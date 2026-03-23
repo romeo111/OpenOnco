@@ -171,7 +171,7 @@ Report statistics:
 
 Output JSON: {{"score": <integer 0-100>, "main_weakness": "<one phrase>"}}"""
 
-    response = generate(FILTER_MODEL, prompt, temperature=0.1, json_format=True, timeout=30)
+    response = generate(FILTER_MODEL, prompt, temperature=0.1, json_format=True, timeout=120)
     if not response:
         return None
 
@@ -435,7 +435,7 @@ def main():
             print("Suggestion failed (model unavailable or insufficient data)", file=sys.stderr)
             sys.exit(1)
         new_strategy, mutation = result
-        print(f"Mutation: {mutation['knob']} ({mutation['from']} → {mutation['to']})")
+        print(f"Mutation: {mutation['knob']} ({mutation['from']} -> {mutation['to']})")
         if args.output:
             with open(args.output, "w", encoding="utf-8") as f:
                 f.write(new_strategy)

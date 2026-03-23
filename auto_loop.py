@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 """
 auto_loop.py — Automatic Iteration Runner for Cancer AutoResearch
 
@@ -358,7 +361,7 @@ def main():
         for v in variants:
             v._file_path = variant_to_file(v, VARIANTS_DIR)
             mut = v.mutation
-            print(f"  {v.variant_id[:32]}  [{mut['knob']}: {mut['from']} → {mut['to']}]")
+            print(f"  {v.variant_id[:32]}  [{mut['knob']}: {mut['from']} -> {mut['to']}]")
 
         if args.dry_run:
             print(f"\nDry run — variants written to {VARIANTS_DIR}/. Stopping.")
@@ -427,7 +430,7 @@ def main():
             "prev_best":       best_score if decision == "discard" else (best_score - (winner["mean_score"] - best_score)),
             "decision":        decision,
             "mutation_desc":   (f"{winner['mutation']['knob']}: "
-                                f"{winner['mutation']['from']} → {winner['mutation']['to']}"
+                                f"{winner['mutation']['from']} -> {winner['mutation']['to']}"
                                 if winner else "none"),
             "note":            note,
             "discarded_ids":   [r["variant_id"] for r in discarded],

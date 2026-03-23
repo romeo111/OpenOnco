@@ -1,3 +1,10 @@
+<!-- VARIANT METADATA
+variant_id: v_tier4_searches_4_30e601c1
+base_hash: 3e0d530775
+mutation: tier4_searches: 2 -> 4
+generated_at: 2026-03-23T17:41:27.660377
+-->
+
 # Research Strategy — Agent-Editable Configuration
 #
 # This file is the ONLY file the autoresearch loop agent may edit.
@@ -16,7 +23,7 @@ Distribution across tiers:
 | Tier 1 — Standard of Care | 3 | HIGH — always execute first |
 | Tier 2 — Approved Targeted/Immuno | 3 | HIGH |
 | Tier 3 — Clinical Trials | 3 | MEDIUM |
-| Tier 4 — Experimental/Cutting-Edge | 2 | MEDIUM |
+| Tier 4 — Experimental/Cutting-Edge | 4 | MEDIUM |
 | Tier 5 — Combination Strategies | 2 | MEDIUM |
 | Tier 6 — Supportive/Adjunctive | 2 | LOW — execute last |
 
@@ -232,39 +239,6 @@ When assigning scores to the 5 rating factors, follow these anchors:
 - **3-4**: Requires rare biomarker (present in <10% of cases)
 - **1-2**: Requires ultra-rare biomarker or specific combination
 
-### Rating Consistency Rules — MANDATORY
-
-Before finalising any treatment's rating_breakdown, verify these rules. Violations cause scoring penalties.
-
-**Evidence Level hard caps:**
-| Study type in key_evidence | Maximum evidence_level score |
-|---|---|
-| Phase 3 RCT, N ≥ 500, top journal | 10 |
-| Phase 3 RCT, N < 500 or secondary journal | 8 |
-| Phase 2 trial (any) | 7 |
-| Phase 1 / dose-escalation | 4 |
-| Retrospective / case series | 3 |
-| Case report / expert opinion | 1 |
-
-**Survival Benefit hard caps:**
-| OS delta (treatment vs. control) | Maximum survival_benefit score |
-|---|---|
-| > 12 months improvement | 10 |
-| 6–12 months improvement | 9 |
-| 3–6 months improvement | 7 |
-| 1–3 months improvement | 5 |
-| < 1 month or no control arm | 3 |
-| No survival data available | 2 |
-
-**Forbidden combinations** (auto-fail rating consistency check):
-- evidence_level ≥ 8 without a Phase 3 RCT cited in key_evidence
-- survival_benefit ≥ 7 without OS or PFS data in key_evidence
-- survival_benefit = 10 without curative intent or >12 months OS delta
-- composite_rating > 8.5 for a palliative-intent treatment in a curative-eligible patient
-
-**Self-check prompt:** Before writing each rating_breakdown, ask:
-"Does the evidence I found actually support this score? Would an oncologist reviewing this report accept this score given the cited trial?"
-
 ## Output Emphasis Guidance
 
 When generating reports, emphasize:
@@ -289,27 +263,19 @@ When generating reports, emphasize:
 
 ## Data Density Targets
 
-Per treatment entry, these fields are MANDATORY (missing = score deduction):
-- `key_evidence.study_name` — full trial name (e.g., "KEYNOTE-048", not just "pembrolizumab trial")
-- `key_evidence.journal` — publication venue
-- `key_evidence.year` — publication year
-- `key_evidence.sample_size` — numeric (use best estimate if exact N unavailable)
-- `key_evidence.os_months.treatment` AND `.control` — BOTH arms required; do not leave control null for comparative trials
-- `key_evidence.os_months.hazard_ratio` — MANDATORY for Phase 3 data; null only for single-arm Phase 1/2
-- `key_evidence.os_months.p_value` — MANDATORY for Phase 3 data; null only when not reported
-- `key_evidence.pfs_months.treatment` and `.control` — populate when reported; do not omit
-- `biomarker_requirements` — always (empty list `[]` if universal, not null)
-- `notable_side_effects` — minimum 3 entries; distinguish acute vs. late toxicity with "(LATE:)" prefix
-- `source_urls` — minimum 1 URL per treatment (PubMed, DOI, or ClinicalTrials.gov)
+Per treatment entry, aim to populate:
+- `key_evidence.study_name` and `key_evidence.journal` — always
+- `key_evidence.sample_size` — always (even if approximate)
+- `key_evidence.os_months.treatment` and `.control` — when available; BOTH arms required for magnitude scoring
+- `key_evidence.pfs_months.treatment` and `.control` — when available
+- `key_evidence.orr_percent.treatment` — when available
+- `key_evidence.os_months.hazard_ratio` and `.p_value` — for Phase 3 data
+- `biomarker_requirements` — always (use empty list if universal)
+- `notable_side_effects` — always list top 3-5 side effects, distinguish acute vs. late
+- `source_urls` — minimum 1 URL per treatment
 - `intent` — MANDATORY: curative / adjuvant / neoadjuvant / palliative / salvage / maintenance
-- `ps_requirement` — always state ECOG range or "No restriction"
+- `ps_requirement` — when treatment requires specific ECOG PS (e.g., "ECOG 0-1 required")
 - `qol_impact` — for H&N, lung, GI cancers: describe functional impact on swallowing, speech, hearing, breathing
-
-**Evidence search order for populating key_evidence:**
-1. Search PubMed/NEJM/JCO for the primary Phase 3 publication — extract OS/PFS/HR/p directly from abstract
-2. If Phase 3 not available, use Phase 2 primary publication — note single-arm if no control
-3. If only trial registry entry available, extract primary endpoint and enrollment; mark HR/p as null
-4. Never estimate or interpolate survival numbers — use only what is explicitly reported
 
 ## Combination Strategy Guidance
 
