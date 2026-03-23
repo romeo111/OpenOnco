@@ -1,0 +1,135 @@
+# How to Contribute — Cancer AutoResearch
+
+This project builds a **free, open database of evidence-ranked cancer treatment plans** — covering every major cancer type, continuously improved by AI research loops.
+
+Anyone can contribute. You do not need to be a doctor or an engineer.
+
+---
+
+## I just want research done for a specific cancer type
+
+**Open a GitHub Issue → New Research Request**
+
+Fill in:
+- Cancer type (be specific: e.g. "Triple-negative breast cancer, Stage II, BRCA1+")
+- Why it matters (who is this for? what clinical question needs answering?)
+- Any specific molecular markers or treatment context
+
+A contributor with compute access will pick it up and run the research. Results are added to the public database and you can query them for free.
+
+> No account needed to open an issue. Just click **Issues → New Issue** at the top of this page.
+
+---
+
+## I want to run research (I have a computer or API access)
+
+You generate research reports and submit them. The CI system automatically scores them — reports above 80/100 are merged into the database.
+
+### Option A — You have an Anthropic API key (best quality)
+
+```bash
+git clone https://github.com/romeo111/cancer-autoresearch.git
+cd cancer-autoresearch
+pip install anthropic
+python worker.py --mode claude --api-key YOUR_API_KEY
+```
+
+This uses **Claude Opus 4.6** to research cases from the benchmark set. Each case takes ~8–12 minutes. The worker submits results automatically.
+
+### Option B — You have a GPU (free, no API key)
+
+```bash
+# 1. Install Ollama: https://ollama.com
+ollama pull llama3.2:3b
+ollama pull phi3:mini
+
+# 2. Clone and run
+git clone https://github.com/romeo111/cancer-autoresearch.git
+cd cancer-autoresearch
+python worker.py --mode local
+```
+
+Works on any NVIDIA GPU with ≥4 GB VRAM, or CPU-only (slower). An RTX 5050 or similar runs comfortably.
+
+### Option C — You want to contribute a specific report manually
+
+1. Find the case in `research_db/` (or open an issue to request a benchmark case be created)
+2. Read the prompt file: `research_db/.../reports/{CASE_ID}_prompt.md`
+3. Follow the research instructions and produce the JSON report
+4. Score locally: `python evaluate.py <your_report.json> --verbose`
+5. Open a pull request
+
+---
+
+## I am a doctor or researcher and I found an error
+
+Open a **Report Correction** issue. Include:
+- Which report file (e.g. `HN-001_report.json`)
+- What is wrong (wrong OS data, wrong biomarker, outdated trial status)
+- The correct information with a citation
+
+Clinical accuracy corrections are the highest-value contribution. Every correction improves the research quality for everyone who queries this database.
+
+---
+
+## I want to add an entire new cancer type to the database
+
+See the step-by-step guide: **[docs/ADDING_CANCER_TYPES.md](docs/ADDING_CANCER_TYPES.md)**
+
+Short version:
+1. Open a **New Cancer Type** issue to coordinate
+2. Create `benchmark_cases.json` with 8–10 representative cases
+3. Run research for each case (Option A or B above)
+4. Score all reports (mean ≥ 80/100 required)
+5. Open a PR — CI auto-scores, maintainers review and merge
+
+---
+
+## I want to improve the research strategy
+
+The AI follows `strategy.md` — a set of research instructions that the autoresearch loop continuously improves. If you know oncology and see a gap (missing trial type, wrong search priority, etc.):
+
+1. Edit `strategy.md` directly
+2. Run `python auto_loop.py --dry-run` to verify syntax
+3. Re-run `python run_experiment.py` on a benchmark set and compare scores
+4. Open a PR with the updated strategy + score comparison
+
+The loop requires a **+2.5 point improvement** before promoting a strategy change — this filters out noise.
+
+---
+
+## What happens to my contribution?
+
+- Reports are stored in `research_db/` under CC BY 4.0
+- Your GitHub username is credited in the git history
+- The database is free to query by anyone
+- If the autoresearch loop adopts a strategy variant you proposed, it's tracked in `mutation_history.json`
+
+---
+
+## Database coverage today
+
+| Category | Cancer types covered | Status |
+|---|---|---|
+| Carcinomas | Head & Neck (130 cases), Lung (10 cases) | Active |
+| Carcinomas | Breast, Colorectal, Pancreatic, Gastric, Hepatocellular, Thyroid, Cervical, Ovarian, Bladder, Kidney, Prostate, Melanoma | Pending — help wanted |
+| Sarcomas | Osteosarcoma, Chondrosarcoma, Ewing, Rhabdomyosarcoma, Leiomyosarcoma, Liposarcoma, GIST | Pending — help wanted |
+| Leukemias | AML, ALL, CML, CLL, Hairy Cell | Pending — help wanted |
+| Lymphomas | Hodgkin, DLBCL, Follicular, Mantle Cell, T-Cell, Marginal Zone | Pending — help wanted |
+| Myelomas | Multiple Myeloma, Waldenström | Pending — help wanted |
+| CNS Tumors | GBM, IDH-mutant Astrocytoma, Meningioma, Medulloblastoma, Ependymoma, Spinal Cord | Pending — help wanted |
+
+---
+
+## Medical disclaimer
+
+This database is for **research and educational purposes only**.
+
+All reports were generated by automated AI systems. They are not reviewed by licensed medical professionals and must not be used as the sole basis for any treatment decision. Always consult a qualified oncologist.
+
+---
+
+## Questions?
+
+Open a GitHub Issue with the label `question`.
+For technical setup problems, include your OS, Python version, and the error message.

@@ -1,0 +1,558 @@
+{
+  "report_metadata": {
+    "generated_date": "2026-03-23",
+    "cancer_type": "HPV-Positive Oropharyngeal Squamous Cell Carcinoma in HIV/AIDS Patient",
+    "stage": "T2N1M0 (AJCC 8th Edition Stage I, p16+)",
+    "molecular_profile": ["HPV-positive (p16+)", "PD-L1 CPS >=20", "HIV/AIDS on ART", "CD4 350 cells/uL", "Undetectable viral load"]
+  },
+  "treatments": [
+    {
+      "rank": 1,
+      "name": "Concurrent cisplatin + IMRT (70 Gy) with INSTI-based ART optimization",
+      "category": "Standard of Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 9, "rationale": "RTOG 1016 and ASTRO 2024 guidelines confirm cisplatin + RT as standard of care for HPV+ OPC. 70 Gy with concurrent cisplatin remains gold standard. T2N1 is borderline for concurrent systemic therapy (single node <=3cm may be RT alone)." },
+        "survival_benefit": { "score": 8, "rationale": "5-year OS 84.6% with cisplatin + RT in RTOG 1016 for HPV+ OPC. HIV-positive patients have worse outcomes (greater hazards for recurrence and death), making intensified therapy important. Standard CRT remains superior to de-intensification." },
+        "accessibility": { "score": 9, "rationale": "Cisplatin and IMRT universally available. Standard regimen at all oncology centers. ART optimization with INSTI-based regimen minimizes drug interactions." },
+        "safety_profile": { "score": 5, "rationale": "Must switch from TDF to TAF or abacavir to avoid compounding cisplatin nephrotoxicity. Overlapping toxicities: cisplatin nephrotoxicity + TDF renal effects, NRTI neuropathy + cisplatin neuropathy. CD4 will drop ~200 cells during CRT. Enhanced mucositis monitoring needed." },
+        "biomarker_match": { "score": 9, "rationale": "HPV+ tumors are highly radiosensitive. PD-L1 CPS>=20 indicates robust immune microenvironment. CD4 350 is adequate for treatment tolerance. Undetectable VL indicates good ART adherence." }
+      },
+      "mechanism_of_action": "Cisplatin forms DNA crosslinks that impair repair of radiation-induced double-strand breaks, providing radiosensitization. IMRT delivers 70 Gy to gross disease with conformal dose distribution. ART must be optimized to INSTI-based backbone (dolutegravir/bictegravir + TAF/emtricitabine) to minimize drug interactions and overlapping nephrotoxicity with cisplatin.",
+      "key_evidence": {
+        "study_name": "NRG Oncology RTOG 1016 / ASTRO HPV+ OPC Guideline 2024",
+        "journal": "Lancet / Practical Radiation Oncology",
+        "year": 2024,
+        "sample_size": 849,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 1.45, "p_value": 0.0163 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HPV-positive (p16+)"],
+      "notable_side_effects": ["Nephrotoxicity (compounded by TDF if not switched)", "Ototoxicity", "Severe mucositis", "CD4 decline during treatment (~200 cell drop)", "Myelosuppression", "Peripheral neuropathy (overlapping with NRTI toxicity)"],
+      "availability": "FDA Approved",
+      "source_urls": ["https://www.practicalradonc.org/article/S1879-8500(24)00139-5/fulltext", "https://www.astro.org/news-and-publications/news-and-media-center/news-releases/2024/astro-issues-clinical-guideline-on-radiation-therapy-for-patients-with-hpv-related-throat-cancer"]
+    },
+    {
+      "rank": 2,
+      "name": "Pembrolizumab + cisplatin/5-FU (KEYNOTE-048 regimen) adapted for HIV",
+      "category": "Immunotherapy",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 8, "rationale": "KEYNOTE-048 demonstrated OS benefit with pembrolizumab + chemo in CPS>=20 HNSCC (median OS 14.7 vs 11.0 months, HR 0.60). Phase 1 CITN-12 trial confirmed pembrolizumab safety in HIV+ patients with CD4>=100. Not standard for locally advanced disease but relevant for this patient's PD-L1 status." },
+        "survival_benefit": { "score": 7, "rationale": "In CPS>=20 R/M HNSCC, pembrolizumab + chemo showed 14.7 months median OS vs 11.0 months. For locally advanced disease, KEYNOTE-689 showed perioperative benefit. 5-year OS 16% for pembrolizumab-chemo vs 5.2% for EXTREME in total population." },
+        "accessibility": { "score": 7, "rationale": "Pembrolizumab FDA-approved for first-line R/M HNSCC. For curative-intent locally advanced disease, use is per KEYNOTE-689 perioperative indication. HIV was historically exclusionary but increasing inclusion in trials." },
+        "safety_profile": { "score": 6, "rationale": "Phase 1 CITN-12 showed pembrolizumab safe in HIV with CD4>=100. CD4 counts remained stable. No HIV viral rebound. irAEs comparable to HIV-negative patients (~20%). Risk of immune flare but no documented IRIS cases with anti-PD-1 in HIV." },
+        "biomarker_match": { "score": 10, "rationale": "PD-L1 CPS>=20 is the strongest predictor of pembrolizumab benefit. HPV+ tumors have high TIL infiltration and PD-1 expression. HIV-induced chronic immune activation may paradoxically enhance checkpoint inhibitor response." }
+      },
+      "mechanism_of_action": "Pembrolizumab blocks PD-1/PD-L1 checkpoint, restoring T-cell anti-tumor immunity. In HIV+ patients, PD-1 blockade may provide dual benefit: anti-tumor activity and potential enhancement of HIV-specific immune responses. Combined with cisplatin/5-FU for cytotoxic synergy. CD4 T-cells remain stable during anti-PD-1 therapy.",
+      "key_evidence": {
+        "study_name": "KEYNOTE-048 (CPS>=20 subgroup) + CITN-12 HIV safety",
+        "journal": "Journal of Clinical Oncology / JAMA Oncology",
+        "year": 2022,
+        "sample_size": 882,
+        "os_months": { "treatment": 14.7, "control": 11.0, "hazard_ratio": 0.6, "p_value": 0.0004 },
+        "pfs_months": { "treatment": 5.8, "control": 5.2 },
+        "orr_percent": { "treatment": 43, "control": 36 }
+      },
+      "biomarker_requirements": ["PD-L1 CPS >=20", "CD4 >=100 cells/uL", "ART for >=4 weeks", "HIV VL <200 copies/mL"],
+      "notable_side_effects": ["Immune-related adverse events (20%)", "Potential immune reconstitution effects", "Cisplatin nephrotoxicity", "Myelosuppression", "Mucositis"],
+      "availability": "FDA Approved (R/M HNSCC first-line)",
+      "source_urls": ["https://ascopubs.org/doi/10.1200/JCO.21.02508", "https://jamanetwork.com/journals/jamaoncology/fullarticle/2735517"]
+    },
+    {
+      "rank": 3,
+      "name": "Perioperative pembrolizumab + surgery + adjuvant RT (KEYNOTE-689 adapted)",
+      "category": "Immunotherapy",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 7, "rationale": "KEYNOTE-689 showed EFS benefit with perioperative pembrolizumab in resectable locally advanced HNSCC (HR 0.66, p=0.004 for CPS>=10). FDA approved June 2025. T2N1 is potentially resectable with TORS." },
+        "survival_benefit": { "score": 7, "rationale": "36-month EFS 59.8% vs 45.9% with perioperative pembrolizumab. CPS>=10 subgroup (patient has CPS>=20) showed strongest benefit. HIV-positive patients may benefit particularly from immune priming." },
+        "accessibility": { "score": 7, "rationale": "FDA approved for resectable locally advanced HNSCC with PD-L1 CPS>=1. Requires surgical expertise (TORS) and immunotherapy coordination. HIV status may complicate clinical trial access." },
+        "safety_profile": { "score": 6, "rationale": "Pembrolizumab safe in HIV+ patients per CITN-12. Surgical risks standard. Adjuvant RT toxicity manageable. irAEs require close monitoring given immunocompromised state. CD4 stability demonstrated." },
+        "biomarker_match": { "score": 9, "rationale": "PD-L1 CPS>=20 exceeds the CPS>=10 threshold for strongest KEYNOTE-689 benefit. HPV+ tumors with high PD-L1 and TILs are ideal candidates for perioperative immunotherapy." }
+      },
+      "mechanism_of_action": "Neoadjuvant pembrolizumab primes anti-tumor immune response against intact tumor, potentially expanding tumor-specific T-cell clones. Surgery removes bulk disease. Adjuvant pembrolizumab with RT maintains immune surveillance against micrometastatic disease.",
+      "key_evidence": {
+        "study_name": "KEYNOTE-689",
+        "journal": "New England Journal of Medicine",
+        "year": 2025,
+        "sample_size": 714,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0.66, "p_value": 0.004 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["PD-L1 CPS >=1", "Resectable disease", "CD4 >=100 for HIV+ patients"],
+      "notable_side_effects": ["Immune-related adverse events", "Surgical complications", "Radiation toxicity", "Potential CD4 fluctuation"],
+      "availability": "FDA Approved (June 2025)",
+      "source_urls": ["https://www.nejm.org/doi/full/10.1056/NEJMoa2415434", "https://www.mskcc.org/clinical-updates/neoadjuvant-and-adjuvant-pembrolizumab-with-standard-of-care-significantly-improves-event-free-survival-in-head-and-neck"]
+    },
+    {
+      "rank": 4,
+      "name": "IMRT alone (70 Gy) without concurrent chemotherapy",
+      "category": "Standard of Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 7, "rationale": "ASTRO 2024 guidelines state RT alone is appropriate for T2N1 with single node <=3cm. Avoids all chemotherapy drug interactions with ART. Multiple series show excellent outcomes for early-stage HPV+ OPC with RT alone." },
+        "survival_benefit": { "score": 7, "rationale": "RT alone achieves excellent local control for T1-2N0-1 HPV+ OPC. May sacrifice some benefit of concurrent systemic therapy but avoids chemotherapy toxicity that may be amplified in HIV setting." },
+        "accessibility": { "score": 9, "rationale": "IMRT universally available. No drug interaction concerns with ART. Simplifies management in HIV/cancer co-management setting." },
+        "safety_profile": { "score": 7, "rationale": "Eliminates cisplatin nephrotoxicity risk overlapping with TDF. No myelosuppression from chemotherapy. HIV+ patients tolerate modern IMRT comparably to HIV-negative patients. Grade 3 mucositis ~17% in HIV+ patients with RT alone." },
+        "biomarker_match": { "score": 8, "rationale": "HPV+ tumors are exquisitely radiosensitive. High cure rates with RT alone in favorable-risk disease. CD4 350 adequate for radiation tolerance." }
+      },
+      "mechanism_of_action": "Definitive IMRT delivers 70 Gy in 33-35 fractions to gross disease with conformal dose distribution, exploiting the enhanced radiosensitivity of HPV-positive tumors. Avoids all chemotherapy-ART drug interactions and overlapping toxicities.",
+      "key_evidence": {
+        "study_name": "ASTRO HPV+ OPC Clinical Practice Guideline",
+        "journal": "Practical Radiation Oncology",
+        "year": 2024,
+        "sample_size": 0,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HPV-positive (p16+)"],
+      "notable_side_effects": ["Mucositis", "Xerostomia", "Dysphagia", "Hypothyroidism", "No chemotherapy-related ART interactions"],
+      "availability": "FDA Approved",
+      "source_urls": ["https://www.practicalradonc.org/article/S1879-8500(24)00139-5/fulltext", "https://pmc.ncbi.nlm.nih.gov/articles/PMC4226241/"]
+    },
+    {
+      "rank": 5,
+      "name": "Concurrent carboplatin/5-FU + IMRT (cisplatin-ineligible alternative)",
+      "category": "Standard of Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 6, "rationale": "ASTRO 2024 guidelines conditionally recommend carboplatin/5-FU as alternative when cisplatin is contraindicated. Less nephrotoxic than cisplatin, reducing overlap with TDF toxicity." },
+        "survival_benefit": { "score": 6, "rationale": "Carboplatin/5-FU provides radiosensitization comparable to cisplatin in some series but with less definitive phase 3 data in HPV+ OPC specifically. Reasonable alternative when cisplatin poses unacceptable renal risk." },
+        "accessibility": { "score": 9, "rationale": "Carboplatin and 5-FU widely available. Standard alternative regimen at all oncology centers." },
+        "safety_profile": { "score": 6, "rationale": "Less nephrotoxic than cisplatin (important for TDF co-administration). Less ototoxic. Still causes myelosuppression which may worsen HIV-related cytopenias. 5-FU mucositis adds to radiation effect." },
+        "biomarker_match": { "score": 8, "rationale": "HPV+ tumors respond to platinum-based radiosensitization regardless of specific platinum agent. Provides chemotherapy benefit with improved renal safety profile for HIV patients on TDF." }
+      },
+      "mechanism_of_action": "Carboplatin provides DNA crosslinking for radiosensitization with less renal tubular toxicity than cisplatin. 5-FU inhibits thymidylate synthase, providing additional radiosensitization. Combination is preferred when cisplatin poses unacceptable nephrotoxicity risk from TDF co-administration.",
+      "key_evidence": {
+        "study_name": "ASTRO HPV+ OPC Guideline (conditional recommendation)",
+        "journal": "Practical Radiation Oncology",
+        "year": 2024,
+        "sample_size": 0,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HPV-positive (p16+)"],
+      "notable_side_effects": ["Myelosuppression", "Mucositis", "Diarrhea", "Hand-foot syndrome", "Reduced nephrotoxicity vs cisplatin"],
+      "availability": "FDA Approved",
+      "source_urls": ["https://www.practicalradonc.org/article/S1879-8500(24)00139-5/fulltext", "https://pmc.ncbi.nlm.nih.gov/articles/PMC4091903/"]
+    },
+    {
+      "rank": 6,
+      "name": "TORS + selective neck dissection + risk-adapted adjuvant therapy",
+      "category": "Standard of Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 7, "rationale": "ECOG 3311 and ASCO 2024 TORS guideline support surgery-first approach for T1-T2 OPC. Pathology-guided adjuvant therapy minimizes overtreatment. Avoids concurrent chemo-ART interactions." },
+        "survival_benefit": { "score": 7, "rationale": "ECOG 3311 showed >90% 2-year PFS across all risk groups. Surgery-first approach allows pathologic risk stratification: low risk = observation, intermediate = de-escalated RT, high risk = CRT." },
+        "accessibility": { "score": 6, "rationale": "TORS requires specialized robotic surgery center. Not available at all institutions. May require referral for HIV/cancer co-management expertise." },
+        "safety_profile": { "score": 7, "rationale": "Surgical approach avoids concurrent chemotherapy-ART interactions. If adjuvant RT alone sufficient (intermediate risk), no chemotherapy needed. Surgical complications manageable in HIV+ patients with adequate CD4." },
+        "biomarker_match": { "score": 8, "rationale": "HPV+ tumors are well-suited for surgical de-escalation approach. Pathologic staging provides definitive risk stratification regardless of HIV status." }
+      },
+      "mechanism_of_action": "Transoral robotic surgery with ipsilateral neck dissection provides primary treatment and definitive pathologic staging. Pathology guides adjuvant therapy: negative margins + limited nodal disease = observation or de-escalated RT; adverse features = standard adjuvant therapy. Avoids concurrent chemotherapy-ART interactions.",
+      "key_evidence": {
+        "study_name": "ECOG-ACRIN 3311 / ASCO TORS Guideline 2024",
+        "journal": "Journal of Clinical Oncology",
+        "year": 2024,
+        "sample_size": 359,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 36, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HPV-positive (p16+)", "Resectable T1-T2 tumor"],
+      "notable_side_effects": ["Oropharyngeal hemorrhage", "Dysphagia", "Wound healing concerns in immunocompromised", "Post-operative pain"],
+      "availability": "FDA Approved (limited specialized centers)",
+      "source_urls": ["https://ascopubs.org/doi/10.1200/JCO-24-02755", "https://bulletin.entnet.org/aao-hnsf-2021/article/21796344/deescalation-of-adjuvant-treatment-for-hpv-oropharyngeal-cancer-tors-and-ecog-3311"]
+    },
+    {
+      "rank": 7,
+      "name": "ART regimen optimization to INSTI-based backbone prior to oncologic treatment",
+      "category": "Supportive Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 8, "rationale": "Expert consensus and pharmacokinetic studies recommend INSTI-based ART (dolutegravir or bictegravir) during chemotherapy due to minimal CYP450 drug interactions. NIH guidelines endorse ART modification for cancer treatment." },
+        "survival_benefit": { "score": 7, "rationale": "Prevents treatment-limiting drug interactions that could compromise either ART efficacy (HIV rebound) or chemotherapy dosing (altered metabolism). Maintains undetectable VL throughout cancer treatment." },
+        "accessibility": { "score": 9, "rationale": "INSTI-based regimens (e.g., Biktarvy, Tivicay) are widely available and first-line ART options. Simple switch for most patients." },
+        "safety_profile": { "score": 9, "rationale": "INSTI-based regimens have favorable safety profiles. Dolutegravir and bictegravir have minimal CYP interactions with chemotherapy. Switching from TDF to TAF eliminates overlapping nephrotoxicity with cisplatin." },
+        "biomarker_match": { "score": 8, "rationale": "Patient has undetectable VL and CD4 350, indicating good virologic control. INSTI-based regimen maintains virologic suppression while enabling full-dose oncologic therapy." }
+      },
+      "mechanism_of_action": "Switching to an INSTI-based ART backbone (dolutegravir or bictegravir + TAF/FTC) eliminates CYP3A4-mediated drug interactions between protease inhibitors/NNRTIs and chemotherapy agents. Switching from TDF to TAF reduces overlapping nephrotoxicity with cisplatin. INSTIs are metabolized via UGT1A1 with minimal CYP450 interaction.",
+      "key_evidence": {
+        "study_name": "Management of HIV Infection in Patients with Cancer Receiving Chemotherapy",
+        "journal": "Clinical Infectious Diseases",
+        "year": 2014,
+        "sample_size": 0,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HIV-positive on ART", "Adequate virologic suppression"],
+      "notable_side_effects": ["INSTI-associated insomnia (rare)", "Weight gain (dolutegravir)", "Minimal drug interactions"],
+      "availability": "FDA Approved",
+      "source_urls": ["https://academic.oup.com/cid/article/59/1/106/400960", "https://pmc.ncbi.nlm.nih.gov/articles/PMC3805712/"]
+    },
+    {
+      "rank": 8,
+      "name": "Nivolumab salvage therapy (for recurrence)",
+      "category": "Immunotherapy",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 8, "rationale": "CheckMate 141 demonstrated OS benefit in R/M HNSCC after platinum progression. HPV+ subgroup showed particularly strong benefit (OS 9.1 vs 4.1 months). Safe in HIV+ patients based on multiple retrospective series." },
+        "survival_benefit": { "score": 4, "rationale": "Relevant only as salvage if primary treatment fails. OS 9.1 months in HPV+ R/M patients. Strong salvage option that preserves quality of life. HIV+ patients with CD4>=100 can receive nivolumab." },
+        "accessibility": { "score": 8, "rationale": "FDA approved for R/M HNSCC after platinum failure. Widely available. No significant ART drug interactions." },
+        "safety_profile": { "score": 7, "rationale": "Well tolerated in HIV+ patients. CD4 counts remain stable. No HIV viral rebound. irAEs similar to HIV-negative patients. Grade 3-4 AEs in ~15%." },
+        "biomarker_match": { "score": 9, "rationale": "HPV+ tumors showed superior nivolumab response. PD-L1 CPS>=20 predicts enhanced checkpoint inhibitor efficacy. HIV-associated PD-1 upregulation may paradoxically prime for anti-PD-1 response." }
+      },
+      "mechanism_of_action": "Nivolumab blocks PD-1 checkpoint, restoring anti-tumor T-cell function. In HIV+ patients, may provide dual anti-tumor and anti-HIV immune restoration. HPV+ tumors with high TIL density and PD-1 expression are particularly responsive.",
+      "key_evidence": {
+        "study_name": "CheckMate 141 (p16+ subgroup)",
+        "journal": "New England Journal of Medicine",
+        "year": 2016,
+        "sample_size": 361,
+        "os_months": { "treatment": 9.1, "control": 4.1, "hazard_ratio": 0.56, "p_value": 0.01 },
+        "pfs_months": { "treatment": 2.0, "control": 2.3 },
+        "orr_percent": { "treatment": 16, "control": 6 }
+      },
+      "biomarker_requirements": ["Prior platinum therapy", "PD-L1 expression (enriches response)", "CD4 >=100 for HIV+ patients"],
+      "notable_side_effects": ["Immune-mediated thyroiditis", "Pneumonitis", "Hepatitis", "Rash", "Stable CD4 counts in HIV+"],
+      "availability": "FDA Approved (R/M HNSCC)",
+      "source_urls": ["https://www.esmo.org/oncology-news/use-of-immune-checkpoint-inhibitors-is-safe-and-effective-in-patients-with-cancer-and-hiv-even-in-those-on-antiretroviral-therapy", "https://ascopubs.org/doi/10.1200/JOP.19.00754"]
+    },
+    {
+      "rank": 9,
+      "name": "Pembrolizumab monotherapy (CPS>=20, curative-intent concurrent with RT)",
+      "category": "Immunotherapy",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 5, "rationale": "Pembrolizumab concurrent with RT is being studied in multiple trials for locally advanced HNSCC. KEYNOTE-412 did not meet primary endpoint for unselected population. CPS>=20 subgroup may show benefit. No HIV-specific data." },
+        "survival_benefit": { "score": 5, "rationale": "Theoretical benefit of combining anti-PD-1 with RT-induced immunogenic cell death. CPS>=20 enriches response probability. Avoids chemotherapy-ART interactions entirely." },
+        "accessibility": { "score": 7, "rationale": "Pembrolizumab FDA approved for HNSCC. Off-label for concurrent RT use in locally advanced setting. Clinical trial access preferred." },
+        "safety_profile": { "score": 7, "rationale": "Avoids all chemotherapy-ART drug interactions. Pembrolizumab safe in HIV+ per CITN-12. irAEs manageable. No nephrotoxicity or ototoxicity concerns." },
+        "biomarker_match": { "score": 10, "rationale": "PD-L1 CPS>=20 is the strongest predictor of pembrolizumab benefit. HPV+ tumor with high TIL density. RT-induced immunogenic cell death may synergize with anti-PD-1. Avoids ART interactions." }
+      },
+      "mechanism_of_action": "Pembrolizumab concurrent with radiation leverages RT-induced immunogenic cell death to release tumor neoantigens while anti-PD-1 blockade prevents T-cell exhaustion. Particularly attractive in HIV+ patients because it avoids all chemotherapy-ART drug interactions.",
+      "key_evidence": {
+        "study_name": "KEYNOTE-412 / Multiple ongoing trials",
+        "journal": "Journal of Clinical Oncology",
+        "year": 2024,
+        "sample_size": 0,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["PD-L1 CPS >=20", "CD4 >=100 for HIV+", "Undetectable VL"],
+      "notable_side_effects": ["Immune-related adverse events", "Radiation-related toxicity", "No chemotherapy toxicity"],
+      "availability": "Clinical Trial / Off-label",
+      "source_urls": ["https://www.ajmc.com/view/phase-1-study-demonstrates-safety-of-pembrolizumab-in-patients-with-hiv-and-advanced-cancer", "https://pmc.ncbi.nlm.nih.gov/articles/PMC8656769/"]
+    },
+    {
+      "rank": 10,
+      "name": "Cetuximab + RT (bioradiotherapy - NOT recommended)",
+      "category": "Standard of Care",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 9, "rationale": "RTOG 1016 and De-ESCALaTE definitively showed cetuximab + RT is INFERIOR to cisplatin + RT in HPV+ OPC. This approach should NOT be used as de-escalation strategy." },
+        "survival_benefit": { "score": 3, "rationale": "5-year OS 77.9% with cetuximab vs 84.6% with cisplatin (RTOG 1016). 2-year OS 89.4% vs 97.5% in De-ESCALaTE. Significantly worse outcomes regardless of HIV status." },
+        "accessibility": { "score": 8, "rationale": "Cetuximab widely available. No significant ART drug interactions (EGFR inhibitor metabolism is distinct from CYP450 pathways used by PIs/NNRTIs)." },
+        "safety_profile": { "score": 5, "rationale": "Similar overall toxicity to cisplatin + RT. Acneiform rash. Infusion reactions. No advantage in toxicity despite inferior efficacy. Not justified in HIV+ patients." },
+        "biomarker_match": { "score": 5, "rationale": "HPV+ tumors may have different EGFR biology rendering cetuximab less effective. Not matched to any actionable biomarker in this patient." }
+      },
+      "mechanism_of_action": "Cetuximab is an anti-EGFR monoclonal antibody originally hypothesized as a less toxic radiosensitizer for HPV+ OPC. RTOG 1016 and De-ESCALaTE proved this approach inferior to cisplatin-based CRT with similar toxicity.",
+      "key_evidence": {
+        "study_name": "NRG Oncology RTOG 1016",
+        "journal": "Lancet",
+        "year": 2019,
+        "sample_size": 849,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 1.45, "p_value": 0.0163 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["EGFR expression"],
+      "notable_side_effects": ["Acneiform rash", "Infusion reactions", "Hypomagnesemia", "Mucositis"],
+      "availability": "FDA Approved (NOT recommended for HPV+ OPC)",
+      "source_urls": ["https://pubmed.ncbi.nlm.nih.gov/30449625/", "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(18)32752-1/fulltext"]
+    },
+    {
+      "rank": 11,
+      "name": "Broadly neutralizing HIV antibodies (bNAbs) to replace ART during chemotherapy",
+      "category": "Experimental",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 3, "rationale": "Preclinical and early clinical data suggest bNAbs could maintain HIV suppression while eliminating ART drug interactions during chemotherapy. Phase 1/2 trials ongoing. Novel approach." },
+        "survival_benefit": { "score": 4, "rationale": "Theoretical benefit of enabling full-dose chemotherapy without ART drug interactions. Could improve both cancer and HIV outcomes by allowing unconstrained oncologic treatment." },
+        "accessibility": { "score": 2, "rationale": "Experimental. Available only in clinical trials at major academic centers. Not FDA approved for ART replacement during cancer treatment." },
+        "safety_profile": { "score": 7, "rationale": "bNAbs have favorable safety profiles. Infusion reactions possible. Risk of HIV viral rebound if bNAb coverage insufficient. Requires careful HIV monitoring." },
+        "biomarker_match": { "score": 6, "rationale": "Requires HIV sensitivity testing to selected bNAbs. Not all HIV strains are susceptible. Patient must have undetectable VL and adequate CD4 for safe ART interruption." }
+      },
+      "mechanism_of_action": "Broadly neutralizing HIV antibodies (e.g., VRC01, 10-1074, 3BNC117) provide passive immunization against HIV, maintaining viral suppression without oral ART. Eliminates all ART-chemotherapy drug interactions, enabling unconstrained oncologic dosing.",
+      "key_evidence": {
+        "study_name": "Replacement of ART with HIV bNAbs during chemotherapy (concept paper)",
+        "journal": "PubMed",
+        "year": 2023,
+        "sample_size": 0,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 0, "control": 0 }
+      },
+      "biomarker_requirements": ["HIV-positive", "HIV sensitivity to selected bNAbs", "Undetectable VL at baseline"],
+      "notable_side_effects": ["Infusion reactions", "Potential viral rebound", "Requires frequent HIV VL monitoring"],
+      "availability": "Clinical Trial Only",
+      "source_urls": ["https://pubmed.ncbi.nlm.nih.gov/37053110/"]
+    },
+    {
+      "rank": 12,
+      "name": "ISA101b HPV16 therapeutic vaccine + anti-PD-1 (investigational)",
+      "category": "Experimental",
+      "composite_rating": 0,
+      "rating_breakdown": {
+        "evidence_level": { "score": 4, "rationale": "Phase 2 OpcemISA trial ongoing for R/M HPV16+ OPC. ORR 11.5% in anti-PD-1-refractory patients. No data in HIV+ population or locally advanced setting." },
+        "survival_benefit": { "score": 3, "rationale": "Studied only in recurrent/metastatic setting. Theoretical synergy with HIV-related immune dysregulation (chronic HPV exposure may enhance vaccine response with checkpoint blockade)." },
+        "accessibility": { "score": 2, "rationale": "Clinical trial only. HIV+ patients historically excluded from most trials though inclusion is expanding. FDA Fast Track designation." },
+        "safety_profile": { "score": 7, "rationale": "Well tolerated in HIV-negative patients. Safety in HIV+ unknown but mechanistic rationale suggests acceptable risk. HPV-specific immune boosting unlikely to cause autoimmunity." },
+        "biomarker_match": { "score": 7, "rationale": "Targets HPV16 E6/E7 oncoproteins. Requires HPV16 confirmation. HIV/HPV co-infected patients may have impaired HPV-specific T-cell responses that could be restored by vaccine + anti-PD-1." }
+      },
+      "mechanism_of_action": "ISA101b induces HPV16-specific CD4+ and CD8+ T-cell responses targeting E6/E7 oncoproteins. Combined with anti-PD-1 to overcome immune exhaustion. In HIV+ patients, could restore HPV-specific immunity that is impaired by chronic immunosuppression.",
+      "key_evidence": {
+        "study_name": "OpcemISA Phase 2",
+        "journal": "Journal of Clinical Oncology",
+        "year": 2024,
+        "sample_size": 194,
+        "os_months": { "treatment": 0, "control": 0, "hazard_ratio": 0, "p_value": 0 },
+        "pfs_months": { "treatment": 0, "control": 0 },
+        "orr_percent": { "treatment": 12, "control": 0 }
+      },
+      "biomarker_requirements": ["HPV16-positive tumor", "CD4 >=100 (proposed for HIV+ inclusion)"],
+      "notable_side_effects": ["Injection site reactions", "Immune-related adverse events (rare)", "Unknown safety in HIV+"],
+      "availability": "Clinical Trial Only",
+      "source_urls": ["https://doi.org/10.1200/JCO.2024.42.16_suppl.6003", "https://www.cancernetwork.com/view/fda-gives-isa101b-fast-track-designation-for-hpv-16-oropharyngeal-cancer"]
+    }
+  ],
+  "clinical_trials": [
+    {
+      "trial_id": "CITN-12",
+      "title": "Phase 1 Assessment of Safety of Pembrolizumab in Patients with HIV and Advanced Cancer",
+      "phase": "Phase 1",
+      "status": "Completed",
+      "sites": ["Multiple US academic centers"],
+      "biomarker_requirements": ["HIV-positive", "CD4 >=100", "ART >=4 weeks", "VL <200"],
+      "early_results": "Pembrolizumab safe in HIV+ cancer patients. CD4 counts stable. No viral rebound. irAEs comparable to HIV-negative patients."
+    },
+    {
+      "trial_id": "KEYNOTE-689",
+      "title": "Neoadjuvant and Adjuvant Pembrolizumab in Locally Advanced Head and Neck Cancer",
+      "phase": "Phase 3",
+      "status": "Completed",
+      "sites": ["Global multicenter"],
+      "biomarker_requirements": ["PD-L1 CPS >=1", "Resectable locally advanced HNSCC"],
+      "early_results": "36-month EFS 59.8% vs 45.9% (HR 0.66, p=0.004) in CPS>=10. FDA approved June 2025."
+    },
+    {
+      "trial_id": "NCT03304093",
+      "title": "IFCT-CHIVA2: Nivolumab After Chemotherapy in HIV-Positive Patients with Advanced NSCLC",
+      "phase": "Phase 2",
+      "status": "Active",
+      "sites": ["France"],
+      "biomarker_requirements": ["HIV-positive", "Advanced NSCLC", "CD4 >=100"],
+      "early_results": "Evaluating nivolumab safety and efficacy in HIV+ cancer population."
+    },
+    {
+      "trial_id": "NCT03669718",
+      "title": "OpcemISA: Cemiplimab +/- ISA101b in HPV16+ OPC",
+      "phase": "Phase 2",
+      "status": "Active",
+      "sites": ["UCSF", "UCSD", "Multiple US sites"],
+      "biomarker_requirements": ["HPV16-positive", "R/M OPC"],
+      "early_results": "ORR 11.5% in anti-PD-1-refractory. Clinical benefit ratio 61.5%."
+    },
+    {
+      "trial_id": "NCT01517243",
+      "title": "Cancer Immunotherapy Trials Network: Immune Checkpoint Inhibitors in HIV-Associated Cancers",
+      "phase": "Phase 1/2",
+      "status": "Active",
+      "sites": ["NCI-designated cancer centers"],
+      "biomarker_requirements": ["HIV-positive", "Various cancers", "CD4 >=100"],
+      "early_results": "Expanding evidence for safety of ICIs in HIV+ patients across tumor types."
+    },
+    {
+      "trial_id": "NCT05063552",
+      "title": "Pembrolizumab + RT De-escalation in HPV+ OPC (inclusive of HIV+)",
+      "phase": "Phase 2",
+      "status": "Recruiting",
+      "sites": ["Multiple US academic centers"],
+      "biomarker_requirements": ["HPV-positive", "PD-L1 CPS >=1"],
+      "early_results": "Evaluating pembrolizumab + reduced-dose RT as alternative to CRT."
+    }
+  ],
+  "combination_strategies": [
+    {
+      "base_therapy": "Cisplatin + IMRT (70 Gy)",
+      "combination_partner": "INSTI-based ART (dolutegravir/bictegravir + TAF/FTC)",
+      "evidence_level": "Expert Consensus",
+      "rationale": "INSTI-based ART has minimal CYP450 drug interactions with cisplatin. Switching from TDF to TAF eliminates overlapping nephrotoxicity. INSTIs metabolized via UGT1A1, distinct from cisplatin metabolism."
+    },
+    {
+      "base_therapy": "Pembrolizumab",
+      "combination_partner": "Concurrent IMRT + ART",
+      "evidence_level": "Phase 1 (CITN-12) + Phase 3 (KEYNOTE-689)",
+      "rationale": "Pembrolizumab safe in HIV+ patients (CITN-12). No ART drug interactions. PD-1 blockade may restore both anti-tumor and anti-HIV immunity. RT-induced immunogenic cell death synergizes with checkpoint blockade."
+    },
+    {
+      "base_therapy": "TORS + neck dissection",
+      "combination_partner": "De-escalated adjuvant RT (50 Gy) without chemotherapy",
+      "evidence_level": "Phase 2 (ECOG 3311)",
+      "rationale": "Surgery-first approach provides definitive staging. De-escalated RT without chemotherapy avoids all ART-chemo drug interactions. Particularly attractive for HIV+ patients where drug interactions complicate CRT."
+    },
+    {
+      "base_therapy": "Carboplatin/5-FU + RT",
+      "combination_partner": "TAF-based ART (replacing TDF)",
+      "evidence_level": "Expert Consensus / Pharmacokinetic data",
+      "rationale": "Carboplatin less nephrotoxic than cisplatin, reducing overlap with TDF. TAF has improved renal safety vs TDF. Combination provides radiosensitization with manageable renal toxicity profile."
+    }
+  ],
+  "supportive_care": [
+    {
+      "approach": "ART optimization by HIV specialist prior to oncologic treatment",
+      "evidence": "Expert consensus recommends INSTI-based ART during chemotherapy to minimize drug interactions. TDF-to-TAF switch reduces nephrotoxicity overlap with cisplatin.",
+      "benefit": "Prevents treatment-limiting drug interactions, maintains HIV suppression, enables full-dose chemotherapy",
+      "recommendation_level": "Strong"
+    },
+    {
+      "approach": "CD4 and HIV viral load monitoring during cancer treatment",
+      "evidence": "CD4 drops ~200 cells during CRT. Viral rebound risk with immunosuppression. Regular monitoring (every 3-4 weeks) guides ART adjustment and opportunistic infection prophylaxis.",
+      "benefit": "Early detection of immune deterioration, prevents opportunistic infections, ensures ART efficacy",
+      "recommendation_level": "Strong"
+    },
+    {
+      "approach": "Opportunistic infection prophylaxis (PJP, MAC, fungal)",
+      "evidence": "CD4 may drop below 200 during CRT. Pneumocystis prophylaxis (TMP-SMX) recommended when CD4 <200. MAC prophylaxis if CD4 <50.",
+      "benefit": "Prevents life-threatening opportunistic infections during treatment-induced immunosuppression",
+      "recommendation_level": "Strong"
+    },
+    {
+      "approach": "Enhanced nutritional support and mucositis management",
+      "evidence": "HIV+ patients may have baseline nutritional deficiency. CRT-induced mucositis can worsen oral intake. Proactive PEG tube consideration if pre-treatment weight loss >5%.",
+      "benefit": "Maintains treatment intensity, prevents treatment breaks, reduces morbidity",
+      "recommendation_level": "Strong"
+    },
+    {
+      "approach": "Multidisciplinary team coordination (oncology, infectious disease, pharmacy)",
+      "evidence": "Drug interaction management, ART optimization, and immune monitoring require coordinated care. Studies show improved outcomes with multidisciplinary management of HIV-cancer comorbidity.",
+      "benefit": "Optimal drug selection, reduced complications, comprehensive immune management",
+      "recommendation_level": "Strong"
+    },
+    {
+      "approach": "Psychosocial support for dual HIV/cancer diagnosis",
+      "evidence": "Patients with HIV and cancer face compounded stigma, treatment burden, and psychological distress. Mental health support improves adherence to both ART and cancer treatment.",
+      "benefit": "Improved treatment adherence, reduced distress, better quality of life",
+      "recommendation_level": "Strong"
+    }
+  ],
+  "sources": [
+    {
+      "index": 1,
+      "title": "Treatment and Outcomes of Oropharyngeal Cancer in People with HIV",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6806360/",
+      "type": "Journal Article"
+    },
+    {
+      "index": 2,
+      "title": "HPV-Associated Oropharyngeal Carcinomas in HIV Patients on Long-Term ART (2024)",
+      "url": "https://journals.sagepub.com/doi/abs/10.1177/09564624241244830",
+      "type": "Case Report"
+    },
+    {
+      "index": 3,
+      "title": "Checkpoint Immunotherapy Safe and Effective for HIV-Positive People with Cancer",
+      "url": "https://www.aidsmap.com/news/jun-2023/checkpoint-immunotherapy-safe-and-effective-hiv-positive-people-cancer",
+      "type": "Review"
+    },
+    {
+      "index": 4,
+      "title": "Safety and Efficacy of ICIs in Patients with Cancer Living with HIV (JCO Oncology Practice)",
+      "url": "https://ascopubs.org/doi/10.1200/JOP.19.00754",
+      "type": "Journal Article"
+    },
+    {
+      "index": 5,
+      "title": "Phase 1 Safety of Pembrolizumab in HIV and Advanced Cancer (JAMA Oncology 2019)",
+      "url": "https://jamanetwork.com/journals/jamaoncology/fullarticle/2735517",
+      "type": "Phase 1 Trial"
+    },
+    {
+      "index": 6,
+      "title": "Management of HIV Infection in Patients with Cancer Receiving Chemotherapy",
+      "url": "https://academic.oup.com/cid/article/59/1/106/400960",
+      "type": "Review Article"
+    },
+    {
+      "index": 7,
+      "title": "Drug-Drug Interactions Between ART and Chemotherapy in HIV Cancer Patients",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4811911/",
+      "type": "Journal Article"
+    },
+    {
+      "index": 8,
+      "title": "KEYNOTE-048: Pembrolizumab +/- Chemotherapy in R/M HNSCC (JCO Updated Results)",
+      "url": "https://ascopubs.org/doi/10.1200/JCO.21.02508",
+      "type": "Phase 3 RCT"
+    },
+    {
+      "index": 9,
+      "title": "KEYNOTE-689: Neoadjuvant/Adjuvant Pembrolizumab in LA-HNSCC (NEJM 2025)",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2415434",
+      "type": "Phase 3 RCT"
+    },
+    {
+      "index": 10,
+      "title": "ASTRO Clinical Practice Guideline: RT for HPV+ OPSCC (2024)",
+      "url": "https://www.practicalradonc.org/article/S1879-8500(24)00139-5/fulltext",
+      "type": "Clinical Guideline"
+    },
+    {
+      "index": 11,
+      "title": "Toxicity and Outcomes After RT for HNC in HIV-Positive Patients",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4226241/",
+      "type": "Journal Article"
+    },
+    {
+      "index": 12,
+      "title": "Tenofovir-Induced Renal Dysfunction Among HIV-Infected Patients: Systematic Review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10590624/",
+      "type": "Systematic Review"
+    },
+    {
+      "index": 13,
+      "title": "RTOG 1016: Cetuximab vs Cisplatin in HPV+ OPC (Lancet)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30449625/",
+      "type": "Phase 3 RCT"
+    },
+    {
+      "index": 14,
+      "title": "ICIs in HIV-Cancer: 2026 Systematic Review",
+      "url": "https://journals.sagepub.com/doi/10.1177/10781552261430873",
+      "type": "Systematic Review"
+    },
+    {
+      "index": 15,
+      "title": "INSTI Drug Interaction Profile (Dolutegravir Pharmacokinetics)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3805712/",
+      "type": "Pharmacokinetic Study"
+    },
+    {
+      "index": 16,
+      "title": "Replacement of ART with HIV bNAbs During Chemotherapy",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37053110/",
+      "type": "Concept Paper"
+    },
+    {
+      "index": 17,
+      "title": "Radiotherapy in HIV Patients: Are Special Precautions Necessary?",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3409663/",
+      "type": "Review Article"
+    }
+  ]
+}
