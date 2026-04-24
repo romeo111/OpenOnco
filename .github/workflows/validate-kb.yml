@@ -1,0 +1,41 @@
+name: Validate Knowledge Base
+
+on:
+  pull_request:
+    paths:
+      - "knowledge_base/**"
+      - "specs/**"
+      - "pyproject.toml"
+      - ".github/workflows/validate-kb.yml"
+  push:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Validate YAML schema + referential integrity
+        run: |
+          python -m knowledge_base.validation.loader knowledge_base/hosted/content
+
+      - name: Run tests
+        run: |
+          python -m pytest tests/ -v
+
+      - name: Lint (non-blocking)
+        continue-on-error: true
+        run: |
+          python -m ruff check knowledge_base/ tests/

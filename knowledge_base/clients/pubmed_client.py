@@ -492,3 +492,73 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ── SourceClient-conforming wrapper ───────────────────────────────────────────
+
+from datetime import datetime, timezone
+
+from knowledge_base.clients.base import (
+    RateLimit as _RateLimit,
+    SourceResponse,
+    TTLCache,
+)
+
+
+class PubMedSourceClient:
+    """SourceClient implementation for PubMed / E-utilities.
+
+    Wraps the existing `PubMedClient` HTTP client above into the
+    unified `SourceClient` protocol (knowledge_base/clients/base.py).
+    Wrapper name avoids collision with the long-standing internal
+    `PubMedClient` class.
+    """
+
+    source_id = "SRC-PUBMED"
+    base_url = EUTILS_BASE if "EUTILS_BASE" in dir() else "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
+    rate_limit = _RateLimit(tokens_per_second=3.0, burst=3)  # no API key
+    cache_ttl_seconds = 7 * 24 * 3600  # 7 days per SOURCE_INGESTION_SPEC §12.3
+
+    def __init__(self, inner: PubMedClient | None = None, cache: TTLCache | None = None):
+        self._inner = inner or PubMedClient()
+        self._cache = cache or TTLCache()
+        self._last_error: str | None = None
+
+    def fetch(self, query: dict) -> SourceResponse:
+        mode = query.get("mode", "search")
+        key = TTLCache.key_for(self.source_id, mode, query)
+        cached = self._cache.get(key)
+        if cached is not None:
+            return cached
+
+        try:
+            if mode == "get":
+                data = self._inner.fetch_summaries([query["pmid"]])
+            else:
+                data = self._inner.search(
+                    query.get("terms", ""),
+                    max_results=query.get("max_results", 10),
+                )
+        except Exception as e:
+            self._last_error = str(e)
+            raise
+
+        resp = SourceResponse(
+            data=data,
+            source_id=self.source_id,
+            fetched_at=datetime.now(timezone.utc).isoformat(),
+            cache_hit=False,
+            api_version="E-utilities",
+        )
+        self._cache.put(key, resp, self.cache_ttl_seconds)
+        return resp
+
+    def health(self) -> dict:
+        try:
+            self._inner.search("cancer", max_results=1)
+            return {"ok": True, "latency_ms": None, "last_error": None}
+        except Exception as e:
+            return {"ok": False, "latency_ms": None, "last_error": str(e)}
+
+    def quota(self) -> dict:
+        return {"remaining": None, "reset_at": None}
