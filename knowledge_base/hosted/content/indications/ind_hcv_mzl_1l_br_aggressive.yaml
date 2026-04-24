@@ -1,0 +1,64 @@
+id: IND-HCV-MZL-1L-BR-AGGRESSIVE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-RNA
+      required: true
+      value_constraint: "detectable (positive viral load)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_chemoimmunotherapy: true
+
+recommended_regimen: REG-BR-STANDARD
+concurrent_therapy:
+  - REG-DAA-SOF-VEL  # antiviral runs in parallel / preceding
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~90%"
+  complete_response: "~70%"
+  progression_free_survival: "Median >5 years in responders"
+  overall_survival_5y: ">80%"
+  hcv_cure_rate_svr12: ">95% (with concurrent DAA)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Aggressive-plan default for HCV-MZL with bulky disease, symptomatic
+  presentation, or histologic evidence of transformation — situations
+  where waiting for antiviral response is clinically unacceptable.
+  Concurrent or preceding DAA addresses HCV; chemoimmunotherapy provides
+  immediate cytoreduction. NCCN 2.2025 supports earlier chemoimmunotherapy
+  in bulky or symptomatic cases. Bendamustine dose reduction applied if
+  FIB-4 > 3.25 or cirrhosis (see REG-BR-STANDARD.dose_adjustments).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "For bulky or symptomatic HCV-associated indolent B-cell lymphoma, chemoimmunotherapy with concurrent antivirals is acceptable first-line"
+  - source_id: SRC-ESMO-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: "Chemoimmunotherapy reserved for non-response to antivirals or aggressive phenotype"
+
+known_controversies: []
+
+last_reviewed: "2026-04-24"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires clinical co-lead signoff before publication.
+  Aggressive counterpart to IND-HCV-MZL-1L-ANTIVIRAL for two-plan
+  output (CHARTER §2).

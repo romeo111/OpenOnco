@@ -1,0 +1,84 @@
+id: IND-HCV-MZL-1L-ANTIVIRAL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-RNA
+      required: true
+      value_constraint: "detectable (positive viral load)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    decompensated_cirrhosis: false
+
+recommended_regimen: REG-DAA-SOF-VEL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~75% (lymphoma regression after SVR12)"
+  complete_response: "~50% at 12 months post-SVR"
+  progression_free_survival: "Median not reached in DAA-responsive cases; prolonged"
+  overall_survival_5y: ">85% in non-cirrhotic responders"
+  hcv_cure_rate_svr12: ">95% (non-cirrhotic, treatment-naive)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-BULKY-DISEASE
+  - RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Standard-plan default for HCV-positive MZL with indolent presentation.
+  Antiviral therapy addresses the etiological driver (chronic HCV antigen
+  stimulation). Lymphoma regression commonly follows viral clearance in
+  4-12 months; many patients achieve durable remission without cytotoxic
+  therapy. ESMO 2024 and NCCN 2.2025 both endorse antiviral-first for
+  indolent HCV-MZL. МОЗ протокол 2024 aligns. Regimen (SOF/VEL) is fully
+  reimbursed via НСЗУ national HCV program.
+
+sources:
+  - source_id: SRC-ESMO-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: "Antiviral-first for HCV-associated MZL with indolent presentation; chemoimmunotherapy reserved for non-response or aggressive phenotype"
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "DAA-based antiviral therapy preferred for HCV+ indolent B-cell lymphomas; response assessment at 6 months"
+  - source_id: SRC-MOZ-UA-LYMPH-2024
+    position: supports
+  - source_id: SRC-EASL-HCV-2023
+    position: supports
+    relevant_quote_paraphrase: "Sofosbuvir/velpatasvir 12 weeks for treatment-naive non-cirrhotic HCV; SVR12 >95%"
+
+known_controversies:
+  - topic: "Concurrent rituximab during DAA therapy for moderate tumor burden"
+    positions:
+      - position: "Monitor for 6 months post-DAA before adding rituximab"
+        sources:
+          - SRC-ESMO-MZL-2024
+      - position: "Consider concurrent rituximab for moderate tumor burden (selected cases)"
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: "Based on expert opinion / subgroup analysis; no definitive RCT"
+    our_default: "Monitor for 6 months post-SVR12; add rituximab only if insufficient response or progression"
+    rationale: >
+      Aligns with ESMO position and МОЗ protocol; preserves
+      opportunity to treat with antivirals alone before adding
+      cytotoxic/immunotherapy burden. Re-evaluate at 6 months.
+
+last_reviewed: "2026-04-24"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — requires clinical co-lead signoff before publication. Content
+  for reference case "Patient Zero" per
+  specs/REFERENCE_CASE_SPECIFICATION.md.

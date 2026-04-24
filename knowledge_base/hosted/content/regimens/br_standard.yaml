@@ -1,0 +1,58 @@
+id: REG-BR-STANDARD
+name: "Bendamustine + Rituximab (BR), 6 cycles"
+name_ua: "Бендамустин + Ритуксимаб (BR), 6 циклів"
+alternate_names:
+  - "BR"
+  - "R-B"
+
+components:
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m²"
+    schedule: "day 1 of each 28-day cycle"
+    route: IV
+  - drug_id: DRUG-BENDAMUSTINE
+    dose: "90 mg/m²"
+    schedule: "days 1 and 2 of each 28-day cycle"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "6"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Antihistamine + acetaminophen before rituximab"
+  - "5-HT3 antagonist antiemetic before bendamustine"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "FIB-4 > 3.25 OR compensated cirrhosis"
+    modification: "Reduce bendamustine to 70 mg/m² days 1-2"
+    rationale: "Hepatic dysfunction increases bendamustine exposure; dose reduction preserves efficacy while managing toxicity"
+    source_refs:
+      - SRC-ESMO-MZL-2024
+  - condition: "Creatinine clearance 30-50 mL/min"
+    modification: "Reduce bendamustine to 70 mg/m²"
+    rationale: "Renal impairment affects bendamustine clearance"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Absolute neutrophil count <1500/µL at cycle start"
+    modification: "Delay cycle; consider G-CSF support"
+    rationale: "Cumulative myelosuppression is a key BR toxicity"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Both bendamustine and rituximab reimbursed per НСЗУ for indolent B-cell lymphomas"
+
+sources:
+  - SRC-ESMO-MZL-2024
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-24"
+notes: >
+  Standard chemoimmunotherapy regimen for indolent B-cell lymphomas.
+  In HCV-MZL, reserved for cases that are non-responsive to antiviral
+  therapy or have aggressive/bulky disease at presentation requiring
+  immediate cytoreduction.

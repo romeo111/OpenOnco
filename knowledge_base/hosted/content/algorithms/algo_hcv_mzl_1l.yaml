@@ -1,0 +1,45 @@
+id: ALGO-HCV-MZL-1L
+applicable_to_disease: DIS-HCV-MZL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line HCV-MZL
+  based on disease burden and phenotype. Outputs the two-plan
+  pair required by CHARTER §2.
+
+output_indications:
+  - IND-HCV-MZL-1L-ANTIVIRAL
+  - IND-HCV-MZL-1L-BR-AGGRESSIVE
+
+default_indication: IND-HCV-MZL-1L-ANTIVIRAL
+alternative_indication: IND-HCV-MZL-1L-BR-AGGRESSIVE
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BULKY-DISEASE
+        - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
+    if_true:
+      result: IND-HCV-MZL-1L-BR-AGGRESSIVE
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "HCV RNA positive"
+        - condition: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
+    if_true:
+      result: IND-HCV-MZL-1L-ANTIVIRAL
+    if_false:
+      result: IND-HCV-MZL-1L-BR-AGGRESSIVE
+
+sources:
+  - SRC-ESMO-MZL-2024
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-24"
+notes: >
+  STUB — RedFlag entities (RF-BULKY-DISEASE, RF-AGGRESSIVE-HISTOLOGY-
+  TRANSFORMATION) and Biomarker entity (BIO-HCV-RNA) referenced by
+  this algorithm and its Indications are not yet defined. Loader will
+  flag these as unresolved references until they are added.

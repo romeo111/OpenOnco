@@ -1,0 +1,30 @@
+[project]
+name = "openonco"
+version = "0.1.0"
+description = "OpenOnco — free public oncology clinical decision support resource"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+    "pydantic>=2.6",
+    "httpx>=0.27",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+ingestion = [
+    "pypdf>=4.0",
+    "pdfplumber>=0.11",
+    "pytesseract>=0.3.10",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

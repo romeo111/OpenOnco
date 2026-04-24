@@ -1114,6 +1114,38 @@ current_as_of: "2026-04-15"
 # Tier assignment per CCS §2
 evidence_tier: 1
 
+# Licensing & hosting (per SOURCE_INGESTION_SPEC §3)
+hosting_mode: "referenced"          # hosted | referenced | mixed
+hosting_justification: null         # H1..H5 per SOURCE_INGESTION_SPEC §1.4 (null якщо referenced)
+ingestion:
+  method: "live_api"                # live_api | scheduled_batch | manual | none
+  client: null                      # modulename якщо live_api, null інакше
+  endpoint: null
+  rate_limit: null
+cache_policy:
+  enabled: false
+  ttl_hours: null
+  scope: null                       # query_result | entity_snapshot | none
+license:
+  name: "NCCN proprietary"
+  url: "https://www.nccn.org/permissions"
+  spdx_id: null                     # SPDX якщо застосовно (e.g. "CC-BY-4.0", "CC0-1.0")
+attribution:
+  required: true
+  text: "Reproduced with permission from the NCCN Clinical Practice Guidelines..."
+  logo_url: null
+commercial_use_allowed: false
+redistribution_allowed: false
+modifications_allowed: false
+sharealike_required: false
+known_restrictions:
+  - "No redistribution of content; only our paraphrase + link per SOURCE_INGESTION_SPEC §1.2"
+legal_review:
+  status: "reviewed"                # pending | reviewed | escalated
+  reviewer: null
+  date: null
+  notes: null
+
 # Related
 relates_to_diseases: [DIS-HCV-MZL, DIS-DLBCL, DIS-FOLLICULAR-LYMPHOMA, "..."]
 
@@ -1125,6 +1157,10 @@ notes: >
 last_verified: "2026-04-15"
 verifier: [reviewer-id]
 ```
+
+**Fields повторюються з SOURCE_INGESTION_SPEC §3.** Два документи
+описують те ж саме; при розбіжності SOURCE_INGESTION_SPEC переможе
+як пізніший і більш детальний спеціалізований документ.
 
 ---
 

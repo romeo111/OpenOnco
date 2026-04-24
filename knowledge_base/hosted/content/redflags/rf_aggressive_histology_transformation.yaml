@@ -1,0 +1,29 @@
+id: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
+definition: "Histologic evidence of transformation to aggressive large B-cell lymphoma (DLBCL) on biopsy or suspected by rapid clinical progression / LDH elevation / PET hotspot"
+definition_ua: "Гістологічне свідчення трансформації в агресивну великоклітинну B-клітинну лімфому (DLBCL) АБО клінічне підозріння на трансформацію"
+
+trigger:
+  type: symptom_composite
+  any_of:
+    - finding: "biopsy_shows_dlbcl"
+      value: true
+    - all_of:
+        - finding: "ldh_ratio_to_uln"
+          threshold: 1.5
+          comparator: ">"
+        - finding: "clinical_progression_weeks"
+          threshold: 12
+          comparator: "<"
+
+clinical_direction: intensify
+
+relevant_diseases:
+  - DIS-HCV-MZL
+shifts_algorithm:
+  - ALGO-HCV-MZL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-24"
+notes: "Transformation shifts MZL from indolent to aggressive lymphoma treatment paradigm."
