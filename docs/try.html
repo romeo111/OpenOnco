@@ -412,10 +412,11 @@ ld = load_content(KB)
 quest = next((info['data'] for eid, info in ld.entities_by_id.items()
               if info['type'] == 'questionnaires' and info['data'].get('id') == _quest_id), None)
 if quest is None:
-    json.dumps({'error': f'Questionnaire {_quest_id} not found'})
+    _preview_result = json.dumps({'error': f'Questionnaire {_quest_id} not found'})
 else:
-    res = evaluate_partial(profile, quest, kb_root=KB)
-    json.dumps(res.to_dict())
+    _preview_eval = evaluate_partial(profile, quest, kb_root=KB)
+    _preview_result = json.dumps(_preview_eval.to_dict())
+_preview_result
 `);
     const result = JSON.parse(resultJson);
     if (result.error) {
