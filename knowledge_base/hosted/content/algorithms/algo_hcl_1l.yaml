@@ -1,0 +1,31 @@
+id: ALGO-HCL-1L
+applicable_to_disease: DIS-HCL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Single-agent purine analog 1L for HCL with treatment indication.
+  Two NCCN Cat 1/2A interchangeable options: cladribine (preferred,
+  single 7-day course) and pentostatin (every 2 weeks until best response).
+
+output_indications:
+  - IND-HCL-1L-CLADRIBINE
+  - IND-HCL-1L-PENTOSTATIN
+
+default_indication: IND-HCL-1L-CLADRIBINE
+alternative_indication: IND-HCL-1L-PENTOSTATIN
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Treatment indication present (cytopenia or symptomatic splenomegaly)"
+        - condition: "No active uncontrolled infection"
+    if_true:
+      result: IND-HCL-1L-CLADRIBINE
+    if_false:
+      result: IND-HCL-1L-CLADRIBINE
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Cladribine preferred per institutional simplicity (single course).
+  Pentostatin gives equivalent outcomes; choice often institutional.

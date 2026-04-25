@@ -1,0 +1,32 @@
+id: ALGO-HGBL-DH-1L
+applicable_to_disease: DIS-HGBL-DH
+applicable_to_line_of_therapy: 1
+purpose: >
+  HGBL-DH 1L: DA-EPOCH-R preferred (better outcomes than R-CHOP);
+  R-CHOP fallback when DA-EPOCH-R logistically not feasible.
+
+output_indications:
+  - IND-HGBL-DH-1L-DAEPOCHR
+  - IND-HGBL-DH-1L-RCHOP
+
+default_indication: IND-HGBL-DH-1L-DAEPOCHR
+alternative_indication: IND-HGBL-DH-1L-RCHOP
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Double-hit confirmed (MYC + BCL2 and/or BCL6)"
+        - condition: "Continuous-infusion DA-EPOCH-R logistically feasible"
+    if_true:
+      result: IND-HGBL-DH-1L-DAEPOCHR
+    if_false:
+      result: IND-HGBL-DH-1L-RCHOP
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  DA-EPOCH-R is the substantial preference. R-CHOP is fallback only
+  when DA-EPOCH-R logistically not available (no continuous-infusion
+  + dose-adjustment capability + central venous access + supportive
+  care infrastructure).

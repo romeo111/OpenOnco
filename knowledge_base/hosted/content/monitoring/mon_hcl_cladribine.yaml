@@ -1,0 +1,35 @@
+id: MON-HCL-CLADRIBINE
+linked_to_regimen: REG-CLADRIBINE-SINGLE
+
+phases:
+  - name: baseline
+    window: "Within 1 week before start"
+    tests: [TEST-CBC, TEST-CMP, TEST-LFT, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY, TEST-CECT-CAP]
+    visits: ["Treatment planning visit"]
+    checkpoints:
+      - "Confirm HCL: hairy cells on PB smear, BM trephine annexin-A1+, flow CD11c+CD25+CD103+CD123+"
+      - "Document BRAF V600E status (informational; required for second-line targeted therapy if relapse)"
+      - "Treatment indication confirmed (significant cytopenia or symptomatic splenomegaly)"
+
+  - name: post_treatment_immediate
+    window: "Weeks 2-4 post-cladribine"
+    tests: [TEST-CBC]
+    visits: ["Clinical assessment + lab; expect deepening cytopenia first 1-2 weeks"]
+    checkpoints: ["Febrile neutropenia management; transfusion support as needed"]
+
+  - name: response_assessment
+    window: "Month 4-6 post-cladribine"
+    tests: [TEST-CBC, TEST-PERIPHERAL-SMEAR, TEST-BM-ASPIRATE, TEST-BM-TREPHINE, TEST-FLOW-CYTOMETRY]
+    visits: ["Restaging visit"]
+    checkpoints: ["CR / PR / persistent disease; if persistent — repeat cladribine course or rituximab consolidation"]
+
+  - name: follow_up
+    window: "Every 6 months × 5 years, then annually"
+    tests: [TEST-CBC, TEST-CMP]
+    visits: ["Clinical + labs"]
+    checkpoints:
+      - "Surveillance for relapse (median PFS >10 years; relapse can occur)"
+      - "PJP + HSV prophylaxis continuing ≥1 year"
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"

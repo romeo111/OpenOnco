@@ -1,0 +1,28 @@
+id: REG-ZANUBRUTINIB-WM
+name: "Zanubrutinib monotherapy (continuous)"
+name_ua: "Занубрутиніб монотерапія (безперервно)"
+alternate_names: ["Zanu mono", "ASPEN-style"]
+
+components:
+  - {drug_id: DRUG-ZANUBRUTINIB, dose: "160 mg PO BID OR 320 mg PO once daily", schedule: "Continuous until progression or intolerance", route: PO}
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-CLL-BTKI  # reuse — same surveillance pattern
+
+dose_adjustments:
+  - {condition: "Strong CYP3A4 inhibitor", modification: "Hold or reduce dose"}
+  - {condition: "Severe hepatic impairment", modification: "Avoid"}
+
+ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Zanubrutinib NOT НСЗУ-reimbursed; ibrutinib substitute (also BTKi, more cardiac toxicity but reimbursed)"}
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  ASPEN trial demonstrated superior hematologic + safety profile vs
+  ibrutinib in MYD88-mutated WM. Preferred BTKi for WM 1L. CXCR4
+  WHIM-mutated subset has reduced depth of response — consider chemo
+  combination.

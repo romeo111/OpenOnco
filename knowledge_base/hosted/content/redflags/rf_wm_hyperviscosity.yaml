@@ -1,0 +1,27 @@
+id: RF-WM-HYPERVISCOSITY
+definition: "Waldenström with symptomatic hyperviscosity syndrome (serum viscosity >4 cp typical, or symptomatic at any level): blurred vision, headache, retinal hemorrhage, mucosal bleeding, neurologic dysfunction"
+definition_ua: "Вальденстрем із симптомним hyperviscosity syndrome (в'язкість сироватки >4 cp, або симптомний при будь-якому рівні): затуманене зір, головний біль, ретинальні крововиливи, кровотеча зі слизових, неврологічна дисфункція"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "hyperviscosity_symptomatic"
+      value: true
+    - finding: "serum_viscosity_above_4cp"
+      value: true
+    - finding: "retinal_hemorrhage"
+      value: true
+
+clinical_direction: hold
+
+relevant_diseases: [DIS-WM]
+shifts_algorithm: []
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Hyperviscosity is medical emergency requiring plasmapheresis BEFORE
+  any cytotoxic therapy (rituximab can cause IgM "flare" worsening
+  hyperviscosity). Direction "hold" — does NOT shift regimen, but
+  imposes plasmapheresis prerequisite. Rituximab held until IgM
+  reduced.

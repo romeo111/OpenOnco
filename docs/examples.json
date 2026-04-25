@@ -896,5 +896,227 @@
         "age_max_65": false
       }
     }
+  },
+  {
+    "case_id": "smzl-hcv-positive",
+    "label": "Splenic MZL · HCV-positive (DAA antiviral)",
+    "file": "patient_smzl_hcv_positive.json",
+    "json": {
+      "patient_id": "SMZL-HCV-001",
+      "comment": "SMZL with HCV-positive status, compensated liver. Engine should select DAA antiviral (HCV-positive track) as default.",
+      "disease": {
+        "icd_o_3_morphology": "9689/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-HCV-RNA": "positive",
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 64,
+        "sex": "male",
+        "ecog": 1,
+        "decompensated_cirrhosis": false
+      },
+      "findings": {
+        "HCV RNA positive": true,
+        "Compensated liver function": true
+      }
+    }
+  },
+  {
+    "case_id": "smzl-hcv-negative",
+    "label": "Splenic MZL · HCV-negative (Rituximab mono)",
+    "file": "patient_smzl_hcv_negative.json",
+    "json": {
+      "patient_id": "SMZL-HCVNEG-001",
+      "comment": "SMZL HCV-negative. Engine should select rituximab monotherapy as default.",
+      "disease": {
+        "icd_o_3_morphology": "9689/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 71,
+        "sex": "female",
+        "ecog": 1
+      },
+      "findings": {
+        "HCV RNA positive": false,
+        "HCV RNA negative OR no antiviral candidate": true,
+        "CD20+ histology confirmed": true
+      }
+    }
+  },
+  {
+    "case_id": "nmzl-low-burden",
+    "label": "Nodal MZL · Low Burden (W&W)",
+    "file": "patient_nmzl_low_burden.json",
+    "json": {
+      "patient_id": "NMZL-LOWBURDEN-001",
+      "comment": "Nodal MZL, asymptomatic, no GELF criteria. Engine should select W&W (surveillance).",
+      "disease": {
+        "id": "DIS-NODAL-MZL"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 62,
+        "sex": "male",
+        "ecog": 0
+      },
+      "findings": {
+        "fl_gelf_high_burden": false,
+        "dominant_nodal_mass_cm": 2.5,
+        "b_symptoms_present": false,
+        "ldh_above_uln": false,
+        "rapid_progression": false,
+        "fl_transformation_suspect": false
+      }
+    }
+  },
+  {
+    "case_id": "burkitt-low-risk",
+    "label": "Burkitt · Low/Intermediate Risk (DA-EPOCH-R)",
+    "file": "patient_burkitt_low_risk.json",
+    "json": {
+      "patient_id": "BURKITT-LOW-001",
+      "comment": "Burkitt without high-risk features (no CNS, LDH within bounds, no leukemic phase). Engine should select DA-EPOCH-R standard.",
+      "disease": {
+        "icd_o_3_morphology": "9687/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-MYC-REARRANGEMENT": "positive"
+      },
+      "demographics": {
+        "age": 42,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "burkitt_high_risk": false,
+        "cns_involvement": false,
+        "ldh_above_3x_uln": false,
+        "leukemic_phase": false,
+        "bulky_abdominal": false,
+        "Standard / intermediate risk": true,
+        "ECOG ≤ 3": true,
+        "lvef_percent": 60
+      }
+    }
+  },
+  {
+    "case_id": "burkitt-high-risk",
+    "label": "Burkitt · High Risk (CODOX-M / IVAC)",
+    "file": "patient_burkitt_high_risk.json",
+    "json": {
+      "patient_id": "BURKITT-HIGH-001",
+      "comment": "Burkitt with CNS involvement + LDH >3× ULN + bulky abdomen. RF-BURKITT-HIGH-RISK fired. Engine should select CODOX-M/IVAC aggressive.",
+      "disease": {
+        "icd_o_3_morphology": "9687/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-MYC-REARRANGEMENT": "positive"
+      },
+      "demographics": {
+        "age": 38,
+        "sex": "male",
+        "ecog": 2
+      },
+      "findings": {
+        "burkitt_high_risk": true,
+        "cns_involvement": true,
+        "ldh_above_3x_uln": true,
+        "leukemic_phase": false,
+        "bulky_abdominal": true,
+        "lvef_percent": 65
+      }
+    }
+  },
+  {
+    "case_id": "hcl-typical",
+    "label": "Hairy Cell Leukemia (Cladribine 7-day)",
+    "file": "patient_hcl_typical.json",
+    "json": {
+      "patient_id": "HCL-TYPICAL-001",
+      "comment": "Typical HCL with cytopenia + splenomegaly. Engine should select cladribine.",
+      "disease": {
+        "icd_o_3_morphology": "9940/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-BRAF-V600E": "positive"
+      },
+      "demographics": {
+        "age": 58,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "Treatment indication present (cytopenia or symptomatic splenomegaly)": true,
+        "No active uncontrolled infection": true
+      }
+    }
+  },
+  {
+    "case_id": "wm-myd88-positive",
+    "label": "Waldenström · MYD88-positive (Zanubrutinib)",
+    "file": "patient_wm_myd88_positive.json",
+    "json": {
+      "patient_id": "WM-MYD88-001",
+      "comment": "WM MYD88 L265P+ with iwWM treatment indication (anemia + IgM neuropathy). Engine should select zanubrutinib.",
+      "disease": {
+        "icd_o_3_morphology": "9671/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-MYD88-L265P": "positive"
+      },
+      "demographics": {
+        "age": 68,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "MYD88 L265P positive": true,
+        "iwWM treatment indication present": true,
+        "hyperviscosity_symptomatic": false
+      }
+    }
+  },
+  {
+    "case_id": "hgbl-double-hit",
+    "label": "HGBL · Double-Hit (DA-EPOCH-R)",
+    "file": "patient_hgbl_double_hit.json",
+    "json": {
+      "patient_id": "HGBL-DH-001",
+      "comment": "HGBL-DH (MYC + BCL2 break-apart). Engine should select DA-EPOCH-R.",
+      "disease": {
+        "id": "DIS-HGBL-DH"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive",
+        "BIO-DOUBLE-HIT": "positive"
+      },
+      "demographics": {
+        "age": 55,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "Double-hit confirmed (MYC + BCL2 and/or BCL6)": true,
+        "Continuous-infusion DA-EPOCH-R logistically feasible": true,
+        "lvef_percent": 60
+      }
+    }
   }
 ]

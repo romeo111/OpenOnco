@@ -1,0 +1,30 @@
+id: REG-DRC-WM
+name: "Dexamethasone + Rituximab + Cyclophosphamide (DRC) × 6 cycles"
+name_ua: "Дексаметазон + Ритуксимаб + Циклофосфамід (DRC) × 6 циклів"
+alternate_names: ["DRC", "Dex-R-Cyclo"]
+
+components:
+  - {drug_id: DRUG-DEXAMETHASONE, dose: "20 mg IV day 1", schedule: "IV day 1 each cycle", route: IV}
+  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1", schedule: "IV day 1 each cycle", route: IV}
+  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "100 mg/m² PO BID days 1-5", schedule: "PO twice daily, days 1-5 each cycle", route: PO}
+
+cycle_length_days: 21
+total_cycles: "6"
+toxicity_profile: low-moderate
+
+premedication: ["Standard rituximab premedications first dose"]
+mandatory_supportive_care: [SUP-PJP-PROPHYLAXIS, SUP-HBV-PROPHYLAXIS]
+monitoring_schedule_id: MON-RITUXIMAB-MONO
+
+dose_adjustments:
+  - {condition: "Symptomatic hyperviscosity (RF-WM-HYPERVISCOSITY)", modification: "Plasmapheresis first; HOLD rituximab until IgM reduced (rituximab causes IgM flare)"}
+  - {condition: "ANC <1500", modification: "Delay cycle"}
+
+ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Time-limited (6 months) chemoimmuno for WM — preferred when BTKi
+  not accessible OR for CXCR4-WHIM-mutated WM (BTKi response weaker).
+  IgM flare with rituximab can worsen hyperviscosity — plasmapheresis
+  first if symptomatic.

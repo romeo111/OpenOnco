@@ -1,0 +1,63 @@
+id: IND-HGBL-DH-1L-RCHOP
+plan_track: aggressive  # paradoxically aggressive — when DA-EPOCH-R not accessible, R-CHOP is the alternative
+# Note: "aggressive" here = "alternative" track; clinical rec is opposite
+# (DA-EPOCH-R preferred). The plan_track value reflects engine slot, not
+# clinical preference order.
+
+applicable_to:
+  disease_id: DIS-HGBL-DH
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD20-IHC, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-R-CHOP  # reuse from DLBCL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~70%"
+  complete_response: "~50%"
+  progression_free_survival: "Median PFS ~1-2 years"
+  overall_survival_5y: "~30%"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-PET-CT
+  - TEST-HBV-SEROLOGY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  R-CHOP fallback for HGBL-DH when DA-EPOCH-R logistics not feasible
+  (no continuous-infusion capability, severely limited supportive care).
+  Outcomes substantially worse than DA-EPOCH-R; consider as bridge to
+  CAR-T at progression.
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies: []
+
+do_not_do:
+  - "НЕ призначати R-CHOP if DA-EPOCH-R is accessible — outcome difference clinically significant."
+  - "НЕ пропускати HBV скринінг + prophylaxis."
+  - "НЕ забути про CAR-T pathway якщо relapse — раннє направлення на CAR-T center."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB.

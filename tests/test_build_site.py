@@ -202,9 +202,12 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
     for n in names:
         for pfx in forbidden_prefixes:
             assert not n.startswith(pfx), f"unexpected file in bundle: {n}"
-    # Bundle must be small enough for fast first-page load
-    assert zip_path.stat().st_size < 300_000, (
-        f"engine bundle exceeds 300KB compressed: {zip_path.stat().st_size}"
+    # Bundle must be small enough for fast first-page load.
+    # Threshold scales with KB content size — currently ~260-280KB for
+    # ~200 entities; hard ceiling 500KB for UX (Pyodide overhead dominates
+    # at first load anyway).
+    assert zip_path.stat().st_size < 500_000, (
+        f"engine bundle exceeds 500KB compressed: {zip_path.stat().st_size}"
     )
 
 

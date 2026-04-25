@@ -1,0 +1,76 @@
+id: IND-HGBL-DH-1L-DAEPOCHR
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HGBL-DH
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD20-IHC, required: true, value_constraint: "positive"}
+    - {biomarker_id: BIO-DOUBLE-HIT, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-DA-EPOCH-R  # reuse from Burkitt
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~85%"
+  complete_response: "~60-70%"
+  progression_free_survival: "Median PFS ~3-5 years"
+  overall_survival_5y: "~50-65% (substantially better than R-CHOP ~30%)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  DA-EPOCH-R preferred 1L for HGBL-DH/TH per NCCN — substantial
+  improvement over R-CHOP (5y OS ~50-65% vs ~30%). Continuous-infusion
+  delivery + dose-adjustment enables intensified anthracycline +
+  etoposide exposure. CNS prophylaxis (HD-MTX) often added for
+  high-CNS-IPI or CNS-positive subset.
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies:
+  - topic: "DA-EPOCH-R vs R-CHOP for HGBL-DH"
+    positions:
+      - position: "DA-EPOCH-R preferred — substantial PFS/OS improvement over R-CHOP"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "R-CHOP acceptable when DA-EPOCH-R logistics not feasible"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "DA-EPOCH-R when available; R-CHOP fallback"
+
+do_not_do:
+  - "НЕ призначати R-CHOP як 1L при відомому double-hit статусі — substantial OS difference."
+  - "НЕ пропускати FISH break-apart MYC + BCL2 + BCL6 на ВСІХ newly-diagnosed DLBCL — інакше double-hit пропускається."
+  - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
+  - "НЕ призначати без baseline LVEF ≥50%."
+  - "НЕ пропускати CNS-IPI calculation + prophylaxis if high-risk."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. Reuses REG-DA-EPOCH-R from Burkitt.

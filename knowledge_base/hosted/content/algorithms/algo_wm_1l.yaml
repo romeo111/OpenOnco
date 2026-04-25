@@ -1,0 +1,32 @@
+id: ALGO-WM-1L
+applicable_to_disease: DIS-WM
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative for first-line WM. MYD88-mutated → BTKi
+  (zanubrutinib) preferred; chemoimmuno (DRC) for MYD88-WT or
+  CXCR4-WHIM or BTKi-inaccessible.
+
+output_indications:
+  - IND-WM-1L-BTKI
+  - IND-WM-1L-DRC
+
+default_indication: IND-WM-1L-BTKI
+alternative_indication: IND-WM-1L-DRC
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "MYD88 L265P positive"
+        - condition: "iwWM treatment indication present"
+    if_true:
+      result: IND-WM-1L-BTKI
+    if_false:
+      result: IND-WM-1L-DRC
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  MYD88 status is decisive. WM with hyperviscosity needs plasmapheresis
+  prerequisite (RF-WM-HYPERVISCOSITY direction "hold" → does not shift
+  regimen but adds prerequisite step).
