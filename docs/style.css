@@ -58,6 +58,63 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   border-bottom: 2px solid var(--green-100); padding-bottom: 1px;
 }
 
+/* New top-bar layout: brand · nav · right-cluster (lang switch + try CTA) */
+.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px; gap: 4px; }
+.top-nav a {
+  color: var(--green-100); padding: 4px 10px; text-decoration: none;
+  font-size: 13px; border-radius: 4px;
+}
+.top-nav a:hover { color: white; background: rgba(255,255,255,.05); }
+.top-nav a.active {
+  color: white; background: rgba(255,255,255,.08);
+}
+
+.top-right { display: flex; align-items: center; gap: 14px; }
+
+/* Language switch — compact UA / EN toggle */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 0;
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px;
+  overflow: hidden;
+}
+.lang-switch .lang-current {
+  background: rgba(255,255,255,.15); color: white;
+  padding: 4px 9px; font-weight: 600;
+}
+.lang-switch .lang-other {
+  color: var(--green-100); padding: 4px 9px;
+  text-decoration: none; transition: background .12s;
+}
+.lang-switch .lang-other:hover { background: rgba(255,255,255,.12); color: white; }
+
+/* CTA "Try it" button — distinct from nav (action, not reading) */
+.btn-cta-try {
+  background: linear-gradient(135deg, var(--green-500) 0%, var(--teal) 100%);
+  color: white; padding: 8px 16px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; text-decoration: none;
+  font-family: var(--font-sans); border: none;
+  box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 1px 4px rgba(0,0,0,.15);
+  transition: transform .12s, box-shadow .12s, filter .12s;
+  white-space: nowrap;
+}
+.btn-cta-try:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(255,255,255,.2) inset, 0 3px 8px rgba(0,0,0,.2);
+  filter: brightness(1.05);
+}
+.btn-cta-try[aria-current="page"] {
+  outline: 2px solid white; outline-offset: 1px;
+}
+
+@media (max-width: 700px) {
+  .top-bar { flex-wrap: wrap; gap: 8px; }
+  .top-nav { order: 3; flex-basis: 100%; margin: 0; justify-content: center; }
+  .top-right { gap: 8px; }
+  .lang-switch { font-size: 10px; }
+  .btn-cta-try { padding: 6px 12px; font-size: 12px; }
+}
+
 /* Hero */
 .hero {
   background:
@@ -375,6 +432,56 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .gap-card p { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
 .gap-card.gap-hard { border-left-color: var(--red); }
 .gap-card.gap-hard .gap-tag { color: var(--red); }
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.spec-card {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 18px 20px;
+  display: flex; flex-direction: column;
+  transition: border-color .15s, box-shadow .15s;
+}
+.spec-card:hover {
+  border-color: var(--green-600);
+  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.06);
+}
+.spec-card-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.spec-tag {
+  display: inline-block; color: white;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px; font-weight: 600;
+}
+.spec-id {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--gray-500);
+}
+.spec-card h3 {
+  font-family: var(--font-display); font-size: 17px;
+  color: var(--green-900); margin-bottom: 8px; line-height: 1.3;
+}
+.spec-card p {
+  font-size: 13px; color: var(--gray-700);
+  line-height: 1.5; flex: 1; margin-bottom: 12px;
+}
+.spec-card-foot {
+  display: flex; gap: 14px; align-items: center;
+  font-size: 12.5px; padding-top: 10px;
+  border-top: 1px solid var(--gray-100);
+}
+.spec-card-foot a {
+  color: var(--green-700); text-decoration: none; font-weight: 600;
+}
+.spec-card-foot a:hover { text-decoration: underline; }
+.spec-card-foot .spec-raw {
+  color: var(--gray-500); font-weight: 400; font-family: var(--font-mono);
+  font-size: 11px;
+}
 .q-list {
   background: var(--green-50); border: 1px solid var(--green-100);
   border-radius: 8px; padding: 14px 18px; margin: 12px 0;

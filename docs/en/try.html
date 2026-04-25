@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Try it</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/en/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/en/">Home</a>
+    
+    <a href="/en/gallery.html">Examples</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current">EN</span>
+      <a class="lang-other" href="/try.html">UA</a>
+    </div>
+    <a href="/en/try.html" class="btn-cta-try" aria-current="page">Try it →</a>
+  </div>
+</header>
+
+<main class="try-page">
+  <h1>Спробувати з віртуальним пацієнтом</h1>
+  <p class="lead">
+    Введи (або підвантаж із прикладу) JSON-профіль синтетичного пацієнта і отримай повний
+    Plan. <strong>Жодних реальних пацієнтських даних</strong> — це лише runner для перевірки
+    функціоналу. Рушій (Python) запускається у твоєму браузері через Pyodide.
+  </p>
+
+  <div class="try-grid">
+    <section class="try-input">
+      <label>
+        Завантажити приклад
+        <select id="exampleSelect">
+          <option value="">— оберіть —</option>
+        </select>
+      </label>
+
+      <label>
+        Patient profile (JSON)
+        <textarea id="patientJson" rows="22" spellcheck="false" placeholder='{"patient_id": "...", "disease": {"icd_o_3_morphology": "9699/3"}, ...}'></textarea>
+      </label>
+
+      <div class="try-actions">
+        <button id="runBtn" class="btn btn-primary">Згенерувати план</button>
+        <button id="formatBtn" class="btn btn-secondary">Format JSON</button>
+      </div>
+
+      <div id="status" class="status"></div>
+      <div id="error" class="error" hidden></div>
+    </section>
+
+    <section class="try-output">
+      <div id="placeholder" class="placeholder">
+        <div class="placeholder-icon">▶</div>
+        <p>Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с.</p>
+      </div>
+      <iframe id="resultFrame" hidden></iframe>
+    </section>
+  </div>
+
+  <footer class="page-foot">
+    Якщо щось не працює — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
+    Pyodide v0.26.4 · engine bundle <code>openonco-engine.zip</code>.
+  </footer>
+</main>
+
+<script type="module">
+import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs";
+
+const status = document.getElementById('status');
+const errorBox = document.getElementById('error');
+const runBtn = document.getElementById('runBtn');
+const formatBtn = document.getElementById('formatBtn');
+const exampleSelect = document.getElementById('exampleSelect');
+const textarea = document.getElementById('patientJson');
+const placeholder = document.getElementById('placeholder');
+const resultFrame = document.getElementById('resultFrame');
+
+let pyodide = null;
+let enginReady = false;
+
+function setStatus(msg, kind = 'info') {
+  status.textContent = msg;
+  status.dataset.kind = kind;
+}
+function setError(msg) {
+  if (msg) {
+    errorBox.hidden = false;
+    errorBox.textContent = msg;
+  } else {
+    errorBox.hidden = true;
+    errorBox.textContent = '';
+  }
+}
+
+// Load examples list
+async function loadExamples() {
+  const resp = await fetch('/examples.json');
+  const examples = await resp.json();
+  exampleSelect.innerHTML = '<option value="">— оберіть —</option>';
+  examples.forEach((ex, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    exampleSelect.appendChild(opt);
+  });
+  exampleSelect.addEventListener('change', () => {
+    const i = exampleSelect.value;
+    if (i === '') return;
+    textarea.value = JSON.stringify(examples[i].json, null, 2);
+    setError(null);
+  });
+  // Default to first example
+  if (examples.length > 0) {
+    exampleSelect.value = '0';
+    textarea.value = JSON.stringify(examples[0].json, null, 2);
+  }
+}
+
+async function ensureEngine() {
+  if (enginReady) return pyodide;
+  setStatus('Завантажую Pyodide…');
+  pyodide = await loadPyodide({indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/"});
+  setStatus('Встановлюю pydantic + pyyaml…');
+  await pyodide.loadPackage(['micropip']);
+  await pyodide.runPythonAsync(`
+import micropip
+await micropip.install(['pydantic', 'pyyaml'])
+`);
+  setStatus('Завантажую двигун OpenOnco…');
+  const resp = await fetch('/openonco-engine.zip');
+  const buf = await resp.arrayBuffer();
+  pyodide.unpackArchive(buf, 'zip');
+  // Quick smoke test
+  await pyodide.runPythonAsync(`
+from pathlib import Path
+from knowledge_base.validation.loader import load_content
+_r = load_content(Path('knowledge_base/hosted/content'))
+assert _r.ok, f'KB validation failed: {_r.schema_errors[:3]}'
+`);
+  enginReady = true;
+  setStatus('Двигун готовий ✓', 'ok');
+  return pyodide;
+}
+
+async function runEngine() {
+  setError(null);
+  // 1. Validate JSON
+  let patient;
+  try {
+    patient = JSON.parse(textarea.value);
+  } catch (e) {
+    setError('Невалідний JSON: ' + e.message);
+    return;
+  }
+  // 2. Ensure Pyodide loaded
+  try {
+    await ensureEngine();
+  } catch (e) {
+    setError('Pyodide не завантажився: ' + (e.message || e));
+    setStatus('');
+    return;
+  }
+  // 3. Run engine
+  setStatus('Запускаю двигун…');
+  try {
+    pyodide.globals.set('_patient_json', JSON.stringify(patient));
+    const html = await pyodide.runPythonAsync(`
+import json
+from pathlib import Path
+from knowledge_base.engine import (
+    generate_plan, generate_diagnostic_brief, is_diagnostic_profile,
+    orchestrate_mdt, render_plan_html, render_diagnostic_brief_html,
+)
+
+patient = json.loads(_patient_json)
+KB = Path('knowledge_base/hosted/content')
+if is_diagnostic_profile(patient):
+    result = generate_diagnostic_brief(patient, kb_root=KB)
+    mdt = orchestrate_mdt(patient, result, kb_root=KB)
+    html = render_diagnostic_brief_html(result, mdt=mdt)
+else:
+    result = generate_plan(patient, kb_root=KB)
+    mdt = orchestrate_mdt(patient, result, kb_root=KB)
+    html = render_plan_html(result, mdt=mdt)
+html
+`);
+    placeholder.hidden = true;
+    resultFrame.hidden = false;
+    resultFrame.srcdoc = html;
+    setStatus('Готово ✓', 'ok');
+  } catch (e) {
+    setError('Двигун повернув помилку:\n' + (e.message || e));
+    setStatus('');
+  }
+}
+
+formatBtn.addEventListener('click', () => {
+  setError(null);
+  try {
+    const obj = JSON.parse(textarea.value);
+    textarea.value = JSON.stringify(obj, null, 2);
+  } catch (e) {
+    setError('Невалідний JSON: ' + e.message);
+  }
+});
+
+runBtn.addEventListener('click', runEngine);
+
+loadExamples().catch(e => setError('examples.json не завантажився: ' + e));
+</script>
+</body>
+</html>

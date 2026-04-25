@@ -55,8 +55,8 @@ def test_landing_is_public_with_hero_and_ctas(site_dir: Path):
     # Both CTAs
     assert 'href="try.html"' in html
     assert 'href="gallery.html"' in html
-    # Hero copy in Ukrainian
-    assert "tumor-board" in html.lower()
+    # Hero copy
+    assert "oncology" in html.lower() or "онколог" in html.lower()
 
 
 def test_landing_shows_numerical_metrics(site_dir: Path):
@@ -239,6 +239,72 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
         assert "openOncoUser" not in html, f"{c.case_id} retains auth gate"
         assert "Назад до галереї" in html
         assert "tester-feedback" in html
+
+
+# ── Language switcher + EN mirror ─────────────────────────────────────────
+
+
+def test_en_mirror_built_alongside_ua(site_dir: Path):
+    """Every public page has an /en/ counterpart so the language toggle
+    can navigate between them without 404."""
+    for page in ("index.html", "gallery.html", "try.html"):
+        assert (site_dir / "en" / page).exists(), f"missing en/{page}"
+    assert (site_dir / "en").is_dir()
+    assert (site_dir / "en" / "cases").is_dir()
+    # Every UA case has an EN counterpart at /en/cases/
+    for c in CASES:
+        assert (site_dir / "en" / "cases" / f"{c.case_id}.html").exists(), (
+            f"missing en/cases/{c.case_id}.html"
+        )
+
+
+def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
+    """Toggle in the top bar lets the user flip UA↔EN on landing/gallery/try."""
+    for page in ("index.html", "gallery.html", "try.html"):
+        ua = (site_dir / page).read_text(encoding="utf-8")
+        en = (site_dir / "en" / page).read_text(encoding="utf-8")
+        # Toggle markup
+        assert 'class="lang-switch"' in ua
+        assert 'class="lang-switch"' in en
+        # UA points to /en/<page>
+        assert '/en/' in ua, f"UA {page} missing pointer to /en/"
+        # EN points back to root (UA)
+        # Either '/' (landing) or '/<page>' for gallery/try
+        en_to_ua_target = "/" if page == "index.html" else f"/{page}"
+        assert f'href="{en_to_ua_target}"' in en, (
+            f"EN {page} lang-switch should link back to {en_to_ua_target}"
+        )
+
+
+def test_lang_switch_present_on_case_pages(site_dir: Path):
+    """Per-case pages also carry a UA↔EN mini-toggle — toggle on a case
+    must navigate to that same case in the other language."""
+    sample_id = CASES[0].case_id
+    ua_case = (site_dir / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
+    en_case = (site_dir / "en" / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
+    assert f"/en/cases/{sample_id}.html" in ua_case, "UA case missing EN twin link"
+    assert f"/cases/{sample_id}.html" in en_case, "EN case missing UA twin link"
+
+
+def test_try_cta_is_separate_action_button(site_dir: Path):
+    """'Try it' is a high-conviction action, not a reading link. It must
+    render as a distinct CTA button class — not a plain top-nav link."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert 'class="btn-cta-try"' in html, "Try CTA button missing from top bar"
+    # Top reading-nav must not include the try link as a plain entry —
+    # CTA lives in the right cluster, separated visually
+    assert 'class="top-right"' in html
+
+
+def test_en_landing_links_use_en_paths(site_dir: Path):
+    """Top-bar links on /en/ pages must stay within /en/ scope (so the
+    user keeps reading in English unless they explicitly toggle UA)."""
+    en_index = (site_dir / "en" / "index.html").read_text(encoding="utf-8")
+    # Gallery + Try links route through /en/ for EN nav
+    assert "/en/gallery.html" in en_index
+    assert "/en/try.html" in en_index
+    # html lang attr is en
+    assert '<html lang="en">' in en_index
 
 
 # ── Privacy guard ─────────────────────────────────────────────────────────

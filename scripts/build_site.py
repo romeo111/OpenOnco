@@ -401,25 +401,89 @@ def bundle_examples(output_dir: Path) -> dict:
 # ── Landing page (index.html) ─────────────────────────────────────────────
 
 
-def _render_top_bar(active: str = "") -> str:
+_NAV_LABELS = {
+    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →"},
+    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →"},
+}
+
+
+def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
+    """Build the URL the language-toggle should point to.
+
+    page_kind: 'home' | 'gallery' | 'try' | 'case'
+    target_lang: UA-side render asks where the EN mirror lives;
+                 EN-side render asks where the UA mirror lives.
+
+    Uses root-relative absolute paths so any nesting depth resolves
+    correctly on openonco.info."""
+    en_prefix = "/en"
+    if target_lang == "uk":
+        # UA page → switcher points to EN mirror
+        if page_kind == "home":      return f"{en_prefix}/"
+        if page_kind == "gallery":   return f"{en_prefix}/gallery.html"
+        if page_kind == "try":       return f"{en_prefix}/try.html"
+        if page_kind == "case":      return f"{en_prefix}/cases/{case_id}.html"
+    else:
+        # EN page → switcher points to UA root
+        if page_kind == "home":      return "/"
+        if page_kind == "gallery":   return "/gallery.html"
+        if page_kind == "try":       return "/try.html"
+        if page_kind == "case":      return f"/cases/{case_id}.html"
+    return "/"
+
+
+def _render_top_bar(active: str = "", target_lang: str = "uk",
+                    lang_switch_href: str = "/en/") -> str:
+    """Top navigation bar with:
+    - brand on the left → links to home
+    - reading-only nav (Home, Examples, optional Capabilities/Limitations
+      on UA, GitHub) in the middle
+    - language switcher (UA / EN toggle) on the right
+    - prominent CTA "Try it" button on the far right (action, not reading)
+
+    Per user direction: 'Спробувати' is an action and gets a separate CTA
+    button styled distinctly from the nav links."""
     def cls(name: str) -> str:
         return ' class="active"' if active == name else ""
+
+    labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["uk"])
+    home_path = "/" if target_lang == "uk" else "/en/"
+    gallery_path = "/gallery.html" if target_lang == "uk" else "/en/gallery.html"
+    try_path = "/try.html" if target_lang == "uk" else "/en/try.html"
+
+    # Capabilities/Limitations/Specs only present in UA build for now; skip in EN
+    extra_links = ""
+    if target_lang == "uk":
+        extra_links = (
+            f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
+            f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
+            f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
+        )
+
+    other_lang = "EN" if target_lang == "uk" else "UA"
+    cur_lang = "UA" if target_lang == "uk" else "EN"
+
     return f"""<header class="top-bar">
   <div class="brand-line">
-    <a href="index.html" class="brand-mini">OpenOnco</a>
+    <a href="{home_path}" class="brand-mini">OpenOnco</a>
   </div>
-  <nav class="top-actions">
-    <a href="index.html"{cls("home")}>Головна</a>
-    <a href="capabilities.html"{cls("capabilities")}>Можливості</a>
-    <a href="limitations.html"{cls("limitations")}>Обмеження</a>
-    <a href="try.html"{cls("try")}>Спробувати</a>
-    <a href="gallery.html"{cls("gallery")}>Приклади</a>
+  <nav class="top-nav">
+    <a href="{home_path}"{cls("home")}>{labels['home']}</a>
+    {extra_links}
+    <a href="{gallery_path}"{cls("gallery")}>{labels['gallery']}</a>
     <a href="https://github.com/{GH_REPO}" target="_blank" rel="noopener">GitHub</a>
   </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current">{cur_lang}</span>
+      <a class="lang-other" href="{lang_switch_href}">{other_lang}</a>
+    </div>
+    <a href="{try_path}" class="btn-cta-try" {'aria-current="page"' if active == "try" else ""}>{labels['try_cta']}</a>
+  </div>
 </header>"""
 
 
-def render_landing(stats) -> str:
+def render_landing(stats, *, target_lang: str = "uk") -> str:
     diseases_full = sum(1 for d in stats.diseases if d.coverage_status in {"stub_full_chain", "reviewed"})
     diseases_partial = sum(1 for d in stats.diseases if d.coverage_status == "partial")
 
@@ -440,7 +504,7 @@ def render_landing(stats) -> str:
     )
 
     return f"""<!DOCTYPE html>
-<html lang="uk">
+<html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -449,7 +513,7 @@ def render_landing(stats) -> str:
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
-{_render_top_bar(active="home")}
+{_render_top_bar(active="home", target_lang=target_lang, lang_switch_href=_lang_switch_href("home", target_lang))}
 
 <main>
   <section class="hero">
@@ -475,9 +539,6 @@ def render_landing(stats) -> str:
           Жоден лікар фізично не може опрацювати такий обсяг для кожного пацієнта —
           engine реферує його за вас.
         </div>
-      </div>
-      <div class="hero-meta">
-        Жодних реальних пацієнтських даних на цьому деплої · CHARTER §9.3 · FDA non-device CDS positioning per CHARTER §15
       </div>
     </div>
   </section>
@@ -646,11 +707,14 @@ def render_landing(stats) -> str:
 # ── Gallery page ──────────────────────────────────────────────────────────
 
 
-def render_gallery(stats_widget_html: str) -> str:
+def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
     cards = []
+    # Cases live at /cases/<id>.html for UA and /en/cases/<id>.html for EN —
+    # use root-relative absolute paths so links work regardless of nesting.
+    case_path_prefix = "/cases/" if target_lang == "uk" else "/en/cases/"
     for c in CASES:
         cards.append(
-            f"""<a class="case-card" href="cases/{c.case_id}.html">
+            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html">
   <div class="case-badge {c.badge_class}">{c.badge}</div>
   <h3>{c.label_ua}</h3>
   <p>{c.summary_ua}</p>
@@ -660,16 +724,16 @@ def render_gallery(stats_widget_html: str) -> str:
     cards_html = "\n".join(cards)
 
     return f"""<!DOCTYPE html>
-<html lang="uk">
+<html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Sample cases</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="style.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>
 <body>
-{_render_top_bar(active="gallery")}
+{_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
   <h1>Готові приклади</h1>
@@ -707,18 +771,21 @@ def render_gallery(stats_widget_html: str) -> str:
 _PYODIDE_VERSION = "0.26.4"
 
 
-def render_try() -> str:
+def render_try(*, target_lang: str = "uk") -> str:
+    # Pyodide assets live at site root — root-relative paths work for both
+    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle +
+    # examples.json are single shared copies — no duplication.
     return f"""<!DOCTYPE html>
-<html lang="uk">
+<html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Спробувати</title>
+<title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="style.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>
 <body>
-{_render_top_bar(active="try")}
+{_render_top_bar(active="try", target_lang=target_lang, lang_switch_href=_lang_switch_href("try", target_lang))}
 
 <main class="try-page">
   <h1>Спробувати з віртуальним пацієнтом</h1>
@@ -797,7 +864,7 @@ function setError(msg) {{
 
 // Load examples list
 async function loadExamples() {{
-  const resp = await fetch('examples.json');
+  const resp = await fetch('/examples.json');
   const examples = await resp.json();
   exampleSelect.innerHTML = '<option value="">— оберіть —</option>';
   examples.forEach((ex, i) => {{
@@ -830,7 +897,7 @@ import micropip
 await micropip.install(['pydantic', 'pyyaml'])
 `);
   setStatus('Завантажую двигун OpenOnco…');
-  const resp = await fetch('openonco-engine.zip');
+  const resp = await fetch('/openonco-engine.zip');
   const buf = await resp.arrayBuffer();
   pyodide.unpackArchive(buf, 'zip');
   // Quick smoke test
@@ -919,9 +986,11 @@ loadExamples().catch(e => setError('examples.json не завантажився:
 # ── Per-case page (back-link banner, no auth gate) ────────────────────────
 
 
-def _wrap_case_html(rendered_html: str, case: CaseEntry) -> str:
-    """Insert a thin sticky bar with back-link + per-case feedback into the
-    rendered Plan/Brief HTML. No auth gate — landing is fully public."""
+def _wrap_case_html(rendered_html: str, case: CaseEntry,
+                    *, target_lang: str = "uk") -> str:
+    """Insert a thin sticky bar with back-link + per-case feedback + lang
+    switcher into the rendered Plan/Brief HTML. No auth gate — landing
+    is fully public."""
     bar_style = (
         '<style>'
         '.case-bar{position:sticky;top:0;z-index:99;background:#0a2e1a;'
@@ -929,18 +998,28 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry) -> str:
         'align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}'
         '.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}'
         '.case-bar a:hover{text-decoration:underline;}'
+        '.case-bar .lang-mini{font-family:JetBrains Mono,monospace;font-size:10px;'
+        'background:rgba(255,255,255,.1);padding:3px 7px;border-radius:3px;'
+        'margin-left:14px;letter-spacing:.5px;}'
         '@media print{.case-bar{display:none;}}'
         '</style>\n'
     )
+
+    back_label = "← Back to gallery" if target_lang == "en" else "← Назад до галереї"
+    feedback_label = "Feedback on this case" if target_lang == "en" else "Feedback на цей кейс"
+    gallery_href = "/en/gallery.html" if target_lang == "en" else "/gallery.html"
+    other_lang_label = "EN" if target_lang == "uk" else "UA"
+    other_lang_href = _lang_switch_href("case", target_lang, case.case_id)
 
     bar_html = (
         '<div class="case-bar no-print">'
         f'<div>OpenOnco · <strong>{case.label_ua}</strong></div>'
         '<div>'
-        '<a href="../gallery.html">← Назад до галереї</a>'
+        f'<a href="{gallery_href}">{back_label}</a>'
         f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+'
         f'{case.case_id}&labels=tester-feedback" target="_blank" rel="noopener">'
-        'Feedback на цей кейс</a>'
+        f'{feedback_label}</a>'
+        f'<a class="lang-mini" href="{other_lang_href}">{other_lang_label}</a>'
         '</div>'
         '</div>\n'
     )
@@ -1011,6 +1090,63 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .top-actions a:hover, .top-actions a.active { color: white; }
 .top-actions a.active {
   border-bottom: 2px solid var(--green-100); padding-bottom: 1px;
+}
+
+/* New top-bar layout: brand · nav · right-cluster (lang switch + try CTA) */
+.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px; gap: 4px; }
+.top-nav a {
+  color: var(--green-100); padding: 4px 10px; text-decoration: none;
+  font-size: 13px; border-radius: 4px;
+}
+.top-nav a:hover { color: white; background: rgba(255,255,255,.05); }
+.top-nav a.active {
+  color: white; background: rgba(255,255,255,.08);
+}
+
+.top-right { display: flex; align-items: center; gap: 14px; }
+
+/* Language switch — compact UA / EN toggle */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 0;
+  background: rgba(255,255,255,.08); border-radius: 4px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px;
+  overflow: hidden;
+}
+.lang-switch .lang-current {
+  background: rgba(255,255,255,.15); color: white;
+  padding: 4px 9px; font-weight: 600;
+}
+.lang-switch .lang-other {
+  color: var(--green-100); padding: 4px 9px;
+  text-decoration: none; transition: background .12s;
+}
+.lang-switch .lang-other:hover { background: rgba(255,255,255,.12); color: white; }
+
+/* CTA "Try it" button — distinct from nav (action, not reading) */
+.btn-cta-try {
+  background: linear-gradient(135deg, var(--green-500) 0%, var(--teal) 100%);
+  color: white; padding: 8px 16px; border-radius: 6px;
+  font-weight: 600; font-size: 13px; text-decoration: none;
+  font-family: var(--font-sans); border: none;
+  box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 1px 4px rgba(0,0,0,.15);
+  transition: transform .12s, box-shadow .12s, filter .12s;
+  white-space: nowrap;
+}
+.btn-cta-try:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 0 rgba(255,255,255,.2) inset, 0 3px 8px rgba(0,0,0,.2);
+  filter: brightness(1.05);
+}
+.btn-cta-try[aria-current="page"] {
+  outline: 2px solid white; outline-offset: 1px;
+}
+
+@media (max-width: 700px) {
+  .top-bar { flex-wrap: wrap; gap: 8px; }
+  .top-nav { order: 3; flex-basis: 100%; margin: 0; justify-content: center; }
+  .top-right { gap: 8px; }
+  .lang-switch { font-size: 10px; }
+  .btn-cta-try { padding: 6px 12px; font-size: 12px; }
 }
 
 /* Hero */
@@ -1330,6 +1466,56 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .gap-card p { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
 .gap-card.gap-hard { border-left-color: var(--red); }
 .gap-card.gap-hard .gap-tag { color: var(--red); }
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.spec-card {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 18px 20px;
+  display: flex; flex-direction: column;
+  transition: border-color .15s, box-shadow .15s;
+}
+.spec-card:hover {
+  border-color: var(--green-600);
+  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.06);
+}
+.spec-card-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.spec-tag {
+  display: inline-block; color: white;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px; font-weight: 600;
+}
+.spec-id {
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--gray-500);
+}
+.spec-card h3 {
+  font-family: var(--font-display); font-size: 17px;
+  color: var(--green-900); margin-bottom: 8px; line-height: 1.3;
+}
+.spec-card p {
+  font-size: 13px; color: var(--gray-700);
+  line-height: 1.5; flex: 1; margin-bottom: 12px;
+}
+.spec-card-foot {
+  display: flex; gap: 14px; align-items: center;
+  font-size: 12.5px; padding-top: 10px;
+  border-top: 1px solid var(--gray-100);
+}
+.spec-card-foot a {
+  color: var(--green-700); text-decoration: none; font-weight: 600;
+}
+.spec-card-foot a:hover { text-decoration: underline; }
+.spec-card-foot .spec-raw {
+  color: var(--gray-500); font-weight: 400; font-family: var(--font-mono);
+  font-size: 11px;
+}
 .q-list {
   background: var(--green-50); border: 1px solid var(--green-100);
   border-radius: 8px; padding: 14px 18px; margin: 12px 0;
@@ -2100,24 +2286,340 @@ def render_limitations(stats) -> str:
 """
 
 
+# ── Specs page ────────────────────────────────────────────────────────────
+
+
+_SPECS_CATALOG: list[dict] = [
+    {
+        "id": "CHARTER",
+        "file": "CHARTER.md",
+        "title": "Charter та Governance",
+        "tag": "governance",
+        "summary": (
+            "Управління проектом, scope (що проект робить і чого не робить), "
+            "FDA non-device CDS positioning (§15 з constraints C1-C7), two-reviewer rule "
+            "для clinical content (§6.1), patient-data privacy (§9.3), forbidden prompt "
+            "patterns для LLM (§8.3 — LLM не приймає клінічні рішення)."
+        ),
+    },
+    {
+        "id": "CLINICAL_CONTENT_STANDARDS",
+        "file": "CLINICAL_CONTENT_STANDARDS.md",
+        "title": "Clinical Content Standards",
+        "tag": "clinical",
+        "summary": (
+            "Стандарти клінічного контенту: citation format (source_id + position + "
+            "paraphrase + page), evidence-level taxonomy (Tier 1-6), reviewer signoff "
+            "workflow, STUB → reviewed transition criteria. Кожна claim у Indication / "
+            "Regimen / RedFlag має посилання на Source entity."
+        ),
+    },
+    {
+        "id": "DATA_STANDARDS",
+        "file": "DATA_STANDARDS.md",
+        "title": "Data Standards — Patient Model",
+        "tag": "data",
+        "summary": (
+            "Patient profile data model. FHIR R4/R5 + mCODE alignment у плані. "
+            "Кодові системи: LOINC + ICD-10/O-3 + RxNorm + CTCAE v5.0. Без SNOMED CT, "
+            "без MedDRA у MVP (license gates). Поля профілю та semantic interoperability."
+        ),
+    },
+    {
+        "id": "KNOWLEDGE_SCHEMA_SPECIFICATION",
+        "file": "KNOWLEDGE_SCHEMA_SPECIFICATION.md",
+        "title": "Knowledge Schema Specification",
+        "tag": "schema",
+        "summary": (
+            "Pydantic schemas всіх KB entities — Disease / Indication / Regimen / "
+            "Algorithm / Biomarker / Drug / Test / Workup / RedFlag / Contraindication / "
+            "MonitoringSchedule / SupportiveCare / Source. Defines fields, validators, "
+            "referential integrity rules, migration roadmap до PostgreSQL."
+        ),
+    },
+    {
+        "id": "SOURCE_INGESTION_SPEC",
+        "file": "SOURCE_INGESTION_SPEC.md",
+        "title": "Source Ingestion & Licensing",
+        "tag": "sources",
+        "summary": (
+            "Як інгестимо джерела: hosting matrix (referenced vs hosted vs mixed) з H1-H5 "
+            "justification, license classification gates, add-a-source checklist (§8), "
+            "hosted-source checklist (§20), SourceClient protocol для live APIs."
+        ),
+    },
+    {
+        "id": "REFERENCE_CASE_SPECIFICATION",
+        "file": "REFERENCE_CASE_SPECIFICATION.md",
+        "title": "Reference Case — \"Patient Zero\"",
+        "tag": "testing",
+        "summary": (
+            "Synthetic HCV-MZL reference case як P0 acceptance test. Defines всі required "
+            "fields у patient profile (§2 templates), critical structural assertions для "
+            "Plan render output (§1.3), milestones M1-M6 для розширення coverage."
+        ),
+    },
+    {
+        "id": "MDT_ORCHESTRATOR_SPEC",
+        "file": "MDT_ORCHESTRATOR_SPEC.md",
+        "title": "MDT Orchestrator + Decision Provenance",
+        "tag": "engine",
+        "summary": (
+            "Orchestrate_mdt rules (R1-R9 для treatment, D1-D6 для diagnostic), "
+            "role activation logic (required / recommended / optional), Open Questions "
+            "механізм (Q1-Q6 + DQ1-DQ4 — engine не приймає рішення без потрібних даних), "
+            "decision provenance graph для audit-grade explanation."
+        ),
+    },
+    {
+        "id": "DIAGNOSTIC_MDT_SPEC",
+        "file": "DIAGNOSTIC_MDT_SPEC.md",
+        "title": "Diagnostic-Phase MDT (Pre-biopsy)",
+        "tag": "engine",
+        "summary": (
+            "Pre-biopsy режим: коли histology ще немає, engine emit DiagnosticPlan з "
+            "workup brief замість treatment Plan. CHARTER §15.2 C7 hard rule. "
+            "DiagnosticWorkup + DiagnosticPlan schemas, generate_diagnostic_brief(), "
+            "polymorphic orchestrate_mdt з DQ1-DQ4 rules."
+        ),
+    },
+    {
+        "id": "WORKUP_METHODOLOGY_SPEC",
+        "file": "WORKUP_METHODOLOGY_SPEC.md",
+        "title": "Workup Research Methodology",
+        "tag": "clinical",
+        "summary": (
+            "Як ми будуємо basic workup для будь-якої онкологічної області. Source "
+            "hierarchy (Tier 1: NCCN/ESMO/EHA/BSH/WHO/ASH), Test/Workup completeness "
+            "checklists, 7-step process для нової domain extension, anti-patterns."
+        ),
+    },
+    {
+        "id": "SKILL_ARCHITECTURE_SPEC",
+        "file": "SKILL_ARCHITECTURE_SPEC.md",
+        "title": "Skill-Oriented Architecture (MDT Roles as Skills)",
+        "tag": "engine",
+        "summary": (
+            "Formalізує MDT ролі (гематолог / патолог / радіолог / etc.) як "
+            "clinically-verified skills — кожен skill має version, sources, "
+            "last_reviewed, clinical_lead. Sizing horizon (~12-15 MVP → 50-60 "
+            "comprehensive), 8-domain layout, 5-phase refactor plan."
+        ),
+    },
+]
+
+_SPEC_TAG_LABELS = {
+    "governance": "Governance",
+    "clinical": "Clinical",
+    "data": "Data",
+    "schema": "Schema",
+    "sources": "Sources",
+    "testing": "Testing",
+    "engine": "Engine",
+}
+
+_SPEC_TAG_COLORS = {
+    "governance": "var(--red)",
+    "clinical": "var(--green-700)",
+    "data": "var(--teal)",
+    "schema": "var(--green-600)",
+    "sources": "var(--green-700)",
+    "testing": "var(--amber)",
+    "engine": "var(--green-700)",
+}
+
+
+def render_specs(stats) -> str:
+    spec_cards = []
+    for sp in _SPECS_CATALOG:
+        gh_url = (
+            f"https://github.com/{GH_REPO}/blob/master/specs/{sp['file']}"
+        )
+        raw_url = (
+            f"https://raw.githubusercontent.com/{GH_REPO}/master/specs/{sp['file']}"
+        )
+        color = _SPEC_TAG_COLORS.get(sp["tag"], "var(--gray-500)")
+        tag_label = _SPEC_TAG_LABELS.get(sp["tag"], sp["tag"])
+        spec_cards.append(f"""
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:{color}">{tag_label}</span>
+            <code class="spec-id">{sp['file']}</code>
+          </div>
+          <h3>{sp['title']}</h3>
+          <p>{sp['summary']}</p>
+          <div class="spec-card-foot">
+            <a href="{gh_url}" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="{raw_url}" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        """)
+
+    cards_html = "".join(spec_cards)
+    n_specs = len(_SPECS_CATALOG)
+
+    return f"""<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Специфікації</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+{_render_top_bar(active="specs")}
+
+<main>
+  <section class="info-page">
+    <h1>Специфікації</h1>
+    <p class="lead">
+      OpenOnco — це specifications-first проект. Кожна архітектурна, клінічна, або
+      governance деталь зафіксована у markdown-документі під <code>specs/</code>,
+      який підлягає версіонуванню та public review. {n_specs} активних специфікацій
+      описують все: від FDA non-device CDS positioning до структури кожної YAML
+      entity у KB. Усі тексти живуть у <a href="https://github.com/{GH_REPO}/tree/master/specs"
+      target="_blank" rel="noopener">github.com/{GH_REPO}/specs</a>.
+    </p>
+
+    <div class="callout">
+      <strong>Source-of-truth ієрархія</strong> (з CLAUDE.md): коли специфікації
+      конфліктують, обов'язковий порядок: <strong>1.</strong> CHARTER.md →
+      <strong>2.</strong> інші <code>specs/*.md</code> → <strong>3.</strong> CLAUDE.md →
+      <strong>4.</strong> README.md. Контент під <code>legacy/</code> не authoritative.
+    </div>
+
+    <div class="info-section">
+      <h2>Активні специфікації ({n_specs})</h2>
+      <div class="spec-grid">
+        {cards_html}
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Регуляторне джерело (PDF)</h2>
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <span class="spec-tag" style="background:var(--gray-700)">Regulatory PDF</span>
+          <code class="spec-id">Guidance-Clinical-Decision-Software_5.pdf</code>
+        </div>
+        <h3>FDA Clinical Decision Support Software Guidance</h3>
+        <p>
+          Офіційне керівництво FDA про non-device CDS classification under
+          §520(o)(1)(E). Лежить у <code>specs/</code> як hosted PDF. CHARTER §15
+          цитує конкретні criteria 1-4 з цього документа для обґрунтування OpenOnco
+          positioning як non-device.
+        </p>
+        <div class="spec-card-foot">
+          <a href="https://github.com/{GH_REPO}/blob/master/specs/Guidance-Clinical-Decision-Software_5.pdf"
+             target="_blank" rel="noopener">View PDF on GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Як ми оновлюємо специфікації</h2>
+      <p class="info-text">
+        Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code>
+        що affects clinical recommendations потребує <strong>two-reviewer merge</strong>
+        (CHARTER §6.1) — два з трьох Clinical Co-Lead approvals. Це жорстке правило
+        gатекіпить якість клінічного контенту. Технічні специфікації (схеми, engine,
+        ingestion) можуть merge'итися single-reviewer для прискорення розробки, але
+        clinical content — завжди dual sign-off.
+      </p>
+      <p class="info-text">
+        Усі специфікації Ukrainian-first (мова інтерфейсу + клінічних reviewers UA),
+        але technical terms та license names залишаються English inline. Версіонування
+        — через git: кожна специфікація має <code>v0.1 (draft)</code> у header, bump
+        на minor/major залежно від breaking changes.
+      </p>
+    </div>
+
+    <div class="info-section">
+      <h2>Compliance + Privacy (короткий зріз)</h2>
+      <table class="kv-table">
+        <thead><tr><th>Гарантія</th><th>Specification</th><th>Що це означає</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>FDA non-device CDS</strong></td>
+            <td><code>CHARTER.md §15</code></td>
+            <td>OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced.</td>
+          </tr>
+          <tr>
+            <td><strong>No patient data</strong></td>
+            <td><code>CHARTER.md §9.3</code></td>
+            <td><code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic.</td>
+          </tr>
+          <tr>
+            <td><strong>Two-reviewer merge</strong></td>
+            <td><code>CHARTER.md §6.1</code></td>
+            <td>Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB.</td>
+          </tr>
+          <tr>
+            <td><strong>No LLM clinical judgment</strong></td>
+            <td><code>CHARTER.md §8.3</code></td>
+            <td>LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection.</td>
+          </tr>
+          <tr>
+            <td><strong>No treatment without histology</strong></td>
+            <td><code>CHARTER.md §15.2 C7</code></td>
+            <td>Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan.</td>
+          </tr>
+          <tr>
+            <td><strong>Anti automation-bias</strong></td>
+            <td><code>CHARTER.md §15.2 C6</code></td>
+            <td>Завжди показуються ≥2 alternative tracks side-by-side; alternative не сховано.</td>
+          </tr>
+          <tr>
+            <td><strong>Source hosting default = referenced</strong></td>
+            <td><code>SOURCE_INGESTION_SPEC.md §1.4</code></td>
+            <td>Не дублюємо external бази; hosting потребує explicit H1-H5 justification.</td>
+          </tr>
+          <tr>
+            <td><strong>Free public resource → non-commercial</strong></td>
+            <td><code>CHARTER.md §2</code></td>
+            <td>Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>
+"""
+
+
 # ── Build orchestration ───────────────────────────────────────────────────
 
 
-def build_one_case(case: CaseEntry, output_dir: Path) -> Path:
+def build_one_case(case: CaseEntry, output_dir: Path,
+                   *, target_lang: str = "uk") -> Path:
+    """Render one case to HTML in `target_lang`. Output path:
+    - target_lang='uk' → output_dir/cases/<id>.html
+    - target_lang='en' → output_dir/en/cases/<id>.html
+    """
     patient_path = EXAMPLES / case.file
     patient = json.loads(patient_path.read_text(encoding="utf-8"))
 
     if is_diagnostic_profile(patient):
         result = generate_diagnostic_brief(patient, kb_root=KB_ROOT)
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
-        html = render_diagnostic_brief_html(result, mdt=mdt)
+        html = render_diagnostic_brief_html(result, mdt=mdt, target_lang=target_lang)
     else:
         result = generate_plan(patient, kb_root=KB_ROOT)
         mdt = orchestrate_mdt(patient, result, kb_root=KB_ROOT)
-        html = render_plan_html(result, mdt=mdt)
+        html = render_plan_html(result, mdt=mdt, target_lang=target_lang)
 
-    wrapped = _wrap_case_html(html, case)
-    out_path = output_dir / "cases" / f"{case.case_id}.html"
+    wrapped = _wrap_case_html(html, case, target_lang=target_lang)
+    sub = "en/cases" if target_lang == "en" else "cases"
+    out_path = output_dir / sub / f"{case.case_id}.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(wrapped, encoding="utf-8")
     return out_path
@@ -2141,25 +2643,43 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
 def build_site(output_dir: Path) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "cases").mkdir(parents=True, exist_ok=True)
+    (output_dir / "en").mkdir(parents=True, exist_ok=True)
+    (output_dir / "en" / "cases").mkdir(parents=True, exist_ok=True)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
     landing_assets = _copy_landing_assets(output_dir)
 
     stats = collect_stats()
+    stats_widget = format_html_widget(stats, embed_style=True)
 
+    # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
     (output_dir / "capabilities.html").write_text(render_capabilities(stats), encoding="utf-8")
     (output_dir / "limitations.html").write_text(render_limitations(stats), encoding="utf-8")
-    (output_dir / "gallery.html").write_text(
-        render_gallery(format_html_widget(stats, embed_style=True)),
-        encoding="utf-8",
-    )
+    (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
+    (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
     (output_dir / "try.html").write_text(render_try(), encoding="utf-8")
 
-    case_paths = [{
-        "case_id": c.case_id,
-        "path": str(build_one_case(c, output_dir).relative_to(output_dir)),
+    # ── EN build (mirror at /en/) ──
+    # Body copy of landing/gallery/try is currently UA — nav + lang attribute
+    # + try-CTA labels translated; full EN body copy is a separate workstream.
+    # Per-case Plan/Brief HTMLs ARE rendered in EN via target_lang="en" —
+    # that's where 80% of the user-facing content lives.
+    (output_dir / "en" / "index.html").write_text(
+        render_landing(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "en" / "gallery.html").write_text(
+        render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+    (output_dir / "en" / "try.html").write_text(
+        render_try(target_lang="en"), encoding="utf-8")
+
+    case_paths_uk = [{
+        "case_id": c.case_id, "lang": "uk",
+        "path": str(build_one_case(c, output_dir, target_lang="uk").relative_to(output_dir)),
+    } for c in CASES]
+    case_paths_en = [{
+        "case_id": c.case_id, "lang": "en",
+        "path": str(build_one_case(c, output_dir, target_lang="en").relative_to(output_dir)),
     } for c in CASES]
 
     engine_bundle = bundle_engine(output_dir)
@@ -2167,8 +2687,9 @@ def build_site(output_dir: Path) -> dict:
 
     return {
         "output_dir": str(output_dir),
-        "cases_built": len(case_paths),
-        "cases": case_paths,
+        "cases_built": len(case_paths_uk) + len(case_paths_en),
+        "cases_uk": case_paths_uk,
+        "cases_en": case_paths_en,
         "engine_bundle": engine_bundle,
         "examples_payload": examples_payload,
         "landing_assets": landing_assets,

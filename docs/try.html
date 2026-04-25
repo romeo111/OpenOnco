@@ -5,21 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Спробувати</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="style.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>
 <body>
 <header class="top-bar">
   <div class="brand-line">
-    <a href="index.html" class="brand-mini">OpenOnco</a>
+    <a href="/" class="brand-mini">OpenOnco</a>
   </div>
-  <nav class="top-actions">
-    <a href="index.html">Головна</a>
-    <a href="capabilities.html">Можливості</a>
-    <a href="limitations.html">Обмеження</a>
-    <a href="try.html" class="active">Спробувати</a>
-    <a href="gallery.html">Приклади</a>
+  <nav class="top-nav">
+    <a href="/">Головна</a>
+    <a href="/capabilities.html">Можливості</a><a href="/limitations.html">Обмеження</a><a href="/specs.html">Специфікації</a>
+    <a href="/gallery.html">Приклади</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current">UA</span>
+      <a class="lang-other" href="/en/try.html">EN</a>
+    </div>
+    <a href="/try.html" class="btn-cta-try" aria-current="page">Спробувати →</a>
+  </div>
 </header>
 
 <main class="try-page">
@@ -99,7 +104,7 @@ function setError(msg) {
 
 // Load examples list
 async function loadExamples() {
-  const resp = await fetch('examples.json');
+  const resp = await fetch('/examples.json');
   const examples = await resp.json();
   exampleSelect.innerHTML = '<option value="">— оберіть —</option>';
   examples.forEach((ex, i) => {
@@ -132,7 +137,7 @@ import micropip
 await micropip.install(['pydantic', 'pyyaml'])
 `);
   setStatus('Завантажую двигун OpenOnco…');
-  const resp = await fetch('openonco-engine.zip');
+  const resp = await fetch('/openonco-engine.zip');
   const buf = await resp.arrayBuffer();
   pyodide.unpackArchive(buf, 'zip');
   // Quick smoke test

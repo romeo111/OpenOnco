@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Специфікації</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Головна</a>
+    <a href="/capabilities.html">Можливості</a><a href="/limitations.html">Обмеження</a><a href="/specs.html" class="active">Специфікації</a>
+    <a href="/gallery.html">Приклади</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current">UA</span>
+      <a class="lang-other" href="/en/">EN</a>
+    </div>
+    <a href="/try.html" class="btn-cta-try" >Спробувати →</a>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <h1>Специфікації</h1>
+    <p class="lead">
+      OpenOnco — це specifications-first проект. Кожна архітектурна, клінічна, або
+      governance деталь зафіксована у markdown-документі під <code>specs/</code>,
+      який підлягає версіонуванню та public review. 10 активних специфікацій
+      описують все: від FDA non-device CDS positioning до структури кожної YAML
+      entity у KB. Усі тексти живуть у <a href="https://github.com/romeo111/OpenOnco/tree/master/specs"
+      target="_blank" rel="noopener">github.com/romeo111/OpenOnco/specs</a>.
+    </p>
+
+    <div class="callout">
+      <strong>Source-of-truth ієрархія</strong> (з CLAUDE.md): коли специфікації
+      конфліктують, обов'язковий порядок: <strong>1.</strong> CHARTER.md →
+      <strong>2.</strong> інші <code>specs/*.md</code> → <strong>3.</strong> CLAUDE.md →
+      <strong>4.</strong> README.md. Контент під <code>legacy/</code> не authoritative.
+    </div>
+
+    <div class="info-section">
+      <h2>Активні специфікації (10)</h2>
+      <div class="spec-grid">
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--red)">Governance</span>
+            <code class="spec-id">CHARTER.md</code>
+          </div>
+          <h3>Charter та Governance</h3>
+          <p>Управління проектом, scope (що проект робить і чого не робить), FDA non-device CDS positioning (§15 з constraints C1-C7), two-reviewer rule для clinical content (§6.1), patient-data privacy (§9.3), forbidden prompt patterns для LLM (§8.3 — LLM не приймає клінічні рішення).</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/CHARTER.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/CHARTER.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Clinical</span>
+            <code class="spec-id">CLINICAL_CONTENT_STANDARDS.md</code>
+          </div>
+          <h3>Clinical Content Standards</h3>
+          <p>Стандарти клінічного контенту: citation format (source_id + position + paraphrase + page), evidence-level taxonomy (Tier 1-6), reviewer signoff workflow, STUB → reviewed transition criteria. Кожна claim у Indication / Regimen / RedFlag має посилання на Source entity.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/CLINICAL_CONTENT_STANDARDS.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/CLINICAL_CONTENT_STANDARDS.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--teal)">Data</span>
+            <code class="spec-id">DATA_STANDARDS.md</code>
+          </div>
+          <h3>Data Standards — Patient Model</h3>
+          <p>Patient profile data model. FHIR R4/R5 + mCODE alignment у плані. Кодові системи: LOINC + ICD-10/O-3 + RxNorm + CTCAE v5.0. Без SNOMED CT, без MedDRA у MVP (license gates). Поля профілю та semantic interoperability.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/DATA_STANDARDS.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/DATA_STANDARDS.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-600)">Schema</span>
+            <code class="spec-id">KNOWLEDGE_SCHEMA_SPECIFICATION.md</code>
+          </div>
+          <h3>Knowledge Schema Specification</h3>
+          <p>Pydantic schemas всіх KB entities — Disease / Indication / Regimen / Algorithm / Biomarker / Drug / Test / Workup / RedFlag / Contraindication / MonitoringSchedule / SupportiveCare / Source. Defines fields, validators, referential integrity rules, migration roadmap до PostgreSQL.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Sources</span>
+            <code class="spec-id">SOURCE_INGESTION_SPEC.md</code>
+          </div>
+          <h3>Source Ingestion & Licensing</h3>
+          <p>Як інгестимо джерела: hosting matrix (referenced vs hosted vs mixed) з H1-H5 justification, license classification gates, add-a-source checklist (§8), hosted-source checklist (§20), SourceClient protocol для live APIs.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/SOURCE_INGESTION_SPEC.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/SOURCE_INGESTION_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--amber)">Testing</span>
+            <code class="spec-id">REFERENCE_CASE_SPECIFICATION.md</code>
+          </div>
+          <h3>Reference Case — "Patient Zero"</h3>
+          <p>Synthetic HCV-MZL reference case як P0 acceptance test. Defines всі required fields у patient profile (§2 templates), critical structural assertions для Plan render output (§1.3), milestones M1-M6 для розширення coverage.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/REFERENCE_CASE_SPECIFICATION.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/REFERENCE_CASE_SPECIFICATION.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Engine</span>
+            <code class="spec-id">MDT_ORCHESTRATOR_SPEC.md</code>
+          </div>
+          <h3>MDT Orchestrator + Decision Provenance</h3>
+          <p>Orchestrate_mdt rules (R1-R9 для treatment, D1-D6 для diagnostic), role activation logic (required / recommended / optional), Open Questions механізм (Q1-Q6 + DQ1-DQ4 — engine не приймає рішення без потрібних даних), decision provenance graph для audit-grade explanation.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/MDT_ORCHESTRATOR_SPEC.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/MDT_ORCHESTRATOR_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Engine</span>
+            <code class="spec-id">DIAGNOSTIC_MDT_SPEC.md</code>
+          </div>
+          <h3>Diagnostic-Phase MDT (Pre-biopsy)</h3>
+          <p>Pre-biopsy режим: коли histology ще немає, engine emit DiagnosticPlan з workup brief замість treatment Plan. CHARTER §15.2 C7 hard rule. DiagnosticWorkup + DiagnosticPlan schemas, generate_diagnostic_brief(), polymorphic orchestrate_mdt з DQ1-DQ4 rules.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/DIAGNOSTIC_MDT_SPEC.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/DIAGNOSTIC_MDT_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Clinical</span>
+            <code class="spec-id">WORKUP_METHODOLOGY_SPEC.md</code>
+          </div>
+          <h3>Workup Research Methodology</h3>
+          <p>Як ми будуємо basic workup для будь-якої онкологічної області. Source hierarchy (Tier 1: NCCN/ESMO/EHA/BSH/WHO/ASH), Test/Workup completeness checklists, 7-step process для нової domain extension, anti-patterns.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/WORKUP_METHODOLOGY_SPEC.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/WORKUP_METHODOLOGY_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+        <div class="spec-card">
+          <div class="spec-card-head">
+            <span class="spec-tag" style="background:var(--green-700)">Engine</span>
+            <code class="spec-id">SKILL_ARCHITECTURE_SPEC.md</code>
+          </div>
+          <h3>Skill-Oriented Architecture (MDT Roles as Skills)</h3>
+          <p>Formalізує MDT ролі (гематолог / патолог / радіолог / etc.) як clinically-verified skills — кожен skill має version, sources, last_reviewed, clinical_lead. Sizing horizon (~12-15 MVP → 50-60 comprehensive), 8-domain layout, 5-phase refactor plan.</p>
+          <div class="spec-card-foot">
+            <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/SKILL_ARCHITECTURE_SPEC.md" target="_blank" rel="noopener">Read on GitHub →</a>
+            <a href="https://raw.githubusercontent.com/romeo111/OpenOnco/master/specs/SKILL_ARCHITECTURE_SPEC.md" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Регуляторне джерело (PDF)</h2>
+      <div class="spec-card">
+        <div class="spec-card-head">
+          <span class="spec-tag" style="background:var(--gray-700)">Regulatory PDF</span>
+          <code class="spec-id">Guidance-Clinical-Decision-Software_5.pdf</code>
+        </div>
+        <h3>FDA Clinical Decision Support Software Guidance</h3>
+        <p>
+          Офіційне керівництво FDA про non-device CDS classification under
+          §520(o)(1)(E). Лежить у <code>specs/</code> як hosted PDF. CHARTER §15
+          цитує конкретні criteria 1-4 з цього документа для обґрунтування OpenOnco
+          positioning як non-device.
+        </p>
+        <div class="spec-card-foot">
+          <a href="https://github.com/romeo111/OpenOnco/blob/master/specs/Guidance-Clinical-Decision-Software_5.pdf"
+             target="_blank" rel="noopener">View PDF on GitHub →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>Як ми оновлюємо специфікації</h2>
+      <p class="info-text">
+        Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code>
+        що affects clinical recommendations потребує <strong>two-reviewer merge</strong>
+        (CHARTER §6.1) — два з трьох Clinical Co-Lead approvals. Це жорстке правило
+        gатекіпить якість клінічного контенту. Технічні специфікації (схеми, engine,
+        ingestion) можуть merge'итися single-reviewer для прискорення розробки, але
+        clinical content — завжди dual sign-off.
+      </p>
+      <p class="info-text">
+        Усі специфікації Ukrainian-first (мова інтерфейсу + клінічних reviewers UA),
+        але technical terms та license names залишаються English inline. Версіонування
+        — через git: кожна специфікація має <code>v0.1 (draft)</code> у header, bump
+        на minor/major залежно від breaking changes.
+      </p>
+    </div>
+
+    <div class="info-section">
+      <h2>Compliance + Privacy (короткий зріз)</h2>
+      <table class="kv-table">
+        <thead><tr><th>Гарантія</th><th>Specification</th><th>Що це означає</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>FDA non-device CDS</strong></td>
+            <td><code>CHARTER.md §15</code></td>
+            <td>OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced.</td>
+          </tr>
+          <tr>
+            <td><strong>No patient data</strong></td>
+            <td><code>CHARTER.md §9.3</code></td>
+            <td><code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic.</td>
+          </tr>
+          <tr>
+            <td><strong>Two-reviewer merge</strong></td>
+            <td><code>CHARTER.md §6.1</code></td>
+            <td>Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB.</td>
+          </tr>
+          <tr>
+            <td><strong>No LLM clinical judgment</strong></td>
+            <td><code>CHARTER.md §8.3</code></td>
+            <td>LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection.</td>
+          </tr>
+          <tr>
+            <td><strong>No treatment without histology</strong></td>
+            <td><code>CHARTER.md §15.2 C7</code></td>
+            <td>Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan.</td>
+          </tr>
+          <tr>
+            <td><strong>Anti automation-bias</strong></td>
+            <td><code>CHARTER.md §15.2 C6</code></td>
+            <td>Завжди показуються ≥2 alternative tracks side-by-side; alternative не сховано.</td>
+          </tr>
+          <tr>
+            <td><strong>Source hosting default = referenced</strong></td>
+            <td><code>SOURCE_INGESTION_SPEC.md §1.4</code></td>
+            <td>Не дублюємо external бази; hosting потребує explicit H1-H5 justification.</td>
+          </tr>
+          <tr>
+            <td><strong>Free public resource → non-commercial</strong></td>
+            <td><code>CHARTER.md §2</code></td>
+            <td>Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>

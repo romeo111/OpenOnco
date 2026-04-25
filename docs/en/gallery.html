@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Sample cases</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/en/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/en/">Home</a>
+    
+    <a href="/en/gallery.html" class="active">Examples</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current">EN</span>
+      <a class="lang-other" href="/gallery.html">UA</a>
+    </div>
+    <a href="/en/try.html" class="btn-cta-try" >Try it →</a>
+  </div>
+</header>
+
+<main class="gallery">
+  <h1>Готові приклади</h1>
+  <p class="lead">
+    Сім синтетичних пацієнтських профілів прогнані через рушій. Кожен клік
+    відкриває повний Plan або Diagnostic Brief, як його побачить лікар у
+    tumor-board. Якщо щось виглядає клінічно неправильно або дезорієнтує —
+    <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback"
+       target="_blank" rel="noopener">відкрий issue на GitHub</a>
+    з посиланням на конкретний кейс.
+  </p>
+
+  <section class="case-grid">
+    <a class="case-card" href="/en/cases/hcv-mzl-reference.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>HCV-MZL · Reference Case (Patient Zero)</h3>
+  <p>Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.</p>
+  <div class="case-foot">patient_zero_reference_case.json</div>
+</a>
+<a class="case-card" href="/en/cases/hcv-mzl-indolent.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>HCV-MZL · Indolent (стандартний варіант)</h3>
+  <p>HCV-MZL із non-bulky disease — engine обирає antiviral-first (DAA SOF/VEL) як default.</p>
+  <div class="case-foot">patient_zero_indolent.json</div>
+</a>
+<a class="case-card" href="/en/cases/hcv-mzl-bulky.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>HCV-MZL · Bulky (агресивний варіант)</h3>
+  <p>HCV-MZL із bulky disease (>7 см) — RF-BULKY-DISEASE спрацьовує, engine обирає BR + concurrent DAA.</p>
+  <div class="case-foot">patient_zero_bulky.json</div>
+</a>
+<a class="case-card" href="/en/cases/mm-standard-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Multiple Myeloma · Standard-Risk</h3>
+  <p>Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.</p>
+  <div class="case-foot">patient_mm_standard_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/mm-high-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Multiple Myeloma · High-Risk</h3>
+  <p>Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.</p>
+  <div class="case-foot">patient_mm_high_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/diagnostic-lymphoma-suspect.html">
+  <div class="case-badge bdg-diag">Diagnostic Brief</div>
+  <h3>Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)</h3>
+  <p>Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).</p>
+  <div class="case-foot">patient_diagnostic_lymphoma_suspect.json</div>
+</a>
+<a class="case-card" href="/en/cases/diagnostic-lymphoma-confirmed.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Lymphoma Confirmed · Post-Biopsy (Treatment Plan)</h3>
+  <p>Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.</p>
+  <div class="case-foot">patient_diagnostic_lymphoma_confirmed.json</div>
+</a>
+<a class="case-card" href="/en/cases/dlbcl-low-ipi.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>DLBCL NOS · Low-IPI (R-CHOP standard)</h3>
+  <p>Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).</p>
+  <div class="case-foot">patient_dlbcl_low_ipi.json</div>
+</a>
+<a class="case-card" href="/en/cases/dlbcl-high-ipi.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>DLBCL NOS · High-IPI (Pola-R-CHP)</h3>
+  <p>Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.</p>
+  <div class="case-foot">patient_dlbcl_high_ipi.json</div>
+</a>
+<a class="case-card" href="/en/cases/fl-low-burden.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Follicular · Low Burden (Watch-and-Wait)</h3>
+  <p>FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&W).</p>
+  <div class="case-foot">patient_fl_low_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/fl-high-burden.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Follicular · High Burden (BR)</h3>
+  <p>FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.</p>
+  <div class="case-foot">patient_fl_high_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/fl-transformation.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Follicular · Transformation Suspect (R-CHOP)</h3>
+  <p>FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).</p>
+  <div class="case-foot">patient_fl_transformation.json</div>
+</a>
+<a class="case-card" href="/en/cases/cll-low-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>CLL/SLL · Low-Risk (BTKi continuous)</h3>
+  <p>ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.</p>
+  <div class="case-foot">patient_cll_low_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/cll-high-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>CLL/SLL · High-Risk (VenO time-limited)</h3>
+  <p>ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).</p>
+  <div class="case-foot">patient_cll_high_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/mcl-fit-younger.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Mantle Cell · Fit Younger (Intensive + autoSCT)</h3>
+  <p>MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).</p>
+  <div class="case-foot">patient_mcl_fit_younger.json</div>
+</a>
+<a class="case-card" href="/en/cases/mcl-unfit-tp53.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Mantle Cell · Unfit / TP53-mutant (BTKi+R)</h3>
+  <p>MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).</p>
+  <div class="case-foot">patient_mcl_unfit_or_tp53.json</div>
+</a>
+<a class="case-card" href="/en/cases/smzl-hcv-positive.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Splenic MZL · HCV-positive (DAA antiviral)</h3>
+  <p>Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.</p>
+  <div class="case-foot">patient_smzl_hcv_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/smzl-hcv-negative.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Splenic MZL · HCV-negative (Rituximab mono)</h3>
+  <p>Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).</p>
+  <div class="case-foot">patient_smzl_hcv_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/nmzl-low-burden.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Nodal MZL · Low Burden (W&W)</h3>
+  <p>Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).</p>
+  <div class="case-foot">patient_nmzl_low_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/burkitt-low-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Burkitt · Low/Intermediate Risk (DA-EPOCH-R)</h3>
+  <p>Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).</p>
+  <div class="case-foot">patient_burkitt_low_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/burkitt-high-risk.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Burkitt · High Risk (CODOX-M / IVAC)</h3>
+  <p>Burkitt з CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.</p>
+  <div class="case-foot">patient_burkitt_high_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/hcl-typical.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Hairy Cell Leukemia (Cladribine 7-day)</h3>
+  <p>Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.</p>
+  <div class="case-foot">patient_hcl_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/wm-myd88-positive.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Waldenström · MYD88-positive (Zanubrutinib)</h3>
+  <p>WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).</p>
+  <div class="case-foot">patient_wm_myd88_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/hgbl-double-hit.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>HGBL · Double-Hit (DA-EPOCH-R)</h3>
+  <p>High-Grade B-Cell Lymphoma з MYC + BCL2 break-apart — engine обирає DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuse схеми з Burkitt.</p>
+  <div class="case-foot">patient_hgbl_double_hit.json</div>
+</a>
+<a class="case-card" href="/en/cases/alcl-alk-negative.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>ALCL · ALK-negative (CHP-Bv)</h3>
+  <p>Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).</p>
+  <div class="case-foot">patient_alcl_alk_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/ptcl-cd30-negative.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>PTCL NOS · CD30-negative (CHOEP)</h3>
+  <p>Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.</p>
+  <div class="case-foot">patient_ptcl_cd30_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/aitl-cd30-positive.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>AITL · CD30-positive (CHP-Bv)</h3>
+  <p>Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.</p>
+  <div class="case-foot">patient_aitl_cd30_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/chl-advanced.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Classical Hodgkin · Advanced (A+AVD)</h3>
+  <p>Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).</p>
+  <div class="case-foot">patient_chl_advanced.json</div>
+</a>
+<a class="case-card" href="/en/cases/chl-early.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>Classical Hodgkin · Early Stage (ABVD)</h3>
+  <p>Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).</p>
+  <div class="case-foot">patient_chl_early.json</div>
+</a>
+<a class="case-card" href="/en/cases/nlpbl-early.html">
+  <div class="case-badge bdg-plan">Treatment Plan</div>
+  <h3>NLPBL · Early Stage (Observation / RT)</h3>
+  <p>Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.</p>
+  <div class="case-foot">patient_nlpbl_early.json</div>
+</a>
+  </section>
+
+  <section class="kb-stats">
+    <style>
+.oo-widget {
+    --green-50:#f0fdf4; --green-100:#dcfce7; --green-500:#16a34a;
+    --green-700:#14532d; --green-900:#0a2e1a;
+    --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb;
+    --gray-500:#6b7280; --gray-700:#374151; --gray-900:#111827;
+    --amber:#d97706; --amber-bg:#fffbeb;
+    font-family:'Source Sans 3','Segoe UI',sans-serif;
+    color:var(--gray-900); background:#fff;
+    border:1px solid var(--gray-200); border-radius:14px;
+    padding:24px; max-width:960px; line-height:1.5;
+}
+.oo-widget h2 {
+    font-family:'DM Serif Display',Georgia,serif;
+    font-size:22px; color:var(--green-900); margin:0 0 4px;
+}
+.oo-widget .oo-sub { font-size:13px; color:var(--gray-500); margin-bottom:18px; }
+.oo-widget .oo-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px; margin-bottom:20px;
+}
+.oo-widget .oo-card {
+    background:var(--green-50); border:1px solid var(--green-100);
+    border-radius:10px; padding:12px 14px;
+}
+.oo-widget .oo-card .oo-num {
+    font-family:'DM Serif Display',Georgia,serif;
+    font-size:26px; color:var(--green-700); line-height:1;
+}
+.oo-widget .oo-card .oo-lbl {
+    font-size:11px; color:var(--gray-700); margin-top:4px;
+    text-transform:uppercase; letter-spacing:.04em;
+}
+.oo-widget .oo-meta {
+    display:flex; flex-wrap:wrap; gap:18px; font-size:13px;
+    color:var(--gray-700); padding:10px 14px; background:var(--gray-50);
+    border-radius:8px; margin-bottom:18px;
+}
+.oo-widget .oo-meta b { color:var(--green-700); }
+.oo-widget .oo-warn {
+    background:var(--amber-bg); border-left:3px solid var(--amber);
+    padding:8px 12px; font-size:13px; color:var(--gray-900);
+    border-radius:4px; margin-bottom:18px;
+}
+.oo-widget table { width:100%; border-collapse:collapse; font-size:13px; }
+.oo-widget th, .oo-widget td {
+    text-align:left; padding:8px 10px; border-bottom:1px solid var(--gray-100);
+}
+.oo-widget th {
+    background:var(--gray-50); font-weight:600; color:var(--gray-700);
+    font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+}
+.oo-widget td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.oo-widget code { font-family:'JetBrains Mono',Menlo,monospace; font-size:12px; }
+.oo-widget .oo-pill {
+    display:inline-block; padding:2px 8px; border-radius:999px;
+    font-size:11px; font-weight:600; text-transform:uppercase;
+    letter-spacing:.03em;
+}
+.oo-widget .oo-pill.reviewed { background:var(--green-100); color:var(--green-900); }
+.oo-widget .oo-pill.stub_full_chain { background:#fef3c7; color:#78350f; }
+.oo-widget .oo-pill.partial { background:#fde68a; color:#7c2d12; }
+.oo-widget .oo-pill.skeleton { background:var(--gray-100); color:var(--gray-700); }
+.oo-widget .oo-foot { margin-top:14px; font-size:11px; color:var(--gray-500); }
+</style>
+<div class="oo-widget" data-component="openonco-stats">
+<h2>OpenOnco — стан бази знань</h2>
+<div class="oo-sub">Зріз станом на 2026-04-25 16:56 UTC · видно і обсяг, і обмеження — поки покриваємо лише декілька хвороб.</div>
+<div class="oo-grid">
+<div class="oo-card"><div class="oo-num">18</div><div class="oo-lbl">Хвороби</div></div>
+<div class="oo-card"><div class="oo-num">30</div><div class="oo-lbl">Показання</div></div>
+<div class="oo-card"><div class="oo-num">21</div><div class="oo-lbl">Режими</div></div>
+<div class="oo-card"><div class="oo-num">18</div><div class="oo-lbl">Алгоритми</div></div>
+<div class="oo-card"><div class="oo-num">32</div><div class="oo-lbl">Біомаркери / гени</div></div>
+<div class="oo-card"><div class="oo-num">34</div><div class="oo-lbl">Препарати</div></div>
+<div class="oo-card"><div class="oo-num">40</div><div class="oo-lbl">Тести / процедури</div></div>
+<div class="oo-card"><div class="oo-num">8</div><div class="oo-lbl">Workups (триаж)</div></div>
+<div class="oo-card"><div class="oo-num">16</div><div class="oo-lbl">Red flags</div></div>
+<div class="oo-card"><div class="oo-num">6</div><div class="oo-lbl">Протипоказання</div></div>
+<div class="oo-card"><div class="oo-num">7</div><div class="oo-lbl">Моніторинг</div></div>
+<div class="oo-card"><div class="oo-num">8</div><div class="oo-lbl">Супровідна терапія</div></div>
+<div class="oo-card"><div class="oo-num">13</div><div class="oo-lbl">Джерела</div></div>
+</div>
+<div class="oo-meta"><span>Специфікації: <b>10</b></span><span>Live API-клієнти: <b>5</b></span><span>Skills (MDT): <b>0</b> / 16 планується</span><span>Reviewer sign-offs ≥ 2: <b>0</b> / 30</span></div>
+<div class="oo-meta"><span>📚 Корпус літератури під 13 цитованими джерелами: <b>3,170+</b> primary publications · <b>2,150</b> сторінок керівництв</span></div>
+<div class="oo-warn">⚠️ Жоден клінічний контент ще не пройшов два sign-off Clinical Co-Lead — увесь контент позначено як STUB. Це інструмент підтримки рішень, не медичний пристрій.</div>
+<table><thead><tr><th>Хвороба</th><th>ID</th><th class="num">Ind</th><th class="num">Reg</th><th class="num">Алг</th><th class="num">RF</th><th class="num">Workups</th><th>Статус</th></tr></thead><tbody>
+<tr><td>Ангіоімунобластна T-клітинна лімфома / нодальна TFH-лімфома</td><td><code>DIS-AITL</code></td><td class="num">0</td><td class="num">0</td><td class="num">✓</td><td class="num">0</td><td class="num">1</td><td><span class="oo-pill skeleton">Тільки скелет</span></td></tr>
+<tr><td>Анапластична великоклітинна лімфома (системна)</td><td><code>DIS-ALCL</code></td><td class="num">1</td><td class="num">1</td><td class="num">✓</td><td class="num">0</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Лімфома Беркітта</td><td><code>DIS-BURKITT</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Хронічна лімфоцитарна лейкемія / Дрібноклітинна лімфоцитарна лімфома</td><td><code>DIS-CLL</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">0</td><td class="num">0</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Дифузна B-великоклітинна лімфома, неуточнена (DLBCL NOS)</td><td><code>DIS-DLBCL-NOS</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Фолікулярна лімфома</td><td><code>DIS-FL</code></td><td class="num">3</td><td class="num">2</td><td class="num">✓</td><td class="num">2</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Волосатоклітинний лейкоз</td><td><code>DIS-HCL</code></td><td class="num">2</td><td class="num">1</td><td class="num">✓</td><td class="num">0</td><td class="num">0</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Лімфома маргінальної зони, асоційована з HCV</td><td><code>DIS-HCV-MZL</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">3</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Високозлоякісна B-клітинна лімфома з MYC + BCL2/BCL6 (double-hit / triple-hit)</td><td><code>DIS-HGBL-DH</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">0</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Класична лімфома Ходжкіна</td><td><code>DIS-CHL</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Лімфома з клітин зони мантії</td><td><code>DIS-MCL</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Множинна мієлома</td><td><code>DIS-MM</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Грибоподібний мікоз / Синдром Сезарі</td><td><code>DIS-MF-SEZARY</code></td><td class="num">0</td><td class="num">0</td><td class="num">✓</td><td class="num">0</td><td class="num">1</td><td><span class="oo-pill skeleton">Тільки скелет</span></td></tr>
+<tr><td>Нодулярна лімфоцит-домінантна B-клітинна лімфома (раніше NLPHL)</td><td><code>DIS-NLPBL</code></td><td class="num">1</td><td class="num">0</td><td class="num">✓</td><td class="num">0</td><td class="num">1</td><td><span class="oo-pill partial">Частково</span></td></tr>
+<tr><td>Нодальна лімфома маргінальної зони</td><td><code>DIS-NODAL-MZL</code></td><td class="num">2</td><td class="num">1</td><td class="num">✓</td><td class="num">2</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Периферична T-клітинна лімфома, неуточнена</td><td><code>DIS-PTCL-NOS</code></td><td class="num">1</td><td class="num">1</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Селезінкова лімфома маргінальної зони</td><td><code>DIS-SPLENIC-MZL</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+<tr><td>Макроглобулінемія Вальденстрема / Лімфоплазмоцитарна лімфома</td><td><code>DIS-WM</code></td><td class="num">2</td><td class="num">2</td><td class="num">✓</td><td class="num">1</td><td class="num">1</td><td><span class="oo-pill stub_full_chain">STUB · повний ланцюг</span></td></tr>
+</tbody></table>
+<div class="oo-foot">Auto-generated · <code>python -m knowledge_base.stats --format html-widget</code></div>
+</div>
+  </section>
+
+  <footer class="page-foot">
+    OpenOnco — open-source · MIT-style usage
+    · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    · Жодних реальних пацієнтських даних · CHARTER §9.3
+  </footer>
+</main>
+</body>
+</html>

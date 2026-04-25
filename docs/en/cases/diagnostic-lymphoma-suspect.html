@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Workup Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --green-900: #0a2e1a; --green-800: #0d3f24; --green-700: #14532d;
+    --green-600: #166534; --green-500: #16a34a; --green-400: #22c55e;
+    --green-300: #4ade80; --green-200: #86efac; --green-100: #dcfce7;
+    --green-50: #f0fdf4; --teal: #0d9488; --teal-dark: #115e59;
+    --red-alert: #dc2626; --red-bg: #fef2f2;
+    --amber-alert: #d97706; --amber-bg: #fffbeb;
+    --blue-bg: #eff6ff; --blue-700: #1d4ed8;
+    --purple-bg: #faf5ff; --purple-700: #7e22ce;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+    font-family: var(--font-body); color: var(--gray-900);
+    background: var(--gray-50); line-height: 1.55;
+}
+.page {
+    max-width: 920px; margin: 0 auto; padding: 32px 48px;
+    background: white; min-height: 100vh;
+    box-shadow: 0 0 24px rgba(0,0,0,.04);
+}
+@media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 16mm; max-width: 100%; }
+    @page { size: A4; margin: 12mm; }
+    .no-print { display: none; }
+    section { page-break-inside: avoid; }
+}
+
+/* Header */
+.doc-header {
+    border-bottom: 2px solid var(--green-700);
+    padding-bottom: 18px; margin-bottom: 24px;
+}
+.doc-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--green-700); margin-bottom: 8px;
+}
+.doc-title {
+    font-family: var(--font-display); font-size: 32px; line-height: 1.15;
+    color: var(--green-900); margin-bottom: 6px;
+}
+.doc-sub {
+    font-size: 14px; color: var(--gray-500);
+    font-family: var(--font-mono);
+}
+
+/* Patient strip */
+.patient-strip {
+    background: var(--green-50); border-left: 4px solid var(--green-600);
+    padding: 14px 18px; margin-bottom: 22px; border-radius: 4px;
+}
+.patient-strip .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
+}
+.patient-strip .value { font-size: 15px; color: var(--gray-900); }
+
+/* Banner — diagnostic phase */
+.banner {
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 22px;
+    border-left: 4px solid; font-size: 14px; line-height: 1.55;
+}
+.banner--diagnostic {
+    background: var(--amber-bg); border-color: var(--amber-alert);
+    color: #92400e;
+}
+.banner--diagnostic strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.banner--info {
+    background: var(--green-50); border-color: var(--green-500);
+    color: var(--green-800);
+}
+.banner--alert {
+    background: var(--red-bg); border-color: var(--red-alert);
+    color: #991b1b;
+}
+
+/* Sections */
+section { margin-bottom: 28px; }
+h2 {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
+    color: var(--green-800); margin-bottom: 12px;
+}
+.section-sub {
+    font-size: 13px; color: var(--gray-500); margin-bottom: 14px;
+    font-family: var(--font-mono);
+}
+h3 {
+    font-size: 14px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 18px 0 10px; color: var(--gray-700);
+}
+
+/* Tracks (treatment plan) */
+.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.track {
+    border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;
+    background: white;
+}
+.track--default { border-left: 4px solid var(--green-600); }
+.track--alternative { border-left: 4px solid var(--gray-500); }
+.track--surveillance { border-left: 4px solid var(--teal); }
+.track--palliative { border-left: 4px solid var(--purple-700); }
+.track-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+}
+.track-name { font-family: var(--font-display); font-size: 18px; }
+.track-default-badge {
+    background: var(--green-100); color: var(--green-700);
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); text-transform: uppercase;
+}
+.track dl { font-size: 13px; }
+.track dt { font-weight: 700; color: var(--gray-700); margin-top: 8px; }
+.track dd { color: var(--gray-700); margin-left: 0; }
+.track ul { font-size: 13px; padding-left: 18px; }
+
+/* Tables — workup steps, etc. */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+    background: var(--green-700); color: white; padding: 8px 10px;
+    text-align: left; font-size: 11px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:nth-child(even) td { background: var(--gray-50); }
+
+/* Badges */
+.badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; font-family: var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge--required { background: var(--red-bg); color: #b91c1c; }
+.badge--recommended { background: var(--blue-bg); color: var(--blue-700); }
+.badge--optional { background: var(--gray-100); color: var(--gray-700); }
+.badge--blocking { background: var(--red-bg); color: #b91c1c; }
+.badge--default { background: var(--green-100); color: var(--green-700); }
+.badge--lab { background: var(--blue-bg); color: var(--blue-700); }
+.badge--imaging { background: var(--purple-bg); color: var(--purple-700); }
+.badge--histology { background: var(--amber-bg); color: #92400e; }
+.badge--consult { background: var(--gray-100); color: var(--gray-700); }
+.badge--other { background: var(--gray-100); color: var(--gray-700); }
+
+/* Lists */
+.role-list { list-style: none; padding: 0; }
+.role-list li {
+    padding: 10px 0; border-bottom: 1px dashed var(--gray-200);
+}
+.role-list li:last-child { border-bottom: none; }
+.role-list .role-name { font-weight: 600; color: var(--gray-900); }
+.role-list .role-reason {
+    font-size: 13px; color: var(--gray-700); margin-top: 4px;
+}
+.role-list .role-questions {
+    font-size: 12px; color: var(--gray-500); margin-top: 4px;
+    font-family: var(--font-mono);
+}
+
+.q-list { list-style: none; padding: 0; }
+.q-list li {
+    padding: 12px 14px; margin-bottom: 8px;
+    border-radius: 6px; background: var(--gray-50);
+    border-left: 3px solid var(--gray-200);
+}
+.q-list li.blocking {
+    border-left-color: var(--red-alert); background: var(--red-bg);
+}
+.q-list .q-id {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--gray-500); margin-bottom: 4px;
+}
+.q-list .q-text { font-size: 14px; color: var(--gray-900); margin-bottom: 4px; }
+.q-list .q-rationale { font-size: 12px; color: var(--gray-700); font-style: italic; }
+.q-list .q-owner {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--green-700); margin-top: 4px;
+}
+
+/* MDT block */
+.mdt {
+    background: var(--green-50); border-radius: 10px; padding: 18px;
+    margin-top: 14px;
+}
+
+/* Steps timeline (workup) */
+.steps { padding-left: 0; list-style: none; }
+.steps li {
+    padding: 10px 0 10px 36px; position: relative;
+    border-bottom: 1px solid var(--gray-100);
+}
+.steps li:last-child { border-bottom: none; }
+.steps .step-num {
+    position: absolute; left: 0; top: 12px; width: 24px; height: 24px;
+    background: var(--green-600); color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--font-mono);
+}
+.steps .step-name { font-weight: 600; color: var(--gray-900); }
+.steps .step-rationale { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* Sources */
+.sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.sources li { padding: 4px 0; }
+
+/* Etiological driver — featured card for etiologically_driven archetype */
+.etiology-card {
+    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
+    border-left: 4px solid var(--teal); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.etiology-card .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+.etiology-card .archetype {
+    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
+    margin-bottom: 8px;
+}
+.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
+.etiology-card ul li { padding: 3px 0; }
+
+/* PRO/CONTRA — two-column grid for red flags */
+.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
+.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
+.pc-col h3 { color: var(--gray-900); margin-top: 0; }
+.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
+.pc-col li { padding: 4px 0; }
+.pc-col .rf-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    display: block; margin-top: 2px;
+}
+
+/* Do-not — strongly framed prohibitive list */
+.do-not {
+    background: var(--red-bg); border-left: 4px solid var(--red-alert);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
+}
+.do-not .track-name {
+    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
+    margin-bottom: 8px;
+}
+.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
+.do-not li { padding: 3px 0; }
+
+/* Timeline — horizontal phase strip */
+.timeline {
+    display: flex; gap: 4px; margin-top: 8px;
+    overflow-x: auto; padding-bottom: 8px;
+}
+.tl-phase {
+    flex: 1; min-width: 120px;
+    background: var(--green-100); border-radius: 6px;
+    padding: 10px 12px; border-top: 3px solid var(--green-600);
+}
+.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
+.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
+.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
+.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
+.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
+.tl-phase .name {
+    font-weight: 700; font-size: 12px; color: var(--gray-900);
+    margin-bottom: 4px;
+}
+.tl-phase .window {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+}
+
+/* Footer */
+.doc-footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 11px; color: var(--gray-500); line-height: 1.6;
+}
+.fda-disclosure {
+    background: var(--gray-50); padding: 14px; border-radius: 6px;
+    margin-bottom: 14px; font-size: 12px; color: var(--gray-700);
+}
+.fda-disclosure strong { color: var(--gray-900); }
+.version-chain {
+    font-family: var(--font-mono); font-size: 11px;
+    background: var(--gray-100); padding: 8px 12px; border-radius: 4px;
+    margin-bottom: 10px;
+}
+.medical-disclaimer {
+    font-style: italic; color: var(--gray-700); font-size: 11px;
+    border-left: 2px solid var(--gray-200); padding-left: 12px;
+}
+
+/* Skill metadata badge inline with each role */
+.skill-meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--gray-500); margin-top: 4px;
+    display: flex; flex-wrap: wrap; gap: 10px;
+}
+.skill-meta .pill {
+    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
+}
+.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
+.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
+
+/* Skill catalog block */
+.skill-catalog { margin-top: 18px; }
+.skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.skill-catalog th {
+    text-align: left; padding: 6px 8px; background: var(--gray-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--gray-700);
+}
+.skill-catalog td {
+    padding: 6px 8px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.skill-catalog tr.activated td:first-child::before {
+    content: "✓ "; color: var(--green-600); font-weight: 700;
+}
+.skill-catalog tr.dormant { color: var(--gray-500); }
+.skill-catalog tr.dormant td:first-child::before {
+    content: "○ "; color: var(--gray-500);
+}
+.skill-catalog .ver {
+    font-family: var(--font-mono); color: var(--gray-700);
+}
+</style>
+<style>.case-bar{position:sticky;top:0;z-index:99;background:#0a2e1a;color:#dcfce7;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}.case-bar .lang-mini{font-family:JetBrains Mono,monospace;font-size:10px;background:rgba(255,255,255,.1);padding:3px 7px;border-radius:3px;margin-left:14px;letter-spacing:.5px;}@media print{.case-bar{display:none;}}</style>
+</head>
+<body>
+<div class="case-bar no-print"><div>OpenOnco · <strong>Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)</strong></div><div><a href="/en/gallery.html">← Back to gallery</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+diagnostic-lymphoma-suspect&labels=tester-feedback" target="_blank" rel="noopener">Feedback on this case</a><a class="lang-mini" href="/cases/diagnostic-lymphoma-suspect.html">UA</a></div></div>
+<div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Workup Brief · DIAGNOSTIC PHASE</div><div class="doc-title">Pre-tumor-board workup brief</div><div class="doc-sub">DPLAN-PZ-DIAG-001-V1 · v1 · 2026-04-25</div></div><div class="banner banner--diagnostic"><strong>⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE</strong>DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE. Histology required before any therapy discussion (CHARTER §15.2 C7).</div><div class="patient-strip"><div class="label">Patient</div><div class="value">PZ-DIAG-001 · suspicion lineage: b_cell_lymphoma</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">Tissues: lymph_node, spleen · Hypotheses: DIS-SPLENIC-MZL, DIS-DLBCL, DIS-FOLLICULAR-LYMPHOMA</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">Splenomegaly + mediastinal lymphadenopathy + cytopenias + B-symptoms (drenching night sweats x 6 weeks)</div></div><div class="banner banner--info"><strong>Matched workup:</strong> WORKUP-SUSPECTED-LYMPHOMA · <strong>Очікуваний термін:</strong> ~14 днів</div><section><h2>Workup steps (23)</h2><ul class="steps"><li><span class="step-num">1</span><span class="step-name"><span class="badge badge--lab">lab</span> Complete Blood Count with Differential</span><div class="step-rationale">Baseline cytopenia assessment and ongoing monitoring of myelosuppression.</div></li><li><span class="step-num">2</span><span class="step-name"><span class="badge badge--lab">lab</span> Peripheral Blood Smear (manual review)</span><div class="step-rationale">Морфологія еритроцитів, лейкоцитів, тромбоцитів — детекція бластів, dysplasia, schistocytes, abnormal lymphoid forms; обов&#x27;язково при будь-якій незрозумілій цитопенії або leukocytosis.</div></li><li><span class="step-num">3</span><span class="step-name"><span class="badge badge--lab">lab</span> Comprehensive Metabolic Panel</span><div class="step-rationale">Електроліти (Na, K, Cl, HCO3), креатинін + BUN (renal function), глюкоза, кальцій, альбумін, total protein. Базова метаболічна оцінка перед будь-якою терапією + основа TLS risk + dosing adjustments.</div></li><li><span class="step-num">4</span><span class="step-name"><span class="badge badge--lab">lab</span> Liver Function Tests</span><div class="step-rationale">Assess hepatic function — baseline + during BR cycles + DAA therapy + HBV reactivation monitoring.</div></li><li><span class="step-num">5</span><span class="step-name"><span class="badge badge--lab">lab</span> Lactate Dehydrogenase</span><div class="step-rationale">Tumor burden surrogate; rising LDH suggests transformation or progression in indolent lymphoma.</div></li><li><span class="step-num">6</span><span class="step-name"><span class="badge badge--lab">lab</span> ESR + C-Reactive Protein</span><div class="step-rationale">Markers of systemic inflammation. У гематологічному workup: differential diagnosis запальних vs neoplastic причин лімфаденопатії; ESR &gt; 100 mm/h при myeloma / advanced lymphoma.</div></li><li><span class="step-num">7</span><span class="step-name"><span class="badge badge--lab">lab</span> Serum Uric Acid</span><div class="step-rationale">Baseline перед cytoreductive therapy + TLS (tumor lysis syndrome) risk assessment. Elevated uric acid + high tumor burden → TLS prophylaxis (allopurinol / rasburicase).</div></li><li><span class="step-num">8</span><span class="step-name"><span class="badge badge--lab">lab</span> Coagulation Panel (PT/INR, aPTT, Fibrinogen)</span><div class="step-rationale">Pre-biopsy assessment + DIC screen + baseline перед anticoagulant-affected procedures. Обов&#x27;язково перед excisional/core biopsy + bone marrow.</div></li><li><span class="step-num">9</span><span class="step-name"><span class="badge badge--lab">lab</span> Hepatitis B Serology Panel</span><div class="step-rationale">Mandatory before any anti-CD20 therapy or rituximab-containing regimen — identify HBV reactivation risk.</div></li><li><span class="step-num">10</span><span class="step-name"><span class="badge badge--lab">lab</span> HCV Antibody (Anti-HCV)</span><div class="step-rationale">Скринінг на HCV. Якщо позитивний → confirm з HCV RNA quantitative (TEST-HCV-RNA). Mandatory для лімфомного workup (HCV-associated MZL, B-cell lymphomas) і перед anti-CD20.</div></li><li><span class="step-num">11</span><span class="step-name"><span class="badge badge--lab">lab</span> HIV Serology (HIV-1/2 Ab + p24)</span><div class="step-rationale">Mandatory baseline для будь-якого пацієнта з лімфомою (HIV-associated lymphomas — DLBCL, Burkitt, primary CNS), цитопеніями невідомого генезу. Впливає на treatment intensity + ART continuation.</div></li><li><span class="step-num">12</span><span class="step-name"><span class="badge badge--lab">lab</span> Quantitative Immunoglobulins (IgG, IgA, IgM)</span><div class="step-rationale">Hypogammaglobulinemia (CLL, MM, post-rituximab) → infection risk; hypergammaglobulinemia (chronic infections, autoimmune); monoclonal spike screening parallel до SPEP.</div></li><li><span class="step-num">13</span><span class="step-name"><span class="badge badge--lab">lab</span> Beta-2 Microglobulin</span><div class="step-rationale">Prognostic marker для MM (component of R-ISS staging) + lymphomas (FLIPI for follicular). Reflects tumor burden + renal function.</div></li><li><span class="step-num">14</span><span class="step-name"><span class="badge badge--imaging">imaging</span> Contrast-Enhanced CT Chest/Abdomen/Pelvis</span><div class="step-rationale">Initial staging imaging для більшості hematologic malignancies — лімфаденопатія mapping, organomegaly, extranodal involvement. Часто replaced by PET-CT для definitive lymphoma staging, але CECT доступніша для початкового workup.</div></li><li><span class="step-num">15</span><span class="step-name"><span class="badge badge--imaging">imaging</span> FDG PET/CT</span><div class="step-rationale">Staging at diagnosis + response assessment after antiviral or chemoimmunotherapy. Detects transformation hotspots.</div></li><li><span class="step-num">16</span><span class="step-name"><span class="badge badge--histology">histology</span> Excisional Lymph Node Biopsy</span><div class="step-rationale">Preferred biopsy для будь-якого suspect lymphoma — preserves nodal architecture (critical для subtyping per WHO Classification). Provides material для histology + IHC + flow + cytogenetics + molecular.</div></li><li><span class="step-num">17</span><span class="step-name"><span class="badge badge--histology">histology</span> Flow Cytometry (Immunophenotyping)</span><div class="step-rationale">Immunophenotypic characterization of leukocytes — discriminates lymphoid vs myeloid lineage, B vs T vs NK, mature vs immature, monoclonal vs reactive. Mandatory у acute leukemia + lymphoma + MDS + MPN workup.</div></li><li><span class="step-num">18</span><span class="step-name"><span class="badge badge--histology">histology</span> CD20 Immunohistochemistry</span><div class="step-rationale">Confirm B-cell lineage and rituximab/obinutuzumab eligibility.</div></li><li><span class="step-num">19</span><span class="step-name"><span class="badge badge--imaging">imaging</span> Echocardiography (TTE) with LVEF assessment</span><div class="step-rationale">Baseline LVEF + cardiac structure перед anthracycline-containing chemotherapy + alloHSCT planning. Mandatory перед R-CHOP, ABVD, doxorubicin-based regimens.</div></li><li><span class="step-num">20</span><span class="step-name"><span class="badge badge--lab">lab</span> Beta-HCG (Pregnancy Test)</span><div class="step-rationale">Mandatory screen у childbearing-age жінок перед cytotoxic / teratogenic therapy + перед PET-CT, certain imaging. Більшість chemotherapy схем teratogenic.</div></li><li><span class="step-num">21</span><span class="step-name"><span class="badge badge--histology">histology</span> Bone Marrow Aspirate (cytology + flow + cytogenetics + molecular)</span><div class="step-rationale">Cytologic + immunophenotypic + cytogenetic + molecular characterization. Mandatory у acute leukemia, MDS, MM, MPN. Often combined з trephine (BMAT). Provides material для multiple downstream tests.</div></li><li><span class="step-num">22</span><span class="step-name"><span class="badge badge--histology">histology</span> Bone Marrow Trephine Biopsy (Core)</span><div class="step-rationale">Architecture + cellularity + fibrosis grade (важливо у MPN/PMF) + IHC for staging lymphomas (15-20% NHL з marrow involvement). Component of bone marrow study (зазвичай combined з aspirate).</div></li><li><span class="step-num">23</span><span class="step-name"><span class="badge badge--histology">histology</span> Tissue biopsy + IHC panel + ancillary molecular</span><div class="step-rationale">Архітектура лімфовузла критична для класифікації лімфоми (follicular vs diffuse, nodular vs interfollicular). FNA зазвичай недостатня — пропускає architectural pattern + не дає material для flow + IHC + cytogenetics.
+</div><div class="step-rationale" style="margin-top:6px;"><strong>Biopsy preferred:</strong> Excisional biopsy of largest accessible peripheral lymph node (axillary &gt; cervical &gt; inguinal)</div><div class="step-rationale" style="margin-top:4px;"><strong>IHC baseline:</strong> CD20, CD3, CD5, CD10, CD23, BCL2, BCL6, Ki67</div></li></ul></section><section><h2>Питання що мають бути закриті (11)</h2><ul style="padding-left:20px;font-size:14px;line-height:1.7;color:var(--gray-700);"><li>Чи це лімфома, реактивна гіперплазія, чи інша малігнізація?</li><li>Якщо лімфома — підтип за WHO Classification 5th ed.?</li><li>Чи є ознаки трансформації / aggressive component (DLBCL areas у follicular / MZL)?</li><li>Чи потрібен молекулярний тест (MYC, BCL2/BCL6 translocations, FISH)?</li><li>Який HBV/HCV/HIV статус? (визначає дозволеність anti-CD20 без prophylaxis)</li><li>Який Ann Arbor / Lugano stage?</li><li>IPI / FLIPI / MIPI prognostic score (стратифікація треку)?</li><li>Чи є показання до bone marrow biopsy (cytopenias, advanced stage)?</li><li>LVEF status — anthracycline-containing regimen feasible?</li><li>Pregnancy status (для childbearing-age female)?</li><li>Fertility preservation discussion проведена?</li></ul></section><section><h2>MDT brief</h2><div class="mdt"><h3>Skills (required) — mandatory virtual specialists (3)</h3><ul class="role-list"><li><span class="role-name">Гематолог / онкогематолог</span> <span class="badge badge--required">required</span><div class="role-reason">Підозра на лімфому — провідна спеціальність для diagnostic workup та подальшого ведення.</div><div class="skill-meta"><span class="pill">skill: <code>hematologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li><li><span class="role-name">Патолог (загальний)</span> <span class="badge badge--required">required</span><div class="role-reason">Будь-яка підозра вимагає біопсії — патолог планує вибір місця, IHC панель, ancillary tests.</div><div class="role-questions">Owns: DQ-CD20-AFTER-BIOPSY, DQ-DIFFERENTIAL</div><div class="skill-meta"><span class="pill">skill: <code>pathologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li><li><span class="role-name">Лікар-радіолог</span> <span class="badge badge--required">required</span><div class="role-reason">Stage / restaging imaging + biopsy guidance — радіолог.</div><div class="role-questions">Owns: DQ-STAGING-PLAN</div><div class="skill-meta"><span class="pill">skill: <code>radiologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li></ul><h3>Skills (recommended) — for consideration (1)</h3><ul class="role-list"><li><span class="role-name">Інфекціоніст / гепатолог</span> <span class="badge badge--recommended">recommended</span><div class="role-reason">Перед anti-CD20 treatment status HCV/HBV має бути відомий — ще на діагностичній фазі.</div><div class="role-questions">Owns: DQ-HBV-SEROLOGY-EARLY</div><div class="skill-meta"><span class="pill">skill: <code>infectious_disease_hepatology</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li></ul><h3>Open questions (4, 3 blocking)</h3><ul class="q-list"><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> DQ-CD20-AFTER-BIOPSY</div><div class="q-text">Який результат CD20 IHC буде після біопсії? Без CD20+ rituximab/obinutuzumab не показані.</div><div class="q-rationale">Базис для будь-якого anti-CD20-containing regimen у майбутньому.</div><div class="q-owner">→ pathologist</div></li><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> DQ-HBV-SEROLOGY-EARLY</div><div class="q-text">Серологія HBV (HBsAg, anti-HBc) — обов&#x27;язкова перед anti-CD20; почати workup зараз.</div><div class="q-rationale">HBV reactivation risk при anti-CD20 без prophylaxis.</div><div class="q-owner">→ infectious_disease_hepatology</div></li><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> DQ-STAGING-PLAN</div><div class="q-text">Чи запланований повний staging (PET/CT + bone marrow за показаннями)?</div><div class="q-rationale">Stage визначає track і treatment intensity.</div><div class="q-owner">→ radiologist</div></li><li class=""><div class="q-id">DQ-DIFFERENTIAL</div><div class="q-text">Який план диференціальної діагностики між гіпотезами: DIS-SPLENIC-MZL, DIS-DLBCL, DIS-FOLLICULAR-LYMPHOMA? Які молекулярні / IHC тести розрізняють?</div><div class="q-rationale">Множинні гіпотези — розрізнити їх перед treatment discussion.</div><div class="q-owner">→ pathologist</div></li></ul><h3>Data quality</h3><ul><li>Missing critical: hbsag, anti_hbc_total, cd20_ihc_status, lugano_stage</li></ul><div class="skill-catalog"><h3>Skill catalog (4/16 activated in this plan)</h3><div class="section-sub">All registered virtual specialists. ✓ — activated for this case; ○ — not activated (available for other clinical scenarios).</div><table><thead><tr><th>Specialist</th><th>skill_id</th><th>Version</th><th>Last reviewed</th><th>Sign-offs</th><th>Domain</th></tr></thead><tbody><tr class="activated"><td>Гематолог / онкогематолог</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematology_oncology</td></tr><tr class="dormant"><td>Медичний онколог (хіміотерапевт солідних пухлин)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncology</td></tr><tr class="activated"><td>Інфекціоніст / гепатолог</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>infectious_diseases</td></tr><tr class="activated"><td>Лікар-радіолог</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostic_imaging</td></tr><tr class="activated"><td>Патолог (загальний)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>pathology</td></tr><tr class="dormant"><td>Гематопатолог (специфічно для лімфом / лейкозів / мієломи)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematopathology</td></tr><tr class="dormant"><td>Молекулярний генетик / молекулярний онколог</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncology</td></tr><tr class="dormant"><td>Клінічний фармацевт</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinical_pharmacy</td></tr><tr class="dormant"><td>Радіотерапевт (променева терапія)</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiation_oncology</td></tr><tr class="dormant"><td>Хірург-онколог</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>surgical_oncology</td></tr><tr class="dormant"><td>Specialist з трансплантації (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="dormant"><td>Specialist з клітинної терапії (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="dormant"><td>Психолог / онкопсихолог</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Паліативна допомога</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>palliative_care</td></tr><tr class="dormant"><td>Соціальний працівник / кейс-менеджер</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Сімейний лікар / терапевт</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>primary_care</td></tr></tbody></table></div></div></section><div class="doc-footer"><div class="version-chain">plan_id: DPLAN-PZ-DIAG-001-V1 | version: 1 | generated: 2026-04-25T16:57:21.903578+00:00</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Diagnostic-phase MDT support: structure the workup, identify the team, surface unresolved questions. Not a medical device; not a treatment plan.</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> DIAGNOSTIC PHASE — this output describes diagnostic workup only. Treatment plan generation is blocked until histology is confirmed (CHARTER §15.2 C7). Do not treat on suspicion.</div><div class="medical-disclaimer">This document is an informational resource supporting tumor-board discussion (per CHARTER §11). It is not a system that makes clinical decisions. Every recommendation must be verified by the treating physician.</div></div></div>
+</body>
+</html>
