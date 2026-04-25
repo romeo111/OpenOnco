@@ -18,7 +18,7 @@ class MonitoringPhase(Base):
 
 class MonitoringSchedule(Base):
     id: str
-    linked_to_regimen: str  # Regimen ID
+    linked_to_regimen: Optional[str] = None  # Regimen ID; null for surveillance schedules
     phases: list[MonitoringPhase]
 
     sources: list[str] = Field(default_factory=list)

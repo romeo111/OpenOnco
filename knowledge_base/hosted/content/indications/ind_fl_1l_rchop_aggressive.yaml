@@ -1,0 +1,83 @@
+id: IND-FL-1L-RCHOP-AGGRESSIVE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-R-CHOP  # shared — same regimen used in DLBCL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~85-90%"
+  complete_response: "~70%"
+  progression_free_survival: "Median PFS comparable to BR for FL grade 1-2; preferred for FL grade 3A and transformation"
+  overall_survival_5y: "~85%"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-CD20-IHC
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Aggressive-track 1L for FL grade 3A with aggressive features OR
+  transformation suspect (RF-FL-TRANSFORMATION-SUSPECT fired). FL grade
+  3B is biologically aggressive ab initio and treated as DLBCL. R-CHOP
+  preferred over BR for these scenarios per NCCN — anthracycline
+  backbone matches DLBCL approach. Confirmatory re-biopsy of dominant
+  PET-avid lesion is mandatory before commitment if transformation is
+  the trigger.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "R-CHOP preferred for FL grade 3A with aggressive features and for transformed FL → DLBCL"
+
+known_controversies: []
+
+do_not_do:
+  - "Не призначати без re-biopsy при підозрі на трансформацію — точна гістологія визначає лікування."
+  - "Не призначати без baseline LVEF ≥50% — anthracycline cardiotoxicity."
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+."
+  - "Не вводити вінкристин інтратекально — ФАТАЛЬНО."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Reuses REG-R-CHOP from
+  DLBCL pathway.

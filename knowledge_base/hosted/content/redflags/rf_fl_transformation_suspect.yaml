@@ -1,0 +1,36 @@
+id: RF-FL-TRANSFORMATION-SUSPECT
+definition: "Follicular lymphoma with clinical features concerning for transformation to aggressive lymphoma (typically DLBCL): rapid disease progression, isolated rapidly-growing nodal mass, sudden LDH rise, new B-symptoms, hypercalcemia, extranodal involvement onset"
+definition_ua: "Фолікулярна лімфома з клінічними ознаками що насторожують щодо трансформації в агресивну лімфому (зазвичай DLBCL): швидка прогресія, ізольоване швидко зростаюче ураження, різке підвищення LDH, нові B-симптоми, гіперкальціємія, поява екстранодального ураження"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "fl_transformation_suspect"
+      value: true
+    - finding: "rapid_progression"
+      value: true
+    - finding: "ldh_doubled_in_weeks"
+      value: true
+    - finding: "biopsy_shows_dlbcl"
+      value: true
+    - finding: "fl_grade_3b"
+      value: true
+
+clinical_direction: intensify
+
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm:
+  - ALGO-FL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  When suspected, urgent re-biopsy of the dominant lesion (PET-avid /
+  rapidly-growing) is mandatory — true transformation is histologically
+  DLBCL and treated with R-CHOP regardless of original FL diagnosis.
+  FL grade 3B is biologically aggressive ab initio and treated as DLBCL
+  from start. Without re-biopsy confirmation, transformation suspect
+  alone shifts algorithm toward R-CHOP.

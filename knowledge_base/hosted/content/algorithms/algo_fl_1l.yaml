@@ -1,0 +1,52 @@
+id: ALGO-FL-1L
+applicable_to_disease: DIS-FL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternatives for first-line FL grade 1-2 / 3A. Three
+  tracks: surveillance (W&W) for low burden; BR (chemoimmunotherapy)
+  for high burden; R-CHOP (aggressive) for transformation suspect or
+  FL grade 3A aggressive features.
+
+output_indications:
+  - IND-FL-1L-WATCH
+  - IND-FL-1L-BR
+  - IND-FL-1L-RCHOP-AGGRESSIVE
+
+default_indication: IND-FL-1L-WATCH
+alternative_indication: IND-FL-1L-BR
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-FL-TRANSFORMATION-SUSPECT
+    if_true:
+      result: IND-FL-1L-RCHOP-AGGRESSIVE
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-FL-HIGH-TUMOR-BURDEN-GELF
+    if_true:
+      result: IND-FL-1L-BR
+    if_false:
+      next_step: 3
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "GELF criteria not met (low tumor burden)"
+        - condition: "Asymptomatic / minimally symptomatic"
+    if_true:
+      result: IND-FL-1L-WATCH
+    if_false:
+      result: IND-FL-1L-WATCH
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  GELF criteria are the primary algorithm driver. Transformation suspect
+  trumps GELF. FL grade 3B treated as DLBCL via different algorithm
+  (ALGO-DLBCL-1L) — recognized at disease-resolution stage.

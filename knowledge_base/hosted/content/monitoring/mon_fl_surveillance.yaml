@@ -1,0 +1,60 @@
+id: MON-FL-SURVEILLANCE
+linked_to_regimen: null  # surveillance — no regimen
+
+phases:
+  - name: baseline
+    window: "At diagnosis confirmation"
+    tests:
+      - TEST-CBC
+      - TEST-CMP
+      - TEST-LFT
+      - TEST-LDH
+      - TEST-B2-MICROGLOBULIN
+      - TEST-PET-CT
+      - TEST-LN-EXCISIONAL-BIOPSY
+      - TEST-FLOW-CYTOMETRY
+      - TEST-CD20-IHC
+      - TEST-BM-ASPIRATE
+      - TEST-BM-TREPHINE
+      - TEST-HBV-SEROLOGY
+    visits: ["Treatment planning visit — confirm GELF-low-burden status"]
+    checkpoints:
+      - "Confirm CD20+ FL grade 1-2 or 3A by histology + IHC (CD10, BCL2, BCL6 typical)"
+      - "Confirm GELF criteria NOT met (otherwise route to active treatment)"
+      - "FLIPI calculation documented"
+      - "Discuss with patient: median time-to-treatment 2-5 years; OS not compromised"
+
+  - name: active_surveillance_short
+    window: "Every 3 months × first 1 year"
+    tests:
+      - TEST-CBC
+      - TEST-CMP
+      - TEST-LFT
+      - TEST-LDH
+    visits: ["Clinical assessment + labs + lymph-node exam + symptom screen"]
+    checkpoints:
+      - "Re-evaluate GELF criteria each visit — trigger active treatment if any criterion newly met"
+      - "Symptom screen: B-symptoms, fatigue, new mass, performance decline"
+      - "Imaging only if clinical concern (no routine surveillance imaging)"
+
+  - name: active_surveillance_long
+    window: "Every 6 months × years 2-5, then annually"
+    tests:
+      - TEST-CBC
+      - TEST-CMP
+      - TEST-LDH
+    visits: ["Clinical + labs"]
+    checkpoints:
+      - "Re-stage with PET-CT only on suspected progression"
+      - "Watch for transformation (RF-FL-TRANSFORMATION-SUSPECT) — re-biopsy if rapidly-growing dominant mass"
+      - "Annual flu + 5-yearly pneumococcal vaccination (non-live only if anti-CD20 ever planned)"
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  Watch-and-wait is supported by multiple RCTs (Ardeshna 2014, RESORT
+  2014) showing no OS benefit from immediate treatment for asymptomatic
+  low-burden FL. Patient counsel is critical — many find waiting
+  psychologically difficult and benefit from explicit education.

@@ -1,0 +1,97 @@
+id: IND-FL-1L-BR
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_chemoimmunotherapy: true
+
+recommended_regimen: REG-BR-STANDARD  # shared — same regimen used in HCV-MZL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~93%"
+  complete_response: "~40%"
+  progression_free_survival: "Median PFS ~6-7 years (StiL trial — superior to R-CHOP for FL)"
+  overall_survival_5y: "~88%"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-SEVERE-CYTOPENIA-BR
+red_flags_triggering_alternative:
+  - RF-FL-TRANSFORMATION-SUSPECT
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-CD20-IHC
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-ECHO
+
+rationale: >
+  Standard-track 1L for FL grade 1-2 / 3A WITH GELF criteria for
+  high tumor burden. BR (bendamustine + rituximab) is preferred over
+  R-CHOP for FL based on StiL trial — superior PFS with comparable
+  toxicity (less alopecia + neuropathy, more cumulative myelosuppression).
+  Maintenance rituximab × 2 years post-induction recommended (PRIMA
+  trial — additional PFS benefit, no clear OS benefit, balance vs
+  infection risk).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "BR is a Category 1 preferred 1L regimen for FL grade 1-2/3A with high tumor burden"
+
+known_controversies:
+  - topic: "Maintenance rituximab × 2 years post-induction"
+    positions:
+      - position: "Standard per PRIMA — extends PFS"
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: "Skip maintenance to reduce infection risk + cost; treat at progression"
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: "OS impact unclear; selected for older / frail / infection-prone patients"
+    our_default: "Maintenance rituximab × 2 years post-induction; skip if frail / repeated infections"
+    rationale: "PFS benefit clear; OS impact uncertain — preference-sensitive."
+
+do_not_do:
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+."
+  - "Не призначати при тяжкій цитопенії на baseline (CI-SEVERE-CYTOPENIA-BR)."
+  - "Не використовувати full-dose bendamustine при FIB-4 > 3.25 — редукція до 70 mg/m²."
+  - "Не забувати PJP profilaxis (cotrimoxazole) — продовжувати ≥6 міс після останньої дози anti-CD20."
+  - "Не рestait-ing imaging-driven response через 4 cycles — interim PET якщо є concern про трансформацію або progression."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Reuses REG-BR-STANDARD
+  (same drugs as HCV-MZL track).

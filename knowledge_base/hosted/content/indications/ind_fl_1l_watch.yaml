@@ -1,0 +1,92 @@
+id: IND-FL-1L-WATCH
+plan_track: surveillance
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: null  # surveillance — no active treatment
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "N/A — observational"
+  progression_free_survival: "Median time-to-treatment 2-5 years; many patients never need treatment"
+  overall_survival_5y: "Equivalent to immediate-treatment arm in multiple RCTs (Ardeshna 2014, RESORT)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-FL-HIGH-TUMOR-BURDEN-GELF
+  - RF-FL-TRANSFORMATION-SUSPECT
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-CD20-IHC
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-HBV-SEROLOGY
+desired_tests:
+  - TEST-FISH-PANEL  # confirm t(14;18) typical; rule out double-hit
+
+rationale: >
+  Watch-and-wait is the standard 1L approach for FL grade 1-2 / 3A
+  WITHOUT GELF criteria. Multiple RCTs (Ardeshna 2014, RESORT 2014,
+  others) demonstrate no OS benefit from immediate rituximab or
+  chemotherapy for low-tumor-burden patients. Active treatment is
+  initiated only when GELF criteria are met or transformation is
+  suspected. This is THE most important counsel for FL patients —
+  many resist W&W psychologically but RCT evidence is strong.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Watch-and-wait is preferred for asymptomatic low-tumor-burden follicular lymphoma; treatment initiated on GELF criteria or transformation"
+
+known_controversies:
+  - topic: "Single-agent rituximab × 4 doses for low-burden FL"
+    positions:
+      - position: "Single-agent rituximab acceptable for low-burden FL with patient preference for active intervention (RESORT trial)"
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: "Watch-and-wait still preferred — rituximab-only does not improve OS, exposes to immunosuppression + reactivation risk"
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: "Watch-and-wait; offer rituximab × 4 doses only if patient strongly wishes active treatment despite GELF-low burden"
+    rationale: >
+      Per RESORT, rituximab-only delays time-to-cytotoxic-therapy but
+      does not change OS. Patient counsel matters; preference-sensitive.
+
+do_not_do:
+  - "Не починати лікування у асимптомного пацієнта без критеріїв GELF — RCT-доказів про зниження смертності немає, є зайва токсичність + immunosuppression."
+  - "Не пропускати CD20 + flow + IHC підтвердження діагнозу перед W&W — без точного діагнозу W&W не виправдано."
+  - "Не пропускати re-biopsy при rapidly-growing dominant lesion або PET hot-spot — трансформація в DLBCL потребує R-CHOP."
+  - "Не призначати routine surveillance imaging — клінічний моніторинг + лаби; PET-CT тільки за показанням."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Surveillance track default
+  for FL low-burden 1L. Engine routes to BR (standard) on
+  RF-FL-HIGH-TUMOR-BURDEN-GELF, to R-CHOP (aggressive) on
+  RF-FL-TRANSFORMATION-SUSPECT.
