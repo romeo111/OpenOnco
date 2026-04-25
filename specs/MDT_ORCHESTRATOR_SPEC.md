@@ -160,18 +160,36 @@ Top-level контейнер, що повертає `orchestrate_mdt(...)`.
 
 | # | Тригер | Роль | Priority | trigger_type |
 |---|---|---|---|---|
-| R1 | `Disease.lineage` містить `lymphoma` АБО `Disease.archetype == "etiologically_driven"` для лімфом | `hematologist` | `required` | `diagnosis_complexity` |
+| R1 | `Disease.lineage` містить `lymphoma` АБО `Disease.codes.icd_o_3_morphology` у діапазоні mature B/T-cell lymphoma (9590–9729 / 9760–9769) | `hematologist` | `required` | `diagnosis_complexity` |
 | R2 | HCV-біомаркер позитивний (BIO-HCV-RNA == positive) АБО HBV-серологія позитивна | `infectious_disease_hepatology` | `recommended` | `molecular_data` |
-| R3 | Ознаки об'ємного захворювання (`dominant_nodal_mass_cm >= 7`) АБО будь-які imaging fields у profile | `radiologist` | `recommended` | `diagnosis_complexity` |
+| R3 | Будь-які imaging fields присутні у profile (`dominant_nodal_mass_cm`, `mediastinal_ratio`, `pet_ct_date`, `ct_findings`, `lugano_stage`) | `radiologist` | `recommended` (escalates per §3-Esc) | `diagnosis_complexity` |
 | R4 | Лімфомний diagnosis (CD20-IHC, biopsy-related fields) АБО ризик трансформації під ревю | `pathologist` | `recommended` | `diagnosis_complexity` |
 | R5 | Дефолтний/альтернативний track має `plan_track == "aggressive"` (chemoimmunotherapy) | `clinical_pharmacist` | `recommended` | `treatment_domain` |
-| R6 | Disease — extranodal MALT (e.g. gastric, salivary, ocular adnexa) — RT може бути локально-ефективною | `radiation_oncologist` | `optional` | `treatment_domain` |
+| R6 | Disease — extranodal MALT (ICD-O-3 morphology starts with `9699`) — RT може бути локально-ефективною | `radiation_oncologist` | `optional` | `treatment_domain` |
 | R7 | Лікувальний план потребує препаратів з `reimbursed_nszu == false` | `social_worker_case_manager` | `recommended` | `local_availability` |
 | R8 | ECOG ≥ 3 АБО декомпенсована коморбідність → паліативна оцінка | `palliative_care` | `recommended` | `palliative_need` |
 
-**Ескалація priority:** якщо у патієнта є RedFlag `clinical_direction == "intensify"` АБО `"hold"` для конкретної ролі-домену — priority цієї ролі підвищується.
+### §3-Esc. Ескалація priority через RedFlag
 
-**Дедублікація:** одна `role_id` зустрічається у result не більше одного разу. Якщо різні правила дають різні priority — береться **найвищий** (`required` > `recommended` > `optional`).
+Якщо в `PlanResult.plan.trace.fired_red_flags` присутній RedFlag з
+`clinical_direction in {"intensify", "hold"}`, його доменна роль
+ескалюється до `required`. Доменна мапа (MVP):
+
+| RedFlag | Domain role |
+|---|---|
+| `RF-BULKY-DISEASE` (intensify) | `radiologist` |
+| `RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION` (intensify) | `pathologist` |
+| `RF-HBV-COINFECTION` (hold) | `infectious_disease_hepatology` |
+| `RF-DECOMP-CIRRHOSIS` (de-escalate) | _не ескалюється_ — direction поза множиною |
+
+Розширюється у `_REDFLAG_DOMAIN_ROLE` коли додаються нові RedFlag-и.
+
+**Дедублікація:** одна `role_id` зустрічається у result не більше одного разу. Якщо різні правила дають різні priority — береться **найвищий** (`required` > `recommended` > `optional`). Це стосується і ескалації §3-Esc.
+
+**Покриття trigger_type:** MVP rules використовують 5 з 7 значень:
+`diagnosis_complexity`, `molecular_data`, `treatment_domain`,
+`local_availability`, `palliative_need`. Значення `missing_data` і
+`safety_risk` зарезервовані для майбутніх правил (extension points).
 
 ---
 
@@ -202,12 +220,20 @@ Top-level контейнер, що повертає `orchestrate_mdt(...)`.
 {
     "missing_critical_fields": [...],      # поля, відсутність яких блокує впевнене ведення
     "missing_recommended_fields": [...],   # поля, бажані але не блокуючі
-    "ambiguous_findings": [...],           # значення, інтерпретація яких потребує уточнення
+    "ambiguous_findings": [...],           # MVP: завжди []; розширення у наступних ітераціях
     "unevaluated_red_flags": [...],        # RedFlag IDs, які не вдалось evaluate через відсутні findings
     "fields_present_count": int,
     "fields_expected_count": int,
 }
 ```
+
+**Механіка `unevaluated_red_flags`:** orchestrator проходить по всіх
+RedFlag entities у KB (фільтруючи за `relevant_diseases`, якщо вказано),
+рекурсивно витягує усі referenced field-keys з `trigger.any_of/all_of/none_of`
+(`finding`, `condition`, `lab`, `symptom`). Якщо хоч один key відсутній
+у patient findings — RedFlag вважається incompletely-evaluatable і
+потрапляє у список. Дозволяє рев'юеру побачити "ми не знаємо чи цей
+ризик реалізувався", замість того щоб тихо вважати його неактуальним.
 
 Це **не нова клінічна рекомендація**; це чесний звіт про повноту даних,
 який допомагає рев'юеру зрозуміти, наскільки впевнено система могла

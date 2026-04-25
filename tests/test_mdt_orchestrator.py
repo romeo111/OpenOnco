@@ -142,3 +142,93 @@ def test_provenance_records_initial_engine_events():
         len(mdt.required_roles) + len(mdt.recommended_roles) + len(mdt.optional_roles)
     )
     assert len(role_event_targets) == total_roles
+
+
+# ── Drift fixes (post-audit) ──────────────────────────────────────────────
+
+
+def test_flagged_risk_events_target_red_flag_ids():
+    """flagged_risk events must reference RedFlag IDs (RF-*), not
+    Indication IDs. Regression test for the bootstrap_provenance bug
+    surfaced in self-audit."""
+
+    patient = _patient("patient_zero_bulky.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    flagged = [e for e in mdt.provenance.events if e.event_type == "flagged_risk"]
+    assert flagged, "bulky patient must produce at least one flagged_risk event"
+    for e in flagged:
+        assert e.target_type == "red_flag"
+        assert e.target_id.startswith("RF-"), (
+            f"flagged_risk target_id must be a RedFlag id, got {e.target_id!r}"
+        )
+
+    # Specifically: RF-BULKY-DISEASE fires for the bulky patient
+    targets = {e.target_id for e in flagged}
+    assert "RF-BULKY-DISEASE" in targets
+
+
+def test_priority_escalation_via_red_flag():
+    """Bulky patient: radiologist starts as `recommended` from R3 (imaging
+    fields present), then escalates to `required` via §3-Esc because
+    RF-BULKY-DISEASE fires with clinical_direction=intensify."""
+
+    patient = _patient("patient_zero_bulky.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    required_ids = {r.role_id for r in mdt.required_roles}
+    assert "radiologist" in required_ids
+
+    radiologist = next(r for r in mdt.required_roles if r.role_id == "radiologist")
+    assert "RF-BULKY-DISEASE" in (radiologist.reason or "")
+    assert "intensify" in (radiologist.reason or "").lower()
+    assert "RF-BULKY-DISEASE" in radiologist.linked_findings
+
+
+def test_non_reimbursed_drug_creates_drug_availability_question():
+    """Q6: any track with a regimen component flagged as not reimbursed
+    by НСЗУ must produce OQ-DRUG-AVAILABILITY for social_worker_case_manager
+    and add the role at `recommended`. Tested by injecting a synthetic
+    non-reimbursed component into the default track's regimen_data."""
+
+    patient = _patient("patient_zero_indolent.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+
+    default_track = next(t for t in plan_result.plan.tracks if t.is_default)
+    base_regimen = dict(default_track.regimen_data or {})
+    base_regimen["ukraine_availability"] = {
+        "per_component": {
+            "DRUG-TEST-NONREIMB": {"reimbursed_nszu": False},
+        },
+    }
+    default_track.regimen_data = base_regimen
+
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    qids = {q.id for q in mdt.open_questions}
+    assert "OQ-DRUG-AVAILABILITY" in qids
+
+    drug_q = next(q for q in mdt.open_questions if q.id == "OQ-DRUG-AVAILABILITY")
+    assert drug_q.owner_role == "social_worker_case_manager"
+    assert drug_q.blocking is False
+    assert "DRUG-TEST-NONREIMB" in drug_q.linked_findings
+
+
+def test_data_quality_lists_unevaluated_red_flags():
+    """Patient profile lacks HBV serology / Child-Pugh / FIB-4 — multiple
+    RedFlag triggers reference those fields, so they should surface as
+    unevaluated_red_flags in the data quality summary."""
+
+    patient = _patient("patient_zero_indolent.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    unevaluated = mdt.data_quality_summary.get("unevaluated_red_flags") or []
+    assert unevaluated, (
+        "indolent patient lacks hbsag/anti_hbc_total/child_pugh_class — "
+        "at least one RedFlag must be incompletely evaluable"
+    )
+    # RF-HBV-COINFECTION trigger references hbsag and anti_hbc_total — must surface
+    assert "RF-HBV-COINFECTION" in unevaluated

@@ -177,6 +177,34 @@ def _role_name(role_id: str) -> str:
     return _ROLE_CATALOG.get(role_id, role_id)
 
 
+# Maps a fired RedFlag id (or substring) → the role whose priority should
+# escalate when that RedFlag fires with clinical_direction in {intensify, hold}.
+# MVP scope; extend as KB grows.
+_REDFLAG_DOMAIN_ROLE: dict[str, str] = {
+    "RF-BULKY-DISEASE": "radiologist",
+    "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION": "pathologist",
+    "RF-HBV-COINFECTION": "infectious_disease_hepatology",
+    "RF-DECOMP-CIRRHOSIS": "infectious_disease_hepatology",
+}
+
+_ESCALATING_DIRECTIONS = {"intensify", "hold"}
+
+
+def _collect_fired_red_flags(plan_result: PlanResult) -> list[str]:
+    """Pull deduplicated fired-RedFlag IDs from the plan's algorithm trace
+    (populated by algorithm_eval.walk_algorithm)."""
+    if not plan_result.plan or not plan_result.plan.trace:
+        return []
+    out: list[str] = []
+    seen: set[str] = set()
+    for entry in plan_result.plan.trace:
+        for rf in entry.get("fired_red_flags") or []:
+            if rf not in seen:
+                out.append(rf)
+                seen.add(rf)
+    return out
+
+
 # ── Rule application ──────────────────────────────────────────────────────
 
 
@@ -243,15 +271,10 @@ def _apply_role_rules(
             linked_findings=linked,
         )
 
-    # R3 — bulky disease OR imaging fields present → radiologist
-    bulky_threshold_hit = False
-    try:
-        if float(findings.get("dominant_nodal_mass_cm") or 0) >= 7.0:
-            bulky_threshold_hit = True
-    except (TypeError, ValueError):
-        pass
-    has_imaging = bulky_threshold_hit or _has(
+    # R3 — imaging fields present → radiologist (priority may escalate via RedFlag below)
+    has_imaging = _has(
         findings,
+        "dominant_nodal_mass_cm",
         "mediastinal_ratio",
         "pet_ct_date",
         "ct_findings",
@@ -260,10 +283,10 @@ def _apply_role_rules(
     if has_imaging:
         add(
             "radiologist",
-            "Об'ємне ураження або наявні візуалізаційні знахідки — потрібен радіолог для staging/restaging.",
+            "Наявні візуалізаційні знахідки — потрібен радіолог для staging/restaging.",
             "diagnosis_complexity",
-            "recommended" if not bulky_threshold_hit else "required",
-            linked_findings=["dominant_nodal_mass_cm"] if bulky_threshold_hit else ["imaging"],
+            "recommended",
+            linked_findings=["imaging"],
         )
 
     # R4 — lymphoma OR pathology fields → pathologist
@@ -345,6 +368,30 @@ def _apply_role_rules(
             "recommended",
             linked_findings=["ecog/decomp"],
         )
+
+    # Priority escalation per spec §3: fired RedFlag with clinical_direction
+    # in {intensify, hold} → role mapped via _REDFLAG_DOMAIN_ROLE escalates
+    # to `required`.
+    fired = _collect_fired_red_flags(plan_result)
+    for rf_id in fired:
+        rf_data = entities.get(rf_id, {}).get("data") if isinstance(entities, dict) else None
+        if not rf_data:
+            continue
+        direction = (rf_data.get("clinical_direction") or "").strip().lower()
+        if direction not in _ESCALATING_DIRECTIONS:
+            continue
+        escalated_role = _REDFLAG_DOMAIN_ROLE.get(rf_id)
+        if not escalated_role or escalated_role not in roles:
+            continue
+        existing = roles[escalated_role]
+        if _PRIORITY_RANK["required"] > _PRIORITY_RANK[existing.priority]:
+            existing.priority = "required"
+            existing.reason = (
+                f"{existing.reason} Ескальовано через RedFlag {rf_id} "
+                f"(clinical_direction={direction})."
+            )
+            if rf_id not in existing.linked_findings:
+                existing.linked_findings.append(rf_id)
 
     return list(roles.values())
 
@@ -444,6 +491,31 @@ def _apply_open_question_rules(
             linked_findings=["ldh_ratio_to_uln"],
         ))
 
+    # Q6 — any track has a regimen that includes a non-reimbursed drug
+    non_reimbursed: list[str] = []
+    for t in (plan_result.plan.tracks if plan_result.plan else []):
+        regimen = t.regimen_data or {}
+        per_component = (regimen.get("ukraine_availability") or {}).get("per_component") or {}
+        for drug_id, info in per_component.items():
+            if isinstance(info, dict) and info.get("reimbursed_nszu") is False:
+                non_reimbursed.append(drug_id)
+    if non_reimbursed:
+        questions.append(OpenQuestion(
+            id="OQ-DRUG-AVAILABILITY",
+            question=(
+                "Чи доступні препарати без реімбурсації НСЗУ для пацієнта "
+                f"({', '.join(sorted(set(non_reimbursed)))})? "
+                "Чи потрібна social work consult / альтернативний регімен?"
+            ),
+            owner_role="social_worker_case_manager",
+            blocking=False,
+            rationale=(
+                "Препарати з reimbursed_nszu=false означають out-of-pocket "
+                "вартість для пацієнта; це впливає на adherence та реалістичність плану."
+            ),
+            linked_findings=sorted(set(non_reimbursed)),
+        ))
+
     return questions
 
 
@@ -464,19 +536,69 @@ _RECOMMENDED_FIELDS_LYMPHOMA = (
 )
 
 
-def _data_quality(findings: dict[str, Any], disease_data: Optional[dict]) -> dict:
+def _trigger_referenced_fields(trigger: Any) -> list[str]:
+    """Walk a RedFlag.trigger dict (any/all/none_of-style) and collect every
+    `finding` / `condition` / `lab` / `symptom` key referenced. Used to
+    detect RedFlags whose required inputs are absent from patient findings."""
+    if not isinstance(trigger, dict):
+        return []
+    out: list[str] = []
+    for key in ("finding", "condition", "lab", "symptom"):
+        v = trigger.get(key)
+        if isinstance(v, str) and v:
+            out.append(v)
+    for nested_key in ("all_of", "any_of", "none_of"):
+        for sub in trigger.get(nested_key) or []:
+            out.extend(_trigger_referenced_fields(sub))
+    return out
+
+
+def _unevaluated_red_flags(
+    findings: dict[str, Any],
+    disease_data: Optional[dict],
+    entities: dict,
+) -> list[str]:
+    """RedFlag IDs whose trigger references at least one finding key absent
+    from the patient profile, AND whose `relevant_diseases` list either
+    includes the patient's disease_id or is unspecified (global RedFlag).
+
+    Empty list when no RedFlags can be evaluated incompletely."""
+    out: list[str] = []
+    disease_id = (disease_data or {}).get("id")
+    for eid, info in (entities or {}).items():
+        if info.get("type") != "redflags":
+            continue
+        rf = info.get("data") or {}
+        relevant = rf.get("relevant_diseases") or []
+        if relevant and disease_id and disease_id not in relevant:
+            continue
+        refs = _trigger_referenced_fields(rf.get("trigger") or {})
+        if not refs:
+            continue
+        # If ANY referenced field is absent, RedFlag couldn't be fully evaluated
+        if any(not _has(findings, f) for f in refs):
+            out.append(eid)
+    return sorted(out)
+
+
+def _data_quality(
+    findings: dict[str, Any],
+    disease_data: Optional[dict],
+    entities: dict,
+) -> dict:
     is_lymphoma = _is_lymphoma(disease_data)
     critical = list(_CRITICAL_FIELDS_LYMPHOMA) if is_lymphoma else []
     recommended = list(_RECOMMENDED_FIELDS_LYMPHOMA) if is_lymphoma else []
 
     missing_critical = [f for f in critical if not _has(findings, f)]
     missing_recommended = [f for f in recommended if not _has(findings, f)]
+    unevaluated = _unevaluated_red_flags(findings, disease_data, entities)
 
     return {
         "missing_critical_fields": missing_critical,
         "missing_recommended_fields": missing_recommended,
         "ambiguous_findings": [],
-        "unevaluated_red_flags": [],
+        "unevaluated_red_flags": unevaluated,
         "fields_present_count": sum(1 for v in findings.values() if v not in (None, "")),
         "fields_expected_count": len(critical) + len(recommended),
     }
@@ -545,19 +667,24 @@ def _bootstrap_provenance(
             summary=f"Підняте питання для {q.owner_role} (blocking={q.blocking}): {q.question}",
         ))
 
-    # Red-flag events from plan trace
+    # Per-fired-RedFlag events (one event per RedFlag, deduplicated across steps)
     if plan and plan.trace:
+        seen_rfs: set[str] = set()
         for entry in plan.trace:
-            branch = entry.get("branch") or {}
-            target = branch.get("result") if isinstance(branch, dict) else None
-            if entry.get("outcome") and target:
+            for rf_id in entry.get("fired_red_flags") or []:
+                if rf_id in seen_rfs:
+                    continue
+                seen_rfs.add(rf_id)
                 graph.add_event(make_event(
                     event_id=next_id(),
                     actor_role="engine",
                     event_type="flagged_risk",
                     target_type="red_flag",
-                    target_id=str(target),
-                    summary=f"Decision-tree step {entry.get('step')} вивів {target}",
+                    target_id=rf_id,
+                    summary=(
+                        f"RedFlag {rf_id} спрацював на step {entry.get('step')} "
+                        f"алгоритму {plan.algorithm_id}."
+                    ),
                 ))
 
     return graph
@@ -596,7 +723,7 @@ def orchestrate_mdt(
 
     roles = _apply_role_rules(patient, plan_result, findings, disease_data, entities)
     questions = _apply_open_question_rules(patient, plan_result, findings, disease_data)
-    quality = _data_quality(findings, disease_data)
+    quality = _data_quality(findings, disease_data, entities)
 
     # Cross-link: roles that own questions get question IDs in linked_questions
     roles_by_id = {r.role_id: r for r in roles}
