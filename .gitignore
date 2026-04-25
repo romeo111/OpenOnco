@@ -67,6 +67,12 @@ knowledge_base/**/_fetch_log.json
 # (parsed YAML output under knowledge_base/hosted/ is what we keep)
 downloads/
 
+# МОЗ / НСЗУ raw PDFs and CSVs — large binary mirrors of public Ukrainian
+# government documents. We reference them by URL in Source entities and
+# parse them into structured KB content; raw artifacts stay local. Path
+# created by scripts/download_moz_protocols.sh or manual curl.
+legacy/source_pdfs/
+
 # Patient plan persistence — per CHARTER §9.3, patient-specific Plan /
 # DiagnosticPlan instances live OUTSIDE public KB. Persistence layer
 # (knowledge_base/engine/persistence.py) writes here by default.
