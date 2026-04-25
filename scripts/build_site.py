@@ -567,11 +567,6 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
     n_workups = by_type.get("workups", 0)
     n_redflags = by_type.get("redflags", 0)
     n_skills = stats.skills_planned_roles  # 13 — full registry of virtual specialists
-    refs_thousands = stats.corpus_references_total // 1000
-    refs_compact = (
-        f"{refs_thousands:,}K+" if refs_thousands >= 1
-        else f"{stats.corpus_references_total:,}+"
-    )
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
@@ -598,17 +593,6 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
       <div class="cta-row">
         <a class="btn btn-primary" href="try.html">Спробувати з віртуальним пацієнтом →</a>
         <a class="btn btn-secondary" href="gallery.html">Дивитись приклади</a>
-      </div>
-      <div class="hero-corpus">
-        <div class="hcorpus-num">{refs_compact}</div>
-        <div class="hcorpus-text">
-          <strong>{stats.corpus_references_total:,}+ клінічних публікацій</strong>
-          реферуються під {n_sources} обраними guidelines
-          (NCCN · ESMO · BSH · EHA · EASL · WHO · МОЗ).
-          <strong>{stats.corpus_pages_total:,}</strong> сторінок керівництв сумарно.
-          Жоден лікар фізично не може опрацювати такий обсяг для кожного пацієнта —
-          engine реферує його за вас.
-        </div>
       </div>
     </div>
   </section>
