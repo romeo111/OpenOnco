@@ -1,0 +1,43 @@
+id: BIO-BCL2-EXPRESSION-IHC
+names:
+  preferred: "BCL2 expression by IHC"
+  ukrainian: "Експресія BCL2 (імуногістохімія)"
+  english: "BCL2 expression by immunohistochemistry"
+  synonyms: ["BCL2", "B-cell lymphoma 2"]
+biomarker_type: protein_expression_ihc
+
+measurement: {method: "IHC on FFPE biopsy (anti-BCL2 antibody, 124 clone)", units: "categorical (positive ≥50% | negative); semi-quantitative percentage often reported"}
+specimen_requirements: ["FFPE biopsy block"]
+
+related_biomarkers:
+  - BIO-BCL2-REARRANGEMENT  # t(14;18) IGH/BCL2 — drives BCL2 over-expression
+  - BIO-DOUBLE-HIT          # BCL2 + MYC + BCL6 composite for HGBL
+
+knowledge_base_refs:
+  oncokb: "https://www.oncokb.org/gene/BCL2"
+  civic: "https://civicdb.org/genes/12"
+
+sources: [SRC-NCCN-BCELL-2025]
+
+last_reviewed: "2026-04-25"
+notes: >
+  Cross-disease relevance:
+
+  - **CLL/SLL**: BCL2-dependent — venetoclax (BCL-2 inhibitor) is highly
+    active. Universal CLL marker; drives VenO 1L choice for high-risk.
+  - **MCL**: cyclin-D1+ MCL is also BCL2+; predicts venetoclax-rituximab
+    sensitivity in r/r — emerging 2L+ pathway.
+  - **FL**: defining via t(14;18) IGH/BCL2 (~85%) — over-expression
+    blocks apoptosis. Tazemetostat (EZH2 inhibitor) emerging in EZH2-mut
+    r/r FL.
+  - **DLBCL**: double-expressor (BCL2+ ≥50% IHC + MYC+ ≥40% IHC at
+    protein level, distinct from FISH double-hit) is adverse but does
+    NOT change 1L regimen per current evidence.
+  - **HGBL-DH**: BCL2 rearrangement is part of double-hit definition
+    (with MYC + optionally BCL6).
+  - **MM**: t(11;14) MM subset highly venetoclax-sensitive; emerging
+    therapy.
+
+  Direct algorithm-driving currently: indirectly via BIO-DOUBLE-HIT in
+  HGBL-DH + via venetoclax-eligible flag in CLL high-risk. Future:
+  drive r/r 2L+ venetoclax pathway across all BCL2-dependent diseases.

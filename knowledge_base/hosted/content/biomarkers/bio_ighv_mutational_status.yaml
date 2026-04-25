@@ -1,0 +1,38 @@
+id: BIO-IGHV-MUTATIONAL-STATUS
+names:
+  preferred: "IGHV (immunoglobulin heavy-chain variable region) mutational status"
+  ukrainian: "IGHV (мутаційний статус варіабельного регіону важкого ланцюга імуноглобуліну)"
+  english: "IGHV mutational status"
+  synonyms: ["IGHV", "IGHV-mutated", "IGHV-unmutated", "IGHV mutation status"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "IGHV (heavy chain variable region — multiple V genes)"
+  variant_type: "somatic hypermutation status"
+  functional_impact: "marker of post-germinal-center maturation"
+
+measurement: {method: "PCR + Sanger sequencing of clonal IGHV gene; calculate % germline homology", units: "categorical (mutated <98% germline | unmutated ≥98% germline)"}
+specimen_requirements: ["Peripheral blood (CLL) or BM aspirate"]
+
+related_biomarkers: [BIO-CLL-HIGH-RISK-GENETICS]
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Cross-disease relevance:
+
+  - **CLL/SLL** (primary use): unmutated IGHV (≥98% germline homology)
+    = adverse; mutated = favorable. Historically drove FCR (mutated did
+    well long-term) vs BR (unmutated similar). Modern era: BTKi/VenO
+    work regardless of IGHV status, BUT IGHV-unmutated is one component
+    of the CLL high-risk composite (along with TP53/del 17p/complex
+    karyotype) that drives toward fixed-duration VenO over BTKi
+    continuous in some guidelines.
+  - **MCL** (subset): mutated IGHV in nodal subset (germinal-center-like)
+    behaves more indolently; unmutated in mantle-zone subset more
+    aggressive. Not algorithm-driving currently.
+  - **WM**: IGHV usage informs B-cell ontogeny but not treatment choice.
+
+  Direct algorithm impact in our KB: triggers RF-CLL-HIGH-RISK when
+  unmutated alone or part of composite. Standalone trigger now wired
+  via this entity.
