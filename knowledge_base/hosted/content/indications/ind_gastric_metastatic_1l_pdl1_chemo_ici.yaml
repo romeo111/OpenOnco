@@ -1,0 +1,59 @@
+id: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements: ["Stage IV (metastatic)", "Unresectable locally advanced not eligible for periop"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      value_constraint: "CPS ≥5"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-FOLFOX-NIVO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~60% (CheckMate-649 CPS ≥5)"
+  complete_response: "~10%"
+  progression_free_survival: "Median ~7.7 mo"
+  overall_survival_5y: "mOS 14.4 mo (vs 11.1 chemo alone, CheckMate-649 CPS ≥5)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE  # Same autoimmune block applies to nivo
+red_flags_triggering_alternative:
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-HER2-IHC-ISH-IF-RAS-WT  # reused test entity name; covers gastric HER2 too
+  - TEST-MSI-PCR-OR-NGS
+
+desired_tests: []
+
+rationale: >
+  CheckMate-649: FOLFOX + nivo for HER2-negative advanced gastric/GEJ
+  with PD-L1 CPS ≥5 — OS benefit. NCCN category 1.
+
+sources:
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+  - source_id: SRC-ESMO-GASTRIC-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use without HER2 testing — HER2+ patients get trastuzumab+chemo instead"
+  - "Do NOT continue through Grade 3+ irAE without permanent ICI discontinuation consideration"
+  - "Do NOT initiate during ongoing GI bleed / obstruction"
+
+last_reviewed: "2026-04-26"
+notes: "Scaffold entry — gastric metastatic 1L PD-L1 CPS ≥5 / HER2- track only."

@@ -1,0 +1,60 @@
+id: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCC
+  line_of_therapy: 1
+  stage_requirements: ["BCLC C (advanced — vascular invasion or extrahepatic spread)", "BCLC B not eligible for or progressed after TACE", "Child-Pugh A (CP-A 5-6)"]
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-ATEZO-BEV
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~30% (RECIST mRECIST higher)"
+  complete_response: "~7%"
+  progression_free_survival: "Median ~6.8 mo (IMbrave150)"
+  overall_survival_5y: "mOS 19.2 mo IMbrave150 vs 13.4 sorafenib"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE  # Same autoimmune contraindication applies to atezo
+red_flags_triggering_alternative:
+  - RF-HCC-VARICEAL-BLEED
+  - RF-HCC-CHILD-PUGH-B-C
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-EGD-VARICES-SCREENING
+  - TEST-AFP
+  - TEST-LFT
+  - TEST-CHILD-PUGH-CALCULATION
+
+desired_tests: []
+
+rationale: >
+  IMbrave150 — atezolizumab + bevacizumab established as 1L standard
+  for advanced unresectable HCC in Child-Pugh A patients (mOS 19.2
+  vs 13.4 sorafenib). NCCN category 1.
+
+sources:
+  - source_id: SRC-NCCN-HCC-2025
+    position: supports
+  - source_id: SRC-AASLD-HCC-2023
+    position: supports
+
+do_not_do:
+  - "Do NOT initiate without EGD within 6 months — high-risk varices must be ligated/banded first (perforation/bleed risk)"
+  - "Do NOT use in Child-Pugh B/C — atezo+bev not studied; mortality risk"
+  - "Do NOT skip HBV prophylaxis in HBsAg+ / anti-HBc+ patients (entecavir or TDF)"
+  - "Do NOT continue bevacizumab through Grade 3+ HTN or proteinuria >3.5 g/24h"
+
+last_reviewed: "2026-04-26"
+notes: "1L systemic HCC default — Child-Pugh A, ECOG ≤1, varices managed."

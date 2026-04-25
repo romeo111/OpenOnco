@@ -1,0 +1,48 @@
+id: RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+definition: >
+  Obstructive jaundice / cholangitis in PDAC: total bilirubin ≥3 mg/dL
+  with pancreatic-head mass causing biliary tree dilation, OR active
+  cholangitis (fever + RUQ pain + jaundice). Mandates biliary drainage
+  (ERCP-stent or PTC) BEFORE chemo, which is hepatotoxic and
+  reduces clearance of cytotoxics.
+definition_ua: >
+  Обструкційна жовтяниця / холангіт при ПДАК: загальний білірубін ≥3
+  мг/дл при пухлині головки + дилатація жовчних проток, АБО активний
+  холангіт. Потрібна декомпресія (ЕРХПГ-стент або ЧЧХС) ДО хіміотерапії.
+
+trigger:
+  type: composite_score
+  any_of:
+    - all_of:
+        - finding: "total_bilirubin_mg_dl"
+          threshold: 3
+          comparator: ">="
+        - finding: "biliary_dilation"
+          value: true
+    - finding: "active_cholangitis"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 35
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-PDAC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  ~70% of head-of-pancreas tumors present with jaundice. Biliary stent
+  (preferred metallic for life expectancy >3 mo, plastic for shorter)
+  via ERCP first-line; PTC if ERCP fails. Resolve bilirubin to <2 mg/dL
+  before initiating gem-nab-pac or FOLFIRINOX (irinotecan in
+  FOLFIRINOX is hepatically cleared — dose-modify or omit if bilirubin
+  >ULN).

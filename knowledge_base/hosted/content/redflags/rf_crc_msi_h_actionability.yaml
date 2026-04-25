@@ -1,0 +1,45 @@
+id: RF-CRC-MSI-H-ACTIONABILITY
+definition: >
+  MSI-high / dMMR mCRC — treatment-defining biomarker. KEYNOTE-177
+  established pembrolizumab 1L over FOLFOX+bev (PFS 16.5 vs 8.2 mo).
+  This RF intensifies toward the immunotherapy track and overrides the
+  default RAS/BRAF-driven chemo algorithm.
+definition_ua: >
+  MSI-high / dMMR метастатичний КРР — лікування-визначальний маркер.
+  KEYNOTE-177 — пембролізумаб 1L переважає FOLFOX+bev. RF переключає
+  алгоритм на імунотерапевтичний трек, перекриваючи дефолт за RAS/BRAF.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "msi_status"
+      value: "MSI-H"
+    - finding: "dmmr_status"
+      value: "deficient"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CRC
+shifts_algorithm:
+  - ALGO-CRC-METASTATIC-1L
+branch_targets:
+  ALGO-CRC-METASTATIC-1L: "step-1"
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  MSI-H/dMMR ~5% of metastatic CRC, ~15% of stage II-III. Adjuvant
+  setting — ICI not yet standard outside trials (NICHE/NICHE-2 promising
+  for neoadjuvant ICI in non-metastatic dMMR colon — emerging paradigm).
+  Lynch-syndrome-driven dMMR cases warrant germline testing + family
+  counseling.

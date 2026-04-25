@@ -1,0 +1,44 @@
+id: RF-HCC-AFP-RAPID-RISE
+definition: >
+  Rapid AFP rise (>50% increase in 4-8 weeks) during systemic HCC therapy
+  suggests progression. Triggers urgent re-imaging + MDT review for
+  treatment change before clinical decline.
+definition_ua: >
+  Швидке зростання AFP (>50% за 4-8 тижнів) під час системної терапії
+  ГЦК — підозра на прогресування. Терміновий контроль зображення + MDT.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "afp_rise_50pct_in_4_8wk"
+      value: true
+    - all_of:
+        - finding: "afp_baseline_ng_ml"
+          threshold: 100
+          comparator: ">="
+        - finding: "afp_doubling_time_weeks"
+          threshold: 8
+          comparator: "<="
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-HCC
+shifts_algorithm: []  # investigate-only; surfaces in plan as MDT trigger
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  AFP velocity is a recognized response/progression signal in
+  AFP-secretors (pre-treatment AFP ≥100). Not all HCCs secrete AFP —
+  ~30% remain AFP-non-secretors. Always re-image (CECT or MRI) before
+  declaring progression — pseudoprogression on ICI mimics rise.

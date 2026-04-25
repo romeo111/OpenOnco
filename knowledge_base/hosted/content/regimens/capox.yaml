@@ -1,0 +1,48 @@
+id: REG-CAPOX
+name: "CAPOX (XELOX)"
+name_ua: "CAPOX (Капецитабін + Оксаліплатин)"
+alternate_names: ["XELOX", "Capecitabine + oxaliplatin"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "130 mg/m²"
+    schedule: "IV over 2h, day 1"
+    route: IV
+  - drug_id: DRUG-CAPECITABINE
+    dose: "1000 mg/m²"
+    schedule: "PO BID, days 1-14"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "8 cycles (6 mo) adjuvant stage III; 4 cycles (3 mo) low-risk T1-3 N1 per IDEA"
+
+toxicity_profile: moderate
+premedication: ["5-HT3 antagonist + dexamethasone day 1"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2-3 hand-foot syndrome"
+    modification: "Hold capecitabine until Grade ≤1, resume at 75% dose"
+    rationale: "HFS is dose-limiting toxicity of capecitabine"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Reduce capecitabine to 750 mg/m² BID"
+    rationale: "Renal clearance"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Persistent Grade 2 peripheral neuropathy"
+    modification: "Hold or reduce oxaliplatin per NCCN table"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Both components NSZU-funded; capecitabine PO simplifies outpatient delivery vs FOLFOX CIV."
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  Patient-friendlier alternative to FOLFOX (oral fluoropyrimidine + 3-weekly
+  oxaliplatin vs 2-weekly CIV). IDEA: 3 mo CAPOX non-inferior to 6 mo
+  for low-risk stage III, with substantially less neuropathy. Avoid in
+  patients who cannot reliably take PO (compliance, dysphagia).

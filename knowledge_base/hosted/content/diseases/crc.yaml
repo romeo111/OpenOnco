@@ -1,0 +1,55 @@
+id: DIS-CRC
+names:
+  preferred: "Colorectal carcinoma (CRC)"
+  ukrainian: "Колоректальний рак"
+  english: "Colorectal carcinoma"
+  synonyms: ["Colon cancer + Rectal cancer", "Bowel cancer"]
+
+codes:
+  icd_o_3_morphology: "8140/3"  # Adenocarcinoma NOS — most common; mucinous (8480/3) etc. are histologic variants tracked under findings
+  icd_o_3_topography: ["C18", "C19", "C20"]  # colon, rectosigmoid junction, rectum
+  icd_10: "C18-C20"
+  who_classification: "WHO Digestive System Tumours 5th ed (2019): Adenocarcinoma of the colon and rectum"
+
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Lynch syndrome (germline MMR — accounts for ~3%)"
+  - "Familial adenomatous polyposis (APC germline)"
+  - "Inflammatory bowel disease (long-standing UC/CD)"
+  - "Lifestyle: low fiber, high red/processed meat, obesity, smoking, sedentary"
+
+related_diseases: []
+
+epidemiology:
+  global_incidence: "~1.9M new cases/yr; 2nd most common cancer death globally"
+  ukraine_incidence: "~17K new cases/yr; 3rd most common in men, 4th in women"
+  msi_h_proportion: "~15% stage II–III; ~5% metastatic"
+  ras_mutation_rate: "~50% (KRAS ~45% + NRAS ~5%)"
+  braf_v600e_rate: "~8-10%"
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 Solid-tumor extensions — full neoadjuvant→surgery→adjuvant phasing for rectum + periop chemoradiation modeling"
+
+notes: >
+  Combined colon + rectum scope. The two share most systemic-therapy
+  decisions (FOLFOX/CAPOX adjuvant, FOLFIRINOX/FOLFOX+bev/cetux/panit
+  metastatic, pembro MSI-H 1L) but rectum has additional neoadjuvant
+  CRT / TNT decisions that the current schema cannot cleanly express
+  (see PROPOSAL §17). For now, rectum-specific neoadjuvant logic is
+  documented in Indication.notes free-text; full sequencing awaits
+  proposal ratification.
+
+  Required biomarkers per NCCN colon v4.2025 §pretreatment for any
+  stage III–IV: MSI / dMMR (treatment-defining for MSI-H), RAS extended
+  (KRAS exons 2-4 + NRAS exons 2-4), BRAF V600E, HER2 (rare but
+  actionable in RAS-WT).

@@ -1,0 +1,46 @@
+id: RF-HCC-CHILD-PUGH-B-C
+definition: >
+  Child-Pugh B or C cirrhosis in HCC patient. CP-A is the only fully-
+  studied class for ICI combinations (atezo+bev, durva+treme); CP-B has
+  partial sorafenib/lenvatinib data but worse safety; CP-C generally
+  precludes systemic therapy (focus on supportive care + transplant
+  evaluation if liver-limited disease).
+definition_ua: >
+  Child-Pugh B або C при ГЦК. Тільки CP-A повністю вивчено для ICI-
+  комбінацій; CP-B має часткові дані для сорафенібу/ленватинібу; CP-C
+  виключає системну терапію (паліатив + оцінка трансплантації).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "child_pugh_class"
+      value: "B"
+    - finding: "child_pugh_class"
+      value: "C"
+
+clinical_direction: de-escalate
+
+severity: critical
+priority: 50
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-HCC
+shifts_algorithm:
+  - ALGO-HCC-SYSTEMIC-1L
+branch_targets:
+  ALGO-HCC-SYSTEMIC-1L: "step-2"
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Child-Pugh score assesses encephalopathy, ascites, bilirubin, albumin,
+  INR. CP-B: ICI-bev contraindicated (anti-angiogenic stress on
+  decompensated liver); sorafenib partial data (GIDEON registry).
+  CP-C: best supportive care + hepatology / transplant; systemic chemo
+  not indicated.

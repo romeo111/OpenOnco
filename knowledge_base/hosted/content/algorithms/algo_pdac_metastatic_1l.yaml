@@ -1,0 +1,35 @@
+id: ALGO-PDAC-METASTATIC-1L
+applicable_to_disease: DIS-PDAC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Scaffold algorithm for PDAC metastatic 1L. Currently models ONE arm
+  (FOLFIRINOX for ECOG 0-1, bilirubin-resolved). Gem-nab-pac (frail /
+  ECOG 2 / bilirubin issues), olaparib BRCA-maintenance, MSI-H pembro
+  pathways await full authoring.
+
+output_indications:
+  - IND-PDAC-METASTATIC-1L-FOLFIRINOX
+
+default_indication: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "ECOG ≤1"
+        - condition: "Bilirubin <1.5 ULN (resolved post-stenting)"
+    if_true:
+      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+    if_false:
+      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+
+last_reviewed: "2026-04-26"
+notes: >
+  Single-indication scaffold. Full coverage requires gem-nab-pac
+  regimen + indication, olaparib maintenance regimen + indication
+  (BRCA-stratified), 5-FU/nanoliposomal-irinotecan 2L, NALIRIFOX
+  emerging 1L data.

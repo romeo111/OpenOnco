@@ -1,0 +1,56 @@
+id: DIS-GASTRIC
+names:
+  preferred: "Gastric / GEJ adenocarcinoma"
+  ukrainian: "Аденокарцинома шлунка / GEJ"
+  english: "Gastric and gastroesophageal junction adenocarcinoma"
+  synonyms: ["Stomach cancer (adeno)", "GEJ adenocarcinoma"]
+
+codes:
+  icd_o_3_morphology: "8140/3"
+  icd_o_3_topography: ["C16"]
+  icd_10: "C16"
+  who_classification: "WHO Digestive System Tumours 5th ed: Gastric adenocarcinoma + GEJ adenocarcinoma"
+
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Helicobacter pylori chronic infection (intestinal-type)"
+  - "Chronic atrophic gastritis"
+  - "Pernicious anemia"
+  - "EBV infection (~10% — distinct molecular subtype, MSI-low)"
+  - "Hereditary diffuse gastric cancer (CDH1 germline) — rare but high-penetrance"
+  - "Lifestyle: smoking, salted food, low fruit/vegetable, obesity (GEJ)"
+
+related_diseases:
+  - "DIS-ESOPHAGEAL (GEJ Siewert I-II share treatment paradigm)"
+
+epidemiology:
+  global_incidence: "~1M new cases/yr; 5th most common cancer; 4th cancer death"
+  ukraine_incidence: "Eastern-European high-incidence belt; one of top 5 cancers in men"
+  msi_h_proportion: "~10%"
+  her2_positive_rate: "~15-20%"
+  pdl1_cps5_rate: "~50% any positivity; ~30% CPS ≥5"
+  cldn18_2_positive_rate: "~30% (≥75% tumor cells with 2+ staining)"
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — periop FLOT (neoadjuvant→surgery→adjuvant) phasing not modellable today; metastatic biomarker-driven algorithm scaffolded only"
+
+notes: >
+  Scaffolded for Phase GI-1: 1 RF (emergency GI-bleed/obstruction),
+  1 indication (1L metastatic FOLFOX+nivo as the most-applicable
+  scaffolded option), 1 algorithm. Full coverage (FLOT periop, T-DXd
+  HER2+ 2L, biomarker-stratified 1L per CPS / HER2 / CLDN18.2 /
+  MSI cascade) awaits proposal ratification + clinical authoring.
+
+  Required biomarkers per NCCN gastric v3.2025 §pretreatment any
+  metastatic: HER2 IHC + reflex ISH, PD-L1 CPS (22C3), MSI/dMMR,
+  CLDN18.2 (where treatment available), EBER if EBV-subtype suspected.

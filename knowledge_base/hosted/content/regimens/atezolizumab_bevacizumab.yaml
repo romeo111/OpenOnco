@@ -1,0 +1,50 @@
+id: REG-ATEZO-BEV
+name: "Atezolizumab + Bevacizumab"
+name_ua: "Атезолізумаб + Бевацизумаб"
+alternate_names: ["IMbrave150 regimen", "Atezo+bev"]
+
+components:
+  - drug_id: DRUG-ATEZOLIZUMAB
+    dose: "1200 mg"
+    schedule: "IV q3w"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg"
+    schedule: "IV q3w (concurrent)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Hypertension Grade 3 (SBP ≥160 OR DBP ≥100)"
+    modification: "Optimize antihypertensives; hold bev if uncontrolled"
+    source_refs: [SRC-NCCN-HCC-2025]
+  - condition: "Proteinuria >3.5 g/24h"
+    modification: "Hold bev until <2 g/24h"
+    source_refs: [SRC-NCCN-HCC-2025]
+  - condition: "Grade 3+ irAE on atezolizumab"
+    modification: "Hold both drugs; corticosteroids; permanent discontinuation per NCCN irAE algorithm"
+    source_refs: [SRC-NCCN-HCC-2025]
+  - condition: "Variceal bleed during therapy"
+    modification: "Discontinue bevacizumab permanently; consider switch to durvalumab+tremelimumab if disease control needed"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Out-of-pocket / charitable / clinical-trial pathway in Ukraine; biosimilar bevacizumab improves access."
+
+sources: [SRC-NCCN-HCC-2025, SRC-AASLD-HCC-2023]
+last_reviewed: "2026-04-26"
+
+notes: >
+  IMbrave150 — 1L unresectable HCC, Child-Pugh A only, ECOG ≤1.
+  Mandatory pre-treatment EGD within 6 months; high-risk varices treated
+  by ligation/banding before initiation. mOS 19.2 mo vs 13.4 sorafenib.
+  AFP-secreting tumors derive larger benefit (subgroup analysis).

@@ -1,0 +1,56 @@
+id: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 1
+  stage_requirements: ["Stage IV (metastatic)", "Locally advanced unresectable"]
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-FOLFIRINOX
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~32%"
+  complete_response: "~5%"
+  progression_free_survival: "Median ~6.4 mo"
+  overall_survival_5y: "mOS ~11.1 mo metastatic; ~54 mo PRODIGE-24 adjuvant"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-LFT
+  - TEST-CBC
+
+desired_tests:
+  - TEST-CT-PET
+  - TEST-NGS-COMPREHENSIVE  # for BRCA / KRAS G12C / MSI biomarker landscape
+
+rationale: >
+  ACCORD-11: FOLFIRINOX OS doubled vs gemcitabine in metastatic PDAC
+  ECOG 0-1, bilirubin <1.5 ULN. NCCN category 1.
+
+sources:
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+  - source_id: SRC-ESMO-PANCREATIC-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT initiate without resolved jaundice (bilirubin <1.5-2 ULN) — irinotecan hepatotoxic"
+  - "Do NOT use in PS ≥2 — substantial Grade 3-4 toxicity"
+  - "Do NOT skip UGT1A1 testing for high-risk populations (preventable severe diarrhea + neutropenia)"
+
+last_reviewed: "2026-04-26"
+notes: "Scaffold — gem-nab-pac alternative + olaparib BRCA-maintenance + adjuvant mFOLFIRINOX await full authoring."

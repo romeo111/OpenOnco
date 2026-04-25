@@ -1,0 +1,46 @@
+id: RF-HCC-HBV-REACTIVATION-RISK
+definition: >
+  HBV-positive HCC patient (any HBsAg+ OR anti-HBc+ status). Anti-tumor
+  therapy — especially anti-VEGF (bev) and ICI — can precipitate HBV
+  reactivation with ALT flare and hepatic decompensation in
+  unprophylaxed patients. Mandates entecavir/TDF prophylaxis throughout
+  treatment + ≥12 mo post.
+definition_ua: >
+  HBV-позитивний пацієнт з ГЦК (HBsAg+ або anti-HBc+). Антитуморна
+  терапія може провокувати реактивацію HBV. Потрібна профілактика
+  ентекавіром/TDF протягом терапії + ≥12 міс після.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hbv_dna_detectable"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 55
+category: infection-screening
+
+relevant_diseases:
+  - DIS-HCC
+shifts_algorithm: []  # Same pattern as RF-UNIVERSAL-HBV-REACTIVATION-RISK:
+                      # operationalized via parallel SUP-HBV-PROPHYLAXIS,
+                      # not by switching atezo+bev vs durva+treme.
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  HCC-specific HBV gate — separate from RF-UNIVERSAL-HBV-REACTIVATION-RISK
+  because HCC patients have higher baseline viremia + cirrhotic substrate.
+  Entecavir or tenofovir disoproxil/alafenamide acceptable; concurrent
+  with HCV-DAA pathway acceptable when both viruses present.

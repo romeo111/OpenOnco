@@ -1,0 +1,56 @@
+id: DIS-ESOPHAGEAL
+names:
+  preferred: "Esophageal carcinoma (squamous + adeno)"
+  ukrainian: "Карцинома стравоходу (плоскоклітинна + аденокарцинома)"
+  english: "Esophageal carcinoma"
+  synonyms: ["Esophageal cancer", "Esophageal SCC + adenocarcinoma"]
+
+codes:
+  icd_o_3_morphology: "8070/3"  # Squamous; adeno (8140/3) tracked under findings
+  icd_o_3_topography: ["C15"]
+  icd_10: "C15"
+  who_classification: "WHO Digestive System Tumours 5th ed: Esophageal squamous cell carcinoma + esophageal adenocarcinoma"
+
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Squamous: smoking, alcohol, hot beverages, lye-injury history, achalasia, low SES diet"
+  - "Adeno: GERD chronic, Barrett's esophagus, obesity, smoking"
+  - "Plummer-Vinson syndrome (squamous)"
+  - "Tylosis (rare familial squamous)"
+
+related_diseases:
+  - "DIS-GASTRIC (GEJ adeno overlaps Siewert classification)"
+
+epidemiology:
+  global_incidence: "~600K new cases/yr; 10th cancer worldwide; 6th cancer death"
+  histology_distribution: "~85% squamous globally (Asia/Africa); ~70% adeno in Western populations (Barrett-driven)"
+  ukraine_incidence: "Squamous predominant; high alcohol cofactor"
+  her2_positive_rate: "~15-20% of adeno (TOGA-style scoring)"
+  pdl1_cps10_rate: "~50% of squamous (KEYNOTE-590 stratified)"
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — CROSS protocol (neoadjuvant CRT 41.4 Gy + carbo-pacli) + esophagectomy + adjuvant nivolumab phasing not modellable; FLOT periop adeno same gap"
+
+notes: >
+  Scaffolded for Phase GI-1: 1 RF (high-grade dysphagia / aspiration —
+  most common acute presentation), 1 indication (CROSS-style scaffold
+  noting RT not modellable), 1 algorithm. Full histology-stratified
+  algorithm (squamous: definitive CRT for unresectable, CROSS for
+  resectable; adeno: FLOT preferred for resectable, CROSS alternative)
+  + adjuvant nivolumab post-CROSS without pCR + metastatic biomarker-
+  stratified ICI/chemo combos await ratification + clinical authoring.
+
+  Histology branching is critical — squamous and adeno have largely
+  parallel but partially divergent paradigms. Per-prompt allowance:
+  one disease YAML covers both, with histology field on Indication
+  applicability.

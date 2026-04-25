@@ -1,0 +1,48 @@
+id: CI-PEMBROLIZUMAB-AUTOIMMUNE
+severity: absolute
+trigger:
+  type: patient_condition
+  conditions:
+    - patient_condition: "Active autoimmune disease requiring systemic immunosuppression at baseline"
+    - patient_condition: "Solid organ transplant recipient (rejection risk on ICI)"
+    - patient_condition: "Recent (≤90 days) high-dose corticosteroids ≥10 mg/d prednisone-equivalent for non-cancer indication"
+  logic: OR
+
+description: >
+  Pembrolizumab (and other PD-1/PD-L1 inhibitors) augment T-cell
+  responses; in patients with active autoimmunity or post-transplant
+  immunosuppression, this can precipitate severe organ-specific
+  flares (colitis, hepatitis, pneumonitis, transplant rejection)
+  that may be fatal or require transplant loss.
+description_ua: >
+  Пембролізумаб (і інші анти-PD-1/PD-L1) посилюють Т-клітинну активність;
+  при активному аутоімунному захворюванні або після ТО — ризик важких
+  органних flare-ів та відторгнення трансплантата.
+
+alternative_actions:
+  - "Consider chemo-only regimens (FOLFOX+bev or cetuximab if RAS-WT) — accept inferior PFS in MSI-H"
+  - "Multidisciplinary review: rheumatology + transplant + oncology"
+  - "Clinical trial enrollment for ICI-free MSI-H mCRC strategies"
+
+affects_drugs:
+  - DRUG-PEMBROLIZUMAB
+  - DRUG-NIVOLUMAB
+  - DRUG-ATEZOLIZUMAB
+  - DRUG-DURVALUMAB
+  - DRUG-TREMELIMUMAB
+
+affects_regimens:
+  - REG-PEMBROLIZUMAB-MSI-MONO
+
+affects_indications:
+  - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+
+sources:
+  - SRC-NCCN-COLON-2025
+
+last_reviewed: "2026-04-26"
+notes: >
+  STUB. NCCN Immunotherapy-Related Toxicities document is the primary
+  decision support; this CI focuses on the absolute contraindications.
+  Many "relative" autoimmune conditions (vitiligo, well-controlled
+  thyroiditis on stable replacement, mild psoriasis) do NOT preclude ICI.

@@ -1,0 +1,42 @@
+id: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+definition: >
+  BRAF V600E mutation in mCRC: ~8-10% prevalence, poor prognosis
+  (median OS halved vs BRAF-WT on standard chemo). Cetuximab/panitumumab
+  ineffective. Encorafenib + cetuximab (BEACON CRC) is preferred 2L+;
+  some 1L data favor FOLFOXIRI + bev intensification in MSS BRAF-mutant.
+definition_ua: >
+  Мутація BRAF V600E при метастатичному КРР: ~8-10%, поганий прогноз
+  (мОС вдвічі нижче). Цетуксимаб/панітумумаб неефективні. Енкорафеніб +
+  цетуксимаб (BEACON) — preferred 2L+; FOLFOXIRI + bev у 1L MSS.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "braf_v600e_mutation"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CRC
+shifts_algorithm:
+  - ALGO-CRC-METASTATIC-1L
+branch_targets:
+  ALGO-CRC-METASTATIC-1L: "step-3"
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  ~30% of BRAF-mutant CRC are MSI-H — RF-CRC-MSI-H-ACTIONABILITY takes
+  precedence (immunotherapy-track outranks chemo-intensification).
+  In MSS BRAF-V600E mutants (the harder subgroup), TRIBE-2 / FOLFOXIRI+bev
+  has ORR 56% but inferior to immunotherapy combinations under study.

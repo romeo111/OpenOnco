@@ -1,0 +1,46 @@
+id: REG-DURVA-TREME-STRIDE
+name: "Durvalumab + Tremelimumab (STRIDE)"
+name_ua: "Дурвалумаб + Тремелімумаб (STRIDE)"
+alternate_names: ["STRIDE regimen", "HIMALAYA regimen", "T+D"]
+
+components:
+  - drug_id: DRUG-TREMELIMUMAB
+    dose: "300 mg"
+    schedule: "IV — single priming dose only (cycle 1 day 1)"
+    route: IV
+  - drug_id: DRUG-DURVALUMAB
+    dose: "1500 mg"
+    schedule: "IV q4w (cycle 1 with tremelimumab; subsequent cycles mono)"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3+ irAE (especially colitis — CTLA-4 typical)"
+    modification: "Hold both; high-dose corticosteroids prednisone 1-2 mg/kg/d; consider permanent discontinuation"
+    source_refs: [SRC-NCCN-HCC-2025]
+  - condition: "Hypophysitis"
+    modification: "Hold + hormone replacement (cortisol, T4 as appropriate); endocrine consult"
+    source_refs: [SRC-NCCN-HCC-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Tremelimumab not registered in Ukraine; access via clinical-trial / off-label pathway only."
+
+sources: [SRC-NCCN-HCC-2025]
+last_reviewed: "2026-04-26"
+
+notes: >
+  HIMALAYA: STRIDE regimen 1L unresectable HCC, Child-Pugh A. mOS 16.4
+  vs 13.8 sorafenib. Preferred when bevacizumab contraindicated (varices,
+  recent thromboembolic, severe HTN). Single priming-dose tremelimumab
+  has acceptable safety vs older Q4W schedules. CTLA-4 irAE pattern
+  earlier + more colitis vs PD-1 alone.

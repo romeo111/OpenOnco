@@ -1,0 +1,49 @@
+id: REG-CARBOPLATIN-PACLITAXEL-WEEKLY
+name: "Weekly carboplatin + paclitaxel (CROSS-style chemo backbone)"
+name_ua: "Щотижневий карбоплатин + паклітаксел (CROSS-схема)"
+alternate_names: ["CROSS chemo backbone", "Weekly carbo-pacli"]
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 2"
+    schedule: "IV weekly × 5"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "50 mg/m²"
+    schedule: "IV weekly × 5"
+    route: IV
+
+cycle_length_days: 7
+total_cycles: "5 weekly cycles concurrent with RT 41.4 Gy in 23 fractions (CROSS protocol)"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Paclitaxel premed: dexamethasone 20 mg PO 12+6h pre + diphenhydramine 50 mg + ranitidine 50 mg IV 30 min pre"
+  - "5-HT3 antagonist for nausea"
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3 neutropenia"
+    modification: "Hold weekly dose until ANC ≥1.5; resume same dose"
+    source_refs: [SRC-NCCN-ESOPHAGEAL-2025]
+  - condition: "Grade 2-3 peripheral neuropathy"
+    modification: "Reduce paclitaxel to 40 mg/m²; if persistent, omit and continue carboplatin alone"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Both components NSZU-funded; outpatient delivery feasible."
+
+sources: [SRC-NCCN-ESOPHAGEAL-2025, SRC-ESMO-ESOPHAGEAL-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  CROSS protocol concurrent with RT 41.4 Gy / 23 fractions. Both
+  squamous and adeno benefit (CROSS subgroup analyses) with pCR ~25%
+  (squamous higher than adeno). The RT component is NOT modellable in
+  current OpenOnco schema — see PROPOSAL §17. This regimen entry
+  represents the chemo-only backbone; "CROSS" the full modality is
+  free-text on the Indication awaiting proposal ratification.

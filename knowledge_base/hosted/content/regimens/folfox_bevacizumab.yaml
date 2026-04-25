@@ -1,0 +1,56 @@
+id: REG-FOLFOX-BEV
+name: "FOLFOX + Bevacizumab"
+name_ua: "FOLFOX + Бевацизумаб"
+alternate_names: ["mFOLFOX6 + bev"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46h"
+    schedule: "Day 1 bolus, day 1-2 CIV"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "5 mg/kg"
+    schedule: "IV day 1"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity (mCRC 1L)"
+
+toxicity_profile: severe
+premedication: ["5-HT3 + dexamethasone"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Hypertension Grade 2 (SBP ≥150 OR DBP ≥100)"
+    modification: "Optimize antihypertensive (ACE-i / CCB); hold bevacizumab if uncontrolled"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Proteinuria >3.5 g/24h"
+    modification: "Hold bevacizumab until <2 g/24h"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Recent / planned major surgery"
+    modification: "Hold bevacizumab ≥28 days pre-op + ≥28 days post-op until wound healing"
+    source_refs: [SRC-NCCN-COLON-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "FOLFOX components NSZU-funded; bevacizumab biosimilars increasingly available; original molecule typically out-of-pocket."
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  mCRC 1L for RAS-mutant patients (where anti-EGFR contraindicated)
+  AND right-sided RAS-WT (CALGB-80405 — bev preferred over cetux for
+  right-sided per ESMO 2024). Adds ~2-4 mo PFS over FOLFOX alone.
+  Required pre-treatment: recent BP control, no recent surgery (≤28 d),
+  no active hemorrhage, UPCR baseline.

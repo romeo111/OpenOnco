@@ -1,0 +1,56 @@
+id: REG-FOLFOX
+name: "FOLFOX (mFOLFOX6)"
+name_ua: "FOLFOX (модифікований FOLFOX6)"
+alternate_names: ["mFOLFOX6", "FOLFOX-6"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV over 2h, day 1"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV over 2h, day 1 (concurrent with oxaliplatin)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46h"
+    schedule: "Day 1 bolus, day 1-2 CIV"
+    route: IV
+cycle_length_days: 14
+total_cycles: "12 cycles (6 mo) for adjuvant stage III; until progression / unacceptable toxicity for metastatic; 4 cycles (8 wk) periop trials"
+
+toxicity_profile: moderate
+
+premedication:
+  - "5-HT3 antagonist (ondansetron 8 mg IV) + dexamethasone 8 mg IV"
+  - "Optional NK1-RA (aprepitant) for highly emetogenic profile"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2 sensory neuropathy with functional impairment"
+    modification: "Reduce oxaliplatin to 65 mg/m² OR omit oxaliplatin (continue 5-FU/LV alone)"
+    rationale: "Cumulative neurotoxicity; oxaliplatin holiday after 8 cycles common"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Grade 3-4 neutropenia / thrombocytopenia"
+    modification: "Reduce 5-FU CIV to 1800 mg/m² and oxaliplatin 25%"
+    rationale: "Standard NCCN dose-modification table"
+    source_refs: [SRC-NCCN-COLON-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All components on НСЗУ formulary for adjuvant + metastatic CRC."
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Standard adjuvant for stage III colon, also stage II high-risk
+  (T4 / lymphovascular invasion / <12 LN sampled / poorly diff).
+  Metastatic 1L for RAS-WT right-sided OR RAS-mutant + bev (combined
+  with bevacizumab) — see Indication entries for biologic-add-on logic.

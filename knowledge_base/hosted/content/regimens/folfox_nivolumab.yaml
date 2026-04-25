@@ -1,0 +1,50 @@
+id: REG-FOLFOX-NIVO
+name: "FOLFOX + Nivolumab"
+name_ua: "FOLFOX + Ніволумаб"
+alternate_names: ["CheckMate-649 regimen (chemo + nivo arm)"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV day 1 every 14d"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46h"
+    schedule: "Day 1 bolus, day 1-2 CIV"
+    route: IV
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "240 mg IV q2w (alternatively 480 mg IV q4w)"
+    schedule: "IV day 1 of each 14-d cycle"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity (chemo backbone capped at ~12 cycles in some protocols; nivo continues mono until 2 years)"
+
+toxicity_profile: severe
+premedication: ["5-HT3 + dexamethasone"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3+ irAE"
+    modification: "Hold nivo permanently; continue FOLFOX if disease control needed"
+  - condition: "Grade 2 oxaliplatin-induced neuropathy"
+    modification: "Reduce / discontinue oxaliplatin; continue 5-FU + nivo"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Nivolumab out-of-pocket; chemo backbone NSZU-funded."
+
+sources: [SRC-NCCN-GASTRIC-2025, SRC-ESMO-GASTRIC-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  CheckMate-649: FOLFOX + nivo in PD-L1 CPS ≥5 (per FDA label) — mOS
+  benefit. Pembrolizumab + chemo (KEYNOTE-859) is a label-equivalent
+  alternative without strict CPS gating but practical CPS ≥1 cutoff.
+  HER2+ patients route to trastuzumab + chemo instead.

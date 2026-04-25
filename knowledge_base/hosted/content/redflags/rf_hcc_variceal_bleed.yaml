@@ -1,0 +1,46 @@
+id: RF-HCC-VARICEAL-BLEED
+definition: >
+  Active or recent (≤6 months) variceal hemorrhage in HCC patient with
+  cirrhosis. Mandates EGD assessment + variceal band ligation BEFORE any
+  bevacizumab-containing regimen (atezo+bev, IMbrave150 prerequisite).
+  Active bleeding is an absolute hold on systemic therapy until controlled.
+definition_ua: >
+  Активна або нещодавня (≤6 міс) кровотеча з варикозно-розширених вен
+  стравоходу при цирозі + ГЦК. Потрібне ЕГДС-оцінювання + лігування
+  ДО будь-якого режиму з бевацизумабом (передумова IMbrave150).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "active_variceal_bleed"
+      value: true
+    - finding: "recent_variceal_bleed_6mo"
+      value: true
+    - finding: "untreated_high_risk_varices"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 40
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-HCC
+shifts_algorithm:
+  - ALGO-HCC-SYSTEMIC-1L
+branch_targets:
+  ALGO-HCC-SYSTEMIC-1L: "step-1"
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  IMbrave150 explicitly excluded patients with high-risk varices not
+  treated by ligation/banding. Routes patient to durva+treme (STRIDE)
+  alternative (HIMALAYA — no bev exposure) OR to TKI (sorafenib /
+  lenvatinib) alone if anti-angiogenic risk also unacceptable.

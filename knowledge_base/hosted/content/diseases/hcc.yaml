@@ -1,0 +1,62 @@
+id: DIS-HCC
+names:
+  preferred: "Hepatocellular carcinoma (HCC)"
+  ukrainian: "Гепатоцелюлярна карцинома"
+  english: "Hepatocellular carcinoma"
+  synonyms: ["Liver cell carcinoma", "Primary liver cancer (parenchymal)"]
+
+codes:
+  icd_o_3_morphology: "8170/3"
+  icd_o_3_topography: ["C22.0"]
+  icd_10: "C22.0"
+  who_classification: "WHO Digestive System Tumours 5th ed (2019): Hepatocellular carcinoma NOS"
+
+# Primary archetype is stage_driven (BCLC governs treatment) BUT
+# etiological_factors is non-empty because etiology drives surveillance
+# entry, prophylaxis (HBV reactivation on ICI), and modifies prognosis.
+# This combination is explicitly allowed per spec §3.3 — archetype is
+# the PRIMARY axis; etiological_factors is descriptive.
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Chronic HBV infection (~50% globally; #1 cause Asia/Africa)"
+  - "Chronic HCV infection (~25%)"
+  - "Alcohol-related liver disease (10-15%)"
+  - "MASH/MAFLD (rapidly increasing — #1 cause Western, projected globally)"
+  - "Aflatoxin exposure (cofactor, sub-Saharan Africa + East Asia)"
+  - "Hereditary hemochromatosis"
+  - "α1-antitrypsin deficiency"
+
+related_diseases:
+  - "DIS-CIRRHOSIS (substrate; not separate cancer entity but determines therapy via Child-Pugh)"
+
+epidemiology:
+  global_incidence: "~900K new cases/yr; 6th most common cancer, 3rd cancer death globally"
+  ukraine_incidence: "Underestimated; HCV-driven HCC peak still rising despite DAA roll-out (cohort effect — viral cure reduces but does not eliminate residual risk)"
+  cirrhotic_proportion: ">85% of HCC arises in cirrhotic liver; remaining 10-15% in non-cirrhotic (HBV-driven, MASH)"
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — surgery (hepatic resection / transplant), loco-regional therapy (TACE / TARE / SBRT) modeling for early/intermediate BCLC stages"
+
+notes: >
+  HCC is the canonical "hybrid" archetype: BCLC stage drives the modality
+  cascade (resection / transplant / ablation for 0-A; TACE / TARE for B;
+  systemic for C; supportive for D), AND etiological factors govern
+  parallel decisions (HBV prophylaxis on ICI / chemoTACE; HCV
+  treatment-and-link for SVR; MASH lifestyle; alcohol cessation).
+  Child-Pugh class is the universal modifier — every BCLC stage has a
+  CP-A vs CP-B vs CP-C subdivision, and CP-C generally precludes
+  systemic therapy.
+
+  This commit ships systemic-therapy-only logic (BCLC C, CP-A) — the
+  curative modalities (surgery, transplant, ablation) await the
+  PROPOSAL §17 ratification. The disease is therefore marked `partial`.

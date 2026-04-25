@@ -1,0 +1,61 @@
+id: REG-FOLFIRINOX
+name: "FOLFIRINOX"
+name_ua: "FOLFIRINOX"
+alternate_names: ["mFOLFIRINOX (modified)", "ACCORD-11 regimen"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV day 1 every 14d"
+    route: IV
+  - drug_id: DRUG-IRINOTECAN
+    dose: "180 mg/m² (full); 150 mg/m² in modified FOLFIRINOX (mFOLFIRINOX)"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46h (modified omits bolus to reduce mucositis)"
+    schedule: "Day 1 bolus, day 1-2 CIV"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "12 cycles (PRODIGE-24 adjuvant); until progression / toxicity (metastatic)"
+
+toxicity_profile: severe
+
+premedication: ["5-HT3 + dexamethasone + atropine for cholinergic syndrome (irinotecan)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "UGT1A1 *28/*28 homozygous"
+    modification: "Reduce irinotecan to 135 mg/m² (or 120 mg/m² in mFOLFIRINOX) for first cycle"
+    rationale: "Severe neutropenia + diarrhea risk"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin 1.5-3 ULN"
+    modification: "Reduce irinotecan 25-50%"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Bilirubin >3 ULN"
+    modification: "Hold irinotecan; consider gem-nab-pac switch"
+    source_refs: [SRC-NCCN-PANCREATIC-2025]
+  - condition: "Grade 3 diarrhea"
+    modification: "Loperamide intensive; reduce irinotecan and 5-FU 25%"
+  - condition: "Grade 3+ neuropathy"
+    modification: "Hold or reduce oxaliplatin"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All four components NSZU-funded; G-CSF prophylaxis recommended due to febrile-neutropenia rate ~10% in metastatic, ~3% in modified."
+
+sources: [SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  ACCORD-11: FOLFIRINOX vs gemcitabine in metastatic PDAC, ECOG 0-1 —
+  mOS 11.1 vs 6.8 mo (significant). PRODIGE-24: mFOLFIRINOX adjuvant
+  for resected stage I-III (R0/R1) — mOS 54 mo vs 35 gem-mono. Eligible
+  patients PS 0-1, bilirubin <1.5 ULN, no severe cardiac comorbidity.

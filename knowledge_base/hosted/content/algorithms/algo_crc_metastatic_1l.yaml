@@ -1,0 +1,78 @@
+id: ALGO-CRC-METASTATIC-1L
+applicable_to_disease: DIS-CRC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L regimen for metastatic colorectal cancer (mCRC) based on
+  MSI-H status (treatment-defining), then RAS/BRAF + tumor sidedness
+  (NCCN/ESMO algorithm), then frailty (de-escalate).
+
+output_indications:
+  - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+  - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+  - IND-CRC-METASTATIC-1L-FOLFOX-BEV
+
+default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+
+decision_tree:
+  # Step 1 — MSI-H/dMMR overrides everything (KEYNOTE-177).
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-MSI-H-ACTIONABILITY
+    if_true:
+      result: IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+    if_false:
+      next_step: 2
+
+  # Step 2 — RAS-WT + left-sided primary → cetuximab (CALGB-80405).
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "RAS wild-type (KRAS exons 2-4 + NRAS exons 2-4 all WT)"
+        - condition: "Left-sided primary (splenic flexure or distal)"
+    if_true:
+      result: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+    if_false:
+      next_step: 3
+
+  # Step 3 — BRAF V600E (poor prognosis) — bev + intensified chemo
+  # (FOLFOXIRI+bev preferred but FOLFOX+bev is the simpler scaffolded
+  # option until FOLFOXIRI regimen is authored).
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+    if_true:
+      result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+    if_false:
+      next_step: 4
+
+  # Step 4 — frailty de-escalation (sentinel; same indication as step 5
+  # in this scaffold but trace records the RF firing).
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-FRAILTY-AGE
+    if_true:
+      result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+    if_false:
+      result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Scaffold algorithm covering 3 indications (MSI-H pembro, RAS-WT
+  left-cetux, RAS-mut/right-WT bev). Missing from scaffold (deferred
+  to clinical authoring): FOLFOXIRI + bev for fit-young aggressive
+  disease, encorafenib + cetuximab BEACON for BRAF V600E 2L+,
+  HER2+ trastuzumab + tucatinib (MOUNTAINEER), regorafenib /
+  trifluridine-tipiracil 3L+. Right-sided RAS-WT routes to step 4
+  default (FOLFOX+bev) per CALGB-80405 sidedness analysis.
+
+  Frailty (step 4) currently routes to FOLFOX+bev — clinically dose-
+  modified or palliative-intent 5-FU/LV mono is more appropriate but
+  awaits dedicated geriatric-oncology indication entry.

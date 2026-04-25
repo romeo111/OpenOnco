@@ -1,0 +1,44 @@
+id: RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+definition: >
+  Surgical/endoscopic emergency in gastric/GEJ adenocarcinoma: massive
+  upper-GI bleed requiring transfusion, gastric outlet obstruction with
+  intolerance of oral intake, or perforation. Mandates urgent
+  endoscopic / surgical / interventional management BEFORE systemic
+  therapy initiation.
+definition_ua: >
+  Хірургічна/ендоскопічна невідкладність при ШКТ-аденокарциномі: масивна
+  верхньо-ШКТ кровотеча, обструкція виходу шлунка, перфорація. Терміново
+  ендоскопія/хірургія/радіологічна інтервенція ДО системної терапії.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "massive_upper_gi_bleed"
+      value: true
+    - finding: "gastric_outlet_obstruction_npo"
+      value: true
+    - finding: "gastric_perforation"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 30
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-GASTRIC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  ~30% of gastric cancer presents with obstruction or bleeding.
+  Endoscopic stenting OR palliative/diversion surgery + nutritional
+  support BEFORE chemo. Bevacizumab/ramucirumab additionally
+  contraindicated for ≥28 days post-surgery.

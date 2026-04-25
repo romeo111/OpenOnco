@@ -1,0 +1,52 @@
+id: RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION
+definition: >
+  Surgical emergency in CRC: complete bowel obstruction (closed-loop or
+  large-bowel obstruction with competent ileocecal valve), perforation
+  with peritonitis, or massive lower-GI bleed requiring transfusion.
+  Mandates urgent surgery / interventional decompression BEFORE any
+  systemic therapy decision; staging and biomarker work-up are deferred
+  until patient is stabilized.
+definition_ua: >
+  Хірургічна невідкладність при КРР: повна кишкова непрохідність,
+  перфорація з перитонітом, або масивна нижня ШКТ-кровотеча. Потребує
+  термінової операції / стент-декомпресії ДО будь-якого системного
+  лікування; стадіювання + молекулярні маркери відкладаються.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "complete_bowel_obstruction"
+      value: true
+    - finding: "perforation_with_peritonitis"
+      value: true
+    - finding: "massive_lower_gi_bleed"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 30
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CRC
+shifts_algorithm: []  # Surgical emergency — escapes the chemo algorithm
+                      # entirely. Engine surfaces this RF in plan output
+                      # with explicit "hold systemic therapy / surgical
+                      # consult immediate" message.
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  ~10-30% of CRC presents with obstruction; ~3-8% with perforation.
+  Self-expandable metal stent (SEMS) is bridge-to-surgery option for
+  left-sided malignant obstruction in elective surgical candidates;
+  emergency surgery for right-sided / proximal lesions and any
+  perforation. Bevacizumab is contraindicated for ≥28 days after major
+  abdominal surgery — relevant for subsequent metastatic-pathway
+  planning.

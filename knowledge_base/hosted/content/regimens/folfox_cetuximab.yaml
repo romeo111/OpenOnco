@@ -1,0 +1,58 @@
+id: REG-FOLFOX-CETUX
+name: "FOLFOX + Cetuximab"
+name_ua: "FOLFOX + Цетуксимаб"
+alternate_names: ["mFOLFOX6 + cetux"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46h"
+    schedule: "Day 1 bolus, day 1-2 CIV"
+    route: IV
+  - drug_id: DRUG-CETUXIMAB
+    dose: "500 mg/m² q2w (preferred for FOLFOX schedule; alternatively 400 mg/m² loading then 250 mg/m² weekly)"
+    schedule: "IV day 1 of each 14-d cycle"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Cetuximab: H1 (diphenhydramine 50 mg IV) + H2 (ranitidine 50 mg IV) + dexamethasone 8 mg IV 30 min pre-cetuximab"
+  - "FOLFOX: 5-HT3 + dexamethasone"
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Acneiform rash Grade 2-3"
+    modification: "Tetracycline (doxycycline 100 mg BID) + topical clindamycin; dose-reduce cetuximab if Grade 3 persistent"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Severe (Grade 3-4) hypersensitivity / anaphylaxis"
+    modification: "Discontinue cetuximab permanently; switch to panitumumab if anti-EGFR still desired (lower hypersensitivity)"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Hypomagnesemia <1.0 mg/dL"
+    modification: "IV magnesium replacement; oral PRN"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Cetuximab typically out-of-pocket; selective NSZU coverage for RAS-WT left-sided mCRC pathway."
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  mCRC 1L for RAS-WT LEFT-sided primary (CALGB-80405 / FIRE-3 /
+  CRYSTAL). Right-sided RAS-WT primaries get bevacizumab preferentially.
+  BRAF V600E precludes anti-EGFR (no benefit). Acneiform rash strongly
+  correlates with response — patient education on skin care critical.

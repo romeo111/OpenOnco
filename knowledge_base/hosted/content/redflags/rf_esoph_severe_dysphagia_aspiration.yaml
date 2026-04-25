@@ -1,0 +1,48 @@
+id: RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION
+definition: >
+  Severe dysphagia with weight loss / aspiration risk in esophageal
+  cancer: inability to swallow saliva, recurrent aspiration pneumonia,
+  >10% weight loss in 3 months, OR malignant tracheoesophageal fistula.
+  Mandates urgent palliative intervention (stenting OR dilation OR
+  diversion) BEFORE any definitive systemic / RT therapy.
+definition_ua: >
+  Тяжка дисфагія з втратою ваги / аспірацією при стравохідному раку.
+  Потребує термінової паліативної інтервенції (стент / ділатація /
+  G-tube) ДО системної / RT-терапії.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cannot_swallow_saliva"
+      value: true
+    - finding: "recurrent_aspiration_pneumonia"
+      value: true
+    - finding: "weight_loss_pct_3mo"
+      threshold: 10
+      comparator: ">="
+    - finding: "tracheoesophageal_fistula"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 30
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-ESOPHAGEAL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Self-expandable esophageal stent OR endoscopic dilation OR PEG/J-tube
+  for nutritional support. Tracheoesophageal fistula precludes RT
+  (worsens fistula) — covered stent + chemo only. Severe weight loss
+  pre-CROSS predicts poor tolerance — pre-treatment nutrition
+  optimization mandatory.

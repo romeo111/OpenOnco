@@ -1,0 +1,53 @@
+id: WORKUP-SUSPECTED-CRC
+applicable_to:
+  lineage_hints:
+    - colorectal_carcinoma
+    - colon_cancer
+    - rectal_cancer
+    - bowel_cancer
+  tissue_locations:
+    - colon
+    - rectum
+    - rectosigmoid
+  presentation_keywords:
+    - hematochezia
+    - rectal_bleeding
+    - change_in_bowel_habit
+    - abdominal_pain
+    - iron_deficiency_anemia_unexplained
+    - obstruction_symptoms
+    - palpable_abdominal_mass
+
+# CRC diagnostic + staging workup per NCCN colon v4.2025 + ESMO 2024.
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-COLONOSCOPY-FULL
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-MRI-RECTUM-IF-RECTAL  # only for rectal primary
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
+  - TEST-RAS-EXTENDED
+  - TEST-BRAF-V600E
+  - TEST-HER2-IHC-ISH-IF-RAS-WT  # reflex if RAS-WT and metastatic
+
+desired_tests:
+  - TEST-CT-PET  # for indeterminate findings or pre-curative-resection of metastatic disease
+  - TEST-NGS-COMPREHENSIVE  # 1L mCRC strongly recommended
+
+mandatory_questions:
+  - "Lynch syndrome family history (≥3 relatives with HNPCC-spectrum cancers)?"
+  - "Inflammatory bowel disease history?"
+  - "Prior pelvic radiotherapy?"
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Reflex molecular testing on biopsy (MSI/dMMR + RAS + BRAF) for
+  stage IV at diagnosis. HER2 reflex when RAS-WT (~3% prevalence,
+  actionable per MOUNTAINEER trial).

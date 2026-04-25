@@ -1,0 +1,35 @@
+id: ALGO-GASTRIC-METASTATIC-1L
+applicable_to_disease: DIS-GASTRIC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Scaffold algorithm for gastric/GEJ adenocarcinoma metastatic 1L.
+  Currently models ONE biomarker arm (HER2- / PD-L1 CPS ≥5 → chemo+ICI).
+  Full HER2+ trastuzumab+chemo, CLDN18.2+ zolbetuximab, MSI-H pembro
+  pathways await clinical authoring + regimen entries.
+
+output_indications:
+  - IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
+
+default_indication: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "PD-L1 CPS ≥5"
+        - condition: "HER2-negative"
+    if_true:
+      result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
+    if_false:
+      result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+
+last_reviewed: "2026-04-26"
+notes: >
+  Single-indication scaffold. Out of scope: HER2+ trastuzumab+chemo
+  (TOGA), CLDN18.2+ zolbetuximab (SPOTLIGHT, GLOW), MSI-H pembro mono,
+  T-DXd 2L+ HER2+, FLOT periop for resectable. Full coverage in next
+  authoring batch.
