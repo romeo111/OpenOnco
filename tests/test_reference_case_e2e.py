@@ -260,32 +260,14 @@ def test_mdt_provenance_is_populated(mdt_result):
     assert mdt_result.provenance.events, "provenance graph has no events"
 
 
-# ── §1.3 critical: KNOWN GAPS (xfail until implemented) ───────────────────
+# ── §1.3 critical: render-layer sections (formerly xfailed gaps) ──────────
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: dedicated 'Etiological driver' section not yet rendered for "
-        "etiologically_driven archetype. Disease.archetype + etiological_factors "
-        "exist in KB (DIS-HCV-MZL) but render_plan_html doesn't surface them as "
-        "their own section. Tracked in roadmap."
-    ),
-    strict=False,
-)
 def test_html_etiological_driver_section_for_etiologically_driven_archetype(html):
     """§1.3 critical: Etiological driver section (for etiologically_driven archetype)."""
     assert "Етіологічний драйвер" in html or "Etiological driver" in html
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: pre-treatment investigations table not rendered in treatment-mode "
-        "Plan. Indication.required_tests + desired_tests are populated and could "
-        "be surfaced by render_plan_html similarly to DiagnosticBrief workup_steps. "
-        "Tracked in roadmap."
-    ),
-    strict=False,
-)
 def test_html_pre_treatment_investigations_with_priority(html):
     """§1.3 critical: Pre-treatment investigations з priority class."""
     assert "Pre-treatment" in html or "Дослідження перед" in html
@@ -294,32 +276,13 @@ def test_html_pre_treatment_investigations_with_priority(html):
     )
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: RedFlags not categorized as PRO-aggressive vs CONTRA-aggressive in "
-        "render output. Algorithm.decision_tree references them by ID; we know "
-        "from indication.red_flags_triggering_alternative which are PRO and from "
-        "regimen contraindications which are CONTRA, but the render layer doesn't "
-        "yet expose this categorization. Tracked in roadmap."
-    ),
-    strict=False,
-)
 def test_html_red_flags_categorized_pro_contra(html):
     """§1.3 critical: Red flags: both PRO aggressive + CONTRA aggressive."""
-    has_pro = "PRO" in html or "за агресивний" in html.lower()
-    has_contra = "CONTRA" in html or "проти агресивн" in html.lower()
+    has_pro = "PRO-AGGRESSIVE" in html or "за агресивний" in html.lower()
+    has_contra = "CONTRA-AGGRESSIVE" in html or "проти агресивн" in html.lower()
     assert has_pro and has_contra
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: 'What NOT to do' section has no schema home and no render. "
-        "Could be derived from Indication.known_controversies + hard_contraindications "
-        "with explicit prohibitive framing, or modeled as a new field on Indication. "
-        "Tracked in roadmap."
-    ),
-    strict=False,
-)
 def test_html_what_not_to_do_section(html):
     """§1.3 critical: 'What NOT to do' section."""
     assert (
@@ -329,14 +292,6 @@ def test_html_what_not_to_do_section(html):
     )
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: monitoring schedule data is attached to PlanTrack.monitoring_data "
-        "but not yet rendered as a phases/frequency table in the Plan HTML. "
-        "Tracked in roadmap."
-    ),
-    strict=False,
-)
 def test_html_monitoring_schedule_phases_visible(html):
     """§1.3 critical: Monitoring schedule with phases visible to reader."""
     assert "Monitoring" in html or "Моніторинг" in html
@@ -369,14 +324,6 @@ def test_side_by_side_comparison_layout(html):
     assert "grid-template-columns: 1fr 1fr" in html
 
 
-@pytest.mark.xfail(
-    reason=(
-        "GAP: timeline visualization not rendered. Spec §1.3 should-have. "
-        "Could be derived from Regimen.cycle_length + MonitoringSchedule.phases. "
-        "Tracked in roadmap (Schema gaps — Timeline as derived output)."
-    ),
-    strict=False,
-)
 def test_html_timeline_visualization(html):
     """Should-have: Timeline visualization (rendered as a visible section,
     not merely the word 'timeline' appearing in CSS comments)."""

@@ -253,6 +253,71 @@ h3 {
 .sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
 .sources li { padding: 4px 0; }
 
+/* Etiological driver — featured card for etiologically_driven archetype */
+.etiology-card {
+    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
+    border-left: 4px solid var(--teal); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.etiology-card .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+.etiology-card .archetype {
+    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
+    margin-bottom: 8px;
+}
+.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
+.etiology-card ul li { padding: 3px 0; }
+
+/* PRO/CONTRA — two-column grid for red flags */
+.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
+.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
+.pc-col h3 { color: var(--gray-900); margin-top: 0; }
+.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
+.pc-col li { padding: 4px 0; }
+.pc-col .rf-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    display: block; margin-top: 2px;
+}
+
+/* Do-not — strongly framed prohibitive list */
+.do-not {
+    background: var(--red-bg); border-left: 4px solid var(--red-alert);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
+}
+.do-not .track-name {
+    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
+    margin-bottom: 8px;
+}
+.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
+.do-not li { padding: 3px 0; }
+
+/* Timeline — horizontal phase strip */
+.timeline {
+    display: flex; gap: 4px; margin-top: 8px;
+    overflow-x: auto; padding-bottom: 8px;
+}
+.tl-phase {
+    flex: 1; min-width: 120px;
+    background: var(--green-100); border-radius: 6px;
+    padding: 10px 12px; border-top: 3px solid var(--green-600);
+}
+.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
+.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
+.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
+.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
+.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
+.tl-phase .name {
+    font-weight: 700; font-size: 12px; color: var(--gray-900);
+    margin-bottom: 4px;
+}
+.tl-phase .window {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+}
+
 /* Footer */
 .doc-footer {
     margin-top: 40px; padding-top: 20px;
@@ -401,6 +466,369 @@ _MEDICAL_DISCLAIMER = (
 )
 
 
+# ── Section helpers (treatment Plan) ──────────────────────────────────────
+
+
+def _render_etiological_driver(disease: Optional[dict]) -> str:
+    """Etiologically-driven archetype gets a featured card explaining WHY
+    a particular driver (HCV, H. pylori, EBV, etc.) shapes treatment.
+    Returns empty string for non-etiologically_driven diseases."""
+    if not disease:
+        return ""
+    archetype = disease.get("archetype")
+    if archetype != "etiologically_driven":
+        return ""
+    factors = disease.get("etiological_factors") or []
+    name = (disease.get("names") or {}).get("ukrainian") or (
+        disease.get("names") or {}).get("preferred") or disease.get("id", "")
+    factor_items = "".join(f"<li>{_h(f)}</li>" for f in factors) or "<li>—</li>"
+    return (
+        '<section>'
+        '<h2>Етіологічний драйвер</h2>'
+        '<div class="etiology-card">'
+        '<div class="label">Etiological driver · etiologically_driven archetype</div>'
+        f'<div class="archetype">{_h(name)}</div>'
+        f'<ul>{factor_items}</ul>'
+        '</div>'
+        '</section>'
+    )
+
+
+_PRIORITY_LABEL_UA = {
+    "critical": "Критично",
+    "standard": "Стандарт",
+    "desired": "Бажано",
+    "calculation_based": "Розрахунок",
+}
+_PRIORITY_BADGE_CLS = {
+    "critical": "badge--required",
+    "standard": "badge--recommended",
+    "desired": "badge--optional",
+    "calculation_based": "badge--optional",
+}
+_PRIORITY_RANK = {"critical": 0, "standard": 1, "desired": 2, "calculation_based": 3}
+
+
+def _render_pretreatment_investigations(plan, kb_resolved: dict) -> str:
+    """Pre-treatment investigations table: union of required + desired tests
+    across all tracks, sorted by priority_class. Each row shows test name,
+    priority badge, category, and which tracks need it.
+    Per REFERENCE_CASE_SPECIFICATION §3.5."""
+    tests_lookup = (kb_resolved or {}).get("tests") or {}
+    if not tests_lookup:
+        return ""
+
+    # Collect: test_id → {required_by: set[track_id], desired_by: set[track_id]}
+    test_use: dict[str, dict] = {}
+    for t in plan.tracks:
+        ind = t.indication_data or {}
+        for tid in ind.get("required_tests") or []:
+            test_use.setdefault(tid, {"required_by": set(), "desired_by": set()})
+            test_use[tid]["required_by"].add(t.track_id)
+        for tid in ind.get("desired_tests") or []:
+            test_use.setdefault(tid, {"required_by": set(), "desired_by": set()})
+            test_use[tid]["desired_by"].add(t.track_id)
+    if not test_use:
+        return ""
+
+    rows = []
+    for tid, use in sorted(
+        test_use.items(),
+        key=lambda kv: (
+            _PRIORITY_RANK.get((tests_lookup.get(kv[0]) or {}).get("priority_class", "standard"), 1),
+            kv[0],
+        ),
+    ):
+        test = tests_lookup.get(tid) or {}
+        names = test.get("names") or {}
+        name = names.get("ukrainian") or names.get("preferred") or tid
+        priority = test.get("priority_class") or "standard"
+        category = test.get("category") or "—"
+        # If required by every track → "all"; else list which tracks
+        all_track_ids = {t.track_id for t in plan.tracks}
+        if use["required_by"] == all_track_ids:
+            scope = "усі треки"
+        elif use["required_by"]:
+            scope = ", ".join(sorted(use["required_by"]))
+        else:
+            scope = "бажано (" + ", ".join(sorted(use["desired_by"])) + ")"
+        priority_badge = (
+            f'<span class="badge {_PRIORITY_BADGE_CLS.get(priority, "badge--optional")}">'
+            f'{_h(_PRIORITY_LABEL_UA.get(priority, priority))}</span>'
+        )
+        rows.append(
+            f'<tr><td>{_h(tid)}</td><td>{_h(name)}</td>'
+            f'<td>{priority_badge}</td>'
+            f'<td>{_h(category)}</td><td>{_h(scope)}</td></tr>'
+        )
+
+    return (
+        '<section>'
+        '<h2>Pre-treatment investigations</h2>'
+        '<div class="section-sub">Дослідження перед стартом терапії · '
+        'критичні / стандарт / бажано · поєднані по треках</div>'
+        '<table class="tbl">'
+        '<thead><tr><th>ID</th><th>Назва</th><th>Пріоритет</th>'
+        '<th>Категорія</th><th>Потрібно для</th></tr></thead>'
+        f'<tbody>{"".join(rows)}</tbody>'
+        '</table>'
+        '</section>'
+    )
+
+
+def _render_red_flags_pro_contra(plan, kb_resolved: dict) -> str:
+    """RedFlag PRO/CONTRA categorization for the aggressive escalation:
+
+    - PRO-AGGRESSIVE: red flags that, when present, push the engine toward
+      the aggressive track. Source: indication.red_flags_triggering_alternative
+      on the STANDARD track + algorithm.decision_tree any_of red_flag clauses
+      that resolve to the aggressive indication.
+    - CONTRA-AGGRESSIVE: hard contraindications attached to the AGGRESSIVE
+      track's indication / regimen — reasons NOT to escalate.
+
+    Per REFERENCE_CASE_SPECIFICATION §3.8.
+    """
+    rf_lookup = (kb_resolved or {}).get("red_flags") or {}
+    if not plan.tracks:
+        return ""
+
+    # PRO: union of red_flags_triggering_alternative across non-aggressive tracks
+    pro_ids: set[str] = set()
+    for t in plan.tracks:
+        if t.track_id == "aggressive":
+            continue
+        ind = t.indication_data or {}
+        pro_ids.update(ind.get("red_flags_triggering_alternative") or [])
+    # Also pick up red flags from algorithm decision tree pointing to aggressive
+    algo = (kb_resolved or {}).get("algorithm") or {}
+    aggr_ind_ids = {
+        t.indication_id for t in plan.tracks if t.track_id == "aggressive"
+    }
+    for step in algo.get("decision_tree") or []:
+        if_true = (step.get("if_true") or {}).get("result")
+        if if_true in aggr_ind_ids:
+            ev = step.get("evaluate") or {}
+            for clause in (ev.get("any_of") or []) + (ev.get("all_of") or []):
+                if isinstance(clause, dict) and clause.get("red_flag"):
+                    pro_ids.add(clause["red_flag"])
+
+    # CONTRA: hard contraindications on aggressive track
+    contra_items: list[dict] = []
+    for t in plan.tracks:
+        if t.track_id != "aggressive":
+            continue
+        for c in t.contraindications_data or []:
+            contra_items.append(c)
+
+    if not pro_ids and not contra_items:
+        return ""
+
+    def _rf_li(rid: str) -> str:
+        rf = rf_lookup.get(rid) or {}
+        defn = rf.get("definition_ua") or rf.get("definition") or "—"
+        return f'<li>{_h(defn)}<span class="rf-id">{_h(rid)}</span></li>'
+
+    def _ci_li(c: dict) -> str:
+        cid = c.get("id", "?")
+        descr = c.get("description_ua") or c.get("description") or "—"
+        return f'<li>{_h(descr)}<span class="rf-id">{_h(cid)}</span></li>'
+
+    pro_html = (
+        '<div class="pc-col pc-col--pro">'
+        '<h3>PRO-AGGRESSIVE</h3>'
+        '<div class="section-sub">Тригери що штовхають до агресивного треку</div>'
+        f'<ul>{"".join(_rf_li(r) for r in sorted(pro_ids)) or "<li>—</li>"}</ul>'
+        '</div>'
+    )
+    contra_html = (
+        '<div class="pc-col pc-col--contra">'
+        '<h3>CONTRA-AGGRESSIVE</h3>'
+        '<div class="section-sub">Жорсткі протипоказання до ескалації</div>'
+        f'<ul>{"".join(_ci_li(c) for c in contra_items) or "<li>—</li>"}</ul>'
+        '</div>'
+    )
+    return (
+        '<section>'
+        '<h2>Red flags — PRO / CONTRA aggressive</h2>'
+        f'<div class="pro-contra">{pro_html}{contra_html}</div>'
+        '</section>'
+    )
+
+
+def _render_what_not_to_do(plan) -> str:
+    """Explicitly prohibitive 'do_not_do' list per track.
+    Per REFERENCE_CASE_SPECIFICATION §1.3 critical."""
+    blocks = []
+    for t in plan.tracks:
+        ind = t.indication_data or {}
+        items = ind.get("do_not_do") or []
+        if not items:
+            continue
+        li = "".join(f"<li>{_h(x)}</li>" for x in items)
+        blocks.append(
+            '<div class="do-not">'
+            f'<div class="track-name">{_h(t.label)} ({_h(t.indication_id)})</div>'
+            f'<ul>{li}</ul>'
+            '</div>'
+        )
+    if not blocks:
+        return ""
+    return (
+        '<section>'
+        '<h2>Що НЕ робити</h2>'
+        '<div class="section-sub">Прямі прохібітивні правила, кожне з обґрунтуванням у regimen / supportive care / contraindication</div>'
+        f'{"".join(blocks)}'
+        '</section>'
+    )
+
+
+def _render_monitoring_phases(plan) -> str:
+    """Monitoring schedule phases as a per-track table.
+    Per REFERENCE_CASE_SPECIFICATION §1.3 critical."""
+    blocks = []
+    seen_monitoring_ids: set[str] = set()
+    for t in plan.tracks:
+        mon = t.monitoring_data
+        if not mon:
+            continue
+        mid = mon.get("id") or ""
+        if mid in seen_monitoring_ids:
+            continue  # dedupe — both tracks may share the same monitoring schedule
+        seen_monitoring_ids.add(mid)
+        phases = mon.get("phases") or []
+        if not phases:
+            continue
+        rows = []
+        for ph in phases:
+            tests = ", ".join(ph.get("tests") or []) or "—"
+            checks = ph.get("checkpoints") or []
+            checks_html = (
+                "<ul style='padding-left:16px;margin:0;'>"
+                + "".join(f"<li>{_h(c)}</li>" for c in checks)
+                + "</ul>"
+            ) if checks else "—"
+            rows.append(
+                f'<tr><td><strong>{_h(ph.get("name", "?"))}</strong></td>'
+                f'<td>{_h(ph.get("window", "—"))}</td>'
+                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h(tests)}</td>'
+                f'<td>{checks_html}</td></tr>'
+            )
+        blocks.append(
+            f'<h3>{_h(t.label)} · {_h(mid)}</h3>'
+            '<table class="tbl">'
+            '<thead><tr><th>Фаза</th><th>Вікно</th>'
+            '<th>Тести</th><th>Контрольні точки</th></tr></thead>'
+            f'<tbody>{"".join(rows)}</tbody>'
+            '</table>'
+        )
+    if not blocks:
+        return ""
+    return (
+        '<section>'
+        '<h2>Monitoring schedule</h2>'
+        '<div class="section-sub">Графік моніторингу за фазами лікування</div>'
+        f'{"".join(blocks)}'
+        '</section>'
+    )
+
+
+def _render_timeline(plan) -> str:
+    """Horizontal timeline strip composed from Regimen.cycle_length_days +
+    total_cycles + MonitoringSchedule.phases. CSS-only, no SVG/JS.
+    Per REFERENCE_CASE_SPECIFICATION §1.3 should-have."""
+    if not plan.tracks:
+        return ""
+
+    blocks = []
+    seen: set[tuple] = set()
+    for t in plan.tracks:
+        reg = t.regimen_data or {}
+        mon = t.monitoring_data or {}
+        key = (reg.get("id"), mon.get("id"))
+        if key in seen or key == (None, None):
+            continue
+        seen.add(key)
+
+        phases_html: list[str] = []
+
+        # Baseline phase from monitoring (always first if present)
+        mon_phases = mon.get("phases") or []
+        baseline = next((p for p in mon_phases if p.get("name") == "baseline"), None)
+        if baseline:
+            phases_html.append(
+                '<div class="tl-phase tl-phase--baseline">'
+                '<div class="name">Baseline</div>'
+                f'<div class="window">{_h(baseline.get("window", "—"))}</div>'
+                '</div>'
+            )
+
+        # Induction phase from regimen cycle metadata
+        cycle_len = reg.get("cycle_length_days")
+        total_cycles = reg.get("total_cycles") or "—"
+        if cycle_len:
+            cycles_str = str(total_cycles).strip()
+            window = (
+                f"{cycle_len}-day cycles × {cycles_str}"
+                if cycles_str and cycles_str != "—"
+                else f"{cycle_len}-day cycles"
+            )
+            phases_html.append(
+                '<div class="tl-phase tl-phase--induction">'
+                f'<div class="name">Induction · {_h(reg.get("name", "—")[:30])}</div>'
+                f'<div class="window">{_h(window)}</div>'
+                '</div>'
+            )
+
+        # Response assessment phase from monitoring
+        ra = next((p for p in mon_phases if "response" in (p.get("name", "").lower())), None)
+        if ra:
+            phases_html.append(
+                '<div class="tl-phase tl-phase--response">'
+                '<div class="name">Response assessment</div>'
+                f'<div class="window">{_h(ra.get("window", "—"))}</div>'
+                '</div>'
+            )
+
+        # Maintenance phase if present
+        maint = next((p for p in mon_phases if "maint" in (p.get("name", "").lower())), None)
+        if maint:
+            phases_html.append(
+                '<div class="tl-phase tl-phase--maintenance">'
+                '<div class="name">Maintenance</div>'
+                f'<div class="window">{_h(maint.get("window", "—"))}</div>'
+                '</div>'
+            )
+
+        # Follow-up phase if present
+        fu = next(
+            (p for p in mon_phases if "follow" in (p.get("name", "").lower())),
+            None,
+        )
+        if fu:
+            phases_html.append(
+                '<div class="tl-phase tl-phase--followup">'
+                '<div class="name">Follow-up</div>'
+                f'<div class="window">{_h(fu.get("window", "—"))}</div>'
+                '</div>'
+            )
+
+        if phases_html:
+            blocks.append(
+                f'<h3>{_h(t.label)}</h3>'
+                f'<div class="timeline">{"".join(phases_html)}</div>'
+            )
+
+    if not blocks:
+        return ""
+    return (
+        '<section>'
+        '<h2>Timeline</h2>'
+        '<div class="section-sub">Хронологія лікування — derived from regimen + monitoring schedule</div>'
+        f'{"".join(blocks)}'
+        '</section>'
+    )
+
+
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
@@ -431,6 +859,11 @@ def render_plan_html(
         f'<div class="value">{_h(plan.patient_id)} · Algorithm: {_h(plan_result.algorithm_id)}</div>'
         '</div>'
     )
+
+    # Etiological driver — only for etiologically_driven archetype
+    body.append(_render_etiological_driver(
+        (plan_result.kb_resolved or {}).get("disease")
+    ))
 
     # Tracks
     track_html = []
@@ -465,6 +898,14 @@ def render_plan_html(
         f'<section><h2>Treatment options ({len(plan.tracks)} tracks)</h2>'
         f'<div class="tracks">{"".join(track_html)}</div></section>'
     )
+
+    # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·
+    # Monitoring phases · Timeline (REFERENCE_CASE_SPECIFICATION §1.3)
+    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved))
+    body.append(_render_red_flags_pro_contra(plan, plan_result.kb_resolved))
+    body.append(_render_what_not_to_do(plan))
+    body.append(_render_monitoring_phases(plan))
+    body.append(_render_timeline(plan))
 
     # MDT brief inline
     body.append(_render_mdt_section(mdt))

@@ -73,6 +73,11 @@ class Indication(Base):
     sources: list[Citation] = Field(default_factory=list)
     known_controversies: list[KnownControversy] = Field(default_factory=list)
 
+    # "What NOT to do" list per REFERENCE_CASE_SPECIFICATION §1.3 critical:
+    # explicit prohibitive bullets that frame avoidable harm. Surfaced by
+    # render_plan_html as a dedicated section.
+    do_not_do: list[str] = Field(default_factory=list)
+
     plan_track: Optional[str] = None  # "standard" | "aggressive" | "trial" | "palliative"
 
     # FDA non-device CDS positioning (per specs/CHARTER.md §15).

@@ -85,6 +85,13 @@ class PlanResult:
     trace: list[dict] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
+    # Runtime KB resolutions for the render layer — NOT persisted with Plan.
+    # Holds: 'disease' (dict), 'tests' (dict[id, dict]), 'red_flags' (dict[id, dict]),
+    # 'algorithm' (dict). Populated by generate_plan; render gracefully degrades
+    # if absent. Persistence (save_result) ignores this field entirely — the
+    # rendered Plan dict is the source of truth on disk.
+    kb_resolved: dict = field(default_factory=dict)
+
     def to_dict(self) -> dict:
         return {
             "patient_id": self.patient_id,
@@ -364,6 +371,32 @@ def generate_plan(
         if len(tracks) >= 2:
             result.alternative_indication_id = tracks[1].indication_id
             result.alternative_indication = tracks[1].indication_data
+
+    # Resolve KB references that the render layer needs but that aren't
+    # carried on the Plan structure: disease (for archetype + etiological_factors),
+    # tests (for priority_class on pre-treatment investigations table),
+    # red_flags (for PRO/CONTRA categorization with definitions).
+    test_ids: set[str] = set()
+    redflag_ids: set[str] = set()
+    for t in tracks:
+        ind = t.indication_data or {}
+        test_ids.update(ind.get("required_tests") or [])
+        test_ids.update(ind.get("desired_tests") or [])
+        redflag_ids.update(ind.get("red_flags_triggering_alternative") or [])
+    # Algorithm-referenced red flags too (decision tree)
+    for step in algo.get("decision_tree") or []:
+        ev = step.get("evaluate") or {}
+        for clause in (ev.get("any_of") or []) + (ev.get("all_of") or []):
+            rf = clause.get("red_flag") if isinstance(clause, dict) else None
+            if rf:
+                redflag_ids.add(rf)
+
+    result.kb_resolved = {
+        "disease": _resolve(entities, disease_id),
+        "algorithm": algo,
+        "tests": {tid: _resolve(entities, tid) for tid in test_ids if _resolve(entities, tid)},
+        "red_flags": {rid: _resolve(entities, rid) for rid in redflag_ids if _resolve(entities, rid)},
+    }
 
     return result
 
