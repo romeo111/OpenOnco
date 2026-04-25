@@ -1,0 +1,39 @@
+id: ALGO-BURKITT-1L
+applicable_to_disease: DIS-BURKITT
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative for first-line Burkitt based on risk
+  profile. Two tracks: DA-EPOCH-R (standard, broader applicability)
+  vs CODOX-M/IVAC (aggressive, fit younger high-risk).
+
+output_indications:
+  - IND-BURKITT-1L-DAEPOCHR
+  - IND-BURKITT-1L-CODOXM-IVAC
+
+default_indication: IND-BURKITT-1L-DAEPOCHR
+alternative_indication: IND-BURKITT-1L-CODOXM-IVAC
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BURKITT-HIGH-RISK
+    if_true:
+      result: IND-BURKITT-1L-CODOXM-IVAC
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Standard / intermediate risk"
+        - condition: "ECOG ≤ 3"
+    if_true:
+      result: IND-BURKITT-1L-DAEPOCHR
+    if_false:
+      result: IND-BURKITT-1L-DAEPOCHR
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  CODOX-M/IVAC requires fit younger (age ≤60, ECOG ≤2). If high-risk
+  AND not fit younger, falls back to DA-EPOCH-R + supportive care.

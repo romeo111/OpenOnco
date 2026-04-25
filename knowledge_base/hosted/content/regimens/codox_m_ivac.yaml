@@ -1,0 +1,52 @@
+id: REG-CODOX-M-IVAC
+name: "CODOX-M / IVAC alternating × 4 (Magrath protocol)"
+name_ua: "CODOX-M / IVAC по черзі × 4 циклів (протокол Магратa)"
+alternate_names: ["Magrath", "LMB-style"]
+
+# Components listed are the core agents — actual schedule is alternating
+# CODOX-M and IVAC blocks; details encoded in notes for brevity.
+components:
+  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
+  - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV per CODOX-M block", route: IV}
+  - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
+  - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 + day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
+  - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV per IVAC block", route: IV}
+  - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per IVAC block", route: IV}
+  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
+  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
+
+cycle_length_days: 21
+total_cycles: "4 alternating blocks (CODOX-M, IVAC, CODOX-M, IVAC)"
+toxicity_profile: very-high
+
+premedication:
+  - "Standard rituximab premedications"
+  - "Aggressive TLS prophylaxis with rasburicase for high-burden"
+  - "HD-MTX prep: hydration 3 L/m²/day, urine pH alkalinization, leucovorin rescue starting 24h post"
+  - "Cytarabine eye drops + cerebellar exam during IVAC HiDAC"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-ANTIEMETIC-PREMED
+  - SUP-GCSF-NEUTROPENIA
+monitoring_schedule_id: MON-R-CHOP-REGIMEN
+
+dose_adjustments:
+  - condition: "Pleural effusion / ascites"
+    modification: "Drain BEFORE HD-MTX — 3rd-space fluid prolongs clearance to lethal levels"
+  - condition: "Concomitant NSAIDs / PPIs / penicillins"
+    modification: "Hold during HD-MTX phase — reduces clearance"
+  - condition: "Age >65"
+    modification: "Generally NOT eligible; route to DA-EPOCH-R; consider hyper-CVAD/MA selectively"
+  - condition: "CrCl <60"
+    modification: "Reduce HD-MTX or omit; reduce cytarabine"
+
+ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Magrath original protocol modified with rituximab (R-CODOX-M/R-IVAC).
+  Used for fit younger high-risk Burkitt: CNS+, leukemic phase, LDH
+  >3× ULN, bulky abdomen. ~80-85% sustained CR in fit younger adults.
+  Substantial myelosuppression + mucositis + HD-MTX management complexity
+  demand experienced center.

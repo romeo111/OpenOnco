@@ -1,0 +1,47 @@
+id: REG-DA-EPOCH-R
+name: "Dose-Adjusted EPOCH + Rituximab (DA-EPOCH-R), 6 cycles"
+name_ua: "Dose-Adjusted EPOCH + Ритуксимаб (DA-EPOCH-R), 6 циклів"
+alternate_names: ["DA-EPOCH-R", "Wilson protocol"]
+
+components:
+  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV day 1 each cycle", route: IV}
+  - {drug_id: DRUG-ETOPOSIDE, dose: "50 mg/m²/day", schedule: "Continuous IV days 1-4 (96h infusion); dose adjust per ANC nadir prior cycle", route: IV}
+  - {drug_id: DRUG-DOXORUBICIN, dose: "10 mg/m²/day", schedule: "Continuous IV days 1-4 (96h infusion); dose adjust", route: IV}
+  - {drug_id: DRUG-VINCRISTINE, dose: "0.4 mg/m²/day (no cap)", schedule: "Continuous IV days 1-4 (96h infusion)", route: IV}
+  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "750 mg/m² (start; dose-adjusted up)", schedule: "IV day 5", route: IV}
+  - {drug_id: DRUG-PREDNISONE, dose: "60 mg/m² BID", schedule: "PO days 1-5", route: PO}
+
+cycle_length_days: 21
+total_cycles: "6 cycles for Burkitt; CNS prophylaxis IT MTX/cytarabine intercalated"
+toxicity_profile: high
+
+premedication:
+  - "Standard rituximab premedications first dose"
+  - "Aggressive TLS prophylaxis (allopurinol/rasburicase + IV hydration) cycle 1"
+  - "Antiemetic regimen + steroids"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-ANTIEMETIC-PREMED
+monitoring_schedule_id: MON-R-CHOP-REGIMEN  # reuse — same baseline + on-treatment structure
+
+dose_adjustments:
+  - condition: "ANC nadir <500/µL OR thrombocytopenia <25K nadir prior cycle"
+    modification: "Reduce etoposide + doxorubicin + cyclophosphamide by one dose level"
+  - condition: "ANC nadir >500 + plt >25K nadir prior cycle"
+    modification: "INCREASE etoposide + doxorubicin + cyclophosphamide by one dose level (up to 5 levels)"
+  - condition: "G-CSF support always in HIV+ patients"
+    modification: "Filgrastim from day 6 each cycle"
+  - condition: "CNS involvement"
+    modification: "Add HD-MTX 3 g/m² intercalated cycles 3 + 5; IT MTX/cytarabine ×6"
+
+ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Dose-adjustment up/down based on prior-cycle ANC nadir is the
+  signature of DA-EPOCH — preserves intensity while limiting toxicity.
+  CALGB 10002 (Burkitt): ~90% sustained CR in adult Burkitt including
+  HIV+. Continuous infusion delivery requires central venous access
+  + ambulatory pump. Tumor lysis can be severe — pre-phase reduction
+  with low-dose cyclophosphamide + steroids advised in bulky disease.

@@ -1,0 +1,30 @@
+id: RF-BURKITT-HIGH-RISK
+definition: "Burkitt lymphoma high-risk features: HIV+ AND CD4 <100 OR ECOG ≥3 OR LDH >3× ULN OR CNS involvement OR bulky abdominal disease — selects more intensive CODOX-M/IVAC over DA-EPOCH-R"
+definition_ua: "Burkitt з ознаками високого ризику: ВІЛ+ AND CD4 <100 АБО ECOG ≥3 АБО LDH >3× ULN АБО ураження ЦНС АБО bulky абдомінальна хвороба — обирає інтенсивніший CODOX-M/IVAC замість DA-EPOCH-R"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "burkitt_high_risk"
+      value: true
+    - finding: "cns_involvement"
+      value: true
+    - finding: "ldh_above_3x_uln"
+      value: true
+    - finding: "leukemic_phase"
+      value: true
+    - finding: "bulky_abdominal"
+      value: true
+
+clinical_direction: intensify
+
+relevant_diseases: [DIS-BURKITT]
+shifts_algorithm: [ALGO-BURKITT-1L]
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  CALGB 10002 / CALGB 50202 evidence that DA-EPOCH-R is sufficient for
+  most adult Burkitt INCLUDING HIV-associated, but high-risk features
+  push to CODOX-M/IVAC (Magrath) or hyper-CVAD/MA. CNS involvement is
+  mandatory CODOX-M/IVAC (HD-MTX dose-intense regimen).

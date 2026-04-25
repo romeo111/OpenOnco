@@ -1,0 +1,74 @@
+id: IND-BURKITT-1L-CODOXM-IVAC
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-BURKITT
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD20-IHC, required: true, value_constraint: "positive"}
+    - {biomarker_id: BIO-MYC-REARRANGEMENT, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 2, age_max: 60}
+
+recommended_regimen: REG-CODOX-M-IVAC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~92%"
+  complete_response: "~80-85%"
+  progression_free_survival: "Median PFS ~5 years for fit younger high-risk"
+  overall_survival_5y: "~75-85%"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-PET-CT
+  - TEST-WHOLE-BODY-MRI  # CNS imaging
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  CODOX-M/IVAC (Magrath protocol, R-modified) for fit younger Burkitt
+  with high-risk features: CNS involvement, leukemic phase, LDH >3× ULN,
+  bulky abdominal disease (RF-BURKITT-HIGH-RISK fired). HD-MTX provides
+  CNS-penetrant therapy; HiDAC + cytarabine deliver intensive marrow
+  + CNS effect. Substantial toxicity demands experienced center +
+  ECOG ≤2 + age ≤60 typically.
+
+sources:
+  - {source_id: SRC-NCCN-BCELL-2025, position: supports}
+
+known_controversies: []
+
+do_not_do:
+  - "Не призначати при наявності pleural/ascites fluid без drainage — HD-MTX clearance подовжується смертельно."
+  - "Не комбінувати з NSAIDs / PPIs / penicillins під час HD-MTX phase — clearance reduction."
+  - "Не пропускати leucovorin rescue + serial MTX levels q24h до <0.1 µM."
+  - "Не використовувати при age >60 OR ECOG >2 — токсичність переважає benefit; route до DA-EPOCH-R."
+  - "Не пропускати CrCl <60 dose adjustment — HD-MTX renally cleared."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB.
