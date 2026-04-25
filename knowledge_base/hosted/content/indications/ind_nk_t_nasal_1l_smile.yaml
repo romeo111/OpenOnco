@@ -1,0 +1,86 @@
+id: IND-NK-T-NASAL-1L-SMILE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NK-T-NASAL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 70
+
+recommended_regimen: REG-SMILE
+concurrent_therapy: []
+followed_by:
+  - "Concurrent RT 50 Gy для localized stage I/II"
+  - "AutoSCT consideration у CR1 для high-risk disseminated"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80% (localized); ~60% (disseminated)"
+  complete_response: "~50-70% (localized); ~30-40% (disseminated)"
+  progression_free_survival: "5-year PFS ~70% (localized stage I/II); ~30% (disseminated)"
+  overall_survival_5y: "~70% localized; ~40% disseminated"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-EBV-VIRAL-LOAD
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-LN-EXCISIONAL-BIOPSY  # nasal tissue biopsy
+  - TEST-PET-CT
+  - TEST-MRI-BRAIN-CONTRAST  # CNS extension
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  SMILE (Yamaguchi 2008) — Asian standard, найкраща ефективність у
+  EBV-driven NK/T-cell lymphoma. Asparaginase — disease-specific
+  (P-gp expression bypasses anthracycline resistance). Concurrent
+  CRT для localized I/II — Tsukada / Kim trials. Disseminated
+  responds gorше; pembrolizumab as salvage (PD-L1 expression
+  у >70% NK/T-NL).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "SMILE or DeVIC + concurrent RT is preferred 1L for nasal NK/T-cell lymphoma localized; SMILE alone for disseminated"
+
+known_controversies:
+  - topic: "SMILE vs P-GEMOX (asparaginase availability)"
+    positions:
+      - position: "SMILE preferred — RCT evidence"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "P-GEMOX acceptable якщо asparaginase недоступний"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "SMILE для центрів з asparaginase access; P-GEMOX як fallback"
+
+do_not_do:
+  - "Не давати CHOP — anekдотично ineffective (P-gp-mediated resistance)."
+  - "Не пропускати mesna при ifosfamide — hemorrhagic cystitis."
+  - "Не пропускати antithrombin III monitoring при asparaginase — thrombosis ризик підвищений."
+  - "Не вводити вінкристин (якщо у subsequent regimen) інтратекально."
+  - "Не давати asparaginase якщо pancreatitis history — fatal pancreatitis."
+  - "Не пропускати EBV viral load — корелює з disease activity + relapse early detection."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Дуже rare у Caucasian populations. Localized + RT — найкращий
+  prognosis. Pembrolizumab для R/R disseminated — окрема Indication.

@@ -1,0 +1,43 @@
+id: REG-ICE
+name: "ICE (Ifosfamide + Carboplatin + Etoposide), 3 cycles"
+name_ua: "ICE — іфосфамід + карбоплатин + етопозид, 3 цикли"
+alternate_names: ["ICE", "Salvage ICE"]
+
+components:
+  - {drug_id: DRUG-IFOSFAMIDE, dose: "5 g/m²", schedule: "IV continuous 24h day 2; mesna co-administration", route: IV}
+  - {drug_id: DRUG-CARBOPLATIN, dose: "AUC 5 (max 800 mg)", schedule: "IV day 2", route: IV}
+  - {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 1-3", route: IV}
+
+cycle_length_days: 14
+total_cycles: "3 cycles induction; then allo-SCT consolidation якщо matched donor"
+toxicity_profile: high
+
+premedication:
+  - "Mesna 100% дози іфосфаміду — hemorrhagic cystitis prophylaxis"
+  - "IV hydration aggressive (≥3 L/day)"
+  - "Antiemetic regimen"
+  - "Prophylactic GCSF day 5"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-GCSF-NEUTROPENIA
+  - SUP-ANTIEMETIC-PREMED
+
+dose_adjustments:
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Reduce ifosfamide 50%; carboplatin AUC 4"
+  - condition: "Prior anthracycline lifetime dose >450 mg/m²"
+    modification: "ICE preferable (no anthracycline) — historic salvage choice"
+  - condition: "Age >65"
+    modification: "Reduce all drugs 25-50%; weekly CBC"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Усі компоненти доступні в Україні."
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. Salvage / pre-transplant cytoreduction. Hemorrhagic cystitis ризик
+  без mesna фатальний; ifosfamide encephalopathy — methylene blue treatable.
+  Used у HSTCL induction + DLBCL R/R + Hodgkin salvage.

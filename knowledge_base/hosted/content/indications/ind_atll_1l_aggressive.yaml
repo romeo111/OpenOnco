@@ -1,0 +1,80 @@
+id: IND-ATLL-1L-AGGRESSIVE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ATLL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-CHOEP  # mLSG15 не у KB; CHOEP — найближчий доступний backbone
+concurrent_therapy:
+  - "DRUG-MOGAMULIZUMAB 1 mg/kg IV q week × 8 then q2w — anti-CCR4, додавати після initial cytoreduction"
+followed_by:
+  - "Allo-SCT consolidation у CR1 (matched donor preferred)"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~60-80% (з mogamulizumab + chemo)"
+  complete_response: "~40%"
+  progression_free_survival: "Median PFS ~9-12 months chemo-only; ~24 months з allo-SCT"
+  overall_survival_5y: "~10% chemo-only; ~30-35% з allo-SCT у CR1"
+
+hard_contraindications:
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HTLV1-SEROLOGY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-PET-CT
+  - TEST-CECT-CAP
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-NGS-LYMPHOID-PANEL
+
+rationale: >
+  Acute / lymphoma ATLL — agressive, refractory до AZT+IFN. mLSG15
+  (Japanese protocol — VCAP-AMP-VECP) — historic standard, але
+  inaccessible поза Japan. CHOEP — найближчий доступний backbone.
+  Mogamulizumab (anti-CCR4) — disease-defining antibody, додає
+  significant response (Ishida 2012); FDA-approved для R/R ATLL.
+  Allo-SCT — єдиний curative option для fit.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Aggressive ATLL — multi-agent chemo + mogamulizumab; allo-SCT in CR1 preferred"
+
+known_controversies: []
+
+do_not_do:
+  - "Не давати AZT+IFN для acute — wasted time, прогресс."
+  - "Не пропускати mogamulizumab якщо доступний — overall survival benefit."
+  - "Не давати mogamulizumab перед planned allo-SCT — pre-existing GVHD risk підвищений."
+  - "Не нехтувати hypercalcemia treatment — bisphosphonates + hydration mandatory."
+  - "Не вводити вінкристин інтратекально — фатально."
+  - "Не давати full-dose anthracycline якщо LVEF <50%."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Mogamulizumab — НСЗУ availability в Україні обмежена.
+  Без mogamulizumab — lower response, але CHOEP + allo-SCT все одно
+  best available.

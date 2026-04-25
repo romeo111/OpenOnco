@@ -1,0 +1,28 @@
+id: ALGO-T-PLL-1L
+applicable_to_disease: DIS-T-PLL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Single-track 1L T-PLL — alemtuzumab IV induction + allo-SCT
+  consolidation у CR1 для fit.
+
+output_indications:
+  - IND-T-PLL-1L-ALEMTUZUMAB
+
+default_indication: IND-T-PLL-1L-ALEMTUZUMAB
+alternative_indication: IND-T-PLL-1L-ALEMTUZUMAB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "T-PLL diagnosis confirmed"
+    if_true:
+      result: IND-T-PLL-1L-ALEMTUZUMAB
+    if_false:
+      result: IND-T-PLL-1L-ALEMTUZUMAB
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Single track — T-PLL refractory до conventional chemo; alemtuzumab —
+  disease-defining. Refer до tertiary center.

@@ -1,0 +1,43 @@
+id: REG-ALEMTUZUMAB-IV
+name: "Alemtuzumab IV — disease-defining anti-CD52, 12 weeks induction"
+name_ua: "Алемтузумаб IV — anti-CD52, 12 тижнів індукція"
+alternate_names: ["Alemtuzumab IV", "Campath IV"]
+
+components:
+  - {drug_id: DRUG-ALEMTUZUMAB, dose: "30 mg IV 3×/тиждень (Mon/Wed/Fri); dose escalation week 1 (3 mg → 10 mg → 30 mg)", schedule: "IV 3×/тиждень × 12 тижнів", route: IV}
+
+cycle_length_days: 7
+total_cycles: "12 weeks induction; allo-SCT consolidation у CR1 у fit"
+toxicity_profile: high
+
+premedication:
+  - "Acetaminophen + diphenhydramine + methylprednisolone 100 mg перед each infusion (особливо first 3 doses)"
+  - "Anti-emetic"
+  - "Hydration"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS  # mandatory throughout + 6 months post — alemtuzumab severe lymphopenia
+  - SUP-HSV-PROPHYLAXIS  # acyclovir prophylaxis
+  - SUP-HBV-PROPHYLAXIS  # entecavir if HBV+/anti-HBc+
+  - SUP-CMV-MONITORING  # weekly CMV PCR — reactivation common
+
+dose_adjustments:
+  - condition: "Infusion reaction grade 3-4"
+    modification: "Hold; restart at lower dose з extended premedication"
+  - condition: "ANC <500"
+    modification: "Hold; resume when ANC >1.0"
+  - condition: "CMV viremia"
+    modification: "Pre-emptive ganciclovir/valganciclovir; не stop alemtuzumab"
+  - condition: "Severe infection"
+    modification: "Hold alemtuzumab; treat infection aggressively"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Alemtuzumab — обмежений у Україні (off-label використання для T-PLL; on-label для MS). Імпортний access required."
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. SC alemtuzumab менш efektivна для T-PLL — IV preferred. Severe
+  pan-lymphopenia → opportunistic infection prophylaxis обов'язкова
+  ≥6 months після last dose. Allo-SCT planning одразу після CR.

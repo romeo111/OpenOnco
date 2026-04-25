@@ -1,0 +1,87 @@
+id: IND-HSTCL-1L-ICE-ALLOSCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HSTCL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ICE
+concurrent_therapy: []
+followed_by:
+  - "Allo-SCT consolidation у CR1 — myeloablative або reduced-intensity conditioning"
+
+evidence_level: low  # rare disease, no RCT
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50-60%"
+  complete_response: "~30-40%"
+  progression_free_survival: "Median ~12 months chemo-only; ~36 months з allo-SCT"
+  overall_survival_5y: "~10% chemo-only; ~30-40% з allo-SCT у CR1"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-FISH-PANEL  # i(7q) detection
+  - TEST-KARYOTYPE
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-PET-CT
+  - TEST-CECT-CAP
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  HSTCL — refractory до anthracycline-based regimens (CHOP virtually
+  ineffective). High-dose AraC + platinum-based regimens (ICE, IVAC,
+  HD-ара-С) показують higher CR rates. Allo-SCT — єдиний curative
+  option (graft-vs-lymphoma effect). Cure rate ~30-40% з allo-SCT;
+  chemo-only OS ~10%.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "ICE/IVAC induction followed by allo-SCT in CR1 is preferred for HSTCL"
+
+known_controversies:
+  - topic: "Conditioning intensity для allo-SCT"
+    positions:
+      - position: "Myeloablative для fit pts (younger, less comorbidity)"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "RIC (reduced-intensity) для older або comorbid"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Myeloablative для ≤50 fit; RIC для 50-65 / comorbid"
+
+do_not_do:
+  - "Не давати CHOP — анекдотично ineffective; switch на ICE/IVAC/HD-ара-С одразу."
+  - "Не пропускати mesna при ifosfamide — hemorrhagic cystitis фатальний без неї."
+  - "Не нехтувати donor search — без allo-SCT prognosis dismal."
+  - "Не давати full-dose ifosfamide якщо CrCl <50 — encephalopathy."
+  - "Не вводити вінкристин (якщо у subsequent regimen) інтратекально."
+  - "Не пропускати IBD history — iatrogenic HSTCL потребує stopping anti-TNF + thiopurines."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Дуже rare disease — patient transferred до tertiary center
+  з allo-SCT capability одразу after diagnosis. EBMT Lymphoma Working
+  Party guidelines.

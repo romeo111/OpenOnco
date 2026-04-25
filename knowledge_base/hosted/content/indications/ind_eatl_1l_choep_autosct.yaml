@@ -1,0 +1,77 @@
+id: IND-EATL-1L-CHOEP-AUTOSCT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-EATL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 70
+
+recommended_regimen: REG-CHOEP
+concurrent_therapy: []
+followed_by:
+  - "AutoSCT consolidation у CR1 — BEAM conditioning"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~60-70%"
+  complete_response: "~40-50%"
+  progression_free_survival: "Median PFS ~24 months (з autoSCT)"
+  overall_survival_5y: "~50-60% (з autoSCT); ~20% chemo-only"
+
+hard_contraindications:
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-LN-EXCISIONAL-BIOPSY  # surgical resection often diagnostic
+  - TEST-PET-CT
+  - TEST-CECT-CAP
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-NGS-LYMPHOID-PANEL  # JAK1/STAT3 confirmation
+
+rationale: >
+  CHOEP (CHOP + etoposide) — preferred over CHOP для PTCL-NOS / EATL
+  у fit ≤60 (Schmitz 2010). AutoSCT у CR1 — ESMO/NCCN рекомендація для
+  fit pts (Reimer 2009, Nordic Lymphoma Group). Strict gluten-free diet
+  obligatory (peri-treatment). Bowel perforation risk у first cycle —
+  rapid tumor lysis at multifocal sites.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "CHOEP-based induction + autoSCT consolidation in CR1 is preferred for fit EATL patients ≤70"
+
+known_controversies: []
+
+do_not_do:
+  - "Не призначати без бесіди про gluten-free diet — крайнє важливо для refractory celiac patients."
+  - "Не пропускати baseline CT abdomen для оцінки multifocal lesions + perforation risk."
+  - "Не нехтувати pre-induction nutrition assessment — celiac pts часто malnourished."
+  - "Не вводити вінкристин інтратекально — фатально."
+  - "Не давати full-dose anthracycline якщо LVEF <50%."
+  - "Не пропускати prophylactic GCSF — neutropenic enterocolitis risk підвищений у EATL."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Brentuximab-CHP (BV-CHP) — CD30+ EATL варіант, але CD30 expression
+  у EATL варіабельна. Allo-SCT consideration для refractory.

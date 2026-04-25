@@ -1,0 +1,31 @@
+id: ALGO-ATLL-1L
+applicable_to_disease: DIS-ATLL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L ATLL based on Shimoyama subtype: indolent (smoldering /
+  chronic favourable) → AZT+IFN; aggressive (acute / lymphoma /
+  chronic unfavourable) → CHOEP + mogamulizumab + allo-SCT.
+
+output_indications:
+  - IND-ATLL-1L-INDOLENT-AZT-IFN
+  - IND-ATLL-1L-AGGRESSIVE
+
+default_indication: IND-ATLL-1L-AGGRESSIVE
+alternative_indication: IND-ATLL-1L-INDOLENT-AZT-IFN
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Shimoyama subtype: smoldering"
+        - condition: "Shimoyama subtype: chronic favourable (no LDH > 2× ULN, no BUN > ULN, no albumin < ULN)"
+    if_true:
+      result: IND-ATLL-1L-INDOLENT-AZT-IFN
+    if_false:
+      result: IND-ATLL-1L-AGGRESSIVE
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Shimoyama 1991 classification drives default. Acute / lymphoma type
+  завжди → aggressive track. Chronic unfavourable теж до aggressive.

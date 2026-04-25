@@ -1,0 +1,43 @@
+id: REG-AZT-IFN-A
+name: "AZT (zidovudine) + IFN-α — continuous, dose-adjusted"
+name_ua: "AZT (зидовудин) + IFN-α — continuous, dose-adjusted"
+alternate_names: ["AZT/IFN", "Antiretroviral combo для ATLL"]
+
+components:
+  - {drug_id: DRUG-ZIDOVUDINE, dose: "1.5-3 g/day divided BID-TID", schedule: "PO continuous, dose-adjust по hematologic toxicity", route: PO}
+  - {drug_id: DRUG-INTERFERON-ALPHA, dose: "5 MIU/m² SC daily для induction; 5 MIU/m² 3×/тиждень maintenance", schedule: "SC daily induction, 3×/тиждень maintenance", route: SC}
+
+cycle_length_days: null  # continuous regimen
+total_cycles: "Continuous, dose-adjust to tolerance; reassess at 6 months"
+toxicity_profile: moderate
+
+premedication:
+  - "Depression screening пере IFN start (PHQ-9)"
+  - "TSH baseline + кожні 3 міс — IFN-induced thyroiditis"
+  - "Baseline CBC + LFTs"
+mandatory_supportive_care:
+  - SUP-PSYCH-MONITORING-IFN
+
+dose_adjustments:
+  - condition: "Anemia Hb <8 g/dL"
+    modification: "Reduce AZT 50%; transfuse if symptomatic; EPO option"
+  - condition: "Neutropenia ANC <1.0"
+    modification: "Reduce AZT + IFN 50%; GCSF if persistent"
+  - condition: "IFN-induced depression PHQ-9 ≥10"
+    modification: "Consult psych; reduce IFN 50% або hold; SSRI може дозволити continuation"
+  - condition: "TSH abnormal"
+    modification: "Treat hypo/hyperthyroidism; не stop IFN unless severe"
+  - condition: "Pregnancy"
+    modification: "STOP — both teratogenic"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "AZT — широко доступний як HIV antiretroviral. IFN-α — обмежено доступний; pegylated form (PEG-IFN-α-2a/2b) альтернативна."
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. AZT inhibits HTLV-1 reverse transcriptase; IFN — immune
+  modulation + apoptosis induction. PEG-IFN може заміняти standard
+  IFN — easier dosing (weekly). Не для acute / lymphoma type.

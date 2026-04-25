@@ -1,0 +1,28 @@
+id: ALGO-NK-T-NASAL-1L
+applicable_to_disease: DIS-NK-T-NASAL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Single-track 1L NK/T-cell nasal — SMILE-based induction; concurrent
+  RT для localized I/II; autoSCT consideration для disseminated CR1.
+
+output_indications:
+  - IND-NK-T-NASAL-1L-SMILE
+
+default_indication: IND-NK-T-NASAL-1L-SMILE
+alternative_indication: IND-NK-T-NASAL-1L-SMILE
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "NK/T-cell nasal lymphoma diagnosis confirmed"
+    if_true:
+      result: IND-NK-T-NASAL-1L-SMILE
+    if_false:
+      result: IND-NK-T-NASAL-1L-SMILE
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Single track. P-GEMOX як fallback для центрів без asparaginase —
+  не модельовано як окрема Indication поки.

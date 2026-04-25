@@ -1,0 +1,26 @@
+id: ALGO-HSTCL-1L
+applicable_to_disease: DIS-HSTCL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Single-track 1L HSTCL — ICE/IVAC induction + allo-SCT consolidation у CR1.
+
+output_indications:
+  - IND-HSTCL-1L-ICE-ALLOSCT
+
+default_indication: IND-HSTCL-1L-ICE-ALLOSCT
+alternative_indication: IND-HSTCL-1L-ICE-ALLOSCT
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "HSTCL diagnosis confirmed"
+    if_true:
+      result: IND-HSTCL-1L-ICE-ALLOSCT
+    if_false:
+      result: IND-HSTCL-1L-ICE-ALLOSCT
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Single track. Дуже rare entity — управління у tertiary center.

@@ -1,0 +1,27 @@
+id: ALGO-EATL-1L
+applicable_to_disease: DIS-EATL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Single-track 1L EATL — CHOEP induction + autoSCT consolidation у CR1.
+
+output_indications:
+  - IND-EATL-1L-CHOEP-AUTOSCT
+
+default_indication: IND-EATL-1L-CHOEP-AUTOSCT
+alternative_indication: IND-EATL-1L-CHOEP-AUTOSCT
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "EATL diagnosis confirmed"
+    if_true:
+      result: IND-EATL-1L-CHOEP-AUTOSCT
+    if_false:
+      result: IND-EATL-1L-CHOEP-AUTOSCT
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Single track для 1L EATL. Future: окрема Indication для CD30+ subtype
+  (BV-CHP замість CHOEP). Refractory → salvage (ICE + allo-SCT consideration).
