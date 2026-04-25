@@ -62,6 +62,10 @@ EXAMPLES = REPO_ROOT / "examples"
 GH_REPO = "romeo111/cancer-autoresearch"
 GH_NEW_ISSUE = f"https://github.com/{GH_REPO}/issues/new"
 
+# Custom apex domain on GitHub Pages. The build writes a CNAME file every
+# run so wiping docs/ via --clean never breaks the binding.
+CUSTOM_DOMAIN = "openonco.info"
+
 
 @dataclass
 class CaseEntry:
@@ -988,6 +992,7 @@ def build_site(output_dir: Path) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "cases").mkdir(parents=True, exist_ok=True)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
+    (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
 
     stats = collect_stats()

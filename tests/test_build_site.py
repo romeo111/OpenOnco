@@ -31,9 +31,16 @@ def site_dir(tmp_path_factory) -> Path:
 
 
 def test_static_assets_present(site_dir: Path):
-    for f in (".nojekyll", "style.css", "index.html", "gallery.html", "try.html",
-              "openonco-engine.zip", "examples.json"):
+    for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
+              "try.html", "openonco-engine.zip", "examples.json"):
         assert (site_dir / f).exists(), f"missing {f}"
+
+
+def test_cname_binds_custom_domain(site_dir: Path):
+    """GitHub Pages reads docs/CNAME on every deploy. Build must rewrite it
+    every run so --clean cycles never break the apex domain binding."""
+    cname = (site_dir / "CNAME").read_text(encoding="utf-8").strip()
+    assert cname == "openonco.info"
 
 
 # ── Landing page (index.html) ─────────────────────────────────────────────
