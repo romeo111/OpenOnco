@@ -59,7 +59,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 EXAMPLES = REPO_ROOT / "examples"
 
-GH_REPO = "romeo111/cancer-autoresearch"
+GH_REPO = "romeo111/OpenOnco"
 GH_NEW_ISSUE = f"https://github.com/{GH_REPO}/issues/new"
 
 # Custom apex domain on GitHub Pages. The build writes a CNAME file every
