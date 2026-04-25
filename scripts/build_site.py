@@ -834,10 +834,48 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
 # ── Gallery page ──────────────────────────────────────────────────────────
 
 
+def _questionnaire_icd_o_3_codes() -> set:
+    """ICD-O-3 morphology codes for which we have a curated questionnaire.
+    Used to decide whether a gallery card opens into a real form or just
+    a JSON dump on /try.html."""
+    qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
+    codes: set = set()
+    if not qsrc.is_dir():
+        return codes
+    import yaml as _yaml
+    for path in qsrc.glob("*.yaml"):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        code = (
+            ((data or {}).get("fixed_fields") or {}).get("disease") or {}
+        ).get("icd_o_3_morphology")
+        if code:
+            codes.add(code)
+    return codes
+
+
+def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
+    """True if the case's example JSON has a disease ICD-O-3 code that
+    matches a curated questionnaire."""
+    p = EXAMPLES / case.file
+    if not p.exists():
+        return False
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return False
+    code = ((data or {}).get("disease") or {}).get("icd_o_3_morphology")
+    return bool(code and code in codes)
+
+
 def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
     is_en = target_lang == "en"
     case_path_prefix = "/en/cases/" if is_en else "/cases/"
     n_cases = len(CASES)
+
+    quest_codes = _questionnaire_icd_o_3_codes()
 
     cat_counts: dict[str, int] = {}
     for c in CASES:
@@ -873,11 +911,20 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 
     cards: list[str] = []
     for i, c in enumerate(CASES):
+        has_quest = _case_has_questionnaire(c, quest_codes)
+        json_only_pill = "" if has_quest else (
+            f'<span class="case-json-only" title="'
+            f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
+            f'">{"JSON-only" if is_en else "JSON-only"}</span>'
+        )
         cards.append(
             f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
    data-category="{c.category}" data-default-order="{i}"
    data-name="{c.label_ua}">
-  <div class="case-badge {c.badge_class}">{c.badge}</div>
+  <div class="case-badge-row">
+    <div class="case-badge {c.badge_class}">{c.badge}</div>
+    {json_only_pill}
+  </div>
   <h3>{c.label_ua}</h3>
   <p>{c.summary_ua}</p>
   <div class="case-foot">{c.file}</div>
@@ -1270,6 +1317,7 @@ function renderQuestion(q) {{
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
   const impact = q.impact || 'optional';
+  wrap.dataset.impact = impact;
   const fieldId = 'fld-' + q.field.replace(/[^A-Za-z0-9]/g, '_');
 
   const triggers = (q.triggers || []).map(t => `<span class="trigger-pill">${{escHtml(t)}}</span>`).join('');
@@ -1581,14 +1629,9 @@ async function loadAssets() {{
     diseaseSelect.appendChild(opt);
   }});
 
-  // Examples selector
-  exampleSelect.innerHTML = '<option value="">— оберіть приклад —</option>';
-  examples.forEach((ex, i) => {{
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = ex.label;
-    exampleSelect.appendChild(opt);
-  }});
+  // Examples selector — initial population shows all; narrows once a
+  // disease is picked.
+  repopulateExamples(null);
 
   // Restore draft
   const draft = loadDraft();
@@ -1597,6 +1640,7 @@ async function loadAssets() {{
     if (idx >= 0) {{
       diseaseSelect.value = idx;
       renderForm(questionnaires[idx]);
+      repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {{
         for (const [field, val] of Object.entries(draft.answers)) {{
@@ -1619,11 +1663,54 @@ async function loadAssets() {{
   // Engine load is lazy — starts only on first action that needs it
 }}
 
+// ── Examples filtering by selected disease ────────────────────────────────
+// We narrow the example dropdown to those whose disease.icd_o_3_morphology
+// matches the active questionnaire — otherwise the picker overwhelms with
+// 35 cases for which we don't have a form.
+function repopulateExamples(activeQuestIdx) {{
+  const wantCode = activeQuestIdx == null
+    ? null
+    : ((questionnaires[activeQuestIdx].fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology;
+  exampleSelect.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = wantCode == null
+    ? '— оберіть приклад —'
+    : '— оберіть приклад для цієї хвороби —';
+  exampleSelect.appendChild(placeholder);
+  let n = 0;
+  examples.forEach((ex, i) => {{
+    if (wantCode != null) {{
+      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
+      if (code !== wantCode) return;
+    }}
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    exampleSelect.appendChild(opt);
+    n++;
+  }});
+  if (wantCode != null && n === 0) {{
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.disabled = true;
+    noneOpt.textContent = '(прикладів для цієї хвороби поки немає)';
+    exampleSelect.appendChild(noneOpt);
+  }}
+}}
+
 // ── Event wiring ──────────────────────────────────────────────────────────
 diseaseSelect.addEventListener('change', () => {{
   const i = diseaseSelect.value;
-  if (i === '') {{ renderForm(null); return; }}
-  renderForm(questionnaires[parseInt(i, 10)]);
+  if (i === '') {{
+    renderForm(null);
+    repopulateExamples(null);
+    return;
+  }}
+  const idx = parseInt(i, 10);
+  renderForm(questionnaires[idx]);
+  repopulateExamples(idx);
+  exampleSelect.value = '';
   saveDraft();
   scheduleEval();
 }});
@@ -1679,11 +1766,13 @@ exampleSelect.addEventListener('change', () => {{
   if (qIdx >= 0) {{
     diseaseSelect.value = qIdx;
     renderForm(questionnaires[qIdx]);
+    repopulateExamples(qIdx);
+    exampleSelect.value = i;
     populateFormFromProfile(questionnaires[qIdx], ex.json);
     setMode('form');
     // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
     textarea.value = JSON.stringify(buildProfile(), null, 2);
-    setStatus('Приклад завантажено у форму ✓', 'ok');
+    setStatus('Приклад завантажено як точку старту ✓ Поля з червоною лівою смугою (critical) — основні дайли, що міняють план; жовта (required) — теж важливі. Можна редагувати будь-яке поле — engine переоцінить план.', 'ok');
   }} else {{
     setMode('json');
     textarea.value = JSON.stringify(ex.json, null, 2);
@@ -1830,10 +1919,11 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   padding: 12px 24px;
   display: flex; justify-content: space-between; align-items: center;
 }
-.brand-line { display: flex; align-items: center; gap: 12px; }
+.brand-line { display: flex; align-items: center; gap: 12px; margin-right: 28px; }
 .brand-mini {
-  font-family: var(--font-display); font-size: 18px;
+  font-family: var(--font-display); font-size: 26px;
   color: var(--green-100); text-decoration: none;
+  letter-spacing: 0.2px;
 }
 .role-pill {
   background: var(--teal); color: white;
@@ -1851,7 +1941,7 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }
 
 /* New top-bar layout: brand · nav · right-cluster (lang switch + try CTA) */
-.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px; gap: 4px; }
+.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px 0 16px; gap: 4px; }
 .top-nav a {
   color: var(--green-100); padding: 4px 10px; text-decoration: none;
   font-size: 13px; border-radius: 4px;
@@ -1861,24 +1951,29 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   color: white; background: rgba(255,255,255,.08);
 }
 
-.top-right { display: flex; align-items: center; gap: 14px; }
+.top-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-/* Language switch — compact UA / EN toggle */
+/* Language switch — compact UA / EN toggle. Fixed-width halves so the
+   pill stays the same shape regardless of which language is current. */
 .lang-switch {
   display: inline-flex; align-items: center; gap: 0;
   background: rgba(255,255,255,.08); border-radius: 4px;
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px;
-  overflow: hidden;
+  overflow: hidden; flex-shrink: 0;
+}
+.lang-switch .lang-current,
+.lang-switch .lang-other {
+  width: 56px; box-sizing: border-box;
+  padding: 4px 9px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
 }
 .lang-switch .lang-current {
   background: rgba(255,255,255,.15); color: white;
-  padding: 4px 9px; font-weight: 600;
-  display: inline-flex; align-items: center; gap: 5px;
+  font-weight: 600;
 }
 .lang-switch .lang-other {
-  color: var(--green-100); padding: 4px 9px;
+  color: var(--green-100);
   text-decoration: none; transition: background .12s;
-  display: inline-flex; align-items: center; gap: 5px;
 }
 .lang-switch .lang-other:hover { background: rgba(255,255,255,.12); color: white; }
 /* CSS-painted mini flag — works on every OS (Windows doesn't render
@@ -1896,15 +1991,19 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: #012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;
 }
 
-/* CTA "Try it" button — distinct from nav (action, not reading) */
+/* CTA "Try it" button — distinct from nav (action, not reading).
+   Fixed min-width so button (and the lang-switch left of it) don't
+   shift between UA "Спробувати →" and EN "Try it →". */
 .btn-cta-try {
   background: linear-gradient(135deg, var(--green-500) 0%, var(--teal) 100%);
-  color: white; padding: 8px 16px; border-radius: 6px;
-  font-weight: 600; font-size: 13px; text-decoration: none;
+  color: white; padding: 11px 22px; border-radius: 7px;
+  font-weight: 600; font-size: 15px; text-decoration: none;
   font-family: var(--font-sans); border: none;
   box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 1px 4px rgba(0,0,0,.15);
   transition: transform .12s, box-shadow .12s, filter .12s;
   white-space: nowrap;
+  min-width: 180px; box-sizing: border-box; text-align: center;
+  display: inline-block;
 }
 .btn-cta-try:hover {
   transform: translateY(-1px);
@@ -1917,10 +2016,14 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 @media (max-width: 700px) {
   .top-bar { flex-wrap: wrap; gap: 8px; }
+  .brand-line { margin-right: 0; }
+  .brand-mini { font-size: 22px; }
   .top-nav { order: 3; flex-basis: 100%; margin: 0; justify-content: center; }
   .top-right { gap: 8px; }
   .lang-switch { font-size: 10px; }
-  .btn-cta-try { padding: 6px 12px; font-size: 12px; }
+  .lang-switch .lang-current,
+  .lang-switch .lang-other { width: 48px; padding: 4px 6px; }
+  .btn-cta-try { padding: 8px 14px; font-size: 13px; min-width: 140px; }
 }
 
 /* Hero */
@@ -2124,10 +2227,21 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   box-shadow: 0 6px 16px rgba(10, 46, 26, .07);
   transform: translateY(-1px);
 }
+.case-badge-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-bottom: 10px;
+}
 .case-badge {
   display: inline-block; font-family: var(--font-mono);
   font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 4px; margin-bottom: 10px;
+  padding: 3px 8px; border-radius: 4px;
+}
+.case-json-only {
+  display: inline-block; font-family: var(--font-mono);
+  font-size: 9.5px; letter-spacing: 0.6px;
+  padding: 2px 7px; border-radius: 3px;
+  background: var(--gray-100); color: var(--gray-500);
+  cursor: help;
 }
 .bdg-plan { background: var(--green-100); color: var(--green-700); }
 .bdg-diag { background: var(--amber-bg); color: var(--amber); }
@@ -2317,9 +2431,15 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .impact-recommended { background: var(--green-100); color: var(--green-700); }
 .impact-optional { background: var(--gray-100); color: var(--gray-500); }
 
-.quest-q[data-impact="critical"] { border-left-color: var(--red); }
-.quest-q[data-impact="required"] { border-left-color: var(--amber); }
-.quest-q[data-impact="recommended"] { border-left-color: var(--green-600); }
+.quest-q[data-impact="critical"] {
+  border-left: 4px solid var(--red);
+  background: linear-gradient(to right, color-mix(in srgb, var(--red) 6%, var(--gray-50)), var(--gray-50) 60%);
+}
+.quest-q[data-impact="required"] {
+  border-left: 4px solid var(--amber);
+  background: linear-gradient(to right, color-mix(in srgb, var(--amber) 6%, var(--gray-50)), var(--gray-50) 60%);
+}
+.quest-q[data-impact="recommended"] { border-left: 3px solid var(--green-600); }
 
 .quest-side {
   position: sticky; top: 20px;

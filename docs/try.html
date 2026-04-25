@@ -258,6 +258,7 @@ function renderQuestion(q) {
   wrap.className = 'quest-q';
   wrap.dataset.field = q.field;
   const impact = q.impact || 'optional';
+  wrap.dataset.impact = impact;
   const fieldId = 'fld-' + q.field.replace(/[^A-Za-z0-9]/g, '_');
 
   const triggers = (q.triggers || []).map(t => `<span class="trigger-pill">${escHtml(t)}</span>`).join('');
@@ -569,14 +570,9 @@ async function loadAssets() {
     diseaseSelect.appendChild(opt);
   });
 
-  // Examples selector
-  exampleSelect.innerHTML = '<option value="">— оберіть приклад —</option>';
-  examples.forEach((ex, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = ex.label;
-    exampleSelect.appendChild(opt);
-  });
+  // Examples selector — initial population shows all; narrows once a
+  // disease is picked.
+  repopulateExamples(null);
 
   // Restore draft
   const draft = loadDraft();
@@ -585,6 +581,7 @@ async function loadAssets() {
     if (idx >= 0) {
       diseaseSelect.value = idx;
       renderForm(questionnaires[idx]);
+      repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {
         for (const [field, val] of Object.entries(draft.answers)) {
@@ -607,11 +604,54 @@ async function loadAssets() {
   // Engine load is lazy — starts only on first action that needs it
 }
 
+// ── Examples filtering by selected disease ────────────────────────────────
+// We narrow the example dropdown to those whose disease.icd_o_3_morphology
+// matches the active questionnaire — otherwise the picker overwhelms with
+// 35 cases for which we don't have a form.
+function repopulateExamples(activeQuestIdx) {
+  const wantCode = activeQuestIdx == null
+    ? null
+    : ((questionnaires[activeQuestIdx].fixed_fields || {}).disease || {}).icd_o_3_morphology;
+  exampleSelect.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = wantCode == null
+    ? '— оберіть приклад —'
+    : '— оберіть приклад для цієї хвороби —';
+  exampleSelect.appendChild(placeholder);
+  let n = 0;
+  examples.forEach((ex, i) => {
+    if (wantCode != null) {
+      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
+      if (code !== wantCode) return;
+    }
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    exampleSelect.appendChild(opt);
+    n++;
+  });
+  if (wantCode != null && n === 0) {
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.disabled = true;
+    noneOpt.textContent = '(прикладів для цієї хвороби поки немає)';
+    exampleSelect.appendChild(noneOpt);
+  }
+}
+
 // ── Event wiring ──────────────────────────────────────────────────────────
 diseaseSelect.addEventListener('change', () => {
   const i = diseaseSelect.value;
-  if (i === '') { renderForm(null); return; }
-  renderForm(questionnaires[parseInt(i, 10)]);
+  if (i === '') {
+    renderForm(null);
+    repopulateExamples(null);
+    return;
+  }
+  const idx = parseInt(i, 10);
+  renderForm(questionnaires[idx]);
+  repopulateExamples(idx);
+  exampleSelect.value = '';
   saveDraft();
   scheduleEval();
 });
@@ -667,11 +707,13 @@ exampleSelect.addEventListener('change', () => {
   if (qIdx >= 0) {
     diseaseSelect.value = qIdx;
     renderForm(questionnaires[qIdx]);
+    repopulateExamples(qIdx);
+    exampleSelect.value = i;
     populateFormFromProfile(questionnaires[qIdx], ex.json);
     setMode('form');
     // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
     textarea.value = JSON.stringify(buildProfile(), null, 2);
-    setStatus('Приклад завантажено у форму ✓', 'ok');
+    setStatus('Приклад завантажено як точку старту ✓ Поля з червоною лівою смугою (critical) — основні дайли, що міняють план; жовта (required) — теж важливі. Можна редагувати будь-яке поле — engine переоцінить план.', 'ok');
   } else {
     setMode('json');
     textarea.value = JSON.stringify(ex.json, null, 2);
