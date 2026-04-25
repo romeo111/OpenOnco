@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Limitations</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/en/" class="brand-mini">OpenOnco</a>
+    <span class="brand-version" title="Project version">v0.1.0</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/en/">Home</a>
+    <a href="/en/capabilities.html">Capabilities</a><a href="/en/limitations.html" class="active">Limitations</a>
+    <a href="/en/gallery.html">Examples</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+      <a class="lang-other" href="/limitations.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+    </div>
+    <a href="/en/try.html" class="btn-cta-try" >Try it →</a>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <h1>Limitations</h1>
+    <p class="lead">
+      OpenOnco deliberately does not try to replace a clinician or a full
+      MDT. This page is the complete, honest list of what the engine
+      <strong>does not do</strong>, where it <strong>refuses</strong> to
+      generate a plan without additional data, and where the clinical
+      decision stays with the clinician. Knowing the limitations is as
+      important as knowing the capabilities.
+    </p>
+
+    <div class="callout callout-hard">
+      <strong>All clinical content is STUB-status.</strong>
+      Reviewer sign-offs ≥ 2: <strong>0/51</strong>
+      (CHARTER §6.1 requires two Clinical Co-Lead approvals before any
+      Indication can be considered "published"). Right now everything is
+      STUB. This is an architecture demo, not a clinical reference for real
+      patients. Snapshot as of <code>2026-04-25 22:05 UTC</code>.
+    </div>
+
+    <div class="info-section">
+      <h2>1. Detecting missing data — the Open Questions mechanism</h2>
+      <p class="info-text">
+        The engine <strong>does not make a decision when required data is
+        missing</strong>. Instead of silently picking a default, it
+        explicitly records which fields are missing and which test or
+        finding is needed. This mechanism is called <strong>Open
+        Questions</strong> and it is a deliberate part of the MDT
+        orchestrator (Q1–Q6 + DQ1–DQ4 rules per
+        MDT_ORCHESTRATOR_SPEC §3).
+      </p>
+      <div class="q-list">
+        <h4>Treatment-mode Open Questions (Q1–Q6) — examples from real code</h4>
+        <ul>
+          <li><strong>Q1 — Histology not confirmed:</strong> if <code>disease.id</code> resolves but there is no <code>biopsy_date</code> or <code>histology_report</code>, the engine emits "Treatment Plan generated against ICD-O-3 code only; recommend confirming primary histology before initiating therapy".</li>
+          <li><strong>Q2 — Stage missing:</strong> if Algorithm.decision_tree references staging but the profile has no <code>stage</code>, the walker falls through to default with a flag "Lugano/Ann Arbor stage required for confident risk-stratification".</li>
+          <li><strong>Q3 — RedFlag clause references findings absent:</strong> if <code>RF-MM-HIGH-RISK-CYTOGENETICS</code> checks <code>tp53_mutation</code> + <code>del_17p</code> + <code>t_4_14</code> + <code>gain_1q</code> and only <code>del_17p</code> is in the profile, the engine does not produce a false negative; it emits "Cytogenetic panel incomplete; high-risk status assessed with partial data".</li>
+          <li><strong>Q4 — Biomarker required by Indication missing:</strong> if <code>IND-CLL-1L-VENO</code> requires <code>BIO-CLL-HIGH-RISK-GENETICS</code> for default-track selection, the engine emits "IGHV mutation status + FISH del(17p) required to confirm 1L recommendation".</li>
+          <li><strong>Q5 — Performance status missing:</strong> if <code>ecog</code> is absent, the engine falls back to a conservative default (standard track only) and emits "ECOG performance status required for transplant-eligibility assessment".</li>
+          <li><strong>Q6 — Drug availability flag:</strong> if the selected Regimen contains a drug flagged <code>nszu_reimbursement: false</code> (e.g. daratumumab in MM), the engine emits "D-VRd: daratumumab not currently NHSU-reimbursed in Ukraine; verify funding pathway before initiation".</li>
+        </ul>
+      </div>
+      <div class="q-list">
+        <h4>Diagnostic-mode Open Questions (DQ1–DQ4) — for pre-biopsy mode</h4>
+        <ul>
+          <li><strong>DQ1 — Tissue location missing:</strong> if <code>suspicion.tissue_locations</code> is empty, workup matching cannot rank candidates; emits "Tissue location is required to match a workup".</li>
+          <li><strong>DQ2 — Lineage hint absent:</strong> without <code>lineage_hint</code> the engine matches on tissue + presentation only, with lower confidence.</li>
+          <li><strong>DQ3 — Presentation free-text empty:</strong> presentation_keywords scoring × 0; only lineage + tissue contribute.</li>
+          <li><strong>DQ4 — Working hypotheses not provided:</strong> the engine has no preferred direction and prefers the most generic workup (e.g. <code>WORKUP-LYMPHADENOPATHY-NONSPECIFIC</code> over <code>WORKUP-SUSPECTED-LYMPHOMA</code>).</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Why we don't pick defaults silently:</strong> CHARTER §15.2 C6
+        (anti automation-bias) — the engine cannot pretend to know what it
+        does not know. Every missing-data situation must be visually obvious
+        to the clinician. Open Questions are rendered in the Plan as their
+        own section, never hidden.
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>2. Five personalization gaps</h2>
+      <p class="info-text">
+        "Personalization" in OpenOnco is rule-based <strong>selection from
+        fixed options</strong>, not AI generation. This is an intentional
+        architectural stance (CHARTER §8.3 — forbidden prompt patterns).
+        The concrete gaps:
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="gap-tag">Gap 1</div>
+          <h3>No per-patient dose calculation</h3>
+          <p>
+            A Regimen stores the <strong>standard dose</strong>
+            (<code>bortezomib 1.3 mg/m²</code>); it is not multiplied by
+            patient BSA and not auto-reduced for CrCl &lt; 30 mL/min. The
+            clinician recalculates. This is deliberate — it keeps OpenOnco
+            out of FDA medical-device classification.
+          </p>
+        </div>
+        <div class="gap-card">
+          <div class="gap-tag">Gap 2</div>
+          <h3>No response-adapted cycle adjustment</h3>
+          <p>
+            A Regimen pins <code>total_cycles: 6 + 2 maintenance</code>.
+            The engine does not auto-adapt based on response (PR vs CR
+            after PET2). A re-staging plan is generated through a separate
+            <code>revise_plan</code> with a new profile — the clinician
+            triggers it explicitly.
+          </p>
+        </div>
+        <div class="gap-card">
+          <div class="gap-tag">Gap 3</div>
+          <h3>Genomic matching is bounded by curated biomarkers</h3>
+          <p>
+            If a patient turns up with PD-L1 78%, the engine will not
+            propose pembrolizumab — because no Indication with the
+            corresponding biomarker_requirement exists in the KB. This is a
+            coverage limit (add an entity), not an engine-logic limit.
+          </p>
+        </div>
+        <div class="gap-card">
+          <div class="gap-tag">Gap 4</div>
+          <h3>SupportiveCare is uniform per regimen</h3>
+          <p>
+            PJP prophylaxis is attached to D-VRd for everyone — even for a
+            patient allergic to bactrim. The engine does not know about
+            alternatives (dapsone instead of bactrim). The clinician
+            substitutes.
+          </p>
+        </div>
+        <div class="gap-card">
+          <div class="gap-tag">Gap 5</div>
+          <h3>No cumulative-toxicity tracking across lines</h3>
+          <p>
+            A 2L plan for a patient who received bortezomib in 1L with
+            grade 2 neuropathy — the engine does not know about the prior
+            exposure unless something new is added. The profile does not
+            yet carry <code>prior_treatment_history</code> as a structured
+            field.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>3. Hard CHARTER constraints (will not change)</h2>
+      <p class="info-text">
+        These are not technical debt — they are deliberate architectural
+        decisions that establish the project's position as non-device CDS
+        and gate FDA / clinical safety.
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §8.3</div>
+          <h3>LLMs do not make clinical decisions</h3>
+          <p>
+            LLMs only assist with: boilerplate code, doc drafts, extraction
+            from clinical documents (with human verification), translation
+            with clinical review. <strong>Not</strong>: regimen selection,
+            dose generation, biomarker interpretation for therapy choice.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C7</div>
+          <h3>No histology → no treatment Plan</h3>
+          <p>
+            A treatment Plan is generated only when <code>disease.id</code>
+            or <code>icd_o_3_morphology</code> is confirmed. Otherwise the
+            engine refuses and switches to DiagnosticPlan mode (workup
+            brief). <code>revise_plan</code> from treatment back to
+            diagnostic is <strong>forbidden</strong> and raises ValueError.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C5</div>
+          <h3>No time-critical recommendations</h3>
+          <p>
+            The engine is not designed for emergency oncology (oncologic
+            emergencies, time-sensitive infusion reactions). That would
+            trigger device classification. If an Indication is flagged
+            <code>time_critical: true</code>, the engine adds a
+            disqualification warning to FDA compliance.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §6.1</div>
+          <h3>Two-reviewer merge for clinical content</h3>
+          <p>
+            Any change under <code>knowledge_base/hosted/content/</code>
+            that affects clinical recommendations needs two of three
+            Clinical Co-Lead approvals. Without that, the Indication stays
+            STUB.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C6</div>
+          <h3>Anti automation-bias is mandatory</h3>
+          <p>
+            The engine never shows a single recommendation — always ≥2
+            tracks side by side. The alternative is never buried, never
+            "click to expand", never fine-print. The clinician sees this is
+            a choice, not a directive.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §9.3</div>
+          <h3>Patient data never in repo / public artifacts</h3>
+          <p>
+            <code>patient_plans/</code> is gitignored. Any patient HTML
+            files are gitignored by pattern. The site (<code>docs/</code>)
+            ships only synthetic examples. Telemetry collection is
+            forbidden without explicit consent.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>4. Coverage limits (current KB state)</h2>
+      <p class="info-text">
+        OpenOnco is a work in progress. Right now only
+        <strong>30 diseases</strong> are covered (out of ~100–150
+        in WHO-HAEM5 for lymphoid + ~50 solid tumors). Specifically:
+      </p>
+      <table class="kv-table">
+        <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Diseases with the full chain</td><td>30 / 30</td><td>The rest are partially modeled; the engine may emit "no Algorithm found for disease=X"</td></tr>
+          <tr><td>Indications</td><td>63</td><td>1L (first-line) only. 2L+ regimens are not yet modeled.</td></tr>
+          <tr><td>RedFlags</td><td>114</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own RFs added</td></tr>
+          <tr><td>Solid tumors</td><td>0</td><td>Engine is generic-ready, but the KB is hematology-only for now</td></tr>
+          <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — separate specialization track</td></tr>
+          <tr><td>Radiation therapy plans</td><td>not modeled</td><td>RT as an Indication is absent; should land as a separate entity</td></tr>
+          <tr><td>Surgery plans</td><td>not modeled</td><td>Surgical-oncology indications are absent</td></tr>
+          <tr><td>Live regimen-availability data (NHSU formulary live feed)</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog item</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>What STUB does NOT mean:</strong> the structured data,
+        algorithm logic, and sources are already in. What STUB
+        <strong>does</strong> mean: <strong>two-of-three Clinical Co-Lead
+        sign-off has not happened yet</strong>. So in effect we have a
+        "proposed plan" that needs review, not an "approved plan".
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>5. What the engine never does</h2>
+      <p class="info-text">
+        A transparent list of forbidden patterns — so the boundaries are
+        clear:
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Hide the alternative track</h3>
+          <p>Both recommendations are always shown. The UI never has an "expand to see alternative" pattern.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Generate a new Indication via LLM</h3>
+          <p>Everything is selected from already-curated KB. If no matching Indication exists, the engine emits a warning — never "creative invention".</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Adjust doses "for the patient"</h3>
+          <p>Doses come from standard NCCN/ESMO. Adjustments live only inside explicit dose_modification_rules in the Regimen YAML — no ad-hoc calculations.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Score "which is better" between tracks</h3>
+          <p>The Algorithm picks a default but does not declare the default "better". The clinician retains full autonomy to choose the alternative — documented in automation_bias_warning.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Interpret imaging</h3>
+          <p>"Bulky disease" arrives as a structured field <code>dominant_nodal_mass_cm</code>, not from image analysis. Image analysis = device classification.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Cohort matching</h3>
+          <p>"In the cohort of N patients, M% picked X" is a future feature requiring a persisted patient registry + privacy review. Not available yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>6. How to live with this</h2>
+      <p class="info-text">
+        This engine is intended as <strong>tumor-board preparation</strong>,
+        not a replacement. The clinician inputs a profile, receives a
+        structured draft with all sources and open questions, and then:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card">
+          <div class="num-big">1</div>
+          <div class="num-lbl">Verifies the sources</div>
+          <p class="num-text">
+            Every claim in the plan carries a citation. The clinician can
+            read the original NCCN / ESMO / local-MoH section and confirm
+            the engine did not misquote it.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">2</div>
+          <div class="num-lbl">Closes Open Questions</div>
+          <p class="num-text">
+            If the engine flags "cytogenetic panel incomplete", the
+            clinician orders the test, adds it to the profile, and runs
+            <code>revise_plan</code>. The plan refreshes, the OpenQuestion
+            closes.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">3</div>
+          <div class="num-lbl">Adapts for the patient</div>
+          <p class="num-text">
+            Re-checks doses, substitutes supportive care for known
+            allergies, manually verifies local-availability constraints.
+            The engine produces a draft; the clinician produces the final.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">4</div>
+          <div class="num-lbl">Tumor board discusses</div>
+          <p class="num-text">
+            The MDT brief shows which roles are activated and which
+            questions are open. That is the structured agenda for the board
+            meeting. Decisions taken at the board are captured as
+            provenance events.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    Open-source · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">romeo111/OpenOnco</a>
+    <br>
+    No real patient data · CHARTER §9.3.
+    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
+  </footer>
+</main>
+</body>
+</html>
