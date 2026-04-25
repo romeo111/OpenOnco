@@ -100,31 +100,50 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 /* Numbers */
 .numbers { padding: 50px 0 30px; }
-.numbers h2, .problem h2, .approach h2, .how h2, .gallery h1, .try-page h1 {
+.numbers h2, .problem h2, .how h2, .gallery h1, .try-page h1 {
   font-family: var(--font-display); font-size: 30px;
   color: var(--green-900); margin-bottom: 24px;
+}
+.numbers-lead {
+  font-size: 15px; color: var(--gray-700); margin-bottom: 24px;
+  max-width: 880px;
 }
 .num-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 12px;
 }
+.num-grid--rich {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
 .num-card {
   background: white; border: 1px solid var(--gray-200); border-radius: 10px;
-  padding: 18px 16px; border-top: 3px solid var(--green-600);
+  padding: 20px 18px; border-top: 3px solid var(--green-600);
+  display: flex; flex-direction: column;
 }
+.num-card--accent { border-top-color: var(--teal); background: linear-gradient(180deg, var(--green-50) 0%, white 40%); }
 .num-big {
   font-family: var(--font-display); font-size: 38px; line-height: 1;
   color: var(--green-900);
 }
 .num-lbl {
-  font-size: 13px; color: var(--gray-700); margin-top: 6px;
-  font-weight: 600;
+  font-size: 14px; color: var(--gray-900); margin-top: 6px;
+  font-weight: 700;
 }
 .num-detail {
   font-family: var(--font-mono); font-size: 11px; color: var(--gray-500);
   margin-top: 4px;
 }
+.num-text {
+  font-size: 13px; color: var(--gray-700); margin-top: 10px;
+  line-height: 1.5;
+}
+.num-text code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
+}
+.num-text em { font-style: normal; font-family: var(--font-mono); font-size: 12px; color: var(--green-700); }
 .num-foot {
   font-size: 13px; color: var(--gray-700); margin-top: 18px;
   padding: 14px 16px; background: var(--amber-bg);
@@ -134,47 +153,31 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 /* Problem */
 .problem { padding: 30px 0; }
-.problem-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-}
-.problem-grid h3 {
-  font-size: 18px; margin-bottom: 8px; color: var(--green-800);
-}
-.problem-grid p { font-size: 15px; color: var(--gray-700); }
-
-/* Approach (Watson cmp) */
-.approach { padding: 30px 0; }
-.cmp {
-  width: 100%; border-collapse: collapse; font-size: 14px;
-  background: white; border-radius: 8px; overflow: hidden;
-  border: 1px solid var(--gray-200);
-}
-.cmp th {
-  background: var(--green-700); color: white; text-align: left;
-  padding: 12px 16px; font-weight: 600;
-}
-.cmp td {
-  padding: 12px 16px; border-bottom: 1px solid var(--gray-100);
-  vertical-align: top;
-}
-.cmp tr:last-child td { border-bottom: none; }
-.cmp tr td:first-child { font-weight: 600; color: var(--gray-700); width: 30%; }
-.cmp tr td:nth-child(2) { color: var(--gray-500); }
-.cmp tr td:nth-child(3) { color: var(--green-800); font-weight: 500; }
-.cmp-cite {
-  margin-top: 10px; font-family: var(--font-mono);
-  font-size: 11px; color: var(--gray-500);
+.problem-text {
+  font-size: 16px; color: var(--gray-700); max-width: 880px;
+  line-height: 1.65;
 }
 
 /* How it works */
 .how { padding: 30px 0; }
-.steps { padding-left: 24px; font-size: 15px; }
-.steps li { padding: 8px 0; color: var(--gray-700); }
-.steps li strong { color: var(--green-800); }
-.steps code {
-  font-family: var(--font-mono); font-size: 12px;
-  background: var(--gray-100); padding: 1px 6px; border-radius: 3px;
+.how-lead {
+  font-size: 15px; color: var(--gray-700); max-width: 880px;
+  margin-bottom: 22px;
 }
+.how-fig {
+  background: #0a2e1a;  /* dark backdrop matches infograph palette */
+  padding: 24px; border-radius: 12px; text-align: center;
+  margin: 0;
+}
+.how-fig img {
+  max-width: 100%; height: auto; border-radius: 6px;
+  background: white;
+}
+.how-fig figcaption {
+  margin-top: 14px; font-size: 13px; color: var(--green-100);
+  text-align: left; line-height: 1.55;
+}
+.how-fig figcaption strong { color: white; }
 
 /* Gallery */
 .gallery { padding: 32px 0; }

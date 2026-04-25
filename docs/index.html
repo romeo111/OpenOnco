@@ -11,7 +11,6 @@
 <header class="top-bar">
   <div class="brand-line">
     <a href="index.html" class="brand-mini">OpenOnco</a>
-    <span class="role-pill">Тестувальник · OSS preview</span>
   </div>
   <nav class="top-actions">
     <a href="index.html" class="active">Головна</a>
@@ -24,7 +23,6 @@
 <main>
   <section class="hero">
     <div class="hero-content">
-      <div class="eyebrow">Open-source · MIT · клінічний контент під CHARTER §6.1 dual-review</div>
       <h1>Структуроване рішення для tumor-board.<br>Без чорних скриньок.</h1>
       <p class="hero-sub">
         Лікар завантажує профіль пацієнта → отримує два альтернативні плани лікування
@@ -43,20 +41,118 @@
 
   <section class="numbers">
     <h2>Що вже зроблено</h2>
-    <div class="num-grid">
-      <div class="num-card"><div class="num-big">2</div><div class="num-lbl">Хвороби в KB</div><div class="num-detail">2 з повним ланцюгом · 0 частково</div></div>
-      <div class="num-card"><div class="num-big">4</div><div class="num-lbl">Показання (Indications)</div></div>
-      <div class="num-card"><div class="num-big">5</div><div class="num-lbl">Режими лікування</div></div>
-      <div class="num-card"><div class="num-big">18</div><div class="num-lbl">Препарати</div></div>
-      <div class="num-card"><div class="num-big">40</div><div class="num-lbl">Тести / процедури</div></div>
-      <div class="num-card"><div class="num-big">8</div><div class="num-lbl">Workups (триаж)</div></div>
-      <div class="num-card"><div class="num-big">6</div><div class="num-lbl">Red flags</div></div>
-      <div class="num-card"><div class="num-big">8</div><div class="num-lbl">Supportive care</div></div>
-      <div class="num-card"><div class="num-big">13</div><div class="num-lbl">Джерела (NCCN, ESMO, EHA…)</div></div>
-      <div class="num-card"><div class="num-big">10</div><div class="num-lbl">Специфікації</div></div>
+    <p class="numbers-lead">
+      Open-source онкологічний rule engine має знаннєву базу (KB), в яку клініцисти
+      контрибутують напряму через GitHub. Кожна одиниця контенту версіонована, цитує
+      першоджерела (NCCN/ESMO/EHA/МОЗ) і проходить dual-review per CHARTER §6.1
+      перш ніж потрапити з STUB у production.
+    </p>
+    <div class="num-grid num-grid--rich">
+
+      <div class="num-card">
+        <div class="num-big">2</div>
+        <div class="num-lbl">Хвороби в KB</div>
+        <div class="num-detail">2 з повним ланцюгом disease→indication→regimen→algorithm · 0 частково</div>
+        <p class="num-text">
+          Кожна хвороба має свій <strong>archetype</strong> (etiologically_driven як
+          HCV-MZL, risk_stratified як MM, biomarker_driven, stage_driven), що визначає
+          логіку алгоритму вибору лікування.
+        </p>
+      </div>
+
+      <div class="num-card num-card--accent">
+        <div class="num-big">13</div>
+        <div class="num-lbl">Лікарі-скіли (віртуальні спеціалісти)</div>
+        <div class="num-detail">кожен скіл має свою версію, sources, last_reviewed</div>
+        <p class="num-text">
+          Гематолог, патолог, інфекціоніст-гепатолог, радіолог, молекулярний генетик,
+          клінічний фармацевт, радіотерапевт, паліативна допомога та інші — кожен
+          активується на конкретні тригери у профілі пацієнта і додає свої open-questions
+          + supportive care recommendations до плану.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">8</div>
+        <div class="num-lbl">Workups (триаж)</div>
+        <div class="num-detail">pre-biopsy діагностичний шлях</div>
+        <p class="num-text">
+          Коли в пацієнта ще немає підтвердженої гістології (CHARTER §15.2 C7 забороняє
+          treatment Plan без неї), engine вмикає <strong>diagnostic mode</strong>: видає
+          Workup Brief зі списком тестів, biopsy approach, IHC panel, та переліком ролей
+          що мають бути в triage MDT. Як тільки histology підтверджено — diagnostic plan
+          promote-иться в treatment plan через <code>revise_plan(...)</code>.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">6</div>
+        <div class="num-lbl">Red flags</div>
+        <div class="num-detail">тригери ескалації або розслідування</div>
+        <p class="num-text">
+          Червоні прапорці — структуровані клінічні умови, що автоматично змінюють план:
+          <em>RF-BULKY-DISEASE</em> (нодальна маса &gt;7 см) перемикає HCV-MZL з antiviral-first
+          на BR + DAA, <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p), gain 1q)
+          ескалує MM з триплету VRd до квадруплету D-VRd. Кожен RedFlag прив'язаний до
+          domain-role, який «виловлює» його у MDT brief.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">5</div>
+        <div class="num-lbl">Режими лікування</div>
+        <p class="num-text">
+          Кожен регімен — список drugs з дозами, шкалою циклів, dose adjustments
+          (для renal impairment, FIB-4, frailty), premedications, mandatory supportive
+          care та monitoring schedule.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">18</div>
+        <div class="num-lbl">Препарати</div>
+        <p class="num-text">
+          ATC/RxNorm-кодовані. Кожен з регуляторним статусом FDA/EMA/MOЗ + НСЗУ
+          reimbursement (наприклад, daratumumab наразі НЕ реімбурсується НСЗУ —
+          це блокер для D-VRd, явно фіксований у плані).
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">40</div>
+        <div class="num-lbl">Тести / процедури</div>
+        <p class="num-text">
+          LOINC-кодовані лабораторні + imaging + histology + IHC + genomic тести.
+          Кожен має <code>priority_class</code> (critical / standard / desired /
+          calculation_based) — рендеряться у Plan як «pre-treatment investigations»
+          таблиця.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">13</div>
+        <div class="num-lbl">Джерела</div>
+        <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO</div>
+        <p class="num-text">
+          Кожна Indication / Regimen / RedFlag цитує конкретні джерела з
+          <em>position</em> (supports / contradicts / context) та paraphrased quote.
+          FDA Criterion 4 — лікар може незалежно перевірити підставу кожної рекомендації.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">10</div>
+        <div class="num-lbl">Специфікації</div>
+        <p class="num-text">
+          CHARTER (governance + FDA позиціювання), CLINICAL_CONTENT_STANDARDS,
+          KNOWLEDGE_SCHEMA, DATA_STANDARDS, SOURCE_INGESTION, REFERENCE_CASE,
+          MDT_ORCHESTRATOR, DIAGNOSTIC_MDT, WORKUP_METHODOLOGY, SKILL_ARCHITECTURE.
+        </p>
+      </div>
+
     </div>
     <div class="num-foot">
-      Зріз станом на <code>2026-04-25 13:54 UTC</code>.
+      Зріз станом на <code>2026-04-25 14:04 UTC</code>.
       Reviewer sign-offs ≥ 2: <strong>0/4</strong>
       — увесь клінічний контент позначено як <strong>STUB</strong> до dual-sign-off
       Clinical Co-Lead. Це інструмент підтримки рішень, не медичний пристрій.
@@ -65,46 +161,32 @@
 
   <section class="problem">
     <h2>Проблема</h2>
-    <div class="problem-grid">
-      <div>
-        <h3>Підготовка до tumor-board — 2-4 години ручної роботи на пацієнта</h3>
-        <p>Лікар чи клінічний фармаколог відкриває NCCN PDF, ESMO guideline, МОЗ протокол, перевіряє НСЗУ-формуляр, шукає dose adjustments, знаходить supportive care, складає це у документ. Кожен раз. Для кожного пацієнта. Кожна помилка — пропущена контра.</p>
-      </div>
-      <div>
-        <h3>Існуючі CDS — або чорні скриньки, або застарілі чек-листи</h3>
-        <p>IBM Watson провалився, тому що приймав рішення за лікаря на тренованих синтетичних кейсах. Класичні чек-листи — статичні і не оновлюються в темпі літератури. Між ними — порожнеча, де реальна робота лікаря.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="approach">
-    <h2>Що робимо інакше</h2>
-    <table class="cmp">
-      <thead>
-        <tr><th></th><th>Watson Oncology</th><th>OpenOnco</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Тренування</td><td>Synthetic cases</td><td>Real expert-verified document validation</td></tr>
-        <tr><td>Джерело рекомендацій</td><td>"Single authority" preferences</td><td>Multiple published guidelines (NCCN, ESMO, МОЗ, EASL, EHA, BSH)</td></tr>
-        <tr><td>Scoring</td><td>"Black box"</td><td>Transparent evidence levels (GRADE) + Plan.trace</td></tr>
-        <tr><td>Хто рекомендує</td><td>LLM генерує</td><td>LLM лише форматує; rules + KB генерують</td></tr>
-        <tr><td>Human review per recommendation</td><td>Немає</td><td>Dual medical review mandatory (CHARTER §6.1)</td></tr>
-        <tr><td>Scaling</td><td>Перед валідацією</td><td>Scope обмежений до validated domains</td></tr>
-        <tr><td>Позиціонування</td><td>"Decision maker"</td><td>"Information support" (FDA non-device CDS, CHARTER §15)</td></tr>
-      </tbody>
-    </table>
-    <div class="cmp-cite">Адаптовано з <code>specs/REFERENCE_CASE_SPECIFICATION.md §8.3</code></div>
+    <p class="problem-text">
+      Щоб призначити лікування, лікар або клінічний фармаколог витрачає 2–4 години
+      ручної роботи: відкриває NCCN PDF, звіряє ESMO guideline, перечитує МОЗ протокол,
+      перевіряє НСЗУ-формуляр на доступність препарату, шукає dose adjustments
+      для нирок чи печінки, додає supportive care, не забуває про вакцинації та
+      профілактику опортуністичних інфекцій. І так — для кожного пацієнта,
+      кожного разу заново. Будь-яка пропущена контраіндикація може коштувати
+      життя. OpenOnco автоматизує цю чорнову роботу: лікар отримує готовий
+      проект плану з усіма джерелами, а далі лише верифікує і коригує під
+      конкретного пацієнта.
+    </p>
   </section>
 
   <section class="how">
     <h2>Як це працює</h2>
-    <ol class="steps">
-      <li><strong>Profile</strong> — JSON-структура пацієнта (FHIR/mCODE-compatible): диагноз, ECOG, біомаркери, лаби, supporting findings.</li>
-      <li><strong>Engine</strong> — Pydantic schemas + YAML knowledge base + rule engine. Знаходить applicable Indications, walk-ить Algorithm, оцінює RedFlags.</li>
-      <li><strong>Plan with tracks</strong> — мінімум 2 альтернативи (стандарт + агресив) у одному документі (CHARTER §2). MDT brief: ролі, відкриті питання, provenance.</li>
-      <li><strong>Render</strong> — single-file HTML з повним sourcing, FDA Criterion-4 metadata, "Що НЕ робити", monitoring schedule, timeline. A4 print-friendly.</li>
-      <li><strong>Revisions</strong> — нові дані → нова версія Plan через <code>revise_plan(...)</code>; supersedes/superseded_by chain зберігається immutably.</li>
-    </ol>
+    <p class="how-lead">
+      Логіка така ж, як у класичної мультидисциплінарної команди (MDT): кілька
+      спеціалістів навколо пацієнта, обговорення випадку, узгоджений план,
+      повернення до випадку при появі нових даних. Ми просто оформлюємо це як
+      structured engine — кожен «віртуальний лікар» — це модуль із версією,
+      правилами і списком джерел.
+    </p>
+    <figure class="how-fig">
+      <img src="MDT.png" alt="Мультидисциплінарна команда — як спеціалісти спільно ухвалюють план лікування пацієнта" loading="lazy">
+      <figcaption>Кожна роль (Хірург-онколог, Хіміотерапевт, Радіолог, Патолог, Молекулярний генетик, Радіотерапевт, Психолог/паліатив тощо) у нашій системі — це <strong>скіл</strong> із власною версією. Активується автоматично при умовах профілю пацієнта і додає до плану свої open-questions, contraindications, supportive care.</figcaption>
+    </figure>
   </section>
 
   <footer class="page-foot">

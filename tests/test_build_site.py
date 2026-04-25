@@ -60,23 +60,68 @@ def test_landing_is_public_with_hero_and_ctas(site_dir: Path):
 
 
 def test_landing_shows_numerical_metrics(site_dir: Path):
-    """Goal 1: project metrics must be prominent on the landing."""
+    """Goal 1: project metrics must be prominent on the landing.
+
+    Per user direction: removed 'Показання' (Indications) and 'Supportive care'
+    cards; added 'Лікарі-скіли' card explaining virtual specialists.
+    Each card now includes a textual explanation, not just the number."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="num-grid"' in html
-    # Headline numbers labels
-    for label in ("Хвороби в KB", "Показання", "Режими", "Препарати",
-                  "Тести", "Workups", "Red flags", "Supportive care",
+    assert 'class="num-grid num-grid--rich"' in html
+    for label in ("Хвороби в KB", "Лікарі-скіли", "Режими лікування",
+                  "Препарати", "Тести", "Workups", "Red flags",
                   "Джерела", "Специфікації"):
         assert label in html, f"missing landing metric label: {label}"
+    # Removed labels per user direction
+    for removed in ("Показання (Indications)", "Supportive care"):
+        assert removed not in html, f"label '{removed}' should be removed"
+    # Each rich card has a text explanation block
+    assert html.count('class="num-text"') >= 8
 
 
-def test_landing_includes_watson_comparison(site_dir: Path):
-    """The 'how we differ from Watson' table from REFERENCE_CASE_SPECIFICATION §8.3
-    is the trust-establishing block — must appear on the public landing."""
+def test_landing_drops_watson_comparison(site_dir: Path):
+    """Per user direction: Watson comparison block removed — keep landing
+    focused on what we DO, not what we're not."""
     html = (site_dir / "index.html").read_text(encoding="utf-8")
-    assert "Watson Oncology" in html
-    assert "OpenOnco" in html
-    assert "Black box" in html or "чорних скриньок" in html.lower()
+    assert "Watson Oncology" not in html
+    assert 'class="cmp"' not in html
+    assert 'class="approach"' not in html
+
+
+def test_landing_problem_block_is_single_paragraph(site_dir: Path):
+    """Per user direction: the problem section is now one prose block,
+    not a 2-column grid."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert 'class="problem-text"' in html
+    assert 'class="problem-grid"' not in html
+
+
+def test_landing_how_section_uses_mdt_infographic(site_dir: Path):
+    """Per user direction: 'Як це працює' section now embeds the MDT
+    infographic image instead of a 5-step ordered list."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert "MDT.png" in html
+    assert 'class="how-fig"' in html
+    # Image asset actually copied into docs/
+    assert (site_dir / "MDT.png").exists()
+    # Old text-list step format removed
+    assert '<ol class="steps">' not in html
+
+
+def test_top_bar_drops_tester_pill(site_dir: Path):
+    """Per user direction: 'Тестувальник · OSS preview' pill removed from header."""
+    for page in ("index.html", "gallery.html", "try.html"):
+        html = (site_dir / page).read_text(encoding="utf-8")
+        assert "Тестувальник · OSS preview" not in html, (
+            f"tester pill still in {page} header"
+        )
+
+
+def test_landing_drops_charter_eyebrow(site_dir: Path):
+    """Per user direction: 'клінічний контент під CHARTER §6.1 dual-review'
+    eyebrow removed from hero — too noisy for first-time visitor."""
+    html = (site_dir / "index.html").read_text(encoding="utf-8")
+    assert "клінічний контент під CHARTER" not in html
+    assert 'class="eyebrow"' not in html
 
 
 # ── Gallery page ──────────────────────────────────────────────────────────

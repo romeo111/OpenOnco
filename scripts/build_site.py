@@ -220,7 +220,6 @@ def _render_top_bar(active: str = "") -> str:
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="index.html" class="brand-mini">OpenOnco</a>
-    <span class="role-pill">Тестувальник · OSS preview</span>
   </div>
   <nav class="top-actions">
     <a href="index.html"{cls("home")}>Головна</a>
@@ -238,14 +237,13 @@ def render_landing(stats) -> str:
     # Pull headline numbers
     by_type = {e.type: e.count for e in stats.entities}
     n_diseases = by_type.get("diseases", 0)
-    n_indications = by_type.get("indications", 0)
     n_regimens = by_type.get("regimens", 0)
     n_drugs = by_type.get("drugs", 0)
     n_tests = by_type.get("tests", 0)
     n_sources = by_type.get("sources", 0)
     n_workups = by_type.get("workups", 0)
     n_redflags = by_type.get("redflags", 0)
-    n_supportive = by_type.get("supportive_care", 0)
+    n_skills = stats.skills_planned_roles  # 13 — full registry of virtual specialists
 
     return f"""<!DOCTYPE html>
 <html lang="uk">
@@ -262,7 +260,6 @@ def render_landing(stats) -> str:
 <main>
   <section class="hero">
     <div class="hero-content">
-      <div class="eyebrow">Open-source · MIT · клінічний контент під CHARTER §6.1 dual-review</div>
       <h1>Структуроване рішення для tumor-board.<br>Без чорних скриньок.</h1>
       <p class="hero-sub">
         Лікар завантажує профіль пацієнта → отримує два альтернативні плани лікування
@@ -281,17 +278,115 @@ def render_landing(stats) -> str:
 
   <section class="numbers">
     <h2>Що вже зроблено</h2>
-    <div class="num-grid">
-      <div class="num-card"><div class="num-big">{n_diseases}</div><div class="num-lbl">Хвороби в KB</div><div class="num-detail">{diseases_full} з повним ланцюгом · {diseases_partial} частково</div></div>
-      <div class="num-card"><div class="num-big">{n_indications}</div><div class="num-lbl">Показання (Indications)</div></div>
-      <div class="num-card"><div class="num-big">{n_regimens}</div><div class="num-lbl">Режими лікування</div></div>
-      <div class="num-card"><div class="num-big">{n_drugs}</div><div class="num-lbl">Препарати</div></div>
-      <div class="num-card"><div class="num-big">{n_tests}</div><div class="num-lbl">Тести / процедури</div></div>
-      <div class="num-card"><div class="num-big">{n_workups}</div><div class="num-lbl">Workups (триаж)</div></div>
-      <div class="num-card"><div class="num-big">{n_redflags}</div><div class="num-lbl">Red flags</div></div>
-      <div class="num-card"><div class="num-big">{n_supportive}</div><div class="num-lbl">Supportive care</div></div>
-      <div class="num-card"><div class="num-big">{n_sources}</div><div class="num-lbl">Джерела (NCCN, ESMO, EHA…)</div></div>
-      <div class="num-card"><div class="num-big">{stats.specs_count}</div><div class="num-lbl">Специфікації</div></div>
+    <p class="numbers-lead">
+      Open-source онкологічний rule engine має знаннєву базу (KB), в яку клініцисти
+      контрибутують напряму через GitHub. Кожна одиниця контенту версіонована, цитує
+      першоджерела (NCCN/ESMO/EHA/МОЗ) і проходить dual-review per CHARTER §6.1
+      перш ніж потрапити з STUB у production.
+    </p>
+    <div class="num-grid num-grid--rich">
+
+      <div class="num-card">
+        <div class="num-big">{n_diseases}</div>
+        <div class="num-lbl">Хвороби в KB</div>
+        <div class="num-detail">{diseases_full} з повним ланцюгом disease→indication→regimen→algorithm · {diseases_partial} частково</div>
+        <p class="num-text">
+          Кожна хвороба має свій <strong>archetype</strong> (etiologically_driven як
+          HCV-MZL, risk_stratified як MM, biomarker_driven, stage_driven), що визначає
+          логіку алгоритму вибору лікування.
+        </p>
+      </div>
+
+      <div class="num-card num-card--accent">
+        <div class="num-big">{n_skills}</div>
+        <div class="num-lbl">Лікарі-скіли (віртуальні спеціалісти)</div>
+        <div class="num-detail">кожен скіл має свою версію, sources, last_reviewed</div>
+        <p class="num-text">
+          Гематолог, патолог, інфекціоніст-гепатолог, радіолог, молекулярний генетик,
+          клінічний фармацевт, радіотерапевт, паліативна допомога та інші — кожен
+          активується на конкретні тригери у профілі пацієнта і додає свої open-questions
+          + supportive care recommendations до плану.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_workups}</div>
+        <div class="num-lbl">Workups (триаж)</div>
+        <div class="num-detail">pre-biopsy діагностичний шлях</div>
+        <p class="num-text">
+          Коли в пацієнта ще немає підтвердженої гістології (CHARTER §15.2 C7 забороняє
+          treatment Plan без неї), engine вмикає <strong>diagnostic mode</strong>: видає
+          Workup Brief зі списком тестів, biopsy approach, IHC panel, та переліком ролей
+          що мають бути в triage MDT. Як тільки histology підтверджено — diagnostic plan
+          promote-иться в treatment plan через <code>revise_plan(...)</code>.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_redflags}</div>
+        <div class="num-lbl">Red flags</div>
+        <div class="num-detail">тригери ескалації або розслідування</div>
+        <p class="num-text">
+          Червоні прапорці — структуровані клінічні умови, що автоматично змінюють план:
+          <em>RF-BULKY-DISEASE</em> (нодальна маса &gt;7 см) перемикає HCV-MZL з antiviral-first
+          на BR + DAA, <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p), gain 1q)
+          ескалує MM з триплету VRd до квадруплету D-VRd. Кожен RedFlag прив'язаний до
+          domain-role, який «виловлює» його у MDT brief.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_regimens}</div>
+        <div class="num-lbl">Режими лікування</div>
+        <p class="num-text">
+          Кожен регімен — список drugs з дозами, шкалою циклів, dose adjustments
+          (для renal impairment, FIB-4, frailty), premedications, mandatory supportive
+          care та monitoring schedule.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_drugs}</div>
+        <div class="num-lbl">Препарати</div>
+        <p class="num-text">
+          ATC/RxNorm-кодовані. Кожен з регуляторним статусом FDA/EMA/MOЗ + НСЗУ
+          reimbursement (наприклад, daratumumab наразі НЕ реімбурсується НСЗУ —
+          це блокер для D-VRd, явно фіксований у плані).
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_tests}</div>
+        <div class="num-lbl">Тести / процедури</div>
+        <p class="num-text">
+          LOINC-кодовані лабораторні + imaging + histology + IHC + genomic тести.
+          Кожен має <code>priority_class</code> (critical / standard / desired /
+          calculation_based) — рендеряться у Plan як «pre-treatment investigations»
+          таблиця.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{n_sources}</div>
+        <div class="num-lbl">Джерела</div>
+        <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO</div>
+        <p class="num-text">
+          Кожна Indication / Regimen / RedFlag цитує конкретні джерела з
+          <em>position</em> (supports / contradicts / context) та paraphrased quote.
+          FDA Criterion 4 — лікар може незалежно перевірити підставу кожної рекомендації.
+        </p>
+      </div>
+
+      <div class="num-card">
+        <div class="num-big">{stats.specs_count}</div>
+        <div class="num-lbl">Специфікації</div>
+        <p class="num-text">
+          CHARTER (governance + FDA позиціювання), CLINICAL_CONTENT_STANDARDS,
+          KNOWLEDGE_SCHEMA, DATA_STANDARDS, SOURCE_INGESTION, REFERENCE_CASE,
+          MDT_ORCHESTRATOR, DIAGNOSTIC_MDT, WORKUP_METHODOLOGY, SKILL_ARCHITECTURE.
+        </p>
+      </div>
+
     </div>
     <div class="num-foot">
       Зріз станом на <code>{stats.generated_at_utc}</code>.
@@ -303,46 +398,32 @@ def render_landing(stats) -> str:
 
   <section class="problem">
     <h2>Проблема</h2>
-    <div class="problem-grid">
-      <div>
-        <h3>Підготовка до tumor-board — 2-4 години ручної роботи на пацієнта</h3>
-        <p>Лікар чи клінічний фармаколог відкриває NCCN PDF, ESMO guideline, МОЗ протокол, перевіряє НСЗУ-формуляр, шукає dose adjustments, знаходить supportive care, складає це у документ. Кожен раз. Для кожного пацієнта. Кожна помилка — пропущена контра.</p>
-      </div>
-      <div>
-        <h3>Існуючі CDS — або чорні скриньки, або застарілі чек-листи</h3>
-        <p>IBM Watson провалився, тому що приймав рішення за лікаря на тренованих синтетичних кейсах. Класичні чек-листи — статичні і не оновлюються в темпі літератури. Між ними — порожнеча, де реальна робота лікаря.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="approach">
-    <h2>Що робимо інакше</h2>
-    <table class="cmp">
-      <thead>
-        <tr><th></th><th>Watson Oncology</th><th>OpenOnco</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Тренування</td><td>Synthetic cases</td><td>Real expert-verified document validation</td></tr>
-        <tr><td>Джерело рекомендацій</td><td>"Single authority" preferences</td><td>Multiple published guidelines (NCCN, ESMO, МОЗ, EASL, EHA, BSH)</td></tr>
-        <tr><td>Scoring</td><td>"Black box"</td><td>Transparent evidence levels (GRADE) + Plan.trace</td></tr>
-        <tr><td>Хто рекомендує</td><td>LLM генерує</td><td>LLM лише форматує; rules + KB генерують</td></tr>
-        <tr><td>Human review per recommendation</td><td>Немає</td><td>Dual medical review mandatory (CHARTER §6.1)</td></tr>
-        <tr><td>Scaling</td><td>Перед валідацією</td><td>Scope обмежений до validated domains</td></tr>
-        <tr><td>Позиціонування</td><td>"Decision maker"</td><td>"Information support" (FDA non-device CDS, CHARTER §15)</td></tr>
-      </tbody>
-    </table>
-    <div class="cmp-cite">Адаптовано з <code>specs/REFERENCE_CASE_SPECIFICATION.md §8.3</code></div>
+    <p class="problem-text">
+      Щоб призначити лікування, лікар або клінічний фармаколог витрачає 2–4 години
+      ручної роботи: відкриває NCCN PDF, звіряє ESMO guideline, перечитує МОЗ протокол,
+      перевіряє НСЗУ-формуляр на доступність препарату, шукає dose adjustments
+      для нирок чи печінки, додає supportive care, не забуває про вакцинації та
+      профілактику опортуністичних інфекцій. І так — для кожного пацієнта,
+      кожного разу заново. Будь-яка пропущена контраіндикація може коштувати
+      життя. OpenOnco автоматизує цю чорнову роботу: лікар отримує готовий
+      проект плану з усіма джерелами, а далі лише верифікує і коригує під
+      конкретного пацієнта.
+    </p>
   </section>
 
   <section class="how">
     <h2>Як це працює</h2>
-    <ol class="steps">
-      <li><strong>Profile</strong> — JSON-структура пацієнта (FHIR/mCODE-compatible): диагноз, ECOG, біомаркери, лаби, supporting findings.</li>
-      <li><strong>Engine</strong> — Pydantic schemas + YAML knowledge base + rule engine. Знаходить applicable Indications, walk-ить Algorithm, оцінює RedFlags.</li>
-      <li><strong>Plan with tracks</strong> — мінімум 2 альтернативи (стандарт + агресив) у одному документі (CHARTER §2). MDT brief: ролі, відкриті питання, provenance.</li>
-      <li><strong>Render</strong> — single-file HTML з повним sourcing, FDA Criterion-4 metadata, "Що НЕ робити", monitoring schedule, timeline. A4 print-friendly.</li>
-      <li><strong>Revisions</strong> — нові дані → нова версія Plan через <code>revise_plan(...)</code>; supersedes/superseded_by chain зберігається immutably.</li>
-    </ol>
+    <p class="how-lead">
+      Логіка така ж, як у класичної мультидисциплінарної команди (MDT): кілька
+      спеціалістів навколо пацієнта, обговорення випадку, узгоджений план,
+      повернення до випадку при появі нових даних. Ми просто оформлюємо це як
+      structured engine — кожен «віртуальний лікар» — це модуль із версією,
+      правилами і списком джерел.
+    </p>
+    <figure class="how-fig">
+      <img src="MDT.png" alt="Мультидисциплінарна команда — як спеціалісти спільно ухвалюють план лікування пацієнта" loading="lazy">
+      <figcaption>Кожна роль (Хірург-онколог, Хіміотерапевт, Радіолог, Патолог, Молекулярний генетик, Радіотерапевт, Психолог/паліатив тощо) у нашій системі — це <strong>скіл</strong> із власною версією. Активується автоматично при умовах профілю пацієнта і додає до плану свої open-questions, contraindications, supportive care.</figcaption>
+    </figure>
   </section>
 
   <footer class="page-foot">
@@ -769,31 +850,50 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 /* Numbers */
 .numbers { padding: 50px 0 30px; }
-.numbers h2, .problem h2, .approach h2, .how h2, .gallery h1, .try-page h1 {
+.numbers h2, .problem h2, .how h2, .gallery h1, .try-page h1 {
   font-family: var(--font-display); font-size: 30px;
   color: var(--green-900); margin-bottom: 24px;
+}
+.numbers-lead {
+  font-size: 15px; color: var(--gray-700); margin-bottom: 24px;
+  max-width: 880px;
 }
 .num-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 12px;
 }
+.num-grid--rich {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
 .num-card {
   background: white; border: 1px solid var(--gray-200); border-radius: 10px;
-  padding: 18px 16px; border-top: 3px solid var(--green-600);
+  padding: 20px 18px; border-top: 3px solid var(--green-600);
+  display: flex; flex-direction: column;
 }
+.num-card--accent { border-top-color: var(--teal); background: linear-gradient(180deg, var(--green-50) 0%, white 40%); }
 .num-big {
   font-family: var(--font-display); font-size: 38px; line-height: 1;
   color: var(--green-900);
 }
 .num-lbl {
-  font-size: 13px; color: var(--gray-700); margin-top: 6px;
-  font-weight: 600;
+  font-size: 14px; color: var(--gray-900); margin-top: 6px;
+  font-weight: 700;
 }
 .num-detail {
   font-family: var(--font-mono); font-size: 11px; color: var(--gray-500);
   margin-top: 4px;
 }
+.num-text {
+  font-size: 13px; color: var(--gray-700); margin-top: 10px;
+  line-height: 1.5;
+}
+.num-text code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
+}
+.num-text em { font-style: normal; font-family: var(--font-mono); font-size: 12px; color: var(--green-700); }
 .num-foot {
   font-size: 13px; color: var(--gray-700); margin-top: 18px;
   padding: 14px 16px; background: var(--amber-bg);
@@ -803,47 +903,31 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 /* Problem */
 .problem { padding: 30px 0; }
-.problem-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-}
-.problem-grid h3 {
-  font-size: 18px; margin-bottom: 8px; color: var(--green-800);
-}
-.problem-grid p { font-size: 15px; color: var(--gray-700); }
-
-/* Approach (Watson cmp) */
-.approach { padding: 30px 0; }
-.cmp {
-  width: 100%; border-collapse: collapse; font-size: 14px;
-  background: white; border-radius: 8px; overflow: hidden;
-  border: 1px solid var(--gray-200);
-}
-.cmp th {
-  background: var(--green-700); color: white; text-align: left;
-  padding: 12px 16px; font-weight: 600;
-}
-.cmp td {
-  padding: 12px 16px; border-bottom: 1px solid var(--gray-100);
-  vertical-align: top;
-}
-.cmp tr:last-child td { border-bottom: none; }
-.cmp tr td:first-child { font-weight: 600; color: var(--gray-700); width: 30%; }
-.cmp tr td:nth-child(2) { color: var(--gray-500); }
-.cmp tr td:nth-child(3) { color: var(--green-800); font-weight: 500; }
-.cmp-cite {
-  margin-top: 10px; font-family: var(--font-mono);
-  font-size: 11px; color: var(--gray-500);
+.problem-text {
+  font-size: 16px; color: var(--gray-700); max-width: 880px;
+  line-height: 1.65;
 }
 
 /* How it works */
 .how { padding: 30px 0; }
-.steps { padding-left: 24px; font-size: 15px; }
-.steps li { padding: 8px 0; color: var(--gray-700); }
-.steps li strong { color: var(--green-800); }
-.steps code {
-  font-family: var(--font-mono); font-size: 12px;
-  background: var(--gray-100); padding: 1px 6px; border-radius: 3px;
+.how-lead {
+  font-size: 15px; color: var(--gray-700); max-width: 880px;
+  margin-bottom: 22px;
 }
+.how-fig {
+  background: #0a2e1a;  /* dark backdrop matches infograph palette */
+  padding: 24px; border-radius: 12px; text-align: center;
+  margin: 0;
+}
+.how-fig img {
+  max-width: 100%; height: auto; border-radius: 6px;
+  background: white;
+}
+.how-fig figcaption {
+  margin-top: 14px; font-size: 13px; color: var(--green-100);
+  text-align: left; line-height: 1.55;
+}
+.how-fig figcaption strong { color: white; }
 
 /* Gallery */
 .gallery { padding: 32px 0; }
@@ -988,12 +1072,28 @@ def build_one_case(case: CaseEntry, output_dir: Path) -> Path:
     return out_path
 
 
+def _copy_landing_assets(output_dir: Path) -> list[str]:
+    """Copy infographic images used by the landing into docs/. Source-of-truth
+    lives in infograph/ (gitignored except these). Listed by name so we don't
+    accidentally copy patient HTMLs (CHARTER §9.3)."""
+    src_root = REPO_ROOT / "infograph"
+    assets = ["MDT.png"]
+    copied: list[str] = []
+    for name in assets:
+        src = src_root / name
+        if src.exists():
+            shutil.copyfile(src, output_dir / name)
+            copied.append(name)
+    return copied
+
+
 def build_site(output_dir: Path) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "cases").mkdir(parents=True, exist_ok=True)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
+    landing_assets = _copy_landing_assets(output_dir)
 
     stats = collect_stats()
 
@@ -1018,6 +1118,7 @@ def build_site(output_dir: Path) -> dict:
         "cases": case_paths,
         "engine_bundle": engine_bundle,
         "examples_payload": examples_payload,
+        "landing_assets": landing_assets,
     }
 
 
