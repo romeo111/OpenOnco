@@ -1119,6 +1119,16 @@ def render_try(*, target_lang: str = "uk") -> str:
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
       <div id="questIntro" class="quest-intro" hidden></div>
+      <div id="exampleLockBanner" class="example-lock-banner" hidden>
+        <div class="elb-text">
+          <strong>📋 Завантажено приклад.</strong>
+          Заповнені поля заблоковано, щоб випадково не змінити дані прикладу.
+          Натисни кнопку, щоб редагувати все.
+        </div>
+        <button id="personalizeBtn" type="button" class="btn btn-secondary elb-btn">
+          Персоналізувати цей приклад
+        </button>
+      </div>
       <div id="questGroups"></div>
       <div id="questEmpty" class="quest-empty">
         Оберіть хворобу зі списку вище, щоб почати опитування.
@@ -1282,13 +1292,73 @@ const IMPACT_LABEL = {{
   optional: 'Optional',
 }};
 
+// Decoupled from engine readiness — button is clickable as soon as
+// there is something to send. The engine itself loads lazily on click
+// (and also kicks off in the background after first interaction so the
+// live impact panel can populate without waiting for a click).
+function updateRunBtnEnabled() {{
+  let hasInput = false;
+  if (mode === 'form') hasInput = !!activeQuest;
+  else hasInput = textarea.value.trim().length > 0;
+  runBtn.disabled = !hasInput;
+}}
+
+let engineKickoffStarted = false;
+function kickoffEngineLoad() {{
+  if (engineKickoffStarted) return;
+  engineKickoffStarted = true;
+  // Don't await — let it run in background so live preview can populate
+  // as soon as it's ready. Errors surface via setError on real click.
+  ensureEngine().catch(e => console.warn('engine bg load failed:', e));
+}}
+
+function hideExampleLockBanner() {{
+  const banner = document.getElementById('exampleLockBanner');
+  if (banner) banner.hidden = true;
+}}
+function showExampleLockBanner() {{
+  const banner = document.getElementById('exampleLockBanner');
+  if (banner) banner.hidden = false;
+}}
+
+function lockFilledFields() {{
+  // Mark every form field that already has an answer as disabled and
+  // tag its wrapper for visual distinction. Fields without a value stay
+  // editable so the user can complete anything missing.
+  const wrappers = formPane.querySelectorAll('.quest-q');
+  wrappers.forEach(wrap => {{
+    const field = wrap.dataset.field;
+    if (!field) return;
+    const inp = wrap.querySelector('input,select,textarea');
+    if (!inp) return;
+    if (answers[field] !== undefined && answers[field] !== null && answers[field] !== '') {{
+      inp.disabled = true;
+      wrap.classList.add('locked');
+    }} else {{
+      inp.disabled = false;
+      wrap.classList.remove('locked');
+    }}
+  }});
+}}
+
+function unlockAllFields() {{
+  formPane.querySelectorAll('.quest-q').forEach(wrap => {{
+    wrap.classList.remove('locked');
+    const inp = wrap.querySelector('input,select,textarea');
+    if (inp) inp.disabled = false;
+  }});
+  hideExampleLockBanner();
+}}
+
 function renderForm(quest) {{
   activeQuest = quest;
   answers = {{}};
   questGroups.innerHTML = '';
+  hideExampleLockBanner();
   if (!quest) {{
     questEmpty.style.display = '';
     questIntro.hidden = true;
+    updateRunBtnEnabled();
     return;
   }}
   questEmpty.style.display = 'none';
@@ -1310,6 +1380,7 @@ function renderForm(quest) {{
     }}
     questGroups.appendChild(groupEl);
   }}
+  updateRunBtnEnabled();
 }}
 
 function renderQuestion(q) {{
@@ -1401,6 +1472,8 @@ function onAnswerChange(ev) {{
   if (val === undefined) delete answers[field];
   else answers[field] = val;
   saveDraft();
+  updateRunBtnEnabled();
+  kickoffEngineLoad();
   scheduleEval();
 }}
 
@@ -1421,6 +1494,7 @@ function setMode(newMode) {{
     textarea.value = JSON.stringify(buildProfile(), null, 2);
   }}
   saveDraft();
+  updateRunBtnEnabled();
 }}
 
 // ── Profile assembly + live preview ───────────────────────────────────────
@@ -1485,9 +1559,153 @@ _preview_result
       return;
     }}
     updateImpactPanel(result);
+    // Fire-and-forget: shadow-evaluate critical/required boolean+enum
+    // fields with alternative values so the user sees what would change
+    // if a given dial flipped. Stale runs auto-discard via whatIfToken.
+    runWhatIf(result).catch(e => console.warn('what-if eval error:', e));
   }} catch (e) {{
     /* Don't spam errors during typing — just log */
     console.warn('preview eval error:', e);
+  }}
+}}
+
+// ── What-if shadow evaluation ─────────────────────────────────────────────
+let whatIfToken = 0;
+
+async function runWhatIf(currentResult) {{
+  if (!enginReady || !activeQuest || !currentResult) return;
+  const myToken = ++whatIfToken;
+
+  const specs = [];
+  for (const group of activeQuest.groups || []) {{
+    for (const q of group.questions || []) {{
+      if (q.impact !== 'critical' && q.impact !== 'required') continue;
+      if (q.type !== 'boolean' && q.type !== 'enum') continue;
+      const currentVal = answers[q.field];
+      if (q.type === 'boolean') {{
+        if (currentVal === true) specs.push({{field: q.field, alt_value: false, label: 'Ні'}});
+        else if (currentVal === false) specs.push({{field: q.field, alt_value: true, label: 'Так'}});
+        else {{
+          specs.push({{field: q.field, alt_value: true, label: 'Так'}});
+          specs.push({{field: q.field, alt_value: false, label: 'Ні'}});
+        }}
+      }} else if (q.type === 'enum') {{
+        for (const opt of q.options || []) {{
+          if (JSON.stringify(opt.value) === JSON.stringify(currentVal)) continue;
+          specs.push({{field: q.field, alt_value: opt.value, label: opt.label}});
+        }}
+      }}
+    }}
+  }}
+
+  if (specs.length === 0) {{ clearWhatIfMarks(); return; }}
+
+  const profile = buildProfile();
+  if (!profile) return;
+
+  pyodide.globals.set('_wf_profile', JSON.stringify(profile));
+  pyodide.globals.set('_wf_quest_id', activeQuest.id);
+  pyodide.globals.set('_wf_specs', JSON.stringify(specs));
+  pyodide.globals.set('_wf_main_ind', currentResult.would_select_indication || '');
+  pyodide.globals.set('_wf_main_rfs', JSON.stringify(currentResult.fired_redflags || []));
+
+  let raw;
+  try {{
+    raw = await pyodide.runPythonAsync(`
+import json, copy
+from pathlib import Path
+from knowledge_base.engine import evaluate_partial
+from knowledge_base.validation.loader import load_content
+profile = json.loads(_wf_profile)
+specs = json.loads(_wf_specs)
+main_ind = _wf_main_ind
+main_rfs = set(json.loads(_wf_main_rfs))
+KB = Path('knowledge_base/hosted/content')
+ld = load_content(KB)
+quest = next((info['data'] for eid, info in ld.entities_by_id.items()
+              if info['type'] == 'questionnaires' and info['data'].get('id') == _wf_quest_id), None)
+
+def _set_path(d, dotted, val):
+    parts = dotted.split('.')
+    cur = d
+    for p in parts[:-1]:
+        if not isinstance(cur.get(p), dict):
+            cur[p] = {{}}
+        cur = cur[p]
+    cur[parts[-1]] = val
+
+results = []
+if quest is not None:
+    for spec in specs:
+        sp = copy.deepcopy(profile)
+        _set_path(sp, spec['field'], spec['alt_value'])
+        try:
+            sr = evaluate_partial(sp, quest, kb_root=KB).to_dict()
+        except Exception:
+            continue
+        diff = {{}}
+        si = sr.get('would_select_indication') or ''
+        if si != main_ind:
+            diff['indication_now'] = si
+        srfs = set(sr.get('fired_redflags') or [])
+        added = sorted(srfs - main_rfs)
+        removed = sorted(main_rfs - srfs)
+        if added: diff['rf_added'] = added
+        if removed: diff['rf_removed'] = removed
+        if diff:
+            results.append({{
+                'field': spec['field'],
+                'alt_value': spec['alt_value'],
+                'label': spec.get('label', ''),
+                'diff': diff,
+            }})
+_wf_result_json = json.dumps(results)
+_wf_result_json
+`);
+  }} catch (e) {{
+    console.warn('what-if eval error:', e);
+    return;
+  }}
+
+  if (myToken !== whatIfToken) return;
+  let results;
+  try {{ results = JSON.parse(raw); }} catch {{ return; }}
+  renderWhatIfMarks(results);
+}}
+
+function clearWhatIfMarks() {{
+  formPane.querySelectorAll('.quest-whatif').forEach(n => n.remove());
+}}
+
+function renderWhatIfMarks(results) {{
+  clearWhatIfMarks();
+  const byField = {{}};
+  for (const r of results) {{
+    (byField[r.field] = byField[r.field] || []).push(r);
+  }}
+  for (const field of Object.keys(byField)) {{
+    const wrap = formPane.querySelector(`.quest-q[data-field="${{CSS.escape(field)}}"]`);
+    if (!wrap) continue;
+    const box = document.createElement('div');
+    box.className = 'quest-whatif';
+    let html = '<div class="whatif-head">Якщо це поле буде іншим:</div><ul>';
+    for (const it of byField[field]) {{
+      const parts = [];
+      if (it.diff.indication_now) {{
+        parts.push(`Indication → <code>${{escHtml(it.diff.indication_now)}}</code>`);
+      }}
+      if (it.diff.rf_added && it.diff.rf_added.length) {{
+        parts.push('<span class="wf-add">+RF</span> ' + it.diff.rf_added.map(r => `<code>${{escHtml(r)}}</code>`).join(' '));
+      }}
+      if (it.diff.rf_removed && it.diff.rf_removed.length) {{
+        parts.push('<span class="wf-rm">−RF</span> ' + it.diff.rf_removed.map(r => `<code>${{escHtml(r)}}</code>`).join(' '));
+      }}
+      const altLabel = it.label || JSON.stringify(it.alt_value);
+      html += `<li><span class="whatif-alt">${{escHtml(altLabel)}}:</span> ${{parts.join(' · ')}}</li>`;
+    }}
+    html += '</ul>';
+    box.innerHTML = html;
+    wrap.appendChild(box);
   }}
 }}
 
@@ -1503,7 +1721,6 @@ function updateImpactPanel(result) {{
     impactMissingCritical.querySelector('ul').innerHTML = '';
     impactRedflags.querySelector('ul').innerHTML = '';
     impactSelectedText.textContent = '—';
-    runBtn.disabled = true;
     impactWarnings.hidden = true;
     return;
   }}
@@ -1530,8 +1747,9 @@ function updateImpactPanel(result) {{
   }} else {{
     impactWarnings.hidden = true;
   }}
-
-  runBtn.disabled = !result.ready_to_generate;
+  // ready_to_generate is advisory — don't block the button on it; the
+  // user can still try to generate even with missing critical fields
+  // and the engine will surface the gaps.
 }}
 
 // ── Pyodide loader ────────────────────────────────────────────────────────
@@ -1655,9 +1873,13 @@ async function loadAssets() {{
       if (draft.jsonText) textarea.value = draft.jsonText;
       if (draft.mode === 'json') setMode('json');
       setStatus('Чернетку відновлено ✓ Готовий до завантаження двигуна.', 'ok');
+      updateRunBtnEnabled();
+      kickoffEngineLoad();
+      scheduleEval();
     }}
   }} else {{
     setStatus('Оберіть хворобу зі списку, щоб почати.');
+    updateRunBtnEnabled();
   }}
 
   // Engine load is lazy — starts only on first action that needs it
@@ -1705,6 +1927,7 @@ diseaseSelect.addEventListener('change', () => {{
   if (i === '') {{
     renderForm(null);
     repopulateExamples(null);
+    updateRunBtnEnabled();
     return;
   }}
   const idx = parseInt(i, 10);
@@ -1712,6 +1935,8 @@ diseaseSelect.addEventListener('change', () => {{
   repopulateExamples(idx);
   exampleSelect.value = '';
   saveDraft();
+  updateRunBtnEnabled();
+  kickoffEngineLoad();
   scheduleEval();
 }});
 
@@ -1770,16 +1995,28 @@ exampleSelect.addEventListener('change', () => {{
     exampleSelect.value = i;
     populateFormFromProfile(questionnaires[qIdx], ex.json);
     setMode('form');
+    // Lock filled fields and reveal the personalize banner so the user
+    // can opt-in to editing the example's data.
+    lockFilledFields();
+    showExampleLockBanner();
     // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
     textarea.value = JSON.stringify(buildProfile(), null, 2);
-    setStatus('Приклад завантажено як точку старту ✓ Поля з червоною лівою смугою (critical) — основні дайли, що міняють план; жовта (required) — теж важливі. Можна редагувати будь-яке поле — engine переоцінить план.', 'ok');
+    setStatus('Приклад завантажено ✓ Поля заблоковано — натисни «Персоналізувати», щоб редагувати.', 'ok');
   }} else {{
     setMode('json');
     textarea.value = JSON.stringify(ex.json, null, 2);
     setStatus('Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)', 'ok');
   }}
   saveDraft();
+  updateRunBtnEnabled();
+  kickoffEngineLoad();
   scheduleEval();
+}});
+
+const personalizeBtn = document.getElementById('personalizeBtn');
+personalizeBtn && personalizeBtn.addEventListener('click', () => {{
+  unlockAllFields();
+  setStatus('Поля розблоковано — редагуй що завгодно. Engine переоцінить план у режимі реального часу.', 'ok');
 }});
 
 modeFormBtn.addEventListener('click', () => setMode('form'));
@@ -1791,6 +2028,8 @@ formatBtn && formatBtn.addEventListener('click', () => {{
 }});
 textarea.addEventListener('input', () => {{
   saveDraft();
+  updateRunBtnEnabled();
+  kickoffEngineLoad();
   scheduleEval();
 }});
 
@@ -1802,6 +2041,7 @@ resetBtn.addEventListener('click', () => {{
   renderForm(null);
   localStorage.removeItem(STORAGE_KEY);
   updateImpactPanel(null);
+  updateRunBtnEnabled();
   setStatus('Очищено.');
 }});
 
@@ -2440,6 +2680,62 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: linear-gradient(to right, color-mix(in srgb, var(--amber) 6%, var(--gray-50)), var(--gray-50) 60%);
 }
 .quest-q[data-impact="recommended"] { border-left: 3px solid var(--green-600); }
+
+.quest-whatif {
+  margin-top: 10px; padding: 8px 10px;
+  background: white; border: 1px dashed var(--gray-200);
+  border-left: 3px solid var(--green-600);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.quest-whatif .whatif-head {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--green-700); font-weight: 600; margin-bottom: 5px;
+}
+.quest-whatif ul { list-style: none; padding: 0; margin: 0; }
+.quest-whatif li {
+  color: var(--gray-700); margin: 3px 0;
+  line-height: 1.5;
+}
+.quest-whatif .whatif-alt {
+  font-weight: 600; color: var(--gray-900); margin-right: 4px;
+}
+.quest-whatif code {
+  font-size: 11px; padding: 1px 5px; background: var(--gray-100);
+  border-radius: 3px; color: var(--green-900);
+}
+.quest-whatif .wf-add { color: var(--red); font-weight: 600; }
+.quest-whatif .wf-rm { color: var(--gray-500); font-weight: 600; }
+
+/* Locked state — fields pre-filled from a loaded example. Visually
+   muted but legible; the user opts in to editing via the personalize
+   button which removes .locked from every wrapper. */
+.quest-q.locked {
+  opacity: 0.78;
+}
+.quest-q.locked input,
+.quest-q.locked select,
+.quest-q.locked textarea {
+  background: var(--gray-100); color: var(--gray-700);
+  cursor: not-allowed;
+}
+.quest-q.locked .quest-q-label::after {
+  content: " 🔒"; font-size: 11px; opacity: 0.6;
+}
+
+.example-lock-banner {
+  display: flex; gap: 14px; align-items: center; justify-content: space-between;
+  background: var(--green-50); border: 1px solid var(--green-600);
+  border-left: 4px solid var(--green-600);
+  padding: 12px 16px; border-radius: 6px; margin-bottom: 18px;
+}
+.example-lock-banner .elb-text {
+  font-size: 13px; line-height: 1.5; color: var(--gray-700); flex: 1;
+}
+.example-lock-banner .elb-btn {
+  white-space: nowrap; flex-shrink: 0;
+}
 
 .quest-side {
   position: sticky; top: 20px;
