@@ -35,6 +35,12 @@ from .persistence import (
     update_superseded_by_on_disk,
 )
 from .plan import PlanResult, generate_plan
+from .questionnaire_eval import (
+    QPreviewResult,
+    assemble_profile,
+    evaluate_partial,
+    list_questions,
+)
 from .provenance import (
     DecisionProvenanceGraph,
     ProvenanceEvent,
@@ -57,13 +63,17 @@ __all__ = [
     "PATIENT_PLANS_ROOT",
     "PlanResult",
     "ProvenanceEvent",
+    "QPreviewResult",
     "SkillMetadata",
+    "assemble_profile",
+    "evaluate_partial",
     "generate_diagnostic_brief",
     "generate_plan",
     "get_skill",
     "is_diagnostic_profile",
     "is_treatment_profile",
     "latest_version_path",
+    "list_questions",
     "list_versions",
     "load_result",
     "make_event",

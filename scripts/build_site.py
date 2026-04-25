@@ -803,7 +803,7 @@ _PYODIDE_VERSION = "0.26.4"
 def render_try(*, target_lang: str = "uk") -> str:
     # Pyodide assets live at site root — root-relative paths work for both
     # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle +
-    # examples.json are single shared copies — no duplication.
+    # examples.json + questionnaires.json are single shared copies.
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
@@ -819,42 +819,100 @@ def render_try(*, target_lang: str = "uk") -> str:
 <main class="try-page">
   <h1>Спробувати з віртуальним пацієнтом</h1>
   <p class="lead">
-    Введи (або підвантаж із прикладу) JSON-профіль синтетичного пацієнта і отримай повний
-    Plan. <strong>Жодних реальних пацієнтських даних</strong> — це лише runner для перевірки
-    функціоналу. Рушій (Python) запускається у твоєму браузері через Pyodide.
+    Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide)
+    одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських
+    даних.</strong> Чернетка зберігається у browser localStorage.
   </p>
 
-  <div class="try-grid">
-    <section class="try-input">
-      <label>
-        Завантажити приклад
-        <select id="exampleSelect">
-          <option value="">— оберіть —</option>
-        </select>
-      </label>
+  <div class="quest-toolbar">
+    <label class="qt-label">
+      Хвороба
+      <select id="diseaseSelect">
+        <option value="">— оберіть —</option>
+      </select>
+    </label>
+    <label class="qt-label">
+      Завантажити приклад
+      <select id="exampleSelect">
+        <option value="">— оберіть —</option>
+      </select>
+    </label>
+    <div class="qt-spacer"></div>
+    <div class="qt-modes">
+      <button id="modeFormBtn" class="mode-btn active" data-mode="form">Форма</button>
+      <button id="modeJsonBtn" class="mode-btn" data-mode="json">Raw JSON (advanced)</button>
+    </div>
+    <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
+  </div>
 
-      <label>
+  <div class="quest-grid">
+    <section class="quest-form-pane" id="formPane">
+      <div id="questIntro" class="quest-intro" hidden></div>
+      <div id="questGroups"></div>
+      <div id="questEmpty" class="quest-empty">
+        Оберіть хворобу зі списку вище, щоб почати опитування.
+      </div>
+    </section>
+
+    <section class="quest-form-pane" id="jsonPane" hidden>
+      <label class="qt-label">
         Patient profile (JSON)
-        <textarea id="patientJson" rows="22" spellcheck="false" placeholder='{{"patient_id": "...", "disease": {{"icd_o_3_morphology": "9699/3"}}, ...}}'></textarea>
+        <textarea id="patientJson" rows="28" spellcheck="false"
+                  placeholder='{{"patient_id": "...", "disease": {{"icd_o_3_morphology": "9699/3"}}, ...}}'></textarea>
       </label>
-
       <div class="try-actions">
-        <button id="runBtn" class="btn btn-primary">Згенерувати план</button>
         <button id="formatBtn" class="btn btn-secondary">Format JSON</button>
       </div>
-
-      <div id="status" class="status"></div>
-      <div id="error" class="error" hidden></div>
     </section>
 
-    <section class="try-output">
-      <div id="placeholder" class="placeholder">
-        <div class="placeholder-icon">▶</div>
-        <p>Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с.</p>
+    <aside class="quest-side">
+      <div class="quest-impact-card">
+        <h3>Імпакт на план</h3>
+        <div class="impact-progress">
+          <div class="impact-bar">
+            <div class="impact-bar-fill" id="progressFill"></div>
+          </div>
+          <div class="impact-stats">
+            <span id="progressText">0 / 0</span>
+            <span class="impact-pct" id="progressPct">0%</span>
+          </div>
+        </div>
+        <div class="impact-section" id="impactMissingCritical">
+          <h4>⚠️ Критичні поля без відповіді</h4>
+          <ul></ul>
+        </div>
+        <div class="impact-section" id="impactRedflags">
+          <h4>🚩 Red flags активовано</h4>
+          <ul></ul>
+        </div>
+        <div class="impact-section" id="impactSelected">
+          <h4>📋 Поточний default</h4>
+          <p id="impactSelectedText">—</p>
+        </div>
+        <div class="impact-section" id="impactWarnings" hidden>
+          <h4>⚙️ Engine warnings</h4>
+          <ul></ul>
+        </div>
       </div>
-      <iframe id="resultFrame" hidden></iframe>
-    </section>
+
+      <div class="try-actions quest-cta">
+        <button id="runBtn" class="btn btn-primary" disabled>
+          Згенерувати повний Plan
+        </button>
+      </div>
+
+      <div id="status" class="status">Завантажую опитувальники…</div>
+      <div id="error" class="error" hidden></div>
+    </aside>
   </div>
+
+  <section class="quest-output">
+    <div id="placeholder" class="placeholder">
+      <div class="placeholder-icon">▶</div>
+      <p>Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с.</p>
+    </div>
+    <iframe id="resultFrame" hidden></iframe>
+  </section>
 
   <footer class="page-foot">
     Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
@@ -865,18 +923,47 @@ def render_try(*, target_lang: str = "uk") -> str:
 <script type="module">
 import {{ loadPyodide }} from "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs";
 
+const STORAGE_KEY = 'openonco-try-draft-v1';
+
+// ── DOM refs ──────────────────────────────────────────────────────────────
 const status = document.getElementById('status');
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
+const resetBtn = document.getElementById('resetBtn');
+const diseaseSelect = document.getElementById('diseaseSelect');
 const exampleSelect = document.getElementById('exampleSelect');
 const textarea = document.getElementById('patientJson');
 const placeholder = document.getElementById('placeholder');
 const resultFrame = document.getElementById('resultFrame');
+const formPane = document.getElementById('formPane');
+const jsonPane = document.getElementById('jsonPane');
+const questGroups = document.getElementById('questGroups');
+const questIntro = document.getElementById('questIntro');
+const questEmpty = document.getElementById('questEmpty');
+const modeFormBtn = document.getElementById('modeFormBtn');
+const modeJsonBtn = document.getElementById('modeJsonBtn');
 
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const impactMissingCritical = document.getElementById('impactMissingCritical');
+const impactRedflags = document.getElementById('impactRedflags');
+const impactSelected = document.getElementById('impactSelected');
+const impactSelectedText = document.getElementById('impactSelectedText');
+const impactWarnings = document.getElementById('impactWarnings');
+
+// ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
 let enginReady = false;
+let questionnaires = [];     // loaded from /questionnaires.json
+let examples = [];           // loaded from /examples.json
+let activeQuest = null;      // currently selected questionnaire
+let answers = {{}};          // {{dotted_path: value}}
+let mode = 'form';           // 'form' | 'json'
+let evalDebounceTimer = null;
 
+// ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info') {{
   status.textContent = msg;
   status.dataset.kind = kind;
@@ -891,30 +978,290 @@ function setError(msg) {{
   }}
 }}
 
-// Load examples list
-async function loadExamples() {{
-  const resp = await fetch('/examples.json');
-  const examples = await resp.json();
-  exampleSelect.innerHTML = '<option value="">— оберіть —</option>';
-  examples.forEach((ex, i) => {{
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = ex.label;
-    exampleSelect.appendChild(opt);
-  }});
-  exampleSelect.addEventListener('change', () => {{
-    const i = exampleSelect.value;
-    if (i === '') return;
-    textarea.value = JSON.stringify(examples[i].json, null, 2);
-    setError(null);
-  }});
-  // Default to first example
-  if (examples.length > 0) {{
-    exampleSelect.value = '0';
-    textarea.value = JSON.stringify(examples[0].json, null, 2);
+function escHtml(s) {{
+  return String(s).replace(/[&<>"']/g, c => ({{
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }})[c]);
+}}
+
+function saveDraft() {{
+  try {{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({{
+      questId: activeQuest ? activeQuest.id : null,
+      answers,
+      mode,
+      jsonText: textarea.value,
+    }}));
+  }} catch (e) {{ /* private mode etc — silent fail */ }}
+}}
+
+function loadDraft() {{
+  try {{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  }} catch {{ return null; }}
+}}
+
+// ── Form rendering ────────────────────────────────────────────────────────
+const IMPACT_LABEL = {{
+  critical: 'CRITICAL',
+  required: 'Required',
+  recommended: 'Recommended',
+  optional: 'Optional',
+}};
+
+function renderForm(quest) {{
+  activeQuest = quest;
+  answers = {{}};
+  questGroups.innerHTML = '';
+  if (!quest) {{
+    questEmpty.style.display = '';
+    questIntro.hidden = true;
+    return;
+  }}
+  questEmpty.style.display = 'none';
+  if (quest.intro) {{
+    questIntro.hidden = false;
+    questIntro.textContent = quest.intro;
+  }} else {{
+    questIntro.hidden = true;
+  }}
+  for (const group of quest.groups || []) {{
+    const groupEl = document.createElement('div');
+    groupEl.className = 'quest-group';
+    groupEl.innerHTML = `
+      <h3>${{escHtml(group.title || '')}}</h3>
+      ${{group.description ? `<p class="quest-group-desc">${{escHtml(group.description)}}</p>` : ''}}
+    `;
+    for (const q of group.questions || []) {{
+      groupEl.appendChild(renderQuestion(q));
+    }}
+    questGroups.appendChild(groupEl);
   }}
 }}
 
+function renderQuestion(q) {{
+  const wrap = document.createElement('div');
+  wrap.className = 'quest-q';
+  wrap.dataset.field = q.field;
+  const impact = q.impact || 'optional';
+  const fieldId = 'fld-' + q.field.replace(/[^A-Za-z0-9]/g, '_');
+
+  const triggers = (q.triggers || []).map(t => `<span class="trigger-pill">${{escHtml(t)}}</span>`).join('');
+
+  let inputHtml = '';
+  const placeholder = q.range_min !== undefined && q.range_max !== undefined
+    ? `${{q.range_min}}–${{q.range_max}}` : '';
+  switch (q.type) {{
+    case 'integer':
+    case 'float':
+      inputHtml = `<input type="number" id="${{fieldId}}" data-field="${{q.field}}"
+        ${{q.range_min !== undefined ? `min="${{q.range_min}}"` : ''}}
+        ${{q.range_max !== undefined ? `max="${{q.range_max}}"` : ''}}
+        ${{q.type === 'float' ? 'step="0.1"' : 'step="1"'}}
+        ${{placeholder ? `placeholder="${{placeholder}}"` : ''}}>`;
+      break;
+    case 'boolean':
+      inputHtml = `<select id="${{fieldId}}" data-field="${{q.field}}" data-type="boolean">
+        <option value="">—</option>
+        <option value="true">Так</option>
+        <option value="false">Ні</option>
+      </select>`;
+      break;
+    case 'enum':
+      const opts = (q.options || []).map(o =>
+        `<option value="${{escHtml(JSON.stringify(o.value))}}">${{escHtml(o.label)}}</option>`
+      ).join('');
+      inputHtml = `<select id="${{fieldId}}" data-field="${{q.field}}" data-type="enum">
+        <option value="">— оберіть —</option>${{opts}}
+      </select>`;
+      break;
+    case 'text':
+    default:
+      inputHtml = `<input type="text" id="${{fieldId}}" data-field="${{q.field}}">`;
+  }}
+
+  wrap.innerHTML = `
+    <div class="quest-q-head">
+      <label for="${{fieldId}}" class="quest-q-label">${{escHtml(q.label)}}</label>
+      <span class="impact-pill impact-${{impact}}">${{IMPACT_LABEL[impact] || impact}}</span>
+    </div>
+    ${{inputHtml}}
+    ${{q.units ? `<span class="quest-units">${{escHtml(q.units)}}</span>` : ''}}
+    ${{q.helper ? `<p class="quest-helper">${{escHtml(q.helper)}}</p>` : ''}}
+    ${{triggers ? `<div class="quest-triggers">${{triggers}}</div>` : ''}}
+  `;
+
+  // Apply default value
+  const inp = wrap.querySelector('input,select');
+  if (q.default_value !== undefined && q.default_value !== null) {{
+    if (q.type === 'boolean') inp.value = String(q.default_value);
+    else if (q.type === 'enum') inp.value = JSON.stringify(q.default_value);
+    else inp.value = q.default_value;
+    answers[q.field] = q.default_value;
+  }}
+  inp.addEventListener('input', onAnswerChange);
+  inp.addEventListener('change', onAnswerChange);
+  return wrap;
+}}
+
+function readValue(input, type) {{
+  const v = input.value;
+  if (v === '') return undefined;
+  switch (type) {{
+    case 'boolean': return v === 'true';
+    case 'enum':
+      try {{ return JSON.parse(v); }} catch {{ return v; }}
+    case 'integer': return parseInt(v, 10);
+    case 'float': return parseFloat(v);
+    default: return v;
+  }}
+}}
+
+function onAnswerChange(ev) {{
+  const inp = ev.target;
+  const field = inp.dataset.field;
+  if (!field) return;
+  const type = inp.dataset.type
+    || (inp.type === 'number' ? (inp.step === '0.1' ? 'float' : 'integer') : 'text');
+  const val = readValue(inp, type);
+  if (val === undefined) delete answers[field];
+  else answers[field] = val;
+  saveDraft();
+  scheduleEval();
+}}
+
+function scheduleEval() {{
+  if (evalDebounceTimer) clearTimeout(evalDebounceTimer);
+  evalDebounceTimer = setTimeout(runLivePreview, 400);
+}}
+
+// ── Mode switch ───────────────────────────────────────────────────────────
+function setMode(newMode) {{
+  mode = newMode;
+  modeFormBtn.classList.toggle('active', mode === 'form');
+  modeJsonBtn.classList.toggle('active', mode === 'json');
+  formPane.hidden = mode !== 'form';
+  jsonPane.hidden = mode !== 'json';
+  if (mode === 'json' && activeQuest) {{
+    // Sync form → JSON
+    textarea.value = JSON.stringify(buildProfile(), null, 2);
+  }}
+  saveDraft();
+}}
+
+// ── Profile assembly + live preview ───────────────────────────────────────
+function buildProfile() {{
+  if (mode === 'json') {{
+    try {{ return JSON.parse(textarea.value); }} catch {{ return null; }}
+  }}
+  if (!activeQuest) return null;
+  // Deep-merge fixed_fields + expand dotted-path answers
+  const profile = JSON.parse(JSON.stringify(activeQuest.fixed_fields || {{}}));
+  for (const [path, val] of Object.entries(answers)) {{
+    if (val === undefined || val === null) continue;
+    const parts = path.split('.');
+    let cur = profile;
+    for (let i = 0; i < parts.length - 1; i++) {{
+      const seg = parts[i];
+      if (typeof cur[seg] !== 'object' || cur[seg] === null) cur[seg] = {{}};
+      cur = cur[seg];
+    }}
+    cur[parts[parts.length - 1]] = val;
+  }}
+  return profile;
+}}
+
+async function runLivePreview() {{
+  const profile = buildProfile();
+  if (!profile || !activeQuest) {{
+    updateImpactPanel(null);
+    return;
+  }}
+  // Local-only progress before Pyodide ready
+  const total = (activeQuest.groups || []).reduce(
+    (acc, g) => acc + (g.questions || []).length, 0);
+  const filled = Object.keys(answers).length;
+  setProgress(filled, total);
+
+  // Call evaluator if engine ready
+  if (!enginReady) return;
+  try {{
+    pyodide.globals.set('_profile_json', JSON.stringify(profile));
+    pyodide.globals.set('_quest_id', activeQuest.id);
+    const resultJson = await pyodide.runPythonAsync(`
+import json
+from pathlib import Path
+from knowledge_base.engine import evaluate_partial
+from knowledge_base.validation.loader import load_content
+profile = json.loads(_profile_json)
+KB = Path('knowledge_base/hosted/content')
+ld = load_content(KB)
+quest = next((info['data'] for eid, info in ld.entities_by_id.items()
+              if info['type'] == 'questionnaires' and info['data'].get('id') == _quest_id), None)
+if quest is None:
+    json.dumps({{'error': f'Questionnaire {{_quest_id}} not found'}})
+else:
+    res = evaluate_partial(profile, quest, kb_root=KB)
+    json.dumps(res.to_dict())
+`);
+    const result = JSON.parse(resultJson);
+    if (result.error) {{
+      setError(result.error);
+      return;
+    }}
+    updateImpactPanel(result);
+  }} catch (e) {{
+    /* Don't spam errors during typing — just log */
+    console.warn('preview eval error:', e);
+  }}
+}}
+
+function setProgress(filled, total) {{
+  progressText.textContent = `${{filled}} / ${{total}}`;
+  const pct = total ? Math.round(filled * 100 / total) : 0;
+  progressPct.textContent = `${{pct}}%`;
+  progressFill.style.width = `${{pct}}%`;
+}}
+
+function updateImpactPanel(result) {{
+  if (!result) {{
+    impactMissingCritical.querySelector('ul').innerHTML = '';
+    impactRedflags.querySelector('ul').innerHTML = '';
+    impactSelectedText.textContent = '—';
+    runBtn.disabled = true;
+    impactWarnings.hidden = true;
+    return;
+  }}
+  setProgress(result.filled_count, result.total_questions);
+
+  const miss = result.missing_critical || [];
+  impactMissingCritical.querySelector('ul').innerHTML = miss.length
+    ? miss.map(m => `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`).join('')
+    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+
+  const rfs = result.fired_redflags || [];
+  impactRedflags.querySelector('ul').innerHTML = rfs.length
+    ? rfs.map(r => `<li><code>${{escHtml(r)}}</code></li>`).join('')
+    : '<li class="muted">Жодного RedFlag поки не активовано</li>';
+
+  impactSelectedText.innerHTML = result.would_select_indication
+    ? `<code>${{escHtml(result.would_select_indication)}}</code>`
+    : '— (бракує даних для вибору)';
+
+  if ((result.warnings || []).length) {{
+    impactWarnings.hidden = false;
+    impactWarnings.querySelector('ul').innerHTML =
+      result.warnings.map(w => `<li>${{escHtml(w)}}</li>`).join('');
+  }} else {{
+    impactWarnings.hidden = true;
+  }}
+
+  runBtn.disabled = !result.ready_to_generate;
+}}
+
+// ── Pyodide loader ────────────────────────────────────────────────────────
 async function ensureEngine() {{
   if (enginReady) return pyodide;
   setStatus('Завантажую Pyodide…');
@@ -929,7 +1276,6 @@ await micropip.install(['pydantic', 'pyyaml'])
   const resp = await fetch('/openonco-engine.zip');
   const buf = await resp.arrayBuffer();
   pyodide.unpackArchive(buf, 'zip');
-  // Quick smoke test
   await pyodide.runPythonAsync(`
 from pathlib import Path
 from knowledge_base.validation.loader import load_content
@@ -938,20 +1284,19 @@ assert _r.ok, f'KB validation failed: {{_r.schema_errors[:3]}}'
 `);
   enginReady = true;
   setStatus('Двигун готовий ✓', 'ok');
+  // Re-run preview now that engine is ready
+  scheduleEval();
   return pyodide;
 }}
 
+// ── Generate full plan ────────────────────────────────────────────────────
 async function runEngine() {{
   setError(null);
-  // 1. Validate JSON
-  let patient;
-  try {{
-    patient = JSON.parse(textarea.value);
-  }} catch (e) {{
-    setError('Невалідний JSON: ' + e.message);
+  const profile = buildProfile();
+  if (!profile) {{
+    setError('Не вдалося зібрати профіль (форма / JSON порожні).');
     return;
   }}
-  // 2. Ensure Pyodide loaded
   try {{
     await ensureEngine();
   }} catch (e) {{
@@ -959,10 +1304,9 @@ async function runEngine() {{
     setStatus('');
     return;
   }}
-  // 3. Run engine
   setStatus('Запускаю двигун…');
   try {{
-    pyodide.globals.set('_patient_json', JSON.stringify(patient));
+    pyodide.globals.set('_patient_json', JSON.stringify(profile));
     const html = await pyodide.runPythonAsync(`
 import json
 from pathlib import Path
@@ -970,7 +1314,6 @@ from knowledge_base.engine import (
     generate_plan, generate_diagnostic_brief, is_diagnostic_profile,
     orchestrate_mdt, render_plan_html, render_diagnostic_brief_html,
 )
-
 patient = json.loads(_patient_json)
 KB = Path('knowledge_base/hosted/content')
 if is_diagnostic_profile(patient):
@@ -986,26 +1329,117 @@ html
     placeholder.hidden = true;
     resultFrame.hidden = false;
     resultFrame.srcdoc = html;
-    setStatus('Готово ✓', 'ok');
+    setStatus('Plan готовий ✓', 'ok');
+    document.querySelector('.quest-output').scrollIntoView({{behavior: 'smooth', block: 'start'}});
   }} catch (e) {{
     setError('Двигун повернув помилку:\\n' + (e.message || e));
     setStatus('');
   }}
 }}
 
-formatBtn.addEventListener('click', () => {{
-  setError(null);
-  try {{
-    const obj = JSON.parse(textarea.value);
-    textarea.value = JSON.stringify(obj, null, 2);
-  }} catch (e) {{
-    setError('Невалідний JSON: ' + e.message);
+// ── Boot ──────────────────────────────────────────────────────────────────
+async function loadAssets() {{
+  setStatus('Завантажую опитувальники…');
+  const [qResp, exResp] = await Promise.all([
+    fetch('/questionnaires.json'),
+    fetch('/examples.json'),
+  ]);
+  questionnaires = await qResp.json();
+  examples = await exResp.json();
+
+  // Disease selector
+  diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
+  questionnaires.forEach((q, i) => {{
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = q.title;
+    diseaseSelect.appendChild(opt);
+  }});
+
+  // Examples selector
+  exampleSelect.innerHTML = '<option value="">— оберіть приклад —</option>';
+  examples.forEach((ex, i) => {{
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    exampleSelect.appendChild(opt);
+  }});
+
+  // Restore draft
+  const draft = loadDraft();
+  if (draft && draft.questId) {{
+    const idx = questionnaires.findIndex(q => q.id === draft.questId);
+    if (idx >= 0) {{
+      diseaseSelect.value = idx;
+      renderForm(questionnaires[idx]);
+      // Apply saved answers
+      if (draft.answers) {{
+        for (const [field, val] of Object.entries(draft.answers)) {{
+          const inp = formPane.querySelector(`[data-field="${{CSS.escape(field)}}"]`);
+          if (!inp) continue;
+          if (typeof val === 'boolean') inp.value = String(val);
+          else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
+          else inp.value = val;
+          answers[field] = val;
+        }}
+      }}
+      if (draft.jsonText) textarea.value = draft.jsonText;
+      if (draft.mode === 'json') setMode('json');
+      setStatus('Чернетку відновлено ✓ Готовий до завантаження двигуна.', 'ok');
+    }}
+  }} else {{
+    setStatus('Оберіть хворобу зі списку, щоб почати.');
   }}
+
+  // Engine load is lazy — starts only on first action that needs it
+}}
+
+// ── Event wiring ──────────────────────────────────────────────────────────
+diseaseSelect.addEventListener('change', () => {{
+  const i = diseaseSelect.value;
+  if (i === '') {{ renderForm(null); return; }}
+  renderForm(questionnaires[parseInt(i, 10)]);
+  saveDraft();
+  scheduleEval();
+}});
+
+exampleSelect.addEventListener('change', () => {{
+  const i = exampleSelect.value;
+  if (i === '') return;
+  const ex = examples[parseInt(i, 10)];
+  // Drop into JSON pane (examples are full JSON profiles)
+  setMode('json');
+  textarea.value = JSON.stringify(ex.json, null, 2);
+  setError(null);
+  saveDraft();
+}});
+
+modeFormBtn.addEventListener('click', () => setMode('form'));
+modeJsonBtn.addEventListener('click', () => setMode('json'));
+formatBtn && formatBtn.addEventListener('click', () => {{
+  setError(null);
+  try {{ textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }}
+  catch (e) {{ setError('Невалідний JSON: ' + e.message); }}
+}});
+textarea.addEventListener('input', () => {{
+  saveDraft();
+  scheduleEval();
+}});
+
+resetBtn.addEventListener('click', () => {{
+  if (!confirm('Очистити форму і прибрати чернетку?')) return;
+  answers = {{}};
+  textarea.value = '';
+  diseaseSelect.value = '';
+  renderForm(null);
+  localStorage.removeItem(STORAGE_KEY);
+  updateImpactPanel(null);
+  setStatus('Очищено.');
 }});
 
 runBtn.addEventListener('click', runEngine);
 
-loadExamples().catch(e => setError('examples.json не завантажився: ' + e));
+loadAssets().catch(e => setError('Initialization failed: ' + e));
 </script>
 </body>
 </html>
@@ -1433,6 +1867,177 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   flex: 1; width: 100%; height: 800px; border: none;
 }
 
+/* Questionnaire UI (try.html) */
+.quest-toolbar {
+  display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
+  flex-wrap: wrap; padding: 14px 18px; background: white;
+  border: 1px solid var(--gray-200); border-radius: 10px;
+}
+.qt-label {
+  display: flex; flex-direction: column; gap: 4px; min-width: 220px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); font-weight: 600;
+}
+.qt-label select, .qt-label input, .qt-label textarea {
+  font-family: var(--font-sans); font-size: 13px;
+  padding: 8px 10px; border: 1px solid var(--gray-200);
+  border-radius: 6px; background: white;
+  text-transform: none; letter-spacing: normal; font-weight: 400;
+  color: var(--gray-900);
+}
+.qt-spacer { flex: 1; }
+.qt-modes {
+  display: inline-flex; border: 1px solid var(--gray-200);
+  border-radius: 7px; overflow: hidden; background: var(--gray-50);
+}
+.mode-btn {
+  background: transparent; color: var(--gray-700); border: none;
+  padding: 8px 14px; font-size: 12.5px; cursor: pointer;
+  font-family: var(--font-sans); font-weight: 600;
+}
+.mode-btn.active {
+  background: var(--green-700); color: white;
+}
+.qt-reset {
+  padding: 8px 14px; font-size: 12.5px;
+}
+.quest-grid {
+  display: grid; grid-template-columns: 1fr 380px; gap: 18px;
+  margin-bottom: 24px; align-items: start;
+}
+.quest-form-pane {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 20px 22px;
+}
+#jsonPane textarea { width: 100%; font-family: var(--font-mono); }
+.quest-empty {
+  text-align: center; color: var(--gray-500); padding: 60px 20px;
+  font-size: 14px;
+}
+.quest-intro {
+  background: var(--green-50); border-left: 3px solid var(--green-600);
+  padding: 12px 16px; border-radius: 4px; margin-bottom: 18px;
+  font-size: 13.5px; color: var(--gray-700); line-height: 1.55;
+}
+.quest-group {
+  border-top: 1px solid var(--gray-100); padding-top: 18px; margin-top: 18px;
+}
+.quest-group:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.quest-group h3 {
+  font-family: var(--font-display); font-size: 17px;
+  color: var(--green-900); margin-bottom: 4px;
+}
+.quest-group-desc {
+  font-size: 12.5px; color: var(--gray-500); margin-bottom: 12px;
+}
+.quest-q {
+  margin: 14px 0; padding: 12px 14px;
+  background: var(--gray-50); border-radius: 6px;
+  border-left: 2px solid var(--gray-200);
+}
+.quest-q-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 6px; gap: 12px;
+}
+.quest-q-label {
+  font-weight: 600; font-size: 13.5px; color: var(--gray-900); flex: 1;
+}
+.quest-q input[type="number"], .quest-q input[type="text"], .quest-q select {
+  width: 100%; max-width: 320px; padding: 7px 10px;
+  border: 1px solid var(--gray-200); border-radius: 5px;
+  font-family: var(--font-sans); font-size: 13px; background: white;
+}
+.quest-q input:focus, .quest-q select:focus {
+  outline: 2px solid var(--green-600); outline-offset: 0;
+  border-color: var(--green-600);
+}
+.quest-units {
+  display: inline-block; margin-left: 8px; font-size: 12px;
+  color: var(--gray-500); font-family: var(--font-mono);
+}
+.quest-helper {
+  font-size: 12px; color: var(--gray-500);
+  margin-top: 6px; line-height: 1.45;
+}
+.quest-triggers {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+}
+.trigger-pill {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--green-100); color: var(--green-700);
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.impact-pill {
+  display: inline-block; font-family: var(--font-mono); font-size: 9.5px;
+  letter-spacing: 0.6px; padding: 2px 7px; border-radius: 3px;
+  text-transform: uppercase; font-weight: 600;
+}
+.impact-critical { background: var(--red-bg); color: var(--red); }
+.impact-required { background: var(--amber-bg); color: var(--amber); }
+.impact-recommended { background: var(--green-100); color: var(--green-700); }
+.impact-optional { background: var(--gray-100); color: var(--gray-500); }
+
+.quest-q[data-impact="critical"] { border-left-color: var(--red); }
+.quest-q[data-impact="required"] { border-left-color: var(--amber); }
+.quest-q[data-impact="recommended"] { border-left-color: var(--green-600); }
+
+.quest-side {
+  position: sticky; top: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.quest-impact-card {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 18px 20px;
+}
+.quest-impact-card h3 {
+  font-family: var(--font-display); font-size: 18px;
+  color: var(--green-900); margin-bottom: 14px;
+}
+.impact-progress { margin-bottom: 16px; }
+.impact-bar {
+  background: var(--gray-100); height: 8px; border-radius: 4px;
+  overflow: hidden; margin-bottom: 6px;
+}
+.impact-bar-fill {
+  background: linear-gradient(90deg, var(--green-500), var(--green-600));
+  height: 100%; width: 0%; transition: width .3s ease;
+}
+.impact-stats {
+  display: flex; justify-content: space-between; font-size: 12px;
+  color: var(--gray-700); font-family: var(--font-mono);
+}
+.impact-pct { font-weight: 700; color: var(--green-700); }
+.impact-section { margin: 14px 0; padding-top: 12px; border-top: 1px solid var(--gray-100); }
+.impact-section h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); margin-bottom: 8px; font-weight: 700;
+}
+.impact-section ul { list-style: none; padding: 0; }
+.impact-section li {
+  font-size: 12.5px; color: var(--gray-900); margin: 4px 0;
+  line-height: 1.4;
+}
+.impact-section .muted { color: var(--gray-500); font-style: italic; }
+.impact-section code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
+  color: var(--green-800);
+}
+.quest-cta { margin-top: 6px; }
+.quest-cta button { width: 100%; }
+.quest-cta button:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.quest-output {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; min-height: 600px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .quest-grid { grid-template-columns: 1fr; }
+  .quest-side { position: static; }
+}
 @media (max-width: 800px) {
   .hero h1 { font-size: 32px; }
   .problem-grid, .try-grid { grid-template-columns: 1fr; }

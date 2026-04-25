@@ -20,6 +20,12 @@ from .drug import Drug
 from .indication import Indication
 from .monitoring import MonitoringSchedule
 from .plan import FDAComplianceMetadata, Plan, PlanAnnotation, PlanTrack
+from .questionnaire import (
+    QGroup,
+    Question,
+    QuestionOption,
+    Questionnaire,
+)
 from .red_flag import RedFlag
 from .regimen import Regimen
 from .source import Source
@@ -45,6 +51,7 @@ ENTITY_BY_DIR: dict[str, type] = {
     "monitoring": MonitoringSchedule,
     "sources": Source,
     "workups": DiagnosticWorkup,
+    "questionnaires": Questionnaire,
 }
 
 __all__ = [
@@ -64,6 +71,10 @@ __all__ = [
     "Plan",
     "PlanAnnotation",
     "PlanTrack",
+    "QGroup",
+    "Question",
+    "QuestionOption",
+    "Questionnaire",
     "RedFlag",
     "Regimen",
     "Source",

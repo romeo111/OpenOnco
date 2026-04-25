@@ -363,6 +363,177 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   flex: 1; width: 100%; height: 800px; border: none;
 }
 
+/* Questionnaire UI (try.html) */
+.quest-toolbar {
+  display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
+  flex-wrap: wrap; padding: 14px 18px; background: white;
+  border: 1px solid var(--gray-200); border-radius: 10px;
+}
+.qt-label {
+  display: flex; flex-direction: column; gap: 4px; min-width: 220px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); font-weight: 600;
+}
+.qt-label select, .qt-label input, .qt-label textarea {
+  font-family: var(--font-sans); font-size: 13px;
+  padding: 8px 10px; border: 1px solid var(--gray-200);
+  border-radius: 6px; background: white;
+  text-transform: none; letter-spacing: normal; font-weight: 400;
+  color: var(--gray-900);
+}
+.qt-spacer { flex: 1; }
+.qt-modes {
+  display: inline-flex; border: 1px solid var(--gray-200);
+  border-radius: 7px; overflow: hidden; background: var(--gray-50);
+}
+.mode-btn {
+  background: transparent; color: var(--gray-700); border: none;
+  padding: 8px 14px; font-size: 12.5px; cursor: pointer;
+  font-family: var(--font-sans); font-weight: 600;
+}
+.mode-btn.active {
+  background: var(--green-700); color: white;
+}
+.qt-reset {
+  padding: 8px 14px; font-size: 12.5px;
+}
+.quest-grid {
+  display: grid; grid-template-columns: 1fr 380px; gap: 18px;
+  margin-bottom: 24px; align-items: start;
+}
+.quest-form-pane {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 20px 22px;
+}
+#jsonPane textarea { width: 100%; font-family: var(--font-mono); }
+.quest-empty {
+  text-align: center; color: var(--gray-500); padding: 60px 20px;
+  font-size: 14px;
+}
+.quest-intro {
+  background: var(--green-50); border-left: 3px solid var(--green-600);
+  padding: 12px 16px; border-radius: 4px; margin-bottom: 18px;
+  font-size: 13.5px; color: var(--gray-700); line-height: 1.55;
+}
+.quest-group {
+  border-top: 1px solid var(--gray-100); padding-top: 18px; margin-top: 18px;
+}
+.quest-group:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.quest-group h3 {
+  font-family: var(--font-display); font-size: 17px;
+  color: var(--green-900); margin-bottom: 4px;
+}
+.quest-group-desc {
+  font-size: 12.5px; color: var(--gray-500); margin-bottom: 12px;
+}
+.quest-q {
+  margin: 14px 0; padding: 12px 14px;
+  background: var(--gray-50); border-radius: 6px;
+  border-left: 2px solid var(--gray-200);
+}
+.quest-q-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 6px; gap: 12px;
+}
+.quest-q-label {
+  font-weight: 600; font-size: 13.5px; color: var(--gray-900); flex: 1;
+}
+.quest-q input[type="number"], .quest-q input[type="text"], .quest-q select {
+  width: 100%; max-width: 320px; padding: 7px 10px;
+  border: 1px solid var(--gray-200); border-radius: 5px;
+  font-family: var(--font-sans); font-size: 13px; background: white;
+}
+.quest-q input:focus, .quest-q select:focus {
+  outline: 2px solid var(--green-600); outline-offset: 0;
+  border-color: var(--green-600);
+}
+.quest-units {
+  display: inline-block; margin-left: 8px; font-size: 12px;
+  color: var(--gray-500); font-family: var(--font-mono);
+}
+.quest-helper {
+  font-size: 12px; color: var(--gray-500);
+  margin-top: 6px; line-height: 1.45;
+}
+.quest-triggers {
+  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
+}
+.trigger-pill {
+  font-family: var(--font-mono); font-size: 10px;
+  background: var(--green-100); color: var(--green-700);
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.impact-pill {
+  display: inline-block; font-family: var(--font-mono); font-size: 9.5px;
+  letter-spacing: 0.6px; padding: 2px 7px; border-radius: 3px;
+  text-transform: uppercase; font-weight: 600;
+}
+.impact-critical { background: var(--red-bg); color: var(--red); }
+.impact-required { background: var(--amber-bg); color: var(--amber); }
+.impact-recommended { background: var(--green-100); color: var(--green-700); }
+.impact-optional { background: var(--gray-100); color: var(--gray-500); }
+
+.quest-q[data-impact="critical"] { border-left-color: var(--red); }
+.quest-q[data-impact="required"] { border-left-color: var(--amber); }
+.quest-q[data-impact="recommended"] { border-left-color: var(--green-600); }
+
+.quest-side {
+  position: sticky; top: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.quest-impact-card {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; padding: 18px 20px;
+}
+.quest-impact-card h3 {
+  font-family: var(--font-display); font-size: 18px;
+  color: var(--green-900); margin-bottom: 14px;
+}
+.impact-progress { margin-bottom: 16px; }
+.impact-bar {
+  background: var(--gray-100); height: 8px; border-radius: 4px;
+  overflow: hidden; margin-bottom: 6px;
+}
+.impact-bar-fill {
+  background: linear-gradient(90deg, var(--green-500), var(--green-600));
+  height: 100%; width: 0%; transition: width .3s ease;
+}
+.impact-stats {
+  display: flex; justify-content: space-between; font-size: 12px;
+  color: var(--gray-700); font-family: var(--font-mono);
+}
+.impact-pct { font-weight: 700; color: var(--green-700); }
+.impact-section { margin: 14px 0; padding-top: 12px; border-top: 1px solid var(--gray-100); }
+.impact-section h4 {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); margin-bottom: 8px; font-weight: 700;
+}
+.impact-section ul { list-style: none; padding: 0; }
+.impact-section li {
+  font-size: 12.5px; color: var(--gray-900); margin: 4px 0;
+  line-height: 1.4;
+}
+.impact-section .muted { color: var(--gray-500); font-style: italic; }
+.impact-section code {
+  font-family: var(--font-mono); font-size: 11px;
+  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
+  color: var(--green-800);
+}
+.quest-cta { margin-top: 6px; }
+.quest-cta button { width: 100%; }
+.quest-cta button:disabled {
+  opacity: 0.5; cursor: not-allowed;
+}
+.quest-output {
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 10px; min-height: 600px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .quest-grid { grid-template-columns: 1fr; }
+  .quest-side { position: static; }
+}
 @media (max-width: 800px) {
   .hero h1 { font-size: 32px; }
   .problem-grid, .try-grid { grid-template-columns: 1fr; }

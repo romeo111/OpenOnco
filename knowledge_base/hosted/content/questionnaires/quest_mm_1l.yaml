@@ -1,0 +1,253 @@
+id: QUEST-MM-1L
+disease_id: DIS-MM
+line_of_therapy: 1
+title: "Multiple Myeloma — newly diagnosed (1L)"
+
+intro: >
+  Опитувальник для newly-diagnosed multiple myeloma. Алгоритм 1L
+  розрізняє standard-risk (VRd триплет) vs high-risk cytogenetics
+  (D-VRd квадруплет, якщо daratumumab доступний). 8-10 хвилин
+  заповнення.
+
+fixed_fields:
+  disease:
+    icd_o_3_morphology: "9732/3"
+  line_of_therapy: 1
+
+groups:
+  - title: "Демографія + transplant eligibility"
+    description: "Вік + fitness drive transplant-eligible vs ineligible track."
+    questions:
+      - field: patient_id
+        label: "ID пацієнта (synthetic)"
+        type: text
+        impact: required
+        default_value: "VIRTUAL-MM-001"
+
+      - field: demographics.age
+        label: "Вік"
+        type: integer
+        impact: critical
+        range_min: 18
+        range_max: 110
+        units: "років"
+        triggers:
+          - "filter:age_max=70 для transplant-eligible track (NCCN)"
+        helper: >
+          Вік ≤70 + ECOG ≤2 без severe comorbidities = transplant-eligible.
+          Engine не запропонує autoSCT консолідацію якщо вік >75.
+
+      - field: demographics.sex
+        label: "Стать"
+        type: enum
+        impact: required
+        options:
+          - {value: "male", label: "Чоловіча"}
+          - {value: "female", label: "Жіноча"}
+        triggers:
+          - "ci:CI-LENALIDOMIDE-PREGNANCY якщо female + reproductive age"
+        helper: >
+          Жінкам репродуктивного віку — обов'язкова негативна beta-hCG
+          + два методи контрацепції перед lenalidomide (REMS).
+
+      - field: demographics.ecog
+        label: "ECOG Performance Status"
+        type: enum
+        impact: critical
+        options:
+          - {value: 0, label: "0"}
+          - {value: 1, label: "1"}
+          - {value: 2, label: "2"}
+          - {value: 3, label: "3"}
+          - {value: 4, label: "4"}
+        triggers:
+          - "filter:ecog_max=2 для transplant-eligible"
+        helper: "ECOG > 2 → transplant-ineligible track, дози редукуються."
+
+      - field: demographics.fit_for_transplant
+        label: "Кандидат на autoSCT (transplant-eligible)?"
+        type: boolean
+        impact: critical
+        triggers:
+          - "select:induction → autoSCT consolidation (4-6 циклів VRd замість continuous)"
+        helper: >
+          Hematologist's clinical judgment — НЕ автоматичне з віку.
+          Враховує комoрбідності, кардіо/нирки, performance.
+
+  - title: "Cytogenetic risk (defining for VRd vs D-VRd)"
+    description: "FISH панель (мінімум del17p / t(4;14) / t(14;16) / 1q gain) — драйвер вибору."
+    questions:
+      - field: "biomarkers.BIO-MM-CYTOGENETICS-HR"
+        label: "MM cytogenetics composite — high-risk?"
+        type: enum
+        impact: critical
+        options:
+          - {value: "high_risk", label: "High-risk (≥1 з: del17p, t(4;14), t(14;16), gain 1q)"}
+          - {value: "standard_risk", label: "Standard-risk"}
+          - {value: "unknown", label: "Не виконано / pending"}
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS → IND-MM-1L-DVRD default"
+        helper: >
+          High-risk → engine обере D-VRd (квадруплет з даратумумабом)
+          як default замість VRd. Standard-risk → VRd залишається.
+
+      - field: "findings.del_17p"
+        label: "del(17p) by FISH"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS"
+        helper: "Найгірший single cytogenetic marker; ~10% NDMM."
+        default_value: false
+
+      - field: "findings.t_4_14"
+        label: "t(4;14) (IgH-FGFR3)"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS"
+        helper: "~15% NDMM; bortezomib partially mitigates."
+        default_value: false
+
+      - field: "findings.t_14_16"
+        label: "t(14;16) (IgH-MAF)"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS"
+        default_value: false
+
+      - field: "findings.gain_1q"
+        label: "Gain 1q (≥3 копій)"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS"
+        helper: "+1q = додатковий несприятливий маркер."
+        default_value: false
+
+      - field: "findings.tp53_mutation"
+        label: "TP53 mutation (NGS)"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-HIGH-RISK-CYTOGENETICS (часто co-occurs з del17p)"
+        helper: "TP53 mutation з або без del17p — поганий прогноз."
+        default_value: false
+
+  - title: "Renal function"
+    description: "MM-induced renal failure часта, впливає на dose."
+    questions:
+      - field: "findings.creatinine_clearance_ml_min"
+        label: "Creatinine clearance (Cockcroft-Gault) "
+        type: float
+        impact: critical
+        range_min: 5
+        range_max: 200
+        units: "мл/хв"
+        triggers:
+          - "RF-MM-RENAL-DYSFUNCTION при <40 → dose modifications"
+        helper: >
+          CrCl <40 → бортезоміб без adjust, lenalidomide cuts to 10 mg.
+          CrCl <30 → daratumumab у monitoring window.
+
+      - field: "findings.serum_creatinine_mg_dl"
+        label: "Serum creatinine (баseline)"
+        type: float
+        impact: required
+        range_min: 0.3
+        range_max: 15
+        units: "мг/дл"
+        triggers:
+          - "RF-MM-RENAL-DYSFUNCTION при ≥2"
+        default_value: 1.0
+
+      - field: "findings.mm_renal_failure"
+        label: "Active MM-induced renal failure?"
+        type: boolean
+        impact: required
+        triggers:
+          - "RF-MM-RENAL-DYSFUNCTION"
+        helper: "Cast nephropathy or light-chain proximal tubulopathy — подих VTd as bridge."
+        default_value: false
+
+  - title: "Безпека: pregnancy + neuropathy + HBV"
+    description: "Контраіндикації, що блокують конкретні препарати."
+    questions:
+      - field: demographics.pregnancy_status
+        label: "Вагітність / можливість вагітності"
+        type: enum
+        impact: critical
+        options:
+          - {value: "not_pregnant", label: "Не вагітна / не репродуктивний вік"}
+          - {value: "reproductive_age_negative_test", label: "Репродуктивний вік, тест негативний + контрацепція"}
+          - {value: "pregnant", label: "Вагітна"}
+        triggers:
+          - "ci:CI-LENALIDOMIDE-PREGNANCY якщо pregnant"
+        helper: >
+          Вагітність — абсолютна заборона leналідомід. Engine блокує
+          VRd + D-VRd обидва, fall на bortezomib + dex (Vd).
+        default_value: "not_pregnant"
+
+      - field: "findings.severe_neuropathy_grade"
+        label: "Передіснуюча нейропатія (CTCAE grade)"
+        type: enum
+        impact: required
+        options:
+          - {value: 0, label: "0 — немає"}
+          - {value: 1, label: "1 — мінімальна, не впливає"}
+          - {value: 2, label: "2 — обмежує ADL"}
+          - {value: 3, label: "3 — severe"}
+          - {value: 4, label: "4 — disabling"}
+        triggers:
+          - "ci:CI-BORTEZOMIB-SEVERE-NEUROPATHY якщо ≥3"
+        helper: >
+          Grade ≥3 — заборона на bortezomib SC. Engine fallback на
+          carfilzomib-based induction (Kd, KCd, KRd).
+        default_value: 0
+
+      - field: "findings.hbsag"
+        label: "HBsAg"
+        type: enum
+        impact: critical
+        options:
+          - {value: "negative", label: "Негативний"}
+          - {value: "positive", label: "Позитивний"}
+        triggers:
+          - "RF-HBV-COINFECTION (особливо при D-VRd — anti-CD38 + dex highly immunosuppressive)"
+        helper: >
+          HBV reactivation risk на D-VRd ще вище ніж rituximab. Engine
+          вимагає entecavir prophylaxis.
+        default_value: "negative"
+
+  - title: "Bone disease + supportive care indicators"
+    description: "Не змінює algorithm, але додає supportive care компоненти."
+    questions:
+      - field: "findings.lytic_lesions_present"
+        label: "Литичні ураження кістки на CT/MRI/PET?"
+        type: boolean
+        impact: recommended
+        triggers:
+          - "SUP-MM-BONE-PROTECTION (zoledronate / denosumab)"
+        helper: ">2 litичних ураження = bone-modifying agent obligatory ≥2 роки."
+        default_value: true
+
+      - field: "findings.vte_history_or_high_risk"
+        label: "Тромбози в анамнезі або high VTE risk?"
+        type: boolean
+        impact: recommended
+        triggers:
+          - "SUP-MM-VTE-PROPHYLAXIS (LMWH замість aspirin)"
+        helper: >
+          Lenalidomide + dex базовий VTE risk ~10-20%. High-risk → LMWH
+          замість aspirin 81 mg.
+        default_value: false
+
+sources:
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+
+notes: >
+  STUB — pending Clinical Co-Lead approval per CHARTER §6.1.

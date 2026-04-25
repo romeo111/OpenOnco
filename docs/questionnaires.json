@@ -1,0 +1,926 @@
+[
+  {
+    "id": "QUEST-CLL-1L",
+    "disease_id": "DIS-CLL",
+    "line_of_therapy": 1,
+    "title": "Chronic Lymphocytic Leukemia / SLL — first line",
+    "intro": "Опитувальник для CLL/SLL з iwCLL treatment indication. Алгоритм розрізняє standard-risk (BTKi continuous, default) vs high-risk cytogenetics (venetoclax + obinutuzumab time-limited, alternative preferred). 6-8 хвилин.\n",
+    "fixed_fields": {
+      "disease": {
+        "icd_o_3_morphology": "9823/3"
+      },
+      "line_of_therapy": 1
+    },
+    "groups": [
+      {
+        "title": "Демографія + iwCLL treatment indication",
+        "description": "Asymptomatic CLL без iwCLL indication = active surveillance, не treatment.",
+        "questions": [
+          {
+            "field": "patient_id",
+            "label": "ID пацієнта (synthetic)",
+            "type": "text",
+            "impact": "required",
+            "default_value": "VIRTUAL-CLL-001"
+          },
+          {
+            "field": "demographics.age",
+            "label": "Вік",
+            "type": "integer",
+            "impact": "critical",
+            "range_min": 18,
+            "range_max": 110,
+            "units": "років",
+            "triggers": [
+              "filter:age у виборі intensive vs less intensive (FCR обмежений ≤65)"
+            ],
+            "helper": "Вік + IGHV mutated → можливість FCR (рідкісно зараз). Старші ≥65 → BTKi або VenO virtually завжди.\n"
+          },
+          {
+            "field": "demographics.sex",
+            "label": "Стать",
+            "type": "enum",
+            "impact": "optional",
+            "options": [
+              {
+                "value": "male",
+                "label": "Чоловіча"
+              },
+              {
+                "value": "female",
+                "label": "Жіноча"
+              }
+            ]
+          },
+          {
+            "field": "demographics.ecog",
+            "label": "ECOG Performance Status",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": 0,
+                "label": "0"
+              },
+              {
+                "value": 1,
+                "label": "1"
+              },
+              {
+                "value": 2,
+                "label": "2"
+              },
+              {
+                "value": 3,
+                "label": "3"
+              },
+              {
+                "value": 4,
+                "label": "4"
+              }
+            ],
+            "triggers": [
+              "filter:ecog_max=3 у IND-CLL-1L-BTKI"
+            ],
+            "helper": "ECOG 4 — palliative track only; engine не запропонує active treatment."
+          },
+          {
+            "field": "demographics.fit_for_chemoimmunotherapy",
+            "label": "Придатний до хіміоімунотерапії (FCR/BR)?",
+            "type": "boolean",
+            "impact": "required",
+            "helper": "У 2025 chemoimmunotherapy витіснено BTKi/venetoclax. Поле залишене для historical compatibility — для більшості 1L ставимо false.\n",
+            "default_value": false
+          },
+          {
+            "field": "findings.iwcll_indication_present",
+            "label": "iwCLL treatment indication present?",
+            "type": "boolean",
+            "impact": "critical",
+            "helper": "Хоч одна з: progressive cytopenia (Hb<10, plt<100), bulky/ progressive splenomegaly або lymphadenopathy, B-symptoms, autoimmune cytopenia не на стероїдах, lymphocyte doubling time <6 міс. БЕЗ цього → active surveillance, no plan.\n"
+          }
+        ]
+      },
+      {
+        "title": "Cytogenetic + molecular risk (defines BTKi vs VenO)",
+        "description": "del(17p), TP53 mut, IGHV-unmutated, complex karyotype = high-risk composite.",
+        "questions": [
+          {
+            "field": "biomarkers.BIO-CLL-HIGH-RISK-GENETICS",
+            "label": "CLL composite high-risk?",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "high_risk",
+                "label": "High-risk (≥1 з: TP53 mut / del17p / IGHV-unmutated / complex karyotype)"
+              },
+              {
+                "value": "standard_risk",
+                "label": "Standard-risk"
+              },
+              {
+                "value": "unknown",
+                "label": "Pending FISH/IGHV"
+              }
+            ],
+            "triggers": [
+              "RF-CLL-HIGH-RISK → IND-CLL-1L-VENO як preferred"
+            ],
+            "helper": "Engine за NCCN рекомендує VenO для high-risk (BTKi не resensitизує del17p, fixed-duration вигідніше).\n"
+          },
+          {
+            "field": "findings.tp53_mutation",
+            "label": "TP53 mutation",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "RF-CLL-HIGH-RISK"
+            ],
+            "helper": "~5-7% NDxg CLL; робить FCR/BR contraindicated.",
+            "default_value": false
+          },
+          {
+            "field": "findings.del_17p",
+            "label": "del(17p) by FISH",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "RF-CLL-HIGH-RISK"
+            ],
+            "helper": "~5-10% 1L; найгірший single marker.",
+            "default_value": false
+          },
+          {
+            "field": "findings.ighv_unmutated",
+            "label": "IGHV-unmutated (≥98% germline homology)",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-CLL-HIGH-RISK"
+            ],
+            "helper": "~50% CLL — unmutated = adverse, mutated = favorable.",
+            "default_value": false
+          },
+          {
+            "field": "findings.complex_karyotype",
+            "label": "Complex karyotype (≥3 abnormalities)",
+            "type": "boolean",
+            "impact": "recommended",
+            "triggers": [
+              "RF-CLL-HIGH-RISK"
+            ],
+            "helper": "≥5 = highly complex, асоційовано з gross prognosis.",
+            "default_value": false
+          }
+        ]
+      },
+      {
+        "title": "Кардіальна безпека (BTKi-specific)",
+        "description": "BTKi (acalabrutinib/zanubrutinib) — атипова фібриляція передсердь, hypertension.",
+        "questions": [
+          {
+            "field": "findings.afib_history",
+            "label": "Атипова фібриляція передсердь в анамнезі?",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "filter:IND-CLL-1L-BTKI relative contraindication → favors VenO"
+            ],
+            "helper": "AFib history = relative contra на BTKi (особливо ibrutinib). Acalab/zanub safer але не zero. VenO без cardiac risk.\n",
+            "default_value": false
+          },
+          {
+            "field": "findings.bleeding_risk_high",
+            "label": "High bleeding risk (anticoagulation, GI bleed history)?",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "filter:IND-CLL-1L-BTKI → favors VenO"
+            ],
+            "helper": "BTKi ↑ bleeding ризик ~2-3×. Anticoagulant interaction issue.",
+            "default_value": false
+          }
+        ]
+      },
+      {
+        "title": "TLS risk (VenO-specific)",
+        "description": "Venetoclax ramp-up — TLS prophylaxis required.",
+        "questions": [
+          {
+            "field": "findings.absolute_lymphocyte_count_k_ul",
+            "label": "Absolute lymphocyte count (K/μL)",
+            "type": "float",
+            "impact": "recommended",
+            "range_min": 0,
+            "range_max": 500,
+            "units": "K/μL",
+            "triggers": [
+              "SUP-TLS-PROPHYLAXIS intensive ramp-up (allopurinol + IV hydration)"
+            ],
+            "helper": ">25 K/μL = high TLS risk → 5-week ramp-up з hospitalization weeks 1-2.",
+            "default_value": 30
+          },
+          {
+            "field": "findings.bulky_lymph_nodes_5cm",
+            "label": "Lymph nodes ≥5 см?",
+            "type": "boolean",
+            "impact": "recommended",
+            "helper": "Bulky disease = TLS high-risk irrespective of ALC.",
+            "default_value": false
+          }
+        ]
+      },
+      {
+        "title": "HBV + опортуністичні інфекції",
+        "description": "BTKi + venetoclax — risk of HSV/VZV, рідше PJP.",
+        "questions": [
+          {
+            "field": "findings.hbsag",
+            "label": "HBsAg",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "negative",
+                "label": "Негативний"
+              },
+              {
+                "value": "positive",
+                "label": "Позитивний"
+              }
+            ],
+            "triggers": [
+              "RF-HBV-COINFECTION (особливо при VenO + obinutuzumab)"
+            ],
+            "helper": "Obinutuzumab (anti-CD20) — HBV reactivation ризик. Engine вимагає entecavir prophylaxis якщо HBsAg+.\n",
+            "default_value": "negative"
+          },
+          {
+            "field": "findings.anti_hbc_total",
+            "label": "Anti-HBc total",
+            "type": "enum",
+            "impact": "required",
+            "options": [
+              {
+                "value": "negative",
+                "label": "Негативний"
+              },
+              {
+                "value": "positive",
+                "label": "Позитивний (occult)"
+              }
+            ],
+            "default_value": "negative"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      "SRC-NCCN-BCELL-2025"
+    ],
+    "last_reviewed": "2026-04-25",
+    "reviewer_signoffs": 0,
+    "notes": "STUB — pending Clinical Co-Lead approval per CHARTER §6.1.\n"
+  },
+  {
+    "id": "QUEST-HCV-MZL-1L",
+    "disease_id": "DIS-HCV-MZL",
+    "line_of_therapy": 1,
+    "title": "HCV-asociated Marginal Zone Lymphoma — first line",
+    "intro": "Опитувальник для підтвердженої HCV-асоційованої MZL у пацієнта без попереднього лікування лімфоми. Заповнення займає 5-7 хвилин. Поля позначені як CRITICAL — обов'язкові; без них engine видасть warning замість Plan.\n",
+    "fixed_fields": {
+      "disease": {
+        "icd_o_3_morphology": "9699/3"
+      },
+      "line_of_therapy": 1
+    },
+    "groups": [
+      {
+        "title": "Демографія + загальний стан",
+        "description": "Базовий портрет пацієнта.",
+        "questions": [
+          {
+            "field": "patient_id",
+            "label": "ID пацієнта (synthetic)",
+            "type": "text",
+            "impact": "required",
+            "helper": "Будь-який неперсональний ID — для збереження в історії.",
+            "default_value": "VIRTUAL-001"
+          },
+          {
+            "field": "demographics.age",
+            "label": "Вік",
+            "type": "integer",
+            "impact": "required",
+            "range_min": 18,
+            "range_max": 110,
+            "units": "років",
+            "triggers": [
+              "filter:age_max constraints на BR-aggressive (немає для HCV-MZL, але впливає на frailty)"
+            ],
+            "helper": "Вплив непрямий — старші 75 з більшою ймовірністю отримають антивірусний-only трек."
+          },
+          {
+            "field": "demographics.sex",
+            "label": "Стать",
+            "type": "enum",
+            "impact": "optional",
+            "options": [
+              {
+                "value": "male",
+                "label": "Чоловіча"
+              },
+              {
+                "value": "female",
+                "label": "Жіноча"
+              }
+            ],
+            "helper": "Не впливає на алгоритм HCV-MZL 1L. Запитується для render layer."
+          },
+          {
+            "field": "demographics.ecog",
+            "label": "ECOG Performance Status",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": 0,
+                "label": "0 — повністю активний"
+              },
+              {
+                "value": 1,
+                "label": "1 — обмеження тяжкої фізичної активності"
+              },
+              {
+                "value": 2,
+                "label": "2 — самостійний у самообслуговуванні, ходить >50% часу"
+              },
+              {
+                "value": 3,
+                "label": "3 — обмежений у самообслуговуванні"
+              },
+              {
+                "value": 4,
+                "label": "4 — повністю прикутий до ліжка"
+              }
+            ],
+            "triggers": [
+              "filter:ecog_max=2 у IND-HCV-MZL-1L-BR-AGGRESSIVE"
+            ],
+            "helper": "ECOG > 2 виключає BR-aggressive track — engine не запропонує chemo, тільки antiviral monotherapy.\n"
+          },
+          {
+            "field": "demographics.fit_for_chemoimmunotherapy",
+            "label": "Придатність до хіміоімунотерапії",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "filter:IND-HCV-MZL-1L-BR-AGGRESSIVE applicable_to"
+            ],
+            "helper": "Лікар оцінює загальну fit (комoрбідності, кардіо- і ниркова функція, dialogo з пацієнтом). False → BR-aggressive track filter'иться.\n"
+          }
+        ]
+      },
+      {
+        "title": "HCV статус (defining biomarker)",
+        "description": "HCV є етіологічним driver'ом для цієї лімфоми.",
+        "questions": [
+          {
+            "field": "biomarkers.BIO-HCV-RNA",
+            "label": "HCV RNA (PCR)",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "positive",
+                "label": "Позитивний (active infection)"
+              },
+              {
+                "value": "negative",
+                "label": "Негативний (cleared)"
+              }
+            ],
+            "triggers": [
+              "select:IND-HCV-MZL-1L-ANTIVIRAL якщо positive + indolent",
+              "select:IND-HCV-MZL-1L-BR-AGGRESSIVE якщо negative або bulky"
+            ],
+            "helper": "HCV RNA positive — основа для antiviral-first track. Якщо negative, engine fallback'ить на BR-aggressive (стандартний approach без eтіологічного інструменту).\n"
+          },
+          {
+            "field": "findings.HCV RNA positive",
+            "label": "HCV RNA positive (boolean — для engine clause)",
+            "type": "boolean",
+            "impact": "critical",
+            "helper": "Технічне поле що дублює biomarker для evaluation. Заповнюється автоматично з попереднього питання — true якщо positive.\n",
+            "when": "biomarkers.BIO-HCV-RNA == 'positive'"
+          },
+          {
+            "field": "demographics.decompensated_cirrhosis",
+            "label": "Декомпенсований цироз?",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "RF-DECOMP-CIRRHOSIS",
+              "ci:CI-DECOMP-CIRRHOSIS-GLEC"
+            ],
+            "helper": "Child-Pugh B/C — блокує glecaprevir/pibrentasvir DAA. Engine обере sof/vel + RBV альтернативу (якщо HCV positive) АБО відкладе антивірусну терапію до hepatology consultation.\n"
+          }
+        ]
+      },
+      {
+        "title": "Tumor burden + phenotype",
+        "description": "Чи indolent / bulky / aggressive — основа для вибору track.",
+        "questions": [
+          {
+            "field": "findings.dominant_nodal_mass_cm",
+            "label": "Найбільший нодальний масив (см)",
+            "type": "float",
+            "impact": "critical",
+            "range_min": 0,
+            "range_max": 30,
+            "units": "см",
+            "triggers": [
+              "RF-BULKY-DISEASE при ≥7 см → switches на BR-aggressive"
+            ],
+            "helper": "Bulky (≥ 7 см) = автоматично BR-aggressive track навіть при HCV positive. Antiviral-only недостатньо швидко reduce tumor burden.\n"
+          },
+          {
+            "field": "findings.mediastinal_ratio",
+            "label": "Медіастинально-торакальне співвідношення (mediastinal mass / thoracic diameter)",
+            "type": "float",
+            "impact": "recommended",
+            "range_min": 0,
+            "range_max": 1,
+            "triggers": [
+              "RF-BULKY-DISEASE при ≥0.33 (alternative bulky criterion)"
+            ],
+            "helper": "Альтернативний критерій bulky disease — за CT thorax.",
+            "default_value": 0
+          },
+          {
+            "field": "findings.symptomatic_b_symptoms_severe",
+            "label": "Тяжкі B-симптоми (febr. >38°C, drenching night sweats, weight loss >10% за 6 міс)?",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "RF-BULKY-DISEASE alternative trigger"
+            ],
+            "helper": "Severe B-symptoms — relative indication для chemotherapy навіть без bulky.\n"
+          },
+          {
+            "field": "findings.Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)",
+            "label": "Indolent presentation (підсумок: non-bulky + min symptoms)?",
+            "type": "boolean",
+            "impact": "critical",
+            "helper": "Технічне поле для algorithm clause. True якщо НЕ bulky AND НЕ severe B-symptoms. Заповнюється автоматично з попередніх питань.\n"
+          }
+        ]
+      },
+      {
+        "title": "Гістологія + transformation risk",
+        "description": "Виключення трансформації в DLBCL.",
+        "questions": [
+          {
+            "field": "findings.biopsy_shows_dlbcl",
+            "label": "Біопсія показує DLBCL transformation?",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION → BR-aggressive obligatory"
+            ],
+            "helper": "Якщо trasformation в DLBCL підтверджено — engine видає попередження і відсилає на DLBCL-specific Algorithm (не HCV-MZL). Поки що fallback — BR-aggressive як safest option.\n",
+            "default_value": false
+          },
+          {
+            "field": "findings.ldh_ratio_to_uln",
+            "label": "LDH ratio to ULN",
+            "type": "float",
+            "impact": "recommended",
+            "range_min": 0.5,
+            "range_max": 10,
+            "triggers": [
+              "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION при ratio ≥ 2"
+            ],
+            "helper": "LDH > 2× ULN — surrogate marker трансформації.",
+            "default_value": 1.0
+          },
+          {
+            "field": "findings.clinical_progression_weeks",
+            "label": "Клінічний прогрес за останні X тижнів (rapid worsening)?",
+            "type": "integer",
+            "impact": "optional",
+            "range_min": 0,
+            "range_max": 200,
+            "units": "тижнів",
+            "helper": "Час від notice'у нової маси / симптомів до visit. <12 тижнів + high LDH = підозра на transformation.\n",
+            "default_value": 52
+          }
+        ]
+      },
+      {
+        "title": "HBV скринінг (mandatory if anti-CD20 planned)",
+        "description": "Будь-який BR-aggressive містить rituximab → HBV reactivation risk.",
+        "questions": [
+          {
+            "field": "findings.hbsag",
+            "label": "HBsAg",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "negative",
+                "label": "Негативний"
+              },
+              {
+                "value": "positive",
+                "label": "Позитивний"
+              }
+            ],
+            "triggers": [
+              "RF-HBV-COINFECTION → entecavir prophylaxis required"
+            ],
+            "helper": "HBsAg positive без prophylaxis — заборона на rituximab. Engine активує CI-HBV-NO-PROPHYLAXIS contraindication.\n"
+          },
+          {
+            "field": "findings.anti_hbc_total",
+            "label": "Anti-HBc total",
+            "type": "enum",
+            "impact": "required",
+            "options": [
+              {
+                "value": "negative",
+                "label": "Негативний"
+              },
+              {
+                "value": "positive",
+                "label": "Позитивний (occult / past infection)"
+              }
+            ],
+            "triggers": [
+              "RF-HBV-COINFECTION (occult HBV)"
+            ],
+            "helper": "Anti-HBc+ HBsAg- = occult HBV → monitoring + prophylaxis за NCCN."
+          }
+        ]
+      }
+    ],
+    "sources": [
+      "SRC-NCCN-BCELL-2025",
+      "SRC-ESMO-MZL-2024",
+      "SRC-EASL-HCV-2023"
+    ],
+    "last_reviewed": "2026-04-25",
+    "reviewer_signoffs": 0,
+    "notes": "STUB — pending Clinical Co-Lead approval per CHARTER §6.1. Field paths must match what engine reads (plan.py:_findings_flatten flattens demographics + biomarkers + findings into one dict).\n"
+  },
+  {
+    "id": "QUEST-MM-1L",
+    "disease_id": "DIS-MM",
+    "line_of_therapy": 1,
+    "title": "Multiple Myeloma — newly diagnosed (1L)",
+    "intro": "Опитувальник для newly-diagnosed multiple myeloma. Алгоритм 1L розрізняє standard-risk (VRd триплет) vs high-risk cytogenetics (D-VRd квадруплет, якщо daratumumab доступний). 8-10 хвилин заповнення.\n",
+    "fixed_fields": {
+      "disease": {
+        "icd_o_3_morphology": "9732/3"
+      },
+      "line_of_therapy": 1
+    },
+    "groups": [
+      {
+        "title": "Демографія + transplant eligibility",
+        "description": "Вік + fitness drive transplant-eligible vs ineligible track.",
+        "questions": [
+          {
+            "field": "patient_id",
+            "label": "ID пацієнта (synthetic)",
+            "type": "text",
+            "impact": "required",
+            "default_value": "VIRTUAL-MM-001"
+          },
+          {
+            "field": "demographics.age",
+            "label": "Вік",
+            "type": "integer",
+            "impact": "critical",
+            "range_min": 18,
+            "range_max": 110,
+            "units": "років",
+            "triggers": [
+              "filter:age_max=70 для transplant-eligible track (NCCN)"
+            ],
+            "helper": "Вік ≤70 + ECOG ≤2 без severe comorbidities = transplant-eligible. Engine не запропонує autoSCT консолідацію якщо вік >75.\n"
+          },
+          {
+            "field": "demographics.sex",
+            "label": "Стать",
+            "type": "enum",
+            "impact": "required",
+            "options": [
+              {
+                "value": "male",
+                "label": "Чоловіча"
+              },
+              {
+                "value": "female",
+                "label": "Жіноча"
+              }
+            ],
+            "triggers": [
+              "ci:CI-LENALIDOMIDE-PREGNANCY якщо female + reproductive age"
+            ],
+            "helper": "Жінкам репродуктивного віку — обов'язкова негативна beta-hCG + два методи контрацепції перед lenalidomide (REMS).\n"
+          },
+          {
+            "field": "demographics.ecog",
+            "label": "ECOG Performance Status",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": 0,
+                "label": "0"
+              },
+              {
+                "value": 1,
+                "label": "1"
+              },
+              {
+                "value": 2,
+                "label": "2"
+              },
+              {
+                "value": 3,
+                "label": "3"
+              },
+              {
+                "value": 4,
+                "label": "4"
+              }
+            ],
+            "triggers": [
+              "filter:ecog_max=2 для transplant-eligible"
+            ],
+            "helper": "ECOG > 2 → transplant-ineligible track, дози редукуються."
+          },
+          {
+            "field": "demographics.fit_for_transplant",
+            "label": "Кандидат на autoSCT (transplant-eligible)?",
+            "type": "boolean",
+            "impact": "critical",
+            "triggers": [
+              "select:induction → autoSCT consolidation (4-6 циклів VRd замість continuous)"
+            ],
+            "helper": "Hematologist's clinical judgment — НЕ автоматичне з віку. Враховує комoрбідності, кардіо/нирки, performance.\n"
+          }
+        ]
+      },
+      {
+        "title": "Cytogenetic risk (defining for VRd vs D-VRd)",
+        "description": "FISH панель (мінімум del17p / t(4;14) / t(14;16) / 1q gain) — драйвер вибору.",
+        "questions": [
+          {
+            "field": "biomarkers.BIO-MM-CYTOGENETICS-HR",
+            "label": "MM cytogenetics composite — high-risk?",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "high_risk",
+                "label": "High-risk (≥1 з: del17p, t(4;14), t(14;16), gain 1q)"
+              },
+              {
+                "value": "standard_risk",
+                "label": "Standard-risk"
+              },
+              {
+                "value": "unknown",
+                "label": "Не виконано / pending"
+              }
+            ],
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS → IND-MM-1L-DVRD default"
+            ],
+            "helper": "High-risk → engine обере D-VRd (квадруплет з даратумумабом) як default замість VRd. Standard-risk → VRd залишається.\n"
+          },
+          {
+            "field": "findings.del_17p",
+            "label": "del(17p) by FISH",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS"
+            ],
+            "helper": "Найгірший single cytogenetic marker; ~10% NDMM.",
+            "default_value": false
+          },
+          {
+            "field": "findings.t_4_14",
+            "label": "t(4;14) (IgH-FGFR3)",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS"
+            ],
+            "helper": "~15% NDMM; bortezomib partially mitigates.",
+            "default_value": false
+          },
+          {
+            "field": "findings.t_14_16",
+            "label": "t(14;16) (IgH-MAF)",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS"
+            ],
+            "default_value": false
+          },
+          {
+            "field": "findings.gain_1q",
+            "label": "Gain 1q (≥3 копій)",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS"
+            ],
+            "helper": "+1q = додатковий несприятливий маркер.",
+            "default_value": false
+          },
+          {
+            "field": "findings.tp53_mutation",
+            "label": "TP53 mutation (NGS)",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-HIGH-RISK-CYTOGENETICS (часто co-occurs з del17p)"
+            ],
+            "helper": "TP53 mutation з або без del17p — поганий прогноз.",
+            "default_value": false
+          }
+        ]
+      },
+      {
+        "title": "Renal function",
+        "description": "MM-induced renal failure часта, впливає на dose.",
+        "questions": [
+          {
+            "field": "findings.creatinine_clearance_ml_min",
+            "label": "Creatinine clearance (Cockcroft-Gault) ",
+            "type": "float",
+            "impact": "critical",
+            "range_min": 5,
+            "range_max": 200,
+            "units": "мл/хв",
+            "triggers": [
+              "RF-MM-RENAL-DYSFUNCTION при <40 → dose modifications"
+            ],
+            "helper": "CrCl <40 → бортезоміб без adjust, lenalidomide cuts to 10 mg. CrCl <30 → daratumumab у monitoring window.\n"
+          },
+          {
+            "field": "findings.serum_creatinine_mg_dl",
+            "label": "Serum creatinine (баseline)",
+            "type": "float",
+            "impact": "required",
+            "range_min": 0.3,
+            "range_max": 15,
+            "units": "мг/дл",
+            "triggers": [
+              "RF-MM-RENAL-DYSFUNCTION при ≥2"
+            ],
+            "default_value": 1.0
+          },
+          {
+            "field": "findings.mm_renal_failure",
+            "label": "Active MM-induced renal failure?",
+            "type": "boolean",
+            "impact": "required",
+            "triggers": [
+              "RF-MM-RENAL-DYSFUNCTION"
+            ],
+            "helper": "Cast nephropathy or light-chain proximal tubulopathy — подих VTd as bridge.",
+            "default_value": false
+          }
+        ]
+      },
+      {
+        "title": "Безпека: pregnancy + neuropathy + HBV",
+        "description": "Контраіндикації, що блокують конкретні препарати.",
+        "questions": [
+          {
+            "field": "demographics.pregnancy_status",
+            "label": "Вагітність / можливість вагітності",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "not_pregnant",
+                "label": "Не вагітна / не репродуктивний вік"
+              },
+              {
+                "value": "reproductive_age_negative_test",
+                "label": "Репродуктивний вік, тест негативний + контрацепція"
+              },
+              {
+                "value": "pregnant",
+                "label": "Вагітна"
+              }
+            ],
+            "triggers": [
+              "ci:CI-LENALIDOMIDE-PREGNANCY якщо pregnant"
+            ],
+            "helper": "Вагітність — абсолютна заборона leналідомід. Engine блокує VRd + D-VRd обидва, fall на bortezomib + dex (Vd).\n",
+            "default_value": "not_pregnant"
+          },
+          {
+            "field": "findings.severe_neuropathy_grade",
+            "label": "Передіснуюча нейропатія (CTCAE grade)",
+            "type": "enum",
+            "impact": "required",
+            "options": [
+              {
+                "value": 0,
+                "label": "0 — немає"
+              },
+              {
+                "value": 1,
+                "label": "1 — мінімальна, не впливає"
+              },
+              {
+                "value": 2,
+                "label": "2 — обмежує ADL"
+              },
+              {
+                "value": 3,
+                "label": "3 — severe"
+              },
+              {
+                "value": 4,
+                "label": "4 — disabling"
+              }
+            ],
+            "triggers": [
+              "ci:CI-BORTEZOMIB-SEVERE-NEUROPATHY якщо ≥3"
+            ],
+            "helper": "Grade ≥3 — заборона на bortezomib SC. Engine fallback на carfilzomib-based induction (Kd, KCd, KRd).\n",
+            "default_value": 0
+          },
+          {
+            "field": "findings.hbsag",
+            "label": "HBsAg",
+            "type": "enum",
+            "impact": "critical",
+            "options": [
+              {
+                "value": "negative",
+                "label": "Негативний"
+              },
+              {
+                "value": "positive",
+                "label": "Позитивний"
+              }
+            ],
+            "triggers": [
+              "RF-HBV-COINFECTION (особливо при D-VRd — anti-CD38 + dex highly immunosuppressive)"
+            ],
+            "helper": "HBV reactivation risk на D-VRd ще вище ніж rituximab. Engine вимагає entecavir prophylaxis.\n",
+            "default_value": "negative"
+          }
+        ]
+      },
+      {
+        "title": "Bone disease + supportive care indicators",
+        "description": "Не змінює algorithm, але додає supportive care компоненти.",
+        "questions": [
+          {
+            "field": "findings.lytic_lesions_present",
+            "label": "Литичні ураження кістки на CT/MRI/PET?",
+            "type": "boolean",
+            "impact": "recommended",
+            "triggers": [
+              "SUP-MM-BONE-PROTECTION (zoledronate / denosumab)"
+            ],
+            "helper": ">2 litичних ураження = bone-modifying agent obligatory ≥2 роки.",
+            "default_value": true
+          },
+          {
+            "field": "findings.vte_history_or_high_risk",
+            "label": "Тромбози в анамнезі або high VTE risk?",
+            "type": "boolean",
+            "impact": "recommended",
+            "triggers": [
+              "SUP-MM-VTE-PROPHYLAXIS (LMWH замість aspirin)"
+            ],
+            "helper": "Lenalidomide + dex базовий VTE risk ~10-20%. High-risk → LMWH замість aspirin 81 mg.\n",
+            "default_value": false
+          }
+        ]
+      }
+    ],
+    "sources": [
+      "SRC-NCCN-MM-2025"
+    ],
+    "last_reviewed": "2026-04-25",
+    "reviewer_signoffs": 0,
+    "notes": "STUB — pending Clinical Co-Lead approval per CHARTER §6.1.\n"
+  }
+]
