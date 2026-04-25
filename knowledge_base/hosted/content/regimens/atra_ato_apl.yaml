@@ -1,0 +1,74 @@
+id: REG-ATRA-ATO-APL
+name: "ATRA + Arsenic Trioxide (APL low/intermediate-risk) — APL0406 / LO-CoCo schedule"
+name_ua: "ATRA + Триоксид арсену (ГПЛ низького/проміжного ризику) — схема APL0406 / LO-CoCo"
+alternate_names:
+  - "ATRA+ATO"
+  - "Tretinoin + arsenic"
+  - "APL0406 regimen"
+  - "Chemotherapy-free APL induction"
+
+components:
+  - drug_id: DRUG-ATRA
+    dose: "45 mg/m²/day PO (divided BID with food)"
+    schedule: "continuous from day 1 until complete remission (~28-50 days induction); then 2 weeks q4w × 7 cycles consolidation"
+    route: PO
+  - drug_id: DRUG-ATO
+    dose: "0.15 mg/kg/day"
+    schedule: "IV daily until CR (~28-35 days induction); then 5 d/wk × 4 wk q8w × 4 cycles consolidation"
+    route: IV
+
+cycle_length_days: null
+total_cycles: "Induction to CR + 4 consolidation cycles (per APL0406 / LO-CoCo); no maintenance for low/intermediate-risk if MRD-negative at end of consolidation"
+
+toxicity_profile: severe
+
+premedication:
+  - "Prophylactic dexamethasone 10 mg IV BID for high-risk (WBC >10) or rising WBC during induction (differentiation-syndrome prophylaxis)"
+  - "Aggressive electrolyte repletion: K+ >4.0, Mg2+ >1.8 (ATO-induced QT prolongation)"
+  - "Daily ECG during ATO induction; weekly during consolidation"
+  - "Pregnancy test pre-treatment + monthly (ATRA + ATO both teratogenic)"
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTc >500 ms"
+    modification: "Hold ATO; correct K+/Mg2+; resume at lower dose with daily ECG once QTc <460 ms"
+    rationale: "Risk of torsades de pointes"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - condition: "Differentiation syndrome (suspected or confirmed)"
+    modification: "Dexamethasone 10 mg IV BID; consider temporary ATRA / ATO hold for severe DS only; resume when symptoms resolve"
+    rationale: "DS is leading cause of induction mortality; early steroids reverse"
+    source_refs:
+      - SRC-ELN-APL-2019
+  - condition: "Rising WBC during induction (>5K low-risk, >10K intermediate)"
+    modification: "Add hydroxyurea 500-1000 mg PO BID OR temporarily hold ATRA; intensify DS prophylaxis"
+    rationale: "Rising WBC is DS predictor"
+    source_refs:
+      - SRC-ELN-APL-2019
+  - condition: "Hepatic dysfunction (transaminases >5× ULN)"
+    modification: "Reduce / hold ATO and ATRA per local protocol"
+    rationale: "Hepatotoxicity is recognized AE of both agents"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "ATRA and ATO both НСЗУ-reimbursed for APL — most accessible regimen in Ukraine. Should be 1L for low/intermediate-risk APL universally."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L for low/intermediate-risk APL (Sanz WBC ≤10). APL0406:
+  2-y EFS 97% vs 86% with ATRA+chemo (AIDA), OS 99% vs 91%, less
+  hematologic toxicity, no anthracycline cardiotoxicity. ATRA initiated
+  IMMEDIATELY at clinical APL suspicion (do NOT wait for cytogenetic
+  confirmation). Daily ECG + electrolyte protocol mandatory during
+  ATO induction. STUB — requires clinical co-lead signoff before
+  publication.

@@ -1,0 +1,39 @@
+id: RF-AML-FRAILTY-AGE
+definition: "AML patient frail or elderly unfit for intensive induction: age ≥75, OR age ≥65 with ≥2 comorbidities (HCT-CI ≥3), OR ECOG ≥2 with multiple comorbidities, OR explicit clinical assessment 'unfit for intensive chemotherapy'"
+definition_ua: "Гострий мієлоїдний лейкоз у літнього або непридатного для інтенсивної індукції пацієнта: вік ≥75, вік ≥65 з ≥2 коморбідностями (HCT-CI ≥3), ECOG ≥2 + множинні коморбідності, або клінічне рішення 'unfit for intensive chemotherapy'"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - finding: "fit_for_intensive_chemo"
+      value: false
+    - finding: "hct_ci_score"
+      threshold: 3
+      comparator: ">="
+    - finding: "aml_frail_unfit"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+category: frailty-age
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-VIALE-A-DINARDO-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers de-escalation from 7+3 + (midostaurin) to ven+aza
+  (VIALE-A; OS 14.7 vs 9.6 mo for unfit AML). Age alone is not the
+  decision — comorbidity (HCT-CI / Sorror) + functional status drive
+  the choice. AlloHCT also generally off the table for this group.
+  STUB — requires clinical co-lead signoff.

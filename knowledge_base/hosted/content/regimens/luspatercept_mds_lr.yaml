@@ -1,0 +1,55 @@
+id: REG-LUSPATERCEPT-MDS-LR
+name: "Luspatercept (MDS-LR with RS or post-ESA failure)"
+name_ua: "Луспатерцепт (MDS-LR з кільцеподібними сидеробластами або невдача ESA)"
+alternate_names:
+  - "Reblozyl"
+  - "MEDALIST regimen"
+  - "COMMANDS regimen"
+
+components:
+  - drug_id: DRUG-LUSPATERCEPT
+    dose: "1.0 mg/kg SC q3wk; titrate to 1.33 mg/kg then 1.75 mg/kg if no transfusion-burden reduction after 2 doses"
+    schedule: "every 3 weeks SC"
+    route: SC
+
+cycle_length_days: 21
+total_cycles: "Continue if transfusion-burden reduction; reassess at 24 weeks"
+
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "No transfusion-burden reduction at 24 weeks (1.75 mg/kg)"
+    modification: "Discontinue luspatercept; consider HMA escalation or alternative"
+    rationale: "Non-responders unlikely to benefit"
+    source_refs:
+      - SRC-COMMANDS-FENAUX-2020
+      - SRC-ESMO-MDS-2021
+  - condition: "Hypertension (new or worsening)"
+    modification: "Hold; antihypertensives; resume at lower dose once BP controlled"
+    rationale: "HTN is recognized AE"
+  - condition: "Thromboembolic event"
+    modification: "Hold; anticoagulation; permanent discontinuation per severity"
+    rationale: "VTE risk"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Luspatercept NOT registered in Ukraine — major access barrier. ESA → repeat ESA dose-titration is the practical reimbursed pathway."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-COMMANDS-FENAUX-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Originally established as 2L (MEDALIST: RS-MDS post-ESA failure).
+  COMMANDS later established luspatercept as 1L over ESA for
+  transfusion-dependent LR-MDS broadly. SF3B1+ / RS subtype shows
+  strongest benefit. NOT registered in Ukraine — pragmatic 1L in our
+  setting remains ESA. STUB — requires clinical co-lead signoff before
+  publication.

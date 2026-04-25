@@ -1,0 +1,93 @@
+id: IND-ET-1L-HU
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ET
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {}
+
+recommended_regimen: REG-HU-PV-ET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Plt <400-450K achievable in >85% on HU"
+  complete_response: "Cytoreduction + thrombosis-risk reduction"
+  progression_free_survival: "Thrombosis events reduced ~50% vs ASA alone in high-risk (PT-1 control arm)"
+  overall_survival_5y: "Median OS ~18-20 years; 5-y OS ~88%"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+  - RF-PV-ET-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-D-DIMER
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+desired_tests:
+  - TEST-ECHO
+
+rationale: >
+  Aggressive 1L for high-risk ET (age >60 OR prior thrombosis OR
+  JAK2+ with CV risk factors per IPSET-thrombosis): HU 500-1500 mg/day
+  (titrate to plt <400-450K) + low-dose aspirin. Anagrelide is 2L
+  for HU-resistance / intolerance per PT-1 trial. Pegylated IFN-α
+  alternative cytoreduction (especially younger / pregnancy planning).
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "HU is preferred 1L cytoreduction for high-risk ET"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "HU + ASA is established 1L for high-risk ET"
+
+do_not_do:
+  - "Не призначати HU при вагітності / планах вагітності — переходити на IFN-α."
+  - "Не пропускати щомісячний CBC перші 3 місяці — myelosuppression-titrating."
+  - "Не використовувати anagrelide 1L — PT-1 trial показав HU перевагу на arterial thrombosis і MF progression."
+  - "Не призначати при cutaneous ulceration historии — ризик рецидиву."
+  - "Не комбінувати з peg-IFN без чіткого протоколу."
+
+known_controversies:
+  - topic: "Anagrelide vs HU as 2L for ET (post HU resistance/intolerance)"
+    positions:
+      - position: "Anagrelide effective for plt control but PT-1 noted more arterial thrombosis + bleeding + MF progression"
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: "Anagrelide better tolerated by some patients; pegylated IFN preferred for younger"
+        sources:
+          - SRC-ESMO-MPN-2015
+    our_default: "Anagrelide 2L only if pegylated IFN-α unavailable / not tolerated; otherwise IFN-α 2L"
+    rationale: "PT-1 unfavorable signal nudges pegylated IFN preferred"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  AGGRESSIVE track for ET 1L high-risk. STUB — requires clinical
+  co-lead signoff.

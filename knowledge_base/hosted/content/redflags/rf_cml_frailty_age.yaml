@@ -1,0 +1,40 @@
+id: RF-CML-FRAILTY-AGE
+definition: "CML patient elderly or frail (age ≥75, ECOG ≥2 with multiple comorbidities) where toxicity profile + life-expectancy considerations favor imatinib over higher-toxicity 2nd-gen TKIs"
+definition_ua: "Пацієнт з ХМЛ літнього віку або з низьким функціональним статусом (вік ≥75, ECOG ≥2 + множинні коморбідності), де профіль токсичності та очікувана тривалість життя надають перевагу іматинібу над більш токсичними ТКІ 2-го покоління"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - finding: "cml_frail_unfit"
+      value: true
+    - all_of:
+        - finding: "ecog_performance_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidities_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: minor
+category: frailty-age
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm:
+  - ALGO-CML-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Imatinib generally preferred for elderly / frail patients given:
+  (1) lifetime CV-event risk on nilotinib increases with age;
+  (2) treatment-free remission less of a goal in elderly;
+  (3) cost / generic availability + Ukraine reimbursement.
+  STUB — requires clinical co-lead signoff.

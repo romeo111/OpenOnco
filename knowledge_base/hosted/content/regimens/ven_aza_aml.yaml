@@ -1,0 +1,70 @@
+id: REG-VEN-AZA-AML
+name: "Venetoclax + Azacitidine (AML, unfit) — VIALE-A schedule"
+name_ua: "Венетоклакс + Азацитидин (ГМЛ, не придатний до інтенсивної індукції) — схема VIALE-A"
+alternate_names:
+  - "ven+aza"
+  - "VEN+AZA"
+  - "Venclexta + Vidaza"
+  - "VIALE-A regimen"
+
+components:
+  - drug_id: DRUG-VENETOCLAX
+    dose: "Cycle 1 ramp: day 1 = 100 mg, day 2 = 200 mg, day 3 = 400 mg → days 4-28 = 400 mg PO daily; subsequent cycles = 400 mg daily continuously"
+    schedule: "PO daily; reduce to ~70-100 mg if combined with strong CYP3A4 inhibitor (posaconazole)"
+    route: PO
+  - drug_id: DRUG-AZACITIDINE
+    dose: "75 mg/m²/day"
+    schedule: "SC or IV days 1-7 of each 28-day cycle"
+    route: SC
+
+cycle_length_days: 28
+total_cycles: "Continue until progression / unacceptable toxicity (median ~12 cycles in VIALE-A; ~25-30% achieve durable remission)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Allopurinol 300 mg PO daily for 5-7 days starting 2-3 days before venetoclax ramp"
+  - "IV hydration ≥1.5 L/day during ramp + first 24 h after each dose escalation"
+  - "Antiemetics for azacitidine (low-emetogenic prophylaxis)"
+  - "G-CSF as needed for febrile neutropenia (NOT routinely; prolonged neutropenia is expected)"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Combined with strong CYP3A4 inhibitor (posaconazole, voriconazole)"
+    modification: "Reduce venetoclax to ~70-100 mg daily (max 100 mg with posaconazole)"
+    rationale: "Strong CYP3A4 inhibition increases venetoclax exposure 4-7×"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-VIALE-A-DINARDO-2020
+  - condition: "Cytopenias persisting beyond cycle 1 (ANC <0.5, plt <50K)"
+    modification: "Hold venetoclax 7 days, dose-reduce by 100 mg next cycle if recurrent; consider shorter venetoclax schedule (21 d / 28 d cycle) per institutional"
+    rationale: "Cumulative myelosuppression — venetoclax-driven; aza alone less myelosuppressive"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Hepatic impairment (Child-Pugh B/C)"
+    modification: "Use cautiously; reduce venetoclax dose"
+    rationale: "Reduced clearance"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Azacitidine НСЗУ-reimbursed; venetoclax registered but NOT reimbursed — major access barrier for AML-unfit indication."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-VIALE-A-DINARDO-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L for AML unfit for intensive 7+3 (VIALE-A: median OS 14.7
+  vs 9.6 mo for aza alone). TLS prophylaxis MANDATORY for first ramp
+  cycle (5-week ramp not used in AML — accelerated 3-day ramp instead).
+  Strong CYP3A4 inhibitor co-administration (azole prophylaxis) requires
+  venetoclax dose reduction. STUB — requires clinical co-lead signoff
+  before publication.

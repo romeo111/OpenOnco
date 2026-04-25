@@ -1,0 +1,44 @@
+id: RF-APL-ORGAN-DYSFUNCTION
+definition: "APL with cardiac comorbidity making ATO problematic: baseline QTc >500 ms, uncorrected hypokalemia (<3.5) or hypomagnesemia (<1.8), pre-existing arrhythmia OR severe hepatic dysfunction (bilirubin >3× ULN, transaminases >5× ULN)"
+definition_ua: "Гострий промієлоцитарний лейкоз з кардіальною коморбідністю, що ускладнює застосування триоксиду арсену: QTc >500 мс, некоригована гіпокаліємія (<3.5) або гіпомагніємія (<1.8), передіснуюча аритмія АБО тяжка печінкова дисфункція (білірубін >3× ВМН, АЛТ/АСТ >5× ВМН)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "qtc_ms"
+      threshold: 500
+      comparator: ">"
+    - finding: "potassium_mmol_l"
+      threshold: 3.5
+      comparator: "<"
+    - finding: "magnesium_mmol_l"
+      threshold: 1.8
+      comparator: "<"
+    - finding: "uncontrolled_arrhythmia"
+      value: true
+    - finding: "total_bilirubin_ulnratio"
+      threshold: 3
+      comparator: ">"
+
+clinical_direction: investigate
+
+severity: critical
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — does NOT shift indication choice (because the
+  alternative for ATO contraindication is classic AIDA, but that is itself
+  surface-able through algorithm logic only after risk stratification).
+  Triggers monitoring + electrolyte correction + ECG protocol + potential
+  switch to AIDA / ATRA + chemotherapy alternative if ATO truly cannot
+  proceed. Mandatory baseline ECG + K+ + Mg2+ + correction targets
+  (K+ >4.0, Mg2+ >1.8) before ATO. STUB — requires clinical co-lead
+  signoff.

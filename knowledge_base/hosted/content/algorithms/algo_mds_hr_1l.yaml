@@ -1,0 +1,73 @@
+id: ALGO-MDS-HR-1L
+applicable_to_disease: DIS-MDS-HR
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line MDS-HR.
+  Standard = azacitidine (NCCN/ESMO consensus 1L); aggressive = ven+aza
+  (off-label, blast-rich pre-alloHCT bridge). AlloHCT donor search is
+  parallel to either path for transplant-eligible.
+
+output_indications:
+  - IND-MDS-HR-1L-AZA
+  - IND-MDS-HR-1L-VEN-AZA
+
+default_indication: IND-MDS-HR-1L-AZA
+alternative_indication: IND-MDS-HR-1L-VEN-AZA
+
+decision_tree:
+  # Step 1 — frailty / organ dysfunction → aza alone (less toxic than ven+aza)
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-FRAILTY-AGE
+        - red_flag: RF-MDS-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-MDS-HR-1L-AZA
+    if_false:
+      next_step: 2
+
+  # Step 2 — TP53 mutation OR transformation/progression on prior HMA →
+  # aza (no clear ven+aza benefit for TP53; transformation re-routes
+  # conceptually to AML algorithm but algorithm pins to aza locally)
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-TP53-MUTATION
+        - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-MDS-HR-1L-AZA
+    if_false:
+      next_step: 3
+
+  # Step 3 — transplant-eligible high-risk → consider ven+aza for deeper
+  # response pre-alloHCT (off-label; informed consent)
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-TRANSPLANT-ELIGIBLE
+    if_true:
+      result: IND-MDS-HR-1L-VEN-AZA
+    if_false:
+      next_step: 4
+
+  # Step 4 — default MDS-HR = aza alone
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Default MDS-HR; alloHCT eligibility separate parallel layer"
+    if_true:
+      result: IND-MDS-HR-1L-AZA
+    if_false:
+      result: IND-MDS-HR-1L-AZA
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-MDS-INFECTION-SCREENING and RF-MDS-DEL-5Q-ISOLATED surface as
+  annotations. RF-MDS-TRANSFORMATION-PROGRESSION should re-route to
+  AML algorithm at calling layer. STUB — requires clinical co-lead
+  signoff.

@@ -1,0 +1,46 @@
+id: RF-PV-ET-HIGH-THROMBOSIS-RISK
+definition: "PV or ET high-risk for thrombosis: age >60 OR prior arterial / venous thrombosis OR (ET only) JAK2 V617F + CV risk factors (IPSET-thrombosis high) — triggers cytoreduction (HU 1L) in addition to baseline phlebotomy + ASA"
+definition_ua: "PV або ET високого ризику тромбозу: вік >60 АБО перенесений артеріальний / венозний тромбоз АБО (ET only) JAK2 V617F + CV-фактори ризику (IPSET-thrombosis high) — потребує циторедукції (HU 1L) додатково до базової флеботомії + АСК"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 60
+      comparator: ">"
+    - finding: "prior_thrombosis_arterial_or_venous"
+      value: true
+    - finding: "ipset_thrombosis_risk"
+      value: "high"
+    - all_of:
+        - finding: "jak2_v617f"
+          value: true
+        - finding: "cv_risk_factors_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-PV
+  - DIS-ET
+shifts_algorithm:
+  - ALGO-PV-1L
+  - ALGO-ET-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Drives selection between low-risk (phlebotomy + ASA only for PV;
+  ASA only for ET) and high-risk (add HU 1L cytoreduction). For PV,
+  ELN 2018 also flags WBC ≥11 as supplementary risk. For ET, IPSET-
+  thrombosis explicitly weights JAK2 V617F as risk-multiplying. CALR-
+  mutated ET has lower thrombosis risk than JAK2 ET — same age cutoff
+  but more permissive cytoreduction threshold. STUB — requires clinical
+  co-lead signoff.

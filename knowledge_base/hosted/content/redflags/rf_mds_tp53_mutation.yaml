@@ -1,0 +1,41 @@
+id: RF-MDS-TP53-MUTATION
+definition: "MDS with TP53 mutation (mono- or biallelic) — distinct WHO 5th-ed entity with poor outcomes on HMA monotherapy and reduced alloHCT benefit; consideration of intensified / experimental therapy or palliative intent"
+definition_ua: "МДС з мутацією TP53 (моно- або біалельна) — окрема нозологія за WHO 5-го видання з поганим прогнозом на монотерапії гіпометилюючими агентами та зниженою ефективністю аллоТГСК; розглянути інтенсифіковане / експериментальне лікування або паліативну тактику"
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "tp53_mutation"
+      value: true
+    - finding: "tp53_biallelic"
+      value: true
+    - finding: "del_17p"
+      value: true
+    - finding: "tp53_vaf_pct"
+      threshold: 10
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: critical
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MDS-HR
+  - DIS-MDS-LR
+shifts_algorithm:
+  - ALGO-MDS-HR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  TP53-mutated MDS is its own WHO 5th-edition entity with median OS
+  ~6-9 months on standard HMA. AlloHCT carries higher relapse risk
+  vs TP53-wt. Active research questions: ven+aza vs aza alone, magrolimab
+  + aza (failed phase-3 ENHANCE), eprenetapopt + aza (mixed results).
+  NOT clear best regimen — flagged as intensify but the algorithm
+  should also surface palliative-intent option. STUB — requires
+  clinical co-lead signoff.

@@ -1,0 +1,36 @@
+id: RF-AML-FLT3-ACTIONABLE
+definition: "AML with FLT3-ITD or FLT3-TKD mutation — addition of midostaurin (or gilteritinib in r/r) to induction is required (RATIFY trial)"
+definition_ua: "Гострий мієлоїдний лейкоз з мутацією FLT3-ITD або FLT3-TKD — обов'язкове додавання мідостаурину (або гілтеритинібу при рецидиві) до індукції (дослідження RATIFY)"
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "flt3_itd"
+      value: true
+    - finding: "flt3_tkd"
+      value: true
+    - finding: "flt3_mutation"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-RATIFY-STONE-2017
+  - SRC-ELN-AML-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers addition of midostaurin 50 mg PO BID days 8-21 to 7+3
+  induction + HiDAC consolidation in fit patients. Gilteritinib is
+  the r/r-AML standard. NOT applicable for unfit patients on ven+aza
+  (FLT3-targeting in that setting under investigation; not yet standard).
+  Access: midostaurin not Ukraine-reimbursed — major barrier.
+  STUB — requires clinical co-lead signoff.

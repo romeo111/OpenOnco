@@ -1,0 +1,35 @@
+id: RF-CML-INFECTION-SCREENING
+definition: "CML patient with positive HBV serology (HBsAg+ or anti-HBc+) — TKI therapy is associated with HBV reactivation in case reports; mandatory HBV testing pre-TKI + active prophylaxis (entecavir / tenofovir) if HBsAg+, monitoring if anti-HBc+ only"
+definition_ua: "Пацієнт з ХМЛ з позитивною HBV-серологією (HBsAg+ або anti-HBc+) — терапія ТКІ асоційована з реактивацією HBV у випадках; обов'язкове тестування HBV перед ТКІ + активна профілактика (ентекавір / тенофовір) якщо HBsAg+, моніторинг якщо лише anti-HBc+"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+
+clinical_direction: investigate
+
+severity: minor
+category: infection-screening
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces a workup-prerequisite annotation.
+  CML TKI-related HBV reactivation is rare but reported (especially with
+  immunosuppression-dose TKI shifts and post-TFR discontinuation). HBV
+  testing recommended before initiating any TKI per ELN 2020 + NCCN.
+  STUB — requires clinical co-lead signoff.

@@ -1,0 +1,59 @@
+id: REG-ESA-MDS-LR
+name: "ESA (epoetin alfa or darbepoetin) — MDS-LR symptomatic anemia 1L"
+name_ua: "ESA (епоетин альфа або дарбепоетин) — симптоматична анемія MDS-LR 1L"
+alternate_names:
+  - "Epoetin alfa MDS"
+  - "Darbepoetin MDS"
+  - "ESA MDS"
+
+components:
+  - drug_id: DRUG-EPOETIN-ALFA
+    dose: "Epoetin alfa 60,000 IU SC weekly OR Darbepoetin 150-300 μg SC weekly (or 500 μg SC q3wk)"
+    schedule: "weekly SC; reassess at 8-12 weeks"
+    route: SC
+
+cycle_length_days: 7
+total_cycles: "Continue if response (Hb ≥1.5 g/dL rise or transfusion-independence achieved); discontinue if no response by 12 weeks"
+
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "No response at 8-12 weeks (Hb rise <1.5 g/dL)"
+    modification: "Discontinue ESA; switch to luspatercept (RS-MDS) OR lenalidomide (del 5q) OR HMA escalation if higher-risk"
+    rationale: "Continuing ESA in non-responders does not deliver benefit"
+    source_refs:
+      - SRC-ESMO-MDS-2021
+      - SRC-NCCN-AML-2025
+  - condition: "Hb >12 g/dL on ESA"
+    modification: "Reduce dose by 25-40%; do NOT exceed Hb 12 (boxed mortality / VTE warning)"
+    rationale: "Boxed warning"
+    source_refs:
+      - SRC-ESMO-MDS-2021
+  - condition: "Iron deficiency identified during ESA therapy"
+    modification: "IV iron supplementation (PO often insufficient)"
+    rationale: "Functional iron deficiency limits ESA response"
+  - condition: "Uncontrolled hypertension"
+    modification: "Hold ESA until BP controlled; resume at lower dose"
+    rationale: "ESA-induced hypertension can be severe"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "ESA НСЗУ-reimbursed; luspatercept NOT registered in Ukraine — major access barrier for MDS-LR 2L."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  1L for MDS-LR symptomatic anemia if endogenous EPO ≤500 mU/mL AND
+  RBC TD ≤2U/month — response rate ~50-60% in this selected population.
+  Add G-CSF in non-responders if RS-MDS subtype. Target Hb 10-12 g/dL
+  (do NOT exceed). Switch to luspatercept (MEDALIST: RS-MDS post-ESA;
+  COMMANDS: 1L LR-MDS broadly) or lenalidomide (del 5q) on failure.
+  STUB — requires clinical co-lead signoff before publication.

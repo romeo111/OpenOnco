@@ -1,0 +1,64 @@
+id: ALGO-MDS-LR-1L
+applicable_to_disease: DIS-MDS-LR
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line MDS-LR
+  symptomatic anemia. Standard = ESA (Ukraine-accessible default);
+  aggressive = luspatercept (preferred per COMMANDS but Ukraine
+  not-registered). Risk-escalation flag (RF-MDS-HIGH-RISK-IPSS) routes
+  to MDS-HR algorithm.
+
+output_indications:
+  - IND-MDS-LR-1L-ESA
+  - IND-MDS-LR-1L-LUSPATERCEPT
+
+default_indication: IND-MDS-LR-1L-ESA
+alternative_indication: IND-MDS-LR-1L-LUSPATERCEPT
+
+decision_tree:
+  # Step 1 — risk escalation to MDS-HR; algorithm still pins to ESA
+  # locally but the calling layer should re-route to MDS-HR algorithm.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-HIGH-RISK-IPSS
+        - red_flag: RF-MDS-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-MDS-LR-1L-ESA
+    if_false:
+      next_step: 2
+
+  # Step 2 — frailty → ESA preferred (lower cost + tolerability)
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-FRAILTY-AGE
+        - red_flag: RF-MDS-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-MDS-LR-1L-ESA
+    if_false:
+      next_step: 3
+
+  # Step 3 — default = ESA (Ukraine context — luspatercept not registered)
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Default LR-MDS symptomatic anemia"
+    if_true:
+      result: IND-MDS-LR-1L-ESA
+    if_false:
+      result: IND-MDS-LR-1L-ESA
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-COMMANDS-FENAUX-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-MDS-DEL-5Q-ISOLATED and RF-MDS-INFECTION-SCREENING are
+  "investigate"-direction flags surfacing as annotations
+  (lenalidomide track for del 5q; HBV pre-HMA screening). When
+  luspatercept becomes accessible in Ukraine, this algorithm should
+  swap default to luspatercept for non-frail. STUB — requires
+  clinical co-lead signoff.

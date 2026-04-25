@@ -1,0 +1,36 @@
+id: RF-PMF-HIGH-RISK-DIPSS
+definition: "PMF intermediate-2 or high risk by DIPSS-Plus — alloHCT referral mandatory in eligible patients (only curative option); ruxolitinib for symptomatic splenomegaly + symptoms while awaiting transplant"
+definition_ua: "Первинний мієлофіброз проміжного-2 або високого ризику за DIPSS-Plus — обов'язкове направлення на аллоТГСК у придатних пацієнтів (єдиний радикальний метод); руксолітиніб для симптоматичної спленомегалії + симптомів під час очікування трансплантації"
+
+trigger:
+  type: risk_score
+  any_of:
+    - finding: "dipss_plus_risk"
+      value: "intermediate_2"
+    - finding: "dipss_plus_risk"
+      value: "high"
+    - finding: "mipss70_risk"
+      value: "high"
+    - finding: "mipss70_risk"
+      value: "very_high"
+
+clinical_direction: intensify
+
+severity: critical
+category: high-risk-biology
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm:
+  - ALGO-PMF-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  DIPSS-Plus int-2 / high → median OS ~2.9 / 1.3 years without alloHCT.
+  AlloHCT in fit patients improves OS but carries 30-50% TRM. Ruxolitinib
+  bridges symptoms + spleen; does NOT eliminate clone but may extend OS
+  in pooled COMFORT analyses. STUB — requires clinical co-lead signoff.

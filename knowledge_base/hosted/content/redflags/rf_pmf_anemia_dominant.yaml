@@ -1,0 +1,35 @@
+id: RF-PMF-ANEMIA-DOMINANT
+definition: "PMF with anemia as dominant clinical problem (Hb <10 g/dL OR transfusion-dependent) — momelotinib preferred over ruxolitinib (MOMENTUM trial: spleen + symptom + Hb improvement)"
+definition_ua: "ПМФ з анемією як домінуючою клінічною проблемою (Hb <10 г/дл АБО трансфузійна залежність) — момелотиніб переважний над руксолітинібом (MOMENTUM: відповідь спленомегалії + симптомів + покращення Hb)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hemoglobin_g_dl"
+      threshold: 10
+      comparator: "<"
+    - finding: "rbc_transfusion_dependent"
+      value: true
+    - finding: "anemia_dominant_pmf"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-COMFORT-I-VERSTOVSEK-2012
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces JAKi-selection annotation.
+  Momelotinib's ACVR1 inhibition lowers hepcidin → improves anemia
+  vs ruxolitinib (which often worsens anemia). NOT registered in
+  Ukraine — major access barrier. Alternative: ruxolitinib + ESA, or
+  pacritinib (severe thrombocytopenia subtype). STUB — requires
+  clinical co-lead signoff.

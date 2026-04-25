@@ -1,0 +1,63 @@
+id: REG-IMATINIB-CML
+name: "Imatinib (CML chronic phase 1L)"
+name_ua: "Іматиніб (ХМЛ хронічна фаза 1L)"
+alternate_names:
+  - "Imatinib 400"
+  - "Glivec/Gleevec 400"
+  - "IRIS regimen"
+
+components:
+  - drug_id: DRUG-IMATINIB
+    dose: "400 mg PO once daily with food + large glass of water"
+    schedule: "continuous, lifelong (or until durable deep molecular response permits TFR attempt per ELN 2020 criteria)"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Continuous; check BCR-ABL1 IS at 3, 6, 12 months for milestone-based response (≤10%, ≤1%, ≤0.1% respectively); TKI switch on suboptimal / failure"
+
+toxicity_profile: low
+
+premedication:
+  - "Take with meal (reduces GI upset)"
+  - "Antiemetic only if needed early on (nausea usually self-limited)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Suboptimal molecular response at 3 mo (BCR-ABL1 IS >10%)"
+    modification: "Confirm adherence + check kinase-domain mutations; switch to 2nd-gen TKI (dasatinib / nilotinib / bosutinib by comorbidity matrix) per ELN 2020"
+    rationale: "Milestone failure predicts inferior long-term outcome on imatinib"
+    source_refs:
+      - SRC-ELN-CML-2020
+  - condition: "Failure at 12 mo (BCR-ABL1 IS >1%) or progression to AP/BP"
+    modification: "Switch to 2nd-gen TKI (dasatinib 100 mg or nilotinib 400 mg BID); ponatinib for T315I"
+    rationale: "Treatment failure"
+    source_refs:
+      - SRC-ELN-CML-2020
+  - condition: "Severe toxicity (cytopenias gr ≥3, severe edema, severe muscle cramps)"
+    modification: "Hold; resume 300 mg daily once recovered; switch TKI if intolerance recurs"
+    rationale: "Toxicity management"
+  - condition: "Hepatic dysfunction (transaminases >5× ULN, bilirubin >3× ULN)"
+    modification: "Hold; resume at reduced dose with hepatology co-management"
+    rationale: "Hepatotoxicity is recognized AE"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Imatinib generic widely НСЗУ-reimbursed for CML. Most accessible 1L TKI in Ukraine."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ESMO-CML-2017
+  - SRC-IRIS-OBRIEN-2003
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L for low-risk CML chronic phase, elderly, comorbid patients,
+  or where cost / access is limiting. IRIS established imatinib 400 mg
+  daily; 10-y OS ~83%. ELN 2020 milestones: ≤10% at 3 mo, ≤1% at 6 mo,
+  ≤0.1% (MMR) at 12 mo. PCR monitoring q3mo for first year, then q3-6mo.
+  TFR attempt eligible after ≥3 years on TKI + sustained DMR (MR4.5)
+  ≥2 years per ELN. STUB — requires clinical co-lead signoff before
+  publication.

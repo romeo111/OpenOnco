@@ -1,0 +1,46 @@
+id: RF-AML-ORGAN-DYSFUNCTION
+definition: "AML patient with organ dysfunction precluding intensive 7+3 induction: ECOG ≥3, baseline LVEF <50%, CrCl <30 mL/min, total bilirubin >3× ULN, OR active uncontrolled organ failure"
+definition_ua: "Гострий мієлоїдний лейкоз з дисфункцією органів, що виключає інтенсивну індукцію 7+3: ECOG ≥3, LVEF <50%, CrCl <30 мл/хв, загальний білірубін >3× ВМН, або активна некомпенсована органна недостатність"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "ecog_performance_status"
+      threshold: 3
+      comparator: ">="
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "total_bilirubin_ulnratio"
+      threshold: 3
+      comparator: ">"
+    - finding: "active_uncontrolled_organ_failure"
+      value: true
+    - finding: "transplant_eligible"
+      value: false
+
+clinical_direction: de-escalate
+
+severity: critical
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers de-escalation from 7+3 + (midostaurin) to ven+aza
+  (VIALE-A) for unfit patients. Transplant-eligibility is a parallel
+  layer also captured by this flag (organ thresholds are the same
+  fitness gate). Cardiac assessment + baseline echo mandatory before
+  anthracycline. STUB — requires clinical co-lead signoff before
+  publication.

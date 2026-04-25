@@ -1,0 +1,70 @@
+id: ALGO-ET-1L
+applicable_to_disease: DIS-ET
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line ET.
+  Standard = ASA only (low-risk: age ≤60, no thrombosis, IPSET-thrombosis
+  low/intermediate); aggressive = HU + ASA (high-risk by age >60 OR
+  prior thrombosis OR JAK2+ with CV risk factors per IPSET-thrombosis).
+  Anagrelide is 2L per PT-1.
+
+output_indications:
+  - IND-ET-1L-ASA
+  - IND-ET-1L-HU
+
+default_indication: IND-ET-1L-ASA
+alternative_indication: IND-ET-1L-HU
+
+decision_tree:
+  # Step 0 — transformation to post-ET MF / AML → re-route conceptually
+  # (algorithm pins to HU 1L locally as bridge)
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-ET-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-ET-1L-HU
+    if_false:
+      next_step: 1
+
+  # Step 1 — high-risk → HU 1L cytoreduction
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
+    if_true:
+      result: IND-ET-1L-HU
+    if_false:
+      next_step: 2
+
+  # Step 2 — frailty / organ dysfunction → ASA only (gentler)
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PV-ET-FRAILTY-AGE
+        - red_flag: RF-PV-ET-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-ET-1L-ASA
+    if_false:
+      next_step: 3
+
+  # Step 3 — default low-risk = ASA only
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Default low-risk ET"
+    if_true:
+      result: IND-ET-1L-ASA
+    if_false:
+      result: IND-ET-1L-ASA
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-PV-ET-PREGNANCY-OR-PLANNING and RF-PV-ET-INFECTION-SCREENING are
+  "investigate"-direction flags surfacing as annotations (IFN-α switch
+  for pregnancy; HBV pre-JAKi/IFN screening). STUB — requires clinical
+  co-lead signoff.

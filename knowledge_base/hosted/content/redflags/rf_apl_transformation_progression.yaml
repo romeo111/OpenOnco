@@ -1,0 +1,45 @@
+id: RF-APL-TRANSFORMATION-PROGRESSION
+definition: "APL differentiation syndrome (formerly RA-syndrome): fever, dyspnea, weight gain ≥5 kg, pleuropericardial effusions, pulmonary infiltrates, hypotension, AKI — typically days 2-21 of induction"
+definition_ua: "Синдром диференціації при гострому промієлоцитарному лейкозі (раніше RA-синдром): лихоманка, задишка, набір ваги ≥5 кг, плевроперикардіальний випіт, легеневі інфільтрати, гіпотензія, гостре пошкодження нирок — зазвичай дні 2-21 індукції"
+
+trigger:
+  type: symptom_composite
+  any_of:
+    - finding: "differentiation_syndrome_active"
+      value: true
+    - finding: "rising_wbc_on_atra"
+      value: true
+    - finding: "wbc_rise_during_induction"
+      threshold: 10
+      comparator: ">"
+    - all_of:
+        - finding: "fever_unexplained"
+          value: true
+        - finding: "new_dyspnea"
+          value: true
+        - finding: "weight_gain_kg"
+          threshold: 5
+          comparator: ">="
+
+clinical_direction: investigate
+
+severity: critical
+category: transformation-progression
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces a monitoring annotation rather than
+  shifting indication. Triggers immediate dexamethasone 10 mg IV BID,
+  consideration of temporary ATRA/ATO hold (per severity), aggressive
+  diuresis, ICU monitoring. Prophylactic steroids (prednisone 0.5 mg/kg
+  or dexamethasone 2.5 mg/m² BID) are recommended for high-risk (WBC >10)
+  and any patient with rising WBC during induction. DS occurs in ~5-25%
+  and is a leading cause of induction mortality if not promptly recognized.
+  STUB — requires clinical co-lead signoff.

@@ -1,0 +1,37 @@
+id: RF-MDS-INFECTION-SCREENING
+definition: "MDS patient with positive HBV / HCV / HIV serology, latent TB, or active uncontrolled infection — needs antiviral prophylaxis before HMA initiation (HBV reactivation reported with azacitidine and decitabine)"
+definition_ua: "Пацієнт з МДС з позитивною серологією HBV / HCV / HIV, латентним ТБ або активною неконтрольованою інфекцією — потребує противірусної профілактики перед ініціацією ГМА (реактивація HBV описана при азацитидині та децитабіні)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+category: infection-screening
+relevant_diseases:
+  - DIS-MDS-LR
+  - DIS-MDS-HR
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "hold" surfaces a workup prerequisite. HBV testing
+  mandatory pre-HMA. HMA-induced cytopenias prolong infection windows;
+  pre-existing infections must be controlled before initiation. STUB —
+  requires clinical co-lead signoff.

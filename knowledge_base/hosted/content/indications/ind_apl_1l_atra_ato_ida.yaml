@@ -1,0 +1,102 @@
+id: IND-APL-1L-ATRA-ATO-IDA
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-APL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    apl_sanz_risk_high: true
+
+recommended_regimen: REG-ATRA-ATO-IDA-APL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~90-95% complete remission (high-risk APL with intensified regimens)"
+  complete_response: "~85-90% post-induction"
+  progression_free_survival: "5-y EFS ~80-85% high-risk"
+  overall_survival_5y: "~85% high-risk treated with ATRA + ATO + idarubicin"
+
+hard_contraindications:
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative:
+  - RF-APL-EMERGENCY-DIC
+  - RF-APL-ORGAN-DYSFUNCTION
+  - RF-APL-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER
+  - TEST-URIC-ACID
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Aggressive 1L for high-risk APL (Sanz: WBC >10). ATRA + ATO +
+  idarubicin (preferred when ATO available) OR classic AIDA (ATRA +
+  idarubicin alone). Chemo-free ATRA + ATO is NOT validated for high-risk
+  (APL0406 enrolled only low/intermediate). Hyperleukocytosis-related
+  DS prophylaxis with dexamethasone, aggressive DIC management, daily
+  ECG + electrolyte monitoring. Cumulative anthracycline tracking for
+  late cardiotoxicity. AlloHCT generally not needed for APL CR1 (cure
+  rate already ~85%); reserved for relapse / TKD-ATRA-resistant variant.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "ATRA + ATO + idarubicin (or classic AIDA) is preferred 1L for high-risk APL"
+  - source_id: SRC-ELN-APL-2019
+    position: supports
+    relevant_quote_paraphrase: "High-risk APL (WBC >10) requires anthracycline addition; chemo-free regimen NOT validated"
+
+do_not_do:
+  - "Не використовувати chemo-free ATRA + ATO для high-risk APL (WBC >10) — APL0406 enrollment criterion виключав цю популяцію."
+  - "Не пропускати DS-профілактику дексаметазоном при високому WBC при дебюті — у high-risk DS особливо часта."
+  - "Не пропускати DIC management — high-risk APL має найвищу частоту bleeding-related early mortality."
+  - "Не призначати idarubicin без baseline LVEF + кумулятивного відстеження антрациклінів."
+  - "Не пропускати hyperleukocytosis management (hydroxyurea ± leukapheresis) якщо WBC >100K при дебюті."
+
+known_controversies:
+  - topic: "ATRA + ATO + idarubicin vs classic AIDA (ATRA + idarubicin) for high-risk APL"
+    positions:
+      - position: "ATRA + ATO + idarubicin is preferred when ATO available — better efficacy + tolerability"
+        sources:
+          - SRC-ELN-APL-2019
+      - position: "Classic AIDA is acceptable alternative if ATO unavailable / contraindicated"
+        sources:
+          - SRC-NCCN-AML-2025
+    our_default: "ATRA + ATO + idarubicin when ATO available (Ukraine: yes, reimbursed); AIDA only if ATO contraindication"
+    rationale: "Both ATO and idarubicin are reimbursed in Ukraine; triple is preferred."
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  AGGRESSIVE track for high-risk APL. time_critical: true (see
+  IND-APL-1L-ATRA-ATO notes). LVEF assessment + cumulative
+  anthracycline tracking + cardiac follow-up post-treatment.
+  STUB — requires clinical co-lead signoff.

@@ -1,0 +1,46 @@
+id: RF-APL-EMERGENCY-DIC
+definition: "APL with active disseminated intravascular coagulation (DIC): fibrinogen <150 mg/dL, prolonged PT/PTT, elevated D-dimer, thrombocytopenia + bleeding manifestations. Initiate ATRA AT CLINICAL SUSPICION before cytogenetic confirmation."
+definition_ua: "Гострий промієлоцитарний лейкоз з активним ДВЗ-синдромом: фібриноген <150 мг/дл, подовження ПЧ/АЧТЧ, високий D-dimer, тромбоцитопенія + кровотечі. ATRA — НЕГАЙНО за клінічною підозрою, до цитогенетичного підтвердження."
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "fibrinogen_mg_dl"
+      threshold: 150
+      comparator: "<"
+    - finding: "d_dimer_elevated"
+      value: true
+    - finding: "active_bleeding"
+      value: true
+    - finding: "dic_active"
+      value: true
+    - finding: "platelet_count_k_ul"
+      threshold: 50
+      comparator: "<"
+
+clinical_direction: hold
+
+severity: critical
+priority: 5
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm:
+  - ALGO-APL-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers HOLD on regimen-choice algorithm pending DIC stabilization:
+  aggressive transfusion (plt to >30-50K, fibrinogen >150, INR <1.5),
+  ATRA initiation IMMEDIATELY (even before PML-RARα confirmation),
+  ATO initiation as soon as confirmed. Per CHARTER §15.2 C2 this is
+  partially time-critical (early-death prevention is the dominant APL
+  outcome driver — historical 80% bleeding mortality without
+  immediate ATRA). OpenOnco scope is workup + plan AFTER initial
+  stabilization. Priority 5 (lowest = wins all conflicts).
+  STUB — requires clinical co-lead signoff.

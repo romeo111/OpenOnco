@@ -1,0 +1,76 @@
+id: ALGO-CML-1L
+applicable_to_disease: DIS-CML
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative TKI Indication for first-line CML
+  chronic phase based on ELTS / Sokal risk + comorbidity matrix.
+  Outputs imatinib (standard, low-risk / elderly / cost-context) vs
+  2nd-generation TKI bundle (aggressive, high-risk / TFR ambition /
+  young). T315I and blast-crisis flags re-route plan generation
+  outside this 1L algorithm. Specific 2nd-gen TKI selection by
+  comorbidity is at the regimen layer.
+
+output_indications:
+  - IND-CML-1L-IMATINIB
+  - IND-CML-1L-2GEN-TKI
+
+default_indication: IND-CML-1L-IMATINIB
+alternative_indication: IND-CML-1L-2GEN-TKI
+
+decision_tree:
+  # Step 1 — blast crisis → algorithm pinned to imatinib but plan
+  # generation should surface emergency workup; T315I flag also routes
+  # outside chronic-phase algorithm.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-CML-TRANSFORMATION-PROGRESSION
+        - red_flag: RF-CML-T315I-MUTATION
+    if_true:
+      result: IND-CML-1L-IMATINIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — frailty / elderly → prefer imatinib (cost + tolerability)
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-CML-FRAILTY-AGE
+    if_true:
+      result: IND-CML-1L-IMATINIB
+    if_false:
+      next_step: 3
+
+  # Step 3 — high-risk ELTS / Sokal → 2nd-gen TKI for faster + deeper
+  # molecular response
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-CML-HIGH-RISK-ELTS
+    if_true:
+      result: IND-CML-1L-2GEN-TKI
+    if_false:
+      next_step: 4
+
+  # Step 4 — default = imatinib (safe, accessible)
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Default low-risk CML chronic phase"
+    if_true:
+      result: IND-CML-1L-IMATINIB
+    if_false:
+      result: IND-CML-1L-IMATINIB
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ESMO-CML-2017
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-CML-ORGAN-DYSFUNCTION is "investigate" — surfaces comorbidity-
+  matched TKI selection annotation at regimen layer (avoid nilotinib
+  for CV; avoid dasatinib for pulmonary; etc). RF-CML-INFECTION-
+  SCREENING is "investigate" too — surfaces HBV pre-screening
+  annotation. STUB — requires clinical co-lead signoff.

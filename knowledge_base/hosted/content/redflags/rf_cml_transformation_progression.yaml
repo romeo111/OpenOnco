@@ -1,0 +1,44 @@
+id: RF-CML-TRANSFORMATION-PROGRESSION
+definition: "CML in accelerated or blast phase: ≥10% blasts in PB or BM (accelerated), ≥20% blasts (blast phase), or extramedullary blasts. Treatment intent shifts from chronic-phase TKI to acute-leukemia-style induction + alloHCT."
+definition_ua: "Хронічна мієлоїдна лейкемія у фазі акселерації або бластного кризу: ≥10% бластів у ПК або КМ (акселерація), ≥20% бластів (бластний криз) або екстрамедулярні бласти. Лікувальна тактика змінюється з ТКІ хронічної фази на хіміотерапію по типу гострої лейкемії + аллоТГСК."
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "cml_phase"
+      value: "accelerated"
+    - finding: "cml_phase"
+      value: "blast"
+    - finding: "blasts_pb_pct"
+      threshold: 10
+      comparator: ">="
+    - finding: "blasts_bm_pct"
+      threshold: 10
+      comparator: ">="
+    - finding: "extramedullary_blasts"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: transformation-progression
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm:
+  - ALGO-CML-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ESMO-CML-2017
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers HOLD on chronic-phase 1L algorithm. Accelerated/blast-phase CML
+  is a clinical emergency: high-dose 2nd/3rd-gen TKI (dasatinib 140 mg or
+  ponatinib if T315I), urgent donor search for alloHCT, induction
+  chemotherapy (myeloid blast: AML-style 7+3; lymphoid blast: hyperCVAD
+  + TKI). Plan generation does not proceed with chronic-phase regimen
+  selection — describes the blast-phase workup. Priority bumped to 10.
+  STUB — requires clinical co-lead signoff.

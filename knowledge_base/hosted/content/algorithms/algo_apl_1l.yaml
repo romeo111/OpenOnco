@@ -1,0 +1,75 @@
+id: ALGO-APL-1L
+applicable_to_disease: DIS-APL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line APL based on
+  Sanz risk (low/intermediate vs high) + organ-fitness flags. Outputs
+  ATRA + ATO chemo-free (standard, low/intermediate-risk) vs ATRA + ATO
+  + idarubicin (aggressive, high-risk). Note that the "standard" track
+  in APL is itself highly active — APL is the first chemotherapy-curable
+  acute leukemia.
+
+output_indications:
+  - IND-APL-1L-ATRA-ATO
+  - IND-APL-1L-ATRA-ATO-IDA
+
+default_indication: IND-APL-1L-ATRA-ATO
+alternative_indication: IND-APL-1L-ATRA-ATO-IDA
+
+decision_tree:
+  # Step 1 — emergency DIC (HOLD); algorithm still pins to a track but
+  # plan generation surfaces emergency workup separately.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-APL-EMERGENCY-DIC
+    if_true:
+      result: IND-APL-1L-ATRA-ATO
+    if_false:
+      next_step: 2
+
+  # Step 2 — high-risk by Sanz (WBC >10) → triplet
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-APL-HIGH-RISK-BIOLOGY
+    if_true:
+      result: IND-APL-1L-ATRA-ATO-IDA
+    if_false:
+      next_step: 3
+
+  # Step 3 — frailty / age over 70 with comorbidity → prefer ATRA+ATO
+  # even for some high-risk patients (toxicity-balanced; rationale in
+  # IND-APL-1L-ATRA-ATO-IDA do_not_do)
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-APL-FRAILTY-AGE
+    if_true:
+      result: IND-APL-1L-ATRA-ATO
+    if_false:
+      next_step: 4
+
+  # Step 4 — default low/intermediate-risk → ATRA + ATO
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Sanz low or intermediate risk (WBC ≤10)"
+    if_true:
+      result: IND-APL-1L-ATRA-ATO
+    if_false:
+      result: IND-APL-1L-ATRA-ATO
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-25"
+notes: >
+  ATRA initiation is parallel to algorithm execution (clinical
+  suspicion → bedside ATRA, then this algorithm refines the
+  consolidation regimen). RF-APL-TRANSFORMATION-PROGRESSION and
+  RF-APL-ORGAN-DYSFUNCTION + RF-APL-INFECTION-SCREENING are
+  "investigate"-direction flags and surface as annotations.
+  STUB — requires clinical co-lead signoff.

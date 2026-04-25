@@ -1,0 +1,77 @@
+id: REG-AML-7-3
+name: "7+3 Induction (cytarabine + daunorubicin/idarubicin) ± midostaurin"
+name_ua: "Індукція 7+3 (цитарабін + даунорубіцин/ідарубіцин) ± мідостаурин"
+alternate_names:
+  - "7+3"
+  - "7+3+midostaurin (FLT3+)"
+  - "DA (daunorubicin + Ara-C)"
+  - "IA (idarubicin + Ara-C)"
+
+components:
+  - drug_id: DRUG-CYTARABINE
+    dose: "100-200 mg/m²/day"
+    schedule: "continuous IV infusion days 1-7"
+    route: IV
+  - drug_id: DRUG-DAUNORUBICIN
+    dose: "60-90 mg/m² (or idarubicin 12 mg/m² as alternative)"
+    schedule: "IV bolus days 1-3"
+    route: IV
+  - drug_id: DRUG-MIDOSTAURIN
+    dose: "50 mg PO BID — ONLY if FLT3-ITD/TKD positive"
+    schedule: "days 8-21 of induction (and continuation through consolidation + maintenance)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "1 induction (re-induction if not in CR after day 14 BM); then 3-4 consolidation HiDAC cycles for younger fit; alloHCT for adverse-risk or post-CR1 in adverse / intermediate"
+
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetics — moderate-emetogenic prophylaxis (ondansetron + dexamethasone)"
+  - "Allopurinol 300 mg PO daily for TLS prophylaxis until WBC <10K"
+  - "IV hydration ≥3 L/day during d1-3"
+  - "Consider rasburicase if pre-induction uric acid >7.5 mg/dL"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Age ≥60-65 OR comorbidity"
+    modification: "Daunorubicin 60 mg/m² (not 90)"
+    rationale: "Cardiotoxicity + treatment-related mortality higher in elderly with high-dose anthracycline"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-AML-2022
+  - condition: "Cardiac dysfunction borderline (LVEF 40-50%)"
+    modification: "Consider idarubicin 12 mg/m² over daunorubicin OR de-escalate to ven+aza"
+    rationale: "Anthracycline cardiotoxicity in baseline reduced LVEF"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "FLT3 status pending at day 1"
+    modification: "Initiate 7+3 d1-7; add midostaurin from day 8 once FLT3 result available; do NOT delay induction"
+    rationale: "Induction timing > waiting for FLT3 result; midostaurin starts d8 per RATIFY"
+    source_refs:
+      - SRC-RATIFY-STONE-2017
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Cytarabine, daunorubicin, idarubicin all НСЗУ-reimbursed for AML. Midostaurin NOT reimbursed — major access barrier for FLT3+ patients."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+  - SRC-RATIFY-STONE-2017
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L for fit-for-intensive AML. Add midostaurin if FLT3-ITD/TKD+
+  (RATIFY: improved 4-y OS 51% vs 44%). Day-14 BM check at end of induction;
+  if blasts persist → re-induction. Consolidation HiDAC 3 g/m² q12h d1, 3, 5
+  for 3-4 cycles in young fit favorable / intermediate-risk; alloHCT for
+  adverse-risk in CR1. STUB — requires clinical co-lead signoff before
+  publication.

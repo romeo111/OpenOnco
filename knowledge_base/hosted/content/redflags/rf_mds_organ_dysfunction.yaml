@@ -1,0 +1,44 @@
+id: RF-MDS-ORGAN-DYSFUNCTION
+definition: "MDS patient with organ dysfunction limiting therapy: ECOG ≥3, severe renal impairment (CrCl <30), hepatic dysfunction (bilirubin >3× ULN), or cardiac dysfunction (LVEF <40%, NYHA III-IV)"
+definition_ua: "Пацієнт з МДС та дисфункцією органів, що обмежує терапію: ECOG ≥3, тяжке ниркове ураження (CrCl <30), печінкова дисфункція (білірубін >3× ВМН) або серцева дисфункція (LVEF <40%, NYHA III-IV)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "ecog_performance_status"
+      threshold: 3
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "total_bilirubin_ulnratio"
+      threshold: 3
+      comparator: ">"
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: "<"
+    - finding: "nyha_class"
+      threshold: 3
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-MDS-LR
+  - DIS-MDS-HR
+shifts_algorithm:
+  - ALGO-MDS-HR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers de-escalation in MDS-HR (skip alloHCT track; consider lower
+  HMA dose or supportive care only) and in MDS-LR (avoid lenalidomide
+  if severe renal impairment; avoid ESA if uncontrolled HTN). CrCl <30
+  also drives lenalidomide dose reduction + careful HMA dosing.
+  STUB — requires clinical co-lead signoff.

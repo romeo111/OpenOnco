@@ -1,0 +1,40 @@
+id: RF-PMF-BLAST-PROGRESSION
+definition: "PMF progressing toward AML (blasts in PB ≥10% accelerated, ≥20% blast-phase / post-MPN AML), rapid splenic enlargement, or rising LDH — re-stage with BM, accelerate alloHCT, consider AML-style therapy if blast-phase"
+definition_ua: "ПМФ з прогресією до ГМЛ (бласти в ПК ≥10% акселерована фаза, ≥20% бластна фаза / пост-MPN ГМЛ), швидкого збільшення селезінки або підвищення ЛДГ — повторне стадіювання з КМ, прискорення аллоТГСК, при бластній фазі — схеми по типу ГМЛ"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "blasts_pb_pct"
+      threshold: 10
+      comparator: ">="
+    - finding: "blasts_bm_pct"
+      threshold: 10
+      comparator: ">="
+    - finding: "post_mpn_aml"
+      value: true
+    - finding: "rapid_splenomegaly_progression"
+      value: true
+    - finding: "ldh_ulnratio"
+      threshold: 5
+      comparator: ">"
+
+clinical_direction: intensify
+
+severity: critical
+category: transformation-progression
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm:
+  - ALGO-PMF-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+
+last_reviewed: "2026-04-25"
+notes: >
+  Post-MPN AML has dismal prognosis (~5-month median OS); ven+aza
+  achieves modest response. Most patients with ≥10% PB blasts and
+  fit-enough biology should be on accelerated alloHCT trajectory.
+  STUB — requires clinical co-lead signoff.

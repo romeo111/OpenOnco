@@ -1,0 +1,34 @@
+id: RF-CML-T315I-MUTATION
+definition: "CML with T315I gatekeeper mutation in the BCR-ABL1 kinase domain — resistant to all 1st/2nd-gen TKIs; requires ponatinib or asciminib (STAMP)"
+definition_ua: "Хронічна мієлоїдна лейкемія з мутацією T315I у кіназному домені BCR-ABL1 — резистентність до всіх ТКІ 1-го та 2-го поколінь; потребує понатинібу або асцимінібу (STAMP)"
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "bcr_abl_t315i"
+      value: true
+    - finding: "kinase_domain_mutation"
+      value: "T315I"
+
+clinical_direction: intensify
+
+severity: critical
+category: high-risk-biology
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm:
+  - ALGO-CML-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  T315I emergence on imatinib / 2nd-gen TKI mandates switch to ponatinib
+  (full-dose 45 mg → response-adjusted to 15 mg per OPTIC) or asciminib
+  STAMP (response rates ~50% in T315I-positive). Both NOT registered in
+  Ukraine — major access barrier. AlloHCT remains alternative for fit
+  patients without ponatinib/asciminib access. Mandatory kinase-domain
+  resistance mutation screening at TKI failure or suboptimal response per
+  ELN 2020 milestones. STUB — requires clinical co-lead signoff.

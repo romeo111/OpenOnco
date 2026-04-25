@@ -1,0 +1,69 @@
+id: REG-RUX-PMF
+name: "Ruxolitinib (PMF — symptomatic splenomegaly / constitutional symptoms)"
+name_ua: "Руксолітиніб (ПМФ — симптоматична спленомегалія / конституційні симптоми)"
+alternate_names:
+  - "Jakafi MF"
+  - "COMFORT-I/II regimen"
+
+components:
+  - drug_id: DRUG-RUXOLITINIB
+    dose: "Start by baseline platelet count: plt 50-100K → 5 mg BID; 100-200K → 15 mg BID; >200K → 20 mg BID. Titrate by toxicity (max 25 mg BID)."
+    schedule: "continuous PO twice daily; NEVER abrupt-stop (taper)"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Lifelong (or until alloHCT bridge or progression)"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-treatment HBV / HCV / HIV / TB screening (MANDATORY before any JAKi)"
+  - "HSV / VZV prophylaxis (acyclovir 400 mg BID) if prior shingles or shingles risk"
+  - "Antiviral prophylaxis (entecavir / tenofovir) if HBsAg+ or anti-HBc+"
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Plt <50K during therapy"
+    modification: "Hold or reduce ruxolitinib (consider pacritinib if persistent severe thrombocytopenia, no dose adjust required)"
+    rationale: "Thrombocytopenia is dose-limiting; pacritinib is off-label option for this scenario"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-COMFORT-I-VERSTOVSEK-2012
+  - condition: "Anemia worsening (Hb <8 or transfusion-dependence)"
+    modification: "Consider switch to momelotinib (MOMENTUM) if anemia is dominant problem"
+    rationale: "Ruxolitinib worsens anemia; momelotinib's ACVR1 inhibition improves Hb"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Discontinuation needed"
+    modification: "Taper over 1-2 weeks; consider parallel low-dose steroid coverage if abrupt withdrawal unavoidable"
+    rationale: "Cytokine rebound — splenomegaly flare + sepsis-like syndrome reported, sometimes fatal"
+    source_refs:
+      - SRC-COMFORT-I-VERSTOVSEK-2012
+  - condition: "Strong CYP3A4 inhibitor (azole)"
+    modification: "Reduce ruxolitinib by 50%"
+    rationale: "CYP3A4 substrate"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Ruxolitinib registered but NOT НСЗУ-reimbursed for MF — major access barrier."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-COMFORT-I-VERSTOVSEK-2012
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L symptom-directed therapy for symptomatic PMF (and post-PV/ET
+  MF). COMFORT-I/II: ≥35% spleen-volume reduction in ~42% vs 0.7%
+  placebo; symptom improvement; pooled OS benefit suggested. Does NOT
+  eliminate clone or alter natural history of fibrosis. AlloHCT remains
+  the only curative option for fit intermediate-2 / high-risk patients.
+  Momelotinib (MOMENTUM) preferred if anemia dominant; fedratinib
+  (FREEDOM-2) 2L; pacritinib for severe thrombocytopenia. NEVER
+  abrupt-stop. STUB — requires clinical co-lead signoff before
+  publication.

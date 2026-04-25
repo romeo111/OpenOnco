@@ -1,0 +1,43 @@
+id: RF-MDS-HIGH-RISK-IPSS
+definition: "MDS escalates from lower-risk to higher-risk classification by IPSS-R (high / very high, >4.5 points) or IPSS-M (High / Very High) — treatment intent shifts from cytopenia management to disease modification + alloHCT bridging"
+definition_ua: "МДС переходить з категорії низького до високого ризику за IPSS-R (high / very high, >4.5 балів) або IPSS-M (High / Very High) — лікувальна тактика змінюється з керування цитопенією на модифікацію хвороби + bridge до аллоТГСК"
+
+trigger:
+  type: risk_score
+  any_of:
+    - finding: "ipss_r_category"
+      value: "high"
+    - finding: "ipss_r_category"
+      value: "very_high"
+    - finding: "ipss_m_category"
+      value: "High"
+    - finding: "ipss_m_category"
+      value: "Very_High"
+    - finding: "bm_blasts_pct"
+      threshold: 10
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: critical
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MDS-LR
+  - DIS-MDS-HR
+shifts_algorithm:
+  - ALGO-MDS-LR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers shift from MDS-LR algorithm (ESA → luspatercept → lenalidomide
+  for del 5q) to MDS-HR algorithm (HMA azacitidine 1L + alloHCT bridge in
+  eligible patients). IPSS-M reclassifies ~46% of patients vs IPSS-R
+  (Bernard et al. 2022) — both are accepted; IPSS-M preferred when
+  molecular data available. The flag also triggers when bm_blasts >= 10%
+  (MDS-IB2 / MDS-EB-2) regardless of IPSS-R math, because that morphology
+  alone qualifies as higher-risk. STUB — requires clinical co-lead signoff.

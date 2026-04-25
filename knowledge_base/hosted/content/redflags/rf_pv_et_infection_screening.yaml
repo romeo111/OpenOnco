@@ -1,0 +1,39 @@
+id: RF-PV-ET-INFECTION-SCREENING
+definition: "PV / ET patient with positive HBV serology, latent TB, or chronic infection — primarily relevant if planning ruxolitinib (HBV reactivation; TB reactivation reported) or interferon-α (relative contraindication for active hepatitis without expert co-management)"
+definition_ua: "Пацієнт з PV / ET та позитивною HBV-серологією, латентним ТБ або хронічною інфекцією — релевантно особливо при плануванні руксолітинібу (реактивація HBV; реактивація ТБ описана) або інтерферону-α (відносне протипоказання при активному гепатиті без експертного супроводу)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "latent_tb"
+      value: true
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+category: infection-screening
+relevant_diseases:
+  - DIS-PV
+  - DIS-ET
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — workup-prerequisite annotation. HU itself
+  is not strongly immunosuppressive, so infection-screening is mostly
+  a forward-looking concern for ruxolitinib (RESPONSE 2L) or
+  interferon-α (preferred for pregnancy / younger patients). HBV /
+  TB screening before JAKi initiation per NCCN. STUB — requires
+  clinical co-lead signoff.

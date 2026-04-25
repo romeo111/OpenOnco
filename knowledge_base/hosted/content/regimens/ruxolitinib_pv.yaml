@@ -1,0 +1,63 @@
+id: REG-RUX-PV
+name: "Ruxolitinib (PV — HU-resistant / intolerant)"
+name_ua: "Руксолітиніб (PV — HU-резистентність / непереносимість)"
+alternate_names:
+  - "Jakafi PV"
+  - "RESPONSE regimen"
+
+components:
+  - drug_id: DRUG-RUXOLITINIB
+    dose: "10 mg PO BID — start; titrate to Hct <45% + WBC + plt control (max 25 mg BID)"
+    schedule: "continuous PO twice daily; do NOT abrupt-stop (cytokine rebound)"
+    route: PO
+  - drug_id: DRUG-ASPIRIN
+    dose: "81-100 mg PO daily"
+    schedule: "continuous"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Lifelong; phlebotomy may still be required intermittently"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-treatment HBV / HCV / HIV / TB screening (mandatory before any JAKi)"
+  - "Antiviral prophylaxis (entecavir / tenofovir) if HBsAg+ or anti-HBc+"
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Severe anemia or thrombocytopenia"
+    modification: "Reduce by 5 mg BID; transfuse as needed"
+    rationale: "Dose-related cytopenias"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-RESPONSE-VANNUCCHI-2015
+  - condition: "Strong CYP3A4 inhibitor co-administration"
+    modification: "Reduce ruxolitinib by 50%"
+    rationale: "CYP3A4 substrate"
+  - condition: "Discontinuation needed"
+    modification: "Taper over 1-2 weeks (NEVER abrupt)"
+    rationale: "Withdrawal cytokine rebound — splenomegaly + symptom flare can be life-threatening"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Ruxolitinib registered but NOT НСЗУ-reimbursed for PV — major access barrier. ASA reimbursed."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  2L PV after HU resistance / intolerance per ELN criteria. RESPONSE
+  trial: composite Hct + spleen response 21% vs 1% with best available
+  therapy. NEVER abrupt-stop — taper over ≥1-2 weeks. HBV / TB / HSV
+  screening mandatory pre-initiation. STUB — requires clinical co-lead
+  signoff before publication.

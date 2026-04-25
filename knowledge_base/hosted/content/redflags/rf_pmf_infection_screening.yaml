@@ -1,0 +1,39 @@
+id: RF-PMF-INFECTION-SCREENING
+definition: "PMF patient with positive HBV / HCV / HIV serology, latent TB, or active uncontrolled infection — ruxolitinib and other JAKi associated with HBV reactivation, TB reactivation, opportunistic infections; mandatory pre-JAKi screening + active prophylaxis"
+definition_ua: "Пацієнт з ПМФ з позитивною серологією HBV / HCV / HIV, латентним ТБ або активною неконтрольованою інфекцією — руксолітиніб та інші JAKi асоційовані з реактивацією HBV, ТБ, опортуністичними інфекціями; обов'язковий скринінг + активна профілактика"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "latent_tb"
+      value: true
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+category: infection-screening
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-COMFORT-I-VERSTOVSEK-2012
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "hold" — surfaces a JAKi-prerequisite annotation. JAK
+  inhibitors carry a real (if uncommon) risk of HBV reactivation,
+  TB reactivation, and opportunistic infections (PJP, cryptococcal).
+  Screening + prophylaxis must be in place before initiation. STUB —
+  requires clinical co-lead signoff.

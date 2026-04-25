@@ -1,0 +1,38 @@
+id: RF-MDS-TRANSFORMATION-PROGRESSION
+definition: "MDS progressing to AML (≥20% blasts) or accelerated MDS-IB2 with rapid progression on HMA — switch to AML algorithm or escalate to ven+aza / intensive chemo + alloHCT bridge"
+definition_ua: "МДС, що трансформується в ГМЛ (≥20% бластів) або акселерована MDS-IB2 з швидкою прогресією на ГМА — перехід на алгоритм ГМЛ або ескалація до вен+аза / інтенсивної хіміотерапії + bridge до аллоТГСК"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "bm_blasts_pct"
+      threshold: 20
+      comparator: ">="
+    - finding: "hma_failure"
+      value: true
+    - finding: "rapid_blast_increase"
+      value: true
+    - finding: "mds_to_aml_transformation"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+category: transformation-progression
+relevant_diseases:
+  - DIS-MDS-LR
+  - DIS-MDS-HR
+shifts_algorithm:
+  - ALGO-MDS-HR-1L
+  - ALGO-MDS-LR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  ≥20% blasts = AML by WHO 2022; switch to AML algorithm. HMA failure
+  in MDS-HR has dismal prognosis (~6-month median OS without alloHCT);
+  ven+aza or intensive chemo + alloHCT bridge are the rescue options.
+  STUB — requires clinical co-lead signoff.

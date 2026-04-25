@@ -1,0 +1,39 @@
+id: RF-APL-FRAILTY-AGE
+definition: "APL patient elderly (age ≥70) or frail (ECOG ≥2 with comorbidities) — chemo-free ATRA + ATO is preferred even for high-risk if anthracycline tolerance is concerning; toxicity profile of AIDA poorly tolerated >70"
+definition_ua: "Пацієнт з ГПЛ літнього віку (≥70) або з низьким функціональним статусом (ECOG ≥2 + коморбідності) — безхіміотерапевтична схема ATRA + ATO переважна навіть для високого ризику якщо переносимість антрациклінів сумнівна; AIDA погано переноситься після 70"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 70
+      comparator: ">="
+    - finding: "apl_frail_unfit"
+      value: true
+    - all_of:
+        - finding: "ecog_performance_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidities_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+category: frailty-age
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm:
+  - ALGO-APL-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers preference for ATRA + ATO over AIDA-style regimens even in
+  high-risk APL when patient cannot tolerate idarubicin. Outcomes in
+  elderly APL still favorable with ATO-based regimens. STUB — requires
+  clinical co-lead signoff.

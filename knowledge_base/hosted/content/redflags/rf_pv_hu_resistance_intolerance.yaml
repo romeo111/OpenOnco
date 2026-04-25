@@ -1,0 +1,37 @@
+id: RF-PV-HU-RESISTANCE-INTOLERANCE
+definition: "PV resistant or intolerant to hydroxyurea per ELN criteria: persistent need for phlebotomy on HU 2 g/day, persistent symptoms, splenomegaly progression, cytopenias at minimum effective HU dose, or HU-related cutaneous ulcers — switch to ruxolitinib (RESPONSE)"
+definition_ua: "Стійкість або непереносимість гідроксикарбаміду при PV за критеріями ELN: потреба в флеботомії на HU 2 г/добу, стійкі симптоми, прогресія спленомегалії, цитопенії на мінімально ефективній дозі HU або шкірні виразки — перехід на руксолітиніб (RESPONSE)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hu_resistance"
+      value: true
+    - finding: "hu_intolerance"
+      value: true
+    - finding: "hu_cutaneous_ulcers"
+      value: true
+    - finding: "hu_dose_max_with_persistent_phlebotomy"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+category: transformation-progression
+relevant_diseases:
+  - DIS-PV
+shifts_algorithm:
+  - ALGO-PV-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  RESPONSE trial established ruxolitinib as 2L for HU-resistant /
+  intolerant PV (Hct + spleen-volume composite primary endpoint
+  21% vs 1%). NOT applicable as 1L (no proven OS benefit over HU).
+  Pegylated interferon-α (ropeginterferon) is alternative 2L /
+  preferred for younger PV but access-limited. STUB — requires
+  clinical co-lead signoff.

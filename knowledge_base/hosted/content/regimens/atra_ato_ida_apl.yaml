@@ -1,0 +1,72 @@
+id: REG-ATRA-ATO-IDA-APL
+name: "ATRA + ATO + Idarubicin (APL high-risk) — modified APL0406 / AIDA-style"
+name_ua: "ATRA + ATO + Ідарубіцин (ГПЛ високого ризику) — модифікована APL0406 / AIDA-схема"
+alternate_names:
+  - "ATRA+ATO+IDA"
+  - "Triplet APL induction high-risk"
+  - "AIDA + ATO"
+
+components:
+  - drug_id: DRUG-ATRA
+    dose: "45 mg/m²/day PO (divided BID with food)"
+    schedule: "continuous from day 1 until CR; then per consolidation"
+    route: PO
+  - drug_id: DRUG-ATO
+    dose: "0.15 mg/kg/day"
+    schedule: "IV daily until CR; then per consolidation"
+    route: IV
+  - drug_id: DRUG-IDARUBICIN
+    dose: "12 mg/m²"
+    schedule: "IV days 2, 4, 6, 8 (4 doses during induction)"
+    route: IV
+
+cycle_length_days: null
+total_cycles: "Induction to CR + 2-3 consolidation cycles (anthracycline-based) ± maintenance"
+
+toxicity_profile: severe
+
+premedication:
+  - "Prophylactic dexamethasone 10 mg IV BID (mandatory in high-risk for DS prophylaxis)"
+  - "Aggressive electrolyte repletion (K+ >4.0, Mg2+ >1.8) for ATO"
+  - "Daily ECG during ATO; baseline + serial echo for anthracycline (LVEF)"
+  - "Hyperleukocytosis management at presentation: hydroxyurea 500-1000 mg BID PO; consider leukapheresis if WBC >100K"
+  - "Aggressive DIC management (transfusion plt to >50K, fibrinogen >150)"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTc >500 ms (ATO)"
+    modification: "Hold ATO; correct electrolytes; resume at lower dose"
+    rationale: "Torsades risk"
+    source_refs:
+      - SRC-ELN-APL-2019
+  - condition: "Cardiac dysfunction (LVEF <50%) precluding idarubicin"
+    modification: "Switch to alternative regimen — classic AIDA ATRA + idarubicin, or ATRA + ATO chemo-free with intensified DS prophylaxis (off-label)"
+    rationale: "Anthracycline cardiotoxicity"
+    source_refs:
+      - SRC-ELN-APL-2019
+  - condition: "Differentiation syndrome (active)"
+    modification: "Dexamethasone 10 mg IV BID; consider temporary ATRA/ATO hold; do NOT routinely hold idarubicin"
+    rationale: "DS management standard"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All three components НСЗУ-reimbursed for APL. Idarubicin and daunorubicin are interchangeable as anthracycline component."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-25"
+notes: >
+  1L for high-risk APL (Sanz WBC >10) per ELN 2019. ATRA + ATO + idarubicin
+  is preferred when ATO available; classic AIDA (ATRA + idarubicin alone)
+  is acceptable alternative without ATO. Hyperleukocytosis-related DS
+  prophylaxis and DIC management are mandatory. Cumulative anthracycline
+  dose tracking. Pregnancy gating mandatory (all 3 agents teratogenic).
+  STUB — requires clinical co-lead signoff before publication.

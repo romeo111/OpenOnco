@@ -1,0 +1,76 @@
+id: REG-2GEN-TKI-CML
+name: "2nd-generation TKI (dasatinib OR nilotinib OR bosutinib by comorbidity matrix) — CML chronic phase 1L for high-risk / younger seeking TFR"
+name_ua: "ТКІ 2-го покоління (дазатиніб АБО нілотиніб АБО босутиніб за матрицею коморбідностей) — ХМЛ хронічна фаза 1L для високого ризику / молодших, які прагнуть TFR"
+alternate_names:
+  - "Dasatinib 1L"
+  - "Nilotinib 1L"
+  - "Bosutinib 1L"
+  - "2nd-gen TKI 1L"
+
+components:
+  - drug_id: DRUG-DASATINIB
+    dose: "100 mg PO once daily — DEFAULT for low-CV-risk; AVOID if pulmonary disease"
+    schedule: "continuous; lifelong unless TFR achieved"
+    route: PO
+  - drug_id: DRUG-NILOTINIB
+    dose: "300 mg PO BID on empty stomach (≥1 h before / ≥2 h after meals) — DEFAULT for low-CV-risk + no pancreatitis history; AVOID if CV disease, DM, hyperlipidemia"
+    schedule: "continuous"
+    route: PO
+  - drug_id: DRUG-BOSUTINIB
+    dose: "400 mg PO once daily with food — for patients with CV comorbidity precluding nilotinib AND pulmonary precluding dasatinib"
+    schedule: "continuous"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Continuous; check BCR-ABL1 IS at 3, 6, 12 months; TFR attempt after ≥3 years if sustained DMR ≥2 years"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Dasatinib: with or without food; AVOID PPIs/H2 blockers (separate by ≥2 h or use antacids only)"
+  - "Nilotinib: STRICT empty stomach (≥1 h before, ≥2 h after meals); baseline + serial ECG (boxed QT warning); AVOID PPIs/H2 blockers"
+  - "Bosutinib: with food (reduces GI); separate from PPIs by ≥6 h"
+  - "Baseline ECG, lipid panel, glucose for nilotinib; baseline echo / pulmonary assessment for dasatinib"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Severe pleural effusion on dasatinib"
+    modification: "Hold dasatinib; diuresis ± thoracentesis; resume at 50 mg daily OR switch TKI"
+    rationale: "Pleural effusion is dose-related dasatinib-specific AE"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-ELN-CML-2020
+  - condition: "PAOD / MI / stroke on nilotinib"
+    modification: "Discontinue nilotinib permanently; switch to imatinib OR bosutinib + cardiology consult"
+    rationale: "Vascular toxicity is dose-cumulative and may be irreversible"
+    source_refs:
+      - SRC-ELN-CML-2020
+  - condition: "Severe diarrhea on bosutinib"
+    modification: "Anti-diarrheal (loperamide); reduce bosutinib to 300 mg if recurrent"
+    rationale: "Diarrhea is dose-limiting bosutinib AE; usually improves over time"
+    source_refs:
+      - SRC-ELN-CML-2020
+  - condition: "QTc >500 ms (nilotinib)"
+    modification: "Hold nilotinib; correct K+/Mg2+; resume at lower dose with daily ECG"
+    rationale: "Boxed QT warning for nilotinib"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Dasatinib and nilotinib НСЗУ-reimbursed for CML 1L+. Bosutinib NOT registered in Ukraine — substantial access barrier."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ESMO-CML-2017
+
+last_reviewed: "2026-04-25"
+notes: >
+  This regimen entry intentionally bundles dasatinib / nilotinib / bosutinib
+  as one Indication-mapped option. Selection per ELN 2020 comorbidity
+  matrix (see notes in DRUG entries). Faster early molecular response vs
+  imatinib (DASISION, ENESTnd, BFORE trials) but no consistent OS benefit
+  — choice driven by treatment goal (TFR ambition) + comorbidity.
+  Asciminib (STAMP) and ponatinib reserved for resistance / T315I.
+  STUB — requires clinical co-lead signoff before publication.

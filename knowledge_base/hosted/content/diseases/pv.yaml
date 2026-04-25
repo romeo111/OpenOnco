@@ -1,0 +1,59 @@
+id: DIS-PV
+names:
+  preferred: "Polycythemia Vera"
+  ukrainian: "Справжня поліцитемія"
+  english: "Polycythemia Vera"
+  synonyms:
+    - "PV"
+    - "Polycythemia rubra vera"
+    - "Erythremia"
+    - "Хвороба Вакеза"
+
+codes:
+  icd_o_3_morphology: "9950/3"
+  icd_o_3_topography: ["C42.1"]
+  icd_10: "D45"
+  snomed_ct: null
+  who_classification: "Polycythaemia vera (PV) — Ph-negative myeloproliferative neoplasm (per WHO 5th ed.)"
+
+archetype: risk_stratified
+lineage: myeloid_neoplasm
+
+etiological_factors:
+  - "JAK2 V617F mutation in ~95% — defining driver"
+  - "JAK2 exon 12 mutation in ~3-4% (typically isolated erythrocytosis phenotype)"
+  - "Triple-negative PV essentially does not exist (unlike ET/PMF)"
+  - "Sporadic; rare familial clustering"
+
+related_diseases:
+  - "DIS-ET"     # related Ph-negative MPN
+  - "DIS-PMF"    # post-PV MF transformation in ~10-15% over decade
+  - "DIS-AML"    # late transformation in ~5-10%
+
+epidemiology:
+  context: >
+    Median age ~60. Annual incidence ~1-2 per 100,000. Slight male
+    predominance. Clinical course dominated by thrombotic risk (arterial
+    + venous; abdominal vein thrombosis pattern); AML transformation
+    relatively rare but cumulative; post-PV MF in ~10-15% over 15 years.
+    Risk stratification: high risk if age >60 OR prior thrombosis;
+    otherwise low risk. ELN 2018 PV risk-stratification adds leukocytosis
+    (WBC ≥11) as supplementary risk factor.
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+reviewers: []
+notes: >
+  Authored as a separate disease from ET (rather than a single combined
+  PV-ET YAML). Rationale (per myeloid expansion commit message): JAK2
+  V617F prevalence is essentially universal in PV (~95%) but only ~50%
+  in ET; thrombotic-risk drivers differ (Hct + RBC mass in PV vs platelet
+  count + JAK2 + age in ET); 1L cytoreduction shares HU but PV adds
+  mandatory phlebotomy + low-dose ASA baseline AND ruxolitinib has a PV
+  indication (RESPONSE) distinct from MF. ET YAML reuses overlapping
+  RFs but has its own algorithm. STUB — requires clinical co-lead signoff
+  before publication. Myeloid expansion (heme).

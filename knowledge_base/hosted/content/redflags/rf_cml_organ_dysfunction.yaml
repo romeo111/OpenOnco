@@ -1,0 +1,45 @@
+id: RF-CML-ORGAN-DYSFUNCTION
+definition: "CML patient with comorbidity excluding specific 2nd-gen TKIs: significant cardiovascular disease (PAOD, prior MI/stroke, uncontrolled HTN — avoid nilotinib/ponatinib), pulmonary disease (COPD, prior pleural disease — avoid dasatinib), severe GI disease (avoid bosutinib), pancreatitis history (avoid nilotinib)"
+definition_ua: "Пацієнт з ХМЛ та коморбідністю, що виключає певні ТКІ 2-го покоління: значуща серцево-судинна патологія (PAOD, перенесений ІМ/інсульт, неконтрольована гіпертензія — уникати нілотинібу/понатинібу), легенева патологія (ХОЗЛ, попередня плевральна патологія — уникати дазатинібу), важка ГІ-патологія (уникати босутинібу), панкреатит в анамнезі (уникати нілотинібу)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "cv_high_risk"
+      value: true
+    - finding: "prior_mi_or_stroke"
+      value: true
+    - finding: "peripheral_arterial_disease"
+      value: true
+    - finding: "pulmonary_disease_significant"
+      value: true
+    - finding: "prior_pleural_effusion"
+      value: true
+    - finding: "pancreatitis_history"
+      value: true
+    - finding: "ibd_or_severe_diarrhea"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces comorbidity-matched TKI choice as a
+  supplementary annotation rather than a binary indication switch. ELN 2020
+  comorbidity matrix:
+    - CV disease / hyperlipidemia / DM → AVOID nilotinib + ponatinib
+    - Pulmonary / pleural disease → AVOID dasatinib
+    - GI disease (IBD, baseline diarrhea) → AVOID bosutinib
+    - Pancreatitis / hepatic dysfunction → AVOID nilotinib
+    - Default low-comorbidity → imatinib (cost) or dasatinib/nilotinib (response)
+  STUB — requires clinical co-lead signoff.

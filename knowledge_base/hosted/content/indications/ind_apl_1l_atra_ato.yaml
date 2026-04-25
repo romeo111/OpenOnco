@@ -1,0 +1,105 @@
+id: IND-APL-1L-ATRA-ATO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-APL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+    apl_sanz_risk_low_or_intermediate: true
+
+recommended_regimen: REG-ATRA-ATO-APL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~99% complete remission (APL0406: ATRA+ATO arm)"
+  complete_response: "~99% post-induction"
+  progression_free_survival: "2-y EFS 97% (APL0406)"
+  overall_survival_5y: "~95-99% in low/intermediate-risk treated with ATRA + ATO"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-APL-EMERGENCY-DIC
+  - RF-APL-HIGH-RISK-BIOLOGY
+  - RF-APL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Standard 1L for low-risk and intermediate-risk APL (Sanz: WBC ≤10).
+  Chemotherapy-free ATRA + ATO per APL0406 / LO-CoCo: 2-y EFS 97% vs
+  86% (ATRA + chemo / AIDA), 2-y OS 99% vs 91%. ATRA initiated
+  IMMEDIATELY at clinical APL suspicion (don't wait for cytogenetic
+  confirmation — early-death from bleeding is dominant APL mortality).
+  Daily ECG + electrolyte monitoring during ATO induction. DS prophylaxis
+  with dexamethasone if rising WBC.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "ATRA + ATO is preferred 1L for low/intermediate-risk APL"
+  - source_id: SRC-ELN-APL-2019
+    position: supports
+    relevant_quote_paraphrase: "ATRA + ATO is recommended 1L for low/intermediate-risk APL; chemotherapy-free regimen"
+  - source_id: SRC-APL0406-LOCOCO-2013
+    position: supports
+    relevant_quote_paraphrase: "APL0406 phase-3 trial: ATRA + ATO superior to ATRA + chemotherapy in low/intermediate-risk APL"
+
+do_not_do:
+  - "Не чекати цитогенетичне підтвердження PML-RARα щоб почати ATRA — клінічна підозра + типовий smear/DIC = негайно ATRA."
+  - "Не пропускати DS-профілактику стероїдами при рості WBC під час індукції — DS — провідна причина смертності в індукції."
+  - "Не починати ATO без daily ECG + електролітної корекції (K+ >4.0, Mg2+ >1.8) — risk torsades."
+  - "Не призначати без виключення вагітності + 2 методів контрацепції — ATRA та ATO обидва тератогенні."
+  - "Не призначати antrachycline-вмісні regimen якщо patient — low-risk (WBC ≤10) — APL0406 показав, що chemo-free ATRA + ATO кращий."
+  - "Не пропускати DIC management при дебюті — fibrinogen target >150, plt target >30-50K, INR <1.5."
+
+known_controversies:
+  - topic: "Maintenance therapy after consolidation in low/intermediate-risk APL"
+    positions:
+      - position: "No maintenance needed for low/intermediate-risk treated with ATRA + ATO + MRD-negative at end of consolidation (APL0406)"
+        sources:
+          - SRC-APL0406-LOCOCO-2013
+      - position: "Some protocols add ATRA / 6-MP / MTX maintenance even for low-risk"
+        sources:
+          - SRC-ELN-APL-2019
+    our_default: "No maintenance for low/intermediate-risk MRD-negative; maintenance for high-risk per protocol"
+    rationale: "APL0406 + LO-CoCo demonstrated equivalent / superior outcomes without maintenance in low-risk"
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STANDARD track for low/intermediate-risk APL. time_critical: true
+  reflects CHARTER §15.2 C2 — APL initial management is partially
+  outside the non-device CDS carve-out (ATRA initiation must be at
+  bedside within hours, not via this tool). OpenOnco scope: workup
+  + plan AFTER initial stabilization. STUB — requires clinical
+  co-lead signoff.

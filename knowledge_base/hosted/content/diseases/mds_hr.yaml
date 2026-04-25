@@ -1,0 +1,60 @@
+id: DIS-MDS-HR
+names:
+  preferred: "Myelodysplastic Syndromes — Higher-Risk (IPSS-R high / very high; includes MDS-EB)"
+  ukrainian: "Мієлодиспластичні синдроми, високий ризик (IPSS-R високий / дуже високий; включає MDS-EB)"
+  english: "Myelodysplastic Syndromes — Higher Risk"
+  synonyms:
+    - "MDS-HR"
+    - "Higher-risk MDS"
+    - "HR-MDS"
+    - "MDS with excess blasts"
+    - "MDS-EB"
+    - "RAEB (legacy FAB)"
+
+codes:
+  icd_o_3_morphology: "9983/3"  # MDS-EB / RAEB
+  icd_o_3_topography: ["C42.1"]
+  icd_10: "D46.2"
+  snomed_ct: null
+  who_classification: "Myelodysplastic neoplasms with increased blasts (MDS-IB1, MDS-IB2 per WHO 5th ed.) — higher-risk subgroup"
+
+archetype: risk_stratified
+lineage: myeloid_neoplasm
+
+etiological_factors:
+  - "TP53 mutations (mono- or biallelic) — defining adverse-risk biology, distinct WHO entity in 5th ed."
+  - "Complex karyotype (≥3 abnormalities); monosomy 7 / del(7q)"
+  - "Increased blast count (5-19% — defines MDS-EB / IB1/IB2)"
+  - "Antecedent CHIP / CCUS / lower-risk MDS"
+  - "Therapy-related etiology especially common (post-cytotoxic, post-radiation)"
+
+related_diseases:
+  - "DIS-MDS-LR"
+  - "DIS-AML"  # ≥20% blasts → AML by WHO; ~30-40% of HR-MDS evolve
+
+epidemiology:
+  context: >
+    ~30-40% of all MDS at diagnosis. Higher-risk = IPSS-R high / very high
+    (>4.5 points) OR IPSS-M High / Very High. Treatment goal is disease
+    modification + AML-transformation prevention, ideally bridging to
+    alloHCT in eligible patients. Hypomethylating agents (azacitidine,
+    decitabine) are the 1L workhorse; ven+aza is increasingly used in
+    HR-MDS based on extrapolation from VIALE-A but no Phase-3
+    HR-MDS-specific RCT yet. AlloHCT is the only curative option;
+    median age + comorbidity often disqualify.
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+reviewers: []
+notes: >
+  Separated from MDS-LR because therapeutic intent (disease modification +
+  transplant bridge) differs from cytopenia management. WHO 5th ed.
+  reclassifies the older "MDS-EB" / "RAEB" terminology to MDS-IB1
+  (5-9% blasts) and MDS-IB2 (10-19% blasts). TP53-mutated MDS is its
+  own WHO entity with poor HMA + alloHCT outcomes (active research
+  question; no consensus best regimen). STUB — requires clinical co-lead
+  signoff before publication. Myeloid expansion (heme).

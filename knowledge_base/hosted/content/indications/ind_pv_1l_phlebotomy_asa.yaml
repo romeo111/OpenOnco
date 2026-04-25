@@ -1,0 +1,95 @@
+id: IND-PV-1L-PHLEBOTOMY-ASA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PV
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {}
+
+recommended_regimen: REG-HU-PV-ET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Hct target <45% achievable in >90% with phlebotomy ± HU"
+  complete_response: "Spontaneous; symptom + thrombosis-risk reduction"
+  progression_free_survival: "PV-related thrombosis reduced from ~5%/y to <2%/y on aspirin + Hct control"
+  overall_survival_5y: "Median OS ~14-20 years; 5-y OS ~85-90% with proper Hct + risk control"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-ET-HIGH-THROMBOSIS-RISK
+  - RF-PV-HU-RESISTANCE-INTOLERANCE
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-D-DIMER
+  - TEST-COAG-PANEL
+  - TEST-URIC-ACID
+  - TEST-HBV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Standard 1L for low-risk PV (age ≤60 AND no prior thrombosis):
+  phlebotomy to Hct <45% (CYTO-PV trial) + low-dose aspirin 81-100 mg
+  daily. Cytoreduction (HU) added for high-risk patients per
+  RF-PV-ET-HIGH-THROMBOSIS-RISK. Phlebotomy frequency dictated by
+  Hct (typically q-week initially → maintenance q1-3 mo). Iron
+  deficiency from phlebotomy is desired (limits erythropoiesis); do
+  NOT supplement iron unless truly symptomatic.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Phlebotomy + ASA is foundation of PV 1L; HU added for high-risk"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "PV management cornerstone: Hct control + low-dose aspirin; cytoreduction for high-risk"
+
+do_not_do:
+  - "Не пропускати JAK2 V617F testing — діагностичний criterion + може ескалувати risk score."
+  - "Не призначати ASA при extreme thrombocytosis (plt >1500K) без виключення acquired vWD — ризик кровотечі."
+  - "Не пропускати abdominal vein thrombosis screening при дебюті — atypical presentation у PV."
+  - "Не призначати iron supplementation при iron-deficiency від phlebotomy без чіткої клінічної causи — це бажаний ефект."
+  - "Не використовувати full-dose ASA (325 мг) — low-dose (81-100 мг) однаково ефективна з меншим ризиком кровотечі."
+
+known_controversies:
+  - topic: "Hct target <45% for all vs <45% males / <42% females"
+    positions:
+      - position: "Hct <45% for all (CYTO-PV; simpler implementation)"
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: "Hct <42% for women (some European centers)"
+        sources:
+          - SRC-ESMO-MPN-2015
+    our_default: "Hct <45% all (CYTO-PV evidence-based)"
+    rationale: "CYTO-PV phase-3 RCT validated <45% target"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STANDARD track for PV 1L low-risk. STUB — requires clinical co-lead
+  signoff.

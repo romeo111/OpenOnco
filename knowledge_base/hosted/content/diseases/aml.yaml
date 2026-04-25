@@ -1,0 +1,58 @@
+id: DIS-AML
+names:
+  preferred: "Acute Myeloid Leukemia (non-APL)"
+  ukrainian: "Гострий мієлоїдний лейкоз (не-APL)"
+  english: "Acute Myeloid Leukemia"
+  synonyms:
+    - "AML"
+    - "Acute non-lymphocytic leukemia"
+    - "ANLL"
+    - "Гострий мієлобластний лейкоз"
+
+codes:
+  icd_o_3_morphology: "9861/3"  # AML, NOS
+  icd_o_3_topography: ["C42.1"]  # Bone marrow
+  icd_10: "C92.0"
+  snomed_ct: null
+  who_classification: "Acute myeloid leukemia (per WHO 5th ed. / ICC 2022) — non-APL subtypes"
+
+archetype: risk_stratified
+lineage: myeloid_neoplasm
+
+etiological_factors:
+  - "Recurrent cytogenetic abnormalities defining WHO subtypes — t(8;21) RUNX1::RUNX1T1, inv(16) CBFB::MYH11, KMT2A rearrangements, complex karyotype"
+  - "Driver mutations: NPM1 (favorable), FLT3-ITD/TKD, IDH1/IDH2, RUNX1, ASXL1, TP53, biallelic CEBPA, DDX41 (germline predisposition)"
+  - "Therapy-related (post-cytotoxic / post-radiation): ~10-20% of all AML; usually adverse-risk biology"
+  - "Antecedent MDS / MPN / CMML transforming to secondary AML"
+  - "Environmental: benzene, ionizing radiation, smoking (modest)"
+
+related_diseases:
+  - "DIS-APL"            # PML-RARA-defined AML, separate clinical entity
+  - "DIS-MDS-HR"         # frequent precursor
+  - "DIS-MDS-LR"
+  - "DIS-PMF"            # post-MPN AML
+
+epidemiology:
+  context: >
+    Most common acute leukemia in adults. Median age ~68. Annual incidence
+    ~4 per 100,000 overall, rising sharply with age. ELN 2022 risk
+    stratification (favorable / intermediate / adverse) by cytogenetics +
+    molecular drives induction intent + transplant decision. 5-y OS ~30%
+    overall, ~60-70% in favorable-risk young fit, <10% in adverse-risk
+    elderly unfit.
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-25"
+reviewers: []
+notes: >
+  Risk-stratified archetype. The fundamental treatment split is fit-vs-unfit
+  for intensive 7+3 induction (age, comorbidity, ECOG). Within fit
+  patients, FLT3-ITD/TKD adds midostaurin (RATIFY); within unfit, ven+aza
+  (VIALE-A) is now the 1L standard. APL (PML-RARA) is a separate disease
+  with completely different therapy (ATRA + ATO) — see DIS-APL.
+  STUB — requires clinical co-lead signoff before publication. Myeloid
+  expansion (heme) — first myeloid disease end-to-end.

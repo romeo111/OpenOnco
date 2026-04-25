@@ -1,0 +1,40 @@
+id: RF-PV-ET-ORGAN-DYSFUNCTION
+definition: "PV or ET patient with organ dysfunction limiting cytoreductive choice: severe renal impairment (CrCl <30 — limits HU), severe hepatic dysfunction (limits ruxolitinib), or severe cardiac dysfunction (limits anagrelide)"
+definition_ua: "Пацієнт з PV або ET з дисфункцією органів, що обмежує вибір циторедукції: тяжка ниркова недостатність (CrCl <30 — обмежує HU), тяжка печінкова дисфункція (обмежує руксолітиніб) або тяжка серцева дисфункція (обмежує анагрелід)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: "<"
+    - finding: "nyha_class"
+      threshold: 3
+      comparator: ">="
+
+clinical_direction: investigate
+
+severity: major
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PV
+  - DIS-ET
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces dose-modification / agent-substitution
+  annotations, not a binary indication switch. CrCl <30 → reduce HU dose,
+  monitor for myelosuppression. Hepatic dysfunction → reduce/avoid
+  ruxolitinib (CYP3A4 substrate). Cardiac dysfunction → avoid anagrelide
+  (PDE3-inhibitor cardiotoxicity). STUB — requires clinical co-lead
+  signoff.

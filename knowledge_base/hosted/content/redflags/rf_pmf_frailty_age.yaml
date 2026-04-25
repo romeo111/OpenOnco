@@ -1,0 +1,41 @@
+id: RF-PMF-FRAILTY-AGE
+definition: "PMF patient elderly or frail (age ≥75, ECOG ≥3, or HCT-CI ≥4) — alloHCT off the table; symptom-directed therapy (ruxolitinib for splenomegaly + symptoms, momelotinib for anemia, transfusion + supportive care)"
+definition_ua: "Пацієнт з ПМФ літнього віку або з низьким функціональним статусом (вік ≥75, ECOG ≥3, або HCT-CI ≥4) — аллоТГСК поза розглядом; симптом-орієнтована терапія (руксолітиніб для спленомегалії + симптомів, момелотиніб для анемії, трансфузії + підтримуюча терапія)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - finding: "pmf_frail_unfit"
+      value: true
+    - finding: "hct_ci_score"
+      threshold: 4
+      comparator: ">="
+    - all_of:
+        - finding: "ecog_performance_status"
+          threshold: 3
+          comparator: ">="
+        - finding: "comorbidities_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+category: frailty-age
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm:
+  - ALGO-PMF-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+
+last_reviewed: "2026-04-25"
+notes: >
+  AlloHCT TRM in elderly PMF >40-50% — almost always off the table.
+  Symptom-directed JAKi as the dominant track. STUB — requires
+  clinical co-lead signoff.

@@ -1,0 +1,41 @@
+id: RF-MDS-TRANSPLANT-ELIGIBLE
+definition: "MDS-HR patient transplant-eligible: age <70-75 (per local practice), HCT-CI ≤4, adequate organ function, donor available — initiate alloHCT donor search at HMA initiation, not at HMA failure"
+definition_ua: "Пацієнт з MDS-HR, придатний до аллоТГСК: вік <70-75 (за місцевою практикою), HCT-CI ≤4, адекватна функція органів, наявний донор — пошук донора розпочати при ініціації гіпометилюючої терапії, а не при її невдачі"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "transplant_eligible"
+      value: true
+    - all_of:
+        - finding: "age_years"
+          threshold: 70
+          comparator: "<"
+        - finding: "hct_ci_score"
+          threshold: 4
+          comparator: "<="
+        - finding: "ipss_r_category"
+          value: "high"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MDS-HR
+shifts_algorithm:
+  - ALGO-MDS-HR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  AlloHCT is the only curative option for MDS-HR; survival benefit
+  consistently demonstrated in IPSS-R high / very-high. Biological-age
+  + comorbidity + donor + caregiver support determine eligibility, not
+  chronological age alone (HCT-CI / Sorror score is the key tool).
+  Triggers donor search initiation alongside HMA — do NOT wait for
+  HMA failure as donor search takes 3-6 months. STUB — requires clinical
+  co-lead signoff.

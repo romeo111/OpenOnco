@@ -1,0 +1,82 @@
+id: ALGO-AML-1L
+applicable_to_disease: DIS-AML
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line AML based on
+  fitness for intensive 7+3 induction (age, comorbidity, ECOG) and
+  emergency / disease-modifier flags. Outputs the two-plan pair: VEN+AZA
+  (standard / unfit default) vs 7+3 ± midostaurin (aggressive / fit
+  default). FLT3-ITD/TKD addition of midostaurin is handled at the
+  regimen layer once 7+3 selected.
+
+output_indications:
+  - IND-AML-1L-VEN-AZA
+  - IND-AML-1L-7-3
+
+default_indication: IND-AML-1L-VEN-AZA
+alternative_indication: IND-AML-1L-7-3
+
+decision_tree:
+  # Step 1 — emergency: TLS / leukostasis / hyperleukocytosis HOLD
+  # Bumped priority via RF severity; here the algorithm pins to standard
+  # (lowest-toxicity) but plan generation should also surface the
+  # emergency workup separately.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+    if_true:
+      result: IND-AML-1L-VEN-AZA
+    if_false:
+      next_step: 2
+
+  # Step 2 — frailty / age / organ dysfunction → ven+aza default
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-FRAILTY-AGE
+        - red_flag: RF-AML-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-AML-1L-VEN-AZA
+    if_false:
+      next_step: 3
+
+  # Step 3 — high-risk biology (TP53, complex karyotype, etc.) — fit
+  # patients escalate to 7+3 (with concurrent alloHCT donor search if
+  # transplant-eligible). Note: high-risk biology in unfit patients
+  # already routed to ven+aza in step 2.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-HIGH-RISK-BIOLOGY
+        - red_flag: RF-AML-FLT3-ACTIONABLE
+        - red_flag: RF-AML-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-AML-1L-7-3
+    if_false:
+      next_step: 4
+
+  # Step 4 — default for fit patients = 7+3
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
+    if_true:
+      result: IND-AML-1L-7-3
+    if_false:
+      result: IND-AML-1L-7-3
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-VIALE-A-DINARDO-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  Fit-vs-unfit triage is the dominant decision. FLT3-ITD/TKD adds
+  midostaurin via REG-AML-7-3 component dose_adjustment, not via
+  separate algorithm branch. Transplant eligibility is a parallel
+  layer captured in regimen + supportive care planning.
+  RF-AML-INFECTION-SCREENING is "investigate"-equivalent and surfaces
+  as an annotation, not a tree branch. STUB — requires clinical co-lead
+  signoff.

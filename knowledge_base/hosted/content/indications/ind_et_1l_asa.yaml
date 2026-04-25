@@ -1,0 +1,92 @@
+id: IND-ET-1L-ASA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ET
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {}
+
+recommended_regimen: REG-HU-PV-ET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Plt control to <400-450K achievable in >80% on HU"
+  complete_response: "Thrombosis-risk reduction; symptom improvement"
+  progression_free_survival: "Thrombosis-related events ~50-60% reduction on HU + ASA in high-risk"
+  overall_survival_5y: "Median OS ~18-20 years; 5-y OS ~90% with proper management"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-ET-HIGH-THROMBOSIS-RISK
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+  - RF-PV-ET-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-D-DIMER
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Standard 1L for low-risk ET (age ≤60 AND no prior thrombosis AND
+  IPSET-thrombosis low/intermediate): low-dose aspirin 81-100 mg daily
+  (avoid in extreme thrombocytosis with acquired vWD). NO cytoreduction
+  needed. Cytoreduction (HU 1L) added for high-risk per
+  RF-PV-ET-HIGH-THROMBOSIS-RISK; anagrelide is 2L per PT-1 trial.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "ASA alone is foundation of low-risk ET; HU added for high-risk"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "Low-risk ET → ASA; high-risk → HU + ASA"
+
+do_not_do:
+  - "Не пропускати JAK2 / CALR / MPL testing — driver-mutation status визначає підтип + IPSET-thrombosis risk."
+  - "Не призначати ASA при extreme thrombocytosis (plt >1500K) без виключення acquired vWD — перевір ristocetin cofactor activity."
+  - "Не пропускати prefibrotic-PMF differential на trephine — однакова презентація, гірший прогноз."
+  - "Не призначати anagrelide 1L — PT-1 trial показав нижче cardiovascular profile + більш бажано HU."
+  - "Не використовувати full-dose ASA — low-dose стандарт."
+
+known_controversies:
+  - topic: "Twice-daily ASA dosing in JAK2+ ET (вплив на arterial thrombosis prevention)"
+    positions:
+      - position: "JAK2+ ET may benefit from BID ASA dosing (small studies suggest residual platelet aggregability after evening hours)"
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: "Once-daily ASA standard; BID experimental"
+        sources:
+          - SRC-ESMO-MPN-2015
+    our_default: "Once-daily ASA standard; BID dosing reserved for confirmed thrombosis on standard regimen"
+    rationale: "BID lacks robust phase-3 evidence"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STANDARD track for ET 1L low-risk. STUB — requires clinical co-lead
+  signoff.

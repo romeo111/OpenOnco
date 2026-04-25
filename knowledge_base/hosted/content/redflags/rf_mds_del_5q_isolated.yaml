@@ -1,0 +1,41 @@
+id: RF-MDS-DEL-5Q-ISOLATED
+definition: "MDS with isolated del(5q) (or del(5q) plus one additional non-7 abnormality) — lenalidomide-responsive subgroup with ~67% RBC transfusion independence; favorable prognosis"
+definition_ua: "МДС з ізольованою del(5q) (або del(5q) плюс одна додаткова не-7 аномалія) — підгрупа, чутлива до леналідоміду, з ~67% досягнення трансфузійної незалежності щодо еритроцитів; сприятливий прогноз"
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "del_5q_isolated"
+      value: true
+    - all_of:
+        - finding: "del_5q"
+          value: true
+        - finding: "monosomy_7"
+          value: false
+        - finding: "del_7q"
+          value: false
+        - finding: "complex_karyotype"
+          value: false
+
+clinical_direction: investigate
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MDS-LR
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces a treatment-option annotation
+  (lenalidomide track) rather than a binary indication switch.
+  Lenalidomide 10 mg/day × 21 days q28d achieves cytogenetic response
+  ~50% + RBC transfusion independence ~67% in del(5q) MDS-LR. Monitor
+  for cytopenias requiring dose reduction. Pregnancy gating mandatory
+  (potent teratogen). TP53 mutation (~20% of del(5q)) co-occurrence
+  predicts resistance + AML transformation. STUB — requires clinical
+  co-lead signoff.

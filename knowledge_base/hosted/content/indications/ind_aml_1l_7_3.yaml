@@ -1,0 +1,105 @@
+id: IND-AML-1L-7-3
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_intensive_chemo: true
+
+recommended_regimen: REG-AML-7-3
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~60-80% complete remission post-induction (favorable to intermediate-risk young fit)"
+  complete_response: "~70% in ELN favorable; ~60% intermediate; ~30-40% adverse"
+  progression_free_survival: "Median ~18 months for intermediate-risk; >5 years if alloHCT in CR1 for adverse-risk fit patients"
+  overall_survival_5y: "~60-70% favorable-risk young fit; ~30-40% intermediate; <20% adverse without alloHCT"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-AML-FRAILTY-AGE
+  - RF-AML-ORGAN-DYSFUNCTION
+  - RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Aggressive 1L for fit AML patients (typically age <70-75, ECOG ≤2,
+  HCT-CI ≤3, no severe organ dysfunction). 7+3 induction (cytarabine
+  100-200 mg/m² CIVI d1-7 + daunorubicin 60-90 mg/m² d1-3 or idarubicin
+  12 mg/m² d1-3); add midostaurin d8-21 if FLT3-ITD/TKD+ per RATIFY.
+  Day-14 BM check; re-induction if blasts persist. Consolidation HiDAC
+  3 g/m² q12h d1, 3, 5 × 3-4 cycles for younger fit; alloHCT in CR1
+  for adverse-risk per ELN 2022 + donor availability.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "7+3 cytarabine + anthracycline is preferred 1L induction for fit AML; add midostaurin for FLT3-mutated"
+  - source_id: SRC-ELN-AML-2022
+    position: supports
+    relevant_quote_paraphrase: "Standard 1L induction for fit AML patients; risk stratification drives post-CR pathway"
+  - source_id: SRC-RATIFY-STONE-2017
+    position: supports
+    relevant_quote_paraphrase: "Midostaurin added to 7+3 + HiDAC improved 4-y OS in FLT3-ITD/TKD AML"
+
+do_not_do:
+  - "Не починати індукцію без baseline echo / LVEF якщо є будь-яка кардіальна підозра — кумулятивна антрациклінова кардіотоксичність може бути фатальною."
+  - "Не чекати результат FLT3 щоб почати d1-d7 цитарабін + антрациклін — мідостаурин починається з дня 8, тому індукція не затримується."
+  - "Не пропускати TLS-профілактику (алопуринол ± расбуриказа) у пацієнтів з високим WBC або високою активністю пухлини."
+  - "Не пропускати HBV/HCV/HIV скринінг до індукції — реактивація HBV на хіміотерапії може бути фатальною."
+  - "Не призначати без обговорення фертильності у молодих пацієнтів — анабольсько-індуковані гонадотоксичність часто незворотна."
+  - "Не починати без валідованого донорського пошуку для ELN-adverse-ризику пацієнтів — alloHCT-вікно швидко закривається."
+
+known_controversies:
+  - topic: "Daunorubicin 60 mg/m² vs 90 mg/m² in younger fit (<60) patients"
+    positions:
+      - position: "Higher-dose 90 mg/m² daunorubicin improves OS in young fit (ECOG-ALL studies)"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Idarubicin 12 mg/m² is alternative anthracycline of equivalent efficacy with arguably lower cardiotoxicity per dose"
+        sources:
+          - SRC-ELN-AML-2022
+    our_default: "Daunorubicin 60 mg/m² for age 60-65, 90 mg/m² for age <60 fit; idarubicin 12 mg/m² as institutional alternative"
+    rationale: "Most data support either; institutional preference + cumulative anthracycline tracking matter most"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  Aggressive track for AML 1L. Fit-vs-unfit triage is the dominant
+  decision; ELN 2022 risk stratification drives post-CR1 pathway
+  (consolidation HiDAC vs alloHCT). FLT3 status drives addition of
+  midostaurin. STUB — requires clinical co-lead signoff.

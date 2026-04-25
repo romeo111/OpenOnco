@@ -1,0 +1,33 @@
+id: RF-PV-ET-FRAILTY-AGE
+definition: "PV or ET patient elderly or frail (age ≥80, ECOG ≥3, multiple comorbidities, life expectancy <5 years) — gentler cytoreduction (lower HU dose), expanded transfusion + monitoring strategy"
+definition_ua: "Пацієнт з PV або ET літнього віку або з низьким функціональним статусом (вік ≥80, ECOG ≥3, множинні коморбідності, очікувана тривалість життя <5 років) — обережніша циторедукція (менша доза HU), розширена трансфузійна та моніторингова стратегія"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "age_years"
+      threshold: 80
+      comparator: ">="
+    - finding: "mpn_frail_unfit"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: minor
+category: frailty-age
+relevant_diseases:
+  - DIS-PV
+  - DIS-ET
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate"-equivalent — surfaces dose-attenuation annotation;
+  does not switch indication. Older patients tolerate HU well long-term
+  but the leukemogenic-conversion concern weighs less; choice often
+  defaults to HU 1L regardless of age. STUB — requires clinical co-lead
+  signoff.

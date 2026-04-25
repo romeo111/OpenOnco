@@ -1,0 +1,74 @@
+id: ALGO-PMF-1L
+applicable_to_disease: DIS-PMF
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line PMF based on
+  DIPSS-Plus risk + symptom burden. Standard = observation + symptom-
+  directed care (low / int-1 risk asymptomatic); aggressive = ruxolitinib
+  (symptomatic int-2 / high-risk; alloHCT bridge for transplant-eligible).
+  AlloHCT is parallel pathway for fit int-2 / high-risk.
+
+output_indications:
+  - IND-PMF-1L-OBSERVATION
+  - IND-PMF-1L-RUXOLITINIB
+
+default_indication: IND-PMF-1L-OBSERVATION
+alternative_indication: IND-PMF-1L-RUXOLITINIB
+
+decision_tree:
+  # Step 1 — blast progression → re-route to AML algorithm conceptually;
+  # algorithm pins to ruxolitinib here as bridge.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-PMF-BLAST-PROGRESSION
+    if_true:
+      result: IND-PMF-1L-RUXOLITINIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — high-risk DIPSS / symptomatic spleen → ruxolitinib
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PMF-HIGH-RISK-DIPSS
+    if_true:
+      result: IND-PMF-1L-RUXOLITINIB
+    if_false:
+      next_step: 3
+
+  # Step 3 — frailty → observation/supportive (no alloHCT; gentler JAKi
+  # if symptomatic)
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-PMF-FRAILTY-AGE
+    if_true:
+      result: IND-PMF-1L-OBSERVATION
+    if_false:
+      next_step: 4
+
+  # Step 4 — default low / int-1 risk = observation + symptom-directed
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Default low / int-1 PMF; symptomatic management as needed"
+    if_true:
+      result: IND-PMF-1L-OBSERVATION
+    if_false:
+      result: IND-PMF-1L-OBSERVATION
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-DIPSS-PLUS-GANGAT-2011
+  - SRC-COMFORT-I-VERSTOVSEK-2012
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-PMF-ANEMIA-DOMINANT, RF-PMF-ORGAN-DYSFUNCTION, RF-PMF-INFECTION-
+  SCREENING are "investigate"-direction flags surfacing as annotations
+  (momelotinib switch for anemia; pacritinib for severe thrombocytopenia;
+  HBV/TB pre-JAKi screening). AlloHCT eligibility is parallel layer
+  surfaced via RF-PMF-HIGH-RISK-DIPSS in fit eligible patients. STUB
+  — requires clinical co-lead signoff.

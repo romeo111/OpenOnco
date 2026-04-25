@@ -1,0 +1,96 @@
+id: IND-PV-1L-HU
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PV
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {}
+
+recommended_regimen: REG-HU-PV-ET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Hct <45% + plt <400K achievable in >80% on HU + phlebotomy"
+  complete_response: "Cytoreduction + thrombosis-risk reduction; clonal burden may decline modestly"
+  progression_free_survival: "Thrombosis-related events reduced ~50-60% on HU vs phlebotomy alone in high-risk"
+  overall_survival_5y: "Median OS ~14-20 years; 5-y OS ~85% with proper cytoreduction"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-HU-RESISTANCE-INTOLERANCE
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+  - RF-PV-ET-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-D-DIMER
+  - TEST-COAG-PANEL
+  - TEST-URIC-ACID
+  - TEST-HBV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Aggressive 1L for high-risk PV (age >60 OR prior thrombosis):
+  HU 500-1500 mg/day (titrate to target Hct <45%, plt <400K) +
+  phlebotomy (intermittent if HU adequate) + low-dose aspirin.
+  Pegylated interferon-α (ropeginterferon for PV — PROUD-PV / CONTI)
+  is alternative cytoreduction with potential disease-modifying
+  activity (clonal allelic burden reduction); access-limited.
+  Ruxolitinib reserved for HU-resistance / intolerance (RESPONSE).
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "HU is preferred 1L cytoreduction for high-risk PV"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "HU is established 1L for high-risk PV / ET; pegylated IFN as alternative"
+
+do_not_do:
+  - "Не пропускати ELN-критерії HU-resistance/intolerance — швидко ескалувати на ruxolitinib (RESPONSE) при відповіді."
+  - "Не призначати HU у пацієнтів з cutaneous ulceration historии — рецидив ulcer ймовірний."
+  - "Не пропускати щомісячний CBC перші 3 місяці — myelosuppression-titrating."
+  - "Не призначати HU при вагітності / планах вагітності — переходити на IFN-α."
+  - "Не комбінувати з peg-IFN-α без чіткого протоколу — дозованість обох змінюється."
+
+known_controversies:
+  - topic: "Pegylated IFN-α (ropeginterferon) vs HU as 1L for high-risk PV in younger patients"
+    positions:
+      - position: "Ropeginterferon (PROUD-PV / CONTI) shows clonal burden reduction + non-inferior thrombosis prevention; potential disease-modifying"
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: "HU still preferred 1L due to cost / access; IFN reserved for younger / pregnancy-planning"
+        sources:
+          - SRC-ESMO-MPN-2015
+    our_default: "HU 1L in Ukraine (cost / access); IFN-α for younger + pregnancy + disease-modifying preference"
+    rationale: "Access drives in Ukraine"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  AGGRESSIVE track for PV 1L high-risk. STUB — requires clinical
+  co-lead signoff.

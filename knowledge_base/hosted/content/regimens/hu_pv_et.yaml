@@ -1,0 +1,68 @@
+id: REG-HU-PV-ET
+name: "Hydroxyurea (PV / ET high-risk 1L cytoreduction) + baseline phlebotomy/ASA"
+name_ua: "Гідроксикарбамід (PV / ET високого ризику 1L циторедукція) + базова флеботомія/АСК"
+alternate_names:
+  - "HU 1L MPN"
+  - "Hydroxycarbamide MPN"
+
+components:
+  - drug_id: DRUG-HYDROXYUREA
+    dose: "Start 500-1500 mg/day PO (15-25 mg/kg/day); titrate to target"
+    schedule: "continuous PO daily; titrate by CBC q2-4wk initially, then q1-3 mo once stable"
+    route: PO
+  - drug_id: DRUG-ASPIRIN
+    dose: "81-100 mg PO daily (low-dose aspirin)"
+    schedule: "continuous"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Lifelong cytoreduction in PV / ET high-risk; phlebotomy in PV (typically 250-500 mL q-week initially) to Hct <45%"
+
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Cytopenias (ANC <2.0, plt <100K)"
+    modification: "Reduce HU by 25-50% or hold until recovery"
+    rationale: "Dose-titratable myelosuppression"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-ESMO-MPN-2015
+  - condition: "Inadequate cytoreduction at maximum tolerated HU + ELN HU-resistance criteria"
+    modification: "Switch to 2L: PV → ruxolitinib (RESPONSE) or pegylated IFN; ET → anagrelide or pegylated IFN"
+    rationale: "HU resistance / intolerance"
+    source_refs:
+      - SRC-RESPONSE-VANNUCCHI-2015
+      - SRC-NCCN-MPN-2025
+  - condition: "Cutaneous leg ulcer on HU"
+    modification: "Discontinue HU permanently; switch to alternative cytoreduction"
+    rationale: "HU ulcers usually do not heal until HU stopped"
+  - condition: "Pregnancy or pregnancy planning"
+    modification: "Switch to interferon-α (PEG-IFN-α2a or ropeginterferon)"
+    rationale: "HU contraindicated in pregnancy"
+    source_refs:
+      - SRC-ESMO-MPN-2015
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "HU + ASA both fully reimbursed. Most accessible MPN regimen in Ukraine. Ruxolitinib registered but NOT reimbursed (2L access barrier)."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 1L cytoreduction for high-risk PV (age >60 OR prior thrombosis)
+  AND high-risk ET (same criteria). Targets:
+    - PV: Hct <45% (mainstay; CYTO-PV trial), platelets <400K
+    - ET: platelets <400-450K
+  Phlebotomy is the foundation in PV (with HU layered for cytoreduction);
+  ASA at low dose unless contraindicated (extreme thrombocytosis with
+  acquired vWD = relative contraindication). STUB — requires clinical
+  co-lead signoff before publication.

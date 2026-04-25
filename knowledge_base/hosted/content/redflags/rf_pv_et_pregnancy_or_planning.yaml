@@ -1,0 +1,35 @@
+id: RF-PV-ET-PREGNANCY-OR-PLANNING
+definition: "PV or ET patient pregnant or planning pregnancy — HU and anagrelide contraindicated; switch to interferon-α (PEG-IFN-α2a or ropeginterferon)"
+definition_ua: "Пацієнтка з PV або ET, вагітна або планує вагітність — HU та анагрелід протипоказані; перехід на інтерферон-α (PEG-IFN-α2a або ропегінтерферон)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "pregnancy_status"
+      value: "pregnant"
+    - finding: "pregnancy_planning"
+      value: true
+    - finding: "fertility_preservation_priority"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+category: frailty-age
+relevant_diseases:
+  - DIS-PV
+  - DIS-ET
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces an agent-substitution annotation.
+  Pregnancy in MPN is high-risk (placental thrombosis, IUGR, miscarriage)
+  and requires hematology + maternal-fetal-medicine co-management.
+  Interferon-α is the cytoreductive agent of choice during pregnancy
+  (no teratogenicity signal). LMWH (postpartum especially) is added for
+  thrombosis prevention. STUB — requires clinical co-lead signoff.

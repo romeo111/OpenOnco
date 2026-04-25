@@ -1,0 +1,39 @@
+id: RF-AML-INFECTION-SCREENING
+definition: "AML patient with positive HBV / HCV / HIV serology, latent TB, or active uncontrolled infection — needs antiviral prophylaxis (HBV-active prophylaxis with entecavir/tenofovir; HCV expert consult; ART optimization for HIV; TB treatment) before induction"
+definition_ua: "Пацієнт з ГМЛ та позитивною серологією HBV / HCV / HIV, латентним ТБ або активною неконтрольованою інфекцією — потребує противірусної профілактики (HBV-активна профілактика — ентекавір/тенофовір; HCV — консультація гепатолога; HIV — оптимізація АРТ; ТБ — лікування) перед індукцією"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_uncontrolled_infection"
+      value: true
+    - finding: "latent_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+category: infection-screening
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "hold" surfaces a workup-prerequisite annotation. AML
+  induction (anthracycline + cytarabine) and ven+aza both cause profound
+  immunosuppression with high HBV-reactivation risk if HBsAg+ or
+  anti-HBc+ without prophylaxis. HBV testing mandatory pre-induction.
+  STUB — requires clinical co-lead signoff.

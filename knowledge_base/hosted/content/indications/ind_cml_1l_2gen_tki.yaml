@@ -1,0 +1,105 @@
+id: IND-CML-1L-2GEN-TKI
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CML
+  line_of_therapy: 1
+  stage_requirements:
+    - "chronic_phase"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-2GEN-TKI-CML
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~95-98% complete hematologic response by 3 months"
+  complete_response: "MMR (BCR-ABL1 IS ≤0.1%) achieved in ~70-80% by 12 months on 2nd-gen TKI (vs 50-60% imatinib)"
+  progression_free_survival: "10-y PFS ~85-90% (DASISION, ENESTnd long-term follow-up)"
+  overall_survival_5y: "Approaches age-matched general population for patients in DMR"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CML-T315I-MUTATION
+  - RF-CML-TRANSFORMATION-PROGRESSION
+  - RF-CML-FRAILTY-AGE
+  - RF-CML-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-BCR-ABL-JAK2
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-PREGNANCY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Aggressive 1L for CML chronic phase: high-risk by ELTS / Sokal /
+  EUTOS, younger patients with TFR ambition, OR low-risk patients
+  preferring deeper / faster molecular response. 2nd-generation TKI
+  selected by comorbidity matrix per ELN 2020:
+    - Default low-CV-risk: dasatinib OR nilotinib
+    - CV disease / DM / hyperlipidemia → AVOID nilotinib + ponatinib → bosutinib or dasatinib
+    - Pulmonary disease → AVOID dasatinib → nilotinib or bosutinib
+    - GI disease → AVOID bosutinib → dasatinib or nilotinib
+    - Pancreatitis history → AVOID nilotinib → dasatinib or bosutinib
+  Faster early molecular response vs imatinib (DASISION, ENESTnd, BFORE)
+  but no consistent OS benefit. Higher rate of TFR-eligibility (~30-40%
+  achieve sustained DMR enabling TKI stop attempt).
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "2nd-gen TKIs are alternative 1L for CML chronic phase; preferred for younger / high-risk / TFR ambition"
+  - source_id: SRC-ELN-CML-2020
+    position: supports
+    relevant_quote_paraphrase: "Comorbidity matrix dictates choice between dasatinib / nilotinib / bosutinib; ELTS risk + TFR ambition tip toward 2nd-gen"
+  - source_id: SRC-ESMO-CML-2017
+    position: supports
+    relevant_quote_paraphrase: "Faster MMR with 2nd-gen TKIs; safety profile dictates choice"
+
+do_not_do:
+  - "Не призначати nilotinib без baseline CV-оцінки + ECG + lipid panel + glucose — boxed QT warning + cumulative vascular toxicity."
+  - "Не призначати dasatinib пацієнтам з пульмональною коморбідністю / попереднім pleural effusion — risk severe effusion."
+  - "Не призначати bosutinib пацієнтам з IBD / тяжкою diarrhoea historии — діарея ~70% ризик."
+  - "Не пропускати pre-TKI HBV скринінг."
+  - "Не пропускати фертильність-обговорення; TKI безпеки під час вагітності обмежені."
+  - "Не починати без food для bosutinib (з їжею); СТРОГО на голодний шлунок для nilotinib (≥1h до / ≥2h після)."
+
+known_controversies:
+  - topic: "Asciminib (STAMP) as 1L (ASC4FIRST trial)"
+    positions:
+      - position: "ASC4FIRST showed asciminib 1L MMR superiority over investigator-choice TKI (imatinib + 2nd-gen)"
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: "Long-term safety + TFR data not yet mature; cost / access prohibitive"
+        sources:
+          - SRC-ELN-CML-2020
+    our_default: "Asciminib reserved for 3L+ or T315I (NOT registered in Ukraine; access barrier dominant)"
+    rationale: "ASC4FIRST encouraging but immature; standard 2nd-gen still 1L"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  AGGRESSIVE track for CML 1L with TFR ambition or high-risk biology.
+  Selection between dasatinib / nilotinib / bosutinib / asciminib done
+  via comorbidity sub-matrix at the regimen level. STUB — requires
+  clinical co-lead signoff.

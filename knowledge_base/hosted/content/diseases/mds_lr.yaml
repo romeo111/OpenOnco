@@ -1,0 +1,56 @@
+id: DIS-MDS-LR
+names:
+  preferred: "Myelodysplastic Syndromes — Lower-Risk (IPSS-R very low / low / intermediate)"
+  ukrainian: "Мієлодиспластичні синдроми, низький ризик (IPSS-R дуже низький / низький / проміжний)"
+  english: "Myelodysplastic Syndromes — Lower Risk"
+  synonyms:
+    - "MDS-LR"
+    - "Lower-risk MDS"
+    - "LR-MDS"
+    - "МДС низького ризику"
+
+codes:
+  icd_o_3_morphology: "9989/3"  # MDS, NOS
+  icd_o_3_topography: ["C42.1"]
+  icd_10: "D46.9"
+  snomed_ct: null
+  who_classification: "Myelodysplastic neoplasms (per WHO 5th ed.) — lower-risk subgroup by IPSS-R / IPSS-M"
+
+archetype: risk_stratified
+lineage: myeloid_neoplasm
+
+etiological_factors:
+  - "Clonal hematopoiesis with somatic mutations: SF3B1 (RS-MDS), TET2, ASXL1, DNMT3A, EZH2"
+  - "Cytogenetic abnormalities: del(5q) isolated (good prognosis, lenalidomide-responsive); del(20q); -Y"
+  - "Therapy-related (post-cytotoxic / radiation): ~10-20%, often with TP53 / complex karyotype (usually high-risk)"
+  - "Antecedent CHIP / CCUS evolving over years"
+  - "Environmental: benzene, smoking, prior chemotherapy"
+
+related_diseases:
+  - "DIS-MDS-HR"
+  - "DIS-AML"  # ~10-20% lifetime AML transformation in lower-risk MDS
+
+epidemiology:
+  context: >
+    Median age ~70-75. Annual incidence ~4 per 100,000 (rising sharply with
+    age). Lower-risk = IPSS-R very low / low / intermediate (≤3.5 points)
+    OR IPSS-M Very Low / Low / Moderate-Low. Treatment goal in LR-MDS is
+    cytopenia management (especially anemia), NOT cure: ESA → luspatercept
+    → lenalidomide (del 5q) → trial / HMA escalation. Median OS 5-8 years
+    in IPSS-R Very Low; 3-5 years in IPSS-R Low / Intermediate.
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+reviewers: []
+notes: >
+  Risk-stratified archetype split into TWO entities (DIS-MDS-LR and
+  DIS-MDS-HR) because therapeutic intent is fundamentally different:
+  cytopenia management vs disease modification + transplant. IPSS-R remains
+  most widely used; IPSS-M (2022) integrates molecular features and
+  reclassifies ~46%. del(5q) carries unique lenalidomide indication.
+  RS-MDS (SF3B1+) is the luspatercept population. STUB — requires clinical
+  co-lead signoff before publication. Myeloid expansion (heme).

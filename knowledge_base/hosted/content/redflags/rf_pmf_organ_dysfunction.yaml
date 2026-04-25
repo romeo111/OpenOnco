@@ -1,0 +1,38 @@
+id: RF-PMF-ORGAN-DYSFUNCTION
+definition: "PMF patient with organ dysfunction limiting JAK-inhibitor or alloHCT eligibility: severe thrombocytopenia (plt <50K — affects ruxolitinib dose; pacritinib option), severe hepatic dysfunction, or significant cardiac/pulmonary comorbidity"
+definition_ua: "Пацієнт з ПМФ та дисфункцією органів, що обмежує застосування JAK-інгібітора або придатність до аллоТГСК: тяжка тромбоцитопенія (плт <50К — впливає на дозу руксолітинібу; pacritinib як опція), тяжка печінкова дисфункція або значуща кардіальна/легенева коморбідність"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "platelet_count_k_ul"
+      threshold: 50
+      comparator: "<"
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: "<"
+
+clinical_direction: investigate
+
+severity: major
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PMF
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-COMFORT-I-VERSTOVSEK-2012
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "investigate" — surfaces JAKi-selection / dose-attenuation
+  annotation. Severe thrombocytopenia: ruxolitinib 5 mg BID (or pacritinib
+  200 mg BID, no dose adjust for plt). Hepatic dysfunction: avoid
+  ruxolitinib (CYP3A4). AlloHCT also likely off-table. STUB — requires
+  clinical co-lead signoff.

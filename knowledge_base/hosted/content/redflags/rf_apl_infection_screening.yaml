@@ -1,0 +1,37 @@
+id: RF-APL-INFECTION-SCREENING
+definition: "APL patient with positive HBV / HCV / HIV serology, latent TB, or active uncontrolled infection — needs antiviral prophylaxis before initiating consolidation; ATRA initiation should NOT wait for these results"
+definition_ua: "Пацієнт з ГПЛ та позитивною серологією HBV / HCV / HIV, латентним ТБ або активною неконтрольованою інфекцією — потребує противірусної профілактики перед консолідацією; ATRA — НЕ чекати результатів"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+category: infection-screening
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+
+last_reviewed: "2026-04-25"
+notes: >
+  Direction "hold" — surfaces a pre-consolidation prerequisite. APL
+  induction (ATRA + ATO ± idarubicin) does not delay for serology;
+  consolidation cycles use anthracycline-containing regimens that
+  warrant HBV-active prophylaxis if serologically at risk. STUB —
+  requires clinical co-lead signoff.

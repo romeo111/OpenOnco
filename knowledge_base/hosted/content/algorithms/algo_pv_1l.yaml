@@ -1,0 +1,65 @@
+id: ALGO-PV-1L
+applicable_to_disease: DIS-PV
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select default + alternative Indication for first-line PV.
+  Standard = phlebotomy + ASA only (low-risk: age ≤60 + no thrombosis);
+  aggressive = HU + phlebotomy + ASA (high-risk by age >60 OR prior
+  thrombosis). HU-resistance routes to ruxolitinib at 2L. Pregnancy
+  re-routes to interferon-α at the regimen layer.
+
+output_indications:
+  - IND-PV-1L-PHLEBOTOMY-ASA
+  - IND-PV-1L-HU
+
+default_indication: IND-PV-1L-PHLEBOTOMY-ASA
+alternative_indication: IND-PV-1L-HU
+
+decision_tree:
+  # Step 1 — high-risk → HU 1L cytoreduction
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
+    if_true:
+      result: IND-PV-1L-HU
+    if_false:
+      next_step: 2
+
+  # Step 2 — HU resistance/intolerance (typically applies at 2L; if
+  # presenting at 1L with prior HU history, consider for ruxolitinib
+  # which is not yet listed as 1L Indication). For 1L scope, this flag
+  # routes the algorithm back to phlebotomy + ASA pending JAKi
+  # evaluation.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PV-HU-RESISTANCE-INTOLERANCE
+    if_true:
+      result: IND-PV-1L-PHLEBOTOMY-ASA
+    if_false:
+      next_step: 3
+
+  # Step 3 — default low-risk = phlebotomy + ASA
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Default low-risk PV"
+    if_true:
+      result: IND-PV-1L-PHLEBOTOMY-ASA
+    if_false:
+      result: IND-PV-1L-PHLEBOTOMY-ASA
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-MPN-2015
+  - SRC-RESPONSE-VANNUCCHI-2015
+
+last_reviewed: "2026-04-25"
+notes: >
+  RF-PV-ET-PREGNANCY-OR-PLANNING, RF-PV-ET-ORGAN-DYSFUNCTION,
+  RF-PV-ET-INFECTION-SCREENING, RF-PV-ET-FRAILTY-AGE are
+  "investigate"-direction flags surfacing as annotations (IFN-α
+  switch for pregnancy; dose attenuation for organ dysfunction;
+  HBV pre-JAKi screening; gentler cytoreduction for elderly).
+  STUB — requires clinical co-lead signoff.
