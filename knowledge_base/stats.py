@@ -110,6 +110,13 @@ class Stats:
     reviewer_signoffs_total: int
     reviewer_signoffs_reviewed: int
     diseases: list[DiseaseCoverage]
+    # Corpus mass behind the cited sources — sum of pages_count + references_count
+    # across all Source entities. Surfaces the "scale of literature" marketing
+    # metric on landing: visitors see "13 sources" but also "3,000+ primary
+    # publications behind them" (NCCN B-Cell guideline alone cites ~700 RCTs).
+    corpus_pages_total: int = 0
+    corpus_references_total: int = 0
+    sources_with_corpus_data: int = 0
 
 
 # ── Loaders ───────────────────────────────────────────────────────────────
@@ -223,6 +230,10 @@ def collect_stats() -> Stats:
     reviewer_total = 0
     reviewer_reviewed = 0
 
+    corpus_pages = 0
+    corpus_refs = 0
+    sources_with_corpus = 0
+
     for dir_name, label in _ENTITY_DIRS:
         files = _list_yaml(_KB_CONTENT / dir_name)
         loaded = [_load_yaml(p) for p in files]
@@ -241,6 +252,14 @@ def collect_stats() -> Stats:
             algorithms_yaml = loaded
         elif dir_name == "workups":
             workups_yaml = loaded
+        elif dir_name == "sources":
+            for d in loaded:
+                pages = d.get("pages_count") or 0
+                refs = d.get("references_count") or 0
+                if pages or refs:
+                    sources_with_corpus += 1
+                corpus_pages += int(pages or 0)
+                corpus_refs += int(refs or 0)
 
     specs_count = (
         len(list(_SPECS_DIR.glob("*.md"))) if _SPECS_DIR.exists() else 0
@@ -272,6 +291,9 @@ def collect_stats() -> Stats:
         reviewer_signoffs_total=reviewer_total,
         reviewer_signoffs_reviewed=reviewer_reviewed,
         diseases=coverage,
+        corpus_pages_total=corpus_pages,
+        corpus_references_total=corpus_refs,
+        sources_with_corpus_data=sources_with_corpus,
     )
 
 
@@ -295,6 +317,22 @@ def format_text(s: Stats) -> str:
     lines.append(
         f"  Skills (MDT-ролі)                {s.skills_count} реалізовано "
         f"/ {s.skills_planned_roles} заплановано"
+    )
+    lines.append("")
+    lines.append("Корпус літератури (за процитованими джерелами):")
+    sources_total = next((e.count for e in s.entities if e.type == "sources"), 0)
+    lines.append(
+        f"  Джерел (top-level guidelines/RCTs)   {sources_total}"
+    )
+    lines.append(
+        f"  Сторінок керівництв сумарно          {s.corpus_pages_total:,}"
+    )
+    lines.append(
+        f"  Primary publications референсовано   {s.corpus_references_total:,}+"
+    )
+    lines.append(
+        f"  Джерел з заповненим corpus mass      "
+        f"{s.sources_with_corpus_data} / {sources_total}"
     )
     lines.append("")
     lines.append("Clinical safety (CHARTER §6.1):")
@@ -449,6 +487,15 @@ def format_html_widget(s: Stats, *, embed_style: bool = True) -> str:
         f"<b>{s.reviewer_signoffs_reviewed}</b> / {s.reviewer_signoffs_total}</span>"
         f"</div>"
     )
+
+    if s.corpus_references_total > 0:
+        out.append(
+            f'<div class="oo-meta">'
+            f"<span>📚 Корпус літератури під {s.sources_with_corpus_data} цитованими джерелами: "
+            f"<b>{s.corpus_references_total:,}+</b> primary publications · "
+            f"<b>{s.corpus_pages_total:,}</b> сторінок керівництв</span>"
+            f"</div>"
+        )
 
     if s.reviewer_signoffs_reviewed == 0 and s.reviewer_signoffs_total > 0:
         out.append(

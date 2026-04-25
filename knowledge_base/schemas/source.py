@@ -53,3 +53,14 @@ class Source(Base):
     notes: Optional[str] = None
     last_verified: Optional[str] = None
     verifier: Optional[str] = None
+
+    # Corpus mass — used by stats.py for the "scale of literature behind the
+    # engine" marketing metric. All three are honest estimates: page count of
+    # the document itself, count of primary references it cites (RCTs /
+    # meta-analyses / cohort studies), and the role this source plays in the
+    # curated corpus. Round to nearest 50 references / 10 pages — we don't
+    # claim more precision than we have.
+    pages_count: Optional[int] = None
+    references_count: Optional[int] = None
+    corpus_role: Optional[str] = None  # primary_guideline | regional_guideline |
+    # diagnostic_methodology | rct_publication | terminology | regulatory

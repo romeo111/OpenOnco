@@ -93,3 +93,38 @@ def test_html_widget_no_style_flag():
     without_style = format_html_widget(s, embed_style=False)
     assert with_style.startswith("<style>")
     assert not without_style.startswith("<style>")
+
+
+def test_corpus_aggregates_populated():
+    """Marketing metric: total pages + primary references across all sources.
+    All 13 current sources have pages_count + references_count populated; the
+    aggregates are non-trivial (~2000+ pages, ~3000+ refs)."""
+    s = collect_stats()
+    sources_total = next((e.count for e in s.entities if e.type == "sources"), 0)
+    assert sources_total > 0, "expected at least one Source entity"
+    assert s.sources_with_corpus_data == sources_total, (
+        "expected every Source to carry pages_count + references_count "
+        "(populated by scripts/_populate_source_corpus.py)"
+    )
+    assert s.corpus_pages_total > 1000, (
+        f"expected >1000 pages of guideline mass; got {s.corpus_pages_total}"
+    )
+    assert s.corpus_references_total > 2000, (
+        f"expected >2000 primary references behind sources; got {s.corpus_references_total}"
+    )
+
+
+def test_corpus_metrics_in_text_formatter():
+    s = collect_stats()
+    out = format_text(s)
+    assert "Корпус літератури" in out
+    assert f"{s.corpus_references_total:,}" in out
+    assert f"{s.corpus_pages_total:,}" in out
+
+
+def test_corpus_metrics_in_html_widget():
+    s = collect_stats()
+    html = format_html_widget(s)
+    assert "Корпус літератури" in html
+    assert f"{s.corpus_references_total:,}" in html
+    assert "primary publications" in html

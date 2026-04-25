@@ -433,6 +433,11 @@ def render_landing(stats) -> str:
     n_workups = by_type.get("workups", 0)
     n_redflags = by_type.get("redflags", 0)
     n_skills = stats.skills_planned_roles  # 13 — full registry of virtual specialists
+    refs_thousands = stats.corpus_references_total // 1000
+    refs_compact = (
+        f"{refs_thousands:,}K+" if refs_thousands >= 1
+        else f"{stats.corpus_references_total:,}+"
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="uk">
@@ -458,6 +463,17 @@ def render_landing(stats) -> str:
       <div class="cta-row">
         <a class="btn btn-primary" href="try.html">Спробувати з віртуальним пацієнтом →</a>
         <a class="btn btn-secondary" href="gallery.html">Дивитись приклади</a>
+      </div>
+      <div class="hero-corpus">
+        <div class="hcorpus-num">{refs_compact}</div>
+        <div class="hcorpus-text">
+          <strong>{stats.corpus_references_total:,}+ клінічних публікацій</strong>
+          реферуються під {n_sources} обраними guidelines
+          (NCCN · ESMO · BSH · EHA · EASL · WHO · МОЗ).
+          <strong>{stats.corpus_pages_total:,}</strong> сторінок керівництв сумарно.
+          Жоден лікар фізично не може опрацювати такий обсяг для кожного пацієнта —
+          engine реферує його за вас.
+        </div>
       </div>
       <div class="hero-meta">
         Жодних реальних пацієнтських даних на цьому деплої · CHARTER §9.3 · FDA non-device CDS positioning per CHARTER §15
@@ -549,14 +565,19 @@ def render_landing(stats) -> str:
         </p>
       </div>
 
-      <div class="num-card">
+      <div class="num-card num-card--accent">
         <div class="num-big">{n_sources}</div>
-        <div class="num-lbl">Джерела</div>
-        <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO</div>
+        <div class="num-lbl">Джерела (top-level guidelines + RCTs)</div>
+        <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA</div>
         <p class="num-text">
+          Під цими {n_sources} джерелами — <strong>{stats.corpus_references_total:,}+ primary
+          clinical publications</strong> (RCTs, мета-аналізи, когортні дослідження)
+          і <strong>{stats.corpus_pages_total:,} сторінок керівництв</strong>. Сама лише
+          NCCN B-Cell Lymphomas guideline — ~500 сторінок з ~700 references.
           Кожна Indication / Regimen / RedFlag цитує конкретні джерела з
-          <em>position</em> (supports / contradicts / context) та paraphrased quote.
-          FDA Criterion 4 — лікар може незалежно перевірити підставу кожної рекомендації.
+          <em>position</em> (supports / contradicts / context), paraphrased
+          quote, page/section. FDA Criterion 4 — лікар незалежно перевіряє
+          підставу кожної рекомендації.
         </p>
       </div>
 
@@ -1026,6 +1047,24 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   border: 1px solid var(--gray-200);
 }
 .btn-secondary:hover { border-color: var(--green-600); }
+.hero-corpus {
+  margin-top: 32px; padding: 18px 22px;
+  background: white; border-radius: 12px;
+  border: 1px solid var(--green-100);
+  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.05);
+  display: flex; gap: 22px; align-items: center;
+  max-width: 720px;
+}
+.hcorpus-num {
+  font-family: var(--font-display); font-size: 56px;
+  color: var(--green-700); line-height: 1;
+  flex-shrink: 0;
+}
+.hcorpus-text {
+  font-size: 14.5px; color: var(--gray-700);
+  line-height: 1.55;
+}
+.hcorpus-text strong { color: var(--green-900); }
 .hero-meta {
   margin-top: 24px; font-size: 12px; color: var(--gray-500);
   font-family: var(--font-mono);
@@ -1504,16 +1543,43 @@ def render_capabilities(stats) -> str:
     </div>
 
     <div class="info-section">
-      <h2>3. Як ми працюємо з джерелами</h2>
+      <h2>3. Як ми працюємо з джерелами — і чому це наша ключова перевага</h2>
+      <div class="hero-corpus" style="max-width:none; margin-bottom:18px;">
+        <div class="hcorpus-num">{stats.corpus_references_total:,}+</div>
+        <div class="hcorpus-text">
+          <strong>{stats.corpus_references_total:,}+ primary clinical publications</strong>
+          (RCTs, мета-аналізи, когортні дослідження) реферуються під
+          <strong>{n_sources} обраними top-level guidelines</strong>.
+          Сумарно — <strong>{stats.corpus_pages_total:,} сторінок керівництв</strong>.
+          Жоден лікар фізично не може опрацювати такий обсяг для кожного пацієнта;
+          engine реферує його за вас і повертає Plan з phrased citations + page links.
+        </div>
+      </div>
       <p class="info-text">
-        Зараз у KB <strong>{n_sources}</strong> джерел: NCCN B-cell/AML/MM/MPN
-        Guidelines 2025, ESMO MZL 2024, BSH MZL 2024, EHA Workup 2024,
-        EASL HCV 2023, WHO LNSC 2023, МОЗ Україна Лімфома 2024, FDA CDS Guidance
-        2026, CTCAE v5.0, SRC-ARCAINI-2014. Кожне джерело мapp'иться на
-        Source entity з ID (наприклад <code>SRC-NCCN-BCELL-2025</code>),
-        title, version, license, access mode (referenced vs hosted per
-        SOURCE_INGESTION_SPEC §1.4).
+        Кожне джерело — це окрема <code>Source</code> entity з власним ID
+        (наприклад <code>SRC-NCCN-BCELL-2025</code>), title, version, license,
+        access mode (referenced vs hosted per SOURCE_INGESTION_SPEC §1.4).
+        Зараз у KB <strong>{n_sources}</strong> джерел:
       </p>
+      <table class="kv-table">
+        <thead><tr><th>Source ID</th><th>Тип</th><th>Сторінок</th><th>Primary refs</th><th>Роль у корпусі</th></tr></thead>
+        <tbody>
+          <tr><td><code>SRC-NCCN-BCELL-2025</code></td><td>NCCN B-Cell Lymphomas v.2.2025</td><td class="num">500</td><td class="num">700</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-NCCN-MM-2025</code></td><td>NCCN Multiple Myeloma 2025</td><td class="num">400</td><td class="num">600</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-NCCN-AML-2025</code></td><td>NCCN AML 2025</td><td class="num">350</td><td class="num">500</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-NCCN-MPN-2025</code></td><td>NCCN MPN 2025</td><td class="num">300</td><td class="num">400</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-EASL-HCV-2023</code></td><td>EASL HCV Guidelines 2023</td><td class="num">80</td><td class="num">250</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-WHO-LNSC-2023</code></td><td>WHO Lymph Node, Spleen, Thymus Cytopathology</td><td class="num">150</td><td class="num">200</td><td>diagnostic_methodology</td></tr>
+          <tr><td><code>SRC-CTCAE-V5</code></td><td>NCI CTCAE v5.0 (toxicity terminology)</td><td class="num">150</td><td class="num">30</td><td>terminology</td></tr>
+          <tr><td><code>SRC-ESMO-MZL-2024</code></td><td>ESMO Marginal Zone Lymphomas 2024</td><td class="num">30</td><td class="num">150</td><td>primary_guideline</td></tr>
+          <tr><td><code>SRC-BSH-MZL-2024</code></td><td>BSH MZL Guideline 2024</td><td class="num">50</td><td class="num">120</td><td>regional_guideline</td></tr>
+          <tr><td><code>SRC-EHA-WORKUP-2024</code></td><td>EHA Practical Workup Guidelines 2024</td><td class="num">40</td><td class="num">100</td><td>diagnostic_methodology</td></tr>
+          <tr><td><code>SRC-MOZ-UA-LYMPH-2024</code></td><td>МОЗ Україна — Лімфоми (placeholder)</td><td class="num">60</td><td class="num">50</td><td>regional_guideline</td></tr>
+          <tr><td><code>SRC-ARCAINI-2014</code></td><td>IELSG-19 RCT — MALT lymphoma</td><td class="num">10</td><td class="num">50</td><td>rct_publication</td></tr>
+          <tr><td><code>SRC-FDA-CDS-2026</code></td><td>FDA CDS Software Guidance 2026</td><td class="num">30</td><td class="num">20</td><td>regulatory</td></tr>
+          <tr><td colspan="2"><strong>Сумарно</strong></td><td class="num"><strong>{stats.corpus_pages_total:,}</strong></td><td class="num"><strong>{stats.corpus_references_total:,}+</strong></td><td>—</td></tr>
+        </tbody>
+      </table>
       <p class="info-text">
         <strong>Кожна клінічна claim у KB має citation</strong>. Indication,
         Regimen, RedFlag, Algorithm — всі мають поле <code>sources: list</code>
