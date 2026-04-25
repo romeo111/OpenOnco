@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from .base import Base, RedFlagDirection, RedFlagSeverity
+from .base import Base, RedFlagCategory, RedFlagDirection, RedFlagSeverity
 
 
 class RedFlagTrigger(Base):
@@ -29,6 +29,11 @@ class RedFlag(Base):
     #   3. priority (lower wins; default 100)
     severity: RedFlagSeverity = RedFlagSeverity.MAJOR
     priority: int = 100
+
+    # 5-type matrix per REDFLAG_AUTHORING_GUIDE §2. Authored explicitly so
+    # coverage tooling doesn't need keyword heuristics. Defaults to OTHER
+    # for un-categorized RFs (legacy compatibility); CI prefers explicit value.
+    category: RedFlagCategory = RedFlagCategory.OTHER
 
     # Optional explicit branch wiring. When set, lets test/coverage tooling
     # confirm that this RedFlag actually drives a specific decision-tree

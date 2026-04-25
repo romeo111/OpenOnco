@@ -1340,6 +1340,21 @@ def orchestrate_mdt(
 
     provenance = _bootstrap_provenance(plan_result, required, recommended, optional, questions)
 
+    # Rehydrate persisted reviewer events for this patient (CHARTER §6).
+    # Without this merge, every fresh orchestration would lose historical
+    # `confirmed` / `modified` / `approved` events. Silent if no events
+    # file exists yet.
+    # Resolve DEFAULT_ROOT through the module attribute (not the captured
+    # function default) so tests can monkeypatch event_store.DEFAULT_ROOT.
+    try:
+        from . import event_store as _evstore
+        if plan_result.patient_id:
+            _evstore.merge_events_into_graph(
+                provenance, plan_result.patient_id, root=_evstore.DEFAULT_ROOT
+            )
+    except Exception as exc:  # noqa: BLE001 — never fail orchestration on event rehydration
+        warnings.append(f"event-store rehydration failed: {exc}")
+
     return MDTOrchestrationResult(
         patient_id=plan_result.patient_id,
         plan_id=(plan_result.plan.id if plan_result.plan else None),

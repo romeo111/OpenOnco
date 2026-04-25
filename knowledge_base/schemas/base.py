@@ -87,6 +87,21 @@ class RedFlagSeverity(str, Enum):
     MINOR = "minor"
 
 
+class RedFlagCategory(str, Enum):
+    """5-type matrix from REDFLAG_AUTHORING_GUIDE §2 plus an `other` bucket.
+
+    Used by coverage tooling and downstream UI grouping. Authored on the
+    RedFlag itself so we don't have to rely on filename/keyword heuristics.
+    """
+
+    ORGAN_DYSFUNCTION = "organ-dysfunction"
+    INFECTION_SCREENING = "infection-screening"
+    HIGH_RISK_BIOLOGY = "high-risk-biology"
+    TRANSFORMATION_PROGRESSION = "transformation-progression"
+    FRAILTY_AGE = "frailty-age"
+    OTHER = "other"
+
+
 # ── Common embedded models ────────────────────────────────────────────────────
 
 
@@ -181,6 +196,7 @@ __all__ = [
     "TestPriority",
     "RedFlagDirection",
     "RedFlagSeverity",
+    "RedFlagCategory",
     "License",
     "Attribution",
     "LegalReview",

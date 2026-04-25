@@ -148,6 +148,41 @@ def test_provenance_records_initial_engine_events():
     assert len(role_event_targets) == total_roles
 
 
+def test_persisted_reviewer_events_are_rehydrated_into_graph(tmp_path, monkeypatch):
+    """orchestrate_mdt() must call merge_events_into_graph so historical
+    reviewer events (`confirmed`/`modified`/`approved` from past sessions)
+    survive a fresh orchestration. Otherwise re-rendering a Plan in a new
+    session would silently drop the audit trail."""
+
+    from knowledge_base.engine import event_store
+    from knowledge_base.engine.provenance import ProvenanceEvent
+
+    # Point event_store at a temp dir so the test never touches real
+    # patient_plans/.
+    monkeypatch.setattr(event_store, "DEFAULT_ROOT", tmp_path)
+
+    patient = _patient("patient_zero_indolent.json")
+    plan_result = generate_plan(patient, kb_root=KB_ROOT)
+
+    historical_event = ProvenanceEvent(
+        event_id="evt-rehydration-test-001",
+        actor_role="medical_oncologist",
+        actor_id="dr-test",
+        event_type="approved",
+        target_type="plan_section",
+        target_id=plan_result.plan.id,
+        timestamp="2025-01-01T00:00:00Z",
+        summary="Pre-existing approval persisted from a prior session.",
+    )
+    event_store.append_event(plan_result.patient_id, historical_event, root=tmp_path)
+
+    mdt = orchestrate_mdt(patient, plan_result, kb_root=KB_ROOT)
+
+    assert any(
+        e.event_id == "evt-rehydration-test-001" for e in mdt.provenance.events
+    ), "merge_events_into_graph not wired into orchestrate_mdt"
+
+
 # ── Drift fixes (post-audit) ──────────────────────────────────────────────
 
 
