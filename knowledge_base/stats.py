@@ -390,7 +390,7 @@ _WIDGET_CSS = """
     padding:24px; max-width:960px; line-height:1.5;
 }
 .oo-widget h2 {
-    font-family:'DM Serif Display',Georgia,serif;
+    font-family:'Playfair Display',Georgia,serif;
     font-size:22px; color:var(--green-900); margin:0 0 4px;
 }
 .oo-widget .oo-sub { font-size:13px; color:var(--gray-500); margin-bottom:18px; }
@@ -403,7 +403,7 @@ _WIDGET_CSS = """
     border-radius:10px; padding:12px 14px;
 }
 .oo-widget .oo-card .oo-num {
-    font-family:'DM Serif Display',Georgia,serif;
+    font-family:'Playfair Display',Georgia,serif;
     font-size:26px; color:var(--green-700); line-height:1;
 }
 .oo-widget .oo-card .oo-lbl {

@@ -49,7 +49,7 @@ _CSS = """
     --purple-bg: #faf5ff; --purple-700: #7e22ce;
     --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
     --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
-    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', Menlo, monospace;
 }
@@ -659,7 +659,7 @@ def _doc_shell(title: str, body: str, target_lang: str = "uk") -> str:
         '<meta charset="UTF-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         f"<title>{_h(title)}</title>\n"
-        '<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display'
+        '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900'
         '&family=Source+Sans+3:wght@300;400;500;600;700'
         '&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n'
         f"<style>{_CSS}</style>\n"

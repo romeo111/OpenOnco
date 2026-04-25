@@ -19,7 +19,7 @@
   --gray-700: #374151;
   --gray-900: #111827;
   --font-sans: 'Source Sans 3', 'Segoe UI', sans-serif;
-  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-mono: 'JetBrains Mono', Menlo, monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,8 +98,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .lang-switch .lang-flag.flag-ua {
   background: linear-gradient(to bottom, #0057b7 50%, #ffd500 50%);
 }
+/* Union Jack via inline SVG — the prior horizontal red/white/blue
+   gradient read as the Dutch flag. Paint the actual British flag instead. */
 .lang-switch .lang-flag.flag-en {
-  background: linear-gradient(to bottom, #cf142b 33%, #fff 33%, #fff 67%, #00247d 67%);
+  background: #012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;
 }
 
 /* CTA "Try it" button — distinct from nav (action, not reading) */
@@ -144,8 +146,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   text-transform: uppercase; color: var(--green-700); margin-bottom: 16px;
 }
 .hero h1 {
-  font-family: var(--font-display); font-size: 44px; line-height: 1.12;
-  color: var(--green-900); margin-bottom: 20px;
+  font-family: var(--font-display); font-weight: 700; font-size: 44px;
+  line-height: 1.12; color: var(--green-900); margin-bottom: 20px;
 }
 .hero-sub {
   font-size: 18px; color: var(--gray-700); max-width: 720px;

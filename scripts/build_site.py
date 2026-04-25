@@ -75,6 +75,21 @@ class CaseEntry:
     summary_ua: str
     badge: str
     badge_class: str
+    # Disease-group classification used by the gallery filter chips.
+    # One of: "b_aggressive", "b_indolent", "t_cell", "hodgkin",
+    # "myeloma", "diagnostic". See CASE_CATEGORIES below.
+    category: str = "b_aggressive"
+
+
+CASE_CATEGORIES: list[tuple[str, str, str]] = [
+    # (key, ua_label, en_label) — order = display order in filter chips
+    ("b_aggressive", "B-клітинні агресивні", "B-cell aggressive"),
+    ("b_indolent",   "B-клітинні індолентні", "B-cell indolent"),
+    ("t_cell",       "T-клітинні",            "T-cell"),
+    ("hodgkin",      "Ходжкіна",              "Hodgkin"),
+    ("myeloma",      "Мієлома",               "Myeloma"),
+    ("diagnostic",   "Діагностика (pre-biopsy)", "Diagnostic (pre-biopsy)"),
+]
 
 
 CASES: list[CaseEntry] = [
@@ -85,6 +100,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="hcv-mzl-indolent",
@@ -93,6 +109,7 @@ CASES: list[CaseEntry] = [
         summary_ua="HCV-MZL із non-bulky disease — engine обирає antiviral-first (DAA SOF/VEL) як default.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="hcv-mzl-bulky",
@@ -101,6 +118,7 @@ CASES: list[CaseEntry] = [
         summary_ua="HCV-MZL із bulky disease (>7 см) — RF-BULKY-DISEASE спрацьовує, engine обирає BR + concurrent DAA.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="mm-standard-risk",
@@ -109,6 +127,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="myeloma",
     ),
     CaseEntry(
         case_id="mm-high-risk",
@@ -117,6 +136,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="myeloma",
     ),
     CaseEntry(
         case_id="diagnostic-lymphoma-suspect",
@@ -125,6 +145,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).",
         badge="Diagnostic Brief",
         badge_class="bdg-diag",
+        category="diagnostic",
     ),
     CaseEntry(
         case_id="diagnostic-lymphoma-confirmed",
@@ -133,6 +154,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="diagnostic",
     ),
     # ── Tier 1 lymphomas (DLBCL, FL, CLL, MCL — added in marathon block) ──
     CaseEntry(
@@ -142,6 +164,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     CaseEntry(
         case_id="dlbcl-high-ipi",
@@ -150,6 +173,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     CaseEntry(
         case_id="fl-low-burden",
@@ -158,6 +182,7 @@ CASES: list[CaseEntry] = [
         summary_ua="FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&W).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="fl-high-burden",
@@ -166,6 +191,7 @@ CASES: list[CaseEntry] = [
         summary_ua="FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="fl-transformation",
@@ -174,6 +200,7 @@ CASES: list[CaseEntry] = [
         summary_ua="FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="cll-low-risk",
@@ -182,6 +209,7 @@ CASES: list[CaseEntry] = [
         summary_ua="ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="cll-high-risk",
@@ -190,6 +218,7 @@ CASES: list[CaseEntry] = [
         summary_ua="ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="mcl-fit-younger",
@@ -198,6 +227,7 @@ CASES: list[CaseEntry] = [
         summary_ua="MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     CaseEntry(
         case_id="mcl-unfit-tp53",
@@ -206,6 +236,7 @@ CASES: list[CaseEntry] = [
         summary_ua="MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     # ── More Tier 1 (MZL splenic + nodal, Burkitt, HCL, WM, HGBL-DH) ────
     CaseEntry(
@@ -215,6 +246,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="smzl-hcv-negative",
@@ -223,6 +255,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="nmzl-low-burden",
@@ -231,6 +264,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="burkitt-low-risk",
@@ -239,6 +273,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     CaseEntry(
         case_id="burkitt-high-risk",
@@ -247,6 +282,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Burkitt з CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     CaseEntry(
         case_id="hcl-typical",
@@ -255,6 +291,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="wm-myd88-positive",
@@ -263,6 +300,7 @@ CASES: list[CaseEntry] = [
         summary_ua="WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_indolent",
     ),
     CaseEntry(
         case_id="hgbl-double-hit",
@@ -271,6 +309,7 @@ CASES: list[CaseEntry] = [
         summary_ua="High-Grade B-Cell Lymphoma з MYC + BCL2 break-apart — engine обирає DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuse схеми з Burkitt.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="b_aggressive",
     ),
     # ── T-cell block + Hodgkin (final marathon block) ──────────────────────
     CaseEntry(
@@ -280,6 +319,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="ptcl-cd30-negative",
@@ -288,6 +328,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="aitl-cd30-positive",
@@ -296,6 +337,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="chl-advanced",
@@ -304,6 +346,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="hodgkin",
     ),
     CaseEntry(
         case_id="chl-early",
@@ -312,6 +355,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="hodgkin",
     ),
     CaseEntry(
         case_id="nlpbl-early",
@@ -320,6 +364,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="hodgkin",
     ),
     # ── Tier 3 deepening: AITL CD30-neg + MF/Sézary block + NLPBL alt arm ──
     CaseEntry(
@@ -329,6 +374,7 @@ CASES: list[CaseEntry] = [
         summary_ua="AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="mf-early-stage",
@@ -337,6 +383,7 @@ CASES: list[CaseEntry] = [
         summary_ua="MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="sezary-advanced",
@@ -345,6 +392,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="mf-advanced-cd30",
@@ -353,6 +401,7 @@ CASES: list[CaseEntry] = [
         summary_ua="Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="t_cell",
     ),
     CaseEntry(
         case_id="nlpbl-ia-rituximab",
@@ -361,6 +410,7 @@ CASES: list[CaseEntry] = [
         summary_ua="NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).",
         badge="Treatment Plan",
         badge_class="bdg-plan",
+        category="hodgkin",
     ),
 ]
 
@@ -599,7 +649,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco — Open-source CDS for oncology</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -784,13 +834,48 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
 
 
 def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
-    cards = []
-    # Cases live at /cases/<id>.html for UA and /en/cases/<id>.html for EN —
-    # use root-relative absolute paths so links work regardless of nesting.
-    case_path_prefix = "/cases/" if target_lang == "uk" else "/en/cases/"
+    is_en = target_lang == "en"
+    case_path_prefix = "/en/cases/" if is_en else "/cases/"
+    n_cases = len(CASES)
+
+    cat_counts: dict[str, int] = {}
     for c in CASES:
+        cat_counts[c.category] = cat_counts.get(c.category, 0) + 1
+
+    chips: list[str] = []
+    all_label = "All" if is_en else "Усі"
+    chips.append(
+        f'<button type="button" class="case-chip is-active" '
+        f'data-filter="all">{all_label} <span class="chip-n">{n_cases}</span></button>'
+    )
+    for key, ua_label, en_label in CASE_CATEGORIES:
+        n = cat_counts.get(key, 0)
+        if n == 0:
+            continue
+        label = en_label if is_en else ua_label
+        chips.append(
+            f'<button type="button" class="case-chip" '
+            f'data-filter="{key}">{label} <span class="chip-n">{n}</span></button>'
+        )
+    chips_html = "\n    ".join(chips)
+
+    if is_en:
+        sort_label = "Sort"
+        sort_default = "Default"
+        sort_alpha = "Name (A→Z)"
+        sort_category = "Category"
+    else:
+        sort_label = "Сортування"
+        sort_default = "За замовчуванням"
+        sort_alpha = "За назвою (А→Я)"
+        sort_category = "За класифікацією"
+
+    cards: list[str] = []
+    for i, c in enumerate(CASES):
         cards.append(
-            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html">
+            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
+   data-category="{c.category}" data-default-order="{i}"
+   data-name="{c.label_ua}">
   <div class="case-badge {c.badge_class}">{c.badge}</div>
   <h3>{c.label_ua}</h3>
   <p>{c.summary_ua}</p>
@@ -799,32 +884,67 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
         )
     cards_html = "\n".join(cards)
 
+    if is_en:
+        lead_html = (
+            f'{n_cases} synthetic patient profiles run through the engine. '
+            f'Each click opens a full Plan or Diagnostic Brief as a clinician '
+            f'would see it in tumor-board. If something looks clinically wrong '
+            f'or confusing — <a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            f'target="_blank" rel="noopener">open an issue on GitHub</a> '
+            f'with a link to the specific case.'
+        )
+    else:
+        lead_html = (
+            f'{n_cases} синтетичних профілів пацієнтів, прогнаних через рушій. '
+            f'Кожен клік відкриває повний Plan або Diagnostic Brief, як його '
+            f'побачить лікар у tumor-board. Якщо щось виглядає клінічно '
+            f'неправильно або дезорієнтує — '
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            f'target="_blank" rel="noopener">відкрий issue на GitHub</a> '
+            f'з посиланням на конкретний кейс.'
+        )
+
+    category_order_js = "[" + ",".join(
+        f'"{key}"' for key, _ua, _en in CASE_CATEGORIES
+    ) + "]"
+
     return f"""<!DOCTYPE html>
-<html lang="{'en' if target_lang == 'en' else 'uk'}">
+<html lang="{'en' if is_en else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Sample cases</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
 {_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
-  <h1>Готові приклади</h1>
-  <p class="lead">
-    Сім синтетичних пацієнтських профілів прогнані через рушій. Кожен клік
-    відкриває повний Plan або Diagnostic Brief, як його побачить лікар у
-    tumor-board. Якщо щось виглядає клінічно неправильно або дезорієнтує —
-    <a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback"
-       target="_blank" rel="noopener">відкрий issue на GitHub</a>
-    з посиланням на конкретний кейс.
-  </p>
+  <h1>{'Sample cases' if is_en else 'Готові приклади'}</h1>
+  <p class="lead">{lead_html}</p>
 
-  <section class="case-grid">
+  <div class="case-controls">
+    <div class="case-chips" role="group" aria-label="{'Filter by category' if is_en else 'Фільтр за класифікацією'}">
+    {chips_html}
+    </div>
+    <label class="case-sort">
+      <span>{sort_label}:</span>
+      <select id="caseSort">
+        <option value="default">{sort_default}</option>
+        <option value="alpha">{sort_alpha}</option>
+        <option value="category">{sort_category}</option>
+      </select>
+    </label>
+  </div>
+
+  <section class="case-grid" id="caseGrid">
     {cards_html}
   </section>
+
+  <p class="case-empty" id="caseEmpty" hidden>
+    {'No cases in this category.' if is_en else 'У цій категорії немає прикладів.'}
+  </p>
 
   <section class="kb-stats">
     {stats_widget_html}
@@ -833,9 +953,63 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
   <footer class="page-foot">
     OpenOnco — open-source · MIT-style usage
     · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
-    · Жодних реальних пацієнтських даних · CHARTER §9.3
+    · {'No real patient data' if is_en else 'Жодних реальних пацієнтських даних'} · CHARTER §9.3
   </footer>
 </main>
+
+<script>
+(function() {{
+  var grid = document.getElementById("caseGrid");
+  var empty = document.getElementById("caseEmpty");
+  var chips = document.querySelectorAll(".case-chip");
+  var sort = document.getElementById("caseSort");
+  var cards = Array.prototype.slice.call(grid.querySelectorAll(".case-card"));
+  var categoryOrder = {category_order_js};
+  var activeFilter = "all";
+
+  function applyFilter() {{
+    var visible = 0;
+    cards.forEach(function(card) {{
+      var match = activeFilter === "all" || card.dataset.category === activeFilter;
+      card.style.display = match ? "" : "none";
+      if (match) visible++;
+    }});
+    empty.hidden = visible !== 0;
+  }}
+
+  function applySort() {{
+    var mode = sort.value;
+    var sorted = cards.slice();
+    if (mode === "alpha") {{
+      sorted.sort(function(a, b) {{
+        return a.dataset.name.localeCompare(b.dataset.name, "uk");
+      }});
+    }} else if (mode === "category") {{
+      sorted.sort(function(a, b) {{
+        var ai = categoryOrder.indexOf(a.dataset.category);
+        var bi = categoryOrder.indexOf(b.dataset.category);
+        if (ai !== bi) return ai - bi;
+        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
+      }});
+    }} else {{
+      sorted.sort(function(a, b) {{
+        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
+      }});
+    }}
+    sorted.forEach(function(card) {{ grid.appendChild(card); }});
+  }}
+
+  chips.forEach(function(chip) {{
+    chip.addEventListener("click", function() {{
+      chips.forEach(function(c) {{ c.classList.remove("is-active"); }});
+      chip.classList.add("is-active");
+      activeFilter = chip.dataset.filter;
+      applyFilter();
+    }});
+  }});
+  sort.addEventListener("change", applySort);
+}})();
+</script>
 </body>
 </html>
 """
@@ -857,7 +1031,7 @@ def render_try(*, target_lang: str = "uk") -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1574,8 +1748,8 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
         'border-radius:1.5px;vertical-align:middle;'
         'box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}'
         '.case-bar .mini-flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}'
-        '.case-bar .mini-flag-en{background:linear-gradient(to bottom,'
-        '#cf142b 33%,#fff 33%,#fff 67%,#00247d 67%);}'
+        '.case-bar .mini-flag-en{background:#012169 '
+        "url(\"data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E\") center/cover no-repeat;}"
         '@media print{.case-bar{display:none;}}'
         '</style>\n'
     )
@@ -1634,7 +1808,7 @@ _STYLE_CSS = """
   --gray-700: #374151;
   --gray-900: #111827;
   --font-sans: 'Source Sans 3', 'Segoe UI', sans-serif;
-  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-mono: 'JetBrains Mono', Menlo, monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1713,8 +1887,10 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .lang-switch .lang-flag.flag-ua {
   background: linear-gradient(to bottom, #0057b7 50%, #ffd500 50%);
 }
+/* Union Jack via inline SVG — the prior horizontal red/white/blue
+   gradient read as the Dutch flag. Paint the actual British flag instead. */
 .lang-switch .lang-flag.flag-en {
-  background: linear-gradient(to bottom, #cf142b 33%, #fff 33%, #fff 67%, #00247d 67%);
+  background: #012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;
 }
 
 /* CTA "Try it" button — distinct from nav (action, not reading) */
@@ -1759,8 +1935,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   text-transform: uppercase; color: var(--green-700); margin-bottom: 16px;
 }
 .hero h1 {
-  font-family: var(--font-display); font-size: 44px; line-height: 1.12;
-  color: var(--green-900); margin-bottom: 20px;
+  font-family: var(--font-display); font-weight: 700; font-size: 44px;
+  line-height: 1.12; color: var(--green-900); margin-bottom: 20px;
 }
 .hero-sub {
   font-size: 18px; color: var(--gray-700); max-width: 720px;
@@ -2357,7 +2533,7 @@ def render_capabilities(stats) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Можливості</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -2733,7 +2909,7 @@ def render_limitations(stats) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Обмеження</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -3230,7 +3406,7 @@ def render_specs(stats) -> str:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Специфікації</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
