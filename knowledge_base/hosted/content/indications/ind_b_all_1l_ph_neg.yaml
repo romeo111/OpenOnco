@@ -1,0 +1,92 @@
+id: IND-B-ALL-1L-PH-NEG
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-BCR-ABL1
+      required: false
+      value_constraint: "BCR::ABL1 absent (Ph negative)"
+  demographic_constraints:
+    ecog_max: 3
+    age_max: 70
+
+recommended_regimen: REG-HYPER-CVAD-R
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~90%"
+  complete_response: "~85%"
+  progression_free_survival: "Median PFS ~36 months (з MRD-driven escalation)"
+  overall_survival_5y: "~40-50% adults; ~85% AYA з pediatric-inspired"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-BCR-ABL-JAK2
+  - TEST-FISH-PANEL
+  - TEST-KARYOTYPE
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-CSF-CYTOLOGY-FLOW
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Hyper-CVAD-R (MD Anderson) — historic adult standard. Pediatric-inspired
+  protocols (CALGB 10403, GMALL) overtaking для AYA (15-39) + fit middle-
+  aged adults: краща long-term OS (~70% vs ~50%) ціною compliance burden
+  (asparaginase tolerance). MRD-driven escalation — blinatumomab для
+  MRD+ Ph- post-induction (BLAST trial).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Hyper-CVAD-R is Category 1 для adults; pediatric-inspired preferred for AYA"
+
+known_controversies:
+  - topic: "Hyper-CVAD vs pediatric-inspired для AYA (age 15-39)"
+    positions:
+      - position: "Pediatric-inspired (CALGB 10403) — better OS, more toxicity"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Hyper-CVAD acceptable якщо asparaginase intolerance"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Pediatric-inspired для AYA ≤40 fit; Hyper-CVAD для >40 або asparaginase intolerance"
+
+do_not_do:
+  - "Не пропускати CNS prophylaxis."
+  - "Не нехтувати MRD-monitoring post-induction — MRD+ pts отримують blinatumomab."
+  - "Не вводити вінкристин інтратекально."
+  - "Не починати без HBV screen + entecavir prophylaxis (rituximab)."
+  - "Не зневажати TLS prophylaxis у hyperleukocytosis (WBC >100K) — фатальна гіперкаліємія."
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Default для Ph- adult B-ALL. Asparaginase часто omitted у >55
+  через pancreatitis + thrombosis ризик.

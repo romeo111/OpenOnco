@@ -1,0 +1,30 @@
+id: ALGO-T-ALL-1L
+applicable_to_disease: DIS-T-ALL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L T-ALL induction. Single recommended track (Hyper-CVAD-based);
+  ETP-ALL subset → allo-SCT у CR1 added.
+
+output_indications:
+  - IND-T-ALL-1L-HYPER-CVAD
+
+default_indication: IND-T-ALL-1L-HYPER-CVAD
+alternative_indication: IND-T-ALL-1L-HYPER-CVAD
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Any T-ALL diagnosis confirmed"
+    if_true:
+      result: IND-T-ALL-1L-HYPER-CVAD
+    if_false:
+      result: IND-T-ALL-1L-HYPER-CVAD
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Single-track для T-ALL 1L поки що — варіант choice (pediatric-inspired
+  vs Hyper-CVAD) ще не модельований як окрема Indication. Future:
+  додати IND-T-ALL-1L-PEDIATRIC-INSPIRED для AYA. ETP-ALL — окрема
+  Indication з allo-SCT consolidation у CR1.

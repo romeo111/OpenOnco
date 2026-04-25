@@ -1,0 +1,78 @@
+id: IND-PTLD-1L-RCHOP
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PTLD
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-R-CHOP
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80-90%"
+  complete_response: "~70%"
+  progression_free_survival: "Median PFS ~30 months у monomorphic"
+  overall_survival_5y: "~50-60% monomorphic"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-EBV-VIRAL-LOAD
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-FLOW-CYTOMETRY
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Monomorphic PTLD (DLBCL-like morphology) — потребує full-dose
+  R-CHOP, аналогічно DLBCL. Polymorphic PTLD без response на
+  reduce-IS + rituximab також escalate сюди. PTLD-1 trial
+  (sequential R-CHOP після rituximab) — modern standard. CR rate
+  ~70%, OS краще ніж historic CHOP-only era.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "R-CHOP is Category 1 для monomorphic PTLD або refractory polymorphic PTLD post-rituximab"
+
+known_controversies: []
+
+do_not_do:
+  - "Не починати R-CHOP без попередньої attempt at reduce-IS + rituximab (полиморфна PTLD)."
+  - "Не нехтувати HBV prophylaxis — IS pts at extreme risk."
+  - "Не вводити вінкристин інтратекально."
+  - "Не давати full-dose anthracycline якщо LVEF <50% — кардіотоксичність."
+  - "Не забувати про graft rejection monitoring при IS reduction concomitant з R-CHOP."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Step 3 of 4-step PTLD ladder. CD19 CAR-T для refractory —
+  ще не модельовано як окрема Indication.

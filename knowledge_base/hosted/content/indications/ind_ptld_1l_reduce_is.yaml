@@ -1,0 +1,81 @@
+id: IND-PTLD-1L-REDUCE-IS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PTLD
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 4
+
+recommended_regimen: REG-RITUXIMAB-MONOTHERAPY
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~50% з reduction-of-IS alone (early polymorphic)"
+  complete_response: "~25% reduce-IS only; +rituximab — ~60-70%"
+  progression_free_survival: "Variable — depends on PTLD category + IS modulation"
+  overall_survival_5y: "~60-70% полиморфна; ~40-50% монoморфна"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-EBV-VIRAL-LOAD
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-FLOW-CYTOMETRY
+  - TEST-LN-EXCISIONAL-BIOPSY  # tissue biopsy + EBER ISH
+  - TEST-PET-CT
+  - TEST-ECHO
+desired_tests:
+  - TEST-NGS-LYMPHOID-PANEL  # confirm clonality
+
+rationale: >
+  Step-wise PTLD therapy: (1) reduce immunosuppression до minimum
+  necessary для graft preservation — обов'язкова transplant team
+  consultation; (2) додати rituximab монотерапія для CD20+ — Cat 1
+  approach. ~50% remit на reduce-IS alone (рання полиморфна PTLD).
+  Якщо no response → escalate to R-CHOP (next Indication).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Reduction of immunosuppression + rituximab monotherapy is Category 1 first-line for CD20+ PTLD"
+
+known_controversies:
+  - topic: "Magnitude of IS reduction"
+    positions:
+      - position: "50% reduction of calcineurin inhibitor"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Stop antimetabolite (MMF), maintain CNI low-dose"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Stop MMF + reduce tacrolimus 50%; monitor graft function weekly"
+
+do_not_do:
+  - "Не редукувати IS без transplant team consult — графт rejection risk."
+  - "Не пропускати EBV viral load monitoring — рост корелює з прогресом."
+  - "Не давати rituximab CD20- pts — використовувати alternative chemo."
+  - "Не давати без HBV screen — ризик реактивації високий у IS pts."
+  - "Не вводити вінкристин (якщо escalation до R-CHOP) інтратекально — фатально."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. Step 1 + 2 of 4-step PTLD ladder. Якщо no response → IND-PTLD-1L-RCHOP
+  (наступна Indication). Tabelecleucel (EBV-CTL) для refractory — ще не у KB.

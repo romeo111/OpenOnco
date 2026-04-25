@@ -1,0 +1,31 @@
+id: ALGO-B-ALL-1L
+applicable_to_disease: DIS-B-ALL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L B-ALL induction. Ph+ → Hyper-CVAD-R + dasatinib;
+  Ph- → Hyper-CVAD-R (adult) or pediatric-inspired (AYA).
+
+output_indications:
+  - IND-B-ALL-1L-PH-POS
+  - IND-B-ALL-1L-PH-NEG
+
+default_indication: IND-B-ALL-1L-PH-NEG
+alternative_indication: IND-B-ALL-1L-PH-POS
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "BCR-ABL1 positive (Ph+)"
+        - condition: "BCR-ABL1-like / Ph-like signature"
+    if_true:
+      result: IND-B-ALL-1L-PH-POS
+    if_false:
+      result: IND-B-ALL-1L-PH-NEG
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Engine видасть warning якщо BCR-ABL1 PCR не виконано — Ph+ vs Ph-
+  decision unsafe без cytogenetics. CR1 allo-SCT decision — окремий
+  алгоритм після induction.

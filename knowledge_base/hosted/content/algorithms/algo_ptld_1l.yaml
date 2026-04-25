@@ -1,0 +1,32 @@
+id: ALGO-PTLD-1L
+applicable_to_disease: DIS-PTLD
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L PTLD treatment. Step-wise: reduce IS + rituximab (default);
+  R-CHOP for monomorphic or refractory.
+
+output_indications:
+  - IND-PTLD-1L-REDUCE-IS
+  - IND-PTLD-1L-RCHOP
+
+default_indication: IND-PTLD-1L-REDUCE-IS
+alternative_indication: IND-PTLD-1L-RCHOP
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Monomorphic PTLD (DLBCL-like)"
+        - condition: "Burkitt-like PTLD"
+        - condition: "Failed reduce-IS + rituximab attempt"
+    if_true:
+      result: IND-PTLD-1L-RCHOP
+    if_false:
+      result: IND-PTLD-1L-REDUCE-IS
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Sequential approach стандартна — engine видасть default IND-PTLD-1L-
+  REDUCE-IS для більшості. Escalate до R-CHOP після failed step 2 —
+  окремий revise_plan() з updated profile.

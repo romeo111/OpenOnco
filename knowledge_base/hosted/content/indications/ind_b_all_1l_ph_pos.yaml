@@ -1,0 +1,90 @@
+id: IND-B-ALL-1L-PH-POS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-HYPER-CVAD-R
+concurrent_therapy:
+  - "DRUG-DASATINIB 100 mg PO daily, continuous (TKI backbone — Ph+ B-ALL не можна лікувати без BCR::ABL1 inhibition)"
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~95%"
+  complete_response: "~95% (post-induction)"
+  progression_free_survival: "Median PFS ~30 months (з allo-SCT consolidation у CR1)"
+  overall_survival_5y: "~50-60% (highly age-dependent)"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-BCR-ABL-JAK2
+  - TEST-FISH-PANEL
+  - TEST-KARYOTYPE
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-CSF-CYTOLOGY-FLOW
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Ph+ B-ALL до TKI era мав 5y OS ~10%; після TKI + chemo backbone
+  довgivає ~50-60%. Dasatinib переважає imatinib (CNS penetration).
+  Ponatinib (T315I-active) — preferred якщо T315I mutation. Allo-SCT
+  у CR1 — historically mandatory; зараз chemo-only підходи (D-ALBA)
+  показують CR ~95% з MRD-based approach. CD19/CD22 CAR-T для R/R.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Hyper-CVAD-R + TKI is Category 1 1L for Ph+ B-ALL"
+
+known_controversies:
+  - topic: "Allo-SCT у CR1 vs continued chemo + TKI"
+    positions:
+      - position: "Allo-SCT у CR1 standard для fit pts"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Chemo-only з deep molecular response acceptable"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Allo-SCT для fit ≤65 з matched donor; chemo-only якщо MR4.5 + no donor"
+
+do_not_do:
+  - "Не починати без BCR::ABL1 PCR baseline — quantitative MRD драйвить therapy escalation."
+  - "Не пропускати CNS prophylaxis (IT MTX/cytarabine + HD-MTX intercalated) — CNS relapse fatal."
+  - "Не нехтувати T315I mutation testing — іматиніб/dasatinib бескорисні; потрібен ponatinib."
+  - "Не вводити вінкристин інтратекально — фатально."
+  - "Не починати TKI без EKG (QTc baseline) — TKI prolong QT."
+  - "Не зменшувати TKI dose без причини — under-dosing → resistance."
+
+time_critical: true  # ALL is acute — TKI + induction within days of dx
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: >
+  STUB. time_critical=true — falls outside FDA non-device CDS carve-out
+  (CHARTER §15.2 C5). Engine додає warning для clinician acknowledgment.
