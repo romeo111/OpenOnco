@@ -1,0 +1,25 @@
+id: RF-ENDOMETRIAL-ORGAN-DYSFUNCTION
+definition: "Cardiac dysfunction (LVEF <50%) — limits anthracycline OR trastuzumab (HER2+ serous variant)."
+definition_ua: "Кардіальна дисфункція (LVEF <50%)."
+
+trigger:
+  type: lab_value
+  any_of:
+    - {finding: "lvef_percent", threshold: 50, comparator: "<"}
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases: [DIS-ENDOMETRIAL]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESMO-ENDOMETRIAL-2022
+
+last_reviewed: null
+draft: false
+
+notes: "HER2+ serous endometrial subset eligible for trastuzumab + chemo."

@@ -1,0 +1,26 @@
+id: RF-RCC-HIGH-RISK-BIOLOGY
+definition: "Sarcomatoid features OR rapid TKI progression — predicts ICI-doublet benefit; non-clear-cell distinct path."
+definition_ua: "Саркоматоїдні риси АБО швидке прогресування на TKI."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "rcc_sarcomatoid_features", value: true}
+    - {finding: "rcc_non_clear_cell", value: true}
+
+clinical_direction: intensify
+severity: major
+priority: 100
+category: high-risk-biology
+
+relevant_diseases: [DIS-RCC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: null
+draft: false
+
+notes: "Sarcomatoid clear-cell uniquely benefits from ICI doublet."

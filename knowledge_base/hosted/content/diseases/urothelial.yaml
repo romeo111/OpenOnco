@@ -1,0 +1,32 @@
+id: DIS-UROTHELIAL
+names:
+  preferred: "Urothelial carcinoma (bladder + upper tract)"
+  ukrainian: "Уротеліальна карцинома"
+  english: "Urothelial carcinoma"
+  synonyms: ["Bladder cancer", "TCC"]
+codes:
+  icd_o_3_morphology: "8120/3"
+  icd_o_3_topography: ["C67.9", "C65.9", "C66.9"]
+  icd_10: "C67"
+  who_classification: "Urothelial carcinoma (WHO 5th 2022)"
+archetype: line_of_therapy_sequential
+lineage: solid_tumor_urothelial
+disease_states:
+  - {id: NMIBC, label: "Non-muscle-invasive (Ta/T1/CIS)", definition: "~75% at presentation. TURBT + intravesical BCG/mitomycin/gem"}
+  - {id: MIBC, label: "Muscle-invasive (T2-T4a)", definition: "~25%. Neoadjuvant cisplatin + cystectomy or trimodality"}
+  - {id: METASTATIC, label: "Metastatic (M1)", definition: "1L: EV+pembro (EV-302) regardless of cisplatin-eligibility"}
+prognostic_frameworks:
+  - {id: GALSKY-CISPLATIN-ELIGIBILITY, label: "Galsky criteria (CrCl ≥60, ECOG ≤1, no severe hearing loss / neuropathy ≥G2 / NYHA ≤II)", used_for: "Pre-EV-302 era 1L choice"}
+  - {id: AJCC-8TH-BLADDER, label: "AJCC 8th TNM", used_for: "Anatomic stratification"}
+etiological_factors:
+  - "Tobacco smoking — dominant"
+  - "Occupational aromatic amines"
+  - "FGFR3 mutations (~20% MIBC)"
+  - "Lynch syndrome (upper-tract)"
+related_diseases: []
+epidemiology:
+  context: "~573K cases/year. EV-302 (2023): EV+pembro median OS 31.5 vs 16.1 months platinum-doublet."
+sources: [SRC-NCCN-BLADDER-2025, SRC-EAU-BLADDER-2024]
+last_reviewed: null
+reviewers: []
+notes: "line_of_therapy_sequential — disease-state dominant fork. Cisplatin-eligibility critical pre-EV era."

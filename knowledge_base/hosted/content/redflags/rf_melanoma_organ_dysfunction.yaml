@@ -1,0 +1,26 @@
+id: RF-MELANOMA-ORGAN-DYSFUNCTION
+definition: "LDH >2x ULN OR severe hepatic dysfunction — predictor of inferior ICI outcomes."
+definition_ua: "ЛДГ >2x ULN АБО тяжка печінкова дисфункція."
+
+trigger:
+  type: lab_value
+  any_of:
+    - {finding: "ldh_x_uln", threshold: 2, comparator: ">"}
+    - {finding: "child_pugh_class", value: "C"}
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases: [DIS-MELANOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+
+last_reviewed: null
+draft: false
+
+notes: "LDH integral AJCC staging variable."

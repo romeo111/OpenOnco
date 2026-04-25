@@ -1,0 +1,17 @@
+id: ALGO-ENDOMETRIAL-ADVANCED-1L
+applicable_to_disease: DIS-ENDOMETRIAL
+applicable_to_line_of_therapy: 1
+purpose: "Select 1L advanced/recurrent endometrial by MMR status."
+output_indications: [IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO, IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO]
+default_indication: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO
+alternative_indication: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - {condition: "dMMR / MSI-high tumor"}
+    if_true: {result: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO}
+    if_false: {result: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO}
+sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022]
+last_reviewed: null
+notes: "Both pembro and dostarlimab approved; chemoimmuno superior to chemo alone regardless of MMR."

@@ -1,0 +1,17 @@
+id: ALGO-UROTHELIAL-METASTATIC-1L
+applicable_to_disease: DIS-UROTHELIAL
+applicable_to_line_of_therapy: 1
+purpose: "Select 1L mUC. Modern: EV+pembro for all unless contraindicated."
+output_indications: [IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO, IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB]
+default_indication: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
+alternative_indication: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - {condition: "Patient eligible for EV+pembro (no severe diabetes, neuropathy, ocular)"}
+    if_true: {result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO}
+    if_false: {result: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB}
+sources: [SRC-NCCN-BLADDER-2025, SRC-EAU-BLADDER-2024]
+last_reviewed: null
+notes: "EV-302 paradigm shift."

@@ -1,0 +1,36 @@
+id: DIS-ENDOMETRIAL
+names:
+  preferred: "Endometrial carcinoma"
+  ukrainian: "Карцинома ендометрія"
+  english: "Endometrial carcinoma"
+  synonyms: ["Endometrial cancer", "Uterine cancer"]
+codes:
+  icd_o_3_morphology: "8380/3"
+  icd_o_3_topography: ["C54.1"]
+  icd_10: "C54"
+  who_classification: "Endometrial adenocarcinoma + TCGA molecular classification (WHO 5th 2020)"
+archetype: biomarker_driven
+lineage: solid_tumor_endometrial
+molecular_subtypes:
+  - {id: POLE_MUT, label: "POLE-ultramutated", definition: "~7%; excellent prognosis"}
+  - {id: MMR_DEFICIENT, label: "MMR-deficient (MSI-high)", definition: "~30%; Lynch screen; pembro/dostarlimab dramatic responses"}
+  - {id: P53_ABNORMAL, label: "p53-abnormal", definition: "~15%; aggressive; carbo+pacli ± trastuzumab (HER2+)"}
+  - {id: NSMP, label: "No specific molecular profile", definition: "~50%; standard chemo + ICI"}
+stage_strata:
+  - {id: STAGE_I_II_EARLY, label: "Stage I-II — TH+BSO ± adjuvant RT"}
+  - {id: STAGE_III_IV_ADVANCED, label: "Stage III-IV — surgery + chemo + ICI (dMMR)"}
+  - {id: RECURRENT_METASTATIC, label: "Recurrent / metastatic — KEYNOTE-868 / RUBY"}
+prognostic_frameworks:
+  - {id: TCGA-MOLECULAR, label: "TCGA classification (POLE / dMMR / p53-abn / NSMP)", used_for: "Refines histologic risk"}
+  - {id: FIGO-2023, label: "FIGO 2023 (incorporates molecular)", used_for: "Modern staging"}
+etiological_factors:
+  - "Estrogen excess (obesity, unopposed estrogen, tamoxifen)"
+  - "Lynch syndrome (~30% lifetime risk)"
+  - "Cowden / PTEN syndromes"
+related_diseases: []
+epidemiology:
+  context: "Most common gyn cancer in developed countries. NRG-GY018 + RUBY: chemoimmuno superior to chemo alone (PFS HR 0.30 dMMR; 0.64 pMMR)."
+sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022]
+last_reviewed: null
+reviewers: []
+notes: "biomarker_driven — TCGA molecular classification dominant stratifier. dMMR drives largest ICI benefit."

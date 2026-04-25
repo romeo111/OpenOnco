@@ -1,0 +1,36 @@
+id: DIS-MELANOMA
+names:
+  preferred: "Cutaneous melanoma"
+  ukrainian: "Шкірна меланома"
+  english: "Cutaneous melanoma"
+  synonyms: ["Melanoma"]
+codes:
+  icd_o_3_morphology: "8720/3"
+  icd_o_3_topography: ["C44.9"]
+  icd_10: "C43"
+  who_classification: "Malignant melanoma of skin (WHO 5th 2023)"
+archetype: biomarker_driven
+lineage: solid_tumor_skin_melanoma
+molecular_subtypes:
+  - {id: BRAF_V600, label: "BRAF V600E/K mutation", definition: "~40-50%; targetable by BRAFi+MEKi"}
+  - {id: NRAS_MUT, label: "NRAS mutation", definition: "~20%; ICI-first"}
+  - {id: BRAF_WT_NRAS_WT, label: "Wild-type", definition: "ICI-only"}
+  - {id: KIT_MUT, label: "KIT mutation", definition: "Acral/mucosal; imatinib-responsive in select hotspots"}
+stage_strata:
+  - {id: STAGE_I_II_LOCAL, label: "Stage I-II — wide local excision ± SLNB"}
+  - {id: STAGE_III_REGIONAL, label: "Stage III regional — surgery + adjuvant ICI/BRAFi"}
+  - {id: STAGE_IV_METASTATIC, label: "Stage IV metastatic — ICI doublet or BRAFi+MEKi"}
+prognostic_frameworks:
+  - {id: AJCC-8TH-MELANOMA, label: "AJCC 8th (Breslow, ulceration, mitotic rate, LDH)", used_for: "Stage stratification + adjuvant decisions"}
+etiological_factors:
+  - "UV radiation"
+  - "BRAF V600E mutation"
+  - "Hereditary CDKN2A / CDK4 / BAP1"
+  - "Multiple atypical nevi / family history"
+related_diseases: []
+epidemiology:
+  context: "~325K cases/year. Metastatic OS transformed: nivo+ipi 7.5y OS 49%; RELATIVITY-047 nivo+rela 4y 48%."
+sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024]
+last_reviewed: null
+reviewers: []
+notes: "biomarker_driven — BRAF determines targeted-vs-ICI. ICI doublet preferred for brain mets."

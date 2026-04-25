@@ -1,0 +1,26 @@
+id: RF-RCC-ORGAN-DYSFUNCTION
+definition: "Solitary kidney OR baseline CrCl <50 mL/min — limits cisplatin alternatives + impacts surveillance imaging."
+definition_ua: "Єдина нирка АБО CrCl <50 — обмежує цисплатин альтернативи."
+
+trigger:
+  type: lab_value
+  any_of:
+    - {finding: "creatinine_clearance_ml_min", threshold: 50, comparator: "<"}
+    - {finding: "solitary_kidney", value: true}
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases: [DIS-RCC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: null
+draft: false
+
+notes: "Many RCC patients are post-nephrectomy by metastatic stage."

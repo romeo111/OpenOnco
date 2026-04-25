@@ -1,0 +1,26 @@
+id: RF-ENDOMETRIAL-TRANSFORMATION-PROGRESSION
+definition: "Sarcomatoid transformation OR carcinosarcoma — distinct biology requiring different chemo backbone."
+definition_ua: "Саркоматоїдна трансформація АБО карциносаркома."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "endometrial_carcinosarcoma", value: true}
+    - {finding: "endometrial_sarcomatoid", value: true}
+
+clinical_direction: intensify
+severity: critical
+priority: 100
+category: transformation-progression
+
+relevant_diseases: [DIS-ENDOMETRIAL]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESMO-ENDOMETRIAL-2022
+
+last_reviewed: null
+draft: false
+
+notes: "Carcinosarcoma: ifos-paclitaxel historical."

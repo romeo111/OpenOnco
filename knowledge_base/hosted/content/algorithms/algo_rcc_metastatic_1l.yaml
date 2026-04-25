@@ -1,0 +1,17 @@
+id: ALGO-RCC-METASTATIC-1L
+applicable_to_disease: DIS-RCC
+applicable_to_line_of_therapy: 1
+purpose: "Select 1L mRCC by histology + IMDC risk."
+output_indications: [IND-RCC-METASTATIC-1L-NIVO-IPI, IND-RCC-METASTATIC-1L-PEMBRO-AXI]
+default_indication: IND-RCC-METASTATIC-1L-PEMBRO-AXI
+alternative_indication: IND-RCC-METASTATIC-1L-NIVO-IPI
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - {condition: "IMDC intermediate or poor risk"}
+    if_true: {result: IND-RCC-METASTATIC-1L-NIVO-IPI}
+    if_false: {result: IND-RCC-METASTATIC-1L-PEMBRO-AXI}
+sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+last_reviewed: null
+notes: "Default to pembro+axi for IMDC favorable; nivo+ipi for intermediate/poor."

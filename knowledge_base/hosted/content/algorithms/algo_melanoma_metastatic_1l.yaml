@@ -1,0 +1,17 @@
+id: ALGO-MELANOMA-METASTATIC-1L
+applicable_to_disease: DIS-MELANOMA
+applicable_to_line_of_therapy: 1
+purpose: "Select 1L metastatic melanoma by BRAF + clinical context."
+output_indications: [IND-MELANOMA-METASTATIC-1L-NIVO-IPI, IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME]
+default_indication: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+alternative_indication: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - {condition: "BRAF V600E/K AND visceral crisis / rapid progression"}
+    if_true: {result: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME}
+    if_false: {result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI}
+sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024]
+last_reviewed: null
+notes: "DREAMseq: ICI-doublet → BRAFi+MEKi sequence preferred over reverse."

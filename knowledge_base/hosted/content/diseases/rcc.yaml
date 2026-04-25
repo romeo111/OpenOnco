@@ -1,0 +1,34 @@
+id: DIS-RCC
+names:
+  preferred: "Renal cell carcinoma"
+  ukrainian: "Нирково-клітинна карцинома"
+  english: "Renal cell carcinoma"
+  synonyms: ["RCC", "Hypernephroma"]
+codes:
+  icd_o_3_morphology: "8312/3"
+  icd_o_3_topography: ["C64.9"]
+  icd_10: "C64"
+  who_classification: "Renal cell carcinoma — clear-cell / papillary / chromophobe (WHO 5th 2022)"
+archetype: biomarker_driven
+lineage: solid_tumor_kidney_rcc
+histologic_subtypes:
+  - {id: CLEAR_CELL, label: "Clear-cell RCC", definition: "~75%; VHL-driven; ICI/TKI-responsive"}
+  - {id: PAPILLARY, label: "Papillary RCC", definition: "~10-15%; type 1 MET-driven indolent; type 2 heterogeneous"}
+  - {id: NON_CLEAR_CELL_OTHER, label: "Other non-clear-cell", definition: "Chromophobe / collecting duct / unclassified; cabozantinib + ICI options"}
+stage_strata:
+  - {id: STAGE_I_II_LOCALIZED, label: "Stage I-II localized — surgical resection"}
+  - {id: STAGE_III_LOCAL_ADVANCED, label: "Stage III locally advanced — surgery + adjuvant pembro (KEYNOTE-564)"}
+  - {id: STAGE_IV_METASTATIC, label: "Stage IV metastatic — ICI ± TKI"}
+prognostic_frameworks:
+  - {id: IMDC-RISK, label: "IMDC (Heng) risk groups: favorable / intermediate / poor", used_for: "1L metastatic regimen choice"}
+etiological_factors:
+  - "VHL inactivation drives clear-cell"
+  - "Smoking, obesity, hypertension"
+  - "Hereditary VHL / HLRCC / BHD / SDH-deficient / BAP1 syndromes"
+related_diseases: []
+epidemiology:
+  context: "~5% of adult cancers; ~430K new cases/year. Modern ICI doublets raised metastatic clear-cell median OS from ~12 to >40 months."
+sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+last_reviewed: null
+reviewers: []
+notes: "biomarker_driven — histology + IMDC risk drive selection. Adjuvant pembrolizumab approved per KEYNOTE-564."
