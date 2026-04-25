@@ -169,3 +169,33 @@ def test_surveillance_track_label_available():
     assert "surveillance" in _TRACK_LABELS_EN
     assert "watch-and-wait" in _TRACK_LABELS_UA["surveillance"].lower()
     assert "watch-and-wait" in _TRACK_LABELS_EN["surveillance"].lower()
+
+
+# ── WHO-LNSC FNA triage in lymphadenopathy workup ─────────────────────────
+
+
+def test_lymphadenopathy_workup_cites_who_lnsc():
+    """WORKUP-LYMPHADENOPATHY-NONSPECIFIC must cite SRC-WHO-LNSC-2023
+    once FNA-first triage with 5-tier categorization is part of the
+    biopsy-approach decision logic."""
+    result = load_content(KB_ROOT)
+    wkp = result.entities_by_id["WORKUP-LYMPHADENOPATHY-NONSPECIFIC"]["data"]
+    assert "SRC-WHO-LNSC-2023" in (wkp.get("sources") or [])
+
+    # FNA-first path must mention WHO-LNSC by name with the 5-tier escalation
+    alts = " ".join(wkp["biopsy_approach"]["alternatives"])
+    assert "WHO-LNSC" in alts
+    for tier in ("Inadequate", "Benign", "Atypical", "Suspicious", "Malignant"):
+        assert tier in alts, f"WHO-LNSC tier '{tier}' missing from FNA escalation rule"
+
+
+def test_suspected_lymphoma_workup_does_not_cite_who_lnsc():
+    """WORKUP-SUSPECTED-LYMPHOMA must NOT cite SRC-WHO-LNSC-2023 — once
+    lineage points to lymphoma, excisional/core remains preferred and
+    FNA cytology categorization does not drive the decision."""
+    result = load_content(KB_ROOT)
+    wkp = result.entities_by_id["WORKUP-SUSPECTED-LYMPHOMA"]["data"]
+    assert "SRC-WHO-LNSC-2023" not in (wkp.get("sources") or []), (
+        "WHO-LNSC should not be cited in the established-lymphoma workup; "
+        "it belongs to the undifferentiated-lymphadenopathy triage path."
+    )

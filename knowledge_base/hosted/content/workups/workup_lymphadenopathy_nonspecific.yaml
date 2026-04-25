@@ -37,20 +37,28 @@ required_tests:
   - TEST-CD20-IHC
 
 biopsy_approach:
-  preferred: "Excisional biopsy if LN persistent > 4-6 weeks AND size > 1.5 cm AND no clear infectious cause"
+  preferred: "Excisional biopsy if LN persistent > 4-6 weeks AND size > 1.5 cm AND lymphoma is leading hypothesis (atypical location, B-symptoms, abnormal CBC/LDH)"
   alternatives:
     - "Watchful waiting 4-6 weeks if size < 1.5 cm + asymptomatic + likely reactive (recent viral illness, oral/dental infection)"
-    - "Core needle if excisional not feasible (deep, mediastinal, abdominal)"
-    - "FNA — discouraged for definitive diagnosis (insufficient architecture); OK for ruling out metastatic carcinoma in old patient with known primary"
+    - "FNA-first triage with WHO-LNSC categorization (per SRC-WHO-LNSC-2023) for cervical / supraclavicular / parotid nodes when carcinoma metastasis is in the differential, OR when patient is unfit for surgery, OR when an established primary cancer is known and recurrence is being confirmed. Escalation rule per WHO-LNSC category: Inadequate → repeat FNA or escalate to core; Benign → clinical follow-up + watch; Atypical → core or excisional biopsy; Suspicious → excisional biopsy (preferred) or core; Malignant → escalate to disease-specific workup (lymphoma → WORKUP-SUSPECTED-LYMPHOMA; carcinoma → primary-tumor workup)."
+    - "Core needle if excisional not feasible (deep, mediastinal, abdominal) AND lymphoma is leading hypothesis — multiple cores ≥3, image-guided"
   rationale: >
     Більшість локалізованої лімфаденопатії — реактивна (особливо
     cervical у young patients). Biopsy criteria: size > 1.5 cm,
     persistence > 4-6 weeks, atypical location (supraclavicular,
     mediastinal, generalized), B-симптоми, abnormal CBC/LDH.
+    Modern triage для cervical / supraclavicular nodes коли differential
+    включає carcinoma metastasis — FNA-first з WHO-LNSC categorization
+    (5-tier: Inadequate / Benign / Atypical / Suspicious / Malignant);
+    категорія drives next-step decision. Якщо lymphoma вже leading
+    hypothesis (B-symptoms + atypical lab profile + axillary/inguinal/
+    generalized LAD) — excisional залишається preferred (architectural
+    pattern + adequate IHC + FISH material).
 
 mandatory_questions_to_resolve:
   - "Реактивна vs неоплазма?"
   - "Якщо неоплазма — лімфома vs metastatic carcinoma vs інше?"
+  - "Якщо проводилась FNA — WHO-LNSC категорія (Inadequate / Benign / Atypical / Suspicious / Malignant)? Категорія визначає escalation."
   - "Якщо лімфома — escalate до WORKUP-SUSPECTED-LYMPHOMA з повним staging?"
   - "Інфекційна causes виключена (TB, syphilis, brucellosis, toxoplasmosis якщо географічно relevant)?"
   - "Drug-induced lymphadenopathy виключена (phenytoin, allopurinol, etc.)?"
@@ -70,6 +78,7 @@ triggers_mdt_roles:
 sources:
   - SRC-EHA-WORKUP-2024
   - SRC-BSH-MZL-2024
+  - SRC-WHO-LNSC-2023
 
 last_reviewed: "2026-04-25"
 notes: >
