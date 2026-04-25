@@ -650,6 +650,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco — Open-source CDS for oncology</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -915,6 +916,7 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Sample cases</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -1032,6 +1034,7 @@ def render_try(*, target_lang: str = "uk") -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · {'Try it' if target_lang == 'en' else 'Спробувати'}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
 </head>
 <body>
@@ -2574,6 +2577,7 @@ def render_capabilities(stats) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Можливості</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -2950,6 +2954,7 @@ def render_limitations(stats) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Обмеження</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -3447,6 +3452,7 @@ def render_specs(stats) -> str:
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpenOnco · Специфікації</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -3619,6 +3625,11 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
         if src.exists():
             shutil.copyfile(src, output_dir / name)
             copied.append(name)
+    # favicon.svg lives directly under docs/ (committed) — preserve on --clean
+    favicon_src = REPO_ROOT / "docs" / "favicon.svg"
+    if favicon_src.exists() and favicon_src.resolve() != (output_dir / "favicon.svg").resolve():
+        shutil.copyfile(favicon_src, output_dir / "favicon.svg")
+        copied.append("favicon.svg")
     return copied
 
 
