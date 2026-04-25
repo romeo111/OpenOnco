@@ -1,0 +1,54 @@
+id: IND-BREAST-BRCA-POS-MET-PARPI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: any_HER2_neg
+  stage_stratum: METASTATIC
+  line_of_therapy: 1
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRCA-GERMLINE
+      value_constraint: "positive"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OLAPARIB-BREAST
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 7
+  notes: "OlympiAD"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-GERMLINE-BRCA-PANEL
+desired_tests: []
+
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: primary
+
+last_reviewed: null
+reviewers: []
+
+notes: >
+  OlympiAD: olaparib superior to physician-choice chemo in germline
+  BRCA-mutant HER2- metastatic. Talazoparib (EMBRACA) similar efficacy
+  with different AE profile (more anemia). Sequencing relative to
+  CDK4/6i (HR+ subset) and chemoimmunotherapy (TNBC subset) per
+  clinical context.

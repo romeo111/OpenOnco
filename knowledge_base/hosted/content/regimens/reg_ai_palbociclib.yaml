@@ -1,0 +1,42 @@
+id: REG-AI-PALBOCICLIB
+name: "AI + palbociclib (HR+/HER2- metastatic 1L)"
+name_ua: "Інгібітор ароматази + палбоцикліб (HR+/HER2- метастаз 1L)"
+alternate_names: ["PALOMA-2 regimen", "Letrozole + palbociclib"]
+
+components:
+  - drug_id: DRUG-LETROZOLE
+    dose: "2.5 mg PO daily"
+    schedule: "Continuous"
+    route: PO
+  - drug_id: DRUG-PALBOCICLIB
+    dose: "125 mg PO daily, days 1-21 of 28-day cycle"
+    schedule: "21 days on, 7 days off"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE   # cross-disease bone-health for AI BMD loss
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "ANC <500/µL"
+    modification: "Hold palbociclib until recovery; resume at next lower dose level"
+  - condition: "Severe hepatic impairment"
+    modification: "Reduce palbociclib to 75 mg; AI dose adjust per hepatic monograph"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Letrozole reimbursed (generic). Palbociclib registered; reimbursement gap — out-of-pocket for most patients in Ukraine. Funding pathway must be confirmed pre-start."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  PALOMA-2: PFS benefit (~10-month improvement vs letrozole alone) in
+  HR+/HER2- metastatic 1L. Premenopausal patients require ovarian
+  suppression (LHRH agonist) added. For postmenopausal with bone-only
+  disease + endocrine-sensitive: this is workhorse 1L.

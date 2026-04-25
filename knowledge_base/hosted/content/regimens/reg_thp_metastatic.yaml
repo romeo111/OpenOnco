@@ -1,0 +1,46 @@
+id: REG-THP-METASTATIC
+name: "THP — docetaxel + trastuzumab + pertuzumab (HER2+ metastatic 1L)"
+name_ua: "THP — доцетаксель + трастузумаб + пертузумаб (HER2+ метастаз 1L)"
+alternate_names: ["CLEOPATRA regimen"]
+
+components:
+  - drug_id: DRUG-DOCETAXEL
+    dose: "75-100 mg/m² IV"
+    schedule: "Day 1 of 21-day cycle x 6-8 cycles, then HP maintenance"
+    route: IV
+  - drug_id: DRUG-TRASTUZUMAB
+    dose: "8 mg/kg loading, 6 mg/kg maintenance IV"
+    schedule: "Day 1 of 21-day cycle, continuous until progression"
+    route: IV
+  - drug_id: DRUG-PERTUZUMAB
+    dose: "840 mg loading, 420 mg maintenance IV"
+    schedule: "Day 1 of 21-day cycle, continuous until progression"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Docetaxel × 6-8; HP continues until progression"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Dexamethasone for docetaxel"
+  - "Antiemetic protocol"
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "LVEF decline >10% from baseline + below LLN"
+    modification: "Hold trastuzumab + pertuzumab; cardiology evaluation"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Reimbursed for HER2+ metastatic 1L."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  CLEOPATRA: median OS ~57 months (pertuzumab arm) — landmark for HER2+
+  metastatic. After docetaxel discontinuation (typically ~6-8 cycles or
+  toxicity), HP maintenance continues until progression. Endocrine
+  therapy added if HR+ co-expressed.

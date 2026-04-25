@@ -1,0 +1,34 @@
+id: RF-BREAST-INFECTION-SCREENING
+definition: "HBV/HCV/HIV serology + dental evaluation pre-bisphosphonate/denosumab + DPYD genotyping for capecitabine-containing regimens (EU practice)."
+definition_ua: "HBV/HCV/HIV серологія + стоматологічна оцінка перед бісфосфонатом/деносумабом + DPYD генотипування для капецитабінових режимів."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "dental_clearance_pending"
+      value: true
+    - finding: "dpyd_deficient"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: infection-screening
+
+relevant_diseases: [DIS-BREAST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: null
+draft: false
+
+notes: >
+  Cross-disease HBV reactivation handled by RF-UNIVERSAL-HBV-REACTIVATION-
+  RISK. DPYD deficiency screening unique to fluoropyrimidine-containing
+  regimens; severe / fatal toxicity in homozygous deficient patients —
+  EU/EMA-recommended pre-test.

@@ -1,0 +1,56 @@
+id: IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HER2_POS
+  stage_stratum: EARLY
+  line_of_therapy: 1
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-TCHP-NEOADJUVANT
+concurrent_therapy: []
+# Sequential: KATHERINE pathway — residual ypT+ or ypN+ post-neoadj
+# switches to T-DM1 x 14 cycles; pCR continues trastuzumab + pertuzumab
+# to complete 1 year HER2-targeted therapy.
+followed_by:
+  - REG-TDM1-ADJUVANT
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  pathologic_complete_response_rate: "60-65%"
+  five_year_invasive_disease_free_survival_with_pcr: ">90%"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-BREAST-FRAILTY-AGE
+  - RF-BREAST-ORGAN-DYSFUNCTION
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests:
+  - TEST-GERMLINE-BRCA-PANEL
+
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-EARLY-2024
+    weight: primary
+
+last_reviewed: null
+reviewers: []
+
+notes: >
+  Stage II-III HER2+ standard. APHINITY trial supports adjuvant
+  pertuzumab post-pCR in node-positive. KATHERINE pathway for residual
+  disease — major iDFS gain.

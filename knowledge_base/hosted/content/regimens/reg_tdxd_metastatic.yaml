@@ -1,0 +1,38 @@
+id: REG-TDXD-METASTATIC
+name: "T-DXd monotherapy (HER2+ metastatic 2L+, also HER2-low metastatic)"
+name_ua: "T-DXd монотерапія (HER2+ метастаз 2L+, також HER2-low метастаз)"
+alternate_names: ["DESTINY-Breast03 regimen", "Enhertu monotherapy"]
+
+components:
+  - drug_id: DRUG-TRASTUZUMAB-DERUXTECAN
+    dose: "5.4 mg/kg IV"
+    schedule: "Day 1 of 21-day cycle, continuous until progression"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Antiemetic — high-emetogenicity protocol (NK-1 + 5-HT3 + dexamethasone)"
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Pneumonitis G≥2 OR new respiratory symptoms"
+    modification: "Hold immediately; CT chest + pulmonology consult; corticosteroids; permanent discontinuation if G≥3"
+  - condition: "LVEF decline"
+    modification: "Cardiology evaluation"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Registered; reimbursement under negotiation. Significant out-of-pocket cost; access barrier — clinical-review queue priority."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  DESTINY-Breast03: superior to T-DM1 in 2L HER2+ metastatic.
+  DESTINY-Breast04: HER2-low metastatic post-chemo (PFS + OS benefit).
+  ILD risk dominant safety concern — boxed warning + active monitoring.

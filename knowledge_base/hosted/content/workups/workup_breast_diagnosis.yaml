@@ -1,0 +1,53 @@
+id: WORKUP-BREAST-DIAGNOSIS
+applicable_to:
+  lineage_hints:
+    - solid_tumor_breast
+    - breast_lump
+    - breast_cancer_suspect
+  tissue_locations:
+    - breast
+    - axillary_lymph_nodes
+  presentation_keywords:
+    - breast_lump
+    - breast_mass
+    - breast_pain
+    - nipple_discharge
+    - axillary_lymphadenopathy
+    - mammographic_abnormality
+
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+
+desired_tests:
+  - TEST-ONCOTYPE-DX
+  - TEST-GERMLINE-BRCA-PANEL
+  - TEST-PIK3CA-NGS
+  - TEST-BONE-SCAN
+
+triggers_mdt_roles:
+  required:
+    - medical_oncologist
+    - breast_surgeon
+    - radiation_oncologist
+  recommended:
+    - radiologist
+    - pathologist
+    - molecular_geneticist
+  rationale_per_role:
+    medical_oncologist: "Systemic therapy planning across early + metastatic settings."
+    breast_surgeon: "BCS vs mastectomy + axillary management; reconstruction discussion."
+    radiation_oncologist: "Adjuvant RT planning for BCS, post-mastectomy with positive nodes, intact-breast palliative."
+    radiologist: "Mammography + breast US + breast MRI interpretation; staging imaging review."
+    pathologist: "Histologic subtyping, IHC/FISH biomarker reporting, margin assessment."
+    molecular_geneticist: "Germline BRCA / HRR + somatic NGS testing for advanced disease."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
+
+last_reviewed: null
+notes: >
+  Comprehensive initial workup. ER/PR/HER2 + germline BRCA testing
+  for all breast cancers per NCCN 2025 (regardless of family history
+  in metastatic). Imaging staging full-body when high-risk early or
+  any metastatic suspicion.

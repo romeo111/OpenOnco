@@ -1,0 +1,58 @@
+id: IND-BREAST-TNBC-EARLY-NEOADJUVANT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: TNBC
+  stage_stratum: EARLY
+  line_of_therapy: 1
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "negative"
+      required: true
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "negative"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  pathologic_complete_response_rate: "65%"
+  three_year_event_free_survival: "85%"
+  notes: "KEYNOTE-522"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-BREAST-FRAILTY-AGE
+  - RF-BREAST-ORGAN-DYSFUNCTION
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+  - TEST-GERMLINE-BRCA-PANEL
+desired_tests: []
+
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-EARLY-2024
+    weight: primary
+
+last_reviewed: null
+reviewers: []
+
+notes: >
+  Stage II-III TNBC standard. KEYNOTE-522 benefit independent of PD-L1
+  status (early-disease setting, distinct from metastatic where PD-L1
+  matters per KEYNOTE-355). Continuation: 9 additional pembro adjuvant
+  cycles to complete ~1 year immunotherapy. BRCA+ residual disease:
+  consider olaparib (OlympiA) — separate Indication.

@@ -1,0 +1,81 @@
+id: ALGO-BREAST-1L
+applicable_to_disease: DIS-BREAST
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L breast cancer regimen via receptor-subtype + stage branching:
+  HER2+ → trastuzumab + pertuzumab backbone (TCHP early; THP metastatic;
+  T-DXd 2L). HR+/HER2- → AI + CDK4/6i (metastatic) or AI ± CDK4/6i
+  (adjuvant high-risk early). TNBC → pembro + chemo (early or PD-L1+
+  metastatic) or chemo alone (PD-L1- metastatic). BRCA-mutant
+  HER2- metastatic: PARPi-first per OlympiAD; OlympiA pathway adjuvant.
+
+output_indications:
+  - IND-BREAST-HR-POS-MET-1L-CDKI
+  - IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
+  - IND-BREAST-HER2-POS-MET-1L-THP
+  - IND-BREAST-HER2-POS-MET-2L-TDXD
+  - IND-BREAST-TNBC-EARLY-NEOADJUVANT
+  - IND-BREAST-BRCA-POS-MET-PARPI
+
+default_indication: IND-BREAST-HR-POS-MET-1L-CDKI
+alternative_indication: IND-BREAST-HER2-POS-MET-1L-THP
+
+decision_tree:
+  # Step 1 — HER2+ disease (independent of HR co-expression)
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "HER2-positive (IHC 3+ OR FISH-amplified)"
+    if_true:
+      next_step: 2
+    if_false:
+      next_step: 3
+  # Step 2 — HER2+ branch: early vs metastatic
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Stage I-III (early)"
+    if_true:
+      result: IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
+    if_false:
+      result: IND-BREAST-HER2-POS-MET-1L-THP
+  # Step 3 — HER2-negative; check TNBC vs HR+
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "ER <1% AND PR <1% (TNBC)"
+    if_true:
+      next_step: 4
+    if_false:
+      next_step: 5
+  # Step 4 — TNBC branch: BRCA+ takes PARPi-first metastatic; otherwise pembro+chemo
+  - step: 4
+    evaluate:
+      all_of:
+        - red_flag: RF-BREAST-HIGH-RISK-BIOLOGY
+        - condition: "Stage IV"
+    if_true:
+      result: IND-BREAST-BRCA-POS-MET-PARPI
+    if_false:
+      result: IND-BREAST-TNBC-EARLY-NEOADJUVANT
+  # Step 5 — HR+/HER2- branch: BRCA+ metastatic takes PARPi over CDK4/6i?
+  # Clinical practice mixed; default keeps CDK4/6i 1L; clinician overrides.
+  - step: 5
+    evaluate:
+      any_of:
+        - condition: "Default HR+/HER2- 1L metastatic"
+    if_true:
+      result: IND-BREAST-HR-POS-MET-1L-CDKI
+    if_false:
+      result: IND-BREAST-HR-POS-MET-1L-CDKI
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  Receptor-subtype is the dominant branch point — biomarker_driven
+  archetype materialized. T-DXd 2L HER2+ metastatic referenced as
+  output but engaged via revise_plan() after THP failure rather than
+  as 1L choice. Decision tree intentionally simplified for MVP — full
+  integration of CDK4/6i adjuvant (NATALEE / monarchE), Lu-PSMA
+  analog targeted ADCs, and brain-met HER2CLIMB pathways requires
+  follow-up content sessions.

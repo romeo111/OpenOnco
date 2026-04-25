@@ -1,0 +1,38 @@
+id: REG-OLAPARIB-BREAST
+name: "Olaparib monotherapy (BRCA-mutant HER2- breast: metastatic OR adjuvant high-risk early)"
+name_ua: "Олапариб моно (BRCA-мутант HER2- РМЗ: метастаз АБО ад'ювант ранній високого ризику)"
+alternate_names: ["OlympiAD regimen", "OlympiA regimen"]
+
+components:
+  - drug_id: DRUG-OLAPARIB
+    dose: "300 mg PO BID continuous"
+    schedule: "Until progression (metastatic) or 1 year (OlympiA adjuvant)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Adjuvant: 12; Metastatic: continuous until progression"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Anemia G≥2"
+    modification: "Hold; reduce stepwise to 250 → 200 mg BID"
+  - condition: "Pneumonitis suspect"
+    modification: "Hold; pulmonology evaluation"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Reimbursed for breast indication — OlympiAD/OlympiA covered."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  OlympiAD: PFS benefit in BRCA-mutant HER2- metastatic. OlympiA:
+  iDFS + OS benefit in adjuvant BRCA-mutant high-risk early breast
+  (TNBC stage II+ OR HR+/HER2- pCP-3 OR ≥4 nodes). Germline BRCA
+  testing required pre-start.

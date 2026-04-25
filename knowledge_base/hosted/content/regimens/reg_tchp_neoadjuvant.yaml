@@ -1,0 +1,53 @@
+id: REG-TCHP-NEOADJUVANT
+name: "TCHP — docetaxel + carboplatin + trastuzumab + pertuzumab (HER2+ neoadjuvant)"
+name_ua: "TCHP — доцетаксель + карбоплатин + трастузумаб + пертузумаб (HER2+ неоад'юв)"
+alternate_names: ["TRYPHAENA regimen", "BERENICE regimen"]
+
+components:
+  - drug_id: DRUG-DOCETAXEL
+    dose: "75 mg/m² IV"
+    schedule: "Day 1 of 21-day cycle x 6 cycles"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 6 IV"
+    schedule: "Day 1 of 21-day cycle x 6 cycles"
+    route: IV
+  - drug_id: DRUG-TRASTUZUMAB
+    dose: "8 mg/kg IV loading, 6 mg/kg IV maintenance"
+    schedule: "Day 1 of 21-day cycle"
+    route: IV
+  - drug_id: DRUG-PERTUZUMAB
+    dose: "840 mg IV loading, 420 mg IV maintenance"
+    schedule: "Day 1 of 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "6 (then surgery → adjuvant trastuzumab + pertuzumab to complete 1 year HER2-targeted therapy; T-DM1 if residual disease)"
+toxicity_profile: severe
+
+premedication:
+  - "Dexamethasone 8 mg PO BID x 3 days starting day before docetaxel (fluid retention prophylaxis)"
+  - "Antiemetic per moderate-emetogenic protocol"
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+  - SUP-G-CSF-PRIMARY-PROPHYLAXIS-PROSTATE  # cross-disease G-CSF
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "LVEF decline >10% from baseline AND below LLN"
+    modification: "Hold trastuzumab + pertuzumab; cardiology consult; reassess in 3 weeks"
+  - condition: "Febrile neutropenia"
+    modification: "G-CSF support; consider docetaxel dose reduction"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Reimbursed for HER2+ early-breast neoadjuvant per НСЗУ; backbone of curative-intent HER2+ care."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
+last_reviewed: null
+notes: >
+  Standard neoadjuvant for HER2+ stage II-III. pCR rate ~60-65% with
+  TCHP. Path to KATHERINE-eligibility: residual disease post-neoadj
+  → adjuvant T-DM1; pCR → continue trastuzumab + pertuzumab to 1 year
+  total.

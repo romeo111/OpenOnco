@@ -1,0 +1,40 @@
+id: REG-FULVESTRANT-ABEMACICLIB
+name: "Fulvestrant + abemaciclib (HR+/HER2- metastatic 2L post-AI)"
+name_ua: "Фулвестрант + абемацикліб (HR+/HER2- метастаз 2L після ІА)"
+alternate_names: ["MONARCH-2 regimen"]
+
+components:
+  - drug_id: DRUG-FULVESTRANT
+    dose: "500 mg IM days 1, 15, 29, then monthly"
+    schedule: "Loading + monthly maintenance"
+    route: IM
+  - drug_id: DRUG-ABEMACICLIB
+    dose: "150 mg PO BID continuous"
+    schedule: "Continuous (no off-week)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: moderate
+
+premedication:
+  - "Loperamide 4 mg PO at first sign of diarrhea, then 2 mg every 4 hours up to 16 mg/day"
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Diarrhea G3 despite loperamide"
+    modification: "Hold abemaciclib; reduce to 100 mg BID after recovery"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Fulvestrant reimbursed; abemaciclib reimbursement pending. Out-of-pocket for combination; clinical-review queue item."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  MONARCH-2: PFS + OS benefit post-AI failure. Diarrhea management
+  is the dominant clinical workflow burden — patient-counseling and
+  immediate access to loperamide critical.

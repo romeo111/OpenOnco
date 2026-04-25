@@ -1,0 +1,39 @@
+id: RF-BREAST-FRAILTY-AGE
+definition: "Age ≥75 + ECOG ≥2 + significant comorbidity — anthracycline + dose-dense regimens poorly tolerated; consider TC, weekly paclitaxel, single-agent endocrine, or trastuzumab + chemo of reduced intensity."
+definition_ua: "Вік ≥75 + ECOG ≥2 + суттєві коморбідності — антрациклін + доза-щільні режими погано переносяться; розглянути TC, тижневий паклітаксель, ендокринну моно, скорочений HER2-режим."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-BREAST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: null
+draft: false
+
+notes: >
+  Geriatric assessment (G8 / CGA) recommended pre-treatment for ≥70.
+  HR+ disease in frail elderly may be managed with endocrine therapy
+  alone (favorable risk-benefit). HER2+: trastuzumab + paclitaxel
+  weekly or T-DM1 monotherapy alternatives. TNBC: weekly paclitaxel
+  or capecitabine.

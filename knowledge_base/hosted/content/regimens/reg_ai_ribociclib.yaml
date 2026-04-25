@@ -1,0 +1,41 @@
+id: REG-AI-RIBOCICLIB
+name: "AI + ribociclib (HR+/HER2- metastatic 1L; OS-validated)"
+name_ua: "Інгібітор ароматази + рибоцикліб (HR+/HER2- метастаз 1L; OS-валідовано)"
+alternate_names: ["MONALEESA regimen"]
+
+components:
+  - drug_id: DRUG-LETROZOLE
+    dose: "2.5 mg PO daily"
+    schedule: "Continuous"
+    route: PO
+  - drug_id: DRUG-RIBOCICLIB
+    dose: "600 mg PO daily, days 1-21 of 28-day cycle"
+    schedule: "21 days on, 7 days off"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care:
+  - SUP-BONE-HEALTH-PROSTATE
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTcF >480 ms"
+    modification: "Hold ribociclib; resume at next lower dose level after recovery"
+  - condition: "ANC <500/µL"
+    modification: "Hold; resume at lower dose"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Same access pattern as palbociclib — registered, NSZU-reimbursement pending."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: null
+notes: >
+  MONALEESA-2/3/7: OS benefit in metastatic HR+/HER2- 1L+ premenopausal
+  + postmenopausal subgroups. NATALEE: 3-year adjuvant role established
+  for high-risk N+ HR+/HER2- early breast (separate Indication needed).

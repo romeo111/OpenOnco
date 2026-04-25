@@ -1,0 +1,95 @@
+id: DIS-BREAST
+names:
+  preferred: "Breast cancer (invasive)"
+  ukrainian: "Інвазивний рак молочної залози"
+  english: "Invasive breast cancer"
+  synonyms: ["BC", "РМЗ", "Mammary carcinoma"]
+
+codes:
+  icd_o_3_morphology: "8500/3"  # Invasive ductal carcinoma NST (most common)
+  icd_o_3_topography: ["C50.9"]
+  icd_10: "C50"
+  who_classification: "Invasive carcinoma of the breast (WHO 5th)"
+
+archetype: biomarker_driven
+lineage: solid_tumor_breast
+
+# Receptor subtypes are the dominant treatment branch — captured as
+# biomarker findings on the patient profile, resolved by Algorithm.
+receptor_subtypes:
+  - id: HR_POS_HER2_NEG
+    label: "HR+/HER2-"
+    label_ua: "HR+/HER2-"
+    definition: "ER and/or PR ≥1% positive AND HER2 negative (IHC 0-1+ or IHC 2+ FISH-negative). ~70% of all breast cancer."
+  - id: HER2_POS
+    label: "HER2+"
+    label_ua: "HER2+"
+    definition: "HER2 IHC 3+ OR HER2 IHC 2+ with FISH-amplified ratio ≥2.0. ~15-20% of all breast cancer; can be HR+ or HR- (HR co-expression refines therapy)."
+  - id: TNBC
+    label: "Triple-negative (TNBC)"
+    label_ua: "Тричі-негативний (TNBC)"
+    definition: "ER <1% AND PR <1% AND HER2 negative. ~10-15% of all breast cancer; aggressive natural history."
+
+# Stage strata
+stage_strata:
+  - id: EARLY
+    label: "Early-stage (curative-intent)"
+    label_ua: "Рання стадія (curative-intent)"
+    definition: "Stage I-III; surgery + neoadjuvant or adjuvant systemic ± RT"
+  - id: METASTATIC
+    label: "Metastatic / Stage IV"
+    label_ua: "Метастатична / IV ст."
+    definition: "Distant metastases at presentation or recurrent — palliative-intent systemic therapy with focus on disease control + QoL"
+
+prognostic_frameworks:
+  - id: AJCC-PROGNOSTIC
+    label: "AJCC 8th edition prognostic stage (anatomic + biomarker grade group)"
+    used_for: "Early-stage prognostic stratification; adjuvant decision-making"
+  - id: ONCOTYPE-DX
+    label: "21-gene Recurrence Score (Oncotype DX) for HR+/HER2-, node-negative early breast"
+    used_for: "Distinguishes patients who benefit from adjuvant chemo vs endocrine alone (TAILORx)"
+  - id: MAMMAPRINT
+    label: "70-gene MammaPrint risk classification for HR+/HER2-"
+    used_for: "MINDACT-validated; clinical-genomic-low → endocrine alone"
+
+etiological_factors:
+  - "Estrogen-driven proliferation in HR+ subtype — endocrine therapy core of treatment"
+  - "HER2 overexpression / ERBB2 amplification — targeted antibody therapy transformative"
+  - "Germline BRCA1/2, PALB2, TP53 (Li-Fraumeni), CHEK2 — predispose to breast (and ovarian / pancreatic) cancer; PARPi-eligible if metastatic"
+  - "Lifestyle modulators (parity, breastfeeding, alcohol, BMI, postmenopausal HRT) influence risk but not treatment"
+
+related_diseases:
+  - "DIS-DCIS"  # (placeholder — not yet in KB)
+  - "DIS-LCIS"  # (placeholder — not yet in KB)
+
+epidemiology:
+  context: >
+    Most common cancer in women globally (~2.3M new cases/year). 5-year
+    OS for early-stage >90%, metastatic ~30%. Modern era (CDK4/6i in
+    HR+, T-DXd in HER2+ ≥2L, pembrolizumab + chemo in TNBC) has
+    substantially extended metastatic survival. Major UA practice gap:
+    expensive targeted/biologic therapy access and germline BRCA testing
+    availability.
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: null
+reviewers: []
+notes: >
+  Single Disease entity with biomarker_driven archetype — receptor
+  subtype (ER/PR/HER2) and BRCA/HRR status are the dominant Algorithm
+  branch points. Sub-strata (early vs metastatic) carried as Indication
+  applicable_to.stage_requirements.
+
+  Decision: ONE Disease (not three) chosen because:
+  (1) shared diagnostic workup, biomarker testing, surgical paradigm;
+  (2) shared bone-health, fertility-preservation, psychosocial supportive
+      care;
+  (3) treatment branching is uniformly resolved through biomarker
+      findings + Algorithm decision_tree — no need for separate Disease
+      entities.
+  Male breast cancer follows the same algorithm with gender-specific
+  notes in supportive care + treatment-tolerance considerations.

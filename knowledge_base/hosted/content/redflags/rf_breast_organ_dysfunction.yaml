@@ -1,0 +1,33 @@
+id: RF-BREAST-ORGAN-DYSFUNCTION
+definition: "Cardiac dysfunction (LVEF <50%) — anthracycline + trastuzumab/pertuzumab + T-DM1/T-DXd all carry cardiotoxicity risk; baseline echo + serial monitoring required."
+definition_ua: "Кардіальна дисфункція (LVEF <50%) — антрациклін + трастузумаб/пертузумаб + T-DM1/T-DXd мають ризик кардіотоксичності; echo на старті + серійний моніторинг."
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "cardiac_dysfunction_baseline"
+      value: true
+
+clinical_direction: investigate
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases: [DIS-BREAST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: null
+draft: false
+
+notes: >
+  Anthracycline + trastuzumab cumulative cardiotoxicity well-established.
+  Modern strategies: cardio-oncology consult; substitute non-anthracycline
+  regimen (TC for HER2-) or modified HER2-backbone if anthracycline
+  contraindicated. T-DXd cardiotoxicity less than naked trastuzumab.
