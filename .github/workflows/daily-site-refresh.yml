@@ -1,0 +1,116 @@
+name: Daily Site Refresh
+
+# Re-runs scripts/build_site.py once a day so the marketing numbers on
+# openonco.info (corpus references, source count, KB entity counts) stay
+# in sync with whatever lands in knowledge_base/ during the day. Commits
+# the regenerated docs/ back to master only if anything actually changed.
+#
+# Schedule: 07:23 UTC daily — off-minute on purpose so we don't pile up
+# with every other repo cron at :00 / :30. Mirrors the in-session Claude
+# scheduler that fires at 07:23 local; whichever runs first wins, the
+# other no-ops because docs/ will already be up to date.
+#
+# Manual trigger via Actions tab → "Run workflow" any time.
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+
+# Only one refresh at a time — prevents two simultaneous pushes if a manual
+# trigger lands during the scheduled run.
+concurrency:
+  group: daily-site-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write  # need push back to master
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history so we can commit back)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use a token that can push to master; default GITHUB_TOKEN works
+          # for same-repo pushes since permissions.contents=write above.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Regenerate docs/ from current KB
+        run: |
+          python -m scripts.build_site
+
+      - name: Check whether docs/ actually changed
+        id: diff
+        run: |
+          if git diff --quiet docs/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes — KB unchanged since yesterday's build."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "docs/ changed — will commit."
+            git diff --stat docs/ | tail -10
+          fi
+
+      - name: Capture new corpus numbers (for commit message)
+        if: steps.diff.outputs.changed == 'true'
+        id: stats
+        run: |
+          # Pull just the headline numbers we use in the commit subject.
+          REFS=$(python -c "from knowledge_base.stats import collect_stats; print(collect_stats().corpus_references_total)")
+          PAGES=$(python -c "from knowledge_base.stats import collect_stats; print(collect_stats().corpus_pages_total)")
+          SOURCES=$(python -c "from knowledge_base.stats import collect_stats; s=collect_stats(); print(next((e.count for e in s.entities if e.type=='sources'), 0))")
+          ENTITIES=$(python -c "from knowledge_base.stats import collect_stats; print(collect_stats().total_yaml_entities)")
+          {
+            echo "refs=$REFS"
+            echo "pages=$PAGES"
+            echo "sources=$SOURCES"
+            echo "entities=$ENTITIES"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push regenerated docs/
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          REFS: ${{ steps.stats.outputs.refs }}
+          PAGES: ${{ steps.stats.outputs.pages }}
+          SOURCES: ${{ steps.stats.outputs.sources }}
+          ENTITIES: ${{ steps.stats.outputs.entities }}
+        run: |
+          git config user.name  "openonco-site-refresh[bot]"
+          git config user.email "site-refresh@openonco.info"
+          git add docs/
+          git commit -m "chore(site): daily refresh — ${REFS}+ refs across ${SOURCES} sources" -m "$(cat <<EOF
+          Auto-regenerated docs/ from current KB state.
+
+          Headline numbers (used by landing hero block):
+          - ${SOURCES} top-level sources cited
+          - ${REFS}+ primary publications referenced
+          - ${PAGES} pages of guideline material
+          - ${ENTITIES} total KB entities
+
+          Triggered by .github/workflows/daily-site-refresh.yml
+          EOF
+          )"
+          git push origin HEAD:master
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "✓ Site refreshed: ${{ steps.stats.outputs.sources }} sources, ${{ steps.stats.outputs.refs }}+ refs, ${{ steps.stats.outputs.pages }} pages."
+          else
+            echo "✓ No changes — site already in sync with KB."
+          fi
