@@ -4,6 +4,7 @@ Usage:
     python -m knowledge_base.engine.cli examples/patient_zero_indolent.json
     python -m knowledge_base.engine.cli patient.json --kb knowledge_base/hosted/content
     python -m knowledge_base.engine.cli patient.json --json-output plan.json --verbose
+    python -m knowledge_base.engine.cli patient.json --mdt
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ import json
 import sys
 from pathlib import Path
 
+from .mdt_orchestrator import orchestrate_mdt
 from .plan import generate_plan
 
 # Force UTF-8 stdout so Cyrillic + symbols print correctly on Windows cp1252
@@ -38,6 +40,51 @@ def _print_track(t, indent: str = "  ") -> None:
         print(f"{indent}  Reason: {t.selection_reason[:100]}")
 
 
+def _print_role_block(label: str, roles) -> None:
+    if not roles:
+        return
+    print(f"  {label} ({len(roles)}):")
+    for r in roles:
+        print(f"    - [{r.role_id}] {r.role_name}")
+        print(f"        reason:  {r.reason}")
+        if r.linked_questions:
+            print(f"        owns:    {', '.join(r.linked_questions)}")
+
+
+def _print_mdt_brief(mdt) -> None:
+    print()
+    print("=== MDT Brief ===")
+    print(f"  Plan:    {mdt.plan_id}")
+    print(f"  Disease: {mdt.disease_id}")
+    print()
+    _print_role_block("Required roles", mdt.required_roles)
+    _print_role_block("Recommended roles", mdt.recommended_roles)
+    _print_role_block("Optional roles", mdt.optional_roles)
+
+    if mdt.open_questions:
+        blocking = sum(1 for q in mdt.open_questions if q.blocking)
+        print(f"  Open questions ({len(mdt.open_questions)}, {blocking} blocking):")
+        for q in mdt.open_questions:
+            tag = "[BLOCKING] " if q.blocking else ""
+            print(f"    - {tag}{q.id} (owner: {q.owner_role})")
+            print(f"        Q: {q.question}")
+            print(f"        why: {q.rationale}")
+    else:
+        print("  Open questions: none")
+
+    dq = mdt.data_quality_summary or {}
+    print("  Data quality:")
+    print(f"    Missing critical:    {len(dq.get('missing_critical_fields') or [])}")
+    print(f"    Missing recommended: {len(dq.get('missing_recommended_fields') or [])}")
+    if dq.get("missing_critical_fields"):
+        print(f"      → {', '.join(dq['missing_critical_fields'])}")
+
+    if mdt.warnings:
+        print("  Warnings:")
+        for w in mdt.warnings:
+            print(f"    - {w}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="OpenOnco rule engine — generate a Plan with multiple tracks.")
     parser.add_argument("patient", type=Path, help="Patient profile JSON")
@@ -49,6 +96,11 @@ def main() -> int:
     )
     parser.add_argument("--json-output", type=Path, help="Write full Plan JSON here")
     parser.add_argument("--verbose", action="store_true", help="Print trace + warnings + sources")
+    parser.add_argument(
+        "--mdt",
+        action="store_true",
+        help="Print MDT brief: required/recommended roles, open questions, data quality",
+    )
     args = parser.parse_args()
 
     if not args.patient.is_file():
@@ -93,9 +145,17 @@ def main() -> int:
             for w in result.warnings:
                 print(f"  - {w}")
 
+    mdt = None
+    if args.mdt:
+        mdt = orchestrate_mdt(patient, result, kb_root=args.kb)
+        _print_mdt_brief(mdt)
+
     if args.json_output:
+        payload = result.to_dict()
+        if mdt is not None:
+            payload["mdt"] = mdt.to_dict()
         args.json_output.write_text(
-            json.dumps(result.to_dict(), indent=2, ensure_ascii=False, default=str),
+            json.dumps(payload, indent=2, ensure_ascii=False, default=str),
             encoding="utf-8",
         )
         print(f"\nFull Plan JSON written to {args.json_output}")
