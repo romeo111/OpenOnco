@@ -1,0 +1,41 @@
+id: REG-MOGAMULIZUMAB
+name: "Mogamulizumab monotherapy (1.0 mg/kg IV weekly × 5, then q2 weeks)"
+name_ua: "Могамулізумаб монотерапія (1.0 mg/kg IV щотижня × 5, далі q2 тижні)"
+alternate_names: ["Mogamulizumab", "Poteligeo", "Anti-CCR4 mAb"]
+
+components:
+  - drug_id: DRUG-MOGAMULIZUMAB
+    dose: "1.0 mg/kg"
+    schedule: "IV over ≥1h weekly × 5 (induction); then every 2 weeks until progression or toxicity"
+    route: IV
+
+cycle_length_days: 14  # maintenance cycle
+total_cycles: "5 weekly induction + maintenance until progression / toxicity"
+toxicity_profile: moderate
+
+premedication: ["Antihistamine + acetaminophen + IV steroid before each dose (especially first 2)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-MF-SYSTEMIC
+
+dose_adjustments:
+  - condition: "Grade ≥3 skin reaction"
+    modification: "Interrupt; resume only if recovery to ≤Grade 1; permanent discontinuation if SJS/TEN suspected"
+  - condition: "Grade ≥3 infusion reaction"
+    modification: "Slow rate; may rechallenge with intensified premedication; discontinue if anaphylactoid"
+  - condition: "Allo-SCT planned within 50 days post"
+    modification: "Defer mogamulizumab — severe GVHD risk persists ≥50 days post last dose (FDA black box)"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Mogamulizumab NOT registered in Ukraine. Access only via МОЗ exception import OR clinical trial enrollment. Fallback: brentuximab vedotin monotherapy if CD30+, or skin-directed + methotrexate per IA stage."
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  MAVORIC trial (Kim 2018, Lancet Oncol): mogamulizumab 28% ORR vs
+  vorinostat 5% ORR in r/r MF/Sézary; PFS HR 0.53. Best response in
+  Sézary syndrome (blood B2). NCCN cat 1 for r/r; emerging 1L for
+  advanced Sézary syndrome where access permits. Skin AE management
+  (drug rash ~25%, distinguishing from progression critical) requires
+  dermatology partnership — not stand-alone hematology workflow.

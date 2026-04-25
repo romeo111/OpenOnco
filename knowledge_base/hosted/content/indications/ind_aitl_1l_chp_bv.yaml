@@ -1,0 +1,86 @@
+id: IND-AITL-1L-CHP-BV
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-AITL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-CHP-BV
+concurrent_therapy: [SUP-PJP-PROPHYLAXIS]
+followed_by: []  # autoSCT consolidation considered separately in fit younger CR1
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80-85%"
+  complete_response: "~60-70%"
+  progression_free_survival: "ECHELON-2 AITL subset signal favorable; full subset PFS ~57% 3y in CD30+ T-cell (driven by ALCL)"
+  overall_survival_5y: "~50-60% (substantial improvement over CHOP-only era for CD30+ AITL)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC  # CD30 IHC mandatory ≥10% per ECHELON-2 — confirmed at biopsy stage
+  - TEST-EBER-ISH  # AITL-specific
+  - TEST-IMMUNOGLOBULINS  # AITL-specific
+  - TEST-DAT-COOMBS  # AITL-specific
+  - TEST-RETICULOCYTE
+  - TEST-HAPTOGLOBIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  CD30+ AITL (≥10% by IHC) — CHP-Bv per ECHELON-2 (Horwitz 2019) which
+  enrolled CD30+ PTCL/AITL/ALCL. Brentuximab REPLACES vincristine
+  (avoids additive MMAE neuropathy) and adds CD30-targeted ADC
+  cytotoxicity. AITL adds same EBV/AIHA/hypogamma workup layer as
+  CHOEP arm. AutoSCT consolidation considered for fit CR1.
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies:
+  - topic: "AutoSCT consolidation in CR1 after CHP-Bv"
+    positions:
+      - position: "Consolidate fit younger CR1 — AITL natural history dismal; transplant remains practice"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Observe — CHP-Bv may be sufficient in selected; await mature follow-up"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "AutoSCT for fit younger CR1 (transplant-eligible)"
+
+do_not_do:
+  - "НЕ комбінувати brentuximab з bleomycin — летальна пульмонарна токсичність."
+  - "НЕ призначати без CD30 IHC ≥10% confirmation — ECHELON-2 inclusion criterion."
+  - "НЕ пропускати baseline LVEF ≥50% (anthracycline)."
+  - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
+  - "НЕ пропускати EBER-ISH baseline — surveillance вторинної EBV-driven DLBCL."
+  - "НЕ пропускати IgG + DAT baseline — AITL paraneoplastic phenomena."
+  - "НЕ ігнорувати pre-existing neuropathy — Grade ≥2 baseline = absolute CI до brentuximab."
+  - "НЕ застосовувати CHP-Bv якщо НСЗУ-фінансування brentuximab недоступне і out-of-pocket нереально — fallback CHOEP."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. AITL-specific CD30+ arm with full EBV/AIHA/hypogamma workup overlay.

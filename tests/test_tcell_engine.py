@@ -50,8 +50,29 @@ def test_ptcl_cd30_negative_routes_to_choep():
 def test_aitl_cd30_positive_routes_to_chp_bv():
     plan = generate_plan(_patient("patient_aitl_cd30_positive.json"), kb_root=KB_ROOT)
     assert plan.disease_id == "DIS-AITL"
-    # CD30+ AITL → CHP-Bv aggressive track
-    assert plan.default_indication_id == "IND-TCELL-1L-CHP-BV"
+    # CD30+ AITL → AITL-specific CHP-Bv aggressive track
+    # (post-Tier 3: AITL has its own indication with EBER/IgG/DAT workup overlay,
+    # not the shared T-cell one)
+    assert plan.default_indication_id == "IND-AITL-1L-CHP-BV"
+
+
+def test_aitl_cd30_negative_routes_to_aitl_choep():
+    """CD30-neg AITL → AITL-specific CHOEP (not generic T-cell CHOEP).
+    Layered EBV/AIHA/hypogamma workup distinguishes from PTCL CHOEP."""
+    plan = generate_plan(_patient("patient_aitl_cd30_negative.json"), kb_root=KB_ROOT)
+    assert plan.disease_id == "DIS-AITL"
+    assert plan.default_indication_id == "IND-AITL-1L-CHOEP"
+
+
+def test_aitl_indications_layer_eber_dat_iggworkup():
+    """AITL indications must carry EBER-ISH + DAT + immunoglobulins in
+    required_tests — paraneoplastic surveillance specific to AITL biology."""
+    plan = generate_plan(_patient("patient_aitl_cd30_positive.json"), kb_root=KB_ROOT)
+    aggressive = next(t for t in plan.plan.tracks if t.track_id == "aggressive")
+    required = set(aggressive.indication_data["required_tests"])
+    assert "TEST-EBER-ISH" in required, "AITL workup must include EBER-ISH"
+    assert "TEST-DAT-COOMBS" in required, "AITL workup must include DAT/Coombs"
+    assert "TEST-IMMUNOGLOBULINS" in required, "AITL workup must include IgG quantitation"
 
 
 def test_choep_includes_etoposide():

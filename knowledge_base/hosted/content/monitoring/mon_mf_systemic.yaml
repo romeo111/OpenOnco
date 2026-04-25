@@ -1,0 +1,67 @@
+id: MON-MF-SYSTEMIC
+linked_to_regimen: REG-MOGAMULIZUMAB
+
+phases:
+  - name: baseline
+    window: "Within 2 weeks before first dose"
+    tests:
+      - TEST-CBC
+      - TEST-CMP
+      - TEST-LFT
+      - TEST-LDH
+      - TEST-SEZARY-COUNT
+      - TEST-TCR-CLONALITY
+      - TEST-FLOW-CYTOMETRY
+      - TEST-CD20-IHC  # rule out B-cell secondary
+      - TEST-HBV-SEROLOGY
+      - TEST-HCV-ANTIBODY
+      - TEST-HIV-SEROLOGY
+      - TEST-PET-CT  # rule out nodal involvement (N-stage)
+    visits: ["Treatment planning visit (hematology + dermatology + photopheresis center if available)"]
+    checkpoints:
+      - "Confirm TNMB stage; document T/N/M/B + IA-IVB stage"
+      - "Skin photograph baseline (mSWAT score) for response tracking"
+      - "If allo-SCT planned downstream — defer mogamulizumab (severe GVHD risk per FDA black box)"
+      - "Dermatology partnership for AE management (mogamulizumab rash ~25%)"
+
+  - name: induction
+    window: "Weekly × 5 doses (mogamulizumab) OR every 3 weeks (BV-mono)"
+    tests: [TEST-CBC, TEST-CMP]
+    visits: ["Pre-infusion clinical + skin assessment + infusion"]
+    checkpoints:
+      - "Infusion reactions (especially mogamulizumab first dose)"
+      - "Skin AE grading (CTCAE) — interrupt if severe rash; differentiate drug rash from disease progression"
+
+  - name: maintenance
+    window: "Every 2 weeks (mogamulizumab) OR every 3 weeks (BV-mono) until progression / toxicity"
+    tests: [TEST-CBC, TEST-CMP, TEST-LFT]
+    visits: ["Pre-infusion clinical + skin + lab review"]
+    checkpoints:
+      - "mSWAT skin response every 2-3 months"
+      - "Sézary count repeat at 3 months (mogamulizumab — blood compartment response)"
+      - "Neuropathy grading on BV-mono"
+
+  - name: response_assessment
+    window: "After 12-16 weeks of therapy"
+    tests: [TEST-PET-CT, TEST-SEZARY-COUNT]
+    visits: ["Restaging visit"]
+    checkpoints:
+      - "Global response per ISCL/EORTC consensus (skin + nodes + viscera + blood)"
+      - "Continue if responding; switch line if stable/progressive"
+
+  - name: follow_up
+    window: "Every 3 months × 2 years post-treatment, then every 6 months"
+    tests: [TEST-CBC, TEST-LFT, TEST-LDH, TEST-SEZARY-COUNT]
+    visits: ["Clinical + dermatology"]
+    checkpoints:
+      - "Surveillance for relapse + LCT"
+      - "Skin cancer screening (CTCL + treatment increases risk)"
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  Reused for both REG-MOGAMULIZUMAB and REG-BV-MONO-MF — both are
+  systemic monotherapies with similar surveillance cadence (skin
+  response + blood compartment + dermatology partnership). Distinct
+  from skin-directed phototherapy (separate, lower-touch dermatology
+  follow-up).

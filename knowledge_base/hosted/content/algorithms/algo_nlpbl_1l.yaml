@@ -2,16 +2,20 @@ id: ALGO-NLPBL-1L
 applicable_to_disease: DIS-NLPBL
 applicable_to_line_of_therapy: 1
 purpose: >
-  NLPBL 1L: early-stage → ISRT alone or observation. Advanced →
-  rituximab-based chemoimmuno (R-CHOP via shared aggressive
-  indication from FL — same biology since reclassified to B-cell).
+  NLPBL 1L (WHO 5th-ed B-cell, formerly NLPHL): early-stage
+  IA-IIA → ISRT alone or observation (default — durable remission,
+  ~95% ORR); rituximab monotherapy as alternative for patients where
+  RT contraindicated (young women with breast field overlap, prior
+  RT, patient preference). Advanced III-IV → R-CHOP-like via FL
+  aggressive pathway (CD20+ B-cell biology preserved).
 
 output_indications:
   - IND-NLPBL-1L-OBSERVATION-OR-RT
+  - IND-NLPBL-1L-RITUXIMAB-MONO
   - IND-FL-1L-RCHOP-AGGRESSIVE  # shared — for advanced NLPBL
 
 default_indication: IND-NLPBL-1L-OBSERVATION-OR-RT
-alternative_indication: IND-FL-1L-RCHOP-AGGRESSIVE
+alternative_indication: IND-NLPBL-1L-RITUXIMAB-MONO
 
 decision_tree:
   - step: 1
@@ -20,13 +24,24 @@ decision_tree:
         - condition: "Early stage I-II"
         - condition: "Localized disease amenable to RT"
     if_true:
-      result: IND-NLPBL-1L-OBSERVATION-OR-RT
+      next_step: 2
     if_false:
-      result: IND-FL-1L-RCHOP-AGGRESSIVE
+      result: IND-FL-1L-RCHOP-AGGRESSIVE  # advanced → FL-style aggressive
+
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)"
+    if_true:
+      result: IND-NLPBL-1L-RITUXIMAB-MONO
+    if_false:
+      result: IND-NLPBL-1L-OBSERVATION-OR-RT
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
 notes: >
-  WHO 5th-ed reclassification (NLPHL → NLPBL) means we treat advanced
-  disease via B-cell pathway, not Hodgkin pathway. Reuses
-  IND-FL-1L-RCHOP-AGGRESSIVE for advanced — same regimen.
+  3-arm algorithm: ISRT default for early-stage RT-amenable;
+  rituximab-mono alternative for early-stage RT-contraindicated;
+  R-CHOP via FL aggressive for advanced. WHO 5th-ed reclassification
+  (NLPHL → NLPBL = B-cell, NOT Hodgkin) means treatment leverages
+  CD20+ biology — never ABVD.

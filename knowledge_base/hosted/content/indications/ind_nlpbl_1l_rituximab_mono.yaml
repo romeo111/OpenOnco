@@ -1,0 +1,75 @@
+id: IND-NLPBL-1L-RITUXIMAB-MONO
+plan_track: aggressive  # vs observation/RT default — engine slot, not preference
+
+applicable_to:
+  disease_id: DIS-NLPBL
+  line_of_therapy: 1
+  stage_requirements: ["IA", "IB", "IIA"]  # early-stage NLPBL where RT not preferred
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD20-IHC, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 2}
+
+recommended_regimen: REG-RITUXIMAB-MONO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~75-85% (single-agent rituximab in NLPBL)"
+  complete_response: "~50-70%"
+  progression_free_survival: "Median PFS ~3-5 years; relapse-prone but salvageable"
+  overall_survival_5y: ">90% (NLPBL indolent biology preserved)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+desired_tests: []
+
+rationale: >
+  Early-stage NLPBL where RT not preferred — young patients with field
+  overlap concerns (breast tissue, gonads, thyroid in cervical fields),
+  patients refusing RT, or already-resected stage IA where adjuvant
+  alone is reasonable. Rituximab monotherapy (4 weekly induction +
+  2-year maintenance) leverages CD20+ biology of NLPBL (reclassified
+  WHO 5th-ed B-cell — NOT Hodgkin) — high response rate, low toxicity,
+  preserves chemo for relapse. Avoids RT late effects (secondary
+  cancers, cardiac, breast — particularly relevant in young women).
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies:
+  - topic: "Rituximab maintenance duration in NLPBL"
+    positions:
+      - position: "2-year maintenance — extrapolated from FL evidence"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Induction-only — relapses salvageable, late effects of prolonged B-cell depletion concerning"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "2-year maintenance for first-presentation early-stage; reassess at relapse"
+
+do_not_do:
+  - "НЕ застосовувати при ABVD-style уявленні NLPBL = Hodgkin (legacy classification) — WHO 5th-ed reclассифікувала як B-cell. CD20+ → rituximab-based, НЕ ABVD."
+  - "НЕ пропускати HBV скринінг + entecavir prophylaxis."
+  - "НЕ розширювати на advanced stage (III-IV) — там R-CHOP per FL pathway."
+  - "НЕ забувати моніторинг pocket transformation in DLBCL — late risk у NLPBL."
+  - "НЕ використовувати при відомій непереносимості mouse-protein-derived antibodies."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. Alternative до ISRT для early-stage NLPBL коли RT не preferred.

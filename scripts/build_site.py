@@ -321,6 +321,47 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
     ),
+    # ── Tier 3 deepening: AITL CD30-neg + MF/Sézary block + NLPBL alt arm ──
+    CaseEntry(
+        case_id="aitl-cd30-negative",
+        file="patient_aitl_cd30_negative.json",
+        label_ua="AITL · CD30-negative (CHOEP + AITL-specific workup)",
+        summary_ua="AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+    ),
+    CaseEntry(
+        case_id="mf-early-stage",
+        file="patient_mf_early_stage.json",
+        label_ua="Mycosis Fungoides · Early Stage (Skin-Directed)",
+        summary_ua="MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+    ),
+    CaseEntry(
+        case_id="sezary-advanced",
+        file="patient_sezary_advanced.json",
+        label_ua="Sézary Syndrome · Advanced (Mogamulizumab)",
+        summary_ua="Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+    ),
+    CaseEntry(
+        case_id="mf-advanced-cd30",
+        file="patient_mf_advanced_cd30.json",
+        label_ua="MF · Advanced + CD30+ LCT (Brentuximab mono)",
+        summary_ua="Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+    ),
+    CaseEntry(
+        case_id="nlpbl-ia-rituximab",
+        file="patient_nlpbl_ia_rituximab.json",
+        label_ua="NLPBL · IA + RT-contraindicated (Rituximab mono)",
+        summary_ua="NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).",
+        badge="Treatment Plan",
+        badge_class="bdg-plan",
+    ),
 ]
 
 

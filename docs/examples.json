@@ -1271,5 +1271,141 @@
         "Localized disease amenable to RT": true
       }
     }
+  },
+  {
+    "case_id": "aitl-cd30-negative",
+    "label": "AITL · CD30-negative (CHOEP + AITL-specific workup)",
+    "file": "patient_aitl_cd30_negative.json",
+    "json": {
+      "patient_id": "AITL-CD30NEG-001",
+      "comment": "AITL with CD30-negative biopsy. Engine should select CHOEP standard (RF-TCELL-CD30-POSITIVE not fired). AITL-specific workup adds EBER-ISH + IgG quant + DAT.",
+      "disease": {
+        "icd_o_3_morphology": "9705/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD30-IHC": "negative"
+      },
+      "demographics": {
+        "age": 58,
+        "sex": "female",
+        "ecog": 1
+      },
+      "findings": {
+        "cd30_positive": false,
+        "lvef_percent": 60,
+        "ebv_positive_b_cells": true,
+        "hypogamma_present": true
+      }
+    }
+  },
+  {
+    "case_id": "mf-early-stage",
+    "label": "Mycosis Fungoides · Early Stage (Skin-Directed)",
+    "file": "patient_mf_early_stage.json",
+    "json": {
+      "patient_id": "MF-EARLY-001",
+      "comment": "MF stage IB (skin patches/plaques without nodal/blood involvement). Engine should default to skin-directed (no systemic regimen). Sezary count B0, no LCT.",
+      "disease": {
+        "icd_o_3_morphology": "9700/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {},
+      "demographics": {
+        "age": 52,
+        "sex": "male",
+        "ecog": 0
+      },
+      "findings": {
+        "stage": "IB",
+        "sezary_count_b2": false,
+        "large_cell_transformation": false,
+        "cd30_positive": false
+      }
+    }
+  },
+  {
+    "case_id": "sezary-advanced",
+    "label": "Sézary Syndrome · Advanced (Mogamulizumab)",
+    "file": "patient_sezary_advanced.json",
+    "json": {
+      "patient_id": "SEZARY-ADV-001",
+      "comment": "Sézary syndrome (B2 leukemic phase, generalized erythroderma). Engine should select mogamulizumab — RF-MF-SEZARY-LEUKEMIC fires step 1 then step 2 routes to MOGA (CD30-).",
+      "disease": {
+        "icd_o_3_morphology": "9700/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-SEZARY-COUNT": "B2"
+      },
+      "demographics": {
+        "age": 67,
+        "sex": "female",
+        "ecog": 2
+      },
+      "findings": {
+        "stage": "IVA1",
+        "sezary_syndrome": true,
+        "sezary_count_b2": true,
+        "large_cell_transformation": false,
+        "cd30_positive": false,
+        "Stage IIB or higher (advanced disease)": true
+      }
+    }
+  },
+  {
+    "case_id": "mf-advanced-cd30",
+    "label": "MF · Advanced + CD30+ LCT (Brentuximab mono)",
+    "file": "patient_mf_advanced_cd30.json",
+    "json": {
+      "patient_id": "MF-ADV-CD30-001",
+      "comment": "Advanced MF stage IIB with large-cell transformation, CD30+. Engine should select brentuximab vedotin monotherapy (LCT triggers step 1, CD30+ triggers step 2 → BV-mono).",
+      "disease": {
+        "icd_o_3_morphology": "9700/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD30-IHC": "positive",
+        "BIO-MF-LCT": "positive"
+      },
+      "demographics": {
+        "age": 61,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "stage": "IIB",
+        "cd30_positive": true,
+        "large_cell_transformation": true,
+        "sezary_count_b2": false,
+        "Stage IIB or higher (advanced disease)": true
+      }
+    }
+  },
+  {
+    "case_id": "nlpbl-ia-rituximab",
+    "label": "NLPBL · IA + RT-contraindicated (Rituximab mono)",
+    "file": "patient_nlpbl_ia_rituximab.json",
+    "json": {
+      "patient_id": "NLPBL-IA-RMONO-001",
+      "comment": "NLPBL stage IA in young woman with cervical adenopathy — RT contraindicated due to breast/thyroid field overlap concerns. Engine should select rituximab monotherapy alternative.",
+      "disease": {
+        "icd_o_3_morphology": "9659/3"
+      },
+      "line_of_therapy": 1,
+      "biomarkers": {
+        "BIO-CD20-IHC": "positive"
+      },
+      "demographics": {
+        "age": 28,
+        "sex": "female",
+        "ecog": 0
+      },
+      "findings": {
+        "Early stage I-II": true,
+        "Localized disease amenable to RT": true,
+        "RT contraindicated (young patient breast/thyroid field overlap, prior RT, patient refuses)": true
+      }
+    }
   }
 ]

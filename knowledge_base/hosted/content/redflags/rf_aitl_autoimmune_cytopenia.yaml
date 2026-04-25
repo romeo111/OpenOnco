@@ -1,0 +1,26 @@
+id: RF-AITL-AUTOIMMUNE-CYTOPENIA
+definition: "AITL with autoimmune hemolytic anemia (AIHA, DAT+) and/or immune thrombocytopenia (ITP) — paraneoplastic phenomenon needing concurrent immunosuppression alongside T-cell-directed therapy"
+definition_ua: "AITL з автоімунною гемолітичною анемією (AIHA, DAT+) і/або імунною тромбоцитопенією (ITP) — паранеопластичний феномен, потребує конкурентної імуносупресії паралельно з T-клітинною терапією"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "TEST-DAT-COOMBS", value: "positive"}
+    - {finding: "aiha_present", value: true}
+    - {finding: "itp_present", value: true}
+    - {finding: "hemolysis_features", value: true}
+
+clinical_direction: investigate
+relevant_diseases: [DIS-AITL]
+shifts_algorithm: []  # safety/supportive; does not switch CHOEP vs CHP-Bv
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  AITL is the T-cell lymphoma most associated with autoimmune
+  cytopenias — AIHA (warm IgG-mediated, DAT+) and ITP can present
+  before, during, or after lymphoma therapy. Standard approach:
+  prednisone-containing chemo (CHOEP/CHP-Bv backbone has prednisone)
+  often controls; refractory cases need rituximab (despite T-cell
+  primary disease — works on B-cell-mediated antibody producers) or
+  IVIG. Monitor reticulocyte + DAT + haptoglobin baseline + during.

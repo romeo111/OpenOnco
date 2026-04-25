@@ -1,0 +1,23 @@
+id: RF-AITL-HYPOGAMMA
+definition: "AITL with baseline hypogammaglobulinemia (IgG <600 mg/dL) and/or recurrent bacterial infections — qualifies for IgG replacement (IVIG) during and after T-cell-directed therapy"
+definition_ua: "AITL з вихідною гіпогаммаглобулінемією (IgG <600 mg/dL) і/або рекурентними бактеріальними інфекціями — кваліфікується на замісну терапію IgG (IVIG) під час і після T-клітинної терапії"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "TEST-IMMUNOGLOBULINS", threshold: 600, comparator: "<", units: "mg/dL IgG"}
+    - {finding: "hypogamma_present", value: true}
+    - {finding: "recurrent_bacterial_infections", value: true}
+
+clinical_direction: investigate
+relevant_diseases: [DIS-AITL]
+shifts_algorithm: []  # supportive; does not change choice of induction
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  AITL produces hypogammaglobulinemia in ~30-50% — paraneoplastic +
+  treatment-related. IgG <400 mg/dL with infection history → IVIG
+  replacement (typically 0.4 g/kg q3-4 weeks targeting trough >500).
+  Continue surveillance post-treatment — recovery often partial. Distinct
+  from rituximab-induced hypogamma (would be late/acquired).

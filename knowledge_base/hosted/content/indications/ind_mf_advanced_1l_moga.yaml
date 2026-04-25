@@ -1,0 +1,74 @@
+id: IND-MF-ADVANCED-1L-MOGA
+plan_track: standard  # for advanced/Sezary stage — this IS the standard-of-care default
+
+applicable_to:
+  disease_id: DIS-MF-SEZARY
+  line_of_therapy: 1
+  stage_requirements: ["IIB", "III", "IVA1", "IVA2", "IVB"]  # advanced-stage MF or Sézary syndrome
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-MOGAMULIZUMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~28% (MAVORIC, r/r setting; 1L higher in real-world)"
+  complete_response: "~5% globally; higher in blood compartment ~30-40%"
+  progression_free_survival: "Median PFS ~7.7 months (MAVORIC); higher in B2 / Sézary"
+  overall_survival_5y: "Improvements vs vorinostat era; mature data accumulating"
+
+hard_contraindications: []
+red_flags_triggering_alternative: [RF-MF-LARGE-CELL-TRANSFORMATION]  # CD30+ LCT → BV-mono preferred
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-SEZARY-COUNT
+  - TEST-TCR-CLONALITY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+desired_tests: []
+
+rationale: >
+  Advanced MF (IIB+) or Sézary syndrome (B2) — mogamulizumab preferred
+  systemic per NCCN cat 1, especially when blood compartment dominant
+  (Sézary) where MAVORIC subset showed highest activity. CCR4-targeted
+  ADCC depletes circulating malignant T-cells effectively. Dermatology
+  partnership mandatory for AE differentiation (drug rash vs disease
+  progression). Allo-SCT consideration in fit responders — but
+  mogamulizumab carries severe GVHD risk if SCT within 50 days post
+  last dose (FDA black box) — coordinate timing.
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies:
+  - topic: "Mogamulizumab vs brentuximab in CD30+ Sézary"
+    positions:
+      - position: "Mogamulizumab if blood-dominant (Sézary syndrome) — best B-compartment response"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Brentuximab if CD30+ ≥10% with skin-dominant burden — ALCANZA evidence"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Mogamulizumab for Sézary syndrome + blood-dominant; BV-mono if CD30+ AND skin-dominant"
+
+do_not_do:
+  - "НЕ розпочинати mogamulizumab якщо allo-SCT планується <50 днів — severe GVHD risk per FDA black box."
+  - "НЕ ігнорувати drug rash — interrupt + dermatology consult; differentiate від progression critical."
+  - "НЕ комбінувати з іншими immunosuppressants без dermatology + ID coordination — інфекційний ризик підвищений."
+  - "НЕ застосовувати при відсутності МОЗ-import підтвердження або clinical trial — не зареєстрований у Україні."
+  - "НЕ пропускати Sezary count baseline + повтор q3 mo — головний end point response у B-компартменті."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. Standard-of-care for advanced MF / Sézary where mogamulizumab accessible. Ukraine access major barrier.

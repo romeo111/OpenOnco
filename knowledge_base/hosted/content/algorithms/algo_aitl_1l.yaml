@@ -1,11 +1,17 @@
 id: ALGO-AITL-1L
 applicable_to_disease: DIS-AITL
 applicable_to_line_of_therapy: 1
-purpose: AITL 1L mirrors PTCL NOS — CD30+ → CHP-Bv; else CHOEP.
+purpose: >
+  AITL 1L: CD30+ (≥10% IHC) → CHP-Bv per ECHELON-2; CD30-negative or
+  brentuximab not accessible → CHOEP with autoSCT consolidation
+  consideration for fit younger CR1. Both arms layer AITL-specific
+  workup (EBER-ISH, IgG quant, DAT/hemolysis) on top of generic
+  T-cell baseline due to EBV+ B-cell microenvironment, paraneoplastic
+  hypogammaglobulinemia (30-50%), and AIHA/ITP risk.
 
-output_indications: [IND-TCELL-1L-CHOEP, IND-TCELL-1L-CHP-BV]
-default_indication: IND-TCELL-1L-CHOEP
-alternative_indication: IND-TCELL-1L-CHP-BV
+output_indications: [IND-AITL-1L-CHOEP, IND-AITL-1L-CHP-BV]
+default_indication: IND-AITL-1L-CHOEP
+alternative_indication: IND-AITL-1L-CHP-BV
 
 decision_tree:
   - step: 1
@@ -13,9 +19,14 @@ decision_tree:
       any_of:
         - red_flag: RF-TCELL-CD30-POSITIVE
     if_true:
-      result: IND-TCELL-1L-CHP-BV
+      result: IND-AITL-1L-CHP-BV
     if_false:
-      result: IND-TCELL-1L-CHOEP
+      result: IND-AITL-1L-CHOEP
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
+notes: >
+  RF-TCELL-CD30-POSITIVE shifts to CHP-Bv (shared with PTCL/ALCL/MF
+  algorithms). RF-AITL-EBV-DRIVEN-B-CELL, RF-AITL-AUTOIMMUNE-CYTOPENIA,
+  RF-AITL-HYPOGAMMA are non-switching safety/surveillance flags
+  surfaced in MDT brief and monitoring.

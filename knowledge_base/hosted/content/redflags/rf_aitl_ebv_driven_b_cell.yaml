@@ -1,0 +1,25 @@
+id: RF-AITL-EBV-DRIVEN-B-CELL
+definition: "AITL with EBV+ B-cell expansion (large B-cells, EBER+ in microenvironment) — risk of secondary EBV-driven B-cell lymphoma (DLBCL-like) emerging during/after T-cell-directed therapy"
+definition_ua: "AITL з EBV+ B-клітинною експансією (великі B-клітини, EBER+ у мікрооточенні) — ризик вторинної EBV-driven B-клітинної лімфоми (DLBCL-like) під час/після T-клітинної терапії"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - {finding: "BIO-EBV-STATUS", value: "positive"}
+    - {finding: "ebv_positive_b_cells", value: true}
+    - {finding: "ebv_dna_serum_positive", value: true}
+
+clinical_direction: investigate  # not algorithm-shifting; flag for surveillance + early biopsy of new mass
+relevant_diseases: [DIS-AITL]
+shifts_algorithm: []  # informational/safety — does not switch indication
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  AITL microenvironment classically contains EBV+ B-cells (~80-90%).
+  Subset develops EBV-driven secondary B-cell lymphoma (often
+  DLBCL-like) during/after T-cell-directed induction — clonally
+  distinct from index AITL. Rebiopsy any new dominant mass; if
+  CD20+/EBER+ DLBCL → add rituximab + treat as B-cell. Serum EBV-DNA
+  rising trend = early warning. Not an algorithm switch (still treat
+  AITL backbone) but mandatory surveillance flag.

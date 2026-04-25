@@ -1,0 +1,41 @@
+id: REG-BV-MONO-MF
+name: "Brentuximab vedotin monotherapy for CD30+ MF/cutaneous ALCL (1.8 mg/kg IV q3 weeks)"
+name_ua: "Брентуксимаб ведотин монотерапія для CD30+ MF/шкірної ALCL (1.8 mg/kg IV q3 тижні)"
+alternate_names: ["BV-mono", "ALCANZA-style", "Brentuximab single-agent MF"]
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg (max 180 mg)"
+    schedule: "IV over 30 min every 21 days × up to 16 cycles or progression / toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 16 (per ALCANZA); shorter if CR or limiting toxicity"
+toxicity_profile: moderate
+
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-MF-SYSTEMIC
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+  - condition: "Grade ≥4 neutropenia"
+    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+  - condition: "Pre-existing Grade ≥2 neuropathy"
+    modification: "Absolute contraindication — choose alternative regimen"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Brentuximab registered in Ukraine but NOT НСЗУ-reimbursed for cutaneous CTCL indication; fundraising / private pay common pathway"
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  ALCANZA trial (Prince 2017, Lancet): brentuximab vedotin monotherapy
+  vs methotrexate or bexarotene in CD30+ CTCL — superior ORR4 (66.7%
+  vs 16.7%). NCCN cat 1 for CD30+ MF (≥10% by IHC) and primary
+  cutaneous ALCL. Different from CHP-Bv (combination chemo backbone)
+  — this is single-agent for cutaneous-predominant disease without
+  systemic chemo intensity.

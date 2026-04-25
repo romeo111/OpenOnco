@@ -1,0 +1,94 @@
+id: IND-AITL-1L-CHOEP
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-AITL
+  line_of_therapy: 1
+  stage_requirements: []
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-CHOEP
+concurrent_therapy: [SUP-PJP-PROPHYLAXIS, SUP-GCSF-NEUTROPENIA]
+followed_by: []  # autoSCT consolidation considered separately in fit younger CR1
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~70-75%"
+  complete_response: "~45-55%"
+  progression_free_survival: "Median PFS ~2-3 years; ~25-35% 5y PFS"
+  overall_survival_5y: "~30-40% (worse than B-cell aggressive lymphomas; AITL has dismal prognosis without consolidation)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE]
+red_flags_triggering_alternative: [RF-TCELL-CD30-POSITIVE]
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC  # CD30 done as IHC under same workflow; CD20 to identify EBV+ B-cell subset
+  - TEST-EBER-ISH  # AITL-specific — EBV+ B-cells in microenvironment
+  - TEST-IMMUNOGLOBULINS  # AITL-specific — hypogamma at baseline
+  - TEST-DAT-COOMBS  # AITL-specific — AIHA paraneoplastic
+  - TEST-RETICULOCYTE
+  - TEST-HAPTOGLOBIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  CD30-negative AITL (or AITL where brentuximab not accessible) — CHOEP
+  preferred over CHOP for fit younger T-cell patients per Nordic data
+  (NLG-T-01). AITL adds three workup layers vs generic PTCL CHOEP:
+  EBER-ISH on biopsy (EBV+ B-cells in 80-90% — surveillance for
+  secondary EBV-driven DLBCL during/after induction), IgG quantitation
+  (paraneoplastic hypogammaglobulinemia in 30-50% — IVIG candidates),
+  and DAT/hemolysis panel (AITL most associated T-cell lymphoma with
+  AIHA/ITP). AutoSCT consolidation in CR1 for fit transplant-eligible
+  — practice standard despite limited RCT evidence.
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies:
+  - topic: "AutoSCT consolidation in AITL CR1"
+    positions:
+      - position: "AutoSCT in CR1 — durable remission in fit younger AITL with CR; offsets dismal natural history"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Skip autoSCT — RCT evidence limited; outcomes comparable in some series; AITL relapses still common post-transplant"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "AutoSCT consolidation for fit younger AITL with CR1 after CHOEP"
+  - topic: "Rituximab addition for EBV+ B-cell component"
+    positions:
+      - position: "Add rituximab if dominant EBV+ B-cell secondary lymphoma confirmed by rebiopsy"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Routine rituximab not justified — EBV+ B-cells often part of background, not driver"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Rituximab only on confirmed CD20+ B-cell secondary lymphoma; not empirically"
+
+do_not_do:
+  - "НЕ пропускати CD30 IHC — якщо ≥10%, route to CHP-Bv (ECHELON-2 evidence)."
+  - "НЕ пропускати EBER-ISH — AITL мікрооточення EBV+ B-клітин у 80-90%; baseline + surveillance."
+  - "НЕ пропускати IgG + DAT baseline — AITL-специфічні paraneoplastic явища (hypogamma + AIHA)."
+  - "НЕ пропускати HBV скринінг + entecavir prophylaxis якщо HBsAg+ або anti-HBc+."
+  - "НЕ використовувати CHOEP age >60 — CHOP без etoposide більш переносимий."
+  - "НЕ ігнорувати падіння Hb з ретикулоцитозом + DAT+ — це AIHA, не chemo-toxicity; додати prednisone-вмісну схему вже є, але refractory → rituximab/IVIG."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. AITL-specific extension of T-cell CHOEP with EBV/AIHA/hypogamma layered workup.

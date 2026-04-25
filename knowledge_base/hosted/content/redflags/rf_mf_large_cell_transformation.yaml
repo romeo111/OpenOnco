@@ -1,0 +1,21 @@
+id: RF-MF-LARGE-CELL-TRANSFORMATION
+definition: "MF with large-cell transformation (LCT — ≥25% large cells on biopsy review) — aggressive variant; mandates systemic therapy reassessment, brentuximab vedotin if CD30+"
+definition_ua: "MF з велекоклітинною трансформацією (LCT — ≥25% великих клітин при перегляді біопсії) — агресивний варіант; мандат на перегляд системної терапії, brentuximab vedotin якщо CD30+"
+
+trigger:
+  type: biomarker
+  any_of:
+    - {finding: "BIO-MF-LCT", value: "positive"}
+    - {finding: "large_cell_transformation", value: true}
+
+clinical_direction: intensify
+relevant_diseases: [DIS-MF-SEZARY]
+shifts_algorithm: [ALGO-MF-SEZARY-1L]
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  LCT prognosis dismal (median OS 2-4y from LCT). CD30+ subset
+  (~30-50%) → ALCANZA-style brentuximab vedotin monotherapy preferred
+  over chemotherapy. Distinct entity from primary cutaneous ALCL.
+  Skin-directed alone never appropriate post-LCT.

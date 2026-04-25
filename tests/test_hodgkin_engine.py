@@ -74,3 +74,29 @@ def test_nlpbl_observation_track_has_no_regimen():
     plan = generate_plan(_patient("patient_nlpbl_early.json"), kb_root=KB_ROOT)
     surv = next(t for t in plan.plan.tracks if t.track_id == "surveillance")
     assert surv.regimen_data is None
+
+
+def test_nlpbl_ia_rt_contraindicated_routes_to_rituximab_mono():
+    """Early-stage NLPBL where RT contraindicated (young, breast/thyroid
+    field overlap) — engine should select rituximab monotherapy alternative
+    instead of ISRT default. CD20+ biology preserved (NLPBL = B-cell post
+    WHO 5th-ed reclassification, NOT Hodgkin)."""
+    plan = generate_plan(_patient("patient_nlpbl_ia_rituximab.json"), kb_root=KB_ROOT)
+    assert plan.disease_id == "DIS-NLPBL"
+    assert plan.default_indication_id == "IND-NLPBL-1L-RITUXIMAB-MONO"
+
+
+def test_nlpbl_rituximab_mono_uses_rituximab():
+    """Rituximab-mono regimen must contain DRUG-RITUXIMAB only (single
+    agent). NLPBL must NEVER route through ABVD pathway."""
+    plan = generate_plan(_patient("patient_nlpbl_ia_rituximab.json"), kb_root=KB_ROOT)
+    track = next(t for t in plan.plan.tracks if t.regimen_data is not None)
+    drug_ids = {c["drug_id"] for c in track.regimen_data["components"]}
+    assert drug_ids == {"DRUG-RITUXIMAB"}, f"NLPBL R-mono should be single-agent; got {drug_ids}"
+    # Verify ABVD components NEVER appear in any NLPBL track
+    for t in plan.plan.tracks:
+        if t.regimen_data:
+            ds = {c["drug_id"] for c in t.regimen_data["components"]}
+            assert "DRUG-BLEOMYCIN" not in ds, "NLPBL must not route through ABVD"
+            assert "DRUG-VINBLASTINE" not in ds, "NLPBL must not route through ABVD"
+            assert "DRUG-DACARBAZINE" not in ds, "NLPBL must not route through ABVD"

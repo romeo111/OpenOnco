@@ -1,0 +1,68 @@
+id: IND-MF-ADVANCED-1L-BV
+plan_track: aggressive  # alternative to mogamulizumab for CD30+ skin-dominant or LCT
+
+applicable_to:
+  disease_id: DIS-MF-SEZARY
+  line_of_therapy: 1
+  stage_requirements: ["IIB", "III", "IVA1", "IVA2", "IVB"]
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive"}
+  biomarker_requirements_excluded: []
+  demographic_constraints: {ecog_max: 3}
+
+recommended_regimen: REG-BV-MONO-MF
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~67% ORR4 (ALCANZA — sustained ≥4 months); single-agent"
+  complete_response: "~16% (ALCANZA)"
+  progression_free_survival: "Median PFS ~16.7 months (ALCANZA)"
+  overall_survival_5y: "~75-80% mature data"
+
+hard_contraindications: [CI-BORTEZOMIB-SEVERE-NEUROPATHY]  # peripheral neuropathy CI also applies to brentuximab MMAE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-SEZARY-COUNT
+  - TEST-TCR-CLONALITY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO  # baseline before any future anthracycline; documentation
+desired_tests: []
+
+rationale: >
+  Advanced CD30+ MF (≥10% by IHC) — brentuximab vedotin monotherapy
+  per ALCANZA. Single-agent ADC delivers MMAE selectively to CD30+ cells
+  → durable cutaneous + nodal response without systemic chemo intensity.
+  Particularly effective in large-cell transformed (LCT) MF where CD30+
+  in 30-50%. Preferred over mogamulizumab when skin/nodal disease
+  dominant + CD30+ confirmed; mogamulizumab preferred when blood
+  compartment dominant (Sézary syndrome).
+
+sources: [{source_id: SRC-NCCN-BCELL-2025, position: supports}]
+known_controversies: []
+
+do_not_do:
+  - "НЕ призначати без CD30 IHC ≥10% — ALCANZA inclusion criterion; нижча експресія = нижча відповідь."
+  - "НЕ використовувати при pre-existing Grade ≥2 peripheral neuropathy — absolute CI."
+  - "НЕ комбінувати з bleomycin (летальна пульмонарна токсичність)."
+  - "НЕ пропускати neuropathy grading щоцикл — dose-cumulative MMAE токсичність."
+  - "НЕ застосовувати >16 циклів без response justification — risk vs benefit reverses."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewer_signoffs: 0
+notes: STUB. CD30+ aggressive arm; preferred for LCT subset.

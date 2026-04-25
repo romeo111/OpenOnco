@@ -35,7 +35,7 @@ def test_seed_has_hcv_mzl_core():
         "BIO-HCV-RNA",
         "SRC-ESMO-MZL-2024",
         "SRC-NCCN-BCELL-2025",
-        "SRC-MOZ-UA-LYMPH-2024",
+        "SRC-MOZ-UA-LYMPH-2013",
         "SRC-EASL-HCV-2023",
     ]:
         assert required in ids, f"Missing seed entity: {required}"

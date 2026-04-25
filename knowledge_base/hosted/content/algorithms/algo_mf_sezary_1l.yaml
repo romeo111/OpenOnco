@@ -2,30 +2,53 @@ id: ALGO-MF-SEZARY-1L
 applicable_to_disease: DIS-MF-SEZARY
 applicable_to_line_of_therapy: 1
 purpose: >
-  MF/Sézary 1L: stage-driven — early-stage (IA-IIA) skin-directed
-  (placeholder, separate workstream); advanced (IIB+) systemic. For
-  Tier 1 placeholder, route everyone to CHOEP-style systemic — actual
-  MF treatment paradigm requires dedicated cutaneous-lymphoma pathway
-  in future iteration (mogamulizumab, brentuximab if CD30+, ECP, TSEBT).
+  MF/Sézary 1L: stage-driven (TNMB per ISCL/EORTC) with biomarker
+  modifiers. Early-stage (IA-IIA) → skin-directed (NBUVB / topicals /
+  TSEBT, no systemic regimen) — preserves systemic options for
+  progression. Advanced (IIB+) or Sézary syndrome (B2) → systemic.
+  Within systemic: blood-dominant Sézary → mogamulizumab (best
+  B-compartment response per MAVORIC); CD30+ skin-dominant or LCT →
+  brentuximab vedotin monotherapy (ALCANZA evidence).
 
-output_indications: [IND-TCELL-1L-CHOEP, IND-TCELL-1L-CHP-BV]
-default_indication: IND-TCELL-1L-CHOEP
-alternative_indication: IND-TCELL-1L-CHP-BV
+output_indications:
+  - IND-MF-EARLY-1L-SKIN-DIRECTED
+  - IND-MF-ADVANCED-1L-MOGA
+  - IND-MF-ADVANCED-1L-BV
+
+default_indication: IND-MF-EARLY-1L-SKIN-DIRECTED  # most MF presents IA-IIA
+alternative_indication: IND-MF-ADVANCED-1L-MOGA  # systemic when staged advanced
 
 decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - red_flag: RF-TCELL-CD30-POSITIVE
+        - red_flag: RF-MF-SEZARY-LEUKEMIC
+        - red_flag: RF-MF-LARGE-CELL-TRANSFORMATION
+        - condition: "Stage IIB or higher (advanced disease)"
     if_true:
-      result: IND-TCELL-1L-CHP-BV
+      next_step: 2
     if_false:
-      result: IND-TCELL-1L-CHOEP
+      result: IND-MF-EARLY-1L-SKIN-DIRECTED
+
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-TCELL-CD30-POSITIVE
+        - red_flag: RF-MF-LARGE-CELL-TRANSFORMATION  # LCT often CD30+ → BV preference
+    if_true:
+      result: IND-MF-ADVANCED-1L-BV
+    if_false:
+      result: IND-MF-ADVANCED-1L-MOGA  # default systemic for non-CD30+ advanced/Sezary
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
 notes: >
-  STUB algorithm — actual MF/Sézary requires stage-driven (TNMB) +
-  skin-directed-first paradigm, not the systemic CHOP-style backbone.
-  Full algorithm deferred. Current entity routes for engine
-  consistency only.
+  Replaces previous STUB algorithm (which routed everyone to T-cell
+  CHOEP backbone). New paradigm: stage-driven (TNMB) with biomarker
+  modifiers (B2 = Sézary, CD30+, LCT). Step 1 separates early-stage
+  skin-directed from advanced systemic. Step 2 within advanced selects
+  CD30-targeted (BV) vs CCR4-targeted (mogamulizumab). Skin-directed
+  has no recommended_regimen (NBUVB/topicals/TSEBT are procedural,
+  not drug regimens). Ukraine access caveat: mogamulizumab not
+  registered → BV-mono more practically achievable; if neither
+  accessible → methotrexate/bexarotene/ECP fallback (not yet in KB).

@@ -1,0 +1,22 @@
+id: RF-MF-SEZARY-LEUKEMIC
+definition: "MF with B2 blood involvement (Sézary cell count ≥1000/μL OR ≥5% Sézary by morphology) — defines Sézary syndrome / IVA1 stage; routes to systemic therapy with mogamulizumab preference"
+definition_ua: "MF з B2 залученням крові (підрахунок клітин Сезарі ≥1000/μL АБО ≥5% Sézary за морфологією) — визначає Sézary syndrome / IVA1 стадію; маршрут до системної терапії з перевагою mogamulizumab"
+
+trigger:
+  type: biomarker
+  any_of:
+    - {finding: "BIO-SEZARY-COUNT", value: "B2"}
+    - {finding: "sezary_count_b2", value: true}
+    - {finding: "sezary_syndrome", value: true}
+
+clinical_direction: intensify
+relevant_diseases: [DIS-MF-SEZARY]
+shifts_algorithm: [ALGO-MF-SEZARY-1L]
+
+sources: [SRC-NCCN-BCELL-2025]
+last_reviewed: "2026-04-25"
+notes: >
+  B2 = leukemic phase, automatic upstaging to IVA1 regardless of skin
+  T-stage. MAVORIC trial subset showed mogamulizumab response highest
+  in B2 (blood compartment most uniform CCR4+). Sézary syndrome
+  variant always advanced — skin-directed alone insufficient.
