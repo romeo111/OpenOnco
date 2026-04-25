@@ -451,6 +451,41 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   flex: 1; width: 100%; height: 800px; border: none;
 }
 
+/* Result toolbar (PDF + lang switcher) — appears above #resultFrame
+   once a Plan / DiagnosticBrief is rendered. */
+.result-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 14px; background: var(--gray-50);
+  border: 1px solid var(--gray-200); border-bottom: none;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+}
+.rt-btn {
+  font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+  background: var(--green-700); color: white;
+  border: none; border-radius: 6px; padding: 8px 14px;
+  cursor: pointer; transition: background 0.15s;
+}
+.rt-btn:hover { background: var(--green-800); }
+.rt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.rt-lang-group {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); font-weight: 600;
+}
+.rt-lang-label { margin-right: 2px; }
+.rt-lang-btn {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.5px;
+  background: white; color: var(--gray-700);
+  border: 1px solid var(--gray-200); border-radius: 4px;
+  padding: 5px 10px; cursor: pointer; transition: all 0.15s;
+}
+.rt-lang-btn:hover { background: var(--gray-100); }
+.rt-lang-btn.is-active {
+  background: var(--green-700); color: white; border-color: var(--green-700);
+}
+.rt-lang-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* Questionnaire UI (try.html) */
 .quest-toolbar {
   display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
@@ -720,6 +755,42 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   .hero h1 { font-size: 32px; }
   .problem-grid, .try-grid { grid-template-columns: 1fr; }
 }
+
+/* Generation lock — overlay modal during full-plan generation. Hard-blocks
+   form interaction (via inert on <main>) so the rendered plan corresponds
+   to a stable input snapshot. Released in runEngine's finally{{}}. */
+.generating-overlay {{
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  animation: oo-fadein 0.18s ease-out;
+}}
+.generating-overlay[hidden] {{ display: none; }}
+.generating-card {{
+  background: white; border-radius: 12px;
+  padding: 28px 36px; max-width: 460px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}}
+.generating-card h3 {{
+  margin: 14px 0 8px; font-family: var(--font-display);
+  font-size: 22px; color: var(--green-900);
+}}
+.generating-card p {{
+  margin: 6px 0; font-size: 14px; color: var(--gray-700); line-height: 1.5;
+}}
+.generating-hint {{
+  font-size: 12px; color: var(--gray-600);
+  font-family: var(--font-mono); margin-top: 14px;
+}}
+.generating-spinner {{
+  width: 36px; height: 36px; margin: 0 auto;
+  border: 3px solid var(--gray-200); border-top-color: var(--green-700);
+  border-radius: 50%; animation: oo-spin 0.9s linear infinite;
+}}
+@keyframes oo-spin {{ to {{ transform: rotate(360deg); }} }}
+@keyframes oo-fadein {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
 
 /* Info pages (capabilities / limitations) */
 .info-page { padding: 32px 0 48px; }

@@ -1083,7 +1083,17 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
   <section class="quest-output">
     <div id="placeholder" class="placeholder">
       <div class="placeholder-icon">▶</div>
-      <p>Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с.</p>
+      <p>{'The result will appear here.<br>The first run downloads Pyodide (~10–15 MB) and the engine itself. Expect ~10–30 seconds on the first run, then &lt;1 s.' if target_lang == 'en' else "Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с."}</p>
+    </div>
+    <div id="resultToolbar" class="result-toolbar" hidden>
+      <button id="pdfBtn" class="rt-btn" type="button" title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
+        <span aria-hidden="true">📄</span> {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+      </button>
+      <div class="rt-lang-group" role="group" aria-label="{'Plan language' if target_lang == 'en' else 'Мова плану'}">
+        <span class="rt-lang-label">{'Language:' if target_lang == 'en' else 'Мова:'}</span>
+        <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
+        <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
+      </div>
     </div>
     <iframe id="resultFrame" hidden></iframe>
   </section>
@@ -1093,6 +1103,15 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine.zip</code>.
   </footer>
 </main>
+
+<div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
+  <div class="generating-card">
+    <div class="generating-spinner" aria-hidden="true"></div>
+    <h3>Генерую план…</h3>
+    <p>Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.</p>
+    <p class="generating-hint" id="generatingHint">Запускаю двигун…</p>
+  </div>
+</div>
 
 <script type="module">
 import {{ loadPyodide }} from "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs";
@@ -1110,6 +1129,10 @@ const exampleSelect = document.getElementById('exampleSelect');
 const textarea = document.getElementById('patientJson');
 const placeholder = document.getElementById('placeholder');
 const resultFrame = document.getElementById('resultFrame');
+const resultToolbar = document.getElementById('resultToolbar');
+const pdfBtn = document.getElementById('pdfBtn');
+const langUaBtn = document.getElementById('langUaBtn');
+const langEnBtn = document.getElementById('langEnBtn');
 const formPane = document.getElementById('formPane');
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1126,6 +1149,9 @@ const impactRedflags = document.getElementById('impactRedflags');
 const impactSelected = document.getElementById('impactSelected');
 const impactSelectedText = document.getElementById('impactSelectedText');
 const impactWarnings = document.getElementById('impactWarnings');
+const generatingOverlay = document.getElementById('generatingOverlay');
+const generatingHint = document.getElementById('generatingHint');
+const mainTryEl = document.querySelector('main.try-page');
 
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
@@ -1133,9 +1159,19 @@ let enginReady = false;
 let questionnaires = [];     // loaded from /questionnaires.json
 let examples = [];           // loaded from /examples.json
 let activeQuest = null;      // currently selected questionnaire
+let generating = false;      // true while runEngine is mid-flight; blocks
+                             // input via <main inert> + overlay so the
+                             // rendered plan matches a stable snapshot
+let previewToken = 0;        // bumped on each runLivePreview start AND on
+                             // runEngine start; stale results are discarded
 let answers = {{}};          // {{dotted_path: value}}
 let mode = 'form';           // 'form' | 'json'
 let evalDebounceTimer = null;
+
+// Initial render language follows the page lang (UA on /try.html, EN on
+// /en/try.html). User can switch via the buttons in the result toolbar
+// without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
+let currentResultLang = '{target_lang}';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info') {{
@@ -1151,6 +1187,58 @@ function setError(msg) {{
     errorBox.textContent = '';
   }}
 }}
+
+// ── Result toolbar (PDF + lang switcher) ──────────────────────────────────
+function showResultToolbar() {{
+  resultToolbar.hidden = false;
+  // Highlight active language
+  langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
+  langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+}}
+
+function downloadPdf() {{
+  // Browser-native print → "Save as PDF" works on every modern browser.
+  // The render layer ships A4-print-friendly CSS (@page + @media print)
+  // so the iframe content paginates cleanly without any extra deps.
+  if (resultFrame.hidden) return;
+  try {{
+    resultFrame.contentWindow.focus();
+    resultFrame.contentWindow.print();
+  }} catch (e) {{
+    setError('Print failed: ' + (e.message || e));
+  }}
+}}
+
+async function switchResultLang(newLang) {{
+  if (!pyodide) return;
+  if (newLang === currentResultLang) return;
+  // Disable buttons during re-render so user can't double-click
+  langUaBtn.disabled = true;
+  langEnBtn.disabled = true;
+  try {{
+    pyodide.globals.set('_target_lang', newLang);
+    const html = await pyodide.runPythonAsync(`
+if _oo_mode == 'diagnostic':
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+else:
+    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+html
+`);
+    resultFrame.srcdoc = html;
+    currentResultLang = newLang;
+    langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
+    langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+  }} catch (e) {{
+    setError('Re-render failed: ' + (e.message || e));
+  }} finally {{
+    langUaBtn.disabled = false;
+    langEnBtn.disabled = false;
+  }}
+}}
+
+pdfBtn.addEventListener('click', downloadPdf);
+langUaBtn.addEventListener('click', () => switchResultLang('uk'));
+langEnBtn.addEventListener('click', () => switchResultLang('en'));
 
 function escHtml(s) {{
   return String(s).replace(/[&<>"']/g, c => ({{
@@ -1414,6 +1502,7 @@ function buildProfile() {{
 
 async function runLivePreview() {{
   const _ooT0 = performance.now();
+  const myToken = ++previewToken;
   const profile = buildProfile();
   if (!profile || !activeQuest) {{
     updateImpactPanel(null);
@@ -1466,6 +1555,10 @@ else:
     _preview_result = json.dumps(_payload)
 _preview_result
 `);
+    if (myToken !== previewToken) {{
+      console.log(`[OO] preview ${{(performance.now() - _ooT0).toFixed(0)}}ms (stale, discarded)`);
+      return;
+    }}
     const result = JSON.parse(resultJson);
     if (result.error) {{
       setError(result.error);
@@ -1744,6 +1837,7 @@ _summary
 
 // ── Generate full plan ────────────────────────────────────────────────────
 async function runEngine() {{
+  if (generating) return;  // double-click / re-entry guard
   const _ooT0 = performance.now();
   setError(null);
   const profile = buildProfile();
@@ -1751,18 +1845,31 @@ async function runEngine() {{
     setError('Не вдалося зібрати профіль (форма / JSON порожні).');
     return;
   }}
+
+  // Lock the form so input during generation can't desync the rendered
+  // plan from a moving profile. Cancel pending live-preview/what-if and
+  // bump tokens so any in-flight Pyodide eval discards its result.
+  generating = true;
+  if (evalDebounceTimer) {{ clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }}
+  ++previewToken;
+  ++whatIfToken;
+  setGeneratingUI(true, 'Завантажую двигун…');
+
   try {{
-    await ensureEngine();
-  }} catch (e) {{
-    setError('Pyodide не завантажився: ' + (e.message || e));
-    setStatus('');
-    return;
-  }}
-  setStatus('Запускаю двигун…');
-  const _ooTPython = performance.now();
-  try {{
-    pyodide.globals.set('_patient_json', JSON.stringify(profile));
-    const html = await pyodide.runPythonAsync(`
+    try {{
+      await ensureEngine();
+    }} catch (e) {{
+      setError('Pyodide не завантажився: ' + (e.message || e));
+      setStatus('');
+      return;
+    }}
+    setStatus('Запускаю двигун…');
+    setGeneratingHint('Двигун обчислює план + MDT…');
+    const _ooTPython = performance.now();
+    try {{
+      pyodide.globals.set('_patient_json', JSON.stringify(profile));
+      pyodide.globals.set('_target_lang', currentResultLang);
+      const html = await pyodide.runPythonAsync(`
 import json
 from pathlib import Path
 from knowledge_base.engine import (
@@ -1772,26 +1879,48 @@ from knowledge_base.engine import (
 patient = json.loads(_patient_json)
 KB = Path('knowledge_base/hosted/content')
 if is_diagnostic_profile(patient):
-    result = generate_diagnostic_brief(patient, kb_root=KB)
-    mdt = orchestrate_mdt(patient, result, kb_root=KB)
-    html = render_diagnostic_brief_html(result, mdt=mdt)
+    _oo_result = generate_diagnostic_brief(patient, kb_root=KB)
+    _oo_mdt = orchestrate_mdt(patient, _oo_result, kb_root=KB)
+    _oo_mode = 'diagnostic'
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 else:
-    result = generate_plan(patient, kb_root=KB)
-    mdt = orchestrate_mdt(patient, result, kb_root=KB)
-    html = render_plan_html(result, mdt=mdt)
+    _oo_result = generate_plan(patient, kb_root=KB)
+    _oo_mdt = orchestrate_mdt(patient, _oo_result, kb_root=KB)
+    _oo_mode = 'treatment'
+    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 html
 `);
-    placeholder.hidden = true;
-    resultFrame.hidden = false;
-    resultFrame.srcdoc = html;
-    setStatus('Plan готовий ✓', 'ok');
-    document.querySelector('.quest-output').scrollIntoView({{behavior: 'smooth', block: 'start'}});
-    const _ooTNow = performance.now();
-    console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
-  }} catch (e) {{
-    setError('Двигун повернув помилку:\\n' + (e.message || e));
-    setStatus('');
+      placeholder.hidden = true;
+      resultFrame.hidden = false;
+      resultFrame.srcdoc = html;
+      showResultToolbar();
+      setStatus('Plan готовий ✓', 'ok');
+      document.querySelector('.quest-output').scrollIntoView({{behavior: 'smooth', block: 'start'}});
+      const _ooTNow = performance.now();
+      console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
+    }} catch (e) {{
+      setError('Двигун повернув помилку:\\n' + (e.message || e));
+      setStatus('');
+    }}
+  }} finally {{
+    generating = false;
+    setGeneratingUI(false);
+    updateRunBtnEnabled();
   }}
+}}
+
+function setGeneratingUI(on, hint) {{
+  generatingOverlay.hidden = !on;
+  // <main inert> hard-blocks pointer + keyboard focus on every interactive
+  // element inside (form fields, toolbar, runBtn). The overlay is a sibling
+  // of <main>, so it stays interactive — but we don't currently put any
+  // controls in it (no cancel — Pyodide runPythonAsync is not interruptable).
+  if (mainTryEl) mainTryEl.inert = on;
+  if (on && hint) setGeneratingHint(hint);
+}}
+
+function setGeneratingHint(text) {{
+  if (generatingHint) generatingHint.textContent = text;
 }}
 
 // ── Boot ──────────────────────────────────────────────────────────────────
@@ -2538,6 +2667,41 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   flex: 1; width: 100%; height: 800px; border: none;
 }
 
+/* Result toolbar (PDF + lang switcher) — appears above #resultFrame
+   once a Plan / DiagnosticBrief is rendered. */
+.result-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 14px; background: var(--gray-50);
+  border: 1px solid var(--gray-200); border-bottom: none;
+  border-top-left-radius: 10px; border-top-right-radius: 10px;
+}
+.rt-btn {
+  font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+  background: var(--green-700); color: white;
+  border: none; border-radius: 6px; padding: 8px 14px;
+  cursor: pointer; transition: background 0.15s;
+}
+.rt-btn:hover { background: var(--green-800); }
+.rt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.rt-lang-group {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gray-700); font-weight: 600;
+}
+.rt-lang-label { margin-right: 2px; }
+.rt-lang-btn {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.5px;
+  background: white; color: var(--gray-700);
+  border: 1px solid var(--gray-200); border-radius: 4px;
+  padding: 5px 10px; cursor: pointer; transition: all 0.15s;
+}
+.rt-lang-btn:hover { background: var(--gray-100); }
+.rt-lang-btn.is-active {
+  background: var(--green-700); color: white; border-color: var(--green-700);
+}
+.rt-lang-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* Questionnaire UI (try.html) */
 .quest-toolbar {
   display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
@@ -2807,6 +2971,42 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   .hero h1 { font-size: 32px; }
   .problem-grid, .try-grid { grid-template-columns: 1fr; }
 }
+
+/* Generation lock — overlay modal during full-plan generation. Hard-blocks
+   form interaction (via inert on <main>) so the rendered plan corresponds
+   to a stable input snapshot. Released in runEngine's finally{{}}. */
+.generating-overlay {{
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  animation: oo-fadein 0.18s ease-out;
+}}
+.generating-overlay[hidden] {{ display: none; }}
+.generating-card {{
+  background: white; border-radius: 12px;
+  padding: 28px 36px; max-width: 460px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}}
+.generating-card h3 {{
+  margin: 14px 0 8px; font-family: var(--font-display);
+  font-size: 22px; color: var(--green-900);
+}}
+.generating-card p {{
+  margin: 6px 0; font-size: 14px; color: var(--gray-700); line-height: 1.5;
+}}
+.generating-hint {{
+  font-size: 12px; color: var(--gray-600);
+  font-family: var(--font-mono); margin-top: 14px;
+}}
+.generating-spinner {{
+  width: 36px; height: 36px; margin: 0 auto;
+  border: 3px solid var(--gray-200); border-top-color: var(--green-700);
+  border-radius: 50%; animation: oo-spin 0.9s linear infinite;
+}}
+@keyframes oo-spin {{ to {{ transform: rotate(360deg); }} }}
+@keyframes oo-fadein {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
 
 /* Info pages (capabilities / limitations) */
 .info-page { padding: 32px 0 48px; }
