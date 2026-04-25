@@ -34,11 +34,23 @@ new work.
 
 ```
 cancer-autoresearch/
-├── specs/                    # 6 active specifications (UA)
-├── knowledge_base/           # rule-engine KB (in progress; may not exist yet)
-├── legacy/                   # retired autoresearch pipeline
-├── clinicaltrials_client.py  # to be refactored under knowledge_base/clients/
-├── pubmed_client.py          # same
+├── specs/                            # active specifications (UA)
+├── knowledge_base/                   # rule-engine KB
+│   ├── clients/                      # SourceClient implementations
+│   │   ├── ctgov_client.py           # ClinicalTrials.gov v2
+│   │   ├── pubmed_client.py          # NCBI E-utilities
+│   │   ├── dailymed_client.py
+│   │   ├── openfda_client.py
+│   │   └── translate_client.py
+│   ├── engine/                       # rule engine + render + MDT
+│   ├── schemas/                      # Pydantic entity schemas
+│   ├── validation/                   # YAML loader + validators
+│   ├── ingestion/                    # МОЗ extractor etc.
+│   └── hosted/content/               # KB YAML data (diseases, regimens, RFs, …)
+├── docs/                             # built site (openonco.info)
+├── scripts/                          # build_site.py, fill scripts, coverage tools
+├── tests/                            # pytest suite
+├── legacy/                           # retired autoresearch pipeline
 ├── README.md
 └── CLAUDE.md
 ```
@@ -130,9 +142,13 @@ explicit instruction from the user.
   top-level docs moved to `legacy/docs/OLD_*.md` (86c7868).
 - Knowledge base implementation (Part B of SOURCE_INGESTION_SPEC):
   **in progress.**
-- `clinicaltrials_client.py` and `pubmed_client.py` live at top level;
-  both need refactoring under `knowledge_base/clients/` conforming to
-  the `SourceClient` protocol defined in SOURCE_INGESTION_SPEC §12.2.
+- API clients refactored under `knowledge_base/clients/` per
+  SOURCE_INGESTION_SPEC §12.2: `ctgov_client.py` (renamed from
+  `clinicaltrials_client.py`), `pubmed_client.py`, `dailymed_client.py`,
+  `openfda_client.py`, `translate_client.py`.
+- RedFlag quality phases 1-7 done (2026-04-25/26): 106 RFs across all 28
+  diseases, ≥2 sources each, golden fixtures auto-generated, 220 RF-tests
+  green; clinical sign-off received. See `specs/REDFLAG_AUTHORING_GUIDE.md`.
 
 ## Medical disclaimer
 
