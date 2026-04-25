@@ -1,0 +1,31 @@
+id: CI-SEVERE-CYTOPENIA-BR
+severity: relative
+trigger:
+  type: lab_value
+  conditions:
+    - lab: "ANC"
+      threshold: 1000
+      comparator: "<"
+    - lab: "platelets"
+      threshold: 75000
+      comparator: "<"
+  logic: OR
+
+description: "Severe baseline cytopenia is a relative contraindication to starting bendamustine + rituximab — high risk of profound myelosuppression."
+description_ua: "Тяжка вихідна цитопенія — відносне протипоказання до BR через ризик глибокої мієлосупресії"
+
+alternative_actions:
+  - "Investigate cause of cytopenia (marrow infiltration, autoimmune, hypersplenism)"
+  - "Consider single-agent rituximab if cytopenia is from disease (treats the cause)"
+  - "Delay until ANC >= 1500 and platelets >= 100K when feasible"
+
+affects_indications: []
+affects_drugs:
+  - DRUG-BENDAMUSTINE
+affects_regimens:
+  - REG-BR-STANDARD
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"

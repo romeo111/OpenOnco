@@ -1,0 +1,63 @@
+id: MON-BR-REGIMEN
+linked_to_regimen: REG-BR-STANDARD
+
+phases:
+  - name: baseline
+    window: "Within 2 weeks before cycle 1"
+    tests:
+      - TEST-CBC
+      - TEST-LFT
+      - TEST-LDH
+      - TEST-HBV-SEROLOGY
+      - TEST-FIB4
+      - TEST-CD20-IHC
+      - TEST-PET-CT
+    visits: ["Treatment planning visit with oncology and infectious disease consult"]
+    checkpoints:
+      - "Confirm CD20+ histology"
+      - "Confirm HBV status and prophylaxis plan"
+      - "FIB-4 + LFT determine bendamustine dose adjustment"
+
+  - name: on_treatment
+    window: "Day 1 of every 28-day cycle"
+    tests:
+      - TEST-CBC
+      - TEST-LFT
+    visits: ["Pre-cycle clinical assessment + infusion-day labs"]
+    checkpoints:
+      - "ANC ≥ 1500/µL and platelets ≥ 75K before each cycle (delay otherwise)"
+      - "ALT/AST trend (rising values may signal HBV reactivation or hepatotoxicity)"
+
+  - name: response_assessment
+    window: "After cycles 3 and 6"
+    tests:
+      - TEST-PET-CT
+      - TEST-LDH
+    visits: ["Restaging visit"]
+    checkpoints:
+      - "Lugano response criteria (CR, PR, SD, PD)"
+      - "If <PR after cycle 3 → consider regimen change"
+
+  - name: follow_up_short
+    window: "Every 3 months for 2 years post-treatment"
+    tests:
+      - TEST-CBC
+      - TEST-LFT
+      - TEST-LDH
+    visits: ["Clinical assessment + labs"]
+    checkpoints:
+      - "Surveillance for relapse"
+      - "HBV reactivation monitoring continues for 12 months post anti-CD20"
+
+  - name: follow_up_long
+    window: "Every 6 months years 3-5"
+    tests:
+      - TEST-CBC
+      - TEST-LFT
+    visits: ["Annual oncology + hepatology follow-up"]
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MZL-2024
+
+last_reviewed: "2026-04-25"

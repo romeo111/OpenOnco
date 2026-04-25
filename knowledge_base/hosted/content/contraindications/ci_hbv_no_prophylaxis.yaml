@@ -1,0 +1,30 @@
+id: CI-HBV-NO-PROPHYLAXIS
+severity: absolute
+trigger:
+  type: patient_condition
+  conditions:
+    - patient_condition: "HBsAg+ OR anti-HBc+"
+    - patient_condition: "no concurrent HBV antiviral prophylaxis prescribed"
+  logic: AND
+
+description: "Active or latent HBV without antiviral prophylaxis is an absolute contraindication to starting anti-CD20 therapy; severe HBV reactivation hepatitis risk."
+description_ua: "Активний або латентний HBV без противірусної профілактики — абсолютне протипоказання до anti-CD20 терапії"
+
+alternative_actions:
+  - "Start entecavir prophylaxis (SUP-HBV-PROPHYLAXIS) before first anti-CD20 dose"
+  - "Refer to hepatologist for shared management"
+  - "Defer anti-CD20 therapy until prophylaxis confirmed"
+
+affects_indications: []
+affects_drugs:
+  - DRUG-RITUXIMAB
+  - DRUG-OBINUTUZUMAB
+affects_regimens:
+  - REG-BR-STANDARD
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-EASL-HCV-2023
+
+last_reviewed: "2026-04-25"
+notes: "Triggered by RF-HBV-COINFECTION; resolved by adding SUP-HBV-PROPHYLAXIS to plan."

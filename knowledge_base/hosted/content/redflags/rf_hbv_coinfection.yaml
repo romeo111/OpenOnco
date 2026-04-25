@@ -1,0 +1,28 @@
+id: RF-HBV-COINFECTION
+definition: "Hepatitis B coinfection: HBsAg positive OR anti-HBc total positive (occult HBV risk)"
+definition_ua: "Коінфекція HBV: HBsAg+ АБО anti-HBc total+"
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+
+clinical_direction: hold
+
+relevant_diseases:
+  - DIS-HCV-MZL
+shifts_algorithm:
+  - ALGO-HCV-MZL-1L
+
+sources:
+  - SRC-EASL-HCV-2023
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  Triggers SUP-HBV-PROPHYLAXIS as a mandatory parallel intervention.
+  Anti-CD20 therapy without prophylaxis carries significant HBV
+  reactivation risk (up to 50% in HBsAg+, 5-10% in anti-HBc+).

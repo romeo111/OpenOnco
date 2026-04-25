@@ -1,0 +1,24 @@
+id: CI-DECOMP-CIRRHOSIS-GLEC
+severity: absolute
+trigger:
+  type: drug_drug_interaction
+  conditions:
+    - drug_id: DRUG-GLECAPREVIR-PIBRENTASVIR
+    - patient_condition: "Child-Pugh B or C cirrhosis"
+  logic: AND
+
+description: "Glecaprevir/pibrentasvir contraindicated in decompensated cirrhosis (Child-Pugh B or C) — protease-inhibitor-related hepatic decompensation risk."
+description_ua: "Глекапревір/пібрентасвір протипоказаний при декомпенсованому цирозі"
+
+alternative_actions:
+  - "Use sofosbuvir/velpatasvir + ribavirin instead (per EASL 2023)"
+  - "Hepatology specialist consultation"
+
+affects_indications: []
+affects_drugs:
+  - DRUG-GLECAPREVIR-PIBRENTASVIR
+
+sources:
+  - SRC-EASL-HCV-2023
+
+last_reviewed: "2026-04-25"
