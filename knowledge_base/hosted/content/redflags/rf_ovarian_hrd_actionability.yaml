@@ -1,0 +1,44 @@
+id: RF-OVARIAN-HRD-ACTIONABILITY
+definition: >
+  HRD-positive (BRCA1/2 mutation OR Genomic Instability Score ≥42)
+  high-grade serous ovarian carcinoma. Treatment-defining for PARPi
+  maintenance after platinum-based induction. Olaparib (SOLO-1 BRCA-only,
+  PAOLA-1 with bev) + niraparib (PRIMA all-comer) substantially improve
+  PFS in HRD-positive subset.
+definition_ua: >
+  HRD-позитивна (BRCA1/2 мутація АБО Genomic Instability Score ≥42)
+  high-grade серозна карцинома яєчників. Визначає вибір PARPi-підтримки
+  після індукції на основі платини.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "hrd_status"
+      value: "HRD-positive"
+    - finding: "brca1_brca2_pathogenic"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  HRD testing on FFPE tumor + paired germline. Reflex BRCA → if WT,
+  proceed to GIS scoring. SOLO-1: BRCA-mut maintenance olaparib mPFS
+  56 vs 14 mo. PAOLA-1: HRD-positive (BRCA-mut OR GIS+) bev+olap
+  mPFS 37 vs 22 mo. PRIMA: niraparib all-comer maintenance benefit
+  weighted toward HRD+ subset.

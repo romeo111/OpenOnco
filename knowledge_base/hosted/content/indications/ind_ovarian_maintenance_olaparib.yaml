@@ -1,0 +1,51 @@
+id: IND-OVARIAN-MAINTENANCE-OLAPARIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-OVARIAN
+  line_of_therapy: 1
+  stage_requirements: ["Post platinum-induction CR/PR", "FIGO IIIB-IV"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HRD-STATUS
+      value_constraint: "HRD-positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OLAPARIB-MAINT-OVARIAN
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance — measured by PFS not response"
+  progression_free_survival: "mPFS 56 mo SOLO-1 (BRCA-mut); 37 mo PAOLA-1 (HRD+ all)"
+  overall_survival_5y: "5-yr OS ~67% SOLO-1 BRCA arm vs 47% placebo"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC  # for anemia monitoring
+desired_tests: []
+
+rationale: >
+  SOLO-1 + PAOLA-1: olaparib maintenance after platinum-response in
+  HRD+ HGSC — treatment-of-choice. NCCN cat 1.
+
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+  - source_id: SRC-ESMO-OVARIAN-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT start without confirmed CR/PR to platinum"
+  - "Do NOT continue past 2 years for non-BRCA HRD+ unless still benefiting (label allows ≤24 mo)"
+  - "Do NOT skip pre-treatment counseling on long-term MDS/AML risk"
+
+last_reviewed: "2026-04-26"
+notes: "Maintenance-phase indication, follows induction IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP."

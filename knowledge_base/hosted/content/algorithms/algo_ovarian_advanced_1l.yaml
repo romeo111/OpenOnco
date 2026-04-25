@@ -1,0 +1,60 @@
+id: ALGO-OVARIAN-ADVANCED-1L
+applicable_to_disease: DIS-OVARIAN
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic regimen for advanced (FIGO IIIB-IV) ovarian
+  high-grade serous carcinoma. Carbo+pacli backbone for all; HRD status
+  drives maintenance choice (olaparib HRD+ vs none / niraparib /
+  bev for HRD-negative).
+
+output_indications:
+  - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
+  - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+  - IND-OVARIAN-MAINTENANCE-OLAPARIB
+
+default_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
+alternative_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+
+decision_tree:
+  # Step 1 — HRD-positive routes to PARPi-maintenance track.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-HRD-ACTIONABILITY
+    if_true:
+      result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
+    if_false:
+      next_step: 2
+
+  # Step 2 — frailty de-escalates (same indication, dose-modified).
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-FRAILTY-AGE
+    if_true:
+      result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+    if_false:
+      next_step: 3
+
+  # Step 3 — default HRD-negative track.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "HRD-negative or unknown"
+    if_true:
+      result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+    if_false:
+      result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Scaffold algorithm focused on HRD-driven maintenance choice.
+  Out-of-scope this commit: NACT vs primary debulking surgery branch
+  (RF-OVARIAN-SUBOPTIMAL-DEBULKING surfaces the MDT trigger but
+  doesn't switch chemo regimen — both pathways use carbo+pacli);
+  rare histologies (clear-cell, mucinous, low-grade serous) have
+  distinct paradigms; recurrent / 2L+ algorithms.

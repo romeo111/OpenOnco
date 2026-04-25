@@ -1,0 +1,50 @@
+id: REG-STUPP-TMZ
+name: "Stupp protocol — Temozolomide concurrent + adjuvant"
+name_ua: "Протокол Stupp — Темозоломід concurrent + adjuvant"
+alternate_names: ["Stupp regimen", "TMZ Stupp"]
+
+components:
+  - drug_id: DRUG-TEMOZOLOMIDE
+    dose: "Concurrent: 75 mg/m² PO daily during RT 6 weeks; Adjuvant: 150 mg/m² PO days 1-5 cycle 1 (escalate to 200 if tolerated) every 28 days × 6 cycles"
+    schedule: "Concurrent daily × 42 days then 4-week break then adjuvant cycles 1-6"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Concurrent phase 6 weeks + adjuvant 6 cycles (~7 months total)"
+
+toxicity_profile: severe
+
+premedication:
+  - "5-HT3 antagonist 30-60 min pre-TMZ daily"
+  - "PJP prophylaxis: TMP-SMX SS daily OR atovaquone (universal lymphopenia)"
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Lymphopenia ALC <0.5 k/µL"
+    modification: "Continue PJP prophylaxis; consider weekly CBC"
+    source_refs: [SRC-NCCN-CNS-2025]
+  - condition: "Grade 3-4 thrombocytopenia / neutropenia (delayed)"
+    modification: "Hold; restart at 75% dose when recovered"
+    source_refs: [SRC-NCCN-CNS-2025]
+  - condition: "Hepatotoxicity Grade 2"
+    modification: "Hold + recheck LFT weekly; resume when normalized"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "TMZ NSZU-funded for newly-diagnosed GBM; recurrent indications variable."
+
+sources: [SRC-NCCN-CNS-2025, SRC-EANO-GBM-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  Stupp 2005: TMZ + RT 60 Gy / 30 fx → mOS 14.6 vs 12.1 mo RT-only.
+  Long-term: 5-yr OS 9.8% vs 1.9%. MGMT-methylated subgroup: mOS 21.7
+  vs 15.3 mo. RT 60 Gy / 30 fractions concurrent NOT modellable per
+  PROPOSAL §17. This regimen entry captures TMZ chemo only.
+
+  Elderly (≥70) with poor PS: TMZ-only (Nordic / Wick) or RT-only
+  (CCTG CE.6 hypofractionated 40 Gy / 15 fx + TMZ for ≥65) are
+  acceptable Stupp variations — separate regimen entries TBD.

@@ -1,0 +1,64 @@
+id: IND-GBM-NEWLY-DIAGNOSED-STUPP
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GBM
+  line_of_therapy: 1
+  stage_requirements: ["Newly-diagnosed glioblastoma (IDH-WT, WHO grade 4)", "Post maximal safe resection OR biopsy-only"]
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_max: 70  # Stupp full-protocol; >70 see elderly variants
+    ecog_max: 2
+
+recommended_regimen: REG-STUPP-TMZ
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Adjuvant — measured by PFS/OS"
+  progression_free_survival: "Median PFS ~7 mo; 6-mo PFS ~54%"
+  overall_survival_5y: "mOS 14.6 mo (2-yr OS 27%); MGMT-methylated 21.7 mo"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
+
+required_tests:
+  - TEST-MRI-BRAIN-CONTRAST
+  - TEST-MGMT-METHYLATION
+  - TEST-IDH-MUTATION
+
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE  # for additional brain-tumor markers (TERT, ATRX, EGFR amplification)
+
+rationale: >
+  Stupp 2005 — temozolomide + RT for newly-diagnosed GBM. Standard
+  for fit patients ≤70 years post maximal-safe-resection or biopsy.
+  MGMT-methylated subgroup derives largest benefit but Stupp is
+  category-1 standard regardless of MGMT status (some elderly +
+  unmethylated may consider TMZ-only or RT-only — separate indications).
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+  - source_id: SRC-EANO-GBM-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT delay starting RT beyond 6 weeks post-resection"
+  - "Do NOT skip MGMT testing — defines elderly (≥70) regimen choice"
+  - "Do NOT skip PJP prophylaxis (universal lymphopenia → opportunistic infection)"
+  - "Do NOT use enzyme-inducing AEDs (phenytoin, carbamazepine) — accelerate TMZ clearance; use levetiracetam"
+
+last_reviewed: "2026-04-26"
+notes: >
+  PARTIAL — RT 60 Gy / 30 fractions concurrent with TMZ is the
+  defining feature of Stupp; not modellable per PROPOSAL §17.
+  This Indication captures TMZ chemo backbone. Test entities
+  TEST-MGMT-METHYLATION and TEST-IDH-MUTATION referenced but not
+  yet authored (engine validation will flag).

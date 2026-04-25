@@ -1,0 +1,47 @@
+id: RF-GBM-INTRACRANIAL-PRESSURE-EMERGENCY
+definition: >
+  Symptomatic raised intracranial pressure / mass effect in glioblastoma:
+  declining GCS, new focal deficit, papilledema, midline shift on imaging,
+  or seizure cluster. Mandates immediate neurosurgical / corticosteroid
+  intervention BEFORE oncologic systemic therapy.
+definition_ua: >
+  Симптоматичне підвищення внутрішньочерепного тиску / mass effect при
+  GBM: падіння GCS, новий неврологічний дефіцит, папіледема, midline
+  shift, серійні судоми. Терміново нейрохірургія / кортикостероїди
+  ДО системної терапії.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "gcs_declining"
+      value: true
+    - finding: "midline_shift_mm"
+      threshold: 5
+      comparator: ">="
+    - finding: "uncontrolled_seizure_cluster"
+      value: true
+    - finding: "new_focal_deficit"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 30
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-GBM
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Mass effect emergency — dexamethasone 8-16 mg IV stat, neurosurgical
+  consult for resection / debulking / VP shunt. Anti-epileptics for
+  seizure cluster (levetiracetam preferred — no enzyme induction
+  vs older AEDs that interfere with TMZ pharmacokinetics).

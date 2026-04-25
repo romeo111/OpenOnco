@@ -1,0 +1,47 @@
+id: RF-OVARIAN-FRAILTY-AGE
+definition: >
+  Frailty profile precluding standard carbo+pacli + bev intensified
+  induction in ovarian: ECOG ≥3, OR (age ≥75 + Charlson ≥3), OR
+  composite (age ≥70 + ascites large-volume + albumin <3.0). Triggers
+  carbo-mono OR weekly-dose-dense-pacli (less neuropathy / bone marrow).
+definition_ua: >
+  Профіль frailty в раку яєчників: ECOG ≥3, АБО (≥75 + Charlson ≥3),
+  АБО (≥70 + великий асцит + альбумін <3.0). Routes до карбо-моно
+  АБО weekly-dose-dense-pacli.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  EWOC-1 trial: 3-weekly carbo+pacli vs single-agent carbo for frail
+  elderly — combination still won OS but reduced-dose acceptable.
+  Bevacizumab caution in elderly (HTN + GI perforation risk).

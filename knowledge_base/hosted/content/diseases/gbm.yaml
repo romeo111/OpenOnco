@@ -1,0 +1,56 @@
+id: DIS-GBM
+names:
+  preferred: "Glioblastoma (IDH-WT, WHO grade 4)"
+  ukrainian: "Гліобластома (IDH-WT, WHO grade 4)"
+  english: "Glioblastoma"
+  synonyms: ["GBM", "Glioblastoma multiforme (legacy term)"]
+
+codes:
+  icd_o_3_morphology: "9440/3"
+  icd_o_3_topography: ["C71"]
+  icd_10: "C71"
+  who_classification: "WHO CNS Tumours 5th ed (2021): Glioblastoma, IDH-wildtype, grade 4 (the IDH-mutant grade-4 astrocytoma is a distinct entity)"
+
+archetype: stage_driven
+lineage: "carcinoma"  # neuroepithelial; "carcinoma" is the closest existing lineage value — see notes
+
+etiological_factors:
+  - "Sporadic (vast majority — no known etiology)"
+  - "Prior cranial radiation (small risk increase)"
+  - "Genetic syndromes (rare): Li-Fraumeni, NF1, Turcot, Lynch"
+
+related_diseases: []
+
+epidemiology:
+  global_incidence: "~3-5 per 100K/yr"
+  median_age_dx: "~64 years"
+  median_os: "~15 mo with Stupp; ~22 mo if MGMT-methylated"
+  mgmt_methylated_rate: "~40% of newly-diagnosed GBM"
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — Stupp protocol = maximal safe resection → concurrent RT 60 Gy/30 fx + temozolomide → adjuvant TMZ × 6. RT + surgery + sequential phasing all unmodellable today"
+
+notes: >
+  Scaffolded for batch #2: 4 RFs (intracranial-pressure emergency,
+  MGMT-actionability, frailty/age — elderly Stupp-modified, biopsy-only
+  vs maximal-safe-resection MDT-trigger). 1 regimen (TMZ Stupp
+  concurrent + adjuvant). 2 indications (Stupp full for fit; TMZ-only
+  for elderly unmethylated unfit). 1 algorithm.
+
+  Lineage value `carcinoma` is suboptimal — neuroepithelial would be
+  more accurate. Schema's lineage field is free-text Optional; using
+  `carcinoma` for now to match other solid-tumor entries; clinical
+  authors may want to add `glioma` / `neuroepithelial` enum value
+  in future.
+
+  RT 60 Gy / 30 fractions concurrent with TMZ 75 mg/m²/d daily during
+  RT is the canonical Stupp concurrent phase. RT NOT modellable per
+  PROPOSAL §17 — treated as free-text in Indication.notes for now.

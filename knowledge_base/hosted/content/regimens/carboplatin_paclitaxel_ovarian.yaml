@@ -1,0 +1,47 @@
+id: REG-CARBO-PACLI-OVARIAN
+name: "Carboplatin + Paclitaxel (ovarian 3-weekly)"
+name_ua: "Карбоплатин + Паклітаксел (3-тижневий, для яєчників)"
+alternate_names: ["CP", "Carbo-pacli q3w"]
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5-6"
+    schedule: "IV day 1 every 21d"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "175 mg/m²"
+    schedule: "IV day 1 every 21d"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "6 cycles (per GOG-218 / ICON-7 induction); subsequent maintenance per HRD/biomarker stratification"
+
+toxicity_profile: severe
+premedication: ["Paclitaxel: dex 20 mg PO 12+6h pre + diphenhydramine 50 mg + ranitidine 50 mg IV", "5-HT3 antagonist day 1"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2-3 peripheral neuropathy"
+    modification: "Reduce paclitaxel to 135 mg/m² OR switch to weekly dose-dense (80 mg/m² weekly) — JGOG-3016 superior PFS but more myelosuppression"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "Grade 3-4 thrombocytopenia"
+    modification: "Reduce carboplatin AUC to 4 next cycle"
+  - condition: "Renal impairment CrCl 30-60"
+    modification: "Recalculate Calvert formula; cap GFR at 125"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Both components NSZU-funded; dose-dense weekly Pacli + 3-weekly Carbo (JGOG-3016) regimen is acceptable variation."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  Backbone of advanced ovarian 1L for ~25 years. ICON-7 + GOG-218
+  added bevacizumab to induction + maintenance — maintenance bev
+  improves PFS but not OS (selected stage III suboptimally debulked
+  + stage IV benefit). Weekly dose-dense Pacli (JGOG-3016) PFS
+  superior vs 3-weekly in Asian-population trial; not consistently
+  reproduced in Western GOG-262 / ICON-8.

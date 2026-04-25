@@ -1,0 +1,38 @@
+id: ALGO-GBM-NEWLY-DIAGNOSED-1L
+applicable_to_disease: DIS-GBM
+applicable_to_line_of_therapy: 1
+purpose: >
+  Scaffold algorithm for newly-diagnosed GBM (IDH-WT, WHO grade 4).
+  Currently models Stupp protocol only. Elderly variants (TMZ-only
+  Nordic / RT-only / hypofractionated CCTG-CE.6) await full authoring.
+  Recurrent GBM (bevacizumab, lomustine, TTF) entirely out of scope here.
+
+output_indications:
+  - IND-GBM-NEWLY-DIAGNOSED-STUPP
+
+default_indication: IND-GBM-NEWLY-DIAGNOSED-STUPP
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "IDH-WT GBM (WHO grade 4)"
+        - condition: "ECOG ≤2 + age ≤70"
+        - condition: "Post maximal safe resection OR biopsy-only"
+    if_true:
+      result: IND-GBM-NEWLY-DIAGNOSED-STUPP
+    if_false:
+      result: IND-GBM-NEWLY-DIAGNOSED-STUPP
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Scaffold. Elderly + MGMT-stratified algorithm needed: ≥70 + MGMT
+  methylated → TMZ-only (Nordic); ≥70 + MGMT unmethylated → RT-only
+  (CCTG-CE.6 hypofractionated 40 Gy / 15 fx). Vorasidenib INDIGO
+  for IDH-mutant grade-2 glioma (different entity per WHO 2021)
+  — separate disease YAML if added.

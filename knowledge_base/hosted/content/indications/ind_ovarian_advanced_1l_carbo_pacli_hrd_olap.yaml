@@ -1,0 +1,55 @@
+id: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-OVARIAN
+  line_of_therapy: 1
+  stage_requirements: ["FIGO IIIB-IV (advanced)", "Post-induction platinum-responder (CR or PR)"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HRD-STATUS
+      value_constraint: "HRD-positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CARBO-PACLI-OVARIAN
+concurrent_therapy: []
+followed_by:
+  - IND-OVARIAN-MAINTENANCE-OLAPARIB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80% (induction)"
+  complete_response: "~50%"
+  progression_free_survival: "Median ~37 mo with HRD+ + olaparib maintenance (PAOLA-1)"
+  overall_survival_5y: "~50-60% in HRD+ subset"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-OVARIAN-FRAILTY-AGE
+  - RF-OVARIAN-SUBOPTIMAL-DEBULKING
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Advanced ovarian HGSC HRD+ — carbo+pacli induction × 6 cycles
+  followed by olaparib maintenance × 2 yr (per SOLO-1 BRCA / PAOLA-1
+  HRD+). Treatment-defining biomarker.
+
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+  - source_id: SRC-ESMO-OVARIAN-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT skip HRD testing — defines maintenance choice (PARPi-only HRD+; niraparib-all-comer if HRD-negative weak benefit)"
+  - "Do NOT start olaparib without confirmed CR/PR to platinum induction"
+  - "Do NOT continue olaparib through Grade 3 anemia without dose reduction"
+
+last_reviewed: "2026-04-26"
+notes: "Stage IV / FIGO IIIB+ HGSC HRD+ — primary aggressive track."

@@ -1,0 +1,56 @@
+id: DIS-OVARIAN
+names:
+  preferred: "Ovarian carcinoma (high-grade serous predominant)"
+  ukrainian: "Карцинома яєчників (переважно high-grade серозна)"
+  english: "Ovarian carcinoma"
+  synonyms: ["Epithelial ovarian cancer", "Tubo-ovarian cancer (incl. fallopian tube + primary peritoneal)"]
+
+codes:
+  icd_o_3_morphology: "8441/3"  # Serous adenocarcinoma; mucinous (8480/3), endometrioid (8380/3), clear-cell (8310/3) variants tracked under findings
+  icd_o_3_topography: ["C56", "C57.0", "C48.1"]  # ovary, fallopian tube, peritoneum (combined per WHO 2020)
+  icd_10: "C56"
+  who_classification: "WHO Female Genital Tumours 5th ed (2020): High-grade serous carcinoma of tubo-ovarian / peritoneal origin"
+
+archetype: biomarker_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Hereditary BRCA1/2 (germline ~15-20% of HGSC; familial high-penetrance)"
+  - "Lynch syndrome (germline MMR; non-serous histologies)"
+  - "Nulliparity, late menopause (incessant ovulation)"
+  - "Endometriosis (clear-cell + endometrioid variants)"
+
+related_diseases: []
+
+epidemiology:
+  global_incidence: "~315K new cases/yr; 8th cancer death in women globally"
+  ukraine_incidence: "~3500 new cases/yr; high mortality (late presentation)"
+  hgsc_proportion: "~70-80% of epithelial ovarian"
+  brca_germline_rate: "~15-20% of HGSC"
+  hrd_positive_rate: "~50% of HGSC (BRCA1/2 + GIS-positive)"
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — primary cytoreductive surgery (interval debulking + complete-resection rate impacts maintenance choice) not modellable as Surgery entity"
+
+notes: >
+  Scaffolded for batch #2: focus on advanced-stage (FIGO III-IV) HGSC
+  1L systemic + maintenance. 4 RFs (debulking-status MDT-trigger,
+  HRD-actionability, frailty/age, perioperative VTE risk).
+  Regimens: carbo+pacli ± bev backbone, olaparib maintenance HRD+,
+  niraparib all-comer maintenance, bev maintenance per PAOLA-1.
+  Out-of-scope this commit: rare histologies (clear-cell,
+  endometrioid, mucinous, low-grade serous have distinct paradigms);
+  recurrent platinum-sensitive vs platinum-resistant 2L+ algorithms;
+  borderline tumors.
+
+  HRD testing (BIO-HRD-STATUS) is the central biomarker — defines
+  PARPi-maintenance benefit. BRCA1/2 germline + somatic via
+  reflex testing.

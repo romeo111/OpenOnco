@@ -1,0 +1,47 @@
+id: RF-OVARIAN-SUBOPTIMAL-DEBULKING
+definition: >
+  Suboptimal primary cytoreductive surgery (residual disease ≥1 cm)
+  or unresectable at presentation in advanced (FIGO III-IV) ovarian
+  carcinoma. MDT-trigger for neoadjuvant chemo (NACT) → interval
+  debulking surgery (IDS) pathway per CHORUS / EORTC55971 trials,
+  rather than primary debulking.
+definition_ua: >
+  Subоптимальна первинна циторедукція (резидуальна пухлина ≥1 см) або
+  нерезектабельність у запущеній (FIGO III-IV) карциномі яєчників.
+  MDT-trigger для НАХТ → інтервал-debulking (CHORUS / EORTC55971).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "primary_debulking_residual_cm"
+      threshold: 1
+      comparator: ">="
+    - finding: "primary_debulking_unsuccessful"
+      value: true
+    - finding: "fagotti_score_high_unresectable"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm: []  # MDT-trigger; doesn't switch chemo regimen, drives surgical pathway
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Surgical-vs-NACT timing decision is the central MDT debate in
+  advanced ovarian. Fagotti laparoscopic score predicts complete
+  resection feasibility. Complete (R0) cytoreduction substantially
+  improves PFS/OS — when achievable, primary debulking preferred.
+  When R0 not achievable or patient frail/comorbid → NACT carbo+pacli
+  × 3-4 cycles → IDS → 3 more cycles + maintenance.

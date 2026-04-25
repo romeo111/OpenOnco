@@ -1,0 +1,41 @@
+id: RF-CERVICAL-HYDRONEPHROSIS-PELVIC-OBSTRUCTION
+definition: >
+  Hydronephrosis or pelvic-mass-induced ureteric obstruction in cervical
+  cancer (FIGO IIIB by definition). Mandates urgent renal decompression
+  (percutaneous nephrostomy or ureteric stent) BEFORE cisplatin-based CRT —
+  cisplatin nephrotoxic + ureteric obstruction worsens AKI.
+definition_ua: >
+  Гідронефроз або обструкція сечоводу пухлиною (FIGO IIIB за визначенням).
+  Терміново — перкутанна нефростомія / ureteric stent ДО цисплатин-CRT.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "hydronephrosis_grade2_plus"
+      value: true
+    - finding: "creatinine_rising"
+      value: true
+    - finding: "ureteric_obstruction_imaging"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 35
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  FIGO IIIB definition includes hydronephrosis from tumor — substantial
+  prognostic weight. Cisplatin radiosensitization needs CrCl ≥60;
+  decompression first, restage CrCl, then proceed with CRT.

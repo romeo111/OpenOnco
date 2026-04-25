@@ -1,0 +1,44 @@
+id: RF-OVARIAN-PERIOPERATIVE-VTE
+definition: >
+  High perioperative VTE risk in ovarian cancer: ascites + bulky pelvic
+  mass + immobilization + ovarian cancer's intrinsic prothrombotic state
+  (~20% VTE incidence post-cytoreduction without prophylaxis). Mandates
+  extended LMWH prophylaxis × 28 days post-op + careful timing of
+  bevacizumab initiation (≥28 days post-op for surgical wound healing).
+definition_ua: >
+  Високий ризик ВТЕ в періопераційному періоді при раку яєчників:
+  асцит + bulky pelvic mass + іммобілізація + інтринсичний протромботичний
+  стан. Потребує продовженої LMWH-профілактики × 28 днів + обережного
+  старту бевацизумабу.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "active_vte_recent"
+      value: true
+    - finding: "ascites_significant"
+      value: true
+    - finding: "bulky_pelvic_mass_cm"
+      threshold: 10
+      comparator: ">="
+
+clinical_direction: investigate
+
+severity: major
+priority: 100
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Khorana score >2 in ovarian = ambulatory VTE prophylaxis discussion.
+  Bevacizumab adds bleeding risk; coordinate with surgical timing.

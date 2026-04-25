@@ -1,0 +1,56 @@
+id: DIS-CERVICAL
+names:
+  preferred: "Cervical carcinoma (squamous predominant + adeno)"
+  ukrainian: "Карцинома шийки матки"
+  english: "Cervical carcinoma"
+  synonyms: ["Cervix uteri carcinoma"]
+
+codes:
+  icd_o_3_morphology: "8070/3"  # SCC; adenocarcinoma (8140/3) + adenosquamous (8560/3) variants tracked under findings
+  icd_o_3_topography: ["C53"]
+  icd_10: "C53"
+  who_classification: "WHO Female Genital Tumours 5th ed (2020): Cervical squamous cell carcinoma + cervical adenocarcinoma"
+
+archetype: etiologically_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "High-risk HPV chronic infection (genotypes 16, 18, 31, 33, 45, 52, 58 — accounts for >99% of cases)"
+  - "HIV co-infection (immunosuppression accelerates progression)"
+  - "Smoking (cofactor for SCC)"
+  - "Long-term oral contraceptives (modest cofactor for adenocarcinoma)"
+  - "Multiple sexual partners + early coitarche (HPV transmission risk)"
+
+related_diseases: []
+
+epidemiology:
+  global_incidence: "~660K new cases/yr; ~350K deaths; 4th most common cancer in women"
+  ukraine_incidence: "~5500 new cases/yr; vaccination roll-out ongoing"
+  hpv16_18_proportion: "~70% of cases"
+  scc_vs_adeno: "~70% SCC, ~25% adeno, ~5% other"
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 — concurrent CRT (cisplatin-radiosensitization + EBRT 45-50.4 Gy + brachytherapy boost) not modellable today"
+
+notes: >
+  Scaffolded for batch #2: focus on locally-advanced (FIGO IB3-IVA)
+  CRT and metastatic 1L systemic. Cervical is the second
+  etiologically_driven disease in KB (after HCV-MZL); HPV is the
+  near-universal causal agent. 4 RFs: hydronephrosis-from-pelvic-mass
+  (organ-dysfunction emergency), HIV-coinfection (infection-screening +
+  prognostic), bulky-disease (high-risk biology), frailty/age.
+  Regimens: cisplatin-radiosensitization (concurrent CRT),
+  pembro+chemo+bev (KEYNOTE-826 metastatic), tisotumab vedotin
+  (innovaTV-301 2L+).
+
+  Out-of-scope this commit: early-stage IA1-IB2 conservative surgery
+  (cone, simple/modified-radical hysterectomy) — Surgery entity per
+  PROPOSAL §17 needed; brachytherapy as separate modality.

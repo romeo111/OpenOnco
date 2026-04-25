@@ -62,6 +62,29 @@ DISEASES_WITH_GAPS_BASELINE = {
     # DIS-MM — closed by Phase 3 second batch (3 new RFs added 2026-04-25)
     "DIS-PTCL-NOS",
     "DIS-WM",
+    # 2026-04-26 GI solid-tumor batch — all 5 ship as `partial` per
+    # PROPOSAL §17 (KNOWLEDGE_SCHEMA_SPECIFICATION.md). 4 RFs covered
+    # for CRC + HCC; 1 RF each for gastric / PDAC / esophageal scaffolds.
+    # Full 5-type matrix awaits clinical authoring + RT/surgery schema
+    # ratification.
+    "DIS-CRC",
+    "DIS-GASTRIC",
+    "DIS-PDAC",
+    "DIS-HCC",
+    "DIS-ESOPHAGEAL",
+    # 2026-04-26 user/linter parallel thoracic work (SCLC partial).
+    "DIS-SCLC",
+    # 2026-04-26 user/linter parallel solid-tumor expansion (partial).
+    "DIS-ENDOMETRIAL",
+    "DIS-MELANOMA",
+    "DIS-RCC",
+    "DIS-UROTHELIAL",
+    # 2026-04-26 batch #2 — Ovarian + Cervical + GBM. Ship as `partial`
+    # per PROPOSAL §17 (Surgery + RT + sequential phasing); 4 RFs covered
+    # for Ovarian, 1 RF each for Cervical + GBM scaffolds.
+    "DIS-OVARIAN",
+    "DIS-CERVICAL",
+    "DIS-GBM",
 }
 
 # Per spec §2: "Якщо для хвороби якась з категорій клінічно нерелевантна

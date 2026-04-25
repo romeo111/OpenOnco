@@ -1,0 +1,45 @@
+id: REG-CISPLATIN-RADIOSENS
+name: "Cisplatin radiosensitization (concurrent with EBRT + brachytherapy)"
+name_ua: "Цисплатин-радіосенсибілізація (одночасно з EBRT + брахітерапія)"
+alternate_names: ["Weekly cisplatin during pelvic CRT"]
+
+components:
+  - drug_id: DRUG-CISPLATIN
+    dose: "40 mg/m² (cap 70 mg)"
+    schedule: "IV weekly × 5-6 doses concurrent with EBRT"
+    route: IV
+
+cycle_length_days: 7
+total_cycles: "5-6 weekly doses (~6 weeks of CRT)"
+
+toxicity_profile: severe
+premedication:
+  - "Mandatory hydration: 1L NS + 20 mEq KCl + 1g MgSO4 over 2h pre-cisplatin"
+  - "5-HT3 + dexamethasone + NK1-RA (aprepitant) for emetogenic prophylaxis"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "CrCl 50-60"
+    modification: "Reduce cisplatin to 30 mg/m² weekly"
+    source_refs: [SRC-NCCN-CERVICAL-2025]
+  - condition: "CrCl <50"
+    modification: "Substitute carboplatin AUC 2 weekly OR omit cisplatin (continue RT alone — inferior outcomes)"
+    source_refs: [SRC-NCCN-CERVICAL-2025]
+  - condition: "Grade 2 hearing loss"
+    modification: "Discontinue cisplatin"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Cisplatin NSZU-funded; radiotherapy modality not in Drug entity scope — see PROPOSAL §17."
+
+sources: [SRC-NCCN-CERVICAL-2025, SRC-ESMO-CERVICAL-2024]
+last_reviewed: "2026-04-26"
+
+notes: >
+  Concurrent CRT for FIGO IB3-IVA cervical: EBRT 45-50.4 Gy / 25-28 fx
+  + cisplatin weekly + brachytherapy boost (24-30 Gy HDR equivalent).
+  RT dose, fractionation, and brachytherapy are NOT modellable in
+  current OpenOnco schema — see PROPOSAL §17. This regimen entry
+  captures the cisplatin-only chemo backbone.
