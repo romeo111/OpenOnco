@@ -48,12 +48,14 @@ from .algorithm_eval import walk_algorithm
 _TRACK_LABELS_UA = {
     "standard": "Стандартний план",
     "aggressive": "Агресивний план",
+    "surveillance": "Активне спостереження (watch-and-wait)",
     "palliative": "Паліативний план",
     "trial": "План у рамках клінічного дослідження",
 }
 _TRACK_LABELS_EN = {
     "standard": "Standard plan",
     "aggressive": "Aggressive plan",
+    "surveillance": "Active surveillance (watch-and-wait)",
     "palliative": "Palliative plan",
     "trial": "Clinical-trial-only plan",
 }

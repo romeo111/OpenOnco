@@ -1,0 +1,79 @@
+id: WORKUP-LYMPHADENOPATHY-NONSPECIFIC
+applicable_to:
+  lineage_hints:
+    - lymphadenopathy_workup
+    - reactive_vs_neoplastic
+    - undifferentiated
+  tissue_locations:
+    - lymph_node
+  presentation_keywords:
+    - lymphadenopathy
+    - lymph_node_enlargement
+    - palpable_lymph_node
+    - lymphadenitis
+    - reactive_node_suspect
+
+# Triage workup для будь-якої незрозумілої лімфаденопатії — ще до confirmed
+# suspicion на лімфому. Per BSH lymphadenopathy guideline + EHA practical 2024.
+required_tests:
+  # Initial assessment — exclude reactive/infectious causes first
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-ESR-CRP
+  # Infectious workup — common reactive causes
+  - TEST-HIV-SEROLOGY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-CMV-SEROLOGY
+  - TEST-EBV-SEROLOGY        # mononucleosis common cause cervical LAD
+  # Imaging if persistent / multifocal
+  - TEST-CECT-CAP            # mapping + characterization
+  # Biopsy if indicated (size > 1.5 cm + persistent > 4-6 weeks OR systemic features)
+  - TEST-LN-EXCISIONAL-BIOPSY  # preferred; reactive vs neoplastic
+  - TEST-FLOW-CYTOMETRY        # on tissue
+  - TEST-CD20-IHC
+
+biopsy_approach:
+  preferred: "Excisional biopsy if LN persistent > 4-6 weeks AND size > 1.5 cm AND no clear infectious cause"
+  alternatives:
+    - "Watchful waiting 4-6 weeks if size < 1.5 cm + asymptomatic + likely reactive (recent viral illness, oral/dental infection)"
+    - "Core needle if excisional not feasible (deep, mediastinal, abdominal)"
+    - "FNA — discouraged for definitive diagnosis (insufficient architecture); OK for ruling out metastatic carcinoma in old patient with known primary"
+  rationale: >
+    Більшість локалізованої лімфаденопатії — реактивна (особливо
+    cervical у young patients). Biopsy criteria: size > 1.5 cm,
+    persistence > 4-6 weeks, atypical location (supraclavicular,
+    mediastinal, generalized), B-симптоми, abnormal CBC/LDH.
+
+mandatory_questions_to_resolve:
+  - "Реактивна vs неоплазма?"
+  - "Якщо неоплазма — лімфома vs metastatic carcinoma vs інше?"
+  - "Якщо лімфома — escalate до WORKUP-SUSPECTED-LYMPHOMA з повним staging?"
+  - "Інфекційна causes виключена (TB, syphilis, brucellosis, toxoplasmosis якщо географічно relevant)?"
+  - "Drug-induced lymphadenopathy виключена (phenytoin, allopurinol, etc.)?"
+  - "Autoimmune / connective tissue disease виключена (ANA, etc. якщо clinical features)?"
+
+expected_timeline_days: 21
+expected_workup_cost_uah_estimate: 12000
+
+triggers_mdt_roles:
+  required:
+    - hematologist  # if biopsy proceeds + neoplastic concern
+    - radiologist
+  recommended:
+    - pathologist  # if biopsy proceeds
+    - infectious_disease_hepatology  # if viral / TB / atypical infections
+
+sources:
+  - SRC-EHA-WORKUP-2024
+  - SRC-BSH-MZL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. У 60-70% reactive у молодих пацієнтів, але у > 50 років
+  частка neoplastic (lymphoma, metastatic carcinoma) значно вища.
+  Якщо biopsy виявляє лімфому → revision workflow → WORKUP-SUSPECTED-LYMPHOMA
+  з повним staging.

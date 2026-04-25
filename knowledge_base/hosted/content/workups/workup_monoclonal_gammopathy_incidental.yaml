@@ -1,0 +1,83 @@
+id: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL
+applicable_to:
+  lineage_hints:
+    - mgus
+    - smoldering_myeloma
+    - monoclonal_gammopathy_unknown_significance
+    - plasma_cell_dyscrasia
+  tissue_locations:
+    - bone_marrow
+    - blood
+  presentation_keywords:
+    - monoclonal_protein
+    - m_spike_incidental
+    - paraprotein_screen
+    - mgus_evaluation
+    - serum_globulin_high
+
+# Триgger — incidental SPEP finding (e.g., високі globulins on routine bio chem,
+# screening тест проведений у GP). Тут diagnostic workup щоб stratify MGUS vs
+# smoldering MM vs active MM. Per IMWG 2014/2024 + NCCN MM v.X.2025.
+required_tests:
+  # Initial — confirm M-spike + characterize
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP                 # creatinine, calcium critical (CRAB)
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-ESR-CRP
+  # Paraprotein characterization
+  - TEST-SPEP-UPEP           # confirm M-spike, immunofixation для isotype
+  - TEST-IMMUNOGLOBULINS     # quantitative IgG/A/M
+  - TEST-FREE-LIGHT-CHAINS   # FLC ratio + κ/λ levels
+  - TEST-B2-MICROGLOBULIN
+  # Pre-treatment baseline (if active MM diagnosed)
+  - TEST-URIC-ACID
+  - TEST-PREGNANCY
+  # Imaging — required to exclude bone lesions
+  - TEST-WHOLE-BODY-MRI      # preferred per IMWG 2024
+  - TEST-CECT-CAP            # if WB-MRI unavailable
+  # Bone marrow — required if M-spike > 1.5 g/dL OR FLC ratio abnormal OR CRAB features OR uninvolved Ig suppression
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-FISH-PANEL          # MM-specific if PC ≥10%
+
+biopsy_approach:
+  preferred: "Bone marrow aspirate + trephine — required if intermediate/high risk MGUS, smoldering MM, or any CRAB feature"
+  alternatives:
+    - "Defer marrow if low-risk MGUS criteria met (M-spike < 1.5 g/dL + IgG isotype + normal FLC ratio + no CRAB) — annual surveillance instead"
+  rationale: >
+    Mayo / IMWG MGUS risk stratification: 0 risk factors → 5%
+    20-year progression; 3 risk factors → 58%. BM justified в
+    inermediate/high risk OR будь-яких CRAB features.
+
+mandatory_questions_to_resolve:
+  - "MGUS / smoldering MM / active MM (per IMWG criteria)?"
+  - "CRAB features присутні? (Ca, Renal, Anemia, Bone lesions)"
+  - "SLiM-CRAB extension features (BM PC ≥60%, FLC ratio ≥100, MRI > 1 focal lesion)?"
+  - "Mayo risk stratification (M-spike size + isotype + FLC ratio)?"
+  - "AL amyloidosis exclusion (organ-specific features — neuropathy, cardiomyopathy, nephrotic syndrome)?"
+  - "Якщо MGUS — annual surveillance frequency?"
+  - "Якщо active MM → escalate до WORKUP-SUSPECTED-MULTIPLE-MYELOMA + treatment planning"
+
+expected_timeline_days: 21
+expected_workup_cost_uah_estimate: 18000
+
+triggers_mdt_roles:
+  required:
+    - hematologist
+  recommended:
+    - pathologist  # if BM proceeds
+    - radiologist  # for skeletal imaging interpretation
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-EHA-WORKUP-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. MGUS = 3-4% population > 50 years. Most don't progress;
+  systematic stratification critical щоб не over-investigate
+  low-risk patients. Якщо IMWG-defined active MM — promotion до
+  WORKUP-SUSPECTED-MULTIPLE-MYELOMA через revisions workflow.

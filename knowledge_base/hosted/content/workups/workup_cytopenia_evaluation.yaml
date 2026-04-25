@@ -1,0 +1,90 @@
+id: WORKUP-CYTOPENIA-EVALUATION
+applicable_to:
+  lineage_hints:
+    - cytopenia_unexplained
+    - anemia_workup
+    - thrombocytopenia_workup
+    - neutropenia_workup
+    - pancytopenia_workup
+  tissue_locations:
+    - peripheral_blood
+    - bone_marrow
+  presentation_keywords:
+    - anemia
+    - thrombocytopenia
+    - neutropenia
+    - pancytopenia
+    - cytopenia
+    - low_blood_counts
+    - cbc_abnormality
+
+# Broad triage workup. Не disease-specific — perfect для GP-referred patients.
+# Per WORKUP_METHODOLOGY_SPEC §1.3 — leads to specific workup as findings clarify.
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR    # critical first step
+  - TEST-RETICULOCYTE        # production vs destruction
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-B12-FOLATE
+  - TEST-HAPTOGLOBIN         # if hemolysis suspect
+  - TEST-DAT-COOMBS          # if hemolysis suspect → AIHA
+  - TEST-ESR-CRP
+  # Viral / infectious causes
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  # Paraprotein screen — myeloma presents as anemia 30%+
+  - TEST-SPEP-UPEP
+  - TEST-IMMUNOGLOBULINS
+  # Imaging
+  - TEST-CECT-CAP            # if splenomegaly / lymphadenopathy on exam
+  # Marrow if no clear cause from above
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE           # if MDS / aplastic / hypoplastic suspect
+
+biopsy_approach:
+  preferred: "Bone marrow aspirate + trephine biopsy AFTER non-invasive workup completed"
+  alternatives:
+    - "Repeat CBC + smear in 2-4 weeks if mild isolated finding (e.g., mild thrombocytopenia / mild anemia) without other abnormalities"
+  rationale: >
+    Marrow study justified after iron/B12/folate/hemolysis/viral
+    causes excluded. Pancytopenia + monoclonal protein → straight to
+    marrow + SPEP. Isolated thrombocytopenia → consider ITP workup
+    окремо (не в цьому workup).
+
+mandatory_questions_to_resolve:
+  - "Single lineage vs multilineage cytopenia?"
+  - "Etiology suggested: nutritional / hemolytic / marrow-failure / infiltrative?"
+  - "Reactive vs primary hematologic disease?"
+  - "Splenomegaly / hepatomegaly / lymphadenopathy on exam → escalate workup?"
+  - "Drug-induced suspect (recent medications, herbal supplements)?"
+  - "Family history of hematologic disorders / Fanconi anemia?"
+  - "Need bone marrow biopsy?"
+
+expected_timeline_days: 21
+expected_workup_cost_uah_estimate: 18000
+
+triggers_mdt_roles:
+  required:
+    - hematologist
+  recommended:
+    - pathologist  # if BM proceeds
+    - infectious_disease_hepatology  # if viral findings
+
+sources:
+  - SRC-EHA-WORKUP-2024
+  - SRC-NCCN-AML-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB — broad triage. Per WORKUP_METHODOLOGY_SPEC §1.3 universal-
+  to-specific decomposition: this workup feeds into more specific
+  ones (lymphoma, leukemia, MM, MPN/MDS) як findings clarify через
+  revisions workflow (DIAGNOSTIC_MDT_SPEC §7.1).

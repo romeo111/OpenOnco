@@ -1,0 +1,108 @@
+id: WORKUP-SUSPECTED-ACUTE-LEUKEMIA
+applicable_to:
+  lineage_hints:
+    - acute_leukemia
+    - aml
+    - all
+    - acute_promyelocytic_leukemia
+    - apl
+  tissue_locations:
+    - bone_marrow
+    - peripheral_blood
+  presentation_keywords:
+    - blasts
+    - pancytopenia
+    - hyperleukocytosis
+    - dic
+    - leukocytosis_with_blasts
+    - leukemia_suspect
+    - cytopenia_with_blasts
+
+# Per NCCN AML v.X.2025 + ELN 2022 + EHA 2024
+required_tests:
+  # Baseline + emergent labs (acute leukemia is medical emergency — TLS, DIC, hyperleuk)
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER             # APL DIC screen
+  # Viral
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY        # alloHSCT planning
+  # Pre-treatment
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  # Diagnosis core — bone marrow study with full molecular
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL          # disease-specific (PML-RARα urgent якщо APL suspect)
+  - TEST-NGS-MYELOID-PANEL   # FLT3, NPM1, IDH1/2 — drives targeted therapy
+
+biopsy_approach:
+  preferred: "Bone marrow aspirate + trephine biopsy (posterior iliac crest); peripheral blood concurrent (often diagnostic if circulating blasts >20%)"
+  alternatives:
+    - "Peripheral blood diagnosis OK якщо marrow procedure delayed AND circulating blasts ≥20% AND immunophenotyping confirms"
+  rationale: >
+    Acute leukemia diagnosis вимагає quantitation of blasts (≥20%
+    marrow blasts per WHO 2022) + lineage assignment via flow +
+    cytogenetic/molecular для risk stratification + targeted therapy
+    eligibility. APL suspicion (DIC + promyelocytes on smear) —
+    medical emergency, ATRA initiation за clinical suspicion перед
+    cytogenetic confirmation.
+
+required_ihc_panel:
+  baseline:
+    - MPO    # myeloperoxidase — myeloid lineage
+    - TdT    # lymphoid blast marker
+    - CD34
+    - CD117
+    - HLA-DR
+    - CD13
+    - CD33
+    - CD19   # B-cell marker
+    - CD3    # T-cell marker
+
+mandatory_questions_to_resolve:
+  - "AML vs ALL vs mixed phenotype (MPAL)?"
+  - "WHO 2022 / ICC 2022 classification subtype?"
+  - "Cytogenetic risk: favourable / intermediate / adverse per ELN 2022?"
+  - "Targetable mutations: FLT3-ITD / FLT3-TKD / NPM1 / IDH1 / IDH2 / KIT?"
+  - "APL урджентний? (PML-RARα FISH stat за clinical suspicion + ATRA initiation immediately)"
+  - "DIC активний? (D-dimer, fibrinogen, urgent platelet transfusion threshold)"
+  - "TLS risk + prophylaxis (rasburicase if uric acid > 7 mg/dL or при високих blasts)?"
+  - "Hyperleukocytosis (WBC > 100K) → leukapheresis indication?"
+  - "AlloHSCT candidacy (age, comorbidity, donor search initiated)?"
+  - "Fertility preservation (if pre-menopausal female / young male) перед induction?"
+
+expected_timeline_days: 7
+expected_workup_cost_uah_estimate: 35000
+
+triggers_mdt_roles:
+  required:
+    - hematologist
+    - pathologist
+  recommended:
+    - infectious_disease_hepatology  # CMV/HBV before induction
+    - clinical_pharmacist  # induction protocol complexity
+    - molecular_geneticist  # NGS interpretation
+    - radiologist  # для CNS imaging if leptomeningeal involvement suspect
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-EHA-WORKUP-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB. Acute leukemia — semi-emergent workup; APL урgent (mortality
+  від bleeding > від leukemia протягом перших 7 днів). Per ELN 2022
+  guidelines, NGS panel mandatory at diagnosis. Per CHARTER §15.2 C2
+  — APL active management часткою time-critical (поза non-device CDS
+  carve-out) — для emergency АТRА у нашому scope тільки workup
+  recommendation, не treatment directive.

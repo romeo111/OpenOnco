@@ -152,17 +152,27 @@ def _match_workup(
 # ── Workup → workup steps materialisation ─────────────────────────────────
 
 
-def _materialise_workup_steps(workup: dict, entities: dict) -> list[WorkupStep]:
+def _materialise_workup_steps(
+    workup: dict,
+    entities: dict,
+    prior_tests_completed: Optional[list[str]] = None,
+) -> list[WorkupStep]:
+    """Build workup steps from a DiagnosticWorkup, **excluding** tests
+    the patient has already completed (per profile.prior_tests_completed)."""
+
     steps: list[WorkupStep] = []
     counter = 0
+    prior = {t.upper() for t in (prior_tests_completed or [])}
 
     def next_step() -> int:
         nonlocal counter
         counter += 1
         return counter
 
-    # Labs first
+    # Labs / imaging / histology — skip those already completed
     for test_id in workup.get("required_tests") or []:
+        if test_id.upper() in prior:
+            continue
         info = entities.get(test_id, {})
         test_data = info.get("data") or {}
         category_raw = (test_data.get("category") or "").lower()
@@ -258,7 +268,8 @@ def generate_diagnostic_brief(
         return result
 
     result.matched_workup_id = workup.get("id")
-    workup_steps = _materialise_workup_steps(workup, entities)
+    prior_tests = patient.get("prior_tests_completed") or []
+    workup_steps = _materialise_workup_steps(workup, entities, prior_tests)
 
     plan_id = f"DPLAN-{(result.patient_id or 'ANONYMOUS').upper()}-V{plan_version}"
     result.diagnostic_plan = DiagnosticPlan(

@@ -15,6 +15,7 @@ applicable_to:
     - salivary_gland
     - mediastinum
     - bone_marrow
+    - skin
   presentation_keywords:
     - lymphadenopathy
     - splenomegaly
@@ -22,24 +23,52 @@ applicable_to:
     - b-symptom
     - night sweats
     - weight loss
+    - fever_unknown_origin
 
+# Comprehensive lymphoma workup per NCCN B-Cell Lymphomas v2.2025 + ESMO MZL 2024 + EHA 2024
 required_tests:
+  # Initial assessment (always)
   - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
   - TEST-LFT
   - TEST-LDH
+  - TEST-ESR-CRP
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  # Viral serology — mandatory before anti-CD20
   - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  # Immunology — paraprotein screen + immune status
+  - TEST-IMMUNOGLOBULINS
+  - TEST-B2-MICROGLOBULIN
+  # Imaging
+  - TEST-CECT-CAP
   - TEST-PET-CT
+  # Histology
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC
+  # Pre-treatment baseline
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  # Marrow staging (selectively)
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
 
 biopsy_approach:
-  preferred: "Excisional biopsy of largest accessible peripheral lymph node"
+  preferred: "Excisional biopsy of largest accessible peripheral lymph node (axillary > cervical > inguinal)"
   alternatives:
-    - "Core needle biopsy if excisional not feasible (deep nodal location)"
-    - "Image-guided biopsy для глибоких або висцеральних локалізацій"
-    - "Splenectomy as diagnostic modality only за умови isolated splenic disease + non-diagnostic less-invasive options"
+    - "Core needle biopsy if excisional not feasible (deep nodal location, patient unfit for surgery) — multiple cores ≥3 image-guided"
+    - "Splenectomy as diagnostic modality only за умови isolated splenic disease + non-diagnostic less-invasive options (rare)"
+    - "Endoscopic biopsy для GI MALT lymphomas — multiple deep biopsies per protocol"
+    - "Bone marrow biopsy primary — for primary BM lymphomas чи коли немає accessible LN"
   rationale: >
     Архітектура лімфовузла критична для класифікації лімфоми
     (follicular vs diffuse, nodular vs interfollicular). FNA
-    зазвичай недостатня — пропускає architectural pattern.
+    зазвичай недостатня — пропускає architectural pattern + не
+    дає material для flow + IHC + cytogenetics.
 
 required_ihc_panel:
   baseline:
@@ -58,16 +87,31 @@ required_ihc_panel:
   if_aggressive:
     - MYC
     - "BCL6 break-apart FISH"
+    - "BCL2 break-apart FISH"
+  if_t_cell:
+    - CD2
+    - CD4
+    - CD7
+    - CD8
+    - CD30
+    - ALK
+    - TIA-1
 
 mandatory_questions_to_resolve:
   - "Чи це лімфома, реактивна гіперплазія, чи інша малігнізація?"
   - "Якщо лімфома — підтип за WHO Classification 5th ed.?"
-  - "Чи є ознаки трансформації / aggressive component (DLBCL areas)?"
+  - "Чи є ознаки трансформації / aggressive component (DLBCL areas у follicular / MZL)?"
   - "Чи потрібен молекулярний тест (MYC, BCL2/BCL6 translocations, FISH)?"
-  - "Який HBV/HCV статус? (визначає дозволеність anti-CD20 без prophylaxis)"
+  - "Який HBV/HCV/HIV статус? (визначає дозволеність anti-CD20 без prophylaxis)"
+  - "Який Ann Arbor / Lugano stage?"
+  - "IPI / FLIPI / MIPI prognostic score (стратифікація треку)?"
+  - "Чи є показання до bone marrow biopsy (cytopenias, advanced stage)?"
+  - "LVEF status — anthracycline-containing regimen feasible?"
+  - "Pregnancy status (для childbearing-age female)?"
+  - "Fertility preservation discussion проведена?"
 
 expected_timeline_days: 14
-expected_workup_cost_uah_estimate: 12000
+expected_workup_cost_uah_estimate: 28000
 
 triggers_mdt_roles:
   required:
@@ -76,14 +120,18 @@ triggers_mdt_roles:
     - radiologist
   recommended:
     - infectious_disease_hepatology
+    - clinical_pharmacist
 
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-MZL-2024
+  - SRC-BSH-MZL-2024
+  - SRC-EHA-WORKUP-2024
 
 last_reviewed: "2026-04-25"
 notes: >
-  STUB — workup для будь-якої підозри на лімфому. Покриває діагностичну
-  фазу до підтвердження гістології. Після готового патогістологічного
-  висновку patient profile отримує `disease.id` і engine переходить
-  на treatment-mode (`generate_plan()`).
+  STUB — comprehensive lymphoma workup per WORKUP_METHODOLOGY_SPEC.
+  Покриває B-cell, T-cell, Hodgkin одним workup-ом для MVP. У наступних
+  ітераціях розділити на subtypes (DLBCL, FL, MCL, CLL, MZL, T-cell,
+  classical Hodgkin) з диференційованими required_ihc_panel і
+  staging-specific tests.

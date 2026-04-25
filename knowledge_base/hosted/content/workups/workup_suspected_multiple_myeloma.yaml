@@ -1,0 +1,104 @@
+id: WORKUP-SUSPECTED-MULTIPLE-MYELOMA
+applicable_to:
+  lineage_hints:
+    - multiple_myeloma
+    - plasma_cell_dyscrasia
+    - mgus
+    - smoldering_myeloma
+    - waldenstrom
+  tissue_locations:
+    - bone_marrow
+    - bone
+  presentation_keywords:
+    - bone_pain
+    - lytic_lesion
+    - hypercalcemia
+    - renal_failure_unexplained
+    - anemia_unexplained
+    - monoclonal_protein
+    - hyperviscosity
+
+# Per NCCN MM v.X.2025 + IMWG criteria 2014/2024 + EHA 2024
+required_tests:
+  # Initial baseline
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP                 # creatinine, calcium critical (CRAB criteria)
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-ESR-CRP
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  # Paraprotein / immunology core
+  - TEST-SPEP-UPEP           # M-spike detection + immunofixation
+  - TEST-IMMUNOGLOBULINS     # quantitative IgG/A/M (uninvolved suppression)
+  - TEST-FREE-LIGHT-CHAINS   # mandatory — FLC ratio is myeloma-defining
+  - TEST-B2-MICROGLOBULIN    # R-ISS staging
+  # Viral
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  # Imaging — modern MM staging
+  - TEST-WHOLE-BODY-MRI      # preferred for skeletal survey
+  - TEST-CECT-CAP            # if WB-MRI unavailable / for extramedullary
+  # Pre-treatment baseline
+  - TEST-ECHO                # baseline before anthracycline / proteasome inhibitor cardiac considerations
+  - TEST-PREGNANCY
+  # Diagnosis core — bone marrow
+  - TEST-BM-ASPIRATE         # plasma cell % (≥10% ↔ plasma cell neoplasm)
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY      # clonality + aberrant phenotype CD56+, CD20−, CD117+
+  - TEST-FISH-PANEL          # del(17p), t(4;14), t(14;16), t(11;14), 1q gain, 1p del — risk
+  - TEST-KARYOTYPE           # complementary, lower yield due to low PC proliferation
+
+biopsy_approach:
+  preferred: "Bone marrow aspirate + trephine biopsy (≥10% clonal plasma cells confirms plasma cell dyscrasia)"
+  alternatives:
+    - "CT-guided biopsy of solitary plasmacytoma (extramedullary or bone) for solitary plasmacytoma diagnosis"
+    - "Tissue biopsy of suspect amyloid deposit + Congo red staining if AL amyloidosis suspect"
+
+required_ihc_panel:
+  baseline:
+    - CD138    # plasma cell marker
+    - CD38
+    - kappa
+    - lambda
+    - CD56
+    - CD117
+  if_b_cell:
+    - CD20     # rare CD20+ MM (could affect anti-CD20 strategy)
+
+mandatory_questions_to_resolve:
+  - "Чи відповідає IMWG criteria для symptomatic MM (CRAB or SLiM-CRAB)?"
+  - "MGUS / smoldering MM / active MM stratification?"
+  - "R-ISS stage (β2M + albumin + LDH + cytogenetics)?"
+  - "High-risk cytogenetics (del 17p, t(4;14), t(14;16), 1q gain) → intensified treatment?"
+  - "Renal function: dialysis-dependent? (кореляція з drug dosing + bortezomib choice)"
+  - "Performance status + comorbidities → transplant-eligible or non-eligible?"
+  - "AL amyloidosis exclusion (organ involvement features)?"
+  - "Pregnancy status (для childbearing-age female)?"
+
+expected_timeline_days: 14
+expected_workup_cost_uah_estimate: 30000
+
+triggers_mdt_roles:
+  required:
+    - hematologist
+    - pathologist
+    - radiologist
+  recommended:
+    - molecular_geneticist  # FISH risk interpretation
+    - clinical_pharmacist  # complex induction regimens
+    - infectious_disease_hepatology
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-EHA-WORKUP-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB — comprehensive MM workup per IMWG. CRAB criteria: hyperCalcemia
+  > 2.75, Renal insufficiency creatinine > 2 mg/dL, Anemia Hb < 10,
+  Bone lesions ≥1 lytic. SLiM-CRAB extension: BM PC ≥60%, FLC ratio
+  ≥100, MRI > 1 focal lesion. AL amyloidosis окремий workup
+  (екстраосніл involvement + biopsy organ + Congo red).

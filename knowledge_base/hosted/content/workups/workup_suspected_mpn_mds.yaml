@@ -1,0 +1,107 @@
+id: WORKUP-SUSPECTED-MPN-MDS
+applicable_to:
+  lineage_hints:
+    - mpn
+    - myeloproliferative_neoplasm
+    - mds
+    - myelodysplastic_syndrome
+    - polycythemia_vera
+    - essential_thrombocythemia
+    - primary_myelofibrosis
+    - cml
+    - chronic_myeloid_leukemia
+  tissue_locations:
+    - bone_marrow
+    - spleen
+  presentation_keywords:
+    - erythrocytosis
+    - thrombocytosis
+    - leukocytosis
+    - leukoerythroblastic
+    - splenomegaly
+    - thrombosis_unexplained
+    - macrocytic_anemia
+    - dysplasia
+    - cytopenia_chronic
+
+# Per NCCN MPN v.X.2025 + WHO 2022 + EHA 2024
+required_tests:
+  # Initial — with focus on differentiating MPN vs MDS vs reactive
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR    # critical — dysplasia, blasts, teardrops
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL          # iron deficiency masks polycythemia
+  - TEST-B12-FOLATE          # B12/folate deficiency mimics MDS
+  - TEST-ESR-CRP
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER             # for MPN thrombotic risk
+  - TEST-URIC-ACID
+  # Viral
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  # Pre-treatment
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  # Diagnosis core — bone marrow + molecular
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE         # critical — fibrosis grading (PMF), megakaryocyte morphology
+  - TEST-FLOW-CYTOMETRY      # blasts %, lineage assignment
+  - TEST-KARYOTYPE           # del 5q (MDS), del 7q, complex karyotype (poor risk)
+  - TEST-FISH-PANEL          # del 5q, monosomy 7, etc.
+  - TEST-BCR-ABL-JAK2        # mandatory — MPN molecular workup
+  - TEST-NGS-MYELOID-PANEL   # ASXL1, SRSF2, U2AF1, TP53, EZH2 — MDS prognostic + targeted
+
+biopsy_approach:
+  preferred: "Bone marrow aspirate + trephine biopsy (trephine essential for fibrosis grading у PMF / overlap MPN)"
+  alternatives:
+    - "Repeat BM if dry tap (common in PMF) — extended trephine, multiple sections"
+  rationale: >
+    Trephine критична для MPN diagnosis: megakaryocyte morphology
+    (clustering, atypia) + reticulin/collagen fibrosis grade
+    (MF-0 to MF-3) — основа WHO 2022 differentials між ET, PV,
+    early-PMF, overt-PMF.
+
+required_ihc_panel:
+  baseline:
+    - CD34    # blasts %
+    - CD117
+    - reticulin staining
+    - collagen staining (Masson trichrome)
+    - megakaryocyte markers (CD41, CD61)
+
+mandatory_questions_to_resolve:
+  - "MDS vs MPN vs MDS/MPN overlap (CMML, atypical CML, JMML)?"
+  - "Якщо MPN — JAK2/CALR/MPL status визначає subtype + prognostic"
+  - "Якщо MDS — IPSS-R or IPSS-M risk stratification?"
+  - "BCR-ABL1 status — CML excluded?"
+  - "Driver mutation absence (triple-negative MPN ~10%) — додаткові molecular?"
+  - "Reactive vs neoplastic cytosis (consider EPO level for PV exclusion)?"
+  - "Risk of thrombosis (MPN) — anticoagulation indication?"
+  - "Risk of progression to AML (MDS high-risk, post-MPN AML)?"
+  - "AlloHSCT candidacy (особливо MDS high-risk + PMF intermediate-2 / high)?"
+
+expected_timeline_days: 14
+expected_workup_cost_uah_estimate: 30000
+
+triggers_mdt_roles:
+  required:
+    - hematologist
+    - pathologist
+  recommended:
+    - molecular_geneticist
+    - radiologist  # for splenomegaly assessment, abdominal vein thrombosis screening
+    - clinical_pharmacist
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-EHA-WORKUP-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  STUB — purposefully broad: covers MPN (PV, ET, PMF, CML) and MDS
+  diagnoses. У наступних ітераціях розділити (e.g., dedicated CML
+  workup, dedicated MDS workup with IPSS-M tool integration).
