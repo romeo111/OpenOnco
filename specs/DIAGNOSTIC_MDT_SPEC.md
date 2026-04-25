@@ -367,10 +367,49 @@ Diagnostic-mode output **обов'язково починається** з:
 - `ProvenanceEvent` shape (те саме provenance.py)
 - FDA Criterion 4 fields у output (intended_use, hcp_user_specification, …)
 - Source citations
-- Audit trail / version chain (supersedes/superseded_by)
+- Audit trail / version chain (supersedes/superseded_by — реалізація у §7.1)
 - Termination criterion: коли histology підтверджено →
   diagnostic-mode `DiagnosticPlan` стає `superseded_by` treatment-mode
   `Plan` (формальна transition; supersedes-link перетинає mode boundary)
+
+### 7.1. Revisions — закриття step 5 з інфографіки
+
+`knowledge_base/engine/revisions.py` містить
+`revise_plan(updated_patient, previous, revision_trigger, kb_root)`,
+що повертає **`(previous_with_superseded_by_set, new_result)`** — обидві
+сторони supersedes-chain. Попередній результат **не мутується** —
+повертається deep copy з заповненим `superseded_by`.
+
+**Три легальні переходи** (auto-detect зі shapes):
+
+| Previous | Updated patient | Transition | New |
+|---|---|---|---|
+| `DiagnosticPlan` vN | suspicion-only | `diagnostic → diagnostic` | `DiagnosticPlan` v(N+1) |
+| `DiagnosticPlan` vN | confirmed `disease.id` | `diagnostic → treatment` | `Plan` v1 (перший treatment) |
+| `Plan` vN | confirmed `disease.id` | `treatment → treatment` | `Plan` v(N+1) |
+
+**Заборонений перехід:**
+
+| `Plan` vN | suspicion-only (no `.id`) | `treatment → diagnostic` | **`ValueError`** — CHARTER §15.2 C7 |
+
+Сенс: якщо вже є treatment Plan, відкат до diagnostic не дозволений
+автоматично — це знаменує клінічну невизначеність, що потребує
+окремого decision (наприклад нова первинна підозра — створи
+**окремий** новий `DiagnosticPlan` без revision-link).
+
+**Provenance:** новий plan отримує `modified` ProvenanceEvent у
+`trace`: `summary = "Plan revised from PREV_ID (trigger: ...). This
+is version N of patient X."` Audit trail завжди показує **звідки**
+прийшла нова версія.
+
+**CLI:** `--revise PREV.json --revision-trigger "biopsy 2026-05-10 →
+DLBCL confirmed"`. PREV.json — це попередній output `--json-output`
+від попереднього run.
+
+**Persistence:** як і раніше, plan instances не у public KB —
+лежать у `patient_plans/<patient_id>/v<N>.{yaml,json}` (gitignored
+per CHARTER §9.3). Revisions тільки **готують** новий артефакт;
+зберігати — задача caller.
 
 ---
 

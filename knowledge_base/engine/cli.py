@@ -6,11 +6,16 @@ Usage:
     python -m knowledge_base.engine.cli patient.json --json-output plan.json --verbose
     python -m knowledge_base.engine.cli patient.json --mdt
     python -m knowledge_base.engine.cli patient.json --diagnostic --mdt
+    python -m knowledge_base.engine.cli patient_v2.json --revise prev_plan.json \
+        --revision-trigger "biopsy result 2026-05-10 → DLBCL confirmed"
 
 Mode auto-detect:
 - patient.disease.id OR .icd_o_3_morphology present → treatment mode (Plan)
 - only patient.disease.suspicion present                → diagnostic mode (DiagnosticPlan)
 - --diagnostic flag forces diagnostic mode (errors if confirmed diagnosis present)
+- --revise PREV.json + --revision-trigger "..."  → generate next-version plan that
+  supersedes the previous one. Auto-detects diagnostic→diagnostic /
+  diagnostic→treatment / treatment→treatment. Refuses treatment→diagnostic.
 """
 
 from __future__ import annotations
@@ -23,12 +28,14 @@ from pathlib import Path
 
 from .diagnostic import (
     _DIAGNOSTIC_BANNER,
+    DiagnosticPlanResult,
     generate_diagnostic_brief,
     is_diagnostic_profile,
     is_treatment_profile,
 )
 from .mdt_orchestrator import orchestrate_mdt
-from .plan import generate_plan
+from .plan import PlanResult, generate_plan
+from .revisions import revise_plan
 
 # Force UTF-8 stdout so Cyrillic + symbols print correctly on Windows cp1252
 if sys.platform == "win32":
@@ -148,6 +155,125 @@ def _print_diagnostic_brief(result) -> None:
             print(f"  - {w}")
 
 
+def _load_previous_result(path: Path):
+    """Reconstruct a PlanResult or DiagnosticPlanResult from a JSON file
+    produced by an earlier --json-output run. Returns just the minimum
+    needed by revise_plan(): the wrapped Plan / DiagnosticPlan model."""
+    from knowledge_base.schemas import DiagnosticPlan, Plan
+
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if raw.get("diagnostic_plan"):
+        dp = DiagnosticPlan.model_validate(raw["diagnostic_plan"])
+        # Build a minimal DiagnosticPlanResult — fields revise_plan reads
+        return DiagnosticPlanResult(
+            patient_id=raw.get("patient_id"),
+            suspicion=None,
+            diagnostic_plan=dp,
+            matched_workup_id=raw.get("matched_workup_id"),
+            warnings=list(raw.get("warnings") or []),
+        )
+    if raw.get("plan"):
+        plan = Plan.model_validate(raw["plan"])
+        return PlanResult(
+            patient_id=raw.get("patient_id"),
+            disease_id=raw.get("disease_id"),
+            algorithm_id=raw.get("algorithm_id"),
+            plan=plan,
+            default_indication_id=raw.get("default_indication_id"),
+            alternative_indication_id=raw.get("alternative_indication_id"),
+            default_indication=raw.get("default_indication"),
+            alternative_indication=raw.get("alternative_indication"),
+            trace=list(raw.get("trace") or []),
+            warnings=list(raw.get("warnings") or []),
+        )
+    raise ValueError(
+        f"{path} does not look like a CLI --json-output (no `plan` or `diagnostic_plan` key)."
+    )
+
+
+def _run_revise(
+    patient: dict,
+    prev_path: Path,
+    trigger: str,
+    kb_root: Path,
+    json_output: Path | None,
+    mdt: bool,
+) -> int:
+    try:
+        previous = _load_previous_result(prev_path)
+    except Exception as e:
+        print(f"ERROR loading previous plan: {e}", file=sys.stderr)
+        return 2
+
+    try:
+        revised_prev, new_result = revise_plan(patient, previous, trigger, kb_root=kb_root)
+    except (ValueError, TypeError) as e:
+        print(f"ERROR revising plan: {e}", file=sys.stderr)
+        return 2
+
+    print("=== Revision summary ===")
+    prev_id = (
+        previous.diagnostic_plan.id if isinstance(previous, DiagnosticPlanResult)
+        and previous.diagnostic_plan
+        else (previous.plan.id if isinstance(previous, PlanResult) and previous.plan else "?")
+    )
+    new_id = (
+        new_result.diagnostic_plan.id if isinstance(new_result, DiagnosticPlanResult)
+        and new_result.diagnostic_plan
+        else (new_result.plan.id if isinstance(new_result, PlanResult) and new_result.plan else "?")
+    )
+    transition = (
+        "diagnostic→treatment" if isinstance(previous, DiagnosticPlanResult)
+        and isinstance(new_result, PlanResult)
+        else "diagnostic→diagnostic" if isinstance(previous, DiagnosticPlanResult)
+        else "treatment→treatment"
+    )
+    print(f"  Previous: {prev_id}")
+    print(f"  New:      {new_id}")
+    print(f"  Trigger:  {trigger}")
+    print(f"  Transition: {transition}")
+    print()
+
+    # Render the new result with existing helpers
+    if isinstance(new_result, DiagnosticPlanResult):
+        _print_diagnostic_brief(new_result)
+    else:
+        # Treatment plan — print core summary inline
+        if new_result.plan:
+            print(f"Plan id:   {new_result.plan.id}  (v{new_result.plan.version})")
+            print(f"Supersedes: {new_result.plan.supersedes}")
+            print(f"Trigger:    {new_result.plan.revision_trigger}")
+            print(f"Tracks ({len(new_result.plan.tracks)}):")
+            for t in new_result.plan.tracks:
+                _print_track(t)
+                print()
+
+    if mdt:
+        m = orchestrate_mdt(patient, new_result, kb_root=kb_root)
+        _print_mdt_brief(m)
+
+    if json_output:
+        payload = {
+            "transition": transition,
+            "previous_with_superseded_by_set": (
+                revised_prev.to_dict()
+                if hasattr(revised_prev, "to_dict")
+                else None
+            ),
+            "new_result": (
+                new_result.to_dict()
+                if hasattr(new_result, "to_dict")
+                else None
+            ),
+        }
+        json_output.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False, default=str),
+            encoding="utf-8",
+        )
+        print(f"\nRevision JSON written to {json_output}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="OpenOnco rule engine — generate a Plan or DiagnosticPlan.")
     parser.add_argument("patient", type=Path, help="Patient profile JSON")
@@ -169,6 +295,18 @@ def main() -> int:
         action="store_true",
         help="Force diagnostic mode (errors if patient.disease.id present per CHARTER §15.2 C7)",
     )
+    parser.add_argument(
+        "--revise",
+        type=Path,
+        help=("Path to a previous plan JSON (output of an earlier --json-output run). "
+              "Generates a next-version plan that supersedes it; auto-detects transition."),
+    )
+    parser.add_argument(
+        "--revision-trigger",
+        type=str,
+        default=None,
+        help="Free-text description of what new data triggered this revision (audit hook).",
+    )
     args = parser.parse_args()
 
     if not args.patient.is_file():
@@ -176,6 +314,17 @@ def main() -> int:
         return 2
 
     patient = json.loads(args.patient.read_text(encoding="utf-8"))
+
+    # ── Revision mode ────────────────────────────────────────────────────
+    if args.revise is not None:
+        if not args.revise.is_file():
+            print(f"ERROR: previous plan file not found: {args.revise}", file=sys.stderr)
+            return 2
+        if not args.revision_trigger:
+            print("ERROR: --revise requires --revision-trigger \"...\"", file=sys.stderr)
+            return 2
+        return _run_revise(patient, args.revise, args.revision_trigger, args.kb,
+                           json_output=args.json_output, mdt=args.mdt)
 
     # Mode dispatch — see DIAGNOSTIC_MDT_SPEC §6.3
     use_diagnostic = args.diagnostic or (

@@ -30,6 +30,7 @@ from .provenance import (
     ProvenanceEvent,
     make_event,
 )
+from .revisions import revise_plan
 
 __all__ = [
     "DecisionProvenanceGraph",
@@ -45,4 +46,5 @@ __all__ = [
     "is_treatment_profile",
     "make_event",
     "orchestrate_mdt",
+    "revise_plan",
 ]
