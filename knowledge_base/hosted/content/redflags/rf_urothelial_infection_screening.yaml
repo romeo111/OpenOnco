@@ -1,0 +1,64 @@
+id: RF-UROTHELIAL-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating ICI (pembro / avelumab) or ICI+ADC (enfortumab-vedotin +
+  pembrolizumab) or platinum-based chemo in advanced urothelial cancer:
+  HBsAg+ or anti-HBc+ (HBV reactivation on cytotoxic chemo and on ICI),
+  HCV-RNA+, HIV+, active TB, or active uncontrolled urinary tract /
+  pyelonephritis infection (especially relevant in UC with ureteral
+  obstruction / hydronephrosis).
+definition_ua: >
+  Активна або латентна інфекція перед ICI (пембро / авелумаб) або
+  ICI+ADC (енфортумаб-ведотин + пембро) або платиновою ХТ при
+  запущеному уротеліальному раку: HBsAg+ або anti-HBc+ (ризик
+  реактивації HBV на ХТ та ICI), HCV-RNA+, HIV+, активний ТБ, або
+  активна неконтрольована інфекція сечових шляхів / пієлонефрит
+  (особливо релевантно при UC з обструкцією сечоводу / гідронефрозом).
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+    - finding: "active_uncontrolled_infection"
+      value: true
+    - finding: "active_pyelonephritis"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 70
+category: infection-screening
+
+relevant_diseases:
+  - DIS-UROTHELIAL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+  - SRC-EAU-BLADDER-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HBsAg+ → entecavir or tenofovir from before first cycle through ≥6
+  months post-last-systemic-therapy. UC-specific: ureteral obstruction
+  + hydronephrosis is common at presentation and predisposes to
+  pyelonephritis — drain (percutaneous nephrostomy or ureteral stent)
+  + treat infection before initiating cytotoxic chemo or ICI; uncontrolled
+  urosepsis is contraindication to systemic therapy initiation. HIV+
+  with stable ART can receive ICI safely. ICI-related immune events
+  (colitis, pneumonitis) can be confused with active infection — TB
+  screening before ICI to avoid IRIS / TB worsening on immune
+  reconstitution. Direction "hold" surfaces a workup-prerequisite
+  annotation rather than switching indication.
