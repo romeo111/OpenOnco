@@ -1,0 +1,69 @@
+id: REG-PRALATREXATE-PTCL
+name: "Pralatrexate 30 mg/m² IV weekly × 6 of 7-week cycle (PROPEL schedule) — r/r PTCL"
+name_ua: "Пралатрексат 30 мг/м² IV щотижнево × 6 з 7-тижневого циклу (PROPEL) — рефрактерна PTCL"
+alternate_names: ["Pralatrexate mono", "PROPEL regimen", "Folotyn r/r PTCL"]
+
+components:
+  - drug_id: DRUG-PRALATREXATE
+    dose: "30 mg/m² IV push over 3-5 min"
+    schedule: "Weekly × 6 of each 7-week cycle, until progression or unacceptable toxicity"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "1 mg PO daily (folate)"
+    schedule: "Continuous throughout therapy + 30 days post-final dose"
+    route: PO
+
+cycle_length_days: 49  # 7-week cycles
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate-high
+
+premedication:
+  - "MANDATORY folate (folic acid 1 mg PO daily) starting 10 days before first dose, continuing throughout + 30 d post"
+  - "MANDATORY vitamin B12 1 mg IM every 8-10 weeks throughout therapy"
+  - "Oral cryotherapy (ice chips / cold water gargle) during infusion — mucositis mitigation"
+  - "5-HT3 antagonist + dexamethasone before each infusion"
+  - "TLS prophylaxis cycle 1 if high-burden"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-ANTIEMETIC-PREMED
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Mucositis Grade ≥2"
+    modification: "Hold; topical analgesia + oral hygiene; resume at 20 mg/m² after recovery to ≤Grade 1; discontinue if recurrent Grade ≥3 at reduced dose"
+    rationale: "Mucositis is dominant dose-limiting toxicity (~70% any, ~21% Grade ≥3)"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Platelets <50K OR ANC <1000"
+    modification: "Hold; resume at 20 mg/m² after recovery; G-CSF support if recurrent"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Bilirubin >1.5× ULN OR transaminases >3× ULN"
+    modification: "Hold; reduce dose 25% on resume; monitor LFTs weekly"
+  - condition: "CrCl <30"
+    modification: "Reduce dose; consider alternative regimen given primarily renal clearance"
+  - condition: "Concomitant TMP-SMX, NSAIDs, probenecid"
+    modification: "Avoid concurrent use OR strict monitoring of mucositis / cytopenia"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Pralatrexate NOT registered in Ukraine; no EMA approval (withdrawn
+    2012). Access via international supply / clinical trial only —
+    limited. Folate (registered) + B12 (registered) + leucovorin
+    (registered) all available domestically. Pralatrexate access is
+    dominant constraint.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  PROPEL trial (O'Connor 2011): r/r PTCL n=111 — ORR 29%, CR 11%, mDOR
+  10.1 mo, mPFS 3.5 mo. FDA-approved for r/r PTCL after ≥1 prior
+  line. Mucositis is dominant dose-limiting toxicity — MANDATORY
+  folate 1 mg PO daily + B12 1 mg IM q8-10 weeks + oral cryotherapy
+  during infusion to mitigate. Active in PTCL NOS, AITL, ALCL ALK-,
+  transformed MF. Distinct mechanism (selective antifolate) from
+  HDACi / BV / ALK TKI — useful in heavily pretreated.

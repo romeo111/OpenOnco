@@ -1,0 +1,79 @@
+id: REG-CHOEP-ALLOSCT-CONSOLIDATION
+name: "CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible PTCL NOS)"
+name_ua: "CHOEP × 6 + алогенна ТКМ в CR1 (придатні до трансплантації PTCL NOS)"
+alternate_names: ["CHOEP-alloSCT", "Aggressive 1L PTCL NOS"]
+
+components:
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "750 mg/m²"
+    schedule: "IV day 1 of each 21-day cycle × 6 (induction)"
+    route: IV
+  - drug_id: DRUG-DOXORUBICIN
+    dose: "50 mg/m²"
+    schedule: "IV day 1 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² (cap 2 mg)"
+    schedule: "IV day 1 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-ETOPOSIDE
+    dose: "100 mg/m²"
+    schedule: "IV days 1-3 each cycle × 6"
+    route: IV
+  - drug_id: DRUG-PREDNISONE
+    dose: "100 mg"
+    schedule: "PO days 1-5 each cycle × 6"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "6 induction → restage by PET-CT → if CR1 in fit transplant-eligible: alloSCT consolidation (RIC or myeloablative based on age + comorbidity)"
+toxicity_profile: very-high
+
+premedication:
+  - "Standard CHOEP premedications + TLS prophylaxis"
+  - "Pre-transplant workup: HLA typing patient + sibling/related/unrelated donor search; pre-transplant viral PCRs (CMV/HHV-6/HBV/HCV/HIV); cardiac/pulmonary fitness; psychosocial assessment"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-ANTIEMETIC-PREMED
+  - SUP-GCSF-NEUTROPENIA
+monitoring_schedule_id: MON-R-CHOP-REGIMEN
+
+dose_adjustments:
+  - condition: "Age >65 OR ECOG ≥2 at induction"
+    modification: "CHOP without etoposide for induction; alloSCT consolidation generally NOT pursued — proceed to autoSCT or maintenance"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Failure to achieve CR after induction (PR or PD)"
+    modification: "Salvage chemoimmuno (ICE / DHAP-style) → re-restage → alloSCT only if subsequent CR (PR pre-alloSCT poor outcome)"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Reduce vincristine; consider non-vincristine regimen"
+  - condition: "Cumulative anthracycline >300 mg/m²"
+    modification: "Echo + LVEF check; cap at 450-500 mg/m² lifetime"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    CHOEP induction fully reimbursed. AlloSCT consolidation: performed
+    at major hematology centers (Kyiv, Lviv, etc.) — capacity-limited.
+    Sibling donor: domestic preference. Unrelated donor: international
+    registries (DKMS, NMDP) accessible but logistically complex.
+    Bridging-time-to-donor critical — relapse during search means
+    re-induction needed.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard intensification for fit younger transplant-eligible PTCL
+  NOS. Per Nordic NLG-T-01 + retrospective registry data: CHOEP
+  superior to CHOP in younger T-cell patients; alloSCT consolidation
+  in CR1 dramatically improves long-term PFS for poor-risk PTCL NOS
+  (mature data from EBMT registries). AutoSCT alternative considered
+  but generally inferior for PTCL NOS (vs B-cell NHL where autoSCT
+  is durable). RIC alloSCT for older fit; myeloablative for younger.
+  Donor selection critical — sibling > matched unrelated > haploidentical;
+  GVHD prophylaxis individualized.

@@ -1,0 +1,112 @@
+id: IND-PTCL-1L-CHOEP-ALLOSCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PTCL-NOS
+  line_of_therapy: 1
+  stage_requirements:
+    - "Newly diagnosed PTCL NOS without CD30 expression OR where brentuximab not accessible (else CHP-Bv preferred per ECHELON-2)"
+    - "Fit transplant-eligible: age ≤65 (RIC alloSCT) or ≤55 (myeloablative); ECOG 0-1; adequate organ function for transplant"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    age_max: 65
+
+recommended_regimen: REG-CHOEP-ALLOSCT-CONSOLIDATION
+concurrent_therapy: [SUP-PJP-PROPHYLAXIS, SUP-GCSF-NEUTROPENIA]
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~70-75% post-induction (CHOEP)"
+  complete_response: "~50-55% post-induction"
+  progression_free_survival: "5y PFS ~50% with alloSCT consolidation in CR1 (vs ~25-30% CHOEP alone) per EBMT registries"
+  overall_survival_5y: "~50-60% with alloSCT consolidation (substantial improvement vs ~30-40% historical CHOEP-only)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-LVEF-LOW-FOR-ANTHRACYCLINE]
+red_flags_triggering_alternative:
+  - RF-TCELL-CD30-POSITIVE  # if CD30+, prefer CHP-Bv per ECHELON-2
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CD20-IHC  # CD30 IHC same workflow — must check before deciding CHOEP vs CHP-Bv
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-CMV-SEROLOGY  # transplant prep
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  CHOEP × 6 induction + alloSCT consolidation in CR1 for fit younger
+  transplant-eligible PTCL NOS where CD30 expression <10% (i.e.
+  CHP-Bv per ECHELON-2 not eligible) OR brentuximab not accessible.
+  CHOEP superior to CHOP in younger T-cell patients per Nordic NLG-T-
+  01. AlloSCT consolidation in CR1 dramatically improves long-term
+  PFS per EBMT registries (5y PFS ~50% vs ~25-30% CHOEP-alone).
+  AutoSCT alternative considered but generally inferior for PTCL
+  NOS biology. Donor sourcing critical — sibling > matched unrelated
+  > haploidentical. NCCN-recommended for fit patients despite limited
+  RCT data — practice standard given dismal natural history without
+  consolidation.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Allogeneic SCT consolidation in CR1 is recommended for fit transplant-eligible PTCL NOS after CHOEP/CHP-Bv induction; substantial PFS benefit per EBMT registry data"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Consolidative SCT (preferentially allogeneic for PTCL NOS) in CR1 is recommended for fit younger patients; standard practice despite limited RCT evidence"
+
+known_controversies:
+  - topic: "AlloSCT vs autoSCT consolidation in PTCL NOS CR1"
+    positions:
+      - position: "AlloSCT preferred — graft-vs-lymphoma effect; durable in fit younger"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "AutoSCT acceptable — less TRM, broader feasibility; mature comparative data lacking"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "AutoSCT outcomes for PTCL NOS generally inferior to B-cell NHL; small registries"
+    our_default: "AlloSCT for fit younger CR1; autoSCT if alloSCT not feasible (no donor, age 60-65, comorbidity)"
+  - topic: "Skip alloSCT if CHP-Bv-induced CR (CD30+ subset)"
+    positions:
+      - position: "Still consolidate — ECHELON-2 mature follow-up shows late relapse despite CHP-Bv CR"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Observe — CHP-Bv may obviate need for SCT in fit responders"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Consolidate regardless of induction regimen for fit transplant-eligible CR1 patients"
+
+do_not_do:
+  - "НЕ призначати без CD30 IHC якщо CD30+ ≥10% — CHP-Bv per ECHELON-2 preferred (RF-TCELL-CD30-POSITIVE)."
+  - "НЕ скасовувати alloSCT consolidation плану в fit transplant-eligible CR1 — natural history без consolidation поганий (5y PFS ~25-30%)."
+  - "НЕ використовувати CHOEP age >65 — CHOP без etoposide більш переносимий; alloSCT generally NOT pursued >65."
+  - "НЕ ігнорувати donor pre-search — сімейне HLA typing варто розпочати під час 1L induction (не чекати completion)."
+  - "НЕ пропускати pre-transplant viral PCRs (CMV / HHV-6 / HBV / HCV / HIV / EBV) — reactivation post-transplant common."
+  - "НЕ ігнорувати pre-transplant cardiac (LVEF) + pulmonary (DLCO) fitness — alloSCT requires substantial reserve."
+  - "НЕ призначати без HBV скринінгу + entecavir prophylaxis."
+  - "НЕ розпочинати alloSCT при PR (не CR) — outcomes substantially гірші; salvage spillover до CR2 спочатку."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L for
+  fit younger transplant-eligible PTCL NOS without CD30 expression.
+  AlloSCT consolidation in CR1 is practice standard despite limited
+  RCT — natural history without consolidation poor.

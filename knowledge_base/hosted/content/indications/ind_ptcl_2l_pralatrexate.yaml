@@ -1,0 +1,100 @@
+id: IND-PTCL-2L-PRALATREXATE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PTCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after ≥1 prior systemic line (CHOEP / CHP-Bv / R-CHOP-equivalent)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PRALATREXATE-PTCL
+concurrent_therapy: []
+followed_by: []  # bridge to alloSCT in fit transplant-eligible responders
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~29% (PROPEL)"
+  complete_response: "~11%"
+  progression_free_survival: "Median PFS ~3.5 mo; mDOR 10.1 mo for responders"
+  overall_survival_5y: "~25-30% (heavily pretreated baseline poor)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-RENAL-FUNCTION-EGFR
+  - TEST-CD20-IHC  # CD30 IHC same workflow
+  - TEST-PET-CT
+  - TEST-LN-CORE-BIOPSY
+  - TEST-BM-ASPIRATE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Pralatrexate (selective antifolate) for r/r PTCL NOS after ≥1 prior
+  line per PROPEL (FDA-approved). Distinct mechanism (RFC-1-selective
+  uptake into malignant T-cells, intracellular polyglutamation
+  trapping) from HDACi / BV / chemo — useful in heavily pretreated.
+  Modest ORR (29%) but durable in responders (mDOR 10.1 mo). Mucositis
+  is dominant dose-limiting toxicity — MANDATORY folate + B12
+  supplementation + oral cryotherapy during infusion to mitigate.
+  Major UA access barrier (not registered + not EMA-approved) —
+  reserved for scenarios where international supply secured.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Pralatrexate is option for r/r PTCL after ≥1 prior systemic line per PROPEL; Cat 2A"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Pralatrexate (antifolate) is recognized 2L+ option for r/r PTCL where targeted therapies failed or inaccessible"
+
+known_controversies:
+  - topic: "Pralatrexate vs HDACi (belinostat / romidepsin) as 2L+ for r/r PTCL NOS"
+    positions:
+      - position: "Pralatrexate — selective T-cell uptake mechanism, distinct from HDACi"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "HDACi — established BELIEF / NCI 1312 data, comparable response rates"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "All three (pralatrexate, belinostat, romidepsin) acceptable; access dictates in UA — none registered domestically"
+  - topic: "Mucositis-mitigation strategies effectiveness"
+    positions:
+      - position: "Folate + B12 + cryotherapy halves Grade ≥3 mucositis"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Real-world rates remain high — mucositis a dominant cause of discontinuation"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Mandatory full mitigation protocol; expect ~20% Grade ≥3 mucositis even with mitigation"
+
+do_not_do:
+  - "НЕ призначати без MANDATORY folate 1 mg PO daily (start 10 days pre-treatment) + B12 1 mg IM q8-10 weeks throughout therapy — рiзко зменшує mucositis."
+  - "НЕ пропускати oral cryotherapy (ice chips / cold water gargle) під час інфузії — додатково знижує mucositis."
+  - "НЕ комбінувати з TMP-SMX prolonged use (PJP prophylaxis) без strict monitoring — additive antifolate toxicity; розглянути альтернативний PJP агент."
+  - "НЕ комбінувати з NSAIDs — reduce pralatrexate clearance, increase toxicity."
+  - "НЕ призначати при CrCl <30 без dose reduction / альтернативу — primarily renal clearance."
+  - "НЕ продовжувати при Grade ≥3 mucositis preventing PO intake — hold + mitigate + reduce dose до 20 mg/m² на resume."
+  - "НЕ забути плану до alloSCT consolidation в fit transplant-eligible responders — пралатрексат не куративний; bridge."
+  - "НЕ призначати без funding pathway — препарат не зареєстрований в Україні і не EMA-approved."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L+ for
+  r/r PTCL NOS. UA access barrier dominant — international supply
+  required. Bridge to alloSCT consolidation standard in fit responders.
