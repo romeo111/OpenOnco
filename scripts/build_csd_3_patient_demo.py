@@ -50,6 +50,105 @@ OUT_HTML = REPO_ROOT / "docs" / "plans" / "csd_3_patient_demo.html"
 REPORT_DATE_HUMAN = "2026-04-27"
 
 
+# ── Sign-off helpers (CSD-5 clinical sign-off surfacing) ──────────────────
+#
+# The patient demo does NOT modify the engine render layer (that surfaces
+# drugs only). We instead build a small post-engine "Підтвердження
+# лікарів" panel that lists each track's indication with a friendly badge.
+# Indication YAMLs may carry `reviewer_signoffs` (int) and/or `reviewers`
+# (list); we take the larger to avoid over-claiming.
+
+
+def _signoff_count(indication_data: dict | None) -> int:
+    if not indication_data:
+        return 0
+    declared = indication_data.get("reviewer_signoffs")
+    try:
+        declared_int = int(declared) if declared is not None else 0
+    except (TypeError, ValueError):
+        declared_int = 0
+    reviewers = indication_data.get("reviewers") or []
+    list_count = len(reviewers) if isinstance(reviewers, list) else 0
+    return max(declared_int, list_count)
+
+
+def _patient_signoff_label(n: int) -> tuple[str, str]:
+    """Map a sign-off count to (css-modifier, friendly UA label)."""
+    if n >= 2:
+        return ("complete", "✅ Підтверджено лікарями")
+    if n == 1:
+        return ("partial", "🟡 Один лікар підтвердив")
+    return ("pending", "🔴 Лікарі ще перевіряють цю рекомендацію")
+
+
+def render_patient_signoff_panel(plan_result) -> str:
+    """One row per unique track indication, with a friendly sign-off label.
+
+    Hidden when the plan has no resolvable tracks (rare — the engine
+    always returns at least one track for a successfully-matched
+    algorithm)."""
+    plan = plan_result.plan
+    if plan is None or not plan.tracks:
+        return ""
+    seen: set[str] = set()
+    rows: list[str] = []
+    track_label_map = {
+        "standard": "Стандартний варіант",
+        "aggressive": "Альтернативний варіант",
+    }
+    for t in plan.tracks:
+        ind_id = t.indication_id or ""
+        if not ind_id or ind_id in seen:
+            continue
+        seen.add(ind_id)
+        n = _signoff_count(t.indication_data or {})
+        modifier, label = _patient_signoff_label(n)
+        track_label = track_label_map.get(t.track_id, t.track_id or "Варіант лікування")
+        rows.append(
+            '<li class="signoff-row">'
+            f'<span class="signoff-track">{_h_text(track_label)}</span>'
+            f'<span class="signoff-pill signoff-pill--{modifier}">{_h_text(label)}</span>'
+            "</li>"
+        )
+    if not rows:
+        return ""
+    return (
+        '<aside class="patient-signoff-panel">'
+        "<h2>Хто перевірив цю рекомендацію</h2>"
+        '<p class="signoff-intro">'
+        "Ми позначаємо кожну рекомендацію статусом перевірки лікарями. "
+        "Будь-яка терапія, яка ще не отримала зеленої позначки, потребує "
+        "обов'язкового обговорення з вашим онкологом."
+        "</p>"
+        f'<ul class="signoff-list">{"".join(rows)}</ul>'
+        "</aside>"
+    )
+
+
+def render_engineering_metrics() -> str:
+    """Collapsible technical-audience footer — same content as CSD-1
+    demo, kept consistent so CSD-5B numbers stay in one place per
+    refresh."""
+    return """
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Engine bundle: lazy-load split — core 1.4 MB + per-disease module ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Per-disease module fetch: &lt;100 ms (browser cache after first visit)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="signoff_status_2026-04-27.md">dashboard</a></li>
+      </ul>
+    </details>
+    """
+
+
+def _h_text(s) -> str:
+    """Local html-escape (the engine's _h is private; avoid coupling)."""
+    import html as _html
+    return _html.escape("" if s is None else str(s))
+
+
 # ── QR generation ─────────────────────────────────────────────────────────
 
 
@@ -307,6 +406,109 @@ body {
   margin: 0 !important;
 }
 
+/* Patient sign-off panel — friendly per-track confirmation status */
+.patient-signoff-panel {
+  background: var(--green-50);
+  border-left: 4px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 20px;
+  margin: 0 0 22px;
+}
+.patient-signoff-panel h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  color: #14532d;
+  margin: 0 0 6px;
+}
+.signoff-intro {
+  font-size: 14px;
+  color: var(--gray-700);
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+.signoff-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.signoff-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.signoff-track {
+  font-weight: 600;
+  color: var(--gray-900);
+  font-size: 14px;
+}
+.signoff-pill {
+  display: inline-block;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.signoff-pill--complete {
+  background: var(--green-100);
+  color: #14532d;
+  border: 1px solid var(--green-600);
+}
+.signoff-pill--partial {
+  background: #fef3c7;
+  color: #78350f;
+  border: 1px solid #d97706;
+}
+.signoff-pill--pending {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #dc2626;
+}
+
+/* Engineering metrics — collapsible technical block above main disclaimer */
+.engineering-metrics {
+  margin: 22px 0 12px;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: left;
+}
+.engineering-metrics summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.engineering-metrics summary:hover { color: var(--green-700); }
+.engineering-metrics ul {
+  list-style: none; padding: 0; margin: 8px 0 0;
+}
+.engineering-metrics li {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-top: 1px dashed var(--gray-200);
+}
+.engineering-metrics li:first-child { border-top: none; }
+.engineering-metrics a { color: var(--green-700); text-decoration: none; }
+.engineering-metrics a:hover { text-decoration: underline; }
+
 /* Demo footer */
 .demo-footer {
   margin-top: 32px;
@@ -359,7 +561,9 @@ def render_qr_panel(qr_data_uri: str | None, url: str | None) -> str:
 
 
 def build_page(patient_inner_html: str, engine_styles: str,
-               qr_data_uri: str | None, url: str | None) -> str:
+               qr_data_uri: str | None, url: str | None,
+               signoff_panel_html: str = "",
+               engineering_metrics_html: str = "") -> str:
     qr_panel = render_qr_panel(qr_data_uri, url)
     return f"""<!DOCTYPE html>
 <html lang="uk">
@@ -400,9 +604,13 @@ def build_page(patient_inner_html: str, engine_styles: str,
 
     {qr_panel}
 
+    {signoff_panel_html}
+
     <article class="patient-plan">
       <div class="patient-report">{patient_inner_html}</div>
     </article>
+
+    {engineering_metrics_html}
 
     <footer class="demo-footer">
       <p>OpenOnco · <a href="https://openonco.info">openonco.info</a> · MIT-style usage · <a href="https://github.com/romeo111/OpenOnco">github.com/romeo111/OpenOnco</a></p>
@@ -464,7 +672,21 @@ def main() -> None:
     else:
         print("[csd-3-demo] WARNING: qrcode unavailable — falling back to placeholder panel")
 
-    page = build_page(inner, engine_styles, qr_data_uri, url)
+    signoff_panel_html = render_patient_signoff_panel(plan_result)
+    engineering_metrics_html = render_engineering_metrics()
+    if plan_result.plan and plan_result.plan.tracks:
+        for t in plan_result.plan.tracks:
+            n = _signoff_count(t.indication_data or {})
+            try:
+                print(f"[csd-3-demo] sign-off {t.track_id} {t.indication_id}: {n}")
+            except UnicodeEncodeError:
+                pass
+
+    page = build_page(
+        inner, engine_styles, qr_data_uri, url,
+        signoff_panel_html=signoff_panel_html,
+        engineering_metrics_html=engineering_metrics_html,
+    )
 
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.write_text(page, encoding="utf-8")

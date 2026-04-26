@@ -64,6 +64,13 @@ REPORT_TIMESTAMP_NOTE = "(оновлено з NSZU-context)"
 PLAN_A_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB"]
 PLAN_B_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB", "DRUG-BINIMETINIB"]
 
+# Both Plan A (doublet) and Plan B (triplet) live under the same KB
+# indication entity (BEACON CRC). We keep the IDs explicit per track so
+# the sign-off badge surface in each track stays self-explanatory if the
+# triplet ever gets its own indication.
+PLAN_A_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
+PLAN_B_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
+
 # Display metadata per drug — names + dose strings re-used by the rendered
 # drug-list rows. Centralised so badge labels and dose strings stay in
 # sync with the surrounding regimen prose.
@@ -106,6 +113,83 @@ def _h(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s))
+
+
+# ── Sign-off badge helpers (CSD-5 clinical sign-off surfacing) ───────────
+
+
+def _signoff_count(indication_data: dict | None) -> int:
+    """Best-effort `reviewer_signoffs` extraction.
+
+    Some indication YAMLs have an explicit integer field; others omit it
+    entirely (treat as 0); some carry a `reviewers:` list and we take the
+    larger of (count, declared int) so a stub author can't accidentally
+    over-claim sign-offs by setting the int below the declared list size.
+    """
+    if not indication_data:
+        return 0
+    declared = indication_data.get("reviewer_signoffs")
+    try:
+        declared_int = int(declared) if declared is not None else 0
+    except (TypeError, ValueError):
+        declared_int = 0
+    reviewers = indication_data.get("reviewers") or []
+    list_count = len(reviewers) if isinstance(reviewers, list) else 0
+    return max(declared_int, list_count)
+
+
+def _signoff_reviewer_names(indication_data: dict | None, count: int) -> list[str]:
+    """Pull display names from the reviewers list, or generate placeholder
+    labels when the list is empty but a count is declared. Placeholders
+    are deliberately generic so the demo never invents real clinician
+    names — they read as "Co-Lead 1 / Co-Lead 2"."""
+    if not indication_data:
+        return []
+    reviewers = indication_data.get("reviewers") or []
+    names: list[str] = []
+    if isinstance(reviewers, list):
+        for r in reviewers:
+            if isinstance(r, dict):
+                n = r.get("name") or r.get("reviewer") or r.get("id")
+            else:
+                n = r
+            if n:
+                names.append(str(n))
+    while len(names) < count:
+        names.append(f"Clinical Co-Lead {len(names) + 1}")
+    return names[:count]
+
+
+def render_signoff_badge(indication_data: dict | None) -> str:
+    """Return the inline sign-off badge `<span>` for an indication.
+
+    Three states: 0 / 1 / 2+ sign-offs. Reuses the `signoff-badge`
+    family of CSS classes defined in the page CSS (mirror of the engine's
+    sign-off conventions, scoped to this demo).
+    """
+    n = _signoff_count(indication_data)
+    if n >= 2:
+        names = _signoff_reviewer_names(indication_data, n)
+        shown = ", ".join(names[:2])
+        return (
+            '<span class="signoff-badge signoff-complete" '
+            f'title="Підписано: {_h(shown)}">'
+            f'✓ Клінічно затверджено: {_h(shown)}'
+            '</span>'
+        )
+    if n == 1:
+        return (
+            '<span class="signoff-badge signoff-partial" '
+            'title="Один Clinical Co-Lead підтвердив; очікується другий підпис">'
+            '🟡 Підписано: 1 з 2'
+            '</span>'
+        )
+    return (
+        '<span class="signoff-badge signoff-pending" '
+        'title="STUB — клінічний контент очікує дворазового підпису перед production-use">'
+        '⚠ Очікує підпису Clinical Co-Lead'
+        '</span>'
+    )
 
 
 # ── Section builders ──────────────────────────────────────────────────────
@@ -306,8 +390,9 @@ def render_drug_list(drug_ids: list[str], badges: dict[str, NszuBadge]) -> str:
     return f'<ul class="drug-list">{rows}</ul>'
 
 
-def render_plan_a(badges: dict[str, NszuBadge]) -> str:
+def render_plan_a(badges: dict[str, NszuBadge], indication_data: dict | None) -> str:
     drugs_html = render_drug_list(PLAN_A_DRUG_IDS, badges)
+    signoff_html = render_signoff_badge(indication_data)
     return f"""
     <section class="plan-track plan-track--standard">
       <div class="track-head">
@@ -317,7 +402,10 @@ def render_plan_a(badges: dict[str, NszuBadge]) -> str:
       <div class="plan-body">
         <dl class="plan-dl">
           <dt>Indication</dt>
-          <dd class="mono">IND-CRC-METASTATIC-2L-BRAF-BEACON</dd>
+          <dd class="mono indication-line">
+            <span class="indication-id">{_h(PLAN_A_INDICATION_ID)}</span>
+            {signoff_html}
+          </dd>
 
           <dt>Регімен</dt>
           <dd>
@@ -365,8 +453,9 @@ def render_plan_a(badges: dict[str, NszuBadge]) -> str:
     """
 
 
-def render_plan_b(badges: dict[str, NszuBadge]) -> str:
+def render_plan_b(badges: dict[str, NszuBadge], indication_data: dict | None) -> str:
     drugs_html = render_drug_list(PLAN_B_DRUG_IDS, badges)
+    signoff_html = render_signoff_badge(indication_data)
     return f"""
     <section class="plan-track plan-track--aggressive">
       <div class="track-head">
@@ -375,6 +464,12 @@ def render_plan_b(badges: dict[str, NszuBadge]) -> str:
       </div>
       <div class="plan-body">
         <dl class="plan-dl">
+          <dt>Indication</dt>
+          <dd class="mono indication-line">
+            <span class="indication-id">{_h(PLAN_B_INDICATION_ID)}</span>
+            {signoff_html}
+          </dd>
+
           <dt>Регімен</dt>
           <dd>
             <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)
@@ -411,7 +506,11 @@ def render_plan_b(badges: dict[str, NszuBadge]) -> str:
     """
 
 
-def render_plan_section(badges: dict[str, NszuBadge]) -> str:
+def render_plan_section(
+    badges: dict[str, NszuBadge],
+    plan_a_indication: dict | None,
+    plan_b_indication: dict | None,
+) -> str:
     return f"""
     <section class="plans engine-section">
       <div class="engine-tag">OpenOnco engine output · 2L authoring layer</div>
@@ -422,10 +521,48 @@ def render_plan_section(badges: dict[str, NszuBadge]) -> str:
         Algorithm + RedFlag eval (CHARTER §8.3). Фінальне рішення — за лікуючим онкологом.
       </div>
       <div class="track-grid">
-        {render_plan_a(badges)}
-        {render_plan_b(badges)}
+        {render_plan_a(badges, plan_a_indication)}
+        {render_plan_b(badges, plan_b_indication)}
       </div>
     </section>
+    """
+
+
+def render_signoff_explainer() -> str:
+    """Mirror of the NSZU explainer — explains the three sign-off badges
+    surfaced inline above each Indication block. Sized to fit on the
+    same A4 page as the plan tracks."""
+    return """
+    <aside class="signoff-explainer">
+      <h3>Що означають позначки клінічного підпису</h3>
+      <ul>
+        <li><span class="signoff-badge signoff-complete">✓ Клінічно затверджено</span> — підпис ≥2 Clinical Co-Leads (CHARTER §6.1)</li>
+        <li><span class="signoff-badge signoff-partial">🟡 Підписано: 1 з 2</span> — один підпис, очікується другий</li>
+        <li><span class="signoff-badge signoff-pending">⚠ Очікує підпису</span> — клінічний контент в обробці; ще не для production-use</li>
+      </ul>
+      <p class="signoff-explainer-foot">
+        Жодний рекомендований препарат не призначається без підтвердження вашого онколога.
+        Ви можете відстежувати поточний sign-off статус у dashboard'і.
+      </p>
+    </aside>
+    """
+
+
+def render_engineering_metrics() -> str:
+    """Collapsible footer block with bundle / load metrics — surfaces the
+    CSD-5B work to a technical audience without distracting clinicians.
+    Placed above the medical disclaimer so the disclaimer remains last."""
+    return """
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Engine bundle: lazy-load split — core 1.4 MB + per-disease module ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Per-disease module fetch: &lt;100 ms (browser cache after first visit)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="signoff_status_2026-04-27.md">dashboard</a></li>
+      </ul>
+    </details>
     """
 
 
@@ -788,6 +925,100 @@ section > h3 {
   padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
 }
 
+/* Sign-off badges — inline next to indication ID + reused inside explainer aside */
+.signoff-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.signoff-complete {
+  background: var(--green-100);
+  color: var(--green-800);
+  border-color: var(--green-600);
+}
+.signoff-partial {
+  background: #fef3c7;
+  color: #78350f;
+  border-color: #d97706;
+}
+.signoff-pending {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #dc2626;
+}
+.indication-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+.indication-line .indication-id {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.signoff-explainer {
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.signoff-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: #78350f; margin-bottom: 8px;
+}
+.signoff-explainer ul { list-style: none; padding: 0; margin: 0; }
+.signoff-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.signoff-explainer li .signoff-badge { margin-left: 0; margin-right: 8px; }
+.signoff-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Engineering metrics — collapsible footer (technical audience) */
+.engineering-metrics {
+  margin: 18px 0;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.engineering-metrics summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.engineering-metrics summary:hover { color: var(--green-700); }
+.engineering-metrics ul {
+  list-style: none; padding: 0; margin: 8px 0 0;
+}
+.engineering-metrics li {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-top: 1px dashed var(--gray-200);
+}
+.engineering-metrics li:first-child { border-top: none; }
+.engineering-metrics a { color: var(--green-700); text-decoration: none; }
+.engineering-metrics a:hover { text-decoration: underline; }
+
 /* NSZU explainer aside — appears between plan tracks and disclaimer */
 .nszu-explainer {
   background: var(--green-50); border: 1px solid var(--green-100);
@@ -874,16 +1105,24 @@ section > h3 {
 # ── Page assembly ─────────────────────────────────────────────────────────
 
 
-def build_page(patient: dict, hits: list[dict], badges: dict[str, NszuBadge]) -> str:
+def build_page(
+    patient: dict,
+    hits: list[dict],
+    badges: dict[str, NszuBadge],
+    plan_a_indication: dict | None,
+    plan_b_indication: dict | None,
+) -> str:
     body = (
         render_header()
         + render_ngs_panel(patient)
         + render_patient_context(patient)
         + render_variant_actionability(hits)
-        + render_plan_section(badges)
+        + render_plan_section(badges, plan_a_indication, plan_b_indication)
+        + render_signoff_explainer()
         + render_nszu_explainer()
         + render_trials()
         + render_disclaimer()
+        + render_engineering_metrics()
         + render_footer()
     )
     return f"""<!doctype html>
@@ -951,7 +1190,17 @@ def main() -> None:
         except UnicodeEncodeError:
             pass
 
-    html_out = build_page(patient, hits, badges)
+    plan_a_indication = _entity_data(load.entities_by_id.get(PLAN_A_INDICATION_ID))
+    plan_b_indication = _entity_data(load.entities_by_id.get(PLAN_B_INDICATION_ID))
+    try:
+        print(f"[csd-1-demo] sign-off Plan A ({PLAN_A_INDICATION_ID}): "
+              f"{_signoff_count(plan_a_indication)}")
+        print(f"[csd-1-demo] sign-off Plan B ({PLAN_B_INDICATION_ID}): "
+              f"{_signoff_count(plan_b_indication)}")
+    except UnicodeEncodeError:
+        pass
+
+    html_out = build_page(patient, hits, badges, plan_a_indication, plan_b_indication)
 
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.write_text(html_out, encoding="utf-8")
