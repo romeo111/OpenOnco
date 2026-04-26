@@ -1380,3 +1380,17 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .oncokb-3B { background: #f97316; color: white; }
 .oncokb-4 { background: #f3f4f6; color: #374151; }
 .oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
+
+/* ── NSZU availability badges — per-drug coverage flag rendered next
+   to each regimen component. Render-time metadata only (engine never
+   reads these — CHARTER §8.3 invariant). Mirrored in
+   knowledge_base/engine/render_styles.py for the embedded Plan HTML. */
+.nszu-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 0.85em; font-weight: 600; white-space: nowrap;
+  margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }     /* green */
+.nszu-partial { background: #fff3cd; color: #856404; }     /* yellow */
+.nszu-oop { background: #ffe5cc; color: #804000; }         /* orange */
+.nszu-not-registered { background: #f8d7da; color: #721c24; } /* red */

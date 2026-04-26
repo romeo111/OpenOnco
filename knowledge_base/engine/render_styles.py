@@ -517,4 +517,23 @@ h3 {
 .oncokb-3B { background: #f97316; color: white; }
 .oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
 .oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
+
+/* NSZU availability badges — per-drug coverage flag rendered alongside
+   each component in the track's drug list. Render-time metadata only
+   (engine never reads these — CHARTER §8.3 invariant). */
+.nszu-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; white-space: nowrap;
+    margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }
+.nszu-partial { background: #fff3cd; color: #856404; }
+.nszu-oop { background: #ffe5cc; color: #804000; }
+.nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+.drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
+.drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
+.drug-list .drug-name { font-weight: 600; }
+.drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
 """
