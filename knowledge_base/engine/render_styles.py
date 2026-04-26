@@ -537,3 +537,128 @@ h3 {
 .drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
 .drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
 """
+
+
+# ── Patient-mode CSS ─────────────────────────────────────────────────
+#
+# Mirrored verbatim from the "Patient mode" section in docs/style.css so
+# the embedded engine HTML (Plan / DiagnosticBrief patient bundles) ships
+# the same look as the static site without an external stylesheet link.
+#
+# Kept in a separate constant rather than appended to STYLESHEET so the
+# clinician-mode renderer can opt out and keep its bundle small. Compose
+# in render.py as `STYLESHEET + PATIENT_MODE_CSS` when a patient-mode
+# document is being emitted.
+#
+# Whenever this string is updated, mirror the same change in
+# docs/style.css (search for the "Patient mode" comment block) so the
+# static site and engine HTML do not drift.
+
+PATIENT_MODE_CSS = """
+/* ── Patient mode ──────────────────────────────────────────────────
+   Patient-facing renderer styles. Distinct typography (larger body
+   text, longer line-height) and a calmer palette than the clinician
+   bundle. Mirror of the same-named section in docs/style.css. */
+
+.patient-report {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #2c3e50;
+}
+
+.patient-report h1 { font-size: 2.2em; margin: 0 0 12px; color: #1a3a5c; }
+.patient-report h2 {
+  font-size: 1.6em; margin: 32px 0 16px; color: #1a3a5c;
+  border-bottom: 2px solid #e8f0fa; padding-bottom: 8px;
+}
+.patient-report h3 { font-size: 1.2em; margin: 20px 0 8px; color: #1a3a5c; }
+
+.patient-subhead { font-size: 1.1em; color: #5a6e80; margin-bottom: 24px; }
+
+.patient-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 600;
+  margin: 4px 0;
+}
+.patient-good { background: #d4edda; color: #155724; }
+.patient-warn { background: #fff3cd; color: #856404; }
+.patient-info { background: #d1ecf1; color: #0c5460; }
+.patient-emergency { background: #f8d7da; color: #721c24; }
+
+.patient-nszu {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.patient-nszu-covered { background: #d4edda; color: #155724; }
+.patient-nszu-partial { background: #fff3cd; color: #856404; }
+.patient-nszu-oop { background: #ffe5cc; color: #804000; }
+.patient-nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+.drug-explanation {
+  background: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 4px;
+}
+.drug-explanation .lay-language {
+  font-size: 1em;
+  margin: 8px 0;
+  color: #2c3e50;
+}
+
+.emergency-list {
+  background: #fff5f5;
+  border-left: 4px solid #dc2626;
+  padding: 16px 20px;
+  margin: 16px 0;
+  list-style: none;
+}
+.emergency-list li {
+  margin: 12px 0;
+  font-weight: 500;
+}
+
+.ask-doctor {
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  padding: 20px;
+  border-radius: 4px;
+  margin: 24px 0;
+}
+.ask-doctor ul { margin: 12px 0 0 20px; }
+.ask-doctor li { margin: 8px 0; line-height: 1.5; }
+
+.patient-disclaimer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid #e2e8f0;
+  font-size: 0.95em;
+  color: #5a6e80;
+}
+
+@media (max-width: 600px) {
+  .patient-report { padding: 16px 20px; font-size: 16px; }
+  .patient-report h1 { font-size: 1.8em; }
+  .patient-report h2 { font-size: 1.4em; }
+}
+
+@media print {
+  .patient-report { font-size: 14pt; }
+  .patient-disclaimer { page-break-before: avoid; }
+}
+"""
+
+
+__all__ = ["STYLESHEET", "PATIENT_MODE_CSS"]
