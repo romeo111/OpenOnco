@@ -1,0 +1,107 @@
+id: IND-AML-PEDIATRIC-AAML1031
+plan_track: standard
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+  - "Newly-diagnosed pediatric AML (age ≤18 years)"
+  - "Treatment per Children's Oncology Group AAML1031 protocol (or successor AAML1831)"
+  - "Risk stratification by cytogenetics + molecular markers (NPM1, FLT3-ITD, CEBPA, KMT2A, inv(16), t(8;21))"
+  - "Multidisciplinary management at pediatric oncology center with HSCT capability"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    age_max: 18
+    ecog_max: 3
+recommended_regimen: REG-AML-7-3
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~85% (CR after 2 cycles induction; AAML1031 Aplenc 2020 JCO)
+  complete_response: ~75-80%
+  progression_free_survival: 5-yr EFS ~50-55% overall; high-risk ~30%, low-risk ~70%
+  overall_survival_5y: 5-yr OS ~65-70% overall; substantially better than adult AML due to better tolerance
+    + biology
+hard_contraindications:
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative:
+- RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+- RF-AML-HIGH-RISK-BIOLOGY
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-COAG-PANEL
+- TEST-D-DIMER
+- TEST-HBV-SEROLOGY
+- TEST-HCV-ANTIBODY
+- TEST-HIV-SEROLOGY
+- TEST-CMV-SEROLOGY
+- TEST-FLOW-CYTOMETRY
+- TEST-FISH-PANEL
+- TEST-BM-ASPIRATE
+- TEST-BM-TREPHINE
+- TEST-ECHO
+- TEST-BCR-ABL-JAK2
+desired_tests: []
+rationale: 'Pediatric AML (age ≤18) is treated per Children''s Oncology Group AAML1031 (now AAML1831) protocol,
+  which is distinct from adult 7+3-based therapy in dose density, supportive care, and risk stratification.
+  Backbone: cytarabine 100 mg/m² CIVI × 7 days + daunorubicin 50 mg/m² IV × 3 days induction (similar
+  to 7+3 but with intensified consolidation). Consolidation with high-dose cytarabine (HiDAC 3 g/m² q12h
+  × 6 doses × 2-3 cycles) — the cornerstone of pediatric AML cure. Risk stratification: low-risk (NPM1+/FLT3-ITD-,
+  CEBPA biallelic, inv(16), t(8;21)) → chemotherapy alone; high-risk (FLT3-ITD high allelic ratio, KMT2A
+  rearranged, complex karyotype, monosomy 7, TP53) → matched-related-donor or matched-unrelated-donor alloHCT
+  in CR1. Gemtuzumab ozogamicin (GO) is added to induction for low-risk per AAML1031 (Aplenc 2020 JCO):
+  EFS improvement 53% vs 47%. Filgrastim / pegfilgrastim primary prophylaxis routine. CNS prophylaxis with
+  intrathecal cytarabine + methotrexate × 4-6 doses standard. Late-effect surveillance (cardiotoxicity
+  from anthracyclines, fertility, secondary malignancies) extends decades beyond cure. STUB regimen — no
+  dedicated REG-AAML1031-PEDIATRIC entity yet; flagged for REG follow-up. Reference REG-AML-7-3 used as
+  proxy with pediatric modifications described.'
+sources:
+- source_id: SRC-NCCN-AML-2025
+  position: supports
+  relevant_quote_paraphrase: Pediatric AML treatment per Children's Oncology Group AAML1031 / AAML1831 protocols;
+    distinct from adult AML in dose density + supportive care; gemtuzumab ozogamicin added for low-risk
+    per AAML1031
+- source_id: SRC-ELN-AML-2022
+  position: supports
+  relevant_quote_paraphrase: ELN endorses pediatric AML treatment at dedicated pediatric oncology centers
+    with COG protocols; risk-adapted alloHCT in CR1 for high-risk biology
+known_controversies:
+- topic: Gemtuzumab ozogamicin addition for pediatric AML 1L
+  positions:
+  - position: Add GO for low-risk — AAML1031 EFS improvement 53% vs 47%
+    sources:
+    - SRC-NCCN-AML-2025
+    evidence_note: AAML1031 Aplenc 2020 JCO
+  - position: Risk for veno-occlusive disease — careful selection + cumulative dose cap
+    sources:
+    - SRC-ELN-AML-2022
+  our_default: Add GO for low-risk pediatric AML per AAML1031 protocol; close VOD surveillance + supportive
+    care
+  rationale: Risk-benefit favors GO addition; VOD risk manageable with current supportive care
+do_not_do:
+- НЕ використовувати adult 7+3 dose intensification без pediatric-specific consolidation — pediatric biology
+  + tolerance differ.
+- НЕ призначати alloHCT для low-risk pediatric AML в CR1 — chemotherapy alone curative для більшості.
+- НЕ забути cardio-protection (dexrazoxane) для cumulative anthracycline dose >300 mg/m² — late cardiotoxicity
+  ризик.
+- НЕ забути fertility preservation discussion (ovarian/sperm cryopreservation) до старту — particularly
+  for adolescents.
+- НЕ ігнорувати late-effect surveillance — survivors потребують lifelong follow-up для secondary malignancies,
+  CV, endocrine, fertility, neurocognitive.
+- НЕ забути psychosocial support — pediatric oncology requires family-centered care + child-life specialists.
+- "НЕ робити decisions без peds-onc-board MDT — рідкісні presentations + complex stratification."
+time_critical: true
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Special-population indication for pediatric AML (≤18).
+  time_critical=true: pediatric AML emergency presentations (hyperleukocytosis, TLS, DIC) require immediate
+  pediatric oncology referral. Missing entity flag: dedicated REG-AAML1031-PEDIATRIC + DRUG-GEMTUZUMAB-OZOGAMICIN
+  — author in PROD-2.'

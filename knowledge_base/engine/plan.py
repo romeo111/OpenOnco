@@ -519,10 +519,14 @@ def generate_plan(
             from .oncokb_extract import extract_oncokb_queries
             from .oncokb_conflict import annotate_layer_with_conflicts
             from .oncokb_types import OncoKBResult, OncoKBError
+            from .oncotree_fallback import resolve_oncotree_code
 
             disease_data = result.kb_resolved.get("disease") or {}
-            oncotree = disease_data.get("oncotree_code")
-            pan_tumor_fallback = oncotree is None
+            # Three-tier resolution: explicit field → ICD-10 fallback → pan-tumor.
+            # Render layer reads `pan_tumor_fallback` to surface the warning
+            # badge per Q4 — but tier-2 fallback also flags it (the user
+            # should know we used a derived code, not an explicit one).
+            oncotree, pan_tumor_fallback = resolve_oncotree_code(disease_data)
 
             # Walk patient biomarkers → collect (id, gene, variant) hints
             # from KB Biomarker.oncokb_lookup field if present.

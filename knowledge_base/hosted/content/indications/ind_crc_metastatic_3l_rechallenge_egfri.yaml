@@ -1,0 +1,78 @@
+id: IND-CRC-METASTATIC-3L-RECHALLENGE-EGFRI
+plan_track: aggressive
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 3
+  stage_requirements:
+    - "Stage IV RAS wild-type left-sided mCRC"
+    - "Prior 1L anti-EGFR (cetuximab or panitumumab) with response, then progression"
+    - "Subsequent 2L therapy without anti-EGFR (e.g., FOLFIRI + bevacizumab)"
+    - "ctDNA RAS wild-type at rechallenge timepoint (CHRONOS / CRICKET trial paradigm)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-RAS-MUTATION
+      required: true
+      value_constraint: "RAS wild-type at baseline; ctDNA RAS wild-type at rechallenge timepoint (≥4 mo off anti-EGFR)"
+    - biomarker_id: BIO-BRAF-V600E
+      required: true
+      value_constraint: "BRAF V600E negative (BRAF V600E patients should be on encorafenib + cetuximab BEACON pathway)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: '2B'
+expected_outcomes:
+  overall_response_rate: ~30% for ctDNA-selected rechallenge (CHRONOS Sartore-Bianchi 2022 Nat Med)
+  complete_response: rare
+  progression_free_survival: Median PFS ~3.6 mo (CHRONOS); CRICKET 4.0 mo
+  overall_survival_5y: Median OS ~17 mo (CRICKET, ctDNA-positive subset has substantially worse OS)
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-BRAF-V600E
+desired_tests: []
+rationale: 'Anti-EGFR rechallenge at 3L+ in RAS wild-type left-sided mCRC is supported by ctDNA-guided trials (CHRONOS, CRICKET, CAVE, REMARRY/PURSUIT). Mechanism: clones bearing acquired RAS/EGFR-ECD mutations decay during anti-EGFR-free intervals (≥4 mo); reintroducing anti-EGFR re-engages RAS-WT clones for meaningful but transient response. CHRONOS (Sartore-Bianchi 2022 Nat Med): ctDNA-RAS-WT-selected patients ORR 30%, mPFS 3.6 mo. CRICKET (Cremolini 2019 JAMA Oncol): ORR 21%, mPFS 4.0 mo. ctDNA testing essential — without it, ORR drops to ~5-10%. Rechallenge is alternative to regorafenib / TAS-102 / fruquintinib in 3L+ RAS-WT pathway. Skin toxicity, hypomagnesemia, infusion reactions all class-specific. STUB regimen — no dedicated REG- entity for cetuximab rechallenge yet; flagged for REG follow-up.'
+rationale_ua: >-
+  Anti-EGFR rechallenge at 3L+ in RAS wild-type left-sided mCRC is supported by цоДНК-guided trials (CHRONOS, CRICKET, CAVE, REMARRY/PURSUIT). Mechanism: clones bearing набутий RAS/EGFR-ECD мутації decay during anti-EGFR-free intervals (≥4 міс.); reintroducing anti-EGFR re-engages RAS-WT clones for meaningful but transient відповідь. CHRONOS (Sartore-Bianchi 2022 Nat Med): цоДНК-RAS-WT-selected patients ORR 30%, mPFS 3.6 mo. CRICKET (Cremolini 2019 JAMA Oncol): ORR 21%, mPFS 4.0 mo. цоДНК testing essential — without it, ORR drops to ~5-10%. Rechallenge is alternative to регорафеніб / TAS-102 / фруквінтиніб in 3L+ RAS-WT pathway. Skin токсичність, hypomagnesemia, infusion reactions all class-specific. STUB схема — ні dedicated REG- сутність for цетуксимаб rechallenge yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: Anti-EGFR rechallenge for RAS-WT left-sided mCRC at 3L+ is acceptable Cat 2B when ctDNA confirms RAS-WT status; alternative to regorafenib / TAS-102
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: ctDNA-guided anti-EGFR rechallenge has emerging evidence (CHRONOS, CRICKET) for late-line mCRC; regorafenib and trifluridine-tipiracil remain primary 3L options without ctDNA infrastructure
+known_controversies:
+  - topic: ctDNA-guided rechallenge vs empirical 3L (regorafenib / TAS-102 / fruquintinib) for RAS-WT mCRC
+    positions:
+      - position: ctDNA-guided rechallenge — higher ORR (~30%) vs regorafenib (~1%) when ctDNA RAS-WT
+        sources:
+          - SRC-NCCN-COLON-2025
+      - position: Regorafenib / TAS-102 / fruquintinib — established 3L options regardless of biomarker
+        sources:
+          - SRC-ESMO-COLON-2024
+        evidence_note: Regorafenib mPFS 1.9 mo, TAS-102 mPFS 2.0 mo, fruquintinib mPFS 3.7 mo (FRESCO-2)
+    our_default: ctDNA-guided rechallenge first if ctDNA infrastructure available + RAS-WT confirmed; otherwise regorafenib OR TAS-102 OR fruquintinib
+    rationale: Rechallenge has higher ORR but requires ctDNA testing infrastructure; without ctDNA, empirical options preferred
+do_not_do:
+  - НЕ робити rechallenge без ctDNA RAS testing — empirical rechallenge має ~5-10% ORR.
+  - НЕ робити rechallenge раніше ніж 4 місяці після останньої anti-EGFR експозиції — clonal decay incomplete.
+  - НЕ забути brain MRI — late-line patients можуть мати CNS progression.
+  - НЕ призначати anti-EGFR при skin toxicity grade 4 з попередньої експозиції — recurrence очікувана.
+  - НЕ ігнорувати hypomagnesemia + hypocalcemia — class effect, требує periodic supplementation.
+  - НЕ продовжувати при ECOG ≥3 — late-line benefit modest.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L pathway for ctDNA-guided anti-EGFR rechallenge in RAS-WT mCRC. Requires ctDNA infrastructure (Guardant 360, FoundationOne Liquid CDx). Missing entity flag: dedicated REG-CETUXIMAB-RECHALLENGE — author in PROD-2.'

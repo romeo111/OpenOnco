@@ -9,59 +9,93 @@ atc_code: L01EB10
 rxnorm_id: ""
 drug_class: "Third-generation EGFR tyrosine kinase inhibitor"
 mechanism: >
-  STUB — needs full curation. Irreversible third-gen EGFR-TKI selective
-  for sensitizing EGFR mutations (ex19del / L858R) and the T790M
-  resistance mutation, sparing wild-type EGFR. CNS-penetrant.
-  MARIPOSA: lazertinib + amivantamab vs osimertinib 1L → PFS 23.7 vs
-  16.6 mo HR 0.70 (FDA 2024 with ami SC).
+  Irreversible third-generation EGFR-TKI that covalently binds the
+  cysteine residue (C797) of mutant EGFR, selective for sensitizing
+  EGFR mutations (exon-19 deletions, L858R) and the T790M
+  resistance-conferring mutation while sparing wild-type EGFR (so
+  reduced rash / GI toxicity vs first-generation TKIs). Brain-
+  penetrant (CSF/plasma ratio similar to osimertinib), enabling
+  intracranial activity. Mechanism of action and target spectrum are
+  pharmacologically analogous to osimertinib. Clinical evidence:
+  MARIPOSA (lazertinib + amivantamab vs osimertinib in 1L EGFR
+  ex19del / L858R NSCLC): mPFS 23.7 vs 16.6 mo, HR 0.70 — added FDA
+  approval Aug 2024 for the combination. Korean approval as monotherapy
+  preceded the Western combo registration (2021).
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2024
-    indications_brief: ["EGFR ex19del/L858R 1L NSCLC (combo amivantamab, MARIPOSA)"]
+    indications_brief:
+      - "EGFR ex19del/L858R 1L NSCLC (combo amivantamab — MARIPOSA)"
   ema:
     approved: true
     year_first_approval: 2024
+    indications_brief:
+      - "EGFR ex19del/L858R 1L NSCLC (combo amivantamab)"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Not registered in UA per drlz.com.ua snapshot 2026-04-27. Originally approved in South Korea 2021."
+    notes: "Не зареєстровано per drlz.com.ua snapshot 2026-04-27. Originally Korean (Yuhan) approval 2021; J&J global development. Доступ via EAP J&J / cross-border / self-pay. Osimertinib remains the dominant 3rd-gen EGFR-TKI in UA НСЗУ."
 
 typical_dosing: >
-  STUB. 240 mg PO once daily, combined with amivantamab IV/SC per
-  MARIPOSA schedule.
+  240 mg PO once daily, with or without food, in combination with
+  amivantamab IV/SC dosed per MARIPOSA schedule. Continuous until
+  progression / unacceptable toxicity. Dose level -1 = 160 mg daily;
+  -2 = 80 mg daily; permanent discontinuation if recurrent G3-4 at
+  -2. Hold for ILD/pneumonitis (any grade — workup); permanently
+  discontinue for confirmed ILD ≥G2. Hold for QTc >500 ms; correct
+  K+/Mg++ and reassess. No formal renal adjustment.
 
 formulations:
   - "Tablets 80 mg"
   - "Tablets 240 mg"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Hypersensitivity to lazertinib or any excipient"
+  - "Pregnancy (embryo-fetal toxicity)"
+  - "Confirmed ILD/pneumonitis attributed to lazertinib"
+
 black_box_warnings: []
+
 common_adverse_events:
-  - "Rash (acneiform — EGFR class)"
-  - "Paronychia"
-  - "Diarrhea"
-  - "Dry skin"
-  - "Stomatitis"
-  - "Decreased appetite"
+  - "Rash / acneiform dermatitis ~40-45% (EGFR class)"
+  - "Paronychia ~30%"
+  - "Diarrhea ~25-30%"
+  - "Dry skin ~25%"
+  - "Stomatitis ~20%"
+  - "Pruritus ~15%"
+  - "Decreased appetite ~15%"
+  - "Fatigue ~25%"
+  - "Nausea ~15%"
+  - "Hypoalbuminemia ~30% (combo)"
+  - "Peripheral edema ~15%"
+
 serious_adverse_events:
-  - "Interstitial lung disease / pneumonitis"
-  - "QT prolongation"
-  - "Cardiomyopathy / LVEF decline"
-  - "Severe rash / SCAR"
-  - "Venous thromboembolism (with amivantamab combo)"
+  - "Interstitial lung disease / pneumonitis (G3+ ~3%; class warning — workup any new dyspnea/cough)"
+  - "QT prolongation (G3 QTc >500 ms ~3%)"
+  - "Cardiomyopathy / LVEF decline (~6% any decrease; G3 rare)"
+  - "Severe rash / SCAR (rare)"
+  - "Venous thromboembolism (combo with amivantamab) — VTE prophylaxis recommended per MARIPOSA protocol (LMWH or DOAC for first 4 mo)"
+  - "Severe paronychia / cellulitis"
+  - "Hepatotoxicity (G3 ALT/AST ~4%)"
+  - "Hypokalemia / hypomagnesemia (electrolyte derangement amplifying QT risk)"
+
 major_interactions:
-  - "STUB — strong CYP3A4 inhibitors/inducers"
+  - "Strong CYP3A4 inhibitors (azoles, clarithromycin, ritonavir) — ↑ exposure; consider dose reduction"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St John's wort) — ↓ exposure; avoid"
+  - "Other QT-prolonging drugs (ondansetron IV, methadone, fluoroquinolones, antipsychotics) — additive QTc"
+  - "P-gp / BCRP substrates — lazertinib inhibits, modest effect"
+  - "Concurrent amivantamab (intentional combination) — VTE prophylaxis required per MARIPOSA"
 
 pharmacology:
   half_life_hours: 65
   clearance: "hepatic"
-  protein_binding_pct: null
-  metabolism: "CYP3A4"
+  protein_binding_pct: 99
+  metabolism: "CYP3A4 (predominant); minor CYP1A2 / 2D6"
 
 sources:
   - SRC-NCCN-NSCLC-2025
@@ -70,7 +104,18 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. Currently approved only in combination
-  with amivantamab (no monotherapy FDA approval despite Korea mono
-  approval). VTE prophylaxis per MARIPOSA protocol. Needs full curation
-  of dose-adj for hepatic, ILD management, drug interactions.
+  Currently approved in the West only in fixed combination with
+  amivantamab (MARIPOSA — superior PFS vs osimertinib but more AE,
+  notably VTE / IRR / rash / hepatotoxicity). Korean approval as
+  monotherapy (2021) is not reflected in EMA/FDA labels. VTE
+  prophylaxis with prophylactic-dose LMWH or DOAC for the first 4
+  months is mandated by MARIPOSA protocol when combined with
+  amivantamab. Baseline workup: ECG (QTc), LFTs, CBC, electrolytes
+  (K, Mg, Ca), CT chest (ILD baseline), echo if cardiac history.
+  Monitor LFTs / ECG q2 weeks first 8 weeks then monthly; CT chest
+  at any new respiratory symptoms (high suspicion for ILD). Premed
+  for amivantamab IRR as per ami protocol (steroid + antihistamine
+  + antipyretic). Compared with osimertinib alone, the combo
+  increases PFS at the cost of toxicity — patient selection
+  (younger, fitter, willing to accept IV therapy and VTE prophylaxis)
+  is critical.

@@ -1,0 +1,85 @@
+id: IND-EMERG-CINV-HIGH-EMETOGENIC
+plan_track: standard
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+  - "Patient receiving high-emetogenic chemotherapy (HEC) — cisplatin ≥50 mg/m², AC (doxorubicin + cyclophosphamide), high-dose cytarabine, ifosfamide, dacarbazine, mechlorethamine, streptozocin, carmustine"
+  - "Goal: prevent acute (0-24h) AND delayed (>24h-120h) chemo-induced nausea and vomiting (CINV)"
+  - "Foundational supportive care; CINV control determines patient adherence + future cycle tolerance"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    ecog_max: 4
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~80-90% complete CINV control (no vomiting + no rescue) with 4-drug regimen (NK1
+    + 5HT3 + dex + olanzapine)
+  complete_response: N/A (prevention indication)
+  progression_free_survival: N/A
+  overall_survival_5y: Inadequate CINV control causes ~10-15% chemo dose reduction / delay / discontinuation
+    — indirectly affects DFS / OS
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+desired_tests: []
+rationale: 'For high-emetogenic chemotherapy (HEC), the 4-drug antiemetic regimen — NK1 receptor antagonist
+  (aprepitant 125 mg PO d1, 80 mg PO d2-3 OR fosaprepitant 150 mg IV d1) + 5HT3 receptor antagonist (palonosetron
+  0.25 mg IV d1 — preferred over ondansetron for delayed CINV) + dexamethasone 12 mg PO/IV d1 then 8 mg
+  PO d2-4 + olanzapine 10 mg PO d1-4 — is NCCN/MASCC/ASCO Cat 1 standard. Olanzapine addition (Navari
+  2016 NEJM, Hashimoto 2020 Lancet Oncol) substantially improves complete response (no vomiting + no rescue):
+  ~80-90% with 4-drug vs ~65-70% with 3-drug. Acute CINV (0-24h) primarily mediated by 5HT3 release; delayed
+  CINV (>24h) primarily by NK1/substance P + dexamethasone. Olanzapine adds dopamine D2 + serotonin 5HT2A
+  blockade. AC regimen (doxorubicin + cyclophosphamide) is now classified HEC and requires same 4-drug
+  regimen. Carboplatin AUC ≥4 reclassified moderate-emetogenic with NK1 addition recommended. STUB regimen
+  — no dedicated REG-CINV-4DRUG-HEC entity yet; flagged for REG follow-up. SUP-ANTIEMETIC-PREMEDICATION
+  exists as proxy.'
+sources:
+- source_id: SRC-NCCN-AML-2025
+  position: supports
+  relevant_quote_paraphrase: For HEC, 4-drug regimen NK1 + 5HT3 + dex + olanzapine is Cat 1 preferred per
+    NCCN antiemesis guidelines; olanzapine addition improves complete response substantially
+- source_id: SRC-CTCAE-V5
+  position: supports
+  relevant_quote_paraphrase: CTCAE v5 grades nausea/vomiting; grade 3 nausea = inadequate oral intake; grade
+    3 vomiting = ≥6 episodes in 24h; antiemetic optimization crucial for cycle continuation
+known_controversies:
+- topic: Olanzapine 10 mg vs 5 mg for HEC antiemesis
+  positions:
+  - position: Olanzapine 10 mg × 4 days — original Navari 2016 NEJM dose; complete response ~64%
+    sources:
+    - SRC-NCCN-AML-2025
+    evidence_note: Navari 2016 NEJM RCT
+  - position: Olanzapine 5 mg × 4 days — Hashimoto 2020 Lancet Oncol non-inferior with less sedation
+    sources:
+    - SRC-NCCN-AML-2025
+    evidence_note: Hashimoto 2020 Lancet Oncol non-inferiority
+  our_default: Olanzapine 5 mg × 4 days for elderly / sedation-sensitive; 10 mg for younger / better tolerated
+  rationale: 5 mg non-inferior with better tolerability; individualize per patient
+do_not_do:
+- НЕ використовувати dexamethasone alone для HEC — inadequate; ризик breakthrough CINV високий.
+- НЕ забути про aprepitant DDI з warfarin (↑INR), oral contraceptives (↓efficacy), corticosteroid (↑exposure
+  — knife-edge dosing).
+- НЕ призначати olanzapine в high-elderly без titration — sedation + falls risk.
+- НЕ ігнорувати breakthrough CINV — додати ondansetron 8 mg q8h PRN, lorazepam, prochlorperazine, ginger
+  / aromatherapy.
+- НЕ забути hydration assessment — vomiting + diarrhea + chemo призводять до dehydration + AKI.
+- НЕ забути про anticipatory CINV (≥3rd cycle після прегарного контролю) — lorazepam 0.5-2 mg PO night
+  before + benzodiazepine + pre-chemo psychological prep.
+- НЕ використовувати metoclopramide >5 days — extrapyramidal symptoms (tardive dyskinesia) ризик.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Emergency supportive-care indication for high-emetogenic
+  chemotherapy CINV prophylaxis. Cross-disease relevance — disease_id=DIS-AML used as proxy; engine should
+  fire across all HEC indications. Reference SUP-ANTIEMETIC-PREMEDICATION exists for general protocols.'

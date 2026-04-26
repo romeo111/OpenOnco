@@ -1,0 +1,47 @@
+id: RF-MM-HYPERCALCEMIA
+definition: "Multiple myeloma with hypercalcemia (corrected serum calcium ≥11 mg/dL or symptomatic): part of CRAB criteria; emergency when ≥14 mg/dL or symptomatic (altered mentation, AKI, arrhythmia)"
+definition_ua: "Множинна мієлома з гіперкальціємією (скоригований сироватковий кальцій ≥11 мг/дл або симптомний): частина CRAB-критеріїв; невідкладність при ≥14 мг/дл або симптомах (порушення свідомості, ГНН, аритмія)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "calcium_corrected_mg_dl"
+      threshold: 11
+      comparator: ">="
+    - finding: "hypercalcemia_symptomatic"
+      value: true
+    - finding: "calcium_corrected_mg_dl"
+      threshold: 14
+      comparator: ">="
+
+clinical_direction: hold
+
+severity: critical
+priority: 12
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+  - SRC-EHA-EMN-MM-2025
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Hypercalcemia is one of CRAB criteria for MM diagnosis; per ESMO-MM
+  2023 + NCCN-MM: aggressive IV hydration (3-4 L NS/24h), zoledronic acid
+  4 mg IV (renal-adjusted) or denosumab 120 mg SC; calcitonin 4 IU/kg
+  SC q12h for first 24-48h while bisphosphonate engages; corticosteroid
+  (dex 40 mg) doubles as MM induction component. Direction HOLD on
+  routine induction start until calcium <12 mg/dL and renal function
+  baseline restored; priority 12. STUB — requires clinical co-lead
+  signoff.
+notes_ua: >
+  Hypercalcemia is one of CRAB criteria for MM діагноз; per ESMO-MM 2023 + NCCN-MM: агресивний IV hydration (3-4 L NS/24h), zoledronic acid 4 mg IV (renal-adjusted) or denosumab 120 mg SC; calcitonin 4 IU/kg SC q12h for first 24-48h while bisphosphonate engages; corticosteroid (dex 40 mg) doubles as MM індукція component. Direction утримати on routine індукція start until calcium <12 mg/dL and renal function базове restored; priority 12. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

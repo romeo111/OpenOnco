@@ -1,0 +1,51 @@
+id: RF-B-ALL-EMERGENCY-TLS-LEUKOSTASIS
+definition: "B-ALL with hyperleukocytosis (WBC ≥100 K/µL — Ph+ B-ALL especially), tumor lysis syndrome (LDH >2× ULN, uric acid >7.5 mg/dL, hyperkalemia, hyperphosphatemia, hypocalcemia) or symptomatic leukostasis at diagnosis"
+definition_ua: "B-ALL з гіперлейкоцитозом (WBC ≥100 К/мкл — особливо Ph+ B-ALL), синдромом лізису пухлини (ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія) або симптомним лейкостазом"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "wbc_k_ul"
+      threshold: 100
+      comparator: ">="
+    - finding: "ldh_ulnratio"
+      threshold: 2
+      comparator: ">"
+    - finding: "uric_acid_mg_dl"
+      threshold: 7.5
+      comparator: ">"
+    - finding: "leukostasis_symptoms"
+      value: true
+    - finding: "tls_active"
+      value: true
+    - finding: "potassium_mmol_l"
+      threshold: 5.5
+      comparator: ">"
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-B-ALL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-BLAST-GOKBUGET-2018
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN ALL/LBL Burkitt/B-ALL section: rasburicase 0.2 mg/kg IV pre-cycle
+  for high-risk TLS; IV hydration 3 L/m²/day. Hyperleukocytosis in B-ALL
+  is less common than AML/T-ALL but Ph+ B-ALL can present with very high
+  WBC. Direction HOLD until stabilization; priority 10. STUB — requires
+  clinical co-lead signoff.
+notes_ua: >
+  Per NCCN ALL/LBL Burkitt/B-ALL section: rasburicase 0.2 mg/kg IV pre-цикл for високого ризику TLS; IV hydration 3 L/m²/day. Hyperleukocytosis in B-ALL is less поширений than AML/T-ALL but Ph+ B-ALL can present with very high WBC. Direction утримати until stabilization; priority 10. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

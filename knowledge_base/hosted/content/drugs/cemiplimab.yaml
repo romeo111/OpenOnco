@@ -9,59 +9,103 @@ atc_code: L01FF06
 rxnorm_id: ""
 drug_class: "Anti-PD-1 monoclonal antibody (immune checkpoint inhibitor)"
 mechanism: >
-  STUB — needs full curation. Fully human IgG4 antibody binding PD-1;
-  blocks PD-1 / PD-L1+PD-L2 → restores T-cell function. Approved
-  indications: advanced cutaneous SCC (FDA 2018 — first systemic
-  approval), advanced basal cell carcinoma post-Hh, PD-L1 ≥50% NSCLC
-  1L (EMPOWER-Lung 1; alt to pembrolizumab), PD-L1 ≥1% NSCLC + chemo
-  (EMPOWER-Lung 3), recurrent cervical cancer post-platinum.
+  Fully human IgG4 monoclonal antibody (S228P-stabilized hinge to
+  prevent Fab-arm exchange) that binds programmed cell death protein 1
+  (PD-1) on activated T cells, blocking engagement with its ligands
+  PD-L1 and PD-L2 on tumor and antigen-presenting cells. The
+  resulting release of T-cell inhibition restores cytotoxic anti-tumor
+  immunity. Pharmacologic class is identical to pembrolizumab and
+  nivolumab; binding kinetics differ modestly. Clinical contexts:
+  advanced cutaneous SCC (Study 1540 / EMPOWER-CSCC: ORR ~47%, the
+  first systemic FDA approval for cSCC), advanced basal cell carcinoma
+  after Hedgehog-pathway inhibitor failure, NSCLC PD-L1 ≥50% 1L
+  monotherapy (EMPOWER-Lung 1) or PD-L1 ≥1% 1L with platinum-doublet
+  chemo (EMPOWER-Lung 3 / EMPOWER-Lung 1 expansion), recurrent /
+  metastatic cervical cancer post-platinum (EMPOWER-Cervical 1).
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2018
-    indications_brief: ["Advanced cutaneous SCC", "Advanced basal cell carcinoma post-Hh", "PD-L1 ≥50% NSCLC 1L (mono)", "PD-L1 ≥1% NSCLC 1L + chemo", "Recurrent cervical post-platinum"]
+    indications_brief:
+      - "Advanced cutaneous SCC"
+      - "Advanced basal cell carcinoma post Hh inhibitor"
+      - "NSCLC PD-L1 ≥50% 1L monotherapy"
+      - "NSCLC 1L + platinum-doublet chemo"
+      - "Recurrent/metastatic cervical post-platinum"
   ema:
     approved: true
     year_first_approval: 2019
+    indications_brief:
+      - "Advanced cutaneous SCC"
+      - "Advanced basal cell carcinoma post Hh"
+      - "NSCLC PD-L1 ≥50% 1L"
+      - "Recurrent cervical post-platinum"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Not registered in UA per drlz.com.ua snapshot 2026-04-27. Pembrolizumab dominates UA ICI reimbursement landscape."
+    notes: "Не зареєстровано per drlz.com.ua snapshot 2026-04-27. Pembrolizumab dominates the UA НСЗУ ICI landscape; cemiplimab not reimbursed. Доступ via EAP Sanofi-Regeneron / cross-border / self-pay."
 
 typical_dosing: >
-  STUB. 350 mg IV over 30 minutes every 3 weeks (flat dose).
+  350 mg IV over 30 minutes every 3 weeks (flat dose, not weight-
+  based) until disease progression, unacceptable toxicity, or up to
+  24 months for some indications. Premedication is not routinely
+  required. No dose adjustment for renal or hepatic impairment per
+  label (mAb catabolism). Hold for G2-3 immune-related AE; permanently
+  discontinue for G4 irAE, recurrent G3, myocarditis, or any
+  life-threatening reaction. Treat irAE per ASCO / NCCN / ESMO
+  algorithm (high-dose corticosteroids, escalate to infliximab /
+  mycophenolate / IVIG for steroid-refractory).
 
 formulations:
-  - "IV concentrate 350 mg / 7 mL vial"
+  - "IV concentrate 350 mg / 7 mL single-dose vial"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Severe hypersensitivity to cemiplimab or any excipient"
+  - "Active solid-organ transplant on calcineurin inhibitor (high rejection risk; weigh case-by-case)"
+
 black_box_warnings: []
+
 common_adverse_events:
-  - "Fatigue"
-  - "Rash / pruritus"
-  - "Diarrhea"
-  - "Musculoskeletal pain"
-  - "Nausea"
+  - "Fatigue ~30%"
+  - "Rash / pruritus ~25%"
+  - "Diarrhea ~22%"
+  - "Musculoskeletal pain ~25%"
+  - "Nausea ~17%"
+  - "Decreased appetite ~15%"
+  - "Cough ~14%"
+  - "Anemia ~15%"
+  - "Hypothyroidism ~7-10%"
+  - "Hyperthyroidism ~3-4%"
+  - "Constipation ~12%"
+
 serious_adverse_events:
-  - "Immune-mediated pneumonitis"
-  - "Immune-mediated colitis"
-  - "Immune-mediated hepatitis"
-  - "Immune-mediated endocrinopathies (thyroid, adrenal, pituitary, type-1 DM)"
-  - "Immune-mediated nephritis"
-  - "Severe cutaneous reactions (SJS / TEN / DRESS)"
-  - "Myocarditis (rare; high mortality)"
-  - "Solid-organ-transplant rejection"
-major_interactions: []
+  - "Immune-mediated pneumonitis (G3+ ~2%; can be fatal)"
+  - "Immune-mediated colitis (G3+ ~2%)"
+  - "Immune-mediated hepatitis (G3+ ALT/AST ~2%)"
+  - "Immune-mediated endocrinopathies (thyroiditis, hypophysitis, adrenal insufficiency, type-1 DM)"
+  - "Immune-mediated nephritis with renal failure (~0.5%)"
+  - "Severe cutaneous reactions (SJS / TEN / DRESS — rare)"
+  - "Myocarditis (rare; high case-fatality — troponin / BNP if symptomatic)"
+  - "Solid-organ transplant rejection"
+  - "Severe infusion reactions"
+  - "Encephalitis / Guillain-Barré / myasthenic syndrome (rare)"
+
+major_interactions:
+  - "Systemic corticosteroids (prednisone >10 mg/day equivalent) at baseline — may blunt anti-tumor activity; avoid where possible"
+  - "Other immune checkpoint inhibitors — not co-administered (no rationale; toxicity additive)"
+  - "Live attenuated vaccines — avoid during therapy"
+  - "Anti-CTLA-4 sequencing — increased irAE if used in close succession"
+  - "Calcineurin inhibitors / immunosuppressants in transplant patients — rejection risk vs efficacy trade-off"
 
 pharmacology:
   half_life_hours: 480
-  clearance: "proteolytic"
+  clearance: "non-renal (proteolytic / reticuloendothelial catabolism); ~20 days"
   protein_binding_pct: null
-  metabolism: "n/a (mAb catabolism)"
+  metabolism: "n/a (monoclonal antibody catabolism to amino acids)"
 
 sources:
   - SRC-NCCN-NSCLC-2025
@@ -70,8 +114,16 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. Generally interchangeable with
-  pembrolizumab in PD-L1-high NSCLC 1L per cross-trial efficacy
-  comparison; cutaneous-SCC + BCC niches are unique. Needs full
-  curation of irAE-management algorithm, monitoring (TFTs, LFTs,
-  cortisol, troponin baseline), and special populations (transplant).
+  Generally interchangeable with pembrolizumab in PD-L1-high NSCLC 1L
+  per cross-trial efficacy comparisons. Unique niches are advanced
+  cutaneous SCC (first systemic approval; durable responses ~50%) and
+  post-Hh BCC. Baseline workup before first dose: TFTs (TSH + free
+  T4), LFTs, creatinine, cortisol (AM), HbA1c, troponin if cardiac
+  history, HBV/HCV serology, baseline imaging, dermatologic +
+  pulmonary review. Monitor TFTs, LFTs, creatinine before each dose
+  for first 6 cycles then q2 cycles. Refer for ophthalmology /
+  cardiology / endocrinology consultation at first sign of
+  organ-specific irAE. Hospitalize and start high-dose IV
+  methylprednisolone for any G3-4 irAE; consult guidelines for
+  refractory cases. In UA ICI access is dominated by pembrolizumab
+  under НСЗУ; cemiplimab access is via EAP / cross-border / self-pay.

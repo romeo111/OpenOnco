@@ -1,0 +1,77 @@
+id: IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD
+plan_track: standard
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 3
+  stage_requirements:
+    - "Triple-negative breast cancer (ER-, PR-, HER2-)"
+    - "Progression on prior pembrolizumab + chemo 1L (PD-L1 CPS ≥10)"
+    - "Subsequent progression on sacituzumab govitecan 2L AND/OR trastuzumab deruxtecan if HER2-low 2L+"
+    - "Adequate organ function for sequential single-agent chemo"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      required: true
+      value_constraint: "ER negative (<1% by IHC)"
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2 negative (IHC 0-1+ OR IHC 2+ FISH-negative); HER2-low considered for T-DXd 2L+"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~10-20% sequential single-agent chemo (capecitabine, eribulin, vinorelbine, gemcitabine)
+  complete_response: rare
+  progression_free_survival: Median PFS 2-4 mo per single-agent (cross-trial)
+  overall_survival_5y: Salvage setting; mOS 6-12 mo from 3L initiation
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-BREAST-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO
+desired_tests: []
+rationale: 'Triple-negative breast cancer at 3L+ after exhaustion of pembrolizumab + chemo 1L (KEYNOTE-355 for CPS ≥10) and sacituzumab govitecan 2L (ASCENT) ± T-DXd if HER2-low (DESTINY-Breast06) is a salvage setting with limited evidence. Sequential single-agent chemotherapy (capecitabine, eribulin, vinorelbine, gemcitabine) is the mainstay; ORR ~10-20% per agent, mPFS 2-4 mo each, mOS from 3L initiation 6-12 mo. Platinum re-challenge (carboplatin) is reasonable if not previously exhausted, particularly for BRCA-mutated TNBC (TBCRC 030). Olaparib/talazoparib for germline BRCA-mutated TNBC if not previously used (OlympiAD, EMBRACA). Trial enrollment + best supportive care should be prioritized given limited efficacy of empirical chemo. Brain MRI at progression — TNBC has high CNS-relapse rate, may shift to whole-brain RT or capecitabine + tucatinib (off-label) for LMD.'
+rationale_ua: >-
+  Triple-negative рак молочної залози at 3L+ after exhaustion of пембролізумаб + chemo 1L (KEYNOTE-355 for CPS ≥10) and сацитузумаб говітекан 2L (ASCENT) ± T-DXd if HER2-low (DESTINY-Breast06) is a сальвадж setting with обмежені докази. Sequential single-agent хіміотерапія (капецитабін, eribulin, vinorelbine, гемцитабін) is the mainstay; ORR ~10-20% per agent, mPFS 2-4 mo each, mOS from 3L initiation 6-12 mo. Platinum re-challenge (карбоплатин) is reasonable if not previously exhausted, особливо for BRCA-mutated TNBC (TBCRC 030). олапариб/талазопариб for герміногенний BRCA-mutated TNBC if not previously used (OlympiAD, EMBRACA). дослідження enrollment + найкраще підтримуюче лікування should be prioritized given limited ефективність of empirical chemo. Brain MRI at прогресування — TNBC has high CNS-рецидив rate, may shift to whole-brain RT or капецитабін + тукатиніб (off-label) for LMD.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: After exhaustion of immune-chemo 1L, sacituzumab 2L, and T-DXd if HER2-low, sequential single-agent chemo is acceptable 3L+; trial enrollment encouraged
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: TNBC 3L+ has limited evidence base; sequential chemo with capecitabine/eribulin/vinorelbine standard; PARP inhibitors for germline BRCA if not previously exhausted
+known_controversies:
+  - topic: Empirical chemo vs trial enrollment at 3L+ TNBC
+    positions:
+      - position: Empirical chemo — broad availability, palliative response
+        sources:
+          - SRC-NCCN-BREAST-2025
+      - position: Trial enrollment — biomarker-driven (TROP2, FRα, HER3, NECTIN4) trials may identify high-impact option
+        sources:
+          - SRC-ESMO-BREAST-METASTATIC-2024
+        evidence_note: Datopotamab deruxtecan (Dato-DXd, TROPION-Breast01), patritumab deruxtecan, and other ADCs in late-phase TNBC trials
+    our_default: Trial enrollment first; empirical chemo (capecitabine or eribulin) if no trial available; PARPi for germline BRCA if not exhausted
+    rationale: TNBC 3L+ benefit from empirical chemo modest; emerging ADCs in trials offer higher upside
+do_not_do:
+  - "НЕ повторювати pembrolizumab у 3L+ після progression на ICI 1L — re-challenge має minimal evidence."
+  - НЕ призначати sequential chemo при ECOG ≥3 — palliative care + best supportive care preferred.
+  - НЕ забути germline BRCA testing — PARPi доступний для germline BRCA-mutated, не перевіреного у 1L/2L.
+  - НЕ ігнорувати CNS — high CNS-relapse rate (40-50% у 3L+ TNBC); brain MRI mandatory.
+  - НЕ комбінувати декілька chemo agents у 3L+ — toxicity > benefit; sequential single-agent strategy.
+  - НЕ продовжувати при rapid clinical deterioration — focus shift до palliative care + symptom control.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L+ salvage pathway for TNBC after immunochemo 1L + ADC 2L exhaustion. Trial enrollment strongly preferred. Multiple sequential single-agent chemo options exist but no dedicated REG- entity for each — flagged for PROD-2.'

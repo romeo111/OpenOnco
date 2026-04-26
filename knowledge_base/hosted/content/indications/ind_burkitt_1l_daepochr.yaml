@@ -5,17 +5,15 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD20-IHC
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-MYC-REARRANGEMENT
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-HIV-STATUS
-    required: true
-    value_constraint: any value valid (categorical etiology gate; CALGB 10002 included HIV+ patients with
-      ~equivalent outcomes; HIV+ → cART throughout, mandatory CNS prophylaxis, integrase-inhibitor backbone
-      preferred)
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-MYC-REARRANGEMENT
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-HIV-STATUS
+      required: true
+      value_constraint: any value valid (categorical etiology gate; CALGB 10002 included HIV+ patients with ~equivalent outcomes; HIV+ → cART throughout, mandatory CNS prophylaxis, integrase-inhibitor backbone preferred)
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3
@@ -31,59 +29,58 @@ expected_outcomes:
   progression_free_survival: 4-year PFS ~85% (CALGB 10002 — adult Burkitt including HIV+)
   overall_survival_5y: ~85-90%
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
-- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
 red_flags_triggering_alternative:
-- RF-BURKITT-HIGH-RISK
+  - RF-BURKITT-HIGH-RISK
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-URIC-ACID
-- TEST-CD20-IHC
-- TEST-FISH-PANEL
-- TEST-PET-CT
-- TEST-BM-ASPIRATE
-- TEST-BM-TREPHINE
-- TEST-LN-EXCISIONAL-BIOPSY
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-ECHO
-- TEST-PREGNANCY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
 desired_tests: []
-rationale: 'DA-EPOCH-R is preferred 1L for adult Burkitt without high-risk features (CNS-, LDH ≤3× ULN,
-  no leukemic phase, no bulky abdomen). Demonstrated ~90% sustained CR in CALGB 10002 including HIV-associated
-  Burkitt. Continuous 96h infusion delivers high effective dose with managed toxicity via dose-adjustment
-  up/down based on prior-cycle ANC nadir.
+rationale: 'DA-EPOCH-R is preferred 1L for adult Burkitt without high-risk features (CNS-, LDH ≤3× ULN, no leukemic phase, no bulky abdomen). Demonstrated ~90% sustained CR in CALGB 10002 including HIV-associated Burkitt. Continuous 96h infusion delivers high effective dose with managed toxicity via dose-adjustment up/down based on prior-cycle ANC nadir.
 
   '
+rationale_ua: >
+  DA-EPOCH-R is переважний 1L for дорослий Burkitt without високого ризику features (CNS-, LDH ≤3× ULN, ні leukemic phase, ні bulky abdomen). продемонстровано ~90% sustained CR in CALGB 10002 включаючи HIV-associated Burkitt. Continuous 96h infusion delivers high effective доза with managed токсичність via доза-adjustment up/down based on prior-цикл ANC nadir.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-- source_id: SRC-ESMO-BURKITT-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 endorses DA-EPOCH-R for low-risk Burkitt; intensive CODOX-M/IVAC
-    or hyper-CVAD for high-risk; CNS prophylaxis mandatory
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+  - source_id: SRC-ESMO-BURKITT-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 endorses DA-EPOCH-R for low-risk Burkitt; intensive CODOX-M/IVAC or hyper-CVAD for high-risk; CNS prophylaxis mandatory
 known_controversies:
-- topic: DA-EPOCH-R vs CODOX-M/IVAC vs hyper-CVAD/MA for adult Burkitt
-  positions:
-  - position: DA-EPOCH-R preferred for most including HIV+ — equivalent efficacy with less toxicity
-    sources:
-    - SRC-NCCN-BCELL-2025
-  - position: CODOX-M/IVAC for fit younger high-risk (CNS+, leukemic, LDH >3×)
-    sources:
-    - SRC-NCCN-BCELL-2025
-  our_default: DA-EPOCH-R for low/intermediate-risk; CODOX-M/IVAC reserved for high-risk fit younger
+  - topic: DA-EPOCH-R vs CODOX-M/IVAC vs hyper-CVAD/MA for adult Burkitt
+    positions:
+      - position: DA-EPOCH-R preferred for most including HIV+ — equivalent efficacy with less toxicity
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: CODOX-M/IVAC for fit younger high-risk (CNS+, leukemic, LDH >3×)
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: DA-EPOCH-R for low/intermediate-risk; CODOX-M/IVAC reserved for high-risk fit younger
 do_not_do:
-- Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+.
-- Не пропускати TLS prophylaxis (allopurinol/rasburicase + IV hydration) — Ki67 ~100% дає масивний tumor
-  lysis.
-- Не пропускати HIV testing — суттєвий subset Burkitt is HIV-associated.
-- Не призначати без baseline LVEF ≥50% (anthracycline).
-- Не пропускати CNS prophylaxis (IT MTX/cytarabine) — CNS relapse часто.
-- Не вводити вінкристин інтратекально — ФАТАЛЬНО.
+  - Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+.
+  - Не пропускати TLS prophylaxis (allopurinol/rasburicase + IV hydration) — Ki67 ~100% дає масивний tumor lysis.
+  - Не пропускати HIV testing — суттєвий subset Burkitt is HIV-associated.
+  - Не призначати без baseline LVEF ≥50% (anthracycline).
+  - Не пропускати CNS prophylaxis (IT MTX/cytarabine) — CNS relapse часто.
+  - Не вводити вінкристин інтратекально — ФАТАЛЬНО.
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewer_signoffs: 0

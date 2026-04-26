@@ -1,0 +1,80 @@
+id: IND-BREAST-HR-POS-3L-POST-CDK46I-POST-AKT
+plan_track: aggressive
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 3
+  stage_requirements:
+    - "HR+/HER2- metastatic breast cancer with progression on prior CDK4/6i + AI 1L"
+    - "Subsequent progression on PI3K/AKT-pathway-targeted endocrine therapy 2L (alpelisib + fulvestrant for PIK3CA mut OR capivasertib + fulvestrant for AKT-pathway alteration)"
+    - "Postmenopausal OR premenopausal with ovarian function suppression"
+    - "Adequate organ function for further endocrine ± mTORi combination"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      required: true
+      value_constraint: "ER positive (≥1% by IHC)"
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "HER2 negative (IHC 0-1+ OR IHC 2+ FISH-negative)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~12% everolimus + exemestane post-AI/CDK4/6i (BOLERO-2 indirect; 3L+ data limited)
+  complete_response: rare
+  progression_free_survival: Median PFS 4-6 mo (cross-trial; BOLERO-2 mPFS 7.8 mo in 2L; less in 3L+)
+  overall_survival_5y: Limited; salvage setting; mOS ~12-18 mo
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-BREAST-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO
+  - TEST-ER-PR-IHC
+desired_tests: []
+rationale: 'For HR+/HER2- mBC patients who have exhausted CDK4/6i + AI 1L AND PI3K/AKT pathway targeted endocrine therapy 2L (alpelisib + fulvestrant per SOLAR-1 OR capivasertib + fulvestrant per CAPItello-291), 3L options are limited and salvage in nature. Everolimus + exemestane (BOLERO-2 paradigm) is reasonable if not previously exhausted. Single-agent endocrine therapy (fulvestrant, exemestane, megestrol) is acceptable for indolent disease. Sacituzumab govitecan (TROPiCS-02 Rugo 2023 Lancet; mPFS 5.5 vs 4.0 mo) and trastuzumab deruxtecan (DESTINY-Breast06 for HER2-low; Bardia 2024 NEJM; mPFS 13.2 vs 8.1 mo) are now competitive 3L+ options with stronger evidence than empirical chemo. Preferred order at 3L+: ADC (sacituzumab or T-DXd if HER2-low) > everolimus + exemestane > sequential single-agent chemo (capecitabine, eribulin). ESR1 mutation testing recommended — elacestrant (EMERALD trial) approved for ESR1-mutant tumors. STUB regimen — multiple 3L+ options exist; treatment selection is highly individualized.'
+rationale_ua: >-
+  For HR+/HER2- mBC patients who have exhausted CDK4/6i + AI 1L AND PI3K/AKT pathway targeted endocrine терапія 2L (алпелісиб + фулвестрант per SOLAR-1 OR capivasertib + фулвестрант per CAPItello-291), 3L options are limited and сальвадж in nature. еверолімус + екземестан (BOLERO-2 paradigm) is reasonable if not previously exhausted. Single-agent endocrine терапія (фулвестрант, екземестан, megestrol) is прийнятний for індолентний хвороба. сацитузумаб говітекан (TROPiCS-02 Rugo 2023 Lancet; mPFS 5.5 проти 4.0 міс.) and трастузумаб дерукстекан (DESTINY-Breast06 for HER2-low; Bardia 2024 NEJM; mPFS 13.2 проти 8.1 міс.) are now competitive 3L+ options with stronger докази than empirical chemo. переважний order at 3L+: ADC (sacituzumab or T-DXd if HER2-low) > еверолімус + екземестан > sequential single-agent chemo (капецитабін, eribulin). ESR1 мутація testing рекомендований — елацестрант (EMERALD дослідження) схвалений для ESR1-mutant tumors. STUB схема — multiple 3L+ options exist; лікування selection is highly individualized.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: After exhaustion of CDK4/6i + AI and biomarker-driven endocrine targeted (alpelisib or capivasertib), 3L+ options include ADC (sacituzumab, T-DXd if HER2-low), elacestrant (ESR1+), everolimus + exemestane, or sequential single-agent chemo
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: ADCs (sacituzumab govitecan, trastuzumab deruxtecan) are emerging preferred 3L+ options for HR+/HER2- mBC after endocrine pathway exhaustion; biomarker stratification (ESR1, HER2-low) drives sequencing
+known_controversies:
+  - topic: ADC (sacituzumab / T-DXd) vs everolimus + exemestane vs sequential chemo at 3L+ HR+/HER2- mBC
+    positions:
+      - position: ADC first (sacituzumab or T-DXd if HER2-low) — superior efficacy, manageable toxicity
+        sources:
+          - SRC-NCCN-BREAST-2025
+      - position: Everolimus + exemestane — endocrine continuation rationale, oral, lower cost
+        sources:
+          - SRC-ESMO-BREAST-METASTATIC-2024
+      - position: Sequential single-agent chemo — simplest, broad availability
+        sources:
+          - SRC-NCCN-BREAST-2025
+    our_default: ADC if accessible (sacituzumab or T-DXd HER2-low); elacestrant if ESR1-mutant; everolimus + exemestane if endocrine-sensitive phenotype; sequential chemo if ADC unavailable
+    rationale: ADCs have strongest 3L+ evidence; access barriers in Ukraine drive practical fallback to everolimus + exemestane or sequential chemo
+do_not_do:
+  - НЕ продовжувати CDK4/6i після progression на CDK4/6i + AI — postMONARCH/MAINTAIN дані обмежені, off-label.
+  - НЕ забути ESR1 testing — elacestrant активний у ESR1-mutant; non-mutant очікують меншу benefit.
+  - НЕ ігнорувати HER2-low (IHC 1+ або 2+/FISH-) — T-DXd показав mPFS 13.2 mo (DESTINY-Breast06).
+  - НЕ призначати everolimus при поганому glucose control — hyperglycemia + stomatitis часті.
+  - НЕ забути sacituzumab — proactive G-CSF + loperamide для neutropenia + diarrhea (~50% grade ≥3 кожен).
+  - НЕ продовжувати з ECOG ≥3 — 3L+ benefit обмежений.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L+ salvage pathway after CDK4/6i + AI 1L exhaustion AND PI3K/AKT-targeted 2L. Multiple competing 3L+ options; treatment selection requires biomarker re-evaluation + access assessment. Missing entity flag: dedicated REG-EVEROLIMUS-EXEMESTANE + REG-ELACESTRANT — author in PROD-2.'

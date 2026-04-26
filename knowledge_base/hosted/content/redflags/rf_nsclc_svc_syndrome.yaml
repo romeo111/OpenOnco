@@ -1,0 +1,43 @@
+id: RF-NSCLC-SVC-SYNDROME
+definition: "NSCLC with superior vena cava syndrome: facial/upper-extremity edema, distended neck/chest veins, dyspnea, plethora, headache — most often right-upper-lobe / bulky mediastinal NSCLC"
+definition_ua: "НМРЛ із SVC-синдромом: набряк обличчя/верхніх кінцівок, розширені вени шиї та грудної клітки, задишка, плетора, головний біль — найчастіше правоверхньодольовий / масивний медіастинальний НМРЛ"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "svc_syndrome_present"
+      value: true
+    - finding: "facial_upper_extremity_edema"
+      value: true
+    - finding: "distended_neck_veins"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 12
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  SVC syndrome occurs in ~5-10% of NSCLC at presentation. Per NCCN-NSCLC:
+  emergency endovascular SVC stenting OR urgent palliative RT (30 Gy/10
+  fx) is first-line stabilization; chemoradiation begun in parallel
+  for limited-stage; systemic therapy started thereafter for metastatic.
+  Direction HOLD on definitive systemic therapy until SVC obstruction
+  relieved (stent or RT). Priority 12. STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  SVC syndrome occurs in ~5-10% of NSCLC при зверненні. Per NCCN-NSCLC: emergency endovascular SVC stenting OR urgent паліативний RT (30 Gy/10 fx) is перша лінія stabilization; хіміопроменева терапія begun in parallel for обмеженої стадії; systemic терапія started thereafter for метастатичний. Direction утримати on definitive systemic терапія until SVC obstruction relieved (stent or RT). Priority 12. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

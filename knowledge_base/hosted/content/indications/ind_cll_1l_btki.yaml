@@ -5,17 +5,15 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD5-IHC
-    required: true
-    value_constraint: positive (CD5+) — part of CLL diagnostic immunophenotype panel (Matutes score)
-  - biomarker_id: BIO-CD23-IHC
-    required: true
-    value_constraint: positive (CD23+) — part of CLL diagnostic immunophenotype panel (Matutes score);
-      distinguishes from MCL
-  - biomarker_id: BIO-NOTCH1-MUTATION
-    required: false
-    value_constraint: NOTCH1-mutated CLL has poorer prognosis but does not exclude BTKi; useful prognostic
-      stratifier
+    - biomarker_id: BIO-CD5-IHC
+      required: true
+      value_constraint: positive (CD5+) — part of CLL diagnostic immunophenotype panel (Matutes score)
+    - biomarker_id: BIO-CD23-IHC
+      required: true
+      value_constraint: positive (CD23+) — part of CLL diagnostic immunophenotype panel (Matutes score); distinguishes from MCL
+    - biomarker_id: BIO-NOTCH1-MUTATION
+      required: false
+      value_constraint: NOTCH1-mutated CLL has poorer prognosis but does not exclude BTKi; useful prognostic stratifier
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3
@@ -31,62 +29,59 @@ expected_outcomes:
   progression_free_survival: 5-year PFS ~78% (ELEVATE-TN)
   overall_survival_5y: ~85-90%
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
+  - CI-HBV-NO-PROPHYLAXIS
 red_flags_triggering_alternative: []
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-B2-MICROGLOBULIN
-- TEST-FISH-PANEL
-- TEST-NGS-LYMPHOID-PANEL
-- TEST-IMMUNOGLOBULINS
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-CECT-CAP
-- TEST-ECHO
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-FISH-PANEL
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-IMMUNOGLOBULINS
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CECT-CAP
+  - TEST-ECHO
 desired_tests: []
-rationale: 'Standard 1L for CLL: BTKi continuous (acalabrutinib preferred over ibrutinib per ELEVATE-TN
-  — superior tolerability, fewer cardiac / hypertension events). Continuous therapy until progression
-  or intolerance. Suitable for most patients regardless of risk status, but high-risk (TP53/del 17p/IGHV-unmutated)
-  may benefit equally or more from fixed-duration VenO (CLL14 evidence).
+rationale: 'Standard 1L for CLL: BTKi continuous (acalabrutinib preferred over ibrutinib per ELEVATE-TN — superior tolerability, fewer cardiac / hypertension events). Continuous therapy until progression or intolerance. Suitable for most patients regardless of risk status, but high-risk (TP53/del 17p/IGHV-unmutated) may benefit equally or more from fixed-duration VenO (CLL14 evidence).
 
   '
+rationale_ua: >
+  стандарт 1L for CLL: BTKi continuous (акалабрутиніб переважний over ібрутиніб per ELEVATE-TN — перевершує переносимість, fewer cardiac / гіпертензія events). Continuous терапія until прогресування or intolerance. Suitable for найбільш patients regardless of risk status, but високого ризику (TP53/del 17p/IGHV-unmutated) may виграш equally or more from fixed-duration VenO (CLL14 докази).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-  relevant_quote_paraphrase: Acalabrutinib is preferred 1L BTKi for CLL; continuous until progression
-    or intolerance
-- source_id: SRC-ESMO-CLL-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 endorses BTKi (ibrutinib/acalabrutinib/zanubrutinib) or fixed-duration
-    venetoclax-obinutuzumab as 1L CLL standards
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: Acalabrutinib is preferred 1L BTKi for CLL; continuous until progression or intolerance
+  - source_id: SRC-ESMO-CLL-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 endorses BTKi (ibrutinib/acalabrutinib/zanubrutinib) or fixed-duration venetoclax-obinutuzumab as 1L CLL standards
 known_controversies:
-- topic: BTKi continuous vs VenO fixed-duration for 1L CLL
-  positions:
-  - position: BTKi simpler logistics, no TLS concern; continuous therapy
-    sources:
-    - SRC-NCCN-BCELL-2025
-  - position: VenO 12-month fixed-duration; preferred for high-risk; durable PFS post-discontinuation
-    sources:
-    - SRC-NCCN-BCELL-2025
-    evidence_note: CLL14 6-year follow-up showed durable response; Ukraine access constraint same as BTKi
-  our_default: BTKi continuous for low-risk; VenO time-limited preferred for high-risk (RF-CLL-HIGH-RISK
-    fired)
-  rationale: Patient preference + risk profile drive choice; both NCCN Cat 1.
+  - topic: BTKi continuous vs VenO fixed-duration for 1L CLL
+    positions:
+      - position: BTKi simpler logistics, no TLS concern; continuous therapy
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: VenO 12-month fixed-duration; preferred for high-risk; durable PFS post-discontinuation
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: CLL14 6-year follow-up showed durable response; Ukraine access constraint same as BTKi
+    our_default: BTKi continuous for low-risk; VenO time-limited preferred for high-risk (RF-CLL-HIGH-RISK fired)
+    rationale: Patient preference + risk profile drive choice; both NCCN Cat 1.
 do_not_do:
-- Не призначати chemoimmuno (FCR / BR) при високоризиковій ХЛЛ — survival impact substantial.
-- Не починати ibrutinib замість acalabrutinib без обґрунтування — ELEVATE-RR показав кращу безпеку акалабрутинібу.
-- Не пропускати baseline ECG + кардіологічну оцінку при atrial fibrillation history або HTN.
-- Не комбінувати BTKi із warfarin без strict monitoring — ризик кровотечі.
-- Не лікувати asymptomatic CLL без iwCLL індикації — surveillance є стандартом.
+  - Не призначати chemoimmuno (FCR / BR) при високоризиковій ХЛЛ — survival impact substantial.
+  - Не починати ibrutinib замість acalabrutinib без обґрунтування — ELEVATE-RR показав кращу безпеку акалабрутинібу.
+  - Не пропускати baseline ECG + кардіологічну оцінку при atrial fibrillation history або HTN.
+  - Не комбінувати BTKi із warfarin без strict monitoring — ризик кровотечі.
+  - Не лікувати asymptomatic CLL без iwCLL індикації — surveillance є стандартом.
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewers: []
 reviewer_signoffs: 0
-notes: 'STUB — pending Co-Lead sign-off. Standard track for CLL 1L. Engine routes high-risk (RF-CLL-HIGH-RISK)
-  toward IND-CLL-1L-VENO time-limited.
+notes: 'STUB — pending Co-Lead sign-off. Standard track for CLL 1L. Engine routes high-risk (RF-CLL-HIGH-RISK) toward IND-CLL-1L-VENO time-limited.
 
   '

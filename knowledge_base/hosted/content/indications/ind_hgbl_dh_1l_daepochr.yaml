@@ -5,22 +5,21 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD20-IHC
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-DOUBLE-HIT
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-MYC-REARRANGEMENT
-    required: true
-    value_constraint: positive (FISH break-apart) — required for HGBL-DH/TH classification
-  - biomarker_id: BIO-BCL2-REARRANGEMENT
-    required: false
-    value_constraint: positive (FISH) — together with MYC defines classic HGBL-DH; either BCL2 or BCL6
-      partner accepted
-  - biomarker_id: BIO-BCL6-REARRANGEMENT
-    required: false
-    value_constraint: positive (FISH) — alternative MYC partner; MYC+BCL6 also classified HGBL with rearrangements
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-DOUBLE-HIT
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-MYC-REARRANGEMENT
+      required: true
+      value_constraint: positive (FISH break-apart) — required for HGBL-DH/TH classification
+    - biomarker_id: BIO-BCL2-REARRANGEMENT
+      required: false
+      value_constraint: positive (FISH) — together with MYC defines classic HGBL-DH; either BCL2 or BCL6 partner accepted
+    - biomarker_id: BIO-BCL6-REARRANGEMENT
+      required: false
+      value_constraint: positive (FISH) — alternative MYC partner; MYC+BCL6 also classified HGBL with rearrangements
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3
@@ -36,54 +35,55 @@ expected_outcomes:
   progression_free_survival: Median PFS ~3-5 years
   overall_survival_5y: ~50-65% (substantially better than R-CHOP ~30%)
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
-- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
 red_flags_triggering_alternative: []
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-CD20-IHC
-- TEST-FISH-PANEL
-- TEST-PET-CT
-- TEST-BM-ASPIRATE
-- TEST-BM-TREPHINE
-- TEST-LN-EXCISIONAL-BIOPSY
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-ECHO
-- TEST-PREGNANCY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
 desired_tests: []
-rationale: 'DA-EPOCH-R preferred 1L for HGBL-DH/TH per NCCN — substantial improvement over R-CHOP (5y
-  OS ~50-65% vs ~30%). Continuous-infusion delivery + dose-adjustment enables intensified anthracycline
-  + etoposide exposure. CNS prophylaxis (HD-MTX) often added for high-CNS-IPI or CNS-positive subset.
+rationale: 'DA-EPOCH-R preferred 1L for HGBL-DH/TH per NCCN — substantial improvement over R-CHOP (5y OS ~50-65% vs ~30%). Continuous-infusion delivery + dose-adjustment enables intensified anthracycline + etoposide exposure. CNS prophylaxis (HD-MTX) often added for high-CNS-IPI or CNS-positive subset.
 
   '
+rationale_ua: >
+  DA-EPOCH-R переважний 1L for HGBL-DH/TH per NCCN — substantial покращення over R-CHOP (5-річна ЗВ ~50-65% проти ~30%). Continuous-infusion delivery + доза-adjustment enables intensified anthracycline + етопозид exposure. CNS prophylaxis (HD-MTX) часто added for high-CNS-IPI or CNS-positive subset.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-- source_id: SRC-ESMO-DLBCL-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 (DLBCL guideline §HGBL-DH) endorses DA-EPOCH-R as preferred 1L
-    for high-grade B-cell lymphoma with MYC + BCL2/BCL6 rearrangement
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 (DLBCL guideline §HGBL-DH) endorses DA-EPOCH-R as preferred 1L for high-grade B-cell lymphoma with MYC + BCL2/BCL6 rearrangement
 known_controversies:
-- topic: DA-EPOCH-R vs R-CHOP for HGBL-DH
-  positions:
-  - position: DA-EPOCH-R preferred — substantial PFS/OS improvement over R-CHOP
-    sources:
-    - SRC-NCCN-BCELL-2025
-  - position: R-CHOP acceptable when DA-EPOCH-R logistics not feasible
-    sources:
-    - SRC-NCCN-BCELL-2025
-  our_default: DA-EPOCH-R when available; R-CHOP fallback
+  - topic: DA-EPOCH-R vs R-CHOP for HGBL-DH
+    positions:
+      - position: DA-EPOCH-R preferred — substantial PFS/OS improvement over R-CHOP
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: R-CHOP acceptable when DA-EPOCH-R logistics not feasible
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: DA-EPOCH-R when available; R-CHOP fallback
 do_not_do:
-- НЕ призначати R-CHOP як 1L при відомому double-hit статусі — substantial OS difference.
-- НЕ пропускати FISH break-apart MYC + BCL2 + BCL6 на ВСІХ newly-diagnosed DLBCL — інакше double-hit пропускається.
-- НЕ пропускати HBV скринінг + entecavir prophylaxis.
-- НЕ призначати без baseline LVEF ≥50%.
-- НЕ пропускати CNS-IPI calculation + prophylaxis if high-risk.
+  - НЕ призначати R-CHOP як 1L при відомому double-hit статусі — substantial OS difference.
+  - НЕ пропускати FISH break-apart MYC + BCL2 + BCL6 на ВСІХ newly-diagnosed DLBCL — інакше double-hit пропускається.
+  - НЕ пропускати HBV скринінг + entecavir prophylaxis.
+  - НЕ призначати без baseline LVEF ≥50%.
+  - НЕ пропускати CNS-IPI calculation + prophylaxis if high-risk.
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewer_signoffs: 0

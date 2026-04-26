@@ -1,0 +1,93 @@
+id: IND-EMERG-NEUTROPENIC-FEVER-PROPHYLAXIS
+plan_track: standard
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+  - "Patient receiving high-risk myelosuppressive chemotherapy with predicted febrile neutropenia (FN) rate ≥20% (NCCN/ASCO threshold for primary G-CSF prophylaxis)"
+  - "OR predicted prolonged neutropenia (ANC <100/μL ≥7 days; ANC <500/μL ≥10 days) — eligible for fluoroquinolone antibacterial prophylaxis per IDSA"
+  - "Goal: prevent FN events, treatment delays, and infection-related mortality during cytotoxic phase"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    ecog_max: 4
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: G-CSF primary prophylaxis reduces FN incidence by ~50% (NNT ~10-12) in high-FN-risk
+    regimens
+  complete_response: N/A (prevention)
+  progression_free_survival: N/A
+  overall_survival_5y: G-CSF + antibacterial prophylaxis reduces all-cause mortality during cytotoxic phase
+    by ~3-7% absolute; preserves dose intensity
+hard_contraindications: []
+red_flags_triggering_alternative:
+- RF-AML-INFECTION-SCREENING
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+desired_tests: []
+rationale: 'G-CSF (filgrastim 5 μg/kg SC daily OR pegfilgrastim 6 mg SC fixed dose × 1) primary prophylaxis
+  is recommended (NCCN/ASCO/EORTC) for chemotherapy regimens with predicted FN rate ≥20% (e.g., AML 7+3
+  induction, dose-dense AC-T, R-CHOEP, HD-MTX-based protocols, FOLFIRINOX in high-risk patients). For 10-20%
+  predicted FN risk, G-CSF added if individual risk factors present (age >65, prior FN, advanced disease,
+  bone marrow involvement, comorbidities, hepatic/renal dysfunction). FLUOROQUINOLONE antibacterial prophylaxis
+  (levofloxacin 500 mg PO daily OR ciprofloxacin 500 mg PO BID) recommended per IDSA for predicted prolonged
+  profound neutropenia (ANC <100/μL ≥7 days OR ANC <500/μL ≥10 days) — typical scenarios: AML induction/consolidation,
+  allogeneic HSCT, lymphoma HD-MTX, autologous HSCT mobilization. Levofloxacin reduces all-cause mortality
+  during neutropenia (Cullen 2005 NEJM). Antifungal prophylaxis (posaconazole 300 mg PO daily) for AML
+  + MDS with prolonged neutropenia (Cornely 2007 NEJM). Anti-PJP prophylaxis (cotrimoxazole) for ALL,
+  HD-corticosteroid regimens, post-HSCT, post-anti-CD20. Anti-VZV/HSV (acyclovir / valacyclovir) for HSCT,
+  CD38-targeted therapy, daratumumab-based MM. Pegfilgrastim preferred over filgrastim for predictable
+  schedules — single dose covers cycle vs daily injections. STUB regimen — no dedicated REG-PRIMARY-PROPHYLAXIS-CYTOTOXIC
+  entity yet; flagged for REG follow-up. SUP-GCSF-NEUTROPENIA + SUP-PJP-PROPHYLAXIS exist as proxies.'
+sources:
+- source_id: SRC-NCCN-AML-2025
+  position: supports
+  relevant_quote_paraphrase: Pegfilgrastim primary prophylaxis recommended for FN risk ≥20% chemo regimens;
+    levofloxacin for prolonged profound neutropenia per IDSA; posaconazole antifungal for AML + MDS
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+  relevant_quote_paraphrase: Primary G-CSF prophylaxis for high-FN-risk lymphoma regimens (R-CHOEP, dose-dense
+    R-CHOP); levofloxacin for HD-MTX / autoSCT mobilization
+known_controversies:
+- topic: Pegfilgrastim primary prophylaxis vs secondary (after FN event) for FN risk 10-20% regimens
+  positions:
+  - position: Primary prophylaxis — reduces FN rate uniformly; preserves dose intensity
+    sources:
+    - SRC-NCCN-AML-2025
+  - position: Secondary prophylaxis — only for patients who develop FN; cost-effective
+    sources:
+    - SRC-NCCN-BCELL-2025
+  our_default: Primary G-CSF for predicted FN ≥20% OR high-risk individual factors (age >65, prior FN, advanced
+    disease); secondary G-CSF for 10-20% with no individual risk factors
+  rationale: Cost-effectiveness analyses favor primary at ≥20% FN risk; below that, individual risk factors
+    drive choice
+do_not_do:
+- НЕ використовувати fluoroquinolone prophylaxis рутинно — antibiotic stewardship + ризик C. difficile
+  + resistance + Achilles tendinopathy.
+- НЕ комбінувати G-CSF з cytotoxic chemo одночасно — обмежити до post-chemo recovery phase (≥24h після
+  останнього cytotoxic).
+- НЕ використовувати pegfilgrastim в weekly regimens — дізайн для q2-3 weeks cycles; weekly = filgrastim.
+- НЕ забувати про HBV/HCV screening перед IVIG-replacement therapy — universal hypogammaglobulinemia з
+  CD20/CD38-targeted therapy.
+- НЕ використовувати posaconazole oral suspension при значній mucositis — absorption variable; switch до
+  IV або alternative azole.
+- НЕ ігнорувати vaccination update до cytotoxic + IO — efficacy зменшена; influenza + pneumococcal + COVID-19
+  baseline.
+- "НЕ забувати про PJP profilaxis ≥6 міс після anti-CD20 OR HD-corticosteroid (≥20 mg/day prednisone equivalent
+  ×4 weeks)."
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Emergency supportive-care indication for primary prophylaxis
+  protocol — G-CSF + antibacterial + antifungal + anti-PJP + anti-VZV/HSV bundle. Cross-disease relevance
+  — disease_id=DIS-AML used as proxy; engine should fire across all high-FN-risk regimens. Reference
+  SUP-GCSF-NEUTROPENIA + SUP-PJP-PROPHYLAXIS exist as proxies.'

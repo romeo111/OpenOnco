@@ -1,0 +1,74 @@
+id: IND-NSCLC-3L-OSI-FAILURE-AMI
+plan_track: aggressive
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 3
+  stage_requirements:
+    - "Stage IV EGFR-mutant NSCLC with progression on osimertinib 1L + chemotherapy 2L"
+    - "Re-biopsy at progression to identify resistance mechanism (C797S, MET amplification, HER2 amp, SCLC transformation, or no clear mechanism)"
+    - "Adequate organ function for combination targeted + chemotherapy regimen"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      required: true
+      value_constraint: "EGFR exon 19 deletion OR L858R sensitizing mutation (original 1L driver)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~63% amivantamab + lazertinib + chemo (MARIPOSA-2 Passaro 2024 Ann Oncol)
+  complete_response: ~3%
+  progression_free_survival: Median PFS 8.3 mo amivantamab + chemo vs 4.2 mo chemo alone (MARIPOSA-2)
+  overall_survival_5y: OS data immature; HR 0.77 trending favorable
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+rationale: 'For EGFR-mutant NSCLC patients who progress on osimertinib 1L + platinum-doublet chemotherapy 2L, amivantamab (EGFR × MET bispecific) + chemotherapy ± lazertinib is the leading 3L option per MARIPOSA-2 (Passaro 2024 Ann Oncol). MARIPOSA-2 enrolled post-osimertinib patients and randomized to amivantamab + chemo vs amivantamab + lazertinib + chemo vs chemo alone; mPFS 8.3 vs 6.3 vs 4.2 mo; ORR 63% vs 64% vs 36%. CHRYSALIS-2 (Cho 2023) provided supporting data. Re-biopsy at progression is critical: C797S point mutation may respond to 4th-gen TKI on trial; MET amplification responds to capmatinib/tepotinib; SCLC transformation requires platinum-etoposide. Without re-biopsy, empirical amivantamab + chemo is reasonable but suboptimal. Significant infusion reactions (~67% with first dose; pre-medication mandatory) + paronychia + skin toxicity require dermatology support. STUB regimen — no dedicated REG- entity for amivantamab regimens yet; flagged for REG follow-up.'
+rationale_ua: >-
+  For EGFR-mutant NSCLC patients who progress on осимертиніб 1L + platinum-дублет хіміотерапія 2L, амівантамаб (EGFR × MET біспецифічний) + хіміотерапія ± лазертиніб is the leading 3L option per MARIPOSA-2 (Passaro 2024 Ann Oncol). MARIPOSA-2 enrolled post-осимертиніб patients and randomized to амівантамаб + chemo vs амівантамаб + лазертиніб + chemo vs chemo alone; mPFS 8.3 проти 6.3 проти 4.2 міс.; ORR 63% проти 64% проти 36%. CHRYSALIS-2 (Cho 2023) provided supporting дані. Re-біопсія at прогресування is critical: C797S point мутація may respond to 4th-gen TKI on дослідження; MET ампліфікація responds to капматиніб/тепотиніб; SCLC трансформація requires platinum-етопозид. Without re-біопсія, empirical амівантамаб + chemo is reasonable but suboptimal. Significant infusion reactions (~67% with first доза; pre-medication обов'язковий) + paronychia + skin токсичність require dermatology support. STUB схема — ні dedicated REG- сутність for амівантамаб схеми yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: Amivantamab + chemotherapy is recommended Cat 2A for EGFR-mutant NSCLC after osimertinib + platinum doublet failure per MARIPOSA-2; addition of lazertinib improves response but increases toxicity
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: Amivantamab + chemo is emerging 3L+ standard for post-osimertinib EGFR NSCLC; re-biopsy to identify resistance mechanism preferred when feasible
+known_controversies:
+  - topic: Amivantamab + chemo vs amivantamab + lazertinib + chemo for post-osimertinib EGFR NSCLC
+    positions:
+      - position: Doublet (amivantamab + chemo) — comparable efficacy, less toxicity
+        sources:
+          - SRC-NCCN-NSCLC-2025
+      - position: Triplet (amivantamab + lazertinib + chemo) — numerically higher response but doubled grade ≥3 AE rate
+        sources:
+          - SRC-NCCN-NSCLC-2025
+        evidence_note: "MARIPOSA-2: triplet ORR 64% vs doublet 63%, mPFS 8.3 vs 6.3 mo, but G≥3 AE 92% vs 75%"
+    our_default: Doublet (amivantamab + chemo) for most; triplet only for fit patients with high-burden disease where deepening response is goal
+    rationale: Triplet PFS lead modest; AE profile substantially worse; doublet is pragmatic standard
+do_not_do:
+  - НЕ призначати без proper infusion-reaction premedication (steroid + antihistamine + acetaminophen) — first-dose reactions ~67%.
+  - НЕ продовжувати без regular dermatology — paronychia + acneiform rash дуже часті, можуть бути painful + cellulitic.
+  - НЕ призначати при тяжкій ILD anamnese — pneumonitis ризик підсилюється з осі-приводом + amivantamab.
+  - НЕ ігнорувати venous thromboembolism risk — particularly з добавленням lazertinib; consider prophylaxis.
+  - НЕ пропускати re-biopsy при доступності — mechanism-driven options можуть бути значно ефективніші.
+  - НЕ поширювати при ECOG ≥3 — MARIPOSA-2 enrolled ECOG 0-1; пов'язана toxicity непомірна для frail.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L pathway for post-osimertinib EGFR NSCLC. Missing entity flag: dedicated REG-AMIVANTAMAB-CHEMO + REG-AMIVANTAMAB-LAZERTINIB-CHEMO — author in PROD-2.'

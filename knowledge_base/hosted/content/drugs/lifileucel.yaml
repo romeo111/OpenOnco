@@ -3,67 +3,120 @@ names:
   preferred: "Lifileucel"
   ukrainian: "Ліфілейцел"
   english: "Lifileucel"
-  synonyms: ["LN-144"]
+  synonyms: ["LN-144", "lifileucel-tarmunileucel"]
   brand_names: ["Amtagvi"]
 atc_code: ""
 rxnorm_id: ""
 drug_class: "Autologous tumor-infiltrating lymphocyte (TIL) cell therapy"
 mechanism: >
-  STUB — needs full curation. Patient-specific autologous TIL product
-  manufactured ex vivo from a resected tumor specimen, expanded with
-  IL-2, then infused after lymphodepleting chemo (cyclophosphamide +
-  fludarabine) and followed by short-course high-dose IL-2. First TIL
-  therapy approved for a solid tumor (advanced melanoma post anti-PD-1
-  ± BRAFi+MEKi).
+  Patient-specific autologous polyclonal cell-therapy product
+  manufactured ex vivo from a fresh resected tumor specimen
+  (typically a single ≥1.5 cm cutaneous, subcutaneous, lymph-node,
+  or visceral metastasis). The tumor is enzymatically dissociated;
+  endogenous tumor-infiltrating lymphocytes (TILs — predominantly
+  CD8+ effector T cells with native polyclonal TCR repertoire
+  recognizing patient-unique tumor neoantigens) are expanded over
+  ~22 days using interleukin-2 (IL-2) and an OKT3 anti-CD3 stimulus,
+  then cryopreserved and shipped back. Treatment requires three
+  steps: (1) non-myeloablative lymphodepleting chemotherapy
+  (cyclophosphamide + fludarabine) to deplete suppressive Tregs and
+  create homeostatic cytokine sinks; (2) single IV infusion of the
+  expanded TIL product (target 7.5–72 × 10⁹ viable cells); (3)
+  short-course high-dose IL-2 (aldesleukin 600,000 IU/kg IV q8-12 h
+  for up to 6 doses) to support in-vivo TIL expansion and
+  persistence. Pivotal evidence C-144-01 (advanced melanoma post
+  anti-PD-1 ± BRAFi+MEKi): ORR ~31%, mDOR not reached at 36 mo for
+  responders; FDA accelerated approval Feb 2024 — first cell-therapy
+  approved for a solid tumor.
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2024
-    indications_brief: ["Unresectable/metastatic melanoma post anti-PD-1 (and BRAFi+MEKi if BRAF V600+)"]
+    indications_brief:
+      - "Unresectable / metastatic melanoma post anti-PD-1 ± BRAFi+MEKi (if BRAF V600+); accelerated approval"
   ema:
     approved: false
     year_first_approval: null
+    indications_brief: []
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Not registered in UA. EU access nascent; cell-therapy logistics + manufacturing capacity gating."
+    notes: "Не зареєстровано; EU access nascent (no EMA approval as of 2026-04). Cell-therapy logistics, manufacturing capacity, and accredited center requirements gate access. Доступ in UA effectively zero in MVP — referenced for completeness; cross-border to a US или EU-approved center via 'Лікування за кордоном' (наказ МОЗ 988) only realistic option, very limited capacity."
 
 typical_dosing: >
-  STUB. Single intravenous infusion of 7.5x10⁹ to 72x10⁹ viable TIL
-  cells after non-myeloablative lymphodepletion (cyclophosphamide
-  60 mg/kg/day x 2 + fludarabine 25 mg/m²/day x 5), followed by up to
-  6 doses high-dose IL-2 (aldesleukin 600,000 IU/kg q8-12h).
+  Single intravenous infusion of 7.5 × 10⁹ to 72 × 10⁹ viable TIL
+  cells (median ~21 × 10⁹) administered after non-myeloablative
+  lymphodepletion: cyclophosphamide 60 mg/kg/day IV × 2 days
+  (Days -7 and -6), then fludarabine 25 mg/m²/day IV × 5 days
+  (Days -5 through -1). TIL infusion on Day 0. Post-infusion
+  IL-2 support: aldesleukin 600,000 IU/kg IV every 8-12 hours
+  starting 3-24 h after TIL infusion, for up to 6 doses (often
+  fewer due to cumulative IL-2 toxicity — capillary leak,
+  hypotension, oliguria). Single course; no maintenance. Manufacturing
+  takes ~22 days from tumor harvest to shipment, with bridging
+  therapy as needed.
 
 formulations:
-  - "IV cell suspension (patient-specific)"
+  - "IV cell suspension (patient-specific autologous product, cryopreserved)"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Inability to undergo lymphodepleting chemotherapy (severe organ dysfunction, refractory cytopenias)"
+  - "Inability to tolerate high-dose IL-2 (uncontrolled cardiac, pulmonary, or CNS disease per IL-2 contraindication list)"
+  - "Active uncontrolled infection"
+  - "Active CNS metastases without local control"
+  - "Inadequate organ function (LVEF <45%, FEV1 <60% predicted, baseline creatinine clearance <60, severe hepatic dysfunction)"
+  - "Active second malignancy requiring systemic therapy"
+  - "Hypersensitivity to lifileucel components, IL-2, or lymphodepleting chemo agents"
+  - "Pregnancy"
+
 black_box_warnings:
-  - "Treatment-related mortality, prolonged severe cytopenia, severe infection, cardiopulmonary disorders, renal failure (boxed warning per US PI)"
+  - "Treatment-related mortality (~7-8% in trial cohorts; multifactorial — lymphodepletion, IL-2, immune effects)"
+  - "Prolonged severe cytopenia (lymphodepletion + cellular product)"
+  - "Severe infection (fungal, bacterial, viral; including opportunistic)"
+  - "Cardiopulmonary disorders (IL-2-mediated capillary leak, arrhythmia, MI)"
+  - "Renal failure (IL-2-mediated)"
+
 common_adverse_events:
-  - "Cytopenias (lymphodepletion + cell-therapy effect)"
-  - "Pyrexia / chills (IL-2 effect)"
-  - "Hypotension"
-  - "Capillary leak / fluid retention"
-  - "Diarrhea"
+  - "Cytopenias (essentially universal during lymphodepletion + early TIL phase) — neutropenia ~96%, anemia ~95%, thrombocytopenia ~80%"
+  - "Pyrexia / chills (IL-2 effect) ~80%"
+  - "Hypotension ~70%"
+  - "Capillary leak / fluid retention / weight gain ~50%"
+  - "Diarrhea ~50%"
+  - "Tachycardia ~50%"
+  - "Edema ~50%"
+  - "Hypoxia ~40%"
+  - "Nausea ~50%"
+  - "Vomiting ~40%"
+  - "Hypoalbuminemia ~80%"
+  - "Hypocalcemia / hypophosphatemia / hypomagnesemia ~50-70%"
+  - "Increased creatinine ~50%"
+
 serious_adverse_events:
-  - "Treatment-related death (~7-8% in trial cohorts)"
-  - "Severe cytopenia / prolonged neutropenia"
-  - "Severe infection / sepsis"
-  - "Cardiopulmonary toxicity from IL-2"
-  - "Renal failure"
-  - "Capillary leak syndrome"
-major_interactions: []
+  - "Treatment-related death ~7-8% (multifactorial — sepsis, cardiopulmonary, hemorrhage)"
+  - "Severe + prolonged cytopenia (G4 ANC ~95% at nadir; recovery typically 14-21 d)"
+  - "Severe infection / sepsis (G3+ ~40%; including bacterial, fungal, viral)"
+  - "Cardiopulmonary toxicity from IL-2 (capillary leak syndrome, pulmonary edema, arrhythmia, MI)"
+  - "Renal failure (IL-2-mediated; G3+ ~10%)"
+  - "Capillary leak syndrome with hemodynamic compromise"
+  - "CNS toxicity (encephalopathy, confusion ~25%; severe ~3%)"
+  - "Tumor lysis syndrome (rare)"
+  - "Hemorrhage from prolonged thrombocytopenia"
+
+major_interactions:
+  - "Concurrent corticosteroids ≥10 mg prednisone equivalent — may suppress TIL expansion and activity; avoid pre-infusion and during IL-2 administration unless life-threatening AE requires"
+  - "Live attenuated vaccines — contraindicated"
+  - "Other immunosuppressants — avoid"
+  - "Concurrent IL-2 with cardio/pulmotoxic agents — additive risk"
 
 pharmacology:
   half_life_hours: null
   clearance: null
   protein_binding_pct: null
-  metabolism: "n/a (cellular product)"
+  metabolism: "n/a (cellular product; expansion in vivo over weeks; long-term persistence variable)"
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -72,8 +125,20 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. UA access ≈ zero in MVP — referenced
-  for completeness; trial-only / cross-border. Requires accredited
-  cell-therapy center (similar logistics to CAR-T). Needs full curation
-  of eligibility (LDH, lesion accessibility for harvest, prior-PD-1
-  refractoriness), monitoring schedule, and IL-2 toxicity management.
+  First cell-therapy approved for any solid tumor. Logistics
+  resemble CAR-T but more demanding: requires fresh tumor harvest
+  (single accessible ≥1.5 cm lesion; surgical or interventional-
+  radiology biopsy not adequate — needs gross tissue), centralized
+  manufacturing (~22 days), bridging therapy during manufacturing,
+  in-patient lymphodepletion + TIL infusion + IL-2 administration in
+  ICU-capable cell-therapy center, prolonged cytopenia recovery,
+  and ~7-8% treatment-related mortality. Eligibility per FDA label:
+  ECOG 0-1, adequate organ function, anti-PD-1 ± BRAFi+MEKi
+  failure, accessible lesion for harvest, anticipated tolerance of
+  IL-2. Patient selection is critical — frail patients have
+  prohibitive mortality risk. UA access in MVP effectively zero;
+  the only realistic pathway is cross-border referral to a US (or
+  eventually EU) Iovance-accredited center via 'Лікування за
+  кордоном' (наказ МОЗ 988) with private / charitable funding —
+  total cost USD 500K-1M. Listed for completeness; rule-engine
+  inclusion as a referral-only option in melanoma post-anti-PD-1.

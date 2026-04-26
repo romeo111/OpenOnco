@@ -1,0 +1,90 @@
+id: IND-DLBCL-3L-LISO-CEL-CART
+plan_track: aggressive
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed / refractory DLBCL after ≥2 prior lines (1L R-CHOP / Pola-R-CHP, 2L salvage chemo ± autoSCT or pola-R-bendamustine)"
+    - "Active progressive disease at lymphodepletion timepoint"
+    - "ECOG 0-2 (TRANSCEND NHL-001 enrolment)"
+    - "Adequate organ function for fludarabine + cyclophosphamide lymphodepletion"
+    - "No prior CD19-directed CAR-T (or sufficient washout per protocol)"
+    - "Manufacturing slot available (~3-week wait acceptable for disease tempo)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20 positive (and CD19 positive on flow / IHC; CD19 loss is exclusion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~73% (TRANSCEND NHL-001 Abramson 2020 Lancet)
+  complete_response: ~53%
+  progression_free_survival: Median PFS 6.8 mo overall; 22.8 mo in CR responders (TRANSCEND)
+  overall_survival_5y: Median OS 27.3 mo (TRANSCEND); CR responders mOS not reached
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PREGNANCY
+desired_tests: []
+rationale: 'Lisocabtagene maraleucel (liso-cel; Breyanzi) is a CD19-targeted CAR-T cell therapy with the best safety profile of the three FDA-approved CAR-T products for r/r DLBCL (axi-cel, tisa-cel, liso-cel). TRANSCEND NHL-001 (Abramson 2020 Lancet): ORR 73%, CR 53%, mPFS 6.8 mo overall, 22.8 mo in CR responders. CRS Grade ≥3 ~2% (vs ~13% axi-cel) and ICANS Grade ≥3 ~10% (vs ~28% axi-cel) make liso-cel preferred in older / frail / cardiac comorbid patients. TRANSFORM (Kamdar 2022 Lancet) and PILOT (Sehgal 2022 Lancet Oncol) extended use to 2L for HSCT-ineligible / primary refractory or early relapse. Step-up dosing not required (single infusion); fludarabine + cyclophosphamide lymphodepletion 5-3 days pre-infusion. Hospital observation 7-14 days. Universal hypogammaglobulinemia → IVIG. PJP + HSV/VZV prophylaxis ≥6 mo. Manufacturing window (~3 weeks) excludes rapidly progressive patients — bridge therapy mandatory. Ukraine access: not registered; international referral required. Axi-cel is alternative CD19 CAR-T with similar efficacy but worse safety (ZUMA-1, ZUMA-7). STUB regimen — no dedicated REG- entity for liso-cel yet; flagged for REG follow-up.'
+rationale_ua: >-
+  лісокабтаген маралейцел (liso-cel; Breyanzi) is a CD19-targeted CAR-T cell терапія with the найкращий профіль безпеки of the three схвалений FDA CAR-T products for р/р DLBCL (axi-cel, tisa-cel, liso-cel). TRANSCEND NHL-001 (Abramson 2020 Lancet): ORR 73%, CR 53%, mPFS 6.8 mo overall, 22.8 mo in CR responders. CRS Grade ≥3 ~2% (vs ~13% axi-cel) and ICANS Grade ≥3 ~10% (vs ~28% axi-cel) make liso-cel переважний in older / frail / cardiac comorbid patients. TRANSFORM (Kamdar 2022 Lancet) and PILOT (Sehgal 2022 Lancet Oncol) extended use to 2L for HSCT-ineligible / primary рефрактерний or early рецидив. Step-up дозування not обов'язковий (single infusion); флударабін + циклофосфамід lymphodepletion 5-3 days pre-infusion. Hospital observation 7-14 days. Universal hypogammaglobulinemia → ВВІГ. PJP + HSV/VZV prophylaxis ≥6 mo. Manufacturing window (~3 weeks) виключає rapidly progressive patients — bridge терапія обов'язковий. Ukraine access: not registered; international referral обов'язковий. Axi-cel is alternative CD19 CAR-T with подібний ефективність but гірше безпека (ZUMA-1, ZUMA-7). STUB схема — ні dedicated REG- сутність for liso-cel yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: Lisocabtagene maraleucel (liso-cel) is Cat 1 preferred for r/r DLBCL after ≥2 prior lines per TRANSCEND NHL-001; 2L use per TRANSFORM / PILOT for primary refractory / early relapse HSCT-ineligible
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: CD19 CAR-T (axi-cel, liso-cel, tisa-cel) is preferred 3L+ for r/r DLBCL; liso-cel has best safety profile and is preferred for older / frail / cardiac comorbid patients
+known_controversies:
+  - topic: Liso-cel vs axi-cel vs tisa-cel for r/r DLBCL 3L+
+    positions:
+      - position: Liso-cel — best safety (CRS G≥3 2%, ICANS G≥3 10%), comparable efficacy
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: Axi-cel — most experience, slightly higher CR rate (~58%), but worse safety (CRS G≥3 13%, ICANS G≥3 28%)
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: Tisa-cel — outpatient feasible, low-grade CRS, but lower efficacy (ORR 52%, CR 40%; JULIET)
+        sources:
+          - SRC-ESMO-DLBCL-2024
+    our_default: Liso-cel for older / frail / cardiac comorbid OR when outpatient pathway desired; axi-cel for younger fit patients prioritizing depth of response; tisa-cel as alternative when liso-cel unavailable
+    rationale: All three Cat 1; safety profile + manufacturing window drive individualization
+do_not_do:
+  - НЕ використовувати поза certified CAR-T center — REMS обов'язкові + tocilizumab + dexamethasone on-site.
+  - НЕ призначати при active infection — lymphodepletion підвищить септичний ризик до untenable.
+  - НЕ забути bridging therapy під час manufacturing window — disease control критично.
+  - НЕ призначати при significant cardiac dysfunction (LVEF <40%) — CRS-related cardiotoxicity може бути fatal.
+  - НЕ повторювати CD19 CAR-T — repeat infusion не вивчено; розглянути bispecific (epcoritamab, glofitamab) при relapse.
+  - НЕ забувати IVIG (IgG <400) + PJP/HSV/VZV профілактику ≥6 міс після інфузії.
+  - НЕ призначати без international referral pathway + funding — препарат недоступний в Україні.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L+ aggressive-track CD19 CAR-T option for r/r DLBCL. Liso-cel preferred for safety; axi-cel already in KB (IND-DLBCL-3L-AXICEL-CART). Missing entity flag: dedicated REG-LISO-CEL — author in PROD-2.'

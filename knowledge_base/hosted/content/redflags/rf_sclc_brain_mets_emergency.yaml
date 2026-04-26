@@ -1,0 +1,43 @@
+id: RF-SCLC-BRAIN-METS-EMERGENCY
+definition: "SCLC with symptomatic brain metastases requiring emergency intervention: focal deficit, new seizure, raised intracranial pressure. SCLC has high CNS-tropism — brain metastases at presentation in ~10-15%, ~50-80% by death without prophylactic cranial irradiation"
+definition_ua: "ДКРЛ із симптомними мозковими метастазами: фокальний дефіцит, новий судомний напад, підвищений ВЧТ. ДКРЛ має високий тропізм до ЦНС — мозкові метастази при діагностиці у ~10-15%, ~50-80% до смерті без PCI"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "brain_metastases_symptomatic"
+      value: true
+    - finding: "raised_intracranial_pressure"
+      value: true
+    - finding: "new_seizure"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 14
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-SCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SCLC-2025
+  - SRC-ESMO-SCLC-2021
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN-SCLC + ESMO-SCLC 2021: WBRT (30 Gy/10 fx) is preferred for
+  symptomatic SCLC brain mets given multifocality; SRS for limited
+  disease in select cases; dexamethasone 4-16 mg/day for edema.
+  Concurrent platinum-etoposide chemotherapy active in CNS — can
+  start simultaneously. Direction HOLD on routine systemic start
+  until ICP controlled. Priority 14. STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  Per NCCN-SCLC + ESMO-SCLC 2021: WBRT (30 Gy/10 fx) is переважний for symptomatic SCLC brain mets given multifocality; SRS for limited хвороба in select cases; dexamethasone 4-16 mg/day for edema. Concurrent platinum-етопозид хіміотерапія active in CNS — can start simultaneously. Direction утримати on routine systemic start until ICP controlled. Priority 14. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

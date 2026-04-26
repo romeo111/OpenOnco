@@ -1,0 +1,77 @@
+id: IND-OVARIAN-MAINT-BEV
+plan_track: standard
+applicable_to:
+  disease_id: DIS-OVARIAN
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage III-IV epithelial ovarian / fallopian tube / primary peritoneal cancer"
+    - "Bevacizumab introduced concurrent with carboplatin + paclitaxel induction (cycles 2-6) and continued as maintenance"
+    - "Total bevacizumab duration: 15-22 months (GOG-218: 15 mo total; ICON7: 12 mo total)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-BRCA-GERMLINE
+      required: false
+      value_constraint: BRCA-mutated patients should be on olaparib maintenance (SOLO-1) preferentially; bevacizumab considered for HRD-positive non-BRCA per PAOLA-1 (with olaparib)
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by:
+  - IND-OVARIAN-3L-POST-PARPi-POST-MIRVE
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: Maintenance — measured by PFS extension
+  complete_response: N/A (maintenance phase)
+  progression_free_survival: Median PFS extension ~3.8 mo (GOG-218 Burger 2011 NEJM; mPFS 14.1 vs 10.3 mo); high-risk subgroup gain larger (ICON7 Oza 2015 Lancet Oncol; mPFS 18.1 vs 14.5 mo)
+  overall_survival_5y: OS benefit confined to high-risk subgroup (ICON7 mOS 39.7 vs 30.2 mo); no overall OS gain in GOG-218
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-OVARIAN-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CA125
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-GERMLINE-BRCA-PANEL
+desired_tests: []
+rationale: 'Bevacizumab 15 mg/kg q3w added to carboplatin + paclitaxel induction (starting cycle 2) and continued as maintenance for 15-22 months total is the GOG-218 / ICON7 paradigm for advanced epithelial ovarian cancer. GOG-218 (Burger 2011 NEJM): mPFS 14.1 vs 10.3 mo (HR 0.72) vs chemo alone; ICON7 (Perren 2011 NEJM): mPFS 19.0 vs 17.3 mo overall, 18.1 vs 14.5 mo in high-risk (suboptimal debulking + stage III/IV). OS benefit confined to high-risk subgroup. PAOLA-1 (Ray-Coquard 2019 NEJM) extended paradigm: bev + olaparib maintenance for HRD-positive non-BRCA patients. Must be discontinued ≥4 weeks before any major surgery; GI perforation, fistula, hemorrhage, hypertension, proteinuria are class effects. Olaparib maintenance (SOLO-1) is preferred for BRCA-mutated patients; bev considered for HRD-positive non-BRCA per PAOLA-1. STUB regimen — no dedicated REG- entity for bev maintenance ovarian yet; flagged for REG follow-up.'
+rationale_ua: >-
+  бевацизумаб 15 mg/kg q3w added to карбоплатин + паклітаксел індукція (starting цикл 2) and continued as підтримка for 15-22 months total is the GOG-218 / ICON7 paradigm for поширений epithelial рак яєчника. GOG-218 (Burger 2011 NEJM): mPFS 14.1 проти 10.3 міс. (HR 0.72) vs chemo alone; ICON7 (Perren 2011 NEJM): mPFS 19.0 проти 17.3 mo overall, 18.1 проти 14.5 mo in високого ризику (suboptimal debulking + stage III/IV). OS виграш confined to високого ризику subgroup. PAOLA-1 (Ray-Coquard 2019 NEJM) extended paradigm: bev + олапариб підтримка for HRD-positive non-BRCA patients. Must be припинений ≥4 weeks before any major surgery; GI perforation, fistula, hemorrhage, гіпертензія, proteinuria are class effects. олапариб підтримка (SOLO-1) is переважний for BRCA-mutated patients; bev considered for HRD-positive non-BRCA per PAOLA-1. STUB схема — ні dedicated REG- сутність for bev підтримка ovarian yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+    relevant_quote_paraphrase: Bevacizumab maintenance × 15-22 mo after carbo/pacli + bev induction is Category 1 for advanced epithelial ovarian cancer per GOG-218 / ICON7
+  - source_id: SRC-ESMO-OVARIAN-2024
+    position: supports
+    relevant_quote_paraphrase: Bevacizumab maintenance is recommended for high-risk advanced ovarian cancer (suboptimal debulking, stage IV); HRD-positive may receive bev + olaparib per PAOLA-1
+known_controversies:
+  - topic: Bevacizumab maintenance vs olaparib maintenance vs combined for advanced ovarian cancer
+    positions:
+      - position: Bevacizumab maintenance — broad applicability (no biomarker), modest PFS gain
+        sources:
+          - SRC-NCCN-OVARIAN-2025
+      - position: Olaparib maintenance — superior PFS for BRCA-mutated (SOLO-1 mPFS NR vs 14 mo, HR 0.30)
+        sources:
+          - SRC-ESMO-OVARIAN-2024
+      - position: Bev + olaparib (PAOLA-1) — HRD-positive non-BRCA gain mPFS 37.2 vs 17.7 mo
+        sources:
+          - SRC-NCCN-OVARIAN-2025
+    our_default: BRCA+ → olaparib maintenance (SOLO-1); HRD+ non-BRCA → bev + olaparib (PAOLA-1); HRD-negative → bev maintenance alone OR observation
+    rationale: Biomarker-stratified maintenance is current standard; bev still has role for HRD-negative population
+do_not_do:
+  - НЕ розпочинати bevacizumab з циклу 1 — wound healing від primary cytoreductive surgery; затримка щонайменше 28 днів post-op.
+  - НЕ продовжувати при non-healing wound, GI fistula, або bowel perforation symptoms — discontinue permanently.
+  - НЕ ігнорувати proteinuria — UPCR >2 g/g або 24h urine >2 g → hold; >3.5 g → discontinue.
+  - НЕ ігнорувати тривалу гіпертензію — додати antihypertensive; permanent discontinue при hypertensive crisis.
+  - НЕ робити major surgery під час bev — discontinue ≥4 тижні до + ≥4 тижні після surgery.
+  - НЕ забувати BRCA testing на baseline — це визначає maintenance choice (SOLO-1 vs PAOLA-1 vs GOG-218).
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 because bev maintenance is continuation of 1L pathway. Missing entity flag: dedicated REG-BEV-MAINTENANCE-OVARIAN — author in PROD-2.'

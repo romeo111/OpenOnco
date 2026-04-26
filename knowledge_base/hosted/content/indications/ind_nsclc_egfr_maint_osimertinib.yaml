@@ -1,0 +1,75 @@
+id: IND-NSCLC-EGFR-MAINT-OSIMERTINIB
+plan_track: standard
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV non-squamous NSCLC"
+    - "Continuous treatment beyond initial response (FLAURA paradigm — TKIs are continuous, not induction-maintenance)"
+    - "Achieved ≥SD/PR at first restaging on osimertinib 1L"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      required: true
+      value_constraint: "Sensitizing EGFR mutation present (exon 19 del OR L858R; less commonly G719X, S768I, L861Q)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen: REG-OSIMERTINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-3L-OSI-FAILURE-AMI
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~80% during initial response phase (FLAURA)
+  complete_response: ~3% (deep CR rare)
+  progression_free_survival: Median PFS ~18.9 mo (FLAURA Soria 2018, Ramalingam 2020 update)
+  overall_survival_5y: Median OS ~38.6 mo vs ~31.8 mo with 1st-gen TKI (FLAURA OS update)
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+rationale: 'Osimertinib 80 mg PO daily continuous until progression or unacceptable toxicity is the FLAURA-defined 1L standard for EGFR-mutant advanced NSCLC. FLAURA (Soria 2018 NEJM, Ramalingam 2020 NEJM): mPFS 18.9 vs 10.2 mo (HR 0.46) and mOS 38.6 vs 31.8 mo (HR 0.80) vs 1st-gen TKI; superior CNS penetration (CNS PFS HR 0.47). Conceptually "maintenance" is misnomer — TKIs are continuous, not induction+maintenance phases. At progression, options: amivantamab + chemo (MARIPOSA-2), platinum-doublet, or biopsy-driven targeted switch (C797S → quadruple/4th-gen TKI on trial). Cardiotoxicity (LVEF decline ~3-5%) + interstitial pneumonitis ~3-4% require ECHO baseline + symptom monitoring.'
+rationale_ua: >-
+  осимертиніб 80 mg PO daily continuous until прогресування or unacceptable токсичність is the FLAURA-defined 1L стандарт for EGFR-mutant поширений NSCLC. FLAURA (Soria 2018 NEJM, Ramalingam 2020 NEJM): mPFS 18.9 проти 10.2 міс. (HR 0.46) and mOS 38.6 проти 31.8 міс. (HR 0.80) проти 1st-gen TKI; перевершує проникнення в ЦНС (CNS PFS HR 0.47). Conceptually "підтримка" is misnomer — TKIs are continuous, not індукція+підтримка phases. At прогресування, options: амівантамаб + chemo (MARIPOSA-2), platinum-дублет, or біопсія-driven targeted switch (C797S → quadruple/4th-gen TKI on дослідження). кардіотоксичність (LVEF зниження ~3-5%) + interstitial pneumonitis ~3-4% require ECHO базове + symptom моніторинг.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: Osimertinib continuous is Category 1 preferred 1L therapy for EGFR ex19del/L858R advanced NSCLC per FLAURA; continue until progression or intolerable toxicity
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: Osimertinib continuous is the ESMO-MCBS preferred 1L EGFR-mutant NSCLC standard; chemotherapy combinations (FLAURA2) emerging for high-risk subsets
+known_controversies:
+  - topic: Osimertinib monotherapy vs osimertinib + chemo (FLAURA2) for high-risk EGFR-mutant 1L
+    positions:
+      - position: Osimertinib mono continuous — established standard, lowest toxicity
+        sources:
+          - SRC-NCCN-NSCLC-2025
+      - position: Osimertinib + carbo/pem (FLAURA2) — additional ~9 mo PFS, more toxicity, OS pending
+        sources:
+          - SRC-ESMO-NSCLC-METASTATIC-2024
+        evidence_note: FLAURA2 mPFS 25.5 vs 16.7 mo (HR 0.62); OS data immature
+    our_default: Osimertinib monotherapy continuous for most patients; consider FLAURA2 combination for high-risk (TP53/RB1 co-mutation, baseline brain metastases, bulky thoracic disease) where toxicity acceptable
+    rationale: PFS gain real but OS unproven; toxicity step-up (chemo neutropenia + GI) tilts default to mono until OS matures
+do_not_do:
+  - НЕ припиняти osimertinib при oligoprogression — local therapy (SBRT) + продовжити TKI може дати додаткові ~10 мо beyond progression.
+  - НЕ призначати без baseline ECHO + LVEF moнitoring — кардіоміопатія документована (~3-5% ↓EF).
+  - НЕ ігнорувати cough/dyspnea — interstitial lung disease ~3-4%, може бути fatal без раннього steroid intervention.
+  - НЕ комбінувати з QTc-prolonging препаратами (azoles, antiarrhythmics) без baseline + serial ECG.
+  - НЕ робити re-biopsy при progression без molecular profiling (C797S, MET amplification, SCLC transformation — кожен має різну стратегію rescue).
+  - НЕ переключатись на 1st-gen TKI при progression — без актіонабельного механізму це втрачена терапія.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 because TKI continuation is part of the 1L pathway (no distinct induction+maintenance phases). Engine activates this indication for any patient on osimertinib 1L beyond first restaging assessment.'

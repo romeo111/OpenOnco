@@ -1,0 +1,92 @@
+id: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GLIOMA-LOW-GRADE
+  line_of_therapy: 1
+  stage_requirements: ["High-risk IDH-mut diffuse glioma WHO grade 2-3 (per WHO 5th ed.): age ≥40 OR subtotal resection / biopsy-only OR symptomatic / large residual"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-IDH1-MUTATION
+      required: true
+      value_constraint: "IDH1 R132H mutation (or non-canonical IDH1/IDH2) — defines IDH-mutant astrocytoma / oligodendroglioma"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-IDH1-MUTATION
+      required: false
+      value_constraint: "IDH-wildtype LGG with EGFR amp / +7-10 / TERT-promoter — reclassified to GBM per WHO 5th ed., excluded from this Indication"
+  demographic_constraints:
+    ecog_max: 2
+    fit_for_intensive_chemo: true
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Median PFS 10.4 yr (RT+PCV) vs 4.0 yr (RT alone), RTOG 9802 high-risk LGG"
+  complete_response:
+  progression_free_survival: "Median PFS 10.4 yr per RTOG 9802 long-term"
+  overall_survival_5y: "Median OS 13.3 yr (RT+PCV) vs 7.8 yr (RT alone) per RTOG 9802 (Buckner 2016 NEJM); 10-yr OS 60% vs 40%"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GLIOMA-LOW-GRADE-FRAILTY-AGE
+  - RF-GLIOMA-LOW-GRADE-HIGH-RISK-BIOLOGY
+  - RF-GLIOMA-LOW-GRADE-INTRACRANIAL-PRESSURE
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  RTOG 9802 (Buckner et al. 2016 NEJM) established RT (54 Gy/30 fx) +
+  6 cycles adjuvant PCV (procarbazine 60 mg/m²/d ×8 + lomustine 110
+  mg/m² d1 + vincristine 1.4 mg/m² d8, q6w) as standard for high-risk
+  IDH-mut LGG (age ≥40 or subtotal resection). 1p/19q-codeleted
+  oligodendroglioma derives the largest benefit. TMZ alternative
+  (per CATNON for grade 3 astrocytoma; LGG-specific data from CODEL
+  pending) is widely used as better-tolerated substitute. EANO 2024
+  endorses both RT+PCV (preferred for fit) and RT+TMZ (alternative).
+
+rationale_ua: >
+  RTOG 9802 (Buckner et al. 2016 NEJM) усталений RT (54 Gy/30 fx) + 6 цикли ад'ювантний PCV (procarbazine 60 mg/m²/d ×8 + lomustine 110 mg/m² d1 + вінкристин 1.4 mg/m² d8, q6w) as стандарт for високого ризику IDH-mut LGG (age ≥40 or subtotal resection). 1p/19q-codeleted oligodendroglioma derives the largest виграш. TMZ alternative (per CATNON for grade 3 astrocytoma; LGG-specific дані from CODEL pending) is widely used as краще-tolerated substitute. EANO 2024 endorses both RT+PCV (переважний for fit) and RT+TMZ (alternative).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+    relevant_quote_paraphrase: "RT + PCV is preferred adjuvant for high-risk IDH-mutant LGG (grade 2-3) in fit patients per NCCN-CNS LGG section (Category 1)"
+  - source_id: SRC-EANO-GBM-2024
+    position: supports
+    relevant_quote_paraphrase: "EANO 2024 glioma guideline recommends RT + PCV or RT + TMZ for high-risk IDH-mutant grade 2-3 glioma; PCV preferred for 1p/19q-codeleted oligodendroglioma"
+
+do_not_do:
+  - "Не пропустити molecular profiling (IDH1/2, 1p/19q, ATRX, MGMT, CDKN2A) — визначає grade за WHO 5-те вид. і вибір ад'юванту"
+  - "Не призначати RT+PCV пацієнтам з IDH-wildtype LGG — реклас. до GBM, потребує Stupp-протоколу"
+  - "Не починати PCV без baseline LFTs, CBC + контрацепції (procarbazine teratogen + EtOH-disulfiram-like reaction)"
+  - "Не пропускати levetiracetam-based AED у пацієнтів з судомами — не індукує P450, на відміну від phenytoin/carbamazepine"
+
+known_controversies:
+  - topic: "RT + PCV vs RT + TMZ for high-risk LGG"
+    positions:
+      - position: "RT+PCV is the only regimen with mature OS benefit in high-risk LGG (RTOG 9802) — preferred when tolerated"
+        sources:
+          - SRC-NCCN-CNS-2025
+      - position: "RT+TMZ has equivalent activity in CATNON (grade 3 IDH-mut astro) and is significantly better tolerated; CODEL trial (RT+TMZ vs RT+PCV in 1p/19q-codeleted) ongoing"
+        sources:
+          - SRC-EANO-GBM-2024
+    our_default: "RT+PCV preferred for fit ECOG 0-1 patients, especially 1p/19q-codeleted oligodendroglioma (largest RTOG 9802 benefit); RT+TMZ alternative for borderline-tolerance"
+    rationale: "PCV has stronger LGG-specific OS data; TMZ is interchangeable in clinical practice given tolerability"
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — requires clinical co-lead signoff. Closes Phase A audit gap
+  for DIS-GLIOMA-LOW-GRADE — the disease had 0 indications. Regimen
+  entity REG-RT-PCV-LGG not yet created.

@@ -1,59 +1,66 @@
 id: IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
 plan_track: aggressive
+
 applicable_to:
   disease_id: DIS-CRC
   line_of_therapy: 1
-  stage_requirements:
-  - Stage IV (metastatic)
-  - M1
+  stage_requirements: ["Stage IV (metastatic)", "M1"]
   biomarker_requirements_required:
-  - biomarker_id: BIO-MSI-STATUS
-    value_constraint: MSI-H
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H"
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
+
 recommended_regimen: REG-PEMBROLIZUMAB-MSI-MONO
 concurrent_therapy: []
 followed_by: []
+
 evidence_level: high
 strength_of_recommendation: strong
-nccn_category: '1'
+nccn_category: "1"
+
 expected_outcomes:
-  overall_response_rate: ~44% (KEYNOTE-177 ORR pembrolizumab arm)
-  complete_response: ~13%
-  progression_free_survival: Median 16.5 mo vs 8.2 mo on FOLFOX+bev (KEYNOTE-177)
-  overall_survival_5y: Confounded by 60% crossover; ORR + duration favor pembrolizumab definitively
+  overall_response_rate: "~44% (KEYNOTE-177 ORR pembrolizumab arm)"
+  complete_response: "~13%"
+  progression_free_survival: "Median 16.5 mo vs 8.2 mo on FOLFOX+bev (KEYNOTE-177)"
+  overall_survival_5y: "Confounded by 60% crossover; ORR + duration favor pembrolizumab definitively"
+
 hard_contraindications:
-- CI-PEMBROLIZUMAB-AUTOIMMUNE
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
 red_flags_triggering_alternative: []
+
 required_tests:
-- TEST-MSI-PCR-OR-NGS
-- TEST-DMMR-IHC
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
 desired_tests: []
-rationale: 'KEYNOTE-177: Pembrolizumab 1L doubled PFS vs FOLFOX+bev in MSI-H/dMMR metastatic CRC. Treatment-defining biomarker
-  — overrides RAS/BRAF algorithm. NCCN category 1 + ESMO strong recommendation.
 
-  '
+rationale: >
+  KEYNOTE-177: Pembrolizumab 1L doubled PFS vs FOLFOX+bev in MSI-H/dMMR
+  metastatic CRC. Treatment-defining biomarker — overrides RAS/BRAF
+  algorithm. NCCN category 1 + ESMO strong recommendation.
+
+rationale_ua: >
+  KEYNOTE-177: пембролізумаб 1L doubled PFS vs FOLFOX+bev in MSI-H/dMMR метастатичний CRC. лікування-defining біомаркер — overrides RAS/BRAF algorithm. NCCN категорія 1 + ESMO strong рекомендація.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-COLON-2025
-  section: MS-26 (mCRC pretreatment + 1L)
-  position: supports
-- source_id: SRC-ESMO-COLON-2024
-  position: supports
-do_not_do:
-- Do NOT start FOLFOX/FOLFIRI ± bev/cetux in MSI-H mCRC 1L — substantial PFS loss vs ICI
-- Do NOT continue pembrolizumab through Grade 3+ immune-related AE without specialist consultation
-- Do NOT start pembrolizumab without prior MSI/dMMR confirmation by validated assay
-last_reviewed: '2026-04-26'
-reviewers: []
-reviewer_signoffs: 1
-notes: 'STUB — Phase GI-1. CI-PEMBROLIZUMAB-AUTOIMMUNE referenced but not yet authored; MSI test entities (TEST-MSI-PCR-OR-NGS,
-  TEST-DMMR-IHC) also pending — engine validation will flag these as unresolved refs until authored.
+  - source_id: SRC-NCCN-COLON-2025
+    section: "MS-26 (mCRC pretreatment + 1L)"
+    position: supports
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
 
-  '
-reviewer_signoffs_v2:
-- reviewer_id: REV-SOLID-LEAD-PLACEHOLDER
-  signoff_date: '2026-04-26'
-  rationale: CRC indications align with NCCN colon-cancer 2025 + ESMO mCRC; molecular gating reviewed (sample sign-off)
-  entity_version_at_signoff: '2026-04-26'
-  scope_match: true
+do_not_do:
+  - "Do NOT start FOLFOX/FOLFIRI ± bev/cetux in MSI-H mCRC 1L — substantial PFS loss vs ICI"
+  - "Do NOT continue pembrolizumab through Grade 3+ immune-related AE without specialist consultation"
+  - "Do NOT start pembrolizumab without prior MSI/dMMR confirmation by validated assay"
+
+last_reviewed: "2026-04-26"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — Phase GI-1. CI-PEMBROLIZUMAB-AUTOIMMUNE referenced but not yet
+  authored; MSI test entities (TEST-MSI-PCR-OR-NGS, TEST-DMMR-IHC) also
+  pending — engine validation will flag these as unresolved refs until
+  authored.

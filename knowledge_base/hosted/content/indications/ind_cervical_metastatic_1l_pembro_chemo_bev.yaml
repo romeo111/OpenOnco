@@ -1,0 +1,89 @@
+id: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CERVICAL
+  line_of_therapy: 1
+  stage_requirements: ["FIGO IVB (metastatic) OR persistent / recurrent cervical cancer not amenable to curative-intent therapy"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PD-L1-CPS
+      required: false
+      value_constraint: "PD-L1 CPS ≥1 (KEYNOTE-826 enrolled all CPS but benefit greatest at CPS ≥1; FDA-approved indication is CPS ≥1)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~68% (KEYNOTE-826 PD-L1 CPS ≥1, pembro+chemo arm)"
+  complete_response: "~23%"
+  progression_free_survival: "Median PFS 10.4 mo (pembro+chemo vs 8.2 mo placebo+chemo, HR 0.62 in CPS ≥1, KEYNOTE-826)"
+  overall_survival_5y: "Median OS 28.6 mo vs 16.5 mo (HR 0.64 in CPS ≥1, KEYNOTE-826 final analysis)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CERVICAL-FRAILTY-AGE
+  - RF-CERVICAL-INFECTION-SCREENING
+  - RF-CERVICAL-HYDRONEPHROSIS-PELVIC-OBSTRUCTION
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Pembrolizumab + paclitaxel + (cisplatin or carboplatin) ± bevacizumab,
+  for PD-L1 CPS ≥1 metastatic / persistent / recurrent cervical cancer.
+  KEYNOTE-826 (Colombo 2021 NEJM, final OS published Lancet 2023):
+  pembrolizumab + chemo ± bev superior to chemo ± bev across PD-L1
+  CPS ≥1 (HR 0.64 OS) and all-comers (HR 0.67 OS). Bevacizumab
+  addition (GOG 240 backbone) preferred when no contraindication
+  (no fistula history, no anticoagulation, BP controlled, urine
+  protein <2+).
+
+rationale_ua: >
+  пембролізумаб + паклітаксел + (цисплатин or карбоплатин) ± бевацизумаб, for PD-L1 CPS ≥1 метастатичний / persistent / рецидивний рак шийки матки. KEYNOTE-826 (Colombo 2021 NEJM, final OS published Lancet 2023): пембролізумаб + chemo ± bev перевершує chemo ± bev across PD-L1 CPS ≥1 (HR 0.64 OS) and all-comers (HR 0.67 OS). бевацизумаб addition (GOG 240 основа схеми) переважний when ні протипоказання (ні fistula history, ні anticoagulation, BP controlled, urine protein <2+).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-CERVICAL-2025
+    position: supports
+    relevant_quote_paraphrase: "Pembrolizumab + chemotherapy ± bevacizumab is preferred 1L for PD-L1 CPS ≥1 metastatic / persistent / recurrent cervical cancer (Category 1)"
+  - source_id: SRC-ESMO-CERVICAL-2024
+    position: supports
+    relevant_quote_paraphrase: "ESMO recommends pembrolizumab + platinum-paclitaxel ± bevacizumab as preferred 1L for PD-L1 CPS ≥1 advanced cervical cancer"
+
+do_not_do:
+  - "Не призначати bevacizumab у пацієнтів з активними фістулами, нелікованою гіпертензією, протеїнурією >2+ або історією перфорації — ризик перфорації / кровотечі"
+  - "Не пропускати тестування PD-L1 CPS — впливає на вибір 1L"
+  - "Не починати pembrolizumab без HBV/HCV/HIV скринінгу + щитовидки baseline"
+
+known_controversies:
+  - topic: "Carboplatin vs cisplatin backbone"
+    positions:
+      - position: "Carboplatin AUC 5 + paclitaxel non-inferior to cisplatin + paclitaxel (JCOG 0505) and better tolerated"
+        sources:
+          - SRC-NCCN-CERVICAL-2025
+      - position: "Cisplatin remains preferred in cisplatin-naïve patients per ESMO CPGs"
+        sources:
+          - SRC-ESMO-CERVICAL-2024
+    our_default: "Carboplatin AUC 5 + paclitaxel for cisplatin-pretreated or renal dysfunction; cisplatin 50 mg/m² + paclitaxel 175 mg/m² for cisplatin-naïve fit patients"
+    rationale: "Both supported as Category 1; institutional + patient factors decide"
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — requires clinical co-lead signoff. Closes Phase A audit gap
+  for DIS-CERVICAL L1-metastatic indication (the existing
+  IND-CERVICAL-LOCALLY-ADVANCED-CRT only covers locally-advanced curative
+  CRT, not the metastatic / recurrent setting). Regimen entity not yet
+  created (REG-PEMBRO-PACLI-CARBO-BEV would be the canonical ID).

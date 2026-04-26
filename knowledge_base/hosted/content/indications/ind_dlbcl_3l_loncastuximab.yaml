@@ -1,0 +1,82 @@
+id: IND-DLBCL-3L-LONCASTUXIMAB
+plan_track: standard
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed / refractory DLBCL after ≥2 prior systemic therapies"
+    - "CD19-positive disease (CD19 IHC or flow)"
+    - "Not a candidate for CAR-T (frailty, comorbidity, manufacturing window prohibitive, prior CD19 CAR-T failure)"
+    - "Adequate organ function for CD19-targeted ADC therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: false
+      value_constraint: "CD20 status not required; CD19 expression required (proxied via CD19 IHC / flow — no separate biomarker entity yet)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~48% (LOTIS-2 Caimi 2021 Lancet Oncol)
+  complete_response: ~24%
+  progression_free_survival: Median PFS 4.9 mo (LOTIS-2)
+  overall_survival_5y: Median OS 9.5 mo (LOTIS-2)
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-FLOW-CYTOMETRY
+desired_tests: []
+rationale: 'Loncastuximab tesirine (Zynlonta) is a CD19-directed antibody-drug conjugate (ADC) with PBD warhead approved for r/r DLBCL after ≥2 prior systemic therapies. LOTIS-2 (Caimi 2021 Lancet Oncol): single-arm phase 2; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo, in heavily pretreated patients (median 3 prior lines, ~30% prior CAR-T). Ideal for patients NOT candidates for CAR-T (frailty, manufacturing window prohibitive, prior CD19 CAR-T failure with CD19-positive relapse, comorbidity precluding lymphodepletion). Off-the-shelf + outpatient feasible — major operational advantage over CAR-T. Bispecifics (epcoritamab, glofitamab) are competing 3L+ options with comparable ORR (~60%) but require step-up dosing + inpatient observation. Loncastuximab toxicities: peripheral edema (~50%), thrombocytopenia (~33%), neutropenia (~20%), hepatotoxicity, effusions/edema (PBD class effect). STUB regimen — no dedicated REG- entity for loncastuximab yet; flagged for REG follow-up.'
+rationale_ua: >-
+  лонкастуксимаб тезирін (Zynlonta) is a CD19-directed кон'югат антитіло-препарат (ADC) with PBD warhead схвалений для р/р DLBCL after ≥2 prior systemic therapies. LOTIS-2 (Caimi 2021 Lancet Oncol): single-arm фаза 2; ORR 48%, CR 24%, mPFS 4.9 міс., міс. 9.5 міс., in heavily pretreated patients (медіана 3 prior lines, ~30% prior CAR-T). Ideal for patients NOT candidates for CAR-T (дряхлість, manufacturing window prohibitive, prior CD19 CAR-T failure with CD19-positive рецидив, коморбідність precluding lymphodepletion). Off-the-shelf + outpatient feasible — major operational advantage over CAR-T. Bispecifics (epcoritamab, glofitamab) are competing 3L+ options with співставний ORR (~60%) but require step-up дозування + inpatient observation. Loncastuximab toxicities: peripheral edema (~50%), тромбоцитопенія (~33%), нейтропенія (~20%), гепатотоксичність, effusions/edema (PBD class effect). STUB схема — ні dedicated REG- сутність for loncastuximab yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: Loncastuximab tesirine is Cat 2A for r/r DLBCL after ≥2 prior systemic therapies per LOTIS-2; ideal for non-CAR-T-eligible patients
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: Loncastuximab tesirine is recognized 3L+ option for r/r DLBCL when CAR-T not feasible; bispecifics (epcoritamab, glofitamab) are alternatives with similar efficacy
+known_controversies:
+  - topic: Loncastuximab vs bispecific (epcoritamab / glofitamab) for r/r DLBCL 3L+ when CAR-T not feasible
+    positions:
+      - position: Loncastuximab — off-the-shelf, outpatient, no CRS/ICANS risk
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: Epcoritamab (subcutaneous) — ORR 63%, CR 39% (EPCORE NHL-1); requires step-up + inpatient observation
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: Glofitamab — fixed-duration (12 cycles) ORR 52%, CR 39%, but requires obinutuzumab pretreatment + step-up
+        sources:
+          - SRC-ESMO-DLBCL-2024
+    our_default: Loncastuximab when outpatient + lower-toxicity preferred (frail, lacks IP infrastructure for bispecific step-up); bispecific (epcoritamab) when deeper response prioritized + IP observation feasible
+    rationale: All 3L+ options for non-CAR-T pathway; loncastuximab has operational advantages but lower CR rate; bispecifics have higher CR but require infrastructure
+do_not_do:
+  - НЕ призначати при значній серцевій патології (LVEF <50%) — fluid retention + effusions можуть погіршити CHF.
+  - НЕ ігнорувати baseline + serial liver tests — hepatotoxicity у ~30%, може бути severe.
+  - НЕ призначати при active infection — neutropenia + lymphopenia підвищать септичний ризик.
+  - НЕ комбінувати з іншими myelosuppressive agents без adjustment.
+  - НЕ забути thromboprophylaxis для пацієнтів з venous thromboembolism risk — ADC + lymphoma combine high-risk.
+  - НЕ продовжувати при grade 3 effusions / edema — hold + diuretic; consider permanent discontinuation.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. 3L+ standard-track option for r/r DLBCL when CAR-T not feasible. Off-the-shelf alternative to bispecifics. Missing entity flag: dedicated REG-LONCASTUXIMAB-TESIRINE — author in PROD-2.'

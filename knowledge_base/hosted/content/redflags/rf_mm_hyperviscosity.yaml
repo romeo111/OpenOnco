@@ -1,0 +1,46 @@
+id: RF-MM-HYPERVISCOSITY
+definition: "Multiple myeloma with hyperviscosity syndrome — uncommon but classic in IgA-MM (M-spike >5 g/dL, polymerization tendency) or biclonal gammopathy: blurred vision, retinal hemorrhage, mucosal bleeding, neurologic symptoms"
+definition_ua: "Множинна мієлома із синдромом гіперв'язкості — нечастий, але класичний для IgA-MM (M-spike >5 г/дл, схильність до полімеризації) чи біклональної гамапатії: затуманене зір, ретинальні крововиливи, кровотечі зі слизових, неврологічні симптоми"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hyperviscosity_symptomatic"
+      value: true
+    - finding: "serum_viscosity_above_4cp"
+      value: true
+    - finding: "retinal_hemorrhage"
+      value: true
+    - finding: "iga_m_spike_g_dl"
+      threshold: 5
+      comparator: ">="
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Hyperviscosity is much rarer in MM than WM (IgM is intrinsically more
+  viscous than IgG/IgA), but IgA-MM with very high M-spike (>5 g/dL) or
+  biclonal disease can produce it. Per NCCN-MM + ESMO-MM 2023:
+  plasmapheresis 1-2 plasma volumes daily until symptoms resolved,
+  THEN initiate cytoreduction. Direction HOLD on routine induction
+  until plasmapheresis underway; priority 10. STUB — requires
+  clinical co-lead signoff.
+notes_ua: >
+  Hyperviscosity is much rarer in MM than WM (IgM is intrinsically more viscous than IgG/IgA), but IgA-MM with very high M-spike (>5 g/dL) or biclonal хвороба can produce it. Per NCCN-MM + ESMO-MM 2023: plasmapheresis 1-2 plasma volumes daily until symptoms resolved, THEN initiate cytoreduction. Direction утримати on routine індукція until plasmapheresis underway; priority 10. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,45 @@
+id: RF-MASTOCYTOSIS-TRANSFORMATION-PROGRESSION
+definition: "Mastocytosis with progression to mast cell leukemia (MCL) or sarcomatous transformation: rising mast cell burden in BM ≥20%, circulating mast cells ≥10% of WBC, or extracutaneous solid mast cell tumor"
+definition_ua: "Мастоцитоз з прогресією до мастоцитоз-лейкозу (MCL) або саркоматозної трансформації: зростання масткових клітин у КМ ≥20%, циркулюючі ≥10% від WBC, або екстракутанна солідна пухлина з мастклітинного типу"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "bm_mast_cells_percent"
+      threshold: 20
+      comparator: ">="
+    - finding: "pb_mast_cells_percent"
+      threshold: 10
+      comparator: ">="
+    - finding: "mast_cell_sarcoma_new"
+      value: true
+    - finding: "rapid_burden_progression"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 25
+category: transformation-progression
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-WHO-LNSC-2023
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  MCL has dismal prognosis (median OS <1 year historically). Per
+  NCCN-SM: avapritinib is preferred for MCL (PATHFINDER showed
+  responses in MCL subset); allogeneic HCT considered for fit
+  patients in remission. Direction INTENSIFY → cytoreduction +
+  consider HCT. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  MCL has dismal прогноз (медіана ЗВ <1 year historically). Per NCCN-SM: avapritinib is переважний for MCL (PATHFINDER showed responses in MCL subset); алогенний HCT considered for fit patients in ремісія. Direction INTENSIFY → cytoreduction + consider HCT. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

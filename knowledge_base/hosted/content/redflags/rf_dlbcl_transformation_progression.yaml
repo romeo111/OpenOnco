@@ -1,59 +1,103 @@
 id: RF-DLBCL-TRANSFORMATION-PROGRESSION
-definition: 'Refractory or progressive DLBCL after ≥1 line of standard immunochemotherapy: primary refractory disease (no
-  CR/PR after 4 cycles of R-CHOP or equivalent), early relapse (<12 months from end of 1L), or transformation to a more aggressive
-  histology (HGBL-DH/TH or Burkitt-like on re-biopsy at relapse). Routes patient out of standard 1L Indications and into 2L+
-  algorithms (CAR-T eligibility assessment, salvage chemotherapy ± autoSCT, bispecific antibodies, polatuzumab-bendamustine-
+definition: >
+  Refractory or progressive DLBCL after ≥1 line of standard
+  immunochemotherapy: primary refractory disease (no CR/PR after
+  4 cycles of R-CHOP or equivalent), early relapse (<12 months
+  from end of 1L), or transformation to a more aggressive
+  histology (HGBL-DH/TH or Burkitt-like on re-biopsy at relapse).
+  Routes patient out of standard 1L Indications and into 2L+
+  algorithms (CAR-T eligibility assessment, salvage chemotherapy
+  ± autoSCT, bispecific antibodies, polatuzumab-bendamustine-
   rituximab regimens).
+definition_ua: >
+  Рефрактерна або прогресуюча DLBCL після ≥1 лінії стандартної
+  імунохіміотерапії: первинно-рефрактерне захворювання (немає
+  CR/PR після 4 циклів R-CHOP або еквіваленту), ранній рецидив
+  (<12 міс від завершення 1L), або трансформація в більш
+  агресивну гістологію (HGBL-DH/TH або Burkitt-подібну на
+  ре-біопсії при рецидиві). Виводить пацієнта зі стандартних 1L
+  Indications в 2L+ алгоритми (оцінка CAR-T кандидатства,
+  сальвадж-хіміотерапія ± autoSCT, біспецифічні антитіла,
+  polatuzumab-bendamustine-rituximab).
 
-  '
-definition_ua: 'Рефрактерна або прогресуюча DLBCL після ≥1 лінії стандартної імунохіміотерапії: первинно-рефрактерне захворювання
-  (немає CR/PR після 4 циклів R-CHOP або еквіваленту), ранній рецидив (<12 міс від завершення 1L), або трансформація в більш
-  агресивну гістологію (HGBL-DH/TH або Burkitt-подібну на ре-біопсії при рецидиві). Виводить пацієнта зі стандартних 1L Indications
-  в 2L+ алгоритми (оцінка CAR-T кандидатства, сальвадж-хіміотерапія ± autoSCT, біспецифічні антитіла, polatuzumab-bendamustine-rituximab).
-
-  '
 trigger:
   type: composite_score
   any_of:
-  - finding: primary_refractory_dlbcl
-    value: true
-  - finding: early_relapse_under_12mo
-    value: true
-  - finding: transformation_to_hgbl_or_burkitt
-    value: true
-  - all_of:
-    - finding: post_4_cycle_response
-      value: stable_or_progressive
-    - finding: line_of_therapy
-      threshold: 1
-      comparator: '>='
+    - finding: "primary_refractory_dlbcl"
+      value: true
+    - finding: "early_relapse_under_12mo"
+      value: true
+    - finding: "transformation_to_hgbl_or_burkitt"
+      value: true
+    - all_of:
+        - finding: "post_4_cycle_response"
+          value: "stable_or_progressive"
+        - finding: "line_of_therapy"
+          threshold: 1
+          comparator: ">="
+
 clinical_direction: intensify
+
 severity: critical
 priority: 70
 category: transformation-progression
+
 relevant_diseases:
-- DIS-DLBCL-NOS
+  - DIS-DLBCL-NOS
 shifts_algorithm:
-- ALGO-DLBCL-2L
+  - ALGO-DLBCL-2L
+
 sources:
-- SRC-NCCN-BCELL-2025
-- SRC-ESMO-DLBCL-2024
-last_reviewed: '2026-04-26'
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-26"
 draft: true
-notes: "Closes the 5-type matrix gap for DLBCL-NOS (REDFLAG_AUTHORING_GUIDE §2 — every disease should have a transformation-progression\
-  \ entry).\nThe clinical concept differs from indolent-lymphoma transformation (FL → DLBCL or CLL → DLBCL Richter): DLBCL\
-  \ is already aggressive at baseline, so \"transformation\" here means either (a) response failure to first-line standard\
-  \ regimens, or (b) histologic re-classification to an even more aggressive entity (HGBL with MYC + BCL2/BCL6 rearrangements,\
-  \ or Burkitt-like) on re-biopsy at relapse.\nOperationally drives: - CAR-T eligibility assessment (axi-cel / liso-cel /\
-  \ tisagenlecleucel\n  per FDA/EMA labels for r/r DLBCL ≥2L; ZUMA-7 / TRANSFORM /\n  BELINDA support 2L use in early-relapse\
-  \ / refractory disease)\n- Salvage chemo (R-DHAP / R-ICE) + autoSCT for chemo-sensitive\n  relapse > 12 months\n- Bispecific\
-  \ antibodies (epcoritamab, glofitamab) in CAR-T-ineligible\n  or post-CAR-T relapse\n- Pola-BR for transplant-ineligible\
-  \ or post-CAR-T\nSTUB — content reflects standard 2026 practice; clinical reviewer must confirm the trigger thresholds (especially\
-  \ the \"primary refractory\" definition, which varies between SCHOLAR-1 and FDA-label conventions) before this RedFlag is\
-  \ wired into ALGO-DLBCL-2L decision_tree.\nreviewer_signoffs: 0\n"
-reviewer_signoffs_v2:
-- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
-  signoff_date: '2026-04-26'
-  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
-  entity_version_at_signoff: '2026-04-26'
-  scope_match: true
+
+notes: >
+  Closes the 5-type matrix gap for DLBCL-NOS (REDFLAG_AUTHORING_GUIDE
+  §2 — every disease should have a transformation-progression entry).
+
+  The clinical concept differs from indolent-lymphoma transformation
+  (FL → DLBCL or CLL → DLBCL Richter): DLBCL is already aggressive at
+  baseline, so "transformation" here means either (a) response failure
+  to first-line standard regimens, or (b) histologic re-classification
+  to an even more aggressive entity (HGBL with MYC + BCL2/BCL6
+  rearrangements, or Burkitt-like) on re-biopsy at relapse.
+
+  Operationally drives:
+  - CAR-T eligibility assessment (axi-cel / liso-cel / tisagenlecleucel
+    per FDA/EMA labels for r/r DLBCL ≥2L; ZUMA-7 / TRANSFORM /
+    BELINDA support 2L use in early-relapse / refractory disease)
+  - Salvage chemo (R-DHAP / R-ICE) + autoSCT for chemo-sensitive
+    relapse > 12 months
+  - Bispecific antibodies (epcoritamab, glofitamab) in CAR-T-ineligible
+    or post-CAR-T relapse
+  - Pola-BR for transplant-ineligible or post-CAR-T
+
+  STUB — content reflects standard 2026 practice; clinical reviewer
+  must confirm the trigger thresholds (especially the "primary
+  refractory" definition, which varies between SCHOLAR-1 and FDA-label
+  conventions) before this RedFlag is wired into ALGO-DLBCL-2L
+  decision_tree.
+
+  reviewer_signoffs: 0
+notes_ua: >
+  Closes the 5-type matrix gap for DLBCL-NOS (REDFLAG_AUTHORING_GUIDE §2 — every хвороба should have a трансформація-прогресування entry).
+
+  The clinical concept differs from індолентний-лімфома трансформація (FL → DLBCL or CLL → DLBCL Richter): DLBCL is already агресивний на старті, so "трансформація" here means either (a) відповідь failure to перша лінія стандарт схеми, або (b) histologic re-classification to an even more агресивний сутність (HGBL with MYC + BCL2/BCL6 rearrangements, or Burkitt-like) on re-біопсія at рецидив.
+
+  Operationally drives: - CAR-T eligibility assessment (axi-cel / liso-cel / тисагенлеклеуцел
+    per FDA/EMA labels for р/р DLBCL ≥2L; ZUMA-7 / TRANSFORM /
+    BELINDA support 2L use in early-рецидив / рефрактерний хвороба)
+  - сальвадж chemo (R-DHAP / R-ICE) + аутоТГСК for chemo-sensitive
+    рецидив > 12 months
+  - біспецифічний antibodies (epcoritamab, glofitamab) in CAR-T-ineligible
+    or post-CAR-T рецидив
+  - Pola-BR for непридатний до трансплантації or post-CAR-T
+
+  STUB — content reflects стандарт 2026 practice; clinical reviewer must confirm the trigger thresholds (особливо the "primary рефрактерний" definition, which varies між SCHOLAR-1 and FDA-label conventions) before this RedFlag is wired into ALGO-DLBCL-2L decision_tree.
+
+  reviewer_signoffs: 0
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

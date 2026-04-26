@@ -1,0 +1,74 @@
+id: IND-MELANOMA-NIVO-MAINT
+plan_track: standard
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV unresectable / metastatic melanoma"
+    - "Achieved ≥SD/PR after 4 cycles of nivolumab + ipilimumab induction"
+    - "Continue nivolumab monotherapy 240 mg q2w (or 480 mg q4w) for up to 2 years total or until progression / unacceptable toxicity"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by:
+  - IND-MELANOMA-3L-POST-LIFILEUCEL
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~58% during induction phase (CheckMate-067)
+  complete_response: ~22% landmark
+  progression_free_survival: Median PFS 11.5 mo for nivo+ipi (CheckMate-067; Larkin 2019 NEJM 5-yr update)
+  overall_survival_5y: 5-yr OS 52% nivo+ipi vs 44% nivo mono vs 26% ipi mono (CheckMate-067)
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-MELANOMA-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-DERMATOSCOPY
+desired_tests: []
+rationale: 'After 4 cycles of nivolumab + ipilimumab combination induction (4 doses q3w) per CheckMate-067, patients transition to nivolumab monotherapy maintenance (240 mg q2w or 480 mg q4w) until progression, unacceptable toxicity, or maximum 2 years. CheckMate-067 (Larkin 2015 NEJM, Wolchok 2017/2019/2022 updates): 5-yr OS 52% combination vs 44% nivo mono vs 26% ipi mono; 6.5-yr OS plateau ~49%; mOS NR for combination arm vs 36.9 mo nivo mono. Approximately 50-60% of patients have durable disease control beyond treatment cessation. PD-L1 status does NOT clinically modify combination choice in advanced melanoma (unlike NSCLC). Brain metastases (CheckMate-204) respond well — combination with nivo+ipi is preferred over mono. STUB regimen — no dedicated REG- entity for nivo maintenance post-CheckMate-067 yet; flagged for REG follow-up.'
+rationale_ua: >-
+  After 4 цикли of ніволумаб + іпілімумаб комбінація індукція (4 doses q3w) per CheckMate-067, patients transition to ніволумаб монотерапія підтримка (240 mg q2w or 480 mg q4w) until прогресування, unacceptable токсичність, or maximum 2 years. CheckMate-067 (Larkin 2015 NEJM, Wolchok 2017/2019/2022 updates): 5-річна ЗВ 52% комбінація vs 44% nivo mono vs 26% ipi mono; 6.5-річна ЗВ plateau ~49%; mOS NR for комбінація arm vs 36.9 mo nivo mono. приблизно 50-60% of patients have durable контроль хвороби beyond лікування cessation. PD-L1 status does NOT clinically modify комбінація choice in поширений меланома (unlike NSCLC). метастази в мозок (CheckMate-204) respond well — комбінація with nivo+ipi is переважний over mono. STUB схема — ні dedicated REG- сутність for nivo підтримка post-CheckMate-067 yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: Nivolumab maintenance after nivolumab + ipilimumab induction is Category 1 for advanced melanoma per CheckMate-067; continue up to 2 years
+  - source_id: SRC-ESMO-MELANOMA-2024
+    position: supports
+    relevant_quote_paraphrase: After 4 cycles nivo+ipi, transition to nivo mono maintenance is standard; pembrolizumab monotherapy is alternative 1L for low-tumor-burden patients
+known_controversies:
+  - topic: 2-year fixed duration vs treat-until-progression for nivolumab maintenance
+    positions:
+      - position: 2-year fixed duration — supported by CheckMate-067 protocol
+        sources:
+          - SRC-NCCN-MELANOMA-2025
+      - position: "Treat-until-progression — observational data suggest continuing benefit; risk of late progression after stopping"
+        sources:
+          - SRC-ESMO-MELANOMA-2024
+        evidence_note: KEYNOTE-006 melanoma 5-yr update suggests 2-yr treatment duration acceptable for stable responders
+    our_default: 2-year fixed duration for stable CR/PR; consider extension for individual high-risk cases
+    rationale: 2-year cap reflects pivotal trial protocol; long-tail OS curves suggest treatment-free disease control common
+do_not_do:
+  - НЕ продовжувати nivo+ipi понад 4 цикли — toxicity ескалаційна без додаткової efficacy; switch до nivo mono maintenance.
+  - НЕ ігнорувати thyroid panel + cortisol — endocrinopathies (hypophysitis, thyroiditis) часті, можуть бути permanent.
+  - НЕ призначати при active autoimmune disease (RA, IBD, lupus, MS) без multidisciplinary дискусії — ризик flare ≥40%.
+  - НЕ продовжувати при grade 3 immune-related AE — hold + steroid taper; permanent discontinue при grade 4 (other than endocrinopathy on replacement).
+  - НЕ робити vaccination (live-attenuated) під час та ≥3 місяці після nivo — недостатня immune response + ризики.
+  - НЕ скасовувати при ізольованій pseudoprogression на 1st restaging — confirm з repeat imaging 4-6 weeks.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 because nivo maintenance is continuation of 1L pathway after nivo+ipi induction. Missing entity flag: dedicated REG-NIVO-MAINTENANCE-MELANOMA — author in PROD-2.'

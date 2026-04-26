@@ -5,22 +5,21 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD20-IHC
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-CCND1-IHC
-    required: true
-    value_constraint: positive (cyclin D1 nuclear staining) — diagnostic hallmark of MCL
-  - biomarker_id: BIO-T11-14-IGH-CCND1
-    required: true
-    value_constraint: positive by FISH — diagnostic confirmation of classical MCL
-  - biomarker_id: BIO-CD5-IHC
-    required: true
-    value_constraint: positive (CD5+) — MCL immunophenotype panel marker
-  - biomarker_id: BIO-MCL-MIPI
-    required: true
-    value_constraint: MIPI required — intensive R-DHAP / autoSCT consolidation typically reserved for
-      fit younger patients regardless of MIPI; high-MIPI especially supported
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-CCND1-IHC
+      required: true
+      value_constraint: positive (cyclin D1 nuclear staining) — diagnostic hallmark of MCL
+    - biomarker_id: BIO-T11-14-IGH-CCND1
+      required: true
+      value_constraint: positive by FISH — diagnostic confirmation of classical MCL
+    - biomarker_id: BIO-CD5-IHC
+      required: true
+      value_constraint: positive (CD5+) — MCL immunophenotype panel marker
+    - biomarker_id: BIO-MCL-MIPI
+      required: true
+      value_constraint: MIPI required — intensive R-DHAP / autoSCT consolidation typically reserved for fit younger patients regardless of MIPI; high-MIPI especially supported
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 1
@@ -38,52 +37,50 @@ expected_outcomes:
   progression_free_survival: Median PFS ~7-8 years
   overall_survival_5y: ~70-80% fit-younger cohort
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
-- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
 red_flags_triggering_alternative:
-- RF-MCL-BLASTOID-OR-TP53
+  - RF-MCL-BLASTOID-OR-TP53
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-B2-MICROGLOBULIN
-- TEST-CD20-IHC
-- TEST-FISH-PANEL
-- TEST-NGS-LYMPHOID-PANEL
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-PET-CT
-- TEST-ECHO
-- TEST-PREGNANCY
-- TEST-BM-ASPIRATE
-- TEST-BM-TREPHINE
-- TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-LN-EXCISIONAL-BIOPSY
 desired_tests: []
-rationale: 'Intensive 1L for fit transplant-eligible MCL (age ≤65, ECOG 0-1): alternating R-CHOP / R-DHAP
-  × 6 + BEAM-conditioned autoSCT + rituximab maintenance × 3 years. Substantial PFS improvement vs R-CHOP
-  alone per Nordic, LYMA, and other trials. TP53-mutant / blastoid / high Ki67 cases shifted to BTKi-based
-  (RF-MCL-BLASTOID-OR-TP53 fired).
+rationale: 'Intensive 1L for fit transplant-eligible MCL (age ≤65, ECOG 0-1): alternating R-CHOP / R-DHAP × 6 + BEAM-conditioned autoSCT + rituximab maintenance × 3 years. Substantial PFS improvement vs R-CHOP alone per Nordic, LYMA, and other trials. TP53-mutant / blastoid / high Ki67 cases shifted to BTKi-based (RF-MCL-BLASTOID-OR-TP53 fired).
 
   '
+rationale_ua: >
+  Intensive 1L for fit придатний до трансплантації MCL (age ≤65, ECOG 0-1): alternating R-CHOP / R-DHAP × 6 + BEAM-conditioned аутоТГСК + ритуксимаб підтримка × 3 years. Substantial PFS покращення vs R-CHOP alone per Nordic, LYMA, and other trials. TP53-mutant / blastoid / high Ki67 cases shifted to BTKi-based (RF-MCL-BLASTOID-OR-TP53 fired).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-  relevant_quote_paraphrase: Intensive R-CHOP/R-DHAP + autoSCT + R maintenance is preferred 1L for fit
-    transplant-eligible MCL
-- source_id: SRC-ESMO-MCL-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 endorses BTKi-rituximab combinations for older/unfit MCL; intensive
-    cytarabine-based induction + autoSCT for fit younger patients
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: Intensive R-CHOP/R-DHAP + autoSCT + R maintenance is preferred 1L for fit transplant-eligible MCL
+  - source_id: SRC-ESMO-MCL-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 endorses BTKi-rituximab combinations for older/unfit MCL; intensive cytarabine-based induction + autoSCT for fit younger patients
 known_controversies: []
 do_not_do:
-- Не призначати в TP53-mutant або blastoid MCL — chemoimmuno-резистентний; прямий маршрут до BTKi-based
-  (REG-ACALABRUTINIB-RITUXIMAB).
-- Не пропускати baseline LVEF + cytogenetics + TP53 sequencing перед стартом.
-- Не використовувати при age >65 OR ECOG >1 — toxicity overwhelms benefit; route to less intensive.
-- Не пропускати HBV скринінг + entecavir prophylaxis.
-- Не вводити вінкристин інтратекально — ФАТАЛЬНО.
+  - Не призначати в TP53-mutant або blastoid MCL — chemoimmuno-резистентний; прямий маршрут до BTKi-based (REG-ACALABRUTINIB-RITUXIMAB).
+  - Не пропускати baseline LVEF + cytogenetics + TP53 sequencing перед стартом.
+  - Не використовувати при age >65 OR ECOG >1 — toxicity overwhelms benefit; route to less intensive.
+  - Не пропускати HBV скринінг + entecavir prophylaxis.
+  - Не вводити вінкристин інтратекально — ФАТАЛЬНО.
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewer_signoffs: 0

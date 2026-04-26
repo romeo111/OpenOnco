@@ -1,0 +1,45 @@
+id: RF-PMBCL-SVC-SYNDROME
+definition: "Primary mediastinal B-cell lymphoma with superior vena cava (SVC) syndrome: facial/upper-extremity edema, distended neck veins, headache, plethora, dyspnea — class-defining presentation in PMBCL"
+definition_ua: "Первинна медіастинальна B-клітинна лімфома із синдромом верхньої порожнистої вени (SVC): набряк обличчя/верхніх кінцівок, розширені вени шиї, головний біль, плетора, задишка — класична презентація PMBCL"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "svc_syndrome_present"
+      value: true
+    - finding: "facial_upper_extremity_edema"
+      value: true
+    - finding: "distended_neck_veins"
+      value: true
+    - finding: "stridor_or_airway_compromise"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PMBCL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  PMBCL median bulky mediastinal mass at diagnosis ~10-12 cm; SVC syndrome
+  reported in 30-50% of PMBCL at presentation. Per NCCN B-cell PMBCL
+  section: emergent dexamethasone 10 mg IV q6h pre-treatment; head
+  elevation; consider venous stent if severe; biopsy-then-treat sequence
+  may need to be compressed. Direction HOLD on definitive induction
+  (DA-EPOCH-R or R-CHOP-RT) until SVC stabilized + airway secure.
+  Priority 8. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  PMBCL медіана bulky mediastinal mass при діагнозі ~10-12 cm; SVC syndrome reported in 30-50% of PMBCL при зверненні. Per NCCN B-cell PMBCL section: emergent dexamethasone 10 mg IV q6h pre-лікування; head elevation; consider venous stent if severe; біопсія-then-treat sequence may need to be compressed. Direction утримати on definitive індукція (DA-EPOCH-R or R-CHOP-RT) until SVC stabilized + airway secure. Priority 8. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

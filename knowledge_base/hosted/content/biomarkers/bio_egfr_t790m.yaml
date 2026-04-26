@@ -1,0 +1,44 @@
+id: BIO-EGFR-T790M
+names:
+  preferred: "EGFR T790M (acquired resistance / gatekeeper)"
+  ukrainian: "Мутація EGFR T790M (набута резистентність)"
+  english: "EGFR T790M"
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "EGFR"
+  exon: "20"
+  variant_type: "missense"
+  hgvs_protein: "p.T790M"
+  functional_impact: "resistance to 1st/2nd-gen EGFR-TKI; sensitive to 3rd-gen (osimertinib)"
+
+measurement:
+  method: "ctDNA NGS (preferred for re-biopsy at progression) OR repeat tumor biopsy NGS"
+specimen_requirements: ["Plasma ctDNA at progression on 1st/2nd-gen TKI", "Tissue re-biopsy if ctDNA negative"]
+
+related_biomarkers: [BIO-EGFR-MUTATION, BIO-EGFR-L858R]
+sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Surfaces as RESISTANCE in OncoKB for gefitinib/erlotinib/afatinib/dacomitinib —
+# triggers resistance-conflict banner in track-card if any of those drugs
+# are present in the engine-recommended regimen (safe-rollout v3 §6 T3
+# mitigation; CHARTER §15.2 C6 automation-bias guard).
+oncokb_lookup:
+  gene: EGFR
+  variant: T790M
+external_ids:
+  hgnc_symbol: "EGFR"
+  hgvs_protein: "p.T790M"
+  oncokb_url: "https://www.oncokb.org/gene/EGFR/T790M"
+
+last_reviewed: "2026-04-27"
+notes: >
+  Acquired in ~50-60% of patients progressing on 1st/2nd-generation
+  EGFR-TKI. Per AURA3 (Mok 2017), osimertinib doubles PFS vs platinum/
+  pemetrexed in T790M+. May also occur de novo (rare; ~1%) — typically
+  germline. ctDNA "liquid biopsy" first-line per NCCN at acquired
+  resistance, with tissue confirmation if negative.
+notes_ua: >
+  набутий in ~50-60% of patients progressing on 1st/2nd-generation EGFR-TKI. Per AURA3 (Mok 2017), осимертиніб doubles PFS vs platinum/ pemetrexed in T790M+. May also occur de novo (рідкісний; ~1%) — типово герміногенний. цоДНК "рідинна біопсія" перша лінія per NCCN at набута резистентність, with tissue confirmation if negative.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

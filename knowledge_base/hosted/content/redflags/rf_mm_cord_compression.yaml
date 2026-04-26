@@ -1,0 +1,45 @@
+id: RF-MM-CORD-COMPRESSION
+definition: "Multiple myeloma with malignant epidural spinal cord compression: new motor deficit, sensory level, severe back pain with vertebral plasmacytoma / lytic lesion + canal invasion — MM is a leading hematologic cause of MESCC"
+definition_ua: "Множинна мієлома із синдромом стиснення спинного мозку: новий моторний дефіцит, сенсорний рівень, біль у спині з вертебральною плазмоцитомою / літичним вогнищем + інвазією каналу — MM є провідною гематологічною причиною MESCC"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "spinal_cord_compression"
+      value: true
+    - finding: "new_motor_deficit_with_back_pain"
+      value: true
+    - finding: "vertebral_plasmacytoma_with_canal_invasion"
+      value: true
+    - finding: "cauda_equina_syndrome"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+  - SRC-EHA-EMN-MM-2025
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN-MM + ESMO-MM 2023 + EHA-EMN-MM 2025: dexamethasone 40 mg PO/IV
+  bolus, MRI whole spine, urgent RT (8 Gy ×1 or 20-30 Gy fractionated)
+  ± neurosurgical decompression for instability/large mass; bortezomib-
+  based induction begun in parallel (rapid cytoreduction). Direction
+  HOLD on routine induction start until decompression initiated;
+  priority 8. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Per NCCN-MM + ESMO-MM 2023 + EHA-EMN-MM 2025: dexamethasone 40 mg PO/IV bolus, MRI whole spine, urgent RT (8 Gy ×1 або 20-30 Gy fractionated) ± neurosurgical decompression for instability/large mass; бортезоміб- based індукція begun in parallel (rapid cytoreduction). Direction утримати on routine індукція start until decompression initiated; priority 8. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
