@@ -29,6 +29,7 @@ decision_tree:
       result: IND-WM-2L-CARFILZOMIB-CXCR4MUT
     if_false:
       next_step: 2
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 2 — cBTKi-naive (e.g., 1L was DRC or RCD): zanubrutinib preferred.
   - step: 2
@@ -41,6 +42,7 @@ decision_tree:
       result: IND-WM-2L-ZANUBRUTINIB
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — chemo-free preferred OR post-BTKi failure → VRd.
   - step: 3
@@ -49,6 +51,7 @@ decision_tree:
         - condition: "Chemo-tolerant fixed-duration preference (avoid continuous BTKi)"
         - condition: "Post-cBTKi failure / progression"
         - condition: "MYD88-WT (BTKi response markedly weaker)"
+        - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-WM-2L-VRD
     if_false:

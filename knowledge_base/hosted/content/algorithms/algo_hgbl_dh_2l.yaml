@@ -75,6 +75,7 @@ decision_tree:
       result: IND-HGBL-DH-2L-CART-AXICEL  # placeholder; see notes — salvage+autoSCT for late relapse
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — default: HGBL-DH 2L → axi-cel CAR-T (curative-intent
   # aggressive track for the realistic majority of HGBL-DH
@@ -83,6 +84,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "HGBL-DH relapsed/refractory, CAR-T-eligible, no specific salvage-chemo+autoSCT preference"
+        - red_flag: RF-HGBL-DH-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HGBL-DH-2L-CART-AXICEL
     if_false:

@@ -33,6 +33,7 @@ decision_tree:
       result: IND-MELANOMA-2L-KIT-IMATINIB
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — Branch on prior-therapy axis. Was 1L anti-PD-1 (with or
   # without ipi)?
@@ -44,6 +45,7 @@ decision_tree:
       next_step: 3
     if_false:
       next_step: 4
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 3 — Post-IO branch. If BRAF V600+, BRAFi+MEKi doublet is
   # the standard 2L per NCCN/ESMO + DREAMseq sequencing data. If
@@ -56,6 +58,7 @@ decision_tree:
       result: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
     if_false:
       result: IND-MELANOMA-3L-LIFILEUCEL
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 4 — Post-BRAFi branch (1L was BRAFi+MEKi for BRAF V600+
   # patient with visceral crisis or active brain mets). 2L is
@@ -70,6 +73,7 @@ decision_tree:
       result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
     if_false:
       next_step: 5
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 5 — Patient unfit for ipi+nivo OR strongly prefers
   # tolerability profile → rela+nivo (Opdualag) as IO-naive 2L
@@ -80,6 +84,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
+        - red_flag: RF-MELANOMA-FRAILTY-AGE
     if_true:
       result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
     if_false:

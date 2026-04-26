@@ -29,6 +29,7 @@ decision_tree:
       result: IND-BREAST-TNBC-2L-BRCA-OLAPARIB
     if_false:
       next_step: 2
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 2 — HER2-low (IHC 1+ or IHC 2+/ISH-) → T-DXd preferred
   # over sacituzumab (DESTINY-Breast04 TNBC subset benefit signal).
@@ -41,6 +42,7 @@ decision_tree:
       result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — default: sacituzumab govitecan (ASCENT) — no biomarker
   # gating, applies to HER2 IHC=0 metastatic TNBC ≥2L.
@@ -52,6 +54,7 @@ decision_tree:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
     if_false:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-BREAST-2025

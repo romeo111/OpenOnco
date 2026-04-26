@@ -25,6 +25,7 @@ decision_tree:
       result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
     if_false:
       next_step: 2
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   - step: 2
     evaluate:
       any_of:
@@ -35,6 +36,7 @@ decision_tree:
       result: IND-GIST-1L-IMATINIB
     if_false:
       next_step: 3
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   - step: 3
     evaluate:
       any_of:
@@ -43,6 +45,7 @@ decision_tree:
       result: IND-GIST-1L-IMATINIB
     if_false:
       result: IND-GIST-1L-IMATINIB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-GIST-2025

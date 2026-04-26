@@ -48,6 +48,7 @@ decision_tree:
       any_of:
         - condition: "CrCl <50 mL/min OR baseline hearing loss / tinnitus precluding cisplatin"
         - condition: "Prior cisplatin cumulative exposure ≥300 mg/m^2"
+        - red_flag: RF-BURKITT-ORGAN-DYSFUNCTION
     if_true:
       result: IND-BURKITT-2L-RICE-ASCT
     if_false:
@@ -66,6 +67,7 @@ decision_tree:
       result: IND-BURKITT-2L-RDHAP-ASCT
     if_false:
       next_step: 4
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 4 — default: R-ICE preferred (CORAL-equivalent salvage,
   # institutional familiarity > R-DHAP in most UA centers).
@@ -73,6 +75,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Fit transplant-eligible relapsed/refractory Burkitt, no R-ICE-specific contraindication"
+        - red_flag: RF-BURKITT-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-BURKITT-2L-RICE-ASCT
     if_false:

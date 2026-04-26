@@ -25,6 +25,7 @@ decision_tree:
       any_of:
         - condition: "Both prior cBTKi AND venetoclax-based regimen failed (≥2 prior lines)"
         - condition: "BTK-C481 mutation documented at progression"
+        - red_flag: RF-CLL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CLL-3L-PIRTOBRUTINIB
     if_false:
@@ -40,6 +41,7 @@ decision_tree:
       result: IND-CLL-2L-VENR-MURANO
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — post-VenO failure: switch back to BTKi (zanubrutinib preferred).
   - step: 3
@@ -51,6 +53,7 @@ decision_tree:
       result: IND-CLL-1L-ZANUBRUTINIB
     if_false:
       result: IND-CLL-2L-VENR-MURANO
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-BCELL-2025

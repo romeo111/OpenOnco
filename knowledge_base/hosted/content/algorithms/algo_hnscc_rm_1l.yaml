@@ -22,6 +22,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+        - red_flag: RF-HNSCC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
     if_false:
@@ -34,6 +35,7 @@ decision_tree:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
     if_false:
       result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-HNSCC-2025

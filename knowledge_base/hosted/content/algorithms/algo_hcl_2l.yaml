@@ -56,6 +56,7 @@ decision_tree:
       result: IND-HCL-2L-VEMURAFENIB
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — BRAF-V600E NEGATIVE (HCL-variant) OR vemurafenib
   # contraindicated/inaccessible: cladribine retreatment (>1y
@@ -69,6 +70,8 @@ decision_tree:
           comparator: "negative (HCL-variant or rare WT)"
         - condition: "Vemurafenib inaccessible / contraindicated (severe arthralgia history, QTc prolongation, hepatic dysfunction)"
         - condition: "Late relapse (>1y from 1L) — cladribine retreatment retains efficacy"
+        - red_flag: RF-HCL-ORGAN-DYSFUNCTION
+        - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HCL-2L-VEMURAFENIB  # placeholder; see notes — cladribine retreatment / pentostatin
     if_false:
@@ -80,6 +83,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Classic HCL (BRAF-V600E+), 2L+ relapsed/refractory"
+        - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-HCL-2L-VEMURAFENIB
     if_false:

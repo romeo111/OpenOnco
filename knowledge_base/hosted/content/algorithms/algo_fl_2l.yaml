@@ -30,6 +30,7 @@ decision_tree:
       result: IND-FL-3L-TAZEMETOSTAT
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — CAR-T-eligible: axi-cel ZUMA-5 durable remission.
   - step: 2
@@ -42,6 +43,7 @@ decision_tree:
       result: IND-FL-3L-AXICEL-CART
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — default: transplant-ineligible / no CAR-T → mosunetuzumab.
   - step: 3
@@ -53,6 +55,7 @@ decision_tree:
       result: IND-FL-3L-MOSUNETUZUMAB
     if_false:
       result: IND-FL-3L-MOSUNETUZUMAB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-BCELL-2025

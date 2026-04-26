@@ -58,6 +58,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — HER2 amplified (~3% of mCRC) AND RAS-WT. MOUNTAINEER
   # tucatinib + trastuzumab default; T-DXd alternative noted in
@@ -71,6 +72,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
     if_false:
       next_step: 5
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 5 — Anti-EGFR rechallenge (3L+; positioned here so 2L candidates
   # without driver mutations route to standard cytotoxic-switch first).
@@ -87,6 +89,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
     if_false:
       next_step: 6
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 6 — 2L cytotoxic-switch default (FOLFOX → FOLFIRI + biologic
   # continuation per TML/ML18147). Standard track.
@@ -94,6 +97,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "First disease progression on 1L FOLFOX-based regimen (FOLFOX, FOLFOX+bev, FOLFOX+cetux)"
+        - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
     if_false:
@@ -106,6 +110,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
+        - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CRC-METASTATIC-3L-TAS102-BEV
     if_false:

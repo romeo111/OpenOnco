@@ -24,6 +24,7 @@ decision_tree:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
   if_false:
     next_step: 2
+  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 - step: 2
   evaluate:
     all_of:
@@ -34,11 +35,13 @@ decision_tree:
     result: IND-DLBCL-3L-AXICEL-CART
   if_false:
     next_step: 3
+  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 - step: 3
   evaluate:
     any_of:
     - condition: Transplant-ineligible (age >70 OR comorbidity OR ECOG ≥2)
     - condition: CAR-T not accessible
+    - red_flag: RF-DLBCL-FRAILTY-AGE
   if_true:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
   if_false:

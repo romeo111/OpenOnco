@@ -53,6 +53,7 @@ decision_tree:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV  # OCEANS chemo, then olaparib maintenance per followed_by
     if_false:
       next_step: 3
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 3 — platinum-sensitive HRD+ (BRCA-WT) → re-induction chemo+bev,
   # maintenance niraparib via followed_by chain.
@@ -61,6 +62,7 @@ decision_tree:
       any_of:
         - condition: "HRD-positive (genomic instability score ≥42 or BRCA-mut equivalent)"
         - biomarker: BIO-HRD-STATUS
+        - red_flag: RF-OVARIAN-HRD-ACTIONABILITY
     if_true:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV  # OCEANS chemo, then niraparib maintenance per followed_by
     if_false:
@@ -76,6 +78,7 @@ decision_tree:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
     if_false:
       result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 5 — platinum-resistant: FRα-high (≥75% TPS by VENTANA FOLR1
   # RxDx) → mirvetuximab soravtansine (MIRASOL, ESCAT IA).
@@ -88,6 +91,7 @@ decision_tree:
       result: IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB
     if_false:
       next_step: 6
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 6 — platinum-resistant, FRα-low/medium/negative or untested →
   # AURELIA chemo + bev (default to weekly paclitaxel + bev: only AURELIA
@@ -102,6 +106,7 @@ decision_tree:
       result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
     if_false:
       result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-OVARIAN-2025

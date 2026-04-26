@@ -28,6 +28,7 @@ decision_tree:
       result: IND-MCL-2L-ACALABRUTINIB
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — post-cBTKi failure + CAR-T-eligible → brexucel preferred.
   - step: 2
@@ -40,6 +41,7 @@ decision_tree:
       result: IND-MCL-3L-BREXUCEL-CART
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — post-cBTKi failure, CAR-T-ineligible → pirtobrutinib.
   - step: 3
@@ -51,6 +53,7 @@ decision_tree:
       result: IND-MCL-3L-PIRTOBRUTINIB
     if_false:
       result: IND-MCL-2L-ACALABRUTINIB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-BCELL-2025

@@ -42,6 +42,7 @@ decision_tree:
       next_step: 2
     if_false:
       next_step: 4
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 2
     evaluate:
@@ -51,12 +52,14 @@ decision_tree:
       result: IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
     if_false:
       next_step: 3
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 3
     # EGFR activating (ex19del / L858R) post-osimertinib 1L → ami+laz
     evaluate:
       any_of:
         - condition: "Disease progression on osimertinib 1L (EGFR ex19del or L858R)"
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
     if_false:
@@ -73,12 +76,14 @@ decision_tree:
       next_step: 5
     if_false:
       next_step: 6
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 5
     # ALK 2L: post-1G crizotinib OR post-2G alectinib/brigatinib → lorlatinib
     evaluate:
       any_of:
         - condition: "Disease progression on prior ALK-TKI (1G crizotinib OR 2G alectinib/brigatinib/ceritinib)"
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NSCLC-ALK-2L-LORLATINIB
     if_false:
@@ -93,6 +98,7 @@ decision_tree:
       next_step: 7
     if_false:
       next_step: 8
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 7
     # ROS1 2L: characterized G2032R → repotrectinib; otherwise entrectinib
@@ -103,6 +109,7 @@ decision_tree:
       result: IND-NSCLC-2L-ROS1-REPOTRECTINIB
     if_false:
       result: IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 8: KRAS G12C ─────────────────────────────────────────────
   - step: 8
@@ -113,6 +120,7 @@ decision_tree:
       next_step: 9
     if_false:
       next_step: 10
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 9
     # KRAS G12C 2L: active brain mets → adagrasib; otherwise sotorasib
@@ -123,6 +131,7 @@ decision_tree:
       result: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
     if_false:
       result: IND-NSCLC-2L-KRAS-G12C-SOTORASIB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 10: MET ex14 ─────────────────────────────────────────────
   - step: 10
@@ -133,6 +142,7 @@ decision_tree:
       next_step: 11
     if_false:
       next_step: 12
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   - step: 11
     # MET ex14 2L: once-daily preference → tepotinib; otherwise capmatinib
@@ -143,6 +153,7 @@ decision_tree:
       result: IND-NSCLC-2L-MET-EX14-TEPOTINIB
     if_false:
       result: IND-NSCLC-2L-MET-EX14-CAPMATINIB
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 12: BRAF V600E ───────────────────────────────────────────
   - step: 12
@@ -153,6 +164,7 @@ decision_tree:
       result: IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
     if_false:
       next_step: 13
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 13: RET fusion ───────────────────────────────────────────
   - step: 13
@@ -163,6 +175,7 @@ decision_tree:
       result: IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
     if_false:
       next_step: 14
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 14: NTRK fusion (pan-tumor) ──────────────────────────────
   - step: 14
@@ -173,6 +186,7 @@ decision_tree:
       result: IND-NSCLC-2L-NTRK-LAROTRECTINIB
     if_false:
       next_step: 15
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 15: HER2 mutation ────────────────────────────────────────
   - step: 15
@@ -183,12 +197,14 @@ decision_tree:
       result: IND-NSCLC-2L-HER2-MUT-T-DXD
     if_false:
       next_step: 16
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # ── Step 16: Default — driver-negative post-IO+chemo → docetaxel±ram ─
   - step: 16
     evaluate:
       any_of:
         - condition: "Driver-negative disease, progression on 1L platinum + ICI"
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
     if_false:
