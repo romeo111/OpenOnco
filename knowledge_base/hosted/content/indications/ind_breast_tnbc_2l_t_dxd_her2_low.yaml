@@ -1,0 +1,66 @@
+id: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: TNBC
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-low (IHC 1+ OR IHC 2+ ISH-negative)"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-positive (IHC 3+ OR IHC 2+ ISH-amplified)"
+      required: false
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    # DESTINY-Breast04 TNBC cohort: ≥1 prior chemo line for metastatic.
+
+recommended_regimen: REG-TDXD-METASTATIC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 8
+  median_overall_survival_months: 18
+  notes: "DESTINY-Breast04 TNBC subset (n=63): PFS 8.5 vs 2.9 mo (HR 0.46), OS 18.2 vs 8.3 mo (HR 0.48). Small subset — extrapolation from overall cohort signal."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-DESTINY-BREAST04-MODI-2022
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. DESTINY-Breast04 included a small TNBC HER2-low cohort
+  (n=63) with consistent benefit signal — T-DXd should be preferred
+  over sacituzumab when HER2-low confirmed (IHC 1+ or IHC 2+/ISH-).
+  When HER2-IHC = 0, sacituzumab govitecan (ASCENT) is the default
+  ≥2L. ILD risk dominant safety concern — baseline CT chest + active
+  monitoring. UA access barrier: T-DXd registered but reimbursement
+  under negotiation. Sequencing question (T-DXd then sacituzumab vs
+  reverse) is unsettled; ALGO-BREAST-TNBC-2L defaults to T-DXd-first
+  for HER2-low.

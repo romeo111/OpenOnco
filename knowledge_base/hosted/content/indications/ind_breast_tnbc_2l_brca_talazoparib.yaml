@@ -1,0 +1,68 @@
+id: IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: TNBC
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRCA1-BRCA2-GERMLINE
+      value_constraint: "pathogenic OR likely-pathogenic germline variant"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OLAPARIB-BREAST  # placeholder — talazoparib regimen not yet authored as standalone
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 9
+  notes: "EMBRACA: 8.6 vs 5.6 mo (HR 0.54); ORR 62.6% vs 27.2%."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-GERMLINE-BRCA-PANEL
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-EMBRACA-LITTON-2018
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. EMBRACA established talazoparib (1 mg PO daily) for
+  germline BRCA1/2-mutant HER2- metastatic breast (≤3 prior cytotoxic
+  regimens). Comparable efficacy to olaparib (no head-to-head trial),
+  different AE profile: more haematologic (anaemia G3+ ~39%), less
+  GI than olaparib. Patient preference and AE-profile drive the
+  olaparib-vs-talazoparib choice.
+
+  KNOWN GAP: dedicated REG-TALAZOPARIB-BREAST regimen entry not yet
+  authored — current placeholder points to REG-OLAPARIB-BREAST. Engine
+  trace must surface that talazoparib dosing differs (1 mg PO daily
+  monotherapy continuous; reduce to 0.75 mg if anaemia, then 0.5 mg).
+  Follow-up authoring task. UA access: talazoparib not reimbursed.
