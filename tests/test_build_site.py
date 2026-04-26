@@ -208,11 +208,12 @@ def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
     # ~260KB at initial implementation (2026-Q1, ~200 entities); ~605KB
     # after the redflag-quality plan (2026-04-25); ~1MB after GI solid-
     # tumor batch + parallel hematology / thoracic / breast / prostate
-    # expansions (2026-04-26 — 43+ diseases, 723+ entities). Pyodide
-    # first-load (≈10 MB) dominates UX latency, so the ceiling is sized
-    # for headroom.
-    assert zip_path.stat().st_size < 1_500_000, (
-        f"engine bundle exceeds 1.5MB compressed: {zip_path.stat().st_size}"
+    # expansions (2026-04-26 — 43+ diseases, 723+ entities); ~1.5MB after
+    # heme 2L+ algorithms + drug curation (2026-04-27 — 1124 entities).
+    # Pyodide first-load (≈10 MB) dominates UX latency, so the ceiling is
+    # sized for headroom.
+    assert zip_path.stat().st_size < 2_000_000, (
+        f"engine bundle exceeds 2MB compressed: {zip_path.stat().st_size}"
     )
 
 

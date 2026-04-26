@@ -647,6 +647,101 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
         cta_secondary = "See examples"
         try_href = "/en/try.html"
         gallery_href = "/en/gallery.html"
+        capabilities_href = "/en/capabilities.html"
+        how_h2 = "Why it matters and how it works"
+        how_lead_1 = (
+            "To prescribe a treatment, an oncologist or clinical pharmacologist spends "
+            "2–4&nbsp;hours of manual work: opening the NCCN PDF, cross-checking the ESMO "
+            "guideline, re-reading the MoH protocol, verifying the national formulary for "
+            "drug availability, looking up renal/hepatic dose adjustments, adding "
+            "supportive care, remembering vaccinations and opportunistic-infection "
+            "prophylaxis. Every time, for every patient, from scratch. Any missed "
+            "contraindication can cost a life."
+        )
+        how_lead_2 = (
+            "OpenOnco automates the grunt work: <strong>the logic is the same as a "
+            "classic multidisciplinary team (MDT)</strong>, augmented by an analytical "
+            "layer. Several specialists around the patient, case discussion, an agreed "
+            "plan, return to the case when new data arrives. We simply formalize this as "
+            "a structured engine — each &laquo;virtual specialist&raquo; is a versioned "
+            "module with its own rules and source list. The clinician receives a ready "
+            "draft plan with all citations and only verifies and tunes it for the "
+            "specific patient."
+        )
+        trust_1_strong = "AI is not the doctor."
+        trust_1_text = (
+            "No LLM decides what to prescribe — clinical logic runs in a declarative "
+            "rule engine."
+        )
+        trust_2_strong = "No external LLM calls"
+        trust_2_text = (
+            "when a plan is built. Every algorithm is open and auditable line-by-line on "
+            "GitHub."
+        )
+        trust_3_strong = "only to scientific databases"
+        trust_3_text_pre = "Lookups go"
+        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, NCCN/ESMO, MoH."
+        df_aria = "OpenOnco — data flow from patient profile to two treatment plans"
+        df1_title = "Patient profile"
+        df1_body = (
+            "FHIR R4 / mCODE: diagnosis, stage, histology, biomarkers, labs, prior lines, "
+            "comorbidities."
+        )
+        df1_aria = "Example patient biomarkers"
+        df2_title = "Open-standards verification"
+        df2_body = (
+            "Every diagnosis code, lab value, dose and drug is grounded in a public "
+            "international standard. No closed vocabularies."
+        )
+        df2_aria = "Open standards used for verification"
+        df3_title = "Red flags, dose adjustments, links"
+        df3_body = (
+            "A declarative rule engine surfaces risks, auto-adjusts dosing, and wires "
+            "biomarker → drug → monitoring connections."
+        )
+        df3_li_1 = "106 red flags across 28 diseases"
+        df3_li_2 = "renal / hepatic / age / weight adjustments"
+        df3_li_3 = "biomarker ↔ regimen ↔ monitoring"
+        df4_title = "Two plans with full citations"
+        df4_body = (
+            "<strong>Standard</strong> (guideline-grade) + <strong>aggressive</strong> "
+            "(trials with higher efficacy). Every claim is a versioned citation. Plans "
+            "refresh automatically as new data arrives."
+        )
+        moh_label = "MoH"
+        why_today_h = "Why start using it today"
+        why_cards = [
+            ("2–4 hours → 5 minutes",
+             "Less time on manual NCCN/ESMO/MoH cross-checking, more patients seen. "
+             "Fewer missed contraindications, less harm."),
+            ("No black box",
+             "An LLM is not the decision-maker — a declarative rule engine is, with "
+             "public code and a public KB. Plans are built <strong>without external LLM "
+             "calls</strong>; only scientific databases (PubMed, ClinicalTrials.gov, "
+             "DailyMed, openFDA) are queried. The clinician sees every &laquo;why&raquo; "
+             "alongside every &laquo;what&raquo;."),
+            ("Biomarkers you won&rsquo;t miss",
+             "TP53, CD30, MYD88, eGFR, hepatic function — every flag automatically "
+             "rewrites the plan: contraindications, dose adjustments, supportive care, "
+             "monitoring."),
+            ("New data → instant re-check",
+             "Fresh labs or clinician decisions update both plans automatically — no "
+             "need to re-sweep all the sources by hand."),
+            ("Free, open, forever",
+             "MIT-style. No paywall, no restrictions for public hospitals. Open-source "
+             "means it can&rsquo;t quietly disappear or be locked behind investors "
+             "tomorrow."),
+            ("Ready for patients today",
+             "28 diseases, 106 RFs, clinical sign-off received. First real-patient "
+             "plans were rated strong by oncologists. There is no reason to wait."),
+        ]
+        why_today_foot = (
+            "Every missed biomarker can cost a life. Every hour of manual cross-checking "
+            "is an hour the patient waits for a decision. The tool is ready today — "
+            "start with a virtual patient and see your typical case through a layer of "
+            "open standards."
+        )
+        why_cta_secondary = "What&rsquo;s currently in the KB"
     else:
         hero_h1 = "Open-source інфраструктура клінічних рішень в онкології"
         hero_sub = (
@@ -659,6 +754,108 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
         cta_secondary = "Дивитись приклади"
         try_href = "try.html"
         gallery_href = "gallery.html"
+        capabilities_href = "capabilities.html"
+        how_h2 = "Чому це потрібно і як це працює"
+        how_lead_1 = (
+            "Щоб призначити лікування, лікар або клінічний фармаколог витрачає "
+            "2–4&nbsp;години ручної роботи: відкриває NCCN PDF, звіряє ESMO guideline, "
+            "перечитує МОЗ протокол, перевіряє НСЗУ-формуляр на доступність препарату, "
+            "шукає dose adjustments для нирок чи печінки, додає supportive care, не "
+            "забуває про вакцинації та профілактику опортуністичних інфекцій. І так — "
+            "для кожного пацієнта, кожного разу заново. Будь-яка пропущена "
+            "контраіндикація може коштувати життя."
+        )
+        how_lead_2 = (
+            "OpenOnco автоматизує цю чорнову роботу: <strong>логіка така сама, як у "
+            "класичної мультидисциплінарної команди (MDT)</strong>, посиленої шаром "
+            "аналітичних алгоритмів. Кілька спеціалістів навколо пацієнта, обговорення "
+            "випадку, узгоджений план, повернення до випадку при появі нових даних. Ми "
+            "просто оформлюємо це як structured engine — кожен &laquo;віртуальний "
+            "лікар&raquo; це модуль із власною версією, правилами та списком джерел. "
+            "Лікар отримує готовий проєкт плану з усіма посиланнями і лише верифікує та "
+            "коригує його під конкретного пацієнта."
+        )
+        trust_1_strong = "AI не є лікарем."
+        trust_1_text = (
+            "LLM не вирішує, що призначати — клінічну логіку виконує декларативний "
+            "rule engine."
+        )
+        trust_2_strong = "Жодних викликів зовнішніх LLM"
+        trust_2_text = (
+            "у момент побудови плану. Усі алгоритми відкриті, перевіряються "
+            "рядок-за-рядком на GitHub."
+        )
+        trust_3_strong = "лише в наукові бази"
+        trust_3_text_pre = "Запити йдуть"
+        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, NCCN/ESMO, МОЗ."
+        df_aria = "OpenOnco — потік даних від профілю пацієнта до двох планів лікування"
+        df1_title = "Профіль пацієнта"
+        df1_body = (
+            "FHIR R4 / mCODE: діагноз, стадія, гістологія, біомаркери, лабораторні "
+            "показники, попередні лінії терапії, коморбідності."
+        )
+        df1_aria = "Приклад біомаркерів пацієнта"
+        df2_title = "Верифікація відкритими стандартами"
+        df2_body = (
+            "Кожен код діагнозу, лабораторний показник, доза й препарат — у публічному "
+            "міжнародному стандарті. Жодних закритих словників."
+        )
+        df2_aria = "Відкриті стандарти, якими верифікуються дані"
+        df3_title = "Red flags, корекції та зв&rsquo;язки"
+        df3_body = (
+            "Декларативний rule engine знаходить ризики, автоматично коригує дози й "
+            "вибудовує зв&rsquo;язки біомаркер → препарат → моніторинг."
+        )
+        df3_li_1 = "106 червоних прапорців по 28 діагнозах"
+        df3_li_2 = "корекції на нирки, печінку, вік, вагу"
+        df3_li_3 = "зв&rsquo;язок біомаркер ↔ режим ↔ моніторинг"
+        df4_title = "Два плани з повними цитатами"
+        df4_body = (
+            "<strong>Стандартний</strong> (за керівницями) + <strong>агресивний</strong> "
+            "(трайали з вищою ефективністю). Кожне твердження — посилання на джерело з "
+            "версією. План оновлюється автоматично, щойно з&rsquo;являються нові дані."
+        )
+        moh_label = "МОЗ"
+        why_today_h = "Чому варто почати користуватись уже сьогодні"
+        why_cards = [
+            ("2–4 години → 5 хвилин",
+             "Лікар витрачає менше часу на чорнову звірку NCCN/ESMO/МОЗ і встигає "
+             "прийняти більше пацієнтів. Менше пропущених контраіндикацій — менше шкоди."),
+            ("Жодного &laquo;чорного ящика&raquo;",
+             "Не LLM вирішує лікування, а декларативний rule engine із публічним кодом "
+             "і публічною KB. План будується <strong>без викликів зовнішніх LLM</strong> "
+             "— лише запити в наукові бази (PubMed, ClinicalTrials.gov, DailyMed, "
+             "openFDA). Лікар бачить кожне &laquo;чому&raquo; поряд із кожним "
+             "&laquo;що&raquo;."),
+            ("Біомаркери, які не пропустиш",
+             "TP53, CD30, MYD88, eGFR, печінкова функція — кожен прапорець автоматично "
+             "переписує план: контраіндикації, корекція дози, supportive care, моніторинг."),
+            ("Перевірка нових даних — миттєво",
+             "Свіжі лабораторні чи рішення лікаря оновлюють обидва плани автоматично, "
+             "без повторного ручного перебору джерел."),
+            ("Безкоштовно, відкрито, назавжди",
+             "MIT-style. Без paywall, без обмежень для державних лікарень. Open-source "
+             "гарантує, що завтра воно нікуди не зникне і його не &laquo;закриють&raquo; "
+             "інвестори."),
+            ("Готово до пацієнтів сьогодні",
+             "28 діагнозів, 106 RF, клінічний sign-off отриманий. Перші реальні плани "
+             "вже верифіковані онкологами як сильні. Немає сенсу чекати."),
+        ]
+        why_today_foot = (
+            "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
+            "звіряння — це години, які пацієнт чекає рішення. Інструмент готовий вже "
+            "сьогодні — почніть із віртуального пацієнта і подивіться, як виглядає ваш "
+            "типовий випадок крізь шар відкритих стандартів."
+        )
+        why_cta_secondary = "Що зараз у базі знань"
+
+    why_cards_html = "\n".join(
+        f'        <div class="why-card">\n'
+        f'          <div class="why-card-h">{h}</div>\n'
+        f'          <p>{p}</p>\n'
+        f'        </div>'
+        for h, p in why_cards
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
@@ -688,28 +885,98 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
   </section>
 
   <section class="how">
-    <h2>Чому це потрібно і як це працює</h2>
+    <h2>{how_h2}</h2>
     <p class="how-lead">
-      Щоб призначити лікування, лікар або клінічний фармаколог витрачає 2–4&nbsp;години
-      ручної роботи: відкриває NCCN PDF, звіряє ESMO guideline, перечитує МОЗ протокол,
-      перевіряє НСЗУ-формуляр на доступність препарату, шукає dose adjustments для нирок
-      чи печінки, додає supportive care, не забуває про вакцинації та профілактику
-      опортуністичних інфекцій. І так — для кожного пацієнта, кожного разу заново.
-      Будь-яка пропущена контраіндикація може коштувати життя.
+      {how_lead_1}
     </p>
     <p class="how-lead">
-      OpenOnco автоматизує цю чорнову роботу: <strong>логіка така сама, як у класичної
-      мультидисциплінарної команди (MDT)</strong>, посиленої шаром аналітичних алгоритмів.
-      Кілька спеціалістів навколо пацієнта, обговорення випадку, узгоджений план,
-      повернення до випадку при появі нових даних. Ми просто оформлюємо це як structured
-      engine — кожен «віртуальний лікар» це модуль із власною версією, правилами та
-      списком джерел. Лікар отримує готовий проєкт плану з усіма посиланнями і лише
-      верифікує та коригує його під конкретного пацієнта.
+      {how_lead_2}
     </p>
-    <figure class="how-fig">
-      <img src="/MDT-light.png" alt="Мультидисциплінарна команда, посилена шаром аналітичних алгоритмів — як спеціалісти спільно ухвалюють план лікування пацієнта" loading="lazy">
-      <figcaption>Кожна роль (Хірург-онколог, Хіміотерапевт, Радіолог, Патолог, Молекулярний генетик, Радіотерапевт, Психолог/паліатив тощо) у нашій системі — це <strong>скіл</strong> із власною версією. Активується автоматично при умовах профілю пацієнта і додає до плану свої open-questions, contraindications, supportive care. Деталі того, що зараз у KB і як працює engine — на сторінці <a href="/capabilities.html">Можливості</a>.</figcaption>
-    </figure>
+
+    <div class="trust-strip" role="note">
+      <div class="trust-pill trust-pill--no">
+        <span class="trust-pill-mark">×</span>
+        <span class="trust-pill-text"><strong>{trust_1_strong}</strong> {trust_1_text}</span>
+      </div>
+      <div class="trust-pill trust-pill--no">
+        <span class="trust-pill-mark">×</span>
+        <span class="trust-pill-text"><strong>{trust_2_strong}</strong> {trust_2_text}</span>
+      </div>
+      <div class="trust-pill trust-pill--yes">
+        <span class="trust-pill-mark">✓</span>
+        <span class="trust-pill-text">{trust_3_text_pre} <strong>{trust_3_strong}</strong>{trust_3_text_post}</span>
+      </div>
+    </div>
+
+    <div class="dataflow" aria-label="{df_aria}">
+      <div class="dataflow-stage" data-stage="1">
+        <div class="dataflow-num">01 · INPUT</div>
+        <div class="dataflow-title">{df1_title}</div>
+        <div class="dataflow-body">
+          {df1_body}
+          <div class="biomarker-row" aria-label="{df1_aria}">
+            <span class="biomarker">CD30+</span>
+            <span class="biomarker">BCL2/MYC</span>
+            <span class="biomarker">TP53</span>
+            <span class="biomarker">IPI 4</span>
+            <span class="biomarker">eGFR 42</span>
+          </div>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="2">
+        <div class="dataflow-num">02 · VERIFY</div>
+        <div class="dataflow-title">{df2_title}</div>
+        <div class="dataflow-body">
+          {df2_body}
+          <div class="std-row" aria-label="{df2_aria}">
+            <span class="std-pill">ICD-O-3</span>
+            <span class="std-pill">LOINC</span>
+            <span class="std-pill">RxNorm</span>
+            <span class="std-pill">ATC</span>
+            <span class="std-pill">CTCAE v5</span>
+            <span class="std-pill">NCCN</span>
+            <span class="std-pill">ESMO</span>
+            <span class="std-pill">{moh_label}</span>
+          </div>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="3">
+        <div class="dataflow-num">03 · BIOMARKERS</div>
+        <div class="dataflow-title">{df3_title}</div>
+        <div class="dataflow-body">
+          {df3_body}
+          <ul class="flow-list">
+            <li><span class="rf-tag rf-red">RF</span> {df3_li_1}</li>
+            <li><span class="rf-tag rf-amber">DOSE</span> {df3_li_2}</li>
+            <li><span class="rf-tag rf-teal">LINK</span> {df3_li_3}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="4">
+        <div class="dataflow-num">04 · OUTPUT</div>
+        <div class="dataflow-title">{df4_title}</div>
+        <div class="dataflow-body">
+          {df4_body}
+        </div>
+      </div>
+    </div>
+
+    <div class="why-today">
+      <h3 class="why-today-h">{why_today_h}</h3>
+      <div class="why-today-grid">
+{why_cards_html}
+      </div>
+      <p class="why-today-foot">
+        {why_today_foot}
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{try_href}">{cta_primary}</a>
+        <a class="btn btn-secondary" href="{capabilities_href}">{why_cta_secondary}</a>
+      </div>
+    </div>
   </section>
 
   <footer class="page-foot">
@@ -2798,20 +3065,148 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   font-size: 15px; color: var(--gray-700); max-width: 880px;
   margin-bottom: 22px;
 }
-.how-fig {
-  background: #0a2e1a;  /* dark backdrop matches infograph palette */
-  padding: 24px; border-radius: 12px; text-align: center;
-  margin: 0;
+
+/* Trust strip — sits above the data flow, sets AI/LLM expectations up front. */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 22px 0 18px;
 }
-.how-fig img {
-  max-width: 100%; height: auto; border-radius: 6px;
+.trust-pill {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border-radius: 8px;
+  font-size: 13.5px; line-height: 1.45;
+  border: 1px solid var(--gray-200);
   background: white;
 }
-.how-fig figcaption {
-  margin-top: 14px; font-size: 13px; color: var(--green-100);
-  text-align: left; line-height: 1.55;
+.trust-pill--no { border-left: 3px solid var(--red); }
+.trust-pill--yes { border-left: 3px solid var(--green-600); background: var(--green-50); }
+.trust-pill-mark {
+  font-family: var(--font-mono); font-weight: 700;
+  width: 22px; height: 22px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-size: 14px;
 }
-.how-fig figcaption strong { color: white; }
+.trust-pill--no .trust-pill-mark { background: var(--red-bg); color: var(--red); }
+.trust-pill--yes .trust-pill-mark { background: var(--green-100); color: var(--green-700); }
+.trust-pill-text { color: var(--gray-700); }
+.trust-pill-text strong { color: var(--gray-900); }
+
+/* Data flow — replaces the prior MDT figure. Four stages on a dark backdrop
+   so the open-standards / biomarker chips read as live data, not decoration. */
+.dataflow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 0; align-items: stretch;
+  background: linear-gradient(135deg, #0a2e1a 0%, #0d3f24 60%, #0f4d2c 100%);
+  padding: 26px 22px; border-radius: 12px;
+  margin: 0 0 28px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
+}
+.dataflow-stage {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(220,252,231,.10);
+  border-radius: 10px;
+  padding: 16px 14px;
+  color: var(--green-100);
+  display: flex; flex-direction: column; gap: 9px;
+  min-width: 0;
+}
+.dataflow-stage[data-stage="1"] { border-top: 3px solid var(--teal); }
+.dataflow-stage[data-stage="2"] { border-top: 3px solid #38bdf8; }
+.dataflow-stage[data-stage="3"] { border-top: 3px solid var(--amber); }
+.dataflow-stage[data-stage="4"] { border-top: 3px solid var(--green-500); }
+.dataflow-num {
+  font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--green-100); opacity: .55; letter-spacing: 1px;
+}
+.dataflow-title {
+  font-family: var(--font-display); font-size: 17px;
+  color: white; line-height: 1.25;
+}
+.dataflow-body {
+  font-size: 12.5px; line-height: 1.5;
+  color: rgba(220,252,231,.85);
+}
+.dataflow-body strong { color: white; }
+.dataflow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--green-100); opacity: .35;
+  padding: 0 4px; user-select: none;
+}
+.biomarker-row, .std-row {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
+}
+.biomarker {
+  font-family: var(--font-mono); font-size: 10.5px;
+  background: rgba(220,38,38,.18); color: #fecaca;
+  border: 1px solid rgba(252,165,165,.30);
+  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.std-pill {
+  font-family: var(--font-mono); font-size: 10.5px;
+  background: rgba(13,148,136,.22); color: #99f6e4;
+  border: 1px solid rgba(94,234,212,.30);
+  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.flow-list { list-style: none; padding: 0; margin: 4px 0 0; font-size: 12.5px; }
+.flow-list li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 3px 0; color: rgba(220,252,231,.85);
+}
+.rf-tag {
+  font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
+  padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.rf-tag.rf-red { background: var(--red); color: white; }
+.rf-tag.rf-amber { background: var(--amber); color: white; }
+.rf-tag.rf-teal { background: var(--teal); color: white; }
+
+@media (max-width: 980px) {
+  .dataflow { grid-template-columns: 1fr; padding: 18px 14px; }
+  .dataflow-arrow { transform: rotate(90deg); padding: 6px 0; font-size: 18px; }
+}
+
+/* Why-today CTA block — closes the section with concrete reasons + CTA. */
+.why-today {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 26px 24px;
+}
+.why-today-h {
+  font-family: var(--font-display); font-size: 24px;
+  color: var(--green-900); margin-bottom: 16px; line-height: 1.2;
+}
+.why-today-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.why-card {
+  background: var(--green-50);
+  border-left: 3px solid var(--green-600);
+  padding: 13px 15px; border-radius: 6px;
+}
+.why-card-h {
+  font-weight: 600; color: var(--green-900);
+  font-size: 14.5px; margin-bottom: 5px;
+}
+.why-card p {
+  font-size: 13px; color: var(--gray-700); line-height: 1.5;
+}
+.why-card p strong { color: var(--green-900); }
+.why-today-foot {
+  font-size: 14px; color: var(--gray-700);
+  line-height: 1.6; margin-bottom: 18px;
+  background: var(--red-bg);
+  border-left: 3px solid var(--red);
+  border-radius: 0 4px 4px 0;
+  padding: 12px 14px;
+}
 
 /* Gallery */
 .gallery { padding: 32px 0; }
