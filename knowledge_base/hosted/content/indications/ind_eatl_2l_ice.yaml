@@ -1,0 +1,91 @@
+id: IND-EATL-2L-ICE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-EATL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after CHOEP-based induction"
+    - "Pre-autoSCT salvage if not yet transplanted in CR1, OR post-autoSCT relapse"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 70
+
+recommended_regimen: REG-ICE
+concurrent_therapy: []
+followed_by:
+  - "Allo-SCT consolidation in fit responders (autoSCT-naive can also bridge to autoSCT)"
+
+evidence_level: low  # rare disease, retrospective series only
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50% (small series; EATL very chemo-refractory)"
+  complete_response: "~25-30%"
+  progression_free_survival: "Median PFS ~6-9 months without consolidative SCT"
+  overall_survival_5y: "<20% without alloSCT; ~25-30% if bridge to alloSCT in CR2"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-CECT-CAP
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-NGS-LYMPHOID-PANEL
+
+rationale: >
+  EATL relapse — dismal prognosis. ICE (ifosfamide + carboplatin +
+  etoposide) is platinum-based salvage from the DLBCL/PTCL R/R
+  paradigm; it bridges to alloSCT consolidation. Gemcitabine-based
+  alternatives (GDP, GemOx) acceptable when ifosfamide contraindicated
+  (CrCl <50, encephalopathy history). Continued strict gluten-free
+  diet remains mandatory peri-treatment to limit refractory celiac
+  inflammation. Bowel perforation risk persists at multifocal
+  enteropathy sites — surgical backup readiness in induction.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Platinum-based salvage (ICE / DHAP / GDP) followed by alloSCT consolidation is preferred 2L for relapsed EATL"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Salvage chemotherapy bridging to alloSCT is the only potentially curative path for relapsed EATL; outcomes remain poor"
+
+known_controversies:
+  - topic: "ICE vs DHAP vs GemOx for EATL salvage"
+    positions:
+      - position: "ICE — most data extrapolated from PTCL/DLBCL salvage"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "GemOx / GDP preferred when ifosfamide contraindicated or for older patients"
+        sources: [SRC-ESMO-PTCL-2024]
+    our_default: "ICE for fit ≤65; GemOx/GDP for older or renal-impaired"
+
+do_not_do:
+  - "НЕ пропускати mesna при ifosfamide — hemorrhagic cystitis."
+  - "НЕ давати full-dose ifosfamide якщо CrCl <50 — encephalopathy ризик."
+  - "НЕ нехтувати donor search — alloSCT — єдиний curative варіант для R/R EATL."
+  - "НЕ ігнорувати продовження gluten-free diet peri-salvage."
+  - "НЕ забувати про PJP prophylaxis у post-salvage period."
+  - "НЕ вводити вінкристин (якщо у subsequent regimen) інтратекально — фатально."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewer_signoffs: 0
+notes: >
+  STUB. Brentuximab-vedotin monotherapy may be considered if CD30+
+  EATL (variable expression — rebiopsy if available). Outcomes overall
+  poor; prioritize donor identification and clinical trial enrollment.
