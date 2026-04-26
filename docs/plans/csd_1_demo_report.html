@@ -517,6 +517,25 @@ h3 {
 .oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
 .oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
 
+/* NSZU availability badges — per-drug coverage flag rendered alongside
+   each component in the track's drug list. Render-time metadata only
+   (engine never reads these — CHARTER §8.3 invariant). */
+.nszu-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; white-space: nowrap;
+    margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }
+.nszu-partial { background: #fff3cd; color: #856404; }
+.nszu-oop { background: #ffe5cc; color: #804000; }
+.nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+.drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
+.drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
+.drug-list .drug-name { font-weight: 600; }
+.drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+
   </style>
   <style>
     
@@ -777,6 +796,40 @@ section > h3 {
   padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
 }
 
+/* NSZU explainer aside — appears between plan tracks and disclaimer */
+.nszu-explainer {
+  background: var(--green-50); border: 1px solid var(--green-100);
+  border-left: 4px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.nszu-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: var(--green-900); margin-bottom: 8px;
+}
+.nszu-explainer ul { list-style: none; padding: 0; margin: 0; }
+.nszu-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.nszu-explainer li .nszu-badge { margin-left: 0; margin-right: 8px; }
+.nszu-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Drug-list rows inside a plan track — one li per drug with badge inline */
+.plan-dl .drug-list {
+  list-style: none; padding-left: 0; margin: 6px 0 4px 0;
+}
+.plan-dl .drug-list .drug-row {
+  padding: 3px 0; line-height: 1.55; font-size: 13px;
+}
+.plan-dl .drug-list .drug-name { font-weight: 700; color: var(--gray-900); }
+.plan-dl .drug-list .drug-dose {
+  color: var(--gray-700); font-size: 12px; margin-left: 6px;
+}
+
 /* Trials */
 .trial-list {
   list-style: none; padding: 0; margin: 0;
@@ -837,7 +890,7 @@ section > h3 {
         </div>
       </div>
       <div class="header-meta">
-        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">2026-04-27 09:30 EEST</span></div>
+        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">2026-04-27 09:30 EEST (оновлено з NSZU-context)</span></div>
         <div class="meta-row"><span class="meta-label">Демонстрація</span><span class="meta-value">CSD Lab × OpenOnco · CSD-1</span></div>
         <div class="lang-toggle">
           <span class="lang-current">UA</span>
@@ -922,9 +975,8 @@ section > h3 {
 
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)<br>
-            • Encorafenib 300 mg PO once daily, безперервно<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
+            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)
+            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Phase GI-1 promotion. BEACON CRC: encorafenib + cetuximab vs control — mOS 9.3 vs 5.9 mo in BRAF V600E mCRC 2L+. Triplet arm (enco + cetux + binimetinib) had numerically higher ORR but no OS benefit vs doublet — doublet is current…">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO once daily</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li></ul>
             <span class="muted">Цикл 28 діб; до прогресування або непереносної токсичності.</span>
           </dd>
 
@@ -947,9 +999,10 @@ section > h3 {
 
           <dt>UA доступність</dt>
           <dd>
-            <span class="badge-ua">REGISTERED</span>
-            <span class="muted">— обидва компоненти зареєстровані в Україні; NSZU-відшкодування селективне (out-of-pocket / благодійне покриття як основний канал у 2026 Q2).
-            <br><i>CSD-2 додасть автоматичний NSZU-lookup.</i></span>
+            <span class="muted">Обидва компоненти зареєстровані в Україні. Автоматичний NSZU-lookup
+            (CSD-2 Wave 1) — бейджі біля кожного препарату вище. Cetuximab — НСЗУ-покриття
+            для CRC; encorafenib — out-of-pocket (НСЗУ-меланоми треком, не CRC).
+            Деталі див. <i>«Що означають NSZU позначки»</i> нижче.</span>
           </dd>
 
           <dt>Цитати</dt>
@@ -974,10 +1027,8 @@ section > h3 {
         <dl class="plan-dl">
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)<br>
-            • Encorafenib 300 mg PO once daily<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
-            • Binimetinib 45 mg PO 2× на день
+            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)
+            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Phase GI-1 promotion. BEACON CRC: encorafenib + cetuximab vs control — mOS 9.3 vs 5.9 mo in BRAF V600E mCRC 2L+. Triplet arm (enco + cetux + binimetinib) had numerically higher ORR but no OS benefit vs doublet — doublet is current…">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO once daily</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li><li class="drug-row drug-item"><span class="drug-name">Binimetinib</span><span class="nszu-badge nszu-not-registered" title="✗ Не зареєстровано в UA">✗ Не зареєстровано в UA</span><span class="drug-dose">45 mg PO 2× на день</span></li></ul>
           </dd>
 
           <dt>Профіль</dt>
@@ -1010,6 +1061,20 @@ section > h3 {
     
       </div>
     </section>
+    
+    <aside class="nszu-explainer">
+      <h3>Що означають NSZU позначки</h3>
+      <ul>
+        <li><span class="nszu-badge nszu-covered">✓ НСЗУ покриває</span> — препарат входить у Програму медичних гарантій 2026, для цього показання, безкоштовно для пацієнта</li>
+        <li><span class="nszu-badge nszu-partial">⚠ НСЗУ — не для цього показання</span> — препарат покривається NSZU, але для іншого показання (для цього — пацієнт сплачує сам)</li>
+        <li><span class="nszu-badge nszu-oop">⚠ Поза НСЗУ — за свій кошт</span> — препарат зареєстрований в UA, але не реімбурсується (приблизно 2200–15000 UAH/цикл OOP)</li>
+        <li><span class="nszu-badge nszu-not-registered">✗ Не зареєстровано в UA</span> — препарат не доступний легально в UA; шлях через named-patient import / EAP / cross-border EU</li>
+      </ul>
+      <p class="nszu-explainer-foot">
+        Дані оновлено: 2026-04-27. Джерело: НСЗУ Програма медичних гарантій 2026 + Держреєстр ЛЗ.
+        Для верифікації live status — переглянути drug entity в JSON output.
+      </p>
+    </aside>
     
     <section class="trials">
       <h2>Активні клінічні випробування на цей профіль (Q3 2026)</h2>
@@ -1074,8 +1139,8 @@ section > h3 {
         Кожна рекомендація — citation-traceable у базу знань.
       </div>
       <div class="foot-line muted small">
-        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1609 entities loaded ·
-        BMA-BRAF-V600E-CRC matched live.
+        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1682 entities ·
+        167 drugs з verified UA registration · BMA-BRAF-V600E-CRC matched live.
       </div>
     </footer>
     </div>
