@@ -292,6 +292,7 @@ def generate_plan(
     supersedes: Optional[str] = None,
     revision_trigger: Optional[str] = None,
     experimental_search_fn: Optional[SearchFn] = None,
+    experimental_cache_root: Optional[Path | str] = None,
 ) -> PlanResult:
     """Run the rule engine on a patient profile and return a PlanResult
     containing a fully-materialized Plan with multiple tracks.
@@ -301,6 +302,14 @@ def generate_plan(
     after track materialization and attaches the result as
     `result.experimental_options`. This is render-time metadata only —
     never a selection signal (CHARTER §8.3, plan §3.2 invariant).
+
+    `experimental_cache_root`: optional directory holding cached
+    `ExperimentalOption` JSONs (7-day TTL). Used in two modes:
+    (a) with `experimental_search_fn`: cache-then-fetch (server-side
+    builds, prewarm via `scripts/sync_ctgov_trials.py`); (b) without
+    `experimental_search_fn`: cache-only (Pyodide demo, where the
+    browser can't reach api.clinicaltrials.gov but the bundled cache
+    can serve hits).
     """
 
     result = PlanResult(
@@ -437,7 +446,10 @@ def generate_plan(
 
     # Experimental track (Phase C of UA-ingestion plan). Append-only,
     # never feeds back into selection — engine output above is final.
-    if experimental_search_fn is not None:
+    # Triggered when either a live search_fn or a prewarmed cache_root
+    # is provided. Cache-only mode (Pyodide) returns hits when present
+    # and a "search not configured" empty bundle on miss.
+    if experimental_search_fn is not None or experimental_cache_root is not None:
         disease_data = result.kb_resolved.get("disease") or {}
         disease_term = (
             ((disease_data.get("names") or {}).get("english"))
@@ -452,6 +464,7 @@ def generate_plan(
                 biomarker_profile=biomarker_term,
                 line_of_therapy=line,
                 search_fn=experimental_search_fn,
+                cache_root=Path(experimental_cache_root) if experimental_cache_root else None,
             )
         except Exception as exc:
             result.warnings.append(f"experimental options skipped: {exc}")
