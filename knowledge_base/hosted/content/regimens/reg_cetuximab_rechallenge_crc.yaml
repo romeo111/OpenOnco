@@ -1,0 +1,68 @@
+id: REG-CETUXIMAB-RECHALLENGE
+name: "Cetuximab rechallenge (mCRC RAS/BRAF-WT, post-1L EGFRi response, ctDNA-guided 3L+)"
+name_ua: "Цетуксимаб ре-челендж (мКРР RAS/BRAF-WT, після відповіді на 1L EGFRi, ctDNA-керований 3L+)"
+alternate_names:
+  - "EGFRi rechallenge"
+  - "CRICKET / CHRONOS-style rechallenge"
+
+components:
+  - drug_id: DRUG-CETUXIMAB
+    dose: "500 mg/m² IV q2w (alternative: 400 mg/m² loading then 250 mg/m² weekly)"
+    schedule: "day 1 of each 14-day cycle"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "H1 + H2 blockers (diphenhydramine 50 mg IV + ranitidine 50 mg IV) + dexamethasone 8 mg IV ≥30 min before infusion"
+  - "First-dose: extended observation 1h post-infusion; subsequent doses 30 min observation"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Acneiform rash G≥2"
+    modification: "Doxycycline 100 mg PO BID prophylactic; topical clindamycin + 1% hydrocortisone; emollients; reduce cetuximab to 200 mg/m² weekly if G3 persists"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Severe infusion reaction (G3-4) — most common cycle 1 day 1, especially Southeast US (alpha-gal IgE)"
+    modification: "Permanent discontinuation; consider panitumumab if EGFRi still indicated (no alpha-gal cross-reactivity)"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Hypomagnesemia G≥2"
+    modification: "Magnesium replacement (oral or IV); class effect from EGFR inhibition of renal Mg reabsorption"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Interstitial lung disease (rare)"
+    modification: "Permanent discontinuation"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Цетуксимаб реімбурсується НСЗУ для RAS/BRAF-WT мКРР; rechallenge є офф-лейбл стратегією, але доказова база зростає (CRICKET, CHRONOS)."
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+  - SRC-CHRONOS-SARTORE-BIANCHI-2022
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  CRICKET (Cremolini 2019, JAMA Oncol) and CHRONOS (Sartore-Bianchi 2022,
+  Nat Med) established cetuximab rechallenge as a 3L+ option in mCRC
+  patients who previously responded to a 1L EGFRi-containing regimen
+  (FOLFOX-cetuximab or FOLFIRI-cetuximab), then progressed, then
+  received an EGFRi-free 2L. ctDNA-guided selection (RAS-WT clearance
+  on liquid biopsy at time of rechallenge) substantially improves
+  response rate (CHRONOS: ORR ~30% in ctDNA-RAS-WT vs ~0% in mutant).
+  Pre-rechallenge ctDNA RAS/BRAF testing strongly recommended.
+notes_ua: >
+  CRICKET (Cremolini 2019, JAMA Oncol) і CHRONOS (Sartore-Bianchi 2022,
+  Nat Med) встановили цетуксимаб ре-челендж як 3L+ опцію для пацієнтів
+  з мКРР, які раніше відповіли на 1L EGFRi-вмісний режим (FOLFOX-cet
+  або FOLFIRI-cet), потім прогресували, потім отримали EGFRi-вільний 2L.
+  ctDNA-керований відбір (кліренс RAS-WT на рідкій біопсії в момент
+  ре-челенджу) суттєво покращує ORR (CHRONOS: ORR ~30% у ctDNA-RAS-WT
+  vs ~0% у мутантних). Перед-ре-челендж ctDNA RAS/BRAF тестування
+  настійно рекомендується.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
