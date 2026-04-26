@@ -3,45 +3,132 @@ names:
   preferred: "Dostarlimab"
   ukrainian: "Достарлімаб"
   english: "Dostarlimab"
+  synonyms: ["TSR-042", "dostarlimab-gxly"]
   brand_names: ["Jemperli"]
 atc_code: L01FF07
-rxnorm_id: null
-drug_class: "Anti-PD-1 monoclonal antibody"
+rxnorm_id: ""
+drug_class: "Anti-PD-1 humanized IgG4 monoclonal antibody (immune checkpoint inhibitor)"
 mechanism: >
-  Anti-PD-1 IgG4. Endometrial advanced/recurrent + chemo (RUBY); tumor-agnostic dMMR/MSI-H post-platinum monotherapy.
+  Humanized IgG4κ (S228P-stabilized) monoclonal antibody binding
+  programmed cell death protein 1 (PD-1) on activated T cells,
+  preventing engagement with PD-L1 / PD-L2 and restoring
+  anti-tumor T-cell function. Pharmacologic class is identical to
+  pembrolizumab / nivolumab / cemiplimab; distinct binding epitope
+  with no clinically meaningful efficacy differential. Approved on
+  the basis of GARNET (single-arm endometrial cancer dMMR/MSI-H
+  2L+: ORR ~45%) and RUBY (1L primary advanced or recurrent
+  endometrial cancer with carbo+pac chemo backbone: dMMR/MSI-H
+  PFS HR 0.30, all-comers PFS HR 0.64, OS benefit), and tumor-
+  agnostic dMMR/MSI-H solid tumors post-platinum. The Cercek 2022
+  proof-of-concept study in dMMR locally advanced rectal cancer
+  showed clinical CR in 100% of 12 patients (now extended in
+  larger cohorts) — neoadjuvant ICI monotherapy avoiding chemo +
+  RT + surgery in this niche.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2021
+    indications_brief:
+      - "dMMR / MSI-H advanced endometrial cancer 2L+ (mono — GARNET)"
+      - "Primary advanced / recurrent endometrial cancer 1L + carboplatin + paclitaxel (RUBY)"
+      - "Tumor-agnostic dMMR solid tumors post-platinum (mono)"
+  ema:
+    approved: true
+    year_first_approval: 2021
+    indications_brief:
+      - "dMMR / MSI-H advanced endometrial 2L"
+      - "Primary advanced / recurrent endometrial 1L + chemo (dMMR)"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: |
-      Не зареєстровано в UA (Держреєстр ЛЗ — РП відсутнє станом на 2026-04-27).
-      Anti-PD-1 для dMMR/MSI-H endometrial Ca та dMMR rectal Ca neoadjuvant;
-      не входить до НСЗУ (на відміну від pembrolizumab — частково покривається).
-      Шляхи доступу:
-      - Named-patient import (DEC спецдозвіл).
-      - EAP GSK Ukraine (Jemperli access program; критерії:
-        dMMR/MSI-H confirmation IHC або NGS).
-      - Cross-border (EU): EU онкоцентри через "Лікування за кордоном"
-        (наказ МОЗ 988); RUBY SoC у EU для primary advanced/recurrent EC.
-      - Trial-only: GARNET, RUBY post-marketing.
-      Source: drlz.com.ua пошук "dostarlimab"/"jemperli" 2026-04-27 — РП відсутнє.
+    notes: "Не зареєстровано per drlz.com.ua snapshot 2026-04-27. Pembrolizumab dominates UA НСЗУ ICI landscape and is the typical anti-PD-1 used for dMMR/MSI-H endometrial; dostarlimab access via EAP GSK / cross-border / self-pay."
 
 typical_dosing: >
-  500 mg IV q3w induction → 1000 mg IV q6w maintenance.
+  Induction: 500 mg IV every 3 weeks for 4 doses (cycles 1-4),
+  followed by maintenance 1000 mg IV every 6 weeks until disease
+  progression / unacceptable toxicity / up to 24 months. In RUBY
+  combo: dostarlimab 500 mg + carboplatin AUC 5 + paclitaxel 175
+  mg/m² every 3 weeks for 6 cycles, then dostarlimab 1000 mg q6w
+  monotherapy maintenance. Infuse over 30 minutes (first dose); 30
+  minutes for subsequent doses if first tolerated. No premedication
+  required. No formal renal or hepatic adjustment (mAb catabolism).
+  Hold for G2-3 irAE; permanently discontinue for G4 irAE,
+  myocarditis, recurrent G3 despite steroids, or any
+  life-threatening reaction.
 
-key_toxicities:
-  - Standard ICI immune-mediated AEs
-  - Fatigue
-  - Anemia (with chemo)
-  - Pneumonitis
+formulations:
+  - "IV concentrate 500 mg / 10 mL single-dose vial"
 
-sources: [SRC-NCCN-NSCLC-2025]
-last_reviewed: null
+absolute_contraindications:
+  - "Severe hypersensitivity to dostarlimab or any excipient"
+  - "Active solid-organ transplant on calcineurin inhibitor (high rejection risk; case-by-case)"
+
+black_box_warnings: []
+
+common_adverse_events:
+  - "Fatigue ~40%"
+  - "Anemia ~30% any-grade (with chemo combo); ~15% mono"
+  - "Nausea ~30%"
+  - "Diarrhea ~25%"
+  - "Constipation ~20%"
+  - "Pruritus / rash ~25%"
+  - "Vomiting ~20%"
+  - "Hypothyroidism ~10-15%"
+  - "Hyperthyroidism ~3-5%"
+  - "Decreased appetite ~17%"
+  - "Cough ~15%"
+  - "Arthralgia ~15%"
+
+serious_adverse_events:
+  - "Immune-mediated pneumonitis (G3+ ~2%)"
+  - "Immune-mediated colitis (G3+ ~2%)"
+  - "Immune-mediated hepatitis (G3+ ~3%)"
+  - "Immune-mediated endocrinopathies (thyroiditis, hypophysitis, adrenal insufficiency, type-1 DM)"
+  - "Immune-mediated nephritis (~1%)"
+  - "Severe cutaneous reactions (SJS / TEN / DRESS — rare)"
+  - "Myocarditis (rare; high mortality)"
+  - "Solid-organ transplant rejection"
+  - "Encephalitis / GBS / myasthenic syndrome (rare)"
+  - "Severe infusion reactions"
+
+major_interactions:
+  - "Systemic corticosteroids ≥10 mg prednisone-equivalent at baseline — may blunt activity; avoid unless required for prior irAE"
+  - "Live attenuated vaccines — avoid during therapy and ≥3 months after"
+  - "Concurrent CTLA-4 inhibitors — toxicity additive; not standard for endometrial"
+  - "Concomitant chemotherapy (carboplatin + paclitaxel per RUBY) — additive cytopenia / fatigue"
+  - "Calcineurin inhibitors / immunosuppressants in transplant — rejection vs efficacy trade-off"
+
+pharmacology:
+  half_life_hours: 596
+  clearance: "non-renal (proteolytic catabolism); ~25 days terminal"
+  protein_binding_pct: null
+  metabolism: "n/a (mAb catabolism to amino acids)"
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESGO-ENDOMETRIAL-2025
+
+last_reviewed: "2026-04-27"
+reviewers: []
 notes: >
-  STUB. RUBY: endometrial dMMR PFS HR 0.30. Not registered in Ukraine.
+  RUBY (NEJM 2023) — paradigm-shifting trial in primary advanced /
+  recurrent endometrial cancer: dostarlimab + carbo+pac chemo vs
+  chemo alone, dMMR PFS HR 0.30 (massive effect, OS benefit
+  emerging); all-comers PFS HR 0.64. Has redefined 1L systemic
+  therapy for advanced endometrial cancer along with KEYNOTE-868
+  (pembrolizumab + chemo). Tumor-agnostic dMMR solid-tumor approval
+  parallels pembrolizumab. Cercek 2022 dMMR rectal study (100% cCR
+  with dostarlimab neoadjuvant — avoiding chemo+RT+surgery) is
+  practice-changing for this rare niche. Baseline workup: TFTs,
+  LFTs, creatinine, cortisol, HbA1c, troponin if cardiac history,
+  HBV/HCV serology, baseline imaging, dermatologic + pulmonary
+  review, dMMR/MSI-H confirmation by IHC or NGS for monotherapy
+  indications. Monitor TFTs / LFTs / creatinine before each dose
+  for first 6 cycles then q2 cycles. Refer for organ-specific
+  consultation at first sign of irAE. UA access via EAP GSK / cross-
+  border / self-pay; not on НСЗУ. Pembrolizumab is the dominant
+  anti-PD-1 used in UA for dMMR endometrial.
