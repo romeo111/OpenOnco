@@ -6,21 +6,11 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 
 ## Summary
 
-- **Defined entities:** 62
+- **Defined entities:** 67
 - **Referenced by rules:** 67 unique IDs, 205 total citations
-- **Defined + used (✓):** 62
+- **Defined + used (✓):** 67
 - **Defined + unused (⚠):** 0
-- **Referenced + missing (❌):** 5
-
-## Issues to resolve
-
-### ❌ Referenced but no entity file
-
-- `BIO-EBV-DNA` — cited 1× (Extranodal NK/T-Cell Lymphoma). Author the entity, or remove the citation.
-- `BIO-HBV-STATUS` — cited 4× (Burkitt Lymphoma, Classical Hodgkin Lymphoma, Multiple Myeloma, Splenic Marginal Zone Lymphoma). Author the entity, or remove the citation.
-- `BIO-HCV-STATUS` — cited 1× (Multiple Myeloma). Author the entity, or remove the citation.
-- `BIO-HIV-STATUS` — cited 5× (Burkitt Lymphoma, Classical Hodgkin Lymphoma, Diffuse Large B-Cell Lymphoma, Multiple Myeloma, Splenic Marginal Zone Lymphoma). Author the entity, or remove the citation.
-- `BIO-HTLV-1` — cited 1× (Adult T-Cell Leukemia/Lymphoma). Author the entity, or remove the citation.
+- **Referenced + missing (❌):** 0
 
 ## Top-cited biomarkers (PDF-extraction priority)
 
@@ -58,9 +48,9 @@ Method category drives PDF-extraction pattern complexity. IHC + serum + MSI mark
 | NGS | 18 |
 | IHC | 16 |
 | FISH | 12 |
+| viral | 7 |
 | composite | 4 |
 | serum | 3 |
-| viral | 2 |
 | histology | 2 |
 | methylation | 1 |
 | MSI/MMR | 1 |
@@ -70,7 +60,7 @@ Method category drives PDF-extraction pattern complexity. IHC + serum + MSI mark
 
 ## Coverage gaps
 
-### Missing LOINC (57 of 62)
+### Missing LOINC (62 of 67)
 
 LOINC required for FHIR R4/R5 + mCODE export. Add `codes.loinc` to each entity below; `https://search.loinc.org` for canonical codes.
 
@@ -94,9 +84,9 @@ LOINC required for FHIR R4/R5 + mCODE export. Add `codes.loinc` to each entity b
 - `BIO-DLBCL-COO-HANS`
 - `BIO-DLBCL-IPI`
 - `BIO-DMMR-IHC`
-- ... and 37 more
+- ... and 42 more
 
-### No fixture coverage (44 used markers)
+### No fixture coverage (49 used markers)
 
 Markers consumed by rules but never appearing in `examples/*.json`. Either add a patient fixture exercising the marker, or document why no example is needed.
 
@@ -115,12 +105,12 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-DLBCL-COO-HANS` (2× refs)
 - `BIO-DLBCL-IPI` (2× refs)
 - `BIO-DMMR-IHC` (2× refs)
+- `BIO-EBV-DNA` (1× refs)
 - `BIO-EBV-STATUS` (2× refs)
 - `BIO-EGFR-MUTATION` (4× refs)
 - `BIO-ESTROGEN-RECEPTOR` (2× refs)
 - `BIO-EZH2-Y641` (1× refs)
-- `BIO-FGFR3-MUTATION` (1× refs)
-- ... and 24 more
+- ... and 29 more
 
 ## Full catalog
 
@@ -151,7 +141,7 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-DLBCL-IPI` | ✓ | 2 | International Prognostic Index (IPI) for DLBCL | composite | — | — | medium | Diffuse Large B-Cell L |
 | `BIO-DMMR-IHC` | ✓ | 2 | Mismatch repair protein expression by IHC | IHC | — | — | medium | Endometrial carcinoma |
 | `BIO-DOUBLE-HIT` | ✓ | 1 | Double-hit (MYC + BCL2 and/or BCL6 rearrangements) | FISH | — | 1× ✓ | low | High-Grade B-Cell Lymp |
-| `BIO-EBV-DNA` | ❌ MISSING | 1 | — | — | — | — | low | Extranodal NK/T-Cell L |
+| `BIO-EBV-DNA` | ✓ | 1 | EBV-DNA viral load (quantitative PCR, plasma) | viral | — | — | low | Extranodal NK/T-Cell L |
 | `BIO-EBV-STATUS` | ✓ | 2 | EBV status (EBER-ISH on tumor tissue) | viral | — | — | medium | Extranodal NK/T-Cell L |
 | `BIO-EGFR-MUTATION` | ✓ | 4 | EGFR mutation status (NSCLC actionable) | NGS | — | — | medium | Non-small cell lung ca |
 | `BIO-ESTROGEN-RECEPTOR` | ✓ | 2 | Estrogen receptor (ER) | IHC | 16112-5 | — | medium | Breast cancer (invasiv |
@@ -159,15 +149,15 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-FGFR3-MUTATION` | ✓ | 1 | FGFR3 mutation/fusion | NGS | — | — | low | — |
 | `BIO-FL-FLIPI` | ✓ | 3 | Follicular Lymphoma International Prognostic Index (FLIPI) | composite | — | — | medium | Follicular Lymphoma |
 | `BIO-GLEASON-ISUP` | ✓ | 5 | Gleason score / ISUP grade group | histology | — | — | medium | Prostate adenocarcinom |
-| `BIO-HBV-STATUS` | ❌ MISSING | 4 | — | — | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Multiple Myeloma, Splenic Marginal Zone  |
+| `BIO-HBV-STATUS` | ✓ | 4 | HBV status (HBsAg + anti-HBc serology) | viral | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Multiple Myeloma, Splenic Marginal Zone  |
 | `BIO-HCV-RNA` | ✓ | 5 | HCV RNA (quantitative PCR) | viral | — | 9× ✓ | medium | HCV-associated Margina, Nodal Marginal Zone Ly, Splenic Marginal Zone  |
-| `BIO-HCV-STATUS` | ❌ MISSING | 1 | — | — | — | — | low | Multiple Myeloma |
+| `BIO-HCV-STATUS` | ✓ | 1 | HCV status (anti-HCV antibody screening) | viral | — | — | low | Multiple Myeloma |
 | `BIO-HER2-SOLID` | ✓ | 9 | HER2 status (solid tumors — gastric/GEJ/CRC scoring) | FISH | — | — | **high** | Breast cancer (invasiv, Gastric / GEJ adenocar |
-| `BIO-HIV-STATUS` | ❌ MISSING | 5 | — | — | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Multiple Myeloma, Splenic Marginal Zone  |
+| `BIO-HIV-STATUS` | ✓ | 5 | HIV status (4th-gen Ag/Ab combo screening) | viral | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Multiple Myeloma, Splenic Marginal Zone  |
 | `BIO-HPV-STATUS` | ✓ | 1 | Human Papillomavirus (HPV) status | serum | — | 1× ✓ | low | Cervical carcinoma (sq |
 | `BIO-HRD-STATUS` | ✓ | 3 | Homologous recombination deficiency (HRD) status | NGS | — | 1× ✓ | medium | Ovarian carcinoma (hig |
 | `BIO-HRR-PANEL` | ✓ | 3 | Homologous recombination repair (HRR) gene panel status | NGS | — | — | medium | Prostate adenocarcinom |
-| `BIO-HTLV-1` | ❌ MISSING | 1 | — | — | — | — | low | Adult T-Cell Leukemia/ |
+| `BIO-HTLV-1` | ✓ | 1 | HTLV-1 status (anti-HTLV-1 antibody + confirmatory) | viral | — | — | low | Adult T-Cell Leukemia/ |
 | `BIO-IDH-MUTATION` | ✓ | 1 | IDH1 / IDH2 mutation status | NGS | — | 1× ✓ | low | Glioblastoma (IDH-WT |
 | `BIO-IGHV-MUTATIONAL-STATUS` | ✓ | 1 | IGHV (immunoglobulin heavy-chain variable region) mutational status | NGS | — | — | low | — |
 | `BIO-KI67-PROLIFERATION-INDEX` | ✓ | 1 | Ki-67 proliferation index (IHC, % positive nuclei) | IHC | — | — | low | — |

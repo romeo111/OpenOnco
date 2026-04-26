@@ -1,0 +1,78 @@
+id: RF-CML-COMORBIDITY-COMPLEX
+definition: >
+  CML patient with cardiovascular / metabolic / pulmonary comorbidity
+  profile that constrains 2nd-generation TKI choice. Specifically:
+  uncontrolled hypertension, prior arterial thrombotic event,
+  QTc-prolongation risk (baseline QTc > 460 ms or QT-prolonging
+  medications), pancreatitis history, pulmonary hypertension, or
+  pleural-effusion-prone state. Drives selection toward asciminib
+  (STAMP inhibitor, cleanest CV/QTc profile) over nilotinib (CV /
+  QTc / metabolic risk), dasatinib (pleural effusion / pulmonary
+  hypertension), or bosutinib (GI / hepatic) when 2nd-gen TKI is
+  otherwise indicated by RF-CML-HIGH-RISK-ELTS.
+definition_ua: >
+  Пацієнт з ХМЛ та профілем серцево-судинної / метаболічної /
+  легеневої коморбідності, що обмежує вибір ТКІ 2-го покоління:
+  неконтрольована гіпертензія, попередня артеріальна тромботична
+  подія, ризик подовження QTc (вихідний QTc > 460 мс або
+  QT-подовжуючі ліки), панкреатит в анамнезі, легенева гіпертензія,
+  схильність до плевральних випотів. Спрямовує вибір на асцімініб
+  (інгібітор STAMP, найчистіший CV/QTc-профіль) замість нілотинібу
+  (CV/QTc/метаболічний ризик), дазатинібу (плевральний випіт /
+  легенева гіпертензія) або бозутинібу (ШКТ/печінка), коли ТКІ
+  2-го покоління інакше показаний за RF-CML-HIGH-RISK-ELTS.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "uncontrolled_hypertension"
+      value: true
+    - finding: "prior_arterial_thrombotic_event"
+      value: true
+    - finding: "baseline_qtc_ms"
+      threshold: 460
+      comparator: ">"
+    - finding: "qt_prolonging_medications"
+      value: true
+    - finding: "pancreatitis_history"
+      value: true
+    - finding: "pulmonary_hypertension"
+      value: true
+    - finding: "pleural_effusion_history"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 85
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm:
+  - ALGO-CML-1L
+  - ALGO-CML-2L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ESMO-CML-2017
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-26"
+draft: true
+
+notes: >
+  Co-determines TKI selection with RF-CML-HIGH-RISK-ELTS. The combination
+  matters: high-risk CML *plus* CV-comorbidity → asciminib preferred (per
+  ASCEMBL trial 3L+ data extrapolating to comorbid 1L use under expanded
+  ELN guidance); high-risk CML without CV-comorbidity → nilotinib or
+  dasatinib remain reasonable. Imatinib remains acceptable in low-risk
+  comorbid patients where treatment-free remission is not the primary
+  goal.
+
+  STUB — author content above reflects published evidence but has not
+  been clinically reviewed. Two-reviewer per CHARTER §6.1 required
+  before this RedFlag is wired into ALGO-CML-1L / ALGO-CML-2L
+  decision_tree branches.
+
+  reviewer_signoffs: 0

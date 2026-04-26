@@ -1,0 +1,54 @@
+id: BIO-HIV-STATUS
+names:
+  preferred: "HIV status (4th-gen Ag/Ab combo screening)"
+  ukrainian: "Статус ВІЛ (4-е покоління Ag/Ab скринінг)"
+  english: "HIV status"
+  synonyms:
+    - "HIV serology"
+    - "HIV-1/2 Ag/Ab"
+    - "Anti-HIV"
+biomarker_type: viral_serology
+
+measurement:
+  method: >
+    Fourth-generation HIV-1/2 antigen/antibody combo immunoassay
+    (detects p24 antigen + anti-HIV-1/2 antibodies; window period
+    ~10-14 days). Reactive screen → confirmatory HIV-1/2 antibody
+    differentiation assay + HIV-1 RNA viral load if newly diagnosed.
+  units: "categorical: HIV+ (with VL/CD4 if known) | HIV-"
+
+specimen_requirements:
+  - "Serum or plasma"
+  - "LOINC 56888-1 (HIV-1+2 Ag+Ab)"
+  - "If reactive → HIV-1 RNA quant (LOINC 25836-8) + CD4 count (LOINC 24467-3)"
+
+related_biomarkers:
+  - BIO-HBV-STATUS
+  - BIO-HCV-STATUS
+  - BIO-EBV-STATUS
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  Mandatory pre-treatment screening for any aggressive lymphoma
+  (Burkitt, DLBCL, plasmablastic, primary effusion) and Hodgkin
+  lymphoma — HIV-associated subtypes have distinct biology, increased
+  CNS-IPI risk, and require coordinated cART before / during
+  cytotoxic therapy.
+
+  HIV+ does NOT contraindicate standard regimens but requires:
+  - cART continuation throughout cytotoxic therapy (avoid AZT —
+    myelotoxic; integrase-inhibitor backbone preferred)
+  - PJP + MAC prophylaxis if CD4 < 200
+  - CNS prophylaxis (intrathecal MTX) for HIV-associated DLBCL /
+    Burkitt regardless of CNS-IPI score
+  - Screen for KSHV / HHV-8 if effusion lymphoma suspected
+
+  Wired into CHL, DLBCL, Burkitt, MM, SMZL 1L algorithm etiology
+  rails (notes only at present — full branching on HIV+ deferred to
+  next round).
+
+  reviewer_signoffs: 0  # STUB — pending two Clinical Co-Lead approvals

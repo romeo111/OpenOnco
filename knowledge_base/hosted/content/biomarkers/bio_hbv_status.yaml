@@ -1,0 +1,57 @@
+id: BIO-HBV-STATUS
+names:
+  preferred: "HBV status (HBsAg + anti-HBc serology)"
+  ukrainian: "Статус HBV (HBsAg + анти-HBc серологія)"
+  english: "Hepatitis B virus status"
+  synonyms:
+    - "HBV serology"
+    - "Hepatitis B screening"
+    - "HBsAg / anti-HBc"
+biomarker_type: viral_serology
+
+measurement:
+  method: >
+    Three-marker screening before B-cell-depleting or anti-CD38
+    therapy: HBsAg (current infection), anti-HBc total (past or
+    occult infection), anti-HBs (immunity). HBV-DNA quantitative PCR
+    follows when HBsAg+ or anti-HBc+ to distinguish active vs
+    resolved infection.
+  units: "categorical: HBsAg+ | anti-HBc+/HBsAg- (occult) | naive | vaccinated"
+
+specimen_requirements:
+  - "Serum or plasma"
+  - "LOINC 5195-3 (HBsAg), 13952-7 (anti-HBc total), 10900-9 (anti-HBs)"
+  - "If HBsAg+ or anti-HBc+ → reflex HBV-DNA quant (LOINC 29615-2)"
+
+related_biomarkers:
+  - BIO-HCV-STATUS
+  - BIO-HIV-STATUS
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-26"
+notes: >
+  Mandatory pre-treatment screening for any regimen containing
+  rituximab, obinutuzumab, daratumumab, isatuximab, blinatumomab,
+  or other B-cell-depleting / plasma-cell-depleting agents (HBV
+  reactivation risk well-documented; ASH/ASCO/AASLD all align).
+
+  Rules engine consumes as boolean flag: HBsAg+ OR anti-HBc+ →
+  RF-HBV-COINFECTION fires → forces entecavir prophylaxis (or
+  tenofovir if entecavir resistance) before any cycle of
+  CD20/CD38-targeted therapy. Wired into CHL, DLBCL, MM, SMZL,
+  Burkitt 1L algorithms.
+
+  Subtypes informally:
+  - HBsAg+ (active or chronic): prophylaxis mandatory; consult
+    hepatology
+  - HBsAg- / anti-HBc+ (resolved or occult): prophylaxis still
+    recommended for high-risk regimens (rituximab-containing); HBV-DNA
+    monitoring acceptable for low-risk regimens
+  - HBsAg- / anti-HBc- / anti-HBs+ (vaccinated): no prophylaxis
+  - All-negative (naive): no prophylaxis; consider vaccination
+    if multi-line therapy anticipated
+
+  reviewer_signoffs: 0  # STUB — pending two Clinical Co-Lead approvals

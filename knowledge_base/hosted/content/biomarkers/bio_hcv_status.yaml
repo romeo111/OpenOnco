@@ -1,0 +1,49 @@
+id: BIO-HCV-STATUS
+names:
+  preferred: "HCV status (anti-HCV antibody screening)"
+  ukrainian: "Статус HCV (антитіла анти-HCV)"
+  english: "Hepatitis C virus status"
+  synonyms:
+    - "HCV serology"
+    - "anti-HCV"
+    - "Hepatitis C screening"
+biomarker_type: viral_serology
+
+measurement:
+  method: >
+    Anti-HCV antibody (third-generation EIA). Reflex to BIO-HCV-RNA
+    (quantitative PCR) when anti-HCV+ to distinguish active infection
+    (RNA detectable) from resolved / cleared (RNA undetectable, antibody
+    persists for life).
+  units: "categorical: anti-HCV+ | anti-HCV-"
+
+specimen_requirements:
+  - "Serum or plasma"
+  - "LOINC 13955-0 (anti-HCV)"
+  - "If anti-HCV+ → reflex BIO-HCV-RNA quantitative"
+
+related_biomarkers:
+  - BIO-HCV-RNA
+  - BIO-HBV-STATUS
+  - BIO-HIV-STATUS
+
+sources:
+  - SRC-EASL-HCV-2023
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-26"
+notes: >
+  Screening test; positive result is necessary but not sufficient
+  evidence of active HCV (false positives in autoimmune disease,
+  cleared infections retain antibodies indefinitely). Active infection
+  requires BIO-HCV-RNA detectable; rules engine should branch on
+  HCV-RNA positivity, not antibody alone, for any DAA / treatment
+  decision.
+
+  Currently consumed by: ALGO-MM-1L (etiology rail — coordinate DAA
+  with hepatologist if HCV+). Companion biomarker BIO-HCV-RNA carries
+  the quantitative load and drives the HCV-MZL etiologically-driven
+  algorithm. STATUS is the cheap screening; RNA is the actionable
+  confirmation.
+
+  reviewer_signoffs: 0  # STUB — pending two Clinical Co-Lead approvals
