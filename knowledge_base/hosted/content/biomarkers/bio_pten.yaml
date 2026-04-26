@@ -1,0 +1,47 @@
+id: BIO-PTEN
+names:
+  preferred: "PTEN loss-of-function"
+  ukrainian: "Втрата функції PTEN"
+  english: "PTEN loss-of-function"
+  synonyms: ["PTEN loss", "PTEN-null"]
+
+biomarker_type: gene_mutation
+mutation_details:
+  gene: "PTEN"
+  gene_hugo_id: "HGNC:9588"
+  hotspots:
+    - "Frameshift / nonsense across all exons (no single hotspot)"
+    - "Biallelic loss (deletion + mutation OR two mutations OR deletion + promoter methylation)"
+    - "C-terminal truncating (loss of regulatory tail)"
+    - "R130 / R173 missense (catalytic site)"
+  variant_type: "loss-of-function (frameshift / nonsense / missense / deletion)"
+  functional_impact: "Loss of PTEN phosphatase activity → unopposed PI3K signaling → AKT activation"
+
+measurement:
+  method: "DNA-NGS (mutations + copy number) PLUS PTEN IHC (loss of nuclear + cytoplasmic staining; complete or near-complete loss is the actionable readout)"
+  units: "IHC: H-score / categorical (intact vs partial vs complete loss). NGS: variant + copy number."
+  sensitivity_requirement: "IHC alone misses ~15% of biallelic-LOF cases → combine with NGS for actionability decisions (e.g. CAPItello-291 enrolment criteria)"
+
+specimen_requirements:
+  - "FFPE tumor tissue, minimum 20% tumor cellularity"
+
+related_biomarkers:
+  - BIO-PIK3CA-MUTATION
+  - BIO-AKT1
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+notes: >
+  Endometrial: ~75% (most common single mutation in EC). Glioma:
+  ~40% in GBM. Prostate: ~20% with biallelic loss in metastatic
+  castration-resistant disease (worse prognosis). Breast: ~5–10%.
+  Capivasertib + fulvestrant (CAPItello-291) approved for HR+ HER2−
+  advanced breast with PIK3CA / AKT1 / PTEN alteration after CDK4/6i
+  progression — PTEN-loss subgroup benefited. Ipatasertib + abiraterone
+  in mCRPC (IPATential150) showed PFS benefit in PTEN-loss subgroup
+  (FDA review pending). Definition of "PTEN loss" varies across trials
+  — IHC + NGS combined is the most consistent operational definition.

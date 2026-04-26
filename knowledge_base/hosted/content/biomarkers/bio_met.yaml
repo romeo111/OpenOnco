@@ -1,0 +1,41 @@
+id: BIO-MET
+names:
+  preferred: "MET alterations (exon 14 skipping or amplification)"
+  ukrainian: "Альтерації MET (пропуск екзону 14 або амплифікація)"
+  english: "MET alterations"
+  synonyms: ["MET ex14", "METex14", "MET amplification"]
+
+biomarker_type: gene_mutation
+mutation_details:
+  gene: "MET"
+  gene_hugo_id: "HGNC:7029"
+  hotspots: ["exon 14 skipping (MET ex14 / METex14, splice-site disruption around exon 14)", "MET amplification (high-level: GCN ≥10 or MET/CEP7 ≥4)"]
+  variant_type: "splice / amplification"
+  functional_impact: "Loss of CBL-mediated ubiquitination (ex14) or constitutive HGF-independent signaling (amplification)"
+
+measurement:
+  method: "Tumor-tissue NGS (DNA + RNA panel preferred for ex14) OR ctDNA NGS OR FISH (amplification) OR IHC screening"
+  units: "categorical (ex14: positive/negative); copy number ratio (amplification)"
+  sensitivity_requirement: "RNA-NGS preferred for ex14 to capture splice-site variants outside hotspots; FISH for amplification (MET/CEP7 ≥4 = high)"
+
+specimen_requirements:
+  - "FFPE tumor tissue, minimum 20% tumor cellularity"
+  - "Plasma ctDNA (Guardant360 / FoundationOne Liquid) acceptable when tissue inadequate"
+
+related_biomarkers:
+  - BIO-EGFR-MUTATION  # MET amplification is a common osimertinib-resistance mechanism
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+notes: >
+  MET ex14 occurs in ~3–4% of NSCLC adenocarcinoma; enriched in older
+  patients, sarcomatoid histology. Capmatinib (GEOMETRY mono-1) and
+  tepotinib (VISION) are approved for ex14-positive advanced NSCLC.
+  High-level MET amplification (GCN ≥10) drives a subset of HCC and
+  papillary RCC and is an actionable resistance mechanism in
+  EGFR-mutant NSCLC progressing on osimertinib (combine osimertinib +
+  savolitinib in trials).
