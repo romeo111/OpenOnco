@@ -9,60 +9,95 @@ atc_code: L01EC01
 rxnorm_id: ""
 drug_class: "BRAF V600 kinase inhibitor"
 mechanism: >
-  STUB — needs full curation. First-in-class selective BRAF V600E/K
-  kinase inhibitor; the historical proof-of-concept agent. Combined
-  with cobimetinib (coBRIM) for BRAF V600 melanoma to mitigate
-  paradoxical activation + skin toxicity. Also active in BRAF V600E
-  Erdheim-Chester / hairy-cell leukemia (off-label / niche).
+  First-in-class selective ATP-competitive small-molecule inhibitor of
+  the mutant BRAF V600E (and to a lesser extent V600K, V600D)
+  serine/threonine kinase. By preferentially binding the activated
+  conformation of mutant BRAF, vemurafenib suppresses the constitutive
+  RAS-RAF-MEK-ERK signaling that drives BRAF V600 melanoma; tumor
+  responses are typically rapid (weeks). Monotherapy provided the
+  historical proof-of-concept (BRIM-3, vs dacarbazine: ORR 48% vs 5%,
+  mOS 13.6 vs 9.7 mo) but is now superseded by combination with the
+  MEKi cobimetinib (coBRIM) which mitigates paradoxical RAF activation
+  in BRAF-WT cells and reduces cutaneous SCC / keratoacanthoma
+  incidence. Active in BRAF V600E Erdheim-Chester disease, hairy-cell
+  leukemia (off-label / accelerated), and rare BRAF V600 pediatric
+  tumors.
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2011
-    indications_brief: ["Unresectable/metastatic BRAF V600 melanoma (mono or combo cobimetinib)", "Erdheim-Chester (BRAF V600+)"]
+    indications_brief:
+      - "Unresectable/metastatic BRAF V600 melanoma (mono or combo cobimetinib)"
+      - "Erdheim-Chester disease BRAF V600+"
   ema:
     approved: true
     year_first_approval: 2012
+    indications_brief:
+      - "Unresectable/metastatic BRAF V600 melanoma"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Dabrafenib (+trametinib) is the dominant BRAFi in UA reimbursement; vemurafenib less commonly funded."
+    notes: "Не зареєстровано per drlz.com.ua 2026-04-27. Dabrafenib (+trametinib) is the dominant BRAFi in UA reimbursement landscape; vemurafenib less commonly funded. Доступ via EAP / cross-border / self-pay."
 
 typical_dosing: >
-  STUB. 960 mg PO BID continuous, with cobimetinib 60 mg PO daily x21d /
-  q28d cycle (coBRIM).
+  960 mg PO BID continuous (~12 h apart), with or without food but
+  consistently. In combination with cobimetinib 60 mg PO daily x 21
+  days then 7-day break (28-day cycle, coBRIM). Dose level -1 = 720
+  mg BID; -2 = 480 mg BID; permanent discontinuation if G3-4 toxicity
+  recurs at -2. No formal renal adjustment for CrCl ≥30; caution in
+  severe hepatic impairment. Hold for QTc >500 ms or any clinically
+  significant arrhythmia.
 
 formulations:
   - "Tablets 240 mg"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Hypersensitivity to vemurafenib or any excipient"
+  - "Pregnancy (embryo-fetal toxicity)"
+  - "Congenital long QT syndrome"
+
 black_box_warnings: []
+
 common_adverse_events:
-  - "Photosensitivity (severe — sun protection critical)"
-  - "Arthralgia"
-  - "Rash / skin papillomas"
-  - "Fatigue"
-  - "Alopecia"
-  - "Nausea"
-  - "Pruritus"
+  - "Arthralgia ~55%"
+  - "Rash (maculopapular, acneiform) ~40-50%"
+  - "Photosensitivity (severe — UVA-driven) ~40%"
+  - "Fatigue ~40%"
+  - "Alopecia ~36%"
+  - "Skin papillomas / verrucous keratosis ~30%"
+  - "Pruritus ~25%"
+  - "Nausea ~35%"
+  - "Diarrhea ~30%"
+  - "Hyperkeratosis (palmar/plantar) ~24%"
+  - "Headache ~20%"
+  - "Dysgeusia ~14%"
+
 serious_adverse_events:
-  - "Cutaneous SCC / new primary melanoma (~25% — dermatology q3 mo)"
-  - "Severe photosensitivity reactions / SJS / TEN"
-  - "QT prolongation"
-  - "Hepatotoxicity"
-  - "Uveitis"
-  - "Renal failure (rare)"
+  - "Cutaneous squamous cell carcinoma / keratoacanthoma / new primary melanoma (~20-25% SCC; G3 ~7% — full body dermatologic exam q2 months mandatory)"
+  - "Severe photosensitivity reactions / SJS / TEN / DRESS (rare but reported)"
+  - "QT prolongation (G3 QTc >500 ms ~3% — ECG baseline + d15 + monthly x 3 then q3mo)"
+  - "Hepatotoxicity (G3 ALT/AST ~3%)"
+  - "Uveitis / iritis / iridocyclitis (~3%)"
+  - "Renal failure / acute interstitial nephritis (rare)"
+  - "Pancreatitis (rare)"
+  - "Radiation recall / radiation sensitization"
+
 major_interactions:
-  - "STUB — strong CYP3A4 inhibitors/inducers; QT-prolonging drugs"
+  - "Strong CYP3A4 inhibitors (azoles, clarithromycin, ritonavir) — ↑ vemurafenib exposure"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St John's wort) — ↓ exposure; avoid"
+  - "QT-prolonging drugs (ondansetron IV, methadone, fluoroquinolones, antipsychotics, citalopram) — additive QTc; avoid where possible"
+  - "Warfarin (CYP2C9 inhibition) — monitor INR weekly initially"
+  - "CYP1A2 substrates (theophylline, caffeine, tizanidine) — vemurafenib inhibits CYP1A2"
 
 pharmacology:
   half_life_hours: 57
   clearance: "hepatic"
   protein_binding_pct: 99
-  metabolism: "CYP3A4"
+  metabolism: "CYP3A4 (predominant); inhibits CYP1A2, induces CYP3A4"
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -71,7 +106,15 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. Skin surveillance (full body derm exam
-  q3 months) mandatory throughout treatment due to SCC/keratoacanthoma
-  risk. Needs full curation of dose-adj, photosensitivity management,
-  monitoring schedule (LFTs, ECG, derm).
+  Skin surveillance (full-body dermatologic exam at baseline, every
+  2 months on therapy, and 6 months post-discontinuation) is mandatory
+  due to high SCC / keratoacanthoma incidence — these are excised but
+  do not require BRAFi discontinuation. Rigorous photoprotection (SPF
+  50+ broad-spectrum, hat, long sleeves, avoid midday sun) given UVA
+  photosensitivity. Baseline + serial ECG (QTc), LFTs, dermatologic +
+  ophthalmologic exam. Combination with cobimetinib reduces SCC and
+  improves PFS/OS vs monotherapy and is the standard. In contemporary
+  UA practice the BRAFi+MEKi reimbursed under НСЗУ is
+  dabrafenib+trametinib; vemurafenib accessed via EAP / cross-border.
+  Active in non-melanoma BRAF V600E neoplasms (Erdheim-Chester,
+  histiocytosis, occasional hairy-cell leukemia) — niche use.

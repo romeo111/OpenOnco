@@ -9,59 +9,93 @@ atc_code: L01EE02
 rxnorm_id: ""
 drug_class: "MEK1/2 inhibitor"
 mechanism: >
-  STUB — needs full curation. Selective allosteric MEK1/MEK2 inhibitor;
-  used in combination with vemurafenib (BRAFi) for BRAF V600 melanoma
-  (coBRIM trial). Also part of triplet atezolizumab + cobimetinib +
-  vemurafenib in BRAF V600 advanced melanoma (IMspire150).
+  Reversible selective allosteric inhibitor of MEK1 and MEK2, binding
+  adjacent to the ATP site and preventing phosphorylation/activation of
+  ERK1/2 in the RAS-RAF-MEK-ERK signaling cascade. Used in combination
+  with vemurafenib (BRAFi) for BRAF V600 unresectable / metastatic
+  melanoma to suppress paradoxical MAPK pathway reactivation seen with
+  BRAFi monotherapy (coBRIM, mPFS 12.3 vs 7.2 mo for vemurafenib alone;
+  mOS 22.3 vs 17.4 mo). Also part of the IMspire150 triplet
+  (atezolizumab + cobimetinib + vemurafenib) for previously untreated
+  BRAF V600 advanced melanoma, where the addition of atezolizumab
+  modestly extended PFS. Off-label in NF1 plexiform neurofibroma and
+  RAS-mutant histiocytic neoplasms.
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2015
-    indications_brief: ["BRAF V600 melanoma (combo vemurafenib)", "BRAF V600 melanoma (combo atezo + vemurafenib, IMspire150)"]
+    indications_brief:
+      - "BRAF V600 melanoma (combo vemurafenib)"
+      - "BRAF V600 melanoma (combo atezolizumab + vemurafenib, IMspire150)"
   ema:
     approved: true
     year_first_approval: 2015
+    indications_brief:
+      - "BRAF V600 melanoma (combo vemurafenib)"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Dabrafenib+trametinib is the dominant BRAFi+MEKi combo in UA practice; cobimetinib+vemurafenib less commonly reimbursed."
+    notes: "Не зареєстровано per drlz.com.ua 2026-04-27. Dabrafenib+trametinib is the dominant BRAFi+MEKi combo in UA НСЗУ; cobimetinib+vemurafenib not on reimbursement list."
 
 typical_dosing: >
-  STUB. 60 mg PO once daily for 21 days then 7-day break (cycle 28d),
-  combined with vemurafenib 960 mg PO BID continuous.
+  60 mg PO once daily on a 21-days-on / 7-days-off schedule (28-day
+  cycle), in combination with vemurafenib 960 mg PO BID continuous
+  (coBRIM regimen). For IMspire150 triplet: 28-day lead-in of
+  vemurafenib + cobimetinib only, then add atezolizumab cycle 2
+  onward. Dose modifications: -1 = 40 mg daily; -2 = 20 mg daily;
+  permanent discontinuation if persistent G3-4 cardiac, ocular, or
+  hepatic toxicity. No specific renal adjustment. Avoid in severe
+  hepatic impairment.
 
 formulations:
   - "Tablets 20 mg"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Hypersensitivity to cobimetinib or excipients"
+  - "Pregnancy (embryo-fetal toxicity)"
+  - "Severe hepatic impairment without alternative justification"
+
 black_box_warnings: []
+
 common_adverse_events:
-  - "Diarrhea"
-  - "Photosensitivity"
-  - "Nausea"
-  - "Pyrexia"
-  - "Vomiting"
-  - "Rash"
-  - "CK elevation"
+  - "Diarrhea ~57%"
+  - "Photosensitivity (combo with vemurafenib amplifies) ~46%"
+  - "Nausea ~39%"
+  - "Pyrexia ~28%"
+  - "Vomiting ~24%"
+  - "Rash / acneiform ~40%"
+  - "Increased CK ~70% (mostly asymptomatic)"
+  - "Increased AST/ALT ~20-30%"
+  - "Hypophosphatemia ~50%"
+  - "Anemia ~13%"
+  - "Hypertension ~15%"
+
 serious_adverse_events:
-  - "Cardiomyopathy / LVEF decline"
-  - "Retinal detachment / serous retinopathy"
-  - "Severe rash / dermatitis"
-  - "Hepatotoxicity"
-  - "Rhabdomyolysis"
-  - "Severe hemorrhage"
+  - "Cardiomyopathy / LVEF decline ≥10% from baseline (~26% any decrease; G3 ~1%)"
+  - "Serous retinopathy / retinal detachment (~26% on OCT; symptomatic G3 ~1%)"
+  - "Severe rash / dermatitis (G3 ~16%)"
+  - "Hepatotoxicity — G3 ALT/AST elevation ~10%"
+  - "Rhabdomyolysis (rare; high CK)"
+  - "Severe hemorrhage (G3 ~13%; subarachnoid, GI)"
+  - "Severe photosensitivity (G3 ~3% — sun-protective measures critical)"
+  - "Pneumonitis (rare)"
+
 major_interactions:
-  - "STUB — strong CYP3A4 inhibitors significantly increase exposure"
+  - "Strong CYP3A4 inhibitors (azoles, clarithromycin, ritonavir) — significantly ↑ cobimetinib exposure (~7-fold AUC); avoid concomitant use"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, St John's wort) — significantly ↓ exposure; avoid"
+  - "Moderate CYP3A4 inhibitors (diltiazem, fluconazole, erythromycin) — caution"
+  - "Concurrent vemurafenib (BRAFi) — intended combination; PK characterized"
+  - "Other QT-prolonging drugs — caution"
 
 pharmacology:
   half_life_hours: 44
   clearance: "hepatic"
   protein_binding_pct: 95
-  metabolism: "CYP3A4, UGT2B7"
+  metabolism: "CYP3A4 (predominant) + UGT2B7 glucuronidation; minor CYP2D6"
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -70,7 +104,15 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. Sun-protective measures critical (BRAFi
-  combo amplifies photosensitivity). Echo + ophtho monitoring as with
-  other MEKi. Needs full curation of dose-adj, monitoring schedule,
-  drug interactions.
+  Sun-protective measures (SPF 50+, protective clothing, hat) are
+  critical because vemurafenib already causes severe photosensitivity
+  and the combination amplifies it. Mandatory baseline + serial
+  monitoring: LFTs (q2wk x first 8 wk then monthly), CK + creatinine
+  if CK rises, LVEF echo at baseline / 1 mo / q3mo, ophthalmologic
+  exam (OCT) at baseline + for any new visual symptom, dermatologic
+  exam q2-3 mo (BRAFi + MEKi class — cutaneous SCC + new primary
+  melanoma surveillance). In contemporary practice
+  dabrafenib+trametinib is preferred where both are available
+  (similar efficacy, less photosensitivity, more pyrexia trade-off).
+  Triplet (IMspire150) reserved for high-risk patients where
+  atezolizumab access is reimbursed.
