@@ -225,6 +225,7 @@ def load_content(root: Path) -> LoadResult:
 
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)
+    _check_source_precedence_policy(result)
 
     return result
 
@@ -313,6 +314,145 @@ def _check_redflag_contracts(result: LoadResult) -> None:
                  f"{eid}: clinical_direction=investigate but shifts_algorithm is non-empty — "
                  "re-classify to intensify/de-escalate/hold or clear shifts_algorithm")
             )
+
+
+_VALID_PRECEDENCE_POLICIES = {
+    "leading",
+    "confirmatory",
+    "national_floor_only",
+    "secondary_evidence_base",
+}
+
+
+def _check_source_precedence_policy(result: LoadResult) -> None:
+    """Source.precedence_policy contract — Phase A invariant of
+    docs/plans/ua_ingestion_and_alternatives_2026-04-26.md §0+§2.4.
+
+    Errors (block CI):
+      - Unknown precedence_policy value (typo guard)
+      - Indication declared as default in some Algorithm cites a
+        national_floor_only Source while a paralleled Tier-1/2 Source
+        for the same disease+line_of_therapy scenario also exists in
+        the KB. UA national guidelines must NOT outrank NCCN/ESMO when
+        both cover the same patient situation.
+    """
+
+    # Index sources by id, with their precedence_policy + evidence_tier
+    src_by_id: dict[str, dict] = {}
+    for eid, info in result.entities_by_id.items():
+        if info["type"] != "sources":
+            continue
+        src_by_id[eid] = info["data"]
+
+    # Validate enum values
+    for sid, sdata in src_by_id.items():
+        pol = sdata.get("precedence_policy")
+        if pol is not None and pol not in _VALID_PRECEDENCE_POLICIES:
+            path = result.entities_by_id[sid]["path"]
+            result.contract_errors.append((
+                path,
+                f"{sid}: precedence_policy={pol!r} not in "
+                f"{sorted(_VALID_PRECEDENCE_POLICIES)}",
+            ))
+
+    # Build (disease_id, line_of_therapy) -> list of indication ids
+    # for paralleled-source detection.
+    by_scenario: dict[tuple[str, object], list[str]] = {}
+    for iid, info in result.entities_by_id.items():
+        if info["type"] != "indications":
+            continue
+        d = info["data"]
+        applicable = d.get("applicable_to") or {}
+        scenario = (
+            applicable.get("disease_id"),
+            applicable.get("line_of_therapy"),
+        )
+        if scenario[0] is None:
+            continue
+        by_scenario.setdefault(scenario, []).append(iid)
+
+    # Identify indications that are reachable as default_indication of any algo
+    default_inds: set[str] = set()
+    for info in result.entities_by_id.values():
+        if info["type"] != "algorithms":
+            continue
+        di = info["data"].get("default_indication")
+        if di:
+            default_inds.add(di)
+
+    def _ind_source_ids(ind_data: dict) -> list[str]:
+        out: list[str] = []
+        for cit in ind_data.get("sources") or []:
+            if isinstance(cit, dict):
+                sid = cit.get("source_id")
+                if sid:
+                    out.append(sid)
+            elif isinstance(cit, str):
+                out.append(cit)
+        return out
+
+    for ind_id in default_inds:
+        info = result.entities_by_id.get(ind_id)
+        if info is None:
+            continue
+        ind_data = info["data"]
+        ind_path = info["path"]
+        ind_source_ids = _ind_source_ids(ind_data)
+        if not ind_source_ids:
+            continue
+
+        # Does this default Indication rely SOLELY on national_floor_only
+        # sources? (Mixed citations — e.g. МОЗ + NCCN — are fine: the Tier-1
+        # source carries the recommendation, МОЗ adds national context.)
+        all_floor = all(
+            (src_by_id.get(sid) or {}).get("precedence_policy")
+            == "national_floor_only"
+            for sid in ind_source_ids
+        )
+        if not all_floor:
+            continue
+
+        # Is there a paralleled Indication for the same scenario that
+        # cites a Tier-1/2 source (and is NOT itself national_floor_only)?
+        applicable = ind_data.get("applicable_to") or {}
+        scenario = (
+            applicable.get("disease_id"),
+            applicable.get("line_of_therapy"),
+        )
+        peers = by_scenario.get(scenario) or []
+
+        has_better_peer = False
+        for peer_id in peers:
+            if peer_id == ind_id:
+                continue
+            peer_data = (result.entities_by_id.get(peer_id) or {}).get("data")
+            if not peer_data:
+                continue
+            peer_src_ids = _ind_source_ids(peer_data)
+            for sid in peer_src_ids:
+                sdata = src_by_id.get(sid) or {}
+                tier = sdata.get("evidence_tier")
+                pol = sdata.get("precedence_policy")
+                if pol == "national_floor_only":
+                    continue
+                if isinstance(tier, int) and tier in (1, 2):
+                    has_better_peer = True
+                    break
+                if pol == "leading":
+                    has_better_peer = True
+                    break
+            if has_better_peer:
+                break
+
+        if has_better_peer:
+            result.contract_errors.append((
+                ind_path,
+                f"{ind_id}: default-Indication cites national_floor_only "
+                f"Source while a paralleled Tier-1/2 Indication exists for "
+                f"scenario disease={scenario[0]} line={scenario[1]}. "
+                f"Re-rank the Tier-1/2 Indication as default, or move this "
+                f"one to alternative_indication."
+            ))
 
 
 def main() -> int:

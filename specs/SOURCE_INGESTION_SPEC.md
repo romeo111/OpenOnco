@@ -972,6 +972,76 @@ Rule engine зобов'язаний:
 
 ---
 
+### 15a. Architectural invariant — UA-availability is annotation, never filter
+
+> **Status:** PROPOSAL (2026-04-26). Aligns with CHARTER §2 (free public
+> resource for evidence-based oncology) and the directive recorded in
+> auto-memory `feedback_efficacy_over_registration.md`:
+> «важливо — ефективність а не реєстрованість».
+
+**Rule.** Whether a drug is registered in Ukraine, reimbursed by НСЗУ,
+or both, MUST NOT influence which `Indication` / `Regimen` / track the
+engine selects. UA-availability fields (`Drug.regulatory_status.ukraine_registration`,
+`Drug.regulatory_status.reimbursement_nszu`) are **render-time advisory
+metadata only**. The engine's selection signal is efficacy + evidence
+tier + patient eligibility, full stop.
+
+**Why.** OpenOnco surfaces the best clinical option per current
+evidence even when in-country access is constrained. Hiding a
+guideline-endorsed therapy because it is not reimbursed would distort
+recommendations toward locally-available, often suboptimal alternatives
+— defeating the project's purpose. The doctor, not the engine, decides
+how to navigate the funding pathway (charitable foundation, employer
+insurance, off-label import, international referral).
+
+**Source-precedence corollary.** МОЗ Ukraine clinical protocols
+(`SRC-MOZ-UA-*`) are a **national floor**, not a substitute for
+Tier-1 international guidelines (NCCN, ESMO, ASCO, EAU). Where МОЗ
+prescribes a less-aggressive regimen than current Tier-1/2 evidence
+endorses, OpenOnco follows the international evidence and cites МОЗ
+as confirmatory / national-floor context — never the other way around.
+
+**Mechanisation.**
+
+1. **`Source.precedence_policy` field** (`leading | confirmatory |
+   national_floor_only | secondary_evidence_base`). All `SRC-MOZ-UA-*`
+   sources MUST be annotated `national_floor_only`. The validator
+   blocks a default-`Indication` whose only sources are
+   `national_floor_only` when a peer `Indication` for the same scenario
+   has at least one Tier-1/2 source.
+
+2. **Validator gate** — `_check_source_precedence_policy` in
+   `knowledge_base/validation/loader.py` runs in Pass 3 alongside
+   RedFlag contract checks.
+
+3. **Architectural-invariant test** —
+   `tests/test_plan_invariant_ua_availability.py` parametrises four
+   real patient fixtures, monkeypatches every `Drug` to
+   `registered: false, reimbursed_nszu: false`, and asserts the
+   engine's clinical-decision signature (default + alternative
+   indication, tracks, regimen ids) is identical to the control run.
+   This is the gate for all UA-ingestion work below.
+
+**Anti-pattern (forbidden).**
+
+- Engine-side filter that hides "not-reimbursed" recommendations.
+- Ranking signal that downgrades a regimen because its drug is
+  unregistered.
+- Track-switching logic that prefers a less-effective in-country
+  alternative when a better evidence-supported option exists.
+
+**Permitted (advisory only).**
+
+- Render-side **Access Matrix** that, for each surfaced track, shows
+  the registration / reimbursement / cost-orientation status with
+  pathway hints (per Phase B-D of
+  `docs/plans/ua_ingestion_and_alternatives_2026-04-26.md`).
+- A separate **`ExperimentalOption`** track exposing relevant
+  ClinicalTrials.gov / EU CTR studies as additional alternatives —
+  appended, never replacing the evidence-driven default.
+
+---
+
 ## 16. Referenced: Live API clients
 
 Короткий playbook per source. Full interface per §12.2.

@@ -35,6 +35,20 @@ class Source(Base):
 
     evidence_tier: Optional[int] = None  # 1..6 per CLINICAL_CONTENT_STANDARDS
 
+    # Precedence policy. Lets a Source declare HOW it should rank against
+    # paralleled sources for the same (disease, line_of_therapy,
+    # biomarker_profile) scenario.
+    #   leading              — drives selection (NCCN/ESMO/ASCO; Tier-1)
+    #   confirmatory         — supplemental evidence; can corroborate
+    #   secondary_evidence_base — molecular knowledge bases (OncoKB, CIViC)
+    #   national_floor_only  — UA national guideline (МОЗ); used ONLY when
+    #     no Tier-1/2 source covers the same scenario. Validator blocks any
+    #     default-Indication that cites `national_floor_only` source while a
+    #     paralleled Tier-1/2 source exists. Per
+    #     docs/plans/ua_ingestion_and_alternatives_2026-04-26.md §0+§2.4.
+    precedence_policy: Optional[str] = None  # leading | confirmatory |
+    # national_floor_only | secondary_evidence_base
+
     # Licensing & hosting (SOURCE_INGESTION_SPEC §3)
     hosting_mode: HostingMode = HostingMode.REFERENCED
     hosting_justification: Optional[str] = None  # H1..H5 per SOURCE_INGESTION_SPEC §1.4
