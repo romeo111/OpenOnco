@@ -490,6 +490,63 @@ h3 {
     .access-matrix summary::before { content: ""; }
     .access-matrix details:not([open]) > *:not(summary) { display: block; }
 }
+
+/* Variant actionability — ESCAT / OncoKB tier badges */
+.variant-actionability { margin: 22px 0; }
+.variant-actionability h2 { color: var(--green-800); }
+.variant-actionability .section-sub {
+    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.actionability-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+    overflow: hidden;
+}
+.actionability-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.actionability-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.actionability-table tr:last-child td { border-bottom: none; }
+.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
+.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
+.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
+.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
+.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
+.actionability-table .src-list {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
+}
+.actionability-table .src-list li { padding: 1px 0; list-style: none; }
+.actionability-table .empty-row td {
+    text-align: center; color: var(--gray-500); font-style: italic;
+    padding: 14px 10px;
+}
+
+/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
+   IV light gray; X gray). OncoKB Level 1 green; 2 light-green; 3A
+   yellow; 3B orange; 4 light gray; R1/R2 red. */
+.tier-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.4px; white-space: nowrap;
+}
+.escat-IA, .escat-IB { background: #16a34a; color: white; }
+.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
+.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
+.escat-IV { background: var(--gray-100); color: var(--gray-700); }
+.escat-X { background: var(--gray-200); color: var(--gray-700); }
+
+.oncokb-1 { background: #16a34a; color: white; }
+.oncokb-2 { background: #86efac; color: #14532d; }
+.oncokb-3A { background: #facc15; color: #713f12; }
+.oncokb-3B { background: #f97316; color: white; }
+.oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
+.oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
 """
 
 
