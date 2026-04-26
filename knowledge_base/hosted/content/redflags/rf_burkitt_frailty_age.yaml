@@ -1,0 +1,59 @@
+id: RF-BURKITT-FRAILTY-AGE
+definition: >
+  Frailty profile precluding intensive Burkitt regimens (CODOX-M/IVAC or
+  DA-EPOCH-R full-dose): ECOG ≥3, OR (age ≥65 with G8 ≤14), OR composite
+  frailty (age ≥70 + Charlson ≥3). Triggers de-escalation to attenuated
+  R-mini-CHOP-like regimen or palliative R-CHOP — Burkitt curability
+  dramatically lower in frail elderly.
+definition_ua: >
+  Профіль frailty, що перешкоджає інтенсивним Burkitt режимам
+  (CODOX-M/IVAC або повнодозова DA-EPOCH-R): ECOG ≥3, АБО (вік ≥65 з
+  G8 ≤14), АБО композитна frailty (вік ≥70 + Charlson ≥3). Триггерує
+  de-escalation до атенуйованого R-mini-CHOP або паліативного R-CHOP —
+  curability при frail elderly суттєво нижча.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 65
+          comparator: ">="
+        - finding: "g8_score"
+          threshold: 14
+          comparator: "<="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-BURKITT
+shifts_algorithm: []  # not yet wired into ALGO-BURKITT-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Burkitt is curable but cure rates collapse from 80-90% (young fit) to
+  20-40% (>65 frail) on full-intensity regimens — toxicity-driven
+  treatment-related mortality is the dominant driver. NCCN B-Cell
+  recommends DA-EPOCH-R (preferred over CODOX-M/IVAC) for fit elderly
+  and modified DA-EPOCH-R or R-CHOP-like for frail. TLS prophylaxis
+  mandatory regardless of dose intensity (rasburicase preferred over
+  allopurinol given high TLS risk in Burkitt).

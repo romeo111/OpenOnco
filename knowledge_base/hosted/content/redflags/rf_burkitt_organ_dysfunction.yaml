@@ -1,0 +1,54 @@
+id: RF-BURKITT-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding HD-MTX-containing CODOX-M/IVAC or
+  full-dose DA-EPOCH-R in Burkitt lymphoma: CrCl <50 (HD-methotrexate
+  contraindicated, Burkitt CNS-prophylaxis-mandatory disease), LVEF <50%
+  (anthracycline contraindicated), bilirubin >3× ULN (vincristine /
+  doxorubicin / methotrexate metabolism), or pulmonary DLCO <60%.
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає HD-MTX-вмісним CODOX-M/IVAC
+  чи повнодозовій DA-EPOCH-R при Burkitt: CrCl <50 (HD-метотрексат
+  протипоказаний, але Burkitt — CNS-prophylaxis-mandatory), LVEF <50%
+  (антрациклін), білірубін >3× ULN (метаболізм вінкристину / доксорубіцину /
+  MTX), DLCO <60%.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 50
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 85
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-BURKITT
+shifts_algorithm: []  # not yet wired into ALGO-BURKITT-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Burkitt is curable but CODOX-M/IVAC and HD-MTX require strict renal
+  function (≥50 mL/min for HD-MTX systemic; ≥60 preferred). CrCl <50 →
+  shift to DA-EPOCH-R (no HD-MTX systemic; IT MTX still feasible) per
+  Roschewski et al. NEJM 2020 NCI 9177 trial. LVEF <50%: substitute
+  liposomal doxorubicin in DA-EPOCH-R, or pursue lower-intensity
+  R-CHOP + IT MTX in palliative intent. CNS prophylaxis is mandatory
+  in Burkitt regardless of dose intensity — IT MTX/cytarabine 4-8 doses.

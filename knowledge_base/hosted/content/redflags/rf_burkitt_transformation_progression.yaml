@@ -1,0 +1,50 @@
+id: RF-BURKITT-TRANSFORMATION-PROGRESSION
+definition: >
+  Burkitt primary-refractory (no CR after 2 cycles induction) OR early
+  relapse <6 months post-induction OR rapidly progressive disease during
+  pre-phase corticosteroids — extremely poor prognosis subset; routes to
+  intensive salvage (R-ICE, R-IVAC) with auto/alloSCT bridge intent or
+  CD19 CAR-T trial enrollment.
+definition_ua: >
+  Burkitt первинно-рефрактерна (без ПР після 2 циклів індукції) АБО
+  ранній рецидив <6 міс АБО швидка прогресія під час пре-фазних
+  кортикостероїдів — підгрупа з украй поганим прогнозом; маршрут до
+  інтенсивного сальваджу (R-ICE, R-IVAC) з мостом до auto/alloSCT
+  або enrollment у CD19 CAR-T trial.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "burkitt_primary_refractory"
+      value: true
+    - finding: "burkitt_early_relapse_lt_6mo"
+      value: true
+    - finding: "rapid_progression"
+      value: true
+    - finding: "ldh_doubled_in_weeks"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-BURKITT
+shifts_algorithm: []  # not yet wired into ALGO-BURKITT-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Burkitt that fails 1L (DA-EPOCH-R or CODOX-M/IVAC) has dismal salvage
+  prognosis: 2-year OS <20% in r/r adult Burkitt across registry data.
+  R-ICE / R-IVAC + alloSCT (preferred over autoSCT given rapid relapses)
+  is the standard backbone; CD19 CAR-T (axi-cel, tisa-cel) on trial /
+  off-label use increasingly evidenced. Avoid delaying — rapid disease
+  doubling time (~24h proliferation) means re-staging windows are days,
+  not weeks. MDT escalation mandatory.
