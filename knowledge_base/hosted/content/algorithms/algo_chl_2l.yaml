@@ -27,6 +27,7 @@ decision_tree:
       result: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — post-ASCT relapse OR transplant-ineligible → pembrolizumab.
   - step: 2
@@ -35,6 +36,8 @@ decision_tree:
         - condition: "Post-ASCT relapse"
         - condition: "Transplant-ineligible (age >70, comorbidity, ECOG ≥2)"
         - condition: "Post-BV failure pre-ASCT, salvage required"
+        - red_flag: RF-CHL-FRAILTY-AGE
+        - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CHL-2L-PEMBROLIZUMAB
     if_false:
@@ -48,6 +51,7 @@ decision_tree:
       any_of:
         - condition: "1st relapse, ASCT-eligible, no high-risk feature"
         - condition: "ASCT not accessible / patient declined"
+        - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-CHL-2L-PEMBROLIZUMAB
     if_false:
