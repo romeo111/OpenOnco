@@ -37,6 +37,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
+        - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
     if_true:
       result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — routes to ALGO-DLBCL
     if_false:
@@ -70,6 +71,7 @@ decision_tree:
       result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — BR salvage
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — default: routine post-DAA surveillance (~70% of patients
   # achieve durable lymphoma response from HCV eradication alone).
@@ -83,6 +85,7 @@ decision_tree:
       result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
     if_false:
       result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-BCELL-2025

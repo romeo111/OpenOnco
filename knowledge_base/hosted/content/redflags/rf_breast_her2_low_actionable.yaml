@@ -1,0 +1,57 @@
+id: RF-BREAST-HER2-LOW-ACTIONABLE
+definition: >
+  HER2-low breast cancer (IHC 1+ OR IHC 2+ with non-amplified ISH) —
+  ~50-55% of HER2-non-positive breast cancers. T-DXd 2L+ approved
+  in HR+ and TNBC HER2-low post-chemo (DESTINY-Breast04 — mPFS 9.9
+  vs 5.1 mo, OS 23.4 vs 16.8 mo).
+definition_ua: >
+  HER2-low РМЗ (ІГХ 1+ АБО ІГХ 2+ з не-ампліфікованим ISH) —
+  ~50-55% HER2-непозитивних РМЗ. T-DXd 2L+ схвалено для HR+ та
+  TNBC HER2-low після хіміотерапії (DESTINY-Breast04 — мПФВ 9.9
+  проти 5.1 міс, ЗВ 23.4 проти 16.8 міс).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "her2_status"
+      value: "low"
+    - finding: "her2_ihc"
+      value: "1+"
+    - finding: "her2_ihc_ish"
+      value: "IHC2+/ISH-"
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+  - ALGO-BREAST-TNBC-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-DESTINY-BREAST04-MODI-2022
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pathology challenge: IHC 1+ vs 0 has poor inter-observer reproducibility
+  — guideline efforts ongoing (ASCO/CAP 2023 update). DESTINY-Breast06
+  data extends to HER2-ultralow (IHC ≥0 with membrane staining)
+  post-endocrine progression in HR+. ILD class warning still applies.
+  Sequence: in HR+ HER2-low post-CDK4/6i + ≥1 prior chemo, T-DXd
+  precedes sacituzumab govitecan in most algorithms.
+notes_ua: >
+  Патоморфологічна складність: ІГХ 1+ vs 0 має погану між-обсерваторську
+  відтворюваність — настанови оновлюються (ASCO/CAP 2023). Дані
+  DESTINY-Breast06 розширюють на HER2-ultralow (ІГХ ≥0 з мембранним
+  забарвленням) після прогресування на ендокринотерапії при HR+.
+  Класове застереження ILD зберігається. Послідовність: при HR+
+  HER2-low після CDK4/6i + ≥1 попередньої хіміо T-DXd передує
+  сацитузумабу говітекану в більшості алгоритмів.

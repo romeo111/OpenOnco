@@ -1,0 +1,56 @@
+id: RF-NSCLC-KRAS-G12C-ACTIONABLE
+definition: >
+  KRAS G12C mutation — ~13% of NSCLC adenocarcinoma; smoking-associated.
+  Sotorasib (CodeBreaK 200 — mPFS 5.6 vs 4.5 mo docetaxel) and
+  adagrasib (KRYSTAL-1) are 2L+ FDA-approved covalent G12C inhibitors.
+  1L is still IO ± chemo per PD-L1 (no 1L G12C-inhibitor superiority yet).
+definition_ua: >
+  Мутація KRAS G12C — ~13% НДРЛ-аденокарциноми; асоційована з курінням.
+  Sotorasib (CodeBreaK 200 — мПФВ 5.6 проти 4.5 міс на доцетакселі) та
+  adagrasib (KRYSTAL-1) — 2L+ FDA-схвалені ковалентні G12C-інгібітори.
+  1L досі IO ± хіміо за PD-L1 (поки немає переваги G12C-інгібіторів 1L).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "kras_g12c"
+      value: true
+    - finding: "kras_g12c"
+      value: "positive"
+    - finding: "kras_mutation"
+      value: "G12C"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-4"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-CODEBREAK200-JOHNSON-2023
+  - SRC-KRYSTAL1-JANNE-2022
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Adagrasib has CNS activity (KRYSTAL-1B brain-met cohort). Hepatotoxicity
+  on sotorasib + concurrent ICI — sequential dosing or G12C monotherapy
+  preferred. Other KRAS variants (G12D, G12V, Q61) NOT actionable with
+  current G12C inhibitors; pan-RAS / G12D-selective agents (RMC-6236,
+  MRTX1133) in trials.
+notes_ua: >
+  Adagrasib має ЦНС-активність (KRYSTAL-1B когорта мозкових метастазів).
+  Гепатотоксичність на sotorasib + одночасний ІКІ — переважна послідовна
+  схема або монотерапія G12C. Інші варіанти KRAS (G12D, G12V, Q61) НЕ
+  таргетуються поточними G12C-інгібіторами; пан-RAS / G12D-селективні
+  препарати (RMC-6236, MRTX1133) — у дослідженнях.

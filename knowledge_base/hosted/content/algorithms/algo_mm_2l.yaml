@@ -33,6 +33,7 @@ decision_tree:
       result: IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — triple-class refractory (IMiD + PI + anti-CD38) → teclistamab.
   - step: 2
@@ -45,6 +46,7 @@ decision_tree:
       result: IND-MM-4L-TECLISTAMAB
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — default 2L: post-VRd progression, switch class to KCD/DKd.
   - step: 3
@@ -52,6 +54,7 @@ decision_tree:
       any_of:
         - condition: "Post-VRd / VTd progression, transplant-naive or post-ASCT relapse"
         - condition: "anti-CD38-naive AND carfilzomib/proteasome-switch eligible"
+        - red_flag: RF-MM-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-MM-2L-DKD
     if_false:

@@ -1,0 +1,97 @@
+id: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV unresectable / metastatic"
+    - "Progression on or after 1L anti-PD-1 (pembrolizumab, nivolumab, ipi+nivo, or rela+nivo)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600E
+      required: true
+      value_constraint: "V600E or V600K positive (encorafenib + binimetinib labelled for both; dabrafenib + trametinib also active)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ENCORAFENIB-BINIMETINIB-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~64% (COLUMBUS, encorafenib+binimetinib)"
+  complete_response: "~8%"
+  progression_free_survival: "Median PFS 14.9 mo (vs 7.3 mo vemurafenib)"
+  overall_survival_5y: "5-y OS 35% (encorafenib+binimetinib arm; mOS 33.6 mo)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  For BRAF V600E/K-mutant metastatic melanoma after progression on
+  1L anti-PD-1 immunotherapy, BRAFi+MEKi doublet is the standard
+  2L per NCCN/ESMO. COLUMBUS established encorafenib + binimetinib
+  as the most tolerable doublet (less pyrexia than dabrafenib +
+  trametinib, less photosensitivity than vemurafenib). DREAMseq
+  confirmed the IO-first → BRAFi+MEKi-second sequence is superior
+  to the reverse for BRAF-mutant patients. Dabrafenib + trametinib
+  (REG-DABRAFENIB-TRAMETINIB-NSCLC) is an interchangeable cat 1
+  alternative for institutions where binimetinib is unavailable.
+
+sources:
+  - source_id: SRC-COLUMBUS-DUMMETT-2018
+    position: supports
+    relevant_quote_paraphrase: "COLUMBUS phase 3: encorafenib 450 + binimetinib 45 BID vs vemurafenib in BRAF V600-mutant unresectable/metastatic melanoma — mPFS 14.9 vs 7.3 mo (HR 0.54); 5-y OS 33.6 vs 16.9 mo"
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "BRAFi+MEKi doublet (encorafenib+binimetinib OR dabrafenib+trametinib) is preferred 2L for BRAF V600+ metastatic melanoma after IO progression; Category 1"
+  - source_id: SRC-ESMO-MELANOMA-2024
+    position: supports
+    relevant_quote_paraphrase: "BRAFi+MEKi doublet is recommended after IO failure for BRAF V600-mutant metastatic disease; ESMO MCBS 4-5"
+
+known_controversies:
+  - topic: "encorafenib+binimetinib vs dabrafenib+trametinib"
+    positions:
+      - position: "ENCO+BINI better tolerated (less pyrexia, less photosensitivity)"
+        sources: [SRC-COLUMBUS-DUMMETT-2018]
+      - position: "DABRA+TRAME has longer historical track record (COMBI-d/v 5-y OS data); broader UA registration / supply"
+        sources: [SRC-NCCN-MELANOMA-2025]
+    our_default: "encorafenib+binimetinib if available; dabrafenib+trametinib as interchangeable cat-1 alternative"
+    rationale: "Tolerability favors ENCO+BINI; access often determines actual choice"
+
+do_not_do:
+  - "НЕ призначати без верифікованого BRAF V600E або V600K — non-V600 BRAF альтерації не відповідають на BRAFi+MEKi doublet."
+  - "НЕ ігнорувати baseline + serial ECHO (LVEF) — binimetinib cardiomyopathy ~7%, обов'язковий моніторинг q2-3 мо."
+  - "НЕ пропускати baseline + symptom-driven ophthalmology — RPED, RVO, uveitis class effect MEKi."
+  - "НЕ використовувати в BRAF-WT — toxic, безefективний; pseudo-paradoxical активація MAPK у BRAF-WT клітинах."
+  - "НЕ забувати dermatology q3 мо — нові SCC + первинні меланоми class effect BRAFi (хоча менше ніж vemurafenib mono)."
+  - "НЕ призначати в IO-naive (без 1L anti-PD-1) — DREAMseq показав, що IO-first sequence superior до targeted-first для OS."
+  - "НЕ підтверджувати план без верифікованого funding pathway — ENCO+BINI out-of-pocket в Україні."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L for
+  BRAF V600+ metastatic melanoma after 1L IO. Sequencing rationale
+  per DREAMseq: IO-first → BRAFi+MEKi-second yields superior OS vs
+  the reverse sequence. Tolerability advantage of ENCO+BINI over
+  DABRA+TRAME and vemurafenib mono drives our default ranking, but
+  DABRA+TRAME (REG-DABRAFENIB-TRAMETINIB-NSCLC) is fully interchangeable
+  per NCCN cat 1.

@@ -1,0 +1,57 @@
+id: RF-NSCLC-RET-FUSION-ACTIONABLE
+definition: >
+  RET fusion (KIF5B-RET, CCDC6-RET, others) — ~1-2% of NSCLC
+  adenocarcinoma. Selpercatinib (LIBRETTO-001 — ORR 85% TKI-naive)
+  and pralsetinib (ARROW) are FDA-approved selective RET-TKIs;
+  preferred 1L over multikinase (cabo, vandetanib).
+definition_ua: >
+  Фузія RET (KIF5B-RET, CCDC6-RET та ін.) — ~1-2% НДРЛ-аденокарциноми.
+  Селперкатиніб (LIBRETTO-001 — ORR 85% у TKI-naive) та пралсетиніб
+  (ARROW) — FDA-схвалені селективні RET-TKI; переважно 1L над
+  мультикіназними (кабо, вандетаніб).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ret_fusion"
+      value: true
+    - finding: "ret_rearrangement"
+      value: "positive"
+    - finding: "ret_status"
+      value: "fusion_positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-4"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-LIBRETTO001-DRILON-2020
+  - SRC-ARROW
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  RET fusions are best detected by RNA-NGS (DNA-NGS may miss some
+  rearrangements with intronic breakpoints). LIBRETTO-431 confirmed
+  selpercatinib superiority over chemo + pembro in 1L (mPFS 24.8 vs
+  11.2 mo). Selpercatinib has CNS activity. Hypertension + LFT
+  elevation + QTc prolongation are class effects.
+notes_ua: >
+  Фузії RET найкраще виявляє RNA-NGS (DNA-NGS може пропустити певні
+  перебудови з інтронними точками розриву). LIBRETTO-431 підтвердив
+  перевагу селперкатинібу над хіміо + пембро 1L (мПФВ 24.8 проти
+  11.2 міс). Селперкатиніб має ЦНС-активність. Гіпертензія +
+  підвищення ЛФТ + подовження QTc — класові ефекти.

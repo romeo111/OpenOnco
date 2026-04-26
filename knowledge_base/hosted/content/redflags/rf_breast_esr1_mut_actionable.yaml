@@ -1,0 +1,56 @@
+id: RF-BREAST-ESR1-MUT-ACTIONABLE
+definition: >
+  ESR1 ligand-binding-domain mutation (D538G, Y537S/N/C, L536H, E380Q)
+  acquired in ~30-40% of HR+/HER2- metastatic breast cancers
+  progressing on aromatase inhibitor. Predictive for elacestrant (oral
+  SERD; EMERALD — mPFS 3.8 vs 1.9 mo in ESR1-mut subgroup) post-AI.
+definition_ua: >
+  Мутація ліганд-зв'язуючого домену ESR1 (D538G, Y537S/N/C, L536H,
+  E380Q) набута у ~30-40% HR+/HER2- метастатичних РМЗ при прогресуванні
+  на інгібіторі ароматази. Предиктивна для елацестранту (оральний SERD;
+  EMERALD — мПФВ 3.8 проти 1.9 міс у підгрупі ESR1-мут) після AI.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "esr1_mutation"
+      value: true
+    - finding: "esr1_status"
+      value: "mutated"
+    - finding: "esr1_lbd"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-EMERALD-BIDARD-2022
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Test on ctDNA at progression on AI ± CDK4/6i (preferred — high
+  concordance, polyclonal mutations common in tissue). Y537S confers
+  more aggressive biology than D538G in some series. ESR1-WT post-AI
+  patients did not benefit from elacestrant in EMERALD — fulvestrant
+  + capivasertib / alpelisib alternative. Other oral SERDs (camizestrant,
+  giredestrant, imlunestrant) and PROTACs in phase-3 development.
+notes_ua: >
+  Тест на цоДНК при прогресуванні на AI ± CDK4/6i (переважно — висока
+  конкордантність, поліклональні мутації часто в тканині). Y537S
+  пов'язана з агресивнішою біологією порівняно з D538G у деяких
+  серіях. ESR1-WT після AI не отримали виграшу від елацестранту в
+  EMERALD — фулвестрант + капівасертиб / алпелісиб альтернатива.
+  Інші оральні SERD (camizestrant, giredestrant, imlunestrant) і
+  PROTAC — у III фазі досліджень.

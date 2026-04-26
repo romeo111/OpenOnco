@@ -1,0 +1,64 @@
+id: RF-AML-IDH1-MUT-ACTIONABLE
+definition: >
+  IDH1 R132 (R132H/C/G/L/S) activating mutation in AML — ~6-10%
+  prevalence. Ivosidenib (AGILE — addition to azacitidine 1L
+  unfit-for-intensive: mEFS HR 0.33, mOS 24.0 vs 7.9 mo) is FDA-approved
+  for ND-AML-IDH1 unfit; 7+3 + ivosidenib in fit patients per
+  emerging data. Monotherapy approved R/R-AML.
+definition_ua: >
+  Активуюча мутація IDH1 R132 (R132H/C/G/L/S) при ГМЛ — ~6-10%
+  поширеність. Івосиденіб (AGILE — додавання до азацитидину 1L у
+  непридатних до інтенсивної терапії: mEFS HR 0.33, mOS 24.0 проти
+  7.9 міс) FDA-схвалено для ND-AML-IDH1 unfit; 7+3 + івосиденіб у
+  придатних. Монотерапія схвалена при р/р ГМЛ.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "idh1_r132h"
+      value: true
+    - finding: "idh1_mutation"
+      value: true
+    - finding: "idh1_status"
+      value: "mutated"
+    - finding: "idh_mutation"
+      value: "IDH1"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+  - ALGO-AML-2L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  IHC (mIDH1-R132H antibody) is highly sensitive for the dominant
+  R132H variant — used for first-pass screen. Other IDH1 variants
+  (R132C, R132G, R132S, R132L) are rarer and IHC-negative — require
+  NGS panel. Differentiation syndrome on ivosidenib (~25%) — monitor
+  WBC, dyspnea, weight gain; dexamethasone treatment + hold IDH1i.
+  AGILE trial: ivosidenib + azacitidine for unfit; 7+3 + ivosidenib
+  emerging for fit (HOVON / NCCN-listed). Olutasidenib alternative
+  (FDA-approved R/R-AML).
+notes_ua: >
+  ІГХ (mIDH1-R132H антитіло) високочутлива для домінуючого варіанта
+  R132H — використовується для скринінгу першої лінії. Інші варіанти
+  IDH1 (R132C, R132G, R132S, R132L) рідкісні й ІГХ-негативні —
+  потребують NGS-панелі. Синдром диференціації на івосиденібі (~25%) —
+  моніторинг WBC, задишки, набору ваги; лікування дексаметазоном +
+  пауза IDH1i. AGILE: івосиденіб + азацитидин для непридатних; 7+3 +
+  івосиденіб з'являється для придатних (HOVON / NCCN-list).
+  Olutasidenib — альтернатива (FDA-схвалено р/р ГМЛ).

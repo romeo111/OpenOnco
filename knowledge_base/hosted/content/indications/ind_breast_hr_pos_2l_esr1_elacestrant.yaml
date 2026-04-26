@@ -1,0 +1,66 @@
+id: IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HR_POS_HER2_NEG
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: true
+    - biomarker_id: BIO-ESR1
+      value_constraint: "ligand-binding-domain mutation present (ctDNA preferred — D538G, Y537S, Y537N, Y537C, L536H, E380Q)"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    progression_on_prior_endocrine_cdk46i: true
+
+recommended_regimen: REG-ELACESTRANT-BREAST
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 4
+  notes: "EMERALD ESR1-mutant cohort: 3.8 vs 1.9 mo (HR 0.55). Benefit greater (~8.6 vs 1.9 mo) in patients with prior CDK4/6i ≥12 mo (post-hoc)."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-EMERALD-BIDARD-2022
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. EMERALD established elacestrant (oral SERD) for ESR1-mutant
+  HR+/HER2- after AI ± CDK4/6i progression. ESR1 mutations are
+  acquired on AI therapy (~30-40% of post-AI metastatic) and predict
+  AI resistance — ctDNA testing at progression is the preferred
+  detection method (subclonal, polyclonal in tissue). Modest absolute
+  PFS gain in overall ESR1-mut cohort (3.8 vs 1.9 mo) but enriched
+  in long-CDK4/6i-exposed subgroup. Other oral SERDs (camizestrant,
+  giredestrant, imlunestrant) and PROTACs (vepdegestrant) in late
+  development. UA access barrier: elacestrant not registered;
+  named-patient import / EAP / cross-border only.

@@ -16,13 +16,19 @@ Hybrid Option A/B build:
   PanCancer output (the demo's framing).
 
 - The **2L treatment tracks (Plan A doublet, Plan B triplet)** are
-  hand-authored — we cannot run `generate_plan()` for line=2 because
-  the CRC algorithm currently only covers 1L (algo_crc_metastatic_1l).
-  Authoring a 2L algorithm is out of scope for this demo. The drug names,
-  schedule, and source IDs are pulled from the existing KB entities
-  (REG-ENCORAFENIB-CETUXIMAB, IND-CRC-METASTATIC-2L-BRAF-BEACON,
-  SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024) so they cite real, validated
-  KB content.
+  framed by the rule engine: with `line_of_therapy=2`, `generate_plan()`
+  resolves to `ALGO-CRC-METASTATIC-2L`, whose decision tree routes the
+  BRAF V600E branch to `IND-CRC-METASTATIC-2L-BRAF-BEACON`
+  (REG-ENCORAFENIB-CETUXIMAB). Plan A's prose mirrors that engine-
+  selected indication 1:1; Plan B (BEACON triplet w/ binimetinib) is
+  the alternative narrated in the indication's notes / known
+  controversies. Drug ids, schedule, and source ids all map to live KB
+  entities (REG-ENCORAFENIB-CETUXIMAB, IND-CRC-METASTATIC-2L-BRAF-
+  BEACON, SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024). NSZU badges are
+  resolved live via `lookup_nszu_status()` per drug. The script also
+  asserts the engine-selected default indication matches what Plan A
+  prose narrates — if the algorithm wiring drifts, the build fails
+  loudly rather than silently rendering stale text.
 
 - The trial section is a hand-curated stub with one BREAKWATER reference;
   CSD-1.7 would wire ctgov live search.
@@ -48,8 +54,16 @@ if str(REPO_ROOT) not in sys.path:
 
 from knowledge_base.engine._actionability import find_matching_actionability  # noqa: E402
 from knowledge_base.engine._nszu import NszuBadge, lookup_nszu_status  # noqa: E402
+from knowledge_base.engine.plan import generate_plan  # noqa: E402
 from knowledge_base.engine.render_styles import STYLESHEET as ENGINE_CSS  # noqa: E402
 from knowledge_base.validation.loader import load_content  # noqa: E402
+
+# What we expect the engine to resolve for this synthetic patient. If the
+# algorithm wiring or BMA/RF cells drift such that the BRAF V600E branch
+# no longer fires, this build should fail loudly rather than render text
+# that no longer matches engine output.
+EXPECTED_ALGORITHM_ID = "ALGO-CRC-METASTATIC-2L"
+EXPECTED_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
 
 
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
@@ -513,7 +527,7 @@ def render_plan_section(
 ) -> str:
     return f"""
     <section class="plans engine-section">
-      <div class="engine-tag">OpenOnco engine output · 2L authoring layer</div>
+      <div class="engine-tag">OpenOnco engine output · ALGO-CRC-METASTATIC-2L</div>
       <h2>Рекомендовані плани лікування — два альтернативні треки</h2>
       <div class="section-sub">
         Обидва треки представлені одним документом (CHARTER §2). Інженер не ранжує
@@ -1162,6 +1176,30 @@ def main() -> None:
     print(f"[csd-1-demo] variant actionability hits: {len(hits)}")
     for h in hits:
         print(f"  · {h['bma_id']} · ESCAT {h['escat_tier']} · OncoKB {h['oncokb_level']}")
+
+    # Sanity-check: the engine should resolve to ALGO-CRC-METASTATIC-2L for
+    # this 2L patient, with IND-CRC-METASTATIC-2L-BRAF-BEACON among the
+    # output indications. Plan A prose below mirrors that indication; if
+    # the algorithm wiring drifts, surface the gap loudly rather than
+    # silently rendering text that no longer matches engine output.
+    plan_result = generate_plan(patient, KB_ROOT)
+    resolved_algo = plan_result.algorithm_id
+    track_indications = [
+        getattr(t, "indication_id", None)
+        for t in (plan_result.plan.tracks if plan_result.plan else [])
+    ]
+    print(f"[csd-1-demo] engine resolved algorithm: {resolved_algo}")
+    print(f"[csd-1-demo] engine tracks ({len(track_indications)}): {track_indications}")
+    if resolved_algo != EXPECTED_ALGORITHM_ID:
+        print(
+            f"[csd-1-demo] WARNING: engine resolved {resolved_algo!r}, expected "
+            f"{EXPECTED_ALGORITHM_ID!r}. Plan A/B prose may no longer match engine output."
+        )
+    if EXPECTED_INDICATION_ID not in track_indications:
+        print(
+            f"[csd-1-demo] WARNING: {EXPECTED_INDICATION_ID} not in engine tracks. "
+            "BRAF V600E branch may not be firing as expected."
+        )
 
     # Resolve disease names so the NSZU lookup can substring-match Ukrainian
     # free-text reimbursement_indications (e.g. "колоректальний рак ...").

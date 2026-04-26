@@ -1,0 +1,58 @@
+id: REG-ENCORAFENIB-BINIMETINIB-MELANOMA
+name: "Encorafenib + binimetinib (BRAF V600E/K melanoma)"
+name_ua: "Енкорафеніб + бініметиніб (меланома BRAF V600E/K)"
+alternate_names: ["COLUMBUS doublet", "ENCO+BINI", "Braftovi + Mektovi"]
+
+components:
+  - drug_id: DRUG-ENCORAFENIB
+    dose: "450 mg PO once daily, with or without food"
+    schedule: "Continuous"
+    route: PO
+  - drug_id: DRUG-BINIMETINIB
+    dose: "45 mg PO BID, with or without food"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "LVEF decline ≥10% from baseline OR LVEF below LLN"
+    modification: "Hold binimetinib; restart at 30 mg BID after recovery; permanent discontinuation if recurrence"
+    source_refs: [SRC-COLUMBUS-DUMMETT-2018]
+  - condition: "Symptomatic ocular toxicity (RPED, RVO, uveitis)"
+    modification: "Hold binimetinib; ophthalmology evaluation; permanent discontinuation for RVO"
+    source_refs: [SRC-COLUMBUS-DUMMETT-2018]
+  - condition: "Grade ≥3 hepatic transaminase elevation"
+    modification: "Hold both; resume at reduced doses (encorafenib 300 mg, binimetinib 30 mg BID) after recovery"
+  - condition: "Cutaneous SCC / new primary skin lesion"
+    modification: "Excise; continue treatment with skin surveillance + dermatology q3 mo (BRAFi class effect)"
+  - condition: "QTcF >500 ms"
+    modification: "Hold encorafenib until QTcF <481; resume at 300 mg"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Енкорафеніб + бініметиніб зареєстровані для меланоми BRAF V600 в Україні; НСЗУ не покриває станом на 2026-04 — out-of-pocket / charity. Альтернатива: dabrafenib + trametinib (схоже покриття)."
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-COLUMBUS-DUMMETT-2018
+
+last_reviewed: "2026-04-27"
+notes: >
+  COLUMBUS phase 3: ENCO 450 + BINI 45 BID vs vemurafenib in 1L/2L
+  BRAF V600-mutant melanoma — mPFS 14.9 vs 7.3 mo (HR 0.54); 5-y OS
+  33.6 vs 16.9 mo. Tolerability advantage over vemurafenib
+  (less photosensitivity) and dabrafenib+trametinib (less pyrexia,
+  less arthralgia). Position: NCCN/ESMO preferred BRAFi+MEKi doublet
+  for BRAF V600E/K metastatic melanoma. In our 2L+ algorithm: used
+  for BRAF V600+ patients who progressed on 1L IO. dabrafenib +
+  trametinib (REG-DABRAFENIB-TRAMETINIB-NSCLC) is an interchangeable
+  alternative — both NCCN cat 1.

@@ -1,0 +1,57 @@
+id: RF-NSCLC-ROS1-FUSION-ACTIONABLE
+definition: >
+  ROS1 fusion (CD74-ROS1, EZR-ROS1, others) — ~1-2% of NSCLC
+  adenocarcinoma; never-smoker enriched. Treatment-defining: entrectinib
+  (CNS-active) or repotrectinib (TRIDENT-1, including post-crizotinib
+  resistance) preferred 1L; crizotinib historic option.
+definition_ua: >
+  Фузія ROS1 (CD74-ROS1, EZR-ROS1 та ін.) — ~1-2% НДРЛ-аденокарциноми;
+  переважно у некурців. Лікування-визначальний маркер: ентректиніб
+  (активний у ЦНС) або repotrectinib (TRIDENT-1, у т.ч. після
+  резистентності до кризотинібу) переважно 1L; кризотиніб — історичний.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ros1_fusion"
+      value: true
+    - finding: "ros1_rearrangement"
+      value: "positive"
+    - finding: "ros1_status"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-4"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-TRIDENT1-DRILON-2024
+  - SRC-STARTRK2-DRILON-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Detection: RNA-NGS preferred for fusion partner; IHC screen with
+  ROS1 antibody (D4D6) acceptable. Repotrectinib next-gen TKI active
+  vs solvent-front G2032R resistance mutation; preferred 1L+ in
+  guidelines updated post-TRIDENT-1. Brain metastases — entrectinib
+  and repotrectinib have CNS activity; crizotinib does not.
+notes_ua: >
+  Виявлення: RNA-NGS (переважно для партнера фузії); ІГХ з антитілом
+  ROS1 (D4D6) прийнятна для скринінгу. Repotrectinib — TKI наступного
+  покоління, активний проти solvent-front мутації G2032R; переважний
+  1L+ у настановах після TRIDENT-1. Метастази в головний мозок —
+  ентректиніб і repotrectinib мають ЦНС-активність, кризотиніб — ні.

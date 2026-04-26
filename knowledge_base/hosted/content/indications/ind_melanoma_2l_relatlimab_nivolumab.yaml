@@ -1,0 +1,99 @@
+id: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV unresectable / metastatic"
+    - "IO-naive (no prior anti-PD-1 — typically because 1L was BRAFi+MEKi for BRAF V600+ patient with visceral crisis or active brain mets)"
+    - "Patient unfit for ipi+nivo Grade 3-4 irAE risk (~50%) — e.g., baseline mild autoimmunity, advanced age, frailty"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-RELATLIMAB-NIVOLUMAB-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~43% (RELATIVITY-047 1L)"
+  complete_response: "~16%"
+  progression_free_survival: "Median PFS 10.1 mo (vs 4.6 mo nivo mono; HR 0.75)"
+  overall_survival_5y: "4-y OS ~48% (RELATIVITY-047)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Relatlimab + nivolumab (Opdualag fixed-dose) is the first
+  anti-LAG-3 + anti-PD-1 combination, FDA-approved 2022 in 1L
+  metastatic melanoma per RELATIVITY-047 (mPFS 10.1 vs 4.6 mo vs
+  nivo mono). Key differentiator vs ipi+nivo: Grade 3-4
+  treatment-related AE 18.9% vs ~50%. Position in our 2L+ algorithm:
+  IO-naive alternative (the patient received 1L BRAFi+MEKi and so
+  has not yet exhausted PD-1/LAG-3 axis), particularly attractive
+  when ipi-grade irAE risk is unacceptable. Trial was 1L; off-label
+  positioning at 2L requires MDT documentation. Note: if RELATIVITY
+  was used at 1L (IO-naive cohort), this Indication does NOT apply
+  at 2L — patient should move to BRAFi+MEKi (if BRAF V600+) or
+  alternative salvage.
+
+sources:
+  - source_id: SRC-RELATIVITY-047-TAWBI-2022
+    position: supports
+    relevant_quote_paraphrase: "RELATIVITY-047: nivolumab + relatlimab vs nivo mono in 1L melanoma — mPFS 10.1 vs 4.6 mo (HR 0.75); Grade 3-4 treatment-related AE 18.9% vs ipi+nivo ~50%"
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "Nivolumab+relatlimab (Opdualag) is a Category 1 1L option for metastatic melanoma; positioned as alternative IO doublet to ipi+nivo with better tolerability"
+  - source_id: SRC-ESMO-MELANOMA-2024
+    position: supports
+    relevant_quote_paraphrase: "Anti-LAG-3 + anti-PD-1 (Opdualag) is recommended where ipi+nivo toxicity is prohibitive"
+
+known_controversies:
+  - topic: "rela+nivo position at 2L (IO-naive) — off-label vs ipi+nivo"
+    positions:
+      - position: "Better tolerability than ipi+nivo (Grade 3-4 irAE ~19% vs ~50%) — preferred for frailer patients"
+        sources: [SRC-RELATIVITY-047-TAWBI-2022]
+      - position: "ipi+nivo has more mature OS data and higher response rates — preferred for fit patients"
+        sources: [SRC-CHECKMATE-067-LARKIN-2019]
+      - position: "RELATIVITY was 1L; 2L use is off-label / extrapolation"
+    our_default: "rela+nivo if patient unfit for ipi+nivo or strongly prefers tolerability profile; ipi+nivo otherwise"
+    rationale: "Tolerability advantage drives this niche; access in UA limited (relatlimab not registered)"
+
+do_not_do:
+  - "НЕ призначати, якщо пацієнт уже отримував anti-PD-1 1L — це buys nothing нового, окрім додаткової LAG-3 блокади з мінімальним benefit post-PD-1."
+  - "НЕ ігнорувати baseline troponin + ECG — myocarditis ~1.7% (вище ніж nivo mono); серійний моніторинг при симптомах."
+  - "НЕ давати >10 мг/добу преднізолону до старту — знижує efficacy ICI."
+  - "НЕ використовувати у baseline активному autoimmune захворюванні на systemic immunosuppression — irAE risk."
+  - "НЕ підтверджувати план без верифікованого funding pathway — релатлімаб не зареєстрований в Україні; pathway = імпорт named-patient."
+  - "НЕ давати live vaccines під час або 3 міс після."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L IO
+  alternative for BRAF V600+ patients who received 1L BRAFi+MEKi
+  (visceral crisis / brain mets indication) and need IO at 2L but
+  cannot tolerate ipi+nivo. RELATIVITY was a 1L trial; 2L
+  positioning is off-label / extrapolation — MDT documentation
+  required. Ukraine access constraint dominant: relatlimab not
+  registered (named-patient import only); fixed-dose Opdualag
+  product unavailable without import.

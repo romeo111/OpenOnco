@@ -1,0 +1,51 @@
+id: REG-MIRVETUXIMAB-OVARIAN
+name: "Mirvetuximab soravtansine (FRα-high platinum-resistant ovarian, MIRASOL)"
+name_ua: "Мірветуксимаб соравтансин (FRα-висока, платинорезистентний рак яєчників, MIRASOL)"
+alternate_names: ["Elahere monotherapy"]
+
+components:
+  - drug_id: DRUG-MIRVETUXIMAB-SORAVTANSINE
+    dose: "6 mg/kg AIBW (adjusted ideal body weight)"
+    schedule: "IV every 21 days until progression or unacceptable toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+premedication:
+  - "Corticosteroid eye drops (prednisolone acetate 1% or dexamethasone 0.1%) — start ≥1 day before each cycle and continue for 4 days; lubricant eye drops 6+ times/day during therapy and 4 weeks post-discontinuation"
+  - "Oral antiemetic (5-HT3 antagonist) day 1"
+  - "Antihistamine + acetaminophen + corticosteroid pre-medication first 2 cycles for infusion-reaction prophylaxis"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2 keratopathy / blurred vision"
+    modification: "Hold until ≤Grade 1, then resume at same dose with intensified eye-drop regimen; ophthalmology consult"
+    source_refs: [SRC-MIRASOL-MOORE-2024]
+  - condition: "Grade 3 keratopathy / visual acuity loss"
+    modification: "Hold until ≤Grade 1, resume at 5 mg/kg AIBW; permanently discontinue if no recovery within 28 days OR if Grade 4"
+  - condition: "Grade 2 peripheral neuropathy"
+    modification: "Hold until ≤Grade 1, resume at 5 mg/kg AIBW"
+  - condition: "Grade 3-4 pneumonitis"
+    modification: "Permanent discontinuation"
+  - condition: "Grade 3 infusion reaction"
+    modification: "Stop infusion, manage; resume at slower rate with intensified premedication; permanently discontinue if Grade 4"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Мірветуксимаб соравтансин не зареєстрований в Україні станом на 2026-04. Доступ виключно через клінічне дослідження або благодійний/іменний імпорт. Потрібен супутній доступ до VENTANA FOLR1 RxDx асаю — також обмежений; референсна патологія (Roche-сертифікована лабораторія) обов'язкова."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-MIRASOL-MOORE-2024]
+last_reviewed: "2026-04-27"
+
+notes: >
+  Single-agent ADC. Mandatory baseline ophthalmology evaluation
+  (slit-lamp + visual acuity) before cycle 1, then every other cycle
+  for first 8 cycles (or per symptoms). Steroid + lubricant eye-drop
+  prophylaxis is non-negotiable — keratopathy/visual impairment is the
+  defining toxicity (~50% blurred vision, ~37% keratopathy in MIRASOL).
+  Avoid contact lenses during therapy. Do not initiate without
+  documented FRα-high status by VENTANA FOLR1 RxDx (≥75% TPS at ≥2+).

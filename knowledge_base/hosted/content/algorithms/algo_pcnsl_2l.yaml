@@ -78,12 +78,14 @@ decision_tree:
       result: IND-PCNSL-2L-RMPV-SALVAGE
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — default: PCNSL 2L → R-MPV salvage re-induction.
   - step: 4
     evaluate:
       any_of:
         - condition: "PCNSL relapsed, CD20+, HD-MTX-eligible by default"
+        - red_flag: RF-PCNSL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-PCNSL-2L-RMPV-SALVAGE
     if_false:

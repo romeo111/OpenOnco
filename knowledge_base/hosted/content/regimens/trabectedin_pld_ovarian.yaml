@@ -1,0 +1,55 @@
+id: REG-TRABECTEDIN-PLD-OVARIAN
+name: "Trabectedin + PLD (recurrent ovarian, OVA-301)"
+name_ua: "Трабектедин + PLD (Доксіл) (рецидив раку яєчників, OVA-301)"
+alternate_names: ["OVA-301 regimen", "Yondelis + Doxil"]
+
+components:
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "30 mg/m²"
+    schedule: "IV day 1 every 21 days (administered immediately before trabectedin)"
+    route: IV
+  - drug_id: DRUG-TRABECTEDIN
+    dose: "1.1 mg/m²"
+    schedule: "IV over 3 hours via central venous catheter, day 1 every 21 days (after PLD)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+premedication:
+  - "Dexamethasone 20 mg IV 30 min pre-trabectedin (mandatory hepatoprotective + antiemetic)"
+  - "5-HT3 antagonist day 1"
+  - "Slow first PLD infusion + topical/oral steroids for PPE prophylaxis"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Transaminase elevation (AST/ALT) > 2.5× ULN at day 21 retest"
+    modification: "Delay next cycle until AST/ALT ≤2.5× ULN; reduce trabectedin one dose level (1.1 → 0.9 → 0.75 mg/m²)"
+    source_refs: [SRC-OVA-301-MONK-2010]
+  - condition: "Grade 3-4 neutropenia (with or without fever)"
+    modification: "Reduce trabectedin one dose level; G-CSF prophylaxis"
+  - condition: "Grade 2-3 PPE / hand-foot syndrome"
+    modification: "Hold PLD until ≤Grade 1 then reduce to 25 mg/m²; topical/oral steroid + cooling"
+  - condition: "CK elevation > 5× ULN OR clinical rhabdomyolysis"
+    modification: "Permanently discontinue trabectedin"
+  - condition: "LVEF drop ≥10 percentage points OR <50%"
+    modification: "Discontinue PLD; cardiology consult"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Трабектедин не зареєстрований в Україні; PLD здебільшого OOP. Цей режим — переважно для пацієнтів з частково платиночутливим рецидивом (PFI 6-12 міс), які не є кандидатами для повторної платини. Доступ через благодійний імпорт або клінічне дослідження."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-OVA-301-MONK-2010]
+last_reviewed: "2026-04-27"
+
+notes: >
+  OVA-301 phase 3: overall mPFS 7.3 vs 5.8 mo (HR 0.79); benefit largest
+  in partially-platinum-sensitive (PFI 6-12 mo) subgroup — mPFS 7.4 vs
+  5.5 mo (HR 0.65), mOS 23.0 vs 17.1 mo (HR 0.59). Used in 3L+ where
+  re-platinum is undesirable (cumulative neuropathy, hypersensitivity,
+  short PFI). Mandatory central venous access for trabectedin
+  (24-h infusion option in sarcoma; 3-h for ovarian per OVA-301).
+  Cumulative anthracycline tracking: stop PLD at lifetime ~550 mg/m².

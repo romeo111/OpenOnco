@@ -1,0 +1,73 @@
+id: RF-AML-NPM1-MUT-FAVORABLE
+definition: >
+  NPM1 mutation (most commonly type-A: c.860_863dupTCTG / p.W288fs) in
+  AML — ~30% of adult AML; ~50% of cytogenetically normal AML.
+  ELN-2022 favorable risk when NPM1-mutated WITHOUT FLT3-ITD; standard
+  7+3 induction first-line (no upfront alloHCT in CR1; consolidation
+  HiDAC × 3-4 cycles is curative-intent). MRD qPCR
+  (NPM1-mut transcript) for monitoring.
+definition_ua: >
+  Мутація NPM1 (найчастіше тип А: c.860_863dupTCTG / p.W288fs) при
+  ГМЛ — ~30% дорослих ГМЛ; ~50% цитогенетично нормального ГМЛ.
+  ELN-2022 — favorable-ризик при NPM1-mut БЕЗ FLT3-ITD; стандартна
+  7+3 індукція 1L (без upfront alloHCT у ПР1; HiDAC × 3-4 цикли в
+  консолідації — curative-intent). МЗХ qPCR (NPM1-мут транскрипт)
+  для моніторингу.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "npm1_mutation"
+          value: true
+        - finding: "npm1_status"
+          value: "mutated"
+        - finding: "npm1_type_a"
+          value: true
+    - any_of:
+        - finding: "flt3_itd"
+          value: false
+        - finding: "flt3_itd_status"
+          value: "negative"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 75
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  De-escalate direction reflects "do NOT intensify to upfront alloHCT"
+  — favorable-risk patients receive standard chemo with curative
+  intent; alloHCT reserved for MRD-positive after consolidation OR
+  early relapse. NPM1-mut + FLT3-ITD high-allelic-ratio downgrades
+  to intermediate (and now adverse per ELN-2022 if NPM1-WT).
+  MRD-NPM1 qPCR threshold ≥2-log reduction = molecular response;
+  MRD-positive after consolidation → consider alloHCT.
+  Menin inhibitors (revumenib, ziftomenib) — investigational R/R
+  NPM1-mut. RF coexists with RF-AML-FLT3-ACTIONABLE (different
+  axes — NPM1+FLT3-ITD case fires both).
+notes_ua: >
+  Напрямок "de-escalate" відображає "НЕ інтенсифікувати до upfront
+  alloHCT" — favorable-risk пацієнти отримують стандартну хіміо з
+  curative-intent; alloHCT — резерв для МЗХ-позитивних після
+  консолідації АБО раннього рецидиву. NPM1-mut + FLT3-ITD з високим
+  алельним співвідношенням понижує до intermediate (і тепер adverse
+  за ELN-2022 при NPM1-WT). Поріг МЗХ-NPM1 qPCR ≥2-log зниження =
+  molecular response; МЗХ-позитивний після консолідації → розглянути
+  alloHCT. Menin-інгібітори (revumenib, ziftomenib) — у дослідженнях
+  при р/р NPM1-mut. RF співіснує з RF-AML-FLT3-ACTIONABLE (різні
+  осі — випадок NPM1+FLT3-ITD спрацьовує обидва).

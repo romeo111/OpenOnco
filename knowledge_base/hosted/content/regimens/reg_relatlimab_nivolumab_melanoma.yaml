@@ -1,0 +1,54 @@
+id: REG-RELATLIMAB-NIVOLUMAB-MELANOMA
+name: "Relatlimab + nivolumab (Opdualag, melanoma)"
+name_ua: "Релатлімаб + ніволумаб (Opdualag, меланома)"
+alternate_names: ["Opdualag", "RELATIVITY-047 regimen", "rela+nivo"]
+
+components:
+  - drug_id: DRUG-RELATLIMAB
+    dose: "160 mg (fixed-dose co-formulation with nivolumab 480 mg)"
+    schedule: "IV q4w, over 30 min"
+    route: IV
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "480 mg (fixed-dose co-formulation with relatlimab 160 mg)"
+    schedule: "IV q4w, over 30 min"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity (typical 24 mo cap in trial)"
+toxicity_profile: moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 immune-mediated adverse event (any organ)"
+    modification: "Hold; corticosteroids per irAE management protocol; resume per organ-specific algorithm"
+    source_refs: [SRC-RELATIVITY-047-TAWBI-2022]
+  - condition: "Suspected myocarditis (troponin↑, new ECG changes, dyspnea)"
+    modification: "PERMANENT discontinuation; high-dose corticosteroids; cardiology consult"
+    source_refs: [SRC-RELATIVITY-047-TAWBI-2022]
+  - condition: "Grade 3-4 immune-mediated AE that does not resolve to ≤Grade 1 within 12 weeks"
+    modification: "Permanent discontinuation"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Релатлімаб не зареєстрований в Україні (2026-04); pathway = named-patient import. Ніволумаб зареєстрований + НСЗУ-покриваний для меланоми 1L (моно або з ipi). Opdualag fixed-dose — недоступний без імпорту."
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-RELATIVITY-047-TAWBI-2022
+
+last_reviewed: "2026-04-27"
+notes: >
+  RELATIVITY-047 phase 2/3: nivo+rela vs nivo mono in 1L melanoma —
+  mPFS 10.1 vs 4.6 mo (HR 0.75). 4-y OS ~48%. Key differentiator vs
+  ipi+nivo: Grade 3-4 treatment-related AE 18.9% vs ~50%. Position
+  in our 2L+ algorithm: IO-naive alternative for patients who
+  received 1L BRAFi+MEKi (no prior anti-PD-1) when ipi-grade irAE
+  risk is unacceptable (e.g., baseline autoimmunity, frailty).
+  Trial was 1L; off-label position requires MDT documentation.
+  Myocarditis surveillance (baseline + serial troponin, ECG with
+  symptoms) recommended.

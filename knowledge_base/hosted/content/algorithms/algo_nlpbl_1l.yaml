@@ -27,6 +27,7 @@ decision_tree:
       next_step: 2
     if_false:
       result: IND-FL-1L-RCHOP-AGGRESSIVE  # advanced → FL-style aggressive
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   - step: 2
     evaluate:
@@ -36,6 +37,7 @@ decision_tree:
       result: IND-NLPBL-1L-RITUXIMAB-MONO
     if_false:
       result: IND-NLPBL-1L-OBSERVATION-OR-RT
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"

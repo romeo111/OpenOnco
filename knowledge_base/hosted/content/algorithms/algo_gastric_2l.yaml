@@ -44,6 +44,7 @@ decision_tree:
       result: IND-GASTRIC-METASTATIC-3L-TAS102
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — default: HER2-negative 2L post-platinum → pac+ram (RAINBOW).
   - step: 3
@@ -56,6 +57,7 @@ decision_tree:
       result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
     if_false:
       result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-GASTRIC-2025

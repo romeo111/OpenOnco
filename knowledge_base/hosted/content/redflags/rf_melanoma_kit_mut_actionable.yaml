@@ -1,0 +1,74 @@
+id: RF-MELANOMA-KIT-MUT-ACTIONABLE
+definition: >
+  KIT activating mutation (exon 11 / 13) in mucosal or acral melanoma
+  subtype — ~15-20% prevalence in those subtypes (rare in cutaneous).
+  Imatinib (Carvajal 2013 — ORR 23% in KIT-mut mucosal/acral) and
+  nilotinib are off-label active; integrate with standard IO if
+  eligible.
+definition_ua: >
+  Активуюча мутація KIT (exon 11 / 13) при мукозальному або акральному
+  підтипах меланоми — ~15-20% поширеність у цих підтипах (рідкісна
+  при шкірній). Іматиніб (Carvajal 2013 — ORR 23% у KIT-mut мукозальній/
+  акральній) та нілотиніб активні off-label; інтегрувати з стандартною
+  IO при допустимості.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "kit_mutation"
+          value: true
+        - finding: "kit_status"
+          value: "mutated"
+        - finding: "kit_exon11"
+          value: "positive"
+        - finding: "kit_exon13"
+          value: "positive"
+    - any_of:
+        - finding: "melanoma_subtype"
+          value: "mucosal"
+        - finding: "melanoma_subtype"
+          value: "acral"
+        - finding: "primary_site"
+          value: "mucosal"
+        - finding: "primary_site"
+          value: "acral"
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm:
+  - ALGO-MELANOMA-METASTATIC-1L
+  - ALGO-MELANOMA-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-CARVAJAL-KIT-MELANOMA-2013
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  KIT mutations very rare (<3%) in cutaneous melanoma — testing
+  reserved for mucosal / acral / chronic-sun-damaged subtypes per
+  guidelines. Exon 17 D816V resistance to imatinib (avapritinib
+  active for D816V — limited mucosal-melanoma data). Mucosal
+  melanoma generally has lower IO response than cutaneous; KIT-TKI
+  + IO sequencing under study. Mucosal-melanoma 1L typically
+  ipi-nivo (KEYNOTE-029, CheckMate-067 subset); KIT-TKI is second-line
+  consideration in KIT-mut subset.
+notes_ua: >
+  Мутації KIT дуже рідкісні (<3%) при шкірній меланомі — тестування
+  обмежене мукозальним / акральним / хронічно-сонячно-ушкодженим
+  підтипами за настановами. Резистентність exon 17 D816V до іматинібу
+  (avapritinib активний за D816V — обмежені дані мукозальної меланоми).
+  Мукозальна меланома загалом має нижчу відповідь на IO ніж шкірна;
+  KIT-TKI + IO послідовність — у дослідженнях. Мукозальна меланома
+  1L — зазвичай ипі-ніво (KEYNOTE-029, підгрупа CheckMate-067);
+  KIT-TKI — друга лінія у KIT-mut підгрупі.

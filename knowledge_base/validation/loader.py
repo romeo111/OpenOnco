@@ -65,7 +65,22 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "workups": [
         # required_tests handled specially (list of Test IDs)
     ],
+    "reviewers": [],
 }
+
+
+# Entity types whose `reviewer_signoffs[]` items carry FK reviewer_ids that
+# must resolve to a ReviewerProfile (REV-*) under reviewers/. This list
+# mirrors the schema migration in CSD-5 (see schemas/_reviewer_signoff.py).
+# Legacy YAML with `reviewer_signoffs: 0` is coerced to [] by the schema
+# validator and produces no ref-check work here.
+REVIEWER_SIGNOFF_TYPES: tuple[str, ...] = (
+    "indications",
+    "algorithms",
+    "regimens",
+    "redflags",
+    "biomarker_actionability",
+)
 
 
 @dataclass
@@ -266,6 +281,23 @@ def _load_content_impl(root: Path) -> LoadResult:
             for i, sid in enumerate(data.get("sources") or []):
                 if isinstance(sid, str):
                     check_ref(path, sid, "sources", f"sources[{i}]")
+
+        # CSD-5: structured reviewer_signoffs[] — every reviewer_id must
+        # resolve to a ReviewerProfile entity. Legacy `reviewer_signoffs: 0`
+        # is coerced to [] by the schema validator before we see it here,
+        # but the raw YAML may still hold `0`; skip non-list values.
+        if etype in REVIEWER_SIGNOFF_TYPES:
+            signoffs = data.get("reviewer_signoffs")
+            if isinstance(signoffs, list):
+                for i, so in enumerate(signoffs):
+                    if not isinstance(so, dict):
+                        continue
+                    check_ref(
+                        path,
+                        so.get("reviewer_id"),
+                        "reviewers",
+                        f"reviewer_signoffs[{i}].reviewer_id",
+                    )
 
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)

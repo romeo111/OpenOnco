@@ -1,0 +1,66 @@
+id: IND-BREAST-HER2-POS-3L-TUCATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HER2_POS
+  stage_stratum: METASTATIC
+  line_of_therapy: 3
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-positive (IHC 3+ OR IHC 2+ ISH-amplified)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    # HER2CLIMB enrolled patients with brain metastases (active or
+    # treated) — preferred indication when brain mets present.
+    brain_metastases_favorable: true
+
+recommended_regimen: REG-TUCATINIB-TRASTUZUMAB-CAPECITABINE-BREAST
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 8
+  median_overall_survival_months: 22
+  notes: "HER2CLIMB overall: PFS 7.8 vs 5.6 mo (HR 0.54), OS 21.9 vs 17.4 mo (HR 0.66). Brain-mets cohort: CNS-PFS 9.9 vs 4.2 mo (HR 0.32), intracranial ORR 47% vs 20%."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+  - TEST-MRI-BRAIN-CONTRAST
+desired_tests: []
+
+sources:
+  - source_id: SRC-HER2CLIMB-MURTHY-2019
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. HER2CLIMB established tucatinib + trastuzumab +
+  capecitabine for HER2+ metastatic ≥3L (post-trastuzumab + post-T-DXd
+  in current era). Major unmet need addressed: active brain
+  metastases — first regimen with prospectively-demonstrated
+  intracranial activity. CNS-PFS doubling justifies preferred
+  positioning when brain mets present (active or treated). MRI brain
+  required pre-treatment to characterize CNS disease. Diarrhea
+  management dominant clinical workflow burden — combined effect of
+  tucatinib + capecitabine. UA access barrier: tucatinib not
+  registered; named-patient import / EAP only. T-DM1 remains an
+  alternative when tucatinib not accessible (KATHERINE / EMILIA
+  data — not modeled in this batch).

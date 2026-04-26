@@ -1,0 +1,63 @@
+id: RF-OVARIAN-PLATINUM-RESISTANT
+definition: >
+  Platinum-resistant ovarian relapse — Platinum-Free Interval (PFI)
+  <6 months from last platinum dose. Re-platinum non-curative;
+  treatment shifts to single-agent non-platinum chemo (PLD, weekly
+  paclitaxel, topotecan, gemcitabine) ± bevacizumab (AURELIA — mPFS
+  6.7 vs 3.4 mo) OR mirvetuximab if FRα-high (MIRASOL).
+definition_ua: >
+  Платина-резистентний рецидив раку яєчників — Platinum-Free Interval
+  (PFI) <6 місяців. Ре-платина — некуративна; лікування переходить
+  на одно-агентну неплатинову хіміо (ПЛД, щотижневий паклітаксел,
+  топотекан, гемцитабін) ± бевацизумаб (AURELIA — мПФВ 6.7 проти
+  3.4 міс) АБО мирветуксимаб при FRα-high (MIRASOL).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "platinum_free_interval_months"
+      threshold: 6
+      comparator: "<"
+    - finding: "platinum_status"
+      value: "resistant"
+
+clinical_direction: de-escalate
+severity: major
+priority: 70
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-2L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+  - SRC-AURELIA-PUJADE-LAURAINE-2014
+  - SRC-MIRASOL-MOORE-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Platinum-refractory (PFI <1 mo) is a worse subset — palliative
+  intent dominates; clinical-trial enrollment encouraged. AURELIA —
+  bev added to single-agent chemo improved PFS but not OS overall;
+  patient symptom-burden (ascites, bowel obstruction) often drives
+  bev decision. clinical-direction "de-escalate" reflects shift away
+  from intensive platinum doublet toward single-agent palliative
+  intent. Mirvetuximab (MIRASOL) is the first regimen with OS benefit
+  in this setting (FRα-high subset). Sacituzumab govitecan,
+  oregovomab, anti-VEGF combinations under study.
+notes_ua: >
+  Платина-рефрактерний (PFI <1 міс) — гірша підгрупа; домінує
+  паліативний підхід; рекомендоване включення у клінічні дослідження.
+  AURELIA — додавання бев до моно-хіміо покращило ПФВ, але не ЗВ
+  загалом; симптом-навантаження пацієнта (асцит, кишкова непрохідність)
+  часто керує рішенням про бев. Clinical-direction "de-escalate"
+  відображає відхід від інтенсивної платинової комбінації до моно-
+  агентного паліативного підходу. Мирветуксимаб (MIRASOL) — перша
+  схема з виграшем за ЗВ у цьому стані (FRα-high підгрупа).
+  Сацитузумаб говітекан, oregovomab, анти-VEGF комбінації — у
+  дослідженнях.

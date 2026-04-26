@@ -599,7 +599,7 @@ def build_page(patient_inner_html: str, engine_styles: str,
     <aside class="lab-letter">
       <p>Шановний пацієнте,</p>
       <p>Ваш генетичний аналіз готовий. Цей звіт пояснює прості висновки на основі результатів. Не замінює консультацію з лікарем — це додатковий інструмент розуміння.</p>
-      <p class="lab-attribution">Лабораторія CSD · MyAction PanCancer 524-gene NGS · код M367 · {REPORT_DATE_HUMAN} · демо-приклад 1-ї лінії</p>
+      <p class="lab-attribution">Лабораторія CSD · MyAction PanCancer 524-gene NGS · код M367 · {REPORT_DATE_HUMAN} · демо-приклад 2-ї лінії (BRAF V600E)</p>
     </aside>
 
     {qr_panel}
@@ -633,17 +633,11 @@ def main() -> None:
           f"disease={patient.get('disease', {}).get('id')} · "
           f"line={patient.get('line_of_therapy')}")
 
-    # The CSD-1 clinician demo hand-authored 2L tracks because the rule
-    # engine currently only covers ALGO-CRC-METASTATIC-1L (the 2L
-    # algorithm is queued for later authoring — see build_csd_1_demo.py
-    # docstring). For this patient demo we want the engine's actual
-    # output, so we render the 1L plan for the same biomarker profile
-    # (BRAF V600E mCRC). The lab-letter framing notes this so the demo
-    # stays honest.
-    if patient.get("line_of_therapy") != 1:
-        print(f"[csd-3-demo] note: overriding line_of_therapy "
-              f"{patient.get('line_of_therapy')} -> 1 (engine 2L coverage pending)")
-        patient = {**patient, "line_of_therapy": 1}
+    # ALGO-CRC-METASTATIC-2L is now authored in the KB, so the engine
+    # resolves the 2L pathway natively for this patient (line=2, BRAF
+    # V600E). The previous 1L override hack has been removed — the
+    # algorithm's step-2 BRAF V600E branch routes to
+    # IND-CRC-METASTATIC-2L-BRAF-BEACON (encorafenib + cetuximab).
 
     print("[csd-3-demo] generating plan via engine…")
     plan_result = generate_plan(patient, KB_ROOT)

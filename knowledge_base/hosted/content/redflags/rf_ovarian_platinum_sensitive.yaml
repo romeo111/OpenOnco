@@ -1,0 +1,61 @@
+id: RF-OVARIAN-PLATINUM-SENSITIVE
+definition: >
+  Platinum-sensitive ovarian relapse — Platinum-Free Interval (PFI)
+  >6 months from last platinum dose to recurrence. Treatment-defining:
+  re-platinum doublet (carbo + paclitaxel/PLD/gem) ± bevacizumab
+  maintenance. PARPi maintenance after response if HRD-positive.
+definition_ua: >
+  Платина-чутливий рецидив раку яєчників — Platinum-Free Interval
+  (PFI) >6 місяців від останньої дози платини до рецидиву.
+  Лікування-визначальне: ре-платинова комбінація (карбо +
+  паклітаксел/PLD/gem) ± бевацизумаб у підтриманні. PARPi у підтриманні
+  після відповіді при HRD-позитивності.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "platinum_free_interval_months"
+      threshold: 6
+      comparator: ">"
+    - finding: "platinum_status"
+      value: "sensitive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-2L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+  - SRC-OCEANS-AGHAJANIAN-2012
+  - SRC-GOG0213-COLEMAN-2017
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  PFI 6-12 mo (partially platinum-sensitive) and >12 mo (fully
+  platinum-sensitive) historically distinguished — both candidates for
+  re-platinum, but >12 mo has higher response rates. ESMO 2024 has
+  moved toward biology-driven decisions (HRD/BRCA + symptom burden)
+  rather than rigid PFI threshold. OCEANS / GOG-0213 — platinum +
+  chemo + bev superior to platinum + chemo alone (OS in GOG-0213
+  with weekly paclitaxel arm). PARPi maintenance after platinum
+  response in HRD-positive: olaparib (SOLO-2), niraparib (NOVA),
+  rucaparib (ARIEL3).
+notes_ua: >
+  PFI 6-12 міс (частково платина-чутливий) та >12 міс (повністю
+  платина-чутливий) історично розрізняли — обидва кандидати для
+  ре-платини, але >12 міс має вищі рівні відповідей. ESMO 2024
+  схиляється до біологія-орієнтованих рішень (HRD/BRCA + симптом-
+  навантаження). OCEANS / GOG-0213 — платина + хіміо + бев перевершує
+  платина + хіміо (ЗВ у GOG-0213 з арм щотижневого паклітакселу).
+  PARPi у підтриманні після платини при HRD-позитивності: олапариб
+  (SOLO-2), нірапариб (NOVA), рукапариб (ARIEL3).

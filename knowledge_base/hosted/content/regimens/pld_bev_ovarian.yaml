@@ -1,0 +1,55 @@
+id: REG-PLD-BEV-OVARIAN
+name: "PLD + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA)"
+name_ua: "PLD (Доксіл) + Бевацизумаб (платинорезистентний рецидив раку яєчників, AURELIA)"
+alternate_names: ["AURELIA PLD arm", "Doxil + Avastin"]
+
+components:
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "40 mg/m²"
+    schedule: "IV every 28 days"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "10 mg/kg"
+    schedule: "IV every 14 days (or 15 mg/kg every 21 days)"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+premedication:
+  - "Slow first PLD infusion (≤1 mg/min then escalate) + topical/oral steroids for PPE prophylaxis"
+  - "5-HT3 antagonist day 1"
+  - "Antihistamine + ranitidine for first PLD infusion"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2-3 PPE / hand-foot syndrome"
+    modification: "Hold PLD until ≤Grade 1 then reduce to 30 mg/m²; topical urea / steroid + cooling measures"
+    source_refs: [SRC-AURELIA-PUJADE-LAURAINE-2014]
+  - condition: "Grade 3 stomatitis"
+    modification: "Hold PLD; supportive (chlorhexidine, lidocaine viscous); reduce next cycle to 30 mg/m²"
+  - condition: "Bev Grade 3 hypertension"
+    modification: "Initiate ACE-i / CCB; hold bev until BP <160/100"
+  - condition: "Bev Grade 3 proteinuria"
+    modification: "Hold bev until <2 g/24h; permanently discontinue if nephrotic syndrome"
+  - condition: "Cumulative PLD approaching 550 mg/m² total anthracycline exposure"
+    modification: "Discontinue PLD; consider single-agent bev maintenance OR switch to topotecan / weekly paclitaxel"
+  - condition: "Major surgery planned"
+    modification: "Hold bev ≥28 days pre-op; resume ≥28 days post-op with full wound healing"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Бевацизумаб НСЗУ-фінансований для рецидивного раку яєчників (часткове покриття); PLD зареєстрований але здебільшого OOP. Альтернатива — REG-WEEKLY-PAC-BEV-OVARIAN (паклітаксел тижневий + бев) має повне НСЗУ-покриття."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-AURELIA-PUJADE-LAURAINE-2014]
+last_reviewed: "2026-04-27"
+
+notes: >
+  AURELIA PLD arm: PFS 5.4 vs 3.5 mo (HR 0.57 vs PLD alone); ORR
+  17.4% vs 7.8%. Combined-cohort AURELIA mPFS 6.7 vs 3.4 mo overall
+  (HR 0.48). Preferred platinum-resistant chemo+bev backbone in
+  patients with prior taxane-induced peripheral neuropathy (avoids
+  re-exposure). Cap cumulative anthracycline at lifetime ~550 mg/m².

@@ -1,0 +1,60 @@
+id: IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-OVARIAN
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent platinum-sensitive ovarian / fallopian tube / primary peritoneal cancer"
+    - "Post-platinum reinduction CR or PR"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRCA1-BRCA2-GERMLINE
+      value_constraint: "pathogenic OR likely pathogenic (germline OR somatic)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OLAPARIB-MAINT-OVARIAN
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance — measured by PFS not response"
+  progression_free_survival: "mPFS 19.1 vs 5.5 mo (SOLO2/ENGOT-Ov21, HR 0.30)"
+  overall_survival_5y: "mOS 51.7 vs 38.8 mo (SOLO2 long-term update Poveda 2021, HR 0.74)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests:
+  - TEST-GERMLINE-BRCA-PANEL
+
+rationale: >
+  Olaparib maintenance after platinum reinduction CR/PR in recurrent
+  platinum-sensitive ovarian with confirmed BRCA1/2 mutation
+  (germline or somatic). SOLO2 phase 3 — strongest PARPi-maintenance
+  evidence in this scenario; established standard of care.
+
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+  - source_id: SRC-ESMO-OVARIAN-2024
+    position: supports
+  - source_id: SRC-SOLO2-PUJADE-LAURAINE-2017
+    position: supports
+
+do_not_do:
+  - "Do NOT start without confirmed CR or PR to platinum reinduction"
+  - "Do NOT start without documented BRCA1/2 pathogenic / likely-pathogenic variant (germline or somatic)"
+  - "Do NOT continue olaparib through Grade 3 anemia without dose reduction (300 → 250 → 200 mg BID)"
+  - "Do NOT skip pre-treatment counseling on long-term MDS/AML risk (~1-2% cumulative)"
+
+last_reviewed: "2026-04-27"
+reviewer_signoffs: 0
+notes: "ESCAT IA. BRCA-mutant 2L+ maintenance — most-evidence PARPi (SOLO2). Plan-track aggressive because adds significant PFS/OS over no maintenance."

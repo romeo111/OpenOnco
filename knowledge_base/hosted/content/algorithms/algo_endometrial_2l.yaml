@@ -31,6 +31,7 @@ decision_tree:
       result: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — default: pMMR OR (dMMR + prior 1L ICI) → pembro+lenva.
   # KEYNOTE-775 covers the 2L pMMR population that benefits most from
@@ -47,6 +48,7 @@ decision_tree:
       result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
     if_false:
       result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-UTERINE-2025

@@ -1,0 +1,97 @@
+id: IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: ROS1_REARRANGED
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic ROS1-rearranged NSCLC"
+    - "Disease progression on crizotinib 1L"
+    - "CNS disease present OR CNS-active TKI desired (entrectinib has CNS penetration crizotinib lacks)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ROS1-FUSION
+      value_constraint: "ROS1 rearrangement confirmed (RNA-NGS preferred OR FISH)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ENTRECTINIB-NSCLC
+concurrent_therapy: []
+followed_by: []  # repotrectinib (TRIDENT-1) for solvent-front-resistant 3L
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~67% post-crizotinib (lower than 1L; depends on resistance profile)"
+  progression_free_survival: "Median PFS ~8-13 mo post-crizotinib (lower than 19 mo TKI-naïve)"
+  overall_survival_5y: "Mature OS data evolving"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm ROS1 retained + characterize resistance (G2032R drives repotrectinib choice)
+  - TEST-BRAIN-MRI-CONTRAST  # critical — entrectinib vs lorlatinib choice CNS-driven
+desired_tests: []
+
+rationale: >
+  Entrectinib (ROS1 / NTRK / ALK TKI with CNS penetration) for ROS1+
+  metastatic NSCLC progressing on crizotinib 1L. Crizotinib has poor
+  CNS penetration; CNS progression is a common failure mode and
+  entrectinib's high intracranial activity (~55% intracranial ORR in
+  STARTRK-2 integrated analysis) makes it preferred in CNS-positive
+  disease. For systemic-only progression or G2032R solvent-front
+  resistance, repotrectinib (TRIDENT-1, separate Indication) may be
+  preferred. Lorlatinib also has ROS1 activity but is less specifically
+  studied for ROS1 2L. Pre-treatment NGS recommended to characterize
+  resistance mutations driving precise next-line choice.
+
+sources:
+  - source_id: SRC-STARTRK2-DRILON-2020
+    position: supports
+    relevant_quote_paraphrase: "Entrectinib in ROS1+ NSCLC integrated analysis (ALKA / STARTRK-1/2): ORR 77%, mPFS 19.0 mo, intracranial ORR 55%; activity preserved post-crizotinib"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Entrectinib is recommended for ROS1+ NSCLC including post-crizotinib setting; particularly indicated for CNS disease; Cat 1"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Entrectinib is preferred CNS-active option for ROS1+ NSCLC; repotrectinib alternative for solvent-front-resistant disease"
+
+known_controversies:
+  - topic: "Entrectinib vs lorlatinib vs repotrectinib for 2L ROS1+ NSCLC post-crizotinib"
+    positions:
+      - position: "Entrectinib (STARTRK): CNS-active; ORR ~67% post-crizotinib; established 2L"
+        sources: [SRC-STARTRK2-DRILON-2020]
+      - position: "Lorlatinib: ROS1 activity demonstrated; less specifically studied for ROS1 2L"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Repotrectinib (TRIDENT-1): post-1 ROS1-TKI ORR 38% incl. G2032R; preferred for solvent-front resistance"
+        sources: [SRC-TRIDENT1-DRILON-2024]
+    our_default: "Entrectinib for CNS-positive or NGS without G2032R; repotrectinib for G2032R-resistant disease or post-entrectinib failure"
+    rationale: "Resistance mutation profile drives next-line choice"
+
+do_not_do:
+  - "НЕ розпочинати без NGS resistance profiling — G2032R вимагає repotrectinib, не entrectinib."
+  - "НЕ ігнорувати baseline brain MRI — entrectinib обирається частково через CNS penetration."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors або inducers без dose modification."
+  - "НЕ ігнорувати cardiomyopathy / LVEF monitoring — class effect TKI."
+  - "НЕ підтверджувати план без funding pathway — entrectinib не зареєстрований в Україні."
+  - "НЕ призначати при ECOG 3-4 без careful assessment — TRK-class CNS AE можуть погіршити frail pts."
+  - "НЕ використовувати crizotinib re-challenge — біологічно нерозумно після прогресії."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L ROS1+
+  NSCLC post-crizotinib. Repotrectinib (TRIDENT-1) is separate
+  Indication for solvent-front-resistant or post-entrectinib disease.

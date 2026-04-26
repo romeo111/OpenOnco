@@ -1,0 +1,53 @@
+id: REG-ADAGRASIB-NSCLC
+name: "Adagrasib monotherapy (KRYSTAL-1) — 2L+ KRAS G12C+ NSCLC"
+name_ua: "Адаграсіб моно (KRYSTAL-1) — 2L+ KRAS G12C+ НДРЛ"
+alternate_names:
+  - "Krazati"
+  - "MRTX849"
+
+components:
+  - drug_id: DRUG-ADAGRASIB
+    dose: "600 mg PO BID"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic prophylaxis (5-HT3 + dexamethasone PO PRN; high N/V incidence)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTc >500 ms"
+    modification: "Hold; correct electrolytes; resume at lower dose once QTc <470 ms"
+    rationale: "QT prolongation class effect"
+    source_refs: [SRC-KRYSTAL1-JANNE-2022]
+  - condition: "Hepatotoxicity ALT/AST >5× ULN"
+    modification: "Hold; resume at lower dose after recovery"
+    source_refs: [SRC-KRYSTAL1-JANNE-2022]
+  - condition: "Renal impairment Grade ≥2"
+    modification: "Hold; ensure hydration; resume lower dose"
+  - condition: "Diarrhea Grade ≥3 despite loperamide"
+    modification: "Hold; resume at lower dose"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Adagrasib NOT registered in UA. Access via BMS named-patient
+    pathway, cross-border (EU) per наказ МОЗ 988, or clinical trial.
+
+sources:
+  - SRC-KRYSTAL1-JANNE-2022
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  KRYSTAL-1: ORR 43%, mPFS 6.5 mo, mOS 12.6 mo in pretreated KRAS
+  G12C+ NSCLC. Intracranial ORR 33% — preferred over sotorasib for
+  active brain metastases. Dosing TID (3x200 mg) sometimes used to
+  improve GI tolerability. KRYSTAL-12 phase-3 vs docetaxel ongoing.

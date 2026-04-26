@@ -43,6 +43,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Re-biopsy NOT performed at relapse site"
+        - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION  # halt placeholder; see notes — algo MUST stop here until biopsy supplied
       reason: "Re-biopsy mandatory: NLPBL transforms to THRLBCL/DLBCL in ~30-40% of relapses; treating without histology misses transformation"
@@ -78,6 +79,7 @@ decision_tree:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION  # placeholder; see notes — R-mono retreatment ± ISRT alternative
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — default (transformation suspected but not confirmed):
   # treat as transformation → R-CHOP (precautionary aggressive
@@ -86,6 +88,7 @@ decision_tree:
     evaluate:
       any_of:
         - condition: "Transformation suspected at relapse — biopsy pending or inconclusive"
+        - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION
     if_false:

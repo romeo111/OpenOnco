@@ -4,8 +4,9 @@ applicability → recommended regimen, with full provenance."""
 
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
+from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, Citation, EvidenceLevel, StrengthOfRecommendation
 
 
@@ -88,5 +89,13 @@ class Indication(Base):
 
     last_reviewed: Optional[str] = None
     reviewers: list[str] = Field(default_factory=list)
-    reviewer_signoffs: int = 0  # CHARTER §6.1: >= 2 to publish
+    # CHARTER §6.1: ≥2 sign-offs to publish. Migrated from int counter to
+    # structured list — see _reviewer_signoff.py. Legacy YAML with
+    # `reviewer_signoffs: 0` is coerced to [] by the validator below.
+    reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
     notes: Optional[str] = None
+
+    @field_validator("reviewer_signoffs", mode="before")
+    @classmethod
+    def _migrate_signoffs(cls, v):
+        return _migrate_int_signoffs(v)

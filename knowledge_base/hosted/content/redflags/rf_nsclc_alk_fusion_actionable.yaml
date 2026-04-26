@@ -1,0 +1,58 @@
+id: RF-NSCLC-ALK-FUSION-ACTIONABLE
+definition: >
+  ALK rearrangement / fusion (typically EML4-ALK) — ~5% of NSCLC
+  adenocarcinoma; never-smoker / younger enriched. Treatment-defining:
+  alectinib (ALEX — mPFS 34.8 mo) or lorlatinib (CROWN — 5-y PFS 60%)
+  preferred 1L over crizotinib. Adjuvant alectinib 2 y after
+  resection (ALINA).
+definition_ua: >
+  Перебудова / фузія ALK (зазвичай EML4-ALK) — ~5% НДРЛ-аденокарциноми;
+  переважно у некурців і молодших. Лікування-визначальний маркер:
+  алектиніб (ALEX) або лорлатиніб (CROWN) переважають кризотиніб 1L.
+  Ад'ювантний алектиніб 2 роки після резекції (ALINA).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "alk_fusion"
+      value: true
+    - finding: "alk_rearrangement"
+      value: "positive"
+    - finding: "alk_status"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-3"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-CROWN-SOLOMON-2021
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Detection: RNA-NGS (preferred for fusion partners) OR FISH break-apart
+  OR IHC (D5F3) screen. Crizotinib effectively obsolete 1L. Lorlatinib
+  has the deepest CNS penetration but most CNS / lipid toxicity;
+  alectinib is the most balanced 1L choice. Sequence: lorlatinib
+  retains activity post-alectinib resistance (G1202R, etc.).
+notes_ua: >
+  Виявлення: RNA-NGS (переважно для партнерів фузії) АБО FISH
+  break-apart АБО ІГХ (D5F3) скринінг. Кризотиніб фактично застарів
+  1L. Лорлатиніб має найглибше проникнення в ЦНС, але найбільшу ЦНС/
+  ліпідну токсичність; алектиніб — найзбалансованіший 1L. Послідовність:
+  лорлатиніб зберігає активність після резистентності алектинібу
+  (G1202R та ін.).

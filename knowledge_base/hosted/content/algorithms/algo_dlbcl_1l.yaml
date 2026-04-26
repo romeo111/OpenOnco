@@ -1,104 +1,72 @@
 id: ALGO-DLBCL-1L
 applicable_to_disease: DIS-DLBCL-NOS
 applicable_to_line_of_therapy: 1
-purpose: >
-  Select default + alternative Indication for first-line newly-diagnosed
-  DLBCL NOS based on IPI risk. Outputs the two-plan pair (R-CHOP standard
-  vs Pola-R-CHP intensified) per CHARTER §2.
+purpose: 'Select default + alternative Indication for first-line newly-diagnosed DLBCL NOS based on IPI risk. Outputs the
+  two-plan pair (R-CHOP standard vs Pola-R-CHP intensified) per CHARTER §2.
 
+  '
 output_indications:
-  - IND-DLBCL-1L-RCHOP
-  - IND-DLBCL-1L-POLA-R-CHP
-
+- IND-DLBCL-1L-RCHOP
+- IND-DLBCL-1L-POLA-R-CHP
 default_indication: IND-DLBCL-1L-RCHOP
 alternative_indication: IND-DLBCL-1L-POLA-R-CHP
-
 decision_tree:
-  # Step 1 — frailty / organ dysfunction de-escalates from intensification.
-  # If a patient cannot tolerate full-dose CHOP backbone, Pola-R-CHP is
-  # not safer; route to standard R-CHOP (or R-mini-CHOP at clinician
-  # discretion within that indication).
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-DLBCL-FRAILTY-AGE
-        - red_flag: RF-DLBCL-ORGAN-DYSFUNCTION
-    if_true:
-      result: IND-DLBCL-1L-RCHOP
-    if_false:
-      next_step: 2
-
-  # Step 2 — high-risk biology OR high-IPI escalates to Pola-R-CHP
-  # (POLARIX subgroup analysis: benefit largest in non-GCB / DE / IPI≥3).
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-DLBCL-HIGH-IPI
-        - red_flag: RF-DLBCL-HIGH-RISK-BIOLOGY
-    if_true:
-      result: IND-DLBCL-1L-POLA-R-CHP
-    if_false:
-      next_step: 3
-
-  # Step 3 — default standard R-CHOP × 6 for low-IPI standard-biology DLBCL.
-  - step: 3
-    evaluate:
-      all_of:
-        - condition: "Standard-risk IPI (0-1)"
-        - condition: "ECOG ≤ 2"
-    if_true:
-      result: IND-DLBCL-1L-RCHOP
-    if_false:
-      result: IND-DLBCL-1L-RCHOP
-
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-DLBCL-FRAILTY-AGE
+    - red_flag: RF-DLBCL-ORGAN-DYSFUNCTION
+  if_true:
+    result: IND-DLBCL-1L-RCHOP
+  if_false:
+    next_step: 2
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-DLBCL-HIGH-IPI
+    - red_flag: RF-DLBCL-HIGH-RISK-BIOLOGY
+  if_true:
+    result: IND-DLBCL-1L-POLA-R-CHP
+  if_false:
+    next_step: 3
+- step: 3
+  evaluate:
+    all_of:
+    - condition: Standard-risk IPI (0-1)
+    - condition: ECOG ≤ 2
+  if_true:
+    result: IND-DLBCL-1L-RCHOP
+  if_false:
+    result: IND-DLBCL-1L-RCHOP
+  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
-
-last_reviewed: "2026-04-27"
-notes: >
-  IPI + biology are the primary regimen determinants; frailty / organ
-  dysfunction de-escalate ahead of intensification (step 1 wins over
-  step 2 if both fire). Engine still surfaces all fired RFs in trace —
-  the conflict is visible to the MDT.
-
-  RF-DLBCL-CNS-RISK and RF-DLBCL-INFECTION-SCREENING are intentionally
-  NOT in the decision_tree because they don't switch indication:
-  CNS-RISK adds CNS prophylaxis (handled in plan render);
-  INFECTION-SCREENING adds HBV/HIV prophylaxis (parallel SUP-* triggers).
-  Cell-of-origin (Hans GCB vs ABC) recorded as biomarker; non-GCB +
-  high-IPI is captured by RF-DLBCL-HIGH-RISK-BIOLOGY.
-
-  Etiology rails (parallel to indication selection — none shifts R-CHOP
-  vs Pola-R-CHP):
-
-  - HBV (HBsAg+ OR anti-HBc+) — RF-UNIVERSAL-HBV-REACTIVATION-RISK +
-    RF-DLBCL-INFECTION-SCREENING fire; entecavir 0.5 mg PO daily started
-    before first rituximab dose, continued through induction +12 months
-    post-last-anti-CD20. CI-HBV-NO-PROPHYLAXIS is a hard contraindication
-    on both R-CHOP and Pola-R-CHP indications, blocking plan finalization
-    until SUP-HBV-PROPHYLAXIS is acknowledged.
-
-  - HCV (HCV-RNA detectable) — Unlike indolent HCV-MZL, aggressive DLBCL
-    is NOT routed to DAA-first. R-CHOP / Pola-R-CHP proceeds without
-    delay; DAA (sofosbuvir/velpatasvir) is initiated concurrently or
-    after induction depending on liver function (ESMO DLBCL 2024 §HCV;
-    NCCN B-Cell 2.2025). Exception: very-low-tumor-burden HCV+ DLBCL
-    in CP-A liver is an unsettled area — refer to MDT + hepatologist.
-    Avoid sofosbuvir + amiodarone (severe bradycardia).
-
-  - HIV (positive serology) — Continue ART throughout R-CHOP / DA-EPOCH-R
-    (DA-EPOCH-R preferred for HIV-DLBCL per AMC 034 / Sparano 2010 with
-    superior outcomes vs R-CHOP in HIV+ subset). Avoid TMP-SMX overlap
-    with high-dose methotrexate (CNS-prophylaxis cycles); coordinate
-    PJP prophylaxis schedule. Monitor CD4 + HIV-VL pre-cycle. Drug-drug
-    interactions: avoid ritonavir-boosted PIs with vincristine
-    (potentiated neurotoxicity); switch to integrase-inhibitor ART
-    backbone if feasible. No empirical R-CHOP dose-reduction required
-    for HIV per se (CD4-driven only).
-
-  All three rails operate via parallel SUP-* / RF-* surfaces, not by
-  branching the indication tree. DA-EPOCH-R-for-HIV-DLBCL is currently
-  represented at the rationale layer; future round may add IND-DLBCL-
-  1L-DAEPOCHR-HIV as a separate plan-track entity once HIV co-infection
-  is wired as a first-class biomarker (BIO-HIV-STATUS missing — flagged).
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-27'
+notes: "IPI + biology are the primary regimen determinants; frailty / organ dysfunction de-escalate ahead of intensification\
+  \ (step 1 wins over step 2 if both fire). Engine still surfaces all fired RFs in trace — the conflict is visible to the\
+  \ MDT.\nRF-DLBCL-CNS-RISK and RF-DLBCL-INFECTION-SCREENING are intentionally NOT in the decision_tree because they don't\
+  \ switch indication: CNS-RISK adds CNS prophylaxis (handled in plan render); INFECTION-SCREENING adds HBV/HIV prophylaxis\
+  \ (parallel SUP-* triggers). Cell-of-origin (Hans GCB vs ABC) recorded as biomarker; non-GCB + high-IPI is captured by RF-DLBCL-HIGH-RISK-BIOLOGY.\n\
+  Etiology rails (parallel to indication selection — none shifts R-CHOP vs Pola-R-CHP):\n- HBV (HBsAg+ OR anti-HBc+) — RF-UNIVERSAL-HBV-REACTIVATION-RISK\
+  \ +\n  RF-DLBCL-INFECTION-SCREENING fire; entecavir 0.5 mg PO daily started\n  before first rituximab dose, continued through\
+  \ induction +12 months\n  post-last-anti-CD20. CI-HBV-NO-PROPHYLAXIS is a hard contraindication\n  on both R-CHOP and Pola-R-CHP\
+  \ indications, blocking plan finalization\n  until SUP-HBV-PROPHYLAXIS is acknowledged.\n\n- HCV (HCV-RNA detectable) —\
+  \ Unlike indolent HCV-MZL, aggressive DLBCL\n  is NOT routed to DAA-first. R-CHOP / Pola-R-CHP proceeds without\n  delay;\
+  \ DAA (sofosbuvir/velpatasvir) is initiated concurrently or\n  after induction depending on liver function (ESMO DLBCL 2024\
+  \ §HCV;\n  NCCN B-Cell 2.2025). Exception: very-low-tumor-burden HCV+ DLBCL\n  in CP-A liver is an unsettled area — refer\
+  \ to MDT + hepatologist.\n  Avoid sofosbuvir + amiodarone (severe bradycardia).\n\n- HIV (positive serology) — Continue\
+  \ ART throughout R-CHOP / DA-EPOCH-R\n  (DA-EPOCH-R preferred for HIV-DLBCL per AMC 034 / Sparano 2010 with\n  superior\
+  \ outcomes vs R-CHOP in HIV+ subset). Avoid TMP-SMX overlap\n  with high-dose methotrexate (CNS-prophylaxis cycles); coordinate\n\
+  \  PJP prophylaxis schedule. Monitor CD4 + HIV-VL pre-cycle. Drug-drug\n  interactions: avoid ritonavir-boosted PIs with\
+  \ vincristine\n  (potentiated neurotoxicity); switch to integrase-inhibitor ART\n  backbone if feasible. No empirical R-CHOP\
+  \ dose-reduction required\n  for HIV per se (CD4-driven only).\n\nAll three rails operate via parallel SUP-* / RF-* surfaces,\
+  \ not by branching the indication tree. DA-EPOCH-R-for-HIV-DLBCL is currently represented at the rationale layer; future\
+  \ round may add IND-DLBCL- 1L-DAEPOCHR-HIV as a separate plan-track entity once HIV co-infection is wired as a first-class\
+  \ biomarker (BIO-HIV-STATUS missing — flagged).\n"
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL algorithm decision tree consistent with NCCN B-cell 2025 (sample sign-off)
+  entity_version_at_signoff: '2026-04-27'
+  scope_match: true

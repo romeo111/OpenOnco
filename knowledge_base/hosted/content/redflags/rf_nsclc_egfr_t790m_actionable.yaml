@@ -1,0 +1,55 @@
+id: RF-NSCLC-EGFR-T790M-ACTIONABLE
+definition: >
+  Acquired EGFR T790M (gatekeeper) mutation at progression on 1st/2nd-gen
+  EGFR-TKI (gefitinib, erlotinib, afatinib, dacomitinib) — drives 2L
+  switch to osimertinib (AURA3 — mPFS 10.1 vs 4.4 mo with platinum-pem).
+  Detected on ctDNA NGS or tissue re-biopsy.
+definition_ua: >
+  Набута мутація EGFR T790M (gatekeeper) при прогресуванні на 1/2 поколінні
+  EGFR-TKI — визначає 2L перехід на осимертиніб (AURA3 — мПФВ 10.1
+  проти 4.4 міс на платина-пеметрексед). Виявляється цоДНК NGS або
+  ре-біопсією.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "egfr_t790m"
+      value: true
+    - finding: "egfr_t790m"
+      value: "positive"
+    - finding: "egfr_mutation"
+      value: "T790M"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-FLAURA-SORIA-2018
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  T790M presence at first progression on older TKI = osimertinib 2L
+  with established benefit. With osimertinib used 1L (FLAURA standard),
+  T790M is a rare resistance mechanism — most progression on osimertinib
+  shows alternate mechanisms (C797S, MET amp, transformation). ctDNA
+  at progression is preferred (avoids re-biopsy morbidity); negative
+  ctDNA → tissue re-biopsy because of false-negative rate.
+notes_ua: >
+  T790M при першому прогресуванні на старих TKI = осимертиніб 2L з
+  доведеним виграшем. При застосуванні осимертинібу 1L (FLAURA) T790M —
+  рідкісний механізм резистентності; домінують альтернативні механізми
+  (C797S, MET амплифікація, трансформація). цоДНК при прогресуванні
+  переважна (уникає морбідності біопсії); негативний цоДНК → тканинна
+  ре-біопсія через ризик false-negative.

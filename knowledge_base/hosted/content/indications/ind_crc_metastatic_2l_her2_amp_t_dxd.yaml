@@ -1,0 +1,106 @@
+id: IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic mCRC"
+    - "Disease progression after ≥2 prior lines (typically including chemo + biologic ± tucatinib-trastuzumab)"
+    - "Heavily pretreated HER2-amp population (DESTINY-CRC01 enrolled median 4 prior lines)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "amplified — IHC 3+ preferred (highest ORR in DESTINY-CRC01); IHC 2+/ISH+ acceptable but lower ORR"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-RAS-MUTATION
+      value_constraint: "RAS-mutant excluded — DESTINY-CRC01 enrolled RAS-WT only"
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
+  demographic_constraints:
+    ecog_max: 1  # tighter than tucatinib due to ILD risk + heavily-pretreated population
+
+recommended_regimen: REG-TRASTUZUMAB-DERUXTECAN-CRC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate  # single-arm Phase II; no head-to-head with tucatinib-trastuzumab
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~45% (DESTINY-CRC01 cohort A, HER2 IHC 3+ or IHC 2+/ISH+)"
+  complete_response: "~0%"
+  progression_free_survival: "Median PFS 6.9 mo (DESTINY-CRC01 cohort A)"
+  overall_survival_5y: "Median OS 15.5 mo (DESTINY-CRC01 cohort A)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+
+required_tests:
+  - TEST-HER2-IHC-ISH-IF-RAS-WT
+  - TEST-RAS-EXTENDED
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS  # baseline lung imaging — ILD surveillance
+  - TEST-ECHO  # baseline LVEF for trastuzumab moiety
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Trastuzumab-deruxtecan (T-DXd) for HER2-amplified RAS-WT mCRC after
+  chemo + (typically) tucatinib-trastuzumab failure. DESTINY-CRC01
+  Phase II: ORR 45% in HER2 IHC 3+ / IHC 2+ ISH+, mPFS 6.9 mo, mOS
+  15.5 mo — in heavily pretreated population (median 4 prior lines).
+  T-DXd is an ADC delivering DNA topo-I inhibitor payload via HER2
+  binding; bystander effect benefits HER2-heterogeneous tumors. Position:
+  aggressive-track 2L+/3L+ ALTERNATIVE to tucatinib-trastuzumab when
+  tucatinib not accessible OR after tucatinib-trastuzumab progression
+  in HER2 IHC 3+ patients without ILD risk factors. ILD/pneumonitis
+  is the key safety signal (~6% all-grade, ~3% Grade ≥3) requiring
+  baseline + serial CT lung surveillance + low-threshold steroid
+  initiation. ESCAT IIA. UA access barrier: T-DXd registered in UA
+  but not NSZU-reimbursed for CRC indication.
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: "Trastuzumab-deruxtecan is a recommended option for HER2-amplified mCRC after standard chemo failure (DESTINY-CRC01); ILD monitoring required"
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: "T-DXd (trastuzumab-deruxtecan) is an active option for HER2-amplified RAS-WT mCRC; alternative to tucatinib-trastuzumab"
+
+known_controversies:
+  - topic: "T-DXd vs tucatinib-trastuzumab sequencing for HER2+ mCRC"
+    positions:
+      - position: "Tucatinib-trastuzumab first (MOUNTAINEER): chemo-free, lower ILD risk, broader HER2+ inclusion"
+        sources: [SRC-NCCN-COLON-2025]
+      - position: "T-DXd first (DESTINY-CRC01): higher ORR in IHC 3+ subset; ADC delivery overcomes some HER2 heterogeneity"
+        sources: [SRC-NCCN-COLON-2025]
+        evidence_note: "No head-to-head trial; access + tolerability + IHC level drive sequencing"
+    our_default: "Tucatinib-trastuzumab first; T-DXd reserved for tucatinib-failure OR access constraint OR HER2 IHC 3+ heavily pretreated patients"
+    rationale: "Lower upfront toxicity favors tucatinib-trastuzumab when accessible; T-DXd remains valuable salvage option"
+
+do_not_do:
+  - "НЕ призначати при baseline ILD/pneumonitis OR prior amiodarone-induced lung disease — high re-activation risk."
+  - "НЕ ігнорувати new respiratory symptoms (cough, dyspnea) — STOP T-DXd, urgent CT, low-threshold steroids."
+  - "НЕ призначати в RAS-mutant пацієнтів — DESTINY-CRC01 excluded RAS-mut."
+  - "НЕ розпочинати без baseline LVEF — trastuzumab moiety cardiotoxicity surveillance."
+  - "НЕ комбінувати з other DNA topo-I inhibitors (irinotecan, topotecan) — overlapping toxicity."
+  - "НЕ продовжувати при Grade 2+ pneumonitis — permanently discontinue T-DXd."
+  - "НЕ підтверджувати план без funding pathway — T-DXd не реімбурсується НСЗУ для CRC."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+
+  alternative for HER2-amp RAS-WT mCRC. ESCAT IIA. Trial-specific
+  source (DESTINY-CRC01 PMID 34637687) not in KB yet — flagged for
+  CSD-4.5. Position vs tucatinib-trastuzumab covered in
+  known_controversies. ILD surveillance protocol is the key
+  implementation detail.

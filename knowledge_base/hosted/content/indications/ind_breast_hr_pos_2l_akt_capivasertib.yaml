@@ -1,0 +1,79 @@
+id: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HR_POS_HER2_NEG
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: true
+    # Pathway-altered: ANY of PIK3CA, AKT1, PTEN per CAPItello-291.
+    # Encoded as three separate optional requirements (engine semantics:
+    # at least one required-mutation field must hit; alpelisib indication
+    # gates only on PIK3CA so this is the broader-coverage option).
+    - biomarker_id: BIO-PIK3CA-MUTATION
+      value_constraint: "activating hotspot OR AKT1 E17K OR PTEN loss-of-function (any one of three)"
+      required: false
+    - biomarker_id: BIO-AKT1
+      value_constraint: "E17K mutation"
+      required: false
+    - biomarker_id: BIO-PTEN
+      value_constraint: "loss-of-function (biallelic NGS or complete IHC loss)"
+      required: false
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    progression_on_prior_endocrine_cdk46i: true
+
+recommended_regimen: REG-CAPIVASERTIB-FULVESTRANT-BREAST
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 7
+  notes: "CAPItello-291 AKT-pathway-altered cohort: 7.3 vs 3.1 mo (HR 0.50). ITT: 7.2 vs 3.6 mo (HR 0.60)."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-PIK3CA-NGS
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-CAPITELLO291-TURNER-2023
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. CAPItello-291 established capivasertib + fulvestrant
+  for HR+/HER2- with PIK3CA / AKT1 / PTEN alteration after AI ±
+  CDK4/6i progression. Broader biomarker coverage than alpelisib
+  (which gates only on PIK3CA): pathway-altered cohort enriched ~41%
+  of ITT. Diarrhea (72%) management dominant workflow burden —
+  loperamide on hand from day 1, intermittent 4-on/3-off dosing
+  intentionally improves tolerability. UA access barrier: capivasertib
+  not yet registered; named-patient import / EAP only. PTEN-loss
+  definition operationally requires combined IHC + NGS (per CAPItello
+  enrolment criteria). When both PIK3CA-mut and AKT1/PTEN coexist,
+  capivasertib is preferred over alpelisib for pathway-spectrum
+  coverage and intermittent-dosing tolerability.

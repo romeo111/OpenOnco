@@ -34,6 +34,7 @@ decision_tree:
       result: IND-NSCLC-EGFR-MUT-MET-1L
     if_false:
       next_step: 3
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   - step: 3
     evaluate:
       any_of:
@@ -42,6 +43,7 @@ decision_tree:
       result: IND-NSCLC-ALK-MET-1L
     if_false:
       next_step: 4
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   - step: 4
     evaluate:
       any_of:
@@ -50,6 +52,7 @@ decision_tree:
       result: IND-NSCLC-KRAS-G12C-MET-2L
     if_false:
       next_step: 5
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   - step: 5
     evaluate:
       any_of:
@@ -58,6 +61,7 @@ decision_tree:
       result: IND-NSCLC-PDL1-HIGH-MET-1L
     if_false:
       result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
 last_reviewed: null

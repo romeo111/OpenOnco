@@ -1,0 +1,98 @@
+id: IND-MELANOMA-2L-KIT-IMATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV unresectable / metastatic"
+    - "Mucosal, acral, or chronically-sun-damaged subtype"
+    - "Progression on or after 1L IO (or as 1L when KIT-actionable variant identified at presentation in mucosal/acral subtype)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KIT
+      required: true
+      value_constraint: "Activating mutation in exon 11 (e.g., L576P, K642E) or exon 13 — KIT amplification alone NOT predictive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-IMATINIB-KIT-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "23% (Carvajal 2011, KIT-mutant cohort)"
+  complete_response: "low single-digit %"
+  progression_free_survival: "Median PFS ~3.5 mo overall; durable responses (>1 year) in subset with exon 11/13 hotspot mutations"
+  overall_survival_5y: "Limited mature data; durable responders reported"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  ~15-20% of mucosal and acral melanomas carry actionable KIT
+  mutations (exon 11 L576P, exon 13 K642E most common). Carvajal
+  2011 (JAMA, NCT00470470) established imatinib 400 mg PO BID
+  produces ORR 23% with durable responses (>1 year) in this subset.
+  KIT amplification alone is NOT predictive — actionable point
+  mutation required. ESCAT IIA per ESMO. Position: niche but
+  high-value option for the small KIT-mutant subset, prioritized
+  early in 2L+ algorithm because it is oral, low-toxicity, and
+  available (imatinib generic widely accessible in UA). Off-label
+  in melanoma (Glivec licensed in UA for CML/GIST/Ph+ALL); MDT
+  documentation required.
+
+sources:
+  - source_id: SRC-CARVAJAL-KIT-MELANOMA-2013
+    position: supports
+    relevant_quote_paraphrase: "Carvajal et al. JAMA 2011 — imatinib 400 BID in KIT-mutant mucosal/acral/CSD melanoma: durable responses in patients with exon 11 (L576P) or exon 13 (K642E) mutations; ORR 23%; KIT amplification alone not predictive"
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "Imatinib is recommended for KIT-mutant (exon 11 / 13) mucosal or acral melanoma after IO failure; Category 2A"
+  - source_id: SRC-ESMO-MELANOMA-2024
+    position: supports
+    relevant_quote_paraphrase: "KIT-targeted therapy (imatinib) is reasonable for KIT-mutant mucosal/acral melanoma; ESCAT IIA"
+
+known_controversies:
+  - topic: "imatinib vs nilotinib vs dasatinib for KIT-mutant melanoma"
+    positions:
+      - position: "Imatinib has the largest evidence base (Carvajal, Hodi, Guo) and is most accessible"
+        sources: [SRC-CARVAJAL-KIT-MELANOMA-2013]
+      - position: "Nilotinib retains activity in some imatinib-resistant variants"
+        sources: [SRC-NCCN-MELANOMA-2025]
+    our_default: "Imatinib first-line targeted for KIT-mutant melanoma; nilotinib/dasatinib salvage for imatinib-resistant"
+    rationale: "Imatinib accessibility + evidence base; salvage TKIs niche"
+
+do_not_do:
+  - "НЕ призначати при KIT amplification без point mutation — non-predictive (Carvajal 2011)."
+  - "НЕ призначати при non-mucosal/non-acral меланомі без NGS-документованої KIT мутації — низька pre-test probability + хибно-позитивні."
+  - "НЕ продовжувати >12 тижнів без об'єктивної response (PR/CR) — ранній switch на ICI або BRAFi+MEKi якщо BRAF-co-mutated."
+  - "НЕ забути off-label обґрунтування MDT — імітиніб ліцензований для CML/GIST/Ph+ALL, не меланоми."
+  - "НЕ ігнорувати baseline + monthly LFTs — гепатотоксичність визначений AE."
+  - "НЕ давати з warfarin без monitoring INR — CYP3A4 substrate взаємодія."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Niche standard-track
+  option for KIT-mutant mucosal/acral melanoma — small subset
+  (~15-20% of mucosal/acral, which is ~5% of all melanoma) but
+  high-value because oral, low-tox, accessible (generic imatinib).
+  Prioritized FIRST in algorithm if KIT-actionable mutation present.
+  Off-label use in UA — MDT documentation required. ESCAT IIA per
+  ESMO molecular targets framework.

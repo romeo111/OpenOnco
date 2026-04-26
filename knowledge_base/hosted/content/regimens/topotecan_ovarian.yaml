@@ -1,0 +1,44 @@
+id: REG-TOPOTECAN-OVARIAN
+name: "Topotecan single-agent (platinum-resistant recurrent ovarian)"
+name_ua: "Топотекан монотерапія (платинорезистентний рецидив раку яєчників)"
+alternate_names: ["Hycamtin weekly", "Topotecan weekly"]
+
+components:
+  - drug_id: DRUG-TOPOTECAN
+    dose: "4 mg/m² (weekly schedule, preferred); alternative 1.5 mg/m² IV daily × 5 days q21d (5-day schedule, more myelotoxic)"
+    schedule: "IV days 1, 8, 15 of 28-day cycle (weekly), OR daily × 5 q21d (5-day)"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+premedication: ["5-HT3 antagonist day 1 (and day 1 each weekly dose)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 4 neutropenia (5-day schedule, dose-limiting)"
+    modification: "Reduce to 1.25 mg/m² daily × 5; G-CSF prophylaxis; consider switch to weekly schedule"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "Grade 3-4 thrombocytopenia"
+    modification: "Hold until platelets ≥75; reduce by 25% next cycle"
+  - condition: "Renal impairment CrCl 20-39"
+    modification: "Reduce IV dose by 50%; do not give if CrCl <20"
+  - condition: "Diarrhea Grade 3-4 (oral formulation)"
+    modification: "Hold; loperamide; hydration; dose-reduce next cycle"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Топотекан зареєстрований; покриття НСЗУ обмежене / здебільшого OOP. Останній рядок salvage у платинорезистентному раку яєчників, коли вичерпані PLD/паклітаксел/бевацизумаб або є протипоказання."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024]
+last_reviewed: "2026-04-27"
+
+notes: >
+  Weekly schedule (4 mg/m² days 1, 8, 15 q28d) preferred over historical
+  ten Bokkel Huinink 5-day q21d schedule (1.5 mg/m² daily × 5) — similar
+  ORR (~7-15% in platinum-resistant) with markedly less myelosuppression.
+  ORR modest, response duration short, but useful when other options
+  exhausted. Was control arm in MIRASOL alongside paclitaxel and PLD.

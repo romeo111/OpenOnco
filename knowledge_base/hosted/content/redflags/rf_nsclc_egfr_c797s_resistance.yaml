@@ -1,0 +1,60 @@
+id: RF-NSCLC-EGFR-C797S-RESISTANCE
+definition: >
+  EGFR C797S — covalent-binding-site mutation that confers acquired
+  resistance to osimertinib (~20% of post-osimertinib progression). 3L+
+  treatment shifts to amivantamab + lazertinib + chemo (MARIPOSA-2) or
+  chemotherapy. Trans-allelic C797S/T790M relative to the sensitizing
+  mutation predicts whether 1st/3rd-gen EGFR-TKI rotation can recover
+  response.
+definition_ua: >
+  EGFR C797S — мутація сайту ковалентного зв'язування, що зумовлює
+  набуту резистентність до осимертинібу (~20% прогресій після
+  осимертинібу). 3L+ перехід на amivantamab + lazertinib + хіміо
+  (MARIPOSA-2) або хіміотерапію. Транс-алельне розташування C797S/T790M
+  відносно сенсибілізуючої мутації прогнозує можливість ротації
+  TKI 1/3 покоління.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "egfr_c797s"
+      value: true
+    - finding: "egfr_c797s"
+      value: "positive"
+    - finding: "egfr_mutation"
+      value: "C797S"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-MARIPOSA2-PASSARO-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Allele context matters: cis-C797S/T790M (same allele) — no available
+  EGFR-TKI restores response, switch to amivantamab + lazertinib + chemo
+  or chemo + bev. Trans-C797S/T790M (different alleles) — combination
+  of 1st-gen + 3rd-gen EGFR-TKI may suppress both clones; rare in
+  practice. Brigatinib + cetuximab data emerging. Note: BIO-EGFR-C797S
+  is not currently authored as a standalone biomarker — finding key
+  egfr_c797s used here for profile match.
+notes_ua: >
+  Алельний контекст важливий: цис-C797S/T790M (одна алель) — жоден
+  EGFR-TKI не відновлює відповідь; перехід на amivantamab + lazertinib
+  + хіміо або хіміо + бевацизумаб. Транс-C797S/T790M (різні алелі) —
+  комбінація 1+3 поколінь EGFR-TKI може супресувати обидва клони;
+  рідко на практиці. Бригатиніб + цетуксимаб — нові дані. Біомаркер
+  BIO-EGFR-C797S наразі не авторизований; ключ egfr_c797s використано
+  для збігу з профілем.

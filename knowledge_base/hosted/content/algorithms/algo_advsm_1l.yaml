@@ -28,6 +28,7 @@ decision_tree:
       result: IND-ADVSM-1L-AVAPRITINIB
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
   - step: 2
     evaluate:
       any_of:
@@ -38,6 +39,7 @@ decision_tree:
       result: IND-ADVSM-1L-MIDOSTAURIN
     if_false:
       result: IND-ADVSM-1L-MIDOSTAURIN
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-SM-2025

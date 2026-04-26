@@ -1,0 +1,68 @@
+id: ALGO-BREAST-HER2-POS-2L
+applicable_to_disease: DIS-BREAST
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ HER2+ metastatic breast Indication after progression
+  on 1L THP (trastuzumab + pertuzumab + taxane). Subtype-restricted:
+  only fires for HER2-positive cohort. Branching on brain-metastasis
+  status: brain-mets-positive → HER2CLIMB tucatinib triplet (CNS
+  activity proven); otherwise → T-DXd (DESTINY-Breast03 superior to
+  T-DM1).
+
+output_indications:
+  - IND-BREAST-HER2-POS-MET-2L-TDXD
+  - IND-BREAST-HER2-POS-3L-TUCATINIB
+
+default_indication: IND-BREAST-HER2-POS-MET-2L-TDXD
+alternative_indication: IND-BREAST-HER2-POS-3L-TUCATINIB
+
+decision_tree:
+  # Step 1 — brain metastases present (active or treated, stable or
+  # progressing) → HER2CLIMB tucatinib + trastuzumab + capecitabine
+  # preferred. T-DXd has CNS activity but HER2CLIMB is the only
+  # regimen with prospective CNS-PFS doubling demonstrated.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Brain metastases present (active OR previously treated, stable or progressing)"
+        - condition: "MRI brain confirms intracranial disease ≤2 cm OR symptomatic ≥2 cm post-local therapy"
+    if_true:
+      result: IND-BREAST-HER2-POS-3L-TUCATINIB
+    if_false:
+      next_step: 2
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+
+  # Step 2 — default: T-DXd 2L (DESTINY-Breast03 — superior to T-DM1).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "No brain metastases OR brain mets not the dominant clinical issue"
+    if_true:
+      result: IND-BREAST-HER2-POS-MET-2L-TDXD
+    if_false:
+      result: IND-BREAST-HER2-POS-MET-2L-TDXD
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-DESTINY-BREAST03-CORTES-2022
+  - SRC-HER2CLIMB-MURTHY-2019
+
+last_reviewed: "2026-04-27"
+notes: >
+  Subtype constraint: HER2+ only — algorithm should be entered only
+  after receptor-subtype branching at the disease-level dispatcher
+  routes the patient here. Schema lacks a top-level
+  `receptor_subtype` field on Algorithm; encoded in purpose +
+  Indication.applicable_to.receptor_subtype.
+
+  Sequencing rationale:
+    Brain mets dominant → tucatinib triplet
+    No CNS issue → T-DXd 2L (DB-03 superior to T-DM1)
+    ≥3L post both → HER2CLIMB triplet (after T-DXd) OR T-DM1 fallback
+
+  T-DM1 (KATHERINE / EMILIA) and bispecifics (zanidatamab — late-stage)
+  not modeled in this batch. After both T-DXd and tucatinib triplet,
+  trastuzumab-deruxtecan rechallenge OR enrollment in trial appropriate
+  per NCCN/ESMO 2024-2025.

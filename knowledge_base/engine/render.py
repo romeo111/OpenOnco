@@ -25,9 +25,13 @@ treatment-Plan-not-applicable disclaimer surfaced above the fold.
 
 from __future__ import annotations
 
+import functools
 import html
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional, Union
+
+import yaml
 
 from ._ask_doctor import select_questions as _select_ask_doctor_questions
 from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
@@ -58,6 +62,102 @@ def _h(s) -> str:
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
+
+# ── Sign-off badge (CHARTER §6.1) ─────────────────────────────────────────
+#
+# Indications carry `reviewer_signoffs_v2: list[ReviewerSignoff]` after the
+# `scripts/clinical_signoff.py` CLI is run. The plan render surfaces the
+# coverage state as a coloured badge so the clinician sees at a glance
+# whether the recommendation has the two Clinical Co-Lead approvals
+# CHARTER §6.1 requires.
+#
+# Reviewer display names come from `knowledge_base/hosted/content/reviewers/`
+# and are cached for the process lifetime.
+
+
+@functools.lru_cache(maxsize=1)
+def _load_reviewer_labels() -> dict[str, str]:
+    """REV-* → display_name. Cached. Returns empty dict on failure."""
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    rev_dir = repo_root / "knowledge_base" / "hosted" / "content" / "reviewers"
+    if not rev_dir.is_dir():
+        return {}
+    out: dict[str, str] = {}
+    for p in sorted(rev_dir.glob("*.yaml")):
+        try:
+            data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(data, dict) and data.get("id"):
+            out[data["id"]] = str(data.get("display_name") or data["id"])
+    return out
+
+
+def _signoff_label(reviewer_id: str) -> str:
+    """REV-* → display_name with REV-id fallback."""
+    return _load_reviewer_labels().get(reviewer_id, reviewer_id)
+
+
+def _render_signoff_badge(entity_data: Optional[dict]) -> str:
+    """Render a clinician-mode sign-off badge for an Indication / Algorithm /
+    Regimen / RedFlag / BiomarkerActionability dict.
+
+    States:
+      - 0 sign-offs   → red    (Очікує підпису Clinical Co-Lead)
+      - 1 sign-off    → yellow (Підписано (1/2): {reviewer})
+      - ≥2 sign-offs  → green  (Клінічно затверджено: {r1}, {r2})
+
+    Returns empty string when entity_data is None.
+    """
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n == 0:
+        return (
+            '<span class="signoff-badge signoff-pending">'
+            '⚠ Очікує підпису Clinical Co-Lead</span>'
+        )
+    if n == 1:
+        rid = sigs[0]["reviewer_id"]
+        return (
+            '<span class="signoff-badge signoff-partial">'
+            f'🟡 Підписано (1/2): {_h(_signoff_label(rid))}'
+            '</span>'
+        )
+    names = ", ".join(_signoff_label(s["reviewer_id"]) for s in sigs[:3])
+    if n > 3:
+        names += f" + {n - 3}"
+    return (
+        '<span class="signoff-badge signoff-complete">'
+        f'✓ Клінічно затверджено: {_h(names)}'
+        '</span>'
+    )
+
+
+def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
+    """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n >= 2:
+        return (
+            '<span class="patient-badge patient-good signoff-complete">'
+            'Затверджено лікарями</span>'
+        )
+    if n == 1:
+        return (
+            '<span class="patient-badge patient-warn signoff-partial">'
+            'Очікує перевірки лікарями (1 з 2)</span>'
+        )
+    return (
+        '<span class="patient-badge patient-emergency signoff-pending">'
+        'Очікує перевірки лікарями</span>'
+    )
 
 
 # ── i18n: live translation client for long free-text ─────────────────────
@@ -1436,23 +1536,11 @@ def render_plan_html(
         drugs_dd = _render_track_drug_list(
             t, drugs_lookup, plan_result.disease_id or "", disease_names, target_lang
         )
-        # Phase 4: OncoKB resistance-conflict inline banner (Q2 — surfaces
-        # R1/R2 next to the recommended regimen so it cannot be missed).
-        oncokb_layer_for_inline = getattr(plan_result, "oncokb_layer", None)
-        oncokb_inline = ""
-        if oncokb_layer_for_inline is not None:
-            try:
-                from .render_oncokb import render_track_resistance_banner
-                oncokb_inline = render_track_resistance_banner(
-                    t.track_id or t.label or "",
-                    oncokb_layer_for_inline.resistance_conflicts,
-                )
-            except Exception:
-                oncokb_inline = ""
+        signoff_badge = _render_signoff_badge(t.indication_data)
         track_html.append(
             f'<div class="{track_class}">'
             f'<div class="track-head"><div class="track-name">{_h(t.label)}</div>{badge}</div>'
-            f'{oncokb_inline}'
+            f'<div class="track-signoff">{signoff_badge}</div>'
             f'<dl>'
             f'<dt>Indication</dt><dd>{_h(t.indication_id)}</dd>'
             f'<dt>Regimen</dt><dd>{_h(regimen_str)}</dd>'
@@ -1870,9 +1958,21 @@ def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
         "</section>"
     )
 
+    # Sign-off badge for the default track's Indication (patient-mode).
+    # Surfaces clinician-review status in plain UA so the patient sees
+    # whether the plan has been verified by a physician (CHARTER §6.1).
+    default_track = next(
+        (t for t in (plan.tracks or []) if getattr(t, "is_default", False)),
+        (plan.tracks[0] if plan.tracks else None),
+    )
+    signoff_html_patient = (
+        _render_signoff_badge_patient(getattr(default_track, "indication_data", None))
+        if default_track else ""
+    )
     body_parts.append(
         '<section class="what-now">'
         "<h2>Що це означає для лікування</h2>"
+        f'{("<p>" + signoff_html_patient + "</p>") if signoff_html_patient else ""}'
         f"{_render_drugs_plain(plan_result)}"
         "</section>"
     )

@@ -54,6 +54,7 @@ decision_tree:
       result: IND-PMBCL-2L-RICE-AUTOSCT  # placeholder; see notes — pembrolizumab salvage
     if_false:
       next_step: 3
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 3 — transplant-eligible chemosensitive relapse → R-ICE
   # salvage → BEAM-autoSCT (curative-intent standard).
@@ -67,12 +68,14 @@ decision_tree:
       result: IND-PMBCL-2L-RICE-AUTOSCT
     if_false:
       next_step: 4
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 4 — default: transplant-eligible → R-ICE-autoSCT.
   - step: 4
     evaluate:
       any_of:
         - condition: "PMBCL relapsed/refractory, transplant-eligible by default"
+        - red_flag: RF-PMBCL-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-PMBCL-2L-RICE-AUTOSCT
     if_false:

@@ -531,6 +531,26 @@ h3 {
 .nszu-oop { background: #ffe5cc; color: #804000; }
 .nszu-not-registered { background: #f8d7da; color: #721c24; }
 
+/* ── Sign-off badges (CHARTER §6.1) ──────────────────────────────
+   Surfaces Clinical Co-Lead approval state on each track in the
+   treatment Plan render. Emitted by render._render_signoff_badge.
+   Mirrored in docs/style.css for the static-site renderer. */
+.track-signoff { margin: 4px 0 8px 0; }
+.signoff-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; line-height: 1.3;
+    border: 1px solid transparent;
+}
+.signoff-pending {
+    background: #fef2f2; color: #991b1b; border-color: #fecaca;
+}
+.signoff-partial {
+    background: #fffbeb; color: #92400e; border-color: #fde68a;
+}
+.signoff-complete {
+    background: #ecfdf5; color: #065f46; border-color: #a7f3d0;
+}
+
 .drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
 .drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
 .drug-list .drug-name { font-weight: 600; }

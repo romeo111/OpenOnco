@@ -1,0 +1,58 @@
+id: REG-TUCATINIB-TRASTUZUMAB-CRC
+name: "Tucatinib + Trastuzumab (MOUNTAINEER, HER2+ RAS-WT mCRC)"
+name_ua: "Тукатиніб + Трастузумаб (MOUNTAINEER, HER2+ RAS-WT мКРР)"
+alternate_names: ["Tuca-Tras", "MOUNTAINEER doublet"]
+
+components:
+  - drug_id: DRUG-TUCATINIB
+    dose: "300 mg PO BID continuous"
+    schedule: "Continuous"
+    route: PO
+  - drug_id: DRUG-TRASTUZUMAB
+    dose: "8 mg/kg IV loading then 6 mg/kg IV q3w"
+    schedule: "IV q3w"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Trastuzumab: monitor for infusion reactions cycle 1; no routine premedication"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Diarrhea Grade 3 OR Grade 2 with dehydration"
+    modification: "Hold tucatinib until ≤Grade 1, resume at next lower dose level (250 mg BID → 200 mg BID → 150 mg BID); aggressive loperamide"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "ALT/AST elevation Grade 2-3"
+    modification: "Hold tucatinib until ≤Grade 1, resume at next lower dose level; if Grade 4, discontinue"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "LVEF drop ≥10% absolute OR LVEF <50%"
+    modification: "Hold trastuzumab; cardiology consult; reassess in 4 weeks; resume if LVEF recovered"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Concomitant strong CYP3A4 inhibitor"
+    modification: "Reduce tucatinib to 100 mg BID; if inducer, avoid combination"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Тукатиніб НЕ зареєстровано в UA (drlz.com.ua станом на 2026-04-27).
+    Трастузумаб (біосиміляр) зареєстровано + НСЗУ-реімбурсується для
+    HER2+ молочної залози / шлунка, АЛЕ НЕ для CRC HER2+ показання.
+    Шляхи доступу: named-patient import (тукатиніб); cross-border EU
+    онкоцентр; Seagen/Pfizer EAP (де доступна); клінічні дослідження.
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-27"
+
+notes: >
+  MOUNTAINEER Phase II (2022): HER2-amp RAS-WT chemo-refractory mCRC,
+  ORR 38%, mPFS 8.2 mo, mOS 24.1 mo. FDA-approved 2023 for HER2+ RAS-WT
+  mCRC (chemo-refractory). Tucatinib is a HER2-selective TKI with low
+  EGFR cross-inhibition — favorable diarrhea profile vs lapatinib.
+  Trastuzumab moiety provides cardiotoxicity surveillance requirement
+  (baseline + q3 mo LVEF). Chemo-free regimen advantage vs T-DXd.

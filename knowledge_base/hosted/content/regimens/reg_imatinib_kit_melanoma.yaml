@@ -1,0 +1,53 @@
+id: REG-IMATINIB-KIT-MELANOMA
+name: "Imatinib (KIT-mutant mucosal/acral melanoma)"
+name_ua: "Іматиніб (меланома мукозальна/акральна KIT-мутована)"
+alternate_names: ["Imatinib 400 BID", "Glivec/Gleevec — melanoma"]
+
+components:
+  - drug_id: DRUG-IMATINIB
+    dose: "400 mg PO BID with food + large glass of water (Carvajal 2011 trial dose)"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low
+
+premedication:
+  - "Take with meal (reduces GI upset)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Severe edema / fluid retention"
+    modification: "Diuretic; reduce to 400 mg daily if persistent"
+  - condition: "Grade ≥3 cytopenias"
+    modification: "Hold until recovery; resume at 400 mg daily"
+  - condition: "Hepatic dysfunction (transaminases >5× ULN, bilirubin >3× ULN)"
+    modification: "Hold; resume at reduced dose with hepatology co-management"
+  - condition: "No response by 12 weeks (no PR/CR or progression)"
+    modification: "Discontinue; switch to ICI (anti-PD-1 mono) or BRAFi+MEKi if BRAF-co-mutated"
+    source_refs: [SRC-CARVAJAL-KIT-MELANOMA-2013]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Іматиніб (генерик) — НСЗУ-покритий для CML, Ph+ ALL, GIST. Off-label використання для KIT-мутованої меланоми технічно не покрите індикацією, але препарат доступний — переважно через MDT-обґрунтоване off-label призначення."
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-CARVAJAL-KIT-MELANOMA-2013
+
+last_reviewed: "2026-04-27"
+notes: >
+  Carvajal et al. JAMA 2011 (NCT00470470): imatinib 400 BID in
+  KIT-mutant or KIT-amplified mucosal/acral/CSD melanoma — durable
+  responses in patients with KIT exon 11 (L576P) or exon 13 (K642E)
+  mutations; ORR 23%. KIT amplification alone NOT predictive — must
+  have actionable point mutation. ESCAT IIA per ESMO molecular
+  targets. Niche but high-value: ~15-20% of mucosal/acral melanoma
+  carry KIT mutations; this is an oral, low-toxicity alternative to
+  IO/chemo when actionable variant present. Off-label in melanoma
+  (Glivec licensed in UA for CML/GIST/Ph+ALL); MDT documentation
+  required.

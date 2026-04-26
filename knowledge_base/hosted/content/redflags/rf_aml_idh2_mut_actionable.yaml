@@ -1,0 +1,66 @@
+id: RF-AML-IDH2-MUT-ACTIONABLE
+definition: >
+  IDH2 R140Q or R172K activating mutation in AML — ~8-12% prevalence.
+  Enasidenib (IDHIFA / IDHENTIFY — phase-3 R/R AML; monotherapy
+  ORR 38%, CR 19%) is FDA-approved for R/R-AML-IDH2; also active
+  1L combination with azacitidine in unfit (AG221-AML-005 — ORR 71%).
+definition_ua: >
+  Активуюча мутація IDH2 R140Q або R172K при ГМЛ — ~8-12% поширеність.
+  Енасиденіб (IDHIFA / IDHENTIFY — III фаза р/р ГМЛ; монотерапія
+  ORR 38%, ПР 19%) FDA-схвалено для р/р ГМЛ-IDH2; також активна 1L
+  комбінація з азацитидином у непридатних (AG221-AML-005 — ORR 71%).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "idh2_r140q"
+      value: true
+    - finding: "idh2_r172k"
+      value: true
+    - finding: "idh2_mutation"
+      value: true
+    - finding: "idh2_status"
+      value: "mutated"
+    - finding: "idh_mutation"
+      value: "IDH2"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+  - ALGO-AML-2L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Detection: NGS panel (no IDH2-specific IHC widely deployed).
+  Differentiation syndrome on enasidenib (~14%) — same monitoring
+  + dexamethasone protocol as ivosidenib. Hyperbilirubinemia on
+  enasidenib (~80% any grade; UGT1A1 inhibition — usually
+  asymptomatic, no dose adjustment unless symptomatic). IDHENTIFY
+  R/R AML did not show OS benefit vs conventional care over all
+  comers but enriched in IDH2-mut who had not received prior
+  hypomethylating agent. Combination with venetoclax + azacitidine
+  under study.
+notes_ua: >
+  Виявлення: NGS-панель (немає широко поширеного IDH2-специфічного
+  ІГХ). Синдром диференціації на енасиденібі (~14%) — той же
+  моніторинг + дексаметазон-протокол як для івосиденібу.
+  Гіпербілірубінемія на енасиденібі (~80% будь-якого ступеня;
+  UGT1A1-інгібування — зазвичай безсимптомна, без корекції дози).
+  IDHENTIFY р/р ГМЛ не показав виграшу за ЗВ vs стандарт у всіх
+  пацієнтів, але enriched у IDH2-мут які не отримували раніше
+  гіпометилюючого агента. Комбінація з венетоклаксом + азацитидин —
+  у дослідженнях.

@@ -1,0 +1,92 @@
+id: IND-CRC-METASTATIC-2L-MSI-H-PEMBRO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic mCRC"
+    - "Disease progression on 1L chemo (FOLFOX / FOLFIRI ± biologic) where MSI-H was missed at baseline OR pembrolizumab was unavailable in 1L"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-STATUS
+      required: true
+      value_constraint: "MSI-H or dMMR (treatment-defining; supersedes other 2L choices)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MSI-MONO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~33% (KEYNOTE-164 cohort A, 2L+ MSI-H mCRC)"
+  complete_response: "~6%"
+  progression_free_survival: "Median PFS 4.1 mo cohort A; 24-mo PFS rate ~33% (sustained plateau)"
+  overall_survival_5y: "Median OS 31.4 mo cohort A; 5-yr OS estimate ~30% (KEYNOTE-164 pooled)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-MSI-PCR-OR-NGS
+  - TEST-DMMR-IHC
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Pembrolizumab monotherapy for MSI-H/dMMR mCRC in 2L+ when MSI-H was
+  missed at baseline OR pembrolizumab was unavailable in 1L. KEYNOTE-164
+  established durable activity in chemo-refractory MSI-H mCRC (ORR ~33%,
+  durable plateau ~30% PFS at 2 years). KEYNOTE-177 cemented 1L position;
+  KEYNOTE-164 supports 2L+. Treatment-defining biomarker — supersedes
+  RAS/BRAF/HER2 algorithm. NCCN Cat 1, ESCAT IA. UA access barrier:
+  pembrolizumab not NSZU-reimbursed for CRC; charitable / clinical-trial
+  pathways apply.
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: "Pembrolizumab is preferred 2L+ for MSI-H/dMMR mCRC in patients who did not receive prior PD-1 inhibitor (KEYNOTE-164); Cat 1"
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: "Anti-PD-1 monotherapy is the standard of care for MSI-H/dMMR mCRC across lines; KEYNOTE-177 (1L) and KEYNOTE-164 (2L+) provide level I evidence"
+
+known_controversies:
+  - topic: "Pembrolizumab vs nivolumab+ipilimumab for 2L+ MSI-H mCRC"
+    positions:
+      - position: "Pembrolizumab monotherapy: better tolerability; KEYNOTE-164 / KEYNOTE-177 mature data"
+        sources: [SRC-NCCN-COLON-2025]
+      - position: "Nivolumab + ipilimumab (CheckMate-142): higher ORR (~58%) but higher irAE burden"
+        sources: [SRC-NCCN-COLON-2025]
+        evidence_note: "CheckMate-142 supports doublet ICI but at cost of immune-related toxicity; CheckMate-8HW (1L doublet) emerging"
+    our_default: "Pembrolizumab monotherapy as default; doublet ICI reserved for fit patients with high disease burden after MDT discussion"
+    rationale: "Tolerability + access drives default; doublet ICI option not currently NSZU-pathway-supported"
+
+do_not_do:
+  - "НЕ призначати без верифікованого MSI-H/dMMR статусу — false-positive MSI може спричинити hyperprogression."
+  - "НЕ продовжувати pembrolizumab при Grade 3+ irAE без specialist consultation + steroid taper."
+  - "НЕ комбінувати з chronic high-dose corticosteroids — pharmacodynamic blunting ICI."
+  - "НЕ призначати при active autoimmune disease без rheumatology / endocrinology MDT."
+  - "НЕ припиняти терапію при tumor pseudoprogression (early flare-up imaging) без biopsy / iRECIST evaluation."
+  - "НЕ підтверджувати план без funding pathway — pembrolizumab не реімбурсується НСЗУ для КРР."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  MSI-H/dMMR mCRC missed at 1L OR where pembrolizumab was unavailable
+  in 1L. Trial-specific source (KEYNOTE-164 PMID 33264544) not in KB
+  yet — flagged for CSD-4.5. Pembrolizumab access remains dominant
+  rate-limiter in Ukraine.

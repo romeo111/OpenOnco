@@ -1,0 +1,54 @@
+id: REG-CARBO-GEM-BEV-OVARIAN
+name: "Carboplatin + Gemcitabine + Bevacizumab (platinum-sensitive recurrent ovarian, OCEANS regimen)"
+name_ua: "Карбоплатин + Гемцитабін + Бевацизумаб (платиночутливий рецидив раку яєчників, схема OCEANS)"
+alternate_names: ["OCEANS regimen", "Carbo-Gem-Bev"]
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 4"
+    schedule: "IV day 1 every 21 days"
+    route: IV
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m²"
+    schedule: "IV days 1 and 8 every 21 days"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg"
+    schedule: "IV day 1 every 21 days during induction; continue as maintenance until progression"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "6-10 induction cycles (per OCEANS), then bevacizumab maintenance until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+premedication: ["5-HT3 antagonist day 1", "Dexamethasone day 1 for nausea + bev infusion comfort"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3-4 thrombocytopenia (gemcitabine-driven)"
+    modification: "Hold day 8 gemcitabine, resume at 75% next cycle; if recurrent, drop to AUC 4 carbo + 800 mg/m² gem"
+    source_refs: [SRC-OCEANS-AGHAJANIAN-2012]
+  - condition: "Grade 3-4 neutropenia / febrile neutropenia"
+    modification: "G-CSF prophylaxis next cycle; reduce gemcitabine to 800 mg/m²"
+  - condition: "Bev Grade 3 proteinuria (>3.5 g/24 h)"
+    modification: "Hold bev until <2 g; permanently discontinue if nephrotic syndrome"
+  - condition: "Major surgery planned"
+    modification: "Hold bev ≥28 days pre-op; resume ≥28 days post-op with full wound healing"
+  - condition: "Renal impairment CrCl 30-60"
+    modification: "Recalculate Calvert (cap GFR 125); consider gemcitabine dose reduction"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Усі три компоненти НСЗУ-фінансовані для відповідних показань (карбо/гем — широко; бев — для рецидивного раку яєчників у комбінації). Найдоступніший платиночутливий 2L регламент в Україні."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-OCEANS-AGHAJANIAN-2012]
+last_reviewed: "2026-04-27"
+
+notes: >
+  OCEANS regimen — primary platinum-sensitive 2L regimen with strongest
+  carbo+gem+bev RCT evidence. PFS 12.4 vs 8.4 mo (HR 0.484) over carbo+gem
+  alone. OS not improved (33.3 vs 32.9 mo). Preferred over carbo+PLD+bev
+  in UA per access (PLD often OOP). Day-8 gemcitabine commonly held for
+  thrombocytopenia — acceptable; protocol tolerates dose reductions.

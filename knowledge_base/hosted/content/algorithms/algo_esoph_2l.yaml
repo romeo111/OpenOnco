@@ -32,6 +32,7 @@ decision_tree:
       result: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
     if_false:
       next_step: 2
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
   # Step 2 — squamous histology (any CPS) → nivolumab.
   # ATTRACTION-3 is biomarker-agnostic for ESCC.
@@ -46,6 +47,7 @@ decision_tree:
       result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
     if_false:
       result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
+    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
 
 sources:
   - SRC-NCCN-ESOPHAGEAL-2025

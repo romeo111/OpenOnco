@@ -1,0 +1,44 @@
+id: REG-NIRAPARIB-MAINT-OVARIAN
+name: "Niraparib maintenance (HRD+ recurrent platinum-sensitive ovarian, NOVA / PRIMA)"
+name_ua: "Нірапариб підтримка (HRD+ рецидив платиночутливого раку яєчників, NOVA / PRIMA)"
+alternate_names: ["NOVA maintenance", "PRIMA maintenance"]
+
+components:
+  - drug_id: DRUG-NIRAPARIB
+    dose: "200 mg PO daily if baseline weight <77 kg OR platelets <150 × 10⁹/L; otherwise 300 mg PO daily (individualized starting dose per Berek et al. 2018 update)"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: moderate
+premedication: ["Optional 5-HT3 antagonist for nausea (most patients tolerate after first weeks)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3-4 thrombocytopenia (defining toxicity, ~36%)"
+    modification: "Hold until platelets ≥100, then resume at 100-mg-lower dose level (300 → 200 → 100 mg)"
+    source_refs: [SRC-NOVA-MIRZA-2016]
+  - condition: "Grade 3-4 anemia / neutropenia"
+    modification: "Hold until ≤Grade 1, resume at one dose level lower"
+  - condition: "Grade 3 hypertension"
+    modification: "Initiate / intensify antihypertensives; hold until ≤Grade 1"
+  - condition: "Persistent Grade 2 nausea"
+    modification: "Aggressive antiemetics; consider dose reduction if persistent"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Нірапариб — НСЗУ-фінансований для оваріальної підтримуючої терапії 1L (PRIMA) і 2L+ платиночутливого рецидиву (НОВА). Перевірено 2026-04-27."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-NOVA-MIRZA-2016, SRC-PRIMA-GONZALEZ-MARTIN-2019]
+last_reviewed: "2026-04-27"
+
+notes: >
+  NOVA (2L+ recurrent platinum-sensitive maintenance): gBRCA mPFS 21.0
+  vs 5.5 mo; non-gBRCA HRD+ 12.9 vs 3.8 mo; non-gBRCA all 9.3 vs 3.9 mo.
+  Individualized starting-dose rule (Berek 2018) reduces thrombocytopenia
+  without compromising efficacy. CBC weekly first month, then monthly.
+  Long-term MDS/AML risk warrants pre-treatment counseling.

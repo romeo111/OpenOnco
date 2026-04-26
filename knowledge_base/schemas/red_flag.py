@@ -2,8 +2,9 @@
 
 from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
+from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, RedFlagCategory, RedFlagDirection, RedFlagSeverity
 
 
@@ -46,9 +47,17 @@ class RedFlag(Base):
 
     sources: list[str] = Field(default_factory=list)
     last_reviewed: Optional[str] = None
+    # CHARTER §6.1: ≥2 sign-offs to publish. Structured form — legacy
+    # `reviewer_signoffs: 0` (int) coerced to [] by the validator below.
+    reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
     notes: Optional[str] = None
 
     # Authoring lifecycle. Drafts (`draft: true`) are loaded by the engine
     # but flagged in CI; non-draft RedFlags must satisfy the source-citation
     # requirement (CHARTER §6.1) and pass clinical review.
     draft: bool = False
+
+    @field_validator("reviewer_signoffs", mode="before")
+    @classmethod
+    def _migrate_signoffs(cls, v):
+        return _migrate_int_signoffs(v)

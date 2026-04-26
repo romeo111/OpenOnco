@@ -1,0 +1,67 @@
+id: RF-MELANOMA-BRAF-V600-ACTIONABLE
+definition: >
+  BRAF V600E or V600K activating mutation in metastatic / unresectable
+  melanoma — ~40-50% prevalence cutaneous melanoma. Treatment-defining:
+  BRAFi + MEKi doublet (dabrafenib + trametinib, encorafenib + binimetinib
+  — COLUMBUS, vemurafenib + cobimetinib). Sequencing with anti-PD-1
+  (CheckMate-067, DREAMseq) — IO-first preferred in low-volume disease;
+  BRAF+MEK first in symptomatic / high-LDH disease.
+definition_ua: >
+  Активуюча мутація BRAF V600E або V600K при метастатичній / нерезекта-
+  бельній меланомі — ~40-50% поширеність шкірної меланоми. Лікування-
+  визначальна: дублет BRAFi + MEKi (дабрафеніб + траметиніб, енкорафеніб +
+  биніметиніб — COLUMBUS, вемурафеніб + кобиметиніб). Послідовність з
+  анти-PD-1 (CheckMate-067, DREAMseq) — IO-перша при low-volume;
+  BRAF+MEK перший при симптоматичній / високий ЛДГ хворобі.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "braf_v600e_mutation"
+      value: true
+    - finding: "braf_v600k_mutation"
+      value: true
+    - finding: "braf_mutation"
+      value: "V600E"
+    - finding: "braf_mutation"
+      value: "V600K"
+    - finding: "braf_v600"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm:
+  - ALGO-MELANOMA-METASTATIC-1L
+  - ALGO-MELANOMA-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-COLUMBUS-DUMMETT-2018
+  - SRC-CHECKMATE-067-LARKIN-2019
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pyrexia (especially dabrafenib + trametinib) is the dominant BRAF+MEK
+  toxicity — patient education + dose-hold algorithm essential.
+  Encorafenib + binimetinib has lower pyrexia but higher CK elevation.
+  Adjuvant dabrafenib + trametinib (COMBI-AD) for stage III BRAF-mut
+  resected melanoma. Atezolizumab + vemurafenib + cobimetinib (IMspire150)
+  triplet — additional 1L option in select cases. BRAF V600 detection
+  by tissue NGS / PCR; ctDNA acceptable.
+notes_ua: >
+  Пірексія (особливо дабрафеніб + траметиніб) — домінуюча токсичність
+  BRAF+MEK — необхідне навчання пацієнта + алгоритм паузи дози.
+  Енкорафеніб + биніметиніб має нижчу пірексію, але вище підвищення КФК.
+  Ад'ювантний дабрафеніб + траметиніб (COMBI-AD) для III стадії BRAF-мут
+  резектованої меланоми. Атезолізумаб + вемурафеніб + кобиметиніб
+  (IMspire150) — додатковий 1L варіант. Виявлення BRAF V600 — NGS / PCR
+  на тканині; цоДНК прийнятна.
