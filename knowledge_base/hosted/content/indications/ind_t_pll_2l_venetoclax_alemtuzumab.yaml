@@ -1,0 +1,98 @@
+id: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-T-PLL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after alemtuzumab IV monotherapy 1L"
+    - "OR alemtuzumab-refractory primary disease"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD52-IHC
+      required: false
+      value_constraint: "Often retained at relapse but verify; CD52-loss escape mechanism described"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-VENETOCLAX-ALEMTUZUMAB-TPLL
+concurrent_therapy: []
+followed_by:
+  - "AlloSCT consolidation in fit responders — only curative path"
+
+evidence_level: low  # phase 1/2 / case series only
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "~50-60% (small case series, Hampel 2020 Blood Adv)"
+  complete_response: "~30%"
+  progression_free_survival: "Median PFS ~6-9 months without alloSCT consolidation"
+  overall_survival_5y: "~10% chemo-only; ~25-35% if successful bridge to alloSCT in CR"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-RENAL-FUNCTION-EGFR
+  - TEST-CMV-SEROLOGY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY  # confirm CD52 retention at relapse
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  T-PLL relapse after alemtuzumab is universally fatal without
+  consolidation; venetoclax exploits BCL2-dependence demonstrated by
+  Boidol 2017 ex-vivo studies. Combination with alemtuzumab leverages
+  BCL2 apoptosis priming + CD52 ADCC. Hampel 2020 (Blood Adv) reported
+  responses in alemtuzumab-refractory cases. Investigational — refer
+  to clinical trial when available; otherwise use as bridging therapy
+  to alloSCT consolidation.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Venetoclax-based regimens are emerging as treatment for r/r T-PLL based on phase 1/2 and case series data"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "BCL2 inhibition with venetoclax (with or without alemtuzumab) is an investigational option for r/r T-PLL; clinical trial enrollment preferred"
+
+known_controversies:
+  - topic: "Venetoclax monotherapy vs venetoclax + alemtuzumab in r/r T-PLL"
+    positions:
+      - position: "Combination — BCL2 priming + ADCC; deeper responses"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Monotherapy — fewer toxicities, similar response rates in BCL2-dependent disease"
+        sources: [SRC-ESMO-PTCL-2024]
+    our_default: "Combination preferred when both accessible; venetoclax mono acceptable when alemtuzumab inaccessible"
+
+do_not_do:
+  - "НЕ давати venetoclax без TLS prophylaxis + ramp-up — high tumor burden T-PLL = HIGH TLS risk."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors (azoles) без dose reduction venetoclax 75%."
+  - "НЕ пропускати CMV monitoring weekly — alemtuzumab pan-lymphopenia → universal CMV reactivation risk."
+  - "НЕ пропускати PJP + HSV prophylaxis ≥6 months після last alemtuzumab dose."
+  - "НЕ нехтувати donor search — alloSCT — єдиний curative path."
+  - "НЕ давати при active infection (especially CMV, HBV)."
+  - "НЕ використовувати поза clinical trial або tertiary center — investigational регіmen."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewer_signoffs: 0
+notes: >
+  STUB. Investigational; refer to clinical trial when feasible. Major
+  UA access barrier for both components. Always plan as bridge to
+  alloSCT.

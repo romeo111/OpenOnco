@@ -1,0 +1,32 @@
+id: ALGO-T-PLL-2L
+applicable_to_disease: DIS-T-PLL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Relapsed/refractory T-PLL — single-track default to venetoclax +
+  alemtuzumab combination per emerging Boidol 2017 / Hampel 2020 data,
+  bridging to alloSCT consolidation in fit responders. Investigational
+  — refer to clinical trial when available.
+
+output_indications:
+  - IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+
+default_indication: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+alternative_indication: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Relapsed/refractory after alemtuzumab IV monotherapy"
+        - condition: "Alemtuzumab-refractory primary disease"
+    if_true:
+      result: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+    if_false:
+      result: IND-T-PLL-2L-VENETOCLAX-ALEMTUZUMAB
+
+sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  Investigational regimen — clinical trial enrollment preferred where
+  available. Bendamustine, pentostatin, and other historic salvage
+  options not yet authored as separate indications.
