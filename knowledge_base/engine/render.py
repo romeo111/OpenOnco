@@ -25,9 +25,13 @@ treatment-Plan-not-applicable disclaimer surfaced above the fold.
 
 from __future__ import annotations
 
+import functools
 import html
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional, Union
+
+import yaml
 
 from ._ask_doctor import select_questions as _select_ask_doctor_questions
 from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
@@ -54,6 +58,89 @@ def _h(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s))
+
+
+# ── Sign-off badge (CHARTER §6.1) ─────────────────────────────────────────
+#
+# Indications carry `reviewer_signoffs_v2: list[ReviewerSignoff]` after the
+# `scripts/clinical_signoff.py` CLI is run. The plan render surfaces the
+# coverage state as a coloured badge so the clinician sees at a glance
+# whether the recommendation has the two Clinical Co-Lead approvals
+# CHARTER §6.1 requires.
+
+
+@functools.lru_cache(maxsize=1)
+def _load_reviewer_labels() -> dict[str, str]:
+    """REV-* → display_name. Cached. Returns empty dict on failure."""
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    rev_dir = repo_root / "knowledge_base" / "hosted" / "content" / "reviewers"
+    if not rev_dir.is_dir():
+        return {}
+    out: dict[str, str] = {}
+    for p in sorted(rev_dir.glob("*.yaml")):
+        try:
+            data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(data, dict) and data.get("id"):
+            out[data["id"]] = str(data.get("display_name") or data["id"])
+    return out
+
+
+def _signoff_label(reviewer_id: str) -> str:
+    return _load_reviewer_labels().get(reviewer_id, reviewer_id)
+
+
+def _render_signoff_badge(entity_data: Optional[dict]) -> str:
+    """Render a clinician-mode sign-off badge. 0/1/≥2 sign-offs."""
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n == 0:
+        return (
+            '<span class="signoff-badge signoff-pending">'
+            '⚠ Очікує підпису Clinical Co-Lead</span>'
+        )
+    if n == 1:
+        rid = sigs[0]["reviewer_id"]
+        return (
+            '<span class="signoff-badge signoff-partial">'
+            f'🟡 Підписано (1/2): {_h(_signoff_label(rid))}'
+            '</span>'
+        )
+    names = ", ".join(_signoff_label(s["reviewer_id"]) for s in sigs[:3])
+    if n > 3:
+        names += f" + {n - 3}"
+    return (
+        '<span class="signoff-badge signoff-complete">'
+        f'✓ Клінічно затверджено: {_h(names)}'
+        '</span>'
+    )
+
+
+def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
+    """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n >= 2:
+        return (
+            '<span class="patient-badge patient-good signoff-complete">'
+            'Затверджено лікарями</span>'
+        )
+    if n == 1:
+        return (
+            '<span class="patient-badge patient-warn signoff-partial">'
+            'Очікує перевірки лікарями (1 з 2)</span>'
+        )
+    return (
+        '<span class="patient-badge patient-emergency signoff-pending">'
+        'Очікує перевірки лікарями</span>'
+    )
 
 
 def _now_iso() -> str:
