@@ -1,0 +1,68 @@
+id: REG-MOMELOTINIB-PMF
+name: "Momelotinib (Ojjaara) for MF with anemia"
+name_ua: "Момелотиніб (Ojjaara) для МФ з анемією"
+alternate_names:
+  - "Momelotinib mono"
+  - "MOMENTUM regimen"
+
+components:
+  - drug_id: DRUG-MOMELOTINIB
+    dose: "200 mg PO once daily (with or without food)"
+    schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-treatment HBV / HCV / HIV / TB screening — JAKi reactivation risk"
+  - "Baseline LFT; serial monitoring"
+  - "Pregnancy testing in WCBP + reliable contraception"
+
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Severe thrombocytopenia (platelets <50K) OR Grade 4"
+    modification: "Hold; resume reduced dose 150 mg or 100 mg PO daily on platelets ≥50K"
+    rationale: "Thrombocytopenia commonest reason for dose hold; less anemia impact than ruxolitinib due to hepcidin lowering via ACVR1 inhibition"
+    source_refs:
+      - SRC-MOMENTUM-VERSTOVSEK-2023
+      - SRC-NCCN-MPN-2025
+  - condition: "Grade ≥3 ALT/AST elevation"
+    modification: "Hold; resume reduced dose on resolution; permanent discontinuation if Grade 4 or recurrent"
+    rationale: "Hepatotoxicity observed in MOMENTUM"
+    source_refs:
+      - SRC-MOMENTUM-VERSTOVSEK-2023
+  - condition: "Renal impairment CrCl <30 mL/min"
+    modification: "Reduce to 150 mg PO daily"
+    rationale: "Reduced clearance"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Hepatic impairment Child-Pugh B"
+    modification: "Reduce to 150 mg PO daily; avoid in Child-Pugh C"
+    rationale: "Hepatic metabolism"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Momelotinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-MOMENTUM-VERSTOVSEK-2023
+
+last_reviewed: "2026-04-25"
+notes: >
+  JAK1/JAK2 + ACVR1 inhibitor — distinguishes from ruxolitinib by
+  improving anemia (ACVR1 → reduced hepcidin → restored
+  erythropoiesis) where ruxolitinib often worsens anemia. MOMENTUM
+  phase-3 vs danazol in JAKi-experienced anemic MF: symptom
+  response 25% vs 9%, spleen response 22% vs 3%, TI 31% vs 20%.
+  STUB — pending Co-Lead sign-off.

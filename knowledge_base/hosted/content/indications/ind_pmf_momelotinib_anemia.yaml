@@ -1,0 +1,106 @@
+id: IND-PMF-MOMELOTINIB-ANEMIA
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PMF
+  line_of_therapy: 2
+  stage_requirements:
+    - "Symptomatic MF (PMF, post-PV-MF, post-ET-MF) with anemia (Hb <10 g/dL) AND symptoms"
+    - "JAKi-experienced (post-ruxolitinib) OR JAKi-naive with anemia precluding ruxolitinib"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-MOMELOTINIB-PMF
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "MFSAF total symptom score response 25% vs 9% danazol (MOMENTUM, p=0.0095)"
+  complete_response: "Spleen volume response 22% vs 3% danazol; transfusion independence 31% vs 20%"
+  progression_free_survival: "Median treatment duration ongoing in MOMENTUM long-term follow-up"
+  overall_survival_5y: "Salvage setting; OS dependent on baseline DIPSS-Plus + alloHCT pathway"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PMF-ANEMIA-DOMINANT
+  - RF-PMF-BLAST-PROGRESSION
+  - RF-PMF-HIGH-RISK-DIPSS
+  - RF-PMF-ORGAN-DYSFUNCTION
+  - RF-PMF-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Momelotinib is JAK1/JAK2 + ACVR1 inhibitor approved for MF with
+  anemia where ruxolitinib often worsens cytopenia. Distinct
+  ACVR1 inhibition reduces hepcidin → restores iron utilization +
+  erythropoiesis. MOMENTUM phase-3 (Verstovsek et al., Lancet
+  2023): vs danazol in JAKi-experienced anemic symptomatic MF
+  (Hb <10) — MFSAF total symptom score response 25% vs 9%
+  (p=0.0095); spleen volume response 22% vs 3%; transfusion
+  independence 31% vs 20%. FDA approval Sept 2023. Particularly
+  appropriate when anemia is dominant problem (RF-PMF-ANEMIA-
+  DOMINANT). Mandatory pre-treatment HBV / HCV / HIV / TB
+  screening. Major Ukraine access barrier: not registered.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Momelotinib is recommended for MF with anemia (Cat 1) per MOMENTUM"
+  - source_id: SRC-MOMENTUM-VERSTOVSEK-2023
+    position: supports
+    relevant_quote_paraphrase: "MOMENTUM phase-3: momelotinib 200 mg PO daily vs danazol in JAKi-experienced anemic MF; symptom response 25% vs 9%, TI 31% vs 20%"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "JAKi with anemia-improvement properties (momelotinib) recommended for MF with anemia"
+
+do_not_do:
+  - "НЕ призначати без HBV / HCV / HIV / TB screening — JAKi reactivation risk."
+  - "НЕ комбінувати з ruxolitinib — обирати один JAKi."
+  - "НЕ ігнорувати baseline + serial LFT — hepatotoxicity у MOMENTUM."
+  - "НЕ продовжувати без response — assessment at 24 тижні; switch якщо немає symptom + anemia improvement."
+  - "НЕ забувати alloHCT-pathway для transplant-eligible — momelotinib не є curative."
+  - "НЕ комбінувати з OATP1B1/1B3 substrates (rosuvastatin) без caution."
+  - "НЕ підтверджувати план без funding pathway — препарат не зареєстрований в Україні."
+
+known_controversies:
+  - topic: "Momelotinib 1L vs 2L for anemia-dominant MF"
+    positions:
+      - position: "Momelotinib 2L (post-rux) per MOMENTUM registration; standard pathway"
+        sources: [SRC-MOMENTUM-VERSTOVSEK-2023, SRC-NCCN-MPN-2025]
+      - position: "Momelotinib 1L for newly-dx MF with anemia (Hb <10) — SIMPLIFY-1 phase-3 vs ruxolitinib (non-inferior spleen response, superior transfusion independence)"
+        sources: [SRC-NCCN-MPN-2025]
+        evidence_note: "SIMPLIFY-1 supports 1L use in anemia-dominant MF; emerging guideline support"
+    our_default: "Momelotinib 2L (post-rux per MOMENTUM); consider 1L if newly-dx MF with anemia precluding ruxolitinib initiation"
+    rationale: "Anemia profile drives JAKi selection; momelotinib uniquely addresses anemia"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track for
+  anemia-dominant MF. ACVR1 inhibition unique among JAKi.
+  Ukraine access constraint.
