@@ -1,0 +1,64 @@
+id: REG-GILTERITINIB-AML
+name: "Gilteritinib monotherapy for R/R FLT3-mutated AML"
+name_ua: "Гілтеритиніб монотерапія для R/R FLT3+ ГМЛ"
+alternate_names:
+  - "Gilteritinib mono"
+  - "Xospata mono"
+
+components:
+  - drug_id: DRUG-GILTERITINIB
+    dose: "120 mg PO once daily"
+    schedule: "continuous, 28-day cycles, until progression / unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity / proceed to alloHCT in CR"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic PRN"
+  - "Baseline + serial ECG; correct K+ ≥4.0 mEq/L and Mg++ ≥2.0 mg/dL before initiation and during therapy"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTc >500 ms"
+    modification: "Hold; resume at 80 mg when QTc ≤480 ms; permanent discontinuation if recurrent"
+    rationale: "Risk of torsades de pointes / sudden death"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-ADMIRAL-PERL-2019
+  - condition: "Differentiation syndrome (fever, dyspnea, weight gain, effusions)"
+    modification: "Dexamethasone 10 mg IV q12h; hold gilteritinib until resolution; resume at full dose"
+    rationale: "DS fatal if untreated; corticosteroids lifesaving"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Concomitant strong CYP3A4 inhibitor unavoidable"
+    modification: "Consider dose reduction to 80 mg + intensify ECG monitoring"
+    rationale: "Increased exposure → QTc + DS risk"
+    source_refs:
+      - SRC-NCCN-AML-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Gilteritinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ADMIRAL-PERL-2019
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard 2L+ for R/R FLT3-mutated AML per ADMIRAL. Bridge to
+  alloHCT for fit candidates achieving CR/CRh — gilteritinib alone
+  is not curative. Continue gilteritinib post-HCT as maintenance
+  (off-label, supported by emerging data MORPHO trial). STUB —
+  pending Co-Lead sign-off.
