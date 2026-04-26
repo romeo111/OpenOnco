@@ -1,0 +1,53 @@
+id: RF-ALCL-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating CHP-Bv / CHOP-class therapy in ALCL: HBsAg-positive (HBV
+  reactivation risk on cytotoxic + steroid-containing regimen), anti-HBc-positive
+  (occult HBV), HCV-RNA-positive, HIV-positive (requires ART coordination),
+  or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед CHP-Bv / CHOP при ALCL: HBsAg+ (ризик реактивації HBV на
+  цитотоксичній + стероїд-вмісній терапії), anti-HBc+ (occult HBV),
+  HCV-РНК+, HIV+ (координація АРТ), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-ALCL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ALCL CHP-Bv contains prednisone + brentuximab — both depress cell-mediated
+  immunity. HBV reactivation risk slightly lower than anti-CD20 regimens
+  (no rituximab here) but still mandates entecavir/tenofovir prophylaxis
+  if HBsAg+ or anti-HBc+ with detectable HBV-DNA. HIV+ ALCL: continue ART,
+  use full-dose CHP-Bv (HIV-associated ALCL responds well to CD30-directed
+  therapy). PJP prophylaxis (TMP-SMX) routine on prolonged steroids.
+  This RF surfaces a workup-prerequisite annotation; engine does not
+  switch indication.

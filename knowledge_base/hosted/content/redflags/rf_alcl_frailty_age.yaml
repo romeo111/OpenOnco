@@ -1,0 +1,60 @@
+id: RF-ALCL-FRAILTY-AGE
+definition: >
+  Frailty profile precluding full-dose CHP-Bv in ALCL: ECOG ≥3, OR (age ≥75
+  with G8 ≤14), OR composite frailty (age ≥70 + Charlson ≥3 + albumin <3.5).
+  Triggers de-escalation to brentuximab-vedotin monotherapy or attenuated
+  CHP-Bv (50-75% doses).
+definition_ua: >
+  Профіль frailty, що перешкоджає повнодозовій CHP-Bv при ALCL: ECOG ≥3,
+  АБО (вік ≥75 з G8 ≤14), АБО композитна frailty (вік ≥70 + Charlson ≥3 +
+  альбумін <3.5). Триггерує de-escalation до brentuximab-vedotin
+  монотерапії або атенуйованої CHP-Bv (50-75% дози).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "g8_score"
+          threshold: 14
+          comparator: "<="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-ALCL
+shifts_algorithm: []  # not yet wired into ALGO-ALCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  G8 (Geriatric-8) screening tool validated in oncology; ≤14 indicates
+  need for full CGA. ALCL is unusual among PTCLs in that brentuximab
+  monotherapy alone (1.8 mg/kg q3w) is meaningfully active in frail
+  unfit patients (~40-60% ORR data extrapolated from r/r ALCL). Avoid
+  vincristine + brentuximab combo when neuropathy already present.
+  AlloHCT typically off-table; autoSCT consolidation post-CR remains
+  reasonable in selected fit-elderly.

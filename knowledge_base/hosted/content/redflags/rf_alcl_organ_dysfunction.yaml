@@ -1,0 +1,56 @@
+id: RF-ALCL-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard CHOP/CHP-Bv doses in ALCL:
+  LVEF <50% (anthracycline / brentuximab cardiotoxicity overlap), CrCl <30
+  (cyclophosphamide dose constraints), bilirubin >3× ULN (vincristine /
+  brentuximab metabolism — brentuximab dose-modify Child-Pugh B; avoid C),
+  or pre-existing peripheral neuropathy ≥grade 2 (vincristine + brentuximab
+  both neuropathic — combination prohibitive).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартним дозам CHOP / CHP-Bv
+  при ALCL: LVEF <50% (антрациклін + brentuximab кардіотоксичність), CrCl <30
+  (циклофосфамід), білірубін >3× ULN (метаболізм вінкристину / brentuximab —
+  Child-Pugh B зменшити дозу, C уникати), або периферична нейропатія
+  ≥ступінь 2 (vincristine + brentuximab — комбінація непереносна).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-ALCL
+shifts_algorithm: []  # not yet wired into ALGO-ALCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ALCL is overwhelmingly CD30+, so CHP-Bv (ECHELON-2) is the standard
+  backbone — but brentuximab adds neuropathy on top of vincristine. With
+  baseline neuropathy ≥2, omit vincristine (CHP without V) or substitute
+  gemcitabine-based salvage. LVEF <50%: substitute liposomal doxorubicin
+  or omit anthracycline (GEM-P). Severe hepatic dysfunction: brentuximab
+  contraindicated in Child-Pugh C.

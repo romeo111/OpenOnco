@@ -1,0 +1,52 @@
+id: RF-ALCL-TRANSFORMATION-PROGRESSION
+definition: >
+  ALCL primary-refractory disease (no CR after 4 cycles CHP-Bv) OR early
+  relapse <12 months post-induction OR ALK-negative ALCL with DUSP22-WT
+  (poor prognostic subset) — routes to salvage chemotherapy (ICE / DHAP /
+  GEM-P) with intent to consolidate with autoSCT or alloSCT.
+definition_ua: >
+  ALCL первинно-рефрактерна (без ПР після 4 циклів CHP-Bv) АБО ранній
+  рецидив <12 міс після індукції АБО ALK-негативна ALCL з DUSP22-WT
+  (підгрупа поганого прогнозу) — маршрут до сальвадж-хіміотерапії
+  (ICE / DHAP / GEM-P) з консолідацією autoSCT або alloSCT.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "alcl_primary_refractory"
+      value: true
+    - finding: "alcl_early_relapse_lt_12mo"
+      value: true
+    - all_of:
+        - finding: "alk_status"
+          value: "negative"
+        - finding: "dusp22_rearrangement"
+          value: "negative"
+    - finding: "rapid_progression"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 70
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-ALCL
+shifts_algorithm: []  # not yet wired into ALGO-ALCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ALK+ ALCL has 70-90% 5-year OS on CHP-Bv; ALK– more heterogeneous.
+  Within ALK–, DUSP22-rearranged subset behaves favorably (~90% 5y OS),
+  while DUSP22-WT/TP63-WT ALK– is poor (40-50% 5y OS) — this drives the
+  prognostic stratification that intensifies upfront consolidation.
+  Primary-refractory or early-relapse ALCL: brentuximab vedotin
+  monotherapy is highly active (50-60% ORR per pivotal Pro et al.,
+  J Clin Oncol 2017) for those who did not receive it 1L; otherwise
+  combination salvage + transplant.
