@@ -1,0 +1,114 @@
+id: ALGO-HCV-MZL-2L
+applicable_to_disease: DIS-HCV-MZL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L Indication for HCV-associated MZL after 1L direct-acting
+  antiviral (DAA) ± rituximab. Routing branches on HCV virologic
+  outcome (BIO-HCV-STATUS / BIO-HCV-RNA) at SVR12 milestone:
+
+  - SVR12 NOT achieved (HCV-RNA detectable 12wk post-DAA): retreat
+    with second-line DAA regimen (sofosbuvir/velpatasvir/voxilaprevir
+    or glecaprevir/pibrentasvir) + add BR if lymphoma persists/
+    progresses despite re-eradication.
+
+  - SVR12 ACHIEVED + lymphoma relapse (HCV-cleared but MZL
+    progresses): straight to BR (no further DAA benefit, lymphoma
+    is now antigen-independent).
+
+  Default 2L indication is IND-HCV-MZL-POST-DAA-SURVEILLANCE for
+  the ~70% of HCV-MZL patients in whom DAA-induced HCV eradication
+  produces durable lymphoma response (no chemo needed); BR routed
+  via free-text MDT note when surveillance flags relapse.
+
+  2L entry triggered by: HCV-RNA positive at week 12 post-DAA
+  (virologic failure), OR lymphoma progression on imaging despite
+  achieved SVR12, OR transformation to aggressive histology.
+
+output_indications:
+  - IND-HCV-MZL-POST-DAA-SURVEILLANCE
+
+default_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+alternative_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+
+decision_tree:
+  # Step 1 — histologic transformation suspected → upstream re-biopsy
+  # + ALGO-DLBCL routing.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Aggressive histology suspected at relapse (rapid growth, B-symptoms, LDH ↑↑, extranodal sites)"
+    if_true:
+      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — routes to ALGO-DLBCL
+    if_false:
+      next_step: 2
+
+  # Step 2 — SVR12 NOT achieved (HCV-RNA detectable post-DAA) →
+  # DAA retreatment branch. Per EASL 2023, second-line DAA is
+  # SOF/VEL/VOX (pan-genotypic, NS5A-rescue) or GLE/PIB. If lymphoma
+  # also progressing, add BR concurrent with retreatment.
+  - step: 2
+    evaluate:
+      all_of:
+        - biomarker: BIO-HCV-RNA
+          comparator: "detectable at week 12 post-DAA (SVR12 not achieved)"
+    if_true:
+      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — DAA retreatment + BR
+    if_false:
+      next_step: 3
+
+  # Step 3 — SVR12 achieved + lymphoma relapse (HCV cleared, MZL
+  # now antigen-independent / clonal escape) → BR. Surveillance
+  # indication remains the default route; clinician escalates to
+  # BR via MDT free-text trigger when relapse documented.
+  - step: 3
+    evaluate:
+      all_of:
+        - biomarker: BIO-HCV-RNA
+          comparator: "undetectable at SVR12 (HCV cleared)"
+        - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
+    if_true:
+      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — BR salvage
+    if_false:
+      next_step: 4
+
+  # Step 4 — default: routine post-DAA surveillance (~70% of patients
+  # achieve durable lymphoma response from HCV eradication alone).
+  - step: 4
+    evaluate:
+      all_of:
+        - biomarker: BIO-HCV-STATUS
+          comparator: "categorical (post-DAA)"
+        - condition: "No documented relapse / progression"
+    if_true:
+      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+    if_false:
+      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-BSH-MZL-2024
+  - SRC-EASL-HCV-2023
+
+last_reviewed: "2026-04-27"
+notes: >
+  OOS / wiring gaps:
+  (1) IND-HCV-MZL-2L-DAA-RETREATMENT (SOF/VEL/VOX or GLE/PIB ±
+  concurrent BR) — not modeled as dedicated indication. Step 2
+  routes to surveillance placeholder; trace must surface "SVR12
+  not achieved → DAA retreatment per EASL 2023; add BR if
+  lymphoma progressing" as free-text MDT note.
+  (2) IND-HCV-MZL-2L-BR (BR for SVR12-achieved + lymphoma relapse)
+  — not modeled as HCV-MZL-specific indication. Step 3 placeholder;
+  trace surfaces "SVR12-achieved relapse → BR salvage" MDT note.
+  (3) Histologic transformation routing must be resolved at upstream
+  disease-resolution stage (re-biopsy mandatory at any clinical
+  progression in HCV-MZL given baseline transformation risk).
+  (4) Branching uses BIO-HCV-RNA (quantitative confirmation) plus
+  BIO-HCV-STATUS (screening); BIO-HCV-RNA is the actionable
+  biomarker per EASL 2023 (anti-HCV antibody persists for life
+  even after clearance).
+  (5) IND-HCV-MZL-POST-DAA-SURVEILLANCE serves as the algorithmic
+  anchor — it covers the ~70% durable-response track and acts as
+  surveillance gate for the ~30% who progress (escalation to DAA
+  retreatment or BR is MDT-driven via free-text triggers).
+  (6) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
