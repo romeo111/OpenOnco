@@ -3,58 +3,109 @@ names:
   preferred: "Irinotecan"
   ukrainian: "Іринотекан"
   english: "Irinotecan"
-  brand_names: ["Camptosar", "CPT-11"]
+  synonyms: ["CPT-11"]
+  brand_names: ["Camptosar", "Onivyde (liposomal nal-IRI)"]
 atc_code: L01CE02
 rxnorm_id: "51499"
-drug_class: "Topoisomerase I inhibitor (camptothecin)"
+drug_class: "Topoisomerase I inhibitor (semi-synthetic camptothecin)"
 mechanism: >
-  Active metabolite SN-38 (UGT1A1-glucuronidated for clearance) inhibits
-  topoisomerase I → DNA single-strand breaks → cell death. UGT1A1 *28/*28
-  homozygotes have severe neutropenia + diarrhea risk; testing recommended
-  before high-dose use.
+  Prodrug hydrolyzed by carboxylesterases to active metabolite SN-38
+  (~100-1000× more potent than parent). SN-38 stabilizes the
+  topoisomerase-I/DNA cleavable complex, producing single-strand DNA
+  breaks that become lethal double-strand breaks during S-phase
+  replication. SN-38 is glucuronidated by UGT1A1 to inactive SN-38G;
+  patients homozygous for UGT1A1*28 (Gilbert-syndrome variant) or *6
+  have impaired clearance and severe neutropenia + diarrhea risk —
+  CPIC and FDA label both recommend testing before high-dose use.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1996
+    indications_brief:
+      - "Metastatic colorectal cancer (1L in combination, 2L mono)"
+      - "Off-label / NCCN-listed: pancreatic (FOLFIRINOX, nal-IRI), gastric, small-cell lung, glioma"
+  ema:
+    approved: true
+    year_first_approval: 1995
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
+    reimbursement_indications:
+      - "Колоректальний рак (метастатична терапія)"
+      - "Підшлункова залоза (FOLFIRINOX, у складі схеми)"
     last_verified: "2026-04-26"
 
 typical_dosing: >
-  FOLFIRI: 180 mg/m² IV day 1 every 14d.
-  FOLFIRINOX: 180 mg/m² IV day 1 every 14d.
-  CRC monotherapy 2L: 350 mg/m² IV every 21d.
-formulations: ["IV solution 20 mg/mL"]
+  FOLFIRI: 180 mg/m² IV over 90 min day 1 every 14 d.
+  FOLFIRINOX: 180 mg/m² IV over 90 min day 1 every 14 d.
+  CRC monotherapy 2L (q3w): 350 mg/m² IV over 90 min every 21 d.
+  CRC monotherapy 2L (weekly): 125 mg/m² IV weekly × 4, then 2 weeks off.
+  Liposomal nal-IRI (Onivyde) for PDAC 2L: 70 mg/m² (free base) IV
+  every 14 d with 5-FU/LV.
+  UGT1A1 *28/*28 or *6/*6: reduce starting dose by ~25-30%.
+formulations:
+  - "IV solution 20 mg/mL (40 mg, 100 mg, 300 mg, 500 mg vials)"
+  - "Liposomal formulation (nal-IRI / Onivyde) 4.3 mg/mL (free base)"
 
 absolute_contraindications:
-  - "Severe pre-existing diarrhea / inflammatory bowel disease"
-  - "Severe baseline myelosuppression"
-  - "Bilirubin >3× ULN"
+  - "Severe hypersensitivity to irinotecan"
+  - "Severe pre-existing diarrhea or inflammatory bowel disease (active flare)"
+  - "Severe baseline myelosuppression (ANC <1.5)"
+  - "Bilirubin >3× ULN (relative — high risk of severe toxicity)"
   - "Pregnancy"
 
 black_box_warnings:
-  - "Severe diarrhea (early cholinergic + late delayed)"
-  - "Severe myelosuppression"
+  - "Severe diarrhea — early cholinergic (within 24 h) and late delayed (>24 h, can be life-threatening)"
+  - "Severe myelosuppression (febrile neutropenia, sepsis)"
 
 common_adverse_events:
-  - "Acute cholinergic syndrome (within 24h — atropine prophylaxis IV)"
-  - "Late delayed diarrhea (loperamide PRN, aggressive hydration)"
-  - "Neutropenia"
-  - "Alopecia"
-  - "Nausea (moderately emetogenic)"
+  - "Acute cholinergic syndrome — abdominal cramping, diarrhea, sweating, lacrimation (within 24 h; atropine 0.25-1 mg SC/IV prophylaxis or treatment)"
+  - "Late delayed diarrhea (~60-80%; loperamide PRN, aggressive hydration)"
+  - "Neutropenia (~50-60%, severe in 20-30%)"
+  - "Anemia (~60%)"
+  - "Alopecia (~50%)"
+  - "Nausea / vomiting (moderately emetogenic)"
+  - "Mucositis (~10-30%)"
+  - "Fatigue (~50%)"
+  - "Asthenia"
+  - "Anorexia"
 
 serious_adverse_events:
-  - "Severe diarrhea + sepsis"
-  - "Febrile neutropenia"
-  - "Interstitial pneumonitis (rare)"
+  - "Severe diarrhea with dehydration / sepsis"
+  - "Febrile neutropenia (~3-15%; up to 35% in UGT1A1 poor metabolizers)"
+  - "Interstitial pneumonitis / pulmonary toxicity (rare)"
+  - "Bowel perforation (rare)"
+  - "Megacolon, ileus"
+  - "Renal failure (secondary to dehydration)"
+
+major_interactions:
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St. John's wort) — reduce SN-38 exposure; avoid if possible"
+  - "Strong CYP3A4 inhibitors (ketoconazole, ritonavir, clarithromycin) — increase SN-38 exposure and toxicity; avoid"
+  - "UGT1A1 inhibitors (atazanavir, indinavir) — increase SN-38 exposure; avoid"
+  - "Live vaccines — avoid during therapy"
+  - "Warfarin — INR fluctuation; monitor"
+  - "Bevacizumab — increased risk of GI perforation in combination"
+
+pharmacology:
+  half_life_hours: 11
+  half_life_notes: "Irinotecan parent t½ ~6-12 h; active SN-38 t½ ~10-20 h."
+  clearance: "hepatic (carboxylesterase activation, CYP3A4 to inactive APC/NPC, UGT1A1 glucuronidation of SN-38) + biliary excretion"
+  protein_binding_pct: 65
+  metabolism: "carboxylesterase, CYP3A4, UGT1A1 (SN-38 glucuronidation)"
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. UGT1A1 testing strongly recommended for
-  FOLFIRINOX (intensive dose). Loperamide 4 mg at first loose stool then
-  2 mg q2h until 12h diarrhea-free; consider octreotide for refractory.
+  UGT1A1 testing strongly recommended for FOLFIRINOX (intensive dose).
+  Loperamide schedule: 4 mg at first loose stool then 2 mg q2h (q4h
+  overnight) until 12 h diarrhea-free; consider octreotide (100-150 mcg
+  SC TID, escalate to 500 mcg) for refractory diarrhea. Hospitalize for
+  Grade 3-4 diarrhea + IV fluids + broad-spectrum antibiotics if febrile.
+  Atropine 0.25-1 mg SC/IV for acute cholinergic syndrome (premedicate
+  in patients with prior episodes).

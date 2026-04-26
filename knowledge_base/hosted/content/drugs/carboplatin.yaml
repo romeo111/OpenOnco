@@ -8,43 +8,114 @@ atc_code: L01XA02
 rxnorm_id: "40048"
 drug_class: "Platinum alkylating agent (second-generation)"
 mechanism: >
-  DNA cross-linker forming intra- and inter-strand platinum-DNA adducts,
-  preferentially at N7 of guanine. Less nephrotoxic and less neurotoxic
-  than cisplatin; myelosuppression (especially thrombocytopenia) is the
-  dose-limiting toxicity.
+  Cisplatin analog with a cyclobutane-dicarboxylate leaving group that
+  hydrolyzes more slowly than cisplatin's chloride ligands → slower
+  formation of activated aquated species, lower reactivity with plasma
+  proteins, and lower nephrotoxicity / ototoxicity / neurotoxicity.
+  The same DNA platinum-adduct biology drives cytotoxicity. Dose
+  individualized by Calvert formula because clearance is dominated by
+  glomerular filtration. Myelosuppression — particularly thrombocytopenia
+  — is the dose-limiting toxicity.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1989
+    indications_brief:
+      - "Ovarian carcinoma (1L + recurrent)"
+      - "Off-label / NCCN-listed: NSCLC, SCLC, head and neck SCC, esophageal (CROSS), endometrial, breast (TNBC), bladder, lymphoma (ICE, GDP)"
+  ema:
+    approved: true
+    year_first_approval: 1986
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
-    last_verified: "2026-04-25"
+    reimbursement_indications:
+      - "Рак яєчників"
+      - "Недрібноклітинний рак легень"
+      - "Дрібноклітинний рак легень"
+      - "Стравохід (CROSS)"
+      - "Лімфоми (ICE, GDP — другий рядок)"
+      - "Голова і шия"
+    last_verified: "2026-04-26"
 
 typical_dosing: >
-  Calvert formula AUC dose: dose (mg) = AUC × (GFR + 25). Typical lymphoma
-  AUC = 5 (ICE regimen, day 2). Round GFR cap at 125 mL/min for safety.
-formulations: ["IV concentrate 10 mg/mL"]
+  Calvert formula: dose (mg) = AUC × (GFR + 25). GFR cap at 125 mL/min
+  recommended (FDA 2010) when measured by Cockcroft-Gault to avoid
+  overdose in patients with overestimated GFR.
+  Ovarian 1L (carbo/paclitaxel): AUC 5-6 IV q21d × 6 cycles.
+  NSCLC (carbo/paclitaxel): AUC 6 IV q21d × 4-6 cycles.
+  CROSS (esophageal CRT): AUC 2 IV weekly × 5 with paclitaxel 50 mg/m².
+  ICE (lymphoma salvage): AUC 5 (max 800 mg) IV day 2.
+  GDP, gem-carbo: AUC 4-5 IV q21d.
+  TNBC neoadjuvant (added to AC-T or KEYNOTE-522): AUC 1.5 weekly or
+  AUC 5 q21d with paclitaxel.
+  Lower AUC (3-4) for elderly / frail / heavily pre-treated.
+formulations:
+  - "IV solution 10 mg/mL (50 mg, 150 mg, 450 mg, 600 mg vials)"
+  - "IV powder for reconstitution 50 mg, 150 mg, 450 mg"
 
 absolute_contraindications:
-  - "Severe hypersensitivity to platinum compounds"
-  - "Severe pre-existing myelosuppression"
+  - "Severe hypersensitivity to platinum compounds (anaphylaxis on prior platinum exposure)"
+  - "Severe pre-existing myelosuppression (ANC <1.5, platelets <100)"
+  - "Severe renal dysfunction (CrCl <20-30 mL/min — relative)"
+  - "Severe bleeding"
+  - "Pregnancy"
+
+black_box_warnings:
+  - "Bone marrow suppression — severe thrombocytopenia and neutropenia, dose-limiting"
+  - "Anaphylactic / anaphylactoid reactions (risk increases ≥cycle 6 with re-exposure; epinephrine on hand)"
 
 common_adverse_events:
-  - "Myelosuppression (thrombocytopenia is dose-limiting)"
-  - "Nausea/vomiting (moderately emetogenic)"
-  - "Fatigue"
-  - "Hypersensitivity (delayed, ≥cycle 6 risk)"
+  - "Thrombocytopenia (~60%, dose-limiting; nadir day 14-21)"
+  - "Neutropenia (~70%, less severe than cisplatin)"
+  - "Anemia (~70%)"
+  - "Nausea / vomiting (moderately emetogenic — MEC tier)"
+  - "Fatigue (~70%)"
+  - "Peripheral neuropathy (mild; less than cisplatin / oxaliplatin)"
+  - "Hypersensitivity reactions (delayed; cycle ≥6 risk)"
+  - "Alopecia (mild)"
+  - "Mucositis (mild)"
+  - "Transient transaminitis"
 
 serious_adverse_events:
-  - "Severe thrombocytopenia"
-  - "Peripheral neuropathy (less than cisplatin)"
-  - "Tumor lysis syndrome in bulky disease"
+  - "Severe thrombocytopenia with bleeding"
+  - "Febrile neutropenia"
+  - "Anaphylactoid hypersensitivity (can be severe)"
+  - "Hemolytic-uremic syndrome (rare)"
+  - "Posterior reversible encephalopathy syndrome (PRES; rare)"
+  - "Tumor lysis syndrome (bulky disease)"
+  - "Secondary leukemia (long-term)"
+  - "Hepatic veno-occlusive disease (rare)"
+
+major_interactions:
+  - "Nephrotoxic agents (aminoglycosides, IV contrast, NSAIDs) — additive renal toxicity (less than cisplatin but still relevant)"
+  - "Other myelosuppressive chemotherapy — additive cytopenias"
+  - "Phenytoin — decreased phenytoin levels"
+  - "Warfarin — INR fluctuation; monitor"
+  - "Live vaccines — avoid"
+  - "Aminoglycosides — additive ototoxicity (less than cisplatin)"
+
+pharmacology:
+  half_life_hours: 3
+  half_life_notes: "Free platinum t½ alpha ~1.5 h, beta ~3 h; protein-bound platinum cleared more slowly. Linear pharmacokinetics over therapeutic AUC range."
+  clearance: "renal (~70% as unchanged drug within 24 h; clearance correlates linearly with GFR)"
+  protein_binding_pct: 24
+  metabolism: "non-CYP; non-enzymatic aquation (slower than cisplatin)"
 
 sources:
   - SRC-NCCN-BCELL-2025
-last_reviewed: "2026-04-25"
+  - SRC-NCCN-ESOPHAGEAL-2025
+
+last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase 9. Used in ICE salvage regimen + GDP, GemOx variants.
-  Dose calculation requires GFR (Cockcroft-Gault or measured); engine
-  uses creatinine_clearance_ml_min finding for AUC computation downstream.
+  Calvert AUC dose calculation requires GFR (Cockcroft-Gault, CKD-EPI,
+  or measured); engine uses creatinine_clearance_ml_min finding for
+  AUC computation. CAP at 125 mL/min per FDA 2010 to prevent overdose.
+  Hypersensitivity prevention: gradual desensitization protocols
+  available for re-exposure beyond cycle 6. Less hydration required
+  than cisplatin (no mandatory pre/post hydration regimen). Platelet
+  nadir day 14-21 — schedule q21d to allow recovery. Monitor CBC
+  weekly for first 4 cycles.

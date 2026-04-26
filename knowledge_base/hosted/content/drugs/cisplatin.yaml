@@ -3,40 +3,132 @@ names:
   preferred: "Cisplatin"
   ukrainian: "Цисплатин"
   english: "Cisplatin"
-  brand_names: ["Platinol"]
+  synonyms: ["cis-DDP", "CDDP"]
+  brand_names: ["Platinol", "Platinol-AQ"]
 atc_code: L01XA01
 rxnorm_id: "2555"
 drug_class: "Platinum alkylating agent (first-generation)"
 mechanism: >
-  DNA cross-linker forming Pt-DNA adducts. Backbone for esophageal CRT,
-  HCC (legacy), gastric (legacy). More nephrotoxic and emetogenic than
-  carboplatin/oxaliplatin; ototoxic and neurotoxic at cumulative doses.
+  Square-planar platinum(II) coordination complex. After cellular uptake
+  and aquation (Cl displaced by water in low-chloride intracellular
+  environment), the activated species forms intra- and inter-strand
+  DNA cross-links, predominantly 1,2-d(GpG) and 1,2-d(ApG) adducts.
+  These adducts distort the DNA helix, blocking replication and
+  transcription, and trigger apoptosis when not repaired. Resistance
+  mechanisms include enhanced nucleotide excision repair, glutathione
+  detoxification, and reduced cellular uptake (CTR1 transporter).
+  Backbone for esophageal CRT, head-and-neck CRT, NSCLC, gastric
+  (legacy), cervical, ovarian, testicular germ-cell, and bladder.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
-  ukraine_registration: {registered: true, reimbursed_nszu: true, last_verified: "2026-04-26"}
+  fda:
+    approved: true
+    year_first_approval: 1978
+    indications_brief:
+      - "Testicular cancer (BEP, EP)"
+      - "Ovarian cancer"
+      - "Bladder cancer"
+      - "Off-label / NCCN-listed: NSCLC, head and neck SCC, esophageal, gastric, cervical, endometrial"
+  ema:
+    approved: true
+    year_first_approval: 1979
+  ukraine_registration:
+    registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
+    reimbursed_nszu: true
+    reimbursement_indications:
+      - "Рак яєчка"
+      - "Рак яєчників"
+      - "Сечовий міхур"
+      - "Голова і шия"
+      - "Стравохід (CRT)"
+      - "Шийка матки (CRT)"
+      - "Недрібноклітинний рак легень"
+    last_verified: "2026-04-26"
 
 typical_dosing: >
-  CROSS regimen: paclitaxel 50 + carboplatin AUC 2 weekly (CARBO preferred over cis in modern protocols).
-  Esophageal definitive CRT: cisplatin 75 mg/m² IV days 1, 29 + 5-FU CIV 1000 mg/m²/d days 1-4, 29-32.
-  Gastric: cisplatin 80 mg/m² IV q21d (legacy ECF/EOX schedules; FLOT preferred now).
-formulations: ["IV solution 1 mg/mL"]
+  Esophageal definitive CRT (cisplatin/5-FU): cisplatin 75 mg/m² IV
+  days 1, 29 + 5-FU 1000 mg/m²/d CIV days 1-4 and 29-32.
+  Head-and-neck CRT: 100 mg/m² IV q21d × 3 cycles (high-dose) or
+  40 mg/m² weekly with RT.
+  NSCLC (cisplatin/etoposide CRT): 50 mg/m² IV days 1, 8, 29, 36.
+  NSCLC adjuvant (cisplatin/vinorelbine): 80 mg/m² IV day 1 q21d × 4.
+  Testicular BEP: 20 mg/m² IV days 1-5 every 21 d × 3-4 cycles.
+  Cervical CRT: 40 mg/m² IV weekly with RT (typically 5-6 cycles).
+  Gastric (legacy ECF/EOX): 60-80 mg/m² IV q21d (FLOT preferred now).
+  Mandatory hydration: ≥1-2 L NS pre-dose + 1-2 L post; mannitol
+  diuresis or furosemide for high-dose schedules; Mg + K replacement.
+formulations:
+  - "IV solution 1 mg/mL (50 mg, 100 mg, 200 mg vials)"
+  - "IV powder for reconstitution 10 mg, 50 mg"
+
 absolute_contraindications:
-  - "Severe pre-existing renal dysfunction (CrCl <60 mL/min)"
-  - "Severe hearing loss"
-  - "Severe peripheral neuropathy"
-  - "Pregnancy"
+  - "Severe pre-existing renal dysfunction (CrCl <60 mL/min — relative; <40 absolute)"
+  - "Severe pre-existing hearing loss"
+  - "Severe pre-existing peripheral neuropathy"
+  - "Pregnancy (Category D)"
+  - "Hypersensitivity to platinum compounds"
+  - "Severe myelosuppression"
+
 black_box_warnings:
-  - "Cumulative renal toxicity (mandatory hydration + Mg/K replacement)"
-  - "Severe nausea/vomiting"
-  - "Ototoxicity (irreversible; baseline audiogram)"
-common_adverse_events: ["Nausea/vomiting (highly emetogenic)", "Renal tubular dysfunction", "Peripheral neuropathy", "Hypomagnesemia"]
-serious_adverse_events: ["Acute kidney injury", "Ototoxicity (high-frequency loss)", "Severe peripheral neuropathy"]
-sources: [SRC-NCCN-ESOPHAGEAL-2025, SRC-ESMO-ESOPHAGEAL-2024]
+  - "Cumulative renal toxicity — mandatory hydration + electrolyte replacement"
+  - "Severe nausea / vomiting (highly emetogenic — HEC tier)"
+  - "Ototoxicity (irreversible high-frequency hearing loss; baseline + serial audiometry)"
+  - "Anaphylactic-like reactions (epinephrine, antihistamines, corticosteroids on hand)"
+  - "Myelosuppression (with high-dose schedules)"
+
+common_adverse_events:
+  - "Nausea / vomiting (highly emetogenic — >90% without prophylaxis)"
+  - "Acute kidney injury / renal tubular dysfunction (~30% without aggressive hydration)"
+  - "Peripheral sensory neuropathy (cumulative; ~40% at >300 mg/m² total)"
+  - "Hypomagnesemia (~75%) — pre-emptive supplementation required"
+  - "Hypokalemia, hypocalcemia"
+  - "Ototoxicity (~30% with high-frequency loss; tinnitus)"
+  - "Myelosuppression (anemia common, neutropenia / thrombocytopenia dose-dependent)"
+  - "Fatigue"
+  - "Alopecia (mild)"
+  - "Hyperuricemia"
+
+serious_adverse_events:
+  - "Acute kidney injury (can require renal replacement therapy)"
+  - "Permanent ototoxicity (high-frequency sensorineural hearing loss)"
+  - "Severe peripheral neuropathy (Lhermitte sign, sensory ataxia)"
+  - "Severe febrile neutropenia"
+  - "Anaphylactoid hypersensitivity reactions"
+  - "Posterior reversible encephalopathy syndrome (PRES; rare)"
+  - "Tumor lysis syndrome (high tumor burden)"
+  - "Cardiac toxicity (rare; arrhythmias, MI)"
+  - "Secondary leukemia (long-term)"
+
+major_interactions:
+  - "Aminoglycosides (gentamicin, tobramycin, amikacin) — additive nephrotoxicity + ototoxicity (avoid; monitor renal function and audiometry)"
+  - "Loop diuretics (furosemide) — additive ototoxicity + nephrotoxicity"
+  - "NSAIDs — additive nephrotoxicity"
+  - "Vancomycin, amphotericin B — additive nephrotoxicity"
+  - "IV contrast — schedule ≥48-72 h apart"
+  - "Phenytoin — decreased phenytoin levels; monitor"
+  - "Warfarin — INR fluctuations; monitor"
+  - "Live vaccines — avoid"
+  - "Bumetanide — additive ototoxicity"
+
+pharmacology:
+  half_life_hours: 100
+  half_life_notes: "Initial t½ ~20-30 min for free drug; terminal t½ ~24-100 h for protein-bound platinum (binds irreversibly to plasma proteins; total platinum detectable for months)."
+  clearance: "renal (~90% excreted in urine over 24-48 h)"
+  protein_binding_pct: 90
+  metabolism: "non-CYP; non-enzymatic aquation in low-chloride intracellular environment"
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. Mandatory hydration ≥3 L pre-dose + 24h post; Mg/K
-  pre-emptive supplementation. Consider carboplatin substitution for
-  CrCl 50-60 or hearing loss. Ondansetron + dex + NK1-RA + olanzapine
-  premedication required for emetogenic prophylaxis.
+  Mandatory hydration ≥3 L pre-dose + 24 h post; Mg / K pre-emptive
+  supplementation. Consider carboplatin substitution for CrCl 50-60 or
+  pre-existing hearing loss. Highly-emetogenic chemotherapy (HEC):
+  ondansetron + dexamethasone + NK1-RA (aprepitant or fosaprepitant) +
+  olanzapine premedication required (NCCN antiemesis v1.2025). Baseline
+  + serial audiometry (esp. pediatric / younger adult patients).
+  Uridine triacetate is NOT an antidote (FU only).

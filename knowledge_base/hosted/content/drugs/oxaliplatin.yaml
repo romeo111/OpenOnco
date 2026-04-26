@@ -8,50 +8,102 @@ atc_code: L01XA03
 rxnorm_id: "32592"
 drug_class: "Platinum alkylating agent (third-generation; DACH-platinum)"
 mechanism: >
-  Forms platinum-DNA adducts (intra- and inter-strand cross-links).
-  Cumulative dose-dependent peripheral sensory neuropathy is the
+  Diaminocyclohexane (DACH) platinum compound. Forms intra- and inter-
+  strand platinum-DNA adducts (preferentially N7 of guanine), bulkier
+  than cisplatin/carboplatin adducts and recognized differently by the
+  mismatch-repair machinery — explains partial activity in MMR-deficient
+  tumors. Cumulative dose-dependent peripheral sensory neuropathy is the
   signature toxicity (acute cold-induced + chronic stocking-glove).
   Backbone of FOLFOX, CAPOX, FOLFIRINOX, FLOT.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2002
+    indications_brief:
+      - "Stage III colon cancer (adjuvant, in combination with 5-FU/LV)"
+      - "Metastatic colorectal cancer (in combination)"
+      - "Off-label / NCCN-listed: gastric/GEJ, pancreatic (FOLFIRINOX), HCC"
+  ema:
+    approved: true
+    year_first_approval: 1999
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
+    reimbursement_indications:
+      - "Колоректальний рак (ад'ювантна, метастатична)"
+      - "Рак шлунка / стравохідно-шлункового з'єднання"
+      - "Підшлункова залоза (FOLFIRINOX, у складі схеми)"
     last_verified: "2026-04-26"
 
 typical_dosing: >
-  FOLFOX: 85 mg/m² IV over 2h day 1 every 14d.
-  CAPOX: 130 mg/m² IV day 1 every 21d.
-  FOLFIRINOX: 85 mg/m² IV day 1 every 14d.
-formulations: ["IV powder for reconstitution 50 mg, 100 mg"]
+  FOLFOX (mFOLFOX6): 85 mg/m² IV over 2 h day 1 every 14 d.
+  CAPOX (XELOX): 130 mg/m² IV over 2 h day 1 every 21 d.
+  FOLFIRINOX: 85 mg/m² IV day 1 every 14 d.
+  FLOT (gastric): 85 mg/m² IV day 1 every 14 d.
+  Adjuvant colon (IDEA-supported): 3 months CAPOX or 6 months FOLFOX
+  per stage and risk; cumulative dose target ≤780 mg/m² to limit
+  chronic neuropathy.
+formulations:
+  - "IV powder for reconstitution 50 mg, 100 mg, 200 mg vials"
+  - "IV solution 5 mg/mL"
 
 absolute_contraindications:
   - "Hypersensitivity to platinum compounds"
-  - "Severe pre-existing peripheral neuropathy (≥ Grade 2)"
+  - "Severe pre-existing peripheral neuropathy (≥ Grade 2 with functional impairment)"
+  - "Severe baseline myelosuppression (ANC <1.5, platelets <100)"
+  - "Pregnancy"
+  - "Severe renal impairment (CrCl <30 mL/min — relative)"
+
+black_box_warnings:
+  - "Anaphylactic / anaphylactoid reactions (epinephrine, corticosteroids, antihistamines for management; risk increases ≥cycle 6)"
 
 common_adverse_events:
-  - "Acute cold-induced peripheral neuropathy (resolves over days)"
-  - "Chronic cumulative sensory neuropathy (dose-limiting, partial recovery)"
-  - "Nausea/vomiting (highly emetogenic)"
-  - "Fatigue"
-  - "Thrombocytopenia"
+  - "Acute cold-induced peripheral neuropathy (~85-95%; resolves over days)"
+  - "Chronic cumulative sensory neuropathy (dose-limiting; ~50% at 12 cycles, partial recovery)"
+  - "Nausea / vomiting (moderately-to-highly emetogenic)"
+  - "Fatigue (~60%)"
+  - "Thrombocytopenia (~30%)"
+  - "Neutropenia (~40%)"
+  - "Diarrhea (~45%, more with FOLFOX/FOLFIRINOX combinations)"
+  - "Mucositis"
+  - "Hepatotoxicity — sinusoidal obstruction syndrome (long-term)"
+  - "Laryngopharyngeal dysesthesia (cold-triggered, transient)"
 
 serious_adverse_events:
-  - "Persistent disabling peripheral neuropathy"
-  - "Hypersensitivity reactions (cycle ≥6 risk)"
-  - "Pulmonary fibrosis (rare)"
-  - "Veno-occlusive liver disease (long-term)"
+  - "Persistent disabling peripheral neuropathy (Grade 3-4)"
+  - "Hypersensitivity reactions (cycle ≥6 risk; can be severe / anaphylactic)"
+  - "Pulmonary fibrosis / interstitial lung disease (rare)"
+  - "Sinusoidal obstruction syndrome / non-cirrhotic portal hypertension (long-term)"
+  - "Posterior reversible encephalopathy syndrome (PRES; rare)"
+  - "Rhabdomyolysis (rare)"
+
+major_interactions:
+  - "Nephrotoxic agents (aminoglycosides, IV contrast) — additive renal toxicity; sequence carefully"
+  - "5-FU / capecitabine — pharmacodynamic synergy (intentional in FOLFOX/CAPOX)"
+  - "Live vaccines — avoid during therapy"
+  - "Warfarin — INR fluctuations; monitor"
+  - "QT-prolonging agents — additive QT prolongation potential"
+
+pharmacology:
+  half_life_hours: 391
+  half_life_notes: "Plasma ultrafiltrate t½ alpha ~0.4 h, beta ~16 h, gamma ~391 h (terminal; reflects platinum-protein binding)."
+  clearance: "renal (~50% of free platinum within 48 h); irreversible tissue binding for the rest"
+  protein_binding_pct: 90
+  metabolism: "non-CYP; non-enzymatic biotransformation (rapid hydrolysis to active hydrated species)"
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. Cumulative dose: stop at Grade 2 functional
-  neuropathy (impaired ADL) or after ~1000 mg/m² regardless. Avoid cold
-  exposure × 5 days post-dose. IDEA trial: 3 vs 6 months adjuvant in
-  stage III colon — for low-risk T1-3 N1, 3 months CAPOX non-inferior
-  with substantially less neuropathy.
+  Cumulative-dose neuropathy management: stop or de-escalate at Grade 2
+  functional neuropathy or after ~780-1000 mg/m² regardless. Cold
+  avoidance × 5 days post-dose (gloves, no cold drinks). IDEA trial:
+  3 vs 6 months adjuvant in stage III colon — for low-risk T1-3 N1, 3
+  months CAPOX is non-inferior with substantially less neuropathy.
+  Calcium / magnesium infusions for neuropathy prevention NOT supported
+  by N08CB trial — abandoned as standard.
