@@ -1,0 +1,107 @@
+id: IND-DLBCL-RENAL-FAILURE-MOD-RCHOP
+plan_track: standard
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 1
+  stage_requirements:
+  - "Newly-diagnosed DLBCL NOS in patient with severe renal impairment (CrCl <30 mL/min)"
+  - "Goal: maintain curative-intent R-CHOP backbone with renal-adjusted cyclophosphamide + doxorubicin"
+  - "Multidisciplinary management: hematology + nephrology"
+  biomarker_requirements_required:
+  - biomarker_id: BIO-CD20-IHC
+    required: true
+    value_constraint: "CD20 positive (CD20+)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+recommended_regimen: REG-R-CHOP
+concurrent_therapy: []
+followed_by: []
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~80% (extrapolated from R-CHOP non-CKD cohorts; Ostgard 2014 retrospective CKD subgroup)
+  complete_response: ~60%
+  progression_free_survival: Median PFS ~3-4 yr (lower than non-CKD due to dose reduction + competing CKD
+    mortality)
+  overall_survival_5y: 5-yr OS ~50% (modified regimen extrapolation; competing risks dominate)
+hard_contraindications:
+- CI-HBV-NO-PROPHYLAXIS
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative:
+- RF-DLBCL-HIGH-IPI
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-B2-MICROGLOBULIN
+- TEST-HBV-SEROLOGY
+- TEST-HCV-ANTIBODY
+- TEST-HIV-SEROLOGY
+- TEST-CD20-IHC
+- TEST-PET-CT
+- TEST-ECHO
+- TEST-LN-EXCISIONAL-BIOPSY
+- TEST-FLOW-CYTOMETRY
+- TEST-FISH-PANEL
+- TEST-PREGNANCY
+- TEST-BM-ASPIRATE
+- TEST-BM-TREPHINE
+desired_tests: []
+rationale: 'In DLBCL patients with severe renal impairment (CrCl <30 mL/min), R-CHOP modifications: (1) CYCLOPHOSPHAMIDE:
+  reduce dose by 25% for CrCl 10-30 mL/min; consider 50% reduction or omission for CrCl <10 / dialysis;
+  cyclophosphamide active metabolite (acrolein) accumulates with haemorrhagic cystitis risk — IV mesna
+  + aggressive hydration mandatory. (2) DOXORUBICIN: no formal renal adjustment but consider 25% reduction
+  for combined hepatic + renal dysfunction; cardiotoxicity risk amplified in fluid-overloaded CKD. (3)
+  VINCRISTINE: no renal adjustment needed; cap dose at 2 mg total (standard practice). (4) PREDNISONE:
+  no renal adjustment. (5) RITUXIMAB: no renal adjustment; HBV/HCV screen mandatory. CNS prophylaxis (HD-MTX
+  intercalated) is challenging in CKD — methotrexate is renally cleared with risk of severe mucositis
+  + AKI; for high CNS-IPI in CKD, consider intrathecal prophylaxis (cytarabine + methotrexate via Ommaya)
+  rather than HD-MTX. Tumor lysis prophylaxis: rasburicase preferred over allopurinol for high-burden disease
+  in CKD (avoid uric acid load). Multidisciplinary nephrology consultation mandatory; dialysis preparation
+  if CrCl deteriorates. R-mini-CHOP (Peyrade 2011 Lancet Oncol) is alternative for very-frail elderly
+  + CKD with similar dose-reduction concept.'
+sources:
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+  relevant_quote_paraphrase: For DLBCL with severe renal impairment, dose-reduced R-CHOP (cyclophosphamide
+    -25-50%; doxorubicin -25%) with mesna + hydration is preferred; HD-MTX CNS prophylaxis contraindicated
+    for CrCl <30
+- source_id: SRC-ESMO-DLBCL-2024
+  position: supports
+  relevant_quote_paraphrase: CKD in DLBCL requires individualized R-CHOP modification; cyclophosphamide reduction
+    + mesna + hydration; cardio-renal monitoring throughout
+known_controversies:
+- topic: Dose-reduced R-CHOP vs R-mini-CHOP vs alternative regimens for DLBCL + severe CKD
+  positions:
+  - position: Dose-reduced R-CHOP — preserves curative intent
+    sources:
+    - SRC-NCCN-BCELL-2025
+  - position: R-mini-CHOP (Peyrade) — better tolerated in elderly + CKD; lower curative rate
+    sources:
+    - SRC-ESMO-DLBCL-2024
+    evidence_note: "R-mini-CHOP in ≥80 yo: 2-yr OS 59% vs ~30% historical R-CHOP in same cohort"
+  our_default: Dose-reduced R-CHOP for fit-CKD (ECOG 0-1, age <80); R-mini-CHOP for very-frail or age ≥80
+    + CKD
+  rationale: Curative intent preserved with appropriate dose modification; very frail benefit more from
+    tolerability
+do_not_do:
+- НЕ використовувати full-dose cyclophosphamide при CrCl <30 — haemorrhagic cystitis + bone marrow toxicity
+  непомірні.
+- НЕ забути mesna + IV hydration з cyclophosphamide — обов'язкові для CKD.
+- НЕ використовувати HD-MTX для CNS prophylaxis при CrCl <30 — MTX accumulation + severe mucositis +
+  AKI; substitute з intrathecal prophylaxis.
+- НЕ забути baseline + serial ECHO — anthracycline cardiotoxicity ризик amplified в CKD; cardio-renal monitoring.
+- НЕ використовувати allopurinol як TLS prophylaxis при високому tumor burden CKD — uric acid не еліминуватиме
+  адекватно; rasburicase preferred.
+- НЕ ігнорувати electrolyte dysregulation — CKD + chemo + tumor lysis = K+, PO4, Mg disturbance.
+- НЕ продовжувати при rapid CrCl deterioration — dialysis discussion + chemo hold.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Special-population indication for DLBCL + severe CKD.
+  Reference REG-R-CHOP used as proxy with dose modifications described in rationale. Multidisciplinary
+  management essential.'
