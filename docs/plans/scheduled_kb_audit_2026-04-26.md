@@ -1,4 +1,4 @@
-# Scheduled KB audit — weekly biomarker + integrity check
+# Scheduled KB audit — monthly biomarker + integrity check
 
 **Дата:** 2026-04-26.
 **Статус:** product + engineering plan, draft.
@@ -14,6 +14,16 @@ BIOMARKER_CATALOG.md` (output of audit).
 > Scheduled-агент дивиться на KB регулярно, **не змінює клінічний
 > контент автоматично**, і повідомляє людину коли щось ламається або
 > деградує. Він — sentinel, не decision-maker.
+
+**Marketing/transparency angle (formalized 2026-04-26).** Окрім
+internal-quality use, audit log + catalog працюють як публічний доказ
+що OpenOnco KB підтримується ригорозно. `docs/BIOMARKER_CATALOG.md`
++ `docs/audit_log/*.md` + `.metrics.csv` — це public-facing evidence
+trail. Лікарі та клінічні reviewer-и бачать: 1) що ми знаємо про
+кожен біомаркер у системі, 2) як він consumed, 3) що metric trends
+(LOINC coverage, freshness breaches) рухаються у бажану сторону.
+Cadence: **monthly** (не weekly) — по-перше signal-to-noise краще;
+по-друге, public marketing artifact не потребує high-frequency churn.
 
 Three architectural invariants:
 
@@ -67,12 +77,12 @@ Three architectural invariants:
 
 ```
 ┌──────────────────────────────────────────────────┐
-│ CronCreate(schedule="0 9 * * MON",               │
+│ CronCreate(schedule="0 9 1 * *",                 │
 │            agent_type="kb-audit-sentinel",       │
 │            permissions=AUDIT_PERMS)              │
 └──────────────────────────────────────────────────┘
                         │
-                        ▼ Mon 09:00
+                        ▼ 1st of month, 09:00 UTC
 ┌──────────────────────────────────────────────────┐
 │ scripts/run_scheduled_audit.py                    │
 │                                                   │
@@ -100,13 +110,13 @@ Pure Python; all decisions deterministic; no LLM calls. Emits one of:
 ```jsonc
 // action_plan.json
 {
-  "run_id": "audit-2026-04-26-weekly",
+  "run_id": "audit-2026-04-26-monthly",
   "started_at": "2026-04-26T09:00:00Z",
   "actions": [
     {
       "type": "commit_catalog_refresh",
       "files": ["docs/BIOMARKER_CATALOG.md", "docs/audit_log/2026-04-26.md"],
-      "message": "chore(catalog): weekly KB audit — refs +1, dormant -1"
+      "message": "chore(catalog): monthly KB audit — refs +1, dormant -1"
     },
     {
       "type": "open_issue",
@@ -155,10 +165,10 @@ companions:
 Each run writes `docs/audit_log/<YYYY-MM-DD>.md`:
 
 ```markdown
-# KB audit — 2026-04-26 (weekly)
+# KB audit — 2026-04-26 (monthly)
 
-**Run id:** audit-2026-04-26-weekly
-**Triggered by:** cron `0 9 * * MON`
+**Run id:** audit-2026-04-26-monthly
+**Triggered by:** cron `0 9 1 * *`
 **Duration:** 12.4s
 **Outcome:** 1 commit, 1 issue opened, 0 PRs
 
@@ -423,7 +433,7 @@ in master, skip the commit (no empty commits).
 - Multiple cron runs in close succession (admin manually triggered).
 - Filename collisions: `2026-04-26.md` exists.
 - Runner appends a sequence: `2026-04-26.md`, `2026-04-26-2.md`, etc.
-- Or: scheduled runs use weekly file `2026-W17.md`; manual runs use
+- Or: scheduled runs use monthly file `2026-04.md`; manual runs use
   date+suffix.
 
 ### 6.6. KB renamed / restructured
@@ -451,8 +461,8 @@ Append a single CSV row per run to `docs/audit_log/.metrics.csv`:
 
 ```csv
 date,run_type,duration_s,defined,referenced,dormant,missing,schema_err,ref_err,loinc_missing,freshness_breaches
-2026-04-26,weekly,12.4,62,62,0,0,0,0,57,14
-2026-05-03,weekly,11.8,63,63,0,0,0,0,56,15
+2026-04-01,monthly,12.4,62,62,0,0,0,0,57,14
+2026-05-01,monthly,11.8,63,63,0,0,0,0,56,15
 ```
 
 Future: `scripts/audit_trends.py` plots these → catches slow drift
@@ -599,9 +609,11 @@ if >10 pending — outage of >10 weeks means bigger problems).
 
 ## 11. Open questions (для co-leads)
 
-1. **Schedule timing.** Mon 09:00 UTC = 11:00 Kyiv. Reasonable for
-   Ukrainian clinical co-leads to see issues at start-of-week. Or
-   prefer Friday EOD so they review on Monday morning?
+1. **Schedule timing.** 1st of month, 09:00 UTC = 11:00 Kyiv. Public
+   monthly cadence means clinical reviewers see deltas at start of
+   each month — alignment with monthly NCCN guideline updates is a
+   secondary win. Alternative: 15th of month if first-of-month
+   conflicts with end-of-month admin work?
 2. **Issue assignee.** Auto-assign to a clinical-review pool? Or
    leave unassigned and triage manually?
 3. **Notification channel.** GitHub issues only, or also a webhook
@@ -637,7 +649,7 @@ of the SLA values + permission whitelist.
 
 **Critical-path question** to pin down before writing any code:
 **confirmation from clinical co-leads** that they'd actually triage
-weekly issues from this thing. Without that signoff, the cron's
+monthly issues from this thing. Without that signoff, the cron's
 output goes nowhere — better to skip the build than to ship a noise
 generator. Plan §11 question 1-3 captures this gate.
 

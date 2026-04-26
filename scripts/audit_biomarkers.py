@@ -76,10 +76,10 @@ def _disease_name_index() -> dict[str, str]:
     return out
 
 
-def _collect_biomarker_entities() -> dict[str, dict]:
+def _collect_biomarker_entities(bio_dir: Path = BIO_DIR) -> dict[str, dict]:
     """`BIO-X` → entity dict. Key is the actual `id` field, not filename."""
     out: dict[str, dict] = {}
-    for path in _walk_yaml(BIO_DIR):
+    for path in _walk_yaml(bio_dir):
         data = _load_yaml(path)
         if not isinstance(data, dict):
             continue
@@ -91,11 +91,12 @@ def _collect_biomarker_entities() -> dict[str, dict]:
     return out
 
 
-def _collect_rule_references() -> tuple[Counter, dict[str, set[str]]]:
+def _collect_rule_references(rule_dirs: list[Path] = None) -> tuple[Counter, dict[str, set[str]]]:
     """Walk rule entities; return (BIO-X → ref count, BIO-X → set(disease_ids))."""
     refs: Counter = Counter()
     bio_to_diseases: dict[str, set[str]] = defaultdict(set)
-    for d in RULE_DIRS:
+    dirs = rule_dirs if rule_dirs is not None else RULE_DIRS
+    for d in dirs:
         for path in _walk_yaml(d):
             text = path.read_text(encoding="utf-8")
             data = _load_yaml(path)
@@ -459,6 +460,61 @@ def _render_markdown(
     lines.append("")
 
     return "\n".join(lines) + "\n"
+
+
+def collect_biomarker_state(kb_root: Path = None) -> dict:
+    """Public entry point for the scheduled-audit orchestrator.
+
+    Returns a JSON-friendly summary of the biomarker catalog state.
+    Does NOT regenerate the markdown — call `main()` for that. The
+    schema is stable so the orchestrator can diff month-over-month.
+
+    `kb_root`: when provided, scopes the audit to that root (used by
+    fixture-driven tests). Defaults to the repo's hosted/content/.
+    """
+
+    if kb_root is not None:
+        bio_dir = kb_root / "biomarkers"
+        rule_dirs = [
+            kb_root / "indications",
+            kb_root / "algorithms",
+            kb_root / "redflags",
+        ]
+    else:
+        bio_dir = BIO_DIR
+        rule_dirs = RULE_DIRS
+
+    defined = _collect_biomarker_entities(bio_dir)
+    refs, bio_to_diseases = _collect_rule_references(rule_dirs)
+    naming_pairs = _detect_naming_mismatches(defined, refs)
+    fixture_coverage = _collect_fixture_coverage()
+
+    n_defined = len(defined)
+    n_referenced = len(refs)
+    missing_ids = sorted(b for b in refs if b not in defined)
+    unused_ids = sorted(b for b in defined if b not in refs)
+
+    no_loinc_ids = sorted(b for b in defined if not _loinc_code(defined[b]))
+    no_fixture_ids = sorted(
+        b for b in defined
+        if b in refs and b not in fixture_coverage
+    )
+
+    return {
+        "defined": n_defined,
+        "referenced": n_referenced,
+        "total_citations": sum(refs.values()),
+        "dormant_count": len(unused_ids),
+        "missing_count": len(missing_ids),
+        "naming_mismatch_count": len(naming_pairs),
+        "loinc_missing_count": len(no_loinc_ids),
+        "fixture_missing_count": len(no_fixture_ids),
+        "missing_ids": missing_ids,
+        "dormant_ids": unused_ids,
+        "naming_pairs": [list(p) for p in naming_pairs],
+        "loinc_missing_ids": no_loinc_ids,
+        "fixture_missing_ids": no_fixture_ids,
+    }
 
 
 def main() -> int:

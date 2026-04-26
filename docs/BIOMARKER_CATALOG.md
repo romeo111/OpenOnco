@@ -7,10 +7,20 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 ## Summary
 
 - **Defined entities:** 62
-- **Referenced by rules:** 62 unique IDs, 181 total citations
+- **Referenced by rules:** 67 unique IDs, 205 total citations
 - **Defined + used (✓):** 62
 - **Defined + unused (⚠):** 0
-- **Referenced + missing (❌):** 0
+- **Referenced + missing (❌):** 5
+
+## Issues to resolve
+
+### ❌ Referenced but no entity file
+
+- `BIO-EBV-DNA` — cited 1× (Extranodal NK/T-Cell Lymphoma). Author the entity, or remove the citation.
+- `BIO-HBV-STATUS` — cited 4× (Burkitt Lymphoma, Classical Hodgkin Lymphoma, Multiple Myeloma, Splenic Marginal Zone Lymphoma). Author the entity, or remove the citation.
+- `BIO-HCV-STATUS` — cited 1× (Multiple Myeloma). Author the entity, or remove the citation.
+- `BIO-HIV-STATUS` — cited 5× (Burkitt Lymphoma, Classical Hodgkin Lymphoma, Diffuse Large B-Cell Lymphoma, Multiple Myeloma, Splenic Marginal Zone Lymphoma). Author the entity, or remove the citation.
+- `BIO-HTLV-1` — cited 1× (Adult T-Cell Leukemia/Lymphoma). Author the entity, or remove the citation.
 
 ## Top-cited biomarkers (PDF-extraction priority)
 
@@ -18,26 +28,26 @@ Reference count below is a proxy for how often the engine reads the marker. High
 
 | Biomarker | Refs | Diseases |
 |---|---|---|
-| `BIO-CD20-IHC` | 30 | Burkitt Lymphoma, Diffuse Large B-Cell Lym, Follicular Lymphoma, High-Grade B-Cell Lympho, Mantle Cell Lymphoma, Nodal Marginal Zone Lymp, Nodular Lymphocyte-Predo, Post-Transplant Lymphopr, Primary Diffuse Large B-, Primary Mediastinal (Thy, Splenic Marginal Zone Ly |
+| `BIO-CD20-IHC` | 40 | Burkitt Lymphoma, Diffuse Large B-Cell Lym, Follicular Lymphoma, High-Grade B-Cell Lympho, Mantle Cell Lymphoma, Nodal Marginal Zone Lymp, Nodular Lymphocyte-Predo, Post-Transplant Lymphopr, Primary Diffuse Large B-, Primary Mediastinal (Thy, Splenic Marginal Zone Ly |
 | `BIO-HER2-SOLID` | 9 | Breast cancer (invasive), Gastric / GEJ adenocarci |
 | `BIO-MYC-REARRANGEMENT` | 7 | Burkitt Lymphoma, High-Grade B-Cell Lympho |
 | `BIO-MSI-STATUS` | 7 | Colorectal carcinoma (CR |
 | `BIO-BRAF-V600E` | 7 | Colorectal carcinoma (CR, Cutaneous melanoma |
 | `BIO-CD30-IHC` | 6 | Anaplastic Large Cell Ly, Angioimmunoblastic T-Cel, Mycosis Fungoides / Séza |
 | `BIO-CD5-IHC` | 6 | Chronic Lymphocytic Leuk, Mantle Cell Lymphoma |
+| `BIO-HCV-RNA` | 5 | HCV-associated Marginal , Nodal Marginal Zone Lymp, Splenic Marginal Zone Ly |
 | `BIO-ALK-FUSION` | 5 | Non-small cell lung canc |
 | `BIO-GLEASON-ISUP` | 5 | Prostate adenocarcinoma |
 | `BIO-PSA` | 5 | Prostate adenocarcinoma |
-| `BIO-HCV-RNA` | 4 | HCV-associated Marginal , Splenic Marginal Zone Ly |
+| `BIO-HIV-STATUS` | 5 | Burkitt Lymphoma, Classical Hodgkin Lympho, Diffuse Large B-Cell Lym, Multiple Myeloma, Splenic Marginal Zone Ly |
 | `BIO-EGFR-MUTATION` | 4 | Non-small cell lung canc |
+| `BIO-HBV-STATUS` | 4 | Burkitt Lymphoma, Classical Hodgkin Lympho, Multiple Myeloma, Splenic Marginal Zone Ly |
 | `BIO-BRCA-GERMLINE` | 3 | Breast cancer (invasive) |
 | `BIO-CD23-IHC` | 3 | Chronic Lymphocytic Leuk |
 | `BIO-NOTCH1-MUTATION` | 3 | Chronic Lymphocytic Leuk |
 | `BIO-FL-FLIPI` | 3 | Follicular Lymphoma |
 | `BIO-AFP` | 3 | Hepatocellular carcinoma |
 | `BIO-CCND1-IHC` | 3 | Mantle Cell Lymphoma |
-| `BIO-MCL-MIPI` | 3 | Mantle Cell Lymphoma |
-| `BIO-HRD-STATUS` | 3 | Ovarian carcinoma (high- |
 
 ## Distribution by measurement method
 
@@ -105,7 +115,7 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-DLBCL-COO-HANS` (2× refs)
 - `BIO-DLBCL-IPI` (2× refs)
 - `BIO-DMMR-IHC` (2× refs)
-- `BIO-EBV-STATUS` (1× refs)
+- `BIO-EBV-STATUS` (2× refs)
 - `BIO-EGFR-MUTATION` (4× refs)
 - `BIO-ESTROGEN-RECEPTOR` (2× refs)
 - `BIO-EZH2-Y641` (1× refs)
@@ -125,13 +135,13 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-BCL2-REARRANGEMENT` | ✓ | 2 | BCL2 rearrangement (t(14;18) IGH/BCL2 by FISH break-apart) | FISH | — | — | medium | High-Grade B-Cell Lymp |
 | `BIO-BCL6-REARRANGEMENT` | ✓ | 2 | BCL6 rearrangement (3q27) by FISH break-apart | FISH | — | — | medium | High-Grade B-Cell Lymp |
 | `BIO-BCR-ABL1` | ✓ | 1 | BCR::ABL1 fusion (Philadelphia chromosome) | FISH | 21239-1 | — | low | B-Lymphoblastic Leukem |
-| `BIO-BRAF-V600E` | ✓ | 7 | BRAF V600E mutation | NGS | — | 1× ✓ | **high** | Colorectal carcinoma (, Cutaneous melanoma |
+| `BIO-BRAF-V600E` | ✓ | 7 | BRAF V600E mutation | NGS | — | 2× ✓ | **high** | Colorectal carcinoma (, Cutaneous melanoma |
 | `BIO-BRCA-GERMLINE` | ✓ | 3 | Germline BRCA1/2 mutation status | NGS | 94075-3 | — | medium | Breast cancer (invasiv |
 | `BIO-BRCA1-BRCA2-GERMLINE` | ✓ | 1 | BRCA1/BRCA2 germline pathogenic variant | NGS | — | 1× ✓ | low | Pancreatic ductal aden |
 | `BIO-CCND1-IHC` | ✓ | 3 | Cyclin D1 expression by IHC (encoded by CCND1) | IHC | — | — | medium | Mantle Cell Lymphoma |
-| `BIO-CD20-IHC` | ✓ | 30 | CD20 expression by immunohistochemistry | IHC | — | 17× ✓ | **high** | Burkitt Lymphoma, Diffuse Large B-Cell L, Follicular Lymphoma, High-Grade B-Cell Lymp, Mantle Cell Lymphoma, Nodal Marginal Zone Ly, Nodular Lymphocyte-Pre, Post-Transplant Lympho, Primary Diffuse Large , Primary Mediastinal (T, Splenic Marginal Zone  |
+| `BIO-CD20-IHC` | ✓ | 40 | CD20 expression by immunohistochemistry | IHC | — | 31× ✓ | **high** | Burkitt Lymphoma, Diffuse Large B-Cell L, Follicular Lymphoma, High-Grade B-Cell Lymp, Mantle Cell Lymphoma, Nodal Marginal Zone Ly, Nodular Lymphocyte-Pre, Post-Transplant Lympho, Primary Diffuse Large , Primary Mediastinal (T, Splenic Marginal Zone  |
 | `BIO-CD23-IHC` | ✓ | 3 | CD23 expression by IHC / flow cytometry | IHC | — | — | medium | Chronic Lymphocytic Le |
-| `BIO-CD30-IHC` | ✓ | 6 | CD30 expression by IHC | IHC | — | 9× ✓ | **high** | Anaplastic Large Cell , Angioimmunoblastic T-C, Mycosis Fungoides / Sé |
+| `BIO-CD30-IHC` | ✓ | 6 | CD30 expression by IHC | IHC | — | 11× ✓ | **high** | Anaplastic Large Cell , Angioimmunoblastic T-C, Mycosis Fungoides / Sé |
 | `BIO-CD5-IHC` | ✓ | 6 | CD5 expression by IHC / flow cytometry | IHC | — | — | **high** | Chronic Lymphocytic Le, Mantle Cell Lymphoma |
 | `BIO-CD52-IHC` | ✓ | 2 | CD52 expression by IHC / flow | IHC | — | 2× ✓ | medium | T-Cell Prolymphocytic  |
 | `BIO-CD79B-IHC` | ✓ | 2 | CD79b expression by IHC (target of polatuzumab vedotin) | IHC | — | — | medium | Diffuse Large B-Cell L |
@@ -141,18 +151,23 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-DLBCL-IPI` | ✓ | 2 | International Prognostic Index (IPI) for DLBCL | composite | — | — | medium | Diffuse Large B-Cell L |
 | `BIO-DMMR-IHC` | ✓ | 2 | Mismatch repair protein expression by IHC | IHC | — | — | medium | Endometrial carcinoma |
 | `BIO-DOUBLE-HIT` | ✓ | 1 | Double-hit (MYC + BCL2 and/or BCL6 rearrangements) | FISH | — | 1× ✓ | low | High-Grade B-Cell Lymp |
-| `BIO-EBV-STATUS` | ✓ | 1 | EBV status (EBER-ISH on tumor tissue) | viral | — | — | low | — |
+| `BIO-EBV-DNA` | ❌ MISSING | 1 | — | — | — | — | low | Extranodal NK/T-Cell L |
+| `BIO-EBV-STATUS` | ✓ | 2 | EBV status (EBER-ISH on tumor tissue) | viral | — | — | medium | Extranodal NK/T-Cell L |
 | `BIO-EGFR-MUTATION` | ✓ | 4 | EGFR mutation status (NSCLC actionable) | NGS | — | — | medium | Non-small cell lung ca |
 | `BIO-ESTROGEN-RECEPTOR` | ✓ | 2 | Estrogen receptor (ER) | IHC | 16112-5 | — | medium | Breast cancer (invasiv |
 | `BIO-EZH2-Y641` | ✓ | 1 | EZH2 Y641 mutation | NGS | — | — | low | Follicular Lymphoma |
 | `BIO-FGFR3-MUTATION` | ✓ | 1 | FGFR3 mutation/fusion | NGS | — | — | low | — |
 | `BIO-FL-FLIPI` | ✓ | 3 | Follicular Lymphoma International Prognostic Index (FLIPI) | composite | — | — | medium | Follicular Lymphoma |
 | `BIO-GLEASON-ISUP` | ✓ | 5 | Gleason score / ISUP grade group | histology | — | — | medium | Prostate adenocarcinom |
-| `BIO-HCV-RNA` | ✓ | 4 | HCV RNA (quantitative PCR) | viral | — | 6× ✓ | medium | HCV-associated Margina, Splenic Marginal Zone  |
+| `BIO-HBV-STATUS` | ❌ MISSING | 4 | — | — | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Multiple Myeloma, Splenic Marginal Zone  |
+| `BIO-HCV-RNA` | ✓ | 5 | HCV RNA (quantitative PCR) | viral | — | 9× ✓ | medium | HCV-associated Margina, Nodal Marginal Zone Ly, Splenic Marginal Zone  |
+| `BIO-HCV-STATUS` | ❌ MISSING | 1 | — | — | — | — | low | Multiple Myeloma |
 | `BIO-HER2-SOLID` | ✓ | 9 | HER2 status (solid tumors — gastric/GEJ/CRC scoring) | FISH | — | — | **high** | Breast cancer (invasiv, Gastric / GEJ adenocar |
+| `BIO-HIV-STATUS` | ❌ MISSING | 5 | — | — | — | — | medium | Burkitt Lymphoma, Classical Hodgkin Lymp, Diffuse Large B-Cell L, Multiple Myeloma, Splenic Marginal Zone  |
 | `BIO-HPV-STATUS` | ✓ | 1 | Human Papillomavirus (HPV) status | serum | — | 1× ✓ | low | Cervical carcinoma (sq |
 | `BIO-HRD-STATUS` | ✓ | 3 | Homologous recombination deficiency (HRD) status | NGS | — | 1× ✓ | medium | Ovarian carcinoma (hig |
 | `BIO-HRR-PANEL` | ✓ | 3 | Homologous recombination repair (HRR) gene panel status | NGS | — | — | medium | Prostate adenocarcinom |
+| `BIO-HTLV-1` | ❌ MISSING | 1 | — | — | — | — | low | Adult T-Cell Leukemia/ |
 | `BIO-IDH-MUTATION` | ✓ | 1 | IDH1 / IDH2 mutation status | NGS | — | 1× ✓ | low | Glioblastoma (IDH-WT |
 | `BIO-IGHV-MUTATIONAL-STATUS` | ✓ | 1 | IGHV (immunoglobulin heavy-chain variable region) mutational status | NGS | — | — | low | — |
 | `BIO-KI67-PROLIFERATION-INDEX` | ✓ | 1 | Ki-67 proliferation index (IHC, % positive nuclei) | IHC | — | — | low | — |
