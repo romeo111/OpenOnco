@@ -5,7 +5,10 @@ applicable_to:
   disease_id: DIS-NK-T-NASAL
   line_of_therapy: 1
   stage_requirements: []
-  biomarker_requirements_required: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EBV-DNA
+      required: false  # monitoring marker, not gating — baseline + serial; same role as in SMILE
+      value_constraint: "quantitative copies/mL (or IU/mL via WHO standard) on EDTA plasma; baseline + monitoring during therapy and post-treatment surveillance — NOT a treatment-decision gate, used as response surrogate"
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3  # broader than SMILE; less HD-MTX neuro/renal toxicity
