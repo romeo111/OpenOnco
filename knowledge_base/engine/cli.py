@@ -205,6 +205,8 @@ def _run_revise(
     save: bool = False,
     save_dir: Path = PATIENT_PLANS_ROOT,
     render_path: Path | None = None,
+    oncokb_enabled: bool = False,
+    oncokb_client=None,
 ) -> int:
     try:
         # `prev_arg` is the value of --revise. If the path doesn't exist as
@@ -218,7 +220,11 @@ def _run_revise(
         return 2
 
     try:
-        revised_prev, new_result = revise_plan(patient, previous, trigger, kb_root=kb_root)
+        revised_prev, new_result = revise_plan(
+            patient, previous, trigger, kb_root=kb_root,
+            oncokb_enabled=oncokb_enabled,
+            oncokb_client=oncokb_client,
+        )
     except (ValueError, TypeError) as e:
         print(f"ERROR revising plan: {e}", file=sys.stderr)
         return 2
@@ -375,6 +381,25 @@ def main() -> int:
         help=("Render result to a single-file HTML document (A4 print-friendly). "
               "Works with treatment plan, diagnostic brief, and --revise (revision note)."),
     )
+    parser.add_argument(
+        "--oncokb-proxy",
+        type=str,
+        metavar="URL",
+        default=None,
+        help=("Enable OncoKB precision-medicine layer. URL points to the "
+              "deployed oncokb-proxy (e.g. http://localhost:8001 or "
+              "https://oncokb-proxy.openonco.info). When omitted, OncoKB "
+              "integration is OFF (default — see safe-rollout v3 §0). "
+              "Surface-only: never influences engine track selection "
+              "(CHARTER §8.3). HCP-mode render only."),
+    )
+    parser.add_argument(
+        "--oncokb-timeout",
+        type=float,
+        default=5.0,
+        metavar="SECONDS",
+        help="Per-query timeout for OncoKB proxy calls (default 5.0).",
+    )
     args = parser.parse_args()
 
     # ── List versions and exit (no patient profile needed) ──────────────
@@ -395,12 +420,24 @@ def main() -> int:
         if not args.revision_trigger:
             print("ERROR: --revise requires --revision-trigger \"...\"", file=sys.stderr)
             return 2
+        # Q7: revise re-queries OncoKB if integration is enabled.
+        revise_oncokb_client = None
+        revise_oncokb_enabled = False
+        if args.oncokb_proxy:
+            from .oncokb_client import HttpxOncoKBClient
+            revise_oncokb_client = HttpxOncoKBClient(
+                proxy_url=args.oncokb_proxy,
+                timeout_seconds=args.oncokb_timeout,
+            )
+            revise_oncokb_enabled = True
         # `--revise` accepts either an explicit file path or a plan_id.
         # _run_revise / _load_previous_result handles both; do not pre-check.
         return _run_revise(patient, args.revise, args.revision_trigger, args.kb,
                            json_output=args.json_output, mdt=args.mdt,
                            save=args.save, save_dir=args.save_dir,
-                           render_path=args.render)
+                           render_path=args.render,
+                           oncokb_enabled=revise_oncokb_enabled,
+                           oncokb_client=revise_oncokb_client)
 
     # Mode dispatch — see DIAGNOSTIC_MDT_SPEC §6.3
     use_diagnostic = args.diagnostic or (
@@ -443,7 +480,19 @@ def main() -> int:
         return 0
 
     # Treatment mode (existing flow)
-    result = generate_plan(patient, kb_root=args.kb)
+    oncokb_kwargs: dict = {}
+    if args.oncokb_proxy:
+        from .oncokb_client import HttpxOncoKBClient
+        oncokb_kwargs = {
+            "oncokb_enabled": True,
+            "oncokb_client": HttpxOncoKBClient(
+                proxy_url=args.oncokb_proxy,
+                timeout_seconds=args.oncokb_timeout,
+            ),
+        }
+        print(f"OncoKB proxy enabled: {args.oncokb_proxy} (timeout {args.oncokb_timeout}s)")
+
+    result = generate_plan(patient, kb_root=args.kb, **oncokb_kwargs)
 
     print(f"Patient:   {result.patient_id or '<anonymous>'}")
     print(f"Disease:   {result.disease_id}")
