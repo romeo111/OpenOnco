@@ -1,0 +1,58 @@
+id: RF-MF-SEZARY-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction influencing MF/Sézary systemic-therapy
+  selection: LVEF <50% (gemcitabine, doxorubicin contraindicated), CrCl
+  <30 (methotrexate, lenalidomide dose constraints), bilirubin >3× ULN
+  (brentuximab dose-modify Child-Pugh B; avoid C — limits ALCANZA option),
+  or baseline peripheral neuropathy ≥grade 2 (brentuximab combination /
+  vincristine prohibitive).
+definition_ua: >
+  Базова дисфункція органів при MF/Sézary: LVEF <50% (гемцитабін,
+  доксорубіцин протипоказані), CrCl <30 (метотрексат, леналідомід —
+  обмеження доз), білірубін >3× ULN (brentuximab — модифікація Child-Pugh
+  B; уникати C — обмежує ALCANZA опцію), базова периферична нейропатія
+  ≥ступінь 2 (brentuximab / вінкристин-комбінації непереносні).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 85
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-MF-SEZARY
+shifts_algorithm: []  # not yet wired into ALGO-MF-SEZARY-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  MF/Sézary systemic options (mogamulizumab, brentuximab, romidepsin,
+  bexarotene, IFN, low-dose MTX, gemcitabine, liposomal doxorubicin)
+  span wide toxicity profiles — organ-dysfunction RF reroutes to
+  better-tolerated agents. Mogamulizumab CCR4-targeted (MAVORIC) has
+  minimal organ toxicity except infusion reactions / dermatitis — good
+  organ-dysfunction-friendly choice. Bexarotene caution with hepatic
+  / pancreatic dysfunction (hypertriglyceridemia / pancreatitis). Avoid
+  vorinostat / romidepsin in significant renal/hepatic dysfunction.

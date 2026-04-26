@@ -1,0 +1,63 @@
+id: RF-MF-SEZARY-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating systemic MF/Sézary therapy: HBsAg-positive (HBV reactivation
+  risk on prolonged systemic therapy with steroid co-medication),
+  anti-HBc-positive (occult HBV), HCV-RNA-positive, HIV-positive (HTLV-1
+  in differential — must distinguish from ATLL — see DIS-ATLL workup
+  pathway), HTLV-1-positive (reclassify as ATLL), or active skin
+  superinfection (MF skin disease frequently superinfected with S. aureus
+  — antibiotics before topical/systemic intensification).
+definition_ua: >
+  Активна / латентна інфекція перед системною терапією MF/Sézary: HBsAg+
+  (ризик реактивації HBV), anti-HBc+ (occult HBV), HCV-РНК+, HIV+
+  (HTLV-1 у диференціальній діагностиці — обов'язково виключити ATLL),
+  HTLV-1+ (рекласифікація як ATLL), активна шкірна superinfection
+  (шкіра MF часто superinfected S. aureus — антибіотики до topical/
+  systemic інтенсифікації).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "htlv1_status"
+      value: "positive"
+    - finding: "active_skin_infection"
+      value: true
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 65
+category: infection-screening
+
+relevant_diseases:
+  - DIS-MF-SEZARY
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HTLV-1 testing is mandatory in any "MF/Sézary" workup per WHO 2022 —
+  HTLV-1+ T-cell lymphoma is ATLL (separate disease entity DIS-ATLL with
+  fundamentally different therapeutic approach: mogamulizumab, IFN+AZT,
+  zidovudine combinations). Misdiagnosis of ATLL as MF/Sézary common in
+  endemic regions. Skin superinfection (S. aureus, occasionally HSV) is
+  major comorbidity in advanced MF — surveillance cultures, mupirocin /
+  systemic antibiotics; sepsis is a leading cause of death in advanced
+  CTCL. PJP prophylaxis on prolonged steroids / alemtuzumab. HBV+:
+  prophylaxis if rituximab / mogamulizumab / brentuximab planned.

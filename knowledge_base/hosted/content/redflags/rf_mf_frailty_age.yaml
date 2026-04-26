@@ -1,0 +1,64 @@
+id: RF-MF-SEZARY-FRAILTY-AGE
+definition: >
+  Frailty profile influencing MF/Sézary therapy selection: ECOG ≥3, OR
+  (age ≥75 with G8 ≤14), OR composite frailty (age ≥70 + Charlson ≥3 +
+  albumin <3.5). Triggers preference for skin-directed therapy (PUVA,
+  topical mechlorethamine), low-dose oral methotrexate, IFN, or
+  mogamulizumab (well-tolerated systemically) over multi-agent
+  chemotherapy regimens.
+definition_ua: >
+  Профіль frailty при MF/Sézary: ECOG ≥3, АБО (вік ≥75 з G8 ≤14), АБО
+  композитна frailty (вік ≥70 + Charlson ≥3 + альбумін <3.5). Триггерує
+  перевагу skin-directed терапії (PUVA, topical mechlorethamine),
+  low-dose oral methotrexate, IFN, або mogamulizumab (добра системна
+  переносимість) над multi-agent chemotherapy.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "g8_score"
+          threshold: 14
+          comparator: "<="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-MF-SEZARY
+shifts_algorithm: []  # not yet wired into ALGO-MF-SEZARY-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  MF/Sézary is typically chronic / indolent in early stages, allowing
+  skin-directed approach (topical corticosteroids, mechlorethamine gel,
+  bexarotene topical, narrowband UVB, PUVA) for stage IA-IIA regardless
+  of age. Frail elderly with stage IIB+ or Sézary: low-dose oral MTX
+  (10-25 mg weekly), IFN-α, or mogamulizumab — all well-tolerated. Avoid
+  multi-agent gem-doxo / CHOP-like regimens in frail (no curative
+  endpoint, considerable toxicity, marginal PFS gains). AlloHCT is the
+  only curative modality but typically off-table for frail elderly.
