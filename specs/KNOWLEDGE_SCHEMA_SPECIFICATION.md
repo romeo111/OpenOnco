@@ -287,6 +287,83 @@ knowledge_base_ref:
   last_synced: "2026-04-15"
 ```
 
+### 4.3. OncoKB-wiring fields (Phase 1 scaffolding)
+
+Три опційні поля додано на Biomarker для безпечного підключення OncoKB.
+Авторитетний контракт — `docs/plans/oncokb_integration_safe_rollout_v3.md` §4
+(variant normalization + skip semantics). Це чисто інженерне розширення схеми;
+жодного клінічного контенту в `bio_*.yaml` ця версія не торкається — заповнення
+полів виконується у фазі 2.
+
+#### `oncokb_lookup` (опційно)
+
+Явний хінт, що дозволяє OncoKB-екстрактору запитати анотацію саме для цього
+біомаркера. Якщо поле відсутнє, екстрактор повністю **пропускає** біомаркер —
+це навмисно, щоб уникнути мовчазного «вгадування» (gene, variant) із id, що
+ризикує дати клініцисту false negative.
+
+```yaml
+oncokb_lookup:
+  gene: "BRAF"            # HGNC symbol, uppercase, 1..32 chars
+  variant: "V600E"        # короткий HGVS-p / структурний дескриптор / fs
+```
+
+Прийнятні форми `variant`:
+- короткий HGVS-p: `V600E`, `L858R`, `G12C`
+- структурні: `Exon 19 deletion`, `E746_A750del`
+- frameshift-токени: `W288fs`
+
+Повна валідація HGVS живе в `engine/oncokb_extract.py:normalize_variant`.
+Схема робить тільки type-check.
+
+#### `oncokb_skip_reason` (опційно)
+
+Стабільний machine-readable токен, що пояснює, чому біомаркер навмисно
+**виключений** з OncoKB-запитів. Ці рядки греп-стійкі — downstream код
+(`engine/oncokb_extract.py`) ключує поведінку саме на них, тож перейменування
+без координації заборонене.
+
+Допустимі значення (`Literal`):
+
+| Token | Коли |
+|---|---|
+| `ihc_no_variant` | IHC без молекулярного варіанту (Ki-67, CD20, …) |
+| `score` | Скор/індекс (IPI, MIPI, GIPSS) |
+| `clinical_composite` | Композитний клінічний маркер |
+| `serological` | Серологія (HCV-Ab, HBsAg) |
+| `viral_load` | Вірусне навантаження (HCV-RNA, HBV-DNA) |
+| `tumor_marker` | Загальний пухлинний маркер (CA-125, AFP, β-hCG) |
+| `imaging` | Imaging-патерн |
+| `germline_no_somatic` | Лише герм-лайн варіант, без соматичної актнабельності |
+| `fusion_mvp` | Fusion — поза скоупом MVP |
+| `itd_mvp` | ITD-варіанти (FLT3-ITD) — поза скоупом MVP |
+| `multi_allele_mvp` | Мультиалельні випадки — поза скоупом MVP |
+| `tumor_agnostic` | Tumor-agnostic indication — окремий шлях |
+
+Взаємно виключає `oncokb_lookup`. Допустимі стани: «жоден не заданий»
+(біомаркер ще не триаговано), «лише lookup», «лише skip_reason». Обидва
+одночасно → ValidationError.
+
+#### `external_ids` (опційно)
+
+Крос-референси на зовнішні KB. Усі ключі опційні; часткове заповнення
+(наприклад, лише `hgnc_symbol`) — нормально.
+
+```yaml
+external_ids:
+  hgnc_symbol: "EGFR"
+  hgnc_id: "HGNC:3236"
+  oncokb_url: "https://oncokb.org/gene/EGFR/L858R"
+  civic_id: "33"
+  civic_url: "https://civicdb.org/links/variants/33"
+  clingen_id: "CA123456"
+  hgvs_protein: "NP_005219.2:p.Leu858Arg"
+  hgvs_coding: "NM_005228.5:c.2573T>G"
+```
+
+Поле незалежне від `oncokb_lookup` / `oncokb_skip_reason` — може бути
+заповнене у будь-якій комбінації.
+
 ---
 
 ## 5. Entity: Drug
