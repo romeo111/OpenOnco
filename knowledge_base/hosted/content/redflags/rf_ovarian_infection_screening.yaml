@@ -1,0 +1,58 @@
+id: RF-OVARIAN-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating carbo+pacli ± bevacizumab and PARPi maintenance in advanced
+  ovarian: HBsAg+ or anti-HBc+ (HBV reactivation on cytotoxic chemo;
+  bevacizumab adds GI / wound-healing complications during reactivation
+  hepatitis), HCV-RNA+, HIV+, active TB, active uncontrolled infection.
+definition_ua: >
+  Активна або латентна інфекція перед карбо+пацлі ± бевацизумаб і
+  PARPi-підтримкою при запущеному раку яєчників: HBsAg+ або anti-HBc+
+  (ризик реактивації HBV на ХТ; бевацизумаб додає GI / порушення
+  загоєння на тлі реактиваційного гепатиту), HCV-RNA+, HIV+,
+  активний ТБ, активна неконтрольована інфекція.
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 70
+category: infection-screening
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HBsAg+ → entecavir or tenofovir from before first cycle through ≥6
+  months post-last-chemo / PARPi (PARPi maintenance can be 2-3 years
+  in BRCA+ — extend prophylaxis duration). Bevacizumab during
+  unrecognized HBV reactivation can cause hepatic decompensation and
+  worsen GI mucosal-healing complications (perforation risk). HIV+
+  with stable ART can receive standard regimens. Active TB: complete
+  intensive-phase anti-TB before initiating chemo. Direction "hold"
+  surfaces a workup-prerequisite annotation rather than switching
+  indication.

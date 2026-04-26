@@ -1,0 +1,62 @@
+id: RF-OVARIAN-TRANSFORMATION-PROGRESSION
+definition: >
+  Platinum-resistant or platinum-refractory ovarian cancer: progression
+  during platinum-based therapy (refractory) or relapse <6 months from
+  last platinum dose (resistant). Routes from platinum-doublet rechallenge
+  to non-platinum single-agent (PLD, weekly paclitaxel, topotecan,
+  gemcitabine) ± bevacizumab (AURELIA), or to mirvetuximab-soravtansine
+  if FRα-high.
+definition_ua: >
+  Платино-резистентний або платино-рефрактерний рак яєчників:
+  прогресування під час платино-вмісної терапії (рефрактерний) або
+  рецидив <6 міс від останньої дози платини (резистентний).
+  Маршрутизує з повторного платинового дублету на не-платинову
+  монотерапію (PLD, weekly paclitaxel, топотекан, гемцитабін) ±
+  бевацизумаб (AURELIA), або на мірветуксимаб-соравтансин при
+  FRα-high.
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "ovarian_platinum_refractory"
+      value: true
+    - finding: "ovarian_platinum_resistant"
+      value: true
+    - all_of:
+        - finding: "post_platinum_response"
+          value: "stable_or_progressive"
+        - finding: "months_since_last_platinum"
+          threshold: 6
+          comparator: "<"
+    - finding: "progression_on_platinum"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 80
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Platinum-resistant ovarian (PROC) is a defining transition point —
+  prognosis worsens markedly (median OS ~12 mo). Sequential single-
+  agent non-platinum chemo: PLD or weekly paclitaxel are preferred
+  backbones; AURELIA (bevacizumab + chemo) improved PFS (HR 0.48)
+  and is the standard if not bev-exposed and no contraindication.
+  Mirvetuximab-soravtansine (MIRASOL) for FRα-high (≥75% by IHC PS2+)
+  PROC: ORR 42% vs chemo 16%, OS benefit confirmed. PARPi at platinum-
+  resistance generally not recommended (low ORR). Direction "intensify"
+  — operationally re-routes plan generation to PROC algorithm rather
+  than 1L choice. CA-125 + imaging confirmation per GCIG criteria.
