@@ -6,7 +6,8 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-    - {biomarker_id: BIO-HCV-RNA, required: true, value_constraint: "detectable (positive viral load)"}
+    - {biomarker_id: BIO-HCV-STATUS, required: true, value_constraint: "anti-HCV-positive (categorical screen — pairs with BIO-HCV-RNA confirmation; antibody alone insufficient for treatment decision)"}
+    - {biomarker_id: BIO-HCV-RNA, required: true, value_constraint: "detectable (positive viral load — confirms active HCV infection driving NMZL clonal proliferation; required to commit to DAA-first track)"}
     - {biomarker_id: BIO-CD20-IHC, required: true, value_constraint: "positive"}
   biomarker_requirements_excluded: []
   demographic_constraints: {ecog_max: 2, decompensated_cirrhosis: false}
