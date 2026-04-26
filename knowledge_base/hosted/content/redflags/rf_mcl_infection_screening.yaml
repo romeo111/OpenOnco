@@ -1,0 +1,56 @@
+id: RF-MCL-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating any anti-CD20-containing MCL induction (R-CHOP, BR, R-DHAP,
+  Nordic, R-bendamustine + cytarabine): HBsAg-positive, anti-HBc-positive
+  (occult HBV), HCV-RNA-positive, HIV-positive, or active TB. Particular
+  vigilance with bendamustine combinations (HBV reactivation rates
+  highest among anti-CD20 partners).
+definition_ua: >
+  Активна / латентна інфекція перед anti-CD20 індукцією MCL (R-CHOP, BR,
+  R-DHAP, Nordic, R-бендамустин + цитарабін): HBsAg+, anti-HBc+ (occult
+  HBV), HCV-РНК+, HIV+, активний туберкульоз. Особлива увага при
+  бендамустин-комбінаціях (найвищі ризики реактивації HBV серед
+  anti-CD20 партнерів).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HBsAg+ → entecavir/tenofovir prophylaxis from –7d through +12-18 mo
+  post-last anti-CD20 (extended given autoSCT consolidation often follows).
+  occult HBV (anti-HBc+ HBsAg-negative) on bendamustine: reactivation
+  rates 10-20% — monitor HBV-DNA q1-3mo or pre-emptive prophylaxis.
+  Bendamustine reactivates HSV / VZV — acyclovir prophylaxis routine.
+  PJP prophylaxis (TMP-SMX) on prolonged R-CHOP / Nordic (T-cell
+  lymphopenia post HD-AraC) and ongoing BTKi maintenance.
+  HIV+ MCL: rare; full-dose chemoimmuno + ART optimization. autoSCT
+  feasible in HIV+ if controlled.

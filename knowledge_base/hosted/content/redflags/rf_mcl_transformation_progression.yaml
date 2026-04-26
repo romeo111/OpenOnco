@@ -1,0 +1,55 @@
+id: RF-MCL-TRANSFORMATION-PROGRESSION
+definition: >
+  MCL with morphologic progression to blastoid or pleomorphic variant
+  (often with TP53 acquisition), OR primary-refractory disease (no CR
+  after induction), OR early relapse <24 months post-induction (POD24-MCL
+  analog) — high-risk subset routes to BTKi-based salvage (BTKi +
+  rituximab + venetoclax — "VR" or BOVen) with CAR-T (brexucabtagene)
+  consolidation when feasible.
+definition_ua: >
+  MCL з морфологічною прогресією у бластоідний або плеоморфний варіант
+  (часто з акумуляцією TP53), АБО первинно-рефрактерна, АБО ранній
+  рецидив <24 міс після індукції (POD24-MCL аналог) — підгрупа високого
+  ризику; маршрут до BTKi-сальваджу (BTKi + рітуксимаб + венетоклакс —
+  "VR" або BOVen) з консолідацією CAR-T (brexucabtagene) при доступі.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "blastoid_morphology"
+      value: true
+    - finding: "pleomorphic_morphology"
+      value: true
+    - finding: "mcl_primary_refractory"
+      value: true
+    - finding: "mcl_early_relapse_lt_24mo"
+      value: true
+    - finding: "rapid_progression"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm: []  # not yet wired into ALGO-MCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Blastoid/pleomorphic morphology + TP53 acquisition often co-occur and
+  predict chemoimmuno-resistance. Distinct from RF-MCL-BLASTOID-OR-TP53
+  (which captures these features at diagnosis as biology) — this RF
+  triggers when morphologic conversion / refractoriness emerges during
+  or after 1L therapy. Brexucabtagene autoleucel (ZUMA-2 — Wang NEJM
+  2020) ORR 87%, CR 62% in r/r MCL post-BTKi; preferred consolidation
+  for chemo-refractory. BTKi + venetoclax + obinutuzumab (BOVen) per
+  Le Gouill ASH 2021 highly active in TP53-mut. AlloHCT remains
+  curative-intent option in young fit r/r MCL.

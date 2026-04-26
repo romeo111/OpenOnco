@@ -1,0 +1,64 @@
+id: RF-MCL-FRAILTY-AGE
+definition: >
+  Frailty profile precluding intensive MCL induction (Nordic R-MaxiCHOP/AraC,
+  R-DHAP) or autoSCT consolidation: ECOG ≥3, OR (age ≥65 with ≥2
+  comorbidities — autoSCT typically off-table), OR composite frailty
+  (age ≥75 + Charlson ≥3). Triggers de-escalation to BR (StiL),
+  R-bendamustine + cytarabine ("R-BAC500" attenuated), VR-CAP, or
+  acalabrutinib + rituximab (chemo-free elderly path).
+definition_ua: >
+  Профіль frailty при MCL: ECOG ≥3, АБО (вік ≥65 з ≥2 коморбідностями —
+  autoSCT зазвичай off-table), АБО композитна frailty (вік ≥75 +
+  Charlson ≥3). Триггерує de-escalation до BR (StiL), R-бендамустин +
+  цитарабін ("R-BAC500" атенуйований), VR-CAP, або акалабрутиніб +
+  рітуксимаб (chemo-free elderly шлях).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 65
+          comparator: ">="
+        - finding: "comorbidity_grade2_count"
+          threshold: 2
+          comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+    - finding: "transplant_eligible"
+      value: false
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm: []  # not yet wired into ALGO-MCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Transplant-eligibility cutoff conventionally age <65-70 + fit; older /
+  unfit MCL: BR (StiL NHL1 — bendamustine + R x6) is standard, with
+  rituximab maintenance per LyMa elderly subgroup giving PFS extension.
+  R-BAC500 (Visco regimen, R + bendamustine + lower-dose cytarabine)
+  has high CR rates in elderly but cytopenia-heavy. SHINE trial
+  (Wang NEJM 2022) added ibrutinib to BR maintenance in ≥65y MCL —
+  PFS benefit but no OS, AE substantial; not yet standard.
+  Chemo-free elderly induction with acalabrutinib + rituximab
+  (TRIANGLE / Xian-Xiang) emerging as option for very frail.
