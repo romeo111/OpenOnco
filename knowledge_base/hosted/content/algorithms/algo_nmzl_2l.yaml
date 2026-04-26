@@ -1,0 +1,78 @@
+id: ALGO-NMZL-2L
+applicable_to_disease: DIS-NODAL-MZL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ Indication for nodal marginal zone lymphoma after 1L
+  failure (rituximab monotherapy, watch-and-wait progression, or
+  R-CHOP for aggressive presentation). Single track: IND-NMZL-2L-BR
+  (bendamustine + rituximab, BSH 2024 / NCCN 2L preferred; Rummel
+  STIL-1 indolent B-NHL data). Two-plan output collapses to BR ±
+  alternative free-text (R-CHOP for transformation — routes to
+  ALGO-DLBCL upstream).
+
+  2L entry triggered by: progression after 1L systemic therapy
+  (nodal progression, B-symptoms, new extranodal sites, cytopenia
+  from marrow involvement), OR transformation to aggressive
+  histology.
+
+output_indications:
+  - IND-NMZL-2L-BR
+
+default_indication: IND-NMZL-2L-BR
+alternative_indication: IND-NMZL-2L-BR
+
+decision_tree:
+  # Step 1 — histologic transformation suspected → upstream re-biopsy
+  # + ALGO-DLBCL routing. Cannot reference cross-disease algo here;
+  # trace must surface "transformation-suspect: ALGO-DLBCL routing"
+  # MDT note.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NMZL-TRANSFORMATION-PROGRESSION
+        - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
+    if_true:
+      result: IND-NMZL-2L-BR  # placeholder; see notes — routes upstream to ALGO-DLBCL
+    if_false:
+      next_step: 2
+
+  # Step 2 — frail / organ dysfunction precluding bendamustine: free-text
+  # rituximab monotherapy retreatment OR R²/lenalidomide alternative.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-NMZL-FRAILTY-AGE
+        - red_flag: RF-NMZL-ORGAN-DYSFUNCTION
+    if_true:
+      result: IND-NMZL-2L-BR  # placeholder; see notes — R-mono / R² alternative
+    if_false:
+      next_step: 3
+
+  # Step 3 — default: nodal progression, fit, BR-eligible → BR.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Nodal progression / new extranodal sites after 1L"
+        - condition: "B-symptoms or symptomatic cytopenia from marrow involvement"
+        - condition: "CD20+ confirmed at relapse biopsy, adequate marrow + organ function for bendamustine"
+    if_true:
+      result: IND-NMZL-2L-BR
+    if_false:
+      result: IND-NMZL-2L-BR
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-BSH-MZL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  OOS / wiring gaps:
+  (1) IND-NMZL-2L-RITUXIMAB-RETREATMENT (R-mono for late relapse
+  >2y) — not modeled.
+  (2) Lenalidomide + rituximab (R², AUGMENT-equivalent in NMZL) —
+  not modeled as NMZL-specific indication.
+  (3) Ibrutinib for r/r NMZL — FDA-approved 2017 (basket label
+  with SMZL/MALT) but not modeled; UA access ≈zero.
+  (4) Histologic transformation routing must be resolved at upstream
+  disease-resolution stage (relapse re-biopsy mandatory).
+  (5) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
