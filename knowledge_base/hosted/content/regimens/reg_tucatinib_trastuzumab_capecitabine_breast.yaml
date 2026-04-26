@@ -1,0 +1,53 @@
+id: REG-TUCATINIB-TRASTUZUMAB-CAPECITABINE-BREAST
+name: "Tucatinib + trastuzumab + capecitabine (HER2+ metastatic ≥3L, especially with brain metastases)"
+name_ua: "Тукатиніб + трастузумаб + капецитабін (HER2+ метастаз ≥3L, зокрема CNS-mets)"
+alternate_names: ["HER2CLIMB regimen"]
+
+components:
+  - drug_id: DRUG-TUCATINIB
+    dose: "300 mg PO BID continuous"
+    schedule: "Continuous (no off-day) within 21-day cycle"
+    route: PO
+  - drug_id: DRUG-TRASTUZUMAB
+    dose: "8 mg/kg IV loading, then 6 mg/kg IV q3w"
+    schedule: "Day 1 of every 21-day cycle"
+    route: IV
+  - drug_id: DRUG-CAPECITABINE-BREAST
+    dose: "1000 mg/m² PO BID days 1-14 of 21-day cycle"
+    schedule: "Days 1-14, then 7-day rest"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Loperamide on hand for diarrhea (combined effect of tucatinib + capecitabine)"
+  - "Antiemetic for capecitabine cycles"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Diarrhea G≥3"
+    modification: "Hold tucatinib + capecitabine; resume tucatinib at 250 mg BID, capecitabine at 75% dose"
+  - condition: "Palmar-plantar erythrodysesthesia (PPE) G≥2"
+    modification: "Topical urea / corticosteroids; reduce capecitabine; hold if G≥3"
+  - condition: "Transaminitis G≥3 (ALT/AST)"
+    modification: "Hold tucatinib; resume at 250 mg BID after recovery to ≤G1"
+  - condition: "LVEF decline G≥2 from baseline"
+    modification: "Hold trastuzumab; cardiology consult"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Tucatinib not registered in Ukraine (named-patient import / EAP only); trastuzumab reimbursed via NSZU онкопакет; capecitabine reimbursed via Доступні Ліки. Tucatinib is the major access barrier."
+
+sources: [SRC-HER2CLIMB-MURTHY-2019, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  HER2CLIMB: brain-mets cohort CNS-PFS 9.9 vs 4.2 mo (HR 0.32);
+  intracranial ORR 47% vs 20%. Established as preferred regimen for
+  HER2+ metastatic with brain metastases (active or stable). Outside
+  CNS-mets context, T-DXd preferred 2L (DESTINY-Breast03). Diarrhea
+  management dominant clinical workflow burden — patient counseling
+  + immediate loperamide access critical.
