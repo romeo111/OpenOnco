@@ -536,6 +536,78 @@ h3 {
 .drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
 .drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
 
+
+/* OncoKB layer — distinct from engine track palette to mitigate
+   automation bias (CHARTER §15.2 C6) */
+.oncokb-layer {
+  margin: 24px 0;
+  padding: 20px;
+  border-left: 4px solid #6b7280;
+  background: #f9fafb;
+  border-radius: 4px;
+}
+.oncokb-section-header h2 { margin: 0 0 8px; color: #374151; font-size: 18px; }
+.oncokb-disclaimer { margin: 4px 0; color: #b45309; font-size: 14px; }
+.oncokb-attribution { margin: 8px 0; color: #6b7280; font-size: 12px; font-style: italic; }
+.oncokb-pan-tumor-badge {
+  display: inline-block; margin-top: 8px; padding: 2px 8px;
+  background: #fef3c7; color: #92400e; border-radius: 12px; font-size: 12px;
+}
+
+/* Resistance block at top */
+.oncokb-conflicts-block {
+  margin: 12px 0; padding: 12px; background: #fef2f2;
+  border: 1px solid #fecaca; border-radius: 4px;
+}
+.oncokb-conflicts-block h3 { margin: 0 0 8px; color: #991b1b; font-size: 15px; }
+.oncokb-conflicts-block ul { margin: 0; padding-left: 18px; }
+.oncokb-conflict-r1 { color: #991b1b; }
+.oncokb-conflict-r2 { color: #b45309; }
+.oncokb-conflict-icon { font-size: 16px; }
+
+/* Inline track-card banners */
+.oncokb-inline-banner {
+  margin: 8px 0; padding: 8px 12px; border-radius: 4px; font-size: 13px;
+}
+.oncokb-inline-banner--r1 { background: #fee2e2; color: #991b1b; border-left: 3px solid #dc2626; }
+.oncokb-inline-banner--r2 { background: #fef3c7; color: #92400e; border-left: 3px solid #f59e0b; }
+.oncokb-inline-icon { font-size: 14px; }
+
+/* Main evidence table */
+.oncokb-table {
+  width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px;
+}
+.oncokb-table th {
+  text-align: left; padding: 6px 8px; background: #e5e7eb;
+  border-bottom: 1px solid #d1d5db; font-weight: 600;
+}
+.oncokb-table td { padding: 6px 8px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+.oncokb-row--r1 { background: #fef2f2; }
+.oncokb-row--r2 { background: #fffbeb; }
+.oncokb-confidence { white-space: nowrap; color: #4b5563; }
+.oncokb-pmid { color: #2563eb; text-decoration: none; font-size: 12px; }
+.oncokb-pmid:hover { text-decoration: underline; }
+.oncokb-fda-badge {
+  display: inline-block; padding: 1px 6px; background: #dcfce7;
+  color: #166534; border-radius: 8px; font-size: 11px; margin-left: 4px;
+}
+
+/* Overflow details */
+.oncokb-overflow { margin: 8px 0; }
+.oncokb-overflow summary { cursor: pointer; color: #374151; font-size: 13px; padding: 4px 0; }
+.oncokb-table--overflow { margin-top: 4px; }
+
+/* Cross-biomarker analysis */
+.oncokb-cross-analysis {
+  margin: 12px 0; padding: 10px; background: #ecfdf5;
+  border-left: 3px solid #10b981; border-radius: 4px;
+}
+.oncokb-cross-analysis h4 { margin: 0 0 6px; color: #065f46; font-size: 14px; }
+.oncokb-cross-analysis ul { margin: 0; padding-left: 18px; font-size: 13px; }
+.oncokb-overlap-tag { color: #047857; font-size: 11px; }
+
+.oncokb-errors-note { color: #6b7280; font-size: 12px; font-style: italic; margin-top: 8px; }
+
   </style>
   <style>
     
@@ -796,6 +868,100 @@ section > h3 {
   padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
 }
 
+/* Sign-off badges — inline next to indication ID + reused inside explainer aside */
+.signoff-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.signoff-complete {
+  background: var(--green-100);
+  color: var(--green-800);
+  border-color: var(--green-600);
+}
+.signoff-partial {
+  background: #fef3c7;
+  color: #78350f;
+  border-color: #d97706;
+}
+.signoff-pending {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #dc2626;
+}
+.indication-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+.indication-line .indication-id {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.signoff-explainer {
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.signoff-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: #78350f; margin-bottom: 8px;
+}
+.signoff-explainer ul { list-style: none; padding: 0; margin: 0; }
+.signoff-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.signoff-explainer li .signoff-badge { margin-left: 0; margin-right: 8px; }
+.signoff-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Engineering metrics — collapsible footer (technical audience) */
+.engineering-metrics {
+  margin: 18px 0;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.engineering-metrics summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.engineering-metrics summary:hover { color: var(--green-700); }
+.engineering-metrics ul {
+  list-style: none; padding: 0; margin: 8px 0 0;
+}
+.engineering-metrics li {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-top: 1px dashed var(--gray-200);
+}
+.engineering-metrics li:first-child { border-top: none; }
+.engineering-metrics a { color: var(--green-700); text-decoration: none; }
+.engineering-metrics a:hover { text-decoration: underline; }
+
 /* NSZU explainer aside — appears between plan tracks and disclaimer */
 .nszu-explainer {
   background: var(--green-50); border: 1px solid var(--green-100);
@@ -971,7 +1137,10 @@ section > h3 {
       <div class="plan-body">
         <dl class="plan-dl">
           <dt>Indication</dt>
-          <dd class="mono">IND-CRC-METASTATIC-2L-BRAF-BEACON</dd>
+          <dd class="mono indication-line">
+            <span class="indication-id">IND-CRC-METASTATIC-2L-BRAF-BEACON</span>
+            <span class="signoff-badge signoff-pending" title="STUB — клінічний контент очікує дворазового підпису перед production-use">⚠ Очікує підпису Clinical Co-Lead</span>
+          </dd>
 
           <dt>Регімен</dt>
           <dd>
@@ -1025,10 +1194,16 @@ section > h3 {
       </div>
       <div class="plan-body">
         <dl class="plan-dl">
+          <dt>Indication</dt>
+          <dd class="mono indication-line">
+            <span class="indication-id">IND-CRC-METASTATIC-2L-BRAF-BEACON</span>
+            <span class="signoff-badge signoff-pending" title="STUB — клінічний контент очікує дворазового підпису перед production-use">⚠ Очікує підпису Clinical Co-Lead</span>
+          </dd>
+
           <dt>Регімен</dt>
           <dd>
             <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)
-            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Phase GI-1 promotion. BEACON CRC: encorafenib + cetuximab vs control — mOS 9.3 vs 5.9 mo in BRAF V600E mCRC 2L+. Triplet arm (enco + cetux + binimetinib) had numerically higher ORR but no OS benefit vs doublet — doublet is current…">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO once daily</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li><li class="drug-row drug-item"><span class="drug-name">Binimetinib</span><span class="nszu-badge nszu-not-registered" title="✗ Не зареєстровано в UA">✗ Не зареєстровано в UA</span><span class="drug-dose">45 mg PO 2× на день</span></li></ul>
+            <ul class="drug-list"><li class="drug-row drug-item"><span class="drug-name">Encorafenib</span><span class="nszu-badge nszu-oop" title="STUB — Phase GI-1 promotion. BEACON CRC: encorafenib + cetuximab vs control — mOS 9.3 vs 5.9 mo in BRAF V600E mCRC 2L+. Triplet arm (enco + cetux + binimetinib) had numerically higher ORR but no OS benefit vs doublet — doublet is current…">⚠ Поза НСЗУ — за свій кошт</span><span class="drug-dose">300 mg PO once daily</span></li><li class="drug-row drug-item"><span class="drug-name">Cetuximab</span><span class="nszu-badge nszu-covered" title="Збіг показання: Метастатичний колоректальний рак (RAS-WT, лівобічний — у комбінації з FOLFOX/FOLFIRI) · Mandatory pre-treatment testing in mCRC: extended RAS panel (KRAS exons 2-4 + NRAS exons 2-4) + BRAF V600E + tumor sidedness. Left- sided RAS-WT BRAF-WT → strong cetuximab benefit; right-sided WT → bevacizumab preferred (CALGB-80405). Rash…">✓ НСЗУ покриває</span><span class="drug-dose">400 mg/m² IV loading → 250 mg/m² IV щотижня</span></li><li class="drug-row drug-item"><span class="drug-name">Binimetinib</span><span class="nszu-badge nszu-not-registered" title="STUB — Phase CSD-4 promotion. Needs full curation including dose-adj for hepatic impairment, full AE profile (notably retinal vein occlusion / CSR-like findings), drug interactions, monitoring schedule (LFTs, echo, ophtho).">✗ Не зареєстровано в UA</span><span class="drug-dose">45 mg PO 2× на день</span></li></ul>
           </dd>
 
           <dt>Профіль</dt>
@@ -1061,6 +1236,19 @@ section > h3 {
     
       </div>
     </section>
+    
+    <aside class="signoff-explainer">
+      <h3>Що означають позначки клінічного підпису</h3>
+      <ul>
+        <li><span class="signoff-badge signoff-complete">✓ Клінічно затверджено</span> — підпис ≥2 Clinical Co-Leads (CHARTER §6.1)</li>
+        <li><span class="signoff-badge signoff-partial">🟡 Підписано: 1 з 2</span> — один підпис, очікується другий</li>
+        <li><span class="signoff-badge signoff-pending">⚠ Очікує підпису</span> — клінічний контент в обробці; ще не для production-use</li>
+      </ul>
+      <p class="signoff-explainer-foot">
+        Жодний рекомендований препарат не призначається без підтвердження вашого онколога.
+        Ви можете відстежувати поточний sign-off статус у dashboard'і.
+      </p>
+    </aside>
     
     <aside class="nszu-explainer">
       <h3>Що означають NSZU позначки</h3>
@@ -1128,6 +1316,17 @@ section > h3 {
         </li>
       </ul>
     </section>
+    
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Engine bundle: lazy-load split — core 1.4 MB + per-disease module ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Per-disease module fetch: &lt;100 ms (browser cache after first visit)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="signoff_status_2026-04-27.md">dashboard</a></li>
+      </ul>
+    </details>
     
     <footer class="csd-footer">
       <div class="foot-line">
