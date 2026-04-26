@@ -1,0 +1,57 @@
+id: RF-RCC-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating ICI doublet (nivo+ipi) or ICI+TKI (axi+pembro, cabo+nivo,
+  len+pembro) in advanced RCC: HBsAg+ or anti-HBc+ (HBV reactivation
+  on ICI), HCV-RNA+ (DAA coordination), HIV+ (ICI safe with virologic
+  suppression), active TB, or active uncontrolled infection.
+definition_ua: >
+  Активна або латентна інфекція перед ICI-дублетом (ніво+іпі) або
+  ICI+TKI (аксі+пембро, кабо+ніво, лен+пембро) при запущеному RCC:
+  HBsAg+ або anti-HBc+ (ризик реактивації HBV на ICI), HCV-RNA+
+  (координація DAA), HIV+ (ICI безпечний при вірусологічній супресії),
+  активний ТБ, або активна неконтрольована інфекція.
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 70
+category: infection-screening
+
+relevant_diseases:
+  - DIS-RCC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ICI + chronic HBV: HBsAg+ → entecavir or tenofovir from before first
+  ICI dose through ≥6 months post-last-dose; monitor HBV DNA q3mo.
+  Anti-HBc+ alone (resolved HBV): monitor HBV DNA + ALT q3mo,
+  prophylaxis only if reactivation. HCV-RNA+: prefer SVR before ICI
+  if feasible; DAA can run concurrently with TKI but watch drug-drug
+  interactions (esp. cabozantinib + protease-inhibitor DAA). HIV+
+  with CD4 >100 + viral load suppressed: ICI active and tolerable.
+  Direction "hold" surfaces a workup-prerequisite annotation rather
+  than switching indication.
