@@ -1,0 +1,45 @@
+id: RF-CHONDROSARCOMA-FRAILTY-AGE
+definition: "Age ≥75 with ECOG ≥2 or ≥2 comorbidities — wide en-bloc bone resection with reconstruction and doxorubicin-based regimens for dedifferentiated subtype poorly tolerated; consider intralesional curettage for low-grade lesions, omission of chemotherapy in dedifferentiated subtype, or palliative RT only."
+definition_ua: "Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — широка en-bloc резекція кістки з реконструкцією і doxorubicin-вмісні режими (для дедиференційованого підтипу) погано переносяться; розглянути внутрішньовогнищеву кюретаж для низькодиференційованих, відмову від хіміотерапії при дедиференційованому підтипі або моно-паліативну RT."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-CHONDROSARCOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Conventional chondrosarcoma is chemotherapy-resistant — frailty
+  rarely changes 1L systemic therapy because there is none. The
+  decision matters most for dedifferentiated subtype where
+  doxorubicin ± ifosfamide is offered (extrapolated from soft-tissue
+  sarcoma data); cardiac toxicity and pancytopenia rates climb with
+  age. Surgical morbidity from en-bloc resection of pelvic / axial
+  lesions is also high in elderly — consider IDH-targeted therapy
+  trial enrollment (ivosidenib for IDH1 R132 mutants) over
+  conventional chemo. Source-gap caveat: NCCN Bone Cancer / ESMO
+  Bone Sarcomas not yet ingested as separate Source entities — using
+  SRC-NCCN-NSCLC-2025 (per disease YAML precedent) and SRC-ONCOKB.
