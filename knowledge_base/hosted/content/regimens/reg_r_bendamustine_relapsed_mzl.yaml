@@ -1,0 +1,42 @@
+id: REG-R-BENDAMUSTINE-RELAPSED-MZL
+name: R-Bendamustine for relapsed marginal zone lymphoma (post-rituximab failure)
+name_ua: R-Бендамустин при рецидивній лімфомі маргінальної зони
+alternate_names:
+- BR-relapsed
+- R-Benda 2L MZL
+components:
+- drug_id: DRUG-RITUXIMAB
+  dose: 375 mg/m²
+  schedule: IV day 1
+  route: IV
+- drug_id: DRUG-BENDAMUSTINE
+  dose: 90 mg/m²
+  schedule: IV days 1-2
+  route: IV
+cycle_length_days: 28
+total_cycles: 6 cycles
+toxicity_profile: moderate
+premedication:
+- Acetaminophen + diphenhydramine + IV steroid before rituximab
+- Antiemetic for bendamustine
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-RITUXIMAB-MONO
+dose_adjustments:
+- condition: FIB-4 >3.25 OR cirrhosis
+  modification: Reduce bendamustine to 70 mg/m²
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+- condition: ANC <1000 OR platelets <75K
+  modification: Hold; G-CSF support; resume at recovery; consider 25% dose reduction
+  source_refs:
+  - SRC-NCCN-BCELL-2025
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: Both drugs НСЗУ-reimbursed for indolent B-cell lymphoma.
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-MZL-2024
+last_reviewed: '2026-04-27'
+notes: Standard 2L for SMZL/NMZL after rituximab monotherapy failure. ORR ~85-90%; median PFS ~3-4 years. PJP prophylaxis
+  ≥6 mo post-anti-CD20; HBV reactivation surveillance mandatory.
