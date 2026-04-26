@@ -1,0 +1,58 @@
+id: REG-PIRTOBRUTINIB
+name: "Pirtobrutinib monotherapy (continuous, BRUIN schedule)"
+name_ua: "Піртобрутиніб монотерапія (безперервно, BRUIN)"
+alternate_names:
+  - "Pirto mono"
+  - "BRUIN regimen"
+  - "Jaypirca"
+
+components:
+  - drug_id: DRUG-PIRTOBRUTINIB
+    dose: "200 mg PO once daily"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor"
+    modification: "Reduce to 100 mg PO once daily; avoid concurrent strong inducers"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "ANC <500 OR platelets <50K"
+    modification: "Hold; resume at same dose after recovery; consider 100 mg if recurrent"
+  - condition: "New-onset atrial fibrillation"
+    modification: "Hold; cardiology consult; rate control + anticoagulation per AHA; resume if benefit justifies"
+    rationale: "Lower afib rate than ibrutinib (~3% vs ~7-15%) but possible"
+  - condition: "Major hemorrhage / planned major surgery"
+    modification: "Hold ≥3-7 days pre-procedure; resume post-op once hemostasis confirmed"
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Reduce dose; monitor LFTs"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Pirtobrutinib NOT registered in Ukraine; no domestic supply. Access
+    via clinical trial / charitable scheme / international referral /
+    out-of-pocket only. For TP53-mutated and/or BTK-C481-mutated
+    post-cBTKi resistant CLL, this is the rational choice — but access
+    is the dominant constraint.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-25"
+notes: >
+  BRUIN trial (Mato 2023): r/r CLL/SLL after prior cBTKi (median 3
+  prior lines, ~80% with prior cBTKi, ~50% with prior BCL2i) — ORR
+  73%; in BTK-C481-mutated subset ORR ~71%; mPFS ~19.6 mo. Approved
+  3L+ post-cBTKi + post-BCL2i in CLL/SLL. Distinct binding mechanism
+  (non-covalent, C481-independent) overcomes resistance to ibrutinib /
+  acalabrutinib / zanubrutinib. Particularly active in TP53-mutated
+  CLL where conventional chemoimmuno + chemoSCT fail.

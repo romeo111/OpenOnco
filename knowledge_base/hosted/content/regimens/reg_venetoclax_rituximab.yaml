@@ -1,0 +1,69 @@
+id: REG-VENETOCLAX-RITUXIMAB
+name: "Venetoclax + Rituximab (VenR), 24-month fixed-duration (MURANO schedule)"
+name_ua: "Венетоклакс + Ритуксимаб (VenR), 24-місячна фіксована тривалість (MURANO)"
+alternate_names:
+  - "VenR"
+  - "Ven-R"
+  - "MURANO regimen"
+
+components:
+  - drug_id: DRUG-VENETOCLAX
+    dose: >
+      5-week ramp-up cycle 1: 20 → 50 → 100 → 200 → 400 mg PO daily
+      (week 1-5); then 400 mg PO daily continuous for total 24 months from start of full dose
+    schedule: "PO daily, total 24 months therapy"
+    route: PO
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m² (cycle 1) then 500 mg/m² (cycles 2-6)"
+    schedule: "IV day 1 of each 28-day cycle for 6 cycles total (start after venetoclax ramp completed)"
+    route: IV
+  - drug_id: DRUG-ALLOPURINOL
+    dose: "300 mg PO daily"
+    schedule: "Start 72h before venetoclax ramp; continue ≥1 week after reaching 400 mg"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "6 rituximab + 24 months total venetoclax"
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-rituximab: acetaminophen + diphenhydramine ± methylprednisolone (cycle 1)"
+  - "Pre-venetoclax ramp: hydration + allopurinol; serial labs every 6-8h during first 24h of each ramp step in high-burden patients"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Concomitant strong CYP3A4 inhibitor"
+    modification: "Hold during inhibitor; resume after washout. Avoid during ramp-up phase entirely."
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "High tumor burden (ALC >25K OR any LN ≥10 cm OR LN ≥5 cm + ALC ≥25K)"
+    modification: "Hospitalize for first 2 ramp-up doses with q6-8h labs (TLS surveillance)"
+    rationale: "Fatal TLS reported when ramp-up done outpatient in high-burden patients"
+  - condition: "ANC <1000 OR febrile neutropenia"
+    modification: "Hold venetoclax + G-CSF support; resume at lower step"
+  - condition: "CrCl <30 mL/min"
+    modification: "Caution with TLS — more aggressive hydration + monitoring; consider inpatient ramp"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Venetoclax registered, NOT reimbursed via НСЗУ. Rituximab registered
+    + reimbursed via НСЗУ for CLL r/r indications. Funding pathway for
+    venetoclax must be confirmed pre-start.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  MURANO trial (Seymour 2018; updated 2023): in r/r CLL after ≥1 prior
+  line, VenR vs BR — superior 4-year PFS (57.3% vs 4.6%) AND superior
+  4-year OS (85% vs 67%, HR 0.41). Approved 2L+ for r/r CLL. 24-month
+  fixed-duration with deep MRD-negative responses (~62% MRD-negative
+  at end of treatment). Distinct from VenO (1L CLL14 schedule, 12 mo
+  + obinutuzumab anti-CD20 instead of rituximab). TLS PROTOCOL
+  CRITICAL: skipping ramp = fatal hyperkalemia + AKI.

@@ -1,0 +1,97 @@
+id: IND-CLL-2L-VENR-MURANO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CLL
+  line_of_therapy: 2
+  stage_requirements: ["Relapsed/refractory after ≥1 prior systemic line", "BCL2i-naive (venetoclax not previously failed)"]
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-VENETOCLAX-RITUXIMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~92% (≥PR by iwCLL, MURANO)"
+  complete_response: "~27% (CR/CRi)"
+  progression_free_survival: "4-year PFS 57.3% vs 4.6% BR (MURANO; HR 0.19)"
+  overall_survival_5y: "5-year OS ~82% vs ~62% BR (HR 0.41)"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS  # rituximab anti-CD20
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-B2-MICROGLOBULIN
+  - TEST-FISH-PANEL
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-IMMUNOGLOBULINS
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CECT-CAP
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Venetoclax + rituximab (VenR) for 24 months is the preferred 2L+
+  fixed-duration regimen for r/r CLL after 1L BTKi or chemoimmuno
+  progression. MURANO trial: substantial PFS + OS benefit over BR with
+  durable MRD-negative responses (~62% MRD-negative at end of treatment).
+  Distinct from VenO (1L CLL14, 12 mo + obinutuzumab anti-CD20) — VenR
+  is 24 mo + rituximab, designed for r/r setting. Particularly valuable
+  for patients who are BCL2-naive and need fixed-duration time-off-
+  treatment. Choice of VenR vs continued BTKi at progression depends
+  on prior 1L exposure: if 1L was BTKi → VenR is the rational switch;
+  if 1L was chemoimmuno → either VenR or BTKi acceptable.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Venetoclax + rituximab (24-month MURANO schedule) is a Category 1 preferred regimen for r/r CLL after 1+ prior lines"
+  - source_id: SRC-ESMO-CLL-2024
+    position: supports
+    relevant_quote_paraphrase: "VenR fixed-duration 24-month regimen is recommended for r/r CLL with substantial PFS + OS benefit over chemoimmunotherapy"
+
+known_controversies:
+  - topic: "Continued BTKi vs switch to VenR after 1L BTKi progression"
+    positions:
+      - position: "Switch to VenR (different MOA — BCL2 inhibition) for patients progressing on cBTKi (intolerance OR true progression)"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Switch to second-gen BTKi (zanu, acal) if 1L was ibrutinib intolerance (not progression) — same class but better tolerability"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Distinguish intolerance from true progression — drives next-line choice"
+    our_default: "VenR for true BTKi progression; BTKi-class-switch (e.g. ibrutinib intolerance → zanubrutinib) if intolerance only"
+    rationale: "Mechanism-of-action switch indicated for true progression"
+
+do_not_do:
+  - "НЕ skip-ити venetoclax 5-week ramp-up — летальний TLS зафіксовано."
+  - "НЕ призначати при concomitant strong CYP3A4 inhibitor під час ramp-up — летальне підвищення концентрації."
+  - "НЕ починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ (anti-CD20 reactivation)."
+  - "НЕ пропускати TLS prophylaxis (allopurinol + hydration) — особливо при ALC >25K або bulky disease."
+  - "НЕ робити ramp-up на амбулаторного пацієнта при high-burden disease — потрібна госпіталізація з q6-8h labs."
+  - "НЕ забути PJP prophylaxis на тривалу терапію."
+  - "НЕ використовувати при попередній BCL2i резистентності — низька efficacy; розглянути pirtobrutinib або CAR-T."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Co-Lead sign-off. Standard-track 2L for r/r CLL —
+  fixed-duration alternative to continued BTKi switch. Particularly
+  valuable when 1L BTKi has progressed (mechanism-of-action switch).
+  Distinct from VenO 1L (IND-CLL-1L-VENO) — different anti-CD20 partner
+  + duration. UA: venetoclax not reimbursed; rituximab reimbursed.

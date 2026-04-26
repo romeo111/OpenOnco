@@ -1,0 +1,58 @@
+id: REG-ZANUBRUTINIB-CONTINUOUS
+name: "Zanubrutinib monotherapy (continuous, ALPINE-style)"
+name_ua: "Занубрутиніб монотерапія (безперервно, ALPINE-style)"
+alternate_names:
+  - "Zanu mono"
+  - "ALPINE regimen"
+
+components:
+  - drug_id: DRUG-ZANUBRUTINIB
+    dose: "160 mg PO twice daily OR 320 mg PO once daily"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor (azoles, ritonavir)"
+    modification: "Reduce to 80 mg PO BID (or 80 mg PO once daily for very strong inhibitors); stop inhibitor when feasible"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Reduce dose to 80 mg PO BID; monitor LFTs"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "ANC <500 OR platelets <50K"
+    modification: "Hold; resume at same dose on recovery; reduce dose if recurrent"
+  - condition: "New-onset atrial fibrillation"
+    modification: "Hold; cardiology / EP consult; rate control + anticoagulation as appropriate; resume if benefit justifies; switch to alternative if recurrent"
+    rationale: "Lower afib incidence vs ibrutinib (~3% vs ~7%) but still possible"
+  - condition: "Major hemorrhage / planned major surgery"
+    modification: "Hold zanubrutinib ≥3-7 days pre-procedure; resume post-op once hemostasis confirmed"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Zanubrutinib registered, NOT NSZU-reimbursed. Ibrutinib reimbursed
+    via НСЗУ for CLL — but ALPINE / ELEVATE-RR data demonstrate
+    superior PFS + cardiac safety with second-generation BTKis. Funding
+    pathway must be confirmed; ibrutinib is the practical fallback.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  ALPINE trial (Brown 2023): in r/r CLL, zanubrutinib superior to
+  ibrutinib in PFS (HR 0.65) and cardiac safety (afib 5.2% vs 13.3%;
+  cardiac death 0% vs 1.9%). SEQUOIA trial: 1L CLL, zanubrutinib vs
+  bendamustine-rituximab — superior PFS. Combined: zanubrutinib is
+  preferred BTKi for both 1L (SEQUOIA) and r/r (ALPINE) CLL where
+  accessible. Acalabrutinib (REG-ACALABRUTINIB-CONTINUOUS, ELEVATE-TN/RR)
+  is the alternative second-generation BTKi with similar safety profile.
