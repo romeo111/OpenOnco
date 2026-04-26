@@ -1,0 +1,67 @@
+id: IND-HNSCC-RM-1L-PEMBRO-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Recurrent / metastatic, not amenable to curative-intent local therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      value_constraint: "CPS ≥1"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-CHEMO-HNSCC-1L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~36% (KEYNOTE-048 chemo-IO arm)"
+  progression_free_survival: "Median ~5 months"
+  overall_survival_5y: "Median OS 13.6 mo (vs 10.4 mo EXTREME); 24-mo OS ~29%"
+  notes: "KEYNOTE-048 (Burtness Lancet 2019) — pembro + chemo vs cetuximab + chemo (EXTREME)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Pembrolizumab + 5-FU + platinum is the preferred 1L for R/M HNSCC
+  with PD-L1 CPS ≥1 per KEYNOTE-048 — superior OS vs EXTREME with
+  similar tolerability and durable responses in a subset. Cisplatin
+  is preferred over carboplatin when feasible; carboplatin is the
+  practical default for elderly / renal-impaired / neuropathy /
+  hearing-loss patients. CPS ≥20 patients have the option of
+  pembrolizumab monotherapy (alternative indication) — equivalent OS
+  with lower toxicity. CPS <1 falls back to EXTREME or
+  cetuximab-based regimens (deferred — not authored).
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+  - source_id: SRC-ONCOKB
+    weight: supporting
+
+do_not_do:
+  - "Do NOT initiate immunotherapy without confirmed PD-L1 CPS testing on representative tumor tissue (biopsy preferred)."
+  - "Do NOT use cisplatin in patients with GFR <60, gr ≥2 hearing loss, gr ≥2 neuropathy, or significant CHF — switch to carboplatin AUC 5."
+  - "Do NOT continue pembrolizumab through gr ≥3 immune-related AE without high-dose corticosteroid initiation + multidisciplinary irAE management."
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  Standard 1L for R/M HNSCC with CPS ≥1 (the majority of HNSCC).
+  Locally advanced (curable) HNSCC routes to concurrent cisplatin + RT
+  or surgery + adjuvant — separate algorithm not yet authored.
+  HPV+ oropharyngeal R/M handled identically (no de-escalation in
+  recurrent setting). Reuses pembrolizumab + cisplatin + carboplatin +
+  5-FU drug entities.

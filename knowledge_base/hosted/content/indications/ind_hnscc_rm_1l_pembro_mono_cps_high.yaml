@@ -1,0 +1,62 @@
+id: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Recurrent / metastatic, not amenable to curative-intent local therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      value_constraint: "CPS ≥20"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBRO-MONO-HNSCC-1L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~23% (KEYNOTE-048 mono CPS ≥20)"
+  progression_free_survival: "Median ~3.4 mo (selection bias toward responders has long tail)"
+  overall_survival_5y: "Median OS 14.9 mo (vs 10.7 mo EXTREME); 24-mo OS ~35%"
+  notes: "KEYNOTE-048 (Burtness Lancet 2019); median DOR ~22 mo — durable responder subset"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Pembrolizumab monotherapy in PD-L1 CPS ≥20 R/M HNSCC achieves
+  equivalent OS to chemo-IO with substantially less toxicity (no
+  cisplatin/carbo + 5-FU burden) — KEYNOTE-048 — and is preferred for
+  elderly, comorbid, or fitness-limited patients with high-CPS
+  tumors. For low-burden indolent recurrence, the durable-response
+  tail (~22 mo median DOR among responders) is particularly valuable.
+  Patients with rapid progression / visceral crisis or symptomatic
+  disease at 1L assessment should receive chemo-IO instead — pembro
+  monotherapy has insufficient early disease-control kinetics.
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+
+do_not_do:
+  - "Do NOT use pembrolizumab monotherapy in CPS <20 — chemo-IO or EXTREME is preferred."
+  - "Do NOT use pembrolizumab monotherapy as 1L in rapidly progressive / visceral-crisis disease — early progression risk before IO kinetics establish."
+  - "Do NOT continue pembrolizumab through gr ≥3 immune-related AE without high-dose corticosteroid initiation + multidisciplinary irAE management."
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  Alternative / aggressive-track 1L for the highest-PD-L1-expressing
+  R/M HNSCC subset, where the chemo-sparing profile is durable and
+  high-quality-of-life. Reuses DRUG-PEMBROLIZUMAB.
