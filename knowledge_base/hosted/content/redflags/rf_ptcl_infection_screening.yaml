@@ -1,0 +1,57 @@
+id: RF-PTCL-NOS-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating CHOEP / CHP-Bv in PTCL NOS: HBsAg-positive (HBV reactivation
+  on prolonged steroid + chemo), anti-HBc-positive (occult HBV),
+  HCV-RNA-positive, HIV-positive (HTLV-1 differential — must exclude
+  ATLL), HTLV-1-positive (reclassify as ATLL), EBV-driven (informs
+  prognostication; some PTCL subsets EBV+), or active TB.
+definition_ua: >
+  Активна / латентна інфекція перед CHOEP / CHP-Bv при PTCL NOS:
+  HBsAg+ (реактивація HBV на тривалому стероїд+chemo), anti-HBc+
+  (occult HBV), HCV-РНК+, HIV+ (HTLV-1 диференціал — виключити ATLL),
+  HTLV-1+ (рекласифікація як ATLL), EBV-driven (прогностична
+  інформація), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "htlv1_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-PTCL-NOS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HTLV-1 status mandatory in any PTCL workup — HTLV-1+ → reclassify as
+  ATLL (separate algorithm: zidovudine+IFN for indolent/smoldering
+  variants; mogamulizumab for acute/lymphoma variants). HBsAg+: entecavir
+  /tenofovir from –7d through +12mo of last steroid-containing cycle.
+  PJP prophylaxis (TMP-SMX) routine throughout CHOEP/CHP-Bv (T-cell
+  lymphoma + chemo = profound CD4 lymphopenia). EBV-driven PTCL NOS
+  variants (some "follicular helper" subsets per WHO 2022) have
+  distinct biology but treatment paradigm unchanged at present.

@@ -1,0 +1,51 @@
+id: RF-PTCL-NOS-TRANSFORMATION-PROGRESSION
+definition: >
+  PTCL NOS primary-refractory disease (no CR after induction) OR early
+  relapse <12 months post-induction OR rapid progression — high-risk
+  subset routes to single-agent salvage (romidepsin, pralatrexate,
+  belinostat, gemcitabine ± brentuximab if CD30+) with intent to bridge
+  to autoSCT (CR2) or alloSCT (younger fit refractory).
+definition_ua: >
+  PTCL NOS первинно-рефрактерна (без ПР після індукції) АБО ранній
+  рецидив <12 міс АБО швидка прогресія — підгрупа високого ризику;
+  маршрут до одноагентного сальваджу (ромідепсин, пралатрексат,
+  белиностат, гемцитабін ± brentuximab якщо CD30+) з мостом до
+  autoSCT (ПР2) або alloSCT (молоді фіт-рефрактерні).
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "ptcl_primary_refractory"
+      value: true
+    - finding: "ptcl_early_relapse_lt_12mo"
+      value: true
+    - finding: "rapid_progression"
+      value: true
+    - finding: "interim_pet_deauville_4_5"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 60
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-PTCL-NOS
+shifts_algorithm: []  # not yet wired into ALGO-PTCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  PTCL NOS has dismal r/r outcomes — median OS ~6 mo without HCT.
+  CD30+ subset: brentuximab vedotin monotherapy ORR 41% per Horwitz
+  Blood 2014. Romidepsin (Pralatrexate, Belinostat) — ORRs 25-30%
+  but durable CR uncommon. Best survival in r/r PTCL: salvage to CR2
+  followed by alloSCT (transplant-eligible only) — 3y OS ~50% in
+  responders. AutoSCT consolidation in CR1 standard for high-risk
+  PTCL NOS per Nordic NLG-T-01. Clinical-trial enrollment strongly
+  encouraged in r/r setting given paucity of effective options.

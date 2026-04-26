@@ -1,0 +1,58 @@
+id: RF-PTCL-NOS-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard CHOEP / CHP-Bv induction
+  in PTCL NOS: LVEF <50% (anthracycline contraindicated), CrCl <30
+  (etoposide / cyclophosphamide constraints), bilirubin >3× ULN
+  (vincristine / brentuximab metabolism), Child-Pugh C (brentuximab
+  contraindicated), or baseline peripheral neuropathy ≥grade 2 (vincristine
+  + brentuximab combination prohibitive).
+definition_ua: >
+  Базова дисфункція органів при PTCL NOS: LVEF <50% (антрациклін), CrCl
+  <30 (етопозид / циклофосфамід), білірубін >3× ULN (метаболізм
+  вінкристину / brentuximab), Child-Pugh C (brentuximab протипоказаний),
+  периферична нейропатія ≥ступінь 2 (vincristine + brentuximab —
+  непереносна).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 85
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-PTCL-NOS
+shifts_algorithm: []  # not yet wired into ALGO-PTCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CHP-Bv (ECHELON-2) for CD30+ PTCL NOS substitutes brentuximab for
+  vincristine — reduces neuropathy vs CHOEP / CHOP. With baseline
+  neuropathy ≥2, even CHP-Bv risky; use GEM-P or pralatrexate or
+  romidepsin monotherapy as palliative-curative balance. LVEF <50%:
+  liposomal doxorubicin substitution; or DHAP-class regimens
+  anthracycline-free for transplant bridge. Severe hepatic dysfunction:
+  brentuximab contraindicated Child-Pugh C; reduce to 1.2 mg/kg
+  Child-Pugh B with monitoring.

@@ -1,0 +1,63 @@
+id: RF-PTCL-NOS-FRAILTY-AGE
+definition: >
+  Frailty profile precluding full-dose CHOEP / CHP-Bv induction in PTCL
+  NOS: ECOG ≥3, OR (age ≥75 with G8 ≤14), OR composite frailty (age ≥70
+  + Charlson ≥3 + albumin <3.5). Triggers de-escalation to CHOP (omit
+  etoposide), GEM-P, romidepsin / pralatrexate monotherapy, or
+  brentuximab monotherapy (if CD30+).
+definition_ua: >
+  Профіль frailty при PTCL NOS: ECOG ≥3, АБО (вік ≥75 з G8 ≤14), АБО
+  композитна frailty (вік ≥70 + Charlson ≥3 + альбумін <3.5). Триггерує
+  de-escalation до CHOP (без етопозиду), GEM-P, монотерапії ромідепсин /
+  пралатрексат, або brentuximab-моно (якщо CD30+).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "g8_score"
+          threshold: 14
+          comparator: "<="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-PTCL-NOS
+shifts_algorithm: []  # not yet wired into ALGO-PTCL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Etoposide adds toxicity (cytopenia, mucositis, secondary leukemia
+  long-term) without clear OS benefit in elderly per German High-Grade
+  NHL Study Group reanalysis — CHOP without etoposide reasonable for
+  ≥60y or frail. CD30+ frail elderly: CHP-Bv preferred over CHOEP if
+  fit-enough; brentuximab monotherapy palliative-curative for very frail.
+  AutoSCT consolidation generally off-table for frail elderly. AlloHCT
+  contraindicated. CGA-guided dose attenuation essential — PTCL outcomes
+  poor and treatment-related mortality must be balanced against modest
+  cure rates.
