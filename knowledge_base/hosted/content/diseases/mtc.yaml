@@ -1,0 +1,67 @@
+id: DIS-MTC
+names:
+  preferred: "Medullary thyroid carcinoma (MTC)"
+  ukrainian: "Медулярна карцинома щитовидної залози"
+  english: "Medullary thyroid carcinoma"
+  synonyms: ["MTC", "Medullary thyroid cancer"]
+
+codes:
+  icd_o_3_morphology: "8345/3"  # Medullary carcinoma with amyloid stroma
+  icd_o_3_topography: ["C73"]
+  icd_10: "C73"
+  who_classification: "WHO Endocrine Tumours 5th ed (2022): Medullary thyroid carcinoma (parafollicular / C-cell origin)"
+
+archetype: biomarker_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Sporadic (~75%) — somatic RET M918T or RAS (HRAS/KRAS) mutation"
+  - "Hereditary (~25%) — germline RET (MEN2A C634R most common; MEN2B M918T; FMTC variants)"
+
+related_diseases:
+  - "DIS-THYROID-PAPILLARY (separate origin: follicular epithelium, RET-fusion-driven; vs MTC parafollicular C-cell origin, RET-mutation-driven)"
+
+key_biomarkers:
+  - BIO-RET  # M918T (sporadic ~50%; MEN2B germline) and C634 (MEN2A germline)
+  # Calcitonin and CEA are tumor markers but not yet authored as BIO entities
+
+epidemiology:
+  global_incidence: "~1-2% of all thyroid cancers; ~1500-2000 new cases/yr in US"
+  hereditary_proportion: "~25% — mandatory germline RET testing for any MTC"
+  ret_mutation_rate: "Sporadic MTC: ~50% somatic RET (M918T dominant); germline (MEN2): ~100% by definition"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-CNS-2025  # NCCN-THYROID not yet ingested — placeholder; flag for replacement
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Total thyroidectomy + central neck dissection + lymph node mapping + lifelong calcitonin / CEA monitoring — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 solid-tumor extension. Source gap: SRC-NCCN-THYROID and SRC-ATA-THYROID-2015 not yet ingested."
+
+notes: >
+  Parafollicular C-cell origin — secretes calcitonin (diagnostic +
+  monitoring biomarker) and CEA (parallel monitoring). RAI is NOT
+  effective (C-cells do not concentrate iodide).
+
+  Germline RET testing is mandatory at diagnosis — drives:
+  - Prophylactic thyroidectomy timing in kindred (MEN2B: <1 yr; MEN2A
+    C634: <5 yr per ATA risk classification).
+  - Pheochromocytoma screening (plasma metanephrines / urinary catechols
+    annually) — RET drives both MTC and adrenal medullary tumors.
+  - Hyperparathyroidism screening in MEN2A.
+
+  Therapy:
+  - Localized: total thyroidectomy + central compartment LN dissection.
+  - Advanced / unresectable (calcitonin doubling time <1 yr or
+    structural progression): selpercatinib (LIBRETTO-001 / -531) or
+    pralsetinib (ARROW) for RET-mutant MTC — superior to multikinase
+    TKIs (vandetanib ZETA / cabozantinib EXAM remain alternatives,
+    significant toxicity).
+  - RET-WT (RAS-mutant or other): no targeted option; cabozantinib /
+    vandetanib by default.
+
+  Calcitonin doubling time <6 months portends very poor survival;
+  <2 yr drives systemic-therapy decisions even without RECIST progression.

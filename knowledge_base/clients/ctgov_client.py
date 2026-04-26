@@ -424,65 +424,60 @@ if __name__ == "__main__":
 
 # ── SourceClient-conforming wrapper ───────────────────────────────────────────
 
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from typing import Literal
 
-from knowledge_base.clients.base import RateLimit, SourceResponse, TTLCache
+from knowledge_base.clients.base import (
+    BaseSourceClient,
+    CacheBackend,
+    RateLimit,
+)
 
 
-class CtgovClient:
+@dataclass
+class CtgovQuery:
+    """Either a trial search by free-text terms (mode='search') or a
+    single-trial fetch by NCT ID (mode='get')."""
+
+    mode: Literal["search", "get"] = "search"
+    terms: str = ""
+    nct_id: Optional[str] = None
+    status: Optional[str] = None
+    phase: Optional[str] = None
+    max_results: int = 20
+
+
+class CtgovClient(BaseSourceClient[CtgovQuery, dict]):
     """SourceClient implementation for ClinicalTrials.gov v2 API.
 
-    Wraps the module-level `search_trials` / `get_trial_details` functions
-    above, exposing them through the unified `SourceClient` protocol
-    (see knowledge_base/clients/base.py).
+    Wraps the module-level `search_trials` / `get_trial` functions above
+    behind the unified `BaseSourceClient` interface — caching and rate-
+    limiting come from the base class.
     """
 
     source_id = "SRC-CTGOV-REGISTRY"
-    base_url = CT_BASE
     rate_limit = RateLimit(tokens_per_second=0.8, burst=3)  # ~50 req/min
     cache_ttl_seconds = 24 * 3600  # 1 day per SOURCE_INGESTION_SPEC §12.3
+    api_version = "v2"
 
-    def __init__(self, cache: TTLCache | None = None):
-        self._cache = cache or TTLCache()
-        self._last_error: str | None = None
-
-    def fetch(self, query: dict) -> SourceResponse:
-        mode = query.get("mode", "search")
-        key = TTLCache.key_for(self.source_id, mode, query)
-        cached = self._cache.get(key)
-        if cached is not None:
-            return cached
-
-        try:
-            if mode == "get":
-                data = get_trial_details(query["nct_id"])
-            else:
-                data = search_trials(
-                    query.get("terms", ""),
-                    status=query.get("status"),
-                    phase=query.get("phase"),
-                    max_results=query.get("max_results", 20),
-                )
-        except Exception as e:
-            self._last_error = str(e)
-            raise
-
-        resp = SourceResponse(
-            data=data,
-            source_id=self.source_id,
-            fetched_at=datetime.now(timezone.utc).isoformat(),
-            cache_hit=False,
-            api_version="v2",
+    def _fetch_raw(self, query: CtgovQuery) -> tuple[dict, Optional[str]]:
+        if query.mode == "get":
+            if not query.nct_id:
+                raise ValueError("CtgovQuery.mode='get' requires nct_id")
+            return get_trial(query.nct_id) or {}, self.api_version
+        return (
+            search_trials(
+                query.terms,
+                status=query.status,
+                phase=query.phase,
+                max_results=query.max_results,
+            ),
+            self.api_version,
         )
-        self._cache.put(key, resp, self.cache_ttl_seconds)
-        return resp
 
     def health(self) -> dict:
         try:
             search_trials("NCT00000000", max_results=1)
             return {"ok": True, "latency_ms": None, "last_error": None}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             return {"ok": False, "latency_ms": None, "last_error": str(e)}
-
-    def quota(self) -> dict:
-        return {"remaining": None, "reset_at": None}

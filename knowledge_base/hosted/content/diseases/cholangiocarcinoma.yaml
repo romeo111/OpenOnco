@@ -1,0 +1,77 @@
+id: DIS-CHOLANGIOCARCINOMA
+names:
+  preferred: "Cholangiocarcinoma (bile duct cancer)"
+  ukrainian: "Холангіокарцинома (рак жовчних проток)"
+  english: "Cholangiocarcinoma"
+  synonyms: ["Bile duct carcinoma", "iCCA", "pCCA", "dCCA", "Klatskin tumor (perihilar)"]
+
+codes:
+  icd_o_3_morphology: "8160/3"  # Cholangiocarcinoma
+  icd_o_3_topography: ["C22.1", "C24.0", "C24.8"]  # intrahepatic bile duct, extrahepatic, biliary tract NOS
+  icd_10: "C22.1, C24.0"
+  who_classification: "WHO Digestive System Tumours 5th ed (2019): Intrahepatic / Perihilar / Distal cholangiocarcinoma"
+
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Primary sclerosing cholangitis (PSC) — strongest Western risk factor"
+  - "Hepatolithiasis / chronic biliary inflammation"
+  - "Liver fluke infection (Opisthorchis viverrini, Clonorchis sinensis — Southeast Asia)"
+  - "Chronic HBV / HCV (intrahepatic CCA)"
+  - "Choledochal cysts / biliary anatomic anomalies"
+  - "Cirrhosis (intrahepatic CCA)"
+
+related_diseases:
+  - "DIS-HCC (mixed HCC-CCA tumors share liver substrate / cirrhotic background)"
+
+key_biomarkers:
+  - BIO-FGFR2  # ~10–20% of intrahepatic CCA (BICC1-FGFR2 fusion most common); pemigatinib / futibatinib actionable
+  - BIO-IDH-MUTATION  # ~15% of intrahepatic CCA (IDH1 R132); ivosidenib actionable (ClarIDHy)
+  - BIO-BRAF-V600E  # ~5% — dabrafenib + trametinib tumor-agnostic
+  - BIO-MSI-STATUS  # ~2–3% MSI-H — pembrolizumab tumor-agnostic
+  - BIO-HER2-SOLID  # ~5–10% perihilar/distal — trastuzumab-deruxtecan / zanidatamab
+
+epidemiology:
+  global_incidence: "~1-2 per 100K Western; up to 90 per 100K in Northeast Thailand (fluke endemic)"
+  subtype_distribution: "Intrahepatic ~10–20%, perihilar ~50–60%, distal ~20–30%"
+  actionable_alteration_rate: "Intrahepatic CCA ~40% targetable (FGFR2 + IDH1 + BRAF + HER2 + MSI); perihilar / distal lower"
+
+sources:
+  - SRC-NCCN-HCC-2025  # NCCN Hepatobiliary covers cholangio
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Surgery (resection / transplant for selected hilar) + adjuvant capecitabine (BILCAP) + locoregional (TARE / SBRT) phasing — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17. Source gap: SRC-ESMO-BTC-2023 / SRC-ASCO-BTC-2023 not yet ingested. Anatomic-subtype-specific (iCCA vs pCCA vs dCCA) workflows need to be addressable distinctly — currently combined."
+
+notes: >
+  Three anatomically and biologically distinct subtypes; actionable
+  alterations cluster in intrahepatic.
+
+  Resectable: surgery + adjuvant capecitabine 6 months (BILCAP).
+  Liver transplant for selected pCCA after Mayo neoadjuvant protocol
+  (chemo-radiation + brachy → exam-under-anesthesia → transplant).
+
+  Advanced 1L: gemcitabine + cisplatin + durvalumab (TOPAZ-1) replaced
+  gem-cis monotherapy as standard. Pembrolizumab + gem-cis is an
+  alternative (KEYNOTE-966).
+
+  Advanced 2L+ by genotype (intrahepatic CCA enrichment):
+  - FGFR2 fusion / rearrangement (~10–20% iCCA): pemigatinib (FIGHT-202)
+    or futibatinib (FOENIX-CCA2) — both FDA-approved. Hyperphosphatemia
+    is on-target effect.
+  - IDH1 R132 (~15% iCCA): ivosidenib (ClarIDHy) — modest PFS benefit.
+  - HER2 IHC 3+ / amplified (~5–10% perihilar/distal): trastuzumab +
+    pertuzumab (MyPathway) or trastuzumab deruxtecan (DESTINY-PanTumor02);
+    zanidatamab (HERIZON-BTC-01).
+  - BRAF V600E (~5%): dabrafenib + trametinib (ROAR — tumor-agnostic).
+  - MSI-H / dMMR (~2–3%): pembrolizumab (KEYNOTE-158).
+  - NTRK fusion (rare): larotrectinib / entrectinib.
+
+  Bile-duct decompression / drainage management is parallel concern;
+  cholangitis / biliary stent dysfunction is the most common
+  treatment-interrupting complication.

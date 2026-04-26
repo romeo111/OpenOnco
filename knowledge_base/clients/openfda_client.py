@@ -13,10 +13,10 @@ import json
 import os
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, Literal, Optional
 
-from .base import RateLimit, SourceResponse, TTLCache
+from .base import BaseSourceClient, CacheBackend, RateLimit, SourceResponse
 
 OPENFDA_BASE = "https://api.fda.gov"
 USER_AGENT = "OpenOnco/0.1 (https://github.com/romeo111/cancer-autoresearch)"
@@ -41,51 +41,35 @@ def drug_recalls(query: str, limit: int = 10) -> dict:
     return _http_get("/drug/enforcement.json", {"search": query, "limit": limit})
 
 
-class OpenFDAClient:
+@dataclass
+class OpenFDAQuery:
+    """openFDA endpoint dispatch + free-text search expression."""
+
+    endpoint: Literal["label", "recall"] = "label"
+    search: str = ""
+    limit: int = 10
+
+
+class OpenFDAClient(BaseSourceClient[OpenFDAQuery, dict]):
     """SourceClient for openFDA."""
 
     source_id = "SRC-OPENFDA"
-    base_url = OPENFDA_BASE
     rate_limit = RateLimit(tokens_per_second=4.0, burst=10)  # 240/min without key
     cache_ttl_seconds = 24 * 3600  # 1 day
+    api_version = "openFDA"
 
-    def __init__(self, cache: TTLCache | None = None):
-        self._cache = cache or TTLCache()
-        self._last_error: str | None = None
-
-    def fetch(self, query: dict) -> SourceResponse:
-        endpoint = query.get("endpoint", "label")
-        key = TTLCache.key_for(self.source_id, endpoint, query)
-        cached = self._cache.get(key)
-        if cached is not None:
-            return cached
-
-        try:
-            if endpoint == "label":
-                data = drug_label_search(query["search"], limit=query.get("limit", 10))
-            elif endpoint == "recall":
-                data = drug_recalls(query["search"], limit=query.get("limit", 10))
-            else:
-                raise ValueError(f"Unknown openFDA endpoint: {endpoint}")
-        except Exception as e:
-            self._last_error = str(e)
-            raise
-
-        resp = SourceResponse(
-            data=data,
-            source_id=self.source_id,
-            fetched_at=datetime.now(timezone.utc).isoformat(),
-            cache_hit=False,
-            api_version="openFDA",
-        )
-        self._cache.put(key, resp, self.cache_ttl_seconds)
-        return resp
+    def _fetch_raw(self, query: OpenFDAQuery) -> tuple[dict, Optional[str]]:
+        if query.endpoint == "label":
+            return drug_label_search(query.search, limit=query.limit), self.api_version
+        if query.endpoint == "recall":
+            return drug_recalls(query.search, limit=query.limit), self.api_version
+        raise ValueError(f"Unknown openFDA endpoint: {query.endpoint!r}")
 
     def health(self) -> dict:
         try:
             drug_label_search("aspirin", limit=1)
             return {"ok": True, "latency_ms": None, "last_error": None}
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             return {"ok": False, "latency_ms": None, "last_error": str(e)}
 
     def quota(self) -> dict:

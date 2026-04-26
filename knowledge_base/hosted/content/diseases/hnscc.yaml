@@ -1,0 +1,80 @@
+id: DIS-HNSCC
+names:
+  preferred: "Head and neck squamous cell carcinoma (HNSCC)"
+  ukrainian: "Плоскоклітинна карцинома голови та шиї"
+  english: "Head and neck squamous cell carcinoma"
+  synonyms: ["HNSCC", "SCCHN"]
+
+codes:
+  icd_o_3_morphology: "8070/3"  # Squamous cell carcinoma NOS
+  icd_o_3_topography: ["C00", "C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09", "C10", "C11", "C12", "C13", "C14", "C30", "C31", "C32"]  # lip / oral cavity / oropharynx / hypopharynx / nasopharynx / nasal / sinus / larynx
+  icd_10: "C00-C14, C30-C32"
+  who_classification: "WHO Head and Neck Tumours 5th ed (2024): Squamous cell carcinoma of upper aerodigestive tract"
+
+archetype: etiologically_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Tobacco (smoked + smokeless) — dominant in HPV-negative disease"
+  - "Alcohol (synergistic with tobacco)"
+  - "HPV (high-risk, mostly type 16) — defines HPV+ oropharyngeal SCC, distinct biology and better prognosis"
+  - "EBV — defines nasopharyngeal carcinoma (separate entity in many guidelines but tracked under HNSCC umbrella)"
+  - "Betel nut chewing (South / Southeast Asia)"
+  - "Fanconi anemia, dyskeratosis congenita (germline susceptibility)"
+
+related_diseases: []
+
+key_biomarkers:
+  - BIO-HPV-STATUS  # Oropharyngeal subset; HPV+ better prognosis, separate staging in AJCC 8
+  - BIO-PDL1-CPS  # Pembrolizumab CPS≥1 (1L combo) and CPS≥20 (mono) per KEYNOTE-048
+  - BIO-EGFR-MUTATION  # Less actionable than NSCLC — cetuximab targets EGFR irrespective of mutation status; no EGFR-TKI role
+  - BIO-HRAS  # ~5–8% — tipifarnib actionable (KO-TIP-001)
+  - BIO-MSI-STATUS  # rare (<2%) but tumor-agnostic pembrolizumab when MSI-H
+  - BIO-TMB-HIGH  # Smoking-associated HNSCC enriched; pembrolizumab tumor-agnostic
+  - BIO-PIK3CA-MUTATION  # ~30% — alpelisib in trials (KURRENT-HN with tipifarnib for HRAS+PIK3CA)
+
+epidemiology:
+  global_incidence: "~900K new cases/yr globally; 6th most common cancer"
+  hpv_proportion: "Oropharyngeal in US: ~70% HPV+; oral cavity / larynx: <20% HPV-attributable"
+  five_year_survival: "HPV+ oropharyngeal stage I-II ~85-90%; HPV− advanced ~30-40%"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-NSCLC-2025  # NCCN-HNSCC not yet ingested — placeholder; flag for replacement
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Multimodal sequencing (induction → surgery vs concurrent chemoRT vs altered fractionation) + de-escalation strategies for HPV+ subset — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17. Source gap: SRC-NCCN-HNSCC-2025 and SRC-ESMO-HNSCC-2020 not yet ingested."
+
+notes: >
+  Two distinct biologies under one disease entity:
+
+  HPV+ oropharyngeal: typically tonsil / base of tongue; younger
+  patients; better prognosis; AJCC 8 separate staging system; active
+  de-escalation trials (cisplatin-light or radiation-light protocols).
+
+  HPV− (tobacco / alcohol): higher TP53 / CDKN2A mutation burden;
+  worse prognosis; standard intensification.
+
+  Therapy:
+  - Localized: surgery (oral cavity preferred when feasible) ± adjuvant
+    chemoRT; or concurrent cisplatin-RT (definitive); or induction +
+    chemoRT (selected hypopharynx / larynx preservation).
+  - Recurrent / metastatic 1L:
+    * PD-L1 CPS ≥20: pembrolizumab monotherapy (KEYNOTE-048).
+    * PD-L1 CPS ≥1: pembrolizumab + 5-FU + platinum (KEYNOTE-048 chemo-IO).
+    * EXTREME (cetuximab + 5-FU + platinum) remains alternative.
+  - 2L+: nivolumab (CheckMate-141) if IO-naive; cetuximab
+    monotherapy / methotrexate / docetaxel.
+  - Genotype-driven (investigational / accelerated):
+    * HRAS mutant (~6-8%): tipifarnib (FDA breakthrough designation;
+      AIM-HN phase 3 ongoing).
+    * NTRK fusion (rare): larotrectinib / entrectinib.
+    * BRAF V600E (very rare): dabrafenib + trametinib.
+
+  Cetuximab (anti-EGFR mAb) has activity irrespective of EGFR
+  mutational status — small-molecule EGFR-TKIs are NOT effective in
+  HNSCC despite EGFR overexpression — distinct from NSCLC.

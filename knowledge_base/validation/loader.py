@@ -53,6 +53,11 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
         ("linked_to_regimen", "regimens"),
     ],
     "biomarkers": [],
+    "biomarker_actionability": [
+        ("biomarker_id", "biomarkers"),
+        ("disease_id", "diseases"),
+        # primary_sources handled specially (list of SRC-* IDs, ≥1 required)
+    ],
     "tests": [],
     "drugs": [],
     "diseases": [],
@@ -207,6 +212,14 @@ def load_content(root: Path) -> LoadResult:
             for alt in data.get("alternatives") or []:
                 if isinstance(alt, dict):
                     check_ref(path, alt.get("drug_id"), "drugs", "alternatives[].drug_id")
+        elif etype == "biomarker_actionability":
+            primary = data.get("primary_sources") or []
+            if not primary:
+                result.ref_errors.append(
+                    (path, f"{eid}: primary_sources is empty (≥1 SRC-* required)")
+                )
+            for i, sid in enumerate(primary):
+                check_ref(path, sid, "sources", f"primary_sources[{i}]")
         elif etype == "workups":
             for sid in data.get("required_tests") or []:
                 check_ref(path, sid, "tests", "required_tests[]")

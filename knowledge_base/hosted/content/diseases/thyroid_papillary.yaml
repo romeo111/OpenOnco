@@ -1,0 +1,70 @@
+id: DIS-THYROID-PAPILLARY
+names:
+  preferred: "Papillary thyroid carcinoma (PTC)"
+  ukrainian: "Папілярна карцинома щитовидної залози"
+  english: "Papillary thyroid carcinoma"
+  synonyms: ["PTC"]
+
+codes:
+  icd_o_3_morphology: "8260/3"  # Papillary adenocarcinoma NOS
+  icd_o_3_topography: ["C73"]
+  icd_10: "C73"
+  who_classification: "WHO Endocrine Tumours 5th ed (2022): Papillary thyroid carcinoma (follicular cell origin)"
+
+archetype: stage_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Childhood ionizing radiation exposure (Chernobyl cohort, therapeutic neck irradiation)"
+  - "Iodine sufficiency / excess (geographic patterns)"
+  - "Hereditary syndromes minor: Cowden (PTEN), FAP, Gardner, Werner — each <2% of PTC"
+
+related_diseases:
+  - "DIS-MTC (separate origin and biology — parafollicular C-cell)"
+  - "DIS-THYROID-ANAPLASTIC (dedifferentiation pathway from PTC / FTC)"
+
+key_biomarkers:
+  - BIO-BRAF-V600E  # ~50–60% of classical PTC; predicts more aggressive behavior
+  - BIO-RET  # CCDC6-RET / NCOA4-RET fusions in ~10–20% (radiation-associated, pediatric enriched)
+  - BIO-NTRK-FUSION  # ~5–10% (ETV6-NTRK3 most common in PTC); pediatric / radiation-exposed enriched
+  - BIO-RAS-MUTATION  # ~10–15% (more common in follicular variant)
+
+epidemiology:
+  global_incidence: "~85% of all thyroid cancers; ~600K new thyroid cancer cases globally; PTC >500K"
+  female_male_ratio: "~3:1"
+  age_distribution: "Peak 40-50; pediatric subset radiation-related"
+  ten_year_survival: ">95% for early-stage; <50% for distant metastatic radioiodine-refractory"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-CNS-2025  # NCCN-THYROID not yet ingested — placeholder; flag for replacement
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Total / hemi-thyroidectomy + radioiodine ablation phasing + TSH suppression — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 solid-tumor extension. Source gap: SRC-NCCN-THYROID and SRC-ATA-THYROID-2015 not yet ingested. Differentiated thyroid cancer (PTC + FTC + oncocytic) currently scoped to PTC; FTC sub-entity may be added later."
+
+notes: >
+  Differentiated thyroid carcinoma — most indolent of common cancers.
+  Standard care: surgery → risk-stratified RAI ablation → TSH
+  suppression → calibrated thyroglobulin (Tg) monitoring.
+
+  Radioiodine-refractory progressive disease is the trigger for
+  systemic therapy:
+  - Multikinase TKI 1L: lenvatinib (SELECT) or sorafenib (DECISION).
+  - Targeted by genotype:
+    * BRAF V600E (~50% PTC): dabrafenib + trametinib (MARCH/REINK
+      compassionate-use; FDA tumor-agnostic 2022 BRAF V600E approval
+      for solid tumors); single-agent dabrafenib also active.
+    * RET fusion: selpercatinib (LIBRETTO-531; positive 2024) and
+      pralsetinib (ARROW) — selpercatinib FDA-approved for RET-fusion+
+      thyroid cancer.
+    * NTRK fusion: larotrectinib / entrectinib (tumor-agnostic).
+    * Re-differentiation strategies: short-course MAPK inhibitor
+      (selumetinib / dabrafenib + trametinib) restoring RAI uptake —
+      under study.
+
+  Aggressive variants (tall cell, hobnail, columnar, diffuse sclerosing)
+  upstage to higher recurrence-risk groups even when small.

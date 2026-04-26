@@ -1,0 +1,73 @@
+id: DIS-GIST
+names:
+  preferred: "Gastrointestinal stromal tumor (GIST)"
+  ukrainian: "Гастроінтестинальна стромальна пухлина (GIST)"
+  english: "Gastrointestinal stromal tumor"
+  synonyms: ["GIST", "ICC tumor"]
+
+codes:
+  icd_o_3_morphology: "8936/3"  # Gastrointestinal stromal sarcoma
+  icd_o_3_topography: ["C15", "C16", "C17", "C18", "C19", "C20", "C26"]  # esophagus, stomach, small intestine, colon, rectum, GI NOS
+  icd_10: "C49"  # connective and other soft tissue, with site modifier
+  who_classification: "WHO Soft Tissue Tumours 5th ed (2020): Gastrointestinal stromal tumour"
+
+archetype: biomarker_driven
+lineage: "sarcoma"
+
+etiological_factors:
+  - "Sporadic (~95%) — somatic KIT or PDGFRA mutation in interstitial cells of Cajal precursors"
+  - "Familial GIST (germline KIT or PDGFRA — rare)"
+  - "Carney triad (gastric GIST + paraganglioma + pulmonary chondroma — SDH-deficient)"
+  - "Carney–Stratakis syndrome (germline SDH mutation — paraganglioma + GIST)"
+  - "Neurofibromatosis type 1 (NF1-mutant GIST — small bowel, multifocal, KIT/PDGFRA wild-type)"
+
+related_diseases: []
+
+key_biomarkers:
+  - BIO-KIT  # ~75–80% (exon 11 most common, exon 9 small bowel; exon 13 / 17 are secondary resistance)
+  - BIO-PDGFRA  # ~10% (D842V imatinib-resistant → avapritinib; non-D842V exon 18 imatinib-sensitive)
+  # SDH-deficient and NF1-mutant subtypes are KIT/PDGFRA wild-type (no current
+  # SDH or NF1 BIO entity — flagged as gap; SDHB IHC is the workup test)
+
+epidemiology:
+  global_incidence: "~10-15 per million per year (~1% of GI malignancies)"
+  age_distribution: "Median 60-65; SDH-deficient subset is younger / pediatric"
+  primary_site_distribution: "Stomach ~60%, small bowel ~30%, colon-rectum ~5%, esophagus / extra-GI <5%"
+
+sources:
+  - SRC-NCCN-MELANOMA-2025  # NCCN GIST guideline not yet ingested — using NCCN-MELANOMA as adjacent KIT reference; flag for replacement when SRC-NCCN-SARCOMA / SRC-NCCN-GIST is added
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Surgery + adjuvant imatinib phasing (3 yr standard, 6 yr extended) + risk-stratified follow-up — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 solid-tumor extension. Source gap: SRC-NCCN-SARCOMA / SRC-NCCN-GIST not yet ingested; SRC-ESMO-SARCOMA-2024 not yet ingested."
+
+notes: >
+  Genotype-driven therapy is the defining feature of GIST. Decision tree:
+
+  - KIT exon 11 mutant (~50%): imatinib 400 mg/day; best prognosis;
+    after imatinib failure → sunitinib → regorafenib → ripretinib.
+  - KIT exon 9 mutant (~10%, predominantly small-bowel): imatinib
+    800 mg/day from start (B2222 / EORTC-62005 dose effect); shorter
+    PFS than exon 11.
+  - PDGFRA D842V (~7%, gastric): imatinib RESISTANT — avapritinib 1L
+    (NAVIGATOR / VOYAGER); ORR ~88% historical.
+  - PDGFRA non-D842V exon 18 / exon 12: imatinib-sensitive.
+  - KIT/PDGFRA wild-type SDH-deficient (~5–10%, gastric, young
+    patients): refractory to imatinib; sunitinib / regorafenib partial;
+    consider clinical trial. Carney triad and Carney-Stratakis fall here.
+  - NF1-mutant (small bowel, multifocal): refractory to TKIs; surgery +
+    MEK inhibitor (selumetinib) being studied.
+
+  Risk stratification (Joensuu / NIH consensus / AFIP) on size, mitotic
+  rate, primary site, rupture → 3 yr adjuvant imatinib (≥3 cm + mitoses
+  ≥5/50 HPF, or rupture, or non-gastric primary) is standard; 6 yr
+  extended in highest-risk per PERSIST-5 / SSG-XXII follow-up.
+
+  Resistance: secondary KIT mutations in exons 13 / 14 (ATP-binding) or
+  17 / 18 (activation loop) emerge during imatinib therapy and drive
+  progression. Ripretinib (INVICTUS) is a switch-control inhibitor with
+  broad secondary-resistance coverage.

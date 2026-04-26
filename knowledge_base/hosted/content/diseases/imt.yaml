@@ -1,0 +1,59 @@
+id: DIS-IMT
+names:
+  preferred: "Inflammatory myofibroblastic tumor (IMT)"
+  ukrainian: "Запальна міофібробластична пухлина"
+  english: "Inflammatory myofibroblastic tumor"
+  synonyms: ["IMT", "Inflammatory pseudotumor (historical, now distinct)", "Plasma cell granuloma (historical)"]
+
+codes:
+  icd_o_3_morphology: "8825/1"  # Myofibroblastic tumor (intermediate behavior)
+  icd_o_3_topography: ["C76", "C16", "C25", "C34", "C49", "C56"]  # multiple sites
+  icd_10: "D48.1"  # neoplasm of uncertain behavior, connective tissue
+  who_classification: "WHO Soft Tissue Tumours 5th ed (2020): Inflammatory myofibroblastic tumour (intermediate, rarely metastasizing)"
+
+archetype: biomarker_driven
+lineage: "sarcoma"  # mesenchymal / soft-tissue (intermediate behavior)
+
+etiological_factors:
+  - "Sporadic — ALK or ROS1 fusion in ~50–60% of cases"
+
+related_diseases: []
+
+key_biomarkers:
+  - BIO-ALK-FUSION  # ~50% — TPM3-ALK / TPM4-ALK / CLTC-ALK fusions; crizotinib / lorlatinib actionable
+  - BIO-ROS1-FUSION  # ~10% — entrectinib / crizotinib actionable
+  - BIO-NTRK-FUSION  # rare — larotrectinib / entrectinib actionable
+
+epidemiology:
+  global_incidence: "Rare — <1 per million; pediatric and young adult enriched but spans all ages"
+  fusion_rate: "ALK ~50%, ROS1 ~10%, NTRK / RET / PDGFRB rare"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-NSCLC-2025  # ALK / ROS1 fusion targeted-therapy reference; SRC-NCCN-SARCOMA not yet ingested
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Surgical resection is curative for localized; systemic targeted therapy for unresectable / metastatic. Source gap: SRC-NCCN-SARCOMA not yet ingested."
+
+notes: >
+  Mesenchymal neoplasm of intermediate biological behavior — locally
+  invasive, ~25% recurrence rate, <5% metastatic. Fusion-driven biology
+  (ALK most common) makes IMT one of the few sarcomas with broadly
+  actionable targets.
+
+  Therapy:
+  - Localized: complete surgical resection — curative in most.
+  - Unresectable / metastatic ALK+: crizotinib FDA-approved (pediatric
+    + adult); lorlatinib for crizotinib-resistant.
+  - ROS1+: entrectinib (FDA tumor-agnostic) or crizotinib.
+  - NTRK+: larotrectinib / entrectinib (FDA tumor-agnostic).
+  - Fusion-negative: surgery, radiation, sometimes corticosteroids /
+    NSAIDs (historical), or chemotherapy by sarcoma protocol.
+
+  IMT is one of the canonical examples of "rare disease, common driver"
+  — small absolute numbers but high actionable-fraction; supports a
+  case for universal molecular profiling at diagnosis.

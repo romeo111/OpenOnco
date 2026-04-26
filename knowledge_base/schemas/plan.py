@@ -134,6 +134,26 @@ class AccessMatrix(Base):
     notes: list[str] = Field(default_factory=list)
 
 
+class VariantActionabilityHit(Base):
+    """One BiomarkerActionability cell matched against the patient's
+    variant profile, surfaced in the Plan for tumor-board context.
+
+    Render-time only — the engine never selects on these tier values
+    (CHARTER §8.3 forbids LLM-or-tier-driven treatment ranking; tracks
+    come from the declarative Algorithm). The ESCAT/OncoKB tier table
+    sits next to the chosen track to inform HCP review.
+    """
+
+    bma_id: str                       # FK → BiomarkerActionability.id
+    biomarker_id: str                 # FK → BIO-* (denormalized for render)
+    variant_qualifier: Optional[str] = None  # null = gene-level cell
+    escat_tier: str                   # "IA"|"IB"|"IIA"|"IIB"|"IIIA"|"IIIB"|"IV"|"X"
+    oncokb_level: str                 # "1"|"2"|"3A"|"3B"|"4"|"R1"|"R2"
+    evidence_summary: str
+    recommended_combinations: list[str] = Field(default_factory=list)
+    primary_sources: list[str] = Field(default_factory=list)  # SRC-* IDs
+
+
 class Plan(Base):
     id: str  # "PLAN-PZ-001-V1"
     patient_id: str  # "PZ-001"
@@ -167,3 +187,10 @@ class Plan(Base):
     # aggregation across tracks. Optional so older Plan YAML still loads.
     # Engine never reads back from this field (plan §0 invariant).
     access_matrix: Optional["AccessMatrix"] = None
+
+    # Variant actionability (ESCAT / OncoKB) — render-time list of
+    # BiomarkerActionability cells matched against the patient's
+    # biomarker profile. Empty list when no variants matched. Engine
+    # never reads back (CHARTER §8.3 — tracks come from Algorithm,
+    # tiers are HCP-review context only).
+    variant_actionability: list[VariantActionabilityHit] = Field(default_factory=list)

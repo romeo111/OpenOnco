@@ -1,0 +1,76 @@
+id: DIS-MASTOCYTOSIS
+names:
+  preferred: "Advanced systemic mastocytosis (AdvSM)"
+  ukrainian: "Поширений системний мастоцитоз"
+  english: "Advanced systemic mastocytosis"
+  synonyms: ["AdvSM", "ASM (aggressive systemic mastocytosis)", "SM-AHN", "MCL (mast cell leukemia)"]
+
+codes:
+  icd_o_3_morphology: "9740/3"  # Mast cell sarcoma; or 9741/3 systemic mastocytosis
+  icd_o_3_topography: ["C42.1"]  # bone marrow
+  icd_10: "C96.2, D47.09"  # malignant mast cell neoplasm; mast cell neoplasm of uncertain behavior
+  who_classification: "WHO Hematolymphoid 5th ed (2022): Systemic mastocytosis with subtypes (ISM / SSM / SM-AHN / ASM / MCL)"
+
+archetype: biomarker_driven
+lineage: "myeloid"
+
+etiological_factors:
+  - "Sporadic — somatic KIT D816V mutation in mast cell precursors (~95%+ of all SM)"
+  - "Familial mastocytosis (very rare germline KIT or other variants)"
+
+related_diseases:
+  - "Indolent systemic mastocytosis (ISM) — same KIT D816V driver but does not get targeted therapy outside symptomatic / quality-of-life concerns; not separately authored"
+
+key_biomarkers:
+  - BIO-KIT  # D816V drives ~95% of advanced SM
+  - BIO-CDKN2A  # SM-AHN with myeloid AHN component (SM-AML / MDS) often co-mutated; tracked here for prognostic note
+  # Tryptase (serum) and mast cell aggregate IHC (CD2/CD25) are workup items
+  # not yet authored as BIO entities
+
+epidemiology:
+  global_incidence: "Systemic mastocytosis ~1 per 10K (mostly indolent); advanced SM (ASM + SM-AHN + MCL) ~5-10% of all SM"
+  d816v_rate: "~95% of advanced SM; rare cases have other exon 17 KIT variants"
+  median_os: "ASM ~3-4 yr; SM-AHN ~2 yr; MCL <6 months historically"
+
+sources:
+  - SRC-NCCN-AML-2025  # NCCN AML guideline covers SM-AHN with AML subtype; SRC-NCCN-SM-2024 not yet ingested
+  - SRC-ESMO-AML-2020
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Subtype-specific staging (B-/C-findings → ISM vs SSM vs ASM transition; AHN-component characterization for SM-AHN) — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17 hematologic-extension. Source gap: SRC-NCCN-SM-2024 / dedicated SM guideline not yet ingested."
+
+notes: >
+  Only ADVANCED forms get targeted therapy. WHO 2022 subtypes:
+
+  - Indolent SM (ISM): KIT D816V+; symptomatic management
+    (anti-mediator: H1/H2 blockers, montelukast, cromolyn,
+    omalizumab); avapritinib (PIONEER) in moderate-severe symptomatic
+    ISM despite optimal anti-mediator therapy.
+  - Smoldering SM (SSM): borderline; observe with hybrid approach.
+  - Aggressive SM (ASM): C-findings (organ damage from mast-cell
+    infiltration) — targeted therapy indicated.
+  - SM with associated hematologic neoplasm (SM-AHN): ~70% of advanced
+    SM; AHN component (most often MDS / MPN / CMML; less often AML)
+    drives prognosis; treat both compartments.
+  - Mast cell leukemia (MCL): ≥20% mast cells in BM aspirate; very
+    aggressive.
+
+  Therapy for ASM / SM-AHN / MCL:
+  - Avapritinib (EXPLORER + PATHFINDER): selective KIT D816V inhibitor;
+    FDA-approved 2021 for advanced SM. Not effective for D816V-negative.
+    Cognitive / cerebral microbleed signal at high dose — 200 mg/day.
+  - Midostaurin (D-RIVE): multikinase including KIT — historically
+    standard pre-avapritinib; ORR ~28%.
+  - SM-AHN: treat AHN per its own histology — e.g. SM-AML with 7+3 +
+    midostaurin if FLT3-ITD also present.
+  - Allo-HSCT: consider in fit MCL or aggressive SM-AHN.
+
+  Imatinib is CONTRAINDICATED in D816V — kinase-domain steric clash.
+  Imatinib is approved for the rare D816V-negative advanced SM (e.g.
+  FIP1L1-PDGFRA-rearranged mast-cell variant — actually a separate
+  myeloid neoplasm with eosinophilia entity).

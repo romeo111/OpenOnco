@@ -1,0 +1,75 @@
+id: DIS-MPNST
+names:
+  preferred: "Malignant peripheral nerve sheath tumor (MPNST)"
+  ukrainian: "Злоякісна пухлина оболонки периферичного нерва"
+  english: "Malignant peripheral nerve sheath tumor"
+  synonyms: ["MPNST", "Neurofibrosarcoma (historical)", "Malignant schwannoma (historical)"]
+
+codes:
+  icd_o_3_morphology: "9540/3"  # Malignant peripheral nerve sheath tumor
+  icd_o_3_topography: ["C47"]  # peripheral nerves
+  icd_10: "C47"
+  who_classification: "WHO Soft Tissue Tumours 5th ed (2020): Malignant peripheral nerve sheath tumour"
+
+archetype: biomarker_driven
+lineage: "sarcoma"
+
+etiological_factors:
+  - "Neurofibromatosis type 1 (NF1) — ~50% of MPNST cases; lifetime risk ~8-13% in NF1 patients"
+  - "Sporadic (~40%)"
+  - "Post-radiation (~10%) — latency 10-20 yrs after therapeutic radiation"
+
+related_diseases:
+  - "Plexiform neurofibroma (NF1-associated benign precursor; selumetinib [SPRINT] approved for symptomatic inoperable plexiform NF in NF1)"
+
+key_biomarkers:
+  - BIO-CDKN2A  # >80% biallelic loss; defining transition from atypical neurofibroma to MPNST
+  - BIO-TP53-MUTATION  # ~50% (high-grade)
+  # NF1 (germline or somatic loss-of-function) is a defining biomarker but
+  # not yet authored as BIO entity — flagged as gap
+
+epidemiology:
+  global_incidence: "~1 per million per year general population; sharply higher in NF1"
+  nf1_proportion: "~50% of MPNST cases arise in NF1"
+  five_year_survival: "Localized resectable ~50%; metastatic <15%"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-NSCLC-2025  # SRC-NCCN-SARCOMA not yet ingested — placeholder
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Surgery (wide en-bloc resection — often morbid) + adjuvant RT + chemo for high-grade. Source gap: SRC-NCCN-SARCOMA / SRC-ESMO-SARCOMA / SRC-NF1-CONSORTIUM not yet ingested. NF1 itself lacks BIO entity."
+
+notes: >
+  Aggressive soft-tissue sarcoma arising from peripheral nerve sheath
+  Schwann cells. Most surgically treatable when diagnosed early; once
+  metastatic, systemic options are limited.
+
+  Standard treatment:
+  - Localized: wide en-bloc surgical resection ± adjuvant RT.
+    Chemotherapy (doxorubicin + ifosfamide) for high-grade per soft-
+    tissue sarcoma protocols; benefit modest.
+  - Metastatic: doxorubicin ± ifosfamide (1L); pazopanib (PALETTE);
+    trabectedin / eribulin in later lines.
+
+  Targeted-therapy investigational signals (no FDA approval to date for
+  MPNST specifically):
+  - MEK inhibitors (selumetinib, mirdametinib): rationale from
+    NF1 → loss of neurofibromin → unrestrained RAS → MAPK; trials
+    ongoing in NF1-related MPNST. Selumetinib is FDA-approved for
+    NF1-associated symptomatic inoperable plexiform NEUROFIBROMA
+    (SPRINT trial) — the pre-malignant precursor — but not yet for
+    MPNST proper.
+  - SHP2 inhibitors: investigational.
+  - CDK4/6 inhibitors (CDKN2A loss → synthetic-lethality hypothesis):
+    investigational.
+  - Mirdametinib + selumetinib + similar agents being studied in NF1
+    consortia for atypical neurofibroma → MPNST transition.
+
+  Surveillance: NF1 patients with rapidly enlarging or painful
+  neurofibroma → urgent imaging + biopsy; FDG-PET useful (high SUV
+  predicts MPNST transformation).

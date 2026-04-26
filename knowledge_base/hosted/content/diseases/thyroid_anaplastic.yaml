@@ -1,0 +1,68 @@
+id: DIS-THYROID-ANAPLASTIC
+names:
+  preferred: "Anaplastic thyroid carcinoma (ATC)"
+  ukrainian: "Анапластична карцинома щитовидної залози"
+  english: "Anaplastic thyroid carcinoma"
+  synonyms: ["ATC", "Undifferentiated thyroid carcinoma"]
+
+codes:
+  icd_o_3_morphology: "8021/3"  # Anaplastic / undifferentiated carcinoma NOS
+  icd_o_3_topography: ["C73"]
+  icd_10: "C73"
+  who_classification: "WHO Endocrine Tumours 5th ed (2022): Anaplastic thyroid carcinoma"
+
+archetype: biomarker_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Dedifferentiation from pre-existing PTC / FTC (most ATC arises in patients with prior or concurrent differentiated thyroid cancer)"
+  - "Long-standing nodular goiter (rare driver)"
+
+related_diseases:
+  - "DIS-THYROID-PAPILLARY (precursor / dedifferentiation source in ~50% of ATC cases)"
+
+key_biomarkers:
+  - BIO-BRAF-V600E  # ~25–40% — defining actionable target
+  - BIO-RAS-MUTATION  # ~25%
+  - BIO-NTRK-FUSION  # rare (<5%)
+  - BIO-RET  # rare (<5%)
+  - BIO-TP53-MUTATION  # >70% — prognostic, drives dedifferentiation
+
+epidemiology:
+  global_incidence: "<1-2% of thyroid cancers; ~500-1500 new cases/yr in US"
+  age_distribution: "Median ~70 years (older than PTC)"
+  median_os_historical: "3-5 months without targeted therapy"
+  median_os_targeted: "~14-24 months for BRAF V600E + dabrafenib + trametinib (ROAR)"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-CNS-2025  # NCCN-THYROID not yet ingested — placeholder; flag for replacement
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Multimodal sequencing (rapid-turnaround BRAF testing + targeted induction + chemo-radiation) — depends on KNOWLEDGE_SCHEMA_SPECIFICATION.md §17. Source gap: SRC-NCCN-THYROID and SRC-ATA-ATC-2021 not yet ingested. Speed-of-workup is itself the clinical decision driver in ATC and may need a dedicated workflow primitive."
+
+notes: >
+  Among the most lethal solid tumors historically — IVC by AJCC at
+  diagnosis (any T any N M0/M1 = stage IVA/B/C). Median OS without
+  targeted therapy 3-6 months; rapid airway compromise common.
+
+  Time-critical workup: BRAF V600E status drives first-line systemic
+  therapy and must be available within days, not weeks. ATA 2021
+  guideline mandates rapid IHC (VE1 antibody) + reflex sequencing.
+
+  Therapy by genotype:
+  - BRAF V600E mutant (~25–40%): dabrafenib + trametinib (ROAR basket
+    trial — ORR ~56%, transformative); FDA approved 2018 for ATC.
+    Often used as neoadjuvant induction → surgery → adjuvant chemoRT.
+  - BRAF wild-type RAS / NTRK / RET targetable: selpercatinib /
+    pralsetinib / larotrectinib / entrectinib per genotype.
+  - BRAF/RAS/NTRK/RET wild-type: chemo-radiation (paclitaxel + RT or
+    docetaxel + doxorubicin + RT); pembrolizumab if PD-L1+ or TMB-H.
+
+  Tracheostomy decision is patient-/family-driven; some protocols
+  defer to systemic-therapy response over upfront tracheostomy when
+  BRAF-mutant.

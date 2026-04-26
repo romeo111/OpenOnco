@@ -1,0 +1,45 @@
+id: BIO-CDKN2A
+names:
+  preferred: "CDKN2A loss (homozygous deletion or biallelic inactivation)"
+  ukrainian: "Втрата CDKN2A (гомозиготна делеція або біалельна інактивація)"
+  english: "CDKN2A loss"
+  synonyms: ["p16 loss", "p14ARF loss", "9p21 deletion"]
+
+biomarker_type: copy_number
+mutation_details:
+  gene: "CDKN2A"
+  gene_hugo_id: "HGNC:1787"
+  hotspots:
+    - "Homozygous deletion (9p21.3 — most common mechanism)"
+    - "Biallelic inactivation: deletion + mutation"
+    - "Promoter hypermethylation (silencing without copy loss)"
+  variant_type: "deletion / loss-of-function"
+  functional_impact: "Loss of p16(INK4a) tumor-suppressor (CDK4/6 inhibition lost — Rb constitutively phosphorylated) and loss of p14(ARF) (MDM2 destabilization of p53 lost)"
+
+measurement:
+  method: "DNA-NGS with copy-number module (preferred) OR FISH (9p21) OR p16 IHC (loss correlates with biallelic inactivation)"
+  units: "Copy number (0 = homozygous deletion, 1 = heterozygous loss, 2 = neutral)"
+  sensitivity_requirement: "Tumor cellularity ≥30% recommended for copy-number calling on DNA-NGS"
+
+specimen_requirements:
+  - "FFPE tumor tissue, minimum 30% tumor cellularity for copy-number calling"
+
+related_biomarkers:
+  - BIO-TP53-MUTATION
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+notes: >
+  ~50% of melanoma, ~50% of squamous NSCLC, ~80% of MPNST,
+  ~50% of glioblastoma, ~30% of pancreatic. Marker of poor prognosis
+  across many tumors. No directly approved targeted agent — CDK4/6
+  inhibitors (palbociclib, ribociclib, abemaciclib) are biologically
+  rational (synthetic-lethal hypothesis: loss of p16 → reliance on
+  CDK4/6) but no large positive trial in solid tumors outside HR+
+  breast. Selective CDK7 / PRMT5 inhibitors in development for
+  MTAP-codeleted (9p21 co-deletion) tumors. In MPNST, CDKN2A loss is
+  near-universal in malignant transformation from neurofibroma.

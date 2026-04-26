@@ -7,6 +7,7 @@ these models on load. See `validation/loader.py`.
 from .access_pathway import AccessPathway, CostOrientation
 from .algorithm import Algorithm
 from .biomarker import Biomarker
+from .biomarker_actionability import BiomarkerActionability, RegulatoryApproval
 from .contraindication import Contraindication
 from .diagnostic import (
     BiopsyApproach,
@@ -28,6 +29,7 @@ from .plan import (
     Plan,
     PlanAnnotation,
     PlanTrack,
+    VariantActionabilityHit,
 )
 from .questionnaire import (
     QGroup,
@@ -52,6 +54,7 @@ ENTITY_BY_DIR: dict[str, type] = {
     "regimens": Regimen,
     "indications": Indication,
     "biomarkers": Biomarker,
+    "biomarker_actionability": BiomarkerActionability,
     "contraindications": Contraindication,
     "redflags": RedFlag,
     "algorithms": Algorithm,
@@ -70,6 +73,7 @@ __all__ = [
     "AccessPathway",
     "Algorithm",
     "Biomarker",
+    "BiomarkerActionability",
     "CostOrientation",
     "BiopsyApproach",
     "Contraindication",
@@ -93,9 +97,11 @@ __all__ = [
     "Questionnaire",
     "RedFlag",
     "Regimen",
+    "RegulatoryApproval",
     "Source",
     "SupportiveCare",
     "SuspicionSnapshot",
     "Test",
+    "VariantActionabilityHit",
     "WorkupStep",
 ]

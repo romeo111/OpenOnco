@@ -1,0 +1,76 @@
+id: DIS-GLIOMA-LOW-GRADE
+names:
+  preferred: "Low-grade glioma (LGG, WHO grade 2 — IDH-mutant)"
+  ukrainian: "Гліома низького ступеня (WHO grade 2 — IDH-мутантна)"
+  english: "Low-grade glioma"
+  synonyms: ["LGG", "Diffuse astrocytoma IDH-mutant", "Oligodendroglioma IDH-mutant 1p/19q-codeleted"]
+
+codes:
+  icd_o_3_morphology: "9400/3"  # Astrocytoma — and 9450/3 for oligodendroglioma
+  icd_o_3_topography: ["C71"]  # brain
+  icd_10: "C71"
+  who_classification: "WHO CNS 5th ed (2021): Astrocytoma IDH-mutant grade 2 (9400/3) + Oligodendroglioma IDH-mutant 1p/19q-codeleted grade 2 (9450/3)"
+
+archetype: biomarker_driven
+lineage: "carcinoma"  # glioma is a CNS tumor — schema lacks a "cns" lineage; using closest
+
+etiological_factors:
+  - "Mostly sporadic"
+  - "Prior cranial irradiation"
+  - "Hereditary syndromes: Li-Fraumeni (TP53), Lynch, Cowden — small fraction"
+
+related_diseases:
+  - "DIS-GBM (IDH-WT high-grade glioma — distinct entity per WHO 2021; LGG can transform to grade 3-4 over years)"
+
+key_biomarkers:
+  - BIO-IDH-MUTATION  # Defining: IDH1 R132H most common, IDH2 R172 minority; vorasidenib actionable
+  - BIO-TP53-MUTATION  # Common in astrocytoma IDH-mutant
+  - BIO-MGMT-METHYLATION  # Predictive for temozolomide response in high-grade transformation
+  - BIO-CDKN2A  # CDKN2A homozygous deletion in IDH-mutant astrocytoma upgrades to grade 4 per WHO 2021
+
+epidemiology:
+  global_incidence: "~1-2 per 100K; ~15-20% of all gliomas (vs ~50% GBM)"
+  age_distribution: "Median 35-40 years (younger than GBM)"
+  median_os: "Astrocytoma IDH-mutant grade 2: ~10-15 yr; oligodendroglioma IDH-mutant 1p/19q-codel: ~15-20 yr"
+  idh_rate: "~80% of WHO grade 2-3 gliomas are IDH-mutant by definition (WHO 2021 reclassified IDH-WT grade 2-3 as IDH-WT 'molecular GBM')"
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024  # EANO has parallel LGG guidance
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Surgery (maximal safe resection) + watch-and-wait vs RT + PCV / temozolomide depending on RTOG-9802 high-risk vs low-risk + INDIGO-era integration of vorasidenib. Source gap: SRC-EANO-LGG-2024 / SRC-NCCN-CNS detailed sub-protocols not yet ingested."
+
+notes: >
+  Defined molecularly, not just histologically: IDH-mutant grade 2
+  diffuse astrocytoma + IDH-mutant 1p/19q-codeleted oligodendroglioma.
+  IDH-wild-type "diffuse astrocytomas" are reclassified as molecular
+  GBM (DIS-GBM) per WHO 2021 even at grade 2 histology.
+
+  Standard care:
+  - Maximal safe surgical resection (extent of resection prognostic).
+  - Low-risk (age <40 + gross-total resection): observation acceptable.
+  - High-risk (age ≥40 OR subtotal resection): RT + adjuvant PCV
+    (procarbazine + CCNU + vincristine; RTOG-9802 12-yr survival
+    benefit) OR RT + temozolomide (CATNON for grade 3 anaplastic
+    astrocytoma; equivalent for grade 2 in practice).
+
+  Targeted therapy (paradigm-shifting 2024):
+  - Vorasidenib (oral brain-penetrant pan-IDH1/2 inhibitor):
+    FDA-approved Aug 2024 for IDH-mutant grade 2 astrocytoma /
+    oligodendroglioma after surgery, in patients NOT requiring
+    immediate RT/chemo. INDIGO trial: PFS HR 0.39 vs placebo;
+    transformative for the watch-and-wait window.
+  - Patient selection: residual / progressive non-enhancing disease
+    after surgery; defers RT-induced cognitive toxicity.
+  - Ivosidenib (IDH1-only) explored in earlier LGG trials but
+    vorasidenib is preferred for CNS penetration.
+
+  Long natural history makes survival endpoints challenging — PFS
+  is the operational endpoint; cognitive function and seizure
+  control are key secondary endpoints (LGG patients often present
+  with seizure as the index symptom).

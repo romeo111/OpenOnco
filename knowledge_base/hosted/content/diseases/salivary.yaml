@@ -1,0 +1,75 @@
+id: DIS-SALIVARY
+names:
+  preferred: "Salivary gland carcinoma"
+  ukrainian: "Карцинома слинних залоз"
+  english: "Salivary gland carcinoma"
+  synonyms: ["Salivary gland cancer", "MASC (mammary analogue secretory carcinoma)", "Salivary duct carcinoma", "Adenoid cystic carcinoma"]
+
+codes:
+  icd_o_3_morphology: "8500/3"  # one of many — salivary covers ~25 distinct histologies (8430/3, 8200/3, 8410/3, 8502/3, 8550/3, …)
+  icd_o_3_topography: ["C07", "C08"]  # parotid, other major salivary glands
+  icd_10: "C07, C08"
+  who_classification: "WHO Head and Neck Tumours 5th ed (2024): Salivary gland tumours (>25 distinct histologic entities)"
+
+archetype: biomarker_driven
+lineage: "carcinoma"
+
+etiological_factors:
+  - "Mostly sporadic; minor radiation-exposure association"
+  - "Distinct molecular drivers per histology — this is a histology-defined umbrella"
+
+related_diseases:
+  - "DIS-HNSCC (anatomically adjacent — salivary gland tumors are biologically distinct, separately staged)"
+
+key_biomarkers:
+  - BIO-NTRK-FUSION  # MASC ~100% ETV6-NTRK3 — defining + targetable
+  - BIO-HER2-SOLID  # Salivary duct carcinoma ~30–40% HER2+; trastuzumab + chemo
+  - BIO-HRAS  # Salivary duct carcinoma ~10–15%; tipifarnib (KO-TIP-007)
+  - BIO-PIK3CA-MUTATION  # Salivary duct carcinoma ~20–30%
+  - BIO-NOTCH1-MUTATION  # Adenoid cystic carcinoma ~15% — gamma-secretase inhibitors in trials
+  # AR (androgen receptor) is a key SDC actionability biomarker (~70–80%
+  # AR+ → bicalutamide / leuprolide) but not yet authored as BIO entity —
+  # flagged as gap.
+
+epidemiology:
+  global_incidence: "~5% of head and neck cancers; ~2 per 100K"
+  histology_distribution: "Mucoepidermoid (~25%), adenoid cystic (~10%), salivary duct (~10%), MASC (~5%), acinic cell (~10%), others (~40%)"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-NSCLC-2025  # NCCN-HNSCC / Salivary not yet ingested — placeholder; flag for replacement
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Histology-specific decision tree (MASC / SDC / ACC / mucoepidermoid each have distinct workflows). Source gap: SRC-NCCN-HNSCC-2025 / SRC-ESMO-SALIVARY not yet ingested. AR pathway also lacks a BIO entity."
+
+notes: >
+  Umbrella disease; therapy is HISTOLOGY-driven. Two histologies are
+  highly actionable:
+
+  - Mammary analogue secretory carcinoma (MASC, parotid most common):
+    near-100% ETV6-NTRK3 fusion (or NTRK1/2 partner variants);
+    larotrectinib / entrectinib transformative in advanced disease
+    (FDA tumor-agnostic).
+
+  - Salivary duct carcinoma (SDC): aggressive, often parotid; molecular
+    profile mimics breast / prostate:
+    * AR-positive (~70-80%): bicalutamide + LHRH agonist
+      (EORTC-1206); active even without prior antiandrogen exposure.
+    * HER2-amplified (~30-40%): trastuzumab + docetaxel
+      (Takahashi et al, JCO 2019); trastuzumab deruxtecan in
+      DESTINY-PanTumor02; zanidatamab.
+    * HRAS mutant (~10-15%): tipifarnib (KO-TIP-007).
+    * PIK3CA / PI3K pathway: alpelisib + tipifarnib in KURRENT-HN.
+
+  - Adenoid cystic carcinoma (ACC): MYB-NFIB fusion ~60% (not currently
+    drugged); NOTCH1 mutation ~15% (gamma-secretase inhibitors —
+    AL101 / ACCURACY trial). Indolent course with late distant
+    relapses (lung most common). Chemotherapy generally low-yield;
+    multikinase TKIs (lenvatinib) modest activity.
+
+  - Mucoepidermoid carcinoma: CRTC1-MAML2 fusion ~50% (prognostic, not
+    therapeutic). Surgery + adjuvant RT for high-grade.

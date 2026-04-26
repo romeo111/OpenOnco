@@ -1,0 +1,60 @@
+id: DIS-IFS
+names:
+  preferred: "Infantile fibrosarcoma (IFS)"
+  ukrainian: "Інфантильна фібросаркома"
+  english: "Infantile fibrosarcoma"
+  synonyms: ["Congenital fibrosarcoma"]
+
+codes:
+  icd_o_3_morphology: "8814/3"  # Infantile fibrosarcoma
+  icd_o_3_topography: ["C49"]  # connective and other soft tissue
+  icd_10: "C49"
+  who_classification: "WHO Soft Tissue Tumours 5th ed (2020): Infantile fibrosarcoma (NTRK-rearranged spindle cell neoplasm — pediatric)"
+
+archetype: biomarker_driven
+lineage: "sarcoma"
+
+etiological_factors:
+  - "Sporadic — defining ETV6-NTRK3 fusion in >90% (also LMNA-NTRK1 / TPM3-NTRK1 in NTRK3-negative cases)"
+
+related_diseases:
+  - "Congenital mesoblastic nephroma (cellular subtype) — same ETV6-NTRK3 driver, renal location"
+
+key_biomarkers:
+  - BIO-NTRK-FUSION  # >90% ETV6-NTRK3; defines the entity + actionable
+
+epidemiology:
+  global_incidence: "Very rare — ~5% of pediatric soft-tissue sarcomas; presents in first 1-2 years of life (often congenital)"
+  ntrk_rate: ">90% — ETV6-NTRK3 dominant; minor LMNA-NTRK1 / TPM3-NTRK1"
+
+sources:
+  - SRC-ONCOKB
+  - SRC-NCCN-NSCLC-2025  # NTRK tumor-agnostic guideline reference; SRC-NCCN-PEDIATRIC-SARCOMA not yet ingested
+
+last_reviewed: "2026-04-27"
+reviewers: []
+
+metadata:
+  proposal_status: partial
+  awaiting_proposal: "Pediatric-specific dosing (BSA-adjusted larotrectinib) + neoadjuvant-then-surgery sequencing. Source gap: SRC-NCCN-PEDIATRIC-SARCOMA / SRC-COG / SRC-EpSSG-NRSTS not yet ingested."
+
+notes: >
+  Defining indication for tumor-agnostic NTRK-targeted therapy in
+  pediatric oncology — historical care was VAC chemotherapy (vincristine
+  + actinomycin + cyclophosphamide) ± surgery, with morbidity from
+  large surgical resections in young infants.
+
+  Therapy:
+  - Larotrectinib (SCOUT pediatric arm): ORR ~94% in NTRK-fusion+ IFS;
+    used as neoadjuvant to convert unresectable / morbid resections to
+    function-preserving surgery.
+  - Entrectinib (STARTRK-NG): similar approach.
+  - Surgery: complete resection if achievable without major morbidity;
+    otherwise neoadjuvant TRK inhibitor → re-evaluate resection.
+  - Chemotherapy (VAC): reserved for fusion-negative or TRK-resistant
+    cases.
+
+  Resistance: solvent-front (G623R for NTRK3; G595R for NTRK1) and
+  gatekeeper mutations on progression — selitrectinib / repotrectinib
+  in development. Pediatric cardiac / neurodevelopmental long-term
+  monitoring on TRK inhibitors is an active research question.

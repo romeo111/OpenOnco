@@ -1,0 +1,49 @@
+id: BIO-KIT
+names:
+  preferred: "KIT mutation"
+  ukrainian: "Мутація KIT"
+  english: "KIT mutation (c-KIT / CD117 gene)"
+  synonyms: ["c-KIT mutation", "CD117 gene mutation"]
+
+biomarker_type: gene_mutation
+mutation_details:
+  gene: "KIT"
+  gene_hugo_id: "HGNC:6342"
+  hotspots:
+    - "exon 11 deletions / insertions / point mutations (juxtamembrane — ~70% of GIST; imatinib-sensitive, best prognosis)"
+    - "exon 9 insertion (extracellular — ~10% of GIST; small-bowel; higher-dose imatinib 800 mg/day)"
+    - "D816V (exon 17, activation loop — ~95% of advanced systemic mastocytosis; imatinib-RESISTANT)"
+    - "exon 13 (V654A — secondary resistance to imatinib in GIST)"
+    - "exon 17 (Y823D — secondary resistance)"
+    - "exon 11 substitutions (mucosal / acral melanoma subset)"
+  variant_type: "deletion / insertion / missense"
+  functional_impact: "Constitutive KIT tyrosine kinase activation"
+
+measurement:
+  method: "DNA-NGS (preferred — covers all relevant exons) OR Sanger (exon 11 + 9 + 13 + 17 directed) OR allele-specific PCR (D816V)"
+  units: "categorical; variant + exon + VAF reported"
+  sensitivity_requirement: "D816V VAF can be very low in ASM peripheral blood — high-sensitivity ddPCR (LoD ~0.05%) preferred over Sanger"
+
+specimen_requirements:
+  - "FFPE tumor tissue (GIST, melanoma)"
+  - "Bone marrow aspirate (preferred for systemic mastocytosis)"
+  - "Peripheral blood ddPCR acceptable for D816V screening in suspected SM"
+
+related_biomarkers:
+  - BIO-PDGFRA
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+notes: >
+  GIST: KIT mutation ~75–80%; PDGFRA ~10%; wild-type / SDH-deficient
+  ~10–15%. Exon-genotype guides therapy (exon 11 → imatinib 400; exon
+  9 → imatinib 800 or sunitinib; D842V → avapritinib only).
+  Advanced systemic mastocytosis: D816V drives the disease; imatinib
+  is contraindicated in D816V (kinase-domain steric clash); midostaurin
+  (D-RIVE), avapritinib (PATHFINDER / EXPLORER), and ripretinib
+  (selected) are active. Mucosal / acral melanoma: ~15–20% KIT mutation
+  — imatinib responses in exon 11 / 13 mutants.
