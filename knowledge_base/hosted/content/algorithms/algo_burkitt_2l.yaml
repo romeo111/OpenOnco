@@ -1,0 +1,101 @@
+id: ALGO-BURKITT-2L
+applicable_to_disease: DIS-BURKITT
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L salvage Indication for relapsed/refractory Burkitt lymphoma
+  in transplant-eligible fit younger patients. Two interchangeable
+  platinum-based salvage regimens, both bridges to ASCT consolidation
+  in CR2/PR: (1) IND-BURKITT-2L-RICE-ASCT (R-ICE — rituximab +
+  ifosfamide + carboplatin + etoposide); (2) IND-BURKITT-2L-RDHAP-ASCT
+  (R-DHAP — rituximab + dexamethasone + cytarabine + cisplatin).
+  Choice driven by organ function: R-DHAP renal/ototoxicity (cisplatin)
+  vs R-ICE bladder/peripheral neuropathy (ifosfamide).
+
+  2L entry triggered by: documented relapse on imaging/biopsy after
+  1L intensive Burkitt regimen (R-CODOX-M/IVAC, R-Hyper-CVAD/MA,
+  DA-EPOCH-R), OR primary refractoriness (failure to achieve CR after
+  induction). Burkitt relapses early (median <6mo) — late relapse rare.
+
+output_indications:
+  - IND-BURKITT-2L-RICE-ASCT
+  - IND-BURKITT-2L-RDHAP-ASCT
+
+default_indication: IND-BURKITT-2L-RICE-ASCT
+alternative_indication: IND-BURKITT-2L-RDHAP-ASCT
+
+decision_tree:
+  # Step 1 — fit transplant-ineligible (frailty, organ dysfunction,
+  # uncontrolled infection): both regimens contraindicated → free-text
+  # palliative routing (no dedicated palliative IND for r/r Burkitt).
+  # Default placeholder remains R-ICE; trace must surface "transplant-
+  # ineligible: best-supportive-care + clinical trial" MDT note.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BURKITT-FRAILTY-AGE
+        - red_flag: RF-BURKITT-ORGAN-DYSFUNCTION
+        - red_flag: RF-BURKITT-INFECTION-SCREENING
+    if_true:
+      result: IND-BURKITT-2L-RICE-ASCT  # placeholder; see notes — palliative track preferred
+    if_false:
+      next_step: 2
+
+  # Step 2 — renal impairment / hearing loss / pre-existing
+  # ototoxicity: avoid cisplatin → R-ICE preferred (ifosfamide-based,
+  # carboplatin AUC-dosed for renal).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "CrCl <50 mL/min OR baseline hearing loss / tinnitus precluding cisplatin"
+        - condition: "Prior cisplatin cumulative exposure ≥300 mg/m^2"
+    if_true:
+      result: IND-BURKITT-2L-RICE-ASCT
+    if_false:
+      next_step: 3
+
+  # Step 3 — pre-existing bladder dysfunction / hemorrhagic cystitis
+  # history / severe peripheral neuropathy: avoid ifosfamide →
+  # R-DHAP preferred.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Prior hemorrhagic cystitis OR pelvic RT field overlap"
+        - condition: "Pre-existing grade ≥2 peripheral neuropathy"
+        - condition: "Bladder dysfunction precluding mesna-protected ifosfamide"
+    if_true:
+      result: IND-BURKITT-2L-RDHAP-ASCT
+    if_false:
+      next_step: 4
+
+  # Step 4 — default: R-ICE preferred (CORAL-equivalent salvage,
+  # institutional familiarity > R-DHAP in most UA centers).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Fit transplant-eligible relapsed/refractory Burkitt, no R-ICE-specific contraindication"
+    if_true:
+      result: IND-BURKITT-2L-RICE-ASCT
+    if_false:
+      result: IND-BURKITT-2L-RICE-ASCT
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  OOS / wiring gaps:
+  (1) BEAM-autoSCT consolidation in CR2 is a procedure, not modeled
+  as a dedicated indication; assumed downstream of both salvage
+  options ("-ASCT" suffix in IND id signals consolidation intent).
+  (2) Allogeneic SCT for primary-refractory Burkitt in young fit
+  patients (CIBMTR data) — referral, outside KB.
+  (3) CAR-T (axi-cel ZUMA-1 included aggressive B-NHL but Burkitt
+  representation small; tisa-cel not approved for Burkitt) — not
+  modeled as Burkitt-specific indication.
+  (4) Palliative best-supportive-care for transplant-ineligible
+  r/r Burkitt — outside KB scope; surfaced as MDT note in step 1.
+  (5) CNS prophylaxis intensification at relapse (Burkitt has high
+  CNS-relapse rate) — handled in regimen-level intrathecal protocol,
+  not algorithm.
+  (6) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
