@@ -49,38 +49,22 @@ SPEC_CATEGORIES = (
 )
 
 DISEASES_WITH_GAPS_BASELINE = {
-    "DIS-AITL",
-    "DIS-ALCL",
-    "DIS-BURKITT",
-    "DIS-CHL",
-    "DIS-CLL",
     # DIS-DLBCL-NOS — closed by Phase 3 first batch (4 new RFs added 2026-04-25)
-    "DIS-FL",
-    "DIS-HCV-MZL",
+    # DIS-MM — closed by Phase 3 second batch (3 new RFs added 2026-04-25)
+    # 2026-04-26 GI solid-tumor batch — all 5 reached full 5-type matrix
+    # via promotion commit (CRC, HCC, gastric, PDAC, esophageal).
+    # 2026-04-27 5-type matrix promotion (Plan C):
+    #   AITL, ENDOMETRIAL, HCV-MZL, MELANOMA, OVARIAN, RCC, SCLC, UROTHELIAL
+    #   reached full 5-type RF coverage.
+    # 2026-04-27 5-type matrix promotion (Plan A):
+    #   ALCL, BURKITT, CERVICAL, CHL, CLL, FL closed via single-RF
+    #   diseases promotion to full coverage.
+    # Remaining baseline gaps — workstreams still in progress:
+    "DIS-GBM",
     "DIS-MCL",
     "DIS-MF-SEZARY",
-    # DIS-MM — closed by Phase 3 second batch (3 new RFs added 2026-04-25)
     "DIS-PTCL-NOS",
     "DIS-WM",
-    # 2026-04-26 GI solid-tumor batch — all 5 reached full 5-type matrix
-    # via promotion commit (CRC: +infection +transformation; HCC:
-    # +biology +frailty; gastric/PDAC/esophageal: +infection +biology
-    # +transformation +frailty). Diseases stay `partial` in metadata
-    # because PROPOSAL §17 (RT, surgery, sequential phasing) still
-    # awaits ratification — but 5-type RF coverage is locked in.
-    # 2026-04-26 user/linter parallel thoracic work (SCLC partial).
-    "DIS-SCLC",
-    # 2026-04-26 user/linter parallel solid-tumor expansion (partial).
-    "DIS-ENDOMETRIAL",
-    "DIS-MELANOMA",
-    "DIS-RCC",
-    "DIS-UROTHELIAL",
-    # 2026-04-26 batch #2 — Ovarian + Cervical + GBM. Ship as `partial`
-    # per PROPOSAL §17 (Surgery + RT + sequential phasing); 4 RFs covered
-    # for Ovarian, 1 RF each for Cervical + GBM scaffolds.
-    "DIS-OVARIAN",
-    "DIS-CERVICAL",
-    "DIS-GBM",
 }
 
 # Per spec §2: "Якщо для хвороби якась з категорій клінічно нерелевантна
