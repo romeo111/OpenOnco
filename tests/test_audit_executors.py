@@ -179,17 +179,21 @@ def test_commit_catalog_refresh_succeeds_with_changes(tmp_path):
 # ── open_issue: idempotency via dedupe-key search ───────────────────────
 
 
-def test_open_issue_returns_existing_when_dedupe_label_matches():
+def test_open_issue_returns_existing_when_dedupe_marker_matches():
     ex = _import_executors()
+    dedupe_key = "kb-audit-key-v1:missing_ref:BIO-FOO"
+    marker = ex._BODY_DEDUPE_MARKER.format(key=dedupe_key)
     runner = _make_runner(
-        (0, json.dumps([{"number": 42}]), ""),    # gh issue list returns one match
+        # gh issue list returns one match — body must contain the marker
+        # so the post-search verification accepts it.
+        (0, json.dumps([{"number": 42, "body": f"some body\n\n{marker}"}]), ""),
     )
     action = {
         "type": "open_issue",
         "title": "[kb-audit] BIO-FOO missing",
         "body": "...",
         "labels": ["kb-audit"],
-        "dedupe_key": "kb-audit-key-v1:missing_ref:BIO-FOO",
+        "dedupe_key": dedupe_key,
     }
     result = ex.execute_open_issue(action, runner=runner)
     assert result.success is True
@@ -256,7 +260,7 @@ def test_close_issue_succeeds_with_explicit_number():
 def test_close_issue_noop_when_no_matching_open():
     ex = _import_executors()
     runner = _make_runner(
-        (0, "[]", ""),  # list returns empty
+        (0, "[]", ""),  # list (gh issue list) returns empty
     )
     action = {
         "type": "close_issue",
@@ -268,6 +272,68 @@ def test_close_issue_noop_when_no_matching_open():
     # Treat as success — already-closed-or-never-opened is idempotent
     assert result.success is True
     assert result.metadata.get("no_op") is True
+
+
+def test_open_issue_filters_out_unallowed_labels():
+    """Defensive: even if the action plan asks for a label not in
+    ALLOWED_LABELS, the executor strips it before calling gh-CLI.
+    Prevents 'label not found' failures from polluting the queue."""
+    ex = _import_executors()
+    captured: list = []
+
+    def runner(cmd, cwd=None, timeout=60, check_disallowed=True):
+        captured.append(list(cmd))
+        if "list" in cmd:
+            return (0, "[]", "")  # no existing
+        if "create" in cmd:
+            return (0, "https://github.com/o/r/issues/9", "")
+        return (0, "", "")
+
+    action = {
+        "type": "open_issue",
+        "title": "[kb-audit] test",
+        "body": "...",
+        "labels": ["kb-audit", "regression", "made-up-label", "evil-label"],
+        "dedupe_key": "kb-audit-key-v1:x:y",
+    }
+    ex.execute_open_issue(action, runner=runner)
+    create_call = next(c for c in captured if "create" in c)
+    # Allowed labels present:
+    assert "kb-audit" in create_call
+    assert "regression" in create_call
+    # Unallowed labels stripped:
+    assert "made-up-label" not in create_call
+    assert "evil-label" not in create_call
+
+
+def test_open_issue_embeds_dedupe_marker_in_body():
+    """The body sent to gh-CLI must contain the HTML-comment marker so
+    the next run's _find_existing_issue can locate this issue."""
+    ex = _import_executors()
+    captured_body: list[str] = []
+
+    def runner(cmd, cwd=None, timeout=60, check_disallowed=True):
+        if "list" in cmd:
+            return (0, "[]", "")
+        if "create" in cmd:
+            # Find the --body arg
+            i = cmd.index("--body")
+            captured_body.append(cmd[i + 1])
+            return (0, "https://github.com/o/r/issues/9", "")
+        return (0, "", "")
+
+    action = {
+        "type": "open_issue",
+        "title": "[kb-audit] test",
+        "body": "user-facing body",
+        "labels": ["kb-audit"],
+        "dedupe_key": "kb-audit-key-v1:test:Z",
+    }
+    ex.execute_open_issue(action, runner=runner)
+    assert len(captured_body) == 1
+    body = captured_body[0]
+    assert "user-facing body" in body
+    assert "<!-- audit-dedupe: kb-audit-key-v1:test:Z -->" in body
 
 
 # ── Pending queue ───────────────────────────────────────────────────────

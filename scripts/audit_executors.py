@@ -233,14 +233,32 @@ def execute_push(
 # ── Executors: GitHub issue ops ─────────────────────────────────────────
 
 
-_GH_LABEL_PREFIX = "kb-audit-key-v1:"
+_BODY_DEDUPE_MARKER = "<!-- audit-dedupe: {key} -->"
+# Six curated labels are pre-created in the repo by maintainer. The
+# cron only attaches labels from this set — never creates new labels.
+ALLOWED_LABELS: frozenset[str] = frozenset({
+    "kb-audit",
+    "kb-audit-meta",
+    "blocker",
+    "regression",
+    "freshness",
+    "clinical-review-required",
+})
 
 
-def _label_for_dedupe_key(key: str) -> str:
-    """Convert dedupe_key (`kb-audit-key-v1:foo`) to a gh-CLI label form
-    (no colons in label names — replace with `__`).
-    Result: `kb-audit-key-v1__foo` — survives in/out lossless."""
-    return key.replace(":", "__")
+def _filter_labels(labels: list[str]) -> list[str]:
+    """Drop labels not in the allow-list. Keeps the curated label set
+    stable; new labels need maintainer signoff (per CHARTER §6.1
+    spirit — config changes go through review, not cron drift)."""
+    return [l for l in labels if l in ALLOWED_LABELS]
+
+
+def _body_with_dedupe_marker(body: str, dedupe_key: str) -> str:
+    """Embed an HTML-comment marker so a future run can find this
+    issue via `gh issue list --search ...`. The marker doesn't render
+    in the GitHub UI."""
+    marker = _BODY_DEDUPE_MARKER.format(key=dedupe_key)
+    return f"{body}\n\n{marker}"
 
 
 def _find_existing_issue(
@@ -248,14 +266,20 @@ def _find_existing_issue(
     runner=_run,
     cwd: Path = REPO_ROOT,
 ) -> Optional[int]:
-    """Return open issue number with the given dedupe_key label, or None.
-    Uses gh-CLI; assumes user is authenticated."""
-    label = _label_for_dedupe_key(dedupe_key)
+    """Return open issue number whose body contains the dedupe marker
+    for `dedupe_key`, or None.
+
+    Implementation: `gh issue list --search "<marker> in:body"`.
+    Fast — GitHub's search index covers body text within seconds of
+    issue create. We narrow to the kb-audit label so cross-label
+    title collisions don't false-match."""
+    marker = _BODY_DEDUPE_MARKER.format(key=dedupe_key)
     code, out, _ = runner(
         ["gh", "issue", "list",
          "--state", "open",
-         "--label", label,
-         "--json", "number",
+         "--label", "kb-audit",
+         "--search", f'"{marker}"',
+         "--json", "number,body",
          "--limit", "10"],
         cwd=cwd,
     )
@@ -265,10 +289,13 @@ def _find_existing_issue(
         rows = json.loads(out)
     except json.JSONDecodeError:
         return None
-    if not rows:
-        return None
-    # Return the most recent (gh-CLI returns DESC by default)
-    return rows[0].get("number")
+    # Verify match: gh-CLI's search is best-effort; double-check the
+    # body actually contains the marker (avoids false positives from
+    # search-index lag).
+    for row in rows:
+        if marker in (row.get("body") or ""):
+            return row.get("number")
+    return None
 
 
 def execute_open_issue(
@@ -285,10 +312,16 @@ def execute_open_issue(
     On rate-limit / network failure: retries up to `max_retries`, then
     defers to pending queue (Phase C §10.6)."""
     title = action.get("title", "").strip()
-    body = action.get("body", "")
-    labels = list(action.get("labels", [])) + [
-        _label_for_dedupe_key(action.get("dedupe_key", "")),
-    ]
+    body_raw = action.get("body", "")
+    dedupe_key = action.get("dedupe_key", "") or ""
+    # Embed dedupe marker in body (HTML comment, doesn't render).
+    body = _body_with_dedupe_marker(body_raw, dedupe_key) if dedupe_key else body_raw
+    # Drop any labels not in the curated allowlist — defensive against
+    # malformed action plans referencing labels that don't exist.
+    labels = _filter_labels(list(action.get("labels", [])))
+    # Always carry the base "kb-audit" label so dedupe search can scope.
+    if "kb-audit" not in labels:
+        labels.append("kb-audit")
 
     if not title:
         return ExecutionResult(
@@ -296,10 +329,10 @@ def execute_open_issue(
             success=False, error="title required",
         )
 
-    # Idempotency: if an open issue with our dedupe label already
+    # Idempotency: if an open issue with our dedupe marker already
     # exists, treat as success (we shouldn't have been called, but
     # defensive).
-    existing = _find_existing_issue(action.get("dedupe_key", ""), runner, cwd)
+    existing = _find_existing_issue(dedupe_key, runner, cwd) if dedupe_key else None
     if existing:
         return ExecutionResult(
             action_type=action["type"], dedupe_key=action.get("dedupe_key"),

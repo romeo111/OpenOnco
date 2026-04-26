@@ -11,6 +11,19 @@ applicable_to:
   - biomarker_id: BIO-DLBCL-IPI
     required: true
     value_constraint: IPI 0-5; R-CHOP preferred for IPI 0-1; for IPI ≥2 see Pola-R-CHP
+  - biomarker_id: BIO-HBV-STATUS
+    required: true
+    value_constraint: any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis
+      mandatory before first rituximab dose; engine consumes the input to fire RF-HBV reactivation rail)
+  - biomarker_id: BIO-HCV-STATUS
+    required: true
+    value_constraint: any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate
+      DAA with hepatology; does not change R-CHOP regimen choice)
+  - biomarker_id: BIO-HIV-STATUS
+    required: true
+    value_constraint: any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis
+      if CD4 < 200, CNS prophylaxis regardless of CNS-IPI; integrase-inhibitor backbone preferred to avoid
+      ritonavir-vincristine interaction)
   - biomarker_id: BIO-DLBCL-COO-HANS
     required: false
     value_constraint: GCB or non-GCB by Hans algorithm — non-GCB has worse R-CHOP outcomes; some centres

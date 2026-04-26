@@ -183,8 +183,11 @@ def run(
             _write_disabled_log_entry()
             return 2
 
-        # 3. Pre-flight (skipped under --dry-run for testability)
-        if not dry_run:
+        # 3. Pre-flight (only enforced when we'll actually fire git/gh ops).
+        # Pre-flight gates the executor side effects, not the persist
+        # writers; `--no-execute` writes log/state/CSV without git/gh, so
+        # an unclean tree shouldn't gate it.
+        if not dry_run and not no_execute:
             ok, reason = preflight_check(cwd)
             if not ok:
                 _log(f"preflight failed: {reason}")
