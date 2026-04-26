@@ -1,0 +1,52 @@
+id: REG-BRENTUXIMAB-MAINTENANCE-ALCL
+name: "Brentuximab vedotin maintenance post-ASCT for high-risk systemic ALCL (AETHERA-style, 16 cycles)"
+name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової системної ALCL (за зразком AETHERA, 16 циклів)"
+alternate_names: ["BV maintenance ALCL", "AETHERA-style ALCL"]
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg (max 180 mg)"
+    schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "16 cycles (~12 months) starting 30-45 days post-ASCT"
+toxicity_profile: moderate
+
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade ≥4 neutropenia"
+    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+  - condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
+    modification: "Generally NOT eligible — risk-benefit unfavorable; surveillance only"
+  - condition: "Any active infection at start"
+    modification: "Defer until resolved"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Brentuximab registered in Ukraine but NOT NSZU-reimbursed for
+    ALCL maintenance off-label use. Funding pathway via fundraising
+    typical. ASCT performed at major hematology centers domestically.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Adapted from AETHERA (Moskowitz 2015 cHL) — extrapolated to systemic
+  ALCL high-risk post-autoSCT (primary refractory, relapse <12 mo,
+  multiple lines pre-ASCT, extranodal at relapse). Strongest rationale
+  for ALK-negative ALCL where natural history post-ASCT remains poor.
+  ECHELON-2 follow-up data (Horwitz 2022, 5-yr) further supports BV
+  consolidation strategies in CD30+ T-cell. Off-label in this setting
+  per NCCN — practice-level recommendation, not registration.

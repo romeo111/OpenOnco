@@ -1,0 +1,66 @@
+id: ALGO-ALCL-2L
+applicable_to_disease: DIS-ALCL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Relapsed/refractory systemic ALCL — three branches reflecting biology
+  and prior exposure: (1) BV-naive (received CHOEP only) → BV
+  monotherapy preferred (SGN-35-005, 86% ORR); (2) BV-exposed and
+  ALK-positive → ALK inhibitor (crizotinib) per Gambacorti-Passerini
+  data; (3) BV-exposed ALK-negative → bendamustine-based salvage
+  bridging to alloSCT consideration. Post-ASCT high-risk patients in
+  CR are candidates for BV-maintenance (separate Indication).
+
+output_indications:
+  - IND-ALCL-2L-BRENTUXIMAB-MONO
+  - IND-ALCL-2L-CRIZOTINIB-ALKPOS
+  - IND-ALCL-2L-BENDAMUSTINE
+  - IND-ALCL-MAINTENANCE-BV-POST-ASCT
+
+default_indication: IND-ALCL-2L-BRENTUXIMAB-MONO
+alternative_indication: IND-ALCL-2L-BENDAMUSTINE
+
+decision_tree:
+  # Step 1 — post-ASCT in CR with high-risk features → maintenance
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Status post autoSCT in CR/PR"
+        - condition: "High-risk features present (primary refractory pre-ASCT, relapse <12 months from 1L, ≥2 prior lines, or extranodal at relapse)"
+    if_true:
+      result: IND-ALCL-MAINTENANCE-BV-POST-ASCT
+    if_false:
+      next_step: 2
+
+  # Step 2 — BV-naive at relapse → BV monotherapy
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Brentuximab vedotin not used in prior line"
+        - condition: "No baseline Grade ≥2 peripheral neuropathy"
+    if_true:
+      result: IND-ALCL-2L-BRENTUXIMAB-MONO
+    if_false:
+      next_step: 3
+
+  # Step 3 — ALK-positive AND BV-exposed → crizotinib
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "ALK-positive ALCL"
+        - condition: "Brentuximab vedotin previously administered"
+    if_true:
+      result: IND-ALCL-2L-CRIZOTINIB-ALKPOS
+    if_false:
+      result: IND-ALCL-2L-BENDAMUSTINE
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Maintenance indication included as branch-1 for post-ASCT high-risk
+  CR setting. Bendamustine arm is the salvage-of-last-resort before
+  alloSCT bridging in BV-exposed ALK-negative patients. Allo-SCT is
+  the only curative option for chemo-refractory disease and is
+  surfaced via MDT brief.

@@ -1,0 +1,87 @@
+id: IND-ALCL-MAINTENANCE-BV-POST-ASCT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ALCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Status post autoSCT consolidation in CR/PR"
+    - "High-risk features: primary-refractory before ASCT, relapse <12 months from 1L, ≥2 prior lines pre-ASCT, or extranodal disease at relapse"
+  biomarker_requirements_required:
+    - {biomarker_id: BIO-CD30-IHC, required: true, value_constraint: "positive (universal in systemic ALCL)"}
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-BRENTUXIMAB-MAINTENANCE-ALCL
+concurrent_therapy:
+  - SUP-PJP-PROPHYLAXIS
+followed_by: []
+
+evidence_level: moderate  # AETHERA was cHL; extrapolated to ALCL
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance setting — CR/PR already achieved at ASCT"
+  complete_response: "Sustains pre-existing CR"
+  progression_free_survival: "Extrapolated from AETHERA: 5-yr PFS benefit ~18 percentage points (59% vs 41%) in high-risk cHL post-ASCT; ALCL data more limited"
+  overall_survival_5y: "Trend toward OS benefit in highest-risk subgroups; ALCL ALK- subset most likely to benefit"
+
+hard_contraindications: [CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-PET-CT  # post-ASCT baseline before maintenance
+  - TEST-CD20-IHC  # also captures CD30 IHC under same workflow
+  - TEST-HBV-SEROLOGY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Post-ASCT brentuximab vedotin maintenance × 16 cycles for high-risk
+  systemic ALCL — adapted from AETHERA paradigm (Moskowitz 2015,
+  cHL) and supported by ECHELON-2 5-year follow-up (Horwitz 2022).
+  Strongest rationale: ALK-negative ALCL with primary-refractory or
+  early-relapse history, where post-ASCT relapse rates remain >40%.
+  Pre-existing peripheral neuropathy is the dominant exclusion —
+  Grade ≥2 baseline = unsuitable. NOT a substitute for inadequate
+  pre-ASCT salvage; deepening response pre-ASCT remains primary goal.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Brentuximab vedotin maintenance after autoSCT may be considered in high-risk systemic ALCL extrapolating AETHERA evidence"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Post-autoSCT consolidative or maintenance brentuximab vedotin is a reasonable option in high-risk CD30+ ALCL"
+
+known_controversies:
+  - topic: "Maintenance vs surveillance after CR-conferring autoSCT in ALCL"
+    positions:
+      - position: "Maintenance — extrapolation from AETHERA reduces relapse in high-risk; ALCL universally CD30+"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Surveillance — AETHERA was cHL-only; ALCL-specific maintenance evidence not RCT-level"
+        sources: [SRC-ESMO-PTCL-2024]
+    our_default: "Maintenance for ALCL ALK- with high-risk features post-ASCT; surveillance acceptable for ALK+ standard-risk in CR1 post-ASCT"
+
+do_not_do:
+  - "НЕ продовжувати maintenance при Grade ≥2 neuropathy — permanent discontinuation."
+  - "НЕ комбінувати з bleomycin — летальна пульмонарна токсичність (absolute)."
+  - "НЕ розпочинати раніше ніж 30 днів post-ASCT — engraftment safety."
+  - "НЕ пропускати baseline ECG / LVEF якщо anthracycline-rich pre-ASCT."
+  - "НЕ ігнорувати HBV-prophylaxis при HBsAg+ або anti-HBc+."
+  - "НЕ пропускати PJP prophylaxis протягом maintenance + ≥6 міс після."
+  - "НЕ заміщати pre-ASCT salvage — поганий response pre-ASCT не виправляється maintenance."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewer_signoffs: 0
+notes: >
+  STUB. Extrapolated from AETHERA cHL paradigm; off-label in this
+  setting in UA. Funding via fundraising typical. ALK- ALCL with
+  high-risk features is the strongest population for benefit.
