@@ -5,40 +5,136 @@ names:
   english: "Pembrolizumab"
   brand_names: ["Keytruda"]
 atc_code: L01FF02
-rxnorm_id: null
-drug_class: "Anti-PD-1 monoclonal antibody"
+rxnorm_id: "1547545"
+drug_class: "Anti-PD-1 humanized IgG4-kappa monoclonal antibody (immune checkpoint inhibitor)"
 mechanism: >
-  Humanized IgG4 monoclonal antibody targeting programmed cell death
-  protein 1 (PD-1) on T cells. Blocks PD-1 / PD-L1 interaction,
-  restoring T-cell-mediated antitumor immunity. Approved across many
-  solid tumors and some hematologic indications.
+  Humanized IgG4 monoclonal antibody binding the programmed cell death
+  protein 1 (PD-1) receptor on activated T cells, B cells, and NK cells.
+  Blocks the PD-1/PD-L1 and PD-1/PD-L2 interactions, releasing the
+  tumor-induced inhibition of cytotoxic T-cell activity and restoring
+  anti-tumor immunity. IgG4 backbone minimizes ADCC. Activity correlates
+  with tumor PD-L1 expression (CPS or TPS), tumor mutational burden
+  (TMB-H ≥10 mut/Mb), microsatellite instability (MSI-H / dMMR), and
+  inflamed tumor microenvironment phenotypes. Approved across many
+  solid tumors and classical Hodgkin / PMBCL lymphoma.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2014
+    indications_brief:
+      - "Melanoma (adjuvant + metastatic)"
+      - "NSCLC (1L mono ≥50% TPS, 1L combo, adjuvant + neoadjuvant KEYNOTE-671)"
+      - "Head and neck SCC (1L)"
+      - "Classical Hodgkin lymphoma (r/r)"
+      - "Primary mediastinal B-cell lymphoma"
+      - "Urothelial carcinoma"
+      - "MSI-H / dMMR solid tumors (tissue-agnostic, KEYNOTE-158/164)"
+      - "TMB-H solid tumors (≥10 mut/Mb, tissue-agnostic)"
+      - "Gastric / GEJ adenocarcinoma (with chemo, CPS ≥1)"
+      - "Esophageal SCC and adenocarcinoma"
+      - "Cervical cancer (CPS ≥1)"
+      - "Endometrial carcinoma (dMMR; or with lenvatinib, pMMR)"
+      - "Hepatocellular carcinoma (2L)"
+      - "Renal cell carcinoma (with axitinib or lenvatinib)"
+      - "Triple-negative breast cancer (KEYNOTE-522 neoadj, KEYNOTE-355 met PD-L1+)"
+      - "Cutaneous SCC, Merkel cell, MCC"
+      - "Biliary tract cancer (KEYNOTE-966)"
+  ema:
+    approved: true
+    year_first_approval: 2015
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: false
-    last_verified: null
-    notes: "Registered; reimbursement varies by indication. Out-of-pocket for most patients in Ukraine; clinical-review queue priority for funding pathway across breast TNBC, NSCLC, and other indications."
+    reimbursement_indications:
+      - "Selected indications under clinical-review queue (not broadly NSZU-funded)"
+    last_verified: "2026-04-26"
+    notes: "Registered; reimbursement varies by indication and remains limited. Out-of-pocket for most patients in Ukraine; clinical-review queue priority for funding pathway across breast TNBC, NSCLC, and other indications."
 
 typical_dosing: >
-  200 mg IV q3 weeks OR 400 mg IV q6 weeks. Treatment continued until
-  progression, unacceptable toxicity, or 2 years (per indication).
+  Standard adult: 200 mg IV q3 weeks OR 400 mg IV q6 weeks (over 30 min).
+  Pediatric: 2 mg/kg (up to 200 mg) IV q3w.
+  Treatment continued until disease progression, unacceptable toxicity,
+  or 24 months in most solid-tumor indications (35 cycles q3w).
+  Adjuvant melanoma: 1 year (KEYNOTE-054).
+  Neoadjuvant + adjuvant TNBC (KEYNOTE-522): 200 mg q3w × 8 cycles
+  with chemo, then 9 cycles adjuvant.
+  Neoadjuvant + adjuvant NSCLC (KEYNOTE-671): 200 mg q3w × 4 cycles
+  with platinum-doublet, then 13 cycles adjuvant.
+  Combination doses unchanged when paired with chemo, lenvatinib,
+  axitinib, or trastuzumab.
+formulations:
+  - "IV solution 25 mg/mL (100 mg / 4 mL vial)"
 
-key_toxicities:
-  - Immune-mediated adverse events (any organ system) — pneumonitis, colitis, hepatitis, endocrinopathies (thyroiditis, hypophysitis, T1DM), nephritis, dermatologic
-  - Fatigue
-  - Infusion reactions (rare)
-  - Severe immune-mediated AEs require corticosteroid management and may require permanent discontinuation
+absolute_contraindications:
+  - "Severe hypersensitivity / anaphylaxis to pembrolizumab"
+  - "Active autoimmune disease requiring systemic immunosuppression (relative; case-by-case after multidisciplinary review)"
+  - "Solid organ transplant on immunosuppression (relative; high rejection risk)"
+  - "Pregnancy (Category D — animal data)"
+  - "Allogeneic hematopoietic stem cell transplant — high risk of severe GVHD if given pre- or post-HSCT"
 
-sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
-last_reviewed: null
+black_box_warnings:
+  - "Severe and fatal immune-mediated adverse reactions (any organ; can occur after discontinuation)"
+
+common_adverse_events:
+  - "Fatigue (~30-40%)"
+  - "Pruritus (~20-30%)"
+  - "Rash / vitiligo (~20%)"
+  - "Diarrhea (~15-20%; assess for colitis)"
+  - "Decreased appetite (~15-25%)"
+  - "Nausea (~15-20%)"
+  - "Arthralgia (~15-20%)"
+  - "Hypothyroidism (~10-15%; usually managed with replacement)"
+  - "Hyperthyroidism (~5%)"
+  - "Cough (~15%)"
+  - "Pyrexia (~10%)"
+  - "Infusion reactions (~3%, usually mild)"
+
+serious_adverse_events:
+  - "Immune-mediated pneumonitis (~3-5%; Grade 3+ ~1-2%; can be fatal)"
+  - "Immune-mediated colitis (~2-5%)"
+  - "Immune-mediated hepatitis (~1-3%)"
+  - "Immune-mediated endocrinopathies — thyroiditis, hypophysitis, adrenal insufficiency, type 1 diabetes mellitus / DKA"
+  - "Immune-mediated nephritis with renal dysfunction (~1%)"
+  - "Severe dermatologic reactions — SJS, TEN, DRESS (rare)"
+  - "Immune-mediated myocarditis (rare; can be fatal)"
+  - "Immune-mediated encephalitis, myelitis, Guillain-Barré-like syndrome"
+  - "Immune-mediated myositis / rhabdomyolysis"
+  - "Pancreatitis"
+  - "Severe infusion reactions (rare)"
+  - "Solid organ transplant rejection"
+  - "Severe complications of allogeneic HSCT (GVHD, hepatic VOD, fatal)"
+
+major_interactions:
+  - "Systemic corticosteroids (>10 mg/d prednisone equivalent) — may reduce efficacy if started before pembrolizumab; acceptable for irAE management"
+  - "Other immunosuppressants — reduce efficacy"
+  - "Live vaccines — avoid during therapy and up to 3 months after"
+  - "Other ICIs (especially CTLA-4 like ipilimumab) — additive irAE risk"
+  - "BRAF/MEK inhibitors — additive hepatotoxicity, pyrexia"
+
+pharmacology:
+  half_life_hours: 528
+  half_life_notes: "Median t½ ~22 days (528 h). Steady state by ~16 weeks (~4 cycles q3w)."
+  clearance: "non-specific catabolism (proteolysis); not renally or hepatically cleared in conventional sense"
+  protein_binding_pct: null
+  metabolism: "non-CYP; antibody catabolism (reticuloendothelial system, target-mediated drug disposition)"
+  volume_of_distribution_l: 6
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  Cross-disease entity. Used in: breast (TNBC neoadj KEYNOTE-522, TNBC
-  met PD-L1+ KEYNOTE-355), NSCLC (multiple), melanoma, RCC, MSI-H/dMMR
-  CRC, gastric, esophageal, head/neck, urothelial, classical Hodgkin
-  lymphoma, etc. ICI-class management protocols apply uniformly.
-
-  STUB: minimum valid entry to satisfy ref-checks. Full clinical
-  content to be filled by cross-disease drug-curation pass.
+  Cross-disease entity. ICI-class management protocols apply uniformly:
+  baseline TFTs, cortisol, glucose, LFTs, renal panel, troponin if
+  combo with CTLA-4 ICI; serial labs every cycle. Grade 2 irAE — hold,
+  start prednisone 0.5-1 mg/kg/d; Grade 3-4 — discontinue, prednisone
+  1-2 mg/kg/d, escalate to infliximab/MMF/IVIG/tocilizumab if refractory.
+  Permanent discontinuation for any Grade 3-4 endocrine event NOT
+  required if hormone replacement controls (most can resume). Endpoint
+  predictors: PD-L1 CPS / TPS by 22C3 IHC, MSI/dMMR, TMB. PD-L1 cutoff
+  varies by indication (TPS ≥1% NSCLC adjuvant, TPS ≥50% NSCLC 1L mono,
+  CPS ≥1 gastric, CPS ≥10 cervical / TNBC met).

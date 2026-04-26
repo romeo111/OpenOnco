@@ -3,30 +3,133 @@ names:
   preferred: "Nivolumab"
   ukrainian: "Ніволумаб"
   english: "Nivolumab"
-  brand_names: ["Opdivo"]
+  brand_names: ["Opdivo", "Opdualag (with relatlimab)"]
 atc_code: L01FF01
 rxnorm_id: "1597876"
-drug_class: "Anti-PD-1 fully human monoclonal antibody (ICI)"
+drug_class: "Anti-PD-1 fully human IgG4 monoclonal antibody (immune checkpoint inhibitor)"
 mechanism: >
-  Blocks PD-1; analog mechanism to pembrolizumab. Adjuvant esophageal
-  (CheckMate-577 — post-CROSS without pCR), 1L gastric/GEJ/esophageal
-  with chemo (CheckMate-649), HCC 2L+ (CheckMate-040, accelerated).
+  Fully human IgG4 monoclonal antibody binding programmed cell death
+  protein 1 (PD-1) on activated T cells, blocking the inhibitory
+  PD-1/PD-L1 and PD-1/PD-L2 interactions and restoring cytotoxic
+  T-cell antitumor responses. IgG4 backbone with a stabilizing S228P
+  hinge mutation minimizes ADCC. Mechanistically equivalent to
+  pembrolizumab; combined with anti-CTLA-4 (ipilimumab) the dual
+  blockade amplifies T-cell priming and effector activity at the cost
+  of substantially increased irAE rates. Combined with relatlimab
+  (anti-LAG-3) in Opdualag for melanoma. Approved as monotherapy or
+  combination across many solid tumors and classical Hodgkin lymphoma.
+
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
-  ukraine_registration: {registered: true, reimbursed_nszu: false, last_verified: "2026-04-26"}
-typical_dosing: "240 mg IV q2w OR 480 mg IV q4w; combination with ipilimumab uses 1 mg/kg + 3 mg/kg q3w × 4 then mono."
-formulations: ["IV solution 10 mg/mL"]
+  fda:
+    approved: true
+    year_first_approval: 2014
+    indications_brief:
+      - "Melanoma (adjuvant + metastatic, mono or with ipilimumab)"
+      - "NSCLC (1L combo with ipilimumab + chemo, 2L mono)"
+      - "Renal cell carcinoma (with ipilimumab; with cabozantinib)"
+      - "Classical Hodgkin lymphoma (r/r post-HSCT and BV)"
+      - "Head and neck SCC (2L)"
+      - "Urothelial carcinoma (adjuvant high-risk muscle-invasive; metastatic)"
+      - "Esophageal SCC and adenocarcinoma (CheckMate-577 adjuvant after CROSS, CheckMate-648 1L)"
+      - "Gastric / GEJ adenocarcinoma (CheckMate-649 1L with chemo, CPS ≥5)"
+      - "Hepatocellular carcinoma (2L; mono or with ipilimumab)"
+      - "Colorectal cancer (MSI-H/dMMR; with or without ipilimumab)"
+      - "Pleural mesothelioma (1L with ipilimumab)"
+  ema:
+    approved: true
+    year_first_approval: 2015
+  ukraine_registration:
+    registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
+    reimbursed_nszu: false
+    reimbursement_indications: []
+    last_verified: "2026-04-26"
+    notes: "Registered; reimbursement remains very limited. Out-of-pocket for most patients."
+
+typical_dosing: >
+  Standard adult monotherapy: 240 mg IV q2w OR 480 mg IV q4w (over 30 min).
+  Pediatric melanoma adjuvant (≥12 yrs, ≥40 kg): 240 mg q2w; <40 kg: 3 mg/kg q2w.
+  With ipilimumab (1L melanoma, RCC, MSI-H CRC): nivolumab 1 mg/kg +
+  ipilimumab 3 mg/kg q3w × 4 doses, then nivolumab 240 mg q2w or
+  480 mg q4w maintenance.
+  CheckMate-649 (gastric 1L + chemo): 360 mg q3w with chemo or
+  240 mg q2w.
+  CheckMate-577 (adjuvant esophageal post-CROSS without pCR):
+  240 mg q2w × 16 wks, then 480 mg q4w to total 1 year.
+  Treatment until progression, unacceptable toxicity, or specified
+  duration (1 yr adjuvant; 2 yrs metastatic in some indications).
+formulations:
+  - "IV solution 10 mg/mL (40 mg / 4 mL, 100 mg / 10 mL, 240 mg / 24 mL vials)"
+  - "SC formulation (Opdivo Qvantig, hyaluronidase co-formulated; FDA 2024)"
+
 absolute_contraindications:
-  - "Active autoimmune disease on systemic immunosuppression"
-  - "Solid organ transplant"
+  - "Severe hypersensitivity / anaphylaxis to nivolumab"
+  - "Active autoimmune disease on systemic immunosuppression (relative)"
+  - "Solid organ transplant on immunosuppression (relative; high rejection risk)"
   - "Pregnancy"
-black_box_warnings: ["Same irAE spectrum as pembrolizumab"]
-common_adverse_events: ["Fatigue", "Pruritus", "Mild diarrhea", "Hypothyroidism", "Hyperthyroidism"]
-serious_adverse_events: ["Pneumonitis", "Hepatitis", "Colitis", "Adrenal crisis", "Myocarditis (rare, fatal)"]
-sources: [SRC-NCCN-GASTRIC-2025, SRC-NCCN-ESOPHAGEAL-2025, SRC-NCCN-HCC-2025]
+  - "Allogeneic HSCT — risk of severe GVHD if given before or shortly after"
+
+black_box_warnings:
+  - "Severe and fatal immune-mediated adverse reactions (any organ; same spectrum as pembrolizumab)"
+  - "Complications of allogeneic HSCT post-nivolumab — hyperacute GVHD, hepatic VOD, severe sepsis (fatal cases)"
+
+common_adverse_events:
+  - "Fatigue (~25-35%)"
+  - "Pruritus (~15-25%)"
+  - "Diarrhea (~15-20%)"
+  - "Rash / vitiligo (~15-20%)"
+  - "Decreased appetite (~15%)"
+  - "Nausea (~15%)"
+  - "Arthralgia (~10-20%)"
+  - "Hypothyroidism (~10%)"
+  - "Hyperthyroidism (~3-5%)"
+  - "Cough (~15%)"
+  - "Constipation"
+  - "Mild infusion reactions (~3-10%)"
+
+serious_adverse_events:
+  - "Immune-mediated pneumonitis (~3%; Grade 3+ ~1%)"
+  - "Immune-mediated colitis (~2-3% mono; ~10-15% with ipilimumab combo)"
+  - "Immune-mediated hepatitis (~2% mono; ~10% with ipi)"
+  - "Endocrinopathies — thyroiditis, hypophysitis, adrenal crisis, type 1 DM / DKA"
+  - "Immune-mediated nephritis (~1%)"
+  - "Severe dermatologic reactions — SJS, TEN, DRESS"
+  - "Immune-mediated myocarditis (rare; can be fatal — particularly with ipi combo)"
+  - "Immune-mediated encephalitis, myelitis, Guillain-Barré-like syndrome"
+  - "Pancreatitis"
+  - "Severe infusion reactions"
+  - "Solid organ transplant rejection"
+  - "Hyperacute / fatal GVHD with allogeneic HSCT"
+
+major_interactions:
+  - "Systemic corticosteroids (>10 mg/d prednisone) before initiation — may reduce efficacy; acceptable for irAE management"
+  - "Other immunosuppressants — may reduce efficacy"
+  - "Ipilimumab — synergistic efficacy AND substantially increased irAE risk (Grade 3-4 irAE ~45-55% with combo vs ~15-20% mono)"
+  - "Live vaccines — avoid during and up to 3 months after"
+  - "BRAF/MEK inhibitors — additive hepatotoxicity, pyrexia"
+
+pharmacology:
+  half_life_hours: 624
+  half_life_notes: "Median t½ ~26 days (624 h). Steady state by ~12 weeks."
+  clearance: "non-specific catabolism (proteolysis); not renally or hepatically cleared in conventional sense"
+  protein_binding_pct: null
+  metabolism: "non-CYP; antibody catabolism"
+  volume_of_distribution_l: 8
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-NCCN-HCC-2025
+
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. CheckMate-577: adjuvant nivo × 1y in patients with
-  residual ypT+ or ypN+ post-CROSS — DFS doubled. Combination with ipi
-  amplifies irAE rates (45% Grade 3-4 vs 18% mono).
+  CheckMate-577: adjuvant nivolumab × 1 yr in patients with residual
+  ypT+ or ypN+ post-CROSS — DFS approximately doubled (median 22.4 vs
+  11.0 mo). CheckMate-649: 1L gastric / GEJ / esophageal adenocarcinoma
+  with FOLFOX or CAPOX — OS benefit in CPS ≥5 (FDA + EMA approvals
+  restrict to CPS ≥5 / CPS ≥1 respectively). Combination with ipi
+  amplifies irAE rates substantially: melanoma combo Grade 3-4 irAE
+  ~45-55% vs 15-20% mono. ICI-class management protocols apply
+  uniformly (baseline TFTs/cortisol/LFTs, serial labs, prompt
+  steroid intervention for Grade ≥2 irAE).
