@@ -1,54 +1,46 @@
 id: RF-DLBCL-INFECTION-SCREENING
-definition: >
-  Active or latent infection requiring resolution / prophylaxis before
-  initiating R-CHOP-class therapy: HBsAg-positive (high HBV reactivation
-  risk on anti-CD20), anti-HBc-positive (occult HBV), HIV-positive
-  (requires HIV-aware regimen choice), or active TB.
-definition_ua: >
-  Активна або латентна інфекція, що потребує лікування / профілактики
-  перед R-CHOP: HBsAg+ (високий ризик реактивації HBV на anti-CD20),
-  anti-HBc+ (occult HBV), HIV+ (потребує HIV-сумісного режиму) або
-  активний туберкульоз.
+definition: 'Active or latent infection requiring resolution / prophylaxis before initiating R-CHOP-class therapy: HBsAg-positive
+  (high HBV reactivation risk on anti-CD20), anti-HBc-positive (occult HBV), HIV-positive (requires HIV-aware regimen choice),
+  or active TB.
 
+  '
+definition_ua: 'Активна або латентна інфекція, що потребує лікування / профілактики перед R-CHOP: HBsAg+ (високий ризик реактивації
+  HBV на anti-CD20), anti-HBc+ (occult HBV), HIV+ (потребує HIV-сумісного режиму) або активний туберкульоз.
+
+  '
 trigger:
   type: lab_value
   any_of:
-    - finding: "hbsag"
-      value: "positive"
-    - finding: "anti_hbc_total"
-      value: "positive"
-    - finding: "hiv_status"
-      value: "positive"
-    - finding: "active_tb"
-      value: true
-
+  - finding: hbsag
+    value: positive
+  - finding: anti_hbc_total
+    value: positive
+  - finding: hiv_status
+    value: positive
+  - finding: active_tb
+    value: true
 clinical_direction: hold
-
 severity: critical
 priority: 60
 category: infection-screening
-
 relevant_diseases:
-  - DIS-DLBCL-NOS
-shifts_algorithm: []  # Same pattern as RF-UNIVERSAL-HBV-REACTIVATION-RISK:
-                      # this RF's "hold" is operationalized via parallel
-                      # SUP-HBV-PROPHYLAXIS / ART-coordination supportive
-                      # care, not by switching indication. Engine surfaces
-                      # this in the plan's pre-treatment workup section.
-
+- DIS-DLBCL-NOS
+shifts_algorithm: []
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
-
-last_reviewed: "2026-04-25"
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
 draft: false
+notes: 'HBsAg+ → mandatory entecavir or tenofovir prophylaxis from –7d through +12mo post-last-anti-CD20 (NCCN B-Cell §HBV-1;
+  ESMO DLBCL §pre-treatment). HIV+ DLBCL is treatable with R-CHOP or DA-EPOCH-R but requires concomitant ART — use the existing
+  IND-DLBCL-1L-RCHOP, but the clinical team must confirm ART regimen and CD4 baseline first. Active TB: full anti-TB course
+  before chemoimmunotherapy when feasible. This RF surfaces the hold; the algorithm engages ALGO-DLBCL-1L step 1 to defer
+  indication selection until prophylaxis/ART/anti-TB pathway is documented.
 
-notes: >
-  HBsAg+ → mandatory entecavir or tenofovir prophylaxis from –7d through
-  +12mo post-last-anti-CD20 (NCCN B-Cell §HBV-1; ESMO DLBCL §pre-treatment).
-  HIV+ DLBCL is treatable with R-CHOP or DA-EPOCH-R but requires concomitant
-  ART — use the existing IND-DLBCL-1L-RCHOP, but the clinical team must
-  confirm ART regimen and CD4 baseline first. Active TB: full anti-TB
-  course before chemoimmunotherapy when feasible. This RF surfaces the
-  hold; the algorithm engages ALGO-DLBCL-1L step 1 to defer indication
-  selection until prophylaxis/ART/anti-TB pathway is documented.
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true

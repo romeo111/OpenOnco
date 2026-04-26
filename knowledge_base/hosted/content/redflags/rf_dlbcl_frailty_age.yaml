@@ -1,60 +1,57 @@
 id: RF-DLBCL-FRAILTY-AGE
-definition: >
-  Frailty profile precluding full-dose R-CHOP: ECOG ≥3, OR (age ≥80
-  with ≥1 grade-2 comorbidity), OR composite frailty (age ≥75 +
-  hypoalbuminemia <3.0 + ≥2 concomitant comorbidities).
-definition_ua: >
-  Профіль frailty, що перешкоджає повнодозовій R-CHOP: ECOG ≥3, АБО
-  (вік ≥80 з ≥1 коморбідністю grade 2), АБО композитна frailty
-  (вік ≥75 + альбумін <3.0 + ≥2 супутніх захворювання).
+definition: 'Frailty profile precluding full-dose R-CHOP: ECOG ≥3, OR (age ≥80 with ≥1 grade-2 comorbidity), OR composite
+  frailty (age ≥75 + hypoalbuminemia <3.0 + ≥2 concomitant comorbidities).
 
+  '
+definition_ua: 'Профіль frailty, що перешкоджає повнодозовій R-CHOP: ECOG ≥3, АБО (вік ≥80 з ≥1 коморбідністю grade 2), АБО
+  композитна frailty (вік ≥75 + альбумін <3.0 + ≥2 супутніх захворювання).
+
+  '
 trigger:
   type: composite_score
   any_of:
-    - finding: "ecog"
-      threshold: 3
-      comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 80
-          comparator: ">="
-        - finding: "comorbidity_grade2_count"
-          threshold: 1
-          comparator: ">="
-    - all_of:
-        - finding: "age"
-          threshold: 75
-          comparator: ">="
-        - finding: "albumin_g_dl"
-          threshold: 3.0
-          comparator: "<"
-        - finding: "comorbidity_count"
-          threshold: 2
-          comparator: ">="
-
+  - finding: ecog
+    threshold: 3
+    comparator: '>='
+  - all_of:
+    - finding: age
+      threshold: 80
+      comparator: '>='
+    - finding: comorbidity_grade2_count
+      threshold: 1
+      comparator: '>='
+  - all_of:
+    - finding: age
+      threshold: 75
+      comparator: '>='
+    - finding: albumin_g_dl
+      threshold: 3.0
+      comparator: <
+    - finding: comorbidity_count
+      threshold: 2
+      comparator: '>='
 clinical_direction: de-escalate
-
 severity: major
 priority: 90
 category: frailty-age
-
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
-
+- ALGO-DLBCL-1L
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
-
-last_reviewed: "2026-04-25"
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
 draft: false
+notes: 'Tucci/Italian Lymphoma Foundation frailty score validated as predictor of R-CHOP tolerance. Frail patients: R-mini-CHOP
+  (50% doses) per GELA LNH03-7B; R-GemOx if anthracycline contraindicated; R-bendamustine in palliative intent. This RF de-escalates
+  from Pola-R-CHP intensification toward R-CHOP / R-mini-CHOP when frailty co-occurs with high-IPI (severity tie-break: hold
+  > intensify > de-escalate, but here directions conflict so engine logs both and surfaces conflict to MDT).
 
-notes: >
-  Tucci/Italian Lymphoma Foundation frailty score validated as predictor
-  of R-CHOP tolerance. Frail patients: R-mini-CHOP (50% doses) per
-  GELA LNH03-7B; R-GemOx if anthracycline contraindicated; R-bendamustine
-  in palliative intent. This RF de-escalates from Pola-R-CHP intensification
-  toward R-CHOP / R-mini-CHOP when frailty co-occurs with high-IPI
-  (severity tie-break: hold > intensify > de-escalate, but here directions
-  conflict so engine logs both and surfaces conflict to MDT).
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true

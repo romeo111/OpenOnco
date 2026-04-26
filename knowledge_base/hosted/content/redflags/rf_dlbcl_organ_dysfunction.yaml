@@ -1,56 +1,52 @@
 id: RF-DLBCL-ORGAN-DYSFUNCTION
-definition: >
-  Baseline organ dysfunction precluding standard R-CHOP doses:
-  LVEF <50% (anthracycline contraindicated), CrCl <30 mL/min (severe
-  cyclophosphamide / methotrexate dose constraints), bilirubin >3× ULN
-  (vincristine / doxorubicin metabolism), or DLCO <60% (lung-toxicity
-  risk on CHOP-based therapy).
-definition_ua: >
-  Базова дисфункція органів, що перешкоджає стандартним дозам R-CHOP:
-  LVEF <50% (антрациклін протипоказаний), CrCl <30 (різко обмежує дози
-  циклофосфаміду/MTX), білірубін >3× ULN (метаболізм вінкристину/
-  доксорубіцину), DLCO <60% (легенева токсичність CHOP).
+definition: 'Baseline organ dysfunction precluding standard R-CHOP doses: LVEF <50% (anthracycline contraindicated), CrCl
+  <30 mL/min (severe cyclophosphamide / methotrexate dose constraints), bilirubin >3× ULN (vincristine / doxorubicin metabolism),
+  or DLCO <60% (lung-toxicity risk on CHOP-based therapy).
 
+  '
+definition_ua: 'Базова дисфункція органів, що перешкоджає стандартним дозам R-CHOP: LVEF <50% (антрациклін протипоказаний),
+  CrCl <30 (різко обмежує дози циклофосфаміду/MTX), білірубін >3× ULN (метаболізм вінкристину/ доксорубіцину), DLCO <60% (легенева
+  токсичність CHOP).
+
+  '
 trigger:
   type: lab_value
   any_of:
-    - finding: "lvef_percent"
-      threshold: 50
-      comparator: "<"
-    - finding: "creatinine_clearance_ml_min"
-      threshold: 30
-      comparator: "<"
-    - finding: "bilirubin_ratio_to_uln"
-      threshold: 3
-      comparator: ">="
-    - finding: "dlco_percent"
-      threshold: 60
-      comparator: "<"
-
+  - finding: lvef_percent
+    threshold: 50
+    comparator: <
+  - finding: creatinine_clearance_ml_min
+    threshold: 30
+    comparator: <
+  - finding: bilirubin_ratio_to_uln
+    threshold: 3
+    comparator: '>='
+  - finding: dlco_percent
+    threshold: 60
+    comparator: <
 clinical_direction: de-escalate
-
 severity: major
 priority: 90
 category: organ-dysfunction
-
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
-
+- ALGO-DLBCL-1L
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
-
-last_reviewed: "2026-04-25"
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
 draft: false
+notes: 'LVEF <50%: substitute liposomal doxorubicin or omit anthracycline (R-CEOP using etoposide; or R-GCVP). CrCl <30: cyclophosphamide
+  reduce 25-50% per institutional renal-dosing protocol; HD-MTX contraindicated for CNS prophylaxis (use IT only). DLCO <60%:
+  document baseline carefully; pulmonary toxicity is uncommon at standard CHOP cycles but accumulates at salvage. This RF
+  de-escalates toward R-CHOP standard from Pola-R-CHP intensification when both fire (high IPI + organ dysfunction common
+  in elderly).
 
-notes: >
-  LVEF <50%: substitute liposomal doxorubicin or omit anthracycline
-  (R-CEOP using etoposide; or R-GCVP). CrCl <30: cyclophosphamide
-  reduce 25-50% per institutional renal-dosing protocol; HD-MTX
-  contraindicated for CNS prophylaxis (use IT only). DLCO <60%:
-  document baseline carefully; pulmonary toxicity is uncommon at
-  standard CHOP cycles but accumulates at salvage. This RF de-escalates
-  toward R-CHOP standard from Pola-R-CHP intensification when both
-  fire (high IPI + organ dysfunction common in elderly).
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true

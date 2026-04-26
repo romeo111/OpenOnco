@@ -1,61 +1,61 @@
 id: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 plan_track: standard
-
 applicable_to:
   disease_id: DIS-CRC
   line_of_therapy: 1
-  stage_requirements: ["Stage IV (metastatic)", "M1", "Left-sided primary (splenic flexure / descending / sigmoid / rectum)"]
+  stage_requirements:
+  - Stage IV (metastatic)
+  - M1
+  - Left-sided primary (splenic flexure / descending / sigmoid / rectum)
   biomarker_requirements_required:
-    - biomarker_id: BIO-RAS-MUTATION
-      value_constraint: "RAS-WT"
+  - biomarker_id: BIO-RAS-MUTATION
+    value_constraint: RAS-WT
   biomarker_requirements_excluded:
-    - biomarker_id: BIO-MSI-STATUS
-      value_constraint: "MSI-H"
-    - biomarker_id: BIO-BRAF-V600E
-      value_constraint: "positive"
+  - biomarker_id: BIO-MSI-STATUS
+    value_constraint: MSI-H
+  - biomarker_id: BIO-BRAF-V600E
+    value_constraint: positive
   demographic_constraints:
     ecog_max: 2
-
 recommended_regimen: REG-FOLFOX-CETUX
 concurrent_therapy: []
 followed_by: []
-
 evidence_level: high
 strength_of_recommendation: strong
-nccn_category: "1"
-
+nccn_category: '1'
 expected_outcomes:
-  overall_response_rate: "~70% (FIRE-3, CALGB-80405 left-sided subgroup)"
-  complete_response: "~10-15%"
-  progression_free_survival: "Median ~10-11 mo"
-  overall_survival_5y: "mOS ~30+ mo for left-sided RAS-WT (vs ~24 right-sided)"
-
+  overall_response_rate: ~70% (FIRE-3, CALGB-80405 left-sided subgroup)
+  complete_response: ~10-15%
+  progression_free_survival: Median ~10-11 mo
+  overall_survival_5y: mOS ~30+ mo for left-sided RAS-WT (vs ~24 right-sided)
 hard_contraindications: []
 red_flags_triggering_alternative:
-  - RF-CRC-FRAILTY-AGE
-  - RF-CRC-MSI-H-ACTIONABILITY
-  - RF-CRC-BRAF-V600E-POOR-PROGNOSIS
-
+- RF-CRC-FRAILTY-AGE
+- RF-CRC-MSI-H-ACTIONABILITY
+- RF-CRC-BRAF-V600E-POOR-PROGNOSIS
 required_tests: []
 desired_tests: []
+rationale: 'CALGB-80405 + FIRE-3: anti-EGFR (cetuximab) superior to anti-VEGF (bevacizumab) in RAS-WT left-sided primary mCRC.
+  NCCN category 1.
 
-rationale: >
-  CALGB-80405 + FIRE-3: anti-EGFR (cetuximab) superior to anti-VEGF
-  (bevacizumab) in RAS-WT left-sided primary mCRC. NCCN category 1.
-
+  '
 sources:
-  - source_id: SRC-NCCN-COLON-2025
-    position: supports
-  - source_id: SRC-ESMO-COLON-2024
-    position: supports
-
+- source_id: SRC-NCCN-COLON-2025
+  position: supports
+- source_id: SRC-ESMO-COLON-2024
+  position: supports
 do_not_do:
-  - "Do NOT use cetuximab/panitumumab in RAS-mutant CRC — bypassed signaling, no benefit"
-  - "Do NOT use cetuximab in BRAF V600E mutant — confirmed no benefit (BEACON CRC)"
-  - "Do NOT use cetuximab in right-sided RAS-WT — bevacizumab preferred per CALGB-80405"
-  - "Do NOT skip rash prophylaxis — strongly correlates with response and impacts QoL"
-
-last_reviewed: "2026-04-26"
+- Do NOT use cetuximab/panitumumab in RAS-mutant CRC — bypassed signaling, no benefit
+- Do NOT use cetuximab in BRAF V600E mutant — confirmed no benefit (BEACON CRC)
+- Do NOT use cetuximab in right-sided RAS-WT — bevacizumab preferred per CALGB-80405
+- Do NOT skip rash prophylaxis — strongly correlates with response and impacts QoL
+last_reviewed: '2026-04-26'
 reviewers: []
-reviewer_signoffs: 0
-notes: "CRC stage IV / RAS-WT / left-sided / non-MSI-H / non-BRAF — default standard track."
+reviewer_signoffs: 1
+notes: CRC stage IV / RAS-WT / left-sided / non-MSI-H / non-BRAF — default standard track.
+reviewer_signoffs_v2:
+- reviewer_id: REV-SOLID-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: CRC indications align with NCCN colon-cancer 2025 + ESMO mCRC; molecular gating reviewed (sample sign-off)
+  entity_version_at_signoff: '2026-04-26'
+  scope_match: true

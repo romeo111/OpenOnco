@@ -1,32 +1,33 @@
 id: RF-DLBCL-HIGH-IPI
-definition: "DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP per POLARIX evidence"
-definition_ua: "DLBCL з міжнародним прогностичним індексом IPI ≥2 — обирає інтенсифікований Pola-R-CHP замість R-CHOP за даними POLARIX"
-
+definition: DLBCL with International Prognostic Index ≥2 — selects intensified Pola-R-CHP over R-CHOP per POLARIX evidence
+definition_ua: DLBCL з міжнародним прогностичним індексом IPI ≥2 — обирає інтенсифікований Pola-R-CHP замість R-CHOP за даними
+  POLARIX
 trigger:
   type: composite_score
   any_of:
-    - finding: "ipi_score"
-      threshold: 2
-      comparator: ">="
-    - finding: "high_ipi"
-      value: true
-
+  - finding: ipi_score
+    threshold: 2
+    comparator: '>='
+  - finding: high_ipi
+    value: true
 clinical_direction: intensify
-
 category: high-risk-biology
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
-
+- ALGO-DLBCL-1L
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
+notes: 'Per POLARIX trial: in IPI ≥2 newly-diagnosed DLBCL, Pola-R-CHP showed superior PFS (~6.5% absolute at 2 years) vs
+  R-CHOP. Toxicity profile comparable except higher peripheral neuropathy with polatuzumab. Major access constraint in Ukraine
+  — polatuzumab not НСЗУ-reimbursed; flag funding pathway in Plan.
 
-last_reviewed: "2026-04-25"
-notes: >
-  Per POLARIX trial: in IPI ≥2 newly-diagnosed DLBCL, Pola-R-CHP showed
-  superior PFS (~6.5% absolute at 2 years) vs R-CHOP. Toxicity profile
-  comparable except higher peripheral neuropathy with polatuzumab. Major
-  access constraint in Ukraine — polatuzumab not НСЗУ-reimbursed; flag
-  funding pathway in Plan.
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true

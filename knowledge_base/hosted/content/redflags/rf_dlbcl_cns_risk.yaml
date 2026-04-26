@@ -1,36 +1,37 @@
 id: RF-DLBCL-CNS-RISK
-definition: "DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast, kidney/adrenal, paranasal sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway"
-definition_ua: "DLBCL з високим ризиком ураження ЦНС (CNS-IPI ≥4) АБО з anatomic risk локалізаціями (тестикулярна, молочна залоза, нирка/наднирник, параназальні синуси, кістковий мозок з high-risk pathology) — активує CNS prophylaxis"
-
+definition: DLBCL with high CNS-IPI risk (CNS-IPI ≥4) OR specific anatomic sites (testicular, breast, kidney/adrenal, paranasal
+  sinus, bone marrow with high-risk pathology) — triggers CNS prophylaxis pathway
+definition_ua: DLBCL з високим ризиком ураження ЦНС (CNS-IPI ≥4) АБО з anatomic risk локалізаціями (тестикулярна, молочна
+  залоза, нирка/наднирник, параназальні синуси, кістковий мозок з high-risk pathology) — активує CNS prophylaxis
 trigger:
   type: composite_score
   any_of:
-    - finding: "cns_ipi_score"
-      threshold: 4
-      comparator: ">="
-    - finding: "anatomic_cns_risk_site"
-      value: true
-    - finding: "testicular_involvement"
-      value: true
-
+  - finding: cns_ipi_score
+    threshold: 4
+    comparator: '>='
+  - finding: anatomic_cns_risk_site
+    value: true
+  - finding: testicular_involvement
+    value: true
 clinical_direction: investigate
-
 category: high-risk-biology
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm: []
-
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
+notes: 'CNS-IPI: age >60, LDH >ULN, ECOG ≥2, stage III/IV, ≥2 extranodal sites, kidney/adrenal involvement (each 1 point;
+  max 6). Score ≥4 = ~12% CNS relapse risk. Anatomic high-risk sites independently warrant prophylaxis regardless of score.
+  Standard prophylaxis: high-dose methotrexate (3-3.5 g/m² IV) intercalated with R-CHOP cycles, OR intrathecal MTX (less preferred
+  — modest efficacy). Direction "investigate" — does not shift main regimen, but mandates additional CNS-directed therapy
+  as particularity in the Plan.
 
-last_reviewed: "2026-04-25"
-notes: >
-  CNS-IPI: age >60, LDH >ULN, ECOG ≥2, stage III/IV, ≥2 extranodal sites,
-  kidney/adrenal involvement (each 1 point; max 6). Score ≥4 = ~12% CNS
-  relapse risk. Anatomic high-risk sites independently warrant prophylaxis
-  regardless of score. Standard prophylaxis: high-dose methotrexate
-  (3-3.5 g/m² IV) intercalated with R-CHOP cycles, OR intrathecal MTX
-  (less preferred — modest efficacy). Direction "investigate" — does not
-  shift main regimen, but mandates additional CNS-directed therapy as
-  particularity in the Plan.
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true

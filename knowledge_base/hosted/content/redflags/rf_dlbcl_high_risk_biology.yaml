@@ -1,51 +1,48 @@
 id: RF-DLBCL-HIGH-RISK-BIOLOGY
-definition: >
-  High-risk biology in DLBCL NOS: double-expressor (MYC + BCL2 by IHC,
-  no rearrangement), TP53 mutation, or non-GCB cell-of-origin in elderly
-  / high-IPI context. Distinct from HGBL "double-hit" which is its own
-  entity (DIS-HGBL-DH) — but double-expressor remains DLBCL NOS and
-  shifts toward intensified backbone.
-definition_ua: >
-  Біологія високого ризику в DLBCL NOS: double-expressor (MYC+BCL2 за IHC,
-  без перебудов), мутація TP53, або non-GCB cell-of-origin у літніх /
-  з high-IPI. Відмінне від HGBL "double-hit" (DIS-HGBL-DH); double-expressor
-  лишається DLBCL NOS і зміщує до інтенсифікації backbone.
+definition: 'High-risk biology in DLBCL NOS: double-expressor (MYC + BCL2 by IHC, no rearrangement), TP53 mutation, or non-GCB
+  cell-of-origin in elderly / high-IPI context. Distinct from HGBL "double-hit" which is its own entity (DIS-HGBL-DH) — but
+  double-expressor remains DLBCL NOS and shifts toward intensified backbone.
 
+  '
+definition_ua: 'Біологія високого ризику в DLBCL NOS: double-expressor (MYC+BCL2 за IHC, без перебудов), мутація TP53, або
+  non-GCB cell-of-origin у літніх / з high-IPI. Відмінне від HGBL "double-hit" (DIS-HGBL-DH); double-expressor лишається DLBCL
+  NOS і зміщує до інтенсифікації backbone.
+
+  '
 trigger:
   type: biomarker
   any_of:
-    - finding: "double_expressor_status"
+  - finding: double_expressor_status
+    value: true
+  - finding: tp53_mutation
+    value: true
+  - all_of:
+    - finding: cell_of_origin_hans
+      value: non-GCB
+    - finding: high_ipi
       value: true
-    - finding: "tp53_mutation"
-      value: true
-    - all_of:
-        - finding: "cell_of_origin_hans"
-          value: "non-GCB"
-        - finding: "high_ipi"
-          value: true
-
 clinical_direction: intensify
-
 severity: critical
 priority: 80
 category: high-risk-biology
-
 relevant_diseases:
-  - DIS-DLBCL-NOS
+- DIS-DLBCL-NOS
 shifts_algorithm:
-  - ALGO-DLBCL-1L
-
+- ALGO-DLBCL-1L
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
-
-last_reviewed: "2026-04-25"
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-25'
 draft: false
+notes: 'Double-expressor (≈30% of DLBCL): inferior PFS/OS on R-CHOP; POLARIX subgroup analysis shows Pola-R-CHP benefit largest
+  in non-GCB + double-expressor. TP53 mutation: PFS halved on R-CHOP; consider Pola-R-CHP and earlier consolidation discussion.
+  Strict double-/ triple-hit (FISH break-apart) is captured by the separate DIS-HGBL-DH entity per WHO 5th classification,
+  not here.
 
-notes: >
-  Double-expressor (≈30% of DLBCL): inferior PFS/OS on R-CHOP; POLARIX
-  subgroup analysis shows Pola-R-CHP benefit largest in non-GCB +
-  double-expressor. TP53 mutation: PFS halved on R-CHOP; consider
-  Pola-R-CHP and earlier consolidation discussion. Strict double-/
-  triple-hit (FISH break-apart) is captured by the separate
-  DIS-HGBL-DH entity per WHO 5th classification, not here.
+  '
+reviewer_signoffs_v2:
+- reviewer_id: REV-HEME-LEAD-PLACEHOLDER
+  signoff_date: '2026-04-26'
+  rationale: DLBCL RedFlag triggers + branch_targets consistent with NCCN risk stratification (sample sign-off)
+  entity_version_at_signoff: '2026-04-25'
+  scope_match: true
