@@ -1,0 +1,68 @@
+id: RF-CLL-FRAILTY-AGE
+definition: >
+  Frailty profile influencing CLL regimen selection: ECOG ≥3, OR (age ≥75
+  with G8 ≤14), OR composite frailty (age ≥70 + Charlson ≥3 + albumin <3.5)
+  — drives selection of fixed-duration V+O (CLL14) over continuous BTKi
+  (better tolerability profile in elderly per ELEVATE-TN / SEQUOIA elderly
+  subgroups), and absolutely contraindicates chemoimmuno (FCR/BR).
+definition_ua: >
+  Профіль frailty, що впливає на вибір режиму при ХЛЛ: ECOG ≥3, АБО
+  (вік ≥75 з G8 ≤14), АБО композитна frailty (вік ≥70 + Charlson ≥3 +
+  альбумін <3.5) — спрямовує на fixed-duration V+O (CLL14) замість
+  continuous BTKi (краща переносимість в elderly за ELEVATE-TN /
+  SEQUOIA elderly subgroups), і абсолютно протипоказує chemoimmuno
+  (FCR/BR).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "g8_score"
+          threshold: 14
+          comparator: "<="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+    - finding: "cirs_score"
+      threshold: 6
+      comparator: ">"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm: []  # not yet wired into ALGO-CLL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CIRS (Cumulative Illness Rating Scale) >6 = "unfit" per CLL11 / CLL14
+  trial criteria — drives choice of obinutuzumab + venetoclax over
+  chemoimmuno. Continuous BTKi (acalabrutinib, zanubrutinib) is also
+  appropriate but requires daily compliance + cardiac monitoring;
+  V+O is fixed-duration 12 months which many elderly prefer (definite
+  end-date, lower long-term toxicity). Avoid ibrutinib first-gen in
+  ≥75 with cardiovascular comorbidity. FCR/BR chemoimmuno absolutely
+  contraindicated — TRM 5-10% in unfit + minimal benefit over targeted
+  therapy.

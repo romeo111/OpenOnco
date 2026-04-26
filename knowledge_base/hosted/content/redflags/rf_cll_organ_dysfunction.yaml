@@ -1,0 +1,60 @@
+id: RF-CLL-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard CLL regimens: CrCl <30
+  (venetoclax / acalabrutinib dose-modify; obinutuzumab caution; FCR/BR
+  contraindicated by renal/marrow), severe cardiac dysfunction (LVEF <40%
+  or NYHA III-IV — ibrutinib relative contraindication; acalabrutinib /
+  zanubrutinib preferred), bilirubin >3× ULN (Child-Pugh B/C), or active
+  bleeding diathesis (BTKi bleeding risk).
+definition_ua: >
+  Базова дисфункція органів при ХЛЛ: CrCl <30 (модифікація доз венетоклаксу /
+  акалабрутинібу; обережно з обінутузумабом; FCR/BR протипоказані),
+  тяжка кардіальна дисфункція (LVEF <40% або NYHA III-IV — ібрутиніб
+  відносне протипоказання; перевага акалабрутиніб / занубрутиніб),
+  білірубін >3× ULN (Child-Pugh B/C), активна геморагія (ризик BTKi).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: "<"
+    - finding: "nyha_class_3_or_4"
+      value: true
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "active_bleeding"
+      value: true
+    - finding: "afib_anticoagulation_required"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 85
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm: []  # not yet wired into ALGO-CLL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Ibrutinib cardiac toxicity (atrial fibrillation, hypertension, sudden
+  death — 5-10% AF cumulatively) — second-generation BTKi (acalabrutinib,
+  zanubrutinib) have substantially lower cardiac AE per ELEVATE-RR /
+  ALPINE head-to-head data; preferred in cardiac-comorbid patients.
+  CrCl <30: venetoclax dose-ramp unchanged but TLS prophylaxis intensified
+  (rasburicase, IV hydration, hospitalization for first ramp). Avoid
+  chemoimmuno (FCR/BR) entirely if any organ dysfunction. AFib requiring
+  anticoagulation + BTKi: bleeding risk additive — consider zanubrutinib
+  (lowest bleeding) or BCL2-based regimen (V+O).

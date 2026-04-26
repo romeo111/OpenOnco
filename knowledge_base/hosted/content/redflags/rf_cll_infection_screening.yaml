@@ -1,0 +1,61 @@
+id: RF-CLL-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating CLL therapy: HBsAg-positive (high HBV reactivation risk on
+  obinutuzumab / rituximab + venetoclax), anti-HBc-positive (occult HBV),
+  HCV-RNA-positive, HIV-positive, active TB, or hypogammaglobulinemia
+  with recurrent infections (consider IVIG before BTKi/anti-CD20).
+definition_ua: >
+  Активна/латентна інфекція перед терапією ХЛЛ: HBsAg+ (високий ризик
+  реактивації HBV на обінутузумабі / ритуксимабі + венетоклаксі),
+  anti-HBc+ (occult HBV), HCV-РНК+, HIV+, активний туберкульоз, або
+  гіпогамаглобулінемія з рекурентними інфекціями (розглянути IVIG до
+  BTKi / anti-CD20).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hcv_rna"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+    - all_of:
+        - finding: "igg_g_l"
+          threshold: 4.0
+          comparator: "<"
+        - finding: "recurrent_infections"
+          value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Obinutuzumab (CLL14) is potent B-cell depleter — HBV reactivation
+  risk among the highest of all CD20 antibodies. Mandatory entecavir /
+  tenofovir prophylaxis from –7d through +12mo (some recommend +18-24mo
+  given extended B-cell aplasia). HCV+: defer DAA cure pre-treatment
+  if feasible; concurrent ledipasvir/sofosbuvir + venetoclax has CYP3A4
+  drug interactions — coordinate. Hypogamma + recurrent serious infection:
+  IVIG 0.4 g/kg q3-4 weeks (per ESMO CLL §infection management). PJP
+  prophylaxis routine on bendamustine, fludarabine, idelalisib; not
+  routine on BTKi/V+O alone.

@@ -1,0 +1,58 @@
+id: RF-CLL-TRANSFORMATION-PROGRESSION
+definition: >
+  CLL with clinical / biochemical features concerning for Richter
+  transformation (to DLBCL or rarely Hodgkin variant): rapid LDH rise,
+  asymmetric / rapidly enlarging nodal or extranodal mass, PET-CT SUVmax
+  >10, B-symptoms in previously asymptomatic patient, or hypercalcemia.
+  Mandates urgent excisional biopsy of PET-avid lesion.
+definition_ua: >
+  ХЛЛ з клінічними / біохімічними ознаками, що насторожують щодо
+  Ріхтер-трансформації (в DLBCL, рідко варіант Hodgkin): швидке
+  підвищення LDH, асиметричне / швидко зростаюче нодальне або
+  екстранодальне ураження, PET-CT SUVmax >10, B-симптоми у раніше
+  безсимптомного пацієнта, гіперкальціємія. Мандатна термінова
+  ексцизійна біопсія PET-avid вогнища.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "ldh_doubled_in_weeks"
+      value: true
+    - finding: "rapid_progression"
+      value: true
+    - finding: "pet_suvmax"
+      threshold: 10
+      comparator: ">"
+    - finding: "richter_suspect"
+      value: true
+    - finding: "biopsy_shows_dlbcl"
+      value: true
+    - finding: "new_b_symptoms"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm: []  # not yet wired into ALGO-CLL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Richter transformation occurs in 5-10% CLL lifetime risk; clonally
+  related to underlying CLL ~80% (poor prognosis, median OS <12 mo on
+  R-CHOP) vs clonally unrelated ~20% (de novo DLBCL biology, R-CHOP
+  curable). PET-CT SUVmax >10 has ~70% sensitivity/specificity for
+  Richter — mandates biopsy of hottest lesion (excisional preferred
+  over core, FDG-avid heterogeneity common). Confirmed Richter:
+  R-CHOP induction; consider acalabrutinib + rituximab + R-CHOP
+  combinations on trial; alloHCT consolidation in fit. Hodgkin-variant
+  Richter (~1%): treat as cHL (ABVD or A+AVD).
