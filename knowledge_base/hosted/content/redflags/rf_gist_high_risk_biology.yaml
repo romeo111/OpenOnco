@@ -1,0 +1,49 @@
+id: RF-GIST-HIGH-RISK-BIOLOGY
+definition: "Adverse genotype or anatomic risk in GIST: PDGFRA D842V (imatinib-resistant — avapritinib indicated), KIT exon 9 mutation (requires imatinib 800 mg), SDH-deficient / KIT-PDGFRA wild-type (TKI-refractory), tumor rupture, mitotic rate >10/50 HPF, or size >10 cm — each shifts adjuvant duration or 1L drug choice."
+definition_ua: "Несприятливий генотип або анатомічний ризик при GIST: PDGFRA D842V (резистентність до imatinib — показаний avapritinib), KIT exon 9 (потрібен imatinib 800 мг), SDH-deficient / KIT-PDGFRA wild-type (рефрактерний до TKI), розрив пухлини, мітози >10/50 HPF або розмір >10 см — змінює тривалість ад'юванту або 1-у лінію."
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-PDGFRA"
+      value: "D842V"
+    - finding: "BIO-KIT"
+      value: "exon-9"
+    - finding: "sdh_deficient"
+      value: true
+    - finding: "kit_pdgfra_wildtype"
+      value: true
+    - finding: "tumor_rupture"
+      value: true
+    - finding: "mitotic_rate_per_50hpf"
+      threshold: 10
+      comparator: ">"
+    - finding: "primary_tumor_size_cm"
+      threshold: 10
+      comparator: ">"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-GIST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Genotype is the dominant decision axis in GIST. PDGFRA D842V is
+  imatinib-RESISTANT — avapritinib 1L (NAVIGATOR / VOYAGER, ORR ~88%).
+  KIT exon 9 (typically small bowel) requires imatinib 800 mg/day from
+  start (B2222 / EORTC-62005 dose effect; PFS ~19 vs 6 mo on 400 mg).
+  SDH-deficient (Carney triad / Carney-Stratakis, gastric, young)
+  responds poorly to TKI — clinical trial preferred. Tumor rupture
+  upgrades to highest-risk per Joensuu / NIH consensus → 6 yr extended
+  adjuvant (SSG-XXII). Mitoses >10/50 HPF + size >10 cm + non-gastric
+  primary all push to extended adjuvant duration.
