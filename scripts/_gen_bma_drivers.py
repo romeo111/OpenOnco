@@ -997,6 +997,630 @@ def add_heme_rearr():
 add_heme_rearr()
 
 
+# ───────────────────────── Additional TP53 hotspot × disease ────────────────
+TP53_EXTRA_CELLS = []
+
+
+def add_tp53_extra():
+    hotspot_variants = ["R175H", "R248Q", "R273H", "R282W"]
+    extra_pairs = [
+        ("DIS-AML", "IIIB", "4",
+         "TP53 hotspot in AML — chemo-resistant pattern; venetoclax + HMA palliative; alloSCT preferred when feasible.",
+         ["azacitidine + venetoclax", "alloSCT consideration", "clinical trial"],
+         ["SRC-NCCN-AML-2025", "SRC-ELN-AML-2022"]),
+        ("DIS-MM", "IIA", "3A",
+         "TP53 hotspot mutation in MM — high-risk genetic feature; quadruplet (D-VRd) preferred; CAR-T effective.",
+         ["D-VRd", "Dara-Rd", "ide-cel / cilta-cel"],
+         ["SRC-NCCN-MM-2025", "SRC-ESMO-MM-2023"]),
+        ("DIS-MCL", "IIA", "3A",
+         "TP53 hotspot in MCL — chemoimmuno failure predictor; acalabrutinib-based 1L preferred.",
+         ["acalabrutinib + rituximab", "brexu-cel"],
+         ["SRC-NCCN-BCELL-2025", "SRC-ESMO-MCL-2024"]),
+        ("DIS-OVARIAN", "IIIA", "4",
+         "TP53 hotspot in HGSOC — near-universal disease feature; not directly targeted.",
+         ["bevacizumab + carbo/pacli", "PARPi maintenance per HRD/BRCA"],
+         ["SRC-NCCN-OVARIAN-2025"]),
+        ("DIS-NSCLC", "IIIB", "4",
+         "TP53 hotspot in NSCLC — adverse prognostic; modulates ICI response. Driven by usual NSCLC algorithm.",
+         ["per usual NSCLC algorithm"],
+         ["SRC-NCCN-NSCLC-2025"]),
+        ("DIS-DLBCL-NOS", "IIIB", "4",
+         "TP53 hotspot in DLBCL — predicts R-CHOP failure; flag for early CAR-T.",
+         ["pola-R-CHP", "CAR-T 2L+"],
+         ["SRC-NCCN-BCELL-2025"]),
+        ("DIS-BREAST", "IIIB", "4",
+         "TP53 hotspot in TNBC / luminal — adverse prognostic; not directly targeted.",
+         ["per usual breast algorithm"],
+         ["SRC-NCCN-BREAST-2025"]),
+    ]
+    for variant in hotspot_variants:
+        for dis, tier, level, summary, combos, sources in extra_pairs:
+            TP53_EXTRA_CELLS.append(yaml_cell(
+                cell_id=f"BMA-TP53-{variant}-{dis.removeprefix('DIS-')}",
+                biomarker_id="BIO-TP53-MUTATION",
+                variant_qualifier=variant,
+                disease_id=dis,
+                escat_tier=tier, oncokb_level=level,
+                summary=f"{summary} Hotspot {variant} is among the most frequent DBD missense — gain-of-function dominant-negative behavior in some functional assays.",
+                combos=combos,
+                sources=sources,
+                notes=f"ESCAT {tier}. Hotspot {variant} listed under BIO-TP53-MUTATION (gene-level BIO; no per-hotspot BIO entity).",
+            ))
+
+
+add_tp53_extra()
+
+
+# ───────────────────────── Additional KRAS variant × disease ────────────────
+KRAS_EXTRA_CELLS = []
+
+
+def add_kras_extra():
+    extra = [
+        ("G12C", "DIS-MM", "IV", "4",
+         "KRAS G12C in myeloma — rare; tissue-agnostic G12Ci (sotorasib/adagrasib) not approved in heme. Trial-only consideration."),
+        ("G12D", "DIS-OVARIAN", "IIIB", "4",
+         "KRAS G12D in mucinous/low-grade serous ovarian — no approved drug; trial-only (MRTX1133)."),
+        ("G12D", "DIS-ENDOMETRIAL", "IV", "4",
+         "KRAS G12D in endometrial — common in endometrioid; no approved targeted therapy."),
+        ("G12V", "DIS-OVARIAN", "IV", "4",
+         "KRAS G12V in low-grade serous / mucinous ovarian — no approved targeted therapy."),
+        ("G12V", "DIS-ENDOMETRIAL", "IV", "4",
+         "KRAS G12V in endometrial — POLE/MMR/p53 subtyping drives 1L."),
+        ("G13D", "DIS-NSCLC", "IV", "4",
+         "KRAS G13D in NSCLC — no approved KRASi; ICI-based therapy per usual algorithm."),
+        ("Q61X", "DIS-NSCLC", "IV", "4",
+         "KRAS Q61 in NSCLC — no approved targeted therapy."),
+        ("Q61X", "DIS-PDAC", "IV", "4",
+         "KRAS Q61 in PDAC (rare vs G12) — no approved drug; chemo + clinical trial."),
+        ("A146T", "DIS-NSCLC", "IV", "4",
+         "KRAS A146T in NSCLC — rare; no approved targeted therapy."),
+        ("A146T", "DIS-PDAC", "IV", "4",
+         "KRAS A146T in PDAC — rare; no approved targeted therapy."),
+    ]
+    for variant, dis, tier, level, summary in extra:
+        slug_var = variant.replace("Q61X", "Q61")
+        KRAS_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-KRAS-{slug_var}-{dis.removeprefix('DIS-')}",
+            biomarker_id="BIO-RAS-MUTATION" if variant != "G12C" else "BIO-KRAS-G12C",
+            variant_qualifier=f"KRAS {variant}",
+            disease_id=dis,
+            escat_tier=tier, oncokb_level=level,
+            summary=summary,
+            sources=["SRC-NCCN-COLON-2025"] if dis == "DIS-CRC" else (
+                ["SRC-NCCN-NSCLC-2025"] if dis == "DIS-NSCLC" else
+                ["SRC-NCCN-PANCREATIC-2025"] if dis == "DIS-PDAC" else
+                ["SRC-NCCN-OVARIAN-2025"] if dis == "DIS-OVARIAN" else
+                ["SRC-NCCN-UTERINE-2025"] if dis == "DIS-ENDOMETRIAL" else
+                ["SRC-NCCN-MM-2025"]
+            ),
+            notes=f"ESCAT {tier}. FLAG: dedicated BIO-KRAS-{variant} would improve granularity.",
+        ))
+
+
+add_kras_extra()
+
+
+# ───────────────────────── Additional NRAS combos ───────────────────────────
+NRAS_EXTRA_CELLS = []
+
+
+def add_nras_extra():
+    for variant in ["G12", "G13"]:
+        NRAS_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-NRAS-{variant}-MDS-LR",
+            biomarker_id="BIO-RAS-MUTATION",
+            variant_qualifier=f"NRAS {variant}",
+            disease_id="DIS-MDS-LR",
+            escat_tier="IIIB", oncokb_level="4",
+            summary=f"NRAS {variant} in MDS-LR — progression-risk marker. No targeted therapy; standard MDS-LR care (luspatercept / HMA).",
+            sources=["SRC-ESMO-MDS-2021"],
+            notes="ESCAT IIIB. Adverse for transformation risk.",
+        ))
+        NRAS_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-NRAS-{variant}-MDS-HR",
+            biomarker_id="BIO-RAS-MUTATION",
+            variant_qualifier=f"NRAS {variant}",
+            disease_id="DIS-MDS-HR",
+            escat_tier="IIIB", oncokb_level="4",
+            summary=f"NRAS {variant} in MDS-HR — adverse marker. Azacitidine + venetoclax / alloSCT.",
+            sources=["SRC-ESMO-MDS-2021", "SRC-IPSS-M-BERNARD-2022"],
+            notes="ESCAT IIIB.",
+        ))
+
+
+add_nras_extra()
+
+
+# ───────────────────────── BRAF in heme niche ───────────────────────────────
+BRAF_HEME_EXTRA_CELLS = []
+
+
+def add_braf_heme():
+    BRAF_HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BRAF-V600E-AML",
+        biomarker_id="BIO-BRAF-V600E",
+        variant_qualifier="V600E",
+        disease_id="DIS-AML",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="""
+            BRAF V600E in AML is rare (<1%, more in histiocytic disorders /
+            mixed-phenotype acute leukemia with histiocytic component).
+            Tissue-agnostic dabrafenib + trametinib not approved in heme.
+            Off-label use case-report level; consider in BRAF V600E AML with
+            myeloid/dendritic mixed lineage.
+        """,
+        combos=["dabrafenib + trametinib (off-label, case-report)"],
+        sources=["SRC-NCCN-AML-2025"],
+        notes="ESCAT IIIB. Distinct from histiocytic neoplasms (LCH, ECD) where BRAF V600E is the dominant driver — but those are not in our DIS list.",
+    ))
+    BRAF_HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BRAF-V600E-CLL",
+        biomarker_id="BIO-BRAF-V600E",
+        variant_qualifier="V600E",
+        disease_id="DIS-CLL",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="""
+            BRAF V600E in CLL is very rare (~1-3%); does not change standard
+            management (BTKi or venetoclax-based fixed-duration). Tissue-
+            agnostic BRAFi off-label only.
+        """,
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IIIB. CLL algorithm primarily driven by IGHV / TP53 / del(17p) status.",
+    ))
+    BRAF_HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BRAF-V600E-DLBCL-NOS",
+        biomarker_id="BIO-BRAF-V600E",
+        variant_qualifier="V600E",
+        disease_id="DIS-DLBCL-NOS",
+        escat_tier="IV", oncokb_level="4",
+        summary="""
+            BRAF V600E in DLBCL is exceptional. Tissue-agnostic dabrafenib +
+            trametinib could be considered after standard lines exhausted.
+        """,
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IV.",
+    ))
+    BRAF_HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BRAF-V600E-PDAC",
+        biomarker_id="BIO-BRAF-V600E",
+        variant_qualifier="V600E",
+        disease_id="DIS-PDAC",
+        escat_tier="IIIA", oncokb_level="3A",
+        summary="""
+            BRAF V600E in PDAC (~1-3%, often in KRAS-WT subset). Tissue-
+            agnostic dabrafenib + trametinib (FDA 2022) approved for
+            unresectable/metastatic V600E solid tumors after prior therapy.
+            Consider after FOLFIRINOX failure in BRAF V600E PDAC.
+        """,
+        fda=["dabrafenib + trametinib — tissue-agnostic V600E (FDA 2022)"],
+        ema=["dabrafenib + trametinib — V600E solid tumors (EMA 2023)"],
+        combos=["dabrafenib + trametinib (post-1L, tissue-agnostic)"],
+        sources=["SRC-NCCN-PANCREATIC-2025", "SRC-ESMO-PANCREATIC-2024"],
+        notes="ESCAT IIIA. KRAS-WT PDAC subset enriched for actionable drivers (BRAF, NTRK, NRG1, FGFR2).",
+    ))
+
+
+add_braf_heme()
+
+
+# ───────────────────────── Additional MYD88 / MYC heme cells ────────────────
+HEME_EXTRA_CELLS = []
+
+
+def add_heme_extra():
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-MYD88-L265P-PCNSL",
+        biomarker_id="BIO-MYD88-L265P",
+        variant_qualifier="L265P",
+        disease_id="DIS-PCNSL",
+        escat_tier="IIB", oncokb_level="3A",
+        summary="""
+            MYD88 L265P present in ~70-90% of PCNSL (often co-mutated with
+            CD79B). Ibrutinib monotherapy crosses BBB and shows activity in
+            R/R PCNSL (Grommes et al. Cancer Discov 2017; Soussain Eur J
+            Cancer 2019). Off-label NCCN-supported in R/R disease.
+        """,
+        combos=["ibrutinib (R/R PCNSL, off-label NCCN-supported)",
+                "ibrutinib + HD-MTX-based regimens (trial)",
+                "MTX-based induction → consolidation per usual PCNSL algorithm"],
+        sources=["SRC-NCCN-CNS-2025"],
+        notes="ESCAT IIB. PCNSL biology overlaps MCD-DLBCL.",
+    ))
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-MYC-REARRANGEMENT-NLPBL",
+        biomarker_id="BIO-MYC-REARRANGEMENT",
+        variant_qualifier="MYC rearrangement (rare in NLPBL — usually denotes transformation)",
+        disease_id="DIS-NLPBL",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="""
+            MYC rearrangement in nodular lymphocyte-predominant B-cell lymphoma
+            is rare and typically denotes transformation to aggressive
+            lymphoma (DLBCL or HGBL). Treat as transformation event with
+            R-CHOP / DA-EPOCH-R.
+        """,
+        combos=["R-CHOP", "DA-EPOCH-R (if HGBL-DH)"],
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IIIB. Transformation marker.",
+    ))
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BCL2-EXPRESSION-DLBCL-NOS",
+        biomarker_id="BIO-BCL2-EXPRESSION-IHC",
+        variant_qualifier="BCL2 high expression by IHC (without rearrangement; 'dual-expressor' if MYC IHC also high)",
+        disease_id="DIS-DLBCL-NOS",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="""
+            High BCL2 IHC expression in DLBCL — common in GCB and ABC
+            subsets. 'Dual-expressor' (BCL2+MYC IHC ≥40-50% / ≥70%) is
+            adverse but distinct from HGBL-DH (rearrangement-defined).
+            Venetoclax + R-CHOP investigational (CAVALLI Ph2). Not
+            biomarker-selected for venetoclax in DLBCL.
+        """,
+        combos=["R-CHOP / pola-R-CHP per usual algorithm",
+                "venetoclax + R-CHOP (trial; CAVALLI)"],
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IIIB. Distinct from HGBL-DH which requires FISH-confirmed rearrangement.",
+    ))
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BCL2-EXPRESSION-FL",
+        biomarker_id="BIO-BCL2-EXPRESSION-IHC",
+        variant_qualifier="BCL2 high expression by IHC",
+        disease_id="DIS-FL",
+        escat_tier="IIIA", oncokb_level="3B",
+        summary="High BCL2 expression universal in FL (driven by t(14;18)). Diagnostic but not therapy-selecting in 1L.",
+        combos=["BR / R-CHOP / O-Benda per FLIPI / burden"],
+        sources=["SRC-NCCN-BCELL-2025", "SRC-ESMO-FL-2024"],
+        notes="ESCAT IIIA. Disease-defining IHC.",
+    ))
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-CCND1-IHC-MM",
+        biomarker_id="BIO-CCND1-IHC",
+        variant_qualifier="CCND1 expression / cyclin D1 IHC (often surrogate for t(11;14))",
+        disease_id="DIS-MM",
+        escat_tier="IIA", oncokb_level="3A",
+        summary="""
+            CCND1 (cyclin D1) overexpression in MM strongly correlates with
+            t(11;14) and BCL2 dependence — predicts venetoclax response.
+            Used as surrogate when FISH unavailable.
+        """,
+        combos=["venetoclax + dexamethasone (off-label, t(11;14)-surrogate)"],
+        sources=["SRC-NCCN-MM-2025"],
+        notes="ESCAT IIA. Use FISH t(11;14) when available; CCND1 IHC as surrogate.",
+    ))
+    HEME_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-CCND1-IHC-MCL",
+        biomarker_id="BIO-CCND1-IHC",
+        variant_qualifier="cyclin D1 IHC (universal in MCL; defines diagnosis with t(11;14) FISH)",
+        disease_id="DIS-MCL",
+        escat_tier="IA", oncokb_level="1",
+        summary="""
+            Cyclin D1 IHC is a defining diagnostic marker of MCL (positive
+            in >95%; SOX11 used in cyclin D1-negative variant). Drives
+            DIS-MCL diagnosis but does not 'select' therapy independently
+            of t(11;14).
+        """,
+        combos=["per DIS-MCL algorithm (BTKi-centric)"],
+        sources=["SRC-NCCN-BCELL-2025", "SRC-ESMO-MCL-2024"],
+        notes="ESCAT IA — disease-defining diagnostic.",
+    ))
+
+
+add_heme_extra()
+
+
+# ───────────────────────── More expansion: PIK3CA × additional solid ────────
+PIK3CA_EXTRA_CELLS = []
+
+
+def add_pik3ca_extra():
+    # Solid tumor breadth — gene-level cells in tumors where PIK3CA mut found but limited approval
+    for dis, src, summary in [
+        ("DIS-GASTRIC", "SRC-NCCN-GASTRIC-2025",
+         "PIK3CA mutations in ~10% of gastric/GEJ adenocarcinoma. No PI3Ki/AKTi approval; trastuzumab/chemo/ICI per HER2/MSI/PD-L1 status."),
+        ("DIS-ESOPHAGEAL", "SRC-NCCN-ESOPHAGEAL-2025",
+         "PIK3CA mutations in ~10% of esophageal SCC/AC. No PI3Ki approval; CRT or chemo/ICI per usual algorithm."),
+        ("DIS-UROTHELIAL", "SRC-NCCN-BLADDER-2025",
+         "PIK3CA mutations in ~20% of muscle-invasive bladder. No PI3Ki approval; FGFR3-driven (erdafitinib) or ICI."),
+        ("DIS-PROSTATE", "SRC-NCCN-PROSTATE-2025",
+         "PIK3CA mutations rare in prostate (~5%); PI3K/AKT/mTOR pathway often activated via PTEN loss instead. Capivasertib + AR-targeted therapy under investigation."),
+        ("DIS-RCC", "SRC-NCCN-KIDNEY-2025",
+         "PIK3CA mutations rare in RCC; mTORi (everolimus, temsirolimus) approved 2L+ regardless of PIK3CA status."),
+        ("DIS-HCC", "SRC-NCCN-HCC-2025",
+         "PIK3CA mutations in ~5% of HCC. No PI3Ki approval; atezolizumab + bevacizumab / TKI per usual algorithm."),
+        ("DIS-NSCLC", "SRC-NCCN-NSCLC-2025",
+         "PIK3CA mutations in ~5% of NSCLC squamous; no approved targeted therapy."),
+    ]:
+        PIK3CA_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-PIK3CA-HOTSPOT-{dis.removeprefix('DIS-')}",
+            biomarker_id="BIO-PIK3CA-MUTATION",
+            variant_qualifier="hotspot (E545K / E542K / H1047R)",
+            disease_id=dis,
+            escat_tier="IIIB", oncokb_level="4",
+            summary=summary,
+            sources=[src],
+            notes="ESCAT IIIB. Tissue-agnostic capivasertib limited to HR+/HER2- breast.",
+        ))
+
+
+add_pik3ca_extra()
+
+
+# ───────────────────────── More IDH expansion ───────────────────────────────
+IDH_EXTRA_CELLS = []
+
+
+def add_idh_extra():
+    # IDH1/2 in DLBCL — rare but reported
+    for variant_g, label in [("IDH1", "R132H"), ("IDH2", "R140Q")]:
+        IDH_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-{variant_g}-{label}-DLBCL-NOS",
+            biomarker_id="BIO-IDH-MUTATION",
+            variant_qualifier=f"{variant_g} {label}",
+            disease_id="DIS-DLBCL-NOS",
+            escat_tier="IV", oncokb_level="4",
+            summary=f"{variant_g} {label} in DLBCL is exceptional (<1%). No targeted therapy in this indication; per usual DLBCL algorithm.",
+            sources=["SRC-NCCN-BCELL-2025"],
+            notes="ESCAT IV.",
+        ))
+    # IDH1 + B-ALL (rare but described)
+    IDH_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-IDH1-R132H-B-ALL",
+        biomarker_id="BIO-IDH-MUTATION",
+        variant_qualifier="IDH1 R132H",
+        disease_id="DIS-B-ALL",
+        escat_tier="IV", oncokb_level="4",
+        summary="IDH1 mutation in B-ALL is rare. Tissue-agnostic ivosidenib not approved in lymphoid; per usual B-ALL pediatric/adult protocol.",
+        sources=["SRC-CALGB-10403-STOCK-2019"],
+        notes="ESCAT IV.",
+    ))
+    IDH_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-IDH2-R140Q-T-ALL",
+        biomarker_id="BIO-IDH-MUTATION",
+        variant_qualifier="IDH2 R140Q",
+        disease_id="DIS-T-ALL",
+        escat_tier="IV", oncokb_level="4",
+        summary="IDH2 mutation in T-ALL is rare. Standard T-ALL protocol; enasidenib off-label R/R consideration.",
+        sources=["SRC-CALGB-10403-STOCK-2019"],
+        notes="ESCAT IV.",
+    ))
+
+
+add_idh_extra()
+
+
+# ───────────────────────── More NOTCH1 / MYD88 / heme expansion ─────────────
+HEME_EXP_CELLS = []
+
+
+def add_heme_exp():
+    # NOTCH1 in MCL (rare but recurrent)
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-NOTCH1-ACTIVATING-MCL",
+        biomarker_id="BIO-NOTCH1-MUTATION",
+        variant_qualifier="activating (PEST / HD)",
+        disease_id="DIS-MCL",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="NOTCH1 mutations in ~10-15% of MCL — adverse prognostic; not directly targeted. BTKi-based 1L (acalabrutinib + R) or BR + autoSCT per fitness/TP53.",
+        sources=["SRC-NCCN-BCELL-2025", "SRC-ESMO-MCL-2024"],
+        notes="ESCAT IIIB. Often co-occurs with TP53; may flag for early CAR-T at relapse.",
+    ))
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-NOTCH1-ACTIVATING-DLBCL-NOS",
+        biomarker_id="BIO-NOTCH1-MUTATION",
+        variant_qualifier="activating",
+        disease_id="DIS-DLBCL-NOS",
+        escat_tier="IV", oncokb_level="4",
+        summary="NOTCH1 mutations in DLBCL — uncommon; not therapy-selecting.",
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IV.",
+    ))
+    # MYD88 in PTLD (post-transplant lymphoproliferative)
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-MYD88-L265P-PTLD",
+        biomarker_id="BIO-MYD88-L265P",
+        variant_qualifier="L265P",
+        disease_id="DIS-PTLD",
+        escat_tier="IV", oncokb_level="4",
+        summary="MYD88 L265P uncommon in PTLD. Standard PTLD ladder (RIS → rituximab → R-CHOP) per usual algorithm; BTKi off-label R/R consideration.",
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IV.",
+    ))
+    # BCL2 expression × FL — already done; add MCL and CLL contexts
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-BCL2-EXPRESSION-MCL",
+        biomarker_id="BIO-BCL2-EXPRESSION-IHC",
+        variant_qualifier="BCL2 high expression by IHC",
+        disease_id="DIS-MCL",
+        escat_tier="IIIA", oncokb_level="3B",
+        summary="High BCL2 in MCL universal (cyclin D1-driven survival pathway). Venetoclax + ibrutinib (AIM trial; Tam NEJM 2018) active in R/R MCL — off-label.",
+        combos=["venetoclax + ibrutinib (R/R MCL, off-label)", "venetoclax + acalabrutinib (trials)"],
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IIIA.",
+    ))
+    # MYC rearrangement × FL (rare — usually transformation)
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-MYC-REARRANGEMENT-FL",
+        biomarker_id="BIO-MYC-REARRANGEMENT",
+        variant_qualifier="MYC rearrangement (acquired; transformation marker in FL)",
+        disease_id="DIS-FL",
+        escat_tier="IIIA", oncokb_level="4",
+        summary="MYC rearrangement acquired in FL signals transformation to HGBL/DLBCL — change therapy to DA-EPOCH-R or pola-R-CHP and consider CAR-T early.",
+        combos=["DA-EPOCH-R", "pola-R-CHP", "CAR-T 2L+"],
+        sources=["SRC-NCCN-BCELL-2025", "SRC-ESMO-FL-2024"],
+        notes="ESCAT IIIA. Transformation flag.",
+    ))
+    # NPM1-like — no BIO; flag only (no cell)
+    # CCND1 IHC × CLL (rare)
+    # BCL2-R × MCL (rare)
+    HEME_EXP_CELLS.append(yaml_cell(
+        cell_id="BMA-BCL2-REARRANGEMENT-MCL",
+        biomarker_id="BIO-BCL2-REARRANGEMENT",
+        variant_qualifier="BCL2-R (very rare in MCL; usually denotes composite/transformation)",
+        disease_id="DIS-MCL",
+        escat_tier="IV", oncokb_level="4",
+        summary="BCL2 rearrangement in MCL is very rare and usually denotes composite lymphoma or transformation. Standard MCL algorithm continues.",
+        sources=["SRC-NCCN-BCELL-2025"],
+        notes="ESCAT IV.",
+    ))
+
+
+add_heme_exp()
+
+
+# ───────────────────────── BRAF & RAS in HCC / NK-T / ATLL niche ────────────
+NICHE_EXTRA_CELLS = []
+
+
+def add_niche():
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-BRAF-V600E-HCC",
+        biomarker_id="BIO-BRAF-V600E",
+        variant_qualifier="V600E",
+        disease_id="DIS-HCC",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="BRAF V600E in HCC is exceptional (<1%). Tissue-agnostic dabrafenib + trametinib could be considered after standard lines.",
+        sources=["SRC-NCCN-HCC-2025", "SRC-AASLD-HCC-2023"],
+        notes="ESCAT IIIB.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-KRAS-G12C-HCC",
+        biomarker_id="BIO-KRAS-G12C",
+        variant_qualifier="G12C",
+        disease_id="DIS-HCC",
+        escat_tier="IV", oncokb_level="4",
+        summary="KRAS G12C in HCC is rare. Sotorasib not approved in HCC; trial-only.",
+        sources=["SRC-NCCN-HCC-2025"],
+        notes="ESCAT IV.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-PIK3CA-HOTSPOT-HCC",
+        biomarker_id="BIO-PIK3CA-MUTATION",
+        variant_qualifier="hotspot",
+        disease_id="DIS-HCC",
+        escat_tier="IV", oncokb_level="4",
+        summary="PIK3CA in HCC — no targeted approval; atezolizumab + bevacizumab / lenvatinib per usual algorithm.",
+        sources=["SRC-NCCN-HCC-2025"],
+        notes="ESCAT IV.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-TP53-MUT-HCC",
+        biomarker_id="BIO-TP53-MUTATION",
+        variant_qualifier="any pathogenic",
+        disease_id="DIS-HCC",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="TP53 mutations in HCC (~30%) — adverse prognostic; not directly targeted.",
+        sources=["SRC-NCCN-HCC-2025", "SRC-AASLD-HCC-2023"],
+        notes="ESCAT IIIB.",
+    ))
+    # RAS family — gastric/esophageal
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-KRAS-G12C-GASTRIC",
+        biomarker_id="BIO-KRAS-G12C",
+        variant_qualifier="G12C",
+        disease_id="DIS-GASTRIC",
+        escat_tier="IIIB", oncokb_level="4",
+        summary="KRAS G12C in gastric/GEJ adenocarcinoma is rare. Sotorasib basket data limited; trial-only.",
+        sources=["SRC-NCCN-GASTRIC-2025"],
+        notes="ESCAT IIIB.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-KRAS-G12D-GASTRIC",
+        biomarker_id="BIO-RAS-MUTATION",
+        variant_qualifier="KRAS G12D",
+        disease_id="DIS-GASTRIC",
+        escat_tier="IV", oncokb_level="4",
+        summary="KRAS G12D in gastric — no approved targeted therapy.",
+        sources=["SRC-NCCN-GASTRIC-2025"],
+        notes="ESCAT IV.",
+    ))
+    # TP53 in additional diseases
+    for dis, src in [
+        ("DIS-GASTRIC", "SRC-NCCN-GASTRIC-2025"),
+        ("DIS-ESOPHAGEAL", "SRC-NCCN-ESOPHAGEAL-2025"),
+        ("DIS-UROTHELIAL", "SRC-NCCN-BLADDER-2025"),
+        ("DIS-PROSTATE", "SRC-NCCN-PROSTATE-2025"),
+        ("DIS-RCC", "SRC-NCCN-KIDNEY-2025"),
+        ("DIS-PDAC", "SRC-NCCN-PANCREATIC-2025"),
+        ("DIS-CRC", "SRC-NCCN-COLON-2025"),
+        ("DIS-MELANOMA", "SRC-NCCN-MELANOMA-2025"),
+        ("DIS-CERVICAL", "SRC-NCCN-CERVICAL-2025"),
+        ("DIS-ENDOMETRIAL", "SRC-NCCN-UTERINE-2025"),
+        ("DIS-SCLC", "SRC-NCCN-SCLC-2025"),
+        ("DIS-GBM", "SRC-NCCN-CNS-2025"),
+    ]:
+        NICHE_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-TP53-MUT-{dis.removeprefix('DIS-')}",
+            biomarker_id="BIO-TP53-MUTATION",
+            variant_qualifier="any pathogenic",
+            disease_id=dis,
+            escat_tier="IIIB", oncokb_level="4",
+            summary=f"TP53 mutation in {dis.removeprefix('DIS-')} — common, adverse prognostic; not directly targeted. Per usual algorithm.",
+            sources=[src],
+            notes="ESCAT IIIB. Gene-level cell.",
+        ))
+    # NRAS in additional diseases
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-NRAS-Q61R-CRC",
+        biomarker_id="BIO-RAS-MUTATION",
+        variant_qualifier="NRAS Q61R",
+        disease_id="DIS-CRC",
+        escat_tier="IB", oncokb_level="1",
+        summary="NRAS Q61R in mCRC — anti-EGFR (cetuximab/panitumumab) contraindication. Standard chemo ± bev; no NRAS-selective drug.",
+        contraindicated=["cetuximab / panitumumab (any line) — extended RAS WT required"],
+        sources=["SRC-NCCN-COLON-2025", "SRC-ESMO-COLON-2024"],
+        notes="ESCAT IB — extended RAS testing is the canonical actionable use of NRAS in mCRC.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-NRAS-Q61K-CRC",
+        biomarker_id="BIO-RAS-MUTATION",
+        variant_qualifier="NRAS Q61K",
+        disease_id="DIS-CRC",
+        escat_tier="IB", oncokb_level="1",
+        summary="NRAS Q61K in mCRC — anti-EGFR contraindication.",
+        contraindicated=["cetuximab / panitumumab"],
+        sources=["SRC-NCCN-COLON-2025"],
+        notes="ESCAT IB.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-NRAS-G12-CRC",
+        biomarker_id="BIO-RAS-MUTATION",
+        variant_qualifier="NRAS G12",
+        disease_id="DIS-CRC",
+        escat_tier="IB", oncokb_level="1",
+        summary="NRAS codon 12 mutation in mCRC — extended RAS WT criterion fails; anti-EGFR contraindicated.",
+        contraindicated=["cetuximab / panitumumab"],
+        sources=["SRC-NCCN-COLON-2025"],
+        notes="ESCAT IB.",
+    ))
+    NICHE_EXTRA_CELLS.append(yaml_cell(
+        cell_id="BMA-NRAS-G13-CRC",
+        biomarker_id="BIO-RAS-MUTATION",
+        variant_qualifier="NRAS G13",
+        disease_id="DIS-CRC",
+        escat_tier="IB", oncokb_level="1",
+        summary="NRAS codon 13 in mCRC — anti-EGFR contraindicated.",
+        contraindicated=["cetuximab / panitumumab"],
+        sources=["SRC-NCCN-COLON-2025"],
+        notes="ESCAT IB.",
+    ))
+    # KRAS extended-RAS in mCRC (G12 generic, G13 generic, exon 3/4)
+    for var, slug in [("G12 (any)", "G12X"), ("G13 (any non-G13C)", "G13X"), ("Q61 (any)", "Q61"), ("exon 3 codon 59/61", "EXON3"), ("exon 4 codon 117/146", "EXON4")]:
+        NICHE_EXTRA_CELLS.append(yaml_cell(
+            cell_id=f"BMA-KRAS-{slug}-CRC",
+            biomarker_id="BIO-RAS-MUTATION",
+            variant_qualifier=f"KRAS {var}",
+            disease_id="DIS-CRC",
+            escat_tier="IA", oncokb_level="1",
+            summary=f"KRAS {var} in mCRC — extended-RAS WT criterion fails; anti-EGFR (cetuximab/panitumumab) contraindicated. Standard chemo ± bevacizumab.",
+            contraindicated=["cetuximab / panitumumab — any line"],
+            sources=["SRC-NCCN-COLON-2025", "SRC-ESMO-COLON-2024"],
+            notes="ESCAT IA — extended-RAS WT testing is companion-diagnostic standard.",
+        ))
+
+
+add_niche()
+
+
 def write_all(cells):
     for body in cells:
         # parse first line
@@ -1015,9 +1639,21 @@ if __name__ == "__main__":
     write_all(MYD88_CELLS)
     write_all(NOTCH1_CELLS)
     write_all(HEME_REARR_CELLS)
+    write_all(TP53_EXTRA_CELLS)
+    write_all(KRAS_EXTRA_CELLS)
+    write_all(NRAS_EXTRA_CELLS)
+    write_all(BRAF_HEME_EXTRA_CELLS)
+    write_all(HEME_EXTRA_CELLS)
+    write_all(PIK3CA_EXTRA_CELLS)
+    write_all(IDH_EXTRA_CELLS)
+    write_all(HEME_EXP_CELLS)
+    write_all(NICHE_EXTRA_CELLS)
     print(
-        f"wrote KRAS={len(KRAS_CELLS)} NRAS={len(NRAS_CELLS)} "
+        f"wrote KRAS={len(KRAS_CELLS)+len(KRAS_EXTRA_CELLS)} "
+        f"NRAS={len(NRAS_CELLS)+len(NRAS_EXTRA_CELLS)} "
         f"PIK3CA={len(PIK3CA_CELLS)} IDH={len(IDH_CELLS)} "
-        f"TP53={len(TP53_CELLS)} MYD88={len(MYD88_CELLS)} "
-        f"NOTCH1={len(NOTCH1_CELLS)} HEME-REARR={len(HEME_REARR_CELLS)}"
+        f"TP53={len(TP53_CELLS)+len(TP53_EXTRA_CELLS)} "
+        f"MYD88={len(MYD88_CELLS)} NOTCH1={len(NOTCH1_CELLS)} "
+        f"HEME-REARR={len(HEME_REARR_CELLS)+len(HEME_EXTRA_CELLS)} "
+        f"BRAF-HEME-EXTRA={len(BRAF_HEME_EXTRA_CELLS)}"
     )
