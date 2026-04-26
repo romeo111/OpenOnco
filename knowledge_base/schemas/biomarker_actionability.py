@@ -11,8 +11,9 @@ partnership pitch). When the spec is updated, register this entity there.
 
 from typing import Literal, Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
+from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base
 
 
@@ -73,4 +74,12 @@ class BiomarkerActionability(Base):
     primary_sources: list[str]  # FK → SRC-*, ≥1 required (enforced by loader)
     last_verified: str  # ISO date (YYYY-MM-DD)
     oncokb_snapshot_version: Optional[str] = None  # e.g. "v3.20-2026-04"
+    # CHARTER §6.1: ≥2 sign-offs to publish. Structured form — legacy
+    # `reviewer_signoffs: 0` (int) coerced to [] by the validator below.
+    reviewer_signoffs: list[ReviewerSignoff] = Field(default_factory=list)
     notes: Optional[str] = None
+
+    @field_validator("reviewer_signoffs", mode="before")
+    @classmethod
+    def _migrate_signoffs(cls, v):
+        return _migrate_int_signoffs(v)
