@@ -1,0 +1,59 @@
+id: REG-PEMBROLIZUMAB-MAINTENANCE
+name: "Pembrolizumab maintenance (continuation post-induction chemo+pembro), q3w until 35 cycles"
+name_ua: "Підтримуюча терапія пембролізумабом (продовження після індукції хіміо+пембро), q3w до 35 циклів"
+alternate_names:
+  - "Pembro maintenance"
+  - "KEYNOTE-189 maintenance"
+  - "KEYNOTE-407 maintenance"
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg flat (or 400 mg q6 weeks alternative)"
+    schedule: "IV q3 weeks until disease progression, unacceptable toxicity, OR completion of 35 total cycles (~2 years from start of induction)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 35 total (combined with induction); typically ~24 maintenance cycles"
+toxicity_profile: low-moderate
+
+premedication:
+  - "Acetaminophen + diphenhydramine for first cycle (mild infusion reactions; no routine premed required)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2 immune-related AE (e.g. pneumonitis, hepatitis, colitis)"
+    modification: "Hold pembrolizumab + start prednisolone 0.5-1 mg/kg/day; resume on resolution to ≤Grade 1"
+    rationale: "Class effect — rapid steroid initiation reduces severity"
+    source_refs: [SRC-NCCN-NSCLC-2025]
+  - condition: "Grade 3-4 immune-related AE (excluding skin toxicity)"
+    modification: "Permanent discontinuation; high-dose steroids (1-2 mg/kg/day); subspecialty consultation; consider infliximab / mycophenolate for steroid-refractory"
+    rationale: "Severe irAE may be life-threatening; permanent discontinuation usually warranted"
+    source_refs: [SRC-NCCN-NSCLC-2025]
+  - condition: "Endocrine irAE (thyroid, hypophysitis, adrenal)"
+    modification: "Hormone replacement; usually NOT a discontinuation reason — pembrolizumab can continue with replacement"
+    rationale: "Endocrine irAEs are managed with replacement; antitumor benefit retained"
+  - condition: "Pneumonitis Grade ≥2"
+    modification: "Hold; chest CT; bronchoscopy if diagnostic uncertainty; high-dose steroids; permanent discontinuation if Grade ≥3"
+    rationale: "Pneumonitis is a leading cause of pembrolizumab-related mortality in NSCLC"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Pembrolizumab reimbursed via НСЗУ for NSCLC (1L PD-L1+ and combination indications). Maintenance phase covered as continuation of approved induction regimen."
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  KEYNOTE-189 (non-squamous, with pemetrexed maintenance) and
+  KEYNOTE-407 (squamous, no pemetrexed maintenance) established
+  pembrolizumab continuation through 35 cycles total — induction (4
+  cycles chemo+pembro) followed by maintenance pembrolizumab (±
+  pemetrexed in non-squamous) until progression or completion. 5-year
+  OS ~19-22% vs ~11% chemo alone (KEYNOTE-189 5-year update). Should be
+  given as continuation of original 1L plan — NOT a separate decision
+  point. Q6 weekly 400 mg flat dosing equivalent to 200 mg q3 weeks
+  per population PK; reduces clinic visits.

@@ -1,0 +1,97 @@
+id: IND-NSCLC-ALK-2L-LORLATINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: ALK_REARRANGED
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic ALK-rearranged NSCLC"
+    - "Disease progression on 2nd-generation ALK TKI (alectinib OR brigatinib OR ceritinib)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ALK-FUSION
+      value_constraint: "ALK rearranged (FISH OR IHC OR NGS)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-LORLATINIB-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~40-50% post-2nd-gen TKI (lower than 1L; depends on resistance mutation profile)"
+  progression_free_survival: "Median PFS ~7-11 mo post-alectinib failure; longer if specific resistance mutations"
+  overall_survival_5y: "Mature OS data evolving; 2-year OS ~60-70%"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm ALK retained + identify resistance mutations
+  - TEST-BRAIN-MRI-CONTRAST  # critical — lorlatinib excellent CNS penetration
+desired_tests:
+  - TEST-FISH-PANEL  # if NGS-resistance not informative
+
+rationale: >
+  Lorlatinib (3rd-generation macrocyclic ALK / ROS1 TKI) for ALK+
+  metastatic NSCLC progressing on 2nd-generation TKI (alectinib /
+  brigatinib / ceritinib). Active vs nearly all known ALK resistance
+  mutations including G1202R, I1171N, and compound mutations (CROWN
+  resistance subset). Excellent CNS penetration — particularly valuable
+  for brain metastasis (intracranial response rate ~80%). CROWN trial
+  supported 1L use (3-year PFS 64% vs 19% crizotinib) but practice
+  favors alectinib 1L → lorlatinib 2L sequencing when 1L alectinib
+  available. 2L role for lorlatinib post-2nd-gen failure is now NCCN
+  Cat 1. Unique cognitive AE profile (~40% any-grade memory / mood AE)
+  requires patient counseling + early dose-modification on emergence.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Lorlatinib is recommended for ALK+ NSCLC progressing on 2nd-generation ALK TKI; Cat 1 (CROWN + post-alectinib data)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Lorlatinib is the preferred 3rd-line option after 2nd-gen ALK TKI failure in ALK+ NSCLC; particularly active for CNS disease and resistance mutations"
+
+known_controversies:
+  - topic: "Lorlatinib 1L (CROWN) vs alectinib 1L → lorlatinib 2L sequencing"
+    positions:
+      - position: "Lorlatinib 1L: superior PFS over crizotinib (CROWN, 3-year PFS 64% vs 19%); aggressive intracranial activity"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Alectinib 1L → lorlatinib 2L: preserves later-line options; alectinib better tolerated; lorlatinib reserved for resistance"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+        evidence_note: "ALEX vs CROWN cross-trial: alectinib mPFS ~34 mo, lorlatinib not reached at 3 years; sequencing data still evolving"
+    our_default: "Alectinib 1L → lorlatinib 2L for most patients (preserves sequencing); lorlatinib 1L for patients with known high-risk ALK variants or extensive baseline brain disease"
+    rationale: "Sequencing approach maintains options + Ukraine access pattern (alectinib registered)"
+
+do_not_do:
+  - "НЕ розпочинати без NGS resistance profiling — деякі resistance mutations реагують краще на repotrectinib або specific re-challenge."
+  - "НЕ ігнорувати CNS imaging — lorlatinib обирається частково через CNS penetration; baseline brain MRI обов'язковий."
+  - "НЕ пропускати lipid panel + diabetes screen — hypercholesterolemia + hypertriglyceridemia >90% (statin management)."
+  - "НЕ ігнорувати cognitive AE — Grade 2 (memory, mood) потребує hold + dose reduction; pacient counseling pre-start."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors або inducers без dose modification — exposure shifts significant."
+  - "НЕ підтверджувати план без funding pathway — лорлатиніб не зареєстрований в Україні; off-label international referral required."
+  - "НЕ припиняти терапію при reversible cognitive AE — дозо-залежне; зазвичай повертається на 75 mg → 50 mg."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L for
+  ALK+ NSCLC post-2nd-gen TKI failure. Reuses existing
+  REG-LORLATINIB-NSCLC. CROWN expanded role to 1L; sequencing decision
+  driven by access + center experience. Repotrectinib (TRIDENT-1) is
+  the next-generation ALK/ROS1 TKI for post-lorlatinib failure —
+  separate future Indication.

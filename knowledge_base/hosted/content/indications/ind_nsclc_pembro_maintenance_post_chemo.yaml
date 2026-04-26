@@ -1,0 +1,93 @@
+id: IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: DRIVER_NEGATIVE
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic NSCLC"
+    - "Completed 4 cycles induction chemo + pembrolizumab (KEYNOTE-189 non-squamous OR KEYNOTE-407 squamous)"
+    - "≥SD or response on induction"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MAINTENANCE
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Sustained from induction; maintenance deepens responses in ~10-15%"
+  progression_free_survival: "Median PFS ~8.8 mo (KEYNOTE-189 non-squamous from start)"
+  overall_survival_5y: "5-year OS ~19-22% (KEYNOTE-189 5-year update; vs ~11% chemo alone)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-PDL1-IHC  # for documentation; not a gate at maintenance phase
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  Pembrolizumab maintenance is a continuation of the KEYNOTE-189 (non-
+  squamous, with pemetrexed maintenance partner) and KEYNOTE-407
+  (squamous, no pemetrexed) 1L regimen — pembrolizumab continues
+  monotherapy q3 weeks until total 35 cycles (~2 years) OR progression
+  OR unacceptable toxicity. 5-year OS ~19-22% in KEYNOTE-189 mature
+  follow-up vs ~11% chemo alone. Critical to recognize maintenance is
+  NOT a separate decision point — patients completing induction without
+  progression should automatically transition to maintenance phase.
+  Discontinuation at 35 cycles is per-protocol; some real-world programs
+  continue beyond if benefit + tolerance.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Pembrolizumab maintenance through 35 cycles total is recommended as continuation of 1L chemo+pembro for stage IV NSCLC (KEYNOTE-189, KEYNOTE-407); Cat 1"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Maintenance pembrolizumab (with pemetrexed maintenance in non-squamous) is standard continuation of 1L chemo-immunotherapy for stage IV NSCLC"
+
+known_controversies:
+  - topic: "35-cycle protocol cap vs continued treatment beyond 35 cycles"
+    positions:
+      - position: "Discontinue at 35 cycles per KEYNOTE-189 protocol (~2 years total) — most responses durable post-discontinuation"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Continue beyond 35 cycles if tolerating + benefiting — rebiopsy / re-treatment difficult on progression"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+        evidence_note: "No randomized data beyond 35 cycles; real-world variability"
+    our_default: "Discontinue at 35 cycles per protocol; consider re-treatment with pembrolizumab on progression if response duration was ≥6 months"
+    rationale: "Protocol-defined; preserves option for re-challenge"
+
+do_not_do:
+  - "НЕ continue maintenance при ≥Grade 3 immune-related AE — permanent discontinuation usually warranted."
+  - "НЕ ігнорувати thyroid / pituitary endocrine surveillance — irAEs можуть бути silent (TSH q3 cycles)."
+  - "НЕ призначати при active autoimmune disease на systemic immunosuppression — ризик flare + irAE значно вищий."
+  - "НЕ використовувати при pneumonitis history > Grade 2 від prior ICI — ризик recurrence + fatal."
+  - "НЕ ігнорувати new dyspnea / cough — pneumonitis ризик зберігається протягом всієї терапії."
+  - "НЕ призначати steroid-tapering без долати причини irAE — рецидив гарантований."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track maintenance
+  continuation for stage IV NSCLC after induction chemo+pembro per
+  KEYNOTE-189/-407. Engine should automatically activate at end of
+  induction; not a separate prompt to clinician. Pemetrexed maintenance
+  (in non-squamous, with pembrolizumab) is a separate concurrent regimen
+  consideration — future Indication entity.

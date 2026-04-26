@@ -1,0 +1,99 @@
+id: IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: DRIVER_NEGATIVE
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic NSCLC"
+    - "Disease progression on 1L chemo+ICI (KEYNOTE-189/-407 OR equivalent)"
+    - "No actionable driver mutation (driver-positive patients receive targeted next line instead)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "EGFR-mutant excluded — targeted therapy preferred"
+    - biomarker_id: BIO-ALK-FUSION
+      value_constraint: "ALK-rearranged excluded — targeted therapy preferred"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DOCETAXEL-RAMUCIRUMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~23% (REVEL doc-ram vs 14% docetaxel)"
+  progression_free_survival: "Median PFS ~4.5 mo (REVEL doc-ram vs 3.0 mo doc; HR 0.76)"
+  overall_survival_5y: "Median OS 10.5 vs 9.1 mo (HR 0.86); 1-year OS ~46%"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE  # frail / elderly may not tolerate doc + ram doublet
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm no missed driver before cytotoxic
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  Docetaxel + ramucirumab for 2L driver-negative NSCLC after 1L
+  chemo+ICI failure (REVEL trial — pre-ICI era but mechanism still
+  applies). Adds modest OS + PFS benefit over single-agent docetaxel.
+  In modern post-ICI+chemo failure setting, this represents the
+  default cytotoxic 2L. Single-agent docetaxel (without ramucirumab)
+  is the realistic fallback in Ukraine where ramucirumab not NSZU-
+  reimbursed. For driver-positive disease that progressed on targeted
+  therapy, this Indication does NOT apply — patient receives next-
+  generation TKI per molecular subtype.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Docetaxel ± ramucirumab is recommended 2L for stage IV NSCLC after 1L chemo+ICI failure in driver-negative tumors (REVEL); single-agent docetaxel acceptable when ramucirumab not accessible"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Docetaxel-based 2L (± ramucirumab or nintedanib) standard for driver-negative metastatic NSCLC progressing on 1L chemo-immunotherapy"
+
+known_controversies:
+  - topic: "Docetaxel + ramucirumab vs docetaxel + nintedanib vs docetaxel alone for 2L NSCLC"
+    positions:
+      - position: "Doc-ram (REVEL): mOS 10.5 mo, PFS 4.5 mo, ORR 23%"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Doc-nintedanib (LUME-Lung 1, adenocarcinoma only): similar PFS benefit; oral PO antiangiogenic — different toxicity"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+      - position: "Single-agent docetaxel: minus VEGFR2 toxicity; slight efficacy compromise"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Doc-ram for fit patients with funding pathway; single-agent docetaxel as practical fallback in Ukraine; nintedanib for adenocarcinoma if oral preferred"
+    rationale: "Access + tolerability driven; outcomes broadly similar"
+
+do_not_do:
+  - "НЕ призначати при baseline Grade ≥2 peripheral neuropathy — taxane токсичність cumulative."
+  - "НЕ розпочинати протягом 28 днів від major surgery — perforation / dehiscence ризик ramucirumab."
+  - "НЕ продовжувати ramucirumab при uncontrolled HTN >160/100 — cerebrovascular ризик."
+  - "НЕ використовувати при active hemoptysis або recent GI bleeding — фатальні крововиливи можливі."
+  - "НЕ пропускати dexamethasone premedication для docetaxel — fluid retention + hypersensitivity."
+  - "НЕ призначати при ECOG 3-4 — toxicity profile doc+ram exceeds frail patient tolerance."
+  - "НЕ підтверджувати ramucirumab без funding — single-agent docetaxel є валідною альтернативою."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L
+  cytotoxic for driver-negative metastatic NSCLC post-1L
+  chemo+ICI failure. Driver-positive (EGFR, ALK, ROS1, etc.)
+  excluded — those receive next-line targeted TKI. Atezolizumab
+  + bevacizumab + chemo (IMpower150) is alternative
+  bevacizumab-containing 1L; atezolizumab maintenance + sequel
+  cytotoxic options separate Indications.
