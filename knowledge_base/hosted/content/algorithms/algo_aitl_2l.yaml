@@ -1,0 +1,76 @@
+id: ALGO-AITL-2L
+applicable_to_disease: DIS-AITL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+/relapsed AITL Indication. Three tracks reflecting AITL's
+  TFH-cell epigenetic biology (TET2/DNMT3A/IDH2 mutations frequent):
+  (1) AITL-specific epigenetic preferred → IND-AITL-2L-AZACITIDINE
+  (per RUYUAN-2 + UA-accessible hypomethylating agent); (2) HDAC-naive
+  with romidepsin access → IND-AITL-2L-ROMIDEPSIN (PTCL-classic HDACi);
+  (3) HDAC alternative for romidepsin-intolerant or accessibility →
+  IND-AITL-2L-BELINOSTAT.
+
+output_indications:
+  - IND-AITL-2L-AZACITIDINE
+  - IND-AITL-2L-ROMIDEPSIN
+  - IND-AITL-2L-BELINOSTAT
+
+default_indication: IND-AITL-2L-AZACITIDINE
+alternative_indication: IND-AITL-2L-ROMIDEPSIN
+
+decision_tree:
+  # Step 1 — AITL epigenetic biology preferred → azacitidine.
+  # Default for UA accessibility (azacitidine is on НСЗУ basket for MDS,
+  # repurposable for AITL with hematologist sign-off).
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "≥1 prior systemic line failed (post-CHOEP/CHP-Bv)"
+        - condition: "AITL-typical epigenetic mutations documented (TET2/DNMT3A/IDH2)"
+        - condition: "Hypomethylating agent accessible / preferred"
+    if_true:
+      result: IND-AITL-2L-AZACITIDINE
+    if_false:
+      next_step: 2
+
+  # Step 2 — HDAC-naive + romidepsin accessible → romidepsin.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "HDAC-inhibitor-naive"
+        - condition: "Romidepsin accessible (named-patient or trial)"
+        - condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
+    if_true:
+      result: IND-AITL-2L-ROMIDEPSIN
+    if_false:
+      next_step: 3
+
+  # Step 3 — alternative HDACi: belinostat (less cardiotoxic than
+  # romidepsin in some series; use when romidepsin not accessible).
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Romidepsin inaccessible / intolerant"
+        - condition: "Mild baseline arrhythmia, prefer belinostat profile"
+    if_true:
+      result: IND-AITL-2L-BELINOSTAT
+    if_false:
+      result: IND-AITL-2L-AZACITIDINE
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  OOS / wiring gaps:
+  (1) Brentuximab vedotin for CD30+ AITL relapse not modeled as 2L
+  indication (CD30+ PTCL/AITL CHP-Bv 1L exists; relapsed-CD30+ BV
+  mono needs IND).
+  (2) Allogeneic SCT for fit younger CR2 — referral, outside KB.
+  (3) Pralatrexate (FOLOTYN) for PTCL/AITL — historic option, not
+  modeled.
+  (4) Combination HDACi+HMA (romidepsin+azacitidine, OPTILY-1) —
+  emerging, not modeled as separate indication.
+  (5) Surface to hematologist: should we add IND-AITL-3L-ALLO-SCT
+  referral indication, or keep allo-SCT as MDT free-text only?
