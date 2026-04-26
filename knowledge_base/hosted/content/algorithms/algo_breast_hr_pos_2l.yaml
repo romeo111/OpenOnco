@@ -26,42 +26,54 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "PIK3CA hotspot mutation present (E542K, E545K, H1047R, H1047L on tissue NGS or ctDNA)"
-        - condition: "AKT1 E17K mutation present"
+        - red_flag: RF-BREAST-PIK3CA-MUT-ACTIONABLE
+        - red_flag: RF-BREAST-AKT1-E17K-ACTIONABLE
         - condition: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
     if_true:
       result: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
     if_false:
       next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 2 — ESR1 mutation present → elacestrant
   - step: 2
     evaluate:
       any_of:
-        - condition: "ESR1 LBD mutation present (D538G, Y537S, Y537N, Y537C, L536H, E380Q on ctDNA preferred)"
+        - red_flag: RF-BREAST-ESR1-MUT-ACTIONABLE
     if_true:
       result: IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
     if_false:
       next_step: 3
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
-  # Step 3 — HER2-low (IHC 1+ or IHC 2+/ISH-) → T-DXd
+  # Step 3 — HER2-low (IHC 1+ or IHC 2+/ISH-) detected → next step
+  # checks chemo-line eligibility. Split from old single all_of step
+  # so the biomarker arm wires additively to RF-BREAST-HER2-LOW-ACTIONABLE.
   - step: 3
     evaluate:
-      all_of:
-        - condition: "HER2 IHC 1+ OR (HER2 IHC 2+ AND ISH-negative)"
+      any_of:
+        - red_flag: RF-BREAST-HER2-LOW-ACTIONABLE
+    if_true:
+      next_step: 4
+    if_false:
+      next_step: 5
+
+  - step: 4
+    # Sub-step: HER2-low + chemo-line eligibility (≥1 prior chemo OR rapid
+    # progression on endocrine). Free-text retained — no fitness RF for
+    # chemo-line count exists; defaults to T-DXd either way (line eligibility
+    # is an MDT confirmation, not a contraindication).
+    evaluate:
+      any_of:
         - condition: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
     if_true:
       result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
     if_false:
-      next_step: 4
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+      result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+    notes: "MDT-only — chemo-line eligibility check has no dedicated RF; T-DXd default for HER2-low metastatic per DESTINY-Breast04."
 
-  # Step 4 — default: fulvestrant + everolimus (BOLERO-2 backbone, no
+  # Step 5 — default: fulvestrant + everolimus (BOLERO-2 backbone, no
   # biomarker gating, broadly applicable when no targetable mutation
   # and HER2-IHC=0).
-  - step: 4
+  - step: 5
     evaluate:
       any_of:
         - condition: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
@@ -69,7 +81,7 @@ decision_tree:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
     if_false:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Default fall-through — no biomarker gating; expressed as plain condition for documentation."
 
 sources:
   - SRC-NCCN-BREAST-2025

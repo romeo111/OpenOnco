@@ -24,29 +24,39 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "Germline BRCA1 OR BRCA2 pathogenic / likely-pathogenic variant on multi-gene HRD panel"
+        - red_flag: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
     if_true:
       result: IND-BREAST-TNBC-2L-BRCA-OLAPARIB
     if_false:
       next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
-  # Step 2 — HER2-low (IHC 1+ or IHC 2+/ISH-) → T-DXd preferred
-  # over sacituzumab (DESTINY-Breast04 TNBC subset benefit signal).
+  # Step 2 — HER2-low (IHC 1+ or IHC 2+/ISH-) detected → next step checks
+  # chemo-line eligibility. Split from previous all_of so the biomarker
+  # arm wires additively to RF-BREAST-HER2-LOW-ACTIONABLE.
   - step: 2
     evaluate:
-      all_of:
-        - condition: "HER2 IHC 1+ OR (HER2 IHC 2+ AND ISH-negative)"
+      any_of:
+        - red_flag: RF-BREAST-HER2-LOW-ACTIONABLE
+    if_true:
+      next_step: 3
+    if_false:
+      next_step: 4
+
+  - step: 3
+    # Sub-step: HER2-low + chemo-line eligibility (≥1 prior chemo line).
+    # Free-text retained — no fitness RF for chemo-line count exists.
+    evaluate:
+      any_of:
         - condition: "≥1 prior chemo line for metastatic disease"
     if_true:
       result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
     if_false:
-      next_step: 3
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+      result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+    notes: "MDT-only — chemo-line eligibility check has no dedicated RF; T-DXd default for HER2-low metastatic TNBC per DESTINY-Breast04 subset."
 
-  # Step 3 — default: sacituzumab govitecan (ASCENT) — no biomarker
+  # Step 4 — default: sacituzumab govitecan (ASCENT) — no biomarker
   # gating, applies to HER2 IHC=0 metastatic TNBC ≥2L.
-  - step: 3
+  - step: 4
     evaluate:
       any_of:
         - condition: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
@@ -54,7 +64,7 @@ decision_tree:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
     if_false:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Default fall-through — sacituzumab govitecan per ASCENT."
 
 sources:
   - SRC-NCCN-BREAST-2025

@@ -17,11 +17,24 @@ default_indication: IND-BREAST-HER2-POS-MET-2L-TDXD
 alternative_indication: IND-BREAST-HER2-POS-3L-TUCATINIB
 
 decision_tree:
-  # Step 1 — brain metastases present (active or treated, stable or
+  # Step 1 — Verify HER2-amplified status (subtype gate). RF fires only
+  # when HER2 IHC 3+ OR ISH-amplified is documented. Failure routes to
+  # the algo's default T-DXd (HER2+ cohort assumed by entry condition).
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-HER2-AMP-ACTIONABLE
+    if_true:
+      next_step: 2
+    if_false:
+      next_step: 3
+
+  # Step 2 — brain metastases present (active or treated, stable or
   # progressing) → HER2CLIMB tucatinib + trastuzumab + capecitabine
   # preferred. T-DXd has CNS activity but HER2CLIMB is the only
-  # regimen with prospective CNS-PFS doubling demonstrated.
-  - step: 1
+  # regimen with prospective CNS-PFS doubling demonstrated. Brain-met
+  # status has no dedicated breast-scoped RF; condition retained.
+  - step: 2
     evaluate:
       any_of:
         - condition: "Brain metastases present (active OR previously treated, stable or progressing)"
@@ -29,11 +42,11 @@ decision_tree:
     if_true:
       result: IND-BREAST-HER2-POS-3L-TUCATINIB
     if_false:
-      next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+      next_step: 3
+    notes: "MDT-only — brain-met status has no dedicated breast-scoped RF; positive branch routes to HER2CLIMB triplet (CNS-PFS doubling proven)."
 
-  # Step 2 — default: T-DXd 2L (DESTINY-Breast03 — superior to T-DM1).
-  - step: 2
+  # Step 3 — default: T-DXd 2L (DESTINY-Breast03 — superior to T-DM1).
+  - step: 3
     evaluate:
       any_of:
         - condition: "No brain metastases OR brain mets not the dominant clinical issue"
@@ -41,7 +54,7 @@ decision_tree:
       result: IND-BREAST-HER2-POS-MET-2L-TDXD
     if_false:
       result: IND-BREAST-HER2-POS-MET-2L-TDXD
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Default fall-through — T-DXd 2L per DESTINY-Breast03."
 
 sources:
   - SRC-NCCN-BREAST-2025

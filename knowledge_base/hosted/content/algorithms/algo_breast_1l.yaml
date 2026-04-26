@@ -25,12 +25,11 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - condition: "HER2-positive (IHC 3+ OR FISH-amplified)"
+        - red_flag: RF-BREAST-HER2-AMP-ACTIONABLE
     if_true:
       next_step: 2
     if_false:
       next_step: 3
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   # Step 2 — HER2+ branch: early vs metastatic
   - step: 2
     evaluate:
