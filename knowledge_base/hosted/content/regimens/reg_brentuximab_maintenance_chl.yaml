@@ -1,0 +1,55 @@
+id: REG-BRENTUXIMAB-MAINTENANCE-CHL
+name: "Brentuximab vedotin maintenance post-ASCT for high-risk cHL (AETHERA, 16 cycles)"
+name_ua: "Брентуксимаб ведотин maintenance після ASCT для високоризикової cHL (AETHERA, 16 циклів)"
+alternate_names: ["BV maintenance", "AETHERA regimen"]
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg (max 180 mg)"
+    schedule: "IV every 21 days × 16 cycles, starting 30-45 days post-ASCT"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "16 cycles (~12 months) starting 30-45 days post-ASCT"
+toxicity_profile: moderate
+
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade ≥4 neutropenia"
+    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+  - condition: "Pre-existing Grade ≥2 neuropathy from pre-ASCT therapy"
+    modification: "Generally NOT eligible for maintenance — risk-benefit unfavorable; surveillance only"
+  - condition: "Any active infection at start"
+    modification: "Defer until resolved"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Brentuximab registered in Ukraine but NOT NSZU-reimbursed for
+    cHL maintenance. Funding pathway via fundraising / charitable /
+    private pay typical. ASCT performed at major hematology centers
+    domestically.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  AETHERA trial (Moskowitz 2015, follow-up 2018): post-ASCT cHL with
+  high-risk features (primary refractory, relapse <12 mo from 1L,
+  extranodal disease at relapse) randomized to BV maintenance × 16
+  cycles vs placebo — 5-y PFS 59% vs 41% (HR 0.52). FDA-approved
+  for post-ASCT cHL high-risk maintenance. Particularly relevant
+  for primary-refractory cHL where standard salvage + ASCT alone has
+  high relapse rates. Pre-existing peripheral neuropathy is dominant
+  patient-selection criterion — Grade ≥2 = practically non-eligible.
+  Funding gap in UA — fundraising pathway often required.

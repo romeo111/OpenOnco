@@ -1,0 +1,56 @@
+id: REG-PEMBROLIZUMAB-CHL
+name: "Pembrolizumab 200 mg IV q3w — r/r cHL post-BV (KEYNOTE-204 schedule)"
+name_ua: "Пембролізумаб 200 мг IV q3w — рефрактерна cHL після BV (KEYNOTE-204)"
+alternate_names: ["Pembro mono cHL", "KEYNOTE-204 regimen", "Keytruda r/r cHL"]
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg flat dose"
+    schedule: "IV every 21 days, until progression or unacceptable toxicity (typical max 35 cycles ~2 years per KEYNOTE-204)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression or unacceptable toxicity (typically ≤2 years / 35 cycles)"
+toxicity_profile: low-moderate
+
+premedication: ["Standard pembrolizumab premedications: paracetamol + diphenhydramine before first 2 doses (infusion reactions less common with checkpoint inhibitors)"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥3 immune-related adverse event (irAE — pneumonitis, hepatitis, colitis, endocrinopathy, nephritis, neurologic, hematologic)"
+    modification: "Hold pembrolizumab; high-dose corticosteroids (1-2 mg/kg prednisone) until ≤Grade 1; then taper over ≥4 weeks; for Grade 4 or selected Grade 3 (severe pneumonitis, encephalitis, myocarditis), discontinue permanently"
+    rationale: "Standard ICI irAE management"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Endocrine irAE (thyroid, adrenal, hypophysitis, type-1 DM)"
+    modification: "Continue pembrolizumab + replacement therapy (levothyroxine, hydrocortisone, insulin); do NOT permanently discontinue for endocrinopathy unless severe acute presentation"
+  - condition: "Active autoimmune disease at baseline"
+    modification: "Caution; multidisciplinary discussion; risk of irAE flare; some autoimmune conditions are absolute CI (CI-PEMBROLIZUMAB-AUTOIMMUNE)"
+  - condition: "Active solid-organ transplant"
+    modification: "Generally CI — risk of acute graft rejection from PD-1 blockade"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Pembrolizumab registered in Ukraine; reimbursed via НСЗУ for
+    melanoma, NSCLC, MSI-H solid tumors. Off-label for r/r cHL
+    despite FDA approval (KEYNOTE-204). Funding pathway typically
+    via institutional appeal or charitable supply.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  KEYNOTE-204 trial (Kuruvilla 2021): r/r cHL post-BV (n=304) —
+  pembrolizumab vs BV — mPFS 13.2 vs 8.3 mo (HR 0.65, p=0.00271);
+  CR rate 24.5% vs 24.2% (similar); PFS benefit predominantly from
+  durable PR/SD plateau. Established 2L+ for r/r cHL post-BV; also
+  useful in BV-naïve r/r cHL based on KEYNOTE-087. cHL has high
+  PD-L1 expression (9p24.1 amplification) → strong checkpoint
+  responses. Bridge to alloSCT in fit transplant-eligible responders
+  per SCT-eligible practice. Combined with BV (BV+pembro) being
+  studied as 1L in Hodgkin Lymphoma Study Group (HD21-style)
+  combinations.

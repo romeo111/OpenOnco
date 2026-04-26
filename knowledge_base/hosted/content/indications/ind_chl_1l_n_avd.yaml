@@ -1,0 +1,101 @@
+id: IND-CHL-1L-N-AVD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Newly diagnosed advanced cHL: stage III or IV (RF-CHL-ADVANCED-STAGE) OR stage II with bulky / B-symptoms / IPS ≥4"
+    - "Emerging 1L standard alongside A+AVD per SWOG S1826"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIVO-AVD
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~94% (SWOG S1826)"
+  complete_response: "~85%"
+  progression_free_survival: "2y PFS 92% (SWOG S1826) — superior to A+AVD 83% (HR 0.48)"
+  overall_survival_5y: "Mature OS data still maturing; 2-year OS ~99% (S1826)"
+
+hard_contraindications: [CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-PEMBROLIZUMAB-AUTOIMMUNE]
+red_flags_triggering_alternative: [RF-CHL-ADVANCED-STAGE]
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-PET-CT
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-HBV-SEROLOGY
+  - TEST-HIV-SEROLOGY
+desired_tests: []
+
+rationale: >
+  N+AVD (Nivolumab + AVD) for newly diagnosed advanced cHL —
+  emerging 1L standard alongside A+AVD per SWOG S1826 (Herrera 2024
+  NEJM). 2-year PFS 92% vs A+AVD 83% (HR 0.48, p<0.001) — markedly
+  superior in advanced cHL. Bleomycin REPLACED by nivolumab (same
+  rationale as A+AVD — eliminates BPT). Toxicity favorable: less
+  peripheral neuropathy + fewer Grade ≥3 hematologic AEs than A+AVD.
+  Pediatric/AYA subgroup benefit larger. NCCN 2025 update places
+  N+AVD as Cat 1 preferred for advanced cHL alongside A+AVD —
+  choice driven by access, autoimmune history (favors A+AVD if
+  autoimmune CI), and patient preference. Funding pathway critical
+  in Ukraine (nivolumab off-label for cHL despite reimbursement for
+  melanoma/NSCLC).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "N+AVD per SWOG S1826 is preferred 1L for advanced cHL alongside A+AVD; superior PFS, favorable toxicity profile; Cat 1"
+  - source_id: SRC-ESMO-HODGKIN-2024
+    position: supports
+    relevant_quote_paraphrase: "Nivolumab + AVD is emerging 1L standard for advanced cHL; superior PFS to A+AVD per SWOG S1826"
+
+known_controversies:
+  - topic: "N+AVD vs A+AVD as preferred 1L for advanced cHL"
+    positions:
+      - position: "N+AVD — superior PFS in S1826, favorable toxicity, particularly in young patients"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "A+AVD — established ECHELON-1 mature data, OS benefit demonstrated, brentuximab access advantages"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "N+AVD preferred for younger / fit patients without autoimmune history; A+AVD acceptable when nivolumab access blocking or autoimmune contraindication"
+  - topic: "Sequential pembrolizumab maintenance after N+AVD"
+    positions:
+      - position: "Add maintenance — extends durable benefit"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Skip maintenance — S1826 protocol did not include maintenance; outcomes already excellent"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "No maintenance per S1826 protocol; surveillance only"
+
+do_not_do:
+  - "НЕ комбінувати з bleomycin — additive lethal pulmonary toxicity (absolute, same rationale as A+AVD)."
+  - "НЕ призначати при active autoimmune disease (CI-PEMBROLIZUMAB-AUTOIMMUNE) — risk of irAE flare."
+  - "НЕ призначати при solid-organ transplant — risk of acute graft rejection."
+  - "НЕ ігнорувати baseline thyroid function + cortisol + glucose — endocrine irAE common; baseline + serial monitoring."
+  - "НЕ припиняти nivolumab при Grade 1 endocrinopathy — replacement therapy + continue treatment; permanent discontinuation тільки для Grade 4 / severe acute presentation."
+  - "НЕ ігнорувати new pneumonitis-suspect symptoms (cough, dyspnea) — HRCT immediately; pneumonitis is most-feared irAE in lung-vulnerable cHL."
+  - "НЕ пропускати baseline LVEF (anthracycline cardiotoxicity)."
+  - "НЕ призначати без funding pathway clarification — nivolumab off-label для cHL в UA."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L
+  emerging standard for advanced cHL. Likely to displace A+AVD
+  where access feasible. Off-label for cHL in UA — funding pathway
+  via institutional appeal.

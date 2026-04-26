@@ -1,0 +1,99 @@
+id: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHL
+  line_of_therapy: 2  # post-2L salvage maintenance setting
+  stage_requirements:
+    - "Post-ASCT consolidation maintenance for high-risk cHL"
+    - "High-risk features: primary refractory cHL OR relapse <12 months from 1L OR extranodal disease at relapse"
+    - "Started 30-45 days post-ASCT"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-BRENTUXIMAB-MAINTENANCE-CHL
+concurrent_therapy: [SUP-PJP-PROPHYLAXIS]
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance setting (post-ASCT remission) — measured by PFS/OS, not response rate"
+  complete_response: "Already in CR/PR post-ASCT"
+  progression_free_survival: "5y PFS 59% (BV maintenance) vs 41% placebo (AETHERA, HR 0.52)"
+  overall_survival_5y: "~80% (5-year OS not significantly different in primary AETHERA analysis)"
+
+hard_contraindications: [CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-PET-CT  # post-ASCT staging confirms no active disease
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Brentuximab vedotin maintenance × 16 cycles starting 30-45 days
+  post-ASCT for high-risk cHL per AETHERA (Moskowitz 2015). High-risk
+  features: primary refractory (no CR after 1L), relapse <12 months
+  from 1L, extranodal disease at relapse. AETHERA: 5-y PFS 59% vs
+  placebo 41% (HR 0.52). FDA-approved for post-ASCT cHL high-risk
+  maintenance. Particularly relevant for primary-refractory cHL
+  where standard salvage + ASCT alone has high relapse rates.
+  Pre-existing peripheral neuropathy is dominant patient-selection
+  criterion — Grade ≥2 = practically non-eligible (risk-benefit
+  unfavorable).
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Brentuximab vedotin maintenance × 16 cycles post-ASCT recommended for high-risk cHL per AETHERA; Cat 1"
+  - source_id: SRC-ESMO-HODGKIN-2024
+    position: supports
+    relevant_quote_paraphrase: "BV maintenance post-ASCT improves PFS in high-risk cHL (primary refractory, early relapse, extranodal at relapse)"
+
+known_controversies:
+  - topic: "BV maintenance vs PD-1 inhibitor maintenance post-ASCT for high-risk cHL"
+    positions:
+      - position: "BV — established AETHERA data, FDA-approved indication"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "PD-1 inhibitor maintenance (pembrolizumab) — emerging data, may be alternative or sequential"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "PD-1 maintenance not yet FDA-approved for cHL post-ASCT setting"
+    our_default: "BV maintenance per AETHERA for high-risk; PD-1 maintenance for BV-intolerant or BV-failed pre-ASCT"
+  - topic: "Skip BV maintenance if patient achieved CR pre-ASCT"
+    positions:
+      - position: "Always maintain — high-risk features predict relapse regardless of pre-ASCT CR status"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Skip if pre-ASCT CR + low-risk features at original relapse"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Maintain if any of 3 high-risk criteria (primary refractory, relapse <12 mo, extranodal at relapse) regardless of pre-ASCT response"
+
+do_not_do:
+  - "НЕ комбінувати з bleomycin — additive lethal pulmonary toxicity (absolute)."
+  - "НЕ призначати при pre-existing Grade ≥2 peripheral neuropathy — risk-benefit unfavorable; surveillance only."
+  - "НЕ розпочинати maintenance до 30 днів post-ASCT — risk of poor engraftment + cytopenia."
+  - "НЕ розпочинати maintenance після 45 днів post-ASCT — best benefit when started early (AETHERA inclusion criterion)."
+  - "НЕ ігнорувати new neuropathy — reduce dose до 1.2 mg/kg на resume; permanent discontinuation для Grade ≥3."
+  - "НЕ продовжувати maintenance понад 16 циклів — protocol-defined; longer benefit not established."
+  - "НЕ використовувати для low-risk cHL (CR pre-ASCT + relapse >12 мс + nodal-only at relapse) — risk-benefit unfavorable."
+  - "НЕ призначати без funding pathway clarification — brentuximab НЕ НСЗУ-reimbursed для cHL maintenance."
+  - "НЕ забути PJP prophylaxis протягом maintenance + ≥6 міс після останньої дози."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track
+  post-ASCT maintenance for high-risk cHL. Funding gap in UA —
+  fundraising pathway required. Pre-existing neuropathy is dominant
+  selection criterion.
