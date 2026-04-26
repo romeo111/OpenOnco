@@ -65,6 +65,11 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "workups": [
         # required_tests handled specially (list of Test IDs)
     ],
+    "reviewers": [
+        # ReviewerProfile carries no cross-entity FKs; sign_off_scope.disease_ids
+        # *could* be checked but most profiles use category-based scope. Keep
+        # explicit-empty for now.
+    ],
 }
 
 
