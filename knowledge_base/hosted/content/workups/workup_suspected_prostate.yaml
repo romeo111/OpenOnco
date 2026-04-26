@@ -1,0 +1,54 @@
+id: WORKUP-SUSPECTED-PROSTATE
+applicable_to:
+  lineage_hints:
+    - prostate_carcinoma
+    - solid_tumor_prostate
+    - prostate_cancer_suspect
+  tissue_locations:
+    - prostate
+  presentation_keywords:
+    - elevated_psa
+    - rising_psa
+    - abnormal_dre
+    - prostate_nodule
+    - urinary_obstruction
+    - luts_with_psa
+    - hematospermia
+    - psa_above_age_threshold
+
+# Pre-biopsy diagnostic workup for suspected prostate carcinoma
+# per NCCN Prostate v1.2025, EAU 2024, and ESMO 2024.
+required_tests:
+  - TEST-PSA-SERUM
+  - TEST-DRE-PROSTATE
+  - TEST-MRI-PROSTATE-MULTIPARAMETRIC   # pre-biopsy mp-MRI is now SoC
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-RENAL-FUNCTION-EGFR
+
+desired_tests:
+  - TEST-TESTOSTERONE-SERUM             # baseline before any ADT discussion
+  - TEST-BONE-SCAN                      # if PSA >20 or high-risk on biopsy
+  - TEST-PSMA-PET                       # preferred over conventional staging when accessible
+  - TEST-GERMLINE-BRCA-PANEL            # any high-risk localized + all metastatic
+
+mandatory_questions:
+  - "Family history of prostate / breast / ovarian / pancreatic cancer (HBOC / Lynch)?"
+  - "PSA trajectory — prior values and rate of rise (doubling time)?"
+  - "5-alpha-reductase inhibitor use (finasteride/dutasteride)? — halves PSA, requires correction"
+  - "Recent prostatitis, instrumentation, or ejaculation within 48-72h (transient PSA elevation)?"
+  - "Life expectancy / functional status (informs biopsy decision in elderly)?"
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-EAU-PROSTATE-2024
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  EAU 2024 / NCCN 2025: pre-biopsy mp-MRI is the standard for
+  biopsy-naive patients with elevated PSA or abnormal DRE. PI-RADS
+  ≥3 lesions warrant targeted (MRI/US-fusion) biopsy plus systematic
+  cores. PI-RADS 1-2 with low-risk PSA (<10, density <0.15) may
+  defer biopsy with shared decision and short-interval surveillance.
+  Defer biopsy decision to urology after mp-MRI review.

@@ -1,0 +1,55 @@
+id: WORKUP-SUSPECTED-BREAST
+applicable_to:
+  lineage_hints:
+    - breast_carcinoma
+    - solid_tumor_breast
+    - breast_cancer_suspect
+  tissue_locations:
+    - breast
+    - axillary_lymph_nodes
+  presentation_keywords:
+    - breast_lump
+    - breast_mass
+    - palpable_breast_mass
+    - nipple_discharge
+    - skin_retraction
+    - peau_d_orange
+    - axillary_lymphadenopathy
+    - mammographic_abnormality
+    - birads_4_or_5
+    - inflammatory_breast_changes
+
+# Pre-biopsy diagnostic workup for suspected breast carcinoma
+# per NCCN Breast v2.2025 and ESMO Early Breast 2024.
+required_tests:
+  - TEST-MAMMOGRAPHY-DIAGNOSTIC
+  - TEST-BREAST-US
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+
+desired_tests:
+  - TEST-BREAST-MRI            # high-risk lesions, occult primary, dense breasts
+  - TEST-CECT-CAP              # staging if clinically advanced or T3+
+  - TEST-BONE-SCAN             # symptomatic bone pain or stage III+
+  - TEST-GERMLINE-BRCA-PANEL   # eligibility per NCCN criteria
+
+mandatory_questions:
+  - "Family history of breast / ovarian / pancreatic / prostate cancer (BRCA suggestion)?"
+  - "Hormone replacement therapy (estrogen ± progestin) — current or past?"
+  - "Prior chest-wall radiation (Hodgkin survivor under age 30)?"
+  - "Pregnancy / lactation status (alters imaging modality choice)?"
+  - "Breast-feeding plans / fertility preservation needed (premenopausal)?"
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Image-guided core-needle biopsy is the standard tissue-acquisition
+  modality for BI-RADS 4-5 lesions; FNA only for axillary node
+  staging. Reflex ER/PR/HER2 ± Ki-67 on the core specimen. Germline
+  BRCA testing eligibility expanded in NCCN 2025 — order at workup
+  if metastatic, triple-negative, age ≤45, male breast, or family
+  history.
