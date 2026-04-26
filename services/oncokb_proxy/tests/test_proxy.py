@@ -14,7 +14,14 @@ from pathlib import Path
 
 # Ensure scaffold mode for tests; live mode is integration-only.
 os.environ.setdefault("ONCOKB_LIVE", "0")
-os.environ.setdefault("ONCOKB_PROXY_CORS_ORIGINS", "https://openonco.org,http://localhost:8000")
+os.environ.setdefault(
+    "ONCOKB_PROXY_CORS_ORIGINS",
+    "https://openonco.info,https://openonco.org,http://localhost:8000",
+)
+# Disable rate-limiter in tests — we exercise the limit explicitly in a
+# dedicated test, but other tests must not trip it.
+os.environ.setdefault("ONCOKB_RATE_LIMIT_DISABLED", "1")
+os.environ.setdefault("GIT_SHA", "test-sha-deadbeef")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -227,3 +234,120 @@ def test_healthz_reports_live_mode(monkeypatch):
     body = client.get("/healthz").json()
     assert body["live_mode"] is True
     assert body["token_configured"] is True
+
+
+# ── Phase 1a hardening tests ─────────────────────────────────────────────
+
+
+def test_healthz_reports_git_sha_and_kill_switch():
+    body = client.get("/healthz").json()
+    assert body["git_sha"] == "test-sha-deadbeef"
+    assert body["integration_enabled"] is True
+    assert body["rate_limit"] == "disabled"
+
+
+def test_cors_default_includes_openonco_info():
+    r = client.options(
+        "/lookup",
+        headers={
+            "Origin": "https://openonco.info",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+    assert r.status_code == 200
+    assert r.headers.get("access-control-allow-origin") == "https://openonco.info"
+
+
+def test_request_id_is_echoed_when_provided():
+    r = client.post(
+        "/lookup",
+        json={"gene": "BRAF", "variant": "V600E"},
+        headers={"X-Request-Id": "client-supplied-abc123"},
+    )
+    assert r.status_code == 200
+    assert r.headers.get("x-request-id") == "client-supplied-abc123"
+
+
+def test_request_id_is_generated_when_absent():
+    r = client.post("/lookup", json={"gene": "EGFR", "variant": "T790M"})
+    assert r.status_code == 200
+    rid = r.headers.get("x-request-id")
+    assert rid is not None
+    assert rid.startswith("req-")
+    assert len(rid) == 16  # "req-" + 12 hex chars
+
+
+def test_kill_switch_returns_503_on_lookup(monkeypatch):
+    monkeypatch.setattr(oncokb_proxy_app, "INTEGRATION_ENABLED", False)
+    r = client.post("/lookup", json={"gene": "BRAF", "variant": "V600E"})
+    assert r.status_code == 503
+    assert "disabled" in r.json()["detail"].lower()
+    # Healthz remains accessible so operators can diagnose
+    h = client.get("/healthz")
+    assert h.status_code == 200
+
+
+def test_scrub_strips_bearer_token():
+    from app import scrub
+    assert scrub("Bearer abc123def") == "[REDACTED]"
+    assert scrub("Authorization: Bearer xyz789") == "Authorization: [REDACTED]"
+    assert scrub("api_key=secret123") == "[REDACTED]"
+    assert scrub("token: my-token-here") == "[REDACTED]"
+    # Idempotent
+    assert scrub(scrub("Bearer abc123")) == "[REDACTED]"
+    # Doesn't touch unrelated text
+    assert scrub("BRAF V600E") == "BRAF V600E"
+    assert scrub("") == ""
+
+
+def test_scrub_is_applied_to_upstream_error_body(monkeypatch):
+    """If OncoKB ever echoes our Authorization header in an error body,
+    we must strip it before propagating to the client."""
+
+    class _ErrAsyncClient(_FakeAsyncClient):
+        async def get(self, url, params=None, headers=None):
+            class _Resp:
+                status_code = 500
+
+                def json(self):
+                    return {}
+
+                @property
+                def text(self):
+                    return "Upstream error: Bearer test-token-secret was used"
+
+            return _Resp()
+
+    _force_live_mode(monkeypatch)
+    monkeypatch.setattr(oncokb_proxy_app.httpx, "AsyncClient", _ErrAsyncClient)
+
+    r = client.post("/lookup", json={"gene": "BRAF", "variant": "V600E"})
+    assert r.status_code == 502
+    detail = r.json()["detail"]
+    assert "test-token-secret" not in detail
+    assert "[REDACTED]" in detail
+
+
+def test_rate_limit_enforced_when_enabled(monkeypatch):
+    """Re-enable the limiter, set a tiny budget, verify 429 after exceeding."""
+    # Rebuild the limiter with a tight budget. We need a fresh app to apply
+    # the limit cleanly because slowapi binds limits at decorator time.
+    from importlib import reload
+    monkeypatch.setenv("ONCOKB_RATE_LIMIT_DISABLED", "0")
+    monkeypatch.setenv("ONCOKB_RATE_LIMIT", "2/minute")
+
+    import app as fresh_app
+    reload(fresh_app)
+    fresh_client = TestClient(fresh_app.app)
+
+    payload = {"gene": "BRAF", "variant": "V600E"}
+    r1 = fresh_client.post("/lookup", json=payload)
+    r2 = fresh_client.post("/lookup", json=payload)
+    r3 = fresh_client.post("/lookup", json=payload)
+    assert r1.status_code == 200
+    assert r2.status_code == 200
+    assert r3.status_code == 429
+
+    # Restore default-disabled state for subsequent tests
+    monkeypatch.setenv("ONCOKB_RATE_LIMIT_DISABLED", "1")
+    reload(fresh_app)
