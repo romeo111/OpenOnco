@@ -389,6 +389,18 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
             ("New data → instant re-check",
              "Fresh labs or clinician decisions update both plans automatically — no "
              "need to re-sweep all the sources by hand."),
+            ("MoH registration & NHSU coverage next to every drug",
+             "Each drug in the plan is tagged: whether it is registered in Ukraine "
+             "(MoH) and whether it is reimbursed by the state medical-guarantees "
+             "programme (NHSU). The clinician immediately sees what is free, what is "
+             "by prescription, and what has to be sourced separately. Access is "
+             "<strong>metadata shown next to the recommendation</strong>, not a filter "
+             "— regimen choice is driven by evidence, not by registration status."),
+            ("Patient-friendly simplified report",
+             "A separate mode generates a plain-language version of the plan for the "
+             "patient: no Latin, no acronyms, with explanations of why each step was "
+             "chosen and what to watch for between visits. Same plan, two voices — "
+             "clinical for the oncologist, human for the patient."),
             ("Free, open, forever",
              "MIT-style. No paywall, no restrictions for public hospitals. Open-source "
              "means it can&rsquo;t quietly disappear or be locked behind investors "
@@ -498,6 +510,17 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
             ("Перевірка нових даних — миттєво",
              "Свіжі лабораторні чи рішення лікаря оновлюють обидва плани автоматично, "
              "без повторного ручного перебору джерел."),
+            ("Реєстрація МОЗ та покриття НСЗУ — поряд із кожним препаратом",
+             "Кожен препарат у плані позначений: чи зареєстрований в Україні (МОЗ) і чи "
+             "покривається державною програмою медичних гарантій (НСЗУ). Лікар одразу "
+             "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати "
+             "окремо. Доступність — це <strong>метадані поряд із рекомендацією</strong>, "
+             "а не фільтр: вибір режиму керується доказами, а не реєстраційним статусом."),
+            ("Спрощений звіт для пацієнта",
+             "Окремий режим генерує версію плану зрозумілою мовою для пацієнта: без "
+             "латини, без абревіатур, з поясненням, чому призначено саме це і на що "
+             "звертати увагу між візитами. Той самий план, дві мови — клінічна для лікаря, "
+             "людська для пацієнта."),
             ("Безкоштовно, відкрито, назавжди",
              "MIT-style. Без paywall, без обмежень для державних лікарень. Open-source "
              "гарантує, що завтра воно нікуди не зникне і його не &laquo;закриють&raquo; "
