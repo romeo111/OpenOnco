@@ -1,0 +1,64 @@
+id: ALGO-MF-SEZARY-2L
+applicable_to_disease: DIS-MF-SEZARY
+applicable_to_line_of_therapy: 2
+purpose: >
+  Relapsed/refractory advanced MF/Sézary — three branches: (1) post
+  CR/PR to induction → bexarotene low-dose maintenance to extend
+  response; (2) active disease with new biology to exploit → switch
+  axis (CD30+ → BV; CCR4-targeted Sézary blood → mogamulizumab);
+  (3) chemo-axis exhausted or both targeted axes unavailable →
+  bexarotene full-dose mono.
+
+output_indications:
+  - IND-MF-MAINTENANCE-RETINOID
+  - IND-MF-ADVANCED-2L-BEXAROTENE
+  - IND-MF-ADVANCED-1L-MOGA
+  - IND-MF-ADVANCED-1L-BV
+
+default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
+alternative_indication: IND-MF-MAINTENANCE-RETINOID
+
+decision_tree:
+  # Step 1 — in CR/PR to induction → maintenance
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Best response to induction is CR or PR"
+        - condition: "Tolerating systemic therapy"
+    if_true:
+      result: IND-MF-MAINTENANCE-RETINOID
+    if_false:
+      next_step: 2
+
+  # Step 2 — CD30+ relapse and BV-naive → BV mono
+  - step: 2
+    evaluate:
+      all_of:
+        - red_flag: RF-TCELL-CD30-POSITIVE
+        - condition: "Brentuximab vedotin not previously administered"
+    if_true:
+      result: IND-MF-ADVANCED-1L-BV
+    if_false:
+      next_step: 3
+
+  # Step 3 — Sézary blood-dominant and moga-naive → mogamulizumab
+  - step: 3
+    evaluate:
+      all_of:
+        - red_flag: RF-MF-SEZARY-LEUKEMIC
+        - condition: "Mogamulizumab not previously administered"
+    if_true:
+      result: IND-MF-ADVANCED-1L-MOGA
+    if_false:
+      result: IND-MF-ADVANCED-2L-BEXAROTENE
+
+sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-CTCL-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  Reuses 1L MOGA / BV indications when those axes are still naive at
+  relapse — clinically these are still appropriate but in the 2L
+  position. OOS / wiring gaps: (1) Methotrexate 5-25 mg/week PO
+  not yet authored as separate indication. (2) Pralatrexate for
+  transformed MF (PROPEL subset) not yet modeled. (3) ECP
+  (extracorporeal photopheresis) for Sézary not in KB. (4) Romidepsin/
+  vorinostat 2L for CTCL — separate indication needed.
