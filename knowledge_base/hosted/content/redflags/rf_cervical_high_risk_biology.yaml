@@ -1,0 +1,57 @@
+id: RF-CERVICAL-HIGH-RISK-BIOLOGY
+definition: >
+  Cervical cancer with adverse biology / locally-advanced features
+  predicting poor CRT response: bulky primary ≥4 cm, lymph-node-positive
+  (pelvic and/or para-aortic), non-squamous histology (adenocarcinoma /
+  adenosquamous), or PD-L1 CPS ≥1 in metastatic context (informs
+  pembrolizumab + chemo per KEYNOTE-826).
+definition_ua: >
+  Рак шийки матки з біологією високого ризику / локально-просунутими
+  ознаками: bulky первинний ≥4 см, ураження л/в (pelvic/para-aortic),
+  не-плоскоклітинна гістологія (аденокарцинома / aденосквамозна), або
+  PD-L1 CPS ≥1 у метастатичному контексті (інформує pembrolizumab + хіміо
+  за KEYNOTE-826).
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "primary_tumor_size_cm"
+      threshold: 4
+      comparator: ">="
+    - finding: "lymph_node_positive"
+      value: true
+    - finding: "para_aortic_node_positive"
+      value: true
+    - finding: "histology_non_squamous"
+      value: true
+    - all_of:
+        - finding: "metastatic_disease"
+          value: true
+        - finding: "pdl1_cps"
+          threshold: 1
+          comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm: []  # not yet wired into ALGO-CERVICAL-LOCALLY-ADVANCED-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Para-aortic-node-positive: extend RT field to PA + pelvis (per ATIVE/RTOG
+  data). Bulky ≥4 cm or LN+ : INTERLACE trial (Lancet 2024) — induction
+  carbo+pacli x6 weeks then standard CRT improves OS (~5% absolute at 5y);
+  ESMO 2024 update endorses for fit patients. Adenocarcinoma: poorer
+  CRT response than squamous; same regimen but lower cure rate — counsel
+  early consolidation considerations. PD-L1 CPS ≥1 metastatic: pembrolizumab
+  + carbo + pacli ± bev (KEYNOTE-826 — OS HR 0.67).

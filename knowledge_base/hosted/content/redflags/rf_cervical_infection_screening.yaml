@@ -1,0 +1,52 @@
+id: RF-CERVICAL-INFECTION-SCREENING
+definition: >
+  Active or unmanaged infection requiring resolution before initiating
+  cisplatin-based chemoradiation in cervical cancer: HIV-positive (HPV-driven
+  disease — almost universal HIV testing recommended; CD4 informs cisplatin
+  dosing and pelvic-RT field tolerance), HBV-positive (reactivation risk on
+  prolonged chemoradiation), active pelvic abscess / pyometra (must drain
+  before RT), or active TB.
+definition_ua: >
+  Активна або неконтрольована інфекція перед цисплатин-CRT при раку шийки
+  матки: HIV+ (HPV-керована хвороба — тестування на HIV майже універсальне;
+  CD4 впливає на дозу цисплатину і толерантність pelvic-RT), HBV+ (ризик
+  реактивації на тривалій CRT), активний абсцес малого тазу / піометра
+  (дренувати до RT), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "active_pelvic_infection"
+      value: true
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 65
+category: infection-screening
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HIV testing recommended for all cervical cancer patients per NCCN
+  (HPV / HIV co-infection extremely common). HIV+ patients tolerate
+  cisplatin-CRT with ART optimization; CD4 <200 is relative contraindication
+  — coordinate with HIV clinic. HBV+: entecavir/tenofovir prophylaxis
+  during prolonged chemo phases. Pelvic abscess / pyometra: percutaneous
+  drainage / antibiotics first; RT into infected field worsens necrosis.
+  This RF surfaces workup-prerequisites; engine does not switch indication.

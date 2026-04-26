@@ -1,0 +1,54 @@
+id: RF-CERVICAL-TRANSFORMATION-PROGRESSION
+definition: >
+  Cervical cancer recurrence or progression after definitive chemoradiation:
+  in-field local recurrence (consider pelvic exenteration), distant
+  metastatic recurrence, or persistent disease at first post-CRT imaging
+  (3-month PET-CT). Routes from curative-intent CRT to systemic-therapy
+  algorithm (platinum + paclitaxel + bevacizumab ± pembrolizumab).
+definition_ua: >
+  Рецидив або прогресія раку шийки матки після дефінітивної CRT: in-field
+  локальний рецидив (розглянути pelvic exenteration), віддалений
+  метастатичний рецидив, або персистуюча хвороба на першому пост-CRT
+  імеджингу (3-місячний PET-CT). Маршрут від curative-intent CRT до
+  системного алгоритму (платина + paclitaxel + bevacizumab ± pembrolizumab).
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "cervical_post_crt_recurrence"
+      value: true
+    - finding: "cervical_post_crt_persistent_disease"
+      value: true
+    - finding: "metastatic_progression"
+      value: true
+    - finding: "pet_residual_disease_3mo"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 70
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cervical recurrence is etiologically distinct from indolent-lymphoma
+  transformation — this RF flags transition from curative-locoregional
+  to palliative-systemic intent. In-field locoregional recurrence in
+  previously-irradiated pelvis: pelvic exenteration is the only
+  curative-intent salvage for select fit patients (5y OS ~30-50% in
+  carefully-selected). Distant metastatic recurrence: KEYNOTE-826 regimen
+  if PD-L1 CPS ≥1 and chemo-naive in metastatic setting; tisotumab
+  vedotin (innovaTV 301 — Vergote NEJM 2024) for platinum-refractory
+  2L+. shifts_algorithm empty — recurrence routes to a separate
+  algorithm not yet authored (ALGO-CERVICAL-RECURRENT-2L, planned).

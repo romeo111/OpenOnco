@@ -1,0 +1,61 @@
+id: RF-CERVICAL-FRAILTY-AGE
+definition: >
+  Frailty profile precluding standard cisplatin-based chemoradiation in
+  cervical cancer: ECOG ≥3, OR (age ≥75 with Charlson ≥3), OR composite
+  (age ≥70 + albumin <3.0 + ≥2 comorbidities). Routes to carboplatin-CRT
+  substitution or RT-alone (less efficacy but tolerable).
+definition_ua: >
+  Профіль frailty, що перешкоджає стандартній цисплатин-CRT при раку
+  шийки матки: ECOG ≥3, АБО (вік ≥75 з Charlson ≥3), АБО композитна
+  (вік ≥70 + альбумін <3.0 + ≥2 коморбідності). Маршрут до карбоплатин-CRT
+  субституції або RT-only (нижча ефективність, але переносна).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 70
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.0
+          comparator: "<"
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm: []  # not yet wired into ALGO-CERVICAL-LOCALLY-ADVANCED-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cisplatin radiosensitizer requires CrCl ≥60 — elderly often fall below.
+  Carboplatin-CRT (AUC 2 weekly) is acceptable substitute when cisplatin
+  intolerable, though less radiosensitizing per non-randomized comparisons.
+  Frail elderly with severe comorbidity: RT-alone (≥80 Gy total to point A
+  via brachytherapy boost) preserves curative intent without chemo
+  toxicity — 5y OS lower (~50% vs ~70% for CRT in stage III) but
+  meaningful palliation. Avoid bevacizumab in elderly with HTN / vascular
+  disease.
