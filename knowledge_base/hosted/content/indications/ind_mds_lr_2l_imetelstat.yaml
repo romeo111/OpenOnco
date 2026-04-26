@@ -1,0 +1,110 @@
+id: IND-MDS-LR-2L-IMETELSTAT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MDS-LR
+  line_of_therapy: 2
+  stage_requirements:
+    - "Transfusion-dependent LR-MDS (IPSS Low / Int-1; IPSS-M Low / Moderate-Low / Moderate-High)"
+    - "Relapsed or refractory to ESA (or luspatercept where available) — failed to achieve or sustain transfusion independence"
+    - "Non-del(5q) (del(5q) → lenalidomide preferred)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-IMETELSTAT-MDS-LR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "8-week RBC TI ~39.8% (IMerge; vs 15.0% placebo, p<0.001)"
+  complete_response: "Sustained 24-week TI ~28% (vs 3.3% placebo)"
+  progression_free_survival: "Cytopenia management; does not alter natural history; median TI duration ~52 weeks for responders"
+  overall_survival_5y: "Per IPSS-R / IPSS-M baseline; OS not significantly altered (cytopenia management indication)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-MDS-DEL-5Q-ISOLATED
+  - RF-MDS-HIGH-RISK-IPSS
+  - RF-MDS-TRANSFORMATION-PROGRESSION
+  - RF-MDS-FRAILTY-AGE
+  - RF-MDS-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-B12-FOLATE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Imetelstat is a first-in-class telomerase inhibitor approved
+  June 2024 for transfusion-dependent LR-MDS post-ESA failure
+  (IMerge phase-3: Platzbecker et al., Lancet 2024). 8-week RBC
+  TI 39.8% vs 15.0% placebo (p<0.001); sustained 24-week TI 28%
+  vs 3.3%; median TI duration ~52 weeks. Active in non-del(5q)
+  setting where lenalidomide is not indicated. Cytopenia (severe
+  thrombocytopenia + neutropenia) is the dominant toxicity —
+  active management with transfusion + G-CSF + dose modification
+  mandatory. Baseline + serial LFT (hepatotoxicity Grade ≥3
+  observed). Major Ukraine access barrier: not registered.
+  Consider sequential lenalidomide → imetelstat in del(5q) post-
+  lenalidomide failure (data extrapolation; not formally studied).
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Imetelstat is recommended for transfusion-dependent LR-MDS post-ESA failure (Cat 1) per IMerge"
+  - source_id: SRC-IMERGE-PLATZBECKER-2024
+    position: supports
+    relevant_quote_paraphrase: "IMerge phase-3: imetelstat 7.1 mg/kg IV q4wk vs placebo; 8-wk RBC TI 39.8% vs 15.0% (p<0.001)"
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "Telomerase inhibition (imetelstat) is emerging 2L for transfusion-dependent LR-MDS post-ESA failure"
+
+do_not_do:
+  - "НЕ призначати без verified ESA failure — IMerge inclusion criteria specifically post-ESA refractory/relapsed."
+  - "НЕ ігнорувати baseline + serial CBC + LFT — Grade ≥3 cytopenia + hepatotoxicity задокументовані."
+  - "НЕ продовжувати full dose при Grade 4 thrombocytopenia / неутропенії — обов'язкова редукція + G-CSF підтримка."
+  - "НЕ розпочинати при HBV-positive без antiviral prophylaxis — імунномодуляція + cytopenia."
+  - "НЕ забувати premedication (антигістамін + ацетамінофен) перші 2 цикли — infusion reactions."
+  - "НЕ підтверджувати план без funding pathway — препарат не зареєстрований в Україні."
+  - "НЕ використовувати в del(5q) пацієнтів як 1L після ESA — lenalidomide залишається preferred для del(5q)."
+
+known_controversies:
+  - topic: "Imetelstat vs luspatercept post-ESA failure for non-del(5q) LR-MDS"
+    positions:
+      - position: "Imetelstat — RCT-validated post-ESA per IMerge; broader applicability beyond SF3B1+/RS-MDS"
+        sources: [SRC-IMERGE-PLATZBECKER-2024, SRC-NCCN-AML-2025]
+      - position: "Luspatercept — established earlier (MEDALIST 2L); SC dosing more convenient than IV imetelstat; preferred 1L per COMMANDS"
+        sources: [SRC-COMMANDS-FENAUX-2020, SRC-NCCN-AML-2025]
+        evidence_note: "No direct head-to-head. Sequence: ESA → luspatercept → imetelstat is reasonable; or luspatercept 1L → imetelstat 2L"
+    our_default: "Luspatercept 1L (COMMANDS) → imetelstat 2L (IMerge) for non-del(5q) transfusion-dependent LR-MDS"
+    rationale: "Both unfunded in Ukraine; sequence reflects data + tolerability"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L
+  for transfusion-dependent LR-MDS post-ESA failure. Ukraine access
+  barrier dominant. Telomerase inhibition is novel mechanism —
+  monitor emerging long-term safety data (clonal evolution, AML
+  transformation rates).

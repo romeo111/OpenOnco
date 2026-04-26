@@ -1,0 +1,114 @@
+id: IND-B-ALL-3L-TISAGENLECLEUCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed or refractory B-ALL after ≥2 prior systemic lines OR post-alloHCT relapse OR primary-refractory after intensive induction"
+    - "CD19+ confirmed (CD19 IHC or flow at baseline / relapse biopsy)"
+    - "Adequate organ function + caregiver support + access to FACT/JACIE-accredited CAR-T center"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    age_min: 1
+    age_max: 25
+
+recommended_regimen: REG-TISAGENLECLEUCEL-B-ALL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "ORR 81% (ELIANA)"
+  complete_response: "CR/CRi 60%; MRD-negativity in CR/CRi 100%"
+  progression_free_survival: "12-month EFS 50%"
+  overall_survival_5y: "12-month OS 76%; 5-y OS ~40-50% in long-term follow-up subsets"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative:
+  - RF-B-ALL-INFECTION-SCREENING
+  - RF-B-ALL-ORGAN-DYSFUNCTION
+  - RF-B-ALL-HIGH-RISK-BIOLOGY
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-CSF-CYTOLOGY-FLOW
+  - TEST-MRI-BRAIN-CONTRAST
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Tisagenlecleucel (Kymriah) — first FDA-approved CD19 CAR-T —
+  for R/R B-ALL ages 3-25 (originally 3-21, expanded). ELIANA
+  pivotal phase-2 (Maude et al., NEJM 2018): ORR 81%; CR/CRi 60%;
+  MRD-negativity in CR/CRi 100%; 12-mo EFS 50%, OS 76%. The only
+  curative option in this otherwise grim setting (historical 3L+
+  R/R B-ALL pediatric mOS ~3-6 months pre-CAR-T). For adult B-ALL
+  (>25), brexucabtagene autoleucel (Tecartus) is the registered
+  alternative — separate Indication, future. CRITICAL: REMS /
+  FACT-JACIE-accredited center mandatory; tocilizumab on-site
+  (≥2 doses) BEFORE infusion; CNS-2/3 symptomatic excluded per
+  ELIANA registration; pre-existing CNS disease + ICANS-related
+  risks. Bridging chemotherapy during 3-4 week manufacturing
+  window (avoid corticosteroids). Hypogammaglobulinemia + B-cell
+  aplasia often >12 months — IVIG support. Absolute Ukraine
+  access barrier: not registered, no domestic manufacturing,
+  international referral (Israel / Poland / Germany / Spain) +
+  USD 350-500K all-in.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Tisagenlecleucel CD19 CAR-T recommended for R/R B-ALL ≤25 years (Cat 1) per ELIANA"
+  - source_id: SRC-ELIANA-MAUDE-2018
+    position: supports
+    relevant_quote_paraphrase: "ELIANA single-arm phase-2: tisa-cel in R/R B-ALL ≤25 years; ORR 81%, CR/CRi 60%, 12-mo EFS 50% / OS 76%"
+
+do_not_do:
+  - "НЕ призначати prophylactic systemic corticosteroids — пригнічує CAR-T expansion + знижує efficacy."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) ДО інфузії — fatal CRS можливе."
+  - "НЕ робити в центрі без CAR-T accreditation (FACT/JACIE/REMS) — toxicity management потребує спеціалізованої команди + ICU доступу."
+  - "НЕ пропускати baseline brain MRI — CNS-2/3 з симптомами exclusion ELIANA; ризик fatal ICANS вищий."
+  - "НЕ ігнорувати тимчасову bridging chemotherapy (3-4 тижні manufacturing window) — disease progression в цьому вікні зменшує efficacy + може unfit пацієнта для CAR-T."
+  - "НЕ призначати при active uncontrolled infection — лімфодеплеція + CRS = high mortality."
+  - "НЕ забути IVIG для довготривалої hypogammaglobulinemia (IgG <400 + recurrent infections) — B-cell aplasia може тривати >12 місяців."
+
+known_controversies:
+  - topic: "Tisagenlecleucel vs allogeneic SCT for R/R pediatric/young-adult B-ALL post-2L"
+    positions:
+      - position: "Tisa-cel — durable remission in subset (~50% 5-y EFS) without GVHD; preferred for HCT-naive with CD19+ relapse"
+        sources: [SRC-ELIANA-MAUDE-2018, SRC-NCCN-BCELL-2025]
+      - position: "AlloHCT — established curative pathway; preferred for high-risk biology + post-CAR-T MRD+ relapse"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Many patients receive both — CAR-T to MRD-eradication followed by HCT consolidation in high-risk biology"
+    our_default: "Tisa-cel for HCT-naive R/R; CAR-T → HCT consolidation for high-risk biology + post-CAR-T MRD+; HCT for post-CAR-T relapse with CD19-loss"
+    rationale: "Sequential pathway maximizes cure; CAR-T for MRD-eradication + HCT consolidation"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+
+  for R/R pediatric / young-adult B-ALL. Ukraine access constraint
+  dominant — international referral pathway. Adult B-ALL (>25) →
+  brexucabtagene autoleucel (Tecartus) separate Indication.

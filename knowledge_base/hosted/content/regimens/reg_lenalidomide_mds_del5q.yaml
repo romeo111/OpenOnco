@@ -1,0 +1,73 @@
+id: REG-LENALIDOMIDE-MDS-DEL5Q
+name: "Lenalidomide for del(5q) LR-MDS"
+name_ua: "Леналідомід для МДС-LR з del(5q)"
+alternate_names:
+  - "Lenalidomide del(5q) MDS"
+  - "Lenalidomide MDS-003/004 schedule"
+
+components:
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "10 mg PO once daily on days 1-21 of 28-day cycle"
+    schedule: "Continuous cycles until loss of transfusion independence / progression / unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continue until loss of TI / progression / unacceptable toxicity; median TI duration >2 years per MDS-004"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Baseline CBC + reticulocyte + cytogenetics confirming del(5q) with or without other abnormalities"
+  - "Pregnancy testing — REMS / Revlimid Risk Management Programme MANDATORY for women of childbearing potential (lenalidomide is teratogenic)"
+  - "VTE risk assessment + prophylaxis (aspirin 81-325 mg PO daily; LMWH for higher-risk patients)"
+  - "Counseling on contraception 4 weeks before, throughout, and 4 weeks after therapy"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3-4 neutropenia (ANC <1.0K)"
+    modification: "Hold; resume reduced dose (5 mg PO daily or 5 mg every other day) on count recovery; G-CSF support for febrile neutropenia"
+    rationale: "Cytopenia commonest reason for dose hold; ~20% require dose reduction in MDS-004"
+    source_refs:
+      - SRC-MDS-004-FENAUX-2011
+      - SRC-NCCN-AML-2025
+  - condition: "Grade 3-4 thrombocytopenia (platelets <30K)"
+    modification: "Hold; resume reduced dose on platelets ≥50K"
+    rationale: "Thrombocytopenia particularly in early cycles"
+    source_refs:
+      - SRC-MDS-004-FENAUX-2011
+  - condition: "Renal impairment CrCl 30-60 mL/min"
+    modification: "Reduce to 5 mg PO daily (rather than 10 mg)"
+    rationale: "Lenalidomide ~80% renal excretion; impaired clearance → cytopenia + GI toxicity"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Renal impairment CrCl <30 mL/min (no dialysis)"
+    modification: "5 mg PO every other day"
+    rationale: "Substantial renal accumulation"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Concurrent ESA (erythropoiesis-stimulating agent)"
+    modification: "Avoid combination — additive thrombosis risk; choose one agent"
+    rationale: "ESA + IMiD combination raises VTE risk"
+    source_refs:
+      - SRC-NCCN-AML-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Lenalidomide registered in Ukraine + НСЗУ-reimbursed for MDS del(5q). Generic available."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-MDS-004-FENAUX-2011
+
+last_reviewed: "2026-04-25"
+notes: >
+  Standard for transfusion-dependent del(5q) LR-MDS. ~56% achieve
+  RBC transfusion independence (MDS-004); ~20-25% achieve
+  cytogenetic CR (loss of del(5q) clone). Mandatory pregnancy
+  prevention (REMS/Revlimid programme). VTE prophylaxis mandatory.
+  Avoid combination with ESA. STUB — pending Co-Lead sign-off.

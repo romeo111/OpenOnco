@@ -1,0 +1,112 @@
+id: IND-CML-ADVANCED-ALLOHCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CML
+  line_of_therapy: 2
+  stage_requirements:
+    - "CML in blast crisis (lymphoid OR myeloid blast phase) OR accelerated phase OR multi-TKI failure without access to ponatinib/asciminib"
+    - "Transplant-eligible: age + comorbidity + organ function permitting allogeneic SCT"
+    - "Suitable donor available (HLA-matched sibling > matched unrelated > haploidentical > cord)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 70
+
+recommended_regimen: REG-ALLOHCT-CML-ADVANCED
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80-90% achieve hematologic + cytogenetic remission post-HCT (variable by pre-HCT disease control)"
+  complete_response: "Durable molecular CR ~50-70% at 5 years for CML-CP at HCT; ~20-40% for advanced phase / blast crisis"
+  progression_free_survival: "5-y PFS 60-70% in CML-CP at HCT with optimal disease control; ~20-30% in blast crisis"
+  overall_survival_5y: "5-y OS 60-70% CML-CP; ~30% blast crisis (markedly worse without disease control pre-HCT)"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative:
+  - RF-CML-TRANSFORMATION-PROGRESSION
+  - RF-CML-ORGAN-DYSFUNCTION
+  - RF-CML-FRAILTY-AGE
+  - RF-CML-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-BCR-ABL-JAK2
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  AlloHCT remains the only curative option for CML in blast
+  crisis, accelerated phase, or after multi-TKI failure when
+  ponatinib/asciminib access is limited. Outcomes are dominated
+  by disease status at transplant — optimal control (≥CCyR, ideally
+  MMR) pre-HCT substantially improves survival vs active blast
+  crisis. Donor selection: HLA-matched sibling preferred; matched
+  unrelated and haploidentical / cord acceptable for fit younger
+  with no sibling. Conditioning: myeloablative for fit younger
+  (Bu/Cy or Cy/TBI); reduced-intensity (Flu/Mel) for older /
+  comorbid (HCT-CI ≥3, age >55). Post-HCT TKI maintenance
+  (typically dasatinib or imatinib) for ≥2 years per institution
+  reduces relapse. Major Ukraine access barrier: limited
+  transplant centers, donor registry coverage limited;
+  international referral common for adults.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT is recommended for CML in blast crisis or after multi-TKI failure for transplant-eligible patients (Cat 1)"
+  - source_id: SRC-ELN-CML-2020
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT remains curative option for advanced-phase CML or post-multi-TKI failure; outcomes best with optimal pre-HCT disease control"
+
+do_not_do:
+  - "НЕ продовжувати TKI-only therapy при blast crisis — alloHCT-pathway розглядається в перші тижні після transformation."
+  - "НЕ проводити HCT при активному uncontrolled infection — лімфодеплеція + GVHD-профілактика = high mortality."
+  - "НЕ виконувати HCT без оптимального disease control — outcomes substantially worse при active blast crisis."
+  - "НЕ ігнорувати donor-search timing — international donor може потребувати 2-3 місяці; розпочинати search ранно."
+  - "НЕ припиняти TKI безпосередньо перед conditioning при blast crisis — продовжувати через conditioning per institution."
+  - "НЕ пропускати post-HCT TKI maintenance (≥2 роки) — знижує relapse rate."
+  - "НЕ забувати fertility preservation у молодих пацієнтів перед conditioning — myeloablative regimen зазвичай sterilizing."
+
+known_controversies:
+  - topic: "AlloHCT vs ponatinib/asciminib for fit younger CML-CP post-multi-TKI failure (no T315I)"
+    positions:
+      - position: "AlloHCT — only curative option; recommended for fit young with sibling donor + good disease control"
+        sources: [SRC-NCCN-MPN-2025]
+      - position: "Ponatinib (response-adjusted OPTIC) or asciminib — non-curative but durable disease control with avoidance of HCT TRM (5-15%) and GVHD; preferred when accessible"
+        sources: [SRC-NCCN-MPN-2025, SRC-ASCEMBL-REA-2021]
+        evidence_note: "TKI 3L+ has supplanted HCT for many patients; HCT now reserved for blast crisis, accelerated phase, or no TKI access"
+    our_default: "TKI 3L+ (asciminib / ponatinib) first when accessible; HCT for blast crisis, accelerated phase, T315I without TKI access, or progression on 3L+ TKI"
+    rationale: "TKI access in Ukraine is the dominant constraint; HCT pathway often the only realistic option for advanced disease"
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+
+  for advanced-phase CML or no-TKI-access scenarios. Donor-search
+  + transplant-center identification time-critical. Fertility
+  preservation + psychosocial support before conditioning.

@@ -1,0 +1,104 @@
+id: IND-PV-2L-RUXOLITINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PV
+  line_of_therapy: 2
+  stage_requirements:
+    - "PV with hydroxyurea resistance OR intolerance per ELN criteria"
+    - "Persistent symptoms (pruritus, night sweats, fatigue, splenomegaly) OR thrombocytosis OR leukocytosis OR persistent need for phlebotomy after HU optimization"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-RUX-PV
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~21% composite primary response (Hct control + ≥35% spleen volume reduction at week 32) per RESPONSE; vs 1% best-available-therapy"
+  complete_response: "Hct <45% achieved in ~60%; symptom + spleen response in majority"
+  progression_free_survival: "Median treatment duration >5 years; thrombosis rate reduced vs BAT in pooled analyses"
+  overall_survival_5y: "OS not significantly altered vs HU per RESPONSE-2 long-term follow-up; cytoreductive maintenance"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-HU-RESISTANCE-INTOLERANCE
+  - RF-PV-ET-HIGH-THROMBOSIS-RISK
+  - RF-PV-ET-INFECTION-SCREENING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+
+required_tests:
+  - TEST-CBC
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-BCR-ABL-JAK2
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+desired_tests:
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+
+rationale: >
+  Ruxolitinib is standard 2L for PV with hydroxyurea resistance or
+  intolerance per ELN criteria. Pivotal RESPONSE phase-3 (Vannucchi
+  et al., NEJM 2015): composite primary response (Hct control
+  without phlebotomy + ≥35% spleen volume reduction at week 32)
+  21% vs 1% with best available therapy (p<0.001). Particularly
+  effective for symptom burden (pruritus, night sweats, fatigue)
+  and splenomegaly which HU does not address. CRITICAL: NEVER
+  abrupt-stop — taper over ≥1-2 weeks (cytokine rebound + spleen
+  flare can be life-threatening). Mandatory pre-treatment HBV /
+  HCV / HIV / TB screening. Add aspirin 81-100 mg PO daily for
+  thrombosis prophylaxis. Major Ukraine access barrier:
+  registered but NOT НСЗУ-reimbursed for PV.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Ruxolitinib is recommended 2L for PV with HU resistance / intolerance (Cat 1) per RESPONSE"
+  - source_id: SRC-RESPONSE-VANNUCCHI-2015
+    position: supports
+    relevant_quote_paraphrase: "RESPONSE phase-3: ruxolitinib vs BAT in HU-resistant/intolerant PV; composite Hct + spleen response 21% vs 1%"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "JAK1/2 inhibitors (ruxolitinib) are 2L for HU-resistant/intolerant PV per ESMO 2015"
+
+do_not_do:
+  - "НЕ призначати без verified HU resistance/intolerance per ELN — slot 2L specific."
+  - "НЕ припиняти abrupt — taper ≥1-2 тижні; cytokine rebound + spleen flare можуть бути life-threatening."
+  - "НЕ розпочинати без HBV / HCV / HIV / TB screening — JAKi може реактивувати latent infection."
+  - "НЕ комбінувати з сильним CYP3A4-inhibitor (fluconazole, кларитроміцин) без редукції дози ~50%."
+  - "НЕ ігнорувати zoster prophylaxis у HSV-positive — реактивація задокументована."
+  - "НЕ забувати aspirin 81-100 мг PO daily для thrombosis prevention (continued from PV pathway)."
+  - "НЕ підтверджувати план без funding pathway — препарат не reimbursed для PV в Україні."
+
+known_controversies:
+  - topic: "Ruxolitinib vs ropeginterferon alfa-2b for HU-resistant/intolerant PV"
+    positions:
+      - position: "Ruxolitinib — RCT-validated 2L per RESPONSE; better symptom + spleen response; faster onset"
+        sources: [SRC-RESPONSE-VANNUCCHI-2015, SRC-NCCN-MPN-2025]
+      - position: "Ropeginterferon — disease-modifying potential (V617F allele burden reduction); preferred for younger fit patients with disease-modification goal"
+        sources: [SRC-PROUD-PV-GISSLINGER-2020]
+        evidence_note: "No direct head-to-head 2L. Ruxolitinib for symptom-dominant; ropeginterferon for disease-modifying intent."
+    our_default: "Ruxolitinib for symptom-dominant + splenomegaly + older / poor IFN tolerance; ropeginterferon for younger fit + disease-modification goal + autoimmune-tolerable"
+    rationale: "Both unfunded for PV in Ukraine; goal-directed choice"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L
+  for HU-resistant/intolerant PV. Ukraine access constraint
+  dominant (not reimbursed for PV).

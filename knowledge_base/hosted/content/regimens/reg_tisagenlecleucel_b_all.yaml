@@ -1,0 +1,90 @@
+id: REG-TISAGENLECLEUCEL-B-ALL
+name: "Tisagenlecleucel CD19 CAR-T for R/R B-ALL ≤25 years"
+name_ua: "Тисагенлеклеуцел CD19 CAR-T для R/R B-ALL ≤25 років"
+alternate_names:
+  - "Tisa-cel B-ALL"
+  - "Kymriah B-ALL"
+  - "ELIANA regimen"
+
+components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m² IV daily × 4 days (lymphodepleting conditioning)"
+    schedule: "Days -4 to -1 before CAR-T infusion"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "500 mg/m² IV daily × 2 days (lymphodepleting conditioning)"
+    schedule: "Days -4 to -3 before CAR-T infusion"
+    route: IV
+  - drug_id: DRUG-TISAGENLECLEUCEL
+    dose: "Single IV infusion: 0.2 to 5.0 × 10⁶ CAR-positive viable T cells per kg for patients ≤50 kg; 0.1 to 2.5 × 10⁸ CAR-positive viable T cells (not weight-based) for patients >50 kg"
+    schedule: "Single infusion day 0 after lymphodepletion completion; no maintenance"
+    route: IV
+
+cycle_length_days: null
+total_cycles: "Single infusion procedure; no maintenance; bridge chemo during 3-4 week manufacturing window for active disease"
+
+toxicity_profile: severe
+
+premedication:
+  - "Confirm CD19 expression on tumor (CD19 IHC or flow on baseline biopsy; CD19+ at original diagnosis sufficient)"
+  - "Confirm REMS / FACT-JACIE accreditation of administering center"
+  - "Tocilizumab on-site (≥2 doses) BEFORE CAR-T infusion — mandatory"
+  - "Bridging chemotherapy during 3-4 week manufacturing window for active disease (avoid corticosteroids)"
+  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI"
+  - "Pre-conditioning hospitalization + ICU bed availability"
+  - "IVIG availability for prolonged hypogammaglobulinemia post-CAR-T"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 CRS"
+    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); supportive care; ICU monitoring"
+    rationale: "Boxed warning — Grade ≥3 CRS ~46% in ELIANA; tocilizumab + ICU mandatory"
+    source_refs:
+      - SRC-ELIANA-MAUDE-2018
+      - SRC-NCCN-BCELL-2025
+  - condition: "Grade ≥2 ICANS"
+    modification: "Dexamethasone 10 mg IV q6h; intensify for higher grades; permanent discontinuation possible"
+    rationale: "Boxed warning — Grade ≥3 ICANS ~13% in ELIANA"
+    source_refs:
+      - SRC-ELIANA-MAUDE-2018
+  - condition: "Pre-existing CNS-2/3 disease (symptomatic)"
+    modification: "Generally exclude from CAR-T per ELIANA registration; CNS-1 or asymptomatic CNS-2 acceptable per institution"
+    rationale: "Symptomatic CNS disease excluded from ELIANA; ICANS risk + lack of efficacy data"
+    source_refs:
+      - SRC-ELIANA-MAUDE-2018
+  - condition: "Active uncontrolled infection"
+    modification: "Defer CAR-T until controlled — lymphodepletion + CRS = high mortality"
+    rationale: "Absolute pre-infusion contraindication"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "B-cell aplasia + IgG <400 + recurrent infections post-CAR-T"
+    modification: "IVIG 400-600 mg/kg q3-4wk"
+    rationale: "Hypogammaglobulinemia can persist >12 months"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Tisagenlecleucel (Kymriah) NOT registered in Ukraine; NO domestic manufacturing. International referral pathway (Israel / Poland / Germany / Spain) required, USD 350-500K all-in. Lymphodepleting fludarabine + cyclophosphamide registered + reimbursed."
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ELIANA-MAUDE-2018
+
+last_reviewed: "2026-04-25"
+notes: >
+  CD19 CAR-T (4-1BB costimulation) for R/R B-ALL ages ≤25.
+  ELIANA: ORR 81%, CR/CRi 60%, 12-mo EFS 50%, OS 76%. Single
+  curative-intent infusion. CRS + ICANS boxed warnings —
+  REMS/FACT-JACIE-accredited center mandatory. Bridging chemo
+  during manufacturing window. Adult B-ALL (>25) — brexucabtagene
+  autoleucel (Tecartus) is the registered alternative (separate
+  Regimen entity, future). STUB — pending Co-Lead sign-off.

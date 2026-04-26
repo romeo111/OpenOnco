@@ -1,0 +1,68 @@
+id: REG-ALLOHCT-PMF
+name: "Allogeneic hematopoietic cell transplant for high-risk PMF"
+name_ua: "Алогенна трансплантація кровотворних клітин для високоризикової ПМФ"
+alternate_names:
+  - "AlloHCT PMF"
+  - "Allogeneic SCT myelofibrosis"
+
+components:
+  - drug_id: DRUG-RUXOLITINIB
+    dose: "JAKi optimization 3-6 months pre-HCT (5-20 mg PO BID by baseline plt) to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
+    schedule: "Pre-HCT bridging; conditioning regimen institution-specific (myeloablative Bu/Flu or Bu/Cy for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Single transplant procedure; consider post-HCT JAKi resumption (off-label) if early molecular relapse signal; donor lymphocyte infusion (DLI) for relapse"
+
+toxicity_profile: severe
+
+premedication:
+  - "Donor identification (HLA-matched sibling > matched unrelated > haploidentical > cord)"
+  - "Pre-transplant comorbidity assessment (HCT-CI)"
+  - "Pre-transplant spleen reduction with JAKi 3-6 months (improves transplant outcomes)"
+  - "Splenectomy NOT routinely recommended pre-HCT (high mortality in MF; only for refractory massive splenomegaly per institution)"
+  - "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
+    modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or matched-unrelated donor acceptable"
+    rationale: "Lower TRM with RIC; comparable disease control in MF"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-DIPSS-PLUS-GANGAT-2011
+  - condition: "Massive splenomegaly with symptoms despite JAKi"
+    modification: "Continue JAKi pre-HCT; splenectomy only for refractory cases per institutional MF-HCT expertise (high mortality)"
+    rationale: "Splenectomy in MF has high peri-op mortality; only for refractory massive splenomegaly"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Active blast progression (>10% blasts → accelerated/blast phase)"
+    modification: "Treat as AML (induction with HMA + venetoclax or 7+3) before HCT; outcomes substantially worse if active blast crisis"
+    rationale: "Disease status at HCT dominant predictor"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult MF. Donor registry coverage limited. Ruxolitinib bridging registered but NOT НСЗУ-reimbursed for MF."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-DIPSS-PLUS-GANGAT-2011
+
+last_reviewed: "2026-04-25"
+notes: >
+  AlloHCT remains the ONLY curative option for PMF. Mandatory
+  consideration in ALL transplant-eligible patients with DIPSS-Plus
+  intermediate-2 / high-risk OR MIPSS70+ high-risk OR adverse
+  molecular features (TP53, ASXL1, EZH2, IDH1/2, SRSF2 — "HMR
+  mutations"). 5-y OS post-HCT 30-65% (DIPSS-stratified) vs <20%
+  for high-risk without HCT. JAKi pre-HCT bridging 3-6 months
+  improves outcomes. STUB — pending Co-Lead sign-off.

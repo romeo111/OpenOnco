@@ -1,0 +1,64 @@
+id: REG-ALLOHCT-CML-ADVANCED
+name: "Allogeneic hematopoietic cell transplant for CML blast crisis OR multi-TKI failure"
+name_ua: "Алогенна трансплантація кровотворних клітин для CML бластного кризу або провалу кількох ТКІ"
+alternate_names:
+  - "AlloHCT CML"
+  - "Allogeneic SCT advanced CML"
+
+components:
+  - drug_id: DRUG-CYTARABINE
+    dose: "Conditioning regimen (variable per institution): typically myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older"
+    schedule: "Pre-transplant conditioning days -7 to -1"
+    route: IV
+
+cycle_length_days: null
+total_cycles: "Single transplant procedure; post-HCT TKI maintenance (typically dasatinib or imatinib) for ≥2 years per institution"
+
+toxicity_profile: severe
+
+premedication:
+  - "Donor identification (HLA-matched sibling > matched unrelated > haplo > cord)"
+  - "Pre-transplant comorbidity assessment (HCT-CI)"
+  - "Active disease control (cytoreduce CML to optimal molecular response if feasible) before transplant"
+  - "TKI continuation through conditioning when blast crisis"
+  - "Standard infectious disease + organ-function workup"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Blast crisis active disease at transplant"
+    modification: "Cytoreduce with TKI ± chemotherapy (lymphoid blast: hyper-CVAD-like; myeloid blast: 7+3-like) before transplant; outcomes substantially worse if active disease at HCT"
+    rationale: "Disease-status at HCT is dominant predictor of post-HCT survival"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+      - SRC-ELN-CML-2020
+  - condition: "Older / comorbid (HCT-CI ≥3, age >55)"
+    modification: "Reduced-intensity conditioning (RIC); haplo or matched-unrelated donor acceptable"
+    rationale: "Lower TRM with RIC; comparable disease control in CML-CP"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult CML. Donor registry coverage limited. Conditioning chemotherapy components (cytarabine etc.) registered + НСЗУ-reimbursed."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+
+last_reviewed: "2026-04-25"
+notes: >
+  AlloHCT remains the only curative option for CML in blast crisis
+  or after multi-TKI failure without ponatinib/asciminib access.
+  Outcomes best with optimal disease control pre-HCT (target ≥CCyR
+  or MMR). Post-HCT TKI maintenance (typically dasatinib or
+  imatinib) for ≥2 years reduces relapse. STUB — pending Co-Lead
+  sign-off. Conditioning regimen selection institution-specific —
+  this entity is a placeholder pointing to alloHCT pathway, not a
+  fully specified chemotherapy regimen.

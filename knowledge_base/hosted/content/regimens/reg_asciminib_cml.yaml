@@ -1,0 +1,60 @@
+id: REG-ASCIMINIB-CML
+name: "Asciminib (STAMP) for CML-CP 3L+ post-multi-TKI failure"
+name_ua: "Асцимініб (STAMP) для CML-CP 3L+ після провалу кількох ТКІ"
+alternate_names:
+  - "Asciminib mono"
+  - "Scemblix mono"
+
+components:
+  - drug_id: DRUG-ASCIMINIB
+    dose: "40 mg PO BID OR 80 mg PO once daily (T315I-negative); 200 mg PO BID for T315I-positive"
+    schedule: "Continuous, with consistent meal timing (avoid high-fat meal); until progression / intolerance"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Baseline CBC + CMP + lipase + glucose; pre-treatment ECG (vascular baseline)"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥3 thrombocytopenia / neutropenia"
+    modification: "Hold; resume reduced dose (40 mg daily or 20 mg BID) on count recovery"
+    rationale: "Cytopenia commonest reason for dose interruption in ASCEMBL"
+    source_refs:
+      - SRC-ASCEMBL-REA-2021
+      - SRC-NCCN-MPN-2025
+  - condition: "Lipase elevation Grade ≥3 OR clinical pancreatitis"
+    modification: "Hold; resume reduced dose only after resolution + GI consult"
+    rationale: "Asymptomatic lipase elevation common; clinical pancreatitis rare but possible"
+    source_refs:
+      - SRC-ASCEMBL-REA-2021
+  - condition: "Concomitant strong CYP3A4 inhibitor"
+    modification: "Reduce asciminib dose 50%"
+    rationale: "Increased asciminib exposure"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Asciminib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ASCEMBL-REA-2021
+
+last_reviewed: "2026-04-25"
+notes: >
+  STAMP allosteric inhibitor — mechanism distinct from all ATP-site
+  TKIs, avoids most cross-resistance. Standard 3L+ for CML-CP post
+  ≥2 prior TKIs per ASCEMBL. T315I requires higher dose (200 mg
+  BID). Cardiovascular safety substantially better than ponatinib
+  but not zero. STUB — pending Co-Lead sign-off.

@@ -1,0 +1,65 @@
+id: REG-PONATINIB-CML
+name: "Ponatinib for CML T315I+ OR post ≥2 TKI failure"
+name_ua: "Понатиніб для CML T315I+ або провалу ≥2 ТКІ"
+alternate_names:
+  - "Ponatinib mono"
+  - "Iclusig mono"
+
+components:
+  - drug_id: DRUG-PONATINIB
+    dose: "45 mg PO once daily; reduce to 15 mg PO daily upon achievement of MMR (≤0.1% IS) per OPTIC response-adjusted dosing"
+    schedule: "Continuous; dose-titrate based on response + vascular monitoring"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity / proceed to alloHCT"
+
+toxicity_profile: severe
+
+premedication:
+  - "Baseline cardiovascular workup: ECG, BP, lipid panel, fasting glucose, ABI if PAD risk"
+  - "Aggressive CV risk-factor management (hypertension, lipids, smoking cessation, diabetes)"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Achievement of MMR (BCR-ABL1 IS ≤0.1%)"
+    modification: "Reduce 45 → 15 mg PO daily per OPTIC"
+    rationale: "Response-adjusted dose reduction lowers vascular events ~50% with maintained efficacy"
+    source_refs:
+      - SRC-PACE-CORTES-2013
+      - SRC-NCCN-MPN-2025
+  - condition: "New arterial occlusive event (MI, stroke, severe PAOD)"
+    modification: "Permanently discontinue; switch to asciminib (T315I high-dose) or alloHCT"
+    rationale: "Vascular events boxed warning; cumulative risk"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Concomitant strong CYP3A4 inhibitor"
+    modification: "Reduce ponatinib dose; consider switching antifungal class"
+    rationale: "Exposure +"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Ponatinib NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-PACE-CORTES-2013
+
+last_reviewed: "2026-04-25"
+notes: >
+  Pan-BCR-ABL1 TKI active against ALL kinase-domain mutations
+  including T315I gatekeeper. PACE trial: 56% MCyR / 34% MMR in
+  CML-CP. Reserved for T315I+ OR post ≥2 TKI failure due to
+  substantial vascular toxicity. Response-adjusted dosing per
+  OPTIC reduces vascular events. Asciminib (STAMP) is emerging
+  less-toxic alternative for non-T315I post-multi-TKI; ponatinib
+  retains advantage at standard dose for T315I (head-to-head
+  asciminib at 200 mg BID for T315I emerging). STUB — pending
+  Co-Lead sign-off.

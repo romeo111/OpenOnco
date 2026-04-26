@@ -1,0 +1,114 @@
+id: IND-APL-SALVAGE-ATRA-ATO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-APL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed APL (PML-RARA confirmed) post front-line therapy (typically post ATRA + chemo / AIDA where ATO not used in 1L; or post 1L ATRA + ATO)"
+    - "Eligible for re-induction (ECOG ≤2, no severe organ dysfunction)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ATRA-ATO-APL-SALVAGE
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "CR ~85-95% (Lengfelder et al., Leukemia 2017 registry)"
+  complete_response: "Molecular CR in 80-90% by end of induction (typically 4-8 weeks)"
+  progression_free_survival: "5-y EFS 60-80% with autoSCT consolidation in molecularly-CR responders"
+  overall_survival_5y: "5-y OS ~70-80% with autoSCT consolidation; ~50-60% without consolidation; <30% if molecular non-CR"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-APL-EMERGENCY-DIC
+  - RF-APL-HIGH-RISK-BIOLOGY
+  - RF-APL-ORGAN-DYSFUNCTION
+  - RF-APL-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Salvage ATRA + ATO for relapsed APL post front-line. APL
+  relapses (~5-15% with modern 1L) remain highly chemosensitive —
+  re-induction with ATRA + ATO achieves CR in 85-95% per
+  Lengfelder et al. Leukemia 2017 multi-center registry. Particularly
+  effective when 1L did NOT include ATO (ATRA + chemo / AIDA
+  patients) — naive to ATO + retains exquisite sensitivity. For
+  patients relapsing AFTER 1L ATRA + ATO, regimen typically
+  combines ATRA + ATO + gemtuzumab ozogamicin (separate
+  Indication). AutoSCT consolidation for fit molecularly-CR
+  responders extends 5-y OS to ~70-80%. AlloHCT reserved for
+  molecular non-CR after re-induction OR very-early relapse OR
+  multiply-relapsed disease. CRITICAL: differentiation syndrome
+  + DIC + QTc prolongation remain dominant safety concerns —
+  daily ECG, electrolyte correction, DS prophylaxis with
+  dexamethasone, DIC management. ATRA + ATO registered and
+  reimbursed in Ukraine — salvage pathway feasible.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Salvage ATRA + ATO is recommended for relapsed APL; autoSCT consolidation for molecularly-CR responders"
+  - source_id: SRC-ELN-APL-2019
+    position: supports
+    relevant_quote_paraphrase: "ATRA + ATO is recommended salvage induction for relapsed APL; alloHCT for non-CR or multiply-relapsed"
+  - source_id: SRC-APL-RELAPSE-LENGFELDER-2017
+    position: supports
+    relevant_quote_paraphrase: "Multi-center registry: ATRA + ATO salvage CR ~85-95%; autoSCT consolidation extends 5-y OS to ~70-80%"
+
+do_not_do:
+  - "НЕ розпочинати без verified PML-RARA molecular relapse — APL relapse часто molecular only (PCR+ MRD); підтвердити перед салважем."
+  - "НЕ пропускати DS-профілактику стероїдами при рості WBC — DS-leading-cause-of-death в APL induction."
+  - "НЕ розпочинати ATO без daily ECG + електролітної корекції (K+ >4.0, Mg2+ >1.8) — torsades risk."
+  - "НЕ ігнорувати DIC management at relapse onset — fibrinogen >150, plt >30-50K."
+  - "НЕ забувати autoSCT-pathway для fit molecularly-CR responders — substantially extends OS."
+  - "НЕ розглядати alloHCT як 1-st-choice salvage для CR-responders — autoSCT has lower TRM with comparable outcomes."
+  - "НЕ продовжувати ATRA + ATO maintenance solely без consolidation autoSCT для fit responders."
+
+known_controversies:
+  - topic: "AutoSCT vs ATO + ATRA maintenance alone for molecularly-CR responders post-salvage"
+    positions:
+      - position: "AutoSCT consolidation — substantially better 5-y OS (~80% vs ~60%) per Lengfelder registry"
+        sources: [SRC-APL-RELAPSE-LENGFELDER-2017, SRC-NCCN-AML-2025]
+      - position: "ATO + ATRA maintenance alone — avoids HCT TRM; reasonable for older / frail molecularly-CR"
+        sources: [SRC-ELN-APL-2019]
+        evidence_note: "AutoSCT preferred for fit younger molecularly-CR; maintenance alone for older / unfit"
+    our_default: "AutoSCT consolidation for fit molecularly-CR responders <65; ATRA + ATO maintenance for older / unfit"
+    rationale: "Fitness drives consolidation strategy"
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L
+  for relapsed APL post-front-line. ATRA + ATO available in
+  Ukraine — salvage pathway feasible domestically. AutoSCT
+  consolidation for fit molecularly-CR.

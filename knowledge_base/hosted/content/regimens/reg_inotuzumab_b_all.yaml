@@ -1,0 +1,70 @@
+id: REG-INOTUZUMAB-B-ALL
+name: "Inotuzumab ozogamicin for R/R Ph- B-ALL 2L+ (bridge to alloHCT)"
+name_ua: "Інотузумаб озогаміцин для R/R Ph- B-ALL 2L+ (міст до alloHCT)"
+alternate_names:
+  - "Inotuzumab mono"
+  - "Besponsa B-ALL"
+  - "INO-VATE regimen"
+
+components:
+  - drug_id: DRUG-INOTUZUMAB-OZOGAMICIN
+    dose: "Cycle 1 induction: 0.8 mg/m² IV day 1, 0.5 mg/m² IV days 8 + 15 (total 1.8 mg/m²); Cycle 2-6 consolidation post-CR: 0.5 mg/m² IV days 1, 8, 15 (total 1.5 mg/m²)"
+    schedule: "Cycles every 21-28 days; max 6 cycles; bridge to alloHCT after 1-2 cycles for transplant-eligible (limit pre-HCT exposure to mitigate VOD risk)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 6 cycles; transplant-eligible patients should bridge to alloHCT after 1-2 cycles to minimize VOD/SOS risk (boxed warning)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetics — moderate-emetogenic prophylaxis (ondansetron + dexamethasone)"
+  - "Pre-cycle CBC + LFT (bilirubin + ALT + AST) + LDH"
+  - "Allopurinol 300 mg PO daily for TLS prophylaxis (especially cycle 1)"
+  - "Antimicrobial prophylaxis per institutional protocol"
+  - "Pre-treatment HBV / HCV / HIV screening"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Bilirubin >1.5× ULN OR AST/ALT >2.5× ULN"
+    modification: "Hold; resume reduced dose on resolution; permanent discontinuation if Grade ≥3 hepatotoxicity persists OR VOD diagnosed"
+    rationale: "Hepatotoxicity precursor to VOD; boxed warning"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+      - SRC-NCCN-BCELL-2025
+  - condition: "Pre-alloHCT setting"
+    modification: "Limit to 2 cycles maximum pre-HCT; avoid dual-alkylator conditioning (no Bu/Cy); use Bu/Flu instead; hepatic monitoring intensified"
+    rationale: "VOD/SOS post-HCT incidence ~14% — minimize cumulative exposure + alkylator burden"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "QTc >500 ms"
+    modification: "Hold; correct electrolytes; resume reduced exposure"
+    rationale: "QTc prolongation observed"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "No CR/CRi after 2 cycles"
+    modification: "Discontinue; consider blinatumomab, CAR-T, or palliation"
+    rationale: "Lack of response per INO-VATE; alternative therapies needed"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Inotuzumab ozogamicin (Besponsa) NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-INOVATE-KANTARJIAN-2016
+
+last_reviewed: "2026-04-25"
+notes: >
+  Anti-CD22 ADC for R/R Ph- B-ALL. INO-VATE: CR/CRi 80.7% vs
+  29.4%; MRD-neg 78.4% vs 28.1%. Bridge-to-HCT intent dominant.
+  VOD/SOS boxed warning — limit pre-HCT exposure + avoid dual
+  alkylator conditioning. STUB — pending Co-Lead sign-off.

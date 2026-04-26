@@ -1,0 +1,113 @@
+id: IND-B-ALL-BLINATUMOMAB-MRD-OR-RR
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  line_of_therapy: 2
+  stage_requirements:
+    - "MRD-positive (≥10⁻³) Ph- or Ph+ B-ALL post-induction OR after consolidation OR persistent/recurrent MRD on intensive chemo"
+    - "OR R/R Ph- or Ph+ B-ALL after ≥1 prior systemic line"
+    - "CD19+ (CD19 IHC or flow on baseline / relapse biopsy)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_min: 1
+
+recommended_regimen: REG-BLINATUMOMAB-B-ALL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "MRD+ (BLAST): complete MRD response 78%; R/R Ph- (TOWER): CR/CRh 44% vs 25% chemo"
+  complete_response: "MRD-negativity in CR/CRh ~80%"
+  progression_free_survival: "TOWER median EFS 7.3 vs 4.6 mo chemo"
+  overall_survival_5y: "TOWER median OS 7.7 vs 4.0 mo chemo (HR 0.71); BLAST 5-y RFS 36% (vs historic ~10% MRD+ continuing chemo)"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative:
+  - RF-B-ALL-HIGH-RISK-BIOLOGY
+  - RF-B-ALL-INFECTION-SCREENING
+  - RF-B-ALL-ORGAN-DYSFUNCTION
+  - RF-B-ALL-TRANSFORMATION-PROGRESSION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-BCR-ABL-JAK2
+  - TEST-FISH-PANEL
+  - TEST-KARYOTYPE
+  - TEST-NGS-LYMPHOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-CSF-CYTOLOGY-FLOW
+desired_tests:
+  - TEST-ECHO
+  - TEST-PREGNANCY
+
+rationale: >
+  Blinatumomab is bispecific T-cell engager (BiTE) approved for
+  TWO indications: (1) MRD+ B-ALL (≥10⁻³) post-induction or after
+  consolidation per BLAST phase-2 (complete MRD response 78%);
+  (2) R/R Ph- or Ph+ B-ALL per TOWER phase-3 (median OS 7.7 vs
+  4.0 mo chemo, HR 0.71). MRD+ indication particularly important
+  — historically MRD+ on intensive chemo had ~10% 5-y RFS;
+  blinatumomab MRD-eradication brings 5-y RFS to ~36%. CRITICAL:
+  CRS + ICANS boxed warnings — Grade ≥3 CRS ~2-15%, Grade ≥3
+  neurotoxicity ~10-15%; tocilizumab + ICU support mandatory.
+  Hospitalization for cycle 1 d1-9 + cycle 2 d1-2 (CRS/neurotox
+  surveillance). Continuous IV infusion via ambulatory pump (24/7)
+  limits accessibility. Cytoreduce high-burden disease (BM blasts
+  >50% OR PB blasts >15K) with chemotherapy BEFORE blinatumomab.
+  Bridge-to-alloHCT intent for transplant-eligible. Ukraine: not
+  registered, international referral required.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Blinatumomab recommended for MRD+ B-ALL (BLAST) AND R/R Ph- and Ph+ B-ALL (TOWER, ALCANTARA); Cat 1"
+  - source_id: SRC-BLAST-GOKBUGET-2018
+    position: supports
+    relevant_quote_paraphrase: "BLAST phase-2: blinatumomab in MRD+ B-ALL post-induction; complete MRD response 78%; 5-y RFS ~36% vs historic ~10%"
+
+do_not_do:
+  - "НЕ розпочинати без CD19 confirmation — CD19-negative blasts уникають targeting; ~30% relapse-loss CD19."
+  - "НЕ розпочинати без cytoreduction при BM blasts >50% OR PB blasts >15K — TLS + CRS ризик amplified."
+  - "НЕ ігнорувати CRS / neurotox surveillance — hospitalization обов'язкова cycle 1 d1-9, cycle 2 d1-2."
+  - "НЕ використовувати без on-site tocilizumab (≥2 dose) — fatal CRS можлива."
+  - "НЕ продовжувати при Grade ≥3 neurotoxicity recurrent OR seizures — permanent discontinuation."
+  - "НЕ призначати prophylactic systemic corticosteroids поза dexamethasone premedication — пригнічує T-cell engagement + знижує efficacy."
+  - "НЕ забувати alloHCT-pathway для transplant-eligible — single-agent blinatumomab not curative для R/R."
+
+known_controversies:
+  - topic: "Blinatumomab MRD+ post-induction → continued chemo + alloHCT vs alloHCT immediately after MRD-eradication"
+    positions:
+      - position: "Blinatumomab + continued chemo to alloHCT — MRD-eradication first, then HCT consolidation"
+        sources: [SRC-BLAST-GOKBUGET-2018, SRC-NCCN-BCELL-2025]
+      - position: "AlloHCT immediately after blinatumomab MRD-eradication — minimize chemo TRM exposure"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Both pathways used; institutional preference + HCT readiness drive timing"
+    our_default: "Blinatumomab to MRD-eradication; bridge to alloHCT immediately for transplant-eligible high-risk"
+    rationale: "MRD-eradication + HCT timing drives long-term cure"
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track for
+  MRD+ post-induction OR R/R B-ALL. Bridge-to-HCT intent dominant.
+  Ukraine access barrier. Time-critical (acute leukemia).

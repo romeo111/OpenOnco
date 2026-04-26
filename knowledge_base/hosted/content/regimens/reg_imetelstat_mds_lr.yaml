@@ -1,0 +1,61 @@
+id: REG-IMETELSTAT-MDS-LR
+name: "Imetelstat (Rytelo) for transfusion-dependent LR-MDS post-ESA failure"
+name_ua: "Іметельстат (Rytelo) для трансфузійно-залежної МДС-LR після провалу ЕСА"
+alternate_names:
+  - "Imetelstat IMerge schedule"
+  - "Rytelo mono"
+
+components:
+  - drug_id: DRUG-IMETELSTAT
+    dose: "7.1 mg/kg IV (2-hour infusion) every 4 weeks"
+    schedule: "Continuous q4wk until loss of transfusion independence / unacceptable toxicity / disease progression"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Continue until loss of TI / unacceptable toxicity / progression; median treatment duration in IMerge ~33 weeks"
+
+toxicity_profile: severe
+
+premedication:
+  - "Pre-infusion antihistamine + acetaminophen for first 2 cycles (infusion-reaction risk)"
+  - "Pre-cycle CBC + LFT + reticulocyte count + transfusion log"
+  - "G-CSF available for febrile neutropenia + transfusion support pathway"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 4 thrombocytopenia (platelets <25K) OR Grade ≥3 with bleeding"
+    modification: "Hold; resume reduced dose (5.7 mg/kg or 4.7 mg/kg) on recovery to platelets ≥75K"
+    rationale: "Cytopenia commonest reason for dose hold/reduction in IMerge"
+    source_refs:
+      - SRC-IMERGE-PLATZBECKER-2024
+      - SRC-NCCN-AML-2025
+  - condition: "Grade 4 neutropenia (ANC <500) OR febrile neutropenia"
+    modification: "Hold; G-CSF support; resume reduced dose on ANC recovery"
+    rationale: "Severe neutropenia + sepsis risk"
+    source_refs:
+      - SRC-IMERGE-PLATZBECKER-2024
+  - condition: "Grade ≥3 ALT/AST elevation"
+    modification: "Hold; rule out alternate hepatotoxicity; resume reduced dose on resolution"
+    rationale: "Hepatotoxicity observed in IMerge"
+    source_refs:
+      - SRC-IMERGE-PLATZBECKER-2024
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Imetelstat (Rytelo) NOT registered in Ukraine. International referral or compassionate-use pathway required."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IMERGE-PLATZBECKER-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Telomerase inhibitor for transfusion-dependent LR-MDS post-ESA
+  failure. Particularly active in non-del(5q) post-ESA setting.
+  Cytopenia dominant toxicity — active management mandatory. STUB —
+  pending Co-Lead sign-off.

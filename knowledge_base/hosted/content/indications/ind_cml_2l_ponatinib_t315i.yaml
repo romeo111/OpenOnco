@@ -1,0 +1,104 @@
+id: IND-CML-2L-PONATINIB-T315I
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CML
+  line_of_therapy: 2
+  stage_requirements:
+    - "CML chronic phase OR accelerated phase"
+    - "T315I gatekeeper mutation OR resistance/intolerance to ≥2 prior TKIs"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PONATINIB-CML
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~56% MCyR (CML-CP); ~70% MCyR in T315I-positive subset (PACE)"
+  complete_response: "~34% MMR (CML-CP); ~18% durable CMR"
+  progression_free_survival: "Median PFS ~26 months (CML-CP at full dose); response-adjusted dosing per OPTIC extends with reduced vascular events"
+  overall_survival_5y: "5-y OS ~73% in CML-CP per PACE long-term follow-up"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CML-T315I-MUTATION
+  - RF-CML-TRANSFORMATION-PROGRESSION
+  - RF-CML-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-FISH-PANEL
+  - TEST-ECHO
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+desired_tests: []
+
+rationale: >
+  Ponatinib is the only widely-available pan-BCR-ABL1 TKI active
+  against T315I gatekeeper mutation. PACE phase-2 in r/r Ph+
+  leukemias post-multi-TKI or T315I+: 56% MCyR / 34% MMR in
+  CML-CP; 70% MCyR in T315I-positive CML-CP. CRITICAL: substantial
+  vascular toxicity (boxed warning — arterial occlusive events MI,
+  stroke, PAOD, mortality). Mandatory baseline + ongoing
+  CV-risk-factor management (BP, lipids, fasting glucose, smoking
+  cessation). OPTIC trial validated response-adjusted dose
+  reduction (45 mg → 15 mg PO daily upon achievement of MMR)
+  reducing vascular events ~50% with maintained efficacy.
+  Asciminib at higher dose (200 mg BID) is alternative for T315I —
+  but ponatinib has broader real-world experience. Major Ukraine
+  access barrier: not registered.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Ponatinib for T315I+ CML or post ≥2 TKI failure; response-adjusted dosing per OPTIC"
+  - source_id: SRC-PACE-CORTES-2013
+    position: supports
+    relevant_quote_paraphrase: "PACE phase-2: ponatinib 45 mg/d in r/r Ph+ leukemias; CML-CP MCyR 56%, T315I subset 70%"
+  - source_id: SRC-ELN-CML-2020
+    position: supports
+    relevant_quote_paraphrase: "Ponatinib is recommended for T315I-positive CML or post-multi-TKI failure per ELN 2020"
+
+do_not_do:
+  - "НЕ призначати без baseline cardiovascular workup (ECG, BP, lipid panel, fasting glucose, ABI якщо PAD ризик)."
+  - "НЕ ігнорувати aggressive CV risk-factor management — cumulative vascular toxicity не зворотна."
+  - "НЕ підтримувати full-dose 45 mg після досягнення MMR — перейти на 15 mg per OPTIC; зменшує vascular events ~50%."
+  - "НЕ призначати при недавньому MI / stroke / severe PAD — absolute CI."
+  - "НЕ комбінувати з сильним CYP3A4-inhibitor без редукції дози."
+  - "НЕ продовжувати після нового arterial occlusive event — permanently discontinue, switch до asciminib (T315I high-dose) або alloHCT."
+  - "НЕ підтверджувати план без funding pathway — препарат не зареєстрований в Україні."
+
+known_controversies:
+  - topic: "Ponatinib full-dose 45 mg vs response-adjusted (OPTIC) for T315I+ CML"
+    positions:
+      - position: "Full-dose 45 mg until MCyR — historically standard per PACE"
+        sources: [SRC-PACE-CORTES-2013]
+      - position: "Response-adjusted (45 → 30 → 15 mg upon BCR-ABL1 IS ≤1%) per OPTIC — equivalent efficacy with ~50% reduction in arterial occlusive events"
+        sources: [SRC-NCCN-MPN-2025]
+        evidence_note: "OPTIC RCT validates dose reduction. Now standard approach per NCCN 2025."
+    our_default: "Response-adjusted dosing (OPTIC schema) for all new ponatinib starters; aggressive CV-risk management"
+    rationale: "OPTIC is current standard; vascular safety priority"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+
+  for T315I+ OR post-multi-TKI CML. Vascular toxicity profile
+  dominant safety concern. Asciminib 200 mg BID is alternative for
+  T315I; ponatinib retains broader experience + responsive even at
+  reduced dose. Ukraine access barrier.

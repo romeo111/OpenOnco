@@ -1,0 +1,76 @@
+id: REG-ATRA-ATO-APL-SALVAGE
+name: "ATRA + ATO salvage for R/R APL post front-line"
+name_ua: "ATRA + ATO рятувальна терапія для R/R APL після фронтальної терапії"
+alternate_names:
+  - "Salvage ATRA + ATO APL"
+  - "Relapsed APL induction"
+
+components:
+  - drug_id: DRUG-ATRA
+    dose: "45 mg/m²/day PO in 2 divided doses, continuous through induction"
+    schedule: "Days 1-60 induction (until molecular CR); thereafter maintenance per protocol"
+    route: PO
+  - drug_id: DRUG-ATO
+    dose: "0.15 mg/kg/day IV (2-hour infusion) daily until molecular CR (typically 4-8 weeks)"
+    schedule: "Daily during induction; consolidation cycles 5 days/week × 4 weeks q8wk × 4 cycles"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Induction until molecular CR (typically 4-8 weeks) + 4 consolidation cycles + autoSCT consolidation for fit molecularly-CR responders"
+
+toxicity_profile: severe
+
+premedication:
+  - "Daily ECG + electrolyte correction (K+ >4.0, Mg2+ >1.8) BEFORE + during ATO"
+  - "Differentiation syndrome prophylaxis with dexamethasone if rising WBC OR unexplained dyspnea/fever"
+  - "DIC management (fibrinogen target >150, platelets >30-50K, INR <1.5; transfuse cryo + platelets + FFP)"
+  - "Pre-treatment HBV / HCV / HIV screening"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Differentiation syndrome (fever, dyspnea, weight gain, effusions, rising WBC)"
+    modification: "Hold ATRA + ATO; dexamethasone 10 mg IV q12h × 3-5 days; resume after resolution"
+    rationale: "DS — leading cause of death in APL induction; corticosteroids lifesaving"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+      - SRC-APL-RELAPSE-LENGFELDER-2017
+  - condition: "QTc >500 ms"
+    modification: "Hold ATO; correct electrolytes (K+ ≥4.0, Mg++ ≥2.0); resume after QTc <460 ms"
+    rationale: "ATO QTc prolongation; torsades risk"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Significant hepatotoxicity (Grade ≥3 ALT/AST or bilirubin)"
+    modification: "Hold; resume reduced dose on resolution"
+    rationale: "ATO + ATRA hepatotoxic; cumulative"
+    source_refs:
+      - SRC-ELN-APL-2019
+  - condition: "Failure to achieve molecular CR after 8 weeks induction"
+    modification: "Add gemtuzumab ozogamicin OR proceed to alloHCT if fit; APL salvage failure portends very poor prognosis"
+    rationale: "Persistent molecular disease portends short remission"
+    source_refs:
+      - SRC-APL-RELAPSE-LENGFELDER-2017
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "ATRA registered + reimbursed for APL. Arsenic trioxide registered + reimbursed for APL. Both available — salvage pathway feasible in Ukraine."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL-RELAPSE-LENGFELDER-2017
+
+last_reviewed: "2026-04-25"
+notes: >
+  Salvage ATRA + ATO for R/R APL post front-line (especially
+  post-ATRA-chemo or post-AIDA where ATO not used in 1L). For
+  patients relapsing AFTER 1L ATRA + ATO, regimen often combines
+  ATRA + ATO + gemtuzumab. AutoSCT consolidation for molecularly-CR
+  responders extends 5-y OS to ~80%. STUB — pending Co-Lead
+  sign-off.

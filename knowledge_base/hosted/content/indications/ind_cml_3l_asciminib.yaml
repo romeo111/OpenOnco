@@ -1,0 +1,102 @@
+id: IND-CML-3L-ASCIMINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CML
+  line_of_therapy: 3
+  stage_requirements:
+    - "CML chronic phase"
+    - "Resistance or intolerance to ≥2 prior TKIs (any combination of imatinib / dasatinib / nilotinib / bosutinib)"
+    - "T315I-negative for standard 80 mg daily / 40 mg BID dosing; T315I-positive eligible for higher 200 mg BID dose"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ASCIMINIB-CML
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~25.5% MMR at 24 weeks (ASCEMBL 3L+; vs 13.2% bosutinib)"
+  complete_response: "MR4 (BCR-ABL1 IS ≤0.01%) ~10.8% at 24 weeks; ~17.4% at 96 weeks"
+  progression_free_survival: "Median PFS not reached at 96 weeks; ~85% PFS at 96 weeks"
+  overall_survival_5y: "Mature OS data still maturing; 96-week OS ~90%+"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CML-T315I-MUTATION
+  - RF-CML-TRANSFORMATION-PROGRESSION
+  - RF-CML-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-BCR-ABL-JAK2
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-FISH-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+desired_tests:
+  - TEST-ECHO
+
+rationale: >
+  Asciminib (STAMP — Specifically Targeting the ABL Myristoyl
+  Pocket) is the first-in-class allosteric BCR-ABL1 inhibitor —
+  binds the myristoyl pocket distinct from the ATP-binding site
+  targeted by all classical TKIs. Mechanism avoids most ATP-site
+  resistance mutations. ASCEMBL phase-3: asciminib 40 mg BID vs
+  bosutinib 500 mg daily in CML-CP after ≥2 prior TKIs; MMR at 24
+  weeks 25.5% vs 13.2% (p=0.029). Superior tolerability vs
+  bosutinib. Low cardiovascular toxicity (vs ponatinib). T315I
+  mutation requires higher dose (200 mg BID) — addressed in a
+  separate algorithm branch with ponatinib as the alternative.
+  Mandatory kinase-domain mutation screening before switching
+  per ELN 2020. Major Ukraine access barrier: not registered.
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Asciminib is recommended for CML-CP after ≥2 prior TKIs (Cat 1) per ASCEMBL"
+  - source_id: SRC-ASCEMBL-REA-2021
+    position: supports
+    relevant_quote_paraphrase: "ASCEMBL phase-3: asciminib 40 mg BID vs bosutinib 500 mg daily in CML-CP post ≥2 TKIs; MMR 25.5% vs 13.2% at 24 weeks"
+  - source_id: SRC-ELN-CML-2020
+    position: supports
+    relevant_quote_paraphrase: "Asciminib is established 3L+ option for CML-CP post-multi-TKI failure"
+
+do_not_do:
+  - "НЕ призначати без kinase-domain mutation testing на момент failure — T315I потребує іншої дози (200 mg BID); інші мутації мають різний resistance pattern."
+  - "НЕ ігнорувати харчування — high-fat meal знижує bioavailability; дотримуватися consistent timing."
+  - "НЕ комбінувати з сильними CYP3A4-inhibitors без редукції дози."
+  - "НЕ ігнорувати baseline + регулярний lipase + glucose — субклінічні pancreatitis + hyperglycemia задокументовані."
+  - "НЕ припиняти при transient cytopenia — найчастіша причина dose hold; recovery типово швидке з G-CSF."
+  - "НЕ підтверджувати план без funding pathway — препарат не зареєстрований в Україні."
+  - "НЕ забувати alloHCT як curative альтернативу для fit-young пацієнтів — asciminib не є curative."
+
+known_controversies:
+  - topic: "Asciminib vs ponatinib for non-T315I post-multi-TKI failure CML-CP"
+    positions:
+      - position: "Asciminib — better cardiovascular safety; ASCEMBL RCT-validated 3L+; preferred for CV-comorbid"
+        sources: [SRC-ASCEMBL-REA-2021, SRC-NCCN-MPN-2025]
+      - position: "Ponatinib — broader spectrum (pan-mutation including T315I); response-adjusted dosing per OPTIC reduces vascular events ~50%; higher response rates in some series"
+        sources: [SRC-PACE-CORTES-2013, SRC-NCCN-MPN-2025]
+        evidence_note: "No direct head-to-head asciminib vs ponatinib in non-T315I 3L+ setting. Comorbidity profile + access drives choice."
+    our_default: "Asciminib first-choice for non-T315I 3L+ when accessible (better CV safety); ponatinib for T315I OR if asciminib unavailable / inadequate response"
+    rationale: "Both require international access in Ukraine; CV comorbidity tilts toward asciminib"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+
+  for CML-CP post-multi-TKI failure. Mechanism distinct (allosteric)
+  → minimal cross-resistance. Ukraine access barrier dominant.

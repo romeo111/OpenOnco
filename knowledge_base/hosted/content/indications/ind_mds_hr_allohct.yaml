@@ -1,0 +1,119 @@
+id: IND-MDS-HR-ALLOHCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MDS-HR
+  line_of_therapy: 1
+  stage_requirements:
+    - "MDS-HR (IPSS-R high / very high; IPSS-M High / Very High; MDS-IB1/IB2)"
+    - "Transplant-eligible: age <70-75 + adequate organ function + ECOG ≤2 + adequate caregiver support"
+    - "Suitable donor: HLA-matched sibling > matched unrelated > haploidentical > cord"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_max: 75
+
+recommended_regimen: REG-ALLOHCT-MDS-HR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~70-90% achieve disease control post-HCT (variable by pre-HCT blast burden)"
+  complete_response: "Durable molecular CR ~40-60% at 5 years for MDS-HR with optimal pre-HCT control"
+  progression_free_survival: "5-y PFS 35-50% for MDS-HR overall; 50-60% for IPSS-R high; 25-35% for very high; ~20-30% for TP53-mutated"
+  overall_survival_5y: "5-y OS 40-50% MDS-HR overall; substantially better than non-transplant (~10-15% 5-y OS)"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative:
+  - RF-MDS-TRANSPLANT-ELIGIBLE
+  - RF-MDS-TP53-MUTATION
+  - RF-MDS-HIGH-RISK-IPSS
+  - RF-MDS-FRAILTY-AGE
+  - RF-MDS-ORGAN-DYSFUNCTION
+  - RF-MDS-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  AlloHCT is the ONLY curative option for MDS-HR — mandatory
+  consideration in ALL transplant-eligible patients (typically
+  age <70-75, adequate organ function, ECOG ≤2, suitable donor,
+  caregiver support). 5-y OS post-HCT 40-50% vs 10-15% with
+  non-transplant therapy. Donor search initiated CONCURRENTLY
+  with HMA induction — donor identification can take 3-6 months
+  and HMA-failure rapid-pivot needed. HMA bridging during search
+  improves disease control before transplant. Conditioning
+  intensity tailored to age + comorbidity (myeloablative for fit
+  young; reduced-intensity for older / comorbid). TP53-mutated
+  MDS-HR has worse outcomes (~20-30% 3-y OS) but HCT still the
+  only curative pathway; consider clinical trial enrollment +
+  post-HCT azacitidine maintenance. CRITICAL: do NOT defer donor
+  search to HMA failure — search vs HMA-failure timeline is the
+  dominant access constraint.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT is the only curative option for MDS-HR; mandatory consideration in all transplant-eligible patients"
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "AlloHCT recommended for MDS-HR transplant-eligible; HMA bridging during donor search; conditioning regimen tailored to age + comorbidity"
+  - source_id: SRC-IPSS-M-BERNARD-2022
+    position: supports
+    relevant_quote_paraphrase: "IPSS-M molecular features refine HCT timing decision; very-high-risk warrants accelerated HCT pathway"
+
+do_not_do:
+  - "НЕ відкладати donor search до HMA failure — пошук триває 3-6 місяців; розпочинати концурентно з 1L HMA."
+  - "НЕ виконувати HCT при активному uncontrolled infection — лімфодеплеція + GVHD-профілактика = high mortality."
+  - "НЕ виконувати HCT без оптимального blast control (target <10%, ideally <5%) — outcomes substantially worse при active blast burden."
+  - "НЕ ігнорувати IPSS-M molecular reclassification — ~46% reclassified vs IPSS-R; може змінити HCT timing."
+  - "НЕ припиняти HMA безпосередньо перед conditioning — продовжувати через donor search до conditioning per institution."
+  - "НЕ забувати fertility preservation у молодих пацієнтів перед conditioning."
+  - "НЕ пропускати TP53-status testing — впливає на conditioning intensity, post-HCT maintenance, прогноз."
+
+known_controversies:
+  - topic: "Timing of alloHCT for MDS-HR — upfront vs after HMA failure"
+    positions:
+      - position: "Upfront HCT (after donor identification, no HMA failure required) — better outcomes for very-high-risk + fit young per IPSS-M"
+        sources: [SRC-IPSS-M-BERNARD-2022, SRC-NCCN-AML-2025]
+      - position: "HMA bridging until response confirmed, then HCT for adequate responders only — minimizes TRM exposure"
+        sources: [SRC-ESMO-MDS-2021]
+        evidence_note: "Markov modeling supports earlier HCT for IPSS-R very-high; modeling for IPSS-R high less clear"
+    our_default: "Concurrent HMA + donor search; transplant as soon as donor + slot available + adequate disease control (do NOT wait for HMA failure)"
+    rationale: "Donor search delay is the dominant constraint; pre-HCT control + early HCT maximize curative potential"
+
+time_critical: true
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track for
+  ALL MDS-HR transplant-eligible. Donor search timing dominates
+  access pathway. Ukraine: limited transplant centers; international
+  referral common.

@@ -1,0 +1,75 @@
+id: REG-QUIZARTINIB-7-3
+name: "7+3 + quizartinib induction + maintenance for FLT3-ITD+ AML 1L"
+name_ua: "7+3 + квізартиніб індукція + підтримка для FLT3-ITD+ ГМЛ 1L"
+alternate_names:
+  - "QuANTUM-First regimen"
+  - "Quiz + 7+3"
+
+components:
+  - drug_id: DRUG-CYTARABINE
+    dose: "100-200 mg/m²/day"
+    schedule: "Continuous IV infusion days 1-7 of induction"
+    route: IV
+  - drug_id: DRUG-DAUNORUBICIN
+    dose: "60 mg/m² (or idarubicin 12 mg/m² as alternative)"
+    schedule: "IV bolus days 1-3 of induction"
+    route: IV
+  - drug_id: DRUG-QUIZARTINIB
+    dose: "35.4 mg PO daily (induction days 8-21); 35.4-53 mg PO daily during consolidation; 26.5-53 mg PO daily for maintenance up to 3 years"
+    schedule: "Days 8-21 of induction; days 6-19 of consolidation; continuous through maintenance"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "1 induction + 4 consolidation cycles (HiDAC) + up to 36 cycles maintenance"
+
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetics — moderate-emetogenic prophylaxis"
+  - "Allopurinol 300 mg PO daily for TLS prophylaxis"
+  - "IV hydration ≥3 L/day d1-3"
+  - "Baseline + serial ECG; correct K+ ≥4.0, Mg++ ≥2.0 BEFORE quizartinib initiation"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "QTc >500 ms"
+    modification: "Hold quizartinib; resume reduced dose when QTc ≤450 ms; permanent discontinuation if recurrent"
+    rationale: "Torsades / sudden death"
+    source_refs:
+      - SRC-QUANTUM-FIRST-ERBA-2023
+      - SRC-NCCN-AML-2025
+  - condition: "Concomitant strong CYP3A4 inhibitor (azole prophylaxis)"
+    modification: "Reduce quizartinib dose 50%; intensify ECG"
+    rationale: "Quizartinib CYP3A4 substrate; exposure +"
+    source_refs:
+      - SRC-QUANTUM-FIRST-ERBA-2023
+  - condition: "Age ≥60-65"
+    modification: "Daunorubicin 60 mg/m² (not 90)"
+    rationale: "Cardiotoxicity in elderly"
+    source_refs:
+      - SRC-NCCN-AML-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Quizartinib NOT registered in Ukraine. Cytarabine + daunorubicin НСЗУ-reimbursed. Major access barrier for FLT3-ITD+ patients seeking standard 1L per QuANTUM-First."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-QUANTUM-FIRST-ERBA-2023
+
+last_reviewed: "2026-04-25"
+notes: >
+  Approved 2023 for newly-dx FLT3-ITD+ AML aged 18-75. Median OS
+  31.9 vs 15.1 mo per QuANTUM-First. Quizartinib does NOT cover
+  FLT3-TKD/D835 mutations — for those use midostaurin + 7+3 or
+  refer to clinical trial. Consider alloHCT in CR1 for FLT3-ITD
+  with high allelic burden (NPM1-wt). STUB — pending Co-Lead sign-off.

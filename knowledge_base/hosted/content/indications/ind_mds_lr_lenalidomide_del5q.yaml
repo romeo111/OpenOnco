@@ -1,0 +1,113 @@
+id: IND-MDS-LR-LENALIDOMIDE-DEL5Q
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MDS-LR
+  line_of_therapy: 1
+  stage_requirements:
+    - "LR-MDS with del(5q) chromosomal abnormality (isolated or with one additional non-monosomy 7 abnormality)"
+    - "Transfusion-dependent (RBC or symptomatic anemia not responding to ESA)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-LENALIDOMIDE-MDS-DEL5Q
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~56% RBC TI at 26 weeks (MDS-004; vs 5.9% placebo)"
+  complete_response: "~20-25% achieve cytogenetic CR (loss of del(5q) clone)"
+  progression_free_survival: "Median TI duration >2 years per MDS-004"
+  overall_survival_5y: "Per IPSS-R baseline; lenalidomide does not alter natural history but improves QoL via TI"
+
+hard_contraindications:
+  - CI-LENALIDOMIDE-PREGNANCY
+red_flags_triggering_alternative:
+  - RF-MDS-DEL-5Q-ISOLATED
+  - RF-MDS-TP53-MUTATION
+  - RF-MDS-HIGH-RISK-IPSS
+  - RF-MDS-TRANSFORMATION-PROGRESSION
+
+required_tests:
+  - TEST-CBC
+  - TEST-RETICULOCYTE
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-IRON-PANEL
+  - TEST-B12-FOLATE
+  - TEST-HBV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Lenalidomide is Cat 1 standard for transfusion-dependent
+  del(5q) LR-MDS. Pivotal MDS-003 (Houston phase-2) + MDS-004
+  (phase-3 RCT, Fenaux et al., Blood 2011) — at 10 mg PO
+  d1-21/28d: ~56% achieve RBC TI vs 5.9% placebo at 26 weeks;
+  ~20-25% achieve cytogenetic CR with loss of del(5q) clone.
+  Median TI duration >2 years. Mechanism: cereblon-mediated
+  selective degradation of casein kinase 1A1 (CK1α), encoded
+  within the 5q33.1 commonly-deleted region — del(5q) cells
+  haploinsufficient → uniquely sensitive. CRITICAL: lenalidomide
+  is teratogenic — REMS / Revlimid Risk Management Programme
+  mandatory; pregnancy testing weekly first month, then monthly.
+  VTE prophylaxis (aspirin 81-325 mg PO daily; LMWH for
+  higher-risk) mandatory. Avoid concurrent ESA (additive VTE
+  risk). MUST screen TP53 — TP53-mutated del(5q) MDS has higher
+  AML transformation risk on lenalidomide (~30-40% at 2 years vs
+  ~10% TP53-wt) and may benefit from earlier alloHCT pathway.
+  Lenalidomide НСЗУ-reimbursed in Ukraine for this indication.
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Lenalidomide is preferred 1L for transfusion-dependent del(5q) LR-MDS (Cat 1)"
+  - source_id: SRC-MDS-004-FENAUX-2011
+    position: supports
+    relevant_quote_paraphrase: "MDS-004 phase-3: lenalidomide 10 mg d1-21/28d vs placebo; 26-wk RBC TI 56.1% vs 5.9% in del(5q) LR-MDS"
+  - source_id: SRC-ESMO-MDS-2021
+    position: supports
+    relevant_quote_paraphrase: "Lenalidomide is recommended 1L for transfusion-dependent del(5q) LR-MDS per ESMO 2021"
+
+do_not_do:
+  - "НЕ призначати без cytogenetic confirmation del(5q) — efficacy specific to del(5q) clones."
+  - "НЕ призначати без REMS / Revlimid Risk Management Programme — препарат тератогенний; зареєстровано numerous birth defects."
+  - "НЕ пропускати pregnancy testing weekly перший місяць, потім monthly у жінок child-bearing-potential."
+  - "НЕ призначати concurrent ESA — additive VTE risk; обирати один agent."
+  - "НЕ ігнорувати TP53-status — TP53-mutated del(5q) MDS має значно вищий ризик AML transformation на lenalidomide; розглядати earlier alloHCT pathway."
+  - "НЕ пропускати VTE prophylaxis (aspirin 81-325 мг або LMWH) протягом усієї терапії."
+  - "НЕ продовжувати без response — якщо немає TI до 6 місяців, припиняти; розглядати alternative (luspatercept, imetelstat)."
+
+known_controversies:
+  - topic: "Lenalidomide 10 mg d1-21/28d vs 5 mg continuous in del(5q) LR-MDS"
+    positions:
+      - position: "10 mg d1-21/28d — higher TI rate (56.1% vs 42.6%) per MDS-004; standard"
+        sources: [SRC-MDS-004-FENAUX-2011]
+      - position: "5 mg continuous — better tolerated in older / cytopenic patients; comparable TI duration"
+        sources: [SRC-NCCN-AML-2025]
+        evidence_note: "Both Cat 1 — choice based on baseline cytopenia + tolerance"
+    our_default: "10 mg d1-21/28d as starting dose; reduce to 5 mg continuous if Grade 3-4 cytopenia or intolerance"
+    rationale: "Higher initial response rate; reduce on toxicity"
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 1L for
+  del(5q) LR-MDS transfusion-dependent. Lenalidomide reimbursed
+  in Ukraine. TP53 testing critical — alters prognosis + alloHCT
+  consideration.
