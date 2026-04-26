@@ -29,10 +29,18 @@ import html
 from datetime import datetime, timezone
 from typing import Optional, Union
 
+from ._ask_doctor import select_questions as _select_ask_doctor_questions
+from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
 from ._nszu import lookup_nszu_status, nszu_label
+from ._patient_vocabulary import (
+    NSZU_PATIENT_LABEL,
+    ESCAT_TIER_PATIENT_LABEL,
+    explain as _explain_patient,
+)
 from .diagnostic import _DIAGNOSTIC_BANNER, DiagnosticPlanResult
 from .mdt_orchestrator import MDTOrchestrationResult
 from .plan import PlanResult
+from .render_styles import PATIENT_MODE_CSS as _PATIENT_CSS
 from .render_styles import STYLESHEET as _CSS
 
 
@@ -1352,7 +1360,23 @@ def render_plan_html(
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
     target_lang: str = "uk",
+    mode: str = "clinician",
 ) -> str:
+    """Render a PlanResult as a single-file HTML document.
+
+    `mode="clinician"` (default) emits the full tumor-board brief with
+    technical IDs, ESCAT tiers, MDT block, FDA disclosure, etc.
+
+    `mode="patient"` emits a stripped-down plain-Ukrainian patient-facing
+    bundle: technical IDs (BMA-*, ALGO-*, BIO-*, IND-*, REG-*, RF-*) are
+    removed from user-visible text and replaced with vocabulary lookups
+    from `_patient_vocabulary`. Emergency RedFlags surface as a banner
+    via `_emergency_rf`; an 'ask your doctor' section is generated via
+    `_ask_doctor`. CHARTER §8.3 invariant — patient-mode never changes
+    the engine's track selection."""
+    if (mode or "").lower() == "patient":
+        return _render_patient_mode(plan_result, target_lang)
+
     plan = plan_result.plan
     if plan is None:
         return _doc_shell("OpenOnco — empty plan", "<p>Empty PlanResult; nothing to render.</p>")
@@ -1470,6 +1494,365 @@ def render_plan_html(
 
     out = _doc_shell(f"План лікування — {plan_result.disease_id}", "".join(body))
     return _localize_html(out, target_lang)
+
+
+# ── Patient-mode render ───────────────────────────────────────────────────
+#
+# Plain-Ukrainian patient-facing bundle. Technical entity IDs (BMA-*,
+# ALGO-*, BIO-*, IND-*, REG-*, RF-*) are NEVER rendered as visible text
+# in patient mode (they may appear in HTML attributes for testing /
+# debugging, e.g. `data-bma-id="..."`, but never in `<p>` / `<li>` /
+# `<td>` content). All clinician-vocabulary terms route through
+# `_patient_vocabulary.explain()`.
+
+
+def _patient_doc_shell(title: str, body: str) -> str:
+    """Patient-mode HTML shell — embeds STYLESHEET + PATIENT_MODE_CSS so
+    the bundle is a single self-contained document. Distinct from
+    `_doc_shell` because patient mode wraps the body in
+    `<div class="patient-report">` rather than `<div class="page">` and
+    doesn't ship the Google Fonts <link> (patient bundles favour system
+    fonts for offline-readability)."""
+    return (
+        "<!DOCTYPE html>\n"
+        '<html lang="uk">\n<head>\n'
+        '<meta charset="UTF-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+        f"<title>{_h(title)}</title>\n"
+        f"<style>{_CSS}{_PATIENT_CSS}</style>\n"
+        "</head>\n<body>\n"
+        f'<div class="patient-report">{body}</div>\n'
+        "</body>\n</html>\n"
+    )
+
+
+def _patient_disease_label(plan_result: PlanResult) -> str:
+    """Plain-UA disease label, never the DIS- ID. Falls back to a generic
+    label so user-visible text never contains a technical ID."""
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    names = disease_data.get("names") if isinstance(disease_data, dict) else None
+    if isinstance(names, dict):
+        for key in ("ukrainian", "preferred", "english"):
+            v = names.get(key)
+            if v:
+                return str(v)
+    return "ваш діагноз"
+
+
+def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
+    """Plain-UA drug label, never the DRUG- ID."""
+    if isinstance(drug_dict, dict):
+        names = drug_dict.get("names") or {}
+        if isinstance(names, dict):
+            for key in ("ukrainian", "preferred", "english"):
+                v = names.get(key)
+                if v:
+                    return str(v)
+        nm = drug_dict.get("name")
+        if nm:
+            return str(nm)
+    # Last-resort fallback: humanize the ID. We deliberately strip the
+    # `DRUG-` prefix so no raw entity ID leaks into rendered text.
+    raw = (drug_id or "").strip()
+    if raw.upper().startswith("DRUG-"):
+        raw = raw[5:]
+    return raw.replace("-", " ").replace("_", " ").lower() or "препарат"
+
+
+def _render_findings_plain(plan_result: PlanResult) -> str:
+    """Plain-UA rendering of the variant_actionability hits.
+
+    Each hit becomes a friendly statement: 'У вас знайдено [variant
+    explanation]. Це означає: [ESCAT tier patient label].' Technical
+    IDs (BMA-*, BIO-*) are stripped — only gene + variant fragment
+    survive (e.g. "BRAF V600E"), which is patient-facing biology, not
+    a KB ID."""
+    plan = plan_result.plan
+    hits = list((plan and plan.variant_actionability) or [])
+    if not hits:
+        return (
+            '<p>За результатами наявних аналізів значущих молекулярних мішеней '
+            "поки не виявлено. Це не означає, що лікування неможливе — стандартна терапія "
+            "залишається повністю чинною. Якщо у вас ще не було молекулярного тестування "
+            "пухлини, обговоріть це з лікарем.</p>"
+        )
+
+    parts: list[str] = ['<ul class="findings-list">']
+    for h in hits:
+        # Strip BIO- prefix from the biomarker label — keep only gene-name
+        # fragment (BRAF, EGFR, etc.) which is patient-readable biology,
+        # not an internal KB ID.
+        bio = (h.biomarker_id or "").strip()
+        gene = bio[4:].split("-", 1)[0] if bio.upper().startswith("BIO-") else bio.split("-", 1)[0]
+        variant = (h.variant_qualifier or "").strip() or ""
+        # Variant explanation from vocabulary (e.g. V600E → "конкретна
+        # заміна валіну на глутамат…"). Falls back to the literal variant
+        # string when vocabulary has no entry.
+        v_expl = _explain_patient(variant) or _explain_patient(gene) or ""
+        tier = (h.escat_tier or "").strip().upper()
+        tier_label = ESCAT_TIER_PATIENT_LABEL.get(tier, "")
+        # Compose a short human paragraph. We render gene + variant
+        # together (e.g. "BRAF V600E") because that's biology a patient
+        # can search for; ESCAT tier is wrapped in a friendly label.
+        gene_variant = f"{gene} {variant}".strip() if variant else gene
+        bits = [f"<li><strong>{_h(gene_variant)}</strong>"]
+        if v_expl:
+            bits.append(f" — {_h(v_expl)}")
+        if tier_label:
+            bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
+        else:
+            bits.append(".")
+        bits.append("</li>")
+        parts.append("".join(bits))
+    parts.append("</ul>")
+    return "".join(parts)
+
+
+def _render_drugs_plain(plan_result: PlanResult) -> str:
+    """Plain-UA rendering of recommended drugs across all tracks.
+
+    Each drug renders as a `<div class="drug-explanation">` block with
+    drug name + lay-language explanation (`drug.notes_patient` if
+    present, else `_explain_patient(drug.drug_class)`, else a generic
+    fallback) + NSZU patient badge."""
+    plan = plan_result.plan
+    if plan is None or not plan.tracks:
+        return (
+            "<p>Конкретний список препаратів буде сформовано лікарем "
+            "після перегляду усіх ваших аналізів.</p>"
+        )
+
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = disease_data.get("names") if isinstance(disease_data, dict) else None
+    seen_drug_ids: set[str] = set()
+    blocks: list[str] = []
+
+    for t in plan.tracks:
+        regimen = t.regimen_data or {}
+        components = regimen.get("components") or []
+        for comp in components:
+            if not isinstance(comp, dict):
+                continue
+            drug_id = comp.get("drug_id") or ""
+            if not drug_id or drug_id in seen_drug_ids:
+                continue
+            seen_drug_ids.add(drug_id)
+
+            drug = drugs_lookup.get(drug_id) or {}
+            label = _patient_drug_label(drug, drug_id)
+            drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
+
+            # Lay-language explanation: prefer notes_patient (drug-author'd
+            # patient-facing blurb) → drug_class vocabulary entry → generic.
+            lay = ""
+            if isinstance(drug, dict):
+                lay = (drug.get("notes_patient") or "").strip()
+            if not lay and drug_class:
+                lay = _explain_patient(drug_class) or ""
+            if not lay:
+                lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+
+            # NSZU badge — patient-friendly label, render only when we can
+            # resolve coverage. Falls back silently when drug entity is
+            # missing (don't fabricate a badge).
+            badge_html = ""
+            if isinstance(drug, dict) and drug:
+                try:
+                    badge = lookup_nszu_status(
+                        drug,
+                        plan_result.disease_id or "",
+                        disease_names=disease_names if isinstance(disease_names, dict) else None,
+                    )
+                    p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
+                    if p_label:
+                        cls = f"patient-nszu patient-nszu-{badge.status}"
+                        badge_html = (
+                            f'<div class="{cls}" data-nszu-status="{_h(badge.status)}">'
+                            f"{_h(p_label)}</div>"
+                        )
+                except Exception:
+                    badge_html = ""
+
+            blocks.append(
+                '<div class="drug-explanation">'
+                f"<h3>{_h(label)}</h3>"
+                f'<p class="lay-language">{_h(lay)}</p>'
+                f"{badge_html}"
+                "</div>"
+            )
+
+    if not blocks:
+        return (
+            "<p>Конкретний список препаратів буде сформовано лікарем "
+            "після перегляду усіх ваших аналізів.</p>"
+        )
+    return "".join(blocks)
+
+
+def _render_emergency_section(plan_result: PlanResult) -> str:
+    """Filter the plan's red flags and render emergency-tier ones as a
+    `<section class="emergency-signals">` with one banner item per RF.
+    Renders an empty-state placeholder when no emergency RFs apply, so
+    the section is always present in the bundle (assertable structural
+    contract for downstream tests)."""
+    rf_lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
+    emergencies = filter_emergency_rfs(list(rf_lookup.values()))
+    if not emergencies:
+        return (
+            '<section class="emergency-signals">'
+            "<h2>Сигнали, що вимагають негайної уваги</h2>"
+            '<p class="patient-badge patient-good">'
+            "Наразі немає термінових сигналів — продовжуйте планові візити."
+            "</p>"
+            "</section>"
+        )
+    items: list[str] = []
+    for rf in emergencies:
+        # data-rf-id keeps the engine ID accessible to debug tooling /
+        # tests, but the visible text is generated solely from the
+        # patient_emergency_label() output.
+        rf_id = (rf.get("id") or "") if isinstance(rf, dict) else ""
+        label = patient_emergency_label(rf)
+        items.append(
+            f'<li data-rf-id="{_h(rf_id)}">{_h(label)}</li>'
+        )
+    return (
+        '<section class="emergency-signals">'
+        "<h2>Сигнали, що вимагають негайної уваги</h2>"
+        '<p>Якщо у вас з\'явилися ці симптоми — зверніться у лікарню '
+        "негайно, не чекайте планового візиту:</p>"
+        f'<ul class="emergency-list">{"".join(items)}</ul>'
+        "</section>"
+    )
+
+
+def _render_ask_doctor_section(plan_result: PlanResult) -> str:
+    """Build the 'про що варто запитати лікаря' block.
+
+    Pulls a plan dict (model_dump) and decorates it with derived flags
+    that the predicates in `_ask_doctor.py` look for (recommended_drugs,
+    plan_tracks, etc.). The decoration keeps the predicates simple
+    while still surfacing oop-drug / multi-track / germline-variant
+    contingent questions."""
+    plan = plan_result.plan
+    plan_dict: dict = plan.model_dump() if plan is not None else {}
+
+    # Decorate with the derived fields the predicates expect. We don't
+    # mutate the persisted Plan — `model_dump()` returns a fresh dict.
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = disease_data.get("names") if isinstance(disease_data, dict) else None
+
+    recommended: list[dict] = []
+    seen: set[str] = set()
+    if plan is not None:
+        for t in plan.tracks:
+            regimen = t.regimen_data or {}
+            for comp in regimen.get("components") or []:
+                if not isinstance(comp, dict):
+                    continue
+                did = comp.get("drug_id") or ""
+                if not did or did in seen:
+                    continue
+                seen.add(did)
+                drug = drugs_lookup.get(did) or {}
+                nszu_status: str = ""
+                if isinstance(drug, dict) and drug:
+                    try:
+                        b = lookup_nszu_status(
+                            drug,
+                            plan_result.disease_id or "",
+                            disease_names=disease_names if isinstance(disease_names, dict) else None,
+                        )
+                        nszu_status = b.status
+                    except Exception:
+                        nszu_status = ""
+                recommended.append({
+                    "drug_id": did,
+                    "name": _patient_drug_label(drug, did),
+                    "drug_class": (drug.get("drug_class") if isinstance(drug, dict) else None),
+                    "nszu_status": nszu_status,
+                })
+
+    plan_dict["recommended_drugs"] = recommended
+    plan_dict["plan_tracks"] = list(plan_dict.get("tracks") or [])
+
+    questions = _select_ask_doctor_questions(plan_dict, target_count=6)
+    if not questions:
+        return ""
+    items = "".join(f"<li>{_h(q['question_ua'])}</li>" for q in questions)
+    return (
+        '<div class="ask-doctor">'
+        "<h2>Про що варто запитати лікаря</h2>"
+        f"<ul>{items}</ul>"
+        "</div>"
+    )
+
+
+_PATIENT_DISCLAIMER_HTML = (
+    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. Усі рішення "
+    "про лікування приймає ваш онколог. Звіт оновлюється, коли з'являються "
+    "нові аналізи. Не змінюйте призначене лікування на основі лише цього звіту.</p>"
+    "<p>Якщо у вас виникли термінові симптоми, перелічені вище — звертайтесь у "
+    "лікарню негайно, не чекайте планового візиту.</p>"
+    "<p>Питання про сам інструмент: "
+    '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
+)
+
+
+def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
+    """Render a Plan as a plain-Ukrainian patient-facing single-file HTML.
+
+    `target_lang` is currently honoured only for the document `<html lang>`
+    attribute — the body stays Ukrainian per the patient-mode spec. EN
+    patient bundles are out of scope for the current iteration (see
+    CSD-3 plan)."""
+    plan = plan_result.plan
+    if plan is None:
+        return _patient_doc_shell(
+            "Ваш персональний онкологічний план",
+            '<p>Поки що недостатньо даних для побудови плану. '
+            'Зверніться до вашого онколога для уточнення.</p>',
+        )
+
+    disease_label = _patient_disease_label(plan_result)
+    body_parts: list[str] = []
+
+    # Header
+    body_parts.append(
+        "<header>"
+        "<h1>Ваш персональний план</h1>"
+        '<p class="patient-subhead">Що показав аналіз і що це означає для вас</p>'
+        f'<p><strong>Діагноз:</strong> {_h(disease_label)}</p>'
+        "</header>"
+    )
+
+    body_parts.append(
+        '<section class="what-was-found">'
+        "<h2>Що знайдено в результаті</h2>"
+        f"{_render_findings_plain(plan_result)}"
+        "</section>"
+    )
+
+    body_parts.append(
+        '<section class="what-now">'
+        "<h2>Що це означає для лікування</h2>"
+        f"{_render_drugs_plain(plan_result)}"
+        "</section>"
+    )
+
+    body_parts.append(_render_emergency_section(plan_result))
+    body_parts.append(_render_ask_doctor_section(plan_result))
+
+    body_parts.append(
+        f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
+    )
+
+    return _patient_doc_shell(
+        "Ваш персональний онкологічний план",
+        "".join(body_parts),
+    )
 
 
 # ── Diagnostic Brief render ───────────────────────────────────────────────
