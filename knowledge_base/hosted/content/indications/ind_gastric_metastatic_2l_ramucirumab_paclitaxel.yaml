@@ -1,0 +1,78 @@
+id: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced"
+    - "Disease progression on or after 1L platinum + fluoropyrimidine ± ICI"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~28% (RAINBOW)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 4.4 vs 2.9 mo paclitaxel alone (HR 0.64, RAINBOW)"
+  overall_survival_5y: "mOS 9.6 vs 7.4 mo (HR 0.81, RAINBOW)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+  - RF-GASTRIC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests:
+  - TEST-ECHO
+
+rationale: >
+  Paclitaxel + ramucirumab is the NCCN cat 1 preferred 2L regimen for
+  HER2-negative metastatic gastric/GEJ adenocarcinoma after 1L platinum
+  + fluoropyrimidine ± ICI failure. RAINBOW trial established OS + PFS
+  + ORR benefit over paclitaxel alone. HER2+ patients route instead to
+  T-DXd (IND-GASTRIC-METASTATIC-2L-HER2-TDXD). MSI-H patients who did
+  not receive ICI in 1L should receive pembrolizumab monotherapy
+  preferentially. Bleeding/perforation risk profile excludes patients
+  with active GI bleed or recent surgery.
+
+sources:
+  - source_id: SRC-NCCN-GASTRIC-2025
+    weight: primary
+    relevant_quote_paraphrase: "Paclitaxel + ramucirumab is a Category 1 preferred 2L regimen for advanced gastric/GEJ adenocarcinoma after platinum + fluoropyrimidine failure"
+  - source_id: SRC-ESMO-GASTRIC-2024
+    weight: primary
+    relevant_quote_paraphrase: "RAINBOW-evidenced paclitaxel + ramucirumab is recommended 2L; single-agent ramucirumab if paclitaxel-intolerant"
+
+do_not_do:
+  - "НЕ призначати при активній GI кровотечі / нещодавній перфорації — VEGFR2 блокада катастрофічно підвищує ризик."
+  - "НЕ починати рамуцирумаб ≤28 днів до або після великої операції — затримка загоєння рани."
+  - "НЕ ігнорувати контроль АТ — Grade ≥3 гіпертензія потребує термінової корекції / hold."
+  - "НЕ забути HER2-тестування на 1L біопсії — HER2+ пацієнти отримують T-DXd 2L preferentially."
+  - "НЕ комбінувати з іншими антиангіогенними препаратами (бевацизумаб) — кумулятивна токсичність."
+
+time_critical: false
+last_reviewed: "2026-04-26"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Co-Lead sign-off. Standard-track 2L for HER2-negative
+  metastatic gastric. Paclitaxel weekly monotherapy is the realistic
+  fallback when ramucirumab funding unavailable in Ukraine (NSZU does
+  not reimburse ramucirumab for gastric).
