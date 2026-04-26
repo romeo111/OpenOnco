@@ -15,6 +15,15 @@ measurement: {method: "NGS panel covering RHOA codon 17 hot-spot", units: "categ
 specimen_requirements: ["FFPE biopsy block (LN typically)"]
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# OncoKB integration hint (safe-rollout v3 §4 + PR-C). When a patient
+# has this biomarker, the engine will issue an OncoKB lookup with these
+# values. Conservative: only the canonical actionable variant; other
+# variants on the same gene need their own variant-specific biomarker.
+oncokb_lookup:
+  gene: RHOA
+  variant: G17V
+
 last_reviewed: "2026-04-25"
 notes: >
   AITL-defining marker: ~70% of AITL / nodal TFH-cell lymphomas carry

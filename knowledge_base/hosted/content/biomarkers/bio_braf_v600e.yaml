@@ -15,6 +15,15 @@ measurement: {method: "PCR / sequencing on bone marrow or peripheral blood (HCL)
 specimen_requirements: ["BM aspirate or PB for HCL", "FFPE tumor for solid tumors"]
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# OncoKB integration hint (safe-rollout v3 §4 + PR-C). When a patient
+# has this biomarker, the engine will issue an OncoKB lookup with these
+# values. Conservative: only the canonical actionable variant; other
+# variants on the same gene need their own variant-specific biomarker.
+oncokb_lookup:
+  gene: BRAF
+  variant: V600E
+
 last_reviewed: "2026-04-25"
 notes: >
   Defining feature of HCL (~100%). Targetable with BRAF inhibitors
