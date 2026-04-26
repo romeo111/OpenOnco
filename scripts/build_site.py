@@ -157,6 +157,30 @@ def _disease_bundle_basename(disease_id: str) -> str:
     return f"openonco-{slug}.zip"
 
 
+def _icd_to_disease_id_map() -> dict[str, str]:
+    """Walk knowledge_base/hosted/content/diseases/*.yaml and produce a
+    `{ICD-O-3 morphology code: DIS-...}` map. Shipped in the bundle index
+    so the JS lazy-loader can resolve a `disease_id` from the patient's
+    `disease.icd_o_3_morphology` without round-tripping into Pyodide."""
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, str] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        code = (data.get("codes") or {}).get("icd_o_3_morphology")
+        if did and code:
+            out[str(code)] = str(did).upper()
+    return out
+
+
 def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
     """Walk knowledge_base/ and produce (source_path, archive_name,
     attributed_disease_id) tuples for every file that belongs in any
@@ -314,6 +338,10 @@ def bundle_engine(output_dir: Path) -> dict:
         "disease_versions": {
             did: meta["version"] for did, meta in sorted(disease_meta.items())
         },
+        # CSD-6E: client-side ICD-O-3 → disease_id resolution. The /try.html
+        # JS uses this so it can pick the per-disease bundle from a profile
+        # whose only disease hint is `disease.icd_o_3_morphology`.
+        "icd_to_disease_id": _icd_to_disease_id_map(),
     }
     index_path.write_text(
         json.dumps(index_payload, ensure_ascii=False, indent=2),
@@ -334,6 +362,78 @@ def bundle_engine(output_dir: Path) -> dict:
         "disease_bundles": disease_meta,
         "index": str(index_path.relative_to(output_dir)),
     }
+
+
+def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
+    """Write `docs/sw.js` — a tiny cache-first service worker for the
+    bundle artifacts. Stores responses in a versioned `CacheStorage`
+    bucket keyed by `core_version`, so a KB push (which rotates the
+    SHA-256 prefix) automatically invalidates stale bundles on next
+    fetch. CSD-6E polish — speeds up cold loads on repeat visits past
+    what localStorage can hold (entire core + all visited diseases)."""
+    cache_name = "openonco-bundle-" + (core_version or "v1")
+    sw_js = """// OpenOnco bundle service worker (CSD-6E)
+// Cache-first strategy for the lazy-load engine bundles. Cache name is
+// stamped with the core bundle's SHA-256 prefix at build time, so any KB
+// change automatically rotates the cache key and old bundles are evicted
+// on the next install (see the activate handler).
+const CACHE_NAME = '__CACHE_NAME__';
+const PRECACHE = [
+  '/openonco-engine-index.json',
+  '/openonco-engine-core.zip',
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      // Precache best-effort: don't fail the SW install if a single
+      // file 404s (e.g. an old deploy that hasn't shipped the index yet).
+      Promise.all(PRECACHE.map((u) => cache.add(u).catch(() => null)))
+    ).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k.startsWith('openonco-bundle-') && k !== CACHE_NAME)
+            .map((k) => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  // Only intercept our own engine artifacts. Everything else (HTML, CSS,
+  // CDN scripts) goes through the normal browser cache.
+  const matches =
+    url.pathname.endsWith('/openonco-engine-core.zip') ||
+    url.pathname.endsWith('/openonco-engine.zip') ||
+    url.pathname.endsWith('/openonco-engine-index.json') ||
+    url.pathname.startsWith('/disease/openonco-');
+  if (!matches) return;
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((hit) =>
+        hit || fetch(event.request).then((resp) => {
+          // Only cache successful responses; never poison the cache with
+          // an opaque 404.
+          if (resp && resp.ok) {
+            const clone = resp.clone();
+            cache.put(event.request, clone);
+          }
+          return resp;
+        })
+      )
+    )
+  );
+});
+""".replace("__CACHE_NAME__", cache_name)
+    out = output_dir / "sw.js"
+    out.write_text(sw_js, encoding="utf-8")
+    return {"path": "sw.js", "cache_name": cache_name}
 
 
 def bundle_examples(output_dir: Path) -> dict:
@@ -1342,6 +1442,18 @@ const initStagesEl = document.getElementById('initStages');
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
 let enginReady = false;
+// CSD-6E: bundle lazy-load state. `bundleIndex` is the parsed index
+// (or null if we fell back to the monolithic bundle); `coreBundleLoaded`
+// is set after the first core (or monolithic) extract; `loadedDiseases`
+// remembers which per-disease modules we've already merged so re-runs
+// against the same disease don't re-fetch.
+const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
+const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
+const FALLBACK_MONOLITHIC_URL = '/openonco-engine.zip';
+let bundleIndex = null;
+let coreBundleLoaded = false;
+let usingMonolithicFallback = false;
+const loadedDiseases = new Set();
 let questionnaires = [];     // loaded from /questionnaires.json
 let examples = [];           // loaded from /examples.json
 let activeQuest = null;      // currently selected questionnaire
@@ -2133,6 +2245,148 @@ function updateImpactPanel(result) {{
   // and the engine will surface the gaps.
 }}
 
+// ── Bundle lazy-load (CSD-6E) ─────────────────────────────────────────────
+// Two-tier bundle: fetch openonco-engine-core.zip first (~1.4 MB), then
+// fetch the matching per-disease module (~15-40 KB) once we know the
+// patient's disease_id. If the index 404s (older deploys, ad-blockers
+// hitting /openonco-engine-*), we fall back to the monolithic zip and
+// behave exactly like before.
+
+async function loadBundleIndex() {{
+  if (bundleIndex !== null) return bundleIndex;
+  try {{
+    const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
+    bundleIndex = await r.json();
+    return bundleIndex;
+  }} catch (e) {{
+    console.warn('[OpenOnco] bundle index unavailable — falling back to monolithic:', e);
+    bundleIndex = null;
+    return null;
+  }}
+}}
+
+// Resolve a disease_id from whatever the patient profile / form gives us.
+// Order: explicit disease.id (or top-level disease_id) → active
+// questionnaire's disease_id → ICD-O-3 morphology → null.
+function resolveDiseaseId(profile) {{
+  if (!profile) return null;
+  const d = profile.disease || {{}};
+  if (typeof d.id === 'string' && d.id.startsWith('DIS-')) return d.id.toUpperCase();
+  if (typeof profile.disease_id === 'string' && profile.disease_id.startsWith('DIS-')) {{
+    return profile.disease_id.toUpperCase();
+  }}
+  if (activeQuest && typeof activeQuest.disease_id === 'string'
+      && activeQuest.disease_id.startsWith('DIS-')) {{
+    return activeQuest.disease_id.toUpperCase();
+  }}
+  const code = d.icd_o_3_morphology;
+  if (code && bundleIndex && bundleIndex.icd_to_disease_id) {{
+    const did = bundleIndex.icd_to_disease_id[String(code)];
+    if (did) return did;
+  }}
+  return null;
+}}
+
+async function loadCoreBundle() {{
+  if (coreBundleLoaded) return;
+  await loadBundleIndex();
+  if (bundleIndex && bundleIndex.core) {{
+    setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+    const ver = bundleIndex.core_version || '';
+    const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
+    const buf = await r.arrayBuffer();
+    await yieldToBrowser();
+    pyodide.unpackArchive(buf, 'zip');
+    coreBundleLoaded = true;
+    return;
+  }}
+  // Fallback: legacy monolithic bundle. Has every disease, so
+  // loadDiseaseModule() becomes a no-op.
+  setStatus('Завантажую двигун OpenOnco (повний)…');
+  const resp = await fetch(FALLBACK_MONOLITHIC_URL + '?v={bundle_version}');
+  if (!resp.ok) throw new Error('Monolithic bundle fetch HTTP ' + resp.status);
+  const buf = await resp.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  coreBundleLoaded = true;
+  usingMonolithicFallback = true;
+}}
+
+// Per-disease module: tiny zip with the disease's indications, regimens,
+// algorithms, redflags, and biomarker_actionability cells. Cached in
+// localStorage keyed by disease_id + version so subsequent visits skip
+// the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
+// time per slot and drop silently on quota errors.
+async function loadDiseaseModule(diseaseId) {{
+  if (!diseaseId) return;
+  if (usingMonolithicFallback) return;             // already have everything
+  if (loadedDiseases.has(diseaseId)) return;
+  if (!bundleIndex || !bundleIndex.diseases) return;
+  const relUrl = bundleIndex.diseases[diseaseId];
+  if (!relUrl) {{
+    // Disease has no per-disease bundle — its content is fully in core.
+    loadedDiseases.add(diseaseId);
+    return;
+  }}
+  const ver = (bundleIndex.disease_versions || {{}})[diseaseId] || '';
+  const cacheKey = 'openonco-disease-' + diseaseId + '-' + ver;
+
+  // localStorage cache hit: decode base64 → ArrayBuffer → unpack.
+  try {{
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {{
+      const bin = atob(cached);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      pyodide.unpackArchive(u8.buffer, 'zip');
+      loadedDiseases.add(diseaseId);
+      console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
+      return;
+    }}
+  }} catch (e) {{
+    console.warn('[OpenOnco] disease cache read failed for ' + diseaseId + ':', e);
+    try {{ localStorage.removeItem(cacheKey); }} catch (_) {{}}
+  }}
+
+  setStatus('Завантажую модуль ' + diseaseId + '…');
+  const url = '/' + relUrl + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
+  const buf = await r.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  loadedDiseases.add(diseaseId);
+
+  // Re-validate after merge so the next generate_plan() sees the new YAMLs.
+  // apply_disease_module() drops the loader cache; cheap enough to run on
+  // every disease swap.
+  try {{
+    await pyodide.runPythonAsync(
+      "from knowledge_base.engine import apply_disease_module\n" +
+      "from pathlib import Path\n" +
+      "apply_disease_module(Path('knowledge_base/hosted/content'))\n"
+    );
+  }} catch (e) {{
+    console.warn('[OpenOnco] apply_disease_module failed (continuing):', e);
+  }}
+
+  // Cache for next visit. Skip silently on quota or encoding errors.
+  try {{
+    let bin = '';
+    const u8 = new Uint8Array(buf);
+    const chunk = 0x8000;
+    for (let i = 0; i < u8.length; i += chunk) {{
+      bin += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+    }}
+    localStorage.setItem(cacheKey, btoa(bin));
+  }} catch (e) {{
+    // Quota exceeded or encoding hiccup — just don't cache.
+  }}
+}}
+
 // ── Pyodide loader ────────────────────────────────────────────────────────
 // Lazy: runs only when user clicks Generate. Drives the init overlay's
 // 4 setup stages (pyodide / pydeps / bundle / validate) with explicit
@@ -2165,14 +2419,12 @@ await micropip.install(['pydantic', 'pyyaml'])
     initStageStart(stage);
     setStatus('Завантажую двигун OpenOnco…');
     await yieldToBrowser(50);
-    // Cache-busting: bundle_version is the SHA-256 prefix of the engine
-    // zip, computed at build time. Forces a fresh fetch when KB content
-    // changes, sidestepping CDN/browser cache (GitHub Pages serves
-    // openonco-engine.zip with Cache-Control: max-age=600).
-    const resp = await fetch('/openonco-engine.zip?v={bundle_version}');
-    const buf = await resp.arrayBuffer();
-    await yieldToBrowser();
-    pyodide.unpackArchive(buf, 'zip');
+    // CSD-6E: lazy-load core bundle (~1.4 MB) instead of monolithic
+    // (~1.8 MB). loadCoreBundle() falls back to the monolithic zip if
+    // the index is unreachable, so old deploys / blocked requests still
+    // work. Per-disease modules are fetched later in runEngine() once
+    // the patient's disease_id is known.
+    await loadCoreBundle();
     initStageDone(stage);
 
     stage = 'validate';
@@ -2250,6 +2502,16 @@ async function runEngine() {{
       setError('Двигун не завантажився: ' + (e.message || e));
       setStatus('');
       return;
+    }}
+    // CSD-6E: lazy-fetch the per-disease module before generate. No-op
+    // when running on the monolithic fallback or when the disease has
+    // no per-disease bundle. Failures are surfaced but non-fatal —
+    // generate_plan() will fall back to whatever's already loaded.
+    try {{
+      const did = resolveDiseaseId(profile);
+      if (did) await loadDiseaseModule(did);
+    }} catch (e) {{
+      console.warn('[OpenOnco] disease module load failed (continuing):', e);
     }}
     initStageStart('generate');
     setStatus('Будую персональний план…');
@@ -2671,6 +2933,24 @@ loadAssets()
   .then(() => loadFromUrlHash())
   .catch(e => setError('Initialization failed: ' + e));
 window.addEventListener('hashchange', loadFromUrlHash);
+
+// CSD-6E: kick off the bundle index fetch as soon as the page loads —
+// it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
+// ICD-O-3 codes before the user clicks Generate. Best-effort, never
+// blocks UI.
+loadBundleIndex().catch(() => {{}});
+
+// CSD-6E polish: register the cache-first service worker so repeat
+// visits skip the network for the engine bundle entirely. Best-effort
+// — falls through silently when the SW API is unavailable (private
+// mode, ITP, file://, etc.).
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', () => {{
+    navigator.serviceWorker.register('/sw.js').catch((e) => {{
+      console.warn('[OpenOnco] service worker registration failed:', e);
+    }});
+  }});
+}}
 </script>
 </body>
 </html>
@@ -5369,6 +5649,9 @@ def build_site(output_dir: Path) -> dict:
     # bundles for ~10 minutes after a KB push.
     engine_bundle = bundle_engine(output_dir)
     bundle_version = engine_bundle.get("version", "")
+    sw_payload = write_service_worker(
+        output_dir, core_version=engine_bundle.get("core_version", ""),
+    )
 
     # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
@@ -5406,6 +5689,7 @@ def build_site(output_dir: Path) -> dict:
         "cases_uk": case_paths_uk,
         "cases_en": case_paths_en,
         "engine_bundle": engine_bundle,
+        "service_worker": sw_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
         "landing_assets": landing_assets,
