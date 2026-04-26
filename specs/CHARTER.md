@@ -173,6 +173,17 @@
 
 ### 6.1. Стандартний workflow
 
+> **⚠ Тимчасовий dev-режим (з 2026-04-26):** проект у фазі v0.1
+> (specs-first / KB-bootstrap). Clinical Co-Leads ще не призначені,
+> тому two-reviewer signoff на рівні PR **тимчасово вважається "OK"**
+> для merge при умовах: (а) контент має ≥1 цитоване primary-джерело,
+> (б) всі Indication / Regimen / RedFlag залишаються позначені як
+> `STUB` (`reviewer_signoffs: 0`), (в) жоден Plan, побудований з цього
+> KB, не публікується пацієнтам поза synthetic / demo-режимом.
+> Цей відступ діє до призначення Clinical Co-Leads або до першого
+> production-deploy для реальних HCP-користувачів — що настане раніше.
+> Tracker: roadmap → "Operations → Reviewer signoff workflow".
+
 1. **Proposal:** Contributor створює PR з клінічною зміною.
    Обов'язкові поля: опис, обґрунтування, джерела (мінімум 1 primary),
    evidence level, вплив на існуючі рекомендації.
@@ -235,6 +246,12 @@
 - Preliminary drafts до перших reviews
 
 ### 7.3. Conflict of Interest
+
+> **⚠ Тимчасовий dev-режим (з 2026-04-26):** Clinical Co-Leads ще не
+> призначені, тому CoI-декларації **тимчасово вважаються "OK"** як
+> "відсутні / N/A". Як тільки перший Co-Lead узгоджений — декларація
+> публікується перед першим voting участю. Цей відступ синхронізований
+> з §6.1 dev-режимом.
 
 Всі Clinical Co-Leads щорічно декларують:
 - Консалтинг для фармацевтичних компаній

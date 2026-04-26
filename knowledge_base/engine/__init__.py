@@ -23,6 +23,15 @@ from .experimental_options import (
     clear_cache as clear_experimental_cache,
     enumerate_experimental_options,
 )
+from .lazy_loader import (
+    apply_disease_module,
+    disease_bundle_basename,
+    lazy_load_disease,
+    load_bundle_index,
+    load_disease_module,
+    merge_disease_module,
+    url_for_disease,
+)
 from .mdt_orchestrator import (
     MDTOrchestrationResult,
     MDTRequiredRole,
@@ -71,8 +80,10 @@ __all__ = [
     "QPreviewResult",
     "SkillMetadata",
     "TrialQuery",
+    "apply_disease_module",
     "assemble_profile",
     "clear_experimental_cache",
+    "disease_bundle_basename",
     "enumerate_experimental_options",
     "evaluate_partial",
     "generate_diagnostic_brief",
@@ -81,10 +92,14 @@ __all__ = [
     "is_diagnostic_profile",
     "is_treatment_profile",
     "latest_version_path",
+    "lazy_load_disease",
     "list_questions",
     "list_versions",
+    "load_bundle_index",
+    "load_disease_module",
     "load_result",
     "make_event",
+    "merge_disease_module",
     "orchestrate_mdt",
     "render",
     "render_diagnostic_brief_html",
@@ -93,4 +108,5 @@ __all__ = [
     "revise_plan",
     "save_result",
     "update_superseded_by_on_disk",
+    "url_for_disease",
 ]

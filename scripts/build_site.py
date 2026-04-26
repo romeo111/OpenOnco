@@ -88,46 +88,237 @@ _BUNDLE_INCLUDE_DIRS = [
 _BUNDLE_INCLUDE_FILES = ["__init__.py"]
 
 
-def bundle_engine(output_dir: Path) -> dict:
-    """Zip the runtime parts of knowledge_base/ → docs/openonco-engine.zip
-    so Pyodide can `pyodide.unpackArchive` it into its filesystem.
+# Entity directories whose YAMLs are *split out* into per-disease modules
+# when they tie to a specific disease via disease_id /
+# applicable_to_disease / applicable_to.disease_id / relevant_diseases.
+# Files from these dirs that don't resolve to any single disease (e.g.
+# universal redflags, cross-disease indications) stay in core.
+_DISEASE_SCOPED_DIRS = {
+    "indications",
+    "algorithms",
+    "regimens",
+    "redflags",
+    "biomarker_actionability",
+}
 
-    Returns a dict whose `version` field is a 12-char SHA-256 prefix of the
-    finished zip — used as a `?v=...` cache-buster on the Pyodide fetch in
-    try.html, so users always get the fresh bundle on KB updates without
-    having to hard-reload."""
+
+def _disease_id_for_yaml(yaml_text: str, arc_path: str) -> str | None:
+    """Best-effort: which disease does this YAML belong to?
+
+    Mirrors scripts/profile_engine_bundle.py — same heuristic — so the
+    profile and the actual split agree. Returns None when:
+      - the YAML doesn't pin to a single disease (universal RFs,
+        cross-disease indications), OR
+      - the file lives under diseases/ (handled separately — disease
+        metadata always stays in core).
+    """
+    import re as _re
+    if "/diseases/" in arc_path:
+        # Disease metadata always stays in core, never sharded.
+        return None
+    m = _re.search(
+        r"^\s*disease_id\s*:\s*(DIS-[A-Z0-9_-]+)", yaml_text, _re.MULTILINE,
+    )
+    if m:
+        return m.group(1).upper()
+    m = _re.search(
+        r"^\s*applicable_to_disease\s*:\s*(DIS-[A-Z0-9_-]+)",
+        yaml_text, _re.MULTILINE,
+    )
+    if m:
+        return m.group(1).upper()
+    m = _re.search(
+        r"applicable_to\s*:\s*\n[\s\S]{0,400}?disease_id\s*:\s*(DIS-[A-Z0-9_-]+)",
+        yaml_text,
+    )
+    if m:
+        return m.group(1).upper()
+    # redflags: relevant_diseases — only attribute when it pins to a
+    # single concrete disease. Universal / multi-disease RFs stay in core.
+    m = _re.search(
+        r"^relevant_diseases\s*:\s*\n((?:\s*-\s*\S+\s*\n)+)",
+        yaml_text, _re.MULTILINE,
+    )
+    if m:
+        diseases = []
+        for line in m.group(1).splitlines():
+            tok = line.strip().lstrip("-").strip()
+            if tok and tok != "*" and tok.upper().startswith("DIS-"):
+                diseases.append(tok.upper())
+        if len(diseases) == 1:
+            return diseases[0]
+    return None
+
+
+def _disease_bundle_basename(disease_id: str) -> str:
+    """`DIS-DLBCL-NOS` → `openonco-dis-dlbcl-nos.zip`. Used both for the
+    file name on disk and for the URL in the bundle index."""
+    slug = disease_id.lower().replace("_", "-")
+    return f"openonco-{slug}.zip"
+
+
+def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
+    """Walk knowledge_base/ and produce (source_path, archive_name,
+    attributed_disease_id) tuples for every file that belongs in any
+    bundle. attributed_disease_id is None for files that go in core.
+    Code, schemas, validation, and shared content are always None.
+    """
+    src = REPO_ROOT / "knowledge_base"
+    entries: list[tuple[Path, str, str | None]] = []
+
+    for fname in _BUNDLE_INCLUDE_FILES:
+        p = src / fname
+        if p.is_file():
+            entries.append((p, f"knowledge_base/{fname}", None))
+
+    for sub in _BUNDLE_INCLUDE_DIRS:
+        sub_root = src / sub
+        if not sub_root.is_dir():
+            continue
+        for path in sub_root.rglob("*"):
+            if not path.is_file():
+                continue
+            if "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}:
+                continue
+            arcname = "knowledge_base/" + str(path.relative_to(src)).replace("\\", "/")
+
+            attributed: str | None = None
+            # Only YAML under hosted/content/<disease-scoped-dir>/ is
+            # eligible to be sharded out.
+            if path.suffix == ".yaml":
+                parts = arcname.split("/")
+                # parts: knowledge_base, hosted, content, <entity_dir>, ...
+                if (
+                    len(parts) >= 5
+                    and parts[1] == "hosted"
+                    and parts[2] == "content"
+                    and parts[3] in _DISEASE_SCOPED_DIRS
+                ):
+                    try:
+                        text = path.read_text(encoding="utf-8")
+                    except OSError:
+                        text = ""
+                    attributed = _disease_id_for_yaml(text, arcname)
+
+            entries.append((path, arcname, attributed))
+    return entries
+
+
+def bundle_engine(output_dir: Path) -> dict:
+    """Build the Pyodide-loadable engine bundles.
+
+    Produces three artifacts in `output_dir/`:
+
+      1. `openonco-engine.zip` — the legacy monolithic bundle (everything
+         in one zip). Kept for backward compatibility with any client
+         that hasn't been upgraded to the lazy-load index yet, and as a
+         safe fallback if the index fetch fails.
+
+      2. `openonco-engine-core.zip` — code + schemas + validation +
+         shared content (drugs, sources, biomarkers, tests,
+         supportive_care, monitoring, workups, questionnaires,
+         contraindications, mdt_skills, diseases, plus universal
+         redflags and any indications/algorithms/regimens/RFs/BMA cells
+         that don't pin to a single disease). This is what /try.html
+         should fetch first — small enough to make the page interactive
+         quickly.
+
+      3. `disease/openonco-{slug}.zip` per disease — the disease-scoped
+         indications, algorithms, regimens, redflags, and BMA cells.
+         Fetched on demand once the patient's `disease_id` is known.
+
+    Plus an index file:
+
+      4. `openonco-engine-index.json` — `{core, core_version, diseases}`
+         mapping disease_id → relative URL for the per-disease bundle.
+
+    Returns a dict whose `version` field is a 12-char SHA-256 prefix of
+    the legacy monolithic zip — used as a `?v=...` cache-buster on the
+    Pyodide fetch in try.html so users always get the fresh bundle on
+    KB updates without having to hard-reload.
+    """
     import hashlib
 
-    src = REPO_ROOT / "knowledge_base"
     out_zip = output_dir / "openonco-engine.zip"
+    core_zip = output_dir / "openonco-engine-core.zip"
+    disease_dir = output_dir / "disease"
+    index_path = output_dir / "openonco-engine-index.json"
 
+    disease_dir.mkdir(parents=True, exist_ok=True)
+
+    entries = _gather_engine_entries()
+    # Deterministic order — same input → same zip → same SHA-256.
+    entries.sort(key=lambda e: e[1])
+
+    # Bucket by destination.
+    core_entries: list[tuple[Path, str]] = []
+    by_disease: dict[str, list[tuple[Path, str]]] = {}
+    for path, arcname, disease in entries:
+        if disease is None:
+            core_entries.append((path, arcname))
+        else:
+            by_disease.setdefault(disease, []).append((path, arcname))
+
+    # 1. Legacy monolithic bundle (back-compat / fallback).
     files_added = 0
     bytes_uncompressed = 0
-    # Sort entries so the zip is deterministic — same content → same hash.
     with zipfile.ZipFile(out_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        entries: list[tuple[Path, str]] = []
-        for fname in _BUNDLE_INCLUDE_FILES:
-            p = src / fname
-            if p.is_file():
-                entries.append((p, f"knowledge_base/{fname}"))
-        for sub in _BUNDLE_INCLUDE_DIRS:
-            sub_root = src / sub
-            if not sub_root.is_dir():
-                continue
-            for path in sub_root.rglob("*"):
-                if not path.is_file():
-                    continue
-                if "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}:
-                    continue
-                arcname = "knowledge_base/" + str(path.relative_to(src)).replace("\\", "/")
-                entries.append((path, arcname))
-        for path, arcname in sorted(entries, key=lambda e: e[1]):
+        for path, arcname, _ in entries:
             zf.write(path, arcname)
             files_added += 1
             bytes_uncompressed += path.stat().st_size
-
     bundle_bytes = out_zip.read_bytes()
     version = hashlib.sha256(bundle_bytes).hexdigest()[:12]
+
+    # 2. Core bundle.
+    core_files = 0
+    core_uncompressed = 0
+    with zipfile.ZipFile(core_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path, arcname in core_entries:
+            zf.write(path, arcname)
+            core_files += 1
+            core_uncompressed += path.stat().st_size
+    core_bytes = core_zip.read_bytes()
+    core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
+
+    # 3. Per-disease bundles. Wipe stale ones first so disease renames
+    # don't leave orphans under docs/disease/.
+    for stale in disease_dir.glob("openonco-*.zip"):
+        stale.unlink()
+
+    disease_meta: dict[str, dict] = {}
+    for disease_id, items in sorted(by_disease.items()):
+        out_name = _disease_bundle_basename(disease_id)
+        out_path = disease_dir / out_name
+        with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as zf:
+            for path, arcname in items:
+                zf.write(path, arcname)
+        b = out_path.read_bytes()
+        disease_meta[disease_id] = {
+            "url": f"disease/{out_name}",
+            "files": len(items),
+            "compressed_bytes": out_path.stat().st_size,
+            "version": hashlib.sha256(b).hexdigest()[:12],
+        }
+
+    # 4. Bundle index — what /try.html should consult to know which
+    # per-disease module to fetch once disease_id is known.
+    index_payload = {
+        "core": "openonco-engine-core.zip",
+        "core_version": core_version,
+        "monolithic": "openonco-engine.zip",
+        "monolithic_version": version,
+        "diseases": {
+            did: meta["url"] for did, meta in sorted(disease_meta.items())
+        },
+        "disease_versions": {
+            did: meta["version"] for did, meta in sorted(disease_meta.items())
+        },
+    }
+    index_path.write_text(
+        json.dumps(index_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     return {
         "zip": str(out_zip.relative_to(output_dir)),
@@ -135,6 +326,13 @@ def bundle_engine(output_dir: Path) -> dict:
         "uncompressed_bytes": bytes_uncompressed,
         "compressed_bytes": out_zip.stat().st_size,
         "version": version,
+        "core_zip": str(core_zip.relative_to(output_dir)),
+        "core_files": core_files,
+        "core_uncompressed_bytes": core_uncompressed,
+        "core_compressed_bytes": core_zip.stat().st_size,
+        "core_version": core_version,
+        "disease_bundles": disease_meta,
+        "index": str(index_path.relative_to(output_dir)),
     }
 
 
