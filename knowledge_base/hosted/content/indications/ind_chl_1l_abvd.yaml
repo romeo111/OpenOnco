@@ -5,7 +5,13 @@ applicable_to:
   disease_id: DIS-CHL
   line_of_therapy: 1
   stage_requirements: []
-  biomarker_requirements_required: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HBV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis before steroid pulse on ABVD; reactivation documented even without anti-CD20)"
+    - biomarker_id: BIO-HIV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; HIV+ → continue cART throughout, integrase-inhibitor backbone preferred to avoid ritonavir-vincristine interaction; PJP prophylaxis if CD4 < 200)"
   biomarker_requirements_excluded: []
   demographic_constraints: {ecog_max: 3}
 

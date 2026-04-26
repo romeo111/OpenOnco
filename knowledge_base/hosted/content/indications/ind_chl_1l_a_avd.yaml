@@ -5,7 +5,13 @@ applicable_to:
   disease_id: DIS-CHL
   line_of_therapy: 1
   stage_requirements: []
-  biomarker_requirements_required: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HBV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis before brentuximab; anti-CD30 ADC has documented HBV reactivation risk; continue ≥12 mo post-BV)"
+    - biomarker_id: BIO-HIV-STATUS
+      required: true
+      value_constraint: "any value valid (categorical etiology gate; HIV+ → A+AVD acceptable with cART; integrase-inhibitor backbone preferred; PJP prophylaxis throughout)"
   biomarker_requirements_excluded: []
   demographic_constraints: {ecog_max: 2}
 
