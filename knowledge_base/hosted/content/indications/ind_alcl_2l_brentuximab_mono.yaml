@@ -1,0 +1,98 @@
+id: IND-ALCL-2L-BRENTUXIMAB-MONO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ALCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after ≥1 prior systemic line (CHP-Bv / CHOEP / R-CHOP equivalent)"
+    - "Both ALK+ and ALK- ALCL eligible"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD30-IHC
+      required: true
+      value_constraint: "positive (universal in systemic ALCL ~100%)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-BV-MONO-SYSTEMIC-ALCL
+concurrent_therapy: []
+followed_by: []  # bridge to alloSCT in fit transplant-eligible responders
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~86% (SGN-35-005)"
+  complete_response: "~57%"
+  progression_free_survival: "Median PFS ~13.3 mo; mDOR 12.6 mo"
+  overall_survival_5y: "~60% (SGN-35-005 5-year follow-up)"
+
+hard_contraindications: [CI-BORTEZOMIB-SEVERE-NEUROPATHY]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC  # also checks CD30 IHC under same workflow
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Brentuximab vedotin monotherapy for r/r systemic ALCL after ≥1 prior
+  line per SGN-35-005 (FDA-approved). ALCL is universally CD30+ (~100%
+  by IHC) — strongest brentuximab response of any T-cell lymphoma:
+  ORR 86%, CR 57%, mDOR 12.6 mo, 5-year OS ~60%. Often used as bridge
+  to consolidative alloSCT (or autoSCT) in fit transplant-eligible
+  responders. Preferred 2L+ regardless of ALK status (works in both
+  ALK+ and ALK- ALCL). Pre-existing peripheral neuropathy is the
+  dominant patient-selection criterion — Grade ≥2 = absolute CI.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Brentuximab vedotin monotherapy is preferred treatment for r/r systemic ALCL after ≥1 prior line per SGN-35-005; Cat 1"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Single-agent brentuximab vedotin is preferred 2L+ for r/r systemic ALCL given universal CD30+ status; bridge to consolidative SCT"
+
+known_controversies:
+  - topic: "BV-mono vs combination salvage (e.g. bendamustine + BV) for r/r ALCL"
+    positions:
+      - position: "BV-mono — established response rates, single-agent toxicity manageable"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Combination salvage (BV + bendamustine, BV + ICE-style) — may deepen response pre-SCT"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Combinations less data, more toxicity"
+    our_default: "BV-mono first; combinations only in pre-SCT bridging when CR depth critical"
+
+do_not_do:
+  - "НЕ комбінувати з bleomycin — additive lethal pulmonary toxicity (absolute)."
+  - "НЕ призначати при pre-existing Grade ≥2 peripheral neuropathy — Grade ≥2 = absolute CI."
+  - "НЕ пропускати baseline CD30 IHC verification — ALCL universally CD30+ але mandatory документація для funding."
+  - "НЕ ігнорувати hepatitis screening + entecavir prophylaxis при HBsAg+ або anti-HBc+."
+  - "НЕ забути PJP prophylaxis протягом cycles + ≥6 міс після останньої дози."
+  - "НЕ припиняти при Grade 1-2 neuropathy — reduce dose до 1.2 mg/kg + продовжити; permanent discontinuation для Grade ≥3."
+  - "НЕ призначати без funding pathway clarification — brentuximab НЕ НСЗУ-reimbursed для r/r ALCL."
+  - "НЕ забути плану до alloSCT consolidation в fit transplant-eligible responders — natural history without consolidation поганий."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L+ for
+  r/r systemic ALCL (both ALK+ and ALK-). Bridge to alloSCT
+  consolidation in fit responders is practice standard. Funding gap
+  in UA — fundraising pathway often required.

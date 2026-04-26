@@ -1,0 +1,105 @@
+id: IND-ALCL-2L-CRIZOTINIB-ALKPOS
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ALCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after ≥1 prior systemic line"
+    - "ALK-positive systemic ALCL only — confirmed by IHC and/or FISH for ALK rearrangement"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ALK-REARRANGEMENT
+      required: true
+      value_constraint: "positive (NPM1-ALK most common; other ALK partners also responsive)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CRIZOTINIB-ALCL
+concurrent_therapy: []
+followed_by: []  # bridge to alloSCT in fit transplant-eligible responders
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~88-90% (NCI-9015)"
+  complete_response: "~75-80%"
+  progression_free_survival: "Median PFS ~24 mo+ (small adult cohorts; longer in pediatric)"
+  overall_survival_5y: "~60-70% with continuous therapy + SCT consolidation"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-FISH-PANEL  # ALK rearrangement confirmation
+  - TEST-CD20-IHC  # ALK IHC done same workflow
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-LN-CORE-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Crizotinib (1st-gen ALK TKI) for ALK+ r/r ALCL per NCI-9015 (Mossé
+  2017). ALK+ ALCL has NPM1-ALK fusion in ~70% (other ALK partners
+  also responsive). Rapid responses (within 4 weeks), durable with
+  continuous therapy. Practical advantage in UA: drug on-shelf via
+  existing NSCLC supply route (НСЗУ-reimbursed for ALK+ NSCLC) —
+  off-label for ALCL but accessible. Often used as bridge to
+  consolidative alloSCT in fit transplant-eligible responders.
+  Newer ALK TKIs (alectinib, brigatinib, lorlatinib) may have CNS
+  advantage but limited ALCL-specific data and more access barrier.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Crizotinib is option for r/r ALK+ ALCL per NCI-9015; rapid responses, bridge to SCT consolidation; Cat 2A"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "ALK TKIs (crizotinib, alectinib) are recognized 2L+ option for r/r ALK+ ALCL; particularly useful as bridge to alloSCT"
+
+known_controversies:
+  - topic: "Crizotinib vs brentuximab vedotin as 2L+ for ALK+ ALCL"
+    positions:
+      - position: "BV-mono — broader applicability (works ALK+/ALK-), 5-y OS data mature"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Crizotinib — selective for ALK+ subset, oral, lower toxicity vs BV"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "BV-mono first as default 2L+; crizotinib if BV-naïve patient + ALK+ + access advantage; consider sequence"
+  - topic: "Crizotinib vs newer ALK TKIs (alectinib, brigatinib, lorlatinib) for r/r ALK+ ALCL"
+    positions:
+      - position: "Crizotinib — established NCI-9015 data, accessible in UA via NSCLC pathway"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Newer ALK TKIs — CNS penetration advantage, second-generation resistance coverage"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Limited ALCL-specific data with newer agents"
+    our_default: "Crizotinib first (access + data); switch to newer TKI on resistance only"
+
+do_not_do:
+  - "НЕ призначати без verified ALK rearrangement (IHC + FISH) — drug effective тільки в ALK+ subset (~70% systemic ALCL)."
+  - "НЕ ігнорувати baseline + serial QTc + visual examinations — visual disturbances (60%), QTc prolongation, bradycardia."
+  - "НЕ комбінувати з QT-prolonging drugs без strict monitoring."
+  - "НЕ призначати при concomitant strong CYP3A inhibitor без dose reduction."
+  - "НЕ ігнорувати pneumonitis warning — cough/fever/dyspnea = HRCT immediately + permanent discontinuation if confirmed."
+  - "НЕ забути плану до alloSCT consolidation в fit transplant-eligible responders — TKI монотерапія не куративна."
+  - "НЕ забути off-label disclosure — drug registered для ALK+ NSCLC; ALCL off-label використання потребує MDT documentation."
+  - "НЕ припиняти при mild visual disturbances (~60% common, transient) — counseling + dose reduction для persistent."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  r/r ALK+ ALCL only. Off-label use; UA-accessible via existing
+  NSCLC supply route. Bridge to alloSCT consolidation standard.

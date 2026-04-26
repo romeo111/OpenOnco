@@ -1,0 +1,54 @@
+id: REG-BV-MONO-SYSTEMIC-ALCL
+name: "Brentuximab vedotin monotherapy (1.8 mg/kg IV q3 weeks × up to 16 cycles) for r/r systemic ALCL"
+name_ua: "Брентуксимаб ведотин монотерапія (1.8 mg/kg IV q3 тижні × до 16 циклів) для рефрактерної системної ALCL"
+alternate_names: ["BV-mono sALCL", "SGN-35-005-style", "Adcetris r/r sALCL"]
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg (max 180 mg)"
+    schedule: "IV over 30 min every 21 days × up to 16 cycles or progression / toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 16 (longer if sustained CR + toxicity acceptable)"
+toxicity_profile: moderate
+
+premedication: ["Antihistamine + acetaminophen before infusion (especially first 2 doses)"]
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Hold; reduce to 1.2 mg/kg on resume; discontinue if Grade ≥3"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade ≥4 neutropenia"
+    modification: "Hold until recovery; G-CSF support if recurrent; reduce dose"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Pre-existing Grade ≥2 neuropathy"
+    modification: "ABSOLUTE CI — choose alternative regimen (bendamustine, pralatrexate)"
+  - condition: "Active concomitant bleomycin therapy"
+    modification: "ABSOLUTE CI — additive lethal pulmonary toxicity"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Brentuximab registered in Ukraine but NOT NSZU-reimbursed for r/r
+    ALCL indication; private pay / fundraising / charitable supply
+    pathway. ALCL is universally CD30+ → strongest brentuximab
+    response of any T-cell lymphoma — funding pathway worth pursuing.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  SGN-35-005 trial (Pro 2012, follow-up 2017): r/r systemic ALCL
+  (n=58) — ORR 86%, CR 57%, mDOR 12.6 mo, 5-year OS ~60%. Best
+  response rates of any single agent in r/r T-cell lymphoma. ALCL
+  is universally CD30+ (~100% by IHC) — strongest BV target. Often
+  used as bridge to autoSCT or alloSCT in transplant-eligible
+  responders. Also used in primary cutaneous ALCL per ALCANZA-style
+  schedule.

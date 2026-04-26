@@ -1,0 +1,60 @@
+id: REG-CRIZOTINIB-ALCL
+name: "Crizotinib 250 mg PO BID continuous — r/r ALK+ ALCL"
+name_ua: "Кризотиніб 250 мг PO BID безперервно — рефрактерна ALK+ ALCL"
+alternate_names: ["Crizo mono ALCL", "NCI-9015 regimen", "Xalkori r/r ALK+ ALCL"]
+
+components:
+  - drug_id: DRUG-CRIZOTINIB
+    dose: "250 mg PO BID"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: moderate
+
+premedication: ["Antiemetic prn for first 1-2 weeks"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥3 transaminase elevation"
+    modification: "Hold; resume at 200 mg PO BID after recovery to ≤Grade 1; discontinue if recurrent"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "QTc >500 ms OR symptomatic bradycardia HR <50"
+    modification: "Hold; correct K/Mg; cardiology consult; resume at reduced dose if benefit justifies"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Suspected pneumonitis (cough, fever, dyspnea)"
+    modification: "Hold immediately; HRCT chest; if confirmed pneumonitis, discontinue permanently + corticosteroids"
+    rationale: "Pneumonitis is rare but can be fatal"
+  - condition: "Concomitant strong CYP3A inhibitor"
+    modification: "Reduce to 250 mg PO once daily"
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Avoid"
+  - condition: "Severe renal impairment (CrCl <30)"
+    modification: "Reduce to 250 mg PO once daily"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Crizotinib registered + НСЗУ-reimbursed for ALK-rearranged
+    metastatic NSCLC. ALK+ ALCL is OFF-LABEL (different indication
+    from registration) — funding pathway via existing NSCLC supply
+    after MDT-justified prescription. NCI-9015 supports use.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  NCI-9015 / Mossé 2017 (children + AYA): r/r ALK+ ALCL — ORR 88-90%,
+  rapid responses (within 4 weeks), durable in adults with continuous
+  therapy. ALK+ ALCL has NPM1-ALK fusion in ~70% (other ALK partners
+  also responsive). Off-label use for adult ALCL (FDA approval is for
+  pediatric ALK+ ALCL ≥1 year of age + some adult R/R). Bridge to
+  alloSCT in fit transplant-eligible responders standard. Practical
+  advantage in UA: drug on-shelf via existing NSCLC supply route.
+  Newer ALK TKIs (alectinib, brigatinib, lorlatinib) may have CNS
+  advantage but limited ALCL-specific data.

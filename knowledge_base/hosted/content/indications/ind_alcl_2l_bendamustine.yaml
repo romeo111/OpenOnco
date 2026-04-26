@@ -1,0 +1,104 @@
+id: IND-ALCL-2L-BENDAMUSTINE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ALCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after ≥1 prior systemic line"
+    - "Both ALK+ and ALK- ALCL eligible"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-BENDAMUSTINE-PTCL
+concurrent_therapy: []
+followed_by: []  # bridge to alloSCT in fit transplant-eligible responders
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50% (BENTLY mixed cohort)"
+  complete_response: "~28%"
+  progression_free_survival: "Median PFS ~3-4 mo; mDOR ~6 mo for responders"
+  overall_survival_5y: "~25-35% (heavily pretreated baseline poor)"
+
+hard_contraindications: [CI-HBV-NO-PROPHYLAXIS, CI-SEVERE-CYTOPENIA-BR]
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC  # CD30 IHC same workflow
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-LN-CORE-BIOPSY
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+  - TEST-FIB4
+  - TEST-RENAL-FUNCTION-EGFR
+desired_tests: []
+
+rationale: >
+  Bendamustine monotherapy for r/r ALCL (and broader r/r PTCL). Useful
+  broad salvage option per BENTLY (Damaj 2013): ORR 50%, CR 28% in
+  mixed PTCL cohort including ALCL subset. Distinct mechanism
+  (alkylator) from BV / ALK TKI / HDAC inhibitor — useful in heavily
+  pretreated. Practical UA advantage: registered + НСЗУ-reimbursed
+  for B-cell lymphoma indications, accessible off-label for ALCL
+  via existing supply pathway (vs brentuximab funding gap and
+  belinostat / romidepsin / pralatrexate not registered).
+  Particularly valuable when: brentuximab not accessible, CD30 loss
+  at relapse (rare in ALCL but possible), or pre-existing neuropathy
+  prevents BV.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Bendamustine is option for r/r PTCL incl ALCL after BV failure or BV intolerance per BENTLY; Cat 2A"
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Bendamustine recognized salvage option for r/r PTCL when targeted therapies failed or inaccessible"
+
+known_controversies:
+  - topic: "Bendamustine vs gemcitabine-based salvage for r/r ALCL"
+    positions:
+      - position: "Bendamustine — single-agent feasibility, manageable toxicity"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Gemcitabine ± oxaliplatin — alternative non-cross-resistant salvage"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Bendamustine first when access + tolerability favorable; gem-based as alternative"
+  - topic: "Add brentuximab to bendamustine (BV-Benda) for r/r ALCL pre-SCT"
+    positions:
+      - position: "BV-Benda combination — deeper responses pre-SCT bridge"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Single agents alone — less toxicity, sequential approach"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Bendamustine mono if BV failed; BV-Benda combination only as pre-SCT bridge with MDT input"
+
+do_not_do:
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — alkylator immunosuppression risk."
+  - "Не призначати при тяжкій цитопенії на baseline (CI-SEVERE-CYTOPENIA-BR)."
+  - "Не використовувати full-dose bendamustine при FIB-4 >3.25 — редукція до 70 mg/m²."
+  - "Не використовувати full-dose при CrCl 30-60 — редукція до 70 mg/m²."
+  - "Не забути PJP prophylaxis (cotrimoxazole) — продовжувати ≥6 міс після останньої дози."
+  - "Не пропускати плану до alloSCT consolidation в fit transplant-eligible responders — natural history без consolidation поганий."
+  - "Не забути off-label disclosure — drug registered for B-cell lymphomas; ALCL off-label через existing supply route."
+  - "Не комбінувати з brentuximab без MDT input — combination toxicity (cytopenia + infection) substantial."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track broad
+  salvage for r/r ALCL. Practical advantage in UA — accessible
+  off-label via B-cell lymphoma supply pathway. Useful when BV
+  inaccessible or contraindicated by neuropathy.

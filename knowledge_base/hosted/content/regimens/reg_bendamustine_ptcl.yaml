@@ -1,0 +1,61 @@
+id: REG-BENDAMUSTINE-PTCL
+name: "Bendamustine monotherapy 90 mg/m² days 1+2 q21d — r/r PTCL incl ALCL"
+name_ua: "Бендамустин монотерапія 90 мг/м² дні 1+2 кожні 21 день — рефрактерна PTCL/ALCL"
+alternate_names: ["Bendamustine mono PTCL", "BENTLY-style"]
+
+components:
+  - drug_id: DRUG-BENDAMUSTINE
+    dose: "90 mg/m² IV"
+    schedule: "Days 1 and 2 of each 21-day cycle, up to 6 cycles or until progression"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 6 (longer if sustained response + tolerability)"
+toxicity_profile: moderate
+
+premedication:
+  - "5-HT3 antagonist + dexamethasone before each infusion"
+  - "Hydration + allopurinol cycle 1 if high-burden disease"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-ANTIEMETIC-PREMED
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "FIB-4 >3.25 OR compensated cirrhosis"
+    modification: "Reduce bendamustine to 70 mg/m² days 1+2"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "CrCl 30-60"
+    modification: "Reduce bendamustine to 70 mg/m²"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "ANC <1000 OR platelets <75K cycle start"
+    modification: "Delay cycle ≥7 days; G-CSF support if recurrent"
+  - condition: "Grade ≥3 myelosuppression after cycle"
+    modification: "Reduce to 70 mg/m²; G-CSF support next cycle"
+  - condition: "Severe infection during cycle"
+    modification: "Hold; treat infection; resume at 70 mg/m²"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Bendamustine registered + НСЗУ-reimbursed for B-cell lymphoma
+    indications (CLL, FL, MZL, MCL). PTCL/ALCL is OFF-LABEL — practical
+    advantage of on-shelf availability via existing B-cell lymphoma
+    supply route after MDT-justified prescription. Salvage option when
+    brentuximab not accessible.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  BENTLY trial (Damaj 2013): r/r PTCL — ORR 50%, CR 28% in mixed cohort
+  (incl ALCL, AITL, PTCL NOS). Useful broad salvage option, particularly
+  when brentuximab not accessible. Alkylator-driven mechanism, distinct
+  from HDAC / ALK TKI / brentuximab — useful in heavily pretreated.
+  AITL subgroup especially responsive. HBV screening + entecavir
+  prophylaxis if HBsAg+ or anti-HBc+ MANDATORY (immunosuppression risk).
+  Often used as bridge to allo / autoSCT in transplant-eligible
+  responders.
