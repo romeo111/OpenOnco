@@ -1,0 +1,88 @@
+id: REG-AV-HEPATIC-MODIFIED
+name: "AV (Doxorubicin + Vinblastine, ABVD-modified for HL with severe hepatic impairment Child-Pugh C)"
+name_ua: "AV (Доксорубіцин + Вінбластин, ABVD-модифікований для HL з тяжкою печінковою недостатністю Child-Pugh C)"
+alternate_names:
+  - "AV"
+  - "Modified ABVD hepatic"
+  - "ABVD without bleomycin/dacarbazine"
+
+components:
+  - drug_id: DRUG-DOXORUBICIN
+    dose: "25 mg/m² IV (full ABVD dose; doxorubicin not significantly hepatically dose-adjusted unless bilirubin >3)"
+    schedule: "days 1 and 15 of each 28-day cycle"
+    route: IV
+  - drug_id: DRUG-VINBLASTINE
+    dose: "6 mg/m² IV (full ABVD dose; reduce 50% if bilirubin 1.5-3, hold if >3)"
+    schedule: "days 1 and 15 of each 28-day cycle"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "2-6 cycles depending on stage and response (PET-adapted); reassess hepatic function before each cycle"
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic — moderate-high emetogenicity (5HT3 + dexamethasone; ondansetron 8 mg IV pre)"
+  - "Doxorubicin: extravasation precautions (vesicant — central line preferred for repeated cycles)"
+  - "Vinblastine: extravasation precautions (vesicant)"
+mandatory_supportive_care:
+  - SUP-ANTIEMETIC-PREMED
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Bilirubin 1.2-3 mg/dL"
+    modification: "Doxorubicin 50% (12.5 mg/m²); vinblastine 50% (3 mg/m²)"
+    rationale: "Both biliary excretion; hepatic dysfunction accumulates"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Bilirubin >3 mg/dL"
+    modification: "Hold doxorubicin AND vinblastine; reassess weekly; consider bridging local therapy (RT to nodal disease) until hepatic function improves"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Baseline LVEF <50%"
+    modification: "Avoid doxorubicin entirely; consider brentuximab-AVD (BV-AVD) or RT-only for limited-stage; cardiology consult"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Cumulative doxorubicin >300 mg/m²"
+    modification: "Consider switching to non-anthracycline regimen (e.g., BV monotherapy, GVD); LVEF assessment"
+    rationale: "Cumulative doxorubicin cardiotoxicity"
+  - condition: "Hepatic encephalopathy / refractory ascites (Child-Pugh C decompensated)"
+    modification: "Hold all chemotherapy; supportive care + hepatology; transplant evaluation if HL is the driver of liver dysfunction (rare); consider single-agent low-dose vinblastine if absolutely required"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Доксорубіцин і вінбластин — обидва реімбурсуються НСЗУ; це off-protocol дозова адаптація стандартного ABVD для пацієнтів з тяжкою печінковою недостатністю, де блеоміцин (легенева токсичність + хеп екскреція) і DTIC/дакарбазин (виражена hepatotoxicity, hepatic veno-occlusive disease ризик) видалені."
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  ABVD = doxorubicin + bleomycin + vinblastine + dacarbazine. In
+  severe hepatic impairment (Child-Pugh C, often from HL infiltration
+  of liver / bulky abdominal disease compressing biliary tree),
+  bleomycin (pulmonary toxicity additive risk; hepatic metabolism)
+  and dacarbazine (significant hepatotoxicity; rare hepatic veno-
+  occlusive syndrome) carry unacceptable risk. Modified AV (doxo +
+  vinblastine only) preserves the two most active agents while
+  removing the two with the worst hepatic / pulmonary safety in this
+  setting. Reassess Child-Pugh weekly initially; reintroduce DTIC or
+  bleomycin once bilirubin normalizes if HL response is partial. For
+  newly-diagnosed advanced HL with severe hepatic dysfunction,
+  brentuximab-AVD (BV + AVD; BV replaces bleomycin) is the better
+  evidence-based choice if Bv accessible; AV is a second-line bridge
+  when BV unavailable.
+notes_ua: >
+  ABVD = доксорубіцин + блеоміцин + вінбластин + дакарбазин. При
+  тяжкій печінковій недостатності (Child-Pugh C, часто від HL
+  інфільтрації печінки / об'ємного абдомінального захворювання, що
+  стискає жовчні шляхи) блеоміцин (адитивна легенева токсичність;
+  печінкова метаболізація) і дакарбазин (значна гепатотоксичність,
+  рідкісний печінковий вено-оклюзивний синдром) несуть неприйнятний
+  ризик. Модифікований AV (тільки доксо + вінбластин) зберігає два
+  найактивніших агенти, видаляючи два з найгіршим профілем безпеки.
+  При нововиявленому поширеному HL з тяжкою печінковою дисфункцією
+  brentuximab-AVD (BV + AVD; BV замінює блеоміцин) — кращий доказово
+  обґрунтований вибір при доступності BV; AV — лінія другого вибору-
+  міст при недоступності BV.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

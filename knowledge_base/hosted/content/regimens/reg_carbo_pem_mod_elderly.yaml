@@ -1,0 +1,79 @@
+id: REG-CARBO-PEM-MOD-ELDERLY
+name: "Carboplatin + Pemetrexed (attenuated, NSCLC non-squamous elderly ≥75y)"
+name_ua: "Карбоплатин + Пеметрексед (ослаблений, НДРЛ несквамозний літні ≥75 р)"
+alternate_names:
+  - "Carbo-Pem elderly"
+  - "Modified carbo-pem ≥75"
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 4 (Calvert formula; reduced from standard AUC 5-6)"
+    schedule: "day 1 of each 21-day cycle × 4 cycles"
+    route: IV
+  - drug_id: DRUG-PEMETREXED
+    dose: "400 mg/m² IV (reduced from standard 500 mg/m²)"
+    schedule: "day 1 of each 21-day cycle × 4 cycles induction; continue as maintenance until progression"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "4 cycles induction; pemetrexed maintenance until progression / unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Folic acid 400-1000 µg PO daily (start 7d before, continue throughout pemetrexed)"
+  - "Vitamin B12 1000 µg IM q9w (start ≤7d before first dose, continue q9w)"
+  - "Dexamethasone 4 mg PO BID days -1, 0, +1 (rash prophylaxis)"
+  - "Antiemetic — moderate emetogenicity (5HT3 + dex)"
+mandatory_supportive_care:
+  - SUP-ANTIEMETIC-PREMED
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CrCl 45-60 mL/min"
+    modification: "Carboplatin AUC 3 (Calvert with measured CrCl); pemetrexed unchanged at 400 mg/m²"
+    source_refs: [SRC-NCCN-NSCLC-2025]
+  - condition: "CrCl <45 mL/min"
+    modification: "Pemetrexed contraindicated; consider gemcitabine + carboplatin or single-agent regimen"
+    source_refs: [SRC-NCCN-NSCLC-2025]
+  - condition: "ECOG 2 with comorbidities"
+    modification: "Consider single-agent carboplatin OR docetaxel; full doublet may not be tolerated"
+    source_refs: [SRC-NCCN-NSCLC-2025]
+  - condition: "G≥3 cytopenia"
+    modification: "Hold; resume next cycle at 75% of both agents on recovery; G-CSF if febrile neutropenia"
+  - condition: "G≥2 stomatitis OR fatigue persistent"
+    modification: "Pemetrexed dose reduction to 75%"
+  - condition: "Hearing loss / ototoxicity concern"
+    modification: "Carboplatin (which is preferred over cisplatin in elderly already) — continue with audiogram monitoring"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Карбоплатин + пеметрексед — реімбурсуються НСЗУ для НДРЛ несквамозного метастатичного."
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  IFCT-0501 / IFCT-0803 and meta-analyses (Quoix 2011 Lancet for
+  carbo-paclitaxel weekly elderly schedule) established the principle
+  of platinum-doublet benefit in fit elderly (≥70-75y) with attenuated
+  dosing. For non-squamous histology, carbo-pem at AUC 4 + 400 mg/m²
+  is a commonly-used reduced-dose schedule that preserves efficacy
+  while lowering G≥3 cytopenia and fatigue in elderly. Add
+  pembrolizumab (KEYNOTE-189 elderly subgroup, fit ≥75) when PD-L1
+  not low and no contraindication. Geriatric assessment (G8 / CGA)
+  recommended before initiating chemo in this age group.
+notes_ua: >
+  IFCT-0501 / IFCT-0803 і мета-аналізи (Quoix 2011 Lancet для carbo-
+  paclitaxel weekly elderly) встановили принцип platinum-doublet
+  користі у fit elderly (≥70-75р) з ослабленим дозуванням. Для
+  несквамозної гістології carbo-pem AUC 4 + 400 мг/м² — поширений
+  редуковано-дозовий режим, що зберігає ефективність зі зниженням
+  G≥3 цитопенії і втоми у літніх. Додати пембролізумаб (KEYNOTE-189
+  субгрупа elderly, fit ≥75) при невисокому PD-L1 і відсутності
+  протипоказань. Геріатрична оцінка (G8 / CGA) рекомендується.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

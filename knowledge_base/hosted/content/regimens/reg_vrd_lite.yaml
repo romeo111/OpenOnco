@@ -1,0 +1,84 @@
+id: REG-VRD-LITE
+name: "VRd-lite (Bortezomib + Lenalidomide + Dexamethasone, attenuated for elderly/frail MM)"
+name_ua: "VRd-lite (Бортезоміб + Леналідомід + Дексаметазон, ослаблений для літніх/слабких MM)"
+alternate_names:
+  - "VRD-lite"
+  - "Modified VRd elderly"
+  - "O'Donnell VRd-lite"
+
+components:
+  - drug_id: DRUG-BORTEZOMIB
+    dose: "1.3 mg/m² SC weekly"
+    schedule: "days 1, 8, 15, 22 of each 35-day cycle"
+    route: SC
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "15 mg PO daily"
+    schedule: "days 1-21 of each 35-day cycle"
+    route: PO
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "20 mg PO weekly (10 mg if age >80 or very frail)"
+    schedule: "days 1, 8, 15, 22 of each 35-day cycle"
+    route: PO
+
+cycle_length_days: 35
+total_cycles: "9 cycles induction (per O'Donnell schedule); then lenalidomide-dex maintenance until progression"
+toxicity_profile: moderate
+
+premedication:
+  - "Acyclovir 400 mg PO BID (HSV/VZV prophylaxis — bortezomib mandatory)"
+  - "Aspirin 81-100 mg PO daily (VTE prophylaxis with lenalidomide; LMWH if higher VTE risk)"
+mandatory_supportive_care:
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-MM-VTE-PROPHYLAXIS
+  - SUP-MM-BONE-PROTECTION
+monitoring_schedule_id: MON-VRD-REGIMEN
+
+dose_adjustments:
+  - condition: "Age >80 OR IMWG frailty score ≥2"
+    modification: "Dexamethasone 10 mg weekly; consider lenalidomide 10 mg"
+    rationale: "Reduces steroid + IMiD toxicity in very elderly / frail"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Peripheral neuropathy G≥2"
+    modification: "Reduce bortezomib to 1.0 mg/m² SC weekly OR every other week; switch to ixazomib if persistent"
+    rationale: "Weekly SC bortezomib already substantially reduces neuropathy vs twice-weekly IV; further dose-modify if breakthrough"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CrCl 30-60 mL/min"
+    modification: "Lenalidomide 10 mg daily; bortezomib unchanged; dexamethasone unchanged"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CrCl <30 mL/min (no dialysis)"
+    modification: "Lenalidomide 5 mg daily (or 10 mg every other day)"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Cytopenias (ANC <1000 OR plt <50K)"
+    modification: "Hold lenalidomide; resume at next-lower dose on recovery"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Бортезоміб, леналідомід, дексаметазон — реімбурсуються НСЗУ для MM 1L (включаючи літніх непридатних до трансплантації)."
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  O'Donnell et al. (Br J Haematol 2018) — VRd-lite phase II in
+  transplant-ineligible MM (median age 73): ORR ~86%, ≥VGPR ~66%,
+  median PFS 35 mo, with substantially less toxicity than full-dose
+  VRd. Weekly bortezomib SC + reduced lenalidomide (15 mg vs 25 mg)
+  + weekly dexamethasone (20 mg vs 40 mg). 35-day cycle (vs 21-day
+  full VRd) gives recovery time. Reasonable alternative to D-Rd
+  (MAIA) when daratumumab not accessible. Frailty-adapted dosing
+  per IMWG.
+notes_ua: >
+  O'Donnell et al. (Br J Haematol 2018) — VRd-lite фаза II в
+  непридатних до трансплантації MM (медіанний вік 73): ORR ~86%,
+  ≥VGPR ~66%, медіанна PFS 35 міс, з суттєво меншою токсичністю,
+  ніж повна доза VRd. Бортезоміб щотижнево ПК + зменшений
+  леналідомід (15 мг vs 25 мг) + дексаметазон щотижнево (20 мг vs
+  40 мг). 35-денний цикл (vs 21-денний повний VRd) дає час на
+  відновлення. Розумна альтернатива D-Rd (MAIA), коли даратумумаб
+  недоступний.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
