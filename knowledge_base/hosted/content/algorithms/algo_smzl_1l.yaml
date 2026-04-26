@@ -18,7 +18,8 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-SMZL-INFECTION-SCREENING  # HCV RNA / anti-HCV positive
-        - condition: "Compensated liver function"
+        - condition: "HCV RNA detectable (anti-HCV alone insufficient)"
+        - condition: "Compensated liver function (no decompensated cirrhosis)"
     if_true:
       result: IND-SMZL-1L-HCV-POSITIVE
     if_false:
@@ -34,7 +35,23 @@ decision_tree:
       result: IND-SMZL-1L-RITUXIMAB
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-MZL-2024]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-27"
 notes: >
-  HCV testing MANDATORY. If HCV+ → DAA pathway. Decompensated cirrhosis
-  = HCV-positive route blocked → rituximab fallback.
+  HCV testing MANDATORY. If HCV-RNA detectable AND compensated liver →
+  DAA pathway (REG-DAA-SOF-VEL). Anti-HCV-seropositive but HCV-RNA
+  undetectable (post-spontaneous-clearance or post-prior-DAA) does NOT
+  qualify for IND-SMZL-1L-HCV-POSITIVE — route to rituximab. Decompensated
+  cirrhosis = HCV-positive route blocked → rituximab fallback +
+  hepatology consult.
+
+  Etiology rails (parallel to indication selection):
+
+  - HCV (driver) — primary algorithm step (above).
+  - HBV (HBsAg+ OR anti-HBc+) — entecavir before rituximab on the HCV-
+    negative arm; also coordinated with DAA on HCV+ arm if HBV+ co-
+    infection (ESMO MZL 2024 §HBV-coinfection note: occult HBV
+    reactivation under anti-CD20 + DAA-induced HCV clearance is a
+    documented risk requiring concurrent HBV antiviral).
+  - HIV — rare in SMZL; standard ART continuation; rituximab acceptable.
+
+  BIO-HBV-STATUS, BIO-HIV-STATUS missing — flagged.
