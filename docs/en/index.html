@@ -44,28 +44,121 @@
   </section>
 
   <section class="how">
-    <h2>Чому це потрібно і як це працює</h2>
+    <h2>Why it matters and how it works</h2>
     <p class="how-lead">
-      Щоб призначити лікування, лікар або клінічний фармаколог витрачає 2–4&nbsp;години
-      ручної роботи: відкриває NCCN PDF, звіряє ESMO guideline, перечитує МОЗ протокол,
-      перевіряє НСЗУ-формуляр на доступність препарату, шукає dose adjustments для нирок
-      чи печінки, додає supportive care, не забуває про вакцинації та профілактику
-      опортуністичних інфекцій. І так — для кожного пацієнта, кожного разу заново.
-      Будь-яка пропущена контраіндикація може коштувати життя.
+      To prescribe a treatment, an oncologist or clinical pharmacologist spends 2–4&nbsp;hours of manual work: opening the NCCN PDF, cross-checking the ESMO guideline, re-reading the MoH protocol, verifying the national formulary for drug availability, looking up renal/hepatic dose adjustments, adding supportive care, remembering vaccinations and opportunistic-infection prophylaxis. Every time, for every patient, from scratch. Any missed contraindication can cost a life.
     </p>
     <p class="how-lead">
-      OpenOnco автоматизує цю чорнову роботу: <strong>логіка така сама, як у класичної
-      мультидисциплінарної команди (MDT)</strong>, посиленої шаром аналітичних алгоритмів.
-      Кілька спеціалістів навколо пацієнта, обговорення випадку, узгоджений план,
-      повернення до випадку при появі нових даних. Ми просто оформлюємо це як structured
-      engine — кожен «віртуальний лікар» це модуль із власною версією, правилами та
-      списком джерел. Лікар отримує готовий проєкт плану з усіма посиланнями і лише
-      верифікує та коригує його під конкретного пацієнта.
+      OpenOnco automates the grunt work: <strong>the logic is the same as a classic multidisciplinary team (MDT)</strong>, augmented by an analytical layer. Several specialists around the patient, case discussion, an agreed plan, return to the case when new data arrives. We simply formalize this as a structured engine — each &laquo;virtual specialist&raquo; is a versioned module with its own rules and source list. The clinician receives a ready draft plan with all citations and only verifies and tunes it for the specific patient.
     </p>
-    <figure class="how-fig">
-      <img src="/MDT-light.png" alt="Мультидисциплінарна команда, посилена шаром аналітичних алгоритмів — як спеціалісти спільно ухвалюють план лікування пацієнта" loading="lazy">
-      <figcaption>Кожна роль (Хірург-онколог, Хіміотерапевт, Радіолог, Патолог, Молекулярний генетик, Радіотерапевт, Психолог/паліатив тощо) у нашій системі — це <strong>скіл</strong> із власною версією. Активується автоматично при умовах профілю пацієнта і додає до плану свої open-questions, contraindications, supportive care. Деталі того, що зараз у KB і як працює engine — на сторінці <a href="/capabilities.html">Можливості</a>.</figcaption>
-    </figure>
+
+    <div class="trust-strip" role="note">
+      <div class="trust-pill trust-pill--no">
+        <span class="trust-pill-mark">×</span>
+        <span class="trust-pill-text"><strong>AI is not the doctor.</strong> No LLM decides what to prescribe — clinical logic runs in a declarative rule engine.</span>
+      </div>
+      <div class="trust-pill trust-pill--no">
+        <span class="trust-pill-mark">×</span>
+        <span class="trust-pill-text"><strong>No external LLM calls</strong> when a plan is built. Every algorithm is open and auditable line-by-line on GitHub.</span>
+      </div>
+      <div class="trust-pill trust-pill--yes">
+        <span class="trust-pill-mark">✓</span>
+        <span class="trust-pill-text">Lookups go <strong>only to scientific databases</strong>: PubMed, ClinicalTrials.gov, DailyMed, openFDA, NCCN/ESMO, MoH.</span>
+      </div>
+    </div>
+
+    <div class="dataflow" aria-label="OpenOnco — data flow from patient profile to two treatment plans">
+      <div class="dataflow-stage" data-stage="1">
+        <div class="dataflow-num">01 · INPUT</div>
+        <div class="dataflow-title">Patient profile</div>
+        <div class="dataflow-body">
+          FHIR R4 / mCODE: diagnosis, stage, histology, biomarkers, labs, prior lines, comorbidities.
+          <div class="biomarker-row" aria-label="Example patient biomarkers">
+            <span class="biomarker">CD30+</span>
+            <span class="biomarker">BCL2/MYC</span>
+            <span class="biomarker">TP53</span>
+            <span class="biomarker">IPI 4</span>
+            <span class="biomarker">eGFR 42</span>
+          </div>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="2">
+        <div class="dataflow-num">02 · VERIFY</div>
+        <div class="dataflow-title">Open-standards verification</div>
+        <div class="dataflow-body">
+          Every diagnosis code, lab value, dose and drug is grounded in a public international standard. No closed vocabularies.
+          <div class="std-row" aria-label="Open standards used for verification">
+            <span class="std-pill">ICD-O-3</span>
+            <span class="std-pill">LOINC</span>
+            <span class="std-pill">RxNorm</span>
+            <span class="std-pill">ATC</span>
+            <span class="std-pill">CTCAE v5</span>
+            <span class="std-pill">NCCN</span>
+            <span class="std-pill">ESMO</span>
+            <span class="std-pill">MoH</span>
+          </div>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="3">
+        <div class="dataflow-num">03 · BIOMARKERS</div>
+        <div class="dataflow-title">Red flags, dose adjustments, links</div>
+        <div class="dataflow-body">
+          A declarative rule engine surfaces risks, auto-adjusts dosing, and wires biomarker → drug → monitoring connections.
+          <ul class="flow-list">
+            <li><span class="rf-tag rf-red">RF</span> 106 red flags across 28 diseases</li>
+            <li><span class="rf-tag rf-amber">DOSE</span> renal / hepatic / age / weight adjustments</li>
+            <li><span class="rf-tag rf-teal">LINK</span> biomarker ↔ regimen ↔ monitoring</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dataflow-arrow" aria-hidden="true">→</div>
+      <div class="dataflow-stage" data-stage="4">
+        <div class="dataflow-num">04 · OUTPUT</div>
+        <div class="dataflow-title">Two plans with full citations</div>
+        <div class="dataflow-body">
+          <strong>Standard</strong> (guideline-grade) + <strong>aggressive</strong> (trials with higher efficacy). Every claim is a versioned citation. Plans refresh automatically as new data arrives.
+        </div>
+      </div>
+    </div>
+
+    <div class="why-today">
+      <h3 class="why-today-h">Why start using it today</h3>
+      <div class="why-today-grid">
+        <div class="why-card">
+          <div class="why-card-h">2–4 hours → 5 minutes</div>
+          <p>Less time on manual NCCN/ESMO/MoH cross-checking, more patients seen. Fewer missed contraindications, less harm.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-h">No black box</div>
+          <p>An LLM is not the decision-maker — a declarative rule engine is, with public code and a public KB. Plans are built <strong>without external LLM calls</strong>; only scientific databases (PubMed, ClinicalTrials.gov, DailyMed, openFDA) are queried. The clinician sees every &laquo;why&raquo; alongside every &laquo;what&raquo;.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-h">Biomarkers you won&rsquo;t miss</div>
+          <p>TP53, CD30, MYD88, eGFR, hepatic function — every flag automatically rewrites the plan: contraindications, dose adjustments, supportive care, monitoring.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-h">New data → instant re-check</div>
+          <p>Fresh labs or clinician decisions update both plans automatically — no need to re-sweep all the sources by hand.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-h">Free, open, forever</div>
+          <p>MIT-style. No paywall, no restrictions for public hospitals. Open-source means it can&rsquo;t quietly disappear or be locked behind investors tomorrow.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card-h">Ready for patients today</div>
+          <p>28 diseases, 106 RFs, clinical sign-off received. First real-patient plans were rated strong by oncologists. There is no reason to wait.</p>
+        </div>
+      </div>
+      <p class="why-today-foot">
+        Every missed biomarker can cost a life. Every hour of manual cross-checking is an hour the patient waits for a decision. The tool is ready today — start with a virtual patient and see your typical case through a layer of open standards.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/en/try.html">Try with a virtual patient →</a>
+        <a class="btn btn-secondary" href="/en/capabilities.html">What&rsquo;s currently in the KB</a>
+      </div>
+    </div>
   </section>
 
   <footer class="page-foot">

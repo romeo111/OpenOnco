@@ -276,20 +276,148 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   font-size: 15px; color: var(--gray-700); max-width: 880px;
   margin-bottom: 22px;
 }
-.how-fig {
-  background: #0a2e1a;  /* dark backdrop matches infograph palette */
-  padding: 24px; border-radius: 12px; text-align: center;
-  margin: 0;
+
+/* Trust strip — sits above the data flow, sets AI/LLM expectations up front. */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 22px 0 18px;
 }
-.how-fig img {
-  max-width: 100%; height: auto; border-radius: 6px;
+.trust-pill {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border-radius: 8px;
+  font-size: 13.5px; line-height: 1.45;
+  border: 1px solid var(--gray-200);
   background: white;
 }
-.how-fig figcaption {
-  margin-top: 14px; font-size: 13px; color: var(--green-100);
-  text-align: left; line-height: 1.55;
+.trust-pill--no { border-left: 3px solid var(--red); }
+.trust-pill--yes { border-left: 3px solid var(--green-600); background: var(--green-50); }
+.trust-pill-mark {
+  font-family: var(--font-mono); font-weight: 700;
+  width: 22px; height: 22px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-size: 14px;
 }
-.how-fig figcaption strong { color: white; }
+.trust-pill--no .trust-pill-mark { background: var(--red-bg); color: var(--red); }
+.trust-pill--yes .trust-pill-mark { background: var(--green-100); color: var(--green-700); }
+.trust-pill-text { color: var(--gray-700); }
+.trust-pill-text strong { color: var(--gray-900); }
+
+/* Data flow — replaces the prior MDT figure. Four stages on a dark backdrop
+   so the open-standards / biomarker chips read as live data, not decoration. */
+.dataflow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 0; align-items: stretch;
+  background: linear-gradient(135deg, #0a2e1a 0%, #0d3f24 60%, #0f4d2c 100%);
+  padding: 26px 22px; border-radius: 12px;
+  margin: 0 0 28px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
+}
+.dataflow-stage {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(220,252,231,.10);
+  border-radius: 10px;
+  padding: 16px 14px;
+  color: var(--green-100);
+  display: flex; flex-direction: column; gap: 9px;
+  min-width: 0;
+}
+.dataflow-stage[data-stage="1"] { border-top: 3px solid var(--teal); }
+.dataflow-stage[data-stage="2"] { border-top: 3px solid #38bdf8; }
+.dataflow-stage[data-stage="3"] { border-top: 3px solid var(--amber); }
+.dataflow-stage[data-stage="4"] { border-top: 3px solid var(--green-500); }
+.dataflow-num {
+  font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--green-100); opacity: .55; letter-spacing: 1px;
+}
+.dataflow-title {
+  font-family: var(--font-display); font-size: 17px;
+  color: white; line-height: 1.25;
+}
+.dataflow-body {
+  font-size: 12.5px; line-height: 1.5;
+  color: rgba(220,252,231,.85);
+}
+.dataflow-body strong { color: white; }
+.dataflow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--green-100); opacity: .35;
+  padding: 0 4px; user-select: none;
+}
+.biomarker-row, .std-row {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
+}
+.biomarker {
+  font-family: var(--font-mono); font-size: 10.5px;
+  background: rgba(220,38,38,.18); color: #fecaca;
+  border: 1px solid rgba(252,165,165,.30);
+  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.std-pill {
+  font-family: var(--font-mono); font-size: 10.5px;
+  background: rgba(13,148,136,.22); color: #99f6e4;
+  border: 1px solid rgba(94,234,212,.30);
+  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
+}
+.flow-list { list-style: none; padding: 0; margin: 4px 0 0; font-size: 12.5px; }
+.flow-list li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 3px 0; color: rgba(220,252,231,.85);
+}
+.rf-tag {
+  font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
+  padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.rf-tag.rf-red { background: var(--red); color: white; }
+.rf-tag.rf-amber { background: var(--amber); color: white; }
+.rf-tag.rf-teal { background: var(--teal); color: white; }
+
+@media (max-width: 980px) {
+  .dataflow { grid-template-columns: 1fr; padding: 18px 14px; }
+  .dataflow-arrow { transform: rotate(90deg); padding: 6px 0; font-size: 18px; }
+}
+
+/* Why-today CTA block — closes the section with concrete reasons + CTA. */
+.why-today {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 26px 24px;
+}
+.why-today-h {
+  font-family: var(--font-display); font-size: 24px;
+  color: var(--green-900); margin-bottom: 16px; line-height: 1.2;
+}
+.why-today-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.why-card {
+  background: var(--green-50);
+  border-left: 3px solid var(--green-600);
+  padding: 13px 15px; border-radius: 6px;
+}
+.why-card-h {
+  font-weight: 600; color: var(--green-900);
+  font-size: 14.5px; margin-bottom: 5px;
+}
+.why-card p {
+  font-size: 13px; color: var(--gray-700); line-height: 1.5;
+}
+.why-card p strong { color: var(--green-900); }
+.why-today-foot {
+  font-size: 14px; color: var(--gray-700);
+  line-height: 1.6; margin-bottom: 18px;
+  background: var(--red-bg);
+  border-left: 3px solid var(--red);
+  border-radius: 0 4px 4px 0;
+  padding: 12px 14px;
+}
 
 /* Gallery */
 .gallery { padding: 32px 0; }
@@ -736,15 +864,49 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: var(--gray-100); color: var(--gray-700);
   padding: 1px 5px; border-radius: 3px;
 }
-.quest-cta { margin-top: 6px; }
+.quest-cta {
+  margin-top: 6px; display: flex; flex-direction: column; gap: 8px;
+}
 .quest-cta button { width: 100%; }
 .quest-cta button:disabled {
   opacity: 0.5; cursor: not-allowed;
 }
-.quest-output {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; min-height: 600px; overflow: hidden;
-  display: flex; flex-direction: column;
+
+/* Plan result modal — replaces the old in-page .quest-output section so
+   the form stays the focus of the page and the rendered plan only shows
+   when the user wants to look at it. */
+.plan-modal {
+  position: fixed; inset: 0; z-index: 9995;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: oo-fadein 0.18s ease-out;
+}
+.plan-modal[hidden] { display: none; }
+.plan-modal-card {
+  background: white; border-radius: 12px;
+  width: min(1000px, 100%); height: min(880px, 92vh);
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+.plan-modal-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 10px 14px; background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+.plan-modal-actions { display: flex; gap: 8px; align-items: center; }
+.plan-modal-card #resultFrame {
+  flex: 1; width: 100%; border: none; background: white;
+}
+.rt-btn-ghost {
+  background: white !important; color: var(--gray-700) !important;
+  border: 1px solid var(--gray-200) !important;
+  font-weight: 700; padding: 6px 10px;
+}
+.rt-btn-ghost:hover {
+  background: var(--gray-100) !important; color: var(--green-700) !important;
 }
 
 @media (max-width: 900px) {
@@ -791,6 +953,73 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }}
 @keyframes oo-spin {{ to {{ transform: rotate(360deg); }} }}
 @keyframes oo-fadein {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
+
+/* Init overlay — first-run engine load with named stages so the doctor
+   sees what's happening instead of mystery lag. Lower z-index than the
+   generating overlay so a generate-click re-uses init for first run, and
+   subsequent clicks use the lighter generating overlay. */
+.init-overlay {{
+  position: fixed; inset: 0; z-index: 9990;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  animation: oo-fadein 0.18s ease-out;
+}}
+.init-overlay[hidden] {{ display: none; }}
+.init-card {{
+  background: white; border-radius: 12px;
+  padding: 28px 36px; max-width: 540px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}}
+.init-card h3 {{
+  margin: 0 0 6px; font-family: var(--font-display);
+  font-size: 22px; color: var(--green-900);
+}}
+.init-lead {{
+  margin: 0 0 18px; font-size: 13px; color: var(--gray-700); line-height: 1.5;
+}}
+.init-stages {{
+  list-style: none; padding: 0; margin: 0 0 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  counter-reset: none;
+}}
+.init-stages .stage {{
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  background: var(--gray-100);
+  font-size: 14px; color: var(--gray-700);
+  transition: background 0.18s, color 0.18s;
+}}
+.init-stages .stage::before {{
+  content: '○'; color: var(--gray-400); font-size: 16px;
+  width: 20px; text-align: center; flex-shrink: 0;
+  font-family: var(--font-mono);
+}}
+.init-stages .stage.active {{
+  background: white; color: var(--green-900);
+  border: 1px solid var(--green-700); font-weight: 500;
+}}
+.init-stages .stage.active::before {{
+  content: '⟳'; color: var(--green-700);
+  display: inline-block;
+  animation: oo-spin 0.9s linear infinite;
+}}
+.init-stages .stage.done {{
+  color: var(--gray-700);
+}}
+.init-stages .stage.done::before {{
+  content: '✓'; color: var(--green-700); font-weight: bold;
+}}
+.init-stages .stage.error {{
+  background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;
+}}
+.init-stages .stage.error::before {{
+  content: '✗'; color: #dc2626;
+}}
+.init-hint {{
+  margin: 0; font-size: 12px; color: var(--gray-600);
+  font-style: italic; line-height: 1.5;
+}}
 
 /* Info pages (capabilities / limitations) */
 .info-page { padding: 32px 0 48px; }
