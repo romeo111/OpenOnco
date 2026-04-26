@@ -1,0 +1,49 @@
+id: RF-CHOLANGIOCARCINOMA-HIGH-RISK-BIOLOGY
+definition: "Actionable molecular alteration in cholangiocarcinoma — FGFR2 fusion / rearrangement, IDH1 R132 mutation, BRAF V600E, HER2 amplification, NTRK fusion, MSI-high / dMMR, or BRCA1/2 mutation — opens a targeted-therapy line distinct from gem-cis-durvalumab and is decisive at progression."
+definition_ua: "Дієвоспроможна молекулярна аберація при холангіокарциномі — FGFR2-фузія/перебудова, мутація IDH1 R132, BRAF V600E, HER2-ампліфікація, NTRK-фузія, MSI-H/dMMR або мутація BRCA1/2 — відкриває таргетну лінію, відмінну від gem-cis-durvalumab, і визначальна при прогресії."
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-FGFR2-FUSION"
+      value: "positive"
+    - finding: "BIO-IDH1-MUTATION"
+      value: "positive"
+    - finding: "BIO-BRAF-V600E"
+      value: "positive"
+    - finding: "BIO-HER2-SOLID"
+      value: "positive"
+    - finding: "BIO-NTRK-FUSION"
+      value: "positive"
+    - finding: "BIO-MSI"
+      value: "high"
+    - finding: "BIO-BRCA-GERMLINE"
+      value: "positive"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-CHOLANGIOCARCINOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-26"
+draft: false
+
+notes: >
+  Intrahepatic cholangiocarcinoma is the most molecularly fertile of
+  GI tumors: FGFR2 fusions (~10–15% iCCA) — pemigatinib (FIGHT-202),
+  futibatinib (FOENIX-CCA2), infigratinib; IDH1 R132 (~15% iCCA) —
+  ivosidenib (ClarIDHy); BRAF V600E (~5%) — dabrafenib + trametinib
+  (ROAR basket); HER2 amp (~5–15% extrahepatic / GBC) — trastuzumab +
+  pertuzumab (MyPathway), zanidatamab (HERIZON-BTC-01); NTRK fusion
+  (<1%) — larotrectinib / entrectinib; MSI-H (~1%) — pembrolizumab
+  (KEYNOTE-158); BRCA — olaparib data emerging. Comprehensive genomic
+  profiling at diagnosis is now standard for advanced biliary cancer
+  (NCCN Cat 1 recommendation level for iCCA). Each positive biomarker
+  re-routes the Algorithm.
