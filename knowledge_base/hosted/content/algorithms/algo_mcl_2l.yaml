@@ -1,0 +1,70 @@
+id: ALGO-MCL-2L
+applicable_to_disease: DIS-MCL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+/relapsed MCL Indication. Three tracks: (1) cBTKi-naive at
+  1L progression → acalabrutinib (preferred 2L BTKi, better cardiac
+  safety than ibrutinib); (2) post-cBTKi failure with BTK-C481 mutation
+  OR clinical resistance → pirtobrutinib (non-covalent, retains
+  activity vs C481-mut); (3) post-cBTKi AND CAR-T-eligible (age ≤70,
+  fit) → brexucabtagene autoleucel (CAR-T, durable 2-yr remission).
+
+output_indications:
+  - IND-MCL-2L-ACALABRUTINIB
+  - IND-MCL-3L-PIRTOBRUTINIB
+  - IND-MCL-3L-BREXUCEL-CART
+
+default_indication: IND-MCL-2L-ACALABRUTINIB
+alternative_indication: IND-MCL-3L-BREXUCEL-CART
+
+decision_tree:
+  # Step 1 — 1L progression, cBTKi-naive: acalabrutinib first.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "1L progression (post-chemo or post-BTKi+R from 1L algo)"
+        - condition: "cBTKi-naive (no prior ibrutinib/acalabrutinib/zanubrutinib)"
+    if_true:
+      result: IND-MCL-2L-ACALABRUTINIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — post-cBTKi failure + CAR-T-eligible → brexucel preferred.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Post-cBTKi failure (progression OR BTK-C481 mutation OR clinical resistance)"
+        - condition: "CAR-T-eligible: age ≤70, ECOG ≤1, adequate organ function"
+        - condition: "CAR-T center referral feasible"
+    if_true:
+      result: IND-MCL-3L-BREXUCEL-CART
+    if_false:
+      next_step: 3
+
+  # Step 3 — post-cBTKi failure, CAR-T-ineligible → pirtobrutinib.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Post-cBTKi failure AND CAR-T-ineligible"
+        - condition: "BTK-C481 mutation documented"
+    if_true:
+      result: IND-MCL-3L-PIRTOBRUTINIB
+    if_false:
+      result: IND-MCL-2L-ACALABRUTINIB
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  OOS / wiring gaps:
+  (1) Bridging therapy for brexucel (rituximab, BTKi continuation, RT)
+  not modeled as separate indication.
+  (2) Lisocabtagene maraleucel (TRANSCEND-NHL-001 MCL cohort) FDA-
+  approved alternative to brexucel — not modeled.
+  (3) Venetoclax-based combos for post-BTKi MCL not modeled.
+  (4) Allogeneic SCT for fit younger post-CAR-T relapse — outside KB
+  scope (transplant referral handled in MDT brief).
+  (5) RF-MCL-BLASTOID-OR-TP53 fires at 1L only; recurrence at relapse
+  doesn't switch indication here but should surface in trace.
