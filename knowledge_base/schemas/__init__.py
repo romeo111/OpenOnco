@@ -29,6 +29,7 @@ from .plan import (
     Plan,
     PlanAnnotation,
     PlanTrack,
+    VariantActionabilityHit,
 )
 from .questionnaire import (
     QGroup,
@@ -101,5 +102,6 @@ __all__ = [
     "SupportiveCare",
     "SuspicionSnapshot",
     "Test",
+    "VariantActionabilityHit",
     "WorkupStep",
 ]

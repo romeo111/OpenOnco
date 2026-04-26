@@ -41,8 +41,10 @@ from knowledge_base.schemas import (
     FDAComplianceMetadata,
     Plan,
     PlanTrack,
+    VariantActionabilityHit,
 )
 from knowledge_base.validation.loader import load_content
+from ._actionability import find_matching_actionability
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
@@ -457,6 +459,22 @@ def generate_plan(
         )
     except Exception as exc:
         result.warnings.append(f"access matrix skipped: {exc}")
+
+    # Variant actionability (ESCAT / OncoKB) — match patient biomarkers
+    # against BiomarkerActionability cells for this disease. Render-time
+    # context only; engine never re-reads tier values to rank tracks
+    # (CHARTER §8.3 — tracks come from the declarative Algorithm above).
+    try:
+        hits = find_matching_actionability(
+            patient.get("biomarkers") or {},
+            disease_id,
+            entities,
+        )
+        result.plan.variant_actionability = [
+            VariantActionabilityHit(**h) for h in hits
+        ]
+    except Exception as exc:
+        result.warnings.append(f"variant actionability skipped: {exc}")
 
     return result
 
