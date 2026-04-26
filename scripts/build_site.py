@@ -3359,25 +3359,17 @@ def _render_capabilities_uk(stats) -> str:
         </div>
 
         <div class="num-card">
-          <div class="num-big">{n_indications}</div>
-          <div class="num-lbl">Показання (Indications)</div>
-          <div class="num-detail">{n_inds_1l} першої лінії · {n_inds_2l} другої лінії та вище</div>
-          <p class="num-text">
-            Indication — сполучення disease + line_of_therapy + biomarker / stage /
-            demographic-фільтрів, що відкриває або закриває конкретний Regimen. Багато
-            показань зараз gатекіпять на біомаркерах (MGMT-METHYLATION для GBM Stupp,
-            CD79B/COO/IPI для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL,
-            MYC+BCL2 rearrangements для HGBL-DH, AFP для HCC, FLIPI для FL).
-          </p>
-        </div>
-
-        <div class="num-card">
           <div class="num-big">{n_regimens}</div>
           <div class="num-lbl">Режими лікування</div>
+          <div class="num-detail">{n_indications} показань ({n_inds_1l} першої лінії · {n_inds_2l} 2L+)</div>
           <p class="num-text">
             Кожна схема — список drugs з дозами, шкалою циклів, dose adjustments
             (для renal impairment, FIB-4, frailty), premedications, mandatory supportive
-            care та monitoring schedule.
+            care та monitoring schedule. Кожна <em>Indication</em> (сполучення
+            disease + line_of_therapy + biomarker / stage / demographic-фільтрів) гейтить
+            конкретний Regimen — наприклад, MGMT-METHYLATION для GBM Stupp, CD79B/COO/IPI
+            для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL, MYC+BCL2 rearrangements
+            для HGBL-DH, AFP для HCC, FLIPI для FL.
           </p>
         </div>
 
@@ -4038,26 +4030,18 @@ def _render_capabilities_en(stats) -> str:
         </div>
 
         <div class="num-card">
-          <div class="num-big">{n_indications}</div>
-          <div class="num-lbl">Indications</div>
-          <div class="num-detail">{n_inds_1l} first-line · {n_inds_2l} second-line and beyond</div>
-          <p class="num-text">
-            An Indication is the combination of disease + line_of_therapy +
-            biomarker / stage / demographic filters that opens or closes a
-            specific Regimen. Many indications now gate on biomarkers
-            (MGMT-METHYLATION for GBM Stupp; CD79B / COO-Hans / IPI for DLBCL
-            R-CHOP vs Pola-R-CHP; t(11;14) / MIPI for MCL; MYC + BCL2
-            rearrangements for HGBL-DH; AFP for HCC; FLIPI for FL).
-          </p>
-        </div>
-
-        <div class="num-card">
           <div class="num-big">{n_regimens}</div>
           <div class="num-lbl">Treatment regimens</div>
+          <div class="num-detail">{n_indications} indications ({n_inds_1l} first-line · {n_inds_2l} 2L+)</div>
           <p class="num-text">
             Each regimen is a list of drugs with doses, cycle schedule, dose
             adjustments (renal impairment, FIB-4, frailty), premedications,
-            mandatory supportive care, and a monitoring schedule.
+            mandatory supportive care, and a monitoring schedule. Every
+            <em>Indication</em> (the combination of disease + line_of_therapy +
+            biomarker / stage / demographic filters) gates a specific Regimen —
+            e.g. MGMT-METHYLATION for GBM Stupp; CD79B / COO-Hans / IPI for DLBCL
+            R-CHOP vs Pola-R-CHP; t(11;14) / MIPI for MCL; MYC + BCL2 rearrangements
+            for HGBL-DH; AFP for HCC; FLIPI for FL.
           </p>
         </div>
 
