@@ -1,0 +1,72 @@
+id: ALGO-CHL-2L
+applicable_to_disease: DIS-CHL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+/relapsed cHL Indication. Three tracks: (1) post-frontline
+  relapse + ASCT-eligible → BV-based salvage (free-text — dedicated
+  IND-CHL-2L-SALVAGE-ASCT not yet wired) → BEAM-autoSCT; (2) high-risk
+  pre-ASCT (primary refractory, extranodal, <12mo CR1) → IND-CHL-2L-
+  BRENTUXIMAB-MAINTENANCE post-ASCT (AETHERA); (3) post-ASCT relapse OR
+  transplant-ineligible → IND-CHL-2L-PEMBROLIZUMAB (KEYNOTE-204 PD-1).
+
+output_indications:
+  - IND-CHL-2L-PEMBROLIZUMAB
+  - IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
+
+default_indication: IND-CHL-2L-PEMBROLIZUMAB
+alternative_indication: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
+
+decision_tree:
+  # Step 1 — high-risk profile pre-ASCT → BV maintenance post-ASCT.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "ASCT-eligible AND completed BV-based salvage → BEAM-ASCT"
+        - condition: "≥1 high-risk feature: primary refractory OR extranodal involvement at relapse OR <12mo from CR1 to relapse OR ≥2 prior salvage lines"
+    if_true:
+      result: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
+    if_false:
+      next_step: 2
+
+  # Step 2 — post-ASCT relapse OR transplant-ineligible → pembrolizumab.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Post-ASCT relapse"
+        - condition: "Transplant-ineligible (age >70, comorbidity, ECOG ≥2)"
+        - condition: "Post-BV failure pre-ASCT, salvage required"
+    if_true:
+      result: IND-CHL-2L-PEMBROLIZUMAB
+    if_false:
+      next_step: 3
+
+  # Step 3 — default: 1st relapse, ASCT-eligible → BV salvage→ASCT then
+  # BV maintenance if high-risk; else pembrolizumab. Default surfaces
+  # pembrolizumab as the standard-track option (most realistic for UA).
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "1st relapse, ASCT-eligible, no high-risk feature"
+        - condition: "ASCT not accessible / patient declined"
+    if_true:
+      result: IND-CHL-2L-PEMBROLIZUMAB
+    if_false:
+      result: IND-CHL-2L-PEMBROLIZUMAB
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  OOS / wiring gaps:
+  (1) IND-CHL-2L-BV-SALVAGE (brentuximab + bendamustine OR BV mono
+  bridge to ASCT) — not modeled; surfaced as free-text in step 1
+  precondition.
+  (2) BEAM-autoSCT itself is a procedure, not modeled as an indication.
+  (3) Nivolumab (CheckMate-205) — not modeled; pembrolizumab covers
+  PD-1 niche.
+  (4) BV+nivolumab combo (post-ASCT relapse) — not modeled.
+  (5) Allogeneic SCT for post-PD-1 relapse — referral, outside KB.
+  (6) RF-CHL-ADVANCED-STAGE applies to 1L only; relapse staging
+  re-evaluated independently.

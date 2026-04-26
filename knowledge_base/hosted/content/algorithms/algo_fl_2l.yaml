@@ -1,0 +1,72 @@
+id: ALGO-FL-2L
+applicable_to_disease: DIS-FL
+applicable_to_line_of_therapy: 3
+purpose: >
+  Select 3L+ relapsed/refractory FL Indication. Three tracks driven by
+  EZH2 status + CAR-T eligibility: (1) EZH2-mutated (Y641) → tazemetostat
+  preferred (treatment-defining biomarker, ORR ~69% mut vs ~35% WT);
+  (2) CAR-T-eligible non-EZH2 → axi-cel for durable remission; (3)
+  transplant-ineligible / older / no CAR-T access → mosunetuzumab
+  bispecific (off-the-shelf, manageable in standard heme unit).
+  Note: although this algo is gated on line=3, it is the de-facto
+  2L+ relapsed routing for FL (no dedicated 2L algo wired).
+
+output_indications:
+  - IND-FL-3L-TAZEMETOSTAT
+  - IND-FL-3L-AXICEL-CART
+  - IND-FL-3L-MOSUNETUZUMAB
+
+default_indication: IND-FL-3L-MOSUNETUZUMAB
+alternative_indication: IND-FL-3L-AXICEL-CART
+
+decision_tree:
+  # Step 1 — EZH2-Y641 mutation is treatment-defining for tazemetostat.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "EZH2-Y641 mutation positive (Y641N/F/S/H/C)"
+        - condition: "≥2 prior systemic lines"
+    if_true:
+      result: IND-FL-3L-TAZEMETOSTAT
+    if_false:
+      next_step: 2
+
+  # Step 2 — CAR-T-eligible: axi-cel ZUMA-5 durable remission.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "≥2 prior systemic lines"
+        - condition: "Age 18-75, ECOG ≤1, CAR-T center referral feasible"
+        - condition: "CD19+ disease confirmed"
+    if_true:
+      result: IND-FL-3L-AXICEL-CART
+    if_false:
+      next_step: 3
+
+  # Step 3 — default: transplant-ineligible / no CAR-T → mosunetuzumab.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Transplant-ineligible OR CAR-T inaccessible"
+        - condition: "EZH2-WT and patient prefers chemo-free off-the-shelf"
+    if_true:
+      result: IND-FL-3L-MOSUNETUZUMAB
+    if_false:
+      result: IND-FL-3L-MOSUNETUZUMAB
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  OOS / wiring gaps:
+  (1) True 2L (post-1L BR/R-CHOP) routing — R2 (rituximab+lenalidomide)
+  AUGMENT regimen, obinutuzumab+benda — not modeled as dedicated
+  indications; this algo is wired at line=3.
+  (2) Histologic transformation detection at relapse (RF-FL-
+  TRANSFORMATION-SUSPECT) routes to ALGO-DLBCL algos — must be
+  resolved at disease-resolution stage upstream.
+  (3) Loncastuximab tesirine, glofitamab not modeled.
+  (4) Bridging therapy + lymphodepletion for axi-cel handled in
+  Regimen / SUP layer, not algorithm.
