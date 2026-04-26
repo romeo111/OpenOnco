@@ -6,7 +6,16 @@ applicable_to:
   line_of_therapy: 2
   stage_requirements:
     - "Relapsed/refractory after ≥1 prior chemoimmunotherapy line (e.g. R-CHOP, BR, intensive R-DHAP/R-CHOP alternation +- autoSCT)"
-  biomarker_requirements_required: []
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CCND1-IHC
+      required: true
+      value_constraint: "positive — confirm MCL diagnosis at relapse if not already established"
+    - biomarker_id: BIO-CD5-IHC
+      required: false
+      value_constraint: "positive (CD5+) — part of original MCL immunophenotype confirmation"
+    - biomarker_id: BIO-MCL-MIPI
+      required: false
+      value_constraint: "MIPI at relapse provides updated prognostic context; high MIPI supports earlier consideration of CAR-T pathway"
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3
