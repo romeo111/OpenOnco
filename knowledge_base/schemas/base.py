@@ -154,16 +154,53 @@ class Citation(Base):
     position: Optional[Literal["supports", "contradicts", "context"]] = None
 
 
+class CostRange(Base):
+    """Range-based cost estimate embedded on UkraineRegistration.
+
+    Per docs/plans/ua_ingestion_and_alternatives_2026-04-26.md §2.2.
+    Mirrors the AccessPathway.CostOrientation shape but lives on the
+    drug-level registration record so the Access Matrix render can show
+    NSZU-tariff vs self-pay ranges without resolving an AccessPathway.
+
+    `per_unit` is one of `cycle | course | month | dose`; kept permissive
+    to not break older YAML. Both min/max are Optional — a single point
+    estimate sets only one of them. Currency is mandatory."""
+
+    currency: str = "UAH"  # ISO-4217
+    min: Optional[float] = None
+    max: Optional[float] = None
+    per_unit: Optional[str] = None  # cycle | course | month | dose
+    notes: Optional[str] = None
+
+
 class UkraineRegistration(Base):
-    """Reused across Drug and Regimen per KNOWLEDGE_SCHEMA_SPECIFICATION §5.1 / §6.1."""
+    """Reused across Drug and Regimen per KNOWLEDGE_SCHEMA_SPECIFICATION §5.1 / §6.1.
+
+    Cost-orientation fields (`cost_uah_reimbursed`, `cost_uah_self_pay`,
+    `cost_last_updated`, `cost_source`) per ua-ingestion plan §2.2. These
+    are rendering metadata only — engine never reads them as a selection
+    signal (plan §0 invariant, enforced by
+    `tests/test_plan_invariant_ua_availability.py`).
+
+    `last_verified` covers the registered/reimbursed flags; `cost_last_updated`
+    is independent and triggers a "stale orientation" warning at >180 days
+    per plan §6.4.
+    """
 
     registered: bool = False
     registration_number: Optional[str] = None
     reimbursed_nszu: bool = False
     reimbursement_indications: list[str] = Field(default_factory=list)
-    typical_cost_per_cycle_uah: Optional[float] = None
+    typical_cost_per_cycle_uah: Optional[float] = None  # legacy point estimate; prefer CostRange below
     last_verified: Optional[str] = None
     notes: Optional[str] = None
+
+    # Cost orientation (plan §2.2). Both Optional; absence renders as
+    # placeholder "₴-? — funding pathway needed" rather than a fake number.
+    cost_uah_reimbursed: Optional[CostRange] = None
+    cost_uah_self_pay: Optional[CostRange] = None
+    cost_last_updated: Optional[str] = None  # ISO date; warns at >180d
+    cost_source: Optional[str] = None        # Source.id reference
 
 
 class RegulatoryStatus(Base):
@@ -203,6 +240,7 @@ __all__ = [
     "IngestionConfig",
     "CachePolicy",
     "Citation",
+    "CostRange",
     "UkraineRegistration",
     "RegulatoryStatus",
     "NamePair",

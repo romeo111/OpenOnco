@@ -383,3 +383,102 @@ def test_generate_plan_swallows_search_fn_failure_into_warnings():
     assert res.plan is not None
     assert res.experimental_options is None
     assert any("experimental options skipped" in w for w in res.warnings)
+
+
+# ── 6. On-disk TTL cache (plan §5.4 task 2) ─────────────────────────────
+
+
+def test_disk_cache_writes_and_reads(tmp_path):
+    """A first call with a search_fn writes a JSON cache file under
+    cache_root; a second call with search_fn=None still returns the
+    cached option (proving the read path)."""
+    studies = [_study("NCT00099001", title="Cached trial")]
+    calls = {"n": 0}
+
+    def stub(**_):
+        calls["n"] += 1
+        return studies
+
+    o1 = enumerate_experimental_options(
+        disease_id="DIS-NSCLC",
+        disease_term="NSCLC",
+        biomarker_profile="EGFR mutation",
+        line_of_therapy=1,
+        search_fn=stub,
+        cache_root=tmp_path,
+    )
+    assert calls["n"] == 1
+    assert any(p.name.startswith("ctgov_") and p.suffix == ".json"
+               for p in tmp_path.iterdir())
+
+    # Simulate fresh process: clear in-process cache, call again with
+    # search_fn=None; disk hit must return the same trial set.
+    clear_experimental_cache()
+    o2 = enumerate_experimental_options(
+        disease_id="DIS-NSCLC",
+        disease_term="NSCLC",
+        biomarker_profile="EGFR mutation",
+        line_of_therapy=1,
+        search_fn=None,
+        cache_root=tmp_path,
+    )
+    assert calls["n"] == 1, "search_fn must not be called on cache hit"
+    assert [t.nct_id for t in o2.trials] == ["NCT00099001"]
+
+
+def test_disk_cache_respects_ttl(tmp_path):
+    """When the on-disk file is older than `cache_ttl_days`, the cache
+    is treated as a miss and the search_fn runs again."""
+    import json
+    from datetime import datetime, timedelta, timezone
+
+    studies = [_study("NCT00099002", title="Stale-cache trial")]
+    calls = {"n": 0}
+
+    def stub(**_):
+        calls["n"] += 1
+        return studies
+
+    enumerate_experimental_options(
+        disease_id="DIS-MM",
+        disease_term="Multiple myeloma",
+        search_fn=stub,
+        cache_root=tmp_path,
+    )
+    assert calls["n"] == 1
+
+    # Backdate the on-disk cache file by 30 days so a 7-day TTL expires
+    cache_files = list(tmp_path.glob("ctgov_*.json"))
+    assert cache_files, "expected one cache file"
+    payload = json.loads(cache_files[0].read_text(encoding="utf-8"))
+    payload["cached_at"] = (
+        datetime.now(timezone.utc) - timedelta(days=30)
+    ).isoformat()
+    cache_files[0].write_text(json.dumps(payload), encoding="utf-8")
+
+    clear_experimental_cache()
+    enumerate_experimental_options(
+        disease_id="DIS-MM",
+        disease_term="Multiple myeloma",
+        search_fn=stub,
+        cache_root=tmp_path,
+        cache_ttl_days=7,
+    )
+    assert calls["n"] == 2, "stale cache must trigger re-fetch"
+
+
+def test_disk_cache_corrupted_file_falls_through(tmp_path):
+    """A corrupted JSON file must not raise; the function falls back to
+    the search_fn path so the engine never blocks on cache I/O."""
+    bad = tmp_path / "ctgov_deadbeef0000.json"
+    bad.write_text("{not valid json", encoding="utf-8")
+
+    studies = [_study("NCT00099003", title="Recovery trial")]
+    o = enumerate_experimental_options(
+        disease_id="DIS-NSCLC",
+        disease_term="NSCLC",
+        biomarker_profile="ALK fusion",
+        search_fn=lambda **_: studies,
+        cache_root=tmp_path,
+    )
+    assert [t.nct_id for t in o.trials] == ["NCT00099003"]

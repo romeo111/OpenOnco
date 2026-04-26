@@ -399,6 +399,97 @@ h3 {
 .skill-catalog .ver {
     font-family: var(--font-mono); color: var(--gray-700);
 }
+
+/* Access Matrix (ua-ingestion plan §4) */
+.access-matrix { margin-top: 32px; padding: 20px; background: var(--green-50);
+    border: 1px solid var(--green-200); border-radius: 6px;
+}
+.access-matrix details { width: 100%; }
+.access-matrix summary {
+    cursor: pointer; list-style: none; display: flex; flex-direction: column;
+    gap: 4px; padding: 4px 0;
+}
+.access-matrix summary::-webkit-details-marker { display: none; }
+.access-matrix summary::before {
+    content: "▶ "; color: var(--green-700); font-size: 12px; margin-right: 4px;
+}
+.access-matrix details[open] summary::before { content: "▼ "; }
+.access-matrix summary h2 {
+    display: inline; font-family: var(--font-display); font-size: 22px;
+    color: var(--green-900); margin: 0;
+}
+.access-matrix .section-sub { font-size: 12px; color: var(--gray-700); }
+.access-matrix-table {
+    width: 100%; border-collapse: collapse; margin-top: 14px;
+    font-size: 12.5px; background: white;
+}
+.access-matrix-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--green-700);
+    border-bottom: 1px solid var(--green-200);
+}
+.access-matrix-table td {
+    padding: 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.access-matrix-table tr:last-child td { border-bottom: none; }
+.access-matrix-table .track-cell { width: 32%; }
+.access-matrix-table .regimen-name {
+    font-size: 11.5px; color: var(--gray-700); margin-top: 3px;
+}
+.access-matrix-table .regimen-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .cost-cell { width: 22%; font-variant-numeric: tabular-nums; }
+.access-matrix-table .cost-row { line-height: 1.5; }
+.access-matrix-table .cost-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    margin-right: 4px;
+}
+.access-matrix-table .cost-trial {
+    color: var(--green-700); font-style: italic;
+}
+.access-matrix-table .cost-unknown {
+    color: var(--amber-alert); font-style: italic;
+}
+.access-matrix-table .pathway-cell { width: 22%; font-size: 11.5px; }
+.access-matrix-table .pathway-cell .alt-paths {
+    font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .badge--ok { background: var(--green-100); color: var(--green-700); }
+.access-matrix-table .badge--no { background: var(--red-bg); color: var(--red-alert); }
+.access-matrix-table .badge--unknown { background: var(--gray-100); color: var(--gray-500); }
+.access-matrix-table .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.access-matrix-table tr.track-trial { background: var(--purple-bg); }
+.access-matrix-table .notes {
+    font-size: 11px; color: var(--gray-700); margin-top: 4px; font-style: italic;
+}
+.access-matrix-table .notes-stale {
+    font-size: 11px; color: var(--amber-alert); margin-top: 4px; font-weight: 600;
+}
+.access-matrix-table .more-notes {
+    cursor: help; color: var(--gray-500); font-size: 10px; margin-left: 4px;
+    border-bottom: 1px dotted var(--gray-500);
+}
+.access-matrix .matrix-disclaimer {
+    margin-top: 10px; font-size: 11px; color: var(--gray-500); font-style: italic;
+}
+.access-matrix .matrix-plan-notes {
+    margin: 10px 0 4px 0; padding: 8px 12px; background: var(--amber-bg);
+    border-left: 3px solid var(--amber-alert); list-style: none; font-size: 12px;
+    color: var(--gray-900);
+}
+@media print {
+    .access-matrix { background: white; border: 1px solid var(--gray-200); }
+    .access-matrix details { width: 100%; }
+    .access-matrix summary::before { content: ""; }
+    .access-matrix details:not([open]) > *:not(summary) { display: block; }
+}
 """
 
 
@@ -1388,6 +1479,139 @@ def _render_experimental_options(option) -> str:
     )
 
 
+# ── Access Matrix (Phase D) ──────────────────────────────────────────────
+
+
+def _fmt_uah_range(lo, hi, per_unit) -> str:
+    """Format `(min, max)` UAH cost range as a short readable string.
+    Returns "—" when both bounds are absent (no cost data on any
+    component). The `per_unit` suffix is appended in plain text."""
+    if lo is None and hi is None:
+        return "—"
+    suffix = f"/{_h(per_unit)}" if per_unit else ""
+    if lo is not None and hi is not None and lo != hi:
+        return f"₴{int(lo):,}–{int(hi):,}{suffix}".replace(",", " ")
+    val = lo if lo is not None else hi
+    return f"₴{int(val):,}{suffix}".replace(",", " ")
+
+
+def _avail_badge(value, *, true_label: str, false_label: str) -> str:
+    """Tri-state status cell — True/False/None each render distinctly so
+    the matrix never silently coalesces 'unknown' into 'no'."""
+    if value is True:
+        return f'<span class="badge badge--ok">✓ {_h(true_label)}</span>'
+    if value is False:
+        return f'<span class="badge badge--no">✗ {_h(false_label)}</span>'
+    return '<span class="badge badge--unknown">— невідомо</span>'
+
+
+def _render_access_matrix(matrix) -> str:
+    """Render the per-Plan Access Matrix block (ua-ingestion plan §4).
+
+    The matrix surfaces UA-availability metadata — registered, reimbursed,
+    cost orientation, primary access pathway — for every track presented
+    in the Plan, including any clinical-trial rows from the experimental
+    track. Render-only; the engine never reads any field on `matrix`
+    back as a selection signal (CHARTER §8.3, plan §0 invariant).
+
+    Default-collapsed via <details>; auto-expanded when at least one row
+    indicates a non-reimbursed component (so clinicians see the funding
+    gap without an extra click). `matrix is None` (older Plans, or
+    aggregator failure) renders nothing — the section is opt-in.
+    """
+    if matrix is None or not matrix.rows:
+        return ""
+
+    # Auto-expand when any track has non-reimbursed component or stale cost
+    auto_open = any(
+        (r.reimbursed_nszu is False) or r.cost_is_stale or (r.registered_in_ua is False)
+        for r in matrix.rows
+    )
+    open_attr = " open" if auto_open else ""
+
+    rows_html: list[str] = []
+    for r in matrix.rows:
+        track_class = "track-trial" if r.track_id.startswith("trial:") else f"track-{_h(r.track_id)}"
+        regimen_label = _h(r.regimen_name or r.regimen_id or "—")
+        if r.regimen_name and r.regimen_id:
+            regimen_label = f"<strong>{_h(r.regimen_name)}</strong> <span class='regimen-id'>({_h(r.regimen_id)})</span>"
+
+        cost_cell_parts: list[str] = []
+        # Reimbursed bucket first (НСЗУ tariff), self-pay second (retail)
+        reimb_cell = _fmt_uah_range(r.cost_reimbursed_min, r.cost_reimbursed_max, r.cost_per_unit)
+        if reimb_cell != "—":
+            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>НСЗУ:</span> {reimb_cell}</div>")
+        sp_cell = _fmt_uah_range(r.cost_self_pay_min, r.cost_self_pay_max, r.cost_per_unit)
+        if sp_cell != "—":
+            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>self-pay:</span> {sp_cell}</div>")
+        if not cost_cell_parts:
+            if r.track_id.startswith("trial:"):
+                cost_cell_parts.append("<span class='cost-trial'>0 для пацієнта (sponsor pays)</span>")
+            else:
+                cost_cell_parts.append("<span class='cost-unknown'>₴-? — verify pathway</span>")
+
+        # Pathway cell
+        if r.primary_pathway_id:
+            path_cell = f'<a href="#path-{_h(r.primary_pathway_id)}">{_h(r.primary_pathway_id)}</a>'
+            if r.pathway_alternative_ids:
+                path_cell += f' <span class="alt-paths">(+{len(r.pathway_alternative_ids)})</span>'
+        elif r.track_id.startswith("trial:"):
+            path_cell = "Trial sponsor"
+        elif r.reimbursed_nszu:
+            path_cell = "НСЗУ formulary"
+        else:
+            path_cell = "<em>not recorded</em>"
+
+        # Notes cell — collapse to one line, full list on hover
+        notes_cell = ""
+        if r.notes:
+            head = r.notes[0]
+            tail = ""
+            if len(r.notes) > 1:
+                tail_attr = _h(" · ".join(r.notes[1:]))
+                tail = f' <span class="more-notes" title="{tail_attr}">+{len(r.notes) - 1}</span>'
+            cls = "notes-stale" if r.cost_is_stale else "notes"
+            notes_cell = f'<div class="{cls}">{_h(head)}{tail}</div>'
+
+        rows_html.append(
+            f'<tr class="{track_class}">'
+            f'<td class="track-cell"><strong>{_h(r.track_label)}</strong>'
+            f'<div class="regimen-name">{regimen_label}</div>{notes_cell}</td>'
+            f'<td>{_avail_badge(r.registered_in_ua, true_label="зареєстровано", false_label="не зареєстровано")}</td>'
+            f'<td>{_avail_badge(r.reimbursed_nszu, true_label="покривається", false_label="out-of-pocket")}</td>'
+            f'<td class="cost-cell">{"".join(cost_cell_parts)}</td>'
+            f'<td class="pathway-cell">{path_cell}</td>'
+            f'</tr>'
+        )
+
+    plan_notes = ""
+    if matrix.notes:
+        items = "".join(f"<li>{_h(n)}</li>" for n in matrix.notes)
+        plan_notes = f'<ul class="matrix-plan-notes">{items}</ul>'
+
+    return (
+        f'<section class="access-matrix">'
+        f'<details{open_attr}>'
+        f'<summary><h2>Доступність опцій в Україні</h2>'
+        f'<span class="section-sub">Per-track UA registration · НСЗУ · cost · access pathway. '
+        f'Render-time metadata; engine selection не залежить від цих полів (CHARTER §8.3).</span></summary>'
+        f'{plan_notes}'
+        f'<table class="access-matrix-table">'
+        f'<thead><tr>'
+        f'<th>Опція</th><th>Реєстрація UA</th><th>НСЗУ</th>'
+        f'<th>Cost orientation</th><th>Access pathway</th>'
+        f'</tr></thead>'
+        f'<tbody>{"".join(rows_html)}</tbody>'
+        f'</table>'
+        f'<p class="matrix-disclaimer">'
+        f'Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті. '
+        f'Status updated: {_h((matrix.generated_at or "")[:10])}.'
+        f'</p>'
+        f'</details>'
+        f'</section>'
+    )
+
+
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
@@ -1483,6 +1707,9 @@ def render_plan_html(
 
     # Experimental options (Phase C — clinical-trial track)
     body.append(_render_experimental_options(plan_result.experimental_options))
+
+    # Access Matrix (Phase D — UA-availability per track)
+    body.append(_render_access_matrix(plan.access_matrix))
 
     # Footer
     body.append('<div class="doc-footer">')

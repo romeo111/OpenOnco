@@ -4179,18 +4179,22 @@ def _coverage_breakdown() -> dict:
     algorithms = _load_dir("algorithms")
     indications = _load_dir("indications")
 
-    heme = solid = 0
+    heme_ids: set[str] = set()
+    solid_ids: set[str] = set()
+    short_by_id: dict[str, str] = {}
     for d in diseases:
+        d_id = d.get("id") or ""
         lin = (d.get("lineage") or "").lower()
+        short_by_id[d_id] = d_id.replace("DIS-", "")
         if (
             "b_cell" in lin or "t_cell" in lin or "plasma" in lin
             or "myeloid" in lin or "lymph" in lin or "mpn" in lin
             or "leuk" in lin or "mds" in lin
             or lin in {"hodgkin", "myeloma"}
         ):
-            heme += 1
+            heme_ids.add(d_id)
         elif lin:
-            solid += 1
+            solid_ids.add(d_id)
 
     algos_1l = algos_2l = 0
     diseases_with_2l: set[str] = set()
@@ -4218,12 +4222,27 @@ def _coverage_breakdown() -> dict:
         elif lot >= 2:
             inds_2l += 1
 
+    diseases_2l_heme_list = ", ".join(
+        sorted(short_by_id.get(d, d) for d in diseases_with_2l & heme_ids)
+    )
+    diseases_2l_solid_list = ", ".join(
+        sorted(short_by_id.get(d, d) for d in diseases_with_2l & solid_ids)
+    ) or "—"
+    solid_disease_list = ", ".join(
+        sorted(short_by_id.get(d, d) for d in solid_ids)
+    )
+
     return {
-        "heme_diseases": heme,
-        "solid_diseases": solid,
+        "heme_diseases": len(heme_ids),
+        "solid_diseases": len(solid_ids),
         "algorithms_1l": algos_1l,
         "algorithms_2l_plus": algos_2l,
         "diseases_with_2l_plus": len(diseases_with_2l),
+        "diseases_with_2l_plus_heme": len(diseases_with_2l & heme_ids),
+        "diseases_with_2l_plus_solid": len(diseases_with_2l & solid_ids),
+        "diseases_2l_heme_list": diseases_2l_heme_list,
+        "diseases_2l_solid_list": diseases_2l_solid_list,
+        "solid_disease_list": solid_disease_list,
         "indications_1l": inds_1l,
         "indications_2l_plus": inds_2l,
     }
@@ -4254,6 +4273,8 @@ def _render_capabilities_uk(stats) -> str:
     n_inds_1l = cov["indications_1l"]
     n_inds_2l = cov["indications_2l_plus"]
     n_dis_2l = cov["diseases_with_2l_plus"]
+    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
+    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
 
     # Live KB metric (moved here from landing). Per-disease coverage is
     # computed once and re-used in the cards block below.
@@ -4418,8 +4439,8 @@ def _render_capabilities_uk(stats) -> str:
             HCV-MZL, risk_stratified як MM, biomarker_driven як NSCLC/EGFR або
             HGBL/MYC-BCL2, stage_driven як cervical), що визначає логіку алгоритму
             вибору лікування. Зараз 1L покрито для всіх {n_diseases} хвороб
-            ({n_algos_1l} алгоритмів), 2L+ — для {n_dis_2l} гематологічних
-            ({n_algos_2l} алгоритмів).
+            ({n_algos_1l} алгоритмів), 2L+ — для {n_dis_2l_heme} гематологічних
+            та {n_dis_2l_solid} солідних ({n_algos_2l} алгоритмів).
           </p>
         </div>
 
@@ -4869,16 +4890,28 @@ def _render_capabilities_uk(stats) -> str:
         </div>
         <div class="num-card">
           <div class="num-big">trials</div>
-          <div class="num-lbl">Experimental options (Phase C tracer)</div>
+          <div class="num-lbl">Experimental options (Phase C — done)</div>
           <p class="num-text">
             <code>enumerate_experimental_options(...)</code> запитує
             ClinicalTrials.gov v2 за disease + biomarker + line_of_therapy і
             повертає <code>ExperimentalOption</code> з UA-availability metadata
             (sites_ua, countries) — render-time, engine не використовує trial
-            як сигнал вибору. Status filter: тільки RECRUITING /
-            ACTIVE_NOT_RECRUITING / ENROLLING_BY_INVITATION. Зараз є schema +
-            enumerator + 8 тестів; інтеграція з generate_plan і render —
-            окремі PR.
+            як сигнал вибору. Status filter: RECRUITING /
+            ACTIVE_NOT_RECRUITING / ENROLLING_BY_INVITATION; інтегровано у
+            <code>generate_plan</code>, render показує третій трек у Plan;
+            7-day on-disk TTL cache для офлайн-запусків.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">access</div>
+          <div class="num-lbl">Access Matrix (Phase D)</div>
+          <p class="num-text">
+            Кожен Plan містить <code>AccessMatrix</code> — per-track agg-table
+            UA-реєстрації, НСЗУ-покриття, cost orientation (₴ ranges) і
+            primary <code>AccessPathway</code>. Render-time only (CHARTER §8.3,
+            invariant test guarantee). Stale-cost warning при
+            <code>cost_last_updated</code> &gt; 180 днів. Trial-рядки додаються
+            автоматично коли experimental track активний.
           </p>
         </div>
       </div>
@@ -4916,6 +4949,8 @@ def _render_capabilities_en(stats) -> str:
     n_inds_1l = cov["indications_1l"]
     n_inds_2l = cov["indications_2l_plus"]
     n_dis_2l = cov["diseases_with_2l_plus"]
+    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
+    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
     diseases_full = sum(
         1 for d in stats.diseases
         if d.coverage_status in {"stub_full_chain", "reviewed"}
@@ -5079,8 +5114,8 @@ def _render_capabilities_en(stats) -> str:
             biomarker_driven like NSCLC/EGFR or HGBL/MYC-BCL2, stage_driven
             like cervical) which determines the algorithm logic for treatment
             selection. 1L is covered for all {n_diseases} diseases
-            ({n_algos_1l} algorithms); 2L+ is covered for {n_dis_2l}
-            hematologic diseases ({n_algos_2l} algorithms).
+            ({n_algos_1l} algorithms); 2L+ is covered for {n_dis_2l_heme}
+            hematologic and {n_dis_2l_solid} solid diseases ({n_algos_2l} algorithms).
           </p>
         </div>
 
@@ -5549,17 +5584,30 @@ def _render_capabilities_en(stats) -> str:
         </div>
         <div class="num-card">
           <div class="num-big">trials</div>
-          <div class="num-lbl">Experimental options (Phase C tracer)</div>
+          <div class="num-lbl">Experimental options (Phase C — done)</div>
           <p class="num-text">
             <code>enumerate_experimental_options(...)</code> queries
             ClinicalTrials.gov v2 by disease + biomarker + line_of_therapy
             and returns <code>ExperimentalOption</code> entries with
             UA-availability metadata (sites_ua, countries) — render-time
             only; the engine never uses a trial as a selection signal.
-            Status filter: only RECRUITING / ACTIVE_NOT_RECRUITING /
-            ENROLLING_BY_INVITATION. Schema + enumerator + 8 tests are in;
-            generate_plan integration and the render layer ship as separate
-            PRs.
+            Status filter: RECRUITING / ACTIVE_NOT_RECRUITING /
+            ENROLLING_BY_INVITATION; integrated into <code>generate_plan</code>,
+            rendered as a third Plan track; 7-day on-disk TTL cache for
+            offline runs.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">access</div>
+          <div class="num-lbl">Access Matrix (Phase D)</div>
+          <p class="num-text">
+            Every Plan carries an <code>AccessMatrix</code> — per-track
+            aggregation of UA registration, НСЗУ coverage, ₴ cost
+            orientation, and primary <code>AccessPathway</code>. Render-time
+            only (CHARTER §8.3, guaranteed by the invariant test). Stale-cost
+            warning fires when <code>cost_last_updated</code> &gt; 180 days.
+            Trial rows are appended automatically when the experimental
+            track is active.
           </p>
         </div>
       </div>
@@ -5599,6 +5647,11 @@ def _render_limitations_uk(stats) -> str:
     n_inds_1l = cov["indications_1l"]
     n_inds_2l = cov["indications_2l_plus"]
     n_dis_2l = cov["diseases_with_2l_plus"]
+    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
+    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
+    heme_2l_list = cov["diseases_2l_heme_list"]
+    solid_2l_list = cov["diseases_2l_solid_list"]
+    solid_disease_list = cov["solid_disease_list"]
 
     return f"""<!DOCTYPE html>
 <html lang="uk">
@@ -5815,14 +5868,15 @@ def _render_limitations_uk(stats) -> str:
         <tbody>
           <tr><td>Хвороби з повним ланцюгом</td><td>{diseases_full} / {n_diseases}</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
           <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>Перша лінія покрита для всіх {n_diseases} хвороб</td></tr>
-          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Друга-четверта лінія: {n_dis_2l} гематологічних хвороб (DLBCL, FL, MCL, CLL, MM, WM, cHL, AITL, AML, CML, APL, B-ALL, MDS-HR, MDS-LR, PV, PMF). Solid-tumor 2L+ — поки що частково (CRC, breast, urothelial), не systematically.</td></tr>
+          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Друга-четверта лінія: {n_dis_2l_heme} гематологічних хвороб ({heme_2l_list}) + {n_dis_2l_solid} солідних ({solid_2l_list}). Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
           <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
-          <tr><td>Solid tumors</td><td>{n_solid}</td><td>NSCLC, SCLC, breast, prostate, RCC, melanoma, CRC, gastric, PDAC, HCC, GBM, ovarian, endometrial, urothelial, cervical, esophageal — переважно 1L. 2L+ і ад'ювантні контексти — частково.</td></tr>
+          <tr><td>Solid tumors</td><td>{n_solid}</td><td>{solid_disease_list} — переважно 1L. 2L+ і ад'ювантні контексти — частково.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
           <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
           <tr><td>Маркетингових даних доступу до режимів (НСЗУ formulary live)</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — це окремий backlog item</td></tr>
-          <tr><td>Experimental options (clinical trials)</td><td>tracer-bullet</td><td>Phase C: <code>enumerate_experimental_options</code> + ExperimentalOption schema готові, але ще не інтегровано у generate_plan і не показуються у render</td></tr>
+          <tr><td>Experimental options (clinical trials)</td><td>integrated</td><td>Phase C done: <code>enumerate_experimental_options</code> + ExperimentalOption schema, інтеграція у <code>generate_plan</code>, render третього треку, 7-day on-disk TTL cache. Що ще: курований мапінг trials ↔ patient-eligibility (а не лише disease+biomarker)</td></tr>
+          <tr><td>Access Matrix (UA-availability per Plan)</td><td>integrated</td><td>Phase D: <code>AccessMatrix</code> + <code>AccessMatrixRow</code> агрегують registered/НСЗУ/cost/pathway по треках, рендеряться у Plan. Що ще: curated <code>AccessPathway</code> seed (~30 препаратів) — потребує two-reviewer signoff per CHARTER §6.1</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -5942,6 +5996,11 @@ def _render_limitations_en(stats) -> str:
     n_inds_1l = cov["indications_1l"]
     n_inds_2l = cov["indications_2l_plus"]
     n_dis_2l = cov["diseases_with_2l_plus"]
+    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
+    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
+    heme_2l_list = cov["diseases_2l_heme_list"]
+    solid_2l_list = cov["diseases_2l_solid_list"]
+    solid_disease_list = cov["solid_disease_list"]
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -6170,14 +6229,15 @@ def _render_limitations_en(stats) -> str:
         <tbody>
           <tr><td>Diseases with the full chain</td><td>{diseases_full} / {n_diseases}</td><td>The rest are partially modeled; the engine may emit "no Algorithm found for disease=X"</td></tr>
           <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>First line covered for all {n_diseases} diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Second-to-fourth line: {n_dis_2l} hematologic diseases (DLBCL, FL, MCL, CLL, MM, WM, cHL, AITL, AML, CML, APL, B-ALL, MDS-HR, MDS-LR, PV, PMF). Solid-tumor 2L+ partial only (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Second-to-fourth line: {n_dis_2l_heme} hematologic diseases ({heme_2l_list}) + {n_dis_2l_solid} solid ({solid_2l_list}). The rest of solid-tumor 2L+ is partial (CRC, breast, urothelial), not systematic.</td></tr>
           <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own RFs added</td></tr>
-          <tr><td>Solid tumors</td><td>{n_solid}</td><td>NSCLC, SCLC, breast, prostate, RCC, melanoma, CRC, gastric, PDAC, HCC, GBM, ovarian, endometrial, urothelial, cervical, esophageal — mostly 1L. 2L+ and adjuvant contexts are partial.</td></tr>
+          <tr><td>Solid tumors</td><td>{n_solid}</td><td>{solid_disease_list} — mostly 1L. 2L+ and adjuvant contexts are partial.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — separate specialization track</td></tr>
           <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is wired into multimodality Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modeled as a separate entity with technical parameters (dose / fractions / target volumes)</td></tr>
           <tr><td>Surgery plans</td><td>not modeled</td><td>Surgical-oncology indications are absent</td></tr>
           <tr><td>Live regimen-availability data (NHSU formulary live feed)</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog item</td></tr>
-          <tr><td>Experimental options (clinical trials)</td><td>tracer-bullet</td><td>Phase C: <code>enumerate_experimental_options</code> + ExperimentalOption schema are in, but not yet integrated into generate_plan and not surfaced in render</td></tr>
+          <tr><td>Experimental options (clinical trials)</td><td>integrated</td><td>Phase C done: <code>enumerate_experimental_options</code> + ExperimentalOption schema, integrated into <code>generate_plan</code>, third Plan track is rendered, 7-day on-disk TTL cache. Still missing: curated trial ↔ patient-eligibility mapping (not just disease+biomarker)</td></tr>
+          <tr><td>Access Matrix (UA-availability per Plan)</td><td>integrated</td><td>Phase D: <code>AccessMatrix</code> + <code>AccessMatrixRow</code> aggregate registered/НСЗУ/cost/pathway across tracks; rendered in Plan. Still missing: a curated <code>AccessPathway</code> seed (~30 drugs) — gated on two-reviewer signoff per CHARTER §6.1</td></tr>
         </tbody>
       </table>
       <div class="callout">

@@ -21,7 +21,14 @@ from .drug import Drug
 from .experimental_option import ExperimentalOption, ExperimentalTrial
 from .indication import Indication
 from .monitoring import MonitoringSchedule
-from .plan import FDAComplianceMetadata, Plan, PlanAnnotation, PlanTrack
+from .plan import (
+    AccessMatrix,
+    AccessMatrixRow,
+    FDAComplianceMetadata,
+    Plan,
+    PlanAnnotation,
+    PlanTrack,
+)
 from .questionnaire import (
     QGroup,
     Question,
@@ -58,6 +65,8 @@ ENTITY_BY_DIR: dict[str, type] = {
 }
 
 __all__ = [
+    "AccessMatrix",
+    "AccessMatrixRow",
     "AccessPathway",
     "Algorithm",
     "Biomarker",

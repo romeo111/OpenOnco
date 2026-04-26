@@ -35,12 +35,15 @@ from pathlib import Path
 from typing import Any, Optional
 
 from knowledge_base.schemas import (
+    AccessMatrix,
+    AccessMatrixRow,
     ExperimentalOption,
     FDAComplianceMetadata,
     Plan,
     PlanTrack,
 )
 from knowledge_base.validation.loader import load_content
+from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
 
@@ -440,6 +443,20 @@ def generate_plan(
             )
         except Exception as exc:
             result.warnings.append(f"experimental options skipped: {exc}")
+
+    # Access Matrix (Phase D of UA-ingestion plan §3.1 + §4). Render-time
+    # aggregation of UA-availability metadata across tracks + experimental
+    # trials. NEVER read back by engine selection — the invariant test
+    # asserts plan signature is unchanged when all drugs are monkeypatched
+    # to registered=False.
+    try:
+        result.plan.access_matrix = build_access_matrix(
+            tracks,
+            entities,
+            experimental_options=result.experimental_options,
+        )
+    except Exception as exc:
+        result.warnings.append(f"access matrix skipped: {exc}")
 
     return result
 

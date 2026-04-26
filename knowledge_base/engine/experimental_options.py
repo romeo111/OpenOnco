@@ -22,14 +22,19 @@ Architectural notes:
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Callable, Optional
 
 from knowledge_base.schemas.experimental_option import (
     ExperimentalOption,
     ExperimentalTrial,
 )
+
+
+_DEFAULT_TTL_DAYS = 7
 
 
 # Statuses we surface as "experimental option for the patient."
@@ -151,6 +156,50 @@ class _CacheEntry:
 _QUERY_CACHE: dict[str, _CacheEntry] = {}
 
 
+def _disk_cache_path(cache_root: Path, sig: str) -> Path:
+    return cache_root / f"ctgov_{sig}.json"
+
+
+def _read_disk_cache(
+    cache_root: Path, sig: str, ttl_days: int
+) -> Optional[ExperimentalOption]:
+    """Return cached `ExperimentalOption` from disk if file exists and the
+    `cached_at` timestamp is within TTL. Otherwise return None. Any error
+    (missing file, corrupted JSON, schema drift) is swallowed — cache is
+    a best-effort optimization, never a correctness requirement."""
+    path = _disk_cache_path(cache_root, sig)
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        cached_at = datetime.fromisoformat(payload["cached_at"])
+        if datetime.now(timezone.utc) - cached_at > timedelta(days=ttl_days):
+            return None
+        return ExperimentalOption.model_validate(payload["option"])
+    except (OSError, ValueError, KeyError):
+        return None
+
+
+def _write_disk_cache(
+    cache_root: Path, sig: str, option: ExperimentalOption
+) -> None:
+    """Best-effort write of an `ExperimentalOption` to a per-signature JSON
+    file. Failures are silently ignored — engine should not block on cache
+    write errors (filesystem full, read-only mount, etc.)."""
+    try:
+        cache_root.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "cached_at": datetime.now(timezone.utc).isoformat(),
+            "option": option.model_dump(),
+        }
+        _disk_cache_path(cache_root, sig).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
+
+
 def enumerate_experimental_options(
     *,
     disease_id: str,
@@ -161,6 +210,8 @@ def enumerate_experimental_options(
     search_fn: Optional[SearchFn] = None,
     max_results: int = 10,
     cache: bool = True,
+    cache_root: Optional[Path] = None,
+    cache_ttl_days: int = _DEFAULT_TTL_DAYS,
 ) -> ExperimentalOption:
     """Return an `ExperimentalOption` bundle for one (disease, biomarker,
     stage, line) scenario.
@@ -194,6 +245,14 @@ def enumerate_experimental_options(
 
     if cache and sig in _QUERY_CACHE:
         return _QUERY_CACHE[sig].option
+
+    if cache and cache_root is not None:
+        disk_hit = _read_disk_cache(Path(cache_root), sig, cache_ttl_days)
+        if disk_hit is not None:
+            _QUERY_CACHE[sig] = _CacheEntry(
+                when=datetime.now(timezone.utc), option=disk_hit
+            )
+            return disk_hit
 
     # Stable id derived from disease + biomarker + line + sync month
     sync_ts = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -252,6 +311,8 @@ def enumerate_experimental_options(
 
     if cache:
         _QUERY_CACHE[sig] = _CacheEntry(when=datetime.now(timezone.utc), option=option)
+        if cache_root is not None:
+            _write_disk_cache(Path(cache_root), sig, option)
 
     return option
 

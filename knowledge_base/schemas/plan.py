@@ -80,6 +80,60 @@ class FDAComplianceMetadata(Base):
     time_critical: bool = False  # if true, falls outside non-device CDS carve-out
 
 
+class AccessMatrixRow(Base):
+    """One row in the per-Plan Access Matrix (ua-ingestion plan §3.1 + §4).
+
+    Aggregates UA-availability metadata for one (track, regimen) pair —
+    summarising the registered / reimbursed status, cost orientation, and
+    primary access pathway of the regimen's drug components.
+
+    Render-time only. The engine never reads any field on this row as a
+    selection signal (plan §0 invariant)."""
+
+    track_id: str                              # "standard" | "aggressive" | "trial:NCT…"
+    track_label: str
+    regimen_id: Optional[str] = None
+    regimen_name: Optional[str] = None
+    drug_ids: list[str] = Field(default_factory=list)
+
+    # Aggregated availability across all drug components of the regimen:
+    #   True   — all components registered / reimbursed
+    #   False  — at least one component not registered / not reimbursed
+    #   None   — no UA-availability metadata was carried on any component
+    registered_in_ua: Optional[bool] = None
+    reimbursed_nszu: Optional[bool] = None
+
+    # Cost summary across components — sum of `cost_uah_self_pay.min` /
+    # `.max` when set, else null. Currency assumed UAH (CostRange default).
+    cost_self_pay_min: Optional[float] = None
+    cost_self_pay_max: Optional[float] = None
+    cost_reimbursed_min: Optional[float] = None
+    cost_reimbursed_max: Optional[float] = None
+    cost_per_unit: Optional[str] = None        # cycle | course | month — first-seen
+    cost_last_updated: Optional[str] = None    # oldest component cost_last_updated
+    cost_is_stale: bool = False                # True when oldest >180 days ago
+
+    # Pathway hint (resolved AccessPathway.id when one of the drugs
+    # has a matching `applies_to_drug_ids` entry; None otherwise).
+    primary_pathway_id: Optional[str] = None
+    pathway_alternative_ids: list[str] = Field(default_factory=list)
+
+    # Free-text caveat surfaced on render (e.g. "1 of 3 components not
+    # listed in НСЗУ formulary" or "verify with foundation directly").
+    notes: list[str] = Field(default_factory=list)
+
+
+class AccessMatrix(Base):
+    """Per-Plan aggregation of UA-availability metadata across all tracks.
+
+    Built by `_build_access_matrix(plan, entities)` after track materialization.
+    Render-time only; persisted on Plan for plan-export reproducibility."""
+
+    rows: list[AccessMatrixRow] = Field(default_factory=list)
+    generated_at: Optional[str] = None
+    notes: list[str] = Field(default_factory=list)
+
+
 class Plan(Base):
     id: str  # "PLAN-PZ-001-V1"
     patient_id: str  # "PZ-001"
@@ -108,3 +162,8 @@ class Plan(Base):
 
     # Living document — append-only annotations
     annotations: list[PlanAnnotation] = Field(default_factory=list)
+
+    # Access Matrix (ua-ingestion plan §3.1 + §4) — render-time UA-availability
+    # aggregation across tracks. Optional so older Plan YAML still loads.
+    # Engine never reads back from this field (plan §0 invariant).
+    access_matrix: Optional["AccessMatrix"] = None
