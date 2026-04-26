@@ -1,0 +1,50 @@
+id: ALGO-MTC-1L
+applicable_to_disease: DIS-MTC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for advanced / progressive medullary
+  thyroid carcinoma by RET mutation status. RET-mutant: selpercatinib
+  (LIBRETTO-531 superior to multikinase TKIs in PFS + tolerability).
+  RET-WT (RAS-mutant or unknown): cabozantinib (EXAM). Localized MTC
+  is managed surgically (total thyroidectomy + central neck dissection)
+  and is out of scope for this 1L systemic algorithm. Trigger for
+  systemic therapy: symptomatic disease OR structural progression OR
+  calcitonin doubling time <2 yr.
+
+output_indications:
+  - IND-MTC-ADVANCED-1L-SELPERCATINIB
+  - IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
+
+default_indication: IND-MTC-ADVANCED-1L-SELPERCATINIB
+alternative_indication: IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "RET mutation positive (somatic M918T OR germline MEN2-associated C634/M918T/other)"
+    if_true:
+      result: IND-MTC-ADVANCED-1L-SELPERCATINIB
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "RET wild-type (RAS-mutant OR unknown OR negative)"
+    if_true:
+      result: IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
+    if_false:
+      result: IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ONCOKB
+last_reviewed: '2026-04-26'
+notes: >
+  Decision tree intentionally simplified: pralsetinib is an
+  alternative RET-selective and vandetanib an alternative multikinase,
+  not authored as separate Indications for MVP. Trigger criteria for
+  systemic therapy (calcitonin doubling time <2 yr, structural
+  progression, symptoms) are encoded as `stage_requirements` on each
+  Indication. Localized MTC routes to surgery (separate solid-tumor
+  workup not yet authored — KNOWLEDGE_SCHEMA_SPECIFICATION §17 gap).

@@ -1,0 +1,57 @@
+id: REG-SELPERCATINIB-MTC-1L
+name: "Selpercatinib monotherapy (advanced/progressive RET-mutant MTC, 1L)"
+name_ua: "Селперкатиніб моно (поширена/прогресуюча RET-мутантна МТС, 1L)"
+alternate_names:
+  - "Retevmo MTC"
+  - "LIBRETTO-531 regimen"
+
+components:
+  - drug_id: DRUG-SELPERCATINIB
+    dose: "160 mg PO BID with food (≥50 kg); 120 mg BID (<50 kg)"
+    schedule: "Continuous, until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Hypertension (resting SBP ≥160 OR DBP ≥100 despite optimal antihypertensive)"
+    modification: "Hold; restart at next lower dose level once SBP <140 / DBP <90"
+    rationale: "Class effect; persistent in ~40%"
+    source_refs:
+      - SRC-NCCN-THYROID-2025
+  - condition: "Hepatotoxicity (ALT/AST >5× ULN OR bilirubin >3× ULN)"
+    modification: "Hold until recovery; resume at next lower dose; permanently discontinue if recurs at lowest dose"
+    rationale: "Boxed AE; check LFTs q2 weeks for first 3 mo, then monthly"
+    source_refs:
+      - SRC-NCCN-THYROID-2025
+  - condition: "QTc >500 ms"
+    modification: "Hold; correct electrolytes; resume at lower dose once QTc <470 ms"
+    rationale: "QT prolongation risk"
+  - condition: "Hemorrhage (any grade ≥3)"
+    modification: "Hold; resume at lower dose after recovery; permanently discontinue if life-threatening"
+    rationale: "Bleeding risk"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Selpercatinib NOT registered in Ukraine. Access via DEC named-patient import, Eli Lilly EAP (Retsevmo access program — requires confirmed RET fusion / mutation NGS), or cross-border EU treatment per наказ МОЗ 988. SoC in EU."
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+notes: >
+  Preferred 1L for advanced/progressive RET-mutant MTC per NCCN (LIBRETTO-
+  531 randomized vs cabozantinib/vandetanib: superior PFS, fewer
+  treatment-limiting AEs). LIBRETTO-001 ORR ~73% in RET-mutant MTC
+  with median DOR not reached. Patient must have advanced/unresectable
+  disease + symptomatic OR structural progression OR calcitonin
+  doubling time <2 yr. Pralsetinib (ARROW) is the alternative
+  RET-selective.

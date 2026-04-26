@@ -467,6 +467,46 @@ def test_disk_cache_respects_ttl(tmp_path):
     assert calls["n"] == 2, "stale cache must trigger re-fetch"
 
 
+def test_generate_plan_uses_cache_only_mode(tmp_path):
+    """With `experimental_cache_root` set and `experimental_search_fn=None`
+    (Pyodide's reality), `generate_plan` must surface trials baked into the
+    on-disk cache. Proves the cache-only plumbing in `plan.py`."""
+
+    import json
+    from pathlib import Path
+    from knowledge_base.engine import generate_plan
+
+    REPO_ROOT = Path(__file__).parent.parent
+    KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
+    EXAMPLES = REPO_ROOT / "examples"
+
+    patient = json.loads(
+        (EXAMPLES / "patient_mm_high_risk.json").read_text(encoding="utf-8")
+    )
+
+    # First call: live search_fn populates the cache at tmp_path.
+    studies = [_study("NCT09001000", title="Cached MM trial", phase="PHASE2")]
+    res1 = generate_plan(
+        patient,
+        kb_root=KB_ROOT,
+        experimental_search_fn=lambda **_: studies,
+        experimental_cache_root=tmp_path,
+    )
+    assert res1.experimental_options is not None
+    assert [t.nct_id for t in res1.experimental_options.trials] == ["NCT09001000"]
+
+    # Second call: cache-only (no search_fn). Must hit the disk cache and
+    # return the same trial without raising or returning the empty bundle.
+    clear_experimental_cache()
+    res2 = generate_plan(
+        patient,
+        kb_root=KB_ROOT,
+        experimental_cache_root=tmp_path,
+    )
+    assert res2.experimental_options is not None
+    assert [t.nct_id for t in res2.experimental_options.trials] == ["NCT09001000"]
+
+
 def test_disk_cache_corrupted_file_falls_through(tmp_path):
     """A corrupted JSON file must not raise; the function falls back to
     the search_fn path so the engine never blocks on cache I/O."""

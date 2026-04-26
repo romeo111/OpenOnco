@@ -1,0 +1,89 @@
+id: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  molecular_subtype: NSMP
+  stage_stratum: RECURRENT_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent / metastatic endometrial carcinoma"
+    - "Disease progression on or after 1L platinum-based chemotherapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-DMMR-IHC
+      value_constraint: "deficient"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-LENVATINIB-ENDOM
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~30% pMMR (KEYNOTE-775)"
+  complete_response: "~5% pMMR"
+  progression_free_survival: "Median PFS 6.6 vs 3.8 mo chemo pMMR (HR 0.60, KEYNOTE-775)"
+  overall_survival_5y: "mOS 17.4 vs 12.0 mo chemo pMMR (HR 0.68, KEYNOTE-775)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-ENDOMETRIAL-FRAILTY-AGE
+  - RF-ENDOMETRIAL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-DMMR-IHC
+
+desired_tests:
+  - TEST-ECHO
+
+rationale: >
+  Pembrolizumab + lenvatinib is the NCCN cat 1 preferred 2L for advanced/
+  recurrent pMMR endometrial carcinoma after 1L platinum-based chemo
+  failure. KEYNOTE-775 established OS + PFS + ORR benefit over
+  investigator's-choice chemo (doxo or pacli). Indication applies
+  primarily to pMMR patients (the majority of 2L population since
+  dMMR patients now receive ICI in 1L per RUBY/NRG-GY018).
+  Toxicity is substantial — proactive hypertension management +
+  dose-reduction algorithm + anti-diarrheal supportive care needed.
+  dMMR patients who did not receive ICI in 1L should preferentially
+  receive single-agent ICI (dostarlimab GARNET or pembro KEYNOTE-158)
+  rather than the heavier pembro+lenva combination.
+
+sources:
+  - source_id: SRC-NCCN-UTERINE-2025
+    weight: primary
+    relevant_quote_paraphrase: "Pembrolizumab + lenvatinib is a Category 1 preferred 2L regimen for advanced/recurrent pMMR endometrial carcinoma post-platinum (KEYNOTE-775 evidence)"
+  - source_id: SRC-ESMO-ENDOMETRIAL-2022
+    weight: primary
+    relevant_quote_paraphrase: "Lenvatinib + pembrolizumab recommended 2L endometrial post-platinum; toxicity profile demands dose-modification readiness"
+
+do_not_do:
+  - "НЕ призначати без MMR/MSI-тестування — dMMR пацієнти отримують single-agent ICI preferentially."
+  - "НЕ ігнорувати baseline + serial АТ — гіпертензія Grade ≥3 у >30% пацієнтів; антигіпертензивна prophylaxis з 1-го дня."
+  - "НЕ забути перевірити proteinuria кожен цикл — ленватініб VEGFR-блокада."
+  - "НЕ призначати при активному autoimmune disease — irAE неконтрольовано прогресуватиме."
+  - "НЕ продовжувати при Grade ≥3 irAE без permanent discontinuation consideration."
+  - "НЕ комбінувати з warfarin без INR-моніторингу — підвищена bleeding ризик."
+  - "НЕ починати ленватініб ≤1 тиж до або ≤2 тиж після операції — затримка загоєння рани."
+  - "НЕ ігнорувати Grade ≥3 діарею / hand-foot — dose-reduction обов'язковий (20→14→10→8 мг)."
+
+time_critical: false
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  STUB — pending Co-Lead sign-off. Standard-track 2L for pMMR (NSMP /
+  p53-abnormal HER2-negative) endometrial post-platinum. UA: not NSZU-
+  reimbursed for endometrial 2L (2026); out-of-pocket / charitable.
+  Single-agent doxorubicin or paclitaxel re-challenge is the realistic
+  funded fallback.

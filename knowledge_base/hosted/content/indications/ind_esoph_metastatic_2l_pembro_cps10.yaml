@@ -1,0 +1,79 @@
+id: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced"
+    - "Squamous-cell OR adenocarcinoma histology"
+    - "Disease progression on or after 1L fluoropyrimidine + platinum (without prior ICI)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      value_constraint: "CPS ≥10 (22C3 assay)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-MONO-ESOPH-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~22% (KEYNOTE-181 CPS ≥10 subgroup)"
+  complete_response: "~5%"
+  progression_free_survival: "Median PFS 2.6 mo CPS ≥10 (vs 3.0 mo chemo; ICI kinetics)"
+  overall_survival_5y: "mOS 9.3 vs 6.7 mo chemo (HR 0.69, KEYNOTE-181 CPS ≥10)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-ESOPH-FRAILTY-AGE
+  - RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests: []
+
+rationale: >
+  Pembrolizumab monotherapy is NCCN cat 1 for 2L metastatic esophageal
+  carcinoma (squamous OR adenocarcinoma) with PD-L1 CPS ≥10 after 1L
+  fluoropyrimidine + platinum (without prior ICI). KEYNOTE-181
+  established OS benefit in CPS ≥10 subgroup. Distinct from
+  ATTRACTION-3 nivolumab (squamous only, biomarker-agnostic). Both
+  histologies eligible if CPS ≥10. Patients with adenocarcinoma + CPS
+  <10 → ramucirumab+paclitaxel gastric-style (not separately modeled
+  here). Squamous + CPS<10 → nivolumab (biomarker-agnostic ESCC).
+
+sources:
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    weight: primary
+    relevant_quote_paraphrase: "Pembrolizumab is a Category 1 2L option for esophageal carcinoma with PD-L1 CPS ≥10 (KEYNOTE-181 evidence)"
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    weight: primary
+    relevant_quote_paraphrase: "KEYNOTE-181 supports pembrolizumab 2L for PD-L1 CPS ≥10 esophageal (squamous + adeno)"
+
+do_not_do:
+  - "НЕ призначати без PD-L1 CPS testing — ефективність обмежена CPS ≥10 субгрупою."
+  - "НЕ призначати при активному autoimmune disease — irAE прогресуватиме."
+  - "НЕ продовжувати через Grade ≥3 irAE без permanent discontinuation consideration."
+  - "НЕ використовувати при ECOG ≥3 — користь ICI в frail population не встановлена."
+  - "НЕ використовувати після 1L ICI-exposure (KEYNOTE-590) — нема даних на reuse."
+  - "НЕ підтверджувати план без верифікованого funding pathway — NSZU 2026 НЕ покриває pembrolizumab для стравоходу."
+
+time_critical: false
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  STUB — pending Co-Lead sign-off. Aggressive-track 2L (PD-L1 CPS ≥10
+  selected). UA: pembrolizumab not NSZU-reimbursed for esophageal —
+  out-of-pocket / charitable.

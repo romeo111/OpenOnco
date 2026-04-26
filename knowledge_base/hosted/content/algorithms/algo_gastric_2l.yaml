@@ -1,0 +1,77 @@
+id: ALGO-GASTRIC-2L
+applicable_to_disease: DIS-GASTRIC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ metastatic gastric/GEJ Indication. Three tracks: (1) HER2+
+  (reconfirmed) → T-DXd (DESTINY-Gastric01); (2) HER2-negative → paclitaxel
+  + ramucirumab (RAINBOW); (3) ≥3 prior lines failed → trifluridine-tipiracil
+  (TAGS). MSI-H pembrolizumab monotherapy pathway covered in 1L if not
+  ICI-exposed; 2L MSI-H without prior ICI also routes to pembrolizumab
+  mono via existing IND-CRC-mCRC-1L-MSI-PEMBRO-style logic — not modeled
+  here as separate indication (cross-disease pembro-MSI pattern).
+
+output_indications:
+  - IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+  - IND-GASTRIC-METASTATIC-2L-HER2-TDXD
+  - IND-GASTRIC-METASTATIC-3L-TAS102
+
+default_indication: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+alternative_indication: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
+
+decision_tree:
+  # Step 1 — HER2+ (reconfirmed) → T-DXd. RF-GASTRIC-HIGH-RISK-BIOLOGY
+  # fires on HER2+/CLDN18.2+/MSI-H/EBV+; for 2L the HER2+ subset is the
+  # T-DXd-eligible population (post-trastuzumab failure).
+  - step: 1
+    evaluate:
+      all_of:
+        - red_flag: RF-GASTRIC-HIGH-RISK-BIOLOGY
+        - condition: "HER2+ reconfirmed on archival or fresh biopsy (IHC 3+ OR 2+/ISH+)"
+        - condition: "Prior trastuzumab-containing 1L"
+        - condition: "ECOG ≤1"
+    if_true:
+      result: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
+    if_false:
+      next_step: 2
+
+  # Step 2 — ≥2 prior systemic lines failed → TAS-102 (3L+).
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "≥2 prior systemic regimens (incl. platinum + fluoropyrimidine ± taxane/ramucirumab)"
+        - condition: "ECOG ≤2"
+    if_true:
+      result: IND-GASTRIC-METASTATIC-3L-TAS102
+    if_false:
+      next_step: 3
+
+  # Step 3 — default: HER2-negative 2L post-platinum → pac+ram (RAINBOW).
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Disease progression on or after 1L platinum + fluoropyrimidine ± ICI"
+        - condition: "HER2-negative OR HER2 status unknown / unable to test"
+        - condition: "ECOG ≤2"
+    if_true:
+      result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+    if_false:
+      result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: '2026-04-26'
+notes: >
+  OOS / wiring gaps:
+  (1) MSI-H 2L pembrolizumab-monotherapy not separately modeled here —
+  if patient was MSI-H but 1L did not include ICI, pembro-mono is the
+  preferred 2L (not pac+ram). Engine should surface this as free-text
+  recommendation via RF-GASTRIC-HIGH-RISK-BIOLOGY trace.
+  (2) Zolbetuximab + chemo for CLDN18.2+ patients (SPOTLIGHT/GLOW trials)
+  is a 1L indication when zolbetuximab access exists — not in 2L scope.
+  (3) Nivolumab single-agent / ipi-nivo for late-line MSI-H not modeled
+  (rare scenario; ICI-exposed in 1L is now standard of care).
+  (4) Single-agent paclitaxel weekly is the realistic UA-funded fallback
+  when ramucirumab unavailable — surfaced in regimen notes, not separate
+  indication.

@@ -1,0 +1,56 @@
+id: REG-TDXD-GASTRIC
+name: "Trastuzumab deruxtecan (T-DXd) — 2L+ HER2+ gastric (DESTINY-Gastric01)"
+name_ua: "Трастузумаб дерукстекан (T-DXd) — 2L+ HER2+ шлунок (DESTINY-Gastric01)"
+alternate_names: ["DESTINY-Gastric01 regimen", "Enhertu gastric"]
+
+components:
+  - drug_id: DRUG-TRASTUZUMAB-DERUXTECAN
+    dose: "6.4 mg/kg"
+    schedule: "IV q3 weeks until progression / unacceptable toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: severe
+
+premedication:
+  - "High-emetogenic prophylaxis: NK1-RA + 5-HT3 + dexamethasone (T-DXd ranks high-emetogenic)"
+  - "Olanzapine 5-10 mg PO × 4 days for delayed nausea control"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Suspected ILD/pneumonitis (any grade)"
+    modification: "HOLD immediately + high-resolution CT chest + pulmonology consult; Grade 1 — hold until resolution; Grade ≥2 — permanently discontinue + corticosteroids prednisone 1 mg/kg taper"
+    rationale: "ILD is dose-limiting boxed-warning toxicity (~12% incidence, ~3% G≥3, ~1% fatal)"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Grade 4 neutropenia / febrile neutropenia"
+    modification: "Hold; resume at next-lower dose level (5.4 → 4.4 mg/kg) after recovery; G-CSF prophylaxis"
+  - condition: "LVEF decline >10 percentage points to <50%"
+    modification: "Hold; cardiology consult + repeat echo q3-4 wk; resume only if LVEF normalizes"
+  - condition: "Grade 3 nausea/vomiting despite optimal antiemetics"
+    modification: "Hold until ≤Grade 1; consider dose reduction"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Trastuzumab deruxtecan registered + NSZU-reimbursed for breast HER2+ /
+    HER2-low (2026 onco package), but gastric HER2+ indication NOT in
+    NSZU 2026 package — out-of-pocket / charitable pathway required.
+    Single-agent paclitaxel + ramucirumab (REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC)
+    is the realistic 2L fallback when T-DXd funding unavailable.
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  DESTINY-Gastric01 (Shitara 2020): 2L+ HER2+ gastric/GEJ adenocarcinoma
+  post-trastuzumab failure — T-DXd vs investigator's-choice chemo
+  ORR 51% vs 14%, mOS 12.5 vs 8.4 mo (HR 0.59). Asian-population trial;
+  DESTINY-Gastric02 single-arm Western confirmed activity. Gastric dose
+  6.4 mg/kg q3w (higher than breast 5.4 mg/kg due to faster clearance).
+  ILD remains key dose-limiting toxicity — baseline + serial CT chest
+  + pulmonology referral on any new respiratory symptom mandatory.

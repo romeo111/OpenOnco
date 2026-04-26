@@ -1,0 +1,44 @@
+id: RF-GIST-TRANSFORMATION-PROGRESSION
+definition: "Radiographic progression on imatinib (RECIST progression or new lesion), focal nodule-within-mass pattern on CT, rising SUV on PET, or imatinib trough <1100 ng/mL — requires re-biopsy for secondary KIT mutation, consideration of imatinib dose escalation to 800 mg, or switch to sunitinib / regorafenib / ripretinib."
+definition_ua: "Радіологічне прогресування на imatinib (за RECIST або нове вогнище), вогнище-у-масі (nodule-within-mass) на КТ, зростання SUV на ПЕТ, або трough imatinib <1100 нг/мл — потрібна ребіопсія для виявлення вторинної мутації KIT, ескалація imatinib до 800 мг або перехід на sunitinib / regorafenib / ripretinib."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "imatinib_progression_recist"
+      value: true
+    - finding: "nodule_within_mass_pattern"
+      value: true
+    - finding: "rising_suv_on_imatinib"
+      value: true
+    - finding: "imatinib_trough_ng_ml"
+      threshold: 1100
+      comparator: "<"
+
+clinical_direction: intensify
+severity: major
+priority: 60
+category: transformation-progression
+
+relevant_diseases: [DIS-GIST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  Focal progression on imatinib classically arises from secondary KIT
+  exon 13 / 14 (ATP-binding) or 17 / 18 (activation-loop) mutations
+  emerging clonally. Sequence: dose-escalate to 800 mg if exon 11
+  with focal progression and trough low; switch to sunitinib (B2222
+  follow-on; ATP-binding mutations preferentially sensitive) at clear
+  RECIST progression; regorafenib (GRID) at 3L; ripretinib (INVICTUS,
+  switch-control inhibitor with broad coverage of secondary mutations)
+  4L. Imatinib trough monitoring (target ≥1100 ng/mL) flags
+  pharmacokinetic non-response distinct from biological resistance.
+  Nodule-within-mass is a sensitive early imaging sign of resistance
+  (Choi response criteria literature).

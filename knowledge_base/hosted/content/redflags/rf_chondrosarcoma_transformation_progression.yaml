@@ -1,0 +1,43 @@
+id: RF-CHONDROSARCOMA-TRANSFORMATION-PROGRESSION
+definition: "Local recurrence within the surgical bed, new pulmonary metastases on surveillance CT, malignant transformation of an enchondroma or osteochondroma in Ollier / Maffucci / HME, or pathologic fracture through the tumor — requires re-staging, re-biopsy for grade upgrade or dedifferentiation, and surgical / systemic re-evaluation."
+definition_ua: "Локальний рецидив у зоні попередньої операції, нові метастази в легенях на КТ-нагляді, малігнізація енхондроми або остеохондроми при синдромі Ollier / Maffucci / HME або патологічний перелом через пухлину — потрібна ре-стадіювання, ребіопсія на upgrade гри або дедиференціювання, перегляд хірургічного / системного підходу."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "local_recurrence_surgical_bed"
+      value: true
+    - finding: "new_pulmonary_metastasis"
+      value: true
+    - finding: "enchondroma_malignant_transformation"
+      value: true
+    - finding: "pathologic_fracture_through_tumor"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-CHONDROSARCOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  Chondrosarcoma metastasizes preferentially to lung — surveillance
+  chest CT every 6–12 mo for ≥10 years standard. Pulmonary
+  metastasectomy for oligometastatic disease yields long-term
+  survival in ~30% of resected patients (extrapolated from sarcoma
+  literature). Local recurrence post-resection rate is grade-dependent
+  (10% grade I, 50% grade III) — re-biopsy mandatory because grade
+  upgrade and dedifferentiation can change adjuvant strategy.
+  Pathologic fracture requires en-bloc resection (pre-fracture
+  curettage no longer adequate — tumor seeding through fracture
+  hematoma). Ollier / Maffucci patients require lifetime imaging
+  surveillance — ~25% lifetime malignant transformation risk.

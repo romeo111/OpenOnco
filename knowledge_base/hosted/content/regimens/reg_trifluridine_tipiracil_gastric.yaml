@@ -1,0 +1,55 @@
+id: REG-TRIFLURIDINE-TIPIRACIL-GASTRIC
+name: "Trifluridine-Tipiracil (TAGS) — 3L+ gastric/GEJ"
+name_ua: "Трифлуридин-Типірацил (TAGS) — 3L+ шлунок/GEJ"
+alternate_names: ["TAS-102 monotherapy gastric", "Lonsurf gastric", "TAGS regimen"]
+
+components:
+  - drug_id: DRUG-TRIFLURIDINE-TIPIRACIL
+    dose: "35 mg/m² PO BID (based on FTD component)"
+    schedule: "Days 1-5 + 8-12 of each 28-day cycle (4 doses/week × 2 weeks, then 14-day rest)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Take TAS-102 within 1 hour after meals (morning + evening)"
+  - "Antiemetic ondansetron 8 mg PO 30 min pre-dose if nausea"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "ANC <500 prior to next cycle"
+    modification: "Hold; G-CSF; reduce TAS-102 by 5 mg/m²/dose level next cycle (max 2 reductions)"
+    rationale: "Neutropenia is the dose-limiting toxicity"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Grade 3-4 non-hematologic AE"
+    modification: "Hold until ≤Grade 1; resume at next-lower dose level"
+  - condition: "CrCl 30-59 mL/min"
+    modification: "Reduce starting dose to 20 mg/m² PO BID"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "CrCl <30 mL/min"
+    modification: "15 mg/m² PO BID; close monitoring"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Trifluridine-tipiracil registered, NOT NSZU-reimbursed for gastric.
+    Best-supportive-care alone is the realistic alternative when funding
+    unavailable; clinical-trial referral encouraged.
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  TAGS trial (Shitara 2018): 3L+ gastric/GEJ adenocarcinoma after ≥2
+  prior regimens — TAS-102 vs placebo mOS 5.7 vs 3.6 mo (HR 0.69),
+  PFS 2.0 vs 1.8 mo. NCCN cat 1 for 3L+ gastric. Distinct mechanism
+  from prior fluoropyrimidine exposure (TS-independent thymidine
+  analog incorporation) — active in 5-FU-refractory disease. Main
+  toxicity is myelosuppression (neutropenia ~38%). Hand-foot reactions
+  notably less than fluoropyrimidine.

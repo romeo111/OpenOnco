@@ -1,0 +1,45 @@
+id: RF-HNSCC-TRANSFORMATION-PROGRESSION
+definition: "Loco-regional recurrence within 6 months of definitive chemoradiation, new distant metastasis (lung, bone, liver), carotid blowout risk on imaging, or rapid airway compromise — emergency-tier flag requiring airway / vascular evaluation, salvage-surgery feasibility review, and immediate transition from curative to palliative-systemic intent."
+definition_ua: "Локо-регіональний рецидив протягом 6 місяців після дефінітивної хіміопроменевої терапії, нові віддалені метастази (легені, кістки, печінка), ризик розриву сонної артерії за візуалізацією або швидке порушення прохідності дихальних шляхів — невідкладний прапорець: оцінка прохідності/судин, перегляд можливості salvage-хірургії, перехід від куративного до паліативного системного наміру."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - all_of:
+        - finding: "locoregional_recurrence"
+          value: true
+        - finding: "months_since_definitive_therapy"
+          threshold: 6
+          comparator: "<="
+    - finding: "new_distant_metastasis"
+      value: true
+    - finding: "carotid_encasement_imaging"
+      value: true
+    - finding: "airway_compromise"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-HNSCC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  Early loco-regional recurrence (<6 mo) after CRT carries dismal
+  prognosis (mOS ~6–9 mo) and excludes most curative re-irradiation
+  trials (RTOG 0421 / 1009 require ≥6 mo). Salvage surgery feasibility
+  is the key axis — multidisciplinary review mandatory. Carotid
+  encasement on imaging is a surgical contraindication and predicts
+  fatal blowout if re-irradiated; embolization / palliation only.
+  Airway compromise: tracheostomy before any chemo / RT escalation.
+  Transition to KEYNOTE-048-style palliative systemic therapy
+  (pembrolizumab ± chemo by CPS) when re-treatment infeasible.

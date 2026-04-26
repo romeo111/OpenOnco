@@ -1,0 +1,88 @@
+id: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  molecular_subtype: MMR_DEFICIENT
+  stage_stratum: RECURRENT_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent / metastatic dMMR (MSI-high) endometrial carcinoma"
+    - "Disease progression on or after 1L platinum-based chemotherapy"
+    - "No prior ICI exposure in 1L"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-DMMR-IHC
+      value_constraint: "deficient (loss of MLH1/MSH2/MSH6/PMS2)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DOSTARLIMAB-MONO-ENDOM
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~45% (GARNET dMMR cohort, single-arm)"
+  complete_response: "~15%"
+  progression_free_survival: "Median DoR not reached (>16 mo); median PFS not reached for responders"
+  overall_survival_5y: "2-year OS ~63% (GARNET dMMR)"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-ENDOMETRIAL-FRAILTY-AGE
+  - RF-ENDOMETRIAL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-DMMR-IHC
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests: []
+
+rationale: >
+  Dostarlimab monotherapy is NCCN cat 1 for 2L+ recurrent/metastatic
+  dMMR endometrial carcinoma after 1L platinum-based chemotherapy
+  failure (in patients who did NOT receive ICI in 1L). GARNET trial
+  established durable responses (ORR 45%, DoR >16 mo). Pembrolizumab
+  monotherapy is the labeled equivalent (KEYNOTE-158 pan-tumor MSI-H).
+  This indication applies primarily to historical-era patients whose
+  1L predated ICI standard of care (RUBY/NRG-GY018 era ~2023+); newer
+  dMMR patients who already received ICI in 1L should receive
+  pembro+lenva or chemo re-challenge in 2L instead. Dramatically lower
+  toxicity than pembro+lenva — preferred when single-agent ICI is
+  appropriate clinical choice. Lynch syndrome screening mandatory for
+  all dMMR endometrial.
+
+sources:
+  - source_id: SRC-NCCN-UTERINE-2025
+    weight: primary
+    relevant_quote_paraphrase: "Dostarlimab is a Category 1 option for 2L+ dMMR recurrent endometrial post-platinum (GARNET evidence); pembrolizumab is labeled alternative"
+  - source_id: SRC-ESMO-ENDOMETRIAL-2022
+    weight: primary
+    relevant_quote_paraphrase: "Single-agent ICI (dostarlimab or pembrolizumab) recommended for dMMR/MSI-H recurrent endometrial without prior ICI exposure"
+
+do_not_do:
+  - "НЕ призначати без підтвердженого dMMR / MSI-H статусу — efficacy в pMMR обмежена."
+  - "НЕ призначати при активному autoimmune disease — irAE неконтрольовано прогресуватиме."
+  - "НЕ продовжувати при Grade ≥3 irAE без permanent discontinuation consideration."
+  - "НЕ використовувати при попередньому ICI-exposure (RUBY/NRG-GY018 era 1L) — нема даних на reuse, розгляньте pembro+lenva або chemo re-challenge."
+  - "НЕ забути Lynch syndrome screening (germline testing на MMR genes) для всіх dMMR пацієнтів — affects family + future tumor surveillance."
+  - "НЕ ігнорувати ICI-pneumonitis при появі задишки — HRCT + кортикостероїди."
+
+time_critical: false
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  STUB — pending Co-Lead sign-off. Aggressive-track 2L for dMMR/MSI-H
+  recurrent endometrial without prior ICI. UA: dostarlimab NSZU-reimbursed
+  for endometrial (1L RUBY indication; 2L use under same onco package
+  per current NSZU protocol — verify). Pembrolizumab labeled alternative
+  if dostarlimab unavailable.
