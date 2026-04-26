@@ -1388,4 +1388,26 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .oncokb-3B { background: #f97316; color: white; }
 .oncokb-4 { background: #f3f4f6; color: #374151; }
 .oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
+
+/* Case-token banner (CSD-3 QR flow): shown above /try.html when a profile
+   was loaded from the URL hash (#p=<token>). Success / error variants. */
+.case-token-banner,
+.case-token-banner-error {
+  font-family: 'Source Sans 3', system-ui, sans-serif;
+  font-size: 1em;
+  margin: 16px auto;
+  max-width: 1200px;
+  padding: 12px 18px;
+  border-radius: 6px;
+}
+.case-token-banner {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.case-token-banner-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
 """

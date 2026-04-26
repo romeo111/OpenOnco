@@ -2388,7 +2388,68 @@ runBtn.addEventListener('click', runEngine);
   el.addEventListener('focus', pauseEvalForToolbar);
 }});
 
-loadAssets().catch(e => setError('Initialization failed: ' + e));
+// ── Case-token URL handler (CSD-3-qr-token) ───────────────────────────────
+// QR codes printed on CSD Lab NGS reports encode the patient profile in the
+// URL hash: openonco.info/try.html#p=<base64-gzip-json>. We decode entirely
+// in the browser — CHARTER §9.3, no PHI ever touches a server.
+async function loadFromUrlHash() {{
+  const hash = window.location.hash.slice(1);  // strip #
+  if (!hash) return;
+  const params = new URLSearchParams(hash);
+  const token = params.get('p');
+  if (!token) return;
+
+  try {{
+    // urlsafe-base64 → bytes (re-add padding) → gunzip → JSON
+    const padded = token + '='.repeat((-token.length) & 3);
+    const binStr = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
+    const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));
+    const ds = new DecompressionStream('gzip');
+    const stream = new Response(bytes).body.pipeThrough(ds);
+    const json = await new Response(stream).text();
+    const patient = JSON.parse(json);
+
+    // Try to match a disease questionnaire so the form mode picks up the
+    // profile cleanly — same flow as the example loader.
+    const qIdx = findQuestionnaireForProfile(patient);
+    if (qIdx >= 0) {{
+      diseaseSelect.value = qIdx;
+      renderForm(questionnaires[qIdx]);
+      repopulateExamples(qIdx);
+      populateFormFromProfile(questionnaires[qIdx], patient);
+      setMode('form');
+      lockFilledFields();
+      showExampleLockBanner();
+      textarea.value = JSON.stringify(buildProfile(), null, 2);
+    }} else {{
+      setMode('json');
+      textarea.value = JSON.stringify(patient, null, 2);
+    }}
+    saveDraft();
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner';
+    banner.textContent = '✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setStatus('Профіль із QR завантажено ✓', 'ok');
+  }} catch (err) {{
+    console.error('Failed to decode case token:', err);
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner-error';
+    banner.textContent = '⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setError('QR token decode failed: ' + (err.message || err));
+  }}
+}}
+
+// Run after loadAssets so questionnaires + examples are populated and
+// findQuestionnaireForProfile/populateFormFromProfile can do their job.
+loadAssets()
+  .then(() => loadFromUrlHash())
+  .catch(e => setError('Initialization failed: ' + e));
+window.addEventListener('hashchange', loadFromUrlHash);
 </script>
 </body>
 </html>
