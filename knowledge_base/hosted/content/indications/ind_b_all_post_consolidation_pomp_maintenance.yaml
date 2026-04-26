@@ -1,0 +1,106 @@
+id: IND-B-ALL-POST-CONSOLIDATION-POMP-MAINTENANCE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-B-ALL
+  line_of_therapy: 1  # 1L pathway tail (post-induction-consolidation maintenance)
+  stage_requirements:
+    - "Completed induction + consolidation + interim maintenance + delayed intensification phases"
+    - "In CR (morphologic + ideally MRD-negative or low-positive)"
+    - "Ph-negative B-ALL OR Ph-positive B-ALL (in addition to TKI continuation, off-label)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-POMP-B-ALL-MAINTENANCE
+concurrent_therapy:
+  - SUP-PJP-PROPHYLAXIS
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance setting — measured by EFS/OS, not response rate"
+  complete_response: "Already in CR at start; maintenance preserves CR + eradicates residual disease"
+  progression_free_survival: "3-y EFS 59% (CALGB 10403, AYA cohort with full pediatric-inspired regimen)"
+  overall_survival_5y: "3-y OS 73% (CALGB 10403); historical adult-style regimens 30-40% in AYA — pediatric-style maintenance is the dominant driver"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-B-ALL-TRANSFORMATION-PROGRESSION  # MRD+ / persistent disease at end of consolidation → consider blinatumomab + maintenance OR HCT
+  - RF-B-ALL-HIGH-RISK-BIOLOGY
+  - RF-B-ALL-ORGAN-DYSFUNCTION
+  - RF-B-ALL-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-FLOW-CYTOMETRY
+desired_tests:
+  - TEST-NGS-MYELOID-PANEL  # MRD trajectory if NGS-based MRD available
+
+rationale: >
+  Standard 2-3 yr POMP maintenance is the cornerstone tail of
+  pediatric-inspired BFM-style B-ALL therapy and the dominant
+  driver of cure in AYA + adult Ph-negative B-ALL. CALGB 10403
+  (Stock 2019, Blood) demonstrated 3-y EFS 59% and OS 73% in AYA
+  17-39 yr — substantially superior to historical adult-style
+  protocols. Total treatment duration ~2 yr (women) — 3 yr (men)
+  from start of interim maintenance. Components: 6-MP PO daily
+  (titrate to mild myelosuppression) + MTX PO weekly + monthly
+  vincristine + prednisone pulse. PJP prophylaxis mandatory
+  throughout. TPMT/NUDT15 genotyping recommended pre-initiation
+  to identify poor metabolizers requiring dramatic 6-MP reduction.
+  For Ph+ B-ALL, POMP maintenance is given alongside continued
+  TKI (imatinib/dasatinib/ponatinib) per institutional protocol.
+
+sources:
+  - source_id: SRC-CALGB-10403-STOCK-2019
+    position: supports
+    relevant_quote_paraphrase: "POMP maintenance × 2-3 years is integral to CALGB 10403 pediatric-inspired AYA protocol; 3-y OS 73%"
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Maintenance therapy for 2-3 years (POMP-style) recommended for Ph-negative B-ALL; TPMT/NUDT15 genotyping suggested"
+
+do_not_do:
+  - "НЕ розпочинати maintenance без верифікованого CR після консолідації — MRD+ потребує переоцінки (blinatumomab, HCT-bridge)."
+  - "НЕ призначати 6-МП без TPMT/NUDT15 генотипу (якщо доступно) — homozygous poor metabolizers потребують dose reduction до 10% або уникнення."
+  - "НЕ комбінувати з allopurinol без 6-МП dose reduction (~50-75%) — xanthine oxidase блокада підвищує токсичність."
+  - "НЕ припиняти PJP-профілактику (TMP/SMX) до завершення повного maintenance — pneumocystis ризик зберігається."
+  - "НЕ ігнорувати persistent transaminitis — 6-MP + MTX synergistic hepatotoxicity може прогресувати до VOD."
+  - "НЕ скорочувати maintenance до <2 років — дані з historical relapse pattern показують пік рецидивів на 18-30 місяцях."
+
+known_controversies:
+  - topic: "Optimal maintenance duration: 2 vs 3 years in AYA Ph-negative B-ALL"
+    positions:
+      - position: "2 years (CCG-style): non-inferior outcomes, less toxicity, less PJP exposure"
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: "3 years (BFM-style, men): CALGB 10403 used 3-yr arm based on historical CCG-1961 sex-specific outcome differences"
+        sources:
+          - SRC-CALGB-10403-STOCK-2019
+    our_default: "Sex-specific per CALGB 10403 protocol (2 yr women, 3 yr men); shorter if toxicity-limiting"
+    rationale: "Direct comparative trial in AYA limited; BFM standard reflects historical pediatric data"
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead signoff. Standard-track maintenance
+  for B-ALL post-induction-consolidation. line_of_therapy: 1 reflects
+  1L pathway continuation (analogous to MM lenalidomide and AML QUAZAR
+  patterns). Engine should activate after consolidation + interim
+  maintenance + delayed intensification phases complete with confirmed
+  CR. For Ph+ B-ALL, runs alongside continued TKI per institutional
+  protocol.

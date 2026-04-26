@@ -1,0 +1,84 @@
+id: REG-POMP-B-ALL-MAINTENANCE
+name: "POMP maintenance — B-ALL post-induction-consolidation (vincristine + 6-MP + MTX + prednisone)"
+name_ua: "POMP підтримуюча терапія B-ALL після індукції-консолідації (вінкристин + 6-МП + MTX + преднізолон)"
+alternate_names:
+  - "POMP"
+  - "B-ALL maintenance"
+  - "Vincristine/6-MP/MTX/prednisone maintenance"
+  - "BFM-style maintenance phase"
+
+components:
+  - drug_id: DRUG-MERCAPTOPURINE
+    dose: "50-75 mg/m² PO daily (continuous), titrated to ANC 0.75-1.5 × 10⁹/L; dose-adjust per TPMT/NUDT15 genotype if measured"
+    schedule: "PO daily, continuous (taken on empty stomach, bedtime preferred)"
+    route: PO
+  - drug_id: DRUG-METHOTREXATE
+    dose: "20 mg/m² PO weekly (titrated to ANC + tolerance)"
+    schedule: "PO weekly, same day each week"
+    route: PO
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² IV (cap 2 mg) day 1 of each maintenance pulse"
+    schedule: "IV monthly (every 4 weeks) during pulse phases, paired with prednisone"
+    route: IV
+  - drug_id: DRUG-PREDNISONE
+    dose: "60 mg/m²/day PO × 5 days each monthly pulse"
+    schedule: "PO × 5 days every 4 weeks (paired with vincristine pulse)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continue maintenance to total treatment duration of 2 years (women) - 3 years (men) from start of interim maintenance"
+toxicity_profile: low-moderate
+
+premedication:
+  - "Antiemetics PRN with vincristine pulse"
+  - "Stool softener / laxative continuous (vincristine ileus prophylaxis)"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS  # TMP/SMX × duration of maintenance
+  - SUP-HBV-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "ANC <0.75 × 10⁹/L OR platelets <75 × 10⁹/L"
+    modification: "Hold 6-MP + MTX; resume at lower dose on count recovery (6-MP 25-50% reduction)"
+    rationale: "Maintenance is dose-titrated to mild myelosuppression; cytopenia signals over-dosing"
+    source_refs:
+      - SRC-CALGB-10403-STOCK-2019
+      - SRC-NCCN-BCELL-2025
+  - condition: "TPMT or NUDT15 poor metabolizer genotype"
+    modification: "6-MP at 10% of standard dose OR avoid; consult pharmacogenomics"
+    rationale: "TPMT*3A/*3A or NUDT15 c.415C>T homozygotes have severe life-threatening myelosuppression at standard doses"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Transaminitis (ALT/AST >5× ULN OR bilirubin >2 mg/dL)"
+    modification: "Hold both 6-MP and MTX; resume at 50% on resolution"
+    rationale: "Both agents are hepatotoxic; synergistic in maintenance"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Severe peripheral neuropathy grade ≥3"
+    modification: "Hold vincristine; resume at 1 mg fixed dose if recovery to grade ≤1"
+    rationale: "Cumulative neurotoxicity; cap dose to limit"
+  - condition: "Concurrent allopurinol indicated (uric acid management)"
+    modification: "Reduce 6-MP dose by 50-75%"
+    rationale: "Allopurinol blocks xanthine oxidase, increases active 6-MP metabolites"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "All four POMP components are registered and НСЗУ-reimbursed for B-ALL maintenance."
+
+sources:
+  - SRC-CALGB-10403-STOCK-2019
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+notes: >
+  CALGB 10403 (Stock 2019): 2-3 yr POMP maintenance after induction +
+  consolidation + interim maintenance + delayed intensification.
+  Standard tail of pediatric-inspired BFM-style regimen for AYA
+  Ph-negative B-ALL; also used in adult Ph-negative ALL and post
+  hyper-CVAD adult protocols. Dose-titrated to mild myelosuppression
+  (ANC 0.75-1.5 × 10⁹/L). TPMT/NUDT15 genotyping recommended
+  pre-initiation when available. PJP prophylaxis (TMP/SMX) mandatory
+  throughout maintenance. STUB — requires Clinical Co-Lead signoff.

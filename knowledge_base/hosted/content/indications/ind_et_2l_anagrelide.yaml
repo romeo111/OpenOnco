@@ -1,0 +1,116 @@
+id: IND-ET-2L-ANAGRELIDE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ET
+  line_of_therapy: 2
+  stage_requirements:
+    - "ET with HU intolerance OR HU resistance per ELN criteria"
+    - "Persistent thrombocytosis (plt >600 × 10⁹/L) on optimized HU dose"
+    - "OR HU-related toxicity (cutaneous ulcers, severe cytopenias, GI intolerance)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ANAGRELIDE-ET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~70-75% achieve plt <600 × 10⁹/L; ~50% achieve <450 × 10⁹/L"
+  complete_response: "Cytoreduction goal — measured by platelet response and thrombosis prevention"
+  progression_free_survival: "Long-term cytoreductive maintenance; thrombosis-free survival inferior to HU per PT-1 in arterial events"
+  overall_survival_5y: "Median OS ~15-20 years for ET overall; not directly altered by 2L choice"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-ET-FRAILTY-AGE
+  - RF-PV-ET-HIGH-THROMBOSIS-RISK
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+  - RF-PV-ET-ORGAN-DYSFUNCTION
+  - RF-PV-ET-INFECTION-SCREENING
+  - RF-ET-TRANSFORMATION-PROGRESSION
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-COAG-PANEL
+  - TEST-ECHO  # baseline LVEF before anagrelide due to BBW
+  - TEST-PREGNANCY
+  - TEST-BCR-ABL-JAK2
+desired_tests:
+  - TEST-NGS-MYELOID-PANEL  # ASXL1, SF3B1, U2AF1, TP53 — adverse markers for MF transformation
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE  # if MF transformation suspected
+
+rationale: >
+  Anagrelide is standard 2L cytoreduction for ET with HU intolerance
+  or HU resistance per ELN criteria (NCCN Cat 2A). PT-1 trial
+  (Harrison 2005, NEJM): in 809 high-risk ET patients, HU + ASA was
+  SUPERIOR to anagrelide + ASA on composite vascular endpoint —
+  anagrelide had MORE arterial thrombosis, MORE serious hemorrhage,
+  and MORE progression to myelofibrosis. Therefore anagrelide is NOT
+  preferred 1L; reserved for HU failure. Pegylated interferon-α
+  (ropeginterferon) is an alternative 2L (preferred for younger
+  patients with disease-modification goal, autoimmune-tolerable, no
+  cardiac comorbidity). Anagrelide preferred over peg-IFN when:
+  patient declines IFN, autoimmune comorbidity, depression history,
+  no cardiac comorbidity. Cardiac baseline (ECG + echo with LVEF)
+  required before initiation. Continued low-dose ASA throughout.
+  Major UA access barrier: anagrelide registered but NOT
+  НСЗУ-reimbursed for ET — out-of-pocket only.
+
+sources:
+  - source_id: SRC-PT1-HARRISON-2005
+    position: supports
+    relevant_quote_paraphrase: "PT-1: HU + ASA superior to anagrelide + ASA on composite vascular endpoint in high-risk ET; anagrelide reserved for HU failure"
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: "Anagrelide recommended (Cat 2A) as 2L cytoreduction for ET with HU intolerance or resistance"
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: "Anagrelide is option for HU-resistant/intolerant ET; pegylated IFN-α an alternative for younger patients"
+
+do_not_do:
+  - "НЕ призначати 1L — PT-1 показав inferior arterial thrombosis vs HU."
+  - "НЕ ескалувати дозу швидше за 0.5 мг/тиждень — кумулятивна тахікардія + cardiomyopathy ризик."
+  - "НЕ розпочинати без baseline ECG + echo (LVEF) — BBW для CV-events; cardiomyopathy задокументована."
+  - "НЕ комбінувати з PDE3-інгібіторами або іншими вазодилятаторами без кардіолога."
+  - "НЕ продовжувати при new CHF або LVEF падінні ≥10% — припинити, перейти на peg-IFN-α."
+  - "НЕ призначати при вагітності — IFN-α перевага."
+  - "НЕ забувати про continued low-dose ASA — bleeding ризик additive, але anti-thrombotic ефект зберігається."
+  - "НЕ пропускати UA-funding pathway розмову — НСЗУ не покриває для ET, тільки out-of-pocket."
+
+known_controversies:
+  - topic: "Anagrelide vs pegylated interferon-α (ropeginterferon) as 2L for HU-resistant/intolerant ET"
+    positions:
+      - position: "Anagrelide: oral, less immune-mediated AE, but BBW cardiac + PT-1 unfavorable arterial signal"
+        sources:
+          - SRC-NCCN-MPN-2025
+          - SRC-PT1-HARRISON-2005
+      - position: "Pegylated interferon (ropeginterferon): disease-modifying potential (V617F allele burden reduction); preferred for younger fit + disease-modification goal"
+        sources:
+          - SRC-ESMO-MPN-2015
+        evidence_note: "PROUD-PV/CONTINUATION-PV PV data extrapolated; less ET-specific RCT data"
+    our_default: "Pegylated IFN-α preferred for younger fit + disease-modification goal + no autoimmune comorbidity; anagrelide for older / IFN-intolerant / IFN-declining / no cardiac comorbidity"
+    rationale: "PT-1 unfavorable arterial signal nudges peg-IFN preferred where feasible; anagrelide remains valid option"
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead signoff. Standard-track 2L cytoreduction
+  for HU-resistant/intolerant ET. NOTE: ET 2L algorithm (algo_et_2l.yaml)
+  is MISSING from KB — flagged in audit report; should be authored from
+  the algorithm-batch process, not unilaterally. Indication can still
+  be activated by 1L algorithm fall-through with HU-resistance RF
+  matching. UA access barrier dominant (not reimbursed for ET).

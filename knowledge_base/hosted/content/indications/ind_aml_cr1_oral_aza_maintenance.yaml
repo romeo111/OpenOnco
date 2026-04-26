@@ -1,0 +1,101 @@
+id: IND-AML-CR1-ORAL-AZA-MAINTENANCE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1  # 1L pathway continuation (post-induction maintenance)
+  stage_requirements:
+    - "Post-induction CR/CRi achieved (with or without consolidation)"
+    - "Patient ≥55 years OR not a candidate for alloHCT (frailty, comorbidity, donor unavailable, patient preference)"
+    - "Started within 4 months of CR/CRi achievement"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ORAL-AZA-QUAZAR-MAINTENANCE
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance setting — measured by RFS/OS, not response"
+  complete_response: "MRD-negativity conversion in subset (QUAZAR exploratory analysis)"
+  progression_free_survival: "Median RFS 10.2 mo vs 4.8 mo placebo (HR 0.65, p<0.001)"
+  overall_survival_5y: "Median OS 24.7 mo vs 14.8 mo placebo (HR 0.69, p<0.001)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-AML-FRAILTY-AGE
+  - RF-AML-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-BM-ASPIRATE
+  - TEST-FLOW-CYTOMETRY
+desired_tests:
+  - TEST-NGS-MYELOID-PANEL  # to assess MRD trajectory
+
+rationale: >
+  Standard-track CR1 maintenance for AML patients ≥55 years not
+  proceeding to alloHCT (the dominant scenario for older / unfit
+  patients). QUAZAR AML-001 (Wei 2020): oral azacitidine 300 mg PO
+  daily × 14 d / 28-d cycle vs placebo improved median OS (24.7 vs
+  14.8 mo; HR 0.69, p<0.001) and RFS (10.2 vs 4.8 mo; HR 0.65) —
+  irrespective of post-induction consolidation status. FDA-approved
+  Sep 2020 as Onureg. CRITICAL: only the oral CC-486 formulation
+  (Onureg) qualifies; SC/IV azacitidine is NOT bioequivalent and
+  must NOT be substituted for QUAZAR maintenance. UA access barrier:
+  Onureg not registered in Ukraine — engine should flag funding
+  pathway as required step before activating this indication.
+
+sources:
+  - source_id: SRC-QUAZAR-WEI-2020
+    position: supports
+    relevant_quote_paraphrase: "Oral azacitidine 300 mg × 14 d / 28 d cycle vs placebo: mOS 24.7 vs 14.8 mo (HR 0.69) in AML CR1 not transplanted"
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: "Oral azacitidine maintenance is recommended Cat 1 for AML CR1 in patients not proceeding to alloHCT per QUAZAR"
+  - source_id: SRC-ELN-AML-2022
+    position: supports
+    relevant_quote_paraphrase: "ELN endorses oral azacitidine maintenance post-induction CR for transplant-ineligible AML"
+
+do_not_do:
+  - "НЕ підставляти SC/IV азацитидин замість Onureg — формуляції НЕ біоеквівалентні; ефективність maintenance документована тільки для перорального CC-486."
+  - "НЕ розпочинати maintenance до 2 повних місяців після останнього курсу консолідації або щонайменше повного відновлення CBC."
+  - "НЕ затримувати >4 місяців від CR/CRi — ефективність QUAZAR продемонстрована при початку в межах цього вікна."
+  - "НЕ продовжувати maintenance при overt morphological relapse — переключитись на rescue (gilteritinib якщо FLT3+, ven+aza, або трансплантат-bridge)."
+  - "НЕ забути HBV/HCV скринінг до старту — реактивація задокументована з HMA."
+  - "НЕ ігнорувати persistent grade ≥3 GI toxicity — зниження дози до 200 мг або скорочення до 7-денного циклу збереже expose-effect баланс."
+
+known_controversies:
+  - topic: "Oral azacitidine maintenance for transplant-eligible patients (bridge-to-transplant)"
+    positions:
+      - position: "Off-label bridging use accumulating; may delay relapse during HCT preparation"
+        sources:
+          - SRC-NCCN-AML-2025
+      - position: "Not formally evaluated in QUAZAR (HCT-eligible excluded); standard remains direct alloHCT once donor identified"
+        sources:
+          - SRC-ELN-AML-2022
+    our_default: "Maintenance only for non-HCT pathway; HCT-eligible patients proceed direct to transplant once donor secured"
+    rationale: "QUAZAR enrolment criteria define on-label use; bridging is investigational"
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead signoff. Standard-track post-induction
+  maintenance for AML CR1 in transplant-ineligible patients. line_of_therapy: 1
+  reflects continuation of the 1L pathway (analogous to MM lenalidomide
+  maintenance pattern). Engine should activate after induction → CR/CRi →
+  no-HCT decision branch. Ukraine access barrier dominant (Onureg not
+  registered); engine must flag funding pathway.
