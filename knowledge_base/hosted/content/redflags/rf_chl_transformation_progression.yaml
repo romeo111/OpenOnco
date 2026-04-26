@@ -1,0 +1,51 @@
+id: RF-CHL-TRANSFORMATION-PROGRESSION
+definition: >
+  Classical Hodgkin lymphoma primary-refractory disease (positive interim
+  PET2 with Deauville 4-5 or end-of-treatment PET-positive) OR early
+  relapse <12 months post-ABVD/A+AVD — high-risk subset routes to salvage
+  chemo (ICE / DHAP / BV-bendamustine) followed by autoSCT consolidation;
+  consider BV-nivolumab combination for chemo-refractory.
+definition_ua: >
+  cHL первинно-рефрактерна (PET2 позитивний Deauville 4-5 або PET-позитивний
+  end-of-treatment) АБО ранній рецидив <12 міс після ABVD/A+AVD —
+  високого ризику підгрупа, маршрут до сальваджу (ICE / DHAP / BV-бендамустин)
+  з консолідацією autoSCT; розглянути BV-ніволумаб при chemo-рефрактерності.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "chl_primary_refractory"
+      value: true
+    - finding: "interim_pet_deauville_4_5"
+      value: true
+    - finding: "chl_early_relapse_lt_12mo"
+      value: true
+    - finding: "end_treatment_pet_positive"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 60
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-CHL
+shifts_algorithm: []  # not yet wired into ALGO-CHL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Interim-PET-adapted approach (RATHL / AHL2011): PET2 positive →
+  intensify (BEACOPP-esc) or salvage workup; PET2 negative → omit
+  bleomycin (AVD). Primary-refractory or <12mo relapse: salvage
+  chemoimmuno (BV-bendamustine, BV-DHAP, ICE) with target ≥CR before
+  autoSCT (CR rates higher with BV-containing salvage per Moskowitz).
+  Post-autoSCT BV maintenance per AETHERA in high-risk
+  (extranodal at relapse, primary-refractory, or <12mo CR1). For
+  multiply-refractory: nivolumab + brentuximab combinations now
+  preferred over single-agent CPI per CheckMate-744 / KEYNOTE-204.

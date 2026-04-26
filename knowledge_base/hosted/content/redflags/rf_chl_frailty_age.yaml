@@ -1,0 +1,62 @@
+id: RF-CHL-FRAILTY-AGE
+definition: >
+  Frailty profile precluding full-dose ABVD or A+AVD in classical Hodgkin
+  lymphoma: ECOG ≥3, OR (age ≥60 with ≥2 comorbidities — elderly cHL has
+  worse outcomes regardless of regimen), OR composite frailty (age ≥75 +
+  Charlson ≥3 + albumin <3.5). Triggers de-escalation to AVD (omit
+  bleomycin), VEPEMB (gem-vinorelbine-based), or BV-AVD.
+definition_ua: >
+  Профіль frailty, що перешкоджає повнодозовій ABVD або A+AVD при cHL:
+  ECOG ≥3, АБО (вік ≥60 з ≥2 коморбідностями — elderly cHL має гірші
+  результати незалежно від режиму), АБО композитна frailty (вік ≥75 +
+  Charlson ≥3 + альбумін <3.5). Триггерує de-escalation до AVD
+  (без блеоміцину), VEPEMB або BV-AVD.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 60
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-CHL
+shifts_algorithm: []  # not yet wired into ALGO-CHL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Elderly cHL (>60y) outcomes substantially worse — bleomycin pulmonary
+  toxicity disproportionately high (>20% pneumonitis with BLEO in age
+  ≥60 per German Hodgkin trials); omit bleomycin or use BV substitution
+  (A+AVD per ECHELON-1 elderly subgroup — favorable PFS without bleo
+  pneumonitis). Frail / unfit: VEPEMB or BV-bendamustine combinations
+  (palliative-curative balance). BEACOPP-escalated contraindicated >60y
+  due to TRM. CGA-guided dose adjustment essential.

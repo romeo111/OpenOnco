@@ -1,0 +1,55 @@
+id: RF-CHL-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard ABVD or A+AVD in classical
+  Hodgkin lymphoma: LVEF <50% (doxorubicin contraindicated), DLCO <60%
+  (bleomycin pneumonitis risk — drives bleomycin omission or A+AVD
+  substitution), CrCl <30 (cyclophosphamide constraint if BEACOPP), or
+  baseline peripheral neuropathy ≥grade 2 (vincristine + brentuximab in
+  A+AVD both neuropathic).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартним ABVD або A+AVD
+  при cHL: LVEF <50% (доксорубіцин), DLCO <60% (ризик блеоміцин-пневмоніту —
+  пропустити блеоміцин або перейти на A+AVD), CrCl <30 (циклофосфамід при
+  BEACOPP), або базова периферична нейропатія ≥ступінь 2 (вінкристин +
+  brentuximab в A+AVD — обидва нейропатичні).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 85
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CHL
+shifts_algorithm: []  # not yet wired into ALGO-CHL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  DLCO <60%: omit bleomycin (AVD without B) or use A+AVD per ECHELON-1
+  (brentuximab substitutes for bleomycin — major reduction in pulmonary
+  toxicity). LVEF <50%: substitute liposomal doxorubicin or use
+  non-anthracycline (BV-ESHAP / GVD) — rare in chemo-naive cHL but
+  relevant in older patients with baseline cardiomyopathy. Bleomycin
+  pulmonary toxicity is dose-cumulative (>270 IU lifetime risky);
+  baseline DLCO assessment mandatory and re-check between cycles 2-3.
