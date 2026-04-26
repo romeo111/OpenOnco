@@ -9,63 +9,103 @@ atc_code: L01EX23
 rxnorm_id: ""
 drug_class: "Selective RET tyrosine kinase inhibitor"
 mechanism: >
-  STUB — needs full curation. Highly selective RET kinase inhibitor;
-  active against RET fusions (NSCLC, thyroid) and activating RET point
-  mutations (medullary thyroid, MEN2). ARROW: ORR 61% in RET-fusion+
-  NSCLC (TKI-naive ~70%; post-platinum ~57%). FDA 2020.
-  Note: marketing rights returned to original developer; commercial
-  availability has shifted (off-market in US 2024 for some indications;
-  EU continues).
+  Highly selective ATP-competitive small-molecule inhibitor of the
+  RET (REarranged during Transfection) receptor tyrosine kinase,
+  active against RET fusions (KIF5B-RET, CCDC6-RET dominant in NSCLC;
+  diverse fusions in papillary thyroid) and RET-activating point
+  mutations including M918T (germline / sporadic medullary thyroid
+  carcinoma). Designed for selectivity vs VEGFR2 to spare class
+  VEGFR-mediated cardiovascular toxicity (although hypertension still
+  occurs). CNS-penetrant. Pivotal trials ARROW: RET-fusion+ NSCLC
+  TKI-naive ORR ~70%, prior platinum ORR ~57%; RET-mutant medullary
+  thyroid ORR ~60%; RET-fusion+ thyroid (papillary, anaplastic) ORR
+  ~89%. FDA approved Sep 2020. Note commercial availability has
+  contracted in 2023-2024 — Roche returned US rights to Blueprint;
+  some indications were withdrawn from US label while EU access
+  continues; selpercatinib is the more widely available RET-TKI
+  globally (and head-to-head LIBRETTO-431 favors selpercatinib in
+  RET+ NSCLC 1L).
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 2020
-    indications_brief: ["RET-fusion+ NSCLC", "RET-mutant medullary thyroid cancer", "RET-fusion+ thyroid cancer (selpercatinib preferred per current US availability)"]
+    indications_brief:
+      - "RET-fusion+ metastatic NSCLC"
+      - "RET-mutant advanced medullary thyroid carcinoma (≥12 yr)"
+      - "RET-fusion+ thyroid cancer post prior systemic therapy (status evolving — selpercatinib preferred in current US availability)"
   ema:
     approved: true
     year_first_approval: 2021
+    indications_brief:
+      - "RET-fusion+ NSCLC"
+      - "RET-mutant MTC / RET-fusion+ thyroid"
   ukraine_registration:
     registered: false
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Not registered in UA per drlz.com.ua snapshot 2026-04-27. Selpercatinib is the dominant RET-TKI globally."
+    notes: "Не зареєстровано per drlz.com.ua snapshot 2026-04-27. Selpercatinib is the dominant RET-TKI globally and in EU access pathways; pralsetinib accessed via EAP / cross-border / self-pay. Both lack UA НСЗУ reimbursement."
 
 typical_dosing: >
-  STUB. 400 mg PO once daily on empty stomach.
+  400 mg PO once daily on an empty stomach (no food 2 h before, 1 h
+  after — fed-state increases exposure ~100%, raising AE risk).
+  Continuous until progression / unacceptable toxicity. Dose level -1
+  = 300 mg daily; -2 = 200 mg daily; -3 = 100 mg daily; permanent
+  discontinuation if recurrent G3-4 at -3. Hold for ILD/pneumonitis
+  (any grade — workup, permanently discontinue if confirmed),
+  hypertensive crisis, severe hepatotoxicity. No formal renal
+  adjustment.
 
 formulations:
   - "Capsules 100 mg"
 
-absolute_contraindications: []
+absolute_contraindications:
+  - "Hypersensitivity to pralsetinib or any excipient"
+  - "Pregnancy (embryo-fetal toxicity)"
+  - "Confirmed ILD/pneumonitis attributed to pralsetinib"
+
 black_box_warnings: []
+
 common_adverse_events:
-  - "Fatigue"
-  - "Constipation"
-  - "Musculoskeletal pain"
-  - "Hypertension"
-  - "Cytopenias (anemia, neutropenia, lymphopenia)"
-  - "AST/ALT elevation"
-  - "Pneumonia (selective-RET-TKI class)"
+  - "Fatigue ~35%"
+  - "Constipation ~35%"
+  - "Musculoskeletal pain ~32%"
+  - "Hypertension ~28-35%"
+  - "Anemia ~50%"
+  - "Lymphopenia ~50%"
+  - "Neutropenia ~40%"
+  - "Thrombocytopenia ~30%"
+  - "AST/ALT elevation ~30-50% (mostly G1-2)"
+  - "Increased creatinine (transporter; not true AKI) ~28%"
+  - "Diarrhea ~25%"
+  - "Dry mouth / dysgeusia ~20%"
+  - "Headache ~20%"
+
 serious_adverse_events:
-  - "ILD / pneumonitis"
-  - "Hypertensive crisis"
-  - "Severe cytopenias"
-  - "Hepatotoxicity"
-  - "QT prolongation"
-  - "Hemorrhage"
-  - "Wound-healing impairment"
-  - "Tumor lysis syndrome (rare; high-burden RET+)"
+  - "ILD / pneumonitis (G3+ ~3%; class warning — RET-TKI; can be fatal)"
+  - "Hypertensive crisis (G3 ~14% — baseline + serial BP, anti-HTN escalation)"
+  - "Severe cytopenias (G3+ neutropenia ~13%, anemia ~14%, lymphopenia ~22%)"
+  - "Hepatotoxicity (G3 ALT/AST ~5-10%)"
+  - "QT prolongation (modest)"
+  - "Hemorrhage (G3 ~3%; pulmonary, GI)"
+  - "Wound-healing impairment (hold ≥1 wk pre- and post-elective surgery)"
+  - "Tumor lysis syndrome (rare, high-burden RET+)"
+  - "Pneumonia (~20% any-grade; G3 ~9% — overlap with infection vs pneumonitis)"
+
 major_interactions:
-  - "STUB — strong CYP3A4 inhibitors/inducers; P-gp; food effect (take fasting)"
+  - "Strong CYP3A4 inhibitors (azoles, clarithromycin, ritonavir) — significantly ↑ exposure; avoid"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, St John's wort) — ↓ exposure; avoid"
+  - "Combined P-gp + strong CYP3A4 inhibitors — particular caution"
+  - "Food (high-fat meal) — increases AUC ~100%; mandate fasting administration"
+  - "Other myelosuppressive agents — additive cytopenia"
 
 pharmacology:
   half_life_hours: 22
   clearance: "hepatic"
   protein_binding_pct: 97
-  metabolism: "CYP3A4"
+  metabolism: "CYP3A4 (predominant)"
 
 sources:
   - SRC-NCCN-NSCLC-2025
@@ -74,7 +114,16 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. In the RET-TKI class with selpercatinib;
-  selpercatinib is generally preferred when both are available
-  (LIBRETTO-431 head-to-head). Needs full curation of dose-adj for
-  hepatic, monitoring (LFTs, BP, CBC, ECG), and pneumonitis management.
+  Same RET-TKI class as selpercatinib; LIBRETTO-431 head-to-head
+  (selpercatinib vs platinum + pembrolizumab in RET+ NSCLC 1L)
+  established selpercatinib as preferred where access permits.
+  Critical fasting administration (high-fat meal nearly doubles AUC).
+  Baseline + ongoing monitoring: BP weekly first month then monthly,
+  CBC q2 wk first 2 mo then monthly, LFTs q2 wk first 8 wk then
+  monthly, ECG (QTc) baseline + periodic, CT chest at any new
+  respiratory symptoms. Hold for elective surgery ≥1 week pre and
+  resume only after full wound healing. In contemporary US practice
+  some pralsetinib indications have been withdrawn (Roche → Blueprint
+  hand-back); EU and EAP access continues. UA: not registered;
+  pursue selpercatinib EAP first if RET+ tumor and access pathway
+  available.
