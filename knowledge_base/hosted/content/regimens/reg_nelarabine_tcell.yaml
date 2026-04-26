@@ -1,0 +1,53 @@
+id: REG-NELARABINE-TCELL
+name: "Nelarabine monotherapy for r/r T-ALL/T-LBL (adult dosing)"
+name_ua: "Неларабін монотерапія для рецидиву/рефрактерного T-ALL/T-LBL (доросле дозування)"
+alternate_names: ["Nelarabine 506U78", "Arranon mono"]
+
+components:
+  - drug_id: DRUG-NELARABINE
+    dose: "1500 mg/m²"
+    schedule: "IV 2-hour infusion days 1, 3, 5 every 21 days; up to 2 cycles induction, then evaluate"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 2 induction cycles then bridge to alloSCT in fit responders; longer in palliative setting"
+toxicity_profile: severe
+
+premedication:
+  - "Hydration + allopurinol/rasburicase for TLS prophylaxis (especially first cycle in high-burden disease)"
+  - "Antiemetic (5-HT3 + dexamethasone)"
+  - "Baseline neurologic examination documented"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-GCSF-NEUTROPENIA
+  - SUP-ANTIEMETIC-PREMED
+
+dose_adjustments:
+  - condition: "Grade ≥2 neurologic event (peripheral neuropathy, somnolence, encephalopathy)"
+    modification: "Permanent discontinuation — neurotoxicity may be irreversible"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade 4 hematologic toxicity"
+    modification: "Hold until Grade ≤2; resume at same dose with G-CSF support"
+  - condition: "CrCl 30-50"
+    modification: "Reduce dose by 25-50%; close neurologic monitoring"
+  - condition: "Concurrent intrathecal chemotherapy"
+    modification: "Avoid in same week — additive CNS toxicity"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Nelarabine not registered in Ukraine; access via international
+    supply / named-patient pathway only. Major UA access barrier.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Adult dosing per Gökbuget 2017 schema; pediatric dosing (650 mg/m²
+  daily × 5) used in BFM-style protocols. Bridge to alloSCT preferred
+  in fit responders — sustained CR uncommon without consolidation.
+  Stop drug at first sign of Grade ≥2 neurologic toxicity — irreversible
+  Guillain-Barré-like syndromes reported.

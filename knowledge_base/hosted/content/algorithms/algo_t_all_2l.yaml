@@ -1,0 +1,31 @@
+id: ALGO-T-ALL-2L
+applicable_to_disease: DIS-T-ALL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Relapsed/refractory T-ALL/T-LBL — single-track default to nelarabine
+  monotherapy as bridge to alloSCT (Category 1, FDA-approved).
+  Alternatives (FLAG-IDA, clofarabine-based) when nelarabine
+  inaccessible or contraindicated by baseline neurologic status.
+
+output_indications:
+  - IND-T-ALL-2L-NELARABINE
+
+default_indication: IND-T-ALL-2L-NELARABINE
+alternative_indication: IND-T-ALL-2L-NELARABINE
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "R/R T-ALL or T-LBL after ≥1 prior systemic line"
+    if_true:
+      result: IND-T-ALL-2L-NELARABINE
+    if_false:
+      result: IND-T-ALL-2L-NELARABINE
+
+sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  Single-track default pending FLAG-IDA / clofarabine indication
+  authorship. Nelarabine accessibility is dominant UA constraint —
+  international supply required.
