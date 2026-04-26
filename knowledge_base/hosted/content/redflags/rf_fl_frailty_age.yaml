@@ -1,0 +1,64 @@
+id: RF-FL-FRAILTY-AGE
+definition: >
+  Frailty profile precluding standard FL combination immunochemo (BR /
+  R-CHOP / G-B / R-Len): ECOG ≥3, OR (age ≥80 with any moderate
+  comorbidity), OR composite frailty (age ≥75 + Charlson ≥3 + albumin
+  <3.5). Triggers de-escalation to rituximab monotherapy or rituximab +
+  chlorambucil (well-tolerated, palliative-curative balance).
+definition_ua: >
+  Профіль frailty при FL: ECOG ≥3, АБО (вік ≥80 з будь-якою помірною
+  коморбідністю), АБО композитна frailty (вік ≥75 + Charlson ≥3 +
+  альбумін <3.5). Триггерує de-escalation до рітуксимаб-моно або
+  рітуксимаб + хлорамбуцил (добра переносимість, баланс
+  паліативно-курабельний).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 80
+          comparator: ">="
+        - finding: "comorbidity_grade2_count"
+          threshold: 1
+          comparator: ">="
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 3
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm: []  # not yet wired into ALGO-FL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  FL is indolent and frequently watch-and-wait appropriate. When
+  treatment is required (per GELF criteria), rituximab monotherapy
+  weekly x4 then maintenance — well-tolerated, response durable in
+  low-burden disease, and can be repeated at progression.
+  Rituximab + chlorambucil oral schedule (StiL NHL2) reasonable for
+  mid-frailty. Avoid bendamustine in elderly with active infection /
+  prior PJP / hypogamma — opportunistic infection risk substantial.
+  Lenalidomide in frail elderly causes cytopenias / fatigue — start
+  reduced-dose (10 mg) and titrate.

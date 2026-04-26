@@ -1,0 +1,56 @@
+id: RF-FL-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard FL regimens (BR /
+  R-CHOP / R-Lenalidomide / G-bendamustine): LVEF <50% (anthracycline
+  contraindicated in R-CHOP), CrCl <30 (cyclophosphamide / lenalidomide
+  dose-modify), bilirubin >3× ULN (vincristine / doxorubicin metabolism),
+  or significant pulmonary disease (DLCO <60% — bendamustine pneumonitis
+  rare but reported).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартним режимам FL
+  (BR / R-CHOP / R-Lenalidomide / G-bendamustine): LVEF <50% (антрациклін
+  у R-CHOP), CrCl <30 (циклофосфамід / леналідомід), білірубін >3× ULN
+  (метаболізм вінкристину / доксорубіцину), значне захворювання легень
+  (DLCO <60% — бендамустин-пневмоніт рідкісний, але описаний).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm: []  # not yet wired into ALGO-FL-1L.decision_tree — surfaces as plan annotation
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  LVEF <50%: avoid R-CHOP; use BR or R-mono (rituximab single-agent —
+  excellent option in low-burden / unfit indolent FL). CrCl <30:
+  lenalidomide dose-reduce per renal-dosing table (10 mg q.d. if CrCl
+  30-60; 15 mg q.o.d. if CrCl <30); cyclophosphamide reduce 25-50%.
+  Bendamustine has rare but real pulmonary toxicity (~1% pneumonitis)
+  and reactivates HBV / HSV / VZV — pre-screening mandatory. CD20
+  antibody alone is highly active in low-tumor-burden FL (RESORT,
+  PRIMA placebo arm) — frequent first-line option for organ-compromised.
