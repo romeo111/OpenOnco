@@ -1,0 +1,51 @@
+id: REG-AMIVANTAMAB-MONO-NSCLC-EX20INS
+name: "Amivantamab monotherapy (CHRYSALIS) — 2L EGFR Exon 20 insertion NSCLC"
+name_ua: "Амівантамаб моно (CHRYSALIS) — 2L EGFR Ex20ins НДРЛ"
+alternate_names:
+  - "Rybrevant mono"
+  - "CHRYSALIS regimen"
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1050 mg IV (<80 kg) OR 1400 mg IV (≥80 kg); SC formulation 1600 / 2240 mg also approved"
+    schedule: "Cycle 1 split day 1+2, then weekly weeks 2-4, then every 2 weeks"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Cycle 1 day 1 IV: methylprednisolone 40 mg IV + diphenhydramine 25-50 mg IV + acetaminophen 650-1000 mg PO (mitigates IRR ~65%)"
+  - "Subsequent cycles: dexamethasone 8 mg PO + antihistamine; SC formulation requires lower premed"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Infusion-related reaction Grade ≥2"
+    modification: "Hold; resume at 50% rate after recovery; continue premed"
+    source_refs: [SRC-CHRYSALIS-PARK-2021]
+  - condition: "Rash Grade ≥3"
+    modification: "Hold; topical/oral steroids + doxycycline; resume lower dose"
+    source_refs: [SRC-CHRYSALIS-PARK-2021]
+  - condition: "ILD any grade"
+    modification: "Hold; steroids; permanent discontinuation Grade ≥3"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Amivantamab NOT registered in UA. Access via Janssen named-patient
+    pathway, cross-border (EU) per наказ МОЗ 988, or clinical trial.
+
+sources:
+  - SRC-CHRYSALIS-PARK-2021
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  CHRYSALIS: ORR 40%, mPFS 8.3 mo, mOS 22.8 mo in EGFR Ex20ins
+  pretreated. FDA accelerated approval 2021. PAPILLON (1L combo with
+  carbo+pem) is now SoC for treatment-naïve EGFR Ex20ins; mono used
+  2L+ post-platinum. SC formulation strongly preferred.

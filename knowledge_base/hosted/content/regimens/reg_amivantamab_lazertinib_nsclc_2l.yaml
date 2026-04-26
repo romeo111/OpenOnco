@@ -1,0 +1,69 @@
+id: REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L
+name: "Amivantamab + Lazertinib (MARIPOSA-2) — 2L EGFR-mut NSCLC post-osimertinib"
+name_ua: "Амівантамаб + Лазертініб (MARIPOSA-2) — 2L EGFR-mut НДРЛ після осимертинібу"
+alternate_names:
+  - "Ami + Laz"
+  - "Rybrevant + Lazcluze"
+  - "MARIPOSA-2 ami+laz arm"
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1050 mg IV (<80 kg) OR 1400 mg IV (≥80 kg); SC formulation 1600 mg / 2240 mg available (PALOMA-3)"
+    schedule: "Cycle 1 split day 1+2, then weekly weeks 2-4, then every 2 weeks"
+    route: IV
+  - drug_id: DRUG-LAZERTINIB
+    dose: "240 mg PO once daily"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: severe
+
+premedication:
+  - "IV amivantamab cycle 1 day 1: methylprednisolone 40 mg IV + diphenhydramine 25-50 mg IV + acetaminophen 650-1000 mg PO 30-60 min pre-infusion (mitigates IRR ~65% baseline → ~5% with full premed)"
+  - "Cycle 1 day 2 + subsequent: continue dexamethasone 8 mg PO + antihistamine + antipyretic; SC formulation reduces premed burden"
+mandatory_supportive_care: []
+# DOAC (apixaban / rivaroxaban) prophylaxis required first 4 mo per
+# MARIPOSA-2 protocol — not yet a SupportiveCare entity in KB; surfaced
+# in `dose_adjustments` (VTE event branch) + `notes` until SUP entity
+# authored. TODO(csd-4.5): create SUP-VTE-PROPHYLAXIS-AMI-LAZ.
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Infusion-related reaction Grade ≥2"
+    modification: "Hold infusion; resume at 50% rate after symptom resolution; continue premedication next cycles"
+    source_refs: [SRC-MARIPOSA2-PASSARO-2024]
+  - condition: "Rash Grade ≥3"
+    modification: "Hold both drugs; topical / oral steroids + doxycycline; resume at lower dose"
+    source_refs: [SRC-MARIPOSA2-PASSARO-2024]
+  - condition: "VTE event despite prophylaxis"
+    modification: "Therapeutic anticoagulation; continue ami+laz unless contraindicated"
+    rationale: "VTE rate ~30% in combo arm; prophylaxis mandatory"
+    source_refs: [SRC-MARIPOSA2-PASSARO-2024]
+  - condition: "ILD / pneumonitis any grade"
+    modification: "Hold both drugs; corticosteroids; permanent discontinuation if Grade ≥3"
+  - condition: "Hepatic transaminase elevation Grade ≥3"
+    modification: "Hold lazertinib; resume at lower dose after recovery"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Both components NOT registered in UA (per drlz.com.ua snapshot
+    2026-04-27). Access only via Janssen named-patient pathway,
+    cross-border (EU) treatment per наказ МОЗ 988, or clinical trial.
+    Funding = primary barrier in UA setting.
+
+sources:
+  - SRC-MARIPOSA2-PASSARO-2024
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  MARIPOSA-2: ami+laz+chemo PFS HR 0.44 vs chemo alone in EGFR-mutated
+  NSCLC progressing on osimertinib. Combination ami+laz without chemo
+  also assessed (similar PFS but better tolerated). VTE prophylaxis
+  mandatory first 4 mo. SC amivantamab (PALOMA-3) preferred where
+  available — IRR rate <10% vs ~65% IV.
