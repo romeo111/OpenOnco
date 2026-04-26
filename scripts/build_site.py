@@ -1071,7 +1071,14 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 
       <div class="try-actions quest-cta">
         <button id="runBtn" class="btn btn-primary" disabled>
-          Згенерувати повний Plan
+          {'Generate full Plan' if target_lang == 'en' else 'Згенерувати повний Plan'}
+        </button>
+        <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
+          {'Show plan' if target_lang == 'en' else 'Показати план'}
+        </button>
+        <button id="pdfBtn" class="btn btn-primary" type="button" disabled
+                title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
+          {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
         </button>
       </div>
 
@@ -1080,29 +1087,48 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     </aside>
   </div>
 
-  <section class="quest-output">
-    <div id="placeholder" class="placeholder">
-      <div class="placeholder-icon">▶</div>
-      <p>{'The result will appear here.<br>The first run downloads Pyodide (~10–15 MB) and the engine itself. Expect ~10–30 seconds on the first run, then &lt;1 s.' if target_lang == 'en' else "Результат з'явиться тут.<br>Перший запуск завантажує Pyodide (~10–15 МБ) та сам рушій. Очікуй ~10–30 секунд при першому запуску, потім &lt;1 с."}</p>
-    </div>
-    <div id="resultToolbar" class="result-toolbar" hidden>
-      <button id="pdfBtn" class="rt-btn" type="button" title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-        <span aria-hidden="true">📄</span> {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
-      </button>
-      <div class="rt-lang-group" role="group" aria-label="{'Plan language' if target_lang == 'en' else 'Мова плану'}">
-        <span class="rt-lang-label">{'Language:' if target_lang == 'en' else 'Мова:'}</span>
-        <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
-        <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
+  <div id="planModal" class="plan-modal" hidden role="dialog" aria-modal="true"
+       aria-label="{'Treatment plan' if target_lang == 'en' else 'План лікування'}">
+    <div class="plan-modal-card">
+      <div class="plan-modal-toolbar">
+        <div class="rt-lang-group" role="group" aria-label="{'Plan language' if target_lang == 'en' else 'Мова плану'}">
+          <span class="rt-lang-label">{'Language:' if target_lang == 'en' else 'Мова:'}</span>
+          <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
+          <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
+        </div>
+        <div class="plan-modal-actions">
+          <button id="modalPdfBtn" class="rt-btn" type="button"
+                  title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
+            <span aria-hidden="true">📄</span> {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+          </button>
+          <button id="planModalClose" class="rt-btn rt-btn-ghost" type="button"
+                  aria-label="{'Close' if target_lang == 'en' else 'Закрити'}">✕</button>
+        </div>
       </div>
+      <iframe id="resultFrame"></iframe>
     </div>
-    <iframe id="resultFrame" hidden></iframe>
-  </section>
+  </div>
 
   <footer class="page-foot">
     Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
     Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine.zip</code>.
   </footer>
 </main>
+
+<div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
+  <div class="init-card">
+    <h3>Готую двигун OpenOnco</h3>
+    <p class="init-lead">Перший запуск триває ~10–20 секунд — двигун завантажується безпосередньо у твій браузер. Дані пацієнта не лишають твого пристрою.</p>
+    <ol class="init-stages" id="initStages">
+      <li data-stage="pyodide" class="stage pending">Готую обчислювач у браузері (~6 МБ)</li>
+      <li data-stage="pydeps" class="stage pending">Налаштовую середовище</li>
+      <li data-stage="bundle" class="stage pending">Завантажую базу знань OpenOnco</li>
+      <li data-stage="validate" class="stage pending">Звіряю клінічну базу</li>
+      <li data-stage="generate" class="stage pending">Будую персональний план</li>
+    </ol>
+    <p class="init-hint" id="initHint">Якщо зараз вийшло, наступного разу буде ~5 с — двигун залишається в пам'яті.</p>
+  </div>
+</div>
 
 <div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
   <div class="generating-card">
@@ -1127,10 +1153,12 @@ const resetBtn = document.getElementById('resetBtn');
 const diseaseSelect = document.getElementById('diseaseSelect');
 const exampleSelect = document.getElementById('exampleSelect');
 const textarea = document.getElementById('patientJson');
-const placeholder = document.getElementById('placeholder');
 const resultFrame = document.getElementById('resultFrame');
-const resultToolbar = document.getElementById('resultToolbar');
 const pdfBtn = document.getElementById('pdfBtn');
+const modalPdfBtn = document.getElementById('modalPdfBtn');
+const viewPlanBtn = document.getElementById('viewPlanBtn');
+const planModal = document.getElementById('planModal');
+const planModalClose = document.getElementById('planModalClose');
 const langUaBtn = document.getElementById('langUaBtn');
 const langEnBtn = document.getElementById('langEnBtn');
 const formPane = document.getElementById('formPane');
@@ -1152,6 +1180,8 @@ const impactWarnings = document.getElementById('impactWarnings');
 const generatingOverlay = document.getElementById('generatingOverlay');
 const generatingHint = document.getElementById('generatingHint');
 const mainTryEl = document.querySelector('main.try-page');
+const initOverlay = document.getElementById('initOverlay');
+const initStagesEl = document.getElementById('initStages');
 
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
@@ -1166,12 +1196,32 @@ let previewToken = 0;        // bumped on each runLivePreview start AND on
                              // runEngine start; stale results are discarded
 let answers = {{}};          // {{dotted_path: value}}
 let mode = 'form';           // 'form' | 'json'
-let evalDebounceTimer = null;
+let evalDebounceTimer = null;    // preview debounce
+let whatIfDebounceTimer = null;  // what-if debounce — separate + longer so
+                                 // dropdowns/typing don't trigger expensive
+                                 // shadow evals every 400ms
+let lastPreviewResult = null;    // most recent preview result, fed to
+                                 // what-if when its (longer) timer fires
+const PREVIEW_DEBOUNCE_MS = 400;
+const WHATIF_DEBOUNCE_MS = 1500;
 
 // Initial render language follows the page lang (UA on /try.html, EN on
 // /en/try.html). User can switch via the buttons in the result toolbar
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
 let currentResultLang = '{target_lang}';
+
+// planSource tracks where the plan currently shown in the modal came from:
+//   null        — no plan yet (form not generated, no example loaded)
+//   'example'   — pre-built case HTML loaded from /cases/<case_id>.html;
+//                 generate stays disabled because plan IS already generated,
+//                 we don't want to lie that clicking does new work
+//   'generated' — engine produced this plan from the current profile
+// planDirty flips to true the moment the user edits any field (form or JSON)
+// after a plan has been shown, which re-enables Generate so the user can
+// recompute against the modified profile.
+let planSource = null;
+let planDirty = false;
+let activeExampleCaseId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 function setStatus(msg, kind = 'info') {{
@@ -1188,19 +1238,31 @@ function setError(msg) {{
   }}
 }}
 
-// ── Result toolbar (PDF + lang switcher) ──────────────────────────────────
-function showResultToolbar() {{
-  resultToolbar.hidden = false;
-  // Highlight active language
+// ── Plan modal + lang switcher ────────────────────────────────────────────
+function highlightLangButtons() {{
   langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
   langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+}}
+
+function openPlanModal() {{
+  if (!planModal) return;
+  planModal.hidden = false;
+  highlightLangButtons();
+}}
+function closePlanModal() {{
+  if (!planModal) return;
+  planModal.hidden = true;
 }}
 
 function downloadPdf() {{
   // Browser-native print → "Save as PDF" works on every modern browser.
   // The render layer ships A4-print-friendly CSS (@page + @media print)
   // so the iframe content paginates cleanly without any extra deps.
-  if (resultFrame.hidden) return;
+  if (planSource == null) return;
+  // Modal must be visible so iframe contentWindow is fully laid out and
+  // print() picks up the right document.
+  const wasHidden = planModal && planModal.hidden;
+  if (wasHidden) openPlanModal();
   try {{
     resultFrame.contentWindow.focus();
     resultFrame.contentWindow.print();
@@ -1210,8 +1272,17 @@ function downloadPdf() {{
 }}
 
 async function switchResultLang(newLang) {{
-  if (!pyodide) return;
   if (newLang === currentResultLang) return;
+  if (planSource === 'example') {{
+    // Pre-built case file: just swap the iframe src to the matching
+    // language variant. UA at /cases/<id>.html, EN at /en/cases/<id>.html.
+    if (!activeExampleCaseId) return;
+    resultFrame.src = (newLang === 'en' ? '/en/cases/' : '/cases/') + activeExampleCaseId + '.html';
+    currentResultLang = newLang;
+    highlightLangButtons();
+    return;
+  }}
+  if (!pyodide) return;
   // Disable buttons during re-render so user can't double-click
   langUaBtn.disabled = true;
   langEnBtn.disabled = true;
@@ -1224,10 +1295,10 @@ else:
     html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 html
 `);
+    resultFrame.removeAttribute('src');
     resultFrame.srcdoc = html;
     currentResultLang = newLang;
-    langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
-    langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+    highlightLangButtons();
   }} catch (e) {{
     setError('Re-render failed: ' + (e.message || e));
   }} finally {{
@@ -1236,7 +1307,45 @@ html
   }}
 }}
 
+function loadExamplePlan(caseId) {{
+  // Show the pre-built case HTML for the just-loaded example so the user
+  // sees a plan immediately — without spinning up Pyodide and without
+  // pretending the engine just ran. Generate stays disabled until the
+  // user edits something (which sets planDirty).
+  if (!caseId) return;
+  activeExampleCaseId = caseId;
+  resultFrame.removeAttribute('srcdoc');
+  resultFrame.src = (currentResultLang === 'en' ? '/en/cases/' : '/cases/') + caseId + '.html';
+  planSource = 'example';
+  planDirty = false;
+  viewPlanBtn.disabled = false;
+  pdfBtn.disabled = false;
+  modalPdfBtn.disabled = false;
+  openPlanModal();
+}}
+
+function clearPlanState() {{
+  planSource = null;
+  planDirty = false;
+  activeExampleCaseId = null;
+  resultFrame.removeAttribute('src');
+  resultFrame.removeAttribute('srcdoc');
+  viewPlanBtn.disabled = true;
+  pdfBtn.disabled = true;
+  modalPdfBtn.disabled = true;
+  closePlanModal();
+}}
+
 pdfBtn.addEventListener('click', downloadPdf);
+modalPdfBtn.addEventListener('click', downloadPdf);
+viewPlanBtn.addEventListener('click', openPlanModal);
+planModalClose.addEventListener('click', closePlanModal);
+planModal.addEventListener('click', (ev) => {{
+  if (ev.target === planModal) closePlanModal();
+}});
+document.addEventListener('keydown', (ev) => {{
+  if (ev.key === 'Escape' && !planModal.hidden) closePlanModal();
+}});
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
 langEnBtn.addEventListener('click', () => switchResultLang('en'));
 
@@ -1277,11 +1386,27 @@ const IMPACT_LABEL = {{
 // there is something to send. The engine itself loads lazily on click
 // (and also kicks off in the background after first interaction so the
 // live impact panel can populate without waiting for a click).
+//
+// Disabled when a plan is already shown for the current input — either
+// because the user just generated it, or because they loaded an example
+// (which auto-displays the pre-built case HTML). Re-enables the moment
+// the user edits any field (planDirty), so they can recompute.
 function updateRunBtnEnabled() {{
   let hasInput = false;
   if (mode === 'form') hasInput = !!activeQuest;
   else hasInput = textarea.value.trim().length > 0;
-  runBtn.disabled = !hasInput;
+  const planFresh = planSource !== null && !planDirty;
+  runBtn.disabled = !hasInput || planFresh;
+}}
+
+// Mark the currently-shown plan as out-of-sync with the current input.
+// Called from every input handler so the next click on Generate runs
+// against the modified profile, not the cached/example plan.
+function markPlanDirty() {{
+  if (planSource !== null) {{
+    planDirty = true;
+    updateRunBtnEnabled();
+  }}
 }}
 
 let engineKickoffStarted = false;
@@ -1452,15 +1577,36 @@ function onAnswerChange(ev) {{
   const val = readValue(inp, type);
   if (val === undefined) delete answers[field];
   else answers[field] = val;
+  markPlanDirty();
   saveDraft();
   updateRunBtnEnabled();
-  kickoffEngineLoad();
-  scheduleEval();
+  updateImpactPanelLocal();
 }}
 
 function scheduleEval() {{
   if (evalDebounceTimer) clearTimeout(evalDebounceTimer);
-  evalDebounceTimer = setTimeout(runLivePreview, 400);
+  if (whatIfDebounceTimer) clearTimeout(whatIfDebounceTimer);
+  evalDebounceTimer = setTimeout(runLivePreview, PREVIEW_DEBOUNCE_MS);
+  whatIfDebounceTimer = setTimeout(triggerWhatIfFromState, WHATIF_DEBOUNCE_MS);
+}}
+
+function triggerWhatIfFromState() {{
+  whatIfDebounceTimer = null;
+  if (!enginReady || !activeQuest || generating || !lastPreviewResult) return;
+  runWhatIf(lastPreviewResult).catch(e => console.warn('what-if eval error:', e));
+}}
+
+// Cancel any pending preview/what-if when user starts interacting with the
+// toolbar (disease/example dropdown, mode buttons, reset). Bumps tokens so
+// any in-flight Pyodide call's result is discarded the moment it lands.
+// We can't interrupt a synchronous wasm call mid-flight, but this prevents
+// new evals from starting while the user is choosing from a dropdown —
+// which is when native <select> popup needs the main thread free.
+function pauseEvalForToolbar() {{
+  if (evalDebounceTimer) {{ clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }}
+  if (whatIfDebounceTimer) {{ clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }}
+  ++previewToken;
+  ++whatIfToken;
 }}
 
 // ── Mode switch ───────────────────────────────────────────────────────────
@@ -1565,11 +1711,12 @@ _preview_result
       return;
     }}
     updateImpactPanel(result);
+    lastPreviewResult = result;
     console.log(`[OO] preview ${{(performance.now() - _ooT0).toFixed(0)}}ms`);
-    // Fire-and-forget: shadow-evaluate critical/required boolean+enum
-    // fields with alternative values so the user sees what would change
-    // if a given dial flipped. Stale runs auto-discard via whatIfToken.
-    runWhatIf(result).catch(e => console.warn('what-if eval error:', e));
+    // What-if shadow evaluation runs from its own timer (WHATIF_DEBOUNCE_MS,
+    // longer than preview) so rapid typing / dropdown interaction doesn't
+    // trigger 10-30 sequential Pyodide evals that block the main thread and
+    // make <select> popups laggy.
   }} catch (e) {{
     /* Don't spam errors during typing — just log */
     console.warn('preview eval error:', e);
@@ -1648,7 +1795,7 @@ if quest is not None:
         sp = copy.deepcopy(profile)
         _set_path(sp, spec['field'], spec['alt_value'])
         try:
-            sr = evaluate_partial(sp, quest, kb_root=KB).to_dict()
+            sr = evaluate_partial(sp, quest, kb_root=KB, loaded_kb=ld).to_dict()
         except Exception:
             continue
         diff = {{}}
@@ -1721,6 +1868,49 @@ function renderWhatIfMarks(results) {{
   }}
 }}
 
+// Local-only impact panel update — runs WITHOUT Pyodide so form interaction
+// stays snappy. Computes progress + missing critical fields directly from
+// the questionnaire schema. Engine-dependent sections (red flags, indication)
+// show "click Generate" placeholders. Replaces the auto-fired runLivePreview
+// path which was costing 4–5 s per keystroke once KB grew past ~30 diseases.
+function updateImpactPanelLocal() {{
+  if (!activeQuest) {{
+    setProgress(0, 0);
+    impactMissingCritical.querySelector('ul').innerHTML = '';
+    impactRedflags.querySelector('ul').innerHTML =
+      '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+    impactSelectedText.innerHTML =
+      '<span class="muted">— оберіть хворобу і заповніть форму —</span>';
+    impactWarnings.hidden = true;
+    return;
+  }}
+  let total = 0, filled = 0;
+  const missing = [];
+  for (const group of activeQuest.groups || []) {{
+    for (const q of group.questions || []) {{
+      total++;
+      const val = answers[q.field];
+      const isFilled = val !== undefined && val !== null && val !== '';
+      if (isFilled) filled++;
+      else if (q.impact === 'critical') {{
+        missing.push({{ label: q.label, group: group.title || '' }});
+      }}
+    }}
+  }}
+  setProgress(filled, total);
+  const ul = impactMissingCritical.querySelector('ul');
+  ul.innerHTML = missing.length
+    ? missing.map(m =>
+        `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`
+      ).join('')
+    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+  impactRedflags.querySelector('ul').innerHTML =
+    '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+  impactSelectedText.innerHTML =
+    '<span class="muted">Натисни «Згенерувати», щоб побачити рекомендований Indication</span>';
+  impactWarnings.hidden = true;
+}}
+
 function setProgress(filled, total) {{
   progressText.textContent = `${{filled}} / ${{total}}`;
   const pct = total ? Math.round(filled * 100 / total) : 0;
@@ -1788,25 +1978,52 @@ function updateImpactPanel(result) {{
 }}
 
 // ── Pyodide loader ────────────────────────────────────────────────────────
+// Lazy: runs only when user clicks Generate. Drives the init overlay's
+// 4 setup stages (pyodide / pydeps / bundle / validate) with explicit
+// yields between each so the browser can repaint and process input
+// (F12, scroll, keyboard) instead of locking up for 10–20 s straight.
 async function ensureEngine() {{
   if (enginReady) return pyodide;
-  setStatus('Завантажую Pyodide…');
-  pyodide = await loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
-  setStatus('Встановлюю pydantic + pyyaml…');
-  await pyodide.loadPackage(['micropip']);
-  await pyodide.runPythonAsync(`
+  let stage = null;
+  try {{
+    stage = 'pyodide';
+    initStageStart(stage);
+    setStatus('Завантажую Pyodide…');
+    await yieldToBrowser(50);
+    pyodide = await loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
+    initStageDone(stage);
+
+    stage = 'pydeps';
+    initStageStart(stage);
+    setStatus('Встановлюю pydantic + pyyaml…');
+    await yieldToBrowser(50);
+    await pyodide.loadPackage(['micropip']);
+    await yieldToBrowser();
+    await pyodide.runPythonAsync(`
 import micropip
 await micropip.install(['pydantic', 'pyyaml'])
 `);
-  setStatus('Завантажую двигун OpenOnco…');
-  // Cache-busting: bundle_version is the SHA-256 prefix of the engine
-  // zip, computed at build time. Forces a fresh fetch when KB content
-  // changes, sidestepping CDN/browser cache (GitHub Pages serves
-  // openonco-engine.zip with Cache-Control: max-age=600).
-  const resp = await fetch('/openonco-engine.zip?v={bundle_version}');
-  const buf = await resp.arrayBuffer();
-  pyodide.unpackArchive(buf, 'zip');
-  const validationSummary = await pyodide.runPythonAsync(`
+    initStageDone(stage);
+
+    stage = 'bundle';
+    initStageStart(stage);
+    setStatus('Завантажую двигун OpenOnco…');
+    await yieldToBrowser(50);
+    // Cache-busting: bundle_version is the SHA-256 prefix of the engine
+    // zip, computed at build time. Forces a fresh fetch when KB content
+    // changes, sidestepping CDN/browser cache (GitHub Pages serves
+    // openonco-engine.zip with Cache-Control: max-age=600).
+    const resp = await fetch('/openonco-engine.zip?v={bundle_version}');
+    const buf = await resp.arrayBuffer();
+    await yieldToBrowser();
+    pyodide.unpackArchive(buf, 'zip');
+    initStageDone(stage);
+
+    stage = 'validate';
+    initStageStart(stage);
+    setStatus('Перевіряю базу…');
+    await yieldToBrowser(50);
+    const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
 from knowledge_base.validation.loader import load_content
 _r = load_content(Path('knowledge_base/hosted/content'))
@@ -1823,16 +2040,19 @@ else:
     _summary = " | ".join(_parts)
 _summary
 `);
-  enginReady = true;
-  if (validationSummary === 'ok') {{
-    setStatus('Двигун готовий ✓', 'ok');
-  }} else {{
-    console.warn('[OpenOnco] KB validation did not pass — engine loaded anyway for testing.\\n' + validationSummary);
-    setStatus('Двигун готовий ⚠ KB неверифіковано (деталі в консолі)', 'warn');
+    initStageDone(stage);
+    enginReady = true;
+    if (validationSummary === 'ok') {{
+      setStatus('Двигун готовий ✓', 'ok');
+    }} else {{
+      console.warn('[OpenOnco] KB validation did not pass — engine loaded anyway for testing.\\n' + validationSummary);
+      setStatus('Двигун готовий ⚠ KB неверифіковано (деталі в консолі)', 'warn');
+    }}
+    return pyodide;
+  }} catch (e) {{
+    if (stage) initStageError(stage, e && e.message);
+    throw e;
   }}
-  // Re-run preview now that engine is ready
-  scheduleEval();
-  return pyodide;
 }}
 
 // ── Generate full plan ────────────────────────────────────────────────────
@@ -1847,24 +2067,37 @@ async function runEngine() {{
   }}
 
   // Lock the form so input during generation can't desync the rendered
-  // plan from a moving profile. Cancel pending live-preview/what-if and
-  // bump tokens so any in-flight Pyodide eval discards its result.
+  // plan from a moving profile. <main inert> hard-blocks pointer + keyboard
+  // focus; init overlay (sibling of <main>) explains what's happening.
   generating = true;
+  if (mainTryEl) mainTryEl.inert = true;
   if (evalDebounceTimer) {{ clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }}
+  if (whatIfDebounceTimer) {{ clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }}
   ++previewToken;
   ++whatIfToken;
-  setGeneratingUI(true, 'Завантажую двигун…');
+  initStagesReset();
+  // If engine is already loaded from a prior click, fast-forward setup
+  // stages so the doctor sees only "Будую план" active. First run lights
+  // up all 5 stages.
+  if (enginReady) {{
+    initStageDone('pyodide');
+    initStageDone('pydeps');
+    initStageDone('bundle');
+    initStageDone('validate');
+  }}
+  initShow();
 
   try {{
     try {{
       await ensureEngine();
     }} catch (e) {{
-      setError('Pyodide не завантажився: ' + (e.message || e));
+      setError('Двигун не завантажився: ' + (e.message || e));
       setStatus('');
       return;
     }}
-    setStatus('Запускаю двигун…');
-    setGeneratingHint('Двигун обчислює план + MDT…');
+    initStageStart('generate');
+    setStatus('Будую персональний план…');
+    await yieldToBrowser(30);
     const _ooTPython = performance.now();
     try {{
       pyodide.globals.set('_patient_json', JSON.stringify(profile));
@@ -1890,21 +2123,30 @@ else:
     html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 html
 `);
-      placeholder.hidden = true;
-      resultFrame.hidden = false;
+      initStageDone('generate');
+      resultFrame.removeAttribute('src');
       resultFrame.srcdoc = html;
-      showResultToolbar();
+      planSource = 'generated';
+      planDirty = false;
+      activeExampleCaseId = null;
+      viewPlanBtn.disabled = false;
+      pdfBtn.disabled = false;
+      modalPdfBtn.disabled = false;
+      openPlanModal();
       setStatus('Plan готовий ✓', 'ok');
-      document.querySelector('.quest-output').scrollIntoView({{behavior: 'smooth', block: 'start'}});
       const _ooTNow = performance.now();
       console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
     }} catch (e) {{
+      initStageError('generate', e && e.message);
       setError('Двигун повернув помилку:\\n' + (e.message || e));
       setStatus('');
     }}
   }} finally {{
     generating = false;
-    setGeneratingUI(false);
+    if (mainTryEl) mainTryEl.inert = false;
+    // Brief delay so the doctor sees green checkmarks before the overlay
+    // fades — purely cosmetic confirmation that all stages succeeded.
+    setTimeout(initHide, 600);
     updateRunBtnEnabled();
   }}
 }}
@@ -1921,6 +2163,51 @@ function setGeneratingUI(on, hint) {{
 
 function setGeneratingHint(text) {{
   if (generatingHint) generatingHint.textContent = text;
+}}
+
+// ── Init overlay (one-time engine load with named stages) ─────────────────
+// Shown on first Generate click; doctor sees what's happening instead of a
+// mystery lag. Yields to the browser between stages so F12, scrolling, and
+// keyboard input remain responsive even though wasm chunks block the main
+// thread internally.
+function initShow() {{ if (initOverlay) initOverlay.hidden = false; }}
+function initHide() {{ if (initOverlay) initOverlay.hidden = true; }}
+
+function initStageStart(id) {{
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${{id}}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'done', 'error');
+  li.classList.add('active');
+}}
+function initStageDone(id) {{
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${{id}}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'active', 'error');
+  li.classList.add('done');
+}}
+function initStageError(id, msg) {{
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${{id}}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'active', 'done');
+  li.classList.add('error');
+  if (msg) li.title = String(msg);
+}}
+function initStagesReset() {{
+  if (!initStagesEl) return;
+  initStagesEl.querySelectorAll('.stage').forEach(li => {{
+    li.classList.remove('active', 'done', 'error');
+    li.classList.add('pending');
+  }});
+}}
+
+// Yield to the browser so it can repaint + process input between heavy
+// synchronous wasm chunks (Pyodide loadPackage / unpackArchive / Python
+// eval). 16ms ≈ one frame; 50ms gives visibly snappier dropdowns.
+function yieldToBrowser(ms) {{
+  return new Promise(resolve => setTimeout(resolve, ms == null ? 16 : ms));
 }}
 
 // ── Boot ──────────────────────────────────────────────────────────────────
@@ -1967,17 +2254,18 @@ async function loadAssets() {{
       }}
       if (draft.jsonText) textarea.value = draft.jsonText;
       if (draft.mode === 'json') setMode('json');
-      setStatus('Чернетку відновлено ✓ Готовий до завантаження двигуна.', 'ok');
+      setStatus('Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий.', 'ok');
       updateRunBtnEnabled();
-      kickoffEngineLoad();
-      scheduleEval();
+      updateImpactPanelLocal();
     }}
   }} else {{
     setStatus('Оберіть хворобу зі списку, щоб почати.');
     updateRunBtnEnabled();
+    updateImpactPanelLocal();
   }}
 
-  // Engine load is lazy — starts only on first action that needs it
+  // Engine is fully lazy now — Pyodide loads only when the user clicks
+  // «Згенерувати». Form interaction stays Pyodide-free and snappy.
 }}
 
 // ── Examples filtering by selected disease ────────────────────────────────
@@ -2019,6 +2307,9 @@ function repopulateExamples(activeQuestIdx) {{
 // ── Event wiring ──────────────────────────────────────────────────────────
 diseaseSelect.addEventListener('change', () => {{
   const i = diseaseSelect.value;
+  // Switching disease invalidates whatever plan was on screen — there is
+  // no longer any example or generated plan that matches the new form.
+  clearPlanState();
   if (i === '') {{
     renderForm(null);
     repopulateExamples(null);
@@ -2031,8 +2322,7 @@ diseaseSelect.addEventListener('change', () => {{
   exampleSelect.value = '';
   saveDraft();
   updateRunBtnEnabled();
-  kickoffEngineLoad();
-  scheduleEval();
+  updateImpactPanelLocal();
 }});
 
 function findQuestionnaireForProfile(profile) {{
@@ -2096,22 +2386,28 @@ exampleSelect.addEventListener('change', () => {{
     showExampleLockBanner();
     // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
     textarea.value = JSON.stringify(buildProfile(), null, 2);
-    setStatus('Приклад завантажено ✓ Поля заблоковано — натисни «Персоналізувати», щоб редагувати.', 'ok');
+    // Show the pre-built case plan in the modal — the example IS already
+    // a generated plan, so we display it directly instead of pretending
+    // Generate would do new work.
+    loadExamplePlan(ex.case_id);
+    setStatus('{'Example loaded ✓ Plan shown — edit any field to generate your own.' if target_lang == 'en' else 'Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.'}', 'ok');
   }} else {{
     setMode('json');
     textarea.value = JSON.stringify(ex.json, null, 2);
+    // No questionnaire match: still show the prebuilt plan if a case file
+    // exists for this example.
+    if (ex.case_id) loadExamplePlan(ex.case_id);
     setStatus('Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)', 'ok');
   }}
   saveDraft();
   updateRunBtnEnabled();
-  kickoffEngineLoad();
-  scheduleEval();
+  updateImpactPanelLocal();
 }});
 
 const personalizeBtn = document.getElementById('personalizeBtn');
 personalizeBtn && personalizeBtn.addEventListener('click', () => {{
   unlockAllFields();
-  setStatus('Поля розблоковано — редагуй що завгодно. Engine переоцінить план у режимі реального часу.', 'ok');
+  setStatus('Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий.', 'ok');
 }});
 
 modeFormBtn.addEventListener('click', () => setMode('form'));
@@ -2122,10 +2418,10 @@ formatBtn && formatBtn.addEventListener('click', () => {{
   catch (e) {{ setError('Невалідний JSON: ' + e.message); }}
 }});
 textarea.addEventListener('input', () => {{
+  markPlanDirty();
   saveDraft();
   updateRunBtnEnabled();
-  kickoffEngineLoad();
-  scheduleEval();
+  // No live preview from JSON — engine runs only on Generate click.
 }});
 
 resetBtn.addEventListener('click', () => {{
@@ -2134,13 +2430,23 @@ resetBtn.addEventListener('click', () => {{
   textarea.value = '';
   diseaseSelect.value = '';
   renderForm(null);
+  clearPlanState();
   localStorage.removeItem(STORAGE_KEY);
-  updateImpactPanel(null);
+  updateImpactPanelLocal();
   updateRunBtnEnabled();
   setStatus('Очищено.');
 }});
 
 runBtn.addEventListener('click', runEngine);
+
+// Pause pending evals the moment the user reaches for a toolbar control —
+// fires before the native <select> popup opens, so the main thread is free
+// to render it. Covers both dropdowns + mode/reset buttons.
+[diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, resetBtn].forEach(el => {{
+  if (!el) return;
+  el.addEventListener('mousedown', pauseEvalForToolbar);
+  el.addEventListener('focus', pauseEvalForToolbar);
+}});
 
 loadAssets().catch(e => setError('Initialization failed: ' + e));
 </script>
@@ -2952,15 +3258,49 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: var(--gray-100); color: var(--gray-700);
   padding: 1px 5px; border-radius: 3px;
 }
-.quest-cta { margin-top: 6px; }
+.quest-cta {
+  margin-top: 6px; display: flex; flex-direction: column; gap: 8px;
+}
 .quest-cta button { width: 100%; }
 .quest-cta button:disabled {
   opacity: 0.5; cursor: not-allowed;
 }
-.quest-output {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; min-height: 600px; overflow: hidden;
-  display: flex; flex-direction: column;
+
+/* Plan result modal — replaces the old in-page .quest-output section so
+   the form stays the focus of the page and the rendered plan only shows
+   when the user wants to look at it. */
+.plan-modal {
+  position: fixed; inset: 0; z-index: 9995;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  animation: oo-fadein 0.18s ease-out;
+}
+.plan-modal[hidden] { display: none; }
+.plan-modal-card {
+  background: white; border-radius: 12px;
+  width: min(1000px, 100%); height: min(880px, 92vh);
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+.plan-modal-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 10px 14px; background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+}
+.plan-modal-actions { display: flex; gap: 8px; align-items: center; }
+.plan-modal-card #resultFrame {
+  flex: 1; width: 100%; border: none; background: white;
+}
+.rt-btn-ghost {
+  background: white !important; color: var(--gray-700) !important;
+  border: 1px solid var(--gray-200) !important;
+  font-weight: 700; padding: 6px 10px;
+}
+.rt-btn-ghost:hover {
+  background: var(--gray-100) !important; color: var(--green-700) !important;
 }
 
 @media (max-width: 900px) {
@@ -3007,6 +3347,73 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 }}
 @keyframes oo-spin {{ to {{ transform: rotate(360deg); }} }}
 @keyframes oo-fadein {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
+
+/* Init overlay — first-run engine load with named stages so the doctor
+   sees what's happening instead of mystery lag. Lower z-index than the
+   generating overlay so a generate-click re-uses init for first run, and
+   subsequent clicks use the lighter generating overlay. */
+.init-overlay {{
+  position: fixed; inset: 0; z-index: 9990;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center;
+  animation: oo-fadein 0.18s ease-out;
+}}
+.init-overlay[hidden] {{ display: none; }}
+.init-card {{
+  background: white; border-radius: 12px;
+  padding: 28px 36px; max-width: 540px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}}
+.init-card h3 {{
+  margin: 0 0 6px; font-family: var(--font-display);
+  font-size: 22px; color: var(--green-900);
+}}
+.init-lead {{
+  margin: 0 0 18px; font-size: 13px; color: var(--gray-700); line-height: 1.5;
+}}
+.init-stages {{
+  list-style: none; padding: 0; margin: 0 0 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  counter-reset: none;
+}}
+.init-stages .stage {{
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  background: var(--gray-100);
+  font-size: 14px; color: var(--gray-700);
+  transition: background 0.18s, color 0.18s;
+}}
+.init-stages .stage::before {{
+  content: '○'; color: var(--gray-400); font-size: 16px;
+  width: 20px; text-align: center; flex-shrink: 0;
+  font-family: var(--font-mono);
+}}
+.init-stages .stage.active {{
+  background: white; color: var(--green-900);
+  border: 1px solid var(--green-700); font-weight: 500;
+}}
+.init-stages .stage.active::before {{
+  content: '⟳'; color: var(--green-700);
+  display: inline-block;
+  animation: oo-spin 0.9s linear infinite;
+}}
+.init-stages .stage.done {{
+  color: var(--gray-700);
+}}
+.init-stages .stage.done::before {{
+  content: '✓'; color: var(--green-700); font-weight: bold;
+}}
+.init-stages .stage.error {{
+  background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;
+}}
+.init-stages .stage.error::before {{
+  content: '✗'; color: #dc2626;
+}}
+.init-hint {{
+  margin: 0; font-size: 12px; color: var(--gray-600);
+  font-style: italic; line-height: 1.5;
+}}
 
 /* Info pages (capabilities / limitations) */
 .info-page { padding: 32px 0 48px; }

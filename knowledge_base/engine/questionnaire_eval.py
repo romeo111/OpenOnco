@@ -102,6 +102,7 @@ def evaluate_partial(
     profile: dict,
     questionnaire: dict,
     kb_root: Path | str = "knowledge_base/hosted/content",
+    loaded_kb=None,
 ) -> QPreviewResult:
     """Evaluate a partial profile against a questionnaire spec.
 
@@ -109,6 +110,10 @@ def evaluate_partial(
     Engine-state queries (which RedFlag fires, which Indication algorithm
     would pick) reuse production engine modules so preview matches the
     real plan once generated.
+
+    `loaded_kb`: optional pre-built `LoadResult` from `load_content()`. When
+    provided, skips the YAML re-walk — used by the what-if loop on /try
+    which evaluates 15+ alt-value specs against the same KB snapshot.
     """
     questions = list_questions(questionnaire)
     total = len(questions)
@@ -138,7 +143,7 @@ def evaluate_partial(
     completion_pct = int(round(filled_count * 100 / max(1, total)))
 
     # Engine-side checks: load KB so we can fire RedFlags + walk Algorithm
-    load = load_content(Path(kb_root))
+    load = loaded_kb if loaded_kb is not None else load_content(Path(kb_root))
     entities = load.entities_by_id
 
     findings = _flatten_findings(profile)
