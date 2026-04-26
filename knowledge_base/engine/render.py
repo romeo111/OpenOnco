@@ -490,6 +490,63 @@ h3 {
     .access-matrix summary::before { content: ""; }
     .access-matrix details:not([open]) > *:not(summary) { display: block; }
 }
+
+/* Variant actionability — ESCAT / OncoKB tier badges */
+.variant-actionability { margin: 22px 0; }
+.variant-actionability h2 { color: var(--green-800); }
+.variant-actionability .section-sub {
+    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.actionability-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+    overflow: hidden;
+}
+.actionability-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.actionability-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.actionability-table tr:last-child td { border-bottom: none; }
+.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
+.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
+.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
+.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
+.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
+.actionability-table .src-list {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
+}
+.actionability-table .src-list li { padding: 1px 0; list-style: none; }
+.actionability-table .empty-row td {
+    text-align: center; color: var(--gray-500); font-style: italic;
+    padding: 14px 10px;
+}
+
+/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
+   IV light gray; X gray). OncoKB Level 1 green; 2 light-green; 3A
+   yellow; 3B orange; 4 light gray; R1/R2 red. */
+.tier-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.4px; white-space: nowrap;
+}
+.escat-IA, .escat-IB { background: #16a34a; color: white; }
+.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
+.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
+.escat-IV { background: var(--gray-100); color: var(--gray-700); }
+.escat-X { background: var(--gray-200); color: var(--gray-700); }
+
+.oncokb-1 { background: #16a34a; color: white; }
+.oncokb-2 { background: #86efac; color: #14532d; }
+.oncokb-3A { background: #facc15; color: #713f12; }
+.oncokb-3B { background: #f97316; color: white; }
+.oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
+.oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
 """
 
 
@@ -700,6 +757,21 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     },
     "fda_disclosure_label":        {"uk": "Per FDA non-device CDS positioning (CHARTER §15):",
                                     "en": "Per FDA non-device CDS positioning (CHARTER §15):"},
+    # Variant actionability (ESCAT / OncoKB)
+    "actionability_heading":       {"uk": "Клінічна значущість мутацій (ESCAT / OncoKB)",
+                                    "en": "Clinical significance of mutations (ESCAT / OncoKB)"},
+    "actionability_sub":           {"uk": "Контекст для тумор-борду — інженер не використовує ці тіри для вибору треку",
+                                    "en": "Tumor-board context — the engine does not use these tiers to rank tracks"},
+    "actionability_th_biomarker":  {"uk": "Біомаркер", "en": "Biomarker"},
+    "actionability_th_variant":    {"uk": "Варіант", "en": "Variant"},
+    "actionability_th_escat":      {"uk": "ESCAT", "en": "ESCAT"},
+    "actionability_th_oncokb":     {"uk": "OncoKB", "en": "OncoKB"},
+    "actionability_th_action":     {"uk": "Клінічна дія", "en": "Clinical significance"},
+    "actionability_th_combos":     {"uk": "Препарати", "en": "Drugs"},
+    "actionability_th_sources":    {"uk": "Джерела", "en": "Sources"},
+    "actionability_empty":         {"uk": "Не знайдено клінічно значущих варіантів у цьому профілі.",
+                                    "en": "No clinically actionable variants matched in this profile."},
+    "actionability_gene_level":    {"uk": "(гено-рівень)", "en": "(gene-level)"},
 }
 
 
@@ -1612,6 +1684,99 @@ def _render_access_matrix(matrix) -> str:
     )
 
 
+# ── Variant actionability (ESCAT / OncoKB) ──────────────────────────────
+
+
+def _escat_class(tier: Optional[str]) -> str:
+    """ESCAT tier → CSS class. Falls back to escat-X for unknown values."""
+    if not tier:
+        return "escat-X"
+    valid = {"IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X"}
+    t = str(tier).strip().upper()
+    return f"escat-{t}" if t in valid else "escat-X"
+
+
+def _oncokb_class(level: Optional[str]) -> str:
+    """OncoKB level → CSS class. Falls back to oncokb-4 for unknown values."""
+    if not level:
+        return "oncokb-4"
+    valid = {"1", "2", "3A", "3B", "4", "R1", "R2"}
+    raw = str(level).strip().upper()
+    return f"oncokb-{raw}" if raw in valid else "oncokb-4"
+
+
+def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
+    """Render the ESCAT / OncoKB tier-badges section.
+
+    Inserted between the diagnostic profile (patient strip + etiological
+    driver) and the treatment-plan tracks. When the patient has no
+    matching BMA cells, render a single placeholder row — the section
+    is always present so HCPs see that the lookup ran.
+    """
+    hits = list(getattr(plan, "variant_actionability", None) or [])
+
+    th = (
+        "<thead><tr>"
+        f"<th>{_h(_t('actionability_th_biomarker', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_variant', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_escat', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_oncokb', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_action', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_combos', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_sources', target_lang))}</th>"
+        "</tr></thead>"
+    )
+
+    rows: list[str] = []
+    if not hits:
+        rows.append(
+            f'<tr class="empty-row"><td colspan="7">'
+            f'{_h(_t("actionability_empty", target_lang))}'
+            f'</td></tr>'
+        )
+    else:
+        for h in hits:
+            biomarker = _h(h.biomarker_id or "")
+            qualifier = h.variant_qualifier
+            variant_cell = (
+                _h(qualifier)
+                if qualifier
+                else f'<span style="color:var(--gray-500)">{_h(_t("actionability_gene_level", target_lang))}</span>'
+            )
+            escat_cls = _escat_class(h.escat_tier)
+            oncokb_cls = _oncokb_class(h.oncokb_level)
+            escat_label = _h(h.escat_tier or "X")
+            oncokb_label = _h(h.oncokb_level or "4")
+            summary = _h_t(h.evidence_summary or "", target_lang)
+            combos = (
+                "<br>".join(_h(c) for c in (h.recommended_combinations or []))
+                or '<span style="color:var(--gray-500)">—</span>'
+            )
+            sources = (
+                "".join(f"<li>{_h(s)}</li>" for s in (h.primary_sources or []))
+                or '<li style="color:var(--gray-500)">—</li>'
+            )
+            rows.append(
+                "<tr>"
+                f'<td><span class="gene">{biomarker}</span></td>'
+                f'<td><span class="variant">{variant_cell}</span></td>'
+                f'<td><span class="tier-badge {escat_cls}">{escat_label}</span></td>'
+                f'<td><span class="tier-badge {oncokb_cls}">{oncokb_label}</span></td>'
+                f'<td class="summary">{summary}</td>'
+                f'<td class="combos">{combos}</td>'
+                f'<td><ul class="src-list">{sources}</ul></td>'
+                "</tr>"
+            )
+
+    return (
+        '<section class="variant-actionability">'
+        f'<h2>{_h(_t("actionability_heading", target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t("actionability_sub", target_lang))}</div>'
+        f'<table class="actionability-table">{th}<tbody>{"".join(rows)}</tbody></table>'
+        '</section>'
+    )
+
+
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
@@ -1649,6 +1814,11 @@ def render_plan_html(
     body.append(_render_etiological_driver(
         (plan_result.kb_resolved or {}).get("disease")
     ))
+
+    # Variant actionability (ESCAT / OncoKB) — inserted between the
+    # diagnostic profile and the treatment-plan tracks. Render-time
+    # context only; engine never re-reads tier values to rank tracks.
+    body.append(_render_variant_actionability(plan, target_lang))
 
     # Tracks
     track_html = []
