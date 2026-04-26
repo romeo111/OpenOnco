@@ -405,11 +405,20 @@ def generate_plan(
     # red_flags (for PRO/CONTRA categorization with definitions).
     test_ids: set[str] = set()
     redflag_ids: set[str] = set()
+    drug_ids: set[str] = set()
     for t in tracks:
         ind = t.indication_data or {}
         test_ids.update(ind.get("required_tests") or [])
         test_ids.update(ind.get("desired_tests") or [])
         redflag_ids.update(ind.get("red_flags_triggering_alternative") or [])
+        # Drugs referenced by the regimen on this track — needed for
+        # render-time NSZU badge lookup (engine/_nszu.py). Not consulted
+        # by the engine itself (CHARTER §8.3 invariant).
+        reg = t.regimen_data or {}
+        for comp in reg.get("components") or []:
+            did = comp.get("drug_id") if isinstance(comp, dict) else None
+            if did:
+                drug_ids.add(did)
     # Algorithm-referenced red flags too (decision tree)
     for step in algo.get("decision_tree") or []:
         ev = step.get("evaluate") or {}
@@ -423,6 +432,7 @@ def generate_plan(
         "algorithm": algo,
         "tests": {tid: _resolve(entities, tid) for tid in test_ids if _resolve(entities, tid)},
         "red_flags": {rid: _resolve(entities, rid) for rid in redflag_ids if _resolve(entities, rid)},
+        "drugs": {did: _resolve(entities, did) for did in drug_ids if _resolve(entities, did)},
     }
 
     # Experimental track (Phase C of UA-ingestion plan). Append-only,

@@ -29,6 +29,7 @@ import html
 from datetime import datetime, timezone
 from typing import Optional, Union
 
+from ._nszu import lookup_nszu_status, nszu_label
 from .diagnostic import _DIAGNOSTIC_BANNER, DiagnosticPlanResult
 from .mdt_orchestrator import MDTOrchestrationResult
 from .plan import PlanResult
@@ -1171,6 +1172,85 @@ def _render_access_matrix(matrix) -> str:
     )
 
 
+# ── NSZU availability badges (per-drug) ─────────────────────────────────
+
+
+_NSZU_DRUGS_LABEL = {
+    "uk": "Препарати + НСЗУ",
+    "en": "Drugs + NSZU",
+}
+
+
+def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_lang="uk") -> str:
+    """One drug → one `<span class="nszu-badge nszu-{status}">…</span>`.
+
+    `drug_entity` is the dict-shape Drug record from the loader. When
+    None (e.g. a drug_id referenced by a regimen but not present in the
+    KB), renders an explicit `not-registered` badge so the row never
+    silently drops a component."""
+    badge = lookup_nszu_status(
+        drug_entity or {},
+        patient_disease_id,
+        disease_names=disease_names,
+    )
+    cls = f"nszu-badge nszu-{badge.status}"
+    label = nszu_label(badge.status, target_lang)
+    tip = badge.notes_excerpt or badge.indication_match or ""
+    title_attr = f' title="{_h(tip)}"' if tip else ""
+    return f'<span class="{cls}"{title_attr}>{_h(label)}</span>'
+
+
+def _render_track_drug_list(
+    track,
+    drugs_lookup: dict,
+    patient_disease_id: str,
+    disease_names: dict,
+    target_lang: str = "uk",
+) -> str:
+    """Render the regimen's drug components as a `<dt>/<dd>` block with
+    an NSZU availability badge per drug. Returns empty string when the
+    track has no regimen / no components — keeps the dl tidy."""
+    reg = track.regimen_data or {}
+    components = reg.get("components") or []
+    if not components:
+        return ""
+    rows: list[str] = []
+    for comp in components:
+        if not isinstance(comp, dict):
+            continue
+        drug_id = comp.get("drug_id")
+        if not drug_id:
+            continue
+        drug = drugs_lookup.get(drug_id)
+        # Drug display name — prefer ukrainian when rendering UA, else preferred
+        names = (drug or {}).get("names") or {}
+        if (target_lang or "uk").lower().startswith("en"):
+            name = names.get("english") or names.get("preferred") or drug_id
+        else:
+            name = names.get("ukrainian") or names.get("preferred") or drug_id
+        dose_bits: list[str] = []
+        for k in ("dose", "schedule", "route"):
+            v = comp.get(k)
+            if v:
+                dose_bits.append(str(v))
+        dose_str = " · ".join(dose_bits)
+        nszu = _render_nszu_badge(drug, patient_disease_id, disease_names, target_lang)
+        meta = (
+            f'<span class="drug-name">{_h(name)}</span>'
+            f' <span class="drug-id">({_h(drug_id)})</span>'
+        )
+        if dose_str:
+            meta += f' <span class="drug-dose">{_h(dose_str)}</span>'
+        rows.append(f'<li class="drug-row">{meta} {nszu}</li>')
+    if not rows:
+        return ""
+    label = _NSZU_DRUGS_LABEL.get(
+        "en" if (target_lang or "uk").lower().startswith("en") else "uk",
+        _NSZU_DRUGS_LABEL["uk"],
+    )
+    return f'<dt>{_h(label)}</dt><dd><ul class="drug-list">{"".join(rows)}</ul></dd>'
+
+
 # ── Variant actionability (ESCAT / OncoKB) ──────────────────────────────
 
 
@@ -1308,6 +1388,9 @@ def render_plan_html(
     body.append(_render_variant_actionability(plan, target_lang))
 
     # Tracks
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = (disease_data.get("names") if isinstance(disease_data, dict) else None) or {}
     track_html = []
     for t in plan.tracks:
         track_class = f"track track--{(t.track_id or 'standard')}"
@@ -1324,12 +1407,18 @@ def render_plan_html(
             f'<dt>Hard contraindications</dt><dd>{_h(", ".join(c.get("id", "?") for c in t.contraindications_data))}</dd>'
             if t.contraindications_data else ""
         )
+        # Drug components with NSZU availability badges (render-time only;
+        # engine never reads these — same contract as ESCAT/OncoKB tiers).
+        drugs_dd = _render_track_drug_list(
+            t, drugs_lookup, plan_result.disease_id or "", disease_names, target_lang
+        )
         track_html.append(
             f'<div class="{track_class}">'
             f'<div class="track-head"><div class="track-name">{_h(t.label)}</div>{badge}</div>'
             f'<dl>'
             f'<dt>Indication</dt><dd>{_h(t.indication_id)}</dd>'
             f'<dt>Regimen</dt><dd>{_h(regimen_str)}</dd>'
+            f'{drugs_dd}'
             f'{sup}'
             f'{ci}'
             f'<dt>Reason</dt><dd>{_h(t.selection_reason)}</dd>'
