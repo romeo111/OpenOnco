@@ -1,0 +1,56 @@
+id: ALGO-ADVSM-1L
+applicable_to_disease: DIS-MASTOCYTOSIS
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic targeted therapy for advanced systemic
+  mastocytosis (ASM / SM-AHN / MCL per WHO 2022) by KIT D816V status
+  and platelet count. KIT D816V+ AND platelets ≥50: avapritinib
+  (EXPLORER / PATHFINDER — preferred). KIT D816V+ AND platelets <50,
+  OR KIT D816V-, OR avapritinib inaccessible: midostaurin (D-RIVE).
+  SM-AHN patients additionally need AHN-component-directed therapy
+  (azacitidine for MDS / CMML AHN; intensive chemo for AML AHN). MCL
+  fit candidates also evaluated for allo-HSCT.
+
+output_indications:
+  - IND-ADVSM-1L-AVAPRITINIB
+  - IND-ADVSM-1L-MIDOSTAURIN
+
+default_indication: IND-ADVSM-1L-AVAPRITINIB
+alternative_indication: IND-ADVSM-1L-MIDOSTAURIN
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "KIT D816V positive"
+        - condition: "Platelet count ≥50 ×10⁹/L"
+    if_true:
+      result: IND-ADVSM-1L-AVAPRITINIB
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "KIT D816V negative"
+        - condition: "Platelet count <50 ×10⁹/L"
+        - condition: "Avapritinib contraindicated OR inaccessible"
+    if_true:
+      result: IND-ADVSM-1L-MIDOSTAURIN
+    if_false:
+      result: IND-ADVSM-1L-MIDOSTAURIN
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-ONCOKB
+last_reviewed: "2026-04-27"
+notes: >
+  Decision tree intentionally simplified for MVP. SM-AHN dual-
+  compartment management (KIT-directed + AHN-histology-directed) is
+  prose-only here — explicit AHN-arm Indications (e.g. avapritinib +
+  azacitidine for SM-MDS) are deferred. Allo-HSCT for fit MCL is also
+  deferred (no separate Indication authored). Indolent SM and PIONEER-
+  context low-dose avapritinib for severely-symptomatic ISM are out
+  of scope (this algorithm is advanced-SM-only).
+  NB: imatinib is CONTRAINDICATED in KIT D816V (steric clash) — the
+  rare FIP1L1-PDGFRA D816V-negative myeloid neoplasm with eosinophilia
+  is a separate WHO entity and is not handled by this algorithm.

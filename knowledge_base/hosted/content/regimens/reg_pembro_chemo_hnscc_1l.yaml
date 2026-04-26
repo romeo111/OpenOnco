@@ -1,0 +1,72 @@
+id: REG-PEMBRO-CHEMO-HNSCC-1L
+name: "Pembrolizumab + 5-FU + platinum (HNSCC R/M, 1L; PD-L1 CPS ≥1)"
+name_ua: "Пембролізумаб + 5-ФУ + платина (HNSCC рецидивна/метастатична, 1L; PD-L1 CPS ≥1)"
+alternate_names:
+  - "KEYNOTE-048 chemo-IO arm"
+  - "Pembro + 5-FU + cisplatin/carboplatin"
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV (or 400 mg IV q6w)"
+    schedule: "Day 1 every 3 weeks (or q6w schedule), for up to 35 cycles (~2 years) or until progression / unacceptable toxicity"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "1000 mg/m² IV continuous infusion days 1-4 (96-hour infusion)"
+    schedule: "Days 1-4 of 21-day cycle, for 6 cycles"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "100 mg/m² IV day 1 (preferred when ECOG 0-1, GFR ≥60, no neuropathy / ototoxicity / heart failure)"
+    schedule: "Day 1 of 21-day cycle, for 6 cycles"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV day 1 (substitute for cisplatin if contraindicated — GFR <60, neuropathy, hearing loss, congestive heart failure, or ECOG 2)"
+    schedule: "Day 1 of 21-day cycle, for 6 cycles (in lieu of cisplatin)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "6 cycles of chemotherapy backbone, then pembrolizumab maintenance up to 35 cycles total (~2 years)"
+toxicity_profile: severe
+
+premedication:
+  - "Cisplatin: pre/post-hydration ≥2 L NS, mannitol/furosemide forced diuresis, antiemetic 5HT3 + NK1 + dexamethasone"
+  - "Carboplatin: standard antiemetic prophylaxis (5HT3 + dexamethasone)"
+  - "5-FU: no specific premed; mucositis prophylaxis (oral cryotherapy)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Cisplatin ototoxicity (gr ≥2 hearing loss) or peripheral neuropathy gr ≥2"
+    modification: "Switch to carboplatin AUC 5"
+    rationale: "Cumulative cisplatin toxicity"
+    source_refs:
+      - SRC-NCCN-HNSCC-2025
+  - condition: "Cisplatin nephrotoxicity (creatinine increase >25% baseline OR GFR <60)"
+    modification: "Switch to carboplatin AUC 5; aggressive hydration if continuing cisplatin at reduced dose"
+    rationale: "Renal preservation"
+    source_refs:
+      - SRC-NCCN-HNSCC-2025
+  - condition: "Severe immune-related adverse event (gr ≥3 colitis, pneumonitis, hepatitis, endocrinopathy)"
+    modification: "Hold pembrolizumab; high-dose corticosteroids (1-2 mg/kg prednisone equiv); permanent discontinuation if recurrent or life-threatening"
+    rationale: "irAE management per ASCO / ESMO IO toxicity guidelines"
+  - condition: "5-FU mucositis gr ≥3 or hand-foot syndrome"
+    modification: "Reduce 5-FU dose 25% next cycle; consider DPD testing if severe early-cycle toxicity"
+    rationale: "5-FU exposure-related toxicity"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Cisplatin, carboplatin, 5-FU widely available and НСЗУ-covered for general oncology use. Pembrolizumab registered; not reimbursed for HNSCC indication — major access barrier; private / EAP / cross-border are realistic routes."
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+
+last_reviewed: "2026-04-27"
+notes: >
+  KEYNOTE-048 (Burtness Lancet 2019): in PD-L1 CPS ≥1 R/M HNSCC,
+  pembrolizumab + 5-FU + platinum vs EXTREME (cetuximab + 5-FU +
+  platinum) improved OS 13.6 vs 10.4 mo (HR 0.65). In CPS <1 the
+  benefit is smaller; in CPS ≥20 monotherapy pembrolizumab is
+  preferred (less chemo-toxicity, equivalent OS). Cisplatin preferred
+  over carboplatin when feasible; carboplatin is the practical default
+  in elderly / comorbid / renal-impaired. EXTREME (cetuximab + 5-FU +
+  platinum) remains an alternative for IO-contraindicated patients.

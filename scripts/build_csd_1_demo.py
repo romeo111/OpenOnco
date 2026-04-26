@@ -47,6 +47,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from knowledge_base.engine._actionability import find_matching_actionability  # noqa: E402
+from knowledge_base.engine._nszu import NszuBadge, lookup_nszu_status  # noqa: E402
 from knowledge_base.engine.render_styles import STYLESHEET as ENGINE_CSS  # noqa: E402
 from knowledge_base.validation.loader import load_content  # noqa: E402
 
@@ -56,6 +57,30 @@ PATIENT_JSON = REPO_ROOT / "examples" / "patient_csd_1_demo_braf_mcrc.json"
 OUT_HTML = REPO_ROOT / "docs" / "plans" / "csd_1_demo_report.html"
 
 REPORT_TIMESTAMP_HUMAN = "2026-04-27 09:30 EEST"
+REPORT_TIMESTAMP_NOTE = "(оновлено з NSZU-context)"
+
+# Drug ids referenced by the 2L plan tracks. Order matters — controls the
+# order in which the drug-list rows render.
+PLAN_A_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB"]
+PLAN_B_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB", "DRUG-BINIMETINIB"]
+
+# Display metadata per drug — names + dose strings re-used by the rendered
+# drug-list rows. Centralised so badge labels and dose strings stay in
+# sync with the surrounding regimen prose.
+DRUG_DISPLAY: dict[str, dict[str, str]] = {
+    "DRUG-ENCORAFENIB": {
+        "name": "Encorafenib",
+        "dose": "300 mg PO once daily",
+    },
+    "DRUG-CETUXIMAB": {
+        "name": "Cetuximab",
+        "dose": "400 mg/m² IV loading → 250 mg/m² IV щотижня",
+    },
+    "DRUG-BINIMETINIB": {
+        "name": "Binimetinib",
+        "dose": "45 mg PO 2× на день",
+    },
+}
 
 
 # ── tier-badge helpers (mirror knowledge_base.engine.render) ──────────────
@@ -97,7 +122,7 @@ def render_header() -> str:
         </div>
       </div>
       <div class="header-meta">
-        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">{_h(REPORT_TIMESTAMP_HUMAN)}</span></div>
+        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">{_h(REPORT_TIMESTAMP_HUMAN)} {_h(REPORT_TIMESTAMP_NOTE)}</span></div>
         <div class="meta-row"><span class="meta-label">Демонстрація</span><span class="meta-value">CSD Lab × OpenOnco · CSD-1</span></div>
         <div class="lang-toggle">
           <span class="lang-current">UA</span>
@@ -239,8 +264,51 @@ def render_variant_actionability(hits: list[dict]) -> str:
     """
 
 
-def render_plan_a() -> str:
-    return """
+def _badge_class(status: str) -> str:
+    """Map an NSZU status to its CSS class."""
+    return {
+        "covered": "nszu-covered",
+        "partial": "nszu-partial",
+        "oop": "nszu-oop",
+        "not-registered": "nszu-not-registered",
+    }.get(status, "nszu-not-registered")
+
+
+def render_drug_row(drug_id: str, badge: NszuBadge) -> str:
+    """One <li> row in a track's drug-list, with NSZU badge inline."""
+    meta = DRUG_DISPLAY.get(drug_id, {})
+    name = meta.get("name", drug_id)
+    dose = meta.get("dose", "")
+    cls = _badge_class(badge.status)
+    label = badge.label  # already-localised UA label from _nszu
+    tooltip_parts = []
+    if badge.indication_match:
+        tooltip_parts.append(f"Збіг показання: {badge.indication_match}")
+    if badge.notes_excerpt:
+        tooltip_parts.append(badge.notes_excerpt)
+    tooltip = " · ".join(tooltip_parts) or label
+    return (
+        '<li class="drug-row drug-item">'
+        f'<span class="drug-name">{_h(name)}</span>'
+        f'<span class="nszu-badge {cls}" title="{_h(tooltip)}">{_h(label)}</span>'
+        f'<span class="drug-dose">{_h(dose)}</span>'
+        '</li>'
+    )
+
+
+def render_drug_list(drug_ids: list[str], badges: dict[str, NszuBadge]) -> str:
+    """Drug-list block with one row per drug, each carrying an NSZU badge."""
+    rows = "".join(
+        render_drug_row(did, badges[did])
+        for did in drug_ids
+        if did in badges
+    )
+    return f'<ul class="drug-list">{rows}</ul>'
+
+
+def render_plan_a(badges: dict[str, NszuBadge]) -> str:
+    drugs_html = render_drug_list(PLAN_A_DRUG_IDS, badges)
+    return f"""
     <section class="plan-track plan-track--standard">
       <div class="track-head">
         <div class="track-name">Plan A — Стандартний трек (2L)</div>
@@ -253,9 +321,8 @@ def render_plan_a() -> str:
 
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)<br>
-            • Encorafenib 300 mg PO once daily, безперервно<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
+            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)
+            {drugs_html}
             <span class="muted">Цикл 28 діб; до прогресування або непереносної токсичності.</span>
           </dd>
 
@@ -278,9 +345,10 @@ def render_plan_a() -> str:
 
           <dt>UA доступність</dt>
           <dd>
-            <span class="badge-ua">REGISTERED</span>
-            <span class="muted">— обидва компоненти зареєстровані в Україні; NSZU-відшкодування селективне (out-of-pocket / благодійне покриття як основний канал у 2026 Q2).
-            <br><i>CSD-2 додасть автоматичний NSZU-lookup.</i></span>
+            <span class="muted">Обидва компоненти зареєстровані в Україні. Автоматичний NSZU-lookup
+            (CSD-2 Wave 1) — бейджі біля кожного препарату вище. Cetuximab — НСЗУ-покриття
+            для CRC; encorafenib — out-of-pocket (НСЗУ-меланоми треком, не CRC).
+            Деталі див. <i>«Що означають NSZU позначки»</i> нижче.</span>
           </dd>
 
           <dt>Цитати</dt>
@@ -297,8 +365,9 @@ def render_plan_a() -> str:
     """
 
 
-def render_plan_b() -> str:
-    return """
+def render_plan_b(badges: dict[str, NszuBadge]) -> str:
+    drugs_html = render_drug_list(PLAN_B_DRUG_IDS, badges)
+    return f"""
     <section class="plan-track plan-track--aggressive">
       <div class="track-head">
         <div class="track-name">Plan B — Агресивний трек (BEACON triplet)</div>
@@ -308,10 +377,8 @@ def render_plan_b() -> str:
         <dl class="plan-dl">
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)<br>
-            • Encorafenib 300 mg PO once daily<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
-            • Binimetinib 45 mg PO 2× на день
+            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)
+            {drugs_html}
           </dd>
 
           <dt>Профіль</dt>
@@ -344,7 +411,7 @@ def render_plan_b() -> str:
     """
 
 
-def render_plan_section() -> str:
+def render_plan_section(badges: dict[str, NszuBadge]) -> str:
     return f"""
     <section class="plans engine-section">
       <div class="engine-tag">OpenOnco engine output · 2L authoring layer</div>
@@ -355,10 +422,28 @@ def render_plan_section() -> str:
         Algorithm + RedFlag eval (CHARTER §8.3). Фінальне рішення — за лікуючим онкологом.
       </div>
       <div class="track-grid">
-        {render_plan_a()}
-        {render_plan_b()}
+        {render_plan_a(badges)}
+        {render_plan_b(badges)}
       </div>
     </section>
+    """
+
+
+def render_nszu_explainer() -> str:
+    return """
+    <aside class="nszu-explainer">
+      <h3>Що означають NSZU позначки</h3>
+      <ul>
+        <li><span class="nszu-badge nszu-covered">✓ НСЗУ покриває</span> — препарат входить у Програму медичних гарантій 2026, для цього показання, безкоштовно для пацієнта</li>
+        <li><span class="nszu-badge nszu-partial">⚠ НСЗУ — не для цього показання</span> — препарат покривається NSZU, але для іншого показання (для цього — пацієнт сплачує сам)</li>
+        <li><span class="nszu-badge nszu-oop">⚠ Поза НСЗУ — за свій кошт</span> — препарат зареєстрований в UA, але не реімбурсується (приблизно 2200–15000 UAH/цикл OOP)</li>
+        <li><span class="nszu-badge nszu-not-registered">✗ Не зареєстровано в UA</span> — препарат не доступний легально в UA; шлях через named-patient import / EAP / cross-border EU</li>
+      </ul>
+      <p class="nszu-explainer-foot">
+        Дані оновлено: 2026-04-27. Джерело: НСЗУ Програма медичних гарантій 2026 + Держреєстр ЛЗ.
+        Для верифікації live status — переглянути drug entity в JSON output.
+      </p>
+    </aside>
     """
 
 
@@ -435,8 +520,8 @@ def render_footer() -> str:
         Кожна рекомендація — citation-traceable у базу знань.
       </div>
       <div class="foot-line muted small">
-        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1609 entities loaded ·
-        BMA-BRAF-V600E-CRC matched live.
+        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1682 entities ·
+        167 drugs з verified UA registration · BMA-BRAF-V600E-CRC matched live.
       </div>
     </footer>
     """
@@ -703,6 +788,40 @@ section > h3 {
   padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
 }
 
+/* NSZU explainer aside — appears between plan tracks and disclaimer */
+.nszu-explainer {
+  background: var(--green-50); border: 1px solid var(--green-100);
+  border-left: 4px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.nszu-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: var(--green-900); margin-bottom: 8px;
+}
+.nszu-explainer ul { list-style: none; padding: 0; margin: 0; }
+.nszu-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.nszu-explainer li .nszu-badge { margin-left: 0; margin-right: 8px; }
+.nszu-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Drug-list rows inside a plan track — one li per drug with badge inline */
+.plan-dl .drug-list {
+  list-style: none; padding-left: 0; margin: 6px 0 4px 0;
+}
+.plan-dl .drug-list .drug-row {
+  padding: 3px 0; line-height: 1.55; font-size: 13px;
+}
+.plan-dl .drug-list .drug-name { font-weight: 700; color: var(--gray-900); }
+.plan-dl .drug-list .drug-dose {
+  color: var(--gray-700); font-size: 12px; margin-left: 6px;
+}
+
 /* Trials */
 .trial-list {
   list-style: none; padding: 0; margin: 0;
@@ -755,13 +874,14 @@ section > h3 {
 # ── Page assembly ─────────────────────────────────────────────────────────
 
 
-def build_page(patient: dict, hits: list[dict]) -> str:
+def build_page(patient: dict, hits: list[dict], badges: dict[str, NszuBadge]) -> str:
     body = (
         render_header()
         + render_ngs_panel(patient)
         + render_patient_context(patient)
         + render_variant_actionability(hits)
-        + render_plan_section()
+        + render_plan_section(badges)
+        + render_nszu_explainer()
         + render_trials()
         + render_disclaimer()
         + render_footer()
@@ -804,7 +924,34 @@ def main() -> None:
     for h in hits:
         print(f"  · {h['bma_id']} · ESCAT {h['escat_tier']} · OncoKB {h['oncokb_level']}")
 
-    html_out = build_page(patient, hits)
+    # Resolve disease names so the NSZU lookup can substring-match Ukrainian
+    # free-text reimbursement_indications (e.g. "колоректальний рак ...").
+    # The loader stores entities as `{'type', 'data', 'path'}` dicts where
+    # `data` carries the actual YAML payload.
+    def _entity_data(record):
+        if record is None:
+            return None
+        if isinstance(record, dict) and "data" in record and isinstance(record["data"], dict):
+            return record["data"]
+        if isinstance(record, dict):
+            return record
+        return getattr(record, "data", None)
+
+    disease_data = _entity_data(load.entities_by_id.get(disease_id)) or {}
+    disease_names = disease_data.get("names")
+
+    badges: dict[str, NszuBadge] = {}
+    all_drug_ids = sorted({*PLAN_A_DRUG_IDS, *PLAN_B_DRUG_IDS})
+    for drug_id in all_drug_ids:
+        drug_data = _entity_data(load.entities_by_id.get(drug_id)) or {"id": drug_id}
+        badge = lookup_nszu_status(drug_data, disease_id, disease_names=disease_names)
+        badges[drug_id] = badge
+        try:
+            print(f"[csd-1-demo] NSZU {drug_id} -> {badge.status}")
+        except UnicodeEncodeError:
+            pass
+
+    html_out = build_page(patient, hits, badges)
 
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.write_text(html_out, encoding="utf-8")
