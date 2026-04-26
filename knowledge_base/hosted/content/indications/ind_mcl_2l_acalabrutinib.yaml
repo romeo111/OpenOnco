@@ -1,0 +1,100 @@
+id: IND-MCL-2L-ACALABRUTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory after ≥1 prior chemoimmunotherapy line (e.g. R-CHOP, BR, intensive R-DHAP/R-CHOP alternation +- autoSCT)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-ACALABRUTINIB-MCL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~81% (ACE-LY-004)"
+  complete_response: "~40%"
+  progression_free_survival: "Median PFS ~22 mo; mDOR ~26 mo (ACE-LY-004 long-term)"
+  overall_survival_5y: "~50-60%"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-CD20-IHC
+  - TEST-FISH-PANEL
+  - TEST-NGS-LYMPHOID-PANEL  # TP53 + Ki67
+  - TEST-PET-CT
+  - TEST-BM-ASPIRATE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Acalabrutinib monotherapy for r/r MCL after ≥1 prior line per ACE-
+  LY-004 (FDA-approved). Substantially superior cardiac safety vs
+  ibrutinib (afib ~3% vs ~7-15%, hypertension ~5% vs ~17%) while
+  preserving efficacy (ORR 81%, mPFS 22 mo). Preferred BTKi for r/r
+  MCL when accessible, particularly in older patients with cardiac
+  history / hypertension / on anticoagulation. Continuous therapy
+  until progression or intolerance. Funding pathway must be
+  confirmed; ibrutinib (REG-IBRUTINIB-CLL or similar) reimbursed via
+  НСЗУ as fallback.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Acalabrutinib is preferred 2L+ BTKi for r/r MCL per ACE-LY-004; superior cardiac safety vs ibrutinib"
+  - source_id: SRC-ESMO-MCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Second-generation BTKi (acalabrutinib, zanubrutinib) preferred over ibrutinib for r/r MCL — comparable efficacy, fewer cardiac events"
+
+known_controversies:
+  - topic: "Acalabrutinib vs zanubrutinib for r/r MCL 2L"
+    positions:
+      - position: "Acalabrutinib: ACE-LY-004 well-established; longer follow-up data"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Zanubrutinib: BGB-3111-206 trial — comparable efficacy, similarly favorable safety"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Either acceptable; choice driven by access + PPI compatibility (zanu more PPI-tolerant)"
+  - topic: "Add rituximab to BTKi for r/r MCL?"
+    positions:
+      - position: "Add R: SHINE-style data suggests modest benefit"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "BTKi mono — simpler, comparable in r/r setting"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "BTKi mono for r/r 2L; reserve combinations for fit transplant-deferred 1L"
+
+do_not_do:
+  - "Не пропускати TP53 / Ki67 — TP53-mutant потребує consideration of CAR-T pathway та alloSCT consultation."
+  - "Не призначати без HBV скринінгу + entecavir prophylaxis при HBsAg+ / anti-HBc+."
+  - "Не комбінувати з warfarin без strict monitoring — bleeding risk."
+  - "Не призначати при concomitant strong CYP3A4 inhibitor без hold або dose reduction."
+  - "Не призначати з PPI/H2-blockers без separation 2h або переходу на acala maleate (PPI-compatible) — absorption."
+  - "Не пропускати baseline ECG — afib знижений але можливий, vulnerable subgroup потребує monitoring."
+  - "Не очікувати CR як first-line goal — MCL BTKi response часто PR, але tривалий."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L+
+  preferred BTKi for r/r MCL. Better cardiac safety vs ibrutinib
+  is dominant advantage. Funding gap (NSZU does not reimburse
+  acalabrutinib) — ibrutinib practical fallback.

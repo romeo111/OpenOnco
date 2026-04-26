@@ -1,0 +1,56 @@
+id: REG-ACALABRUTINIB-MCL
+name: "Acalabrutinib monotherapy (continuous, ACE-LY-004) — r/r MCL"
+name_ua: "Акалабрутиніб монотерапія (безперервно, ACE-LY-004) — рефрактерна/рецидивна MCL"
+alternate_names: ["Acala mono MCL", "ACE-LY-004 regimen"]
+
+components:
+  - drug_id: DRUG-ACALABRUTINIB
+    dose: "100 mg"
+    schedule: "PO twice daily, continuous until progression or intolerance"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: low-moderate
+
+premedication: ["Hydration if high-burden disease"]
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Concomitant strong CYP3A4 inhibitor (azoles, ritonavir)"
+    modification: "Hold during inhibitor course OR reduce to 100 mg once daily"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Avoid"
+  - condition: "Concomitant PPI/H2-blocker"
+    modification: "Separate dosing 2h apart OR switch to acalabrutinib maleate (PPI-compatible)"
+  - condition: "New-onset atrial fibrillation"
+    modification: "Hold; cardiology consult; rate control + anticoagulation; resume if benefit justifies; switch BTKi if recurrent"
+    rationale: "Lower afib rate than ibrutinib but possible"
+  - condition: "Major hemorrhage / planned surgery"
+    modification: "Hold ≥3-7 days pre-procedure; resume post-op once hemostasis confirmed"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Acalabrutinib registered in Ukraine but NOT NSZU-reimbursed for
+    MCL. Ibrutinib reimbursed via НСЗУ for MCL — practical fallback
+    where access blocking, but worse cardiac safety profile (afib
+    ~7-15% vs ~3% with acala).
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  ACE-LY-004 trial (Wang 2018, follow-up 2020): r/r MCL after ≥1
+  prior line — ORR 81%, CR 40%, mDOR ~26 mo, mPFS ~22 mo. FDA-
+  approved for r/r MCL after ≥1 prior line. Substantial cardiac-
+  safety advantage over ibrutinib (afib ~3% vs ~7-15%). Preferred
+  cBTKi for MCL when accessible — particularly for older patients
+  with cardiac history, hypertension, or anticoagulation. Funding
+  pathway must be confirmed; ibrutinib + R fallback if acala access
+  blocking.

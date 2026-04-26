@@ -1,0 +1,101 @@
+id: IND-MCL-3L-PIRTOBRUTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed/refractory after ≥2 prior systemic lines including a covalent BTK inhibitor"
+    - "Documented progression on cBTKi OR cBTKi intolerance (acalabrutinib, ibrutinib, zanubrutinib)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PIRTOBRUTINIB-MCL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50% (BRUIN MCL cohort)"
+  complete_response: "~13%"
+  progression_free_survival: "Median PFS ~7.4 mo; mDOR ~17.6 mo"
+  overall_survival_5y: "Mature OS data still maturing; 18-mo OS ~67%"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-FISH-PANEL
+  - TEST-NGS-LYMPHOID-PANEL  # confirm BTK-C481 + TP53 status to clarify rationale
+  - TEST-CD20-IHC
+  - TEST-IMMUNOGLOBULINS
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PET-CT
+  - TEST-ECHO
+desired_tests: []
+
+rationale: >
+  Pirtobrutinib (non-covalent reversible BTKi) for r/r MCL after ≥2
+  prior lines including a covalent BTKi. Distinct binding mechanism
+  (C481-independent) overcomes BTK-C481-S/R mutations conferring
+  resistance to ibrutinib / acalabrutinib / zanubrutinib. BRUIN MCL
+  cohort: ORR 50% (CR 13%) in heavily pretreated population —
+  meaningful in setting where chemoimmuno + autoSCT + cBTKi have
+  all failed and CAR-T (brexu-cel) may be inaccessible logistically.
+  Important bridge to brexu-cel CAR-T during manufacturing window
+  when disease pace requires. Cardiac safety better than ibrutinib
+  (afib ~3% vs ~7-15%). Major UA access barrier: not registered.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Pirtobrutinib is recommended for r/r MCL after ≥2 prior lines including cBTKi (BRUIN MCL); Cat 2A"
+  - source_id: SRC-ESMO-MCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Non-covalent BTK inhibitors (pirtobrutinib) are emerging standard for r/r MCL post-cBTKi resistance; bridge to cellular therapy"
+
+known_controversies:
+  - topic: "Pirtobrutinib monotherapy vs bridge to brexu-cel for r/r MCL post-cBTKi"
+    positions:
+      - position: "Pirtobrutinib monotherapy as endpoint when CAR-T not accessible — meaningful response duration"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Pirtobrutinib as bridge to brexu-cel — durable cure-intent only via cellular therapy"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Bridge to CAR-T when accessible; pirtobrutinib monotherapy as endpoint if CAR-T not feasible"
+  - topic: "Pirto vs CAR-T as primary 3L+ choice"
+    positions:
+      - position: "CAR-T preferred for fit / accessible — durable remission potential"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Pirto preferred for older / frail / non-CAR-T-accessible — oral, no CRS/ICANS"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "CAR-T for fit ECOG 0-1 with access; pirto for non-CAR-T candidates"
+
+do_not_do:
+  - "НЕ призначати без verified prior cBTKi exposure — Cat 2A indication restricts use to post-cBTKi setting."
+  - "НЕ припиняти при transient AE без переоцінки — для post-cBTKi MCL альтернатив мало."
+  - "НЕ пропускати baseline ECG + кардіологічну оцінку — afib знижений але можливий."
+  - "НЕ комбінувати з anticoagulants без strict monitoring — bleeding risk persists."
+  - "НЕ призначати при concomitant strong CYP3A4 inhibitor без dose reduction до 100 mg PO QD."
+  - "НЕ підтверджувати plan без funding pathway — препарат не зареєстрований в Україні."
+  - "НЕ забути моніторинг прогресії — для TP53-mut або blastoid MCL рекомендовано раннє CAR-T-referral planning, навіть під час pirtobrutinib bridge."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Co-Lead sign-off. Standard-track 3L+ option for r/r
+  MCL post-cBTKi resistance. Often used as bridge to brexu-cel CAR-T
+  when CAR-T accessible. UA access barrier dominant.

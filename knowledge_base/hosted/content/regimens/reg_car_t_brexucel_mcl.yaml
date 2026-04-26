@@ -1,0 +1,70 @@
+id: REG-CAR-T-BREXUCEL-MCL
+name: "Brexucabtagene autoleucel (brexu-cel) CAR-T for r/r MCL — single infusion after lymphodepletion (ZUMA-2)"
+name_ua: "Брексукабтаген аутолейцел (brexu-cel) CAR-T для рефрактерної MCL — одна інфузія після лімфодеплеції (ZUMA-2)"
+alternate_names: ["Brexu-cel MCL", "Tecartus MCL", "ZUMA-2 regimen"]
+
+components:
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "500 mg/m²/day"
+    schedule: "IV days -5, -4, -3 (lymphodepletion, with fludarabine 30 mg/m²/day same days)"
+    route: IV
+  - drug_id: DRUG-BREXUCABTAGENE-AUTOLEUCEL
+    dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
+    schedule: "Single IV infusion day 0, after lymphodepletion completed"
+    route: IV
+
+cycle_length_days: null
+total_cycles: "Single infusion (one-time therapy)"
+toxicity_profile: severe
+
+premedication:
+  - "Lymphodepletion: fludarabine 30 mg/m² + cyclophosphamide 500 mg/m² IV days -5 to -3"
+  - "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
+  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
+  - "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency CRS rescue"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+  - SUP-TLS-PROPHYLAXIS
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "CRS Grade 2"
+    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Persistent severe cytopenia >Day +30"
+    modification: "G-CSF; transfusions; IVIG for IgG <400 with recurrent infection"
+  - condition: "Active uncontrolled infection at planned infusion"
+    modification: "Delay infusion until resolved + repeat lymphodepletion if interval >2 weeks"
+  - condition: "TP53-mutated bridging considerations"
+    modification: "Bridging during 3-4 wk manufacturing window — TP53-mutated MCL progresses fast; consider BTKi-based bridging if not previously failed; avoid steroid-heavy regimens"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Brexu-cel NOT registered in Ukraine; access requires international
+    referral. USD 350-500K all-in. For MCL specifically, post-cBTKi
+    failure (especially blastoid or TP53-mutated MCL) has dismal
+    natural history (~6-9 mo survival historically) — CAR-T is the
+    only durable-remission option.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  ZUMA-2 trial (Wang 2020): r/r MCL after prior cBTKi (median 3 prior
+  lines, ~25% TP53-mut, 60% high-risk MIPI) — ORR 91%, CR 68%,
+  3-year OS ~60%. First CAR-T for MCL. Higher Grade ≥3 ICANS in MCL
+  cohort (~31%) vs DLBCL — MCL patients older + heavily pretreated.
+  CD19-depletion manufacturing step in brexu-cel reduces malignant
+  apheresis contamination (vs axi-cel) — relevant in leukemic MCL.
+  Bridging therapy critical: TP53-mut / blastoid MCL progresses fast
+  in 3-4 wk manufacturing window; pirtobrutinib bridging preferred if
+  not prior-failed.

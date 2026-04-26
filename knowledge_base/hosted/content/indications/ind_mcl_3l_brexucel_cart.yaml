@@ -1,0 +1,105 @@
+id: IND-MCL-3L-BREXUCEL-CART
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed/refractory after ≥2 prior systemic lines including a covalent BTK inhibitor (ibrutinib / acalabrutinib / zanubrutinib)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD19+ confirmed (CD19 typically retained); CD20+ at original diagnosis sufficient"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    age_min: 18
+    age_max: 75
+
+recommended_regimen: REG-CAR-T-BREXUCEL-MCL
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~91% (ZUMA-2)"
+  complete_response: "~68%"
+  progression_free_survival: "Median PFS ~25 mo (ZUMA-2 3-yr update); ~37% PFS at 3y"
+  overall_survival_5y: "~40-50% (3-yr OS ~60% per ZUMA-2; mature 5-yr maturing)"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-BM-ASPIRATE
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-NGS-LYMPHOID-PANEL  # TP53 + Ki67 status
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-MRI-BRAIN-CONTRAST
+
+rationale: >
+  Brexucabtagene autoleucel for r/r MCL after prior cBTKi (per ZUMA-2
+  registration). Anti-CD19 CD28-costim CAR-T with CD19-depletion
+  manufacturing step (vs axi-cel) — addresses leukemic-phase MCL
+  apheresis contamination. Best response rates and durability
+  observed in r/r MCL post-cBTKi setting (ORR 91%, CR 68%, 3-y OS
+  ~60%) — historical natural-history median survival was only 6-9
+  months in this setting. Particularly relevant for TP53-mutated /
+  blastoid MCL where chemoimmuno + autoSCT / continuous BTKi all
+  fail. Bridging therapy critical during 3-4 week manufacturing
+  window — pirtobrutinib bridging preferred when not prior-failed.
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Brexu-cel is preferred treatment for r/r MCL after ≥1 prior cBTKi; Cat 1 (ZUMA-2)"
+  - source_id: SRC-ESMO-MCL-2024
+    position: supports
+    relevant_quote_paraphrase: "Anti-CD19 CAR-T is established standard of care for r/r MCL post-cBTKi failure; only durable-remission option in this setting"
+
+known_controversies:
+  - topic: "Brexu-cel timing — immediately post-cBTKi or after additional bridging line?"
+    positions:
+      - position: "Immediate referral on cBTKi progression — best CR rate when bridging to fit"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Try pirtobrutinib bridge first for TP53-mut to maintain disease control during manufacturing"
+        sources: [SRC-NCCN-BCELL-2025]
+        evidence_note: "Pirto BRUIN MCL: ORR 50% — useful bridge, not durable enough alone"
+    our_default: "Refer for CAR-T immediately on cBTKi progression; use pirto as bridge during manufacturing window if disease pace requires"
+
+do_not_do:
+  - "НЕ призначати prophylactic systemic corticosteroids — пригнічує CAR-T expansion + знижує efficacy."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) ДО інфузії — fatal CRS можливе."
+  - "НЕ робити в центрі без CAR-T accreditation (FACT/JACIE/REMS) — toxicity management потребує спеціалізованої команди + ICU доступу."
+  - "НЕ пропускати baseline brain MRI — pre-existing CNS disease ризик fatal ICANS значно вищий (вищий в MCL ніж DLBCL)."
+  - "НЕ ігнорувати bridging therapy — TP53-mut або blastoid MCL прогресує fast в 3-4 wk manufacturing window."
+  - "НЕ призначати при active uncontrolled infection — лімфодеплеція + CRS = high mortality."
+  - "НЕ використовувати axi-cel замість brexu-cel — leukemic-phase MCL apheresis contamination проблематична без CD19-depletion process step."
+  - "НЕ забути IVIG для довготривалої hypogammaglobulinemia (IgG <400 + recurrent infections)."
+
+time_critical: false
+last_reviewed: "2026-04-25"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+
+  CAR-T option for r/r MCL post-cBTKi failure. Ukraine access
+  constraint dominant. Pirtobrutinib bridge during manufacturing
+  window is increasingly standard practice.

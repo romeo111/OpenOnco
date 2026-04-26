@@ -1,0 +1,57 @@
+id: REG-PIRTOBRUTINIB-MCL
+name: "Pirtobrutinib monotherapy continuous (BRUIN MCL schedule, post-cBTKi)"
+name_ua: "Піртобрутиніб монотерапія безперервно (BRUIN MCL, після cBTKi)"
+alternate_names: ["Pirto mono MCL", "BRUIN MCL", "Jaypirca MCL"]
+
+components:
+  - drug_id: DRUG-PIRTOBRUTINIB
+    dose: "200 mg PO once daily"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: MON-CLL-BTKI
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor"
+    modification: "Reduce to 100 mg PO once daily; avoid concurrent strong inducers"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "ANC <500 OR platelets <50K"
+    modification: "Hold; resume at same dose after recovery; consider 100 mg if recurrent"
+  - condition: "New-onset atrial fibrillation"
+    modification: "Hold; cardiology consult; rate control + anticoagulation per AHA"
+    rationale: "Lower afib rate than ibrutinib (~3% vs ~7-15%) but possible"
+  - condition: "Major hemorrhage / planned major surgery"
+    modification: "Hold ≥3-7 days pre-procedure; resume post-op once hemostasis confirmed"
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Reduce dose; monitor LFTs"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Pirtobrutinib NOT registered in Ukraine. Access via international
+    supply / charitable / out-of-pocket. For post-cBTKi MCL —
+    particularly TP53-mutated or BTK-C481-mutated — pirto is the
+    rational bridge to CAR-T or last systemic option if CAR-T not
+    accessible.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  BRUIN MCL cohort (Wang 2023): r/r MCL after prior cBTKi (median 3
+  prior lines, ~80% prior cBTKi, ~50% prior cBTKi-discontinued for
+  resistance) — ORR 50% (CR 13%); mPFS 7.4 mo; mDOR 17.6 mo. FDA-
+  approved for r/r MCL after ≥2 prior lines including cBTKi.
+  Distinct binding mechanism (non-covalent, C481-independent) overcomes
+  resistance to ibrutinib / acalabrutinib / zanubrutinib. Important
+  bridge to CAR-T (brexu-cel) when manufacturing window concerns
+  exist. Cardiac safety better than ibrutinib (afib ~3% vs ~7-15%).
