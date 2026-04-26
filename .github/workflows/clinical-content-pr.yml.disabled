@@ -1,0 +1,79 @@
+# Clinical Content PR Reviewer Workflow (CHARTER §6.1)
+#
+# DISABLED template — rename to clinical-content-pr.yml to enable.
+#
+# Why disabled by default:
+#   1. Requires the "clinical-co-lead" team to be configured in GitHub
+#      repo settings before review-requesting will succeed.
+#   2. The placeholder reviewer profiles
+#      (knowledge_base/hosted/content/reviewers/rev_*_placeholder.yaml)
+#      are not real Clinical Co-Leads — gating PRs on placeholder
+#      sign-offs would block real work without genuine clinical review.
+#
+# When the team exists and real reviewers have onboarded, drop the
+# `.disabled` suffix and (optionally) un-comment the
+# `request-clinical-review` job to require team review on every PR.
+
+name: Clinical Content PR Review
+
+on:
+  pull_request:
+    paths:
+      - 'knowledge_base/hosted/content/indications/**'
+      - 'knowledge_base/hosted/content/algorithms/**'
+      - 'knowledge_base/hosted/content/regimens/**'
+      - 'knowledge_base/hosted/content/redflags/**'
+      - 'knowledge_base/hosted/content/biomarker_actionability/**'
+
+jobs:
+  add-clinical-review-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add 'clinical-review-required' label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: clinical-review-required
+
+      - name: Comment with sign-off requirement
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚕️ This PR modifies clinical content (CHARTER §6.1). ' +
+                    'Requires sign-off from ≥2 Clinical Co-Leads via ' +
+                    '`scripts/clinical_signoff.py`. See ' +
+                    '`docs/clinical_signoff_workflow.md` for the workflow.'
+            })
+
+  # Optional: request review from the clinical-co-lead team automatically.
+  # Un-comment after the team is configured in GitHub repo settings.
+  #
+  # request-clinical-review:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Request review from clinical-co-lead team
+  #       uses: actions/github-script@v7
+  #       with:
+  #         script: |
+  #           github.rest.pulls.requestReviewers({
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             pull_number: context.issue.number,
+  #             team_reviewers: ['clinical-co-lead']
+  #           })
+
+  # Optional: validate that any sign-off rows added in this PR reference
+  # a real reviewer profile (REV-* in knowledge_base/hosted/content/reviewers/).
+  # Cheap, fast — keeps placeholder/typo reviewer-IDs from sneaking in.
+  #
+  # validate-signoffs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with: { python-version: '3.11' }
+  #     - run: pip install pydantic pyyaml
+  #     - run: python -m knowledge_base.validation.loader knowledge_base/hosted/content
