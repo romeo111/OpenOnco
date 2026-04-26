@@ -23,6 +23,12 @@ class Disease(Base):
     archetype: Optional[str] = None  # etiologically_driven | biomarker_driven | ...
     lineage: Optional[str] = None  # b_cell_lymphoma | carcinoma | sarcoma | ...
 
+    # OncoTree (MSK) code for OncoKB lookups — Phase 2 of OncoKB integration
+    # (oncokb_integration_safe_rollout_v3.md §5). Optional in MVP; fallback
+    # table in engine/oncotree_fallback.py covers ICD-10-based resolution.
+    # Example values: "LUNG", "COADREAD", "MEL", "BRCA", "AML".
+    oncotree_code: Optional[str] = None
+
     etiological_factors: list[str] = Field(default_factory=list)
     related_diseases: list[str] = Field(default_factory=list)
 
