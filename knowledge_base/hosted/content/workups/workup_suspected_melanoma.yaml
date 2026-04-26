@@ -1,0 +1,65 @@
+id: WORKUP-SUSPECTED-MELANOMA
+applicable_to:
+  lineage_hints:
+    - melanoma
+    - solid_tumor_skin_melanoma
+    - cutaneous_melanoma_suspect
+    - mucosal_melanoma_suspect
+    - uveal_melanoma_suspect
+  tissue_locations:
+    - skin
+    - mucosa
+    - oral_mucosa
+    - anorectal_mucosa
+    - vulvar_mucosa
+    - uvea
+    - choroid
+  presentation_keywords:
+    - abcde_lesion
+    - new_pigmented_growth
+    - changing_nevus
+    - bleeding_pigmented_lesion
+    - ugly_duckling_lesion
+    - subungual_pigmentation
+    - mucosal_pigmented_lesion
+    - choroidal_mass
+
+# Pre-biopsy diagnostic workup for suspected melanoma
+# per NCCN Melanoma v3.2025 and ESMO Melanoma 2024.
+required_tests:
+  - TEST-DERMATOSCOPY
+  - TEST-EXCISIONAL-SKIN-BIOPSY         # 1-3 mm margin, full-thickness
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LDH                            # AJCC M-stage modifier; baseline mandatory
+
+desired_tests:
+  - TEST-CECT-CAP                       # stage IIB+ or any clinical N+
+  - TEST-BRAIN-MRI-CONTRAST             # stage III high-risk and any IV
+  - TEST-PET-CT                         # systemic-disease assessment
+  - TEST-BRAF-V600E                     # reflex on stage III+ or unresectable
+  - TEST-NGS-COMPREHENSIVE              # mucosal / acral / uveal subtypes
+
+mandatory_questions:
+  - "Family history of melanoma / pancreatic cancer (CDKN2A; familial atypical mole syndrome)?"
+  - "Prior melanoma — date, stage, treatment, surveillance status?"
+  - "Atypical-mole syndrome / dysplastic nevus syndrome?"
+  - "Cumulative UV exposure (occupational outdoor, tanning-bed use, blistering childhood sunburns)?"
+  - "Skin phototype (Fitzpatrick I-II = highest risk)?"
+  - "Immunosuppression (organ transplant, lymphoma history, biologic therapy)?"
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Excisional biopsy with 1-3 mm clinical margin is the standard
+  first-line diagnostic procedure for any pigmented lesion suspect
+  for melanoma. Shave or punch biopsy of a melanoma destroys depth
+  measurement (Breslow thickness) and is contraindicated unless the
+  lesion is too large for excisional sampling (then incisional of
+  thickest portion is acceptable). Reflex BRAF V600 testing on any
+  stage III or IV. Sentinel lymph node biopsy decision after definitive
+  re-excision and Breslow review (typically ≥0.8 mm or any high-risk
+  feature).

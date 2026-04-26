@@ -1,0 +1,64 @@
+id: WORKUP-SUSPECTED-NSCLC
+applicable_to:
+  lineage_hints:
+    - non_small_cell_lung_carcinoma
+    - solid_tumor_lung_nsclc
+    - lung_cancer_suspect
+    - lung_adenocarcinoma_suspect
+    - lung_squamous_suspect
+  tissue_locations:
+    - lung
+    - hilar_lymph_nodes
+    - mediastinal_lymph_nodes
+    - pleura
+  presentation_keywords:
+    - lung_mass
+    - lung_nodule
+    - solitary_pulmonary_nodule
+    - hemoptysis
+    - persistent_cough
+    - unexplained_weight_loss_with_lung_finding
+    - paraneoplastic_syndrome
+    - hypertrophic_osteoarthropathy
+    - new_clubbing
+    - malignant_pleural_effusion
+
+# Pre-biopsy diagnostic + staging workup for suspected NSCLC
+# per NCCN NSCLC v3.2025, ESMO Early NSCLC 2024, ESMO Metastatic NSCLC 2024.
+required_tests:
+  - TEST-CECT-CAP                       # contrast-enhanced CT chest/abdomen/pelvis
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BRONCHOSCOPY-WITH-EBUS         # tissue + N-staging when central / mediastinal nodes
+  - TEST-PET-CT                         # full-body staging FDG-PET
+
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST             # mandatory for stage III curative intent or any neuro symptoms
+  - TEST-NSCLC-NGS-PANEL                # reflex on tissue when adenocarcinoma / non-squamous
+  - TEST-PDL1-IHC                       # reflex on tissue, all NSCLC
+  - TEST-BONE-SCAN                      # if symptoms, when PET/CT unavailable
+
+mandatory_questions:
+  - "Smoking history — pack-years and time since quitting?"
+  - "Occupational / environmental exposures: asbestos, radon, silica, diesel?"
+  - "Family history of lung cancer — first-degree relatives?"
+  - "Performance status (ECOG / Karnofsky) — drives treatment intent?"
+  - "Prior thoracic radiotherapy or other malignancy?"
+  - "Weight loss > 5% in 3 months (paraneoplastic / cachexia stratification)?"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-EARLY-2024
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Tissue-acquisition strategy depends on suspected stage and lesion
+  location: peripheral → CT-guided percutaneous core biopsy;
+  central / endobronchial → bronchoscopy with biopsy; suspicious
+  mediastinal nodes → EBUS-TBNA (preferred over mediastinoscopy).
+  Always pursue the lesion that yields highest stage AND adequate
+  tissue for molecular testing (NGS requires ≥100 ng DNA typically).
+  Plasma cfDNA NGS is acceptable when tissue is insufficient for
+  molecular testing in metastatic disease (NCCN 2025).

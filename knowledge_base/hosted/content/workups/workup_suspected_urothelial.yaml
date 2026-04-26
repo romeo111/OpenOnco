@@ -1,0 +1,63 @@
+id: WORKUP-SUSPECTED-UROTHELIAL
+applicable_to:
+  lineage_hints:
+    - urothelial_carcinoma
+    - solid_tumor_urothelial
+    - bladder_cancer_suspect
+    - upper_tract_urothelial_suspect
+  tissue_locations:
+    - bladder
+    - upper_urinary_tract
+    - renal_pelvis
+    - ureter
+    - urethra
+  presentation_keywords:
+    - hematuria
+    - gross_hematuria
+    - microscopic_hematuria
+    - dysuria
+    - irritative_voiding
+    - bladder_mass
+    - cystoscopic_finding
+    - obstructive_uropathy
+    - filling_defect_upper_tract
+
+# Pre-biopsy diagnostic + staging workup for suspected urothelial carcinoma
+# per NCCN Bladder v3.2025 and EAU Bladder 2024.
+required_tests:
+  - TEST-CYSTOSCOPY                     # primary diagnostic procedure
+  - TEST-URINE-CYTOLOGY
+  - TEST-CT-UROGRAPHY                   # upper-tract evaluation mandatory
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-RENAL-FUNCTION-EGFR            # cisplatin / pembro eligibility
+
+desired_tests:
+  - TEST-CECT-CAP                       # if muscle-invasive on TURBT
+  - TEST-PET-CT                         # selective for stage III/IV planning
+  - TEST-PDL1-IHC                       # reflex on muscle-invasive specimen
+  - TEST-NGS-COMPREHENSIVE              # FGFR3 actionable; emerging in advanced
+
+mandatory_questions:
+  - "Tobacco use — pack-years (single largest modifiable risk factor)?"
+  - "Occupational exposure (aromatic amines: rubber, dyes, painting, hairdressing)?"
+  - "Prior pelvic radiotherapy or cyclophosphamide exposure?"
+  - "Schistosoma haematobium exposure / endemic region travel (squamous variant risk)?"
+  - "Renal function trajectory (cisplatin eligibility threshold eGFR ≥60)?"
+  - "Hearing loss / neuropathy (cisplatin contraindication)?"
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+  - SRC-EAU-BLADDER-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  TURBT is both diagnostic and initial therapeutic for bladder
+  primary — must include detrusor muscle for accurate T-staging.
+  Re-TURBT within 6 weeks for high-grade T1 or absent muscle in
+  initial specimen. Upper-tract urothelial workup adds ureteroscopy
+  + selective-catheter cytology when CT urography reveals filling
+  defect. NCCN 2025: variant histology (micropapillary, sarcomatoid,
+  plasmacytoid, small-cell) requires expert pathology review and
+  often upstages treatment intensity.

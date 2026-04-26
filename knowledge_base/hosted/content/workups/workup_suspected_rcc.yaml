@@ -1,0 +1,59 @@
+id: WORKUP-SUSPECTED-RCC
+applicable_to:
+  lineage_hints:
+    - renal_cell_carcinoma
+    - solid_tumor_kidney_rcc
+    - kidney_cancer_suspect
+  tissue_locations:
+    - kidney
+    - renal_pelvis
+  presentation_keywords:
+    - renal_mass
+    - kidney_mass
+    - hematuria
+    - flank_mass
+    - flank_pain
+    - paraneoplastic_erythrocytosis
+    - paraneoplastic_hypercalcemia
+    - paraneoplastic_stauffer_syndrome
+    - incidental_renal_lesion
+
+# Pre-biopsy diagnostic + staging workup for suspected RCC
+# per NCCN Kidney v1.2025 and ESMO RCC 2024.
+required_tests:
+  - TEST-RENAL-IMAGING-BASELINE         # multi-phase CECT or MRI kidney protocol
+  - TEST-CECT-CAP                       # staging chest + abdomen + pelvis
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-RENAL-FUNCTION-EGFR
+  - TEST-LDH                            # IMDC prognostic score input
+
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST             # if neurologic symptoms or stage IV
+  - TEST-BONE-SCAN                      # if alkaline phosphatase elevated or bone pain
+  - TEST-NGS-COMPREHENSIVE              # selective in metastatic; emerging utility
+
+mandatory_questions:
+  - "Family history of kidney cancer / VHL / Birt-Hogg-Dubé / hereditary leiomyomatosis-RCC?"
+  - "Tobacco use — pack-years (smoking doubles RCC risk)?"
+  - "Occupational exposure (trichloroethylene, cadmium)?"
+  - "Polycystic kidney disease or end-stage renal disease (acquired cystic disease)?"
+  - "Solitary kidney / baseline CKD (drives partial vs radical nephrectomy decision)?"
+  - "Symptoms of paraneoplastic syndromes (fevers, weight loss, hypercalcemia, erythrocytosis)?"
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: "2026-04-25"
+notes: >
+  Diagnosis of localized RCC is typically made on imaging alone;
+  pre-treatment percutaneous renal mass biopsy is selective
+  (small renal masses on active surveillance, ablation candidates,
+  metastatic to confirm RCC vs differential, suspected lymphoma /
+  metastasis to kidney). Stage IV disease — biopsy of accessible
+  metastatic site preferred to obtain tissue for histologic subtyping
+  and any biomarker work. IMDC risk stratification (Hb, Ca, ANC,
+  PLT, KPS, time-to-systemic-therapy) drives 1L systemic-therapy
+  choice in metastatic disease.
