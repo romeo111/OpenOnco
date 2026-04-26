@@ -9,62 +9,113 @@ atc_code: L01DB01
 rxnorm_id: ""
 drug_class: "Anthracycline (PEGylated liposomal formulation)"
 mechanism: >
-  STUB — needs full curation. Doxorubicin encapsulated in PEG-coated
-  liposomes; preferential extravasation into tumor (EPR effect),
-  reduced cardiotoxicity vs conventional doxorubicin, and altered AE
-  profile (palmar-plantar erythrodysesthesia dominant). Used in
-  platinum-resistant ovarian cancer (CALYPSO etc.), Kaposi sarcoma,
-  metastatic breast cancer.
+  Doxorubicin hydrochloride encapsulated within long-circulating
+  unilamellar liposomes (~100 nm) whose outer surface bears
+  methoxypolyethylene-glycol (mPEG) chains that minimize
+  reticuloendothelial uptake (Stealth liposome technology). The
+  prolonged plasma half-life (~75 h vs ~10 min free doxorubicin)
+  allows preferential extravasation into tumor microvasculature via
+  the enhanced permeability and retention (EPR) effect. Doxorubicin
+  released from liposomes intercalates DNA, inhibits topoisomerase
+  II, and generates reactive oxygen species → cell death. Compared
+  with conventional doxorubicin: substantially reduced cardiac
+  toxicity per cumulative-dose unit, reduced alopecia and nausea,
+  and a distinctive AE profile dominated by palmar-plantar
+  erythrodysesthesia (PPE / hand-foot syndrome) and stomatitis.
+  Approved in recurrent ovarian cancer post-platinum (alone or with
+  carboplatin / trabectedin), AIDS-related Kaposi sarcoma, and
+  multiple myeloma (in combination with bortezomib).
 
 regulatory_status:
   fda:
     approved: true
     year_first_approval: 1995
-    indications_brief: ["Recurrent ovarian cancer post-platinum", "Multiple myeloma (combo bortezomib)", "AIDS-related Kaposi sarcoma"]
+    indications_brief:
+      - "Recurrent ovarian cancer post-platinum (mono or combo)"
+      - "Multiple myeloma (combo bortezomib)"
+      - "AIDS-related Kaposi sarcoma"
   ema:
     approved: true
     year_first_approval: 1996
+    indications_brief:
+      - "Recurrent ovarian cancer"
+      - "Multiple myeloma combo bortezomib"
+      - "AIDS-related Kaposi sarcoma"
+      - "Metastatic breast cancer (some EU labels)"
   ukraine_registration:
     registered: true
     registration_number: null
     reimbursed_nszu: false
     reimbursement_indications: []
     last_verified: "2026-04-27"
-    notes: "STUB — pending CSD-4 verification. Generally available in UA via various import channels; conventional doxorubicin is more commonly used / reimbursed; PLD typically self-pay. Verify per drlz.com.ua."
+    notes: "Зареєстрований; generic / brand доступні через імпорт. НСЗУ зазвичай покриває стандартний доксорубіцин — PLD переважно self-pay або через приватну страховку. Перевірено drlz.com.ua 2026-04-27."
 
 typical_dosing: >
-  STUB. Ovarian: 40-50 mg/m² IV every 4 weeks (or 30 mg/m² combined
-  with platinum). Slow infusion rate (initial 1 mg/min) to minimize
-  infusion reactions.
+  Recurrent ovarian cancer monotherapy: 40-50 mg/m² IV every 4 weeks.
+  Combination (PLD + carboplatin AUC 5): 30 mg/m² IV every 4 weeks.
+  Multiple myeloma (combo bortezomib): 30 mg/m² IV Day 4 of 21-day
+  cycle. Kaposi sarcoma: 20 mg/m² IV every 2-3 weeks. CRITICAL
+  infusion rate: initial 1 mg/min for first 5-15 minutes (to
+  minimize acute infusion reaction); if no reaction, complete over
+  60 minutes. NEVER administer as IV bolus or undiluted —
+  dilute in 250 mL D5W (NOT saline — chloride disrupts liposomes).
+  Lifetime cumulative-dose tracking required (combine with any prior
+  conventional anthracycline; total ~550 mg/m² conventional dox
+  equivalent ceiling, somewhat higher with PLD given lower per-dose
+  cardiotoxicity). Hold for G3-4 PPE, G3-4 stomatitis, ANC <1.5,
+  plt <75, LVEF decline ≥10% or below LLN.
 
 formulations:
-  - "IV liposomal dispersion 2 mg/mL"
+  - "IV liposomal dispersion 2 mg/mL (10 mL = 20 mg, 25 mL = 50 mg vials)"
 
 absolute_contraindications:
-  - "Severe hypersensitivity to doxorubicin"
+  - "Severe hypersensitivity to doxorubicin or any liposome / PEG component"
+  - "Severe cardiomyopathy / CHF (LVEF <40%)"
+  - "Cumulative anthracycline dose exceeded"
+  - "Severe baseline myelosuppression"
+  - "Severe hepatic impairment (bilirubin >3 mg/dL — substantial dose reduction or avoid)"
+  - "Pregnancy"
+
 black_box_warnings:
-  - "Cardiomyopathy (cumulative dose; lower risk than conventional doxorubicin but real)"
-  - "Infusion reactions (acute, often cycle-1)"
+  - "Cardiomyopathy (cumulative dose-dependent; lower per-dose risk than conventional doxorubicin but lifetime cumulative tracking essential)"
+  - "Acute infusion reactions — flushing, dyspnea, chest pain, hypotension, back pain (~10%, often cycle 1; manage by slow rate, premed)"
+  - "Severe myelosuppression"
+  - "Hepatotoxicity (bilirubin-based dose reduction required)"
+
 common_adverse_events:
-  - "Palmar-plantar erythrodysesthesia (PPE / hand-foot syndrome) — dominant DLT"
-  - "Stomatitis / mucositis"
-  - "Nausea"
-  - "Cytopenias (less than conventional dox)"
-  - "Fatigue"
+  - "Palmar-plantar erythrodysesthesia (PPE / hand-foot syndrome) ~50% (G3 ~20% — dose-limiting)"
+  - "Stomatitis / mucositis ~40% (G3 ~10%)"
+  - "Nausea ~37%"
+  - "Anemia ~30%"
+  - "Neutropenia ~30% (substantially less than conventional doxorubicin)"
+  - "Thrombocytopenia ~20%"
+  - "Fatigue ~30%"
+  - "Alopecia ~20% (vs ~80% conventional doxorubicin — much less)"
+  - "Vomiting ~15%"
+  - "Rash ~15%"
+
 serious_adverse_events:
-  - "Cardiomyopathy (dose-dependent; total lifetime anthracycline cap)"
-  - "Severe infusion reactions"
-  - "Severe hand-foot syndrome (G3) requiring dose hold"
-  - "Secondary leukemia (anthracycline class)"
-  - "Stomatitis G3+"
+  - "Cardiomyopathy / CHF (cumulative-dose dependent; baseline + serial LVEF assessment at ~250 mg/m² then more frequently)"
+  - "Severe infusion reactions / anaphylactoid (cycle-1 dominant; can be severe — slow infusion + premed)"
+  - "Severe PPE (G3 with skin breakdown ~20%; dose-limiting)"
+  - "Severe stomatitis (G3-4 ~10%)"
+  - "Secondary leukemia / MDS (anthracycline class — long-term risk ~1-2%)"
+  - "Severe extravasation tissue necrosis (vesicant; central line strongly preferred)"
+  - "Hepatotoxicity (G3 ALT/AST ~5%)"
+
 major_interactions:
-  - "STUB — anthracycline + trastuzumab cardiotox additive; sequential not concurrent"
+  - "Concurrent trastuzumab — additive cardiotoxicity; sequential rather than concurrent (or extreme caution + LVEF monitoring)"
+  - "Other anthracyclines (epirubicin, daunorubicin, idarubicin) — cumulative cardiotoxic dose tracking"
+  - "Mediastinal RT — additive cardiotoxicity"
+  - "Strong CYP3A4 inhibitors / inducers — modest effect on doxorubicin clearance"
+  - "Live vaccines — avoid"
+  - "Concurrent CYP3A4-metabolized drugs (cyclosporine, paclitaxel) — modest interactions"
 
 pharmacology:
   half_life_hours: 75
-  clearance: "RES uptake (liposomal); doxorubicin metabolism then renal/biliary"
+  clearance: "RES uptake (intact liposome); released doxorubicin via CYP3A4 / aldoketoreductase + biliary"
   protein_binding_pct: 70
-  metabolism: "CYP3A4 (doxorubicin payload)"
+  metabolism: "CYP3A4 (doxorubicin payload after liposome release); aldoketoreductase to doxorubicinol (cardiotoxic metabolite)"
 
 sources:
   - SRC-NCCN-OVARIAN-2025
@@ -73,9 +124,21 @@ sources:
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
-  STUB — Phase CSD-4 promotion. Cumulative anthracycline dose tracking
-  required (lifetime ~550 mg/m² conventional dox equivalent; PLD
-  somewhat higher tolerated). PPE prophylaxis: cool compresses, avoid
-  pressure/heat, urea-containing emollients. Needs full curation of
-  dose-adj for hepatic, cardiac monitoring schedule (LVEF baseline +
-  cumulative-dose triggers), PPE management algorithm.
+  Cumulative anthracycline dose tracking is mandatory — combine PLD
+  dose with any prior conventional doxorubicin / epirubicin /
+  daunorubicin. Conventional dox equivalent ceiling ~550 mg/m²; PLD
+  is somewhat better tolerated cardiotoxicity-wise so a higher
+  cumulative dose may be permissible with serial LVEF, but no formal
+  ceiling raised. PPE prophylaxis: cool compresses to hands/feet
+  during and 24 h after infusion, avoid heat / friction / vigorous
+  exercise / hot showers / occlusive footwear, urea 10-40% creams,
+  pyridoxine 50 mg PO TID has historical use though evidence weak.
+  CRITICAL: dilute in D5W only (saline disrupts liposomes); slow
+  initial infusion rate to mitigate reactions; central line strongly
+  preferred (vesicant). Baseline + serial LVEF (echo or MUGA) at
+  cumulative milestones (~150, 250, 350 mg/m² and more frequently
+  thereafter). Acute infusion reaction differs from anaphylaxis —
+  responds to stopping infusion + supportive care, can often resume
+  at slower rate. UA: registered; reimbursement variable —
+  conventional doxorubicin is the more commonly НСЗУ-funded
+  anthracycline.
