@@ -3,62 +3,135 @@ names:
   preferred: "Bevacizumab"
   ukrainian: "Бевацизумаб"
   english: "Bevacizumab"
-  brand_names: ["Avastin", "Mvasi (biosimilar)", "Zirabev (biosimilar)"]
+  brand_names:
+    - "Avastin"
+    - "Mvasi (biosimilar)"
+    - "Zirabev (biosimilar)"
+    - "Alymsys (biosimilar)"
+    - "Vegzelma (biosimilar)"
 atc_code: L01FG01
 rxnorm_id: "337525"
-drug_class: "Anti-VEGF-A humanized monoclonal antibody"
+drug_class: "Anti-VEGF-A humanized IgG1 monoclonal antibody (anti-angiogenic)"
 mechanism: >
-  Binds and neutralizes VEGF-A, blocking endothelial-cell receptor
-  signaling → tumor anti-angiogenesis + vessel normalization. Adds
-  ~2-4 mo PFS in metastatic CRC when added to FOLFOX/FOLFIRI;
-  combined with atezolizumab in 1L unresectable HCC (IMbrave150).
+  Recombinant humanized IgG1 monoclonal antibody binding all isoforms
+  of vascular endothelial growth factor A (VEGF-A) in plasma and
+  extracellular space, preventing VEGF-A from engaging VEGFR-1
+  (Flt-1) and VEGFR-2 (KDR) on vascular endothelium. Net effects:
+  inhibition of tumor angiogenesis, regression of existing tumor
+  microvasculature, and transient vessel normalization improving
+  drug delivery. Adds approximately 2-4 months PFS in metastatic CRC
+  when added to FOLFOX/FOLFIRI; combined with atezolizumab in 1L
+  unresectable HCC (IMbrave150) and with chemo in NSCLC, ovarian,
+  cervical. Class effects (HTN, proteinuria, bleeding, perforation)
+  derive from systemic VEGF blockade.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2004
+    indications_brief:
+      - "Metastatic colorectal cancer (1L + 2L, with chemo)"
+      - "Non-squamous NSCLC (1L with carbo/paclitaxel)"
+      - "Recurrent glioblastoma (mono)"
+      - "Metastatic renal cell carcinoma (with interferon-alpha)"
+      - "Persistent / recurrent / metastatic cervical cancer (with chemo)"
+      - "Epithelial ovarian / fallopian tube / primary peritoneal cancer (1L + recurrent ± PARPi)"
+      - "Hepatocellular carcinoma (1L with atezolizumab — IMbrave150)"
+  ema:
+    approved: true
+    year_first_approval: 2005
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: false
+    reimbursement_indications:
+      - "Selected indications via НСЗУ; biosimilars improve access"
     last_verified: "2026-04-26"
-    notes: "Original biologic out-of-pocket; biosimilars (Mvasi, Zirabev) increasingly available; selected indications NSZU-funded"
+    notes: "Original biologic largely out-of-pocket; biosimilars (Mvasi, Zirabev) increasingly available; selected indications NSZU-funded."
 
 typical_dosing: >
-  CRC metastatic: 5 mg/kg IV every 14d (with FOLFOX/FOLFIRI) or 7.5 mg/kg q21d (with CAPOX).
-  HCC: 15 mg/kg IV q21d (with atezolizumab 1200 mg).
-formulations: ["IV concentrate 25 mg/mL (100 mg, 400 mg vials)"]
+  CRC metastatic with FOLFOX/FOLFIRI: 5 mg/kg IV q14d.
+  CRC metastatic with CAPOX: 7.5 mg/kg IV q21d.
+  NSCLC (with carbo/paclitaxel): 15 mg/kg IV q21d × 6 cycles, then maintenance.
+  Ovarian (1L with carbo/paclitaxel): 15 mg/kg IV q21d × 6 cycles + 15 mo maintenance.
+  Cervical: 15 mg/kg IV q21d.
+  Glioblastoma: 10 mg/kg IV q14d.
+  HCC (with atezolizumab): 15 mg/kg IV q21d.
+  Hold ≥28 days pre-elective surgery; resume ≥28 days post-op with
+  full wound healing.
+formulations:
+  - "IV concentrate 25 mg/mL (100 mg / 4 mL, 400 mg / 16 mL vials)"
 
 absolute_contraindications:
-  - "Recent (≤28 days) major surgery"
-  - "Active GI perforation history"
-  - "Severe uncontrolled hypertension"
+  - "Recent (≤28 days) major surgery or non-healed surgical wound"
+  - "Active GI perforation or recent (≤6 mo) history"
+  - "Severe uncontrolled hypertension (>160/100 despite optimal antihypertensives)"
   - "Active hemoptysis ≥2.5 mL"
   - "Recent CVA / arterial thromboembolic event (≤6 months)"
+  - "Active severe bleeding"
+  - "Pregnancy"
+  - "Squamous-cell NSCLC with central lesion (severe pulmonary hemorrhage risk — historical contraindication)"
 
 black_box_warnings:
-  - "GI perforation"
-  - "Surgery / wound healing complications (hold ≥28 days pre-op, restart ≥28 days post-op)"
-  - "Hemorrhage (severe — pulmonary, GI, CNS)"
+  - "GI perforation (incidence 1-3% in CRC; higher in ovarian, cervical, GBM)"
+  - "Surgery / wound healing complications (hold ≥28 days pre-op; restart ≥28 days post-op only with full healing)"
+  - "Hemorrhage (severe pulmonary, GI, CNS — including fatal hemoptysis)"
 
 common_adverse_events:
-  - "Hypertension (manage with ACE-i or CCB)"
-  - "Proteinuria (monitor UPCR; hold if >3.5 g/24h)"
-  - "Epistaxis"
-  - "Fatigue"
+  - "Hypertension (~30%; manage with ACE-i or CCB; new HTN requires antihypertensive initiation)"
+  - "Proteinuria (~30%; monitor by UPCR or urine dipstick; hold if 24-h protein >2 g)"
+  - "Epistaxis (~35%, mostly mild)"
+  - "Fatigue (~50%)"
+  - "Headache (~25%)"
   - "Impaired wound healing"
+  - "Dysphonia (~15%)"
+  - "Asthenia"
+  - "Anorexia"
+  - "Mucositis / stomatitis"
+  - "Diarrhea (~30%, often combination-related)"
+  - "Mild infusion reactions (~3%)"
 
 serious_adverse_events:
-  - "GI perforation (1-3% in CRC)"
-  - "Severe hemorrhage"
-  - "Arterial thromboembolic events (MI, stroke)"
-  - "Reversible posterior leukoencephalopathy syndrome (RPLS)"
+  - "GI perforation (1-3% CRC; up to 5-10% ovarian/cervical with prior pelvic RT or bowel involvement)"
+  - "Severe hemorrhage (pulmonary, GI, CNS — can be fatal)"
+  - "Arterial thromboembolic events — MI, stroke (~3-5%; higher in elderly, prior ATE)"
+  - "Venous thromboembolism (incidence increased)"
+  - "Posterior reversible encephalopathy syndrome (PRES) — rare, requires immediate MRI"
+  - "Nephrotic syndrome (rare)"
+  - "Heart failure / cardiomyopathy (rare)"
+  - "Necrotizing fasciitis (rare; usually post-perforation)"
+  - "Osteonecrosis of the jaw (rare; risk factors: dental procedures, bisphosphonates)"
+  - "Tracheoesophageal fistula (head and neck combos)"
+
+major_interactions:
+  - "Sunitinib — additive microangiopathic hemolytic anemia and HTN (avoid)"
+  - "Anthracyclines — additive cardiotoxicity (use with caution)"
+  - "Irinotecan — increased severity of GI toxicity (diarrhea, perforation)"
+  - "Anticoagulants (warfarin, DOACs) — additive bleeding; monitor closely"
+  - "Antiplatelets (aspirin >325 mg/d, clopidogrel) — additive bleeding"
+  - "Live vaccines — avoid"
+  - "ACE inhibitors / ARBs — used to manage bevacizumab HTN (synergistic in this context)"
+
+pharmacology:
+  half_life_hours: 480
+  half_life_notes: "Median t½ ~20 days (range 11-50 d). Steady state by ~12 weeks."
+  clearance: "non-specific catabolism (proteolysis); not renally or hepatically cleared in conventional sense"
+  protein_binding_pct: null
+  metabolism: "non-CYP; antibody catabolism"
+  volume_of_distribution_l: 3
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-NCCN-HCC-2025
 
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. HCC IMbrave150 require pre-treatment EGD to assess
-  varices; high-risk varices need ligation/banding before atezo+bev.
-  Hold ≥28 days pre-elective surgery; resume ≥28 days post-op with
-  full wound healing.
+  HCC IMbrave150 prerequisites: pre-treatment EGD to assess varices;
+  high-risk varices need ligation/banding before atezo+bev. Hold
+  ≥28 days pre-elective surgery; resume ≥28 days post-op with full
+  wound healing. Discontinue permanently for: GI perforation,
+  tracheoesophageal fistula, any Grade 4 fistula, any Grade 4
+  bleeding event, severe arterial thromboembolic event, hypertensive
+  crisis, nephrotic syndrome, PRES. Biosimilars (Mvasi, Zirabev,
+  Alymsys, Vegzelma) clinically interchangeable per FDA / EMA.

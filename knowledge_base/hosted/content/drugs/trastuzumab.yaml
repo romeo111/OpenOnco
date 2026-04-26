@@ -3,46 +3,136 @@ names:
   preferred: "Trastuzumab"
   ukrainian: "Трастузумаб"
   english: "Trastuzumab"
-  brand_names: ["Herceptin", "Ogivri (biosimilar)", "Kanjinti (biosimilar)"]
+  brand_names:
+    - "Herceptin"
+    - "Ogivri (biosimilar)"
+    - "Kanjinti (biosimilar)"
+    - "Herzuma (biosimilar)"
+    - "Trazimera (biosimilar)"
+    - "Ontruzant (biosimilar)"
+    - "Herceptin Hylecta (SC fixed dose)"
 atc_code: L01FD01
-rxnorm_id: null
-drug_class: "HER2-targeted monoclonal antibody (subdomain IV)"
+rxnorm_id: "224905"
+drug_class: "Anti-HER2 humanized IgG1 monoclonal antibody (subdomain IV)"
 mechanism: >
-  Humanized IgG1 monoclonal antibody targeting the extracellular subdomain
-  IV of the HER2 receptor. Mechanisms: ADCC (antibody-dependent cell-
-  mediated cytotoxicity), inhibition of HER2 signaling, blockade of HER2
-  shedding, and disruption of HER2-driven angiogenesis.
+  Humanized IgG1 monoclonal antibody binding the extracellular
+  subdomain IV of the HER2 (ERBB2) receptor tyrosine kinase.
+  Mechanisms: (1) ADCC mediated by NK cells via Fc-FcγRIIIa
+  interaction; (2) inhibition of ligand-independent HER2 homo- and
+  heterodimerization and downstream PI3K/AKT and MAPK signaling;
+  (3) prevention of HER2 ectodomain shedding (which otherwise yields
+  constitutively active p95-HER2); (4) interference with HER2-driven
+  angiogenesis. Synergizes with chemotherapy and pertuzumab (binds
+  subdomain II, blocking heterodimerization). Activity requires HER2
+  IHC 3+ or ISH-amplified (HER2:CEP17 ≥2 or HER2 copy number ≥6) per
+  ASCO/CAP 2018 criteria.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1998
+    indications_brief:
+      - "HER2+ breast cancer — adjuvant (1 yr post-surgery, with chemo)"
+      - "HER2+ breast cancer — neoadjuvant (TCHP, AC-THP)"
+      - "HER2+ metastatic breast cancer (1L with pertuzumab + taxane; later lines mono or with chemo)"
+      - "HER2+ metastatic gastric / GEJ adenocarcinoma (1L with cisplatin + capecitabine/5-FU — ToGA)"
+  ema:
+    approved: true
+    year_first_approval: 2000
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
-    last_verified: null
-    notes: "Reimbursed for HER2+ breast (early adjuvant + neoadjuvant + metastatic) per НСЗУ. Biosimilar formulations widely available."
+    reimbursement_indications:
+      - "HER2+ рак молочної залози (ад'ювантна, неоад'ювантна, метастатична терапія)"
+      - "HER2+ рак шлунка (1-ша лінія, відповідно до НСЗУ)"
+    last_verified: "2026-04-26"
+    notes: "Reimbursed for HER2+ breast (early adjuvant + neoadjuvant + metastatic) and HER2+ gastric per НСЗУ. Biosimilar formulations widely available."
 
 typical_dosing: >
-  IV: 8 mg/kg loading dose, then 6 mg/kg q3 weeks maintenance.
-  SC formulation: 600 mg fixed dose q3 weeks.
-  Combined with chemotherapy + pertuzumab for early HER2+ (TCHP) and
-  metastatic 1L (THP). Continued for 1 year total in adjuvant; until
-  progression in metastatic. Cardiac monitoring (LVEF) at baseline
-  and q3 months.
+  IV q3-week schedule (most common): 8 mg/kg loading dose IV over 90 min,
+  then 6 mg/kg IV over 30-90 min q3 weeks.
+  IV weekly schedule (alternative): 4 mg/kg loading, then 2 mg/kg weekly.
+  SC (Herceptin Hylecta with hyaluronidase): 600 mg fixed dose SC q3w
+  over ~2-5 min — non-inferior to IV (HannaH study).
+  Combined with chemo + pertuzumab for early HER2+ (TCHP) and
+  metastatic 1L (THP, CLEOPATRA). Continued for 1 year total in
+  adjuvant; until progression in metastatic.
+  Cardiac monitoring: baseline LVEF (echo or MUGA) before initiation,
+  then q3 months during therapy and 6 months after completion.
+formulations:
+  - "IV powder for reconstitution 150 mg, 420 mg, 440 mg vials"
+  - "SC injection 600 mg / 5 mL with hyaluronidase (Herceptin Hylecta)"
 
-key_toxicities:
-  - Cardiotoxicity (LVEF decline; usually reversible; additive with anthracyclines + pertuzumab — sequential or cardio-sparing scheduling)
-  - Infusion reactions (mild-moderate; pre-medication typical)
-  - Diarrhea (combination with pertuzumab)
-  - Pulmonary toxicity (rare)
+absolute_contraindications:
+  - "Severe hypersensitivity to trastuzumab or murine proteins"
+  - "Pre-existing severe LV systolic dysfunction (LVEF <40%)"
+  - "Severe symptomatic heart failure (NYHA III-IV)"
+  - "Pregnancy (Category D — oligohydramnios, fetal renal failure)"
+  - "Severe pulmonary compromise (severe baseline dyspnea or O2 requirement)"
 
-sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
-last_reviewed: null
+black_box_warnings:
+  - "Cardiomyopathy (LVEF decline; symptomatic CHF risk; usually reversible on discontinuation; additive with anthracyclines)"
+  - "Severe infusion reactions (anaphylaxis, hypersensitivity, ARDS — most occur during or within 24 h of first infusion)"
+  - "Pulmonary toxicity (interstitial pneumonitis, pulmonary infiltrates, ARDS — can be fatal)"
+  - "Embryo-fetal toxicity (oligohydramnios, fetal renal failure, fatal pulmonary hypoplasia — effective contraception required)"
+
+common_adverse_events:
+  - "Fever / chills (especially first infusion, ~30%)"
+  - "Infusion reactions (~10-40%; mostly mild, first infusion)"
+  - "Nausea (~30%)"
+  - "Diarrhea (~25%; more severe with pertuzumab combo)"
+  - "Headache (~25%)"
+  - "Fatigue (~30%)"
+  - "Asymptomatic LVEF decline (~15-20%)"
+  - "Rash (~15%)"
+  - "Cough"
+  - "Anemia / leukopenia (mild)"
+  - "Arthralgia / myalgia"
+  - "Insomnia"
+
+serious_adverse_events:
+  - "Symptomatic congestive heart failure (~2-4% mono; up to 27% with concurrent anthracycline — sequential scheduling preferred)"
+  - "Severe LVEF decline requiring discontinuation"
+  - "Severe infusion reactions including anaphylaxis"
+  - "Interstitial lung disease / pneumonitis (rare; can be fatal)"
+  - "Tumor lysis syndrome (bulky disease; rare)"
+  - "Severe febrile neutropenia (combination chemotherapy)"
+  - "Oligohydramnios with fetal harm if exposure during pregnancy"
+
+major_interactions:
+  - "Anthracyclines (doxorubicin, epirubicin) — additive cardiotoxicity (sequential scheduling preferred over concurrent; AC-T-H sequence rather than AC-T concurrent with H)"
+  - "Pertuzumab — synergistic anti-HER2 activity (intentional in CLEOPATRA, APHINITY); additive diarrhea"
+  - "Cardiotoxic agents (other) — additive cardiac risk"
+  - "Live vaccines — avoid"
+  - "Paclitaxel / docetaxel — synergistic in HER2+ breast (intentional)"
+
+pharmacology:
+  half_life_hours: 672
+  half_life_notes: "Median t½ ~28 days (672 h) at steady state; range 1-32 d depending on regimen. Steady state by ~16 weeks (q3w schedule)."
+  clearance: "non-specific catabolism (proteolysis); target-mediated drug disposition"
+  protein_binding_pct: null
+  metabolism: "non-CYP; antibody catabolism"
+  volume_of_distribution_l: 3
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  Cross-disease entity. Used in HER2+ breast (early + metastatic),
-  HER2+ gastric/GEJ (1L per ToGA + 2L per DESTINY-Gastric series),
-  occasional uterine/biliary HER2-amp use.
-
-  STUB: minimum valid entry. Full clinical content (cardiac surveillance
-  protocol, biosimilar interchangeability notes, indication-specific
-  dose tables) to be filled by cross-disease drug-curation pass.
+  Cross-disease entity. HER2+ breast (early + metastatic), HER2+
+  gastric/GEJ (1L per ToGA), occasional uterine / biliary / lung
+  HER2-amplified use (off-label / clinical trial). Cardiac
+  surveillance: baseline LVEF + q3 months on therapy + 6 months
+  post; hold for asymptomatic decline ≥10% absolute or below
+  institutional threshold (commonly <50%); discontinue for
+  symptomatic CHF or persistent decline. Sequence with
+  anthracyclines (AC → T+H, or non-anthracycline TCHP) preferred
+  to minimize cardiac risk. SC formulation: shorter administration,
+  fixed-dose, no loading dose required, non-inferior efficacy.
+  Biosimilars (Ogivri, Kanjinti, Herzuma, Trazimera, Ontruzant)
+  clinically interchangeable per FDA / EMA. For HER2+ gastric: ToGA
+  trial established 1L cis/cape/5-FU + trastuzumab; later lines move
+  to T-DXd (DESTINY-Gastric) and other HER2-targeted agents.

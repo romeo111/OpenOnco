@@ -3,27 +3,116 @@ names:
   preferred: "Nab-paclitaxel"
   ukrainian: "Наб-паклітаксел"
   english: "Nab-paclitaxel (albumin-bound paclitaxel)"
+  synonyms: ["ABI-007", "albumin-bound paclitaxel"]
   brand_names: ["Abraxane"]
 atc_code: L01CD01
 rxnorm_id: "1101771"
-drug_class: "Taxane (albumin-bound nanoparticle formulation)"
+drug_class: "Taxane (microtubule stabilizer; albumin-bound nanoparticle formulation)"
 mechanism: >
-  Microtubule stabilizer; albumin-bound formulation eliminates
-  Cremophor-EL solvent (no premedication for hypersensitivity needed).
-  Backbone of gem-nab-pac PDAC regimen (MPACT trial).
+  Same active moiety as paclitaxel — binds β-tubulin and stabilizes
+  microtubules, blocking mitotic progression. Solvent-free 130-nm
+  nanoparticle formulation: paclitaxel non-covalently bound to human
+  serum albumin. Eliminates Cremophor-EL → no Cremophor hypersensitivity
+  → no corticosteroid / antihistamine premedication required and
+  faster infusion (~30 min). Albumin binding may exploit gp60-mediated
+  endothelial transcytosis and SPARC-mediated tumor accumulation
+  (proposed; clinical relevance debated). Backbone of gem-nab-pac PDAC
+  regimen (MPACT trial).
+
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
-  ukraine_registration: {registered: true, reimbursed_nszu: false, last_verified: "2026-04-26", notes: "out-of-pocket; selective NSZU coverage"}
+  fda:
+    approved: true
+    year_first_approval: 2005
+    indications_brief:
+      - "Metastatic breast cancer (after failure of combination chemotherapy)"
+      - "Locally advanced or metastatic non-small cell lung cancer (1L with carboplatin)"
+      - "Metastatic adenocarcinoma of the pancreas (1L with gemcitabine — MPACT)"
+  ema:
+    approved: true
+    year_first_approval: 2008
+  ukraine_registration:
+    registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
+    reimbursed_nszu: false
+    reimbursement_indications:
+      - "Selective NSZU coverage"
+    last_verified: "2026-04-26"
+    notes: "Out-of-pocket; selective NSZU coverage."
+
 typical_dosing: >
-  PDAC gem-nab-pac: 125 mg/m² IV days 1, 8, 15 of 28-d cycle.
-formulations: ["IV powder 100 mg vial"]
-absolute_contraindications: ["Pre-existing severe peripheral neuropathy", "Severe baseline ANC <1.5", "Pregnancy"]
-common_adverse_events: ["Peripheral neuropathy", "Fatigue", "Alopecia", "Myelosuppression", "Diarrhea", "Nausea"]
-serious_adverse_events: ["Severe neutropenia / sepsis", "Severe peripheral neuropathy", "Pneumonitis (rare)"]
-sources: [SRC-NCCN-PANCREATIC-2025]
+  Pancreatic 1L gem-nab-pac (MPACT regimen): 125 mg/m² IV over
+  30-40 min days 1, 8, 15 of 28-day cycle, with gemcitabine 1000 mg/m².
+  Breast metastatic: 260 mg/m² IV over 30 min q21d (mono).
+  NSCLC (with carboplatin AUC 6): 100 mg/m² IV days 1, 8, 15 q21d.
+  TNBC (IMpassion130, with atezolizumab): 100 mg/m² IV days 1, 8,
+  15 of 28-day cycle.
+  No corticosteroid premedication required (vs Cremophor-paclitaxel).
+  Day-15 dose held for ANC <1.0 / Plt <75 in PDAC schedule.
+formulations:
+  - "IV powder for reconstitution 100 mg single-use vial (suspension after reconstitution)"
+
+absolute_contraindications:
+  - "Pre-existing severe peripheral neuropathy (≥ Grade 2 with functional impairment)"
+  - "Severe baseline myelosuppression (ANC <1.5)"
+  - "Severe hepatic dysfunction (bilirubin >5× ULN — contraindicated; >2× ULN — dose reduce)"
+  - "Severe hypersensitivity to paclitaxel"
+  - "Pregnancy"
+
+black_box_warnings:
+  - "Severe myelosuppression (administration NOT recommended for ANC <1.5)"
+
+common_adverse_events:
+  - "Peripheral neuropathy (~70% any grade; cumulative; partial recovery)"
+  - "Neutropenia (~80% PDAC; ~60% breast)"
+  - "Anemia (~60-80%)"
+  - "Thrombocytopenia (~70% PDAC)"
+  - "Fatigue (~50%)"
+  - "Alopecia (~85%)"
+  - "Nausea / vomiting (~50%, low-to-moderate emetogenicity)"
+  - "Diarrhea (~40%)"
+  - "Mucositis"
+  - "Edema (peripheral)"
+  - "Arthralgia / myalgia (~25%; less than Cremophor-paclitaxel)"
+  - "Mild hypersensitivity (~3-5%; severe rare without Cremophor)"
+
+serious_adverse_events:
+  - "Severe neutropenia / febrile neutropenia / sepsis"
+  - "Severe peripheral neuropathy (Grade 3-4)"
+  - "Severe thrombocytopenia with bleeding"
+  - "Pneumonitis / interstitial lung disease (rare)"
+  - "Sepsis (PDAC, neutropenic)"
+  - "Hepatotoxicity"
+  - "Cardiac toxicity (rare; arrhythmia)"
+  - "Cystoid macular edema (rare)"
+  - "Stevens-Johnson syndrome (rare)"
+
+major_interactions:
+  - "Strong CYP3A4 / CYP2C8 inhibitors (ketoconazole, gemfibrozil) — increased exposure; avoid"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St. John's wort) — decreased exposure; avoid"
+  - "Other myelosuppressive agents — additive cytopenias"
+  - "Live vaccines — avoid"
+  - "Gemcitabine — pharmacodynamic synergy in PDAC (MPACT, intentional)"
+
+pharmacology:
+  half_life_hours: 27
+  half_life_notes: "Median terminal t½ ~27 h (range 13-50 h); larger volume of distribution than Cremophor-paclitaxel."
+  clearance: "hepatic (CYP2C8 — major, CYP3A4 — minor); biliary excretion; <10% renal"
+  protein_binding_pct: 94
+  metabolism: "CYP2C8 (primary) and CYP3A4 (secondary), same as paclitaxel"
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. No corticosteroid premedication required (vs
-  cremophor paclitaxel). Day-15 dose held for ANC <1.0 / Plt <75. PDAC
-  PS 0-1 + bilirubin <2× ULN eligibility.
+  No corticosteroid premedication required (vs Cremophor paclitaxel),
+  enabling outpatient infusion + reduced steroid exposure (relevant
+  for diabetic and immunocompromised patients). Day-15 dose typically
+  held for ANC <1.0 or platelets <75 in PDAC gem-nab-pac. PDAC
+  eligibility: PS 0-1, bilirubin <2× ULN. MPACT trial: gem-nab-pac vs
+  gem alone — mOS 8.5 vs 6.7 mo, ORR 23 vs 7%. Compared to FOLFIRINOX:
+  gem-nab-pac better tolerated in older / frail / ECOG 1, FOLFIRINOX
+  superior efficacy in fit ECOG 0. Hepatic dose adjustment: bilirubin
+  1.26-2.0× ULN reduce to 100 mg/m² (PDAC) or 200 mg/m² (breast);
+  >2-5× ULN reduce to 75 mg/m² (PDAC) or 130 mg/m² (breast).

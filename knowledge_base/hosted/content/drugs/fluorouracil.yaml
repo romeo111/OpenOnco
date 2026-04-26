@@ -3,60 +3,120 @@ names:
   preferred: "5-Fluorouracil"
   ukrainian: "5-Фторурацил"
   english: "5-Fluorouracil"
-  brand_names: ["Adrucil", "5-FU"]
+  synonyms: ["5-FU", "Fluorouracil"]
+  brand_names: ["Adrucil", "Efudex", "Carac"]
 atc_code: L01BC02
 rxnorm_id: "4492"
-drug_class: "Antimetabolite (fluoropyrimidine)"
+drug_class: "Antimetabolite (fluoropyrimidine, pyrimidine analog)"
 mechanism: >
-  Pyrimidine analog; metabolites inhibit thymidylate synthase (TS) and
-  incorporate into RNA/DNA. Backbone of FOLFOX, FOLFIRI, FOLFIRINOX,
-  FLOT, capecitabine-bridged regimens. Bolus + continuous-infusion
-  schedules differ in toxicity profile (more myelosuppression bolus,
-  more mucositis/HFS infusion).
+  Pyrimidine analog. Intracellularly converted to FdUMP, FdUTP, and FUTP.
+  FdUMP forms a stable ternary complex with thymidylate synthase (TS) +
+  reduced folate (leucovorin), depleting dTMP and blocking DNA synthesis.
+  FUTP misincorporation into RNA disrupts pre-mRNA processing; FdUTP
+  misincorporation into DNA produces strand breaks. Backbone of FOLFOX,
+  FOLFIRI, FOLFIRINOX, FLOT, and capecitabine-bridged regimens. Bolus and
+  continuous-infusion (CIV) schedules differ in toxicity profile (more
+  myelosuppression with bolus, more mucositis/HFS with CIV).
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1962
+    indications_brief:
+      - "Colorectal cancer (adjuvant + metastatic)"
+      - "Gastric / GEJ adenocarcinoma"
+      - "Pancreatic adenocarcinoma"
+      - "Breast cancer (limited modern use)"
+      - "Head and neck squamous cell carcinoma"
+  ema:
+    approved: true
+    year_first_approval: 1962
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
+    reimbursement_indications:
+      - "Колоректальний рак (ад'ювантна + метастатична терапія)"
+      - "Рак шлунка та стравохідно-шлункового з'єднання"
+      - "Рак підшлункової залози"
+      - "Плоскоклітинний рак голови та шиї"
     last_verified: "2026-04-26"
+    notes: "Generic; broadly available in oncology dispensaries."
 
 typical_dosing: >
-  FOLFOX: 400 mg/m² IV bolus day 1 + 2400 mg/m² IV CIV over 46h.
-  FLOT: 2600 mg/m² IV CIV over 24h day 1.
-  Bolus-only regimens (5-FU/LV in adjuvant): 425 mg/m² days 1-5 q4w.
-formulations: ["IV solution 50 mg/mL"]
+  FOLFOX (mFOLFOX6): 400 mg/m² IV bolus day 1 + 2400 mg/m² IV CIV over
+  46 h every 14 d.
+  FOLFIRI: 400 mg/m² IV bolus day 1 + 2400 mg/m² IV CIV over 46 h q14d.
+  FOLFIRINOX: 400 mg/m² IV bolus + 2400 mg/m² CIV over 46 h q14d.
+  FLOT: 2600 mg/m² IV CIV over 24 h day 1 q14d.
+  Bolus 5-FU/LV (Mayo Clinic, adjuvant legacy): 425 mg/m² IV bolus
+  days 1-5 every 28 d.
+  Continuous infusion (de Gramont): 400 mg/m² IV bolus + 600 mg/m² CIV
+  over 22 h days 1-2 q14d.
+  Head & neck CRT: 1000 mg/m² CIV days 1-4 with cisplatin.
+formulations:
+  - "IV solution 50 mg/mL (250 mg, 500 mg, 1 g, 2.5 g, 5 g vials)"
+  - "Topical cream 0.5%, 1%, 5% (non-oncology dermatologic use)"
 
 absolute_contraindications:
-  - "DPD (dihydropyrimidine dehydrogenase) complete deficiency"
-  - "Pregnancy"
-  - "Severe pre-existing myelosuppression"
+  - "Known DPD (dihydropyrimidine dehydrogenase) complete deficiency"
+  - "Pregnancy (Category D)"
+  - "Severe pre-existing myelosuppression (ANC <1.5, platelets <100)"
+  - "Severe baseline mucositis or diarrhea"
+  - "Concurrent brivudine / sorivudine (DPD inhibitor — fatal interaction)"
+  - "Hypersensitivity to fluorouracil"
 
 black_box_warnings:
-  - "Severe / fatal toxicity in DPD-deficient patients"
-  - "Cardiac toxicity (coronary vasospasm, MI; rare but reported)"
-  - "Hand-foot syndrome (more with infusion / capecitabine)"
+  - "Severe / fatal toxicity in DPD-deficient patients (consider DPYD genotyping pre-dose)"
+  - "Severe / fatal toxicity with concurrent brivudine or sorivudine"
 
 common_adverse_events:
-  - "Mucositis / stomatitis"
-  - "Diarrhea"
-  - "Myelosuppression (more with bolus)"
-  - "Hand-foot syndrome (more with infusion)"
-  - "Coronary vasospasm (chest pain — hold dose, ECG)"
+  - "Mucositis / stomatitis (~30-40%)"
+  - "Diarrhea (~30-50%; severe in 10-15% with bolus schedules)"
+  - "Myelosuppression — neutropenia (more with bolus, ~30%)"
+  - "Hand-foot syndrome (palmar-plantar erythrodysesthesia; more with CIV)"
+  - "Nausea / vomiting (low-to-moderate emetogenicity)"
+  - "Fatigue (~30%)"
+  - "Alopecia (mild)"
+  - "Hyperpigmentation (skin, nails)"
+  - "Lacrimation / conjunctivitis"
+  - "Coronary vasospasm — chest pain (~1-5%; more with CIV; hold drug, ECG)"
 
 serious_adverse_events:
-  - "Severe pancytopenia in DPD-deficient patients"
-  - "Acute coronary syndrome (vasospasm)"
-  - "Severe diarrhea with sepsis"
+  - "Severe pancytopenia in DPD-deficient patients (can be fatal)"
+  - "Acute coronary syndrome from coronary vasospasm"
+  - "Severe diarrhea with dehydration / sepsis"
+  - "Severe mucositis with secondary infection"
+  - "Hyperammonemic encephalopathy (rare, with high-dose CIV)"
+  - "Cerebellar ataxia (rare, reversible)"
+
+major_interactions:
+  - "Brivudine / sorivudine — DPD inhibitor; fatal toxicity (contraindicated; minimum 4-week washout)"
+  - "Warfarin — INR may increase (monitor INR weekly first month)"
+  - "Phenytoin — increased phenytoin levels (monitor)"
+  - "Leucovorin — intentional pharmacodynamic potentiation (required for activity in CRC)"
+  - "Metronidazole — increased 5-FU AUC and toxicity"
+  - "Allopurinol — may decrease efficacy (avoid combination)"
+
+pharmacology:
+  half_life_hours: 0.25
+  half_life_notes: "Plasma t½ ~10-20 min; intracellular metabolites longer. Eliminated rapidly via DPD-mediated catabolism."
+  clearance: "hepatic (DPD enzymatic catabolism, ~80%) + renal (~20% unchanged)"
+  protein_binding_pct: 10
+  metabolism: "DPD (dihydropyrimidine dehydrogenase) — rate-limiting; non-CYP"
+  bioavailability_notes: "Erratic oral absorption (capecitabine is the oral prodrug)."
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. DPD activity testing recommended before first dose
-  (NCCN colon v2.2025 §pretreatment). Bolus-only schedules largely
-  superseded by infusional + LV in modern adjuvant. Coronary spasm: hold
-  drug, urgent ECG; switch to raltitrexed if confirmed.
+  DPYD genotyping (variants *2A, *13, c.2846A>T, HapB3) recommended
+  before first dose per CPIC guidelines and EMA 2020 recommendation
+  (NCCN colon v2.2025, pretreatment section). Bolus-only schedules
+  largely superseded by infusional + LV in modern adjuvant. Coronary
+  spasm: hold drug, urgent ECG; switch to raltitrexed if confirmed.
+  Uridine triacetate (Vistogard) is the antidote for severe overdose
+  or early-onset toxicity (≤96 h post-exposure).

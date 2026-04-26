@@ -3,29 +3,141 @@ names:
   preferred: "Gemcitabine"
   ukrainian: "Гемцитабін"
   english: "Gemcitabine"
-  brand_names: ["Gemzar"]
+  synonyms: ["dFdC", "2',2'-difluorodeoxycytidine"]
+  brand_names: ["Gemzar", "Infugem"]
 atc_code: L01BC05
 rxnorm_id: "12574"
 drug_class: "Antimetabolite (deoxycytidine analog)"
 mechanism: >
-  Incorporated into DNA → masked chain termination + ribonucleotide
-  reductase inhibition. PDAC backbone (gem-nab-pac), biliary tract
-  cancers, NK/T-nasal lymphoma (SMILE — already used in our KB).
+  Pyrimidine nucleoside analog of deoxycytidine. Phosphorylated by
+  deoxycytidine kinase (rate-limiting) to active metabolites
+  gemcitabine diphosphate (dFdCDP) and triphosphate (dFdCTP). dFdCDP
+  inhibits ribonucleotide reductase, depleting deoxynucleotide pools
+  required for DNA synthesis (self-potentiation effect — increases
+  cellular dFdCTP). dFdCTP is incorporated into DNA, after which one
+  additional natural nucleotide is added before DNA polymerase
+  stalls — "masked chain termination" — making the lesion resistant
+  to exonucleolytic repair. Cell cycle phase-specific (S phase) with
+  G1/S blockade. PDAC backbone (gem-nab-pac MPACT, gem mono in
+  frail), biliary tract cancers, NSCLC, bladder, NK/T-nasal lymphoma
+  (SMILE), Hodgkin / DLBCL salvage (GDP).
+
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
-  ukraine_registration: {registered: true, reimbursed_nszu: true, last_verified: "2026-04-26"}
+  fda:
+    approved: true
+    year_first_approval: 1996
+    indications_brief:
+      - "Locally advanced or metastatic pancreatic adenocarcinoma (1L mono and combination)"
+      - "Locally advanced or metastatic NSCLC (1L with cisplatin)"
+      - "Metastatic breast cancer (with paclitaxel, after anthracycline failure)"
+      - "Advanced ovarian cancer (with carboplatin, after platinum-based 1L)"
+      - "Off-label / NCCN-listed: bladder (gem-cis MVAC alternative), biliary tract (gem-cis), NK/T nasal (SMILE), Hodgkin / NHL salvage (GDP), soft-tissue sarcoma (gem-doc)"
+  ema:
+    approved: true
+    year_first_approval: 1995
+  ukraine_registration:
+    registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
+    reimbursed_nszu: true
+    reimbursement_indications:
+      - "Рак підшлункової залози"
+      - "Недрібноклітинний рак легень"
+      - "Рак яєчників"
+      - "Рак сечового міхура"
+      - "Лімфоми (салвадж GDP)"
+    last_verified: "2026-04-26"
+
 typical_dosing: >
-  PDAC gem-nab-pac: 1000 mg/m² IV days 1, 8, 15 of 28-d cycle.
-  PDAC mono (frail): 1000 mg/m² weekly × 7 then 3-of-4-weekly.
-  Adjuvant PDAC: 1000 mg/m² weekly × 3 of every 4 weeks × 6 cycles.
-formulations: ["IV powder 200 mg, 1 g, 2 g"]
-absolute_contraindications: ["Severe hepatic dysfunction", "Pregnancy"]
-common_adverse_events: ["Myelosuppression", "Flu-like syndrome", "Mild rash", "Mild peripheral edema", "Transient transaminitis"]
-serious_adverse_events: ["Hemolytic-uremic syndrome (rare, drug-related)", "Pulmonary toxicity", "Capillary-leak syndrome", "Severe thrombocytopenia"]
-sources: [SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+  PDAC gem-nab-pac (MPACT): 1000 mg/m² IV over 30 min days 1, 8, 15
+  of 28-day cycle.
+  PDAC mono (frail): 1000 mg/m² IV over 30 min weekly × 7, then
+  rest 1 week, then 3-of-4-weekly thereafter.
+  Adjuvant PDAC mono: 1000 mg/m² IV weekly × 3 of every 4 weeks ×
+  6 cycles.
+  Adjuvant biliary tract (BILCAP): 1000 mg/m² IV weekly × 3 of 4 ×
+  8 cycles, with capecitabine.
+  NSCLC (with cisplatin): 1000-1250 mg/m² IV days 1, 8 q21d.
+  Bladder (gem-cis): 1000 mg/m² IV days 1, 8, 15 q28d with cisplatin.
+  Ovarian (with carboplatin): 1000 mg/m² IV days 1, 8 q21d.
+  GDP (lymphoma salvage): 1000 mg/m² IV days 1, 8 q21d.
+  SMILE (NK/T): 1000 mg/m² IV day 1, 8 of 28-day cycle (with steroids,
+  MTX, ifosfamide, L-asparaginase, etoposide).
+  Day-15 dose held for ANC <1.5 or platelets <100.
+  Infusion duration ~30 min standard; longer infusions (fixed dose
+  rate 10 mg/m²/min) increase efficacy in PDAC but more myelotoxicity.
+formulations:
+  - "IV powder for reconstitution 200 mg, 1 g, 2 g vials"
+  - "IV solution 38 mg/mL (Infugem ready-to-administer)"
+
+absolute_contraindications:
+  - "Severe hypersensitivity to gemcitabine"
+  - "Severe hepatic dysfunction"
+  - "Severe pre-existing myelosuppression"
+  - "Pregnancy"
+
+black_box_warnings:
+  - "Hemolytic-uremic syndrome / thrombotic microangiopathy (rare but catastrophic; may occur after weeks-to-months of therapy; permanent discontinuation if confirmed)"
+  - "Pulmonary toxicity (interstitial pneumonitis, pulmonary edema, ARDS — can be fatal)"
+  - "Capillary leak syndrome (rare)"
+
+common_adverse_events:
+  - "Myelosuppression — neutropenia (~60-70%), thrombocytopenia (~25-50%), anemia (~70%); usually mild-moderate, schedule-limiting"
+  - "Flu-like syndrome (~20%; fever, chills, myalgia within 24-48 h)"
+  - "Nausea / vomiting (~70%, low-to-moderate emetogenicity)"
+  - "Mild rash (~30%)"
+  - "Mild peripheral edema (~20%)"
+  - "Transient transaminitis (~70%; usually clinically insignificant)"
+  - "Proteinuria (~45%, usually mild)"
+  - "Hematuria (~35%, usually mild)"
+  - "Fatigue (~70%)"
+  - "Diarrhea (~20%)"
+  - "Stomatitis (~10%)"
+  - "Alopecia (mild; ~15%)"
+  - "Constipation"
+
+serious_adverse_events:
+  - "Hemolytic-uremic syndrome / thrombotic microangiopathy (rare; permanent discontinuation if confirmed)"
+  - "Severe pulmonary toxicity — pneumonitis, pulmonary edema, ARDS"
+  - "Capillary-leak syndrome"
+  - "Severe thrombocytopenia with bleeding"
+  - "Severe febrile neutropenia / sepsis"
+  - "Posterior reversible encephalopathy syndrome (PRES; rare)"
+  - "Severe radiation recall (use with prior or concurrent RT)"
+  - "Hepatic veno-occlusive disease"
+  - "Severe skin reactions (SJS, TEN — rare)"
+  - "Cardiac toxicity — MI, CHF, arrhythmia (rare)"
+  - "Acute kidney injury"
+
+major_interactions:
+  - "Concurrent radiation therapy — substantial radiosensitization; severe radiation recall and tissue toxicity; sequence carefully"
+  - "Other myelosuppressive chemotherapy — additive cytopenias"
+  - "Warfarin — INR may fluctuate; monitor"
+  - "Live vaccines — avoid"
+  - "Cisplatin — pharmacodynamic synergy in NSCLC, bladder, biliary (intentional)"
+  - "Nab-paclitaxel — pharmacodynamic synergy in PDAC (MPACT, intentional)"
+
+pharmacology:
+  half_life_hours: 1
+  half_life_notes: "Plasma t½ ~30-90 min for short infusions (<70 min); ~4-10 h for long infusions (>70 min). Intracellular dFdCTP t½ much longer (~4-15 h), driving prolonged cytotoxicity."
+  clearance: "hepatic + intracellular (cytidine deaminase to inactive dFdU); renal excretion of dFdU (~99% within 24 h)"
+  protein_binding_pct: 10
+  metabolism: "cytidine deaminase (rapid deamination to inactive dFdU); deoxycytidine kinase (intracellular activation)"
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
 last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  STUB — Phase GI-1. Day-15 dose often held for ANC <1.5 or platelets <100.
-  HUS rare but catastrophic — monitor renal + hemolysis labs. Already used
-  in NK/T SMILE — reuse this entity rather than duplicate.
+  Day-15 dose often held for ANC <1.5 or platelets <100. HUS / TMA
+  rare but catastrophic — monitor renal function + hemolysis labs
+  (LDH, haptoglobin, schistocytes) periodically; discontinue
+  permanently if confirmed. Pulmonary toxicity (cough, dyspnea, new
+  hypoxia) requires immediate workup including CT and discontinuation.
+  Already used in NK/T SMILE — reuse this entity rather than
+  duplicate. Radiation recall: severe mucocutaneous reactions in
+  prior RT field — increase awareness when sequencing or combining
+  with RT (esp. esophageal, lung, pelvic). For PDAC: gem-nab-pac
+  modestly outperforms gem mono (MPACT mOS 8.5 vs 6.7); FOLFIRINOX
+  preferred in fit ECOG 0; gem mono for frail.

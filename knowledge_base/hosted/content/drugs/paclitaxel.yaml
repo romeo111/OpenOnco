@@ -3,44 +3,127 @@ names:
   preferred: "Paclitaxel"
   ukrainian: "Паклітаксель"
   english: "Paclitaxel"
-  brand_names: ["Taxol"]
+  brand_names: ["Taxol", "Onxol"]
 atc_code: L01CD01
-rxnorm_id: null
+rxnorm_id: "56946"
 drug_class: "Taxane (microtubule stabilizer)"
 mechanism: >
-  Promotes microtubule polymerization and stabilizes microtubule
-  assembly, blocking mitotic progression and inducing apoptosis.
-  Cremophor-EL solubilizer requires pre-medication for hypersensitivity.
+  Diterpenoid originally isolated from Pacific yew (Taxus brevifolia).
+  Binds the β-subunit of polymerized tubulin at the taxane-binding
+  site, promoting microtubule assembly and stabilizing existing
+  microtubules against depolymerization. Cells arrest at the
+  G2/M-phase transition unable to complete mitosis, triggering
+  apoptosis. Solubilized in Cremophor-EL (polyoxyethylated castor
+  oil) + dehydrated alcohol — Cremophor-EL is responsible for the
+  characteristic hypersensitivity reactions and necessitates
+  premedication with corticosteroids + H1 + H2 antihistamines.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1992
+    indications_brief:
+      - "Ovarian carcinoma (1L + recurrent)"
+      - "Breast cancer (adjuvant, neoadjuvant, metastatic)"
+      - "Non-small cell lung cancer (1L combo with platinum)"
+      - "Kaposi sarcoma (AIDS-related, 2L)"
+      - "Off-label / NCCN-listed: gastric, esophageal (CROSS), pancreatic, head and neck, bladder, cervical, endometrial"
+  ema:
+    approved: true
+    year_first_approval: 1993
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
-    last_verified: null
+    reimbursement_indications:
+      - "Рак яєчників"
+      - "Рак молочної залози (ад'ювантна, метастатична)"
+      - "Недрібноклітинний рак легень"
+      - "Стравохід (CROSS)"
+      - "Шлунок"
+    last_verified: "2026-04-26"
     notes: "Generic; reimbursed across solid-tumor and lymphoma indications."
 
 typical_dosing: >
-  Breast (weekly): 80 mg/m² IV weekly. Breast (every-3-weeks): 175 mg/m²
-  IV q3 weeks. NSCLC, ovarian, gastric: indication-specific. Pre-medication:
-  dexamethasone + diphenhydramine + H2 blocker for cremophor hypersensitivity.
+  Breast (weekly, dose-dense and mCa schedules): 80 mg/m² IV over
+  1 h weekly.
+  Breast (every-3-weeks): 175 mg/m² IV over 3 h q21d.
+  Ovarian 1L (with carboplatin): 175 mg/m² IV over 3 h q21d × 6.
+  Ovarian dose-dense (Japanese GOG): 80 mg/m² weekly × 18 wks
+  with carboplatin AUC 6 q21d × 6.
+  NSCLC (with carbo, Bevacizumab+CP): 200 mg/m² IV q21d × 4-6.
+  CROSS (esophageal CRT): 50 mg/m² IV weekly × 5 with carboplatin AUC 2.
+  Mandatory premedication: dexamethasone 20 mg PO at 12 h and 6 h
+  before, OR 20 mg IV at 30 min before; diphenhydramine 50 mg IV +
+  H2 blocker (ranitidine 50 mg IV or famotidine 20 mg IV) at 30 min
+  before infusion.
+formulations:
+  - "IV solution 6 mg/mL (30 mg / 5 mL, 100 mg / 16.7 mL, 300 mg / 50 mL vials in Cremophor-EL/ethanol)"
 
-key_toxicities:
-  - Hypersensitivity reactions (cremophor — severe; pre-medication mandatory)
-  - Peripheral neuropathy (sensory, dose-cumulative)
-  - Neutropenia (less than docetaxel)
-  - Alopecia
-  - Myalgia / arthralgia (post-infusion days 2-4)
-  - Bradycardia / cardiac arrhythmia (rare)
+absolute_contraindications:
+  - "Severe hypersensitivity to paclitaxel, Cremophor-EL, or polyoxyethylated castor oil"
+  - "Severe pre-existing peripheral neuropathy (≥ Grade 2 with functional impairment)"
+  - "Severe baseline myelosuppression (ANC <1.5)"
+  - "Severe hepatic dysfunction"
+  - "Pregnancy"
 
-sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-EARLY-2024]
-last_reviewed: null
+black_box_warnings:
+  - "Severe hypersensitivity reactions (Cremophor-mediated; premedication mandatory)"
+  - "Severe myelosuppression"
+
+common_adverse_events:
+  - "Hypersensitivity reactions (Cremophor; pre-medication essentially eliminates Grade 3-4 — without it ~30%; with it ~3%)"
+  - "Peripheral sensory neuropathy (~60-70% any grade; cumulative dose-dependent; partial recovery)"
+  - "Neutropenia (~80%; less than docetaxel)"
+  - "Anemia (~60%)"
+  - "Alopecia (~85%)"
+  - "Myalgia / arthralgia (~50%; post-infusion days 2-4; NSAIDs / steroids for relief)"
+  - "Fatigue (~50%)"
+  - "Mucositis (~30%)"
+  - "Nausea / vomiting (~50%, low-to-moderate emetogenicity)"
+  - "Diarrhea (~30%)"
+  - "Bradycardia / cardiac arrhythmia (rare; usually asymptomatic)"
+  - "Mild hepatotoxicity"
+
+serious_adverse_events:
+  - "Severe hypersensitivity / anaphylaxis (rare with proper premedication)"
+  - "Severe febrile neutropenia"
+  - "Severe peripheral neuropathy (Grade 3-4 with sensory loss)"
+  - "Severe cardiac arrhythmia (heart block, ventricular tachycardia — rare)"
+  - "Interstitial pneumonitis / pulmonary toxicity (rare)"
+  - "Hepatic failure"
+  - "Stevens-Johnson syndrome / TEN (rare)"
+  - "Cystoid macular edema (rare)"
+
+major_interactions:
+  - "Strong CYP3A4 inhibitors (ketoconazole, ritonavir, clarithromycin) — increased paclitaxel exposure; avoid or dose-reduce"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St. John's wort) — decreased paclitaxel exposure; avoid"
+  - "Strong CYP2C8 inhibitors (gemfibrozil) — increased paclitaxel exposure; avoid"
+  - "Cisplatin sequencing — cisplatin BEFORE paclitaxel reduces paclitaxel clearance and increases myelosuppression (give paclitaxel first)"
+  - "Doxorubicin — additive myelosuppression; sequence-dependent (paclitaxel first decreases doxorubicin clearance)"
+  - "Live vaccines — avoid"
+
+pharmacology:
+  half_life_hours: 13
+  half_life_notes: "Median terminal t½ ~13 h (range 3-52 h depending on dose and infusion duration); non-linear pharmacokinetics."
+  clearance: "hepatic (CYP2C8 — major, CYP3A4 — minor); biliary excretion; <10% renal"
+  protein_binding_pct: 95
+  metabolism: "CYP2C8 (primary, to 6α-hydroxypaclitaxel) and CYP3A4 (secondary)"
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-EARLY-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
   Cross-disease entity. Standard of care in many regimens (weekly
-  paclitaxel for breast adjuvant + KEYNOTE-522 phase 1, AC-T sequencing,
-  carboplatin + paclitaxel for NSCLC + ovarian + gastric).
-
-  STUB: minimum valid entry. Full clinical content (formulation
-  specifics including nab-paclitaxel comparison, indication-specific
-  dosing tables) to be filled by cross-disease drug-curation pass.
+  paclitaxel for breast adjuvant, dose-dense AC-T, KEYNOTE-522 phase 1
+  weekly carbo-paclitaxel for TNBC, carboplatin-paclitaxel for NSCLC
+  + ovarian + gastric, CROSS for esophageal). Weekly dosing has
+  improved DFS over q3w in node-positive breast (E1199 trial).
+  Hypersensitivity management: stop infusion immediately at first
+  sign (flushing, dyspnea, hypotension); IV steroids + antihistamines
+  + epinephrine for severe; rechallenge possible after Grade 1-2 with
+  enhanced premedication and slower infusion. Neuropathy: dose-reduce
+  20-25% for Grade 2 persistent; discontinue for Grade 3.

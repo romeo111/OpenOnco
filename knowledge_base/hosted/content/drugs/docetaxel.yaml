@@ -3,37 +3,135 @@ names:
   preferred: "Docetaxel"
   ukrainian: "Доцетаксель"
   english: "Docetaxel"
-  brand_names: ["Taxotere"]
+  brand_names: ["Taxotere", "Docefrez", "Docetere"]
 atc_code: L01CD02
-rxnorm_id: null
+rxnorm_id: "72962"
 drug_class: "Taxane (microtubule stabilizer)"
 mechanism: >
-  Binds β-tubulin and stabilizes microtubules, blocking mitotic spindle disassembly and inducing apoptosis. Pre-medication with corticosteroids critical to prevent fluid retention and hypersensitivity.
+  Semi-synthetic taxane derived from European yew (Taxus baccata).
+  Binds the β-subunit of polymerized tubulin at the taxane-binding
+  site (~1.9× higher affinity than paclitaxel), promoting microtubule
+  assembly and stabilizing existing microtubules against
+  depolymerization. Cells arrest at G2/M, triggering apoptosis. Solubilized in polysorbate 80 (Tween 80) + ethanol — premedication
+  with corticosteroids critical to prevent fluid retention and
+  hypersensitivity (Cremophor-EL not used in docetaxel). Higher
+  myelosuppression and febrile neutropenia rates than paclitaxel.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 1996
+    indications_brief:
+      - "Locally advanced or metastatic breast cancer (after failure of prior chemotherapy)"
+      - "Adjuvant breast cancer (with doxorubicin + cyclophosphamide — TAC)"
+      - "Locally advanced or metastatic NSCLC (1L with cisplatin; 2L mono after platinum failure)"
+      - "Hormone-refractory metastatic prostate cancer (mCRPC, with prednisone — TAX-327)"
+      - "Metastatic hormone-sensitive prostate cancer (mHSPC, with ADT — CHAARTED, STAMPEDE)"
+      - "Advanced gastric adenocarcinoma (1L with cisplatin + 5-FU — DCF / mDCF)"
+      - "Locally advanced squamous cell carcinoma of head and neck (induction with cisplatin + 5-FU — TPF)"
+  ema:
+    approved: true
+    year_first_approval: 1995
   ukraine_registration:
     registered: true
+    registration_number: "[TBD — to be populated by Держреєстр ЛЗ lookup]"
     reimbursed_nszu: true
-    last_verified: null
+    reimbursement_indications:
+      - "Рак передміхурової залози (mHSPC, mCRPC)"
+      - "Рак молочної залози (ад'ювантна, метастатична)"
+      - "Недрібноклітинний рак легень"
+      - "Рак шлунка"
+      - "Голова і шия (TPF індукція)"
+    last_verified: "2026-04-26"
     notes: "Generic; reimbursed for prostate, breast, NSCLC, gastric, and other solid-tumor indications."
 
 typical_dosing: >
-  Prostate (mHSPC + mCRPC): 75 mg/m² IV q3 weeks × 6 cycles (mHSPC) or × 10 cycles (mCRPC, until intolerance). Pre-medication: dexamethasone 8 mg PO BID × 3 days starting day before infusion.
+  Prostate (mHSPC + mCRPC): 75 mg/m² IV q3 weeks × 6 cycles (mHSPC,
+  CHAARTED) or × 10 cycles (mCRPC, TAX-327, until intolerance).
+  Breast adjuvant TAC: 75 mg/m² IV day 1 q21d × 6 (with doxorubicin
+  50 mg/m² + cyclophosphamide 500 mg/m²).
+  Breast metastatic mono: 60-100 mg/m² IV q21d.
+  NSCLC 2L mono: 75 mg/m² IV q21d.
+  NSCLC 1L (with cisplatin): 75 mg/m² IV q21d.
+  Gastric DCF: 75 mg/m² IV day 1 q21d (with cisplatin + 5-FU).
+  Head and neck TPF induction: 75 mg/m² IV day 1 q21d × 3 (with
+  cisplatin + 5-FU).
+  Mandatory premedication: dexamethasone 8 mg PO BID × 3 days
+  starting day before infusion (to prevent fluid retention and
+  hypersensitivity).
+formulations:
+  - "IV concentrate 10 mg/mL or 20 mg/mL (single-vial formulations 20 mg, 80 mg, 160 mg)"
+  - "IV solution 10 mg/mL (single-vial formulation, no diluent required)"
 
-key_toxicities:
-  - Neutropenia (severe in 30-40%; G-CSF support if febrile-neutropenia history)
-  - Febrile neutropenia (~5-15%)
-  - Peripheral neuropathy (~30% any grade; cumulative dose-dependent)
-  - Fluid retention (~50% — pre-medication mandatory)
-  - Alopecia
-  - Mucositis
-  - Nail changes
-  - Hypersensitivity reactions (rare with pre-medication)
-  - Hepatic dysfunction may worsen toxicity — dose-modify or avoid in severe impairment
+absolute_contraindications:
+  - "Severe hypersensitivity to docetaxel or polysorbate 80"
+  - "Severe pre-existing peripheral neuropathy (≥ Grade 2 with functional impairment)"
+  - "Severe baseline myelosuppression (ANC <1.5)"
+  - "Severe hepatic dysfunction (bilirubin > ULN; AST/ALT >1.5× ULN with alkaline phosphatase >2.5× ULN)"
+  - "Pregnancy"
 
-sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
-last_reviewed: null
+black_box_warnings:
+  - "Hepatic dysfunction — increased risk of severe / fatal toxicity (avoid if bilirubin > ULN)"
+  - "Severe neutropenia — neutropenic deaths reported"
+  - "Severe hypersensitivity reactions"
+  - "Severe fluid retention (premedication mandatory; can be fatal)"
+
+common_adverse_events:
+  - "Neutropenia (~80%; severe Grade 3-4 ~30-40%; G-CSF support if febrile-neutropenia history)"
+  - "Febrile neutropenia (~5-15%; up to 25% with TAC)"
+  - "Anemia (~70%)"
+  - "Peripheral neuropathy (~30% any grade; cumulative dose-dependent)"
+  - "Fluid retention / edema (~50%; pre-medication mandatory; cumulative)"
+  - "Alopecia (~80%, often complete)"
+  - "Mucositis (~40%)"
+  - "Nail changes / onycholysis (~20-40%; can be disfiguring with cumulative dose)"
+  - "Hypersensitivity reactions (rare with proper premedication)"
+  - "Fatigue (~60%)"
+  - "Nausea / vomiting (~40%)"
+  - "Diarrhea (~40%)"
+  - "Skin reactions / rash"
+  - "Lacrimation / canalicular stenosis (with weekly dosing)"
+
+serious_adverse_events:
+  - "Severe febrile neutropenia / sepsis / neutropenic enterocolitis (typhlitis)"
+  - "Severe fluid retention with effusions (pleural, pericardial, ascites; can require drainage)"
+  - "Hepatic failure (esp. with pre-existing dysfunction — fatal)"
+  - "Severe hypersensitivity / anaphylaxis (rare with premed)"
+  - "Severe peripheral neuropathy (Grade 3-4)"
+  - "Stevens-Johnson syndrome / TEN (rare)"
+  - "Cystoid macular edema (rare)"
+  - "Acute respiratory distress / pneumonitis (rare)"
+  - "Cardiac arrhythmias (rare)"
+  - "Secondary malignancies (long-term, particularly with TAC)"
+
+major_interactions:
+  - "Strong CYP3A4 inhibitors (ketoconazole, ritonavir, clarithromycin, itraconazole, voriconazole) — substantial increase in docetaxel exposure; avoid or dose-reduce by 50%"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St. John's wort) — decreased exposure; avoid"
+  - "Hepatic dysfunction — markedly increased toxicity (dose modify or avoid)"
+  - "Other myelosuppressive agents — additive cytopenias"
+  - "Live vaccines — avoid"
+  - "Doxorubicin — additive cardiotoxicity in TAC (monitor LVEF)"
+
+pharmacology:
+  half_life_hours: 11
+  half_life_notes: "Triphasic disposition; terminal t½ ~11 h."
+  clearance: "hepatic (CYP3A4 — primary); biliary excretion; <10% renal"
+  protein_binding_pct: 95
+  metabolism: "CYP3A4 (primary); CYP3A5 contribution"
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-04-26"
+reviewers: []
 notes: >
-  Cytotoxic backbone added to ADT for high-volume mHSPC (CHAARTED, STAMPEDE) and as ARASENS triplet partner. mCRPC option but ARPIs typically preferred 1L if no high-volume burden.
+  Cytotoxic backbone added to ADT for high-volume mHSPC (CHAARTED,
+  STAMPEDE) and as ARASENS triplet partner with darolutamide.
+  mCRPC option (TAX-327) but ARPIs typically preferred 1L if no
+  high-volume burden. Hepatic adjustment essential — bilirubin > ULN
+  requires dose reduction or avoidance. Premedication: dexamethasone
+  8 mg PO BID × 3 days starting day before to prevent fluid retention
+  + hypersensitivity. G-CSF primary prophylaxis for high febrile-
+  neutropenia risk regimens (TAC, TPF, DCF). Cumulative neuropathy
+  + nail toxicity may be dose-limiting after several cycles.
