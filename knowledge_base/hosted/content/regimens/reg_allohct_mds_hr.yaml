@@ -1,0 +1,72 @@
+id: REG-ALLOHCT-MDS-HR
+name: "Allogeneic hematopoietic cell transplant for high-risk MDS"
+name_ua: "Алогенна трансплантація кровотворних клітин для високоризикової МДС"
+alternate_names:
+  - "AlloHCT MDS-HR"
+  - "Allogeneic SCT MDS"
+
+components:
+  - drug_id: DRUG-AZACITIDINE
+    dose: "Pre-HCT cytoreduction: azacitidine 75 mg/m² SC days 1-7 q28d × 4-6 cycles to reduce blast burden + bridge to HCT"
+    schedule: "Bridging until donor identified + transplant slot available; conditioning regimen institution-specific (myeloablative Bu/Cy or Bu/Flu for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
+    route: SC
+
+cycle_length_days: null
+total_cycles: "Single transplant procedure; HMA bridging 4-6 cycles pre-HCT; post-HCT azacitidine maintenance optional ×12 months for high-risk subset"
+
+toxicity_profile: severe
+
+premedication:
+  - "Donor identification (HLA-matched sibling > matched unrelated > haploidentical > cord)"
+  - "Pre-transplant comorbidity assessment (HCT-CI score)"
+  - "Pre-transplant blast reduction with HMA to optimal disease control (target blasts <10%, ideally <5%)"
+  - "Standard infectious + organ workup (echo, PFT, CMV serology, HBV/HCV/HIV)"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Older / comorbid (HCT-CI ≥3, age >60-65)"
+    modification: "Reduced-intensity conditioning (RIC): Flu/Mel or Flu/Bu2; haplo or matched-unrelated donor acceptable"
+    rationale: "Lower TRM with RIC; comparable disease control in MDS-HR"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-ESMO-MDS-2021
+  - condition: "Active blast crisis (>20% blasts → AML transformation)"
+    modification: "Treat as AML — induction (7+3 or ven+aza) before HCT; HCT outcomes substantially worse if active disease"
+    rationale: "Disease status at HCT is dominant predictor"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "TP53-mutated MDS-HR"
+    modification: "HCT remains the only chance of cure; outcomes worse than non-TP53 (~20-30% 3-y OS); consider clinical trial enrollment + post-HCT maintenance"
+    rationale: "TP53-mutated MDS has very poor HMA response + post-HCT relapse; decitabine/cedazuridine + venetoclax studied as bridging"
+    source_refs:
+      - SRC-NCCN-AML-2025
+      - SRC-IPSS-M-BERNARD-2022
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "AlloHCT performed at limited Ukrainian centers (Kyiv Institute of Hematology + few others); international referral common for adult MDS-HR. Donor registry coverage limited. Azacitidine bridging components НСЗУ-reimbursed."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-25"
+notes: >
+  AlloHCT remains the ONLY curative option for MDS-HR. Mandatory
+  consideration in all transplant-eligible patients (typically
+  age <70-75 + adequate organ function + suitable donor + adequate
+  caregiver support). HMA bridging during 3-6 month donor search
+  is standard. Post-HCT azacitidine maintenance ×12 months reduces
+  relapse in high-risk subset (Oran et al., emerging data). STUB —
+  pending Co-Lead sign-off. Conditioning regimen selection is
+  institution-specific — this entity is a placeholder pointing to
+  the alloHCT pathway with HMA bridging, not a fully specified
+  conditioning chemotherapy regimen.
