@@ -1,0 +1,24 @@
+id: ALGO-RCC-METASTATIC-2L
+applicable_to_disease: DIS-RCC
+applicable_to_line_of_therapy: 2
+purpose: "Select 2L+ therapy for metastatic clear-cell RCC after prior PD-(L)1 + VEGF-TKI."
+output_indications: [IND-RCC-METASTATIC-2L-BELZUTIFAN]
+default_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
+alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN  # single-option algorithm; Pydantic alt is required
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - {condition: "Prior PD-(L)1 + VEGF-TKI failure"}
+    if_true: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}
+    if_false: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}  # default — algorithm only fires post-1L
+sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+last_reviewed: "2026-04-26"
+notes: >
+  Tracer-bullet 2L algorithm — single output (belzutifan). Future expansion:
+  cabozantinib, lenvatinib + everolimus, tivozanib as 2L+ alternatives.
+  When ≥2 indications wired, decision_tree becomes meaningful (currently
+  it's a passthrough). Hereditary-VHL patients diverge to 1L
+  IND-RCC-VHL-DISEASE-BELZUTIFAN regardless of metastatic status —
+  ALGO-RCC-METASTATIC-1L excludes them via VHL-status check upstream
+  (separate wiring task).

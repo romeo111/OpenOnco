@@ -7,9 +7,9 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 ## Summary
 
 - **Defined entities:** 62
-- **Referenced by rules:** 60 unique IDs, 175 total citations
-- **Defined + used (✓):** 60
-- **Defined + unused (⚠):** 2
+- **Referenced by rules:** 61 unique IDs, 177 total citations
+- **Defined + used (✓):** 61
+- **Defined + unused (⚠):** 1
 - **Referenced + missing (❌):** 0
 
 ## Issues to resolve
@@ -17,7 +17,6 @@ Purpose: single source of truth for which biomarkers OpenOnco's engine actually 
 ### ⚠ Defined but no rule consumes them
 
 - `BIO-TMB-HIGH` — Tumor mutational burden (TMB-high). Wire into ≥1 Indication or red-flag, or document why dormant.
-- `BIO-VHL-STATUS` — VHL gene status. Wire into ≥1 Indication or red-flag, or document why dormant.
 
 ## Top-cited biomarkers (PDF-extraction priority)
 
@@ -108,7 +107,6 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-CCND1-IHC` (3× refs)
 - `BIO-CD23-IHC` (3× refs)
 - `BIO-CD5-IHC` (6× refs)
-- `BIO-CD52-IHC` (1× refs)
 - `BIO-CD79B-IHC` (2× refs)
 - `BIO-DLBCL-COO-HANS` (2× refs)
 - `BIO-DLBCL-IPI` (2× refs)
@@ -117,6 +115,7 @@ Markers consumed by rules but never appearing in `examples/*.json`. Either add a
 - `BIO-EGFR-MUTATION` (3× refs)
 - `BIO-ESTROGEN-RECEPTOR` (2× refs)
 - `BIO-EZH2-Y641` (1× refs)
+- `BIO-FGFR3-MUTATION` (1× refs)
 - ... and 23 more
 
 ## Full catalog
@@ -140,7 +139,7 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-CD23-IHC` | ✓ | 3 | CD23 expression by IHC / flow cytometry | IHC | — | — | medium | Chronic Lymphocytic Le |
 | `BIO-CD30-IHC` | ✓ | 6 | CD30 expression by IHC | IHC | — | 9× ✓ | **high** | Anaplastic Large Cell , Angioimmunoblastic T-C, Mycosis Fungoides / Sé |
 | `BIO-CD5-IHC` | ✓ | 6 | CD5 expression by IHC / flow cytometry | IHC | — | — | **high** | Chronic Lymphocytic Le, Mantle Cell Lymphoma |
-| `BIO-CD52-IHC` | ✓ | 1 | CD52 expression by IHC / flow | IHC | — | — | low | T-Cell Prolymphocytic  |
+| `BIO-CD52-IHC` | ✓ | 2 | CD52 expression by IHC / flow | IHC | — | 2× ✓ | medium | T-Cell Prolymphocytic  |
 | `BIO-CD79B-IHC` | ✓ | 2 | CD79b expression by IHC (target of polatuzumab vedotin) | IHC | — | — | medium | Diffuse Large B-Cell L |
 | `BIO-CLL-HIGH-RISK-GENETICS` | ✓ | 1 | CLL high-risk genetics (TP53 / del(17p) / IGHV-unmutated / complex karyotype) | composite | — | 2× ✓ | low | — |
 | `BIO-CXCR4-WHIM` | ✓ | 2 | CXCR4 WHIM-like mutation | NGS | — | 1× ✓ | medium | Waldenström Macroglobu |
@@ -186,5 +185,5 @@ Columns: **Status** = ✓/⚠/❌ from §Issues. **Refs** = total citations. **M
 | `BIO-T11-14-IGH-CCND1` | ✓ | 2 | t(11;14)(q13;q32) IGH/CCND1 by FISH | FISH | — | — | medium | Mantle Cell Lymphoma |
 | `BIO-TMB-HIGH` | ⚠ unused | 0 | Tumor mutational burden (TMB-high) | NGS-TMB | — | — | low | — |
 | `BIO-TP53-MUTATION` | ✓ | 2 | TP53 mutation / del(17p) | FISH | — | — | medium | — |
-| `BIO-VHL-STATUS` | ⚠ unused | 0 | VHL gene status | NGS | — | — | low | — |
+| `BIO-VHL-STATUS` | ✓ | 1 | VHL gene status | NGS | — | — | low | Renal cell carcinoma |
 
