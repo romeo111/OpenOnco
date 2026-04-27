@@ -1,109 +1,61 @@
 id: ALGO-PMBCL-2L
 applicable_to_disease: DIS-PMBCL
 applicable_to_line_of_therapy: 2
-purpose: >
-  Select 2L Indication for relapsed/refractory primary mediastinal
-  large B-cell lymphoma. Routing branches on transplant-eligibility:
-
-  - Transplant-ELIGIBLE (fit, age ≤65-70, ECOG ≤1, adequate organ
-    function, chemosensitive to salvage): IND-PMBCL-2L-RICE-AUTOSCT
-    (R-ICE salvage → BEAM-autoSCT consolidation, the curative-
-    intent standard track).
-
-  - Transplant-INELIGIBLE / R-ICE-refractory: pembrolizumab
-    monotherapy (KEYNOTE-170 — PMBCL has 9p24.1 amplification with
-    PD-L1 overexpression in ~70%, ORR 45% with durable responses).
-    No dedicated IND-PMBCL-2L-PEMBROLIZUMAB; routes via free-text
-    MDT note (see notes).
-
-  2L entry triggered by: documented relapse on imaging/biopsy after
-  1L (DA-EPOCH-R or R-CHOP ± mediastinal RT), OR primary
-  refractoriness (residual mediastinal mass with persistent FDG-
-  avidity Deauville 4-5 post-1L).
-
+purpose: "Select 2L Indication for relapsed/refractory primary mediastinal large B-cell lymphoma. Routing branches on transplant-eligibility:\n- Transplant-ELIGIBLE (fit, age ≤65-70, ECOG ≤1, adequate organ\n  function, chemosensitive to salvage): IND-PMBCL-2L-RICE-AUTOSCT\n  (R-ICE salvage → BEAM-autoSCT consolidation, the curative-\n  intent standard track).\n\n- Transplant-INELIGIBLE / R-ICE-refractory: pembrolizumab\n  monotherapy (KEYNOTE-170 — PMBCL has 9p24.1 amplification with\n  PD-L1 overexpression in ~70%, ORR 45% with durable responses).\n  No dedicated IND-PMBCL-2L-PEMBROLIZUMAB; routes via free-text\n  MDT note (see notes).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP ± mediastinal RT), OR primary refractoriness (residual mediastinal mass with persistent FDG- avidity Deauville 4-5 post-1L).\n"
 output_indications:
-  - IND-PMBCL-2L-RICE-AUTOSCT
-
+- IND-PMBCL-2L-RICE-AUTOSCT
 default_indication: IND-PMBCL-2L-RICE-AUTOSCT
 alternative_indication: IND-PMBCL-2L-RICE-AUTOSCT
-
 decision_tree:
-  # Step 1 — transplant-ineligible (frailty, organ dysfunction, ECOG
-  # ≥2, age >70, prior cardiotoxicity precluding BEAM): pembrolizumab
-  # KEYNOTE-170 is the preferred non-transplant option (chemo-free,
-  # PD-L1 amplification rationale). Free-text routing.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-PMBCL-FRAILTY-AGE
-        - red_flag: RF-PMBCL-ORGAN-DYSFUNCTION
-        - condition: "Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)"
-    if_true:
-      result: IND-PMBCL-2L-RICE-AUTOSCT  # placeholder; see notes — pembrolizumab KEYNOTE-170 alternative
-    if_false:
-      next_step: 2
-
-  # Step 2 — R-ICE-refractory after 2 cycles (no Deauville improvement):
-  # switch to pembrolizumab. Free-text routing.
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "R-ICE x 2 cycles completed"
-        - condition: "Interim Deauville ≥4 (no metabolic response) — chemorefractory"
-    if_true:
-      result: IND-PMBCL-2L-RICE-AUTOSCT  # placeholder; see notes — pembrolizumab salvage
-    if_false:
-      next_step: 3
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
-  # Step 3 — transplant-eligible chemosensitive relapse → R-ICE
-  # salvage → BEAM-autoSCT (curative-intent standard).
-  - step: 3
-    evaluate:
-      all_of:
-        - condition: "Age ≤65-70, ECOG ≤1, LVEF ≥45%, CrCl ≥50 (transplant-eligible)"
-        - condition: "First relapse OR primary refractory with chemosensitive disease"
-        - condition: "CD20+ confirmed at relapse biopsy"
-    if_true:
-      result: IND-PMBCL-2L-RICE-AUTOSCT
-    if_false:
-      next_step: 4
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
-  # Step 4 — default: transplant-eligible → R-ICE-autoSCT.
-  - step: 4
-    evaluate:
-      any_of:
-        - condition: "PMBCL relapsed/refractory, transplant-eligible by default"
-        - red_flag: RF-PMBCL-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-PMBCL-2L-RICE-AUTOSCT
-    if_false:
-      result: IND-PMBCL-2L-RICE-AUTOSCT
-
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-PMBCL-FRAILTY-AGE
+    - red_flag: RF-PMBCL-ORGAN-DYSFUNCTION
+    - condition: Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)
+  if_true:
+    result: IND-PMBCL-2L-RICE-AUTOSCT
+  if_false:
+    next_step: 2
+- step: 2
+  evaluate:
+    all_of:
+    - condition: R-ICE x 2 cycles completed
+    - condition: Interim Deauville ≥4 (no metabolic response) — chemorefractory
+  if_true:
+    result: IND-PMBCL-2L-RICE-AUTOSCT
+  if_false:
+    next_step: 3
+  notes: MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required.
+- step: 3
+  evaluate:
+    all_of:
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - none_of:
+      - red_flag: RF-ORGAN-RENAL-IMPAIRED
+    - none_of:
+      - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
+    - condition: Age ≤65-70, (transplant-eligible)
+    - condition: First relapse OR primary refractory with chemosensitive disease
+    - condition: CD20+ confirmed at relapse biopsy
+  if_true:
+    result: IND-PMBCL-2L-RICE-AUTOSCT
+  if_false:
+    next_step: 4
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 4
+  evaluate:
+    any_of:
+    - condition: PMBCL relapsed/refractory, transplant-eligible by default
+    - red_flag: RF-PMBCL-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-PMBCL-2L-RICE-AUTOSCT
+  if_false:
+    result: IND-PMBCL-2L-RICE-AUTOSCT
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-DLBCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-DLBCL-2024
+last_reviewed: '2026-04-27'
+notes: 'OOS / wiring gaps: (1) IND-PMBCL-2L-PEMBROLIZUMAB (KEYNOTE-170, FDA-approved 2018 for r/r PMBCL ≥2 prior lines, ORR 45% durable) — not modeled as dedicated indication. Steps 1+2 route to R-ICE-autoSCT placeholder; trace must surface "transplant-ineligible OR R-ICE-refractory → pembrolizumab KEYNOTE-170 (200mg q3w)" as free-text MDT note. (2) BEAM-autoSCT consolidation is a procedure (not an indication); IND-PMBCL-2L-RICE-AUTOSCT name signals the expected consolidation downstream. (3) CAR-T (axi-cel ZUMA-12 included PMBCL; tisa-cel JULIET PMBCL cohort) for ≥3L or post-autoSCT relapse — not modeled. (4) Brentuximab vedotin for CD30+ PMBCL r/r — phase 2 ECOG-1412 data positive, not FDA-approved for PMBCL specifically; not modeled. (5) Mediastinal RT consolidation post-CR2 — radiation oncology referral, outside algorithm. (6) Allogeneic SCT for post-autoSCT relapse young patients — referral, outside KB. (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
 
-last_reviewed: "2026-04-27"
-notes: >
-  OOS / wiring gaps:
-  (1) IND-PMBCL-2L-PEMBROLIZUMAB (KEYNOTE-170, FDA-approved 2018
-  for r/r PMBCL ≥2 prior lines, ORR 45% durable) — not modeled
-  as dedicated indication. Steps 1+2 route to R-ICE-autoSCT
-  placeholder; trace must surface "transplant-ineligible OR
-  R-ICE-refractory → pembrolizumab KEYNOTE-170 (200mg q3w)" as
-  free-text MDT note.
-  (2) BEAM-autoSCT consolidation is a procedure (not an
-  indication); IND-PMBCL-2L-RICE-AUTOSCT name signals the
-  expected consolidation downstream.
-  (3) CAR-T (axi-cel ZUMA-12 included PMBCL; tisa-cel JULIET PMBCL
-  cohort) for ≥3L or post-autoSCT relapse — not modeled.
-  (4) Brentuximab vedotin for CD30+ PMBCL r/r — phase 2 ECOG-1412
-  data positive, not FDA-approved for PMBCL specifically; not
-  modeled.
-  (5) Mediastinal RT consolidation post-CR2 — radiation oncology
-  referral, outside algorithm.
-  (6) Allogeneic SCT for post-autoSCT relapse young patients —
-  referral, outside KB.
-  (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+  '

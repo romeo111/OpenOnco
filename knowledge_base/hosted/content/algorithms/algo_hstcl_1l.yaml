@@ -1,36 +1,32 @@
 id: ALGO-HSTCL-1L
 applicable_to_disease: DIS-HSTCL
 applicable_to_line_of_therapy: 1
-purpose: >
-  HSTCL 1L — preferred path is ICE/IVAC induction + alloSCT consolidation
-  in CR1 (only curative option). Fallback for unfit/elderly patients
-  without donor pathway: CHOEP — accepted as palliative/bridging
-  despite inferior responses.
+purpose: 'HSTCL 1L — preferred path is ICE/IVAC induction + alloSCT consolidation in CR1 (only curative option). Fallback for unfit/elderly patients without donor pathway: CHOEP — accepted as palliative/bridging despite inferior responses.
 
+  '
 output_indications:
-  - IND-HSTCL-1L-ICE-ALLOSCT
-  - IND-HSTCL-1L-CHOEP-UNFIT
-
+- IND-HSTCL-1L-ICE-ALLOSCT
+- IND-HSTCL-1L-CHOEP-UNFIT
 default_indication: IND-HSTCL-1L-CHOEP-UNFIT
 alternative_indication: IND-HSTCL-1L-ICE-ALLOSCT
-
 decision_tree:
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "ECOG ≤ 2"
-        - condition: "Age ≤ 65 OR fit"
-        - condition: "AlloSCT donor pathway feasible (matched donor identified or imminent)"
-    if_true:
-      result: IND-HSTCL-1L-ICE-ALLOSCT
-    if_false:
-      result: IND-HSTCL-1L-CHOEP-UNFIT
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+- step: 1
+  evaluate:
+    all_of:
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - condition: Age ≤ 65 OR fit
+    - condition: AlloSCT donor pathway feasible (matched donor identified or imminent)
+  if_true:
+    result: IND-HSTCL-1L-ICE-ALLOSCT
+  if_false:
+    result: IND-HSTCL-1L-CHOEP-UNFIT
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+sources:
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
+last_reviewed: '2026-04-27'
+notes: 'Дуже rare entity — управління у tertiary center. CHOEP-unfit branch is palliative/bridging; cure rate near zero without alloSCT. Iatrogenic HSTCL (post-anti-TNF + thiopurines for IBD) requires immediate cessation of those agents regardless of branch.
 
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
-last_reviewed: "2026-04-27"
-notes: >
-  Дуже rare entity — управління у tertiary center. CHOEP-unfit branch
-  is palliative/bridging; cure rate near zero without alloSCT.
-  Iatrogenic HSTCL (post-anti-TNF + thiopurines for IBD) requires
-  immediate cessation of those agents regardless of branch.
+  '

@@ -33,12 +33,14 @@ decision_tree:
   evaluate:
     all_of:
     - condition: Standard-risk IPI (0-1)
-    - condition: ECOG ≤ 2
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
   if_true:
     result: IND-DLBCL-1L-RCHOP
   if_false:
     result: IND-DLBCL-1L-RCHOP
-  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+  notes: "Partially wired — fitness gate (ECOG ≤ 2) wired via CSD-7A pan-disease RFs; IPI risk kept as MDT-evaluated condition (no RF for IPI strata)."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024

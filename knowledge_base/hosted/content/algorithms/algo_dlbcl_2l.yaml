@@ -1,10 +1,7 @@
 id: ALGO-DLBCL-2L
 applicable_to_disease: DIS-DLBCL-NOS
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) transplant-eligible salvage chemo → BEAM-autoSCT
-  (no dedicated indication yet — surfaced as free-text recommendation in trace, see notes); (2) ≥3 lines failed AND CAR-T-eligible
-  → axi-cel CAR-T (curative-intent aggressive track); (3) transplant-ineligible / older / frail → Pola-R- bendamustine (standard-track
-  2L for the realistic UA majority).
+purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) transplant-eligible salvage chemo → BEAM-autoSCT (no dedicated indication yet — surfaced as free-text recommendation in trace, see notes); (2) ≥3 lines failed AND CAR-T-eligible → axi-cel CAR-T (curative-intent aggressive track); (3) transplant-ineligible / older / frail → Pola-R- bendamustine (standard-track 2L for the realistic UA majority).
 
   '
 output_indications:
@@ -17,25 +14,33 @@ decision_tree:
   evaluate:
     all_of:
     - condition: 'Transplant-eligible: age ≤70'
-    - condition: ECOG ≤ 2
-    - condition: Adequate organ function (LVEF ≥45%, CrCl ≥50, no active infection)
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - none_of:
+      - red_flag: RF-ORGAN-RENAL-IMPAIRED
+    - none_of:
+      - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
+    - condition: Adequate organ function (no active infection)
     - condition: First relapse, chemosensitive disease (≥PR to salvage)
   if_true:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
   if_false:
     next_step: 2
-  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 - step: 2
   evaluate:
     all_of:
     - condition: ≥2 prior systemic lines failed
-    - condition: Age 18-75, ECOG ≤1
-    - condition: CD19+ disease confirmed, CAR-T center referral feasible
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: Age 18-75
+    - red_flag: RF-CAR-T-ELIGIBLE
+    - condition: CD19+ disease confirmed
   if_true:
     result: IND-DLBCL-3L-AXICEL-CART
   if_false:
     next_step: 3
-  notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 - step: 3
   evaluate:
     any_of:
@@ -50,12 +55,7 @@ sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
 last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) IND-DLBCL-2L-RDHAP-AUTOSCT (or R-ICE-autoSCT) is the true NCCN-preferred 2L for transplant-eligible
-  chemosensitive relapse but no dedicated indication YAML exists yet — step 1 routes to the Pola-BR placeholder and the trace
-  must surface "salvage → BEAM-ASCT preferred" as a free-text MDT note. Add IND-DLBCL-2L-RDHAP-AUTOSCT in next batch. (2)
-  Liso-cel / TRANSFORM (early-relapse 2L CAR-T) not modeled — only axi-cel for ≥3L modeled. (3) Bispecifics (epcoritamab,
-  glofitamab) for ≥3L not modeled. (4) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only
-  via free-text condition until 2L-specific RFs land.
+notes: 'OOS / wiring gaps: (1) IND-DLBCL-2L-RDHAP-AUTOSCT (or R-ICE-autoSCT) is the true NCCN-preferred 2L for transplant-eligible chemosensitive relapse but no dedicated indication YAML exists yet — step 1 routes to the Pola-BR placeholder and the trace must surface "salvage → BEAM-ASCT preferred" as a free-text MDT note. Add IND-DLBCL-2L-RDHAP-AUTOSCT in next batch. (2) Liso-cel / TRANSFORM (early-relapse 2L CAR-T) not modeled — only axi-cel for ≥3L modeled. (3) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (4) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
 reviewer_signoffs_v2:

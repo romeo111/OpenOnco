@@ -1,76 +1,53 @@
 id: ALGO-WM-2L
 applicable_to_disease: DIS-WM
 applicable_to_line_of_therapy: 2
-purpose: >
-  Select 2L+/relapsed WM Indication based on CXCR4 status, prior BTKi
-  exposure, and patient preference for chemo-free vs fixed-duration.
-  Three tracks: (1) CXCR4-WHIM-mutated → carfilzomib-based (BTKi
-  response weaker in CXCR4-mut); (2) cBTKi-naive → zanubrutinib
-  (ASPEN superior cardiac safety vs ibrutinib); (3) chemo-tolerant
-  fixed-duration preference OR post-BTKi failure → VRd
-  (bortezomib-rituximab-dex).
+purpose: 'Select 2L+/relapsed WM Indication based on CXCR4 status, prior BTKi exposure, and patient preference for chemo-free vs fixed-duration. Three tracks: (1) CXCR4-WHIM-mutated → carfilzomib-based (BTKi response weaker in CXCR4-mut); (2) cBTKi-naive → zanubrutinib (ASPEN superior cardiac safety vs ibrutinib); (3) chemo-tolerant fixed-duration preference OR post-BTKi failure → VRd (bortezomib-rituximab-dex).
 
+  '
 output_indications:
-  - IND-WM-2L-ZANUBRUTINIB
-  - IND-WM-2L-VRD
-  - IND-WM-2L-CARFILZOMIB-CXCR4MUT
-
+- IND-WM-2L-ZANUBRUTINIB
+- IND-WM-2L-VRD
+- IND-WM-2L-CARFILZOMIB-CXCR4MUT
 default_indication: IND-WM-2L-ZANUBRUTINIB
 alternative_indication: IND-WM-2L-VRD
-
 decision_tree:
-  # Step 1 — CXCR4-WHIM-mut: BTKi response is weaker, carfilzomib preferred.
-  - step: 1
-    evaluate:
-      any_of:
-        - condition: "CXCR4-WHIM mutation positive (NGS or Sanger)"
-        - condition: "Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated"
-    if_true:
-      result: IND-WM-2L-CARFILZOMIB-CXCR4MUT
-    if_false:
-      next_step: 2
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
-
-  # Step 2 — cBTKi-naive (e.g., 1L was DRC or RCD): zanubrutinib preferred.
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "cBTKi-naive (no prior ibrutinib/zanubrutinib)"
-        - condition: "MYD88-L265P positive (preferred BTKi responders)"
-        - condition: "No high atrial fibrillation / cardiac risk precluding BTKi"
-    if_true:
-      result: IND-WM-2L-ZANUBRUTINIB
-    if_false:
-      next_step: 3
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
-  # Step 3 — chemo-free preferred OR post-BTKi failure → VRd.
-  - step: 3
-    evaluate:
-      any_of:
-        - condition: "Chemo-tolerant fixed-duration preference (avoid continuous BTKi)"
-        - condition: "Post-cBTKi failure / progression"
-        - condition: "MYD88-WT (BTKi response markedly weaker)"
-        - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
-    if_true:
-      result: IND-WM-2L-VRD
-    if_false:
-      result: IND-WM-2L-ZANUBRUTINIB
-
+- step: 1
+  evaluate:
+    any_of:
+    - condition: CXCR4-WHIM mutation positive (NGS or Sanger)
+    - condition: Bortezomib-intolerant due to baseline neuropathy AND PI-class still indicated
+  if_true:
+    result: IND-WM-2L-CARFILZOMIB-CXCR4MUT
+  if_false:
+    next_step: 2
+  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+- step: 2
+  evaluate:
+    all_of:
+    - none_of:
+      - red_flag: RF-PRIOR-BTKI-PROGRESSION
+    - condition: MYD88-L265P positive (preferred BTKi responders)
+    - condition: No high atrial fibrillation / cardiac risk precluding BTKi
+  if_true:
+    result: IND-WM-2L-ZANUBRUTINIB
+  if_false:
+    next_step: 3
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 3
+  evaluate:
+    any_of:
+    - condition: Chemo-tolerant fixed-duration preference (avoid continuous BTKi)
+    - condition: Post-cBTKi failure / progression
+    - condition: MYD88-WT (BTKi response markedly weaker)
+    - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-WM-2L-VRD
+  if_false:
+    result: IND-WM-2L-ZANUBRUTINIB
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-WM-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-WM-2024
+last_reviewed: '2026-04-26'
+notes: 'OOS / wiring gaps: (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled (no IND-WM yet). (2) Bendamustine-rituximab (BR) re-treatment for chemo-sensitive late relapse — not modeled. (3) Hyperviscosity emergency at relapse routes via RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not decision-tree branch. (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut, TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
 
-last_reviewed: "2026-04-26"
-notes: >
-  OOS / wiring gaps:
-  (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled
-  (no IND-WM yet).
-  (2) Bendamustine-rituximab (BR) re-treatment for chemo-sensitive
-  late relapse — not modeled.
-  (3) Hyperviscosity emergency at relapse routes via
-  RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not
-  decision-tree branch.
-  (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by
-  RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut,
-  TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
+  '
