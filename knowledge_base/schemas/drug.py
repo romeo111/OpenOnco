@@ -32,3 +32,11 @@ class Drug(Base):
     last_reviewed: Optional[str] = None
     reviewers: list[str] = Field(default_factory=list)
     notes: Optional[str] = None
+
+    # Patient-mode lay-language blurb (1-2 sentences, Ukrainian, friendly
+    # tone). Read by `engine.render._render_drugs_plain` when present;
+    # otherwise the renderer falls back to the drug_class vocabulary entry
+    # in `engine._patient_vocabulary.DRUG_CLASS_PLAIN_UA` and finally to a
+    # generic placeholder. NEVER consulted as a treatment-selection signal
+    # (CHARTER §8.3 invariant — render-time only).
+    notes_patient: Optional[str] = None
