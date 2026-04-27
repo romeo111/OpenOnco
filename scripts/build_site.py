@@ -497,6 +497,134 @@ def bundle_examples(output_dir: Path) -> dict:
     }
 
 
+# Universal screening fields injected into every questionnaire at bundle
+# time. Audit 2026-04-27 found ~200 RF-disease evaluations were blocked
+# because these clinically-universal data points (TB screening, LVEF,
+# etc.) were absent from the per-disease questionnaire YAMLs. Rather
+# than copy-paste these into 65 questionnaires, the build prepends a
+# single "Загальний скринінг" group at JSON serialisation time. Each
+# field is `recommended` (not `critical`) so users can leave it blank
+# without blocking the Generate button. RF triggers reference these
+# field names directly — no alias needed.
+_COMMON_SCREENING_GROUP = {
+    "title": "Загальний скринінг (опційно)",
+    "description": "Універсальні поля для оцінки фітнесу, інфекційного статусу, "
+                   "органної функції. Заповнюй те, що є в карті — пусті поля "
+                   "engine просто не оцінює (replaces 'unevaluated RedFlag' warnings).",
+    "questions": [
+        {"field": "findings.lvef_percent", "label": "LVEF (%) — ехокардіографія",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 80,
+         "units": "%", "helper": "Перед антрациклінами / HER2-агентами / алкілуючими — потрібно baseline LVEF."},
+        {"field": "findings.active_tb", "label": "Активний туберкульоз?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Скринінг перед IO / стероїдами / алоТКМ. Quantiferon або скриніноговий рентген."},
+        {"field": "findings.latent_tb", "label": "Латентний ТБ (Quantiferon+ / IGRA+)?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.active_uncontrolled_infection", "label": "Активна неконтрольована інфекція?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Будь-який сепсис / pneumonia / неконтрольована грибкова — затримка lечення."},
+        {"field": "findings.albumin_g_dl", "label": "Альбумін",
+         "type": "float", "impact": "recommended", "range_min": 1.0, "range_max": 6.0,
+         "units": "г/дл"},
+        {"field": "findings.bilirubin_uln_x", "label": "Загальний білірубін (× ULN)",
+         "type": "float", "impact": "recommended", "range_min": 0.1, "range_max": 20.0,
+         "units": "× верхня межа норми",
+         "helper": "Більшість регімів вимагає bili ≤1.5×ULN; FDA-одобрення часто пишуть в кратах ULN."},
+        {"field": "findings.dlco_percent", "label": "DLCO (% від норми)",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 150,
+         "units": "%", "helper": "DLCO <50% — заборона на блеоміцин (cHL ABVD); <40% — обережно з CAR-T."},
+        {"field": "findings.qtc_ms", "label": "QTc (мс) на ЕКГ",
+         "type": "integer", "impact": "recommended", "range_min": 300, "range_max": 700,
+         "units": "мс",
+         "helper": "QTc >480 → обережно з венетоклаксом, кризотинібом, апалутамідом, FLT3i."},
+        {"field": "findings.potassium_mmol_l", "label": "Калій",
+         "type": "float", "impact": "recommended", "range_min": 1.5, "range_max": 8.0,
+         "units": "ммоль/л"},
+        {"field": "findings.uric_acid_mg_dl", "label": "Сечова кислота",
+         "type": "float", "impact": "recommended", "range_min": 1, "range_max": 20,
+         "units": "мг/дл",
+         "helper": "Високий уровень + bulky disease → ризик TLS, потрібен расбуриказа."},
+        {"field": "findings.tls_active", "label": "Активний синдром лізису пухлини?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.comorbidity_count", "label": "К-сть значущих коморбідностей",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 20,
+         "helper": "Серцева недостатність / COPD / cirrhosis / CKD / diabetes etc. Driver для frailty score."},
+        {"field": "findings.charlson_score", "label": "Charlson Comorbidity Index",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 30,
+         "helper": "0-1 fit, 2-3 intermediate, ≥4 frail (для elderly + солідних)."},
+        {"field": "findings.g8_score", "label": "G8 Geriatric Screening (0-17)",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 17,
+         "helper": "≤14 — потрібна повна geriatric assessment перед інтенсивною ХТ."},
+        {"field": "findings.child_pugh_class", "label": "Child-Pugh class (печінка)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "A", "label": "A — компенсована"},
+             {"value": "B", "label": "B — субкомпенсована"},
+             {"value": "C", "label": "C — декомпенсована"},
+         ],
+         "helper": "Тільки якщо є cirrhosis / liver disease. B/C — виключає більшість регімів."},
+        {"field": "findings.rapid_progression", "label": "Стрімка прогресія (швидке зростання обʼєму / нові симптоми)?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Driver для intensification у aggressive lymphomas / CAR-T bridging."},
+        {"field": "findings.new_metastatic_disease", "label": "Нові метастази на повторному скані?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.hcv_rna", "label": "HCV RNA (для пацієнтів з anti-HCV+)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативна / нижче LOD"},
+             {"value": "positive", "label": "Позитивна (active HCV)"},
+         ]},
+        {"field": "findings.hiv_status", "label": "HIV статус",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативний"},
+             {"value": "positive", "label": "Позитивний"},
+         ]},
+        {"field": "findings.peripheral_neuropathy_grade", "label": "Передіснуюча периферична нейропатія (CTCAE)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": 0, "label": "0 — немає"},
+             {"value": 1, "label": "1 — мінімальна"},
+             {"value": 2, "label": "2 — обмежує ADL"},
+             {"value": 3, "label": "3 — severe"},
+             {"value": 4, "label": "4 — disabling"},
+         ],
+         "helper": "Grade ≥3 — заборона на bortezomib SC, vincristine, oxaliplatin, cisplatin."},
+        {"field": "findings.nyha_class", "label": "NYHA клас (серцева недостатність)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "I", "label": "I — без обмежень"},
+             {"value": "II", "label": "II — легкі обмеження"},
+             {"value": "III", "label": "III — виражені обмеження"},
+             {"value": "IV", "label": "IV — симптоми у спокої"},
+         ],
+         "helper": "Тільки якщо є HF в анамнезі. NYHA III/IV — заборона на антрацикліни / трастузумаб."},
+        {"field": "findings.hemoglobin_g_dl", "label": "Гемоглобін",
+         "type": "float", "impact": "recommended", "range_min": 3, "range_max": 22,
+         "units": "г/дл"},
+        {"field": "findings.wbc_k_ul", "label": "Лейкоцити (×10⁹/л)",
+         "type": "float", "impact": "recommended", "range_min": 0, "range_max": 1000,
+         "units": "×10⁹/л",
+         "helper": "Hyperleukocytosis (>50-100) — risk leukostasis у AML/ALL/CML-blast."},
+        {"field": "findings.uncontrolled_hypertension", "label": "Неконтрольована гіпертензія?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Заборона / обережність з VEGF-інгібіторами (bevacizumab, sunitinib, lenvatinib)."},
+    ],
+}
+
+
+def _inject_common_screening(quest: dict) -> dict:
+    """Append the universal screening group to a questionnaire's groups
+    list at bundle time, unless the YAML already has a group with the
+    same title (idempotent — manual customisation wins)."""
+    groups = list(quest.get("groups") or [])
+    title = _COMMON_SCREENING_GROUP["title"]
+    if any(g.get("title") == title for g in groups):
+        return quest
+    groups.append(_COMMON_SCREENING_GROUP)
+    return {**quest, "groups": groups}
+
+
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
     JSON file at docs/questionnaires.json + thin manifest for /try.html.
@@ -505,6 +633,10 @@ def bundle_questionnaires(output_dir: Path) -> dict:
     disease_icd) — ~30× smaller than the full payload — so /try.html
     populates dropdowns instantly. Full payload is lazy-fetched only
     after the user selects a questionnaire.
+
+    Each questionnaire is post-processed by `_inject_common_screening`
+    so universal fields (LVEF, TB, child-pugh, etc.) appear without
+    every disease YAML having to copy them.
     """
     qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
     payload = []
@@ -515,6 +647,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
             try:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
+                    data = _inject_common_screening(data)
                     payload.append(data)
                     manifest.append({
                         "id": data.get("id"),
