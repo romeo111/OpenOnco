@@ -1,0 +1,64 @@
+id: RF-ORGAN-CARDIAC-LVEF-LOW
+definition: >
+  Reduced left ventricular ejection fraction (LVEF <50% by echocardiogram
+  or MUGA). Anthracyclines (doxorubicin, daunorubicin, epirubicin,
+  idarubicin) and HER2-targeted antibodies (trastuzumab, pertuzumab,
+  T-DM1, T-DXd) are relatively/absolutely contraindicated. Triggers
+  substitution with non-anthracycline regimens (R-CEOP, R-GCVP,
+  liposomal doxorubicin) and cardiology co-management.
+definition_ua: >
+  Знижена фракція викиду лівого шлуночка (LVEF <50% за ехокардіографією
+  або MUGA). Антрацикліни (доксорубіцин, даунорубіцин, епірубіцин,
+  ідарубіцин) та HER2-таргетні антитіла (трастузумаб, пертузумаб, T-DM1,
+  T-DXd) — відносно/абсолютно протипоказані. Триггерує заміну на
+  неантрациклінові режими (R-CEOP, R-GCVP, ліпосомальний доксорубіцин)
+  та сумісне ведення з кардіологом.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: critical
+priority: 60
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []  # Per-disease algorithms reference for branching
+                      # to non-anthracycline indications; engine surfaces
+                      # cardiology consult and substitution annotation.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  LVEF threshold 50% per most cooperative-group protocols; some centers
+  use 55% with comorbidity. R-CEOP (etoposide for doxorubicin) shows
+  comparable PFS in elderly with cardiac dysfunction (Moccia 2009).
+  R-GCVP (gemcitabine + cyclophosphamide + vincristine + prednisolone)
+  for severe LV impairment (LVEF <40% or class III/IV CHF). Liposomal
+  doxorubicin (R-COMP) reduces but does not eliminate cardiotoxicity —
+  acceptable at LVEF 40-50% with cardiology agreement. HER2 agents:
+  hold trastuzumab if LVEF drops ≥10% from baseline AND below LLN per
+  AHA cardio-oncology guidance. Cumulative anthracycline dose tracking
+  is separate (see RF-OBLIGATE-CARDIO-TOXIC-NAIVE).
+notes_ua: >
+  Поріг LVEF 50% за більшістю кооперативних протоколів; деякі центри
+  використовують 55% при коморбідності. R-CEOP (етопозид замість
+  доксорубіцину) показує порівнюваний PFS у літніх з кардіальною
+  дисфункцією (Moccia 2009). R-GCVP — при тяжкому LV-порушенні (LVEF
+  <40% або CHF III/IV). Ліпосомальний доксорубіцин (R-COMP) зменшує
+  але не усуває кардіотоксичність — допустимий при LVEF 40-50% за
+  згодою кардіолога. HER2-агенти: припинити трастузумаб при падінні
+  LVEF ≥10% від базового AND нижче LLN.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,57 @@
+id: RF-ORGAN-HEPATIC-CHILD-PUGH-B
+definition: >
+  Moderate hepatic dysfunction (Child-Pugh B, score 7-9). Triggers dose
+  modification or substitution for hepatically metabolized drugs:
+  doxorubicin, vincristine, vinblastine, paclitaxel, docetaxel,
+  etoposide, sorafenib, atezolizumab + bevacizumab caution; bilirubin
+  and AST/ALT-driven attenuation per FDA labels.
+definition_ua: >
+  Помірна печінкова дисфункція (Child-Pugh B, бал 7-9). Триггерує
+  модифікацію доз або заміну для печінково-метаболізованих препаратів:
+  доксорубіцин, вінкристин, вінбластин, паклітаксел, доцетаксел,
+  етопозид, сорафеніб, атезолізумаб + бевацизумаб обережно; атенуація
+  за білірубіном та AST/ALT відповідно до інструкцій FDA.
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "child_pugh_class"
+      value: "B"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Child-Pugh B is the most clinically nuanced hepatic-dysfunction tier —
+  many systemic-therapy trials (atezo+bev for HCC, sorafenib) limit to
+  Child-Pugh A or carefully selected B7. Doxorubicin: 50% reduction at
+  bilirubin 1.5-3 mg/dL, 75% at 3-5; vincristine: 50% reduction at
+  bilirubin 1.5-3, hold ≥3; paclitaxel: dose reduction per total bilirubin;
+  etoposide reduce 50% at bilirubin 1.5-3. R-CHOP feasible at Child-Pugh
+  B with vincristine substitution / dose attenuation. Sorafenib safe at
+  Child-Pugh B7 (SHARP subgroup, GIDEON registry); avoid at B8-9. For
+  HCC-specific dosing see RF-HCC-CHILD-PUGH-B-C.
+notes_ua: >
+  Child-Pugh B — найбільш клінічно нюансований тер печінкової дисфункції —
+  більшість трайлів (atezo+bev при HCC, сорафеніб) обмежуються Child-Pugh
+  A або обережним B7. Доксорубіцин: -50% при білірубіні 1.5-3 мг/дл,
+  -75% при 3-5; вінкристин: -50% при білірубіні 1.5-3, тримати при ≥3;
+  етопозид -50% при білірубіні 1.5-3. R-CHOP можливий при Child-Pugh B
+  із заміною/редукцією вінкристину. Сорафеніб безпечний при Child-Pugh
+  B7; уникати при B8-9.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

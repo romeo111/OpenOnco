@@ -1,0 +1,57 @@
+id: RF-ORGAN-HEPATIC-CHILD-PUGH-C
+definition: >
+  Severe hepatic dysfunction (Child-Pugh C, score 10-15). Effectively
+  contraindicates most cytotoxic and targeted systemic therapy.
+  Best-supportive-care or strictly palliative regimens only; trial
+  participation excluded. Liver transplant evaluation may take precedence
+  over oncologic therapy in HCC.
+definition_ua: >
+  Тяжка печінкова дисфункція (Child-Pugh C, бал 10-15). Фактично
+  протипоказує більшість цитотоксичної і таргетної системної терапії.
+  Лише підтримуюче лікування або суто паліативні режими; участь у
+  трайлах виключена. При HCC оцінка трансплантації печінки може мати
+  пріоритет над онкологічним лікуванням.
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "child_pugh_class"
+      value: "C"
+
+clinical_direction: hold
+
+severity: critical
+priority: 50
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Child-Pugh C exclusion is near-universal across systemic-therapy trials.
+  In HCC: only BSC or hospice referral typically; selected centers offer
+  Y90 radioembolization in CP-C7-with-good-PS, but no systemic standard.
+  In hematologic malignancies with secondary hepatic involvement
+  (Hodgkin, DLBCL infiltrating liver), pre-phase prednisolone alone may
+  improve LFTs sufficiently to allow attenuated R-CVP within 1-2 weeks —
+  reassess after pre-phase. Direction `hold` rather than `de-escalate`
+  because no evidence-supported attenuation guarantees safety here.
+notes_ua: >
+  Виключення Child-Pugh C — практично універсальне в трайлах системної
+  терапії. При HCC: зазвичай лише BSC або хоспіс; окремі центри пропонують
+  Y90-радіоемболізацію при CP-C7 з добрим PS, але системного стандарту
+  немає. При гематологічних з вторинним залученням печінки (Hodgkin,
+  DLBCL) pre-phase преднізолоном може покращити LFT достатньо для
+  атенуйованого R-CVP через 1-2 тижні — переоцінити. Направлення `hold`,
+  а не `де-ескалувати`, оскільки немає evidence-based атенуації, що
+  гарантує безпеку.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

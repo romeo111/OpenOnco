@@ -1,0 +1,59 @@
+id: RF-ORGAN-PULMONARY-DLCO-LOW
+definition: >
+  Reduced pulmonary diffusing capacity (DLCO <60% predicted). Bleomycin,
+  BCNU/carmustine, BEAM conditioning, gemcitabine in combination with
+  thoracic RT, and ICI in patients with prior pneumonitis are
+  relatively/absolutely contraindicated. Triggers AVD-without-bleomycin,
+  alternative lymphoma conditioning (LEAM, FEAM, BeEAM), or omission of
+  bleomycin from ABVD per RATHL.
+definition_ua: >
+  Знижена дифузійна здатність легень (DLCO <60% від норми). Блеоміцин,
+  BCNU/кармустин, BEAM-кондиціонування, гемцитабін у поєднанні з
+  торакальною ПТ, та ІКТ у пацієнтів з попереднім пневмонітом —
+  відносно/абсолютно протипоказані. Триггерує AVD без блеоміцину,
+  альтернативне кондиціонування для лімфом (LEAM, FEAM, BeEAM) або
+  виключення блеоміцину з ABVD за RATHL.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Bleomycin pulmonary toxicity is dose-dependent (cumulative >270 IU)
+  and risk-elevated by baseline DLCO <60%, age >40, smoking, prior
+  thoracic RT, renal dysfunction. RATHL trial (Johnson 2016) established
+  PET2-negative-then-AVD safety, halving bleomycin exposure without
+  PFS loss. For autoSCT conditioning: BEAM (BCNU 300 mg/m²) carries
+  10-20% pneumonitis at DLCO <60% — substitute LEAM (lomustine) or
+  BeEAM (bendamustine) per institutional preference. For ICI: prior
+  pneumonitis grade ≥2 contraindicates rechallenge.
+notes_ua: >
+  Легенева токсичність блеоміцину дозо-залежна (кумулятивно >270 IU);
+  ризик підвищують базовий DLCO <60%, вік >40, куріння, попередня
+  торакальна ПТ, ниркова дисфункція. Трайл RATHL (Johnson 2016) показав
+  безпеку PET2-негатив-тоді-AVD, удвічі скорочуючи блеоміцин без втрати
+  PFS. Для autoSCT: BEAM (BCNU 300 mg/m²) дає 10-20% пневмоніту при DLCO
+  <60% — замінити на LEAM або BeEAM. Для ІКТ: попередній пневмоніт ≥2
+  ст. — протипоказання до повторного введення.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

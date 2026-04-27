@@ -1,0 +1,63 @@
+id: RF-ORGAN-RENAL-IMPAIRED
+definition: >
+  Renal impairment requiring dose modification: moderate (CrCl 30-50
+  mL/min) or severe (CrCl <30 mL/min). Affects renally cleared cytotoxics
+  and targeted agents — cisplatin (severe contraindicated; use carboplatin
+  with Calvert formula), carboplatin (AUC dosing), HD-MTX (contraindicated
+  CrCl <50), HD-cytarabine, cyclophosphamide (25-50% reduction), bleomycin
+  (50% reduction), capecitabine, lenalidomide, gemcitabine.
+definition_ua: >
+  Ниркова недостатність, що вимагає модифікації доз: помірна (CrCl 30-50
+  мл/хв) або тяжка (CrCl <30 мл/хв). Впливає на ниркочисні цитотоксики
+  та таргетні препарати — цисплатин (тяжка — протипоказання; замінити
+  на карбоплатин за Calvert), карбоплатин (AUC), HD-MTX (протипоказаний
+  при CrCl <50), HD-цитарабін, циклофосфамід (зниж. 25-50%), блеоміцин
+  (50%), капецитабін, леналідомід, гемцитабін.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 50
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Single trigger covers both moderate (30-50) and severe (<30) — engine
+  consumers should branch on the actual finding value to apply the
+  correct attenuation. Per NCCN Drug Renal Dosing Tables / ASCO
+  expert-panel 2014 (Lichtman et al.): cisplatin contraindicated CrCl
+  <30 (substitute carboplatin Calvert AUC 4-5); HD-MTX contraindicated
+  <50 mL/min (substitute IT MTX for CNS prophylaxis); cyclophosphamide
+  reduce 25% at CrCl 30-50, 50% at <30; lenalidomide 10 mg (vs 25 mg)
+  at CrCl 30-60, 15 mg q48h <30, dialysis-specific dosing. Anti-CD20
+  monoclonals (rituximab, obinutuzumab) and BTKi do not require renal
+  adjustment. Multiple myeloma RF-MM-RENAL-DYSFUNCTION already exists
+  for myeloma-specific cast-nephropathy logic.
+notes_ua: >
+  Один тригер покриває як помірну (30-50), так і тяжку (<30) — споживачі
+  повинні розгалужувати за реальним значенням finding для правильної
+  атенуації. NCCN Drug Renal Dosing Tables / ASCO 2014: цисплатин
+  протипоказаний при CrCl <30 (замінити на карбоплатин Calvert AUC 4-5);
+  HD-MTX протипоказаний <50 мл/хв; циклофосфамід — 25% при 30-50, 50%
+  при <30; леналідомід 10 mg (замість 25) при CrCl 30-60. Anti-CD20
+  моноклоніки і BTKi не потребують ниркового коригування. Для
+  множинної мієломи RF-MM-RENAL-DYSFUNCTION вже існує.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
