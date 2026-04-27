@@ -58,7 +58,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
     if_false:
       next_step: 4
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 4 — HER2 amplified (~3% of mCRC) AND RAS-WT. MOUNTAINEER
   # tucatinib + trastuzumab default; T-DXd alternative noted in
@@ -72,7 +72,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
     if_false:
       next_step: 5
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 5 — Anti-EGFR rechallenge (3L+; positioned here so 2L candidates
   # without driver mutations route to standard cytotoxic-switch first).
@@ -89,7 +89,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
     if_false:
       next_step: 6
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 6 — 2L cytotoxic-switch default (FOLFOX → FOLFIRI + biologic
   # continuation per TML/ML18147). Standard track.
