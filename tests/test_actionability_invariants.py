@@ -19,7 +19,6 @@ import pytest
 
 from knowledge_base.engine.actionability_client import (
     NullActionabilityClient,
-    SnapshotActionabilityClient,
     StubActionabilityClient,
 )
 from knowledge_base.engine.actionability_conflict import detect_resistance_conflicts
@@ -170,20 +169,6 @@ def test_null_client_returns_disabled_errors():
     out = client.batch_lookup([q])
     assert len(out) == 1
     assert out[0].error_kind == "disabled"
-
-
-def test_snapshot_client_lookup_not_implemented():
-    """SnapshotActionabilityClient is a Phase 2 placeholder — calling it
-    must raise NotImplementedError until the CIViC reader lands."""
-    client = SnapshotActionabilityClient()
-    q = ActionabilityQuery(
-        gene="BRAF", variant="V600E", oncotree_code="MEL",
-        source_biomarker_id="BIO-1",
-    )
-    with pytest.raises(NotImplementedError):
-        client.lookup(q)
-    with pytest.raises(NotImplementedError):
-        client.batch_lookup([q])
 
 
 # ── AC-9 / AC-15: resistance-conflict detection ─────────────────────────

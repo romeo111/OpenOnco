@@ -118,58 +118,22 @@ class StubActionabilityClient:
         return [self.lookup(q) for q in queries]
 
 
-# ── Snapshot client (Phase 2 placeholder — superseded by SnapshotCIViCClient) ─
+# ── Snapshot client ──────────────────────────────────────────────────────
 #
-# Phase 2 of the CIViC pivot landed the canonical reader in
+# The canonical CIViC snapshot reader lives in
 # ``knowledge_base/engine/snapshot_civic_client.py`` (class
-# ``SnapshotCIViCClient``). That module is now the live implementation.
-#
-# This class stays because ``tests/test_actionability_invariants.py::
-# test_snapshot_client_lookup_not_implemented`` locks the placeholder
-# behaviour as an architectural-firewall checkpoint, and the implementation
-# brief's allowlist forbids editing that test in this commit. A follow-up
-# Phase-4 cleanup pass can either delete this class (after retiring the
-# placeholder test) or rewire it to delegate to ``SnapshotCIViCClient``.
-#
-# Callers wiring the live snapshot reader should import
-# ``SnapshotCIViCClient`` directly:
+# ``SnapshotCIViCClient``). Import it directly:
 #
 #     from knowledge_base.engine.snapshot_civic_client import SnapshotCIViCClient
 #     client = SnapshotCIViCClient("knowledge_base/hosted/civic/2026-04-25/evidence.yaml")
 #
-# This intentionally has NO httpx dependency — CIViC distribution is the
-# local snapshot under ``knowledge_base/hosted/civic/``, not a live API.
-
-
-class SnapshotActionabilityClient:
-    """Phase-1 placeholder; superseded by ``SnapshotCIViCClient``.
-
-    Retained so the firewall invariant test
-    (``test_snapshot_client_lookup_not_implemented``) keeps passing until
-    Phase 4. New code should use ``SnapshotCIViCClient`` directly."""
-
-    def __init__(self, snapshot_root: str | None = None) -> None:
-        self.snapshot_root = snapshot_root
-
-    def lookup(self, query: ActionabilityQuery) -> ActionabilityResult | ActionabilityError:
-        raise NotImplementedError(
-            "SnapshotActionabilityClient is the Phase-1 placeholder — "
-            "use knowledge_base.engine.snapshot_civic_client.SnapshotCIViCClient "
-            "for the live CIViC reader."
-        )
-
-    def batch_lookup(
-        self, queries: list[ActionabilityQuery]
-    ) -> list[ActionabilityResult | ActionabilityError]:
-        raise NotImplementedError(
-            "SnapshotActionabilityClient is the Phase-1 placeholder — "
-            "use knowledge_base.engine.snapshot_civic_client.SnapshotCIViCClient."
-        )
+# This module intentionally has NO httpx dependency — CIViC distribution
+# is the local snapshot under ``knowledge_base/hosted/civic/``, not a
+# live API.
 
 
 __all__ = [
     "ActionabilityClient",
     "NullActionabilityClient",
     "StubActionabilityClient",
-    "SnapshotActionabilityClient",
 ]
