@@ -1,0 +1,80 @@
+id: RF-GASTRIC-PDL1-CPS-1-PLUS
+definition: >
+  Advanced/metastatic gastric or GE-junction adenocarcinoma with PD-L1
+  combined positive score (CPS) ≥1 by 22C3 IHC. CheckMate-649 (Janjigian
+  Lancet 2021; final OS 2024) established nivolumab + chemo (FOLFOX or
+  XELOX) over chemo alone for CPS ≥5 (mOS 14.4 vs 11.1 mo, HR 0.71)
+  with continued benefit at CPS ≥1 (HR 0.78). FDA approved nivolumab +
+  chemo for HER2-negative gastric/GEJ adenocarcinoma 1L regardless of
+  CPS; EMA restricts to CPS ≥5. NCCN/ESMO 2024 favor adding nivolumab
+  to FOLFOX/XELOX for CPS ≥1 (with stronger preference at CPS ≥5).
+definition_ua: >
+  Поширена/метастатична аденокарцинома шлунка або стравохідно-шлункового
+  з'єднання з PD-L1 CPS (combined positive score) ≥1 за 22C3 IHC.
+  CheckMate-649 (Janjigian Lancet 2021; фінальний OS 2024) встановило
+  ніволумаб + хіміо (FOLFOX або XELOX) над хіміо в монорежимі при CPS ≥5
+  (мОВ 14.4 проти 11.1 міс, HR 0.71) зі збереженням вигоди при CPS ≥1
+  (HR 0.78). FDA схвалило ніволумаб + хіміо для HER2-негативної
+  гастро/GEJ-аденокарциноми 1L незалежно від CPS; EMA обмежує до CPS ≥5.
+  NCCN/ESMO 2024 підтримують додавання ніволумабу до FOLFOX/XELOX при
+  CPS ≥1 (з сильнішою преференцією при CPS ≥5).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "pdl1_cps"
+      threshold: 1
+      comparator: ">="
+    - finding: "pdl1_cps_22c3"
+      threshold: 1
+      comparator: ">="
+    - finding: "BIO-PDL1-CPS"
+      threshold: 1
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-GASTRIC
+shifts_algorithm:
+  - ALGO-GASTRIC-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Two-tier CPS approach: CPS ≥5 = strong evidence (CheckMate-649 primary
+  endpoint, EMA-approved cutoff); CPS 1-4 = secondary subgroup, FDA-
+  approved but EMA restricts. Pembrolizumab (KEYNOTE-859) approved
+  similarly for CPS ≥1 with chemo. HER2 testing precedes PD-L1 in
+  the algorithm — HER2+ disease routes to trastuzumab + chemo (KEYNOTE-811
+  established pembrolizumab + trastuzumab + chemo for HER2+ CPS ≥1).
+  MSI-H gastric (~5%) overrides PD-L1 (KEYNOTE-859 MSI-H subset shows
+  exceptional response — single-agent pembrolizumab acceptable).
+  EBV-positive gastric (~10%) is also IO-responsive but no biomarker
+  threshold established. Detection: 22C3 IHC, central or local
+  laboratory; Dako 28-8 (used in CheckMate-649) and 22C3 are
+  interchangeable for gastric CPS in clinical practice.
+notes_ua: >
+  Двоступеневий CPS-підхід: CPS ≥5 — сильні докази (CheckMate-649
+  primary endpoint, EMA-схвалений cutoff); CPS 1-4 — secondary subgroup,
+  FDA-схвалено але EMA обмежує. Пембролізумаб (KEYNOTE-859) схвалений
+  аналогічно при CPS ≥1 з хіміо. HER2-тестування передує PD-L1 в
+  алгоритмі — HER2+ хвороба маршрутизується на трастузумаб + хіміо
+  (KEYNOTE-811 встановив пембролізумаб + трастузумаб + хіміо для HER2+
+  CPS ≥1). MSI-H gastric (~5%) переважає PD-L1 (KEYNOTE-859 MSI-H subset
+  показав виняткову відповідь — single-agent пембролізумаб прийнятний).
+  EBV-позитивний gastric (~10%) теж IO-чутливий, але порогу не
+  встановлено. Виявлення: 22C3 IHC центральна або локальна лабораторія;
+  Dako 28-8 (використано в CheckMate-649) і 22C3 — взаємозамінні для
+  гастро CPS на практиці.
+
+# MISSING SOURCE: SRC-CHECKMATE-649-JANJIGIAN-2021 — phase-3 RCT.

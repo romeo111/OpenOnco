@@ -1,0 +1,84 @@
+id: RF-AML-CORE-BINDING-FACTOR-FAVORABLE
+definition: >
+  AML with core-binding-factor (CBF) cytogenetics: t(8;21)(q22;q22.1)
+  with RUNX1::RUNX1T1 fusion OR inv(16)(p13.1q22) / t(16;16)(p13.1;q22)
+  with CBFB::MYH11 fusion. ~10-15% of de novo adult AML, ~25% of pediatric
+  AML. ELN 2022 favorable risk; standard 7+3 induction + 3-4 cycles HiDAC
+  consolidation is curative-intent in CR1 (5-year OS 60-75%); upfront
+  alloHCT is NOT recommended in CR1 default. Adding gemtuzumab ozogamicin
+  to induction (ALFA-0701, AML-19) further improves OS specifically in
+  CBF AML (HR 0.69). c-KIT mutations (D816, exon-8) co-occur in ~25% of
+  CBF AML and may downgrade favorability — warrant MRD-directed approach.
+definition_ua: >
+  ГМЛ з core-binding-factor цитогенетикою: t(8;21)(q22;q22.1) зі злиттям
+  RUNX1::RUNX1T1 АБО inv(16)(p13.1q22) / t(16;16)(p13.1;q22) зі злиттям
+  CBFB::MYH11. ~10-15% de novo дорослого ГМЛ, ~25% педіатричного ГМЛ.
+  ELN 2022 favorable-ризик; стандартна 7+3 індукція + 3-4 цикли HiDAC
+  консолідації — curative-intent у CR1 (5-річний ЗВ 60-75%); upfront
+  alloHCT НЕ рекомендований у CR1 за замовчуванням. Додавання гемтузумабу
+  озогаміцину до індукції (ALFA-0701, AML-19) додатково покращує ЗВ саме
+  при CBF AML (HR 0.69). Мутації c-KIT (D816, exon-8) співіснують у ~25%
+  CBF AML і можуть знизити favorability — потрібен MRD-направлений підхід.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "t_8_21"
+      value: true
+    - finding: "inv_16"
+      value: true
+    - finding: "t_16_16"
+      value: true
+    - finding: "runx1_runx1t1_fusion"
+      value: "positive"
+    - finding: "cbfb_myh11_fusion"
+      value: "positive"
+    - finding: "core_binding_factor"
+      value: "positive"
+    - finding: "aml_eln_risk"
+      value: "favorable"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  De-escalate direction reflects "do NOT add upfront alloHCT" — CBF AML
+  receives curative chemo (7+3 ± GO + HiDAC × 3-4) without transplant in
+  CR1; alloHCT reserved for MRD-positive after consolidation OR relapse.
+  KIT D816 mutation (~15-25% of CBF AML) is associated with higher
+  relapse risk — some centers add midostaurin or dasatinib (PETHEMA-CETLAM
+  2018), though c-KIT-targeted therapy not yet ELN-2022 standard. MRD by
+  RT-qPCR for the fusion transcript is sensitive (10⁻⁵) and predictive:
+  >3-log reduction by end of consolidation = molecular CR; persistent
+  positivity → consider alloHCT or salvage. Co-firing with RF-AML-FLT3-
+  ACTIONABLE (rare in CBF) or RF-AML-MEASURABLE-RESIDUAL-DISEASE: latter
+  takes priority and shifts to alloHCT routing despite CBF favorability.
+notes_ua: >
+  Напрямок "de-escalate" відображає "НЕ додавати upfront alloHCT" — CBF
+  AML отримує curative хіміо (7+3 ± GO + HiDAC × 3-4) без трансплантації
+  у CR1; alloHCT — резерв для МЗХ-позитивних після консолідації АБО
+  рецидиву. Мутація KIT D816 (~15-25% CBF AML) асоційована з вищим
+  ризиком рецидиву — деякі центри додають мідостаурин або дазатиніб
+  (PETHEMA-CETLAM 2018), хоча c-KIT-таргетна терапія ще не ELN-2022
+  стандарт. МЗХ за RT-qPCR для транскрипта злиття чутлива (10⁻⁵) і
+  прогностична: >3-log зниження до кінця консолідації = molecular CR;
+  стійка позитивність → розглянути alloHCT або сальвадж. Ко-спрацювання
+  з RF-AML-FLT3-ACTIONABLE (рідко при CBF) або RF-AML-MEASURABLE-RESIDUAL-
+  DISEASE: останній має пріоритет і переключає на alloHCT попри CBF
+  favorability.
