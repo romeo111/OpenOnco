@@ -1,0 +1,67 @@
+id: RF-THYROID-ANAPLASTIC-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating cisplatin / paclitaxel / doxorubicin chemoradiation,
+  dabrafenib + trametinib, larotrectinib / entrectinib, or selpercatinib
+  for ATC: HBsAg-positive (HBV reactivation on cytotoxic + targeted),
+  anti-HBc-positive (occult HBV), HIV-positive (ART coordination,
+  CYP3A4 interactions with TKIs), or active TB. Disease tempo limits
+  ability to fully resolve infection — pragmatic prophylaxis approach
+  required.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед cisplatin / paclitaxel / doxorubicin хіміо-RT, dabrafenib +
+  trametinib, larotrectinib / entrectinib або selpercatinib при ATC:
+  HBsAg+ (реактивація HBV на цитотоксичній + таргетній), anti-HBc+
+  (occult HBV), HIV+ (координація АРТ, CYP3A4-взаємодії з TKI),
+  активний туберкульоз. Темп хвороби обмежує можливість повного
+  вилікування інфекції — потрібен прагматичний профілактичний підхід.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-THYROID-ANAPLASTIC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ATC has median OS 3-6 months untreated and ~14 months on best
+  targeted therapy — the timeline for infection workup must be days,
+  not weeks. HBsAg+: start entecavir / tenofovir prophylaxis
+  immediately rather than waiting for hepatology consult. HIV+: start
+  ATC therapy concurrently with ART optimization (delay would be
+  fatal); BRAFi/MEKi/TKI are CYP3A4 substrates — avoid ritonavir-
+  boosted PIs. Active TB: pragmatic — start anti-TB and ATC therapy
+  together with monitoring, given disease tempo. The "hold" direction
+  here is pragmatic prophylaxis-coordinated start, not delayed
+  treatment.
+notes_ua: >
+  ATC — медіанна ЗВ 3-6 міс. без лікування і ~14 міс. на оптимальній
+  таргетній — часові рамки для інфекційного скринінгу — дні, не тижні.
+  HBsAg+: розпочати entecavir / tenofovir негайно. HIV+: розпочати
+  терапію ATC паралельно з оптимізацією АРТ. Активний ТБ: прагматично —
+  розпочати анти-ТБ + ATC одночасно з моніторингом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

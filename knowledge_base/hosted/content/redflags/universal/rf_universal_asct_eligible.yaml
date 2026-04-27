@@ -1,0 +1,96 @@
+id: RF-ASCT-ELIGIBLE-COMPOSITE
+definition: >
+  Composite eligibility for autologous stem-cell transplantation (ASCT)
+  consolidation: ECOG ≤2 AND adequate cardiac function (LVEF ≥50%,
+  no NYHA III-IV) AND adequate pulmonary function (DLCO ≥50% or absent
+  severe COPD/fibrosis) AND adequate hepatic function (bilirubin ≤2× ULN,
+  AST/ALT ≤3× ULN) AND adequate renal function (CrCl ≥30 mL/min) AND
+  age <70 (lymphoma/MM standard) or <65 (AML standard) AND no active
+  uncontrolled infection AND no second active malignancy. Used to gate
+  ASCT consolidation in MM 1L (CASSIOPEIA, GRIFFIN), DLBCL/PTCL salvage
+  (CORAL, ECHELON-2 follow-up), Hodgkin salvage (post-second-line PR/CR),
+  AML CR1 in non-favorable risk if alloHCT donor unavailable.
+definition_ua: >
+  Композитна придатність до аутологічної ТСК (ASCT) як консолідації:
+  ECOG ≤2 ТА адекватна кардіальна функція (LVEF ≥50%, без NYHA III-IV)
+  ТА адекватна легенева функція (DLCO ≥50% або без тяжких COPD/фіброзу)
+  ТА адекватна печінкова функція (білірубін ≤2× ULN, AST/ALT ≤3× ULN)
+  ТА адекватна ниркова функція (CrCl ≥30 мл/хв) ТА вік <70 (лімфома/MM
+  стандарт) або <65 (AML стандарт) ТА відсутність активної неконтрольованої
+  інфекції ТА відсутність другої активної злоякісності. Використовується
+  для гейту ASCT консолідації у MM 1L (CASSIOPEIA, GRIFFIN), DLBCL/PTCL
+  сальвадж (CORAL, ECHELON-2 fu), Hodgkin сальвадж (post-2L PR/CR), AML
+  CR1 у не-favorable ризику при відсутності донора для alloHCT.
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "ecog"
+      threshold: 2
+      comparator: "<="
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: ">="
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 2
+      comparator: "<="
+    - finding: "active_uncontrolled_infection"
+      value: false
+    - any_of:
+        - finding: "age_years"
+          threshold: 70
+          comparator: "<"
+        - finding: "asct_age_eligible"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 75
+category: other
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-MM-2025
+  - SRC-EHA-EMN-MM-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Composite gate harmonized across landmark ASCT trials. AML uses age
+  <65 cutoff (more restrictive than lymphoma/MM <70) due to higher
+  TRM in older AML alloHCT/ASCT pathways; chronological age is a
+  proxy — biologic-age assessment (CGA, HCT-CI score) overrides for
+  borderline cases. DLCO threshold 50% is a hard limit for many
+  centers; 40-50% with cardiopulmonary fitness clearance acceptable
+  on individual basis. Frailty score (Palumbo IMWG-frailty for MM,
+  G8 for solid/lymphoma) preferred over isolated age cutoff. RF
+  coexists with RF-CAR-T-ELIGIBLE for cases where both are options
+  (DLBCL 2L: ZUMA-7/TRANSFORM established CAR-T over ASCT in early
+  relapse <12 mo or primary refractory; ASCT remains standard for
+  late-relapse R/R DLBCL post-CR). MM tandem-ASCT (StaMINA) for
+  high-risk cytogenetics — additional gate when this RF fires AND
+  RF-MM-HIGH-RISK-CYTOGENETICS fires.
+notes_ua: >
+  Композитний гейт, гармонізований за landmark ASCT трайлами. AML
+  використовує вік <65 cutoff (суворіший за лімфому/MM <70) через
+  вищий TRM у старших AML alloHCT/ASCT шляхах; хронологічний вік —
+  proxy; biologic-age оцінка (CGA, HCT-CI score) — override для
+  borderline кейсів. DLCO поріг 50% — жорсткий ліміт у багатьох
+  центрах; 40-50% з cardiopulmonary fitness clearance — на
+  індивідуальній основі. Frailty-скор (Palumbo IMWG-frailty для MM,
+  G8 для solid/lymphoma) — переважніший за ізольований вік. RF
+  співіснує з RF-CAR-T-ELIGIBLE для кейсів, де обидва доступні
+  (DLBCL 2L: ZUMA-7/TRANSFORM встановили CAR-T над ASCT при
+  ранньому рецидиві <12 міс або primary refractory; ASCT —
+  стандарт для late-relapse р/р DLBCL post-CR). MM tandem-ASCT
+  (StaMINA) для high-risk цитогенетики — додатковий гейт коли цей
+  RF спрацьовує ТА RF-MM-HIGH-RISK-CYTOGENETICS спрацьовує.

@@ -46,13 +46,14 @@ decision_tree:
       next_step: 4
   - step: 4
     evaluate:
-      any_of:
-        - condition: "HCV RNA positive AND indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
+      all_of:
+        - condition: "HCV RNA positive"
+        - condition: "Indolent presentation (non-bulky, asymptomatic or minimally symptomatic)"
     if_true:
       result: IND-HCV-MZL-1L-ANTIVIRAL
     if_false:
       result: IND-HCV-MZL-1L-BR-AGGRESSIVE
-    notes: "MDT-only — disease-burden + viral-status combination; default routes by viral status (HCV-RNA+ indolent → antiviral DAA, otherwise BR)."
+    notes: "Disease-burden + viral-status combination; default routes by viral status (HCV-RNA+ indolent → antiviral DAA, otherwise BR)."
 
 sources:
   - SRC-ESMO-MZL-2024

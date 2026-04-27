@@ -1,0 +1,70 @@
+id: RF-IMT-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard methotrexate /
+  vinorelbine adjuvant or affecting crizotinib / lorlatinib / entrectinib
+  dosing in IMT: bilirubin >3× ULN (TKI-class hepatic clearance,
+  vinorelbine metabolism), CrCl <30 mL/min (methotrexate contraindicated),
+  LVEF <50% (lorlatinib hyperlipidemia + cardiac concerns), QTc >480 ms
+  (crizotinib / lorlatinib QT prolongation), or DLCO <60% (crizotinib
+  pneumonitis signal).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає methotrexate / vinorelbine
+  адʼюванту або впливає на дозування crizotinib / lorlatinib /
+  entrectinib при IMT: білірубін >3× ULN (печінковий кліренс TKI,
+  метаболізм vinorelbine), CrCl <30 (methotrexate протипоказаний), LVEF
+  <50% (lorlatinib гіперліпідемія + кардіальні занепокоєння), QTc >480
+  мс (crizotinib / lorlatinib подовження QT), DLCO <60% (сигнал
+  пневмоніту crizotinib).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">"
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-IMT
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Crizotinib + lorlatinib both prolong QTc — baseline ECG mandatory;
+  hold if QTc >500 ms. Crizotinib has documented pneumonitis signal
+  (~1-2% Gr3+) — DLCO <60% increases risk of clinically meaningful
+  toxicity. Lorlatinib hyperlipidemia + weight gain + cognitive effects
+  documented; baseline lipid panel + LVEF measurement recommended.
+  Hepatic dose reductions per FDA labels for severe impairment.
+  Methotrexate / vinorelbine adjuvant (used in fusion-negative or pre-
+  TKI era IMT) requires standard cytotoxic monitoring.
+notes_ua: >
+  Crizotinib + lorlatinib подовжують QTc — базова ЕКГ обовʼязкова;
+  утримати при QTc >500 мс. Crizotinib — описаний сигнал пневмоніту
+  (~1-2% Gr3+) — DLCO <60% підвищує ризик. Lorlatinib — гіперліпідемія,
+  набір ваги, когнітивні ефекти — базовий ліпідний панель + LVEF.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

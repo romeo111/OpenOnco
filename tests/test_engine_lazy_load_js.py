@@ -52,14 +52,17 @@ def test_try_html_contains_lazy_load_helpers(site_dir: Path, page: str):
 
 
 @pytest.mark.parametrize("page", ["try.html", "en/try.html"])
-def test_try_html_keeps_monolithic_fallback(site_dir: Path, page: str):
-    """The monolithic bundle is the safety net when the index 404s
-    (old deploys, ad-blockers). render_try() must still reference it."""
+def test_try_html_drops_monolithic_fallback(site_dir: Path, page: str):
+    """CSD-9C dropped monolithic. render_try() must NOT reference the old
+    openonco-engine.zip path or FALLBACK_MONOLITHIC_URL — index path is canonical."""
     html = (site_dir / page).read_text(encoding="utf-8")
-    assert "openonco-engine.zip" in html, (
-        f"{page} dropped monolithic fallback — old clients will break"
+    # Allow the substring inside larger names ("openonco-engine-core.zip")
+    # but forbid the bare "openonco-engine.zip" reference.
+    import re
+    assert not re.search(r"openonco-engine\.zip\b", html), (
+        f"{page} still references monolithic openonco-engine.zip"
     )
-    assert "FALLBACK_MONOLITHIC_URL" in html
+    assert "FALLBACK_MONOLITHIC_URL" not in html
 
 
 @pytest.mark.parametrize("page", ["try.html", "en/try.html"])
@@ -119,10 +122,9 @@ def test_service_worker_written_and_versioned(site_dir: Path):
         "sw.js cache name not stamped with core_version — KB pushes won't "
         "invalidate stale bundles in the SW cache"
     )
-    # Must intercept the engine artifacts and only those.
+    # Must intercept the engine artifacts (CSD-9C: monolithic dropped).
     for pat in (
         "openonco-engine-core.zip",
-        "openonco-engine.zip",
         "openonco-engine-index.json",
         "/disease/openonco-",
     ):

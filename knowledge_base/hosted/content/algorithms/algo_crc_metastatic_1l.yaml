@@ -26,16 +26,19 @@ decision_tree:
       next_step: 2
 
   # Step 2 — RAS-WT + left-sided primary → cetuximab (CALGB-80405).
+  # RF-CRC-RAS-WT gates extended-RAS wild-type (KRAS exons 2/3/4 +
+  # NRAS exons 2/3/4 all WT). Left-sidedness criterion kept as
+  # MDT-text (no RF for primary-tumour location yet).
   - step: 2
     evaluate:
       all_of:
-        - condition: "RAS wild-type (KRAS exons 2-4 + NRAS exons 2-4 all WT)"
+        - red_flag: RF-CRC-RAS-WT
         - condition: "Left-sided primary (splenic flexure or distal)"
     if_true:
       result: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
     if_false:
       next_step: 3
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type cetuximab eligibility (vs RF-CRC-RAS-MUTANT → bev+chemo); left-sided primary criterion remains MDT-text (no primary-location RF authored)."
 
   # Step 3 — BRAF V600E (poor prognosis) — bev + intensified chemo
   # (FOLFOXIRI+bev preferred but FOLFOX+bev is the simpler scaffolded

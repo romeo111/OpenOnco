@@ -24,15 +24,24 @@ decision_tree:
   notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 - step: 2
   evaluate:
+    any_of:
+    - red_flag: RF-MCL-BLASTOID-VARIANT
+    - red_flag: RF-PRIOR-BTKI-PROGRESSION
+  if_true:
+    next_step: 21
+  if_false:
+    next_step: 3
+  notes: "Wired via RF-MCL-BLASTOID-VARIANT (CSD-9A) + RF-PRIOR-BTKI-PROGRESSION: blastoid/pleomorphic histology OR documented post-cBTKi progression flags candidacy for CAR-T; sequential step 21 then checks fitness + CAR-T eligibility before routing to brexucel."
+- step: 21
+  evaluate:
     all_of:
-    - condition: Post-cBTKi failure (progression OR BTK-C481 mutation OR clinical resistance)
     - red_flag: RF-FITNESS-ECOG-FIT
     - red_flag: RF-CAR-T-ELIGIBLE
   if_true:
     result: IND-MCL-3L-BREXUCEL-CART
   if_false:
     next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Sequential CAR-T gate after blastoid/post-cBTKi flag (step 2): only fit + CAR-T-eligible patients route to brexucel (ZUMA-2); else fall through to pirtobrutinib (step 3)."
 - step: 3
   evaluate:
     any_of:

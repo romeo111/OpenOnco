@@ -1,0 +1,73 @@
+id: RF-THYROID-PAPILLARY-TRANSFORMATION-PROGRESSION
+definition: >
+  PTC transformation into anaplastic thyroid carcinoma component
+  (DTC→ATC dedifferentiation, ~5-15% of long-standing PTC), progression
+  to RAI-refractory metastatic disease (no iodine uptake on therapy
+  scan, RECIST progression on therapeutic ¹³¹I activities), rapid
+  thyroglobulin doubling time (<1 yr — adverse prognostic), new bulky
+  lung / bone / brain metastases, or rapid progression on lenvatinib —
+  triggers re-staging, re-biopsy of progressing lesion, salvage second-
+  line TKI (cabozantinib post-lenvatinib) or selective TKI if molecular
+  rebiopsy reveals actionable target.
+definition_ua: >
+  Трансформація PTC у компонент анапластичної тиреоїдної карциноми
+  (DTC→ATC дедиференціація, ~5-15% хронічної PTC), прогресія у RAI-
+  рефрактерну метастатичну хворобу (немає захоплення йоду на скані,
+  RECIST прогресія на терапевтичних активностях ¹³¹I), швидкий час
+  подвоєння тиреоглобуліну (<1 р. — несприятливий прогностичний), нові
+  обʼємні метастази в легені / кістки / мозок або швидке прогресування
+  на lenvatinib — тригер до повторного стейджингу, ребіопсії
+  прогресуючої лезії, сальваджу 2-ї лінії TKI (cabozantinib після
+  lenvatinib) або селективного TKI при actionable таргеті.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "dtc_to_atc_dedifferentiation"
+      value: true
+    - finding: "rai_refractory"
+      value: true
+    - finding: "thyroglobulin_doubling_time_months"
+      threshold: 12
+      comparator: "<"
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "rapid_progression_on_tki"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-THYROID-PAPILLARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Thyroglobulin doubling time <12 months is a validated adverse
+  prognostic marker (Miyauchi et al, JCEM 2011) — predicts shorter OS
+  in DTC. RAI refractoriness defined per ATA criteria (Schlumberger
+  consensus): no uptake at diagnosis, lesion-level uptake but no
+  response, or progression after RAI ≥600 mCi cumulative. Lenvatinib is
+  1L for RAI-refractory progressive PTC (SELECT trial); cabozantinib
+  COSMIC-311 is FDA-approved 2L post-lenvatinib (PFS 11 vs 1.9 mo
+  placebo). DTC→ATC dedifferentiation: re-biopsy any new rapidly
+  enlarging mass (especially neck) — disease tempo changes dramatically.
+  Brain metastases rare in PTC; if present, consider stereotactic RT +
+  CNS-penetrant TKI. Selpercatinib for RET-fusion / pralsetinib for
+  RET-fusion pediatric / adolescent.
+notes_ua: >
+  Час подвоєння тиреоглобуліну <12 міс. — валідований несприятливий
+  прогностичний маркер (Miyauchi та ін.). RAI-рефрактерність — за ATA
+  (Schlumberger). Lenvatinib — 1L для RAI-рефрактерної прогресуючої PTC
+  (SELECT); cabozantinib (COSMIC-311) — FDA 2L post-lenvatinib (PFS
+  11 vs 1.9 міс.). DTC→ATC: ребіопсія будь-якого нового масу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

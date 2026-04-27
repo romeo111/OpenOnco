@@ -1,0 +1,62 @@
+id: RF-MPNST-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — doxorubicin + ifosfamide
+  (AI) neoadjuvant poorly tolerated; consider doxorubicin monotherapy
+  with cardio-protection, pazopanib monotherapy for advanced disease,
+  hypofractionated RT alone, or surgical-margin-focused approach without
+  systemic therapy.
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — doxorubicin + ifosfamide
+  (AI) неоадʼювант погано переноситься; розглянути doxorubicin
+  монотерапію з кардіопротекцією, pazopanib монотерапію при поширеній
+  хворобі, гіпофракціоноване RT моно або хірургію з акцентом на
+  чисті межі без системної терапії.
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-MPNST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  AI is not well-tolerated in elderly: ifosfamide encephalopathy,
+  cumulative thrombocytopenia, doxorubicin cardiotoxicity. Sarcoma trials
+  (EORTC 62012) showed marginal AI benefit over doxorubicin monotherapy
+  in advanced STS — this informs de-escalation rationale in elderly /
+  frail. Pazopanib (PALETTE) reasonable second-line, less acute toxicity
+  but cumulative fatigue + hypertension. Hypofractionated RT (54 Gy /
+  18 fractions) emerging as feasible for elderly with comorbidity-
+  limited surgical candidacy. NF1-MPNST in elderly often presents with
+  larger / more invasive primary — surgical complexity adds to fragility.
+notes_ua: >
+  AI погано переноситься у літніх: ifosfamide-енцефалопатія, кумулятивна
+  тромбоцитопенія, doxorubicin-кардіотоксичність. EORTC 62012 — AI
+  маргінально переважає doxorubicin моно у поширеній STS — обґрунтування
+  de-escalation у літніх. Pazopanib (PALETTE) — 2L, менш гостра
+  токсичність. Гіпофракціоноване RT (54 Гр / 18 фракцій) — для
+  непридатних до хірургії.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -17,11 +17,13 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
+        - red_flag: RF-CLL-TP53-DELETION-ACTIONABLE
         - red_flag: RF-CLL-HIGH-RISK
     if_true:
       result: IND-CLL-1L-VENO
     if_false:
       next_step: 2
+    notes: "Wired via RF-CLL-TP53-DELETION-ACTIONABLE (CSD-9A) + RF-CLL-HIGH-RISK: TP53-disruption (del(17p)/TP53-mut) is the strongest single negative-prognostic factor and routes to fixed-duration venetoclax+obinutuzumab (CLL14, Fischer 2019); RF-CLL-HIGH-RISK still fires for IGHV-unmutated and complex-karyotype routing to the same VenO track."
   - step: 2
     evaluate:
       any_of:

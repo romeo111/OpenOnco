@@ -1,0 +1,72 @@
+id: RF-THYROID-ANAPLASTIC-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard cisplatin / paclitaxel /
+  doxorubicin chemoradiation or affecting BRAF-MEK-inhibitor dosing in
+  ATC: CrCl <30 mL/min (cisplatin contraindicated), LVEF <50% (doxorubicin
+  contraindicated; trametinib cardiac monitoring), bilirubin >3× ULN
+  (BRAFi/MEKi hepatic clearance), QTc >480 ms (dabrafenib QT signal),
+  or compromised airway from tumor (tracheostomy or stent required
+  before systemic therapy initiation).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартній cisplatin /
+  paclitaxel / doxorubicin хіміо-RT або впливає на дозування BRAF-MEK-
+  інгібіторів при ATC: CrCl <30 (cisplatin протипоказаний), LVEF <50%
+  (doxorubicin протипоказаний; моніторинг trametinib), білірубін
+  >3× ULN (печінковий кліренс BRAFi/MEKi), QTc >480 мс (сигнал QT
+  dabrafenib), скомпрометований дихальний шлях (потрібна трахеостома /
+  стент перед системною терапією).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">"
+    - finding: "compromised_airway"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: critical
+priority: 50
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-THYROID-ANAPLASTIC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ATC patients commonly present with rapid neck mass + airway compromise
+  — emergency airway management (tracheostomy / endotracheal stent) is
+  the gating step before any systemic therapy. Cisplatin-paclitaxel
+  weekly with concurrent IMRT is the cytotoxic standard in BRAF-wild-
+  type ATC; CrCl <30 forces switch to carboplatin or omit platinum.
+  Dabrafenib + trametinib better tolerated than cytotoxic in BRAF-mutant
+  ATC — preferred for organ-dysfunction scenarios. LVEF <50% is gating
+  for doxorubicin-containing regimens (DHA-BCG historical). Trametinib
+  carries LVEF decline risk (~5% Gr3+) — baseline ECHO + serial.
+  Critical severity reflects the disease's narrow therapeutic window.
+notes_ua: >
+  ATC — швидке утворення в шиї + компрометація дихального шляху —
+  трахеостома / стент перед системною терапією. Cisplatin-paclitaxel
+  weekly + IMRT — цитотоксичний стандарт у BRAF-wt ATC; CrCl <30 —
+  карбоплатин або omit. Dabrafenib + trametinib краще переноситься у
+  BRAF+ — переважний при organ-dysfunction.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

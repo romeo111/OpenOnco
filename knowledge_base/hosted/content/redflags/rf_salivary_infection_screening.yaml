@@ -1,0 +1,60 @@
+id: RF-SALIVARY-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating cisplatin-based chemotherapy, trastuzumab, larotrectinib /
+  entrectinib, or bicalutamide for advanced salivary gland carcinoma:
+  HBsAg-positive (HBV reactivation on cytotoxic + targeted), anti-HBc-
+  positive (occult HBV), HIV-positive (ART coordination), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед платино-вмісною хіміотерапією, трастузумабом, larotrectinib /
+  entrectinib або бікалутамідом при поширеній карциномі слинних залоз:
+  HBsAg+ (реактивація HBV на цитотоксичній + таргетній), anti-HBc+
+  (occult HBV), HIV+ (координація АРТ), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-SALIVARY
+shifts_algorithm: []
+
+sources:
+  - SRC-ESMO-SALIVARY
+  - SRC-NCCN-HEAD-AND-NECK
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Trastuzumab carries HBV reactivation risk (FDA boxed warning class
+  effect for chemoimmunotherapy in HBV-endemic regions). Larotrectinib /
+  entrectinib (CYP3A4 substrates) require ART coordination — avoid
+  ritonavir-boosted PIs. Bicalutamide / LHRH analogs (AR+ SDC) are
+  generally low-risk for HBV reactivation but standard pre-treatment
+  screening still applies. Active TB: complete anti-TB before head-and-
+  neck RT given mucositis + neutropenia overlap. HBsAg+: entecavir /
+  tenofovir prophylaxis. HIV+: PCP prophylaxis if on cytotoxic
+  combination chemotherapy.
+notes_ua: >
+  Трастузумаб — ризик реактивації HBV (FDA warning класу). Larotrectinib /
+  entrectinib (CYP3A4) — координація АРТ. Бікалутамід / LHRH (AR+ SDC)
+  — низький ризик HBV-реактивації, але скринінг стандартний. Активний
+  ТБ: завершити перед RT.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

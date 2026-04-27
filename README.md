@@ -24,23 +24,24 @@ OpenOnco automates the chore work. The clinician gets a **drafted plan with ever
 
 ## Status
 
-**v0.1.0-alpha — first public alpha.** Specifications complete; knowledge base, rule engine, render layer, sign-off infrastructure, and in-browser Pyodide demo all functional and exercised by 1450+ tests.
+**v0.1.1 — second public alpha.** CIViC-primary actionability pivot, full solid-tumor 5-type RF matrix, CSD-Lab pitch pack, /try.html performance pass (lazy Pyodide import + service-worker shell cache + localStorage warmup → dropdowns appear in <50 ms on repeat visits), disease-grouped gallery drill-down, prominent loading status banner. 1450+ tests still green.
 
-**Knowledge base** (Pydantic-validated; minor ref drift on in-flight NSCLC scaffolding being closed out):
+**Knowledge base** (Pydantic-validated):
 
 | | Count |
 |---|---:|
-| Total entities | **1923** |
-| Diseases | 65 (lymphoid + myeloid + solid tumors scaffolded) |
-| Indications | 250 |
-| Algorithms | 95 |
-| Regimens | 186 |
-| RedFlags | 313 (≥2 sources each per REDFLAG_AUTHORING_GUIDE) |
-| Drugs | 185 (NSZU registration / reimbursement verified) |
+| Total entities | **2377** |
+| Diseases | 65 (lymphoid + myeloid + solid tumors) |
+| Indications | 302 |
+| Algorithms | 110 |
+| Regimens | 244 |
+| RedFlags | 426 (≥2 sources each per REDFLAG_AUTHORING_GUIDE) |
+| Drugs | 216 (167 with NSZU registration / reimbursement verified) |
 | BiomarkerActionability cells | 399 (ESCAT tier + CIViC evidence levels) |
-| Biomarkers / genes | 97 |
+| Biomarkers / genes | 111 |
 | Tests / procedures | 95 |
-| Sources | 162 (≈10,200 guideline pages, 26,000+ primary publications referenced) |
+| Sources | 268 |
+| Questionnaires | 65 |
 
 **Engine** — rule-based decision engine with ESCAT tier + CIViC actionability interpretation, NSZU availability badges, patient-mode rendering, plan revisions / supersedes loop, append-only reviewer event log, QR-code case-token sharing. Bundle: split core (~1.4 MB) + per-disease lazy-load; ~2.4 MB compressed for the Pyodide demo.
 
@@ -71,6 +72,8 @@ OpenOnco automates the chore work. The clinician gets a **drafted plan with ever
 Sample patients: **[openonco.info/gallery.html](https://openonco.info/gallery.html)** — 30+ pre-rendered cases across DLBCL, FL, CLL/SLL, MCL, HCV-MZL, HCL, WM, HGBL-DH, PTCL, ALCL, AITL, MF/Sézary, cHL, NLPBL, and MM.
 
 **Contributors:** start with [`specs/`](specs/) and [`CLAUDE.md`](CLAUDE.md) — these define scope, schemas, and authoring conventions before any KB or code change.
+
+**Want to help with AI-assisted contributions?** OpenOnco accepts distributed contributor work through the [TaskTorrent chunk-shelf](https://github.com/romeo111/task_torrent/tree/main/chunks/openonco). Read [`docs/contributing/HELP_WANTED.md`](docs/contributing/HELP_WANTED.md) for the contributor workflow — pick an active `[Chunk]` issue, run with your AI tool, submit a sidecar PR. Safety boundaries: no medical advice, no treatment recommendations, no patient-specific outputs; everything reviewed before merge.
 
 **Developers running tests locally:**
 

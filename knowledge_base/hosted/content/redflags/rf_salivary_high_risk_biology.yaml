@@ -1,0 +1,71 @@
+id: RF-SALIVARY-HIGH-RISK-BIOLOGY
+definition: >
+  Salivary gland carcinoma with actionable molecular driver: ETV6-NTRK3
+  fusion (mammary analog secretory carcinoma — ~100% MASC, larotrectinib
+  / entrectinib), HER2 amplification (salivary duct carcinoma ~30-40%,
+  trastuzumab + chemotherapy), HRAS mutation (SDC ~10-15%, tipifarnib),
+  PIK3CA mutation (SDC ~20-30%), AR positivity (~70-80% SDC, androgen
+  deprivation), or NOTCH1 mutation (adenoid cystic ~15%, gamma-secretase
+  inhibitors in trials) — re-routes from cytotoxic chemotherapy to
+  histology-specific targeted therapy.
+definition_ua: >
+  Карцинома слинних залоз з дієвоспроможним молекулярним драйвером:
+  фузія ETV6-NTRK3 (mammary analog secretory carcinoma — ~100% MASC,
+  larotrectinib / entrectinib), ампліфікація HER2 (salivary duct
+  carcinoma ~30-40%, трастузумаб + хіміотерапія), мутація HRAS (SDC
+  ~10-15%, tipifarnib), мутація PIK3CA (SDC ~20-30%), AR-позитивність
+  (~70-80% SDC, андрогендеприваційна терапія), або мутація NOTCH1
+  (adenoid cystic ~15%, гамма-секретазні інгібітори у трайлах) — змінює
+  тактику від цитотоксичної хіміотерапії до гістологія-специфічної
+  таргетної.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-NTRK-FUSION"
+      value: "positive"
+    - finding: "BIO-HER2-SOLID"
+      value: "positive"
+    - finding: "BIO-HRAS"
+      value: "positive"
+    - finding: "BIO-PIK3CA-MUTATION"
+      value: "positive"
+    - finding: "BIO-NOTCH1-MUTATION"
+      value: "positive"
+    - finding: "androgen_receptor_status"
+      value: "positive"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-SALIVARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-ESMO-SALIVARY
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Salivary gland carcinoma is a histology-defined umbrella with distinct
+  molecular drivers: MASC ~100% ETV6-NTRK3 fusion → larotrectinib (ORR
+  ~80% basket trials). Salivary duct carcinoma (SDC) ~70-80% AR+ →
+  bicalutamide + LHRH analog (EORTC-1206 phase 2 confirms benefit);
+  ~30-40% HER2+ → trastuzumab + paclitaxel (similar ORR to breast
+  cancer trials); HRAS-mutant ~10-15% → tipifarnib (KO-TIP-007 ORR ~38%
+  in HRAS-mutant SDC). Adenoid cystic carcinoma ~15% NOTCH1 mutant —
+  AL101 / brontictuzumab in trials; otherwise cisplatin-based chemo
+  modest activity. Comprehensive histology + molecular profiling at
+  diagnosis is now ESMO-recommended for advanced salivary cancer.
+notes_ua: >
+  Парасолькова гістологія: MASC ~100% ETV6-NTRK3 → larotrectinib (ORR
+  ~80%). Salivary duct carcinoma (SDC) — ~70-80% AR+ → бікалутамід +
+  LHRH (EORTC-1206); ~30-40% HER2+ → трастузумаб + паклітаксел; HRAS-
+  mutant ~10-15% → tipifarnib (KO-TIP-007 ORR ~38%). Adenoid cystic
+  ~15% NOTCH1 → AL101 / brontictuzumab у трайлах.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

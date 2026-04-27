@@ -26,13 +26,14 @@ decision_tree:
     all_of:
     - none_of:
       - red_flag: RF-PRIOR-BTKI-PROGRESSION
-    - condition: MYD88-L265P positive (preferred BTKi responders)
+    - any_of:
+      - red_flag: RF-WM-MYD88-L265P-ACTIONABLE
     - condition: No high atrial fibrillation / cardiac risk precluding BTKi
   if_true:
     result: IND-WM-2L-ZANUBRUTINIB
   if_false:
     next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Wired via RF-WM-MYD88-L265P-ACTIONABLE (CSD-9A): MYD88-L265P-positive route to BTKi (zanubrutinib per ASPEN); pan-disease RF gates fitness; cardiac-risk condition stays MDT-evaluated (no RF for cardiac comorbidity grading)."
 - step: 3
   evaluate:
     any_of:

@@ -1,0 +1,68 @@
+id: RF-MPNST-HIGH-RISK-BIOLOGY
+definition: >
+  MPNST with adverse molecular / clinical features: biallelic CDKN2A/B
+  loss (>80% high-grade MPNST; defines transition from atypical
+  neurofibroma to malignancy), TP53 mutation (~50% high-grade,
+  prognostically poor), NF1 germline loss-of-function (~50% MPNST
+  cases — NF1-associated, worse prognosis than sporadic), tumor size
+  >10 cm, or post-radiation MPNST (10% — biologically aggressive)
+  — each shifts toward intensified neoadjuvant doxorubicin + ifosfamide
+  and aggressive surgical margins.
+definition_ua: >
+  MPNST з несприятливими молекулярними / клінічними ознаками: біалельна
+  втрата CDKN2A/B (>80% high-grade MPNST), мутація TP53 (~50%, поганий
+  прогноз), герміногенна loss-of-function NF1 (~50% — NF1-асоційована
+  MPNST, гірший прогноз), розмір >10 см, post-radiation MPNST (10%) —
+  змінює тактику до інтенсифікованого неоадʼюванту doxorubicin +
+  ifosfamide та широких хірургічних меж.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-CDKN2A"
+      value: "biallelic_loss"
+    - finding: "BIO-TP53-MUTATION"
+      value: "positive"
+    - finding: "nf1_germline_loss_of_function"
+      value: true
+    - finding: "primary_tumor_size_cm"
+      threshold: 10
+      comparator: ">"
+    - finding: "post_radiation_mpnst"
+      value: true
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-MPNST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CDKN2A/B biallelic loss is the defining genomic event differentiating
+  high-grade MPNST from atypical neurofibromatous neoplasm of uncertain
+  biologic potential (ANNUBP) per recent consensus criteria. TP53
+  mutations co-occur in high-grade — confer chemoresistance signal.
+  NF1-associated MPNST has worse 5-yr OS (~30%) vs sporadic (~50%).
+  Post-radiation MPNST (latency 10-20 yr) — biologically aggressive,
+  often unresectable due to RT field constraints. Size >10 cm is
+  Joensuu prognostic threshold. Intensification: neoadjuvant AI
+  (doxorubicin + ifosfamide) followed by R0 resection + adjuvant
+  RT — improves limb salvage rate. Selumetinib has activity in NF1-
+  related plexiform NF (SPRINT) but data in frank MPNST limited.
+notes_ua: >
+  CDKN2A/B біалельна втрата — визначальна геномна подія high-grade MPNST
+  vs ANNUBP. TP53 — хіміорезистентність. NF1-асоційована MPNST — 5-річна
+  ЗВ ~30% (vs sporadic ~50%). Post-radiation MPNST (латентність 10-20 р.)
+  — біологічно агресивна. Інтенсифікація: неоадʼювант AI (doxorubicin +
+  ifosfamide) → R0 резекція + адʼювантне RT.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

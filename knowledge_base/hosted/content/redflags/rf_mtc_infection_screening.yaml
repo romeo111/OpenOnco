@@ -1,0 +1,62 @@
+id: RF-MTC-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating long-duration RET-targeted (selpercatinib / pralsetinib) or
+  multikinase (vandetanib / cabozantinib) therapy in MTC: HBsAg-positive
+  (HBV reactivation reported on TKI-class), anti-HBc-positive (occult
+  HBV — chronic TKI exposure raises reactivation), HIV-positive (ART
+  coordination, CYP3A4 interactions with TKIs), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед тривалою RET-таргетною (selpercatinib / pralsetinib) або
+  мультикіназною (vandetanib / cabozantinib) терапією при MTC: HBsAg+
+  (повідомлено про реактивацію HBV на TKI-класі), anti-HBc+ (occult HBV
+  — хронічна експозиція TKI підвищує реактивацію), HIV+ (координація
+  АРТ, CYP3A4-взаємодії), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-MTC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  RET-targeted therapy is typically multi-year (median PFS >25 mo on
+  selpercatinib in LIBRETTO-001) — chronic exposure raises HBV
+  reactivation risk meaningfully even in HBsAg-negative / anti-HBc+
+  patients. Standard practice: HBsAg + anti-HBc + anti-HBs serology pre-
+  TKI; entecavir / tenofovir for HBsAg+. HIV+: selpercatinib /
+  pralsetinib / cabozantinib are CYP3A4 substrates — coordinate ART to
+  avoid CYP3A4 inhibitors (ritonavir-boosted PIs) which raise TKI
+  exposure 2-3 fold. Active TB: rifampin (CYP3A4 inducer) lowers TKI
+  exposure significantly — prefer rifabutin if anti-TB needed.
+notes_ua: >
+  RET-таргетна — багаторічна (медіанна PFS >25 міс. селпер.) — хронічна
+  експозиція підвищує ризик реактивації HBV. Selpercatinib / pralsetinib
+  / cabozantinib — CYP3A4 субстрати; координувати АРТ. Rifampin (CYP3A4
+  індуктор) знижує експозицію TKI; rifabutin переважний.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,21 @@
+id: ALGO-CHOLANGIO-1L
+applicable_to_disease: DIS-CHOLANGIOCARCINOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  1L systemic therapy for unresectable / metastatic biliary tract cancer.
+
+output_indications:
+  - IND-CHOLANGIO-ADVANCED-GEM-CIS
+
+default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-CHOLANGIO-ADVANCED-GEM-CIS
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

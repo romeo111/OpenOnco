@@ -1,0 +1,73 @@
+id: RF-HNSCC-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard cisplatin-based
+  chemoradiation or pembrolizumab + 5-FU + cisplatin / cetuximab in
+  head and neck squamous cell carcinoma: CrCl <60 mL/min (cisplatin
+  contraindicated at full dose, switch to carboplatin or cetuximab),
+  hearing loss / ototoxicity baseline (cisplatin contraindicated),
+  LVEF <50% (5-FU cardiac risk), bilirubin >3× ULN (taxane / 5-FU
+  metabolism), or severe peripheral neuropathy (cisplatin + taxane
+  contraindicated).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартній платино-вмісній
+  хіміо-променевій терапії або pembrolizumab + 5-FU + cisplatin /
+  cetuximab при HNSCC: CrCl <60 (cisplatin протипоказаний у повній дозі —
+  замінити carboplatin або cetuximab), базова втрата слуху / ототоксичність
+  (cisplatin протипоказаний), LVEF <50% (5-FU кардіоризик), білірубін
+  >3× ULN (метаболізм таксанів / 5-FU), тяжка периферична нейропатія
+  (cisplatin + таксан протипоказані).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 60
+      comparator: "<"
+    - finding: "baseline_ototoxicity"
+      value: true
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "peripheral_neuropathy_grade"
+      threshold: 2
+      comparator: ">"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-HNSCC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+  - SRC-ESMO-HNSCC-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cisplatin-based CRT is the curative-intent standard (Intergroup 0099,
+  TAX 324, EORTC 24891) but ~30% of HNSCC patients are cisplatin-
+  ineligible at presentation due to age + organ dysfunction. CrCl <60:
+  switch to carboplatin (RTOG 81-17 lower local control but acceptable)
+  or cetuximab + RT (Bonner trial — less effective than cisplatin per
+  RTOG 1016 / De-ESCALaTE post hoc but tolerated in cisplatin-ineligible).
+  Baseline hearing loss is gating for cisplatin — high cumulative
+  ototoxicity rate (40% Gr2+) compounds. LVEF <50: 5-FU + cisplatin
+  triplet risky — pembrolizumab monotherapy (KEYNOTE-048 if PD-L1 CPS
+  ≥1) is alternative for R/M setting.
+notes_ua: >
+  Cisplatin-CRT — стандарт куративної терапії, але ~30% пацієнтів HNSCC
+  cisplatin-неприйнятні. CrCl <60: carboplatin або cetuximab + RT (Bonner
+  — менш ефективний ніж cisplatin per RTOG 1016 / De-ESCALaTE). Базова
+  втрата слуху — гейтинговий чинник. Pembrolizumab моно (KEYNOTE-048
+  якщо PD-L1 CPS ≥1) — альтернатива для R/M.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

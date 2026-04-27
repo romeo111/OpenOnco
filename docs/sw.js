@@ -1,13 +1,23 @@
-// OpenOnco bundle service worker (CSD-6E)
-// Cache-first strategy for the lazy-load engine bundles. Cache name is
-// stamped with the core bundle's SHA-256 prefix at build time, so any KB
-// change automatically rotates the cache key and old bundles are evicted
-// on the next install (see the activate handler).
-const CACHE_NAME = 'openonco-bundle-519b4505e7b6';
+// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
+// Two strategies in one SW:
+//   1. Cache-first for engine bundle artifacts (large, infrequent).
+//   2. Stale-while-revalidate for try.html + style.css — repeat visits
+//      paint instantly from cache while a fresh copy fetches in the
+//      background, so the dropdowns aren't gated on the HTML download.
+// Cache name is stamped with the core bundle's SHA-256 prefix so a KB
+// push automatically rotates the cache key.
+const CACHE_NAME = 'openonco-bundle-f94a066812a3';
 const PRECACHE = [
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
+  '/try.html',
+  '/en/try.html',
+  '/style.css',
 ];
+// Routes that use stale-while-revalidate (instant from cache, refresh
+// in background). HTML pages must be on this list — never cache-first,
+// or the user gets stuck on an old build.
+const SWR_PATHS = ['/try.html', '/en/try.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -30,22 +40,39 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+function staleWhileRevalidate(event) {
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((hit) => {
+        const network = fetch(event.request).then((resp) => {
+          if (resp && resp.ok) cache.put(event.request, resp.clone());
+          return resp;
+        }).catch(() => hit);
+        return hit || network;
+      })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  // Only intercept our own engine artifacts. Everything else (HTML, CSS,
-  // CDN scripts) goes through the normal browser cache.
-  const matches =
+
+  // SWR for the small interactive shell (HTML + CSS).
+  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+    return staleWhileRevalidate(event);
+  }
+
+  // Cache-first for the heavy engine bundles.
+  const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine.zip') ||
     url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
-  if (!matches) return;
+  if (!cacheFirstMatch) return;
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
       cache.match(event.request, { ignoreSearch: true }).then((hit) =>
         hit || fetch(event.request).then((resp) => {
-          // Only cache successful responses; never poison the cache with
-          // an opaque 404.
           if (resp && resp.ok) {
             const clone = resp.clone();
             cache.put(event.request, clone);

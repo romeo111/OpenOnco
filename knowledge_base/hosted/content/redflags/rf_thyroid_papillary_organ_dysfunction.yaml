@@ -1,0 +1,76 @@
+id: RF-THYROID-PAPILLARY-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard lenvatinib / sorafenib
+  multikinase inhibitor for RAI-refractory PTC or affecting selective
+  TKI dosing: LVEF <50% (lenvatinib hypertension + cardiac dysfunction),
+  CrCl <30 mL/min (TKI dose adjustment), bilirubin >3× ULN (sorafenib /
+  lenvatinib hepatic clearance), QTc >480 ms (TKI-class QT prolongation),
+  uncontrolled hypertension, or prior fistula / GI perforation
+  (lenvatinib / sorafenib FDA boxed-warning class).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартному lenvatinib /
+  sorafenib мультикіназному інгібітору для RAI-рефрактерної PTC або
+  впливає на дозування селективних TKI: LVEF <50% (lenvatinib
+  гіпертензія + кардіодисфункція), CrCl <30 (корекція дози TKI),
+  білірубін >3× ULN (sorafenib / lenvatinib печінковий кліренс), QTc
+  >480 мс (подовження QT TKI-класу), неконтрольована гіпертензія,
+  попередня фістула / перфорація ШКТ (lenvatinib / sorafenib — FDA
+  boxed warning класу).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">"
+    - finding: "uncontrolled_hypertension"
+      value: true
+    - finding: "prior_gi_perforation_or_fistula"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-THYROID-PAPILLARY
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Lenvatinib carries severe hypertension (~70% any grade), proteinuria,
+  hand-foot, and rare fistula / GI perforation (FDA boxed warning class).
+  Sorafenib similar profile + hand-foot more pronounced. Selective RET
+  (selpercatinib, pralsetinib) and NTRK (larotrectinib, entrectinib)
+  inhibitors better-tolerated alternatives — preferred when fusion+.
+  Dabrafenib + trametinib for BRAF-mut RAI-refractory PTC has lower
+  hypertension burden than lenvatinib but adds pyrexia + cardiac
+  monitoring. Most PTC patients are LVEF-normal at presentation but
+  develop cardiac dysfunction on chronic multikinase TKI exposure —
+  baseline ECHO + 3-monthly during therapy.
+notes_ua: >
+  Lenvatinib — тяжка гіпертензія (~70% будь-якого ступеня), протеїнурія,
+  hand-foot, рідко фістула / перфорація ШКТ (FDA boxed warning класу).
+  Sorafenib — подібний профіль + hand-foot. Selpercatinib / pralsetinib
+  / larotrectinib — краще-переносимі альтернативи при fusion+. Dabrafenib
+  + trametinib для BRAF+ RAI-рефрактерної — менша гіпертензія, але
+  пірексія + кардіомоніторинг.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

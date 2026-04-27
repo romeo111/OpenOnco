@@ -1,0 +1,66 @@
+id: RF-MTC-TRANSFORMATION-PROGRESSION
+definition: >
+  MTC progression on first-line RET-selective inhibitor (acquired RET
+  solvent-front mutation G810R / G810S / G810C), rapid calcitonin
+  doubling time (<6 months — adverse prognostic marker), new bone /
+  liver / brain metastases, or symptomatic carcinoid-like diarrhea
+  (calcitonin-driven, debilitating) — triggers switch to next-gen RET
+  inhibitor (TPX-0046, vepafestinib in trials), cabozantinib re-challenge,
+  or peptide receptor radionuclide therapy.
+definition_ua: >
+  Прогресія MTC на 1-й лінії RET-селективного інгібітора (набута RET
+  solvent-front мутація G810R / G810S / G810C), швидке подвоєння
+  кальцитоніну (<6 міс. — несприятливий маркер), нові метастази в кістки
+  / печінку / мозок або симптоматична карциноїдоподібна діарея
+  (індукована кальцитоніном, виснажлива) — тригер до наступного покоління
+  RET-інгібіторів (TPX-0046, vepafestinib у трайлах), повторного
+  cabozantinib або PRRT.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "ret_solvent_front_mutation"
+      value: true
+    - finding: "calcitonin_doubling_time_months"
+      threshold: 6
+      comparator: "<"
+    - finding: "new_bone_liver_brain_mets"
+      value: true
+    - finding: "carcinoid_diarrhea_symptomatic"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-MTC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Calcitonin doubling time <6 months is a validated adverse prognostic
+  marker (Barbet et al, JCEM 2005) — predicts rapid clinical
+  progression and shorter OS; serves as biomarker-based progression
+  signal even before RECIST. Acquired RET solvent-front mutations
+  (G810R/S/C) are the dominant on-target resistance to selpercatinib /
+  pralsetinib (~30% of progressors). Next-gen RET inhibitors
+  (vepafestinib / TPX-0046; LOX-260) in trials. Cabozantinib re-challenge
+  has limited but documented activity post-RET-selective failure.
+  Carcinoid-like diarrhea (calcitonin-driven) is debilitating — somatostatin
+  analogs (octreotide / lanreotide) for symptom control. PRRT (¹⁷⁷Lu-
+  DOTATATE) for somatostatin-receptor-positive metastatic MTC.
+notes_ua: >
+  Подвоєння кальцитоніну <6 міс. — несприятливий прогностичний маркер
+  (Barbet та ін., JCEM 2005). Набуті RET solvent-front мутації (G810R/S/C)
+  — домінантна on-target резистентність (~30% прогресорів). Vepafestinib
+  / LOX-260 — наступне покоління у трайлах. Карциноїдоподібна діарея —
+  октреотид / ланреотид. PRRT (¹⁷⁷Lu-DOTATATE) при SSTR+.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

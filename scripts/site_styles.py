@@ -517,6 +517,104 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   font-size: 11px; color: var(--gray-500);
 }
 
+/* ── Disease drill-down (gallery rev 2026-04-27) ────────────────────── */
+.disease-stage { margin-bottom: 28px; }
+.disease-search-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px;
+  max-width: 560px;
+}
+.disease-search {
+  flex: 1 1 auto;
+  font: inherit; font-size: 15px;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
+  background: white; color: var(--gray-900);
+  transition: border-color .15s, box-shadow .15s;
+}
+.disease-search:focus {
+  outline: none;
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.10);
+}
+.disease-search-count {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--gray-500);
+  flex: 0 0 auto;
+}
+.disease-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.disease-tile {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 6px;
+  padding: 16px 18px; min-height: 78px;
+  border-radius: 10px;
+  border: 1.5px solid var(--gray-200);
+  background: white; color: var(--gray-900);
+  font: inherit; text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .15s, background .15s;
+}
+.disease-tile:hover {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  box-shadow: 0 6px 16px rgba(10, 46, 26, .08);
+  transform: translateY(-1px);
+}
+.disease-tile:focus-visible {
+  outline: 3px solid var(--green-600); outline-offset: 2px;
+}
+.dt-label {
+  font-family: var(--font-display); font-size: 16px;
+  color: var(--green-900); line-height: 1.2;
+  font-weight: 600;
+}
+.dt-count {
+  font-family: var(--font-mono); font-size: 11.5px;
+  color: var(--gray-500); letter-spacing: 0.3px;
+}
+.disease-tile:hover .dt-count { color: var(--green-700); }
+.disease-empty {
+  padding: 40px 0; text-align: center;
+  color: var(--gray-500); font-size: 14px;
+}
+
+/* Stage 2: cases for selected disease */
+.case-stage { margin-bottom: 28px; }
+.case-back-btn {
+  font: inherit; font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  background: white; color: var(--gray-700);
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.case-back-btn:hover {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  color: var(--green-900);
+}
+.case-list-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.case-list-header h2 {
+  font-family: var(--font-display); font-size: 22px;
+  color: var(--green-900); margin: 0;
+}
+.case-list-count {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--gray-500);
+}
+
 .kb-stats { margin-top: 16px; }
 
 /* Try page */
@@ -562,6 +660,51 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 .status[data-kind="warn"] {
   background: #fff8e1; border-left-color: #f59e0b;
   color: #92400e;
+}
+/* Prominent top status banner — visible above the toolbar so users see
+   the engine is mid-load. Animated spinner while busy; turns green on ok. */
+.status-top {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-sans, inherit); font-size: 15px; font-weight: 600;
+  padding: 12px 18px; margin: 0 0 16px 0;
+  border-radius: 8px;
+  background: #e0f2fe; color: #075985;
+  border: 1px solid #7dd3fc;
+  box-shadow: 0 1px 4px rgba(2,132,199,0.10);
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.status-top.is-ok {
+  background: var(--green-50); color: var(--green-800); border-color: var(--green-500);
+}
+.status-top.is-warn {
+  background: #fff8e1; color: #92400e; border-color: #f59e0b;
+}
+.status-top-spinner {
+  width: 16px; height: 16px; flex: 0 0 16px;
+  border: 2.5px solid #bae6fd; border-top-color: #0284c7;
+  border-radius: 50%;
+  animation: status-top-spin 700ms linear infinite;
+}
+.status-top.is-ok .status-top-spinner {
+  border: 2.5px solid var(--green-500); border-top-color: transparent;
+  animation: none;
+  /* Render as a check ✓ via CSS — repurpose the spinner box. */
+  border-radius: 0; background: transparent;
+  width: 14px; height: 8px;
+  border-left: 0; border-right: 3px solid var(--green-600);
+  border-top: 0; border-bottom: 3px solid var(--green-600);
+  transform: rotate(45deg) translateY(-2px);
+}
+.status-top.is-warn .status-top-spinner {
+  animation: none;
+  border-color: #f59e0b;
+  border-radius: 50%;
+}
+.status-top:not(.is-busy) .status-top-spinner {
+  animation: none;
+}
+@keyframes status-top-spin {
+  to { transform: rotate(360deg); }
 }
 .error {
   font-family: var(--font-mono); font-size: 12px; color: var(--red);
@@ -624,14 +767,33 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
 
 /* Questionnaire UI (try.html) */
 .quest-toolbar {
-  display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
-  flex-wrap: wrap; padding: 14px 18px; background: white;
-  border: 1px solid var(--gray-200); border-radius: 10px;
+  display: flex; gap: 16px; align-items: flex-end; margin: 24px 0 22px;
+  flex-wrap: wrap; padding: 22px 24px; background: linear-gradient(135deg, #f0fdf4 0%, white 60%);
+  border: 2px solid var(--green-600); border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(22, 101, 52, 0.08);
+  position: relative;
 }
+.quest-toolbar::before {
+  content: "1. Оберіть хворобу та (опційно) приклад";
+  position: absolute; top: -11px; left: 18px;
+  background: var(--green-700); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  text-transform: uppercase; padding: 3px 12px; border-radius: 4px;
+  font-family: var(--font-mono);
+}
+/* Make the FIRST TWO selects (Хвороба + Приклад) visually dominant.
+   Subsequent labels (mode buttons, JSON toggle) keep the smaller original styling. */
 .qt-label {
-  display: flex; flex-direction: column; gap: 4px; min-width: 220px;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  display: flex; flex-direction: column; gap: 6px; min-width: 280px;
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
   color: var(--gray-700); font-weight: 600;
+}
+.quest-toolbar > .qt-label:nth-of-type(-n+2) {
+  flex: 1 1 320px; min-width: 320px;
+}
+.quest-toolbar > .qt-label:nth-of-type(-n+2) {
+  font-size: 13px; color: var(--green-800); font-weight: 700;
+  letter-spacing: 0.4px;
 }
 .qt-label select, .qt-label input, .qt-label textarea {
   font-family: var(--font-sans); font-size: 13px;
@@ -639,6 +801,22 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   border-radius: 6px; background: white;
   text-transform: none; letter-spacing: normal; font-weight: 400;
   color: var(--gray-900);
+}
+/* Bigger, bolder selects for the first two dropdowns */
+.quest-toolbar > .qt-label:nth-of-type(-n+2) select {
+  font-size: 16px; padding: 12px 14px; font-weight: 500;
+  border: 2px solid var(--green-600); border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.quest-toolbar > .qt-label:nth-of-type(-n+2) select:hover {
+  border-color: var(--green-700);
+  box-shadow: 0 2px 6px rgba(22, 101, 52, 0.15);
+}
+.quest-toolbar > .qt-label:nth-of-type(-n+2) select:focus {
+  outline: none; border-color: var(--green-500);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
 }
 .qt-spacer { flex: 1; }
 .qt-modes {

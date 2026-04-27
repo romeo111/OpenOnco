@@ -1,0 +1,60 @@
+id: RF-IMT-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — methotrexate / vinorelbine
+  cytotoxic adjuvant and TKI-class agents (crizotinib, lorlatinib) more
+  toxic in elderly (mucositis, fatigue, hyperlipidemia, edema); consider
+  monotherapy with reduced-dose TKI, watchful waiting if asymptomatic
+  (IMT is intermediate-behavior), or best supportive care.
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — methotrexate / vinorelbine
+  адʼювант та TKI (crizotinib, lorlatinib) більш токсичні у літніх
+  (мукозити, втома, гіперліпідемія, набряки); розглянути монотерапію
+  зменшеною дозою TKI, спостереження якщо безсимптомно (IMT — поведінка
+  інтермедіарна), або симптоматичну допомогу.
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-IMT]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  IMT spans pediatric to elderly; older patients more often have
+  abdominal / retroperitoneal location and asymptomatic incidental
+  diagnosis — watchful waiting reasonable for fusion-negative slow-
+  growing disease. Lorlatinib in elderly: hyperlipidemia (statin coverage
+  required), cognitive effects + neuropathy more frequent. Crizotinib:
+  edema, fatigue, GI more pronounced. Geriatric assessment (G8 score)
+  recommended ≥70 before initiating TKI. Methotrexate / vinorelbine
+  cytotoxic adjuvant rarely tolerated in this group — TKI monotherapy
+  preferred when fusion-positive.
+notes_ua: >
+  IMT — від педіатричного до літнього; у літніх часто абдомінальна /
+  ретроперитонеальна локалізація, безсимптомний випадковий діагноз —
+  спостереження прийнятне для fusion-negative повільної хвороби.
+  Lorlatinib у літніх: гіперліпідемія, когнітивні ефекти, нейропатія.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,66 @@
+id: RF-THYROID-ANAPLASTIC-TRANSFORMATION-PROGRESSION
+definition: >
+  Acquired resistance to dabrafenib + trametinib in BRAF-mutant ATC
+  (secondary BRAF / MEK / RAS / MAPK reactivation, NRAS or KRAS
+  mutations, BRAF amplification), rapid local progression on cytotoxic
+  CRT, new distant metastases (lung, bone, brain), or transformation
+  from differentiated thyroid cancer (DTC) into ATC component
+  (dedifferentiation event) — triggers re-staging, re-biopsy, salvage
+  immunotherapy (pembrolizumab or pembrolizumab + lenvatinib) or trial
+  enrollment.
+definition_ua: >
+  Набута резистентність до dabrafenib + trametinib при BRAF-mutant ATC
+  (вторинна реактивація BRAF / MEK / RAS / MAPK, мутації NRAS / KRAS,
+  ампліфікація BRAF), швидке локальне прогресування на цитотоксичній
+  CRT, нові віддалені метастази (легені, кістки, мозок) або трансформація
+  з диференційованого тиреоїдного раку (DTC) у ATC-компонент
+  (дедиференціація) — тригер до повторного стейджингу, ребіопсії,
+  сальваджу імунотерапією (pembrolizumab або pembrolizumab + lenvatinib)
+  або трайлу.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "braf_mek_resistance_mutation"
+      value: true
+    - finding: "rapid_progression_on_crt"
+      value: true
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "dtc_to_atc_dedifferentiation"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 30
+category: transformation-progression
+
+relevant_diseases: [DIS-THYROID-ANAPLASTIC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Most BRAF+ ATC will progress on dabrafenib + trametinib within 6-12
+  months due to MAPK pathway reactivation (acquired NRAS / KRAS, BRAF
+  amplification, MEK1 mutation). Salvage options: pembrolizumab
+  monotherapy (KEYNOTE-158 ATC cohort ORR ~16%, durable in responders),
+  pembrolizumab + lenvatinib (ATLAS investigational), or salvage cytotoxic
+  (cisplatin-paclitaxel). DTC→ATC dedifferentiation: ~5-15% of long-
+  standing PTC develops anaplastic transformation — re-biopsy any new
+  rapidly enlarging mass in DTC patient. Brain metastases: stereotactic
+  RT + dabrafenib (CNS-penetrant). Priority 30 reflects critical-tier
+  override given disease tempo.
+notes_ua: >
+  Більшість BRAF+ ATC прогресує на dabrafenib + trametinib протягом
+  6-12 міс. через реактивацію MAPK. Сальвадж: пембролізумаб моно
+  (KEYNOTE-158 ATC ORR ~16%), пембролізумаб + lenvatinib (ATLAS у
+  трайлах), сальвадж цитотоксичний. DTC→ATC: ~5-15% PTC розвиває
+  анапластичну трансформацію — ребіопсія будь-якого нового масу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

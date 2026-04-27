@@ -1,0 +1,66 @@
+id: RF-IMT-TRANSFORMATION-PROGRESSION
+definition: >
+  IMT progression on first-line crizotinib (acquired ALK kinase-domain
+  resistance mutation L1196M / G1202R / I1171N), dedifferentiation into
+  high-grade sarcoma (epithelioid inflammatory myofibroblastic sarcoma
+  variant), new metastatic disease, or rapid local progression — triggers
+  switch to lorlatinib / alectinib (next-gen ALK), repotrectinib (ROS1),
+  or salvage cytotoxic chemotherapy.
+definition_ua: >
+  Прогресія IMT на 1-й лінії crizotinib (набута ALK kinase-domain
+  резистентна мутація L1196M / G1202R / I1171N), дедиференціація у
+  високодиференційовану саркому (epithelioid inflammatory myofibroblastic
+  sarcoma варіант), нова метастатична хвороба або швидке локальне
+  прогресування — тригер до lorlatinib / alectinib (наступне покоління
+  ALK), repotrectinib (ROS1) або сальваджу.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "BIO-ALK-G1202R"
+      value: "positive"
+    - finding: "BIO-ALK-L1196M"
+      value: "positive"
+    - finding: "alk_resistance_mutation"
+      value: true
+    - finding: "epithelioid_inflammatory_sarcoma_dedifferentiation"
+      value: true
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "rapid_progression_on_tki"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-IMT]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Most IMT is intermediate-behavior; epithelioid inflammatory
+  myofibroblastic sarcoma (EIMS) is an aggressive variant with
+  exclusively ALK-fusion (typically RANBP2-ALK) that behaves like
+  high-grade sarcoma — distinct prognosis, often metastatic at
+  diagnosis, requires aggressive systemic therapy + surgery. Acquired
+  ALK resistance mutations (L1196M gatekeeper, G1202R solvent-front,
+  I1171N) drive crizotinib failure within 12-18 mo — switch to lorlatinib
+  (covers most resistance variants) or alectinib (covers L1196M, less
+  G1202R). ROS1+ progression: repotrectinib (TRIDENT-1). Re-biopsy at
+  progression strongly recommended for resistance genotyping.
+notes_ua: >
+  Більшість IMT — поведінка інтермедіарна; epithelioid inflammatory
+  myofibroblastic sarcoma (EIMS) — агресивний варіант (RANBP2-ALK),
+  поводиться як high-grade саркома. Набуті ALK-резистентні мутації
+  (L1196M, G1202R, I1171N) — провал crizotinib за 12-18 міс. — перехід
+  на lorlatinib (покриває більшість) або alectinib.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

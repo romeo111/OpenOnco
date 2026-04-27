@@ -1,0 +1,61 @@
+id: RF-CHOLANGIOCARCINOMA-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating gemcitabine + cisplatin + durvalumab or FGFR2/IDH1-targeted
+  therapy: HBsAg-positive (HBV reactivation risk on chemoimmunotherapy +
+  durvalumab), anti-HBc-positive (occult HBV), HIV-positive (ART
+  coordination required), or active TB. Cholangitis from biliary
+  obstruction is also addressed in transformation-progression flag.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед gemcitabine + cisplatin + durvalumab або FGFR2/IDH1-таргетною
+  терапією: HBsAg+ (ризик реактивації HBV на хіміоімунотерапії +
+  durvalumab), anti-HBc+ (occult HBV), HIV+ (потребує координації АРТ)
+  або активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-CHOLANGIOCARCINOMA
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HBsAg+: entecavir / tenofovir prophylaxis before durvalumab + gem-cis
+  (immune-checkpoint inhibitors carry HBV reactivation signal even in
+  HBsAg-negative / anti-HBc-positive patients). HIV+ biliary cancer
+  manageable with TOPAZ-1 regimen but requires ART coordination — avoid
+  ritonavir-boosted PIs with TKIs (CYP3A4 interactions with FGFR / IDH
+  inhibitors). Active TB: anti-TB completion preferred before
+  chemoimmunotherapy. This flag operationalizes the hold via parallel
+  supportive-care workup rather than indication switch.
+notes_ua: >
+  HBsAg+: entecavir / tenofovir профілактика перед durvalumab + gem-cis
+  (інгібітори імунних чекпоінтів мають сигнал реактивації HBV навіть у
+  HBsAg-негативних / anti-HBc+ пацієнтів). HIV+: координація АРТ —
+  уникати ritonavir-boosted PI з TKI (CYP3A4 взаємодії з FGFR / IDH-
+  інгібіторами). Активний ТБ: завершити анти-ТБ перед хіміоімунотерапією.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

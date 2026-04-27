@@ -1,0 +1,36 @@
+id: RF-SALIVARY-ADVANCED-PALLIATIVE
+definition: "Metastatic salivary gland carcinoma with ECOG ≥3 OR rapid progression — palliative supportive care + symptom-directed RT only."
+definition_ua: "Метастатична карцинома слинних залоз з ECOG ≥3 АБО швидке прогресування — паліативна допомога + симптоматична RT."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "stage"
+      threshold: "metastatic"
+      comparator: "=="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 3
+          comparator: ">="
+        - finding: "rapid_progression"
+          threshold: true
+          comparator: "=="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-SALIVARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+
+last_reviewed: '2026-04-27'
+draft: false
+
+notes: >
+  Salivary gland cancer histologically diverse. Metastatic disease has
+  no SoC with proven OS benefit — palliative taxane+platinum most-used.
+  Frailty/ECOG ≥3 → BSC + palliative RT only.

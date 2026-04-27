@@ -529,6 +529,9 @@ def generate_plan(
     # tracks/actionability are final. CHARTER §8.3 invariant: nothing
     # below influences track selection (those are done above).
     # Default OFF: caller must pass actionability_enabled=True AND a client.
+    # Coexists with master's plan.variant_actionability (static-KB lookup
+    # via _actionability.find_matching_actionability) — this layer adds
+    # dynamic CIViC snapshot lookup for biomarkers with actionability_lookup.
     if actionability_enabled and actionability_client is not None:
         try:
             from .actionability_extract import extract_actionability_queries
@@ -537,15 +540,8 @@ def generate_plan(
             from .oncotree_fallback import resolve_oncotree_code
 
             disease_data = result.kb_resolved.get("disease") or {}
-            # Three-tier resolution: explicit field → ICD-10 fallback → pan-tumor.
-            # Render layer reads `pan_tumor_fallback` to surface the warning
-            # badge — but tier-2 fallback also flags it (the user should
-            # know we used a derived code, not an explicit one).
             oncotree, pan_tumor_fallback = resolve_oncotree_code(disease_data)
 
-            # Walk patient biomarkers → collect (id, gene, variant) hints
-            # from KB Biomarker.actionability_lookup (or legacy oncokb_lookup
-            # — Phase 1.5 migrates) field if present.
             hints: list[tuple[str, str, str]] = []
             for bio_id, _value in (patient.get("biomarkers") or {}).items():
                 bio_record = _resolve(entities, bio_id) or {}
@@ -567,7 +563,6 @@ def generate_plan(
                     errors=errors,
                     pan_tumor_fallback_used=pan_tumor_fallback,
                 )
-                # T3 mitigation: detect resistance conflicts inline
                 annotate_layer_with_conflicts(layer, tracks)
                 result.actionability_layer = layer
         except Exception as exc:  # noqa: BLE001 — fail-open contract

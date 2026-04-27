@@ -31,8 +31,10 @@ def site_dir(tmp_path_factory) -> Path:
 
 
 def test_static_assets_present(site_dir: Path):
+    # CSD-9C dropped monolithic openonco-engine.zip — replaced by core + per-disease + index.
     for f in (".nojekyll", "CNAME", "style.css", "index.html", "gallery.html",
-              "try.html", "openonco-engine.zip", "examples.json"):
+              "try.html", "openonco-engine-core.zip", "openonco-engine-index.json",
+              "examples.json"):
         assert (site_dir / f).exists(), f"missing {f}"
 
 
@@ -158,8 +160,9 @@ def test_try_page_wires_pyodide_and_form(site_dir: Path):
     assert 'id="runBtn"' in html
     # Result rendered into iframe (so embedded styles don't conflict)
     assert 'id="resultFrame"' in html
-    # Engine bundle URL
-    assert "openonco-engine.zip" in html
+    # Engine bundle URL (CSD-9C lazy-load: core + per-disease modules)
+    assert "openonco-engine-core.zip" in html
+    assert "openonco-engine-index.json" in html
     # Example dropdown source
     assert "examples.json" in html
 
@@ -168,7 +171,8 @@ def test_try_page_wires_pyodide_and_form(site_dir: Path):
 
 
 def test_engine_bundle_contains_runtime_modules(site_dir: Path):
-    zip_path = site_dir / "openonco-engine.zip"
+    # CSD-9C: core bundle replaces monolithic openonco-engine.zip
+    zip_path = site_dir / "openonco-engine-core.zip"
     with zipfile.ZipFile(zip_path) as zf:
         names = set(zf.namelist())
     # Required engine + schema + validation + content for generate_plan to run
@@ -189,9 +193,9 @@ def test_engine_bundle_contains_runtime_modules(site_dir: Path):
 
 def test_engine_bundle_excludes_heavy_unused_subtrees(site_dir: Path):
     """code_systems/ + civic/ + ctcae/ are not loaded by the engine at runtime
-    (validation.loader scans hosted/content/ only). Excluding them keeps the
-    Pyodide download under ~250KB compressed."""
-    zip_path = site_dir / "openonco-engine.zip"
+    (validation.loader scans hosted/content/ only). CSD-9C dropped monolithic;
+    same exclusion contract now applies to core bundle."""
+    zip_path = site_dir / "openonco-engine-core.zip"
     with zipfile.ZipFile(zip_path) as zf:
         names = zf.namelist()
     forbidden_prefixes = (

@@ -1,0 +1,66 @@
+id: RF-THYROID-ANAPLASTIC-HIGH-RISK-BIOLOGY
+definition: >
+  Anaplastic thyroid carcinoma with actionable driver mutation: BRAF
+  V600E (~25-40% ATC; dabrafenib + trametinib FDA-approved Cat 1 1L for
+  BRAF-mutant ATC), NTRK fusion (rare; larotrectinib / entrectinib),
+  RET fusion (rare; selpercatinib), or ALK fusion (very rare; alectinib /
+  lorlatinib) — re-routes algorithm from emergency cytotoxic chemo + RT
+  to targeted therapy with potential surgical resection after molecular
+  response.
+definition_ua: >
+  Анапластична карцинома щитоподібної залози з дієвоспроможною
+  драйверною мутацією: BRAF V600E (~25-40% ATC; dabrafenib + trametinib
+  FDA-затверджений Cat 1 1L для BRAF-mutant ATC), фузія NTRK (рідко;
+  larotrectinib / entrectinib), фузія RET (рідко; selpercatinib), фузія
+  ALK (дуже рідко; alectinib / lorlatinib) — змінює тактику від
+  невідкладної цитотоксичної хіміотерапії + RT до таргетної з можливим
+  хірургічним видаленням після молекулярної відповіді.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-BRAF-V600E"
+      value: "positive"
+    - finding: "BIO-NTRK-FUSION"
+      value: "positive"
+    - finding: "BIO-RET"
+      value: "fusion"
+    - finding: "BIO-ALK-FUSION"
+      value: "positive"
+
+clinical_direction: intensify
+severity: critical
+priority: 30
+category: high-risk-biology
+
+relevant_diseases: [DIS-THYROID-ANAPLASTIC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ATC is one of the most aggressive human malignancies (median OS
+  3-6 months historically). The discovery that ~25-40% are BRAF V600E-
+  mutant transformed practice — dabrafenib + trametinib (ROAR basket)
+  achieved ORR ~70% with median OS extended to ~14 mo in BRAF-mutant
+  ATC, sometimes converting unresectable to resectable. NCCN Cat 1
+  recommendation; FDA approval 2018. For BRAF-mut ATC, neoadjuvant
+  dabrafenib + trametinib → surgery → adjuvant RT is now the optimal
+  paradigm when feasible. NTRK / RET / ALK fusions <5% combined but
+  highly actionable. Comprehensive genomic profiling within days of
+  diagnosis is critical given disease tempo. Priority bumped to 30
+  because targeted therapy is critical-tier override of cytotoxic
+  default.
+notes_ua: >
+  ATC — найагресивніша пухлина (медіанна ЗВ 3-6 міс. історично). ~25-40%
+  BRAF V600E-mutant — dabrafenib + trametinib (ROAR) ORR ~70%, медіанна
+  ЗВ ~14 міс. NCCN Cat 1; FDA 2018. Для BRAF-mut: неоадʼювант → хірургія
+  → адʼювантне RT — оптимально. NTRK / RET / ALK <5% сумарно, але
+  високо actionable. CGP протягом днів від діагнозу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

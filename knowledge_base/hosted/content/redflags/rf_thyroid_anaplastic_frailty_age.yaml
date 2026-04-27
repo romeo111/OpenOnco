@@ -1,0 +1,67 @@
+id: RF-THYROID-ANAPLASTIC-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — cisplatin-paclitaxel CRT
+  poorly tolerated and curative-intent surgical resection often not
+  feasible; for BRAF-mutant ATC, dabrafenib + trametinib monotherapy
+  (without RT or surgery) is reasonable; for BRAF-wild-type frail
+  patients, palliative-intent care + tracheostomy for airway management
+  is often the appropriate path. ATC frailty assessment must integrate
+  with palliative-care planning given short median OS.
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — cisplatin-paclitaxel CRT
+  погано переноситься і куративна хірургічна резекція часто неможлива;
+  для BRAF-mutant ATC — dabrafenib + trametinib монотерапія (без RT і
+  хірургії) розумна; для BRAF-wild-type крихких — паліативна терапія +
+  трахеостома для управління дихальним шляхом. Frailty-оцінка при ATC
+  повинна інтегрувати паліативне планування з огляду на короткий
+  медіанний ЗВ.
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: critical
+priority: 50
+category: frailty-age
+
+relevant_diseases: [DIS-THYROID-ANAPLASTIC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ATC predominantly affects elderly (median age ~70); aggressive CRT
+  is rarely tolerated in ≥75 with comorbidity. For BRAF-mut ATC in
+  elderly: dabrafenib + trametinib monotherapy retains ~60% ORR with
+  much lower toxicity than CRT — palliative-intent treatment may
+  approach disease-modifying benefit. For BRAF-wt elderly: tracheostomy
+  + symptom control + hospice often appropriate; selected fit elderly
+  may benefit from pembrolizumab monotherapy (better tolerated than
+  cytotoxic). Goals-of-care discussion within first MDT meeting is
+  ATA-recommended given disease tempo. Severity critical because of
+  high stakes; priority 50 because BRAF status overrides this in
+  conflict (RF-THYROID-ANAPLASTIC-HIGH-RISK-BIOLOGY priority 30).
+notes_ua: >
+  ATC переважно в літніх (медіана ~70); агресивна CRT рідко
+  переноситься у ≥75 з коморбідністю. BRAF+ ATC у літніх: dabrafenib +
+  trametinib моно — ~60% ORR з набагато меншою токсичністю ніж CRT.
+  BRAF-wt літній: трахеостома + симптоматична + хоспіс. Goals-of-care
+  обговорення на 1-й MDT (ATA-рекомендовано).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

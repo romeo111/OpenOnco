@@ -180,10 +180,13 @@ def _flatten_findings(patient: dict) -> dict[str, Any]:
 
 
 def _has(findings: dict[str, Any], *keys: str) -> bool:
-    """True if ANY of the given keys is present and not None/empty-string."""
+    """True if ANY of the given keys (or its known aliases) resolves to a
+    non-empty value. Uses the same alias map as the trigger evaluator so
+    `unevaluated_red_flags` and `evaluate_redflag_trigger` agree on
+    "data present"."""
+    from .redflag_eval import _resolve_finding
     for k in keys:
-        v = findings.get(k)
-        if v not in (None, ""):
+        if _resolve_finding(findings, k) is not None:
             return True
     return False
 

@@ -24,7 +24,9 @@ Layout produced:
     gallery.html                   # 7 pre-generated sample cases
     try.html                       # interactive Pyodide demo
     cases/<case-id>.html           # one rendered Plan / Diagnostic Brief
-    openonco-engine.zip            # zipped engine + KB content for Pyodide
+    openonco-engine-core.zip       # core engine + shared KB for Pyodide
+    openonco-engine-index.json     # disease_id → per-disease bundle URL map
+    disease/openonco-<slug>.zip    # per-disease KB modules (lazy-loaded)
     examples.json                  # dropdown payload for try.html
 
 No real patient data ever flows here — only synthetic seed cases under
@@ -38,10 +40,12 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import shutil
 import zipfile
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from knowledge_base.engine import (
@@ -54,6 +58,7 @@ from knowledge_base.engine import (
 )
 from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
+from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats, format_html_widget
 from scripts.site_cases import CASE_CATEGORIES, CASES, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
@@ -231,44 +236,46 @@ def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
 def bundle_engine(output_dir: Path) -> dict:
     """Build the Pyodide-loadable engine bundles.
 
-    Produces three artifacts in `output_dir/`:
+    Produces (in `output_dir/`):
 
-      1. `openonco-engine.zip` — the legacy monolithic bundle (everything
-         in one zip). Kept for backward compatibility with any client
-         that hasn't been upgraded to the lazy-load index yet, and as a
-         safe fallback if the index fetch fails.
-
-      2. `openonco-engine-core.zip` — code + schemas + validation +
+      1. `openonco-engine-core.zip` — code + schemas + validation +
          shared content (drugs, sources, biomarkers, tests,
          supportive_care, monitoring, workups, questionnaires,
          contraindications, mdt_skills, diseases, plus universal
          redflags and any indications/algorithms/regimens/RFs/BMA cells
-         that don't pin to a single disease). This is what /try.html
-         should fetch first — small enough to make the page interactive
-         quickly.
+         that don't pin to a single disease). /try.html fetches this
+         first — small enough to make the page interactive quickly.
 
-      3. `disease/openonco-{slug}.zip` per disease — the disease-scoped
+      2. `disease/openonco-{slug}.zip` per disease — the disease-scoped
          indications, algorithms, regimens, redflags, and BMA cells.
          Fetched on demand once the patient's `disease_id` is known.
 
-    Plus an index file:
+      3. `openonco-engine-index.json` — `{core, core_version, diseases,
+         disease_versions, icd_to_disease_id}`. /try.html consults this
+         to pick the per-disease bundle once `disease_id` is known.
 
-      4. `openonco-engine-index.json` — `{core, core_version, diseases}`
-         mapping disease_id → relative URL for the per-disease bundle.
+    CSD-9C (2026-04-27): the legacy monolithic `openonco-engine.zip`
+    has been retired. Lazy-load (CSD-5B + CSD-6E) is the canonical
+    path — the monolithic bundle had crossed the 3 MB ceiling and was
+    only kept as a safety fallback. Any stale monolithic on disk is
+    cleaned up so deploys don't carry the old file forever.
 
-    Returns a dict whose `version` field is a 12-char SHA-256 prefix of
-    the legacy monolithic zip — used as a `?v=...` cache-buster on the
-    Pyodide fetch in try.html so users always get the fresh bundle on
-    KB updates without having to hard-reload.
+    Returns a dict whose `core_version` field is a 12-char SHA-256
+    prefix of the core zip — used as a `?v=...` cache-buster on the
+    Pyodide fetch so users always get fresh bundles on KB updates.
     """
     import hashlib
 
-    out_zip = output_dir / "openonco-engine.zip"
     core_zip = output_dir / "openonco-engine-core.zip"
     disease_dir = output_dir / "disease"
     index_path = output_dir / "openonco-engine-index.json"
+    legacy_monolithic = output_dir / "openonco-engine.zip"
 
     disease_dir.mkdir(parents=True, exist_ok=True)
+
+    # CSD-9C: clean up any stale monolithic bundle from previous builds.
+    if legacy_monolithic.exists():
+        legacy_monolithic.unlink()
 
     entries = _gather_engine_entries()
     # Deterministic order — same input → same zip → same SHA-256.
@@ -283,18 +290,7 @@ def bundle_engine(output_dir: Path) -> dict:
         else:
             by_disease.setdefault(disease, []).append((path, arcname))
 
-    # 1. Legacy monolithic bundle (back-compat / fallback).
-    files_added = 0
-    bytes_uncompressed = 0
-    with zipfile.ZipFile(out_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        for path, arcname, _ in entries:
-            zf.write(path, arcname)
-            files_added += 1
-            bytes_uncompressed += path.stat().st_size
-    bundle_bytes = out_zip.read_bytes()
-    version = hashlib.sha256(bundle_bytes).hexdigest()[:12]
-
-    # 2. Core bundle.
+    # 1. Core bundle.
     core_files = 0
     core_uncompressed = 0
     with zipfile.ZipFile(core_zip, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -305,7 +301,7 @@ def bundle_engine(output_dir: Path) -> dict:
     core_bytes = core_zip.read_bytes()
     core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
-    # 3. Per-disease bundles. Wipe stale ones first so disease renames
+    # 2. Per-disease bundles. Wipe stale ones first so disease renames
     # don't leave orphans under docs/disease/.
     for stale in disease_dir.glob("openonco-*.zip"):
         stale.unlink()
@@ -325,13 +321,11 @@ def bundle_engine(output_dir: Path) -> dict:
             "version": hashlib.sha256(b).hexdigest()[:12],
         }
 
-    # 4. Bundle index — what /try.html should consult to know which
+    # 3. Bundle index — what /try.html consults to know which
     # per-disease module to fetch once disease_id is known.
     index_payload = {
         "core": "openonco-engine-core.zip",
         "core_version": core_version,
-        "monolithic": "openonco-engine.zip",
-        "monolithic_version": version,
         "diseases": {
             did: meta["url"] for did, meta in sorted(disease_meta.items())
         },
@@ -349,16 +343,15 @@ def bundle_engine(output_dir: Path) -> dict:
     )
 
     return {
-        "zip": str(out_zip.relative_to(output_dir)),
-        "files": files_added,
-        "uncompressed_bytes": bytes_uncompressed,
-        "compressed_bytes": out_zip.stat().st_size,
-        "version": version,
         "core_zip": str(core_zip.relative_to(output_dir)),
         "core_files": core_files,
         "core_uncompressed_bytes": core_uncompressed,
         "core_compressed_bytes": core_zip.stat().st_size,
         "core_version": core_version,
+        # `version` retained as alias for `core_version` — older callers
+        # (try.html cache-buster wiring) still reference it as a generic
+        # "current bundle version" stamp.
+        "version": core_version,
         "disease_bundles": disease_meta,
         "index": str(index_path.relative_to(output_dir)),
     }
@@ -372,16 +365,26 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
     cache_name = "openonco-bundle-" + (core_version or "v1")
-    sw_js = """// OpenOnco bundle service worker (CSD-6E)
-// Cache-first strategy for the lazy-load engine bundles. Cache name is
-// stamped with the core bundle's SHA-256 prefix at build time, so any KB
-// change automatically rotates the cache key and old bundles are evicted
-// on the next install (see the activate handler).
+    sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
+// Two strategies in one SW:
+//   1. Cache-first for engine bundle artifacts (large, infrequent).
+//   2. Stale-while-revalidate for try.html + style.css — repeat visits
+//      paint instantly from cache while a fresh copy fetches in the
+//      background, so the dropdowns aren't gated on the HTML download.
+// Cache name is stamped with the core bundle's SHA-256 prefix so a KB
+// push automatically rotates the cache key.
 const CACHE_NAME = '__CACHE_NAME__';
 const PRECACHE = [
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
+  '/try.html',
+  '/en/try.html',
+  '/style.css',
 ];
+// Routes that use stale-while-revalidate (instant from cache, refresh
+// in background). HTML pages must be on this list — never cache-first,
+// or the user gets stuck on an old build.
+const SWR_PATHS = ['/try.html', '/en/try.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -404,22 +407,39 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+function staleWhileRevalidate(event) {
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((hit) => {
+        const network = fetch(event.request).then((resp) => {
+          if (resp && resp.ok) cache.put(event.request, resp.clone());
+          return resp;
+        }).catch(() => hit);
+        return hit || network;
+      })
+    )
+  );
+}
+
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
-  // Only intercept our own engine artifacts. Everything else (HTML, CSS,
-  // CDN scripts) goes through the normal browser cache.
-  const matches =
+
+  // SWR for the small interactive shell (HTML + CSS).
+  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+    return staleWhileRevalidate(event);
+  }
+
+  // Cache-first for the heavy engine bundles.
+  const cacheFirstMatch =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine.zip') ||
     url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
-  if (!matches) return;
+  if (!cacheFirstMatch) return;
   event.respondWith(
     caches.open(CACHE_NAME).then((cache) =>
       cache.match(event.request, { ignoreSearch: true }).then((hit) =>
         hit || fetch(event.request).then((resp) => {
-          // Only cache successful responses; never poison the cache with
-          // an opaque 404.
           if (resp && resp.ok) {
             const clone = resp.clone();
             cache.put(event.request, clone);
@@ -438,43 +458,206 @@ self.addEventListener('fetch', (event) => {
 
 def bundle_examples(output_dir: Path) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
-    the 'Load example' dropdown on try.html."""
+    the 'Load example' dropdown on try.html.
+
+    Also extracts a thin manifest (label + disease_icd only, ~10× smaller)
+    used by /try.html for instant dropdown population. Full payload is
+    lazy-fetched only when a user actually picks an example.
+    """
     payload = []
+    manifest = []
     for c in CASES:
         p = EXAMPLES / c.file
         if not p.exists():
             continue
+        ex_json = json.loads(p.read_text(encoding="utf-8"))
         payload.append({
             "case_id": c.case_id,
             "label": c.label_ua,
             "file": c.file,
-            "json": json.loads(p.read_text(encoding="utf-8")),
+            "json": ex_json,
+        })
+        manifest.append({
+            "case_id": c.case_id,
+            "label": c.label_ua,
+            "disease_icd": (
+                ex_json.get("disease", {}).get("icd_o_3_morphology")
+                if isinstance(ex_json, dict) else None
+            ),
         })
     out = output_dir / "examples.json"
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "examples.json", "count": len(payload)}
+    return {
+        "path": "examples.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
+
+
+# Universal screening fields injected into every questionnaire at bundle
+# time. Audit 2026-04-27 found ~200 RF-disease evaluations were blocked
+# because these clinically-universal data points (TB screening, LVEF,
+# etc.) were absent from the per-disease questionnaire YAMLs. Rather
+# than copy-paste these into 65 questionnaires, the build prepends a
+# single "Загальний скринінг" group at JSON serialisation time. Each
+# field is `recommended` (not `critical`) so users can leave it blank
+# without blocking the Generate button. RF triggers reference these
+# field names directly — no alias needed.
+_COMMON_SCREENING_GROUP = {
+    "title": "Загальний скринінг (опційно)",
+    "description": "Універсальні поля для оцінки фітнесу, інфекційного статусу, "
+                   "органної функції. Заповнюй те, що є в карті — пусті поля "
+                   "engine просто не оцінює (replaces 'unevaluated RedFlag' warnings).",
+    "questions": [
+        {"field": "findings.lvef_percent", "label": "LVEF (%) — ехокардіографія",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 80,
+         "units": "%", "helper": "Перед антрациклінами / HER2-агентами / алкілуючими — потрібно baseline LVEF."},
+        {"field": "findings.active_tb", "label": "Активний туберкульоз?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Скринінг перед IO / стероїдами / алоТКМ. Quantiferon або скриніноговий рентген."},
+        {"field": "findings.latent_tb", "label": "Латентний ТБ (Quantiferon+ / IGRA+)?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.active_uncontrolled_infection", "label": "Активна неконтрольована інфекція?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Будь-який сепсис / pneumonia / неконтрольована грибкова — затримка lечення."},
+        {"field": "findings.albumin_g_dl", "label": "Альбумін",
+         "type": "float", "impact": "recommended", "range_min": 1.0, "range_max": 6.0,
+         "units": "г/дл"},
+        {"field": "findings.bilirubin_uln_x", "label": "Загальний білірубін (× ULN)",
+         "type": "float", "impact": "recommended", "range_min": 0.1, "range_max": 20.0,
+         "units": "× верхня межа норми",
+         "helper": "Більшість регімів вимагає bili ≤1.5×ULN; FDA-одобрення часто пишуть в кратах ULN."},
+        {"field": "findings.dlco_percent", "label": "DLCO (% від норми)",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 150,
+         "units": "%", "helper": "DLCO <50% — заборона на блеоміцин (cHL ABVD); <40% — обережно з CAR-T."},
+        {"field": "findings.qtc_ms", "label": "QTc (мс) на ЕКГ",
+         "type": "integer", "impact": "recommended", "range_min": 300, "range_max": 700,
+         "units": "мс",
+         "helper": "QTc >480 → обережно з венетоклаксом, кризотинібом, апалутамідом, FLT3i."},
+        {"field": "findings.potassium_mmol_l", "label": "Калій",
+         "type": "float", "impact": "recommended", "range_min": 1.5, "range_max": 8.0,
+         "units": "ммоль/л"},
+        {"field": "findings.uric_acid_mg_dl", "label": "Сечова кислота",
+         "type": "float", "impact": "recommended", "range_min": 1, "range_max": 20,
+         "units": "мг/дл",
+         "helper": "Високий уровень + bulky disease → ризик TLS, потрібен расбуриказа."},
+        {"field": "findings.tls_active", "label": "Активний синдром лізису пухлини?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.comorbidity_count", "label": "К-сть значущих коморбідностей",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 20,
+         "helper": "Серцева недостатність / COPD / cirrhosis / CKD / diabetes etc. Driver для frailty score."},
+        {"field": "findings.charlson_score", "label": "Charlson Comorbidity Index",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 30,
+         "helper": "0-1 fit, 2-3 intermediate, ≥4 frail (для elderly + солідних)."},
+        {"field": "findings.g8_score", "label": "G8 Geriatric Screening (0-17)",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 17,
+         "helper": "≤14 — потрібна повна geriatric assessment перед інтенсивною ХТ."},
+        {"field": "findings.child_pugh_class", "label": "Child-Pugh class (печінка)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "A", "label": "A — компенсована"},
+             {"value": "B", "label": "B — субкомпенсована"},
+             {"value": "C", "label": "C — декомпенсована"},
+         ],
+         "helper": "Тільки якщо є cirrhosis / liver disease. B/C — виключає більшість регімів."},
+        {"field": "findings.rapid_progression", "label": "Стрімка прогресія (швидке зростання обʼєму / нові симптоми)?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Driver для intensification у aggressive lymphomas / CAR-T bridging."},
+        {"field": "findings.new_metastatic_disease", "label": "Нові метастази на повторному скані?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.hcv_rna", "label": "HCV RNA (для пацієнтів з anti-HCV+)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативна / нижче LOD"},
+             {"value": "positive", "label": "Позитивна (active HCV)"},
+         ]},
+        {"field": "findings.hiv_status", "label": "HIV статус",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативний"},
+             {"value": "positive", "label": "Позитивний"},
+         ]},
+        {"field": "findings.peripheral_neuropathy_grade", "label": "Передіснуюча периферична нейропатія (CTCAE)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": 0, "label": "0 — немає"},
+             {"value": 1, "label": "1 — мінімальна"},
+             {"value": 2, "label": "2 — обмежує ADL"},
+             {"value": 3, "label": "3 — severe"},
+             {"value": 4, "label": "4 — disabling"},
+         ],
+         "helper": "Grade ≥3 — заборона на bortezomib SC, vincristine, oxaliplatin, cisplatin."},
+        {"field": "findings.nyha_class", "label": "NYHA клас (серцева недостатність)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "I", "label": "I — без обмежень"},
+             {"value": "II", "label": "II — легкі обмеження"},
+             {"value": "III", "label": "III — виражені обмеження"},
+             {"value": "IV", "label": "IV — симптоми у спокої"},
+         ],
+         "helper": "Тільки якщо є HF в анамнезі. NYHA III/IV — заборона на антрацикліни / трастузумаб."},
+        {"field": "findings.hemoglobin_g_dl", "label": "Гемоглобін",
+         "type": "float", "impact": "recommended", "range_min": 3, "range_max": 22,
+         "units": "г/дл"},
+        {"field": "findings.wbc_k_ul", "label": "Лейкоцити (×10⁹/л)",
+         "type": "float", "impact": "recommended", "range_min": 0, "range_max": 1000,
+         "units": "×10⁹/л",
+         "helper": "Hyperleukocytosis (>50-100) — risk leukostasis у AML/ALL/CML-blast."},
+        {"field": "findings.uncontrolled_hypertension", "label": "Неконтрольована гіпертензія?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Заборона / обережність з VEGF-інгібіторами (bevacizumab, sunitinib, lenvatinib)."},
+    ],
+}
+
+
+def _inject_common_screening(quest: dict) -> dict:
+    """Append the universal screening group to a questionnaire's groups
+    list at bundle time, unless the YAML already has a group with the
+    same title (idempotent — manual customisation wins)."""
+    groups = list(quest.get("groups") or [])
+    title = _COMMON_SCREENING_GROUP["title"]
+    if any(g.get("title") == title for g in groups):
+        return quest
+    groups.append(_COMMON_SCREENING_GROUP)
+    return {**quest, "groups": groups}
 
 
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
-    JSON file at docs/questionnaires.json so the form on /try.html can
-    fetch them with one HTTP request — no Pyodide needed just to render.
+    JSON file at docs/questionnaires.json + thin manifest for /try.html.
 
-    Pyodide is still required for the live evaluator (which runs against
-    the real engine), but the form itself renders from this JSON.
+    Manifest carries only the dropdown-needed fields (id + title +
+    disease_icd) — ~30× smaller than the full payload — so /try.html
+    populates dropdowns instantly. Full payload is lazy-fetched only
+    after the user selects a questionnaire.
+
+    Each questionnaire is post-processed by `_inject_common_screening`
+    so universal fields (LVEF, TB, child-pugh, etc.) appear without
+    every disease YAML having to copy them.
     """
     qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
     payload = []
+    manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
         for path in sorted(qsrc.glob("*.yaml")):
             try:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
+                    data = _inject_common_screening(data)
                     payload.append(data)
+                    manifest.append({
+                        "id": data.get("id"),
+                        "title": data.get("title"),
+                        "disease_icd": (
+                            (data.get("fixed_fields") or {})
+                            .get("disease", {})
+                            .get("icd_o_3_morphology")
+                        ),
+                    })
             except Exception:
                 continue
     out = output_dir / "questionnaires.json"
@@ -482,15 +665,19 @@ def bundle_questionnaires(output_dir: Path) -> dict:
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "questionnaires.json", "count": len(payload)}
+    return {
+        "path": "questionnaires.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
 
 
 # ── Landing page (index.html) ─────────────────────────────────────────────
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →"},
+    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →", "diseases": "Хвороби"},
+    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →", "diseases": "Diseases"},
 }
 
 
@@ -512,6 +699,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{en_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
         if page_kind == "limitations":  return f"{en_prefix}/limitations.html"
+        if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
     else:
         # EN page → switcher points to UA root
         if page_kind == "home":         return "/"
@@ -520,6 +708,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "limitations":  return "/limitations.html"
+        if page_kind == "diseases":     return "/diseases.html"
     return "/"
 
 
@@ -547,12 +736,14 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
+            f'<a href="/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
             f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
+            f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/en/limitations.html"{cls("limitations")}>Limitations</a>'
         )
@@ -565,7 +756,7 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Project version">v{OPENONCO_VERSION}</span>
+    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
@@ -1019,98 +1210,206 @@ def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
     return bool(code and code in codes)
 
 
+def _load_disease_name_map() -> dict[str, dict[str, str]]:
+    """Walk diseases/*.yaml and produce {DIS-ID: {ua, en}}.
+
+    UA falls back to preferred → english if `names.ukrainian` missing;
+    EN falls back to preferred → ukrainian. Used by the gallery to
+    label disease-grouped tiles."""
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, dict[str, str]] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        if not did:
+            continue
+        names = data.get("names") or {}
+        ua = names.get("ukrainian") or names.get("preferred") or names.get("english") or did
+        en = names.get("english") or names.get("preferred") or names.get("ukrainian") or did
+        out[str(did).upper()] = {"ua": ua, "en": en}
+    return out
+
+
+def _gallery_case_disease_meta() -> list[dict]:
+    """For each CaseEntry, derive (disease_id, disease label UA/EN, ICD)
+    by loading its example JSON. Cases whose JSON is missing or carries
+    no recognised disease land in a synthetic 'OTHER' bucket so the UI
+    still surfaces them."""
+    icd_map = _icd_to_disease_id_map()
+    name_map = _load_disease_name_map()
+    out: list[dict] = []
+    for c in CASES:
+        p = EXAMPLES / c.file
+        icd = None
+        if p.exists():
+            try:
+                ex = json.loads(p.read_text(encoding="utf-8"))
+                icd = ((ex or {}).get("disease") or {}).get("icd_o_3_morphology")
+            except Exception:
+                icd = None
+        did = icd_map.get(str(icd)) if icd else None
+        if did:
+            names = name_map.get(did, {"ua": did, "en": did})
+            out.append({
+                "case": c,
+                "disease_id": did,
+                "icd": icd,
+                "label_ua": names["ua"],
+                "label_en": names["en"],
+            })
+        else:
+            out.append({
+                "case": c,
+                "disease_id": "OTHER",
+                "icd": icd,
+                "label_ua": "Інше / без класифікації",
+                "label_en": "Other / unclassified",
+            })
+    return out
+
+
 def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
+    """Disease-grouped gallery (CSD UX rev 2026-04-27).
+
+    Initial view is a tiled grid of diseases — each tile lists the
+    disease name + how many examples we have for it. Clicking a tile
+    drills into that disease's case list. The disease-level taxonomy
+    page (/diseases.html) covers everything else, so the gallery
+    intentionally drops the old category-chip filter."""
+    import html as _html
     is_en = target_lang == "en"
     case_path_prefix = "/en/cases/" if is_en else "/cases/"
     n_cases = len(CASES)
 
     quest_codes = _questionnaire_icd_o_3_codes()
+    case_meta = _gallery_case_disease_meta()
 
-    cat_counts: dict[str, int] = {}
-    for c in CASES:
-        cat_counts[c.category] = cat_counts.get(c.category, 0) + 1
+    # Group cases by disease_id, preserving CASES order within each group.
+    grouped: dict[str, dict] = {}
+    for i, m in enumerate(case_meta):
+        did = m["disease_id"]
+        bucket = grouped.setdefault(did, {
+            "disease_id": did,
+            "label_ua": m["label_ua"],
+            "label_en": m["label_en"],
+            "items": [],
+        })
+        bucket["items"].append({**m, "default_order": i})
+    # Sort diseases alphabetically by display label (UA primary).
+    sort_key = "label_en" if is_en else "label_ua"
+    diseases = sorted(grouped.values(), key=lambda d: d[sort_key].lower())
 
-    chips: list[str] = []
-    all_label = "All" if is_en else "Усі"
-    chips.append(
-        f'<button type="button" class="case-chip is-active" '
-        f'data-filter="all">{all_label} <span class="chip-n">{n_cases}</span></button>'
-    )
-    for key, ua_label, en_label in CASE_CATEGORIES:
-        n = cat_counts.get(key, 0)
-        if n == 0:
-            continue
-        label = en_label if is_en else ua_label
-        chips.append(
-            f'<button type="button" class="case-chip" '
-            f'data-filter="{key}">{label} <span class="chip-n">{n}</span></button>'
+    def _examples_word(n: int) -> str:
+        if is_en:
+            return "example" if n == 1 else "examples"
+        last2 = n % 100
+        last1 = n % 10
+        if 11 <= last2 <= 14:
+            return "прикладів"
+        if last1 == 1:
+            return "приклад"
+        if 2 <= last1 <= 4:
+            return "приклади"
+        return "прикладів"
+
+    # ── Disease tile grid ──
+    disease_tiles: list[str] = []
+    for d in diseases:
+        label = d[sort_key]
+        n = len(d["items"])
+        n_word = _examples_word(n)
+        # data-search holds both UA + EN labels lowercased so the search
+        # box works regardless of the page's render language.
+        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        disease_tiles.append(
+            f'<button type="button" class="disease-tile" '
+            f'data-disease-id="{_html.escape(d["disease_id"])}" '
+            f'data-search="{_html.escape(search_blob)}">'
+            f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'<span class="dt-count">{n} {n_word}</span>'
+            f'</button>'
         )
-    chips_html = "\n    ".join(chips)
+    disease_tiles_html = "\n    ".join(disease_tiles)
 
-    if is_en:
-        sort_label = "Sort"
-        sort_default = "Default"
-        sort_alpha = "Name (A→Z)"
-        sort_category = "Category"
-    else:
-        sort_label = "Сортування"
-        sort_default = "За замовчуванням"
-        sort_alpha = "За назвою (А→Я)"
-        sort_category = "За класифікацією"
-
-    cards: list[str] = []
-    for i, c in enumerate(CASES):
-        has_quest = _case_has_questionnaire(c, quest_codes)
-        json_only_pill = "" if has_quest else (
-            f'<span class="case-json-only" title="'
-            f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
-            f'">{"JSON-only" if is_en else "JSON-only"}</span>'
-        )
-        cards.append(
-            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
-   data-category="{c.category}" data-default-order="{i}"
-   data-name="{c.label_ua}">
+    # ── Per-disease card lists (hidden until selected) ──
+    case_lists: list[str] = []
+    for d in diseases:
+        cards: list[str] = []
+        for item in d["items"]:
+            c: CaseEntry = item["case"]
+            has_quest = _case_has_questionnaire(c, quest_codes)
+            json_only_pill = "" if has_quest else (
+                f'<span class="case-json-only" title="'
+                f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
+                f'">JSON-only</span>'
+            )
+            cards.append(
+                f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
+   data-default-order="{item['default_order']}"
+   data-name="{_html.escape(c.label_ua)}">
   <div class="case-badge-row">
     <div class="case-badge {c.badge_class}">{c.badge}</div>
     {json_only_pill}
   </div>
-  <h3>{c.label_ua}</h3>
-  <p>{c.summary_ua}</p>
+  <h3>{_html.escape(c.label_ua)}</h3>
+  <p>{_html.escape(c.summary_ua)}</p>
   <div class="case-foot">{c.file}</div>
 </a>"""
+            )
+        cards_html = "\n".join(cards)
+        label = d[sort_key]
+        case_lists.append(
+            f'<section class="case-list" data-disease-id="{_html.escape(d["disease_id"])}" hidden>\n'
+            f'  <header class="case-list-header">\n'
+            f'    <h2>{_html.escape(label)}</h2>\n'
+            f'    <span class="case-list-count">{len(d["items"])} {_examples_word(len(d["items"]))}</span>\n'
+            f'  </header>\n'
+            f'  <div class="case-grid">\n{cards_html}\n  </div>\n'
+            f'</section>'
         )
-    cards_html = "\n".join(cards)
+    case_lists_html = "\n".join(case_lists)
 
     if is_en:
         lead_html = (
-            f'{n_cases} synthetic patient profiles run through the engine. '
-            f'Each click opens a full Plan or Diagnostic Brief as a clinician '
-            f'would see it in tumor-board. If something looks clinically wrong '
-            f'or confusing — <a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">open an issue on GitHub</a> '
-            f'with a link to the specific case.'
+            f'{n_cases} synthetic patient profiles run through the engine, '
+            f'grouped by disease. Pick a disease to see its examples — each '
+            f'click opens a full Plan or Diagnostic Brief as a clinician would '
+            f'see it in tumor-board. If something looks clinically wrong — '
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            f'target="_blank" rel="noopener">open an issue</a>.'
         )
+        page_title = "Sample cases"
+        search_ph = "Search disease…"
+        back_label = "← All diseases"
+        empty_label = "No diseases match your search."
     else:
         lead_html = (
-            f'{n_cases} синтетичних профілів пацієнтів, прогнаних через рушій. '
-            f'Кожен клік відкриває повний Plan або Diagnostic Brief, як його '
-            f'побачить лікар у tumor-board. Якщо щось виглядає клінічно '
-            f'неправильно або дезорієнтує — '
+            f'{n_cases} синтетичних профілів пацієнтів, згрупованих за хворобою. '
+            f'Оберіть хворобу зі списку — кожен клік відкриває повний Plan або '
+            f'Diagnostic Brief, як його побачить лікар у tumor-board. Якщо '
+            f'щось виглядає клінічно неправильно — '
             f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">відкрий issue на GitHub</a> '
-            f'з посиланням на конкретний кейс.'
+            f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
-
-    category_order_js = "[" + ",".join(
-        f'"{key}"' for key, _ua, _en in CASE_CATEGORIES
-    ) + "]"
+        page_title = "Готові приклади"
+        search_ph = "Шукати хворобу…"
+        back_label = "← Усі хвороби"
+        empty_label = "Жодна хвороба не підходить під запит."
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Sample cases</title>
+<title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
@@ -1119,30 +1418,30 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 {_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
-  <h1>{'Sample cases' if is_en else 'Готові приклади'}</h1>
+  <h1>{page_title}</h1>
   <p class="lead">{lead_html}</p>
 
-  <div class="case-controls">
-    <div class="case-chips" role="group" aria-label="{'Filter by category' if is_en else 'Фільтр за класифікацією'}">
-    {chips_html}
+  <!-- Stage 1: disease grid (default visible) -->
+  <section id="diseaseStage" class="disease-stage">
+    <div class="disease-search-row">
+      <input type="search" id="diseaseSearch" class="disease-search"
+             placeholder="{search_ph}" autocomplete="off"
+             aria-label="{search_ph}">
+      <span class="disease-search-count" id="diseaseSearchCount">{len(diseases)}</span>
     </div>
-    <label class="case-sort">
-      <span>{sort_label}:</span>
-      <select id="caseSort">
-        <option value="default">{sort_default}</option>
-        <option value="alpha">{sort_alpha}</option>
-        <option value="category">{sort_category}</option>
-      </select>
-    </label>
-  </div>
-
-  <section class="case-grid" id="caseGrid">
-    {cards_html}
+    <div class="disease-tile-grid" id="diseaseTileGrid">
+    {disease_tiles_html}
+    </div>
+    <p class="disease-empty" id="diseaseEmpty" hidden>{empty_label}</p>
   </section>
 
-  <p class="case-empty" id="caseEmpty" hidden>
-    {'No cases in this category.' if is_en else 'У цій категорії немає прикладів.'}
-  </p>
+  <!-- Stage 2: case list for the selected disease (hidden by default) -->
+  <section id="caseStage" class="case-stage" hidden>
+    <button type="button" class="case-back-btn" id="caseBackBtn">{back_label}</button>
+    <div id="caseListContainer">
+    {case_lists_html}
+    </div>
+  </section>
 
   <section class="kb-stats">
     {stats_widget_html}
@@ -1157,55 +1456,70 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 
 <script>
 (function() {{
-  var grid = document.getElementById("caseGrid");
-  var empty = document.getElementById("caseEmpty");
-  var chips = document.querySelectorAll(".case-chip");
-  var sort = document.getElementById("caseSort");
-  var cards = Array.prototype.slice.call(grid.querySelectorAll(".case-card"));
-  var categoryOrder = {category_order_js};
-  var activeFilter = "all";
+  var diseaseStage = document.getElementById("diseaseStage");
+  var caseStage = document.getElementById("caseStage");
+  var tileGrid = document.getElementById("diseaseTileGrid");
+  var tiles = Array.prototype.slice.call(tileGrid.querySelectorAll(".disease-tile"));
+  var search = document.getElementById("diseaseSearch");
+  var searchCount = document.getElementById("diseaseSearchCount");
+  var emptyMsg = document.getElementById("diseaseEmpty");
+  var backBtn = document.getElementById("caseBackBtn");
+  var listContainer = document.getElementById("caseListContainer");
+  var lists = Array.prototype.slice.call(listContainer.querySelectorAll(".case-list"));
 
-  function applyFilter() {{
+  function showDiseaseStage() {{
+    caseStage.hidden = true;
+    diseaseStage.hidden = false;
+    lists.forEach(function(l) {{ l.hidden = true; }});
+    if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+    // Restore scroll to top of stage so user sees the search bar.
+    diseaseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function showDiseaseCases(diseaseId) {{
+    var found = false;
+    lists.forEach(function(l) {{
+      var match = l.dataset.diseaseId === diseaseId;
+      l.hidden = !match;
+      if (match) found = true;
+    }});
+    if (!found) return;
+    diseaseStage.hidden = true;
+    caseStage.hidden = false;
+    if (history.replaceState) history.replaceState(null, "", "#" + encodeURIComponent(diseaseId));
+    caseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function applySearch() {{
+    var q = (search.value || "").trim().toLowerCase();
     var visible = 0;
-    cards.forEach(function(card) {{
-      var match = activeFilter === "all" || card.dataset.category === activeFilter;
-      card.style.display = match ? "" : "none";
+    tiles.forEach(function(t) {{
+      var blob = t.dataset.search || "";
+      var match = !q || blob.indexOf(q) !== -1;
+      t.style.display = match ? "" : "none";
       if (match) visible++;
     }});
-    empty.hidden = visible !== 0;
+    searchCount.textContent = visible;
+    emptyMsg.hidden = visible !== 0;
   }}
 
-  function applySort() {{
-    var mode = sort.value;
-    var sorted = cards.slice();
-    if (mode === "alpha") {{
-      sorted.sort(function(a, b) {{
-        return a.dataset.name.localeCompare(b.dataset.name, "uk");
-      }});
-    }} else if (mode === "category") {{
-      sorted.sort(function(a, b) {{
-        var ai = categoryOrder.indexOf(a.dataset.category);
-        var bi = categoryOrder.indexOf(b.dataset.category);
-        if (ai !== bi) return ai - bi;
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }} else {{
-      sorted.sort(function(a, b) {{
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }}
-    sorted.forEach(function(card) {{ grid.appendChild(card); }});
-  }}
-
-  chips.forEach(function(chip) {{
-    chip.addEventListener("click", function() {{
-      chips.forEach(function(c) {{ c.classList.remove("is-active"); }});
-      chip.classList.add("is-active");
-      activeFilter = chip.dataset.filter;
-      applyFilter();
+  tiles.forEach(function(t) {{
+    t.addEventListener("click", function() {{
+      showDiseaseCases(t.dataset.diseaseId);
     }});
   }});
-  sort.addEventListener("change", applySort);
+  backBtn.addEventListener("click", showDiseaseStage);
+  search.addEventListener("input", applySearch);
+
+  // Deep-link support: gallery.html#DIS-DLBCL-NOS opens that disease.
+  function applyHash() {{
+    var h = window.location.hash.replace(/^#/, "");
+    if (!h) {{ showDiseaseStage(); return; }}
+    try {{ h = decodeURIComponent(h); }} catch (e) {{}}
+    showDiseaseCases(h);
+  }}
+  window.addEventListener("hashchange", applyHash);
+  applyHash();
 }})();
 </script>
 </body>
@@ -1219,10 +1533,25 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 _PYODIDE_VERSION = "0.26.4"
 
 
-def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
+def render_try(
+    *,
+    target_lang: str = "uk",
+    bundle_version: str = "",
+    questionnaires_manifest: list = None,
+    examples_manifest: list = None,
+) -> str:
     # Pyodide assets live at site root — root-relative paths work for both
-    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle +
-    # examples.json + questionnaires.json are single shared copies.
+    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle is
+    # a single shared copy.
+    #
+    # Dropdown manifests (~15 KB total) are inlined as JS constants so the
+    # form populates instantly. Full questionnaires.json (~640 KB) and
+    # examples.json (~230 KB) are lazy-fetched only after the user selects
+    # an option — saves ~870 KB on first paint.
+    qm = questionnaires_manifest if questionnaires_manifest is not None else []
+    em = examples_manifest if examples_manifest is not None else []
+    qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
+    em_json = json.dumps(em, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
@@ -1244,6 +1573,14 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     даних.</strong> Чернетка зберігається у browser localStorage.
   </p>
 
+  <!-- Top status banner — prominent, sticky-ish, animated while loading
+       so the user sees that something is happening even when the engine
+       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+    <span class="status-top-spinner" aria-hidden="true"></span>
+    <span class="status-top-text">Завантажую опитувальники…</span>
+  </div>
+
   <div class="quest-toolbar">
     <label class="qt-label">
       Хвороба
@@ -1264,6 +1601,54 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     </div>
     <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
   </div>
+
+  <!-- Early-paint warmup: a tiny synchronous script that runs before the
+       module-script below. Populates dropdowns from a localStorage cache
+       (written on the previous successful boot) so repeat visitors see
+       a filled dropdown the moment the toolbar renders, without waiting
+       for the Pyodide-importing module script to download + parse. The
+       module script later re-renders from the inline manifest, which
+       wins if the cached version is stale. -->
+  <script>
+  (function() {{
+    try {{
+      var raw = localStorage.getItem('openonco-manifests-v1');
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      var ds = document.getElementById('diseaseSelect');
+      if (ds && data && Array.isArray(data.questionnaires)) {{
+        var frag = document.createDocumentFragment();
+        var ph = document.createElement('option');
+        ph.value = ''; ph.textContent = '— оберіть —';
+        frag.appendChild(ph);
+        data.questionnaires.forEach(function(q, i) {{
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = q.title;
+          frag.appendChild(opt);
+        }});
+        ds.innerHTML = '';
+        ds.appendChild(frag);
+        ds.dataset.warmedUp = '1';
+      }}
+      var es = document.getElementById('exampleSelect');
+      if (es && data && Array.isArray(data.examples)) {{
+        var frag2 = document.createDocumentFragment();
+        var ph2 = document.createElement('option');
+        ph2.value = ''; ph2.textContent = '— оберіть приклад —';
+        frag2.appendChild(ph2);
+        data.examples.forEach(function(ex, i) {{
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = ex.label;
+          frag2.appendChild(opt);
+        }});
+        es.innerHTML = '';
+        es.appendChild(frag2);
+      }}
+    }} catch (e) {{ /* silent */ }}
+  }})();
+  </script>
 
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
@@ -1367,7 +1752,7 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 
   <footer class="page-foot">
     Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
-    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine.zip</code>.
+    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine-core.zip</code> + per-disease modules.
   </footer>
 </main>
 
@@ -1396,12 +1781,25 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 </div>
 
 <script type="module">
-import {{ loadPyodide }} from "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs";
+// Pyodide is loaded lazily on first Generate-click so a slow CDN fetch
+// (~few-100 KB module + parse) doesn't block dropdown population.
+// Static `import …` would gate the entire module-script body on
+// pyodide.mjs being fetched & parsed — meaning the form looked frozen
+// on cold visits even though the manifests are already in this HTML.
+let loadPyodide = null;
+async function ensurePyodideLoader() {{
+  if (loadPyodide) return loadPyodide;
+  const mod = await import("https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs");
+  loadPyodide = mod.loadPyodide;
+  return loadPyodide;
+}}
 
 const STORAGE_KEY = 'openonco-try-draft-v1';
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
 const status = document.getElementById('status');
+const statusTop = document.getElementById('statusTop');
+const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -1442,20 +1840,24 @@ const initStagesEl = document.getElementById('initStages');
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
 let enginReady = false;
-// CSD-6E: bundle lazy-load state. `bundleIndex` is the parsed index
-// (or null if we fell back to the monolithic bundle); `coreBundleLoaded`
-// is set after the first core (or monolithic) extract; `loadedDiseases`
-// remembers which per-disease modules we've already merged so re-runs
-// against the same disease don't re-fetch.
+// CSD-6E + CSD-9C: bundle lazy-load state. `bundleIndex` is the parsed
+// index (resolved from /openonco-engine-index.json); `coreBundleLoaded`
+// is set after the first core extract; `loadedDiseases` remembers which
+// per-disease modules we've already merged so re-runs against the same
+// disease don't re-fetch. The legacy monolithic fallback was retired in
+// CSD-9C — lazy-load is the only path now.
 const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
 const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
-const FALLBACK_MONOLITHIC_URL = '/openonco-engine.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
-let usingMonolithicFallback = false;
 const loadedDiseases = new Set();
-let questionnaires = [];     // loaded from /questionnaires.json
-let examples = [];           // loaded from /examples.json
+// Build-time manifests — instant dropdown population, no fetch.
+const QUESTIONNAIRES_MANIFEST = {qm_json};
+const EXAMPLES_MANIFEST = {em_json};
+let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
+let examples = null;         // lazy-fetched from /examples.json on first need
+let _questionnairesPromise = null;
+let _examplesPromise = null;
 let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
@@ -1492,9 +1894,33 @@ let planDirty = false;
 let activeExampleCaseId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function setStatus(msg, kind = 'info') {{
+function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
+  // Mirror to the prominent top banner.
+  //  topMode='busy'  → spinner, blue
+  //  topMode='ok'    → green ✓
+  //  topMode='warn'  → amber
+  //  topMode='hide'  → hide top banner (sidebar still updates)
+  //  topMode='auto'  → kind=info shows busy, ok→green, warn→amber
+  if (!statusTop || !statusTopText) return;
+  let mode = topMode;
+  if (mode === 'auto') {{
+    if (kind === 'ok') mode = 'ok';
+    else if (kind === 'warn') mode = 'warn';
+    else if (!msg) mode = 'hide';
+    else mode = 'busy';
+  }}
+  if (mode === 'hide' || !msg) {{
+    statusTop.hidden = true;
+    return;
+  }}
+  statusTop.hidden = false;
+  statusTopText.textContent = msg;
+  statusTop.dataset.kind = kind;
+  statusTop.classList.toggle('is-busy', mode === 'busy');
+  statusTop.classList.toggle('is-ok', mode === 'ok');
+  statusTop.classList.toggle('is-warn', mode === 'warn');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -2245,25 +2671,35 @@ function updateImpactPanel(result) {{
   // and the engine will surface the gaps.
 }}
 
-// ── Bundle lazy-load (CSD-6E) ─────────────────────────────────────────────
+// ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
 // Two-tier bundle: fetch openonco-engine-core.zip first (~1.4 MB), then
 // fetch the matching per-disease module (~15-40 KB) once we know the
-// patient's disease_id. If the index 404s (older deploys, ad-blockers
-// hitting /openonco-engine-*), we fall back to the monolithic zip and
-// behave exactly like before.
+// patient's disease_id. CSD-9C (2026-04-27) drops the legacy monolithic
+// fallback — the lazy-load path is the canonical path now. The index
+// fetch retries once on transient failure before giving up; if that
+// fails too we surface a clear error rather than silently downloading
+// 3+ MB of fallback that no longer ships.
 
 async function loadBundleIndex() {{
   if (bundleIndex !== null) return bundleIndex;
-  try {{
-    const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
-    if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
-    bundleIndex = await r.json();
-    return bundleIndex;
-  }} catch (e) {{
-    console.warn('[OpenOnco] bundle index unavailable — falling back to monolithic:', e);
-    bundleIndex = null;
-    return null;
+  // One retry to absorb a transient CDN hiccup before failing the load.
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {{
+    try {{
+      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+      if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
+      bundleIndex = await r.json();
+      return bundleIndex;
+    }} catch (e) {{
+      lastErr = e;
+      if (attempt === 0) {{
+        console.warn('[OpenOnco] bundle index fetch failed — retrying once:', e);
+        await yieldToBrowser(250);
+      }}
+    }}
   }}
+  console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
+  throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
 }}
 
 // Resolve a disease_id from whatever the patient profile / form gives us.
@@ -2290,29 +2726,20 @@ function resolveDiseaseId(profile) {{
 
 async function loadCoreBundle() {{
   if (coreBundleLoaded) return;
+  // CSD-9C: index is required — monolithic fallback retired.
   await loadBundleIndex();
-  if (bundleIndex && bundleIndex.core) {{
-    setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
-    const ver = bundleIndex.core_version || '';
-    const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
-    const buf = await r.arrayBuffer();
-    await yieldToBrowser();
-    pyodide.unpackArchive(buf, 'zip');
-    coreBundleLoaded = true;
-    return;
+  if (!bundleIndex || !bundleIndex.core) {{
+    throw new Error('Bundle index missing core entry — cannot load engine');
   }}
-  // Fallback: legacy monolithic bundle. Has every disease, so
-  // loadDiseaseModule() becomes a no-op.
-  setStatus('Завантажую двигун OpenOnco (повний)…');
-  const resp = await fetch(FALLBACK_MONOLITHIC_URL + '?v={bundle_version}');
-  if (!resp.ok) throw new Error('Monolithic bundle fetch HTTP ' + resp.status);
-  const buf = await resp.arrayBuffer();
+  setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+  const ver = bundleIndex.core_version || '';
+  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
+  const buf = await r.arrayBuffer();
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
   coreBundleLoaded = true;
-  usingMonolithicFallback = true;
 }}
 
 // Per-disease module: tiny zip with the disease's indications, regimens,
@@ -2322,7 +2749,6 @@ async function loadCoreBundle() {{
 // time per slot and drop silently on quota errors.
 async function loadDiseaseModule(diseaseId) {{
   if (!diseaseId) return;
-  if (usingMonolithicFallback) return;             // already have everything
   if (loadedDiseases.has(diseaseId)) return;
   if (!bundleIndex || !bundleIndex.diseases) return;
   const relUrl = bundleIndex.diseases[diseaseId];
@@ -2365,9 +2791,9 @@ async function loadDiseaseModule(diseaseId) {{
   // every disease swap.
   try {{
     await pyodide.runPythonAsync(
-      "from knowledge_base.engine import apply_disease_module\n" +
-      "from pathlib import Path\n" +
-      "apply_disease_module(Path('knowledge_base/hosted/content'))\n"
+      "from knowledge_base.engine import apply_disease_module\\n" +
+      "from pathlib import Path\\n" +
+      "apply_disease_module(Path('knowledge_base/hosted/content'))\\n"
     );
   }} catch (e) {{
     console.warn('[OpenOnco] apply_disease_module failed (continuing):', e);
@@ -2400,7 +2826,8 @@ async function ensureEngine() {{
     initStageStart(stage);
     setStatus('Завантажую Pyodide…');
     await yieldToBrowser(50);
-    pyodide = await loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
+    const _loadPyodide = await ensurePyodideLoader();
+    pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
     initStageDone(stage);
 
     stage = 'pydeps';
@@ -2419,11 +2846,10 @@ await micropip.install(['pydantic', 'pyyaml'])
     initStageStart(stage);
     setStatus('Завантажую двигун OpenOnco…');
     await yieldToBrowser(50);
-    // CSD-6E: lazy-load core bundle (~1.4 MB) instead of monolithic
-    // (~1.8 MB). loadCoreBundle() falls back to the monolithic zip if
-    // the index is unreachable, so old deploys / blocked requests still
-    // work. Per-disease modules are fetched later in runEngine() once
-    // the patient's disease_id is known.
+    // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
+    // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
+    // disease modules are the only path. Per-disease modules are
+    // fetched later in runEngine() once disease_id is known.
     await loadCoreBundle();
     initStageDone(stage);
 
@@ -2504,9 +2930,9 @@ async function runEngine() {{
       return;
     }}
     // CSD-6E: lazy-fetch the per-disease module before generate. No-op
-    // when running on the monolithic fallback or when the disease has
-    // no per-disease bundle. Failures are surfaced but non-fatal —
-    // generate_plan() will fall back to whatever's already loaded.
+    // when the disease has no per-disease bundle (its content is in
+    // core). Failures are surfaced but non-fatal — generate_plan()
+    // will fall back to whatever's already loaded.
     try {{
       const did = resolveDiseaseId(profile);
       if (did) await loadDiseaseModule(did);
@@ -2634,23 +3060,54 @@ function yieldToBrowser(ms) {{
 }}
 
 // ── Boot ──────────────────────────────────────────────────────────────────
-async function loadAssets() {{
-  setStatus('Завантажую опитувальники…');
-  const [qResp, exResp] = await Promise.all([
-    fetch('/questionnaires.json'),
-    fetch('/examples.json'),
-  ]);
-  questionnaires = await qResp.json();
-  examples = await exResp.json();
+//
+// Lazy-loaders for full questionnaire/example data. Dropdowns populate
+// instantly from the build-time manifests above; the full ~870 KB payload
+// is fetched only after the user picks something.
+async function ensureQuestionnaires() {{
+  if (questionnaires) return questionnaires;
+  if (!_questionnairesPromise) {{
+    _questionnairesPromise = fetch('/questionnaires.json')
+      .then(r => r.json())
+      .then(data => {{ questionnaires = data; return data; }});
+  }}
+  return _questionnairesPromise;
+}}
+async function ensureExamples() {{
+  if (examples) return examples;
+  if (!_examplesPromise) {{
+    _examplesPromise = fetch('/examples.json')
+      .then(r => r.json())
+      .then(data => {{ examples = data; return data; }});
+  }}
+  return _examplesPromise;
+}}
 
-  // Disease selector
+// Persist dropdown manifests across visits. Read by the early-paint
+// warmup at the top of the script body, written by loadAssets after a
+// successful boot so the next cold visit can paint dropdowns from
+// localStorage even before the new HTML's inline manifest is parsed.
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v1';
+function saveManifestsToCache() {{
+  try {{
+    localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({{
+      ts: Date.now(),
+      questionnaires: QUESTIONNAIRES_MANIFEST,
+      examples: EXAMPLES_MANIFEST,
+    }}));
+  }} catch (e) {{ /* quota or private mode — silent skip */ }}
+}}
+
+async function loadAssets() {{
+  // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
-  questionnaires.forEach((q, i) => {{
+  QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = q.title;
     diseaseSelect.appendChild(opt);
   }});
+  saveManifestsToCache();
 
   // Examples selector — initial population shows all; narrows once a
   // disease is picked.
@@ -2659,10 +3116,12 @@ async function loadAssets() {{
   // Restore draft
   const draft = loadDraft();
   if (draft && draft.questId) {{
-    const idx = questionnaires.findIndex(q => q.id === draft.questId);
+    const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
       diseaseSelect.value = idx;
-      renderForm(questionnaires[idx]);
+      // Draft restore needs full data — lazy-fetch now
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[idx]);
       repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {{
@@ -2682,7 +3141,8 @@ async function loadAssets() {{
       updateImpactPanelLocal();
     }}
   }} else {{
-    setStatus('Оберіть хворобу зі списку, щоб почати.');
+    // Initial load done — hide the top busy banner; sidebar still shows hint.
+    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
@@ -2696,9 +3156,11 @@ async function loadAssets() {{
 // matches the active questionnaire — otherwise the picker overwhelms with
 // 35 cases for which we don't have a form.
 function repopulateExamples(activeQuestIdx) {{
+  // Filter from manifest only — no need to await full examples payload
+  // just to populate a dropdown (manifest carries label + disease_icd).
   const wantCode = activeQuestIdx == null
     ? null
-    : ((questionnaires[activeQuestIdx].fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}}).disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -2707,10 +3169,9 @@ function repopulateExamples(activeQuestIdx) {{
     : '— оберіть приклад для цієї хвороби —';
   exampleSelect.appendChild(placeholder);
   let n = 0;
-  examples.forEach((ex, i) => {{
+  EXAMPLES_MANIFEST.forEach((ex, i) => {{
     if (wantCode != null) {{
-      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
-      if (code !== wantCode) return;
+      if (ex.disease_icd !== wantCode) return;
     }}
     const opt = document.createElement('option');
     opt.value = i;
@@ -2728,7 +3189,7 @@ function repopulateExamples(activeQuestIdx) {{
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
-diseaseSelect.addEventListener('change', () => {{
+diseaseSelect.addEventListener('change', async () => {{
   const i = diseaseSelect.value;
   // Switching disease invalidates whatever plan was on screen — there is
   // no longer any example or generated plan that matches the new form.
@@ -2740,7 +3201,8 @@ diseaseSelect.addEventListener('change', () => {{
     return;
   }}
   const idx = parseInt(i, 10);
-  renderForm(questionnaires[idx]);
+  const fullList = await ensureQuestionnaires();
+  renderForm(fullList[idx]);
   repopulateExamples(idx);
   exampleSelect.value = '';
   saveDraft();
@@ -2749,13 +3211,11 @@ diseaseSelect.addEventListener('change', () => {{
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology stamped in the example's disease block
-  // (questionnaires carry the same code under fixed_fields.disease).
+  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
+  // to wait for full questionnaires payload.
   const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
   if (!code) return -1;
-  return questionnaires.findIndex(q =>
-    ((q.fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology === code
-  );
+  return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
 
 function getByPath(obj, dotted) {{
@@ -2787,10 +3247,11 @@ function populateFormFromProfile(quest, profile) {{
   }}
 }}
 
-exampleSelect.addEventListener('change', () => {{
+exampleSelect.addEventListener('change', async () => {{
   const i = exampleSelect.value;
   if (i === '') return;
-  const ex = examples[parseInt(i, 10)];
+  const fullExamples = await ensureExamples();
+  const ex = fullExamples[parseInt(i, 10)];
   setError(null);
   // Prefer form mode: find a questionnaire that matches this example's
   // disease and populate it. Fall back to JSON view only when no
@@ -2798,10 +3259,11 @@ exampleSelect.addEventListener('change', () => {{
   const qIdx = findQuestionnaireForProfile(ex.json);
   if (qIdx >= 0) {{
     diseaseSelect.value = qIdx;
-    renderForm(questionnaires[qIdx]);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[qIdx]);
     repopulateExamples(qIdx);
     exampleSelect.value = i;
-    populateFormFromProfile(questionnaires[qIdx], ex.json);
+    populateFormFromProfile(fullList[qIdx], ex.json);
     setMode('form');
     // Lock filled fields and reveal the personalize banner so the user
     // can opt-in to editing the example's data.
@@ -2897,9 +3359,10 @@ async function loadFromUrlHash() {{
     const qIdx = findQuestionnaireForProfile(patient);
     if (qIdx >= 0) {{
       diseaseSelect.value = qIdx;
-      renderForm(questionnaires[qIdx]);
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
       repopulateExamples(qIdx);
-      populateFormFromProfile(questionnaires[qIdx], patient);
+      populateFormFromProfile(fullList[qIdx], patient);
       setMode('form');
       lockFilledFields();
       showExampleLockBanner();
@@ -4486,6 +4949,308 @@ def _render_capabilities_en(stats) -> str:
 """
 
 
+# ── Diseases coverage page ────────────────────────────────────────────────
+
+
+def _build_disease_coverage_rows() -> list[dict]:
+    """Bridge to scripts/disease_coverage_matrix.py — re-uses its
+    per_disease_metrics walker so the page + the JSON snapshot + the
+    plan markdown all share one source of truth."""
+    from scripts.disease_coverage_matrix import per_disease_metrics
+    return per_disease_metrics(REPO_ROOT / "knowledge_base" / "hosted" / "content")
+
+
+_DISEASES_PAGE_LABELS = {
+    "uk": {
+        "title": "Хвороби · OpenOnco",
+        "h1": "Хвороби в базі знань",
+        "lead": (
+            "Покриття OpenOnco по 65 онкологічних діагнозах: біомаркери, "
+            "препарати, indications/regimens/RedFlags, наявність алгоритму та "
+            "опитувальника, % наповненості і % верифікації Clinical Co-Lead."
+        ),
+        "sum_diseases": "Усього діагнозів",
+        "sum_avg_fill": "Сер. наповненість",
+        "sum_avg_ver": "Сер. верифікація",
+        "sum_with_signed": "З ≥1 верифікованим indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "З 1L алгоритмом",
+        "sum_algo_2l": "З 2L+ алгоритмом",
+        "fam_lymphoid": "Лімфоїдна гематологія",
+        "fam_myeloid": "Мієлоїдна гематологія",
+        "fam_solid": "Солідні пухлини",
+        "th_disease": "Хвороба", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Метрики",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
+            "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags для цієї хвороби",
+            "<b>1L / 2L</b> — наявність Algorithm для першої / другої+ лінії",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — відсутній",
+            "<b>Fill %</b> — composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % indications цієї хвороби з reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % переважно 0%</b> — діє dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) до призначення "
+            "Clinical Co-Leads. Це навмисно, не bug."
+        ),
+        "footer_data": "Дані оновлюються при кожному build_site.py запуску. JSON snapshot:",
+    },
+    "en": {
+        "title": "Diseases · OpenOnco",
+        "h1": "Diseases in the Knowledge Base",
+        "lead": (
+            "OpenOnco coverage across 65 oncology diagnoses: biomarkers, "
+            "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
+            "presence, % fill and % Clinical Co-Lead verification."
+        ),
+        "sum_diseases": "Total diseases",
+        "sum_avg_fill": "Avg fill",
+        "sum_avg_ver": "Avg verified",
+        "sum_with_signed": "With ≥1 verified indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "With 1L algorithm",
+        "sum_algo_2l": "With 2L+ algorithm",
+        "fam_lymphoid": "Lymphoid hematologic",
+        "fam_myeloid": "Myeloid hematologic",
+        "fam_solid": "Solid tumors",
+        "th_disease": "Disease", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Metric definitions",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
+            "<b>#Drug</b> — distinct drugs in this disease's regimens",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags for this disease",
+            "<b>1L / 2L</b> — Algorithm presence for first-line / second-line+",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — absent",
+            "<b>Fill %</b> — composite over 8 entity types: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % of this disease's indications with reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % is mostly 0%</b> — dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
+            "until Clinical Co-Leads are appointed. This is intentional, not a bug."
+        ),
+        "footer_data": "Data refreshes on every build_site.py run. JSON snapshot:",
+    },
+}
+
+
+def _disease_row_html(r: dict, lbl: dict) -> str:
+    yes, no = lbl["yes"], lbl["no"]
+    algo_1l = yes if r["algo_1l"] else no
+    algo_2l = yes if r["algo_2l"] else no
+    if r["has_quest"]:
+        quest = "STUB" if r["is_stub_quest"] else yes
+    else:
+        quest = no
+    fill_class = "fill-high" if r["fill_pct"] >= 75 else ("fill-mid" if r["fill_pct"] >= 50 else "fill-low")
+    ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
+    short_id = r["id"].replace("DIS-", "")
+    name = (r["name"] or "")[:48]
+    return (
+        '<tr>'
+        f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
+        f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
+        f'<td class="num">{r["n_bios"]}</td>'
+        f'<td class="num">{r["n_drugs"]}</td>'
+        f'<td class="num">{r["n_inds"]}</td>'
+        f'<td class="num">{r["n_regs"]}</td>'
+        f'<td class="num">{r["n_rfs"]}</td>'
+        f'<td class="ck">{algo_1l}</td>'
+        f'<td class="ck">{algo_2l}</td>'
+        f'<td class="ck quest-cell quest-{("stub" if r["is_stub_quest"] else "real" if r["has_quest"] else "none")}">{quest}</td>'
+        f'<td class="num pct {fill_class}"><strong>{r["fill_pct"]}%</strong></td>'
+        f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
+        '</tr>'
+    )
+
+
+def render_diseases(stats, *, target_lang: str = "uk") -> str:
+    """Per-disease coverage page. Pulls live metrics from
+    disease_coverage_matrix.per_disease_metrics so this page is the
+    canonical UI surface for the same data exported as
+    /disease_coverage.json."""
+    import html as _html
+    rows = _build_disease_coverage_rows()
+    lbl = _DISEASES_PAGE_LABELS.get(target_lang, _DISEASES_PAGE_LABELS["uk"])
+
+    n = len(rows)
+    avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
+    avg_ver = round(sum(r["verified_pct"] for r in rows) / max(1, n), 1)
+    n_signed = sum(1 for r in rows if r["verified_pct"] > 0)
+    n_quest_real = sum(1 for r in rows if r["has_quest"] and not r["is_stub_quest"])
+    n_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
+    n_algo_1l = sum(1 for r in rows if r["algo_1l"])
+    n_algo_2l = sum(1 for r in rows if r["algo_2l"])
+
+    # Group by family
+    by_family: dict[str, list[dict]] = {
+        "Лімфоїдна гематологія": [],
+        "Мієлоїдна гематологія": [],
+        "Солідні пухлини": [],
+    }
+    for r in rows:
+        by_family.setdefault(r["family"], []).append(r)
+
+    fam_label_map = {
+        "Лімфоїдна гематологія": lbl["fam_lymphoid"],
+        "Мієлоїдна гематологія": lbl["fam_myeloid"],
+        "Солідні пухлини": lbl["fam_solid"],
+    }
+
+    family_blocks: list[str] = []
+    for fam_key in ("Лімфоїдна гематологія", "Мієлоїдна гематологія", "Солідні пухлини"):
+        flist = by_family.get(fam_key) or []
+        if not flist:
+            continue
+        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], x["name"]))
+        rows_html = "\n".join(_disease_row_html(r, lbl) for r in flist_sorted)
+        f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
+        f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
+        family_blocks.append(f"""
+<section class="dis-family">
+  <h2>{fam_label_map[fam_key]} <span class="fam-count">({len(flist)})</span></h2>
+  <table class="dis-table">
+    <thead><tr>
+      <th class="th-disease">{lbl["th_disease"]}</th>
+      <th>{lbl["th_icd"]}</th>
+      <th class="th-num">{lbl["th_bio"]}</th>
+      <th class="th-num">{lbl["th_drug"]}</th>
+      <th class="th-num">{lbl["th_ind"]}</th>
+      <th class="th-num">{lbl["th_reg"]}</th>
+      <th class="th-num">{lbl["th_rf"]}</th>
+      <th class="th-ck">{lbl["th_1l"]}</th>
+      <th class="th-ck">{lbl["th_2l"]}</th>
+      <th class="th-ck">{lbl["th_quest"]}</th>
+      <th class="th-num">{lbl["th_fill"]}</th>
+      <th class="th-num">{lbl["th_ver"]}</th>
+    </tr></thead>
+    <tbody>
+{rows_html}
+    </tbody>
+    <tfoot><tr>
+      <td colspan="10"><em>avg</em></td>
+      <td class="num pct"><em>{f_fill}%</em></td>
+      <td class="num pct"><em>{f_ver}%</em></td>
+    </tr></tfoot>
+  </table>
+</section>
+""")
+
+    metrics_li = "\n".join(f"<li>{m}</li>" for m in lbl["metrics"])
+
+    top_bar = _render_top_bar(
+        active="diseases", target_lang=target_lang,
+        lang_switch_href=_lang_switch_href("diseases", target_lang),
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{target_lang}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{_html.escape(lbl['title'])}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<style>
+.dis-summary {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 24px; }}
+.dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
+.dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
+.dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-family {{ margin: 28px 0; }}
+.dis-family h2 {{ margin-bottom: 8px; }}
+.dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
+.dis-table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
+.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }}
+.dis-table td {{ padding: 6px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }}
+.dis-table tr:nth-child(even) td {{ background: var(--gray-50); }}
+.dis-table tfoot td {{ background: var(--gray-100); font-style: italic; color: var(--gray-700); }}
+.dis-table .num {{ text-align: right; font-family: var(--font-mono); }}
+.dis-table .ck {{ text-align: center; }}
+.dis-table .mono {{ font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }}
+.dis-table .dis-name {{ color: var(--gray-700); font-weight: normal; }}
+.dis-table .pct {{ font-weight: 600; }}
+.dis-table .pct.fill-high {{ color: #166534; }}
+.dis-table .pct.fill-mid {{ color: #b45309; }}
+.dis-table .pct.fill-low {{ color: #991b1b; }}
+.dis-table .pct.ver-high {{ color: #166534; background: #ecfdf5; }}
+.dis-table .pct.ver-mid {{ color: #b45309; }}
+.dis-table .pct.ver-low {{ color: var(--gray-500); }}
+.quest-cell.quest-stub {{ color: #b45309; font-size: 10px; font-family: var(--font-mono); }}
+.quest-cell.quest-real {{ color: #166534; font-weight: 600; }}
+.quest-cell.quest-none {{ color: var(--gray-500); }}
+.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin-top: 28px; font-size: 13px; }}
+.dis-metrics ul {{ padding-left: 20px; line-height: 1.7; }}
+.dis-metrics .verified-note {{ background: #fef3c7; border-left: 3px solid #d97706; padding: 10px 14px; margin-top: 12px; border-radius: 4px; color: #92400e; }}
+.dis-footer-data {{ font-size: 12px; color: var(--gray-500); margin-top: 20px; }}
+.dis-footer-data a {{ font-family: var(--font-mono); }}
+@media (max-width: 800px) {{ .dis-summary {{ grid-template-columns: repeat(2, 1fr); }} .dis-table {{ font-size: 11px; }} }}
+</style>
+</head>
+<body>
+{top_bar}
+<main>
+  <section class="info-page">
+    <h1>{_html.escape(lbl['h1'])}</h1>
+    <p class="lead">{_html.escape(lbl['lead'])}</p>
+
+    <div class="dis-summary">
+      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_ver']}</div><div class="v">{avg_ver}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_with_signed']}</div><div class="v">{n_signed}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_real']}</div><div class="v">{n_quest_real}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_stub']}</div><div class="v">{n_quest_stub}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
+    </div>
+
+    {''.join(family_blocks)}
+
+    <div class="dis-metrics">
+      <h3>{lbl['metrics_title']}</h3>
+      <ul>
+        {metrics_li}
+      </ul>
+      <div class="verified-note">{lbl['verified_note']}</div>
+    </div>
+
+    <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
+  </section>
+</main>
+</body>
+</html>
+"""
+
+
+def bundle_disease_coverage(output_dir: Path) -> dict:
+    """Write JSON snapshot of per-disease coverage for CI / external tooling.
+    Same source data as the /diseases.html page."""
+    rows = _build_disease_coverage_rows()
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "total_diseases": len(rows),
+        "rows": rows,
+    }
+    out = output_dir / "disease_coverage.json"
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"path": "disease_coverage.json", "count": len(rows)}
+
+
 # ── Limitations page ──────────────────────────────────────────────────────
 
 
@@ -5638,14 +6403,27 @@ def build_site(output_dir: Path) -> dict:
         output_dir, core_version=engine_bundle.get("core_version", ""),
     )
 
+    # Bundle dropdowns BEFORE render_try so /try.html can inline the
+    # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
+    # of questionnaires.json + examples.json on first paint.
+    examples_payload = bundle_examples(output_dir)
+    questionnaires_payload = bundle_questionnaires(output_dir)
+    questionnaires_manifest = questionnaires_payload.get("manifest", [])
+    examples_manifest = examples_payload.get("manifest", [])
+
     # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
     (output_dir / "capabilities.html").write_text(render_capabilities(stats), encoding="utf-8")
     (output_dir / "limitations.html").write_text(render_limitations(stats), encoding="utf-8")
     (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
     (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
+    (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
     (output_dir / "try.html").write_text(
-        render_try(bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     # ── EN build (mirror at /en/) ──
     # Body copy of landing/gallery/try is currently UA — nav + lang attribute
@@ -5660,13 +6438,18 @@ def build_site(output_dir: Path) -> dict:
         render_limitations(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "gallery.html").write_text(
         render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+    (output_dir / "en" / "diseases.html").write_text(
+        render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "try.html").write_text(
-        render_try(target_lang="en", bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            target_lang="en",
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
-
-    examples_payload = bundle_examples(output_dir)
-    questionnaires_payload = bundle_questionnaires(output_dir)
+    disease_coverage_payload = bundle_disease_coverage(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -5677,6 +6460,7 @@ def build_site(output_dir: Path) -> dict:
         "service_worker": sw_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
+        "disease_coverage_payload": disease_coverage_payload,
         "landing_assets": landing_assets,
     }
 

@@ -18,22 +18,25 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-SMZL-INFECTION-SCREENING  # HCV RNA / anti-HCV positive
-        - condition: "HCV RNA detectable (anti-HCV alone insufficient)"
-        - condition: "Compensated liver function (no decompensated cirrhosis)"
+        - finding: "hcv_rna_positive"
+          value: true
+        - none_of:
+            - finding: "decompensated_cirrhosis"
+              value: true
     if_true:
       result: IND-SMZL-1L-HCV-POSITIVE
     if_false:
       next_step: 2
   - step: 2
     evaluate:
-      all_of:
+      any_of:
         - condition: "HCV RNA negative OR no antiviral candidate"
         - condition: "CD20+ histology confirmed"
     if_true:
       result: IND-SMZL-1L-RITUXIMAB
     if_false:
       result: IND-SMZL-1L-RITUXIMAB
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Default rituximab fallback; HCV+ compensated patients have already routed via step 1."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-MZL-2024]
 last_reviewed: "2026-04-27"

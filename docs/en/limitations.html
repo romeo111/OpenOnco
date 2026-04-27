@@ -12,11 +12,11 @@
 <header class="top-bar">
   <div class="brand-line">
     <a href="/en/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Project version">v0.1.0</span>
+    <span class="brand-version" title="Released 2026-04-27">v0.1.1 · 2026-04-27</span>
   </div>
   <nav class="top-nav">
     <a href="/en/">Home</a>
-    <a href="/en/capabilities.html">Capabilities</a><a href="/en/limitations.html" class="active">Limitations</a>
+    <a href="/en/diseases.html">Diseases</a><a href="/en/capabilities.html">Capabilities</a><a href="/en/limitations.html" class="active">Limitations</a>
     <a href="/en/gallery.html">Examples</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -43,11 +43,11 @@
 
     <div class="callout callout-hard">
       <strong>All clinical content is STUB-status.</strong>
-      Reviewer sign-offs ≥ 2: <strong>0/152</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/298</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals before any
       Indication can be considered "published"). Right now everything is
       STUB. This is an architecture demo, not a clinical reference for real
-      patients. Snapshot as of <code>2026-04-26 14:02 UTC</code>.
+      patients. Snapshot as of <code>2026-04-27 15:45 UTC</code>.
     </div>
 
     <div class="info-section">
@@ -145,8 +145,8 @@
           <div class="gap-tag">Gap 5</div>
           <h3>No cumulative-toxicity tracking across lines</h3>
           <p>
-            2L+ algorithms are now in for 35 hematologic diseases
-            (67 2L+ indications), but the profile does not yet
+            2L+ algorithms are now in for 43 hematologic diseases
+            (129 2L+ indications), but the profile does not yet
             carry <code>prior_treatment_history</code> as a structured
             field. A 2L plan for a patient who received bortezomib in 1L
             with grade 2 neuropathy — the engine does not know about the
@@ -233,19 +233,19 @@
     <div class="info-section">
       <h2>4. Coverage limits (current KB state)</h2>
       <p class="info-text">
-        OpenOnco is a work in progress. <strong>52 diseases</strong>
-        are currently modeled (36 hematologic + 16 solid tumors)
+        OpenOnco is a work in progress. <strong>65 diseases</strong>
+        are currently modeled (37 hematologic + 28 solid tumors)
         — far short of the full WHO-HAEM5 / WHO Classification of Tumours.
         Specifically:
       </p>
       <table class="kv-table">
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
-          <tr><td>Diseases with the full chain</td><td>52 / 52</td><td>The rest are partially modeled; the engine may emit "no Algorithm found for disease=X"</td></tr>
-          <tr><td>Indications 1L</td><td>133</td><td>First line covered for all 52 diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>67</td><td>Second-to-fourth line: 34 hematologic diseases (AITL, ALCL, AML, APL, ATLL, B-ALL, BURKITT, CHL, CLL, CML, DLBCL-NOS, ET, FL, HCL, HCV-MZL, HGBL-DH, MCL, MDS-HR, MDS-LR, MF-SEZARY, MM, NK-T-NASAL, NLPBL, NODAL-MZL, PCNSL, PMBCL, PMF, PTCL-NOS, PTLD, PV, SPLENIC-MZL, T-ALL, T-PLL, WM) + 1 solid (RCC). The rest of solid-tumor 2L+ is partial (CRC, breast, urothelial), not systematic.</td></tr>
-          <tr><td>RedFlags</td><td>267</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own RFs added</td></tr>
-          <tr><td>Solid tumors</td><td>16</td><td>BREAST, CERVICAL, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, GBM, HCC, MELANOMA, NSCLC, OVARIAN, PDAC, PROSTATE, RCC, SCLC, UROTHELIAL — mostly 1L. 2L+ and adjuvant contexts are partial.</td></tr>
+          <tr><td>Diseases with the full chain</td><td>64 / 65</td><td>The rest are partially modeled; the engine may emit "no Algorithm found for disease=X"</td></tr>
+          <tr><td>Indications 1L</td><td>173</td><td>First line covered for all 65 diseases</td></tr>
+          <tr><td>Indications 2L+</td><td>129</td><td>Second-to-fourth line: 34 hematologic diseases (AITL, ALCL, AML, APL, ATLL, B-ALL, BURKITT, CHL, CLL, CML, DLBCL-NOS, ET, FL, HCL, HCV-MZL, HGBL-DH, MCL, MDS-HR, MDS-LR, MF-SEZARY, MM, NK-T-NASAL, NLPBL, NODAL-MZL, PCNSL, PMBCL, PMF, PTCL-NOS, PTLD, PV, SPLENIC-MZL, T-ALL, T-PLL, WM) + 9 solid (BREAST, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, MELANOMA, NSCLC, OVARIAN, RCC). The rest of solid-tumor 2L+ is partial (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>RedFlags</td><td>426</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own RFs added</td></tr>
+          <tr><td>Solid tumors</td><td>28</td><td>BREAST, CERVICAL, CHOLANGIOCARCINOMA, CHONDROSARCOMA, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, GBM, GIST, GLIOMA-LOW-GRADE, HCC, HNSCC, IFS, IMT, MELANOMA, MPNST, MTC, NSCLC, OVARIAN, PDAC, PROSTATE, RCC, SALIVARY, SCLC, THYROID-ANAPLASTIC, THYROID-PAPILLARY, UROTHELIAL — mostly 1L. 2L+ and adjuvant contexts are partial.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — separate specialization track</td></tr>
           <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is wired into multimodality Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modeled as a separate entity with technical parameters (dose / fractions / target volumes)</td></tr>
           <tr><td>Surgery plans</td><td>not modeled</td><td>Surgical-oncology indications are absent</td></tr>

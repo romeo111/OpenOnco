@@ -1,0 +1,21 @@
+id: ALGO-THYROID-PAPILLARY-1L
+applicable_to_disease: DIS-THYROID-PAPILLARY
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for RAI-refractory progressive PTC. Trigger: RECIST progression OR symptomatic disease that cannot be controlled by surgery/RAI/RT.
+
+output_indications:
+  - IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+
+default_indication: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

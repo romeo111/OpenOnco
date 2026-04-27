@@ -1,0 +1,60 @@
+id: RF-GIST-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating imatinib / sunitinib / regorafenib / avapritinib for GIST:
+  HBsAg-positive (HBV reactivation reported on TKI-class therapy),
+  anti-HBc-positive (occult HBV — risk on long-duration TKI),
+  HIV-positive (ART coordination, CYP3A4 interactions), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед imatinib / sunitinib / regorafenib / avapritinib при GIST: HBsAg+
+  (повідомлено про реактивацію HBV на TKI-терапії), anti-HBc+ (occult
+  HBV — ризик на тривалій TKI), HIV+ (координація АРТ, CYP3A4-взаємодії)
+  або активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-GIST
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GIST-2025
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HBV reactivation case reports on imatinib (Lok et al; Ikeda et al)
+  prompted FDA label update for monitoring. Standard practice: HBsAg +
+  anti-HBc screening pre-imatinib; if HBsAg+ — entecavir / tenofovir
+  prophylaxis throughout TKI duration (often >3 yr in adjuvant or life-
+  long in metastatic). HIV+: avoid ritonavir-boosted PIs with imatinib /
+  sunitinib (CYP3A4); coordinate ART regimen with infectious disease.
+  Active TB: complete anti-TB before initiating (less urgent than for
+  cytotoxic chemo but still preferred).
+notes_ua: >
+  Описано випадки реактивації HBV на imatinib (Lok та ін.; Ikeda та ін.)
+  — FDA оновив маркування. Стандарт: HBsAg + anti-HBc до imatinib; якщо
+  HBsAg+ — entecavir / tenofovir профілактика на весь час TKI (часто
+  >3 років адʼювантно або довічно при метастатичній). HIV+: уникати
+  ritonavir-boosted PI з imatinib / sunitinib (CYP3A4).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

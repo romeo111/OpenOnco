@@ -1,0 +1,61 @@
+id: RF-MPNST-TRANSFORMATION-PROGRESSION
+definition: >
+  Atypical neurofibromatous neoplasm of uncertain biologic potential
+  (ANNUBP) progression to frank MPNST (CDKN2A/B biallelic loss, increased
+  cellularity, mitotic activity), rapid local progression on AI
+  neoadjuvant, new metastatic disease (lung, pleura, bone), or
+  unresectable recurrence — triggers re-staging, re-biopsy, salvage AI
+  intensification or pazopanib + clinical trial enrollment.
+definition_ua: >
+  Прогресія ANNUBP до явної MPNST (біалельна втрата CDKN2A/B, підвищена
+  клітинність, мітотична активність), швидке локальне прогресування на AI
+  неоадʼюванті, нова метастатична хвороба (легені, плевра, кістки) або
+  нерезектабельний рецидив — тригер до повторного стейджингу, ребіопсії,
+  сальваджу AI або pazopanib + клінічного дослідження.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "annubp_to_mpnst_transition"
+      value: true
+    - finding: "rapid_progression_on_chemo"
+      value: true
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "unresectable_local_recurrence"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-MPNST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Continuum from plexiform NF → ANNUBP → low-grade MPNST → high-grade
+  MPNST is well-described in NF1 patients; CDKN2A/B loss is the
+  inflection point. Surveillance MRI + functional imaging (FDG-PET
+  SUVmax >3) recommended in NF1 for high-burden plexiform NF. Rapid
+  progression on AI: re-biopsy at progression, consider switch to
+  pazopanib (PALETTE; limited MPNST data but FDA-approved for non-GIST
+  STS) or trial. New lung metastases: pulmonary metastasectomy if
+  oligometastatic + adequate lung function. Salvage AI re-induction has
+  diminishing returns; trial enrollment (selumetinib + AI; cabozantinib
+  in NF1-MPNST) preferred.
+notes_ua: >
+  Континуум plexiform NF → ANNUBP → low-grade MPNST → high-grade MPNST
+  у NF1; втрата CDKN2A/B — точка перелому. Контроль MRI + FDG-PET
+  (SUVmax >3) у NF1. Швидке прогресування на AI: ребіопсія, pazopanib
+  (PALETTE; обмежені дані MPNST) або трайл. Нові легеневі метастази:
+  метастазектомія, якщо олігометастатично + збережений резерв.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
