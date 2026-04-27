@@ -39,13 +39,19 @@ HOSTED_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 
 BANNED_SOURCES = {"SRC-ONCOKB", "SRC-SNOMED", "SRC-MEDDRA"}
 ALLOWED_AI_TOOLS = {"claude-code", "codex", "cursor", "chatgpt", "other"}
+# Required for ALL sidecars regardless of type.
 REQUIRED_CONTRIB_FIELDS = {
     "chunk_id",
     "contributor",
-    "target_action",
     "ai_tool",
     "ai_model",
 }
+# target_action is required for entity-sidecars (bma_*, bio_*, drug_*, ind_*,
+# source_stub_*) which upsert into hosted content. Report-only files
+# (audit-report.yaml, citation-report.yaml, generation-summary.md) are
+# read-only outputs — no target_entity_id, no upsert path — so target_action
+# is optional. The check below routes per filename pattern.
+ENTITY_SIDECAR_PREFIXES = ("bma_", "bio_", "drug_", "ind_", "source_stub_")
 TARGET_ACTIONS = {"upsert", "new", "flag_duplicate"}
 
 
@@ -151,12 +157,21 @@ def _validate_chunk(chunk_dir: Path, hosted_ids: set[str], hosted_src: set[str])
                 f"[{rel}] _contribution.ai_tool '{contrib.get('ai_tool')}' "
                 f"not in {sorted(ALLOWED_AI_TOOLS)}"
             )
+        is_entity_sidecar = p.name.startswith(ENTITY_SIDECAR_PREFIXES)
         action = contrib.get("target_action")
-        if action not in TARGET_ACTIONS:
-            failures.append(f"[{rel}] _contribution.target_action '{action}' invalid")
+        if is_entity_sidecar:
+            if action not in TARGET_ACTIONS:
+                failures.append(
+                    f"[{rel}] _contribution.target_action '{action}' invalid for entity sidecar"
+                )
+            if action in {"upsert", "flag_duplicate"} and not contrib.get("target_entity_id"):
+                failures.append(f"[{rel}] target_entity_id required for action={action}")
+        elif action is not None and action not in TARGET_ACTIONS:
+            # Report-only file with explicit but invalid target_action — flag but don't require.
+            failures.append(
+                f"[{rel}] _contribution.target_action '{action}' invalid (use null for report-only files)"
+            )
         target_id = contrib.get("target_entity_id")
-        if action in {"upsert", "flag_duplicate"} and not target_id:
-            failures.append(f"[{rel}] target_entity_id required for action={action}")
         if target_id and target_id not in manifest:
             failures.append(
                 f"[{rel}] target_entity_id '{target_id}' not in task_manifest.txt"
