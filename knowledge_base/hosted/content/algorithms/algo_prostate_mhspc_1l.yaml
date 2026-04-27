@@ -21,15 +21,34 @@ decision_tree:
     next_step: 2
 - step: 2
   evaluate:
+    any_of:
+    - red_flag: RF-CHAARTED-HIGH-VOLUME-MHSPC
+  if_true:
+    next_step: 3
+  if_false:
+    next_step: 4
+  notes: "Wired via RF-CHAARTED-HIGH-VOLUME-MHSPC (CSD-8A): high-volume gate then fitness/docetaxel-eligibility gate determines triplet vs doublet."
+- step: 3
+  evaluate:
     all_of:
-    - condition: High-volume disease per CHAARTED (visceral mets OR ≥4 bone lesions with ≥1 beyond axial skeleton)
     - red_flag: RF-FITNESS-ECOG-FIT
-    - condition: Docetaxel-eligible (no significant comorbidity)
+    - any_of:
+      - red_flag: RF-LATITUDE-HIGH-RISK-MHSPC
+      - red_flag: RF-CHAARTED-HIGH-VOLUME-MHSPC
   if_true:
     result: IND-PROSTATE-MHSPC-1L-TRIPLET
   if_false:
     result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Wired via RF-FITNESS-ECOG-FIT + RF-LATITUDE-HIGH-RISK-MHSPC / RF-CHAARTED-HIGH-VOLUME-MHSPC (CSD-7A + CSD-8A): docetaxel-eligible high-volume / high-risk gets ARASENS triplet."
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-LATITUDE-HIGH-RISK-MHSPC
+  if_true:
+    result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
+  if_false:
+    result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
+  notes: "Wired via RF-LATITUDE-HIGH-RISK-MHSPC (CSD-8A): low-volume LATITUDE high-risk routes to abi+ADT doublet (no docetaxel benefit shown for low-volume per LATITUDE / CHAARTED)."
 sources:
 - SRC-NCCN-PROSTATE-2025
 - SRC-ESMO-PROSTATE-2024

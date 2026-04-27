@@ -32,6 +32,7 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
+        - red_flag: RF-SANZ-HIGH-RISK
         - red_flag: RF-APL-HIGH-RISK-BIOLOGY
     if_true:
       result: IND-APL-1L-ATRA-ATO-IDA
@@ -53,13 +54,14 @@ decision_tree:
   # Step 4 — default low/intermediate-risk → ATRA + ATO
   - step: 4
     evaluate:
-      all_of:
-        - condition: "Sanz low or intermediate risk (WBC ≤10)"
+      any_of:
+        - red_flag: RF-SANZ-LOW-RISK
+        - red_flag: RF-SANZ-INTERMEDIATE
     if_true:
       result: IND-APL-1L-ATRA-ATO
     if_false:
       result: IND-APL-1L-ATRA-ATO
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Wired via RF-SANZ-LOW-RISK / RF-SANZ-INTERMEDIATE (CSD-8A); confirms low/intermediate Sanz routes to ATRA+ATO chemo-free per APL0406."
 
 sources:
   - SRC-NCCN-AML-2025

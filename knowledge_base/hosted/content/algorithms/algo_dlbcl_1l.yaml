@@ -23,6 +23,8 @@ decision_tree:
 - step: 2
   evaluate:
     any_of:
+    - red_flag: RF-IPI-HIGH
+    - red_flag: RF-AAIPI-HIGH
     - red_flag: RF-DLBCL-HIGH-IPI
     - red_flag: RF-DLBCL-HIGH-RISK-BIOLOGY
   if_true:
@@ -32,7 +34,9 @@ decision_tree:
 - step: 3
   evaluate:
     all_of:
-    - condition: Standard-risk IPI (0-1)
+    - any_of:
+      - red_flag: RF-IPI-LOW
+      - red_flag: RF-IPI-INTERMEDIATE
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -40,7 +44,7 @@ decision_tree:
     result: IND-DLBCL-1L-RCHOP
   if_false:
     result: IND-DLBCL-1L-RCHOP
-  notes: "Partially wired — fitness gate (ECOG ≤ 2) wired via CSD-7A pan-disease RFs; IPI risk kept as MDT-evaluated condition (no RF for IPI strata)."
+  notes: "Wired via RF-IPI-LOW / RF-IPI-INTERMEDIATE (CSD-8A) for IPI risk strata; fitness gate via CSD-7A pan-disease RFs."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024

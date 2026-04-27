@@ -44,27 +44,29 @@ decision_tree:
     if_false:
       next_step: 3
 
-  # Step 3 — high-risk ELTS / Sokal → 2nd-gen TKI for faster + deeper
-  # molecular response
+  # Step 3 — high-risk ELTS / Sokal / Hasford → 2nd-gen TKI for faster +
+  # deeper molecular response
   - step: 3
     evaluate:
       any_of:
+        - red_flag: RF-SOKAL-HIGH
+        - red_flag: RF-HASFORD-HIGH
         - red_flag: RF-CML-HIGH-RISK-ELTS
     if_true:
       result: IND-CML-1L-2GEN-TKI
     if_false:
       next_step: 4
 
-  # Step 4 — default = imatinib (safe, accessible)
+  # Step 4 — default = imatinib (safe, accessible) — low-risk Sokal/Hasford
   - step: 4
     evaluate:
       all_of:
-        - condition: "Default low-risk CML chronic phase"
+        - condition: "Default low-risk CML chronic phase (negative for Sokal-high / Hasford-high gated above)"
     if_true:
       result: IND-CML-1L-IMATINIB
     if_false:
       result: IND-CML-1L-IMATINIB
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Wired via RF-SOKAL-HIGH / RF-HASFORD-HIGH (CSD-8A) at step 3; this catch-all is the residual default for low-risk Sokal/Hasford routing to imatinib."
 
 sources:
   - SRC-NCCN-MPN-2025
