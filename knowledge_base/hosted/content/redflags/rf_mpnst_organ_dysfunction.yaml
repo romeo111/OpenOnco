@@ -1,0 +1,66 @@
+id: RF-MPNST-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard doxorubicin + ifosfamide
+  (AI) neoadjuvant or salvage chemotherapy in MPNST: LVEF <50%
+  (anthracycline contraindicated), CrCl <30 mL/min (ifosfamide
+  nephrotoxicity), bilirubin >3× ULN (doxorubicin / ifosfamide hepatic
+  metabolism), or DLCO <60% (post-thoracotomy reserve concern for
+  pulmonary metastasectomy candidacy).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартному doxorubicin +
+  ifosfamide (AI) неоадʼюванту або сальваджу при MPNST: LVEF <50%
+  (антрациклін протипоказаний), CrCl <30 (нефротоксичність ifosfamide),
+  білірубін >3× ULN (печінковий метаболізм doxorubicin / ifosfamide),
+  DLCO <60% (легеневий резерв для метастазектомії).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-MPNST
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  AI is the soft-tissue sarcoma standard for high-grade MPNST in the
+  preoperative setting (EORTC 62931 / 62012 data extrapolation). LVEF
+  <50: substitute liposomal doxorubicin or omit anthracycline (ifosfamide
+  + epirubicin or pazopanib alternative for advanced). CrCl <30:
+  ifosfamide contraindicated — switch to dose-modified doxorubicin
+  monotherapy. Pazopanib (PALETTE in non-MPNST STS) has limited but
+  documented activity in MPNST — used in cisplatin / ifosfamide-
+  ineligible. NF1-MPNST patients often have additional comorbidity
+  (cardiomyopathy, scoliosis) lowering tolerance. DLCO <60: limits
+  metastasectomy candidacy.
+notes_ua: >
+  AI — стандарт STS для high-grade MPNST у передопераційній лінії. LVEF
+  <50: ліпосомальний doxorubicin або pazopanib. CrCl <30: ifosfamide
+  протипоказаний — dose-modified doxorubicin моно. Пацієнти з NF1-MPNST
+  часто мають додаткові коморбідності (кардіоміопатія, сколіоз).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

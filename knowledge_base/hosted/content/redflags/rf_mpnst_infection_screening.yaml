@@ -1,0 +1,57 @@
+id: RF-MPNST-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating doxorubicin + ifosfamide neoadjuvant or pazopanib for
+  advanced MPNST: HBsAg-positive (HBV reactivation on cytotoxic + TKI),
+  anti-HBc-positive (occult HBV), HIV-positive (ART coordination,
+  CYP3A4 interactions with pazopanib), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед doxorubicin + ifosfamide неоадʼювантом або pazopanib при
+  поширеній MPNST: HBsAg+ (реактивація HBV на цитотоксичній + TKI),
+  anti-HBc+ (occult HBV), HIV+ (координація АРТ, CYP3A4-взаємодії з
+  pazopanib), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-MPNST
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Sarcoma chemotherapy regimens (AI) and pazopanib all carry meaningful
+  HBV reactivation risk — entecavir / tenofovir prophylaxis indicated
+  for HBsAg+ or anti-HBc+. HIV+: ART coordination — pazopanib is CYP3A4
+  substrate, avoid CYP3A4 inhibitors (ritonavir-boosted PIs). Active TB:
+  complete anti-TB before cytotoxic chemotherapy when feasible. Surfaces
+  hold via parallel pre-treatment workup rather than indication switch.
+notes_ua: >
+  Саркомні режими (AI) і pazopanib мають значущий ризик реактивації HBV
+  — entecavir / tenofovir для HBsAg+ або anti-HBc+. HIV+: pazopanib —
+  CYP3A4 субстрат, уникати CYP3A4 інгібіторів. Активний ТБ: завершити
+  анти-ТБ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
