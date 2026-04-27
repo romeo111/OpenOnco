@@ -1,0 +1,74 @@
+id: RF-MCL-BLASTOID-VARIANT
+definition: >
+  Blastoid or pleomorphic histologic variant of mantle cell lymphoma —
+  ~10-15% of MCL at diagnosis, biology aggressive (Ki-67 typically >50%,
+  often co-mutated TP53/CDKN2A), poor response to chemoimmunotherapy
+  (BR, R-CHOP, R-DHAP) with median OS <2 years on cBTKi. ZUMA-2
+  (Wang NEJM 2020) established brexucabtagene autoleucel (KTE-X19) for
+  R/R MCL post-cBTKi (ORR 91%, CR 68%, mPFS not reached at 24 mo). Routes
+  blastoid/pleomorphic MCL to CAR-T prioritization at 2L (post-cBTKi or
+  post-chemoimmuno failure) over alloHCT or further chemoimmuno.
+definition_ua: >
+  Бластоідний або плеоморфний гістологічний варіант мантійноклітинної
+  лімфоми — ~10-15% MCL на діагнозі, агресивна біологія (Ki-67 зазвичай
+  >50%, часто ко-мутації TP53/CDKN2A), погана відповідь на chemoimmuno
+  (BR, R-CHOP, R-DHAP) з медіаною ЗВ <2 років на cBTKi. ZUMA-2
+  (Wang NEJM 2020) встановило brexucabtagene autoleucel (KTE-X19) для
+  р/р MCL post-cBTKi (ORR 91%, CR 68%, мПФВ не досягнута на 24 міс).
+  Маршрутизує бластоідну/плеоморфну MCL на пріоритезацію CAR-T на 2L
+  (після cBTKi або провалу chemoimmuno) над alloHCT або повторною chemoimmuno.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "mcl_histology_variant"
+      value: "blastoid"
+    - finding: "mcl_histology_variant"
+      value: "pleomorphic"
+    - finding: "blastoid_morphology"
+      value: true
+    - finding: "pleomorphic_morphology"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm:
+  - ALGO-MCL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+  - SRC-ZUMA-2-WANG-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Distinguish from RF-MCL-BLASTOID-OR-TP53 — that flag is broader (any
+  high-risk biology including TP53/del(17p)/Ki-67>30%) and routes 1L to
+  BTKi-based; this flag is narrower (histology-defined blastoid/pleomorphic
+  morphology) and routes 2L specifically to brexu-cel CAR-T. Both fire in
+  parallel for blastoid + TP53-mut cases. Brexu-cel manufacture takes
+  ~3 weeks — bridge with cBTKi (acalabrutinib) or pirtobrutinib if
+  cBTKi-pretreated. Eligibility check via RF-CAR-T-ELIGIBLE composite.
+  Lisocabtagene maraleucel (TRANSCEND-NHL-001 MCL cohort) is a second
+  CAR-T option with similar efficacy and lower CRS/ICANS rates. Access UA:
+  CAR-T not domestically available; international referral pathway only.
+notes_ua: >
+  Відрізняти від RF-MCL-BLASTOID-OR-TP53 — той прапор ширший (будь-яка
+  high-risk biology включно з TP53/del(17p)/Ki-67>30%) і маршрутизує 1L
+  на BTKi-based; цей прапор вужчий (гістологічно визначені бластоідна/
+  плеоморфна морфологія) і маршрутизує 2L саме на brexu-cel CAR-T.
+  Обидва спрацьовують паралельно для бластоідних + TP53-mut кейсів.
+  Виробництво brexu-cel ~3 тижні — bridge з cBTKi (акалабрутиніб) або
+  піртобрутиніб для cBTKi-предлікованих. Перевірка придатності через
+  RF-CAR-T-ELIGIBLE composite. Лісокабтаген маралеуцель (TRANSCEND-NHL-001
+  MCL когорта) — друга CAR-T опція з подібною ефективністю та нижчими
+  CRS/ICANS. Доступ в Україні: CAR-T внутрішньо недоступна; лише
+  міжнародне направлення.
