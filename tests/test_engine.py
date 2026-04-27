@@ -32,11 +32,14 @@ def test_indolent_hcv_mzl_picks_antiviral_default():
 def test_bulky_hcv_mzl_picks_br_default():
     """Bulky HCV-MZL patient: BR should become the default.
 
-    NOTE: ALGO-HCV-MZL-1L is now a 3-step tree (Phase 1 wiring 2026-04-25):
+    NOTE: ALGO-HCV-MZL-1L is now a 4-step tree (post-CSD orphan-RF wiring
+    2026-04-27):
       step 1 = RF-DECOMP-CIRRHOSIS → ANTIVIRAL (de-escalate)
-      step 2 = RF-BULKY-DISEASE / RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION → BR
-      step 3 = HCV-RNA+ + indolent → ANTIVIRAL
-    Bulky-without-decomp patient: step 1 False, step 2 True → BR."""
+      step 2 = RF-HCV-MZL-FRAILTY-AGE → ANTIVIRAL (de-escalate)
+      step 3 = RF-BULKY-DISEASE / RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION → BR
+      step 4 = HCV-RNA+ + indolent → ANTIVIRAL
+    Bulky-without-decomp, non-frail patient: step 1 False, step 2 False,
+    step 3 True → BR."""
 
     result = generate_plan(_patient("patient_zero_bulky.json"), kb_root=KB_ROOT)
 
@@ -46,10 +49,14 @@ def test_bulky_hcv_mzl_picks_br_default():
 
     step_1 = next((t for t in result.trace if t.get("step") == 1), None)
     step_2 = next((t for t in result.trace if t.get("step") == 2), None)
+    step_3 = next((t for t in result.trace if t.get("step") == 3), None)
     assert step_1 is not None and step_1["outcome"] is False, (
         "decomp-cirrhosis step should NOT fire for the bulky-without-decomp patient"
     )
-    assert step_2 is not None and step_2["outcome"] is True, (
+    assert step_2 is not None and step_2["outcome"] is False, (
+        "frailty-age step should NOT fire for the age-62 fit patient"
+    )
+    assert step_3 is not None and step_3["outcome"] is True, (
         "bulky-disease step should fire and route to BR-AGGRESSIVE"
     )
 

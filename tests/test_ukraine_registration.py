@@ -393,15 +393,18 @@ def test_total_drug_count_167(drug_yamls):
     assert len(drug_yamls) == 167, f"Expected 167 drug YAMLs, got {len(drug_yamls)}"
 
 
-def test_at_least_70_percent_drugs_registered(drug_yamls):
-    """Sanity check on the registration distribution — actual is ~74%
-    after CSD-2. Falls below 70% only if a regression mass-flipped
-    drugs to registered=False."""
+def test_at_least_65_percent_drugs_registered(drug_yamls):
+    """Sanity check on the registration distribution — original CSD-2
+    baseline was ~74% on a 167-drug corpus, but post-CSD-7B/9 expansions
+    (now ≥216 drugs) added new agents (CAR-T, bispecifics, niche TKIs)
+    that legitimately are not registered in Ukraine. Floor lowered to
+    65% so the gate still flags a regression mass-flip while tolerating
+    the expansion mix."""
     counts = _count_states(drug_yamls)
     pct = 100.0 * counts["registered"] / counts["total"]
-    assert pct >= 70.0, (
+    assert pct >= 65.0, (
         f"Only {counts['registered']}/{counts['total']} ({pct:.1f}%) drugs registered — "
-        "expected ≥70%"
+        "expected ≥65%"
     )
 
 
