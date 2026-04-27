@@ -1,0 +1,37 @@
+id: RF-RAI-HIGH
+definition: "CLL/SLL with Rai stage III-IV (anemia Hb <11 g/dL or thrombocytopenia plt <100K from CLL marrow infiltration) — meets treatment indication; supports BTKi or ven+G 1L"
+definition_ua: "ХЛЛ/МЛЛ зі стадією Rai III-IV (анемія Hb <11 г/дл або тромбоцитопенія тромб <100K через інфільтрацію кісткового мозку) — є показаннями до лікування; підтримує BTK-інгібітор або ven+G 1L"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cll_rai_stage"
+      value: "III"
+    - finding: "cll_rai_stage"
+      value: "IV"
+    - finding: "cll_rai_risk"
+      value: "high"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Rai III-IV (high-risk modified Rai) marks symptomatic disease:
+  anemia from marrow infiltration (Hb <11 g/dL) or thrombocytopenia
+  (plt <100K) by CLL — distinguish from autoimmune cytopenia which
+  warrants steroids first. Median OS pre-targeted therapy was 18-24 mo;
+  modern BTKi or ven+G has transformed outcomes (RESONATE-2,
+  ELEVATE-TN, CLL14). Direction `intensify` flips watch-and-wait
+  default to active treatment branch in CLL-1L. Overlaps with Binet C
+  semantically (cytopenia from CLL).

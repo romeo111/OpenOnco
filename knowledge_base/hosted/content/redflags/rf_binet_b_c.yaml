@@ -1,0 +1,39 @@
+id: RF-BINET-B-C
+definition: "CLL/SLL with Binet stage B (≥3 lymphoid areas, no cytopenia) or C (Hb <10 OR platelets <100K) — meets treatment indication; supports BTKi-based 1L (ibrutinib / acalabrutinib / zanubrutinib) or venetoclax+obinutuzumab fixed-duration"
+definition_ua: "ХЛЛ/МЛЛ зі стадією Binet B (≥3 лімфоїдні зони, без цитопенії) або C (Hb <10 АБО тромбоцити <100K) — є показаннями до лікування; підтримує BTK-інгібітор-базоване 1L (ібрутиніб / акалабрутиніб / занубрутиніб) або фіксовану схему венетоклакс+обінутузумаб"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cll_binet_stage"
+      value: "B"
+    - finding: "cll_binet_stage"
+      value: "C"
+    - finding: "cll_binet_risk"
+      value: "intermediate"
+    - finding: "cll_binet_risk"
+      value: "high"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Binet B = ≥3 lymphoid areas, no cytopenia, median OS ~5-7 yr.
+  Binet C = anemia (Hb <10) or thrombocytopenia (plt <100K) due to
+  marrow infiltration, median OS ~2-3 yr without modern targeted
+  therapy. iwCLL 2018 active-disease criteria are met by Binet C and
+  by progressive Binet B; supports moving to systemic therapy. 1L
+  options per CLL14 (ven+G fixed 12 mo), iLLUMINATE (ibrutinib+G),
+  ELEVATE-TN (acalabrutinib +/- G), SEQUOIA (zanubrutinib). Direction
+  is intensify only relative to Binet A's watch-and-wait baseline.

@@ -1,0 +1,38 @@
+id: RF-ISS-3
+definition: "Multiple myeloma with ISS stage 3 — β2-microglobulin ≥5.5 mg/L — high-risk presentation; supports four-drug daratumumab-anchored 1L and transplant pursuit when feasible; trigger for R-ISS / R2-ISS upgrade with cytogenetics"
+definition_ua: "Множинна мієлома з ISS стадією 3 — β2-мікроглобулін ≥5,5 мг/л — високий ризик; підтримує 4-компонентну схему 1-ї лінії з даратумумабом і пошук трансплантації за можливості; тригер для оновлення до R-ISS / R2-ISS з цитогенетикою"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "beta2_microglobulin_mg_per_l"
+      threshold: 5.5
+      comparator: ">="
+    - finding: "iss_stage"
+      value: "3"
+    - finding: "iss_risk_group"
+      value: "high"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm:
+  - ALGO-MM-1L
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-27"
+notes: >
+  ISS-3 (β2M ≥5.5) median OS ~29 mo in the original cohort, improved
+  substantially in the daratumumab era. ISS-3 alone is not a sufficient
+  intensification trigger — cytogenetics drive the upgrade to R-ISS
+  (Palumbo 2015) and R2-ISS (D'Agostino 2022). When ISS-3 co-occurs
+  with high-risk cytogenetics + LDH-high, R-ISS-3 emerges and warrants
+  the most intensive 1L (RF-R-ISS-3-HIGH-RISK). Direction `intensify`
+  reflects the four-drug-1L preference over triplet for ISS-3 even
+  when cytogenetics standard.

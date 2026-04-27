@@ -1,0 +1,34 @@
+id: RF-RAI-LOW
+definition: "CLL/SLL with Rai stage 0 (lymphocytosis only, no nodes / spleen / cytopenia) — watch-and-wait candidate; treatment is not indicated by stage alone"
+definition_ua: "ХЛЛ/МЛЛ зі стадією Rai 0 (тільки лімфоцитоз, без вузлів / спленомегалії / цитопенії) — кандидат на watch-and-wait; стадія сама по собі не є показанням до лікування"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cll_rai_stage"
+      value: "0"
+    - finding: "cll_rai_risk"
+      value: "low"
+
+clinical_direction: de-escalate
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Rai (Rai 1975, modified) staging stratifies CLL by clinical findings:
+  0 = lymphocytosis only; I = +nodes; II = +splenomegaly/hepatomegaly;
+  III = anemia (Hb <11); IV = thrombocytopenia (plt <100K). Modified
+  Rai groups: low = 0, intermediate = I-II, high = III-IV. Rai 0 has
+  median OS >10 yr — same observation principle as Binet A. Active
+  disease criteria (iwCLL 2018) override stage; this RF fires only
+  when Rai 0 alone is the picture. Companion to RF-BINET-A.
