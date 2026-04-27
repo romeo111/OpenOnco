@@ -1,0 +1,44 @@
+id: RF-CHAARTED-HIGH-VOLUME-MHSPC
+definition: "Metastatic hormone-sensitive prostate cancer meeting CHAARTED high-volume criteria — visceral metastases OR ≥4 bone metastases with at least 1 outside vertebral column / pelvis — supports docetaxel + ADT triplet (with or without darolutamide / abiraterone)"
+definition_ua: "Метастатичний гормон-чутливий рак передміхурової залози з критеріями CHAARTED для великого об'єму — вісцеральні метастази АБО ≥4 кісткових метастази з принаймні 1 поза хребтом / тазом — підтримує доцетаксел + АДТ як трійник (з або без даролутаміду / абіратерону)"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "prostate_chaarted_volume"
+      value: "high"
+    - finding: "visceral_metastases_present"
+      value: true
+    - all_of:
+        - finding: "bone_metastases_count"
+          threshold: 4
+          comparator: ">="
+        - finding: "bone_metastases_outside_axial"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-PROSTATE
+shifts_algorithm:
+  - ALGO-PROSTATE-MHSPC-1L
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+  - SRC-EAU-PROSTATE-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  CHAARTED (Sweeney NEJM 2015) defined high-volume as visceral mets OR
+  ≥4 bone mets with ≥1 outside vertebrae and pelvis. High-volume cohort
+  showed 17-mo OS improvement with docetaxel + ADT vs ADT alone (HR 0.60).
+  ARASENS (Smith 2022) extended to triplet darolutamide + docetaxel + ADT
+  with further OS benefit (HR 0.68 for OS) — high-volume preferred for
+  triplet. PEACE-1 (Fizazi 2022) showed similar for abiraterone +
+  docetaxel + ADT. Direction `intensify` toward triplet over doublet
+  ADT+ARSI alone in CHAARTED high-volume. Co-fires with
+  RF-LATITUDE-HIGH-RISK-MHSPC for LATITUDE high-risk overlap;
+  triplet preferred when both fire.

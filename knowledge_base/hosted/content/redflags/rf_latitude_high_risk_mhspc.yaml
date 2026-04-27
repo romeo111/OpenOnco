@@ -1,0 +1,42 @@
+id: RF-LATITUDE-HIGH-RISK-MHSPC
+definition: "Metastatic hormone-sensitive prostate cancer meeting LATITUDE high-risk criteria — ≥2 of (Gleason ≥8, ≥3 bone metastases, visceral metastases) — supports abiraterone + ADT doublet (or triplet with docetaxel where high-volume by CHAARTED also met)"
+definition_ua: "Метастатичний гормон-чутливий рак передміхурової залози з критеріями LATITUDE для високого ризику — ≥2 з (Gleason ≥8, ≥3 кісткових метастазів, вісцеральні метастази) — підтримує абіратерон + АДТ як дублет (або трійник з доцетакселом, якщо також виконані критерії CHAARTED для великого об'єму)"
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "prostate_latitude_risk"
+      value: "high"
+    - all_of:
+        - finding: "prostate_high_risk_factor_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-PROSTATE
+shifts_algorithm:
+  - ALGO-PROSTATE-MHSPC-1L
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+  - SRC-EAU-PROSTATE-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  LATITUDE (Fizazi NEJM 2017) defined high-risk as ≥2 of: Gleason ≥8,
+  ≥3 bone mets, presence of visceral mets. The high-risk cohort
+  showed 4-yr OS improvement with abiraterone + ADT vs ADT alone
+  (HR 0.62). NCCN / ESMO / EAU 2024 endorse abiraterone + ADT as
+  standard for LATITUDE high-risk. Co-fires with
+  RF-CHAARTED-HIGH-VOLUME-MHSPC; when both fire, PEACE-1 / ARASENS
+  data support adding docetaxel for triplet. Direction `intensify`
+  toward ADT + ARSI (abiraterone preferred per LATITUDE; apalutamide
+  / enzalutamide also acceptable per TITAN / ENZAMET) over ADT
+  monotherapy. Composite trigger uses pre-computed
+  prostate_high_risk_factor_count when available; otherwise individual
+  factor flags can be assessed by extending the trigger schema later.
