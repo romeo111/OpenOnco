@@ -73,6 +73,8 @@ Sample patients: **[openonco.info/gallery.html](https://openonco.info/gallery.ht
 
 **Contributors:** start with [`specs/`](specs/) and [`CLAUDE.md`](CLAUDE.md) — these define scope, schemas, and authoring conventions before any KB or code change.
 
+**Want to help with AI-assisted contributions?** OpenOnco accepts distributed contributor work through the [TaskTorrent chunk-shelf](https://github.com/romeo111/task_torrent/tree/main/chunks/openonco). Read [`docs/contributing/HELP_WANTED.md`](docs/contributing/HELP_WANTED.md) for the contributor workflow — pick an active `[Chunk]` issue, run with your AI tool, submit a sidecar PR. Safety boundaries: no medical advice, no treatment recommendations, no patient-specific outputs; everything reviewed before merge.
+
 **Developers running tests locally:**
 
 ```bash
