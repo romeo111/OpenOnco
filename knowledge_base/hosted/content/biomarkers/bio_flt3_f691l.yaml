@@ -1,0 +1,81 @@
+id: BIO-FLT3-F691L
+names:
+  preferred: "FLT3 F691L gilteritinib-resistance gatekeeper mutation"
+  ukrainian: "FLT3 F691L — gatekeeper-мутація резистентності до гілтеритинібу"
+  english: "FLT3 F691L gatekeeper resistance mutation"
+  synonyms: ["FLT3 p.F691L", "FLT3 gatekeeper", "FLT3-ITD F691L"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "FLT3"
+  gene_hugo_id: "HGNC:3765"
+  exon: "14"
+  variant_type: "missense"
+  hgvs_protein: "p.F691L"
+  functional_impact: "acquired gatekeeper resistance to FLT3 inhibitors (gilteritinib, quizartinib, midostaurin); typically emerges on top of pre-existing FLT3-ITD"
+
+measurement:
+  method: "Targeted NGS panel (FLT3-resistance panel) at FLT3-inhibitor failure / relapse; ddPCR for known F691L allele monitoring"
+  units: "categorical (positive | negative); VAF % when reported by NGS"
+  sensitivity_requirement: "Subclonal emergence common — NGS sensitivity ~1-2% VAF preferred for early detection"
+specimen_requirements:
+  - "Bone marrow aspirate (preferred at FLT3-TKI relapse)"
+  - "Peripheral blood acceptable when blast count adequate"
+
+related_biomarkers:
+  - BIO-FLT3-ITD
+  - BIO-FLT3-D835
+  - BIO-NPM1
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-ADMIRAL-PERL-2019
+
+# Gatekeeper mutation conferring acquired resistance to gilteritinib
+# (most prominently per ADMIRAL and post-progression analyses) and
+# also reduced activity of quizartinib, midostaurin, sorafenib.
+# Surfaces as RESISTANCE in OncoKB for gilteritinib — triggers
+# resistance-conflict banner if gilteritinib is recommended at the
+# same line where F691L is present.
+oncokb_lookup:
+  gene: FLT3
+  variant: F691L
+external_ids:
+  hgnc_symbol: "FLT3"
+  hgvs_protein: "p.F691L"
+  oncokb_url: "https://www.oncokb.org/gene/FLT3/F691L"
+
+last_reviewed: "2026-04-27"
+notes: >
+  FLT3 gatekeeper mutation analogous to BCR::ABL1 T315I, EGFR T790M,
+  and ALK L1196M. Almost always emerges on top of pre-existing FLT3-ITD
+  (rarely de novo). Most clinically relevant as acquired resistance to
+  gilteritinib in relapsed/refractory FLT3-mut AML — the dominant
+  on-target mechanism per ADMIRAL (Perl 2019, NEJM) post-progression
+  series and several real-world cohorts. F691L also reduces quizartinib
+  activity (originally a type-II FLT3 inhibitor with even narrower
+  resistance profile) and midostaurin. No commercially available FLT3
+  inhibitor reliably overcomes F691L; clinical trials of
+  next-generation FLT3 inhibitors (FF-10101, MAX-40279) and combination
+  strategies (FLT3i + venetoclax, FLT3i + hypomethylator) are the
+  current investigational options. Detection at gilteritinib relapse
+  → route to alloSCT (if not already done), trial enrollment, or
+  venetoclax-based salvage.
+notes_ua: >
+  Gatekeeper-мутація FLT3, аналог BCR::ABL1 T315I, EGFR T790M та
+  ALK L1196M. Майже завжди виникає на тлі попередньої FLT3-ITD
+  (рідко de novo). Найбільш клінічно значуща як набута резистентність
+  до гілтеритинібу при рецидивній/рефрактерній FLT3-mut AML —
+  домінуючий on-target механізм за ADMIRAL (Perl 2019, NEJM) серіями
+  пост-прогресії та кількома real-world когортами. F691L також знижує
+  активність квізартинібу (спочатку type-II FLT3-інгібітор з ще більш
+  вузьким профілем резистентності) та мідостаурину. Жоден комерційно
+  доступний FLT3-інгібітор надійно не долає F691L; клінічні дослідження
+  FLT3-інгібіторів наступного покоління (FF-10101, MAX-40279) та
+  комбінаційних стратегій (FLT3i + венетоклакс, FLT3i + гіпометилюючий
+  агент) є поточними дослідницькими опціями. Виявлення при рецидиві
+  на гілтеритинібі → шлях до алоТГСК (якщо ще не виконана), включення
+  в клінічне дослідження, або venetoclax-based salvage.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,72 @@
+id: BIO-EGFR-C797S
+names:
+  preferred: "EGFR C797S resistance mutation"
+  ukrainian: "EGFR C797S — мутація резистентності"
+  english: "EGFR C797S resistance mutation"
+  synonyms: ["EGFR p.C797S", "EGFR exon 20 C797S"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "EGFR"
+  exon: "20"
+  variant_type: "missense"
+  hgvs_protein: "p.C797S"
+  hgvs_coding: "c.2390G>C"
+  functional_impact: "acquired resistance to 3rd-generation EGFR-TKI (osimertinib); covalent-binding cysteine residue lost"
+
+measurement:
+  method: "ctDNA NGS (preferred for re-biopsy at osimertinib progression) OR repeat tumor biopsy NGS"
+  units: "categorical (positive | negative); VAF % when available"
+  sensitivity_requirement: "VAF ≥1% (cfDNA) or any (tissue); cis vs trans T790M+C797S configuration must be reported when both present"
+specimen_requirements:
+  - "Plasma ctDNA at progression on osimertinib (10 mL EDTA)"
+  - "Tissue re-biopsy if ctDNA negative (FFPE block)"
+
+related_biomarkers:
+  - BIO-EGFR-T790M
+  - BIO-EGFR-EXON19-DELETION
+  - BIO-EGFR-L858R
+  - BIO-EGFR-MUTATION
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-MARIPOSA2-PASSARO-2024
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+# Surfaces as RESISTANCE in OncoKB for osimertinib — triggers
+# resistance-conflict banner if osimertinib monotherapy is recommended
+# at the same line where C797S has emerged (safe-rollout v3 §6 T3
+# mitigation; CHARTER §15.2 C6 automation-bias guard).
+oncokb_lookup:
+  gene: EGFR
+  variant: C797S
+external_ids:
+  hgnc_symbol: "EGFR"
+  hgvs_protein: "p.C797S"
+  oncokb_url: "https://www.oncokb.org/gene/EGFR/C797S"
+
+last_reviewed: "2026-04-27"
+notes: >
+  Acquired resistance mutation to 3rd-generation EGFR-TKI (osimertinib) —
+  the C797 cysteine is the covalent-binding residue for osimertinib, so
+  C797S abolishes irreversible inhibition. Most common osimertinib-
+  resistance EGFR-on-target alteration (~7-22% of post-osimertinib
+  re-biopsies). Triggers ESCAT IB pathway: amivantamab + lazertinib
+  per MARIPOSA-2 (Passaro 2024). Cis vs trans T790M+C797S configuration
+  matters: trans (different alleles) may respond to combo of 3rd-gen +
+  1st/2nd-gen EGFR-TKI; cis (same allele) is fully resistant to all
+  current EGFR-TKI monotherapy and requires bypass strategy
+  (amivantamab-based, chemo, or trial enrollment).
+notes_ua: >
+  Набута мутація резистентності до EGFR-TKI 3-го покоління (осимертиніб) —
+  цистеїн C797 є залишком ковалентного зв'язування для осимертинібу, тому
+  C797S скасовує незворотне інгібування. Найпоширеніша EGFR-on-target
+  альтерація після прогресії на осимертинібі (~7-22% повторних біопсій).
+  Активує шлях ESCAT IB: амівантамаб + лазертиніб згідно з MARIPOSA-2
+  (Passaro 2024). Cis vs trans конфігурація T790M+C797S має значення:
+  trans (різні алелі) може відповідати на комбінацію 3-го + 1/2-го
+  покоління EGFR-TKI; cis (один алель) повністю резистентна до всіх
+  поточних EGFR-TKI у монотерапії та потребує bypass-стратегії
+  (на основі амівантамабу, хіміотерапія, або клінічне дослідження).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
