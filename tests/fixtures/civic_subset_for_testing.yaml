@@ -1,0 +1,206 @@
+source_id: SRC-CIVIC
+snapshot_date: '2026-04-25-fixture'
+source_url: https://civicdb.org/downloads/nightly/
+license: CC0-1.0
+fetched_at: '2026-04-25T00:00:00+00:00'
+evidence_items:
+# 1. BRAF V600E + Vemurafenib — Level A, classic predictive sensitivity
+- id: 'F1'
+  molecular_profile: BRAF V600E
+  gene: BRAF
+  variant: V600E
+  disease: Melanoma
+  doid: '1909'
+  therapies:
+  - Vemurafenib
+  therapy_interaction_type: null
+  evidence_level: A
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '21639808'
+  citation_source_type: PubMed
+  pmid: '21639808'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F1
+# 2. BRAF V600E + Dabrafenib — Level A, second option for collapse test
+- id: 'F2'
+  molecular_profile: BRAF V600E
+  gene: BRAF
+  variant: V600E
+  disease: Melanoma
+  doid: '1909'
+  therapies:
+  - Dabrafenib
+  - Trametinib
+  therapy_interaction_type: Combination
+  evidence_level: A
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '25399551'
+  citation_source_type: PubMed
+  pmid: '25399551'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F2
+# 3. BCR::ABL1 fusion + T315I + Ponatinib — Level B, fusion-aware match
+- id: 'F3'
+  molecular_profile: BCR::ABL1 Fusion AND ABL1 T315I
+  gene: BCR::ABL1
+  variant: Fusion AND ABL1 T315I
+  disease: Chronic Myeloid Leukemia
+  doid: '8552'
+  therapies:
+  - Ponatinib
+  therapy_interaction_type: null
+  evidence_level: B
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '23935528'
+  citation_source_type: PubMed
+  pmid: '23935528'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F3
+# 4. Empty-therapies entry (filtered out — diagnostic-only)
+- id: 'F4'
+  molecular_profile: JAK2 V617F
+  gene: JAK2
+  variant: V617F
+  disease: Polycythemia Vera
+  doid: '8884'
+  therapies: []
+  therapy_interaction_type: null
+  evidence_level: C
+  evidence_type: Diagnostic
+  evidence_direction: Supports
+  significance: Positive
+  citation_id: '15781101'
+  citation_source_type: PubMed
+  pmid: '15781101'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F4
+# 5. "Does Not Support" direction — preserved in description
+- id: 'F5'
+  molecular_profile: KRAS G12C
+  gene: KRAS
+  variant: G12C
+  disease: Colorectal Cancer
+  doid: '9256'
+  therapies:
+  - Cetuximab
+  therapy_interaction_type: null
+  evidence_level: B
+  evidence_type: Predictive
+  evidence_direction: Does Not Support
+  significance: Sensitivity/Response
+  citation_id: '18316791'
+  citation_source_type: PubMed
+  pmid: '18316791'
+  rating: '4'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F5
+# 6. Level E entry — surfacing rule excludes it, but client returns it
+- id: 'F6'
+  molecular_profile: BRAF V600K
+  gene: BRAF
+  variant: V600K
+  disease: Melanoma
+  doid: '1909'
+  therapies:
+  - Encorafenib
+  therapy_interaction_type: null
+  evidence_level: E
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '29573941'
+  citation_source_type: PubMed
+  pmid: '29573941'
+  rating: '2'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F6
+# 7. EML4-ALK + G1202R + Lorlatinib — second fusion case (legacy hyphen)
+- id: 'F7'
+  molecular_profile: EML4-ALK Fusion AND ALK G1202R
+  gene: EML4-ALK
+  variant: Fusion AND ALK G1202R
+  disease: Lung Non-small Cell Carcinoma
+  doid: '3908'
+  therapies:
+  - Lorlatinib
+  therapy_interaction_type: null
+  evidence_level: B
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '30093503'
+  citation_source_type: PubMed
+  pmid: '30093503'
+  rating: '4'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F7
+# 8. EGFR T790M + Osimertinib — Level A
+- id: 'F8'
+  molecular_profile: EGFR T790M
+  gene: EGFR
+  variant: T790M
+  disease: Lung Non-small Cell Carcinoma
+  doid: '3908'
+  therapies:
+  - Osimertinib
+  therapy_interaction_type: null
+  evidence_level: A
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '25923549'
+  citation_source_type: PubMed
+  pmid: '25923549'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F8
+# 9. Non-PubMed citation — pmids tuple should be empty
+- id: 'F9'
+  molecular_profile: IDH1 R132H
+  gene: IDH1
+  variant: R132H
+  disease: Glioblastoma Multiforme
+  doid: '3068'
+  therapies:
+  - Ivosidenib
+  therapy_interaction_type: null
+  evidence_level: C
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: 'ASCO-2019-3000'
+  citation_source_type: ASCO
+  pmid: null
+  rating: '3'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F9
+# 10. Malformed entry (missing required gene field) — should be skipped at init
+- id: 'F10'
+  molecular_profile: ' V600E'
+  gene: ''
+  variant: V600E
+  disease: Melanoma
+  doid: '1909'
+  therapies:
+  - Vemurafenib
+  therapy_interaction_type: null
+  evidence_level: A
+  evidence_type: Predictive
+  evidence_direction: Supports
+  significance: Sensitivity/Response
+  citation_id: '21639808'
+  citation_source_type: PubMed
+  pmid: '21639808'
+  rating: '5'
+  evidence_status: accepted
+  civic_url: https://civicdb.org/links/evidence_items/F10
