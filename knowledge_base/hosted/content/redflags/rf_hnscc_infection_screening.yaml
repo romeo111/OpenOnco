@@ -1,0 +1,61 @@
+id: RF-HNSCC-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating cisplatin-based chemoradiation, cetuximab + RT, or
+  pembrolizumab in HNSCC: HBsAg-positive (HBV reactivation on cytotoxic
+  chemotherapy + checkpoint inhibitors), anti-HBc-positive (occult HBV
+  on cetuximab — anti-EGFR class), HIV-positive (ART coordination, often
+  comorbid in HPV-related HNSCC), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед платино-CRT, cetuximab + RT або pembrolizumab при HNSCC: HBsAg+
+  (реактивація HBV на цитотоксичній хіміотерапії + чекпоінт-інгібіторах),
+  anti-HBc+ (occult HBV на cetuximab — анти-EGFR клас), HIV+ (координація
+  АРТ, часто комбіновано при HPV-асоційованій HNSCC), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-HNSCC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+  - SRC-ESMO-HNSCC-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cetuximab — anti-EGFR mAb — has documented HBV reactivation reports
+  (less than rituximab but non-zero); FDA label notes warning. Standard
+  HBsAg + anti-HBc + anti-HBs serology pre-treatment; entecavir /
+  tenofovir for HBsAg+. HIV-related HNSCC (oropharyngeal, cervical
+  squamous) is increasingly recognized; ART coordination critical
+  before cisplatin (renal interactions with tenofovir DF) — switch to
+  TAF or coordinate with infectious disease. Active TB: complete anti-TB
+  before head-and-neck RT given mucositis + neutropenia overlap.
+notes_ua: >
+  Cetuximab (анти-EGFR) — описані повідомлення про реактивацію HBV (FDA
+  warning). Стандарт: HBsAg + anti-HBc + anti-HBs до лікування; entecavir
+  / tenofovir при HBsAg+. HIV-асоційована HNSCC (орофарингеальна,
+  цервікальна сквамозна) — координація АРТ критична до cisplatin (ниркові
+  взаємодії з tenofovir DF). Активний ТБ: завершити анти-ТБ до RT.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
