@@ -30,24 +30,23 @@ chunks open as previous ones close.
 
 ## How to take a chunk
 
-1. **Pick** an open `[Chunk]` issue with label `status-active` and no
-   assignee. Comment to claim. Maintainer assigns you within 24 hours.
-2. **Read** the chunk spec, skill spec, and pilot-workflow doc linked
-   from the issue.
-3. **Branch** from `master` as `tasktorrent/<chunk-id>`.
-4. **Generate** sidecar files using your AI tool, following the skill
-   spec. All output goes into `contributions/<chunk-id>/`.
-5. **Self-validate** locally before opening PR:
-   ```
-   python -m scripts.tasktorrent.validate_contributions <chunk-id>
-   ```
-6. **Open PR** against `master`. CI runs the validator automatically;
-   maintainer reviews after CI passes.
-7. **Iterate** if maintainer requests changes; force-push to your
-   branch.
-8. **PR merges** when accepted. The maintainer-run upsert script
-   later promotes your sidecar payloads into `knowledge_base/hosted/content/`
-   after Clinical Co-Lead signoff (CHARTER §6.1) where applicable.
+**Step-by-step instructions:** [`CONTRIBUTOR_QUICKSTART.md`](CONTRIBUTOR_QUICKSTART.md) — fork → branch → run agent → validate → PR. Read this before starting.
+
+**Per-chunk agent prompts:** copy-paste templates that you give to your AI tool. See `AGENT_PROMPT_<chunk-id>.md` for each chunk:
+
+- [`AGENT_PROMPT_civic-bma-reconstruct-all.md`](AGENT_PROMPT_civic-bma-reconstruct-all.md) — CIViC BMA evidence reconstruction.
+- (more added as chunks promote to `status-active`).
+
+Quick summary of the flow:
+
+1. **Pick** an open `[Chunk]` issue with label `status-active` and no assignee. Comment to claim. Maintainer assigns you within 24 hours.
+2. **Read** [`CONTRIBUTOR_QUICKSTART.md`](CONTRIBUTOR_QUICKSTART.md) end-to-end.
+3. **Branch** as `tasktorrent/<chunk-id>`.
+4. **Run** your AI tool with the chunk's `AGENT_PROMPT_*.md` content. Output goes into `contributions/<chunk-id>/`.
+5. **Self-validate**: `python -m scripts.tasktorrent.validate_contributions <chunk-id>` — must say `PASS`.
+6. **Open PR** against `master`. CI auto-runs; maintainer reviews when CI green.
+7. **Iterate** force-pushing if maintainer requests changes.
+8. **PR merges** when accepted. Maintainer-run upsert promotes sidecars into hosted content after Clinical Co-Lead signoff (CHARTER §6.1) where applicable.
 
 ## Reference output: the PoC sidecar
 
