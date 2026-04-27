@@ -16,14 +16,22 @@ alternative_indication: IND-WM-1L-DRC
 decision_tree:
   - step: 1
     evaluate:
-      all_of:
-        - condition: "MYD88 L265P positive"
+      any_of:
+        - red_flag: RF-WM-MYD88-L265P-ACTIONABLE
+    if_true:
+      next_step: 2
+    if_false:
+      result: IND-WM-1L-DRC
+    notes: "Wired via RF-WM-MYD88-L265P-ACTIONABLE (CSD-9A): MYD88-L265P-positive disease routes to BTKi-track (sequential treatment-indication check at step 2); MYD88-WT routes directly to DRC chemoimmuno (BTKi response markedly weaker)."
+  - step: 2
+    evaluate:
+      any_of:
         - condition: "iwWM treatment indication present"
     if_true:
       result: IND-WM-1L-BTKI
     if_false:
       result: IND-WM-1L-DRC
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Sequential gate after MYD88 RF: confirms iwWM treatment indication (symptomatic disease) before committing to BTKi 1L; otherwise DRC remains default."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"

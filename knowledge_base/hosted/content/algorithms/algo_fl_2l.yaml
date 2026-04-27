@@ -13,14 +13,24 @@ alternative_indication: IND-FL-3L-AXICEL-CART
 decision_tree:
 - step: 1
   evaluate:
-    all_of:
-    - condition: EZH2-Y641 mutation positive (Y641N/F/S/H/C)
-    - condition: ≥2 prior systemic lines
+    any_of:
+    - red_flag: RF-FL-EZH2-Y641-ACTIONABLE
+  if_true:
+    next_step: 11
+  if_false:
+    next_step: 2
+  notes: "Wired via RF-FL-EZH2-Y641-ACTIONABLE (CSD-9A): biomarker-gated branch fires on EZH2 hotspot mutation; sequential step 11 then checks ≥2 prior lines requirement before routing to tazemetostat."
+- step: 11
+  evaluate:
+    any_of:
+    - finding: "prior_lines"
+      threshold: 2
+      comparator: ">="
   if_true:
     result: IND-FL-3L-TAZEMETOSTAT
   if_false:
     next_step: 2
-  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+  notes: "Sequential gate after EZH2 RF (step 1): tazemetostat is FDA-approved only for ≥2 prior systemic lines (Morschhauser 2020). EZH2-mut at <2 lines falls through to CAR-T / mosunetuzumab routing."
 - step: 2
   evaluate:
     all_of:
