@@ -24,7 +24,9 @@ Layout produced:
     gallery.html                   # 7 pre-generated sample cases
     try.html                       # interactive Pyodide demo
     cases/<case-id>.html           # one rendered Plan / Diagnostic Brief
-    openonco-engine.zip            # zipped engine + KB content for Pyodide
+    openonco-engine-core.zip       # core engine + shared KB for Pyodide
+    openonco-engine-index.json     # disease_id → per-disease bundle URL map
+    disease/openonco-<slug>.zip    # per-disease KB modules (lazy-loaded)
     examples.json                  # dropdown payload for try.html
 
 No real patient data ever flows here — only synthetic seed cases under
@@ -38,10 +40,12 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import shutil
 import zipfile
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from knowledge_base.engine import (
@@ -231,44 +235,46 @@ def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
 def bundle_engine(output_dir: Path) -> dict:
     """Build the Pyodide-loadable engine bundles.
 
-    Produces three artifacts in `output_dir/`:
+    Produces (in `output_dir/`):
 
-      1. `openonco-engine.zip` — the legacy monolithic bundle (everything
-         in one zip). Kept for backward compatibility with any client
-         that hasn't been upgraded to the lazy-load index yet, and as a
-         safe fallback if the index fetch fails.
-
-      2. `openonco-engine-core.zip` — code + schemas + validation +
+      1. `openonco-engine-core.zip` — code + schemas + validation +
          shared content (drugs, sources, biomarkers, tests,
          supportive_care, monitoring, workups, questionnaires,
          contraindications, mdt_skills, diseases, plus universal
          redflags and any indications/algorithms/regimens/RFs/BMA cells
-         that don't pin to a single disease). This is what /try.html
-         should fetch first — small enough to make the page interactive
-         quickly.
+         that don't pin to a single disease). /try.html fetches this
+         first — small enough to make the page interactive quickly.
 
-      3. `disease/openonco-{slug}.zip` per disease — the disease-scoped
+      2. `disease/openonco-{slug}.zip` per disease — the disease-scoped
          indications, algorithms, regimens, redflags, and BMA cells.
          Fetched on demand once the patient's `disease_id` is known.
 
-    Plus an index file:
+      3. `openonco-engine-index.json` — `{core, core_version, diseases,
+         disease_versions, icd_to_disease_id}`. /try.html consults this
+         to pick the per-disease bundle once `disease_id` is known.
 
-      4. `openonco-engine-index.json` — `{core, core_version, diseases}`
-         mapping disease_id → relative URL for the per-disease bundle.
+    CSD-9C (2026-04-27): the legacy monolithic `openonco-engine.zip`
+    has been retired. Lazy-load (CSD-5B + CSD-6E) is the canonical
+    path — the monolithic bundle had crossed the 3 MB ceiling and was
+    only kept as a safety fallback. Any stale monolithic on disk is
+    cleaned up so deploys don't carry the old file forever.
 
-    Returns a dict whose `version` field is a 12-char SHA-256 prefix of
-    the legacy monolithic zip — used as a `?v=...` cache-buster on the
-    Pyodide fetch in try.html so users always get the fresh bundle on
-    KB updates without having to hard-reload.
+    Returns a dict whose `core_version` field is a 12-char SHA-256
+    prefix of the core zip — used as a `?v=...` cache-buster on the
+    Pyodide fetch so users always get fresh bundles on KB updates.
     """
     import hashlib
 
-    out_zip = output_dir / "openonco-engine.zip"
     core_zip = output_dir / "openonco-engine-core.zip"
     disease_dir = output_dir / "disease"
     index_path = output_dir / "openonco-engine-index.json"
+    legacy_monolithic = output_dir / "openonco-engine.zip"
 
     disease_dir.mkdir(parents=True, exist_ok=True)
+
+    # CSD-9C: clean up any stale monolithic bundle from previous builds.
+    if legacy_monolithic.exists():
+        legacy_monolithic.unlink()
 
     entries = _gather_engine_entries()
     # Deterministic order — same input → same zip → same SHA-256.
@@ -283,18 +289,7 @@ def bundle_engine(output_dir: Path) -> dict:
         else:
             by_disease.setdefault(disease, []).append((path, arcname))
 
-    # 1. Legacy monolithic bundle (back-compat / fallback).
-    files_added = 0
-    bytes_uncompressed = 0
-    with zipfile.ZipFile(out_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        for path, arcname, _ in entries:
-            zf.write(path, arcname)
-            files_added += 1
-            bytes_uncompressed += path.stat().st_size
-    bundle_bytes = out_zip.read_bytes()
-    version = hashlib.sha256(bundle_bytes).hexdigest()[:12]
-
-    # 2. Core bundle.
+    # 1. Core bundle.
     core_files = 0
     core_uncompressed = 0
     with zipfile.ZipFile(core_zip, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -305,7 +300,7 @@ def bundle_engine(output_dir: Path) -> dict:
     core_bytes = core_zip.read_bytes()
     core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
-    # 3. Per-disease bundles. Wipe stale ones first so disease renames
+    # 2. Per-disease bundles. Wipe stale ones first so disease renames
     # don't leave orphans under docs/disease/.
     for stale in disease_dir.glob("openonco-*.zip"):
         stale.unlink()
@@ -325,13 +320,11 @@ def bundle_engine(output_dir: Path) -> dict:
             "version": hashlib.sha256(b).hexdigest()[:12],
         }
 
-    # 4. Bundle index — what /try.html should consult to know which
+    # 3. Bundle index — what /try.html consults to know which
     # per-disease module to fetch once disease_id is known.
     index_payload = {
         "core": "openonco-engine-core.zip",
         "core_version": core_version,
-        "monolithic": "openonco-engine.zip",
-        "monolithic_version": version,
         "diseases": {
             did: meta["url"] for did, meta in sorted(disease_meta.items())
         },
@@ -349,16 +342,15 @@ def bundle_engine(output_dir: Path) -> dict:
     )
 
     return {
-        "zip": str(out_zip.relative_to(output_dir)),
-        "files": files_added,
-        "uncompressed_bytes": bytes_uncompressed,
-        "compressed_bytes": out_zip.stat().st_size,
-        "version": version,
         "core_zip": str(core_zip.relative_to(output_dir)),
         "core_files": core_files,
         "core_uncompressed_bytes": core_uncompressed,
         "core_compressed_bytes": core_zip.stat().st_size,
         "core_version": core_version,
+        # `version` retained as alias for `core_version` — older callers
+        # (try.html cache-buster wiring) still reference it as a generic
+        # "current bundle version" stamp.
+        "version": core_version,
         "disease_bundles": disease_meta,
         "index": str(index_path.relative_to(output_dir)),
     }
@@ -410,7 +402,6 @@ self.addEventListener('fetch', (event) => {
   // CDN scripts) goes through the normal browser cache.
   const matches =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine.zip') ||
     url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!matches) return;
@@ -489,8 +480,8 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →"},
+    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →", "diseases": "Хвороби"},
+    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →", "diseases": "Diseases"},
 }
 
 
@@ -512,6 +503,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{en_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
         if page_kind == "limitations":  return f"{en_prefix}/limitations.html"
+        if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
     else:
         # EN page → switcher points to UA root
         if page_kind == "home":         return "/"
@@ -520,6 +512,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "limitations":  return "/limitations.html"
+        if page_kind == "diseases":     return "/diseases.html"
     return "/"
 
 
@@ -547,12 +540,14 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
+            f'<a href="/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
             f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
+            f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/en/limitations.html"{cls("limitations")}>Limitations</a>'
         )
@@ -1367,7 +1362,7 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 
   <footer class="page-foot">
     Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
-    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine.zip</code>.
+    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine-core.zip</code> + per-disease modules.
   </footer>
 </main>
 
@@ -1442,17 +1437,16 @@ const initStagesEl = document.getElementById('initStages');
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
 let enginReady = false;
-// CSD-6E: bundle lazy-load state. `bundleIndex` is the parsed index
-// (or null if we fell back to the monolithic bundle); `coreBundleLoaded`
-// is set after the first core (or monolithic) extract; `loadedDiseases`
-// remembers which per-disease modules we've already merged so re-runs
-// against the same disease don't re-fetch.
+// CSD-6E + CSD-9C: bundle lazy-load state. `bundleIndex` is the parsed
+// index (resolved from /openonco-engine-index.json); `coreBundleLoaded`
+// is set after the first core extract; `loadedDiseases` remembers which
+// per-disease modules we've already merged so re-runs against the same
+// disease don't re-fetch. The legacy monolithic fallback was retired in
+// CSD-9C — lazy-load is the only path now.
 const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
 const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
-const FALLBACK_MONOLITHIC_URL = '/openonco-engine.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
-let usingMonolithicFallback = false;
 const loadedDiseases = new Set();
 let questionnaires = [];     // loaded from /questionnaires.json
 let examples = [];           // loaded from /examples.json
@@ -2245,25 +2239,35 @@ function updateImpactPanel(result) {{
   // and the engine will surface the gaps.
 }}
 
-// ── Bundle lazy-load (CSD-6E) ─────────────────────────────────────────────
+// ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
 // Two-tier bundle: fetch openonco-engine-core.zip first (~1.4 MB), then
 // fetch the matching per-disease module (~15-40 KB) once we know the
-// patient's disease_id. If the index 404s (older deploys, ad-blockers
-// hitting /openonco-engine-*), we fall back to the monolithic zip and
-// behave exactly like before.
+// patient's disease_id. CSD-9C (2026-04-27) drops the legacy monolithic
+// fallback — the lazy-load path is the canonical path now. The index
+// fetch retries once on transient failure before giving up; if that
+// fails too we surface a clear error rather than silently downloading
+// 3+ MB of fallback that no longer ships.
 
 async function loadBundleIndex() {{
   if (bundleIndex !== null) return bundleIndex;
-  try {{
-    const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
-    if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
-    bundleIndex = await r.json();
-    return bundleIndex;
-  }} catch (e) {{
-    console.warn('[OpenOnco] bundle index unavailable — falling back to monolithic:', e);
-    bundleIndex = null;
-    return null;
+  // One retry to absorb a transient CDN hiccup before failing the load.
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {{
+    try {{
+      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+      if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
+      bundleIndex = await r.json();
+      return bundleIndex;
+    }} catch (e) {{
+      lastErr = e;
+      if (attempt === 0) {{
+        console.warn('[OpenOnco] bundle index fetch failed — retrying once:', e);
+        await yieldToBrowser(250);
+      }}
+    }}
   }}
+  console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
+  throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
 }}
 
 // Resolve a disease_id from whatever the patient profile / form gives us.
@@ -2290,29 +2294,20 @@ function resolveDiseaseId(profile) {{
 
 async function loadCoreBundle() {{
   if (coreBundleLoaded) return;
+  // CSD-9C: index is required — monolithic fallback retired.
   await loadBundleIndex();
-  if (bundleIndex && bundleIndex.core) {{
-    setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
-    const ver = bundleIndex.core_version || '';
-    const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
-    const buf = await r.arrayBuffer();
-    await yieldToBrowser();
-    pyodide.unpackArchive(buf, 'zip');
-    coreBundleLoaded = true;
-    return;
+  if (!bundleIndex || !bundleIndex.core) {{
+    throw new Error('Bundle index missing core entry — cannot load engine');
   }}
-  // Fallback: legacy monolithic bundle. Has every disease, so
-  // loadDiseaseModule() becomes a no-op.
-  setStatus('Завантажую двигун OpenOnco (повний)…');
-  const resp = await fetch(FALLBACK_MONOLITHIC_URL + '?v={bundle_version}');
-  if (!resp.ok) throw new Error('Monolithic bundle fetch HTTP ' + resp.status);
-  const buf = await resp.arrayBuffer();
+  setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+  const ver = bundleIndex.core_version || '';
+  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
+  const buf = await r.arrayBuffer();
   await yieldToBrowser();
   pyodide.unpackArchive(buf, 'zip');
   coreBundleLoaded = true;
-  usingMonolithicFallback = true;
 }}
 
 // Per-disease module: tiny zip with the disease's indications, regimens,
@@ -2322,7 +2317,6 @@ async function loadCoreBundle() {{
 // time per slot and drop silently on quota errors.
 async function loadDiseaseModule(diseaseId) {{
   if (!diseaseId) return;
-  if (usingMonolithicFallback) return;             // already have everything
   if (loadedDiseases.has(diseaseId)) return;
   if (!bundleIndex || !bundleIndex.diseases) return;
   const relUrl = bundleIndex.diseases[diseaseId];
@@ -2419,11 +2413,10 @@ await micropip.install(['pydantic', 'pyyaml'])
     initStageStart(stage);
     setStatus('Завантажую двигун OpenOnco…');
     await yieldToBrowser(50);
-    // CSD-6E: lazy-load core bundle (~1.4 MB) instead of monolithic
-    // (~1.8 MB). loadCoreBundle() falls back to the monolithic zip if
-    // the index is unreachable, so old deploys / blocked requests still
-    // work. Per-disease modules are fetched later in runEngine() once
-    // the patient's disease_id is known.
+    // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
+    // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
+    // disease modules are the only path. Per-disease modules are
+    // fetched later in runEngine() once disease_id is known.
     await loadCoreBundle();
     initStageDone(stage);
 
@@ -2504,9 +2497,9 @@ async function runEngine() {{
       return;
     }}
     // CSD-6E: lazy-fetch the per-disease module before generate. No-op
-    // when running on the monolithic fallback or when the disease has
-    // no per-disease bundle. Failures are surfaced but non-fatal —
-    // generate_plan() will fall back to whatever's already loaded.
+    // when the disease has no per-disease bundle (its content is in
+    // core). Failures are surfaced but non-fatal — generate_plan()
+    // will fall back to whatever's already loaded.
     try {{
       const did = resolveDiseaseId(profile);
       if (did) await loadDiseaseModule(did);
@@ -4486,6 +4479,308 @@ def _render_capabilities_en(stats) -> str:
 """
 
 
+# ── Diseases coverage page ────────────────────────────────────────────────
+
+
+def _build_disease_coverage_rows() -> list[dict]:
+    """Bridge to scripts/disease_coverage_matrix.py — re-uses its
+    per_disease_metrics walker so the page + the JSON snapshot + the
+    plan markdown all share one source of truth."""
+    from scripts.disease_coverage_matrix import per_disease_metrics
+    return per_disease_metrics(REPO_ROOT / "knowledge_base" / "hosted" / "content")
+
+
+_DISEASES_PAGE_LABELS = {
+    "uk": {
+        "title": "Хвороби · OpenOnco",
+        "h1": "Хвороби в базі знань",
+        "lead": (
+            "Покриття OpenOnco по 65 онкологічних діагнозах: біомаркери, "
+            "препарати, indications/regimens/RedFlags, наявність алгоритму та "
+            "опитувальника, % наповненості і % верифікації Clinical Co-Lead."
+        ),
+        "sum_diseases": "Усього діагнозів",
+        "sum_avg_fill": "Сер. наповненість",
+        "sum_avg_ver": "Сер. верифікація",
+        "sum_with_signed": "З ≥1 верифікованим indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "З 1L алгоритмом",
+        "sum_algo_2l": "З 2L+ алгоритмом",
+        "fam_lymphoid": "Лімфоїдна гематологія",
+        "fam_myeloid": "Мієлоїдна гематологія",
+        "fam_solid": "Солідні пухлини",
+        "th_disease": "Хвороба", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Метрики",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
+            "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags для цієї хвороби",
+            "<b>1L / 2L</b> — наявність Algorithm для першої / другої+ лінії",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — відсутній",
+            "<b>Fill %</b> — composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % indications цієї хвороби з reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % переважно 0%</b> — діє dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) до призначення "
+            "Clinical Co-Leads. Це навмисно, не bug."
+        ),
+        "footer_data": "Дані оновлюються при кожному build_site.py запуску. JSON snapshot:",
+    },
+    "en": {
+        "title": "Diseases · OpenOnco",
+        "h1": "Diseases in the Knowledge Base",
+        "lead": (
+            "OpenOnco coverage across 65 oncology diagnoses: biomarkers, "
+            "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
+            "presence, % fill and % Clinical Co-Lead verification."
+        ),
+        "sum_diseases": "Total diseases",
+        "sum_avg_fill": "Avg fill",
+        "sum_avg_ver": "Avg verified",
+        "sum_with_signed": "With ≥1 verified indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "With 1L algorithm",
+        "sum_algo_2l": "With 2L+ algorithm",
+        "fam_lymphoid": "Lymphoid hematologic",
+        "fam_myeloid": "Myeloid hematologic",
+        "fam_solid": "Solid tumors",
+        "th_disease": "Disease", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Metric definitions",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
+            "<b>#Drug</b> — distinct drugs in this disease's regimens",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags for this disease",
+            "<b>1L / 2L</b> — Algorithm presence for first-line / second-line+",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — absent",
+            "<b>Fill %</b> — composite over 8 entity types: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % of this disease's indications with reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % is mostly 0%</b> — dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
+            "until Clinical Co-Leads are appointed. This is intentional, not a bug."
+        ),
+        "footer_data": "Data refreshes on every build_site.py run. JSON snapshot:",
+    },
+}
+
+
+def _disease_row_html(r: dict, lbl: dict) -> str:
+    yes, no = lbl["yes"], lbl["no"]
+    algo_1l = yes if r["algo_1l"] else no
+    algo_2l = yes if r["algo_2l"] else no
+    if r["has_quest"]:
+        quest = "STUB" if r["is_stub_quest"] else yes
+    else:
+        quest = no
+    fill_class = "fill-high" if r["fill_pct"] >= 75 else ("fill-mid" if r["fill_pct"] >= 50 else "fill-low")
+    ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
+    short_id = r["id"].replace("DIS-", "")
+    name = (r["name"] or "")[:48]
+    return (
+        '<tr>'
+        f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
+        f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
+        f'<td class="num">{r["n_bios"]}</td>'
+        f'<td class="num">{r["n_drugs"]}</td>'
+        f'<td class="num">{r["n_inds"]}</td>'
+        f'<td class="num">{r["n_regs"]}</td>'
+        f'<td class="num">{r["n_rfs"]}</td>'
+        f'<td class="ck">{algo_1l}</td>'
+        f'<td class="ck">{algo_2l}</td>'
+        f'<td class="ck quest-cell quest-{("stub" if r["is_stub_quest"] else "real" if r["has_quest"] else "none")}">{quest}</td>'
+        f'<td class="num pct {fill_class}"><strong>{r["fill_pct"]}%</strong></td>'
+        f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
+        '</tr>'
+    )
+
+
+def render_diseases(stats, *, target_lang: str = "uk") -> str:
+    """Per-disease coverage page. Pulls live metrics from
+    disease_coverage_matrix.per_disease_metrics so this page is the
+    canonical UI surface for the same data exported as
+    /disease_coverage.json."""
+    import html as _html
+    rows = _build_disease_coverage_rows()
+    lbl = _DISEASES_PAGE_LABELS.get(target_lang, _DISEASES_PAGE_LABELS["uk"])
+
+    n = len(rows)
+    avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
+    avg_ver = round(sum(r["verified_pct"] for r in rows) / max(1, n), 1)
+    n_signed = sum(1 for r in rows if r["verified_pct"] > 0)
+    n_quest_real = sum(1 for r in rows if r["has_quest"] and not r["is_stub_quest"])
+    n_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
+    n_algo_1l = sum(1 for r in rows if r["algo_1l"])
+    n_algo_2l = sum(1 for r in rows if r["algo_2l"])
+
+    # Group by family
+    by_family: dict[str, list[dict]] = {
+        "Лімфоїдна гематологія": [],
+        "Мієлоїдна гематологія": [],
+        "Солідні пухлини": [],
+    }
+    for r in rows:
+        by_family.setdefault(r["family"], []).append(r)
+
+    fam_label_map = {
+        "Лімфоїдна гематологія": lbl["fam_lymphoid"],
+        "Мієлоїдна гематологія": lbl["fam_myeloid"],
+        "Солідні пухлини": lbl["fam_solid"],
+    }
+
+    family_blocks: list[str] = []
+    for fam_key in ("Лімфоїдна гематологія", "Мієлоїдна гематологія", "Солідні пухлини"):
+        flist = by_family.get(fam_key) or []
+        if not flist:
+            continue
+        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], x["name"]))
+        rows_html = "\n".join(_disease_row_html(r, lbl) for r in flist_sorted)
+        f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
+        f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
+        family_blocks.append(f"""
+<section class="dis-family">
+  <h2>{fam_label_map[fam_key]} <span class="fam-count">({len(flist)})</span></h2>
+  <table class="dis-table">
+    <thead><tr>
+      <th class="th-disease">{lbl["th_disease"]}</th>
+      <th>{lbl["th_icd"]}</th>
+      <th class="th-num">{lbl["th_bio"]}</th>
+      <th class="th-num">{lbl["th_drug"]}</th>
+      <th class="th-num">{lbl["th_ind"]}</th>
+      <th class="th-num">{lbl["th_reg"]}</th>
+      <th class="th-num">{lbl["th_rf"]}</th>
+      <th class="th-ck">{lbl["th_1l"]}</th>
+      <th class="th-ck">{lbl["th_2l"]}</th>
+      <th class="th-ck">{lbl["th_quest"]}</th>
+      <th class="th-num">{lbl["th_fill"]}</th>
+      <th class="th-num">{lbl["th_ver"]}</th>
+    </tr></thead>
+    <tbody>
+{rows_html}
+    </tbody>
+    <tfoot><tr>
+      <td colspan="10"><em>avg</em></td>
+      <td class="num pct"><em>{f_fill}%</em></td>
+      <td class="num pct"><em>{f_ver}%</em></td>
+    </tr></tfoot>
+  </table>
+</section>
+""")
+
+    metrics_li = "\n".join(f"<li>{m}</li>" for m in lbl["metrics"])
+
+    top_bar = _render_top_bar(
+        active="diseases", target_lang=target_lang,
+        lang_switch_href=_lang_switch_href("diseases", target_lang),
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{target_lang}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{_html.escape(lbl['title'])}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<style>
+.dis-summary {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 24px; }}
+.dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
+.dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
+.dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-family {{ margin: 28px 0; }}
+.dis-family h2 {{ margin-bottom: 8px; }}
+.dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
+.dis-table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
+.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }}
+.dis-table td {{ padding: 6px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }}
+.dis-table tr:nth-child(even) td {{ background: var(--gray-50); }}
+.dis-table tfoot td {{ background: var(--gray-100); font-style: italic; color: var(--gray-700); }}
+.dis-table .num {{ text-align: right; font-family: var(--font-mono); }}
+.dis-table .ck {{ text-align: center; }}
+.dis-table .mono {{ font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }}
+.dis-table .dis-name {{ color: var(--gray-700); font-weight: normal; }}
+.dis-table .pct {{ font-weight: 600; }}
+.dis-table .pct.fill-high {{ color: #166534; }}
+.dis-table .pct.fill-mid {{ color: #b45309; }}
+.dis-table .pct.fill-low {{ color: #991b1b; }}
+.dis-table .pct.ver-high {{ color: #166534; background: #ecfdf5; }}
+.dis-table .pct.ver-mid {{ color: #b45309; }}
+.dis-table .pct.ver-low {{ color: var(--gray-500); }}
+.quest-cell.quest-stub {{ color: #b45309; font-size: 10px; font-family: var(--font-mono); }}
+.quest-cell.quest-real {{ color: #166534; font-weight: 600; }}
+.quest-cell.quest-none {{ color: var(--gray-500); }}
+.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin-top: 28px; font-size: 13px; }}
+.dis-metrics ul {{ padding-left: 20px; line-height: 1.7; }}
+.dis-metrics .verified-note {{ background: #fef3c7; border-left: 3px solid #d97706; padding: 10px 14px; margin-top: 12px; border-radius: 4px; color: #92400e; }}
+.dis-footer-data {{ font-size: 12px; color: var(--gray-500); margin-top: 20px; }}
+.dis-footer-data a {{ font-family: var(--font-mono); }}
+@media (max-width: 800px) {{ .dis-summary {{ grid-template-columns: repeat(2, 1fr); }} .dis-table {{ font-size: 11px; }} }}
+</style>
+</head>
+<body>
+{top_bar}
+<main>
+  <section class="info-page">
+    <h1>{_html.escape(lbl['h1'])}</h1>
+    <p class="lead">{_html.escape(lbl['lead'])}</p>
+
+    <div class="dis-summary">
+      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_ver']}</div><div class="v">{avg_ver}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_with_signed']}</div><div class="v">{n_signed}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_real']}</div><div class="v">{n_quest_real}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_stub']}</div><div class="v">{n_quest_stub}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
+    </div>
+
+    {''.join(family_blocks)}
+
+    <div class="dis-metrics">
+      <h3>{lbl['metrics_title']}</h3>
+      <ul>
+        {metrics_li}
+      </ul>
+      <div class="verified-note">{lbl['verified_note']}</div>
+    </div>
+
+    <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
+  </section>
+</main>
+</body>
+</html>
+"""
+
+
+def bundle_disease_coverage(output_dir: Path) -> dict:
+    """Write JSON snapshot of per-disease coverage for CI / external tooling.
+    Same source data as the /diseases.html page."""
+    rows = _build_disease_coverage_rows()
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "total_diseases": len(rows),
+        "rows": rows,
+    }
+    out = output_dir / "disease_coverage.json"
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"path": "disease_coverage.json", "count": len(rows)}
+
+
 # ── Limitations page ──────────────────────────────────────────────────────
 
 
@@ -5643,6 +5938,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "limitations.html").write_text(render_limitations(stats), encoding="utf-8")
     (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
     (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
+    (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(bundle_version=bundle_version), encoding="utf-8")
 
@@ -5659,6 +5955,8 @@ def build_site(output_dir: Path) -> dict:
         render_limitations(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "gallery.html").write_text(
         render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+    (output_dir / "en" / "diseases.html").write_text(
+        render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "try.html").write_text(
         render_try(target_lang="en", bundle_version=bundle_version), encoding="utf-8")
 
@@ -5666,6 +5964,7 @@ def build_site(output_dir: Path) -> dict:
 
     examples_payload = bundle_examples(output_dir)
     questionnaires_payload = bundle_questionnaires(output_dir)
+    disease_coverage_payload = bundle_disease_coverage(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -5676,6 +5975,7 @@ def build_site(output_dir: Path) -> dict:
         "service_worker": sw_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
+        "disease_coverage_payload": disease_coverage_payload,
         "landing_assets": landing_assets,
     }
 
