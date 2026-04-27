@@ -2,44 +2,38 @@ id: ALGO-PROSTATE-MHSPC-1L
 applicable_to_disease: DIS-PROSTATE
 applicable_to_disease_state: mHSPC
 applicable_to_line_of_therapy: 1
-purpose: >
-  Select 1L mHSPC regimen. Default: ADT + ARPI (abiraterone preferred per
-  LATITUDE; enzalutamide/apalutamide acceptable). High-volume CHAARTED
-  criteria + docetaxel-eligible: ARASENS triplet. Frail elderly:
-  de-escalate to ADT + ARPI mono.
+purpose: 'Select 1L mHSPC regimen. Default: ADT + ARPI (abiraterone preferred per LATITUDE; enzalutamide/apalutamide acceptable). High-volume CHAARTED criteria + docetaxel-eligible: ARASENS triplet. Frail elderly: de-escalate to ADT + ARPI mono.
 
+  '
 output_indications:
-  - IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
-  - IND-PROSTATE-MHSPC-1L-TRIPLET
-
+- IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
+- IND-PROSTATE-MHSPC-1L-TRIPLET
 default_indication: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
 alternative_indication: IND-PROSTATE-MHSPC-1L-TRIPLET
-
 decision_tree:
-  # Step 1 — frailty / elderly: never triplet
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-PROSTATE-FRAILTY-AGE
-    if_true:
-      result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
-    if_false:
-      next_step: 2
-  # Step 2 — high-volume disease (CHAARTED) + fit → triplet
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "High-volume disease per CHAARTED (visceral mets OR ≥4 bone lesions with ≥1 beyond axial skeleton)"
-        - condition: "Docetaxel-eligible (ECOG 0-1, no significant comorbidity)"
-    if_true:
-      result: IND-PROSTATE-MHSPC-1L-TRIPLET
-    if_false:
-      result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
-sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-PROSTATE-FRAILTY-AGE
+  if_true:
+    result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
+  if_false:
+    next_step: 2
+- step: 2
+  evaluate:
+    all_of:
+    - condition: High-volume disease per CHAARTED (visceral mets OR ≥4 bone lesions with ≥1 beyond axial skeleton)
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: Docetaxel-eligible (no significant comorbidity)
+  if_true:
+    result: IND-PROSTATE-MHSPC-1L-TRIPLET
+  if_false:
+    result: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+sources:
+- SRC-NCCN-PROSTATE-2025
+- SRC-ESMO-PROSTATE-2024
 last_reviewed: null
-notes: >
-  Decision_tree captures the two main 1L decision points: frailty
-  (de-escalate) and volume (intensify). Engine routes through these
-  before defaulting to ADT + ARPI doublet.
+notes: 'Decision_tree captures the two main 1L decision points: frailty (de-escalate) and volume (intensify). Engine routes through these before defaulting to ADT + ARPI doublet.
+
+  '

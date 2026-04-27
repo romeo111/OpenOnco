@@ -1,39 +1,29 @@
 id: ALGO-CERVICAL-LOCALLY-ADVANCED-1L
 applicable_to_disease: DIS-CERVICAL
 applicable_to_line_of_therapy: 1
-purpose: >
-  Scaffold algorithm for locally-advanced cervical (FIGO IB3-IVA).
-  Currently models concurrent cisplatin-CRT only; metastatic
-  KEYNOTE-826 (pembro+chemo+bev), tisotumab vedotin 2L+, early-stage
-  surgical paths await full authoring.
+purpose: 'Scaffold algorithm for locally-advanced cervical (FIGO IB3-IVA). Currently models concurrent cisplatin-CRT only; metastatic KEYNOTE-826 (pembro+chemo+bev), tisotumab vedotin 2L+, early-stage surgical paths await full authoring.
 
+  '
 output_indications:
-  - IND-CERVICAL-LOCALLY-ADVANCED-CRT
-
+- IND-CERVICAL-LOCALLY-ADVANCED-CRT
 default_indication: IND-CERVICAL-LOCALLY-ADVANCED-CRT
 alternative_indication: null
-
 decision_tree:
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "FIGO IB3-IVA (locally advanced)"
-        - condition: "ECOG ≤2 + CrCl ≥60"
-    if_true:
-      result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
-    if_false:
-      result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
+- step: 1
+  evaluate:
+    all_of:
+    - condition: FIGO IB3-IVA (locally advanced)
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - none_of:
+      - red_flag: RF-ORGAN-RENAL-IMPAIRED
+  if_true:
+    result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
+  if_false:
+    result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 sources:
-  - SRC-NCCN-CERVICAL-2025
-
-last_reviewed: "2026-04-26"
-notes: >
-  Single-indication scaffold. Full algorithm requires:
-  - Metastatic 1L (KEYNOTE-826: pembro+carbo+pacli ± bev for PD-L1
-    CPS ≥1)
-  - Recurrent/persistent locally advanced (tisotumab vedotin 2L+)
-  - Early-stage surgical paths (radical hysterectomy IB1-IB2 vs
-    cone IA1; Surgery entity per PROPOSAL §17 needed)
-  - INTERLACE 2024 — induction carbo+pacli before CRT (emerging standard)
+- SRC-NCCN-CERVICAL-2025
+last_reviewed: '2026-04-26'
+notes: "Single-indication scaffold. Full algorithm requires: - Metastatic 1L (KEYNOTE-826: pembro+carbo+pacli ± bev for PD-L1\n  CPS ≥1)\n- Recurrent/persistent locally advanced (tisotumab vedotin 2L+) - Early-stage surgical paths (radical hysterectomy IB1-IB2 vs\n  cone IA1; Surgery entity per PROPOSAL §17 needed)\n- INTERLACE 2024 — induction carbo+pacli before CRT (emerging standard)\n"

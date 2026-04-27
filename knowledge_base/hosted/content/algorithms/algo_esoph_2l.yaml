@@ -1,70 +1,43 @@
 id: ALGO-ESOPH-2L
 applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 2
-purpose: >
-  Select 2L+ metastatic esophageal carcinoma Indication. Two ICI tracks
-  modeled: (1) squamous histology → nivolumab monotherapy (ATTRACTION-3,
-  biomarker-agnostic for ESCC); (2) adenocarcinoma OR squamous + PD-L1
-  CPS ≥10 → pembrolizumab monotherapy (KEYNOTE-181). Adenocarcinoma +
-  CPS <10 routes to gastric-style ramucirumab+paclitaxel (not separately
-  modeled — covered via DIS-GASTRIC pathway when histology is GEJ
-  Siewert I-II adeno; pure esophageal adeno + CPS<10 surfaced as
-  free-text in trace).
+purpose: 'Select 2L+ metastatic esophageal carcinoma Indication. Two ICI tracks modeled: (1) squamous histology → nivolumab monotherapy (ATTRACTION-3, biomarker-agnostic for ESCC); (2) adenocarcinoma OR squamous + PD-L1 CPS ≥10 → pembrolizumab monotherapy (KEYNOTE-181). Adenocarcinoma + CPS <10 routes to gastric-style ramucirumab+paclitaxel (not separately modeled — covered via DIS-GASTRIC pathway when histology is GEJ Siewert I-II adeno; pure esophageal adeno + CPS<10 surfaced as free-text in trace).
 
+  '
 output_indications:
-  - IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
-  - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
-
+- IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
+- IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 default_indication: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 alternative_indication: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
-
 decision_tree:
-  # Step 1 — PD-L1 CPS ≥10 (any histology) → pembrolizumab.
-  # KEYNOTE-181 covers both squamous + adeno when CPS ≥10.
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "PD-L1 CPS ≥10 (22C3 assay)"
-        - condition: "No prior ICI in 1L"
-        - condition: "ECOG ≤1"
-        - condition: "No active autoimmune disease"
-    if_true:
-      result: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
-    if_false:
-      next_step: 2
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
-  # Step 2 — squamous histology (any CPS) → nivolumab.
-  # ATTRACTION-3 is biomarker-agnostic for ESCC.
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "Squamous-cell histology"
-        - condition: "No prior ICI in 1L"
-        - condition: "ECOG ≤1"
-        - condition: "No active autoimmune disease"
-    if_true:
-      result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
-    if_false:
-      result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
-    notes: "MDT-only — multi-condition fitness/eligibility AND-conjunction; cannot wire RF additively without inverting clinical intent. Restructure manually if engine routing required."
-
+- step: 1
+  evaluate:
+    all_of:
+    - condition: PD-L1 CPS ≥10 (22C3 assay)
+    - condition: No prior ICI in 1L
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: No active autoimmune disease
+  if_true:
+    result: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
+  if_false:
+    next_step: 2
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 2
+  evaluate:
+    all_of:
+    - condition: Squamous-cell histology
+    - condition: No prior ICI in 1L
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: No active autoimmune disease
+  if_true:
+    result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
+  if_false:
+    result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 sources:
-  - SRC-NCCN-ESOPHAGEAL-2025
-  - SRC-ESMO-ESOPHAGEAL-2024
-
+- SRC-NCCN-ESOPHAGEAL-2025
+- SRC-ESMO-ESOPHAGEAL-2024
 last_reviewed: '2026-04-26'
-notes: >
-  OOS / wiring gaps:
-  (1) Adenocarcinoma + CPS <10 patients without ICI option — gastric-style
-  ramucirumab+paclitaxel (RAINBOW) is the standard but not separately
-  modeled here; engine should surface free-text recommendation to refer
-  to ALGO-GASTRIC-2L when histology is GEJ-overlap or pure esoph adeno.
-  (2) Patients post 1L ICI (KEYNOTE-590) — no good 2L ICI data; cytotoxic
-  taxane / irinotecan remains the option, not modeled.
-  (3) HER2+ adenocarcinoma 2L T-DXd evidence (DESTINY-Gastric02 + label
-  extrapolation) for GEJ — not modeled as separate esoph indication.
-  (4) MSI-H esophageal 2L pembro-mono — extremely rare; not separately
-  modeled.
-  (5) UA funding gap dominant — neither nivolumab nor pembrolizumab
-  NSZU-reimbursed for esophageal; single-agent taxane is funded fallback.
+notes: 'OOS / wiring gaps: (1) Adenocarcinoma + CPS <10 patients without ICI option — gastric-style ramucirumab+paclitaxel (RAINBOW) is the standard but not separately modeled here; engine should surface free-text recommendation to refer to ALGO-GASTRIC-2L when histology is GEJ-overlap or pure esoph adeno. (2) Patients post 1L ICI (KEYNOTE-590) — no good 2L ICI data; cytotoxic taxane / irinotecan remains the option, not modeled. (3) HER2+ adenocarcinoma 2L T-DXd evidence (DESTINY-Gastric02 + label extrapolation) for GEJ — not modeled as separate esoph indication. (4) MSI-H esophageal 2L pembro-mono — extremely rare; not separately modeled. (5) UA funding gap dominant — neither nivolumab nor pembrolizumab NSZU-reimbursed for esophageal; single-agent taxane is funded fallback.
+
+  '
