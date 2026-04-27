@@ -14,34 +14,36 @@ decision_tree:
 - step: 1
   evaluate:
     any_of:
-    - condition: Both prior cBTKi AND venetoclax-based regimen failed (≥2 prior lines)
-    - condition: BTK-C481 mutation documented at progression
+    - red_flag: RF-CLL-POST-BTKI-C481-ACTIONABLE
     - red_flag: RF-CLL-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-CLL-3L-PIRTOBRUTINIB
   if_false:
     next_step: 2
+  notes: "Wired via RF-CLL-POST-BTKI-C481-ACTIONABLE (CSD-9A): C481S/PLCG2 resistance after cBTKi routes to pirtobrutinib (BRUIN, Mato 2021 — ORR 82%, mPFS 19.6 mo); transformation also routes here pending DLBCL-algo handoff upstream."
 - step: 2
   evaluate:
     all_of:
-    - condition: Prior 1L cBTKi (ibrutinib/acalabrutinib/zanubrutinib) failed
-    - condition: Venetoclax-naive
+    - red_flag: RF-PRIOR-BTKI-PROGRESSION
+    - none_of:
+      - red_flag: RF-CLL-VEN-RESISTANT-ACTIONABLE
   if_true:
     result: IND-CLL-2L-VENR-MURANO
   if_false:
     next_step: 3
-  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+  notes: "Wired via RF-PRIOR-BTKI-PROGRESSION + none_of RF-CLL-VEN-RESISTANT-ACTIONABLE (CSD-9A): post-cBTKi failure with venetoclax-naive disease (no BCL2-G101V, no prior-ven PD) routes to MURANO ven+rituximab; ven-resistant cases fall through to step 3 BTKi class-switch."
 - step: 3
   evaluate:
     all_of:
-    - condition: Prior 1L venetoclax+obinutuzumab failed
+    - any_of:
+      - red_flag: RF-CLL-VEN-RESISTANT-ACTIONABLE
     - none_of:
       - red_flag: RF-PRIOR-BTKI-PROGRESSION
   if_true:
     result: IND-CLL-1L-ZANUBRUTINIB
   if_false:
     result: IND-CLL-2L-VENR-MURANO
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Wired via RF-CLL-VEN-RESISTANT-ACTIONABLE (CSD-9A) + none_of RF-PRIOR-BTKI-PROGRESSION: venetoclax progression in cBTKi-naive patients routes back to BTKi class (zanubrutinib); cBTKi-exposed ven-resistant cases were already captured at step 1 via RF-CLL-POST-BTKI-C481-ACTIONABLE."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-CLL-2024
