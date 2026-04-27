@@ -174,14 +174,22 @@ def _validate_chunk(chunk_dir: Path, hosted_ids: set[str], hosted_src: set[str])
                 failures.append(
                     f"[{rel}] _contribution.target_action '{action}' invalid for entity sidecar"
                 )
-            if action in {"upsert", "flag_duplicate", "review_existing_hosted_draft", "review_existing_stub"} and not contrib.get("target_entity_id"):
+            if action in WRITE_TARGET_ACTIONS and not contrib.get("target_entity_id"):
+                # WRITE actions need explicit target_entity_id — upsert script
+                # consumes it to route the payload into hosted/content/.
                 failures.append(f"[{rel}] target_entity_id required for action={action}")
         elif action is not None and action not in TARGET_ACTIONS:
             # Report-only file with explicit but invalid target_action — flag but don't require.
             failures.append(
                 f"[{rel}] _contribution.target_action '{action}' invalid (use null for report-only files)"
             )
+        # For REVIEW actions, fall back to top-level `id` field if
+        # target_entity_id is missing — review payload is a faithful snapshot
+        # of an existing hosted entity, so its top-level id IS the entity
+        # being flagged for review.
         target_id = contrib.get("target_entity_id")
+        if target_id is None and action in REVIEW_TARGET_ACTIONS:
+            target_id = doc.get("id") if isinstance(doc.get("id"), str) else None
         if target_id and target_id not in manifest:
             failures.append(
                 f"[{rel}] target_entity_id '{target_id}' not in task_manifest.txt"
