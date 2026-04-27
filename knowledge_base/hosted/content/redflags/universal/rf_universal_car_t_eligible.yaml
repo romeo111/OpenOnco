@@ -1,0 +1,82 @@
+id: RF-CAR-T-ELIGIBLE
+definition: >
+  Composite eligibility for CAR-T cell therapy: ECOG ≤2 AND adequate
+  organ function (LVEF ≥40%, CrCl ≥30 mL/min, bilirubin ≤2× ULN, AST/ALT
+  ≤5× ULN, no severe pulmonary disease) AND no active uncontrolled CNS
+  disease AND adequate bridging plan available AND no active uncontrolled
+  infection. Used to gate referral to axi-cel, brexu-cel, liso-cel,
+  tisa-cel, ide-cel, cilta-cel.
+definition_ua: >
+  Композитна придатність до CAR-T клітинної терапії: ECOG ≤2 ТА
+  адекватна функція органів (LVEF ≥40%, CrCl ≥30 мл/хв, білірубін ≤2×
+  ULN, AST/ALT ≤5× ULN, відсутність тяжкої легеневої патології) ТА
+  відсутність активного неконтрольованого ЦНС-захворювання ТА доступний
+  адекватний bridging-план ТА відсутність активної неконтрольованої
+  інфекції. Гейт направлення на axi-cel, brexu-cel, liso-cel, tisa-cel,
+  ide-cel, cilta-cel.
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "ecog"
+      threshold: 2
+      comparator: "<="
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: ">="
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 2
+      comparator: "<="
+    - finding: "active_cns_disease"
+      value: false
+    - finding: "active_uncontrolled_infection"
+      value: false
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: other
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []  # Per-disease CAR-T algorithms reference this RF as
+                      # gate; engine surfaces eligibility verdict and
+                      # bridging recommendations.
+
+sources:
+  - SRC-ZUMA1-NEELAPU-2017
+  - SRC-ZUMA7-LOCKE-2022
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Composite gate harmonized across landmark CAR-T trials (ZUMA-1,
+  TRANSCEND, JULIET, ZUMA-7, TRANSFORM, ZUMA-2, KarMMa, CARTITUDE-1).
+  Real-world expansion of criteria (CIBMTR analysis): ECOG 2 acceptable
+  with consultant judgment; LVEF 40-50% acceptable with cardiology
+  input; bilirubin elevation from disease (Gilbert, hemolysis, cholestasis)
+  vs primary hepatic dysfunction must be distinguished. Active CNS
+  disease requires control (resection / IT / RT) before lymphodepletion;
+  some centers offer CAR-T for primary CNS lymphoma with restricted
+  criteria. Bridging plan is critical — manufacture takes 2-5 weeks; if
+  bridging chemo gives PR/CR, lymphodepletion still scheduled. Ineligibility
+  for one product (e.g., cilta-cel parkinsonism risk) does not preclude
+  another (ide-cel) — re-evaluate per product.
+notes_ua: >
+  Композитний гейт, гармонізований за landmark CAR-T трайлами (ZUMA-1,
+  TRANSCEND, JULIET, ZUMA-7, TRANSFORM, ZUMA-2, KarMMa, CARTITUDE-1).
+  Real-world розширення критеріїв (CIBMTR): ECOG 2 прийнятний за
+  думкою консультанта; LVEF 40-50% — за консультацією кардіолога;
+  гіпербілірубінемію від хвороби (Gilbert, гемоліз, холестаз) проти
+  первинної печінкової дисфункції потрібно розрізняти. Активне
+  ЦНС-захворювання потребує контролю (резекція / IT / ПТ) до
+  лімфодеплеції. Bridging-план критичний — виробництво 2-5 тижнів.
+  Непридатність до одного продукту (cilta-cel паркінсонізм) не виключає
+  інший (ide-cel) — переоцінка за продуктом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
