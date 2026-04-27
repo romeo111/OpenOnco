@@ -1,0 +1,55 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_sclc_svc_syndrome.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-SCLC-SVC-SYNDROME
+definition: "Small-cell lung cancer with superior vena cava syndrome: facial/upper-extremity edema, distended neck veins, dyspnea, plethora — SCLC is a top oncologic cause of SVC syndrome (alongside NSCLC and lymphoma)"
+definition_ua: "Дрібноклітинний рак легені із SVC-синдромом: набряк обличчя/верхніх кінцівок, розширені вени шиї, задишка, плетора — ДКРЛ є провідною онкологічною причиною SVC-синдрому"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "svc_syndrome_present"
+      value: true
+    - finding: "facial_upper_extremity_edema"
+      value: true
+    - finding: "distended_neck_veins"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 12
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-SCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SCLC-2025
+  - SRC-ESMO-SCLC-2021
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  SVC syndrome occurs in ~10% of SCLC at presentation. Per NCCN-SCLC +
+  ESMO-SCLC 2021: SCLC is highly chemosensitive; cisplatin/carboplatin +
+  etoposide first-line is preferred (not RT) when SVC is uncomplicated;
+  endovascular SVC stenting ± urgent palliative RT (30 Gy/10 fx) for
+  rapid relief if neurologic compromise. Direction HOLD on definitive
+  systemic start until vascular access ensured + airway secured;
+  priority 12. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  SVC syndrome occurs in ~10% of SCLC при зверненні. Per NCCN-SCLC + ESMO-SCLC 2021: SCLC is highly chemosensitive; цисплатин/карбоплатин + етопозид перша лінія is переважний (not RT) when SVC is uncomplicated; endovascular SVC stenting ± urgent паліативний RT (30 Gy/10 fx) for rapid relief if neurologic compromise. Direction утримати on definitive systemic start until vascular access ensured + airway secured; priority 12. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

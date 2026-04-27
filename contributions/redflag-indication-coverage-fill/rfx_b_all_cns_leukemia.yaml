@@ -1,0 +1,59 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_b_all_cns_leukemia.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-B-ALL-CNS-LEUKEMIA
+definition: "B-ALL with CNS-2 (CSF blasts, WBC <5/µL) or CNS-3 (CSF WBC ≥5/µL with blasts, or cranial nerve palsy) status at diagnosis or relapse — mandates intensified IT therapy ± cranial RT"
+definition_ua: "B-ALL зі статусом CNS-2 (бласти в лікворі, WBC <5/мкл) або CNS-3 (WBC в лікворі ≥5/мкл з бластами, або параліч черепних нервів) при діагностиці чи рецидиві — інтенсифікована IT-терапія ± краніальна RT"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "csf_blasts_present"
+      value: true
+    - finding: "csf_wbc_per_ul"
+      threshold: 5
+      comparator: ">="
+    - finding: "cranial_nerve_palsy"
+      value: true
+    - finding: "cns_parenchymal_mass"
+      value: true
+    - finding: "cns_status"
+      value: "CNS-3"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 20
+category: high-risk-biology
+relevant_diseases:
+  - DIS-B-ALL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CALGB-10403-STOCK-2019
+  - SRC-BLAST-GOKBUGET-2018
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN ALL/LBL: CNS-3 at diagnosis warrants cranial RT (12-18 Gy)
+  addition + intensified IT MTX/Ara-C/HC schedule. CALGB-10403 + GMALL
+  protocols both define CNS-2/CNS-3 thresholds and IT escalation.
+  Direction INTENSIFY — adds CNS-directed therapy to chosen 1L
+  regimen; priority 20. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Per NCCN ALL/LBL: CNS-3 при діагнозі warrants cranial RT (12-18 Gy) addition + intensified IT MTX/Ara-C/HC схема. CALGB-10403 + GMALL protocols both define CNS-2/CNS-3 thresholds and IT escalation. Direction INTENSIFY — adds CNS-directed терапія to chosen 1L схема; priority 20. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

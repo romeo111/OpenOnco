@@ -1,0 +1,66 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_t_all_mediastinal_airway.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-T-ALL-MEDIASTINAL-AIRWAY
+definition: "T-ALL/T-LBL with anterior mediastinal mass causing airway compromise (stridor, orthopnea, SVC syndrome features) or pericardial effusion with tamponade physiology — class-defining presentation in T-ALL"
+definition_ua: "T-ALL/T-LBL з передньою медіастинальною масою та компрометацією дихальних шляхів (стридор, ортопноє, ознаки SVC-синдрому) або перикардіальним випотом з тампонадою — класична презентація T-ALL"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "anterior_mediastinal_mass_cm"
+      threshold: 10
+      comparator: ">="
+    - finding: "stridor_or_airway_compromise"
+      value: true
+    - finding: "orthopnea_supine_intolerance"
+      value: true
+    - finding: "pericardial_effusion_tamponade"
+      value: true
+    - finding: "svc_syndrome_present"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-T-ALL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CALGB-10403-STOCK-2019
+  - SRC-BLAST-GOKBUGET-2018
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  T-ALL/T-LBL anterior mediastinal mass is class-defining (~50-60% of T-ALL).
+  Airway compromise + SVC syndrome are joint emergency presentations requiring
+  HOLD on definitive induction — needs urgent steroids (prednisone or
+  dexamethasone) to debulk, head-elevation, avoid supine GA. Per NCCN-BCELL
+  ALL/LBL section: emergent steroid pre-phase before formal induction in
+  symptomatic mediastinal mass. Per CALGB-10403: pediatric-inspired regimens
+  begin with steroid pre-phase that addresses this. Direction HOLD because
+  definitive induction is deferred until airway / SVC stabilized; priority 8
+  to win conflicts with TLS-emergency (which fires on the same patient).
+  STUB — requires clinical co-lead signoff. Wiring suggestion:
+  ALGO-T-ALL-1L step that branches on this RF to a steroid-pre-phase
+  pathway before regimen selection.
+notes_ua: >
+  T-ALL/T-LBL anterior mediastinal mass is class-defining (~50-60% of T-ALL). Airway compromise + SVC syndrome are joint emergency presentations requiring утримати on definitive індукція — needs urgent steroids (prednisone or dexamethasone) to debulk, head-elevation, avoid supine GA. Per NCCN-BCELL ALL/LBL section: emergent steroid pre-phase before formal індукція in symptomatic mediastinal mass. Per CALGB-10403: педіатричний-inspired схеми begin with steroid pre-phase that addresses this. Direction утримати because definitive індукція is deferred until airway / SVC stabilized; priority 8 to win conflicts with TLS-emergency (which fires on the same patient). STUB — requires clinical co-lead signoff. Wiring suggestion: ALGO-T-ALL-1L step that branches on this RF to a steroid-pre-phase pathway before схема selection.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,59 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_nsclc_brain_mets_emergency.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-NSCLC-BRAIN-METS-EMERGENCY
+definition: "NSCLC with symptomatic brain metastases requiring emergency intervention: focal deficit, new seizure, raised intracranial pressure, or impending herniation. Asymptomatic / oligometastatic brain disease handled separately"
+definition_ua: "НМРЛ із симптомними мозковими метастазами, що потребують невідкладного втручання: фокальний дефіцит, новий судомний напад, підвищений ВЧТ, ризик дислокації. Асимптомні/олігометастатичні ураження ведуться окремо"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "brain_metastases_symptomatic"
+      value: true
+    - finding: "raised_intracranial_pressure"
+      value: true
+    - finding: "new_seizure"
+      value: true
+    - finding: "midline_shift_mm"
+      threshold: 5
+      comparator: ">"
+
+clinical_direction: hold
+
+severity: critical
+priority: 14
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Symptomatic brain mets in NSCLC ~20-30% at presentation. Per NCCN-NSCLC:
+  dexamethasone 4-16 mg/day depending on edema; SRS for ≤4 lesions or
+  WBRT for diffuse; surgical resection for large solitary or
+  herniation-risk. Systemic therapy choice influenced by CNS-penetrant
+  drugs (osimertinib for EGFR, alectinib/lorlatinib for ALK, pembrolizumab
+  active in CNS for PD-L1-high). Direction HOLD on systemic therapy
+  start until ICP controlled; priority 14. STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  Symptomatic brain mets in NSCLC ~20-30% при зверненні. Per NCCN-NSCLC: dexamethasone 4-16 mg/day depending on edema; SRS for ≤4 lesions or WBRT for diffuse; surgical resection for large solitary or herniation-risk. Systemic терапія choice influenced by CNS-penetrant drugs (осимертиніб for EGFR, алектиніб/лорлатиніб for ALK, пембролізумаб active in CNS for PD-L1-high). Direction утримати on systemic терапія start until ICP controlled; priority 14. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

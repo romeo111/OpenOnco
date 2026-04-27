@@ -1,0 +1,109 @@
+_contribution:
+  chunk_id: bma-drafting-gap-diseases
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/biomarker_actionability/bma_jak2_v617f_et.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: BMA-JAK2-V617F-ET
+biomarker_id: BIO-JAK2
+variant_qualifier: V617F (exon 14 — present in ~50-60% of essential thrombocythemia)
+disease_id: DIS-ET
+escat_tier: IA
+evidence_summary: 'JAK2 V617F is one of three defining drivers in essential thrombocythemia
+  (~50-60%; CALR ~25-30%, MPL ~3-5%, triple-negative ~10-15%) and a WHO 2022 / ICC
+  2022 major diagnostic criterion (per SRC-NCCN-MPN-2025, SRC-ESMO-MPN-2015). Treatment
+  is risk-stratified by IPSET-thrombosis (age, prior thrombosis, JAK2 V617F positivity,
+  cardiovascular risk factors); high-risk → cytoreduction with hydroxyurea (PT1 trial
+  Harrison 2005 — superior thrombosis-free survival vs anagrelide in HU-naive ET);
+  low-risk → low-dose aspirin alone (or observation in CALR-mutated very-low-risk
+  per SRC-ESMO-MPN-2015).
+
+  '
+evidence_summary_ua: 'JAK2 V617F is one of three defining drivers in essential thrombocythemia
+  (~50-60%; CALR ~25-30%, MPL ~3-5%, triple-negative ~10-15%) and a WHO 2022 / ICC
+  2022 major діагностичний criterion (per SRC-NCCN-MPN-2025, SRC-ESMO-MPN-2015). лікування
+  is risk-stratified by IPSET-thrombosis (age, prior thrombosis, JAK2 V617F positivity,
+  cardiovascular risk factors); високого ризику → cytoreduction with гідроксикарбамід
+  (PT1 дослідження Harrison 2005 — перевершує thrombosis-free виживаність vs анагрелід
+  in HU-naive ET); низького ризику → low-доза aspirin alone (or observation in CALR-mutated
+  very-низького ризику per SRC-ESMO-MPN-2015).
+
+  '
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+regulatory_approval:
+  fda:
+  - anagrelide — ET (FDA approved 1997)
+  - hydroxyurea — myeloproliferative disorders (FDA approved on-label 1968)
+  ema:
+  - anagrelide — high-risk ET resistant/intolerant to first-line
+  ukraine: []
+recommended_combinations:
+- low-dose aspirin (low-risk per SRC-NCCN-MPN-2025)
+- hydroxyurea + aspirin (high-risk 1L per SRC-PT1-HARRISON-2005)
+- interferon-alpha (preferred for younger high-risk per SRC-NCCN-MPN-2025, SRC-ESMO-MPN-2015)
+- anagrelide (HU-resistant/intolerant 2L)
+contraindicated_monotherapy: []
+primary_sources:
+- SRC-NCCN-MPN-2025
+- SRC-ESMO-MPN-2015
+- SRC-PT1-HARRISON-2005
+- SRC-ONCOKB
+last_verified: '2026-04-27'
+evidence_sources:
+- source: SRC-ONCOKB
+  level: '1'
+  evidence_ids: []
+  direction: null
+  significance: null
+  note: Pre-CIViC-pivot legacy entry — pending Phase 3 reconciliation against CIViC.
+    Per OncoKB ToS this entry is NOT surfaced in HCP or patient render; Phase 4 render
+    skips evidence_sources entries with source=SRC-ONCOKB.
+- source: SRC-CIVIC
+  level: B
+  evidence_ids:
+  - '1'
+  direction: Supports
+  significance: Negative
+  note: 'Auto-added Phase 3-N from CIViC snapshot 2026-04-25; therapies: (no therapy
+    attached)'
+- source: SRC-CIVIC
+  level: B
+  evidence_ids:
+  - '5'
+  - '6'
+  - '7'
+  direction: Supports
+  significance: Positive
+  note: 'Auto-added Phase 3-N from CIViC snapshot 2026-04-25; therapies: (no therapy
+    attached)'
+- source: SRC-CIVIC
+  level: B
+  evidence_ids:
+  - '19'
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'Auto-added Phase 3-N from CIViC snapshot 2026-04-25; therapies: Peginterferon
+    Alfa-2b'
+- source: SRC-CIVIC
+  level: D
+  evidence_ids:
+  - '20'
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'Auto-added Phase 3-N from CIViC snapshot 2026-04-25; therapies: Fedratinib'
+actionability_review_required: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: 'ESCAT IA / OncoKB Level 1 — JAK2 mutation status is required for diagnosis
+  and risk stratification (IPSET-thrombosis upgrades JAK2- positive patients into
+  higher-risk strata per SRC-ESMO-MPN-2015). V617F allele burden does not determine
+  treatment choice. Source-gap: SRC-NCCN-MPN-2025 STUB; awaits full ingestion.
+
+  '

@@ -1,0 +1,58 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_mastocytosis_high_risk_biology.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-MASTOCYTOSIS-HIGH-RISK-BIOLOGY
+definition: "Aggressive systemic mastocytosis variant by WHO 5th ed.: SM with associated hematologic neoplasm (SM-AHN), aggressive SM (ASM), mast cell leukemia (MCL ≥10% mast cells in PB or ≥20% in BM), mast cell sarcoma; KIT D816V detected"
+definition_ua: "Агресивний варіант системного мастоцитозу за ВООЗ 5-те вид.: SM з асоційованим гематологічним новоутворенням (SM-AHN), агресивний SM (ASM), мастоцитоз-лейкоз (MCL ≥10% у ПК або ≥20% у КМ), саркома мастоцитів; KIT D816V"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "sm_ahn_diagnosis"
+      value: true
+    - finding: "asm_diagnosis"
+      value: true
+    - finding: "mast_cell_leukemia"
+      value: true
+    - finding: "mast_cell_sarcoma"
+      value: true
+    - finding: "kit_d816v_positive"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 30
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-WHO-LNSC-2023
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  KIT D816V is present in ≥90% of advSM and is the actionable target for
+  midostaurin (RATIFY/PATHWAY studies) and avapritinib (PATHFINDER, EXPLORER).
+  AHN component (most often myeloid neoplasm — CMML, MDS, MPN-U) is
+  treated separately per its own algorithm AND with KIT-directed therapy.
+  Direction INTENSIFY → KIT-targeted therapy + AHN-directed regimen.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  KIT D816V is present in ≥90% of advSM and is the actionable target for мідостаурин (RATIFY/PATHWAY дослідження) and avapritinib (PATHFINDER, EXPLORER). AHN component (найбільш часто myeloid neoplasm — CMML, MDS, MPN-U) is treated separately per its own algorithm AND with KIT-directed терапія. Direction INTENSIFY → KIT-таргетна терапія + AHN-directed схема. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

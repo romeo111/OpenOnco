@@ -1,0 +1,60 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_pmbcl_mediastinal_airway.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-PMBCL-MEDIASTINAL-AIRWAY
+definition: "PMBCL with bulky anterior mediastinal mass (≥10 cm) causing airway compromise (stridor, orthopnea, supine intolerance, post-obstructive pneumonia) or pericardial effusion with tamponade physiology"
+definition_ua: "PMBCL з масивною передньою медіастинальною масою (≥10 см) та компрометацією дихальних шляхів (стридор, ортопноє, ознаки тампонади перикарда)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "mediastinal_mass_cm"
+      threshold: 10
+      comparator: ">="
+    - finding: "stridor_or_airway_compromise"
+      value: true
+    - finding: "orthopnea_supine_intolerance"
+      value: true
+    - finding: "pericardial_effusion_tamponade"
+      value: true
+    - finding: "post_obstructive_pneumonia"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PMBCL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Bulky mediastinal mass (≥10 cm) is in the PMBCL diagnostic criteria
+  (WHO 5th ed.) and is the dominant prognostic factor. Per NCCN B-cell
+  PMBCL section: emergency steroid debulking, head elevation, avoid
+  general anesthesia in supine; CT-guided percutaneous core biopsy if
+  airway too compromised for surgical biopsy. Direction HOLD until
+  airway/circulation stabilized; priority 8. STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  Bulky mediastinal mass (≥10 cm) is in the PMBCL діагностичний criteria (WHO 5th ed.) and is the dominant прогностичний factor. Per NCCN B-cell PMBCL section: emergency steroid debulking, head elevation, avoid general anesthesia in supine; CT-guided percutaneous core біопсія if airway too compromised for surgical біопсія. Direction утримати until airway/circulation stabilized; priority 8. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

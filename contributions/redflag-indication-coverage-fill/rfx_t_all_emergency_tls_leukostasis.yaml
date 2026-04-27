@@ -1,0 +1,64 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_t_all_emergency_tls_leukostasis.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-T-ALL-EMERGENCY-TLS-LEUKOSTASIS
+definition: "T-ALL with hyperleukocytosis (WBC ≥100 K/µL), spontaneous tumor lysis (LDH >2× ULN, uric acid >7.5 mg/dL, hyperphosphatemia, hyperkalemia, hypocalcemia) or symptomatic leukostasis at diagnosis — requires emergency stabilization before induction"
+definition_ua: "T-ALL з гіперлейкоцитозом (WBC ≥100 К/мкл), спонтанним синдромом лізису пухлини (ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперфосфатемія, гіперкаліємія, гіпокальціємія) або симптомним лейкостазом при діагностиці — невідкладна стабілізація до індукції"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "wbc_k_ul"
+      threshold: 100
+      comparator: ">="
+    - finding: "ldh_ulnratio"
+      threshold: 2
+      comparator: ">"
+    - finding: "uric_acid_mg_dl"
+      threshold: 7.5
+      comparator: ">"
+    - finding: "leukostasis_symptoms"
+      value: true
+    - finding: "tls_active"
+      value: true
+    - finding: "potassium_mmol_l"
+      threshold: 5.5
+      comparator: ">"
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-T-ALL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CALGB-10403-STOCK-2019
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  T-ALL hyperleukocytosis + TLS is high-frequency (T-ALL median WBC at
+  diagnosis ~50-100K). Per NCCN: rasburicase IV 0.2 mg/kg + IV hydration
+  + electrolyte management before steroid pre-phase / induction. Per
+  CALGB-10403: stepwise cytoreduction with steroid pre-phase to mitigate
+  acute TLS. Direction HOLD; priority 10 (matches AML emergency RF).
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  T-ALL hyperleukocytosis + TLS is high-frequency (T-ALL медіана WBC при діагнозі ~50-100K). Per NCCN: rasburicase IV 0.2 mg/kg + IV hydration + electrolyte management before steroid pre-phase / індукція. Per CALGB-10403: stepwise cytoreduction with steroid pre-phase to mitigate acute TLS. Direction утримати; priority 10 (matches AML emergency RF). STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
