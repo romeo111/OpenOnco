@@ -24,14 +24,24 @@ decision_tree:
       next_step: 2
   - step: 2
     evaluate:
-      all_of:
-        - condition: "Standard-risk genetics"
-        - condition: "iwCLL treatment indication present"
+      any_of:
+        - red_flag: RF-BINET-B-C
+        - red_flag: RF-RAI-HIGH
+    if_true:
+      result: IND-CLL-1L-BTKI
+    if_false:
+      next_step: 3
+    notes: "Wired via RF-BINET-B-C / RF-RAI-HIGH (CSD-8A): treatment indication established by stage; standard-risk genetics route to BTKi 1L."
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-BINET-A
+        - red_flag: RF-RAI-LOW
     if_true:
       result: IND-CLL-1L-BTKI
     if_false:
       result: IND-CLL-1L-BTKI
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Wired via RF-BINET-A / RF-RAI-LOW (CSD-8A): early-stage CLL without iwCLL treatment indication — engine pins to BTKi as default but plan render surfaces watch-and-wait recommendation."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"
