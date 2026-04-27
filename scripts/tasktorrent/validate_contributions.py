@@ -116,11 +116,16 @@ def _validate_chunk(chunk_dir: Path, hosted_ids: set[str], hosted_src: set[str])
     if not manifest_path.exists():
         failures.append(f"[{chunk_id}] missing task_manifest.txt")
         return failures
-    manifest = {
-        line.strip()
-        for line in manifest_path.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.lstrip().startswith("#")
-    }
+    # Manifest format: one stable ID per line. Optional `::path::filename`
+    # suffix is allowed (some contributors use `id::path::filename` triples
+    # to encode source-entity paths). Take the first `::`-separated field as
+    # the canonical stable ID.
+    manifest = set()
+    for line in manifest_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        manifest.add(line.split("::", 1)[0].strip())
     if not manifest:
         failures.append(f"[{chunk_id}] task_manifest.txt is empty")
         return failures
