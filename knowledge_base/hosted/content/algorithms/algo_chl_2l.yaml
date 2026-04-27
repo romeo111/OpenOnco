@@ -17,17 +17,23 @@ default_indication: IND-CHL-2L-PEMBROLIZUMAB
 alternative_indication: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
 
 decision_tree:
-  # Step 1 — high-risk profile pre-ASCT → BV maintenance post-ASCT.
+  # Step 1 — BV-naive gate. AETHERA BV-maintenance post-ASCT requires
+  # patient is BV-exposure-naive at the maintenance start (or limited
+  # prior BV in the salvage line) and has ≥1 high-risk feature for
+  # post-ASCT relapse. RF-PRIOR-BV-NAIVE wires the BV-naive prerequisite;
+  # high-risk-feature composite remains MDT-evaluated text (no
+  # pan-disease RF for the post-ASCT high-risk composite yet).
   - step: 1
     evaluate:
       all_of:
+        - red_flag: RF-PRIOR-BV-NAIVE
         - condition: "ASCT-eligible AND completed BV-based salvage → BEAM-ASCT"
         - condition: "≥1 high-risk feature: primary refractory OR extranodal involvement at relapse OR <12mo from CR1 to relapse OR ≥2 prior salvage lines"
     if_true:
       result: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
     if_false:
       next_step: 2
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Partially wired - RF-PRIOR-BV-NAIVE gates AETHERA eligibility (BV-naive vs BV-exposed routes); remaining high-risk composite (primary refractory OR extranodal OR <12mo CR1→relapse OR ≥2 prior salvage) kept as MDT-evaluated text (no pan-disease RF for post-ASCT high-risk composite yet)."
 
   # Step 2 — post-ASCT relapse OR transplant-ineligible → pembrolizumab.
   - step: 2

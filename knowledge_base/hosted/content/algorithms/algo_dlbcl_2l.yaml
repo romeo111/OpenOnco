@@ -13,21 +13,13 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: 'Transplant-eligible: age ≤70'
-    - any_of:
-      - red_flag: RF-FITNESS-ECOG-FIT
-      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    - none_of:
-      - red_flag: RF-ORGAN-RENAL-IMPAIRED
-    - none_of:
-      - red_flag: RF-ORGAN-CARDIAC-LVEF-LOW
-    - condition: Adequate organ function (no active infection)
+    - red_flag: RF-ASCT-ELIGIBLE-COMPOSITE
     - condition: First relapse, chemosensitive disease (≥PR to salvage)
   if_true:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
   if_false:
     next_step: 2
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired - RF-ASCT-ELIGIBLE-COMPOSITE gates the transplant-eligible composite (ECOG ≤2 + LVEF ≥50% + CrCl ≥30 + bilirubin ≤2× ULN + no active infection + age <70) for autoSCT consolidation route (vs transplant-ineligible CAR-T pivot at step 2); chemosensitivity-to-salvage criterion remains MDT-text (response-to-prior-line not RF-modelled)."
 - step: 2
   evaluate:
     all_of:

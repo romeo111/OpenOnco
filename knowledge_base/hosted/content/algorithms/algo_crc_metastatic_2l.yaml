@@ -77,11 +77,15 @@ decision_tree:
   # Step 5 — Anti-EGFR rechallenge (3L+; positioned here so 2L candidates
   # without driver mutations route to standard cytotoxic-switch first).
   # Only fires if patient has prior anti-EGFR response AND intervening
-  # EGFR-free 2L line — typically 3L scenario.
+  # EGFR-free 2L line — typically 3L scenario. RF-CRC-RAS-WT gates the
+  # extended-RAS WT prerequisite at baseline; ctDNA RAS-WT at
+  # rechallenge timepoint, prior-EGFR-response and intervening-line
+  # criteria remain MDT-text (CHRONOS-style ctDNA timing not modelled).
   - step: 5
     evaluate:
       all_of:
-        - condition: "RAS wild-type at baseline AND ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
+        - red_flag: RF-CRC-RAS-WT
+        - condition: "ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
         - condition: "Prior anti-EGFR response (PR or better OR SD ≥6 mo) in 1L"
         - condition: "Intervening anti-EGFR-free 2L line completed (typically bev-based)"
         - condition: "BRAF V600E excluded (ruled out via step 2)"
@@ -89,7 +93,7 @@ decision_tree:
       result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
     if_false:
       next_step: 6
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type baseline (CHRONOS biomarker selection for cetuximab rechallenge post-FOLFOX failure); ctDNA-timepoint RAS-WT, prior-EGFR-response, and intervening-line criteria remain MDT-text (CHRONOS-style ctDNA timing and prior-response history not RF-modelled)."
 
   # Step 6 — 2L cytotoxic-switch default (FOLFOX → FOLFIRI + biologic
   # continuation per TML/ML18147). Standard track.

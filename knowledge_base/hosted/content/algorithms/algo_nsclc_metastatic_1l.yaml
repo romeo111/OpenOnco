@@ -66,14 +66,15 @@ decision_tree:
       next_step: 5
     notes: "MDT-only — driver-positive cohort routes to 2L+ targeted regimen as a placeholder (1L per-driver Indications not yet authored for ROS1/MET/RET/NTRK/BRAF V600E in this KB; PROD-5 territory). KRAS G12C deliberately excluded from 1L (no approved 1L G12Ci)."
   - step: 5
+    # PD-L1 TPS ≥50% (KEYNOTE-024) → pembro monotherapy 1L; lower
+    # TPS / non-squamous → chemo+pembro (KEYNOTE-189 / KEYNOTE-407).
     evaluate:
       any_of:
-        - condition: "PD-L1 TPS ≥50%"
+        - red_flag: RF-NSCLC-PDL1-50-PLUS
     if_true:
       result: IND-NSCLC-PDL1-HIGH-MET-1L
     if_false:
       result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
 last_reviewed: null
