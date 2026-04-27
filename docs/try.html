@@ -1446,41 +1446,68 @@ function yieldToBrowser(ms) {
 // ── Boot ──────────────────────────────────────────────────────────────────
 async function loadAssets() {
   setStatus('Завантажую опитувальники…');
-  const [qResp, exResp] = await Promise.all([
-    fetch('/questionnaires.json'),
-    fetch('/examples.json'),
-  ]);
-  questionnaires = await qResp.json();
-  examples = await exResp.json();
+  let qResp, exResp;
+  try {
+    [qResp, exResp] = await Promise.all([
+      fetch('/questionnaires.json'),
+      fetch('/examples.json'),
+    ]);
+  } catch (e) {
+    setStatus('Помилка fetch: ' + e.message, 'error');
+    console.error('[loadAssets] fetch failed', e);
+    throw e;
+  }
+  try {
+    questionnaires = await qResp.json();
+    examples = await exResp.json();
+  } catch (e) {
+    setStatus('Помилка JSON-parse: ' + e.message, 'error');
+    console.error('[loadAssets] JSON parse failed', e);
+    throw e;
+  }
+  console.log('[loadAssets] loaded', questionnaires.length, 'questionnaires +', examples.length, 'examples');
 
-  // Disease selector — hand-authored first, then auto-generated stubs
-  // (stubs marked with ⚠ prefix in the dropdown so users see the
-  // distinction at a glance; they still work end-to-end with the engine
-  // but content depth is preliminary, pending clinical co-lead review).
+  // Disease selector — defensive populate. If the new sort/separator
+  // logic throws for any reason, fall back to the original simple forEach
+  // so the dropdown is never left empty (better degraded UX than blank).
   diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
-  const sorted = [...questionnaires].map((q, i) => ({q, i}))
-    .sort((a, b) => {
-      const aStub = !!a.q._stub_auto_generated;
-      const bStub = !!b.q._stub_auto_generated;
-      if (aStub !== bStub) return aStub ? 1 : -1;  // hand-authored first
-      return (a.q.title || '').localeCompare(b.q.title || '');
-    });
-  let stubGroupOpened = false;
-  for (const {q, i} of sorted) {
-    const isStub = !!q._stub_auto_generated;
-    if (isStub && !stubGroupOpened) {
-      const sep = document.createElement('option');
-      sep.value = '';
-      sep.disabled = true;
-      sep.textContent = '— ⚠ Auto-generated STUB questionnaires (preliminary) —';
-      diseaseSelect.appendChild(sep);
-      stubGroupOpened = true;
+  try {
+    const sorted = [...questionnaires].map((q, i) => ({q, i}))
+      .sort((a, b) => {
+        const aStub = !!a.q._stub_auto_generated;
+        const bStub = !!b.q._stub_auto_generated;
+        if (aStub !== bStub) return aStub ? 1 : -1;  // hand-authored first
+        return (a.q.title || '').localeCompare(b.q.title || '');
+      });
+    let stubGroupOpened = false;
+    for (const item of sorted) {
+      const q = item.q;
+      const i = item.i;
+      const isStub = !!q._stub_auto_generated;
+      if (isStub && !stubGroupOpened) {
+        const sep = document.createElement('option');
+        sep.value = '';
+        sep.disabled = true;
+        sep.textContent = '— Auto-generated STUB questionnaires (preliminary) —';
+        diseaseSelect.appendChild(sep);
+        stubGroupOpened = true;
+      }
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = (isStub ? '[STUB] ' : '') + (q.title || q.id || '?');
+      if (isStub) opt.dataset.stub = '1';
+      diseaseSelect.appendChild(opt);
     }
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = isStub ? `⚠ ${q.title}` : q.title;
-    if (isStub) opt.dataset.stub = '1';
-    diseaseSelect.appendChild(opt);
+  } catch (e) {
+    console.error('[loadAssets] sort/separator failed, falling back to simple forEach', e);
+    // Fallback: original simple populate so dropdown is never empty
+    diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
+    questionnaires.forEach((q, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = q.title || q.id || '?';
+      diseaseSelect.appendChild(opt);
+    });
   }
 
   // Examples selector — initial population shows all; narrows once a
