@@ -1,0 +1,94 @@
+id: RF-CRC-RAS-WT
+definition: >
+  Metastatic colorectal cancer with RAS wild-type status: KRAS exon 2
+  (codons 12, 13), exon 3 (codons 59, 61), exon 4 (codons 117, 146)
+  AND NRAS exon 2/3/4 ALL wild-type by NGS or extended-RAS PCR. Defines
+  the ~50% of mCRC eligible for anti-EGFR monoclonal antibody therapy
+  (cetuximab, panitumumab) when combined with chemotherapy backbone.
+  Left-sided RAS-WT mCRC particularly benefits from 1L anti-EGFR + FOLFOX/
+  FOLFIRI (CALGB/SWOG-80405, FIRE-3, PRIME, CRYSTAL — survival benefit
+  driven by left-sided primaries; right-sided RAS-WT does NOT benefit
+  and routes to bevacizumab + chemo).
+definition_ua: >
+  Метастатичний КРР з RAS wild-type статусом: KRAS exon 2 (кодони 12, 13),
+  exon 3 (кодони 59, 61), exon 4 (кодони 117, 146) ТА NRAS exon 2/3/4
+  ВСІ WT за NGS або extended-RAS PCR. Визначає ~50% mCRC, придатні до
+  anti-EGFR моноклональних антитіл (цетуксимаб, панітумумаб) у комбінації
+  з хіміо backbone. Лівобічна RAS-WT mCRC особливо отримує користь від
+  1L anti-EGFR + FOLFOX/FOLFIRI (CALGB/SWOG-80405, FIRE-3, PRIME, CRYSTAL —
+  survival benefit зумовлений лівобічними первинками; правобічна RAS-WT
+  НЕ отримує вигоди і маршрутизується на бевацизумаб + хіміо).
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "kras_status"
+          value: "wild_type"
+        - finding: "kras_mutation"
+          value: false
+        - finding: "kras_extended_status"
+          value: "wild_type"
+    - any_of:
+        - finding: "nras_status"
+          value: "wild_type"
+        - finding: "nras_mutation"
+          value: false
+    - any_of:
+        - finding: "ras_status"
+          value: "wild_type"
+        - finding: "extended_ras_status"
+          value: "wild_type"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CRC
+shifts_algorithm:
+  - ALGO-CRC-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Sidedness modifier: left-sided primary (splenic flexure to rectum) +
+  RAS-WT — anti-EGFR + chemo strongly preferred (mOS ~38 mo with cetux+
+  FOLFOX vs ~33 mo with bev+FOLFOX, FIRE-3 left-sided). Right-sided
+  primary (cecum to transverse) + RAS-WT — bev + chemo preferred (anti-
+  EGFR no benefit or harm in right-sided despite RAS-WT). MSI-H still
+  takes priority (RF-CRC-MSI-H-ACTIONABILITY) — pembrolizumab 1L
+  regardless of RAS status. BRAF V600E mutation (RF-CRC-BRAF-V600E) is
+  a DIFFERENT axis — even RAS-WT BRAF-V600E does NOT respond to anti-EGFR
+  alone; routes to encorafenib + cetuximab (BEACON-CRC). HER2 amplification
+  (~3% RAS-WT) — trastuzumab + tucatinib or T-DXd second-line option
+  (MOUNTAINEER, DESTINY-CRC01). Left-sided + RAS-WT + BRAF-WT + HER2-WT
+  + MSS = canonical anti-EGFR target population (~30% of mCRC).
+  Resistance evolution: ctDNA monitoring at progression for emerging
+  RAS or EGFR-ECD (S492R) mutations — anti-EGFR rechallenge after a
+  TKI-free interval (CHRONOS, Sartore-Bianchi 2022) is feasible if
+  ctDNA shows RAS-WT clonal reset.
+notes_ua: >
+  Sidedness модифікатор: лівобічний первинник (splenic flexure до прямої)
+  + RAS-WT — anti-EGFR + хіміо строго переважно (мОВ ~38 міс з цетук+
+  FOLFOX vs ~33 міс з бев+FOLFOX, FIRE-3 left-sided). Правобічний
+  первинник (сліпа до поперечної) + RAS-WT — бев + хіміо переважно
+  (anti-EGFR без вигоди або шкода у правобічних попри RAS-WT). MSI-H
+  усе ще має пріоритет (RF-CRC-MSI-H-ACTIONABILITY) — пембролізумаб 1L
+  незалежно від RAS. BRAF V600E мутація (RF-CRC-BRAF-V600E) — ІНША вісь —
+  навіть RAS-WT BRAF-V600E НЕ відповідає на anti-EGFR alone; маршрут
+  на енкорафеніб + цетуксимаб (BEACON-CRC). HER2 ампліфікація (~3%
+  RAS-WT) — трастузумаб + тукатиніб або T-DXd 2L опція (MOUNTAINEER,
+  DESTINY-CRC01). Лівобічний + RAS-WT + BRAF-WT + HER2-WT + MSS =
+  канонічна anti-EGFR target population (~30% mCRC). Еволюція
+  резистентності: ctDNA моніторинг при прогресії для нових RAS або
+  EGFR-ECD (S492R) мутацій — anti-EGFR rechallenge після TKI-free
+  interval (CHRONOS, Sartore-Bianchi 2022) — feasible якщо ctDNA
+  показує RAS-WT clonal reset.
