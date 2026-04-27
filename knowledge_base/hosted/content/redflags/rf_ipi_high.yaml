@@ -1,0 +1,37 @@
+id: RF-IPI-HIGH
+definition: "DLBCL with International Prognostic Index 4-5 (high risk) — supports Pola-R-CHP intensification per POLARIX and triggers CNS-prophylaxis discussion via CNS-IPI"
+definition_ua: "DLBCL з IPI 4-5 (високий ризик) — підтримує інтенсифікацію Pola-R-CHP за POLARIX і запускає обговорення CNS-профілактики через CNS-IPI"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ipi_score"
+      threshold: 4
+      comparator: ">="
+    - finding: "ipi_risk_group"
+      value: "high"
+    - finding: "ipi_risk_group"
+      value: "high_intermediate"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  IPI 4-5 in newly-diagnosed DLBCL gives 5-yr OS ~50% on R-CHOP-21 × 6;
+  POLARIX showed clearest absolute benefit for Pola-R-CHP in this stratum.
+  CNS-IPI 4-6 (which overlaps strongly with IPI 4-5) further triggers
+  IT-MTX or HD-MTX prophylaxis per NCCN B-Cell 2025. Co-fires with
+  RF-DLBCL-HIGH-IPI (which is the existing wired flag); kept distinct
+  so the score-stratum cohort is recognizable in fixtures and so a
+  cross-algorithm rule could later reference IPI 4-5 specifically
+  (e.g., aggressive consolidation).
