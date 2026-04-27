@@ -893,6 +893,20 @@ CASES: list[CaseEntry] = [
         badge="Auto-stub", badge_class="bdg-stub", category="hodgkin",
     ),
     CaseEntry(
+        case_id="auto-cholangiocarcinoma",
+        file="auto_cholangiocarcinoma.json",
+        label_ua="DIS-CHOLANGIOCARCINOMA — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Cholangiocarcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
+        case_id="auto-chondrosarcoma",
+        file="auto_chondrosarcoma.json",
+        label_ua="DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Chondrosarcoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
         case_id="auto-cll",
         file="auto_cll.json",
         label_ua="DIS-CLL — Auto-stub (88% наповненість)",
@@ -1026,6 +1040,20 @@ CASES: list[CaseEntry] = [
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
     ),
     CaseEntry(
+        case_id="auto-ifs",
+        file="auto_ifs.json",
+        label_ua="DIS-IFS — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Infantile fibrosarcoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
+        case_id="auto-imt",
+        file="auto_imt.json",
+        label_ua="DIS-IMT — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Inflammatory myofibroblastic tumor. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
         case_id="auto-mastocytosis",
         file="auto_mastocytosis.json",
         label_ua="DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)",
@@ -1075,10 +1103,17 @@ CASES: list[CaseEntry] = [
         badge="Auto-stub", badge_class="bdg-stub", category="myeloma",
     ),
     CaseEntry(
+        case_id="auto-mpnst",
+        file="auto_mpnst.json",
+        label_ua="DIS-MPNST — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Malignant peripheral nerve sheath tumor. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
         case_id="auto-mtc",
         file="auto_mtc.json",
-        label_ua="DIS-MTC — Auto-stub (88% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Medullary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-MTC — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Medullary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
     ),
     CaseEntry(
@@ -1180,6 +1215,13 @@ CASES: list[CaseEntry] = [
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
     ),
     CaseEntry(
+        case_id="auto-salivary",
+        file="auto_salivary.json",
+        label_ua="DIS-SALIVARY — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Salivary gland carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
         case_id="auto-sclc",
         file="auto_sclc.json",
         label_ua="DIS-SCLC — Auto-stub (75% наповненість)",
@@ -1206,6 +1248,20 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для T-Cell Prolymphocytic Leukemia. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+    ),
+    CaseEntry(
+        case_id="auto-thyroid_anaplastic",
+        file="auto_thyroid_anaplastic.json",
+        label_ua="DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Anaplastic thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
+    ),
+    CaseEntry(
+        case_id="auto-thyroid_papillary",
+        file="auto_thyroid_papillary.json",
+        label_ua="DIS-THYROID-PAPILLARY — Auto-stub (62% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Papillary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 62%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        badge="Auto-stub", badge_class="bdg-stub", category="solid",
     ),
     CaseEntry(
         case_id="auto-urothelial",
