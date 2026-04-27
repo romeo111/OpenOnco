@@ -1,0 +1,55 @@
+id: RF-FITNESS-ECOG-INTERMEDIATE
+definition: >
+  Intermediate performance status (ECOG 2): patient ambulatory and capable
+  of self-care but unable to carry out work; up and about >50% of waking
+  hours. Generally not a candidate for dose-intensive regimens; modified
+  / dose-attenuated therapy preferred (mini-CHOP, R-mini-CHOP, attenuated
+  BEACOPP, attenuated CODOX-M/IVAC; CAR-T case-by-case).
+definition_ua: >
+  Проміжний функціональний стан (ECOG 2): амбулаторний, здатен до
+  самообслуговування, але не здатен працювати; на ногах >50% часу пробудження.
+  Не кандидат на дозо-інтенсивні режими; перевага модифікованої /
+  редукованої терапії (mini-CHOP, R-mini-CHOP, attenuated BEACOPP,
+  редукований CODOX-M/IVAC; CAR-T — індивідуально).
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "ecog"
+      threshold: 2
+      comparator: "=="
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: frailty-age
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ECOG 2 is the borderline zone where most intensified regimens lose
+  benefit and gain toxicity. R-CHOP standard, R-mini-CHOP for elderly
+  ECOG 2, ABVD over BEACOPP for Hodgkin, dose-attenuated DA-EPOCH-R
+  selectable per case. CAR-T trials (ZUMA-1, JULIET) excluded ECOG ≥2;
+  real-world evidence supports ECOG 2 with adequate organ function,
+  but admission protocols vary. Geriatric assessment recommended at
+  ECOG 2 for patients >70 to disambiguate frailty vs disease burden.
+notes_ua: >
+  ECOG 2 — гранична зона, де більшість інтенсифікованих режимів втрачає
+  переваги і набуває токсичності. R-CHOP стандарт, R-mini-CHOP для
+  літніх ECOG 2, ABVD замість BEACOPP при Hodgkin. CAR-T trials (ZUMA-1,
+  JULIET) виключали ECOG ≥2; real-world дані підтримують ECOG 2 з
+  адекватною функцією органів. Геріатрична оцінка рекомендована при
+  ECOG 2 для пацієнтів >70 років.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

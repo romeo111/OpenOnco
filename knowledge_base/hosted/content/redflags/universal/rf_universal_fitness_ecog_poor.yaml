@@ -1,0 +1,61 @@
+id: RF-FITNESS-ECOG-POOR
+definition: >
+  Poor performance status (ECOG ≥3): patient capable of only limited
+  self-care, confined to bed/chair >50% of waking hours, or completely
+  disabled. Generally palliative/best-supportive-care intent; cytotoxic
+  therapy at full dose contraindicated. Selective targeted-therapy or
+  steroid debulk may be appropriate as bridge to reassessment.
+definition_ua: >
+  Тяжкий функціональний стан (ECOG ≥3): пацієнт здатен лише на обмежене
+  самообслуговування, у ліжку/кріслі >50% часу пробудження, або повністю
+  непрацездатний. Зазвичай — паліативна / підтримуюча допомога;
+  цитотоксична терапія повними дозами протипоказана. У окремих випадках
+  — селективна таргетна терапія або стероїдне дебулькування як міст до
+  переоцінки.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 3
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: critical
+priority: 60
+category: frailty-age
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ECOG ≥3 routinely excludes patients from cytotoxic intensification
+  trials. Decision is rarely "no treatment" but rather "treatment
+  proportional to the patient's reserve": prednisolone-only debulk for
+  steroid-responsive disease (DLBCL, ALL) to allow reassessment;
+  rituximab-monotherapy for B-cell indolent disease; ibrutinib-monotherapy
+  in CLL/MCL/WM; aza-monotherapy or BSC in elderly AML. Engages
+  palliative-care consult per NCCN Palliative Care guidelines and
+  ESMO supportive-care guidance. ECOG ≥3 caused by disease itself
+  (e.g. DLBCL with massive disease) may improve dramatically with
+  steroid pre-phase — reassess after 3-7 days.
+notes_ua: >
+  ECOG ≥3 регулярно виключає пацієнтів з трайлів цитотоксичної
+  інтенсифікації. Рішення рідко "не лікувати" — швидше "лікування
+  пропорційне резерву пацієнта": преднізолон-моно дебулькування для
+  стероїд-чутливих хвороб (DLBCL, ALL); ритуксимаб-моно для B-клітинних
+  індолентних; ібрутиніб-моно при CLL/MCL/WM; aza-моно або BSC при AML
+  у літніх. Активує консультацію паліативної служби. ECOG ≥3,
+  спричинений самою хворобою, може різко покращитися після стероїдної
+  pre-phase — переоцінити через 3-7 днів.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
