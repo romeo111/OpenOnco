@@ -1,0 +1,21 @@
+id: ALGO-CHONDROSARCOMA-1L
+applicable_to_disease: DIS-CHONDROSARCOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  1L palliative systemic therapy for unresectable / metastatic conventional chondrosarcoma.
+
+output_indications:
+  - IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN
+
+default_indication: IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-CHONDROSARCOMA-ADVANCED-DOXORUBICIN
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

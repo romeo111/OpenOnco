@@ -1,0 +1,21 @@
+id: ALGO-MPNST-1L
+applicable_to_disease: DIS-MPNST
+applicable_to_line_of_therapy: 1
+purpose: >
+  1L systemic therapy for unresectable / metastatic MPNST.
+
+output_indications:
+  - IND-MPNST-DOXORUBICIN-IFOSFAMIDE
+
+default_indication: IND-MPNST-DOXORUBICIN-IFOSFAMIDE
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-MPNST-DOXORUBICIN-IFOSFAMIDE
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

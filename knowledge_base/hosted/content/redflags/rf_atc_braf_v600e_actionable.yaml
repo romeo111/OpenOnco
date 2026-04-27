@@ -1,0 +1,30 @@
+id: RF-ATC-BRAF-V600E-ACTIONABLE
+definition: "Anaplastic thyroid carcinoma with BRAF V600E mutation (~25-50% of ATC) — dabrafenib + trametinib produces dramatic responses (ROAR ORR ~70%); preferred over palliative chemotherapy."
+definition_ua: "Анапластична карцинома з мутацією BRAF V600E (~25-50% ATC) — дабрафеніб + траметиніб дає драматичні відповіді (ROAR ORR ~70%); перевага над паліативною хіміотерапією."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "BRAF_V600E"
+      threshold: true
+      comparator: "=="
+
+clinical_direction: intensify
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases: [DIS-THYROID-ANAPLASTIC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+
+last_reviewed: '2026-04-27'
+draft: false
+
+notes: >
+  ATC universally aggressive (median OS ~5-6 mo with chemo alone).
+  BRAF V600E found in 25-50%; FDA-approved dabrafenib + trametinib
+  (ROAR sub-cohort, Subbiah JCO 2018) — ORR ~69%. Time-critical: BRAF
+  testing must return within days of diagnosis.

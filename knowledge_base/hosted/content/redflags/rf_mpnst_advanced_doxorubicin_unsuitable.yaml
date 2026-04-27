@@ -1,0 +1,36 @@
+id: RF-MPNST-ADVANCED-DOXORUBICIN-UNSUITABLE
+definition: "Advanced/metastatic MPNST with LVEF <50% OR cumulative anthracycline ≥350 mg/m² OR ECOG ≥3 — anthracycline-based regimen unsafe."
+definition_ua: "Поширений/метастатичний MPNST з ФВЛШ <50% АБО кумулятивний антрациклін ≥350 мг/м² АБО ECOG ≥3 — антрациклін небезпечний."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "lvef_pct"
+      threshold: 50
+      comparator: "<"
+    - finding: "cumulative_anthracycline_mg_m2"
+      threshold: 350
+      comparator: ">="
+    - finding: "ecog_status"
+      threshold: 3
+      comparator: ">="
+
+clinical_direction: de-escalate
+severity: critical
+priority: 50
+category: organ-dysfunction
+
+relevant_diseases: [DIS-MPNST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+
+last_reviewed: '2026-04-27'
+draft: false
+
+notes: >
+  MPNST 1L is doxorubicin + ifosfamide (EORTC 62012). Cumulative
+  anthracycline cap traditionally 450 mg/m²; 350 is conservative
+  trigger. NF1-MPNST often young — congenital cardiac issues warrant
+  baseline echo before regimen.
