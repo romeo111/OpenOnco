@@ -45,6 +45,7 @@ from knowledge_base.schemas import (
 )
 from knowledge_base.validation.loader import load_content
 from ._actionability import find_matching_actionability
+from ._track_filter import is_track_excluded
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
@@ -370,9 +371,21 @@ def generate_plan(
         candidates.remove(default_id)
         candidates.insert(0, default_id)
 
+    # Lenient biomarker-aware track filtering: drop only when the patient
+    # profile EXPLICITLY violates an Indication's
+    # `biomarker_requirements_excluded` list. Missing biomarkers do NOT
+    # drop a track — see engine/_track_filter.py for rationale.
+    patient_biomarkers = patient.get("biomarkers") or {}
+
     tracks: list[PlanTrack] = []
     for ind_id in candidates:
         ind = _resolve(entities, ind_id)
+        if ind and is_track_excluded(ind, patient_biomarkers):
+            result.warnings.append(
+                f"track {ind_id} dropped: patient biomarker profile "
+                f"explicitly violates biomarker_requirements_excluded"
+            )
+            continue
         track_label = (ind or {}).get("plan_track") or ind_id
         is_default = ind_id == default_id
         reason = (
