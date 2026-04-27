@@ -31,804 +31,66 @@
 
 <main class="gallery">
   <h1>Sample cases</h1>
-  <p class="lead">164 synthetic patient profiles run through the engine. Each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong or confusing — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue on GitHub</a> with a link to the specific case.</p>
+  <p class="lead">164 synthetic patient profiles run through the engine, grouped by disease. Pick a disease to see its examples — each click opens a full Plan or Diagnostic Brief as a clinician would see it in tumor-board. If something looks clinically wrong — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+&labels=tester-feedback" target="_blank" rel="noopener">open an issue</a>.</p>
 
-  <div class="case-controls">
-    <div class="case-chips" role="group" aria-label="Filter by category">
-    <button type="button" class="case-chip is-active" data-filter="all">All <span class="chip-n">164</span></button>
-    <button type="button" class="case-chip" data-filter="b_aggressive">B-cell aggressive <span class="chip-n">23</span></button>
-    <button type="button" class="case-chip" data-filter="b_indolent">B-cell indolent <span class="chip-n">24</span></button>
-    <button type="button" class="case-chip" data-filter="t_cell">T-cell <span class="chip-n">34</span></button>
-    <button type="button" class="case-chip" data-filter="hodgkin">Hodgkin <span class="chip-n">8</span></button>
-    <button type="button" class="case-chip" data-filter="myeloma">Myeloma <span class="chip-n">5</span></button>
-    <button type="button" class="case-chip" data-filter="myeloid">Myeloid (AML/MDS/MPN) <span class="chip-n">30</span></button>
-    <button type="button" class="case-chip" data-filter="lymphoblastic">Lymphoblastic (ALL/LBL) <span class="chip-n">7</span></button>
-    <button type="button" class="case-chip" data-filter="solid">Solid tumors <span class="chip-n">31</span></button>
-    <button type="button" class="case-chip" data-filter="diagnostic">Diagnostic (pre-biopsy) <span class="chip-n">2</span></button>
+  <!-- Stage 1: disease grid (default visible) -->
+  <section id="diseaseStage" class="disease-stage">
+    <div class="disease-search-row">
+      <input type="search" id="diseaseSearch" class="disease-search"
+             placeholder="Search disease…" autocomplete="off"
+             aria-label="Search disease…">
+      <span class="disease-search-count" id="diseaseSearchCount">33</span>
     </div>
-    <label class="case-sort">
-      <span>Sort:</span>
-      <select id="caseSort">
-        <option value="default">Default</option>
-        <option value="alpha">Name (A→Z)</option>
-        <option value="category">Category</option>
-      </select>
-    </label>
-  </div>
+    <div class="disease-tile-grid" id="diseaseTileGrid">
+    <button type="button" class="disease-tile" data-disease-id="DIS-AML" data-search="гострий мієлоїдний лейкоз (не-apl) acute myeloid leukemia"><span class="dt-label">Acute Myeloid Leukemia</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-APL" data-search="гострий промієлоцитарний лейкоз (pml-rara) acute promyelocytic leukemia"><span class="dt-label">Acute Promyelocytic Leukemia</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ATLL" data-search="дорослий t-клітинний лейкоз/лімфома adult t-cell leukemia/lymphoma"><span class="dt-label">Adult T-Cell Leukemia/Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ALCL" data-search="анапластична великоклітинна лімфома (системна) anaplastic large cell lymphoma, systemic"><span class="dt-label">Anaplastic Large Cell Lymphoma, Systemic</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-AITL" data-search="ангіоімунобластна t-клітинна лімфома / нодальна tfh-лімфома angioimmunoblastic t-cell lymphoma"><span class="dt-label">Angioimmunoblastic T-Cell Lymphoma</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-B-ALL" data-search="b-лімфобластна лейкемія/лімфома b-lymphoblastic leukemia/lymphoma"><span class="dt-label">B-Lymphoblastic Leukemia/Lymphoma</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-BURKITT" data-search="лімфома беркітта burkitt lymphoma"><span class="dt-label">Burkitt Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CLL" data-search="хронічна лімфоцитарна лейкемія / дрібноклітинна лімфоцитарна лімфома chronic lymphocytic leukemia / small lymphocytic lymphoma"><span class="dt-label">Chronic Lymphocytic Leukemia / Small Lymphocytic Lymphoma</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CML" data-search="хронічна мієлоїдна лейкемія (bcr-abl1) chronic myeloid leukemia"><span class="dt-label">Chronic Myeloid Leukemia</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-CHL" data-search="класична лімфома ходжкіна classical hodgkin lymphoma"><span class="dt-label">Classical Hodgkin Lymphoma</span><span class="dt-count">4 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-EATL" data-search="ентеропатія-асоційована t-клітинна лімфома enteropathy-associated t-cell lymphoma"><span class="dt-label">Enteropathy-Associated T-Cell Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-ET" data-search="есенціальна тромбоцитемія essential thrombocythemia"><span class="dt-label">Essential Thrombocythemia</span><span class="dt-count">1 example</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NK-T-NASAL" data-search="екстранодальна nk/t-клітинна лімфома, назального типу extranodal nk/t-cell lymphoma, nasal type"><span class="dt-label">Extranodal NK/T-Cell Lymphoma, Nasal Type</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-FL" data-search="фолікулярна лімфома follicular lymphoma"><span class="dt-label">Follicular Lymphoma</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-HCL" data-search="волосатоклітинний лейкоз hairy cell leukemia"><span class="dt-label">Hairy Cell Leukemia</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-HSTCL" data-search="гепатоспленічна t-клітинна лімфома hepatosplenic t-cell lymphoma"><span class="dt-label">Hepatosplenic T-Cell Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MCL" data-search="лімфома з клітин зони мантії mantle cell lymphoma"><span class="dt-label">Mantle Cell Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MM" data-search="множинна мієлома multiple myeloma"><span class="dt-label">Multiple Myeloma</span><span class="dt-count">4 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MF-SEZARY" data-search="грибоподібний мікоз / синдром сезарі mycosis fungoides / sézary syndrome"><span class="dt-label">Mycosis Fungoides / Sézary Syndrome</span><span class="dt-count">4 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-MDS-LR" data-search="мієлодиспластичні синдроми, низький ризик (ipss-r дуже низький / низький / проміжний) myelodysplastic syndromes — lower risk"><span class="dt-label">Myelodysplastic Syndromes — Lower Risk</span><span class="dt-count">5 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NODAL-MZL" data-search="нодальна лімфома маргінальної зони nodal marginal zone lymphoma"><span class="dt-label">Nodal Marginal Zone Lymphoma</span><span class="dt-count">5 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-NLPBL" data-search="нодулярна лімфоцит-домінантна b-клітинна лімфома (раніше nlphl) nodular lymphocyte-predominant b-cell lymphoma"><span class="dt-label">Nodular Lymphocyte-Predominant B-cell Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="OTHER" data-search="інше / без класифікації other / unclassified"><span class="dt-label">Other / unclassified</span><span class="dt-count">74 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PTCL-NOS" data-search="периферична t-клітинна лімфома, неуточнена peripheral t-cell lymphoma, nos"><span class="dt-label">Peripheral T-Cell Lymphoma, NOS</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PV" data-search="справжня поліцитемія polycythemia vera"><span class="dt-label">Polycythemia Vera</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PTLD" data-search="посттрансплантаційні лімфопроліферативні захворювання post-transplant lymphoproliferative disorder"><span class="dt-label">Post-Transplant Lymphoproliferative Disorder</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PCNSL" data-search="первинна дифузна великоклітинна b-клітинна лімфома центральної нервової системи primary cns lymphoma"><span class="dt-label">Primary CNS Lymphoma</span><span class="dt-count">8 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PMBCL" data-search="первинна медіастинальна (тимічна) b-великоклітинна лімфома primary mediastinal large b-cell lymphoma"><span class="dt-label">Primary Mediastinal Large B-Cell Lymphoma</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-PMF" data-search="первинний мієлофіброз primary myelofibrosis"><span class="dt-label">Primary Myelofibrosis</span><span class="dt-count">3 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-SPLENIC-MZL" data-search="селезінкова лімфома маргінальної зони splenic marginal zone lymphoma"><span class="dt-label">Splenic Marginal Zone Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-T-PLL" data-search="t-клітинна пролімфоцитарна лейкемія t-cell prolymphocytic leukemia"><span class="dt-label">T-Cell Prolymphocytic Leukemia</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-T-ALL" data-search="t-лімфобластна лейкемія/лімфома t-lymphoblastic leukemia/lymphoma"><span class="dt-label">T-Lymphoblastic Leukemia/Lymphoma</span><span class="dt-count">2 examples</span></button>
+    <button type="button" class="disease-tile" data-disease-id="DIS-WM" data-search="макроглобулінемія вальденстрема / лімфоплазмоцитарна лімфома waldenström macroglobulinemia / lymphoplasmacytic lymphoma"><span class="dt-label">Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma</span><span class="dt-count">2 examples</span></button>
+    </div>
+    <p class="disease-empty" id="diseaseEmpty" hidden>No diseases match your search.</p>
+  </section>
 
-  <section class="case-grid" id="caseGrid">
-    <a class="case-card" href="/en/cases/hcv-mzl-reference.html"
-   data-category="b_indolent" data-default-order="0"
-   data-name="HCV-MZL · Reference Case (Patient Zero)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HCV-MZL · Reference Case (Patient Zero)</h3>
-  <p>Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.</p>
-  <div class="case-foot">patient_zero_reference_case.json</div>
-</a>
-<a class="case-card" href="/en/cases/hcv-mzl-bulky.html"
-   data-category="b_indolent" data-default-order="1"
-   data-name="HCV-MZL · Aggressive Burden (BR + concurrent DAA)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HCV-MZL · Aggressive Burden (BR + concurrent DAA)</h3>
-  <p>HCV-MZL із bulky disease (>7 см) — RF-BULKY-DISEASE fired. Engine обирає BR (бендамустин+ритуксимаб) + concurrent DAA. Поєднує колишні patient_zero_bulky та новий fixture aggressive_burden.</p>
-  <div class="case-foot">patient_hcv_mzl_aggressive_burden.json</div>
-</a>
-<a class="case-card" href="/en/cases/hcv-mzl-post-daa.html"
-   data-category="b_indolent" data-default-order="2"
-   data-name="HCV-MZL · Post-DAA Responder (Surveillance)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HCV-MZL · Post-DAA Responder (Surveillance)</h3>
-  <p>Пацієнт post-DAA з SVR12 + lymphoma response — engine обирає surveillance only; план для re-treatment trigger при relapse.</p>
-  <div class="case-foot">patient_hcv_mzl_post_daa_responder.json</div>
-</a>
-<a class="case-card" href="/en/cases/mm-standard-risk.html"
-   data-category="myeloma" data-default-order="3"
-   data-name="Multiple Myeloma · Standard-Risk">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Multiple Myeloma · Standard-Risk</h3>
-  <p>Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.</p>
-  <div class="case-foot">patient_mm_standard_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/mm-high-risk.html"
-   data-category="myeloma" data-default-order="4"
-   data-name="Multiple Myeloma · High-Risk">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Multiple Myeloma · High-Risk</h3>
-  <p>Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.</p>
-  <div class="case-foot">patient_mm_high_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/diagnostic-lymphoma-suspect.html"
-   data-category="diagnostic" data-default-order="5"
-   data-name="Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-diag">Diagnostic Brief</div>
-    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
-  </div>
-  <h3>Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)</h3>
-  <p>Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).</p>
-  <div class="case-foot">patient_diagnostic_lymphoma_suspect.json</div>
-</a>
-<a class="case-card" href="/en/cases/diagnostic-lymphoma-confirmed.html"
-   data-category="diagnostic" data-default-order="6"
-   data-name="Lymphoma Confirmed · Post-Biopsy (Treatment Plan)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Lymphoma Confirmed · Post-Biopsy (Treatment Plan)</h3>
-  <p>Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.</p>
-  <div class="case-foot">patient_diagnostic_lymphoma_confirmed.json</div>
-</a>
-<a class="case-card" href="/en/cases/dlbcl-low-ipi.html"
-   data-category="b_aggressive" data-default-order="7"
-   data-name="DLBCL NOS · Low-IPI (R-CHOP standard)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>DLBCL NOS · Low-IPI (R-CHOP standard)</h3>
-  <p>Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).</p>
-  <div class="case-foot">patient_dlbcl_low_ipi.json</div>
-</a>
-<a class="case-card" href="/en/cases/dlbcl-high-ipi.html"
-   data-category="b_aggressive" data-default-order="8"
-   data-name="DLBCL NOS · High-IPI (Pola-R-CHP)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>DLBCL NOS · High-IPI (Pola-R-CHP)</h3>
-  <p>Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.</p>
-  <div class="case-foot">patient_dlbcl_high_ipi.json</div>
-</a>
-<a class="case-card" href="/en/cases/fl-low-burden.html"
-   data-category="b_indolent" data-default-order="9"
-   data-name="Follicular · Low Burden (Watch-and-Wait)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Follicular · Low Burden (Watch-and-Wait)</h3>
-  <p>FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&W).</p>
-  <div class="case-foot">patient_fl_low_burden.json</div>
-</a>
-<a class="case-card" href="/en/cases/fl-high-burden.html"
-   data-category="b_indolent" data-default-order="10"
-   data-name="Follicular · High Burden (BR)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Follicular · High Burden (BR)</h3>
-  <p>FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.</p>
-  <div class="case-foot">patient_fl_high_burden.json</div>
-</a>
-<a class="case-card" href="/en/cases/fl-transformation.html"
-   data-category="b_indolent" data-default-order="11"
-   data-name="Follicular · Transformation Suspect (R-CHOP)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Follicular · Transformation Suspect (R-CHOP)</h3>
-  <p>FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).</p>
-  <div class="case-foot">patient_fl_transformation.json</div>
-</a>
-<a class="case-card" href="/en/cases/cll-low-risk.html"
-   data-category="b_indolent" data-default-order="12"
-   data-name="CLL/SLL · Low-Risk (BTKi continuous)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>CLL/SLL · Low-Risk (BTKi continuous)</h3>
-  <p>ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.</p>
-  <div class="case-foot">patient_cll_low_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/cll-high-risk.html"
-   data-category="b_indolent" data-default-order="13"
-   data-name="CLL/SLL · High-Risk (VenO time-limited)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>CLL/SLL · High-Risk (VenO time-limited)</h3>
-  <p>ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).</p>
-  <div class="case-foot">patient_cll_high_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/mcl-fit-younger.html"
-   data-category="b_aggressive" data-default-order="14"
-   data-name="Mantle Cell · Fit Younger (Intensive + autoSCT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Mantle Cell · Fit Younger (Intensive + autoSCT)</h3>
-  <p>MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).</p>
-  <div class="case-foot">patient_mcl_fit_younger.json</div>
-</a>
-<a class="case-card" href="/en/cases/mcl-unfit-tp53.html"
-   data-category="b_aggressive" data-default-order="15"
-   data-name="Mantle Cell · Unfit / TP53-mutant (BTKi+R)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Mantle Cell · Unfit / TP53-mutant (BTKi+R)</h3>
-  <p>MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).</p>
-  <div class="case-foot">patient_mcl_unfit_or_tp53.json</div>
-</a>
-<a class="case-card" href="/en/cases/smzl-hcv-positive.html"
-   data-category="b_indolent" data-default-order="16"
-   data-name="Splenic MZL · HCV-positive (DAA antiviral)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Splenic MZL · HCV-positive (DAA antiviral)</h3>
-  <p>Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.</p>
-  <div class="case-foot">patient_smzl_hcv_positive.json</div>
-</a>
-<a class="case-card" href="/en/cases/smzl-hcv-negative.html"
-   data-category="b_indolent" data-default-order="17"
-   data-name="Splenic MZL · HCV-negative (Rituximab mono)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Splenic MZL · HCV-negative (Rituximab mono)</h3>
-  <p>Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).</p>
-  <div class="case-foot">patient_smzl_hcv_negative.json</div>
-</a>
-<a class="case-card" href="/en/cases/nmzl-low-burden.html"
-   data-category="b_indolent" data-default-order="18"
-   data-name="Nodal MZL · Low Burden (W&W)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
-  </div>
-  <h3>Nodal MZL · Low Burden (W&W)</h3>
-  <p>Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).</p>
-  <div class="case-foot">patient_nmzl_low_burden.json</div>
-</a>
-<a class="case-card" href="/en/cases/burkitt-low-risk.html"
-   data-category="b_aggressive" data-default-order="19"
-   data-name="Burkitt · Low/Intermediate Risk (DA-EPOCH-R)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Burkitt · Low/Intermediate Risk (DA-EPOCH-R)</h3>
-  <p>Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).</p>
-  <div class="case-foot">patient_burkitt_low_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/burkitt-high-risk.html"
-   data-category="b_aggressive" data-default-order="20"
-   data-name="Burkitt · High Risk (CODOX-M / IVAC)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Burkitt · High Risk (CODOX-M / IVAC)</h3>
-  <p>Burkitt з CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.</p>
-  <div class="case-foot">patient_burkitt_high_risk.json</div>
-</a>
-<a class="case-card" href="/en/cases/hcl-typical.html"
-   data-category="b_indolent" data-default-order="21"
-   data-name="Hairy Cell Leukemia (Cladribine 7-day)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Hairy Cell Leukemia (Cladribine 7-day)</h3>
-  <p>Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.</p>
-  <div class="case-foot">patient_hcl_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/wm-myd88-positive.html"
-   data-category="b_indolent" data-default-order="22"
-   data-name="Waldenström · MYD88-positive (Zanubrutinib)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Waldenström · MYD88-positive (Zanubrutinib)</h3>
-  <p>WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).</p>
-  <div class="case-foot">patient_wm_myd88_positive.json</div>
-</a>
-<a class="case-card" href="/en/cases/hgbl-double-hit.html"
-   data-category="b_aggressive" data-default-order="23"
-   data-name="HGBL · Double-Hit (DA-EPOCH-R)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
-  </div>
-  <h3>HGBL · Double-Hit (DA-EPOCH-R)</h3>
-  <p>High-Grade B-Cell Lymphoma з MYC + BCL2 break-apart — engine обирає DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuse схеми з Burkitt.</p>
-  <div class="case-foot">patient_hgbl_double_hit.json</div>
-</a>
-<a class="case-card" href="/en/cases/alcl-alk-negative.html"
-   data-category="t_cell" data-default-order="24"
-   data-name="ALCL · ALK-negative (CHP-Bv)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>ALCL · ALK-negative (CHP-Bv)</h3>
-  <p>Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).</p>
-  <div class="case-foot">patient_alcl_alk_negative.json</div>
-</a>
-<a class="case-card" href="/en/cases/ptcl-cd30-negative.html"
-   data-category="t_cell" data-default-order="25"
-   data-name="PTCL NOS · CD30-negative (CHOEP)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PTCL NOS · CD30-negative (CHOEP)</h3>
-  <p>Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.</p>
-  <div class="case-foot">patient_ptcl_cd30_negative.json</div>
-</a>
-<a class="case-card" href="/en/cases/aitl-cd30-positive.html"
-   data-category="t_cell" data-default-order="26"
-   data-name="AITL · CD30-positive (CHP-Bv)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>AITL · CD30-positive (CHP-Bv)</h3>
-  <p>Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.</p>
-  <div class="case-foot">patient_aitl_cd30_positive.json</div>
-</a>
-<a class="case-card" href="/en/cases/chl-advanced.html"
-   data-category="hodgkin" data-default-order="27"
-   data-name="Classical Hodgkin · Advanced (A+AVD)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Classical Hodgkin · Advanced (A+AVD)</h3>
-  <p>Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).</p>
-  <div class="case-foot">patient_chl_advanced.json</div>
-</a>
-<a class="case-card" href="/en/cases/chl-early.html"
-   data-category="hodgkin" data-default-order="28"
-   data-name="Classical Hodgkin · Early Stage (ABVD)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Classical Hodgkin · Early Stage (ABVD)</h3>
-  <p>Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).</p>
-  <div class="case-foot">patient_chl_early.json</div>
-</a>
-<a class="case-card" href="/en/cases/nlpbl-early.html"
-   data-category="hodgkin" data-default-order="29"
-   data-name="NLPBL · Early Stage (Observation / RT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>NLPBL · Early Stage (Observation / RT)</h3>
-  <p>Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.</p>
-  <div class="case-foot">patient_nlpbl_early.json</div>
-</a>
-<a class="case-card" href="/en/cases/aitl-cd30-negative.html"
-   data-category="t_cell" data-default-order="30"
-   data-name="AITL · CD30-negative (CHOEP + AITL-specific workup)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>AITL · CD30-negative (CHOEP + AITL-specific workup)</h3>
-  <p>AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).</p>
-  <div class="case-foot">patient_aitl_cd30_negative.json</div>
-</a>
-<a class="case-card" href="/en/cases/mf-early-stage.html"
-   data-category="t_cell" data-default-order="31"
-   data-name="Mycosis Fungoides · Early Stage (Skin-Directed)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Mycosis Fungoides · Early Stage (Skin-Directed)</h3>
-  <p>MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.</p>
-  <div class="case-foot">patient_mf_early_stage.json</div>
-</a>
-<a class="case-card" href="/en/cases/sezary-advanced.html"
-   data-category="t_cell" data-default-order="32"
-   data-name="Sézary Syndrome · Advanced (Mogamulizumab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Sézary Syndrome · Advanced (Mogamulizumab)</h3>
-  <p>Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).</p>
-  <div class="case-foot">patient_sezary_advanced.json</div>
-</a>
-<a class="case-card" href="/en/cases/mf-advanced-cd30.html"
-   data-category="t_cell" data-default-order="33"
-   data-name="MF · Advanced + CD30+ LCT (Brentuximab mono)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>MF · Advanced + CD30+ LCT (Brentuximab mono)</h3>
-  <p>Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).</p>
-  <div class="case-foot">patient_mf_advanced_cd30.json</div>
-</a>
-<a class="case-card" href="/en/cases/nlpbl-ia-rituximab.html"
-   data-category="hodgkin" data-default-order="34"
-   data-name="NLPBL · IA + RT-contraindicated (Rituximab mono)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>NLPBL · IA + RT-contraindicated (Rituximab mono)</h3>
-  <p>NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).</p>
-  <div class="case-foot">patient_nlpbl_ia_rituximab.json</div>
-</a>
-<a class="case-card" href="/en/cases/dlbcl-chemorefractory-cart.html"
-   data-category="b_aggressive" data-default-order="35"
-   data-name="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)</h3>
-  <p>DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T > salvage+autoSCT для early-failure).</p>
-  <div class="case-foot">patient_dlbcl_chemorefractory_for_cart.json</div>
-</a>
-<a class="case-card" href="/en/cases/dlbcl-relapsed-te-ineligible.html"
-   data-category="b_aggressive" data-default-order="36"
-   data-name="DLBCL NOS · Relapsed (Transplant-Ineligible)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>DLBCL NOS · Relapsed (Transplant-Ineligible)</h3>
-  <p>DLBCL relapsed, transplant-ineligible через age + comorbidity — engine обирає Pola-BR (POLARGO) або loncastuximab tesirine.</p>
-  <div class="case-foot">patient_dlbcl_relapsed_transplant_ineligible.json</div>
-</a>
-<a class="case-card" href="/en/cases/hgbl-primary-refractory.html"
-   data-category="b_aggressive" data-default-order="37"
-   data-name="HGBL · Primary Refractory (Early CAR-T)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HGBL · Primary Refractory (Early CAR-T)</h3>
-  <p>HGBL-DH що не відповів на DA-EPOCH-R — engine обирає axi-cel CAR-T (ZUMA-7); chemosensitivity-test позитивний для late-relapse → salvage+autoSCT.</p>
-  <div class="case-foot">patient_hgbl_primary_refractory.json</div>
-</a>
-<a class="case-card" href="/en/cases/pmbcl-typical.html"
-   data-category="b_aggressive" data-default-order="38"
-   data-name="PMBCL · Typical (DA-EPOCH-R)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PMBCL · Typical (DA-EPOCH-R)</h3>
-  <p>Молода жінка з anterior mediastinal mass — engine обирає DA-EPOCH-R без RT (NCI 2013: ~93% EFS, обхід RT-токсичності для AYA).</p>
-  <div class="case-foot">patient_pmbcl_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/pmbcl-bulky-svc.html"
-   data-category="b_aggressive" data-default-order="39"
-   data-name="PMBCL · Bulky + SVC Syndrome">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PMBCL · Bulky + SVC Syndrome</h3>
-  <p>PMBCL з bulky mediastinal mass + SVC compression — engine додає upfront pre-phase steroids + airway management до DA-EPOCH-R.</p>
-  <div class="case-foot">patient_pmbcl_bulky_svc.json</div>
-</a>
-<a class="case-card" href="/en/cases/pmbcl-relapsed-post-rchop.html"
-   data-category="b_aggressive" data-default-order="40"
-   data-name="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PMBCL · Relapsed post-R-CHOP (Pembrolizumab)</h3>
-  <p>PMBCL relapsed/refractory після R-CHOP — engine обирає R-ICE+autoSCT (eligible) або pembrolizumab (KEYNOTE-170, ineligible/refractory).</p>
-  <div class="case-foot">patient_pmbcl_relapsed_post_rchop.json</div>
-</a>
-<a class="case-card" href="/en/cases/pcnsl-typical.html"
-   data-category="b_aggressive" data-default-order="41"
-   data-name="PCNSL · Typical (R-MPV → autoSCT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PCNSL · Typical (R-MPV → autoSCT)</h3>
-  <p>Імунокомпетентний пацієнт з biopsy-confirmed PCNSL — engine обирає R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).</p>
-  <div class="case-foot">patient_pcnsl_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/pcnsl-elderly-frail.html"
-   data-category="b_aggressive" data-default-order="42"
-   data-name="PCNSL · Elderly Frail (R-MTX-attenuated)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PCNSL · Elderly Frail (R-MTX-attenuated)</h3>
-  <p>PCNSL вік 75, ECOG 2 — engine обирає attenuated MTX-based induction без autoSCT consolidation; lenalidomide maintenance як альтернатива.</p>
-  <div class="case-foot">patient_pcnsl_elderly_frail.json</div>
-</a>
-<a class="case-card" href="/en/cases/pcnsl-immunocompromised-ebv.html"
-   data-category="b_aggressive" data-default-order="43"
-   data-name="PCNSL · Immunocompromised + EBV+ (Restore Immunity)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PCNSL · Immunocompromised + EBV+ (Restore Immunity)</h3>
-  <p>PCNSL у HIV+/post-transplant пацієнта, EBER+ — engine додає immune-restoration (HAART / RIS) перед HD-MTX; rituximab якщо CD20+.</p>
-  <div class="case-foot">patient_pcnsl_immunocompromised_ebv.json</div>
-</a>
-<a class="case-card" href="/en/cases/cll-post-btki.html"
-   data-category="b_indolent" data-default-order="44"
-   data-name="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)</h3>
-  <p>CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).</p>
-  <div class="case-foot">patient_cll_post_btki_progression.json</div>
-</a>
-<a class="case-card" href="/en/cases/hcl-relapsed-braf.html"
-   data-category="b_indolent" data-default-order="45"
-   data-name="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)</h3>
-  <p>HCL relapsed з BRAF-V600E+ — engine обирає vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.</p>
-  <div class="case-foot">patient_hcl_relapsed_braf.json</div>
-</a>
-<a class="case-card" href="/en/cases/wm-cxcr4-mut.html"
-   data-category="b_indolent" data-default-order="46"
-   data-name="Waldenström · CXCR4-mutant (BR fixed-duration)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Waldenström · CXCR4-mutant (BR fixed-duration)</h3>
-  <p>WM з MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 знижує BTKi response). Engine обирає BR fixed-duration або zanubrutinib з extended observation.</p>
-  <div class="case-foot">patient_wm_cxcr4_mut.json</div>
-</a>
-<a class="case-card" href="/en/cases/nmzl-high-burden.html"
-   data-category="b_indolent" data-default-order="47"
-   data-name="Nodal MZL · High Burden (BR)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Nodal MZL · High Burden (BR)</h3>
-  <p>Нодальна MZL з GELF+ — engine обирає BR (1L); 2L після rituximab/W&W failure теж BR.</p>
-  <div class="case-foot">patient_nmzl_high_burden.json</div>
-</a>
-<a class="case-card" href="/en/cases/alcl-alk-positive-typical.html"
-   data-category="t_cell" data-default-order="48"
-   data-name="ALCL · ALK-positive Typical (CHP-Bv)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>ALCL · ALK-positive Typical (CHP-Bv)</h3>
-  <p>Молода особа з ALK+ ALCL — engine обирає CHP-Bv (ECHELON-2). ALK+ має значно кращий прогноз vs ALK-.</p>
-  <div class="case-foot">patient_alcl_alk_positive_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/alcl-relapsed-bv-naive.html"
-   data-category="t_cell" data-default-order="49"
-   data-name="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>ALCL · Relapsed BV-naive (Brentuximab → autoSCT)</h3>
-  <p>Relapsed ALCL без попереднього brentuximab — engine обирає brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.</p>
-  <div class="case-foot">patient_alcl_relapsed_bv_naive.json</div>
-</a>
-<a class="case-card" href="/en/cases/ptcl-cd30-positive.html"
-   data-category="t_cell" data-default-order="50"
-   data-name="PTCL NOS · CD30-positive (CHP-Bv)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PTCL NOS · CD30-positive (CHP-Bv)</h3>
-  <p>PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv (ECHELON-2 inclusion threshold).</p>
-  <div class="case-foot">patient_ptcl_cd30_positive.json</div>
-</a>
-<a class="case-card" href="/en/cases/ptcl-relapsed.html"
-   data-category="t_cell" data-default-order="51"
-   data-name="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)</h3>
-  <p>PTCL NOS relapsed після autoSCT — engine обирає romidepsin або pralatrexate; alloHCT як curative-intent для chemosensitive.</p>
-  <div class="case-foot">patient_ptcl_relapsed.json</div>
-</a>
-<a class="case-card" href="/en/cases/aitl-relapsed-2l.html"
-   data-category="t_cell" data-default-order="52"
-   data-name="AITL · Relapsed 2L (Azacitidine)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>AITL · Relapsed 2L (Azacitidine)</h3>
-  <p>AITL relapsed з TET2/DNMT3A epigenetic profile — engine обирає azacitidine (epigenetic targeting; AITL — найбільш azacitidine-responsive TCL subtype).</p>
-  <div class="case-foot">patient_aitl_relapsed_2l.json</div>
-</a>
-<a class="case-card" href="/en/cases/eatl-typical.html"
-   data-category="t_cell" data-default-order="53"
-   data-name="EATL · Typical (Celiac, CHOEP → autoSCT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>EATL · Typical (Celiac, CHOEP → autoSCT)</h3>
-  <p>EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).</p>
-  <div class="case-foot">patient_eatl_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/eatl-relapsed-post-choep.html"
-   data-category="t_cell" data-default-order="54"
-   data-name="EATL · Relapsed post-CHOEP (ICE Salvage)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>EATL · Relapsed post-CHOEP (ICE Salvage)</h3>
-  <p>EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.</p>
-  <div class="case-foot">patient_eatl_relapsed_post_choep.json</div>
-</a>
-<a class="case-card" href="/en/cases/hstcl-fit-younger.html"
-   data-category="t_cell" data-default-order="55"
-   data-name="HSTCL · Fit Younger (ICE/IVAC → alloHCT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HSTCL · Fit Younger (ICE/IVAC → alloHCT)</h3>
-  <p>Hepatosplenic T-cell Lymphoma у молодої особи, ECOG 0 — engine обирає intensive ICE/IVAC → upfront alloHCT (CHOP неадекватний).</p>
-  <div class="case-foot">patient_hstcl_fit_younger.json</div>
-</a>
-<a class="case-card" href="/en/cases/hstcl-iatrogenic-ibd.html"
-   data-category="t_cell" data-default-order="56"
-   data-name="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)</h3>
-  <p>HSTCL у IBD-пацієнта на тривалій thiopurine+anti-TNF therapy — engine припиняє imunosuppression + CHOEP-unfit fallback з branching algorithm.</p>
-  <div class="case-foot">patient_hstcl_iatrogenic_ibd.json</div>
-</a>
-<a class="case-card" href="/en/cases/t-pll-typical.html"
-   data-category="t_cell" data-default-order="57"
-   data-name="T-PLL · Typical (Alemtuzumab IV)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>T-PLL · Typical (Alemtuzumab IV)</h3>
-  <p>T-PLL з ATM mutation + TCL1A rearrangement — engine обирає alemtuzumab IV (~90% ORR) → alloHCT consolidation.</p>
-  <div class="case-foot">patient_t_pll_typical.json</div>
-</a>
-<a class="case-card" href="/en/cases/t-pll-alem-refractory.html"
-   data-category="t_cell" data-default-order="58"
-   data-name="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)</h3>
-  <p>T-PLL refractory до alemtuzumab mono — engine обирає venetoclax + alemtuzumab combo (Boidol/Hampel).</p>
-  <div class="case-foot">patient_t_pll_alemtuzumab_refractory.json</div>
-</a>
-<a class="case-card" href="/en/cases/atll-acute.html"
-   data-category="t_cell" data-default-order="59"
-   data-name="ATLL · Acute (mLSG15 / EPOCH)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>ATLL · Acute (mLSG15 / EPOCH)</h3>
-  <p>Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine обирає intensive mLSG15 або EPOCH; alloHCT consolidation для responders.</p>
-  <div class="case-foot">patient_atll_acute.json</div>
-</a>
-<a class="case-card" href="/en/cases/atll-indolent-smoldering.html"
-   data-category="t_cell" data-default-order="60"
-   data-name="ATLL · Indolent / Smoldering (Watchful Waiting)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>ATLL · Indolent / Smoldering (Watchful Waiting)</h3>
-  <p>ATLL indolent/smoldering — engine обирає observation; system trigger для transformation.</p>
-  <div class="case-foot">patient_atll_indolent_smoldering.json</div>
-</a>
-<a class="case-card" href="/en/cases/nk-t-nasal-localized.html"
-   data-category="t_cell" data-default-order="61"
-   data-name="NK/T-Nasal · Localized (P-GEMOX + RT)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>NK/T-Nasal · Localized (P-GEMOX + RT)</h3>
-  <p>Localized extranodal NK/T-cell lymphoma, nasal type — engine обирає concurrent P-GEMOX + RT (anthracycline-resistant biology).</p>
-  <div class="case-foot">patient_nk_t_nasal_localized.json</div>
-</a>
-<a class="case-card" href="/en/cases/nk-t-nasal-relapsed.html"
-   data-category="t_cell" data-default-order="62"
-   data-name="NK/T-Nasal · Relapsed (Avelumab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>NK/T-Nasal · Relapsed (Avelumab)</h3>
-  <p>NK/T-nasal relapsed — engine обирає avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).</p>
-  <div class="case-foot">patient_nk_t_nasal_relapsed.json</div>
-</a>
-<a class="case-card" href="/en/cases/mf-relapsed-post-moga.html"
-   data-category="t_cell" data-default-order="63"
-   data-name="MF · Relapsed post-Mogamulizumab (Bexarotene)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>MF · Relapsed post-Mogamulizumab (Bexarotene)</h3>
-  <p>MF/Sézary relapsed після mogamulizumab — engine обирає bexarotene 2L з low-dose maintenance (RXR-targeted oral retinoid).</p>
-  <div class="case-foot">patient_mf_relapsed_post_moga.json</div>
-</a>
-<a class="case-card" href="/en/cases/ptld-polymorphic-ebv.html"
-   data-category="t_cell" data-default-order="64"
-   data-name="PTLD · Polymorphic EBV+ (RIS + Rituximab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PTLD · Polymorphic EBV+ (RIS + Rituximab)</h3>
-  <p>Post-transplant LPD, polymorphic EBV+ — engine обирає RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.</p>
-  <div class="case-foot">patient_ptld_polymorphic_ebv.json</div>
-</a>
-<a class="case-card" href="/en/cases/ptld-monomorphic-dlbcl-like.html"
-   data-category="t_cell" data-default-order="65"
-   data-name="PTLD · Monomorphic DLBCL-like (R-CHOP)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>PTLD · Monomorphic DLBCL-like (R-CHOP)</h3>
-  <p>Monomorphic PTLD з DLBCL morphology — engine обирає R-CHOP після RIS-failure; sequential treatment per PTLD-1.</p>
-  <div class="case-foot">patient_ptld_monomorphic_dlbcl_like.json</div>
-</a>
-<a class="case-card" href="/en/cases/chl-pediatric-bulky.html"
-   data-category="hodgkin" data-default-order="66"
-   data-name="cHL · AYA Stage IIB Bulky Mediastinal">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>cHL · AYA Stage IIB Bulky Mediastinal</h3>
-  <p>AYA пацієнт з cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.</p>
-  <div class="case-foot">patient_chl_pediatric_bulky_mediastinal.json</div>
-</a>
-<a class="case-card" href="/en/cases/chl-relapsed-salvage.html"
-   data-category="hodgkin" data-default-order="67"
-   data-name="cHL · Relapsed (Salvage → autoSCT + BV maint.)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>cHL · Relapsed (Salvage → autoSCT + BV maint.)</h3>
-  <p>cHL relapsed після ABVD/A+AVD — engine обирає salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).</p>
-  <div class="case-foot">patient_chl_relapsed_for_salvage.json</div>
-</a>
-<a class="case-card" href="/en/cases/mm-post-vrd-progression.html"
-   data-category="myeloma" data-default-order="68"
-   data-name="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)</h3>
-  <p>MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).</p>
-  <div class="case-foot">patient_mm_post_vrd_progression.json</div>
-</a>
-<a class="case-card" href="/en/cases/mm-triple-class-refractory.html"
-   data-category="myeloma" data-default-order="69"
-   data-name="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)</h3>
-  <p>MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.</p>
-  <div class="case-foot">patient_mm_triple_class_refractory.json</div>
-</a>
+  <!-- Stage 2: case list for the selected disease (hidden by default) -->
+  <section id="caseStage" class="case-stage" hidden>
+    <button type="button" class="case-back-btn" id="caseBackBtn">← All diseases</button>
+    <div id="caseListContainer">
+    <section class="case-list" data-disease-id="DIS-AML" hidden>
+  <header class="case-list-header">
+    <h2>Acute Myeloid Leukemia</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
 <a class="case-card" href="/en/cases/aml-fit-1l-7-3.html"
-   data-category="myeloid" data-default-order="70"
+   data-default-order="70"
    data-name="AML · Fit 1L (7+3 Induction)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -839,7 +101,7 @@
   <div class="case-foot">patient_aml_fit_1l_seven_three.json</div>
 </a>
 <a class="case-card" href="/en/cases/aml-unfit-ven-aza.html"
-   data-category="myeloid" data-default-order="71"
+   data-default-order="71"
    data-name="AML · Unfit (Venetoclax + Azacitidine)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -850,7 +112,7 @@
   <div class="case-foot">patient_aml_unfit_ven_aza.json</div>
 </a>
 <a class="case-card" href="/en/cases/aml-flt3-relapse.html"
-   data-category="myeloid" data-default-order="72"
+   data-default-order="72"
    data-name="AML · FLT3-mutant Relapse (Gilteritinib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -860,30 +122,248 @@
   <p>AML relapsed з FLT3-ITD/TKD — engine обирає gilteritinib mono (ADMIRAL: superior до salvage chemo); alloHCT для responders.</p>
   <div class="case-foot">patient_aml_flt3_relapse.json</div>
 </a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-APL" hidden>
+  <header class="case-list-header">
+    <h2>Acute Promyelocytic Leukemia</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
 <a class="case-card" href="/en/cases/apl-low-risk.html"
-   data-category="myeloid" data-default-order="73"
+   data-default-order="73"
    data-name="APL · Low Risk (ATRA + ATO chemo-free)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
   <h3>APL · Low Risk (ATRA + ATO chemo-free)</h3>
-  <p>APL з WBC <10K (low-risk Sanz) — engine обирає ATRA+ATO chemo-free (APL0406: ~98% CR, без anthracycline).</p>
+  <p>APL з WBC &lt;10K (low-risk Sanz) — engine обирає ATRA+ATO chemo-free (APL0406: ~98% CR, без anthracycline).</p>
   <div class="case-foot">patient_apl_low_risk.json</div>
 </a>
 <a class="case-card" href="/en/cases/apl-high-risk.html"
-   data-category="myeloid" data-default-order="74"
+   data-default-order="74"
    data-name="APL · High Risk + DIC (ATRA + ATO + Idarubicin)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
   <h3>APL · High Risk + DIC (ATRA + ATO + Idarubicin)</h3>
-  <p>APL з WBC >10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine додає idarubicin до ATRA+ATO; emergency cryoprecipitate/platelets.</p>
+  <p>APL з WBC &gt;10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine додає idarubicin до ATRA+ATO; emergency cryoprecipitate/platelets.</p>
   <div class="case-foot">patient_apl_high_risk.json</div>
 </a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ATLL" hidden>
+  <header class="case-list-header">
+    <h2>Adult T-Cell Leukemia/Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/atll-acute.html"
+   data-default-order="59"
+   data-name="ATLL · Acute (mLSG15 / EPOCH)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>ATLL · Acute (mLSG15 / EPOCH)</h3>
+  <p>Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine обирає intensive mLSG15 або EPOCH; alloHCT consolidation для responders.</p>
+  <div class="case-foot">patient_atll_acute.json</div>
+</a>
+<a class="case-card" href="/en/cases/atll-indolent-smoldering.html"
+   data-default-order="60"
+   data-name="ATLL · Indolent / Smoldering (Watchful Waiting)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>ATLL · Indolent / Smoldering (Watchful Waiting)</h3>
+  <p>ATLL indolent/smoldering — engine обирає observation; system trigger для transformation.</p>
+  <div class="case-foot">patient_atll_indolent_smoldering.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ALCL" hidden>
+  <header class="case-list-header">
+    <h2>Anaplastic Large Cell Lymphoma, Systemic</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/alcl-alk-negative.html"
+   data-default-order="24"
+   data-name="ALCL · ALK-negative (CHP-Bv)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>ALCL · ALK-negative (CHP-Bv)</h3>
+  <p>Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).</p>
+  <div class="case-foot">patient_alcl_alk_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/alcl-alk-positive-typical.html"
+   data-default-order="48"
+   data-name="ALCL · ALK-positive Typical (CHP-Bv)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>ALCL · ALK-positive Typical (CHP-Bv)</h3>
+  <p>Молода особа з ALK+ ALCL — engine обирає CHP-Bv (ECHELON-2). ALK+ має значно кращий прогноз vs ALK-.</p>
+  <div class="case-foot">patient_alcl_alk_positive_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/alcl-relapsed-bv-naive.html"
+   data-default-order="49"
+   data-name="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>ALCL · Relapsed BV-naive (Brentuximab → autoSCT)</h3>
+  <p>Relapsed ALCL без попереднього brentuximab — engine обирає brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.</p>
+  <div class="case-foot">patient_alcl_relapsed_bv_naive.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-AITL" hidden>
+  <header class="case-list-header">
+    <h2>Angioimmunoblastic T-Cell Lymphoma</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/aitl-cd30-positive.html"
+   data-default-order="26"
+   data-name="AITL · CD30-positive (CHP-Bv)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>AITL · CD30-positive (CHP-Bv)</h3>
+  <p>Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.</p>
+  <div class="case-foot">patient_aitl_cd30_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/aitl-cd30-negative.html"
+   data-default-order="30"
+   data-name="AITL · CD30-negative (CHOEP + AITL-specific workup)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>AITL · CD30-negative (CHOEP + AITL-specific workup)</h3>
+  <p>AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).</p>
+  <div class="case-foot">patient_aitl_cd30_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/aitl-relapsed-2l.html"
+   data-default-order="52"
+   data-name="AITL · Relapsed 2L (Azacitidine)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>AITL · Relapsed 2L (Azacitidine)</h3>
+  <p>AITL relapsed з TET2/DNMT3A epigenetic profile — engine обирає azacitidine (epigenetic targeting; AITL — найбільш azacitidine-responsive TCL subtype).</p>
+  <div class="case-foot">patient_aitl_relapsed_2l.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-B-ALL" hidden>
+  <header class="case-list-header">
+    <h2>B-Lymphoblastic Leukemia/Lymphoma</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/b-all-mrd-positive.html"
+   data-default-order="92"
+   data-name="B-ALL · MRD-positive (Blinatumomab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>B-ALL · MRD-positive (Blinatumomab)</h3>
+  <p>B-ALL MRD-positive після induction — engine обирає blinatumomab (BLAST: MRD eradication у &gt;75%).</p>
+  <div class="case-foot">patient_b_all_mrd_positive.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-BURKITT" hidden>
+  <header class="case-list-header">
+    <h2>Burkitt Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/burkitt-low-risk.html"
+   data-default-order="19"
+   data-name="Burkitt · Low/Intermediate Risk (DA-EPOCH-R)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Burkitt · Low/Intermediate Risk (DA-EPOCH-R)</h3>
+  <p>Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).</p>
+  <div class="case-foot">patient_burkitt_low_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/burkitt-high-risk.html"
+   data-default-order="20"
+   data-name="Burkitt · High Risk (CODOX-M / IVAC)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Burkitt · High Risk (CODOX-M / IVAC)</h3>
+  <p>Burkitt з CNS involvement + LDH &gt;3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.</p>
+  <div class="case-foot">patient_burkitt_high_risk.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CLL" hidden>
+  <header class="case-list-header">
+    <h2>Chronic Lymphocytic Leukemia / Small Lymphocytic Lymphoma</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/cll-low-risk.html"
+   data-default-order="12"
+   data-name="CLL/SLL · Low-Risk (BTKi continuous)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>CLL/SLL · Low-Risk (BTKi continuous)</h3>
+  <p>ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.</p>
+  <div class="case-foot">patient_cll_low_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/cll-high-risk.html"
+   data-default-order="13"
+   data-name="CLL/SLL · High-Risk (VenO time-limited)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>CLL/SLL · High-Risk (VenO time-limited)</h3>
+  <p>ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).</p>
+  <div class="case-foot">patient_cll_high_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/cll-post-btki.html"
+   data-default-order="44"
+   data-name="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)</h3>
+  <p>CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).</p>
+  <div class="case-foot">patient_cll_post_btki_progression.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CML" hidden>
+  <header class="case-list-header">
+    <h2>Chronic Myeloid Leukemia</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
 <a class="case-card" href="/en/cases/cml-chronic-newdx.html"
-   data-category="myeloid" data-default-order="75"
+   data-default-order="75"
    data-name="CML · Chronic Phase Newly Diagnosed (TKI 1L)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -894,7 +374,7 @@
   <div class="case-foot">patient_cml_chronic_phase_newdx.json</div>
 </a>
 <a class="case-card" href="/en/cases/cml-t315i.html"
-   data-category="myeloid" data-default-order="76"
+   data-default-order="76"
    data-name="CML · T315I-mutated (Ponatinib / Asciminib)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -905,18 +385,392 @@
   <div class="case-foot">patient_cml_t315i.json</div>
 </a>
 <a class="case-card" href="/en/cases/cml-blast-crisis.html"
-   data-category="myeloid" data-default-order="77"
+   data-default-order="77"
    data-name="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
   <h3>CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)</h3>
-  <p>CML що дебютує як blast crisis — engine обирає TKI + intensive chemo bridge → urgent alloHCT (без alloHCT медіана OS <12 mo).</p>
+  <p>CML що дебютує як blast crisis — engine обирає TKI + intensive chemo bridge → urgent alloHCT (без alloHCT медіана OS &lt;12 mo).</p>
   <div class="case-foot">patient_cml_blast_crisis_at_presentation.json</div>
 </a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-CHL" hidden>
+  <header class="case-list-header">
+    <h2>Classical Hodgkin Lymphoma</h2>
+    <span class="case-list-count">4 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/chl-advanced.html"
+   data-default-order="27"
+   data-name="Classical Hodgkin · Advanced (A+AVD)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Classical Hodgkin · Advanced (A+AVD)</h3>
+  <p>Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).</p>
+  <div class="case-foot">patient_chl_advanced.json</div>
+</a>
+<a class="case-card" href="/en/cases/chl-early.html"
+   data-default-order="28"
+   data-name="Classical Hodgkin · Early Stage (ABVD)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Classical Hodgkin · Early Stage (ABVD)</h3>
+  <p>Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).</p>
+  <div class="case-foot">patient_chl_early.json</div>
+</a>
+<a class="case-card" href="/en/cases/chl-pediatric-bulky.html"
+   data-default-order="66"
+   data-name="cHL · AYA Stage IIB Bulky Mediastinal">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>cHL · AYA Stage IIB Bulky Mediastinal</h3>
+  <p>AYA пацієнт з cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.</p>
+  <div class="case-foot">patient_chl_pediatric_bulky_mediastinal.json</div>
+</a>
+<a class="case-card" href="/en/cases/chl-relapsed-salvage.html"
+   data-default-order="67"
+   data-name="cHL · Relapsed (Salvage → autoSCT + BV maint.)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>cHL · Relapsed (Salvage → autoSCT + BV maint.)</h3>
+  <p>cHL relapsed після ABVD/A+AVD — engine обирає salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).</p>
+  <div class="case-foot">patient_chl_relapsed_for_salvage.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-EATL" hidden>
+  <header class="case-list-header">
+    <h2>Enteropathy-Associated T-Cell Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/eatl-typical.html"
+   data-default-order="53"
+   data-name="EATL · Typical (Celiac, CHOEP → autoSCT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>EATL · Typical (Celiac, CHOEP → autoSCT)</h3>
+  <p>EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).</p>
+  <div class="case-foot">patient_eatl_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/eatl-relapsed-post-choep.html"
+   data-default-order="54"
+   data-name="EATL · Relapsed post-CHOEP (ICE Salvage)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>EATL · Relapsed post-CHOEP (ICE Salvage)</h3>
+  <p>EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.</p>
+  <div class="case-foot">patient_eatl_relapsed_post_choep.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-ET" hidden>
+  <header class="case-list-header">
+    <h2>Essential Thrombocythemia</h2>
+    <span class="case-list-count">1 example</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/et-high-risk-hu.html"
+   data-default-order="87"
+   data-name="Essential Thrombocythemia · High Risk (HU)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Essential Thrombocythemia · High Risk (HU)</h3>
+  <p>ET high-risk (age &gt;60 + JAK2+ + thrombosis) — engine обирає hydroxyurea + ASA; anagrelide як 2L (PT-1).</p>
+  <div class="case-foot">patient_et_high_risk_hu.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-NK-T-NASAL" hidden>
+  <header class="case-list-header">
+    <h2>Extranodal NK/T-Cell Lymphoma, Nasal Type</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/nk-t-nasal-localized.html"
+   data-default-order="61"
+   data-name="NK/T-Nasal · Localized (P-GEMOX + RT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>NK/T-Nasal · Localized (P-GEMOX + RT)</h3>
+  <p>Localized extranodal NK/T-cell lymphoma, nasal type — engine обирає concurrent P-GEMOX + RT (anthracycline-resistant biology).</p>
+  <div class="case-foot">patient_nk_t_nasal_localized.json</div>
+</a>
+<a class="case-card" href="/en/cases/nk-t-nasal-relapsed.html"
+   data-default-order="62"
+   data-name="NK/T-Nasal · Relapsed (Avelumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>NK/T-Nasal · Relapsed (Avelumab)</h3>
+  <p>NK/T-nasal relapsed — engine обирає avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).</p>
+  <div class="case-foot">patient_nk_t_nasal_relapsed.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-FL" hidden>
+  <header class="case-list-header">
+    <h2>Follicular Lymphoma</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/fl-low-burden.html"
+   data-default-order="9"
+   data-name="Follicular · Low Burden (Watch-and-Wait)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Follicular · Low Burden (Watch-and-Wait)</h3>
+  <p>FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&amp;W).</p>
+  <div class="case-foot">patient_fl_low_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/fl-high-burden.html"
+   data-default-order="10"
+   data-name="Follicular · High Burden (BR)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Follicular · High Burden (BR)</h3>
+  <p>FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.</p>
+  <div class="case-foot">patient_fl_high_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/fl-transformation.html"
+   data-default-order="11"
+   data-name="Follicular · Transformation Suspect (R-CHOP)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Follicular · Transformation Suspect (R-CHOP)</h3>
+  <p>FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).</p>
+  <div class="case-foot">patient_fl_transformation.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-HCL" hidden>
+  <header class="case-list-header">
+    <h2>Hairy Cell Leukemia</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/hcl-typical.html"
+   data-default-order="21"
+   data-name="Hairy Cell Leukemia (Cladribine 7-day)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Hairy Cell Leukemia (Cladribine 7-day)</h3>
+  <p>Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.</p>
+  <div class="case-foot">patient_hcl_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/hcl-relapsed-braf.html"
+   data-default-order="45"
+   data-name="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)</h3>
+  <p>HCL relapsed з BRAF-V600E+ — engine обирає vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.</p>
+  <div class="case-foot">patient_hcl_relapsed_braf.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-HSTCL" hidden>
+  <header class="case-list-header">
+    <h2>Hepatosplenic T-Cell Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/hstcl-fit-younger.html"
+   data-default-order="55"
+   data-name="HSTCL · Fit Younger (ICE/IVAC → alloHCT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>HSTCL · Fit Younger (ICE/IVAC → alloHCT)</h3>
+  <p>Hepatosplenic T-cell Lymphoma у молодої особи, ECOG 0 — engine обирає intensive ICE/IVAC → upfront alloHCT (CHOP неадекватний).</p>
+  <div class="case-foot">patient_hstcl_fit_younger.json</div>
+</a>
+<a class="case-card" href="/en/cases/hstcl-iatrogenic-ibd.html"
+   data-default-order="56"
+   data-name="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)</h3>
+  <p>HSTCL у IBD-пацієнта на тривалій thiopurine+anti-TNF therapy — engine припиняє imunosuppression + CHOEP-unfit fallback з branching algorithm.</p>
+  <div class="case-foot">patient_hstcl_iatrogenic_ibd.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MCL" hidden>
+  <header class="case-list-header">
+    <h2>Mantle Cell Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/mcl-fit-younger.html"
+   data-default-order="14"
+   data-name="Mantle Cell · Fit Younger (Intensive + autoSCT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Mantle Cell · Fit Younger (Intensive + autoSCT)</h3>
+  <p>MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).</p>
+  <div class="case-foot">patient_mcl_fit_younger.json</div>
+</a>
+<a class="case-card" href="/en/cases/mcl-unfit-tp53.html"
+   data-default-order="15"
+   data-name="Mantle Cell · Unfit / TP53-mutant (BTKi+R)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Mantle Cell · Unfit / TP53-mutant (BTKi+R)</h3>
+  <p>MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).</p>
+  <div class="case-foot">patient_mcl_unfit_or_tp53.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MM" hidden>
+  <header class="case-list-header">
+    <h2>Multiple Myeloma</h2>
+    <span class="case-list-count">4 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/mm-standard-risk.html"
+   data-default-order="3"
+   data-name="Multiple Myeloma · Standard-Risk">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Multiple Myeloma · Standard-Risk</h3>
+  <p>Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.</p>
+  <div class="case-foot">patient_mm_standard_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/mm-high-risk.html"
+   data-default-order="4"
+   data-name="Multiple Myeloma · High-Risk">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Multiple Myeloma · High-Risk</h3>
+  <p>Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.</p>
+  <div class="case-foot">patient_mm_high_risk.json</div>
+</a>
+<a class="case-card" href="/en/cases/mm-post-vrd-progression.html"
+   data-default-order="68"
+   data-name="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)</h3>
+  <p>MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).</p>
+  <div class="case-foot">patient_mm_post_vrd_progression.json</div>
+</a>
+<a class="case-card" href="/en/cases/mm-triple-class-refractory.html"
+   data-default-order="69"
+   data-name="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)</h3>
+  <p>MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.</p>
+  <div class="case-foot">patient_mm_triple_class_refractory.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MF-SEZARY" hidden>
+  <header class="case-list-header">
+    <h2>Mycosis Fungoides / Sézary Syndrome</h2>
+    <span class="case-list-count">4 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/mf-early-stage.html"
+   data-default-order="31"
+   data-name="Mycosis Fungoides · Early Stage (Skin-Directed)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Mycosis Fungoides · Early Stage (Skin-Directed)</h3>
+  <p>MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.</p>
+  <div class="case-foot">patient_mf_early_stage.json</div>
+</a>
+<a class="case-card" href="/en/cases/sezary-advanced.html"
+   data-default-order="32"
+   data-name="Sézary Syndrome · Advanced (Mogamulizumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Sézary Syndrome · Advanced (Mogamulizumab)</h3>
+  <p>Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).</p>
+  <div class="case-foot">patient_sezary_advanced.json</div>
+</a>
+<a class="case-card" href="/en/cases/mf-advanced-cd30.html"
+   data-default-order="33"
+   data-name="MF · Advanced + CD30+ LCT (Brentuximab mono)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>MF · Advanced + CD30+ LCT (Brentuximab mono)</h3>
+  <p>Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).</p>
+  <div class="case-foot">patient_mf_advanced_cd30.json</div>
+</a>
+<a class="case-card" href="/en/cases/mf-relapsed-post-moga.html"
+   data-default-order="63"
+   data-name="MF · Relapsed post-Mogamulizumab (Bexarotene)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>MF · Relapsed post-Mogamulizumab (Bexarotene)</h3>
+  <p>MF/Sézary relapsed після mogamulizumab — engine обирає bexarotene 2L з low-dose maintenance (RXR-targeted oral retinoid).</p>
+  <div class="case-foot">patient_mf_relapsed_post_moga.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-MDS-LR" hidden>
+  <header class="case-list-header">
+    <h2>Myelodysplastic Syndromes — Lower Risk</h2>
+    <span class="case-list-count">5 examples</span>
+  </header>
+  <div class="case-grid">
 <a class="case-card" href="/en/cases/mds-hr-transplant-eligible.html"
-   data-category="myeloid" data-default-order="78"
+   data-default-order="78"
    data-name="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -927,7 +781,7 @@
   <div class="case-foot">patient_mds_hr_transplant_eligible.json</div>
 </a>
 <a class="case-card" href="/en/cases/mds-hr-unfit-aza.html"
-   data-category="myeloid" data-default-order="79"
+   data-default-order="79"
    data-name="MDS-HR · Unfit (Azacitidine Maintenance)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -938,7 +792,7 @@
   <div class="case-foot">patient_mds_hr_unfit_aza.json</div>
 </a>
 <a class="case-card" href="/en/cases/mds-hr-progression-aml.html"
-   data-category="myeloid" data-default-order="80"
+   data-default-order="80"
    data-name="MDS-HR · Progression to Secondary AML">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -949,7 +803,7 @@
   <div class="case-foot">patient_mds_hr_progression_to_aml.json</div>
 </a>
 <a class="case-card" href="/en/cases/mds-lr-del5q.html"
-   data-category="myeloid" data-default-order="81"
+   data-default-order="81"
    data-name="MDS-LR · del(5q) (Lenalidomide)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -959,19 +813,8 @@
   <p>MDS-LR з isolated del(5q) syndrome — engine обирає lenalidomide (MDS-004: ~67% transfusion-independence).</p>
   <div class="case-foot">patient_mds_lr_del5q.json</div>
 </a>
-<a class="case-card" href="/en/cases/mds-lr-rs-luspatercept.html"
-   data-category="myeloid" data-default-order="82"
-   data-name="MDS-LR · RS+ EPO-failure (Luspatercept)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
-  </div>
-  <h3>MDS-LR · RS+ EPO-failure (Luspatercept)</h3>
-  <p>MDS-LR з ring sideroblasts + EPO-high (>500) → ESA-failure — engine обирає luspatercept (COMMANDS).</p>
-  <div class="case-foot">patient_mds_lr_rs_luspatercept.json</div>
-</a>
 <a class="case-card" href="/en/cases/mds-lr-hypoplastic-ist.html"
-   data-category="myeloid" data-default-order="83"
+   data-default-order="83"
    data-name="MDS-LR · Hypoplastic / IST candidate">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -981,85 +824,153 @@
   <p>Hypoplastic MDS, mimics aplastic anemia — engine обирає immunosuppressive therapy (ATG+CsA) як alternative до transfusion-only.</p>
   <div class="case-foot">patient_mds_lr_hypoplastic_ist.json</div>
 </a>
-<a class="case-card" href="/en/cases/pv-high-risk-hu.html"
-   data-category="myeloid" data-default-order="84"
-   data-name="Polycythemia Vera · High Risk (HU 1L)">
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-NODAL-MZL" hidden>
+  <header class="case-list-header">
+    <h2>Nodal Marginal Zone Lymphoma</h2>
+    <span class="case-list-count">5 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/hcv-mzl-reference.html"
+   data-default-order="0"
+   data-name="HCV-MZL · Reference Case (Patient Zero)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>Polycythemia Vera · High Risk (HU 1L)</h3>
-  <p>PV вік >60 + thrombosis history — engine обирає phlebotomy + low-dose ASA + cytoreduction hydroxyurea.</p>
-  <div class="case-foot">patient_pv_high_risk_hu.json</div>
+  <h3>HCV-MZL · Reference Case (Patient Zero)</h3>
+  <p>Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.</p>
+  <div class="case-foot">patient_zero_reference_case.json</div>
 </a>
-<a class="case-card" href="/en/cases/pv-hu-resistant-rux.html"
-   data-category="myeloid" data-default-order="85"
-   data-name="PV · HU-resistant (Ruxolitinib 2L)">
+<a class="case-card" href="/en/cases/hcv-mzl-bulky.html"
+   data-default-order="1"
+   data-name="HCV-MZL · Aggressive Burden (BR + concurrent DAA)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>PV · HU-resistant (Ruxolitinib 2L)</h3>
-  <p>PV з HU-intolerance/resistance per ELN — engine обирає ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).</p>
-  <div class="case-foot">patient_pv_hu_resistant_ruxolitinib.json</div>
+  <h3>HCV-MZL · Aggressive Burden (BR + concurrent DAA)</h3>
+  <p>HCV-MZL із bulky disease (&gt;7 см) — RF-BULKY-DISEASE fired. Engine обирає BR (бендамустин+ритуксимаб) + concurrent DAA. Поєднує колишні patient_zero_bulky та новий fixture aggressive_burden.</p>
+  <div class="case-foot">patient_hcv_mzl_aggressive_burden.json</div>
 </a>
-<a class="case-card" href="/en/cases/pv-pregnancy-planning.html"
-   data-category="myeloid" data-default-order="86"
-   data-name="PV · Pregnancy Planning (Peg-IFN)">
+<a class="case-card" href="/en/cases/hcv-mzl-post-daa.html"
+   data-default-order="2"
+   data-name="HCV-MZL · Post-DAA Responder (Surveillance)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>PV · Pregnancy Planning (Peg-IFN)</h3>
-  <p>Reproductive-age жінка з PV, planning pregnancy — engine обирає peg-IFN α-2a (non-teratogenic, fetus-safe).</p>
-  <div class="case-foot">patient_pv_pregnancy_planning.json</div>
+  <h3>HCV-MZL · Post-DAA Responder (Surveillance)</h3>
+  <p>Пацієнт post-DAA з SVR12 + lymphoma response — engine обирає surveillance only; план для re-treatment trigger при relapse.</p>
+  <div class="case-foot">patient_hcv_mzl_post_daa_responder.json</div>
 </a>
-<a class="case-card" href="/en/cases/et-high-risk-hu.html"
-   data-category="myeloid" data-default-order="87"
-   data-name="Essential Thrombocythemia · High Risk (HU)">
+<a class="case-card" href="/en/cases/diagnostic-lymphoma-confirmed.html"
+   data-default-order="6"
+   data-name="Lymphoma Confirmed · Post-Biopsy (Treatment Plan)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>Essential Thrombocythemia · High Risk (HU)</h3>
-  <p>ET high-risk (age >60 + JAK2+ + thrombosis) — engine обирає hydroxyurea + ASA; anagrelide як 2L (PT-1).</p>
-  <div class="case-foot">patient_et_high_risk_hu.json</div>
+  <h3>Lymphoma Confirmed · Post-Biopsy (Treatment Plan)</h3>
+  <p>Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.</p>
+  <div class="case-foot">patient_diagnostic_lymphoma_confirmed.json</div>
 </a>
-<a class="case-card" href="/en/cases/pmf-anemia-dominant.html"
-   data-category="myeloid" data-default-order="88"
-   data-name="PMF · Anemia-Dominant (Momelotinib)">
+<a class="case-card" href="/en/cases/nmzl-high-burden.html"
+   data-default-order="47"
+   data-name="Nodal MZL · High Burden (BR)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>PMF · Anemia-Dominant (Momelotinib)</h3>
-  <p>PMF DIPSS-Plus int-1, anemia-dominant — engine обирає momelotinib (MOMENTUM: anemia-friendly JAKi).</p>
-  <div class="case-foot">patient_pmf_anemia_dominant.json</div>
+  <h3>Nodal MZL · High Burden (BR)</h3>
+  <p>Нодальна MZL з GELF+ — engine обирає BR (1L); 2L після rituximab/W&amp;W failure теж BR.</p>
+  <div class="case-foot">patient_nmzl_high_burden.json</div>
 </a>
-<a class="case-card" href="/en/cases/pmf-int2-symptomatic-rux.html"
-   data-category="myeloid" data-default-order="89"
-   data-name="PMF · Int-2 Symptomatic (Ruxolitinib)">
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-NLPBL" hidden>
+  <header class="case-list-header">
+    <h2>Nodular Lymphocyte-Predominant B-cell Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/nlpbl-early.html"
+   data-default-order="29"
+   data-name="NLPBL · Early Stage (Observation / RT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>PMF · Int-2 Symptomatic (Ruxolitinib)</h3>
-  <p>PMF DIPSS-Plus int-2 з splenomegaly + constitutional symptoms — engine обирає ruxolitinib (COMFORT-I/II).</p>
-  <div class="case-foot">patient_pmf_int2_symptomatic_ruxolitinib.json</div>
+  <h3>NLPBL · Early Stage (Observation / RT)</h3>
+  <p>Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.</p>
+  <div class="case-foot">patient_nlpbl_early.json</div>
 </a>
-<a class="case-card" href="/en/cases/pmf-post-rux-allohct.html"
-   data-category="myeloid" data-default-order="90"
-   data-name="PMF · Post-Rux alloHCT Bridge (Urgent)">
+<a class="case-card" href="/en/cases/nlpbl-ia-rituximab.html"
+   data-default-order="34"
+   data-name="NLPBL · IA + RT-contraindicated (Rituximab mono)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
     
   </div>
-  <h3>PMF · Post-Rux alloHCT Bridge (Urgent)</h3>
-  <p>PMF post-ruxolitinib failure з massive splenomegaly + transfusion-dependence — engine обирає alloHCT bridge (curative-intent, urgent).</p>
-  <div class="case-foot">patient_pmf_post_rux_allohct_bridge.json</div>
+  <h3>NLPBL · IA + RT-contraindicated (Rituximab mono)</h3>
+  <p>NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).</p>
+  <div class="case-foot">patient_nlpbl_ia_rituximab.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="OTHER" hidden>
+  <header class="case-list-header">
+    <h2>Other / unclassified</h2>
+    <span class="case-list-count">74 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/diagnostic-lymphoma-suspect.html"
+   data-default-order="5"
+   data-name="Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-diag">Diagnostic Brief</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)</h3>
+  <p>Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).</p>
+  <div class="case-foot">patient_diagnostic_lymphoma_suspect.json</div>
+</a>
+<a class="case-card" href="/en/cases/nmzl-low-burden.html"
+   data-default-order="18"
+   data-name="Nodal MZL · Low Burden (W&amp;W)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>Nodal MZL · Low Burden (W&amp;W)</h3>
+  <p>Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).</p>
+  <div class="case-foot">patient_nmzl_low_burden.json</div>
+</a>
+<a class="case-card" href="/en/cases/hgbl-double-hit.html"
+   data-default-order="23"
+   data-name="HGBL · Double-Hit (DA-EPOCH-R)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>HGBL · Double-Hit (DA-EPOCH-R)</h3>
+  <p>High-Grade B-Cell Lymphoma з MYC + BCL2 break-apart — engine обирає DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuse схеми з Burkitt.</p>
+  <div class="case-foot">patient_hgbl_double_hit.json</div>
+</a>
+<a class="case-card" href="/en/cases/mds-lr-rs-luspatercept.html"
+   data-default-order="82"
+   data-name="MDS-LR · RS+ EPO-failure (Luspatercept)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    <span class="case-json-only" title="Form not yet available — opens as JSON on Try-it">JSON-only</span>
+  </div>
+  <h3>MDS-LR · RS+ EPO-failure (Luspatercept)</h3>
+  <p>MDS-LR з ring sideroblasts + EPO-high (&gt;500) → ESA-failure — engine обирає luspatercept (COMMANDS).</p>
+  <div class="case-foot">patient_mds_lr_rs_luspatercept.json</div>
 </a>
 <a class="case-card" href="/en/cases/b-all-ph-pos-adult.html"
-   data-category="lymphoblastic" data-default-order="91"
+   data-default-order="91"
    data-name="B-ALL · Ph+ Adult (TKI + Chemo)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1069,19 +980,8 @@
   <p>Adult B-ALL Ph+ (BCR-ABL1+) — engine обирає dasatinib + chemo (hyper-CVAD або pediatric-inspired); alloHCT для CR1 high-risk.</p>
   <div class="case-foot">patient_b_all_ph_pos_adult.json</div>
 </a>
-<a class="case-card" href="/en/cases/b-all-mrd-positive.html"
-   data-category="lymphoblastic" data-default-order="92"
-   data-name="B-ALL · MRD-positive (Blinatumomab)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>B-ALL · MRD-positive (Blinatumomab)</h3>
-  <p>B-ALL MRD-positive після induction — engine обирає blinatumomab (BLAST: MRD eradication у >75%).</p>
-  <div class="case-foot">patient_b_all_mrd_positive.json</div>
-</a>
 <a class="case-card" href="/en/cases/b-all-t315i-post-tki.html"
-   data-category="lymphoblastic" data-default-order="93"
+   data-default-order="93"
    data-name="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1091,30 +991,8 @@
   <p>Ph+ B-ALL relapsed з T315I gatekeeper — engine обирає ponatinib + chemo bridge → alloHCT.</p>
   <div class="case-foot">patient_b_all_t315i_post_tki.json</div>
 </a>
-<a class="case-card" href="/en/cases/t-all-relapsed.html"
-   data-category="lymphoblastic" data-default-order="94"
-   data-name="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>T-ALL · Relapsed post-hyper-CVAD (Nelarabine)</h3>
-  <p>T-ALL relapsed після hyper-CVAD — engine обирає nelarabine (T-cell selective; alloHCT consolidation).</p>
-  <div class="case-foot">patient_t_all_relapsed_post_hyper_cvad.json</div>
-</a>
-<a class="case-card" href="/en/cases/t-lbl-mediastinal.html"
-   data-category="lymphoblastic" data-default-order="95"
-   data-name="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)">
-  <div class="case-badge-row">
-    <div class="case-badge bdg-plan">Treatment Plan</div>
-    
-  </div>
-  <h3>T-LBL · Mediastinal Mass (Pediatric-inspired ALL)</h3>
-  <p>T-lymphoblastic lymphoma з mediastinal mass — engine обирає pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis обов'язкове.</p>
-  <div class="case-foot">patient_t_lbl_mediastinal.json</div>
-</a>
 <a class="case-card" href="/en/cases/cervical-locally-advanced.html"
-   data-category="solid" data-default-order="96"
+   data-default-order="96"
    data-name="Cervical · Locally Advanced (CCRT + Pembrolizumab)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1125,7 +1003,7 @@
   <div class="case-foot">patient_cervical_locally_advanced.json</div>
 </a>
 <a class="case-card" href="/en/cases/gbm-stupp.html"
-   data-category="solid" data-default-order="97"
+   data-default-order="97"
    data-name="Glioblastoma · Newly Diagnosed (Stupp Protocol)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1136,7 +1014,7 @@
   <div class="case-foot">patient_gbm_newly_diagnosed_stupp.json</div>
 </a>
 <a class="case-card" href="/en/cases/ovarian-advanced-hrd.html"
-   data-category="solid" data-default-order="98"
+   data-default-order="98"
    data-name="Ovarian · Advanced HRD+ (PARPi maintenance)">
   <div class="case-badge-row">
     <div class="case-badge bdg-plan">Treatment Plan</div>
@@ -1147,7 +1025,7 @@
   <div class="case-foot">patient_ovarian_advanced_hrd.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-aitl.html"
-   data-category="t_cell" data-default-order="99"
+   data-default-order="99"
    data-name="DIS-AITL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1158,7 +1036,7 @@
   <div class="case-foot">auto_aitl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-alcl.html"
-   data-category="t_cell" data-default-order="100"
+   data-default-order="100"
    data-name="DIS-ALCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1169,7 +1047,7 @@
   <div class="case-foot">auto_alcl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-aml.html"
-   data-category="myeloid" data-default-order="101"
+   data-default-order="101"
    data-name="DIS-AML — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1180,7 +1058,7 @@
   <div class="case-foot">auto_aml.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-apl.html"
-   data-category="myeloid" data-default-order="102"
+   data-default-order="102"
    data-name="DIS-APL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1191,7 +1069,7 @@
   <div class="case-foot">auto_apl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-atll.html"
-   data-category="t_cell" data-default-order="103"
+   data-default-order="103"
    data-name="DIS-ATLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1202,7 +1080,7 @@
   <div class="case-foot">auto_atll.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-b_all.html"
-   data-category="lymphoblastic" data-default-order="104"
+   data-default-order="104"
    data-name="DIS-B-ALL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1213,7 +1091,7 @@
   <div class="case-foot">auto_b_all.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-breast.html"
-   data-category="solid" data-default-order="105"
+   data-default-order="105"
    data-name="DIS-BREAST — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1224,7 +1102,7 @@
   <div class="case-foot">auto_breast.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-burkitt.html"
-   data-category="b_aggressive" data-default-order="106"
+   data-default-order="106"
    data-name="DIS-BURKITT — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1235,7 +1113,7 @@
   <div class="case-foot">auto_burkitt.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-cervical.html"
-   data-category="solid" data-default-order="107"
+   data-default-order="107"
    data-name="DIS-CERVICAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1246,7 +1124,7 @@
   <div class="case-foot">auto_cervical.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-chl.html"
-   data-category="hodgkin" data-default-order="108"
+   data-default-order="108"
    data-name="DIS-CHL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1257,7 +1135,7 @@
   <div class="case-foot">auto_chl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-cholangiocarcinoma.html"
-   data-category="solid" data-default-order="109"
+   data-default-order="109"
    data-name="DIS-CHOLANGIOCARCINOMA — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1268,7 +1146,7 @@
   <div class="case-foot">auto_cholangiocarcinoma.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-chondrosarcoma.html"
-   data-category="solid" data-default-order="110"
+   data-default-order="110"
    data-name="DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1279,7 +1157,7 @@
   <div class="case-foot">auto_chondrosarcoma.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-cll.html"
-   data-category="b_indolent" data-default-order="111"
+   data-default-order="111"
    data-name="DIS-CLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1290,7 +1168,7 @@
   <div class="case-foot">auto_cll.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-cml.html"
-   data-category="myeloid" data-default-order="112"
+   data-default-order="112"
    data-name="DIS-CML — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1301,7 +1179,7 @@
   <div class="case-foot">auto_cml.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-crc.html"
-   data-category="solid" data-default-order="113"
+   data-default-order="113"
    data-name="DIS-CRC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1312,7 +1190,7 @@
   <div class="case-foot">auto_crc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-dlbcl_nos.html"
-   data-category="b_aggressive" data-default-order="114"
+   data-default-order="114"
    data-name="DIS-DLBCL-NOS — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1323,7 +1201,7 @@
   <div class="case-foot">auto_dlbcl_nos.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-eatl.html"
-   data-category="t_cell" data-default-order="115"
+   data-default-order="115"
    data-name="DIS-EATL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1334,7 +1212,7 @@
   <div class="case-foot">auto_eatl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-endometrial.html"
-   data-category="solid" data-default-order="116"
+   data-default-order="116"
    data-name="DIS-ENDOMETRIAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1345,7 +1223,7 @@
   <div class="case-foot">auto_endometrial.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-esophageal.html"
-   data-category="solid" data-default-order="117"
+   data-default-order="117"
    data-name="DIS-ESOPHAGEAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1356,7 +1234,7 @@
   <div class="case-foot">auto_esophageal.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-et.html"
-   data-category="myeloid" data-default-order="118"
+   data-default-order="118"
    data-name="DIS-ET — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1367,7 +1245,7 @@
   <div class="case-foot">auto_et.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-fl.html"
-   data-category="b_indolent" data-default-order="119"
+   data-default-order="119"
    data-name="DIS-FL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1378,7 +1256,7 @@
   <div class="case-foot">auto_fl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-gastric.html"
-   data-category="solid" data-default-order="120"
+   data-default-order="120"
    data-name="DIS-GASTRIC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1389,7 +1267,7 @@
   <div class="case-foot">auto_gastric.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-gbm.html"
-   data-category="solid" data-default-order="121"
+   data-default-order="121"
    data-name="DIS-GBM — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1400,7 +1278,7 @@
   <div class="case-foot">auto_gbm.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-gist.html"
-   data-category="solid" data-default-order="122"
+   data-default-order="122"
    data-name="DIS-GIST — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1411,7 +1289,7 @@
   <div class="case-foot">auto_gist.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-glioma_low_grade.html"
-   data-category="solid" data-default-order="123"
+   data-default-order="123"
    data-name="DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1422,7 +1300,7 @@
   <div class="case-foot">auto_glioma_low_grade.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hcc.html"
-   data-category="solid" data-default-order="124"
+   data-default-order="124"
    data-name="DIS-HCC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1433,7 +1311,7 @@
   <div class="case-foot">auto_hcc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hcl.html"
-   data-category="b_indolent" data-default-order="125"
+   data-default-order="125"
    data-name="DIS-HCL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1444,7 +1322,7 @@
   <div class="case-foot">auto_hcl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hcv_mzl.html"
-   data-category="b_indolent" data-default-order="126"
+   data-default-order="126"
    data-name="DIS-HCV-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1455,7 +1333,7 @@
   <div class="case-foot">auto_hcv_mzl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hgbl_dh.html"
-   data-category="b_aggressive" data-default-order="127"
+   data-default-order="127"
    data-name="DIS-HGBL-DH — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1466,7 +1344,7 @@
   <div class="case-foot">auto_hgbl_dh.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hnscc.html"
-   data-category="solid" data-default-order="128"
+   data-default-order="128"
    data-name="DIS-HNSCC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1477,7 +1355,7 @@
   <div class="case-foot">auto_hnscc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-hstcl.html"
-   data-category="t_cell" data-default-order="129"
+   data-default-order="129"
    data-name="DIS-HSTCL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1488,7 +1366,7 @@
   <div class="case-foot">auto_hstcl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-ifs.html"
-   data-category="solid" data-default-order="130"
+   data-default-order="130"
    data-name="DIS-IFS — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1499,7 +1377,7 @@
   <div class="case-foot">auto_ifs.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-imt.html"
-   data-category="solid" data-default-order="131"
+   data-default-order="131"
    data-name="DIS-IMT — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1510,7 +1388,7 @@
   <div class="case-foot">auto_imt.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mastocytosis.html"
-   data-category="myeloid" data-default-order="132"
+   data-default-order="132"
    data-name="DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1521,7 +1399,7 @@
   <div class="case-foot">auto_mastocytosis.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mcl.html"
-   data-category="b_aggressive" data-default-order="133"
+   data-default-order="133"
    data-name="DIS-MCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1532,7 +1410,7 @@
   <div class="case-foot">auto_mcl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mds_hr.html"
-   data-category="myeloid" data-default-order="134"
+   data-default-order="134"
    data-name="DIS-MDS-HR — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1543,7 +1421,7 @@
   <div class="case-foot">auto_mds_hr.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mds_lr.html"
-   data-category="myeloid" data-default-order="135"
+   data-default-order="135"
    data-name="DIS-MDS-LR — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1554,7 +1432,7 @@
   <div class="case-foot">auto_mds_lr.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-melanoma.html"
-   data-category="solid" data-default-order="136"
+   data-default-order="136"
    data-name="DIS-MELANOMA — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1565,7 +1443,7 @@
   <div class="case-foot">auto_melanoma.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mf_sezary.html"
-   data-category="t_cell" data-default-order="137"
+   data-default-order="137"
    data-name="DIS-MF-SEZARY — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1576,7 +1454,7 @@
   <div class="case-foot">auto_mf_sezary.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mm.html"
-   data-category="myeloma" data-default-order="138"
+   data-default-order="138"
    data-name="DIS-MM — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1587,7 +1465,7 @@
   <div class="case-foot">auto_mm.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mpnst.html"
-   data-category="solid" data-default-order="139"
+   data-default-order="139"
    data-name="DIS-MPNST — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1598,7 +1476,7 @@
   <div class="case-foot">auto_mpnst.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-mtc.html"
-   data-category="solid" data-default-order="140"
+   data-default-order="140"
    data-name="DIS-MTC — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1609,7 +1487,7 @@
   <div class="case-foot">auto_mtc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-nk_t_nasal.html"
-   data-category="t_cell" data-default-order="141"
+   data-default-order="141"
    data-name="DIS-NK-T-NASAL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1620,7 +1498,7 @@
   <div class="case-foot">auto_nk_t_nasal.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-nlpbl.html"
-   data-category="hodgkin" data-default-order="142"
+   data-default-order="142"
    data-name="DIS-NLPBL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1631,7 +1509,7 @@
   <div class="case-foot">auto_nlpbl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-nodal_mzl.html"
-   data-category="b_indolent" data-default-order="143"
+   data-default-order="143"
    data-name="DIS-NODAL-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1642,7 +1520,7 @@
   <div class="case-foot">auto_nodal_mzl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-nsclc.html"
-   data-category="solid" data-default-order="144"
+   data-default-order="144"
    data-name="DIS-NSCLC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1653,7 +1531,7 @@
   <div class="case-foot">auto_nsclc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-ovarian.html"
-   data-category="solid" data-default-order="145"
+   data-default-order="145"
    data-name="DIS-OVARIAN — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1664,7 +1542,7 @@
   <div class="case-foot">auto_ovarian.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-pcnsl.html"
-   data-category="b_aggressive" data-default-order="146"
+   data-default-order="146"
    data-name="DIS-PCNSL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1675,7 +1553,7 @@
   <div class="case-foot">auto_pcnsl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-pdac.html"
-   data-category="solid" data-default-order="147"
+   data-default-order="147"
    data-name="DIS-PDAC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1686,7 +1564,7 @@
   <div class="case-foot">auto_pdac.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-pmbcl.html"
-   data-category="b_aggressive" data-default-order="148"
+   data-default-order="148"
    data-name="DIS-PMBCL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1697,7 +1575,7 @@
   <div class="case-foot">auto_pmbcl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-pmf.html"
-   data-category="myeloid" data-default-order="149"
+   data-default-order="149"
    data-name="DIS-PMF — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1708,7 +1586,7 @@
   <div class="case-foot">auto_pmf.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-prostate.html"
-   data-category="solid" data-default-order="150"
+   data-default-order="150"
    data-name="DIS-PROSTATE — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1719,7 +1597,7 @@
   <div class="case-foot">auto_prostate.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-ptcl_nos.html"
-   data-category="t_cell" data-default-order="151"
+   data-default-order="151"
    data-name="DIS-PTCL-NOS — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1730,7 +1608,7 @@
   <div class="case-foot">auto_ptcl_nos.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-ptld.html"
-   data-category="b_aggressive" data-default-order="152"
+   data-default-order="152"
    data-name="DIS-PTLD — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1741,7 +1619,7 @@
   <div class="case-foot">auto_ptld.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-pv.html"
-   data-category="myeloid" data-default-order="153"
+   data-default-order="153"
    data-name="DIS-PV — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1752,7 +1630,7 @@
   <div class="case-foot">auto_pv.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-rcc.html"
-   data-category="solid" data-default-order="154"
+   data-default-order="154"
    data-name="DIS-RCC — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1763,7 +1641,7 @@
   <div class="case-foot">auto_rcc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-salivary.html"
-   data-category="solid" data-default-order="155"
+   data-default-order="155"
    data-name="DIS-SALIVARY — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1774,7 +1652,7 @@
   <div class="case-foot">auto_salivary.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-sclc.html"
-   data-category="solid" data-default-order="156"
+   data-default-order="156"
    data-name="DIS-SCLC — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1785,7 +1663,7 @@
   <div class="case-foot">auto_sclc.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-splenic_mzl.html"
-   data-category="b_indolent" data-default-order="157"
+   data-default-order="157"
    data-name="DIS-SPLENIC-MZL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1796,7 +1674,7 @@
   <div class="case-foot">auto_splenic_mzl.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-t_all.html"
-   data-category="lymphoblastic" data-default-order="158"
+   data-default-order="158"
    data-name="DIS-T-ALL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1807,7 +1685,7 @@
   <div class="case-foot">auto_t_all.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-t_pll.html"
-   data-category="t_cell" data-default-order="159"
+   data-default-order="159"
    data-name="DIS-T-PLL — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1818,7 +1696,7 @@
   <div class="case-foot">auto_t_pll.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-thyroid_anaplastic.html"
-   data-category="solid" data-default-order="160"
+   data-default-order="160"
    data-name="DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1829,7 +1707,7 @@
   <div class="case-foot">auto_thyroid_anaplastic.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-thyroid_papillary.html"
-   data-category="solid" data-default-order="161"
+   data-default-order="161"
    data-name="DIS-THYROID-PAPILLARY — Auto-stub (62% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1840,7 +1718,7 @@
   <div class="case-foot">auto_thyroid_papillary.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-urothelial.html"
-   data-category="solid" data-default-order="162"
+   data-default-order="162"
    data-name="DIS-UROTHELIAL — Auto-stub (75% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1851,7 +1729,7 @@
   <div class="case-foot">auto_urothelial.json</div>
 </a>
 <a class="case-card" href="/en/cases/auto-wm.html"
-   data-category="b_indolent" data-default-order="163"
+   data-default-order="163"
    data-name="DIS-WM — Auto-stub (88% наповненість)">
   <div class="case-badge-row">
     <div class="case-badge bdg-stub">Auto-stub</div>
@@ -1861,11 +1739,420 @@
   <p>Автогенерований мінімальний профіль для Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.</p>
   <div class="case-foot">auto_wm.json</div>
 </a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PTCL-NOS" hidden>
+  <header class="case-list-header">
+    <h2>Peripheral T-Cell Lymphoma, NOS</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/ptcl-cd30-negative.html"
+   data-default-order="25"
+   data-name="PTCL NOS · CD30-negative (CHOEP)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PTCL NOS · CD30-negative (CHOEP)</h3>
+  <p>Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.</p>
+  <div class="case-foot">patient_ptcl_cd30_negative.json</div>
+</a>
+<a class="case-card" href="/en/cases/ptcl-cd30-positive.html"
+   data-default-order="50"
+   data-name="PTCL NOS · CD30-positive (CHP-Bv)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PTCL NOS · CD30-positive (CHP-Bv)</h3>
+  <p>PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv (ECHELON-2 inclusion threshold).</p>
+  <div class="case-foot">patient_ptcl_cd30_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/ptcl-relapsed.html"
+   data-default-order="51"
+   data-name="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)</h3>
+  <p>PTCL NOS relapsed після autoSCT — engine обирає romidepsin або pralatrexate; alloHCT як curative-intent для chemosensitive.</p>
+  <div class="case-foot">patient_ptcl_relapsed.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PV" hidden>
+  <header class="case-list-header">
+    <h2>Polycythemia Vera</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/pv-high-risk-hu.html"
+   data-default-order="84"
+   data-name="Polycythemia Vera · High Risk (HU 1L)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Polycythemia Vera · High Risk (HU 1L)</h3>
+  <p>PV вік &gt;60 + thrombosis history — engine обирає phlebotomy + low-dose ASA + cytoreduction hydroxyurea.</p>
+  <div class="case-foot">patient_pv_high_risk_hu.json</div>
+</a>
+<a class="case-card" href="/en/cases/pv-hu-resistant-rux.html"
+   data-default-order="85"
+   data-name="PV · HU-resistant (Ruxolitinib 2L)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PV · HU-resistant (Ruxolitinib 2L)</h3>
+  <p>PV з HU-intolerance/resistance per ELN — engine обирає ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).</p>
+  <div class="case-foot">patient_pv_hu_resistant_ruxolitinib.json</div>
+</a>
+<a class="case-card" href="/en/cases/pv-pregnancy-planning.html"
+   data-default-order="86"
+   data-name="PV · Pregnancy Planning (Peg-IFN)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PV · Pregnancy Planning (Peg-IFN)</h3>
+  <p>Reproductive-age жінка з PV, planning pregnancy — engine обирає peg-IFN α-2a (non-teratogenic, fetus-safe).</p>
+  <div class="case-foot">patient_pv_pregnancy_planning.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PTLD" hidden>
+  <header class="case-list-header">
+    <h2>Post-Transplant Lymphoproliferative Disorder</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/ptld-polymorphic-ebv.html"
+   data-default-order="64"
+   data-name="PTLD · Polymorphic EBV+ (RIS + Rituximab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PTLD · Polymorphic EBV+ (RIS + Rituximab)</h3>
+  <p>Post-transplant LPD, polymorphic EBV+ — engine обирає RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.</p>
+  <div class="case-foot">patient_ptld_polymorphic_ebv.json</div>
+</a>
+<a class="case-card" href="/en/cases/ptld-monomorphic-dlbcl-like.html"
+   data-default-order="65"
+   data-name="PTLD · Monomorphic DLBCL-like (R-CHOP)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PTLD · Monomorphic DLBCL-like (R-CHOP)</h3>
+  <p>Monomorphic PTLD з DLBCL morphology — engine обирає R-CHOP після RIS-failure; sequential treatment per PTLD-1.</p>
+  <div class="case-foot">patient_ptld_monomorphic_dlbcl_like.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PCNSL" hidden>
+  <header class="case-list-header">
+    <h2>Primary CNS Lymphoma</h2>
+    <span class="case-list-count">8 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/dlbcl-low-ipi.html"
+   data-default-order="7"
+   data-name="DLBCL NOS · Low-IPI (R-CHOP standard)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>DLBCL NOS · Low-IPI (R-CHOP standard)</h3>
+  <p>Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).</p>
+  <div class="case-foot">patient_dlbcl_low_ipi.json</div>
+</a>
+<a class="case-card" href="/en/cases/dlbcl-high-ipi.html"
+   data-default-order="8"
+   data-name="DLBCL NOS · High-IPI (Pola-R-CHP)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>DLBCL NOS · High-IPI (Pola-R-CHP)</h3>
+  <p>Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.</p>
+  <div class="case-foot">patient_dlbcl_high_ipi.json</div>
+</a>
+<a class="case-card" href="/en/cases/dlbcl-chemorefractory-cart.html"
+   data-default-order="35"
+   data-name="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)</h3>
+  <p>DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T &gt; salvage+autoSCT для early-failure).</p>
+  <div class="case-foot">patient_dlbcl_chemorefractory_for_cart.json</div>
+</a>
+<a class="case-card" href="/en/cases/dlbcl-relapsed-te-ineligible.html"
+   data-default-order="36"
+   data-name="DLBCL NOS · Relapsed (Transplant-Ineligible)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>DLBCL NOS · Relapsed (Transplant-Ineligible)</h3>
+  <p>DLBCL relapsed, transplant-ineligible через age + comorbidity — engine обирає Pola-BR (POLARGO) або loncastuximab tesirine.</p>
+  <div class="case-foot">patient_dlbcl_relapsed_transplant_ineligible.json</div>
+</a>
+<a class="case-card" href="/en/cases/hgbl-primary-refractory.html"
+   data-default-order="37"
+   data-name="HGBL · Primary Refractory (Early CAR-T)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>HGBL · Primary Refractory (Early CAR-T)</h3>
+  <p>HGBL-DH що не відповів на DA-EPOCH-R — engine обирає axi-cel CAR-T (ZUMA-7); chemosensitivity-test позитивний для late-relapse → salvage+autoSCT.</p>
+  <div class="case-foot">patient_hgbl_primary_refractory.json</div>
+</a>
+<a class="case-card" href="/en/cases/pcnsl-typical.html"
+   data-default-order="41"
+   data-name="PCNSL · Typical (R-MPV → autoSCT)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PCNSL · Typical (R-MPV → autoSCT)</h3>
+  <p>Імунокомпетентний пацієнт з biopsy-confirmed PCNSL — engine обирає R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).</p>
+  <div class="case-foot">patient_pcnsl_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/pcnsl-elderly-frail.html"
+   data-default-order="42"
+   data-name="PCNSL · Elderly Frail (R-MTX-attenuated)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PCNSL · Elderly Frail (R-MTX-attenuated)</h3>
+  <p>PCNSL вік 75, ECOG 2 — engine обирає attenuated MTX-based induction без autoSCT consolidation; lenalidomide maintenance як альтернатива.</p>
+  <div class="case-foot">patient_pcnsl_elderly_frail.json</div>
+</a>
+<a class="case-card" href="/en/cases/pcnsl-immunocompromised-ebv.html"
+   data-default-order="43"
+   data-name="PCNSL · Immunocompromised + EBV+ (Restore Immunity)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PCNSL · Immunocompromised + EBV+ (Restore Immunity)</h3>
+  <p>PCNSL у HIV+/post-transplant пацієнта, EBER+ — engine додає immune-restoration (HAART / RIS) перед HD-MTX; rituximab якщо CD20+.</p>
+  <div class="case-foot">patient_pcnsl_immunocompromised_ebv.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PMBCL" hidden>
+  <header class="case-list-header">
+    <h2>Primary Mediastinal Large B-Cell Lymphoma</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/pmbcl-typical.html"
+   data-default-order="38"
+   data-name="PMBCL · Typical (DA-EPOCH-R)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMBCL · Typical (DA-EPOCH-R)</h3>
+  <p>Молода жінка з anterior mediastinal mass — engine обирає DA-EPOCH-R без RT (NCI 2013: ~93% EFS, обхід RT-токсичності для AYA).</p>
+  <div class="case-foot">patient_pmbcl_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/pmbcl-bulky-svc.html"
+   data-default-order="39"
+   data-name="PMBCL · Bulky + SVC Syndrome">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMBCL · Bulky + SVC Syndrome</h3>
+  <p>PMBCL з bulky mediastinal mass + SVC compression — engine додає upfront pre-phase steroids + airway management до DA-EPOCH-R.</p>
+  <div class="case-foot">patient_pmbcl_bulky_svc.json</div>
+</a>
+<a class="case-card" href="/en/cases/pmbcl-relapsed-post-rchop.html"
+   data-default-order="40"
+   data-name="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMBCL · Relapsed post-R-CHOP (Pembrolizumab)</h3>
+  <p>PMBCL relapsed/refractory після R-CHOP — engine обирає R-ICE+autoSCT (eligible) або pembrolizumab (KEYNOTE-170, ineligible/refractory).</p>
+  <div class="case-foot">patient_pmbcl_relapsed_post_rchop.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-PMF" hidden>
+  <header class="case-list-header">
+    <h2>Primary Myelofibrosis</h2>
+    <span class="case-list-count">3 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/pmf-anemia-dominant.html"
+   data-default-order="88"
+   data-name="PMF · Anemia-Dominant (Momelotinib)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMF · Anemia-Dominant (Momelotinib)</h3>
+  <p>PMF DIPSS-Plus int-1, anemia-dominant — engine обирає momelotinib (MOMENTUM: anemia-friendly JAKi).</p>
+  <div class="case-foot">patient_pmf_anemia_dominant.json</div>
+</a>
+<a class="case-card" href="/en/cases/pmf-int2-symptomatic-rux.html"
+   data-default-order="89"
+   data-name="PMF · Int-2 Symptomatic (Ruxolitinib)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMF · Int-2 Symptomatic (Ruxolitinib)</h3>
+  <p>PMF DIPSS-Plus int-2 з splenomegaly + constitutional symptoms — engine обирає ruxolitinib (COMFORT-I/II).</p>
+  <div class="case-foot">patient_pmf_int2_symptomatic_ruxolitinib.json</div>
+</a>
+<a class="case-card" href="/en/cases/pmf-post-rux-allohct.html"
+   data-default-order="90"
+   data-name="PMF · Post-Rux alloHCT Bridge (Urgent)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>PMF · Post-Rux alloHCT Bridge (Urgent)</h3>
+  <p>PMF post-ruxolitinib failure з massive splenomegaly + transfusion-dependence — engine обирає alloHCT bridge (curative-intent, urgent).</p>
+  <div class="case-foot">patient_pmf_post_rux_allohct_bridge.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-SPLENIC-MZL" hidden>
+  <header class="case-list-header">
+    <h2>Splenic Marginal Zone Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/smzl-hcv-positive.html"
+   data-default-order="16"
+   data-name="Splenic MZL · HCV-positive (DAA antiviral)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Splenic MZL · HCV-positive (DAA antiviral)</h3>
+  <p>Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.</p>
+  <div class="case-foot">patient_smzl_hcv_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/smzl-hcv-negative.html"
+   data-default-order="17"
+   data-name="Splenic MZL · HCV-negative (Rituximab mono)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Splenic MZL · HCV-negative (Rituximab mono)</h3>
+  <p>Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).</p>
+  <div class="case-foot">patient_smzl_hcv_negative.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-T-PLL" hidden>
+  <header class="case-list-header">
+    <h2>T-Cell Prolymphocytic Leukemia</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/t-pll-typical.html"
+   data-default-order="57"
+   data-name="T-PLL · Typical (Alemtuzumab IV)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>T-PLL · Typical (Alemtuzumab IV)</h3>
+  <p>T-PLL з ATM mutation + TCL1A rearrangement — engine обирає alemtuzumab IV (~90% ORR) → alloHCT consolidation.</p>
+  <div class="case-foot">patient_t_pll_typical.json</div>
+</a>
+<a class="case-card" href="/en/cases/t-pll-alem-refractory.html"
+   data-default-order="58"
+   data-name="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)</h3>
+  <p>T-PLL refractory до alemtuzumab mono — engine обирає venetoclax + alemtuzumab combo (Boidol/Hampel).</p>
+  <div class="case-foot">patient_t_pll_alemtuzumab_refractory.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-T-ALL" hidden>
+  <header class="case-list-header">
+    <h2>T-Lymphoblastic Leukemia/Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/t-all-relapsed.html"
+   data-default-order="94"
+   data-name="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>T-ALL · Relapsed post-hyper-CVAD (Nelarabine)</h3>
+  <p>T-ALL relapsed після hyper-CVAD — engine обирає nelarabine (T-cell selective; alloHCT consolidation).</p>
+  <div class="case-foot">patient_t_all_relapsed_post_hyper_cvad.json</div>
+</a>
+<a class="case-card" href="/en/cases/t-lbl-mediastinal.html"
+   data-default-order="95"
+   data-name="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>T-LBL · Mediastinal Mass (Pediatric-inspired ALL)</h3>
+  <p>T-lymphoblastic lymphoma з mediastinal mass — engine обирає pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis обов&#x27;язкове.</p>
+  <div class="case-foot">patient_t_lbl_mediastinal.json</div>
+</a>
+  </div>
+</section>
+<section class="case-list" data-disease-id="DIS-WM" hidden>
+  <header class="case-list-header">
+    <h2>Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma</h2>
+    <span class="case-list-count">2 examples</span>
+  </header>
+  <div class="case-grid">
+<a class="case-card" href="/en/cases/wm-myd88-positive.html"
+   data-default-order="22"
+   data-name="Waldenström · MYD88-positive (Zanubrutinib)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Waldenström · MYD88-positive (Zanubrutinib)</h3>
+  <p>WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).</p>
+  <div class="case-foot">patient_wm_myd88_positive.json</div>
+</a>
+<a class="case-card" href="/en/cases/wm-cxcr4-mut.html"
+   data-default-order="46"
+   data-name="Waldenström · CXCR4-mutant (BR fixed-duration)">
+  <div class="case-badge-row">
+    <div class="case-badge bdg-plan">Treatment Plan</div>
+    
+  </div>
+  <h3>Waldenström · CXCR4-mutant (BR fixed-duration)</h3>
+  <p>WM з MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 знижує BTKi response). Engine обирає BR fixed-duration або zanubrutinib з extended observation.</p>
+  <div class="case-foot">patient_wm_cxcr4_mut.json</div>
+</a>
+  </div>
+</section>
+    </div>
   </section>
-
-  <p class="case-empty" id="caseEmpty" hidden>
-    No cases in this category.
-  </p>
 
   <section class="kb-stats">
     <style>
@@ -1935,7 +2222,7 @@
 </style>
 <div class="oo-widget" data-component="openonco-stats">
 <h2>OpenOnco — стан бази знань</h2>
-<div class="oo-sub">Зріз станом на 2026-04-27 12:22 UTC · видно і обсяг, і обмеження — поки покриваємо лише декілька хвороб.</div>
+<div class="oo-sub">Зріз станом на 2026-04-27 12:35 UTC · видно і обсяг, і обмеження — поки покриваємо лише декілька хвороб.</div>
 <div class="oo-grid">
 <div class="oo-card"><div class="oo-num">65</div><div class="oo-lbl">Хвороби</div></div>
 <div class="oo-card"><div class="oo-num">302</div><div class="oo-lbl">Показання</div></div>
@@ -2033,55 +2320,70 @@
 
 <script>
 (function() {
-  var grid = document.getElementById("caseGrid");
-  var empty = document.getElementById("caseEmpty");
-  var chips = document.querySelectorAll(".case-chip");
-  var sort = document.getElementById("caseSort");
-  var cards = Array.prototype.slice.call(grid.querySelectorAll(".case-card"));
-  var categoryOrder = ["b_aggressive","b_indolent","t_cell","hodgkin","myeloma","myeloid","lymphoblastic","solid","diagnostic"];
-  var activeFilter = "all";
+  var diseaseStage = document.getElementById("diseaseStage");
+  var caseStage = document.getElementById("caseStage");
+  var tileGrid = document.getElementById("diseaseTileGrid");
+  var tiles = Array.prototype.slice.call(tileGrid.querySelectorAll(".disease-tile"));
+  var search = document.getElementById("diseaseSearch");
+  var searchCount = document.getElementById("diseaseSearchCount");
+  var emptyMsg = document.getElementById("diseaseEmpty");
+  var backBtn = document.getElementById("caseBackBtn");
+  var listContainer = document.getElementById("caseListContainer");
+  var lists = Array.prototype.slice.call(listContainer.querySelectorAll(".case-list"));
 
-  function applyFilter() {
+  function showDiseaseStage() {
+    caseStage.hidden = true;
+    diseaseStage.hidden = false;
+    lists.forEach(function(l) { l.hidden = true; });
+    if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+    // Restore scroll to top of stage so user sees the search bar.
+    diseaseStage.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
+  function showDiseaseCases(diseaseId) {
+    var found = false;
+    lists.forEach(function(l) {
+      var match = l.dataset.diseaseId === diseaseId;
+      l.hidden = !match;
+      if (match) found = true;
+    });
+    if (!found) return;
+    diseaseStage.hidden = true;
+    caseStage.hidden = false;
+    if (history.replaceState) history.replaceState(null, "", "#" + encodeURIComponent(diseaseId));
+    caseStage.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
+  function applySearch() {
+    var q = (search.value || "").trim().toLowerCase();
     var visible = 0;
-    cards.forEach(function(card) {
-      var match = activeFilter === "all" || card.dataset.category === activeFilter;
-      card.style.display = match ? "" : "none";
+    tiles.forEach(function(t) {
+      var blob = t.dataset.search || "";
+      var match = !q || blob.indexOf(q) !== -1;
+      t.style.display = match ? "" : "none";
       if (match) visible++;
     });
-    empty.hidden = visible !== 0;
+    searchCount.textContent = visible;
+    emptyMsg.hidden = visible !== 0;
   }
 
-  function applySort() {
-    var mode = sort.value;
-    var sorted = cards.slice();
-    if (mode === "alpha") {
-      sorted.sort(function(a, b) {
-        return a.dataset.name.localeCompare(b.dataset.name, "uk");
-      });
-    } else if (mode === "category") {
-      sorted.sort(function(a, b) {
-        var ai = categoryOrder.indexOf(a.dataset.category);
-        var bi = categoryOrder.indexOf(b.dataset.category);
-        if (ai !== bi) return ai - bi;
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      });
-    } else {
-      sorted.sort(function(a, b) {
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      });
-    }
-    sorted.forEach(function(card) { grid.appendChild(card); });
-  }
-
-  chips.forEach(function(chip) {
-    chip.addEventListener("click", function() {
-      chips.forEach(function(c) { c.classList.remove("is-active"); });
-      chip.classList.add("is-active");
-      activeFilter = chip.dataset.filter;
-      applyFilter();
+  tiles.forEach(function(t) {
+    t.addEventListener("click", function() {
+      showDiseaseCases(t.dataset.diseaseId);
     });
   });
-  sort.addEventListener("change", applySort);
+  backBtn.addEventListener("click", showDiseaseStage);
+  search.addEventListener("input", applySearch);
+
+  // Deep-link support: gallery.html#DIS-DLBCL-NOS opens that disease.
+  function applyHash() {
+    var h = window.location.hash.replace(/^#/, "");
+    if (!h) { showDiseaseStage(); return; }
+    try { h = decodeURIComponent(h); } catch (e) {}
+    showDiseaseCases(h);
+  }
+  window.addEventListener("hashchange", applyHash);
+  applyHash();
 })();
 </script>
 </body>

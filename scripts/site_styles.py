@@ -517,6 +517,104 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   font-size: 11px; color: var(--gray-500);
 }
 
+/* ── Disease drill-down (gallery rev 2026-04-27) ────────────────────── */
+.disease-stage { margin-bottom: 28px; }
+.disease-search-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px;
+  max-width: 560px;
+}
+.disease-search {
+  flex: 1 1 auto;
+  font: inherit; font-size: 15px;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
+  background: white; color: var(--gray-900);
+  transition: border-color .15s, box-shadow .15s;
+}
+.disease-search:focus {
+  outline: none;
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.10);
+}
+.disease-search-count {
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--gray-500);
+  flex: 0 0 auto;
+}
+.disease-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.disease-tile {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 6px;
+  padding: 16px 18px; min-height: 78px;
+  border-radius: 10px;
+  border: 1.5px solid var(--gray-200);
+  background: white; color: var(--gray-900);
+  font: inherit; text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, transform .15s, background .15s;
+}
+.disease-tile:hover {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  box-shadow: 0 6px 16px rgba(10, 46, 26, .08);
+  transform: translateY(-1px);
+}
+.disease-tile:focus-visible {
+  outline: 3px solid var(--green-600); outline-offset: 2px;
+}
+.dt-label {
+  font-family: var(--font-display); font-size: 16px;
+  color: var(--green-900); line-height: 1.2;
+  font-weight: 600;
+}
+.dt-count {
+  font-family: var(--font-mono); font-size: 11.5px;
+  color: var(--gray-500); letter-spacing: 0.3px;
+}
+.disease-tile:hover .dt-count { color: var(--green-700); }
+.disease-empty {
+  padding: 40px 0; text-align: center;
+  color: var(--gray-500); font-size: 14px;
+}
+
+/* Stage 2: cases for selected disease */
+.case-stage { margin-bottom: 28px; }
+.case-back-btn {
+  font: inherit; font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  background: white; color: var(--gray-700);
+  cursor: pointer;
+  margin-bottom: 18px;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.case-back-btn:hover {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  color: var(--green-900);
+}
+.case-list-header {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--gray-200);
+}
+.case-list-header h2 {
+  font-family: var(--font-display); font-size: 22px;
+  color: var(--green-900); margin: 0;
+}
+.case-list-count {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--gray-500);
+}
+
 .kb-stats { margin-top: 16px; }
 
 /* Try page */

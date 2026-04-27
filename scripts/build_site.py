@@ -1048,98 +1048,206 @@ def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
     return bool(code and code in codes)
 
 
+def _load_disease_name_map() -> dict[str, dict[str, str]]:
+    """Walk diseases/*.yaml and produce {DIS-ID: {ua, en}}.
+
+    UA falls back to preferred → english if `names.ukrainian` missing;
+    EN falls back to preferred → ukrainian. Used by the gallery to
+    label disease-grouped tiles."""
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, dict[str, str]] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        if not did:
+            continue
+        names = data.get("names") or {}
+        ua = names.get("ukrainian") or names.get("preferred") or names.get("english") or did
+        en = names.get("english") or names.get("preferred") or names.get("ukrainian") or did
+        out[str(did).upper()] = {"ua": ua, "en": en}
+    return out
+
+
+def _gallery_case_disease_meta() -> list[dict]:
+    """For each CaseEntry, derive (disease_id, disease label UA/EN, ICD)
+    by loading its example JSON. Cases whose JSON is missing or carries
+    no recognised disease land in a synthetic 'OTHER' bucket so the UI
+    still surfaces them."""
+    icd_map = _icd_to_disease_id_map()
+    name_map = _load_disease_name_map()
+    out: list[dict] = []
+    for c in CASES:
+        p = EXAMPLES / c.file
+        icd = None
+        if p.exists():
+            try:
+                ex = json.loads(p.read_text(encoding="utf-8"))
+                icd = ((ex or {}).get("disease") or {}).get("icd_o_3_morphology")
+            except Exception:
+                icd = None
+        did = icd_map.get(str(icd)) if icd else None
+        if did:
+            names = name_map.get(did, {"ua": did, "en": did})
+            out.append({
+                "case": c,
+                "disease_id": did,
+                "icd": icd,
+                "label_ua": names["ua"],
+                "label_en": names["en"],
+            })
+        else:
+            out.append({
+                "case": c,
+                "disease_id": "OTHER",
+                "icd": icd,
+                "label_ua": "Інше / без класифікації",
+                "label_en": "Other / unclassified",
+            })
+    return out
+
+
 def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
+    """Disease-grouped gallery (CSD UX rev 2026-04-27).
+
+    Initial view is a tiled grid of diseases — each tile lists the
+    disease name + how many examples we have for it. Clicking a tile
+    drills into that disease's case list. The disease-level taxonomy
+    page (/diseases.html) covers everything else, so the gallery
+    intentionally drops the old category-chip filter."""
+    import html as _html
     is_en = target_lang == "en"
     case_path_prefix = "/en/cases/" if is_en else "/cases/"
     n_cases = len(CASES)
 
     quest_codes = _questionnaire_icd_o_3_codes()
+    case_meta = _gallery_case_disease_meta()
 
-    cat_counts: dict[str, int] = {}
-    for c in CASES:
-        cat_counts[c.category] = cat_counts.get(c.category, 0) + 1
+    # Group cases by disease_id, preserving CASES order within each group.
+    grouped: dict[str, dict] = {}
+    for i, m in enumerate(case_meta):
+        did = m["disease_id"]
+        bucket = grouped.setdefault(did, {
+            "disease_id": did,
+            "label_ua": m["label_ua"],
+            "label_en": m["label_en"],
+            "items": [],
+        })
+        bucket["items"].append({**m, "default_order": i})
+    # Sort diseases alphabetically by display label (UA primary).
+    sort_key = "label_en" if is_en else "label_ua"
+    diseases = sorted(grouped.values(), key=lambda d: d[sort_key].lower())
 
-    chips: list[str] = []
-    all_label = "All" if is_en else "Усі"
-    chips.append(
-        f'<button type="button" class="case-chip is-active" '
-        f'data-filter="all">{all_label} <span class="chip-n">{n_cases}</span></button>'
-    )
-    for key, ua_label, en_label in CASE_CATEGORIES:
-        n = cat_counts.get(key, 0)
-        if n == 0:
-            continue
-        label = en_label if is_en else ua_label
-        chips.append(
-            f'<button type="button" class="case-chip" '
-            f'data-filter="{key}">{label} <span class="chip-n">{n}</span></button>'
+    def _examples_word(n: int) -> str:
+        if is_en:
+            return "example" if n == 1 else "examples"
+        last2 = n % 100
+        last1 = n % 10
+        if 11 <= last2 <= 14:
+            return "прикладів"
+        if last1 == 1:
+            return "приклад"
+        if 2 <= last1 <= 4:
+            return "приклади"
+        return "прикладів"
+
+    # ── Disease tile grid ──
+    disease_tiles: list[str] = []
+    for d in diseases:
+        label = d[sort_key]
+        n = len(d["items"])
+        n_word = _examples_word(n)
+        # data-search holds both UA + EN labels lowercased so the search
+        # box works regardless of the page's render language.
+        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        disease_tiles.append(
+            f'<button type="button" class="disease-tile" '
+            f'data-disease-id="{_html.escape(d["disease_id"])}" '
+            f'data-search="{_html.escape(search_blob)}">'
+            f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'<span class="dt-count">{n} {n_word}</span>'
+            f'</button>'
         )
-    chips_html = "\n    ".join(chips)
+    disease_tiles_html = "\n    ".join(disease_tiles)
 
-    if is_en:
-        sort_label = "Sort"
-        sort_default = "Default"
-        sort_alpha = "Name (A→Z)"
-        sort_category = "Category"
-    else:
-        sort_label = "Сортування"
-        sort_default = "За замовчуванням"
-        sort_alpha = "За назвою (А→Я)"
-        sort_category = "За класифікацією"
-
-    cards: list[str] = []
-    for i, c in enumerate(CASES):
-        has_quest = _case_has_questionnaire(c, quest_codes)
-        json_only_pill = "" if has_quest else (
-            f'<span class="case-json-only" title="'
-            f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
-            f'">{"JSON-only" if is_en else "JSON-only"}</span>'
-        )
-        cards.append(
-            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
-   data-category="{c.category}" data-default-order="{i}"
-   data-name="{c.label_ua}">
+    # ── Per-disease card lists (hidden until selected) ──
+    case_lists: list[str] = []
+    for d in diseases:
+        cards: list[str] = []
+        for item in d["items"]:
+            c: CaseEntry = item["case"]
+            has_quest = _case_has_questionnaire(c, quest_codes)
+            json_only_pill = "" if has_quest else (
+                f'<span class="case-json-only" title="'
+                f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
+                f'">JSON-only</span>'
+            )
+            cards.append(
+                f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
+   data-default-order="{item['default_order']}"
+   data-name="{_html.escape(c.label_ua)}">
   <div class="case-badge-row">
     <div class="case-badge {c.badge_class}">{c.badge}</div>
     {json_only_pill}
   </div>
-  <h3>{c.label_ua}</h3>
-  <p>{c.summary_ua}</p>
+  <h3>{_html.escape(c.label_ua)}</h3>
+  <p>{_html.escape(c.summary_ua)}</p>
   <div class="case-foot">{c.file}</div>
 </a>"""
+            )
+        cards_html = "\n".join(cards)
+        label = d[sort_key]
+        case_lists.append(
+            f'<section class="case-list" data-disease-id="{_html.escape(d["disease_id"])}" hidden>\n'
+            f'  <header class="case-list-header">\n'
+            f'    <h2>{_html.escape(label)}</h2>\n'
+            f'    <span class="case-list-count">{len(d["items"])} {_examples_word(len(d["items"]))}</span>\n'
+            f'  </header>\n'
+            f'  <div class="case-grid">\n{cards_html}\n  </div>\n'
+            f'</section>'
         )
-    cards_html = "\n".join(cards)
+    case_lists_html = "\n".join(case_lists)
 
     if is_en:
         lead_html = (
-            f'{n_cases} synthetic patient profiles run through the engine. '
-            f'Each click opens a full Plan or Diagnostic Brief as a clinician '
-            f'would see it in tumor-board. If something looks clinically wrong '
-            f'or confusing — <a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">open an issue on GitHub</a> '
-            f'with a link to the specific case.'
+            f'{n_cases} synthetic patient profiles run through the engine, '
+            f'grouped by disease. Pick a disease to see its examples — each '
+            f'click opens a full Plan or Diagnostic Brief as a clinician would '
+            f'see it in tumor-board. If something looks clinically wrong — '
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            f'target="_blank" rel="noopener">open an issue</a>.'
         )
+        page_title = "Sample cases"
+        search_ph = "Search disease…"
+        back_label = "← All diseases"
+        empty_label = "No diseases match your search."
     else:
         lead_html = (
-            f'{n_cases} синтетичних профілів пацієнтів, прогнаних через рушій. '
-            f'Кожен клік відкриває повний Plan або Diagnostic Brief, як його '
-            f'побачить лікар у tumor-board. Якщо щось виглядає клінічно '
-            f'неправильно або дезорієнтує — '
+            f'{n_cases} синтетичних профілів пацієнтів, згрупованих за хворобою. '
+            f'Оберіть хворобу зі списку — кожен клік відкриває повний Plan або '
+            f'Diagnostic Brief, як його побачить лікар у tumor-board. Якщо '
+            f'щось виглядає клінічно неправильно — '
             f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">відкрий issue на GitHub</a> '
-            f'з посиланням на конкретний кейс.'
+            f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
-
-    category_order_js = "[" + ",".join(
-        f'"{key}"' for key, _ua, _en in CASE_CATEGORIES
-    ) + "]"
+        page_title = "Готові приклади"
+        search_ph = "Шукати хворобу…"
+        back_label = "← Усі хвороби"
+        empty_label = "Жодна хвороба не підходить під запит."
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Sample cases</title>
+<title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
@@ -1148,30 +1256,30 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 {_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
-  <h1>{'Sample cases' if is_en else 'Готові приклади'}</h1>
+  <h1>{page_title}</h1>
   <p class="lead">{lead_html}</p>
 
-  <div class="case-controls">
-    <div class="case-chips" role="group" aria-label="{'Filter by category' if is_en else 'Фільтр за класифікацією'}">
-    {chips_html}
+  <!-- Stage 1: disease grid (default visible) -->
+  <section id="diseaseStage" class="disease-stage">
+    <div class="disease-search-row">
+      <input type="search" id="diseaseSearch" class="disease-search"
+             placeholder="{search_ph}" autocomplete="off"
+             aria-label="{search_ph}">
+      <span class="disease-search-count" id="diseaseSearchCount">{len(diseases)}</span>
     </div>
-    <label class="case-sort">
-      <span>{sort_label}:</span>
-      <select id="caseSort">
-        <option value="default">{sort_default}</option>
-        <option value="alpha">{sort_alpha}</option>
-        <option value="category">{sort_category}</option>
-      </select>
-    </label>
-  </div>
-
-  <section class="case-grid" id="caseGrid">
-    {cards_html}
+    <div class="disease-tile-grid" id="diseaseTileGrid">
+    {disease_tiles_html}
+    </div>
+    <p class="disease-empty" id="diseaseEmpty" hidden>{empty_label}</p>
   </section>
 
-  <p class="case-empty" id="caseEmpty" hidden>
-    {'No cases in this category.' if is_en else 'У цій категорії немає прикладів.'}
-  </p>
+  <!-- Stage 2: case list for the selected disease (hidden by default) -->
+  <section id="caseStage" class="case-stage" hidden>
+    <button type="button" class="case-back-btn" id="caseBackBtn">{back_label}</button>
+    <div id="caseListContainer">
+    {case_lists_html}
+    </div>
+  </section>
 
   <section class="kb-stats">
     {stats_widget_html}
@@ -1186,55 +1294,70 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 
 <script>
 (function() {{
-  var grid = document.getElementById("caseGrid");
-  var empty = document.getElementById("caseEmpty");
-  var chips = document.querySelectorAll(".case-chip");
-  var sort = document.getElementById("caseSort");
-  var cards = Array.prototype.slice.call(grid.querySelectorAll(".case-card"));
-  var categoryOrder = {category_order_js};
-  var activeFilter = "all";
+  var diseaseStage = document.getElementById("diseaseStage");
+  var caseStage = document.getElementById("caseStage");
+  var tileGrid = document.getElementById("diseaseTileGrid");
+  var tiles = Array.prototype.slice.call(tileGrid.querySelectorAll(".disease-tile"));
+  var search = document.getElementById("diseaseSearch");
+  var searchCount = document.getElementById("diseaseSearchCount");
+  var emptyMsg = document.getElementById("diseaseEmpty");
+  var backBtn = document.getElementById("caseBackBtn");
+  var listContainer = document.getElementById("caseListContainer");
+  var lists = Array.prototype.slice.call(listContainer.querySelectorAll(".case-list"));
 
-  function applyFilter() {{
+  function showDiseaseStage() {{
+    caseStage.hidden = true;
+    diseaseStage.hidden = false;
+    lists.forEach(function(l) {{ l.hidden = true; }});
+    if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+    // Restore scroll to top of stage so user sees the search bar.
+    diseaseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function showDiseaseCases(diseaseId) {{
+    var found = false;
+    lists.forEach(function(l) {{
+      var match = l.dataset.diseaseId === diseaseId;
+      l.hidden = !match;
+      if (match) found = true;
+    }});
+    if (!found) return;
+    diseaseStage.hidden = true;
+    caseStage.hidden = false;
+    if (history.replaceState) history.replaceState(null, "", "#" + encodeURIComponent(diseaseId));
+    caseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function applySearch() {{
+    var q = (search.value || "").trim().toLowerCase();
     var visible = 0;
-    cards.forEach(function(card) {{
-      var match = activeFilter === "all" || card.dataset.category === activeFilter;
-      card.style.display = match ? "" : "none";
+    tiles.forEach(function(t) {{
+      var blob = t.dataset.search || "";
+      var match = !q || blob.indexOf(q) !== -1;
+      t.style.display = match ? "" : "none";
       if (match) visible++;
     }});
-    empty.hidden = visible !== 0;
+    searchCount.textContent = visible;
+    emptyMsg.hidden = visible !== 0;
   }}
 
-  function applySort() {{
-    var mode = sort.value;
-    var sorted = cards.slice();
-    if (mode === "alpha") {{
-      sorted.sort(function(a, b) {{
-        return a.dataset.name.localeCompare(b.dataset.name, "uk");
-      }});
-    }} else if (mode === "category") {{
-      sorted.sort(function(a, b) {{
-        var ai = categoryOrder.indexOf(a.dataset.category);
-        var bi = categoryOrder.indexOf(b.dataset.category);
-        if (ai !== bi) return ai - bi;
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }} else {{
-      sorted.sort(function(a, b) {{
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }}
-    sorted.forEach(function(card) {{ grid.appendChild(card); }});
-  }}
-
-  chips.forEach(function(chip) {{
-    chip.addEventListener("click", function() {{
-      chips.forEach(function(c) {{ c.classList.remove("is-active"); }});
-      chip.classList.add("is-active");
-      activeFilter = chip.dataset.filter;
-      applyFilter();
+  tiles.forEach(function(t) {{
+    t.addEventListener("click", function() {{
+      showDiseaseCases(t.dataset.diseaseId);
     }});
   }});
-  sort.addEventListener("change", applySort);
+  backBtn.addEventListener("click", showDiseaseStage);
+  search.addEventListener("input", applySearch);
+
+  // Deep-link support: gallery.html#DIS-DLBCL-NOS opens that disease.
+  function applyHash() {{
+    var h = window.location.hash.replace(/^#/, "");
+    if (!h) {{ showDiseaseStage(); return; }}
+    try {{ h = decodeURIComponent(h); }} catch (e) {{}}
+    showDiseaseCases(h);
+  }}
+  window.addEventListener("hashchange", applyHash);
+  applyHash();
 }})();
 </script>
 </body>
