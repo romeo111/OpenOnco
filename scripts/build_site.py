@@ -429,36 +429,57 @@ self.addEventListener('fetch', (event) => {
 
 def bundle_examples(output_dir: Path) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
-    the 'Load example' dropdown on try.html."""
+    the 'Load example' dropdown on try.html.
+
+    Also extracts a thin manifest (label + disease_icd only, ~10× smaller)
+    used by /try.html for instant dropdown population. Full payload is
+    lazy-fetched only when a user actually picks an example.
+    """
     payload = []
+    manifest = []
     for c in CASES:
         p = EXAMPLES / c.file
         if not p.exists():
             continue
+        ex_json = json.loads(p.read_text(encoding="utf-8"))
         payload.append({
             "case_id": c.case_id,
             "label": c.label_ua,
             "file": c.file,
-            "json": json.loads(p.read_text(encoding="utf-8")),
+            "json": ex_json,
+        })
+        manifest.append({
+            "case_id": c.case_id,
+            "label": c.label_ua,
+            "disease_icd": (
+                ex_json.get("disease", {}).get("icd_o_3_morphology")
+                if isinstance(ex_json, dict) else None
+            ),
         })
     out = output_dir / "examples.json"
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "examples.json", "count": len(payload)}
+    return {
+        "path": "examples.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
 
 
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
-    JSON file at docs/questionnaires.json so the form on /try.html can
-    fetch them with one HTTP request — no Pyodide needed just to render.
+    JSON file at docs/questionnaires.json + thin manifest for /try.html.
 
-    Pyodide is still required for the live evaluator (which runs against
-    the real engine), but the form itself renders from this JSON.
+    Manifest carries only the dropdown-needed fields (id + title +
+    disease_icd) — ~30× smaller than the full payload — so /try.html
+    populates dropdowns instantly. Full payload is lazy-fetched only
+    after the user selects a questionnaire.
     """
     qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
     payload = []
+    manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
         for path in sorted(qsrc.glob("*.yaml")):
@@ -466,6 +487,15 @@ def bundle_questionnaires(output_dir: Path) -> dict:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
                     payload.append(data)
+                    manifest.append({
+                        "id": data.get("id"),
+                        "title": data.get("title"),
+                        "disease_icd": (
+                            (data.get("fixed_fields") or {})
+                            .get("disease", {})
+                            .get("icd_o_3_morphology")
+                        ),
+                    })
             except Exception:
                 continue
     out = output_dir / "questionnaires.json"
@@ -473,7 +503,11 @@ def bundle_questionnaires(output_dir: Path) -> dict:
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "questionnaires.json", "count": len(payload)}
+    return {
+        "path": "questionnaires.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
 
 
 # ── Landing page (index.html) ─────────────────────────────────────────────
@@ -1214,10 +1248,25 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 _PYODIDE_VERSION = "0.26.4"
 
 
-def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
+def render_try(
+    *,
+    target_lang: str = "uk",
+    bundle_version: str = "",
+    questionnaires_manifest: list = None,
+    examples_manifest: list = None,
+) -> str:
     # Pyodide assets live at site root — root-relative paths work for both
-    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle +
-    # examples.json + questionnaires.json are single shared copies.
+    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle is
+    # a single shared copy.
+    #
+    # Dropdown manifests (~15 KB total) are inlined as JS constants so the
+    # form populates instantly. Full questionnaires.json (~640 KB) and
+    # examples.json (~230 KB) are lazy-fetched only after the user selects
+    # an option — saves ~870 KB on first paint.
+    qm = questionnaires_manifest if questionnaires_manifest is not None else []
+    em = examples_manifest if examples_manifest is not None else []
+    qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
+    em_json = json.dumps(em, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
@@ -1448,8 +1497,13 @@ const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
 const loadedDiseases = new Set();
-let questionnaires = [];     // loaded from /questionnaires.json
-let examples = [];           // loaded from /examples.json
+// Build-time manifests — instant dropdown population, no fetch.
+const QUESTIONNAIRES_MANIFEST = {qm_json};
+const EXAMPLES_MANIFEST = {em_json};
+let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
+let examples = null;         // lazy-fetched from /examples.json on first need
+let _questionnairesPromise = null;
+let _examplesPromise = null;
 let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
@@ -2627,18 +2681,33 @@ function yieldToBrowser(ms) {{
 }}
 
 // ── Boot ──────────────────────────────────────────────────────────────────
-async function loadAssets() {{
-  setStatus('Завантажую опитувальники…');
-  const [qResp, exResp] = await Promise.all([
-    fetch('/questionnaires.json'),
-    fetch('/examples.json'),
-  ]);
-  questionnaires = await qResp.json();
-  examples = await exResp.json();
+//
+// Lazy-loaders for full questionnaire/example data. Dropdowns populate
+// instantly from the build-time manifests above; the full ~870 KB payload
+// is fetched only after the user picks something.
+async function ensureQuestionnaires() {{
+  if (questionnaires) return questionnaires;
+  if (!_questionnairesPromise) {{
+    _questionnairesPromise = fetch('/questionnaires.json')
+      .then(r => r.json())
+      .then(data => {{ questionnaires = data; return data; }});
+  }}
+  return _questionnairesPromise;
+}}
+async function ensureExamples() {{
+  if (examples) return examples;
+  if (!_examplesPromise) {{
+    _examplesPromise = fetch('/examples.json')
+      .then(r => r.json())
+      .then(data => {{ examples = data; return data; }});
+  }}
+  return _examplesPromise;
+}}
 
-  // Disease selector
+async function loadAssets() {{
+  // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
-  questionnaires.forEach((q, i) => {{
+  QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = q.title;
@@ -2652,10 +2721,12 @@ async function loadAssets() {{
   // Restore draft
   const draft = loadDraft();
   if (draft && draft.questId) {{
-    const idx = questionnaires.findIndex(q => q.id === draft.questId);
+    const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
       diseaseSelect.value = idx;
-      renderForm(questionnaires[idx]);
+      // Draft restore needs full data — lazy-fetch now
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[idx]);
       repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {{
@@ -2689,9 +2760,11 @@ async function loadAssets() {{
 // matches the active questionnaire — otherwise the picker overwhelms with
 // 35 cases for which we don't have a form.
 function repopulateExamples(activeQuestIdx) {{
+  // Filter from manifest only — no need to await full examples payload
+  // just to populate a dropdown (manifest carries label + disease_icd).
   const wantCode = activeQuestIdx == null
     ? null
-    : ((questionnaires[activeQuestIdx].fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}}).disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -2700,10 +2773,9 @@ function repopulateExamples(activeQuestIdx) {{
     : '— оберіть приклад для цієї хвороби —';
   exampleSelect.appendChild(placeholder);
   let n = 0;
-  examples.forEach((ex, i) => {{
+  EXAMPLES_MANIFEST.forEach((ex, i) => {{
     if (wantCode != null) {{
-      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
-      if (code !== wantCode) return;
+      if (ex.disease_icd !== wantCode) return;
     }}
     const opt = document.createElement('option');
     opt.value = i;
@@ -2721,7 +2793,7 @@ function repopulateExamples(activeQuestIdx) {{
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
-diseaseSelect.addEventListener('change', () => {{
+diseaseSelect.addEventListener('change', async () => {{
   const i = diseaseSelect.value;
   // Switching disease invalidates whatever plan was on screen — there is
   // no longer any example or generated plan that matches the new form.
@@ -2733,7 +2805,8 @@ diseaseSelect.addEventListener('change', () => {{
     return;
   }}
   const idx = parseInt(i, 10);
-  renderForm(questionnaires[idx]);
+  const fullList = await ensureQuestionnaires();
+  renderForm(fullList[idx]);
   repopulateExamples(idx);
   exampleSelect.value = '';
   saveDraft();
@@ -2742,13 +2815,11 @@ diseaseSelect.addEventListener('change', () => {{
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology stamped in the example's disease block
-  // (questionnaires carry the same code under fixed_fields.disease).
+  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
+  // to wait for full questionnaires payload.
   const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
   if (!code) return -1;
-  return questionnaires.findIndex(q =>
-    ((q.fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology === code
-  );
+  return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
 
 function getByPath(obj, dotted) {{
@@ -2780,10 +2851,11 @@ function populateFormFromProfile(quest, profile) {{
   }}
 }}
 
-exampleSelect.addEventListener('change', () => {{
+exampleSelect.addEventListener('change', async () => {{
   const i = exampleSelect.value;
   if (i === '') return;
-  const ex = examples[parseInt(i, 10)];
+  const fullExamples = await ensureExamples();
+  const ex = fullExamples[parseInt(i, 10)];
   setError(null);
   // Prefer form mode: find a questionnaire that matches this example's
   // disease and populate it. Fall back to JSON view only when no
@@ -2791,10 +2863,11 @@ exampleSelect.addEventListener('change', () => {{
   const qIdx = findQuestionnaireForProfile(ex.json);
   if (qIdx >= 0) {{
     diseaseSelect.value = qIdx;
-    renderForm(questionnaires[qIdx]);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[qIdx]);
     repopulateExamples(qIdx);
     exampleSelect.value = i;
-    populateFormFromProfile(questionnaires[qIdx], ex.json);
+    populateFormFromProfile(fullList[qIdx], ex.json);
     setMode('form');
     // Lock filled fields and reveal the personalize banner so the user
     // can opt-in to editing the example's data.
@@ -2890,9 +2963,10 @@ async function loadFromUrlHash() {{
     const qIdx = findQuestionnaireForProfile(patient);
     if (qIdx >= 0) {{
       diseaseSelect.value = qIdx;
-      renderForm(questionnaires[qIdx]);
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
       repopulateExamples(qIdx);
-      populateFormFromProfile(questionnaires[qIdx], patient);
+      populateFormFromProfile(fullList[qIdx], patient);
       setMode('form');
       lockFilledFields();
       showExampleLockBanner();
@@ -5932,6 +6006,14 @@ def build_site(output_dir: Path) -> dict:
         output_dir, core_version=engine_bundle.get("core_version", ""),
     )
 
+    # Bundle dropdowns BEFORE render_try so /try.html can inline the
+    # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
+    # of questionnaires.json + examples.json on first paint.
+    examples_payload = bundle_examples(output_dir)
+    questionnaires_payload = bundle_questionnaires(output_dir)
+    questionnaires_manifest = questionnaires_payload.get("manifest", [])
+    examples_manifest = examples_payload.get("manifest", [])
+
     # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
     (output_dir / "capabilities.html").write_text(render_capabilities(stats), encoding="utf-8")
@@ -5940,7 +6022,11 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
     (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
     (output_dir / "try.html").write_text(
-        render_try(bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     # ── EN build (mirror at /en/) ──
     # Body copy of landing/gallery/try is currently UA — nav + lang attribute
@@ -5958,12 +6044,14 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "en" / "diseases.html").write_text(
         render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "try.html").write_text(
-        render_try(target_lang="en", bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            target_lang="en",
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
-
-    examples_payload = bundle_examples(output_dir)
-    questionnaires_payload = bundle_questionnaires(output_dir)
     disease_coverage_payload = bundle_disease_coverage(output_dir)
 
     return {
