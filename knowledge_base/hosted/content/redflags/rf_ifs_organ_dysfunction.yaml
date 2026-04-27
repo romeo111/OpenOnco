@@ -1,0 +1,70 @@
+id: RF-IFS-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction in pediatric IFS precluding standard VAC
+  (vincristine / actinomycin / cyclophosphamide) cytotoxic adjuvant or
+  affecting larotrectinib / entrectinib dosing: bilirubin >3× ULN
+  (vincristine / TRK-inhibitor hepatic clearance), CrCl <30 mL/min for
+  age-adjusted GFR (cyclophosphamide dose adjustment), severe cytopenias
+  (ANC <1.0, platelets <80), or LVEF <55% (anthracycline-component
+  protocols, e.g., VAC-doxorubicin escalation).
+definition_ua: >
+  Базова дисфункція органів при педіатричній IFS, що перешкоджає
+  стандартній цитотоксичній адʼювантній VAC (vincristine / actinomycin /
+  cyclophosphamide) або впливає на дозування larotrectinib / entrectinib:
+  білірубін >3× ULN (печінковий кліренс vincristine / TRK-інгібіторів),
+  CrCl <30 для віку (корекція cyclophosphamide), тяжкі цитопенії (ANC
+  <1.0, тромбоцити <80), LVEF <55% (антрациклін-вмісні протоколи).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "anc_x10_9_per_l"
+      threshold: 1.0
+      comparator: "<"
+    - finding: "platelets_x10_9_per_l"
+      threshold: 80
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 55
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-IFS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PEDIATRIC-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pediatric VAC + IE (Ewing-like) protocols are myelosuppressive and
+  require strict hepatic / renal monitoring in infants (often <1 yr
+  old). LVEF threshold 55% (not 50%) in pediatric oncology reflects
+  long-life-expectancy sensitivity to anthracycline cardiotoxicity.
+  Larotrectinib / entrectinib much better tolerated than cytotoxic in
+  this age group — the organ-dysfunction flag pushes harder toward
+  TRK-inhibitor monotherapy when fusion-positive (which is >90% of
+  cases). For TRK-inhibitor: dose by BSA / weight per FDA pediatric
+  label; hepatic dose reduction required at bilirubin >3× ULN.
+notes_ua: >
+  Педіатричні VAC + IE мієлосупресивні; LVEF поріг 55% у педіатричній
+  онкології (не 50%) через тривалість життя і чутливість до антрациклінів.
+  Larotrectinib / entrectinib набагато краще переносяться — organ-
+  dysfunction flag сильніше штовхає до TRK-моно при fusion+ (>90% IFS).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
