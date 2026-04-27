@@ -26,17 +26,22 @@ decision_tree:
     if_false:
       next_step: 2
 
-  # Step 2 — HER2- + PD-L1 CPS ≥5 → FOLFOX+nivo (CheckMate-649).
+  # Step 2 — HER2- + PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649). Note:
+  # FDA strict label is CPS ≥5; EMA broader label is CPS ≥1.
+  # RF-GASTRIC-PDL1-CPS-1-PLUS captures the broader CPS ≥1 cohort; the
+  # MDT note in the indication discusses CPS 1-5 vs ≥5 magnitude-of-
+  # benefit. HER2-negative gate kept as MDT-text (HER2+ already routed
+  # at step 1; HER2-low not yet a separate gastric branch).
   - step: 2
     evaluate:
       all_of:
-        - condition: "PD-L1 CPS ≥5"
+        - red_flag: RF-GASTRIC-PDL1-CPS-1-PLUS
         - condition: "HER2-negative"
     if_true:
       result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
     if_false:
       result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Partially wired - RF-GASTRIC-PDL1-CPS-1-PLUS gates ICI add-on (CheckMate-649 FOLFOX+nivo); HER2-negative criterion kept as MDT-text (HER2+ pre-routed at step 1)."
 
 sources:
   - SRC-NCCN-GASTRIC-2025
