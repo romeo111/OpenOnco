@@ -563,6 +563,51 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
   background: #fff8e1; border-left-color: #f59e0b;
   color: #92400e;
 }
+/* Prominent top status banner — visible above the toolbar so users see
+   the engine is mid-load. Animated spinner while busy; turns green on ok. */
+.status-top {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-sans, inherit); font-size: 15px; font-weight: 600;
+  padding: 12px 18px; margin: 0 0 16px 0;
+  border-radius: 8px;
+  background: #e0f2fe; color: #075985;
+  border: 1px solid #7dd3fc;
+  box-shadow: 0 1px 4px rgba(2,132,199,0.10);
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.status-top.is-ok {
+  background: var(--green-50); color: var(--green-800); border-color: var(--green-500);
+}
+.status-top.is-warn {
+  background: #fff8e1; color: #92400e; border-color: #f59e0b;
+}
+.status-top-spinner {
+  width: 16px; height: 16px; flex: 0 0 16px;
+  border: 2.5px solid #bae6fd; border-top-color: #0284c7;
+  border-radius: 50%;
+  animation: status-top-spin 700ms linear infinite;
+}
+.status-top.is-ok .status-top-spinner {
+  border: 2.5px solid var(--green-500); border-top-color: transparent;
+  animation: none;
+  /* Render as a check ✓ via CSS — repurpose the spinner box. */
+  border-radius: 0; background: transparent;
+  width: 14px; height: 8px;
+  border-left: 0; border-right: 3px solid var(--green-600);
+  border-top: 0; border-bottom: 3px solid var(--green-600);
+  transform: rotate(45deg) translateY(-2px);
+}
+.status-top.is-warn .status-top-spinner {
+  animation: none;
+  border-color: #f59e0b;
+  border-radius: 50%;
+}
+.status-top:not(.is-busy) .status-top-spinner {
+  animation: none;
+}
+@keyframes status-top-spin {
+  to { transform: rotate(360deg); }
+}
 .error {
   font-family: var(--font-mono); font-size: 12px; color: var(--red);
   background: var(--red-bg); padding: 10px 12px; border-radius: 4px;

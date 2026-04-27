@@ -1288,6 +1288,14 @@ def render_try(
     даних.</strong> Чернетка зберігається у browser localStorage.
   </p>
 
+  <!-- Top status banner — prominent, sticky-ish, animated while loading
+       so the user sees that something is happening even when the engine
+       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+    <span class="status-top-spinner" aria-hidden="true"></span>
+    <span class="status-top-text">Завантажую опитувальники…</span>
+  </div>
+
   <div class="quest-toolbar">
     <label class="qt-label">
       Хвороба
@@ -1446,6 +1454,8 @@ const STORAGE_KEY = 'openonco-try-draft-v1';
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
 const status = document.getElementById('status');
+const statusTop = document.getElementById('statusTop');
+const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -1540,9 +1550,33 @@ let planDirty = false;
 let activeExampleCaseId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function setStatus(msg, kind = 'info') {{
+function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
+  // Mirror to the prominent top banner.
+  //  topMode='busy'  → spinner, blue
+  //  topMode='ok'    → green ✓
+  //  topMode='warn'  → amber
+  //  topMode='hide'  → hide top banner (sidebar still updates)
+  //  topMode='auto'  → kind=info shows busy, ok→green, warn→amber
+  if (!statusTop || !statusTopText) return;
+  let mode = topMode;
+  if (mode === 'auto') {{
+    if (kind === 'ok') mode = 'ok';
+    else if (kind === 'warn') mode = 'warn';
+    else if (!msg) mode = 'hide';
+    else mode = 'busy';
+  }}
+  if (mode === 'hide' || !msg) {{
+    statusTop.hidden = true;
+    return;
+  }}
+  statusTop.hidden = false;
+  statusTopText.textContent = msg;
+  statusTop.dataset.kind = kind;
+  statusTop.classList.toggle('is-busy', mode === 'busy');
+  statusTop.classList.toggle('is-ok', mode === 'ok');
+  statusTop.classList.toggle('is-warn', mode === 'warn');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -2746,7 +2780,8 @@ async function loadAssets() {{
       updateImpactPanelLocal();
     }}
   }} else {{
-    setStatus('Оберіть хворобу зі списку, щоб почати.');
+    // Initial load done — hide the top busy banner; sidebar still shows hint.
+    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}

@@ -3,7 +3,7 @@
 // stamped with the core bundle's SHA-256 prefix at build time, so any KB
 // change automatically rotates the cache key and old bundles are evicted
 // on the next install (see the activate handler).
-const CACHE_NAME = 'openonco-bundle-519b4505e7b6';
+const CACHE_NAME = 'openonco-bundle-46700c74d25b';
 const PRECACHE = [
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
@@ -36,7 +36,6 @@ self.addEventListener('fetch', (event) => {
   // CDN scripts) goes through the normal browser cache.
   const matches =
     url.pathname.endsWith('/openonco-engine-core.zip') ||
-    url.pathname.endsWith('/openonco-engine.zip') ||
     url.pathname.endsWith('/openonco-engine-index.json') ||
     url.pathname.startsWith('/disease/openonco-');
   if (!matches) return;

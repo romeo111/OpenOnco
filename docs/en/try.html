@@ -37,6 +37,14 @@
     даних.</strong> Чернетка зберігається у browser localStorage.
   </p>
 
+  <!-- Top status banner — prominent, sticky-ish, animated while loading
+       so the user sees that something is happening even when the engine
+       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+    <span class="status-top-spinner" aria-hidden="true"></span>
+    <span class="status-top-text">Завантажую опитувальники…</span>
+  </div>
+
   <div class="quest-toolbar">
     <label class="qt-label">
       Хвороба
@@ -195,6 +203,8 @@ const STORAGE_KEY = 'openonco-try-draft-v1';
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
 const status = document.getElementById('status');
+const statusTop = document.getElementById('statusTop');
+const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -246,8 +256,13 @@ const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
 let bundleIndex = null;
 let coreBundleLoaded = false;
 const loadedDiseases = new Set();
-let questionnaires = [];     // loaded from /questionnaires.json
-let examples = [];           // loaded from /examples.json
+// Build-time manifests — instant dropdown population, no fetch.
+const QUESTIONNAIRES_MANIFEST = [{"id": "QUEST-AITL-1L-STUB", "title": "Angioimmunoblastic T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9705/3"}, {"id": "QUEST-ALCL-1L-STUB", "title": "Anaplastic Large Cell Lymphoma, Systemic — first line (auto-generated STUB)", "disease_icd": "9714/3"}, {"id": "QUEST-AML-1L-STUB", "title": "Acute Myeloid Leukemia — first line (auto-generated STUB)", "disease_icd": "9861/3"}, {"id": "QUEST-APL-1L-STUB", "title": "Acute Promyelocytic Leukemia — first line (auto-generated STUB)", "disease_icd": "9866/3"}, {"id": "QUEST-ATLL-1L-STUB", "title": "Adult T-Cell Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9827/3"}, {"id": "QUEST-B-ALL-1L-STUB", "title": "B-Lymphoblastic Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9811/3"}, {"id": "QUEST-BREAST-1L-STUB", "title": "Invasive breast cancer — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-BURKITT-1L-STUB", "title": "Burkitt Lymphoma — first line (auto-generated STUB)", "disease_icd": "9687/3"}, {"id": "QUEST-CERVICAL-1L-STUB", "title": "Cervical carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-CHL-1L-STUB", "title": "Classical Hodgkin Lymphoma — first line (auto-generated STUB)", "disease_icd": "9650/3"}, {"id": "QUEST-CHOLANGIOCARCINOMA-1L-STUB", "title": "Cholangiocarcinoma — first line (auto-generated STUB)", "disease_icd": "8160/3"}, {"id": "QUEST-CHONDROSARCOMA-1L-STUB", "title": "Chondrosarcoma — first line (auto-generated STUB)", "disease_icd": "9220/3"}, {"id": "QUEST-CLL-1L", "title": "Chronic Lymphocytic Leukemia / SLL — first line", "disease_icd": "9823/3"}, {"id": "QUEST-CML-1L-STUB", "title": "Chronic Myeloid Leukemia — first line (auto-generated STUB)", "disease_icd": "9863/3"}, {"id": "QUEST-CRC-1L-STUB", "title": "Colorectal carcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-DLBCL-NOS-1L-STUB", "title": "Diffuse Large B-Cell Lymphoma, Not Otherwise Specified — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-EATL-1L-STUB", "title": "Enteropathy-Associated T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9717/3"}, {"id": "QUEST-ENDOMETRIAL-1L-STUB", "title": "Endometrial carcinoma — first line (auto-generated STUB)", "disease_icd": "8380/3"}, {"id": "QUEST-ESOPHAGEAL-1L-STUB", "title": "Esophageal carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-ET-1L-STUB", "title": "Essential Thrombocythemia — first line (auto-generated STUB)", "disease_icd": "9962/3"}, {"id": "QUEST-FL-1L-STUB", "title": "Follicular Lymphoma — first line (auto-generated STUB)", "disease_icd": "9690/3"}, {"id": "QUEST-GASTRIC-1L-STUB", "title": "Gastric and gastroesophageal junction adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-GBM-1L-STUB", "title": "Glioblastoma — first line (auto-generated STUB)", "disease_icd": "9440/3"}, {"id": "QUEST-GIST-1L-STUB", "title": "Gastrointestinal stromal tumor — first line (auto-generated STUB)", "disease_icd": "8936/3"}, {"id": "QUEST-GLIOMA-LOW-GRADE-1L-STUB", "title": "Low-grade glioma — first line (auto-generated STUB)", "disease_icd": "9400/3"}, {"id": "QUEST-HCC-1L-STUB", "title": "Hepatocellular carcinoma — first line (auto-generated STUB)", "disease_icd": "8170/3"}, {"id": "QUEST-HCL-1L-STUB", "title": "Hairy Cell Leukemia — first line (auto-generated STUB)", "disease_icd": "9940/3"}, {"id": "QUEST-HCV-MZL-1L", "title": "HCV-asociated Marginal Zone Lymphoma — first line", "disease_icd": "9699/3"}, {"id": "QUEST-HGBL-DH-1L-STUB", "title": "High-Grade B-Cell Lymphoma, Double-Hit / Triple-Hit — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-HNSCC-1L-STUB", "title": "Head and neck squamous cell carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-HSTCL-1L-STUB", "title": "Hepatosplenic T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9716/3"}, {"id": "QUEST-IFS-1L-STUB", "title": "Infantile fibrosarcoma — first line (auto-generated STUB)", "disease_icd": "8814/3"}, {"id": "QUEST-IMT-1L-STUB", "title": "Inflammatory myofibroblastic tumor — first line (auto-generated STUB)", "disease_icd": "8825/1"}, {"id": "QUEST-MASTOCYTOSIS-1L-STUB", "title": "Advanced systemic mastocytosis — first line (auto-generated STUB)", "disease_icd": "9740/3"}, {"id": "QUEST-MCL-1L-STUB", "title": "Mantle Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9673/3"}, {"id": "QUEST-MDS-HR-1L-STUB", "title": "Myelodysplastic Syndromes — Higher Risk — first line (auto-generated STUB)", "disease_icd": "9983/3"}, {"id": "QUEST-MDS-LR-1L-STUB", "title": "Myelodysplastic Syndromes — Lower Risk — first line (auto-generated STUB)", "disease_icd": "9989/3"}, {"id": "QUEST-MELANOMA-1L-STUB", "title": "Cutaneous melanoma — first line (auto-generated STUB)", "disease_icd": "8720/3"}, {"id": "QUEST-MF-SEZARY-1L-STUB", "title": "Mycosis Fungoides / Sézary Syndrome — first line (auto-generated STUB)", "disease_icd": "9700/3"}, {"id": "QUEST-MM-1L", "title": "Multiple Myeloma — newly diagnosed (1L)", "disease_icd": "9732/3"}, {"id": "QUEST-MPNST-1L-STUB", "title": "Malignant peripheral nerve sheath tumor — first line (auto-generated STUB)", "disease_icd": "9540/3"}, {"id": "QUEST-MTC-1L-STUB", "title": "Medullary thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8345/3"}, {"id": "QUEST-NK-T-NASAL-1L-STUB", "title": "Extranodal NK/T-Cell Lymphoma, Nasal Type — first line (auto-generated STUB)", "disease_icd": "9719/3"}, {"id": "QUEST-NLPBL-1L-STUB", "title": "Nodular Lymphocyte-Predominant B-cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9659/3"}, {"id": "QUEST-NODAL-MZL-1L-STUB", "title": "Nodal Marginal Zone Lymphoma — first line (auto-generated STUB)", "disease_icd": "9699/3"}, {"id": "QUEST-NSCLC-1L-STUB", "title": "Non-small cell lung cancer — first line (auto-generated STUB)", "disease_icd": "8046/3"}, {"id": "QUEST-OVARIAN-1L-STUB", "title": "Ovarian carcinoma — first line (auto-generated STUB)", "disease_icd": "8441/3"}, {"id": "QUEST-PCNSL-1L-STUB", "title": "Primary CNS Lymphoma — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-PDAC-1L-STUB", "title": "Pancreatic ductal adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-PMBCL-1L-STUB", "title": "Primary Mediastinal Large B-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9679/3"}, {"id": "QUEST-PMF-1L-STUB", "title": "Primary Myelofibrosis — first line (auto-generated STUB)", "disease_icd": "9961/3"}, {"id": "QUEST-PROSTATE-1L-STUB", "title": "Prostate adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-PTCL-NOS-1L-STUB", "title": "Peripheral T-Cell Lymphoma, NOS — first line (auto-generated STUB)", "disease_icd": "9702/3"}, {"id": "QUEST-PTLD-1L-STUB", "title": "Post-Transplant Lymphoproliferative Disorder — first line (auto-generated STUB)", "disease_icd": "9971/3"}, {"id": "QUEST-PV-1L-STUB", "title": "Polycythemia Vera — first line (auto-generated STUB)", "disease_icd": "9950/3"}, {"id": "QUEST-RCC-1L-STUB", "title": "Renal cell carcinoma — first line (auto-generated STUB)", "disease_icd": "8312/3"}, {"id": "QUEST-SALIVARY-1L-STUB", "title": "Salivary gland carcinoma — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-SCLC-1L-STUB", "title": "Small cell lung cancer — first line (auto-generated STUB)", "disease_icd": "8041/3"}, {"id": "QUEST-SPLENIC-MZL-1L-STUB", "title": "Splenic Marginal Zone Lymphoma — first line (auto-generated STUB)", "disease_icd": "9689/3"}, {"id": "QUEST-T-ALL-1L-STUB", "title": "T-Lymphoblastic Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9837/3"}, {"id": "QUEST-T-PLL-1L-STUB", "title": "T-Cell Prolymphocytic Leukemia — first line (auto-generated STUB)", "disease_icd": "9834/3"}, {"id": "QUEST-THYROID-ANAPLASTIC-1L-STUB", "title": "Anaplastic thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8021/3"}, {"id": "QUEST-THYROID-PAPILLARY-1L-STUB", "title": "Papillary thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8260/3"}, {"id": "QUEST-UROTHELIAL-1L-STUB", "title": "Urothelial carcinoma — first line (auto-generated STUB)", "disease_icd": "8120/3"}, {"id": "QUEST-WM-1L-STUB", "title": "Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma — first line (auto-generated STUB)", "disease_icd": "9671/3"}];
+const EXAMPLES_MANIFEST = [{"case_id": "hcv-mzl-reference", "label": "HCV-MZL · Reference Case (Patient Zero)", "disease_icd": "9699/3"}, {"case_id": "hcv-mzl-bulky", "label": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)", "disease_icd": "9699/3"}, {"case_id": "hcv-mzl-post-daa", "label": "HCV-MZL · Post-DAA Responder (Surveillance)", "disease_icd": "9699/3"}, {"case_id": "mm-standard-risk", "label": "Multiple Myeloma · Standard-Risk", "disease_icd": "9732/3"}, {"case_id": "mm-high-risk", "label": "Multiple Myeloma · High-Risk", "disease_icd": "9732/3"}, {"case_id": "diagnostic-lymphoma-suspect", "label": "Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)", "disease_icd": null}, {"case_id": "diagnostic-lymphoma-confirmed", "label": "Lymphoma Confirmed · Post-Biopsy (Treatment Plan)", "disease_icd": "9699/3"}, {"case_id": "dlbcl-low-ipi", "label": "DLBCL NOS · Low-IPI (R-CHOP standard)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-high-ipi", "label": "DLBCL NOS · High-IPI (Pola-R-CHP)", "disease_icd": "9680/3"}, {"case_id": "fl-low-burden", "label": "Follicular · Low Burden (Watch-and-Wait)", "disease_icd": "9690/3"}, {"case_id": "fl-high-burden", "label": "Follicular · High Burden (BR)", "disease_icd": "9690/3"}, {"case_id": "fl-transformation", "label": "Follicular · Transformation Suspect (R-CHOP)", "disease_icd": "9690/3"}, {"case_id": "cll-low-risk", "label": "CLL/SLL · Low-Risk (BTKi continuous)", "disease_icd": "9823/3"}, {"case_id": "cll-high-risk", "label": "CLL/SLL · High-Risk (VenO time-limited)", "disease_icd": "9823/3"}, {"case_id": "mcl-fit-younger", "label": "Mantle Cell · Fit Younger (Intensive + autoSCT)", "disease_icd": "9673/3"}, {"case_id": "mcl-unfit-tp53", "label": "Mantle Cell · Unfit / TP53-mutant (BTKi+R)", "disease_icd": "9673/3"}, {"case_id": "smzl-hcv-positive", "label": "Splenic MZL · HCV-positive (DAA antiviral)", "disease_icd": "9689/3"}, {"case_id": "smzl-hcv-negative", "label": "Splenic MZL · HCV-negative (Rituximab mono)", "disease_icd": "9689/3"}, {"case_id": "nmzl-low-burden", "label": "Nodal MZL · Low Burden (W&W)", "disease_icd": null}, {"case_id": "burkitt-low-risk", "label": "Burkitt · Low/Intermediate Risk (DA-EPOCH-R)", "disease_icd": "9687/3"}, {"case_id": "burkitt-high-risk", "label": "Burkitt · High Risk (CODOX-M / IVAC)", "disease_icd": "9687/3"}, {"case_id": "hcl-typical", "label": "Hairy Cell Leukemia (Cladribine 7-day)", "disease_icd": "9940/3"}, {"case_id": "wm-myd88-positive", "label": "Waldenström · MYD88-positive (Zanubrutinib)", "disease_icd": "9671/3"}, {"case_id": "hgbl-double-hit", "label": "HGBL · Double-Hit (DA-EPOCH-R)", "disease_icd": null}, {"case_id": "alcl-alk-negative", "label": "ALCL · ALK-negative (CHP-Bv)", "disease_icd": "9714/3"}, {"case_id": "ptcl-cd30-negative", "label": "PTCL NOS · CD30-negative (CHOEP)", "disease_icd": "9702/3"}, {"case_id": "aitl-cd30-positive", "label": "AITL · CD30-positive (CHP-Bv)", "disease_icd": "9705/3"}, {"case_id": "chl-advanced", "label": "Classical Hodgkin · Advanced (A+AVD)", "disease_icd": "9650/3"}, {"case_id": "chl-early", "label": "Classical Hodgkin · Early Stage (ABVD)", "disease_icd": "9650/3"}, {"case_id": "nlpbl-early", "label": "NLPBL · Early Stage (Observation / RT)", "disease_icd": "9659/3"}, {"case_id": "aitl-cd30-negative", "label": "AITL · CD30-negative (CHOEP + AITL-specific workup)", "disease_icd": "9705/3"}, {"case_id": "mf-early-stage", "label": "Mycosis Fungoides · Early Stage (Skin-Directed)", "disease_icd": "9700/3"}, {"case_id": "sezary-advanced", "label": "Sézary Syndrome · Advanced (Mogamulizumab)", "disease_icd": "9700/3"}, {"case_id": "mf-advanced-cd30", "label": "MF · Advanced + CD30+ LCT (Brentuximab mono)", "disease_icd": "9700/3"}, {"case_id": "nlpbl-ia-rituximab", "label": "NLPBL · IA + RT-contraindicated (Rituximab mono)", "disease_icd": "9659/3"}, {"case_id": "dlbcl-chemorefractory-cart", "label": "DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-relapsed-te-ineligible", "label": "DLBCL NOS · Relapsed (Transplant-Ineligible)", "disease_icd": "9680/3"}, {"case_id": "hgbl-primary-refractory", "label": "HGBL · Primary Refractory (Early CAR-T)", "disease_icd": "9680/3"}, {"case_id": "pmbcl-typical", "label": "PMBCL · Typical (DA-EPOCH-R)", "disease_icd": "9679/3"}, {"case_id": "pmbcl-bulky-svc", "label": "PMBCL · Bulky + SVC Syndrome", "disease_icd": "9679/3"}, {"case_id": "pmbcl-relapsed-post-rchop", "label": "PMBCL · Relapsed post-R-CHOP (Pembrolizumab)", "disease_icd": "9679/3"}, {"case_id": "pcnsl-typical", "label": "PCNSL · Typical (R-MPV → autoSCT)", "disease_icd": "9680/3"}, {"case_id": "pcnsl-elderly-frail", "label": "PCNSL · Elderly Frail (R-MTX-attenuated)", "disease_icd": "9680/3"}, {"case_id": "pcnsl-immunocompromised-ebv", "label": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)", "disease_icd": "9680/3"}, {"case_id": "cll-post-btki", "label": "CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)", "disease_icd": "9823/3"}, {"case_id": "hcl-relapsed-braf", "label": "HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)", "disease_icd": "9940/3"}, {"case_id": "wm-cxcr4-mut", "label": "Waldenström · CXCR4-mutant (BR fixed-duration)", "disease_icd": "9671/3"}, {"case_id": "nmzl-high-burden", "label": "Nodal MZL · High Burden (BR)", "disease_icd": "9699/3"}, {"case_id": "alcl-alk-positive-typical", "label": "ALCL · ALK-positive Typical (CHP-Bv)", "disease_icd": "9714/3"}, {"case_id": "alcl-relapsed-bv-naive", "label": "ALCL · Relapsed BV-naive (Brentuximab → autoSCT)", "disease_icd": "9714/3"}, {"case_id": "ptcl-cd30-positive", "label": "PTCL NOS · CD30-positive (CHP-Bv)", "disease_icd": "9702/3"}, {"case_id": "ptcl-relapsed", "label": "PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)", "disease_icd": "9702/3"}, {"case_id": "aitl-relapsed-2l", "label": "AITL · Relapsed 2L (Azacitidine)", "disease_icd": "9705/3"}, {"case_id": "eatl-typical", "label": "EATL · Typical (Celiac, CHOEP → autoSCT)", "disease_icd": "9717/3"}, {"case_id": "eatl-relapsed-post-choep", "label": "EATL · Relapsed post-CHOEP (ICE Salvage)", "disease_icd": "9717/3"}, {"case_id": "hstcl-fit-younger", "label": "HSTCL · Fit Younger (ICE/IVAC → alloHCT)", "disease_icd": "9716/3"}, {"case_id": "hstcl-iatrogenic-ibd", "label": "HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)", "disease_icd": "9716/3"}, {"case_id": "t-pll-typical", "label": "T-PLL · Typical (Alemtuzumab IV)", "disease_icd": "9834/3"}, {"case_id": "t-pll-alem-refractory", "label": "T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)", "disease_icd": "9834/3"}, {"case_id": "atll-acute", "label": "ATLL · Acute (mLSG15 / EPOCH)", "disease_icd": "9827/3"}, {"case_id": "atll-indolent-smoldering", "label": "ATLL · Indolent / Smoldering (Watchful Waiting)", "disease_icd": "9827/3"}, {"case_id": "nk-t-nasal-localized", "label": "NK/T-Nasal · Localized (P-GEMOX + RT)", "disease_icd": "9719/3"}, {"case_id": "nk-t-nasal-relapsed", "label": "NK/T-Nasal · Relapsed (Avelumab)", "disease_icd": "9719/3"}, {"case_id": "mf-relapsed-post-moga", "label": "MF · Relapsed post-Mogamulizumab (Bexarotene)", "disease_icd": "9700/3"}, {"case_id": "ptld-polymorphic-ebv", "label": "PTLD · Polymorphic EBV+ (RIS + Rituximab)", "disease_icd": "9971/3"}, {"case_id": "ptld-monomorphic-dlbcl-like", "label": "PTLD · Monomorphic DLBCL-like (R-CHOP)", "disease_icd": "9971/3"}, {"case_id": "chl-pediatric-bulky", "label": "cHL · AYA Stage IIB Bulky Mediastinal", "disease_icd": "9650/3"}, {"case_id": "chl-relapsed-salvage", "label": "cHL · Relapsed (Salvage → autoSCT + BV maint.)", "disease_icd": "9650/3"}, {"case_id": "mm-post-vrd-progression", "label": "Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)", "disease_icd": "9732/3"}, {"case_id": "mm-triple-class-refractory", "label": "Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)", "disease_icd": "9732/3"}, {"case_id": "aml-fit-1l-7-3", "label": "AML · Fit 1L (7+3 Induction)", "disease_icd": "9861/3"}, {"case_id": "aml-unfit-ven-aza", "label": "AML · Unfit (Venetoclax + Azacitidine)", "disease_icd": "9861/3"}, {"case_id": "aml-flt3-relapse", "label": "AML · FLT3-mutant Relapse (Gilteritinib)", "disease_icd": "9861/3"}, {"case_id": "apl-low-risk", "label": "APL · Low Risk (ATRA + ATO chemo-free)", "disease_icd": "9866/3"}, {"case_id": "apl-high-risk", "label": "APL · High Risk + DIC (ATRA + ATO + Idarubicin)", "disease_icd": "9866/3"}, {"case_id": "cml-chronic-newdx", "label": "CML · Chronic Phase Newly Diagnosed (TKI 1L)", "disease_icd": "9863/3"}, {"case_id": "cml-t315i", "label": "CML · T315I-mutated (Ponatinib / Asciminib)", "disease_icd": "9863/3"}, {"case_id": "cml-blast-crisis", "label": "CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)", "disease_icd": "9863/3"}, {"case_id": "mds-hr-transplant-eligible", "label": "MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)", "disease_icd": "9989/3"}, {"case_id": "mds-hr-unfit-aza", "label": "MDS-HR · Unfit (Azacitidine Maintenance)", "disease_icd": "9989/3"}, {"case_id": "mds-hr-progression-aml", "label": "MDS-HR · Progression to Secondary AML", "disease_icd": "9989/3"}, {"case_id": "mds-lr-del5q", "label": "MDS-LR · del(5q) (Lenalidomide)", "disease_icd": "9989/3"}, {"case_id": "mds-lr-rs-luspatercept", "label": "MDS-LR · RS+ EPO-failure (Luspatercept)", "disease_icd": "9982/3"}, {"case_id": "mds-lr-hypoplastic-ist", "label": "MDS-LR · Hypoplastic / IST candidate", "disease_icd": "9989/3"}, {"case_id": "pv-high-risk-hu", "label": "Polycythemia Vera · High Risk (HU 1L)", "disease_icd": "9950/3"}, {"case_id": "pv-hu-resistant-rux", "label": "PV · HU-resistant (Ruxolitinib 2L)", "disease_icd": "9950/3"}, {"case_id": "pv-pregnancy-planning", "label": "PV · Pregnancy Planning (Peg-IFN)", "disease_icd": "9950/3"}, {"case_id": "et-high-risk-hu", "label": "Essential Thrombocythemia · High Risk (HU)", "disease_icd": "9962/3"}, {"case_id": "pmf-anemia-dominant", "label": "PMF · Anemia-Dominant (Momelotinib)", "disease_icd": "9961/3"}, {"case_id": "pmf-int2-symptomatic-rux", "label": "PMF · Int-2 Symptomatic (Ruxolitinib)", "disease_icd": "9961/3"}, {"case_id": "pmf-post-rux-allohct", "label": "PMF · Post-Rux alloHCT Bridge (Urgent)", "disease_icd": "9961/3"}, {"case_id": "b-all-ph-pos-adult", "label": "B-ALL · Ph+ Adult (TKI + Chemo)", "disease_icd": "9836/3"}, {"case_id": "b-all-mrd-positive", "label": "B-ALL · MRD-positive (Blinatumomab)", "disease_icd": "9811/3"}, {"case_id": "b-all-t315i-post-tki", "label": "B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)", "disease_icd": "9836/3"}, {"case_id": "t-all-relapsed", "label": "T-ALL · Relapsed post-hyper-CVAD (Nelarabine)", "disease_icd": "9837/3"}, {"case_id": "t-lbl-mediastinal", "label": "T-LBL · Mediastinal Mass (Pediatric-inspired ALL)", "disease_icd": "9837/3"}, {"case_id": "cervical-locally-advanced", "label": "Cervical · Locally Advanced (CCRT + Pembrolizumab)", "disease_icd": null}, {"case_id": "gbm-stupp", "label": "Glioblastoma · Newly Diagnosed (Stupp Protocol)", "disease_icd": null}, {"case_id": "ovarian-advanced-hrd", "label": "Ovarian · Advanced HRD+ (PARPi maintenance)", "disease_icd": null}, {"case_id": "auto-aitl", "label": "DIS-AITL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-alcl", "label": "DIS-ALCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-aml", "label": "DIS-AML — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-apl", "label": "DIS-APL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-atll", "label": "DIS-ATLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-b_all", "label": "DIS-B-ALL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-breast", "label": "DIS-BREAST — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-burkitt", "label": "DIS-BURKITT — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cervical", "label": "DIS-CERVICAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-chl", "label": "DIS-CHL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cholangiocarcinoma", "label": "DIS-CHOLANGIOCARCINOMA — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-chondrosarcoma", "label": "DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-cll", "label": "DIS-CLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cml", "label": "DIS-CML — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-crc", "label": "DIS-CRC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-dlbcl_nos", "label": "DIS-DLBCL-NOS — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-eatl", "label": "DIS-EATL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-endometrial", "label": "DIS-ENDOMETRIAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-esophageal", "label": "DIS-ESOPHAGEAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-et", "label": "DIS-ET — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-fl", "label": "DIS-FL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gastric", "label": "DIS-GASTRIC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gbm", "label": "DIS-GBM — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gist", "label": "DIS-GIST — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-glioma_low_grade", "label": "DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)", "disease_icd": null}, {"case_id": "auto-hcc", "label": "DIS-HCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hcl", "label": "DIS-HCL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-hcv_mzl", "label": "DIS-HCV-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hgbl_dh", "label": "DIS-HGBL-DH — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hnscc", "label": "DIS-HNSCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hstcl", "label": "DIS-HSTCL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-ifs", "label": "DIS-IFS — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-imt", "label": "DIS-IMT — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mastocytosis", "label": "DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mcl", "label": "DIS-MCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mds_hr", "label": "DIS-MDS-HR — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mds_lr", "label": "DIS-MDS-LR — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-melanoma", "label": "DIS-MELANOMA — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mf_sezary", "label": "DIS-MF-SEZARY — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mm", "label": "DIS-MM — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mpnst", "label": "DIS-MPNST — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mtc", "label": "DIS-MTC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-nk_t_nasal", "label": "DIS-NK-T-NASAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nlpbl", "label": "DIS-NLPBL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nodal_mzl", "label": "DIS-NODAL-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nsclc", "label": "DIS-NSCLC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-ovarian", "label": "DIS-OVARIAN — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pcnsl", "label": "DIS-PCNSL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pdac", "label": "DIS-PDAC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pmbcl", "label": "DIS-PMBCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pmf", "label": "DIS-PMF — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-prostate", "label": "DIS-PROSTATE — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-ptcl_nos", "label": "DIS-PTCL-NOS — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-ptld", "label": "DIS-PTLD — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pv", "label": "DIS-PV — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-rcc", "label": "DIS-RCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-salivary", "label": "DIS-SALIVARY — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-sclc", "label": "DIS-SCLC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-splenic_mzl", "label": "DIS-SPLENIC-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-t_all", "label": "DIS-T-ALL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-t_pll", "label": "DIS-T-PLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-thyroid_anaplastic", "label": "DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-thyroid_papillary", "label": "DIS-THYROID-PAPILLARY — Auto-stub (62% наповненість)", "disease_icd": null}, {"case_id": "auto-urothelial", "label": "DIS-UROTHELIAL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-wm", "label": "DIS-WM — Auto-stub (88% наповненість)", "disease_icd": null}];
+let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
+let examples = null;         // lazy-fetched from /examples.json on first need
+let _questionnairesPromise = null;
+let _examplesPromise = null;
 let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
@@ -284,9 +299,33 @@ let planDirty = false;
 let activeExampleCaseId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function setStatus(msg, kind = 'info') {
+function setStatus(msg, kind = 'info', topMode = 'auto') {
   status.textContent = msg;
   status.dataset.kind = kind;
+  // Mirror to the prominent top banner.
+  //  topMode='busy'  → spinner, blue
+  //  topMode='ok'    → green ✓
+  //  topMode='warn'  → amber
+  //  topMode='hide'  → hide top banner (sidebar still updates)
+  //  topMode='auto'  → kind=info shows busy, ok→green, warn→amber
+  if (!statusTop || !statusTopText) return;
+  let mode = topMode;
+  if (mode === 'auto') {
+    if (kind === 'ok') mode = 'ok';
+    else if (kind === 'warn') mode = 'warn';
+    else if (!msg) mode = 'hide';
+    else mode = 'busy';
+  }
+  if (mode === 'hide' || !msg) {
+    statusTop.hidden = true;
+    return;
+  }
+  statusTop.hidden = false;
+  statusTopText.textContent = msg;
+  statusTop.dataset.kind = kind;
+  statusTop.classList.toggle('is-busy', mode === 'busy');
+  statusTop.classList.toggle('is-ok', mode === 'ok');
+  statusTop.classList.toggle('is-warn', mode === 'warn');
 }
 function setError(msg) {
   if (msg) {
@@ -1428,18 +1467,33 @@ function yieldToBrowser(ms) {
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────
-async function loadAssets() {
-  setStatus('Завантажую опитувальники…');
-  const [qResp, exResp] = await Promise.all([
-    fetch('/questionnaires.json'),
-    fetch('/examples.json'),
-  ]);
-  questionnaires = await qResp.json();
-  examples = await exResp.json();
+//
+// Lazy-loaders for full questionnaire/example data. Dropdowns populate
+// instantly from the build-time manifests above; the full ~870 KB payload
+// is fetched only after the user picks something.
+async function ensureQuestionnaires() {
+  if (questionnaires) return questionnaires;
+  if (!_questionnairesPromise) {
+    _questionnairesPromise = fetch('/questionnaires.json')
+      .then(r => r.json())
+      .then(data => { questionnaires = data; return data; });
+  }
+  return _questionnairesPromise;
+}
+async function ensureExamples() {
+  if (examples) return examples;
+  if (!_examplesPromise) {
+    _examplesPromise = fetch('/examples.json')
+      .then(r => r.json())
+      .then(data => { examples = data; return data; });
+  }
+  return _examplesPromise;
+}
 
-  // Disease selector
+async function loadAssets() {
+  // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
-  questionnaires.forEach((q, i) => {
+  QUESTIONNAIRES_MANIFEST.forEach((q, i) => {
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = q.title;
@@ -1453,10 +1507,12 @@ async function loadAssets() {
   // Restore draft
   const draft = loadDraft();
   if (draft && draft.questId) {
-    const idx = questionnaires.findIndex(q => q.id === draft.questId);
+    const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {
       diseaseSelect.value = idx;
-      renderForm(questionnaires[idx]);
+      // Draft restore needs full data — lazy-fetch now
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[idx]);
       repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {
@@ -1476,7 +1532,8 @@ async function loadAssets() {
       updateImpactPanelLocal();
     }
   } else {
-    setStatus('Оберіть хворобу зі списку, щоб почати.');
+    // Initial load done — hide the top busy banner; sidebar still shows hint.
+    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }
@@ -1490,9 +1547,11 @@ async function loadAssets() {
 // matches the active questionnaire — otherwise the picker overwhelms with
 // 35 cases for which we don't have a form.
 function repopulateExamples(activeQuestIdx) {
+  // Filter from manifest only — no need to await full examples payload
+  // just to populate a dropdown (manifest carries label + disease_icd).
   const wantCode = activeQuestIdx == null
     ? null
-    : ((questionnaires[activeQuestIdx].fixed_fields || {}).disease || {}).icd_o_3_morphology;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {}).disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -1501,10 +1560,9 @@ function repopulateExamples(activeQuestIdx) {
     : '— оберіть приклад для цієї хвороби —';
   exampleSelect.appendChild(placeholder);
   let n = 0;
-  examples.forEach((ex, i) => {
+  EXAMPLES_MANIFEST.forEach((ex, i) => {
     if (wantCode != null) {
-      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
-      if (code !== wantCode) return;
+      if (ex.disease_icd !== wantCode) return;
     }
     const opt = document.createElement('option');
     opt.value = i;
@@ -1522,7 +1580,7 @@ function repopulateExamples(activeQuestIdx) {
 }
 
 // ── Event wiring ──────────────────────────────────────────────────────────
-diseaseSelect.addEventListener('change', () => {
+diseaseSelect.addEventListener('change', async () => {
   const i = diseaseSelect.value;
   // Switching disease invalidates whatever plan was on screen — there is
   // no longer any example or generated plan that matches the new form.
@@ -1534,7 +1592,8 @@ diseaseSelect.addEventListener('change', () => {
     return;
   }
   const idx = parseInt(i, 10);
-  renderForm(questionnaires[idx]);
+  const fullList = await ensureQuestionnaires();
+  renderForm(fullList[idx]);
   repopulateExamples(idx);
   exampleSelect.value = '';
   saveDraft();
@@ -1543,13 +1602,11 @@ diseaseSelect.addEventListener('change', () => {
 });
 
 function findQuestionnaireForProfile(profile) {
-  // Match by ICD-O-3 morphology stamped in the example's disease block
-  // (questionnaires carry the same code under fixed_fields.disease).
+  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
+  // to wait for full questionnaires payload.
   const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
   if (!code) return -1;
-  return questionnaires.findIndex(q =>
-    ((q.fixed_fields || {}).disease || {}).icd_o_3_morphology === code
-  );
+  return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }
 
 function getByPath(obj, dotted) {
@@ -1581,10 +1638,11 @@ function populateFormFromProfile(quest, profile) {
   }
 }
 
-exampleSelect.addEventListener('change', () => {
+exampleSelect.addEventListener('change', async () => {
   const i = exampleSelect.value;
   if (i === '') return;
-  const ex = examples[parseInt(i, 10)];
+  const fullExamples = await ensureExamples();
+  const ex = fullExamples[parseInt(i, 10)];
   setError(null);
   // Prefer form mode: find a questionnaire that matches this example's
   // disease and populate it. Fall back to JSON view only when no
@@ -1592,10 +1650,11 @@ exampleSelect.addEventListener('change', () => {
   const qIdx = findQuestionnaireForProfile(ex.json);
   if (qIdx >= 0) {
     diseaseSelect.value = qIdx;
-    renderForm(questionnaires[qIdx]);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[qIdx]);
     repopulateExamples(qIdx);
     exampleSelect.value = i;
-    populateFormFromProfile(questionnaires[qIdx], ex.json);
+    populateFormFromProfile(fullList[qIdx], ex.json);
     setMode('form');
     // Lock filled fields and reveal the personalize banner so the user
     // can opt-in to editing the example's data.
@@ -1691,9 +1750,10 @@ async function loadFromUrlHash() {
     const qIdx = findQuestionnaireForProfile(patient);
     if (qIdx >= 0) {
       diseaseSelect.value = qIdx;
-      renderForm(questionnaires[qIdx]);
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
       repopulateExamples(qIdx);
-      populateFormFromProfile(questionnaires[qIdx], patient);
+      populateFormFromProfile(fullList[qIdx], patient);
       setMode('form');
       lockFilledFields();
       showExampleLockBanner();
