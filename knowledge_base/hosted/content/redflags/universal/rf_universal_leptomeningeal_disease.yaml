@@ -1,0 +1,70 @@
+id: RF-LEPTOMENINGEAL-DISEASE
+definition: >
+  Leptomeningeal disease (LMD) confirmed by CSF cytology (positive
+  malignant cells), CSF flow cytometry, or imaging (linear/nodular
+  leptomeningeal enhancement on contrast MRI brain/spine). Triggers
+  intrathecal chemotherapy (methotrexate, cytarabine, liposomal
+  cytarabine), CSF-penetrant systemic therapy (HD-MTX, HD-cytarabine,
+  pemetrexed, osimertinib at 160 mg, tucatinib), and consideration of
+  craniospinal RT.
+definition_ua: >
+  Лептоменінгеальне захворювання (LMD), підтверджене цитологією ЦСР
+  (позитивні злоякісні клітини), проточною цитометрією ЦСР, або
+  візуалізацією (лінійне/вузликове підсилення лептоменінгу на КТ/МРТ
+  з контрастом). Триггерує інтратекальну хіміотерапію (метотрексат,
+  цитарабін, ліпосомальний цитарабін), CSF-проникну системну терапію
+  (HD-MTX, HD-цитарабін, пеметрексед, осимертиніб 160 mg, тукатиніб),
+  розгляд краніо-спинальної ПТ.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "csf_cytology_positive"
+      value: true
+    - finding: "leptomeningeal_enhancement_imaging"
+      value: true
+    - finding: "leptomeningeal_disease"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  EANO-ESMO 2017 LMD guideline (Le Rhun) classifies into Type I (CSF+)
+  and Type II (imaging+) — both confirm. Solid tumors: outcomes poor,
+  median OS 3-6 months untreated. Treatments: IT MTX 12-15 mg twice
+  weekly induction; IT cytarabine 50 mg, IT liposomal cytarabine 50 mg
+  q2wk (IRIS); IT topotecan investigational. Systemic options:
+  HD-MTX 3-8 g/m² (lymphoma, breast), pemetrexed (NSCLC adeno), high-
+  dose osimertinib 160 mg (BLOOM trial CNS-LM), tucatinib (HER2CLIMB
+  LM subgroup), pembrolizumab (PMBCL, NSCLC). Hematologic LMD
+  (DLBCL, ALL, Burkitt) carries CNS prophylaxis lessons — IT MTX
+  4 doses + HD-MTX systemic. Craniospinal RT 24-30 Gy for bulky
+  LM unresponsive to IT/HD systemic. Symptom control: ventriculo-
+  peritoneal shunt + Ommaya reservoir for hydrocephalus + IT access.
+notes_ua: >
+  EANO-ESMO 2017 LMD guideline (Le Rhun) розрізняє Type I (CSF+) і
+  Type II (imaging+). Солідні пухлини: прогноз поганий, медіана OS
+  3-6 міс без лікування. Лікування: IT MTX 12-15 mg 2/тиждень
+  індукція; IT цитарабін 50 mg, IT ліпосомальний цитарабін 50 mg
+  q2wk (IRIS). Системні: HD-MTX 3-8 g/m² (лімфома, молочна),
+  пеметрексед (NSCLC adeno), high-dose осимертиніб 160 mg (BLOOM),
+  тукатиніб (HER2CLIMB LM), пембролізумаб. Гематологічна LMD
+  (DLBCL, ALL, Burkitt) — IT MTX 4 дози + HD-MTX системно. Кранioscпинальна
+  ПТ 24-30 Gy при bulky LM. Контроль симптомів: VP-shunt + Ommaya.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

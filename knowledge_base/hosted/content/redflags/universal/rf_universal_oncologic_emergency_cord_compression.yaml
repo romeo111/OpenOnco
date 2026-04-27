@@ -1,0 +1,76 @@
+id: RF-ONCOLOGIC-EMERGENCY-CORD-COMPRESSION
+definition: >
+  Malignant spinal cord compression (MSCC) — radiologic compression of
+  cord/cauda equina by epidural tumor with neurologic deficit (motor
+  weakness, sensory level, sphincter dysfunction) or impending deficit
+  (severe back pain + radiologic compression). Triggers immediate
+  dexamethasone 10 mg IV bolus → 16 mg/day, urgent MRI whole spine,
+  surgical decompression within 24h if life expectancy ≥3 months
+  + single-level disease (Patchell trial), and/or RT 8 Gy x1 or
+  20 Gy/5 fx (SCORAD), and disease-directed systemic therapy.
+definition_ua: >
+  Злоякісна компресія спинного мозку (MSCC) — радіологічна компресія
+  спинного мозку/кінського хвоста епідуральною пухлиною з
+  неврологічним дефіцитом (моторна слабкість, сенсорний рівень,
+  сфінктерна дисфункція) або з загрозою дефіциту (тяжкий біль у
+  спині + радіологічна компресія). Триггерує негайний дексаметазон
+  10 mg IV bolus → 16 mg/день, ургентну МРТ всього хребта,
+  хірургічну декомпресію протягом 24 год при очікуваній тривалості
+  життя ≥3 міс + одно-рівневій хворобі (Patchell trial), та/або
+  ПТ 8 Gy x1 або 20 Gy/5 fx (SCORAD), плюс хвороб-направлену
+  системну терапію.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "spinal_cord_compression"
+      value: true
+    - finding: "epidural_compression_with_deficit"
+      value: true
+    - finding: "cauda_equina_syndrome"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 40
+category: transformation-progression
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Patchell 2005 RCT — surgery + RT > RT alone for ambulatory recovery
+  in single-level epidural compression with life expectancy >3 mo.
+  SCORAD III (Hoskin 2019) — 8 Gy x1 non-inferior to 20 Gy/5 fx for
+  ambulatory metastatic spinal cord compression, simpler. SINS score
+  (Spinal Instability Neoplastic Score) ≥7 → surgical consult; ≥13
+  → unstable. Tumor types vary: lymphoma, MM, breast, prostate, lung
+  most common; chemosensitive (lymphoma, MM, SCLC, germ cell) — favor
+  chemo-first if asymptomatic-borderline; chemoresistant (RCC,
+  melanoma, sarcoma) — favor surgery + RT. Time-to-treatment is the
+  critical predictor of recovery — onset of paraplegia <48h prior to
+  decompression has poor recovery; >48h paraplegic patients rarely
+  ambulate again. Steroids: dex 96 mg/d x3d → taper (Vecht 1989) for
+  high-risk; standard 16 mg/d adequate in less-severe.
+notes_ua: >
+  Patchell 2005 RCT — хірургія + ПТ > ПТ альо для відновлення ходи
+  при одно-рівневій епідуральній компресії з очікуваним життям >3 міс.
+  SCORAD III (Hoskin 2019) — 8 Gy x1 не гірше за 20 Gy/5 fx для
+  амбулаторної метастатичної SCC, простіше. SINS score (Spinal
+  Instability Neoplastic Score) ≥7 → хірургічна консультація; ≥13
+  → нестабільна. Типи пухлин: лімфома, ММ, молочна, простата,
+  легеня — найпоширеніші; хімочутливі (лімфома, ММ, SCLC, гермінативні)
+  — chemo-first при асимптомній/межевій; хіморезистентні (RCC,
+  меланома, саркома) — хірургія + ПТ. Час до лікування — критичний
+  предиктор відновлення.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
