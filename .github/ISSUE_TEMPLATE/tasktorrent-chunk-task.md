@@ -27,6 +27,28 @@ assignees: ""
 
 `tasktorrent/<chunk-id>`
 
+## Claim Method
+
+<!-- Pick one (must match chunk-spec):
+     - formal-issue → contributor comments to claim, maintainer assigns within 24h SLA
+     - trusted-agent-wip-branch-first → pre-authorized agent pushes empty WIP commit immediately
+-->
+
+claim_method:
+
+## How to claim
+
+For `formal-issue`:
+- Comment: `I'd like to take this chunk.`
+- Maintainer assigns within 24h. If not assigned, auto-released by bot.
+- One contributor per chunk.
+
+For `trusted-agent-wip-branch-first`:
+- Push empty WIP commit to `tasktorrent/<chunk-id>` on origin IMMEDIATELY when starting.
+- That branch on origin is the visible lock — other agents see it and don't duplicate.
+
+**Stale-claim auto-release:** if no branch activity for 14 days, bot drops assignee + relabels `status-active`.
+
 ## Sidecar Output Path
 
 ```
