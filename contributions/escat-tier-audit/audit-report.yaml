@@ -1,0 +1,667 @@
+_contribution:
+  chunk_id: escat-tier-audit
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-28'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'B2 subset: 50 random BMAs (out of 399). Algorithmic ESCAT mapping
+    based on evidence_sources level + primary_sources guideline presence + regulatory_approval.
+    Conservative — defaults to underclaim where signal is sparse.'
+audit_method: Algorithmic mapping per Mateo et al. 2018 §3.2 criteria summary. Applied
+  to 50 random BMAs. Each finding shows assigned vs derived tier + evidence signature.
+  100% Co-Lead read recommended on overclaim/borderline before any hosted-content
+  correction.
+summary:
+  total_audited: 50
+  overclaim: 16
+  correct: 12
+  underclaim: 22
+findings:
+- bma_id: BMA-MLH1-SOMATIC-ENDOMETRIAL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_mlh1_somatic_endometrial.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MET-AMP-HCC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_met_amp_hcc.yaml
+  assigned_tier: IIIA
+  derived_tier: IIIA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level D/E only → case-series or pre-clinical
+  verified_rationale: 'Assigned IIIA vs derived IIIA. Mapping basis: CIViC level D/E
+    only → case-series or pre-clinical. Per Mateo et al. 2018 ESCAT §3.2: tier IA
+    requires prospective RCT + CDx-driven biomarker selection (CIViC level A + NCCN
+    cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-FGFR1-AMP-NSCLC-SQUAMOUS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_fgfr1_amp_nsclc_squamous.yaml
+  assigned_tier: IIIA
+  derived_tier: IIA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level B + NCCN → prospective basket evidence
+  verified_rationale: 'Assigned IIIA vs derived IIA. Mapping basis: CIViC level B
+    + NCCN → prospective basket evidence. Per Mateo et al. 2018 ESCAT §3.2: tier IA
+    requires prospective RCT + CDx-driven biomarker selection (CIViC level A + NCCN
+    cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-PMS2-GERMLINE-PROSTATE
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_pms2_germline_prostate.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-EGFR-G719X-NSCLC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_egfr_g719x_nsclc.yaml
+  assigned_tier: IB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IB vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-FLT3-ITD-AML-RR
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_flt3_itd_aml_rr.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-IDH1-R132C-AML
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132c_aml.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-BRCA2-SOMATIC-PROSTATE
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_brca2_somatic_prostate.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-TP53-R273H-OVARIAN
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_r273h_ovarian.yaml
+  assigned_tier: IIIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-BRAF-V600E-MELANOMA
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_melanoma.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-IDH1-R132C-GBM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132c_gbm.yaml
+  assigned_tier: IIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-R248Q-BREAST
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_r248q_breast.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MET-AMP-RCC-PAPILLARY
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_met_amp_rcc_papillary.yaml
+  assigned_tier: IIA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IIA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-NTRK-FUSION-CRC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_crc.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-MUT-GBM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_gbm.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-MUT-PDAC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_pdac.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-NTRK-FUSION-SALIVARY
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_salivary.yaml
+  assigned_tier: IA
+  derived_tier: X
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: No evidence sources
+  verified_rationale: 'Assigned IA vs derived X. Mapping basis: No evidence sources.
+    Per Mateo et al. 2018 ESCAT §3.2: tier IA requires prospective RCT + CDx-driven
+    biomarker selection (CIViC level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-BRAF-V600E-MM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_mm.yaml
+  assigned_tier: IIIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-RAD51C-GERMLINE-OVARIAN
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_rad51c_germline_ovarian.yaml
+  assigned_tier: IIA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IIA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-NOTCH1-ACTIVATING-T-ALL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_notch1_activating_t_all.yaml
+  assigned_tier: IIIA
+  derived_tier: IB
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A but no NCCN/FDA confirmation → strong evidence
+    pending registration
+  verified_rationale: 'Assigned IIIA vs derived IB. Mapping basis: CIViC level A but
+    no NCCN/FDA confirmation → strong evidence pending registration. Per Mateo et
+    al. 2018 ESCAT §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection
+    (CIViC level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MSH2-GERMLINE-PROSTATE
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_germline_prostate.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-R175H-MM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_r175h_mm.yaml
+  assigned_tier: IIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-PMS2-SOMATIC-UROTHELIAL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_pms2_somatic_urothelial.yaml
+  assigned_tier: IB
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IB vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-PIK3CA-HOTSPOT-UROTHELIAL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_hotspot_urothelial.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-FGFR3-S249C-UROTHELIAL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_fgfr3_s249c_urothelial.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-KRAS-Q61-NSCLC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_kras_q61_nsclc.yaml
+  assigned_tier: IV
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IV vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MGMT-METHYLATION-GBM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_mgmt_methylation_gbm.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-MUT-GASTRIC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_gastric.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-FGFR3-MUTATION-MM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_fgfr3_mutation_mm.yaml
+  assigned_tier: X
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned X vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-CCND1-T1114-MCL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ccnd1_t1114_mcl.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MYC-REARRANGEMENT-DLBCL-NOS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_myc_rearrangement_dlbcl_nos.yaml
+  assigned_tier: IIIA
+  derived_tier: IIA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level B + NCCN → prospective basket evidence
+  verified_rationale: 'Assigned IIIA vs derived IIA. Mapping basis: CIViC level B
+    + NCCN → prospective basket evidence. Per Mateo et al. 2018 ESCAT §3.2: tier IA
+    requires prospective RCT + CDx-driven biomarker selection (CIViC level A + NCCN
+    cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-ROS1-FUSION-NSCLC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ros1_fusion_nsclc.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-PIK3CA-EXON9-BREAST
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_pik3ca_exon9_breast.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-KRAS-G12C-OVARIAN
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12c_ovarian.yaml
+  assigned_tier: IIIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-BRAF-V600E-HCC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_hcc.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-R175H-DLBCL-NOS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_r175h_dlbcl_nos.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-NTRK-ETV6-SALIVARY
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_etv6_salivary.yaml
+  assigned_tier: IA
+  derived_tier: X
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: No evidence sources
+  verified_rationale: 'Assigned IA vs derived X. Mapping basis: No evidence sources.
+    Per Mateo et al. 2018 ESCAT §3.2: tier IA requires prospective RCT + CDx-driven
+    biomarker selection (CIViC level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-MUT-DLBCL-NOS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_dlbcl_nos.yaml
+  assigned_tier: IIIB
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIB vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-TP53-R282W-MM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_tp53_r282w_mm.yaml
+  assigned_tier: IIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-MYD88-L265P-DLBCL-NOS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_myd88_l265p_dlbcl_nos.yaml
+  assigned_tier: IIB
+  derived_tier: IIA
+  finding_category: underclaim
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level B + NCCN → prospective basket evidence
+  verified_rationale: 'Assigned IIB vs derived IIA. Mapping basis: CIViC level B +
+    NCCN → prospective basket evidence. Per Mateo et al. 2018 ESCAT §3.2: tier IA
+    requires prospective RCT + CDx-driven biomarker selection (CIViC level A + NCCN
+    cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-KIT-MUTATION-MELANOMA
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_kit_mutation_melanoma.yaml
+  assigned_tier: IB
+  derived_tier: IIA
+  finding_category: overclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level B + NCCN → prospective basket evidence
+  verified_rationale: 'Assigned IB vs derived IIA. Mapping basis: CIViC level B +
+    NCCN → prospective basket evidence. Per Mateo et al. 2018 ESCAT §3.2: tier IA
+    requires prospective RCT + CDx-driven biomarker selection (CIViC level A + NCCN
+    cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-BCL2-EXPRESSION-MCL
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_bcl2_expression_mcl.yaml
+  assigned_tier: IIIA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IIIA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-IDH1-R132L-AML
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_idh1_r132l_aml.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-PDGFRA-EXON14-GIST
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_pdgfra_exon14_gist.yaml
+  assigned_tier: IB
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IB vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-ALK-FUSION-NSCLC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_alk_fusion_nsclc.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-MSH2-SOMATIC-CRC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_somatic_crc.yaml
+  assigned_tier: IA
+  derived_tier: IIIB
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: Guideline-only (no CIViC) → expert consensus / mechanistic
+  verified_rationale: 'Assigned IA vs derived IIIB. Mapping basis: Guideline-only
+    (no CIViC) → expert consensus / mechanistic. Per Mateo et al. 2018 ESCAT §3.2:
+    tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC level
+    A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-FGFR2-BICC1-CHOLANGIO
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_fgfr2_bicc1_cholangio.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-KRAS-G12X-CRC
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12x_crc.yaml
+  assigned_tier: IA
+  derived_tier: IA
+  finding_category: correct
+  severity: minor
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IA vs derived IA. Mapping basis: CIViC level A + NCCN/FDA
+    approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT §3.2: tier
+    IA requires prospective RCT + CDx-driven biomarker selection (CIViC level A +
+    NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: keep
+- bma_id: BMA-NTRK-FUSION-IFS
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_ifs.yaml
+  assigned_tier: IA
+  derived_tier: X
+  finding_category: overclaim
+  severity: critical
+  confidence: medium
+  evidence_signature: No evidence sources
+  verified_rationale: 'Assigned IA vs derived X. Mapping basis: No evidence sources.
+    Per Mateo et al. 2018 ESCAT §3.2: tier IA requires prospective RCT + CDx-driven
+    biomarker selection (CIViC level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim
+- bma_id: BMA-BRAF-V600E-GBM
+  bma_file: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_gbm.yaml
+  assigned_tier: IIIA
+  derived_tier: IA
+  finding_category: underclaim
+  severity: moderate
+  confidence: medium
+  evidence_signature: CIViC level A + NCCN/FDA approval → prospective RCT + CDx criteria
+  verified_rationale: 'Assigned IIIA vs derived IA. Mapping basis: CIViC level A +
+    NCCN/FDA approval → prospective RCT + CDx criteria. Per Mateo et al. 2018 ESCAT
+    §3.2: tier IA requires prospective RCT + CDx-driven biomarker selection (CIViC
+    level A + NCCN cat 1 / FDA approval). actionability_review_required=True.'
+  suggested_action: revise_claim

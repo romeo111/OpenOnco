@@ -1,0 +1,322 @@
+_contribution:
+  chunk_id: indication-line-of-therapy-audit
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-28'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'B3 subset: 30 random INDs (sample). Algorithmic check via regex
+    on cited Source title/notes; NO web fetch. Many findings will be ''ambiguous_source''
+    because line-of-therapy keywords often live in source full-text, not titles. Demonstrates
+    methodology floor.'
+audit_method: 'Sampled 30 INDs randomly. For each: read Indication.applicable_to.line_of_therapy
+  + collected text-blob from cited Source entities (title + notes + section). Regex-detected
+  first-line / second-line / third-line keywords. NO PubMed PDF fetch — those fields
+  aren''t in source title/notes typically.'
+summary:
+  total_audited: 30
+  ambiguous_source: 29
+  match: 1
+limitations: 'Floor-quality: source titles/notes often don''t contain line-of-therapy
+  keywords explicitly (those live in full-text PDFs). ''ambiguous_source'' is expected
+  high-fraction. Real chunk via Codex with web fetch would resolve these via PubMed
+  abstracts.'
+findings:
+- ind_id: IND-B-ALL-1L-PH-NEG
+  ind_file: knowledge_base/hosted/content/indications/ind_b_all_1l_ph_neg.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-GIST-1L-IMATINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_gist_1l_imatinib.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-BREAST-HR-POS-MAINT-CDK46I
+  ind_file: knowledge_base/hosted/content/indications/ind_breast_hr_pos_maint_cdk46i.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-NSCLC-2L-HER2-MUT-T-DXD
+  ind_file: knowledge_base/hosted/content/indications/ind_nsclc_2l_her2_mut_t_dxd.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+  ind_file: knowledge_base/hosted/content/indications/ind_gist_1l_avapritinib_pdgfra_d842v.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-BURKITT-2L-RDHAP-ASCT
+  ind_file: knowledge_base/hosted/content/indications/ind_burkitt_2l_rdhap_asct.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-APL-1L-ATRA-ATO-IDA
+  ind_file: knowledge_base/hosted/content/indications/ind_apl_1l_atra_ato_ida.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-NK-T-NASAL-1L-P-GEMOX
+  ind_file: knowledge_base/hosted/content/indications/ind_nk_t_nasal_1l_p_gemox.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-PV-1L-ROPEGINTERFERON
+  ind_file: knowledge_base/hosted/content/indications/ind_pv_1l_ropeginterferon.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-SMZL-2L-BR
+  ind_file: knowledge_base/hosted/content/indications/ind_smzl_2l_br.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-MELANOMA-2L-KIT-IMATINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_melanoma_2l_kit_imatinib.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-MELANOMA-3L-LIFILEUCEL
+  ind_file: knowledge_base/hosted/content/indications/ind_melanoma_3l_lifileucel.yaml
+  assigned_line: 3
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=3 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+  ind_file: knowledge_base/hosted/content/indications/ind_crc_metastatic_1l_msi_h_pembro.yaml
+  assigned_line: 1
+  source_attested_line: 1
+  finding_category: match
+  severity: minor
+  verified_rationale: line_of_therapy=1 matches detected line-of-therapy keyword in
+    cited source title/notes.
+  suggested_action: keep
+- ind_id: IND-CLL-1L-VENO
+  ind_file: knowledge_base/hosted/content/indications/ind_cll_1l_veno.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+  ind_file: knowledge_base/hosted/content/indications/ind_melanoma_2l_post_io_brafi_meki.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-FL-1L-WATCH
+  ind_file: knowledge_base/hosted/content/indications/ind_fl_1l_watch.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-CRC-METASTATIC-2L-BRAF-BEACON
+  ind_file: knowledge_base/hosted/content/indications/ind_crc_metastatic_2l_braf_beacon.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-ADVSM-1L-AVAPRITINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_advsm_1l_avapritinib.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-NSCLC-EGFR-MAINT-OSIMERTINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_nsclc_egfr_maint_osimertinib.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-MTC-ADVANCED-1L-SELPERCATINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_mtc_advanced_1l_selpercatinib.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-BREAST-HER2-POS-MAINT-TRAST
+  ind_file: knowledge_base/hosted/content/indications/ind_breast_her2_pos_maint_trast.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-AITL-1L-CHP-BV
+  ind_file: knowledge_base/hosted/content/indications/ind_aitl_1l_chp_bv.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-MCL-3L-PIRTOBRUTINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_mcl_3l_pirtobrutinib.yaml
+  assigned_line: 3
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=3 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO
+  ind_file: knowledge_base/hosted/content/indications/ind_nsclc_pembro_maintenance_post_chemo.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-BURKITT-1L-CODOXM-IVAC
+  ind_file: knowledge_base/hosted/content/indications/ind_burkitt_1l_codoxm_ivac.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-ATC-PACLITAXEL-CARBOPLATIN
+  ind_file: knowledge_base/hosted/content/indications/ind_atc_paclitaxel_carboplatin.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB
+  ind_file: knowledge_base/hosted/content/indications/ind_breast_tnbc_2l_brca_talazoparib.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-CLL-3L-PIRTOBRUTINIB
+  ind_file: knowledge_base/hosted/content/indications/ind_cll_3l_pirtobrutinib.yaml
+  assigned_line: 3
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=3 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-CHL-CHILD-PUGH-C-MOD
+  ind_file: knowledge_base/hosted/content/indications/ind_chl_child_pugh_c_mod.yaml
+  assigned_line: 1
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=1 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review
+- ind_id: IND-ALCL-MAINTENANCE-BV-POST-ASCT
+  ind_file: knowledge_base/hosted/content/indications/ind_alcl_maintenance_bv_post_asct.yaml
+  assigned_line: 2
+  source_attested_line: null
+  finding_category: ambiguous_source
+  severity: minor
+  verified_rationale: Cited sources do not contain explicit line-of-therapy keywords
+    (1L/2L/first-line/etc.). Cannot verify line_of_therapy=2 from in-repo source titles+notes.
+    Maintainer should fetch source PDFs to confirm.
+  suggested_action: maintainer_review

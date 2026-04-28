@@ -1,0 +1,592 @@
+_contribution:
+  chunk_id: trial-source-ingest-pubmed
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-28'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'B1 subset: pre-filter 47 trial candidates by domain-spread
+    + name pattern. NO PubMed fetch. Maintainer / next-contributor uses real-rct subset
+    for PubMed lookup; skips likely-false-positive entirely.'
+summary:
+  total_trials: 47
+  real-rct: 34
+  likely-false-positive: 3
+  ambiguous: 10
+filter_method: Pattern match (KEYNOTE-XXX / NRG-XXX-style) + domain-spread analysis
+  (real RCTs cluster in 1-3 disease domains; generic English words spread across many
+  unrelated diseases)
+trials:
+- trial_name: PARADIGM
+  classification: likely-false-positive
+  citation_count: 16
+  distinct_entities: 16
+  domain_spread:
+  - ALECTINIB
+  - ASCT
+  - BALL
+  - BEV
+  - CHEMO
+  - CML
+  - ICE
+  - IFS
+  - MOSUNETUZUMAB
+  - PEMBRO
+  - TRANSFORMATION
+  - UROTHELIAL
+  - VRD
+  - WATCH
+  - WM
+  rationale: generic English word + 15-domain spread
+  sample_findings:
+  - CV914-0007
+  - CV914-0107
+  - CV914-0292
+  - CV914-0300
+  - CV914-0318
+- trial_name: RUBY
+  classification: likely-false-positive
+  citation_count: 16
+  distinct_entities: 16
+  domain_spread:
+  - CHEMO
+  - DMMR
+  - ENDOM
+  - ENDOMETRIAL
+  - PMMR
+  rationale: generic English word + 5-domain spread
+  sample_findings:
+  - CV914-0047
+  - CV914-0052
+  - CV914-0057
+  - CV914-0062
+  - CV914-0067
+- trial_name: CROSS
+  classification: likely-false-positive
+  citation_count: 16
+  distinct_entities: 16
+  domain_spread:
+  - ABIRATERONE
+  - AML
+  - ASCIMINIB
+  - ASCT
+  - BURKITT
+  - CML
+  - CROSS
+  - ESOPH
+  - IMATINIB
+  - NEOADJUVANT
+  - NONSQ
+  - SELPERCATINIB
+  - TRAME
+  - WEEKLY
+  - WT
+  rationale: generic English word + 15-domain spread
+  sample_findings:
+  - CV914-0232
+  - CV914-0297
+  - CV914-0445
+  - CV914-0450
+  - CV914-0474
+- trial_name: NRG-GY018
+  classification: ambiguous
+  citation_count: 14
+  distinct_entities: 14
+  domain_spread:
+  - CHEMO
+  - DMMR
+  - ENDOM
+  - ENDOMETRIAL
+  - PMMR
+  rationale: 5 domains, no strong signal
+  sample_findings:
+  - CV914-0048
+  - CV914-0053
+  - CV914-0058
+  - CV914-0063
+  - CV914-0068
+- trial_name: PAOLA-1
+  classification: ambiguous
+  citation_count: 10
+  distinct_entities: 10
+  domain_spread:
+  - BEV
+  - OLAP
+  - OLAPARIB
+  - OVARIAN
+  rationale: 4 domains, no strong signal
+  sample_findings:
+  - CV914-0013
+  - CV914-0092
+  - CV914-0097
+  - CV914-0102
+  - CV914-0109
+- trial_name: CODEBREAK
+  classification: ambiguous
+  citation_count: 6
+  distinct_entities: 6
+  domain_spread:
+  - 2L
+  - CRC
+  - KRAS
+  - NSCLC
+  - OVARIAN
+  - PDAC
+  rationale: 6 domains, no strong signal
+  sample_findings:
+  - CV914-0144
+  - CV914-0238
+  - CV914-0241
+  - CV914-0362
+  - CV914-0595
+- trial_name: AIDA
+  classification: ambiguous
+  citation_count: 6
+  distinct_entities: 6
+  domain_spread:
+  - APL
+  - ATO
+  - IDA
+  - SALVAGE
+  rationale: 4 domains, no strong signal
+  sample_findings:
+  - CV914-0427
+  - CV914-0554
+  - CV914-0555
+  - CV914-0616
+  - CV914-0617
+- trial_name: PROPEL
+  classification: ambiguous
+  citation_count: 4
+  distinct_entities: 4
+  domain_spread:
+  - PRALATREXATE
+  - PROSTATE
+  - PTCL
+  rationale: 3 domains, no strong signal
+  sample_findings:
+  - CV914-0017
+  - CV914-0027
+  - CV914-0602
+  - CV914-0643
+- trial_name: MAGNITUDE
+  classification: ambiguous
+  citation_count: 4
+  distinct_entities: 4
+  domain_spread:
+  - AML
+  - PARPI
+  - PROSTATE
+  rationale: 3 domains, no strong signal
+  sample_findings:
+  - CV914-0018
+  - CV914-0028
+  - CV914-0229
+  - CV914-0468
+- trial_name: OLYMPIA
+  classification: real-rct
+  citation_count: 4
+  distinct_entities: 4
+  domain_spread:
+  - BREAST
+  - NEOADJUVANT
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0022
+  - CV914-0124
+  - CV914-0434
+  - CV914-0492
+- trial_name: MARIPOSA
+  classification: real-rct
+  citation_count: 4
+  distinct_entities: 4
+  domain_spread:
+  - NSCLC
+  - OSIMERTINIB
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0032
+  - CV914-0044
+  - CV914-0364
+  - CV914-0457
+- trial_name: THOR
+  classification: ambiguous
+  citation_count: 4
+  distinct_entities: 4
+  domain_spread:
+  - UROTHELIAL
+  rationale: generic word but bounded 1 domains
+  sample_findings:
+  - CV914-0224
+  - CV914-0227
+  - CV914-0336
+  - CV914-0338
+- trial_name: GOG-218
+  classification: real-rct
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - BEV
+  - NEG
+  - OVARIAN
+  rationale: trial-pattern + bounded 3 diseases
+  sample_findings:
+  - CV914-0110
+  - CV914-0463
+  - CV914-0621
+- trial_name: ARASENS
+  classification: ambiguous
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - DOCETAXEL
+  - DOUBLET
+  - TRIPLET
+  rationale: 3 domains, no strong signal
+  sample_findings:
+  - CV914-0171
+  - CV914-0600
+  - CV914-0611
+- trial_name: MAGNOLIA
+  classification: real-rct
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - MZL
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0262
+  - CV914-0265
+  - CV914-0268
+- trial_name: KEYNOTE-522
+  classification: real-rct
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - BREAST
+  - NEOADJUVANT
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0286
+  - CV914-0435
+  - CV914-0639
+- trial_name: STARTRK
+  classification: real-rct
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - PAPILLARY
+  - SALIVARY
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0535
+  - CV914-0539
+  - CV914-0540
+- trial_name: PRODIGE
+  classification: ambiguous
+  citation_count: 3
+  distinct_entities: 3
+  domain_spread:
+  - BEV
+  - FOLFIRINOX
+  rationale: generic word but bounded 2 domains
+  sample_findings:
+  - CV914-0574
+  - CV914-0598
+  - CV914-0631
+- trial_name: TALAPRO-2
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - PARPI
+  - PROSTATE
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0029
+  - CV914-0469
+- trial_name: ALINA
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - NSCLC
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0117
+  - CV914-0477
+- trial_name: TRIANGLE
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - MCL
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0132
+  - CV914-0160
+- trial_name: TROPICS-02
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CDK46I
+  - SACITUZUMAB
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0167
+  - CV914-0505
+- trial_name: LATITUDE
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - ABIRATERONE
+  - DOUBLET
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0168
+  - CV914-0475
+- trial_name: ENZAMET
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - DOUBLET
+  - ENZALUTAMIDE
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0169
+  - CV914-0612
+- trial_name: TITAN
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - APALUTAMIDE
+  - DOUBLET
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0170
+  - CV914-0610
+- trial_name: BLC2001
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - UROTHELIAL
+  rationale: trial-pattern + bounded 1 diseases
+  sample_findings:
+  - CV914-0223
+  - CV914-0226
+- trial_name: ENESTND
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CML
+  - TKI
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0289
+  - CV914-0301
+- trial_name: DASISION
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CML
+  - TKI
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0290
+  - CV914-0302
+- trial_name: BFORE
+  classification: ambiguous
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CML
+  - TKI
+  rationale: generic word but bounded 2 domains
+  sample_findings:
+  - CV914-0291
+  - CV914-0303
+- trial_name: CHECKMATE-577
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CROSS
+  - ESOPH
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0444
+  - CV914-0490
+- trial_name: IMPOWER133
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - 1L
+  - SCLC
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0471
+  - CV914-0628
+- trial_name: EV-302
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - PEMBRO
+  - UROTHELIAL
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0473
+  - CV914-0487
+- trial_name: FIRE-3
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - CETUX
+  - LEFT
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0488
+  - CV914-0570
+- trial_name: KEYNOTE-590
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - 2L
+  - SQUAMOUS
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0577
+  - CV914-0640
+- trial_name: STUPP
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - STUPP
+  - TMZ
+  rationale: narrow 2 domains
+  sample_findings:
+  - CV914-0583
+  - CV914-0647
+- trial_name: PACIFIC
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - PACIFIC
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0597
+  - CV914-0626
+- trial_name: CHECKMATE-214
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - IPI
+  - RCC
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0603
+  - CV914-0636
+- trial_name: KEYNOTE-426
+  classification: real-rct
+  citation_count: 2
+  distinct_entities: 2
+  domain_spread:
+  - AXI
+  - RCC
+  rationale: trial-pattern + bounded 2 diseases
+  sample_findings:
+  - CV914-0604
+  - CV914-0637
+- trial_name: ICON7
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - BEV
+  rationale: trial-pattern + bounded 1 diseases
+  sample_findings:
+  - CV914-0111
+- trial_name: PAPILLON
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - NSCLC
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0214
+- trial_name: AGILE
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - AML
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0344
+- trial_name: STIL
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - BR
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0446
+- trial_name: CRYSTAL
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - CETUX
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0489
+- trial_name: MONUMENTAL-1
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - TECLISTAMAB
+  rationale: trial-pattern + bounded 1 diseases
+  sample_findings:
+  - CV914-0511
+- trial_name: BRIGHT
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - MOGAMULIZUMAB
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0556
+- trial_name: IMPOWER150
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - RAMUCIRUMAB
+  rationale: trial-pattern + bounded 1 diseases
+  sample_findings:
+  - CV914-0593
+- trial_name: SHINE
+  classification: real-rct
+  citation_count: 1
+  distinct_entities: 1
+  domain_spread:
+  - RITUXIMAB
+  rationale: narrow 1 domains
+  sample_findings:
+  - CV914-0609
