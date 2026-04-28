@@ -1,0 +1,71 @@
+name: TaskTorrent Claim Coordination Bots
+
+# L-19 implementation:
+#   - claim-sla-bot (hourly): auto-release issues whose claim was not
+#     assigned within 24h
+#   - stale-claim-bot (daily): auto-release issues with assignee set but
+#     no activity on the `tasktorrent/<chunk-id>` branch for 14+ days
+
+on:
+  schedule:
+    # Hourly: SLA check
+    - cron: "0 * * * *"
+    # Daily 04:00 UTC: stale-claim sweep
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-run mode (don't actually unassign / comment)"
+        required: false
+        default: "false"
+        type: choice
+        options: ["true", "false"]
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  claim-sla-check:
+    # Runs hourly — quick check for unassigned-too-long claims
+    if: github.event.schedule == '0 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run claim-SLA bot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DRY_RUN_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+          python -m scripts.tasktorrent.check_claim_sla $DRY_RUN_FLAG
+
+  stale-claim-sweep:
+    # Runs daily — slower sweep across all assigned issues
+    if: github.event.schedule == '0 4 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run stale-claim bot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DRY_RUN_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_RUN_FLAG="--dry-run"
+          fi
+          python -m scripts.tasktorrent.auto_release_stale_claims $DRY_RUN_FLAG

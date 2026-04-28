@@ -26,17 +26,30 @@ python --version    # 3.12.x or higher; on Windows: py -V:3.12
    <https://github.com/romeo111/OpenOnco/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active>
 2. Read the chunk-task issue. It links to the full chunk spec at
    `https://github.com/romeo111/task_torrent/blob/main/chunks/openonco/<chunk-id>.md`.
-3. Comment on the issue: `I'd like to take this chunk.` Wait up to 24 hours for the maintainer to assign you. Only one contributor per chunk.
+3. Note the chunk's **`claim_method`** — declared in the spec. Two values:
+   - `formal-issue`: comment on issue → maintainer assigns. Step 3 below.
+   - `trusted-agent-wip-branch-first`: skip issue claim, push WIP branch immediately. Step 3 below describes this.
+4. For `formal-issue` chunks: comment on the issue: `I'd like to take this chunk.` Wait up to 24 hours for the maintainer to assign you. **24h SLA** — if not assigned, the chunk auto-releases.
 
-If no chunks are `status-active`, the pilot is at its concurrency cap (2 active). Subscribe to the repo or check back.
+If no chunks are `status-active`, all slots are taken or queued. Subscribe to the repo or check back.
 
-## 3. Branch (1 min)
+## 3. Branch + WIP-push (1 min)
+
+For both claim methods:
 
 ```bash
-git checkout -b tasktorrent/<chunk-id>      # e.g. tasktorrent/civic-bma-reconstruct-all
+git checkout -b tasktorrent/<chunk-id>      # e.g. tasktorrent/escat-tier-audit
+git commit --allow-empty -m "wip: starting <chunk-id>"
+git push -u origin tasktorrent/<chunk-id>
 ```
 
+**The empty WIP-push is mandatory for `trusted-agent-wip-branch-first` chunks** — it broadcasts your claim immediately, before you do significant local work. Other trusted agents see the branch on origin and don't duplicate.
+
+For `formal-issue` chunks: WIP-push is recommended even though the issue assignee is the primary lock. Two layers of visibility = better coordination.
+
 The branch name matters — CI looks for the `tasktorrent/` prefix.
+
+**Stale-claim auto-release:** if you don't push commits to your branch for 14 days, a bot will release your claim (drop assignee, re-open the slot). If you need more time, comment on the issue with an ETA before the bot fires.
 
 ## 4. Read the agent prompt (10 min)
 

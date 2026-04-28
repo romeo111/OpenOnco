@@ -39,14 +39,41 @@ chunks open as previous ones close.
 
 Quick summary of the flow:
 
-1. **Pick** an open `[Chunk]` issue with label `status-active` and no assignee. Comment to claim. Maintainer assigns you within 24 hours.
+1. **Pick** an open `[Chunk]` issue with label `status-active` and no assignee. Comment to claim. Maintainer assigns you within 24 hours (auto-released after 24h if not assigned).
 2. **Read** [`CONTRIBUTOR_QUICKSTART.md`](CONTRIBUTOR_QUICKSTART.md) end-to-end.
-3. **Branch** as `tasktorrent/<chunk-id>`.
+3. **Branch** as `tasktorrent/<chunk-id>` AND **immediately push the empty branch to origin** (WIP-branch-first rule, see below).
 4. **Run** your AI tool with the chunk's `AGENT_PROMPT_*.md` content. Output goes into `contributions/<chunk-id>/`.
 5. **Self-validate**: `python -m scripts.tasktorrent.validate_contributions <chunk-id>` — must say `PASS`.
 6. **Open PR** against `master`. CI auto-runs; maintainer reviews when CI green.
 7. **Iterate** force-pushing if maintainer requests changes.
 8. **PR merges** when accepted. Maintainer-run upsert promotes sidecars into hosted content after Clinical Co-Lead signoff (CHARTER §6.1) where applicable.
+
+## Two claim methods (per chunk-spec)
+
+Each chunk-spec declares one of two `claim_method` values. Use the method declared in the chunk you're taking.
+
+### `formal-issue` (for open contributors)
+
+The standard flow described in steps 1–8 above. Comment on issue → maintainer assigns → assignee field locks the slot. Other contributors see the assigned issue and don't duplicate.
+
+**24h SLA:** if maintainer doesn't assign within 24 hours of your claim comment, the chunk auto-releases (a bot drops the claim label). You can re-claim or another contributor can take it.
+
+### `trusted-agent-wip-branch-first` (for pre-authorized contributor agents)
+
+Maintainer pre-authorizes the contributor (e.g. their own Codex or a known partner agent). No formal issue-claim ceremony.
+
+**Critical:** push a minimal/empty WIP commit to `tasktorrent/<chunk-id>` on origin **immediately** when you start, BEFORE doing significant local work. This branch on origin = the visible lock.
+
+```bash
+git checkout -b tasktorrent/<chunk-id>
+git commit --allow-empty -m "wip: starting <chunk-id>"
+git push -u origin tasktorrent/<chunk-id>
+# now do the actual work; force-push or new commits later
+```
+
+The WIP-branch-first rule prevents the "invisible window" between local-work-start and first-push from causing two trusted agents to duplicate the chunk. Without it, a 2-hour local session of agent A blocks nothing from origin's perspective; agent B starts the same chunk in parallel.
+
+**Stale-claim auto-release:** chunk-task issues with `assignee` set + no commits to `tasktorrent/<chunk-id>` for 14 days are auto-released by a bot (drops assignee, re-labels `status-active`). If you fall behind, comment on the issue with an ETA before the bot fires.
 
 ## Reference output: the PoC sidecar
 
