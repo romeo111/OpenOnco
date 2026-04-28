@@ -10,7 +10,7 @@
 |---|---|---|
 | 1 | Доступ до task_torrent | **1b — Claude продукує patches/diffs; user застосовує PR-ами** (немає write-access) |
 | 2 | Прочитати їх improvement plan? | ✅ Зроблено — див. §3 |
-| 3 | Versioning handshake | **"Always latest, fail loud"** — без semver-pinning, без `tasktorrent_version` поля, без `.tasktorrent.yaml`. Validators читають raw `main`; mismatch → loud error, не silent accept. (Trade-off: multi-consumer-future простіший за #21, але solo-maintainer у v0.1 не платить ціну ceremonии.) |
+| 3 | Versioning handshake | **Hybrid (variant C, переглянуто 2026-04-29):** "Always-latest, fail loud" як правило enforcement + `tasktorrent_version` як **OPTIONAL observability field** у `_contribution_meta.yaml`. Без semver tags, без `.tasktorrent.yaml`. Bootstrap-script captures task_torrent `git rev-parse HEAD` і embeds як commit-hash (e.g., `tasktorrent_version: "2026-04-29-7c3d4e8"`). Validator не enforce-ить присутність, але підтримує post-hoc drift-trace. Резолвить contradiction із `kb-coverage-strategy.md` рядок 83-84. |
 | 4 | Single source of truth контракту | **Sync-rule:** у обох репо з automated drift-detection |
 
 ## 2. Recon — що в task_torrent (фактично прочитано)
@@ -70,15 +70,18 @@ Living document із 12 lessons (L-1..L-21) + 21 numbered Proposals по 3 Tiers
 
 ### 3.1. Що з нашого додаємо як NEW Proposals для their living doc
 
-Три речі, які НЕ входять у поточні 21 Proposal — варто запропонувати maintainer-у task_torrent для додавання:
+П'ять речей, які НЕ входять у поточні 21 Proposal — варто запропонувати maintainer-у task_torrent для додавання (revised 2026-04-29 після `kb-coverage-strategy.md` integration):
 
 | Proposal-кандидат | Зміст | Ціна |
 |---|---|---|
 | **#22 Severity + Min-Tier фіолд** | `Severity: low\|medium\|high` + `Min Contributor Tier: new\|established\|trusted` у chunk-spec. Linter validates. Дозволяє tier-based gating (див. `one-prompt-onboarding-plan-2026-04-28` §8.1) | ~½ день |
 | **#23 Verifier Threshold field** | Опціональний `Verifier Threshold` у chunk-spec для chunks, що включають citation-verification. Linter перевіряє наявність для chunks із `topic_label: citation-verify`. Default = 85% if not specified | ~¼ день |
 | **#24 Cross-repo contract sync** | Published canonical contract doc, sync mechanism: (a) у task_torrent — `docs/cross-repo-contract.md` (canonical); (b) у OpenOnco — `docs/contributing/cross-repo-contract.md` із frontmatter `synced_from: task_torrent@main#docs/cross-repo-contract.md` (per Q3 = always-latest, no tag); (c) CI на обох репо — daily job hash-compare (LF-normalized); mismatch → issue в обох | ~1 день |
+| **#25 Mission references kb-coverage-matrix cell** (NEW per `kb-coverage-strategy.md`) | Mission section у chunk-spec мусить містити reference на конкретний matrix cell, наприклад "advances `kb-coverage-matrix.md > Per-disease matrix > glioma-low-grade > BMA` from 0 to ≥3". Linter перевіряє наявність регекспом `kb-coverage-matrix.md\s*>\s*[A-Z]`. Без цього chunks дрейфують до "what's quick" замість "what closes a known gap" | ~¼ день |
+| **#26 Queue tag required field** (NEW per `kb-coverage-strategy.md`) | `Queue: A\|B\|C` у chunk-spec. A = Coverage-fill (entity count↑), B = Audit-remediate (error count↓), C = Schema-evolution (% with new field↑). Корелює, але не replaces Severity. Linter validates enum | ~¼ день |
+| **#27 tasktorrent_version observability** (NEW per L-21 hybrid resolution) | Optional field `tasktorrent_version` у `_contribution_meta.yaml`. Bootstrap-script captures task_torrent main HEAD як commit-hash. НЕ enforced. Дає post-hoc drift trace. Дет. §5.2 | ~¼ день |
 
-**Ці 3 я подам як patch до їхнього `tasktorrent-improvement-plan.md` як L-22/L-23/L-24 + Proposal #22/#23/#24.**
+**Ці 6 (3 original + 3 нових від strategy doc integration) я подам як patches до їхнього `tasktorrent-improvement-plan.md` як L-22..L-27 + Proposal #22..#27.**
 
 ## 4. File-by-file changes у task_torrent
 
@@ -130,50 +133,73 @@ Living document із 12 lessons (L-1..L-21) + 21 numbered Proposals по 3 Tiers
 
 **Загалом: ~1 день для sync mechanism.** Implements Q4 рішення.
 
-## 5. Schema versioning approach: "Always latest, fail loud" (per Q3)
+## 5. Schema versioning approach: Hybrid (variant C, revised 2026-04-29)
 
-**Не adopt-имо Proposal #21.** Користувач обрав простіший підхід для solo-maintainer / one-consumer scenario.
+**Резолвить contradiction:** `kb-coverage-strategy.md` Queue C TODO ("Add `tasktorrent_version` to all sidecars per L-21") vs. початкова Q3 "always-latest pure". Прийнятий гібрид зберігає простоту enforcement рівня + додає observability рівня.
 
-### 5.1. Як це працює
+### 5.1. Що **НЕ робимо** (з Proposal #21)
+
+- ❌ task_torrent НЕ тегує semver releases
+- ❌ OpenOnco НЕ створює `.tasktorrent.yaml`
+- ❌ Validator НЕ enforce-ить version pin
+- ❌ Issue-template URLs НЕ переходять на tagged refs
+
+### 5.2. Що **ДОДАЄМО** як observability layer
+
+✅ `_contribution_meta.yaml.tasktorrent_version` — **OPTIONAL** field. Bootstrap-script (`scripts/tasktorrent/bootstrap_contributor.sh`) capture-ить task_torrent main HEAD при clone і embeds:
+
+```yaml
+# contributions/<chunk-id>/_contribution_meta.yaml
+_contribution:
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  tasktorrent_version: "2026-04-29-7c3d4e8"  # commit-hash style, не semver
+  # ...
+```
+
+Якщо field відсутній — validator passes (для legacy / hand-edited sidecars). Якщо присутній — стає audit-trail для post-hoc drift-trace.
+
+### 5.3. Як це працює при drift
 
 ```
-- task_torrent НЕ тегує semver releases
-- task_torrent НЕ публікує `_contribution_meta.yaml.tasktorrent_version` поле
-- OpenOnco НЕ створює `.tasktorrent.yaml`
-- Усі URL у issue-templates referen `main` HEAD, не release tag
-- Validators читають raw raw.githubusercontent.com/.../main/... як завжди
+СЦЕНАРІЙ A: task_torrent main додає required field X на 2026-05-15
+СЦЕНАРІЙ B: contributor's bootstrap клонує task_torrent на 2026-05-20
+СЦЕНАРІЙ C: contributor's sidecar landing у 2026-05-25 із tasktorrent_version: "2026-05-20-abc1234"
 
-КОЛИ schemas drift (наприклад, task_torrent додає required field):
-  - lint_chunk_spec.py @ task_torrent main fails closed on existing chunk specs
-  - OR OpenOnco validator fails clean із чітким error:
-    "chunk-spec at task_torrent/main has section X that this validator
-     doesn't understand. Please update OpenOnco validator: see commit Y in task_torrent."
-  - Mismatch видно одразу при першому запуску, не silent
+Maintainer reviewing: бачить tasktorrent_version → знає що contributor був aware of field X
+Якщо sidecar відсутнє field X що з'явилось 2026-05-15 → flag як "post-X but doesn't comply"
+Якщо sidecar tasktorrent_version: "2026-04-15-xyz" → "pre-X submission, deemed acceptable"
 ```
 
-### 5.2. Все одно бамп — у CHANGELOG, не у version tag
+Без heavy ceremony, але з actionable observability.
 
-Breaking changes (наші 3 нові required sections — Severity, Min Tier, Verifier Threshold) landing у task_torrent `main` як звичайні merge commits + entry у `docs/CHANGELOG.md`:
+### 5.4. Все одно бамп — у CHANGELOG, не у version tag
+
+Breaking changes (наші нові required sections) landing як звичайні merge commits + entry у `docs/CHANGELOG.md`:
 
 ```
-## 2026-04-30 — Cross-repo sync v1
-+ Severity required section у chunk-spec (per OpenOnco onboarding plan §8.1)
+## 2026-04-30 — Cross-repo sync wave 1
++ Severity required section (per OpenOnco onboarding plan §8.1)
 + Min Contributor Tier required section (per OpenOnco onboarding plan §8.1)
-+ Verifier Threshold conditional for citation-* chunks
-- Existing 12 OpenOnco chunks backfilled with defaults
++ Verifier Threshold conditional (citation-* chunks)
++ Queue tag required (Queue A/B/C per kb-coverage-strategy.md)
++ Mission must reference kb-coverage-matrix cell (Proposal #25)
++ tasktorrent_version optional observability field
 
-Breaking: lint_chunk_spec.py rejects pre-this-commit chunk specs.
+Breaking: lint_chunk_spec.py rejects chunk-specs missing new required sections.
+Non-breaking: tasktorrent_version is optional; legacy sidecars without it still validate.
 ```
 
-### 5.3. Trade-off, який ми приймаємо
+### 5.5. Trade-off, який ми приймаємо
 
-| Що отримуємо | Що ризикуємо |
+| Що отримуємо (переглянуто з C-гібридом) | Що ризикуємо |
 |---|---|
-| Швидка ітерація, нульовий ceremony cost | Multi-consumer adoption у майбутньому потребує retroactive versioning |
-| Один файл `CHANGELOG.md` замість release-tags + migration tables | Time-travel debugging тільки через git log, не через checkout v0.X |
-| Менше boilerplate в OpenOnco валідаторі | Якщо хтось fork-не TaskTorrent для іншого проєкту — їм доведеться додавати pinning самим |
+| Швидка ітерація, нульовий enforcement-ceremony cost | Multi-consumer adoption у майбутньому потребує upgrade observability → enforcement |
+| `tasktorrent_version` дає post-hoc drift-trace без upfront ceremony | Якщо contributor не запустив bootstrap-script (manual sidecar), field відсутній → втрачаємо trace тільки для нього |
+| Один файл `CHANGELOG.md` замість release-tags + migration tables | Time-travel debugging через git log + commit-hash у tasktorrent_version (не через checkout v0.X) |
+| Резолвить contradiction із `kb-coverage-strategy.md` Queue C | Сompromise: ні pure-always-latest ні full-#21 |
 
-**Цей trade-off виправданий поки:** TaskTorrent — solo-maintainer проєкт із одним consumer (OpenOnco). Якщо приходить N=2-й consumer — переоцінюємо.
+**Цей trade-off виправданий поки:** TaskTorrent — solo-maintainer / one-consumer. Якщо N=2 consumer — переоцінюємо чи enforce-ити `tasktorrent_version` як required.
 
 ## 6. Coordination protocol (per Q1 = patches-not-direct-write)
 
@@ -251,7 +277,8 @@ Breaking: lint_chunk_spec.py rejects pre-this-commit chunk specs.
 | citation-verifier | 2-3 дні | 1 день | ½-1 день | ≈4-5 днів |
 | one-prompt-onboarding | 5.75 днів (з tier system) | 2.5-3 дні | 1-2 дні | ≈9-11 днів |
 | Sync-rule mechanism | ½ день | ½ день | ½ день | ≈1.5 дні |
-| **Загалом** | **~14-15 днів** | **~5-6 днів** | **~2-3 дні** | **~21-24 днів elapsed** |
+| **NEW: kb-coverage integration** (Proposals #25-#27, revised 2026-04-29) | ½ день (bootstrap captures version) | 1 день (linter ext + 12 chunks backfill Queue tag + Mission references) | ½ день | ≈2 дні |
+| **Загалом** | **~14.5-15.5 днів** | **~6-7 днів** | **~3-3.5 дні** | **~23-26 днів elapsed** |
 
 Раніше попередня оцінка для one-prompt onboarding plan була "13-15 днів elapsed for GA". Тепер з task_torrent integration — **21-24 дні**. Maintainer-apply час (2-3 дні) — це **bottleneck**, не coding.
 
@@ -285,7 +312,10 @@ Breaking: lint_chunk_spec.py rejects pre-this-commit chunk specs.
 |---|---|---|---|
 | 1 | Окремий plan-doc чи інтегрувати? | Окремий | Cross-repo coordination — окремий concern, не subсекція жодного з 3 OpenOnco workstreams |
 | 2 | Дублюємо чи extend-имо їх improvement plan? | Extend (3 NEW Proposals: #22/#23/#24) | Уникаємо drift; living doc — їхній механізм |
-| 3 | Versioning approach | "Always latest, fail loud" — НЕ adopt-имо Proposal #21 | Per Q3 user choice. Solo-maintainer / one-consumer не платить ціну ceremony. Trade-off задокументовано у §5.3 |
+| 3 | Versioning approach | **Hybrid (variant C, revised 2026-04-29):** always-latest enforcement + optional `tasktorrent_version` observability field | Per Q3 user choice + резолюція contradiction із `kb-coverage-strategy.md` Queue C TODO. Trade-off задокументовано у §5.5 |
+| 8 | Чи додавати Proposal #25 (Mission → matrix)? | Так | Strategy doc 2026-04-28 явно вимагає що chunks reference matrix cell у Mission. Linter regexp-check простий |
+| 9 | Чи додавати Proposal #26 (Queue tag)? | Так | Queue A/B/C корелює з Severity але має іншу dimension (purpose vs. stakes). Обидва потрібні |
+| 10 | Чи додавати Proposal #27 (`tasktorrent_version` як observability)? | Так | Резолюція L-21 contradiction — гібрид між pure-always-latest і Proposal #21 |
 | 4 | Sync mechanism для contract doc | Both repos + automated drift-detection (CI hash-compare) | Per user Q4 = "sync" |
 | 5 | Coordination без write access | git format-patch у contributions/task_torrent_patches/ | Per user Q1 = "1b" (patches not direct PRs) |
 | 6 | Sequencing | task_torrent schema sync ДО citation-verifier + onboarding scripts | Без нових fields у task_torrent main scripts ламатимуться (fail loud per Q3) |
