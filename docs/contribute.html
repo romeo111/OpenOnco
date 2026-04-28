@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Допомогти</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-04-27">v0.1.1 · 2026-04-27</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Головна</a>
+    <a href="/diseases.html">Хвороби</a><a href="/capabilities.html">Можливості</a><a href="/limitations.html">Обмеження</a><a href="/specs.html">Специфікації</a>
+    <a href="/gallery.html">Приклади</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/en/contribute.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/try.html" class="btn-cta-try" >Спробувати →</a>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <h1>Допомогти OpenOnco</h1>
+    <p class="lead">
+      У вас є непрацюючий потенціал у Claude Code, Codex, Cursor чи ChatGPT? Ваш AI-агент може взяти один структурований шматок роботи з нашої черги, виконати його за 1-3 години, і відкрити Pull Request. Так ми колективно наповнюємо публічну онкологічну базу знань для України.
+    </p>
+
+    <h2>Що це таке</h2>
+    <p>
+      OpenOnco — безкоштовний публічний ресурс для підтримки клінічних рішень в онкології. База знань складається з тисяч структурованих записів: біомаркери, схеми лікування, червоні прапорці, цитати на NCCN/ESMO/RCT. Кожен запис верифікується. Кожне твердження має джерело.
+    </p>
+    <p>
+      <strong>TaskTorrent</strong> — наш протокол для розподіленої роботи. Maintainer публікує "чанк" (одну задачу: ~100k-300k токенів роботи). Контрибутор зі своїм AI-tool бере чанк, виконує, відкриває PR. Maintainer перевіряє і мерджить.
+    </p>
+
+    <h2>Як долучитись — 8 рядків</h2>
+    <p>
+      Скопіюй цей промпт у свій AI-агент (Claude Code, Codex, Cursor, ChatGPT). Все інше зробить агент.
+    </p>
+
+    <pre style="background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;padding:1em;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:0.9em;line-height:1.45;"><code>You are an OpenOnco TaskTorrent contributor agent. Your goal is to do one chunk of structured KB work and submit it as a PR.
+
+1. Read https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md (full workflow).
+2. Run scripts/tasktorrent/bootstrap_contributor.sh — it tells you the next available chunk.
+3. Read the chunk spec at the printed URL. Confirm you can complete it within the Drop estimate. If not, exit.
+4. Run scripts/tasktorrent/auto_claim.sh &lt;chunk-id&gt; --issue &lt;#&gt; --method &lt;method&gt;.
+5. Do the work on branch tasktorrent/&lt;chunk-id&gt;, only under contributions/&lt;chunk-id&gt;/. Every sidecar's _contribution_meta.yaml must declare ai_tool + ai_model.
+6. Run python -m scripts.tasktorrent.validate_contributions &lt;chunk-id&gt; until it passes.
+7. Run scripts/tasktorrent/auto_pr.sh &lt;chunk-id&gt; --issue &lt;#&gt; to open the PR.
+8. STOP after PR is opened. Do not push to master, do not create chunks, do not delete branches.</code></pre>
+
+    <p>
+      Канонічна копія: <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/PROMPT_PASTE_AND_GO.md">PROMPT_PASTE_AND_GO.md</a>.
+    </p>
+
+    <h2>Вимоги до контрибутора</h2>
+    <ul>
+      <li><strong>AI-tool</strong>: Claude Code (Pro+), Codex, Cursor, ChatGPT (з web access). Token budget на чанк — 100k-300k.</li>
+      <li><strong>GitHub account</strong> + встановлений <code>gh</code> CLI (<a href="https://cli.github.com/" target="_blank" rel="noopener">cli.github.com</a>).</li>
+      <li><strong>Python 3.10+</strong> для валідатора.</li>
+      <li><strong>Web access</strong> у вашого агента — багато чанків потребують PubMed / NCCN / ESMO read.</li>
+    </ul>
+
+    <h2>Що буде з вашим внеском</h2>
+    <ul>
+      <li>Кожен PR проходить <strong>2 reviewer-signoff</strong> для clinical content (CHARTER §6.1).</li>
+      <li>Maintainer запускає re-verify скрипти на mechanical-частину.</li>
+      <li>Вибірковий sample-review від Clinical Co-Lead на semantic-частину.</li>
+      <li>Після merge — внесок landing у master, потім в hosted KB, потім у render для пацієнтів.</li>
+    </ul>
+
+    <h2>Що ми НЕ приймаємо</h2>
+    <ul>
+      <li>Медичні поради чи treatment recommendations у виводі (CHARTER §8.3 — LLM не приймає клінічні рішення).</li>
+      <li>Patient-specific output (без явної згоди + de-identification + ethics approval).</li>
+      <li>Цитати з заборонених джерел: <code>SRC-ONCOKB</code>, <code>SRC-SNOMED</code>, <code>SRC-MEDDRA</code> (CHARTER §2 — non-commercial only).</li>
+      <li>Обхід валідатора (<code>--no-verify</code>, <code>git add -A</code>, etc.).</li>
+      <li>Файли поза <code>contributions/&lt;chunk-id&gt;/</code> (allowlist enforcement).</li>
+    </ul>
+
+    <h2>Підтримка</h2>
+    <p>
+      Питання — <a href="https://github.com/romeo111/OpenOnco/issues/new?labels=question" target="_blank" rel="noopener">відкрийте issue з тегом <code>question</code></a>. Не пишіть приватно maintainer-у — публічний audit trail важливіший.
+    </p>
+    <p>
+      <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Повна інструкція →</a>
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>OpenOnco · CHARTER §11 — research/support tool, not a medical device. Усі рекомендації мають бути верифіковані кваліфікованим онкологом.</p>
+</footer>
+</body>
+</html>

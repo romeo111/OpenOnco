@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Contribute</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/en/" class="brand-mini">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-04-27">v0.1.1 · 2026-04-27</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/en/">Home</a>
+    <a href="/en/diseases.html">Diseases</a><a href="/en/capabilities.html">Capabilities</a><a href="/en/limitations.html">Limitations</a>
+    <a href="/en/gallery.html">Examples</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/contribute.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+    <a href="/en/try.html" class="btn-cta-try" >Try →</a>
+  </div>
+</header>
+
+<main>
+  <section class="info-page">
+    <h1>Contribute to OpenOnco</h1>
+    <p class="lead">
+      Got idle capacity in Claude Code, Codex, Cursor, or ChatGPT? Your AI agent can take one structured chunk of work from our queue, finish it in 1-3 hours, and open a Pull Request. That's how we collectively build a public oncology knowledge base.
+    </p>
+
+    <h2>What this is</h2>
+    <p>
+      OpenOnco is a free public clinical decision-support resource for oncology. The KB consists of thousands of structured records: biomarkers, treatment regimens, red flags, citations to NCCN/ESMO/RCTs. Every record is verified. Every claim has a source.
+    </p>
+    <p>
+      <strong>TaskTorrent</strong> is our protocol for distributed work. The maintainer publishes a "chunk" (one task: ~100k-300k tokens of work). A contributor with their own AI tool takes the chunk, executes, opens a PR. The maintainer reviews and merges.
+    </p>
+
+    <h2>How to contribute — 8 lines</h2>
+    <p>
+      Paste this prompt into your AI agent (Claude Code, Codex, Cursor, ChatGPT). The agent does the rest.
+    </p>
+
+    <pre style="background:#f6f8fa;border:1px solid #d0d7de;border-radius:6px;padding:1em;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:0.9em;line-height:1.45;"><code>You are an OpenOnco TaskTorrent contributor agent. Your goal is to do one chunk of structured KB work and submit it as a PR.
+
+1. Read https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md (full workflow).
+2. Run scripts/tasktorrent/bootstrap_contributor.sh — it tells you the next available chunk.
+3. Read the chunk spec at the printed URL. Confirm you can complete it within the Drop estimate. If not, exit.
+4. Run scripts/tasktorrent/auto_claim.sh &lt;chunk-id&gt; --issue &lt;#&gt; --method &lt;method&gt;.
+5. Do the work on branch tasktorrent/&lt;chunk-id&gt;, only under contributions/&lt;chunk-id&gt;/. Every sidecar's _contribution_meta.yaml must declare ai_tool + ai_model.
+6. Run python -m scripts.tasktorrent.validate_contributions &lt;chunk-id&gt; until it passes.
+7. Run scripts/tasktorrent/auto_pr.sh &lt;chunk-id&gt; --issue &lt;#&gt; to open the PR.
+8. STOP after PR is opened. Do not push to master, do not create chunks, do not delete branches.</code></pre>
+
+    <p>
+      Canonical copy: <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/PROMPT_PASTE_AND_GO.md">PROMPT_PASTE_AND_GO.md</a>.
+    </p>
+
+    <h2>Contributor requirements</h2>
+    <ul>
+      <li><strong>AI tool</strong>: Claude Code (Pro+), Codex, Cursor, ChatGPT (with web access). Per-chunk token budget: 100k-300k.</li>
+      <li><strong>GitHub account</strong> + the <code>gh</code> CLI installed (<a href="https://cli.github.com/" target="_blank" rel="noopener">cli.github.com</a>).</li>
+      <li><strong>Python 3.10+</strong> for the validator.</li>
+      <li><strong>Web access</strong> for your agent — many chunks require PubMed / NCCN / ESMO reads.</li>
+    </ul>
+
+    <h2>What happens to your contribution</h2>
+    <ul>
+      <li>Every PR gets <strong>two-reviewer signoff</strong> for clinical content (CHARTER §6.1).</li>
+      <li>Maintainer runs re-verify scripts on the mechanical part.</li>
+      <li>Sample-review by a Clinical Co-Lead on the semantic part.</li>
+      <li>After merge — your contribution lands on master, then in the hosted KB, then in renders for patients.</li>
+    </ul>
+
+    <h2>What we do NOT accept</h2>
+    <ul>
+      <li>Medical advice or treatment recommendations in your output (CHARTER §8.3 — LLM does not make clinical decisions).</li>
+      <li>Patient-specific output (without explicit consent + de-identification + ethics approval).</li>
+      <li>Citations from banned sources: <code>SRC-ONCOKB</code>, <code>SRC-SNOMED</code>, <code>SRC-MEDDRA</code> (CHARTER §2 — non-commercial only).</li>
+      <li>Validator bypass (<code>--no-verify</code>, <code>git add -A</code>, etc.).</li>
+      <li>Files outside <code>contributions/&lt;chunk-id&gt;/</code> (allowlist enforcement).</li>
+    </ul>
+
+    <h2>Support</h2>
+    <p>
+      Questions — <a href="https://github.com/romeo111/OpenOnco/issues/new?labels=question" target="_blank" rel="noopener">open an issue with the <code>question</code> label</a>. Don't DM the maintainer — public audit trail matters.
+    </p>
+    <p>
+      <a href="https://github.com/romeo111/OpenOnco/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Full guide →</a>
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>OpenOnco · CHARTER §11 — research/support tool, not a medical device. All recommendations must be verified by a qualified oncologist.</p>
+</footer>
+</body>
+</html>
