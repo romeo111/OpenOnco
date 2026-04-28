@@ -224,6 +224,19 @@ Verifier-first означає: кожен PR прибуває з grounding pre-c
 | **established** | (`age ≥ 90d` AND `repos ≥ 3`) OR `≥3 accepted PRs у цьому проекті` | Усі чанки крім high-stakes (regimen-creation, charter-impacting) | Standard (1-of-3 dev-mode або 2-of-3 full §6.1) |
 | **trusted** | `≥10 accepted PRs з validator-pass-first-try ≥90%` AND maintainer endorsement | Усі чанки, включно high-stakes | Standard, eligible для tiered single-sample review |
 
+### 8.1.2.1. Queue × Severity × Tier matrix (per `kb-coverage-strategy.md`)
+
+Cross-доку integration 2026-04-29: `kb-coverage-strategy.md` запровадила Queue A/B/C класифікацію (purpose), що ортогональна до Severity (stakes). Tier-eligibility = function of (queue, severity), не лише severity.
+
+| Queue | Типова severity | Min tier | Приклади |
+|---|---|---|---|
+| **A — Coverage-fill** (entity count↑) | low або medium | `new` для low (UA-translation, source stubs); `established` для medium (BMA drafting) | `bma-drafting-gap-diseases`, `redflag-indication-coverage-fill` |
+| **B — Audit-only** (read-only sidecars) | low | `new` (ризик низький — тільки findings, не fixes) | `citation-verify-914-audit`, `escat-tier-audit`, `rec-wording-audit` |
+| **B — Remediation** (acts on triage queue) | medium або high | `established` для medium, `trusted` для high (clinical content edit) | `citation-verify-v2 remediation` (793-row queue), `rec-wording remediation` (229 critical) |
+| **C — Schema-evolution** (cross-cutting field add) | high | `trusted` (charter-impacting) | `civic-bma-reconstruct-all`, `regimen-phases-refactor` |
+
+`Queue` поле у chunk-spec (Proposal #26 у cross-repo plan §3.1) дає linter і `next_chunk.py` enough context для визначення min-tier. Без queue-tag system покладається тільки на severity, що недо-disambiguates.
+
 ### 8.1.3. Composite credibility signals (для tier elevation)
 
 Кожен сигнал — +1 score; тhresholds для tier-промоції — конфігуровні:
@@ -358,3 +371,4 @@ V0.2 path (mention only): `pip install openonco-contribute` коли pypi-packag
 | 6 | "Не приймати від нулячих акаунтів"? | Так, але tiered, не binary | Binary reject відсіює legit-новачків (онкологи з age=0). Tier system у §8.1 |
 | 7 | "Rejected" tier поріг | Мінімальний: `age=0 AND repos=0 AND profile_empty AND email_unverified` | Точково throwaway accounts; реальні новачки можуть пройти за 5 хвилин (заповнити profile + verify email) |
 | 8 | Identity attestation level | L0 immediately, L1 до public GA (1 день), L3 post-launch | L1 = найкращий ROI/day; L2 sigstore — only if formal non-repudiation потрібно |
+| 9 | Queue × Severity × Tier matrix (added 2026-04-29) | Adopt orthogonal axes per `kb-coverage-strategy.md` integration | Severity сама по собі не disambiguates: low-stakes audit ≠ low-stakes coverage-fill. Queue tag (Proposal #26 у cross-repo plan) додає purpose dimension |
