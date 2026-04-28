@@ -56,25 +56,8 @@ SPEC_CATEGORIES = (
 #   SCLC, UROTHELIAL.
 # - 2026-04-27 Plan A: ALCL, BURKITT, CERVICAL, CHL, CLL, FL, GBM, MCL,
 #   MF-SEZARY, PTCL-NOS, WM.
-# 2026-04-27 — newly-scaffolded solid-tumour expansions (CSD-9B / Plan D):
-# rare-tumour algorithms added without yet seeding the 5-type RF matrix.
-# Each will close as the disease-specific RF families land in subsequent
-# CSDs; whitelisted now so the matrix gate still fails on regressions
-# elsewhere.
-DISEASES_WITH_GAPS_BASELINE: set[str] = {
-    "DIS-CHOLANGIOCARCINOMA",
-    "DIS-CHONDROSARCOMA",
-    "DIS-GIST",
-    "DIS-GLIOMA-LOW-GRADE",
-    "DIS-HNSCC",
-    "DIS-IFS",
-    "DIS-IMT",
-    "DIS-MPNST",
-    "DIS-MTC",
-    "DIS-SALIVARY",
-    "DIS-THYROID-ANAPLASTIC",
-    "DIS-THYROID-PAPILLARY",
-}
+# 2026-04-28 — rare-tumour RF families now cover the 5-type matrix too.
+DISEASES_WITH_GAPS_BASELINE: set[str] = set()
 
 # Per spec §2: "Якщо для хвороби якась з категорій клінічно нерелевантна
 # ... постав <rf>.notes: з обґрунтуванням замість заглушки." We model that

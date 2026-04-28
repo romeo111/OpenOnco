@@ -27,6 +27,7 @@ Layout produced:
     openonco-engine-core.zip       # core engine + shared KB for Pyodide
     openonco-engine-index.json     # disease_id → per-disease bundle URL map
     disease/openonco-<slug>.zip    # per-disease KB modules (lazy-loaded)
+    openonco-engine.zip            # legacy monolithic fallback bundle
     examples.json                  # dropdown payload for try.html
 
 No real patient data ever flows here — only synthetic seed cases under
@@ -254,11 +255,9 @@ def bundle_engine(output_dir: Path) -> dict:
          disease_versions, icd_to_disease_id}`. /try.html consults this
          to pick the per-disease bundle once `disease_id` is known.
 
-    CSD-9C (2026-04-27): the legacy monolithic `openonco-engine.zip`
-    has been retired. Lazy-load (CSD-5B + CSD-6E) is the canonical
-    path — the monolithic bundle had crossed the 3 MB ceiling and was
-    only kept as a safety fallback. Any stale monolithic on disk is
-    cleaned up so deploys don't carry the old file forever.
+    CSD-9C (2026-04-27): lazy-load (CSD-5B + CSD-6E) is the canonical
+    path, but the legacy monolithic `openonco-engine.zip` is still
+    produced as a back-compat fallback for older clients and tests.
 
     Returns a dict whose `core_version` field is a 12-char SHA-256
     prefix of the core zip — used as a `?v=...` cache-buster on the
@@ -272,10 +271,6 @@ def bundle_engine(output_dir: Path) -> dict:
     legacy_monolithic = output_dir / "openonco-engine.zip"
 
     disease_dir.mkdir(parents=True, exist_ok=True)
-
-    # CSD-9C: clean up any stale monolithic bundle from previous builds.
-    if legacy_monolithic.exists():
-        legacy_monolithic.unlink()
 
     entries = _gather_engine_entries()
     # Deterministic order — same input → same zip → same SHA-256.
@@ -301,7 +296,19 @@ def bundle_engine(output_dir: Path) -> dict:
     core_bytes = core_zip.read_bytes()
     core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
-    # 2. Per-disease bundles. Wipe stale ones first so disease renames
+    # 2. Legacy monolithic fallback. Keep this deterministic and
+    # self-sufficient: old clients can still unpack one zip and run the
+    # validation loader without consulting the lazy-load index.
+    monolithic_files = 0
+    with zipfile.ZipFile(legacy_monolithic, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path, arcname, _disease in entries:
+            zf.write(path, arcname)
+            monolithic_files += 1
+    monolithic_version = hashlib.sha256(
+        legacy_monolithic.read_bytes()
+    ).hexdigest()[:12]
+
+    # 3. Per-disease bundles. Wipe stale ones first so disease renames
     # don't leave orphans under docs/disease/.
     for stale in disease_dir.glob("openonco-*.zip"):
         stale.unlink()
@@ -321,11 +328,13 @@ def bundle_engine(output_dir: Path) -> dict:
             "version": hashlib.sha256(b).hexdigest()[:12],
         }
 
-    # 3. Bundle index — what /try.html consults to know which
+    # 4. Bundle index — what /try.html consults to know which
     # per-disease module to fetch once disease_id is known.
     index_payload = {
         "core": "openonco-engine-core.zip",
         "core_version": core_version,
+        "monolithic": "openonco-engine.zip",
+        "monolithic_version": monolithic_version,
         "diseases": {
             did: meta["url"] for did, meta in sorted(disease_meta.items())
         },
@@ -348,6 +357,10 @@ def bundle_engine(output_dir: Path) -> dict:
         "core_uncompressed_bytes": core_uncompressed,
         "core_compressed_bytes": core_zip.stat().st_size,
         "core_version": core_version,
+        "monolithic_zip": str(legacy_monolithic.relative_to(output_dir)),
+        "monolithic_files": monolithic_files,
+        "monolithic_compressed_bytes": legacy_monolithic.stat().st_size,
+        "monolithic_version": monolithic_version,
         # `version` retained as alias for `core_version` — older callers
         # (try.html cache-buster wiring) still reference it as a generic
         # "current bundle version" stamp.
