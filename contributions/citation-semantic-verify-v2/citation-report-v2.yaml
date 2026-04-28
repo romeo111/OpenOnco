@@ -24,16 +24,15 @@ scope_note: >
 counts:
   total_rows: 914
   by_verified_status:
-    supported: 152
+    supported: 121
     unsupported: 247
-    unclear: 299
-    access_blocked: 216
+    unclear: 362
+    access_blocked: 184
   by_suggested_action:
-    keep: 10
-    maintainer_review: 377
-    replace_source: 142
+    maintainer_review: 345
+    replace_source: 121
     revise_claim: 124
-    source_stub_needed: 261
+    source_stub_needed: 324
 rows:
   - finding_id: CV914-0001
     prior_status: unclear
@@ -472,7 +471,7 @@ rows:
       ""
   - finding_id: CV914-0018
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-BRCA1-GERMLINE-PROSTATE
     entity_kind: BMA
     entity_file: bma_brca1_germline_prostate.yaml
@@ -481,28 +480,23 @@ rows:
     finding_text: >
       trial ''MAGNITUDE'' mentioned but no matching source citation (looked for substrings:
       [''MAGNITUDE'', ''NIRAPARIB''])
-    resolved_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/34102137'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MAGNITUDE' to existing source SRC-CHECKMATE-649-JANJIGIAN-2022 at
-      knowledge_base/hosted/content/sources/src_checkmate_649_janjigian_2022.yaml. The source
-      title is 'First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced
-      gastric, gastro-oesophageal junction, and oesophageal adenocarcinoma (CheckMate 649): a
-      randomised, open-label, phase 3 trial'; source notes identify the trial/source context as:
-      'CheckMate-649 phase 3 (NCT02872116): nivolumab 360 mg q3w (or 240 mg q2w) + FOLFOX/XELOX vs
-      chemotherapy alone, 1L advanced/metastatic gastric, GEJ, or oesophageal adenocarcinoma;
-      n=1,581 in the nivo+chemo vs chemo-alone comparison. In PD-L1 CPS ≥5 population: mOS 14.4 vs
-      11.1 mo (HR 0.71; p<0.0001); mPFS 7.7 vs 6.0 mo (HR 0.68; p<0.0001). Benefit also seen '.
-      Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_brca1_germline_prostate.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'MAGNITUDE'. Prior candidate
+      SRC-CHECKMATE-649-JANJIGIAN-2022 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-CHECKMATE-649-JANJIGIAN-2022 rejected;
+      no specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0019
     prior_status: unclear
     verified_status: unclear
@@ -580,7 +574,7 @@ rows:
       ""
   - finding_id: CV914-0022
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-BRCA2-GERMLINE-BREAST
     entity_kind: BMA
     entity_file: bma_brca2_germline_breast.yaml
@@ -589,26 +583,22 @@ rows:
     finding_text: >
       trial ''OLYMPIA'' mentioned but no matching source citation (looked for substrings:
       [''OLYMPIA'', ''OLAPARIB''])
-    resolved_source_id: SRC-OLYMPIAD-ROBSON-2017
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1706450'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'OLYMPIA' to existing source SRC-OLYMPIAD-ROBSON-2017 at
-      knowledge_base/hosted/content/sources/src_olympiad_robson_2017.yaml. The source title is
-      'Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation'; source
-      notes identify the trial/source context as: 'OlympiAD phase-3: olaparib 300 mg PO BID vs
-      physician-choice single-agent chemo (capecitabine, eribulin, vinorelbine) in germline
-      BRCA1/2-mutant HER2- metastatic breast (≤2 prior chemo lines for metastatic disease; HR+
-      subset must have progressed on ≥1 endocrine line). Median PFS 7.0 vs 4.2 mo (HR 0.58,
-      p<0.001); ORR 60% vs 29%; OS not significantly improved'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_brca2_germline_breast.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'OLYMPIA'. Prior candidate
+      SRC-OLYMPIAD-ROBSON-2017 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-OLYMPIAD-ROBSON-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0023
     prior_status: unclear
     verified_status: access_blocked
@@ -746,7 +736,7 @@ rows:
       ""
   - finding_id: CV914-0028
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-BRCA2-GERMLINE-PROSTATE
     entity_kind: BMA
     entity_file: bma_brca2_germline_prostate.yaml
@@ -755,28 +745,23 @@ rows:
     finding_text: >
       trial ''MAGNITUDE'' mentioned but no matching source citation (looked for substrings:
       [''MAGNITUDE'', ''NIRAPARIB''])
-    resolved_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/34102137'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MAGNITUDE' to existing source SRC-CHECKMATE-649-JANJIGIAN-2022 at
-      knowledge_base/hosted/content/sources/src_checkmate_649_janjigian_2022.yaml. The source
-      title is 'First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced
-      gastric, gastro-oesophageal junction, and oesophageal adenocarcinoma (CheckMate 649): a
-      randomised, open-label, phase 3 trial'; source notes identify the trial/source context as:
-      'CheckMate-649 phase 3 (NCT02872116): nivolumab 360 mg q3w (or 240 mg q2w) + FOLFOX/XELOX vs
-      chemotherapy alone, 1L advanced/metastatic gastric, GEJ, or oesophageal adenocarcinoma;
-      n=1,581 in the nivo+chemo vs chemo-alone comparison. In PD-L1 CPS ≥5 population: mOS 14.4 vs
-      11.1 mo (HR 0.71; p<0.0001); mPFS 7.7 vs 6.0 mo (HR 0.68; p<0.0001). Benefit also seen '.
-      Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_brca2_germline_prostate.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'MAGNITUDE'. Prior candidate
+      SRC-CHECKMATE-649-JANJIGIAN-2022 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-CHECKMATE-649-JANJIGIAN-2022 rejected;
+      no specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0029
     prior_status: unclear
     verified_status: unclear
@@ -852,7 +837,7 @@ rows:
       ""
   - finding_id: CV914-0032
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-EGFR-C797S-NSCLC
     entity_kind: BMA
     entity_file: bma_egfr_c797s_nsclc.yaml
@@ -861,26 +846,22 @@ rows:
     finding_text: >
       trial ''MARIPOSA'' mentioned but no matching source citation (looked for substrings:
       [''MARIPOSA''])
-    resolved_source_id: SRC-MARIPOSA2-PASSARO-2024
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/38780114/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MARIPOSA' to existing source SRC-MARIPOSA2-PASSARO-2024 at
-      knowledge_base/hosted/content/sources/src_mariposa2_passaro_2024.yaml. The source title is
-      'Amivantamab plus Lazertinib in Osimertinib-Relapsed EGFR-Mutated Advanced Non-Small Cell
-      Lung Cancer (MARIPOSA-2)'; source notes identify the trial/source context as: 'MARIPOSA-2
-      phase-3: amivantamab + chemo (carbo+pem) ± lazertinib vs carbo+pem in EGFR-mutated NSCLC
-      progressing on osimertinib. Ami+chemo PFS HR 0.48 (8.3 vs 4.2 mo); ami+laz+chemo HR 0.44
-      (8.3 vs 4.2 mo). VTE rate elevated with lazertinib combo → prophylactic anticoagulation
-      mandated.'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_egfr_c797s_nsclc.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'MARIPOSA'. Prior candidate
+      SRC-MARIPOSA2-PASSARO-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-MARIPOSA2-PASSARO-2024
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-MARIPOSA2-PASSARO-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0033
     prior_status: unclear
     verified_status: unclear
@@ -1178,7 +1159,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0044
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-EGFR-L858R-NSCLC
     entity_kind: BMA
     entity_file: bma_egfr_l858r_nsclc.yaml
@@ -1187,26 +1168,22 @@ rows:
     finding_text: >
       trial ''MARIPOSA'' mentioned but no matching source citation (looked for substrings:
       [''MARIPOSA''])
-    resolved_source_id: SRC-MARIPOSA2-PASSARO-2024
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/38780114/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MARIPOSA' to existing source SRC-MARIPOSA2-PASSARO-2024 at
-      knowledge_base/hosted/content/sources/src_mariposa2_passaro_2024.yaml. The source title is
-      'Amivantamab plus Lazertinib in Osimertinib-Relapsed EGFR-Mutated Advanced Non-Small Cell
-      Lung Cancer (MARIPOSA-2)'; source notes identify the trial/source context as: 'MARIPOSA-2
-      phase-3: amivantamab + chemo (carbo+pem) ± lazertinib vs carbo+pem in EGFR-mutated NSCLC
-      progressing on osimertinib. Ami+chemo PFS HR 0.48 (8.3 vs 4.2 mo); ami+laz+chemo HR 0.44
-      (8.3 vs 4.2 mo). VTE rate elevated with lazertinib combo → prophylactic anticoagulation
-      mandated.'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_egfr_l858r_nsclc.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'MARIPOSA'. Prior candidate
+      SRC-MARIPOSA2-PASSARO-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-MARIPOSA2-PASSARO-2024
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-MARIPOSA2-PASSARO-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0045
     prior_status: unclear
     verified_status: unclear
@@ -3220,7 +3197,7 @@ rows:
       ""
   - finding_id: CV914-0124
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-BRCA1-GERMLINE-BREAST
     entity_kind: BMA
     entity_file: bma_brca1_germline_breast.yaml
@@ -3229,26 +3206,22 @@ rows:
     finding_text: >
       trial ''OLYMPIA'' mentioned but no matching source citation (looked for substrings:
       [''OLYMPIA'', ''OLAPARIB''])
-    resolved_source_id: SRC-OLYMPIAD-ROBSON-2017
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1706450'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'OLYMPIA' to existing source SRC-OLYMPIAD-ROBSON-2017 at
-      knowledge_base/hosted/content/sources/src_olympiad_robson_2017.yaml. The source title is
-      'Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation'; source
-      notes identify the trial/source context as: 'OlympiAD phase-3: olaparib 300 mg PO BID vs
-      physician-choice single-agent chemo (capecitabine, eribulin, vinorelbine) in germline
-      BRCA1/2-mutant HER2- metastatic breast (≤2 prior chemo lines for metastatic disease; HR+
-      subset must have progressed on ≥1 endocrine line). Median PFS 7.0 vs 4.2 mo (HR 0.58,
-      p<0.001); ORR 60% vs 29%; OS not significantly improved'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_brca1_germline_breast.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'OLYMPIA'. Prior candidate
+      SRC-OLYMPIAD-ROBSON-2017 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-OLYMPIAD-ROBSON-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0125
     prior_status: unclear
     verified_status: access_blocked
@@ -3448,7 +3421,7 @@ rows:
       ""
   - finding_id: CV914-0132
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-CCND1-T1114-MCL
     entity_kind: BMA
     entity_file: bma_ccnd1_t1114_mcl.yaml
@@ -3457,22 +3430,17 @@ rows:
     finding_text: >
       trial ''TRIANGLE'' mentioned but no matching source citation (looked for substrings:
       [''TRIANGLE''])
-    resolved_source_id: SRC-ESMO-MCL-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-lymphomas/mantle-cell-lymphoma-mcl'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'TRIANGLE' to existing source SRC-ESMO-MCL-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_mcl_2024.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Mantle Cell Lymphoma'; source notes identify the trial/source
-      context as: 'Primary international guideline for MCL. Codifies high-risk biology flags (TP53
-      mutation, del(17p), Ki-67 >30%, blastoid/pleomorphic morphology) → more aggressive 1L
-      (TRIANGLE: ibrutinib + immunochemo + autoSCT), Nordic MCL2/3 protocols for fit
-      transplant-eligible, BR + R maintenance for non-eligible, BTK-inhibitor + venetoclax-based
-      approaches in R/R.'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_ccnd1_t1114_mcl.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'TRIANGLE'. Prior candidate
+      SRC-ESMO-MCL-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       ""
@@ -3751,7 +3719,7 @@ rows:
       ""
   - finding_id: CV914-0144
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-KRAS-G12C-PDAC
     entity_kind: BMA
     entity_file: bma_kras_g12c_pdac.yaml
@@ -3760,26 +3728,23 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12c_pdac.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0145
     prior_status: unclear
     verified_status: supported
@@ -4185,7 +4150,7 @@ rows:
       ""
   - finding_id: CV914-0160
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-TP53-MUT-MCL
     entity_kind: BMA
     entity_file: bma_tp53_mut_mcl.yaml
@@ -4194,22 +4159,17 @@ rows:
     finding_text: >
       trial ''TRIANGLE'' mentioned but no matching source citation (looked for substrings:
       [''TRIANGLE''])
-    resolved_source_id: SRC-ESMO-MCL-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-lymphomas/mantle-cell-lymphoma-mcl'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'TRIANGLE' to existing source SRC-ESMO-MCL-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_mcl_2024.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Mantle Cell Lymphoma'; source notes identify the trial/source
-      context as: 'Primary international guideline for MCL. Codifies high-risk biology flags (TP53
-      mutation, del(17p), Ki-67 >30%, blastoid/pleomorphic morphology) → more aggressive 1L
-      (TRIANGLE: ibrutinib + immunochemo + autoSCT), Nordic MCL2/3 protocols for fit
-      transplant-eligible, BR + R maintenance for non-eligible, BTK-inhibitor + venetoclax-based
-      approaches in R/R.'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_mcl.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'TRIANGLE'. Prior candidate
+      SRC-ESMO-MCL-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       ""
@@ -4385,7 +4345,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0167
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-BREAST-HR-POS-MAINT-CDK46I
     entity_kind: Indication
     entity_file: ind_breast_hr_pos_maint_cdk46i.yaml
@@ -4394,29 +4354,25 @@ rows:
     finding_text: >
       trial ''TROPiCS-02'' mentioned but no matching source citation (looked for substrings:
       [''TROPICS'', ''SACITUZUMAB''])
-    resolved_source_id: SRC-NCCN-BREAST-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'TROPiCS-02' to existing source SRC-NCCN-BREAST-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_breast_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Breast Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for breast cancer. Codifies receptor- driven
-      branching, CDK4/6i in HR+/HER2- metastatic + adjuvant high-risk (monarchE, NATALEE),
-      pertuzumab + trastuzumab backbone for HER2+ (APHINITY, CLEOPATRA), T-DM1 adjuvant for
-      residual after neoadjuvant HER2+ (KATHERINE), T-DXd ≥2L HER2+ metastatic (DESTINY-Breast03),
-      pembrolizumab + che'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_breast_hr_pos_maint_cdk46i.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'TROPiCS-02'. Prior candidate
+      SRC-NCCN-BREAST-2025 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-NCCN-BREAST-2025
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ASCENT-BARDIA-2021
+      Strict replace_source repair: previous candidate SRC-NCCN-BREAST-2025 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0168
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-PROSTATE-MHSPC-1L-ARPI-DOUBLET
     entity_kind: Indication
     entity_file: ind_prostate_mhspc_1l_arpi_doublet.yaml
@@ -4425,24 +4381,22 @@ rows:
     finding_text: >
       trial ''LATITUDE'' mentioned but no matching source citation (looked for substrings:
       [''LATITUDE'', ''ABIRATERONE''])
-    resolved_source_id: SRC-ESMO-PROSTATE-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-prostate-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'LATITUDE' to existing source SRC-ESMO-PROSTATE-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_prostate_2024.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Prostate Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for prostate cancer. Detailed mHSPC
-      stratification (CHAARTED + LATITUDE), mCRPC sequencing, biomarker-driven PARPi indications,
-      PSMA-radioligand therapy positioning.'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_prostate_mhspc_1l_arpi_doublet.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'LATITUDE'. Prior candidate
+      SRC-ESMO-PROSTATE-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-ESMO-PROSTATE-2024
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-ESMO-PROSTATE-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0169
     prior_status: unclear
     verified_status: unclear
@@ -5589,7 +5543,7 @@ rows:
       ""
   - finding_id: CV914-0214
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-EGFR-EX20INS-NSCLC
     entity_kind: BMA
     entity_file: bma_egfr_ex20ins_nsclc.yaml
@@ -5598,26 +5552,22 @@ rows:
     finding_text: >
       trial ''PAPILLON'' mentioned but no matching source citation (looked for substrings:
       [''PAPILLON'', ''AMIVANTAMAB''])
-    resolved_source_id: SRC-CHRYSALIS-PARK-2021
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/33914029/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'PAPILLON' to existing source SRC-CHRYSALIS-PARK-2021 at
-      knowledge_base/hosted/content/sources/src_chrysalis_park_2021.yaml. The source title is
-      'Amivantamab in EGFR Exon 20 Insertion-Mutated Non-Small-Cell Lung Cancer Progressing on
-      Platinum Chemotherapy: Initial Results From the CHRYSALIS Phase I Study'; source notes
-      identify the trial/source context as: 'CHRYSALIS phase-1 expansion: amivantamab monotherapy
-      in 81 EGFR exon-20-insertion NSCLC pts post-platinum. ORR 40%, mPFS 8.3 mo, mOS 22.8 mo.
-      Basis for FDA accelerated approval (2021) and the PAPILLON 1L combo development.
-      Confirmatory PAPILLON established ami+chemo as 1L SoC for EGFR Ex20ins.'. Current entity
-      locator knowledge_base/hosted/content/biomarker_actionability/bma_egfr_ex20ins_nsclc.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'PAPILLON'. Prior candidate
+      SRC-CHRYSALIS-PARK-2021 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-CHRYSALIS-PARK-2021
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-CHRYSALIS-PARK-2021 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0215
     prior_status: unclear
     verified_status: unclear
@@ -5846,7 +5796,7 @@ rows:
       ""
   - finding_id: CV914-0224
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-FGFR2-MUTATION-UROTHELIAL
     entity_kind: BMA
     entity_file: bma_fgfr2_mutation_urothelial.yaml
@@ -5855,28 +5805,22 @@ rows:
     finding_text: >
       trial ''THOR'' mentioned but no matching source citation (looked for substrings: [''THOR'',
       ''ERDAFITINIB''])
-    resolved_source_id: SRC-POSEIDON-JOHNSON-2023
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/36223558'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'THOR' to existing source SRC-POSEIDON-JOHNSON-2023 at
-      knowledge_base/hosted/content/sources/src_poseidon_johnson_2023.yaml. The source title is
-      'Durvalumab With or Without Tremelimumab in Combination With Chemotherapy as First-Line
-      Therapy for Metastatic Non-Small-Cell Lung Cancer (POSEIDON)'; source notes identify the
-      trial/source context as: 'POSEIDON phase-3 (NCT03164616): durvalumab + tremelimumab + chemo
-      (4 cycles, then durva+treme maintenance) vs durva+chemo vs chemo alone in 1L metastatic
-      NSCLC (n=1013). Triple regimen mOS 14.0 vs 11.7 mo (HR 0.77; p=0.003); mPFS 6.2 vs 4.8 mo.
-      Notable benefit in STK11/KEAP1/KRAS subgroups. Established durva+treme+chemo as alternative
-      1L IO doublet+chemo for'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_fgfr2_mutation_urothelial.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'THOR'. Prior candidate
+      SRC-POSEIDON-JOHNSON-2023 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-POSEIDON-JOHNSON-2023
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-KRYSTAL-10-YAEGER-2023,
-      SRC-OCEANS-AGHAJANIAN-2012, SRC-ELEVATE-TN-SHARMAN-2020
+      Strict replace_source repair: previous candidate SRC-POSEIDON-JOHNSON-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0225
     prior_status: unclear
     verified_status: unclear
@@ -5926,7 +5870,7 @@ rows:
       ""
   - finding_id: CV914-0227
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-FGFR3-TACC3-UROTHELIAL
     entity_kind: BMA
     entity_file: bma_fgfr3_tacc3_urothelial.yaml
@@ -5935,28 +5879,22 @@ rows:
     finding_text: >
       trial ''THOR'' mentioned but no matching source citation (looked for substrings: [''THOR'',
       ''ERDAFITINIB''])
-    resolved_source_id: SRC-POSEIDON-JOHNSON-2023
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/36223558'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'THOR' to existing source SRC-POSEIDON-JOHNSON-2023 at
-      knowledge_base/hosted/content/sources/src_poseidon_johnson_2023.yaml. The source title is
-      'Durvalumab With or Without Tremelimumab in Combination With Chemotherapy as First-Line
-      Therapy for Metastatic Non-Small-Cell Lung Cancer (POSEIDON)'; source notes identify the
-      trial/source context as: 'POSEIDON phase-3 (NCT03164616): durvalumab + tremelimumab + chemo
-      (4 cycles, then durva+treme maintenance) vs durva+chemo vs chemo alone in 1L metastatic
-      NSCLC (n=1013). Triple regimen mOS 14.0 vs 11.7 mo (HR 0.77; p=0.003); mPFS 6.2 vs 4.8 mo.
-      Notable benefit in STK11/KEAP1/KRAS subgroups. Established durva+treme+chemo as alternative
-      1L IO doublet+chemo for'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_fgfr3_tacc3_urothelial.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'THOR'. Prior candidate
+      SRC-POSEIDON-JOHNSON-2023 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-POSEIDON-JOHNSON-2023
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-KRYSTAL-10-YAEGER-2023,
-      SRC-OCEANS-AGHAJANIAN-2012, SRC-ELEVATE-TN-SHARMAN-2020
+      Strict replace_source repair: previous candidate SRC-POSEIDON-JOHNSON-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0228
     prior_status: unclear
     verified_status: unclear
@@ -5982,7 +5920,7 @@ rows:
       ""
   - finding_id: CV914-0229
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-FLT3-D835-AML
     entity_kind: BMA
     entity_file: bma_flt3_d835_aml.yaml
@@ -5991,28 +5929,23 @@ rows:
     finding_text: >
       trial ''MAGNITUDE'' mentioned but no matching source citation (looked for substrings:
       [''MAGNITUDE'', ''NIRAPARIB''])
-    resolved_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/34102137'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MAGNITUDE' to existing source SRC-CHECKMATE-649-JANJIGIAN-2022 at
-      knowledge_base/hosted/content/sources/src_checkmate_649_janjigian_2022.yaml. The source
-      title is 'First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced
-      gastric, gastro-oesophageal junction, and oesophageal adenocarcinoma (CheckMate 649): a
-      randomised, open-label, phase 3 trial'; source notes identify the trial/source context as:
-      'CheckMate-649 phase 3 (NCT02872116): nivolumab 360 mg q3w (or 240 mg q2w) + FOLFOX/XELOX vs
-      chemotherapy alone, 1L advanced/metastatic gastric, GEJ, or oesophageal adenocarcinoma;
-      n=1,581 in the nivo+chemo vs chemo-alone comparison. In PD-L1 CPS ≥5 population: mOS 14.4 vs
-      11.1 mo (HR 0.71; p<0.0001); mPFS 7.7 vs 6.0 mo (HR 0.68; p<0.0001). Benefit also seen '.
-      Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_flt3_d835_aml.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'MAGNITUDE'. Prior candidate
+      SRC-CHECKMATE-649-JANJIGIAN-2022 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-CHECKMATE-649-JANJIGIAN-2022 rejected;
+      no specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0230
     prior_status: unclear
     verified_status: unclear
@@ -6063,7 +5996,7 @@ rows:
       ""
   - finding_id: CV914-0232
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-FLT3-F691L-AML
     entity_kind: BMA
     entity_file: bma_flt3_f691l_aml.yaml
@@ -6072,27 +6005,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_flt3_f691l_aml.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0233
     prior_status: unclear
     verified_status: access_blocked
@@ -6216,7 +6144,7 @@ rows:
       ""
   - finding_id: CV914-0238
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-KRAS-G12C-CRC
     entity_kind: BMA
     entity_file: bma_kras_g12c_crc.yaml
@@ -6225,26 +6153,23 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12c_crc.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0239
     prior_status: unclear
     verified_status: supported
@@ -6300,7 +6225,7 @@ rows:
       ""
   - finding_id: CV914-0241
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-KRAS-G12C-NSCLC
     entity_kind: BMA
     entity_file: bma_kras_g12c_nsclc.yaml
@@ -6309,26 +6234,23 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12c_nsclc.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0242
     prior_status: unclear
     verified_status: supported
@@ -7496,7 +7418,7 @@ rows:
       ""
   - finding_id: CV914-0286
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-TP53-MUT-BREAST
     entity_kind: BMA
     entity_file: bma_tp53_mut_breast.yaml
@@ -7505,22 +7427,18 @@ rows:
     finding_text: >
       trial ''KEYNOTE-522'' mentioned but no matching source citation (looked for substrings:
       [''KEYNOTE-522'', ''KEYNOTE522''])
-    resolved_source_id: SRC-NCCN-BREAST-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'KEYNOTE-522' to existing source SRC-NCCN-BREAST-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_breast_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Breast Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for breast cancer. Codifies receptor- driven
-      branching, CDK4/6i in HR+/HER2- metastatic + adjuvant high-risk (monarchE, NATALEE),
-      pertuzumab + trastuzumab backbone for HER2+ (APHINITY, CLEOPATRA), T-DM1 adjuvant for
-      residual after neoadjuvant HER2+ (KATHERINE), T-DXd ≥2L HER2+ metastatic (DESTINY-Breast03),
-      pembrolizumab + che'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_tp53_mut_breast.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'KEYNOTE-522'. Prior
+      candidate SRC-NCCN-BREAST-2025 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       ""
@@ -7777,7 +7695,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0297
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-MTC-ADVANCED-1L-SELPERCATINIB
     entity_kind: Indication
     entity_file: ind_mtc_advanced_1l_selpercatinib.yaml
@@ -7786,27 +7704,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_mtc_advanced_1l_selpercatinib.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0298
     prior_status: unclear
     verified_status: supported
@@ -8739,7 +8652,7 @@ rows:
       ""
   - finding_id: CV914-0336
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-FGFR3-R248C-UROTHELIAL
     entity_kind: BMA
     entity_file: bma_fgfr3_r248c_urothelial.yaml
@@ -8748,28 +8661,22 @@ rows:
     finding_text: >
       trial ''THOR'' mentioned but no matching source citation (looked for substrings: [''THOR'',
       ''ERDAFITINIB''])
-    resolved_source_id: SRC-POSEIDON-JOHNSON-2023
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/36223558'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'THOR' to existing source SRC-POSEIDON-JOHNSON-2023 at
-      knowledge_base/hosted/content/sources/src_poseidon_johnson_2023.yaml. The source title is
-      'Durvalumab With or Without Tremelimumab in Combination With Chemotherapy as First-Line
-      Therapy for Metastatic Non-Small-Cell Lung Cancer (POSEIDON)'; source notes identify the
-      trial/source context as: 'POSEIDON phase-3 (NCT03164616): durvalumab + tremelimumab + chemo
-      (4 cycles, then durva+treme maintenance) vs durva+chemo vs chemo alone in 1L metastatic
-      NSCLC (n=1013). Triple regimen mOS 14.0 vs 11.7 mo (HR 0.77; p=0.003); mPFS 6.2 vs 4.8 mo.
-      Notable benefit in STK11/KEAP1/KRAS subgroups. Established durva+treme+chemo as alternative
-      1L IO doublet+chemo for'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_fgfr3_r248c_urothelial.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'THOR'. Prior candidate
+      SRC-POSEIDON-JOHNSON-2023 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-POSEIDON-JOHNSON-2023
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-KRYSTAL-10-YAEGER-2023,
-      SRC-OCEANS-AGHAJANIAN-2012, SRC-ELEVATE-TN-SHARMAN-2020
+      Strict replace_source repair: previous candidate SRC-POSEIDON-JOHNSON-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0337
     prior_status: unclear
     verified_status: unclear
@@ -8795,7 +8702,7 @@ rows:
       ""
   - finding_id: CV914-0338
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-FGFR3-S249C-UROTHELIAL
     entity_kind: BMA
     entity_file: bma_fgfr3_s249c_urothelial.yaml
@@ -8804,28 +8711,22 @@ rows:
     finding_text: >
       trial ''THOR'' mentioned but no matching source citation (looked for substrings: [''THOR'',
       ''ERDAFITINIB''])
-    resolved_source_id: SRC-POSEIDON-JOHNSON-2023
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/36223558'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'THOR' to existing source SRC-POSEIDON-JOHNSON-2023 at
-      knowledge_base/hosted/content/sources/src_poseidon_johnson_2023.yaml. The source title is
-      'Durvalumab With or Without Tremelimumab in Combination With Chemotherapy as First-Line
-      Therapy for Metastatic Non-Small-Cell Lung Cancer (POSEIDON)'; source notes identify the
-      trial/source context as: 'POSEIDON phase-3 (NCT03164616): durvalumab + tremelimumab + chemo
-      (4 cycles, then durva+treme maintenance) vs durva+chemo vs chemo alone in 1L metastatic
-      NSCLC (n=1013). Triple regimen mOS 14.0 vs 11.7 mo (HR 0.77; p=0.003); mPFS 6.2 vs 4.8 mo.
-      Notable benefit in STK11/KEAP1/KRAS subgroups. Established durva+treme+chemo as alternative
-      1L IO doublet+chemo for'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_fgfr3_s249c_urothelial.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'THOR'. Prior candidate
+      SRC-POSEIDON-JOHNSON-2023 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-POSEIDON-JOHNSON-2023
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-KRYSTAL-10-YAEGER-2023,
-      SRC-OCEANS-AGHAJANIAN-2012, SRC-ELEVATE-TN-SHARMAN-2020
+      Strict replace_source repair: previous candidate SRC-POSEIDON-JOHNSON-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0339
     prior_status: unclear
     verified_status: unclear
@@ -9379,7 +9280,7 @@ rows:
       ""
   - finding_id: CV914-0362
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: BMA-KRAS-G12C-OVARIAN
     entity_kind: BMA
     entity_file: bma_kras_g12c_ovarian.yaml
@@ -9388,26 +9289,23 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_kras_g12c_ovarian.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0363
     prior_status: unclear
     verified_status: access_blocked
@@ -9433,7 +9331,7 @@ rows:
       ""
   - finding_id: CV914-0364
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-MET-AMP-NSCLC
     entity_kind: BMA
     entity_file: bma_met_amp_nsclc.yaml
@@ -9442,26 +9340,22 @@ rows:
     finding_text: >
       trial ''MARIPOSA'' mentioned but no matching source citation (looked for substrings:
       [''MARIPOSA''])
-    resolved_source_id: SRC-MARIPOSA2-PASSARO-2024
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/38780114/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MARIPOSA' to existing source SRC-MARIPOSA2-PASSARO-2024 at
-      knowledge_base/hosted/content/sources/src_mariposa2_passaro_2024.yaml. The source title is
-      'Amivantamab plus Lazertinib in Osimertinib-Relapsed EGFR-Mutated Advanced Non-Small Cell
-      Lung Cancer (MARIPOSA-2)'; source notes identify the trial/source context as: 'MARIPOSA-2
-      phase-3: amivantamab + chemo (carbo+pem) ± lazertinib vs carbo+pem in EGFR-mutated NSCLC
-      progressing on osimertinib. Ami+chemo PFS HR 0.48 (8.3 vs 4.2 mo); ami+laz+chemo HR 0.44
-      (8.3 vs 4.2 mo). VTE rate elevated with lazertinib combo → prophylactic anticoagulation
-      mandated.'. Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_met_amp_nsclc.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'MARIPOSA'. Prior candidate
+      SRC-MARIPOSA2-PASSARO-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-MARIPOSA2-PASSARO-2024
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-MARIPOSA2-PASSARO-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0365
     prior_status: unclear
     verified_status: unsupported
@@ -11050,7 +10944,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0427
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-APL-1L-ATRA-ATO-IDA
     entity_kind: Indication
     entity_file: ind_apl_1l_atra_ato_ida.yaml
@@ -11058,22 +10952,17 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/indications/ind_apl_1l_atra_ato_ida.yaml
-      already cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-ESMO-AML-2020, SRC-APL0406-LOCOCO-2013
@@ -11266,7 +11155,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0434
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-BREAST-TNBC-EARLY-NEOADJUVANT
     entity_kind: Indication
     entity_file: ind_breast_tnbc_early_neoadjuvant.yaml
@@ -11275,29 +11164,25 @@ rows:
     finding_text: >
       trial ''OLYMPIA'' mentioned but no matching source citation (looked for substrings:
       [''OLYMPIA'', ''OLAPARIB''])
-    resolved_source_id: SRC-OLYMPIAD-ROBSON-2017
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1706450'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'OLYMPIA' to existing source SRC-OLYMPIAD-ROBSON-2017 at
-      knowledge_base/hosted/content/sources/src_olympiad_robson_2017.yaml. The source title is
-      'Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation'; source
-      notes identify the trial/source context as: 'OlympiAD phase-3: olaparib 300 mg PO BID vs
-      physician-choice single-agent chemo (capecitabine, eribulin, vinorelbine) in germline
-      BRCA1/2-mutant HER2- metastatic breast (≤2 prior chemo lines for metastatic disease; HR+
-      subset must have progressed on ≥1 endocrine line). Median PFS 7.0 vs 4.2 mo (HR 0.58,
-      p<0.001); ORR 60% vs 29%; OS not significantly improved'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_breast_tnbc_early_neoadjuvant.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'OLYMPIA'. Prior candidate
+      SRC-OLYMPIAD-ROBSON-2017 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-OLYMPIAD-ROBSON-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0435
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-BREAST-TNBC-EARLY-NEOADJUVANT
     entity_kind: Indication
     entity_file: ind_breast_tnbc_early_neoadjuvant.yaml
@@ -11306,26 +11191,23 @@ rows:
     finding_text: >
       trial ''KEYNOTE-522'' mentioned but no matching source citation (looked for substrings:
       [''KEYNOTE-522'', ''KEYNOTE522''])
-    resolved_source_id: SRC-NCCN-BREAST-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'KEYNOTE-522' to existing source SRC-NCCN-BREAST-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_breast_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Breast Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for breast cancer. Codifies receptor- driven
-      branching, CDK4/6i in HR+/HER2- metastatic + adjuvant high-risk (monarchE, NATALEE),
-      pertuzumab + trastuzumab backbone for HER2+ (APHINITY, CLEOPATRA), T-DM1 adjuvant for
-      residual after neoadjuvant HER2+ (KATHERINE), T-DXd ≥2L HER2+ metastatic (DESTINY-Breast03),
-      pembrolizumab + che'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_breast_tnbc_early_neoadjuvant.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'KEYNOTE-522'. Prior
+      candidate SRC-NCCN-BREAST-2025 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-NCCN-BREAST-2025
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-NCCN-BREAST-2025 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0436
     prior_status: unclear
     verified_status: supported
@@ -11572,7 +11454,7 @@ rows:
       ""
   - finding_id: CV914-0445
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
     entity_kind: Indication
     entity_file: ind_esoph_adjuvant_nivolumab_post_cross.yaml
@@ -11581,27 +11463,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_esoph_adjuvant_nivolumab_post_cross.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0446
     prior_status: unclear
     verified_status: unclear
@@ -11636,28 +11513,25 @@ rows:
     finding_text: >
       trial ''PRIMA'' mentioned but no matching source citation (looked for substrings:
       [''PRIMA'', ''NIRAPARIB''])
-    resolved_source_id: SRC-DIPSS-PLUS-GANGAT-2011
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.2010.32.2446'
+    resolved_source_id: SRC-PRIMA-GONZALEZ-MARTIN-2019
+    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1910962'
     verified_rationale: >
-      Resolved trial 'PRIMA' to existing source SRC-DIPSS-PLUS-GANGAT-2011 at
-      knowledge_base/hosted/content/sources/src_dipss_plus_gangat_2011.yaml. The source title is
-      'DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary
-      myelofibrosis that incorporates prognostic information from karyotype, platelet count, and
-      transfusion status'; source notes identify the trial/source context as: 'Foundational
-      publication of DIPSS-Plus (8-point prognostic scoring for PMF: DIPSS components + karyotype
-      + platelets + transfusion need). Defines low / int-1 / int-2 / high risk and is the standard
-      for alloHCT-eligibility decisions in PMF. Newer scores (MIPSS70, MIPSS70-plus v2.0, MYSEC-PM
-      for post-PV/ET MF) are also cited but DIPSS-Plus remains the most wid'. Current entity
-      locator knowledge_base/hosted/content/indications/ind_fl_1l_br.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'PRIMA'. Prior candidate
+      SRC-DIPSS-PLUS-GANGAT-2011 failed strict trial-name verification. Existing trial-specific
+      source SRC-PRIMA-GONZALEZ-MARTIN-2019 at
+      knowledge_base/hosted/content/sources/src_prima_gonzalez_martin_2019.yaml matches by source
+      id/title ('Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer'), but its
+      URL is publisher-blocked/subscription-gated for this run; maintainer should review before
+      mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
     suggested_action: maintainer_review
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.2010.32.2446 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-OCEANS-AGHAJANIAN-2012,
-      SRC-DESTINYLUNG02-GOTO-2023, SRC-PRIMA-GONZALEZ-MARTIN-2019, SRC-ESMO-CTCL-2024
+      Strict replace_source repair: previous candidate SRC-DIPSS-PLUS-GANGAT-2011 rejected;
+      remapped to trial-specific existing source SRC-PRIMA-GONZALEZ-MARTIN-2019 because the trial
+      name appears in source id/title.
+
   - finding_id: CV914-0448
     prior_status: unclear
     verified_status: supported
@@ -11722,7 +11596,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0450
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
     entity_kind: Indication
     entity_file: ind_melanoma_braf_metastatic_1l_dabra_trame.yaml
@@ -11731,27 +11605,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_melanoma_braf_metastatic_1l_dabra_trame.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0451
     prior_status: unclear
     verified_status: supported
@@ -11940,7 +11809,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0457
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-NSCLC-EGFR-MAINT-OSIMERTINIB
     entity_kind: Indication
     entity_file: ind_nsclc_egfr_maint_osimertinib.yaml
@@ -11949,26 +11818,22 @@ rows:
     finding_text: >
       trial ''MARIPOSA'' mentioned but no matching source citation (looked for substrings:
       [''MARIPOSA''])
-    resolved_source_id: SRC-MARIPOSA2-PASSARO-2024
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/38780114/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MARIPOSA' to existing source SRC-MARIPOSA2-PASSARO-2024 at
-      knowledge_base/hosted/content/sources/src_mariposa2_passaro_2024.yaml. The source title is
-      'Amivantamab plus Lazertinib in Osimertinib-Relapsed EGFR-Mutated Advanced Non-Small Cell
-      Lung Cancer (MARIPOSA-2)'; source notes identify the trial/source context as: 'MARIPOSA-2
-      phase-3: amivantamab + chemo (carbo+pem) ± lazertinib vs carbo+pem in EGFR-mutated NSCLC
-      progressing on osimertinib. Ami+chemo PFS HR 0.48 (8.3 vs 4.2 mo); ami+laz+chemo HR 0.44
-      (8.3 vs 4.2 mo). VTE rate elevated with lazertinib combo → prophylactic anticoagulation
-      mandated.'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_nsclc_egfr_maint_osimertinib.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'MARIPOSA'. Prior candidate
+      SRC-MARIPOSA2-PASSARO-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-MARIPOSA2-PASSARO-2024
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-MARIPOSA2-PASSARO-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0458
     prior_status: unclear
     verified_status: supported
@@ -12104,29 +11969,25 @@ rows:
     finding_text: >
       trial ''PRIMA'' mentioned but no matching source citation (looked for substrings:
       [''PRIMA'', ''NIRAPARIB''])
-    resolved_source_id: SRC-DIPSS-PLUS-GANGAT-2011
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.2010.32.2446'
+    resolved_source_id: SRC-PRIMA-GONZALEZ-MARTIN-2019
+    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1910962'
     verified_rationale: >
-      Resolved trial 'PRIMA' to existing source SRC-DIPSS-PLUS-GANGAT-2011 at
-      knowledge_base/hosted/content/sources/src_dipss_plus_gangat_2011.yaml. The source title is
-      'DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary
-      myelofibrosis that incorporates prognostic information from karyotype, platelet count, and
-      transfusion status'; source notes identify the trial/source context as: 'Foundational
-      publication of DIPSS-Plus (8-point prognostic scoring for PMF: DIPSS components + karyotype
-      + platelets + transfusion need). Defines low / int-1 / int-2 / high risk and is the standard
-      for alloHCT-eligibility decisions in PMF. Newer scores (MIPSS70, MIPSS70-plus v2.0, MYSEC-PM
-      for post-PV/ET MF) are also cited but DIPSS-Plus remains the most wid'. Current entity
-      locator
-      knowledge_base/hosted/content/indications/ind_ovarian_advanced_1l_carbo_pacli_hrd_neg.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'PRIMA'. Prior candidate
+      SRC-DIPSS-PLUS-GANGAT-2011 failed strict trial-name verification. Existing trial-specific
+      source SRC-PRIMA-GONZALEZ-MARTIN-2019 at
+      knowledge_base/hosted/content/sources/src_prima_gonzalez_martin_2019.yaml matches by source
+      id/title ('Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer'), but its
+      URL is publisher-blocked/subscription-gated for this run; maintainer should review before
+      mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
     suggested_action: maintainer_review
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.2010.32.2446 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-OCEANS-AGHAJANIAN-2012,
-      SRC-DESTINYLUNG02-GOTO-2023, SRC-PRIMA-GONZALEZ-MARTIN-2019, SRC-ESMO-CTCL-2024
+      Strict replace_source repair: previous candidate SRC-DIPSS-PLUS-GANGAT-2011 rejected;
+      remapped to trial-specific existing source SRC-PRIMA-GONZALEZ-MARTIN-2019 because the trial
+      name appears in source id/title.
+
   - finding_id: CV914-0463
     prior_status: unclear
     verified_status: unclear
@@ -12263,7 +12124,7 @@ rows:
       ""
   - finding_id: CV914-0468
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-PROSTATE-MCRPC-1L-PARPI
     entity_kind: Indication
     entity_file: ind_prostate_mcrpc_1l_parpi.yaml
@@ -12272,28 +12133,23 @@ rows:
     finding_text: >
       trial ''MAGNITUDE'' mentioned but no matching source citation (looked for substrings:
       [''MAGNITUDE'', ''NIRAPARIB''])
-    resolved_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/34102137'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'MAGNITUDE' to existing source SRC-CHECKMATE-649-JANJIGIAN-2022 at
-      knowledge_base/hosted/content/sources/src_checkmate_649_janjigian_2022.yaml. The source
-      title is 'First-line nivolumab plus chemotherapy versus chemotherapy alone for advanced
-      gastric, gastro-oesophageal junction, and oesophageal adenocarcinoma (CheckMate 649): a
-      randomised, open-label, phase 3 trial'; source notes identify the trial/source context as:
-      'CheckMate-649 phase 3 (NCT02872116): nivolumab 360 mg q3w (or 240 mg q2w) + FOLFOX/XELOX vs
-      chemotherapy alone, 1L advanced/metastatic gastric, GEJ, or oesophageal adenocarcinoma;
-      n=1,581 in the nivo+chemo vs chemo-alone comparison. In PD-L1 CPS ≥5 population: mOS 14.4 vs
-      11.1 mo (HR 0.71; p<0.0001); mPFS 7.7 vs 6.0 mo (HR 0.68; p<0.0001). Benefit also seen '.
-      Current entity locator
-      knowledge_base/hosted/content/indications/ind_prostate_mcrpc_1l_parpi.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'MAGNITUDE'. Prior candidate
+      SRC-CHECKMATE-649-JANJIGIAN-2022 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-CHECKMATE-649-JANJIGIAN-2022
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-CHECKMATE-649-JANJIGIAN-2022 rejected;
+      no specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0469
     prior_status: unclear
     verified_status: unclear
@@ -12352,7 +12208,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0471
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-SCLC-EXTENSIVE-1L
     entity_kind: Indication
     entity_file: ind_sclc_extensive_1l.yaml
@@ -12361,26 +12217,22 @@ rows:
     finding_text: >
       trial ''IMpower133'' mentioned but no matching source citation (looked for substrings:
       [''IMPOWER133'', ''ATEZOLIZUMAB-SCLC''])
-    resolved_source_id: SRC-ESMO-SCLC-2021
-    source_url_checked: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-small-cell-lung-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'IMpower133' to existing source SRC-ESMO-SCLC-2021 at
-      knowledge_base/hosted/content/sources/src_esmo_sclc_2021.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Small Cell Lung Cancer'; source notes identify the
-      trial/source context as: 'Pre-IMpower133 / CASPIAN baseline. Updated supplementary
-      recommendations integrate ICI combinations for extensive-stage. Freshness check 2026-04-27:
-      ESMO has not published a SCLC guideline refresh beyond the 2021 Dingemans et al document
-      (the prior-audit "2024 update under review" note is unresolved as of the 2026 audit; ESMO
-      2024 congress data was integrate'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_sclc_extensive_1l.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'IMpower133'. Prior candidate
+      SRC-ESMO-SCLC-2021 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-ESMO-SCLC-2021
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-NCCN-SCLC-2025
+      Strict replace_source repair: previous candidate SRC-ESMO-SCLC-2021 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0472
     prior_status: unclear
     verified_status: unclear
@@ -12431,7 +12283,7 @@ rows:
       ""
   - finding_id: CV914-0474
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-ADT-ABIRATERONE
     entity_kind: Regimen
     entity_file: reg_adt_abiraterone.yaml
@@ -12440,29 +12292,25 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_adt_abiraterone.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0475
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-ADT-ABIRATERONE
     entity_kind: Regimen
     entity_file: reg_adt_abiraterone.yaml
@@ -12471,19 +12319,17 @@ rows:
     finding_text: >
       trial ''LATITUDE'' mentioned but no matching source citation (looked for substrings:
       [''LATITUDE'', ''ABIRATERONE''])
-    resolved_source_id: SRC-ESMO-PROSTATE-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-prostate-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'LATITUDE' to existing source SRC-ESMO-PROSTATE-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_prostate_2024.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Prostate Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for prostate cancer. Detailed mHSPC
-      stratification (CHAARTED + LATITUDE), mCRPC sequencing, biomarker-driven PARPi indications,
-      PSMA-radioligand therapy positioning.'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_adt_abiraterone.yaml already cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'LATITUDE'. Prior candidate
+      SRC-ESMO-PROSTATE-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       ""
@@ -12892,7 +12738,7 @@ rows:
       ""
   - finding_id: CV914-0491
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-NIVO-ADJUVANT-ESOPH
     entity_kind: Regimen
     entity_file: nivolumab_adjuvant_esophageal.yaml
@@ -12901,25 +12747,25 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-ESMO-ESOPHAGEAL-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/clinical-practice-guideline-oesophageal-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-ESMO-ESOPHAGEAL-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_esophageal_2024.yaml. The source title is
-      'ESMO Esophageal Cancer'; source notes identify the trial/source context as:
-      'Histology-tailored. FLOT for adeno, CROSS for both.'. Current entity locator
-      knowledge_base/hosted/content/regimens/nivolumab_adjuvant_esophageal.yaml already cites this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-ESMO-ESOPHAGEAL-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      Other source candidates: SRC-NCCN-ESOPHAGEAL-2025, SRC-IMC-HTLV-2017,
-      SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-ESMO-ESOPHAGEAL-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0492
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-OLAPARIB-BREAST
     entity_kind: Regimen
     entity_file: reg_olaparib_breast.yaml
@@ -12928,25 +12774,22 @@ rows:
     finding_text: >
       trial ''OLYMPIA'' mentioned but no matching source citation (looked for substrings:
       [''OLYMPIA'', ''OLAPARIB''])
-    resolved_source_id: SRC-OLYMPIAD-ROBSON-2017
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1706450'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'OLYMPIA' to existing source SRC-OLYMPIAD-ROBSON-2017 at
-      knowledge_base/hosted/content/sources/src_olympiad_robson_2017.yaml. The source title is
-      'Olaparib for Metastatic Breast Cancer in Patients with a Germline BRCA Mutation'; source
-      notes identify the trial/source context as: 'OlympiAD phase-3: olaparib 300 mg PO BID vs
-      physician-choice single-agent chemo (capecitabine, eribulin, vinorelbine) in germline
-      BRCA1/2-mutant HER2- metastatic breast (≤2 prior chemo lines for metastatic disease; HR+
-      subset must have progressed on ≥1 endocrine line). Median PFS 7.0 vs 4.2 mo (HR 0.58,
-      p<0.001); ORR 60% vs 29%; OS not significantly improved'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_olaparib_breast.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'OLYMPIA'. Prior candidate
+      SRC-OLYMPIAD-ROBSON-2017 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-OLYMPIAD-ROBSON-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0493
     prior_status: unclear
     verified_status: access_blocked
@@ -13094,7 +12937,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0498
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-PEMBRO-CHEMO-NSCLC-NONSQ
     entity_kind: Regimen
     entity_file: reg_pembro_chemo_nsclc_nonsq.yaml
@@ -13103,27 +12946,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_pembro_chemo_nsclc_nonsq.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0499
     prior_status: unclear
     verified_status: supported
@@ -13219,7 +13057,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0502
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-RICE-BURKITT
     entity_kind: Regimen
     entity_file: reg_rice_burkitt.yaml
@@ -13228,26 +13066,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_rice_burkitt.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0503
     prior_status: unclear
     verified_status: supported
@@ -13310,7 +13144,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0505
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-SACITUZUMAB
     entity_kind: Regimen
     entity_file: reg_sacituzumab.yaml
@@ -13319,21 +13153,17 @@ rows:
     finding_text: >
       trial ''TROPiCS-02'' mentioned but no matching source citation (looked for substrings:
       [''TROPICS'', ''SACITUZUMAB''])
-    resolved_source_id: SRC-NCCN-BREAST-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'TROPiCS-02' to existing source SRC-NCCN-BREAST-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_breast_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Breast Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for breast cancer. Codifies receptor- driven
-      branching, CDK4/6i in HR+/HER2- metastatic + adjuvant high-risk (monarchE, NATALEE),
-      pertuzumab + trastuzumab backbone for HER2+ (APHINITY, CLEOPATRA), T-DM1 adjuvant for
-      residual after neoadjuvant HER2+ (KATHERINE), T-DXd ≥2L HER2+ metastatic (DESTINY-Breast03),
-      pembrolizumab + che'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_sacituzumab.yaml already cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'TROPiCS-02'. Prior candidate
+      SRC-NCCN-BREAST-2025 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       Other source candidates: SRC-ASCENT-BARDIA-2021
@@ -14067,7 +13897,7 @@ rows:
       ""
   - finding_id: CV914-0535
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-NTRK-ETV6-SALIVARY
     entity_kind: BMA
     entity_file: bma_ntrk_etv6_salivary.yaml
@@ -14076,26 +13906,22 @@ rows:
     finding_text: >
       trial ''STARTRK'' mentioned but no matching source citation (looked for substrings:
       [''STARTRK''])
-    resolved_source_id: SRC-STARTRK2-DRILON-2020
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/31838015/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'STARTRK' to existing source SRC-STARTRK2-DRILON-2020 at
-      knowledge_base/hosted/content/sources/src_startrk2_drilon_2020.yaml. The source title is
-      'Entrectinib in ROS1 fusion-positive non-small-cell lung cancer: integrated analysis of
-      three phase 1-2 trials'; source notes identify the trial/source context as: "Integrated
-      analysis of ALKA-372-001, STARTRK-1, STARTRK-2: entrectinib in 53 ROS1+ NSCLC pts. ORR 77%,
-      mPFS 19.0 mo, intracranial ORR 55%. Established entrectinib as preferred ROS1 1L in
-      CNS-positive disease given crizotinib's poor CNS penetration. NCCN/ESMO 1L for ROS1+ NSCLC
-      alongside crizotinib.". Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_etv6_salivary.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'STARTRK'. Prior candidate
+      SRC-STARTRK2-DRILON-2020 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-STARTRK2-DRILON-2020
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-STARTRK2-DRILON-2020 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0536
     prior_status: unclear
     verified_status: unclear
@@ -14168,7 +13994,7 @@ rows:
       ""
   - finding_id: CV914-0539
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-NTRK-FUSION-SALIVARY
     entity_kind: BMA
     entity_file: bma_ntrk_fusion_salivary.yaml
@@ -14177,29 +14003,25 @@ rows:
     finding_text: >
       trial ''STARTRK'' mentioned but no matching source citation (looked for substrings:
       [''STARTRK''])
-    resolved_source_id: SRC-STARTRK2-DRILON-2020
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/31838015/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'STARTRK' to existing source SRC-STARTRK2-DRILON-2020 at
-      knowledge_base/hosted/content/sources/src_startrk2_drilon_2020.yaml. The source title is
-      'Entrectinib in ROS1 fusion-positive non-small-cell lung cancer: integrated analysis of
-      three phase 1-2 trials'; source notes identify the trial/source context as: "Integrated
-      analysis of ALKA-372-001, STARTRK-1, STARTRK-2: entrectinib in 53 ROS1+ NSCLC pts. ORR 77%,
-      mPFS 19.0 mo, intracranial ORR 55%. Established entrectinib as preferred ROS1 1L in
-      CNS-positive disease given crizotinib's poor CNS penetration. NCCN/ESMO 1L for ROS1+ NSCLC
-      alongside crizotinib.". Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_salivary.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'STARTRK'. Prior candidate
+      SRC-STARTRK2-DRILON-2020 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-STARTRK2-DRILON-2020
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-STARTRK2-DRILON-2020 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0540
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: BMA-NTRK-FUSION-THYROID-PAPILLARY
     entity_kind: BMA
     entity_file: bma_ntrk_fusion_thyroid_papillary.yaml
@@ -14208,26 +14030,22 @@ rows:
     finding_text: >
       trial ''STARTRK'' mentioned but no matching source citation (looked for substrings:
       [''STARTRK''])
-    resolved_source_id: SRC-STARTRK2-DRILON-2020
-    source_url_checked: 'https://pubmed.ncbi.nlm.nih.gov/31838015/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'STARTRK' to existing source SRC-STARTRK2-DRILON-2020 at
-      knowledge_base/hosted/content/sources/src_startrk2_drilon_2020.yaml. The source title is
-      'Entrectinib in ROS1 fusion-positive non-small-cell lung cancer: integrated analysis of
-      three phase 1-2 trials'; source notes identify the trial/source context as: "Integrated
-      analysis of ALKA-372-001, STARTRK-1, STARTRK-2: entrectinib in 53 ROS1+ NSCLC pts. ORR 77%,
-      mPFS 19.0 mo, intracranial ORR 55%. Established entrectinib as preferred ROS1 1L in
-      CNS-positive disease given crizotinib's poor CNS penetration. NCCN/ESMO 1L for ROS1+ NSCLC
-      alongside crizotinib.". Current entity locator
-      knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_thyroid_papillary.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'STARTRK'. Prior candidate
+      SRC-STARTRK2-DRILON-2020 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-STARTRK2-DRILON-2020
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted.
+      Strict replace_source repair: previous candidate SRC-STARTRK2-DRILON-2020 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0541
     prior_status: unclear
     verified_status: unclear
@@ -14537,7 +14355,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0554
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-APL-1L-ATRA-ATO
     entity_kind: Indication
     entity_file: ind_apl_1l_atra_ato.yaml
@@ -14545,28 +14363,23 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/indications/ind_apl_1l_atra_ato.yaml already
-      cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-APL0406-LOCOCO-2013, SRC-ESMO-AML-2020
   - finding_id: CV914-0555
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-APL-SALVAGE-ATRA-ATO
     entity_kind: Indication
     entity_file: ind_apl_salvage_atra_ato.yaml
@@ -14574,27 +14387,22 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/indications/ind_apl_salvage_atra_ato.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-AML-2020,
-      SRC-APL0406-LOCOCO-2013
+      Strict replace_source repair: previous candidate SRC-ELN-APL-2019 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0556
     prior_status: unclear
     verified_status: unclear
@@ -14747,7 +14555,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0561
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-BURKITT-2L-RDHAP-ASCT
     entity_kind: Indication
     entity_file: ind_burkitt_2l_rdhap_asct.yaml
@@ -14756,27 +14564,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_burkitt_2l_rdhap_asct.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0562
     prior_status: unclear
     verified_status: unclear
@@ -14955,7 +14758,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0568
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-CML-3L-ASCIMINIB
     entity_kind: Indication
     entity_file: ind_cml_3l_asciminib.yaml
@@ -14964,27 +14767,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_cml_3l_asciminib.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0569
     prior_status: unclear
     verified_status: access_blocked
@@ -15232,7 +15030,7 @@ rows:
       ""
   - finding_id: CV914-0578
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
     entity_kind: Indication
     entity_file: ind_esoph_resectable_cross_neoadjuvant.yaml
@@ -15241,27 +15039,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_esoph_resectable_cross_neoadjuvant.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0579
     prior_status: unclear
     verified_status: supported
@@ -15329,29 +15122,25 @@ rows:
     finding_text: >
       trial ''PRIMA'' mentioned but no matching source citation (looked for substrings:
       [''PRIMA'', ''NIRAPARIB''])
-    resolved_source_id: SRC-DIPSS-PLUS-GANGAT-2011
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.2010.32.2446'
+    resolved_source_id: SRC-PRIMA-GONZALEZ-MARTIN-2019
+    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1910962'
     verified_rationale: >
-      Resolved trial 'PRIMA' to existing source SRC-DIPSS-PLUS-GANGAT-2011 at
-      knowledge_base/hosted/content/sources/src_dipss_plus_gangat_2011.yaml. The source title is
-      'DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary
-      myelofibrosis that incorporates prognostic information from karyotype, platelet count, and
-      transfusion status'; source notes identify the trial/source context as: 'Foundational
-      publication of DIPSS-Plus (8-point prognostic scoring for PMF: DIPSS components + karyotype
-      + platelets + transfusion need). Defines low / int-1 / int-2 / high risk and is the standard
-      for alloHCT-eligibility decisions in PMF. Newer scores (MIPSS70, MIPSS70-plus v2.0, MYSEC-PM
-      for post-PV/ET MF) are also cited but DIPSS-Plus remains the most wid'. Current entity
-      locator
-      knowledge_base/hosted/content/indications/ind_fl_post_induction_rituximab_maintenance.yaml
-      does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'PRIMA'. Prior candidate
+      SRC-DIPSS-PLUS-GANGAT-2011 failed strict trial-name verification. Existing trial-specific
+      source SRC-PRIMA-GONZALEZ-MARTIN-2019 at
+      knowledge_base/hosted/content/sources/src_prima_gonzalez_martin_2019.yaml matches by source
+      id/title ('Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer'), but its
+      URL is publisher-blocked/subscription-gated for this run; maintainer should review before
+      mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
     suggested_action: maintainer_review
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.2010.32.2446 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-OCEANS-AGHAJANIAN-2012,
-      SRC-DESTINYLUNG02-GOTO-2023, SRC-PRIMA-GONZALEZ-MARTIN-2019, SRC-ESMO-CTCL-2024
+      Strict replace_source repair: previous candidate SRC-DIPSS-PLUS-GANGAT-2011 rejected;
+      remapped to trial-specific existing source SRC-PRIMA-GONZALEZ-MARTIN-2019 because the trial
+      name appears in source id/title.
+
   - finding_id: CV914-0582
     prior_status: unclear
     verified_status: supported
@@ -15387,7 +15176,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0583
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-GBM-NEWLY-DIAGNOSED-STUPP
     entity_kind: Indication
     entity_file: ind_gbm_newly_diagnosed_stupp.yaml
@@ -15396,26 +15185,25 @@ rows:
     finding_text: >
       trial ''Stupp'' mentioned but no matching source citation (looked for substrings:
       [''STUPP'', ''TEMOZOLOMIDE''])
-    resolved_source_id: SRC-EANO-GBM-2024
-    source_url_checked: 'https://www.eano.eu/guidelines/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'Stupp' to existing source SRC-EANO-GBM-2024 at
-      knowledge_base/hosted/content/sources/src_eano_gbm_2024.yaml. The source title is 'EANO
-      Guidelines on Diagnosis and Treatment of Diffuse Gliomas of Adulthood'; source notes
-      identify the trial/source context as: 'European authority for diffuse gliomas. WHO 2021
-      classification + Stupp + IDH-mutant + MGMT-driven decisions.'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_gbm_newly_diagnosed_stupp.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'Stupp'. Prior candidate
+      SRC-EANO-GBM-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.eano.eu/guidelines/ failed with 'HTTP Error 404: Not Found'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-NCCN-CNS-2025
+      Strict replace_source repair: previous candidate SRC-EANO-GBM-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0584
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-GIST-1L-IMATINIB
     entity_kind: Indication
     entity_file: ind_gist_1l_imatinib.yaml
@@ -15424,27 +15212,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_gist_1l_imatinib.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0585
     prior_status: unclear
     verified_status: access_blocked
@@ -15600,7 +15383,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0590
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-MTC-ADVANCED-1L-CABOZANTINIB-RET-WT
     entity_kind: Indication
     entity_file: ind_mtc_advanced_1l_cabozantinib_ret_wt.yaml
@@ -15609,27 +15392,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_mtc_advanced_1l_cabozantinib_ret_wt.yaml does
-      not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0591
     prior_status: unclear
     verified_status: unclear
@@ -15735,7 +15513,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0595
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: IND-NSCLC-KRAS-G12C-MET-2L
     entity_kind: Indication
     entity_file: ind_nsclc_kras_g12c_met_2l.yaml
@@ -15744,26 +15522,23 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/indications/ind_nsclc_kras_g12c_met_2l.yaml does not cite this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0596
     prior_status: unclear
     verified_status: supported
@@ -15797,7 +15572,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0597
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: IND-NSCLC-STAGE-III-PACIFIC
     entity_kind: Indication
     entity_file: ind_nsclc_stage_iii_pacific.yaml
@@ -15806,25 +15581,22 @@ rows:
     finding_text: >
       trial ''PACIFIC'' mentioned but no matching source citation (looked for substrings:
       [''PACIFIC'', ''DURVALUMAB''])
-    resolved_source_id: SRC-NCCN-NSCLC-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/nscl.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'PACIFIC' to existing source SRC-NCCN-NSCLC-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_nsclc_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Non-Small Cell Lung Cancer'; source notes identify the
-      trial/source context as: 'Primary international guideline for NSCLC. Codifies universal NGS
-      testing for advanced disease, driver-mutation 1L therapy hierarchies (FLAURA: osimertinib >
-      1G TKI; ALEX: alectinib > crizotinib), PACIFIC-style durva consolidation, KEYNOTE-024 /
-      KEYNOTE-189 / KEYNOTE-407 PD-L1 + chemo strategies.'. Current entity locator
-      knowledge_base/hosted/content/indications/ind_nsclc_stage_iii_pacific.yaml does not cite
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'PACIFIC'. Prior candidate
+      SRC-NCCN-NSCLC-2025 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: replace_source
-    suggested_replacement_source_id: SRC-NCCN-NSCLC-2025
+    suggested_action: source_stub_needed
+    suggested_replacement_source_id: null
     notes: >
-      Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-NSCLC-EARLY-2024
+      Strict replace_source repair: previous candidate SRC-NCCN-NSCLC-2025 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0598
     prior_status: unclear
     verified_status: unclear
@@ -16281,7 +16053,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0615
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-ASCIMINIB-CML
     entity_kind: Regimen
     entity_file: reg_asciminib_cml.yaml
@@ -16290,29 +16062,25 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_asciminib_cml.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0616
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-ATRA-ATO-APL
     entity_kind: Regimen
     entity_file: atra_ato_apl.yaml
@@ -16320,28 +16088,23 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/regimens/atra_ato_apl.yaml already cites this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-APL0406-LOCOCO-2013, SRC-ESMO-AML-2020
   - finding_id: CV914-0617
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-ATRA-ATO-APL-SALVAGE
     entity_kind: Regimen
     entity_file: reg_atra_ato_apl_salvage.yaml
@@ -16349,28 +16112,23 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/regimens/reg_atra_ato_apl_salvage.yaml already
-      cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-ESMO-AML-2020, SRC-APL0406-LOCOCO-2013
   - finding_id: CV914-0618
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-ATRA-ATO-IDA-APL
     entity_kind: Regimen
     entity_file: atra_ato_ida_apl.yaml
@@ -16378,22 +16136,17 @@ rows:
     audit_finding_type: missing-trial-source
     finding_text: >
       trial ''AIDA'' mentioned but no matching source citation (looked for substrings: [''AIDA''])
-    resolved_source_id: SRC-ELN-APL-2019
-    source_url_checked: 'https://ashpublications.org/blood/article/133/15/1630/272971'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'AIDA' to existing source SRC-ELN-APL-2019 at
-      knowledge_base/hosted/content/sources/src_eln_apl_2019.yaml. The source title is 'Management
-      of acute promyelocytic leukemia: updated recommendations from an expert panel of the
-      European LeukemiaNet'; source notes identify the trial/source context as: 'Authoritative
-      APL-specific guideline: ATRA + ATO low-risk (LO-CoCo / APL0406), ATRA + ATO + idarubicin or
-      AIDA-style for high-risk, DIC management, differentiation syndrome prophylaxis, MRD
-      monitoring with PML-RARα RT-PCR. Supersedes Sanz 2009. Freshness check 2026-04-27: ELN has
-      not published an APL-specific refresh since 2019 (Sanz/Fenaux/Tallman). The 202'. Current
-      entity locator knowledge_base/hosted/content/regimens/atra_ato_ida_apl.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'AIDA'. Prior candidate
+      SRC-ELN-APL-2019 was rejected because the target source id/title does not contain the exact
+      trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://ashpublications.org/blood/article/133/15/1630/272971 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-APL0406-LOCOCO-2013, SRC-ESMO-AML-2020
@@ -16483,7 +16236,7 @@ rows:
       ""
   - finding_id: CV914-0622
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-CARBOPLATIN-PACLITAXEL-WEEKLY
     entity_kind: Regimen
     entity_file: carboplatin_paclitaxel_weekly.yaml
@@ -16492,22 +16245,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-ESMO-ESOPHAGEAL-2024
-    source_url_checked: 'https://www.esmo.org/guidelines/guidelines-by-topic/esmo-clinical-practice-guidelines-gastrointestinal-cancers/clinical-practice-guideline-oesophageal-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-ESMO-ESOPHAGEAL-2024 at
-      knowledge_base/hosted/content/sources/src_esmo_esophageal_2024.yaml. The source title is
-      'ESMO Esophageal Cancer'; source notes identify the trial/source context as:
-      'Histology-tailored. FLOT for adeno, CROSS for both.'. Current entity locator
-      knowledge_base/hosted/content/regimens/carboplatin_paclitaxel_weekly.yaml already cites this
-      source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-ESMO-ESOPHAGEAL-2024 was rejected because the target source id/title does not contain
+      the exact trial name or is a general guideline/different trial. No strict trial-specific
+      hosted Source was found in knowledge_base/hosted/content/sources by source id/title, so
+      this row remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      Other source candidates: SRC-NCCN-ESOPHAGEAL-2025, SRC-IMC-HTLV-2017,
-      SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-ESMO-ESOPHAGEAL-2024 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0623
     prior_status: unclear
     verified_status: supported
@@ -16596,7 +16349,7 @@ rows:
       ""
   - finding_id: CV914-0626
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-DURVA-CONSOLIDATION-PACIFIC
     entity_kind: Regimen
     entity_file: reg_durva_consolidation_pacific.yaml
@@ -16605,21 +16358,17 @@ rows:
     finding_text: >
       trial ''PACIFIC'' mentioned but no matching source citation (looked for substrings:
       [''PACIFIC'', ''DURVALUMAB''])
-    resolved_source_id: SRC-NCCN-NSCLC-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/nscl.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'PACIFIC' to existing source SRC-NCCN-NSCLC-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_nsclc_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Non-Small Cell Lung Cancer'; source notes identify the
-      trial/source context as: 'Primary international guideline for NSCLC. Codifies universal NGS
-      testing for advanced disease, driver-mutation 1L therapy hierarchies (FLAURA: osimertinib >
-      1G TKI; ALEX: alectinib > crizotinib), PACIFIC-style durva consolidation, KEYNOTE-024 /
-      KEYNOTE-189 / KEYNOTE-407 PD-L1 + chemo strategies.'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_durva_consolidation_pacific.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'PACIFIC'. Prior candidate
+      SRC-NCCN-NSCLC-2025 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       Other source candidates: SRC-ESMO-NSCLC-EARLY-2024
@@ -16656,7 +16405,7 @@ rows:
       should add/map it if accepted.
   - finding_id: CV914-0628
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-EP-ATEZO-SCLC
     entity_kind: Regimen
     entity_file: reg_ep_atezo_sclc.yaml
@@ -16665,21 +16414,17 @@ rows:
     finding_text: >
       trial ''IMpower133'' mentioned but no matching source citation (looked for substrings:
       [''IMPOWER133'', ''ATEZOLIZUMAB-SCLC''])
-    resolved_source_id: SRC-ESMO-SCLC-2021
-    source_url_checked: 'https://www.esmo.org/guidelines/esmo-clinical-practice-guideline-small-cell-lung-cancer'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'IMpower133' to existing source SRC-ESMO-SCLC-2021 at
-      knowledge_base/hosted/content/sources/src_esmo_sclc_2021.yaml. The source title is 'ESMO
-      Clinical Practice Guideline on Small Cell Lung Cancer'; source notes identify the
-      trial/source context as: 'Pre-IMpower133 / CASPIAN baseline. Updated supplementary
-      recommendations integrate ICI combinations for extensive-stage. Freshness check 2026-04-27:
-      ESMO has not published a SCLC guideline refresh beyond the 2021 Dingemans et al document
-      (the prior-audit "2024 update under review" note is unresolved as of the 2026 audit; ESMO
-      2024 congress data was integrate'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_ep_atezo_sclc.yaml already cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'IMpower133'. Prior candidate
+      SRC-ESMO-SCLC-2021 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       Other source candidates: SRC-NCCN-SCLC-2025
@@ -16963,7 +16708,7 @@ rows:
       ""
   - finding_id: CV914-0639
     prior_status: unclear
-    verified_status: supported
+    verified_status: unclear
     entity_id: REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT
     entity_kind: Regimen
     entity_file: reg_pembro_chemo_tnbc_neoadjuvant.yaml
@@ -16972,22 +16717,18 @@ rows:
     finding_text: >
       trial ''KEYNOTE-522'' mentioned but no matching source citation (looked for substrings:
       [''KEYNOTE-522'', ''KEYNOTE522''])
-    resolved_source_id: SRC-NCCN-BREAST-2025
-    source_url_checked: 'https://www.nccn.org/professionals/physician_gls/pdf/breast.pdf'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'KEYNOTE-522' to existing source SRC-NCCN-BREAST-2025 at
-      knowledge_base/hosted/content/sources/src_nccn_breast_2025.yaml. The source title is 'NCCN
-      Clinical Practice Guidelines — Breast Cancer'; source notes identify the trial/source
-      context as: 'Primary international guideline for breast cancer. Codifies receptor- driven
-      branching, CDK4/6i in HR+/HER2- metastatic + adjuvant high-risk (monarchE, NATALEE),
-      pertuzumab + trastuzumab backbone for HER2+ (APHINITY, CLEOPATRA), T-DM1 adjuvant for
-      residual after neoadjuvant HER2+ (KATHERINE), T-DXd ≥2L HER2+ metastatic (DESTINY-Breast03),
-      pembrolizumab + che'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_pembro_chemo_tnbc_neoadjuvant.yaml already cites
-      this source.
+      Rechecked after maintainer review. Audit names specific trial 'KEYNOTE-522'. Prior
+      candidate SRC-NCCN-BREAST-2025 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: keep
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       ""
@@ -17103,7 +16844,7 @@ rows:
       ""
   - finding_id: CV914-0644
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-RDHAP-BURKITT
     entity_kind: Regimen
     entity_file: reg_rdhap_burkitt.yaml
@@ -17112,26 +16853,22 @@ rows:
     finding_text: >
       trial ''CROSS'' mentioned but no matching source citation (looked for substrings:
       [''CROSS''])
-    resolved_source_id: SRC-IMC-HTLV-2017
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.18.00501'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CROSS' to existing source SRC-IMC-HTLV-2017 at
-      knowledge_base/hosted/content/sources/src_imc_htlv_2017.yaml. The source title is 'Revised
-      Adult T-Cell Leukemia-Lymphoma International Consensus Meeting Report'; source notes
-      identify the trial/source context as: 'International consensus on adult T-cell
-      leukemia-lymphoma (ATL), a mature T-cell malignancy caused by chronic HTLV-1 infection.
-      Updates the 2009 Tsukasaki consensus. Defines clinical subtypes (acute, lymphoma, chronic,
-      smouldering), prognostic factors (Shimoyama classification + indolent vs aggressive),
-      treatment recommendations (watch-and-wait for indolent;'. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_rdhap_burkitt.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CROSS'. Prior candidate
+      SRC-IMC-HTLV-2017 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.18.00501 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-ESMO-ESOPHAGEAL-2024,
-      SRC-NCCN-ESOPHAGEAL-2025, SRC-CHECKMATE-238-WEBER-2017
+      Strict replace_source repair: previous candidate SRC-IMC-HTLV-2017 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0645
     prior_status: unclear
     verified_status: access_blocked
@@ -17143,31 +16880,28 @@ rows:
     finding_text: >
       trial ''PRIMA'' mentioned but no matching source citation (looked for substrings:
       [''PRIMA'', ''NIRAPARIB''])
-    resolved_source_id: SRC-DIPSS-PLUS-GANGAT-2011
-    source_url_checked: 'https://ascopubs.org/doi/10.1200/JCO.2010.32.2446'
+    resolved_source_id: SRC-PRIMA-GONZALEZ-MARTIN-2019
+    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa1910962'
     verified_rationale: >
-      Resolved trial 'PRIMA' to existing source SRC-DIPSS-PLUS-GANGAT-2011 at
-      knowledge_base/hosted/content/sources/src_dipss_plus_gangat_2011.yaml. The source title is
-      'DIPSS plus: a refined Dynamic International Prognostic Scoring System for primary
-      myelofibrosis that incorporates prognostic information from karyotype, platelet count, and
-      transfusion status'; source notes identify the trial/source context as: 'Foundational
-      publication of DIPSS-Plus (8-point prognostic scoring for PMF: DIPSS components + karyotype
-      + platelets + transfusion need). Defines low / int-1 / int-2 / high risk and is the standard
-      for alloHCT-eligibility decisions in PMF. Newer scores (MIPSS70, MIPSS70-plus v2.0, MYSEC-PM
-      for post-PV/ET MF) are also cited but DIPSS-Plus remains the most wid'. Current entity
-      locator knowledge_base/hosted/content/regimens/reg_rituximab_maintenance_fl.yaml does not
-      cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'PRIMA'. Prior candidate
+      SRC-DIPSS-PLUS-GANGAT-2011 failed strict trial-name verification. Existing trial-specific
+      source SRC-PRIMA-GONZALEZ-MARTIN-2019 at
+      knowledge_base/hosted/content/sources/src_prima_gonzalez_martin_2019.yaml matches by source
+      id/title ('Niraparib in Patients with Newly Diagnosed Advanced Ovarian Cancer'), but its
+      URL is publisher-blocked/subscription-gated for this run; maintainer should review before
+      mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
     suggested_action: maintainer_review
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://ascopubs.org/doi/10.1200/JCO.2010.32.2446 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-OCEANS-AGHAJANIAN-2012,
-      SRC-DESTINYLUNG02-GOTO-2023, SRC-PRIMA-GONZALEZ-MARTIN-2019, SRC-ESMO-CTCL-2024
+      Strict replace_source repair: previous candidate SRC-DIPSS-PLUS-GANGAT-2011 rejected;
+      remapped to trial-specific existing source SRC-PRIMA-GONZALEZ-MARTIN-2019 because the trial
+      name appears in source id/title.
+
   - finding_id: CV914-0646
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-SOTORASIB-KRAS
     entity_kind: Regimen
     entity_file: reg_sotorasib_kras.yaml
@@ -17176,28 +16910,26 @@ rows:
     finding_text: >
       trial ''CodeBreaK'' mentioned but no matching source citation (looked for substrings:
       [''CODEBREAK'', ''SOTORASIB''])
-    resolved_source_id: SRC-CODEBREAK-300-FAKIH-2023
-    source_url_checked: 'https://www.nejm.org/doi/full/10.1056/NEJMoa2308795'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'CodeBreaK' to existing source SRC-CODEBREAK-300-FAKIH-2023 at
-      knowledge_base/hosted/content/sources/src_codebreak300_fakih_2023.yaml. The source title is
-      'Sotorasib plus Panitumumab in Refractory Colorectal Cancer with Mutated KRAS G12C'; source
-      notes identify the trial/source context as: 'CodeBreaK 300 phase-3 (NCT05198934): sotorasib
-      960 mg PO daily + panitumumab vs sotorasib 240 mg + panitumumab vs investigator-choice
-      (trifluridine/tipiracil or regorafenib) in chemo-refractory KRAS G12C-mutated mCRC. mPFS 5.6
-      mo (soto 960 + pani) vs 3.9 mo (soto 240 + pani) vs 2.2 mo (control); HR 0.49 (960 + pani vs
-      control, p=0.006). ORR 26.4% vs 5.7% vs '. Current entity locator
-      knowledge_base/hosted/content/regimens/reg_sotorasib_kras.yaml does not cite this source.
+      Rechecked after maintainer review. Audit names specific trial 'CodeBreaK'. Prior candidate
+      SRC-CODEBREAK-300-FAKIH-2023 was rejected because the target source id/title does not
+      contain the exact trial name or is a general guideline/different trial. No strict
+      trial-specific hosted Source was found in knowledge_base/hosted/content/sources by source
+      id/title, so this row remains unresolved and needs a trial-specific source stub or
+      maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
-      URL reachability check on https://www.nejm.org/doi/full/10.1056/NEJMoa2308795 failed with 'HTTP Error 403: Forbidden'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Existing source candidate found but not present in current entity citation list; maintainer
-      should add/map it if accepted. Other source candidates: SRC-CODEBREAK200-JOHNSON-2023
+      Strict replace_source repair: previous candidate SRC-CODEBREAK-300-FAKIH-2023 rejected; no
+      specific-trial to guideline/different-trial replacement retained.
+
   - finding_id: CV914-0647
     prior_status: unclear
-    verified_status: access_blocked
+    verified_status: unclear
     entity_id: REG-STUPP-TMZ
     entity_kind: Regimen
     entity_file: stupp_temozolomide.yaml
@@ -17206,18 +16938,17 @@ rows:
     finding_text: >
       trial ''Stupp'' mentioned but no matching source citation (looked for substrings:
       [''STUPP'', ''TEMOZOLOMIDE''])
-    resolved_source_id: SRC-EANO-GBM-2024
-    source_url_checked: 'https://www.eano.eu/guidelines/'
+    resolved_source_id: null
+    source_url_checked: null
     verified_rationale: >
-      Resolved trial 'Stupp' to existing source SRC-EANO-GBM-2024 at
-      knowledge_base/hosted/content/sources/src_eano_gbm_2024.yaml. The source title is 'EANO
-      Guidelines on Diagnosis and Treatment of Diffuse Gliomas of Adulthood'; source notes
-      identify the trial/source context as: 'European authority for diffuse gliomas. WHO 2021
-      classification + Stupp + IDH-mutant + MGMT-driven decisions.'. Current entity locator
-      knowledge_base/hosted/content/regimens/stupp_temozolomide.yaml already cites this source.
+      Rechecked after maintainer review. Audit names specific trial 'Stupp'. Prior candidate
+      SRC-EANO-GBM-2024 was rejected because the target source id/title does not contain the
+      exact trial name or is a general guideline/different trial. No strict trial-specific hosted
+      Source was found in knowledge_base/hosted/content/sources by source id/title, so this row
+      remains unresolved and needs a trial-specific source stub or maintainer mapping.
     verified_at: '2026-04-28'
     verifier: romeo111
-    suggested_action: maintainer_review
+    suggested_action: source_stub_needed
     suggested_replacement_source_id: null
     notes: >
       URL reachability check on https://www.eano.eu/guidelines/ failed with 'HTTP Error 404: Not Found'; row downgraded from supported to access_blocked pending maintainer/source replacement review.       Other source candidates: SRC-NCCN-CNS-2025
