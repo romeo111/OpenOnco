@@ -4,6 +4,16 @@ You want to help OpenOnco. You have an AI tool (Codex / Claude Code / Cursor / C
 
 > Prerequisite reading: [`HELP_WANTED.md`](HELP_WANTED.md) — pilot framing and safety boundaries. **You will not write medical advice or treatment recommendations.** You drive your AI tool through structured evidence drafting; maintainers review.
 
+## Fastest path — paste-and-go (recommended)
+
+If your AI tool has filesystem + shell access (Claude Code, Codex CLI, Cursor):
+
+1. Read [`PROMPT_PASTE_AND_GO.md`](PROMPT_PASTE_AND_GO.md) — the canonical 8-line prompt
+2. Paste it into your AI agent
+3. The agent runs `scripts/tasktorrent/bootstrap_contributor.sh` → finds next chunk → orchestrates `auto_claim.sh` → does work → runs `auto_pr.sh`
+
+Manual phase-by-phase steps below if you want to understand each step or your tool is web-only (ChatGPT).
+
 ## 1. Setup (5 min)
 
 ```bash
