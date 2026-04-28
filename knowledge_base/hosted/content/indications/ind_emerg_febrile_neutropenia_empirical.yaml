@@ -1,0 +1,95 @@
+id: IND-EMERG-FEBRILE-NEUTROPENIA-EMPIRICAL
+plan_track: standard
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+  - "Febrile neutropenia (FN): single oral T ≥38.3°C OR sustained T ≥38.0°C × 1h, AND ANC <500/μL OR predicted to fall <500/μL within 48h"
+  - "Goal: empirical broad-spectrum antibiotic within 60 minutes of presentation; sepsis bundle if hemodynamic instability"
+  - "Time-critical emergency — septic shock mortality 30-50%; rapid antibiotic correlates with survival"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    ecog_max: 4
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~70-85% defervesce within 72h with empirical regimen
+  complete_response: N/A (treatment of acute condition)
+  progression_free_survival: N/A
+  overall_survival_5y: FN mortality without antibiotics ~50%; with proper empirical management <10%; antibiotic
+    delay >60 min increases mortality OR ~1.6-3.0
+hard_contraindications: []
+red_flags_triggering_alternative:
+- RF-AML-INFECTION-SCREENING
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-COAG-PANEL
+- TEST-D-DIMER
+desired_tests: []
+rationale: 'Febrile neutropenia (FN) is a medical emergency. Definition: single oral T ≥38.3°C OR sustained
+  T ≥38.0°C ×1h, AND ANC <500/μL (or expected to fall <500/μL within 48h). Empirical broad-spectrum antibiotic
+  must be initiated within 60 minutes of presentation per IDSA, NCCN, ASCO, MASCC guidelines — antibiotic
+  delay >60 min correlates with increased mortality (Rosa 2014 J Clin Oncol). Default empirical regimen:
+  piperacillin-tazobactam 4.5 g IV q6h (covers most gram-positive + gram-negative + Pseudomonas) OR cefepime
+  2 g IV q8h (similar coverage) OR meropenem 1 g IV q8h (if prior carbapenem-sparing reasonable; broader
+  for ESBL/AmpC concerns). ADD vancomycin 15-20 mg/kg IV q12h IF: clinical suspicion of catheter-related
+  infection, mucositis grade ≥3, hemodynamic instability, prior MRSA colonization/infection, recent quinolone
+  prophylaxis. Coverage escalation: linezolid OR daptomycin if VRE risk; aminoglycoside (gentamicin) addition
+  for septic shock; antifungal (caspofungin or voriconazole) if persistent fever >96h despite antibacterial
+  + at-risk for invasive fungal disease. Source workup: CXR, urine culture, blood cultures × 2 sets (one
+  from each lumen of central line if present), nasopharyngeal swab for respiratory virus PCR, HSV/CMV PCR
+  if mucositis severe. MASCC risk-index score guides outpatient vs inpatient management — score ≥21 (low
+  risk) eligible for outpatient oral therapy (ciprofloxacin + amoxicillin-clavulanate) per IDSA. STUB regimen
+  — no dedicated REG- entity for empirical FN protocol yet; flagged for REG follow-up.'
+sources:
+- source_id: SRC-NCCN-AML-2025
+  position: supports
+  relevant_quote_paraphrase: Febrile neutropenia requires empirical broad-spectrum antibiotic (pip-tazo,
+    cefepime, or meropenem) within 60 min; vancomycin addition for specific risk factors per IDSA/NCCN
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+  relevant_quote_paraphrase: FN is medical emergency; empirical antibacterial within 60 min of presentation;
+    risk stratification (MASCC) guides inpatient vs outpatient
+known_controversies:
+- topic: Pip-tazo vs cefepime vs meropenem as empirical FN therapy
+  positions:
+  - position: Pip-tazo — broadest gram-negative + Pseudomonas, lower C. difficile rate
+    sources:
+    - SRC-NCCN-AML-2025
+    evidence_note: Hospital-specific antibiogram should drive choice
+  - position: Cefepime — comparable, less anaerobic coverage, may preserve carbapenems
+    sources:
+    - SRC-NCCN-AML-2025
+  - position: Meropenem — broadest spectrum, reserve for highly suspected ESBL / AmpC OR salvage
+    sources:
+    - SRC-NCCN-BCELL-2025
+  our_default: Pip-tazo as default empirical; cefepime if pip-tazo contraindicated; meropenem for known
+    ESBL colonization OR persistent fever escalation
+  rationale: Antibiotic stewardship favors pip-tazo / cefepime; meropenem reserved for documented resistance
+    needs
+do_not_do:
+- "НЕ затримувати антибіотики >60 хвилин від presentation — кожна година затримки збільшує mortality."
+- НЕ використовувати vancomycin emipirically для всіх FN — додати лише при clear MRSA risk factors.
+- НЕ припиняти антибіотики при afebrile <72h ANC recovery — лікувати всю clinical course; meta-analysis
+  suggests neutropenic period не закінчується afebrile alone.
+- НЕ забувати fungal coverage при persistent fever >96h на адекватних antibacterials — invasive aspergillosis
+  / candidiasis ризик.
+- НЕ ігнорувати джерело інфекції — central line removal for catheter-related sepsis; abscess drainage; mucositis
+  source control.
+- НЕ призначати aminoglycoside monotherapy — никогда; завжди в комбінації + AKI + ototoxicity ризик.
+- НЕ забути de-escalation після culture results — narrow до targeted therapy.
+time_critical: true
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Emergency supportive-care indication for febrile neutropenia
+  empirical management. time_critical=true: <60 min antibiotic standard. Cross-disease relevance — disease_id=DIS-AML
+  used as proxy; engine should fire across all neutropenic-fever scenarios.'

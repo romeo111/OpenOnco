@@ -41,6 +41,9 @@ sources:
   - SRC-NCCN-MM-2025
   - SRC-NCCN-AML-2025
 
+oncokb_skip_reason: multi_allele_mvp
+external_ids:
+  hgnc_symbol: TP53
 last_reviewed: "2026-04-25"
 notes: >
   Universal adverse marker across most hematologic + solid malignancies
@@ -77,3 +80,32 @@ notes: >
   traceability + ready ground for future direct-driving rules
   (e.g., 2L CAR-T flag) without re-encoding the source citation in
   multiple places.
+notes_ua: >
+  Universal несприятливий marker across найбільш hematologic + solid malignancies — predicts poor відповідь to chemo + chemoimmuno; selects for novel- agent схеми / targeted therapies / cellular терапія / алоТГСК.
+
+  **Cross-хвороба decision impact in our KB (current scope):**
+
+  - **CLL/SLL**: TP53-mut OR del(17p) → contraindicates chemoimmuno
+    (FCR/BR); favors fixed-duration VenO (CLL14) over BTKi continuous
+    in some настанови. Captured in composite BIO-CLL-високого ризику-GENETICS
+    + RF-CLL-високого ризику.
+
+  - **MCL**: TP53-mut → predicts chemoimmuno failure (intensive
+    R-CHOP/R-DHAP+аутоТГСК outcomes substantially гірше); routes to
+    BTKi-based 1L (акалабрутиніб+R) regardless of fitness. Captured in
+    RF-MCL-BLASTOID-OR-TP53.
+
+  - **MM**: del(17p) part of високого ризику cytogenetics composite — drives
+    quadruplet (D-VRd) over триплет (VRd). Captured in
+    BIO-MM-CYTOGENETICS-HR + RF-MM-високого ризику-CYTOGENETICS.
+
+  - **DLBCL** (future scope): predicts R-CHOP failure; flag for early
+    CAR-T pathway consideration at 2L+. Not yet driving 1L algorithm.
+
+  - **AML** (future scope, not in KB yet): TP53-mut AML has dismal
+    chemo outcomes — currently routes directly to алоТГСК consideration
+    + венетоклакс-азацитидин for unfit + клінічні дослідження.
+
+  This сутність is the **standalone marker citation** for all the above. Engine algorithms reference it indirectly via composite біомаркери (CLL-високого ризику-GENETICS, MM-CYTOGENETICS-HR) or via RedFlags (RF-MCL-BLASTOID-OR-TP53). Centralizing it here gives clean traceability + ready ground for future direct-driving rules (e.g., 2L CAR-T flag) without re-encoding the source citation in multiple places.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

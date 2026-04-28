@@ -1,93 +1,47 @@
 id: ALGO-HCC-SYSTEMIC-1L
 applicable_to_disease: DIS-HCC
 applicable_to_line_of_therapy: 1
-purpose: >
-  Select 1L systemic regimen for advanced/unresectable HCC. BCLC C or
-  intermediate B not eligible for loco-regional. Child-Pugh A is the
-  primary gate; CP-B has limited options; CP-C → BSC + transplant
-  evaluation.
+purpose: 'Select 1L systemic regimen for advanced/unresectable HCC. BCLC C or intermediate B not eligible for loco-regional. Child-Pugh A is the primary gate; CP-B has limited options; CP-C → BSC + transplant evaluation.
 
+  '
 output_indications:
-  - IND-HCC-SYSTEMIC-1L-ATEZO-BEV
-  - IND-HCC-SYSTEMIC-1L-DURVA-TREME
-  - IND-HCC-SYSTEMIC-1L-SORAFENIB
-
+- IND-HCC-SYSTEMIC-1L-ATEZO-BEV
+- IND-HCC-SYSTEMIC-1L-DURVA-TREME
+- IND-HCC-SYSTEMIC-1L-SORAFENIB
 default_indication: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
 alternative_indication: IND-HCC-SYSTEMIC-1L-DURVA-TREME
-
 decision_tree:
-  # Step 1 — variceal-bleed history routes away from bevacizumab.
-  - step: 1
-    evaluate:
-      any_of:
-        - red_flag: RF-HCC-VARICEAL-BLEED
-    if_true:
-      result: IND-HCC-SYSTEMIC-1L-DURVA-TREME
-    if_false:
-      next_step: 2
-
-  # Step 2 — Child-Pugh B/C OR frailty → ICI-combinations not eligible;
-  # sorafenib reduced-dose for CP-B7 / frail-elderly, BSC for CP-C
-  # (BSC handled outside algorithm).
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-HCC-CHILD-PUGH-B-C
-        - red_flag: RF-HCC-FRAILTY-AGE
-    if_true:
-      result: IND-HCC-SYSTEMIC-1L-SORAFENIB
-    if_false:
-      next_step: 3
-
-  # Step 3 — Child-Pugh A + no varices → atezo+bev default.
-  - step: 3
-    evaluate:
-      all_of:
-        - condition: "Child-Pugh A (5-6)"
-        - condition: "ECOG ≤1"
-    if_true:
-      result: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
-    if_false:
-      result: IND-HCC-SYSTEMIC-1L-SORAFENIB
-
+- step: 1
+  evaluate:
+    any_of:
+    - red_flag: RF-HCC-VARICEAL-BLEED
+  if_true:
+    result: IND-HCC-SYSTEMIC-1L-DURVA-TREME
+  if_false:
+    next_step: 2
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-HCC-CHILD-PUGH-B-C
+    - red_flag: RF-HCC-FRAILTY-AGE
+  if_true:
+    result: IND-HCC-SYSTEMIC-1L-SORAFENIB
+  if_false:
+    next_step: 3
+- step: 3
+  evaluate:
+    all_of:
+    - none_of:
+      - red_flag: RF-ORGAN-HEPATIC-CHILD-PUGH-B
+      - red_flag: RF-ORGAN-HEPATIC-CHILD-PUGH-C
+    - red_flag: RF-FITNESS-ECOG-FIT
+  if_true:
+    result: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
+  if_false:
+    result: IND-HCC-SYSTEMIC-1L-SORAFENIB
+  notes: Wired via CSD-7A pan-disease fitness/eligibility/prior-therapy RFs.
 sources:
-  - SRC-NCCN-HCC-2025
-  - SRC-AASLD-HCC-2023
-
-last_reviewed: "2026-04-27"
-notes: >
-  Scaffold systemic-only algorithm. Out of scope for this commit (awaits
-  PROPOSAL §17 ratification): hepatic resection (BCLC 0-A, single tumor
-  ≤5 cm, CP-A, no significant portal HTN), liver transplant (Milan or
-  UCSF expanded criteria), thermal ablation (RFA / MWA for ≤3 nodules
-  ≤3 cm), TACE / TARE for BCLC B intermediate, SBRT for unresectable
-  liver-confined unable to undergo other LRT. These are first-line
-  curative-or-loco-regional modalities; systemic therapy is a downstream
-  fallback.
-
-  Etiology branching (parallel to indication selection, does NOT shift
-  the atezo+bev / durva+treme / sorafenib choice — handled as parallel
-  supportive_care rails):
-
-  - HBV+ (HBsAg+ OR anti-HBc+ OR HBV-DNA detectable) — RF-HCC-HBV-
-    REACTIVATION-RISK fires → entecavir or tenofovir prophylaxis
-    initiated before first systemic dose, continued through treatment
-    + ≥12 months post (per AASLD HCC 2023 §antiviral-during-systemic).
-    Anti-VEGF (bevacizumab) + ICI both trigger reactivation in
-    unprophylaxed HBsAg+ patients with reported decompensation.
-
-  - HCV+ (HCV-RNA detectable, NOT just anti-HCV seropositive) — DAA
-    therapy (sofosbuvir/velpatasvir 12 weeks; alternative glec/pibr if
-    DAA-experienced) should be initiated before or concurrently with
-    atezo+bev when feasible. SVR12 reduces hepatic decompensation risk
-    and may improve OS in HCC-on-HCV-cirrhosis cohorts (Singal et al.
-    Gastroenterology 2019; AASLD HCC 2023). Concurrent DAA + atezo+bev
-    is acceptable when liver function CP-A; defer atezo+bev start by
-    2-4 weeks if rapid HCV clearance feasible AND tumor biology not
-    aggressive (no rapid AFP doubling, no extrahepatic spread). Do
-    NOT combine sofosbuvir with amiodarone (severe bradycardia).
-
-  Both viral pathways operate as parallel SUP-* rails (entecavir +
-  DAA-coordination); the algorithm's indication choice is unchanged.
-  Future round: add SUP-HCV-DAA-PERI-HCC supportive_care entity to
-  formalize this coordination (currently noted in atezo+bev do_not_do).
+- SRC-NCCN-HCC-2025
+- SRC-AASLD-HCC-2023
+last_reviewed: '2026-04-27'
+notes: "Scaffold systemic-only algorithm. Out of scope for this commit (awaits PROPOSAL §17 ratification): hepatic resection (BCLC 0-A, single tumor ≤5 cm, CP-A, no significant portal HTN), liver transplant (Milan or UCSF expanded criteria), thermal ablation (RFA / MWA for ≤3 nodules ≤3 cm), TACE / TARE for BCLC B intermediate, SBRT for unresectable liver-confined unable to undergo other LRT. These are first-line curative-or-loco-regional modalities; systemic therapy is a downstream fallback.\nEtiology branching (parallel to indication selection, does NOT shift the atezo+bev / durva+treme / sorafenib choice — handled as parallel supportive_care rails):\n- HBV+ (HBsAg+ OR anti-HBc+ OR HBV-DNA detectable) — RF-HCC-HBV-\n  REACTIVATION-RISK fires → entecavir or tenofovir prophylaxis\n  initiated before first systemic dose, continued through treatment\n  + ≥12 months post (per AASLD HCC 2023 §antiviral-during-systemic).\n  Anti-VEGF (bevacizumab) + ICI both trigger reactivation in\n  unprophylaxed HBsAg+ patients with reported decompensation.\n\n- HCV+ (HCV-RNA detectable, NOT just anti-HCV seropositive) — DAA\n  therapy (sofosbuvir/velpatasvir 12 weeks; alternative glec/pibr if\n  DAA-experienced) should be initiated before or concurrently with\n  atezo+bev when feasible. SVR12 reduces hepatic decompensation risk\n  and may improve OS in HCC-on-HCV-cirrhosis cohorts (Singal et al.\n  Gastroenterology 2019; AASLD HCC 2023). Concurrent DAA + atezo+bev\n  is acceptable when liver function CP-A; defer atezo+bev start by\n  2-4 weeks if rapid HCV clearance feasible AND tumor biology not\n  aggressive (no rapid AFP doubling, no extrahepatic spread). Do\n  NOT combine sofosbuvir with amiodarone (severe bradycardia).\n\nBoth viral pathways operate as parallel SUP-* rails (entecavir + DAA-coordination); the algorithm's indication choice is unchanged. Future round: add SUP-HCV-DAA-PERI-HCC supportive_care entity to formalize this coordination (currently noted in atezo+bev do_not_do).\n"

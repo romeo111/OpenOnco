@@ -5,13 +5,12 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD20-IHC
-    required: true
-    value_constraint: positive
-  - biomarker_id: BIO-FL-FLIPI
-    required: true
-    value_constraint: FLIPI 0-5 — required risk stratifier; high-burden / GELF-positive / FLIPI 3-5 routes
-      to BR or R-CHOP active treatment
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: positive
+    - biomarker_id: BIO-FL-FLIPI
+      required: true
+      value_constraint: FLIPI 0-5 — required risk stratifier; high-burden / GELF-positive / FLIPI 3-5 routes to BR or R-CHOP active treatment
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 2
@@ -28,63 +27,61 @@ expected_outcomes:
   progression_free_survival: Median PFS ~6-7 years (StiL trial — superior to R-CHOP for FL)
   overall_survival_5y: ~88%
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
-- CI-SEVERE-CYTOPENIA-BR
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-SEVERE-CYTOPENIA-BR
 red_flags_triggering_alternative:
-- RF-FL-TRANSFORMATION-SUSPECT
+  - RF-FL-TRANSFORMATION-SUSPECT
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-B2-MICROGLOBULIN
-- TEST-CD20-IHC
-- TEST-LN-EXCISIONAL-BIOPSY
-- TEST-FLOW-CYTOMETRY
-- TEST-PET-CT
-- TEST-FISH-PANEL
-- TEST-BM-ASPIRATE
-- TEST-BM-TREPHINE
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-PREGNANCY
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-CD20-IHC
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PET-CT
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
 desired_tests:
-- TEST-ECHO
-rationale: 'Standard-track 1L for FL grade 1-2 / 3A WITH GELF criteria for high tumor burden. BR (bendamustine
-  + rituximab) is preferred over R-CHOP for FL based on StiL trial — superior PFS with comparable toxicity
-  (less alopecia + neuropathy, more cumulative myelosuppression). Maintenance rituximab × 2 years post-induction
-  recommended (PRIMA trial — additional PFS benefit, no clear OS benefit, balance vs infection risk).
+  - TEST-ECHO
+rationale: 'Standard-track 1L for FL grade 1-2 / 3A WITH GELF criteria for high tumor burden. BR (bendamustine + rituximab) is preferred over R-CHOP for FL based on StiL trial — superior PFS with comparable toxicity (less alopecia + neuropathy, more cumulative myelosuppression). Maintenance rituximab × 2 years post-induction recommended (PRIMA trial — additional PFS benefit, no clear OS benefit, balance vs infection risk).
 
   '
+rationale_ua: >
+  стандарт-track 1L for FL grade 1-2 / 3A WITH GELF criteria for high пухлинне навантаження. BR (бендамустин + ритуксимаб) is переважний over R-CHOP for FL based on StiL дослідження — перевершує PFS with співставний токсичність (less алопеція + нейропатія, more cumulative myelosuppression). підтримка ритуксимаб × 2 years після індукції рекомендований (PRIMA дослідження — additional PFS виграш, ні clear OS виграш, balance vs infection risk).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-  relevant_quote_paraphrase: BR is a Category 1 preferred 1L regimen for FL grade 1-2/3A with high tumor
-    burden
-- source_id: SRC-ESMO-FL-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 endorses watch-and-wait for low-burden FL; BR or R-CHOP for high-burden
-    GELF-positive 1L; rituximab maintenance × 2 years post-induction
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: BR is a Category 1 preferred 1L regimen for FL grade 1-2/3A with high tumor burden
+  - source_id: SRC-ESMO-FL-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 endorses watch-and-wait for low-burden FL; BR or R-CHOP for high-burden GELF-positive 1L; rituximab maintenance × 2 years post-induction
 known_controversies:
-- topic: Maintenance rituximab × 2 years post-induction
-  positions:
-  - position: Standard per PRIMA — extends PFS
-    sources:
-    - SRC-NCCN-BCELL-2025
-  - position: Skip maintenance to reduce infection risk + cost; treat at progression
-    sources:
-    - SRC-NCCN-BCELL-2025
-    evidence_note: OS impact unclear; selected for older / frail / infection-prone patients
-  our_default: Maintenance rituximab × 2 years post-induction; skip if frail / repeated infections
-  rationale: PFS benefit clear; OS impact uncertain — preference-sensitive.
+  - topic: Maintenance rituximab × 2 years post-induction
+    positions:
+      - position: Standard per PRIMA — extends PFS
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: Skip maintenance to reduce infection risk + cost; treat at progression
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: OS impact unclear; selected for older / frail / infection-prone patients
+    our_default: Maintenance rituximab × 2 years post-induction; skip if frail / repeated infections
+    rationale: PFS benefit clear; OS impact uncertain — preference-sensitive.
 do_not_do:
-- Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+.
-- Не призначати при тяжкій цитопенії на baseline (CI-SEVERE-CYTOPENIA-BR).
-- Не використовувати full-dose bendamustine при FIB-4 > 3.25 — редукція до 70 mg/m².
-- Не забувати PJP profilaxis (cotrimoxazole) — продовжувати ≥6 міс після останньої дози anti-CD20.
-- Не рestait-ing imaging-driven response через 4 cycles — interim PET якщо є concern про трансформацію
-  або progression.
+  - Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+.
+  - Не призначати при тяжкій цитопенії на baseline (CI-SEVERE-CYTOPENIA-BR).
+  - Не використовувати full-dose bendamustine при FIB-4 > 3.25 — редукція до 70 mg/m².
+  - Не забувати PJP profilaxis (cotrimoxazole) — продовжувати ≥6 міс після останньої дози anti-CD20.
+  - Не рestait-ing imaging-driven response через 4 cycles — interim PET якщо є concern про трансформацію або progression.
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewers: []

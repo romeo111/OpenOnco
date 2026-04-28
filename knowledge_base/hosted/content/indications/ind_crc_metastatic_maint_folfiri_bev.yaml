@@ -1,0 +1,75 @@
+id: IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV
+plan_track: standard
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic CRC"
+    - "Achieved ≥SD/PR after 6-8 cycles of FOLFOX+bev or FOLFIRI+bev induction"
+    - "Goal: maintain response while reducing oxaliplatin/irinotecan cumulative toxicity"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MSI-STATUS
+      required: false
+      value_constraint: MSI-H/dMMR patients should be on pembrolizumab maintenance pathway, not chemo de-escalation
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by:
+  - IND-CRC-METASTATIC-2L-FOLFIRI-BEV
+  - IND-CRC-METASTATIC-2L-BRAF-BEACON
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: Maintenance — measured by PFS/duration of disease control
+  complete_response: N/A (maintenance phase)
+  progression_free_survival: Median PFS extension ~3-4 mo vs full-stop after induction (CAIRO3, AIO 0207, PRODIGE 9 meta-analysis)
+  overall_survival_5y: OS benefit modest (~1-2 mo); main rationale is QoL via oxaliplatin neuropathy avoidance
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+rationale: 'De-escalation to maintenance after 6-8 induction cycles of oxaliplatin- or irinotecan-based doublet + bevacizumab is NCCN/ESMO standard for unresectable mCRC responders. CAIRO3 (Simkens 2015 Lancet) established capecitabine + bevacizumab maintenance superiority over observation (mPFS 8.5 vs 4.1 mo); AIO 0207 (Hegewisch-Becker 2015) confirmed bevacizumab ± fluoropyrimidine maintenance vs full pause. Maintenance drug typically capecitabine + bevacizumab OR 5FU/LV + bevacizumab; full FOLFOX/FOLFIRI is NOT continued as maintenance (cumulative neuropathy/diarrhea). Reintroduction of oxaliplatin/irinotecan upon progression is standard. STUB regimen — no dedicated REG- entity for capecitabine+bev maintenance yet; flagged for REG follow-up.'
+rationale_ua: >-
+  De-escalation to підтримка after 6-8 індукція цикли of оксаліплатин- or іринотекан-based дублет + бевацизумаб is NCCN/ESMO стандарт for нерезектабельний mCRC responders. CAIRO3 (Simkens 2015 Lancet) усталений капецитабін + бевацизумаб підтримка superiority over observation (mPFS 8.5 проти 4.1 міс.); AIO 0207 (Hegewisch-Becker 2015) confirmed бевацизумаб ± fluoropyrimidine підтримка vs full pause. підтримка drug типово капецитабін + бевацизумаб OR 5FU/LV + бевацизумаб; full FOLFOX/FOLFIRI is NOT continued as підтримка (cumulative нейропатія/діарея). Reintroduction of оксаліплатин/іринотекан upon прогресування is стандарт. STUB схема — ні dedicated REG- сутність for капецитабін+bev підтримка yet; flagged for REG спостереження.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: After 4-6 mo of 1L doublet + bev induction with response/SD, de-escalation to fluoropyrimidine + bevacizumab maintenance is preferred to limit cumulative oxaliplatin neuropathy
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: Maintenance with 5FU/capecitabine + bevacizumab after induction response is recommended for unresectable mCRC; full doublet continuation is not advised due to toxicity
+known_controversies:
+  - topic: Maintenance vs full pause (chemo holiday) after induction response in mCRC
+    positions:
+      - position: Active maintenance — PFS gain (CAIRO3, AIO 0207)
+        sources:
+          - SRC-NCCN-COLON-2025
+      - position: Full pause acceptable for selected patients with deep response — improved QoL
+        sources:
+          - SRC-ESMO-COLON-2024
+        evidence_note: OPTIMOX trials suggested feasibility of stop-and-go strategy
+    our_default: Active maintenance (capecitabine + bevacizumab) for fit patients with adequate response; full pause for frail / patient preference / deep CR
+    rationale: PFS gain modest but QoL/neuropathy avoidance vs continued doublet is the dominant consideration
+do_not_do:
+  - НЕ продовжувати full FOLFOX як maintenance — cumulative oxaliplatin neuropathy >7-12 мг/м² є irreversible у >30% пацієнтів.
+  - НЕ продовжувати irinotecan-base maintenance — diarrhea cumulative ризик; бажаний switch до fluoropyrimidine + bev.
+  - НЕ припиняти bevacizumab без причини — meta-analysis підтверджує PFS внесок під час maintenance.
+  - НЕ ігнорувати протеїнурію + гіпертензію moнitоринг — bev-class effect триває впродовж maintenance.
+  - НЕ continued bev при non-healing wound, GI fistula, або recent major surgery — hold ≥4 тижні.
+  - НЕ забути screening для аневризм + arterial thromboembolism у пацієнтів старше 65.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 reflects continuation of 1L pathway (induction → maintenance is one continuous line). Engine activates after 6-8 cycles of induction with response/SD. Missing entity flag: dedicated REG-CAPE-BEV-MAINTENANCE (capecitabine + bevacizumab maintenance) — author in PROD-2.'

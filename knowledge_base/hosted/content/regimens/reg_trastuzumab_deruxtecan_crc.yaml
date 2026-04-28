@@ -1,0 +1,59 @@
+id: REG-TRASTUZUMAB-DERUXTECAN-CRC
+name: "Trastuzumab-deruxtecan monotherapy (DESTINY-CRC01, HER2+ mCRC)"
+name_ua: "Трастузумаб-дерукстекан моно (DESTINY-CRC01, HER2+ мКРР)"
+alternate_names: ["T-DXd CRC", "DS-8201 CRC", "Enhertu CRC"]
+
+components:
+  - drug_id: DRUG-TRASTUZUMAB-DERUXTECAN
+    dose: "6.4 mg/kg IV q3w"
+    schedule: "IV q3w (DESTINY-CRC01 dosing; lower than 5.4 mg/kg breast/gastric dose for ILD risk balance)"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity / ILD"
+
+toxicity_profile: severe
+
+premedication:
+  - "5-HT3 antagonist (granisetron 1 mg IV OR ondansetron 8 mg IV)"
+  - "Dexamethasone 8 mg IV"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "ILD/pneumonitis Grade 1 (asymptomatic, radiographic only)"
+    modification: "Hold T-DXd; corticosteroids prednisone 0.5 mg/kg/d ≥14 days; resume at same dose if resolved within 28 days, else next dose level (5.4 mg/kg → 4.4 mg/kg)"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "ILD/pneumonitis Grade 2+ (symptomatic)"
+    modification: "Permanently discontinue T-DXd; high-dose steroids prednisone 1 mg/kg/d; pulmonology consult"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "ANC <500 OR platelets <50K"
+    modification: "Hold until recovery; resume at next lower dose level"
+  - condition: "LVEF drop ≥10% absolute OR LVEF <50%"
+    modification: "Hold T-DXd; cardiology consult; reassess 4 weeks"
+    source_refs: [SRC-NCCN-COLON-2025]
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: |
+    Трастузумаб-дерукстекан зареєстровано в UA (РП присутнє станом
+    на 2026-04-27 для HER2+ молочної залози / шлунка).
+    НЕ реімбурсується НСЗУ для CRC HER2+ показання (off-label-equivalent
+    for CRC use; DESTINY-CRC01 is FDA-recognized but not in UA NSZU
+    formulary).
+    Шляхи доступу: out-of-pocket; благодійні фонди; AstraZeneca/Daiichi
+    Sankyo PAP (де доступна).
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-27"
+
+notes: >
+  DESTINY-CRC01 Phase II (2021): HER2-amp RAS-WT chemo-refractory mCRC
+  (median 4 prior lines), ORR 45% in IHC 3+/IHC 2+ ISH+ cohort, mPFS
+  6.9 mo, mOS 15.5 mo. T-DXd is an ADC: trastuzumab + cleavable linker
+  + DXd (DNA topo-I inhibitor exatecan derivative). Bystander effect
+  benefits HER2-heterogeneous tumors. ILD/pneumonitis is the dominant
+  safety signal (~6% all-grade, ~3% Grade ≥3) — baseline + serial lung
+  imaging mandatory. CRC dose 6.4 mg/kg differs from breast/gastric
+  5.4 mg/kg (DESTINY-CRC01 protocol).

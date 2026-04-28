@@ -1,0 +1,65 @@
+id: RF-IMT-HIGH-RISK-BIOLOGY
+definition: >
+  Inflammatory myofibroblastic tumor with actionable fusion driver:
+  ALK fusion (TPM3-ALK, TPM4-ALK, CLTC-ALK; ~50%), ROS1 fusion (~10%),
+  NTRK fusion (rare), RET fusion (rare), or PDGFRB fusion (rare) — opens
+  targeted-therapy line (crizotinib / lorlatinib for ALK; entrectinib /
+  crizotinib for ROS1; larotrectinib / entrectinib for NTRK; selpercatinib
+  for RET) sparing the patient cytotoxic chemotherapy and aggressive
+  surgery for unresectable disease.
+definition_ua: >
+  Запальна міофібробластична пухлина з дієвоспроможним fusion-драйвером:
+  ALK-фузія (TPM3-ALK, TPM4-ALK, CLTC-ALK; ~50%), ROS1-фузія (~10%),
+  NTRK-фузія (рідко), RET-фузія (рідко), PDGFRB-фузія (рідко) — відкриває
+  таргетну лінію (crizotinib / lorlatinib для ALK; entrectinib /
+  crizotinib для ROS1; larotrectinib / entrectinib для NTRK; selpercatinib
+  для RET).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-ALK-FUSION"
+      value: "positive"
+    - finding: "BIO-ALK-REARRANGEMENT"
+      value: "positive"
+    - finding: "BIO-ROS1-FUSION"
+      value: "positive"
+    - finding: "BIO-NTRK-FUSION"
+      value: "positive"
+    - finding: "BIO-RET"
+      value: "fusion"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-IMT]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  IMT is fusion-driven in ~60–70% of cases; comprehensive genomic
+  profiling at diagnosis is now standard. Crizotinib in ALK-positive
+  IMT (Schöffski et al, Lancet Oncol 2018; ORR ~50%; pediatric COG-
+  ADVL0912) — also active in ROS1+ (entrectinib STARTRK-2). Resistance
+  to crizotinib emerges via secondary ALK kinase mutations — switch to
+  lorlatinib (more potent, CNS-penetrant) or alectinib. NTRK-fusion IMT
+  responds to larotrectinib / entrectinib (NCCN tumor-agnostic). RET-
+  fusion IMT case reports of selpercatinib responses. This RF re-routes
+  algorithm from surgery-first / chemotherapy to fusion-targeted 1L.
+notes_ua: >
+  IMT — fusion-driven у ~60–70%; CGP при діагностиці стандарт. Crizotinib
+  при ALK+ IMT (Schöffski та ін., Lancet Oncol 2018; ORR ~50%; педіатричне
+  COG-ADVL0912). Резистентність до crizotinib — вторинні ALK kinase
+  мутації — перехід на lorlatinib (потужніший, CNS-проникний) або
+  alectinib. ROS1+ → entrectinib (STARTRK-2); NTRK+ → larotrectinib /
+  entrectinib (NCCN tumor-agnostic).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

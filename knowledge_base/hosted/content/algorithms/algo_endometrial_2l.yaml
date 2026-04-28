@@ -1,0 +1,44 @@
+id: ALGO-ENDOMETRIAL-2L
+applicable_to_disease: DIS-ENDOMETRIAL
+applicable_to_line_of_therapy: 2
+purpose: 'Select 2L+ recurrent/metastatic endometrial carcinoma Indication after 1L platinum-based chemotherapy failure. Two tracks: (1) dMMR/MSI-H + no prior ICI → single-agent dostarlimab (GARNET) or pembrolizumab (KEYNOTE-158); (2) pMMR OR dMMR with prior 1L ICI → pembrolizumab + lenvatinib (KEYNOTE-775). Note: in modern era (post-RUBY/NRG-GY018 ~2023+), most dMMR patients receive ICI in 1L and so route to pembro+lenva in 2L; the dostarlimab single-agent track is for historical-era patients without prior ICI.
+
+  '
+output_indications:
+- IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+- IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+default_indication: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+alternative_indication: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+decision_tree:
+- step: 1
+  evaluate:
+    all_of:
+    - condition: dMMR / MSI-high tumor (confirmed by IHC or PCR/NGS)
+    - condition: No prior ICI exposure in 1L
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+  if_true:
+    result: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+  if_false:
+    next_step: 2
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 2
+  evaluate:
+    all_of:
+    - condition: Disease progression after 1L platinum-based chemo
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: lenvatinib toxicity tolerance required
+    - condition: Adequate organ function (BP controllable, no recent surgery, no active GI bleed)
+  if_true:
+    result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+  if_false:
+    result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+sources:
+- SRC-NCCN-UTERINE-2025
+- SRC-ESMO-ENDOMETRIAL-2022
+last_reviewed: '2026-04-26'
+notes: 'OOS / wiring gaps: (1) HER2+ endometrial 2L T-DXd (DESTINY-PanTumor02 + uterine serous carcinoma evidence) — not modeled as separate indication; surfaced as free-text recommendation. (2) HRD+/POLE-mutated 2L scenarios — molecular-class-specific 2L (e.g., POLE-mut excellent prognosis with chemo re-challenge) not modeled. (3) Hormonal therapy (megestrol, AI) for low-grade ER+ endometrial 2L — not modeled; appropriate for indolent low-burden cases. (4) ECOG ≥2 patients ineligible for lenva combination — single-agent doxorubicin or paclitaxel re-challenge is the funded fallback; surfaced as free-text since not separately modeled. (5) UA funding gap — pembro+lenva not NSZU-reimbursed for endometrial 2L (2026 onco package); dostarlimab funding extends to 2L+ under same package but verify per current NSZU protocol.
+
+  '

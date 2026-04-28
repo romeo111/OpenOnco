@@ -27,33 +27,50 @@ decision_tree:
     if_false:
       next_step: 5
   - step: 2
+    # EGFR sensitizing mutation (ex19del / L858R / ex20ins covered by RF set)
+    # → osimertinib 1L (FLAURA) or amivantamab+chemo for ex20ins (PAPILLON).
     evaluate:
       any_of:
-        - condition: "EGFR mutation positive"
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
+        - condition: "EGFR L858R or other classical sensitizing mutation"
     if_true:
       result: IND-NSCLC-EGFR-MUT-MET-1L
     if_false:
       next_step: 3
   - step: 3
+    # ALK fusion → alectinib/brigatinib/lorlatinib 1L.
     evaluate:
       any_of:
-        - condition: "ALK rearrangement positive"
+        - red_flag: RF-NSCLC-ALK-FUSION-ACTIONABLE
     if_true:
       result: IND-NSCLC-ALK-MET-1L
     if_false:
       next_step: 4
   - step: 4
+    # Other actionable drivers — ROS1 / KRAS G12C / BRAF V600E / MET ex14 /
+    # RET fusion / NTRK fusion / HER2-mut. KRAS G12C is 2L+ only (no 1L
+    # G12C-inhibitor approval); other drivers route to per-driver 1L when
+    # an Indication exists (deferred — currently routes to KRAS-G12C-MET-2L
+    # placeholder per pre-CSD-6A behaviour).
     evaluate:
       any_of:
-        - condition: "Other actionable driver (ROS1 / KRAS G12C / BRAF / MET / RET / NTRK / HER2-mut)"
+        - red_flag: RF-NSCLC-MET-EX14-ACTIONABLE
+        - red_flag: RF-NSCLC-RET-FUSION-ACTIONABLE
+        - red_flag: RF-NSCLC-ROS1-FUSION-ACTIONABLE
+        - red_flag: RF-NSCLC-NTRK-FUSION-ACTIONABLE
+        - red_flag: RF-NSCLC-BRAF-V600E-ACTIONABLE
     if_true:
       result: IND-NSCLC-KRAS-G12C-MET-2L
     if_false:
       next_step: 5
+    notes: "MDT-only — driver-positive cohort routes to 2L+ targeted regimen as a placeholder (1L per-driver Indications not yet authored for ROS1/MET/RET/NTRK/BRAF V600E in this KB; PROD-5 territory). KRAS G12C deliberately excluded from 1L (no approved 1L G12Ci)."
   - step: 5
+    # PD-L1 TPS ≥50% (KEYNOTE-024) → pembro monotherapy 1L; lower
+    # TPS / non-squamous → chemo+pembro (KEYNOTE-189 / KEYNOTE-407).
     evaluate:
       any_of:
-        - condition: "PD-L1 TPS ≥50%"
+        - red_flag: RF-NSCLC-PDL1-50-PLUS
     if_true:
       result: IND-NSCLC-PDL1-HIGH-MET-1L
     if_false:

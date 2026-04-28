@@ -1,0 +1,36 @@
+id: RF-SANZ-HIGH-RISK
+definition: "APL with Sanz high risk — WBC >10 ×10^9/L at diagnosis — supports ATRA+ATO+idarubicin (or +gemtuzumab in selected protocols); higher early-death risk and warrants leukapheresis-avoidance + aggressive DIC management"
+definition_ua: "ГПЛ високого ризику за Sanz — WBC >10 ×10⁹/л на момент діагнозу — підтримує ATRA+ATO+ідарубіцин (або +гемтузумаб у окремих протоколах); вищий ризик ранньої смерті, потребує уникнення лейкаферезу + агресивне ведення ДВЗ"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "wbc_count_x10_9_per_l"
+      threshold: 10
+      comparator: ">"
+    - finding: "apl_sanz_risk"
+      value: "high"
+
+clinical_direction: intensify
+
+severity: critical
+category: risk-score
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm:
+  - ALGO-APL-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+
+last_reviewed: "2026-04-27"
+notes: >
+  High-risk APL (WBC >10) carries 10-15% early-death risk, primarily from
+  DIC + differentiation syndrome. Standard 1L is ATRA + ATO + idarubicin
+  (or with gemtuzumab in some North American protocols replacing
+  idarubicin in cardiac patients). APML4 / AIDA / Lo-Coco data support
+  triplet over doublet for high-risk. NCCN AML 2025 / ELN APL 2019.
+  Leukapheresis is contraindicated (worsens DIC); use ATRA + hydroxyurea
+  for cytoreduction. Severity `critical` because intensification + DIC
+  bundle is mandatory, not preference.

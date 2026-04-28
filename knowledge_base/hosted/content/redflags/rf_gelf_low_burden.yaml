@@ -1,0 +1,47 @@
+id: RF-GELF-LOW-BURDEN
+definition: "Follicular lymphoma NOT meeting any GELF criterion — low tumor burden — watch-and-wait candidate; no survival benefit shown for early treatment in asymptomatic low-burden FL"
+definition_ua: "Фолікулярна лімфома без жодного критерію GELF — низьке пухлинне навантаження — кандидат на стратегію watch-and-wait; раннє лікування не покращує виживаність у безсимптомних пацієнтів з низьким навантаженням"
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "fl_gelf_high_burden"
+      value: false
+    - finding: "b_symptoms_present"
+      value: false
+    - finding: "rapid_progression"
+      value: false
+  none_of:
+    - finding: "dominant_nodal_mass_cm"
+      threshold: 7.0
+      comparator: ">="
+    - finding: "ldh_above_uln"
+      value: true
+    - finding: "compressive_symptoms"
+      value: true
+    - finding: "cytopenia_due_to_lymphoma"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm:
+  - ALGO-FL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Low-burden FL (no GELF criterion) is the canonical watch-and-wait
+  population. RESORT (E4402, Kahl 2014) showed rituximab-monotherapy
+  did not improve OS over observation; Ardeshna 2014 showed similar.
+  ESMO FL 2024 / NCCN B-cell 2025 recommend observation as first
+  approach for stage III-IV asymptomatic low-burden FL; rituximab
+  monotherapy is acceptable when patient prefers active intervention
+  and meets shared-decision threshold. de-escalate direction routes
+  away from chemoimmunotherapy.

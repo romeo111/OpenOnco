@@ -1,0 +1,64 @@
+id: RF-MTC-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — vandetanib / cabozantinib
+  multikinase inhibitors poorly tolerated (severe diarrhea, hand-foot,
+  hypertension, fatigue); selpercatinib / pralsetinib better-tolerated
+  alternatives but still require dose adjustment; for asymptomatic
+  indolent MTC, watchful waiting with calcitonin / CEA monitoring is
+  appropriate.
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — vandetanib / cabozantinib
+  мультикіназні інгібітори погано переносяться (тяжка діарея, hand-foot,
+  гіпертензія, втома); selpercatinib / pralsetinib — краще-переносимі
+  альтернативи, але потребують корекції дози; для безсимптомної
+  індолентної MTC — спостереження з контролем кальцитоніну / CEA.
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-MTC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  MTC is often indolent — watchful waiting with calcitonin doubling
+  time monitoring is appropriate for slow-progressing asymptomatic
+  disease in elderly (ATA recommendation). Cabozantinib (EXAM trial)
+  and vandetanib (ZETA) have meaningful diarrhea + hypertension burden;
+  dose reductions to 60 mg / 200 mg respectively common in elderly.
+  Selpercatinib LIBRETTO-531 demonstrated superior tolerability vs
+  vandetanib — preferred 1L when RET-mutant. Geriatric assessment (G8)
+  ≥70 recommended before TKI initiation. ¹⁷⁷Lu-DOTATATE PRRT is
+  generally well-tolerated in elderly with SSTR+ disease and limited
+  acute toxicity profile.
+notes_ua: >
+  MTC часто індолентна — спостереження з кальцитоніном для повільно-
+  прогресуючої безсимптомної у літніх (ATA). Cabozantinib (EXAM) і
+  vandetanib (ZETA) — значуща діарея + гіпертензія; зменшення дози до
+  60 / 200 мг. Selpercatinib LIBRETTO-531 — краще переноситься,
+  переважний 1L при RET+. ¹⁷⁷Lu-DOTATATE PRRT — добре переноситься у
+  літніх з SSTR+.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

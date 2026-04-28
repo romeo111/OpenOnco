@@ -1,0 +1,81 @@
+id: IND-PV-ANAGRELIDE-CONTINUOUS
+plan_track: standard
+applicable_to:
+  disease_id: DIS-PV
+  line_of_therapy: 2
+  stage_requirements:
+    - "Polycythemia vera with persistent thrombocytosis after hydroxyurea (HU) failure / intolerance"
+    - "Continuous cytoreduction needed; primary indication is platelet count control (>1500 × 10⁹/L OR thrombosis history despite HU)"
+    - "JAK2 V617F-positive PV patients only (anagrelide does not address erythrocytosis — phlebotomy / ruxolitinib needed in parallel)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-JAK2
+      required: true
+      value_constraint: "JAK2 V617F positive (PV diagnosis criterion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+recommended_regimen: REG-ANAGRELIDE-ET
+concurrent_therapy:
+  - DRUG-ASPIRIN
+followed_by:
+  - IND-PV-2L-RUXOLITINIB
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: ~70-80% platelet response rate (ELN criteria) for anagrelide in HU-failure ET/PV
+  complete_response: N/A (chronic cytoreduction)
+  progression_free_survival: Thrombosis-free survival comparable to HU in PT1 trial (ET cohort); PV-specific data extrapolated from ET evidence
+  overall_survival_5y: No OS difference vs HU in PT1; concern for higher arterial thrombosis with anagrelide (PT1)
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-PV-ET-HIGH-THROMBOSIS-RISK
+  - RF-PV-HU-RESISTANCE-INTOLERANCE
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECHO
+  - TEST-COAG-PANEL
+  - TEST-BCR-ABL-JAK2
+desired_tests: []
+rationale: 'Anagrelide is a second-line cytoreductive option for polycythemia vera patients who fail or are intolerant to hydroxyurea, when thrombocytosis is the dominant clinical concern. Mechanism is selective inhibition of megakaryocyte maturation. PT1 trial (Harrison 2005 NEJM, ET cohort): anagrelide + aspirin vs HU + aspirin showed equivalent overall events but higher arterial thrombosis, hemorrhage, and myelofibrotic transformation in anagrelide arm. PV-specific data extrapolated from ET; ELN/NCCN/ESMO position anagrelide as 2L for PV (after HU + ruxolitinib failure). Anagrelide does NOT address erythrocytosis — phlebotomy + low-dose aspirin must continue; ruxolitinib (RESPONSE trial) is competing 2L option with broader symptom + spleen + erythrocytosis benefit. Anagrelide preferred when thrombocytosis is the dominant uncontrolled parameter and ruxolitinib not accessible.'
+rationale_ua: >-
+  анагрелід is a друга лінія cytoreductive option for polycythemia vera patients who fail or are intolerant to гідроксикарбамід, when thrombocytosis is the dominant clinical concern. Mechanism is селективний inhibition of megakaryocyte maturation. PT1 дослідження (Harrison 2005 NEJM, ET cohort): анагрелід + aspirin vs HU + aspirin showed еквівалентний overall events but higher arterial thrombosis, hemorrhage, and myelofibrotic трансформація in анагрелід arm. PV-specific дані extrapolated from ET; ELN/NCCN/ESMO position анагрелід as 2L for PV (after HU + руксолитиніб failure). анагрелід does NOT address erythrocytosis — phlebotomy + low-доза aspirin must continue; руксолитиніб (відповідь дослідження) is competing 2L option with broader symptom + spleen + erythrocytosis виграш. анагрелід переважний when thrombocytosis is the dominant uncontrolled parameter and руксолитиніб not accessible.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-PT1-HARRISON-2005
+    position: supports
+    relevant_quote_paraphrase: PT1 trial showed anagrelide + aspirin vs HU + aspirin equivalent for primary composite but higher arterial thrombosis + hemorrhage + myelofibrotic transformation in anagrelide arm
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: Anagrelide is a second-line cytoreductive option for HU-resistant/intolerant PV/ET; ruxolitinib preferred when broader symptom control needed
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: Anagrelide remains a recognized option for HU-failure ET; PV use extrapolated when thrombocytosis dominates clinical picture
+known_controversies:
+  - topic: Anagrelide vs ruxolitinib as 2L for HU-failure PV
+    positions:
+      - position: Ruxolitinib — RESPONSE trial, addresses erythrocytosis + spleen + symptoms + thrombocytosis
+        sources:
+          - SRC-NCCN-MPN-2025
+        evidence_note: RESPONSE Vannucchi 2015 NEJM; HCT control 60% + spleen response 38% vs 1% control
+      - position: Anagrelide — selective for thrombocytosis only; lower cost, oral
+        sources:
+          - SRC-ESMO-MPN-2015
+    our_default: Ruxolitinib for HU-failure PV (broad MPN response); anagrelide reserved for ruxolitinib-intolerant or non-accessible OR isolated thrombocytosis
+    rationale: Ruxolitinib has broader MPN benefit; anagrelide remains useful narrow-indication option
+do_not_do:
+  - НЕ використовувати anagrelide як monotherapy для PV без phlebotomy + ASA — еритроцитоз залишається unaddressed.
+  - НЕ призначати при значній серцевій патології (НФН, аритмії) — positive inotropic + vasodilatory effects можуть провокувати ішемію + arrhythmia.
+  - НЕ ігнорувати baseline ECG + ECHO — myocardial damage документована, особливо у пацієнтів старше 60.
+  - НЕ продовжувати при незрозумілих palpitations / dyspnea — повторна ECHO + cardiology консультація.
+  - НЕ комбінувати з PDE3 інгібіторами (cilostazol, milrinone) — additive cardiac toxicity.
+  - НЕ забути про пізню myelofibrotic transformation — PT1 показав вищий ризик в anagrelide arm; periodic BM assessment.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 2 reflects post-HU failure salvage. Concurrent ASA + phlebotomy continuation expected. Engine activates after HU intolerance/resistance documented per ELN criteria. Reference REG-ANAGRELIDE-ET (originally authored for ET) used as proxy; PV-specific REG- not authored.'

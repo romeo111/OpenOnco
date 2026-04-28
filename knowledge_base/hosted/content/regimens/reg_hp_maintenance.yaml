@@ -1,0 +1,68 @@
+id: REG-HP-MAINTENANCE
+name: "Trastuzumab + Pertuzumab (HP) maintenance, HER2+ metastatic breast post-THP induction"
+name_ua: "Трастузумаб + Пертузумаб (HP) підтримка, HER2+ метастатичний РМЗ після індукції THP"
+alternate_names:
+  - "HP maintenance"
+  - "Dual HER2 blockade maintenance"
+  - "CLEOPATRA-style maintenance"
+
+components:
+  - drug_id: DRUG-TRASTUZUMAB
+    dose: "8 mg/kg IV loading, then 6 mg/kg IV q3w (or 600 mg SC fixed-dose q3w)"
+    schedule: "day 1 of each 21-day cycle"
+    route: IV
+  - drug_id: DRUG-PERTUZUMAB
+    dose: "840 mg IV loading, then 420 mg IV q3w"
+    schedule: "day 1 of each 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low
+
+premedication:
+  - "First-dose pertuzumab + trastuzumab: observe for infusion reaction; subsequent doses no routine premedication if first dose tolerated"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "LVEF drop ≥10% absolute below baseline AND below LLN, OR symptomatic CHF"
+    modification: "Hold both trastuzumab and pertuzumab; cardiology consult; ACEi/BB optimisation; recheck LVEF in 3 weeks; resume at full dose if LVEF recovers and ≥LLN"
+    rationale: "HER2-mAb cardiotoxicity is class effect, usually reversible"
+    source_refs: [SRC-NCCN-BREAST-2025]
+  - condition: "LVEF persistently <LLN after 2 holds"
+    modification: "Permanent discontinuation"
+    source_refs: [SRC-NCCN-BREAST-2025]
+  - condition: "Severe infusion reaction"
+    modification: "Premedicate before subsequent infusions; slow rate; permanent discontinuation if recurrent severe"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Трастузумаб (включаючи біосиміляри) реімбурсується НСЗУ для HER2+ РМЗ; пертузумаб реімбурсується для HER2+ метастатичного РМЗ 1L (CLEOPATRA індикація)."
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  CLEOPATRA (Swain 2020, NEJM): pertuzumab + trastuzumab + docetaxel
+  vs trastuzumab + docetaxel — mOS 57.1 vs 40.8 mo. After ~6 cycles of
+  THP induction with confirmed response, docetaxel is dropped and
+  HP maintenance continues until progression. Endocrine therapy added
+  if HR-co-positive. PHESGO (HP fixed-dose SC + hyaluronidase) approved
+  alternative — single SC injection over ~5-8 min, replaces both IV
+  infusions; preferred for chair-time and patient convenience after
+  initial IV doses tolerated. LVEF baseline + q3 mo.
+notes_ua: >
+  CLEOPATRA (Swain 2020, NEJM): пертузумаб + трастузумаб + доцетаксел
+  vs трастузумаб + доцетаксел — mOS 57.1 vs 40.8 міс. Після ~6 циклів
+  індукції THP з підтвердженою відповіддю доцетаксел відміняється і
+  підтримка HP продовжується до прогресування. Ендокринна терапія
+  додається при HR-копозитивному статусі. PHESGO (HP фіксована доза
+  ПК + гіалуронідаза) — альтернатива; одна ін'єкція ПК ~5-8 хв.
+  Базова LVEF + q3 міс.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

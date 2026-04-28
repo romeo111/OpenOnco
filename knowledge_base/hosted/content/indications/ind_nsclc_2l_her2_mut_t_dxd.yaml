@@ -1,0 +1,109 @@
+id: IND-NSCLC-2L-HER2-MUT-T-DXD
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: HER2_MUTATED
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic HER2-mutant NSCLC (kinase-domain insertion or activating point mutation)"
+    - "Disease progression on 1L systemic therapy (typically platinum ± ICI)"
+    - "HER2 mutation distinct from HER2 amplification or overexpression — different testing pathway"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-activating mutation confirmed by NGS (kinase-domain insertion most common — Y772_A775dup; also G776 / V777 / L755 / S310 hotspots)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-T-DXD-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~49% (DESTINY-Lung02 5.4 mg/kg dose); ~55% (DESTINY-Lung01 6.4 mg/kg)"
+  progression_free_survival: "Median PFS 9.9 mo (DESTINY-Lung02 5.4 mg/kg)"
+  overall_survival_5y: "Median OS 19.5 mo (DESTINY-Lung02 5.4 mg/kg); 17.8 mo (DESTINY-Lung01)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # critical — HER2 mutation (not amplification) detected by NGS
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-ECHO  # baseline LVEF — T-DXd cardiomyopathy monitoring
+desired_tests: []
+
+rationale: >
+  Trastuzumab deruxtecan (T-DXd, HER2-targeted ADC with deruxtecan
+  topoisomerase-I payload) for HER2-mutant metastatic NSCLC progressing
+  on 1L. HER2 mutations occur in ~2-4% of NSCLC adenocarcinoma —
+  distinct from HER2 amplification (rarer in NSCLC, different testing).
+  DESTINY-Lung01 (Li 2022): T-DXd 6.4 mg/kg ORR 55%, mPFS 8.2 mo, mOS
+  17.8 mo. DESTINY-Lung02 (Goto 2023): randomized 5.4 vs 6.4 mg/kg →
+  5.4 mg/kg ORR 49%, mPFS 9.9 mo, mOS 19.5 mo, with substantially
+  less pneumonitis. 5.4 mg/kg is the label dose. FDA approval 2022.
+  Boxed pneumonitis warning ~12% any-grade (3% G≥3, ~1% fatal) —
+  baseline + serial CT chest mandatory; LVEF monitoring required.
+  Drug is registered + reimbursed in UA for breast indications
+  (DESTINY-Breast03 / -04); NSCLC indication not on НСЗУ formulary —
+  funding via off-label / charity / DEC permit citing FDA NSCLC label.
+
+sources:
+  - source_id: SRC-DESTINYLUNG02-GOTO-2023
+    position: supports
+    relevant_quote_paraphrase: "T-DXd 5.4 mg/kg in HER2-mutant pretreated NSCLC: ORR 49%, mPFS 9.9 mo, mOS 19.5 mo, with substantially less pneumonitis vs 6.4 mg/kg"
+  - source_id: SRC-DESTINYLUNG01-LI-2022
+    position: supports
+    relevant_quote_paraphrase: "T-DXd 6.4 mg/kg in HER2-mutant pretreated NSCLC: ORR 55%, mPFS 8.2 mo, mOS 17.8 mo (basis for FDA approval 2022)"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "T-DXd is recommended for HER2-mutant metastatic NSCLC after platinum chemotherapy; Cat 1 (DESTINY-Lung01/02); 5.4 mg/kg preferred dose"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "T-DXd 5.4 mg/kg is the preferred targeted option for HER2-mutant NSCLC after platinum failure"
+
+  - source_id: SRC-DESTINY-BREAST03-CORTES-2022
+    position: supports
+    relevant_quote_paraphrase: DESTINY-BREAST03 trial — see referenced publication for primary outcome data.
+known_controversies:
+  - topic: "T-DXd 5.4 vs 6.4 mg/kg for HER2-mutant NSCLC"
+    positions:
+      - position: "5.4 mg/kg (DESTINY-Lung02): label dose; ORR 49%, mPFS 9.9 mo; less pneumonitis"
+        sources: [SRC-DESTINYLUNG02-GOTO-2023]
+      - position: "6.4 mg/kg (DESTINY-Lung01): higher ORR (55%) but more pneumonitis (~26% any-grade); not recommended for routine use"
+        sources: [SRC-DESTINYLUNG01-LI-2022]
+    our_default: "5.4 mg/kg q3w (label dose; better safety / efficacy balance)"
+    rationale: "DESTINY-Lung02 head-to-head established 5.4 mg/kg"
+
+do_not_do:
+  - "НЕ підтверджувати HER2 mutation status на базі IHC alone — IHC корисний для amplification/overexpression, NOT для kinase-domain mutations; NGS обов'язковий."
+  - "НЕ ігнорувати baseline + monthly CT chest — pneumonitis ~12% any-grade, ~3% G≥3, ~1% fatal."
+  - "НЕ продовжувати T-DXd при будь-якій підтвердженій ILD ≥G2 — permanent discontinuation."
+  - "НЕ ігнорувати baseline + serial LVEF (echo q3 mo) — cardiomyopathy ризик нижчий ніж naked trastuzumab але існує."
+  - "НЕ пропускати aggressive antiemetic prophylaxis — high emetogenicity (NK1+5HT3+dex регламент)."
+  - "НЕ призначати при baseline ILD або severe lung disease — додатковий pneumonitis ризик."
+  - "НЕ підтверджувати UA-funding pathway на базі breast registration — NSCLC indication поза НСЗУ; funding requires explicit charity / off-label / DEC pathway citing FDA NSCLC label."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for
+  HER2-mutant NSCLC 2L+. Drug physically available in UA (registered
+  + reimbursed for breast); NSCLC indication funding is administrative
+  gate, not import. HER2 amplification + overexpression in NSCLC are
+  separate (rarer, less-validated) targets — different Indications.

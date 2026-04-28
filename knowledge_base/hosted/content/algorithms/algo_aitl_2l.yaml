@@ -32,6 +32,7 @@ decision_tree:
       result: IND-AITL-2L-AZACITIDINE
     if_false:
       next_step: 2
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
   # Step 2 — HDAC-naive + romidepsin accessible → romidepsin.
   - step: 2
@@ -44,6 +45,7 @@ decision_tree:
       result: IND-AITL-2L-ROMIDEPSIN
     if_false:
       next_step: 3
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 3 — alternative HDACi: belinostat (less cardiotoxic than
   # romidepsin in some series; use when romidepsin not accessible).
@@ -56,6 +58,7 @@ decision_tree:
       result: IND-AITL-2L-BELINOSTAT
     if_false:
       result: IND-AITL-2L-AZACITIDINE
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-BCELL-2025

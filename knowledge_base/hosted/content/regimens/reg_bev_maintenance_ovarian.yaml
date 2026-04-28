@@ -1,0 +1,62 @@
+id: REG-BEV-MAINTENANCE-OVARIAN
+name: "Bevacizumab maintenance (post 1L platinum, ovarian/fallopian/primary peritoneal)"
+name_ua: "Бевацизумаб підтримуюча терапія (після 1L платини, рак яєчника/маткових труб/первинно очеревинний)"
+alternate_names:
+  - "Bev maintenance ovarian"
+  - "GOG-218 / ICON7 maintenance"
+
+components:
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg IV q3w (GOG-218 schedule); 7.5 mg/kg IV q3w acceptable (ICON7 schedule)"
+    schedule: "day 1 of each 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "15 cycles (GOG-218, ~10 mo from start of maintenance) up to 22 cycles (~15 mo); higher-risk subset (ICON7 stage III suboptimal / IV) may continue total ~15 mo from carboplatin-paclitaxel start"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Proteinuria >2 g/24h"
+    modification: "Hold; resume on <2 g/24h; permanent discontinuation if nephrotic syndrome"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "Uncontrolled HTN (>160/100 despite ≥2 antihypertensives)"
+    modification: "Hold; permanent discontinuation if hypertensive crisis"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "GI perforation, fistula, wound dehiscence, or arterial TE"
+    modification: "Permanent discontinuation"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "Surgery planned"
+    modification: "Hold ≥4 weeks before and ≥4 weeks after surgery"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Бевацизумаб (та біосиміляри) реімбурсується НСЗУ для епітеліального раку яєчника 1L підтримки."
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  GOG-218 (Burger 2011, NEJM) and ICON7 (Perren 2011, NEJM) established
+  bevacizumab maintenance after 6 cycles carboplatin-paclitaxel ±
+  concurrent bevacizumab. Highest absolute benefit in stage III
+  suboptimally debulked or stage IV. Often combined with PARP
+  maintenance (PAOLA-1: bev + olaparib) in HRD-positive disease;
+  see REG-OLAPARIB-MAINTENANCE-OVARIAN. Avoid in patients with
+  bowel-wall invasion or recent bowel surgery (perforation risk).
+notes_ua: >
+  GOG-218 (Burger 2011, NEJM) і ICON7 (Perren 2011, NEJM) встановили
+  підтримку бевацизумабом після 6 циклів карбоплатин-паклітаксел ±
+  одночасний бевацизумаб. Найбільша абсолютна користь у III стадії
+  субоптимально дебульктованих або IV стадії. Часто комбінується з
+  PARP-підтримкою (PAOLA-1: bev + olaparib) при HRD-позитивній хворобі.
+  Уникати при ураженні стінки кишечника або нещодавніх кишкових операціях.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

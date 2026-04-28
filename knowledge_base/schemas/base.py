@@ -88,17 +88,32 @@ class RedFlagSeverity(str, Enum):
 
 
 class RedFlagCategory(str, Enum):
-    """5-type matrix from REDFLAG_AUTHORING_GUIDE §2 plus an `other` bucket.
+    """5-type matrix from REDFLAG_AUTHORING_GUIDE §2 plus extension buckets.
 
     Used by coverage tooling and downstream UI grouping. Authored on the
     RedFlag itself so we don't have to rely on filename/keyword heuristics.
+
+    Canonical extensions added 2026-04-26 to retire workaround categories
+    introduced by CSD-7A (universal fitness/eligibility/prior-therapy/
+    emergency/reproductive RFs) and CSD-8A (clinical risk-stratification
+    scores: IPI/Sanz/GELF/MIPI/Binet/Rai/ISS/DIPSS/IPSS/Sokal/Hasford/
+    CHAARTED/LATITUDE).
     """
 
+    # Original 5-type matrix (REDFLAG_AUTHORING_GUIDE §2)
     ORGAN_DYSFUNCTION = "organ-dysfunction"
     INFECTION_SCREENING = "infection-screening"
     HIGH_RISK_BIOLOGY = "high-risk-biology"
     TRANSFORMATION_PROGRESSION = "transformation-progression"
     FRAILTY_AGE = "frailty-age"
+
+    # Canonical extensions (2026-04-26)
+    FITNESS_ELIGIBILITY = "fitness-eligibility"
+    PRIOR_THERAPY_CLASS = "prior-therapy-class"
+    ONCOLOGIC_EMERGENCY = "oncologic-emergency"
+    REPRODUCTIVE_STATUS = "reproductive-status"
+    RISK_SCORE = "risk-score"
+
     OTHER = "other"
 
 

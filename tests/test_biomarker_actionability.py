@@ -93,6 +93,12 @@ def test_all_bma_cells_have_valid_escat_tier(bma_records):
     assert not bad, f"Cells with invalid escat_tier: {bad}"
 
 
+@pytest.mark.skip(
+    reason="phase-1.5: BMA YAML still carries legacy `oncokb_level`; "
+    "schema dropped that field in Phase 1 (CIViC pivot). Phase 1.5 "
+    "migrates the field into `evidence_sources` entries; this test "
+    "is restored as a check on `evidence_sources` content then."
+)
 def test_all_bma_cells_have_valid_oncokb_level(bma_records):
     """Every cell's oncokb_level is in the canonical OncoKB v2 levels set."""
     bad = [
@@ -302,7 +308,6 @@ def test_case_1_braf_v600e_mcrc():
         f"Expected BMA-BRAF-V600E-CRC; got {[h.bma_id for h in result.plan.variant_actionability]}"
     )
     assert hit.escat_tier == "IB"
-    assert hit.oncokb_level == "1"
     assert hit.primary_sources, "primary_sources should be non-empty"
     assert any("encorafenib" in c.lower() for c in hit.recommended_combinations)
 
@@ -318,7 +323,6 @@ def test_case_2_egfr_t790m_nsclc():
         f"Expected BMA-EGFR-T790M-NSCLC; got {[h.bma_id for h in result.plan.variant_actionability]}"
     )
     assert hit.escat_tier == "IA"
-    assert hit.oncokb_level == "1"
     assert hit.primary_sources
     assert any("osimertinib" in c.lower() for c in hit.recommended_combinations)
 
@@ -334,7 +338,6 @@ def test_case_3_brca1_germline_ovarian():
         f"Expected BMA-BRCA1-GERMLINE-OVARIAN; got {[h.bma_id for h in result.plan.variant_actionability]}"
     )
     assert hit.escat_tier == "IA"
-    assert hit.oncokb_level == "1"
     assert hit.primary_sources
     assert any("olaparib" in c.lower() for c in hit.recommended_combinations)
 
@@ -350,7 +353,6 @@ def test_case_4_kras_g12c_nsclc():
         f"Expected BMA-KRAS-G12C-NSCLC; got {[h.bma_id for h in result.plan.variant_actionability]}"
     )
     assert hit.escat_tier == "IA"
-    assert hit.oncokb_level == "1"
     assert hit.primary_sources
     assert any(
         "sotorasib" in c.lower() or "adagrasib" in c.lower()
@@ -372,7 +374,6 @@ def test_case_5_alk_fusion_nsclc_substitution():
         f"Expected BMA-ALK-FUSION-NSCLC; got {[h.bma_id for h in result.plan.variant_actionability]}"
     )
     assert hit.escat_tier == "IA"
-    assert hit.oncokb_level == "1"
     assert hit.primary_sources
     assert any(
         "alectinib" in c.lower() or "lorlatinib" in c.lower() or "brigatinib" in c.lower()
@@ -386,16 +387,15 @@ def test_case_5_alk_fusion_nsclc_substitution():
 
 
 def test_render_html_includes_tier_badges():
-    """End-to-end render check: the actionability table emits ESCAT/OncoKB
-    tier-badge spans with the expected CSS classes (escat-IB + oncokb-1
-    for the BRAF V600E mCRC case)."""
+    """End-to-end render check: the actionability table emits ESCAT
+    tier-badge spans with the expected CSS classes (escat-IB for the
+    BRAF V600E mCRC case). The OncoKB-level badge column was removed
+    in Phase 1 of the CIViC pivot; per-source levels now render via
+    the `evidence-sources` <ul>."""
     patient = _load_fixture("csd_1_braf_v600e_mcrc.json")
     result = generate_plan(patient, kb_root=KB_ROOT)
     html = render_plan_html(result)
     assert "tier-badge" in html, "Expected tier-badge CSS class in rendered HTML"
     assert "escat-IB" in html, (
         "Expected escat-IB badge class for BRAF V600E mCRC"
-    )
-    assert "oncokb-1" in html, (
-        "Expected oncokb-1 badge class for BRAF V600E mCRC"
     )

@@ -1,0 +1,69 @@
+id: RF-PRIOR-CDK46I-PROGRESSION
+definition: >
+  Progression on prior CDK4/6 inhibitor + endocrine therapy
+  (palbociclib, ribociclib, abemaciclib + AI/fulvestrant) in HR+/HER2-
+  metastatic breast cancer. Triggers second-line selection per
+  resistance mechanism: ESR1mut → elacestrant; PIK3CA → alpelisib +
+  fulvestrant; AKT1/PTEN → capivasertib + fulvestrant; BRCA1/2 →
+  PARPi; HER2-low → T-DXd; chemotherapy if endocrine-resistant biology.
+definition_ua: >
+  Прогресія на попередньому CDK4/6 інгібіторі + ендокринна терапія
+  (палбоцикліб, рібоцикліб, абемацикліб + AI/фулвестрант) при HR+/HER2-
+  метастатичному раку молочної залози. Триггерує вибір другої лінії за
+  механізмом резистентності: ESR1mut → елацестрант; PIK3CA → альпелісиб
+  + фулвестрант; AKT1/PTEN → капівасертиб + фулвестрант; BRCA1/2 →
+  PARPi; HER2-low → T-DXd; хіміотерапія при ендокрин-резистентній
+  біології.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_cdk46i_progression"
+      value: true
+    - all_of:
+        - finding: "prior_cdk46i_received"
+          value: true
+        - finding: "best_response_to_cdk46i"
+          value: "PD"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Mandatory at progression: ESR1, PIK3CA, AKT1, PTEN, BRCA1/2 testing
+  (liquid biopsy preferred). EMERALD: elacestrant 2L for ESR1mut +
+  CDK4/6i-pretreated, mPFS 3.8 mo vs 1.9 SoC. SOLAR-1: alpelisib +
+  fulvestrant for PIK3CA mutant. CAPItello-291: capivasertib +
+  fulvestrant for AKT-pathway altered. DESTINY-Breast04: T-DXd for
+  HER2-low (IHC 1+/2+ ISH-). Continuing CDK4/6i in 2L with switched
+  endocrine partner (post-MAINTAIN, post-PALMIRA): mixed evidence —
+  modest PFS benefit, generally not preferred over biomarker-driven
+  switch. CDK4/6i rechallenge with abemaciclib (more cytostatic vs
+  cytotoxic profile) considered in oligo-progression after previous
+  ribo/palbo response.
+notes_ua: >
+  Обовʼязково при прогресії: тестування ESR1, PIK3CA, AKT1, PTEN,
+  BRCA1/2 (liquid biopsy переважно). EMERALD: елацестрант 2L для
+  ESR1mut + CDK4/6i-предлікованих, мPFS 3.8 vs 1.9 SoC. SOLAR-1:
+  альпелісиб + фулвестрант при PIK3CA. CAPItello-291: капівасертиб +
+  фулвестрант при AKT-змінах. DESTINY-Breast04: T-DXd при HER2-low.
+  Продовження CDK4/6i у 2L зі зміненим ендокринним партнером — змішані
+  дані; зазвичай переважає biomarker-driven перехід. CDK4/6i
+  rechallenge з абемациклібом — при oligo-прогресії після попередньої
+  відповіді на rіbo/palbo.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

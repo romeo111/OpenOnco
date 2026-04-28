@@ -1,0 +1,134 @@
+id: ALGO-OVARIAN-2L
+applicable_to_disease: DIS-OVARIAN
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ Indication for recurrent ovarian / fallopian / primary
+  peritoneal cancer based on (1) platinum-free interval (PFI: >6 mo =
+  platinum-sensitive, ≤6 mo = platinum-resistant), (2) HRD / BRCA1/2
+  status (drives choice of maintenance PARPi after re-induction
+  response), and (3) FRα expression on platinum-resistant relapse
+  (drives mirvetuximab vs AURELIA chemo+bev). Maintenance PARPi only
+  after demonstrated CR/PR to platinum re-induction.
+
+output_indications:
+  - IND-OVARIAN-2L-PLAT-SENS-CARBO-PLD-BEV
+  - IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
+  - IND-OVARIAN-MAINT-PARPI-BRCAM-OLAPARIB
+  - IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB
+  - IND-OVARIAN-MAINT-PARPI-RUCAPARIB
+  - IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB
+  - IND-OVARIAN-2L-PLAT-RES-PLD-BEV
+  - IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
+  - IND-OVARIAN-2L-PLAT-RES-TOPOTECAN
+
+# Defaults: standard track = OCEANS carbo+gem+bev (platinum-sensitive
+# default, full UA NSZU coverage); aggressive track = mirvetuximab
+# (best evidence for FRα-high platinum-resistant).
+default_indication: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
+alternative_indication: IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB
+
+decision_tree:
+  # Step 1 — PFI gate. RF-OVARIAN-PLATINUM-SENSITIVE fires on PFI >6 mo
+  # OR explicit platinum_status=sensitive. If not sensitive →
+  # RF-OVARIAN-PLATINUM-RESISTANT path.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-PLATINUM-SENSITIVE
+    if_true:
+      next_step: 2
+    if_false:
+      next_step: 5
+
+  # Step 2 — platinum-sensitive: BRCA1/2-mut → re-induction chemo+bev,
+  # maintenance olaparib via followed_by chain.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-BRCA-MUT-ACTIONABLE
+    if_true:
+      result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV  # OCEANS chemo, then olaparib maintenance per followed_by
+    if_false:
+      next_step: 3
+
+  # Step 3 — platinum-sensitive HRD+ (BRCA-WT) → re-induction chemo+bev,
+  # maintenance niraparib via followed_by chain.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-HRD-POSITIVE-ACTIONABLE
+        - red_flag: RF-OVARIAN-HRD-ACTIONABILITY
+    if_true:
+      result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV  # OCEANS chemo, then niraparib maintenance per followed_by
+    if_false:
+      next_step: 4
+
+  # Step 4 — platinum-sensitive HRD-negative / unknown → re-induction
+  # chemo+bev (no maintenance PARPi unless HRD+ confirmed).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Platinum-sensitive, HRD-negative or unknown — default re-induction chemo+bev"
+    if_true:
+      result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
+    if_false:
+      result: IND-OVARIAN-2L-PLAT-SENS-CARBO-GEM-BEV
+    notes: "Default fall-through for platinum-sensitive HRD-negative cohort; no biomarker gate required."
+
+  # Step 5 — platinum-resistant: FRα-high (≥75% TPS by VENTANA FOLR1
+  # RxDx) → mirvetuximab soravtansine (MIRASOL, ESCAT IA).
+  - step: 5
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-FRA-HIGH-ACTIONABLE
+    if_true:
+      result: IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB
+    if_false:
+      next_step: 6
+
+  # Step 6 — platinum-resistant, FRα-low/medium/negative or untested →
+  # AURELIA chemo + bev (default to weekly paclitaxel + bev: only AURELIA
+  # subgroup with significant OS benefit and full UA NSZU coverage).
+  # Switch to PLD + bev if residual taxane neuropathy; topotecan if bev
+  # contraindicated.
+  - step: 6
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-PLATINUM-RESISTANT
+    if_true:
+      result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
+    if_false:
+      result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
+    notes: "Default fall-through — platinum-resistant FRα-low cohort routes to AURELIA weekly pac+bev (PLD/topotecan as toxicity-driven alternatives via Indication notes)."
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Decision-tree primary axes: PFI > BRCA/HRD > FRα. Maintenance PARPi
+  surfaces via the chemo Indication's `followed_by` chain (BRCA-mut →
+  olaparib; HRD+ → niraparib; rucaparib alternative when olaparib /
+  niraparib intolerant). Engine should evaluate `followed_by` only
+  after re-induction CR/PR is documented (status update, not a
+  pre-treatment branch).
+
+  OOS / wiring gaps:
+  (1) PFI is encoded in the Indication's stage_requirements as free
+  text; the engine reads platinum_free_interval_months from the
+  patient profile to gate step 1. If profile field absent, fallback
+  is to ask via questionnaire.
+  (2) FRα testing is gated on the patient already having tissue
+  available — re-biopsy at platinum-resistant relapse is preferred
+  over relying on archival primary tumor (expression can shift).
+  (3) Trabectedin+PLD (IND-OVARIAN-3L-TRABECTEDIN-PLD) and
+  topotecan single-agent (IND-OVARIAN-2L-PLAT-RES-TOPOTECAN) are
+  later-line / salvage options NOT routed by this 2L algorithm; they
+  surface via MDT free-text or a future ALGO-OVARIAN-3L.
+  (4) Frailty (RF-OVARIAN-FRAILTY-AGE) and perioperative VTE
+  (RF-OVARIAN-PERIOPERATIVE-VTE) modify dosing / drop bev — surfaced
+  as red_flags_triggering_alternative on each Indication, not as
+  algorithm branches.
+  (5) BIO-FRA is newly introduced in this batch; biomarker_actionability
+  entry not yet authored.

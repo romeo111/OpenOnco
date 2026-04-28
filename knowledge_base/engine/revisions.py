@@ -123,6 +123,9 @@ def revise_plan(
     previous: PreviousResult,
     revision_trigger: str,
     kb_root: Path | str = "knowledge_base/hosted/content",
+    *,
+    actionability_enabled: bool = False,
+    actionability_client=None,
 ) -> tuple[PreviousResult, NewResult]:
     """Generate a new Plan / DiagnosticPlan version that supersedes the
     previous one, given an updated patient profile and a description of
@@ -133,6 +136,11 @@ def revise_plan(
     Auto-detects the transition from the shape of `previous` and the
     shape of `updated_patient`. Raises ValueError on illegal downgrade
     (treatment → diagnostic) per CHARTER §15.2 C7.
+
+    Per Q7 lock (safe-rollout v3 §2): when actionability integration is
+    enabled, every revision re-queries the actionability source rather
+    than reusing the previous version's cached layer. Data may have
+    updated between versions; staleness defeats the integration's value.
     """
     if not revision_trigger or not str(revision_trigger).strip():
         raise ValueError(
@@ -159,6 +167,8 @@ def revise_plan(
             plan_version=prev_version + 1,
             supersedes=prev_id,
             revision_trigger=revision_trigger,
+            actionability_enabled=actionability_enabled,
+            actionability_client=actionability_client,
         )
     elif isinstance(previous, DiagnosticPlanResult):
         if is_treat_now:
@@ -169,6 +179,8 @@ def revise_plan(
                 plan_version=1,
                 supersedes=prev_id,
                 revision_trigger=revision_trigger,
+                actionability_enabled=actionability_enabled,  # Q7: re-query on revision
+                actionability_client=actionability_client,
             )
         elif is_diag_now:
             # diagnostic → diagnostic (still no histology, but new data)

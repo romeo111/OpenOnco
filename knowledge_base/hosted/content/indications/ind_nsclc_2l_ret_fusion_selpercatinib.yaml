@@ -1,0 +1,97 @@
+id: IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: RET_FUSION
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic RET fusion-positive NSCLC"
+    - "Disease progression on 1L therapy (could be platinum chemo, ICI, or selpercatinib if 1L given)"
+    - "Note: LIBRETTO-431 confirmed 1L superiority of selpercatinib over platinum±pembrolizumab; this Indication covers 2L mono use"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-RET
+      value_constraint: "RET fusion confirmed by RNA-NGS (preferred) or FISH; KIF5B-RET most common partner in NSCLC"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SELPERCATINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~64% pretreated; ~85% TKI-naïve (LIBRETTO-001)"
+  progression_free_survival: "Median PFS 16.5 mo pretreated; intracranial ORR 91% (measurable brain mets)"
+  overall_survival_5y: "Mature OS evolving; LIBRETTO-431 phase-3 vs platinum±pembrolizumab confirmed PFS HR 0.46"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # critical — RNA-NGS for RET fusion (DNA-only panels miss many)
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Selpercatinib (highly selective RET TKI) for RET fusion-positive
+  metastatic NSCLC (~1-2% of NSCLC adenocarcinoma). LIBRETTO-001 NSCLC
+  cohorts: pretreated ORR 64% (mPFS 16.5 mo); TKI-naïve ORR 85%;
+  intracranial ORR 91% (measurable brain mets). FDA approval 2020 for
+  RET-fusion+ NSCLC any line. LIBRETTO-431 phase-3 vs platinum±
+  pembrolizumab confirmed 1L superiority (PFS HR 0.46). Pralsetinib
+  (ARROW) is alternative — comparable efficacy, slightly different AE
+  profile (more hematologic). Hypertension (~40%) and hepatotoxicity
+  are dose-limiting AEs requiring proactive management. RNA-NGS
+  detection mandatory — DNA-only panels often miss RET fusions.
+
+sources:
+  - source_id: SRC-LIBRETTO001-DRILON-2020
+    position: supports
+    relevant_quote_paraphrase: "Selpercatinib in RET-fusion+ NSCLC: pretreated ORR 64%, mPFS 16.5 mo; TKI-naïve ORR 85%; intracranial ORR 91%"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Selpercatinib is recommended for RET-fusion+ NSCLC any line; Cat 1 (LIBRETTO-001 / -431); pralsetinib alternative"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Selpercatinib is the preferred RET-targeted option for RET-fusion+ NSCLC; pralsetinib alternative"
+
+known_controversies:
+  - topic: "Selpercatinib vs pralsetinib for RET-fusion+ NSCLC"
+    positions:
+      - position: "Selpercatinib (LIBRETTO-001 / -431): broader experience; less hematologic toxicity"
+        sources: [SRC-LIBRETTO001-DRILON-2020]
+      - position: "Pralsetinib (ARROW): comparable efficacy; more pneumonitis + hematologic AE"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Selpercatinib for most patients (more validation, less heme toxicity); pralsetinib if intolerable hypertension on selpercatinib"
+    rationale: "Comparable efficacy; tolerability nuances drive choice"
+
+do_not_do:
+  - "НЕ підтверджувати RET fusion на базі DNA-only hotspot panel — RNA-NGS обов'язковий."
+  - "НЕ ігнорувати baseline + serial hypertension monitoring — class effect ~40%; antihypertensives proactive."
+  - "НЕ ігнорувати baseline + serial LFTs (q2 weeks first 3 mo) — boxed hepatotoxicity AE."
+  - "НЕ комбінувати з QT-prolonging drugs без careful review — QTc class effect."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers — exposure shifts."
+  - "НЕ підтверджувати план без funding pathway — selpercatinib не зареєстрований в Україні."
+  - "НЕ ігнорувати hemorrhage risk — Grade ≥3 bleeding потребує дозo-modification або discontinuation."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for RET
+  fusion-positive NSCLC any line. Pralsetinib alternative (separate
+  future Indication).

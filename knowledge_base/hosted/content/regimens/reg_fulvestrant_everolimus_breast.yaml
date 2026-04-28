@@ -1,0 +1,50 @@
+id: REG-FULVESTRANT-EVEROLIMUS-BREAST
+name: "Fulvestrant + everolimus (HR+/HER2- metastatic post-AI/CDK4/6i, no targetable mutation)"
+name_ua: "Фулвестрант + еверолімус (HR+/HER2- метастаз після ІА/CDK4/6i, без таргетованої мутації)"
+alternate_names: ["PrECOG 0102 regimen", "BOLERO-2 backbone (off-label fulvestrant substitution)"]
+
+components:
+  - drug_id: DRUG-FULVESTRANT
+    dose: "500 mg IM days 1, 15, 29, then monthly"
+    schedule: "Loading days 1, 15, 29; then q4w maintenance"
+    route: IM
+  - drug_id: DRUG-EVEROLIMUS
+    dose: "10 mg PO once daily continuous"
+    schedule: "Continuous, no off-day"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Dexamethasone 0.5 mg/5 mL alcohol-free oral solution: 5 mL swish for 2 minutes and spit out, BID, for the first 8 weeks (SWISH stomatitis prophylaxis)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Stomatitis G≥2 despite mouthwash"
+    modification: "Hold everolimus; resume at 5 mg PO daily after recovery"
+  - condition: "Pneumonitis G≥2 (new dyspnea, ground-glass on CT)"
+    modification: "Hold immediately; high-dose corticosteroids; pulmonology consult; permanent discontinuation if G≥3"
+  - condition: "Hyperglycemia G≥3 / hyperlipidemia"
+    modification: "Anti-diabetic / lipid-lowering agents; consider dose reduction"
+  - condition: "Severe infection"
+    modification: "Hold; treat aggressively; consider permanent discontinuation if recurrent"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Fulvestrant reimbursed; everolimus registered (Afinitor + generics) but NSZU онкопакет does not cover the breast indication (RCC indication is broader). Out-of-pocket; generic everolimus substantially cheaper than brand."
+
+sources: [SRC-BOLERO2-BASELGA-2012, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  Pivotal trial: BOLERO-2 used everolimus + exemestane (PFS 10.6 vs
+  4.1 mo). PrECOG 0102 (Kornblum 2018) substituted fulvestrant for
+  exemestane (PFS 10.3 vs 5.1 mo) — mechanistically equivalent and
+  preferred when fulvestrant already in use. Stomatitis prophylaxis
+  with dexamethasone mouthwash (SWISH) reduces G2+ stomatitis from
+  ~33% to ~2% — mandatory pre-medication. Used as default 2L when no
+  PIK3CA/AKT1/PTEN/ESR1 alteration is found and HER2-low not
+  available; no biomarker gating.

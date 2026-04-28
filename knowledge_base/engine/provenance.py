@@ -25,6 +25,11 @@ EventType = Literal[
     "approved",
     "requested_data",
     "flagged_risk",
+    # Phase 2 of OncoKB integration — surface-only external KB consultation.
+    # See oncokb_integration_safe_rollout_v3.md §7. Backward-compatible
+    # extension; older events without these values still load.
+    "external_kb_consulted",
+    "resistance_conflict_detected",
 ]
 
 TargetType = Literal[
@@ -35,6 +40,7 @@ TargetType = Literal[
     "red_flag",
     "source",
     "plan_section",
+    "oncokb_query",
 ]
 
 

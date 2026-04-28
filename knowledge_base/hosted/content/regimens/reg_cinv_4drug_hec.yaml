@@ -1,0 +1,89 @@
+id: REG-CINV-4DRUG-HEC
+name: "4-drug CINV prophylaxis (high-emetogenic chemo: NK1 + 5HT3 + dex + olanzapine)"
+name_ua: "4-компонентна профілактика CINV (HEC: NK1 + 5HT3 + дексаметазон + оланзапін)"
+alternate_names:
+  - "MASCC/ESMO HEC antiemetic regimen"
+  - "Quadruplet antiemetic"
+  - "Olanzapine-NEPA-style regimen"
+
+components:
+  - drug_id: DRUG-ONDANSETRON
+    dose: "16 mg PO OR 8 mg IV (acute phase day 1; substitute palonosetron 0.25 mg IV preferred where available — single-dose covers acute + delayed)"
+    schedule: "30 min before chemotherapy on day 1 only"
+    route: IV
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "12 mg PO/IV day 1 (with NEPA/aprepitant) OR 20 mg without NK1; days 2-4 8 mg PO daily (taper for delayed phase) — omit days 2-4 if olanzapine used (PrOnD trial: olanzapine substitutes for delayed-phase steroid)"
+    schedule: "Day 1 single dose pre-chemo + days 2-4 8 mg daily delayed prophylaxis (OR omit delayed if olanzapine used)"
+    route: PO
+
+cycle_length_days: 1
+total_cycles: "Per chemotherapy cycle (re-administer with each HEC cycle)"
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cisplatin ≥50 mg/m² OR AC (doxorubicin + cyclophosphamide) — definitively HEC"
+    modification: "Use full 4-drug regimen (NK1 + 5HT3 + dex + olanzapine 10 mg PO days 1-4)"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Carboplatin AUC ≥4 — reclassified HEC by NCCN/MASCC 2017+"
+    modification: "Use 4-drug regimen as for cisplatin-HEC"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Refractory CINV despite 4-drug prophylaxis"
+    modification: "Add olanzapine 10 mg PO daily (if not already in regimen) OR rescue with metoclopramide 10-20 mg PO/IV q6h + lorazepam 0.5-2 mg q6h PRN"
+  - condition: "Olanzapine sedation problematic"
+    modification: "Reduce olanzapine to 5 mg PO QHS; avoid in elderly with delirium risk"
+  - condition: "Strong CYP3A4 inducer (rifampin) concurrent"
+    modification: "Aprepitant requires dose increase OR alternative NK1 (rolapitant — long t1/2, fewer DDIs); fosaprepitant single 150 mg IV day 1 alternative"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Ондансетрон + дексаметазон — реімбурсуються НСЗУ. Апрепітант
+    (NK1-антагоніст) НЕ зареєстрований в Україні станом на 2026-04;
+    палоносетрон обмежено доступний (іноді через cross-border).
+    Оланзапін зареєстрований як антипсихотик, off-label для CINV;
+    cost-effective додавання.
+    Альтернатива: 2-component prophylaxis (ondansetron + dexamethasone)
+    для HEC є нижчою якості допомоги, але прийнятна при відсутності
+    NK1; додавання оланзапіну 10 мг PO QHS days 1-4 (PrOnD trial,
+    Navari 2017 NEJM) показало значне зменшення CINV без NK1.
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  MASCC/ESMO 2016 + NCCN Antiemesis 2025 standard for high-emetogenic
+  chemo (HEC = cisplatin ≥50 mg/m², AC, carboplatin AUC ≥4 (since 2017),
+  cyclophosphamide ≥1500 mg/m², HD-cytarabine, others). Full 4-drug:
+  (1) NK1 antagonist — aprepitant 125 mg PO day 1, 80 mg PO days 2-3
+  (or fosaprepitant 150 mg IV day 1 single dose; or NEPA combination
+  netupitant-palonosetron 300/0.5 mg PO day 1 single); (2) 5HT3
+  antagonist — palonosetron 0.25 mg IV day 1 PREFERRED (single-dose
+  covers acute + delayed) OR ondansetron 8 mg IV / 16 mg PO; (3)
+  dexamethasone 12 mg day 1 with NK1 (or 20 mg without NK1), then
+  8 mg daily days 2-4; (4) olanzapine 10 mg PO QHS days 1-4 (PrOnD
+  trial Navari 2017 NEJM — added to triplet, ~50% reduction in CINV
+  failure). Olanzapine also substitutes for delayed-phase dexamethasone
+  (steroid-sparing). For Ukraine where aprepitant unavailable, the
+  best evidence-based alternative is ondansetron + dexamethasone +
+  olanzapine triplet (NCCN supports this combination for HEC when
+  NK1 unavailable). DRUG IDs missing in KB and to be authored: NK1
+  agents (aprepitant/fosaprepitant/rolapitant/netupitant), olanzapine,
+  palonosetron, metoclopramide, lorazepam — flagged for PROD batch.
+notes_ua: >
+  MASCC/ESMO 2016 + NCCN Antiemesis 2025 стандарт для високо-еметогенної
+  хіміо. Повний 4-компонент: (1) NK1 — апрепітант 125 мг PO день 1, 80
+  мг PO дні 2-3; (2) 5HT3 — палоносетрон 0.25 мг IV день 1 переважний;
+  (3) дексаметазон 12 мг день 1 + 8 мг дні 2-4; (4) оланзапін 10 мг PO
+  QHS дні 1-4 (PrOnD, Navari 2017 NEJM — ~50% зменшення failure).
+  Для України, де апрепітант недоступний, найкраща альтернатива —
+  трипл ондансетрон + дексаметазон + оланзапін.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

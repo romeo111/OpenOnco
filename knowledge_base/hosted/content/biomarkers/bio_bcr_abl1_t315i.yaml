@@ -1,0 +1,81 @@
+id: BIO-BCR-ABL1-T315I
+names:
+  preferred: "BCR::ABL1 T315I gatekeeper mutation"
+  ukrainian: "BCR::ABL1 T315I — мутація-gatekeeper"
+  english: "BCR-ABL1 T315I gatekeeper mutation"
+  synonyms: ["ABL1 p.T315I", "BCR-ABL T315I", "T315I"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "ABL1"
+  exon: "6"
+  variant_type: "missense"
+  hgvs_protein: "p.T315I"
+  functional_impact: "pan-TKI resistance: imatinib, dasatinib, nilotinib, bosutinib all inactive; ponatinib and asciminib retain activity"
+
+measurement:
+  method: "BCR::ABL1 kinase-domain Sanger sequencing OR targeted NGS at TKI failure / suboptimal response"
+  units: "categorical (positive | negative); VAF % when reported by NGS"
+  sensitivity_requirement: "Sanger sensitivity ~10-20%; NGS recommended for low-VAF clones (~1-5%)"
+specimen_requirements:
+  - "Peripheral blood (RNA, BCR::ABL1 transcript) — preferred at TKI failure"
+  - "Bone marrow aspirate acceptable"
+
+related_biomarkers:
+  - BIO-BCR-ABL1
+  - BIO-BCR-ABL1-F317L
+  - BIO-BCR-ABL1-V299L
+  - BIO-BCR-ABL1-E255K
+
+sources:
+  - SRC-ELN-CML-2020
+  - SRC-ELN-CML-2025
+  - SRC-PACE-CORTES-2013
+  - SRC-ASCEMBL-REA-2021
+
+# Classical BCR::ABL1 gatekeeper mutation. Confers pan-TKI resistance
+# to all 1st/2nd-gen agents (imatinib, dasatinib, nilotinib, bosutinib).
+# Ponatinib (PACE, Cortes 2013) and asciminib (ASCEMBL, Rea 2021) are
+# the only commercially available agents with retained activity. Triggers
+# resistance-conflict banner if any 1st/2nd-gen TKI is recommended at
+# the same line where T315I is present (safe-rollout v3 §6 T3 mitigation).
+actionability_lookup:
+  gene: ABL1
+  variant: T315I
+external_ids:
+  hgnc_symbol: "ABL1"
+  hgvs_protein: "p.T315I"
+  oncokb_url: "https://www.oncokb.org/gene/ABL1/T315I"
+
+last_reviewed: "2026-04-27"
+notes: >
+  Classical gatekeeper mutation analogous to EGFR T790M and ALK L1196M.
+  T315 normally forms a hydrogen bond with imatinib; the T→I substitution
+  introduces a bulky isoleucine side chain that sterically blocks all
+  type-II ATP-competitive TKIs (imatinib, nilotinib, dasatinib,
+  bosutinib). Ponatinib (PACE, Cortes 2013) was specifically designed
+  to accommodate the I315 side chain via a triple-bond linker and remains
+  active. Asciminib (ASCEMBL, Rea 2021) — an allosteric STAMP inhibitor
+  binding the myristoyl pocket — also retains activity at higher doses
+  (200 mg BID for T315I). Per ELN-2020 and ELN-2025, T315I screening
+  is mandatory at TKI failure or suboptimal response; presence dictates
+  ponatinib or asciminib choice over 2G-TKI. In Ph+ B-ALL, T315I emerges
+  rapidly under non-ponatinib TKI pressure — ponatinib + chemo (or +
+  blinatumomab) is preferred when detected.
+notes_ua: >
+  Класична gatekeeper-мутація, аналог EGFR T790M та ALK L1196M. T315
+  у нормі формує водневий зв'язок з іматинібом; заміна T→I вносить
+  об'ємний бічний ланцюг ізолейцину, який стерично блокує всі type-II
+  ATP-конкурентні TKI (іматиніб, нілотиніб, дазатиніб, босутиніб).
+  Понатиніб (PACE, Cortes 2013) був спеціально розроблений для
+  розміщення бічного ланцюга I315 через лінкер з потрійним зв'язком
+  і зберігає активність. Асциминіб (ASCEMBL, Rea 2021) — алостеричний
+  STAMP-інгібітор, що зв'язується з myristoyl-кишенею — також зберігає
+  активність у вищих дозах (200 мг двічі на добу для T315I). Згідно
+  з ELN-2020 та ELN-2025, скринінг T315I є обов'язковим при невдачі TKI
+  або субоптимальній відповіді; наявність зумовлює вибір понатинібу або
+  асцимінібу замість 2G-TKI. При Ph+ B-ALL T315I швидко виникає під
+  тиском не-понатинібних TKI — понатиніб + ХТ (або + блінатумомаб)
+  є переважним при виявленні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

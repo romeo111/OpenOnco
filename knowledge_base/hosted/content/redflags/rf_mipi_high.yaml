@@ -1,0 +1,40 @@
+id: RF-MIPI-HIGH
+definition: "Mantle cell lymphoma with MIPI high risk (MIPI ≥6.2 / simplified ≥6 points) — aggressive disease; supports early BTK-inhibitor incorporation (TRIANGLE) and alloHCT consideration in eligible relapsed/refractory patients"
+definition_ua: "Мантійноклітинна лімфома з високим ризиком MIPI (MIPI ≥6.2 / спрощений ≥6 балів) — агресивний перебіг; підтримує раннє включення BTK-інгібітора (TRIANGLE) та розгляд аллоТГСК у придатних рецидивуючих/рефрактерних пацієнтів"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "mipi_score"
+      threshold: 6.2
+      comparator: ">="
+    - finding: "mipi_simplified_score"
+      threshold: 6
+      comparator: ">="
+    - finding: "mipi_risk_group"
+      value: "high"
+
+clinical_direction: intensify
+
+severity: major
+category: high-risk-biology
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm:
+  - ALGO-MCL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  MIPI high (MIPI ≥6.2 / simplified ≥6) marks the worst-prognosis MCL
+  cohort with median OS pre-BTKi ~3-4 years. TRIANGLE (Dreyling 2024)
+  showed adding ibrutinib to R-CHOP/R-DHAP induction + maintenance
+  improved FFS, with comparable benefit retained when ibrutinib
+  replaced ASCT consolidation in the experimental arm. NCCN B-cell 2025
+  upgrades early BTKi for high-risk MCL. AlloHCT remains the salvage
+  pathway for relapsed-disease in fit younger MIPI-high patients.
+  Co-fires with TP53/blastoid biomarker RFs which themselves indicate
+  more aggressive deviation.

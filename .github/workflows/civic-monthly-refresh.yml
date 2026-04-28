@@ -1,0 +1,80 @@
+# Monthly CIViC snapshot refresh.
+#
+# Cron: 06:00 UTC on the 1st of every month. Manual trigger via
+# workflow_dispatch is also supported (useful for one-off backfills /
+# debugging). The workflow:
+#
+#   1. Downloads the CIViC nightly TSV (CC0-licensed, free to mirror).
+#   2. Runs knowledge_base/ingestion/civic_loader.py to materialise a
+#      new snapshot under knowledge_base/hosted/civic/<today>/.
+#   3. Diffs the new snapshot against the most recent prior snapshot,
+#      writing a markdown summary into the same dated directory.
+#   4. Opens a pull request with the new snapshot + diff summary as the
+#      PR body, labelled `civic-refresh` and `needs-clinical-review`.
+#
+# Two-reviewer signoff required per CHARTER §6.1 before merge —
+# drift in CIViC evidence levels, directions, or therapy lists can
+# affect engine-driven clinical recommendations, so a clinician must
+# read the diff summary before this PR is merged.
+#
+# Notes:
+# - The PR is opened against the default branch (master).
+# - GITHUB_TOKEN is auto-provided by Actions; no extra secrets needed.
+# - peter-evans/create-pull-request is a permissively-licensed third
+#   party action; pinned to a major version.
+
+name: CIViC monthly refresh
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'   # 06:00 UTC on the 1st of each month
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install pyyaml httpx
+
+      - name: Run refresh
+        id: refresh
+        run: |
+          python scripts/refresh_civic.py
+          # Locate the diff_summary.md just written (latest dated dir).
+          latest_dir=$(ls -1d knowledge_base/hosted/civic/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] | sort | tail -n 1)
+          echo "latest_dir=$latest_dir" >> "$GITHUB_OUTPUT"
+          echo "diff_path=$latest_dir/diff_summary.md" >> "$GITHUB_OUTPUT"
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: civic-refresh-${{ github.run_id }}
+          title: "chore(civic): monthly snapshot refresh"
+          body-path: ${{ steps.refresh.outputs.diff_path }}
+          labels: |
+            civic-refresh
+            needs-clinical-review
+          commit-message: "chore(civic): refresh nightly snapshot — auto-PR for clinical review"

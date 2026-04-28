@@ -1,0 +1,66 @@
+id: RF-CHONDROSARCOMA-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding doxorubicin / ifosfamide-based
+  chemotherapy in dedifferentiated or mesenchymal chondrosarcoma:
+  LVEF <50% (anthracycline contraindicated), CrCl <30 mL/min (ifosfamide
+  nephrotoxicity, MESNA dose constraints), bilirubin >3× ULN (anthracycline
+  metabolism), or DLCO <60% (post-thoracotomy pulmonary reserve concern
+  for surgical resection of pulmonary metastases).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає хіміотерапії на основі
+  doxorubicin / ifosfamide при дедиференційованій або мезенхімальній
+  хондросаркомі: LVEF <50% (антрациклін протипоказаний), CrCl <30
+  (нефротоксичність ifosfamide), білірубін >3× ULN (метаболізм
+  антрациклінів), DLCO <60% (легеневий резерв для метастазектомії).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CHONDROSARCOMA
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BONE-SARCOMA
+  - SRC-ESMO-BONE-SARCOMA
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Conventional chondrosarcoma is largely chemo-resistant; the organ-
+  dysfunction flag matters for dedifferentiated subtype (10%) where
+  doxorubicin + ifosfamide adjuvant is extrapolated from soft-tissue
+  sarcoma protocols, and mesenchymal subtype (3-5%) treated with Ewing-
+  type VDC/IE — both anthracycline + alkylator-heavy. LVEF <50: omit
+  doxorubicin or substitute liposomal formulation (limited data). CrCl
+  <30: ifosfamide contraindicated — switch to dose-modified doxorubicin
+  monotherapy or pazopanib for advanced disease. DLCO <60: limits
+  metastasectomy candidacy, important for oligometastatic pulmonary disease.
+notes_ua: >
+  Конвенційна хондросаркома загалом хіміо-резистентна; organ-dysfunction
+  flag матеріально для дедиференційованого підтипу (10%) — doxorubicin +
+  ifosfamide ад'ювантний (екстраполяція з STS), і мезенхімального (3-5%) —
+  VDC/IE Ewing-протокол. LVEF <50: пропустити doxorubicin. CrCl <30:
+  ifosfamide протипоказаний — pazopanib для поширеної хвороби.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

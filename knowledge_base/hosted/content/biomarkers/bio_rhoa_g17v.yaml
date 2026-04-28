@@ -15,6 +15,19 @@ measurement: {method: "NGS panel covering RHOA codon 17 hot-spot", units: "categ
 specimen_requirements: ["FFPE biopsy block (LN typically)"]
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# OncoKB integration hint (safe-rollout v3 §4 + PR-C). When a patient
+# has this biomarker, the engine will issue an OncoKB lookup with these
+# values. Conservative: only the canonical actionable variant; other
+# variants on the same gene need their own variant-specific biomarker.
+actionability_lookup:
+  gene: RHOA
+  variant: G17V
+external_ids:
+  hgnc_symbol: "RHOA"
+  hgvs_protein: "p.G17V"
+  oncokb_url: "https://www.oncokb.org/gene/RHOA/G17V"
+
 last_reviewed: "2026-04-25"
 notes: >
   AITL-defining marker: ~70% of AITL / nodal TFH-cell lymphomas carry
@@ -25,3 +38,9 @@ notes: >
 
   Outside AITL: rare in other hematologic neoplasms (gastric cancer
   context different therapeutic framing).
+notes_ua: >
+  AITL-defining marker: ~70% of AITL / nodal TFH-cell lymphomas carry RHOA G17V. Useful діагностичний-confirmation marker (with TET2/IDH2/ DNMT3A clonal hematopoiesis-like background). Not currently algorithm-driving — informational. Future: may stratify within AITL прогноз.
+
+  Outside AITL: рідкісний in other hematologic neoplasms (рак шлунка context відмінний терапевтичний framing).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

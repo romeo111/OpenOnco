@@ -24,7 +24,9 @@ Layout produced:
     gallery.html                   # 7 pre-generated sample cases
     try.html                       # interactive Pyodide demo
     cases/<case-id>.html           # one rendered Plan / Diagnostic Brief
-    openonco-engine.zip            # zipped engine + KB content for Pyodide
+    openonco-engine-core.zip       # core engine + shared KB for Pyodide
+    openonco-engine-index.json     # disease_id → per-disease bundle URL map
+    disease/openonco-<slug>.zip    # per-disease KB modules (lazy-loaded)
     examples.json                  # dropdown payload for try.html
 
 No real patient data ever flows here — only synthetic seed cases under
@@ -38,10 +40,12 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import shutil
 import zipfile
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from knowledge_base.engine import (
@@ -54,7 +58,10 @@ from knowledge_base.engine import (
 )
 from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
+from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
 from knowledge_base.stats import collect_stats, format_html_widget
+from scripts.site_cases import CASE_CATEGORIES, CASES, CaseEntry
+from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -69,813 +76,6 @@ GH_NEW_ISSUE = f"https://github.com/{GH_REPO}/issues/new"
 # run so wiping docs/ via --clean never breaks the binding.
 CUSTOM_DOMAIN = "openonco.info"
 
-
-@dataclass
-class CaseEntry:
-    case_id: str
-    file: str
-    label_ua: str
-    summary_ua: str
-    badge: str
-    badge_class: str
-    # Disease-group classification used by the gallery filter chips.
-    # One of: "b_aggressive", "b_indolent", "t_cell", "hodgkin",
-    # "myeloma", "myeloid", "lymphoblastic", "solid", "diagnostic".
-    # See CASE_CATEGORIES below.
-    category: str = "b_aggressive"
-
-
-CASE_CATEGORIES: list[tuple[str, str, str]] = [
-    # (key, ua_label, en_label) — order = display order in filter chips
-    ("b_aggressive",   "B-клітинні агресивні",   "B-cell aggressive"),
-    ("b_indolent",     "B-клітинні індолентні",  "B-cell indolent"),
-    ("t_cell",         "T-клітинні",             "T-cell"),
-    ("hodgkin",        "Ходжкіна",               "Hodgkin"),
-    ("myeloma",        "Мієлома",                "Myeloma"),
-    ("myeloid",        "Мієлоїдні (AML/MDS/MPN)", "Myeloid (AML/MDS/MPN)"),
-    ("lymphoblastic",  "Лімфобластні (ALL/LBL)",  "Lymphoblastic (ALL/LBL)"),
-    ("solid",          "Солідні пухлини",         "Solid tumors"),
-    ("diagnostic",     "Діагностика (pre-biopsy)", "Diagnostic (pre-biopsy)"),
-]
-
-
-CASES: list[CaseEntry] = [
-    CaseEntry(
-        case_id="hcv-mzl-reference",
-        file="patient_zero_reference_case.json",
-        label_ua="HCV-MZL · Reference Case (Patient Zero)",
-        summary_ua="Чоловік 49, ECOG 1, 5.3 см ураження кореня язика, HCV генотип 1b, indolent presentation. Acceptance test для P0.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="hcv-mzl-bulky",
-        file="patient_hcv_mzl_aggressive_burden.json",
-        label_ua="HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
-        summary_ua="HCV-MZL із bulky disease (>7 см) — RF-BULKY-DISEASE fired. Engine обирає BR (бендамустин+ритуксимаб) + concurrent DAA. Поєднує колишні patient_zero_bulky та новий fixture aggressive_burden.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="hcv-mzl-post-daa",
-        file="patient_hcv_mzl_post_daa_responder.json",
-        label_ua="HCV-MZL · Post-DAA Responder (Surveillance)",
-        summary_ua="Пацієнт post-DAA з SVR12 + lymphoma response — engine обирає surveillance only; план для re-treatment trigger при relapse.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="mm-standard-risk",
-        file="patient_mm_standard_risk.json",
-        label_ua="Multiple Myeloma · Standard-Risk",
-        summary_ua="Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine обирає триплет VRd як default.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="myeloma",
-    ),
-    CaseEntry(
-        case_id="mm-high-risk",
-        file="patient_mm_high_risk.json",
-        label_ua="Multiple Myeloma · High-Risk",
-        summary_ua="Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine обирає квадруплет D-VRd.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="myeloma",
-    ),
-    CaseEntry(
-        case_id="diagnostic-lymphoma-suspect",
-        file="patient_diagnostic_lymphoma_suspect.json",
-        label_ua="Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)",
-        summary_ua="Pre-biopsy режим — engine генерує Workup Brief, не Treatment Plan (CHARTER §15.2 C7 — без histology немає лікування).",
-        badge="Diagnostic Brief",
-        badge_class="bdg-diag",
-        category="diagnostic",
-    ),
-    CaseEntry(
-        case_id="diagnostic-lymphoma-confirmed",
-        file="patient_diagnostic_lymphoma_confirmed.json",
-        label_ua="Lymphoma Confirmed · Post-Biopsy (Treatment Plan)",
-        summary_ua="Той самий пацієнт після підтвердження гістології — diagnostic→treatment promotion через revise_plan.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="diagnostic",
-    ),
-    # ── Tier 1 lymphomas (DLBCL, FL, CLL, MCL — added in marathon block) ──
-    CaseEntry(
-        case_id="dlbcl-low-ipi",
-        file="patient_dlbcl_low_ipi.json",
-        label_ua="DLBCL NOS · Low-IPI (R-CHOP standard)",
-        summary_ua="Чоловік 54, ECOG 1, IPI 1, GCB cell-of-origin — engine обирає R-CHOP × 6 циклів як default. Найпоширеніша агресивна лімфома (~30% NHL).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="dlbcl-high-ipi",
-        file="patient_dlbcl_high_ipi.json",
-        label_ua="DLBCL NOS · High-IPI (Pola-R-CHP)",
-        summary_ua="Жінка 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine ескалує до Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="fl-low-burden",
-        file="patient_fl_low_burden.json",
-        label_ua="Follicular · Low Burden (Watch-and-Wait)",
-        summary_ua="FL grade 1-2, asymptomatic, no GELF criteria — engine обирає surveillance трек (3 plans usable side-by-side, default = W&W).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="fl-high-burden",
-        file="patient_fl_high_burden.json",
-        label_ua="Follicular · High Burden (BR)",
-        summary_ua="FL з 8 cm масою + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine обирає BR (бендамустин + ритуксимаб); reuse REG-BR-STANDARD з HCV-MZL.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="fl-transformation",
-        file="patient_fl_transformation.json",
-        label_ua="Follicular · Transformation Suspect (R-CHOP)",
-        summary_ua="FL з rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine обирає R-CHOP (трактує як DLBCL pathway).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="cll-low-risk",
-        file="patient_cll_low_risk.json",
-        label_ua="CLL/SLL · Low-Risk (BTKi continuous)",
-        summary_ua="ХЛЛ зі стандартним ризиком (no TP53/del 17p/IGHV-unmut) — engine обирає acalabrutinib continuous; modern era замість FCR/BR.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="cll-high-risk",
-        file="patient_cll_high_risk.json",
-        label_ua="CLL/SLL · High-Risk (VenO time-limited)",
-        summary_ua="ХЛЛ з TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine ескалує до venetoclax+obinutuzumab (CLL14).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="mcl-fit-younger",
-        file="patient_mcl_fit_younger.json",
-        label_ua="Mantle Cell · Fit Younger (Intensive + autoSCT)",
-        summary_ua="MCL вік 58, ECOG 0, TP53-wt — engine обирає intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="mcl-unfit-tp53",
-        file="patient_mcl_unfit_or_tp53.json",
-        label_ua="Mantle Cell · Unfit / TP53-mutant (BTKi+R)",
-        summary_ua="MCL вік 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine обирає acalabrutinib + rituximab (BTKi-based).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    # ── More Tier 1 (MZL splenic + nodal, Burkitt, HCL, WM, HGBL-DH) ────
-    CaseEntry(
-        case_id="smzl-hcv-positive",
-        file="patient_smzl_hcv_positive.json",
-        label_ua="Splenic MZL · HCV-positive (DAA antiviral)",
-        summary_ua="Селезінкова MZL із HCV-позитивним статусом — engine обирає DAA antiviral (sofosbuvir/velpatasvir 12 тижнів) як 1L; reuse REG-DAA-SOF-VEL з HCV-MZL extranodal.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="smzl-hcv-negative",
-        file="patient_smzl_hcv_negative.json",
-        label_ua="Splenic MZL · HCV-negative (Rituximab mono)",
-        summary_ua="Селезінкова MZL HCV-negative — engine обирає rituximab monotherapy (4 weekly + 2-year maintenance).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="nmzl-low-burden",
-        file="patient_nmzl_low_burden.json",
-        label_ua="Nodal MZL · Low Burden (W&W)",
-        summary_ua="Нодальна MZL без GELF-критеріїв — engine обирає surveillance трек (повторює FL-парадигму).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="burkitt-low-risk",
-        file="patient_burkitt_low_risk.json",
-        label_ua="Burkitt · Low/Intermediate Risk (DA-EPOCH-R)",
-        summary_ua="Burkitt без CNS+, LDH в нормі — engine обирає DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="burkitt-high-risk",
-        file="patient_burkitt_high_risk.json",
-        label_ua="Burkitt · High Risk (CODOX-M / IVAC)",
-        summary_ua="Burkitt з CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine обирає Magrath protocol з HD-MTX + IT MTX/cytarabine.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="hcl-typical",
-        file="patient_hcl_typical.json",
-        label_ua="Hairy Cell Leukemia (Cladribine 7-day)",
-        summary_ua="Волосатоклітинний лейкоз з cytopenia + splenomegaly — engine обирає 1 курс cladribine 7 днів. ~85% durable CR.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="wm-myd88-positive",
-        file="patient_wm_myd88_positive.json",
-        label_ua="Waldenström · MYD88-positive (Zanubrutinib)",
-        summary_ua="WM з MYD88 L265P + iwWM treatment indication — engine обирає zanubrutinib (ASPEN — superior до ibrutinib).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="hgbl-double-hit",
-        file="patient_hgbl_double_hit.json",
-        label_ua="HGBL · Double-Hit (DA-EPOCH-R)",
-        summary_ua="High-Grade B-Cell Lymphoma з MYC + BCL2 break-apart — engine обирає DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuse схеми з Burkitt.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="b_aggressive",
-    ),
-    # ── T-cell block + Hodgkin (final marathon block) ──────────────────────
-    CaseEntry(
-        case_id="alcl-alk-negative",
-        file="patient_alcl_alk_negative.json",
-        label_ua="ALCL · ALK-negative (CHP-Bv)",
-        summary_ua="Системна анапластична великоклітинна лімфома, ALK-negative — universally CD30+. Engine обирає CHP-Bv (ECHELON-2: brentuximab замість vincristine).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="ptcl-cd30-negative",
-        file="patient_ptcl_cd30_negative.json",
-        label_ua="PTCL NOS · CD30-negative (CHOEP)",
-        summary_ua="Периферична T-клітинна лімфома, CD30-negative — engine обирає CHOEP (CHOP + etoposide). CD30+ варіант ескалював би до CHP-Bv.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="aitl-cd30-positive",
-        file="patient_aitl_cd30_positive.json",
-        label_ua="AITL · CD30-positive (CHP-Bv)",
-        summary_ua="Ангіоімунобластна T-клітинна лімфома, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="chl-advanced",
-        file="patient_chl_advanced.json",
-        label_ua="Classical Hodgkin · Advanced (A+AVD)",
-        summary_ua="Стадія IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine обирає A+AVD (ECHELON-1: brentuximab замість bleomycin, superior OS).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="hodgkin",
-    ),
-    CaseEntry(
-        case_id="chl-early",
-        file="patient_chl_early.json",
-        label_ua="Classical Hodgkin · Early Stage (ABVD)",
-        summary_ua="Стадія IIA cHL, без advanced criteria — engine обирає ABVD × 2-4 + ISRT (response-adapted).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="hodgkin",
-    ),
-    CaseEntry(
-        case_id="nlpbl-early",
-        file="patient_nlpbl_early.json",
-        label_ua="NLPBL · Early Stage (Observation / RT)",
-        summary_ua="Нодулярна лімфоцит-домінантна B-клітинна лімфома (перекласифіковано WHO 5th-ed з NLPHL у B-cell) — early stage. Engine обирає observation / ISRT alone.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="hodgkin",
-    ),
-    # ── Tier 3 deepening: AITL CD30-neg + MF/Sézary block + NLPBL alt arm ──
-    CaseEntry(
-        case_id="aitl-cd30-negative",
-        file="patient_aitl_cd30_negative.json",
-        label_ua="AITL · CD30-negative (CHOEP + AITL-specific workup)",
-        summary_ua="AITL з CD30-negative біопсією — engine обирає AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell мікрооточення), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="mf-early-stage",
-        file="patient_mf_early_stage.json",
-        label_ua="Mycosis Fungoides · Early Stage (Skin-Directed)",
-        summary_ua="MF stage IB без B2/LCT — engine обирає skin-directed (NBUVB / topicals / TSEBT). Жодного системного режиму — preserves chemo для прогресу. Workup rules out occult Sézary (B2 count) + LCT.",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="sezary-advanced",
-        file="patient_sezary_advanced.json",
-        label_ua="Sézary Syndrome · Advanced (Mogamulizumab)",
-        summary_ua="Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine обирає mogamulizumab (MAVORIC: anti-CCR4 ADCC, найкраща blood-compartment відповідь).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="mf-advanced-cd30",
-        file="patient_mf_advanced_cd30.json",
-        label_ua="MF · Advanced + CD30+ LCT (Brentuximab mono)",
-        summary_ua="Advanced MF stage IIB з large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine обирає brentuximab vedotin monotherapy (ALCANZA).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="t_cell",
-    ),
-    CaseEntry(
-        case_id="nlpbl-ia-rituximab",
-        file="patient_nlpbl_ia_rituximab.json",
-        label_ua="NLPBL · IA + RT-contraindicated (Rituximab mono)",
-        summary_ua="NLPBL stage IA у молодої жінки з cervical adenopathy — RT-contraindicated через breast/thyroid field overlap. Engine обирає rituximab monotherapy alternative (CD20+ B-cell biology, НЕ ABVD).",
-        badge="Treatment Plan",
-        badge_class="bdg-plan",
-        category="hodgkin",
-    ),
-    # ── B-cell aggressive: extra DLBCL/HGBL/PMBCL/PCNSL (relapsed + new diseases) ──
-    CaseEntry(
-        case_id="dlbcl-chemorefractory-cart",
-        file="patient_dlbcl_chemorefractory_for_cart.json",
-        label_ua="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)",
-        summary_ua="DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T > salvage+autoSCT для early-failure).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="dlbcl-relapsed-te-ineligible",
-        file="patient_dlbcl_relapsed_transplant_ineligible.json",
-        label_ua="DLBCL NOS · Relapsed (Transplant-Ineligible)",
-        summary_ua="DLBCL relapsed, transplant-ineligible через age + comorbidity — engine обирає Pola-BR (POLARGO) або loncastuximab tesirine.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="hgbl-primary-refractory",
-        file="patient_hgbl_primary_refractory.json",
-        label_ua="HGBL · Primary Refractory (Early CAR-T)",
-        summary_ua="HGBL-DH що не відповів на DA-EPOCH-R — engine обирає axi-cel CAR-T (ZUMA-7); chemosensitivity-test позитивний для late-relapse → salvage+autoSCT.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pmbcl-typical",
-        file="patient_pmbcl_typical.json",
-        label_ua="PMBCL · Typical (DA-EPOCH-R)",
-        summary_ua="Молода жінка з anterior mediastinal mass — engine обирає DA-EPOCH-R без RT (NCI 2013: ~93% EFS, обхід RT-токсичності для AYA).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pmbcl-bulky-svc",
-        file="patient_pmbcl_bulky_svc.json",
-        label_ua="PMBCL · Bulky + SVC Syndrome",
-        summary_ua="PMBCL з bulky mediastinal mass + SVC compression — engine додає upfront pre-phase steroids + airway management до DA-EPOCH-R.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pmbcl-relapsed-post-rchop",
-        file="patient_pmbcl_relapsed_post_rchop.json",
-        label_ua="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)",
-        summary_ua="PMBCL relapsed/refractory після R-CHOP — engine обирає R-ICE+autoSCT (eligible) або pembrolizumab (KEYNOTE-170, ineligible/refractory).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pcnsl-typical",
-        file="patient_pcnsl_typical.json",
-        label_ua="PCNSL · Typical (R-MPV → autoSCT)",
-        summary_ua="Імунокомпетентний пацієнт з biopsy-confirmed PCNSL — engine обирає R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pcnsl-elderly-frail",
-        file="patient_pcnsl_elderly_frail.json",
-        label_ua="PCNSL · Elderly Frail (R-MTX-attenuated)",
-        summary_ua="PCNSL вік 75, ECOG 2 — engine обирає attenuated MTX-based induction без autoSCT consolidation; lenalidomide maintenance як альтернатива.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    CaseEntry(
-        case_id="pcnsl-immunocompromised-ebv",
-        file="patient_pcnsl_immunocompromised_ebv.json",
-        label_ua="PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
-        summary_ua="PCNSL у HIV+/post-transplant пацієнта, EBER+ — engine додає immune-restoration (HAART / RIS) перед HD-MTX; rituximab якщо CD20+.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
-    ),
-    # ── B-cell indolent: relapsed + new diseases ──
-    CaseEntry(
-        case_id="cll-post-btki",
-        file="patient_cll_post_btki_progression.json",
-        label_ua="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)",
-        summary_ua="CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="hcl-relapsed-braf",
-        file="patient_hcl_relapsed_braf.json",
-        label_ua="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)",
-        summary_ua="HCL relapsed з BRAF-V600E+ — engine обирає vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="wm-cxcr4-mut",
-        file="patient_wm_cxcr4_mut.json",
-        label_ua="Waldenström · CXCR4-mutant (BR fixed-duration)",
-        summary_ua="WM з MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 знижує BTKi response). Engine обирає BR fixed-duration або zanubrutinib з extended observation.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
-    ),
-    CaseEntry(
-        case_id="nmzl-high-burden",
-        file="patient_nmzl_high_burden.json",
-        label_ua="Nodal MZL · High Burden (BR)",
-        summary_ua="Нодальна MZL з GELF+ — engine обирає BR (1L); 2L після rituximab/W&W failure теж BR.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
-    ),
-    # ── T-cell: ALCL ALK+ + relapsed + PTCL CD30+ + EATL/HSTCL/T-PLL/ATLL/NK-T/PTLD ──
-    CaseEntry(
-        case_id="alcl-alk-positive-typical",
-        file="patient_alcl_alk_positive_typical.json",
-        label_ua="ALCL · ALK-positive Typical (CHP-Bv)",
-        summary_ua="Молода особа з ALK+ ALCL — engine обирає CHP-Bv (ECHELON-2). ALK+ має значно кращий прогноз vs ALK-.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="alcl-relapsed-bv-naive",
-        file="patient_alcl_relapsed_bv_naive.json",
-        label_ua="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)",
-        summary_ua="Relapsed ALCL без попереднього brentuximab — engine обирає brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="ptcl-cd30-positive",
-        file="patient_ptcl_cd30_positive.json",
-        label_ua="PTCL NOS · CD30-positive (CHP-Bv)",
-        summary_ua="PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv (ECHELON-2 inclusion threshold).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="ptcl-relapsed",
-        file="patient_ptcl_relapsed.json",
-        label_ua="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)",
-        summary_ua="PTCL NOS relapsed після autoSCT — engine обирає romidepsin або pralatrexate; alloHCT як curative-intent для chemosensitive.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="aitl-relapsed-2l",
-        file="patient_aitl_relapsed_2l.json",
-        label_ua="AITL · Relapsed 2L (Azacitidine)",
-        summary_ua="AITL relapsed з TET2/DNMT3A epigenetic profile — engine обирає azacitidine (epigenetic targeting; AITL — найбільш azacitidine-responsive TCL subtype).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="eatl-typical",
-        file="patient_eatl_typical.json",
-        label_ua="EATL · Typical (Celiac, CHOEP → autoSCT)",
-        summary_ua="EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="eatl-relapsed-post-choep",
-        file="patient_eatl_relapsed_post_choep.json",
-        label_ua="EATL · Relapsed post-CHOEP (ICE Salvage)",
-        summary_ua="EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="hstcl-fit-younger",
-        file="patient_hstcl_fit_younger.json",
-        label_ua="HSTCL · Fit Younger (ICE/IVAC → alloHCT)",
-        summary_ua="Hepatosplenic T-cell Lymphoma у молодої особи, ECOG 0 — engine обирає intensive ICE/IVAC → upfront alloHCT (CHOP неадекватний).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="hstcl-iatrogenic-ibd",
-        file="patient_hstcl_iatrogenic_ibd.json",
-        label_ua="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)",
-        summary_ua="HSTCL у IBD-пацієнта на тривалій thiopurine+anti-TNF therapy — engine припиняє imunosuppression + CHOEP-unfit fallback з branching algorithm.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="t-pll-typical",
-        file="patient_t_pll_typical.json",
-        label_ua="T-PLL · Typical (Alemtuzumab IV)",
-        summary_ua="T-PLL з ATM mutation + TCL1A rearrangement — engine обирає alemtuzumab IV (~90% ORR) → alloHCT consolidation.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="t-pll-alem-refractory",
-        file="patient_t_pll_alemtuzumab_refractory.json",
-        label_ua="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)",
-        summary_ua="T-PLL refractory до alemtuzumab mono — engine обирає venetoclax + alemtuzumab combo (Boidol/Hampel).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="atll-acute",
-        file="patient_atll_acute.json",
-        label_ua="ATLL · Acute (mLSG15 / EPOCH)",
-        summary_ua="Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine обирає intensive mLSG15 або EPOCH; alloHCT consolidation для responders.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="atll-indolent-smoldering",
-        file="patient_atll_indolent_smoldering.json",
-        label_ua="ATLL · Indolent / Smoldering (Watchful Waiting)",
-        summary_ua="ATLL indolent/smoldering — engine обирає observation; system trigger для transformation.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="nk-t-nasal-localized",
-        file="patient_nk_t_nasal_localized.json",
-        label_ua="NK/T-Nasal · Localized (P-GEMOX + RT)",
-        summary_ua="Localized extranodal NK/T-cell lymphoma, nasal type — engine обирає concurrent P-GEMOX + RT (anthracycline-resistant biology).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="nk-t-nasal-relapsed",
-        file="patient_nk_t_nasal_relapsed.json",
-        label_ua="NK/T-Nasal · Relapsed (Avelumab)",
-        summary_ua="NK/T-nasal relapsed — engine обирає avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="mf-relapsed-post-moga",
-        file="patient_mf_relapsed_post_moga.json",
-        label_ua="MF · Relapsed post-Mogamulizumab (Bexarotene)",
-        summary_ua="MF/Sézary relapsed після mogamulizumab — engine обирає bexarotene 2L з low-dose maintenance (RXR-targeted oral retinoid).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="ptld-polymorphic-ebv",
-        file="patient_ptld_polymorphic_ebv.json",
-        label_ua="PTLD · Polymorphic EBV+ (RIS + Rituximab)",
-        summary_ua="Post-transplant LPD, polymorphic EBV+ — engine обирає RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    CaseEntry(
-        case_id="ptld-monomorphic-dlbcl-like",
-        file="patient_ptld_monomorphic_dlbcl_like.json",
-        label_ua="PTLD · Monomorphic DLBCL-like (R-CHOP)",
-        summary_ua="Monomorphic PTLD з DLBCL morphology — engine обирає R-CHOP після RIS-failure; sequential treatment per PTLD-1.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
-    ),
-    # ── Hodgkin: pediatric + relapsed ──
-    CaseEntry(
-        case_id="chl-pediatric-bulky",
-        file="patient_chl_pediatric_bulky_mediastinal.json",
-        label_ua="cHL · AYA Stage IIB Bulky Mediastinal",
-        summary_ua="AYA пацієнт з cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
-    ),
-    CaseEntry(
-        case_id="chl-relapsed-salvage",
-        file="patient_chl_relapsed_for_salvage.json",
-        label_ua="cHL · Relapsed (Salvage → autoSCT + BV maint.)",
-        summary_ua="cHL relapsed після ABVD/A+AVD — engine обирає salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
-    ),
-    # ── Myeloma: relapsed (post-VRd + triple-class refractory) ──
-    CaseEntry(
-        case_id="mm-post-vrd-progression",
-        file="patient_mm_post_vrd_progression.json",
-        label_ua="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)",
-        summary_ua="MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
-    ),
-    CaseEntry(
-        case_id="mm-triple-class-refractory",
-        file="patient_mm_triple_class_refractory.json",
-        label_ua="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)",
-        summary_ua="MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
-    ),
-    # ── Myeloid: AML / APL / CML / MDS-HR / MDS-LR / PV / ET / PMF ──
-    CaseEntry(
-        case_id="aml-fit-1l-7-3",
-        file="patient_aml_fit_1l_seven_three.json",
-        label_ua="AML · Fit 1L (7+3 Induction)",
-        summary_ua="Newly-diagnosed AML, fit, ELN intermediate — engine обирає 7+3 induction (cytarabine + daunorubicin) → consolidation HiDAC.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="aml-unfit-ven-aza",
-        file="patient_aml_unfit_ven_aza.json",
-        label_ua="AML · Unfit (Venetoclax + Azacitidine)",
-        summary_ua="AML вік 78, ECOG 2 — engine обирає ven+aza (VIALE-A: ~65% CR/CRi, OS 14.7 mo, краще ніж aza alone).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="aml-flt3-relapse",
-        file="patient_aml_flt3_relapse.json",
-        label_ua="AML · FLT3-mutant Relapse (Gilteritinib)",
-        summary_ua="AML relapsed з FLT3-ITD/TKD — engine обирає gilteritinib mono (ADMIRAL: superior до salvage chemo); alloHCT для responders.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="apl-low-risk",
-        file="patient_apl_low_risk.json",
-        label_ua="APL · Low Risk (ATRA + ATO chemo-free)",
-        summary_ua="APL з WBC <10K (low-risk Sanz) — engine обирає ATRA+ATO chemo-free (APL0406: ~98% CR, без anthracycline).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="apl-high-risk",
-        file="patient_apl_high_risk.json",
-        label_ua="APL · High Risk + DIC (ATRA + ATO + Idarubicin)",
-        summary_ua="APL з WBC >10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine додає idarubicin до ATRA+ATO; emergency cryoprecipitate/platelets.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="cml-chronic-newdx",
-        file="patient_cml_chronic_phase_newdx.json",
-        label_ua="CML · Chronic Phase Newly Diagnosed (TKI 1L)",
-        summary_ua="Newly-diagnosed CML chronic phase, BCR-ABL1+ — engine обирає imatinib (low-risk Sokal) або 2G TKI (intermediate/high).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="cml-t315i",
-        file="patient_cml_t315i.json",
-        label_ua="CML · T315I-mutated (Ponatinib / Asciminib)",
-        summary_ua="CML з T315I gatekeeper mutation post-2G TKI — engine обирає ponatinib (PACE) або asciminib (allosteric STAMP-inhibitor).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="cml-blast-crisis",
-        file="patient_cml_blast_crisis_at_presentation.json",
-        label_ua="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)",
-        summary_ua="CML що дебютує як blast crisis — engine обирає TKI + intensive chemo bridge → urgent alloHCT (без alloHCT медіана OS <12 mo).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-hr-transplant-eligible",
-        file="patient_mds_hr_transplant_eligible.json",
-        label_ua="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)",
-        summary_ua="MDS IPSS-R high, fit, donor available — engine обирає azacitidine bridge → upfront alloHCT (curative).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-hr-unfit-aza",
-        file="patient_mds_hr_unfit_aza.json",
-        label_ua="MDS-HR · Unfit (Azacitidine Maintenance)",
-        summary_ua="MDS-HR transplant-ineligible — engine обирає azacitidine indefinite (AZA-001: median OS 24 mo vs 15 mo для conventional care).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-hr-progression-aml",
-        file="patient_mds_hr_progression_to_aml.json",
-        label_ua="MDS-HR · Progression to Secondary AML",
-        summary_ua="MDS на azacitidine з progression до sAML — engine реагує AML-reroute: ven+aza або 7+3 induction (за fitness).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-lr-del5q",
-        file="patient_mds_lr_del5q.json",
-        label_ua="MDS-LR · del(5q) (Lenalidomide)",
-        summary_ua="MDS-LR з isolated del(5q) syndrome — engine обирає lenalidomide (MDS-004: ~67% transfusion-independence).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-lr-rs-luspatercept",
-        file="patient_mds_lr_rs_luspatercept.json",
-        label_ua="MDS-LR · RS+ EPO-failure (Luspatercept)",
-        summary_ua="MDS-LR з ring sideroblasts + EPO-high (>500) → ESA-failure — engine обирає luspatercept (COMMANDS).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="mds-lr-hypoplastic-ist",
-        file="patient_mds_lr_hypoplastic_ist.json",
-        label_ua="MDS-LR · Hypoplastic / IST candidate",
-        summary_ua="Hypoplastic MDS, mimics aplastic anemia — engine обирає immunosuppressive therapy (ATG+CsA) як alternative до transfusion-only.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pv-high-risk-hu",
-        file="patient_pv_high_risk_hu.json",
-        label_ua="Polycythemia Vera · High Risk (HU 1L)",
-        summary_ua="PV вік >60 + thrombosis history — engine обирає phlebotomy + low-dose ASA + cytoreduction hydroxyurea.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pv-hu-resistant-rux",
-        file="patient_pv_hu_resistant_ruxolitinib.json",
-        label_ua="PV · HU-resistant (Ruxolitinib 2L)",
-        summary_ua="PV з HU-intolerance/resistance per ELN — engine обирає ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pv-pregnancy-planning",
-        file="patient_pv_pregnancy_planning.json",
-        label_ua="PV · Pregnancy Planning (Peg-IFN)",
-        summary_ua="Reproductive-age жінка з PV, planning pregnancy — engine обирає peg-IFN α-2a (non-teratogenic, fetus-safe).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="et-high-risk-hu",
-        file="patient_et_high_risk_hu.json",
-        label_ua="Essential Thrombocythemia · High Risk (HU)",
-        summary_ua="ET high-risk (age >60 + JAK2+ + thrombosis) — engine обирає hydroxyurea + ASA; anagrelide як 2L (PT-1).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pmf-anemia-dominant",
-        file="patient_pmf_anemia_dominant.json",
-        label_ua="PMF · Anemia-Dominant (Momelotinib)",
-        summary_ua="PMF DIPSS-Plus int-1, anemia-dominant — engine обирає momelotinib (MOMENTUM: anemia-friendly JAKi).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pmf-int2-symptomatic-rux",
-        file="patient_pmf_int2_symptomatic_ruxolitinib.json",
-        label_ua="PMF · Int-2 Symptomatic (Ruxolitinib)",
-        summary_ua="PMF DIPSS-Plus int-2 з splenomegaly + constitutional symptoms — engine обирає ruxolitinib (COMFORT-I/II).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    CaseEntry(
-        case_id="pmf-post-rux-allohct",
-        file="patient_pmf_post_rux_allohct_bridge.json",
-        label_ua="PMF · Post-Rux alloHCT Bridge (Urgent)",
-        summary_ua="PMF post-ruxolitinib failure з massive splenomegaly + transfusion-dependence — engine обирає alloHCT bridge (curative-intent, urgent).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
-    ),
-    # ── Lymphoblastic: B-ALL / T-ALL / T-LBL ──
-    CaseEntry(
-        case_id="b-all-ph-pos-adult",
-        file="patient_b_all_ph_pos_adult.json",
-        label_ua="B-ALL · Ph+ Adult (TKI + Chemo)",
-        summary_ua="Adult B-ALL Ph+ (BCR-ABL1+) — engine обирає dasatinib + chemo (hyper-CVAD або pediatric-inspired); alloHCT для CR1 high-risk.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
-    ),
-    CaseEntry(
-        case_id="b-all-mrd-positive",
-        file="patient_b_all_mrd_positive.json",
-        label_ua="B-ALL · MRD-positive (Blinatumomab)",
-        summary_ua="B-ALL MRD-positive після induction — engine обирає blinatumomab (BLAST: MRD eradication у >75%).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
-    ),
-    CaseEntry(
-        case_id="b-all-t315i-post-tki",
-        file="patient_b_all_t315i_post_tki.json",
-        label_ua="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)",
-        summary_ua="Ph+ B-ALL relapsed з T315I gatekeeper — engine обирає ponatinib + chemo bridge → alloHCT.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
-    ),
-    CaseEntry(
-        case_id="t-all-relapsed",
-        file="patient_t_all_relapsed_post_hyper_cvad.json",
-        label_ua="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)",
-        summary_ua="T-ALL relapsed після hyper-CVAD — engine обирає nelarabine (T-cell selective; alloHCT consolidation).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
-    ),
-    CaseEntry(
-        case_id="t-lbl-mediastinal",
-        file="patient_t_lbl_mediastinal.json",
-        label_ua="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)",
-        summary_ua="T-lymphoblastic lymphoma з mediastinal mass — engine обирає pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis обов'язкове.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
-    ),
-    # ── Solid tumors: Cervical / GBM / Ovarian ──
-    CaseEntry(
-        case_id="cervical-locally-advanced",
-        file="patient_cervical_locally_advanced.json",
-        label_ua="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
-        summary_ua="Locally advanced cervical cancer (FIGO IIB-IVA) — engine обирає cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
-    ),
-    CaseEntry(
-        case_id="gbm-stupp",
-        file="patient_gbm_newly_diagnosed_stupp.json",
-        label_ua="Glioblastoma · Newly Diagnosed (Stupp Protocol)",
-        summary_ua="GBM IDH-WT WHO grade 4 — engine обирає Stupp: maximal safe resection → RT + concurrent TMZ → adjuvant TMZ × 6; TTFields для MGMT-methylated.",
-        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
-    ),
-    CaseEntry(
-        case_id="ovarian-advanced-hrd",
-        file="patient_ovarian_advanced_hrd.json",
-        label_ua="Ovarian · Advanced HRD+ (PARPi maintenance)",
-        summary_ua="Advanced high-grade serous ovarian, HRD+ — engine обирає platinum-doublet → PARPi maintenance (olaparib/niraparib; SOLO-1, PRIMA).",
-        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
-    ),
-]
 
 
 # ── Engine bundling for Pyodide ───────────────────────────────────────────
@@ -893,95 +93,571 @@ _BUNDLE_INCLUDE_DIRS = [
 _BUNDLE_INCLUDE_FILES = ["__init__.py"]
 
 
-def bundle_engine(output_dir: Path) -> dict:
-    """Zip the runtime parts of knowledge_base/ → docs/openonco-engine.zip
-    so Pyodide can `pyodide.unpackArchive` it into its filesystem.
+# Entity directories whose YAMLs are *split out* into per-disease modules
+# when they tie to a specific disease via disease_id /
+# applicable_to_disease / applicable_to.disease_id / relevant_diseases.
+# Files from these dirs that don't resolve to any single disease (e.g.
+# universal redflags, cross-disease indications) stay in core.
+_DISEASE_SCOPED_DIRS = {
+    "indications",
+    "algorithms",
+    "regimens",
+    "redflags",
+    "biomarker_actionability",
+}
 
-    Returns a dict whose `version` field is a 12-char SHA-256 prefix of the
-    finished zip — used as a `?v=...` cache-buster on the Pyodide fetch in
-    try.html, so users always get the fresh bundle on KB updates without
-    having to hard-reload."""
+
+def _disease_id_for_yaml(yaml_text: str, arc_path: str) -> str | None:
+    """Best-effort: which disease does this YAML belong to?
+
+    Mirrors scripts/profile_engine_bundle.py — same heuristic — so the
+    profile and the actual split agree. Returns None when:
+      - the YAML doesn't pin to a single disease (universal RFs,
+        cross-disease indications), OR
+      - the file lives under diseases/ (handled separately — disease
+        metadata always stays in core).
+    """
+    import re as _re
+    if "/diseases/" in arc_path:
+        # Disease metadata always stays in core, never sharded.
+        return None
+    m = _re.search(
+        r"^\s*disease_id\s*:\s*(DIS-[A-Z0-9_-]+)", yaml_text, _re.MULTILINE,
+    )
+    if m:
+        return m.group(1).upper()
+    m = _re.search(
+        r"^\s*applicable_to_disease\s*:\s*(DIS-[A-Z0-9_-]+)",
+        yaml_text, _re.MULTILINE,
+    )
+    if m:
+        return m.group(1).upper()
+    m = _re.search(
+        r"applicable_to\s*:\s*\n[\s\S]{0,400}?disease_id\s*:\s*(DIS-[A-Z0-9_-]+)",
+        yaml_text,
+    )
+    if m:
+        return m.group(1).upper()
+    # redflags: relevant_diseases — only attribute when it pins to a
+    # single concrete disease. Universal / multi-disease RFs stay in core.
+    m = _re.search(
+        r"^relevant_diseases\s*:\s*\n((?:\s*-\s*\S+\s*\n)+)",
+        yaml_text, _re.MULTILINE,
+    )
+    if m:
+        diseases = []
+        for line in m.group(1).splitlines():
+            tok = line.strip().lstrip("-").strip()
+            if tok and tok != "*" and tok.upper().startswith("DIS-"):
+                diseases.append(tok.upper())
+        if len(diseases) == 1:
+            return diseases[0]
+    return None
+
+
+def _disease_bundle_basename(disease_id: str) -> str:
+    """`DIS-DLBCL-NOS` → `openonco-dis-dlbcl-nos.zip`. Used both for the
+    file name on disk and for the URL in the bundle index."""
+    slug = disease_id.lower().replace("_", "-")
+    return f"openonco-{slug}.zip"
+
+
+def _icd_to_disease_id_map() -> dict[str, str]:
+    """Walk knowledge_base/hosted/content/diseases/*.yaml and produce a
+    `{ICD-O-3 morphology code: DIS-...}` map. Shipped in the bundle index
+    so the JS lazy-loader can resolve a `disease_id` from the patient's
+    `disease.icd_o_3_morphology` without round-tripping into Pyodide."""
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, str] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        code = (data.get("codes") or {}).get("icd_o_3_morphology")
+        if did and code:
+            out[str(code)] = str(did).upper()
+    return out
+
+
+def _gather_engine_entries() -> list[tuple[Path, str, str | None]]:
+    """Walk knowledge_base/ and produce (source_path, archive_name,
+    attributed_disease_id) tuples for every file that belongs in any
+    bundle. attributed_disease_id is None for files that go in core.
+    Code, schemas, validation, and shared content are always None.
+    """
+    src = REPO_ROOT / "knowledge_base"
+    entries: list[tuple[Path, str, str | None]] = []
+
+    for fname in _BUNDLE_INCLUDE_FILES:
+        p = src / fname
+        if p.is_file():
+            entries.append((p, f"knowledge_base/{fname}", None))
+
+    for sub in _BUNDLE_INCLUDE_DIRS:
+        sub_root = src / sub
+        if not sub_root.is_dir():
+            continue
+        for path in sub_root.rglob("*"):
+            if not path.is_file():
+                continue
+            if "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}:
+                continue
+            arcname = "knowledge_base/" + str(path.relative_to(src)).replace("\\", "/")
+
+            attributed: str | None = None
+            # Only YAML under hosted/content/<disease-scoped-dir>/ is
+            # eligible to be sharded out.
+            if path.suffix == ".yaml":
+                parts = arcname.split("/")
+                # parts: knowledge_base, hosted, content, <entity_dir>, ...
+                if (
+                    len(parts) >= 5
+                    and parts[1] == "hosted"
+                    and parts[2] == "content"
+                    and parts[3] in _DISEASE_SCOPED_DIRS
+                ):
+                    try:
+                        text = path.read_text(encoding="utf-8")
+                    except OSError:
+                        text = ""
+                    attributed = _disease_id_for_yaml(text, arcname)
+
+            entries.append((path, arcname, attributed))
+    return entries
+
+
+def bundle_engine(output_dir: Path) -> dict:
+    """Build the Pyodide-loadable engine bundles.
+
+    Produces (in `output_dir/`):
+
+      1. `openonco-engine-core.zip` — code + schemas + validation +
+         shared content (drugs, sources, biomarkers, tests,
+         supportive_care, monitoring, workups, questionnaires,
+         contraindications, mdt_skills, diseases, plus universal
+         redflags and any indications/algorithms/regimens/RFs/BMA cells
+         that don't pin to a single disease). /try.html fetches this
+         first — small enough to make the page interactive quickly.
+
+      2. `disease/openonco-{slug}.zip` per disease — the disease-scoped
+         indications, algorithms, regimens, redflags, and BMA cells.
+         Fetched on demand once the patient's `disease_id` is known.
+
+      3. `openonco-engine-index.json` — `{core, core_version, diseases,
+         disease_versions, icd_to_disease_id}`. /try.html consults this
+         to pick the per-disease bundle once `disease_id` is known.
+
+    CSD-9C (2026-04-27): the legacy monolithic `openonco-engine.zip`
+    has been retired. Lazy-load (CSD-5B + CSD-6E) is the canonical
+    path — the monolithic bundle had crossed the 3 MB ceiling and was
+    only kept as a safety fallback. Any stale monolithic on disk is
+    cleaned up so deploys don't carry the old file forever.
+
+    Returns a dict whose `core_version` field is a 12-char SHA-256
+    prefix of the core zip — used as a `?v=...` cache-buster on the
+    Pyodide fetch so users always get fresh bundles on KB updates.
+    """
     import hashlib
 
-    src = REPO_ROOT / "knowledge_base"
-    out_zip = output_dir / "openonco-engine.zip"
+    core_zip = output_dir / "openonco-engine-core.zip"
+    disease_dir = output_dir / "disease"
+    index_path = output_dir / "openonco-engine-index.json"
+    legacy_monolithic = output_dir / "openonco-engine.zip"
 
-    files_added = 0
-    bytes_uncompressed = 0
-    # Sort entries so the zip is deterministic — same content → same hash.
-    with zipfile.ZipFile(out_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        entries: list[tuple[Path, str]] = []
-        for fname in _BUNDLE_INCLUDE_FILES:
-            p = src / fname
-            if p.is_file():
-                entries.append((p, f"knowledge_base/{fname}"))
-        for sub in _BUNDLE_INCLUDE_DIRS:
-            sub_root = src / sub
-            if not sub_root.is_dir():
-                continue
-            for path in sub_root.rglob("*"):
-                if not path.is_file():
-                    continue
-                if "__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"}:
-                    continue
-                arcname = "knowledge_base/" + str(path.relative_to(src)).replace("\\", "/")
-                entries.append((path, arcname))
-        for path, arcname in sorted(entries, key=lambda e: e[1]):
+    disease_dir.mkdir(parents=True, exist_ok=True)
+
+    # CSD-9C: clean up any stale monolithic bundle from previous builds.
+    if legacy_monolithic.exists():
+        legacy_monolithic.unlink()
+
+    entries = _gather_engine_entries()
+    # Deterministic order — same input → same zip → same SHA-256.
+    entries.sort(key=lambda e: e[1])
+
+    # Bucket by destination.
+    core_entries: list[tuple[Path, str]] = []
+    by_disease: dict[str, list[tuple[Path, str]]] = {}
+    for path, arcname, disease in entries:
+        if disease is None:
+            core_entries.append((path, arcname))
+        else:
+            by_disease.setdefault(disease, []).append((path, arcname))
+
+    # 1. Core bundle.
+    core_files = 0
+    core_uncompressed = 0
+    with zipfile.ZipFile(core_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path, arcname in core_entries:
             zf.write(path, arcname)
-            files_added += 1
-            bytes_uncompressed += path.stat().st_size
+            core_files += 1
+            core_uncompressed += path.stat().st_size
+    core_bytes = core_zip.read_bytes()
+    core_version = hashlib.sha256(core_bytes).hexdigest()[:12]
 
-    bundle_bytes = out_zip.read_bytes()
-    version = hashlib.sha256(bundle_bytes).hexdigest()[:12]
+    # 2. Per-disease bundles. Wipe stale ones first so disease renames
+    # don't leave orphans under docs/disease/.
+    for stale in disease_dir.glob("openonco-*.zip"):
+        stale.unlink()
+
+    disease_meta: dict[str, dict] = {}
+    for disease_id, items in sorted(by_disease.items()):
+        out_name = _disease_bundle_basename(disease_id)
+        out_path = disease_dir / out_name
+        with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as zf:
+            for path, arcname in items:
+                zf.write(path, arcname)
+        b = out_path.read_bytes()
+        disease_meta[disease_id] = {
+            "url": f"disease/{out_name}",
+            "files": len(items),
+            "compressed_bytes": out_path.stat().st_size,
+            "version": hashlib.sha256(b).hexdigest()[:12],
+        }
+
+    # 3. Bundle index — what /try.html consults to know which
+    # per-disease module to fetch once disease_id is known.
+    index_payload = {
+        "core": "openonco-engine-core.zip",
+        "core_version": core_version,
+        "diseases": {
+            did: meta["url"] for did, meta in sorted(disease_meta.items())
+        },
+        "disease_versions": {
+            did: meta["version"] for did, meta in sorted(disease_meta.items())
+        },
+        # CSD-6E: client-side ICD-O-3 → disease_id resolution. The /try.html
+        # JS uses this so it can pick the per-disease bundle from a profile
+        # whose only disease hint is `disease.icd_o_3_morphology`.
+        "icd_to_disease_id": _icd_to_disease_id_map(),
+    }
+    index_path.write_text(
+        json.dumps(index_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
     return {
-        "zip": str(out_zip.relative_to(output_dir)),
-        "files": files_added,
-        "uncompressed_bytes": bytes_uncompressed,
-        "compressed_bytes": out_zip.stat().st_size,
-        "version": version,
+        "core_zip": str(core_zip.relative_to(output_dir)),
+        "core_files": core_files,
+        "core_uncompressed_bytes": core_uncompressed,
+        "core_compressed_bytes": core_zip.stat().st_size,
+        "core_version": core_version,
+        # `version` retained as alias for `core_version` — older callers
+        # (try.html cache-buster wiring) still reference it as a generic
+        # "current bundle version" stamp.
+        "version": core_version,
+        "disease_bundles": disease_meta,
+        "index": str(index_path.relative_to(output_dir)),
     }
+
+
+def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
+    """Write `docs/sw.js` — a tiny cache-first service worker for the
+    bundle artifacts. Stores responses in a versioned `CacheStorage`
+    bucket keyed by `core_version`, so a KB push (which rotates the
+    SHA-256 prefix) automatically invalidates stale bundles on next
+    fetch. CSD-6E polish — speeds up cold loads on repeat visits past
+    what localStorage can hold (entire core + all visited diseases)."""
+    cache_name = "openonco-bundle-" + (core_version or "v1")
+    sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
+// Two strategies in one SW:
+//   1. Cache-first for engine bundle artifacts (large, infrequent).
+//   2. Stale-while-revalidate for try.html + style.css — repeat visits
+//      paint instantly from cache while a fresh copy fetches in the
+//      background, so the dropdowns aren't gated on the HTML download.
+// Cache name is stamped with the core bundle's SHA-256 prefix so a KB
+// push automatically rotates the cache key.
+const CACHE_NAME = '__CACHE_NAME__';
+const PRECACHE = [
+  '/openonco-engine-index.json',
+  '/openonco-engine-core.zip',
+  '/try.html',
+  '/en/try.html',
+  '/style.css',
+];
+// Routes that use stale-while-revalidate (instant from cache, refresh
+// in background). HTML pages must be on this list — never cache-first,
+// or the user gets stuck on an old build.
+const SWR_PATHS = ['/try.html', '/en/try.html', '/style.css'];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      // Precache best-effort: don't fail the SW install if a single
+      // file 404s (e.g. an old deploy that hasn't shipped the index yet).
+      Promise.all(PRECACHE.map((u) => cache.add(u).catch(() => null)))
+    ).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k.startsWith('openonco-bundle-') && k !== CACHE_NAME)
+            .map((k) => caches.delete(k))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+function staleWhileRevalidate(event) {
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((hit) => {
+        const network = fetch(event.request).then((resp) => {
+          if (resp && resp.ok) cache.put(event.request, resp.clone());
+          return resp;
+        }).catch(() => hit);
+        return hit || network;
+      })
+    )
+  );
+}
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+
+  // SWR for the small interactive shell (HTML + CSS).
+  if (SWR_PATHS.indexOf(url.pathname) !== -1) {
+    return staleWhileRevalidate(event);
+  }
+
+  // Cache-first for the heavy engine bundles.
+  const cacheFirstMatch =
+    url.pathname.endsWith('/openonco-engine-core.zip') ||
+    url.pathname.endsWith('/openonco-engine-index.json') ||
+    url.pathname.startsWith('/disease/openonco-');
+  if (!cacheFirstMatch) return;
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) =>
+      cache.match(event.request, { ignoreSearch: true }).then((hit) =>
+        hit || fetch(event.request).then((resp) => {
+          if (resp && resp.ok) {
+            const clone = resp.clone();
+            cache.put(event.request, clone);
+          }
+          return resp;
+        })
+      )
+    )
+  );
+});
+""".replace("__CACHE_NAME__", cache_name)
+    out = output_dir / "sw.js"
+    out.write_text(sw_js, encoding="utf-8")
+    return {"path": "sw.js", "cache_name": cache_name}
 
 
 def bundle_examples(output_dir: Path) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
-    the 'Load example' dropdown on try.html."""
+    the 'Load example' dropdown on try.html.
+
+    Also extracts a thin manifest (label + disease_icd only, ~10× smaller)
+    used by /try.html for instant dropdown population. Full payload is
+    lazy-fetched only when a user actually picks an example.
+    """
     payload = []
+    manifest = []
     for c in CASES:
         p = EXAMPLES / c.file
         if not p.exists():
             continue
+        ex_json = json.loads(p.read_text(encoding="utf-8"))
         payload.append({
             "case_id": c.case_id,
             "label": c.label_ua,
             "file": c.file,
-            "json": json.loads(p.read_text(encoding="utf-8")),
+            "json": ex_json,
+        })
+        manifest.append({
+            "case_id": c.case_id,
+            "label": c.label_ua,
+            "disease_icd": (
+                ex_json.get("disease", {}).get("icd_o_3_morphology")
+                if isinstance(ex_json, dict) else None
+            ),
         })
     out = output_dir / "examples.json"
     out.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "examples.json", "count": len(payload)}
+    return {
+        "path": "examples.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
+
+
+# Universal screening fields injected into every questionnaire at bundle
+# time. Audit 2026-04-27 found ~200 RF-disease evaluations were blocked
+# because these clinically-universal data points (TB screening, LVEF,
+# etc.) were absent from the per-disease questionnaire YAMLs. Rather
+# than copy-paste these into 65 questionnaires, the build prepends a
+# single "Загальний скринінг" group at JSON serialisation time. Each
+# field is `recommended` (not `critical`) so users can leave it blank
+# without blocking the Generate button. RF triggers reference these
+# field names directly — no alias needed.
+_COMMON_SCREENING_GROUP = {
+    "title": "Загальний скринінг (опційно)",
+    "description": "Універсальні поля для оцінки фітнесу, інфекційного статусу, "
+                   "органної функції. Заповнюй те, що є в карті — пусті поля "
+                   "engine просто не оцінює (replaces 'unevaluated RedFlag' warnings).",
+    "questions": [
+        {"field": "findings.lvef_percent", "label": "LVEF (%) — ехокардіографія",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 80,
+         "units": "%", "helper": "Перед антрациклінами / HER2-агентами / алкілуючими — потрібно baseline LVEF."},
+        {"field": "findings.active_tb", "label": "Активний туберкульоз?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Скринінг перед IO / стероїдами / алоТКМ. Quantiferon або скриніноговий рентген."},
+        {"field": "findings.latent_tb", "label": "Латентний ТБ (Quantiferon+ / IGRA+)?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.active_uncontrolled_infection", "label": "Активна неконтрольована інфекція?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Будь-який сепсис / pneumonia / неконтрольована грибкова — затримка lечення."},
+        {"field": "findings.albumin_g_dl", "label": "Альбумін",
+         "type": "float", "impact": "recommended", "range_min": 1.0, "range_max": 6.0,
+         "units": "г/дл"},
+        {"field": "findings.bilirubin_uln_x", "label": "Загальний білірубін (× ULN)",
+         "type": "float", "impact": "recommended", "range_min": 0.1, "range_max": 20.0,
+         "units": "× верхня межа норми",
+         "helper": "Більшість регімів вимагає bili ≤1.5×ULN; FDA-одобрення часто пишуть в кратах ULN."},
+        {"field": "findings.dlco_percent", "label": "DLCO (% від норми)",
+         "type": "float", "impact": "recommended", "range_min": 10, "range_max": 150,
+         "units": "%", "helper": "DLCO <50% — заборона на блеоміцин (cHL ABVD); <40% — обережно з CAR-T."},
+        {"field": "findings.qtc_ms", "label": "QTc (мс) на ЕКГ",
+         "type": "integer", "impact": "recommended", "range_min": 300, "range_max": 700,
+         "units": "мс",
+         "helper": "QTc >480 → обережно з венетоклаксом, кризотинібом, апалутамідом, FLT3i."},
+        {"field": "findings.potassium_mmol_l", "label": "Калій",
+         "type": "float", "impact": "recommended", "range_min": 1.5, "range_max": 8.0,
+         "units": "ммоль/л"},
+        {"field": "findings.uric_acid_mg_dl", "label": "Сечова кислота",
+         "type": "float", "impact": "recommended", "range_min": 1, "range_max": 20,
+         "units": "мг/дл",
+         "helper": "Високий уровень + bulky disease → ризик TLS, потрібен расбуриказа."},
+        {"field": "findings.tls_active", "label": "Активний синдром лізису пухлини?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.comorbidity_count", "label": "К-сть значущих коморбідностей",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 20,
+         "helper": "Серцева недостатність / COPD / cirrhosis / CKD / diabetes etc. Driver для frailty score."},
+        {"field": "findings.charlson_score", "label": "Charlson Comorbidity Index",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 30,
+         "helper": "0-1 fit, 2-3 intermediate, ≥4 frail (для elderly + солідних)."},
+        {"field": "findings.g8_score", "label": "G8 Geriatric Screening (0-17)",
+         "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 17,
+         "helper": "≤14 — потрібна повна geriatric assessment перед інтенсивною ХТ."},
+        {"field": "findings.child_pugh_class", "label": "Child-Pugh class (печінка)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "A", "label": "A — компенсована"},
+             {"value": "B", "label": "B — субкомпенсована"},
+             {"value": "C", "label": "C — декомпенсована"},
+         ],
+         "helper": "Тільки якщо є cirrhosis / liver disease. B/C — виключає більшість регімів."},
+        {"field": "findings.rapid_progression", "label": "Стрімка прогресія (швидке зростання обʼєму / нові симптоми)?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Driver для intensification у aggressive lymphomas / CAR-T bridging."},
+        {"field": "findings.new_metastatic_disease", "label": "Нові метастази на повторному скані?",
+         "type": "boolean", "impact": "recommended"},
+        {"field": "findings.hcv_rna", "label": "HCV RNA (для пацієнтів з anti-HCV+)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативна / нижче LOD"},
+             {"value": "positive", "label": "Позитивна (active HCV)"},
+         ]},
+        {"field": "findings.hiv_status", "label": "HIV статус",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "negative", "label": "Негативний"},
+             {"value": "positive", "label": "Позитивний"},
+         ]},
+        {"field": "findings.peripheral_neuropathy_grade", "label": "Передіснуюча периферична нейропатія (CTCAE)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": 0, "label": "0 — немає"},
+             {"value": 1, "label": "1 — мінімальна"},
+             {"value": 2, "label": "2 — обмежує ADL"},
+             {"value": 3, "label": "3 — severe"},
+             {"value": 4, "label": "4 — disabling"},
+         ],
+         "helper": "Grade ≥3 — заборона на bortezomib SC, vincristine, oxaliplatin, cisplatin."},
+        {"field": "findings.nyha_class", "label": "NYHA клас (серцева недостатність)",
+         "type": "enum", "impact": "recommended",
+         "options": [
+             {"value": "I", "label": "I — без обмежень"},
+             {"value": "II", "label": "II — легкі обмеження"},
+             {"value": "III", "label": "III — виражені обмеження"},
+             {"value": "IV", "label": "IV — симптоми у спокої"},
+         ],
+         "helper": "Тільки якщо є HF в анамнезі. NYHA III/IV — заборона на антрацикліни / трастузумаб."},
+        {"field": "findings.hemoglobin_g_dl", "label": "Гемоглобін",
+         "type": "float", "impact": "recommended", "range_min": 3, "range_max": 22,
+         "units": "г/дл"},
+        {"field": "findings.wbc_k_ul", "label": "Лейкоцити (×10⁹/л)",
+         "type": "float", "impact": "recommended", "range_min": 0, "range_max": 1000,
+         "units": "×10⁹/л",
+         "helper": "Hyperleukocytosis (>50-100) — risk leukostasis у AML/ALL/CML-blast."},
+        {"field": "findings.uncontrolled_hypertension", "label": "Неконтрольована гіпертензія?",
+         "type": "boolean", "impact": "recommended",
+         "helper": "Заборона / обережність з VEGF-інгібіторами (bevacizumab, sunitinib, lenvatinib)."},
+    ],
+}
+
+
+def _inject_common_screening(quest: dict) -> dict:
+    """Append the universal screening group to a questionnaire's groups
+    list at bundle time, unless the YAML already has a group with the
+    same title (idempotent — manual customisation wins)."""
+    groups = list(quest.get("groups") or [])
+    title = _COMMON_SCREENING_GROUP["title"]
+    if any(g.get("title") == title for g in groups):
+        return quest
+    groups.append(_COMMON_SCREENING_GROUP)
+    return {**quest, "groups": groups}
 
 
 def bundle_questionnaires(output_dir: Path) -> dict:
     """Pre-render all curated Questionnaire YAML files to a single
-    JSON file at docs/questionnaires.json so the form on /try.html can
-    fetch them with one HTTP request — no Pyodide needed just to render.
+    JSON file at docs/questionnaires.json + thin manifest for /try.html.
 
-    Pyodide is still required for the live evaluator (which runs against
-    the real engine), but the form itself renders from this JSON.
+    Manifest carries only the dropdown-needed fields (id + title +
+    disease_icd) — ~30× smaller than the full payload — so /try.html
+    populates dropdowns instantly. Full payload is lazy-fetched only
+    after the user selects a questionnaire.
+
+    Each questionnaire is post-processed by `_inject_common_screening`
+    so universal fields (LVEF, TB, child-pugh, etc.) appear without
+    every disease YAML having to copy them.
     """
     qsrc = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "questionnaires"
     payload = []
+    manifest = []
     if qsrc.is_dir():
         import yaml as _yaml
         for path in sorted(qsrc.glob("*.yaml")):
             try:
                 data = _yaml.safe_load(path.read_text(encoding="utf-8"))
                 if isinstance(data, dict):
+                    data = _inject_common_screening(data)
                     payload.append(data)
+                    manifest.append({
+                        "id": data.get("id"),
+                        "title": data.get("title"),
+                        "disease_icd": (
+                            (data.get("fixed_fields") or {})
+                            .get("disease", {})
+                            .get("icd_o_3_morphology")
+                        ),
+                    })
             except Exception:
                 continue
     out = output_dir / "questionnaires.json"
@@ -989,15 +665,19 @@ def bundle_questionnaires(output_dir: Path) -> dict:
         json.dumps(payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    return {"path": "questionnaires.json", "count": len(payload)}
+    return {
+        "path": "questionnaires.json",
+        "count": len(payload),
+        "manifest": manifest,
+    }
 
 
 # ── Landing page (index.html) ─────────────────────────────────────────────
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →"},
+    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →", "diseases": "Хвороби"},
+    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →", "diseases": "Diseases"},
 }
 
 
@@ -1019,6 +699,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"{en_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
         if page_kind == "limitations":  return f"{en_prefix}/limitations.html"
+        if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
     else:
         # EN page → switcher points to UA root
         if page_kind == "home":         return "/"
@@ -1027,6 +708,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "limitations":  return "/limitations.html"
+        if page_kind == "diseases":     return "/diseases.html"
     return "/"
 
 
@@ -1054,12 +736,14 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
+            f'<a href="/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
             f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
+            f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/en/limitations.html"{cls("limitations")}>Limitations</a>'
         )
@@ -1072,7 +756,7 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     return f"""<header class="top-bar">
   <div class="brand-line">
     <a href="{home_path}" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Project version">v{OPENONCO_VERSION}</span>
+    <span class="brand-version" title="Released {OPENONCO_RELEASE_DATE}">v{OPENONCO_VERSION} · {OPENONCO_RELEASE_DATE}</span>
   </div>
   <nav class="top-nav">
     <a href="{home_path}"{cls("home")}>{labels['home']}</a>
@@ -1194,6 +878,18 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
             ("New data → instant re-check",
              "Fresh labs or clinician decisions update both plans automatically — no "
              "need to re-sweep all the sources by hand."),
+            ("MoH registration & NHSU coverage next to every drug",
+             "Each drug in the plan is tagged: whether it is registered in Ukraine "
+             "(MoH) and whether it is reimbursed by the state medical-guarantees "
+             "programme (NHSU). The clinician immediately sees what is free, what is "
+             "by prescription, and what has to be sourced separately. Access is "
+             "<strong>metadata shown next to the recommendation</strong>, not a filter "
+             "— regimen choice is driven by evidence, not by registration status."),
+            ("Patient-friendly simplified report",
+             "A separate mode generates a plain-language version of the plan for the "
+             "patient: no Latin, no acronyms, with explanations of why each step was "
+             "chosen and what to watch for between visits. Same plan, two voices — "
+             "clinical for the oncologist, human for the patient."),
             ("Free, open, forever",
              "MIT-style. No paywall, no restrictions for public hospitals. Open-source "
              "means it can&rsquo;t quietly disappear or be locked behind investors "
@@ -1303,6 +999,17 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
             ("Перевірка нових даних — миттєво",
              "Свіжі лабораторні чи рішення лікаря оновлюють обидва плани автоматично, "
              "без повторного ручного перебору джерел."),
+            ("Реєстрація МОЗ та покриття НСЗУ — поряд із кожним препаратом",
+             "Кожен препарат у плані позначений: чи зареєстрований в Україні (МОЗ) і чи "
+             "покривається державною програмою медичних гарантій (НСЗУ). Лікар одразу "
+             "бачить, що доступно безкоштовно, що — за рецептом, а що доведеться шукати "
+             "окремо. Доступність — це <strong>метадані поряд із рекомендацією</strong>, "
+             "а не фільтр: вибір режиму керується доказами, а не реєстраційним статусом."),
+            ("Спрощений звіт для пацієнта",
+             "Окремий режим генерує версію плану зрозумілою мовою для пацієнта: без "
+             "латини, без абревіатур, з поясненням, чому призначено саме це і на що "
+             "звертати увагу між візитами. Той самий план, дві мови — клінічна для лікаря, "
+             "людська для пацієнта."),
             ("Безкоштовно, відкрито, назавжди",
              "MIT-style. Без paywall, без обмежень для державних лікарень. Open-source "
              "гарантує, що завтра воно нікуди не зникне і його не &laquo;закриють&raquo; "
@@ -1503,98 +1210,206 @@ def _case_has_questionnaire(case: CaseEntry, codes: set) -> bool:
     return bool(code and code in codes)
 
 
+def _load_disease_name_map() -> dict[str, dict[str, str]]:
+    """Walk diseases/*.yaml and produce {DIS-ID: {ua, en}}.
+
+    UA falls back to preferred → english if `names.ukrainian` missing;
+    EN falls back to preferred → ukrainian. Used by the gallery to
+    label disease-grouped tiles."""
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, dict[str, str]] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        if not did:
+            continue
+        names = data.get("names") or {}
+        ua = names.get("ukrainian") or names.get("preferred") or names.get("english") or did
+        en = names.get("english") or names.get("preferred") or names.get("ukrainian") or did
+        out[str(did).upper()] = {"ua": ua, "en": en}
+    return out
+
+
+def _gallery_case_disease_meta() -> list[dict]:
+    """For each CaseEntry, derive (disease_id, disease label UA/EN, ICD)
+    by loading its example JSON. Cases whose JSON is missing or carries
+    no recognised disease land in a synthetic 'OTHER' bucket so the UI
+    still surfaces them."""
+    icd_map = _icd_to_disease_id_map()
+    name_map = _load_disease_name_map()
+    out: list[dict] = []
+    for c in CASES:
+        p = EXAMPLES / c.file
+        icd = None
+        if p.exists():
+            try:
+                ex = json.loads(p.read_text(encoding="utf-8"))
+                icd = ((ex or {}).get("disease") or {}).get("icd_o_3_morphology")
+            except Exception:
+                icd = None
+        did = icd_map.get(str(icd)) if icd else None
+        if did:
+            names = name_map.get(did, {"ua": did, "en": did})
+            out.append({
+                "case": c,
+                "disease_id": did,
+                "icd": icd,
+                "label_ua": names["ua"],
+                "label_en": names["en"],
+            })
+        else:
+            out.append({
+                "case": c,
+                "disease_id": "OTHER",
+                "icd": icd,
+                "label_ua": "Інше / без класифікації",
+                "label_en": "Other / unclassified",
+            })
+    return out
+
+
 def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
+    """Disease-grouped gallery (CSD UX rev 2026-04-27).
+
+    Initial view is a tiled grid of diseases — each tile lists the
+    disease name + how many examples we have for it. Clicking a tile
+    drills into that disease's case list. The disease-level taxonomy
+    page (/diseases.html) covers everything else, so the gallery
+    intentionally drops the old category-chip filter."""
+    import html as _html
     is_en = target_lang == "en"
     case_path_prefix = "/en/cases/" if is_en else "/cases/"
     n_cases = len(CASES)
 
     quest_codes = _questionnaire_icd_o_3_codes()
+    case_meta = _gallery_case_disease_meta()
 
-    cat_counts: dict[str, int] = {}
-    for c in CASES:
-        cat_counts[c.category] = cat_counts.get(c.category, 0) + 1
+    # Group cases by disease_id, preserving CASES order within each group.
+    grouped: dict[str, dict] = {}
+    for i, m in enumerate(case_meta):
+        did = m["disease_id"]
+        bucket = grouped.setdefault(did, {
+            "disease_id": did,
+            "label_ua": m["label_ua"],
+            "label_en": m["label_en"],
+            "items": [],
+        })
+        bucket["items"].append({**m, "default_order": i})
+    # Sort diseases alphabetically by display label (UA primary).
+    sort_key = "label_en" if is_en else "label_ua"
+    diseases = sorted(grouped.values(), key=lambda d: d[sort_key].lower())
 
-    chips: list[str] = []
-    all_label = "All" if is_en else "Усі"
-    chips.append(
-        f'<button type="button" class="case-chip is-active" '
-        f'data-filter="all">{all_label} <span class="chip-n">{n_cases}</span></button>'
-    )
-    for key, ua_label, en_label in CASE_CATEGORIES:
-        n = cat_counts.get(key, 0)
-        if n == 0:
-            continue
-        label = en_label if is_en else ua_label
-        chips.append(
-            f'<button type="button" class="case-chip" '
-            f'data-filter="{key}">{label} <span class="chip-n">{n}</span></button>'
+    def _examples_word(n: int) -> str:
+        if is_en:
+            return "example" if n == 1 else "examples"
+        last2 = n % 100
+        last1 = n % 10
+        if 11 <= last2 <= 14:
+            return "прикладів"
+        if last1 == 1:
+            return "приклад"
+        if 2 <= last1 <= 4:
+            return "приклади"
+        return "прикладів"
+
+    # ── Disease tile grid ──
+    disease_tiles: list[str] = []
+    for d in diseases:
+        label = d[sort_key]
+        n = len(d["items"])
+        n_word = _examples_word(n)
+        # data-search holds both UA + EN labels lowercased so the search
+        # box works regardless of the page's render language.
+        search_blob = (d["label_ua"] + " " + d["label_en"]).lower()
+        disease_tiles.append(
+            f'<button type="button" class="disease-tile" '
+            f'data-disease-id="{_html.escape(d["disease_id"])}" '
+            f'data-search="{_html.escape(search_blob)}">'
+            f'<span class="dt-label">{_html.escape(label)}</span>'
+            f'<span class="dt-count">{n} {n_word}</span>'
+            f'</button>'
         )
-    chips_html = "\n    ".join(chips)
+    disease_tiles_html = "\n    ".join(disease_tiles)
 
-    if is_en:
-        sort_label = "Sort"
-        sort_default = "Default"
-        sort_alpha = "Name (A→Z)"
-        sort_category = "Category"
-    else:
-        sort_label = "Сортування"
-        sort_default = "За замовчуванням"
-        sort_alpha = "За назвою (А→Я)"
-        sort_category = "За класифікацією"
-
-    cards: list[str] = []
-    for i, c in enumerate(CASES):
-        has_quest = _case_has_questionnaire(c, quest_codes)
-        json_only_pill = "" if has_quest else (
-            f'<span class="case-json-only" title="'
-            f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
-            f'">{"JSON-only" if is_en else "JSON-only"}</span>'
-        )
-        cards.append(
-            f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
-   data-category="{c.category}" data-default-order="{i}"
-   data-name="{c.label_ua}">
+    # ── Per-disease card lists (hidden until selected) ──
+    case_lists: list[str] = []
+    for d in diseases:
+        cards: list[str] = []
+        for item in d["items"]:
+            c: CaseEntry = item["case"]
+            has_quest = _case_has_questionnaire(c, quest_codes)
+            json_only_pill = "" if has_quest else (
+                f'<span class="case-json-only" title="'
+                f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
+                f'">JSON-only</span>'
+            )
+            cards.append(
+                f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
+   data-default-order="{item['default_order']}"
+   data-name="{_html.escape(c.label_ua)}">
   <div class="case-badge-row">
     <div class="case-badge {c.badge_class}">{c.badge}</div>
     {json_only_pill}
   </div>
-  <h3>{c.label_ua}</h3>
-  <p>{c.summary_ua}</p>
+  <h3>{_html.escape(c.label_ua)}</h3>
+  <p>{_html.escape(c.summary_ua)}</p>
   <div class="case-foot">{c.file}</div>
 </a>"""
+            )
+        cards_html = "\n".join(cards)
+        label = d[sort_key]
+        case_lists.append(
+            f'<section class="case-list" data-disease-id="{_html.escape(d["disease_id"])}" hidden>\n'
+            f'  <header class="case-list-header">\n'
+            f'    <h2>{_html.escape(label)}</h2>\n'
+            f'    <span class="case-list-count">{len(d["items"])} {_examples_word(len(d["items"]))}</span>\n'
+            f'  </header>\n'
+            f'  <div class="case-grid">\n{cards_html}\n  </div>\n'
+            f'</section>'
         )
-    cards_html = "\n".join(cards)
+    case_lists_html = "\n".join(case_lists)
 
     if is_en:
         lead_html = (
-            f'{n_cases} synthetic patient profiles run through the engine. '
-            f'Each click opens a full Plan or Diagnostic Brief as a clinician '
-            f'would see it in tumor-board. If something looks clinically wrong '
-            f'or confusing — <a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">open an issue on GitHub</a> '
-            f'with a link to the specific case.'
+            f'{n_cases} synthetic patient profiles run through the engine, '
+            f'grouped by disease. Pick a disease to see its examples — each '
+            f'click opens a full Plan or Diagnostic Brief as a clinician would '
+            f'see it in tumor-board. If something looks clinically wrong — '
+            f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
+            f'target="_blank" rel="noopener">open an issue</a>.'
         )
+        page_title = "Sample cases"
+        search_ph = "Search disease…"
+        back_label = "← All diseases"
+        empty_label = "No diseases match your search."
     else:
         lead_html = (
-            f'{n_cases} синтетичних профілів пацієнтів, прогнаних через рушій. '
-            f'Кожен клік відкриває повний Plan або Diagnostic Brief, як його '
-            f'побачить лікар у tumor-board. Якщо щось виглядає клінічно '
-            f'неправильно або дезорієнтує — '
+            f'{n_cases} синтетичних профілів пацієнтів, згрупованих за хворобою. '
+            f'Оберіть хворобу зі списку — кожен клік відкриває повний Plan або '
+            f'Diagnostic Brief, як його побачить лікар у tumor-board. Якщо '
+            f'щось виглядає клінічно неправильно — '
             f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+&labels=tester-feedback" '
-            f'target="_blank" rel="noopener">відкрий issue на GitHub</a> '
-            f'з посиланням на конкретний кейс.'
+            f'target="_blank" rel="noopener">відкрий issue</a>.'
         )
-
-    category_order_js = "[" + ",".join(
-        f'"{key}"' for key, _ua, _en in CASE_CATEGORIES
-    ) + "]"
+        page_title = "Готові приклади"
+        search_ph = "Шукати хворобу…"
+        back_label = "← Усі хвороби"
+        empty_label = "Жодна хвороба не підходить під запит."
 
     return f"""<!DOCTYPE html>
 <html lang="{'en' if is_en else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Sample cases</title>
+<title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
@@ -1603,30 +1418,30 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 {_render_top_bar(active="gallery", target_lang=target_lang, lang_switch_href=_lang_switch_href("gallery", target_lang))}
 
 <main class="gallery">
-  <h1>{'Sample cases' if is_en else 'Готові приклади'}</h1>
+  <h1>{page_title}</h1>
   <p class="lead">{lead_html}</p>
 
-  <div class="case-controls">
-    <div class="case-chips" role="group" aria-label="{'Filter by category' if is_en else 'Фільтр за класифікацією'}">
-    {chips_html}
+  <!-- Stage 1: disease grid (default visible) -->
+  <section id="diseaseStage" class="disease-stage">
+    <div class="disease-search-row">
+      <input type="search" id="diseaseSearch" class="disease-search"
+             placeholder="{search_ph}" autocomplete="off"
+             aria-label="{search_ph}">
+      <span class="disease-search-count" id="diseaseSearchCount">{len(diseases)}</span>
     </div>
-    <label class="case-sort">
-      <span>{sort_label}:</span>
-      <select id="caseSort">
-        <option value="default">{sort_default}</option>
-        <option value="alpha">{sort_alpha}</option>
-        <option value="category">{sort_category}</option>
-      </select>
-    </label>
-  </div>
-
-  <section class="case-grid" id="caseGrid">
-    {cards_html}
+    <div class="disease-tile-grid" id="diseaseTileGrid">
+    {disease_tiles_html}
+    </div>
+    <p class="disease-empty" id="diseaseEmpty" hidden>{empty_label}</p>
   </section>
 
-  <p class="case-empty" id="caseEmpty" hidden>
-    {'No cases in this category.' if is_en else 'У цій категорії немає прикладів.'}
-  </p>
+  <!-- Stage 2: case list for the selected disease (hidden by default) -->
+  <section id="caseStage" class="case-stage" hidden>
+    <button type="button" class="case-back-btn" id="caseBackBtn">{back_label}</button>
+    <div id="caseListContainer">
+    {case_lists_html}
+    </div>
+  </section>
 
   <section class="kb-stats">
     {stats_widget_html}
@@ -1641,55 +1456,70 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 
 <script>
 (function() {{
-  var grid = document.getElementById("caseGrid");
-  var empty = document.getElementById("caseEmpty");
-  var chips = document.querySelectorAll(".case-chip");
-  var sort = document.getElementById("caseSort");
-  var cards = Array.prototype.slice.call(grid.querySelectorAll(".case-card"));
-  var categoryOrder = {category_order_js};
-  var activeFilter = "all";
+  var diseaseStage = document.getElementById("diseaseStage");
+  var caseStage = document.getElementById("caseStage");
+  var tileGrid = document.getElementById("diseaseTileGrid");
+  var tiles = Array.prototype.slice.call(tileGrid.querySelectorAll(".disease-tile"));
+  var search = document.getElementById("diseaseSearch");
+  var searchCount = document.getElementById("diseaseSearchCount");
+  var emptyMsg = document.getElementById("diseaseEmpty");
+  var backBtn = document.getElementById("caseBackBtn");
+  var listContainer = document.getElementById("caseListContainer");
+  var lists = Array.prototype.slice.call(listContainer.querySelectorAll(".case-list"));
 
-  function applyFilter() {{
+  function showDiseaseStage() {{
+    caseStage.hidden = true;
+    diseaseStage.hidden = false;
+    lists.forEach(function(l) {{ l.hidden = true; }});
+    if (history.replaceState) history.replaceState(null, "", window.location.pathname);
+    // Restore scroll to top of stage so user sees the search bar.
+    diseaseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function showDiseaseCases(diseaseId) {{
+    var found = false;
+    lists.forEach(function(l) {{
+      var match = l.dataset.diseaseId === diseaseId;
+      l.hidden = !match;
+      if (match) found = true;
+    }});
+    if (!found) return;
+    diseaseStage.hidden = true;
+    caseStage.hidden = false;
+    if (history.replaceState) history.replaceState(null, "", "#" + encodeURIComponent(diseaseId));
+    caseStage.scrollIntoView({{ block: "start", behavior: "auto" }});
+  }}
+
+  function applySearch() {{
+    var q = (search.value || "").trim().toLowerCase();
     var visible = 0;
-    cards.forEach(function(card) {{
-      var match = activeFilter === "all" || card.dataset.category === activeFilter;
-      card.style.display = match ? "" : "none";
+    tiles.forEach(function(t) {{
+      var blob = t.dataset.search || "";
+      var match = !q || blob.indexOf(q) !== -1;
+      t.style.display = match ? "" : "none";
       if (match) visible++;
     }});
-    empty.hidden = visible !== 0;
+    searchCount.textContent = visible;
+    emptyMsg.hidden = visible !== 0;
   }}
 
-  function applySort() {{
-    var mode = sort.value;
-    var sorted = cards.slice();
-    if (mode === "alpha") {{
-      sorted.sort(function(a, b) {{
-        return a.dataset.name.localeCompare(b.dataset.name, "uk");
-      }});
-    }} else if (mode === "category") {{
-      sorted.sort(function(a, b) {{
-        var ai = categoryOrder.indexOf(a.dataset.category);
-        var bi = categoryOrder.indexOf(b.dataset.category);
-        if (ai !== bi) return ai - bi;
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }} else {{
-      sorted.sort(function(a, b) {{
-        return parseInt(a.dataset.defaultOrder, 10) - parseInt(b.dataset.defaultOrder, 10);
-      }});
-    }}
-    sorted.forEach(function(card) {{ grid.appendChild(card); }});
-  }}
-
-  chips.forEach(function(chip) {{
-    chip.addEventListener("click", function() {{
-      chips.forEach(function(c) {{ c.classList.remove("is-active"); }});
-      chip.classList.add("is-active");
-      activeFilter = chip.dataset.filter;
-      applyFilter();
+  tiles.forEach(function(t) {{
+    t.addEventListener("click", function() {{
+      showDiseaseCases(t.dataset.diseaseId);
     }});
   }});
-  sort.addEventListener("change", applySort);
+  backBtn.addEventListener("click", showDiseaseStage);
+  search.addEventListener("input", applySearch);
+
+  // Deep-link support: gallery.html#DIS-DLBCL-NOS opens that disease.
+  function applyHash() {{
+    var h = window.location.hash.replace(/^#/, "");
+    if (!h) {{ showDiseaseStage(); return; }}
+    try {{ h = decodeURIComponent(h); }} catch (e) {{}}
+    showDiseaseCases(h);
+  }}
+  window.addEventListener("hashchange", applyHash);
+  applyHash();
 }})();
 </script>
 </body>
@@ -1703,10 +1533,25 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
 _PYODIDE_VERSION = "0.26.4"
 
 
-def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
+def render_try(
+    *,
+    target_lang: str = "uk",
+    bundle_version: str = "",
+    questionnaires_manifest: list = None,
+    examples_manifest: list = None,
+) -> str:
     # Pyodide assets live at site root — root-relative paths work for both
-    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle +
-    # examples.json + questionnaires.json are single shared copies.
+    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle is
+    # a single shared copy.
+    #
+    # Dropdown manifests (~15 KB total) are inlined as JS constants so the
+    # form populates instantly. Full questionnaires.json (~640 KB) and
+    # examples.json (~230 KB) are lazy-fetched only after the user selects
+    # an option — saves ~870 KB on first paint.
+    qm = questionnaires_manifest if questionnaires_manifest is not None else []
+    em = examples_manifest if examples_manifest is not None else []
+    qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
+    em_json = json.dumps(em, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
@@ -1728,6 +1573,14 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     даних.</strong> Чернетка зберігається у browser localStorage.
   </p>
 
+  <!-- Top status banner — prominent, sticky-ish, animated while loading
+       so the user sees that something is happening even when the engine
+       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+    <span class="status-top-spinner" aria-hidden="true"></span>
+    <span class="status-top-text">Завантажую опитувальники…</span>
+  </div>
+
   <div class="quest-toolbar">
     <label class="qt-label">
       Хвороба
@@ -1748,6 +1601,54 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
     </div>
     <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
   </div>
+
+  <!-- Early-paint warmup: a tiny synchronous script that runs before the
+       module-script below. Populates dropdowns from a localStorage cache
+       (written on the previous successful boot) so repeat visitors see
+       a filled dropdown the moment the toolbar renders, without waiting
+       for the Pyodide-importing module script to download + parse. The
+       module script later re-renders from the inline manifest, which
+       wins if the cached version is stale. -->
+  <script>
+  (function() {{
+    try {{
+      var raw = localStorage.getItem('openonco-manifests-v1');
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      var ds = document.getElementById('diseaseSelect');
+      if (ds && data && Array.isArray(data.questionnaires)) {{
+        var frag = document.createDocumentFragment();
+        var ph = document.createElement('option');
+        ph.value = ''; ph.textContent = '— оберіть —';
+        frag.appendChild(ph);
+        data.questionnaires.forEach(function(q, i) {{
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = q.title;
+          frag.appendChild(opt);
+        }});
+        ds.innerHTML = '';
+        ds.appendChild(frag);
+        ds.dataset.warmedUp = '1';
+      }}
+      var es = document.getElementById('exampleSelect');
+      if (es && data && Array.isArray(data.examples)) {{
+        var frag2 = document.createDocumentFragment();
+        var ph2 = document.createElement('option');
+        ph2.value = ''; ph2.textContent = '— оберіть приклад —';
+        frag2.appendChild(ph2);
+        data.examples.forEach(function(ex, i) {{
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = ex.label;
+          frag2.appendChild(opt);
+        }});
+        es.innerHTML = '';
+        es.appendChild(frag2);
+      }}
+    }} catch (e) {{ /* silent */ }}
+  }})();
+  </script>
 
   <div class="quest-grid">
     <section class="quest-form-pane" id="formPane">
@@ -1851,7 +1752,7 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 
   <footer class="page-foot">
     Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
-    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine.zip</code>.
+    Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine-core.zip</code> + per-disease modules.
   </footer>
 </main>
 
@@ -1880,12 +1781,25 @@ def render_try(*, target_lang: str = "uk", bundle_version: str = "") -> str:
 </div>
 
 <script type="module">
-import {{ loadPyodide }} from "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs";
+// Pyodide is loaded lazily on first Generate-click so a slow CDN fetch
+// (~few-100 KB module + parse) doesn't block dropdown population.
+// Static `import …` would gate the entire module-script body on
+// pyodide.mjs being fetched & parsed — meaning the form looked frozen
+// on cold visits even though the manifests are already in this HTML.
+let loadPyodide = null;
+async function ensurePyodideLoader() {{
+  if (loadPyodide) return loadPyodide;
+  const mod = await import("https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/pyodide.mjs");
+  loadPyodide = mod.loadPyodide;
+  return loadPyodide;
+}}
 
 const STORAGE_KEY = 'openonco-try-draft-v1';
 
 // ── DOM refs ──────────────────────────────────────────────────────────────
 const status = document.getElementById('status');
+const statusTop = document.getElementById('statusTop');
+const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
 const errorBox = document.getElementById('error');
 const runBtn = document.getElementById('runBtn');
 const formatBtn = document.getElementById('formatBtn');
@@ -1926,8 +1840,24 @@ const initStagesEl = document.getElementById('initStages');
 // ── State ─────────────────────────────────────────────────────────────────
 let pyodide = null;
 let enginReady = false;
-let questionnaires = [];     // loaded from /questionnaires.json
-let examples = [];           // loaded from /examples.json
+// CSD-6E + CSD-9C: bundle lazy-load state. `bundleIndex` is the parsed
+// index (resolved from /openonco-engine-index.json); `coreBundleLoaded`
+// is set after the first core extract; `loadedDiseases` remembers which
+// per-disease modules we've already merged so re-runs against the same
+// disease don't re-fetch. The legacy monolithic fallback was retired in
+// CSD-9C — lazy-load is the only path now.
+const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
+const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
+let bundleIndex = null;
+let coreBundleLoaded = false;
+const loadedDiseases = new Set();
+// Build-time manifests — instant dropdown population, no fetch.
+const QUESTIONNAIRES_MANIFEST = {qm_json};
+const EXAMPLES_MANIFEST = {em_json};
+let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
+let examples = null;         // lazy-fetched from /examples.json on first need
+let _questionnairesPromise = null;
+let _examplesPromise = null;
 let activeQuest = null;      // currently selected questionnaire
 let generating = false;      // true while runEngine is mid-flight; blocks
                              // input via <main inert> + overlay so the
@@ -1964,9 +1894,33 @@ let planDirty = false;
 let activeExampleCaseId = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
-function setStatus(msg, kind = 'info') {{
+function setStatus(msg, kind = 'info', topMode = 'auto') {{
   status.textContent = msg;
   status.dataset.kind = kind;
+  // Mirror to the prominent top banner.
+  //  topMode='busy'  → spinner, blue
+  //  topMode='ok'    → green ✓
+  //  topMode='warn'  → amber
+  //  topMode='hide'  → hide top banner (sidebar still updates)
+  //  topMode='auto'  → kind=info shows busy, ok→green, warn→amber
+  if (!statusTop || !statusTopText) return;
+  let mode = topMode;
+  if (mode === 'auto') {{
+    if (kind === 'ok') mode = 'ok';
+    else if (kind === 'warn') mode = 'warn';
+    else if (!msg) mode = 'hide';
+    else mode = 'busy';
+  }}
+  if (mode === 'hide' || !msg) {{
+    statusTop.hidden = true;
+    return;
+  }}
+  statusTop.hidden = false;
+  statusTopText.textContent = msg;
+  statusTop.dataset.kind = kind;
+  statusTop.classList.toggle('is-busy', mode === 'busy');
+  statusTop.classList.toggle('is-ok', mode === 'ok');
+  statusTop.classList.toggle('is-warn', mode === 'warn');
 }}
 function setError(msg) {{
   if (msg) {{
@@ -2717,6 +2671,148 @@ function updateImpactPanel(result) {{
   // and the engine will surface the gaps.
 }}
 
+// ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
+// Two-tier bundle: fetch openonco-engine-core.zip first (~1.4 MB), then
+// fetch the matching per-disease module (~15-40 KB) once we know the
+// patient's disease_id. CSD-9C (2026-04-27) drops the legacy monolithic
+// fallback — the lazy-load path is the canonical path now. The index
+// fetch retries once on transient failure before giving up; if that
+// fails too we surface a clear error rather than silently downloading
+// 3+ MB of fallback that no longer ships.
+
+async function loadBundleIndex() {{
+  if (bundleIndex !== null) return bundleIndex;
+  // One retry to absorb a transient CDN hiccup before failing the load.
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {{
+    try {{
+      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+      if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
+      bundleIndex = await r.json();
+      return bundleIndex;
+    }} catch (e) {{
+      lastErr = e;
+      if (attempt === 0) {{
+        console.warn('[OpenOnco] bundle index fetch failed — retrying once:', e);
+        await yieldToBrowser(250);
+      }}
+    }}
+  }}
+  console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
+  throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
+}}
+
+// Resolve a disease_id from whatever the patient profile / form gives us.
+// Order: explicit disease.id (or top-level disease_id) → active
+// questionnaire's disease_id → ICD-O-3 morphology → null.
+function resolveDiseaseId(profile) {{
+  if (!profile) return null;
+  const d = profile.disease || {{}};
+  if (typeof d.id === 'string' && d.id.startsWith('DIS-')) return d.id.toUpperCase();
+  if (typeof profile.disease_id === 'string' && profile.disease_id.startsWith('DIS-')) {{
+    return profile.disease_id.toUpperCase();
+  }}
+  if (activeQuest && typeof activeQuest.disease_id === 'string'
+      && activeQuest.disease_id.startsWith('DIS-')) {{
+    return activeQuest.disease_id.toUpperCase();
+  }}
+  const code = d.icd_o_3_morphology;
+  if (code && bundleIndex && bundleIndex.icd_to_disease_id) {{
+    const did = bundleIndex.icd_to_disease_id[String(code)];
+    if (did) return did;
+  }}
+  return null;
+}}
+
+async function loadCoreBundle() {{
+  if (coreBundleLoaded) return;
+  // CSD-9C: index is required — monolithic fallback retired.
+  await loadBundleIndex();
+  if (!bundleIndex || !bundleIndex.core) {{
+    throw new Error('Bundle index missing core entry — cannot load engine');
+  }}
+  setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+  const ver = bundleIndex.core_version || '';
+  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
+  const buf = await r.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  coreBundleLoaded = true;
+}}
+
+// Per-disease module: tiny zip with the disease's indications, regimens,
+// algorithms, redflags, and biomarker_actionability cells. Cached in
+// localStorage keyed by disease_id + version so subsequent visits skip
+// the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
+// time per slot and drop silently on quota errors.
+async function loadDiseaseModule(diseaseId) {{
+  if (!diseaseId) return;
+  if (loadedDiseases.has(diseaseId)) return;
+  if (!bundleIndex || !bundleIndex.diseases) return;
+  const relUrl = bundleIndex.diseases[diseaseId];
+  if (!relUrl) {{
+    // Disease has no per-disease bundle — its content is fully in core.
+    loadedDiseases.add(diseaseId);
+    return;
+  }}
+  const ver = (bundleIndex.disease_versions || {{}})[diseaseId] || '';
+  const cacheKey = 'openonco-disease-' + diseaseId + '-' + ver;
+
+  // localStorage cache hit: decode base64 → ArrayBuffer → unpack.
+  try {{
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {{
+      const bin = atob(cached);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      pyodide.unpackArchive(u8.buffer, 'zip');
+      loadedDiseases.add(diseaseId);
+      console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
+      return;
+    }}
+  }} catch (e) {{
+    console.warn('[OpenOnco] disease cache read failed for ' + diseaseId + ':', e);
+    try {{ localStorage.removeItem(cacheKey); }} catch (_) {{}}
+  }}
+
+  setStatus('Завантажую модуль ' + diseaseId + '…');
+  const url = '/' + relUrl + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
+  const buf = await r.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  loadedDiseases.add(diseaseId);
+
+  // Re-validate after merge so the next generate_plan() sees the new YAMLs.
+  // apply_disease_module() drops the loader cache; cheap enough to run on
+  // every disease swap.
+  try {{
+    await pyodide.runPythonAsync(
+      "from knowledge_base.engine import apply_disease_module\\n" +
+      "from pathlib import Path\\n" +
+      "apply_disease_module(Path('knowledge_base/hosted/content'))\\n"
+    );
+  }} catch (e) {{
+    console.warn('[OpenOnco] apply_disease_module failed (continuing):', e);
+  }}
+
+  // Cache for next visit. Skip silently on quota or encoding errors.
+  try {{
+    let bin = '';
+    const u8 = new Uint8Array(buf);
+    const chunk = 0x8000;
+    for (let i = 0; i < u8.length; i += chunk) {{
+      bin += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+    }}
+    localStorage.setItem(cacheKey, btoa(bin));
+  }} catch (e) {{
+    // Quota exceeded or encoding hiccup — just don't cache.
+  }}
+}}
+
 // ── Pyodide loader ────────────────────────────────────────────────────────
 // Lazy: runs only when user clicks Generate. Drives the init overlay's
 // 4 setup stages (pyodide / pydeps / bundle / validate) with explicit
@@ -2730,7 +2826,8 @@ async function ensureEngine() {{
     initStageStart(stage);
     setStatus('Завантажую Pyodide…');
     await yieldToBrowser(50);
-    pyodide = await loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
+    const _loadPyodide = await ensurePyodideLoader();
+    pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
     initStageDone(stage);
 
     stage = 'pydeps';
@@ -2749,14 +2846,11 @@ await micropip.install(['pydantic', 'pyyaml'])
     initStageStart(stage);
     setStatus('Завантажую двигун OpenOnco…');
     await yieldToBrowser(50);
-    // Cache-busting: bundle_version is the SHA-256 prefix of the engine
-    // zip, computed at build time. Forces a fresh fetch when KB content
-    // changes, sidestepping CDN/browser cache (GitHub Pages serves
-    // openonco-engine.zip with Cache-Control: max-age=600).
-    const resp = await fetch('/openonco-engine.zip?v={bundle_version}');
-    const buf = await resp.arrayBuffer();
-    await yieldToBrowser();
-    pyodide.unpackArchive(buf, 'zip');
+    // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
+    // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
+    // disease modules are the only path. Per-disease modules are
+    // fetched later in runEngine() once disease_id is known.
+    await loadCoreBundle();
     initStageDone(stage);
 
     stage = 'validate';
@@ -2834,6 +2928,16 @@ async function runEngine() {{
       setError('Двигун не завантажився: ' + (e.message || e));
       setStatus('');
       return;
+    }}
+    // CSD-6E: lazy-fetch the per-disease module before generate. No-op
+    // when the disease has no per-disease bundle (its content is in
+    // core). Failures are surfaced but non-fatal — generate_plan()
+    // will fall back to whatever's already loaded.
+    try {{
+      const did = resolveDiseaseId(profile);
+      if (did) await loadDiseaseModule(did);
+    }} catch (e) {{
+      console.warn('[OpenOnco] disease module load failed (continuing):', e);
     }}
     initStageStart('generate');
     setStatus('Будую персональний план…');
@@ -2956,23 +3060,54 @@ function yieldToBrowser(ms) {{
 }}
 
 // ── Boot ──────────────────────────────────────────────────────────────────
-async function loadAssets() {{
-  setStatus('Завантажую опитувальники…');
-  const [qResp, exResp] = await Promise.all([
-    fetch('/questionnaires.json'),
-    fetch('/examples.json'),
-  ]);
-  questionnaires = await qResp.json();
-  examples = await exResp.json();
+//
+// Lazy-loaders for full questionnaire/example data. Dropdowns populate
+// instantly from the build-time manifests above; the full ~870 KB payload
+// is fetched only after the user picks something.
+async function ensureQuestionnaires() {{
+  if (questionnaires) return questionnaires;
+  if (!_questionnairesPromise) {{
+    _questionnairesPromise = fetch('/questionnaires.json')
+      .then(r => r.json())
+      .then(data => {{ questionnaires = data; return data; }});
+  }}
+  return _questionnairesPromise;
+}}
+async function ensureExamples() {{
+  if (examples) return examples;
+  if (!_examplesPromise) {{
+    _examplesPromise = fetch('/examples.json')
+      .then(r => r.json())
+      .then(data => {{ examples = data; return data; }});
+  }}
+  return _examplesPromise;
+}}
 
-  // Disease selector
+// Persist dropdown manifests across visits. Read by the early-paint
+// warmup at the top of the script body, written by loadAssets after a
+// successful boot so the next cold visit can paint dropdowns from
+// localStorage even before the new HTML's inline manifest is parsed.
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v1';
+function saveManifestsToCache() {{
+  try {{
+    localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({{
+      ts: Date.now(),
+      questionnaires: QUESTIONNAIRES_MANIFEST,
+      examples: EXAMPLES_MANIFEST,
+    }}));
+  }} catch (e) {{ /* quota or private mode — silent skip */ }}
+}}
+
+async function loadAssets() {{
+  // Populate dropdowns from manifests — instant, no network fetch.
   diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
-  questionnaires.forEach((q, i) => {{
+  QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = q.title;
     diseaseSelect.appendChild(opt);
   }});
+  saveManifestsToCache();
 
   // Examples selector — initial population shows all; narrows once a
   // disease is picked.
@@ -2981,10 +3116,12 @@ async function loadAssets() {{
   // Restore draft
   const draft = loadDraft();
   if (draft && draft.questId) {{
-    const idx = questionnaires.findIndex(q => q.id === draft.questId);
+    const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
     if (idx >= 0) {{
       diseaseSelect.value = idx;
-      renderForm(questionnaires[idx]);
+      // Draft restore needs full data — lazy-fetch now
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[idx]);
       repopulateExamples(idx);
       // Apply saved answers
       if (draft.answers) {{
@@ -3004,7 +3141,8 @@ async function loadAssets() {{
       updateImpactPanelLocal();
     }}
   }} else {{
-    setStatus('Оберіть хворобу зі списку, щоб почати.');
+    // Initial load done — hide the top busy banner; sidebar still shows hint.
+    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
@@ -3018,9 +3156,11 @@ async function loadAssets() {{
 // matches the active questionnaire — otherwise the picker overwhelms with
 // 35 cases for which we don't have a form.
 function repopulateExamples(activeQuestIdx) {{
+  // Filter from manifest only — no need to await full examples payload
+  // just to populate a dropdown (manifest carries label + disease_icd).
   const wantCode = activeQuestIdx == null
     ? null
-    : ((questionnaires[activeQuestIdx].fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology;
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {{}}).disease_icd;
   exampleSelect.innerHTML = '';
   const placeholder = document.createElement('option');
   placeholder.value = '';
@@ -3029,10 +3169,9 @@ function repopulateExamples(activeQuestIdx) {{
     : '— оберіть приклад для цієї хвороби —';
   exampleSelect.appendChild(placeholder);
   let n = 0;
-  examples.forEach((ex, i) => {{
+  EXAMPLES_MANIFEST.forEach((ex, i) => {{
     if (wantCode != null) {{
-      const code = ex.json && ex.json.disease && ex.json.disease.icd_o_3_morphology;
-      if (code !== wantCode) return;
+      if (ex.disease_icd !== wantCode) return;
     }}
     const opt = document.createElement('option');
     opt.value = i;
@@ -3050,7 +3189,7 @@ function repopulateExamples(activeQuestIdx) {{
 }}
 
 // ── Event wiring ──────────────────────────────────────────────────────────
-diseaseSelect.addEventListener('change', () => {{
+diseaseSelect.addEventListener('change', async () => {{
   const i = diseaseSelect.value;
   // Switching disease invalidates whatever plan was on screen — there is
   // no longer any example or generated plan that matches the new form.
@@ -3062,7 +3201,8 @@ diseaseSelect.addEventListener('change', () => {{
     return;
   }}
   const idx = parseInt(i, 10);
-  renderForm(questionnaires[idx]);
+  const fullList = await ensureQuestionnaires();
+  renderForm(fullList[idx]);
   repopulateExamples(idx);
   exampleSelect.value = '';
   saveDraft();
@@ -3071,13 +3211,11 @@ diseaseSelect.addEventListener('change', () => {{
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology stamped in the example's disease block
-  // (questionnaires carry the same code under fixed_fields.disease).
+  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
+  // to wait for full questionnaires payload.
   const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
   if (!code) return -1;
-  return questionnaires.findIndex(q =>
-    ((q.fixed_fields || {{}}).disease || {{}}).icd_o_3_morphology === code
-  );
+  return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
 
 function getByPath(obj, dotted) {{
@@ -3109,10 +3247,11 @@ function populateFormFromProfile(quest, profile) {{
   }}
 }}
 
-exampleSelect.addEventListener('change', () => {{
+exampleSelect.addEventListener('change', async () => {{
   const i = exampleSelect.value;
   if (i === '') return;
-  const ex = examples[parseInt(i, 10)];
+  const fullExamples = await ensureExamples();
+  const ex = fullExamples[parseInt(i, 10)];
   setError(null);
   // Prefer form mode: find a questionnaire that matches this example's
   // disease and populate it. Fall back to JSON view only when no
@@ -3120,10 +3259,11 @@ exampleSelect.addEventListener('change', () => {{
   const qIdx = findQuestionnaireForProfile(ex.json);
   if (qIdx >= 0) {{
     diseaseSelect.value = qIdx;
-    renderForm(questionnaires[qIdx]);
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[qIdx]);
     repopulateExamples(qIdx);
     exampleSelect.value = i;
-    populateFormFromProfile(questionnaires[qIdx], ex.json);
+    populateFormFromProfile(fullList[qIdx], ex.json);
     setMode('form');
     // Lock filled fields and reveal the personalize banner so the user
     // can opt-in to editing the example's data.
@@ -3193,7 +3333,87 @@ runBtn.addEventListener('click', runEngine);
   el.addEventListener('focus', pauseEvalForToolbar);
 }});
 
-loadAssets().catch(e => setError('Initialization failed: ' + e));
+// ── Case-token URL handler (CSD-3-qr-token) ───────────────────────────────
+// QR codes printed on CSD Lab NGS reports encode the patient profile in the
+// URL hash: openonco.info/try.html#p=<base64-gzip-json>. We decode entirely
+// in the browser — CHARTER §9.3, no PHI ever touches a server.
+async function loadFromUrlHash() {{
+  const hash = window.location.hash.slice(1);  // strip #
+  if (!hash) return;
+  const params = new URLSearchParams(hash);
+  const token = params.get('p');
+  if (!token) return;
+
+  try {{
+    // urlsafe-base64 → bytes (re-add padding) → gunzip → JSON
+    const padded = token + '='.repeat((-token.length) & 3);
+    const binStr = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
+    const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));
+    const ds = new DecompressionStream('gzip');
+    const stream = new Response(bytes).body.pipeThrough(ds);
+    const json = await new Response(stream).text();
+    const patient = JSON.parse(json);
+
+    // Try to match a disease questionnaire so the form mode picks up the
+    // profile cleanly — same flow as the example loader.
+    const qIdx = findQuestionnaireForProfile(patient);
+    if (qIdx >= 0) {{
+      diseaseSelect.value = qIdx;
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
+      repopulateExamples(qIdx);
+      populateFormFromProfile(fullList[qIdx], patient);
+      setMode('form');
+      lockFilledFields();
+      showExampleLockBanner();
+      textarea.value = JSON.stringify(buildProfile(), null, 2);
+    }} else {{
+      setMode('json');
+      textarea.value = JSON.stringify(patient, null, 2);
+    }}
+    saveDraft();
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner';
+    banner.textContent = '✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setStatus('Профіль із QR завантажено ✓', 'ok');
+  }} catch (err) {{
+    console.error('Failed to decode case token:', err);
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner-error';
+    banner.textContent = '⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setError('QR token decode failed: ' + (err.message || err));
+  }}
+}}
+
+// Run after loadAssets so questionnaires + examples are populated and
+// findQuestionnaireForProfile/populateFormFromProfile can do their job.
+loadAssets()
+  .then(() => loadFromUrlHash())
+  .catch(e => setError('Initialization failed: ' + e));
+window.addEventListener('hashchange', loadFromUrlHash);
+
+// CSD-6E: kick off the bundle index fetch as soon as the page loads —
+// it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
+// ICD-O-3 codes before the user clicks Generate. Best-effort, never
+// blocks UI.
+loadBundleIndex().catch(() => {{}});
+
+// CSD-6E polish: register the cache-first service worker so repeat
+// visits skip the network for the engine bundle entirely. Best-effort
+// — falls through silently when the SW API is unavailable (private
+// mode, ITP, file://, etc.).
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', () => {{
+    navigator.serviceWorker.register('/sw.js').catch((e) => {{
+      console.warn('[OpenOnco] service worker registration failed:', e);
+    }});
+  }});
+}}
 </script>
 </body>
 </html>
@@ -3265,1365 +3485,6 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
 # ── Static stylesheet ─────────────────────────────────────────────────────
 
 
-_STYLE_CSS = """
-:root {
-  --green-900: #0a2e1a;
-  --green-800: #0d3f24;
-  --green-700: #14532d;
-  --green-600: #166534;
-  --green-500: #16a34a;
-  --green-100: #dcfce7;
-  --green-50: #f0fdf4;
-  --teal: #0d9488;
-  --amber-bg: #fffbeb;
-  --amber: #d97706;
-  --red-bg: #fef2f2;
-  --red: #dc2626;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-500: #6b7280;
-  --gray-700: #374151;
-  --gray-900: #111827;
-  --font-sans: 'Source Sans 3', 'Segoe UI', sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-mono: 'JetBrains Mono', Menlo, monospace;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: var(--font-sans);
-  color: var(--gray-900);
-  background: var(--gray-50);
-  line-height: 1.55;
-}
-a { color: var(--green-700); }
-main { max-width: 1100px; margin: 0 auto; padding: 0 24px 48px; }
-
-/* Top bar */
-.top-bar {
-  background: var(--green-900); color: var(--green-100);
-  padding: 12px 24px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.brand-line { display: flex; align-items: center; gap: 12px; margin-right: 28px; }
-.brand-mini {
-  font-family: var(--font-display); font-size: 26px;
-  color: var(--green-100); text-decoration: none;
-  letter-spacing: 0.2px;
-}
-.brand-version {
-  font-family: var(--font-mono); font-size: 10.5px;
-  color: var(--green-100); opacity: 0.55;
-  background: rgba(255,255,255,0.06);
-  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.5px;
-  align-self: center;
-}
-.role-pill {
-  background: var(--teal); color: white;
-  font-family: var(--font-mono); font-size: 10px;
-  padding: 2px 8px; border-radius: 4px; letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.top-actions a {
-  color: var(--green-100); margin-left: 16px; text-decoration: none;
-  font-size: 13px;
-}
-.top-actions a:hover, .top-actions a.active { color: white; }
-.top-actions a.active {
-  border-bottom: 2px solid var(--green-100); padding-bottom: 1px;
-}
-
-/* New top-bar layout: brand · nav · right-cluster (lang switch + try CTA) */
-.top-nav { display: flex; align-items: center; flex: 1; margin: 0 24px 0 16px; gap: 4px; }
-.top-nav a {
-  color: var(--green-100); padding: 4px 10px; text-decoration: none;
-  font-size: 13px; border-radius: 4px;
-}
-.top-nav a:hover { color: white; background: rgba(255,255,255,.05); }
-.top-nav a.active {
-  color: white; background: rgba(255,255,255,.08);
-}
-
-.top-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-
-/* Language switch — compact UA / EN toggle. Fixed-width halves so the
-   pill stays the same shape regardless of which language is current. */
-.lang-switch {
-  display: inline-flex; align-items: center; gap: 0;
-  background: rgba(255,255,255,.08); border-radius: 4px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.5px;
-  overflow: hidden; flex-shrink: 0;
-}
-.lang-switch .lang-current,
-.lang-switch .lang-other {
-  width: 56px; box-sizing: border-box;
-  padding: 4px 9px;
-  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
-}
-.lang-switch .lang-current {
-  background: rgba(255,255,255,.15); color: white;
-  font-weight: 600;
-}
-.lang-switch .lang-other {
-  color: var(--green-100);
-  text-decoration: none; transition: background .12s;
-}
-.lang-switch .lang-other:hover { background: rgba(255,255,255,.12); color: white; }
-/* CSS-painted mini flag — works on every OS (Windows doesn't render
-   regional-indicator emoji as flags). 14×10 colored bar. */
-.lang-switch .lang-flag {
-  display: inline-block; width: 14px; height: 10px; border-radius: 1.5px;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.25) inset;
-}
-.lang-switch .lang-flag.flag-ua {
-  background: linear-gradient(to bottom, #0057b7 50%, #ffd500 50%);
-}
-/* Union Jack via inline SVG — the prior horizontal red/white/blue
-   gradient read as the Dutch flag. Paint the actual British flag instead. */
-.lang-switch .lang-flag.flag-en {
-  background: #012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;
-}
-
-/* CTA "Try it" button — distinct from nav (action, not reading).
-   Fixed min-width so button (and the lang-switch left of it) don't
-   shift between UA "Спробувати →" and EN "Try it →". */
-.btn-cta-try {
-  background: linear-gradient(135deg, var(--green-500) 0%, var(--teal) 100%);
-  color: white; padding: 11px 22px; border-radius: 7px;
-  font-weight: 600; font-size: 15px; text-decoration: none;
-  font-family: var(--font-sans); border: none;
-  box-shadow: 0 1px 0 rgba(255,255,255,.2) inset, 0 1px 4px rgba(0,0,0,.15);
-  transition: transform .12s, box-shadow .12s, filter .12s;
-  white-space: nowrap;
-  min-width: 180px; box-sizing: border-box; text-align: center;
-  display: inline-block;
-}
-.btn-cta-try:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 0 rgba(255,255,255,.2) inset, 0 3px 8px rgba(0,0,0,.2);
-  filter: brightness(1.05);
-}
-.btn-cta-try[aria-current="page"] {
-  outline: 2px solid white; outline-offset: 1px;
-}
-
-@media (max-width: 700px) {
-  .top-bar { flex-wrap: wrap; gap: 8px; }
-  .brand-line { margin-right: 0; }
-  .brand-mini { font-size: 22px; }
-  .top-nav { order: 3; flex-basis: 100%; margin: 0; justify-content: center; }
-  .top-right { gap: 8px; }
-  .lang-switch { font-size: 10px; }
-  .lang-switch .lang-current,
-  .lang-switch .lang-other { width: 48px; padding: 4px 6px; }
-  .btn-cta-try { padding: 8px 14px; font-size: 13px; min-width: 140px; }
-}
-
-/* Hero */
-.hero {
-  background:
-    radial-gradient(ellipse at top left, var(--green-100) 0%, transparent 55%),
-    radial-gradient(ellipse at bottom right, #ccfbf1 0%, transparent 55%),
-    var(--gray-50);
-  padding: 60px 24px 50px;
-  margin: 0 -24px;
-}
-.hero-content { max-width: 880px; margin: 0 auto; }
-.eyebrow {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--green-700); margin-bottom: 16px;
-}
-.hero h1 {
-  font-family: var(--font-display); font-weight: 700; font-size: 44px;
-  line-height: 1.12; color: var(--green-900); margin-bottom: 20px;
-}
-.hero-sub {
-  font-size: 18px; color: var(--gray-700); max-width: 720px;
-  margin-bottom: 28px;
-}
-.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn {
-  display: inline-block; padding: 12px 22px; border-radius: 8px;
-  font-weight: 600; font-size: 15px; text-decoration: none;
-  font-family: var(--font-sans); cursor: pointer; border: none;
-}
-.btn-primary { background: var(--green-700); color: white; }
-.btn-primary:hover { background: var(--green-600); }
-.btn-secondary {
-  background: white; color: var(--green-700);
-  border: 1px solid var(--gray-200);
-}
-.btn-secondary:hover { border-color: var(--green-600); }
-.hero-corpus {
-  margin-top: 32px; padding: 18px 22px;
-  background: white; border-radius: 12px;
-  border: 1px solid var(--green-100);
-  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.05);
-  display: flex; gap: 22px; align-items: center;
-  max-width: 720px;
-}
-.hcorpus-num {
-  font-family: var(--font-display); font-size: 56px;
-  color: var(--green-700); line-height: 1;
-  flex-shrink: 0;
-}
-.hcorpus-text {
-  font-size: 14.5px; color: var(--gray-700);
-  line-height: 1.55;
-}
-.hcorpus-text strong { color: var(--green-900); }
-.hero-meta {
-  margin-top: 24px; font-size: 12px; color: var(--gray-500);
-  font-family: var(--font-mono);
-}
-
-/* Numbers */
-.numbers { padding: 50px 0 30px; }
-.numbers h2, .problem h2, .how h2, .gallery h1, .try-page h1 {
-  font-family: var(--font-display); font-size: 30px;
-  color: var(--green-900); margin-bottom: 24px;
-}
-.numbers-lead {
-  font-size: 15px; color: var(--gray-700); margin-bottom: 24px;
-  max-width: 880px;
-}
-.num-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 12px;
-}
-.num-grid--rich {
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-.num-card {
-  background: white; border: 1px solid var(--gray-200); border-radius: 10px;
-  padding: 20px 18px; border-top: 3px solid var(--green-600);
-  display: flex; flex-direction: column;
-}
-.num-card--accent { border-top-color: var(--teal); background: linear-gradient(180deg, var(--green-50) 0%, white 40%); }
-.num-big {
-  font-family: var(--font-display); font-size: 38px; line-height: 1;
-  color: var(--green-900);
-}
-.num-lbl {
-  font-size: 14px; color: var(--gray-900); margin-top: 6px;
-  font-weight: 700;
-}
-.num-detail {
-  font-family: var(--font-mono); font-size: 11px; color: var(--gray-500);
-  margin-top: 4px;
-}
-.num-text {
-  font-size: 13px; color: var(--gray-700); margin-top: 10px;
-  line-height: 1.5;
-}
-.num-text code {
-  font-family: var(--font-mono); font-size: 11px;
-  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
-}
-.num-text em { font-style: normal; font-family: var(--font-mono); font-size: 12px; color: var(--green-700); }
-.num-foot {
-  font-size: 13px; color: var(--gray-700); margin-top: 18px;
-  padding: 14px 16px; background: var(--amber-bg);
-  border-left: 3px solid var(--amber); border-radius: 4px;
-}
-.num-foot code { font-family: var(--font-mono); font-size: 12px; }
-
-/* Problem */
-.problem { padding: 30px 0; }
-.problem-text {
-  font-size: 16px; color: var(--gray-700); max-width: 880px;
-  line-height: 1.65;
-}
-
-/* How it works */
-.how { padding: 30px 0; }
-.how-lead {
-  font-size: 15px; color: var(--gray-700); max-width: 880px;
-  margin-bottom: 22px;
-}
-
-/* Trust strip — sits above the data flow, sets AI/LLM expectations up front. */
-.trust-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 10px;
-  margin: 22px 0 18px;
-}
-.trust-pill {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 12px 14px; border-radius: 8px;
-  font-size: 13.5px; line-height: 1.45;
-  border: 1px solid var(--gray-200);
-  background: white;
-}
-.trust-pill--no { border-left: 3px solid var(--red); }
-.trust-pill--yes { border-left: 3px solid var(--green-600); background: var(--green-50); }
-.trust-pill-mark {
-  font-family: var(--font-mono); font-weight: 700;
-  width: 22px; height: 22px; flex-shrink: 0;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 50%; font-size: 14px;
-}
-.trust-pill--no .trust-pill-mark { background: var(--red-bg); color: var(--red); }
-.trust-pill--yes .trust-pill-mark { background: var(--green-100); color: var(--green-700); }
-.trust-pill-text { color: var(--gray-700); }
-.trust-pill-text strong { color: var(--gray-900); }
-
-/* Data flow — replaces the prior MDT figure. Four stages on a dark backdrop
-   so the open-standards / biomarker chips read as live data, not decoration. */
-.dataflow {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-  gap: 0; align-items: stretch;
-  background: linear-gradient(135deg, #0a2e1a 0%, #0d3f24 60%, #0f4d2c 100%);
-  padding: 26px 22px; border-radius: 12px;
-  margin: 0 0 28px;
-  box-shadow: 0 1px 0 rgba(0,0,0,.04);
-}
-.dataflow-stage {
-  background: rgba(255,255,255,.04);
-  border: 1px solid rgba(220,252,231,.10);
-  border-radius: 10px;
-  padding: 16px 14px;
-  color: var(--green-100);
-  display: flex; flex-direction: column; gap: 9px;
-  min-width: 0;
-}
-.dataflow-stage[data-stage="1"] { border-top: 3px solid var(--teal); }
-.dataflow-stage[data-stage="2"] { border-top: 3px solid #38bdf8; }
-.dataflow-stage[data-stage="3"] { border-top: 3px solid var(--amber); }
-.dataflow-stage[data-stage="4"] { border-top: 3px solid var(--green-500); }
-.dataflow-num {
-  font-family: var(--font-mono); font-size: 10.5px;
-  color: var(--green-100); opacity: .55; letter-spacing: 1px;
-}
-.dataflow-title {
-  font-family: var(--font-display); font-size: 17px;
-  color: white; line-height: 1.25;
-}
-.dataflow-body {
-  font-size: 12.5px; line-height: 1.5;
-  color: rgba(220,252,231,.85);
-}
-.dataflow-body strong { color: white; }
-.dataflow-arrow {
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; color: var(--green-100); opacity: .35;
-  padding: 0 4px; user-select: none;
-}
-.biomarker-row, .std-row {
-  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px;
-}
-.biomarker {
-  font-family: var(--font-mono); font-size: 10.5px;
-  background: rgba(220,38,38,.18); color: #fecaca;
-  border: 1px solid rgba(252,165,165,.30);
-  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
-}
-.std-pill {
-  font-family: var(--font-mono); font-size: 10.5px;
-  background: rgba(13,148,136,.22); color: #99f6e4;
-  border: 1px solid rgba(94,234,212,.30);
-  padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px;
-}
-.flow-list { list-style: none; padding: 0; margin: 4px 0 0; font-size: 12.5px; }
-.flow-list li {
-  display: flex; align-items: baseline; gap: 8px;
-  padding: 3px 0; color: rgba(220,252,231,.85);
-}
-.rf-tag {
-  font-family: var(--font-mono); font-size: 9.5px; font-weight: 600;
-  padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
-  letter-spacing: 0.5px;
-}
-.rf-tag.rf-red { background: var(--red); color: white; }
-.rf-tag.rf-amber { background: var(--amber); color: white; }
-.rf-tag.rf-teal { background: var(--teal); color: white; }
-
-@media (max-width: 980px) {
-  .dataflow { grid-template-columns: 1fr; padding: 18px 14px; }
-  .dataflow-arrow { transform: rotate(90deg); padding: 6px 0; font-size: 18px; }
-}
-
-/* Why-today CTA block — closes the section with concrete reasons + CTA. */
-.why-today {
-  background: white;
-  border: 1px solid var(--gray-200);
-  border-radius: 12px;
-  padding: 26px 24px;
-}
-.why-today-h {
-  font-family: var(--font-display); font-size: 24px;
-  color: var(--green-900); margin-bottom: 16px; line-height: 1.2;
-}
-.why-today-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-.why-card {
-  background: var(--green-50);
-  border-left: 3px solid var(--green-600);
-  padding: 13px 15px; border-radius: 6px;
-}
-.why-card-h {
-  font-weight: 600; color: var(--green-900);
-  font-size: 14.5px; margin-bottom: 5px;
-}
-.why-card p {
-  font-size: 13px; color: var(--gray-700); line-height: 1.5;
-}
-.why-card p strong { color: var(--green-900); }
-.why-today-foot {
-  font-size: 14px; color: var(--gray-700);
-  line-height: 1.6; margin-bottom: 18px;
-  background: var(--red-bg);
-  border-left: 3px solid var(--red);
-  border-radius: 0 4px 4px 0;
-  padding: 12px 14px;
-}
-
-/* Gallery */
-.gallery { padding: 32px 0; }
-.gallery .lead {
-  font-size: 15px; color: var(--gray-700); margin-bottom: 20px;
-  max-width: 760px;
-}
-.case-controls {
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: 16px; margin-bottom: 22px;
-}
-.case-chips {
-  display: flex; flex-wrap: wrap; gap: 8px; flex: 1 1 auto;
-}
-.case-chip {
-  font: inherit; font-size: 13px;
-  padding: 6px 12px; border-radius: 999px;
-  border: 1px solid var(--gray-200);
-  background: white; color: var(--gray-700);
-  cursor: pointer;
-  transition: border-color .15s, background .15s, color .15s;
-}
-.case-chip:hover { border-color: var(--green-600); color: var(--green-900); }
-.case-chip.is-active {
-  background: var(--green-100); border-color: var(--green-600);
-  color: var(--green-900);
-}
-.case-chip .chip-n {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--gray-500); margin-left: 4px;
-}
-.case-chip.is-active .chip-n { color: var(--green-700); }
-.case-sort {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13px; color: var(--gray-700);
-}
-.case-sort select {
-  font: inherit; font-size: 13px;
-  padding: 5px 8px; border-radius: 6px;
-  border: 1px solid var(--gray-200);
-  background: white; color: var(--gray-900);
-  cursor: pointer;
-}
-.case-empty {
-  padding: 40px 0; text-align: center;
-  color: var(--gray-500); font-size: 14px;
-}
-.case-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px; margin-bottom: 36px;
-}
-.case-card {
-  display: block; background: white; border-radius: 10px;
-  border: 1px solid var(--gray-200); padding: 18px;
-  text-decoration: none; color: var(--gray-900);
-  transition: border-color .15s, box-shadow .15s, transform .15s;
-}
-.case-card:hover {
-  border-color: var(--green-600);
-  box-shadow: 0 6px 16px rgba(10, 46, 26, .07);
-  transform: translateY(-1px);
-}
-.case-badge-row {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
-  margin-bottom: 10px;
-}
-.case-badge {
-  display: inline-block; font-family: var(--font-mono);
-  font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 4px;
-}
-.case-json-only {
-  display: inline-block; font-family: var(--font-mono);
-  font-size: 9.5px; letter-spacing: 0.6px;
-  padding: 2px 7px; border-radius: 3px;
-  background: var(--gray-100); color: var(--gray-500);
-  cursor: help;
-}
-.bdg-plan { background: var(--green-100); color: var(--green-700); }
-.bdg-diag { background: var(--amber-bg); color: var(--amber); }
-.case-card h3 {
-  font-family: var(--font-display); font-size: 18px;
-  color: var(--green-900); margin-bottom: 8px; line-height: 1.25;
-}
-.case-card p { font-size: 13px; color: var(--gray-700); }
-.case-foot {
-  margin-top: 12px; font-family: var(--font-mono);
-  font-size: 11px; color: var(--gray-500);
-}
-
-.kb-stats { margin-top: 16px; }
-
-/* Try page */
-.try-page { padding: 32px 0; }
-.try-page .lead {
-  font-size: 15px; color: var(--gray-700); margin-bottom: 24px;
-  max-width: 800px;
-}
-.try-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-  align-items: start;
-}
-.try-input label {
-  display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
-  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--gray-700); font-weight: 600;
-}
-.try-input select, .try-input textarea {
-  font-family: var(--font-mono); font-size: 13px;
-  padding: 10px 12px; border: 1px solid var(--gray-200);
-  border-radius: 6px; background: white;
-}
-.try-input textarea {
-  width: 100%; resize: vertical; line-height: 1.45;
-  min-height: 380px;
-}
-.try-input select { width: 100%; }
-.try-input select:focus, .try-input textarea:focus {
-  outline: 2px solid var(--green-600); outline-offset: 0;
-  border-color: var(--green-600);
-}
-.try-actions { display: flex; gap: 8px; margin-top: 8px; }
-.status {
-  font-family: var(--font-mono); font-size: 12px; color: var(--gray-700);
-  padding: 8px 12px; min-height: 32px; margin-top: 12px;
-  background: var(--gray-50); border-radius: 4px;
-  border-left: 3px solid var(--gray-200);
-}
-.status[data-kind="ok"] {
-  background: var(--green-50); border-left-color: var(--green-500);
-  color: var(--green-800);
-}
-.status[data-kind="warn"] {
-  background: #fff8e1; border-left-color: #f59e0b;
-  color: #92400e;
-}
-.error {
-  font-family: var(--font-mono); font-size: 12px; color: var(--red);
-  background: var(--red-bg); padding: 10px 12px; border-radius: 4px;
-  margin-top: 10px; white-space: pre-wrap;
-  border-left: 3px solid var(--red);
-}
-.try-output {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; min-height: 600px;
-  display: flex; flex-direction: column; overflow: hidden;
-}
-.placeholder {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px; text-align: center; color: var(--gray-500);
-}
-.placeholder-icon {
-  font-size: 48px; color: var(--green-600); margin-bottom: 16px;
-  font-family: var(--font-display);
-}
-#resultFrame {
-  flex: 1; width: 100%; height: 800px; border: none;
-}
-
-/* Result toolbar (PDF + lang switcher) — appears above #resultFrame
-   once a Plan / DiagnosticBrief is rendered. */
-.result-toolbar {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 10px 14px; background: var(--gray-50);
-  border: 1px solid var(--gray-200); border-bottom: none;
-  border-top-left-radius: 10px; border-top-right-radius: 10px;
-}
-.rt-btn {
-  font-family: var(--font-sans); font-size: 13px; font-weight: 600;
-  background: var(--green-700); color: white;
-  border: none; border-radius: 6px; padding: 8px 14px;
-  cursor: pointer; transition: background 0.15s;
-}
-.rt-btn:hover { background: var(--green-800); }
-.rt-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.rt-lang-group {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--gray-700); font-weight: 600;
-}
-.rt-lang-label { margin-right: 2px; }
-.rt-lang-btn {
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.5px;
-  background: white; color: var(--gray-700);
-  border: 1px solid var(--gray-200); border-radius: 4px;
-  padding: 5px 10px; cursor: pointer; transition: all 0.15s;
-}
-.rt-lang-btn:hover { background: var(--gray-100); }
-.rt-lang-btn.is-active {
-  background: var(--green-700); color: white; border-color: var(--green-700);
-}
-.rt-lang-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-/* Questionnaire UI (try.html) */
-.quest-toolbar {
-  display: flex; gap: 16px; align-items: flex-end; margin: 18px 0 14px;
-  flex-wrap: wrap; padding: 14px 18px; background: white;
-  border: 1px solid var(--gray-200); border-radius: 10px;
-}
-.qt-label {
-  display: flex; flex-direction: column; gap: 4px; min-width: 220px;
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--gray-700); font-weight: 600;
-}
-.qt-label select, .qt-label input, .qt-label textarea {
-  font-family: var(--font-sans); font-size: 13px;
-  padding: 8px 10px; border: 1px solid var(--gray-200);
-  border-radius: 6px; background: white;
-  text-transform: none; letter-spacing: normal; font-weight: 400;
-  color: var(--gray-900);
-}
-.qt-spacer { flex: 1; }
-.qt-modes {
-  display: inline-flex; border: 1px solid var(--gray-200);
-  border-radius: 7px; overflow: hidden; background: var(--gray-50);
-}
-.mode-btn {
-  background: transparent; color: var(--gray-700); border: none;
-  padding: 8px 14px; font-size: 12.5px; cursor: pointer;
-  font-family: var(--font-sans); font-weight: 600;
-}
-.mode-btn.active {
-  background: var(--green-700); color: white;
-}
-.qt-reset {
-  padding: 8px 14px; font-size: 12.5px;
-}
-.quest-grid {
-  display: grid; grid-template-columns: 1fr 380px; gap: 18px;
-  margin-bottom: 24px; align-items: start;
-}
-.quest-form-pane {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 20px 22px;
-}
-#jsonPane textarea { width: 100%; font-family: var(--font-mono); }
-.quest-empty {
-  text-align: center; color: var(--gray-500); padding: 60px 20px;
-  font-size: 14px;
-}
-.quest-intro {
-  background: var(--green-50); border-left: 3px solid var(--green-600);
-  padding: 12px 16px; border-radius: 4px; margin-bottom: 18px;
-  font-size: 13.5px; color: var(--gray-700); line-height: 1.55;
-}
-.quest-group {
-  border-top: 1px solid var(--gray-100); padding-top: 18px; margin-top: 18px;
-}
-.quest-group:first-child { border-top: none; padding-top: 0; margin-top: 0; }
-.quest-group h3 {
-  font-family: var(--font-display); font-size: 17px;
-  color: var(--green-900); margin-bottom: 4px;
-}
-.quest-group-desc {
-  font-size: 12.5px; color: var(--gray-500); margin-bottom: 12px;
-}
-.quest-q {
-  margin: 14px 0; padding: 12px 14px;
-  background: var(--gray-50); border-radius: 6px;
-  border-left: 2px solid var(--gray-200);
-}
-.quest-q-head {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 6px; gap: 12px;
-}
-.quest-q-label {
-  font-weight: 600; font-size: 13.5px; color: var(--gray-900); flex: 1;
-}
-.quest-q input[type="number"], .quest-q input[type="text"], .quest-q select {
-  width: 100%; max-width: 320px; padding: 7px 10px;
-  border: 1px solid var(--gray-200); border-radius: 5px;
-  font-family: var(--font-sans); font-size: 13px; background: white;
-}
-.quest-q input:focus, .quest-q select:focus {
-  outline: 2px solid var(--green-600); outline-offset: 0;
-  border-color: var(--green-600);
-}
-.quest-units {
-  display: inline-block; margin-left: 8px; font-size: 12px;
-  color: var(--gray-500); font-family: var(--font-mono);
-}
-.quest-helper {
-  font-size: 12px; color: var(--gray-500);
-  margin-top: 6px; line-height: 1.45;
-}
-.quest-triggers {
-  display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px;
-}
-.trigger-pill {
-  font-family: var(--font-mono); font-size: 10px;
-  background: var(--green-100); color: var(--green-700);
-  padding: 2px 6px; border-radius: 3px; letter-spacing: 0.3px;
-}
-.impact-pill {
-  display: inline-block; font-family: var(--font-mono); font-size: 9.5px;
-  letter-spacing: 0.6px; padding: 2px 7px; border-radius: 3px;
-  text-transform: uppercase; font-weight: 600;
-}
-.impact-critical { background: var(--red-bg); color: var(--red); }
-.impact-required { background: var(--amber-bg); color: var(--amber); }
-.impact-recommended { background: var(--green-100); color: var(--green-700); }
-.impact-optional { background: var(--gray-100); color: var(--gray-500); }
-
-.quest-q[data-impact="critical"] {
-  border-left: 4px solid var(--red);
-  background: linear-gradient(to right, color-mix(in srgb, var(--red) 6%, var(--gray-50)), var(--gray-50) 60%);
-}
-.quest-q[data-impact="required"] {
-  border-left: 4px solid var(--amber);
-  background: linear-gradient(to right, color-mix(in srgb, var(--amber) 6%, var(--gray-50)), var(--gray-50) 60%);
-}
-.quest-q[data-impact="recommended"] { border-left: 3px solid var(--green-600); }
-
-.quest-whatif {
-  margin-top: 10px; padding: 8px 10px;
-  background: white; border: 1px dashed var(--gray-200);
-  border-left: 3px solid var(--green-600);
-  border-radius: 4px;
-  font-size: 12px;
-}
-.quest-whatif .whatif-head {
-  font-family: var(--font-mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.6px;
-  color: var(--green-700); font-weight: 600; margin-bottom: 5px;
-}
-.quest-whatif ul { list-style: none; padding: 0; margin: 0; }
-.quest-whatif li {
-  color: var(--gray-700); margin: 3px 0;
-  line-height: 1.5;
-}
-.quest-whatif .whatif-alt {
-  font-weight: 600; color: var(--gray-900); margin-right: 4px;
-}
-.quest-whatif code {
-  font-size: 11px; padding: 1px 5px; background: var(--gray-100);
-  border-radius: 3px; color: var(--green-900);
-}
-.quest-whatif .wf-add { color: var(--red); font-weight: 600; }
-.quest-whatif .wf-rm { color: var(--gray-500); font-weight: 600; }
-
-/* Locked state — fields pre-filled from a loaded example. Visually
-   muted but legible; the user opts in to editing via the personalize
-   button which removes .locked from every wrapper. */
-.quest-q.locked {
-  opacity: 0.78;
-}
-.quest-q.locked input,
-.quest-q.locked select,
-.quest-q.locked textarea {
-  background: var(--gray-100); color: var(--gray-700);
-  cursor: not-allowed;
-}
-.quest-q.locked .quest-q-label::after {
-  content: " 🔒"; font-size: 11px; opacity: 0.6;
-}
-
-.example-lock-banner {
-  display: flex; gap: 14px; align-items: center; justify-content: space-between;
-  background: var(--green-50); border: 1px solid var(--green-600);
-  border-left: 4px solid var(--green-600);
-  padding: 12px 16px; border-radius: 6px; margin-bottom: 18px;
-}
-.example-lock-banner .elb-text {
-  font-size: 13px; line-height: 1.5; color: var(--gray-700); flex: 1;
-}
-.example-lock-banner .elb-btn {
-  white-space: nowrap; flex-shrink: 0;
-}
-
-.quest-side {
-  position: sticky; top: 20px;
-  display: flex; flex-direction: column; gap: 12px;
-}
-.quest-impact-card {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 18px 20px;
-}
-.quest-impact-card h3 {
-  font-family: var(--font-display); font-size: 18px;
-  color: var(--green-900); margin-bottom: 14px;
-}
-.impact-progress { margin-bottom: 16px; }
-.impact-bar {
-  background: var(--gray-100); height: 8px; border-radius: 4px;
-  overflow: hidden; margin-bottom: 6px;
-}
-.impact-bar-fill {
-  background: linear-gradient(90deg, var(--green-500), var(--green-600));
-  height: 100%; width: 0%; transition: width .3s ease;
-}
-.impact-stats {
-  display: flex; justify-content: space-between; font-size: 12px;
-  color: var(--gray-700); font-family: var(--font-mono);
-}
-.impact-pct { font-weight: 700; color: var(--green-700); }
-.impact-section { margin: 14px 0; padding-top: 12px; border-top: 1px solid var(--gray-100); }
-.impact-section h4 {
-  font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--gray-700); margin-bottom: 8px; font-weight: 700;
-}
-.impact-section ul { list-style: none; padding: 0; }
-.impact-section li {
-  font-size: 12.5px; color: var(--gray-900); margin: 4px 0;
-  line-height: 1.4;
-}
-.impact-section .muted { color: var(--gray-500); font-style: italic; }
-.impact-section code {
-  font-family: var(--font-mono); font-size: 11px;
-  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
-  color: var(--green-800);
-}
-
-/* P4: enriched fired-RF item — shows id + direction + definition + sources. */
-.rf-fired-item {
-  background: var(--green-50); border-left: 3px solid var(--green-600);
-  border-radius: 4px; padding: 8px 10px; margin: 6px 0 !important;
-}
-.rf-fired-head {
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  margin-bottom: 4px;
-}
-.rf-fired-head code {
-  font-size: 10.5px;
-}
-.rf-dir {
-  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.5px;
-  padding: 1px 6px; border-radius: 3px; text-transform: uppercase;
-  font-weight: 600;
-}
-.rf-dir-hold        { background: var(--red-bg, #fef2f2); color: var(--red, #b91c1c); }
-.rf-dir-intensify   { background: var(--amber-bg, #fef3c7); color: var(--amber, #b45309); }
-.rf-dir-de-escalate { background: var(--gray-100); color: var(--gray-700); }
-.rf-dir-investigate { background: var(--gray-100); color: var(--gray-500); }
-.rf-fired-defn {
-  font-size: 11.5px; color: var(--gray-700); line-height: 1.45;
-  margin-bottom: 4px;
-}
-.rf-fired-srcs { display: flex; flex-wrap: wrap; gap: 3px; }
-.rf-src-chip {
-  font-family: var(--font-mono); font-size: 9.5px;
-  background: var(--gray-100); color: var(--gray-700);
-  padding: 1px 5px; border-radius: 3px;
-}
-.quest-cta {
-  margin-top: 6px; display: flex; flex-direction: column; gap: 8px;
-}
-.quest-cta button { width: 100%; }
-.quest-cta button:disabled {
-  opacity: 0.5; cursor: not-allowed;
-}
-
-/* Plan result modal — replaces the old in-page .quest-output section so
-   the form stays the focus of the page and the rendered plan only shows
-   when the user wants to look at it. */
-.plan-modal {
-  position: fixed; inset: 0; z-index: 9995;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(2px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  animation: oo-fadein 0.18s ease-out;
-}
-.plan-modal[hidden] { display: none; }
-.plan-modal-card {
-  background: white; border-radius: 12px;
-  width: min(1000px, 100%); height: min(880px, 92vh);
-  display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
-}
-.plan-modal-toolbar {
-  display: flex; flex-wrap: wrap; align-items: center;
-  justify-content: space-between; gap: 12px;
-  padding: 10px 14px; background: var(--gray-50);
-  border-bottom: 1px solid var(--gray-200);
-}
-.plan-modal-actions { display: flex; gap: 8px; align-items: center; }
-.plan-modal-card #resultFrame {
-  flex: 1; width: 100%; border: none; background: white;
-}
-.rt-btn-ghost {
-  background: white !important; color: var(--gray-700) !important;
-  border: 1px solid var(--gray-200) !important;
-  font-weight: 700; padding: 6px 10px;
-}
-.rt-btn-ghost:hover {
-  background: var(--gray-100) !important; color: var(--green-700) !important;
-}
-
-@media (max-width: 900px) {
-  .quest-grid { grid-template-columns: 1fr; }
-  .quest-side { position: static; }
-}
-@media (max-width: 800px) {
-  .hero h1 { font-size: 32px; }
-  .problem-grid, .try-grid { grid-template-columns: 1fr; }
-}
-
-/* Generation lock — overlay modal during full-plan generation. Hard-blocks
-   form interaction (via inert on <main>) so the rendered plan corresponds
-   to a stable input snapshot. Released in runEngine's finally{{}}. */
-.generating-overlay {{
-  position: fixed; inset: 0; z-index: 9999;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(2px);
-  display: flex; align-items: center; justify-content: center;
-  animation: oo-fadein 0.18s ease-out;
-}}
-.generating-overlay[hidden] {{ display: none; }}
-.generating-card {{
-  background: white; border-radius: 12px;
-  padding: 28px 36px; max-width: 460px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-  text-align: center;
-}}
-.generating-card h3 {{
-  margin: 14px 0 8px; font-family: var(--font-display);
-  font-size: 22px; color: var(--green-900);
-}}
-.generating-card p {{
-  margin: 6px 0; font-size: 14px; color: var(--gray-700); line-height: 1.5;
-}}
-.generating-hint {{
-  font-size: 12px; color: var(--gray-600);
-  font-family: var(--font-mono); margin-top: 14px;
-}}
-.generating-spinner {{
-  width: 36px; height: 36px; margin: 0 auto;
-  border: 3px solid var(--gray-200); border-top-color: var(--green-700);
-  border-radius: 50%; animation: oo-spin 0.9s linear infinite;
-}}
-@keyframes oo-spin {{ to {{ transform: rotate(360deg); }} }}
-@keyframes oo-fadein {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
-
-/* Init overlay — first-run engine load with named stages so the doctor
-   sees what's happening instead of mystery lag. Lower z-index than the
-   generating overlay so a generate-click re-uses init for first run, and
-   subsequent clicks use the lighter generating overlay. */
-.init-overlay {{
-  position: fixed; inset: 0; z-index: 9990;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(2px);
-  display: flex; align-items: center; justify-content: center;
-  animation: oo-fadein 0.18s ease-out;
-}}
-.init-overlay[hidden] {{ display: none; }}
-.init-card {{
-  background: white; border-radius: 12px;
-  padding: 28px 36px; max-width: 540px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
-}}
-.init-card h3 {{
-  margin: 0 0 6px; font-family: var(--font-display);
-  font-size: 22px; color: var(--green-900);
-}}
-.init-lead {{
-  margin: 0 0 18px; font-size: 13px; color: var(--gray-700); line-height: 1.5;
-}}
-.init-stages {{
-  list-style: none; padding: 0; margin: 0 0 14px;
-  display: flex; flex-direction: column; gap: 6px;
-  counter-reset: none;
-}}
-.init-stages .stage {{
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border-radius: 8px;
-  background: var(--gray-100);
-  font-size: 14px; color: var(--gray-700);
-  transition: background 0.18s, color 0.18s;
-}}
-.init-stages .stage::before {{
-  content: '○'; color: var(--gray-400); font-size: 16px;
-  width: 20px; text-align: center; flex-shrink: 0;
-  font-family: var(--font-mono);
-}}
-.init-stages .stage.active {{
-  background: white; color: var(--green-900);
-  border: 1px solid var(--green-700); font-weight: 500;
-}}
-.init-stages .stage.active::before {{
-  content: '⟳'; color: var(--green-700);
-  display: inline-block;
-  animation: oo-spin 0.9s linear infinite;
-}}
-.init-stages .stage.done {{
-  color: var(--gray-700);
-}}
-.init-stages .stage.done::before {{
-  content: '✓'; color: var(--green-700); font-weight: bold;
-}}
-.init-stages .stage.error {{
-  background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;
-}}
-.init-stages .stage.error::before {{
-  content: '✗'; color: #dc2626;
-}}
-.init-hint {{
-  margin: 0; font-size: 12px; color: var(--gray-600);
-  font-style: italic; line-height: 1.5;
-}}
-
-/* Info pages (capabilities / limitations) */
-.info-page { padding: 32px 0 48px; }
-.info-page h1 {
-  font-family: var(--font-display); font-size: 36px;
-  color: var(--green-900); margin-bottom: 10px;
-}
-.info-page .lead {
-  font-size: 16px; color: var(--gray-700); max-width: 820px;
-  margin-bottom: 28px; line-height: 1.6;
-}
-.info-section { margin-top: 36px; }
-.info-section h2 {
-  font-family: var(--font-display); font-size: 24px;
-  color: var(--green-900); margin-bottom: 14px;
-}
-.info-section p { font-size: 14.5px; color: var(--gray-700); margin-bottom: 12px; }
-.info-section .info-text {
-  max-width: 820px; line-height: 1.6;
-}
-.flow-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 10px; margin: 18px 0;
-}
-.flow-step {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 14px 14px;
-  border-top: 3px solid var(--green-600);
-}
-.flow-step .flow-num {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--green-700); margin-bottom: 6px;
-  letter-spacing: 1px; text-transform: uppercase;
-}
-.flow-step .flow-title {
-  font-weight: 700; font-size: 14px;
-  color: var(--gray-900); margin-bottom: 6px;
-  font-family: var(--font-display);
-}
-.flow-step .flow-desc {
-  font-size: 12.5px; color: var(--gray-700); line-height: 1.45;
-}
-.flow-step code {
-  font-family: var(--font-mono); font-size: 11px;
-  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
-}
-
-/* Promotional infographic hero (capabilities page) */
-.promo-info {
-  margin: 28px 0 36px;
-  padding: 32px 32px 28px;
-  background:
-    radial-gradient(circle at 0% 0%, rgba(22, 163, 74, 0.18), transparent 55%),
-    radial-gradient(circle at 100% 100%, rgba(13, 148, 136, 0.18), transparent 55%),
-    linear-gradient(135deg, var(--green-900) 0%, var(--green-800) 60%, #082017 100%);
-  border-radius: 14px;
-  color: #e9f5ec;
-  box-shadow: 0 12px 32px rgba(10, 46, 26, 0.18);
-  position: relative; overflow: hidden;
-}
-.promo-info::before {
-  content: ""; position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none; opacity: 0.5;
-}
-.promo-info > * { position: relative; }
-.promo-eyebrow {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px;
-  text-transform: uppercase; color: #6ee7b7; opacity: 0.85;
-  margin-bottom: 10px;
-}
-.promo-headline {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 34px; line-height: 1.18; color: white;
-  margin-bottom: 14px; max-width: 880px;
-}
-.promo-headline em {
-  font-style: normal; color: #6ee7b7;
-  background: linear-gradient(120deg, #6ee7b7 0%, #5eead4 100%);
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.promo-sub {
-  font-size: 15px; line-height: 1.55; color: #c5e0cd;
-  max-width: 780px; margin-bottom: 26px;
-}
-.promo-sub strong { color: white; font-weight: 600; }
-
-.promo-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-  gap: 14px; margin-bottom: 26px;
-  padding: 18px 0; border-top: 1px solid rgba(255,255,255,0.12);
-  border-bottom: 1px solid rgba(255,255,255,0.12);
-}
-.promo-stat { text-align: left; }
-.promo-stat-num {
-  font-family: var(--font-display); font-weight: 900;
-  font-size: 38px; line-height: 1; color: white;
-  letter-spacing: -0.02em;
-}
-.promo-stat-num .promo-stat-plus { color: #6ee7b7; font-weight: 700; }
-.promo-stat-lbl {
-  font-size: 12px; line-height: 1.4; color: #a7c7b1;
-  margin-top: 6px; text-transform: uppercase; letter-spacing: 0.6px;
-  font-weight: 500;
-}
-
-.promo-flow {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1.2fr;
-  gap: 12px; align-items: stretch;
-  margin-bottom: 26px;
-}
-.promo-flow-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(110, 231, 183, 0.22);
-  border-radius: 10px; padding: 14px 16px;
-  backdrop-filter: blur(2px);
-}
-.promo-flow-card.is-output {
-  background: linear-gradient(135deg, rgba(110,231,183,0.16), rgba(94,234,212,0.10));
-  border-color: rgba(110, 231, 183, 0.45);
-}
-.promo-flow-tag {
-  font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.2px;
-  text-transform: uppercase; color: #6ee7b7; margin-bottom: 6px;
-}
-.promo-flow-title {
-  font-family: var(--font-display); font-weight: 700;
-  font-size: 17px; color: white; line-height: 1.2; margin-bottom: 6px;
-}
-.promo-flow-desc {
-  font-size: 12.5px; line-height: 1.45; color: #b8d3c0;
-}
-.promo-flow-desc code {
-  font-family: var(--font-mono); font-size: 10.5px;
-  background: rgba(255,255,255,0.08); color: #e9f5ec;
-  padding: 1px 5px; border-radius: 3px;
-}
-.promo-flow-arrow {
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 26px;
-  color: #6ee7b7; opacity: 0.7; font-weight: 400;
-}
-.promo-flow-tracks {
-  display: flex; gap: 6px; margin-top: 8px;
-}
-.promo-flow-track {
-  flex: 1; padding: 6px 8px; border-radius: 4px;
-  font-size: 11px; color: #e9f5ec;
-  background: rgba(255,255,255,0.10);
-  border-left: 2px solid #6ee7b7;
-}
-.promo-flow-track.is-alt { border-left-color: #5eead4; opacity: 0.85; }
-.promo-flow-track-label {
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.8px;
-  text-transform: uppercase; color: #6ee7b7; display: block;
-}
-
-.promo-pillars {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
-.promo-pillar {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 10px; padding: 14px 16px;
-  display: flex; gap: 12px; align-items: flex-start;
-}
-.promo-pillar-num {
-  font-family: var(--font-display); font-size: 22px; font-weight: 900;
-  color: #6ee7b7; line-height: 1; flex-shrink: 0;
-  min-width: 28px;
-}
-.promo-pillar-title {
-  font-weight: 700; font-size: 13px; color: white;
-  margin-bottom: 4px; letter-spacing: 0.2px;
-}
-.promo-pillar-desc {
-  font-size: 12px; line-height: 1.45; color: #b8d3c0;
-}
-
-@media (max-width: 760px) {
-  .promo-info { padding: 22px 18px; }
-  .promo-headline { font-size: 26px; }
-  .promo-flow {
-    grid-template-columns: 1fr;
-  }
-  .promo-flow-arrow { transform: rotate(90deg); padding: 4px 0; }
-}
-@media print {
-  .promo-info {
-    background: white; color: var(--gray-900);
-    border: 1px solid var(--green-700);
-    box-shadow: none;
-  }
-  .promo-info::before { display: none; }
-  .promo-headline, .promo-stat-num, .promo-flow-title, .promo-pillar-title { color: var(--green-900); }
-  .promo-headline em { -webkit-text-fill-color: initial; color: var(--green-700); background: none; }
-  .promo-eyebrow, .promo-flow-tag, .promo-pillar-num, .promo-stat-num .promo-stat-plus { color: var(--green-700); }
-  .promo-sub, .promo-stat-lbl, .promo-flow-desc, .promo-pillar-desc { color: var(--gray-700); }
-  .promo-flow-card, .promo-pillar { border-color: var(--gray-200); background: var(--gray-50); }
-  .promo-flow-arrow { color: var(--green-700); }
-  .promo-flow-track { background: white; border-left-color: var(--green-600); color: var(--gray-900); }
-  .promo-flow-track-label { color: var(--green-700); }
-}
-
-.gap-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
-}
-.gap-card {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 16px 18px;
-  border-left: 3px solid var(--amber);
-}
-.gap-card .gap-tag {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--amber); letter-spacing: 0.5px; text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.gap-card h3 {
-  font-family: var(--font-display); font-size: 17px;
-  color: var(--green-900); margin-bottom: 8px;
-}
-.gap-card p { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
-.gap-card.gap-hard { border-left-color: var(--red); }
-.gap-card.gap-hard .gap-tag { color: var(--red); }
-.spec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
-}
-.spec-card {
-  background: white; border: 1px solid var(--gray-200);
-  border-radius: 10px; padding: 18px 20px;
-  display: flex; flex-direction: column;
-  transition: border-color .15s, box-shadow .15s;
-}
-.spec-card:hover {
-  border-color: var(--green-600);
-  box-shadow: 0 4px 14px rgba(10, 46, 26, 0.06);
-}
-.spec-card-head {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px; flex-wrap: wrap;
-}
-.spec-tag {
-  display: inline-block; color: white;
-  font-family: var(--font-mono); font-size: 10px;
-  letter-spacing: 0.6px; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 4px; font-weight: 600;
-}
-.spec-id {
-  font-family: var(--font-mono); font-size: 11px;
-  color: var(--gray-500);
-}
-.spec-card h3 {
-  font-family: var(--font-display); font-size: 17px;
-  color: var(--green-900); margin-bottom: 8px; line-height: 1.3;
-}
-.spec-card p {
-  font-size: 13px; color: var(--gray-700);
-  line-height: 1.5; flex: 1; margin-bottom: 12px;
-}
-.spec-card-foot {
-  display: flex; gap: 14px; align-items: center;
-  font-size: 12.5px; padding-top: 10px;
-  border-top: 1px solid var(--gray-100);
-}
-.spec-card-foot a {
-  color: var(--green-700); text-decoration: none; font-weight: 600;
-}
-.spec-card-foot a:hover { text-decoration: underline; }
-.spec-card-foot .spec-raw {
-  color: var(--gray-500); font-weight: 400; font-family: var(--font-mono);
-  font-size: 11px;
-}
-.q-list {
-  background: var(--green-50); border: 1px solid var(--green-100);
-  border-radius: 8px; padding: 14px 18px; margin: 12px 0;
-}
-.q-list h4 {
-  font-family: var(--font-display); font-size: 15px;
-  color: var(--green-900); margin-bottom: 8px;
-}
-.q-list ul { padding-left: 18px; font-size: 13px; color: var(--gray-700); }
-.q-list li { margin-bottom: 4px; line-height: 1.5; }
-.q-list code {
-  font-family: var(--font-mono); font-size: 11px;
-  background: white; padding: 1px 5px; border-radius: 3px;
-  color: var(--green-800);
-}
-.callout {
-  background: var(--amber-bg); border-left: 3px solid var(--amber);
-  padding: 12px 16px; border-radius: 4px; margin: 16px 0;
-  font-size: 13.5px; color: var(--gray-900); line-height: 1.55;
-}
-.callout.callout-good {
-  background: var(--green-50); border-left-color: var(--green-600);
-}
-.callout.callout-hard {
-  background: var(--red-bg); border-left-color: var(--red);
-}
-.kv-table {
-  width: 100%; border-collapse: collapse; font-size: 13px;
-  margin-top: 10px;
-}
-.kv-table th, .kv-table td {
-  text-align: left; padding: 8px 10px;
-  border-bottom: 1px solid var(--gray-100);
-}
-.kv-table th {
-  background: var(--gray-50); font-weight: 600;
-  color: var(--gray-700); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
-.kv-table code {
-  font-family: var(--font-mono); font-size: 11px;
-  background: var(--gray-100); padding: 1px 5px; border-radius: 3px;
-}
-
-/* Page footer */
-.page-foot {
-  margin-top: 36px; padding-top: 18px;
-  border-top: 1px solid var(--gray-200);
-  font-size: 12px; color: var(--gray-500);
-}
-.page-foot a { color: var(--green-700); }
-"""
 
 
 # ── Capabilities page ─────────────────────────────────────────────────────
@@ -4961,25 +3822,17 @@ def _render_capabilities_uk(stats) -> str:
         </div>
 
         <div class="num-card">
-          <div class="num-big">{n_indications}</div>
-          <div class="num-lbl">Показання (Indications)</div>
-          <div class="num-detail">{n_inds_1l} першої лінії · {n_inds_2l} другої лінії та вище</div>
-          <p class="num-text">
-            Indication — сполучення disease + line_of_therapy + biomarker / stage /
-            demographic-фільтрів, що відкриває або закриває конкретний Regimen. Багато
-            показань зараз gатекіпять на біомаркерах (MGMT-METHYLATION для GBM Stupp,
-            CD79B/COO/IPI для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL,
-            MYC+BCL2 rearrangements для HGBL-DH, AFP для HCC, FLIPI для FL).
-          </p>
-        </div>
-
-        <div class="num-card">
           <div class="num-big">{n_regimens}</div>
           <div class="num-lbl">Режими лікування</div>
+          <div class="num-detail">{n_indications} показань ({n_inds_1l} першої лінії · {n_inds_2l} 2L+)</div>
           <p class="num-text">
             Кожна схема — список drugs з дозами, шкалою циклів, dose adjustments
             (для renal impairment, FIB-4, frailty), premedications, mandatory supportive
-            care та monitoring schedule.
+            care та monitoring schedule. Кожна <em>Indication</em> (сполучення
+            disease + line_of_therapy + biomarker / stage / demographic-фільтрів) гейтить
+            конкретний Regimen — наприклад, MGMT-METHYLATION для GBM Stupp, CD79B/COO/IPI
+            для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL, MYC+BCL2 rearrangements
+            для HGBL-DH, AFP для HCC, FLIPI для FL.
           </p>
         </div>
 
@@ -5640,26 +4493,18 @@ def _render_capabilities_en(stats) -> str:
         </div>
 
         <div class="num-card">
-          <div class="num-big">{n_indications}</div>
-          <div class="num-lbl">Indications</div>
-          <div class="num-detail">{n_inds_1l} first-line · {n_inds_2l} second-line and beyond</div>
-          <p class="num-text">
-            An Indication is the combination of disease + line_of_therapy +
-            biomarker / stage / demographic filters that opens or closes a
-            specific Regimen. Many indications now gate on biomarkers
-            (MGMT-METHYLATION for GBM Stupp; CD79B / COO-Hans / IPI for DLBCL
-            R-CHOP vs Pola-R-CHP; t(11;14) / MIPI for MCL; MYC + BCL2
-            rearrangements for HGBL-DH; AFP for HCC; FLIPI for FL).
-          </p>
-        </div>
-
-        <div class="num-card">
           <div class="num-big">{n_regimens}</div>
           <div class="num-lbl">Treatment regimens</div>
+          <div class="num-detail">{n_indications} indications ({n_inds_1l} first-line · {n_inds_2l} 2L+)</div>
           <p class="num-text">
             Each regimen is a list of drugs with doses, cycle schedule, dose
             adjustments (renal impairment, FIB-4, frailty), premedications,
-            mandatory supportive care, and a monitoring schedule.
+            mandatory supportive care, and a monitoring schedule. Every
+            <em>Indication</em> (the combination of disease + line_of_therapy +
+            biomarker / stage / demographic filters) gates a specific Regimen —
+            e.g. MGMT-METHYLATION for GBM Stupp; CD79B / COO-Hans / IPI for DLBCL
+            R-CHOP vs Pola-R-CHP; t(11;14) / MIPI for MCL; MYC + BCL2 rearrangements
+            for HGBL-DH; AFP for HCC; FLIPI for FL.
           </p>
         </div>
 
@@ -6102,6 +4947,308 @@ def _render_capabilities_en(stats) -> str:
 </body>
 </html>
 """
+
+
+# ── Diseases coverage page ────────────────────────────────────────────────
+
+
+def _build_disease_coverage_rows() -> list[dict]:
+    """Bridge to scripts/disease_coverage_matrix.py — re-uses its
+    per_disease_metrics walker so the page + the JSON snapshot + the
+    plan markdown all share one source of truth."""
+    from scripts.disease_coverage_matrix import per_disease_metrics
+    return per_disease_metrics(REPO_ROOT / "knowledge_base" / "hosted" / "content")
+
+
+_DISEASES_PAGE_LABELS = {
+    "uk": {
+        "title": "Хвороби · OpenOnco",
+        "h1": "Хвороби в базі знань",
+        "lead": (
+            "Покриття OpenOnco по 65 онкологічних діагнозах: біомаркери, "
+            "препарати, indications/regimens/RedFlags, наявність алгоритму та "
+            "опитувальника, % наповненості і % верифікації Clinical Co-Lead."
+        ),
+        "sum_diseases": "Усього діагнозів",
+        "sum_avg_fill": "Сер. наповненість",
+        "sum_avg_ver": "Сер. верифікація",
+        "sum_with_signed": "З ≥1 верифікованим indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "З 1L алгоритмом",
+        "sum_algo_2l": "З 2L+ алгоритмом",
+        "fam_lymphoid": "Лімфоїдна гематологія",
+        "fam_myeloid": "Мієлоїдна гематологія",
+        "fam_solid": "Солідні пухлини",
+        "th_disease": "Хвороба", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Метрики",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers, на які посилаються Indications + Regimens цієї хвороби",
+            "<b>#Drug</b> — distinct drugs у regimens цієї хвороби",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags для цієї хвороби",
+            "<b>1L / 2L</b> — наявність Algorithm для першої / другої+ лінії",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — відсутній",
+            "<b>Fill %</b> — composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % indications цієї хвороби з reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % переважно 0%</b> — діє dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) до призначення "
+            "Clinical Co-Leads. Це навмисно, не bug."
+        ),
+        "footer_data": "Дані оновлюються при кожному build_site.py запуску. JSON snapshot:",
+    },
+    "en": {
+        "title": "Diseases · OpenOnco",
+        "h1": "Diseases in the Knowledge Base",
+        "lead": (
+            "OpenOnco coverage across 65 oncology diagnoses: biomarkers, "
+            "drugs, indications/regimens/RedFlags, algorithm and questionnaire "
+            "presence, % fill and % Clinical Co-Lead verification."
+        ),
+        "sum_diseases": "Total diseases",
+        "sum_avg_fill": "Avg fill",
+        "sum_avg_ver": "Avg verified",
+        "sum_with_signed": "With ≥1 verified indication",
+        "sum_quest_real": "Hand-authored questionnaires",
+        "sum_quest_stub": "STUB questionnaires",
+        "sum_algo_1l": "With 1L algorithm",
+        "sum_algo_2l": "With 2L+ algorithm",
+        "fam_lymphoid": "Lymphoid hematologic",
+        "fam_myeloid": "Myeloid hematologic",
+        "fam_solid": "Solid tumors",
+        "th_disease": "Disease", "th_icd": "ICD-10",
+        "th_bio": "Bio", "th_drug": "Drug",
+        "th_ind": "Ind", "th_reg": "Reg", "th_rf": "RF",
+        "th_1l": "1L", "th_2l": "2L", "th_quest": "Quest",
+        "th_fill": "Fill %", "th_ver": "Ver %",
+        "yes": "✓", "no": "—",
+        "metrics_title": "Metric definitions",
+        "metrics": [
+            "<b>#Bio</b> — distinct biomarkers referenced by this disease's Indications + Regimens",
+            "<b>#Drug</b> — distinct drugs in this disease's regimens",
+            "<b>#Ind / #Reg / #RF</b> — Indications / Regimens / RedFlags for this disease",
+            "<b>1L / 2L</b> — Algorithm presence for first-line / second-line+",
+            "<b>Quest</b> — ✓ hand-authored / STUB auto-generated / — absent",
+            "<b>Fill %</b> — composite over 8 entity types: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup",
+            "<b>Ver %</b> — % of this disease's indications with reviewer_signoffs ≥ 2 (CHARTER §6.1)",
+        ],
+        "verified_note": (
+            "<b>Ver % is mostly 0%</b> — dev-mode signoff exemption "
+            "(<code>project_charter_dev_mode_exemptions</code>) is in effect "
+            "until Clinical Co-Leads are appointed. This is intentional, not a bug."
+        ),
+        "footer_data": "Data refreshes on every build_site.py run. JSON snapshot:",
+    },
+}
+
+
+def _disease_row_html(r: dict, lbl: dict) -> str:
+    yes, no = lbl["yes"], lbl["no"]
+    algo_1l = yes if r["algo_1l"] else no
+    algo_2l = yes if r["algo_2l"] else no
+    if r["has_quest"]:
+        quest = "STUB" if r["is_stub_quest"] else yes
+    else:
+        quest = no
+    fill_class = "fill-high" if r["fill_pct"] >= 75 else ("fill-mid" if r["fill_pct"] >= 50 else "fill-low")
+    ver_class = "ver-high" if r["verified_pct"] >= 60 else ("ver-mid" if r["verified_pct"] >= 1 else "ver-low")
+    short_id = r["id"].replace("DIS-", "")
+    name = (r["name"] or "")[:48]
+    return (
+        '<tr>'
+        f'<td><strong>{html.escape(short_id)}</strong> <span class="dis-name">{html.escape(name)}</span></td>'
+        f'<td class="mono">{html.escape(r["icd10"] or "")}</td>'
+        f'<td class="num">{r["n_bios"]}</td>'
+        f'<td class="num">{r["n_drugs"]}</td>'
+        f'<td class="num">{r["n_inds"]}</td>'
+        f'<td class="num">{r["n_regs"]}</td>'
+        f'<td class="num">{r["n_rfs"]}</td>'
+        f'<td class="ck">{algo_1l}</td>'
+        f'<td class="ck">{algo_2l}</td>'
+        f'<td class="ck quest-cell quest-{("stub" if r["is_stub_quest"] else "real" if r["has_quest"] else "none")}">{quest}</td>'
+        f'<td class="num pct {fill_class}"><strong>{r["fill_pct"]}%</strong></td>'
+        f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
+        '</tr>'
+    )
+
+
+def render_diseases(stats, *, target_lang: str = "uk") -> str:
+    """Per-disease coverage page. Pulls live metrics from
+    disease_coverage_matrix.per_disease_metrics so this page is the
+    canonical UI surface for the same data exported as
+    /disease_coverage.json."""
+    import html as _html
+    rows = _build_disease_coverage_rows()
+    lbl = _DISEASES_PAGE_LABELS.get(target_lang, _DISEASES_PAGE_LABELS["uk"])
+
+    n = len(rows)
+    avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
+    avg_ver = round(sum(r["verified_pct"] for r in rows) / max(1, n), 1)
+    n_signed = sum(1 for r in rows if r["verified_pct"] > 0)
+    n_quest_real = sum(1 for r in rows if r["has_quest"] and not r["is_stub_quest"])
+    n_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
+    n_algo_1l = sum(1 for r in rows if r["algo_1l"])
+    n_algo_2l = sum(1 for r in rows if r["algo_2l"])
+
+    # Group by family
+    by_family: dict[str, list[dict]] = {
+        "Лімфоїдна гематологія": [],
+        "Мієлоїдна гематологія": [],
+        "Солідні пухлини": [],
+    }
+    for r in rows:
+        by_family.setdefault(r["family"], []).append(r)
+
+    fam_label_map = {
+        "Лімфоїдна гематологія": lbl["fam_lymphoid"],
+        "Мієлоїдна гематологія": lbl["fam_myeloid"],
+        "Солідні пухлини": lbl["fam_solid"],
+    }
+
+    family_blocks: list[str] = []
+    for fam_key in ("Лімфоїдна гематологія", "Мієлоїдна гематологія", "Солідні пухлини"):
+        flist = by_family.get(fam_key) or []
+        if not flist:
+            continue
+        flist_sorted = sorted(flist, key=lambda x: (-x["fill_pct"], x["name"]))
+        rows_html = "\n".join(_disease_row_html(r, lbl) for r in flist_sorted)
+        f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
+        f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
+        family_blocks.append(f"""
+<section class="dis-family">
+  <h2>{fam_label_map[fam_key]} <span class="fam-count">({len(flist)})</span></h2>
+  <table class="dis-table">
+    <thead><tr>
+      <th class="th-disease">{lbl["th_disease"]}</th>
+      <th>{lbl["th_icd"]}</th>
+      <th class="th-num">{lbl["th_bio"]}</th>
+      <th class="th-num">{lbl["th_drug"]}</th>
+      <th class="th-num">{lbl["th_ind"]}</th>
+      <th class="th-num">{lbl["th_reg"]}</th>
+      <th class="th-num">{lbl["th_rf"]}</th>
+      <th class="th-ck">{lbl["th_1l"]}</th>
+      <th class="th-ck">{lbl["th_2l"]}</th>
+      <th class="th-ck">{lbl["th_quest"]}</th>
+      <th class="th-num">{lbl["th_fill"]}</th>
+      <th class="th-num">{lbl["th_ver"]}</th>
+    </tr></thead>
+    <tbody>
+{rows_html}
+    </tbody>
+    <tfoot><tr>
+      <td colspan="10"><em>avg</em></td>
+      <td class="num pct"><em>{f_fill}%</em></td>
+      <td class="num pct"><em>{f_ver}%</em></td>
+    </tr></tfoot>
+  </table>
+</section>
+""")
+
+    metrics_li = "\n".join(f"<li>{m}</li>" for m in lbl["metrics"])
+
+    top_bar = _render_top_bar(
+        active="diseases", target_lang=target_lang,
+        lang_switch_href=_lang_switch_href("diseases", target_lang),
+    )
+
+    return f"""<!DOCTYPE html>
+<html lang="{target_lang}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{_html.escape(lbl['title'])}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<style>
+.dis-summary {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 24px; }}
+.dis-summary .card {{ background: var(--gray-50); border-left: 3px solid var(--green-600); padding: 10px 14px; border-radius: 4px; }}
+.dis-summary .card .v {{ font-family: var(--font-display); font-size: 22px; color: var(--green-800); }}
+.dis-summary .card .k {{ font-size: 12px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }}
+.dis-family {{ margin: 28px 0; }}
+.dis-family h2 {{ margin-bottom: 8px; }}
+.dis-family .fam-count {{ font-size: 14px; color: var(--gray-500); font-weight: normal; }}
+.dis-table {{ width: 100%; border-collapse: collapse; font-size: 12.5px; }}
+.dis-table th {{ background: var(--green-700); color: white; padding: 6px 8px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }}
+.dis-table td {{ padding: 6px 8px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }}
+.dis-table tr:nth-child(even) td {{ background: var(--gray-50); }}
+.dis-table tfoot td {{ background: var(--gray-100); font-style: italic; color: var(--gray-700); }}
+.dis-table .num {{ text-align: right; font-family: var(--font-mono); }}
+.dis-table .ck {{ text-align: center; }}
+.dis-table .mono {{ font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }}
+.dis-table .dis-name {{ color: var(--gray-700); font-weight: normal; }}
+.dis-table .pct {{ font-weight: 600; }}
+.dis-table .pct.fill-high {{ color: #166534; }}
+.dis-table .pct.fill-mid {{ color: #b45309; }}
+.dis-table .pct.fill-low {{ color: #991b1b; }}
+.dis-table .pct.ver-high {{ color: #166534; background: #ecfdf5; }}
+.dis-table .pct.ver-mid {{ color: #b45309; }}
+.dis-table .pct.ver-low {{ color: var(--gray-500); }}
+.quest-cell.quest-stub {{ color: #b45309; font-size: 10px; font-family: var(--font-mono); }}
+.quest-cell.quest-real {{ color: #166534; font-weight: 600; }}
+.quest-cell.quest-none {{ color: var(--gray-500); }}
+.dis-metrics {{ background: var(--gray-50); padding: 16px 20px; border-radius: 6px; margin-top: 28px; font-size: 13px; }}
+.dis-metrics ul {{ padding-left: 20px; line-height: 1.7; }}
+.dis-metrics .verified-note {{ background: #fef3c7; border-left: 3px solid #d97706; padding: 10px 14px; margin-top: 12px; border-radius: 4px; color: #92400e; }}
+.dis-footer-data {{ font-size: 12px; color: var(--gray-500); margin-top: 20px; }}
+.dis-footer-data a {{ font-family: var(--font-mono); }}
+@media (max-width: 800px) {{ .dis-summary {{ grid-template-columns: repeat(2, 1fr); }} .dis-table {{ font-size: 11px; }} }}
+</style>
+</head>
+<body>
+{top_bar}
+<main>
+  <section class="info-page">
+    <h1>{_html.escape(lbl['h1'])}</h1>
+    <p class="lead">{_html.escape(lbl['lead'])}</p>
+
+    <div class="dis-summary">
+      <div class="card"><div class="k">{lbl['sum_diseases']}</div><div class="v">{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_fill']}</div><div class="v">{avg_fill}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_avg_ver']}</div><div class="v">{avg_ver}%</div></div>
+      <div class="card"><div class="k">{lbl['sum_with_signed']}</div><div class="v">{n_signed}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_real']}</div><div class="v">{n_quest_real}</div></div>
+      <div class="card"><div class="k">{lbl['sum_quest_stub']}</div><div class="v">{n_quest_stub}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_1l']}</div><div class="v">{n_algo_1l}/{n}</div></div>
+      <div class="card"><div class="k">{lbl['sum_algo_2l']}</div><div class="v">{n_algo_2l}/{n}</div></div>
+    </div>
+
+    {''.join(family_blocks)}
+
+    <div class="dis-metrics">
+      <h3>{lbl['metrics_title']}</h3>
+      <ul>
+        {metrics_li}
+      </ul>
+      <div class="verified-note">{lbl['verified_note']}</div>
+    </div>
+
+    <p class="dis-footer-data">{lbl['footer_data']} <a href="/disease_coverage.json">/disease_coverage.json</a></p>
+  </section>
+</main>
+</body>
+</html>
+"""
+
+
+def bundle_disease_coverage(output_dir: Path) -> dict:
+    """Write JSON snapshot of per-disease coverage for CI / external tooling.
+    Same source data as the /diseases.html page."""
+    rows = _build_disease_coverage_rows()
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "total_diseases": len(rows),
+        "rows": rows,
+    }
+    out = output_dir / "disease_coverage.json"
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"path": "disease_coverage.json", "count": len(rows)}
 
 
 # ── Limitations page ──────────────────────────────────────────────────────
@@ -7122,6 +6269,7 @@ def render_specs(stats) -> str:
           <tr>
             <td><strong>Free public resource → non-commercial</strong></td>
             <td><code>CHARTER.md §2</code></td>
+            <!-- TODO(phase-5-cleanup): rephrase license-audit example without naming the rejected vendor (currently retained as policy-context only — not surfaced as clinical content). -->
             <td>Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit.</td>
           </tr>
         </tbody>
@@ -7251,6 +6399,17 @@ def build_site(output_dir: Path) -> dict:
     # bundles for ~10 minutes after a KB push.
     engine_bundle = bundle_engine(output_dir)
     bundle_version = engine_bundle.get("version", "")
+    sw_payload = write_service_worker(
+        output_dir, core_version=engine_bundle.get("core_version", ""),
+    )
+
+    # Bundle dropdowns BEFORE render_try so /try.html can inline the
+    # ~15 KB manifests as JS constants — saves the ~870 KB initial fetch
+    # of questionnaires.json + examples.json on first paint.
+    examples_payload = bundle_examples(output_dir)
+    questionnaires_payload = bundle_questionnaires(output_dir)
+    questionnaires_manifest = questionnaires_payload.get("manifest", [])
+    examples_manifest = examples_payload.get("manifest", [])
 
     # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
@@ -7258,8 +6417,13 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "limitations.html").write_text(render_limitations(stats), encoding="utf-8")
     (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
     (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
+    (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
     (output_dir / "try.html").write_text(
-        render_try(bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     # ── EN build (mirror at /en/) ──
     # Body copy of landing/gallery/try is currently UA — nav + lang attribute
@@ -7274,13 +6438,18 @@ def build_site(output_dir: Path) -> dict:
         render_limitations(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "gallery.html").write_text(
         render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+    (output_dir / "en" / "diseases.html").write_text(
+        render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "try.html").write_text(
-        render_try(target_lang="en", bundle_version=bundle_version), encoding="utf-8")
+        render_try(
+            target_lang="en",
+            bundle_version=bundle_version,
+            questionnaires_manifest=questionnaires_manifest,
+            examples_manifest=examples_manifest,
+        ), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
-
-    examples_payload = bundle_examples(output_dir)
-    questionnaires_payload = bundle_questionnaires(output_dir)
+    disease_coverage_payload = bundle_disease_coverage(output_dir)
 
     return {
         "output_dir": str(output_dir),
@@ -7288,8 +6457,10 @@ def build_site(output_dir: Path) -> dict:
         "cases_uk": case_paths_uk,
         "cases_en": case_paths_en,
         "engine_bundle": engine_bundle,
+        "service_worker": sw_payload,
         "examples_payload": examples_payload,
         "questionnaires_payload": questionnaires_payload,
+        "disease_coverage_payload": disease_coverage_payload,
         "landing_assets": landing_assets,
     }
 

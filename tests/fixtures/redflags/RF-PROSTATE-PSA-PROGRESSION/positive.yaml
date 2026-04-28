@@ -1,0 +1,13 @@
+red_flag: RF-PROSTATE-PSA-PROGRESSION
+# Clinical scenario: mCRPC on ARPI (e.g., enzalutamide). PSA nadir 1.5
+# ng/mL at month 4; at month 7, PSA repeated 3 weeks apart shows
+# confirmed rise from nadir 167%, absolute increase +2.5 ng/mL.
+# PCWG3 algebraic criteria satisfied via the all_of branch (rise%
+# >=25 AND absolute >=2 AND confirmed at >=3wk). Surfaced for MDT
+# re-imaging — does NOT auto-switch line per PCWG3 caution.
+findings:
+  psa_progression_pcwg3_confirmed: false
+  psa_rise_pct_from_nadir: 167
+  psa_abs_increase_ng_ml: 2.5
+  psa_progression_confirmed_3wk: true
+expected_fires: true

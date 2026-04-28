@@ -1,0 +1,66 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_mastocytosis_organ_dysfunction.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-MASTOCYTOSIS-ORGAN-DYSFUNCTION
+definition: "Mastocytosis with C-finding (organ-damage) criteria per WHO 5th ed.: cytopenia (Hb <10, platelets <100K, ANC <1.0K), hepatomegaly + ascites or hypoalbuminemia, splenomegaly + hypersplenism, malabsorption + weight loss, large osteolyses + pathological fractures"
+definition_ua: "Мастоцитоз із C-критеріями (органні ураження) за ВООЗ 5-те вид.: цитопенія (Hb <10, тромбоцити <100K, АНГ <1.0K), гепатомегалія + асцит або гіпоальбумінемія, спленомегалія + гіперспленізм, мальабсорбція + втрата ваги, великі остеолізи + патологічні переломи"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hemoglobin_g_dl"
+      threshold: 10
+      comparator: "<"
+    - finding: "platelet_count_k_ul"
+      threshold: 100
+      comparator: "<"
+    - finding: "anc_k_ul"
+      threshold: 1.0
+      comparator: "<"
+    - finding: "ascites_present"
+      value: true
+    - finding: "albumin_g_dl"
+      threshold: 3.5
+      comparator: "<"
+    - finding: "pathologic_fracture_present"
+      value: true
+    - finding: "malabsorption_weight_loss"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 50
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-WHO-LNSC-2023
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  WHO 5th ed. (2022/2023) C-findings define advSM and trigger cytoreductive
+  therapy (avapritinib, midostaurin, cladribine, IFN-α). Per NCCN-SM:
+  presence of any C-finding mandates KIT-directed therapy regardless of
+  symptomatic load. Direction INTENSIFY shifts toward avapritinib
+  (KIT D816V-positive ASM/SM-AHN/MCL) per PATHFINDER trial. STUB —
+  requires clinical co-lead signoff.
+notes_ua: >
+  WHO 5th ed. (2022/2023) C-findings define advSM and trigger cytoreductive терапія (avapritinib, мідостаурин, кладрибін, IFN-α). Per NCCN-SM: presence of any C-finding mandates KIT-directed терапія regardless of symptomatic load. Direction INTENSIFY shifts toward avapritinib (KIT D816V-positive ASM/SM-AHN/MCL) per PATHFINDER дослідження. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

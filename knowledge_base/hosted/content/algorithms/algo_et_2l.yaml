@@ -46,6 +46,7 @@ decision_tree:
         - condition: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
         - condition: "Thrombotic event on HU therapy"
         - condition: "Age <60 preferring non-cytotoxic option"
+        - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
     if_true:
       result: IND-ET-2L-ANAGRELIDE
     if_false:
@@ -60,6 +61,7 @@ decision_tree:
       result: IND-ET-2L-ANAGRELIDE
     if_false:
       result: IND-ET-2L-ANAGRELIDE
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources:
   - SRC-NCCN-MPN-2025

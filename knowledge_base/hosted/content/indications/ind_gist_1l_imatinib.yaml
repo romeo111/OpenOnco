@@ -1,0 +1,76 @@
+id: IND-GIST-1L-IMATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced / metastatic / unresectable"
+    - "OR adjuvant after R0/R1 resection of high-risk primary (≥3 cm + mitoses ≥5/50 HPF, OR rupture, OR non-gastric primary, per Joensuu / NIH consensus)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KIT
+      value_constraint: "exon 11 OR exon 9 mutation positive"
+      required: false
+    - biomarker_id: BIO-PDGFRA
+      value_constraint: "exon 12 / 14 / non-D842V exon 18 mutation positive"
+      required: false
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-PDGFRA
+      value_constraint: "D842V positive (imatinib-RESISTANT)"
+      required: false
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen: REG-IMATINIB-GIST-1L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~50-67% (KIT exon 11)"
+  progression_free_survival: "~24 months (KIT exon 11); ~12 months (KIT exon 9 at 800 mg)"
+  overall_survival_5y: "~50% advanced disease; ~80-90% adjuvant high-risk"
+  notes: "B2222 / EORTC-62005 / S0033 / SSG-XVIII / SSG-XXII"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests: []
+desired_tests: []
+
+rationale: >
+  Imatinib at 400 mg/day is the established 1L for advanced/metastatic
+  GIST and the adjuvant standard for high-risk resected disease.
+  KIT exon 9 mutants require 800 mg/day from start (B2222 / EORTC-62005
+  dose effect — codified in REG-IMATINIB-GIST-1L dose_adjustments).
+  PDGFRA D842V is imatinib-resistant and routes to the alternative
+  (avapritinib) indication. SDH-deficient KIT/PDGFRA-WT GIST is also
+  imatinib-refractory but has no current 1L alternative in this KB —
+  flagged as a gap for the "Other actionable subtype" branch.
+
+rationale_ua: >
+  іматиніб at 400 mg/day is the усталений 1L for поширений/метастатичний GIST and the ад'ювантний стандарт for високого ризику resected хвороба. KIT exon 9 mutants require 800 mg/day from start (B2222 / EORTC-62005 доза effect — codified in REG-іматиніб-GIST-1L доза_adjustments). PDGFRA D842V is іматиніб-resistant and routes to the alternative (avapritinib) показання. SDH-deficient KIT/PDGFRA-WT GIST is also іматиніб-рефрактерний but has ні current 1L alternative in this KB — flagged as a gap for the "Other actionable підтип" branch.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-GIST-2025
+    weight: primary
+  - source_id: SRC-IRIS-OBRIEN-2003
+    weight: supporting
+  - source_id: SRC-ONCOKB
+    weight: supporting
+
+do_not_do:
+  - "Do NOT start imatinib in PDGFRA D842V GIST — it is intrinsically resistant; route to avapritinib."
+  - "Do NOT use imatinib 400 mg/day for KIT exon 9 — escalate to 800 mg/day from start."
+  - "Do NOT skip mutation testing (KIT/PDGFRA NGS) prior to 1L systemic therapy — genotype determines drug + dose."
+
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  Standard 1L for the imatinib-sensitive GIST genotypes (~85% of all
+  GIST). Reuses cross-line REG-IMATINIB-GIST-1L which encodes the
+  KIT exon 9 dose-escalation rule.

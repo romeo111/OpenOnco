@@ -1,0 +1,45 @@
+id: REG-ALPELISIB-FULVESTRANT-BREAST
+name: "Alpelisib + fulvestrant (HR+/HER2- PIK3CA-mutant metastatic post-AI/CDK4/6i)"
+name_ua: "Алпелісіб + фулвестрант (HR+/HER2- PIK3CA-mut метастаз після ІА/CDK4/6i)"
+alternate_names: ["SOLAR-1 regimen"]
+
+components:
+  - drug_id: DRUG-ALPELISIB
+    dose: "300 mg PO once daily with food"
+    schedule: "Continuous, no off-day"
+    route: PO
+  - drug_id: DRUG-FULVESTRANT
+    dose: "500 mg IM days 1, 15, 29, then monthly"
+    schedule: "Loading days 1, 15, 29; then q4w maintenance"
+    route: IM
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Pre-treatment HbA1c + fasting glucose; if HbA1c ≥6.5% or FG ≥126, optimize before start"
+  - "Antihistamine on hand for rash; consider prophylactic cetirizine 10 mg PO daily first 8 weeks (META-PAN/registry data)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Hyperglycemia G≥2 (FG ≥160 mg/dL)"
+    modification: "Initiate metformin first-line; recheck within 7 days; if G≥3 hold alpelisib until ≤G1, resume at 250 mg → 200 mg"
+  - condition: "Rash G≥2"
+    modification: "Topical/systemic corticosteroids; antihistamines; if G≥3 hold until ≤G1, resume at reduced dose"
+  - condition: "Pneumonitis suspect"
+    modification: "Hold immediately; pulmonology evaluation; permanent discontinuation if confirmed G≥2"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Alpelisib registered, NSZU does not cover; fulvestrant reimbursed. Out-of-pocket for alpelisib. Major access barrier."
+
+sources: [SRC-SOLAR1-ANDRE-2019, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  SOLAR-1: PIK3CA-mutant cohort PFS 11.0 vs 5.7 mo (HR 0.65). PIK3CA
+  testing (tissue NGS or ctDNA) required pre-start. Hyperglycemia
+  management dominant clinical workflow burden — joint endocrinology
+  follow-up recommended.

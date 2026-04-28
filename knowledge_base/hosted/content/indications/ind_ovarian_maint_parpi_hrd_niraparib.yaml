@@ -1,0 +1,64 @@
+id: IND-OVARIAN-MAINT-PARPI-HRD-NIRAPARIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-OVARIAN
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent platinum-sensitive ovarian / fallopian tube / primary peritoneal cancer"
+    - "Post-platinum reinduction CR or PR"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HRD-STATUS
+      value_constraint: "HRD-positive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIRAPARIB-MAINT-OVARIAN
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "Maintenance — measured by PFS not response"
+  progression_free_survival: "Non-gBRCA HRD+ mPFS 12.9 vs 3.8 mo (NOVA, HR 0.38); gBRCA mPFS 21.0 vs 5.5 mo; non-gBRCA all-comers 9.3 vs 3.9 mo"
+  overall_survival_5y: "OS not significantly improved in NOVA final analysis (Matulonis 2023); benefit cohort-dependent"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+desired_tests: []
+
+rationale: >
+  Niraparib maintenance after platinum reinduction CR/PR in recurrent
+  platinum-sensitive ovarian. Broadest indication of any PARPi —
+  benefit demonstrated regardless of biomarker (NOVA), strongest in
+  HRD+ subset, also acceptable in HRD-negative all-comers. Preferred
+  PARPi when BRCA-WT but HRD+ (no SOLO2-equivalent in HRD+ non-BRCA
+  subset for olaparib monotherapy).
+
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+  - source_id: SRC-ESMO-OVARIAN-2024
+    position: supports
+  - source_id: SRC-NOVA-MIRZA-2016
+    position: supports
+  - source_id: SRC-PRIMA-GONZALEZ-MARTIN-2019
+    position: supports
+
+do_not_do:
+  - "Do NOT start without confirmed CR or PR to platinum reinduction"
+  - "Do NOT use 300 mg fixed starting dose if baseline weight <77 kg OR platelets <150 — start at 200 mg (Berek 2018 individualized rule)"
+  - "Do NOT continue through Grade 3-4 thrombocytopenia without dose reduction (300 → 200 → 100 mg)"
+  - "Do NOT skip pre-treatment counseling on MDS/AML risk"
+  - "Do NOT skip CBC monitoring weekly for first month"
+
+last_reviewed: "2026-04-27"
+reviewer_signoffs: 0
+notes: "ESCAT IA (HRD+). Niraparib 2L+ maintenance — preferred when HRD+ and BRCA-WT, or BRCA-status unknown. Individualized starting dose mandatory."

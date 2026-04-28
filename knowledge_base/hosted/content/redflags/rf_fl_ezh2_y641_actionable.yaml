@@ -1,0 +1,71 @@
+id: RF-FL-EZH2-Y641-ACTIONABLE
+definition: >
+  EZH2 gain-of-function mutation (most commonly Y641 hotspot — Y641F/N/S/H/C
+  + occasional A682G/A692V) is present in ~25% of follicular lymphoma. Drives
+  EZH2-dependent epigenetic silencing of tumor-suppressor genes. Tazemetostat
+  (EPZ-6438) is FDA-accelerated-approved (2020) for R/R FL with EZH2-mutated
+  disease after ≥2 prior systemic lines (Morschhauser et al., Lancet Oncology
+  2020; NCT01897571). Routes 3L+ FL with confirmed EZH2 hotspot to
+  tazemetostat 800 mg PO BID over chemoimmunotherapy or PI3Ki.
+definition_ua: >
+  EZH2 gain-of-function мутація (найчастіше Y641 hotspot — Y641F/N/S/H/C
+  плюс окремі A682G/A692V) присутня у ~25% фолікулярної лімфоми. Запускає
+  EZH2-залежне епігенетичне глушіння tumor-suppressor генів. Таземетостат
+  (EPZ-6438) FDA-схвалений (2020) для р/р ФЛ з EZH2-мутацією після ≥2 ліній
+  (Morschhauser et al., Lancet Oncology 2020; NCT01897571). Маршрутизує 3L+
+  ФЛ із підтвердженим EZH2 hotspot на таземетостат 800 мг PO 2р/добу замість
+  chemoimmunotherapy або PI3Ki.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ezh2_mutation"
+      value: true
+    - finding: "ezh2_y641"
+      value: "positive"
+    - finding: "ezh2_status"
+      value: "mutated"
+    - finding: "ezh2_hotspot"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm:
+  - ALGO-FL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Tazemetostat is also active in EZH2-wildtype FL (ORR 35%) but the
+  approved indication is EZH2-mut after ≥2 lines (ORR 69%, mPFS 13.8 mo
+  in mutant cohort). Order EZH2 hotspot panel (NGS or targeted PCR) at
+  first relapse so the result is in hand by 3L decision point. Tolerability
+  profile favorable vs PI3Ki (no AIH/colitis class effect, no requirement
+  for PJP prophylaxis); main toxicity is asthenia and cytopenia. Off-target
+  T-cell lymphoma signal in early development resolved at approved dose.
+  Access UA: not NSZU-reimbursed — consider compassionate-use access or
+  EU early-access programs.
+notes_ua: >
+  Таземетостат також активний у EZH2-WT ФЛ (ORR 35%) але схвалене показання
+  саме для EZH2-mut після ≥2 ліній (ORR 69%, мПФВ 13.8 міс у мутантній
+  когорті). Замовляти панель EZH2 hotspot (NGS або targeted PCR) при
+  першому рецидиві, щоб результат був до 3L рішення. Профіль переносимості
+  сприятливіший за PI3Ki (без AIH/коліт класового ефекту, без обов'язкової
+  PJP-профілактики); основна токсичність — астенія та цитопенії. Off-target
+  Т-клітинно-лімфомний сигнал на ранній розробці зник на схваленій дозі.
+  Доступ в Україні: не відшкодовується НСЗУ — розглянути compassionate-use
+  або EU early-access програми.
+
+# MISSING SOURCE: SRC-MORSCHHAUSER-2020-TAZEMETOSTAT-FL (Lancet Oncol 2020,
+# NCT01897571 phase-2). Should be authored as Tier-2 RCT source.

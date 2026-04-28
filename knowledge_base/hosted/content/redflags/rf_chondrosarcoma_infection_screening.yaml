@@ -1,0 +1,58 @@
+id: RF-CHONDROSARCOMA-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating doxorubicin + ifosfamide adjuvant (dedifferentiated /
+  mesenchymal subtypes) or pazopanib / ivosidenib for advanced disease:
+  HBsAg-positive (HBV reactivation on cytotoxic chemotherapy),
+  anti-HBc-positive (occult HBV), HIV-positive, or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед адʼювантною doxorubicin + ifosfamide (дедиференційована /
+  мезенхімальна) або pazopanib / ivosidenib для поширеної хвороби: HBsAg+
+  (реактивація HBV на цитотоксичній хіміотерапії), anti-HBc+ (occult HBV),
+  HIV+ або активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-CHONDROSARCOMA
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BONE-SARCOMA
+  - SRC-ESMO-BONE-SARCOMA
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Sarcoma chemotherapy regimens (AI / VDC-IE) and TKI-class agents
+  (pazopanib) all carry meaningful HBV reactivation risk — entecavir /
+  tenofovir prophylaxis indicated for HBsAg+ or anti-HBc+. HIV+ patients
+  treatable but require ART coordination (avoid CYP3A4 conflicts with
+  pazopanib / ivosidenib). Active TB: complete anti-TB before starting
+  systemic therapy when feasible. Surfaces hold via parallel pre-treatment
+  workup rather than indication switch.
+notes_ua: >
+  Саркомні режими (AI / VDC-IE) і TKI (pazopanib) мають значущий ризик
+  реактивації HBV — entecavir / tenofovir профілактика для HBsAg+ або
+  anti-HBc+. HIV+: координація АРТ (уникати CYP3A4 конфліктів з pazopanib
+  / ivosidenib). Активний ТБ: завершити анти-ТБ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

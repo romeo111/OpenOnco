@@ -1,0 +1,151 @@
+id: ALGO-CRC-METASTATIC-2L
+applicable_to_disease: DIS-CRC
+applicable_to_line_of_therapy: 2
+purpose: >
+  2L+ routing for metastatic CRC by molecular profile + prior therapy.
+  Driver-mutation routing first (MSI > BRAF > KRAS-G12C > HER2 > EGFRi
+  rechallenge > 3L default chemo-refractory salvage). MSI-H supersedes
+  all other 2L choices. Each driver-mutation indication is treatment-
+  defining for its biomarker subset.
+
+output_indications:
+  - IND-CRC-METASTATIC-2L-MSI-H-PEMBRO
+  - IND-CRC-METASTATIC-2L-BRAF-BEACON
+  - IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
+  - IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
+  - IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD
+  - IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
+  - IND-CRC-METASTATIC-2L-FOLFIRI-BEV
+  - IND-CRC-METASTATIC-3L-TAS102-BEV
+  - IND-CRC-METASTATIC-3L-REGORAFENIB
+  - IND-CRC-METASTATIC-3L-TRIFLURIDINE-TIPIRACIL-MONO
+
+default_indication: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
+alternative_indication: IND-CRC-METASTATIC-3L-TAS102-BEV
+
+decision_tree:
+  # Step 1 — MSI-H/dMMR overrides everything (KEYNOTE-164 2L+ continuation
+  # of KEYNOTE-177 1L). Treatment-defining biomarker.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-MSI-H-ACTIONABILITY
+        - condition: "MSI-H or dMMR confirmed by validated assay AND no prior anti-PD-1 exposure"
+    if_true:
+      result: IND-CRC-METASTATIC-2L-MSI-H-PEMBRO
+    if_false:
+      next_step: 2
+
+  # Step 2 — BRAF V600E (poor prognosis). BEACON encorafenib + cetuximab
+  # is the molecular-targeted 2L+ standard for this subset.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+        - condition: "BRAF V600E confirmed by validated assay (NGS or IHC + confirm)"
+    if_true:
+      result: IND-CRC-METASTATIC-2L-BRAF-BEACON
+    if_false:
+      next_step: 3
+
+  # Step 3 — KRAS G12C (~3-4% of mCRC). CodeBreaK 300 sotorasib + cetuximab.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "KRAS G12C confirmed by NGS (tissue OR ctDNA)"
+        - condition: "BRAF V600E excluded (ruled out via step 2)"
+    if_true:
+      result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
+    if_false:
+      next_step: 4
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+
+  # Step 4 — HER2 amplified (~3% of mCRC) AND RAS-WT. MOUNTAINEER
+  # tucatinib + trastuzumab default; T-DXd alternative noted in
+  # algorithm purpose / indication controversies.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
+        - condition: "RAS wild-type (MOUNTAINEER eligibility)"
+    if_true:
+      result: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
+    if_false:
+      next_step: 5
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+
+  # Step 5 — Anti-EGFR rechallenge (3L+; positioned here so 2L candidates
+  # without driver mutations route to standard cytotoxic-switch first).
+  # Only fires if patient has prior anti-EGFR response AND intervening
+  # EGFR-free 2L line — typically 3L scenario. RF-CRC-RAS-WT gates the
+  # extended-RAS WT prerequisite at baseline; ctDNA RAS-WT at
+  # rechallenge timepoint, prior-EGFR-response and intervening-line
+  # criteria remain MDT-text (CHRONOS-style ctDNA timing not modelled).
+  - step: 5
+    evaluate:
+      all_of:
+        - red_flag: RF-CRC-RAS-WT
+        - condition: "ctDNA RAS-WT at rechallenge timepoint (CHRONOS biomarker selection)"
+        - condition: "Prior anti-EGFR response (PR or better OR SD ≥6 mo) in 1L"
+        - condition: "Intervening anti-EGFR-free 2L line completed (typically bev-based)"
+        - condition: "BRAF V600E excluded (ruled out via step 2)"
+    if_true:
+      result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
+    if_false:
+      next_step: 6
+    notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type baseline (CHRONOS biomarker selection for cetuximab rechallenge post-FOLFOX failure); ctDNA-timepoint RAS-WT, prior-EGFR-response, and intervening-line criteria remain MDT-text (CHRONOS-style ctDNA timing and prior-response history not RF-modelled)."
+
+  # Step 6 — 2L cytotoxic-switch default (FOLFOX → FOLFIRI + biologic
+  # continuation per TML/ML18147). Standard track.
+  - step: 6
+    evaluate:
+      any_of:
+        - condition: "First disease progression on 1L FOLFOX-based regimen (FOLFOX, FOLFOX+bev, FOLFOX+cetux)"
+        - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
+    if_false:
+      next_step: 7
+
+  # Step 7 — 3L+ chemo-refractory salvage. Default to TAS-102 + bev
+  # (SUNLIGHT, preferred); regorafenib (CORRECT) and TAS-102 monotherapy
+  # (RECOURSE) are alternatives by toxicity / access profile.
+  - step: 7
+    evaluate:
+      any_of:
+        - condition: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
+        - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+    if_false:
+      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  2L+ routing for metastatic CRC. Driver-mutation cascade:
+  MSI-H > BRAF V600E > KRAS G12C > HER2-amp > EGFRi rechallenge >
+  2L cytotoxic switch > 3L salvage.
+
+  Wiring gaps / future work:
+  (1) RF-CRC-KRAS-G12C-ACTIONABILITY and RF-CRC-HER2-AMP-ACTIONABILITY
+  do not yet exist as red-flag entities — algorithm currently uses
+  free-text conditions for steps 3-4. Add dedicated RFs in next batch.
+  (2) HER2-amp T-DXd alternative (DESTINY-CRC01) is not a separate
+  algorithm branch — surfaced via known_controversies in
+  IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB and via standalone
+  IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD. MDT decides.
+  (3) Fruquintinib (FRESCO-2) 3L+ option not modeled — DRUG-FRUQUINTINIB
+  not in KB. Flagged for CSD-4.5.
+  (4) TAS-102 monotherapy fallback (RECOURSE) routes through step 7
+  decision via known_controversies in IND-CRC-METASTATIC-3L-TAS102-BEV;
+  no separate algorithm branch.
+  (5) Adagrasib + cetuximab (KRYSTAL-1) alternative for KRAS G12C+
+  with CNS involvement — surfaced via known_controversies; no separate
+  branch.
+  (6) ctDNA-guided EGFRi rechallenge (step 5) requires ctDNA NGS access
+  not universally available in Ukraine — clinical-selection fallback
+  noted in indication.

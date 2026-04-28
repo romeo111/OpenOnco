@@ -1,0 +1,98 @@
+id: IND-NSCLC-2L-KRAS-G12C-SOTORASIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: KRAS_G12C
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic KRAS G12C+ NSCLC"
+    - "Disease progression on 1L platinum chemotherapy ± ICI"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KRAS-G12C
+      value_constraint: "KRAS G12C mutation confirmed by NGS or allele-specific PCR"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SOTORASIB-KRAS
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~28% (CodeBreaK 200 vs 13% docetaxel)"
+  progression_free_survival: "Median PFS 5.6 mo (CodeBreaK 200 vs 4.5 mo docetaxel; HR 0.66)"
+  overall_survival_5y: "Median OS not significant vs docetaxel (HR 1.01) — crossover-confounded"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm KRAS G12C; characterize co-mutations (STK11, KEAP1, TP53)
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Sotorasib (first-in-class covalent KRAS G12C inhibitor) for KRAS G12C+
+  metastatic NSCLC progressing on 1L platinum ± ICI. CodeBreaK 200
+  phase-3 vs docetaxel: PFS HR 0.66 (5.6 vs 4.5 mo), ORR 28% vs 13%;
+  OS not significant (HR 1.01) reflecting post-progression therapy
+  crossover and biological limits. FDA approval 2021 (accelerated) /
+  2024 (full) for 2L+ KRAS G12C+ NSCLC. Adagrasib (KRYSTAL-1) is
+  alternative — preferred for active brain metastases (better CNS
+  penetration: intracranial ORR ~33% vs sotorasib's modest CNS
+  activity). Hepatotoxicity is the dose-limiting AE; LFTs q-cycle.
+  Co-mutation profile (STK11, KEAP1) modulates response — STK11+KRAS
+  G12C predicts poorer ICI response (separate consideration for prior 1L).
+
+sources:
+  - source_id: SRC-CODEBREAK200-JOHNSON-2023
+    position: supports
+    relevant_quote_paraphrase: "Sotorasib 960 mg PO daily vs docetaxel in pretreated KRAS G12C+ NSCLC: PFS HR 0.66 (5.6 vs 4.5 mo), ORR 28% vs 13%; OS not significant (crossover-confounded)"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Sotorasib is recommended 2L+ for KRAS G12C+ metastatic NSCLC; Cat 1 (CodeBreaK 200)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Sotorasib is established 2L for KRAS G12C+ NSCLC; adagrasib alternative with better CNS profile"
+
+known_controversies:
+  - topic: "Sotorasib vs adagrasib for 2L KRAS G12C+ NSCLC"
+    positions:
+      - position: "Sotorasib (CodeBreaK 200): randomized phase-3 vs docetaxel; PFS HR 0.66; longer track record"
+        sources: [SRC-CODEBREAK200-JOHNSON-2023]
+      - position: "Adagrasib (KRYSTAL-1): phase-2 ORR 43%, intracranial ORR 33%; preferred for brain mets"
+        sources: [SRC-KRYSTAL1-JANNE-2022]
+    our_default: "Sotorasib for non-CNS or stable CNS disease (more validation); adagrasib for active untreated brain metastases (better CNS profile)"
+    rationale: "CNS-driven choice; both efficacious systemically"
+
+do_not_do:
+  - "НЕ ігнорувати baseline + serial LFTs (q-cycle) — hepatotoxicity ~25% transaminase elevation, dose-limiting."
+  - "НЕ призначати при baseline transaminases >5× ULN — toxicity ризик cumulative."
+  - "НЕ використовувати при ECOG 3-4 — limited benefit та toxicity profile."
+  - "НЕ підтверджувати план без funding pathway — соторасіб не зареєстрований в Україні."
+  - "НЕ використовувати разом з proton-pump inhibitors або H2-blockers — absorption suppressed (administer with cola for acidification if PPI required)."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors — exposure increased."
+  - "НЕ призначати при active untreated brain metastases без розгляду адаграсіб alternative."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L KRAS G12C+
+  NSCLC. Adagrasib (separate Indication) preferred for active brain
+  metastases. Replaces existing IND-NSCLC-KRAS-G12C-MET-2L (which is
+  retained but should be deprecated — it points to same regimen).

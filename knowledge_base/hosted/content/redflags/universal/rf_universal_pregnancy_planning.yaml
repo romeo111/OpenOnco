@@ -1,0 +1,62 @@
+id: RF-PREGNANCY-PLANNING
+definition: >
+  Patient planning pregnancy within next 12 months. Triggers fertility
+  preservation referral (oocyte/embryo cryopreservation, ovarian tissue
+  cryopreservation, GnRH agonist co-administration, sperm banking),
+  selection of regimens with lowest gonadotoxic burden where oncologic
+  equivalence exists, and informed-consent emphasis on fertility outcomes.
+definition_ua: >
+  Пацієнт/-ка планує вагітність протягом наступних 12 місяців. Триггерує
+  направлення на збереження фертильності (кріоконсервація ооцитів/
+  ембріонів, тканини яєчника, ко-введення агоніста GnRH, кріоконсервація
+  сперми), вибір режимів з найменшим гонадотоксичним навантаженням за
+  онкологічної еквівалентності та акцент інформованої згоди на питанні
+  фертильності.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "pregnancy_planning_12_months"
+      value: true
+    - finding: "fertility_preservation_requested"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 90
+category: reproductive-status
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ASCO 2018 fertility preservation guideline mandates discussion at
+  diagnosis. Gonadotoxicity ranking: alkylators (cyclophosphamide,
+  busulfan, melphalan) — high; anthracyclines + alkylators (R-CHOP,
+  ABVD) — moderate-high cumulative; ABVD lower vs BEACOPP; FCR vs
+  BR — BR less gonadotoxic; aromatase inhibitors require LHRH-co-
+  administration in premenopausal. GnRH-agonist co-administration
+  (POEMS, PROMISE-GIM6 in breast) reduces premature ovarian failure
+  rate. Direction `investigate` because flag drives parallel
+  fertility-preservation pathway, not alternative oncologic
+  indication. Bridges to RF-PREGNANCY-ACTIVE if patient becomes
+  pregnant during/after therapy.
+notes_ua: >
+  ASCO 2018 fertility preservation guideline вимагає обговорення при
+  діагнозі. Ранг гонадотоксичності: алкілатори (циклофосфамід,
+  бусульфан, мелфалан) — високий; антрацикліни + алкілатори (R-CHOP,
+  ABVD) — помірно-високий кумулятивний; ABVD нижче ніж BEACOPP; FCR
+  vs BR — BR менш гонадотоксичний; ароматазні інгібітори потребують
+  ко-введення LHRH у пременопаузі. Ко-введення агоніста GnRH (POEMS,
+  PROMISE-GIM6) зменшує частоту передчасної оваріальної недостатності.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

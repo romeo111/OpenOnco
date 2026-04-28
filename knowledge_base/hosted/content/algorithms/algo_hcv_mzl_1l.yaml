@@ -15,16 +15,27 @@ alternative_indication: IND-HCV-MZL-1L-BR-AGGRESSIVE
 
 decision_tree:
   - step: 1
+    # Decompensated cirrhosis → antiviral-only (Child-Pugh B/C contra-
+    # indicates bendamustine and PI-containing DAA).
     evaluate:
       any_of:
         - red_flag: RF-DECOMP-CIRRHOSIS
     if_true:
-      # Child-Pugh B/C contraindicates bendamustine and PI-containing DAA;
-      # de-escalate to antiviral-only (SOF/VEL+RBV) per RF notes.
       result: IND-HCV-MZL-1L-ANTIVIRAL
     if_false:
       next_step: 2
   - step: 2
+    # Frail / elderly HCV-MZL — de-escalate from BR (bendamustine +
+    # rituximab) toward anti-CD20 mono / antiviral-only. Routes to
+    # antiviral default (BR-aggressive omitted for unfit patients).
+    evaluate:
+      any_of:
+        - red_flag: RF-HCV-MZL-FRAILTY-AGE
+    if_true:
+      result: IND-HCV-MZL-1L-ANTIVIRAL
+    if_false:
+      next_step: 3
+  - step: 3
     evaluate:
       any_of:
         - red_flag: RF-BULKY-DISEASE
@@ -32,8 +43,8 @@ decision_tree:
     if_true:
       result: IND-HCV-MZL-1L-BR-AGGRESSIVE
     if_false:
-      next_step: 3
-  - step: 3
+      next_step: 4
+  - step: 4
     evaluate:
       all_of:
         - condition: "HCV RNA positive"
@@ -42,6 +53,7 @@ decision_tree:
       result: IND-HCV-MZL-1L-ANTIVIRAL
     if_false:
       result: IND-HCV-MZL-1L-BR-AGGRESSIVE
+    notes: "Disease-burden + viral-status combination; default routes by viral status (HCV-RNA+ indolent → antiviral DAA, otherwise BR)."
 
 sources:
   - SRC-ESMO-MZL-2024

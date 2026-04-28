@@ -1,0 +1,97 @@
+id: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: KRAS_G12C
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic KRAS G12C+ NSCLC"
+    - "Disease progression on 1L platinum ± ICI"
+    - "Active CNS metastases (brain) — adagrasib preferred over sotorasib for CNS"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KRAS-G12C
+      value_constraint: "KRAS G12C mutation confirmed by NGS or allele-specific PCR"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ADAGRASIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~43% (KRYSTAL-1)"
+  progression_free_survival: "Median PFS 6.5 mo (KRYSTAL-1)"
+  overall_survival_5y: "Median OS 12.6 mo (KRYSTAL-1); intracranial ORR ~33%"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm KRAS G12C; ECG for QT baseline
+  - TEST-BRAIN-MRI-CONTRAST  # critical — adagrasib chosen for CNS
+desired_tests: []
+
+rationale: >
+  Adagrasib (KRAS G12C-selective covalent inhibitor with CNS penetration)
+  for KRAS G12C+ metastatic NSCLC progressing on 1L platinum ± ICI.
+  KRYSTAL-1 phase-2: ORR 43%, mPFS 6.5 mo, mOS 12.6 mo, intracranial
+  ORR ~33% (active brain mets) — distinguishing CNS profile from
+  sotorasib's modest CNS activity. FDA accelerated approval 2022 for
+  2L+ KRAS G12C+ NSCLC. KRYSTAL-12 phase-3 vs docetaxel ongoing for
+  full approval. Aggressive-track preferred for patients with active
+  brain metastases. AE profile: high GI burden (diarrhea, N/V), QTc
+  prolongation, hepatotoxicity, renal impairment — broader monitoring
+  than sotorasib.
+
+sources:
+  - source_id: SRC-KRYSTAL1-JANNE-2022
+    position: supports
+    relevant_quote_paraphrase: "Adagrasib in pretreated KRAS G12C+ NSCLC: ORR 43%, mPFS 6.5 mo, mOS 12.6 mo; intracranial ORR 33%"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Adagrasib is recommended 2L+ for KRAS G12C+ metastatic NSCLC; preferred over sotorasib for active brain metastases; Cat 2A pending phase-3"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Adagrasib is alternative to sotorasib for 2L KRAS G12C+ NSCLC; CNS-active profile favors brain-met-positive disease"
+
+known_controversies:
+  - topic: "Adagrasib vs sotorasib for 2L KRAS G12C+ NSCLC"
+    positions:
+      - position: "Adagrasib: intracranial ORR 33%; preferred CNS-positive disease"
+        sources: [SRC-KRYSTAL1-JANNE-2022]
+      - position: "Sotorasib: phase-3 randomized vs docetaxel (CodeBreaK 200); longer real-world experience"
+        sources: [SRC-CODEBREAK200-JOHNSON-2023]
+    our_default: "Adagrasib for active untreated brain metastases; sotorasib otherwise (more validation, simpler AE profile)"
+    rationale: "CNS-driven choice; both target same protein"
+
+do_not_do:
+  - "НЕ ігнорувати baseline ECG + electrolytes — QTc prolongation class effect; correct K/Mg pre-start."
+  - "НЕ комбінувати з QT-prolonging drugs (ondansetron, ciprofloxacin, methadone) без careful review."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors — exposure increased."
+  - "НЕ ігнорувати baseline + serial LFTs та renal function — multi-organ toxicity."
+  - "НЕ підтверджувати план без funding pathway — адаграсіб не зареєстрований в Україні."
+  - "НЕ використовувати при baseline QTc >480 ms — contraindicated."
+  - "НЕ ігнорувати aggressive antiemetic prophylaxis — N/V dominantly limits adherence."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track for KRAS
+  G12C+ NSCLC with active brain metastases. KRYSTAL-12 phase-3
+  confirmatory trial ongoing.

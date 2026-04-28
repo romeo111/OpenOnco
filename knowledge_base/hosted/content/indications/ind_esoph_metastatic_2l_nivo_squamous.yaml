@@ -1,0 +1,83 @@
+id: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced"
+    - "Squamous-cell histology"
+    - "Disease progression on or after 1L fluoropyrimidine + platinum (without prior ICI)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-NIVO-MONO-ESOPH-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~19% (ATTRACTION-3)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 1.7 mo (vs 3.4 mo taxane; ICI delayed-effect kinetics)"
+  overall_survival_5y: "mOS 10.9 vs 8.4 mo taxane (HR 0.77, ATTRACTION-3); 12-mo OS 47% vs 34%"
+
+hard_contraindications:
+  - CI-PEMBROLIZUMAB-AUTOIMMUNE
+red_flags_triggering_alternative:
+  - RF-ESOPH-FRAILTY-AGE
+  - RF-ESOPH-SEVERE-DYSPHAGIA-ASPIRATION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests: []
+
+rationale: >
+  Nivolumab monotherapy is the NCCN cat 1 preferred 2L option for
+  metastatic esophageal squamous-cell carcinoma after 1L fluoropyrimidine
+  + platinum (without prior ICI). ATTRACTION-3 trial established OS
+  benefit + dramatically better safety vs taxane chemo. Selection
+  agnostic to PD-L1 status for ESCC (unlike adeno where CPS ≥10 cutoff
+  applies via KEYNOTE-181). Adenocarcinoma patients route instead to
+  pembrolizumab if CPS ≥10 (IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10) or
+  ramucirumab + paclitaxel (gastric-style; not separately modeled here).
+  Patients with prior ICI in 1L (KEYNOTE-590-style chemo+pembro)
+  require alternative cytotoxic strategy in 2L.
+
+rationale_ua: >
+  ніволумаб монотерапія is the NCCN cat 1 переважний 2L option for метастатичний esophageal squamous-cell карцинома after 1L fluoropyrimidine + platinum (without prior ICI). ATTRACTION-3 дослідження усталений OS виграш + dramatically краще безпека vs taxane chemo. Selection agnostic to PD-L1 status for ESCC (unlike adeno where CPS ≥10 cutoff applies via KEYNOTE-181). Adenocarcinoma patients route instead to пембролізумаб if CPS ≥10 (IND-ESOPH-метастатичний-2L-PEMBRO-CPS10) or рамуцирумаб + паклітаксел (gastric-style; not separately modeled here). Patients with prior ICI in 1L (KEYNOTE-590-style chemo+pembro) require alternative cytotoxic strategy in 2L.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    weight: primary
+    relevant_quote_paraphrase: "Nivolumab monotherapy is a Category 1 preferred 2L for advanced ESCC post fluoropyrimidine + platinum (ATTRACTION-3 evidence)"
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    weight: primary
+    relevant_quote_paraphrase: "Nivolumab recommended 2L ESCC (ATTRACTION-3); KEYNOTE-181 supports pembrolizumab in PD-L1 CPS ≥10 subset"
+
+do_not_do:
+  - "НЕ призначати при активному autoimmune disease (lupus, IBD, untreated thyroiditis G3+) — irAE неконтрольовано прогресуватиме."
+  - "НЕ продовжувати через Grade ≥3 irAE без permanent discontinuation consideration."
+  - "НЕ ігнорувати ICI-pneumonitis при появі задишки / кашлю — HRCT + кортикостероїди."
+  - "НЕ використовувати при ECOG ≥3 — користь ICI в frail population не встановлена; розглянути best-supportive-care."
+  - "НЕ використовувати після 1L ICI-exposure — нема даних на reuse; розглянути cytotoxic alternative."
+  - "НЕ підтверджувати план без верифікованого funding pathway — NSZU 2026 НЕ покриває nivolumab для стравоходу."
+
+time_critical: false
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  STUB — pending Co-Lead sign-off. Standard-track 2L for metastatic ESCC.
+  UA: nivolumab not NSZU-reimbursed for esophageal — out-of-pocket /
+  charitable. Single-agent paclitaxel weekly (or docetaxel) is the
+  funded fallback when ICI access unavailable.

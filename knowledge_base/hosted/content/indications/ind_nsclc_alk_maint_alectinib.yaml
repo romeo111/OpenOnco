@@ -1,0 +1,82 @@
+id: IND-NSCLC-ALK-MAINT-ALECTINIB
+plan_track: standard
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+  - "Stage IV NSCLC"
+  - "Continuous treatment beyond initial response (TKI continuation, not classical maintenance)"
+  - "Achieved ≥SD/PR on alectinib 1L"
+  biomarker_requirements_required:
+  - biomarker_id: BIO-ALK-FUSION
+    required: true
+    value_constraint: "ALK rearrangement positive by IHC / FISH / NGS"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen: REG-ALECTINIB-NSCLC
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~83% during initial response phase (ALEX)
+  complete_response: ~5%
+  progression_free_survival: Median PFS 34.8 mo (ALEX Mok 2020 update)
+  overall_survival_5y: 5-yr OS ~62.5% (ALEX 5-yr update Mok 2024 Annals Oncol)
+hard_contraindications: []
+red_flags_triggering_alternative:
+- RF-NSCLC-TRANSFORMATION-PROGRESSION
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-CT-CHEST-ABDOMEN-PELVIS
+- TEST-ECHO
+- TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+rationale: 'Alectinib 600 mg BID PO continuous until progression is the ALEX-defined 1L standard for ALK-positive
+  advanced NSCLC. ALEX trial (Peters 2017 NEJM, Mok 2020 update Ann Oncol): mPFS 34.8 vs 10.9 mo (HR 0.43)
+  vs crizotinib; 5-yr OS 62.5% vs 45.5%; CNS PFS HR 0.18 (dramatic CNS protection). Lorlatinib (CROWN trial)
+  is increasingly competitive with mPFS not reached at 5 yr — see known_controversies. Alectinib continued
+  through oligoprogression with local therapy is reasonable; full progression triggers lorlatinib (preferred
+  next-gen) or chemo. Hepatotoxicity ~5% grade ≥3 + edema + bradycardia + photosensitivity require monitoring
+  but rarely treatment-limiting.'
+sources:
+- source_id: SRC-NCCN-NSCLC-2025
+  position: supports
+  relevant_quote_paraphrase: Alectinib continuous is Category 1 preferred 1L therapy for ALK+ advanced NSCLC
+    per ALEX; lorlatinib is alternative Cat 1 per CROWN
+- source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+  position: supports
+  relevant_quote_paraphrase: Alectinib + lorlatinib are both ESMO-MCBS preferred 1L for ALK+ NSCLC; choice
+    driven by toxicity profile + access
+known_controversies:
+- topic: Alectinib vs lorlatinib for 1L ALK+ NSCLC
+  positions:
+  - position: Alectinib — established, lower CNS toxicity, mPFS 34.8 mo
+    sources:
+    - SRC-NCCN-NSCLC-2025
+  - position: Lorlatinib — CROWN mPFS not reached at 5 yr (HR 0.19 vs crizotinib), better CNS PFS, but ~21%
+      grade ≥3 cognitive/mood AEs
+    sources:
+    - SRC-ESMO-NSCLC-METASTATIC-2024
+    evidence_note: "CROWN 5-yr update (Solomon 2024 JCO): mPFS NR, 5-yr PFS 60% vs 8% crizotinib"
+  our_default: Alectinib for most patients (longer real-world experience, better tolerated cognitively); lorlatinib
+    for high-risk (multiple brain metastases, leptomeningeal disease, young patients prioritizing depth/duration)
+  rationale: Both drugs Cat 1; lorlatinib's PFS lead is real but cognitive AEs need stronger patient counseling
+do_not_do:
+- НЕ продовжувати alectinib при rapid systemic progression — switch до lorlatinib OR chemo, не зволікати.
+- НЕ ігнорувати ALT/AST elevation — hepatotoxicity grade ≥3 у ~5%; hold + dose-reduce при >5x ULN.
+- НЕ припиняти при transient sinus bradycardia — рідко symptomatic; лише при <50 bpm + symptoms.
+- НЕ комбінувати з сильними CYP3A4 інгібіторами (azoles, ritonavir, clarithromycin) без adjustment.
+- НЕ забути сонцезахист — photosensitivity грає роль, severe skin reactions документовані.
+- НЕ переключатись на crizotinib при progression — generation downgrade без actionable rationale.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 because TKI continuation is part of
+  the 1L pathway. Engine activates this indication for any patient on alectinib 1L beyond first restaging.
+  Lorlatinib 1L (CROWN paradigm) — separate Indication entity to be authored.'

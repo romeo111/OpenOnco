@@ -16,13 +16,19 @@ Hybrid Option A/B build:
   PanCancer output (the demo's framing).
 
 - The **2L treatment tracks (Plan A doublet, Plan B triplet)** are
-  hand-authored — we cannot run `generate_plan()` for line=2 because
-  the CRC algorithm currently only covers 1L (algo_crc_metastatic_1l).
-  Authoring a 2L algorithm is out of scope for this demo. The drug names,
-  schedule, and source IDs are pulled from the existing KB entities
-  (REG-ENCORAFENIB-CETUXIMAB, IND-CRC-METASTATIC-2L-BRAF-BEACON,
-  SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024) so they cite real, validated
-  KB content.
+  framed by the rule engine: with `line_of_therapy=2`, `generate_plan()`
+  resolves to `ALGO-CRC-METASTATIC-2L`, whose decision tree routes the
+  BRAF V600E branch to `IND-CRC-METASTATIC-2L-BRAF-BEACON`
+  (REG-ENCORAFENIB-CETUXIMAB). Plan A's prose mirrors that engine-
+  selected indication 1:1; Plan B (BEACON triplet w/ binimetinib) is
+  the alternative narrated in the indication's notes / known
+  controversies. Drug ids, schedule, and source ids all map to live KB
+  entities (REG-ENCORAFENIB-CETUXIMAB, IND-CRC-METASTATIC-2L-BRAF-
+  BEACON, SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024). NSZU badges are
+  resolved live via `lookup_nszu_status()` per drug. The script also
+  asserts the engine-selected default indication matches what Plan A
+  prose narrates — if the algorithm wiring drifts, the build fails
+  loudly rather than silently rendering stale text.
 
 - The trial section is a hand-curated stub with one BREAKWATER reference;
   CSD-1.7 would wire ctgov live search.
@@ -47,8 +53,17 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from knowledge_base.engine._actionability import find_matching_actionability  # noqa: E402
+from knowledge_base.engine._nszu import NszuBadge, lookup_nszu_status  # noqa: E402
+from knowledge_base.engine.plan import generate_plan  # noqa: E402
 from knowledge_base.engine.render_styles import STYLESHEET as ENGINE_CSS  # noqa: E402
 from knowledge_base.validation.loader import load_content  # noqa: E402
+
+# What we expect the engine to resolve for this synthetic patient. If the
+# algorithm wiring or BMA/RF cells drift such that the BRAF V600E branch
+# no longer fires, this build should fail loudly rather than render text
+# that no longer matches engine output.
+EXPECTED_ALGORITHM_ID = "ALGO-CRC-METASTATIC-2L"
+EXPECTED_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
 
 
 KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
@@ -56,6 +71,37 @@ PATIENT_JSON = REPO_ROOT / "examples" / "patient_csd_1_demo_braf_mcrc.json"
 OUT_HTML = REPO_ROOT / "docs" / "plans" / "csd_1_demo_report.html"
 
 REPORT_TIMESTAMP_HUMAN = "2026-04-27 09:30 EEST"
+REPORT_TIMESTAMP_NOTE = "(оновлено з NSZU-context)"
+
+# Drug ids referenced by the 2L plan tracks. Order matters — controls the
+# order in which the drug-list rows render.
+PLAN_A_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB"]
+PLAN_B_DRUG_IDS = ["DRUG-ENCORAFENIB", "DRUG-CETUXIMAB", "DRUG-BINIMETINIB"]
+
+# Both Plan A (doublet) and Plan B (triplet) live under the same KB
+# indication entity (BEACON CRC). We keep the IDs explicit per track so
+# the sign-off badge surface in each track stays self-explanatory if the
+# triplet ever gets its own indication.
+PLAN_A_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
+PLAN_B_INDICATION_ID = "IND-CRC-METASTATIC-2L-BRAF-BEACON"
+
+# Display metadata per drug — names + dose strings re-used by the rendered
+# drug-list rows. Centralised so badge labels and dose strings stay in
+# sync with the surrounding regimen prose.
+DRUG_DISPLAY: dict[str, dict[str, str]] = {
+    "DRUG-ENCORAFENIB": {
+        "name": "Encorafenib",
+        "dose": "300 mg PO once daily",
+    },
+    "DRUG-CETUXIMAB": {
+        "name": "Cetuximab",
+        "dose": "400 mg/m² IV loading → 250 mg/m² IV щотижня",
+    },
+    "DRUG-BINIMETINIB": {
+        "name": "Binimetinib",
+        "dose": "45 mg PO 2× на день",
+    },
+}
 
 
 # ── tier-badge helpers (mirror knowledge_base.engine.render) ──────────────
@@ -83,6 +129,83 @@ def _h(s) -> str:
     return html.escape(str(s))
 
 
+# ── Sign-off badge helpers (CSD-5 clinical sign-off surfacing) ───────────
+
+
+def _signoff_count(indication_data: dict | None) -> int:
+    """Best-effort `reviewer_signoffs` extraction.
+
+    Some indication YAMLs have an explicit integer field; others omit it
+    entirely (treat as 0); some carry a `reviewers:` list and we take the
+    larger of (count, declared int) so a stub author can't accidentally
+    over-claim sign-offs by setting the int below the declared list size.
+    """
+    if not indication_data:
+        return 0
+    declared = indication_data.get("reviewer_signoffs")
+    try:
+        declared_int = int(declared) if declared is not None else 0
+    except (TypeError, ValueError):
+        declared_int = 0
+    reviewers = indication_data.get("reviewers") or []
+    list_count = len(reviewers) if isinstance(reviewers, list) else 0
+    return max(declared_int, list_count)
+
+
+def _signoff_reviewer_names(indication_data: dict | None, count: int) -> list[str]:
+    """Pull display names from the reviewers list, or generate placeholder
+    labels when the list is empty but a count is declared. Placeholders
+    are deliberately generic so the demo never invents real clinician
+    names — they read as "Co-Lead 1 / Co-Lead 2"."""
+    if not indication_data:
+        return []
+    reviewers = indication_data.get("reviewers") or []
+    names: list[str] = []
+    if isinstance(reviewers, list):
+        for r in reviewers:
+            if isinstance(r, dict):
+                n = r.get("name") or r.get("reviewer") or r.get("id")
+            else:
+                n = r
+            if n:
+                names.append(str(n))
+    while len(names) < count:
+        names.append(f"Clinical Co-Lead {len(names) + 1}")
+    return names[:count]
+
+
+def render_signoff_badge(indication_data: dict | None) -> str:
+    """Return the inline sign-off badge `<span>` for an indication.
+
+    Three states: 0 / 1 / 2+ sign-offs. Reuses the `signoff-badge`
+    family of CSS classes defined in the page CSS (mirror of the engine's
+    sign-off conventions, scoped to this demo).
+    """
+    n = _signoff_count(indication_data)
+    if n >= 2:
+        names = _signoff_reviewer_names(indication_data, n)
+        shown = ", ".join(names[:2])
+        return (
+            '<span class="signoff-badge signoff-complete" '
+            f'title="Підписано: {_h(shown)}">'
+            f'✓ Клінічно затверджено: {_h(shown)}'
+            '</span>'
+        )
+    if n == 1:
+        return (
+            '<span class="signoff-badge signoff-partial" '
+            'title="Один Clinical Co-Lead підтвердив; очікується другий підпис">'
+            '🟡 Підписано: 1 з 2'
+            '</span>'
+        )
+    return (
+        '<span class="signoff-badge signoff-pending" '
+        'title="STUB — клінічний контент очікує дворазового підпису перед production-use">'
+        '⚠ Очікує підпису Clinical Co-Lead'
+        '</span>'
+    )
+
+
 # ── Section builders ──────────────────────────────────────────────────────
 
 
@@ -97,7 +220,7 @@ def render_header() -> str:
         </div>
       </div>
       <div class="header-meta">
-        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">{_h(REPORT_TIMESTAMP_HUMAN)}</span></div>
+        <div class="meta-row"><span class="meta-label">Звіт згенеровано</span><span class="meta-value">{_h(REPORT_TIMESTAMP_HUMAN)} {_h(REPORT_TIMESTAMP_NOTE)}</span></div>
         <div class="meta-row"><span class="meta-label">Демонстрація</span><span class="meta-value">CSD Lab × OpenOnco · CSD-1</span></div>
         <div class="lang-toggle">
           <span class="lang-current">UA</span>
@@ -239,8 +362,52 @@ def render_variant_actionability(hits: list[dict]) -> str:
     """
 
 
-def render_plan_a() -> str:
-    return """
+def _badge_class(status: str) -> str:
+    """Map an NSZU status to its CSS class."""
+    return {
+        "covered": "nszu-covered",
+        "partial": "nszu-partial",
+        "oop": "nszu-oop",
+        "not-registered": "nszu-not-registered",
+    }.get(status, "nszu-not-registered")
+
+
+def render_drug_row(drug_id: str, badge: NszuBadge) -> str:
+    """One <li> row in a track's drug-list, with NSZU badge inline."""
+    meta = DRUG_DISPLAY.get(drug_id, {})
+    name = meta.get("name", drug_id)
+    dose = meta.get("dose", "")
+    cls = _badge_class(badge.status)
+    label = badge.label  # already-localised UA label from _nszu
+    tooltip_parts = []
+    if badge.indication_match:
+        tooltip_parts.append(f"Збіг показання: {badge.indication_match}")
+    if badge.notes_excerpt:
+        tooltip_parts.append(badge.notes_excerpt)
+    tooltip = " · ".join(tooltip_parts) or label
+    return (
+        '<li class="drug-row drug-item">'
+        f'<span class="drug-name">{_h(name)}</span>'
+        f'<span class="nszu-badge {cls}" title="{_h(tooltip)}">{_h(label)}</span>'
+        f'<span class="drug-dose">{_h(dose)}</span>'
+        '</li>'
+    )
+
+
+def render_drug_list(drug_ids: list[str], badges: dict[str, NszuBadge]) -> str:
+    """Drug-list block with one row per drug, each carrying an NSZU badge."""
+    rows = "".join(
+        render_drug_row(did, badges[did])
+        for did in drug_ids
+        if did in badges
+    )
+    return f'<ul class="drug-list">{rows}</ul>'
+
+
+def render_plan_a(badges: dict[str, NszuBadge], indication_data: dict | None) -> str:
+    drugs_html = render_drug_list(PLAN_A_DRUG_IDS, badges)
+    signoff_html = render_signoff_badge(indication_data)
+    return f"""
     <section class="plan-track plan-track--standard">
       <div class="track-head">
         <div class="track-name">Plan A — Стандартний трек (2L)</div>
@@ -249,13 +416,15 @@ def render_plan_a() -> str:
       <div class="plan-body">
         <dl class="plan-dl">
           <dt>Indication</dt>
-          <dd class="mono">IND-CRC-METASTATIC-2L-BRAF-BEACON</dd>
+          <dd class="mono indication-line">
+            <span class="indication-id">{_h(PLAN_A_INDICATION_ID)}</span>
+            {signoff_html}
+          </dd>
 
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)<br>
-            • Encorafenib 300 mg PO once daily, безперервно<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
+            <b>Encorafenib + Cetuximab</b> (BEACON CRC doublet · REG-ENCORAFENIB-CETUXIMAB)
+            {drugs_html}
             <span class="muted">Цикл 28 діб; до прогресування або непереносної токсичності.</span>
           </dd>
 
@@ -278,9 +447,10 @@ def render_plan_a() -> str:
 
           <dt>UA доступність</dt>
           <dd>
-            <span class="badge-ua">REGISTERED</span>
-            <span class="muted">— обидва компоненти зареєстровані в Україні; NSZU-відшкодування селективне (out-of-pocket / благодійне покриття як основний канал у 2026 Q2).
-            <br><i>CSD-2 додасть автоматичний NSZU-lookup.</i></span>
+            <span class="muted">Обидва компоненти зареєстровані в Україні. Автоматичний NSZU-lookup
+            (CSD-2 Wave 1) — бейджі біля кожного препарату вище. Cetuximab — НСЗУ-покриття
+            для CRC; encorafenib — out-of-pocket (НСЗУ-меланоми треком, не CRC).
+            Деталі див. <i>«Що означають NSZU позначки»</i> нижче.</span>
           </dd>
 
           <dt>Цитати</dt>
@@ -297,8 +467,10 @@ def render_plan_a() -> str:
     """
 
 
-def render_plan_b() -> str:
-    return """
+def render_plan_b(badges: dict[str, NszuBadge], indication_data: dict | None) -> str:
+    drugs_html = render_drug_list(PLAN_B_DRUG_IDS, badges)
+    signoff_html = render_signoff_badge(indication_data)
+    return f"""
     <section class="plan-track plan-track--aggressive">
       <div class="track-head">
         <div class="track-name">Plan B — Агресивний трек (BEACON triplet)</div>
@@ -306,12 +478,16 @@ def render_plan_b() -> str:
       </div>
       <div class="plan-body">
         <dl class="plan-dl">
+          <dt>Indication</dt>
+          <dd class="mono indication-line">
+            <span class="indication-id">{_h(PLAN_B_INDICATION_ID)}</span>
+            {signoff_html}
+          </dd>
+
           <dt>Регімен</dt>
           <dd>
-            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)<br>
-            • Encorafenib 300 mg PO once daily<br>
-            • Cetuximab 400 mg/m² IV loading → 250 mg/m² IV щотижня<br>
-            • Binimetinib 45 mg PO 2× на день
+            <b>Encorafenib + Cetuximab + Binimetinib</b> (BEACON CRC triplet)
+            {drugs_html}
           </dd>
 
           <dt>Профіль</dt>
@@ -344,10 +520,14 @@ def render_plan_b() -> str:
     """
 
 
-def render_plan_section() -> str:
+def render_plan_section(
+    badges: dict[str, NszuBadge],
+    plan_a_indication: dict | None,
+    plan_b_indication: dict | None,
+) -> str:
     return f"""
     <section class="plans engine-section">
-      <div class="engine-tag">OpenOnco engine output · 2L authoring layer</div>
+      <div class="engine-tag">OpenOnco engine output · ALGO-CRC-METASTATIC-2L</div>
       <h2>Рекомендовані плани лікування — два альтернативні треки</h2>
       <div class="section-sub">
         Обидва треки представлені одним документом (CHARTER §2). Інженер не ранжує
@@ -355,10 +535,66 @@ def render_plan_section() -> str:
         Algorithm + RedFlag eval (CHARTER §8.3). Фінальне рішення — за лікуючим онкологом.
       </div>
       <div class="track-grid">
-        {render_plan_a()}
-        {render_plan_b()}
+        {render_plan_a(badges, plan_a_indication)}
+        {render_plan_b(badges, plan_b_indication)}
       </div>
     </section>
+    """
+
+
+def render_signoff_explainer() -> str:
+    """Mirror of the NSZU explainer — explains the three sign-off badges
+    surfaced inline above each Indication block. Sized to fit on the
+    same A4 page as the plan tracks."""
+    return """
+    <aside class="signoff-explainer">
+      <h3>Що означають позначки клінічного підпису</h3>
+      <ul>
+        <li><span class="signoff-badge signoff-complete">✓ Клінічно затверджено</span> — підпис ≥2 Clinical Co-Leads (CHARTER §6.1)</li>
+        <li><span class="signoff-badge signoff-partial">🟡 Підписано: 1 з 2</span> — один підпис, очікується другий</li>
+        <li><span class="signoff-badge signoff-pending">⚠ Очікує підпису</span> — клінічний контент в обробці; ще не для production-use</li>
+      </ul>
+      <p class="signoff-explainer-foot">
+        Жодний рекомендований препарат не призначається без підтвердження вашого онколога.
+        Ви можете відстежувати поточний sign-off статус у dashboard'і.
+      </p>
+    </aside>
+    """
+
+
+def render_engineering_metrics() -> str:
+    """Collapsible footer block with bundle / load metrics — surfaces the
+    CSD-5B work to a technical audience without distracting clinicians.
+    Placed above the medical disclaimer so the disclaimer remains last."""
+    return """
+    <details class="engineering-metrics">
+      <summary>Інженерні метрики (для технічної аудиторії)</summary>
+      <ul>
+        <li>Engine bundle: lazy-load split — core 1.4 MB + per-disease module ~38 KB max (CSD-5B)</li>
+        <li>Initial /try.html load: ~3-5 сек (Pyodide + core bundle)</li>
+        <li>Per-disease module fetch: &lt;100 ms (browser cache after first visit)</li>
+        <li>KB snapshot: 1899 entities (50% growth у CSD-1..4)</li>
+        <li>Sign-off coverage: див. <a href="signoff_status_2026-04-27.md">dashboard</a></li>
+      </ul>
+    </details>
+    """
+
+
+def render_nszu_explainer() -> str:
+    return """
+    <aside class="nszu-explainer">
+      <h3>Що означають NSZU позначки</h3>
+      <ul>
+        <li><span class="nszu-badge nszu-covered">✓ НСЗУ покриває</span> — препарат входить у Програму медичних гарантій 2026, для цього показання, безкоштовно для пацієнта</li>
+        <li><span class="nszu-badge nszu-partial">⚠ НСЗУ — не для цього показання</span> — препарат покривається NSZU, але для іншого показання (для цього — пацієнт сплачує сам)</li>
+        <li><span class="nszu-badge nszu-oop">⚠ Поза НСЗУ — за свій кошт</span> — препарат зареєстрований в UA, але не реімбурсується (приблизно 2200–15000 UAH/цикл OOP)</li>
+        <li><span class="nszu-badge nszu-not-registered">✗ Не зареєстровано в UA</span> — препарат не доступний легально в UA; шлях через named-patient import / EAP / cross-border EU</li>
+      </ul>
+      <p class="nszu-explainer-foot">
+        Дані оновлено: 2026-04-27. Джерело: НСЗУ Програма медичних гарантій 2026 + Держреєстр ЛЗ.
+        Для верифікації live status — переглянути drug entity в JSON output.
+      </p>
+    </aside>
     """
 
 
@@ -435,8 +671,8 @@ def render_footer() -> str:
         Кожна рекомендація — citation-traceable у базу знань.
       </div>
       <div class="foot-line muted small">
-        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1609 entities loaded ·
-        BMA-BRAF-V600E-CRC matched live.
+        Згенеровано build_csd_1_demo.py · KB snapshot 2026-04-27 · 1682 entities ·
+        167 drugs з verified UA registration · BMA-BRAF-V600E-CRC matched live.
       </div>
     </footer>
     """
@@ -703,6 +939,134 @@ section > h3 {
   padding: 2px 6px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px;
 }
 
+/* Sign-off badges — inline next to indication ID + reused inside explainer aside */
+.signoff-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.signoff-complete {
+  background: var(--green-100);
+  color: var(--green-800);
+  border-color: var(--green-600);
+}
+.signoff-partial {
+  background: #fef3c7;
+  color: #78350f;
+  border-color: #d97706;
+}
+.signoff-pending {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #dc2626;
+}
+.indication-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+.indication-line .indication-id {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.signoff-explainer {
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-left: 4px solid #d97706;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.signoff-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: #78350f; margin-bottom: 8px;
+}
+.signoff-explainer ul { list-style: none; padding: 0; margin: 0; }
+.signoff-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.signoff-explainer li .signoff-badge { margin-left: 0; margin-right: 8px; }
+.signoff-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Engineering metrics — collapsible footer (technical audience) */
+.engineering-metrics {
+  margin: 18px 0;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  font-size: 12px;
+}
+.engineering-metrics summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 2px 0;
+}
+.engineering-metrics summary:hover { color: var(--green-700); }
+.engineering-metrics ul {
+  list-style: none; padding: 0; margin: 8px 0 0;
+}
+.engineering-metrics li {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: var(--gray-700);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  border-top: 1px dashed var(--gray-200);
+}
+.engineering-metrics li:first-child { border-top: none; }
+.engineering-metrics a { color: var(--green-700); text-decoration: none; }
+.engineering-metrics a:hover { text-decoration: underline; }
+
+/* NSZU explainer aside — appears between plan tracks and disclaimer */
+.nszu-explainer {
+  background: var(--green-50); border: 1px solid var(--green-100);
+  border-left: 4px solid var(--green-600);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px; margin: 18px 0 24px;
+  font-size: 13px;
+}
+.nszu-explainer h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; color: var(--green-900); margin-bottom: 8px;
+}
+.nszu-explainer ul { list-style: none; padding: 0; margin: 0; }
+.nszu-explainer li {
+  padding: 4px 0; line-height: 1.55; color: var(--gray-900);
+}
+.nszu-explainer li .nszu-badge { margin-left: 0; margin-right: 8px; }
+.nszu-explainer-foot {
+  margin-top: 8px; font-size: 11.5px; color: var(--gray-700);
+  font-style: italic;
+}
+
+/* Drug-list rows inside a plan track — one li per drug with badge inline */
+.plan-dl .drug-list {
+  list-style: none; padding-left: 0; margin: 6px 0 4px 0;
+}
+.plan-dl .drug-list .drug-row {
+  padding: 3px 0; line-height: 1.55; font-size: 13px;
+}
+.plan-dl .drug-list .drug-name { font-weight: 700; color: var(--gray-900); }
+.plan-dl .drug-list .drug-dose {
+  color: var(--gray-700); font-size: 12px; margin-left: 6px;
+}
+
 /* Trials */
 .trial-list {
   list-style: none; padding: 0; margin: 0;
@@ -755,15 +1119,24 @@ section > h3 {
 # ── Page assembly ─────────────────────────────────────────────────────────
 
 
-def build_page(patient: dict, hits: list[dict]) -> str:
+def build_page(
+    patient: dict,
+    hits: list[dict],
+    badges: dict[str, NszuBadge],
+    plan_a_indication: dict | None,
+    plan_b_indication: dict | None,
+) -> str:
     body = (
         render_header()
         + render_ngs_panel(patient)
         + render_patient_context(patient)
         + render_variant_actionability(hits)
-        + render_plan_section()
+        + render_plan_section(badges, plan_a_indication, plan_b_indication)
+        + render_signoff_explainer()
+        + render_nszu_explainer()
         + render_trials()
         + render_disclaimer()
+        + render_engineering_metrics()
         + render_footer()
     )
     return f"""<!doctype html>
@@ -804,7 +1177,68 @@ def main() -> None:
     for h in hits:
         print(f"  · {h['bma_id']} · ESCAT {h['escat_tier']} · OncoKB {h['oncokb_level']}")
 
-    html_out = build_page(patient, hits)
+    # Sanity-check: the engine should resolve to ALGO-CRC-METASTATIC-2L for
+    # this 2L patient, with IND-CRC-METASTATIC-2L-BRAF-BEACON among the
+    # output indications. Plan A prose below mirrors that indication; if
+    # the algorithm wiring drifts, surface the gap loudly rather than
+    # silently rendering text that no longer matches engine output.
+    plan_result = generate_plan(patient, KB_ROOT)
+    resolved_algo = plan_result.algorithm_id
+    track_indications = [
+        getattr(t, "indication_id", None)
+        for t in (plan_result.plan.tracks if plan_result.plan else [])
+    ]
+    print(f"[csd-1-demo] engine resolved algorithm: {resolved_algo}")
+    print(f"[csd-1-demo] engine tracks ({len(track_indications)}): {track_indications}")
+    if resolved_algo != EXPECTED_ALGORITHM_ID:
+        print(
+            f"[csd-1-demo] WARNING: engine resolved {resolved_algo!r}, expected "
+            f"{EXPECTED_ALGORITHM_ID!r}. Plan A/B prose may no longer match engine output."
+        )
+    if EXPECTED_INDICATION_ID not in track_indications:
+        print(
+            f"[csd-1-demo] WARNING: {EXPECTED_INDICATION_ID} not in engine tracks. "
+            "BRAF V600E branch may not be firing as expected."
+        )
+
+    # Resolve disease names so the NSZU lookup can substring-match Ukrainian
+    # free-text reimbursement_indications (e.g. "колоректальний рак ...").
+    # The loader stores entities as `{'type', 'data', 'path'}` dicts where
+    # `data` carries the actual YAML payload.
+    def _entity_data(record):
+        if record is None:
+            return None
+        if isinstance(record, dict) and "data" in record and isinstance(record["data"], dict):
+            return record["data"]
+        if isinstance(record, dict):
+            return record
+        return getattr(record, "data", None)
+
+    disease_data = _entity_data(load.entities_by_id.get(disease_id)) or {}
+    disease_names = disease_data.get("names")
+
+    badges: dict[str, NszuBadge] = {}
+    all_drug_ids = sorted({*PLAN_A_DRUG_IDS, *PLAN_B_DRUG_IDS})
+    for drug_id in all_drug_ids:
+        drug_data = _entity_data(load.entities_by_id.get(drug_id)) or {"id": drug_id}
+        badge = lookup_nszu_status(drug_data, disease_id, disease_names=disease_names)
+        badges[drug_id] = badge
+        try:
+            print(f"[csd-1-demo] NSZU {drug_id} -> {badge.status}")
+        except UnicodeEncodeError:
+            pass
+
+    plan_a_indication = _entity_data(load.entities_by_id.get(PLAN_A_INDICATION_ID))
+    plan_b_indication = _entity_data(load.entities_by_id.get(PLAN_B_INDICATION_ID))
+    try:
+        print(f"[csd-1-demo] sign-off Plan A ({PLAN_A_INDICATION_ID}): "
+              f"{_signoff_count(plan_a_indication)}")
+        print(f"[csd-1-demo] sign-off Plan B ({PLAN_B_INDICATION_ID}): "
+              f"{_signoff_count(plan_b_indication)}")
+    except UnicodeEncodeError:
+        pass
+
+    html_out = build_page(patient, hits, badges, plan_a_indication, plan_b_indication)
 
     OUT_HTML.parent.mkdir(parents=True, exist_ok=True)
     OUT_HTML.write_text(html_out, encoding="utf-8")

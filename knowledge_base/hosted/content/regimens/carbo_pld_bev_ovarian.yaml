@@ -1,0 +1,59 @@
+id: REG-CARBO-PLD-BEV-OVARIAN
+name: "Carboplatin + PLD + Bevacizumab (platinum-sensitive recurrent ovarian)"
+name_ua: "Карбоплатин + PLD (Доксіл) + Бевацизумаб (платиночутливий рецидив раку яєчників)"
+alternate_names: ["Carbo-PLD-Bev"]
+
+components:
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5"
+    schedule: "IV day 1 every 28 days"
+    route: IV
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "30 mg/m²"
+    schedule: "IV day 1 every 28 days"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "10 mg/kg"
+    schedule: "IV every 14 days during induction; continue 15 mg/kg q21d as maintenance until progression"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "6 induction cycles, then bevacizumab maintenance until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+premedication: ["Slow first PLD infusion (≤1 mg/min then escalate) + topical/oral steroids for PPE prophylaxis", "5-HT3 antagonist day 1", "Antihistamine + ranitidine for first PLD infusion"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2-3 PPE / hand-foot syndrome"
+    modification: "Hold PLD until ≤Grade 1 then reduce to 25 mg/m²; continue carbo + bev"
+    source_refs: [SRC-NCCN-OVARIAN-2025]
+  - condition: "Grade 3 stomatitis"
+    modification: "Hold PLD, supportive care, reduce next cycle"
+  - condition: "Grade 3-4 thrombocytopenia"
+    modification: "Reduce carboplatin AUC to 4 next cycle"
+  - condition: "Bev-related Grade 3 hypertension"
+    modification: "Initiate ACE-i / CCB; hold bev until BP <160/100"
+  - condition: "Major surgery planned"
+    modification: "Hold bev ≥28 days pre-op; resume ≥28 days post-op with full wound healing"
+  - condition: "Cumulative anthracycline exposure approaching 550 mg/m² total"
+    modification: "Discontinue PLD; continue carbo ± bev as monotherapy track"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Carboplatin + bevacizumab НСЗУ-фінансовані для рецидивного раку яєчників (часткове покриття); PLD здебільшого OOP. Альтернатива з більшим UA-доступом — REG-CARBO-GEM-BEV-OVARIAN (карбо + гемцитабін + бев)."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-GOG0213-COLEMAN-2017]
+last_reviewed: "2026-04-27"
+
+notes: >
+  Carbo+PLD+bev is the platinum-sensitive recurrence backbone preferred
+  in patients with residual peripheral neuropathy from prior taxane
+  exposure (PLD substitutes for paclitaxel). Direct carbo+PLD+bev RCT
+  evidence is extrapolated from GOG-0213 (carbo+pacli+bev) plus the
+  separate carbo+PLD vs carbo+pacli equivalence (CALYPSO, Pujade-Lauraine
+  JCO 2010 — comparable PFS, distinct toxicity profile favoring PLD for
+  neuropathy). Lower bev dose (10 mg/kg q14d) per OCEANS-style schedule;
+  alternative 15 mg/kg q21d acceptable.

@@ -140,15 +140,18 @@ class VariantActionabilityHit(Base):
 
     Render-time only — the engine never selects on these tier values
     (CHARTER §8.3 forbids LLM-or-tier-driven treatment ranking; tracks
-    come from the declarative Algorithm). The ESCAT/OncoKB tier table
-    sits next to the chosen track to inform HCP review.
+    come from the declarative Algorithm). The ESCAT tier table sits next
+    to the chosen track to inform HCP review.
+
+    Phase 1 of the CIViC pivot (2026-04-27): `oncokb_level` was dropped
+    in favour of `evidence_sources`. ESCAT remains the primary tier.
     """
 
     bma_id: str                       # FK → BiomarkerActionability.id
     biomarker_id: str                 # FK → BIO-* (denormalized for render)
     variant_qualifier: Optional[str] = None  # null = gene-level cell
     escat_tier: str                   # "IA"|"IB"|"IIA"|"IIB"|"IIIA"|"IIIB"|"IV"|"X"
-    oncokb_level: str                 # "1"|"2"|"3A"|"3B"|"4"|"R1"|"R2"
+    evidence_sources: list[dict] = Field(default_factory=list)
     evidence_summary: str
     recommended_combinations: list[str] = Field(default_factory=list)
     primary_sources: list[str] = Field(default_factory=list)  # SRC-* IDs
@@ -188,7 +191,7 @@ class Plan(Base):
     # Engine never reads back from this field (plan §0 invariant).
     access_matrix: Optional["AccessMatrix"] = None
 
-    # Variant actionability (ESCAT / OncoKB) — render-time list of
+    # Variant actionability (ESCAT) — render-time list of
     # BiomarkerActionability cells matched against the patient's
     # biomarker profile. Empty list when no variants matched. Engine
     # never reads back (CHARTER §8.3 — tracks come from Algorithm,

@@ -1,0 +1,56 @@
+id: RF-BREAST-AKT1-E17K-ACTIONABLE
+definition: >
+  AKT1 E17K activating mutation in HR+/HER2- metastatic breast cancer —
+  ~3-6% prevalence. Capivasertib + fulvestrant (CAPItello-291) is
+  FDA-approved for HR+/HER2- advanced breast harboring PIK3CA / AKT1 /
+  PTEN alteration after progression on endocrine ± CDK4/6i.
+definition_ua: >
+  Активуюча мутація AKT1 E17K при HR+/HER2- метастатичному раку
+  молочної залози — ~3-6% поширеність. Капівасертиб + фулвестрант
+  (CAPItello-291) FDA-схвалено для HR+/HER2- поширеного раку з
+  PIK3CA / AKT1 / PTEN-альтераціями після прогресування на
+  ендокринотерапії ± CDK4/6i.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "akt1_e17k"
+      value: true
+    - finding: "akt1_mutation"
+      value: "E17K"
+    - finding: "akt1_status"
+      value: "E17K-positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-CAPITELLO291-TURNER-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  AKT1 E17K is the dominant (>90%) AKT1 hotspot. Tested via tissue
+  NGS or ctDNA. Capivasertib hyperglycemia rate lower than alpelisib.
+  Toxicity: diarrhea (70%), rash (35%), hyperglycemia (~16%).
+  Concurrent PIK3CA / AKT1 / PTEN testing recommended at first
+  progression on AI ± CDK4/6i — any single alteration triggers
+  pathway-targeted therapy.
+notes_ua: >
+  AKT1 E17K — домінуючий (>90%) AKT1 hotspot. Тест: NGS на тканині
+  або цоДНК. Капівасертиб має нижчий рівень гіперглікемії порівняно
+  з алпелісибом. Токсичність: діарея (70%), висип (35%), гіперглікемія
+  (~16%). Рекомендоване одночасне тестування PIK3CA / AKT1 / PTEN при
+  першому прогресуванні на AI ± CDK4/6i — будь-яка альтерація триггер
+  таргетної терапії шляху.

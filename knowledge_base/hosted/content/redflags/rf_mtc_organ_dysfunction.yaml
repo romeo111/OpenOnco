@@ -1,0 +1,71 @@
+id: RF-MTC-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard vandetanib / cabozantinib
+  multikinase inhibitor or selpercatinib / pralsetinib RET-selective
+  inhibitor in advanced MTC: QTc >480 ms (vandetanib + cabozantinib QT
+  prolongation, FDA boxed warning for vandetanib), LVEF <50% (vandetanib /
+  cabozantinib hypertension + cardiac dysfunction), CrCl <30 mL/min (TKI
+  dose adjustment), bilirubin >3× ULN (TKI hepatic clearance), or
+  uncontrolled hypertension.
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартному vandetanib /
+  cabozantinib мультикіназному інгібітору або selpercatinib /
+  pralsetinib RET-селективному інгібітору при поширеній MTC: QTc >480 мс
+  (подовження QT vandetanib + cabozantinib, FDA boxed warning для
+  vandetanib), LVEF <50% (гіпертензія + кардіодисфункція), CrCl <30
+  (корекція доз TKI), білірубін >3× ULN (печінковий кліренс TKI),
+  неконтрольована гіпертензія.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "uncontrolled_hypertension"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-MTC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Vandetanib carries FDA boxed warning for QT prolongation, sudden death,
+  and torsades — baseline ECG mandatory; contraindicated if QTc >450 ms
+  or bradycardia. Cabozantinib similar QT signal + GI perforation /
+  fistula risk. Selective RET inhibitors (selpercatinib, pralsetinib)
+  better tolerated but still carry hypertension, transaminitis, QT
+  prolongation — selpercatinib LIBRETTO-531 vs vandetanib showed
+  superior PFS + better safety profile, now preferred 1L. Selpercatinib
+  hepatic dose reductions per FDA label. Uncontrolled hypertension is
+  gating — optimize before TKI initiation.
+notes_ua: >
+  Vandetanib — FDA boxed warning щодо подовження QT, раптової смерті та
+  torsades — базова ЕКГ обовʼязкова; протипоказаний при QTc >450 мс або
+  брадикардії. Cabozantinib — ризик перфорації ШКТ + фістул. Selpercatinib
+  / pralsetinib краще переносяться, але також QT, гіпертензія,
+  трансаміназемія — selpercatinib LIBRETTO-531 — переважний 1L.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

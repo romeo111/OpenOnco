@@ -1,0 +1,43 @@
+id: RF-IPI-INTERMEDIATE
+definition: "DLBCL with International Prognostic Index 2-3 (intermediate risk) — opens MDT discussion of R-CHOP vs Pola-R-CHP per POLARIX subgroup signal; shared-decision territory"
+definition_ua: "DLBCL з IPI 2-3 (проміжний ризик) — відкриває дискусію MDT R-CHOP vs Pola-R-CHP за сигналом підгрупи POLARIX; зона спільного прийняття рішень"
+
+trigger:
+  type: composite_score
+  any_of:
+    - all_of:
+        - finding: "ipi_score"
+          threshold: 2
+          comparator: ">="
+        - finding: "ipi_score"
+          threshold: 3
+          comparator: "<="
+    - finding: "ipi_risk_group"
+      value: "intermediate"
+    - finding: "ipi_risk_group"
+      value: "intermediate_low"
+    - finding: "ipi_risk_group"
+      value: "intermediate_high"
+
+clinical_direction: investigate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  IPI 2-3 cohort accounts for ~40% of newly-diagnosed DLBCL; POLARIX
+  HR for PFS favored Pola-R-CHP in IPI ≥2 overall (HR 0.73) but the
+  benefit was concentrated in IPI 3-5 / non-GCB / age >60 subgroups.
+  ESMO 2024 frames IPI 2-3 as MDT discussion: R-CHOP-21 × 6 remains
+  acceptable when access to polatuzumab is constrained (Ukraine: not
+  НСЗУ-reimbursed). Direction `investigate` because flag surfaces the
+  decision for the MDT brief but does not auto-shift indication —
+  RF-DLBCL-HIGH-IPI (≥2 also fires) takes precedence in the engine.

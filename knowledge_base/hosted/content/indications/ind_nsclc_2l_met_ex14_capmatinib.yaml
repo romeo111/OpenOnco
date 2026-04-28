@@ -1,0 +1,96 @@
+id: IND-NSCLC-2L-MET-EX14-CAPMATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: MET_EX14_SKIPPING
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic MET exon 14 skipping mutation NSCLC"
+    - "Disease progression on 1L therapy (could be platinum chemo, ICI, or capmatinib/tepotinib if 1L MET-TKI given)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MET
+      value_constraint: "MET exon 14 skipping mutation confirmed by NGS (RNA-NGS preferred — captures splice-site variants outside hotspots)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CAPMATINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~41% pretreated; ~68% TKI-naïve (GEOMETRY mono-1)"
+  progression_free_survival: "Median PFS 5.4 mo pretreated; 12.4 mo TKI-naïve"
+  overall_survival_5y: "Mature OS evolving"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # critical — RNA-NGS for MET ex14 (hotspot PCR insufficient)
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Capmatinib (selective MET TKI) for MET exon 14 skipping mutation
+  metastatic NSCLC (~3-4% of NSCLC adenocarcinoma; enriched in older,
+  sarcomatoid histology). GEOMETRY mono-1: pretreated ORR 41%, mPFS
+  5.4 mo; TKI-naïve ORR 68%, mPFS 12.4 mo. FDA approval 2020 for MET
+  ex14 NSCLC any line. CNS activity demonstrated. Tepotinib (VISION)
+  is alternative (once-daily oral; comparable efficacy). Detection
+  requires NGS that captures splice-site variants — DNA-only hotspot
+  panels miss many MET ex14 events; RNA-NGS preferred. Peripheral
+  edema dominant AE (~70%); diuretics + leg elevation usually
+  manageable.
+
+sources:
+  - source_id: SRC-GEOMETRY-WOLF-2020
+    position: supports
+    relevant_quote_paraphrase: "Capmatinib 400 mg PO BID in MET ex14 NSCLC: pretreated ORR 41%, mPFS 5.4 mo; TKI-naïve ORR 68%, mPFS 12.4 mo"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Capmatinib is recommended for MET ex14 skipping NSCLC any line; Cat 1 (GEOMETRY mono-1)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Capmatinib and tepotinib are interchangeable preferred options for MET ex14 NSCLC; choice driven by tolerability + dosing schedule"
+
+known_controversies:
+  - topic: "Capmatinib BID vs tepotinib once-daily for MET ex14 NSCLC"
+    positions:
+      - position: "Capmatinib: BID; less peripheral edema in some series; CNS activity"
+        sources: [SRC-GEOMETRY-WOLF-2020]
+      - position: "Tepotinib: once-daily (convenience); peripheral edema ~70%"
+        sources: [SRC-VISION-PAIK-2020]
+    our_default: "Either acceptable; tepotinib for once-daily preference; capmatinib if BID acceptable; choice often driven by EAP availability in UA"
+    rationale: "Comparable efficacy; tolerability nuances drive choice"
+
+do_not_do:
+  - "НЕ підтверджувати MET ex14 на базі DNA-only hotspot panel — RNA-NGS обов'язковий для catching splice-site variants."
+  - "НЕ ігнорувати baseline + serial LFTs — hepatotoxicity Grade ≥3 потребує hold."
+  - "НЕ ігнорувати peripheral edema — proactive diuretics + compression; reduce dose if persistent G≥2."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers — exposure shifts."
+  - "НЕ підтверджувати план без funding pathway — capmatinib не зареєстрований в Україні."
+  - "НЕ використовувати при baseline pneumonitis або severe lung disease — ILD ризик додатковий."
+  - "НЕ припиняти за isolated mild edema — manageable з conservative measures."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for MET ex14
+  NSCLC any line (1L or 2L+). Tepotinib (separate Indication) is once-
+  daily alternative.

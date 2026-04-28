@@ -1,0 +1,57 @@
+id: RF-FITNESS-ECOG-FIT
+definition: >
+  Fit performance status (ECOG 0-1): patient is fully active or restricted
+  in physically strenuous activity but ambulatory and able to carry out
+  light work. Eligible for full-dose chemotherapy and intensive regimens
+  (CHOEP, BEACOPP-escalated, HD-MTX, ASCT consolidation, CAR-T).
+definition_ua: >
+  Збережений функціональний стан (ECOG 0-1): пацієнт повністю активний
+  або обмежений у фізично напружених активностях, але амбулаторний і
+  здатен виконувати легку роботу. Кандидат на повнодозову хіміотерапію
+  та інтенсивні режими (CHOEP, BEACOPP-escalated, HD-MTX, ASCT
+  консолідація, CAR-T).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ecog"
+      threshold: 1
+      comparator: "<="
+
+clinical_direction: intensify
+
+severity: minor
+priority: 100
+category: fitness-eligibility
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []  # pan-disease — referenced from many algorithms as
+                      # gate for intensification branches; engine surfaces
+                      # as plan annotation rather than indication switch.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pan-disease eligibility gate. ECOG 0-1 is the canonical entry criterion
+  for intensified regimens across DLBCL (CHOEP-21 in age ≤60 with elevated
+  LDH per German High-Grade NHL Study Group), Hodgkin (BEACOPP-escalated),
+  Burkitt (CODOX-M/IVAC, DA-EPOCH-R), CAR-T eligibility. Used in
+  conjunction with organ-function gates. Conflict-resolution: when
+  ECOG-FIT fires alongside RF-ORGAN-* de-escalation, organ-dysfunction
+  wins (de-escalation has higher severity). Replaces free-text
+  "ecog 0-1" all_of clauses across algorithms.
+notes_ua: >
+  Pan-disease eligibility gate. ECOG 0-1 — канонічний вхідний критерій для
+  інтенсифікованих режимів у DLBCL (CHOEP-21 при віці ≤60 з підвищеним
+  LDH за German High-Grade NHL Study Group), Hodgkin (BEACOPP-escalated),
+  Burkitt (CODOX-M/IVAC, DA-EPOCH-R), CAR-T. Використовується разом з
+  оцінкою функції органів. Conflict-resolution: коли ECOG-FIT тригерить
+  одночасно з RF-ORGAN-* (де-ескалація), перемагає організм-дисфункція.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

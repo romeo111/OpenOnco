@@ -1,0 +1,39 @@
+id: RF-HASFORD-HIGH
+definition: "CML chronic phase with Hasford (EURO) high risk — supports 2nd-generation TKI 1L (dasatinib / nilotinib / bosutinib) over imatinib; comparable rationale to Sokal-high"
+definition_ua: "ХМЛ хронічної фази з високим ризиком за Hasford (EURO) — підтримує 2-е покоління ТКІ 1-ї лінії (дазатиніб / нілотиніб / босутиніб) над іматинібом; рекомендація аналогічна високому Sokal"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cml_hasford_risk"
+      value: "high"
+    - finding: "cml_euro_risk"
+      value: "high"
+    - finding: "cml_hasford_score"
+      threshold: 1480
+      comparator: ">"
+
+clinical_direction: intensify
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-CML
+shifts_algorithm:
+  - ALGO-CML-1L
+
+sources:
+  - SRC-NCCN-MPN-2025
+  - SRC-ELN-CML-2020
+  - SRC-ESMO-CML-2017
+
+last_reviewed: "2026-04-27"
+notes: >
+  Hasford / EURO score (Hasford 1998) refined Sokal by adding eosinophils
+  and basophils; high-risk = >1480. Hasford-high and Sokal-high overlap
+  substantially but identify slightly different subsets. ELN 2020
+  recognizes both alongside the newer ELTS but prefers ELTS for
+  treatment-free remission planning. Direction `intensify` to 2nd-gen
+  TKI 1L; co-fires with RF-SOKAL-HIGH and the existing
+  RF-CML-HIGH-RISK-ELTS. The CML-1L algorithm picks the 2nd-gen track
+  as long as comorbidity flags don't de-escalate.

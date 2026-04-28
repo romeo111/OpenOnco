@@ -1,0 +1,85 @@
+id: IND-BREAST-HER2-POS-MAINT-TRAST
+plan_track: standard
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 1
+  stage_requirements:
+  - "HER2-positive metastatic breast cancer"
+  - "Achieved CR/PR/SD after ≥6 cycles of THP (taxane + trastuzumab + pertuzumab) induction"
+  - "Discontinue taxane after 6-8 cycles per CLEOPATRA paradigm; continue HP backbone until progression"
+  biomarker_requirements_required:
+  - biomarker_id: BIO-HER2-SOLID
+    required: true
+    value_constraint: "HER2-positive (IHC 3+ OR IHC 2+ FISH-amplified)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~80% during induction phase (CLEOPATRA)
+  complete_response: ~5%
+  progression_free_survival: Median PFS 18.7 mo (CLEOPATRA Swain 2015 NEJM final)
+  overall_survival_5y: 8-yr OS landmark ~37% (CLEOPATRA Swain 2020 ESMO update; mOS 57.1 mo)
+hard_contraindications:
+- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative:
+- RF-BREAST-TRANSFORMATION-PROGRESSION
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-CT-CHEST-ABDOMEN-PELVIS
+- TEST-ECHO
+- TEST-HER2-IHC-FISH
+- TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+rationale: 'After 6-8 cycles of THP (docetaxel/paclitaxel + trastuzumab + pertuzumab) 1L induction with CLEOPATRA-defined
+  benefit (mPFS 18.7 mo, mOS 57.1 mo), taxane is discontinued for cumulative neuropathy/alopecia and patient
+  is maintained on dual HER2 blockade (trastuzumab + pertuzumab) ± endocrine therapy if HR+ until progression.
+  HP backbone continuation is foundational; adding endocrine therapy in HR+ patients (PERTAIN, SYSUCC-002)
+  improves PFS modestly. Brain MRI surveillance recommended given CNS-prominent relapse pattern in HER2+
+  disease. Cardiac surveillance (LVEF q3mo) mandatory throughout. STUB regimen — no dedicated REG- entity
+  for HP-only maintenance yet; flagged for REG follow-up.'
+sources:
+- source_id: SRC-NCCN-BREAST-2025
+  position: supports
+  relevant_quote_paraphrase: After 6-8 cycles of THP induction in HER2+ mBC, taxane discontinuation + maintenance
+    HP ± endocrine therapy is preferred until progression
+- source_id: SRC-ESMO-BREAST-METASTATIC-2024
+  position: supports
+  relevant_quote_paraphrase: CLEOPATRA-style HP maintenance after taxane discontinuation is standard 1L practice;
+    median exposure to HP in CLEOPATRA was ~22 mo
+known_controversies:
+- topic: HP maintenance + endocrine therapy vs HP alone for HR+/HER2+ mBC
+  positions:
+  - position: HP + AI maintenance — PERTAIN/SYSUCC-002 mPFS gain ~3-4 mo
+    sources:
+    - SRC-NCCN-BREAST-2025
+    evidence_note: "PERTAIN: mPFS 18.9 vs 15.8 mo HP+AI vs HP alone"
+  - position: HP alone — simpler, fewer endocrine AEs (joint pain, vasomotor)
+    sources:
+    - SRC-ESMO-BREAST-METASTATIC-2024
+  our_default: HP + AI for HR+/HER2+ patients with adequate bone health and tolerability; HP alone for HR-
+    or AI-intolerant
+  rationale: PFS gain modest; default to combination in HR+ unless tolerability concerns
+do_not_do:
+- НЕ продовжувати таксан понад 6-8 циклів — cumulative neuropathy + alopecia + neutropenia виходять з-під
+  контролю.
+- НЕ припиняти HP при першій progression без brain MRI — CNS relapse особливо часта при HER2+; T-DXd має
+  CNS активність.
+- НЕ робити LVEF <50% — hold trastuzumab + pertuzumab; рестарт лише після LVEF ≥50% + cardio-oncology консультація.
+- НЕ комбінувати з anthracyclines — фатальна кардіотоксичність; розділення мінімум 4 тижні + cardio-protection.
+- НЕ ігнорувати infusion reactions — premedications + slower rate; premedicate з diphenhydramine + acetaminophen.
+- НЕ скасовувати при isolated tumor marker rise — repeat imaging для real progression confirmation.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. line_of_therapy: 1 because HP maintenance is continuation
+  of 1L THP pathway. Missing entity flag: dedicated REG-HP-MAINTENANCE (trastuzumab + pertuzumab + optional
+  AI maintenance) — author in PROD-2.'

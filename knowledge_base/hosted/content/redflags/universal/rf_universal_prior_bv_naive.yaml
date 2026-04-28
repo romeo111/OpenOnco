@@ -1,0 +1,78 @@
+id: RF-PRIOR-BV-NAIVE
+definition: >
+  Patient has NOT previously received brentuximab vedotin (BV) — eligible
+  for BV-containing first-line and salvage regimens in CD30-expressing
+  diseases: A+AVD in advanced cHL (ECHELON-1, Connors NEJM 2018), BV-CHP
+  in CD30+ PTCL/ALCL (ECHELON-2, Horwitz Lancet 2019), BV monotherapy or
+  BV-containing salvage in R/R cHL (AETHERA post-ASCT consolidation).
+  This eligibility flag is used as an inclusion gate for BV-using
+  algorithm branches; firing means standard BV-route is open. Co-fires
+  with disease-specific CD30-positivity flags.
+definition_ua: >
+  Пацієнт НЕ отримував раніше брентуксимаб ведотин (BV) — придатний до
+  BV-вмісних 1L та сальвадж режимів у CD30-експресуючих захворюваннях:
+  A+AVD у поширеній cHL (ECHELON-1, Connors NEJM 2018), BV-CHP у CD30+
+  PTCL/ALCL (ECHELON-2, Horwitz Lancet 2019), BV монотерапія або
+  BV-вмісний сальвадж у р/р cHL (AETHERA post-ASCT консолідація).
+  Цей прапор придатності використовується як inclusion-gate для
+  BV-вмісних гілок алгоритму; спрацювання — стандартний BV-маршрут
+  відкритий. Ко-спрацьовує з захворювання-специфічними CD30+ прапорами.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_brentuximab_received"
+      value: false
+    - finding: "prior_bv_received"
+      value: false
+    - finding: "brentuximab_naive"
+      value: true
+    - finding: "prior_therapy_classes"
+      value: "no_bv"
+
+clinical_direction: intensify
+
+severity: major
+priority: 80
+category: other
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-ECHELON-1-CONNORS-2018
+  - SRC-ECHELON-2-HORWITZ-2019
+  - SRC-AETHERA-MOSKOWITZ-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Inclusion-gate flag (eligibility), not a routing flag — direction
+  "intensify" reflects "BV-route is the preferred first-line where
+  applicable; absence of prior BV does NOT alone trigger BV-using regimen,
+  but it removes the contraindication that prior BV refractoriness or
+  high cumulative neuropathy would impose". Combine with
+  RF-CHL-ADVANCED-STAGE (cHL stage III-IV → A+AVD over ABVD) or
+  RF-TCELL-CD30-POSITIVE (PTCL/ALCL CD30+ → BV-CHP). Cumulative
+  neuropathy is the dose-limiting toxicity (peripheral neuropathy
+  ~67% all-grade in ECHELON-1; grade 3-4 ~10%); pre-existing
+  neuropathy ≥grade 2 is a contraindication regardless of BV-naive
+  status. Maintenance BV post-ASCT in high-risk cHL (AETHERA) requires
+  the patient to be both BV-naive AND have ≥1 risk factor (primary
+  refractory, relapse <12 mo, or extranodal disease at relapse).
+notes_ua: >
+  Inclusion-gate прапор (придатність), а не routing — напрямок
+  "intensify" відображає "BV-маршрут — preferred 1L там, де
+  застосовний; відсутність попереднього BV сама по собі НЕ тригерить
+  BV-режим, але знімає протипоказання, які попередня BV-рефрактерність
+  або висока кумулятивна нейропатія би наклали". Комбінувати з
+  RF-CHL-ADVANCED-STAGE (cHL стадія III-IV → A+AVD над ABVD) або
+  RF-TCELL-CD30-POSITIVE (PTCL/ALCL CD30+ → BV-CHP). Кумулятивна
+  нейропатія — dose-limiting токсичність (peripheral neuropathy ~67%
+  all-grade у ECHELON-1; grade 3-4 ~10%); попередньо існуюча нейропатія
+  ≥grade 2 — протипоказання незалежно від BV-naive статусу. Підтримка
+  BV post-ASCT у high-risk cHL (AETHERA) потребує BV-naive ТА ≥1 факт
+  ризику (primary refractory, рецидив <12 міс, або екстранодальна
+  хвороба при рецидиві).

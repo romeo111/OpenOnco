@@ -1,0 +1,52 @@
+id: REG-WEEKLY-PAC-BEV-OVARIAN
+name: "Weekly Paclitaxel + Bevacizumab (platinum-resistant recurrent ovarian, AURELIA)"
+name_ua: "Тижневий паклітаксел + Бевацизумаб (платинорезистентний рецидив раку яєчників, AURELIA)"
+alternate_names: ["AURELIA weekly-paclitaxel arm"]
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "80 mg/m²"
+    schedule: "IV days 1, 8, 15, 22 of 28-day cycle"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "10 mg/kg"
+    schedule: "IV every 14 days (or 15 mg/kg every 21 days)"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+premedication:
+  - "Paclitaxel: dexamethasone 20 mg PO 12 + 6 h pre-dose, OR dex 10 mg IV 30 min pre, + diphenhydramine 50 mg IV + ranitidine 50 mg IV"
+  - "5-HT3 antagonist day 1"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2-3 peripheral neuropathy"
+    modification: "Hold paclitaxel until ≤Grade 1, then reduce to 60 mg/m² weekly"
+    source_refs: [SRC-AURELIA-PUJADE-LAURAINE-2014]
+  - condition: "Grade 3-4 neutropenia"
+    modification: "Hold paclitaxel; resume at 60 mg/m²; G-CSF prophylaxis next cycle"
+  - condition: "Bev Grade 3 hypertension"
+    modification: "Initiate / intensify antihypertensives; hold bev until BP <160/100"
+  - condition: "Bev Grade 3 proteinuria (>3.5 g/24 h)"
+    modification: "Hold bev until <2 g; permanently discontinue if nephrotic syndrome"
+  - condition: "Major surgery planned"
+    modification: "Hold bev ≥28 days pre-op; resume ≥28 days post-op with full wound healing"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Обидва компоненти НСЗУ-фінансовані. Найдоступніший платинорезистентний 2L регламент в Україні."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-AURELIA-PUJADE-LAURAINE-2014]
+last_reviewed: "2026-04-27"
+
+notes: >
+  AURELIA weekly-paclitaxel arm: mPFS 10.4 vs 3.9 mo (HR 0.46);
+  ORR 53.3% vs 30.2%. OS subgroup analysis: 22.4 vs 13.2 mo
+  (HR 0.65) — only AURELIA chemo arm with statistically significant
+  OS benefit. Preferred AURELIA backbone when no contraindication to
+  paclitaxel re-exposure (no significant residual neuropathy).

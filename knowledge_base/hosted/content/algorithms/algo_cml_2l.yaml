@@ -46,12 +46,14 @@ decision_tree:
 
   # Step 3 — ≥2 TKI failure with CV-comorbid profile (or established
   # vascular events) → asciminib (STAMP allosteric; non-CV AE profile,
-  # ASCEMBL OS/MMR data).
+  # ASCEMBL OS/MMR data). RF-CML-COMORBIDITY-COMPLEX captures the
+  # CV/QTc/pulmonary comorbidity matrix that constrains 2GTKI choice.
   - step: 3
     evaluate:
       any_of:
         - red_flag: RF-CML-ORGAN-DYSFUNCTION
         - red_flag: RF-CML-FRAILTY-AGE
+        - red_flag: RF-CML-COMORBIDITY-COMPLEX
     if_true:
       result: IND-CML-3L-ASCIMINIB
     if_false:
@@ -68,6 +70,7 @@ decision_tree:
       result: IND-CML-3L-ASCIMINIB
     if_false:
       result: IND-CML-3L-ASCIMINIB
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
   - SRC-NCCN-MPN-2025

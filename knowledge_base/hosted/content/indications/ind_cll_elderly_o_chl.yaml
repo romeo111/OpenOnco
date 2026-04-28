@@ -1,0 +1,80 @@
+id: IND-CLL-ELDERLY-O-CHL
+plan_track: standard
+applicable_to:
+  disease_id: DIS-CLL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Newly-diagnosed symptomatic chronic lymphocytic leukemia / SLL in elderly (≥75 years) AND/OR with significant comorbidity (CIRS >6)"
+    - "Indication for treatment per iwCLL criteria (B-symptoms, cytopenia, bulky disease, lymphocyte doubling)"
+    - "Goal: well-tolerated time-limited therapy in patients unsuitable for BTKi continuous OR venetoclax-obinutuzumab"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-TP53-MUTATION
+      required: false
+      value_constraint: "TP53 mutation / del(17p) — these patients should NOT receive chemoimmunotherapy; preferred BTKi or venetoclax-based"
+  demographic_constraints:
+    age_min: 65
+    ecog_max: 3
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~78% (CLL11 Goede 2014 NEJM)
+  complete_response: ~21%
+  progression_free_survival: Median PFS 26.7 mo (CLL11 obinutuzumab + chlorambucil; 6-yr update Goede 2018)
+  overall_survival_5y: 5-yr OS ~74% (CLL11)
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-FISH-PANEL
+  - TEST-CD20-IHC
+desired_tests: []
+rationale: 'Obinutuzumab + chlorambucil (O-Chl) is the historical chemoimmunotherapy gold standard for elderly / comorbid CLL patients per CLL11 trial (Goede 2014 NEJM): O-Chl vs Rituximab + Chlorambucil (R-Chl) showed mPFS 26.7 vs 16.3 mo (HR 0.40), CR 21% vs 7%, MRD-negativity 38% vs 4%, with comparable safety. 6-year update (Goede 2018 ASH) confirmed sustained OS benefit. iwCLL criteria define treatment indication; iwCLL-2018 response criteria define endpoints. Modern paradigm has shifted: most NCCN/ESMO Cat 1 1L for CLL are now BTKi continuous (acalabrutinib, zanubrutinib) or venetoclax + obinutuzumab fixed-duration (CLL14). O-Chl remains a valid option for very-frail patients (CIRS >6, severe comorbidity precluding BTKi/venetoclax) OR resource-limited settings. STUB regimen — no dedicated REG-O-CHL entity yet; flagged for REG follow-up. Closest existing regimen: REG-VENETOCLAX-OBINUTUZUMAB (CLL14) for fit-elderly fixed-duration.'
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: O-Chl is acceptable Cat 1 chemoimmunotherapy option for elderly / comorbid CLL 1L per CLL11; modern preferred Cat 1 regimens are BTKi continuous (acalabrutinib, zanubrutinib) or venetoclax + obinutuzumab (CLL14)
+  - source_id: SRC-ESMO-CLL-2024
+    position: supports
+    relevant_quote_paraphrase: Obinutuzumab + chlorambucil per CLL11 remains a recognized 1L option for elderly CLL with significant comorbidity; targeted therapy (BTKi, venetoclax) preferred when accessible
+  - source_id: SRC-CLL14-FISCHER-2019
+    position: supports
+    relevant_quote_paraphrase: CLL14 trial — see referenced publication for primary outcome data.
+known_controversies:
+  - topic: O-Chl vs venetoclax + obinutuzumab vs BTKi continuous for elderly CLL 1L
+    positions:
+      - position: Venetoclax + obinutuzumab (CLL14) — fixed-duration 12 cycles, deeper MRD response, mPFS NR
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: CLL14 Al-Sawaf 2023 update; mPFS 76.2 vs 36.4 mo O-Chl
+      - position: BTKi continuous (acalabrutinib, zanubrutinib) — best PFS but indefinite duration
+        sources:
+          - SRC-NCCN-BCELL-2025
+      - position: O-Chl — chemoimmunotherapy historical control; valid for very frail / resource-limited
+        sources:
+          - SRC-ESMO-CLL-2024
+    our_default: BTKi continuous OR venetoclax + obinutuzumab for fit elderly; O-Chl reserved for very-frail (CIRS >6) OR resource-limited settings
+    rationale: Targeted therapy outperforms chemoimmunotherapy in all PFS endpoints; O-Chl maintains role for select frailest patients
+do_not_do:
+  - НЕ використовувати O-Chl при TP53-mutated / del(17p) — chemoimmunotherapy має drastically inferior outcomes; preferred BTKi або venetoclax-based.
+  - НЕ ігнорувати TLS prophylaxis — особливо у high-burden CLL з obinutuzumab першу дозу (uric acid + IV hydration).
+  - НЕ забути HBV скринінг + entecavir prophylaxis при HBsAg+ або anti-HBc+ — реактивація з anti-CD20.
+  - НЕ призначати без IRR profilaxis — obinutuzumab high IRR rate (особливо first dose); split first dose + steroid + antihistamine.
+  - НЕ забувати про PJP prophylaxis (cotrimoxazole) ≥6 міс після anti-CD20 в elderly.
+  - НЕ продовжувати при cumulative cytopenias grade 4 — dose-reduce chlorambucil або hold.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Special-population indication for elderly / comorbid CLL 1L. Missing entity flag: dedicated REG-O-CHL + DRUG-CHLORAMBUCIL — author in PROD-2.'

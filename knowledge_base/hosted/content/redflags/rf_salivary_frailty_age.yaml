@@ -1,0 +1,63 @@
+id: RF-SALIVARY-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — cisplatin + RT and
+  trastuzumab + chemotherapy combinations poorly tolerated; AR-targeted
+  therapy (bicalutamide + LHRH for AR+ SDC) is favored low-toxicity
+  alternative; for indolent histologies (low-grade mucoepidermoid /
+  acinic cell), watchful waiting is appropriate.
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — cisplatin + RT і
+  трастузумаб + хіміотерапія погано переносяться; AR-таргетна (бікалутамід
+  + LHRH при AR+ SDC) — переважна низькотоксична альтернатива; для
+  індолентних гістологій (low-grade mucoepidermoid / acinic cell) —
+  спостереження.
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-SALIVARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-ESMO-SALIVARY
+  - SRC-NCCN-HEAD-AND-NECK
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Salivary gland cancers span indolent (low-grade mucoepidermoid, acinic
+  cell — 10-yr OS >80%) to aggressive (salivary duct, high-grade
+  transformation — 5-yr OS ~30%); frailty-age framing must consider
+  histology + AR / HER2 / NTRK status. Cisplatin-CRT in elderly carries
+  high mucositis + nephrotoxicity rates. Bicalutamide + LHRH (AR+ SDC)
+  is well-tolerated even in elderly — comparable efficacy to
+  chemotherapy with much lower toxicity (EORTC-1206). Larotrectinib /
+  entrectinib (NTRK+) similar — well-tolerated. Geriatric assessment
+  (G8) ≥70 recommended before chemoradiation. Consider IMRT alone
+  (without chemo) for elderly with locally advanced disease + organ
+  dysfunction.
+notes_ua: >
+  Слинні залози — від індолентних (low-grade — 10-річна ЗВ >80%) до
+  агресивних (SDC — 5-річна ЗВ ~30%); frailty-age має враховувати
+  гістологію + AR / HER2 / NTRK. Cisplatin-CRT у літніх — високі
+  мукозит + нефротоксичність. Бікалутамід + LHRH (AR+ SDC) добре
+  переноситься, ефект порівнянний з хіміо.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

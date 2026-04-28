@@ -1,0 +1,63 @@
+id: RF-THYROID-PAPILLARY-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating long-duration lenvatinib / sorafenib multikinase or
+  selective TKI (selpercatinib / larotrectinib / dabrafenib + trametinib)
+  for RAI-refractory PTC: HBsAg-positive (HBV reactivation reported on
+  TKI-class chronic exposure), anti-HBc-positive (occult HBV), HIV-
+  positive (ART coordination, CYP3A4 interactions), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед тривалою lenvatinib / sorafenib мультикіназною або селективною
+  TKI (selpercatinib / larotrectinib / dabrafenib + trametinib) при
+  RAI-рефрактерній PTC: HBsAg+ (повідомлено про реактивацію HBV на TKI-
+  класі при хронічній експозиції), anti-HBc+ (occult HBV), HIV+
+  (координація АРТ, CYP3A4-взаємодії), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-THYROID-PAPILLARY
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  RAI-refractory PTC TKI therapy is multi-year (median PFS 18 mo on
+  lenvatinib SELECT; >25 mo on selpercatinib LIBRETTO) — chronic
+  exposure raises HBV reactivation risk. Standard practice: HBsAg +
+  anti-HBc + anti-HBs serology pre-TKI; entecavir / tenofovir for
+  HBsAg+. HIV+: lenvatinib / sorafenib / selpercatinib / dabrafenib /
+  trametinib are all CYP3A4 substrates — coordinate ART to avoid
+  CYP3A4 inhibitors (ritonavir-boosted PIs). Active TB: rifampin
+  (CYP3A4 inducer) lowers TKI exposure significantly — prefer rifabutin
+  if anti-TB needed concurrently.
+notes_ua: >
+  RAI-рефрактерна PTC TKI — багаторічна (медіанна PFS 18 міс. lenvatinib
+  SELECT; >25 міс. selpercatinib LIBRETTO) — хронічна експозиція
+  підвищує ризик реактивації HBV. Lenvatinib / sorafenib / selpercatinib /
+  dabrafenib / trametinib — CYP3A4 субстрати. Rifampin — CYP3A4 індуктор,
+  знижує експозицію; rifabutin переважний.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

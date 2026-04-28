@@ -1,0 +1,68 @@
+id: RF-OVARIAN-BRCA-MUT-ACTIONABLE
+definition: >
+  BRCA1 or BRCA2 pathogenic variant (germline OR somatic) in
+  high-grade serous ovarian carcinoma — ~20-25% prevalence (15% germline +
+  ~7% somatic). Olaparib maintenance after platinum-based 1L
+  (SOLO-1 — mPFS 56.0 vs 13.8 mo BRCA-mut) is treatment-defining;
+  rucaparib + niraparib alternatives. SOLO-2 — 2L+ relapse maintenance.
+definition_ua: >
+  Патогенна варіація BRCA1 або BRCA2 (зародкова АБО соматична) при
+  серозній карциномі яєчників високого ступеня — ~20-25% поширеність
+  (15% герміногенні + ~7% соматичні). Олапариб у підтриманні після
+  1L на основі платини (SOLO-1 — мПФВ 56.0 проти 13.8 міс BRCA-мут) —
+  лікування-визначальне; рукапариб + нірапариб — альтернативи.
+  SOLO-2 — підтримання при 2L+ рецидиві.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "brca1_brca2_pathogenic"
+      value: true
+    - finding: "brca1_status"
+      value: "pathogenic"
+    - finding: "brca2_status"
+      value: "pathogenic"
+    - finding: "brca1_brca2_tumor"
+      value: "pathogenic"
+    - finding: "brca1_brca2_germline"
+      value: "pathogenic"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+  - ALGO-OVARIAN-2L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+  - SRC-SOLO1-MOORE-2018
+  - SRC-SOLO2-PUJADE-LAURAINE-2017
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Tumor-tissue testing identifies somatic BRCA missed by germline-only
+  testing — both germline (blood) AND tumor BRCA testing recommended
+  at diagnosis for all newly diagnosed advanced ovarian. Germline
+  finding triggers cascade testing of relatives + risk-reducing
+  surgery counseling. Olaparib + bevacizumab (PAOLA-1) extended
+  benefit in HRD-positive (incl. BRCA-mut) cohort. RF coexists with
+  RF-OVARIAN-HRD-ACTIONABILITY — BRCA-mut is the BRCA-specific
+  subset; HRD covers both BRCA + GIS-positive non-BRCA cases.
+notes_ua: >
+  Тестування пухлинної тканини виявляє соматичні BRCA, пропущені
+  лише герміногенним — рекомендоване обидва (кров + пухлина) при
+  діагнозі поширеного раку яєчників. Герміногенне виявлення триггер
+  каскадного тестування родичів + консультація щодо profilактичної
+  операції. Олапариб + бевацизумаб (PAOLA-1) подовжив виграш у
+  HRD-позитивній (вкл. BRCA-мут) когорті. RF співіснує з
+  RF-OVARIAN-HRD-ACTIONABILITY — BRCA-мут — підгрупа специфічна
+  для BRCA; HRD охоплює обидва BRCA + GIS-позитивні не-BRCA випадки.

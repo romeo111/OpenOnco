@@ -1,0 +1,70 @@
+id: RF-PREGNANCY-ACTIVE
+definition: >
+  Patient currently pregnant (any trimester). Triggers MFM (maternal-
+  fetal medicine) co-management, gestational-age-stratified treatment
+  selection (no antineoplastic in first trimester except in rare
+  emergencies; second/third trimester chemotherapy for selected regimens
+  with documented safety — anthracyclines without taxanes, weekly
+  paclitaxel; methotrexate, radiation, ICI, and most targeted agents
+  contraindicated).
+definition_ua: >
+  Пацієнтка зараз вагітна (будь-який триместр). Триггерує сумісне
+  ведення з MFM (материнсько-плодова медицина), вибір лікування за
+  гестаційним віком (жодного антинеопластичного засобу в першому
+  триместрі, крім рідкісних надзвичайних випадків; у 2/3 триместрі —
+  певні режими з документованою безпекою — антрацикліни без таксанів,
+  weekly паклітаксел; метотрексат, радіація, ІКТ і більшість таргетних
+  засобів — протипоказані).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "pregnancy_active"
+      value: true
+    - finding: "gestational_age_weeks"
+      threshold: 0
+      comparator: ">"
+
+clinical_direction: hold
+
+severity: critical
+priority: 40
+category: reproductive-status
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ESMO clinical practice guideline on cancer in pregnancy (Peccatori
+  2013, updated). First-trimester teratogenicity: no chemotherapy except
+  emergency hematologic salvage; counsel on therapeutic abortion vs
+  delayed therapy. Second/third trimester safety profile (Loibl,
+  Amant): doxorubicin + cyclophosphamide AC for breast — safe;
+  weekly paclitaxel — safe; trastuzumab — contraindicated (oligohydramnios);
+  ICI — limited data, defer to postpartum; rituximab — neonatal B-cell
+  depletion but reversible, often acceptable; ABVD for Hodgkin — safe in
+  T2/T3; BEACOPP — avoid; R-CHOP for DLBCL — feasible T2/T3 with MFM.
+  Delivery 2-3 weeks after last cycle to allow nadir recovery.
+  Direction `hold` for any first-trimester systemic; modulated to
+  `de-escalate` later — engine should consume gestational age.
+notes_ua: >
+  ESMO clinical practice guideline cancer in pregnancy (Peccatori 2013,
+  updated). Тератогенність 1 триместру: жодної хіміотерапії окрім
+  екстреного гематологічного salvage; консультація про переривання
+  vs відкладене лікування. Безпека 2/3 триместру (Loibl, Amant):
+  доксорубіцин + циклофосфамід AC для молочної — безпечні; weekly
+  паклітаксел — безпечний; трастузумаб — протипоказаний (олігогідрамніон);
+  ІКТ — обмежені дані, відкласти на post partum; ритуксимаб —
+  неонатальна B-клітинна деплеція оборотна; ABVD при Hodgkin —
+  безпечний у T2/T3; BEACOPP — уникати; R-CHOP при DLBCL — можливий
+  T2/T3 з MFM. Пологи через 2-3 тижні після останнього циклу.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

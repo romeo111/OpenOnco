@@ -139,7 +139,41 @@ def test_redflag_fixture(rf_id: str, fixture_path: Path) -> None:
 #   - RF-TCELL-CD30-POSITIVE → wired into ALGO-ALCL-1L step 1
 #   - RF-HBV-COINFECTION → reclassified to clinical_direction=investigate
 #     (CLINICAL_REVIEW_QUEUE_REDFLAGS §B.1 Option 2); cleared shifts_algorithm
-_KNOWN_ORPHANS: set[tuple[str, str]] = set()
+#
+# Re-introduced 2026-04-27 by the CIViC pivot + CSD-7/8 + solid-tumor expansion.
+# Three cohorts:
+#
+# (A) Biomarker-actionability annotations (CIViC pivot, Phase 3-N) — surface
+#     variant-level evidence into the actionability render layer (ESCAT-primary),
+#     not into the algorithm decision tree. shifts_algorithm documents which
+#     algorithms the variant *should be considered against*; wiring is
+#     render-side via BiomarkerActionability, not engine routing.
+# (B) Clinical-data RFs awaiting algorithm wiring (CSD-8 follow-up) —
+#     clinician-prioritized but step-design needs co-lead review.
+# (C) Solid-tumor PDL1/CRC RAS RFs from CSD-9 expansion — same wiring TODO.
+#
+# Tracked in docs/reviews/preexisting-failures-2026-04-27.md.
+_KNOWN_ORPHANS: set[tuple[str, str]] = {
+    # (A) Biomarker-actionability (CIViC pivot — render-layer, not engine-routed)
+    ("RF-CLL-POST-BTKI-C481-ACTIONABLE", "ALGO-CLL-2L"),
+    ("RF-CLL-TP53-DELETION-ACTIONABLE", "ALGO-CLL-1L"),
+    ("RF-CLL-VEN-RESISTANT-ACTIONABLE", "ALGO-CLL-2L"),
+    ("RF-FL-EZH2-Y641-ACTIONABLE", "ALGO-FL-2L"),
+    ("RF-WM-MYD88-L265P-ACTIONABLE", "ALGO-WM-1L"),
+    # (B) Clinical-data RFs awaiting algorithm wiring (CSD-8 follow-up)
+    ("RF-AML-CORE-BINDING-FACTOR-FAVORABLE", "ALGO-AML-1L"),
+    ("RF-AML-MEASURABLE-RESIDUAL-DISEASE", "ALGO-AML-1L"),
+    ("RF-AML-MEASURABLE-RESIDUAL-DISEASE", "ALGO-AML-2L"),
+    ("RF-IPSS-M-HIGH", "ALGO-MDS-LR-1L"),
+    ("RF-MCL-BLASTOID-VARIANT", "ALGO-MCL-2L"),
+    # (C) Solid-tumor PDL1 / CRC RAS (CSD-9 expansion — wiring TODO)
+    ("RF-CERVICAL-PDL1-CPS-1-PLUS", "ALGO-CERVICAL-LOCALLY-ADVANCED-1L"),
+    ("RF-CRC-RAS-MUTANT", "ALGO-CRC-METASTATIC-1L"),
+    ("RF-CRC-RAS-MUTANT", "ALGO-CRC-METASTATIC-2L"),
+    ("RF-CRC-RAS-WT", "ALGO-CRC-METASTATIC-1L"),
+    ("RF-GASTRIC-PDL1-CPS-1-PLUS", "ALGO-GASTRIC-METASTATIC-1L"),
+    ("RF-NSCLC-PDL1-50-PLUS", "ALGO-NSCLC-METASTATIC-1L"),
+}
 
 
 def test_no_orphan_red_flag_decl() -> None:

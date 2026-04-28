@@ -1,0 +1,60 @@
+id: RF-NSCLC-HER2-MUT-ACTIONABLE
+definition: >
+  HER2 (ERBB2) activating exon-20 mutation in NSCLC adenocarcinoma —
+  ~2-3% prevalence; distinct from HER2 amplification or overexpression.
+  Trastuzumab deruxtecan (T-DXd; DESTINY-Lung01/02 — ORR 49-58%) is
+  the FDA-approved 2L+ targeted ADC. HER2-amp / IHC-only NSCLC has
+  weaker T-DXd response data — kinase-domain mutation is the better
+  predictive biomarker.
+definition_ua: >
+  Активуюча мутація HER2 (ERBB2) в exon 20 при НДРЛ-аденокарциномі —
+  ~2-3% поширеність; відрізняється від ампліфікації / гіперекспресії
+  HER2. Трастузумаб дерукстекан (T-DXd; DESTINY-Lung01/02 — ORR 49-58%)
+  — FDA-схвалений 2L+ таргетний АDC. HER2-амп / ІГХ-only НДРЛ має
+  слабші дані відповіді на T-DXd — мутація кіназного домену —
+  кращий предиктивний біомаркер.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "her2_mutation"
+      value: true
+    - finding: "erbb2_mutation"
+      value: "positive"
+    - finding: "her2_status"
+      value: "mutated"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-DESTINYLUNG01-LI-2022
+  - SRC-DESTINYLUNG02-GOTO-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Detection: NGS panel (PCR misses many in-frame insertions). T-DXd
+  ILD risk ~10-15% in pretreated NSCLC — baseline + serial chest CT,
+  patient education on dyspnea / cough. 1L is still chemo + IO per
+  PD-L1; T-DXd is 2L+. Pyrotinib + chemo investigational in China.
+  Trastuzumab + chemo (TOGA-style) inferior to T-DXd in this molecular
+  subgroup.
+notes_ua: >
+  Виявлення: NGS-панель (PCR пропускає багато in-frame інсерцій). Ризик
+  пневмоніту-ILD на T-DXd ~10-15% в попередньо лікованих НДРЛ — baseline
+  + серійна КТ ОГК, навчання пацієнта (задишка / кашель). 1L досі —
+  хіміо + IO за PD-L1; T-DXd — 2L+. Піротиніб + хіміо — у дослідженнях
+  у Китаї. Трастузумаб + хіміо (TOGA-style) поступається T-DXd у цій
+  молекулярній підгрупі.

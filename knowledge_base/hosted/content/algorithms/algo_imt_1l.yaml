@@ -1,0 +1,22 @@
+id: ALGO-IMT-1L
+applicable_to_disease: DIS-IMT
+applicable_to_line_of_therapy: 1
+purpose: >
+  1L systemic therapy for unresectable / multifocal IMT with confirmed ALK fusion.
+
+output_indications:
+  - IND-IMT-ALK-CRIZOTINIB
+
+default_indication: IND-IMT-ALK-CRIZOTINIB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "BIO-ALK-FUSION positive"
+          biomarker: BIO-ALK-FUSION
+    branch_target: IND-IMT-ALK-CRIZOTINIB
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

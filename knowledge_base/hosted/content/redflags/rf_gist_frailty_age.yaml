@@ -1,0 +1,47 @@
+id: RF-GIST-FRAILTY-AGE
+definition: "Age ≥75 with ECOG ≥2 or ≥2 comorbidities — high-dose imatinib 800 mg (KIT exon 9) and TKI sequencing into sunitinib / regorafenib poorly tolerated; consider imatinib 400 mg, dose reductions, and earlier supportive-care emphasis."
+definition_ua: "Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — високодозовий imatinib 800 мг (KIT exon 9) і послідовність TKI sunitinib / regorafenib погано переноситься; розглянути imatinib 400 мг, зниження доз, ранню симптоматичну допомогу."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-GIST]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  Imatinib is generally well-tolerated in elderly but cumulative fluid
+  retention, periorbital edema, and hepatotoxicity are more frequent.
+  Sunitinib (2L) carries significant cardiotoxicity, hypertension,
+  hand-foot syndrome — geriatric patients at higher risk; regorafenib
+  (3L) similar concerns. Adjuvant imatinib durations (3 vs 6 yr) should
+  be individualized in elderly: SSG-XXII / PERSIST-5 data on extended
+  duration enrolled fewer patients ≥70. Source-gap caveat: NCCN GIST /
+  ESMO Sarcoma not yet ingested — using NCCN-MELANOMA-2025 (adjacent
+  KIT-pathway reference per disease YAML precedent) and SRC-ONCOKB.
+notes_ua: >
+  іматиніб is загалом добре переноситься in літнього віку but cumulative fluid retention, periorbital edema, and гепатотоксичність are more частий. сунитиніб (2L) carries significant кардіотоксичність, гіпертензія, hand-foot syndrome — geriatric patients at higher risk; регорафеніб (3L) подібний concerns. ад'ювантний іматиніб durations (3 проти 6 рік) should be individualized in літнього віку: SSG-XXII / PERSIST-5 дані on extended duration enrolled fewer patients ≥70. Source-gap caveat: NCCN GIST / ESMO саркома not yet ingested — using NCCN-меланома-2025 (adjacent KIT-pathway reference per хвороба YAML precedent) and SRC-ONCOKB.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

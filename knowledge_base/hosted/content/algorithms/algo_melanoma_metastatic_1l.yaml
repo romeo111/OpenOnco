@@ -6,12 +6,45 @@ output_indications: [IND-MELANOMA-METASTATIC-1L-NIVO-IPI, IND-MELANOMA-BRAF-META
 default_indication: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
 alternative_indication: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
 decision_tree:
+  # Step 0 — KIT-actionable mucosal/acral subset annotation. No dedicated
+  # 1L KIT-imatinib indication in this KB (Carvajal 2013 — imatinib is
+  # off-label and conventionally 2L+ in melanoma). Annotation only:
+  # standard IO-doublet 1L while flagging the KIT-mut for MDT to
+  # consider trial / 2L imatinib at progression.
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-KIT-MUT-ACTIONABLE
+    if_true:
+      next_step: 1
+    if_false:
+      next_step: 1
+    notes: "Annotation step — KIT-mut surfaces 2L-imatinib readiness; 1L still defaults to IO-doublet (no 1L KIT-imatinib Indication in KB)."
+
+  # Step 1 — BRAF V600E/K detected → next step checks visceral-crisis /
+  # rapid-progression context (1L BRAFi+MEKi only when crisis dominates;
+  # otherwise DREAMseq favors IO-first). Split from old single any_of so
+  # the biomarker arm wires additively to RF-MELANOMA-BRAF-V600-ACTIONABLE.
   - step: 1
     evaluate:
       any_of:
-        - {condition: "BRAF V600E/K AND visceral crisis / rapid progression"}
-    if_true: {result: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME}
-    if_false: {result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI}
+        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+    if_true:
+      next_step: 2
+    if_false:
+      result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+
+  - step: 2
+    # BRAF V600+ + crisis/progression → BRAFi+MEKi 1L. Otherwise IO-doublet
+    # per DREAMseq sequencing.
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
+    if_false:
+      result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+    notes: "MDT-only — visceral-crisis / rapid-progression check; default IO-doublet per DREAMseq when no crisis."
 sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024]
 last_reviewed: null
 notes: "DREAMseq: ICI-doublet → BRAFi+MEKi sequence preferred over reverse."

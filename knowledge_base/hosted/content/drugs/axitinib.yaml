@@ -3,33 +3,134 @@ names:
   preferred: "Axitinib"
   ukrainian: "Акситиніб"
   english: "Axitinib"
+  synonyms: ["AG-013736"]
   brand_names: ["Inlyta"]
 atc_code: L01EK01
-rxnorm_id: null
-drug_class: "VEGFR-1/2/3 tyrosine kinase inhibitor"
+rxnorm_id: ""
+drug_class: "Selective VEGFR-1/2/3 tyrosine kinase inhibitor (2nd-generation)"
 mechanism: >
-  Selective VEGFR TKI; antiangiogenic. Combined with pembrolizumab (KEYNOTE-426) for 1L mRCC.
+  Selective ATP-competitive small-molecule TKI of VEGFR-1, VEGFR-2,
+  and VEGFR-3 with sub-nanomolar in-vitro potency and improved
+  selectivity over first-generation multikinase TKIs (sunitinib,
+  sorafenib). Blocks VEGF-driven endothelial proliferation,
+  migration, and survival in the tumor microenvironment, producing
+  predominantly anti-angiogenic effects with minimal direct
+  cytotoxicity. Short half-life (~2.5-6 h) gives titratable BID
+  dosing — characteristic patient-specific dose escalation based on
+  blood-pressure response (titrate up to 10 mg BID if BP tolerable
+  at 5 mg). Pivotal evidence: AXIS (axitinib vs sorafenib 2L mRCC
+  post-sunitinib/cytokines: mPFS 6.7 vs 4.7 mo); KEYNOTE-426
+  (pembrolizumab + axitinib vs sunitinib 1L mRCC: mPFS 15.7 vs 11.1
+  mo, OS HR 0.53), JAVELIN Renal 101 (avelumab + axitinib vs
+  sunitinib 1L mRCC).
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2012
+    indications_brief:
+      - "Advanced renal cell carcinoma 2L+ (post sunitinib / cytokines)"
+      - "Advanced RCC 1L (combo pembrolizumab — KEYNOTE-426)"
+      - "Advanced RCC 1L (combo avelumab — JAVELIN Renal 101)"
+  ema:
+    approved: true
+    year_first_approval: 2012
+    indications_brief:
+      - "Advanced RCC 2L"
+      - "Advanced RCC 1L combo pembrolizumab / avelumab"
   ukraine_registration:
-    registered: false
-    reimbursed_nszu: false
-    last_verified: null
-    notes: "Out-of-pocket / off-label import — major access barrier."
+    registered: true
+    registration_number: null
+    reimbursed_nszu: true
+    reimbursement_indications:
+      - "Реімбурсаційний пакет «Онкологія» 2026: НКК нирки 2L+ після sunitinib/cytokines (AXIS)"
+      - "Реімбурсаційний пакет «Онкологія» 2026: НКК нирки 1L з pembrolizumab (KEYNOTE-426) або з avelumab"
+    last_verified: "2026-04-27"
+    notes: "Реєстрація МОЗ підтверджена. НСЗУ покриває RCC 1L (з pembro) та 2L. Джерело: nszu.gov.ua (2026-04)."
 
 typical_dosing: >
-  5 mg PO BID continuous; titrate up to 10 mg BID per BP/tolerability.
+  Starting dose: 5 mg PO BID (~12 h apart), with or without food.
+  Titration: if BP normal/well-controlled and no G≥2 AE for ≥2
+  consecutive weeks → escalate to 7 mg BID, then to 10 mg BID
+  similarly. Dose level -1 = 3 mg BID; -2 = 2 mg BID; permanent
+  discontinuation if recurrent G3-4 at -2. Hold for hypertensive
+  crisis, severe HFS, severe proteinuria, GI perforation, or
+  hemorrhage. Strong CYP3A4 inhibitor coadministration: halve
+  starting dose to 2 mg BID. No formal renal adjustment for CrCl
+  ≥30; modest adjustment in moderate hepatic impairment (50% dose
+  reduction recommended for Child-Pugh B).
 
-key_toxicities:
-  - Hypertension (~40%)
-  - Diarrhea
-  - Hand-foot syndrome
-  - Hypothyroidism
-  - Proteinuria
+formulations:
+  - "Tablets 1 mg, 5 mg"
 
-sources: [SRC-NCCN-NSCLC-2025]
-last_reviewed: null
+absolute_contraindications:
+  - "Hypersensitivity to axitinib or any excipient"
+  - "Severe uncontrolled hypertension (resistant to ≥3 antihypertensives)"
+  - "Active hemorrhage / recent (within 4 wk) major bleed"
+  - "Recent major surgery / unhealed wound (within 4 wk)"
+  - "Severe hepatic impairment (Child-Pugh C)"
+  - "Pregnancy (embryo-fetal toxicity)"
+
+black_box_warnings: []
+
+common_adverse_events:
+  - "Hypertension ~40% any-grade; G3 ~16%"
+  - "Diarrhea ~55%"
+  - "Fatigue ~40%"
+  - "Decreased appetite ~35%"
+  - "Nausea ~32%"
+  - "Hand-foot syndrome (palmar-plantar erythrodysesthesia) ~27%"
+  - "Hypothyroidism ~20-30% (anti-VEGF class)"
+  - "Dysphonia ~30%"
+  - "Proteinuria ~10-20%"
+  - "Weight loss ~25%"
+  - "Vomiting ~20%"
+  - "Constipation ~20%"
+  - "Headache ~14%"
+
+serious_adverse_events:
+  - "Hypertensive crisis / PRES (G3+ ~16%; baseline + serial BP)"
+  - "Hemorrhage — GI, intracranial, pulmonary (G3+ ~3%)"
+  - "GI perforation / fistula (rare)"
+  - "Arterial thromboembolism (MI, CVA — ~2%)"
+  - "Venous thromboembolism (~3%)"
+  - "Severe hepatotoxicity (G3 ALT/AST ~3%)"
+  - "Severe HFS (G3 ~5%)"
+  - "Severe proteinuria / nephrotic syndrome (rare)"
+  - "Wound-healing impairment (hold pre-/post-elective surgery)"
+  - "Cardiac dysfunction / LVEF decline"
+
+major_interactions:
+  - "Strong CYP3A4 inhibitors (azoles, clarithromycin, ritonavir) — significantly ↑ exposure; halve starting dose"
+  - "Strong CYP3A4 inducers (rifampin, phenytoin, carbamazepine, St John's wort) — ↓ exposure; avoid"
+  - "Other anti-VEGF agents — additive toxicity; not co-administered"
+  - "Anticoagulants (warfarin, DOAC) — additive bleeding risk; balance vs thrombosis"
+  - "Concurrent ICIs (pembrolizumab, avelumab) — intended combination per KEYNOTE-426 / JAVELIN Renal 101"
+  - "Grapefruit juice — CYP3A4 inhibition; avoid"
+
+pharmacology:
+  half_life_hours: 5
+  clearance: "hepatic"
+  protein_binding_pct: 99
+  metabolism: "CYP3A4 (predominant); minor CYP1A2 / 2C19; UGT1A1 glucuronidation"
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
 notes: >
-  STUB. KEYNOTE-426 1L mRCC.
+  Patient-specific titration to maximum tolerated dose (5 → 7 → 10
+  mg BID) is a defining feature — patients tolerating starting dose
+  with normotension should escalate, as exposure correlates with
+  efficacy. KEYNOTE-426 + JAVELIN-Renal-101 redefined 1L mRCC by
+  combining axitinib with anti-PD-(L)1 — dual mechanism of action
+  outperforms sunitinib monotherapy. Baseline workup: BP,
+  urinalysis (UPCR), LFTs, CBC, TSH, ECG, pregnancy test. Monitor
+  BP weekly first 6 weeks then monthly, urinalysis monthly, LFTs
+  monthly, TSH q3 months. Hold for SBP >160/100 — escalate
+  antihypertensives (ACE-i / ARB first then CCB amlodipine). Hold
+  ≥2 weeks before elective surgery; resume only after full wound
+  healing. Counsel patients on dental procedures (bleeding risk).
+  UA: registered; НСЗУ-reimbursed in RCC.

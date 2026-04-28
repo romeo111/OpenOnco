@@ -1,0 +1,69 @@
+id: RF-PRIOR-IO-PROGRESSION
+definition: >
+  Documented progressive disease (PD) on or within 6 months of prior
+  anti-PD-1 / anti-PD-L1 therapy (pembrolizumab, nivolumab, atezolizumab,
+  durvalumab, cemiplimab). Triggers exclusion from monotherapy ICI
+  rechallenge and preference for IO-naïve doublets, ADC, targeted
+  therapy, or chemotherapy combinations.
+definition_ua: >
+  Документована прогресія (PD) на або протягом 6 місяців після anti-PD-1
+  / anti-PD-L1 терапії (пембролізумаб, ніволумаб, атезолізумаб,
+  дурвалумаб, цеміплімаб). Триггерує виключення з монотерапії ІКТ-
+  rechallenge та перевагу IO-наївних дублетів, ADC, таргетної терапії
+  чи хіміотерапевтичних комбінацій.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_anti_pd1_progression"
+      value: true
+    - finding: "prior_anti_pdl1_progression"
+      value: true
+    - all_of:
+        - finding: "prior_io_received"
+          value: true
+        - finding: "io_treatment_free_interval_months"
+          threshold: 6
+          comparator: "<"
+        - finding: "best_response_to_io"
+          value: "PD"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Primary IO resistance is operationally distinct from acquired
+  resistance (PD after initial response >6 months). SITC consensus
+  (Kluger 2020) defines primary resistance as PD within 6 months of
+  IO start. Subsequent options vary by tumor: melanoma — BRAF/MEKi if
+  V600E, T-VEC, TIL therapy at trial centers, IL-2; NSCLC — docetaxel
+  ± ramucirumab, ADC if HER2/TROP2; urothelial — enfortumab vedotin
+  + pembrolizumab combination remains active even after IO-mono PD per
+  EV-302; RCC — cabozantinib monotherapy or lenvatinib + everolimus.
+  IO-rechallenge is generally not standard but may be considered after
+  >6 months treatment-free + non-PD discontinuation reason.
+notes_ua: >
+  Первинна IO-резистентність операційно відрізняється від набутої (PD
+  після початкової відповіді >6 міс). Консенсус SITC (Kluger 2020)
+  визначає первинну резистентність як PD протягом 6 міс від початку IO.
+  Подальші опції залежать від пухлини: меланома — BRAF/MEKi при V600E,
+  T-VEC, TIL у трайл-центрах; NSCLC — доцетаксел ± рамуцірумаб, ADC
+  при HER2/TROP2; уротеліальний — enfortumab vedotin + пембролізумаб
+  залишається активним за EV-302; RCC — кабозантиніб моно або
+  ленватиніб + еверолімус. IO-rechallenge зазвичай не стандарт.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

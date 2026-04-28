@@ -1,0 +1,62 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_pcnsl_intracranial_pressure.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-PCNSL-INTRACRANIAL-PRESSURE
+definition: "Primary CNS lymphoma with raised intracranial pressure / mass effect at presentation: focal deficit, headache + papilledema, obtundation, midline shift on imaging, herniation risk"
+definition_ua: "Первинна лімфома ЦНС з підвищеним внутрішньочерепним тиском / мас-ефектом: фокальний дефіцит, головний біль + набряк диска, порушення свідомості, дислокаційний синдром на КТ/МРТ"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "raised_intracranial_pressure"
+      value: true
+    - finding: "midline_shift_mm"
+      threshold: 5
+      comparator: ">"
+    - finding: "papilledema"
+      value: true
+    - finding: "gcs_score"
+      threshold: 12
+      comparator: "<"
+    - finding: "herniation_risk"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PCNSL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  PCNSL frequently presents with raised ICP; 60-70% have focal deficit
+  at diagnosis. Per NCCN-CNS PCNSL section: dexamethasone 16 mg/day
+  initial dose markedly reduces tumor (steroid-responsive); however
+  steroids must be HELD before stereotactic biopsy if biopsy is
+  diagnostic-pending — steroids alone can produce tissue regression
+  precluding histology. Direction HOLD on definitive HD-MTX-based
+  induction until ICP managed AND biopsy obtained. Priority 10.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  PCNSL часто presents with raised ICP; 60-70% have focal deficit при діагнозі. Per NCCN-CNS PCNSL section: dexamethasone 16 mg/day initial доза markedly зменшує пухлина (steroid-responsive);, однак steroids must be утримано before stereotactic біопсія if біопсія is діагностичний-pending — steroids alone can produce tissue регресія precluding гістологія. Direction утримати on definitive HD-MTX-based індукція until ICP managed AND біопсія obtained. Priority 10. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,21 @@
+id: ALGO-SALIVARY-1L
+applicable_to_disease: DIS-SALIVARY
+applicable_to_line_of_therapy: 1
+purpose: >
+  Palliative 1L for metastatic / recurrent salivary gland carcinoma without actionable receptor (HER2+, AR+, NTRK fusion).
+
+output_indications:
+  - IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+
+default_indication: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

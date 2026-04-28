@@ -1,0 +1,21 @@
+id: ALGO-THYROID-ANAPLASTIC-1L
+applicable_to_disease: DIS-THYROID-ANAPLASTIC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Palliative 1L systemic therapy for unresectable / metastatic ATC without BRAF V600E or with BRAFi unavailable. Median OS ~5-6 mo.
+
+output_indications:
+  - IND-ATC-PACLITAXEL-CARBOPLATIN
+
+default_indication: IND-ATC-PACLITAXEL-CARBOPLATIN
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
+    branch_target: IND-ATC-PACLITAXEL-CARBOPLATIN
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

@@ -32,6 +32,9 @@ sources:
   - SRC-AASLD-HCC-2023
 
 last_reviewed: "2026-04-26"
+oncokb_skip_reason: serological
+external_ids:
+  loinc: "5195-3"  # HBsAg (primary screening marker; companion LOINCs 13952-7 anti-HBc, 10900-9 anti-HBs, 29615-2 HBV-DNA)
 notes: >
   Mandatory pre-treatment screening for any regimen containing
   rituximab, obinutuzumab, daratumumab, isatuximab, blinatumomab,
@@ -55,3 +58,19 @@ notes: >
     if multi-line therapy anticipated
 
   reviewer_signoffs: 0  # STUB — pending two Clinical Co-Lead approvals
+notes_ua: >
+  обов'язковий pre-лікування screening for any схема containing ритуксимаб, обінутузумаб, даратумумаб, ізатуксимаб, блінатумомаб, or other B-cell-depleting / plasma-cell-depleting agents (HBV reactivation risk well-documented; ASH/ASCO/AASLD all align).
+
+  Rules engine consumes as boolean flag: HBsAg+ OR anti-HBc+ → RF-HBV-COINFECTION fires → forces entecavir prophylaxis (or tenofovir if entecavir resistance) before any цикл of CD20/CD38-таргетна терапія. Wired into CHL, DLBCL, MM, SMZL, Burkitt 1L algorithms.
+
+  підтипи informally: - HBsAg+ (active or chronic): prophylaxis обов'язковий; consult
+    hepatology
+  - HBsAg- / anti-HBc+ (resolved or occult): prophylaxis still
+    рекомендований for високого ризику схеми (ритуксимаб-containing); HBV-DNA
+    моніторинг прийнятний for низького ризику схеми
+  - HBsAg- / anti-HBc- / anti-HBs+ (vaccinated): ні prophylaxis - All-negative (naive): ні prophylaxis; consider vaccination
+    if multi-line терапія anticipated
+
+  reviewer_signoffs: 0  # STUB — pending two Clinical Co-Lead approvals
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

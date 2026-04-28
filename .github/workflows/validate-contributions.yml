@@ -1,0 +1,52 @@
+name: Validate TaskTorrent Contributions
+
+on:
+  pull_request:
+    paths:
+      - "contributions/**"
+      - "scripts/tasktorrent/**"
+      - ".github/workflows/validate-contributions.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev] || pip install pydantic pyyaml httpx pypdf pdfplumber
+
+      - name: Identify changed chunk dirs
+        id: chunks
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            | grep '^contributions/' \
+            | awk -F/ 'NF>1 {print $2}' \
+            | sort -u \
+            | tee /tmp/chunks.txt
+          if [ ! -s /tmp/chunks.txt ]; then
+            echo "no_chunks=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run validator on each changed chunk
+        if: steps.chunks.outputs.no_chunks != 'true'
+        run: |
+          set -e
+          while IFS= read -r chunk; do
+            echo "::group::Validating $chunk"
+            python -m scripts.tasktorrent.validate_contributions "$chunk"
+            echo "::endgroup::"
+          done < /tmp/chunks.txt
+
+      - name: Skip — no chunk dirs changed
+        if: steps.chunks.outputs.no_chunks == 'true'
+        run: echo "No contributions/<chunk-id>/ files changed; skipping validator."

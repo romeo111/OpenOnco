@@ -1,0 +1,71 @@
+id: RF-FOLLICULAR-TRANSFORMATION
+definition: >
+  Histologic transformation of follicular lymphoma to DLBCL or
+  high-grade B-cell lymphoma (5-7%/year cumulative risk; lifetime
+  risk 30-40%). Triggers immediate switch from FL-directed therapy
+  (R-CHOP if first treatment, BR, lenalidomide-rituximab, R²-mainentance)
+  to aggressive lymphoma protocol (R-CHOP if rituximab-naive in past
+  2 years; R-DHAP/R-ICE/R-GDP salvage + ASCT in fit; CAR-T axi-cel/
+  liso-cel/tisa-cel for transformed-FL per ZUMA-5/ELARA/TRANSCEND-FL).
+definition_ua: >
+  Гістологічна трансформація фолікулярної лімфоми у DLBCL або
+  high-grade B-клітинну лімфому (5-7%/рік кумулятивно; пожиттєвий
+  ризик 30-40%). Триггерує негайний перехід з FL-направленої терапії
+  (R-CHOP якщо перше лікування, BR, леналідомід-ритуксимаб, R²-підтримка)
+  на агресивний лімфомний протокол (R-CHOP якщо ритуксимаб-наївний за
+  останні 2 роки; R-DHAP/R-ICE/R-GDP сальвадж + ASCT у fit;
+  CAR-T axi-cel/liso-cel/tisa-cel для трансформованої FL за
+  ZUMA-5/ELARA/TRANSCEND-FL).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "follicular_transformation"
+      value: true
+    - finding: "fl_to_dlbcl_transformation"
+      value: true
+    - finding: "fl_to_hgbl_transformation"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-FL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-FL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Suspect transformation when: rapid LDH rise, asymmetric/explosive
+  nodal growth, new B-symptoms, hypercalcemia, extranodal involvement,
+  PET SUVmax >10 or SUVmax-discordance >5 between sites. Confirm by
+  excisional biopsy of FDG-most-avid lesion. Treatment if rituximab-
+  naive: R-CHOP standard (response ≥80%); rituximab-pretreated within
+  6-24 months: R-DHAP/R-ICE salvage + ASCT consolidation in fit;
+  rituximab-refractory or post-ASCT: CAR-T per CHAMPLAIN-1, ZUMA-5
+  (axi-cel transformed-FL ORR 86%, CR 65%; FDA-approved for r/r FL/
+  transformed FL after ≥2 lines), polatuzumab-BR (POLARIX-style),
+  tafasitamab + lenalidomide. Outcomes have improved markedly with
+  CAR-T era — historical median OS 1-2 yrs now 3-5 yrs in fit
+  CAR-T-eligible.
+notes_ua: >
+  Підозра на трансформацію: швидке підвищення LDH, асиметричний/
+  вибуховий ріст вузлів, нові B-симптоми, гіперкальціємія,
+  екстранодальне залучення, PET SUVmax >10 або SUVmax-дискордант >5
+  між зонами. Підтвердження ексцизійною біопсією FDG-найактивнішого
+  вогнища. Лікування при ритуксимаб-наївному: R-CHOP стандарт
+  (відповідь ≥80%); ритуксимаб-предлікований 6-24 міс: R-DHAP/R-ICE
+  сальвадж + ASCT у fit; ритуксимаб-рефрактерний або post-ASCT:
+  CAR-T (axi-cel ORR 86%, CR 65%); полатузумаб-BR, тафаситамаб +
+  леналідомід. Результати значно покращилися в епоху CAR-T.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

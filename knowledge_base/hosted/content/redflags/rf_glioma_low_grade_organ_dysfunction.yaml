@@ -1,0 +1,72 @@
+id: RF-GLIOMA-LOW-GRADE-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard PCV (procarbazine /
+  CCNU / vincristine) or temozolomide adjuvant in low-grade glioma:
+  CrCl <30 mL/min (CCNU / temozolomide dose adjustment), bilirubin
+  >3× ULN (CCNU / vincristine hepatic clearance), severe cytopenias
+  (ANC <1.5, platelets <100), or DLCO <60% (CCNU pulmonary fibrosis
+  signal at cumulative doses).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартній PCV
+  (procarbazine / CCNU / vincristine) або temozolomide-адʼювантній
+  терапії при гліомі низького ступеня: CrCl <30 (корекція CCNU /
+  temozolomide), білірубін >3× ULN (печінковий кліренс CCNU /
+  vincristine), тяжкі цитопенії (ANC <1.5, тромбоцити <100), DLCO <60%
+  (сигнал легеневого фіброзу CCNU при кумулятивних дозах).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "anc_x10_9_per_l"
+      threshold: 1.5
+      comparator: "<"
+    - finding: "platelets_x10_9_per_l"
+      threshold: 100
+      comparator: "<"
+    - finding: "dlco_percent"
+      threshold: 60
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  RTOG 9802 established RT + PCV as standard for high-risk LGG; PCV is
+  marrow-suppressive (cumulative thrombocytopenia from CCNU is a leading
+  cause of treatment discontinuation). Temozolomide is better-tolerated
+  alternative widely substituted in practice (CATNON, EORTC 22033 data
+  in IDH-mut anaplastic gliomas) — also marrow-suppressive but more
+  predictable. CrCl <30: temozolomide dose reduce 25%, CCNU contra-
+  indicated. Cytopenias at baseline frequently reflect prior RT — defer
+  systemic therapy until recovery. Vorasidenib (IDH-mut LGG, INDIGO
+  trial) is now an option with more favorable toxicity profile —
+  consider in organ-dysfunction setting if IDH-mut.
+notes_ua: >
+  RTOG 9802 — RT + PCV стандарт для high-risk LGG; PCV пригнічує кістковий
+  мозок (кумулятивна тромбоцитопенія від CCNU — основна причина
+  дискoнтинуації). Temozolomide — кращe-переносимий alternative (CATNON,
+  EORTC 22033). CrCl <30: temozolomide зменшити 25%, CCNU протипоказаний.
+  Vorasidenib (IDH-mut LGG, INDIGO) — кращий toxicity profile — розглянути
+  при organ-dysfunction.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

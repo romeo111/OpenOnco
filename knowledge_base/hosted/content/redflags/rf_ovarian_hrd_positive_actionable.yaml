@@ -1,0 +1,65 @@
+id: RF-OVARIAN-HRD-POSITIVE-ACTIONABLE
+definition: >
+  Homologous Recombination Deficiency (HRD)-positive high-grade serous
+  ovarian carcinoma (BRCA1/2 mutation OR Genomic Instability Score
+  ≥42). PARPi maintenance after platinum-based induction is
+  treatment-defining: niraparib (PRIMA — mPFS 21.9 vs 10.4 mo
+  HRD-pos), olaparib + bevacizumab (PAOLA-1 — mPFS 37.2 vs 17.7 mo
+  HRD-pos).
+definition_ua: >
+  HRD-позитивна серозна карцинома яєчників високого ступеня
+  (мутація BRCA1/2 АБО Genomic Instability Score ≥42). PARPi
+  у підтриманні після індукції на основі платини — лікування-визначальне:
+  нірапариб (PRIMA — мПФВ 21.9 проти 10.4 міс HRD-поз),
+  олапариб + бевацизумаб (PAOLA-1 — мПФВ 37.2 проти 17.7 міс HRD-поз).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "hrd_status"
+      value: "HRD-positive"
+    - finding: "hrd_status"
+      value: "positive"
+    - finding: "genomic_instability_score"
+      threshold: 42
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: critical
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-OVARIAN
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+  - ALGO-OVARIAN-2L
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+  - SRC-PRIMA-GONZALEZ-MARTIN-2019
+  - SRC-NOVA-MIRZA-2016
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  HRD assays: Myriad myChoice CDx (companion for olaparib + bev,
+  niraparib), FoundationOne CDx HRD. GIS captures BRCAness
+  (LOH + TAI + LST signatures) in tumors WT for BRCA1/2.
+  HRD-negative HGSC has minimal PARPi maintenance benefit (PRIMA
+  mPFS 8.1 vs 5.4 mo) — bev maintenance preferred.
+  Coexists with RF-OVARIAN-BRCA-MUT-ACTIONABLE (BRCA-mut subset
+  is HRD-positive by definition); RF-OVARIAN-HRD-ACTIONABILITY
+  is the older composite version.
+notes_ua: >
+  HRD-аналізи: Myriad myChoice CDx (companion для олапариб + бев,
+  нірапариб), FoundationOne CDx HRD. GIS захоплює BRCAness
+  (сигнатури LOH + TAI + LST) у пухлинах WT за BRCA1/2.
+  HRD-негативна HGSC має мінімальний виграш від PARPi-підтримання
+  (PRIMA мПФВ 8.1 проти 5.4 міс) — переважна бевацизумаб-підтримка.
+  Співіснує з RF-OVARIAN-BRCA-MUT-ACTIONABLE (підгрупа BRCA-мут —
+  HRD-позитивна за визначенням); RF-OVARIAN-HRD-ACTIONABILITY —
+  старша composite-версія.

@@ -1,0 +1,97 @@
+id: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV unresectable / metastatic"
+    - "Progression on or after 1L BRAFi+MEKi (dabrafenib+trametinib or encorafenib+binimetinib)"
+    - "BRAF V600+ (received BRAFi+MEKi as 1L due to visceral crisis, brain mets requiring rapid response, or institutional preference)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-NIVO-IPI-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~58% (CheckMate-067 in 1L; lower in 2L post-targeted)"
+  complete_response: "~22%"
+  progression_free_survival: "Median PFS 11.5 mo (CheckMate-067 1L); shorter in 2L post-BRAFi cohorts"
+  overall_survival_5y: "5-y OS 52% (CheckMate-067 1L)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  For patients who received 1L BRAFi+MEKi (typically driven by
+  visceral crisis or active brain metastases requiring rapid
+  response in a BRAF V600+ patient), 2L is anti-PD-1-based IO. The
+  ipi+nivo doublet is the most active IO option (CheckMate-067:
+  5-y OS 52% in 1L; benefit retained but attenuated post-BRAFi).
+  Acceptable 2L alternative when patient is fit (ECOG ≤1) and can
+  tolerate combo Grade 3-4 irAE rates ~50%. For frailer patients,
+  anti-PD-1 monotherapy or rela+nivo (if accessible) are reasonable
+  de-escalations. DREAMseq supports the IO-after-targeted sequence
+  retains meaningful activity.
+
+sources:
+  - source_id: SRC-CHECKMATE-067-LARKIN-2019
+    position: supports
+    relevant_quote_paraphrase: "CheckMate-067: nivolumab + ipilimumab vs nivo vs ipi in 1L melanoma — 5-y OS 52% (combo) vs 44% (nivo) vs 26% (ipi); mOS >60 mo combo. Used here as the standard IO doublet salvage post-BRAFi"
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "Anti-PD-1-based IO (ipi+nivo or anti-PD-1 mono) is preferred 2L after BRAFi+MEKi failure for BRAF V600+ metastatic melanoma; Category 1"
+  - source_id: SRC-ESMO-MELANOMA-2024
+    position: supports
+    relevant_quote_paraphrase: "IO is recommended after BRAFi+MEKi failure; combination ipi+nivo for fit patients, anti-PD-1 mono for frailer"
+
+known_controversies:
+  - topic: "ipi+nivo vs anti-PD-1 mono vs rela+nivo as 2L IO after BRAFi"
+    positions:
+      - position: "ipi+nivo most active but Grade 3-4 irAE ~50%"
+        sources: [SRC-CHECKMATE-067-LARKIN-2019]
+      - position: "rela+nivo (Opdualag) similar PFS as nivo mono but Grade 3-4 irAE ~19% — better tolerated than ipi+nivo"
+        sources: [SRC-RELATIVITY-047-TAWBI-2022]
+        evidence_note: "RELATIVITY-047 was 1L; 2L data limited"
+      - position: "Anti-PD-1 mono (pembrolizumab/nivolumab) — least toxic; lower response than doublets"
+        sources: [SRC-NCCN-MELANOMA-2025]
+    our_default: "ipi+nivo for ECOG 0-1 fit patients without significant baseline autoimmunity; rela+nivo or anti-PD-1 mono if irAE risk unacceptable"
+    rationale: "Most active IO doublet; reserve de-escalation for patients who cannot tolerate combo"
+
+do_not_do:
+  - "НЕ призначати при baseline активному autoimmune захворюванні на systemic immunosuppression — irAE можуть бути fatal (myocarditis, hepatitis)."
+  - "НЕ ігнорувати baseline TFTs, cortisol, LFTs, troponin — irAE моніторинг foundational."
+  - "НЕ давати >10 мг/добу преднізолону до старту — знижує efficacy ICI."
+  - "НЕ продовжувати ipi+nivo при Grade ≥3 irAE — переходити на nivo maintenance або зупиняти."
+  - "НЕ призначати в pre-BRAFi setting в BRAF V600+ — DREAMseq показав, що IO-first дає кращий OS у BRAF-mut пацієнтів (виняток: visceral crisis потребує BRAFi для швидкого response)."
+  - "НЕ давати live vaccines під час або 3 міс після завершення."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L for
+  BRAF V600+ metastatic melanoma where 1L was BRAFi+MEKi (visceral
+  crisis / brain mets indication). Reuses REG-NIVO-IPI-MELANOMA
+  (CheckMate-067 dosing schedule). Note: 2L-after-BRAFi cohorts in
+  CheckMate-067 were small; outcome estimates extrapolate from 1L
+  registration cohort.

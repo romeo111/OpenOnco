@@ -12,11 +12,11 @@
 <header class="top-bar">
   <div class="brand-line">
     <a href="/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Project version">v0.1.0</span>
+    <span class="brand-version" title="Released 2026-04-27">v0.1.1 · 2026-04-27</span>
   </div>
   <nav class="top-nav">
     <a href="/">Головна</a>
-    <a href="/capabilities.html">Можливості</a><a href="/limitations.html" class="active">Обмеження</a><a href="/specs.html">Специфікації</a>
+    <a href="/diseases.html">Хвороби</a><a href="/capabilities.html">Можливості</a><a href="/limitations.html" class="active">Обмеження</a><a href="/specs.html">Специфікації</a>
     <a href="/gallery.html">Приклади</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
@@ -43,11 +43,11 @@
 
     <div class="callout callout-hard">
       <strong>STUB-статус усього клінічного контенту.</strong>
-      Reviewer sign-offs ≥ 2: <strong>0/152</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/298</strong>
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз весь контент
       — STUB. Це інструмент демонстрації архітектури, не клінічна довідка
-      для реальних пацієнтів. Стан станом на <code>2026-04-26 14:02 UTC</code>.
+      для реальних пацієнтів. Стан станом на <code>2026-04-27 15:45 UTC</code>.
     </div>
 
     <div class="info-section">
@@ -137,8 +137,8 @@
           <div class="gap-tag">Gap 5</div>
           <h3>Без cumulative-toxicity tracking між lines</h3>
           <p>
-            2L+ алгоритми вже існують для 35 гематологічних хвороб
-            (67 показань 2L+), але profile не carrier'ить
+            2L+ алгоритми вже існують для 43 гематологічних хвороб
+            (129 показань 2L+), але profile не carrier'ить
             <code>prior_treatment_history</code> як structured field. 2L plan
             для пацієнта що отримав bortezomib у 1L з grade 2 нейропатією —
             engine не знає про попередній exposure якщо нічого нового не
@@ -222,18 +222,18 @@
     <div class="info-section">
       <h2>4. Coverage limits (поточний стан KB)</h2>
       <p class="info-text">
-        OpenOnco — work in progress. Зараз модельовано <strong>52
-        захворювань</strong> (36 гематологічних + 16 солідних) —
+        OpenOnco — work in progress. Зараз модельовано <strong>65
+        захворювань</strong> (37 гематологічних + 28 солідних) —
         це далеко не повний WHO-HAEM5 / WHO Classification of Tumours. Конкретно:
       </p>
       <table class="kv-table">
         <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
         <tbody>
-          <tr><td>Хвороби з повним ланцюгом</td><td>52 / 52</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>133</td><td>Перша лінія покрита для всіх 52 хвороб</td></tr>
-          <tr><td>Indications 2L+</td><td>67</td><td>Друга-четверта лінія: 34 гематологічних хвороб (AITL, ALCL, AML, APL, ATLL, B-ALL, BURKITT, CHL, CLL, CML, DLBCL-NOS, ET, FL, HCL, HCV-MZL, HGBL-DH, MCL, MDS-HR, MDS-LR, MF-SEZARY, MM, NK-T-NASAL, NLPBL, NODAL-MZL, PCNSL, PMBCL, PMF, PTCL-NOS, PTLD, PV, SPLENIC-MZL, T-ALL, T-PLL, WM) + 1 солідних (RCC). Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
-          <tr><td>RedFlags</td><td>267</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
-          <tr><td>Solid tumors</td><td>16</td><td>BREAST, CERVICAL, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, GBM, HCC, MELANOMA, NSCLC, OVARIAN, PDAC, PROSTATE, RCC, SCLC, UROTHELIAL — переважно 1L. 2L+ і ад'ювантні контексти — частково.</td></tr>
+          <tr><td>Хвороби з повним ланцюгом</td><td>64 / 65</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>173</td><td>Перша лінія покрита для всіх 65 хвороб</td></tr>
+          <tr><td>Indications 2L+</td><td>129</td><td>Друга-четверта лінія: 34 гематологічних хвороб (AITL, ALCL, AML, APL, ATLL, B-ALL, BURKITT, CHL, CLL, CML, DLBCL-NOS, ET, FL, HCL, HCV-MZL, HGBL-DH, MCL, MDS-HR, MDS-LR, MF-SEZARY, MM, NK-T-NASAL, NLPBL, NODAL-MZL, PCNSL, PMBCL, PMF, PTCL-NOS, PTLD, PV, SPLENIC-MZL, T-ALL, T-PLL, WM) + 9 солідних (BREAST, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, MELANOMA, NSCLC, OVARIAN, RCC). Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
+          <tr><td>RedFlags</td><td>426</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
+          <tr><td>Solid tumors</td><td>28</td><td>BREAST, CERVICAL, CHOLANGIOCARCINOMA, CHONDROSARCOMA, CRC, ENDOMETRIAL, ESOPHAGEAL, GASTRIC, GBM, GIST, GLIOMA-LOW-GRADE, HCC, HNSCC, IFS, IMT, MELANOMA, MPNST, MTC, NSCLC, OVARIAN, PDAC, PROSTATE, RCC, SALIVARY, SCLC, THYROID-ANAPLASTIC, THYROID-PAPILLARY, UROTHELIAL — переважно 1L. 2L+ і ад'ювантні контексти — частково.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
           <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>

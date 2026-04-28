@@ -1,0 +1,67 @@
+id: RF-PRIOR-PLATINUM-RESISTANT
+definition: >
+  Platinum-resistant disease: progression-free interval (PFI) ≤6 months
+  from completion of last platinum-containing regimen. Standard
+  taxonomy in ovarian (PROC), urothelial, NSCLC, head-and-neck.
+  Triggers non-platinum next line — single-agent chemotherapy (PLD,
+  topotecan, weekly paclitaxel for ovarian; docetaxel, ADC for
+  urothelial), targeted therapy, or trial.
+definition_ua: >
+  Платино-резистентна хвороба: безпрогресивний інтервал (PFI) ≤6 місяців
+  від завершення останнього платино-режиму. Стандарт таксономії при
+  оваріальному (PROC), уротеліальному, NSCLC, head-and-neck. Триггерує
+  неплатинову наступну лінію — монохіміотерапію (PLD, топотекан, weekly
+  паклітаксел при оваріальному; доцетаксел, ADC при уротеліальному),
+  таргетну терапію або трайл.
+
+trigger:
+  type: composite_score
+  any_of:
+    - all_of:
+        - finding: "prior_platinum_received"
+          value: true
+        - finding: "platinum_free_interval_months"
+          threshold: 6
+          comparator: "<="
+    - finding: "platinum_resistant"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-AURELIA-PUJADE-LAURAINE-2014
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Ovarian PROC: AURELIA established weekly paclitaxel ± bevacizumab,
+  PLD ± bev, topotecan ± bev as standard; mirvetuximab for FRα-high
+  (MIRASOL); olaparib if BRCA + PARPi-naive. Platinum-refractory
+  (progression on platinum or PFI <1 mo) is even more aggressive — bev
+  combinations preferred. Urothelial post-platinum PD: enfortumab
+  vedotin + pembrolizumab (EV-302) is now 1L standard but for those
+  who progressed on prior platinum without IO, EV mono or EV+pembro
+  (KEYNOTE-A39); sacituzumab govitecan (TROPHY-U-01); erdafitinib if
+  FGFR2/3 alteration. NSCLC: docetaxel ± ramucirumab, ICI rechallenge
+  rare. PFI cutoff 6 months is convention — some trials use 3 or 12.
+notes_ua: >
+  Оваріальний PROC: AURELIA — weekly паклітаксел ± бевацизумаб, PLD
+  ± бев, топотекан ± бев — стандарт; мірветуксимаб при FRα-високому;
+  олапариб при BRCA + PARPi-наївному. Платино-рефрактерний (прогресія
+  на платині або PFI <1 міс) — ще агресивніше; бев-комбінації
+  переважні. Уротеліальний після платини PD: enfortumab vedotin +
+  пембролізумаб (EV-302) — стандарт 1L, але для тих, хто прогресував
+  на попередній платині без IO — EV моно або EV+pembro; сацитузумаб
+  говітекан (TROPHY-U-01); ердафітиніб при FGFR2/3.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,70 @@
+id: RF-OBLIGATE-CARDIO-TOXIC-NAIVE
+definition: >
+  Patient has never received cumulative cardio-toxic therapy
+  (anthracycline, mitoxantrone, trastuzumab, mediastinal/cardiac
+  radiation). Cumulative anthracycline exposure budget remains intact;
+  full standard regimens (R-CHOP, AC-T, ABVD, BEACOPP) are dose-feasible
+  without dose-cap concern. Distinct from RF-ORGAN-CARDIAC-LVEF-LOW
+  (which gates on functional reserve regardless of prior exposure).
+definition_ua: >
+  Пацієнт ніколи не отримував кумулятивно кардіотоксичної терапії
+  (антрациклін, мітоксантрон, трастузумаб, медіастинальне/серцеве
+  опромінення). Бюджет кумулятивної експозиції антрациклінами цілий;
+  повні стандартні режими (R-CHOP, AC-T, ABVD, BEACOPP) дозо-можливі
+  без проблеми ліміту. Відрізняється від RF-ORGAN-CARDIAC-LVEF-LOW
+  (який гейтить на функціональному резерві незалежно від попередньої
+  експозиції).
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "prior_anthracycline_received"
+      value: false
+    - finding: "prior_trastuzumab_received"
+      value: false
+    - finding: "prior_mediastinal_rt"
+      value: false
+
+clinical_direction: intensify
+
+severity: minor
+priority: 100
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cumulative anthracycline cardiotoxicity is dose-dependent: doxorubicin
+  ≥250 mg/m² lifetime — significant CHF risk, ≥450 mg/m² — high risk
+  (Swain 2003); epirubicin equivalent ≈ 0.7x doxorubicin; idarubicin
+  ≈ 4x doxorubicin per mg. Standard R-CHOP delivers 300 mg/m² across
+  6 cycles — leaves headroom for relapse/salvage. Patients who received
+  AC-T (240 mg/m² doxorubicin) for breast then progress to lymphoma
+  have ~60 mg/m² remaining safely; substitute liposomal doxorubicin or
+  R-CEOP. Trastuzumab cardiotoxicity is reversible (unlike anthracycline)
+  but co-administration with anthracycline contraindicated; staggered
+  AC→T → trastuzumab standard. Mediastinal RT (Hodgkin survivor)
+  doubles anthracycline cardiotoxicity risk per equivalent dose.
+notes_ua: >
+  Кумулятивна антрациклінова кардіотоксичність дозо-залежна: доксорубіцин
+  ≥250 mg/m² довічно — значущий ризик CHF, ≥450 mg/m² — високий
+  (Swain 2003); епірубіцин еквівалент ≈ 0.7x доксорубіцину; ідарубіцин
+  ≈ 4x на mg. Стандартний R-CHOP дає 300 mg/m² за 6 циклів — залишає
+  запас для рецидиву/сальваджу. Пацієнти, які отримали AC-T (240 mg/m²
+  доксорубіцину) при молочній і перейшли в лімфому, мають ~60 mg/m²
+  безпечного запасу; замінити на ліпосомальний доксорубіцин або
+  R-CEOP. Кардіотоксичність трастузумабу зворотна; ко-введення з
+  антрацикліном протипоказане; staggered AC→T → трастузумаб —
+  стандарт. Медіастинальна ПТ подвоює ризик антрациклінової
+  кардіотоксичності.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,59 @@
+id: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
+definition: >
+  EGFR exon 20 insertion — heterogeneous in-frame insertions that
+  sterically block 1st/2nd/3rd-gen EGFR-TKI binding. Targeted by
+  amivantamab (EGFR-MET bispecific; CHRYSALIS / PAPILLON) and
+  mobocertinib (where available). PAPILLON established 1L
+  amivantamab + carboplatin/pemetrexed; CHRYSALIS supports 2L+
+  amivantamab monotherapy.
+definition_ua: >
+  Інсерція в 20-му екзоні EGFR — гетерогенні in-frame інсерції, які
+  стерично блокують зв'язування 1/2/3 поколінь EGFR-TKI. Таргетується
+  amivantamab (EGFR-MET біспецифічне; CHRYSALIS / PAPILLON) та
+  mobocertinib (де доступний). PAPILLON визначає 1L amivantamab +
+  карбоплатин/пеметрексед; CHRYSALIS — 2L+ amivantamab монотерапія.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "egfr_exon20_insertion"
+      value: true
+    - finding: "egfr_ex20ins"
+      value: "positive"
+    - finding: "egfr_mutation"
+      value: "exon20_insertion"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-CHRYSALIS-PARK-2021
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ~5-10% of EGFR-mutant NSCLC. NGS strongly preferred over PCR for
+  detection (PCR misses non-canonical insertions). Standard EGFR-TKI
+  (osimertinib, erlotinib) inactive — do not treat as classic EGFR
+  mutation. Amivantamab IV q-weekly induction → q-2-weekly maintenance
+  (rapid infusion-reaction premedication required). Mobocertinib
+  voluntarily withdrawn in some markets due to OS data.
+notes_ua: >
+  ~5-10% EGFR-мутантного НДРЛ. NGS значно переважає PCR (PCR пропускає
+  неканонічні інсерції). Стандартні EGFR-TKI (осимертиніб, ерлотиніб)
+  неактивні — не лікувати як класичну EGFR-мутацію. Amivantamab IV
+  щотижнево (індукція) → q-2-тижневе підтримання (необхідна
+  премедикація для інфузійних реакцій). Mobocertinib знятий з ринку
+  в деяких країнах через дані OS.

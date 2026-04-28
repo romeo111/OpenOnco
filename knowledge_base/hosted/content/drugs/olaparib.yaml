@@ -5,7 +5,7 @@ names:
   english: "Olaparib"
   brand_names: ["Lynparza"]
 atc_code: L01XK01
-rxnorm_id: null
+rxnorm_id:
 drug_class: "PARP inhibitor"
 mechanism: >
   Inhibits PARP1/2 — prevents repair of single-strand DNA breaks; in HRR-deficient (BRCA1/2 + other) tumors, leads to synthetic lethality via accumulated double-strand breaks that cannot be repaired by homologous recombination.
@@ -15,23 +15,30 @@ regulatory_status:
   ema: {approved: true}
   ukraine_registration:
     registered: true
-    reimbursed_nszu: false
-    last_verified: null
-    notes: "Registered for ovarian + breast indications with НСЗУ reimbursement; prostate indication reimbursement under negotiation. Out-of-pocket likely for prostate use until formulary update."
+    reimbursed_nszu: true
+    last_verified: "2026-04-27"
+    notes: "Раніше reimbursed_nszu=false; виправлено на true для оваріального BRCA1/2 (1L maintenance та 2L+) і РМЗ BRCA1/2-герм. Простатичний mCRPC HRR (PROfound) — поза НСЗУ, переговори тривають. Джерело: nszu.gov.ua (2026-04)."
 
+    reimbursement_indications:
+    - 'Програма медичних гарантій 2026: рак яєчників BRCA1/2-мутований, підтримуюча терапія 1L після відповіді на платину'
+    - 'Реімбурсаційний пакет «Онкологія» 2026: рак яєчників BRCA1/2 рецидивний платиночутливий — підтримуюча терапія'
+    - 'Реімбурсаційний пакет «Онкологія» 2026: РМЗ HER2- BRCA1/2-герм метастатичний (OlympiAD)'
 typical_dosing: >
   300 mg PO BID continuous until progression or unacceptable toxicity. Dose-modify for renal impairment (CrCl 31-50 → 200 mg BID; <30 not recommended).
 
 key_toxicities:
-  - Anemia (~46% any grade, ~22% G3+)
-  - Fatigue (~52%)
-  - Nausea (~41%)
-  - Lymphopenia
-  - Pneumonitis (~1%) — serious; investigate any new/worsening respiratory symptoms
-  - MDS / AML (rare; long-term risk)
-  - Venous thromboembolism (modest excess in PROfound)
+- Anemia (~46% any grade, ~22% G3+)
+- Fatigue (~52%)
+- Nausea (~41%)
+- Lymphopenia
+- Pneumonitis (~1%) — serious; investigate any new/worsening respiratory symptoms
+- MDS / AML (rare; long-term risk)
+- Venous thromboembolism (modest excess in PROfound)
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
-last_reviewed: null
+last_reviewed:
 notes: >
   PROfound trial: olaparib superior to enzalutamide/abiraterone in HRR-mutant mCRPC (BRCA1/2 highest benefit). Germline + somatic HRR testing required pre-start.
+
+notes_patient: >
+  Таблетка, що блокує DNA-repair фермент PARP. У пухлинних клітинах з мутацією BRCA1 або BRCA2 ця блокада призводить до загибелі — пухлина не може лагодити свою ДНК. Приймається щоденно.

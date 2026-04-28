@@ -1,0 +1,66 @@
+_contribution:
+  chunk_id: bma-drafting-gap-diseases
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/biomarker_actionability/bma_cxcr4_whim_wm.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: BMA-CXCR4-WHIM-WM
+biomarker_id: BIO-CXCR4-WHIM
+variant_qualifier: "CXCR4 WHIM-like nonsense / frameshift mutations (C-terminal truncation, e.g., S338X, R334X); ~30-40% of MYD88-L265P Waldenström macroglobulinemia"
+disease_id: DIS-WM
+escat_tier: "IB"
+evidence_summary: >
+  CXCR4 WHIM-like mutations co-occur in ~30-40% of MYD88-L265P
+  Waldenström macroglobulinemia and confer relative resistance to
+  ibrutinib (BTKi) — lower ORR and major-response rate, slower kinetics
+  of IgM decline (Treon NEJM 2015 — initial cohort; Castillo Blood 2020
+  — confirmation) per SRC-NCCN-BCELL-2025, SRC-ESMO-WM-2024. CXCR4
+  status drives 1L therapy selection in WM: in CXCR4-mutated patients,
+  guidelines list bendamustine + rituximab (BR) or proteasome-inhibitor-
+  based regimens (BDR — bortezomib/dex/rituximab) as preferred over
+  BTKi monotherapy; in CXCR4-WT patients, BTKi monotherapy
+  (ibrutinib or zanubrutinib) is preferred. Mavorixafor (CXCR4
+  antagonist) has FDA orphan designation for WHIM but is investigational
+  in WM.
+evidence_summary_ua: >
+  CXCR4 WHIM-like мутації co-occur in ~30-40% of MYD88-L265P Waldenström macroglobulinemia and confer relative резистентність до ібрутиніб (BTKi) — lower ORR and major-частота відповіді, slower kinetics of IgM зниження (Treon NEJM 2015 — initial cohort; Castillo Blood 2020 — confirmation) per SRC-NCCN-BCELL-2025, SRC-ESMO-WM-2024. CXCR4 status drives 1L терапія selection in WM: in CXCR4-mutated patients, настанови list бендамустин + ритуксимаб (BR) or proteasome-інгібітор- based схеми (BDR — бортезоміб/dex/ритуксимаб) as переважний over BTKi монотерапія; in CXCR4-WT patients, BTKi монотерапія (ібрутиніб or занубрутиніб) is переважний. Mavorixafor (CXCR4 антагоніст) has FDA orphan designation for WHIM but is експериментальний in WM.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+regulatory_approval:
+  fda: []
+  ema: []
+  ukraine: []
+recommended_combinations:
+  - "bendamustine + rituximab (1L CXCR4-mutated WM per SRC-NCCN-BCELL-2025, SRC-ESMO-WM-2024)"
+  - "bortezomib + dexamethasone + rituximab (BDR, 1L CXCR4-mutated alternative per SRC-NCCN-BCELL-2025)"
+  - "zanubrutinib monotherapy (1L CXCR4-mutated alternative — preserved efficacy vs ibrutinib in CXCR4-mut subgroup of ASPEN trial per SRC-NCCN-BCELL-2025)"
+contraindicated_monotherapy:
+  - "ibrutinib monotherapy as preferred 1L in CXCR4-mutated WM (slower / less complete response per SRC-ESMO-WM-2024 — alternative; not strict contraindication)"
+primary_sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-WM-2024
+  - SRC-ONCOKB
+last_verified: "2026-04-27"
+evidence_sources:
+  - source: SRC-ONCOKB
+    level: "3A"
+    evidence_ids: []
+    direction: null
+    significance: null
+    note: "Pre-CIViC-pivot legacy entry — pending Phase 3 reconciliation against CIViC. Per OncoKB ToS this entry is NOT surfaced in HCP or patient render; Phase 4 render skips evidence_sources entries with source=SRC-ONCOKB."
+actionability_review_required: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  ESCAT IB / OncoKB Level 3A (predictive of resistance / response
+  modifier rather than a direct drug target). Detection: NGS targeted
+  panel (CXCR4 C-terminal exon 2). Patients with both MYD88-L265P and
+  CXCR4-WHIM mutation have higher disease burden (IgM, BM infiltration)
+  per SRC-NCCN-BCELL-2025. Source-gap: SRC-ASPEN, SRC-INNOVATE-WM not
+  yet ingested.

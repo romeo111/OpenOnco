@@ -1,0 +1,42 @@
+id: RF-ATLL-HYPERCALCEMIA
+definition: "Adult T-cell leukemia/lymphoma (ATLL) with paraneoplastic hypercalcemia (corrected calcium ≥11 mg/dL): present in ~50-70% of acute-type ATLL at diagnosis, driven by HTLV-1-induced PTHrP and RANKL expression"
+definition_ua: "Дорослий T-клітинний лейкоз/лімфома (ATLL) з паранеопластичною гіперкальціємією (скоригований кальцій ≥11 мг/дл): присутня в ~50-70% при гострому типі ATLL, керована HTLV-1-індукованою експресією PTHrP та RANKL"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "calcium_corrected_mg_dl"
+      threshold: 11
+      comparator: ">="
+    - finding: "hypercalcemia_symptomatic"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 12
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-ATLL
+shifts_algorithm: []
+
+sources:
+  - SRC-IMC-HTLV-2017
+  - SRC-ESMO-PTCL-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Hypercalcemia is the second-most-common ATLL emergency presentation
+  after lymphocytosis; per IMC-HTLV-2017 (Tsukasaki/IACR consensus)
+  + ESMO-PTCL 2024 ATLL section: aggressive IV hydration, zoledronic
+  acid, calcitonin; cytoreduction with EPOCH-based regimen + zidovudine/
+  interferon (acute) or watchful-wait → AZT/IFN (chronic/smoldering).
+  Direction HOLD on routine induction until calcium <12 mg/dL and
+  AKI resolved; priority 12. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Hypercalcemia is the second-найбільш-поширений ATLL emergency presentation after lymphocytosis; per IMC-HTLV-2017 (Tsukasaki/IACR consensus) + ESMO-PTCL 2024 ATLL section: агресивний IV hydration, zoledronic acid, calcitonin; cytoreduction with EPOCH-based схема + zidovudine/ інтерферон (acute) or watchful-wait → AZT/IFN (chronic/smoldering). Direction утримати on routine індукція until calcium <12 mg/dL and AKI resolved; priority 12. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

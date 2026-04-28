@@ -1,0 +1,38 @@
+id: RF-SANZ-LOW-RISK
+definition: "APL with Sanz low risk — WBC ≤10 ×10^9/L AND platelets >40 ×10^9/L — supports ATRA+ATO chemo-free induction/consolidation per APL0406 / Lo-Coco; no anthracycline indicated"
+definition_ua: "ГПЛ з низьким ризиком за Sanz — WBC ≤10 ×10⁹/л І тромбоцити >40 ×10⁹/л — підтримує АТRA+ATO без хіміотерапії (індукція/консолідація) за APL0406 / Lo-Coco; антрациклін не показаний"
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "wbc_count_x10_9_per_l"
+      threshold: 10
+      comparator: "<="
+    - finding: "platelet_count_x10_9_per_l"
+      threshold: 40
+      comparator: ">"
+
+clinical_direction: de-escalate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm:
+  - ALGO-APL-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-27"
+notes: >
+  Sanz score (Sanz et al. Blood 2000) stratifies APL by presenting
+  WBC and platelets: low = WBC ≤10 + plt >40, intermediate = WBC ≤10
+  + plt ≤40, high = WBC >10. APL0406 (Lo-Coco 2013, NEJM) randomized
+  low/intermediate-risk patients to ATRA+ATO vs ATRA+chemo and showed
+  non-inferior EFS plus reduced toxicity for ATRA+ATO. The chemo-free
+  arm is now the standard of care for non-high-risk APL (NCCN AML 2025,
+  ELN APL 2019). de-escalate direction reflects the avoidance of
+  anthracycline-based consolidation.

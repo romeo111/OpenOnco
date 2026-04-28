@@ -1,0 +1,77 @@
+id: REG-CAPECITABINE-PALLIATIVE
+name: "Capecitabine palliative monotherapy (CRC ECOG 3-4, BSC-adjacent low-intensity)"
+name_ua: "Капецитабін паліативна монотерапія (КРР ECOG 3-4, BSC-сусідня низькоінтенсивна)"
+alternate_names:
+  - "Cape mono palliative"
+  - "Low-dose capecitabine"
+
+components:
+  - drug_id: DRUG-CAPECITABINE
+    dose: "1000 mg/m² PO BID (consider 750 mg/m² BID if frail, age >75, or CrCl 30-50)"
+    schedule: "days 1-14 of each 21-day cycle"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "Until progression, intolerance, or patient/family preference to stop"
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hand-foot syndrome G≥2"
+    modification: "Hold; resume at 75% on resolution to ≤G1; topical urea/emollient + pyridoxine"
+    rationale: "HFS is dose-related and reversible"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Diarrhea G≥2"
+    modification: "Hold; loperamide; hydration; resume at 75%; G≥3 → 50% reduction"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Capecitabine 75% (750 mg/m² BID)"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "CrCl <30 mL/min"
+    modification: "Contraindicated"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "DPYD deficiency (any clinically-significant variant)"
+    modification: "Reduce starting dose by 50% per CPIC genotype-based guideline; consider avoiding entirely if homozygous deficient"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Patient/family preference shifts to BSC only"
+    modification: "Discontinue; transition to symptom-only management; palliative care consult"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Капецитабін реімбурсується НСЗУ для мКРР; добре переносимий пероральний агент, придатний для паліативного лікування ослаблених пацієнтів."
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  In ECOG 3-4 mCRC patients where full doublet (FOLFOX/CapOx) or
+  triplet (FOLFIRINOX) is not feasible due to performance status,
+  comorbidity burden, or patient preference, single-agent capecitabine
+  offers a low-toxicity oral option that preserves quality of life
+  while providing modest disease control (mPFS ~4-6 mo in unselected
+  populations; longer in MSS / well-differentiated tumours). Avoids
+  IV access requirements and reduces clinic burden. Discuss explicitly
+  with patient + family that the goal is symptom-balance, not
+  life-prolongation in any meaningful sense — this regimen is
+  BSC-adjacent and the boundary between treatment and BSC is fluid.
+  Co-enrol palliative care early. DPYD pre-screening strongly
+  recommended (CPIC) — DPYD deficiency causes severe-fatal toxicity.
+notes_ua: >
+  У ECOG 3-4 мКРР пацієнтів, де повний дублет (FOLFOX/CapOx) або
+  триплет (FOLFIRINOX) недоступний через performance status, тягар
+  коморбідностей або пацієнтську преференцію, монотерапія капецита-
+  біном пропонує низькотоксичну пероральну опцію, що зберігає якість
+  життя, забезпечуючи помірний контроль хвороби (mPFS ~4-6 міс).
+  Уникає вимог IV-доступу. Явно обговорити з пацієнтом + родиною,
+  що мета — симптомний баланс, не продовження життя — цей режим
+  є BSC-сусіднім. Раннє залучення паліативної допомоги. DPYD-перед-
+  скринінг наполегливо рекомендується (CPIC).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

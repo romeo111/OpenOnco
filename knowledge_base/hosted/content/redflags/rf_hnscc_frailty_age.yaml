@@ -1,0 +1,57 @@
+id: RF-HNSCC-FRAILTY-AGE
+definition: "Age ≥75 with ECOG ≥2, ≥2 comorbidities, weight loss >5%, or albumin <3.5 g/dL — concurrent high-dose cisplatin chemoradiation poorly tolerated; consider weekly cisplatin, carboplatin, cetuximab + RT, or definitive RT alone with prophylactic gastrostomy."
+definition_ua: "Вік ≥75 з ECOG ≥2, ≥2 коморбідностями, втратою ваги >5% або альбуміном <3,5 г/дл — конкурентна високодозова cisplatin-хіміопромінева терапія погано переноситься; розглянути тижневий cisplatin, carboplatin, cetuximab + RT або моно-RT з профілактичною гастростомою."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - all_of:
+        - finding: "age_years"
+          threshold: 75
+          comparator: ">="
+        - any_of:
+            - finding: "ecog_status"
+              threshold: 2
+              comparator: ">="
+            - finding: "comorbidity_count"
+              threshold: 2
+              comparator: ">="
+    - finding: "albumin_g_dl"
+      threshold: 3.5
+      comparator: "<"
+    - finding: "weight_loss_percent"
+      threshold: 5
+      comparator: ">"
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-HNSCC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  HNSCC patients are disproportionately tobacco / alcohol users with
+  cardiopulmonary comorbidity and pre-treatment malnutrition.
+  High-dose 3-weekly cisplatin (100 mg/m²) yields high renal /
+  ototoxicity rates in elderly — Bonner cetuximab + RT (mAB-targeted)
+  remains an option for cisplatin-ineligible. RTOG 1016 / De-ESCALaTE
+  showed cetuximab + RT inferior to cisplatin + RT for HPV+ disease,
+  so de-escalation should be cisplatin-ineligibility-driven, not
+  HPV-driven. Pre-treatment swallowing evaluation, gastrostomy
+  consideration, and dental clearance are mandatory in frail patients.
+  Source-gap caveat: NCCN H&N / ESMO H&N not yet ingested as separate
+  Source entities — using SRC-NCCN-NSCLC-2025 (adjacent thoracic /
+  squamous reference per disease YAML precedent) and SRC-ONCOKB.
+notes_ua: >
+  HNSCC patients are disproportionately tobacco / alcohol users with cardiopulmonary коморбідність and pre-лікування malnutrition. High-доза 3-weekly цисплатин (100 mg/m²) yields high renal / ototoxicity rates in літнього віку — Bonner цетуксимаб + RT (mAB-targeted) remains an option for цисплатин-ineligible. RTOG 1016 / деескалувати showed цетуксимаб + RT поступається цисплатин + RT for HPV+ хвороба, so de-escalation should be цисплатин-ineligibility-driven, not HPV-driven. Pre-лікування swallowing evaluation, gastrostomy consideration, and dental clearance are обов'язковий in frail patients. Source-gap caveat: NCCN H&N / ESMO H&N not yet ingested as separate Source entities — using SRC-NCCN-NSCLC-2025 (adjacent thoracic / squamous reference per хвороба YAML precedent) and SRC-ONCOKB.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

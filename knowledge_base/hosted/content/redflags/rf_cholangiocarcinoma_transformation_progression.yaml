@@ -1,0 +1,42 @@
+id: RF-CHOLANGIOCARCINOMA-TRANSFORMATION-PROGRESSION
+definition: "Rapid radiographic progression on first-line gem-cis-durvalumab, new symptomatic biliary obstruction with cholangitis, or new peritoneal carcinomatosis — emergency-tier flag requiring biliary drainage, re-biopsy with comprehensive genomic profiling, and second-line decision (FOLFOX vs targeted therapy if actionable mutation)."
+definition_ua: "Швидке радіологічне прогресування на 1-й лінії gem-cis-durvalumab, нова симптоматична біліарна обструкція з холангітом або новий перитонеальний карциноматоз — невідкладний прапорець: дренування жовчних шляхів, ребіопсія з повним молекулярним профілем, рішення про 2-у лінію (FOLFOX vs таргетна, якщо є дієвоспроможна мутація)."
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "rapid_visceral_progression"
+      value: true
+    - finding: "biliary_obstruction_cholangitis"
+      value: true
+    - finding: "new_peritoneal_carcinomatosis"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-CHOLANGIOCARCINOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  ABC-06 trial established FOLFOX as 2L standard (mOS 6.2 vs 5.3 mo
+  active symptom control); however biliary drainage (ERCP / PTBD) is
+  prerequisite — chemotherapy on uncontrolled cholangitis is associated
+  with rapid sepsis. Re-biopsy at progression yields actionable mutation
+  in ~30% (FGFR2, IDH1, HER2, BRAF) per MSKCC and Mayo cohorts —
+  changes 2L choice from FOLFOX to targeted therapy. Peritoneal
+  carcinomatosis indicates poor prognosis (mOS <6 mo); palliative
+  intent and early hospice consultation appropriate.
+notes_ua: >
+  ABC-06 дослідження усталений FOLFOX as 2L стандарт (mOS 6.2 проти 5.3 mo active symptom control);, однак biliary drainage (ERCP / PTBD) is prerequisite — хіміотерапія on uncontrolled cholangitis is associated with rapid sepsis. Re-біопсія at прогресування yields actionable мутація in ~30% (FGFR2, IDH1, HER2, BRAF) per MSKCC and Mayo cohorts — changes 2L choice from FOLFOX to таргетна терапія. Peritoneal carcinomatosis indicates poor прогноз (mOS <6 міс.); паліативний intent and early hospice consultation appropriate.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

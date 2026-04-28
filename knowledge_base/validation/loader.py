@@ -65,7 +65,22 @@ REF_FIELDS: dict[str, list[tuple[str, str]]] = {
     "workups": [
         # required_tests handled specially (list of Test IDs)
     ],
+    "reviewers": [],
 }
+
+
+# Entity types whose `reviewer_signoffs[]` items carry FK reviewer_ids that
+# must resolve to a ReviewerProfile (REV-*) under reviewers/. This list
+# mirrors the schema migration in CSD-5 (see schemas/_reviewer_signoff.py).
+# Legacy YAML with `reviewer_signoffs: 0` is coerced to [] by the schema
+# validator and produces no ref-check work here.
+REVIEWER_SIGNOFF_TYPES: tuple[str, ...] = (
+    "indications",
+    "algorithms",
+    "regimens",
+    "redflags",
+    "biomarker_actionability",
+)
 
 
 @dataclass
@@ -94,10 +109,41 @@ def _extract(obj: dict, dotted: str):
     return cur
 
 
-def load_content(root: Path) -> LoadResult:
-    """Walk hosted/content/, validate each YAML against its schema,
-    then do a referential-integrity pass."""
+# Module-level cache: load_content() walks ~1700 YAMLs and Pydantic-validates
+# every one (~3.7s on the current KB), and engine entry points (generate_plan,
+# orchestrate_mdt, generate_diagnostic_brief, evaluate_partial) each call it
+# fresh on every invocation. A batch build of 99 × 2 cases issues ~400 such
+# calls — over an hour of redundant CPU work in aggregate.
+#
+# Caching is keyed on the *resolved* path so that "knowledge_base/hosted/content"
+# (relative) and the same dir given absolutely hit the same entry. Tests that
+# need a fresh load (e.g., after writing a temporary KB to a tmp_path) call
+# `clear_load_cache()` explicitly.
+_LOAD_CACHE: dict[Path, "LoadResult"] = {}
 
+
+def clear_load_cache() -> None:
+    """Drop all cached LoadResults. Call between tests that mutate the KB
+    on disk and re-load it."""
+    _LOAD_CACHE.clear()
+
+
+def load_content(root: Path) -> LoadResult:
+    """Walk hosted/content/, validate each YAML against its schema, then do
+    a referential-integrity pass. Result is cached per resolved root path —
+    re-calls with the same KB return the same instance.
+    """
+    key = Path(root).resolve()
+    cached = _LOAD_CACHE.get(key)
+    if cached is not None:
+        return cached
+    result = _load_content_impl(key)
+    _LOAD_CACHE[key] = result
+    return result
+
+
+def _load_content_impl(root: Path) -> LoadResult:
+    """The real loader (uncached). Public callers go through `load_content`."""
     result = LoadResult()
 
     # Pass 1: load + validate
@@ -235,6 +281,23 @@ def load_content(root: Path) -> LoadResult:
             for i, sid in enumerate(data.get("sources") or []):
                 if isinstance(sid, str):
                     check_ref(path, sid, "sources", f"sources[{i}]")
+
+        # CSD-5: structured reviewer_signoffs[] — every reviewer_id must
+        # resolve to a ReviewerProfile entity. Legacy `reviewer_signoffs: 0`
+        # is coerced to [] by the schema validator before we see it here,
+        # but the raw YAML may still hold `0`; skip non-list values.
+        if etype in REVIEWER_SIGNOFF_TYPES:
+            signoffs = data.get("reviewer_signoffs")
+            if isinstance(signoffs, list):
+                for i, so in enumerate(signoffs):
+                    if not isinstance(so, dict):
+                        continue
+                    check_ref(
+                        path,
+                        so.get("reviewer_id"),
+                        "reviewers",
+                        f"reviewer_signoffs[{i}].reviewer_id",
+                    )
 
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)

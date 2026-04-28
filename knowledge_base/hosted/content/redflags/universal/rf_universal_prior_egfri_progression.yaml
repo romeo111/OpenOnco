@@ -1,0 +1,65 @@
+id: RF-PRIOR-EGFRI-PROGRESSION
+definition: >
+  Progression on prior EGFR-targeted therapy (osimertinib, erlotinib,
+  gefitinib, afatinib, dacomitinib, amivantamab — for EGFR-mutant NSCLC;
+  cetuximab, panitumumab — for EGFR-WT colorectal). Triggers resistance
+  testing (T790M for 1G/2G EGFRi, C797S/MET-amp/HER2-amp for osimertinib;
+  RAS/BRAF for anti-EGFR mAb in CRC) and selection of resistance-targeted
+  next line.
+definition_ua: >
+  Прогресія на попередній EGFR-таргетній терапії (осимертиніб, ерлотиніб,
+  гефітиніб, афатиніб, дакомітиніб, амівантамаб — для EGFR-мутованого
+  NSCLC; цетуксимаб, паніт умумаб — для EGFR-WT колоректального).
+  Триггерує тестування на резистентність (T790M для 1/2G, C797S/MET-amp/
+  HER2-amp для осимертинібу; RAS/BRAF для anti-EGFR mAb при CRC) і
+  вибір наступної лінії за механізмом резистентності.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_egfri_progression"
+      value: true
+    - all_of:
+        - finding: "prior_egfri_received"
+          value: true
+        - finding: "best_response_to_egfri"
+          value: "PD"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-NCCN-COLON-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  NSCLC: Post-1G/2G EGFRi PD with T790M+ → osimertinib (AURA3 / FLAURA
+  paradigm); post-osimertinib PD: chemo + amivantamab + lazertinib
+  (MARIPOSA-2) or chemo alone, with re-biopsy looking for C797S, MET
+  amplification (savolitinib + osimertinib trials), HER2 amp
+  (T-DXd activity), small-cell transformation (require platinum-etoposide).
+  CRC: post-cetuximab/panitumumab PD with acquired RAS — anti-EGFR
+  rechallenge after anti-EGFR-free interval (CHRONOS trial); HER2 amp
+  (trastuzumab + tucatinib per MOUNTAINEER); BRAF V600E (encorafenib +
+  cetuximab per BEACON).
+notes_ua: >
+  NSCLC: після 1G/2G EGFRi PD з T790M+ → осимертиніб (AURA3 / FLAURA);
+  після осимертинібу PD: chemo + амівантамаб + лазертиніб (MARIPOSA-2)
+  або chemo, з ребіопсією на C797S, MET-amp (savolitinib +
+  осимертиніб), HER2-amp (T-DXd), small-cell transformation (потрібен
+  платина-етопозид). CRC: після цетуксимабу/паніт умумабу PD з набутим
+  RAS — anti-EGFR rechallenge після anti-EGFR-вільного інтервалу
+  (CHRONOS); HER2-amp (трастузумаб + тукатиніб за MOUNTAINEER); BRAF
+  V600E (енкорафеніб + цетуксимаб за BEACON).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

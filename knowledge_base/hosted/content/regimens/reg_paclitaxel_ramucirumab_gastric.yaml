@@ -1,0 +1,71 @@
+id: REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC
+name: "Paclitaxel + Ramucirumab (RAINBOW) — 2L gastric/GEJ"
+name_ua: "Паклітаксель + Рамуцирумаб (RAINBOW) — 2L шлунок/GEJ"
+alternate_names:
+  - "Pac-Ram"
+  - "RAINBOW regimen"
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "80 mg/m²"
+    schedule: "IV days 1, 8, 15 of each 28-day cycle"
+    route: IV
+  - drug_id: DRUG-RAMUCIRUMAB
+    dose: "8 mg/kg"
+    schedule: "IV days 1, 15 of each 28-day cycle"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Pre-paclitaxel: dexamethasone 20 mg PO 12 + 6 h pre-infusion + diphenhydramine 50 mg IV + H2-blocker (hypersensitivity)"
+  - "Antiemetic — low-emetogenic prophylaxis (5-HT3 day 1)"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hypertension Grade ≥2 (SBP ≥150 OR DBP ≥100)"
+    modification: "Optimize antihypertensives; hold ramucirumab if uncontrolled"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Proteinuria >2 g/24h"
+    modification: "Hold ramucirumab until <2 g/24h"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Recent / planned major surgery"
+    modification: "Hold ramucirumab ≥28 days pre-op + ≥28 days post-op until wound healing"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Active GI bleed / perforation history / arterial thromboembolism"
+    modification: "Permanently discontinue ramucirumab"
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Reduce paclitaxel by one dose level; hold until ≤Grade 1"
+  - condition: "Grade 4 neutropenia OR febrile neutropenia"
+    modification: "Reduce paclitaxel by one dose level; G-CSF prophylaxis"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Paclitaxel widely available NSZU-funded. Ramucirumab registered but
+    NOT NSZU-reimbursed for gastric — out-of-pocket / charitable
+    pathway required. Single-agent paclitaxel weekly is the realistic
+    fallback when ramucirumab funding unavailable (modestly inferior
+    OS but practical access).
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-26"
+notes: >
+  RAINBOW trial (Wilke 2014): 2L gastric/GEJ adenocarcinoma post-platinum/
+  fluoropyrimidine — paclitaxel + ramucirumab vs paclitaxel mOS 9.6 vs
+  7.4 mo (HR 0.81), PFS 4.4 vs 2.9 mo, ORR 28% vs 16%. Established as
+  preferred 2L regimen per NCCN cat 1. REGARD trial showed single-agent
+  ramucirumab benefit but combination preferred when tolerated.
+  Hypertension + bleeding monitoring + 28-day pre/post-surgery hold
+  mandatory.
+notes_ua: >
+  RAINBOW дослідження (Wilke 2014): 2L gastric/GEJ adenocarcinoma post-platinum/ fluoropyrimidine — паклітаксел + рамуцирумаб vs паклітаксел mOS 9.6 проти 7.4 міс. (HR 0.81), PFS 4.4 проти 2.9 міс., ORR 28% проти 16%. усталений as переважний 2L схема per NCCN cat 1. REGARD дослідження showed single-agent рамуцирумаб виграш but комбінація переважний when tolerated. гіпертензія + bleeding моніторинг + 28-day pre/post-surgery утримати обов'язковий.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

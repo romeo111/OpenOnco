@@ -1,0 +1,59 @@
+id: RF-IMT-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating crizotinib / lorlatinib / entrectinib or methotrexate /
+  vinorelbine cytotoxic adjuvant in IMT: HBsAg-positive (HBV reactivation
+  on TKI / cytotoxic), anti-HBc-positive (occult HBV), HIV-positive
+  (ART coordination, CYP3A4 interactions with TKIs), or active TB.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед crizotinib / lorlatinib / entrectinib або methotrexate /
+  vinorelbine адʼювантом при IMT: HBsAg+ (реактивація HBV на TKI /
+  цитотоксичній терапії), anti-HBc+ (occult HBV), HIV+ (координація АРТ,
+  CYP3A4-взаємодії з TKI), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-IMT
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ALK / ROS1 / NTRK inhibitors (crizotinib, lorlatinib, alectinib,
+  entrectinib, larotrectinib) are CYP3A4 substrates — coordinate with HIV
+  ART regimens to avoid CYP3A4 inhibitors (ritonavir-boosted PIs) which
+  raise TKI levels and toxicity. HBsAg+: entecavir / tenofovir prophylaxis
+  for duration of TKI (often years in IMT). HIV+: PCP prophylaxis if on
+  cytotoxic methotrexate / vinorelbine. Active TB: complete anti-TB
+  before TKI initiation; rifampin (CYP3A4 inducer) lowers TKI levels —
+  prefer rifabutin if anti-TB needed concurrently.
+notes_ua: >
+  ALK / ROS1 / NTRK-інгібітори — CYP3A4 субстрати; координувати з АРТ,
+  щоб уникнути CYP3A4 інгібіторів (ritonavir-boosted PI). HBsAg+:
+  entecavir / tenofovir на час TKI. ТБ: rifampin — CYP3A4 індуктор,
+  знижує рівні TKI; rifabutin при потребі.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

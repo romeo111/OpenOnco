@@ -1,0 +1,110 @@
+id: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_MUTATED_POST_OSIMERTINIB
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic EGFR-mutated NSCLC (ex19del OR L858R activating mutation)"
+    - "Disease progression on osimertinib 1L (FLAURA / FLAURA2 sequencing)"
+    - "Resistance mechanism characterization recommended (post-osimertinib biopsy or ctDNA NGS — C797S, MET amplification, HER2-mut, transformation)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Activating EGFR mutation (ex19del OR L858R) confirmed at diagnosis; status reassessed for resistance mutations at progression"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "Histologic transformation to small-cell or squamous (excluded — different treatment pathway)"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB  # cytotoxic 3L+ after ami+laz failure
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~36-42% (MARIPOSA-2 ami+laz±chemo arms vs chemo alone)"
+  progression_free_survival: "Median PFS 8.3 mo (ami+chemo) and similar 8.3 mo (ami+laz+chemo) vs 4.2 mo chemo alone (HR ~0.44-0.48)"
+  overall_survival_5y: "OS interim — trend toward benefit; mature OS data evolving"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE  # frail / elderly may not tolerate IRR + VTE risk profile
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # critical — characterize resistance mutations + rule out transformation
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests:
+  - TEST-PDL1-IHC
+
+rationale: >
+  Amivantamab (EGFR-MET bispecific antibody) + lazertinib (3rd-gen
+  EGFR-TKI) for EGFR-mutated metastatic NSCLC (ex19del / L858R)
+  progressing on 1L osimertinib. MARIPOSA-2 demonstrated PFS HR
+  ~0.44-0.48 vs platinum doublet alone. The combination targets both
+  the on-pathway (T790M / C797S resistance mutations) and the
+  bypass-pathway (MET amplification — common osimertinib resistance
+  mechanism) by virtue of amivantamab's dual EGFR + MET targeting.
+  Pre-treatment biopsy or ctDNA NGS strongly recommended to
+  characterize resistance and exclude small-cell transformation
+  (5-15%, requires platinum-etoposide instead). Significant toxicity
+  burden: IRR (mitigated by SC formulation), VTE (DOAC prophylaxis
+  mandatory first 4 mo), rash, paronychia. Aggressive-track for fit
+  patients with funding pathway.
+
+sources:
+  - source_id: SRC-MARIPOSA2-PASSARO-2024
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab + lazertinib ± chemotherapy significantly improved PFS over platinum chemotherapy in EGFR-mutated NSCLC progressing on osimertinib (HR 0.44-0.48); doublet ami+laz arm well-tolerated with required VTE prophylaxis"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab + lazertinib ± chemotherapy is recommended for EGFR-mutated NSCLC progressing on osimertinib; Cat 1 (MARIPOSA-2)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab-based combinations are the new standard for EGFR-mutated NSCLC after osimertinib failure"
+
+known_controversies:
+  - topic: "Ami+laz vs ami+chemo vs ami+laz+chemo vs platinum chemo alone post-osimertinib"
+    positions:
+      - position: "Ami+laz+chemo (MARIPOSA-2): best PFS, highest toxicity"
+        sources: [SRC-MARIPOSA2-PASSARO-2024]
+      - position: "Ami+chemo (MARIPOSA-2): comparable PFS to triplet, slightly less toxicity"
+        sources: [SRC-MARIPOSA2-PASSARO-2024]
+      - position: "Ami+laz doublet (chemo-free): MARIPOSA-2 also tested; comparable PFS for selected fit pts; preferred for chemo-averse"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Platinum chemo alone: REVEL pre-ICI standard; remains realistic fallback in resource-limited settings"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Ami+laz doublet for fit patients (manageable toxicity, no chemo); ami+laz+carbo+pem for high-burden / aggressive disease; platinum doublet for elderly/frail or no ami access"
+    rationale: "Sequencing approach maintains options + reflects UA access reality (ami not registered)"
+
+do_not_do:
+  - "НЕ розпочинати без post-osimertinib re-biopsy або ctDNA NGS — small-cell transformation (~5-15%) потребує etoposide/platinum, не EGFR-targeted."
+  - "НЕ пропускати DOAC profylactic anticoagulation перші 4 місяці — VTE rate ~30% з амі+лазертініб combination."
+  - "НЕ призначати при ECOG ≥2 — IRR + cumulative toxicity непереносимі."
+  - "НЕ використовувати IV формуляцію без full premedication протоколу — IRR ~65% baseline; SC формуляція strongly preferred."
+  - "НЕ ігнорувати baseline + serial ILD monitoring (CT chest) — pneumonitis ризик; permanent discontinuation Grade ≥3."
+  - "НЕ підтверджувати план без funding pathway — ані амівантамаб, ані лазертініб не зареєстровані в Україні; access requires named-patient або cross-border."
+  - "НЕ призначати при відомій historic VTE (DVT/PE) без gastroenterology consult — anticoagulation triple-therapy ризик."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L for
+  EGFR-mutated NSCLC post-osimertinib failure. Reuses
+  REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L. PAPILLON (1L Ex20ins) and
+  MARIPOSA (1L EGFR-mut) are separate Indications. Resistance
+  mutation profile (T790M, C797S, MET-amp, HER2-mut) drives precise
+  3L+ sequencing — separate future Indications.

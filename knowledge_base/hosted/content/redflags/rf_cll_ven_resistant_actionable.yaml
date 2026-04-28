@@ -1,0 +1,82 @@
+id: RF-CLL-VEN-RESISTANT-ACTIONABLE
+definition: >
+  CLL progression on venetoclax — either acquired BCL2 G101V (or rarer
+  D103Y, A113G, R107_R110dup) mutation, or clinical PD on venetoclax-based
+  regimen with or without identified mutation. BCL2 G101V abolishes
+  venetoclax binding; mechanism affects ~50% of post-venetoclax progressors
+  (Blombery 2019). Routes back to BTKi-class therapy (cBTKi if BTKi-naive,
+  pirtobrutinib if cBTKi-exposed) over re-challenge with venetoclax;
+  CAR-T (liso-cel, TRANSCEND-CLL-004) is an option in heavily pretreated
+  fit patients.
+definition_ua: >
+  Прогресія ХЛЛ на венетоклаксі — або набута BCL2 G101V (рідше D103Y,
+  A113G, R107_R110dup) мутація, або клінічна PD на венетоклакс-режимі
+  з або без виявленої мутації. BCL2 G101V скасовує зв'язування
+  венетоклаксу; цей механізм у ~50% post-venetoclax прогресорів
+  (Blombery 2019). Маршрутизує назад до BTKi-класу (cBTKi якщо BTKi-наївний,
+  piртобрутиніб якщо cBTKi-експонований) замість re-challenge венетоклаксу;
+  CAR-T (liso-cel, TRANSCEND-CLL-004) — опція для тяжко предлікованих fit
+  пацієнтів.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "bcl2_g101v_mutation"
+      value: true
+    - finding: "bcl2_resistance_mutation"
+      value: "positive"
+    - finding: "venetoclax_resistance"
+      value: true
+    - all_of:
+        - finding: "prior_venetoclax_received"
+          value: true
+        - finding: "best_response_to_venetoclax"
+          value: "PD"
+    - all_of:
+        - finding: "prior_venetoclax_received"
+          value: true
+        - finding: "venetoclax_progression"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: prior-therapy-class
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Venetoclax retreatment is feasible (~70% ORR) when initial response
+  was deep (uMRD) and treatment-free interval ≥18-24 mo, particularly
+  when given as a fixed-duration course (CLL14-style) — flag does NOT
+  fire for "completed planned 12-cycle ven+obinutuzumab and progressed
+  >24 mo later". Flag fires for: (1) PD on continuous venetoclax,
+  (2) PD on fixed-duration with TFI <18 mo, (3) acquired BCL2 G101V.
+  Combinations under study (venetoclax + pirtobrutinib — BRUIN-CLL-322;
+  ven + obinutuzumab + acalabrutinib — CLL17). BCL2 mutation testing
+  at PD by ddPCR (preferred — high sensitivity for low-VAF subclones)
+  or NGS; can predate clinical PD by 12-24 mo. Access UA: venetoclax
+  is NSZU-listed for CLL R/R; pirtobrutinib not yet listed.
+notes_ua: >
+  Re-challenge венетоклаксом можливий (~70% ORR) при глибокій початковій
+  відповіді (uMRD) та інтервалі без лікування ≥18-24 міс, особливо
+  при fixed-duration курсі (CLL14-стиль) — прапор НЕ спрацьовує для
+  "завершив планові 12 циклів ven+obinutuzumab і прогресував >24 міс
+  пізніше". Прапор спрацьовує: (1) PD на continuous венетоклакс, (2) PD
+  на fixed-duration з TFI <18 міс, (3) набута BCL2 G101V. Комбінації
+  досліджуються (венетоклакс + піртобрутиніб — BRUIN-CLL-322;
+  ven + obinutuzumab + акалабрутиніб — CLL17). BCL2-мутації при PD за
+  ddPCR (краще — висока чутливість для low-VAF subclones) або NGS;
+  можуть передувати клінічній PD на 12-24 міс. Доступ в Україні:
+  венетоклакс — у НСЗУ-списку для CLL R/R; піртобрутиніб ще не в списку.

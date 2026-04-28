@@ -1,0 +1,52 @@
+id: ALGO-HNSCC-RM-1L
+applicable_to_disease: DIS-HNSCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for recurrent / metastatic HNSCC by
+  PD-L1 CPS stratum (KEYNOTE-048 framework). CPS ≥20: pembrolizumab
+  monotherapy (less toxicity, equivalent OS). CPS 1-19: pembrolizumab
+  + 5-FU + platinum (chemo-IO superior OS to EXTREME). CPS <1: chemo-
+  IO with attenuated benefit OR EXTREME (cetuximab + 5-FU + platinum)
+  — fallback EXTREME indication is deferred (not authored). Locally
+  advanced (curative-intent) HNSCC is out of scope for this algorithm.
+
+output_indications:
+  - IND-HNSCC-RM-1L-PEMBRO-CHEMO
+  - IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
+
+default_indication: IND-HNSCC-RM-1L-PEMBRO-CHEMO
+alternative_indication: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "PD-L1 CPS ≥20 AND no rapid progression / visceral crisis AND ECOG 0-2"
+        - red_flag: RF-HNSCC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "PD-L1 CPS ≥1"
+    if_true:
+      result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
+    if_false:
+      result: IND-HNSCC-RM-1L-PEMBRO-CHEMO
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+last_reviewed: '2026-04-26'
+notes: >
+  CPS <1 R/M HNSCC ideally routes to EXTREME (cetuximab + 5-FU +
+  platinum) or chemo-IO with attenuated OS benefit; explicit
+  IND-HNSCC-RM-1L-EXTREME is deferred to a follow-up content session.
+  Genotype-driven 1L (HRAS-mutant tipifarnib, NTRK-fusion
+  larotrectinib/entrectinib, BRAF V600E dabra+trame) are
+  investigational / accelerated and not authored as 1L Indications
+  here. Locally advanced HNSCC (definitive cisplatin + RT, induction
+  chemo, larynx-preservation strategies) is a separate algorithm not
+  yet authored.

@@ -1,0 +1,104 @@
+id: IND-MELANOMA-3L-LIFILEUCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 3
+  stage_requirements:
+    - "Stage IV unresectable / metastatic"
+    - "Progression on or after anti-PD-1 (1L or 2L)"
+    - "If BRAF V600+: also progression on BRAFi+MEKi"
+    - "Resectable lesion ≥1.5 cm³ available for tumor procurement"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    age_min: 18
+    age_max: 70
+
+recommended_regimen: REG-LIFILEUCEL-TIL-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "31.4% (C-144-01 pooled, n=153)"
+  complete_response: "~9%"
+  progression_free_survival: "Median PFS 4.1 mo overall; mDoR not reached at 27.6 mo follow-up among responders"
+  overall_survival_5y: "mOS 13.9 mo overall; durable plateau ~25-30% among responders"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-ECHO
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Lifileucel (autologous TIL therapy, Amtagvi) is the first cellular
+  therapy approved for any solid tumor (FDA 2024-02-16, accelerated).
+  C-144-01 pooled cohorts demonstrated ORR 31.4% with mOS 13.9 mo in
+  patients who had exhausted anti-PD-1 (and BRAFi+MEKi if BRAF V600+)
+  — a population with otherwise grim prognosis (historical mOS ~6-8
+  mo). Single-infusion treatment intent. Specialty-center pathway:
+  tumor procurement → ~22-day central manufacturing → cy/flu
+  lymphodepletion → TIL infusion → up to 6 doses bolus IL-2 → 4-week
+  recovery. Treatment-related mortality ~7% — strict patient selection
+  required (ECOG ≤1, organ function adequate for IL-2). Ukraine access
+  pathway: international referral only.
+
+sources:
+  - source_id: SRC-C14401-CHESNEY-2024
+    position: supports
+    relevant_quote_paraphrase: "C-144-01 pooled cohorts (n=153): lifileucel ORR 31.4%, mOS 13.9 mo, mDoR not reached at 27.6 mo follow-up — first cellular therapy for solid tumors; FDA accelerated approval 2024"
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "Lifileucel TIL therapy is a recommended option for advanced melanoma after progression on anti-PD-1 (and BRAFi+MEKi if BRAF V600+); referral to specialty TIL center"
+
+known_controversies:
+  - topic: "lifileucel vs anti-PD-1 retreatment vs clinical trial as 3L+ strategy"
+    positions:
+      - position: "Lifileucel is the only therapy with regulatory approval in this setting; durable responses possible"
+        sources: [SRC-C14401-CHESNEY-2024]
+      - position: "Anti-PD-1 retreatment (with prior response) yields ORR ~15%; cheaper, more accessible"
+        sources: [SRC-NCCN-MELANOMA-2025]
+      - position: "Clinical trial enrollment preferred when accessible (novel cellular / bispecific approaches)"
+        sources: [SRC-NCCN-MELANOMA-2025]
+    our_default: "Lifileucel for fit ECOG 0-1 patients with international-referral pathway accessible; anti-PD-1 retreatment otherwise"
+    rationale: "Cellular therapy is unique salvage option but access-limited; retreatment is realistic UA fallback"
+
+do_not_do:
+  - "НЕ призначати без верифікованої spec center authorization — Iovance authorized treatment center або EU pilot site (Ukraine не має внутрішніх можливостей)."
+  - "НЕ давати systemic corticosteroids (>10 мг/добу преднізолону) до або одразу після TIL інфузії — abrogates TIL function."
+  - "НЕ призначати при ECOG ≥2, LVEF <45%, FEV1 <60%, DLCO <60% — IL-2 contraindications, treatment-related mortality неприпустимо висока."
+  - "НЕ пропускати baseline brain MRI — untreated CNS mets exclusion."
+  - "НЕ робити в центрі без ICU доступу + досвіду в IL-2 management — capillary leak syndrome може бути fatal."
+  - "НЕ ігнорувати antimicrobial prophylaxis (PCP, HSV, fungal) під час prolonged neutropenia post-cy/flu."
+  - "НЕ підтверджувати план без funding pathway (~USD 500-700K all-in) + travel/lodging + 6-week absence from home."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. 3L+ aggressive-track
+  cellular salvage. Ukraine access constraint dominant: international
+  referral required (Iovance US authorized centers; EU pilot sites
+  emerging — Spain, Netherlands, Germany). Loft cost USD ~515K for
+  TIL product alone; total package USD 500-700K. Treatment-related
+  mortality ~7% — patient selection critical. Position in algorithm:
+  default "lifileucel_default" branch when both IO and BRAFi
+  exhausted, OR BRAF-WT post-IO with no other actionable option.

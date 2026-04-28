@@ -1,0 +1,83 @@
+id: IND-NSCLC-ELDERLY-CARBO-PEM-MOD
+plan_track: standard
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV non-squamous NSCLC in elderly (≥75 years) AND/OR ECOG 2 patients"
+    - "No actionable driver mutation (EGFR, ALK, ROS1, BRAF, MET, RET, NTRK negative; PD-L1 TPS <50% or untested)"
+    - "Goal: balance disease control with tolerability; reduced carboplatin AUC + standard pemetrexed"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-TPS
+      required: false
+      value_constraint: "PDL1 TPS <50% (TPS ≥50% would direct to pembrolizumab monotherapy KEYNOTE-024 paradigm)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      required: false
+      value_constraint: "Driver-negative; EGFR mut → osimertinib pathway"
+    - biomarker_id: BIO-ALK-FUSION
+      required: false
+      value_constraint: "ALK fusion-negative; ALK+ → alectinib pathway"
+  demographic_constraints:
+    age_min: 65
+    ecog_max: 2
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~30% carbo + pem (extrapolated from JCOG 0803 elderly NSCLC; Quoix 2011 Lancet)
+  complete_response: ~3%
+  progression_free_survival: Median PFS ~5-6 mo (elderly cohorts; lower than fit cohorts)
+  overall_survival_5y: Median OS ~10-14 mo (elderly cohorts; addition of pembro per KEYNOTE-189 may extend further)
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-TRANSFORMATION-PROGRESSION
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO
+  - TEST-PDL1-IHC
+desired_tests: []
+rationale: 'For elderly (≥75 years) and/or ECOG 2 patients with stage IV non-squamous NSCLC without actionable drivers, full-dose carboplatin AUC 5-6 + pemetrexed 500 mg/m² + pembrolizumab (KEYNOTE-189 dose schedule) has unacceptable toxicity. Modified regimen: carboplatin AUC 4 + pemetrexed 500 mg/m² q21d × 4-6 cycles, then pemetrexed maintenance ± pembrolizumab. JCOG 0803 (Quoix 2011 Lancet) established elderly-specific carbo + pacli/gem combinations; ELDERS (Gridelli 2018) and other elderly-specific trials confirmed dose-modified approach feasible. KEYNOTE-189 / KEYNOTE-407 enrolled patients ≤75 in majority but elderly subgroup analyses (JCO 2020 elderly PCM) suggest pembro addition still beneficial. ECOG 2 patients have more limited evidence; single-agent chemo (weekly paclitaxel, gemcitabine) acceptable. Comprehensive geriatric assessment (CGA) recommended for ≥75 to identify frailty + reversible deficits. STUB regimen — no dedicated REG- entity for elderly carbo-pem-mod yet; flagged for REG follow-up.'
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: For elderly / ECOG 2 NSCLC, carboplatin AUC 4-5 + pemetrexed (non-squamous) with reduced dose intensity is preferred; pembrolizumab addition per KEYNOTE-189 acceptable when tolerable
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: Elderly NSCLC patients should undergo CGA before treatment selection; dose-modified platinum doublet ± ICI for fit-elderly; single-agent chemo for ECOG 2 / frail
+  - source_id: SRC-KEYNOTE-189-GANDHI-2018
+    position: supports
+    relevant_quote_paraphrase: KEYNOTE-189 trial — see referenced publication for primary outcome data.
+known_controversies:
+  - topic: Modified carbo-pem ± pembro vs single-agent chemo vs pembro mono for elderly NSCLC
+    positions:
+      - position: Carbo-pem + pembro at reduced dose — best PFS; tolerable for fit-elderly
+        sources:
+          - SRC-NCCN-NSCLC-2025
+      - position: Single-agent chemo (weekly paclitaxel or gemcitabine) — gentler, ECOG 2 acceptable
+        sources:
+          - SRC-ESMO-NSCLC-METASTATIC-2024
+      - position: Pembro monotherapy (if PDL1 ≥50%) — chemo-free, well-tolerated in elderly
+        sources:
+          - SRC-NCCN-NSCLC-2025
+        evidence_note: KEYNOTE-024 mPFS 10.3 vs 6.0 mo; elderly-specific subgroup OS HR 0.79
+    our_default: Pembro mono if PDL1 ≥50% + ECOG 0-1; modified carbo-pem ± pembro for PDL1 <50% + ECOG 0-1; single-agent chemo for ECOG 2; best supportive care for ECOG ≥3
+    rationale: PDL1 status + ECOG drive choice; geriatric assessment essential for individualization
+do_not_do:
+  - НЕ використовувати full-dose carboplatin (AUC 6) у ≥75 років без CGA — toxicity непомірна для frail.
+  - НЕ комбінувати з anti-EGFR / VEGF без strict indication — older patients мають вищі вторинні наслідки.
+  - "НЕ забути CGA + frailty assessment — Charlson + G8 score керують modulation."
+  - НЕ ігнорувати pembrolizumab immunotoxicity у elderly — pneumonitis + colitis частіші, потребують швидкого steroid intervention.
+  - НЕ продовжувати при ECOG ≥3 — focus shift до palliative care + best supportive care.
+  - НЕ забувати про vaccine update (influenza, pneumococcal, COVID-19) до старту IO — efficacy зменшена з PD-1 блокадою.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Special-population indication for elderly / ECOG 2 NSCLC 1L. Missing entity flag: dedicated REG-CARBO-PEM-MOD-ELDERLY ± REG-PEMBRO-CARBO-PEM-MOD — author in PROD-2.'

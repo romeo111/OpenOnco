@@ -1,0 +1,99 @@
+id: IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: BRAF_V600E
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic BRAF V600E-mutant NSCLC"
+    - "Disease progression on 1L therapy (platinum chemo ± ICI)"
+    - "Note: 1L use also approved (BRF113928 cohort C ORR 64%); 2L primary positioning here per typical sequencing"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600E
+      value_constraint: "BRAF V600E confirmed by NGS or PCR"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DABRAFENIB-TRAMETINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~63% pretreated cohort B; ~64% 1L cohort C (BRF113928)"
+  progression_free_survival: "Median PFS 9.7 mo (cohort B)"
+  overall_survival_5y: "Median OS 18.2 mo (cohort B)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # confirm BRAF V600E (V600K, V600D, non-V600 less responsive)
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-ECHO  # baseline LVEF — MEK inhibitor cardiomyopathy monitoring
+desired_tests: []
+
+rationale: >
+  Dabrafenib (BRAF inhibitor) + trametinib (MEK inhibitor) for BRAF
+  V600E-mutant metastatic NSCLC (~1-2% of NSCLC adenocarcinoma).
+  BRF113928 phase-2 cohort B (pretreated): ORR 63%, mPFS 9.7 mo, mOS
+  18.2 mo. Cohort C (1L) ORR 64%. FDA approval 2017 for any-line BRAF
+  V600E+ NSCLC. Pyrexia (~50% any-grade, often recurrent) and LVEF
+  decline are dominant clinical management challenges; protocol-driven
+  pyrexia management (hold both, restart when afebrile) maintains
+  exposure. V600K, V600D, and non-V600 BRAF mutations are NOT
+  reliably responsive to this regimen — confirm V600E specifically.
+  Encorafenib + binimetinib (PHAROS, 2023) is alternative — same
+  combination strategy, comparable efficacy, slightly less pyrexia.
+
+sources:
+  - source_id: SRC-BRF113928-PLANCHARD-2016
+    position: supports
+    relevant_quote_paraphrase: "Dabrafenib + trametinib in BRAF V600E+ pretreated NSCLC (cohort B): ORR 63%, mPFS 9.7 mo, mOS 18.2 mo; cohort C 1L ORR 64%"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Dabrafenib + trametinib is recommended for BRAF V600E+ NSCLC any line; Cat 1 (BRF113928); encorafenib + binimetinib alternative"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "BRAF V600E+ NSCLC: dabrafenib+trametinib OR encorafenib+binimetinib as preferred targeted options any line"
+
+known_controversies:
+  - topic: "Dabrafenib + trametinib (BRF113928) vs encorafenib + binimetinib (PHAROS) for BRAF V600E+ NSCLC"
+    positions:
+      - position: "Dab+tram (BRF113928): longer track record; pyrexia dominant AE"
+        sources: [SRC-BRF113928-PLANCHARD-2016]
+      - position: "Enco+bini (PHAROS, 2023): comparable efficacy; slightly less pyrexia"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Dab+tram for established access in UA (registered, partial reimbursement); enco+bini if pyrexia intolerable"
+    rationale: "Comparable efficacy; UA access pattern favors dab+tram (registered)"
+
+do_not_do:
+  - "НЕ призначати при non-V600 BRAF mutations (V600K часто responsive, V600D variable, fusion / class-2 / class-3 NOT responsive)."
+  - "НЕ ігнорувати pyrexia management protocol — hold both drugs, antipyretics, restart коли afebrile; не permanent discontinuation за reversible pyrexia."
+  - "НЕ ігнорувати baseline + serial LVEF (echo q3 mo) — MEK inhibitor cardiomyopathy."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers."
+  - "НЕ використовувати при baseline LVEF <50% або severe HF."
+  - "НЕ ігнорувати dermatologic surveillance — secondary skin malignancies (SCC, KA) можливі class effect."
+  - "НЕ підтверджувати план без funding — частковий покриття НСЗУ; може потребувати co-pay або charity."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for BRAF
+  V600E+ NSCLC any line. Encorafenib + binimetinib (PHAROS) is
+  alternative — separate future Indication.

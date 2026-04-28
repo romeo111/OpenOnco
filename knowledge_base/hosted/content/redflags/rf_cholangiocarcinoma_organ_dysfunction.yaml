@@ -1,0 +1,68 @@
+id: RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard gemcitabine + cisplatin +
+  durvalumab in advanced biliary tract cancer: Child-Pugh B/C cirrhosis or
+  bilirubin >3× ULN (impaired hepatic clearance of gem-cis + FGFR2/IDH1
+  inhibitors, increased toxicity), CrCl <30 mL/min (cisplatin
+  contraindicated; reduced gemcitabine), or LVEF <50% (FGFR2-inhibitor
+  cardiac monitoring requirement).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартному gemcitabine +
+  cisplatin + durvalumab при поширеній холангіокарциномі: Child-Pugh B/C
+  цироз або білірубін >3× ULN (порушений печінковий кліренс gem-cis +
+  FGFR2/IDH1-інгібіторів, підвищена токсичність), CrCl <30 (cisplatin
+  протипоказаний; зменшити gemcitabine), або LVEF <50% (FGFR2-інгібітори
+  потребують моніторингу серця).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "child_pugh_class"
+      value: "B"
+    - finding: "child_pugh_class"
+      value: "C"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-CHOLANGIOCARCINOMA
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Child-Pugh B/C: cisplatin component should be omitted or replaced;
+  consider gemcitabine monotherapy or capecitabine. FGFR2-inhibitors
+  (pemigatinib, futibatinib, infigratinib) require dose adjustment in
+  hepatic impairment per FDA labels. Ivosidenib (IDH1) requires QTc
+  monitoring + dose reduction with hepatic dysfunction. CrCl <30:
+  cisplatin contraindicated — substitute carboplatin or omit. ABC-02 /
+  TOPAZ-1 / KEYNOTE-966 enrolled mostly preserved hepatic function;
+  extrapolation to Child-Pugh B requires individualized risk-benefit.
+notes_ua: >
+  Child-Pugh B/C: компонент cisplatin слід пропустити або замінити;
+  розглянути gemcitabine монотерапію або capecitabine. FGFR2-інгібітори
+  (пемігатиніб, футибатиніб, інфігратиніб) потребують корекції доз при
+  печінковій дисфункції відповідно до FDA. Івосиденіб (IDH1) потребує
+  моніторингу QTc + зменшення дози при печінковій дисфункції. CrCl <30:
+  cisplatin протипоказаний — замінити карбоплатином або пропустити.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

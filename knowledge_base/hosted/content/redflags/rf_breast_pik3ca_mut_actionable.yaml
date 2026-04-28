@@ -1,0 +1,59 @@
+id: RF-BREAST-PIK3CA-MUT-ACTIONABLE
+definition: >
+  PIK3CA hotspot activating mutation (E542K, E545K, H1047R/L) in
+  HR+/HER2- metastatic breast cancer — present in ~40% of cases.
+  After progression on endocrine ± CDK4/6i, alpelisib + fulvestrant
+  (SOLAR-1 — mPFS 11.0 vs 5.7 mo) or capivasertib + fulvestrant
+  (CAPItello-291 — mPFS 7.3 vs 3.1 mo) are 2L+ targeted options.
+definition_ua: >
+  Активуюча мутація hotspot PIK3CA (E542K, E545K, H1047R/L) при HR+/HER2-
+  метастатичному раку молочної залози — ~40% випадків. Після
+  прогресування на ендокринотерапії ± CDK4/6i: алпелісиб + фулвестрант
+  (SOLAR-1 — мПФВ 11.0 проти 5.7 міс) або капівасертиб + фулвестрант
+  (CAPItello-291 — мПФВ 7.3 проти 3.1 міс) — 2L+ таргетні варіанти.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "pik3ca_mutation"
+      value: true
+    - finding: "pik3ca_status"
+      value: "mutated"
+    - finding: "pik3ca_hotspot"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-SOLAR1-ANDRE-2019
+  - SRC-CAPITELLO291-TURNER-2023
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Hyperglycemia + diarrhea + rash class on-target effects; DM screening
+  + glycemic management plan required before alpelisib initiation.
+  Capivasertib has a more favorable hyperglycemia profile but similar
+  rash + diarrhea. Test on tumor tissue OR plasma ctDNA at progression
+  (concordance high). Order AKT1 + PTEN concurrently — same drug class
+  responds across all three pathway alterations (CAPItello-291 cohort).
+notes_ua: >
+  Гіперглікемія + діарея + висип — класові on-target ефекти; необхідне
+  планування глікемічного контролю + скринінг на ЦД до початку
+  алпелісибу. Капівасертиб має сприятливіший профіль гіперглікемії,
+  але подібні висип + діарею. Тест на пухлинній тканині АБО плазмовій
+  цоДНК при прогресуванні (висока конкордантність). Замовляти AKT1 +
+  PTEN одночасно — той же клас препаратів реагує на всі три альтерації
+  шляху (когорта CAPItello-291).

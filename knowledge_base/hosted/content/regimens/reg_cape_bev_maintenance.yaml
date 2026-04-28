@@ -1,0 +1,72 @@
+id: REG-CAPE-BEV-MAINTENANCE
+name: "Capecitabine + Bevacizumab maintenance (post-FOLFOX/CapOx induction, mCRC)"
+name_ua: "Капецитабін + Бевацизумаб підтримуюча терапія (після індукції FOLFOX/CapOx, мКРР)"
+alternate_names:
+  - "Cape-Bev maintenance"
+  - "CAIRO3-style maintenance"
+
+components:
+  - drug_id: DRUG-CAPECITABINE
+    dose: "1000 mg/m² PO BID"
+    schedule: "days 1-14 of each 21-day cycle"
+    route: PO
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "7.5 mg/kg IV"
+    schedule: "day 1 of each 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hand-foot syndrome G≥2"
+    modification: "Hold capecitabine; resume at 75% on resolution to ≤G1; topical urea/emollient + pyridoxine"
+    rationale: "Capecitabine HFS is dose-related and reversible"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Proteinuria >2 g/24h OR uncontrolled HTN"
+    modification: "Hold bevacizumab; antihypertensive optimisation; resume on proteinuria <2 g and BP control"
+    rationale: "VEGF-class effect; risk of nephrotic-range proteinuria + hypertensive crisis"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "GI perforation OR fistula OR arterial thromboembolism"
+    modification: "Permanent discontinuation of bevacizumab"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Capecitabine 75% (750 mg/m² BID); CrCl <30 → contraindicated"
+    rationale: "Capecitabine renal clearance"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Major surgery planned"
+    modification: "Hold bevacizumab ≥4 weeks before and ≥4 weeks after surgery"
+    rationale: "Wound healing + bleeding risk"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Capecitabine + bevacizumab (incl. biosimilars) — реімбурсуються НСЗУ для мКРР."
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  CAIRO3 (Simkens 2015, Lancet) and AIO 0207 established maintenance
+  with capecitabine + bevacizumab after 6 cycles induction (CapOx-Bev
+  or FOLFOX-Bev) — improves PFS vs observation; reintroduction of full
+  doublet on progression. Standard de-escalation strategy in mCRC after
+  induction response or stable disease. Lower-toxicity than continuing
+  oxaliplatin (avoids cumulative neuropathy).
+notes_ua: >
+  CAIRO3 (Simkens 2015, Lancet) і AIO 0207 встановили підтримку
+  капецитабін + бевацизумаб після 6 циклів індукції (CapOx-Bev або
+  FOLFOX-Bev) — покращує PFS vs спостереження; реіндукція повного
+  дублету при прогресуванні. Стандартна стратегія де-ескалації в мКРР
+  після відповіді або стабілізації. Нижча токсичність, ніж продовження
+  оксаліплатину (уникає кумулятивної нейропатії).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,95 @@
+id: IND-EMERG-TLS-PROPHYLAXIS-RASBURICASE
+plan_track: standard
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+  - "High-risk tumor lysis syndrome setting BEFORE initiating cytotoxic / cytoreductive therapy"
+  - "High-risk patients: Burkitt lymphoma (any stage), AML with hyperleukocytosis (WBC >100K), B-ALL high risk, lymphoblastic lymphoma, bulky high-grade lymphoma with elevated LDH (>2× ULN)"
+  - "Goal: prevent acute kidney injury, hyperkalemia, hyperphosphatemia, hypocalcemia, fatal arrhythmia from rapid tumor lysis"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    ecog_max: 4
+recommended_regimen: null
+concurrent_therapy:
+- DRUG-ALLOPURINOL
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~90% achieve normalization of uric acid within 24h with rasburicase
+  complete_response: N/A (prevention, not response)
+  progression_free_survival: N/A (prevention indication)
+  overall_survival_5y: TLS-related mortality reduced from ~17% (allopurinol-only era, high-risk) to <2%
+    with rasburicase + IV hydration (Cortes 2010 J Clin Oncol; meta-analyses)
+hard_contraindications: []
+red_flags_triggering_alternative:
+- RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+- RF-BURKITT-HIGH-RISK
+required_tests:
+- TEST-CBC
+- TEST-CMP
+- TEST-LFT
+- TEST-LDH
+- TEST-COAG-PANEL
+desired_tests: []
+rationale: 'Tumor lysis syndrome (TLS) prophylaxis with rasburicase 0.2 mg/kg IV daily × 1-5 days + IV hydration
+  (2.5-3 L/m²/day) + concomitant allopurinol 300-600 mg PO daily is mandatory before cytotoxic / cytoreductive
+  therapy in high-risk patients. Rasburicase (recombinant urate oxidase) cleaves uric acid → allantoin
+  (renally cleared) — far more effective than allopurinol (which only inhibits new uric acid formation,
+  does not break down preformed pool). Cairo-Bishop classification defines TLS risk: high-risk = Burkitt
+  + AML with WBC >100K + B-ALL high risk + lymphoblastic lymphoma + bulky high-grade lymphoma with LDH
+  >2× ULN. Rasburicase reduces TLS-related AKI from ~10-20% to <2% in high-risk cohorts. CONTRAINDICATIONS:
+  G6PD deficiency (severe haemolysis risk — screen Asian / African / Mediterranean ancestry; methemoglobinemia
+  risk also). Pregnancy CATEGORY C. ALLOPURINOL alone (300-600 mg PO daily) acceptable for intermediate-risk
+  patients (some MM, some CLL, FL high tumor burden). IV hydration target: maintain urine output ≥100-150
+  mL/h; monitor electrolytes q6-12h × 72h. Avoid alkalinization (older protocol; risks calcium phosphate
+  precipitation). Hemodialysis access on standby for refractory hyperkalemia / AKI. Often time-critical
+  (must initiate before chemotherapy).'
+sources:
+- source_id: SRC-NCCN-AML-2025
+  position: supports
+  relevant_quote_paraphrase: Rasburicase 0.2 mg/kg IV daily × 1-5 days + IV hydration + allopurinol is preferred
+    TLS prophylaxis for high-risk patients (Burkitt, AML hyperleuk, B-ALL HR, bulky high-grade lymphoma);
+    G6PD screening required
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+  relevant_quote_paraphrase: TLS prophylaxis with rasburicase for high-risk hematologic malignancies (Burkitt,
+    high-grade lymphoma, ALL); allopurinol for intermediate-risk; IV hydration foundational
+known_controversies:
+- topic: Rasburicase single-dose (3-7.5 mg flat) vs weight-based daily (0.2 mg/kg × 5 days)
+  positions:
+  - position: Single-dose flat (3-7.5 mg) — cost-effective, often sufficient (Vadhan-Raj 2012 JCO)
+    sources:
+    - SRC-NCCN-AML-2025
+  - position: Weight-based daily × 5 days — FDA-label, ensures sustained urate clearance
+    sources:
+    - SRC-NCCN-BCELL-2025
+  our_default: Weight-based 0.2 mg/kg daily × 1-3 days for very-high-risk (Burkitt, AML hyperleuk); single
+    dose 3-6 mg for intermediate-risk; redose only if uric acid rises
+  rationale: Single-dose effective for moderate burden; weight-based daily preserves protocol fidelity for
+    highest-risk
+do_not_do:
+- "НЕ використовувати rasburicase у G6PD-deficient пацієнтів — фатальний oxidative haemolysis + methemoglobinemia."
+- НЕ забути screen G6PD у пацієнтів Asian / African / Mediterranean ancestry до старту rasburicase.
+- НЕ використовувати alkalinization (NaHCO3) — risk calcium phosphate + uric acid precipitation; abandoned
+  per modern protocols.
+- НЕ ігнорувати hyperkalemia — fatal arrhythmia ризик; Kayexalate / insulin-glucose / calcium gluconate
+  + hemodialysis на standby.
+- НЕ затримувати chemotherapy при адекватному prophylaxis — disease control critical для AML hyperleuk
+  / Burkitt; balance ризик.
+- НЕ забути IV hydration target — UO ≥100-150 mL/h; loop diuretics для maintenance.
+- НЕ забути обробку sample крові на ice + швидкий transport — uric acid вимірювання falsely low post-rasburicase
+  (in vitro continued urate degradation).
+time_critical: true
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Emergency supportive-care indication for TLS prophylaxis
+  in high-risk hematologic malignancies. time_critical=true: must initiate before / concurrent with cytotoxic
+  therapy. Cross-disease relevance (AML, Burkitt, B-ALL, bulky lymphoma) — disease_id=DIS-AML used as
+  proxy; engine should fire across multiple disease pathways. Reference SUP-TLS-PROPHYLAXIS exists for
+  intermediate-risk allopurinol-only protocol.'

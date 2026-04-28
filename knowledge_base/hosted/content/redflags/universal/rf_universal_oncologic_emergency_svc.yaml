@@ -1,0 +1,70 @@
+id: RF-ONCOLOGIC-EMERGENCY-SVC
+definition: >
+  Superior vena cava (SVC) syndrome: facial/neck swelling, plethora,
+  jugular distension, venous collateral, dyspnea/stridor due to
+  obstructed superior vena cava blood flow by mediastinal mass.
+  Triggers urgent steroids, expedited histologic diagnosis, immediate
+  initiation of disease-directed therapy (chemotherapy for chemosensitive
+  histologies, RT for chemorefractory), and consideration of
+  endovascular SVC stenting for severe symptoms.
+definition_ua: >
+  Синдром верхньої порожнистої вени (SVC): набряк обличчя/шиї,
+  плетора, набухання яремних вен, венозні колатералі, задишка/стридор
+  через обструкцію кровотоку у верхній порожнистій вені медіастинальною
+  масою. Триггерує невідкладні стероїди, прискорену гістологічну
+  діагностику, негайний старт хвороб-направленої терапії (хіміотерапія
+  при хіміочутливих гістологіях, ПТ при хіміорезистентних) та розгляд
+  ендоваскулярного стентування SVC при тяжких симптомах.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "svc_syndrome"
+      value: true
+    - finding: "svc_obstruction"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 40
+category: oncologic-emergency
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  SVC syndrome causes: SCLC (~10% present with SVC), NSCLC, lymphoma
+  (PMBCL, DLBCL with bulky mediastinal mass, T-LBL), thymic carcinoma,
+  mediastinal germ cell tumors, indwelling catheter thrombosis.
+  Treatment urgency depends on YR-Kishi grade — grade 3-4 (laryngeal/
+  cerebral edema, hemodynamic compromise) needs immediate stenting +
+  empiric steroids while awaiting biopsy. Avoid empiric XRT before
+  biopsy — destroys diagnostic tissue, common error in lymphoma
+  presentations. Steroids dexamethasone 4-10 mg q6h initially. Once
+  histology confirmed: PMBCL/DLBCL — DA-EPOCH-R or R-CHOP cycle 1
+  with TLS prophylaxis; SCLC — platinum-etoposide + atezolizumab; T-LBL
+  — hyper-CVAD or pediatric-inspired. Stenting via IR provides relief
+  in 24-72h regardless of histology.
+notes_ua: >
+  Причини SVC: SCLC (~10% зі SVC), NSCLC, лімфома (PMBCL, DLBCL з
+  bulky медіастинальною масою, T-LBL), тимоми, гермінативні пухлини
+  медіастінуму, тромбоз центрального катетера. Невідкладність за
+  градусом YR-Kishi — 3-4 ступінь (ларингеальний/церебральний набряк,
+  гемодинамічний компроміс) потребує негайного стентування + емпіричні
+  стероїди до біопсії. Уникати емпіричної ПТ до біопсії — знищує
+  діагностичну тканину, поширена помилка при лімфомах. Стероїди
+  дексаметазон 4-10 mg q6h. Після гістології: PMBCL/DLBCL — DA-EPOCH-R
+  або R-CHOP цикл 1 з TLS-профілактикою; SCLC — платина-етопозид +
+  атезолізумаб; T-LBL — hyper-CVAD або pediatric-inspired. Стентування
+  через ІР дає полегшення за 24-72 години незалежно від гістології.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

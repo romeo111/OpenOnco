@@ -1,0 +1,132 @@
+id: ALGO-BREAST-HR-POS-2L
+applicable_to_disease: DIS-BREAST
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ HR+/HER2- metastatic breast Indication after progression
+  on AI ± CDK4/6i. Subtype-restricted: only fires for the HR+/HER2-
+  cohort. Branching driven by molecular profile (PIK3CA / AKT1 /
+  PTEN, ESR1, HER2-low). Default fallback when no targetable mutation
+  and HER2-IHC=0: fulvestrant + everolimus (BOLERO-2 backbone).
+
+output_indications:
+  - IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB
+  - IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+  - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
+  - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+  - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+  - IND-BREAST-BRCA-POS-MET-PARPI
+
+default_indication: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+alternative_indication: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+
+decision_tree:
+  # Step 0 — gBRCA1/2 mutation rescue. CLAUDE.md guidance: PARPi for
+  # HR+/HER2- gBRCA-mut metastatic is handled at 1L (OlympiAD); revisit
+  # at 2L if PARPi not yet given. Most HR+/HER2- gBRCA-mut patients
+  # arrive here on the AI±CDK4/6i path (OlympiAD line position varied);
+  # offering olaparib/talazoparib at 2L when PARPi-naive is supported
+  # by OlympiAD/EMBRACA OS data.
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
+    if_true:
+      result: IND-BREAST-BRCA-POS-MET-PARPI
+    if_false:
+      next_step: 1
+    notes: "MDT-only — 2L PARPi entry assumes PARPi-naive at 1L (OlympiAD line-position varied; ESMO 2024 supports 2L+ when PARPi not yet given); MDT confirms not-already-exposed before this branch fires."
+
+  # Step 1 — PIK3CA / AKT1 / PTEN alteration → capivasertib preferred
+  # (broader pathway coverage + intermittent dosing tolerability);
+  # alpelisib alternative when only PIK3CA mutation present and
+  # capivasertib not accessible.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-PIK3CA-MUT-ACTIONABLE
+        - red_flag: RF-BREAST-AKT1-E17K-ACTIONABLE
+        - condition: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
+    if_true:
+      result: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — ESR1 mutation present → elacestrant
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-ESR1-MUT-ACTIONABLE
+    if_true:
+      result: IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
+    if_false:
+      next_step: 3
+
+  # Step 3 — HER2-low (IHC 1+ or IHC 2+/ISH-) detected → next step
+  # checks chemo-line eligibility. Split from old single all_of step
+  # so the biomarker arm wires additively to RF-BREAST-HER2-LOW-ACTIONABLE.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-HER2-LOW-ACTIONABLE
+    if_true:
+      next_step: 4
+    if_false:
+      next_step: 5
+
+  - step: 4
+    # Sub-step: HER2-low + chemo-line eligibility (≥1 prior chemo OR rapid
+    # progression on endocrine). Free-text retained — no fitness RF for
+    # chemo-line count exists; defaults to T-DXd either way (line eligibility
+    # is an MDT confirmation, not a contraindication).
+    evaluate:
+      any_of:
+        - condition: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
+    if_true:
+      result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+    if_false:
+      result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+    notes: "MDT-only — chemo-line eligibility check has no dedicated RF; T-DXd default for HER2-low metastatic per DESTINY-Breast04."
+
+  # Step 5 — default: fulvestrant + everolimus (BOLERO-2 backbone, no
+  # biomarker gating, broadly applicable when no targetable mutation
+  # and HER2-IHC=0).
+  - step: 5
+    evaluate:
+      any_of:
+        - condition: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
+    if_true:
+      result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+    if_false:
+      result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+    notes: "Default fall-through — no biomarker gating; expressed as plain condition for documentation."
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-SOLAR1-ANDRE-2019
+  - SRC-CAPITELLO291-TURNER-2023
+  - SRC-EMERALD-BIDARD-2022
+  - SRC-BOLERO2-BASELGA-2012
+  - SRC-DESTINY-BREAST04-MODI-2022
+
+last_reviewed: "2026-04-27"
+notes: >
+  Subtype constraint: HR+/HER2- only — algorithm should be entered
+  only after receptor-subtype branching at the disease-level dispatcher
+  routes the patient here. Schema currently lacks a top-level
+  `receptor_subtype` field on Algorithm; encoded in purpose + via
+  Indication.applicable_to.receptor_subtype on each output.
+
+  Sequencing rationale (default order):
+    PIK3CA/AKT1/PTEN > ESR1 > HER2-low > no-biomarker
+  Capivasertib preferred over alpelisib in the pathway-altered
+  branch because (1) broader coverage (3 genes vs 1), (2) intermittent
+  4-on/3-off dosing better tolerated, (3) more recent evidence base.
+  Alpelisib remains a valid alternative if PIK3CA-only and
+  capivasertib not accessible (UA major access barrier — neither is
+  reimbursed).
+
+  PARPi (olaparib/talazoparib) for HR+/HER2- gBRCA-mut metastatic is
+  handled by IND-BREAST-BRCA-POS-MET-PARPI in 1L; revisit at 2L if
+  PARPi not yet given. Not in this algo's default tree to keep the
+  decision focused on post-CDK4/6i targeted-therapy selection.

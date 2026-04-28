@@ -1,0 +1,100 @@
+id: ALGO-BREAST-TNBC-2L
+applicable_to_disease: DIS-BREAST
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L+ TNBC metastatic Indication after progression on 1L
+  pembro + chemo (PD-L1+) or chemo alone (PD-L1-). Subtype-restricted:
+  only fires for TNBC cohort. Branching on germline BRCA status →
+  HER2-low status → default sacituzumab.
+
+output_indications:
+  - IND-BREAST-TNBC-2L-BRCA-OLAPARIB
+  - IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB
+  - IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+  - IND-BREAST-TNBC-2L-SACITUZUMAB
+
+default_indication: IND-BREAST-TNBC-2L-SACITUZUMAB
+alternative_indication: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+
+decision_tree:
+  # Step 1 — germline BRCA1/2 mutation present → PARPi (olaparib OR
+  # talazoparib by patient preference + AE-profile fit). Olaparib
+  # default selection because UA-reimbursed for breast indication;
+  # talazoparib requires named-patient access.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
+    if_true:
+      result: IND-BREAST-TNBC-2L-BRCA-OLAPARIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — HER2-low (IHC 1+ or IHC 2+/ISH-) detected → next step checks
+  # chemo-line eligibility. Split from previous all_of so the biomarker
+  # arm wires additively to RF-BREAST-HER2-LOW-ACTIONABLE.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-HER2-LOW-ACTIONABLE
+    if_true:
+      next_step: 3
+    if_false:
+      next_step: 4
+
+  - step: 3
+    # Sub-step: HER2-low + chemo-line eligibility (≥1 prior chemo line).
+    # Free-text retained — no fitness RF for chemo-line count exists.
+    evaluate:
+      any_of:
+        - condition: "≥1 prior chemo line for metastatic disease"
+    if_true:
+      result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+    if_false:
+      result: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
+    notes: "MDT-only — chemo-line eligibility check has no dedicated RF; T-DXd default for HER2-low metastatic TNBC per DESTINY-Breast04 subset."
+
+  # Step 4 — default: sacituzumab govitecan (ASCENT) — no biomarker
+  # gating, applies to HER2 IHC=0 metastatic TNBC ≥2L.
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
+    if_true:
+      result: IND-BREAST-TNBC-2L-SACITUZUMAB
+    if_false:
+      result: IND-BREAST-TNBC-2L-SACITUZUMAB
+    notes: "Default fall-through — sacituzumab govitecan per ASCENT."
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-OLYMPIAD-ROBSON-2017
+  - SRC-EMBRACA-LITTON-2018
+  - SRC-DESTINY-BREAST04-MODI-2022
+  - SRC-ASCENT-BARDIA-2021
+
+last_reviewed: "2026-04-27"
+notes: >
+  Subtype constraint: TNBC only — algorithm should be entered only
+  after receptor-subtype branching at the disease-level dispatcher
+  routes the patient here (ER<1% AND PR<1% AND HER2-negative).
+  Schema lacks a top-level `receptor_subtype` field on Algorithm;
+  encoded in purpose + Indication.applicable_to.receptor_subtype.
+
+  Sequencing rationale (default order):
+    BRCA-germline > HER2-low > no-biomarker (default sacituzumab)
+
+  Olaparib chosen as default PARPi over talazoparib because of UA
+  reimbursement (olaparib reimbursed for breast indication;
+  talazoparib named-patient only). Talazoparib remains valid
+  alternative if patient cannot tolerate olaparib GI profile or has
+  patient-preference reason.
+
+  T-DXd-vs-sacituzumab sequencing for HER2-low TNBC is unsettled;
+  default is T-DXd first (DB-04 OS signal stronger than ASCENT in
+  the same line position) but trial data in this exact setting are
+  limited (TNBC HER2-low subset of DB-04 was n=63).
+
+  After PARPi failure in BRCA-mut cohort: revisit at step 2/3 (T-DXd
+  if HER2-low, otherwise sacituzumab). Follow-up authoring task.

@@ -1,0 +1,61 @@
+id: RF-PRIOR-PARPI-EXPOSED
+definition: >
+  Patient has received prior PARP inhibitor (olaparib, niraparib,
+  rucaparib, talazoparib) — either as maintenance or for treatment of
+  HRD/BRCA-mutant disease. PARPi-exposure influences subsequent line:
+  reduces benefit of platinum rechallenge, alters ADC selection
+  (mirvetuximab in ovarian), and is increasingly a stratification
+  variable in trial design.
+definition_ua: >
+  Пацієнт отримав попередню PARP-інгібіторну терапію (олапариб,
+  ніраpariб, рукапариб, талазопариб) — як підтримку або як лікування
+  HRD/BRCA-мутованої хвороби. PARPi-експозиція впливає на наступну
+  лінію: зменшує користь повторної терапії платиною, змінює вибір ADC
+  (мірветуксимаб при оваріальному), і все частіше — стратифікаційна
+  змінна в дизайні трайлів.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_parpi_received"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 90
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ARIEL3-COLEMAN-2017
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Direction `investigate` (not de-escalate) because PARPi-exposure does
+  not contraindicate any specific next-line — it informs ranking.
+  Ovarian: post-PARPi platinum-sensitive recurrence — platinum doublet
+  remains standard but ORR drops 20-30% vs PARPi-naive (Frenel 2022,
+  OREO study); mirvetuximab soravtansine for FRα+ resistance/maintenance
+  candidates (MIRASOL); bevacizumab combinations retain activity. Breast
+  BRCA: post-talazoparib/olaparib (OlympiAD/EMBRACA) PD — capecitabine,
+  eribulin, sacituzumab govitecan (TNBC), T-DXd if HER2-low. Prostate:
+  post-olaparib PD (PROfound) — radium-223 if bone-predominant, Lu-177-
+  PSMA-617, cabazitaxel.
+notes_ua: >
+  Направлення `investigate` (не de-escalate), бо PARPi-експозиція не
+  протипоказує жодну конкретну наступну лінію — інформує ранжування.
+  Оваріальний: після PARPi платина-чутливий рецидив — платинова
+  комбінація залишається стандартом, але ORR падає 20-30% vs
+  PARPi-наївних; мірветуксимаб соравтансин для FRα+. Молочна BRCA:
+  після талазопарибу/олапарибу PD — капецитабін, ерибулін, сацитузумаб
+  говітекан (TNBC), T-DXd при HER2-low. Простата: після олапарибу PD
+  — радій-223, Lu-177-PSMA-617, кабазитаксел.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,49 @@
+id: RF-R-ISS-3-HIGH-RISK
+definition: "Multiple myeloma with R-ISS stage 3 — ISS-3 (β2M ≥5.5) PLUS LDH above ULN PLUS high-risk cytogenetics by FISH (any of t(4;14), t(14;16), del(17p)) — most aggressive presentation; supports four-drug D-VRd induction + ASCT (eligible) or D-Rd intensification (unfit) + maintenance"
+definition_ua: "Множинна мієлома з R-ISS стадією 3 — ISS-3 (β2M ≥5,5) ПЛЮС LDH вище ULN ПЛЮС цитогенетика високого ризику за FISH (будь-яке з t(4;14), t(14;16), del(17p)) — найагресивніша форма; підтримує 4-компонентну індукцію D-VRd + АТКМ (для придатних) або інтенсифікацію D-Rd (для неприданих) + підтримуюча терапія"
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "beta2_microglobulin_mg_per_l"
+      threshold: 5.5
+      comparator: ">="
+    - finding: "ldh_above_uln"
+      value: true
+    - any_of:
+        - finding: "mm_high_risk_cytogenetics"
+          value: true
+        - finding: "fish_t_4_14"
+          value: true
+        - finding: "fish_t_14_16"
+          value: true
+        - finding: "fish_del_17p"
+          value: true
+        - finding: "tp53_deletion"
+          value: true
+
+clinical_direction: intensify
+
+severity: critical
+category: risk-score
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm:
+  - ALGO-MM-1L
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-27"
+notes: >
+  R-ISS (Palumbo et al., JCO 2015) refined ISS by adding LDH and FISH
+  cytogenetics: R-ISS-3 = ISS-3 + LDH-high + high-risk FISH. R-ISS-3
+  median OS ~43 mo pre-daratumumab; modern PERSEUS / IsKia / GRIFFIN
+  show D-VRd benefits across risk groups but absolute outcomes in
+  R-ISS-3 remain inferior — argues for tandem ASCT consideration
+  (StaMINA / EMN02) and aggressive maintenance (lenalidomide +/- daratumumab
+  + ixazomib in selected protocols). Severity `critical` for conflict
+  resolution: this should win over standard de-escalation flags.
+  Co-fires with biomarker-actionability flags for individual cytogenetic
+  hits.

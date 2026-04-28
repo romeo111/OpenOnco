@@ -1,0 +1,68 @@
+id: RF-GIST-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard imatinib / sunitinib /
+  regorafenib / avapritinib in GIST: LVEF <50% (sunitinib + regorafenib
+  cardiotoxicity, hypertension), CrCl <30 mL/min (TKI-class dose
+  adjustment, especially regorafenib), bilirubin >3× ULN (imatinib /
+  avapritinib hepatic clearance — dose-limiting toxicity), or
+  uncontrolled hypertension (sunitinib / regorafenib contraindicated).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартній імatinib /
+  sunitinib / regorafenib / avapritinib при GIST: LVEF <50%
+  (кардіотоксичність sunitinib + regorafenib, гіпертензія), CrCl <30
+  (корекція дози TKI, особливо regorafenib), білірубін >3× ULN
+  (печінковий кліренс imatinib / avapritinib), неконтрольована
+  гіпертензія (sunitinib / regorafenib протипоказані).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "uncontrolled_hypertension"
+      value: true
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-GIST
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-GIST-2025
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Imatinib well-tolerated in mild-moderate hepatic impairment; severe
+  hepatic dysfunction (Child-Pugh C) requires dose reduction. Sunitinib
+  (2L) — significant cardiac signal: LVEF decline, hypertension,
+  hand-foot syndrome — require baseline ECHO + serial monitoring, hold
+  if LVEF drops >15% or below 50%. Regorafenib (3L) — hepatotoxicity
+  (FDA boxed warning), severe hand-foot, hypertension — contraindicated
+  if Child-Pugh C. Avapritinib carries CNS bleeding signal; QTc
+  monitoring not required but cognitive effects observed at 300 mg.
+  Uncontrolled hypertension is gating for sunitinib/regorafenib —
+  optimize before initiation.
+notes_ua: >
+  Imatinib добре переноситься при легкій-помірній печінковій дисфункції;
+  тяжка дисфункція (Child-Pugh C) — корекція дози. Sunitinib (2L) —
+  значущий кардіо-сигнал: зниження LVEF, гіпертензія — базовий ЕхоКГ +
+  серійний моніторинг, утримати якщо LVEF падає >15% або <50%.
+  Regorafenib (3L) — гепатотоксичність (FDA boxed warning), тяжкий hand-
+  foot, гіпертензія — протипоказаний при Child-Pugh C.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

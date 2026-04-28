@@ -1,0 +1,85 @@
+id: IND-EMERG-INFUSION-REACTION-IRR
+plan_track: standard
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 1
+  stage_requirements:
+  - "Grade ≥2 infusion-related reaction during monoclonal antibody infusion (rituximab, obinutuzumab, daratumumab, cetuximab, trastuzumab, etc.)"
+  - "Symptoms: chills, rigors, fever, urticaria, dyspnea, hypotension, bronchospasm, angioedema, anaphylaxis"
+  - "Goal: stop infusion immediately, stabilize patient, manage with steroids + antihistamine + bronchodilator + epi (if anaphylaxis), evaluate for resumption at slower rate"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 0
+    ecog_max: 4
+recommended_regimen: null
+concurrent_therapy: []
+followed_by: []
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: '1'
+expected_outcomes:
+  overall_response_rate: ~95% successfully resume infusion at slower rate after grade 1-2 IRR management
+  complete_response: N/A (acute management)
+  progression_free_survival: N/A
+  overall_survival_5y: Anaphylaxis (grade 4 IRR) mortality without epinephrine ~10-15%; with proper management
+    <1%
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+- TEST-CBC
+- TEST-CMP
+desired_tests: []
+rationale: 'Infusion-related reactions (IRRs) are common with monoclonal antibodies, particularly first
+  doses of CD20-targeted (rituximab, obinutuzumab — IRR rate ~50-77%), CD38 (daratumumab — ~46%), EGFR
+  (cetuximab — ~3% severe), HER2 (trastuzumab — ~30% mild), bispecifics (mosunetuzumab, glofitamab —
+  CRS overlap). CTCAE v5 grading: G1 transient flushing/rash/fever; G2 requires intervention/interruption
+  but rapid response; G3 prolonged, recurrent symptoms requiring hospitalization; G4 life-threatening
+  (anaphylaxis, ARDS); G5 death. ALGORITHM: G1 — slow infusion 50%; G2 — STOP infusion + IV diphenhydramine
+  25-50 mg + IV hydrocortisone 100 mg (or methylprednisolone 40-80 mg) + acetaminophen 650-1000 mg PO/IV
+  + supportive (oxygen, fluids); resume at 50% rate after symptoms resolve; G3 — STOP + above + bronchodilator
+  (albuterol nebulized) if bronchospasm + IV fluid bolus if hypotensive; resume at 25% rate next time
+  with extended premedication; G4 (anaphylaxis) — STOP + IM EPINEPHRINE 0.3-0.5 mg (1:1000) + repeat q5-15
+  min as needed + IV diphenhydramine + IV methylprednisolone 125 mg + bronchodilator + IV fluid bolus
+  + ICU admission; PERMANENTLY DISCONTINUE the offending agent. Premedication for subsequent infusions:
+  steroid (dexamethasone 20 mg PO/IV night before AND morning of) + antihistamine (diphenhydramine 50 mg
+  IV) + acetaminophen + ranitidine/famotidine. Some centers use montelukast for cetuximab. STUB regimen
+  — no dedicated REG- entity for IRR management protocol yet; flagged for REG follow-up.'
+sources:
+- source_id: SRC-NCCN-BCELL-2025
+  position: supports
+  relevant_quote_paraphrase: "IRR management algorithm: stop infusion, antihistamine + steroid + acetaminophen for grade 2-3; epinephrine + ICU for grade 4 anaphylaxis; permanent discontinuation for severe / recurrent"
+- source_id: SRC-CTCAE-V5
+  position: supports
+  relevant_quote_paraphrase: CTCAE v5 grades infusion-related reactions G1-G5; G4 anaphylaxis is life-threatening;
+    epinephrine + steroid + antihistamine standard
+known_controversies:
+- topic: Resume infusion vs permanent discontinuation after grade 3 IRR
+  positions:
+  - position: Resume at slower rate with extended premedication — preserves access to active therapy
+    sources:
+    - SRC-NCCN-BCELL-2025
+  - position: Permanent discontinuation — avoid recurrence risk; substitute alternative agent
+    sources:
+    - SRC-NCCN-BCELL-2025
+  our_default: Resume cautiously after grade 3 single episode with extended premedication; permanent discontinue
+    after recurrent G3 OR any G4
+  rationale: Rituximab/obinutuzumab IRR usually first-dose only; subsequent doses better tolerated; balance
+    benefit vs recurrence risk
+do_not_do:
+- "НЕ продовжувати інфузію при grade ≥2 IRR — STOP immediately."
+- НЕ забувати IM EPINEPHRINE при grade 4 anaphylaxis — затримка асоційована з mortality.
+- НЕ використовувати IV epinephrine boli — IM 1:1000 preferred (peripheral; IV epi для cardiac arrest only).
+- НЕ призначати steroid alone при anaphylaxis — slow onset; epinephrine first-line.
+- НЕ забувати про biphasic anaphylaxis — observation ≥4-6h після resolution; повторна reactions у ~5%.
+- НЕ повертати пацієнта на той самий agent після grade 4 без strict alternative consideration — recurrence
+  ризик підвищена + може бути fatal.
+- НЕ забути document IRR detail (timing, symptoms, vitals, intervention, outcome) для майбутніх cycles.
+time_critical: true
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Emergency supportive-care indication for infusion-related
+  reaction management. time_critical=true: rapid intervention required, particularly for grade 4 anaphylaxis.
+  Cross-disease relevance — disease_id=DIS-DLBCL-NOS used as proxy (rituximab IRRs most common); engine
+  should fire across all monoclonal antibody indications.'

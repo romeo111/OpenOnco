@@ -1,0 +1,44 @@
+id: RF-MASTOCYTOSIS-INFECTION-SCREENING
+definition: "Mastocytosis pre-cytoreductive therapy infection screening: HBsAg+, anti-HCV+, HIV+, latent TB — relevant before cladribine, IFN-α, or allo-HCT"
+definition_ua: "Мастоцитоз: інфекційний скринінг до циторедуктивної терапії: HBsAg+, anti-HCV+, HIV+, латентний ТБ — релевантно перед кладрибіном, IFN-α, ало-ТГСК"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "hbsag_positive"
+      value: true
+    - finding: "hcv_antibody_positive"
+      value: true
+    - finding: "hiv_positive"
+      value: true
+    - finding: "latent_tb_positive"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 60
+category: infection-screening
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-AASLD-HBV-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Cladribine (purine analog) is profoundly lymphotoxic; per NCCN-SM:
+  HBV/HCV/HIV screen mandatory before cytoreductive therapy. AASLD-HBV
+  2024 mandates entecavir or TAF prophylaxis for HBsAg+ on lymphocyte-
+  depleting therapy through 12 months post-completion. Direction HOLD
+  on cytoreduction until prophylaxis underway. STUB — requires
+  clinical co-lead signoff.
+notes_ua: >
+  кладрибін (purine analog) is profoundly lymphotoxic; per NCCN-SM: HBV/HCV/HIV screen обов'язковий before cytoreductive терапія. AASLD-HBV 2024 mandates entecavir or TAF prophylaxis for HBsAg+ on lymphocyte- depleting терапія through 12 months post-completion. Direction утримати on cytoreduction until prophylaxis underway. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,85 @@
+id: RF-CLL-POST-BTKI-C481-ACTIONABLE
+definition: >
+  CLL with acquired BTK C481S (rarely C481R/F/Y) mutation after progression
+  on covalent BTK inhibitor (ibrutinib, acalabrutinib, zanubrutinib).
+  C481S abolishes covalent binding of cBTKi to BTK; non-covalent BTKi
+  (pirtobrutinib) retains activity (BRUIN, Mato Lancet 2021;
+  pirtobrutinib in cBTKi-pretreated CLL ORR 82%, mPFS 19.6 mo). Routes
+  2L+/3L+ post-cBTKi CLL with confirmed C481-axis resistance to
+  pirtobrutinib over chemoimmunotherapy or alloHCT.
+definition_ua: >
+  ХЛЛ із набутою BTK C481S (рідко C481R/F/Y) мутацією після прогресії
+  на ковалентному BTK-інгібіторі (ібрутиніб, акалабрутиніб, занубрутиніб).
+  C481S скасовує ковалентне зв'язування cBTKi з BTK; нековалентні BTKi
+  (піртобрутиніб) зберігають активність (BRUIN, Mato Lancet 2021;
+  піртобрутиніб у cBTKi-предлікованих CLL ORR 82%, мПФВ 19.6 міс).
+  Маршрутизує 2L+/3L+ post-cBTKi CLL з підтвердженою C481-axis резистентністю
+  на піртобрутиніб замість chemoimmuno або alloHCT.
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "prior_btki_received"
+          value: true
+        - finding: "prior_cbtki_received"
+          value: true
+    - any_of:
+        - finding: "btk_c481s_mutation"
+          value: true
+        - finding: "btk_c481_mutation"
+          value: "positive"
+        - finding: "btk_resistance_mutation"
+          value: "C481S"
+        - finding: "plcg2_mutation"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: prior-therapy-class
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Distinguish from RF-PRIOR-BTKI-PROGRESSION (universal, broad) — that
+  flag fires on any cBTKi PD; this flag is mutation-confirmed C481S
+  resistance, the canonical mechanism of acquired cBTKi resistance
+  (~80% of CLL patients with progressive disease on cBTKi). PLCG2
+  mutations (R665W, S707F/Y, L845F) are an alternative resistance
+  mechanism (~15%) — also responds to pirtobrutinib. Test at PD by
+  ddPCR or NGS on peripheral-blood mononuclear cells (sensitivity
+  better than BM in CLL). Venetoclax + rituximab (MURANO) and
+  CAR-T (TRANSCEND-CLL-004 with liso-cel, ORR 80%, CR 18% in heavy
+  pretreatment) are the alternative options for pirtobrutinib-
+  ineligible or pirtobrutinib-progressed; combinations under study
+  (pirto + ven; pirto + ven + obinutuzumab — BRUIN-CLL-321/322).
+  Access UA: pirtobrutinib not yet NSZU-listed; international
+  early-access pathways.
+notes_ua: >
+  Відрізняти від RF-PRIOR-BTKI-PROGRESSION (універсальний, широкий) — той
+  спрацьовує на будь-яку cBTKi PD; цей — мутаційно-підтверджена C481S
+  резистентність, канонічний механізм набутої резистентності до cBTKi
+  (~80% CLL пацієнтів з прогресією на cBTKi). PLCG2 мутації (R665W,
+  S707F/Y, L845F) — альтернативний механізм (~15%) — теж відповідає
+  на піртобрутиніб. Тестувати при PD ddPCR або NGS на периферичних
+  мононуклеарах (чутливість краща за BM при CLL). Венетоклакс + ритуксимаб
+  (MURANO) і CAR-T (TRANSCEND-CLL-004 з liso-cel, ORR 80%, CR 18% при
+  тяжкій предлікованості) — альтернативи для piртобрутиніб-неприйнятних
+  або piртобрутиніб-прогресованих; комбінації досліджуються (pirto + ven;
+  pirto + ven + obinutuzumab — BRUIN-CLL-321/322). Доступ в Україні:
+  піртобрутиніб ще не в НСЗУ-списку; міжнародні early-access шляхи.
+
+# MISSING SOURCE: SRC-BRUIN-MATO-2021 (Lancet 2021) — phase-1/2 pirtobrutinib
+# in cBTKi-pretreated B-cell malignancies. Tier-2.

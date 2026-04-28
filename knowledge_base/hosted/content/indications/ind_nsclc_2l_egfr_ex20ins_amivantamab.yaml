@@ -1,0 +1,104 @@
+id: IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_EX20INS
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic EGFR exon 20 insertion-mutated NSCLC"
+    - "Disease progression on platinum-based chemotherapy (1L)"
+    - "Note: PAPILLON established ami+chemo as 1L SoC for Ex20ins; this Indication covers post-platinum 2L mono use (CHRYSALIS pathway) when 1L was platinum alone"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "EGFR exon 20 insertion confirmed by NGS (DNA-NGS preferred — variable insertion sites, not detected by hotspot PCR)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-AMIVANTAMAB-MONO-NSCLC-EX20INS
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB  # cytotoxic 3L+ after amivantamab failure
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~40% (CHRYSALIS post-platinum cohort)"
+  progression_free_survival: "Median PFS 8.3 mo (CHRYSALIS)"
+  overall_survival_5y: "Median OS 22.8 mo (CHRYSALIS)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # critical — DNA-NGS to confirm Ex20ins (variable site)
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests:
+  - TEST-PDL1-IHC
+
+rationale: >
+  Amivantamab monotherapy for EGFR exon 20 insertion-mutated metastatic
+  NSCLC progressing on platinum chemotherapy. EGFR Ex20ins (~10% of
+  EGFR-mut NSCLC) is poorly responsive to standard EGFR-TKIs (osimertinib
+  ORR ~10-25%) due to the variable insertion site that distorts the
+  ATP-binding pocket. CHRYSALIS phase-1 expansion: ORR 40%, mPFS 8.3 mo,
+  mOS 22.8 mo — basis for FDA accelerated approval (2021). PAPILLON
+  has subsequently established ami+carbo+pem as the 1L SoC for Ex20ins;
+  this 2L mono indication applies when 1L was platinum alone (e.g., before
+  PAPILLON results, or in resource-limited settings). DNA-NGS (not
+  hotspot PCR) is essential for Ex20ins detection — sites are variable
+  and not all assays capture them. SC amivantamab strongly preferred
+  over IV given dramatic IRR reduction.
+
+sources:
+  - source_id: SRC-CHRYSALIS-PARK-2021
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab monotherapy in EGFR Ex20ins NSCLC post-platinum: ORR 40%, mPFS 8.3 mo, mOS 22.8 mo (basis for FDA accelerated approval 2021)"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab monotherapy is recommended for EGFR Ex20ins NSCLC after platinum chemotherapy; Cat 1 (CHRYSALIS); for treatment-naïve disease ami+carbo+pem (PAPILLON) is preferred 1L"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Amivantamab is the preferred targeted option for EGFR Ex20ins NSCLC; PAPILLON established 1L combination, CHRYSALIS supports 2L monotherapy"
+
+known_controversies:
+  - topic: "Amivantamab mono vs mobocertinib vs platinum-doublet for 2L EGFR Ex20ins"
+    positions:
+      - position: "Amivantamab mono (CHRYSALIS): ORR 40%, durable; standard 2L"
+        sources: [SRC-CHRYSALIS-PARK-2021]
+      - position: "Mobocertinib: oral; FDA approval withdrawn 2023 due to negative confirmatory trial"
+        sources: [SRC-NCCN-NSCLC-2025]
+        evidence_note: "Mobocertinib no longer recommended; confirmatory failure"
+      - position: "Platinum doublet: realistic fallback when amivantamab not accessible"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Amivantamab mono for fit pts with funding pathway; platinum doublet (or doc-ram if 1L was platinum) as fallback when ami unavailable"
+    rationale: "Mobocertinib withdrawn; amivantamab is the only validated targeted 2L for Ex20ins"
+
+do_not_do:
+  - "НЕ призначати osimertinib або інші 1G/2G/3G EGFR-TKI для EGFR Ex20ins — ORR <25%, не active."
+  - "НЕ використовувати mobocertinib — FDA approval withdrawn 2023 (negative confirmatory trial)."
+  - "НЕ підтверджувати Ex20ins на базі hotspot PCR — DNA-NGS обов'язковий (variable insertion sites)."
+  - "НЕ використовувати IV без full premedication протоколу — IRR ~65% cycle 1; SC formulation preferred."
+  - "НЕ підтверджувати план без funding pathway — амівантамаб не зареєстрований в Україні."
+  - "НЕ ігнорувати baseline + serial ILD monitoring (CT chest)."
+  - "НЕ призначати при ECOG 3-4 — IRR + AE profile непереносимий."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L for EGFR
+  Ex20ins post-platinum. PAPILLON 1L combo (ami+carbo+pem) is separate
+  future Indication. Mobocertinib withdrawn 2023; zipalertinib /
+  furmonertinib in development.

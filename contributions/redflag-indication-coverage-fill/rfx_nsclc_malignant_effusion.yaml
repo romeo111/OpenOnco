@@ -1,0 +1,56 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_nsclc_malignant_effusion.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-NSCLC-MALIGNANT-EFFUSION
+definition: "NSCLC with symptomatic malignant pleural / pericardial effusion: dyspnea at rest, hypoxia, hemodynamic compromise (effusion-driven hypotension or tamponade physiology)"
+definition_ua: "НМРЛ із симптомним злоякісним плевральним / перикардіальним випотом: задишка у спокої, гіпоксія, гемодинамічний компроміс (гіпотензія чи ознаки тампонади)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "malignant_pleural_effusion_symptomatic"
+      value: true
+    - finding: "pericardial_effusion_tamponade"
+      value: true
+    - finding: "hypoxia_at_rest"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 30
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN-NSCLC: thoracentesis ± indwelling pleural catheter ± talc
+  pleurodesis for symptomatic relief before / parallel to systemic
+  therapy. Pericardial effusion: window or pericardiocentesis
+  depending on tamponade status. Note: malignant pleural effusion
+  classifies disease as M1a (per AJCC 8th ed.) → systemic therapy
+  is the pathway, not curative-intent treatment. Direction HOLD
+  until symptomatic relief achieved. Priority 30. STUB — requires
+  clinical co-lead signoff.
+notes_ua: >
+  Per NCCN-NSCLC: thoracentesis ± indwelling pleural catheter ± talc pleurodesis for symptomatic relief before / parallel to systemic терапія. Pericardial effusion: window or pericardiocentesis depending on tamponade status. Note: malignant pleural effusion classifies хвороба as M1a (per AJCC 8th ed.) → systemic терапія is the pathway, not curative-intent лікування. Direction утримати until symptomatic relief achieved. Priority 30. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

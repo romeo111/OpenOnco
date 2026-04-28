@@ -1,0 +1,59 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_prostate_cord_compression.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-PROSTATE-CORD-COMPRESSION
+definition: "Metastatic prostate cancer with malignant epidural spinal cord compression (MESCC): new motor deficit, sensory level, cauda equina syndrome, severe back pain with vertebral metastasis — prostate is the most common solid tumor cause of MESCC"
+definition_ua: "Метастатичний рак простати із синдромом стиснення спинного мозку (MESCC): новий моторний дефіцит, сенсорний рівень, синдром кінського хвоста, біль у спині з вертебральними метастазами — простата є найчастішою солідною причиною MESCC"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "spinal_cord_compression"
+      value: true
+    - finding: "new_motor_deficit_with_back_pain"
+      value: true
+    - finding: "cauda_equina_syndrome"
+      value: true
+    - finding: "vertebral_metastasis_with_canal_invasion"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-PROSTATE
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+  - SRC-EAU-PROSTATE-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN-PROSTATE supportive-care + EAU-PROSTATE 2024: dexamethasone
+  10 mg IV bolus + 4 mg q6h, MRI whole spine within 24 h, multidisciplinary
+  surgical/RT review. Patchell criteria for surgery (single-level, ≥48 h
+  expected survival, paraplegia <24 h). RT alone for non-surgical
+  candidates. ADT initiation accelerates response in hormone-naïve;
+  androgen-receptor pathway inhibitor in mCRPC. Direction HOLD on
+  routine outpatient systemic therapy until cord stabilized.
+  Priority 8. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Per NCCN-PROSTATE supportive-care + EAU-PROSTATE 2024: dexamethasone 10 mg IV bolus + 4 mg q6h, MRI whole spine within 24 h, multidisciplinary surgical/RT review. Patchell criteria for surgery (single-level, ≥48 h expected виживаність, paraplegia <24 h). RT alone for non-surgical candidates. ADT initiation accelerates відповідь in hormone-naïve; androgen-receptor pathway інгібітор in mCRPC. Direction утримати on routine outpatient systemic терапія until cord stabilized. Priority 8. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

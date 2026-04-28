@@ -1,0 +1,48 @@
+id: RF-CHOLANGIOCARCINOMA-FRAILTY-AGE
+definition: "Age ≥75 with ECOG ≥2 or ≥2 comorbidities — gemcitabine + cisplatin + durvalumab triplet poorly tolerated; consider gemcitabine + cisplatin doublet, gemcitabine monotherapy, or best supportive care depending on biliary-tree dysfunction and performance status."
+definition_ua: "Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — триплет gemcitabine + cisplatin + durvalumab погано переноситься; розглянути дублет gemcitabine + cisplatin, моно-gemcitabine або симптоматичну допомогу залежно від білі-обструкції і ECOG."
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-CHOLANGIOCARCINOMA]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-HCC-2025
+  - SRC-ONCOKB
+
+last_reviewed: '2026-04-26'
+draft: false
+
+notes: >
+  TOPAZ-1 (gem-cis-durvalumab) and KEYNOTE-966 (gem-cis-pembrolizumab)
+  enrolled mostly ECOG 0–1 fit patients; older / frail patients have
+  higher rates of gem-cis-related thrombocytopenia, neutropenia, and
+  decompensated cholestasis. Geriatric assessment (G8) recommended ≥70.
+  In frail patients with adequate biliary drainage, gem-cis doublet
+  (ABC-02 doublet) remains acceptable; gem monotherapy or capecitabine
+  for very frail. Source gap: NCCN Hepatobiliary / ESMO Biliary Tract
+  Cancer guideline not yet ingested as a separate Source entity — using
+  SRC-NCCN-HCC-2025 (adjacent hepatobiliary reference per disease YAML
+  precedent) and SRC-ONCOKB until biliary-specific Source is added.
+notes_ua: >
+  TOPAZ-1 (гем-цис-дурвалумаб) and KEYNOTE-966 (гем-цис-пембролізумаб) enrolled mostly ECOG 0–1 fit patients; older / frail patients have higher rates of гем-цис-related тромбоцитопенія, нейтропенія, and decompensated cholestasis. Geriatric assessment (G8) рекомендований ≥70. In frail patients with adequate biliary drainage, гем-цис дублет (ABC-02 дублет) remains прийнятний; gem монотерапія or капецитабін for very frail. Source gap: NCCN Hepatobiliary / ESMO Biliary Tract рак настанова not yet ingested as a separate Source сутність — using SRC-NCCN-HCC-2025 (adjacent hepatobiliary reference per хвороба YAML precedent) and SRC-ONCOKB until biliary-specific Source is added.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,10 +1,10 @@
 """Variant actionability lookup — match patient biomarkers to
-BiomarkerActionability cells (ESCAT / OncoKB) for a given disease.
+BiomarkerActionability cells (ESCAT) for a given disease.
 
 Render-time metadata only. The engine MUST NOT consult these tier
 assignments as a treatment-selection signal — that would replicate the
 LLM-ranks-treatments anti-pattern (CHARTER §8.3). Tracks come from the
-declarative Algorithm; this module surfaces parallel ESCAT/OncoKB
+declarative Algorithm; this module surfaces parallel ESCAT
 context next to the chosen track for tumor-board discussion.
 
 Patient `biomarkers` may take several shapes (the ingestion path varies):
@@ -185,12 +185,16 @@ def find_matching_actionability(
             bma_id = cell.get("id")
             if not bma_id or bma_id in hits:
                 continue
+            # `evidence_sources` (Phase 1.5+) carries per-source level
+            # attestations. Default empty for back-compat with legacy
+            # YAML still using `oncokb_level`; Phase 1.5 migrates the
+            # latter into `evidence_sources` entries.
             hits[bma_id] = {
                 "bma_id": bma_id,
                 "biomarker_id": cell_bid,
                 "variant_qualifier": cell.get("variant_qualifier"),
                 "escat_tier": cell.get("escat_tier"),
-                "oncokb_level": cell.get("oncokb_level"),
+                "evidence_sources": list(cell.get("evidence_sources") or []),
                 "evidence_summary": (cell.get("evidence_summary") or "").strip(),
                 "recommended_combinations": list(cell.get("recommended_combinations") or []),
                 "primary_sources": list(cell.get("primary_sources") or []),

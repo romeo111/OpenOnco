@@ -1,0 +1,78 @@
+id: RF-THYROID-PAPILLARY-HIGH-RISK-BIOLOGY
+definition: >
+  Papillary thyroid carcinoma with adverse molecular / clinical features:
+  BRAF V600E (~60% of PTC, more aggressive when paired with TERT promoter
+  mutation), TERT promoter mutation (~10%, strongly adverse — 5-yr OS
+  <50% in advanced), TP53 mutation (rare, dedifferentiation risk), NTRK
+  / RET / ALK fusion (rare in PTC; targeted therapy candidate),
+  radioactive-iodine (RAI)-refractory metastatic disease, or aggressive
+  histologic variant (tall cell, columnar, hobnail) — re-routes to
+  multikinase inhibitor (lenvatinib / sorafenib) or selective TKI
+  (selpercatinib / larotrectinib / dabrafenib).
+definition_ua: >
+  Папілярна карцинома щитоподібної залози з несприятливими молекулярними
+  / клінічними ознаками: BRAF V600E (~60% PTC, більш агресивна у
+  поєднанні з TERT promoter мутацією), TERT promoter мутація (~10%,
+  виражено несприятлива — 5-річна ЗВ <50% у поширеній), мутація TP53
+  (рідко, ризик дедиференціації), фузія NTRK / RET / ALK (рідко в PTC;
+  кандидат на таргетну), RAI-рефрактерна метастатична хвороба або
+  агресивний гістологічний варіант (tall cell, columnar, hobnail) —
+  змінює тактику на мультикіназний інгібітор (lenvatinib / sorafenib)
+  або селективний TKI (selpercatinib / larotrectinib / dabrafenib).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-BRAF-V600E"
+      value: "positive"
+    - finding: "tert_promoter_mutation"
+      value: true
+    - finding: "BIO-TP53-MUTATION"
+      value: "positive"
+    - finding: "BIO-NTRK-FUSION"
+      value: "positive"
+    - finding: "BIO-RET"
+      value: "fusion"
+    - finding: "BIO-ALK-FUSION"
+      value: "positive"
+    - finding: "rai_refractory"
+      value: true
+    - finding: "aggressive_histology_variant"
+      value: true
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-THYROID-PAPILLARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Most PTC is indolent (10-yr OS >95%) — high-risk biology flag is
+  about identifying the ~5-10% who will have aggressive course. BRAF
+  V600E + TERT promoter co-mutation is the strongest adverse molecular
+  signature (Liu et al, JCO 2017 — meta-analysis 5-yr OS hazard ratio
+  ~3-4). RAI-refractory disease (no iodine uptake on diagnostic scan,
+  progression on therapeutic activities ≥600 mCi cumulative) → lenvatinib
+  (SELECT trial PFS 18 vs 4 mo). RET-fusion PTC (~10% of pediatric / young
+  adult) → selpercatinib (LIBRETTO-001) preferred over multikinase. NTRK-
+  fusion PTC → larotrectinib (NCCN tumor-agnostic). BRAF-mut RAI-refractory
+  → dabrafenib + trametinib (off-label, but data emerging). Aggressive
+  variants (tall cell ~10%, columnar, hobnail) more often BRAF+ and
+  RAI-refractory.
+notes_ua: >
+  Більшість PTC індолентна (10-річна ЗВ >95%); high-risk biology — про
+  ~5-10%, що матимуть агресивний перебіг. BRAF V600E + TERT promoter
+  ко-мутація — найсильніша несприятлива молекулярна підпис (Liu та ін.).
+  RAI-рефрактерна → lenvatinib (SELECT). RET-fusion → selpercatinib
+  (LIBRETTO-001). NTRK-fusion → larotrectinib.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

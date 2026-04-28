@@ -27,6 +27,7 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
+        - red_flag: RF-GELF-CRITERIA-MET
         - red_flag: RF-FL-HIGH-TUMOR-BURDEN-GELF
     if_true:
       result: IND-FL-1L-BR
@@ -34,13 +35,13 @@ decision_tree:
       next_step: 3
   - step: 3
     evaluate:
-      all_of:
-        - condition: "GELF criteria not met (low tumor burden)"
-        - condition: "Asymptomatic / minimally symptomatic"
+      any_of:
+        - red_flag: RF-GELF-LOW-BURDEN
     if_true:
       result: IND-FL-1L-WATCH
     if_false:
       result: IND-FL-1L-WATCH
+    notes: "Wired via RF-GELF-LOW-BURDEN (CSD-8A); low-burden FL not meeting any GELF criterion routes to watch-and-wait."
 
 sources:
   - SRC-NCCN-BCELL-2025

@@ -30,6 +30,7 @@ decision_tree:
       result: IND-ALCL-MAINTENANCE-BV-POST-ASCT
     if_false:
       next_step: 2
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 2 — BV-naive at relapse → BV monotherapy
   - step: 2
@@ -41,6 +42,7 @@ decision_tree:
       result: IND-ALCL-2L-BRENTUXIMAB-MONO
     if_false:
       next_step: 3
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
   # Step 3 — ALK-positive AND BV-exposed → crizotinib
   - step: 3
@@ -52,6 +54,7 @@ decision_tree:
       result: IND-ALCL-2L-CRIZOTINIB-ALKPOS
     if_false:
       result: IND-ALCL-2L-BENDAMUSTINE
+    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources:
   - SRC-NCCN-BCELL-2025

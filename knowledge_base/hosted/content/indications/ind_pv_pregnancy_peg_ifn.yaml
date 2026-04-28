@@ -1,0 +1,82 @@
+id: IND-PV-PREGNANCY-PEG-IFN
+plan_track: standard
+applicable_to:
+  disease_id: DIS-PV
+  line_of_therapy: 1
+  stage_requirements:
+    - "Polycythemia vera in pregnancy planning OR confirmed pregnancy"
+    - "Hydroxyurea contraindicated (teratogenic) — switch to peg-IFN α-2a (Pegasys) BEFORE conception OR immediately on confirmation"
+    - "Goal: maintain HCT <45% (women), platelet stability, prevent thrombosis through pregnancy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-JAK2
+      required: true
+      value_constraint: "JAK2 V617F positive (PV diagnosis criterion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    age_max: 50
+    ecog_max: 1
+recommended_regimen: REG-ROPEGINTERFERON-PV
+concurrent_therapy:
+  - DRUG-ASPIRIN
+followed_by: []
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: '2A'
+expected_outcomes:
+  overall_response_rate: HCT control + platelet stability achievable in ~70-80% with peg-IFN throughout pregnancy
+  complete_response: N/A (chronic management)
+  progression_free_survival: Live birth rate ~70-75% with combined IFN + ASA + low-dose phlebotomy (vs ~50% historical)
+  overall_survival_5y: N/A
+hard_contraindications:
+  - CI-PSYCH-DECOMPENSATED-FOR-INTERFERON
+red_flags_triggering_alternative:
+  - RF-PV-ET-PREGNANCY-OR-PLANNING
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-COAG-PANEL
+  - TEST-BCR-ABL-JAK2
+  - TEST-PREGNANCY
+desired_tests: []
+rationale: 'Polycythemia vera in pregnancy is high-risk: maternal thrombosis ~20%, fetal loss ~25%, pre-eclampsia ~10%, IUGR ~10%. Hydroxyurea is teratogenic (FDA category D) and must be discontinued ≥3 months pre-conception (peg-IFN bridge) OR immediately on confirmed pregnancy. Pegylated interferon alpha-2a (Pegasys) 45-90 μg SC weekly is the cytoreductive of choice — does not cross placenta, no documented teratogenicity in registry data (PROUD-PV, MPN registries). Ropeginterferon alfa-2b (Besremi, REG-ROPEGINTERFERON-PV) is the modern alternative with weekly-to-biweekly dosing. Targets: HCT <45%, platelets <600 ×10⁹/L. Concurrent low-dose aspirin (75-100 mg PO daily) throughout pregnancy + 6 weeks postpartum. Low-dose phlebotomy (200-300 mL units) only if HCT >45%. LMWH prophylaxis postpartum 4-6 weeks (high VTE risk window). Multidisciplinary care: hematology + maternal-fetal medicine. ELN-MPN guidelines (Tefferi 2018, Barbui 2018) and pregnancy registry data underpin recommendations.'
+rationale_ua: >-
+  Polycythemia vera in вагітність is високого ризику: maternal thrombosis ~20%, fetal loss ~25%, pre-eclampsia ~10%, IUGR ~10%. гідроксикарбамід is teratogenic (FDA category D) and must be припинений ≥3 months pre-conception (peg-IFN bridge) OR immediately on confirmed вагітність. Pegylated інтерферон alpha-2a (Pegasys) 45-90 μg SC weekly is the cytoreductive of choice — does not cross placenta, ні documented teratogenicity in registry дані (PROUD-PV, MPN registries). Ropeginterferon alfa-2b (Besremi, REG-ROPEGINTERFERON-PV) is the modern alternative with weekly-to-biweekly дозування. Targets: HCT <45%, platelets <600 ×10⁹/L. Concurrent low-доза aspirin (75-100 mg PO daily) throughout вагітність + 6 weeks postpartum. Low-доза phlebotomy (200-300 mL units) only if HCT >45%. LMWH prophylaxis postpartum 4-6 weeks (high VTE risk window). Multidisciplinary care: hematology + maternal-fetal medicine. ELN-MPN настанови (Tefferi 2018, Barbui 2018) and вагітність registry дані underpin рекомендації.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: Hydroxyurea is contraindicated in pregnancy; pegylated interferon alpha is the cytoreductive of choice for PV/ET in pregnancy; concurrent ASA + LMWH postpartum
+  - source_id: SRC-PROUD-PV-GISSLINGER-2020
+    position: supports
+    relevant_quote_paraphrase: Ropeginterferon alfa-2b is non-inferior to hydroxyurea for PV control with favorable safety profile; pregnancy data emerging
+  - source_id: SRC-ESMO-MPN-2015
+    position: supports
+    relevant_quote_paraphrase: Interferon alpha is the preferred cytoreductive for MPN in pregnancy; ASA throughout pregnancy; LMWH postpartum 4-6 weeks for VTE prevention
+known_controversies:
+  - topic: Peg-IFN α-2a (Pegasys) vs ropeginterferon alfa-2b (Besremi) for MPN in pregnancy
+    positions:
+      - position: Peg-IFN α-2a — broader pregnancy registry data, weekly dosing
+        sources:
+          - SRC-NCCN-MPN-2025
+      - position: Ropeginterferon — modern alternative, biweekly dosing, similar safety extrapolated
+        sources:
+          - SRC-PROUD-PV-GISSLINGER-2020
+        evidence_note: Limited dedicated pregnancy data for ropeginterferon; safety extrapolated from PROUD-PV
+    our_default: Peg-IFN α-2a (Pegasys) as first-line if available; ropeginterferon as alternative when Pegasys not accessible
+    rationale: Peg-IFN α-2a has broader pregnancy registry data; ropeginterferon similar safety profile but less direct pregnancy evidence
+do_not_do:
+  - НЕ продовжувати hydroxyurea при confirmed pregnancy — discontinue immediately + switch до peg-IFN.
+  - НЕ ігнорувати mental health screening — interferon може провокувати depression / suicidality; prior psychiatric history is contraindication.
+  - НЕ використовувати warfarin або DOAC — placental transfer + teratogenicity; LMWH preferred для VTE prophylaxis.
+  - НЕ робити aggressive phlebotomy в 1-му триместрі — оптимально HCT <45% поступово (низький об'єм per session).
+  - НЕ забути thyroid panel + auto-antibodies — interferon може провокувати autoimmune thyroiditis.
+  - НЕ забувати postpartum LMWH 4-6 тижнів — peak VTE ризик у postpartum window.
+  - НЕ продовжувати breastfeeding на hydroxyurea — secreted in breast milk; peg-IFN compatible з breastfeeding.
+time_critical: false
+last_reviewed: '2026-04-27'
+reviewers: []
+reviewer_signoffs: 0
+notes: 'STUB — pending Clinical Co-Lead sign-off. Special-population indication for PV in pregnancy (planning or confirmed). Multidisciplinary care mandatory. ELN-MPN pregnancy guidelines underpin protocol.'

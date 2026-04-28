@@ -39,6 +39,59 @@ _COMPARATORS = {
 }
 
 
+# RedFlag triggers and patient questionnaires evolved separately, so the
+# same clinical concept ended up with different field names. Rather than
+# rewrite hundreds of YAMLs, we resolve aliases at lookup time. A RF
+# referencing `age_years` finds the value the questionnaire stored under
+# `age` (and vice versa). Each entry maps a name → set of equivalents
+# (any of which the engine will accept as the source of truth). Audit
+# 2026-04-27 showed these 8 aliases close ~150 of 1396 unevaluated-RF
+# hits across 65 questionnaires — biggest single lever short of new
+# questionnaire content.
+FINDING_ALIASES: dict[str, tuple[str, ...]] = {
+    "age": ("age_years",),
+    "age_years": ("age",),
+    "ecog": ("ecog_status", "ecog_performance_status"),
+    "ecog_status": ("ecog", "ecog_performance_status"),
+    "ecog_performance_status": ("ecog", "ecog_status"),
+    "comorbidity_count": ("comorbidities_count",),
+    "comorbidities_count": ("comorbidity_count",),
+    "severe_neuropathy_grade": ("peripheral_neuropathy_grade",),
+    "peripheral_neuropathy_grade": ("severe_neuropathy_grade",),
+    "ldh_ratio_to_uln": ("ldh_ulnratio",),
+    "ldh_ulnratio": ("ldh_ratio_to_uln",),
+    "bilirubin_uln_x": ("bilirubin_ratio_to_uln",),
+    "bilirubin_ratio_to_uln": ("bilirubin_uln_x",),
+    "hcv_status": ("hcv_rna", "anti_hcv", "BIO-HCV-RNA", "BIO-HCV-STATUS"),
+    "hcv_rna": ("hcv_status", "anti_hcv", "BIO-HCV-RNA"),
+    "anti_hcv": ("hcv_status", "hcv_rna", "BIO-HCV-STATUS"),
+    "her2_status": ("BIO-HER2-SOLID", "BIO-HER2"),
+    "BIO-HER2-SOLID": ("her2_status",),
+    "hiv_status": ("hiv_serology", "BIO-HIV"),
+    "hiv_serology": ("hiv_status", "BIO-HIV"),
+    "tp53_mutation": ("BIO-TP53-MUTATION", "tp53_mut"),
+    "BIO-TP53-MUTATION": ("tp53_mutation", "tp53_mut"),
+    "bilirubin_uln_x": ("bilirubin_ratio_to_uln", "total_bilirubin_ulnratio"),
+    "bilirubin_ratio_to_uln": ("bilirubin_uln_x", "total_bilirubin_ulnratio"),
+    "total_bilirubin_ulnratio": ("bilirubin_uln_x", "bilirubin_ratio_to_uln"),
+}
+
+
+def _resolve_finding(findings: dict[str, Any], key: str) -> Any:
+    """Read a finding by name, falling back to known aliases. Returns the
+    raw value (None if absent). Used by both trigger evaluation and the
+    data-quality `unevaluated_red_flags` calculation so they stay
+    consistent — if a RF can fire on a value, it's also marked evaluable."""
+    v = findings.get(key)
+    if v not in (None, ""):
+        return v
+    for alias in FINDING_ALIASES.get(key, ()):
+        v = findings.get(alias)
+        if v not in (None, ""):
+            return v
+    return None
+
+
 def _eval_clause(clause: dict, findings: dict[str, Any]) -> bool:
     if not isinstance(clause, dict):
         return False
@@ -55,7 +108,7 @@ def _eval_clause(clause: dict, findings: dict[str, Any]) -> bool:
     if finding_key is None:
         return False
 
-    actual = findings.get(finding_key)
+    actual = _resolve_finding(findings, finding_key)
 
     if "threshold" in clause:
         if actual is None:
@@ -166,4 +219,6 @@ __all__ = [
     "evaluate_redflag_trigger",
     "resolve_redflag_conflict",
     "is_redflag_applicable",
+    "FINDING_ALIASES",
+    "_resolve_finding",
 ]

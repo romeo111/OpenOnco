@@ -1,0 +1,61 @@
+id: RF-PRIOR-BTKI-PROGRESSION
+definition: >
+  Progression on covalent BTK inhibitor (ibrutinib, acalabrutinib,
+  zanubrutinib). Triggers selection of non-covalent BTKi (pirtobrutinib),
+  BCL2i (venetoclax-based regimens), CAR-T (lisocabtagene maraleucel,
+  brexucabtagene autoleucel), or PI3Ki — depending on disease (CLL, MCL,
+  WM). Resistance often driven by BTK C481S or PLCG2 mutation.
+definition_ua: >
+  Прогресія на ковалентному BTK-інгібіторі (ібрутиніб, акалабрутиніб,
+  занубрутиніб). Триггерує вибір non-covalent BTKi (піртобрутиніб),
+  BCL2i (венетоклакс-режими), CAR-T (lisocabtagene maraleucel,
+  brexucabtagene autoleucel) або PI3Ki — залежно від хвороби (CLL,
+  MCL, WM). Резистентність часто зумовлена мутацією BTK C481S або PLCG2.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_btki_progression"
+      value: true
+    - all_of:
+        - finding: "prior_btki_received"
+          value: true
+        - finding: "best_response_to_btki"
+          value: "PD"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CLL: BRUIN study (Mato 2023) — pirtobrutinib ORR 82% in BTKi-pretreated;
+  venetoclax + obinutuzumab also active (CLL14 was 1L but venetoclax
+  monotherapy MURANO post-BTKi shows efficacy); CAR-T (liso-cel) per
+  TRANSCEND-CLL-004. MCL: BRUIN MCL-321 — pirtobrutinib ORR 58% post-
+  cBTKi; brexu-cel (ZUMA-2) ORR 91% in r/r MCL. WM: pirtobrutinib in
+  TBLINNA, venetoclax + rituximab (BGB-3111-302). BTK C481S testing
+  recommended at progression to confirm acquired resistance vs
+  intolerance/non-adherence (different management).
+notes_ua: >
+  CLL: BRUIN (Mato 2023) — піртобрутиніб ORR 82% після BTKi; венетоклакс
+  + обінутузумаб теж активний; CAR-T (liso-cel) — TRANSCEND-CLL-004.
+  MCL: BRUIN MCL-321 — піртобрутиніб ORR 58% post-cBTKi; brexu-cel
+  (ZUMA-2) ORR 91% при р/р MCL. WM: піртобрутиніб у TBLINNA,
+  венетоклакс + ритуксимаб. Тестування BTK C481S при прогресії для
+  підтвердження набутої резистентності замість непереносимості/
+  невідповідності (різне ведення).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

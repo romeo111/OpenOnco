@@ -1,0 +1,68 @@
+id: RF-RICHTER-TRANSFORMATION
+definition: >
+  Richter transformation: histologically confirmed transformation of
+  CLL/SLL to aggressive lymphoma — DLBCL-type (most common, ~90%) or
+  Hodgkin-type (~10%). Triggers immediate switch from CLL-directed
+  therapy (BTKi, BCL2i, CIT) to DLBCL-style chemoimmunotherapy
+  (R-CHOP, R-EPOCH; outcomes poor → consider clinical trial,
+  CAR-T post-induction, allogeneic SCT in fit).
+definition_ua: >
+  Трансформація Ріхтера: гістологічно підтверджена трансформація
+  CLL/SLL у агресивну лімфому — DLBCL-тип (найпоширеніший, ~90%) або
+  Hodgkin-тип (~10%). Триггерує негайний перехід з CLL-направленої
+  терапії (BTKi, BCL2i, CIT) на DLBCL-style хіміоімунотерапію (R-CHOP,
+  R-EPOCH; результати погані → розглянути клінічний трайл, CAR-T
+  після індукції, ало-СКТ у fit).
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "richter_transformation"
+      value: true
+    - finding: "cll_to_dlbcl_transformation"
+      value: true
+    - finding: "cll_to_hodgkin_transformation"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Incidence 5-10% over CLL course; risk factors include unmutated IGHV,
+  TP53 disruption, NOTCH1, MYC alterations, prior fludarabine. Clonally-
+  related Richter (>80%) has worse OS (median 8-12 months) than
+  clonally-unrelated (de novo DLBCL in CLL patient, 2-year OS 60%).
+  Treatment paradigm: R-CHOP induction (CR 20-30%), consolidate with
+  alloSCT or CAR-T (TRANSCEND-CLL-004 includes Richter cohort, ORR
+  ~60%); BTKi-Richter — pirtobrutinib + venetoclax + R-CHOP under
+  investigation (Mato), pembrolizumab + ibrutinib (Ding 2017) shows
+  responses; Hodgkin-variant Richter — ABVD/AVD ± brentuximab. PET-CT
+  guided biopsy of FDG-avid lesion (SUVmax >5) recommended in CLL
+  patients with rapid clinical change.
+notes_ua: >
+  Частота 5-10% протягом перебігу CLL; фактори ризику: незмутований
+  IGHV, ураження TP53, NOTCH1, MYC-зміни, попередній флударабін.
+  Клонально пов'язана Ріхтер (>80%) має гірший OS (медіана 8-12 міс)
+  ніж клонально непов'язана (de novo DLBCL у CLL-пацієнта, 2-річний
+  OS 60%). Парадигма: R-CHOP індукція (CR 20-30%), консолідація
+  алоСКТ або CAR-T (TRANSCEND-CLL-004 включає Ріхтер-когорту, ORR
+  ~60%); BTKi-Ріхтер — піртобрутиніб + венетоклакс + R-CHOP вивчається,
+  пембролізумаб + ібрутиніб (Ding 2017) дає відповіді; Hodgkin-варіант
+  — ABVD/AVD ± брентуксимаб. PET-CT направлена біопсія FDG-avid
+  вогнища (SUVmax >5) рекомендована при швидкій клінічній зміні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

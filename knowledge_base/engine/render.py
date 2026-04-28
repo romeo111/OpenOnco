@@ -25,529 +25,29 @@ treatment-Plan-not-applicable disclaimer surfaced above the fold.
 
 from __future__ import annotations
 
+import functools
 import html
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional, Union
 
+import yaml
+
+from ._ask_doctor import select_questions as _select_ask_doctor_questions
+from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
+from ._nszu import lookup_nszu_status, nszu_label
+from ._patient_vocabulary import (
+    NSZU_PATIENT_LABEL,
+    ESCAT_TIER_PATIENT_LABEL,
+    explain as _explain_patient,
+)
 from .diagnostic import _DIAGNOSTIC_BANNER, DiagnosticPlanResult
 from .mdt_orchestrator import MDTOrchestrationResult
 from .plan import PlanResult
+from .render_styles import PATIENT_MODE_CSS as _PATIENT_CSS
+from .render_styles import STYLESHEET as _CSS
 
 
-# ── Embedded CSS (adapted from infograph reference, A4-tuned) ─────────────
-
-
-_CSS = """
-:root {
-    --green-900: #0a2e1a; --green-800: #0d3f24; --green-700: #14532d;
-    --green-600: #166534; --green-500: #16a34a; --green-400: #22c55e;
-    --green-300: #4ade80; --green-200: #86efac; --green-100: #dcfce7;
-    --green-50: #f0fdf4; --teal: #0d9488; --teal-dark: #115e59;
-    --red-alert: #dc2626; --red-bg: #fef2f2;
-    --amber-alert: #d97706; --amber-bg: #fffbeb;
-    --blue-bg: #eff6ff; --blue-700: #1d4ed8;
-    --purple-bg: #faf5ff; --purple-700: #7e22ce;
-    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
-    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
-    --font-mono: 'JetBrains Mono', Menlo, monospace;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-font-smoothing: antialiased; }
-body {
-    font-family: var(--font-body); color: var(--gray-900);
-    background: var(--gray-50); line-height: 1.55;
-}
-.page {
-    max-width: 920px; margin: 0 auto; padding: 32px 48px;
-    background: white; min-height: 100vh;
-    box-shadow: 0 0 24px rgba(0,0,0,.04);
-}
-@media print {
-    body { background: white; }
-    .page { box-shadow: none; padding: 16mm; max-width: 100%; }
-    @page { size: A4; margin: 12mm; }
-    .no-print { display: none; }
-    section { page-break-inside: avoid; }
-}
-
-/* Header */
-.doc-header {
-    border-bottom: 2px solid var(--green-700);
-    padding-bottom: 18px; margin-bottom: 24px;
-}
-.doc-label {
-    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
-    letter-spacing: 2px; text-transform: uppercase;
-    color: var(--green-700); margin-bottom: 8px;
-}
-.doc-title {
-    font-family: var(--font-display); font-size: 32px; line-height: 1.15;
-    color: var(--green-900); margin-bottom: 6px;
-}
-.doc-sub {
-    font-size: 14px; color: var(--gray-500);
-    font-family: var(--font-mono);
-}
-
-/* Patient strip */
-.patient-strip {
-    background: var(--green-50); border-left: 4px solid var(--green-600);
-    padding: 14px 18px; margin-bottom: 22px; border-radius: 4px;
-}
-.patient-strip .label {
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
-}
-.patient-strip .value { font-size: 15px; color: var(--gray-900); }
-
-/* Banner — diagnostic phase */
-.banner {
-    border-radius: 8px; padding: 16px 20px; margin-bottom: 22px;
-    border-left: 4px solid; font-size: 14px; line-height: 1.55;
-}
-.banner--diagnostic {
-    background: var(--amber-bg); border-color: var(--amber-alert);
-    color: #92400e;
-}
-.banner--diagnostic strong { display: block; font-size: 15px; margin-bottom: 4px; }
-.banner--info {
-    background: var(--green-50); border-color: var(--green-500);
-    color: var(--green-800);
-}
-.banner--alert {
-    background: var(--red-bg); border-color: var(--red-alert);
-    color: #991b1b;
-}
-
-/* Sections */
-section { margin-bottom: 28px; }
-h2 {
-    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
-    color: var(--green-800); margin-bottom: 12px;
-}
-.section-sub {
-    font-size: 13px; color: var(--gray-500); margin-bottom: 14px;
-    font-family: var(--font-mono);
-}
-h3 {
-    font-size: 14px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; margin: 18px 0 10px; color: var(--gray-700);
-}
-
-/* Tracks (treatment plan) */
-.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.track {
-    border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;
-    background: white;
-}
-.track--default { border-left: 4px solid var(--green-600); }
-.track--alternative { border-left: 4px solid var(--gray-500); }
-.track--surveillance { border-left: 4px solid var(--teal); }
-.track--palliative { border-left: 4px solid var(--purple-700); }
-.track-head {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 8px;
-}
-.track-name { font-family: var(--font-display); font-size: 18px; }
-.track-default-badge {
-    background: var(--green-100); color: var(--green-700);
-    font-size: 10px; padding: 2px 8px; border-radius: 4px;
-    font-family: var(--font-mono); text-transform: uppercase;
-}
-.track dl { font-size: 13px; }
-.track dt { font-weight: 700; color: var(--gray-700); margin-top: 8px; }
-.track dd { color: var(--gray-700); margin-left: 0; }
-.track ul { font-size: 13px; padding-left: 18px; }
-
-/* Tables — workup steps, etc. */
-.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tbl th {
-    background: var(--green-700); color: white; padding: 8px 10px;
-    text-align: left; font-size: 11px; letter-spacing: 0.5px;
-    text-transform: uppercase; font-weight: 600;
-}
-.tbl td {
-    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
-    vertical-align: top; color: var(--gray-700);
-}
-.tbl tr:last-child td { border-bottom: none; }
-.tbl tbody tr:nth-child(even) td { background: var(--gray-50); }
-
-/* Badges */
-.badge {
-    display: inline-block; padding: 2px 7px; border-radius: 4px;
-    font-size: 10px; font-weight: 600; font-family: var(--font-mono);
-    text-transform: uppercase; letter-spacing: 0.3px;
-}
-.badge--required { background: var(--red-bg); color: #b91c1c; }
-.badge--recommended { background: var(--blue-bg); color: var(--blue-700); }
-.badge--optional { background: var(--gray-100); color: var(--gray-700); }
-.badge--blocking { background: var(--red-bg); color: #b91c1c; }
-.badge--default { background: var(--green-100); color: var(--green-700); }
-.badge--lab { background: var(--blue-bg); color: var(--blue-700); }
-.badge--imaging { background: var(--purple-bg); color: var(--purple-700); }
-.badge--histology { background: var(--amber-bg); color: #92400e; }
-.badge--consult { background: var(--gray-100); color: var(--gray-700); }
-.badge--other { background: var(--gray-100); color: var(--gray-700); }
-
-/* Lists */
-.role-list { list-style: none; padding: 0; }
-.role-list li {
-    padding: 10px 0; border-bottom: 1px dashed var(--gray-200);
-}
-.role-list li:last-child { border-bottom: none; }
-.role-list .role-name { font-weight: 600; color: var(--gray-900); }
-.role-list .role-reason {
-    font-size: 13px; color: var(--gray-700); margin-top: 4px;
-}
-.role-list .role-questions {
-    font-size: 12px; color: var(--gray-500); margin-top: 4px;
-    font-family: var(--font-mono);
-}
-
-.q-list { list-style: none; padding: 0; }
-.q-list li {
-    padding: 12px 14px; margin-bottom: 8px;
-    border-radius: 6px; background: var(--gray-50);
-    border-left: 3px solid var(--gray-200);
-}
-.q-list li.blocking {
-    border-left-color: var(--red-alert); background: var(--red-bg);
-}
-.q-list .q-id {
-    font-family: var(--font-mono); font-size: 11px;
-    color: var(--gray-500); margin-bottom: 4px;
-}
-.q-list .q-text { font-size: 14px; color: var(--gray-900); margin-bottom: 4px; }
-.q-list .q-rationale { font-size: 12px; color: var(--gray-700); font-style: italic; }
-.q-list .q-owner {
-    font-family: var(--font-mono); font-size: 11px;
-    color: var(--green-700); margin-top: 4px;
-}
-
-/* MDT block */
-.mdt {
-    background: var(--green-50); border-radius: 10px; padding: 18px;
-    margin-top: 14px;
-}
-
-/* Steps timeline (workup) */
-.steps { padding-left: 0; list-style: none; }
-.steps li {
-    padding: 10px 0 10px 36px; position: relative;
-    border-bottom: 1px solid var(--gray-100);
-}
-.steps li:last-child { border-bottom: none; }
-.steps .step-num {
-    position: absolute; left: 0; top: 12px; width: 24px; height: 24px;
-    background: var(--green-600); color: white; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; font-family: var(--font-mono);
-}
-.steps .step-name { font-weight: 600; color: var(--gray-900); }
-.steps .step-rationale { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
-
-/* Sources */
-.sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
-.sources li { padding: 4px 0; }
-
-/* Etiological driver — featured card for etiologically_driven archetype */
-.etiology-card {
-    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
-    border-left: 4px solid var(--teal); border-radius: 8px;
-    padding: 18px 20px; margin-bottom: 22px;
-}
-.etiology-card .label {
-    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
-}
-.etiology-card .archetype {
-    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
-    margin-bottom: 8px;
-}
-.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
-.etiology-card ul li { padding: 3px 0; }
-
-/* PRO/CONTRA — two-column grid for red flags */
-.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
-.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
-.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
-.pc-col h3 { color: var(--gray-900); margin-top: 0; }
-.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
-.pc-col li { padding: 4px 0; }
-.pc-col .rf-id {
-    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
-    display: block; margin-top: 2px;
-}
-
-/* Branch-explanation — actually-fired RFs from the engine trace, with
-   the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
-   above (which lists possible triggers in the abstract). */
-.branch-explanation { margin: 18px 0; }
-.branch-explanation .branch-step {
-    background: var(--green-bg, #ecfdf5); border-left: 4px solid var(--green-700, #047857);
-    padding: 10px 14px; border-radius: 6px; margin-bottom: 10px;
-}
-.branch-explanation .branch-step-head {
-    font-size: 13px; color: var(--gray-700); margin-bottom: 6px; font-weight: 600;
-}
-.branch-explanation .branch-step ul {
-    margin: 0; padding-left: 20px; font-size: 13px; color: var(--gray-700);
-}
-.branch-explanation .branch-step li { padding: 3px 0; line-height: 1.5; }
-.branch-explanation .rf-winner-tag {
-    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.5px;
-    background: var(--green-700, #047857); color: white;
-    padding: 1px 6px; border-radius: 3px; margin-left: 4px; vertical-align: 1px;
-}
-.branch-explanation .src-chip {
-    font-family: var(--font-mono); font-size: 9.5px;
-    background: var(--gray-100); color: var(--gray-700);
-    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
-}
-
-/* Do-not — strongly framed prohibitive list */
-.do-not {
-    background: var(--red-bg); border-left: 4px solid var(--red-alert);
-    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
-}
-.do-not .track-name {
-    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
-    margin-bottom: 8px;
-}
-.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
-.do-not li { padding: 3px 0; }
-
-/* Timeline — horizontal phase strip */
-.timeline {
-    display: flex; gap: 4px; margin-top: 8px;
-    overflow-x: auto; padding-bottom: 8px;
-}
-.tl-phase {
-    flex: 1; min-width: 120px;
-    background: var(--green-100); border-radius: 6px;
-    padding: 10px 12px; border-top: 3px solid var(--green-600);
-}
-.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
-.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
-.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
-.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
-.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
-.tl-phase .name {
-    font-weight: 700; font-size: 12px; color: var(--gray-900);
-    margin-bottom: 4px;
-}
-.tl-phase .window {
-    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
-}
-
-/* Footer */
-.doc-footer {
-    margin-top: 40px; padding-top: 20px;
-    border-top: 1px solid var(--gray-200);
-    font-size: 11px; color: var(--gray-500); line-height: 1.6;
-}
-.fda-disclosure {
-    background: var(--gray-50); padding: 14px; border-radius: 6px;
-    margin-bottom: 14px; font-size: 12px; color: var(--gray-700);
-}
-.fda-disclosure strong { color: var(--gray-900); }
-.version-chain {
-    font-family: var(--font-mono); font-size: 11px;
-    background: var(--gray-100); padding: 8px 12px; border-radius: 4px;
-    margin-bottom: 10px;
-}
-.medical-disclaimer {
-    font-style: italic; color: var(--gray-700); font-size: 11px;
-    border-left: 2px solid var(--gray-200); padding-left: 12px;
-}
-
-/* Skill metadata badge inline with each role */
-.skill-meta {
-    font-family: var(--font-mono); font-size: 10px;
-    color: var(--gray-500); margin-top: 4px;
-    display: flex; flex-wrap: wrap; gap: 10px;
-}
-.skill-meta .pill {
-    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
-}
-.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
-.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
-
-/* Skill catalog block */
-.skill-catalog { margin-top: 18px; }
-.skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.skill-catalog th {
-    text-align: left; padding: 6px 8px; background: var(--gray-100);
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
-    text-transform: uppercase; color: var(--gray-700);
-}
-.skill-catalog td {
-    padding: 6px 8px; border-bottom: 1px solid var(--gray-100);
-    vertical-align: top;
-}
-.skill-catalog tr.activated td:first-child::before {
-    content: "✓ "; color: var(--green-600); font-weight: 700;
-}
-.skill-catalog tr.dormant { color: var(--gray-500); }
-.skill-catalog tr.dormant td:first-child::before {
-    content: "○ "; color: var(--gray-500);
-}
-.skill-catalog .ver {
-    font-family: var(--font-mono); color: var(--gray-700);
-}
-
-/* Access Matrix (ua-ingestion plan §4) */
-.access-matrix { margin-top: 32px; padding: 20px; background: var(--green-50);
-    border: 1px solid var(--green-200); border-radius: 6px;
-}
-.access-matrix details { width: 100%; }
-.access-matrix summary {
-    cursor: pointer; list-style: none; display: flex; flex-direction: column;
-    gap: 4px; padding: 4px 0;
-}
-.access-matrix summary::-webkit-details-marker { display: none; }
-.access-matrix summary::before {
-    content: "▶ "; color: var(--green-700); font-size: 12px; margin-right: 4px;
-}
-.access-matrix details[open] summary::before { content: "▼ "; }
-.access-matrix summary h2 {
-    display: inline; font-family: var(--font-display); font-size: 22px;
-    color: var(--green-900); margin: 0;
-}
-.access-matrix .section-sub { font-size: 12px; color: var(--gray-700); }
-.access-matrix-table {
-    width: 100%; border-collapse: collapse; margin-top: 14px;
-    font-size: 12.5px; background: white;
-}
-.access-matrix-table th {
-    text-align: left; padding: 8px 10px; background: var(--green-100);
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
-    text-transform: uppercase; color: var(--green-700);
-    border-bottom: 1px solid var(--green-200);
-}
-.access-matrix-table td {
-    padding: 10px; border-bottom: 1px solid var(--gray-100);
-    vertical-align: top;
-}
-.access-matrix-table tr:last-child td { border-bottom: none; }
-.access-matrix-table .track-cell { width: 32%; }
-.access-matrix-table .regimen-name {
-    font-size: 11.5px; color: var(--gray-700); margin-top: 3px;
-}
-.access-matrix-table .regimen-id {
-    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
-}
-.access-matrix-table .cost-cell { width: 22%; font-variant-numeric: tabular-nums; }
-.access-matrix-table .cost-row { line-height: 1.5; }
-.access-matrix-table .cost-label {
-    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
-    margin-right: 4px;
-}
-.access-matrix-table .cost-trial {
-    color: var(--green-700); font-style: italic;
-}
-.access-matrix-table .cost-unknown {
-    color: var(--amber-alert); font-style: italic;
-}
-.access-matrix-table .pathway-cell { width: 22%; font-size: 11.5px; }
-.access-matrix-table .pathway-cell .alt-paths {
-    font-size: 10px; color: var(--gray-500);
-}
-.access-matrix-table .badge--ok { background: var(--green-100); color: var(--green-700); }
-.access-matrix-table .badge--no { background: var(--red-bg); color: var(--red-alert); }
-.access-matrix-table .badge--unknown { background: var(--gray-100); color: var(--gray-500); }
-.access-matrix-table .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 3px;
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3px;
-    white-space: nowrap;
-}
-.access-matrix-table tr.track-trial { background: var(--purple-bg); }
-.access-matrix-table .notes {
-    font-size: 11px; color: var(--gray-700); margin-top: 4px; font-style: italic;
-}
-.access-matrix-table .notes-stale {
-    font-size: 11px; color: var(--amber-alert); margin-top: 4px; font-weight: 600;
-}
-.access-matrix-table .more-notes {
-    cursor: help; color: var(--gray-500); font-size: 10px; margin-left: 4px;
-    border-bottom: 1px dotted var(--gray-500);
-}
-.access-matrix .matrix-disclaimer {
-    margin-top: 10px; font-size: 11px; color: var(--gray-500); font-style: italic;
-}
-.access-matrix .matrix-plan-notes {
-    margin: 10px 0 4px 0; padding: 8px 12px; background: var(--amber-bg);
-    border-left: 3px solid var(--amber-alert); list-style: none; font-size: 12px;
-    color: var(--gray-900);
-}
-@media print {
-    .access-matrix { background: white; border: 1px solid var(--gray-200); }
-    .access-matrix details { width: 100%; }
-    .access-matrix summary::before { content: ""; }
-    .access-matrix details:not([open]) > *:not(summary) { display: block; }
-}
-
-/* Variant actionability — ESCAT / OncoKB tier badges */
-.variant-actionability { margin: 22px 0; }
-.variant-actionability h2 { color: var(--green-800); }
-.variant-actionability .section-sub {
-    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
-    font-family: var(--font-mono);
-}
-.actionability-table {
-    width: 100%; border-collapse: collapse; font-size: 12.5px;
-    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
-    overflow: hidden;
-}
-.actionability-table th {
-    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
-    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
-    text-transform: uppercase; font-weight: 600;
-}
-.actionability-table td {
-    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
-    vertical-align: top; color: var(--gray-700);
-}
-.actionability-table tr:last-child td { border-bottom: none; }
-.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
-.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
-.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
-.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
-.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
-.actionability-table .src-list {
-    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
-}
-.actionability-table .src-list li { padding: 1px 0; list-style: none; }
-.actionability-table .empty-row td {
-    text-align: center; color: var(--gray-500); font-style: italic;
-    padding: 14px 10px;
-}
-
-/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
-   IV light gray; X gray). OncoKB Level 1 green; 2 light-green; 3A
-   yellow; 3B orange; 4 light gray; R1/R2 red. */
-.tier-badge {
-    display: inline-block; padding: 2px 8px; border-radius: 4px;
-    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.4px; white-space: nowrap;
-}
-.escat-IA, .escat-IB { background: #16a34a; color: white; }
-.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
-.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
-.escat-IV { background: var(--gray-100); color: var(--gray-700); }
-.escat-X { background: var(--gray-200); color: var(--gray-700); }
-
-.oncokb-1 { background: #16a34a; color: white; }
-.oncokb-2 { background: #86efac; color: #14532d; }
-.oncokb-3A { background: #facc15; color: #713f12; }
-.oncokb-3B { background: #f97316; color: white; }
-.oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
-.oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
-"""
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────
@@ -558,6 +58,89 @@ def _h(s) -> str:
     if s is None:
         return ""
     return html.escape(str(s))
+
+
+# ── Sign-off badge (CHARTER §6.1) ─────────────────────────────────────────
+#
+# Indications carry `reviewer_signoffs_v2: list[ReviewerSignoff]` after the
+# `scripts/clinical_signoff.py` CLI is run. The plan render surfaces the
+# coverage state as a coloured badge so the clinician sees at a glance
+# whether the recommendation has the two Clinical Co-Lead approvals
+# CHARTER §6.1 requires.
+
+
+@functools.lru_cache(maxsize=1)
+def _load_reviewer_labels() -> dict[str, str]:
+    """REV-* → display_name. Cached. Returns empty dict on failure."""
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    rev_dir = repo_root / "knowledge_base" / "hosted" / "content" / "reviewers"
+    if not rev_dir.is_dir():
+        return {}
+    out: dict[str, str] = {}
+    for p in sorted(rev_dir.glob("*.yaml")):
+        try:
+            data = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(data, dict) and data.get("id"):
+            out[data["id"]] = str(data.get("display_name") or data["id"])
+    return out
+
+
+def _signoff_label(reviewer_id: str) -> str:
+    return _load_reviewer_labels().get(reviewer_id, reviewer_id)
+
+
+def _render_signoff_badge(entity_data: Optional[dict]) -> str:
+    """Render a clinician-mode sign-off badge. 0/1/≥2 sign-offs."""
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n == 0:
+        return (
+            '<span class="signoff-badge signoff-pending">'
+            '⚠ Очікує підпису Clinical Co-Lead</span>'
+        )
+    if n == 1:
+        rid = sigs[0]["reviewer_id"]
+        return (
+            '<span class="signoff-badge signoff-partial">'
+            f'🟡 Підписано (1/2): {_h(_signoff_label(rid))}'
+            '</span>'
+        )
+    names = ", ".join(_signoff_label(s["reviewer_id"]) for s in sigs[:3])
+    if n > 3:
+        names += f" + {n - 3}"
+    return (
+        '<span class="signoff-badge signoff-complete">'
+        f'✓ Клінічно затверджено: {_h(names)}'
+        '</span>'
+    )
+
+
+def _render_signoff_badge_patient(entity_data: Optional[dict]) -> str:
+    """Patient-mode sign-off — simpler vocabulary, no reviewer names."""
+    if not isinstance(entity_data, dict):
+        return ""
+    sigs = entity_data.get("reviewer_signoffs_v2") or []
+    sigs = [s for s in sigs if isinstance(s, dict) and s.get("reviewer_id")]
+    n = len(sigs)
+    if n >= 2:
+        return (
+            '<span class="patient-badge patient-good signoff-complete">'
+            'Затверджено лікарями</span>'
+        )
+    if n == 1:
+        return (
+            '<span class="patient-badge patient-warn signoff-partial">'
+            'Очікує перевірки лікарями (1 з 2)</span>'
+        )
+    return (
+        '<span class="patient-badge patient-emergency signoff-pending">'
+        'Очікує перевірки лікарями</span>'
+    )
 
 
 def _now_iso() -> str:
@@ -757,15 +340,15 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     },
     "fda_disclosure_label":        {"uk": "Per FDA non-device CDS positioning (CHARTER §15):",
                                     "en": "Per FDA non-device CDS positioning (CHARTER §15):"},
-    # Variant actionability (ESCAT / OncoKB)
-    "actionability_heading":       {"uk": "Клінічна значущість мутацій (ESCAT / OncoKB)",
-                                    "en": "Clinical significance of mutations (ESCAT / OncoKB)"},
+    # Variant actionability (ESCAT)
+    "actionability_heading":       {"uk": "Клінічна значущість мутацій (ESCAT)",
+                                    "en": "Clinical significance of mutations (ESCAT)"},
     "actionability_sub":           {"uk": "Контекст для тумор-борду — інженер не використовує ці тіри для вибору треку",
                                     "en": "Tumor-board context — the engine does not use these tiers to rank tracks"},
     "actionability_th_biomarker":  {"uk": "Біомаркер", "en": "Biomarker"},
     "actionability_th_variant":    {"uk": "Варіант", "en": "Variant"},
     "actionability_th_escat":      {"uk": "ESCAT", "en": "ESCAT"},
-    "actionability_th_oncokb":     {"uk": "OncoKB", "en": "OncoKB"},
+    "actionability_th_evidence":   {"uk": "Доказова база", "en": "Evidence"},
     "actionability_th_action":     {"uk": "Клінічна дія", "en": "Clinical significance"},
     "actionability_th_combos":     {"uk": "Препарати", "en": "Drugs"},
     "actionability_th_sources":    {"uk": "Джерела", "en": "Sources"},
@@ -1684,7 +1267,93 @@ def _render_access_matrix(matrix) -> str:
     )
 
 
-# ── Variant actionability (ESCAT / OncoKB) ──────────────────────────────
+# ── NSZU availability badges (per-drug) ─────────────────────────────────
+
+
+_NSZU_DRUGS_LABEL = {
+    "uk": "Препарати + НСЗУ",
+    "en": "Drugs + NSZU",
+}
+
+
+def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_lang="uk") -> str:
+    """One drug → one `<span class="nszu-badge nszu-{status}">…</span>`.
+
+    `drug_entity` is the dict-shape Drug record from the loader. When
+    None (e.g. a drug_id referenced by a regimen but not present in the
+    KB), renders an explicit `not-registered` badge so the row never
+    silently drops a component."""
+    badge = lookup_nszu_status(
+        drug_entity or {},
+        patient_disease_id,
+        disease_names=disease_names,
+    )
+    cls = f"nszu-badge nszu-{badge.status}"
+    label = nszu_label(badge.status, target_lang)
+    tip = badge.notes_excerpt or badge.indication_match or ""
+    title_attr = f' title="{_h(tip)}"' if tip else ""
+    return f'<span class="{cls}"{title_attr}>{_h(label)}</span>'
+
+
+def _render_track_drug_list(
+    track,
+    drugs_lookup: dict,
+    patient_disease_id: str,
+    disease_names: dict,
+    target_lang: str = "uk",
+) -> str:
+    """Render the regimen's drug components as a `<dt>/<dd>` block with
+    an NSZU availability badge per drug. Returns empty string when the
+    track has no regimen / no components — keeps the dl tidy."""
+    reg = track.regimen_data or {}
+    components = reg.get("components") or []
+    if not components:
+        return ""
+    rows: list[str] = []
+    for comp in components:
+        if not isinstance(comp, dict):
+            continue
+        drug_id = comp.get("drug_id")
+        if not drug_id:
+            continue
+        drug = drugs_lookup.get(drug_id)
+        # Drug display name — prefer ukrainian when rendering UA, else preferred
+        names = (drug or {}).get("names") or {}
+        if (target_lang or "uk").lower().startswith("en"):
+            name = names.get("english") or names.get("preferred") or drug_id
+        else:
+            name = names.get("ukrainian") or names.get("preferred") or drug_id
+        dose_bits: list[str] = []
+        for k in ("dose", "schedule", "route"):
+            v = comp.get(k)
+            if v:
+                dose_bits.append(str(v))
+        dose_str = " · ".join(dose_bits)
+        nszu = _render_nszu_badge(drug, patient_disease_id, disease_names, target_lang)
+        meta = (
+            f'<span class="drug-name">{_h(name)}</span>'
+            f' <span class="drug-id">({_h(drug_id)})</span>'
+        )
+        if dose_str:
+            meta += f' <span class="drug-dose">{_h(dose_str)}</span>'
+        rows.append(f'<li class="drug-row">{meta} {nszu}</li>')
+    if not rows:
+        return ""
+    label = _NSZU_DRUGS_LABEL.get(
+        "en" if (target_lang or "uk").lower().startswith("en") else "uk",
+        _NSZU_DRUGS_LABEL["uk"],
+    )
+    return f'<dt>{_h(label)}</dt><dd><ul class="drug-list">{"".join(rows)}</ul></dd>'
+
+
+# ── Variant actionability (ESCAT) ───────────────────────────────────────
+# Phase 4 (CIViC pivot, 2026-04-27): ESCAT tier is the primary actionability
+# label (vendor-neutral, source-of-truth). evidence_sources renders the
+# per-source detail BELOW the ESCAT tag — SRC-CIVIC entries link to
+# civicdb.org, "Does Not Support" / "Resistance" entries get a ⚠ flag.
+# Per OncoKB ToS (see review-2026-04-27 §3.4), SRC-ONCOKB entries are
+# never rendered; if evidence_sources is empty after that skip, the
+# render falls back to primary_sources (sans OncoKB) as citation cards.
 
 
 def _escat_class(tier: Optional[str]) -> str:
@@ -1696,17 +1365,175 @@ def _escat_class(tier: Optional[str]) -> str:
     return f"escat-{t}" if t in valid else "escat-X"
 
 
-def _oncokb_class(level: Optional[str]) -> str:
-    """OncoKB level → CSS class. Falls back to oncokb-4 for unknown values."""
-    if not level:
-        return "oncokb-4"
-    valid = {"1", "2", "3A", "3B", "4", "R1", "R2"}
-    raw = str(level).strip().upper()
-    return f"oncokb-{raw}" if raw in valid else "oncokb-4"
+# Sources that must NEVER appear in rendered HTML, per their license
+# Terms of Use. OncoKB ToS forbids "use for patient services" and
+# "generation of reports in a hospital or other patient care setting,"
+# which is exactly what OpenOnco produces; therefore SRC-ONCOKB-attested
+# evidence is skipped from both `evidence_sources` and `primary_sources`
+# at render time, regardless of any legacy data still present in YAMLs.
+# See docs/reviews/oncokb-public-civic-coverage-2026-04-27.md §3.4.
+_RENDER_SKIP_SOURCES = frozenset({"SRC-ONCOKB"})
+
+
+def _is_skipped_source(source_id: str) -> bool:
+    """Per ToS, do not render anything attributed to OncoKB to user-facing
+    HTML. Match is case-insensitive and on prefix so SRC-ONCOKB-* legacy
+    variants are also caught."""
+    if not source_id:
+        return False
+    s = str(source_id).strip().upper()
+    if s in _RENDER_SKIP_SOURCES:
+        return True
+    return s.startswith("SRC-ONCOKB")
+
+
+def _civic_evidence_url(evidence_ids: list) -> Optional[str]:
+    """Return a civicdb.org link for the first numeric evidence id, or
+    fall back to the gene-page URL pattern if no numeric id is present.
+
+    CIViC evidence-item URL pattern: civicdb.org/links/evidence_items/<id>.
+    Some imports store ids as `EID12345`; we strip a leading `EID`.
+    """
+    for raw in (evidence_ids or []):
+        s = str(raw).strip()
+        if s.upper().startswith("EID"):
+            s = s[3:]
+        if s.isdigit():
+            return f"https://civicdb.org/links/evidence_items/{s}"
+    return None
+
+
+def _is_resistance_entry(direction, significance) -> bool:
+    """CIViC `direction == 'Does Not Support'` flips a Sensitivity item
+    into anti-evidence; `significance == 'Resistance'` is the explicit
+    resistance signal. Either condition gets a ⚠ flag at render time."""
+    d = (direction or "").strip().lower() if direction else ""
+    s = (significance or "").strip().lower() if significance else ""
+    if d in {"does not support", "does_not_support"}:
+        return True
+    if "resistance" in s:
+        return True
+    return False
+
+
+def _format_evidence_sources(
+    evidence_sources: list, primary_sources: Optional[list] = None
+) -> str:
+    """Render evidence_sources entries as a short list per BMA cell.
+
+    Render rules (Phase-4 CIViC pivot, see review-2026-04-27):
+      1. Iterate `evidence_sources`. For each entry:
+         - SKIP source=SRC-ONCOKB entirely (OncoKB ToS forbids surfacing
+           OncoKB labels in patient-care reports).
+         - Otherwise render as `<source>: Level <level>`. SRC-CIVIC
+           entries get a clickable civicdb.org link via the first
+           numeric evidence_id (or gene-page fallback).
+         - "Does Not Support" / "Resistance" entries get a ⚠ marker +
+           "Resistance evidence" label.
+         - Deduplicate (source, level, resistance-flag) so multiple
+           CIViC evidence items at the same level collapse into one row.
+      2. Fallback (Phase 3-O finding): if `evidence_sources` is empty
+         after the SRC-ONCOKB skip, promote `primary_sources` (filtered
+         for non-OncoKB) as citation cards without a level, plus a note
+         pointing to the Phase-2-of-CIViC-pivot re-cite roadmap.
+    """
+    items: list[str] = []
+    seen: set = set()
+    for es in (evidence_sources or []):
+        if isinstance(es, dict):
+            source = es.get("source") or ""
+            level = es.get("level") or ""
+            direction = es.get("direction")
+            significance = es.get("significance")
+            evidence_ids = es.get("evidence_ids") or []
+        else:
+            source = getattr(es, "source", "") or ""
+            level = getattr(es, "level", "") or ""
+            direction = getattr(es, "direction", None)
+            significance = getattr(es, "significance", None)
+            evidence_ids = getattr(es, "evidence_ids", None) or []
+        if not source or _is_skipped_source(source):
+            continue
+        is_resistance = _is_resistance_entry(direction, significance)
+        # Dedupe key — collapse same source+level+resistance-flag rows.
+        key = (str(source).upper(), str(level).upper(), is_resistance)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        # Source label + optional clickable link (CIViC for SRC-CIVIC;
+        # other SRC-* render plain since URL lookup needs kb_resolved
+        # which we don't carry into this helper — see TODO below).
+        source_label = _h(source)
+        if str(source).upper() == "SRC-CIVIC":
+            href = _civic_evidence_url(evidence_ids) or "https://civicdb.org/"
+            source_label = (
+                f'<a href="{_h(href)}" target="_blank" rel="noopener">'
+                f'{_h(source)}</a>'
+            )
+
+        # Resistance flag
+        if is_resistance:
+            badge = (
+                ' <span class="evidence-resistance" '
+                'title="Resistance evidence">⚠ Resistance</span>'
+            )
+        else:
+            badge = ""
+
+        # Fine-grained metadata (direction/significance) — surfaced as a
+        # muted suffix when present and non-resistance (resistance is
+        # already conveyed by the badge).
+        suffix_parts: list[str] = []
+        if direction and not is_resistance:
+            suffix_parts.append(_h(str(direction)))
+        if significance and not is_resistance:
+            suffix_parts.append(_h(str(significance)))
+        suffix = (
+            f' <span class="evidence-meta">({", ".join(suffix_parts)})</span>'
+            if suffix_parts
+            else ""
+        )
+
+        items.append(
+            f'<li>{source_label}: Level {_h(level)}{badge}{suffix}</li>'
+        )
+
+    if items:
+        return f'<ul class="evidence-sources">{"".join(items)}</ul>'
+
+    # Fallback: promote primary_sources (sans OncoKB) into citation cards
+    # so the cell still surfaces something meaningful for the 18 J-drafts
+    # that carry only SRC-ONCOKB in evidence_sources after the skip.
+    fallback_items: list[str] = []
+    fallback_seen: set = set()
+    for sid in (primary_sources or []):
+        if not sid or _is_skipped_source(sid):
+            continue
+        key = str(sid).upper()
+        if key in fallback_seen:
+            continue
+        fallback_seen.add(key)
+        fallback_items.append(f'<li class="evidence-fallback">{_h(sid)}</li>')
+
+    if fallback_items:
+        note = (
+            '<div class="evidence-fallback-note">'
+            'Evidence cited from clinical guidelines; per-source evidence '
+            'levels not yet structured. See Phase-2-of-CIViC-pivot for '
+            're-cite roadmap.'
+            '</div>'
+        )
+        return (
+            f'<ul class="evidence-sources evidence-sources--fallback">'
+            f'{"".join(fallback_items)}</ul>{note}'
+        )
+
+    return '<span style="color:var(--gray-500)">—</span>'
 
 
 def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
-    """Render the ESCAT / OncoKB tier-badges section.
+    """Render the ESCAT tier-badges + per-source evidence section.
 
     Inserted between the diagnostic profile (patient strip + etiological
     driver) and the treatment-plan tracks. When the patient has no
@@ -1720,7 +1547,7 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
         f"<th>{_h(_t('actionability_th_biomarker', target_lang))}</th>"
         f"<th>{_h(_t('actionability_th_variant', target_lang))}</th>"
         f"<th>{_h(_t('actionability_th_escat', target_lang))}</th>"
-        f"<th>{_h(_t('actionability_th_oncokb', target_lang))}</th>"
+        f"<th>{_h(_t('actionability_th_evidence', target_lang))}</th>"
         f"<th>{_h(_t('actionability_th_action', target_lang))}</th>"
         f"<th>{_h(_t('actionability_th_combos', target_lang))}</th>"
         f"<th>{_h(_t('actionability_th_sources', target_lang))}</th>"
@@ -1744,16 +1571,23 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
                 else f'<span style="color:var(--gray-500)">{_h(_t("actionability_gene_level", target_lang))}</span>'
             )
             escat_cls = _escat_class(h.escat_tier)
-            oncokb_cls = _oncokb_class(h.oncokb_level)
             escat_label = _h(h.escat_tier or "X")
-            oncokb_label = _h(h.oncokb_level or "4")
+            evidence_cell = _format_evidence_sources(
+                getattr(h, "evidence_sources", None) or [],
+                primary_sources=list(h.primary_sources or []),
+            )
             summary = _h_t(h.evidence_summary or "", target_lang)
             combos = (
                 "<br>".join(_h(c) for c in (h.recommended_combinations or []))
                 or '<span style="color:var(--gray-500)">—</span>'
             )
+            # Per OncoKB ToS, filter SRC-ONCOKB from the user-visible
+            # primary-sources column as well.
+            visible_sources = [
+                s for s in (h.primary_sources or []) if not _is_skipped_source(s)
+            ]
             sources = (
-                "".join(f"<li>{_h(s)}</li>" for s in (h.primary_sources or []))
+                "".join(f"<li>{_h(s)}</li>" for s in visible_sources)
                 or '<li style="color:var(--gray-500)">—</li>'
             )
             rows.append(
@@ -1761,7 +1595,7 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
                 f'<td><span class="gene">{biomarker}</span></td>'
                 f'<td><span class="variant">{variant_cell}</span></td>'
                 f'<td><span class="tier-badge {escat_cls}">{escat_label}</span></td>'
-                f'<td><span class="tier-badge {oncokb_cls}">{oncokb_label}</span></td>'
+                f'<td class="evidence">{evidence_cell}</td>'
                 f'<td class="summary">{summary}</td>'
                 f'<td class="combos">{combos}</td>'
                 f'<td><ul class="src-list">{sources}</ul></td>'
@@ -1785,7 +1619,23 @@ def render_plan_html(
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
     target_lang: str = "uk",
+    mode: str = "clinician",
 ) -> str:
+    """Render a PlanResult as a single-file HTML document.
+
+    `mode="clinician"` (default) emits the full tumor-board brief with
+    technical IDs, ESCAT tiers, MDT block, FDA disclosure, etc.
+
+    `mode="patient"` emits a stripped-down plain-Ukrainian patient-facing
+    bundle: technical IDs (BMA-*, ALGO-*, BIO-*, IND-*, REG-*, RF-*) are
+    removed from user-visible text and replaced with vocabulary lookups
+    from `_patient_vocabulary`. Emergency RedFlags surface as a banner
+    via `_emergency_rf`; an 'ask your doctor' section is generated via
+    `_ask_doctor`. CHARTER §8.3 invariant — patient-mode never changes
+    the engine's track selection."""
+    if (mode or "").lower() == "patient":
+        return _render_patient_mode(plan_result, target_lang)
+
     plan = plan_result.plan
     if plan is None:
         return _doc_shell("OpenOnco — empty plan", "<p>Empty PlanResult; nothing to render.</p>")
@@ -1815,12 +1665,15 @@ def render_plan_html(
         (plan_result.kb_resolved or {}).get("disease")
     ))
 
-    # Variant actionability (ESCAT / OncoKB) — inserted between the
+    # Variant actionability (ESCAT) — inserted between the
     # diagnostic profile and the treatment-plan tracks. Render-time
     # context only; engine never re-reads tier values to rank tracks.
     body.append(_render_variant_actionability(plan, target_lang))
 
     # Tracks
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = (disease_data.get("names") if isinstance(disease_data, dict) else None) or {}
     track_html = []
     for t in plan.tracks:
         track_class = f"track track--{(t.track_id or 'standard')}"
@@ -1837,12 +1690,24 @@ def render_plan_html(
             f'<dt>Hard contraindications</dt><dd>{_h(", ".join(c.get("id", "?") for c in t.contraindications_data))}</dd>'
             if t.contraindications_data else ""
         )
+        # Drug components with NSZU availability badges (render-time only;
+        # engine never reads these — same contract as ESCAT tiers).
+        drugs_dd = _render_track_drug_list(
+            t, drugs_lookup, plan_result.disease_id or "", disease_names, target_lang
+        )
+        # TODO(phase-4): inline resistance-conflict banner once the
+        # CIViC reader (SnapshotActionabilityClient) is wired and the
+        # actionability_layer is populated. Surface-only — the inline
+        # banner is the T3 mitigation for clinicians scrolling top-down.
+        actionability_inline = ""
         track_html.append(
             f'<div class="{track_class}">'
             f'<div class="track-head"><div class="track-name">{_h(t.label)}</div>{badge}</div>'
+            f'{actionability_inline}'
             f'<dl>'
             f'<dt>Indication</dt><dd>{_h(t.indication_id)}</dd>'
             f'<dt>Regimen</dt><dd>{_h(regimen_str)}</dd>'
+            f'{drugs_dd}'
             f'{sup}'
             f'{ci}'
             f'<dt>Reason</dt><dd>{_h(t.selection_reason)}</dd>'
@@ -1864,6 +1729,18 @@ def render_plan_html(
     body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved))
     body.append(_render_red_flags_pro_contra(plan, plan_result.kb_resolved, target_lang))
     body.append(_render_what_not_to_do(plan, target_lang))
+
+    # Phase 4 (CIViC pivot, 2026-04-27): the per-cell `evidence_sources`
+    # rendering inside `_render_variant_actionability` is now ESCAT-primary
+    # + CIViC-detailed. SRC-ONCOKB entries are skipped per OncoKB ToS, and
+    # `primary_sources` (sans OncoKB) are promoted as a fallback when the
+    # post-skip evidence_sources list is empty (Phase 3-O finding). See
+    # `_format_evidence_sources` for the full rule set.
+    # TODO(phase-5-cleanup): when SnapshotActionabilityClient is wired,
+    # actionability_layer can replace the inline cell renderer below with
+    # a richer card-grid view.
+    # actionability_layer = getattr(plan_result, "actionability_layer", None)
+
     body.append(_render_monitoring_phases(plan))
     body.append(_render_timeline(plan))
 
@@ -1894,6 +1771,365 @@ def render_plan_html(
 
     out = _doc_shell(f"План лікування — {plan_result.disease_id}", "".join(body))
     return _localize_html(out, target_lang)
+
+
+# ── Patient-mode render ───────────────────────────────────────────────────
+#
+# Plain-Ukrainian patient-facing bundle. Technical entity IDs (BMA-*,
+# ALGO-*, BIO-*, IND-*, REG-*, RF-*) are NEVER rendered as visible text
+# in patient mode (they may appear in HTML attributes for testing /
+# debugging, e.g. `data-bma-id="..."`, but never in `<p>` / `<li>` /
+# `<td>` content). All clinician-vocabulary terms route through
+# `_patient_vocabulary.explain()`.
+
+
+def _patient_doc_shell(title: str, body: str) -> str:
+    """Patient-mode HTML shell — embeds STYLESHEET + PATIENT_MODE_CSS so
+    the bundle is a single self-contained document. Distinct from
+    `_doc_shell` because patient mode wraps the body in
+    `<div class="patient-report">` rather than `<div class="page">` and
+    doesn't ship the Google Fonts <link> (patient bundles favour system
+    fonts for offline-readability)."""
+    return (
+        "<!DOCTYPE html>\n"
+        '<html lang="uk">\n<head>\n'
+        '<meta charset="UTF-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+        f"<title>{_h(title)}</title>\n"
+        f"<style>{_CSS}{_PATIENT_CSS}</style>\n"
+        "</head>\n<body>\n"
+        f'<div class="patient-report">{body}</div>\n'
+        "</body>\n</html>\n"
+    )
+
+
+def _patient_disease_label(plan_result: PlanResult) -> str:
+    """Plain-UA disease label, never the DIS- ID. Falls back to a generic
+    label so user-visible text never contains a technical ID."""
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    names = disease_data.get("names") if isinstance(disease_data, dict) else None
+    if isinstance(names, dict):
+        for key in ("ukrainian", "preferred", "english"):
+            v = names.get(key)
+            if v:
+                return str(v)
+    return "ваш діагноз"
+
+
+def _patient_drug_label(drug_dict: dict, drug_id: str) -> str:
+    """Plain-UA drug label, never the DRUG- ID."""
+    if isinstance(drug_dict, dict):
+        names = drug_dict.get("names") or {}
+        if isinstance(names, dict):
+            for key in ("ukrainian", "preferred", "english"):
+                v = names.get(key)
+                if v:
+                    return str(v)
+        nm = drug_dict.get("name")
+        if nm:
+            return str(nm)
+    # Last-resort fallback: humanize the ID. We deliberately strip the
+    # `DRUG-` prefix so no raw entity ID leaks into rendered text.
+    raw = (drug_id or "").strip()
+    if raw.upper().startswith("DRUG-"):
+        raw = raw[5:]
+    return raw.replace("-", " ").replace("_", " ").lower() or "препарат"
+
+
+def _render_findings_plain(plan_result: PlanResult) -> str:
+    """Plain-UA rendering of the variant_actionability hits.
+
+    Each hit becomes a friendly statement: 'У вас знайдено [variant
+    explanation]. Це означає: [ESCAT tier patient label].' Technical
+    IDs (BMA-*, BIO-*) are stripped — only gene + variant fragment
+    survive (e.g. "BRAF V600E"), which is patient-facing biology, not
+    a KB ID."""
+    plan = plan_result.plan
+    hits = list((plan and plan.variant_actionability) or [])
+    if not hits:
+        return (
+            '<p>За результатами наявних аналізів значущих молекулярних мішеней '
+            "поки не виявлено. Це не означає, що лікування неможливе — стандартна терапія "
+            "залишається повністю чинною. Якщо у вас ще не було молекулярного тестування "
+            "пухлини, обговоріть це з лікарем.</p>"
+        )
+
+    parts: list[str] = ['<ul class="findings-list">']
+    for h in hits:
+        # Strip BIO- prefix from the biomarker label — keep only gene-name
+        # fragment (BRAF, EGFR, etc.) which is patient-readable biology,
+        # not an internal KB ID.
+        bio = (h.biomarker_id or "").strip()
+        gene = bio[4:].split("-", 1)[0] if bio.upper().startswith("BIO-") else bio.split("-", 1)[0]
+        variant = (h.variant_qualifier or "").strip() or ""
+        # Variant explanation from vocabulary (e.g. V600E → "конкретна
+        # заміна валіну на глутамат…"). Falls back to the literal variant
+        # string when vocabulary has no entry.
+        v_expl = _explain_patient(variant) or _explain_patient(gene) or ""
+        tier = (h.escat_tier or "").strip().upper()
+        tier_label = ESCAT_TIER_PATIENT_LABEL.get(tier, "")
+        # Compose a short human paragraph. We render gene + variant
+        # together (e.g. "BRAF V600E") because that's biology a patient
+        # can search for; ESCAT tier is wrapped in a friendly label.
+        gene_variant = f"{gene} {variant}".strip() if variant else gene
+        bits = [f"<li><strong>{_h(gene_variant)}</strong>"]
+        if v_expl:
+            bits.append(f" — {_h(v_expl)}")
+        if tier_label:
+            bits.append(f'. <span class="patient-badge patient-info">{_h(tier_label)}</span>')
+        else:
+            bits.append(".")
+        bits.append("</li>")
+        parts.append("".join(bits))
+    parts.append("</ul>")
+    return "".join(parts)
+
+
+def _render_drugs_plain(plan_result: PlanResult) -> str:
+    """Plain-UA rendering of recommended drugs across all tracks.
+
+    Each drug renders as a `<div class="drug-explanation">` block with
+    drug name + lay-language explanation (`drug.notes_patient` if
+    present, else `_explain_patient(drug.drug_class)`, else a generic
+    fallback) + NSZU patient badge."""
+    plan = plan_result.plan
+    if plan is None or not plan.tracks:
+        return (
+            "<p>Конкретний список препаратів буде сформовано лікарем "
+            "після перегляду усіх ваших аналізів.</p>"
+        )
+
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = disease_data.get("names") if isinstance(disease_data, dict) else None
+    seen_drug_ids: set[str] = set()
+    blocks: list[str] = []
+
+    for t in plan.tracks:
+        regimen = t.regimen_data or {}
+        components = regimen.get("components") or []
+        for comp in components:
+            if not isinstance(comp, dict):
+                continue
+            drug_id = comp.get("drug_id") or ""
+            if not drug_id or drug_id in seen_drug_ids:
+                continue
+            seen_drug_ids.add(drug_id)
+
+            drug = drugs_lookup.get(drug_id) or {}
+            label = _patient_drug_label(drug, drug_id)
+            drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
+
+            # Lay-language explanation: prefer notes_patient (drug-author'd
+            # patient-facing blurb) → drug_class vocabulary entry → generic.
+            lay = ""
+            if isinstance(drug, dict):
+                lay = (drug.get("notes_patient") or "").strip()
+            if not lay and drug_class:
+                lay = _explain_patient(drug_class) or ""
+            if not lay:
+                lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+
+            # NSZU badge — patient-friendly label, render only when we can
+            # resolve coverage. Falls back silently when drug entity is
+            # missing (don't fabricate a badge).
+            badge_html = ""
+            if isinstance(drug, dict) and drug:
+                try:
+                    badge = lookup_nszu_status(
+                        drug,
+                        plan_result.disease_id or "",
+                        disease_names=disease_names if isinstance(disease_names, dict) else None,
+                    )
+                    p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
+                    if p_label:
+                        cls = f"patient-nszu patient-nszu-{badge.status}"
+                        badge_html = (
+                            f'<div class="{cls}" data-nszu-status="{_h(badge.status)}">'
+                            f"{_h(p_label)}</div>"
+                        )
+                except Exception:
+                    badge_html = ""
+
+            blocks.append(
+                '<div class="drug-explanation">'
+                f"<h3>{_h(label)}</h3>"
+                f'<p class="lay-language">{_h(lay)}</p>'
+                f"{badge_html}"
+                "</div>"
+            )
+
+    if not blocks:
+        return (
+            "<p>Конкретний список препаратів буде сформовано лікарем "
+            "після перегляду усіх ваших аналізів.</p>"
+        )
+    return "".join(blocks)
+
+
+def _render_emergency_section(plan_result: PlanResult) -> str:
+    """Filter the plan's red flags and render emergency-tier ones as a
+    `<section class="emergency-signals">` with one banner item per RF.
+    Renders an empty-state placeholder when no emergency RFs apply, so
+    the section is always present in the bundle (assertable structural
+    contract for downstream tests)."""
+    rf_lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
+    emergencies = filter_emergency_rfs(list(rf_lookup.values()))
+    if not emergencies:
+        return (
+            '<section class="emergency-signals">'
+            "<h2>Сигнали, що вимагають негайної уваги</h2>"
+            '<p class="patient-badge patient-good">'
+            "Наразі немає термінових сигналів — продовжуйте планові візити."
+            "</p>"
+            "</section>"
+        )
+    items: list[str] = []
+    for rf in emergencies:
+        # data-rf-id keeps the engine ID accessible to debug tooling /
+        # tests, but the visible text is generated solely from the
+        # patient_emergency_label() output.
+        rf_id = (rf.get("id") or "") if isinstance(rf, dict) else ""
+        label = patient_emergency_label(rf)
+        items.append(
+            f'<li data-rf-id="{_h(rf_id)}">{_h(label)}</li>'
+        )
+    return (
+        '<section class="emergency-signals">'
+        "<h2>Сигнали, що вимагають негайної уваги</h2>"
+        '<p>Якщо у вас з\'явилися ці симптоми — зверніться у лікарню '
+        "негайно, не чекайте планового візиту:</p>"
+        f'<ul class="emergency-list">{"".join(items)}</ul>'
+        "</section>"
+    )
+
+
+def _render_ask_doctor_section(plan_result: PlanResult) -> str:
+    """Build the 'про що варто запитати лікаря' block.
+
+    Pulls a plan dict (model_dump) and decorates it with derived flags
+    that the predicates in `_ask_doctor.py` look for (recommended_drugs,
+    plan_tracks, etc.). The decoration keeps the predicates simple
+    while still surfacing oop-drug / multi-track / germline-variant
+    contingent questions."""
+    plan = plan_result.plan
+    plan_dict: dict = plan.model_dump() if plan is not None else {}
+
+    # Decorate with the derived fields the predicates expect. We don't
+    # mutate the persisted Plan — `model_dump()` returns a fresh dict.
+    drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
+    disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
+    disease_names = disease_data.get("names") if isinstance(disease_data, dict) else None
+
+    recommended: list[dict] = []
+    seen: set[str] = set()
+    if plan is not None:
+        for t in plan.tracks:
+            regimen = t.regimen_data or {}
+            for comp in regimen.get("components") or []:
+                if not isinstance(comp, dict):
+                    continue
+                did = comp.get("drug_id") or ""
+                if not did or did in seen:
+                    continue
+                seen.add(did)
+                drug = drugs_lookup.get(did) or {}
+                nszu_status: str = ""
+                if isinstance(drug, dict) and drug:
+                    try:
+                        b = lookup_nszu_status(
+                            drug,
+                            plan_result.disease_id or "",
+                            disease_names=disease_names if isinstance(disease_names, dict) else None,
+                        )
+                        nszu_status = b.status
+                    except Exception:
+                        nszu_status = ""
+                recommended.append({
+                    "drug_id": did,
+                    "name": _patient_drug_label(drug, did),
+                    "drug_class": (drug.get("drug_class") if isinstance(drug, dict) else None),
+                    "nszu_status": nszu_status,
+                })
+
+    plan_dict["recommended_drugs"] = recommended
+    plan_dict["plan_tracks"] = list(plan_dict.get("tracks") or [])
+
+    questions = _select_ask_doctor_questions(plan_dict, target_count=6)
+    if not questions:
+        return ""
+    items = "".join(f"<li>{_h(q['question_ua'])}</li>" for q in questions)
+    return (
+        '<div class="ask-doctor">'
+        "<h2>Про що варто запитати лікаря</h2>"
+        f"<ul>{items}</ul>"
+        "</div>"
+    )
+
+
+_PATIENT_DISCLAIMER_HTML = (
+    "<p>Цей звіт — інформаційний інструмент, не медичний прилад. Усі рішення "
+    "про лікування приймає ваш онколог. Звіт оновлюється, коли з'являються "
+    "нові аналізи. Не змінюйте призначене лікування на основі лише цього звіту.</p>"
+    "<p>Якщо у вас виникли термінові симптоми, перелічені вище — звертайтесь у "
+    "лікарню негайно, не чекайте планового візиту.</p>"
+    "<p>Питання про сам інструмент: "
+    '<a href="https://github.com/romeo111/OpenOnco/issues">github.com/romeo111/OpenOnco</a></p>'
+)
+
+
+def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
+    """Render a Plan as a plain-Ukrainian patient-facing single-file HTML.
+
+    `target_lang` is currently honoured only for the document `<html lang>`
+    attribute — the body stays Ukrainian per the patient-mode spec. EN
+    patient bundles are out of scope for the current iteration (see
+    CSD-3 plan)."""
+    plan = plan_result.plan
+    if plan is None:
+        return _patient_doc_shell(
+            "Ваш персональний онкологічний план",
+            '<p>Поки що недостатньо даних для побудови плану. '
+            'Зверніться до вашого онколога для уточнення.</p>',
+        )
+
+    disease_label = _patient_disease_label(plan_result)
+    body_parts: list[str] = []
+
+    # Header
+    body_parts.append(
+        "<header>"
+        "<h1>Ваш персональний план</h1>"
+        '<p class="patient-subhead">Що показав аналіз і що це означає для вас</p>'
+        f'<p><strong>Діагноз:</strong> {_h(disease_label)}</p>'
+        "</header>"
+    )
+
+    body_parts.append(
+        '<section class="what-was-found">'
+        "<h2>Що знайдено в результаті</h2>"
+        f"{_render_findings_plain(plan_result)}"
+        "</section>"
+    )
+
+    body_parts.append(
+        '<section class="what-now">'
+        "<h2>Що це означає для лікування</h2>"
+        f"{_render_drugs_plain(plan_result)}"
+        "</section>"
+    )
+
+    body_parts.append(_render_emergency_section(plan_result))
+    body_parts.append(_render_ask_doctor_section(plan_result))
+
+    body_parts.append(
+        f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
+    )
+
+    return _patient_doc_shell(
+        "Ваш персональний онкологічний план",
+        "".join(body_parts),
+    )
 
 
 # ── Diagnostic Brief render ───────────────────────────────────────────────

@@ -1,0 +1,36 @@
+id: RF-SANZ-INTERMEDIATE
+definition: "APL with Sanz intermediate risk — WBC ≤10 ×10^9/L AND platelets ≤40 ×10^9/L — eligible for ATRA+ATO chemo-free per APL0406; some protocols add limited anthracycline (idarubicin) per AIDA-style backbone"
+definition_ua: "ГПЛ з проміжним ризиком за Sanz — WBC ≤10 ×10⁹/л І тромбоцити ≤40 ×10⁹/л — придатний для АТRA+ATO без хіміотерапії за APL0406; деякі протоколи додають обмежений антрациклін (ідарубіцин) за AIDA-схемою"
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "wbc_count_x10_9_per_l"
+      threshold: 10
+      comparator: "<="
+    - finding: "platelet_count_x10_9_per_l"
+      threshold: 40
+      comparator: "<="
+
+clinical_direction: investigate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-APL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-APL-2019
+  - SRC-APL0406-LOCOCO-2013
+
+last_reviewed: "2026-04-27"
+notes: >
+  Sanz intermediate — same induction outcome category as low-risk in
+  APL0406 (combined non-high-risk arm). Both groups treated with
+  ATRA+ATO chemo-free. ELN-APL 2019 allows anthracycline addition for
+  intermediate-risk if platelets very low or in resource-limited
+  settings. Direction `investigate` because the score alone does not
+  flip the indication — the algorithm picks ATRA+ATO unless the high-risk
+  flag fires; this RF surfaces the cohort for MDT brief.

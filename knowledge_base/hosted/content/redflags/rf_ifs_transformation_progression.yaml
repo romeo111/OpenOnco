@@ -1,0 +1,57 @@
+id: RF-IFS-TRANSFORMATION-PROGRESSION
+definition: >
+  Progression of infantile fibrosarcoma on first-line larotrectinib /
+  entrectinib (acquired NTRK kinase-domain solvent-front G595R / G667S
+  mutation), new metastatic disease (lung most common), or rapid local
+  progression — triggers second-generation TRK inhibitor (selitrectinib,
+  repotrectinib) or salvage VAC / Ewing-like cytotoxic protocol.
+definition_ua: >
+  Прогресія інфантильної фібросаркоми на 1-й лінії larotrectinib /
+  entrectinib (набута NTRK kinase-domain solvent-front мутація G595R /
+  G667S), нова метастатична хвороба (найчастіше легені) або швидке
+  локальне прогресування — тригер до 2-го покоління TRK-інгібіторів
+  (selitrectinib, repotrectinib) або сальваджу VAC / Ewing-протоколу.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "BIO-NTRK-FUSION"
+      value: "resistance_mutation"
+    - finding: "ntrk_solvent_front_mutation"
+      value: true
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "rapid_progression_on_trk_inhibitor"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-IFS]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PEDIATRIC-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Acquired resistance to 1st-gen TRK inhibitors typically emerges via
+  on-target kinase-domain mutations (G595R for NTRK1, G623R for NTRK3,
+  solvent-front and gatekeeper variants) within 12-24 months; off-target
+  bypass via MAPK signaling described. Selitrectinib (LOXO-195) and
+  repotrectinib (TPX-0005) are 2nd-gen designed to overcome these
+  mutations — TRIDENT-1 enrolled pediatric with promising responses in
+  TRK-resistant. Salvage cytotoxic (VAC, Ewing-like VDC/IE) reasonable
+  if 2nd-gen unavailable. Re-biopsy at progression strongly recommended.
+notes_ua: >
+  Набута резистентність до 1-го покоління TRK-інгібіторів через on-target
+  kinase-domain мутації (G595R NTRK1, G623R NTRK3) — 12-24 міс. 2-ге
+  покоління — selitrectinib (LOXO-195) та repotrectinib (TPX-0005,
+  TRIDENT-1). Сальвадж VAC / VDC-IE — резерв.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

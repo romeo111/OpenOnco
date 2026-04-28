@@ -1,0 +1,62 @@
+id: RF-NSCLC-MET-EX14-ACTIONABLE
+definition: >
+  MET exon 14 skipping — ~3-4% of NSCLC adenocarcinoma; older / smoker
+  enriched. Capmatinib (GEOMETRY mono-1 — ORR 41-68%) and tepotinib
+  (VISION) are FDA-approved selective MET-TKIs for any-line use.
+  RNA-NGS preferred for splice-site detection.
+definition_ua: >
+  MET exon 14 skipping — ~3-4% НДРЛ-аденокарциноми; переважно старші /
+  курці. Капматиніб (GEOMETRY mono-1 — ORR 41-68%) та тепотиніб (VISION) —
+  FDA-схвалені селективні MET-TKI для будь-якої лінії. RNA-NGS переважно
+  для виявлення сплайсингових варіантів.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "met_ex14_skipping"
+      value: true
+    - finding: "met_exon14_skipping"
+      value: "positive"
+    - finding: "met_alteration"
+      value: "Ex14 skipping"
+    - finding: "met_status"
+      value: "ex14_skipping"
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-4"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-GEOMETRY-WOLF-2020
+  - SRC-VISION-PAIK-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  GEOMETRY mono-1 / VISION enrolled both 1L and 2L+ — TKI is a
+  reasonable 1L option, though some MTBs still default to chemo + IO
+  in 1L and reserve MET-TKI for 2L. Toxicity: peripheral edema (60-80%),
+  hypoalbuminemia, creatinine elevation (TKI competition with creatinine
+  secretion — pseudo-elevation, not true AKI). MET amplification
+  (high-level GCN ≥10) is a separate actionable subset — covered by
+  BIO-MET amplification status.
+notes_ua: >
+  GEOMETRY mono-1 / VISION включали 1L та 2L+ — TKI — обґрунтований
+  варіант 1L, хоча частина MDT-комісій 1L залишають хіміо + IO, а
+  MET-TKI — 2L. Токсичність: периферичні набряки (60-80%),
+  гіпоальбумінемія, підвищення креатиніну (конкуренція TKI за
+  секрецію — псевдо-підвищення, не справжнє ГНН). MET ампліфікація
+  (високорівнева GCN ≥10) — окрема actionable підгрупа.

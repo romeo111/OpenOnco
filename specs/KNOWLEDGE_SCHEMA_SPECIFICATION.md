@@ -8,6 +8,20 @@
 
 ---
 
+> **Pivot 2026-04-27 — Actionability source.** Первинне джерело
+> biomarker-actionability мігровано з **OncoKB** на **CIViC**. Підстава:
+> OncoKB Terms of Use прямо забороняють використання даних "for patient
+> services" та "generation of reports in a hospital or other patient care
+> setting" — що є точним визначенням scope OpenOnco (CHARTER §2). Деталі
+> аудиту: [`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`](../docs/reviews/oncokb-public-civic-coverage-2026-04-27.md).
+> CIViC (CC0) тепер — primary actionability source; усі engine-модулі
+> названо vendor-neutral (`actionability_*`), що залишає можливість
+> повернутися до іншого джерела без переписування schema. Поля
+> `oncokb_skip_reason` та інші token-словники, що не виносять рішення
+> рендеру, збережені незмінними (vocabulary stays).
+
+---
+
 ## Мета документа
 
 Цей документ визначає **технічну структуру даних knowledge base** —
@@ -286,6 +300,224 @@ knowledge_base_ref:
   civic: "https://civicdb.org/links/variants/33"
   last_synced: "2026-04-15"
 ```
+
+### 4.3. Actionability-wiring fields (Phase 1 scaffolding)
+
+Три опційні поля додано на Biomarker для безпечного підключення зовнішньої
+biomarker-actionability бази (CIViC у v0.1 після pivot 2026-04-27 — див.
+callout на початку документа). Поля свідомо vendor-neutral named — engine
+переключається з OncoKB на CIViC без зміни schema. Це чисто інженерне
+розширення схеми; жодного клінічного контенту в `bio_*.yaml` ця версія
+не торкається — заповнення полів виконується у фазі 2.
+
+#### `actionability_lookup` (опційно)
+
+Явний хінт, що дозволяє actionability-екстрактору запитати анотацію саме
+для цього біомаркера у зовнішній КБ (CIViC). Якщо поле відсутнє, екстрактор
+повністю **пропускає** біомаркер — це навмисно, щоб уникнути мовчазного
+«вгадування» (gene, variant) із id, що ризикує дати клініцисту false negative.
+
+Поле раніше називалось `oncokb_lookup` (Phase 1 scaffolding); перейменоване
+на `actionability_lookup` у Phase 1.5-міграції (commit `c72e45b`,
+2026-04-27) разом з pivot до CIViC. Семантика і прийняті форми не
+змінилися.
+
+```yaml
+actionability_lookup:
+  gene: "BRAF"            # HGNC symbol, uppercase, 1..32 chars
+  variant: "V600E"        # короткий HGVS-p / структурний дескриптор / fs
+```
+
+Прийнятні форми `variant`:
+- короткий HGVS-p: `V600E`, `L858R`, `G12C`
+- структурні: `Exon 19 deletion`, `E746_A750del`
+- frameshift-токени: `W288fs`
+- fusion-нотація CIViC: `BCR::ABL1` (пара генів через `::`), у т.ч.
+  з вкладеними резистентними мутаціями у `variant` (`Fusion AND ABL1 T315I`)
+
+Повна валідація HGVS живе в `engine/civic_variant_matcher.py` (попередньо
+`engine/oncokb_extract.py:normalize_variant`). Схема робить тільки type-check.
+
+#### `oncokb_skip_reason` (опційно)
+
+Стабільний machine-readable токен, що пояснює, чому біомаркер навмисно
+**виключений** з actionability-запитів. Ім'я поля збережено історично
+(token-словник source-agnostic — ті самі причини виключення діють і для
+CIViC, і для OncoKB). Ці рядки греп-стійкі — downstream код
+(`engine/_actionability.py`) ключує поведінку саме на них, тож
+перейменування без координації заборонене.
+
+Допустимі значення (`Literal`):
+
+| Token | Коли |
+|---|---|
+| `ihc_no_variant` | IHC без молекулярного варіанту (Ki-67, CD20, …) |
+| `score` | Скор/індекс (IPI, MIPI, GIPSS) |
+| `clinical_composite` | Композитний клінічний маркер |
+| `serological` | Серологія (HCV-Ab, HBsAg) |
+| `viral_load` | Вірусне навантаження (HCV-RNA, HBV-DNA) |
+| `tumor_marker` | Загальний пухлинний маркер (CA-125, AFP, β-hCG) |
+| `imaging` | Imaging-патерн |
+| `germline_no_somatic` | Лише герм-лайн варіант, без соматичної актнабельності |
+| `fusion_mvp` | Fusion — поза скоупом MVP |
+| `itd_mvp` | ITD-варіанти (FLT3-ITD) — поза скоупом MVP |
+| `multi_allele_mvp` | Мультиалельні випадки — поза скоупом MVP |
+| `tumor_agnostic` | Tumor-agnostic indication — окремий шлях |
+
+Взаємно виключає `actionability_lookup`. Допустимі стани: «жоден не заданий»
+(біомаркер ще не триаговано), «лише lookup», «лише skip_reason». Обидва
+одночасно → ValidationError.
+
+#### `external_ids` (опційно)
+
+Крос-референси на зовнішні KB. Усі ключі опційні; часткове заповнення
+(наприклад, лише `hgnc_symbol`) — нормально.
+
+```yaml
+external_ids:
+  hgnc_symbol: "EGFR"
+  hgnc_id: "HGNC:3236"
+  oncokb_url: "https://oncokb.org/gene/EGFR/L858R"
+  civic_id: "33"
+  civic_url: "https://civicdb.org/links/variants/33"
+  clingen_id: "CA123456"
+  hgvs_protein: "NP_005219.2:p.Leu858Arg"
+  hgvs_coding: "NM_005228.5:c.2573T>G"
+```
+
+Поле незалежне від `actionability_lookup` / `oncokb_skip_reason` — може
+бути заповнене у будь-якій комбінації. `oncokb_url` залишено в словнику
+як read-only legacy-метадані: рендер їх не використовує (див. §4.4 щодо
+ToS-обмежень OncoKB), але цитати з опублікованих наукових праць можуть
+посилатися на стабільну OncoKB-сторінку без redistribution-конфлікту.
+
+---
+
+### 4.4. Entity: BiomarkerActionability (BMA)
+
+Окрема сутність, яка маппить пару (gene-variant, tumor type) на
+клінічну actionability-tier за ESCAT (ESMO Scale for Clinical Actionability
+of molecular Targets, Mateo 2018). Композує існуючі `BIO-*` (gene/variant
+taxonomy) та `DIS-*` (disease taxonomy) у per-tumor клінічну
+інтерпретацію. Pydantic-схема: `knowledge_base/schemas/biomarker_actionability.py`.
+
+**ID convention:** `BMA-{biomarker}-{variant?}-{disease}`, наприклад
+`BMA-BRAF-V600E-CRC`, `BMA-EGFR-T790M-NSCLC`. `biomarker_id` може вже
+кодувати variant (e.g. `BIO-BRAF-V600E`); тоді `variant_qualifier` —
+опційний рефайнмент (sub-variant / co-occurrence). `null` у
+`variant_qualifier` → клітинка gene-level (будь-яка патогенна
+альтерація трактується ідентично).
+
+#### 4.4.1. Канонічна схема (post-pivot)
+
+```yaml
+# File: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_crc.yaml
+
+entity_type: BiomarkerActionability
+id: BMA-BRAF-V600E-CRC
+biomarker_id: BIO-BRAF-V600E         # FK → BIO-*
+variant_qualifier: null               # null → весь варіант, що в biomarker_id
+disease_id: DIS-CRC                  # FK → DIS-*
+
+# ── Primary actionability tier (vendor-neutral) ────────────────────────
+escat_tier: "IA"                     # ESCAT IA|IB|IIA|IIB|IIIA|IIIB|IV|X
+
+# ── Evidence sources block (canonical post-pivot) ──────────────────────
+# Замінює legacy-поля oncokb_level / oncokb_snapshot_version. Список
+# EvidenceSourceRef-структур; жодне джерело не привілейоване в render.
+evidence_sources:
+  - source: "SRC-CIVIC"              # FK → Source entity
+    level: "B"                       # CIViC level: A|B|C|D|E
+    evidence_ids: ["civic:EID-1409", "civic:EID-7821"]
+    direction: "supports"            # supports | does_not_support | n/a
+    significance: "sensitivity_response"  # sensitivity_response|resistance|reduced_sensitivity|...
+    note: "Encorafenib + cetuximab in BRAF V600E mCRC after prior therapy."
+  - source: "SRC-NCCN-COLORECTAL-2025"
+    level: "category_1"              # NCCN-specific level vocabulary
+    evidence_ids: []
+    direction: "supports"
+    significance: "sensitivity_response"
+    note: "Preferred 2L+ regimen for V600E."
+
+# ── Two-reviewer gate flag (CHARTER §6.1) ─────────────────────────────
+# True → блокує publish до двох клінічних sign-off. Виставляється
+# loader'ом якщо drafted_by починається з "claude_extraction" або якщо
+# evidence_sources містить лише A/B без guideline-corroboration.
+actionability_review_required: true
+
+# ── Per-jurisdiction regulatory ─────────────────────────────────────
+regulatory_approval:
+  fda: ["encorafenib + cetuximab — BRAF V600E mCRC (FDA 2020)"]
+  ema: ["encorafenib + cetuximab — BRAF V600E mCRC (EMA 2020)"]
+  ukraine: []
+
+recommended_combinations:
+  - "encorafenib + cetuximab (2L+ V600E mCRC per SRC-NCCN-COLORECTAL-2025)"
+contraindicated_monotherapy:
+  - "BRAF inhibitor monotherapy (paradoxical MAPK activation)"
+
+primary_sources:                      # ≥1 required (loader-enforced)
+  - SRC-NCCN-COLORECTAL-2025
+  - SRC-CIVIC
+last_verified: "2026-04-27"
+reviewer_signoffs: []                 # ≥2 to publish per CHARTER §6.1
+notes: >
+  ESCAT IA. Resistance: MAPK reactivation through MEK or PI3K — see
+  triplet trials.
+```
+
+#### 4.4.2. `EvidenceSourceRef` shape
+
+```
+EvidenceSourceRef = {
+  source:        str,        # FK → SRC-*  (required)
+  level:         str,        # source-specific level token (required)
+  evidence_ids:  list[str],  # source-native IDs, e.g. "civic:EID-1409"
+  direction:     "supports" | "does_not_support" | "n/a",
+  significance:  str,        # "sensitivity_response" | "resistance" |
+                             # "reduced_sensitivity" | "predisposition" |
+                             # "better_outcome" | "poor_outcome" | ...
+  note:          Optional[str],
+}
+```
+
+`level` — це **source-native токен** (CIViC `A|B|C|D|E`, NCCN
+`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Vendor-mapping (наприклад,
+CIViC-A → ESCAT IA) лежить у render-шарі, не в YAML — клінічна
+відповідальність за сumulative-tier (`escat_tier`) залишається на
+рев'юері BMA, не на автоматичному маппінгу.
+
+Поле `direction == "does_not_support"` є load-bearing: render має
+показати такий запис як **anti-evidence card** (negative recommendation),
+а не приховати. CIViC містить ~10% таких записів — це навмисний клінічний
+сигнал, який engine не повинен мовчазно дропати.
+
+#### 4.4.3. `escat_tier` як primary actionability tier
+
+`escat_tier` — vendor-neutral, опубліковано-стабільний (Mateo 2018 не
+оновлюється щодня, на відміну від OncoKB level scheme). Це поле — те,
+що render використовує як основний тіер у Plan-картках. Окремі
+`evidence_sources[*].level` — це доказова база для sign-off, не
+користувацький рендер-токен.
+
+#### 4.4.4. Legacy-поля та ToS-обмеження
+
+Поля `oncokb_level` і `oncokb_snapshot_version`, що існували у Phase 0
+draft-yaml-ах, **видалено зі схеми** в Phase 1.5-міграції (engine commit
+`5384348`, schema-міграція YAML — pending Part B). Якщо запис у
+`evidence_sources` має `source: "SRC-ONCOKB"`, він трактується render-шаром
+як **legacy metadata**: не виводиться у користувацький UI, не використовується
+як основа для рекомендації. Підстава — OncoKB Terms of Use (Phase-4 правило
+рендеру; деталі див. `SOURCE_INGESTION_SPEC.md` §2.5 і
+`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md` §3.3).
+
+#### 4.4.5. Статус формалізації
+
+Сутність додано до Pydantic-схеми (`knowledge_base/schemas/biomarker_actionability.py`)
+2026-04-26 під CSD Lab pitch і не потрапила в §2 top-level entities у
+v0.1-draft цього документа. Цей розділ — закрепачення BMA як
+повноправної сутності 13-го рівня для майбутнього перегляду §2 і
+data-model-діаграми (§15).
 
 ---
 

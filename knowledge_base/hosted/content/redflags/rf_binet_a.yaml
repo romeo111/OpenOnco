@@ -1,0 +1,36 @@
+id: RF-BINET-A
+definition: "CLL/SLL with Binet stage A — lymphocytosis with <3 involved lymphoid areas, no anemia, no thrombocytopenia — watch-and-wait candidate; no survival benefit from early treatment"
+definition_ua: "ХЛЛ/МЛЛ зі стадією Binet A — лімфоцитоз з <3 ураженими лімфоїдними ділянками, без анемії та тромбоцитопенії — кандидат на watch-and-wait; раннє лікування не покращує виживаність"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "cll_binet_stage"
+      value: "A"
+    - finding: "cll_binet_risk"
+      value: "low"
+
+clinical_direction: de-escalate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Binet A (Binet 1981) = <3 involved lymphoid areas (cervical, axillary,
+  inguinal +/- liver/spleen) AND Hb ≥10 g/dL AND plt ≥100K. Median OS
+  >10 yr. iwCLL 2018 + ESMO + NCCN concur: Binet A without active
+  disease criteria (progressive cytopenia, bulky/symptomatic
+  lymphadenopathy, doubling lymphocytes <6 mo, autoimmune cytopenia
+  refractory to steroids, B-symptoms) does NOT meet treatment indication.
+  CLL12 (Langerbeins 2019) showed ibrutinib monotherapy in Binet A
+  high-genetic-risk improved EFS but not OS — early treatment in stage A
+  remains non-standard outside trials.

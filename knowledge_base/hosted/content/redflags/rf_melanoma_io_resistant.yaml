@@ -1,0 +1,64 @@
+id: RF-MELANOMA-IO-RESISTANT
+definition: >
+  IO-resistant metastatic melanoma — progression on prior anti-PD-1
+  (± anti-CTLA-4 or anti-LAG-3) regimen. Treatment shifts to
+  BRAFi+MEKi salvage (if BRAF V600 mutant) OR lifileucel TIL
+  (C-144-01 — ORR 31% post-IO post-BRAFi); ipi-nivo rechallenge in
+  selected cases.
+definition_ua: >
+  IO-резистентна метастатична меланома — прогресування на попередньому
+  анти-PD-1 (± анти-CTLA-4 або анти-LAG-3). Лікування переходить на
+  BRAFi+MEKi-salvage (при BRAF V600 mut) АБО lifileucel TIL (C-144-01 —
+  ORR 31% після IO + BRAFi); реіндукція ипі-ніво у вибраних випадках.
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "prior_io_received"
+      value: true
+    - any_of:
+        - finding: "progression_on_io"
+          value: true
+        - finding: "io_response_status"
+          value: "progression"
+        - finding: "io_response_status"
+          value: "primary_resistance"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: transformation-progression
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm:
+  - ALGO-MELANOMA-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-CHECKMATE-067-LARKIN-2019
+  - SRC-C14401-CHESNEY-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Lifileucel (C-144-01 / TILVANCE-301) — first FDA-approved TIL
+  therapy in solid tumors (Feb 2024). Eligibility: ECOG 0-1, prior
+  anti-PD-1 + anti-CTLA-4 (if eligible) + BRAFi+MEKi (if BRAF mut).
+  Resectable metastasis required for TIL harvest. Lymphodepletion
+  (cy + flu) + IL-2 administration → ICU-grade supportive care.
+  BRAFi+MEKi salvage post-IO has lower response rates (ORR 30-40%)
+  than 1L (ORR 65-75%) — sequencing matters. Ipi-nivo rechallenge
+  data (CheckMate-064 / 069) — modest response in select patients.
+notes_ua: >
+  Lifileucel (C-144-01 / TILVANCE-301) — перша FDA-схвалена TIL-терапія
+  у солідних пухлинах (лют. 2024). Прийнятність: ECOG 0-1, попередній
+  анти-PD-1 + анти-CTLA-4 (якщо допустимо) + BRAFi+MEKi (при BRAF mut).
+  Резектабельний метастаз для забору TIL. Лімфодеплеція (циклофосфамід
+  + флударабін) + IL-2 → ICU-рівень підтримки. BRAFi+MEKi-salvage
+  після IO має нижчі рівні відповіді (ORR 30-40%) ніж 1L (ORR 65-75%) —
+  послідовність важлива. Реіндукція ипі-ніво (CheckMate-064 / 069) —
+  помірна відповідь у вибраних пацієнтів.

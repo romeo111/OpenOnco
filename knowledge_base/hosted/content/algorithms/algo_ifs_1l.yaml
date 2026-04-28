@@ -1,0 +1,22 @@
+id: ALGO-IFS-1L
+applicable_to_disease: DIS-IFS
+applicable_to_line_of_therapy: 1
+purpose: >
+  1L systemic therapy for IFS confirmed NTRK-fusion-positive (FISH or NGS).
+
+output_indications:
+  - IND-IFS-NTRK-LAROTRECTINIB
+
+default_indication: IND-IFS-NTRK-LAROTRECTINIB
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "BIO-NTRK-FUSION positive"
+          biomarker: BIO-NTRK-FUSION
+    branch_target: IND-IFS-NTRK-LAROTRECTINIB
+
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold. Single-branch algorithm.

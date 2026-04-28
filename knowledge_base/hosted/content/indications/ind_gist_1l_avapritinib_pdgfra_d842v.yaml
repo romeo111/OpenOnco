@@ -1,0 +1,67 @@
+id: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced / metastatic / unresectable"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDGFRA
+      value_constraint: "D842V positive"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    platelet_min: 50000
+
+recommended_regimen: REG-AVAPRITINIB-GIST-1L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~88% (NAVIGATOR PDGFRA D842V cohort)"
+  progression_free_survival: "Median ~34 months (NAVIGATOR PDGFRA D842V)"
+  overall_survival_5y: "Not yet mature; ~70% at 36 months in NAVIGATOR D842V cohort"
+  notes: "NAVIGATOR (Heinrich Lancet Oncol 2020); pre-avapritinib historical PFS ~3 mo on imatinib in this genotype"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests: []
+desired_tests: []
+
+rationale: >
+  PDGFRA D842V mutation (~7% of GIST, predominantly gastric primary)
+  produces an activation-loop conformation that imatinib cannot bind
+  effectively — historical imatinib PFS ~3 months. Avapritinib was
+  designed against this conformation; NAVIGATOR ORR ~88% in PDGFRA
+  D842V cohort, the largest single-genotype response signal in GIST.
+  Defines an exception to the imatinib-first default — genotype-driven
+  branch in ALGO-GIST-1L.
+
+rationale_ua: >
+  PDGFRA D842V мутація (~7% of GIST, переважно gastric primary) produces an activation-loop conformation that іматиніб cannot bind effectively — historical іматиніб PFS ~3 місяців. Avapritinib was designed against this conformation; NAVIGATOR ORR ~88% in PDGFRA D842V cohort, the largest single-генотип відповідь signal in GIST. Defines an exception to the іматиніб-first default — генотип-driven branch in ALGO-GIST-1L.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-GIST-2025
+    weight: primary
+  - source_id: SRC-ONCOKB
+    weight: supporting
+
+do_not_do:
+  - "Do NOT use imatinib (any dose) for PDGFRA D842V — intrinsic resistance."
+  - "Do NOT start avapritinib without baseline brain MRI — cerebral microbleed surveillance is required (boxed warning)."
+  - "Do NOT continue avapritinib through gr ≥2 cognitive AEs without dose reduction (300 → 200 mg)."
+
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  Genotype-restricted alternative 1L for the imatinib-resistant
+  PDGFRA D842V subset. Access in Ukraine is via DEC named-patient
+  import or Blueprint Medicines EAP.

@@ -1,0 +1,61 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_hgbl_dh_emergency_tls.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-HGBL-DH-EMERGENCY-TLS
+definition: "High-grade B-cell lymphoma double-/triple-hit with active or imminent TLS at diagnosis: LDH >2× ULN, uric acid >7.5 mg/dL, hyperkalemia, hyperphosphatemia, hypocalcemia, AKI"
+definition_ua: "Високозлоякісна B-клітинна лімфома double-/triple-hit з активним або неминучим TLS при діагностиці: ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія, ГНН"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "ldh_ulnratio"
+      threshold: 2
+      comparator: ">"
+    - finding: "uric_acid_mg_dl"
+      threshold: 7.5
+      comparator: ">"
+    - finding: "potassium_mmol_l"
+      threshold: 5.5
+      comparator: ">"
+    - finding: "phosphate_mg_dl"
+      threshold: 4.5
+      comparator: ">"
+    - finding: "tls_active"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-HGBL-DH
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  HGBL-DH (MYC + BCL2 ± BCL6 rearrangement) behaves biologically like
+  Burkitt — high proliferation index, strong TLS predisposition. Per NCCN
+  B-cell v.X.2025 HGBL section: DA-EPOCH-R is preferred 1L; rasburicase
+  pre-cycle-1 + IV hydration mandatory. Direction HOLD until stabilized;
+  priority 10. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  HGBL-DH (MYC + BCL2 ± BCL6 перебудова) behaves biologically like Burkitt — high proliferation index, strong TLS predisposition. Per NCCN B-cell v.X.2025 HGBL section: DA-EPOCH-R is переважний 1L; rasburicase pre-цикл-1 + IV hydration обов'язковий. Direction утримати until stabilized; priority 10. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

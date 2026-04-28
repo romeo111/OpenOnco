@@ -1,0 +1,67 @@
+id: RF-CNS-METASTASES-ACTIVE
+definition: >
+  Radiologically confirmed active brain metastases (parenchymal,
+  enhancing on MRI gadolinium). Triggers parallel CNS-directed therapy
+  (stereotactic radiosurgery for ≤4 lesions, whole-brain RT for diffuse,
+  craniotomy for symptomatic single lesion ≥3 cm) and selection of
+  systemic therapy with CNS-penetrant activity (osimertinib, alectinib,
+  lorlatinib, tucatinib, T-DXd, pembrolizumab, dabrafenib + trametinib).
+definition_ua: >
+  Радіологічно підтверджені активні метастази в мозок (паренхіматозні,
+  підсилюються гадолінієм на МРТ). Триггерує паралельну ЦНС-направлену
+  терапію (стереотаксична радіохірургія при ≤4 вогнищах, тотальне
+  опромінення мозку при дифузних, краніотомія при симптомному
+  поодинокому ≥3 см) та вибір системної терапії з CNS-проникністю
+  (осимертиніб, алектиніб, лорлатиніб, тукатиніб, T-DXd, пембролізумаб,
+  дабрафеніб + траметиніб).
+
+trigger:
+  type: imaging_finding
+  any_of:
+    - finding: "active_brain_metastases"
+      value: true
+    - finding: "brain_metastases_count"
+      threshold: 1
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: oncologic-emergency
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ASCO/SNO/ASTRO 2022 guideline for brain metastases. SRS preferred for
+  ≤4 lesions per QUARTZ + AAPM; WBRT reserved for diffuse (>10 lesions)
+  or leptomeningeal involvement. Systemic CNS-penetrant choices by
+  tumor: NSCLC EGFR — osimertinib (FLAURA CNS), brigatinib post-crizotinib
+  (ALTA-1L); NSCLC ALK — alectinib (ALEX CNS), lorlatinib (CROWN);
+  NSCLC ROS1 — entrectinib, repotrectinib; HER2+ breast — tucatinib +
+  trastuzumab + capecitabine (HER2CLIMB), T-DXd (DESTINY-Breast03 CNS
+  subgroup); melanoma — pembrolizumab + ipilimumab (CheckMate-204) or
+  dab+tram if BRAF; SCLC — atezo + chemo, lurbinectedin. Steroids
+  (dexamethasone 4-8 mg/d) for vasogenic edema; taper as soon as
+  feasible — high-dose steroids attenuate ICI efficacy.
+notes_ua: >
+  ASCO/SNO/ASTRO 2022 гайдлайн для метастазів мозку. SRS переважно при
+  ≤4 вогнищах за QUARTZ + AAPM; WBRT — при дифузних (>10) або
+  лептоменінгеальному ураженні. Системний CNS-проникний вибір за
+  пухлиною: NSCLC EGFR — осимертиніб (FLAURA CNS); NSCLC ALK —
+  алектиніб (ALEX CNS), лорлатиніб (CROWN); HER2+ молочна — тукатиніб
+  + трастузумаб + капецитабін (HER2CLIMB), T-DXd; меланома —
+  пембролізумаб + іпілімумаб (CheckMate-204) або dab+tram при BRAF.
+  Стероїди (дексаметазон 4-8 mg/d) для вазогенного набряку; tapering
+  максимально швидкий — високі дози стероїдів зменшують ефект ІКТ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

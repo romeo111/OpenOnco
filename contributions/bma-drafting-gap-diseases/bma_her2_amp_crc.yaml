@@ -1,0 +1,69 @@
+_contribution:
+  chunk_id: bma-drafting-gap-diseases
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/biomarker_actionability/bma_her2_amp_crc.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: BMA-HER2-AMP-CRC
+biomarker_id: BIO-HER2-SOLID
+variant_qualifier: "amplification / overexpression — IHC 3+ or (IHC 2+ + ISH amplified, HER2/CEP17 ≥2.0); ~3-5% of metastatic colorectal cancer (RAS/BRAF-WT)"
+disease_id: DIS-CRC
+escat_tier: "IB"
+evidence_summary: >
+  HER2-amplified metastatic colorectal cancer (~3-5% in RAS/BRAF-WT
+  population): tucatinib + trastuzumab is FDA-approved 2L+ for HER2-
+  positive RAS-WT mCRC based on MOUNTAINEER (Strickler Lancet Oncol
+  2023 — ORR 38%, mDOR 12 mo) per SRC-NCCN-COLON-2025. Trastuzumab
+  deruxtecan also has activity (DESTINY-CRC01 Siena Lancet Oncol 2021
+  — ORR 45% in HER2 IHC 3+ RAS-WT) and tumor-agnostic FDA approval
+  (2024) for HER2-positive solid tumors that have progressed on prior
+  therapy. Older trastuzumab + lapatinib (HERACLES) is referenced as
+  alternative. RAS-mutant tumors should not receive HER2-directed
+  therapy in 2L because RAS-driven resistance is well-documented per
+  SRC-NCCN-COLON-2025.
+evidence_summary_ua: >
+  HER2-amplified метастатичний колоректальний рак (~3-5% in RAS/BRAF-WT population): тукатиніб + трастузумаб is схвалений FDA 2L+ for HER2- positive RAS-WT mCRC based on MOUNTAINEER (Strickler Lancet Oncol 2023 — ORR 38%, mDOR 12 міс.) per SRC-NCCN-COLON-2025. трастузумаб дерукстекан also has activity (DESTINY-CRC01 Siena Lancet Oncol 2021 — ORR 45% in HER2 IHC 3+ RAS-WT) and пухлина-agnostic FDA схвалення (2024) for HER2-positive solid tumors that have progressed on prior терапія. Older трастузумаб + лапатиніб (HERACLES) is referenced as alternative. RAS-mutant tumors should not receive HER2-directed терапія in 2L because RAS-driven resistance is well-documented per SRC-NCCN-COLON-2025.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+regulatory_approval:
+  fda:
+    - "tucatinib + trastuzumab — HER2+ RAS-WT unresectable/metastatic CRC after fluoropyrimidine, oxaliplatin, irinotecan (FDA accelerated 2023)"
+    - "trastuzumab deruxtecan — HER2+ solid tumors with no satisfactory alternative (FDA tumor-agnostic 2024)"
+  ema:
+    - "tucatinib + trastuzumab — HER2+ RAS-WT mCRC (EMA approved 2024)"
+  ukraine: []
+recommended_combinations:
+  - "tucatinib + trastuzumab (2L+ HER2+ RAS-WT mCRC per SRC-NCCN-COLON-2025)"
+  - "trastuzumab deruxtecan (2L+ HER2+ mCRC per SRC-NCCN-COLON-2025)"
+  - "trastuzumab + lapatinib (alternative per HERACLES, listed in SRC-NCCN-COLON-2025)"
+contraindicated_monotherapy:
+  - "HER2-directed therapy in RAS-mutated mCRC (RAS mutation drives downstream resistance per SRC-NCCN-COLON-2025)"
+  - "trastuzumab monotherapy"
+primary_sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+  - SRC-ONCOKB
+last_verified: "2026-04-27"
+evidence_sources:
+  - source: SRC-ONCOKB
+    level: "2"
+    evidence_ids: []
+    direction: null
+    significance: null
+    note: "Pre-CIViC-pivot legacy entry — pending Phase 3 reconciliation against CIViC. Per OncoKB ToS this entry is NOT surfaced in HCP or patient render; Phase 4 render skips evidence_sources entries with source=SRC-ONCOKB."
+actionability_review_required: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  ESCAT IB / OncoKB Level 2 (initially Level 2A in CRC pre-MOUNTAINEER;
+  Level 1 tumor-agnostic for T-DXd 2024). HER2 testing recommended for
+  metastatic CRC with RAS/BRAF-WT genotype per SRC-NCCN-COLON-2025.
+  RAS mutation = exclusion criterion for anti-HER2 therapy.
+  Source-gap: SRC-MOUNTAINEER-STRICKLER-2023, SRC-DESTINY-CRC01, SRC-HERACLES
+  not yet ingested.

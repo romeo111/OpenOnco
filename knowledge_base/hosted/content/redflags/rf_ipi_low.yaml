@@ -1,0 +1,35 @@
+id: RF-IPI-LOW
+definition: "DLBCL with International Prognostic Index 0-1 (low risk) — supports R-CHOP standard backbone; no need for Pola-R-CHP intensification or CNS prophylaxis on score alone"
+definition_ua: "DLBCL з міжнародним прогностичним індексом IPI 0-1 (низький ризик) — підтримує R-CHOP як стандартну схему; без інтенсифікації Pola-R-CHP та без CNS-профілактики лише на підставі балу"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ipi_score"
+      threshold: 1
+      comparator: "<="
+    - finding: "ipi_risk_group"
+      value: "low"
+
+clinical_direction: de-escalate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm:
+  - ALGO-DLBCL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  IPI 0-1 in newly-diagnosed DLBCL identifies the low-risk cohort with
+  5-yr OS ~85-90% on R-CHOP-21 × 6 in the rituximab era. POLARIX did not
+  show benefit for Pola-R-CHP in IPI 0-1 (subgroup analysis) so the
+  intensified regimen is not justified by score alone. CNS-IPI may still
+  shift CNS-prophylaxis decisions independently. Counterpart to
+  RF-DLBCL-HIGH-IPI which intensifies; both kept separate so engine can
+  pick R-CHOP affirmatively when low-risk fires.

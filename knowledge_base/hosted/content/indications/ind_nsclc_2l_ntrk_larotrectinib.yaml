@@ -1,0 +1,101 @@
+id: IND-NSCLC-2L-NTRK-LAROTRECTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: NTRK_FUSION
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic NTRK1/2/3 fusion-positive NSCLC"
+    - "Disease progression on 1L therapy (could be platinum chemo, ICI, or larotrectinib/entrectinib if 1L given)"
+    - "Note: NTRK fusion in NSCLC ~0.2% — RNA-NGS panel testing essential"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-NTRK-FUSION
+      value_constraint: "NTRK1/2/3 fusion confirmed by RNA-NGS (preferred — captures partner) or pan-TRK IHC ≥1+ confirmed by NGS/FISH"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-LAROTRECTINIB-PANTUMOR
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB  # cytotoxic 3L+ after larotrectinib failure
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~75% pooled (NAVIGATE / SCOUT / phase-1; tumor-agnostic incl. NSCLC subset)"
+  progression_free_survival: "Median DOR not reached at 9.4 mo follow-up in pooled analysis; subsequent updates show durable responses"
+  overall_survival_5y: "Mature OS evolving; tumor-agnostic data"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # RNA-NGS critical for NTRK fusion detection
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Larotrectinib (highly selective TRK inhibitor) for NTRK1/2/3
+  fusion-positive metastatic NSCLC. NTRK fusion frequency in NSCLC is
+  ~0.2% — extremely rare but actionable. Pooled NAVIGATE / SCOUT /
+  phase-1 analysis: ORR 75% (IRC) across 17 tumor types incl. NSCLC
+  subset. Tumor-agnostic FDA approval 2018 — the first solid-tumor
+  approval based on biomarker irrespective of histology. Best
+  tolerated TRK inhibitor; entrectinib alternative (broader spectrum
+  incl. ROS1 / ALK but more CNS-AE); repotrectinib (TRIDENT-1, also
+  approved for NTRK 2024) is next-gen for resistance mutations
+  (G595R / G667C). RNA-NGS detection mandatory — pan-TRK IHC is
+  reasonable inexpensive screen but NGS confirmation required.
+
+sources:
+  - source_id: SRC-NAVIGATE-DRILON-2018
+    position: supports
+    relevant_quote_paraphrase: "Pooled NAVIGATE / SCOUT / phase-1: larotrectinib in TRK-fusion+ tumors ORR 75% (IRC) across 17 tumor types; durable responses; mild AE profile"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Larotrectinib is recommended for NTRK fusion-positive NSCLC any line; Cat 1 (NAVIGATE); entrectinib alternative; tumor-agnostic indication"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Larotrectinib and entrectinib are both recommended for NTRK fusion-positive NSCLC; larotrectinib best tolerated; repotrectinib for resistance"
+
+known_controversies:
+  - topic: "Larotrectinib vs entrectinib vs repotrectinib for NTRK-fusion+ solid tumors incl. NSCLC"
+    positions:
+      - position: "Larotrectinib: best tolerated; longest track record; tumor-agnostic"
+        sources: [SRC-NAVIGATE-DRILON-2018]
+      - position: "Entrectinib: also tumor-agnostic; broader spectrum (ROS1, ALK); more CNS-AE"
+        sources: [SRC-STARTRK2-DRILON-2020]
+      - position: "Repotrectinib (TRIDENT-1 NTRK arm, FDA 2024): next-gen; preferred for solvent-front resistance (G595R / G667C)"
+        sources: [SRC-TRIDENT1-DRILON-2024]
+    our_default: "Larotrectinib for treatment-naïve NTRK-fusion+ NSCLC (best tolerated); repotrectinib for post-larotrectinib resistance"
+    rationale: "Tolerability + access drive 1L choice; resistance profile drives 2L+"
+
+do_not_do:
+  - "НЕ підтверджувати NTRK fusion на базі pan-TRK IHC alone — confirm by RNA-NGS (IHC less sensitive for NTRK3)."
+  - "НЕ припиняти larotrectinib abruptly — withdrawal symptoms описані; taper за можливості."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers без dose modification."
+  - "НЕ ігнорувати baseline + serial LFTs."
+  - "НЕ підтверджувати план без funding pathway — larotrectinib не зареєстрований в Україні."
+  - "НЕ використовувати при baseline severe cognitive dysfunction — TRK class CNS-AE (less than entrectinib)."
+  - "НЕ ігнорувати NGS-based resistance characterization at progression — repotrectinib active for G595R / G667C."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for
+  NTRK-fusion+ NSCLC any line. Tumor-agnostic FDA approval — same
+  Indication structurally applies to other NTRK-fusion+ solid tumors
+  (separate Indications outside NSCLC scope).

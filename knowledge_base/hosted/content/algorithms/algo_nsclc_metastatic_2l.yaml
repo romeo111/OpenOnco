@@ -1,0 +1,272 @@
+id: ALGO-NSCLC-METASTATIC-2L
+applicable_to_disease: DIS-NSCLC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Single integrated decision tree for 2L+ metastatic NSCLC. Branches in
+  priority order by actionable driver mutation, with default fallback
+  to docetaxel-based cytotoxic chemotherapy for driver-negative disease.
+  Driver detection requires comprehensive NGS panel (ideally RNA-NGS for
+  fusion sensitivity) prior to 2L; if 1L NGS not done, repeat at
+  progression to characterize resistance and rule out missed drivers.
+  Driver-positive patients who progressed on 1L targeted TKI receive
+  next-line targeted (per molecular subtype); driver-negative who
+  progressed on 1L platinum+ICI receive cytotoxic doublet.
+
+output_indications:
+  - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+  - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
+  - IND-NSCLC-ALK-2L-LORLATINIB
+  - IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB
+  - IND-NSCLC-2L-ROS1-REPOTRECTINIB
+  - IND-NSCLC-2L-KRAS-G12C-SOTORASIB
+  - IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
+  - IND-NSCLC-2L-MET-EX14-CAPMATINIB
+  - IND-NSCLC-2L-MET-EX14-TEPOTINIB
+  - IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
+  - IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
+  - IND-NSCLC-2L-NTRK-LAROTRECTINIB
+  - IND-NSCLC-2L-HER2-MUT-T-DXD
+  - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+
+default_indication: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL  # driver-negative cytotoxic fallback
+alternative_indication: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # most-common driver-targeted aggressive track
+
+decision_tree:
+  # ── Step 1: EGFR-mut detect (any EGFR sensitizing variant) ──────────
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-T790M-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-C797S-RESISTANCE
+    if_true:
+      next_step: 2
+    if_false:
+      next_step: 4
+
+  - step: 2
+    # Ex20ins is a distinct molecular subset → amivantamab (CHRYSALIS).
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
+    if_false:
+      next_step: 3
+
+  - step: 3
+    # EGFR activating (ex19del / L858R / T790M / C797S) post-osimertinib 1L
+    # → ami+laz (MARIPOSA-2). T790M acquired on 1G/2G TKI also routes here.
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-T790M-ACTIONABLE
+        - red_flag: RF-NSCLC-EGFR-C797S-RESISTANCE
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+    if_false:
+      result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+      # nested EGFR sub-branches (post-1G/2G TKI direct-to-osimertinib,
+      # MET-amp resistance) — see notes; capped at 4 levels
+
+  # ── Step 4: ALK-rearranged ────────────────────────────────────────
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-ALK-FUSION-ACTIONABLE
+    if_true:
+      next_step: 5
+    if_false:
+      next_step: 6
+
+  - step: 5
+    # ALK 2L: post-1G crizotinib OR post-2G alectinib/brigatinib → lorlatinib
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-ALK-FUSION-ACTIONABLE
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-NSCLC-ALK-2L-LORLATINIB
+    if_false:
+      result: IND-NSCLC-ALK-2L-LORLATINIB
+
+  # ── Step 6: ROS1 ──────────────────────────────────────────────────
+  - step: 6
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-ROS1-FUSION-ACTIONABLE
+    if_true:
+      next_step: 7
+    if_false:
+      next_step: 8
+
+  - step: 7
+    # ROS1 2L: characterized G2032R → repotrectinib; otherwise entrectinib.
+    # G2032R/post-entrectinib failure is a sub-classification not yet captured
+    # by a dedicated RF; condition retained as plain text + MDT flag.
+    evaluate:
+      any_of:
+        - condition: "G2032R solvent-front resistance mutation OR post-entrectinib failure"
+    if_true:
+      result: IND-NSCLC-2L-ROS1-REPOTRECTINIB
+    if_false:
+      result: IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB
+    notes: "MDT-only — sub-stratification by G2032R / post-entrectinib failure has no dedicated RF (resistance-mutation level). Default routes to entrectinib (MDT may switch to repotrectinib)."
+
+  # ── Step 8: KRAS G12C ─────────────────────────────────────────────
+  - step: 8
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-KRAS-G12C-ACTIONABLE
+    if_true:
+      next_step: 9
+    if_false:
+      next_step: 10
+
+  - step: 9
+    # KRAS G12C 2L: active brain mets → adagrasib; otherwise sotorasib.
+    # Brain-met fitness modifier has no dedicated RF; condition retained.
+    evaluate:
+      any_of:
+        - condition: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
+    if_true:
+      result: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
+    if_false:
+      result: IND-NSCLC-2L-KRAS-G12C-SOTORASIB
+    notes: "MDT-only — sotorasib vs adagrasib choice driven by brain-met status (no dedicated RF for active untreated brain mets in NSCLC); default sotorasib."
+
+  # ── Step 10: MET ex14 ─────────────────────────────────────────────
+  - step: 10
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-MET-EX14-ACTIONABLE
+    if_true:
+      next_step: 11
+    if_false:
+      next_step: 12
+
+  - step: 11
+    # MET ex14 2L: once-daily preference → tepotinib; otherwise capmatinib.
+    # Adherence preference is not a clinical-finding RF; condition retained.
+    evaluate:
+      any_of:
+        - condition: "Once-daily dosing preferred (adherence / convenience)"
+    if_true:
+      result: IND-NSCLC-2L-MET-EX14-TEPOTINIB
+    if_false:
+      result: IND-NSCLC-2L-MET-EX14-CAPMATINIB
+    notes: "MDT-only — capmatinib BID vs tepotinib once-daily is a preference call; default capmatinib."
+
+  # ── Step 12: BRAF V600E ───────────────────────────────────────────
+  - step: 12
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-BRAF-V600E-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
+    if_false:
+      next_step: 13
+
+  # ── Step 13: RET fusion ───────────────────────────────────────────
+  - step: 13
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-RET-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
+    if_false:
+      next_step: 14
+
+  # ── Step 14: NTRK fusion (pan-tumor) ──────────────────────────────
+  - step: 14
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-NTRK-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-NTRK-LAROTRECTINIB
+    if_false:
+      next_step: 15
+
+  # ── Step 15: HER2 mutation ────────────────────────────────────────
+  - step: 15
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-HER2-MUT-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-HER2-MUT-T-DXD
+    if_false:
+      next_step: 16
+
+  # ── Step 16: Default — driver-negative post-IO+chemo → docetaxel±ram ─
+  - step: 16
+    evaluate:
+      any_of:
+        - condition: "Driver-negative disease, progression on 1L platinum + ICI"
+        - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
+    if_true:
+      result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+    if_false:
+      result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Driver-stratified 2L+ algorithm. Branches in priority order by
+  actionable mutation; default fallback to docetaxel±ramucirumab for
+  driver-negative disease.
+
+  DEPTH CAP: nesting capped at 4 levels (per scope). Deeper logic
+  surfaced as `condition` text within steps and as free-text below:
+
+  EGFR sub-branches (deferred — separate Indications when authored):
+  - Post-1G/2G TKI 1L → osimertinib 2L (FLAURA pre-arrival pathway,
+    increasingly rare).
+  - T790M-positive post-1G/2G TKI → osimertinib 2L.
+  - C797S resistance post-osimertinib → next-gen 4G EGFR-TKI in
+    development (no FDA approval yet).
+  - MET-amp resistance post-osimertinib → osimertinib + savolitinib
+    (SAVANNAH; not FDA-approved); ami+laz covers indirectly via MET arm.
+  - Histologic transformation (small-cell ~5-15%) → platinum+etoposide.
+
+  ALK sub-branches:
+  - Post-1G crizotinib → 2G alectinib/brigatinib (preserves lorlatinib
+    for 3L); but if 1L was already 2G, then 2L = lorlatinib.
+  - Post-lorlatinib 3L → repotrectinib (early data; off-label).
+  - Compound-mutation ALK → repotrectinib.
+
+  ROS1 sub-branches:
+  - Crizotinib 1L → entrectinib 2L (CNS) OR repotrectinib (G2032R).
+  - Entrectinib 1L → repotrectinib 2L (G2032R or other resistance).
+
+  KRAS G12C: sotorasib + adagrasib both phase-3-validated (CodeBreaK
+  200) or phase-2 (KRYSTAL-1, KRYSTAL-12 ongoing). CNS-mets-driven choice.
+
+  MET ex14: capmatinib BID vs tepotinib once-daily — comparable.
+
+  BRAF V600E: dab+tram (BRF113928) vs encorafenib+binimetinib (PHAROS
+  2023) — comparable; dab+tram registered in UA.
+
+  RET: selpercatinib > pralsetinib (less heme toxicity).
+
+  NTRK: larotrectinib (best-tolerated) > entrectinib > repotrectinib
+  (resistance).
+
+  HER2-mut: T-DXd 5.4 mg/kg (DESTINY-Lung02 dose; less pneumonitis).
+
+  Driver-negative default: doc+ram (REVEL) > doc+nintedanib (LUME-Lung
+  1, adenocarcinoma) > single-agent docetaxel (UA fallback).
+
+  WIRING GAPS to address in csd-4.5:
+  - RF-NSCLC-FRAILTY-AGE wired only via free-text condition; needs
+    proper red_flag binding in evaluate clauses.
+  - CSD ≥3L lines not modeled — separate ALGO-NSCLC-METASTATIC-3L
+    when entropy warrants.
+  - Resistance-mutation-driven precise sub-branches (T790M, C797S,
+    G2032R, G595R) deferred to dedicated future Indications +
+    biomarker entities for sub-types (currently single BIO-EGFR-MUTATION
+    covers all EGFR variants).

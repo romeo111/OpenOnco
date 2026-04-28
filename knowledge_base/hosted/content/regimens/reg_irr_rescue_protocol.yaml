@@ -1,0 +1,95 @@
+id: REG-IRR-RESCUE-PROTOCOL
+name: "Infusion reaction rescue protocol (mAb / chemotherapy IRR Grade ≥2)"
+name_ua: "Протокол лікування інфузійної реакції (mAb / хіміотерапія IRR Grade ≥2)"
+alternate_names:
+  - "IRR rescue"
+  - "Infusion reaction management"
+  - "Anaphylaxis rescue (chemo / mAb)"
+
+components:
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "10-20 mg IV bolus (or methylprednisolone 80-125 mg IV; or hydrocortisone 100-200 mg IV — use whichever steroid available; equivalent anti-inflammatory potency)"
+    schedule: "Single bolus at IRR onset; repeat at 6h if biphasic risk"
+    route: IV
+
+cycle_length_days: 1
+total_cycles: "Single rescue event per occurrence; pre-medicate before all subsequent infusions"
+toxicity_profile: low
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 1 (mild — flushing, mild rash, low-grade fever; no intervention needed)"
+    modification: "Slow infusion rate by 50%; complete infusion under observation; pre-medicate next infusion"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade 2 (moderate — symptomatic but responds to symptomatic treatment; brief interruption)"
+    modification: "STOP infusion; IV fluids 250-500 mL bolus; diphenhydramine 25-50 mg IV (H1) + ranitidine 50 mg IV or famotidine 20 mg IV (H2); IV steroid (dexamethasone 10 mg OR methylprednisolone 80 mg OR hydrocortisone 100 mg); acetaminophen 650-1000 mg PO/IV; observe ≥30 min; resume at 50% rate when symptoms resolved; pre-medicate all subsequent infusions"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade 3 (severe — symptomatic bronchospasm, urticaria, transient hypotension; recurrence after initial improvement)"
+    modification: "STOP infusion; full anaphylaxis algorithm if hypotension/bronchospasm: epinephrine 0.3-0.5 mg IM (1:1000) anterolateral thigh, repeat q5-15 min PRN; supplemental O2; H1 + H2 blockers IV; high-dose IV steroid (methylprednisolone 1-2 mg/kg or hydrocortisone 200 mg); IV fluids 1-2L crystalloid; bronchodilator (albuterol/salbutamol 5 mg nebulized); ECG + BP monitoring; admit for observation ≥6-24h (biphasic risk); discuss permanent discontinuation vs desensitization with attending; document reaction in chart"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Grade 4 (life-threatening — cardiopulmonary compromise, intubation needed)"
+    modification: "STOP infusion; activate code/MET; full ACLS; epinephrine IM (and IV infusion if refractory: 0.05-0.1 µg/kg/min); intubation if airway compromise; ICU admission; PERMANENT discontinuation of offending agent (no rechallenge); document and report"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Recurrent G≥2 IRR despite optimal premedication"
+    modification: "Discuss desensitization protocol (allergy/immunology consult); switch to alternative agent (e.g., panitumumab for cetuximab-IRR; SC formulation for IV mAb where available — rituximab SC, daratumumab SC, amivantamab SC, trastuzumab SC); biosimilar switch unlikely to help (cross-reactive)"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Cetuximab IRR Southeast US (alpha-gal IgE)"
+    modification: "Permanent discontinuation; switch to panitumumab (humanized; no alpha-gal); test alpha-gal IgE antibody to confirm"
+    rationale: "Pre-existing alpha-gal IgE (tick-bite-induced, common SE US) cross-reacts with cetuximab Fab — high anaphylaxis risk"
+  - condition: "Severe IV daratumumab/rituximab/obinutuzumab IRR"
+    modification: "Switch to SC formulation (substantially lower IRR rate); rate-modified IV protocol if SC unavailable"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Дексаметазон, гідрокортизон, метилпреднізолон, адреналін (epinephrine),
+    димедрол (diphenhydramine), хлорфенірамін, ранітидин/фамотидин,
+    альбутерол/сальбутамол — всі зареєстровані і доступні. Це emergency
+    rescue — мають бути присутні в кожному chemotherapy-treatment area
+    як частина anaphylaxis cart.
+    DRUG IDs to author for full coverage: epinephrine, diphenhydramine,
+    hydrocortisone, methylprednisolone, ranitidine/famotidine, salbutamol.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  CTCAE v5.0 IRR grading + NCCN/ESMO/MASCC anaphylaxis management
+  framework. Highest-risk agents for IRR: rituximab cycle 1 (~75%
+  any-grade, ~10% G3+), obinutuzumab cycle 1 day 1 (~65%), daratumumab
+  cycle 1 (~50% IV; ~13% SC), amivantamab cycle 1 day 1 (~65% IV;
+  ~13% SC), cetuximab cycle 1 (~3% G3+; SE US ~20% with alpha-gal IgE),
+  paclitaxel (~10% any-grade; cremophor vehicle hypersensitivity),
+  carboplatin/oxaliplatin (cumulative; cycles 6+ — true IgE-mediated,
+  desensitization protocol indicated), L-asparaginase (anaphylaxis
+  ~5-10% with native E. coli formulation; less with PEG-asparaginase /
+  Erwinia), bleomycin (rare; idiosyncratic). Premedication standard:
+  acetaminophen 650-1000 mg PO + diphenhydramine 25-50 mg PO/IV +
+  ranitidine 50 mg IV (or famotidine 20 mg IV) ≥30 min before
+  infusion; add IV steroid for high-risk agents (rituximab cycle 1,
+  obinutuzumab cycle 1, daratumumab cycle 1, amivantamab cycle 1, taxanes).
+  Slow first-cycle infusion rate is universally protective. Desensitization
+  (incremental dose escalation over 3-4h with 12-step protocol) allows
+  continuation of life-saving therapy in true IgE-mediated reactions —
+  requires allergy/immunology + ICU-capable setting.
+notes_ua: >
+  CTCAE v5.0 IRR grading + NCCN/ESMO/MASCC anaphylaxis management.
+  Найвищий ризик IRR: ритуксимаб цикл 1 (~75% any-grade, ~10% G3+),
+  обінутузумаб цикл 1 день 1 (~65%), даратумумаб IV цикл 1 (~50%),
+  амівантамаб IV цикл 1 (~65%), цетуксимаб (~3% G3+; SE США ~20% з
+  alpha-gal IgE), паклітаксел (~10%; cremophor), карбоплатин/оксалі-
+  платин (кумулятивний; цикли 6+ — справжня IgE-опосередкована,
+  десенсибілізація показана), L-аспарагіназа. Стандартна премедикація:
+  ацетамінофен + димедрол + ранітидин/фамотидин ≥30 хв до інфузії;
+  додати IV-стероїд для високоризикових. Уповільнення first-cycle
+  інфузії універсально захисне. Десенсибілізація — для справжніх IgE-
+  реакцій, потребує алерголога + ICU-capable налаштування.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

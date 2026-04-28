@@ -25,14 +25,22 @@ decision_tree:
       next_step: 2
   - step: 2
     evaluate:
-      all_of:
-        - condition: "fit_for_transplant"
-        - condition: "age_max_65"
-        - condition: "ecog_0_or_1"
+      any_of:
+        - red_flag: RF-MIPI-HIGH
+    if_true:
+      result: IND-MCL-1L-BTKI-R
+    if_false:
+      next_step: 3
+    notes: "Wired via RF-MIPI-HIGH (CSD-8A): high-MIPI MCL favors early BTKi incorporation (TRIANGLE) over chemo-intensive R-DHAP-autoSCT."
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-MIPI-LOW
     if_true:
       result: IND-MCL-1L-INTENSIVE
     if_false:
       result: IND-MCL-1L-BTKI-R
+    notes: "Wired via RF-MIPI-LOW (CSD-8A): low-MIPI fit-younger MCL routes to standard intensified Nordic / R-DHAP induction; default to BTKi+R for unfit / unstratified."
 
 sources: [SRC-NCCN-BCELL-2025]
 last_reviewed: "2026-04-25"

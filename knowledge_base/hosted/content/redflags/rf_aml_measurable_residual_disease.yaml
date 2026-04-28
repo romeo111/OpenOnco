@@ -1,0 +1,89 @@
+id: RF-AML-MEASURABLE-RESIDUAL-DISEASE
+definition: >
+  AML with detectable measurable residual disease (MRD) after induction or
+  consolidation — defined per ELN 2021 MRD working-party as
+  ≥0.1% MFC-MRD by multiparametric flow cytometry, OR molecular MRD ≥10⁻³
+  for NPM1/CBF/KMT2A-rearranged transcripts (RT-qPCR), OR persistent
+  detectable WT1 transcript >2.5×10⁻³ in PB. MRD-positivity post-CR1 is
+  the strongest single predictor of relapse (RFS hazard ratio 3-5×) and
+  defines the population that benefits from consolidation intensification:
+  alloHCT in CR1 (per ELN 2022) over standard HiDAC consolidation, or
+  switch to MRD-directed maintenance (oral azacitidine post-consolidation
+  per QUAZAR; gilteritinib post-alloHCT for FLT3-ITD per MORPHO).
+definition_ua: >
+  ГМЛ з виявленою МЗХ (measurable residual disease) після індукції або
+  консолідації — визначено за ELN 2021 MRD working-party як ≥0.1% MFC-MRD
+  багатопараметровою проточною цитометрією, АБО молекулярна МЗХ ≥10⁻³
+  для NPM1/CBF/KMT2A-rearranged транскриптів (RT-qPCR), АБО стійкий
+  виявлений WT1 транскрипт >2.5×10⁻³ у PB. МЗХ-позитивність після ПР1 —
+  найсильніший окремий предиктор рецидиву (HR RFS 3-5×) і визначає
+  популяцію, що отримує користь від інтенсифікації консолідації:
+  alloHCT у CR1 (ELN 2022) над стандартною HiDAC консолідацією, або
+  перехід на MRD-направлену підтримку (пероральний азацитидин
+  post-консолідація — QUAZAR; гілтеритиніб post-alloHCT для FLT3-ITD — MORPHO).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "aml_mrd_positive"
+      value: true
+    - finding: "aml_mrd_status"
+      value: "positive"
+    - finding: "aml_mrd_post_induction"
+      value: "positive"
+    - finding: "mfc_mrd_percent"
+      threshold: 0.1
+      comparator: ">="
+    - finding: "molecular_mrd_npm1"
+      threshold: 0.001
+      comparator: ">="
+    - finding: "wt1_transcript_pb"
+      threshold: 0.0025
+      comparator: ">"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+  - ALGO-AML-2L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-QUAZAR-WEI-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Timing matters: MRD assessed after induction (cycle 1 day 28 BM) and
+  after each consolidation cycle. MRD-positive after induction in
+  favorable-risk (NPM1+/FLT3-ITD-WT or CBF) does not automatically mean
+  alloHCT — repeat after consolidation; persistent or rising MRD is the
+  trigger. Method choice: NPM1-mut → RT-qPCR for the NPM1 transcript
+  (most sensitive, ≤10⁻⁵); CBF (RUNX1::RUNX1T1, CBFB::MYH11) → RT-qPCR
+  for the fusion; otherwise MFC-MRD with LAIP/DfN gating (sensitivity
+  10⁻³ to 10⁻⁴). Emerging: error-corrected NGS for non-NPM1 mutations
+  (DTA mutations DNMT3A/TET2/ASXL1 are clonal-hematopoiesis-related,
+  do NOT count as MRD-positive). RF coexists with RF-AML-FLT3-ACTIONABLE
+  (different axes; FLT3-mut + MRD-positive = strong alloHCT in CR1
+  + post-transplant gilteritinib maintenance per MORPHO).
+notes_ua: >
+  Час тестування важливий: МЗХ оцінюється після індукції (cycle 1 day 28
+  BM) та після кожного циклу консолідації. МЗХ-позитивна після індукції
+  у favorable-risk (NPM1+/FLT3-ITD-WT або CBF) не означає автоматично
+  alloHCT — повторити після консолідації; стійка або зростаюча МЗХ —
+  тригер. Вибір методу: NPM1-mut → RT-qPCR для транскрипта NPM1
+  (найчутливіший, ≤10⁻⁵); CBF (RUNX1::RUNX1T1, CBFB::MYH11) → RT-qPCR
+  для злиття; інакше MFC-MRD з LAIP/DfN gating (чутливість 10⁻³ до 10⁻⁴).
+  Нове: error-corrected NGS для не-NPM1 мутацій (DTA мутації DNMT3A/TET2/
+  ASXL1 — клональний гемопоез, НЕ зараховуються як МЗХ-позитивні).
+  RF співіснує з RF-AML-FLT3-ACTIONABLE (різні осі; FLT3-mut + МЗХ+ =
+  сильна показання до alloHCT у CR1 + post-transplant гілтеритиніб
+  maintenance за MORPHO).

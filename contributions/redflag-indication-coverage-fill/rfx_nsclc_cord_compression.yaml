@@ -1,0 +1,57 @@
+_contribution:
+  chunk_id: redflag-indication-coverage-fill
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  target_action: review_existing_hosted_draft
+  source_entity_path: "knowledge_base/hosted/content/redflags/rf_nsclc_cord_compression.yaml"
+  notes_for_reviewer: >
+    Review sidecar generated from an existing hosted draft/stub to avoid
+    colliding with tracked entities already present on this branch.
+
+id: RF-NSCLC-CORD-COMPRESSION
+definition: "NSCLC with malignant epidural spinal cord compression (MESCC): new motor deficit, sensory level, bowel/bladder dysfunction, severe back pain with vertebral metastasis on imaging — neurosurgical/radiation emergency"
+definition_ua: "НМРЛ із синдромом стиснення спинного мозку (MESCC): новий моторний дефіцит, сенсорний рівень, тазові порушення, сильний біль у спині з вертебральними метастазами — нейрохірургічна/радіаційна невідкладність"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "spinal_cord_compression"
+      value: true
+    - finding: "new_motor_deficit_with_back_pain"
+      value: true
+    - finding: "vertebral_metastasis_with_canal_invasion"
+      value: true
+    - finding: "bowel_bladder_dysfunction_acute"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 8
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN-NSCLC + NCCN supportive-care: dexamethasone 10 mg IV bolus
+  + 4 mg q6h, urgent MRI whole spine, neurosurgery/radiation oncology
+  consult within 24 h. Surgical decompression + RT if surgical
+  candidate (Patchell criteria); RT alone otherwise. Time to motor
+  deficit ≤24 h is functional-recovery cutoff. Direction HOLD on
+  systemic therapy until cord stabilized. Priority 8 (matches PMBCL
+  airway). STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Per NCCN-NSCLC + NCCN supportive-care: dexamethasone 10 mg IV bolus + 4 mg q6h, urgent MRI whole spine, neurosurgery/radiation oncology consult within 24 h. Surgical decompression + RT if surgical candidate (Patchell criteria); RT alone otherwise. Time to motor deficit ≤24 h is functional-recovery cutoff. Direction утримати on systemic терапія until cord stabilized. Priority 8 (matches PMBCL airway). STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,101 @@
+id: RF-NSCLC-PDL1-50-PLUS
+definition: >
+  Metastatic NSCLC with PD-L1 tumor proportion score (TPS) ≥50% by 22C3
+  IHC, no actionable driver mutations (EGFR/ALK/ROS1/BRAF/RET/MET/NTRK/
+  KRAS-G12C/HER2 wild-type or unselected). KEYNOTE-024 (Reck NEJM 2016;
+  5-year update Reck JCO 2021) established pembrolizumab monotherapy 1L
+  over platinum-doublet chemo for TPS ≥50% (mOS 26.3 vs 13.4 mo, 5y OS
+  31.9% vs 16.3%). FDA-approved 2016. Atezolizumab (IMpower-110) and
+  cemiplimab (EMPOWER-Lung-1) similarly approved. ESMO/NCCN 2024
+  prefer pembrolizumab monotherapy 1L for TPS ≥50% over chemo + IO
+  combinations (KEYNOTE-189 / -407) when patient is fit and the
+  TPS-50% determination is reliable.
+definition_ua: >
+  Метастатичний НДРЛ з PD-L1 TPS (tumor proportion score) ≥50% за 22C3
+  IHC, без actionable драйвер-мутацій (EGFR/ALK/ROS1/BRAF/RET/MET/NTRK/
+  KRAS-G12C/HER2 — WT або не визначено). KEYNOTE-024 (Reck NEJM 2016;
+  5-річне оновлення Reck JCO 2021) встановило пембролізумаб монотерапію
+  1L над platinum-doublet хіміо при TPS ≥50% (мОВ 26.3 проти 13.4 міс,
+  5-річний ЗВ 31.9% проти 16.3%). FDA-схвалено 2016. Атезолізумаб
+  (IMpower-110) і цеміпліма (EMPOWER-Lung-1) — аналогічно схвалені.
+  ESMO/NCCN 2024 надають перевагу пембролізумаб монотерапії 1L при
+  TPS ≥50% над хіміо + IO комбо (KEYNOTE-189 / -407) коли пацієнт fit
+  і визначення TPS-50% надійне.
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "pdl1_tps"
+          threshold: 50
+          comparator: ">="
+        - finding: "pdl1_tps_22c3"
+          threshold: 50
+          comparator: ">="
+        - finding: "BIO-PDL1-TPS"
+          threshold: 50
+          comparator: ">="
+    - any_of:
+        - finding: "egfr_mutation"
+          value: false
+        - finding: "egfr_mutation"
+          value: "negative"
+        - finding: "actionable_driver_mutation"
+          value: false
+    - any_of:
+        - finding: "alk_fusion"
+          value: false
+        - finding: "alk_status"
+          value: "negative"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-3"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-KEYNOTE-024-RECK-2016
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  TPS-50% bypass of chemo applies only AFTER all driver mutations are
+  excluded (EGFR, ALK, ROS1, BRAF V600E, MET ex14, RET, NTRK, KRAS G12C,
+  HER2 — at minimum the SOC panel). EGFR-mutant or ALK-rearranged disease
+  responds POORLY to ICI even at TPS-100% — driver-targeting TKI is
+  always the correct 1L. TPS 1-49% — chemo + ICI combo (KEYNOTE-189
+  non-squamous, KEYNOTE-407 squamous) preferred; pembrolizumab
+  monotherapy is still an option (KEYNOTE-042) but inferior to combo.
+  TPS <1% — chemo + ICI combo or chemo + ipi/nivo (CheckMate-9LA);
+  monotherapy not recommended. STK11/KEAP1 co-mutation is a negative
+  predictor for ICI response even at high TPS — emerging biomarker for
+  chemo + ICI combo over monotherapy. Detection: 22C3 IHC central
+  laboratory preferred; SP263 (used in IMpower studies) and 22C3 are
+  NOT interchangeable for the 50% cutoff (Blueprint comparison).
+  Brain metastases are NOT a contraindication if asymptomatic and
+  ≤2 cm — KEYNOTE-024 included controlled brain mets.
+notes_ua: >
+  TPS-50% bypass хіміо застосовується ЛИШЕ ПІСЛЯ виключення всіх драйвер-
+  мутацій (EGFR, ALK, ROS1, BRAF V600E, MET ex14, RET, NTRK, KRAS G12C,
+  HER2 — мінімум SOC панель). EGFR-mut або ALK-rearranged хвороба відповідає
+  ПОГАНО на ICI навіть при TPS-100% — driver-targeting TKI завжди
+  правильний 1L. TPS 1-49% — хіміо + ICI combo (KEYNOTE-189 non-squamous,
+  KEYNOTE-407 squamous) переважно; пембролізумаб монотерапія — опція
+  (KEYNOTE-042) але нижча за combo. TPS <1% — хіміо + ICI combo або
+  хіміо + ipi/nivo (CheckMate-9LA); монотерапія не рекомендована.
+  STK11/KEAP1 ко-мутації — негативний предиктор ICI відповіді навіть
+  при високому TPS. Виявлення: 22C3 IHC центральна лабораторія
+  переважно; SP263 (IMpower) і 22C3 НЕ взаємозамінні для 50% cutoff
+  (Blueprint comparison). Метастази в мозок НЕ протипоказання якщо
+  асимптомні і ≤2 см — KEYNOTE-024 включала controlled brain mets.

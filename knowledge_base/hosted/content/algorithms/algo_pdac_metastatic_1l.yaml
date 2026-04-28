@@ -1,67 +1,46 @@
 id: ALGO-PDAC-METASTATIC-1L
 applicable_to_disease: DIS-PDAC
 applicable_to_line_of_therapy: 1
-purpose: >
-  Algorithm for PDAC metastatic 1L. ECOG 0-1 + bilirubin-resolved →
-  FOLFIRINOX (preferred for fit patients; better OS but more toxic).
-  Frail / ECOG ≥2 → gem-nab-pac de-escalation. BRCA-germline maintenance
-  (POLO) follows ≥16 weeks platinum-induction without progression.
+purpose: 'Algorithm for PDAC metastatic 1L. ECOG 0-1 + bilirubin-resolved → FOLFIRINOX (preferred for fit patients; better OS but more toxic). Frail / ECOG ≥2 → gem-nab-pac de-escalation. BRCA-germline maintenance (POLO) follows ≥16 weeks platinum-induction without progression.
 
+  '
 output_indications:
-  - IND-PDAC-METASTATIC-1L-FOLFIRINOX
-  - IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-  - IND-PDAC-MAINTENANCE-OLAPARIB-BRCA
-
+- IND-PDAC-METASTATIC-1L-FOLFIRINOX
+- IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+- IND-PDAC-MAINTENANCE-OLAPARIB-BRCA
 default_indication: IND-PDAC-METASTATIC-1L-FOLFIRINOX
 alternative_indication: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-
 decision_tree:
-  # Step 1 — biliary obstruction emergency: hold systemic therapy.
-  # (Surfaced by RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS in trace;
-  # not a branching step, but routes through this hold-pattern.)
-
-  # Step 2 — frailty → gem-nab-pac.
-  - step: 2
-    evaluate:
-      any_of:
-        - red_flag: RF-PDAC-FRAILTY-AGE
-    if_true:
-      result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-    if_false:
-      next_step: 3
-
-  # Step 3 — fit patients → FOLFIRINOX.
-  - step: 3
-    evaluate:
-      all_of:
-        - condition: "ECOG ≤1"
-        - condition: "Bilirubin <1.5 ULN (resolved post-stenting)"
-    if_true:
-      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-    if_false:
-      result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
-
-  # Step 4 — BRCA-germline → olaparib-maintenance candidate.
-  # (Sentinel: surfaces RF-PDAC-HIGH-RISK-BIOLOGY in trace; the
-  # maintenance Indication is invoked AFTER ≥16 weeks of platinum
-  # induction without progression — handled by the Plan render layer
-  # walking Indication.followed_by, not as a step-result here.)
-  - step: 4
-    evaluate:
-      any_of:
-        - red_flag: RF-PDAC-HIGH-RISK-BIOLOGY
-    if_true:
-      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-    if_false:
-      result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
-
+- step: 2
+  evaluate:
+    any_of:
+    - red_flag: RF-PDAC-FRAILTY-AGE
+  if_true:
+    result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+  if_false:
+    next_step: 3
+- step: 3
+  evaluate:
+    all_of:
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - condition: Bilirubin <1.5 ULN (resolved post-stenting)
+  if_true:
+    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+  if_false:
+    result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 4
+  evaluate:
+    any_of:
+    - red_flag: RF-PDAC-HIGH-RISK-BIOLOGY
+  if_true:
+    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+  if_false:
+    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
 sources:
-  - SRC-NCCN-PANCREATIC-2025
-  - SRC-ESMO-PANCREATIC-2024
+- SRC-NCCN-PANCREATIC-2025
+- SRC-ESMO-PANCREATIC-2024
+last_reviewed: '2026-04-26'
+notes: '3-arm algorithm: FOLFIRINOX (default fit) / gem-nab-pac (frail) / olaparib-maintenance (BRCA-germline post-platinum). NALIRIFOX (NAPOLI-3) emerging as 1L alternative — separate Indication when added.
 
-last_reviewed: "2026-04-26"
-notes: >
-  3-arm algorithm: FOLFIRINOX (default fit) / gem-nab-pac (frail) /
-  olaparib-maintenance (BRCA-germline post-platinum). NALIRIFOX
-  (NAPOLI-3) emerging as 1L alternative — separate Indication when
-  added.
+  '

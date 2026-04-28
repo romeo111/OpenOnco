@@ -1,0 +1,62 @@
+id: REG-SOTORASIB-CETUXIMAB-CRC
+name: "Sotorasib + Cetuximab (CodeBreaK 300, KRAS G12C+ mCRC)"
+name_ua: "Сотерасіб + Цетуксимаб (CodeBreaK 300, KRAS G12C+ мКРР)"
+alternate_names: ["CodeBreaK CRC doublet"]
+
+components:
+  - drug_id: DRUG-SOTORASIB
+    dose: "960 mg PO once daily continuous"
+    schedule: "Continuous"
+    route: PO
+  - drug_id: DRUG-CETUXIMAB
+    dose: "500 mg/m² IV q2w (preferred) OR 400 mg/m² loading then 250 mg/m² weekly"
+    schedule: "IV q2w"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Cetuximab: H1 (diphenhydramine 50 mg IV) + H2 (ranitidine 50 mg IV) + dexamethasone 8 mg IV 30 min pre-cetuximab"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Sotorasib hepatic transaminase Grade 2-3"
+    modification: "Hold sotorasib until ≤Grade 1, resume at next lower dose level (480 mg → 240 mg daily); discontinue if Grade 4 OR persistent"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Concomitant PPI / H2 blocker / antacid"
+    modification: "AVOID — PPI significantly reduces sotorasib absorption (acid-dependent dissolution); separate antacid by 4 h pre-/10 h post-sotorasib"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Concomitant strong CYP3A4 inducer (rifampin, phenytoin, carbamazepine, St John's wort)"
+    modification: "AVOID — sotorasib levels reduced; if unavoidable, consider alternative regimen"
+  - condition: "Cetuximab Grade 3 acneiform rash"
+    modification: "Tetracycline + topical clindamycin; reduce cetuximab if Grade 3 persistent"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Severe (Grade 3-4) cetuximab hypersensitivity"
+    modification: "Discontinue cetuximab permanently; switch to panitumumab if anti-EGFR still desired (lower hypersensitivity)"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Сотерасіб НЕ зареєстровано в UA (drlz.com.ua станом на 2026-04-27).
+    Цетуксимаб зареєстровано, АЛЕ НЕ реімбурсується НСЗУ для KRAS-mut
+    CRC показання (NSZU coverage обмежена RAS-WT 1L пакету).
+    Шляхи доступу: named-patient (сотерасіб); EAP Amgen Ukraine
+    (Lumakras access програма); cross-border EU онкоцентр; клінічні
+    дослідження CodeBreaK.
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+last_reviewed: "2026-04-27"
+
+notes: >
+  CodeBreaK 300 Phase III (2024): KRAS G12C+ chemo-refractory mCRC,
+  sotorasib 960 mg + cetuximab vs investigator-choice chemo (TAS-102 /
+  regorafenib). mPFS 5.6 vs 2.2 mo (HR 0.49); ORR 26%. Mechanistic
+  rationale: KRAS G12C inhibition triggers EGFR feedback reactivation;
+  concurrent EGFR blockade prevents bypass. FDA approval 2024 for
+  combination. Note: in NSCLC sotorasib monotherapy is approved 2L+;
+  in CRC the combination with cetuximab is the standard.

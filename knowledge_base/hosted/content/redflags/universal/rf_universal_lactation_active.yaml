@@ -1,0 +1,61 @@
+id: RF-LACTATION-ACTIVE
+definition: >
+  Patient actively breastfeeding. Most antineoplastic agents transfer
+  into breast milk at clinically relevant concentrations. Triggers
+  lactation suspension (with cabergoline if indicated) before treatment
+  start, or postponement of treatment if oncologically safe.
+definition_ua: >
+  Пацієнтка активно годує грудьми. Більшість антинеопластичних засобів
+  переходить у грудне молоко в клінічно значущих концентраціях.
+  Триггерує припинення лактації (з каберголіном за потреби) перед
+  початком лікування або відтермінування, якщо це онкологічно
+  безпечно.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "lactation_active"
+      value: true
+    - finding: "breastfeeding"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 70
+category: reproductive-status
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  LactMed (NIH database) categorizes drugs by lactation safety. Almost
+  all chemotherapy: hold breastfeeding for treatment + 1-2 weeks after
+  last dose (variable by half-life — methotrexate 1 week, anthracyclines
+  10 days, taxanes 7 days). Tamoxifen, aromatase inhibitors,
+  ICI — hold breastfeeding throughout treatment. Anti-CD20 (rituximab,
+  obinutuzumab) — small molecular size, low milk transfer, but precaution
+  warranted for at least 6 months given long half-life and infant
+  B-cell development. Cabergoline 1 mg single dose for lactation
+  suppression if patient consents. Direction `hold` — flags lactation
+  cessation rather than alternative oncologic indication.
+notes_ua: >
+  LactMed (NIH database) класифікує препарати за безпекою при лактації.
+  Майже вся хіміотерапія: припинення годування на час лікування + 1-2
+  тижні після останньої дози (варіює за half-life — метотрексат 1
+  тиждень, антрацикліни 10 днів, таксани 7 днів). Тамоксифен,
+  ароматазні інгібітори, ІКТ — припинення на весь курс. Anti-CD20
+  (ритуксимаб, обінутузумаб) — мала молекула, низький перехід у
+  молоко, але обережність ≥6 міс через довгий half-life та розвиток
+  В-клітин у малюка. Каберголін 1 mg одноразово для пригнічення
+  лактації за згодою.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

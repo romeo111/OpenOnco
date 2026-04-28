@@ -45,9 +45,11 @@ from knowledge_base.schemas import (
 )
 from knowledge_base.validation.loader import load_content
 from ._actionability import find_matching_actionability
+from ._track_filter import is_track_excluded
 from .access_matrix import build_access_matrix
 from .algorithm_eval import walk_algorithm
 from .experimental_options import SearchFn, enumerate_experimental_options
+from .actionability_types import ActionabilityLayer
 
 
 # Track labels — ordered, default labels for the well-known plan_track values.
@@ -98,6 +100,15 @@ class PlanResult:
     # search function is wired, this stays None — render shows the
     # "ctgov sync needed" placeholder per plan §3.3.
     experimental_options: Optional[ExperimentalOption] = None
+
+    # Actionability precision-medicine layer (safe-rollout v3 §0.1
+    # invariant 1: surface-only, never influences track selection).
+    # None when integration is disabled (default) or when the patient
+    # has no actionable biomarkers. Render layer reads this in HCP mode
+    # only; patient-mode HTML must NOT contain any actionability detail.
+    # Renamed from `oncokb_layer` (CIViC pivot — see
+    # docs/reviews/oncokb-public-civic-coverage-2026-04-27.md).
+    actionability_layer: Optional[ActionabilityLayer] = None
 
     # Runtime KB resolutions for the render layer — NOT persisted with Plan.
     # Holds: 'disease' (dict), 'tests' (dict[id, dict]), 'red_flags' (dict[id, dict]),
@@ -293,6 +304,8 @@ def generate_plan(
     revision_trigger: Optional[str] = None,
     experimental_search_fn: Optional[SearchFn] = None,
     experimental_cache_root: Optional[Path | str] = None,
+    actionability_enabled: bool = False,
+    actionability_client: Optional[Any] = None,
 ) -> PlanResult:
     """Run the rule engine on a patient profile and return a PlanResult
     containing a fully-materialized Plan with multiple tracks.
@@ -360,9 +373,21 @@ def generate_plan(
         candidates.remove(default_id)
         candidates.insert(0, default_id)
 
+    # Lenient biomarker-aware track filtering: drop only when the patient
+    # profile EXPLICITLY violates an Indication's
+    # `biomarker_requirements_excluded` list. Missing biomarkers do NOT
+    # drop a track — see engine/_track_filter.py for rationale.
+    patient_biomarkers = patient.get("biomarkers") or {}
+
     tracks: list[PlanTrack] = []
     for ind_id in candidates:
         ind = _resolve(entities, ind_id)
+        if ind and is_track_excluded(ind, patient_biomarkers):
+            result.warnings.append(
+                f"track {ind_id} dropped: patient biomarker profile "
+                f"explicitly violates biomarker_requirements_excluded"
+            )
+            continue
         track_label = (ind or {}).get("plan_track") or ind_id
         is_default = ind_id == default_id
         reason = (
@@ -414,11 +439,20 @@ def generate_plan(
     # red_flags (for PRO/CONTRA categorization with definitions).
     test_ids: set[str] = set()
     redflag_ids: set[str] = set()
+    drug_ids: set[str] = set()
     for t in tracks:
         ind = t.indication_data or {}
         test_ids.update(ind.get("required_tests") or [])
         test_ids.update(ind.get("desired_tests") or [])
         redflag_ids.update(ind.get("red_flags_triggering_alternative") or [])
+        # Drugs referenced by the regimen on this track — needed for
+        # render-time NSZU badge lookup (engine/_nszu.py). Not consulted
+        # by the engine itself (CHARTER §8.3 invariant).
+        reg = t.regimen_data or {}
+        for comp in reg.get("components") or []:
+            did = comp.get("drug_id") if isinstance(comp, dict) else None
+            if did:
+                drug_ids.add(did)
     # Algorithm-referenced red flags too (decision tree)
     for step in algo.get("decision_tree") or []:
         ev = step.get("evaluate") or {}
@@ -432,6 +466,7 @@ def generate_plan(
         "algorithm": algo,
         "tests": {tid: _resolve(entities, tid) for tid in test_ids if _resolve(entities, tid)},
         "red_flags": {rid: _resolve(entities, rid) for rid in redflag_ids if _resolve(entities, rid)},
+        "drugs": {did: _resolve(entities, did) for did in drug_ids if _resolve(entities, did)},
     }
 
     # Experimental track (Phase C of UA-ingestion plan). Append-only,
@@ -488,6 +523,50 @@ def generate_plan(
         ]
     except Exception as exc:
         result.warnings.append(f"variant actionability skipped: {exc}")
+
+    # ── Actionability precision-medicine layer ──────────────────────────
+    # Phase 3b wiring (safe-rollout v3 §3.2). Surface-only — added AFTER
+    # tracks/actionability are final. CHARTER §8.3 invariant: nothing
+    # below influences track selection (those are done above).
+    # Default OFF: caller must pass actionability_enabled=True AND a client.
+    # Coexists with master's plan.variant_actionability (static-KB lookup
+    # via _actionability.find_matching_actionability) — this layer adds
+    # dynamic CIViC snapshot lookup for biomarkers with actionability_lookup.
+    if actionability_enabled and actionability_client is not None:
+        try:
+            from .actionability_extract import extract_actionability_queries
+            from .actionability_conflict import annotate_layer_with_conflicts
+            from .actionability_types import ActionabilityResult, ActionabilityError
+            from .oncotree_fallback import resolve_oncotree_code
+
+            disease_data = result.kb_resolved.get("disease") or {}
+            oncotree, pan_tumor_fallback = resolve_oncotree_code(disease_data)
+
+            hints: list[tuple[str, str, str]] = []
+            for bio_id, _value in (patient.get("biomarkers") or {}).items():
+                bio_record = _resolve(entities, bio_id) or {}
+                hint = (
+                    bio_record.get("actionability_lookup")
+                    or bio_record.get("oncokb_lookup")
+                )
+                if isinstance(hint, dict) and hint.get("gene") and hint.get("variant"):
+                    hints.append((bio_id, hint["gene"], hint["variant"]))
+
+            queries = extract_actionability_queries(hints, oncotree_code=oncotree)
+            if queries:
+                results_list = actionability_client.batch_lookup(queries)
+                ok_results = [r for r in results_list if isinstance(r, ActionabilityResult)]
+                errors = [r for r in results_list if isinstance(r, ActionabilityError)]
+
+                layer = ActionabilityLayer(
+                    results=ok_results,
+                    errors=errors,
+                    pan_tumor_fallback_used=pan_tumor_fallback,
+                )
+                annotate_layer_with_conflicts(layer, tracks)
+                result.actionability_layer = layer
+        except Exception as exc:  # noqa: BLE001 — fail-open contract
+            result.warnings.append(f"actionability layer skipped: {exc}")
 
     return result
 

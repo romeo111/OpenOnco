@@ -1,0 +1,74 @@
+id: RF-CAR-T-INELIGIBLE-AGE-COMORBID
+definition: >
+  Composite age + comorbidity exclusion from CAR-T: age ≥75 with
+  Charlson Comorbidity Index ≥4, OR age ≥80 regardless of comorbidity
+  (real-world median for CRS/ICANS mortality jump), OR significant
+  cognitive impairment (MMSE ≤24 or documented dementia) precluding
+  ICANS toxicity recognition and informed consent.
+definition_ua: >
+  Композитне виключення за віком + коморбідністю з CAR-T: вік ≥75 з
+  індексом коморбідності Charlson ≥4, АБО вік ≥80 незалежно від
+  коморбідності (real-world медіана стрибка CRS/ICANS-смертності), АБО
+  значне когнітивне порушення (MMSE ≤24 або документована деменція),
+  що унеможливлює розпізнавання ICANS-токсичності та інформованої
+  згоди.
+
+trigger:
+  type: composite_score
+  any_of:
+    - all_of:
+        - finding: "age"
+          threshold: 75
+          comparator: ">="
+        - finding: "charlson_score"
+          threshold: 4
+          comparator: ">="
+    - finding: "age"
+      threshold: 80
+      comparator: ">="
+    - all_of:
+        - finding: "mmse_score"
+          threshold: 24
+          comparator: "<="
+    - finding: "cognitive_impairment_significant"
+      value: true
+
+clinical_direction: hold
+
+severity: major
+priority: 70
+category: fitness-eligibility
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-ZUMA-1-NEELAPU-2017
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  ZUMA-1, TRANSCEND, JULIET enrolled patients up to age 76-77; real-world
+  experience (CIBMTR, French DESCAR-T) shows acceptable safety to age 80
+  with selected fit patients but >80 carries 2-3x higher non-relapse
+  mortality. Cognitive baseline matters because ICANS presents as
+  encephalopathy (ICE score, hand-writing) — pre-existing dementia
+  obscures detection. Liso-cel (TRANSCEND) had broadest age tolerability
+  in trials due to favorable CRS profile. Frail-elderly alternatives:
+  bispecifics (epcoritamab, glofitamab — outpatient escalation
+  feasible) gaining ground. Distinguish from RF-CAR-T-INELIGIBLE-ORGAN
+  (organ-driven) and RF-FRAILTY-AGE-G8-LOW (general geriatric flag).
+notes_ua: >
+  ZUMA-1, TRANSCEND, JULIET включали пацієнтів до 76-77 років; real-
+  world дані (CIBMTR, DESCAR-T) показують прийнятну безпеку до 80 у
+  обраних fit-пацієнтів, але >80 — 2-3x вища non-relapse смертність.
+  Когнітивний базовий стан важливий, бо ICANS проявляється як
+  енцефалопатія (ICE score, почерк) — попередня деменція приховує
+  детекцію. Liso-cel (TRANSCEND) мав найкращу age-toleranсе у
+  трайлах через сприятливий CRS-профіль. Frail-elderly альтернативи:
+  біспецифіки (епкорітамаб, глофітамаб — амбулаторна ескалація).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

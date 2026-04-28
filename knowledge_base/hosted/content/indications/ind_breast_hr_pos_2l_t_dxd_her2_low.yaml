@@ -1,0 +1,71 @@
+id: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HR_POS_HER2_NEG
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: true
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-low (IHC 1+ OR IHC 2+ ISH-negative)"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-positive (IHC 3+ OR IHC 2+ ISH-amplified)"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    progression_on_prior_endocrine_cdk46i: true
+    # DESTINY-Breast04 HR+ cohort: ≥1 prior chemo line for metastatic
+    # OR rapid progression on endocrine — engine should consider both.
+
+recommended_regimen: REG-TDXD-METASTATIC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 10
+  median_overall_survival_months: 24
+  notes: "DESTINY-Breast04 HR+ cohort: PFS 10.1 vs 5.4 mo (HR 0.51); OS 23.9 vs 17.5 mo (HR 0.64)."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-DESTINY-BREAST04-MODI-2022
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. DESTINY-Breast04 transformed HER2-low (IHC 1+ or IHC
+  2+/ISH-) from a "negative" category into an actionable one for
+  T-DXd. HR+ subset must have progressed on endocrine ± CDK4/6i and
+  received ≥1 prior chemo line for metastatic disease (OR rapid
+  progression making chemo immediately needed). ILD risk dominant
+  safety concern (~12% any grade, 1.3% G3+ in DB-04) — baseline CT
+  chest + active monitoring; immediate hold + corticosteroids if
+  pneumonitis suspect. UA access barrier: T-DXd registered but
+  reimbursement under negotiation; significant out-of-pocket cost.
+  Sequencing question: T-DXd vs sequential targetable-mutation drugs
+  (capivasertib/alpelisib/elacestrant when applicable) is unsettled
+  — see ALGO-BREAST-HR-POS-2L for default ordering.

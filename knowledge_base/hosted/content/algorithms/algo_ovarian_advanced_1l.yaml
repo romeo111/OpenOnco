@@ -16,35 +16,76 @@ default_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
 alternative_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
 
 decision_tree:
-  # Step 1 — HRD-positive routes to PARPi-maintenance track.
+  # Step 1 — Infection screening prerequisite. Hold direction surfaces
+  # workup-prerequisite annotation (HBV / HCV / HIV / TB) before
+  # bevacizumab / paclitaxel initiation. Does not switch the chosen
+  # indication — clearance is a precondition for ANY 1L track. Routes
+  # to the same default downstream regardless of outcome (annotation only).
   - step: 1
     evaluate:
       any_of:
+        - red_flag: RF-OVARIAN-INFECTION-SCREENING
+    if_true:
+      next_step: 2
+    if_false:
+      next_step: 2
+    notes: "Annotation step — RF-OVARIAN-INFECTION-SCREENING surfaces a workup-prerequisite (HBV/HCV/HIV/TB clearance) before bev/pacli/PARPi; does not gate Indication selection."
+
+  # Step 2 — Transformation/progression check. RF fires for platinum-
+  # refractory disease at presentation (rare in 1L — would route the case
+  # toward PROC algorithm rather than HRD-track). Annotation-only at 1L.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-TRANSFORMATION-PROGRESSION
+    if_true:
+      next_step: 3
+    if_false:
+      next_step: 3
+    notes: "Annotation step — RF-OVARIAN-TRANSFORMATION-PROGRESSION surfaces PROC routing if 1L progression is documented before standard chemo; case reroutes via revise_plan() to ALGO-OVARIAN-2L."
+
+  # Step 3 — BRCA1/2 mutation → PARPi-maintenance track (SOLO-1).
+  # SOLO-1 mPFS 56.0 vs 13.8 mo — strongest 1L PARPi benefit subgroup.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-BRCA-MUT-ACTIONABLE
+    if_true:
+      result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
+    if_false:
+      next_step: 4
+
+  # Step 4 — HRD-positive (BRCA-WT) routes to PARPi-maintenance track.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-OVARIAN-HRD-POSITIVE-ACTIONABLE
         - red_flag: RF-OVARIAN-HRD-ACTIONABILITY
     if_true:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
     if_false:
-      next_step: 2
+      next_step: 5
 
-  # Step 2 — frailty de-escalates (same indication, dose-modified).
-  - step: 2
+  # Step 5 — frailty de-escalates (same indication, dose-modified).
+  - step: 5
     evaluate:
       any_of:
         - red_flag: RF-OVARIAN-FRAILTY-AGE
     if_true:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
     if_false:
-      next_step: 3
+      next_step: 6
 
-  # Step 3 — default HRD-negative track.
-  - step: 3
+  # Step 6 — default HRD-negative track.
+  - step: 6
     evaluate:
-      all_of:
+      any_of:
         - condition: "HRD-negative or unknown"
     if_true:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
     if_false:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+    notes: "Default fall-through — HRD-negative cohort routes to carbo+pacli without PARPi maintenance."
 
 sources:
   - SRC-NCCN-OVARIAN-2025

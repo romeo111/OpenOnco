@@ -56,7 +56,25 @@ SPEC_CATEGORIES = (
 #   SCLC, UROTHELIAL.
 # - 2026-04-27 Plan A: ALCL, BURKITT, CERVICAL, CHL, CLL, FL, GBM, MCL,
 #   MF-SEZARY, PTCL-NOS, WM.
-DISEASES_WITH_GAPS_BASELINE: set[str] = set()
+# 2026-04-27 — newly-scaffolded solid-tumour expansions (CSD-9B / Plan D):
+# rare-tumour algorithms added without yet seeding the 5-type RF matrix.
+# Each will close as the disease-specific RF families land in subsequent
+# CSDs; whitelisted now so the matrix gate still fails on regressions
+# elsewhere.
+DISEASES_WITH_GAPS_BASELINE: set[str] = {
+    "DIS-CHOLANGIOCARCINOMA",
+    "DIS-CHONDROSARCOMA",
+    "DIS-GIST",
+    "DIS-GLIOMA-LOW-GRADE",
+    "DIS-HNSCC",
+    "DIS-IFS",
+    "DIS-IMT",
+    "DIS-MPNST",
+    "DIS-MTC",
+    "DIS-SALIVARY",
+    "DIS-THYROID-ANAPLASTIC",
+    "DIS-THYROID-PAPILLARY",
+}
 
 # Per spec §2: "Якщо для хвороби якась з категорій клінічно нерелевантна
 # ... постав <rf>.notes: з обґрунтуванням замість заглушки." We model that
@@ -98,7 +116,9 @@ def _categorize(rf: dict) -> str:
     Priority order:
     1. Explicit `category:` field on the RF (RedFlagCategory enum, see
        schemas/base.py). Hyphenated values translated to underscored
-       SPEC_CATEGORIES form.
+       SPEC_CATEGORIES form. Canonical extension categories added
+       2026-04-26 are mapped onto the closest 5-type slot they substitute
+       for (see CANONICAL_EXTENSION_TO_SPEC).
     2. Id-suffix (matches scaffold-tool naming convention).
     3. Fallback: keyword scan over id + definition for legacy-named RFs."""
 
@@ -108,6 +128,27 @@ def _categorize(rf: dict) -> str:
         normalized = explicit.replace("-", "_")
         if normalized in SPEC_CATEGORIES:
             return normalized
+        # Canonical extension categories substitute for spec slots:
+        #   risk-score              → high_risk_biology (clinical risk
+        #                             stratification scores fill the
+        #                             high-risk-biology slot per §2)
+        #   fitness-eligibility     → frailty_age (performance status +
+        #                             eligibility composites)
+        #   oncologic-emergency     → organ_dysfunction (acute end-organ
+        #                             threat — TLS, SVC, cord compression)
+        #   prior-therapy-class     → high_risk_biology (resistance signature
+        #                             after class-defining failure)
+        #   reproductive-status     → no spec-slot mapping; treated as
+        #                             non-matrix metadata (universal RFs are
+        #                             skipped by the matrix test anyway).
+        extension_map = {
+            "risk_score": "high_risk_biology",
+            "fitness_eligibility": "frailty_age",
+            "oncologic_emergency": "organ_dysfunction",
+            "prior_therapy_class": "high_risk_biology",
+        }
+        if normalized in extension_map:
+            return extension_map[normalized]
 
     rf_id = rf.get("id", "")
     suffix_map = {

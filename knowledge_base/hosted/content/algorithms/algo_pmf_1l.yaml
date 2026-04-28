@@ -31,6 +31,7 @@ decision_tree:
   - step: 2
     evaluate:
       any_of:
+        - red_flag: RF-DIPSS-PLUS-HIGH
         - red_flag: RF-PMF-HIGH-RISK-DIPSS
     if_true:
       result: IND-PMF-1L-RUXOLITINIB
@@ -57,6 +58,7 @@ decision_tree:
       result: IND-PMF-1L-OBSERVATION
     if_false:
       result: IND-PMF-1L-OBSERVATION
+    notes: "Default catch-all for low / int-1 DIPSS-Plus risk (negative of RF-DIPSS-PLUS-HIGH gated in step 2). RF-DIPSS-PLUS-HIGH (CSD-8A) wires the high-risk branch; this step is the residual default and remains MDT-evaluated for symptom-directed care."
 
 sources:
   - SRC-NCCN-MPN-2025

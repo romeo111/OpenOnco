@@ -13,7 +13,14 @@ mechanism: >
 regulatory_status:
   fda: {approved: true}
   ema: {approved: true}
-  ukraine_registration: {registered: false, last_verified: "2026-04-26"}
+  ukraine_registration:
+    registered: true
+    reimbursed_nszu: true
+    reimbursement_indications:
+    - 'Програма медичних гарантій 2026: НДРЛ стадія III нерезектабельна після ХПТ (PACIFIC, консолідація)'
+    - 'Реімбурсаційний пакет «Онкологія» 2026: ДРЛ-розширене стадія 1L з карбоплатин+етопозид'
+    last_verified: "2026-04-27"
+    notes: "Раніше ключ reimbursed_nszu відсутній — встановлено true з обмеженням до PACIFIC-режиму (NSCLC III nerezектабельна) та ДРЛ ext. STRIDE-режим (з tremelimumab) — без UA НСЗУ. Джерело: nszu.gov.ua (2026-04)."
 typical_dosing: >
   STRIDE (HCC): single priming dose tremelimumab 300 mg + durvalumab 1500 mg q4w until progression.
 formulations: ["IV solution 50 mg/mL"]
@@ -24,6 +31,18 @@ serious_adverse_events: ["Severe colitis", "Pneumonitis", "Hepatitis", "Hypophys
 sources: [SRC-NCCN-HCC-2025, SRC-AASLD-HCC-2023]
 last_reviewed: "2026-04-26"
 notes: >
-  STUB — Phase GI-1. STRIDE (single tremelimumab + durvalumab) preferred
-  over previous T+D dosing. mOS 16.4 mo vs 13.8 sorafenib (HIMALAYA).
-  Useful when bev contraindicated (varices, recent thromboembolic event).
+  STRIDE (single priming tremelimumab + durvalumab maintenance)
+  preferred over previous T+D Q4W dosing. HIMALAYA: mOS 16.4 vs 13.8
+  mo sorafenib in unresectable HCC. Useful when bevacizumab
+  contraindicated (high-risk varices, recent thromboembolic event).
+  PACIFIC: durvalumab consolidation post-CRT in stage III
+  unresectable NSCLC — mOS not reached vs 29.1 mo placebo, paradigm-
+  defining. CASPIAN: durva + chemo extensive-stage SCLC. Baseline +
+  serial TFTs, LFTs, creatinine, cortisol, troponin if cardiac
+  history. Hospitalize and start IV methylprednisolone for G3-4 irAE.
+  UA: registered; НСЗУ покриває PACIFIC-режим (NSCLC III
+  нерезектабельна) та ext-SCLC. STRIDE-режим (з tremelimumab) —
+  без UA НСЗУ.
+
+notes_patient: >
+  Імунотерапія anti-PD-L1: знімає блок, яким пухлина вимикає ваш імунітет. Часто застосовується після хіміо-променевої терапії раку легені для закріплення результату.

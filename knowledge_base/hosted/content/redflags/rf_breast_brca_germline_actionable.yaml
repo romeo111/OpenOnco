@@ -1,0 +1,70 @@
+id: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
+definition: >
+  Germline BRCA1 or BRCA2 pathogenic variant in HER2-negative breast
+  cancer (HR+ or TNBC). Olaparib (OlympiAD — mPFS 7.0 vs 4.2 mo
+  vs chemo) and talazoparib (EMBRACA — mPFS 8.6 vs 5.6 mo) are
+  FDA-approved for metastatic gBRCA HER2-negative breast.
+  Adjuvant olaparib (OlympiA) for high-risk HER2-negative gBRCA early
+  breast.
+definition_ua: >
+  Зародкова патогенна варіація BRCA1 або BRCA2 при HER2-негативному
+  РМЗ (HR+ або TNBC). Олапариб (OlympiAD — мПФВ 7.0 проти 4.2 міс
+  vs хіміо) та талазопариб (EMBRACA — мПФВ 8.6 проти 5.6 міс) —
+  FDA-схвалено для метастатичного gBRCA HER2-негативного РМЗ.
+  Ад'ювантний олапариб (OlympiA) для високоризикового HER2-негативного
+  gBRCA РМЗ ранньої стадії.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "brca1_germline"
+      value: "pathogenic"
+    - finding: "brca2_germline"
+      value: "pathogenic"
+    - finding: "brca1_brca2_germline"
+      value: "positive"
+    - finding: "brca1_brca2_pathogenic"
+      value: true
+    - finding: "germline_brca_status"
+      value: "pathogenic"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+  - ALGO-BREAST-TNBC-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-OLYMPIAD-ROBSON-2017
+  - SRC-EMBRACA-LITTON-2018
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Germline-only — somatic BRCA1/2 in breast lacks the same prospective
+  RCT evidence (use HRD assay where pathway-altered status sought).
+  Genetic counseling mandatory (cascade testing of first-degree
+  relatives; risk-reducing salpingo-oophorectomy). PALB2 has analogous
+  HRR-deficient biology — emerging data support PARPi but off-label.
+  Toxicity: cytopenias (~grade 3 anemia 16-25%), MDS / AML <1.5%
+  long-term. Test before starting any PARPi candidate (chemotherapy
+  de-escalation argument: avoid platinum-based sensitizing regimens
+  if PARPi readily available).
+notes_ua: >
+  Лише зародкова — соматична BRCA1/2 при РМЗ не має аналогічних
+  проспективних РКД (використовувати HRD-аналіз, якщо потрібен
+  pathway-altered статус). Обов'язкове генетичне консультування
+  (каскадне тестування родичів першого ступеня; profilактична
+  salpingo-oophorectomy). PALB2 має аналогічну HRR-дефіцитну біологію —
+  нові дані за PARPi, але off-label. Токсичність: цитопенії (анемія
+  G3 ~16-25%), MDS / AML <1.5% у довгостроковій перспективі. Тест
+  перед призначенням будь-якого кандидата PARPi.

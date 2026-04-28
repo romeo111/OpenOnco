@@ -1,0 +1,80 @@
+id: REG-O-CHL
+name: "Obinutuzumab + Chlorambucil (G-Clb, CLL11 — elderly comorbid CLL 1L)"
+name_ua: "Обінутузумаб + Хлорамбуцил (G-Clb, CLL11 — літні коморбідні CLL 1L)"
+alternate_names:
+  - "G-Clb"
+  - "GA101 + Clb"
+  - "CLL11 regimen"
+
+components:
+  - drug_id: DRUG-OBINUTUZUMAB
+    dose: "Cycle 1: 100 mg IV day 1, 900 mg IV day 2 (split-dose loading), 1000 mg IV days 8 and 15. Cycles 2-6: 1000 mg IV day 1"
+    schedule: "Cycle 1 days 1, 2, 8, 15; cycles 2-6 day 1 of each 28-day cycle"
+    route: IV
+  - drug_id: DRUG-CHLORAMBUCIL
+    dose: "0.5 mg/kg PO"
+    schedule: "days 1 and 15 of each 28-day cycle × 6 cycles"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "6"
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-obinutuzumab cycle 1 day 1 (high IRR risk): IV methylprednisolone 80-100 mg ≥1h pre + paracetamol 650-1000 mg + diphenhydramine 50 mg ≥30 min pre + slow infusion start (25 mg/h × 1h, escalate)"
+  - "TLS prophylaxis cycle 1: allopurinol 300 mg PO daily starting 2-3 days pre-cycle 1; aggressive hydration; rasburicase if uric acid elevated or high tumor burden"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Severe IRR cycle 1 day 1 (G≥3)"
+    modification: "Pause infusion; manage symptomatically; resume at 50% rate when resolved to G≤1; permanent discontinuation if life-threatening"
+    rationale: "Obinutuzumab IRR rate cycle 1 ~65% (mostly G1-2); split-dose loading (100/900 mg) reduces severity vs single-dose"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Tumor lysis syndrome (high-burden CLL — ALC >25, bulky LN)"
+    modification: "Rasburicase 0.2 mg/kg IV; aggressive hydration; consider stepwise debulking before full-dose obinutuzumab"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "HBV reactivation (HBsAg+ or anti-HBc+ with detectable HBV-DNA)"
+    modification: "Entecavir 0.5 mg PO daily throughout therapy and ≥12 months post; do not initiate G-Clb without antiviral cover if serology positive"
+    source_refs: [SRC-NCCN-BCELL-2025]
+  - condition: "Severe + prolonged neutropenia (ANC <500 >7 days)"
+    modification: "G-CSF support; delay next dose; consider chlorambucil dose reduction to 0.3 mg/kg"
+  - condition: "Therapy-related cytopenia OR cumulative toxicity"
+    modification: "Reduce chlorambucil to 0.3 mg/kg or hold until count recovery"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Обінутузумаб + хлорамбуцил — обидва реімбурсуються НСЗУ для CLL 1L у літніх коморбідних (CLL11 індикація)."
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  CLL11 (Goede 2014, NEJM): G-Clb vs R-Clb vs Clb monotherapy in
+  previously-untreated CLL with comorbidities (CIRS >6 OR CrCl 30-69)
+  — mPFS 26.7 vs 15.2 vs 11.1 mo, with G-Clb also showing OS benefit
+  vs Clb alone. Established obinutuzumab as the preferred anti-CD20
+  for elderly comorbid CLL. Now positioned behind venetoclax-
+  obinutuzumab (CLL14, fixed-duration) and BTK-inhibitor monotherapy
+  in fit comorbid patients, but G-Clb remains a reasonable
+  fixed-duration option when targeted-agent access or tolerability
+  is limited. HBV screening + TLS prophylaxis are mandatory.
+  Monitor closely cycle 1 for IRR (highest first dose).
+notes_ua: >
+  CLL11 (Goede 2014, NEJM): G-Clb vs R-Clb vs Clb-моно в раніше
+  нелікованих CLL з коморбідностями (CIRS >6 АБО CrCl 30-69) —
+  mPFS 26.7 vs 15.2 vs 11.1 міс, G-Clb також демонструє OS-користь
+  vs Clb-моно. Встановив обінутузумаб як переважний анти-CD20 для
+  літніх коморбідних CLL. Зараз позиціюється після venetoclax-
+  obinutuzumab (CLL14, фіксованої тривалості) і BTKi-монотерапії
+  у придатних, але G-Clb залишається розумною fixed-duration опцією
+  при обмеженому доступі або переносимості таргетних агентів.
+  HBV-скринінг + TLS-профілактика обов'язкові.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

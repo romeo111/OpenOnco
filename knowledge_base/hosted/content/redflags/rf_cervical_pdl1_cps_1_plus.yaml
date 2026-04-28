@@ -1,0 +1,80 @@
+id: RF-CERVICAL-PDL1-CPS-1-PLUS
+definition: >
+  Persistent, recurrent, or metastatic cervical cancer with PD-L1 CPS ≥1
+  by 22C3 IHC. KEYNOTE-826 (Colombo NEJM 2021; final OS 2023) established
+  pembrolizumab + chemotherapy ± bevacizumab as 1L over chemo ± bev
+  alone for CPS ≥1 (mOS 28.6 vs 16.5 mo at CPS ≥1, HR 0.64). FDA + EMA
+  approved pembrolizumab + paclitaxel + cisplatin or carboplatin
+  ± bevacizumab for CPS ≥1 cervical cancer 1L. KEYNOTE-A18 (Lorusso
+  Lancet 2024) extends pembrolizumab to high-risk locally advanced
+  cervical cancer + chemoradiation regardless of PD-L1.
+definition_ua: >
+  Стійкий, рецидивний або метастатичний рак шийки матки з PD-L1 CPS ≥1
+  за 22C3 IHC. KEYNOTE-826 (Colombo NEJM 2021; фінальний OS 2023)
+  встановило пембролізумаб + хіміо ± бевацизумаб 1L над хіміо ± бев
+  у монорежимі при CPS ≥1 (мОВ 28.6 проти 16.5 міс при CPS ≥1, HR 0.64).
+  FDA + EMA схвалили пембролізумаб + паклітаксел + цисплатин або
+  карбоплатин ± бевацизумаб для CPS ≥1 цервікального раку 1L.
+  KEYNOTE-A18 (Lorusso Lancet 2024) розширив пембролізумаб на
+  high-risk локально-поширений цервікальний + ХПТ незалежно від PD-L1.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "pdl1_cps"
+      threshold: 1
+      comparator: ">="
+    - finding: "pdl1_cps_22c3"
+      threshold: 1
+      comparator: ">="
+    - finding: "BIO-PDL1-CPS"
+      threshold: 1
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CERVICAL
+shifts_algorithm:
+  - ALGO-CERVICAL-LOCALLY-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CPS ≥1 captures ~85% of cervical cancers (vs HNSCC where the cutoff
+  is more discriminative). Cemiplimab (EMPOWER-Cervical-1, Tewari NEJM
+  2022) — second-line ICI option for platinum-pretreated, also CPS-
+  agnostic in approval but with greater benefit at higher PD-L1.
+  Tisotumab vedotin (innovaTV-204, FDA 2021) — ADC for 2L+ R/R cervical
+  regardless of PD-L1, mDOR ~8 mo. KEYNOTE-A18 extends ICI to LOCALLY
+  ADVANCED disease (FIGO IIIB-IVA): pembro + cisplatin-RT (concurrent)
+  improved PFS, regulatory approval pending in many jurisdictions.
+  Detection: 22C3 IHC; reported as CPS, NOT TPS (cervical PD-L1 lives
+  in tumor + immune cells, CPS captures both). Pseudoprogression and
+  hyperprogression rates similar to other ICI tumors. Access UA:
+  pembrolizumab NSZU-listed for cervical CPS ≥1 (2025) — major access
+  improvement.
+notes_ua: >
+  CPS ≥1 охоплює ~85% цервікального раку (на відміну від HNSCC, де
+  cutoff більш дискримінативний). Цеміпліма (EMPOWER-Cervical-1, Tewari
+  NEJM 2022) — 2L ICI опція для platinum-pretreated, теж CPS-агностично
+  у схваленні, але з більшою вигодою при вищому PD-L1. Тісотумаб ведотин
+  (innovaTV-204, FDA 2021) — ADC для 2L+ р/р цервікал незалежно від
+  PD-L1, мDOR ~8 міс. KEYNOTE-A18 розширює ICI на ЛОКАЛЬНО ПОШИРЕНУ
+  хворобу (FIGO IIIB-IVA): пембро + цисплатин-ПТ (concurrent) покращив
+  ПФВ, регуляторне схвалення триває у багатьох юрисдикціях. Виявлення:
+  22C3 IHC; CPS, НЕ TPS (цервікальний PD-L1 — у tumor + immune клітинах,
+  CPS охоплює обидва). Псевдопрогресія + гіперпрогресія — як в інших
+  ICI пухлинах. Доступ в Україні: пембролізумаб у НСЗУ-списку для
+  цервікального CPS ≥1 (2025) — значне покращення доступу.
+
+# MISSING SOURCE: SRC-KEYNOTE-826-COLOMBO-2021 (NEJM 2021) — phase-3.

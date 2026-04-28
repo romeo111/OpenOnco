@@ -1,0 +1,94 @@
+id: IND-NSCLC-2L-MET-EX14-TEPOTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: MET_EX14_SKIPPING
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic MET exon 14 skipping mutation NSCLC"
+    - "Disease progression on 1L therapy"
+    - "Once-daily oral preferred over BID (capmatinib alternative)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MET
+      value_constraint: "MET exon 14 skipping mutation confirmed by NGS (RNA-NGS preferred)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-TEPOTINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~46% combined cohort (1L 43%, pretreated 48% — VISION)"
+  progression_free_survival: "Median DOR 11.1 mo"
+  overall_survival_5y: "Mature OS evolving"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Tepotinib (selective MET TKI, once-daily oral) for MET exon 14
+  skipping mutation metastatic NSCLC. VISION trial: combined ORR 46%
+  (1L 43%, pretreated 48%); mDOR 11.1 mo. FDA approval 2021 (now full)
+  for MET ex14 NSCLC any line. Once-daily dosing convenience advantage
+  over capmatinib BID. Peripheral edema dominant AE (~70% — class
+  effect); proactive management with diuretics + compression. Comparable
+  efficacy to capmatinib; choice driven by tolerability nuances and
+  EAP availability in UA.
+
+sources:
+  - source_id: SRC-VISION-PAIK-2020
+    position: supports
+    relevant_quote_paraphrase: "Tepotinib 500 mg PO daily in MET ex14 NSCLC (VISION): combined ORR 46% (1L 43%, pretreated 48%); mDOR 11.1 mo"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Tepotinib is recommended for MET ex14 skipping NSCLC any line; Cat 1 (VISION)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Tepotinib once-daily alternative to capmatinib BID for MET ex14 NSCLC; comparable efficacy"
+
+known_controversies:
+  - topic: "Capmatinib BID vs tepotinib once-daily for MET ex14 NSCLC"
+    positions:
+      - position: "Tepotinib: once-daily; peripheral edema ~70%"
+        sources: [SRC-VISION-PAIK-2020]
+      - position: "Capmatinib: BID; CNS-active; less edema in some series"
+        sources: [SRC-GEOMETRY-WOLF-2020]
+    our_default: "Tepotinib for once-daily preference / adherence concerns; capmatinib if BID acceptable"
+    rationale: "Comparable efficacy"
+
+do_not_do:
+  - "НЕ підтверджувати MET ex14 на базі DNA-only hotspot panel — RNA-NGS обов'язковий."
+  - "НЕ ігнорувати baseline + serial LFTs — hepatotoxicity Grade ≥3."
+  - "НЕ ігнорувати peripheral edema — diuretics + compression; reduce до 225 mg if persistent."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers."
+  - "НЕ підтверджувати план без funding pathway — tepotinib не зареєстрований в Україні."
+  - "НЕ використовувати при ILD або severe lung disease."
+  - "НЕ припиняти за isolated mild edema."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track once-daily
+  alternative to capmatinib for MET ex14 NSCLC.

@@ -1,0 +1,36 @@
+id: RF-ISS-1
+definition: "Multiple myeloma with ISS stage 1 — β2-microglobulin <3.5 mg/L AND albumin ≥3.5 g/dL — standard-risk presentation; eligible for standard 1L (D-VRd transplant-eligible / D-Rd unfit) without intensification beyond the four-drug baseline"
+definition_ua: "Множинна мієлома з ISS стадією 1 — β2-мікроглобулін <3,5 мг/л І альбумін ≥3,5 г/дл — стандартний ризик; кандидат на стандартну 1-у лінію (D-VRd для трансплант-кандидатів / D-Rd для нетранспланта-кандидатів) без подальшої інтенсифікації"
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "beta2_microglobulin_mg_per_l"
+      threshold: 3.5
+      comparator: "<"
+    - finding: "serum_albumin_g_per_dl"
+      threshold: 3.5
+      comparator: ">="
+
+clinical_direction: de-escalate
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm:
+  - ALGO-MM-1L
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-27"
+notes: >
+  ISS (Greipp 2005) is the original 3-tier MM staging using β2M and
+  albumin only. ISS-1 (β2M <3.5 + albumin ≥3.5) = median OS ~62 mo in
+  the original cohort and substantially longer in the modern era with
+  daratumumab-based 1L (PERSEUS / IsKia / GRIFFIN show D-VRd 4-yr PFS
+  ~85% in ISS-1). de-escalate direction means "do not add cytogenetic-
+  driven intensification beyond D-VRd baseline" — high-risk cytogenetics
+  override this if present (handled by separate biomarker RFs).

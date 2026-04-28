@@ -1,0 +1,64 @@
+id: RF-PRIOR-BRAFI-MEKI-FAILED
+definition: >
+  Progression on prior BRAF + MEK inhibitor combination (dabrafenib +
+  trametinib, vemurafenib + cobimetinib, encorafenib + binimetinib).
+  Resistance is typically MAPK-pathway reactivation; rechallenge with
+  same combination after IO interval may yield short-duration responses,
+  but standard next-line is IO (if not given), chemotherapy, or trial.
+definition_ua: >
+  Прогресія на попередній комбінації BRAFi + MEKi (дабрафеніб +
+  траметиніб, вемурафеніб + кобіметиніб, енкорафеніб + бініметиніб).
+  Резистентність зазвичай — реактивація MAPK-шляху; rechallenge тією ж
+  комбінацією після інтервалу IO може давати короткотривалі відповіді,
+  але стандарт наступної лінії — IO (якщо не отримана), хіміотерапія
+  або трайл.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "prior_brafi_meki_progression"
+      value: true
+    - all_of:
+        - finding: "prior_brafi_meki_received"
+          value: true
+        - finding: "best_response_to_brafi_meki"
+          value: "PD"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 80
+category: prior-therapy-class
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-COMBI-D-LONG-2014
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Melanoma: standard next line is anti-PD1 ± anti-CTLA4 if not previously
+  given (DREAMseq favored IO→BRAFi sequence; for those who got
+  BRAFi+MEKi 1L without IO, IO 2L appropriate). BRAFi-rechallenge after
+  IO-bridge demonstrated in small series (Romano 2018) — short median
+  PFS (~5 mo) but valid for symptomatic palliation. NSCLC BRAF V600E:
+  post-dab+tram PD → docetaxel + ramucirumab or pembrolizumab if
+  PD-L1 positive. CRC BRAF V600E: encorafenib + cetuximab (BEACON
+  doublet) — if progression on this triplet, options very limited
+  (irinotecan-based; trial preferred).
+notes_ua: >
+  Меланома: стандарт наступної лінії — anti-PD1 ± anti-CTLA4 якщо не
+  отримана раніше (DREAMseq favored IO→BRAFi); для тих, хто отримав
+  BRAFi+MEKi 1L без IO, IO в 2L доречний. BRAFi-rechallenge після
+  IO-bridge демонстрований у малих серіях (Romano 2018) — короткий
+  медіанний PFS (~5 міс) але прийнятний для симптоматичної паліації.
+  NSCLC BRAF V600E: після dab+tram PD → доцетаксел + рамуцірумаб або
+  пембролізумаб при PD-L1+. CRC BRAF V600E: енкорафеніб + цетуксимаб
+  (BEACON dublet) — при прогресії опції дуже обмежені.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

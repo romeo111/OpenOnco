@@ -1,0 +1,41 @@
+id: RF-AAIPI-HIGH
+definition: "Age-adjusted IPI ≥2 in patient <60 yo — high-risk young-adult DLBCL; supports DA-EPOCH-R consideration over R-CHOP per CALGB 50303 / Wilson and AYA-DLBCL series"
+definition_ua: "Вік-адаптований IPI ≥2 у пацієнта <60 років — DLBCL високого ризику молодого віку; підтримує розгляд DA-EPOCH-R замість R-CHOP за CALGB 50303 / Wilson та серіями AYA-DLBCL"
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "age_years"
+      threshold: 60
+      comparator: "<"
+    - any_of:
+        - finding: "aaipi_score"
+          threshold: 2
+          comparator: ">="
+        - finding: "aaipi_risk_group"
+          value: "high"
+        - finding: "aaipi_risk_group"
+          value: "high_intermediate"
+
+clinical_direction: intensify
+
+severity: major
+category: risk-score
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  Age-adjusted IPI (Shipp 1993) uses 3 factors (stage III-IV, LDH>ULN,
+  ECOG ≥2) and was validated in <60 yo; aaIPI ≥2 marks the
+  high/high-intermediate cohort with R-CHOP 5-yr OS ~50-60%. CALGB 50303
+  did not show DA-EPOCH-R superiority over R-CHOP overall but
+  retrospective and HIV-DLBCL data favor DA-EPOCH-R in younger high-risk
+  patients with double-hit / MYC-rearrangement (handled separately by
+  RF-DLBCL-HIGH-RISK-BIOLOGY). Kept as a discussion trigger; final
+  regimen choice still goes to MDT (CHARTER §8.3).

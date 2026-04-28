@@ -1,0 +1,102 @@
+id: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic mCRC"
+    - "Disease progression after 1L (and typically 2L) chemo (FOLFOX/FOLFIRI ± biologic)"
+    - "RAS wild-type (HER2-amp + RAS-mut considered non-actionable for anti-HER2 in MOUNTAINEER eligibility)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      required: true
+      value_constraint: "amplified — IHC 3+ OR (IHC 2+ AND ISH+)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-RAS-MUTATION
+      value_constraint: "RAS-mutant excluded — MOUNTAINEER enrolled RAS-WT only; HER2+ RAS-mut subset shows substantially lower benefit"
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-TUCATINIB-TRASTUZUMAB-CRC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~38% (MOUNTAINEER tucatinib + trastuzumab cohort, RAS-WT HER2+ chemo-refractory mCRC)"
+  complete_response: "~3%"
+  progression_free_survival: "Median PFS 8.2 mo (MOUNTAINEER)"
+  overall_survival_5y: "Median OS 24.1 mo (MOUNTAINEER); long-term f/u pending"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+
+required_tests:
+  - TEST-HER2-IHC-ISH-IF-RAS-WT
+  - TEST-RAS-EXTENDED
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-ECHO  # baseline LVEF for trastuzumab
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Tucatinib + trastuzumab for HER2-amplified RAS-WT chemo-refractory
+  mCRC (MOUNTAINEER trial 2022): ORR 38%, mPFS 8.2 mo, mOS 24.1 mo —
+  in a population with poor expectations after standard chemo failure.
+  HER2 amplification is a treatment-defining biomarker in ~3% of mCRC.
+  Tucatinib is a HER2-selective TKI with low EGFR cross-inhibition
+  (favorable diarrhea profile vs lapatinib). Position: aggressive-track
+  2L+/3L+ for the small HER2+ RAS-WT subset; FDA-approved for this
+  indication 2023. ESCAT IIA (tumor-agnostic HER2 + CRC-specific
+  evidence). UA access barrier: tucatinib not registered in Ukraine
+  (named-patient / EAP only); trastuzumab biosimilar widely available
+  but not NSZU-funded for CRC indication.
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: "Tucatinib + trastuzumab is a recommended option for HER2-amplified RAS-WT chemo-refractory mCRC (MOUNTAINEER); FDA-approved 2023"
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: "HER2 amplification testing recommended in RAS-WT mCRC; trastuzumab + tucatinib (or trastuzumab-deruxtecan as alternative) has actionable benefit"
+
+known_controversies:
+  - topic: "Tucatinib + trastuzumab vs trastuzumab-deruxtecan for HER2+ mCRC"
+    positions:
+      - position: "Tucatinib + trastuzumab: oral + IV chemo-free combo; lower ILD risk; MOUNTAINEER mature data"
+        sources: [SRC-NCCN-COLON-2025]
+      - position: "Trastuzumab-deruxtecan (T-DXd, DESTINY-CRC01): higher ORR in IHC 3+ subset (~45%); ILD signal requires monitoring"
+        sources: [SRC-NCCN-COLON-2025]
+        evidence_note: "T-DXd preferred for HER2 IHC 3+ pretreated heavily; tucatinib-trastuzumab broader population including IHC 2+ ISH+"
+    our_default: "Tucatinib + trastuzumab as default for HER2-amp RAS-WT 2L+/3L+; T-DXd alternative when tucatinib not accessible OR for IHC 3+ heavily pretreated patients with no ILD risk factors"
+    rationale: "Lower toxicity + chemo-free regimen favors tucatinib-trastuzumab as default; T-DXd reserved per access + tolerability"
+
+do_not_do:
+  - "НЕ призначати в RAS-mutant пацієнтів — MOUNTAINEER excluded RAS-mut; benefit substantially reduced."
+  - "НЕ розпочинати без baseline LVEF — trastuzumab cardiotoxicity surveillance протокол обов'язковий (q3 mo)."
+  - "НЕ ігнорувати diarrhea early management — tucatinib loperamide protocol; reduce dose якщо Grade ≥3."
+  - "НЕ комбінувати з strong CYP3A4 inducers — рівні tucatinib знижуються significantly."
+  - "НЕ продовжувати при LVEF drop ≥10% absolute OR LVEF <50% — hold trastuzumab; cardiology consult."
+  - "НЕ підтверджувати план без funding pathway — tucatinib не зареєстрований в UA."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  HER2-amp RAS-WT mCRC. ESCAT IIA. Trial-specific source (MOUNTAINEER
+  PMID 36257398) not in KB yet — flagged for CSD-4.5. Tucatinib
+  registration status in UA: not registered (drlz.com.ua confirms);
+  named-patient pathway only.

@@ -1,0 +1,59 @@
+id: REG-LIFILEUCEL-TIL-MELANOMA
+name: "Lifileucel TIL therapy (Amtagvi, melanoma 3L+)"
+name_ua: "Ліфілеуцел TIL-терапія (Amtagvi, меланома 3L+)"
+alternate_names: ["Amtagvi", "C-144-01 regimen", "TIL"]
+
+components:
+  - drug_id: DRUG-LIFILEUCEL
+    dose: "Single IV infusion of 7.5 × 10⁹ to 72 × 10⁹ viable autologous TIL cells"
+    schedule: "Once, after lymphodepletion; followed by IL-2 supportive bolus regimen"
+    route: IV
+    duration: "single infusion"
+
+cycle_length_days: null
+total_cycles: "Single TIL infusion (one-time treatment intent); ~6-week inpatient pathway including lymphodepletion + TIL + IL-2 + recovery"
+toxicity_profile: severe
+
+premedication:
+  - "Tumor procurement (~1.5 cm³ resection) → central manufacturing ~22 days"
+  - "Bridging therapy permitted during manufacturing window if disease threatening"
+  - "Lymphodepletion: cyclophosphamide 60 mg/kg/day IV × 2 days, then fludarabine 25 mg/m²/day IV × 5 days"
+  - "Aldesleukin (IL-2) 600,000 IU/kg IV q8-12h, max 6 doses, started within 24 h of TIL infusion"
+  - "G-CSF support starting D+1 post-TIL"
+  - "Antimicrobial prophylaxis: PCP, HSV, fungal during prolonged neutropenia"
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Hemodynamic instability during IL-2 (SBP <90, oliguria, hypoxia)"
+    modification: "Hold IL-2; vasopressors / fluid resuscitation per ICU protocol; resume only if recovered before next scheduled dose"
+    source_refs: [SRC-C14401-CHESNEY-2024]
+  - condition: "Cardiac arrhythmia (atrial fibrillation, ischemia)"
+    modification: "Discontinue IL-2; cardiology consult"
+    source_refs: [SRC-C14401-CHESNEY-2024]
+  - condition: "Suspected sepsis during neutropenic phase"
+    modification: "Empirical broad-spectrum antibiotics per institutional febrile-neutropenia protocol; ICU-level support"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Ліфілеуцел не зареєстрований в Україні (2026-04); немає вітчизняних viral vector / TIL манufacturing capabilities. Pathway = international referral до spec center (US — Iovance authorized treatment centers; EU pilot sites). Loft cost (TIL product alone) ~USD 515K + lymphodepletion + IL-2 + ICU + housing. Без НСЗУ покриття; charity / fundraising single pathway."
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-C14401-CHESNEY-2024
+
+last_reviewed: "2026-04-27"
+notes: >
+  C-144-01 pooled cohorts (n=153): ORR 31.4%, mDoR not reached at
+  27.6 mo follow-up, mOS 13.9 mo — first cellular therapy approved
+  for any solid tumor (FDA 2024-02-16, Iovance Amtagvi). Single-
+  infusion treatment intent (no maintenance). Treatment-related
+  mortality ~7% — patient selection critical: ECOG ≤1, organ
+  function adequate for IL-2 (LVEF ≥45, FEV1 ≥60, DLCO ≥60), no
+  active infection, no chronic immunosuppression. CRITICAL: must
+  AVOID systemic corticosteroids before and shortly after TIL
+  infusion (abrogate TIL function). Specialty-center authorization
+  + REMS-style accreditation required. Ukraine pathway: international
+  referral only.

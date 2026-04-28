@@ -1,0 +1,47 @@
+id: RF-GLIOMA-LOW-GRADE-HIGH-RISK-BIOLOGY
+definition: "Low-grade glioma with high-risk molecular features: IDH-wildtype (per WHO 5th ed., reclassified as glioblastoma molecular features even if histologically low-grade), CDKN2A/B homozygous deletion, TERT-promoter mutation in IDH-wildtype, or 1p/19q intact astrocytoma with poor risk score"
+definition_ua: "Гліома низького ступеня з молекулярними high-risk факторами: IDH-wildtype (за ВООЗ 5-те вид., реклас. як glioblastoma molecular features), CDKN2A/B гомозиготна делеція, TERT-promoter мутація при IDH-wt, або 1p/19q-intact астроцитома з поганим прогнозом"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "idh_wildtype"
+      value: true
+    - finding: "cdkn2a_b_homozygous_deletion"
+      value: true
+    - finding: "tert_promoter_mutation"
+      value: true
+    - finding: "histology_grade_3_features"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 25
+category: high-risk-biology
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+  - SRC-WHO-LNSC-2023
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per WHO 5th ed.: IDH-wildtype diffuse astrocytoma with EGFR amp / +7-10 /
+  TERT-promoter mutation is reclassified as "glioblastoma, IDH-wildtype"
+  regardless of histology grade — these patients are managed under
+  GBM (DIS-GBM) algorithm, not LGG. Per EANO 2024 + NCCN-CNS LGG:
+  CDKN2A/B homozygous deletion in IDH-mut astrocytoma confers grade 4
+  behavior. Direction INTENSIFY — shifts to GBM-like management
+  (Stupp protocol or aggressive RT + chemotherapy). STUB — requires
+  clinical co-lead signoff.
+notes_ua: >
+  Per WHO 5th ed.: IDH-wildtype diffuse astrocytoma with EGFR amp / +7-10 / TERT-promoter мутація is reclassified as "гліобластома, IDH-wildtype" regardless of гістологія grade — these patients are managed under GBM (DIS-GBM) algorithm, not LGG. Per EANO 2024 + NCCN-CNS LGG: CDKN2A/B homozygous делеція in IDH-mut astrocytoma confers grade 4 behavior. Direction INTENSIFY — shifts to GBM-like management (Stupp protocol or агресивний RT + хіміотерапія). STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -5,31 +5,154 @@ names:
   english: "Ipilimumab"
   brand_names: ["Yervoy"]
 atc_code: L01FX04
-rxnorm_id: null
-drug_class: "Anti-CTLA-4 monoclonal antibody"
+rxnorm_id: ""
+drug_class: "Anti-CTLA-4 monoclonal antibody (immune checkpoint inhibitor)"
 mechanism: >
-  Fully human IgG1 anti-CTLA-4 antibody. Combination with PD-1 inhibitors (CheckMate-067 melanoma; CheckMate-214 RCC).
+  Fully human IgG1κ monoclonal antibody targeting cytotoxic
+  T-lymphocyte-associated antigen 4 (CTLA-4 / CD152), an inhibitory
+  checkpoint receptor expressed on activated T cells and constitutively
+  on regulatory T cells (Tregs). By blocking CTLA-4 / B7 (CD80/CD86)
+  engagement at the T-cell priming stage in lymph nodes, ipilimumab
+  releases an early brake on T-cell activation and expands the
+  anti-tumor T-cell repertoire; the IgG1 isotype also depletes
+  intratumoral Tregs via Fc-mediated ADCC. Mechanism is
+  complementary and non-redundant with anti-PD-1 (which acts at the
+  effector phase in the tumor microenvironment), giving clear
+  efficacy gains in combination but also markedly increased irAE
+  burden. Historical first-in-class ICI (FDA 2011 melanoma — Hodi
+  NEJM 2010, first OS-prolonging therapy in metastatic melanoma).
+  Pivotal combination trials: CheckMate-067 (nivo+ipi vs nivo vs
+  ipi melanoma 1L — 5-yr OS 52% combo, 44% nivo, 26% ipi), CheckMate-
+  214 (nivo+ipi vs sunitinib intermediate/poor-risk RCC),
+  CheckMate-743 (nivo+ipi mesothelioma 1L), CheckMate-9LA
+  (nivo+ipi+chemo NSCLC), CheckMate-9DW (HCC).
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2011
+    indications_brief:
+      - "Unresectable/metastatic melanoma (mono and combo nivo)"
+      - "Adjuvant melanoma stage III post-resection"
+      - "Intermediate/poor-risk RCC 1L (combo nivo)"
+      - "MSI-H/dMMR mCRC (combo nivo)"
+      - "HCC post-sorafenib (combo nivo)"
+      - "Unresectable mesothelioma 1L (combo nivo)"
+      - "NSCLC PD-L1 ≥1% 1L (combo nivo) or +chemo (CheckMate-9LA)"
+      - "Esophageal SCC 1L (combo nivo)"
+  ema:
+    approved: true
+    year_first_approval: 2011
+    indications_brief:
+      - "Melanoma mono / combo nivolumab"
+      - "RCC 1L combo nivolumab"
+      - "MSI-H mCRC combo nivolumab"
+      - "Mesothelioma 1L combo nivolumab"
+      - "NSCLC 1L combo nivolumab ± chemo"
   ukraine_registration:
-    registered: false
-    reimbursed_nszu: false
-    last_verified: null
-    notes: "Out-of-pocket / off-label import — major access barrier."
+    registered: true
+    registration_number: null
+    reimbursed_nszu: true
+    reimbursement_indications:
+      - "Програма медичних гарантій 2026: меланома нерезектабельна/метастатична 1L у комбінації з nivolumab"
+      - "Реімбурсаційний пакет «Онкологія» 2026: НКК нирки проміжний/несприятливий ризик 1L з nivolumab"
+    last_verified: "2026-04-27"
+    notes: "Зареєстрований; НСЗУ покриває переважно в комбо з nivolumab (мономеланома 2L+ — out-of-pocket). Джерело: nszu.gov.ua (2026-04)."
 
 typical_dosing: >
-  Melanoma 1L: 3 mg/kg IV q3w x 4 + nivolumab. RCC 1L: 1 mg/kg IV q3w x 4 + nivolumab.
+  Melanoma 1L combo: ipilimumab 3 mg/kg IV over 90 minutes every 3
+  weeks × 4 doses + nivolumab 1 mg/kg IV q3w × 4 doses (induction),
+  then nivolumab monotherapy 240 mg q2w or 480 mg q4w until
+  progression / toxicity / 24 mo. RCC 1L combo: ipilimumab 1 mg/kg +
+  nivolumab 3 mg/kg IV q3w × 4 doses, then nivo mono. Mesothelioma /
+  MSI-H mCRC / HCC / NSCLC 1L combos: per protocol-specific schedules
+  (typically 1 mg/kg q3w or q6w with nivolumab). Adjuvant melanoma
+  monotherapy: 10 mg/kg q3w × 4 then q12w up to 3 yr (largely
+  superseded by nivolumab adjuvant). No formal renal or hepatic dose
+  adjustment (mAb catabolism). Hold for G2-3 irAE; permanently
+  discontinue for G4 irAE, myocarditis, recurrent G3 despite
+  steroids, or any life-threatening reaction.
 
-key_toxicities:
-  - Severe immune-mediated AEs more frequent than PD-1
-  - Colitis
-  - Hepatitis
-  - Hypophysitis
-  - Pneumonitis
+formulations:
+  - "IV concentrate 5 mg/mL (50 mg / 10 mL or 200 mg / 40 mL single-dose vials)"
 
-sources: [SRC-NCCN-NSCLC-2025]
-last_reviewed: null
+absolute_contraindications:
+  - "Severe hypersensitivity to ipilimumab or any excipient"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Solid-organ transplant on calcineurin inhibitor (high rejection risk)"
+  - "Pregnancy"
+
+black_box_warnings:
+  - "Severe and fatal immune-mediated adverse reactions — colitis, hepatitis, dermatitis (SJS/TEN), neuropathy, endocrinopathies; can occur during or after ipilimumab; substantially more frequent and more severe than with anti-PD-1 alone"
+
+common_adverse_events:
+  - "Fatigue ~40-50%"
+  - "Diarrhea ~30-35% (any grade)"
+  - "Pruritus ~30%"
+  - "Rash ~25-30%"
+  - "Nausea ~25%"
+  - "Decreased appetite ~20%"
+  - "Vomiting ~15%"
+  - "Pyrexia ~15%"
+  - "Hypothyroidism ~10-15%"
+  - "Headache ~15%"
+  - "Abdominal pain ~15%"
+  - "Hypophysitis ~5-10% (substantially higher than PD-1 mono)"
+
+serious_adverse_events:
+  - "Severe colitis with possible perforation (G3+ ~10-15% mono, ~15-20% combo; CTLA-4-typical, often early in course)"
+  - "Severe hepatitis (G3+ ALT/AST ~5-10%; can be fatal)"
+  - "Hypophysitis with secondary adrenal insufficiency (often permanent — lifelong corticosteroid + thyroid replacement)"
+  - "Severe pneumonitis (G3+ ~3-5% combo)"
+  - "Immune-mediated nephritis (~1-2%)"
+  - "Severe cutaneous reactions (SJS / TEN / DRESS — rare)"
+  - "Myocarditis (rare; very high case-fatality — combo with PD-1 increases risk)"
+  - "Encephalitis / GBS / myasthenic syndrome / aseptic meningitis"
+  - "Solid-organ transplant rejection"
+  - "Severe infusion reactions"
+
+major_interactions:
+  - "Concurrent anti-PD-1 (nivolumab, pembrolizumab) — intentional combination; toxicity additive (G3+ irAE ~55% combo vs ~15% PD-1 mono)"
+  - "Systemic corticosteroids ≥10 mg prednisone-equivalent at baseline — may blunt activity; avoid unless required"
+  - "Live attenuated vaccines — contraindicated"
+  - "Calcineurin inhibitors / immunosuppressants in transplant — rejection vs efficacy trade-off"
+  - "Vemurafenib + ipilimumab — historical combination caused severe hepatotoxicity; avoid concurrent"
+
+pharmacology:
+  half_life_hours: 360
+  clearance: "non-renal (proteolytic / reticuloendothelial catabolism); ~15 days terminal"
+  protein_binding_pct: null
+  metabolism: "n/a (mAb catabolism to amino acids)"
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
 notes: >
-  STUB. Cross-disease entity. Combinations in melanoma, RCC, mesothelioma, dMMR-MSI-H CRC.
+  CTLA-4 irAE pattern differs from PD-1: earlier onset (often within
+  first cycle), more colitis, more hypophysitis, less pneumonitis /
+  thyroiditis (vs PD-1). Cumulative cycle count rather than ongoing
+  exposure drives toxicity (because of long half-life and IgG1
+  effector functions); after 4-cycle induction the irAE risk
+  trajectory continues for weeks-to-months. Hypophysitis is often
+  permanent — patients require lifelong corticosteroid + thyroid
+  hormone replacement. Baseline workup before any combo with anti-
+  PD-1: TFTs, LFTs, creatinine, cortisol (AM), HbA1c, lipase /
+  amylase, troponin if cardiac risk, HBV/HCV, CT chest, dermatologic
+  exam. Monitor TFTs / LFTs / creatinine / cortisol before each
+  cycle for first 4 cycles then before each nivo dose. Hospitalize
+  early and treat aggressively with high-dose IV methylprednisolone
+  for any G3-4 irAE; escalate to infliximab / mycophenolate / IVIG /
+  ATG for steroid-refractory. Cross-disease entity: ipilimumab is
+  used in melanoma (1L combo nivo, adjuvant mono superseded by
+  nivo), RCC (1L combo nivo intermediate/poor risk), MSI-H/dMMR
+  CRC (combo nivo), HCC (combo nivo post sorafenib), mesothelioma
+  (1L combo nivo), NSCLC (1L combo nivo ± chemo), esophageal SCC
+  (1L combo nivo). Toxicity-vs-efficacy trade-off favors patients
+  with adequate functional reserve and access to skilled irAE
+  management.
+
+notes_patient: >
+  Імунотерапія anti-CTLA-4: «розбуджує» початкову імунну відповідь. Зазвичай комбінують з nivolumab для посилення ефекту. Вища частота імунних побічних ефектів — потребує уважного спостереження.

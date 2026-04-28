@@ -1,0 +1,37 @@
+id: RF-IPSS-R-VERY-HIGH
+definition: "Higher-risk MDS with IPSS-R very-high category (score >6) — alloHCT primary curative path in eligible; HMA (azacitidine / decitabine) bridge or non-transplant 1L; venetoclax+aza pending HR-MDS evidence maturation"
+definition_ua: "MDS вищого ризику з IPSS-R категорією дуже високого ризику (бал >6) — аллоТГСК первинний радикальний шлях у придатних; гіпометилюючий агент (азацитидин / децитабін) як міст або 1-а лінія для нетрансплант-кандидатів; ven+aza очікує дозрівання даних для HR-MDS"
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "ipss_r_score"
+      threshold: 6
+      comparator: ">"
+    - finding: "ipss_r_risk"
+      value: "very_high"
+
+clinical_direction: intensify
+
+severity: critical
+category: risk-score
+relevant_diseases:
+  - DIS-MDS-HR
+shifts_algorithm:
+  - ALGO-MDS-HR-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-MDS-2021
+
+last_reviewed: "2026-04-27"
+notes: >
+  IPSS-R (Greenberg 2012) replaced original IPSS by adding 5-tier
+  cytogenetic risk and granular cytopenia counts. Very-high (>6) =
+  median OS ~9 mo, AML transformation median ~0.7 yr. AlloHCT in
+  eligible patients is curative; bridge with azacitidine 5 d / 28 d
+  cycles per AZA-001 (Fenaux 2009). Ven+aza in HR-MDS has phase-2
+  evidence (VIALE-A primarily AML) — phase 3 (VERONA) reading out.
+  Severity `critical` ensures intensification wins conflicts with
+  generic frailty flags; alloHCT eligibility separately gates by ECOG /
+  comorbidity (handled by RF-FITNESS-* flags).

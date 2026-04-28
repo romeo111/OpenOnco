@@ -1,0 +1,61 @@
+id: RF-GLIOMA-LOW-GRADE-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating PCV or temozolomide adjuvant for low-grade glioma:
+  HBsAg-positive (HBV reactivation on cytotoxic chemotherapy plus
+  steroid co-therapy common with brain edema), anti-HBc-positive (occult
+  HBV), HIV-positive (ART coordination + Pneumocystis prophylaxis), or
+  active TB. Steroid-induced reactivation amplifies risk.
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед PCV або temozolomide-адʼювантом при гліомі низького ступеня:
+  HBsAg+ (реактивація HBV на цитотоксичній хіміотерапії + стероїди при
+  церебральному набряку — підсилює ризик), anti-HBc+ (occult HBV), HIV+
+  (координація АРТ + профілактика Pneumocystis), активний туберкульоз.
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-GLIOMA-LOW-GRADE
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Brain-tumor patients commonly receive concurrent dexamethasone for
+  edema — chronic steroid exposure compounds HBV-reactivation risk on
+  temozolomide / PCV. HBsAg+ → entecavir / tenofovir prophylaxis pre-
+  chemo through 12 mo post. HIV+ glioma patients require Pneumocystis
+  prophylaxis on dex + alkylator combo (lymphopenia is profound).
+  Active TB: complete anti-TB before chemoradiotherapy when feasible;
+  isoniazid hepatotoxicity + temozolomide hepatic clearance create
+  monitoring burden. Surfaces hold via parallel pre-treatment workup
+  rather than indication switch.
+notes_ua: >
+  Хворі на пухлину мозку часто отримують dexamethasone від набряку —
+  хронічна стероїдна експозиція посилює ризик реактивації HBV на
+  temozolomide / PCV. HBsAg+ → entecavir / tenofovir профілактика. HIV+:
+  профілактика Pneumocystis на dex + alkylator (тяжка лімфопенія).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,80 @@
+id: RF-WM-MYD88-L265P-ACTIONABLE
+definition: >
+  MYD88 L265P is the hallmark mutation of Waldenström macroglobulinemia,
+  present in >90% of WM. Drives constitutive NF-κB activation through BTK.
+  iNNOVATE (Dimopoulos NEJM 2018) and the iNNOVATE long-term follow-up
+  established ibrutinib + rituximab > placebo + rituximab regardless of
+  prior therapy; MYD88-L265P-positive disease has the highest response
+  rate to BTKi monotherapy (ORR ~90%, major-response ~70%) while
+  MYD88-WT WM responds poorly. Routes 1L symptomatic WM with MYD88-L265P
+  toward BTKi-based therapy (ibrutinib, zanubrutinib per ASPEN, or
+  ibrutinib + rituximab) over DRC chemoimmuno when chemo-avoidance is
+  preferred (cardiac, frailty, hyperviscosity-controlled).
+definition_ua: >
+  MYD88 L265P — характерна мутація макроглобулінемії Вальденстрема,
+  присутня у >90% WM. Викликає конститутивну активацію NF-κB через BTK.
+  iNNOVATE (Dimopoulos NEJM 2018) та довготривалий fu встановили
+  ібрутиніб + ритуксимаб > плацебо + ритуксимаб незалежно від попередньої
+  терапії; MYD88-L265P-позитивна хвороба має найвищу відповідь на BTKi
+  монотерапію (ORR ~90%, major-response ~70%), тоді як MYD88-WT WM
+  слабо відповідає. Маршрутизує 1L симптоматичну WM з MYD88-L265P на
+  BTKi-based терапію (ібрутиніб, занубрутиніб за ASPEN, або
+  ібрутиніб + ритуксимаб) замість DRC chemoimmuno, коли уникнення хіміо
+  є кращим (кардіо, frailty, гіперв'язкість контрольована).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "myd88_l265p"
+      value: true
+    - finding: "myd88_mutation"
+      value: "positive"
+    - finding: "myd88_status"
+      value: "L265P"
+    - finding: "BIO-MYD88-L265P"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-WM
+shifts_algorithm:
+  - ALGO-WM-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-WM-2024
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  CXCR4 WHIM-like mutations (~30-40% of WM) co-occur with MYD88-L265P
+  and reduce BTKi major-response rate (~30% with CXCR4-mut vs ~70% in
+  CXCR4-WT) — order CXCR4 alongside MYD88 to risk-stratify BTKi response;
+  CXCR4-mut + cardiac comorbidity favors zanubrutinib (ASPEN) or
+  bortezomib-based DRC. MYD88-WT WM (~10%) is biologically distinct,
+  often IgM-MGUS-like or marginal-zone-overlap, and BTKi response very
+  low (ORR ~30%, major <10%) — for MYD88-WT WM prefer chemoimmuno
+  (DRC/BR) or proteasome-inhibitor regimens. Detection: allele-specific
+  PCR on bone-marrow CD19-sorted cells (peripheral blood lower
+  sensitivity); sequencing alone misses ~10% of L265P due to low
+  tumor fraction.
+notes_ua: >
+  CXCR4 WHIM-like мутації (~30-40% WM) ко-існують з MYD88-L265P і знижують
+  major-response на BTKi (~30% при CXCR4-mut проти ~70% при CXCR4-WT) —
+  замовляти CXCR4 разом з MYD88 для стратифікації відповіді на BTKi;
+  CXCR4-mut + кардіокоморбідність — занубрутиніб (ASPEN) або
+  бортезоміб-DRC. MYD88-WT WM (~10%) біологічно відмінна (часто
+  IgM-MGUS-подібна або marginal-zone-overlap), і відповідь на BTKi дуже
+  низька (ORR ~30%, major <10%) — для MYD88-WT WM перевагу мають
+  chemoimmuno (DRC/BR) або протеасомні інгібітори. Виявлення: allele-specific
+  PCR на BM CD19-sorted клітинах (peripheral blood — нижча чутливість);
+  секвенування пропускає ~10% L265P через низьку tumor fraction.
+
+# MISSING SOURCE: SRC-INNOVATE-DIMOPOULOS-2018 (NEJM 2018) — phase-3
+# ibrutinib + rituximab vs placebo + rituximab in WM. Tier-2 RCT.

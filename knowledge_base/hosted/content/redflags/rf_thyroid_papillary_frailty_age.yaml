@@ -1,0 +1,66 @@
+id: RF-THYROID-PAPILLARY-FRAILTY-AGE
+definition: >
+  Age ≥75 with ECOG ≥2 or ≥2 comorbidities — lenvatinib full-dose
+  (24 mg) poorly tolerated; consider lenvatinib 14 mg starting dose
+  (Brose et al subgroup), selective RET / NTRK inhibitor monotherapy
+  if fusion+, or watchful waiting if asymptomatic indolent metastatic
+  disease (most PTC indolent — frail elderly often die with rather
+  than from disease).
+definition_ua: >
+  Вік ≥75 з ECOG ≥2 або ≥2 коморбідностями — lenvatinib у повній дозі
+  (24 мг) погано переноситься; розглянути lenvatinib 14 мг стартову
+  дозу (Brose та ін. subgroup), селективну RET / NTRK моно при fusion+
+  або спостереження при безсимптомній індолентній метастатичній
+  хворобі (більшість PTC індолентна — крихкі літні часто помирають
+  "з", а не "від" хвороби).
+
+trigger:
+  type: composite_clinical
+  all_of:
+    - finding: "age_years"
+      threshold: 75
+      comparator: ">="
+    - any_of:
+        - finding: "ecog_status"
+          threshold: 2
+          comparator: ">="
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-THYROID-PAPILLARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  PTC is the most indolent thyroid malignancy; for elderly with
+  metastatic but asymptomatic disease, watchful waiting with serial
+  thyroglobulin + imaging is appropriate (especially if doubling time
+  >12 mo). Lenvatinib starting at 14 mg (vs 24 mg standard) tested in
+  Study 211 — PFS comparable, lower hypertension / fatigue / proteinuria
+  burden in elderly. Selpercatinib / pralsetinib (RET+) and larotrectinib
+  / entrectinib (NTRK+) better tolerated than multikinase — preferred
+  in frail elderly when biomarker-positive. Geriatric assessment (G8)
+  ≥70 recommended before TKI initiation. Most PTC patients in this
+  category will benefit more from symptom-focused care + low-dose TKI
+  than full-dose induction.
+notes_ua: >
+  PTC — найіндолентніша тиреоїдна; для літніх з метастатичною
+  безсимптомною — спостереження з тиреоглобуліном + контролем зображень
+  прийнятне (особливо при подвоєнні >12 міс.). Lenvatinib 14 мг (vs 24
+  мг стандарт) — Study 211, PFS порівнянна, нижча гіпертензія / втома /
+  протеїнурія. Selpercatinib / larotrectinib — краще переносяться
+  альтернативи при fusion+.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -3,45 +3,141 @@ names:
   preferred: "Pemetrexed"
   ukrainian: "Пеметрексед"
   english: "Pemetrexed"
+  synonyms: ["LY231514", "MTA"]
   brand_names: ["Alimta"]
 atc_code: L01BA04
-rxnorm_id: null
+rxnorm_id: ""
 drug_class: "Multi-targeted antifolate antimetabolite"
 mechanism: >
-  Inhibits multiple folate-dependent enzymes (TS, DHFR, GARFT) — disrupts
-  DNA/RNA synthesis. Folic acid + B12 supplementation mandatory to mitigate
-  hematologic and mucosal toxicity. Active in non-squamous NSCLC and
-  mesothelioma.
+  Pyrrolopyrimidine antifolate that, after intracellular polyglutamation
+  by folylpolyglutamate synthetase, simultaneously inhibits multiple
+  folate-dependent enzymes critical for thymidine and purine
+  biosynthesis: thymidylate synthase (TS — primary target),
+  dihydrofolate reductase (DHFR), and glycinamide ribonucleotide
+  formyltransferase (GARFT). The combined inhibition disrupts both
+  thymidylate and purine de-novo synthesis, halting DNA / RNA
+  production and producing S-phase-specific cytotoxicity. Activity is
+  histology-restricted: highly active in non-squamous NSCLC and
+  malignant pleural mesothelioma (MPM); minimal-to-no activity in
+  squamous NSCLC due to higher baseline TS expression in squamous
+  histology. Mandatory folic acid (vitamin B9) and vitamin B12
+  supplementation reduce hematologic and mucosal toxicity by ~50%
+  without compromising efficacy (Niyikiza 2002, Vogelzang
+  EMPHACIS). Backbone of KEYNOTE-189 (carbo + pem + pembrolizumab
+  vs carbo + pem in non-squamous NSCLC 1L) and PARAMOUNT (pem
+  maintenance), and the historical EMPHACIS regimen (cisplatin + pem)
+  in MPM.
 
 regulatory_status:
-  fda: {approved: true}
-  ema: {approved: true}
+  fda:
+    approved: true
+    year_first_approval: 2004
+    indications_brief:
+      - "Non-squamous NSCLC 1L + platinum (induction)"
+      - "Non-squamous NSCLC switch / continuation maintenance after platinum doublet"
+      - "Non-squamous NSCLC 2L+ monotherapy"
+      - "Malignant pleural mesothelioma 1L (combo cisplatin)"
+  ema:
+    approved: true
+    year_first_approval: 2004
+    indications_brief:
+      - "Non-squamous NSCLC induction / maintenance / 2L"
+      - "Malignant pleural mesothelioma combo cisplatin"
   ukraine_registration:
     registered: true
+    registration_number: null
     reimbursed_nszu: true
-    last_verified: null
-    notes: "Generic; reimbursed for non-squamous NSCLC + mesothelioma."
+    reimbursement_indications:
+      - "Неплоскоклітинний недрібноклітинний рак легень (1L з платиною + підтримуюча; 2L+ моно)"
+      - "Злоякісна плевральна мезотеліома (з cisplatin)"
+    last_verified: "2026-04-27"
+    notes: "Generic; reimbursed for non-squamous NSCLC + mesothelioma per НСЗУ. Перевірено drlz.com.ua + nszu.gov.ua 2026-04-27."
 
 typical_dosing: >
-  500 mg/m² IV q3 weeks. With folic acid 400-1000 mcg PO daily (start
-  1 week pre-treatment) + Vit B12 1000 mcg IM q9 weeks + dexamethasone
-  4 mg PO BID days 0, 1, 2 (rash prophylaxis).
+  Standard: 500 mg/m² IV over 10 minutes every 21 days. Combinations:
+  + cisplatin 75 mg/m² IV Day 1 (mesothelioma EMPHACIS, NSCLC AVAPERL);
+  + carboplatin AUC 5-6 IV Day 1 (NSCLC alternative); + pembrolizumab
+  200 mg IV q3w (KEYNOTE-189). Maintenance after induction: 500 mg/m²
+  q3w continuing until progression. CRITICAL pre-medication regimen
+  to mitigate hematologic and mucosal toxicity: folic acid 350-1000
+  mcg PO daily starting ≥7 days before first pemetrexed dose,
+  continuing throughout treatment and 3 weeks post; vitamin B12 1000
+  mcg IM ≥7 days before first dose then every 9 weeks throughout
+  treatment; dexamethasone 4 mg PO BID Days 0, 1, 2 of each cycle
+  (rash prophylaxis). Renal adjustment: avoid in CrCl <45 mL/min
+  (high toxicity risk; consider gemcitabine or other alternative).
+  Hold for NSAID/aspirin renal-clearance interaction in renal
+  insufficiency.
 
-key_toxicities:
-  - Myelosuppression (neutropenia, thrombocytopenia)
-  - Mucositis / stomatitis
-  - Rash (mitigated by dexamethasone prophylaxis)
-  - Fatigue
-  - Nephrotoxicity (renally cleared — avoid in CrCl <45)
-  - Hepatic enzyme elevations
+formulations:
+  - "Powder for IV solution: 100 mg, 500 mg, 1000 mg single-dose vials"
 
-sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
-last_reviewed: null
+absolute_contraindications:
+  - "Severe hypersensitivity to pemetrexed or any excipient"
+  - "CrCl <45 mL/min (relative — substantial toxicity risk; case-by-case)"
+  - "Pregnancy (embryo-fetal toxicity)"
+  - "Severe hepatic impairment (limited PK data)"
+  - "Active uncontrolled infection"
+
+black_box_warnings: []
+
+common_adverse_events:
+  - "Myelosuppression: neutropenia ~28%, anemia ~33%, thrombocytopenia ~17% (substantially reduced by folate / B12 supplementation)"
+  - "Nausea ~50% (premedicate with 5-HT3 + dexamethasone)"
+  - "Vomiting ~30%"
+  - "Mucositis / stomatitis ~20%"
+  - "Rash ~25% (mitigated by dexamethasone prophylaxis)"
+  - "Fatigue ~40%"
+  - "Decreased appetite ~30%"
+  - "Diarrhea ~15%"
+  - "Constipation ~15%"
+  - "ALT/AST elevation ~10%"
+  - "Increased creatinine ~10%"
+  - "Alopecia ~10% (less than other cytotoxics)"
+
+serious_adverse_events:
+  - "Severe myelosuppression / febrile neutropenia (G3+ neutropenia ~5-15%; without folate supplementation up to 30%)"
+  - "Severe mucositis (G3+ ~3-5%)"
+  - "Acute interstitial nephritis / acute kidney injury (~1-3%; risk amplified by NSAIDs in renal impairment)"
+  - "Pneumonitis / interstitial lung disease (~1-2%; can be fatal — workup any new respiratory symptom)"
+  - "Severe rash / SJS-like reactions (rare; mostly prevented by dex prophylaxis)"
+  - "Severe hepatic injury (G3+ ALT/AST ~3%)"
+  - "Tumor lysis syndrome (rare; high-burden lymphoma off-label)"
+  - "Sepsis from prolonged neutropenia"
+
+major_interactions:
+  - "NSAIDs + aspirin + indomethacin — reduce renal clearance of pemetrexed in renal insufficiency; avoid for 2 days before to 2 days after pemetrexed in CrCl 45-79; longer hold in worse renal function"
+  - "Probenecid / penicillin — competitive renal tubular transport; avoid"
+  - "Nephrotoxic agents (cisplatin — intentional combo; aminoglycosides, vancomycin, contrast) — additive AKI risk"
+  - "Live vaccines — avoid during therapy and ≥6 mo after"
+  - "Concurrent pembrolizumab (KEYNOTE-189) — intentional combination; additive cytopenia"
+  - "Folate antagonists (high-dose methotrexate within recent days) — additive antifolate toxicity"
+
+pharmacology:
+  half_life_hours: 3.5
+  clearance: "renal (predominantly; ~90% excreted unchanged in urine via OAT3)"
+  protein_binding_pct: 81
+  metabolism: "minimal hepatic; predominant renal tubular secretion"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
 notes: >
-  Standard backbone in non-squamous NSCLC (KEYNOTE-189 + maintenance).
-  Not active in squamous histology — important histology-specific
-  selection. Mesothelioma (cisplatin + pemetrexed) primary 1L.
-
-  STUB: minimum valid entry. Full clinical content (mesothelioma dosing
-  table, induction-vs-maintenance distinctions) to be filled by
-  cross-disease drug-curation pass.
+  Standard backbone for non-squamous NSCLC (KEYNOTE-189: carbo +
+  pem + pembro vs carbo + pem placebo, OS HR 0.49 in PD-L1-all-
+  comers — practice-defining 1L for non-squamous EGFR/ALK-WT NSCLC)
+  and for malignant pleural mesothelioma (EMPHACIS cis + pem mOS
+  12.1 vs 9.3 mo — historical 1L until CheckMate-743 added nivo+ipi
+  as combo option). NOT active in squamous NSCLC — histology-
+  specific selection is critical. Mandatory pre-medication: folic
+  acid 350-1000 mcg PO daily (start ≥7 days pre-cycle 1), B12 1000
+  mcg IM (start ≥7 days pre-cycle 1, then q9 wk), dexamethasone 4
+  mg PO BID Days 0, 1, 2 of each cycle for rash prophylaxis. Renal
+  function is the dominant gating factor — avoid in CrCl <45.
+  Counsel patients to hold OTC NSAIDs / aspirin around each cycle in
+  renal insufficiency. Monitor CBC weekly through nadir, CMP each
+  cycle, CT chest at any new respiratory symptom (ILD suspicion).
+  UA: generic available; НСЗУ-reimbursed for indicated uses.

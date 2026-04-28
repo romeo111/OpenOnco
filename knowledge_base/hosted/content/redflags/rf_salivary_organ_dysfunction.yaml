@@ -1,0 +1,72 @@
+id: RF-SALIVARY-ORGAN-DYSFUNCTION
+definition: >
+  Baseline organ dysfunction precluding standard cisplatin-based
+  chemotherapy or affecting targeted therapy in advanced salivary gland
+  carcinoma: CrCl <60 mL/min (cisplatin contraindicated, switch to
+  carboplatin), LVEF <50% (trastuzumab contraindicated for HER2+ SDC,
+  doxorubicin in adenoid-cystic chemo), bilirubin >3× ULN (taxane / TKI
+  hepatic clearance), baseline ototoxicity (cisplatin contraindicated),
+  or QTc >480 ms (entrectinib / tipifarnib QT signal).
+definition_ua: >
+  Базова дисфункція органів, що перешкоджає стандартній платино-вмісній
+  хіміотерапії або впливає на таргетну терапію при поширеній карциномі
+  слинних залоз: CrCl <60 (cisplatin протипоказаний — карбоплатин),
+  LVEF <50% (трастузумаб протипоказаний при HER2+ SDC, doxorubicin при
+  adenoid-cystic), білірубін >3× ULN (печінковий кліренс таксанів /
+  TKI), базова ототоксичність (cisplatin протипоказаний), QTc >480 мс
+  (entrectinib / tipifarnib).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 60
+      comparator: "<"
+    - finding: "lvef_percent"
+      threshold: 50
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 3
+      comparator: ">="
+    - finding: "baseline_ototoxicity"
+      value: true
+    - finding: "qtc_ms"
+      threshold: 480
+      comparator: ">"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 90
+category: organ-dysfunction
+
+relevant_diseases:
+  - DIS-SALIVARY
+shifts_algorithm: []
+
+sources:
+  - SRC-ESMO-SALIVARY
+  - SRC-NCCN-HEAD-AND-NECK
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Cisplatin-based chemotherapy in salivary gland cancer has only modest
+  activity (ORR ~30% in mucoepidermoid / adenoid cystic) — the organ-
+  dysfunction flag pushes harder toward histology-specific targeted
+  therapy when biomarker-positive. HER2+ SDC: trastuzumab +
+  chemotherapy requires baseline LVEF ≥50% (analogous to breast cancer
+  protocols). Larotrectinib / entrectinib for NTRK+ MASC well-tolerated;
+  entrectinib has documented QT prolongation. Tipifarnib (HRAS+ SDC)
+  carries cytopenias + QT prolongation. AR-targeted therapy
+  (bicalutamide + LHRH) generally well-tolerated even with organ
+  dysfunction — a viable de-escalation path for AR+ SDC.
+notes_ua: >
+  Cisplatin-вмісна хіміотерапія при слинних — помірна активність (ORR
+  ~30%) — organ-dysfunction flag сильніше штовхає до histology-specific
+  таргетної. HER2+ SDC: трастузумаб + хіміотерапія потребує LVEF ≥50%.
+  Larotrectinib / entrectinib для NTRK+ MASC добре переносяться; QT —
+  entrectinib. AR-таргетна (бікалутамід + LHRH) — добре переноситься.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

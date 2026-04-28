@@ -1,0 +1,50 @@
+id: RF-MASTOCYTOSIS-FRAILTY-AGE
+definition: "Advanced systemic mastocytosis (advSM) patient with frailty: age ≥75 with ≥2 comorbidities + albumin <3.5 g/dL, OR ECOG ≥3, OR CIRS-G ≥7 — limits tolerability of midostaurin / avapritinib + supportive complexity"
+definition_ua: "Прогресуючий системний мастоцитоз (advSM): пацієнт із крихкістю — вік ≥75 з ≥2 коморбідностями + альбумін <3.5 г/дл, АБО ECOG ≥3, АБО CIRS-G ≥7"
+
+trigger:
+  type: composite
+  all_of:
+    - any_of:
+        - finding: "age_years"
+          threshold: 75
+          comparator: ">="
+        - finding: "ecog"
+          threshold: 3
+          comparator: ">="
+    - any_of:
+        - finding: "comorbidity_count"
+          threshold: 2
+          comparator: ">="
+        - finding: "albumin_g_dl"
+          threshold: 3.5
+          comparator: "<"
+
+clinical_direction: de-escalate
+
+severity: major
+priority: 100
+category: frailty-age
+relevant_diseases:
+  - DIS-MASTOCYTOSIS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-SM-2025
+  - SRC-ESMO-MPN-2015
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  AdvSM (ASM, SM-AHN, mast cell leukemia) patients are typically older
+  (median ~65). Per NCCN-SM v.X.2025: midostaurin or avapritinib
+  preferred for advSM but require careful monitoring (QT, hepatic);
+  frailty steers toward supportive management + symptomatic mediator-
+  blockade (H1/H2 antihistamines, cromolyn, omalizumab) over
+  cytoreduction. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  AdvSM (ASM, SM-AHN, mast cell лейкоз) patients are типово older (медіана ~65). Per NCCN-SM v.X.2025: мідостаурин or avapritinib переважний for advSM but require careful моніторинг (QT, hepatic); дряхлість steers toward supportive management + symptomatic mediator- blockade (H1/H2 antihistamines, cromolyn, omalizumab) over cytoreduction. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

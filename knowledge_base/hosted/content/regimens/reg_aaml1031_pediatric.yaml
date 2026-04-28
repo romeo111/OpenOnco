@@ -1,0 +1,101 @@
+id: REG-AAML1031-PEDIATRIC
+name: "AAML1031-style induction (Cytarabine + Daunorubicin + Etoposide, pediatric AML 1L)"
+name_ua: "AAML1031-style індукція (Цитарабін + Даунорубіцин + Етопозид, педіатричний AML 1L)"
+alternate_names:
+  - "ADE 10+3+5"
+  - "AAML1031 induction I"
+  - "Pediatric ADE induction"
+
+components:
+  - drug_id: DRUG-CYTARABINE
+    dose: "100 mg/m² IV q12h × 10 days (days 1-10)"
+    schedule: "Days 1-10 of induction (continuous q12h dosing)"
+    route: IV
+  - drug_id: DRUG-DAUNORUBICIN
+    dose: "50 mg/m² IV"
+    schedule: "Days 1, 3, 5 of induction"
+    route: IV
+  - drug_id: DRUG-ETOPOSIDE
+    dose: "100 mg/m² IV"
+    schedule: "Days 1-5 of induction"
+    route: IV
+
+cycle_length_days: 28
+total_cycles: "1-2 induction cycles per response (BMA day 21-28); risk-stratified consolidation × 3-4 cycles (high-dose cytarabine ± mitoxantrone-cytarabine); allogeneic HSCT for high-risk per AAML1031 risk-group definitions"
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetic — high emetogenicity: 5HT3 (palonosetron OR ondansetron 0.15 mg/kg IV q8h) + dexamethasone (age-adjusted) + NK1 (aprepitant if age ≥12)"
+  - "TLS prophylaxis: allopurinol OR rasburicase (mandatory if WBC >50K or bulky disease); aggressive IV hydration ≥3L/m²/day"
+  - "PJP prophylaxis: TMP-SMX 5 mg/kg/day in 2 doses, 3 consecutive days/week (start before induction nadir)"
+  - "Antifungal prophylaxis: posaconazole OR voriconazole (voriconazole avoid if vincristine concurrent; posaconazole pediatric-formulation preferred)"
+  - "HSV prophylaxis: acyclovir 250 mg/m² IV q8h OR 400 mg PO BID"
+  - "Cytarabine eye drops: dexamethasone 0.1% ophthalmic 1-2 drops q4h while awake during HD-cytarabine consolidation (not standard induction dose)"
+  - "Ondansetron eye drops not applicable; standard CINV"
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-GCSF-NEUTROPENIA
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Down syndrome AML (DS-AML)"
+    modification: "Use ML-DS-specific protocol (AAML1531-style: reduced cytarabine intensity, no anthracycline cap reduction); DS-AML is biologically distinct (GATA1-mutant), requires lower-intensity therapy with excellent outcomes"
+    rationale: "DS-AML has higher cure rate with reduced-intensity therapy; standard AAML1031 dosing causes excess toxicity"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Cumulative anthracycline approaching 300 mg/m² doxorubicin-equivalent"
+    modification: "Plan consolidation without further anthracycline; LVEF assessment; consider dexrazoxane if anthracycline unavoidable"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Renal/hepatic dysfunction"
+    modification: "Dose-modify per institutional pediatric oncology protocol; cytarabine renal-adjusted at high doses (consolidation), not standard induction; daunorubicin reduced if bilirubin elevated"
+  - condition: "FLT3-ITD positive (high-allelic-ratio)"
+    modification: "Add midostaurin 30 mg/m² PO BID days 8-21 (AAML18P1-style FLT3 add-on); plan for alloHCT in CR1"
+    rationale: "FLT3-ITD high-AR confers high-risk; FLT3 inhibitor + alloHCT improves outcome"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "CD33+ (most pediatric AML) and ELN-favorable / intermediate cytogenetics"
+    modification: "Consider gemtuzumab ozogamicin 3 mg/m² (max 4.5 mg) IV days 1, 4, 7 of induction (AAML0531/AAML1031-style GO add-on; ALFA-0701-equivalent dose-fractionation); EFS benefit"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Severe + prolonged febrile neutropenia"
+    modification: "Empirical broad-spectrum antibiotics (anti-Pseudomonal beta-lactam ± vancomycin); G-CSF support; antifungal coverage if persistent fever ≥4-7 days on antibiotics"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Цитарабін, даунорубіцин, етопозид — реімбурсуються НСЗУ для педіатричного AML; standard 1L. Гемтузумаб озогаміцин (опціональне додавання для CD33+/cytogenetic-фаворабел) НЕ зареєстрований в Україні (доступ EAP Pfizer / cross-border)."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  AAML1031 (Aplenc 2020/Pollard 2021, JCO; Children's Oncology Group):
+  pediatric AML 1L backbone for non-DS, non-APL AML age <30. Induction
+  I = ADE 10+3+5 (cytarabine + daunorubicin + etoposide). Risk
+  stratification at end-induction by cytogenetics, MRD, FLT3-ITD AR,
+  WT1-mutant, CEBPA, NPM1. Low-risk: 5 cycles chemotherapy. High-
+  risk: alloHCT in CR1 (matched related/unrelated). Bortezomib add-on
+  did NOT improve outcome (AAML1031 randomization). Ongoing successor:
+  AAML1831 (with venetoclax + GO + selinexor depending on biology).
+  Pediatric AML in Ukraine — typically managed at Окхматдит /
+  regional pediatric oncology centres per NMRC consensus protocol
+  (NMRC Pediatric AML 2022, locally adapted from AAML1031 +
+  Berlin-Frankfurt-Münster AML-BFM 2012/2019). PJP, HSV, antifungal,
+  TLS prophylaxis are non-negotiable. Long-term follow-up: cardiology
+  (anthracycline), endocrinology (GH, gonadal), 2nd malignancy
+  surveillance.
+notes_ua: >
+  AAML1031 (Aplenc 2020/Pollard 2021, JCO; Дитяча онкогрупа COG):
+  педіатричний AML 1L backbone для не-DS, не-APL AML вік <30. Індукція
+  I = ADE 10+3+5 (цитарабін + даунорубіцин + етопозид). Стратифікація
+  ризику в кінці індукції за цитогенетикою, МРХ, FLT3-ITD AR.
+  Низький ризик: 5 циклів хіміо. Високий ризик: alloHCT в CR1
+  (matched related/unrelated). Bortezomib НЕ покращив результат
+  (AAML1031). Педіатричний AML в Україні — типово в Охматдиті /
+  регіональних центрах за NMRC консенсус-протоколом. PJP, HSV,
+  antifungal, TLS-профілактика — обов'язкові. Довгостроковий FU:
+  кардіологія (антрациклін), ендокринологія, нагляд за 2-ма пухлинами.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

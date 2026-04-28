@@ -1,0 +1,81 @@
+id: RF-CLL-TP53-DELETION-ACTIONABLE
+definition: >
+  CLL with del(17p) by FISH AND/OR TP53 mutation by NGS — ~5-10% at
+  diagnosis, rising to ~30-40% in R/R disease. Defines a chemoimmuno-
+  refractory subset (FCR/BR contraindicated; chemo OS <2 years). 1L
+  selection narrows to two targeted-only routes: continuous BTKi
+  (acalabrutinib, zanubrutinib, ibrutinib) OR fixed-duration
+  venetoclax + obinutuzumab (CLL14, Fischer NEJM 2019; del(17p)/TP53-mut
+  subgroup mPFS >5 years). NCCN/ESMO 2024 prefer fixed-duration
+  ven + obinutuzumab over continuous BTKi for patient-preference and
+  cardiac/bleeding-risk profiles, while continuous BTKi preferred for
+  high disease bulk or patients unable to tolerate TLS-prophylaxis ramp.
+definition_ua: >
+  ХЛЛ з del(17p) за FISH ТА/АБО TP53 мутацією за NGS — ~5-10% на діагнозі,
+  до ~30-40% при р/р хворобі. Визначає chemoimmuno-рефрактерну підгрупу
+  (FCR/BR протипоказані; хіміо ЗВ <2 роки). 1L звужується до двох
+  таргетних маршрутів: безперервний BTKi (акалабрутиніб, занубрутиніб,
+  ібрутиніб) АБО fixed-duration венетоклакс + обінутузумаб
+  (CLL14, Fischer NEJM 2019; del(17p)/TP53-mut підгрупа мПФВ >5 років).
+  NCCN/ESMO 2024 надають перевагу fixed-duration ven + obinutuzumab
+  над безперервним BTKi для пацієнт-преференції та кардіо/кровотечного
+  профілю; безперервний BTKi — при високому об'ємі хвороби або
+  неможливості переносити TLS-профілактику ramp.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "del_17p"
+      value: true
+    - finding: "tp53_mutation"
+      value: true
+    - finding: "tp53_status"
+      value: "mutated"
+    - finding: "BIO-TP53-MUTATION"
+      value: "positive"
+    - finding: "tp53_disruption"
+      value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CLL
+shifts_algorithm:
+  - ALGO-CLL-1L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CLL-2024
+  - SRC-CLL14-FISCHER-2019
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Narrower than RF-CLL-HIGH-RISK (which fires on TP53 OR IGHV-unmutated OR
+  complex karyotype) — this flag fires only on TP53-axis disruption, the
+  strongest single negative-prognostic factor and the one with most direct
+  treatment routing. Both fire in parallel for TP53-disrupted cases;
+  resolution: this flag has higher priority (50 vs default 100) and routes
+  to ven+obinutuzumab/BTKi specifically. del(17p) FISH cutoff: most centers
+  use ≥7-10% nuclei positive; TP53 mutation by NGS at VAF ≥5-10% (subclonal
+  TP53 also predicts poor outcome and warrants targeted therapy). Repeat
+  TP53 testing at every relapse (clonal evolution adds del/mut in ~30%
+  late-line). RF-CLL-HIGH-RISK still fires for IGHV-unmutated and complex-
+  karyotype routing.
+notes_ua: >
+  Вужчий за RF-CLL-HIGH-RISK (який спрацьовує на TP53 АБО IGHV-unmutated
+  АБО complex-karyotype) — цей прапор спрацьовує лише на TP53-вісь, що
+  є найсильнішим окремим негативним прогностичним фактором з прямим
+  routing на лікування. Обидва спрацьовують паралельно для TP53-disrupted;
+  цей має пріоритет 50 (vs default 100) і маршрутизує на
+  ven+obinutuzumab/BTKi. del(17p) FISH cutoff: більшість центрів — ≥7-10%
+  позитивних ядер; TP53 мутація за NGS при VAF ≥5-10% (субклональна
+  TP53 теж погіршує прогноз і потребує таргетної). Повторне TP53
+  тестування при кожному рецидиві (клональна еволюція додає del/mut у
+  ~30% пізніх ліній). RF-CLL-HIGH-RISK залишається для IGHV-unmutated
+  і complex-karyotype routing.

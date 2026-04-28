@@ -1,0 +1,138 @@
+id: ALGO-MELANOMA-METASTATIC-2L
+applicable_to_disease: DIS-MELANOMA
+applicable_to_line_of_therapy: 2
+purpose: >
+  2L+ routing for metastatic melanoma by prior-therapy axis (IO vs
+  BRAFi+MEKi at 1L) crossed with BRAF V600 status. KIT-actionable
+  mucosal/acral subset gets a separate first branch (oral, low-tox,
+  accessible). Lifileucel TIL is the 3L default when both IO and
+  BRAFi exhausted (or BRAF-WT post-IO with no other actionable
+  option).
+
+output_indications:
+  - IND-MELANOMA-2L-KIT-IMATINIB
+  - IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+  - IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+  - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+  - IND-MELANOMA-3L-LIFILEUCEL
+
+default_indication: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+alternative_indication: IND-MELANOMA-3L-LIFILEUCEL
+
+decision_tree:
+  # Step 1 — KIT-actionable mucosal/acral subset (small but high-value).
+  # Imatinib is oral, low-tox, accessible (UA generic). Carvajal 2011
+  # established the genotype-response correlation: exon 11 / exon 13
+  # point mutations only — KIT amplification alone NOT predictive.
+  - step: 1
+    # KIT-actionable subset → imatinib. RF triggers only on exon 11 / 13
+    # activating mutations (not amplification alone). Subtype context
+    # (mucosal/acral/chronic-sun-damaged) retained as MDT note since no
+    # melanoma-subtype RF exists yet.
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-KIT-MUT-ACTIONABLE
+    if_true:
+      result: IND-MELANOMA-2L-KIT-IMATINIB
+    if_false:
+      next_step: 2
+    notes: "MDT-only — KIT-imatinib clinical context (mucosal/acral/CSD subtype) is documented in indication eligibility; the RF gates on activating exon 11/13 mutation."
+
+  # Step 2 — Branch on prior-therapy axis. Was 1L anti-PD-1 (with or
+  # without ipi)? RF-MELANOMA-IO-RESISTANT fires when post-IO progression
+  # is documented.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-IO-RESISTANT
+    if_true:
+      next_step: 3
+    if_false:
+      next_step: 4
+
+  # Step 3 — Post-IO branch. If BRAF V600+, BRAFi+MEKi doublet is
+  # the standard 2L per NCCN/ESMO + DREAMseq sequencing data. If
+  # BRAF-WT, route to lifileucel default (no targeted option).
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+    if_true:
+      result: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
+    if_false:
+      result: IND-MELANOMA-3L-LIFILEUCEL
+
+  # Step 4 — Post-BRAFi branch (1L was BRAFi+MEKi for BRAF V600+
+  # patient with visceral crisis or active brain mets). 2L is
+  # IO-based. Detect BRAF V600+ first (biomarker), then verify ipi-fit
+  # status downstream. Split from old all_of.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+    if_true:
+      next_step: 41
+    if_false:
+      next_step: 5
+
+  - step: 41
+    # Sub-step: ipi+nivo fitness check (ECOG 0-1, no autoimmunity).
+    # Free-text retained — no melanoma-scoped RF for "fit for high-grade
+    # irAE risk" combination.
+    evaluate:
+      any_of:
+        - condition: "Patient fit for ipi+nivo Grade 3-4 irAE risk (ECOG 0-1, no significant baseline autoimmunity)"
+    if_true:
+      result: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+    if_false:
+      next_step: 5
+    notes: "MDT-only — ipi+nivo fitness has no dedicated RF (composite ECOG + autoimmunity); falls through to rela+nivo / lifileucel for unfit patients."
+
+  # Step 5 — Patient unfit for ipi+nivo OR strongly prefers
+  # tolerability profile → rela+nivo (Opdualag) as IO-naive 2L
+  # alternative. If neither applicable, fall through to lifileucel
+  # default (e.g., BRAF-WT with no IO history at all — unusual but
+  # possible if 1L was clinical trial).
+  - step: 5
+    evaluate:
+      any_of:
+        - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
+        - red_flag: RF-MELANOMA-FRAILTY-AGE
+    if_true:
+      result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+    if_false:
+      result: IND-MELANOMA-3L-LIFILEUCEL
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-COLUMBUS-DUMMETT-2018
+  - SRC-CHECKMATE-067-LARKIN-2019
+  - SRC-RELATIVITY-047-TAWBI-2022
+  - SRC-C14401-CHESNEY-2024
+  - SRC-CARVAJAL-KIT-MELANOMA-2013
+
+last_reviewed: "2026-04-27"
+
+notes: >
+  Sequencing logic: 1L choice (IO vs BRAFi+MEKi) drives 2L. KIT
+  mucosal/acral subset prioritized first (small but high-value).
+  Lifileucel is the 3L default when both IO and BRAFi are exhausted
+  OR when BRAF-WT post-IO has no other actionable option. DREAMseq
+  supports IO-first → BRAFi+MEKi-second sequence over the reverse for
+  BRAF V600+ patients (visceral crisis is the main exception driving
+  1L BRAFi+MEKi). Off-label flags: rela+nivo at 2L (RELATIVITY was
+  1L); imatinib in melanoma (licensed in UA for CML/GIST/Ph+ALL only).
+  All cellular/imported components have substantial UA access barriers
+  — funding pathway must be verified before plan finalization.
+
+  Wiring gaps for next batch:
+  (1) RELATIVITY-047 used at 1L would shift the 2L IO-naive branch
+  to a different alternative — currently algorithm does not check
+  whether rela+nivo was already used at 1L.
+  (2) Pembrolizumab-only 2L (anti-PD-1 mono salvage) is not modeled —
+  reasonable de-escalation for frail patients post-BRAFi.
+  (3) Talimogene laherparepvec (T-VEC) intralesional for in-transit
+  disease not modeled.
+  (4) Brain-met-specific RFs (RF-MELANOMA-CNS-ACTIVE) should fire
+  here to bias toward ipi+nivo at 1L+2L; not yet wired.

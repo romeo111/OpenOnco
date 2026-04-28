@@ -5,33 +5,27 @@ applicable_to:
   line_of_therapy: 1
   stage_requirements: []
   biomarker_requirements_required:
-  - biomarker_id: BIO-CD20-IHC
-    required: true
-    value_constraint: positive (CD20+)
-  - biomarker_id: BIO-DLBCL-IPI
-    required: true
-    value_constraint: IPI 0-5; R-CHOP preferred for IPI 0-1; for IPI ≥2 see Pola-R-CHP
-  - biomarker_id: BIO-HBV-STATUS
-    required: true
-    value_constraint: any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis
-      mandatory before first rituximab dose; engine consumes the input to fire RF-UNIVERSAL-HBV-REACTIVATION-RISK)
-  - biomarker_id: BIO-HCV-STATUS
-    required: true
-    value_constraint: any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate
-      DAA with hepatology; does not change R-CHOP regimen choice)
-  - biomarker_id: BIO-HIV-STATUS
-    required: true
-    value_constraint: any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis
-      if CD4 < 200, CNS prophylaxis regardless of CNS-IPI; integrase-inhibitor backbone preferred to avoid
-      ritonavir-vincristine interaction)
-  - biomarker_id: BIO-DLBCL-COO-HANS
-    required: false
-    value_constraint: GCB or non-GCB by Hans algorithm — non-GCB has worse R-CHOP outcomes; some centres
-      consider R-CHOEP for non-GCB
-  - biomarker_id: BIO-BCL2-EXPRESSION-IHC
-    required: false
-    value_constraint: BCL2-IHC ≥50% combined with MYC-IHC ≥40% defines double-expressor (DEL) phenotype
-      — poorer prognosis but not an excluder; HGBL-DH (FISH double-hit) must be ruled out
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: positive (CD20+)
+    - biomarker_id: BIO-DLBCL-IPI
+      required: true
+      value_constraint: IPI 0-5; R-CHOP preferred for IPI 0-1; for IPI ≥2 see Pola-R-CHP
+    - biomarker_id: BIO-HBV-STATUS
+      required: true
+      value_constraint: any value valid (categorical etiology gate; HBsAg+ or anti-HBc+ → entecavir prophylaxis mandatory before first rituximab dose; engine consumes the input to fire RF-UNIVERSAL-HBV-REACTIVATION-RISK)
+    - biomarker_id: BIO-HCV-STATUS
+      required: true
+      value_constraint: any value valid (categorical etiology gate; anti-HCV+ → reflex BIO-HCV-RNA; coordinate DAA with hepatology; does not change R-CHOP regimen choice)
+    - biomarker_id: BIO-HIV-STATUS
+      required: true
+      value_constraint: any value valid (categorical etiology gate; HIV+ → cART throughout, PJP/MAC prophylaxis if CD4 < 200, CNS prophylaxis regardless of CNS-IPI; integrase-inhibitor backbone preferred to avoid ritonavir-vincristine interaction)
+    - biomarker_id: BIO-DLBCL-COO-HANS
+      required: false
+      value_constraint: GCB or non-GCB by Hans algorithm — non-GCB has worse R-CHOP outcomes; some centres consider R-CHOEP for non-GCB
+    - biomarker_id: BIO-BCL2-EXPRESSION-IHC
+      required: false
+      value_constraint: BCL2-IHC ≥50% combined with MYC-IHC ≥40% defines double-expressor (DEL) phenotype — poorer prognosis but not an excluder; HGBL-DH (FISH double-hit) must be ruled out
   biomarker_requirements_excluded: []
   demographic_constraints:
     ecog_max: 3
@@ -47,77 +41,68 @@ expected_outcomes:
   progression_free_survival: Median PFS ~5 years for low-IPI; ~2 years for high-IPI
   overall_survival_5y: ~60% overall (low-IPI ~80%, high-IPI ~55%)
 hard_contraindications:
-- CI-HBV-NO-PROPHYLAXIS
-- CI-LVEF-LOW-FOR-ANTHRACYCLINE
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
 red_flags_triggering_alternative:
-- RF-DLBCL-HIGH-IPI
+  - RF-DLBCL-HIGH-IPI
 required_tests:
-- TEST-CBC
-- TEST-CMP
-- TEST-LFT
-- TEST-LDH
-- TEST-B2-MICROGLOBULIN
-- TEST-HBV-SEROLOGY
-- TEST-HCV-ANTIBODY
-- TEST-HIV-SEROLOGY
-- TEST-CD20-IHC
-- TEST-PET-CT
-- TEST-ECHO
-- TEST-LN-EXCISIONAL-BIOPSY
-- TEST-FLOW-CYTOMETRY
-- TEST-FISH-PANEL
-- TEST-PREGNANCY
-- TEST-BM-ASPIRATE
-- TEST-BM-TREPHINE
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-FISH-PANEL
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
 desired_tests: []
-rationale: 'Long-standing 1L standard for newly-diagnosed DLBCL NOS, used for the past 20+ years across
-  NCCN, ESMO, EHA. ~60% overall cure rate; outcomes highly dependent on IPI. Replaced PreCHOP regimens
-  after the rituximab era (RCT data from late 1990s/early 2000s). Default for low-IPI (0-1) patients;
-  for IPI ≥2, modern evidence (POLARIX 2022) favors Pola-R-CHP if accessible (see IND-DLBCL-1L-POLA-R-CHP).
+rationale: 'Long-standing 1L standard for newly-diagnosed DLBCL NOS, used for the past 20+ years across NCCN, ESMO, EHA. ~60% overall cure rate; outcomes highly dependent on IPI. Replaced PreCHOP regimens after the rituximab era (RCT data from late 1990s/early 2000s). Default for low-IPI (0-1) patients; for IPI ≥2, modern evidence (POLARIX 2022) favors Pola-R-CHP if accessible (see IND-DLBCL-1L-POLA-R-CHP).
 
   '
+rationale_ua: >
+  Long-standing 1L стандарт for newly-diagnosed DLBCL NOS, used for the past 20+ years across NCCN, ESMO, EHA. ~60% overall cure rate; outcomes highly dependent on IPI. Replaced PreCHOP схеми after the ритуксимаб era (РКД дані from late 1990s/early 2000s). Default for low-IPI (0-1) patients; for IPI ≥2, modern докази (POLARIX 2022) favors Pola-R-CHP if accessible (see IND-DLBCL-1L-POLA-R-CHP).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
 sources:
-- source_id: SRC-NCCN-BCELL-2025
-  position: supports
-  relevant_quote_paraphrase: R-CHOP is a Category 1 preferred regimen for newly-diagnosed DLBCL across
-    all IPI groups; Pola-R-CHP is preferred Category 1 for IPI ≥2 where accessible
-- source_id: SRC-ESMO-DLBCL-2024
-  position: supports
-  relevant_quote_paraphrase: ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred
-    for IPI ≥3 per POLARIX
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: R-CHOP is a Category 1 preferred regimen for newly-diagnosed DLBCL across all IPI groups; Pola-R-CHP is preferred Category 1 for IPI ≥2 where accessible
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: ESMO 2024 codifies R-CHOP × 6 as 1L standard for DLBCL NOS; Pola-R-CHP preferred for IPI ≥3 per POLARIX
 known_controversies:
-- topic: R-CHOP vs Pola-R-CHP for IPI ≥2 1L DLBCL
-  positions:
-  - position: Pola-R-CHP preferred for IPI ≥2 where accessible (POLARIX evidence)
-    sources:
-    - SRC-NCCN-BCELL-2025
-    evidence_note: PFS benefit ~6.5% absolute at 2 years
-  - position: R-CHOP remains acceptable when polatuzumab not accessible
-    sources:
-    - SRC-NCCN-BCELL-2025
-  our_default: R-CHOP for IPI 0-1 OR when polatuzumab not accessible (Ukraine reimbursement gap); Pola-R-CHP
-    for IPI ≥2 with confirmed funding pathway
-  rationale: 'Polatuzumab not НСЗУ-reimbursed in Ukraine — access is bottleneck. Patient should be informed
-    of trade-off + offered POLARIX-style Pola-R-CHP if funding pathway exists.
+  - topic: R-CHOP vs Pola-R-CHP for IPI ≥2 1L DLBCL
+    positions:
+      - position: Pola-R-CHP preferred for IPI ≥2 where accessible (POLARIX evidence)
+        sources:
+          - SRC-NCCN-BCELL-2025
+        evidence_note: PFS benefit ~6.5% absolute at 2 years
+      - position: R-CHOP remains acceptable when polatuzumab not accessible
+        sources:
+          - SRC-NCCN-BCELL-2025
+    our_default: R-CHOP for IPI 0-1 OR when polatuzumab not accessible (Ukraine reimbursement gap); Pola-R-CHP for IPI ≥2 with confirmed funding pathway
+    rationale: 'Polatuzumab not НСЗУ-reimbursed in Ukraine — access is bottleneck. Patient should be informed of trade-off + offered POLARIX-style Pola-R-CHP if funding pathway exists.
 
-    '
+      '
 do_not_do:
-- Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик фатальної реактивації
-  значно підвищений на anti-CD20.
-- Не призначати без baseline LVEF ≥50% — anthracyclines кардіотоксичні; кардіоміопатія часто незворотна.
-- Не ігнорувати CNS-IPI — для пацієнтів з ≥4 CNS-IPI або високоризиковими anatomic sites (тестикули, груди,
-  нирки/наднирники, параназальні синуси) додавати CNS prophylaxis (HD-MTX intercalated).
-- Не пропускати fertility preservation discussion у репродуктивного віку — циклофосфамід викликає азооспермію
-  + amenorrhea.
-- Не вводити вінкристин інтратекально — ФАТАЛЬНО. WHO/FDA вимагають IV mini-bag packaging.
-- Не ескалувати дозу при febrile neutropenia без G-CSF — G-CSF prophylaxis для високоризикових пацієнтів
-  (вік >65, prior cytopenia, advanced disease).
+  - Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик фатальної реактивації значно підвищений на anti-CD20.
+  - Не призначати без baseline LVEF ≥50% — anthracyclines кардіотоксичні; кардіоміопатія часто незворотна.
+  - Не ігнорувати CNS-IPI — для пацієнтів з ≥4 CNS-IPI або високоризиковими anatomic sites (тестикули, груди, нирки/наднирники, параназальні синуси) додавати CNS prophylaxis (HD-MTX intercalated).
+  - Не пропускати fertility preservation discussion у репродуктивного віку — циклофосфамід викликає азооспермію + amenorrhea.
+  - Не вводити вінкристин інтратекально — ФАТАЛЬНО. WHO/FDA вимагають IV mini-bag packaging.
+  - Не ескалувати дозу при febrile neutropenia без G-CSF — G-CSF prophylaxis для високоризикових пацієнтів (вік >65, prior cytopenia, advanced disease).
 time_critical: false
 last_reviewed: '2026-04-27'
 reviewers: []
 reviewer_signoffs: 0
-notes: 'STUB — pending Clinical Co-Lead sign-off. Standard track for DLBCL 1L two-plan output (CHARTER
-  §2). For relapsed/refractory after R-CHOP, treatment moves to 2L pathway (salvage chemo → autoSCT for
-  fit; CAR-T for r/r refractory) — separate Indication entities.
+notes: 'STUB — pending Clinical Co-Lead sign-off. Standard track for DLBCL 1L two-plan output (CHARTER §2). For relapsed/refractory after R-CHOP, treatment moves to 2L pathway (salvage chemo → autoSCT for fit; CAR-T for r/r refractory) — separate Indication entities.
 
   '

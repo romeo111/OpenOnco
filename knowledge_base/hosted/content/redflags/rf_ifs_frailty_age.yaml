@@ -1,0 +1,59 @@
+id: RF-IFS-FRAILTY-AGE
+definition: >
+  Pediatric IFS with neonatal age (<3 months), low birth weight / failure
+  to thrive (weight <-2SD for age), or hemodynamic instability — VAC
+  cytotoxic protocols poorly tolerated in this very-young population;
+  larotrectinib / entrectinib are the substantially safer alternative.
+  This is the pediatric counterpart of adult frailty-age.
+definition_ua: >
+  Педіатрична IFS у періоді новонародженості (<3 міс.), з низькою вагою
+  при народженні / гіпотрофією (вага <-2SD для віку) або гемодинамічною
+  нестабільністю — VAC цитотоксичні протоколи погано переносяться у цій
+  дуже молодій групі; larotrectinib / entrectinib — суттєво безпечніша
+  альтернатива. Це педіатричний аналог frailty-age у дорослих.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "age_months"
+      threshold: 3
+      comparator: "<"
+    - finding: "weight_for_age_zscore"
+      threshold: -2
+      comparator: "<"
+    - finding: "hemodynamic_instability"
+      value: true
+
+clinical_direction: de-escalate
+severity: major
+priority: 100
+category: frailty-age
+
+relevant_diseases: [DIS-IFS]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PEDIATRIC-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  IFS often presents at birth or in the first 6 months of life; very
+  young infants tolerate cytotoxic chemotherapy poorly (myelosuppression,
+  hepatic immaturity, cardiac sensitivity to anthracyclines). VAC
+  protocol carries significant infectious mortality in <3 months. The
+  emergence of TRK-inhibitors (larotrectinib pediatric label down to
+  newborns; entrectinib down to 1 month) has transformed practice —
+  these agents have ORR >90% and are the preferred 1L for fusion-positive
+  IFS in this age group. This frailty flag pushes harder toward TRK-
+  inhibitor monotherapy when fusion-positive (>90% of cases).
+notes_ua: >
+  IFS часто маніфестує при народженні або у перші 6 міс.; дуже молоді
+  немовлята погано переносять цитотоксичну хіміотерапію. VAC — значуща
+  інфекційна смертність у <3 міс. Larotrectinib (FDA — від народження),
+  entrectinib (від 1 міс.) — переважний 1L при fusion+ IFS у цій
+  віковій групі (ORR >90%).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

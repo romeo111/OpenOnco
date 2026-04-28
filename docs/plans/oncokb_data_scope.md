@@ -1,3 +1,13 @@
+# ⚠️ SUPERSEDED — 2026-04-27
+
+This OncoKB-era decision-record is preserved for historical reference.
+OncoKB integration was rejected after Terms-of-Service audit found a fundamental
+conflict with CHARTER §2 (free public clinical decision-support). See
+`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md` and
+`docs/plans/civic_integration_v1.md`.
+
+---
+
 # OncoKB · Data scope (deferred decision, parked 2026-04-25)
 
 **Status:** parked default — confirmed during Phase 10 scaffold sprint.

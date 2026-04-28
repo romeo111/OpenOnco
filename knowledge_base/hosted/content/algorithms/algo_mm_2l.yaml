@@ -1,78 +1,64 @@
 id: ALGO-MM-2L
 applicable_to_disease: DIS-MM
 applicable_to_line_of_therapy: 2
-purpose: >
-  Select 2L+/maintenance MM Indication based on prior exposures and
-  ASCT status. Three tracks: (1) post-ASCT in CR/VGPR → IND-MM-POST-
-  ASCT-LENALIDOMIDE-MAINTENANCE (continuous IMiD maintenance, OS
-  benefit); (2) post-VRd progression, transplant-naive, anti-CD38-naive
-  → IND-MM-2L-DKD (proteasome class switch carfilzomib + dara, CANDOR);
-  (3) ≥3 lines exposed to IMiD + PI + anti-CD38 (triple-class refractory)
-  → IND-MM-4L-TECLISTAMAB (BCMA bispecific, MajesTEC-1).
+purpose: 'Select 2L+/maintenance MM Indication based on prior exposures and ASCT status. Three tracks: (1) post-ASCT in CR/VGPR → IND-MM-POST- ASCT-LENALIDOMIDE-MAINTENANCE (continuous IMiD maintenance, OS benefit); (2) post-VRd progression, transplant-naive, anti-CD38-naive → IND-MM-2L-DKD (proteasome class switch carfilzomib + dara, CANDOR); (3) ≥3 lines exposed to IMiD + PI + anti-CD38 (triple-class refractory) → IND-MM-4L-TECLISTAMAB (BCMA bispecific, MajesTEC-1).
 
+  '
 output_indications:
-  - IND-MM-2L-DKD
-  - IND-MM-4L-TECLISTAMAB
-  - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
-
+- IND-MM-2L-DKD
+- IND-MM-4L-TECLISTAMAB
+- IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-4L-TECLISTAMAB
-
 decision_tree:
-  # Step 1 — post-ASCT consolidation in CR/VGPR → maintenance.
-  # This is technically not 2L progression but post-induction maintenance —
-  # included here for now as 2L algo placeholder until ALGO-MM-MAINTENANCE
-  # exists.
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "Post-ASCT (autoSCT consolidation completed)"
-        - condition: "Disease status: CR, VGPR, or PR"
-        - condition: "No active progression"
-    if_true:
-      result: IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
-    if_false:
-      next_step: 2
-
-  # Step 2 — triple-class refractory (IMiD + PI + anti-CD38) → teclistamab.
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38"
-        - condition: "Triple-class refractory (refractory to last line of each class)"
-        - condition: "ECOG ≤2, adequate organ function for bispecific"
-    if_true:
-      result: IND-MM-4L-TECLISTAMAB
-    if_false:
-      next_step: 3
-
-  # Step 3 — default 2L: post-VRd progression, switch class to KCD/DKd.
-  - step: 3
-    evaluate:
-      any_of:
-        - condition: "Post-VRd / VTd progression, transplant-naive or post-ASCT relapse"
-        - condition: "anti-CD38-naive AND carfilzomib/proteasome-switch eligible"
-    if_true:
-      result: IND-MM-2L-DKD
-    if_false:
-      result: IND-MM-2L-DKD
-
+- step: 1
+  evaluate:
+    all_of:
+    - condition: Post-ASCT (autoSCT consolidation completed)
+    - condition: 'Disease status: CR, VGPR, or PR'
+    - condition: No active progression
+  if_true:
+    result: IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
+  if_false:
+    next_step: 2
+  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 2
+  evaluate:
+    all_of:
+    - condition: ≥3 prior lines including ≥1 IMiD, ≥1 PI, ≥1 anti-CD38
+    - condition: Triple-class refractory (refractory to last line of each class)
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - condition: adequate organ function for bispecific
+  if_true:
+    result: IND-MM-4L-TECLISTAMAB
+  if_false:
+    next_step: 3
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 3
+  evaluate:
+    any_of:
+    - red_flag: RF-MM-T11-14-ACTIONABLE
+  if_true:
+    result: IND-MM-2L-DKD
+  if_false:
+    next_step: 4
+  notes: 'MDT-only — t(11;14) actionable: route to DKd backbone with MDT to add venetoclax (BELLINI t(11;14) subgroup mPFS 22.4 vs 11.6 mo; off-label, CANOVA pending). No dedicated venetoclax MM Indication in KB (PROD-5 deferred).'
+- step: 4
+  evaluate:
+    any_of:
+    - condition: Post-VRd / VTd progression, transplant-naive or post-ASCT relapse
+    - condition: anti-CD38-naive AND carfilzomib/proteasome-switch eligible
+    - red_flag: RF-MM-TRANSFORMATION-PROGRESSION
+  if_true:
+    result: IND-MM-2L-DKD
+  if_false:
+    result: IND-MM-2L-DKD
 sources:
-  - SRC-NCCN-MM-2025
-  - SRC-ESMO-MM-2023
+- SRC-NCCN-MM-2025
+- SRC-ESMO-MM-2023
+last_reviewed: '2026-04-26'
+notes: 'OOS / wiring gaps: (1) Maintenance is conceptually a separate algo (ALGO-MM-MAINTENANCE) not a 2L choice — included here pragmatically until the maintenance algo lands. Surface to hematologist: should we split? (2) DRd (daratumumab+lenalidomide+dex) for lenalidomide-naive 2L — not modeled. (3) Belantamab mafodotin (BCMA ADC) — withdrawn from market post DREAMM-3, not modeled. (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) for early-line triple-class — not modeled (UA access ≈zero). (5) Selinexor combos for penta-refractory — not modeled. (6) Plasma cell leukemia / extramedullary disease handled at RF-MM-TRANSFORMATION-PROGRESSION level (1L algo), not here.
 
-last_reviewed: "2026-04-26"
-notes: >
-  OOS / wiring gaps:
-  (1) Maintenance is conceptually a separate algo (ALGO-MM-MAINTENANCE)
-  not a 2L choice — included here pragmatically until the maintenance
-  algo lands. Surface to hematologist: should we split?
-  (2) DRd (daratumumab+lenalidomide+dex) for lenalidomide-naive 2L —
-  not modeled.
-  (3) Belantamab mafodotin (BCMA ADC) — withdrawn from market post
-  DREAMM-3, not modeled.
-  (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) for early-line
-  triple-class — not modeled (UA access ≈zero).
-  (5) Selinexor combos for penta-refractory — not modeled.
-  (6) Plasma cell leukemia / extramedullary disease handled at
-  RF-MM-TRANSFORMATION-PROGRESSION level (1L algo), not here.
+  '

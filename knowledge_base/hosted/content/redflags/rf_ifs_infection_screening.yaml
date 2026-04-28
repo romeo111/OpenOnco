@@ -1,0 +1,65 @@
+id: RF-IFS-INFECTION-SCREENING
+definition: >
+  Active or latent infection requiring resolution / prophylaxis before
+  initiating VAC cytotoxic chemotherapy or larotrectinib / entrectinib
+  for infantile fibrosarcoma: HBsAg-positive (vertical transmission risk
+  in newborns; reactivation on cytotoxic chemo), anti-HBc-positive
+  (occult HBV), HIV-positive (vertical transmission, ART coordination),
+  active TB, or active CMV / herpes (immunocompromise on cytotoxic
+  protocols).
+definition_ua: >
+  Активна або латентна інфекція, що потребує лікування / профілактики
+  перед VAC або larotrectinib / entrectinib при IFS: HBsAg+ (ризик
+  вертикальної передачі у новонароджених; реактивація на цитотоксичній
+  хіміотерапії), anti-HBc+ (occult HBV), HIV+ (вертикальна передача,
+  координація АРТ), активний туберкульоз, активний CMV / herpes
+  (імунокомпрометованість на цитотоксичних протоколах).
+
+trigger:
+  type: lab_value
+  any_of:
+    - finding: "hbsag"
+      value: "positive"
+    - finding: "anti_hbc_total"
+      value: "positive"
+    - finding: "hiv_status"
+      value: "positive"
+    - finding: "active_tb"
+      value: true
+    - finding: "active_cmv"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: infection-screening
+
+relevant_diseases:
+  - DIS-IFS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PEDIATRIC-SARCOMA
+  - SRC-ONCOKB
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pediatric infection screening is broader than adult — include CMV /
+  herpes given immunosuppression on VAC and likelihood of reactivation
+  in neonates / infants. HBsAg+ infants: confirm vertical transmission,
+  consult pediatric hepatology, entecavir / tenofovir prophylaxis adapted
+  to weight. HIV+ pediatric: ART coordination critical — TRK inhibitors
+  (larotrectinib, entrectinib) are CYP3A4 substrates, avoid CYP3A4
+  inhibitors. Pneumocystis prophylaxis (TMP-SMX) is standard on cytotoxic
+  arm. Surfaces hold via parallel pre-treatment workup.
+notes_ua: >
+  Педіатричний скринінг інфекцій ширший — включає CMV / herpes через
+  імуносупресію на VAC і ймовірність реактивації у новонароджених. HBsAg+
+  немовлята: підтвердити вертикальну передачу, педіатричний гепатолог,
+  entecavir / tenofovir за вагою. HIV+: TRK-інгібітори — CYP3A4
+  субстрати, уникати CYP3A4 інгібіторів.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

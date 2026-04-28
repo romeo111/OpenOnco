@@ -1,0 +1,66 @@
+id: RF-SALIVARY-TRANSFORMATION-PROGRESSION
+definition: >
+  Salivary gland carcinoma progression: high-grade transformation
+  (low-grade adenoid cystic / acinic cell to high-grade variant —
+  aggressive course), perineural invasion / skull base extension on
+  imaging (adenoid cystic dominant pattern), new lung / liver / bone
+  metastases, rapid progression on histology-specific targeted therapy,
+  or salivary duct carcinoma with rapidly rising tumor markers — triggers
+  re-staging, re-biopsy with comprehensive genomic profiling, and salvage
+  systemic therapy + RT consideration.
+definition_ua: >
+  Прогресія карциноми слинних залоз: трансформація у високу ступінь
+  диференціації (low-grade adenoid cystic / acinic cell → high-grade —
+  агресивний перебіг), периневральна інвазія / поширення на основу
+  черепа (домінантна модель adenoid cystic), нові метастази в легені /
+  печінку / кістки, швидке прогресування на гістологія-специфічній
+  таргетній терапії або salivary duct carcinoma зі швидко зростаючими
+  пухлинними маркерами — тригер до повторного стейджингу, ребіопсії з
+  CGP та сальваджу + RT.
+
+trigger:
+  type: composite_clinical
+  any_of:
+    - finding: "high_grade_transformation"
+      value: true
+    - finding: "perineural_invasion_skull_base"
+      value: true
+    - finding: "new_metastatic_disease"
+      value: true
+    - finding: "rapid_progression_on_targeted_therapy"
+      value: true
+
+clinical_direction: hold
+severity: critical
+priority: 50
+category: transformation-progression
+
+relevant_diseases: [DIS-SALIVARY]
+shifts_algorithm: []
+
+sources:
+  - SRC-ESMO-SALIVARY
+  - SRC-NCCN-HEAD-AND-NECK
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Adenoid cystic carcinoma classically has indolent course but
+  progressive perineural invasion + late distant relapses (lung, bone)
+  10-15 yr post-treatment — surveillance imaging required even in
+  apparently "stable" patients. High-grade transformation of low-grade
+  histologies (acinic cell, mucoepidermoid) confers worse prognosis,
+  often requires intensified RT + cisplatin chemoradiation. Re-biopsy
+  at progression captures actionable molecular drivers in ~30-40% (HER2,
+  AR, NTRK, HRAS, NOTCH1) — changes salvage choice from cytotoxic to
+  targeted. Skull-base extension may benefit from proton-beam RT
+  (improves organ-at-risk sparing).
+notes_ua: >
+  Adenoid cystic — індолентний, але прогресуюча периневральна інвазія +
+  пізні віддалені рецидиви (легені, кістки) через 10-15 р. Трансформація
+  у high-grade (acinic cell, mucoepidermoid) — гірший прогноз. Ребіопсія
+  при прогресії — actionable драйвери у ~30-40% (HER2, AR, NTRK, HRAS,
+  NOTCH1). Поширення на основу черепа — протонне RT.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

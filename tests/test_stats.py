@@ -97,14 +97,20 @@ def test_html_widget_no_style_flag():
 
 def test_corpus_aggregates_populated():
     """Marketing metric: total pages + primary references across all sources.
-    All 13 current sources have pages_count + references_count populated; the
-    aggregates are non-trivial (~2000+ pages, ~3000+ refs)."""
+    The 13 curated primary sources have pages_count + references_count
+    populated by scripts/_populate_source_corpus.py; the corpus has since
+    grown to 261+ Source entities (incl. stub references for BMA / RCT /
+    derivation citations) — the populator only seeds the curated subset,
+    so this test only requires that the seeded count remains ≥ the
+    original 13-source baseline. Aggregates are non-trivial (~10K+
+    pages, ~25K+ refs)."""
     s = collect_stats()
     sources_total = next((e.count for e in s.entities if e.type == "sources"), 0)
     assert sources_total > 0, "expected at least one Source entity"
-    assert s.sources_with_corpus_data == sources_total, (
-        "expected every Source to carry pages_count + references_count "
-        "(populated by scripts/_populate_source_corpus.py)"
+    assert s.sources_with_corpus_data >= 13, (
+        "expected ≥13 Sources to carry pages_count + references_count "
+        f"(curated primary set populated by scripts/_populate_source_corpus.py); "
+        f"got {s.sources_with_corpus_data}/{sources_total}"
     )
     assert s.corpus_pages_total > 1000, (
         f"expected >1000 pages of guideline mass; got {s.corpus_pages_total}"

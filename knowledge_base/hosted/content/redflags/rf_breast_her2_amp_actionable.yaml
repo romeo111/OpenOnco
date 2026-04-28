@@ -1,0 +1,61 @@
+id: RF-BREAST-HER2-AMP-ACTIONABLE
+definition: >
+  HER2 amplification / overexpression in breast cancer (IHC 3+ OR
+  IHC 2+ with ISH amplified) — ~15-20% of invasive breast. Defines
+  HER2-positive treatment track: trastuzumab + pertuzumab + chemo
+  (CLEOPATRA 1L), T-DXd 2L (DESTINY-Breast03 — mPFS 28.8 vs 6.8 mo
+  vs T-DM1).
+definition_ua: >
+  Ампліфікація / гіперекспресія HER2 при раку молочної залози
+  (ІГХ 3+ АБО ІГХ 2+ з ISH ампліфікація) — ~15-20% інвазивного РМЗ.
+  Визначає HER2-позитивний трек: трастузумаб + пертузумаб + хіміо
+  (CLEOPATRA 1L), T-DXd 2L (DESTINY-Breast03 — мПФВ 28.8 проти 6.8
+  міс на T-DM1).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "her2_status"
+      value: "positive"
+    - finding: "her2_status"
+      value: "amplified"
+    - finding: "her2_ihc"
+      value: "3+"
+    - finding: "her2_ish"
+      value: "amplified"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-1L
+  - ALGO-BREAST-HER2-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-DESTINY-BREAST03-CORTES-2022
+  - SRC-HER2CLIMB-MURTHY-2019
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Scoring: 2018 ASCO/CAP guideline. IHC 2+ → reflex ISH; HER2/CEP17
+  ≥2.0 OR average HER2 signals ≥6 = amplified. Brain metastases —
+  tucatinib + trastuzumab + capecitabine (HER2CLIMB) preferred.
+  T-DXd ILD risk ~10-15% — baseline + serial chest CT.
+  Cardiomyopathy on trastuzumab — q3-monthly LVEF (early-stage)
+  or q6-monthly (metastatic on extended therapy).
+notes_ua: >
+  Оцінка: настанова ASCO/CAP 2018. ІГХ 2+ → reflex ISH; HER2/CEP17
+  ≥2.0 АБО середня кількість HER2-сигналів ≥6 = ампліфікація.
+  Метастази в головний мозок — tucatinib + трастузумаб + капецитабін
+  (HER2CLIMB) переважно. Ризик ILD на T-DXd ~10-15% — baseline +
+  серійна КТ ОГК. Кардіоміопатія на трастузумабі — щоквартально
+  ФВЛШ (рання стадія) або щопівроку (метастатична на тривалій терапії).

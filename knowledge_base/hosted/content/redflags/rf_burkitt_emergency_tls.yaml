@@ -1,0 +1,59 @@
+id: RF-BURKITT-EMERGENCY-TLS
+definition: "Burkitt lymphoma with active or imminent tumor lysis syndrome at diagnosis: LDH >2× ULN, uric acid >7.5 mg/dL, hyperkalemia, hyperphosphatemia, hypocalcemia, AKI — Burkitt is the textbook TLS disease (doubling time 24-48 h)"
+definition_ua: "Лімфома Беркітта з активним або неминучим синдромом лізису пухлини при діагностиці: ЛДГ >2× ВМН, сечова кислота >7.5 мг/дл, гіперкаліємія, гіперфосфатемія, гіпокальціємія, ГНН — Беркітт є класичним TLS-захворюванням (час подвоєння 24-48 год)"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "ldh_ulnratio"
+      threshold: 2
+      comparator: ">"
+    - finding: "uric_acid_mg_dl"
+      threshold: 7.5
+      comparator: ">"
+    - finding: "potassium_mmol_l"
+      threshold: 5.5
+      comparator: ">"
+    - finding: "phosphate_mg_dl"
+      threshold: 4.5
+      comparator: ">"
+    - finding: "creatinine_mg_dl"
+      threshold: 1.5
+      comparator: ">"
+    - finding: "tls_active"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 10
+category: organ-dysfunction
+relevant_diseases:
+  - DIS-BURKITT
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Per NCCN Burkitt v.X.2025 §BURK-A: rasburicase mandatory for Burkitt
+  pre-cycle-1; allopurinol insufficient for high-risk. ESMO-Burkitt 2024
+  echoes: rasburicase 0.2 mg/kg IV daily ×3-5 days, IV hydration 3 L/m²/day.
+  Burkitt has highest TLS incidence among lymphomas (>30% high-risk).
+  Direction HOLD on regimen start until uric acid <7.5, potassium <5.0,
+  phosphate <4.5, creatinine baseline restored. Priority 10. Note this is
+  a Burkitt-specific complement to RF-UNIVERSAL-TLS-RISK (which is
+  intensify, surfaces supportive care without holding); this disease-
+  specific HOLD is needed because Burkitt cycle 1 reduction-phase
+  (COP/cyclophosphamide-vincristine-prednisone) sits between universal
+  TLS-prophylaxis and definitive induction. STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  Per NCCN Burkitt v.X.2025 §BURK-A: rasburicase обов'язковий for Burkitt pre-цикл-1; allopurinol insufficient for високого ризику. ESMO-Burkitt 2024 echoes: rasburicase 0.2 mg/kg IV daily ×3-5 days, IV hydration 3 L/m²/day. Burkitt has найвища TLS incidence серед lymphomas (>30% високого ризику). Direction утримати on схема start until uric acid <7.5, potassium <5.0, phosphate <4.5, creatinine базове restored. Priority 10. Note this is a Burkitt-specific complement to RF-UNIVERSAL-TLS-RISK (which is intensify, surfaces підтримуюче лікування without holding); this хвороба- specific утримати is needed because Burkitt цикл 1 зниження-phase (COP/циклофосфамід-вінкристин-prednisone) sits між universal TLS-prophylaxis and definitive індукція. STUB — requires clinical co-lead signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

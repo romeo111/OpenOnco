@@ -41,30 +41,79 @@ decision_tree:
     if_false:
       next_step: 3
 
-  # Step 3 — high-risk biology (TP53, complex karyotype, etc.) — fit
-  # patients escalate to 7+3 (with concurrent alloHCT donor search if
-  # transplant-eligible). Note: high-risk biology in unfit patients
-  # already routed to ven+aza in step 2.
+  # Step 3 — CBF-favorable cytogenetics: t(8;21) RUNX1::RUNX1T1 OR
+  # inv(16)/t(16;16) CBFB::MYH11. ELN-favorable; standard 7+3 induction
+  # plus high-dose cytarabine consolidation; no alloHCT in CR1 (vs other
+  # AML high-risk routings). Gate on fitness — unfit CBF still goes to
+  # ven+aza via step 2 (precedes this).
   - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-CORE-BINDING-FACTOR-FAVORABLE
+    if_true:
+      next_step: 4
+    if_false:
+      next_step: 5
+
+  # Step 4 — CBF-favorable + fit → 7+3 (no alloHCT in CR1 per ELN-2022
+  # favorable risk). Fitness gate redundant after step 2 but kept
+  # explicit so the trace records the fitness RF firing for the CBF
+  # cohort branch.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-AML-1L-7-3
+    if_false:
+      result: IND-AML-1L-7-3
+    notes: "CBF-favorable AML — fitness gate already cleared at step 2; CBF cohort is treatment-defining for standard 7+3 (no alloHCT in CR1 per ELN-2022 favorable risk)."
+
+  # Step 5 — high-risk biology (TP53, complex karyotype) AND FLT3+ AND
+  # NPM1-favorable — fit patients escalate to 7+3 (with concurrent alloHCT
+  # donor search if transplant-eligible). NPM1-mut without FLT3-ITD is
+  # ELN-favorable and benefits from standard 7+3 (no alloHCT in CR1).
+  # Note: high-risk biology in unfit patients already routed to ven+aza
+  # in step 2.
+  - step: 5
     evaluate:
       any_of:
         - red_flag: RF-AML-HIGH-RISK-BIOLOGY
         - red_flag: RF-AML-FLT3-ACTIONABLE
+        - red_flag: RF-AML-NPM1-MUT-FAVORABLE
         - red_flag: RF-AML-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-AML-1L-7-3
     if_false:
-      next_step: 4
+      next_step: 6
 
-  # Step 4 — default for fit patients = 7+3
-  - step: 4
+  # Step 6 — IDH1 / IDH2 actionable. AGILE / IDHENTIFY: ivosidenib /
+  # enasidenib + azacitidine for unfit; 7+3 + IDHi emerging for fit.
+  # No dedicated IDHi indication in this KB yet (PROD-5 territory) —
+  # route to ven+aza backbone with MDT note to consider IDH1/IDH2
+  # inhibitor add-on.
+  - step: 6
     evaluate:
-      all_of:
+      any_of:
+        - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
+        - red_flag: RF-AML-IDH2-MUT-ACTIONABLE
+    if_true:
+      result: IND-AML-1L-VEN-AZA
+    if_false:
+      next_step: 7
+    notes: "MDT-only — IDH1/IDH2 actionable: route to ven+aza backbone (default unfit-AML standard); MDT to add ivosidenib (IDH1) or enasidenib (IDH2) per AGILE / IDHENTIFY. No dedicated IDHi Indication in KB (PROD-5 deferred)."
+
+  # Step 7 — default for fit patients = 7+3
+  - step: 7
+    evaluate:
+      any_of:
         - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
     if_true:
       result: IND-AML-1L-7-3
     if_false:
       result: IND-AML-1L-7-3
+    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3."
 
 sources:
   - SRC-NCCN-AML-2025

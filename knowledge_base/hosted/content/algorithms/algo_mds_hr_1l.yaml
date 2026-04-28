@@ -50,15 +50,17 @@ decision_tree:
     if_false:
       next_step: 4
 
-  # Step 4 — default MDS-HR = aza alone
+  # Step 4 — default MDS-HR = aza alone (very-high IPSS-R / IPSS-M-high default)
   - step: 4
     evaluate:
-      all_of:
-        - condition: "Default MDS-HR; alloHCT eligibility separate parallel layer"
+      any_of:
+        - red_flag: RF-IPSS-R-VERY-HIGH
+        - red_flag: RF-IPSS-M-HIGH
     if_true:
       result: IND-MDS-HR-1L-AZA
     if_false:
       result: IND-MDS-HR-1L-AZA
+    notes: "Wired via RF-IPSS-R-VERY-HIGH / RF-IPSS-M-HIGH (CSD-8A): default HR-MDS routes to azacitidine; alloHCT bridge handled at step 3."
 
 sources:
   - SRC-NCCN-AML-2025

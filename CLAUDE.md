@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) and similar AI
+agents (Codex, etc.) when working in this repository. **Read this file
+in full at the start of every session.**
 
 ## Project: OpenOnco
 
@@ -9,148 +11,255 @@ patient profile → receives two alternative treatment plans (standard +
 aggressive) with full source citations. Plans refresh as new data arrives
 (new labs, doctor decisions, updated guidelines).
 
-**Status:** v0.1 draft. The project is in a specifications-first phase —
-specs exist; implementation of the knowledge base + rule engine is just
-starting.
+**Status:** v0.1 draft. Specifications-first phase; KB + rule engine
+implementation in progress. CIViC-primary actionability pivot in flight
+(2026-04-27).
 
 ## Source of truth hierarchy
 
 When instructions conflict, obey this order:
 
-1. `specs/CHARTER.md` — project governance + scope + what the project can/can't do
+1. `specs/CHARTER.md` — project governance + scope
 2. Other `specs/*.md` — clinical, data, schema, source, reference case
 3. This `CLAUDE.md`
 4. `README.md`
-5. Anything under `legacy/` — **not authoritative**; preserved as historical reference
+5. Anything under `legacy/` — **not authoritative**; historical reference only
 
-`legacy/` contains the pre-OpenOnco autoresearch pipeline (Karpathy-style
-`strategy.md` optimization loop). It generated the first real-patient
-treatment plans, which clinicians reviewed favorably. It is retired, not
-deleted, because the LLM-ranks-treatments approach conflicts with
-CHARTER §8.3 (forbidden prompt patterns). Don't use it as a pattern for
-new work.
+`legacy/` contains the pre-OpenOnco autoresearch pipeline. Retired (not
+deleted) because the LLM-ranks-treatments pattern conflicts with CHARTER
+§8.3. Don't use it as a pattern for new work.
 
 ## Repo layout (top level)
 
 ```
 cancer-autoresearch/
 ├── specs/                            # active specifications (UA)
-├── knowledge_base/                   # rule-engine KB
+├── knowledge_base/
 │   ├── clients/                      # SourceClient implementations
 │   │   ├── ctgov_client.py           # ClinicalTrials.gov v2
-│   │   ├── pubmed_client.py          # NCBI E-utilities
+│   │   ├── pubmed_client.py
 │   │   ├── dailymed_client.py
 │   │   ├── openfda_client.py
 │   │   └── translate_client.py
 │   ├── engine/                       # rule engine + render + MDT
+│   │                                 # actionability_{types,client,extract,conflict}.py
 │   ├── schemas/                      # Pydantic entity schemas
 │   ├── validation/                   # YAML loader + validators
-│   ├── ingestion/                    # МОЗ extractor etc.
-│   └── hosted/content/               # KB YAML data (diseases, regimens, RFs, …)
-├── docs/                             # built site (openonco.info)
+│   ├── ingestion/                    # МОЗ extractor, civic_loader.py, ...
+│   └── hosted/
+│       ├── content/                  # KB YAML data (diseases, regimens, RFs, …)
+│       └── civic/<date>/             # CIViC nightly snapshot (CC0)
+├── docs/                             # built site (openonco.info) + reviews/
 ├── scripts/                          # build_site.py, fill scripts, coverage tools
 ├── tests/                            # pytest suite
-├── legacy/                           # retired autoresearch pipeline
+├── legacy/                           # retired autoresearch pipeline (not authoritative)
 ├── README.md
 └── CLAUDE.md
 ```
 
 Two Ukrainian HTML files at the repo root (`*план лікування.html`) are
-real first-patient deliverables. They are **gitignored** per
-`specs/CHARTER.md` §9.3 — do not stage them, do not move them without
-explicit instruction from the user.
+real first-patient deliverables. **Gitignored** per CHARTER §9.3 — do
+not stage, do not move without explicit user instruction.
 
 ## Critical invariants
 
-- **Language:** specs are in Ukrainian and will stay Ukrainian. Do not
-  translate to English unilaterally. Technical terms and license names
-  may stay English inline.
-- **LLMs may not be the clinical decision-maker** (CHARTER §8.3).
-  Clinical recommendations come from a declarative rule engine reading a
-  versioned knowledge base. LLMs do only: boilerplate code, doc drafts,
-  extraction from clinical documents (with human verification), translation
-  with clinical review. Not: choosing regimens, generating dosing,
-  interpreting biomarkers for treatment selection.
+- **Language:** specs are in Ukrainian and stay Ukrainian. Don't translate
+  unilaterally. Technical terms and license names may stay English inline.
+- **LLMs are not the clinical decision-maker** (CHARTER §8.3). Clinical
+  recommendations come from a declarative rule engine reading a versioned
+  knowledge base. LLMs do only: boilerplate code, doc drafts, extraction
+  from clinical documents (with human verification), translation with
+  clinical review. Not: choosing regimens, generating dosing, interpreting
+  biomarkers for treatment selection.
 - **Two-reviewer merge for clinical content** (CHARTER §6.1). Any change
-  under `knowledge_base/hosted/content/` that affects clinical
-  recommendations needs two of three Clinical Co-Leads to approve.
-- **No destructive action on patient data.** The two HTML files at repo
-  root and any future patient-specific artifacts must not leak into git
-  history or public artifacts. CHARTER §9.3 requires informed consent +
-  de-identification + ethics approval before any patient data can be
-  public.
-- **Source hosting default is `referenced`, not `hosted`** (SOURCE_INGESTION_SPEC §1.4).
-  Hosting requires explicit H1–H5 justification. Do not propose mirroring
-  external databases.
+  under `knowledge_base/hosted/content/` that affects clinical recommendations
+  needs two of three Clinical Co-Leads to approve.
+- **No destructive action on patient data.** Two HTML files at repo root
+  + any future patient artifacts must not leak into git history or public
+  artifacts. CHARTER §9.3 requires informed consent + de-identification +
+  ethics approval before any patient data goes public.
+- **Source hosting default = `referenced`, not `hosted`** (SOURCE_INGESTION_SPEC §1.4).
+  Hosting requires explicit H1–H5 justification.
 - **Free public resource → non-commercial** (CHARTER §2). Many source
-  licenses (ESMO CC-BY-NC-ND, OncoKB academic, ATC) depend on this.
-  Proposing a paid tier triggers a license audit across all `referenced`
-  and `mixed` sources.
+  licenses depend on this.
+- **Actionability data source = CIViC (CC0).** OncoKB rejected per ToS
+  conflict with CHARTER §2 — see
+  `docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`. Engine modules
+  use `actionability_*` naming. Any `SRC-ONCOKB` citations in YAML are
+  legacy migration metadata; render layer must not surface them.
+
+## Multi-agent coordination protocol
+
+This repo runs multiple parallel Claude/Codex sessions. Branches, working
+tree, and HEAD can change between any two commands without warning. Treat
+the repo state as adversarially mutable.
+
+### Pre-flight check (mandatory for every agent, every task)
+
+Before any write or destructive operation, run AND verify:
+
+```bash
+git rev-parse --abbrev-ref HEAD       # expected branch
+git rev-parse HEAD                    # expected commit
+git status --short                    # expected clean (or known mods)
+```
+
+If any of these mismatch what the brief promised: **STOP, report, do not
+proceed.** The orchestrating session corrects state; agents do not.
+
+### Branch ownership
+
+- One workstream = one named feature branch (`feat/*`, `hotfix/*`).
+- **Never commit directly to `master`.**
+- **Never delete a branch** (`git branch -d/-D`) without explicit user instruction.
+- **Never force-push** (`-f`, `--force-with-lease`) without explicit user instruction.
+- For long-running pivots, tag a baseline at start: `git tag <name>-baseline`.
+- Branch refs may vanish between commands (parallel session deleted them) —
+  the commits remain on other branches and via reflog. Don't panic-recreate
+  state; report and ask.
+
+### Worktree isolation
+
+- Parallel agents (background batches, multi-agent runs) **MUST** use
+  worktree isolation (`isolation: "worktree"`).
+- The user's main working tree is for the user + the foreground orchestrator
+  only. Other agents must not edit it.
+- If an agent realises it's been editing the main worktree by accident,
+  **STOP** immediately and report. Do not attempt clever recovery
+  (`git stash` + `git reset --hard` + `git checkout -- .` chains have lost
+  work in this repo before).
+- `worktree-agent-*` branches are recovery points. Do not delete them.
+
+### Commit hygiene
+
+- **`git add -A` and `git add .` are BANNED.** Always pass explicit pathspecs.
+  Other agents leave untracked files behind; `-A` swallows them.
+- One agent = one logical commit (or a named small set). Composite commits
+  spanning multiple agents' work are forbidden — they destroy audit trails.
+- Pre-commit hooks run; **never use `--no-verify`**.
+- Never amend a commit that's been shared across branches (`--amend` only
+  while a commit is solo on its branch and unpushed).
+- Stash messages must include `<branch>-<purpose>-<HHMM>` for grep-recovery.
+
+### Stop conditions (abort + report, do not proceed)
+
+- HEAD on a different branch than the brief expected.
+- Working tree unexpectedly modified.
+- Expected commit absent from current branch (cherry-pick / merge needed —
+  orchestrator's call, not agent's).
+- Stash pop / cherry-pick / merge conflict.
+- Unfamiliar branches/tags appearing (likely from parallel session).
+- Edits would land outside the brief's allowlist of file paths.
+
+### File-set partitioning for parallel batches
+
+When orchestrator launches N parallel agents, each agent receives an
+**explicit allowlist of file paths**. Agents skip files outside the
+allowlist silently (no error). The orchestrator partitions by:
+
+- File-system path (different directories)
+- Entity type (`bio_*.yaml` vs `bma_*.yaml` vs `rf_*.yaml`)
+- Biomarker/disease/source classification (e.g., IHC bucket vs single-allele bucket)
+
+Two agents writing to the same file is a coordination bug — surfaces as a
+worktree merge conflict at integration time.
+
+### Multi-session realities to expect
+
+- Other sessions check out branches under your feet.
+- HEAD jumps to unrelated commits.
+- Stashes accumulate; some are yours, most aren't. **Never `git stash drop`
+  a stash you didn't create.**
+- New `worktree-agent-*` branches appear in `git worktree list`.
+- 30+ such branches is normal; they are work-in-progress recovery points.
 
 ## Technology choices
 
-- **Python 3.11+.** The legacy code was stdlib-only; OpenOnco adds real
-  dependencies where they pay off.
-- **Dependencies in scope (planned):** `pydantic` (schema validation +
-  referential integrity), `httpx` (HTTP clients with retry/async),
-  `pyyaml` (YAML loading), `pypdf` / `pdfplumber` (МОЗ PDF extraction),
-  `pytesseract` + Ukrainian language pack (OCR for scanned protocols).
-- **Storage format for the KB:** YAML files + git history, validated by
-  Pydantic on load. See SOURCE_INGESTION_SPEC §12.1 for the directory
-  layout. Migrate to PostgreSQL when entity count passes ~10K
-  (KNOWLEDGE_SCHEMA_SPECIFICATION §16.1 allows).
-- **No Django, no ORMs, no heavy frameworks.** Python stdlib + the
-  dependencies above.
-- **FHIR R4/R5 + mCODE** as the patient-input data model (DATA_STANDARDS).
+- **Python 3.11+.** Schema layer requires 3.12 specifically (PEP 585).
+  Default `python` on Windows shells often resolves to 3.8 — use
+  `C:/Python312/python.exe` or `py -V:3.12` for validator/tests.
+- **Dependencies:** `pydantic`, `httpx`, `pyyaml`/`ruamel.yaml`, `pypdf` /
+  `pdfplumber`, `pytesseract` + Ukrainian language pack.
+- **Storage = YAML files + git history**, validated by Pydantic on load
+  (SOURCE_INGESTION_SPEC §12.1). Migrate to PostgreSQL when entity count
+  passes ~10K.
+- **No Django, no ORMs, no heavy frameworks.**
+- **FHIR R4/R5 + mCODE** as patient-input data model.
 - **No SNOMED CT, no MedDRA** in MVP — license gates. Use LOINC + ICD-10/O-3
   + RxNorm + CTCAE v5.0 instead.
 
 ## Workflow expectations
 
-- When asked to design or add to the knowledge base, check the relevant
-  entity definition in `specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md` first.
-  If something is vague there, surface the gap and ask — do not invent
-  fields unilaterally.
-- When adding a new source to the KB, follow `specs/SOURCE_INGESTION_SPEC.md`
-  §8 (the add-a-source checklist) and §20 (the hosted-source checklist).
-  License classification is a gate, not a formality.
-- When writing clinical content (an Indication, a Regimen), every factual
-  claim needs a Source entity citation. See CLINICAL_CONTENT_STANDARDS
-  for citation format and evidence-level taxonomy.
-- Prefer editing existing spec files to creating new ones. If you must
-  add a new spec document, register it in CHARTER's document list.
+- Check `specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md` before adding to the KB.
+  Vague spec → surface gap, ask. Don't invent fields.
+- New source → follow `specs/SOURCE_INGESTION_SPEC.md` §8 + §20. License
+  classification is a gate, not a formality.
+- Clinical content → every factual claim needs a Source citation per
+  CLINICAL_CONTENT_STANDARDS.
+- Prefer editing existing spec files. New spec docs need registration in
+  CHARTER's document list.
 
 ## What Claude Code should (not) do on its own
 
-- **Do** edit specs to fix inconsistencies after surfacing them — if the
-  user approves.
-- **Do** implement Pydantic schemas, ingestion loaders, validators, client
-  refactors autonomously.
-- **Do not** commit patient-specific data, ever.
-- **Do not** push to `origin` without explicit user instruction.
-- **Do not** rename the project, change licenses, or alter CHARTER scope
-  statements without explicit user instruction.
-- **Do not** revive or build on `legacy/` code as a pattern for new work —
-  it is retired.
-- **Do not** propose features that assume a paid/commercial tier.
+**Do:**
+- Edit specs to fix inconsistencies, after surfacing them and getting user approval.
+- Implement Pydantic schemas, ingestion loaders, validators, client refactors autonomously.
+- Run pre-flight checks before every write.
+- Stop and report when stop conditions hit.
 
-## Current state (as of 2026-04-24)
+**Do not:**
+- Commit patient-specific data, ever.
+- Push to `origin` without explicit user instruction.
+- Delete branches without explicit user instruction.
+- Force-push without explicit user instruction.
+- Use `git add -A` / `git add .` / `--no-verify`.
+- Rename the project, change licenses, alter CHARTER scope.
+- Revive `legacy/` code as a pattern.
+- Propose paid/commercial-tier features.
+- Drop or modify a stash you didn't create.
+- Use destructive shortcuts (`git reset --hard`, `git checkout -- .` over
+  files you don't fully understand) to "make a problem go away" — diagnose
+  the root cause, ask the user when uncertain.
 
-- All six specs drafted at v0.1. Specs rename: OpenOncoBrief → OncoPlan →
-  OpenOnco (final).
-- `legacy/` archive committed (be9738b). `specs/` consolidated, stale
-  top-level docs moved to `legacy/docs/OLD_*.md` (86c7868).
-- Knowledge base implementation (Part B of SOURCE_INGESTION_SPEC):
-  **in progress.**
-- API clients refactored under `knowledge_base/clients/` per
-  SOURCE_INGESTION_SPEC §12.2: `ctgov_client.py` (renamed from
-  `clinicaltrials_client.py`), `pubmed_client.py`, `dailymed_client.py`,
-  `openfda_client.py`, `translate_client.py`.
-- RedFlag quality phases 1-7 done (2026-04-25/26): 106 RFs across all 28
-  diseases, ≥2 sources each, golden fixtures auto-generated, 220 RF-tests
-  green; clinical sign-off received. See `specs/REDFLAG_AUTHORING_GUIDE.md`.
+## Current state (as of 2026-04-27)
+
+- All six specs drafted at v0.1. Specs naming locked: OpenOnco.
+- KB scale: 65 diseases, ~400 biomarker_actionability, 111 biomarkers, 109+
+  sources, 216 drugs, 294 indications, ~292 redflags. **Note:** prior
+  documentation said "28 diseases" — that figure is stale.
+- API clients live under `knowledge_base/clients/`.
+- RedFlag quality phases 1-7 done (2026-04-25/26): clinical sign-off received.
+- 9-agent parallel run (2026-04-27 morning): ~73 biomarkers tagged with
+  `oncokb_skip_reason`, 23 BMA drafts pending clinical signoff, 53 Source
+  stubs, 1,251 UA-language fields drafted, several review reports.
+- **OncoKB → CIViC pivot** (2026-04-27 afternoon): Phases 0 + 1 + 1.5
+  landed on `feat/civic-primary`:
+  - Phase 0: coverage audit (`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`)
+  - Phase 1 (commit `5384348`): engine module renames `oncokb_*` →
+    `actionability_*`, `services/oncokb_proxy/` dropped, schema generalized
+    with `evidence_sources` block.
+  - Phase 1.5 (commit `c72e45b`): YAML migration — 29 BIO files
+    `oncokb_lookup` → `actionability_lookup`, 399 BMA files
+    `oncokb_level` + `oncokb_snapshot_version` → `evidence_sources` block
+    + `actionability_review_required: true`.
+  - Phases 2 (CIViC reader, fusion-aware matcher, monthly refresh CI) +
+    3 (BMA evidence reconstruction) + 4 (render + spec + docs) + 5 (verification) pending.
+
+## Audit artifacts
+
+Canonical record of recent multi-agent runs lives in `docs/reviews/`:
+
+- `oncokb-public-civic-coverage-2026-04-27.md` — license + coverage audit
+  that drove the CIViC pivot.
+- `citation-verification-2026-04-27.md` — 914 findings across 464 entities.
+- `redflag-indication-coverage-2026-04-27.md` — 65-disease gap matrix.
+- `bma-coverage-2026-04-27.md` — 23 BMA drafts + 14 source-ingest TODOs.
+
+Read these before drafting clinical content in their domain — they list
+known gaps, evidence disagreements, and entities awaiting two-reviewer
+signoff.
 
 ## Medical disclaimer
 
-This is a research/support tool, not a medical device. All recommendations
-must be verified by a qualified oncologist. See CHARTER §11.
+Research/support tool, not a medical device. All recommendations must be
+verified by a qualified oncologist. See CHARTER §11.

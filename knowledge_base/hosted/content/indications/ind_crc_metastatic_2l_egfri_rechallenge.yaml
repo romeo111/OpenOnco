@@ -1,0 +1,108 @@
+id: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 3  # rechallenge typically positioned 3L+ after intervening line
+  stage_requirements:
+    - "Stage IV metastatic mCRC"
+    - "Prior 1L anti-EGFR (cetuximab or panitumumab) + chemo with documented response (PR or better) OR prolonged SD ≥6 mo"
+    - "Intervening 2L therapy (no anti-EGFR) — typical pattern: 1L anti-EGFR → 2L bev-based → 3L anti-EGFR rechallenge"
+    - "Recommended: ctDNA RAS reassessment before rechallenge — RAS-WT in ctDNA supports rechallenge benefit"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-RAS-MUTATION
+      required: true
+      value_constraint: "RAS wild-type at baseline AND (preferably) RAS-WT confirmed on ctDNA at rechallenge timepoint (CHRONOS biomarker selection)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-BRAF-V600E
+      value_constraint: "BRAF V600E excluded — encorafenib + cetuximab (BEACON) preferred; rechallenge benefit lower in BRAF-mut"
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-FOLFOX-CETUX  # rechallenge regimen — uses existing FOLFOX+cetuximab; FOLFIRI+cetux equally acceptable
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate  # Phase II evidence (CHRONOS, CITRIC); not yet Phase III
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "~30% (CHRONOS panitumumab rechallenge in ctDNA RAS-WT subgroup)"
+  complete_response: "~0%"
+  progression_free_survival: "Median PFS 4.0 mo (CHRONOS); CITRIC: numerically improved but not statistically significant"
+  overall_survival_5y: "OS data immature; signal favors rechallenge in ctDNA RAS-WT selected patients"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+
+required_tests:
+  - TEST-RAS-EXTENDED  # baseline RAS-WT confirmation
+  - TEST-NGS-COMPREHENSIVE  # ctDNA NGS at rechallenge timepoint preferred (CHRONOS-style selection)
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CEA
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Anti-EGFR (cetuximab or panitumumab) rechallenge in 3L+ for RAS-WT
+  mCRC patients with documented prior anti-EGFR response in 1L AND
+  intervening anti-EGFR-free 2L line. Rationale: clonal selection
+  during anti-EGFR exposure allows RAS-mut subclones to emerge; during
+  the anti-EGFR-free interval these subclones decay, restoring RAS-WT
+  dominance. CHRONOS Phase II (2022): ctDNA RAS-WT selection at
+  rechallenge timepoint identifies subgroup with ~30% ORR to
+  panitumumab monotherapy. CITRIC Phase II (cetuximab rechallenge +
+  irinotecan): numerically positive, modest effect. Position:
+  aggressive-track 3L+ for the molecularly-selected RAS-WT subgroup
+  with prior anti-EGFR benefit; ctDNA-guided selection is the
+  implementation challenge — without ctDNA, blanket rechallenge is
+  not supported. ESCAT IIA (biomarker-selected). UA access barrier:
+  ctDNA NGS not NSZU-funded; cetuximab access constrained for non-1L
+  use.
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: "Anti-EGFR rechallenge may be considered in 3L+ for RAS-WT mCRC with prior anti-EGFR response and intervening EGFR-free interval; ctDNA RAS reassessment recommended (CHRONOS)"
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: "Anti-EGFR rechallenge in selected RAS-WT mCRC patients with prior anti-EGFR benefit is a recognised strategy; ctDNA-guided selection improves outcomes"
+
+known_controversies:
+  - topic: "ctDNA-guided vs unselected anti-EGFR rechallenge"
+    positions:
+      - position: "ctDNA RAS-WT selection (CHRONOS) is mandatory — unselected rechallenge has minimal benefit"
+        sources: [SRC-NCCN-COLON-2025]
+      - position: "Clinical selection (prior response + EGFR-free interval ≥4 mo) is acceptable when ctDNA unavailable"
+        sources: [SRC-ESMO-COLON-2024]
+        evidence_note: "Pragmatic compromise where ctDNA NGS not accessible — but lower ORR expected"
+    our_default: "ctDNA-selected rechallenge preferred (CHRONOS-style); clinical-selection rechallenge acceptable when ctDNA NGS not feasible — document rationale + lower expectations"
+    rationale: "ctDNA selection improves enrichment; UA ctDNA access constrained — pragmatic clinical selection is fallback"
+
+do_not_do:
+  - "НЕ призначати rechallenge без prior anti-EGFR response (PR+ OR SD ≥6 mo) — inadequate selection."
+  - "НЕ використовувати rechallenge безпосередньо після prior anti-EGFR (без intervening line) — clonal selection not yet decayed."
+  - "НЕ ігнорувати RAS-WT confirmation — baseline RAS-mut patients не повинні отримувати rechallenge."
+  - "НЕ розпочинати при known BRAF V600E — preferred encorafenib + cetuximab (BEACON)."
+  - "НЕ ігнорувати acneiform rash management — tetracycline + topical clindamycin protocol."
+  - "НЕ підтверджувати rechallenge без funding pathway — cetuximab not NSZU-reimbursed for non-1L."
+
+time_critical: false
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+
+  rechallenge for biomarker-selected RAS-WT mCRC. ESCAT IIA. Trial-
+  specific sources (CHRONOS, CITRIC) not in KB yet — flagged for
+  CSD-4.5. Re-uses existing REG-FOLFOX-CETUX (FOLFIRI+cetux equally
+  acceptable rechallenge backbone — future regimen authoring).
+  Routed to line_of_therapy=3 because rechallenge requires intervening
+  EGFR-free 2L line; algorithm step ras_egfri_check fires the routing.
+

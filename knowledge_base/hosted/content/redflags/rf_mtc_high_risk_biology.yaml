@@ -1,0 +1,63 @@
+id: RF-MTC-HIGH-RISK-BIOLOGY
+definition: >
+  Medullary thyroid carcinoma with actionable RET mutation: germline RET
+  M918T (MEN2B — most aggressive, prophylactic thyroidectomy <1 yr),
+  germline RET codon 634 (MEN2A), somatic RET M918T (~25-30% sporadic
+  MTC, more aggressive), or RAS mutation (HRAS / KRAS / NRAS, ~15-20%
+  sporadic, mutually exclusive with RET) — opens selpercatinib /
+  pralsetinib targeted therapy line for advanced disease.
+definition_ua: >
+  Медулярна карцинома щитоподібної залози з дієвоспроможною мутацією RET:
+  гермінальна RET M918T (MEN2B — найагресивніший, профілактична
+  тиреоїдектомія <1 р.), гермінальна RET кодон 634 (MEN2A), соматична
+  RET M918T (~25-30% спорадичної MTC, більш агресивна) або мутація RAS
+  (HRAS / KRAS / NRAS, ~15-20% спорадичної, взаємовиключна з RET) —
+  відкриває таргетну лінію selpercatinib / pralsetinib при поширеній
+  хворобі.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "BIO-RET-M918T"
+      value: "positive"
+    - finding: "BIO-RET"
+      value: "germline_men2"
+    - finding: "BIO-RET"
+      value: "somatic_mutation"
+    - finding: "BIO-HRAS"
+      value: "positive"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases: [DIS-MTC]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-THYROID-2025
+  - SRC-ATA-THYROID-2015
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  RET M918T (MEN2B) = highest-risk MEN syndrome — prophylactic
+  thyroidectomy in first year of life per ATA guidelines. Sporadic MTC
+  with somatic RET M918T (~25-30%) has worse prognosis than RET-wild-
+  type or RAS-mutant. Selpercatinib (LIBRETTO-001/-531; ORR ~70%, PFS
+  ~25 mo in advanced RET-mutant MTC) is now standard 1L for advanced /
+  metastatic RET-mutant MTC. Pralsetinib (ARROW) similar efficacy. RAS-
+  mutant MTC is RET-wild-type and does NOT respond to RET inhibitors —
+  vandetanib (ZETA) or cabozantinib (EXAM) are 1L for these. Comprehensive
+  germline + tumor RET / RAS testing at diagnosis is now standard
+  (NCCN Cat 1 recommendation).
+notes_ua: >
+  RET M918T (MEN2B) = найвищий ризик — профілактична тиреоїдектомія у
+  1-й рік життя per ATA. Спорадична MTC з соматичною RET M918T (~25-30%)
+  — гірший прогноз. Selpercatinib (LIBRETTO-001/-531; ORR ~70%) —
+  стандарт 1L для поширеної RET-mutant MTC. RAS-mutant MTC — RET-wild-
+  type, vandetanib (ZETA) або cabozantinib (EXAM) — 1L.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

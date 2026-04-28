@@ -1,0 +1,46 @@
+id: REG-RUCAPARIB-MAINT-OVARIAN
+name: "Rucaparib maintenance (recurrent platinum-sensitive ovarian, ARIEL3)"
+name_ua: "Рукапариб підтримка (рецидив платиночутливого раку яєчників, ARIEL3)"
+alternate_names: ["ARIEL3 maintenance"]
+
+components:
+  - drug_id: DRUG-RUCAPARIB
+    dose: "600 mg PO BID continuous"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: null
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: moderate
+premedication: ["Optional 5-HT3 antagonist for nausea"]
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 3 anemia"
+    modification: "Hold until ≤Grade 1, resume at next-lower level (600 → 500 → 400 → 300 mg BID)"
+    source_refs: [SRC-ARIEL3-COLEMAN-2017]
+  - condition: "Persistent Grade 2 nausea / vomiting"
+    modification: "Aggressive antiemetics; reduce to 500 mg BID if unrelieved"
+  - condition: "ALT/AST > 3× ULN with bilirubin > 2× ULN"
+    modification: "Hold until recovery; resume at lower dose"
+  - condition: "Increased serum creatinine (transporter effect, non-progressive)"
+    modification: "Confirm with cystatin C if concerned; not a routine reason to dose-modify"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Рукапариб не зареєстрований в Україні; доступ через клінічне дослідження або благодійний імпорт. Альтернативи з UA-доступом: REG-OLAPARIB-MAINT-OVARIAN (BRCA1/2) або REG-NIRAPARIB-MAINT-OVARIAN (HRD+ або all-comer)."
+
+sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-ARIEL3-COLEMAN-2017]
+last_reviewed: "2026-04-27"
+
+notes: >
+  ARIEL3 (recurrent platinum-sensitive maintenance after CR/PR to most
+  recent platinum, ≥2 prior platinum lines): BRCA-mut mPFS 16.6 vs 5.4
+  mo (HR 0.23); HRD+ 13.6 vs 5.4 mo (HR 0.32); all-comers 10.8 vs 5.4
+  mo (HR 0.36). Third PARPi maintenance option after olaparib (SOLO-2)
+  and niraparib (NOVA). Distinct AE: ALT/AST elevation common but
+  usually transient; non-progressive creatinine elevation (transporter
+  effect) is not nephrotoxicity.

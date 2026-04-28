@@ -32,6 +32,19 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-RATIFY-STONE-2017
 
+
+# OncoKB integration hint (safe-rollout v3 §4 + PR-C). When a patient
+# has this biomarker, the engine will issue an OncoKB lookup with these
+# values. Conservative: only the canonical actionable variant; other
+# variants on the same gene need their own variant-specific biomarker.
+actionability_lookup:
+  gene: FLT3
+  variant: D835Y
+external_ids:
+  hgnc_symbol: "FLT3"
+  hgvs_protein: "p.D835Y"
+  oncokb_url: "https://www.oncokb.org/gene/FLT3/D835Y"
+
 last_reviewed: "2026-04-27"
 notes: >
   ~7–10% of AML; can co-occur with FLT3-ITD. Type-I FLT3 inhibitors
@@ -41,3 +54,7 @@ notes: >
   resistance mechanism to type-II inhibitors during therapy. ELN-2022
   classifies FLT3-TKD without ITD as intermediate-risk (revised down
   from adverse).
+notes_ua: >
+  ~7–10% of AML; can co-occur with FLT3-ITD. Type-I FLT3 інгібітори (мідостаурин, гілтеритиніб, crenolanib) inhibit both ITD and TKD; type-II (квізартиніб, сорафеніб) bind only inactive conformation and are less effective against D835. FLT3-TKD also acts as a resistance mechanism to type-II інгібітори during терапія. ELN-2022 classifies FLT3-TKD without ITD as проміжного ризику (revised down from несприятливий).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

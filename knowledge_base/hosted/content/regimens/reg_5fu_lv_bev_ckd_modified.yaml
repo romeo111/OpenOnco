@@ -1,0 +1,83 @@
+id: REG-5FU-LV-BEV-CKD-MODIFIED
+name: "5-FU + Leucovorin + Bevacizumab (sLV5FU2-Bev, CRC severe CKD CrCl <30 — oxali/cape unsafe)"
+name_ua: "5-ФУ + Лейковорин + Бевацизумаб (sLV5FU2-Bev, КРР тяжка ХХН CrCl <30 — оксалі/капе небезпечні)"
+alternate_names:
+  - "sLV5FU2 + Bev"
+  - "Simplified de Gramont + Bev"
+  - "5-FU/LV/Bev CKD-adapted"
+
+components:
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus, then 2400 mg/m² CIVI over 46h"
+    schedule: "day 1 of each 14-day cycle"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m² IV over 2h"
+    schedule: "day 1 of each 14-day cycle (before 5-FU)"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "5 mg/kg IV"
+    schedule: "day 1 of each 14-day cycle"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Proteinuria >2 g/24h (more common in CKD)"
+    modification: "Hold bevacizumab; consult nephrology; resume on <2 g; permanent discontinuation if nephrotic syndrome"
+    rationale: "Pre-existing CKD increases bevacizumab nephrotoxicity risk"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Uncontrolled HTN"
+    modification: "Hold bevacizumab; antihypertensive optimisation"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "5-FU related cardiotoxicity (chest pain, ECG changes)"
+    modification: "Permanent discontinuation of 5-FU; cardiology evaluation; consider raltitrexed as alternative thymidylate-synthase inhibitor"
+  - condition: "G≥3 mucositis OR diarrhea"
+    modification: "Reduce 5-FU to 75%; hydration + loperamide"
+  - condition: "DPYD deficiency (any clinically-significant variant)"
+    modification: "Reduce 5-FU starting dose by 50% per DPYD genotype-based dosing guideline; CPIC"
+    rationale: "DPYD deficiency causes severe-fatal 5-FU toxicity"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "GI perforation / fistula / arterial TE"
+    modification: "Permanent discontinuation of bevacizumab"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "5-ФУ, лейковорин, бевацизумаб — всі реімбурсуються НСЗУ для мКРР; ця CKD-адаптована схема — стандартна для пацієнтів з CrCl <30, де капецитабін протипоказаний і оксаліплатин кумулятивно нефротоксичний."
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-04-27"
+reviewers: []
+notes: >
+  Capecitabine is contraindicated CrCl <30 (renally cleared, severe
+  toxicity risk). Oxaliplatin is hepatically cleared but has additive
+  nephrotoxicity in pre-existing CKD; risk-benefit unfavourable in
+  severe CKD where neuropathy is also harder to manage. sLV5FU2-Bev
+  (simplified bolus + 46h CIVI 5-FU + leucovorin + bev) provides a
+  reasonable backbone for mCRC in severe CKD when chemo is still
+  desired. 5-FU is hepatically metabolised (DPD); no dose adjustment
+  needed for renal impairment (parent and metabolites only ~5-10%
+  renal). Bevacizumab dose reduced to 5 mg/kg q2w (vs standard 5-7.5
+  mg/kg q2w) to limit proteinuria worsening; close BP + UPC monitoring.
+  DPYD pre-screening strongly recommended (CPIC).
+notes_ua: >
+  Капецитабін протипоказаний CrCl <30 (нирковий кліренс, ризик тяжкої
+  токсичності). Оксаліплатин — печінковий кліренс, але адитивна нефро-
+  токсичність при пре-існуючій ХХН; неприйнятне співвідношення ризик-
+  користь при тяжкій ХХН. sLV5FU2-Bev (simplified bolus + 46h CIVI
+  5-ФУ + лейковорин + бев) — розумний backbone для мКРР при тяжкій
+  ХХН, коли хіміо все ще бажане. 5-ФУ — печінкова метаболізація (DPD);
+  не потребує корекції для ниркової недостатності (~5-10% ниркового
+  виведення). DPYD-передскринінг наполегливо рекомендується (CPIC).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

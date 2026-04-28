@@ -1,0 +1,49 @@
+id: RF-T-ALL-CNS-LEUKEMIA
+definition: "T-ALL with CNS-2 (CSF blasts present, WBC <5/µL) or CNS-3 (CSF WBC ≥5/µL with blasts, or cranial nerve palsy / parenchymal mass) status at diagnosis or relapse — mandates intensified IT/CNS-directed therapy"
+definition_ua: "T-ALL зі статусом CNS-2 (бласти в лікворі, WBC <5/мкл) або CNS-3 (WBC в лікворі ≥5/мкл з бластами, або параліч черепних нервів / паренхіматозне ураження) при діагностиці або рецидиві — потребує інтенсифікованої IT/CNS-терапії"
+
+trigger:
+  type: composite
+  any_of:
+    - finding: "csf_blasts_present"
+      value: true
+    - finding: "csf_wbc_per_ul"
+      threshold: 5
+      comparator: ">="
+    - finding: "cranial_nerve_palsy"
+      value: true
+    - finding: "cns_parenchymal_mass"
+      value: true
+    - finding: "cns_status"
+      value: "CNS-3"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 20
+category: high-risk-biology
+relevant_diseases:
+  - DIS-T-ALL
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-CALGB-10403-STOCK-2019
+
+last_reviewed: "2026-04-27"
+draft: true
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  CNS-3 is the highest-risk CNS status; per NCCN ALL/LBL guideline, CNS-3 at
+  diagnosis mandates cranial radiation (12-18 Gy) addition to standard
+  IT therapy + adjustment of post-CR consolidation. Direction INTENSIFY —
+  shifts indication toward pediatric-inspired regimens (CALGB-10403,
+  GMALL) + cranial RT addition. Priority 20 (high but below airway/TLS
+  emergencies). STUB — requires clinical co-lead signoff. Wiring
+  suggestion: ALGO-T-ALL-1L step that branches to CNS-intensified
+  consolidation indication.
+notes_ua: >
+  CNS-3 is the найвища-risk CNS status; per NCCN ALL/LBL настанова, CNS-3 при діагнозі mandates cranial radiation (12-18 Gy) addition to стандарт IT терапія + adjustment of post-CR консолідація. Direction INTENSIFY — shifts показання toward педіатричний-inspired схеми (CALGB-10403, GMALL) + cranial RT addition. Priority 20 (high but below airway/TLS emergencies). STUB — requires clinical co-lead signoff. Wiring suggestion: ALGO-T-ALL-1L step that branches to CNS-intensified консолідація показання.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

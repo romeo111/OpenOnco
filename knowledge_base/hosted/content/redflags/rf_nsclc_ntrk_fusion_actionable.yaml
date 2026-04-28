@@ -1,0 +1,62 @@
+id: RF-NSCLC-NTRK-FUSION-ACTIONABLE
+definition: >
+  NTRK1/2/3 gene fusion — pan-tumor actionable driver; <1% in NSCLC.
+  Larotrectinib (NAVIGATE — ORR 75% pan-tumor) and entrectinib
+  (STARTRK-2) are FDA tissue-agnostic TRK inhibitors. Treatment-defining
+  if detected.
+definition_ua: >
+  Фузія генів NTRK1/2/3 — пан-пухлинний actionable драйвер; <1% при
+  НДРЛ. Ларотректиніб (NAVIGATE — ORR 75% пан-пухлинно) та ентректиніб
+  (STARTRK-2) — FDA tissue-agnostic TRK-інгібітори. Лікування-визначальний
+  при виявленні.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ntrk_fusion"
+      value: true
+    - finding: "ntrk_status"
+      value: "fusion_positive"
+    - finding: "ntrk1_fusion"
+      value: true
+    - finding: "ntrk2_fusion"
+      value: true
+    - finding: "ntrk3_fusion"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-1L
+  - ALGO-NSCLC-METASTATIC-2L
+branch_targets:
+  ALGO-NSCLC-METASTATIC-1L: "step-4"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-NAVIGATE-DRILON-2018
+  - SRC-STARTRK2-DRILON-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Detection: pan-TRK IHC screen → confirm by RNA-NGS or FISH (IHC
+  less sensitive for NTRK3). Acquired-resistance solvent-front
+  mutations (NTRK1 G595R, NTRK3 G623R) addressed by next-gen
+  TRK-TKI repotrectinib / selitrectinib. Class neurologic toxicity
+  (dizziness, paresthesias, weight gain) — tropomyosin-receptor-mediated.
+notes_ua: >
+  Виявлення: пан-TRK ІГХ скринінг → підтвердження RNA-NGS або FISH
+  (ІГХ менш чутлива для NTRK3). Set вторинних solvent-front мутацій
+  резистентності (NTRK1 G595R, NTRK3 G623R) таргетується TRK-TKI
+  наступного покоління (repotrectinib, селитректиніб). Класова
+  неврологічна токсичність (запаморочення, парестезії, набір ваги) —
+  опосередкована tropomyosin-рецептором.

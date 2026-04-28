@@ -1,0 +1,63 @@
+id: IND-BREAST-TNBC-2L-SACITUZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: TNBC
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-SACITUZUMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 6
+  median_overall_survival_months: 12
+  notes: "ASCENT brain-mets-negative cohort: PFS 5.6 vs 1.7 mo (HR 0.41), OS 12.1 vs 6.7 mo (HR 0.48), ORR 35% vs 5%."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests:
+  - TEST-GERMLINE-BRCA-PANEL  # to rule in/out PARPi alternative
+
+sources:
+  - source_id: SRC-ASCENT-BARDIA-2021
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-27"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  ESCAT IA. ASCENT established sacituzumab govitecan (anti-Trop-2 ADC
+  with SN-38 payload) as standard ≥2L for metastatic TNBC pretreated
+  with ≥2 prior chemo lines (≥1 in metastatic). No biomarker gating —
+  Trop-2 expression is universal in TNBC. Severe AE profile:
+  neutropenia G3+ 51% (G-CSF primary prophylaxis recommended),
+  diarrhea G3+ 10%. UGT1A1*28 homozygous patients require dose
+  reduction. Default 2L for non-BRCA TNBC; default 3L for BRCA-mut
+  TNBC after PARPi failure. UA access barrier: not registered;
+  named-patient import / EAP / cross-border only.

@@ -1,0 +1,49 @@
+id: REG-CAPIVASERTIB-FULVESTRANT-BREAST
+name: "Capivasertib + fulvestrant (HR+/HER2- PIK3CA/AKT1/PTEN-altered metastatic post-AI/CDK4/6i)"
+name_ua: "Капівасертіб + фулвестрант (HR+/HER2- PIK3CA/AKT1/PTEN-альт метастаз після ІА/CDK4/6i)"
+alternate_names: ["CAPItello-291 regimen"]
+
+components:
+  - drug_id: DRUG-CAPIVASERTIB
+    dose: "400 mg PO BID, 4 days on / 3 days off (intermittent schedule)"
+    schedule: "Days 1-4, 8-11, 15-18, 22-25 of 28-day cycle"
+    route: PO
+  - drug_id: DRUG-FULVESTRANT
+    dose: "500 mg IM days 1, 15, 29, then monthly"
+    schedule: "Loading days 1, 15, 29; then q4w maintenance"
+    route: IM
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Pre-treatment HbA1c + fasting glucose"
+  - "Loperamide on hand from day 1; patient counseling on early intervention"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Diarrhea G≥2 despite loperamide"
+    modification: "Hold capivasertib; resume at 320 mg BID → 240 mg BID after recovery to ≤G1"
+  - condition: "Hyperglycemia G≥3"
+    modification: "Hold; metformin/insulin per endocrinology; resume at reduced dose when controlled"
+  - condition: "Rash G≥3"
+    modification: "Hold; topical/systemic corticosteroids; resume at reduced dose"
+  - condition: "DKA"
+    modification: "Permanent discontinuation"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Capivasertib not registered in Ukraine; fulvestrant reimbursed. Named-patient import / EAP only for capivasertib. Major access barrier."
+
+sources: [SRC-CAPITELLO291-TURNER-2023, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed: "2026-04-27"
+notes: >
+  CAPItello-291: AKT-pathway-altered (PIK3CA / AKT1 / PTEN) cohort
+  PFS 7.3 vs 3.1 mo (HR 0.50). Pathway-alteration testing (NGS for
+  PIK3CA / AKT1 + combined IHC + NGS for PTEN loss) required
+  pre-start. Intermittent 4-on/3-off dosing intentional — improves
+  tolerability vs continuous (phase 1/2 finding). Diarrhea management
+  dominant clinical workflow burden.

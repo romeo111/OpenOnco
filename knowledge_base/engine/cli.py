@@ -205,6 +205,8 @@ def _run_revise(
     save: bool = False,
     save_dir: Path = PATIENT_PLANS_ROOT,
     render_path: Path | None = None,
+    actionability_enabled: bool = False,
+    actionability_client=None,
 ) -> int:
     try:
         # `prev_arg` is the value of --revise. If the path doesn't exist as
@@ -218,7 +220,11 @@ def _run_revise(
         return 2
 
     try:
-        revised_prev, new_result = revise_plan(patient, previous, trigger, kb_root=kb_root)
+        revised_prev, new_result = revise_plan(
+            patient, previous, trigger, kb_root=kb_root,
+            actionability_enabled=actionability_enabled,
+            actionability_client=actionability_client,
+        )
     except (ValueError, TypeError) as e:
         print(f"ERROR revising plan: {e}", file=sys.stderr)
         return 2
@@ -375,6 +381,10 @@ def main() -> int:
         help=("Render result to a single-file HTML document (A4 print-friendly). "
               "Works with treatment plan, diagnostic brief, and --revise (revision note)."),
     )
+    # Actionability flags. The OncoKB-specific --oncokb-proxy / --oncokb-timeout
+    # were removed in Phase 1 of the CIViC pivot (the proxy is gone; see
+    # docs/reviews/oncokb-public-civic-coverage-2026-04-27.md). Phase 2 will
+    # add `--civic-snapshot PATH` once SnapshotActionabilityClient ships.
     args = parser.parse_args()
 
     # ── List versions and exit (no patient profile needed) ──────────────
@@ -395,12 +405,15 @@ def main() -> int:
         if not args.revision_trigger:
             print("ERROR: --revise requires --revision-trigger \"...\"", file=sys.stderr)
             return 2
+        # TODO(phase-2): wire --civic-snapshot to revise re-query as well.
         # `--revise` accepts either an explicit file path or a plan_id.
         # _run_revise / _load_previous_result handles both; do not pre-check.
         return _run_revise(patient, args.revise, args.revision_trigger, args.kb,
                            json_output=args.json_output, mdt=args.mdt,
                            save=args.save, save_dir=args.save_dir,
-                           render_path=args.render)
+                           render_path=args.render,
+                           actionability_enabled=False,
+                           actionability_client=None)
 
     # Mode dispatch — see DIAGNOSTIC_MDT_SPEC §6.3
     use_diagnostic = args.diagnostic or (
@@ -442,7 +455,8 @@ def main() -> int:
             return 1
         return 0
 
-    # Treatment mode (existing flow)
+    # Treatment mode (existing flow). TODO(phase-2): wire --civic-snapshot
+    # → SnapshotActionabilityClient when CIViC reader lands.
     result = generate_plan(patient, kb_root=args.kb)
 
     print(f"Patient:   {result.patient_id or '<anonymous>'}")

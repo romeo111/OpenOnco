@@ -1,0 +1,84 @@
+id: IND-GASTRIC-METASTATIC-2L-HER2-TDXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced"
+    - "Disease progression on or after 1L trastuzumab-containing regimen"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive (IHC 3+ OR IHC 2+/ISH+) on archival or fresh biopsy"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-TDXD-GASTRIC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~51% (DESTINY-Gastric01)"
+  complete_response: "~9%"
+  progression_free_survival: "Median PFS 5.6 mo (vs 3.5 mo investigator's choice; HR 0.47)"
+  overall_survival_5y: "mOS 12.5 vs 8.4 mo (HR 0.59, DESTINY-Gastric01)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+  - RF-GASTRIC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-HER2-IHC-ISH-IF-RAS-WT
+  - TEST-ECHO
+  - TEST-CBC
+  - TEST-CMP
+
+desired_tests: []
+
+rationale: >
+  Trastuzumab deruxtecan (T-DXd) is the NCCN cat 1 preferred 2L for
+  HER2+ metastatic gastric/GEJ adenocarcinoma after 1L trastuzumab-based
+  regimen failure. DESTINY-Gastric01 established ORR + OS + PFS benefit
+  over investigator's-choice chemo. HER2 positivity should be reconfirmed
+  on fresh biopsy where feasible (HER2 loss occurs in ~30% post 1L).
+  Gastric dose is 6.4 mg/kg q3w (higher than breast 5.4 mg/kg). ILD is
+  the dose-limiting boxed-warning toxicity.
+
+rationale_ua: >
+  трастузумаб дерукстекан (T-DXd) is the NCCN cat 1 переважний 2L for HER2+ метастатичний gastric/GEJ adenocarcinoma after 1L трастузумаб-based схема failure. DESTINY-Gastric01 усталений ORR + OS + PFS виграш over investigator's-choice chemo. HER2 positivity should be reconfirmed on fresh біопсія where feasible (HER2 loss occurs in ~30% post 1L). Gastric доза is 6.4 mg/kg q3w (higher than breast 5.4 mg/kg). ILD is the доза-limiting boxed-warning токсичність.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-GASTRIC-2025
+    weight: primary
+    relevant_quote_paraphrase: "T-DXd is a Category 1 preferred regimen for HER2+ gastric/GEJ adenocarcinoma 2L post-trastuzumab failure (DESTINY-Gastric01)"
+  - source_id: SRC-ESMO-GASTRIC-2024
+    weight: primary
+    relevant_quote_paraphrase: "Trastuzumab deruxtecan recommended 2L for HER2+ gastric after trastuzumab progression"
+
+do_not_do:
+  - "НЕ ігнорувати baseline + serial HRCT chest — ILD ~12% incidence, ~1% fatal."
+  - "НЕ продовжувати при підозрі на пневмоніт — негайний hold + пульмонолог + кортикостероїди."
+  - "НЕ використовувати без HER2 reconfirmation на fresh biopsy за можливістю — HER2-loss після 1L поширений."
+  - "НЕ призначати при baseline LVEF <50% — кардіотоксичність трастузумаб-базованих кон'югатів."
+  - "НЕ пропускати profilactic high-emetogenic антиеметики — T-DXd HEC."
+  - "НЕ підтверджувати план без верифікованого funding pathway — NSZU 2026 НЕ покриває T-DXd для шлунка."
+
+time_critical: false
+last_reviewed: '2026-04-26'
+reviewers: []
+reviewer_signoffs: 2
+notes: >
+  STUB — pending Co-Lead sign-off. Aggressive-track 2L for HER2+
+  metastatic gastric. UA: T-DXd registered + NSZU-reimbursed for breast
+  but NOT for gastric (2026 onco package); out-of-pocket / charitable
+  pathway only. RAINBOW (paclitaxel + ramucirumab) is the funded
+  fallback for HER2+ patients without T-DXd access.

@@ -180,10 +180,13 @@ def _flatten_findings(patient: dict) -> dict[str, Any]:
 
 
 def _has(findings: dict[str, Any], *keys: str) -> bool:
-    """True if ANY of the given keys is present and not None/empty-string."""
+    """True if ANY of the given keys (or its known aliases) resolves to a
+    non-empty value. Uses the same alias map as the trigger evaluator so
+    `unevaluated_red_flags` and `evaluate_redflag_trigger` agree on
+    "data present"."""
+    from .redflag_eval import _resolve_finding
     for k in keys:
-        v = findings.get(k)
-        if v not in (None, ""):
+        if _resolve_finding(findings, k) is not None:
             return True
     return False
 
@@ -265,229 +268,52 @@ def _role_name(role_id: str) -> str:
 
 # ── Skill registry (version + last_reviewed + clinical_lead per role) ─────
 #
-# Each MDT role is a "skill" — a versioned bundle of rules implemented in
-# this module (see SKILL_ARCHITECTURE_SPEC §5; refactor to per-file modules
-# under knowledge_base/skills/ deferred until Co-Lead sign-off). The
-# registry is the single source of truth for rendering "skill X v0.1.0,
-# last reviewed YYYY-MM-DD" badges on every Plan / Diagnostic Brief.
+# Each MDT role is a "skill" — a versioned bundle of rules. As of skill
+# candidate #7a (clinical sign-off 2026-04-26) the metadata for each
+# skill lives in `knowledge_base/hosted/content/mdt_skills/<role_id>.yaml`
+# rather than as a Python literal here, so clinical co-leads can bump
+# version, add sign-offs, and register sources via the same two-reviewer
+# governance as Indications and RedFlags (CHARTER §6.1, ADR-0002).
+#
+# The `_SKILL_REGISTRY` symbol is preserved (tests + render layer import
+# it directly) but is now populated from the KB at module import time.
+# The loader cache (validation/loader.py) makes the import-time read
+# cheap — one cold parse per worker process, then pure dict access.
 #
 # Bump version when: rule semantics change (major), rule added/modified
 # (minor), source citation or wording (patch). Update last_reviewed on
-# every bump.
+# every bump. Do this in the YAML, not here.
 
-_SKILL_REGISTRY: dict[str, SkillMetadata] = {
-    "hematologist": SkillMetadata(
-        skill_id="hematologist",
-        name="Гематолог / онкогематолог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025", "SRC-NCCN-AML-2025",
-                 "SRC-NCCN-MM-2025", "SRC-NCCN-MPN-2025",
-                 "SRC-EHA-WORKUP-2024", "SRC-ESMO-MZL-2024",
-                 "SRC-BSH-MZL-2024"],
-        domain="hematology_oncology",
-        notes="STUB — required role for any lymphoma/MM/leukemia plan; "
-              "pending Clinical Co-Lead sign-off per CHARTER §6.1.",
-    ),
-    "medical_oncologist": SkillMetadata(
-        skill_id="medical_oncologist",
-        name="Медичний онколог (хіміотерапевт солідних пухлин)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="solid_oncology",
-        notes="STUB — placeholder for solid-tumor cases; rules minimal "
-              "until first solid-tumor disease lands in KB.",
-    ),
-    "infectious_disease_hepatology": SkillMetadata(
-        skill_id="infectious_disease_hepatology",
-        name="Інфекціоніст / гепатолог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-EASL-HCV-2023", "SRC-NCCN-BCELL-2025"],
-        domain="infectious_diseases",
-        notes="STUB — escalates on viral etiology (HCV/HBV/HIV) or anti-CD20 "
-              "with HBV reactivation risk.",
-    ),
-    "radiologist": SkillMetadata(
-        skill_id="radiologist",
-        name="Лікар-радіолог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025"],
-        domain="diagnostic_imaging",
-        notes="STUB — staging/restaging via CECT/PET-CT/MRI; reads bulky-disease "
-              "and mass-mapping findings.",
-    ),
-    "pathologist": SkillMetadata(
-        skill_id="pathologist",
-        name="Патолог (загальний)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025", "SRC-EHA-WORKUP-2024"],
-        domain="pathology",
-        notes="STUB — generic pathologist for solid-tumor histology. "
-              "Hematologic neoplasms route to hematopathologist (separate skill) "
-              "in future rule revision; per CHARTER §15.2 C7 either way.",
-    ),
-    "hematopathologist": SkillMetadata(
-        skill_id="hematopathologist",
-        name="Гематопатолог (специфічно для лімфом / лейкозів / мієломи)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025", "SRC-NCCN-AML-2025",
-                 "SRC-NCCN-MM-2025", "SRC-EHA-WORKUP-2024"],
-        domain="hematopathology",
-        notes="STUB — subspecialized pathologist for lymphoid + myeloid "
-              "neoplasms. Owns: WHO 5th-ed classification mapping, IHC panel "
-              "design (CD20/CD3/CD5/CD10/CD23/BCL2/BCL6/MYC/Ki67), flow "
-              "cytometry interpretation, FISH (MYC/BCL2/BCL6 break-apart), "
-              "Hans algorithm (ABC vs GCB DLBCL), gene-rearrangement studies. "
-              "Critical for differentiating lymphoma subtypes — without rich "
-              "hematopathology, you can't pick the right Tier 1 algorithm.",
-    ),
-    "molecular_geneticist": SkillMetadata(
-        skill_id="molecular_geneticist",
-        name="Молекулярний генетик / молекулярний онколог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-MM-2025"],
-        domain="molecular_oncology",
-        notes="STUB — escalates on actionable genomic biomarkers per R9 "
-              "(_ACTIONABLE_GENOMIC_TYPES set).",
-    ),
-    "clinical_pharmacist": SkillMetadata(
-        skill_id="clinical_pharmacist",
-        name="Клінічний фармацевт",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="clinical_pharmacy",
-        notes="STUB — drug-drug interactions, dose adjustments, "
-              "premedication, supportive care.",
-    ),
-    "radiation_oncologist": SkillMetadata(
-        skill_id="radiation_oncologist",
-        name="Радіотерапевт (променева терапія)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-ESMO-MZL-2024"],
-        domain="radiation_oncology",
-        notes="STUB — extranodal MALT lymphomas often eligible for "
-              "localized radiotherapy.",
-    ),
-    "surgical_oncologist": SkillMetadata(
-        skill_id="surgical_oncologist",
-        name="Хірург-онколог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="surgical_oncology",
-        notes="STUB — placeholder; rules minimal until first solid-tumor "
-              "disease lands in KB. Episodic role for hematologic: "
-              "splenectomy in splenic MZL with hypersplenism, GI surgery "
-              "for selected GI lymphomas.",
-    ),
-    "transplant_specialist": SkillMetadata(
-        skill_id="transplant_specialist",
-        name="Спеціаліст з трансплантації (BMT)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025", "SRC-NCCN-MM-2025",
-                 "SRC-EHA-WORKUP-2024"],
-        domain="cellular_therapy",
-        notes="STUB — autoSCT/alloSCT decision-making. Activates for: "
-              "first-line consolidation in transplant-eligible MCL + high-risk "
-              "DLBCL; salvage transplant for relapsed/refractory aggressive "
-              "lymphomas; alloSCT for relapsed CLL/T-cell. Triggers: "
-              "fit_for_transplant + ECOG ≤ 2 + age ≤ 70-75 (relative).",
-    ),
-    "cellular_therapy_specialist": SkillMetadata(
-        skill_id="cellular_therapy_specialist",
-        name="Спеціаліст з клітинної терапії (CAR-T)",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=["SRC-NCCN-BCELL-2025"],
-        domain="cellular_therapy",
-        notes="STUB — CAR-T product selection (axi-cel, tisa-cel, liso-cel, "
-              "brexu-cel) + bridging therapy + CRS/ICANS management. Modern "
-              "standard for refractory/relapsed DLBCL/MCL/CLL after 2nd line. "
-              "Triggers: line_of_therapy ≥ 2 + aggressive_b_cell_lymphoma + "
-              "fit_for_cellular_therapy. Funding pathway flag mandatory "
-              "(not НСЗУ-reimbursed in UA — clinical trial / charitable).",
-    ),
-    "psychologist": SkillMetadata(
-        skill_id="psychologist",
-        name="Психолог / онкопсихолог",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="psychosocial",
-        notes="STUB — supportive role for distress, anxiety, treatment "
-              "decision support.",
-    ),
-    "palliative_care": SkillMetadata(
-        skill_id="palliative_care",
-        name="Паліативна допомога",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="palliative_care",
-        notes="STUB — advanced-disease symptom management and goals-of-care.",
-    ),
-    "social_worker_case_manager": SkillMetadata(
-        skill_id="social_worker_case_manager",
-        name="Соціальний працівник / кейс-менеджер",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="psychosocial",
-        notes="STUB — coordinates НСЗУ reimbursement pathway, drug access, "
-              "transportation, financial counseling.",
-    ),
-    "primary_care": SkillMetadata(
-        skill_id="primary_care",
-        name="Сімейний лікар / терапевт",
-        version="0.1.0",
-        last_reviewed="2026-04-25",
-        clinical_lead=None,
-        verified_by=[],
-        sources=[],
-        domain="primary_care",
-        notes="STUB — comorbidity management, vaccinations, post-treatment "
-              "long-term follow-up.",
-    ),
-}
+def _build_skill_registry() -> dict[str, SkillMetadata]:
+    """Walk the loaded KB and project every `mdt_skills` entity into a
+    `SkillMetadata` dataclass keyed on role_id. Called once at module
+    import; tests that need a different KB call this manually after
+    `clear_load_cache()`."""
+    from knowledge_base.validation.loader import load_content
+
+    kb_default = Path(__file__).resolve().parent.parent / "hosted" / "content"
+    out: dict[str, SkillMetadata] = {}
+    load = load_content(kb_default)
+    for _eid, info in load.entities_by_id.items():
+        if info["type"] != "mdt_skills":
+            continue
+        d = info["data"]
+        role_id = d["role_id"]
+        out[role_id] = SkillMetadata(
+            skill_id=role_id,
+            name=d["name"],
+            version=d.get("version", "0.1.0"),
+            last_reviewed=d.get("last_reviewed", ""),
+            clinical_lead=d.get("clinical_lead"),
+            verified_by=list(d.get("verified_by") or []),
+            sources=list(d.get("sources") or []),
+            domain=d.get("domain"),
+            notes=d.get("notes"),
+        )
+    return out
+
+
+_SKILL_REGISTRY: dict[str, SkillMetadata] = _build_skill_registry()
 
 
 def get_skill(role_id: str) -> SkillMetadata:

@@ -1,34 +1,29 @@
 id: ALGO-ESOPH-RESECTABLE-1L
 applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 1
-purpose: >
-  Scaffold algorithm for esophageal carcinoma resectable 1L. Currently
-  models ONE pathway (CROSS chemo backbone for both histologies). Full
-  histology stratification (FLOT preferred for adeno per FLOT4-extension
-  data, definitive CRT for squamous unresectable, adjuvant nivolumab
-  CheckMate-577) awaits PROPOSAL §17 ratification + clinical authoring.
+purpose: 'Scaffold algorithm for esophageal carcinoma resectable 1L. Currently models ONE pathway (CROSS chemo backbone for both histologies). Full histology stratification (FLOT preferred for adeno per FLOT4-extension data, definitive CRT for squamous unresectable, adjuvant nivolumab CheckMate-577) awaits PROPOSAL §17 ratification + clinical authoring.
 
+  '
 output_indications:
-  - IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
-
+- IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
 default_indication: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
 alternative_indication: null
-
 decision_tree:
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "cT1b-T4a or N+ M0 (resectable / borderline)"
-        - condition: "ECOG ≤2"
-    if_true:
-      result: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
-    if_false:
-      result: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
-
+- step: 1
+  evaluate:
+    all_of:
+    - condition: cT1b-T4a or N+ M0 (resectable / borderline)
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+  if_true:
+    result: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
+  if_false:
+    result: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 sources:
-  - SRC-NCCN-ESOPHAGEAL-2025
+- SRC-NCCN-ESOPHAGEAL-2025
+last_reviewed: '2026-04-26'
+notes: 'Single-indication scaffold; histology branching + adjuvant nivolumab + FLOT for adeno + definitive CRT alternative await full authoring.
 
-last_reviewed: "2026-04-26"
-notes: >
-  Single-indication scaffold; histology branching + adjuvant nivolumab
-  + FLOT for adeno + definitive CRT alternative await full authoring.
+  '

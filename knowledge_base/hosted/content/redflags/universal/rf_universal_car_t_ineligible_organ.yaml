@@ -1,0 +1,71 @@
+id: RF-CAR-T-INELIGIBLE-ORGAN
+definition: >
+  Patient fails organ-function thresholds for CAR-T cell therapy: any of
+  LVEF <40%, CrCl <30 mL/min, bilirubin >2× ULN (non-Gilbert / non-disease-
+  related), AST/ALT >5× ULN, severe pulmonary disease (DLCO <40% or O2
+  requirement), or uncontrolled active infection. Triggers exclusion from
+  CAR-T pathways and pivot to bispecific antibodies, ADC, or salvage
+  chemotherapy.
+definition_ua: >
+  Пацієнт не відповідає порогам функції органів для CAR-T клітинної
+  терапії: будь-яке з LVEF <40%, CrCl <30 мл/хв, білірубін >2× ULN
+  (не Gilbert / не зумовлений хворобою), AST/ALT >5× ULN, тяжка
+  легенева патологія (DLCO <40% або потреба в O2), неконтрольована
+  активна інфекція. Триггерує виключення з CAR-T шляхів та перехід на
+  біспецифічні антитіла, ADC або salvage-хіміотерапію.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "lvef_percent"
+      threshold: 40
+      comparator: "<"
+    - finding: "creatinine_clearance_ml_min"
+      threshold: 30
+      comparator: "<"
+    - finding: "bilirubin_ratio_to_uln"
+      threshold: 2
+      comparator: ">"
+    - finding: "ast_alt_ratio_to_uln"
+      threshold: 5
+      comparator: ">"
+    - finding: "active_uncontrolled_infection"
+      value: true
+
+clinical_direction: hold
+
+severity: critical
+priority: 60
+category: organ-dysfunction
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []
+
+sources:
+  - SRC-ZUMA-1-NEELAPU-2017
+  - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+
+last_reviewed: "2026-04-27"
+draft: false
+
+notes: >
+  Pivotal trial exclusions; real-world data (CIBMTR, French DESCAR-T)
+  suggest some flexibility but at increased CRS/ICANS-mortality cost.
+  Alternatives by disease: DLBCL/HGBL — bispecifics (epcoritamab,
+  glofitamab), polatuzumab + bendamustine + rituximab (POLARIX salvage
+  setting), tafasitamab + lenalidomide (L-MIND); MCL — pirtobrutinib,
+  bendamustine-based regimens; multiple myeloma — talquetamab,
+  teclistamab, elranatamab, selinexor combinations, belantamab.
+  Direction `hold` for CAR-T pathway only; other systemic therapy
+  remains feasible with attenuation per RF-ORGAN-* siblings.
+notes_ua: >
+  Виключення з pivotal трайлів; real-world дані (CIBMTR, DESCAR-T)
+  показують гнучкість, але ціною підвищеної CRS/ICANS-смертності.
+  Альтернативи за хворобою: DLBCL/HGBL — біспецифіки (епкорітамаб,
+  глофітамаб), полатузумаб + бендамустин + ритуксимаб, тафаситамаб +
+  леналідомід (L-MIND); MCL — піртобрутиніб; ММ — талкветамаб,
+  теклістамаб, елранатамаб, селінексор, белантамаб. Направлення
+  `hold` лише для CAR-T-шляху.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

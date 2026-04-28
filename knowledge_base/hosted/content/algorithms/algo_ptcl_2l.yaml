@@ -1,58 +1,42 @@
 id: ALGO-PTCL-2L
 applicable_to_disease: DIS-PTCL-NOS
 applicable_to_line_of_therapy: 2
-purpose: >
-  Relapsed/refractory PTCL-NOS — three salvage options of comparable
-  modest efficacy (ORR 25-30%) but distinct mechanisms: pralatrexate
-  (selective antifolate, PROPEL), romidepsin (HDACi, NCI 1312), and
-  belinostat (HDACi, BELIEF). Selection in UA practice is dominated
-  by access (none registered domestically) and toxicity profile
-  (mucositis-prone vs HDACi cardiotoxicity vs HDACi liver toxicity).
-  All three are bridges to alloSCT consolidation in fit transplant-
-  eligible responders. CD30+ relapse may be eligible for brentuximab
-  vedotin monotherapy (separate consideration).
+purpose: 'Relapsed/refractory PTCL-NOS — three salvage options of comparable modest efficacy (ORR 25-30%) but distinct mechanisms: pralatrexate (selective antifolate, PROPEL), romidepsin (HDACi, NCI 1312), and belinostat (HDACi, BELIEF). Selection in UA practice is dominated by access (none registered domestically) and toxicity profile (mucositis-prone vs HDACi cardiotoxicity vs HDACi liver toxicity). All three are bridges to alloSCT consolidation in fit transplant- eligible responders. CD30+ relapse may be eligible for brentuximab vedotin monotherapy (separate consideration).
 
+  '
 output_indications:
-  - IND-PTCL-2L-PRALATREXATE
-  - IND-PTCL-2L-ROMIDEPSIN
-
+- IND-PTCL-2L-PRALATREXATE
+- IND-PTCL-2L-ROMIDEPSIN
 default_indication: IND-PTCL-2L-ROMIDEPSIN
 alternative_indication: IND-PTCL-2L-PRALATREXATE
-
 decision_tree:
-  # Step 1 — HDACi-naive + no contraindicating cardiac history → romidepsin
-  - step: 1
-    evaluate:
-      all_of:
-        - condition: "HDAC-inhibitor-naive"
-        - condition: "Romidepsin accessible (named-patient or trial)"
-        - condition: "No baseline cardiac arrhythmia / QTc prolongation precluding HDACi"
-    if_true:
-      result: IND-PTCL-2L-ROMIDEPSIN
-    if_false:
-      next_step: 2
-
-  # Step 2 — pralatrexate accessible + no severe mucositis history
-  - step: 2
-    evaluate:
-      all_of:
-        - condition: "Pralatrexate accessible (named-patient or trial)"
-        - condition: "No prior Grade ≥3 mucositis from antifolates"
-        - condition: "CrCl ≥30"
-    if_true:
-      result: IND-PTCL-2L-PRALATREXATE
-    if_false:
-      result: IND-PTCL-2L-ROMIDEPSIN
-
+- step: 1
+  evaluate:
+    all_of:
+    - red_flag: RF-PRIOR-HDACI-NAIVE
+    - condition: Romidepsin accessible (named-patient or trial)
+    - condition: No baseline cardiac arrhythmia / QTc prolongation precluding HDACi
+  if_true:
+    result: IND-PTCL-2L-ROMIDEPSIN
+  if_false:
+    next_step: 2
+  notes: "Partially wired - RF-PRIOR-HDACI-NAIVE gates romidepsin/belinostat eligibility (HDACi-naive vs prior-HDACi → CHOEP/pralatrexate routing); access + cardiac criteria kept as MDT-evaluated text (no RF for named-patient access; QTc/arrhythmia criterion is pre-treatment workup, not RF-modeled)."
+- step: 2
+  evaluate:
+    all_of:
+    - condition: Pralatrexate accessible (named-patient or trial)
+    - condition: No prior Grade ≥3 mucositis from antifolates
+    - none_of:
+      - red_flag: RF-ORGAN-RENAL-IMPAIRED
+  if_true:
+    result: IND-PTCL-2L-PRALATREXATE
+  if_false:
+    result: IND-PTCL-2L-ROMIDEPSIN
+  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 sources:
-  - SRC-NCCN-BCELL-2025
-  - SRC-ESMO-PTCL-2024
+- SRC-NCCN-BCELL-2025
+- SRC-ESMO-PTCL-2024
+last_reviewed: '2026-04-27'
+notes: 'OOS / wiring gaps: (1) Belinostat 2L for PTCL-NOS not yet authored as separate indication (only AITL 2L belinostat exists). (2) Brentuximab vedotin monotherapy for CD30+ PTCL-NOS relapse — standalone indication needed. (3) Allo-SCT bridging is referral, outside KB. (4) Combination HDACi + pralatrexate emerging but not modeled.
 
-last_reviewed: "2026-04-27"
-notes: >
-  OOS / wiring gaps: (1) Belinostat 2L for PTCL-NOS not yet authored
-  as separate indication (only AITL 2L belinostat exists). (2)
-  Brentuximab vedotin monotherapy for CD30+ PTCL-NOS relapse —
-  standalone indication needed. (3) Allo-SCT bridging is referral,
-  outside KB. (4) Combination HDACi + pralatrexate emerging but not
-  modeled.
+  '
