@@ -1,0 +1,81 @@
+_contribution:
+  chunk_id: drug-class-normalization
+  contributor: claude-anthropic-internal
+  submission_date: "2026-04-28"
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: "1m-context"
+  ai_session_notes: ""
+  notes_for_reviewer: >
+    Negative-finding deliverable. Audit of all 216 hosted Drug entities'
+    drug_class field found ZERO actionable normalization candidates —
+    existing data is already canonical-style. Chunk's MARGINAL economic
+    profile retroactively becomes FAIL.
+
+report_type: drug_class_normalization_audit
+generated_at: "2026-04-28"
+total_drugs_audited: 216
+
+findings_summary:
+  unique_drug_class_strings: 200
+  clusters_with_multiple_phrasings: 0  # the key normalization candidate metric
+  drugs_with_empty_drug_class: 0
+  drug_class_min_chars: 14
+  drug_class_max_chars: 133
+  drug_class_avg_chars: 53
+
+  generation_tag_distribution:
+    "1st-generation": 4
+    "2nd-generation": 8
+    "3rd-generation": 3
+    no_alternative_phrasing_observed: true
+
+  abbreviation_distribution:
+    "TKI": 14
+    "ADC": 2
+    "mAb": 0  # all expanded forms ("monoclonal antibody")
+    "ICPI": 0  # all expanded forms
+
+audit_method: |
+  1. Bulk-read drug_class + mechanism + atc_code fields from 216 YAMLs.
+  2. Normalize each drug_class for cluster detection: lowercase + strip
+     non-alphanumeric + expand abbreviations (TKI→tyrosine kinase inhibitor,
+     mAb→monoclonal antibody, generation tags).
+  3. Group by normalized key. Identify clusters with multiple distinct
+     original phrasings = real normalization candidates.
+  4. Verify generation-tag uniformity (1st-gen vs first-generation, etc.).
+  5. Verify capitalization-only variants.
+
+findings: []   # explicit empty: no normalization actions proposed
+
+conclusion: |
+  Existing OpenOnco Drug entities have remarkably consistent drug_class
+  formatting. Hypothesized inconsistency (capitalization drift, mixed
+  abbreviations, generation-tag variants) was not present in the data.
+
+  Likely cause: Drugs were authored by a small set of contributors with
+  shared style conventions, OR a prior cleanup pass already normalized
+  the field. Either way, additional contributor-side normalization adds
+  zero clinical value.
+
+retrospective_economic_profile:
+  pre_execution: MARGINAL (assumed ≥70% maintainer accept rate on suggestions)
+  post_execution: FAIL (zero suggestions produced; chunk added zero value)
+  lesson: |
+    Before opening MARGINAL "cleanup" chunks, run a quick maintainer-side
+    audit script to count expected violations. If audit returns near-zero,
+    don't open the chunk.
+
+    Per L-20 (added to TaskTorrent living improvement plan):
+    "Run upstream-audit-script before opening speculative-cleanup chunks."
+
+    For OpenOnco specifically: drug_class field is clean. Future taxonomy
+    chunks should target fields with documented inconsistency
+    (e.g., evidence_summary wording, *_ua translation completeness),
+    not speculative cleanup of fields that were already cared for.
+
+recommendations_to_maintainer:
+  - 'Close issue for drug-class-normalization chunk as "no actionable work" (not as "completed").'
+  - 'Update chunk-spec status to "withdrawn" (or "not_actionable") rather than "completed".'
+  - 'Add L-20 to living plan: pre-flight audit before MARGINAL chunk opening.'
+  - 'For future taxonomy normalizations: define "expected_violations" threshold in chunk-spec; if actual count of violations falls below threshold, withdraw.'
