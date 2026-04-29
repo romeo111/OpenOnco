@@ -1,0 +1,87 @@
+{
+  "patient_id": "AML-RR-GILT-FLT3TKD-001",
+  "comment": "Synthetic R/R AML patient, age 62, FLT3-TKD (D835Y) primary-refractory after 7+3 induction (NO CR1 achieved — 28% blasts on day-28 BM). DIFFERENTIATION from existing patient_aml_flt3_relapse.json (which is FLT3-ITD, achieved CR1 then relapsed at 9 mo, age 55, female): this case is PRIMARY-REFRACTORY (no CR achieved), FLT3-TKD (D835Y) variant (not ITD), age 62, male, post 7+3+midostaurin induction failure. Engine routes ALGO-AML-2L step 1 (no emergency) → step 2 (no MRD — refractory not MRD-positive CR) → step 4 (RF-AML-FLT3-ACTIONABLE fires via flt3_tkd / flt3_mutation=positive; gilteritinib covers BOTH FLT3-ITD AND FLT3-TKD per ADMIRAL) → IND-AML-2L-GILTERITINIB-FLT3 (aggressive 2L+; mOS 9.3 vs 5.6 mo HR 0.64; bridge to alloHCT for fit responders).",
+
+  "disease": {
+    "id": "DIS-AML",
+    "icd_o_3_morphology": "9861/3"
+  },
+  "line_of_therapy": 2,
+
+  "biomarkers": {},
+
+  "demographics": {
+    "age": 62,
+    "sex": "male",
+    "ecog": 1,
+    "fit_for_transplant": true,
+    "fit_for_intensive_chemo": true
+  },
+
+  "findings": {
+    "prior_lines_count": 1,
+    "prior_regimen": "7+3 induction (cytarabine 200 mg/m² CIVI d1-7 + daunorubicin 60 mg/m² d1-3) + midostaurin 50 mg PO BID d8-21 — primary-refractory, day-28 BM blasts 28% (no CR achieved)",
+    "best_response_prior_line": "primary_refractory",
+    "aml_refractory": true,
+    "aml_relapse": false,
+    "bm_blasts_post_induction_pct": 28,
+    "time_to_relapse_months": null,
+    "flt3_itd": false,
+    "flt3_tkd": true,
+    "flt3_mutation": "positive",
+    "flt3_variant_aa": "D835Y",
+    "flt3_retested_at_relapse": true,
+    "flt3_retested_after_induction_failure": true,
+    "npm1": "positive",
+    "tp53_mutation": false,
+    "complex_karyotype": false,
+    "monosomal_karyotype": false,
+    "monosomy_7": false,
+    "del_5q": false,
+    "active_uncontrolled_infection": false,
+    "wbc_k_ul": 12,
+    "blast_percent_pb": 18,
+    "blast_percent_bm": 28,
+    "lvef_percent": 58,
+    "qtc_ms": 438,
+    "potassium_meq_l": 4.3,
+    "magnesium_mg_dl": 2.1,
+    "creatinine_mg_dl": 1.0,
+    "creatinine_clearance_ml_min": 78,
+    "bilirubin_mg_dl": 0.7,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_ab": "negative",
+    "hiv_ag_ab": "negative"
+  },
+
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Acute Myeloid Leukemia — FLT3-TKD (D835Y)-mutated, primary-refractory after 7+3 + midostaurin induction (no CR1 achieved)",
+        "icd_o_3": "9861/3",
+        "icd_10": "C92.0"
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "7+3 (cytarabine + daunorubicin) + midostaurin per RATIFY",
+          "best_response": "primary_refractory",
+          "day_28_bm_blasts_percent": 28,
+          "consolidation": "not_eligible_no_CR_achieved",
+          "relapse_at_months": null,
+          "induction_failure": true
+        }
+      },
+      "molecular_at_relapse_or_failure": {
+        "flt3_itd": "negative",
+        "flt3_tkd": "positive",
+        "flt3_variant": "D835Y (TKD activation-loop mutation)",
+        "flt3_retested_after_induction_failure": true,
+        "npm1_mutation": "positive",
+        "tp53_mutation": "negative",
+        "note": "FLT3-TKD persists despite midostaurin exposure during induction — gilteritinib covers TKD per ADMIRAL (distinct from quizartinib which is ITD-only)."
+      }
+    },
+    "planned_regimen_notes": "IND-AML-2L-GILTERITINIB-FLT3: gilteritinib 120 mg PO daily monotherapy per ADMIRAL (Perl 2019). Baseline + serial ECG (QTc <450 ms) + electrolyte correction (K+ ≥4.0, Mg++ ≥2.0). Differentiation-syndrome monitoring (fever, dyspnea, weight gain, pleural effusion → dexamethasone). Bridge to alloHCT for fit responders (CRITICAL — gilteritinib monotherapy NOT curative; sustained remission requires HCT). Consider post-HCT gilteritinib maintenance per emerging MORPHO data. Ukraine access: not registered — international referral / compassionate-use pathway required."
+  }
+}

@@ -1,0 +1,97 @@
+name: Citation Verify
+
+# Runs on PRs that touch contributions/. Two layers:
+#
+#   - Structural (always): every cited SRC-* must exist on master OR be
+#     stubbed in the chunk dir; CIViC EIDs validated against snapshot.
+#   - Semantic (when ANTHROPIC_API_KEY secret is set): asks Claude
+#     whether each claim is plausibly supported by its cited source.
+#
+# Forks without the secret degrade to structural-only — never blocking
+# on missing secrets, per cross-repo plan §4.2 + onboarding plan §6.
+
+on:
+  pull_request:
+    paths:
+      - "contributions/**"
+      - "scripts/tasktorrent/verify_citations.py"
+  workflow_dispatch:
+    inputs:
+      chunk_id:
+        description: "Chunk ID to verify"
+        required: true
+      semantic:
+        description: "Run semantic check (requires ANTHROPIC_API_KEY secret)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  detect-chunks:
+    runs-on: ubuntu-latest
+    outputs:
+      chunks: ${{ steps.detect.outputs.chunks }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need base ref to diff
+
+      - name: Detect chunk IDs in PR diff
+        id: detect
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || 'origin/master' }}
+        run: |
+          if [ -n "${{ github.event.inputs.chunk_id }}" ]; then
+            CHUNKS='["${{ github.event.inputs.chunk_id }}"]'
+          else
+            git fetch origin master --quiet || true
+            CHUNKS=$(
+              git diff --name-only "$BASE_SHA"...HEAD -- 'contributions/' \
+              | awk -F'/' '/^contributions\// && NF>=2 {print $2}' \
+              | sort -u \
+              | jq -R . | jq -sc .
+            )
+            [ "$CHUNKS" = "[]" ] && CHUNKS='[]'
+          fi
+          echo "chunks=$CHUNKS" >> "$GITHUB_OUTPUT"
+          echo "Detected chunks: $CHUNKS"
+
+  verify:
+    needs: detect-chunks
+    if: needs.detect-chunks.outputs.chunks != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: ${{ fromJSON(needs.detect-chunks.outputs.chunks) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+          # Optional: anthropic SDK only if we'll do semantic check
+          if [ -n "$ANTHROPIC_API_KEY" ] && [ "${{ github.event.inputs.semantic }}" = "true" ]; then
+            pip install 'anthropic>=0.40,<1.0'
+          fi
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Run structural + title-substring checks
+        run: |
+          python -m scripts.tasktorrent.verify_citations "${{ matrix.chunk }}"
+
+      - name: Run semantic check (when key available + opted in)
+        if: github.event.inputs.semantic == 'true' && env.ANTHROPIC_API_KEY != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python -m scripts.tasktorrent.verify_citations "${{ matrix.chunk }}" --semantic

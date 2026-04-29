@@ -1,0 +1,113 @@
+_contribution:
+  chunk_id: trial-source-ambiguous-resolution-2026-04-29-0030
+  contributor: codex-agent
+  ai_tool: codex
+  ai_model: gpt-5
+  ai_model_version: ""
+  notes_for_reviewer: >
+    One verdict is recorded for every manifest trial name. Real, safely mapped
+    trial-source targets have a matching source_stub_*.yaml. Generic or
+    conflicting acronym hits are not stubbed.
+
+summary:
+  manifest_count: 22
+  source_stub_created: 14
+  false_positive: 4
+  maintainer_review_needed: 4
+method: >
+  Compared the manifest acronyms against the previous citation-semantic audit,
+  existing OpenOnco entity contexts, and PubMed/journal-publication metadata.
+  A source stub was created only when the acronym mapped to one defensible
+  publication target for the cited clinical context.
+resolutions:
+  - trial_name: CROSS
+    verdict: false_positive
+    rationale: >
+      CROSS is a real esophageal cancer trial, but this extracted candidate has
+      broad unrelated spread across AML, MTC, melanoma, prostate, NSCLC,
+      Burkitt, CML, and esophageal contexts. The manifest item is therefore not
+      one safe source target.
+  - trial_name: PARADIGM
+    verdict: false_positive
+    rationale: >
+      PARADIGM is a real colorectal trial name, but the extracted candidate
+      spans unrelated entities including BALL, CML, ovarian, endometrial,
+      urothelial, lymphoma, and IFS contexts. Do not collapse these into one
+      source without maintainer remapping.
+  - trial_name: RUBY
+    verdict: source_stub_created
+    source_stub: source_stub_src_ruby_mirza_2023.yaml
+  - trial_name: CODEBREAK
+    verdict: maintainer_review_needed
+    rationale: >
+      CODEBREAK is a family of KRAS G12C trials, but the extracted rows span
+      NSCLC, CRC, PDAC, and ovarian contexts. A maintainer should choose whether
+      this needs CodeBreaK 100, CodeBreaK 200, or disease-specific stubs.
+  - trial_name: AIDA
+    verdict: source_stub_created
+    source_stub: source_stub_src_aida_avvisati_1996.yaml
+  - trial_name: PROPEL
+    verdict: maintainer_review_needed
+    rationale: >
+      The candidate mixes two unrelated PROPEL targets: olaparib plus
+      abiraterone in prostate cancer and pralatrexate in relapsed/refractory
+      PTCL. One source stub would be unsafe.
+  - trial_name: MAGNITUDE
+    verdict: maintainer_review_needed
+    rationale: >
+      MAGNITUDE is a prostate cancer PARP-inhibitor trial, but one extracted
+      row is an AML FLT3 item where magnitude appears non-trial-like. Requires
+      maintainer remapping before a source is attached.
+  - trial_name: THOR
+    verdict: source_stub_created
+    source_stub: source_stub_src_thor_loriot_2023.yaml
+  - trial_name: ARASENS
+    verdict: source_stub_created
+    source_stub: source_stub_src_arasens_smith_2022.yaml
+  - trial_name: PRODIGE
+    verdict: maintainer_review_needed
+    rationale: >
+      PRODIGE identifies multiple French cooperative-group studies in this
+      manifest, including PDAC FOLFIRINOX and colorectal maintenance contexts.
+      A single PRODIGE source would be ambiguous.
+  - trial_name: BFORE
+    verdict: source_stub_created
+    source_stub: source_stub_src_bfore_cortes_2018.yaml
+  - trial_name: FIRE-3
+    verdict: source_stub_created
+    source_stub: source_stub_src_fire3_heinemann_2014.yaml
+  - trial_name: ICON7
+    verdict: source_stub_created
+    source_stub: source_stub_src_icon7_perren_2011.yaml
+  - trial_name: STARTRK
+    verdict: source_stub_created
+    source_stub: source_stub_src_startrk_drilon_2020.yaml
+  - trial_name: STUPP
+    verdict: source_stub_created
+    source_stub: source_stub_src_stupp_stupp_2005.yaml
+  - trial_name: AGILE
+    verdict: source_stub_created
+    source_stub: source_stub_src_agile_montesinos_2022.yaml
+  - trial_name: STIL
+    verdict: source_stub_created
+    source_stub: source_stub_src_stil_rummel_2013.yaml
+  - trial_name: CRYSTAL
+    verdict: source_stub_created
+    source_stub: source_stub_src_crystal_van_cutsem_2009.yaml
+  - trial_name: MONUMENTAL-1
+    verdict: false_positive
+    rationale: >
+      MonumenTAL-1 is a talquetamab study, but the extracted OpenOnco row is
+      REG-TECLISTAMAB. Teclistamab should map to MajesTEC-1, not MonumenTAL-1.
+  - trial_name: BRIGHT
+    verdict: false_positive
+    rationale: >
+      BRIGHT is a real bendamustine/rituximab lymphoma trial name, but the
+      extracted row is IND-ATLL-2L-MOGAMULIZUMAB where "bright" appears to come
+      from CCR4-expression wording, not a trial citation.
+  - trial_name: IMPOWER150
+    verdict: source_stub_created
+    source_stub: source_stub_src_impower150_socinski_2018.yaml
+  - trial_name: SHINE
+    verdict: source_stub_created
+    source_stub: source_stub_src_shine_wang_2022.yaml

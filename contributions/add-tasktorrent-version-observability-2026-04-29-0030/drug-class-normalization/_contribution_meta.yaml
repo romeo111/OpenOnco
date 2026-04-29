@@ -1,0 +1,23 @@
+chunk_id: drug-class-normalization
+contributor: claude-anthropic-internal
+submission_date: '2026-04-28'
+ai_tool: claude-code
+ai_model: claude-opus-4-7
+ai_model_version: 1m-context
+ai_session_notes: 'Maintainer-side execution as proof-of-concept for MARGINAL chunks
+  (per chunk-spec). Audit performed via single bulk-read pass: parse 216 Drug YAMLs,
+  extract drug_class field, cluster by normalized form (lowercase + alphanumeric +
+  abbreviation expansion), count distinct phrasings per cluster. Result: 200 unique
+  drug_class strings across 216 drugs; ZERO clusters with multiple distinct phrasings.
+  Existing data is already canonical-style.
+
+  Token economy (this run): ~10k input + ~5k output ~= 15k total. Pre-execution estimate
+  was ~150k. Actual was 10x lower because the audit found nothing to do - bulk-extract
+  plus cluster check short-circuited before per-entity LLM judgment was needed.
+
+  Net: this chunk''s MARGINAL economic profile retroactively becomes FAIL. Documented
+  as L-20 in TaskTorrent improvement plan: run upstream audit before opening speculative-cleanup
+  chunks.
+
+  '
+tasktorrent_version: 2026-04-28-facd1f9

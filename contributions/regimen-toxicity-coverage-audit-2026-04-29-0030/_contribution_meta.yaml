@@ -1,0 +1,47 @@
+_contribution:
+  chunk_id: regimen-toxicity-coverage-audit-2026-04-29-0030
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-29'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: |
+    Audit chunk for issue #35. Walked all 244 regimen YAMLs in
+    knowledge_base/hosted/content/regimens/. For each: classified
+    completeness on the toxicity-coverage axis (none / minimal /
+    partial / structured) and recorded distribution of the existing
+    `toxicity_profile` single-string field.
+
+    Worker: `_audit_worker.py` in this dir (kept for audit trail).
+
+    Output is deterministic — re-running yields identical content.
+    Report-only. No KB modifications.
+  tasktorrent_version: 2026-04-29-pending-first-commit
+  notes_for_reviewer: |
+    Headline finding: the schema gap is **uniform** across the KB.
+
+      0   regimens have structured CTCAE-graded toxicity (key_toxicities
+          list with grade-percentages)
+      5   have partial coverage (CTCAE/grade mentions in prose only)
+      239 have minimal coverage (just `toxicity_profile: low|moderate|high`)
+      0   have nothing
+
+    This means safety-side rendering (CTCAE Grade ≥3 percentages per
+    regimen) currently cannot be done from structured KB data. It would
+    have to be inferred from prose notes or from the cited Source's
+    full-text — both of which are reviewer-side burden.
+
+    Recommended sequencing (NOT in this chunk):
+      1. Queue C — schema-evolution chunk: add `key_toxicities:
+         list[{name, ctcae_grade_any_pct, ctcae_grade_3plus_pct,
+         source}]` to Pydantic Regimen schema + lint accepting absent.
+      2. Queue A — coverage-fill: populate per-regimen from FDA labels
+         + pivotal-trial AE tables. Sample-driven (top-50 high-traffic
+         regimens first). Estimated ~5 Drops × 244 regimens × ~5k
+         tokens each = significant work.
+
+    VALIDATOR LIMITATION ACKNOWLEDGED: report-only sidecar.
+    `output_type: report-only` per chunk-spec.
+
+    target_action: review_existing_stub
+    target_entity_id: regimen-toxicity-coverage-audit-2026-04-29-0030

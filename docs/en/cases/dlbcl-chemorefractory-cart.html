@@ -459,7 +459,7 @@ h3 {
     .access-matrix details:not([open]) > *:not(summary) { display: block; }
 }
 
-/* Variant actionability — ESCAT / OncoKB tier badges */
+/* Variant actionability — ESCAT tier badges */
 .variant-actionability { margin: 22px 0; }
 .variant-actionability h2 { color: var(--green-800); }
 .variant-actionability .section-sub {
@@ -496,8 +496,8 @@ h3 {
 }
 
 /* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
-   IV light gray; X gray). OncoKB Level 1 green; 2 light-green; 3A
-   yellow; 3B orange; 4 light gray; R1/R2 red. */
+   IV light gray; X gray). Per-source level details render via
+   .evidence-sources <ul> in the same row. */
 .tier-badge {
     display: inline-block; padding: 2px 8px; border-radius: 4px;
     font-family: var(--font-mono); font-size: 11px; font-weight: 700;
@@ -509,12 +509,36 @@ h3 {
 .escat-IV { background: var(--gray-100); color: var(--gray-700); }
 .escat-X { background: var(--gray-200); color: var(--gray-700); }
 
-.oncokb-1 { background: #16a34a; color: white; }
-.oncokb-2 { background: #86efac; color: #14532d; }
-.oncokb-3A { background: #facc15; color: #713f12; }
-.oncokb-3B { background: #f97316; color: white; }
-.oncokb-4 { background: var(--gray-100); color: var(--gray-700); }
-.oncokb-R1, .oncokb-R2 { background: #dc2626; color: white; }
+/* Per-source evidence list inside each actionability row */
+.evidence-sources {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px;
+}
+.evidence-sources li { padding: 1px 0; color: var(--gray-700); }
+.evidence-sources .evidence-meta { color: var(--gray-500); font-size: 10px; }
+.evidence-sources a { color: var(--green-700); text-decoration: none; }
+.evidence-sources a:hover { text-decoration: underline; }
+
+/* Resistance evidence flag — ⚠ badge for direction="Does Not Support"
+   or significance contains "Resistance" (CIViC anti-evidence). */
+.evidence-resistance {
+    display: inline-block; padding: 0 6px; margin-left: 4px;
+    border-radius: 3px;
+    background: #fee2e2; color: #991b1b;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+
+/* Fallback rendering — when leveled evidence is unavailable,
+   primary_sources are promoted as citation cards without a level.
+   Visually muted relative to leveled evidence. */
+.evidence-sources--fallback li.evidence-fallback {
+    color: var(--gray-600); font-style: italic;
+}
+.evidence-fallback-note {
+    margin-top: 4px;
+    font-size: 10px; color: var(--gray-500);
+    font-family: var(--font-sans); font-style: italic;
+}
 
 /* NSZU availability badges — per-drug coverage flag rendered alongside
    each component in the track's drug list. Render-time metadata only
