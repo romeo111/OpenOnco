@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План лікування — DIS-CHL</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --green-900: #0a2e1a; --green-800: #0d3f24; --green-700: #14532d;
+    --green-600: #166534; --green-500: #16a34a; --green-400: #22c55e;
+    --green-300: #4ade80; --green-200: #86efac; --green-100: #dcfce7;
+    --green-50: #f0fdf4; --teal: #0d9488; --teal-dark: #115e59;
+    --red-alert: #dc2626; --red-bg: #fef2f2;
+    --amber-alert: #d97706; --amber-bg: #fffbeb;
+    --blue-bg: #eff6ff; --blue-700: #1d4ed8;
+    --purple-bg: #faf5ff; --purple-700: #7e22ce;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+    font-family: var(--font-body); color: var(--gray-900);
+    background: var(--gray-50); line-height: 1.55;
+}
+.page {
+    max-width: 920px; margin: 0 auto; padding: 32px 48px;
+    background: white; min-height: 100vh;
+    box-shadow: 0 0 24px rgba(0,0,0,.04);
+}
+@media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 16mm; max-width: 100%; }
+    @page { size: A4; margin: 12mm; }
+    .no-print { display: none; }
+    section { page-break-inside: avoid; }
+}
+
+/* Header */
+.doc-header {
+    border-bottom: 2px solid var(--green-700);
+    padding-bottom: 18px; margin-bottom: 24px;
+}
+.doc-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--green-700); margin-bottom: 8px;
+}
+.doc-title {
+    font-family: var(--font-display); font-size: 32px; line-height: 1.15;
+    color: var(--green-900); margin-bottom: 6px;
+}
+.doc-sub {
+    font-size: 14px; color: var(--gray-500);
+    font-family: var(--font-mono);
+}
+
+/* Patient strip */
+.patient-strip {
+    background: var(--green-50); border-left: 4px solid var(--green-600);
+    padding: 14px 18px; margin-bottom: 22px; border-radius: 4px;
+}
+.patient-strip .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
+}
+.patient-strip .value { font-size: 15px; color: var(--gray-900); }
+
+/* Banner — diagnostic phase */
+.banner {
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 22px;
+    border-left: 4px solid; font-size: 14px; line-height: 1.55;
+}
+.banner--diagnostic {
+    background: var(--amber-bg); border-color: var(--amber-alert);
+    color: #92400e;
+}
+.banner--diagnostic strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.banner--info {
+    background: var(--green-50); border-color: var(--green-500);
+    color: var(--green-800);
+}
+.banner--alert {
+    background: var(--red-bg); border-color: var(--red-alert);
+    color: #991b1b;
+}
+
+/* Sections */
+section { margin-bottom: 28px; }
+h2 {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
+    color: var(--green-800); margin-bottom: 12px;
+}
+.section-sub {
+    font-size: 13px; color: var(--gray-500); margin-bottom: 14px;
+    font-family: var(--font-mono);
+}
+h3 {
+    font-size: 14px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 18px 0 10px; color: var(--gray-700);
+}
+
+/* Tracks (treatment plan) */
+.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.track {
+    border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;
+    background: white;
+}
+.track--default { border-left: 4px solid var(--green-600); }
+.track--alternative { border-left: 4px solid var(--gray-500); }
+.track--surveillance { border-left: 4px solid var(--teal); }
+.track--palliative { border-left: 4px solid var(--purple-700); }
+.track-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+}
+.track-name { font-family: var(--font-display); font-size: 18px; }
+.track-default-badge {
+    background: var(--green-100); color: var(--green-700);
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); text-transform: uppercase;
+}
+.track dl { font-size: 13px; }
+.track dt { font-weight: 700; color: var(--gray-700); margin-top: 8px; }
+.track dd { color: var(--gray-700); margin-left: 0; }
+.track ul { font-size: 13px; padding-left: 18px; }
+
+/* Tables — workup steps, etc. */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+    background: var(--green-700); color: white; padding: 8px 10px;
+    text-align: left; font-size: 11px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:nth-child(even) td { background: var(--gray-50); }
+
+/* Badges */
+.badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; font-family: var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge--required { background: var(--red-bg); color: #b91c1c; }
+.badge--recommended { background: var(--blue-bg); color: var(--blue-700); }
+.badge--optional { background: var(--gray-100); color: var(--gray-700); }
+.badge--blocking { background: var(--red-bg); color: #b91c1c; }
+.badge--default { background: var(--green-100); color: var(--green-700); }
+.badge--lab { background: var(--blue-bg); color: var(--blue-700); }
+.badge--imaging { background: var(--purple-bg); color: var(--purple-700); }
+.badge--histology { background: var(--amber-bg); color: #92400e; }
+.badge--consult { background: var(--gray-100); color: var(--gray-700); }
+.badge--other { background: var(--gray-100); color: var(--gray-700); }
+
+/* Lists */
+.role-list { list-style: none; padding: 0; }
+.role-list li {
+    padding: 10px 0; border-bottom: 1px dashed var(--gray-200);
+}
+.role-list li:last-child { border-bottom: none; }
+.role-list .role-name { font-weight: 600; color: var(--gray-900); }
+.role-list .role-reason {
+    font-size: 13px; color: var(--gray-700); margin-top: 4px;
+}
+.role-list .role-questions {
+    font-size: 12px; color: var(--gray-500); margin-top: 4px;
+    font-family: var(--font-mono);
+}
+
+.q-list { list-style: none; padding: 0; }
+.q-list li {
+    padding: 12px 14px; margin-bottom: 8px;
+    border-radius: 6px; background: var(--gray-50);
+    border-left: 3px solid var(--gray-200);
+}
+.q-list li.blocking {
+    border-left-color: var(--red-alert); background: var(--red-bg);
+}
+.q-list .q-id {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--gray-500); margin-bottom: 4px;
+}
+.q-list .q-text { font-size: 14px; color: var(--gray-900); margin-bottom: 4px; }
+.q-list .q-rationale { font-size: 12px; color: var(--gray-700); font-style: italic; }
+.q-list .q-owner {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--green-700); margin-top: 4px;
+}
+
+/* MDT block */
+.mdt {
+    background: var(--green-50); border-radius: 10px; padding: 18px;
+    margin-top: 14px;
+}
+
+/* Steps timeline (workup) */
+.steps { padding-left: 0; list-style: none; }
+.steps li {
+    padding: 10px 0 10px 36px; position: relative;
+    border-bottom: 1px solid var(--gray-100);
+}
+.steps li:last-child { border-bottom: none; }
+.steps .step-num {
+    position: absolute; left: 0; top: 12px; width: 24px; height: 24px;
+    background: var(--green-600); color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--font-mono);
+}
+.steps .step-name { font-weight: 600; color: var(--gray-900); }
+.steps .step-rationale { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* Sources */
+.sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.sources li { padding: 4px 0; }
+
+/* Etiological driver — featured card for etiologically_driven archetype */
+.etiology-card {
+    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
+    border-left: 4px solid var(--teal); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.etiology-card .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+.etiology-card .archetype {
+    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
+    margin-bottom: 8px;
+}
+.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
+.etiology-card ul li { padding: 3px 0; }
+
+/* PRO/CONTRA — two-column grid for red flags */
+.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
+.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
+.pc-col h3 { color: var(--gray-900); margin-top: 0; }
+.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
+.pc-col li { padding: 4px 0; }
+.pc-col .rf-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    display: block; margin-top: 2px;
+}
+
+/* Branch-explanation — actually-fired RFs from the engine trace, with
+   the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
+   above (which lists possible triggers in the abstract). */
+.branch-explanation { margin: 18px 0; }
+.branch-explanation .branch-step {
+    background: var(--green-bg, #ecfdf5); border-left: 4px solid var(--green-700, #047857);
+    padding: 10px 14px; border-radius: 6px; margin-bottom: 10px;
+}
+.branch-explanation .branch-step-head {
+    font-size: 13px; color: var(--gray-700); margin-bottom: 6px; font-weight: 600;
+}
+.branch-explanation .branch-step ul {
+    margin: 0; padding-left: 20px; font-size: 13px; color: var(--gray-700);
+}
+.branch-explanation .branch-step li { padding: 3px 0; line-height: 1.5; }
+.branch-explanation .rf-winner-tag {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.5px;
+    background: var(--green-700, #047857); color: white;
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px; vertical-align: 1px;
+}
+.branch-explanation .src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+}
+
+/* Do-not — strongly framed prohibitive list */
+.do-not {
+    background: var(--red-bg); border-left: 4px solid var(--red-alert);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
+}
+.do-not .track-name {
+    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
+    margin-bottom: 8px;
+}
+.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
+.do-not li { padding: 3px 0; }
+
+/* Timeline — horizontal phase strip */
+.timeline {
+    display: flex; gap: 4px; margin-top: 8px;
+    overflow-x: auto; padding-bottom: 8px;
+}
+.tl-phase {
+    flex: 1; min-width: 120px;
+    background: var(--green-100); border-radius: 6px;
+    padding: 10px 12px; border-top: 3px solid var(--green-600);
+}
+.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
+.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
+.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
+.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
+.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
+.tl-phase .name {
+    font-weight: 700; font-size: 12px; color: var(--gray-900);
+    margin-bottom: 4px;
+}
+.tl-phase .window {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+}
+
+/* Footer */
+.doc-footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 11px; color: var(--gray-500); line-height: 1.6;
+}
+.fda-disclosure {
+    background: var(--gray-50); padding: 14px; border-radius: 6px;
+    margin-bottom: 14px; font-size: 12px; color: var(--gray-700);
+}
+.fda-disclosure strong { color: var(--gray-900); }
+.version-chain {
+    font-family: var(--font-mono); font-size: 11px;
+    background: var(--gray-100); padding: 8px 12px; border-radius: 4px;
+    margin-bottom: 10px;
+}
+.medical-disclaimer {
+    font-style: italic; color: var(--gray-700); font-size: 11px;
+    border-left: 2px solid var(--gray-200); padding-left: 12px;
+}
+
+/* Skill metadata badge inline with each role */
+.skill-meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--gray-500); margin-top: 4px;
+    display: flex; flex-wrap: wrap; gap: 10px;
+}
+.skill-meta .pill {
+    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
+}
+.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
+.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
+
+/* Skill catalog block */
+.skill-catalog { margin-top: 18px; }
+.skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.skill-catalog th {
+    text-align: left; padding: 6px 8px; background: var(--gray-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--gray-700);
+}
+.skill-catalog td {
+    padding: 6px 8px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.skill-catalog tr.activated td:first-child::before {
+    content: "✓ "; color: var(--green-600); font-weight: 700;
+}
+.skill-catalog tr.dormant { color: var(--gray-500); }
+.skill-catalog tr.dormant td:first-child::before {
+    content: "○ "; color: var(--gray-500);
+}
+.skill-catalog .ver {
+    font-family: var(--font-mono); color: var(--gray-700);
+}
+
+/* Access Matrix (ua-ingestion plan §4) */
+.access-matrix { margin-top: 32px; padding: 20px; background: var(--green-50);
+    border: 1px solid var(--green-200); border-radius: 6px;
+}
+.access-matrix details { width: 100%; }
+.access-matrix summary {
+    cursor: pointer; list-style: none; display: flex; flex-direction: column;
+    gap: 4px; padding: 4px 0;
+}
+.access-matrix summary::-webkit-details-marker { display: none; }
+.access-matrix summary::before {
+    content: "▶ "; color: var(--green-700); font-size: 12px; margin-right: 4px;
+}
+.access-matrix details[open] summary::before { content: "▼ "; }
+.access-matrix summary h2 {
+    display: inline; font-family: var(--font-display); font-size: 22px;
+    color: var(--green-900); margin: 0;
+}
+.access-matrix .section-sub { font-size: 12px; color: var(--gray-700); }
+.access-matrix-table {
+    width: 100%; border-collapse: collapse; margin-top: 14px;
+    font-size: 12.5px; background: white;
+}
+.access-matrix-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--green-700);
+    border-bottom: 1px solid var(--green-200);
+}
+.access-matrix-table td {
+    padding: 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.access-matrix-table tr:last-child td { border-bottom: none; }
+.access-matrix-table .track-cell { width: 32%; }
+.access-matrix-table .regimen-name {
+    font-size: 11.5px; color: var(--gray-700); margin-top: 3px;
+}
+.access-matrix-table .regimen-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .cost-cell { width: 22%; font-variant-numeric: tabular-nums; }
+.access-matrix-table .cost-row { line-height: 1.5; }
+.access-matrix-table .cost-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    margin-right: 4px;
+}
+.access-matrix-table .cost-trial {
+    color: var(--green-700); font-style: italic;
+}
+.access-matrix-table .cost-unknown {
+    color: var(--amber-alert); font-style: italic;
+}
+.access-matrix-table .pathway-cell { width: 22%; font-size: 11.5px; }
+.access-matrix-table .pathway-cell .alt-paths {
+    font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .badge--ok { background: var(--green-100); color: var(--green-700); }
+.access-matrix-table .badge--no { background: var(--red-bg); color: var(--red-alert); }
+.access-matrix-table .badge--unknown { background: var(--gray-100); color: var(--gray-500); }
+.access-matrix-table .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.access-matrix-table tr.track-trial { background: var(--purple-bg); }
+.access-matrix-table .notes {
+    font-size: 11px; color: var(--gray-700); margin-top: 4px; font-style: italic;
+}
+.access-matrix-table .notes-stale {
+    font-size: 11px; color: var(--amber-alert); margin-top: 4px; font-weight: 600;
+}
+.access-matrix-table .more-notes {
+    cursor: help; color: var(--gray-500); font-size: 10px; margin-left: 4px;
+    border-bottom: 1px dotted var(--gray-500);
+}
+.access-matrix .matrix-disclaimer {
+    margin-top: 10px; font-size: 11px; color: var(--gray-500); font-style: italic;
+}
+.access-matrix .matrix-plan-notes {
+    margin: 10px 0 4px 0; padding: 8px 12px; background: var(--amber-bg);
+    border-left: 3px solid var(--amber-alert); list-style: none; font-size: 12px;
+    color: var(--gray-900);
+}
+@media print {
+    .access-matrix { background: white; border: 1px solid var(--gray-200); }
+    .access-matrix details { width: 100%; }
+    .access-matrix summary::before { content: ""; }
+    .access-matrix details:not([open]) > *:not(summary) { display: block; }
+}
+
+/* Variant actionability — ESCAT tier badges */
+.variant-actionability { margin: 22px 0; }
+.variant-actionability h2 { color: var(--green-800); }
+.variant-actionability .section-sub {
+    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.actionability-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+    overflow: hidden;
+}
+.actionability-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.actionability-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.actionability-table tr:last-child td { border-bottom: none; }
+.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
+.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
+.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
+.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
+.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
+.actionability-table .src-list {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
+}
+.actionability-table .src-list li { padding: 1px 0; list-style: none; }
+.actionability-table .empty-row td {
+    text-align: center; color: var(--gray-500); font-style: italic;
+    padding: 14px 10px;
+}
+
+/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
+   IV light gray; X gray). Per-source level details render via
+   .evidence-sources <ul> in the same row. */
+.tier-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.4px; white-space: nowrap;
+}
+.escat-IA, .escat-IB { background: #16a34a; color: white; }
+.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
+.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
+.escat-IV { background: var(--gray-100); color: var(--gray-700); }
+.escat-X { background: var(--gray-200); color: var(--gray-700); }
+
+/* Per-source evidence list inside each actionability row */
+.evidence-sources {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px;
+}
+.evidence-sources li { padding: 1px 0; color: var(--gray-700); }
+.evidence-sources .evidence-meta { color: var(--gray-500); font-size: 10px; }
+.evidence-sources a { color: var(--green-700); text-decoration: none; }
+.evidence-sources a:hover { text-decoration: underline; }
+
+/* Resistance evidence flag — ⚠ badge for direction="Does Not Support"
+   or significance contains "Resistance" (CIViC anti-evidence). */
+.evidence-resistance {
+    display: inline-block; padding: 0 6px; margin-left: 4px;
+    border-radius: 3px;
+    background: #fee2e2; color: #991b1b;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+
+/* Fallback rendering — when leveled evidence is unavailable,
+   primary_sources are promoted as citation cards without a level.
+   Visually muted relative to leveled evidence. */
+.evidence-sources--fallback li.evidence-fallback {
+    color: var(--gray-600); font-style: italic;
+}
+.evidence-fallback-note {
+    margin-top: 4px;
+    font-size: 10px; color: var(--gray-500);
+    font-family: var(--font-sans); font-style: italic;
+}
+
+/* NSZU availability badges — per-drug coverage flag rendered alongside
+   each component in the track's drug list. Render-time metadata only
+   (engine never reads these — CHARTER §8.3 invariant). */
+.nszu-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; white-space: nowrap;
+    margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }
+.nszu-partial { background: #fff3cd; color: #856404; }
+.nszu-oop { background: #ffe5cc; color: #804000; }
+.nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+/* ── Sign-off badges (CHARTER §6.1) ──────────────────────────────
+   Surfaces Clinical Co-Lead approval state on each track in the
+   treatment Plan render. Emitted by render._render_signoff_badge.
+   Mirrored in docs/style.css for the static-site renderer. */
+.track-signoff { margin: 4px 0 8px 0; }
+.signoff-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; line-height: 1.3;
+    border: 1px solid transparent;
+}
+.signoff-pending {
+    background: #fef2f2; color: #991b1b; border-color: #fecaca;
+}
+.signoff-partial {
+    background: #fffbeb; color: #92400e; border-color: #fde68a;
+}
+.signoff-complete {
+    background: #ecfdf5; color: #065f46; border-color: #a7f3d0;
+}
+
+.drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
+.drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
+.drug-list .drug-name { font-weight: 600; }
+.drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+</style>
+<style>.case-bar{position:sticky;top:0;z-index:99;background:#0a2e1a;color:#dcfce7;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}.case-bar .lang-mini{font-family:JetBrains Mono,monospace;font-size:10px;background:rgba(255,255,255,.1);padding:3px 7px;border-radius:3px;margin-left:14px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:5px;}.case-bar .lang-mini-current{font-family:JetBrains Mono,monospace;font-size:11px;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:3px;letter-spacing:.5px;font-weight:600;display:inline-flex;align-items:center;gap:5px;}.case-bar .mini-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.case-bar .mini-flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.case-bar .mini-flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}@media print{.case-bar{display:none;}}</style>
+</head>
+<body>
+<div class="case-bar no-print"><div><span class="lang-mini-current" title="Active language"><span class="mini-flag mini-flag-ua" aria-hidden="true"></span>UA</span> · OpenOnco · <strong>DIS-CHL · Actionable біомаркер present</strong></div><div><a href="/gallery.html">← Назад до галереї</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+variant-chl-biomarker-act&labels=tester-feedback" target="_blank" rel="noopener">Feedback на цей кейс</a><a class="lang-mini" href="/en/cases/variant-chl-biomarker-act.html" title="Switch to EN"><span class="mini-flag mini-flag-en" aria-hidden="true"></span>EN</a></div></div>
+<div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Treatment Plan</div><div class="doc-title">План лікування — DIS-CHL</div><div class="doc-sub">PLAN-VAR-CHL-BIOMARK-V1 · v1 · 2026-04-29</div></div><div class="patient-strip"><div class="label">Patient</div><div class="value">VAR-CHL-BIOMARK · Algorithm: ALGO-CHL-1L</div></div><section class="variant-actionability"><h2>Клінічна значущість мутацій (ESCAT)</h2><div class="section-sub">Контекст для тумор-борду — інженер не використовує ці тіри для вибору треку</div><table class="actionability-table"><thead><tr><th>Біомаркер</th><th>Варіант</th><th>ESCAT</th><th>Доказова база</th><th>Клінічна дія</th><th>Препарати</th><th>Джерела</th></tr></thead><tbody><tr class="empty-row"><td colspan="7">Не знайдено клінічно значущих варіантів у цьому профілі.</td></tr></tbody></table></section><section><h2>Treatment options (2 tracks)</h2><div class="tracks"><div class="track track--standard"><div class="track-head"><div class="track-name">Стандартний план</div><span class="track-default-badge">★ DEFAULT</span></div><dl><dt>Indication</dt><dd>IND-CHL-1L-ABVD</dd><dt>Regimen</dt><dd>ABVD (Adriamycin + Bleomycin + Vinblastine + Dacarbazine), 2-6 cycles</dd><dt>Препарати + НСЗУ</dt><dd><ul class="drug-list"><li class="drug-row"><span class="drug-name">Доксорубіцин</span> <span class="drug-id">(DRUG-DOXORUBICIN)</span> <span class="drug-dose">25 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="Baseline echocardiogram (LVEF) mandatory before first dose; surveillance during therapy especially after cumulative dose &gt;300 mg/m². Dexrazoxane cardioprotectant available for high-cumulative-dose scenarios. Liposomal doxorubicin (Doxil)…">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Блеоміцин</span> <span class="drug-id">(DRUG-BLEOMYCIN)</span> <span class="drug-dose">10 units/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="Replaced in modern Hodgkin 1L by brentuximab vedotin (A+AVD per ECHELON-1) due to pulmonary toxicity. NEVER combine with brentuximab (additive lung toxicity). Avoid G-CSF on ABVD (increases pulmonary toxicity). Pre-treatment PFT (DLCO)…">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Вінбластин</span> <span class="drug-id">(DRUG-VINBLASTINE)</span> <span class="drug-dose">6 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="Used in ABVD (Hodgkin), other regimens. Cap at 12 mg total dose typical. Hepatic dose adjustment for total bilirubin &gt;3 mg/dL.">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Дакарбазин</span> <span class="drug-id">(DRUG-DACARBAZINE)</span> <span class="drug-dose">375 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="ABVD (Hodgkin) component. Highly emetogenic — triple-combo antiemetic prophylaxis. Avoid sun exposure during therapy + 1 week after.">✓ НСЗУ покриває</span></li></ul></dd><dt>Supportive care</dt><dd>SUP-ANTIEMETIC-PREMED</dd><dt>Hard contraindications</dt><dd>CI-LVEF-LOW-FOR-ANTHRACYCLINE</dd><dt>Reason</dt><dd>Engine default per algorithm ALGO-CHL-1L: {&#x27;step&#x27;: 1, &#x27;outcome&#x27;: False, &#x27;branch&#x27;: {&#x27;result&#x27;: &#x27;IND-CHL-1L-ABVD&#x27;}, &#x27;fired_red_flags&#x27;: [], &#x27;winner_red_flag&#x27;: None}</dd></dl></div><div class="track track--aggressive"><div class="track-head"><div class="track-name">Агресивний план</div></div><dl><dt>Indication</dt><dd>IND-CHL-1L-A-AVD</dd><dt>Regimen</dt><dd>A+AVD (Brentuximab vedotin + Adriamycin + Vinblastine + Dacarbazine), 6 cycles</dd><dt>Препарати + НСЗУ</dt><dd><ul class="drug-list"><li class="drug-row"><span class="drug-name">Брентуксимаб ведотин</span> <span class="drug-id">(DRUG-BRENTUXIMAB-VEDOTIN)</span> <span class="drug-dose">1.2 mg/kg · IV days 1+15 of 28-day cycle × 6 · IV</span> <span class="nszu-badge nszu-covered" title="Used in: 1L T-cell lymphomas with CD30+ (ALCL universal CD30+; ~40-60% PTCL NOS / AITL CD30+) — ECHELON-2 trial showed CHP-Bv superior to CHOP. 1L Hodgkin (A+AVD = ABVD with brentuximab replacing bleomycin — ECHELON-1; bleomycin removed…">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Доксорубіцин</span> <span class="drug-id">(DRUG-DOXORUBICIN)</span> <span class="drug-dose">25 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="Baseline echocardiogram (LVEF) mandatory before first dose; surveillance during therapy especially after cumulative dose &gt;300 mg/m². Dexrazoxane cardioprotectant available for high-cumulative-dose scenarios. Liposomal doxorubicin (Doxil)…">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Вінбластин</span> <span class="drug-id">(DRUG-VINBLASTINE)</span> <span class="drug-dose">6 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="Used in ABVD (Hodgkin), other regimens. Cap at 12 mg total dose typical. Hepatic dose adjustment for total bilirubin &gt;3 mg/dL.">✓ НСЗУ покриває</span></li><li class="drug-row"><span class="drug-name">Дакарбазин</span> <span class="drug-id">(DRUG-DACARBAZINE)</span> <span class="drug-dose">375 mg/m² · IV days 1+15 of 28-day cycle · IV</span> <span class="nszu-badge nszu-covered" title="ABVD (Hodgkin) component. Highly emetogenic — triple-combo antiemetic prophylaxis. Avoid sun exposure during therapy + 1 week after.">✓ НСЗУ покриває</span></li></ul></dd><dt>Supportive care</dt><dd>SUP-ANTIEMETIC-PREMED, SUP-GCSF-NEUTROPENIA</dd><dt>Hard contraindications</dt><dd>CI-LVEF-LOW-FOR-ANTHRACYCLINE, CI-BORTEZOMIB-SEVERE-NEUROPATHY, CI-HBV-NO-PROPHYLAXIS</dd><dt>Reason</dt><dd>Alternative track presented for HCP consideration</dd></dl></div></div></section><section><h2>Pre-treatment investigations</h2><div class="section-sub">Дослідження перед стартом терапії · критичні / стандарт / бажано · поєднані по треках</div><table class="tbl"><thead><tr><th>ID</th><th>Назва</th><th>Пріоритет</th><th>Категорія</th><th>Потрібно для</th></tr></thead><tbody><tr><td>TEST-CBC</td><td>Загальний аналіз крові з лейкоцитарною формулою</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-CMP</td><td>Розширений біохімічний аналіз крові</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-HBV-SEROLOGY</td><td>Серологія HBV: HBsAg, anti-HBc, anti-HBs</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-HIV-SEROLOGY</td><td>Серологія ВІЛ (антитіла HIV-1/2 + p24)</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-LDH</td><td>Лактатдегідрогеназа (ЛДГ)</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-LFT</td><td>Печінкові проби (АЛТ, АСТ, білірубін, ЛФ, ГГТП, альбумін)</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-LN-EXCISIONAL-BIOPSY</td><td>Ексцизійна біопсія лімфатичного вузла</td><td><span class="badge badge--required">Критично</span></td><td>histology</td><td>усі треки</td></tr><tr><td>TEST-PREGNANCY</td><td>β-ХГЛ (тест на вагітність)</td><td><span class="badge badge--required">Критично</span></td><td>lab</td><td>усі треки</td></tr><tr><td>TEST-ECHO</td><td>Ехокардіографія (ТТЕ) з оцінкою ФВ ЛШ</td><td><span class="badge badge--recommended">Стандарт</span></td><td>imaging</td><td>усі треки</td></tr><tr><td>TEST-PET-CT</td><td>ПЕТ/КТ із 18F-ФДГ</td><td><span class="badge badge--recommended">Стандарт</span></td><td>imaging</td><td>усі треки</td></tr></tbody></table></section><section><h2>Red flags — PRO / CONTRA aggressive</h2><div class="pro-contra"><div class="pc-col pc-col--pro"><h3>PRO-AGGRESSIVE</h3><div class="section-sub">Тригери що штовхають до агресивного треку</div><ul><li>Класична лімфома Ходжкіна стадія III-IV (просунута) — обирає A+AVD замість ABVD при доступному брентуксимабу<span class="rf-id">RF-CHL-ADVANCED-STAGE</span></li></ul></div><div class="pc-col pc-col--contra"><h3>CONTRA-AGGRESSIVE</h3><div class="section-sub">Жорсткі протипоказання до ескалації</div><ul><li>LVEF &lt;50% на baseline — абсолютне протипоказання до anthracycline-вмісних регімів (R-CHOP, Pola-R-CHP, ABVD, BV-AVD). Кардіотоксичність доксорубіцину доза-кумулятивна і часто незворотна.<span class="rf-id">CI-LVEF-LOW-FOR-ANTHRACYCLINE</span></li><li>Виражена периферична невропатія до початку терапії — абсолютне протипоказання до бортезомібу. Терапія з високою імовірністю поглибить невропатію до інвалідизуючого та часто стійкого ступеня.<span class="rf-id">CI-BORTEZOMIB-SEVERE-NEUROPATHY</span></li><li>Активний або латентний HBV без противірусної профілактики — абсолютне протипоказання до моноклональних антитіл, що вичерпують B-клітини або імуномодулюючих (anti-CD20, anti-CD30 ADC, anti-CD38)<span class="rf-id">CI-HBV-NO-PROPHYLAXIS</span></li></ul></div></div></section><section><h2>Що НЕ робити</h2><div class="section-sub">Прямі прохібітивні правила, кожне з обґрунтуванням у regimen / supportive care / contraindication</div><div class="do-not"><div class="track-name">Стандартний план (IND-CHL-1L-ABVD)</div><ul><li>НЕ комбінувати з brentuximab vedotin — ABSOLUTE pulmonary toxicity contraindication.</li><li>НЕ використовувати G-CSF на ABVD — підвищує pulmonary toxicity bleomycin.</li><li>НЕ продовжувати bleomycin при DLCO drop ≥25% — switch to AVD (drop bleo).</li><li>НЕ пропускати baseline LVEF + DLCO + fertility preservation discussion.</li><li>НЕ використовувати високопоточний O2 при анестезії після bleomycin (lifetime risk).</li><li>НЕ починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ — реактивація на стероїдному пульсі реальна (також actionable при anti-HBc+ — моніторити HBV-DNA q-cycle).</li><li>НЕ переривати ART у HIV+ пацієнтів — HIV-HL outcomes approach HIV-negative cHL з концурентним ART; уникати ritonavir-boosted PIs (vincristine interaction); PJP prophylaxis throughout.</li></ul></div><div class="do-not"><div class="track-name">Агресивний план (IND-CHL-1L-A-AVD)</div><ul><li>НЕ комбінувати brentuximab з bleomycin — ABSOLUTE; lethality risk.</li><li>НЕ пропускати G-CSF support — neutropenia з brentuximab + анти-mitotic вища.</li><li>НЕ ігнорувати pre-existing peripheral neuropathy — Grade ≥2 = absolute CI.</li><li>НЕ призначати без verifiedного funding pathway — brentuximab не НСЗУ-reimbursed.</li><li>НЕ починати brentuximab без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — anti-CD30 ADC має документований HBV reactivation risk; продовжувати ≥12 міс після останньої дози BV.</li><li>НЕ переривати ART у HIV+ — A+AVD акцептабельний з ART; інтегразний backbone preferred (vincristine-PI interaction); PJP prophylaxis throughout.</li></ul></div></section><section><h2>Monitoring schedule</h2><div class="section-sub">Графік моніторингу за фазами лікування</div><h3>Стандартний план · MON-R-CHOP-REGIMEN</h3><table class="tbl"><thead><tr><th>Фаза</th><th>Вікно</th><th>Тести</th><th>Контрольні точки</th></tr></thead><tbody><tr><td><strong>baseline</strong></td><td>Within 2 weeks before cycle 1</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-CBC, TEST-CMP, TEST-LFT, TEST-LDH, TEST-B2-MICROGLOBULIN, TEST-HBV-SEROLOGY, TEST-HCV-ANTIBODY, TEST-HIV-SEROLOGY, TEST-PET-CT, TEST-LN-EXCISIONAL-BIOPSY, TEST-FLOW-CYTOMETRY, TEST-CD20-IHC, TEST-ECHO, TEST-PREGNANCY, TEST-BM-ASPIRATE, TEST-BM-TREPHINE</td><td><ul style='padding-left:16px;margin:0;'><li>Confirm CD20+ DLBCL histology; rule out double-hit (FISH for MYC/BCL2/BCL6)</li><li>Confirm HBV status + entecavir prophylaxis plan if HBsAg+ or anti-HBc+</li><li>Baseline LVEF ≥50% before doxorubicin</li><li>IPI calculation documented (age, ECOG, LDH, stage, extranodal sites)</li><li>CNS-IPI calculation if anatomic risk sites or composite score concerning</li><li>Fertility preservation discussion (sperm banking / oocyte cryo) for childbearing-age</li></ul></td></tr><tr><td><strong>on_treatment</strong></td><td>Day 1 of every 21-day cycle</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-CBC, TEST-CMP, TEST-LFT</td><td><ul style='padding-left:16px;margin:0;'><li>ANC ≥1500 + platelets ≥100K before each cycle (delay or G-CSF if not)</li><li>Neuropathy grade documented (CTCAE) — vincristine modification if ≥2</li><li>LVEF re-check after cumulative doxorubicin ~300 mg/m²</li></ul></td></tr><tr><td><strong>interim_response_assessment</strong></td><td>After cycles 2-4 (interim PET-CT)</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-PET-CT, TEST-LDH</td><td><ul style='padding-left:16px;margin:0;'><li>Lugano response criteria + Deauville score</li><li>If Deauville 4-5 with mass progression → consider salvage or trial</li></ul></td></tr><tr><td><strong>end_of_treatment</strong></td><td>After cycle 6 (within 6-8 weeks)</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-PET-CT, TEST-CBC, TEST-CMP, TEST-LDH</td><td><ul style='padding-left:16px;margin:0;'><li>Confirm CR vs PR vs SD vs PD by Lugano/Deauville</li><li>Begin survivorship plan: cardiac surveillance schedule, vaccination catch-up, second-cancer screening</li></ul></td></tr><tr><td><strong>follow_up_short</strong></td><td>Every 3 months × 2 years post-treatment</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-CBC, TEST-CMP, TEST-LFT, TEST-LDH</td><td><ul style='padding-left:16px;margin:0;'><li>Surveillance for relapse (~40% relapse risk by 2 years overall)</li><li>HBV reactivation monitoring continues for 12 months post anti-CD20</li></ul></td></tr><tr><td><strong>follow_up_long</strong></td><td>Every 6 months years 3-5, then annually</td><td style="font-family:var(--font-mono);font-size:11px;">TEST-CBC, TEST-LFT, TEST-ECHO</td><td><ul style='padding-left:16px;margin:0;'><li>Late cardiomyopathy screening (LVEF) annually if cumulative dox &gt;300</li><li>Annual second-malignancy screening (skin, breast, etc. age-appropriate)</li></ul></td></tr></tbody></table></section><section><h2>Timeline</h2><div class="section-sub">Хронологія лікування — derived from regimen + monitoring schedule</div><h3>Стандартний план</h3><div class="timeline"><div class="tl-phase tl-phase--baseline"><div class="name">Baseline</div><div class="window">Within 2 weeks before cycle 1</div></div><div class="tl-phase tl-phase--induction"><div class="name">Induction · ABVD (Adriamycin + Bleomycin +</div><div class="window">28-day cycles × 2-4 (early-stage + ISRT) OR 6 (advanced); response-adapted per interim PET-CT Deauville</div></div><div class="tl-phase tl-phase--response"><div class="name">Response assessment</div><div class="window">After cycles 2-4 (interim PET-CT)</div></div><div class="tl-phase tl-phase--followup"><div class="name">Follow-up</div><div class="window">Every 3 months × 2 years post-treatment</div></div></div><h3>Агресивний план</h3><div class="timeline"><div class="tl-phase tl-phase--baseline"><div class="name">Baseline</div><div class="window">Within 2 weeks before cycle 1</div></div><div class="tl-phase tl-phase--induction"><div class="name">Induction · A+AVD (Brentuximab vedotin + A</div><div class="window">28-day cycles × 6</div></div><div class="tl-phase tl-phase--response"><div class="name">Response assessment</div><div class="window">After cycles 2-4 (interim PET-CT)</div></div><div class="tl-phase tl-phase--followup"><div class="name">Follow-up</div><div class="window">Every 3 months × 2 years post-treatment</div></div></div></section><section><h2>MDT brief</h2><div class="mdt"><h3>Скіли (required) — обов&#x27;язкові віртуальні спеціалісти (1)</h3><ul class="role-list"><li><span class="role-name">Гематолог / онкогематолог</span> <span class="badge badge--required">required</span><div class="role-reason">Лімфомний діагноз — провідна спеціальність для терапевтичного ведення.</div><div class="role-questions">Owns: OQ-LDH-CURRENT</div><div class="skill-meta"><span class="pill">skill: <code>hematologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li></ul><h3>Скіли (recommended) — рекомендовані для розгляду (2)</h3><ul class="role-list"><li><span class="role-name">Клінічний фармацевт</span> <span class="badge badge--recommended">recommended</span><div class="role-reason">Хіміоімунотерапевтичний схема — drug-drug interactions, dose adjustments, premedication.</div><div class="skill-meta"><span class="pill">skill: <code>clinical_pharmacist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li><li><span class="role-name">Патолог (загальний)</span> <span class="badge badge--recommended">recommended</span><div class="role-reason">Підтвердження гістології лімфоми + оцінка ризику трансформації (DLBCL/Richter).</div><div class="role-questions">Owns: OQ-CD20-CONFIRMATION</div><div class="skill-meta"><span class="pill">skill: <code>pathologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li></ul><h3>Open questions (3, 1 blocking)</h3><ul class="q-list"><li class="blocking"><div class="q-id"><span class="badge badge--blocking">BLOCKING</span> OQ-CD20-CONFIRMATION</div><div class="q-text">Чи підтверджено CD20+ статус гістологією (IHC)? Без CD20+ rituximab/obinutuzumab не показані.</div><div class="q-rationale">Anti-CD20 терапія — основа для більшості ліній; відсутність експресії CD20 повністю змінює regimen.</div><div class="q-owner">→ pathologist</div></li><li class=""><div class="q-id">OQ-STAGING-COMPLETE</div><div class="q-text">Чи виконано повне стадіювання (Lugano + PET/CT або CT)?</div><div class="q-rationale">Прогноз і вибір треку залежать від stage та tumor burden.</div><div class="q-owner">→ radiologist</div></li><li class=""><div class="q-id">OQ-LDH-CURRENT</div><div class="q-text">Який актуальний LDH? Маркер пухлинного навантаження і трансформації.</div><div class="q-rationale">LDH входить у прогностичні індекси індолентних лімфом.</div><div class="q-owner">→ hematologist</div></li></ul><h3>Data quality</h3><ul><li>Missing critical: cd20_ihc_status, lugano_stage</li><li>Missing recommended: ldh_ratio_to_uln, fib4_index, pet_ct_date</li><li>Unevaluated RedFlags: RF-CHL-ADVANCED-STAGE, RF-CHL-FRAILTY-AGE, RF-CHL-INFECTION-SCREENING, RF-CHL-ORGAN-DYSFUNCTION, RF-CHL-TRANSFORMATION-PROGRESSION</li></ul><div class="skill-catalog"><h3>Skill catalog (3/16 активовано в цьому плані)</h3><div class="section-sub">Усі зареєстровані віртуальні спеціалісти. ✓ — активовано для цього кейсу; ○ — не активовано (доступні для інших клінічних сценаріїв).</div><table><thead><tr><th>Спеціаліст</th><th>skill_id</th><th>Версія</th><th>Last reviewed</th><th>Sign-offs</th><th>Domain</th></tr></thead><tbody><tr class="dormant"><td>Спеціаліст з клітинної терапії (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="activated"><td>Клінічний фармацевт</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinical_pharmacy</td></tr><tr class="activated"><td>Гематолог / онкогематолог</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematology_oncology</td></tr><tr class="dormant"><td>Гематопатолог (специфічно для лімфом / лейкозів / мієломи)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematopathology</td></tr><tr class="dormant"><td>Інфекціоніст / гепатолог</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>infectious_diseases</td></tr><tr class="dormant"><td>Медичний онколог (хіміотерапевт солідних пухлин)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncology</td></tr><tr class="dormant"><td>Молекулярний генетик / молекулярний онколог</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncology</td></tr><tr class="dormant"><td>Паліативна допомога</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>palliative_care</td></tr><tr class="activated"><td>Патолог (загальний)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>pathology</td></tr><tr class="dormant"><td>Сімейний лікар / терапевт</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>primary_care</td></tr><tr class="dormant"><td>Психолог / онкопсихолог</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Радіотерапевт (променева терапія)</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiation_oncology</td></tr><tr class="dormant"><td>Лікар-радіолог</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostic_imaging</td></tr><tr class="dormant"><td>Соціальний працівник / кейс-менеджер</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Хірург-онколог</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>surgical_oncology</td></tr><tr class="dormant"><td>Спеціаліст з трансплантації (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr></tbody></table></div></div></section><section><h2>Sources cited</h2><ul class='sources'><li>SRC-ECHELON-1-CONNORS-2018: Brentuximab Vedotin with Chemotherapy for Stage III or IV Hodgkin&#x27;s Lymphoma (2018)</li><li>SRC-NCCN-BCELL-2025: NCCN Clinical Practice Guidelines in Oncology: B-Cell Lymphomas (v.2.2025)</li></ul></section><section class="experimental-track"><h2>Експериментальні опції (клінічні дослідження)</h2><div class="section-sub">Третій трек плану — open-enrollment trials з ClinicalTrials.gov. Останнє оновлення: 2026-04-29. <em>Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3).</em></div><table class="trials-table"><thead><tr><th>NCT</th><th>Назва</th><th>Фаза</th><th>Статус</th><th>Спонсор</th><th>UA</th><th>Включення (фрагмент)</th></tr></thead><tbody><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06984146" target="_blank" rel="noopener">NCT06984146</a></td><td class="trial-title">Nivo40-AVD for Advanced Classic Hodgkin Lymphoma</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">National Medical Research Radiological Centre of the Ministry of Health of Russia</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT02797717" target="_blank" rel="noopener">NCT02797717</a></td><td class="trial-title">Treatment for Classical Hodgkin Lymphoma in Children and Adolescents</td><td class="trial-phase">NA</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">GALIA AVRAHAMI</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06745076" target="_blank" rel="noopener">NCT06745076</a></td><td class="trial-title">Personalized Reduction of Chemotherapy Intensity Through ctDNA Evaluation for the Treatment of Patients With Advanced Hodgkin Lymphoma</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">University of Washington</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT02332668" target="_blank" rel="noopener">NCT02332668</a></td><td class="trial-title">A Study of Pembrolizumab (MK-3475) in Pediatric Participants With an Advanced Solid Tumor or Lymphoma (MK-3475-051/KEYNOTE-051)</td><td class="trial-phase">PHASE1 / PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Merck Sharp &amp; Dohme LLC</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT05934084" target="_blank" rel="noopener">NCT05934084</a></td><td class="trial-title">Lifestyles Implemented-Survivorship Care Plan In Lymphoma Survivors</td><td class="trial-phase">NA</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Fondazione Italiana Linfomi - ETS</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT07234487" target="_blank" rel="noopener">NCT07234487</a></td><td class="trial-title">Comparison of AVD + Low-Dose Nivolumab vs. PET-Adapted BEACOPP-like in Advanced cHL</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">St. Petersburg State Pavlov Medical University</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06831370" target="_blank" rel="noopener">NCT06831370</a></td><td class="trial-title">A Study of Brentuximab Vedotin With Doxorubicin, Vinblastine and Dacarbazine in Adults With Hodgkin Lymphoma in India</td><td class="trial-phase">PHASE4</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Takeda</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT05955105" target="_blank" rel="noopener">NCT05955105</a></td><td class="trial-title">A Study of ILB2109 and Toripalimab in Patients With Advanced Solid Malignancies</td><td class="trial-phase">PHASE1 / PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Innolake Biopharm</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT04838652" target="_blank" rel="noopener">NCT04838652</a></td><td class="trial-title">Pembrolizumab in Combination With Salvage Chemotherapy for First-relapsed or Refractory Classical Hodgkin Lymphoma</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">University of Cologne</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr><tr><td class="trial-nct"><a href="https://clinicaltrials.gov/study/NCT06848569" target="_blank" rel="noopener">NCT06848569</a></td><td class="trial-title">Sintilimab Plus AVD in Pediatric Low/Moderate Risk Hodgkin Lymphoma: A Phase II Study</td><td class="trial-phase">PHASE2</td><td class="trial-status">RECRUITING</td><td class="trial-sponsor">Sun Yat-sen University</td><td class="trial-ua">—</td><td class="trial-elig"></td></tr></tbody></table><p class="trial-disclaimer">Перевіряти статус набору безпосередньо у дослідницькому центрі. Дані ctgov можуть відставати від поточного статусу UA-сайтів.</p></section><section class="access-matrix"><details><summary><h2>Доступність опцій в Україні</h2><span class="section-sub">Per-track UA registration · НСЗУ · cost · access pathway. Render-time metadata; engine selection не залежить від цих полів (CHARTER §8.3).</span></summary><table class="access-matrix-table"><thead><tr><th>Опція</th><th>Реєстрація UA</th><th>НСЗУ</th><th>Cost orientation</th><th>Access pathway</th></tr></thead><tbody><tr class="track-standard"><td class="track-cell"><strong>Стандартний план</strong><div class="regimen-name"><strong>ABVD (Adriamycin + Bleomycin + Vinblastine + Dacarbazine), 2-6 cycles</strong> <span class='regimen-id'>(REG-ABVD)</span></div></td><td><span class="badge badge--ok">✓ зареєстровано</span></td><td><span class="badge badge--ok">✓ покривається</span></td><td class="cost-cell"><span class='cost-unknown'>₴-? — verify pathway</span></td><td class="pathway-cell">НСЗУ formulary</td></tr><tr class="track-aggressive"><td class="track-cell"><strong>Агресивний план</strong><div class="regimen-name"><strong>A+AVD (Brentuximab vedotin + Adriamycin + Vinblastine + Dacarbazine), 6 cycles</strong> <span class='regimen-id'>(REG-A-AVD)</span></div></td><td><span class="badge badge--ok">✓ зареєстровано</span></td><td><span class="badge badge--ok">✓ покривається</span></td><td class="cost-cell"><span class='cost-unknown'>₴-? — verify pathway</span></td><td class="pathway-cell">НСЗУ formulary</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT06984146</strong><div class="regimen-name">Nivo40-AVD for Advanced Classic Hodgkin Lymphoma</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT02797717</strong><div class="regimen-name">Treatment for Classical Hodgkin Lymphoma in Children and Adolescents</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT06745076</strong><div class="regimen-name">Personalized Reduction of Chemotherapy Intensity Through ctDNA Evaluation for the Treatment of Patients With Advanced Hodgkin Lymphoma</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT02332668</strong><div class="regimen-name">A Study of Pembrolizumab (MK-3475) in Pediatric Participants With an Advanced Solid Tumor or Lymphoma (MK-3475-051/KEYNOTE-051)</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT05934084</strong><div class="regimen-name">Lifestyles Implemented-Survivorship Care Plan In Lymphoma Survivors</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT07234487</strong><div class="regimen-name">Comparison of AVD + Low-Dose Nivolumab vs. PET-Adapted BEACOPP-like in Advanced cHL</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT06831370</strong><div class="regimen-name">A Study of Brentuximab Vedotin With Doxorubicin, Vinblastine and Dacarbazine in Adults With Hodgkin Lymphoma in India</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT05955105</strong><div class="regimen-name">A Study of ILB2109 and Toripalimab in Patients With Advanced Solid Malignancies</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT04838652</strong><div class="regimen-name">Pembrolizumab in Combination With Salvage Chemotherapy for First-relapsed or Refractory Classical Hodgkin Lymphoma</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr><tr class="track-trial"><td class="track-cell"><strong>Trial · NCT06848569</strong><div class="regimen-name">Sintilimab Plus AVD in Pediatric Low/Moderate Risk Hodgkin Lymphoma: A Phase II Study</div><div class="notes">No UA site listed — international referral required</div></td><td><span class="badge badge--unknown">— невідомо</span></td><td><span class="badge badge--unknown">— невідомо</span></td><td class="cost-cell"><div class='cost-row'><span class='cost-label'>self-pay:</span> ₴0/course</div></td><td class="pathway-cell">Trial sponsor</td></tr></tbody></table><p class="matrix-disclaimer">Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті. Status updated: 2026-04-29.</p></details></section><div class="doc-footer"><div class="version-chain">plan_id: PLAN-VAR-CHL-BIOMARK-V1 | version: 1 | generated: 2026-04-29T13:03:31.154810+00:00</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Outpatient oncology treatment planning to support tumor-board discussion. Not a medical device; not for autonomous clinical decision-making.</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Both treatment options below are presented for review. The engine&#x27;s selection of a &#x27;recommended&#x27; default does not constitute a clinical decision. Final treatment selection requires HCP judgment incorporating information not available to the system.</div><div class="medical-disclaimer">Цей документ — інформаційний ресурс для підтримки обговорення в тумор-борді (per CHARTER §11). Не система, що приймає клінічні рішення. Усі рекомендації потребують перевірки лікуючим лікарем.</div></div></div>
+</body>
+</html>
