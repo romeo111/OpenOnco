@@ -1,0 +1,52 @@
+{
+  "patient_id": "CRC-MET-3L-REGO-001",
+  "comment": "Synthetic chemo-refractory metastatic CRC, 67M, ECOG 1, left-sided sigmoid primary, RAS-mutant (KRAS G12V), BRAF-WT, MSS, post 1L FOLFOX+bev → 2L FOLFIRI+bev → PD; intent is 3L+ regorafenib (CORRECT, mOS 6.4 vs 5.0 mo HR 0.77, ReDOS dose-escalation strategy). KB DRIFT: there is currently NO ALGO-CRC-METASTATIC-3L; the engine routes (DIS-CRC, line=3) to no algorithm and emits no plan. To preserve a renderable artifact this case is encoded as line_of_therapy=2 with prior_lines reflecting both 1L and 2L exposure, so it falls through ALGO-CRC-METASTATIC-2L: step 1 (no MSI-H) → step 2 (no BRAF) → step 3 (no KRAS-G12C) → step 4 (no HER2 amp) → step 5 (RAS-mut, no rechallenge) → step 6 (RF-CRC-TRANSFORMATION-PROGRESSION does NOT fire — no cea_doubling / peritoneal / oxaliplatin-relapse trigger) → step 7 if_false default = IND-CRC-METASTATIC-3L-TAS102-BEV. The engine surfaces TAS-102+bev (SUNLIGHT) as the ENGINE-DEFAULT track; IND-CRC-METASTATIC-3L-REGORAFENIB appears as one of the alternative tracks via algo.output_indications. Drift: the brief asked for regorafenib as the headline plan, but the wired KB prefers SUNLIGHT TAS-102+bev (better tolerability + slight OS edge) and demotes regorafenib to alternative-track positioning per the indication's known_controversies + Ukraine-context access analysis. Fix would require either an ALGO-CRC-METASTATIC-3L with regorafenib as a frailty/preference branch, or a dedicated RF-CRC-TAS102-INELIGIBLE gate — both are Phase-2 KB work.",
+  "disease": {"id": "DIS-CRC"},
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-MSI-STATUS": "stable",
+    "BIO-BRAF-V600E": "negative",
+    "KRAS": "G12V",
+    "BIO-RAS-MUTATION": "positive"
+  },
+  "demographics": {
+    "age": 67,
+    "sex": "male",
+    "ecog": 1
+  },
+  "findings": {
+    "primary_site": "sigmoid_colon",
+    "primary_sidedness": "left",
+    "histology": "adenocarcinoma",
+    "stage": "IV",
+    "stage_iv": true,
+    "metastatic_sites": ["liver", "lung", "peritoneum"],
+    "liver_lesion_count": 8,
+    "largest_lesion_cm": 3.4,
+    "cea_ng_ml": 312,
+    "msi_status": "stable",
+    "dmmr_status": "proficient",
+    "kras_status": "mutated",
+    "kras_mutation": true,
+    "kras_variant": "G12V",
+    "nras_status": "wild_type",
+    "nras_mutation": false,
+    "ras_status": "mutated",
+    "extended_ras_status": "mutated",
+    "braf_v600e_mutation": false,
+    "her2_amplified": false,
+    "prior_lines": [
+      {"line": 1, "regimen": "FOLFOX + bevacizumab", "cycles": 9, "best_response": "PR", "outcome": "PD at 8 mo"},
+      {"line": 2, "regimen": "FOLFIRI + bevacizumab", "cycles": 7, "best_response": "SD", "outcome": "PD at 5 mo"}
+    ],
+    "creatinine_clearance_ml_min": 78,
+    "bilirubin_uln_x": 1.0,
+    "absolute_neutrophil_count_k_ul": 2.8,
+    "platelets_k_ul": 192,
+    "albumin_g_dl": 3.6,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  }
+}
