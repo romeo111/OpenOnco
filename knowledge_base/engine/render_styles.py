@@ -619,6 +619,35 @@ h3 {
     font-family: var(--font-mono); font-size: 11px; color: var(--gray-700);
 }
 .bridging-options-list li.bridging-option { padding: 2px 0; }
+
+/* PR5 — citation-presence guard
+   `.no-citation-badge` is the WARN-mode flag rendered inline at the top of
+   any Regimen / Indication / BMA cell whose declared sources fail to
+   resolve to a real Source entity. It uses a soft amber palette so it
+   reads as a warning without overpowering surrounding clinical content.
+   `.stripped-block` is the STRICT-mode placeholder that replaces the
+   block body when the same condition fires.
+
+   Source: docs/reviews/cross-repo-task_torrent-sync-plan-2026-04-28.md
+   §6 verifier algorithms — item #1 "Cite-or-strip at render". */
+.no-citation-badge {
+  display: inline-block;
+  background: #fff8e1;
+  color: #6d4c00;
+  border: 1px solid #ffd54f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+.stripped-block {
+  background: #fafafa;
+  border: 1px dashed #bbb;
+  color: #888;
+  padding: 8px;
+  font-style: italic;
+  text-align: center;
+}
 """
 
 
