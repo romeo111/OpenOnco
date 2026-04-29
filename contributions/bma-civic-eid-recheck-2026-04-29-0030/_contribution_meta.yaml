@@ -1,0 +1,36 @@
+_contribution:
+  chunk_id: bma-civic-eid-recheck-2026-04-29-0030
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-29'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: |
+    Computational re-verification chunk for issue #36. Walked all 399 BMA
+    records in knowledge_base/hosted/content/biomarker_actionability/, for
+    each BMA parsed the `evidence_sources` list and checked every CIViC
+    EID referenced against the latest snapshot under
+    knowledge_base/hosted/civic/2026-04-25/evidence.yaml.
+
+    Worker: `_recheck_worker.py` in this dir (kept for audit trail).
+
+    Output is deterministic — re-running yields identical content. No
+    KB content modified. Report-only deliverable.
+  tasktorrent_version: 2026-04-29-pending-first-commit
+  notes_for_reviewer: |
+    Result: clean. 10768/10768 referenced EIDs are present in the current
+    CIViC snapshot. 0 deprecated. 295/399 BMAs cite CIViC. The CIViC
+    reconstruction (PR #14 / #22) is well-aligned with the current snapshot.
+
+    This is a health-check chunk. The intended remediation pathway (when
+    drift is found) is to surface deprecated/changed EIDs for maintainer
+    review and trigger a partial re-reconstruction. With 0 drift, no
+    follow-up action is needed beyond merging the report.
+
+    VALIDATOR LIMITATION ACKNOWLEDGED: report-only sidecar. The
+    validator reports "no sidecar payloads found" because no entity-
+    sidecar files are produced (this is an audit). Per chunk-spec
+    `output_type: report-only` this is expected.
+
+    target_action: review_existing_stub
+    target_entity_id: bma-civic-eid-recheck-2026-04-29-0030
