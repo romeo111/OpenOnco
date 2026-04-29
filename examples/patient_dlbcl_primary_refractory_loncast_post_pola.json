@@ -1,0 +1,83 @@
+{
+  "patient_id": "DLBCL-LONCAST-001",
+  "comment": "Synthetic primary-refractory DLBCL post 1L R-CHOP (PD at 4 mo, treatment stopped) → 2L Pola-R-CHP (early-switch attempt to anti-CD79b combination, transient PR then PD at 3 mo). Age 71, ECOG 2, frail, multiple grade-2 comorbidities; not transplant-eligible AND not CAR-T-eligible (no UA international referral pathway). Clinically the textbook indication is loncastuximab tesirine 3L+ (LOTIS-2 Caimi 2021 Lancet Oncol; ORR 48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient ADC ideally suited for non-CAR-T-eligible frail patient. KB-DRIFT NOTE: engine routes ALGO-DLBCL-2L (LOT=2 set per algorithm match constraint; clinically post-2L) → standard-track DEFAULT = IND-DLBCL-2L-POLA-R-BENDAMUSTINE (step 3 fallback), aggressive-track ALTERNATIVE = IND-DLBCL-3L-AXICEL-CART. The intended IND-DLBCL-3L-LONCASTUXIMAB is NOT surfaced because (a) it is not in ALGO-DLBCL-2L.output_indications list, (b) its YAML has empty recommended_regimen (no REG-LONCASTUXIMAB-TESIRINE entity yet — flagged STUB), and (c) no ALGO-DLBCL-3L exists. Surfacing real KB drift: loncastuximab pathway needs (i) REG-LONCASTUXIMAB-TESIRINE authoring, (ii) inclusion in ALGO-DLBCL-2L step branches gated on CAR-T-ineligible composite, (iii) and/or new ALGO-DLBCL-3L for frail post-2L cohort. Default Pola-BR is clinically inappropriate for this patient (already failed Pola-based 2L Pola-R-CHP — re-treating with same MMAE class is futile + neuropathy risk Grade 1 already present).",
+  "disease": {
+    "id": "DIS-DLBCL-NOS",
+    "icd_o_3_morphology": "9680/3"
+  },
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-CD20-IHC": "positive"
+  },
+  "demographics": {
+    "age": 71,
+    "sex": "male",
+    "ecog": 2,
+    "fit_for_transplant": false
+  },
+  "findings": {
+    "prior_lines_count": 2,
+    "prior_regimens": ["R-CHOP x 4 (stopped at PD)", "Pola-R-CHP x 6"],
+    "primary_refractory_or_early_relapse": true,
+    "time_to_progression_months": 3,
+    "transplant_eligible": false,
+    "cart_eligible": false,
+    "cart_ineligibility_reason": "frailty_age_71_ECOG_2_no_international_referral_pathway",
+    "cd19_positive": true,
+    "cd20_positive": true,
+    "cns_disease_present": false,
+    "cns_status": "CNS-1",
+    "active_uncontrolled_infection": false,
+    "ldh_ratio_to_uln": 2.4,
+    "ipi_score": 4,
+    "high_ipi": true,
+    "lvef_percent": 52,
+    "creatinine_clearance_ml_min": 58,
+    "bilirubin_uln_x": 1.1,
+    "absolute_neutrophil_count_k_ul": 1.8,
+    "platelets_k_ul": 95,
+    "severe_neuropathy_grade": 1,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "biopsy_shows_dlbcl": true,
+    "comorbidity_grade2_count": 3
+  },
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS — primary-refractory after Pola-R-CHP",
+        "icd_o_3": "9680/3",
+        "icd_10": "C83.3",
+        "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "R-CHOP x 4",
+          "best_response": "PD",
+          "progression_at_months": 4,
+          "stopped_for_progression": true
+        },
+        "second_line": {
+          "regimen": "Pola-R-CHP x 6 (early-switch to anti-CD79b combination)",
+          "best_response": "PR (transient)",
+          "progression_at_months": 3
+        }
+      },
+      "transplant_assessment": {
+        "eligible": false,
+        "rationale": "Age 71, ECOG 2, mild renal impairment (CrCl 58) and grade 1 neuropathy → autoSCT not advised"
+      },
+      "cart_assessment": {
+        "eligible": false,
+        "rationale": "Frailty (age 71, ECOG 2, comorbidity grade-2 count 3); no funded UA international CAR-T referral pathway secured; manufacturing window risk high given primary-refractory disease"
+      }
+    },
+    "infectious_status": {
+      "HBV": {"HBsAg": "negative", "anti_HBc": "negative"},
+      "HCV": "negative",
+      "HIV": "negative"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "patient_id": "DLBCL-2L-POLABR-002",
+  "comment": "Synthetic relapsed DLBCL NOS post 1L R-CHOP, late relapse at 18 mo, transplant-INELIGIBLE on a different axis than existing patient_dlbcl_relapsed_transplant_ineligible.json (which uses age 72 + ECOG 2). This case: age 64, fit ECOG 1, but LVEF 38% from anthracycline-induced cardiomyopathy → autoSCT cardiac contraindication (BEAM ineligible). Engine routes ALGO-DLBCL-2L step 3 (transplant-ineligible composite via cardiac comorbidity) → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (POLARIX-era 2L; GO29365 Pola-BR for non-ASCT-eligible r/r DLBCL, ORR ~63%, CR ~40%, mOS ~12.4 mo). Same indication target as the older sibling case, different patient archetype: cardiac-comorbidity-driven ineligibility vs age-driven ineligibility, late vs early relapse, fit vs frail.",
+  "disease": {
+    "id": "DIS-DLBCL-NOS",
+    "icd_o_3_morphology": "9680/3"
+  },
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-CD20-IHC": "positive",
+    "BIO-CD79B-IHC": "positive"
+  },
+  "demographics": {
+    "age": 64,
+    "sex": "female",
+    "ecog": 1,
+    "fit_for_transplant": false
+  },
+  "findings": {
+    "prior_lines_count": 1,
+    "prior_regimen": "R-CHOP",
+    "prior_regimens": ["R-CHOP x 6"],
+    "time_to_progression_months": 18,
+    "primary_refractory_or_early_relapse": false,
+    "transplant_eligible": false,
+    "transplant_ineligibility_reason": "anthracycline_induced_cardiomyopathy_lvef_38",
+    "ipi_score": 2,
+    "high_ipi": false,
+    "ldh_ratio_to_uln": 1.3,
+    "lvef_percent": 38,
+    "cardiac_dysfunction": true,
+    "creatinine_clearance_ml_min": 78,
+    "bilirubin_uln_x": 0.9,
+    "absolute_neutrophil_count_k_ul": 3.1,
+    "platelets_k_ul": 195,
+    "severe_neuropathy_grade": 0,
+    "cns_disease_present": false,
+    "cns_status": "CNS-1",
+    "cd20_positive": true,
+    "cd79b_positive": true,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "biopsy_shows_dlbcl": true,
+    "comorbidity_grade2_count": 1
+  },
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS — late relapse",
+        "icd_o_3": "9680/3",
+        "icd_10": "C83.3",
+        "who_classification_5th_ed": "Aggressive B-cell lymphomas — Diffuse large B-cell lymphoma, NOS"
+      },
+      "staging_at_relapse": {
+        "staging_system": "Lugano",
+        "stage": "III",
+        "b_symptoms": false,
+        "extranodal_involvement": false
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "R-CHOP x 6",
+          "best_response": "CR",
+          "progression_at_months": 18,
+          "completed_planned_cycles": true
+        }
+      },
+      "transplant_assessment": {
+        "eligible": false,
+        "rationale": "Anthracycline-induced cardiomyopathy (LVEF 38%, baseline 60%); BEAM-conditioning + autoSCT cardiac toxicity contraindicated despite age 64 and ECOG 1"
+      }
+    },
+    "infectious_status": {
+      "HBV": {"HBsAg": "negative", "anti_HBc": "negative"},
+      "HCV": "negative",
+      "HIV": "negative"
+    }
+  }
+}
