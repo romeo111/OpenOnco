@@ -15,7 +15,7 @@ real OncoKB Academic-tier token + GCP credentials (Phase 1b operational
 gate). Engine is ready to run with `--oncokb-proxy=URL` against a live
 or mocked proxy as soon as Phase 1b lands.
 
-Authoritative plan: `docs/plans/oncokb_integration_safe_rollout_v3.md`
+Authoritative plan: `docs/plans/archive/oncokb_integration_safe_rollout_v3.md`
 (18 sections, 12-item threat model, 20+ acceptance criteria, all 8
 clinical questions resolved).
 
@@ -125,7 +125,7 @@ Phase 1a hardening before Phase 1b deploy:
 #### Phase 0 — mock-mode evidence
 
 Phase 0 documented as 🟡 **PROVISIONAL** in
-`docs/plans/oncokb_api_evidence.md`. Verified from public docs
+`docs/plans/archive/oncokb_api_evidence.md`. Verified from public docs
 (api.oncokb.org, faq.oncokb.org, oncokb-annotator):
 
 - A1 endpoint `/annotate/mutations/byProteinChange` ✓
@@ -203,12 +203,12 @@ with ~20 hints providing real coverage of actionable variants.
 
 #### Plan documents
 
-- `docs/plans/oncokb_integration_safe_rollout_v3.md` — authoritative
+- `docs/plans/archive/oncokb_integration_safe_rollout_v3.md` — authoritative
   18-section plan with threat model, locked Q1–Q8, 6 phases, 20 ACs,
   hard-pause gates at 1b/5d/5e.
-- `docs/plans/oncokb_api_evidence.md` — 🟡 PROVISIONAL A1–A11
+- `docs/plans/archive/oncokb_api_evidence.md` — 🟡 PROVISIONAL A1–A11
   registry; flips to ✅ VERIFIED only after real-token curl pass.
-- `docs/plans/oncokb_data_scope.md`, `oncokb_cache_strategy.md`,
+- `docs/plans/archive/oncokb_data_scope.md`, `oncokb_cache_strategy.md`,
   `oncokb_render_integration.md`, `oncokb_source_classification.md`
   — older decision-records, subordinate to v3.
 

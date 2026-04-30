@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One-shot script: stamp `last_verified: 2026-04-27` and indication-
 restricted `reimbursement_indications` for the 52 pkg2 drugs (per
-docs/plans/csd_2_categorization.md).
+docs/plans/archive/csd_2_categorization.md).
 
 Per-drug instructions:
   - set last_verified: "2026-04-27" inside ukraine_registration block

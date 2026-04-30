@@ -7,7 +7,7 @@ Run:
     python -m scripts.profile_engine_bundle
 
 Outputs a Markdown report at
-`docs/plans/csd_5_bundle_profile_<YYYY-MM-DD>.md` and prints a summary
+`docs/plans/archive/csd_5_bundle_profile_<YYYY-MM-DD>.md` and prints a summary
 to stdout. Builds the bundle on the fly if it doesn't already exist.
 """
 

@@ -1,6 +1,6 @@
 """Build the CSD-3 patient-mode demo HTML.
 
-Generates ``docs/plans/csd_3_patient_demo.html`` — the patient-facing
+Generates ``docs/plans/archive/csd_3_patient_demo.html`` — the patient-facing
 companion to the CSD-1 clinician demo. Same synthetic BRAF V600E mCRC
 patient (``examples/patient_csd_1_demo_braf_mcrc.json``), rendered through
 ``render_plan_html(plan_result, mode="patient")`` and wrapped in a small
@@ -19,7 +19,7 @@ Run::
 
     PYTHONPATH=. py -3.12 scripts/build_csd_3_patient_demo.py
 
-Output: ``docs/plans/csd_3_patient_demo.html`` (overwrites if present).
+Output: ``docs/plans/archive/csd_3_patient_demo.html`` (overwrites if present).
 
 This is the demo a CSD molecular oncologist sees alongside the clinician
 view — it makes concrete the "two outputs from the same engine" point of
