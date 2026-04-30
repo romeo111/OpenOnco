@@ -1667,7 +1667,7 @@ def render_try(
     <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
   </div>
 
-  <div class="quest-toolbar">
+  <div class="quest-toolbar" data-step-label="{'1. Pick a disease and (optionally) an example' if target_lang == 'en' else '1. Оберіть хворобу та (опційно) приклад'}">
     <label class="qt-label">
       {'Disease' if target_lang == 'en' else 'Хвороба'}
       <select id="diseaseSelect">
