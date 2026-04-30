@@ -9,10 +9,12 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - {condition: "dMMR / MSI-high tumor"}
+        - {finding: mmr_status, value: deficient}
+        - {finding: msi_status, value: MSI-H}
+        - {finding: msi_status, value: MSI-high}
     if_true: {result: IND-ENDOMETRIAL-ADVANCED-1L-DOSTARLIMAB-CHEMO}
     if_false: {result: IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO}
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Gate replaced free-text condition with structured finding lookups for dMMR (mmr_status=deficient) and MSI-H (msi_status=MSI-H/MSI-high) — both label as eligible for dostarlimab arm."
 sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022]
 last_reviewed: null
 notes: "Both pembro and dostarlimab approved; chemoimmuno superior to chemo alone regardless of MMR."

@@ -9,10 +9,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - {condition: "Patient eligible for EV+pembro (no severe diabetes, neuropathy, ocular)"}
+        - {finding: ev_pembro_eligible, value: true}
     if_true: {result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO}
     if_false: {result: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB}
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Gate replaced free-text condition with structured finding lookup (EV+pembro eligibility composite — see patient_urothelial_muc_ev_pembro fixture). RF authoring still owed for the composite criteria (no severe diabetes / neuropathy / ocular disease)."
 sources: [SRC-NCCN-BLADDER-2025, SRC-EAU-BLADDER-2024]
 last_reviewed: null
 notes: "EV-302 paradigm shift."

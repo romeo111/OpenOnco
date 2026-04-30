@@ -36,12 +36,12 @@ decision_tree:
     evaluate:
       all_of:
         - red_flag: RF-GASTRIC-PDL1-CPS-1-PLUS
-        - condition: "HER2-negative"
+        - {finding: her2_status, value: negative}
     if_true:
       result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
     if_false:
       result: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
-    notes: "Partially wired - RF-GASTRIC-PDL1-CPS-1-PLUS gates ICI add-on (CheckMate-649 FOLFOX+nivo); HER2-negative criterion kept as MDT-text (HER2+ pre-routed at step 1)."
+    notes: "RF-GASTRIC-PDL1-CPS-1-PLUS gates ICI add-on (CheckMate-649 FOLFOX+nivo); HER2-negative criterion now structured as finding lookup (HER2+ already pre-routed at step 1)."
 
 sources:
   - SRC-NCCN-GASTRIC-2025
