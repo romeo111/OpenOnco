@@ -7,6 +7,7 @@ purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) tra
 output_indications:
 - IND-DLBCL-2L-POLA-R-BENDAMUSTINE
 - IND-DLBCL-3L-AXICEL-CART
+- IND-DLBCL-3L-LONCASTUXIMAB
 default_indication: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
 alternative_indication: IND-DLBCL-3L-AXICEL-CART
 decision_tree:
@@ -31,8 +32,17 @@ decision_tree:
   if_true:
     result: IND-DLBCL-3L-AXICEL-CART
   if_false:
-    next_step: 3
+    next_step: 21
   notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 21
+  evaluate:
+    any_of:
+    - red_flag: RF-DLBCL-CART-INELIGIBLE-POST-2L
+  if_true:
+    result: IND-DLBCL-3L-LONCASTUXIMAB
+  if_false:
+    next_step: 3
+  notes: "Wired 2026-05-01 (W5d carry-forward). Loncastuximab tesirine (LOTIS-2 Caimi 2021; ORR 48%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient CD19-targeted ADC for post-2L DLBCL when CAR-T not feasible (frailty, comorbidity, no funded UA international referral pathway, manufacturing-window risk, prior CAR-T failure). RF-DLBCL-CART-INELIGIBLE-POST-2L composite fires on prior_lines_count ≥2 + (cart_ineligibility_reason set OR ECOG ≥2 + age ≥70 OR universal CAR-T-ineligible). Closes drift-signal #5 from W5b heme chunk that deferred this fix to avoid breaking patient_dlbcl_primary_refractory_loncast_post_pola fixture golden; golden updated alongside this wiring. IND-DLBCL-3L-LONCASTUXIMAB has applicable_to.line_of_therapy=3 — cross-line surfacing (algo line=2 emits a 3L-tagged IND) is intentional: engine routes patients with line=2+post-2L-progression into this branch since DLBCL doesn't have a separate 3L algo."
 - step: 3
   evaluate:
     any_of:

@@ -13,6 +13,7 @@ output_indications:
   - IND-AML-1L-VEN-AZA
   - IND-AML-1L-7-3
   - IND-AML-1L-7-3-GO-CBF
+  - IND-AML-1L-CPX351-SECONDARY
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -54,7 +55,7 @@ decision_tree:
     if_true:
       next_step: 4
     if_false:
-      next_step: 5
+      next_step: 41
 
   # Step 4 — CBF-favorable + fit + CD33+ → 7+3 + fractionated GO
   # (ALFA-0701 Castaigne 2012; Hills meta 2014: ~20% relative
@@ -72,8 +73,30 @@ decision_tree:
     if_true:
       result: IND-AML-1L-7-3-GO-CBF
     if_false:
-      next_step: 5
+      next_step: 41
     notes: "Wired via RF-AML-CORE-BINDING-FACTOR-FAVORABLE + cd33_positive=true (explicit; ≥20% blasts by flow per ALFA-0701 entry criterion). Daunorubicin 60 mg/m² (not 90) when GO added per ALFA-0701. NOT for adverse-risk (TP53-mut, complex karyotype). Falls through to plain 7+3 if CD33 not documented or GO inaccessible — current 7+3 routing preserved by default."
+
+  # Step 41 — CPX-351 (Vyxeos) for tAML / AML-MRC age 60-75 fit
+  # (Lancet 2018 Lancet 2018;392:2088: mOS 9.56 vs 5.95 mo for 7+3,
+  # HR 0.69; 5-yr OS 18% vs 8%). Gates BEFORE high-risk-biology step
+  # so CPX-351 takes precedence over plain 7+3 when secondary-AML
+  # signal is present. Age 60-75 + fitness constraints live in
+  # IND-AML-1L-CPX351-SECONDARY.applicable_to.demographic_constraints
+  # — engine track-filter drops the indication for out-of-range
+  # patients, falling through to step 5 (high-risk-biology → 7+3).
+  # Additive 2026-05-01 (W5d carry-forward — closes drift-signal #4
+  # from W5b heme chunk that deferred this fix to avoid breaking
+  # patient_aml_secondary_cpx351 fixture golden; golden now
+  # correctly updated alongside this wiring).
+  - step: 41
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-SECONDARY-AML-MRC-CPX351-ELIGIBLE
+    if_true:
+      result: IND-AML-1L-CPX351-SECONDARY
+    if_false:
+      next_step: 5
+    notes: "Wired via RF-AML-SECONDARY-AML-MRC-CPX351-ELIGIBLE (truthy on therapy_related_aml / antecedent_mds / aml_mrc / aml_secondary). CPX-351 (Vyxeos) is the FDA-approved subset Tx for AML 60-75 fit with secondary biology (lowers OS HR 0.69 vs 7+3); fall-through to step 5 if the RF doesn't fire OR if track-filter drops the IND for age-out-of-range / unfit patients (preserves prior 7+3 routing for those cohorts)."
 
   # Step 5 — high-risk biology (TP53, complex karyotype) AND FLT3+ AND
   # NPM1-favorable — fit patients escalate to 7+3 (with concurrent alloHCT

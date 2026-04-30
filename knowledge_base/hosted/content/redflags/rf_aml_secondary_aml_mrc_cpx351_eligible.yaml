@@ -1,0 +1,77 @@
+id: RF-AML-SECONDARY-AML-MRC-CPX351-ELIGIBLE
+definition: >
+  AML eligible for CPX-351 (Vyxeos) liposomal cytarabine+daunorubicin per
+  the FDA-approved subset: therapy-related AML (t-AML, post-cytotoxic /
+  post-radiation), AML with myelodysplasia-related changes (AML-MRC) per
+  WHO criteria (multilineage dysplasia OR MDS-related cytogenetics OR
+  antecedent MDS/CMML). Phase-3 Lancet 2018 (Lancet 2018;392:2088;
+  Lancet Haematology 2020;7:e552 5-yr follow-up): mOS 9.56 vs 5.95 mo
+  for 7+3, HR 0.69; 5-yr OS 18% vs 8%. Eligibility window age 60-75 +
+  fit-for-intensive-chemo. Routes 1L AML to CPX-351-SECONDARY indication
+  over standard 7+3 when this RF fires.
+definition_ua: >
+  ГМЛ, що відповідає критеріям CPX-351 (Vyxeos) ліпосомальний
+  цитарабін+даунорубіцин за FDA-схваленою підгрупою: терапія-індукований
+  ГМЛ (t-AML, post-цитотоксична / post-радіаційна терапія), ГМЛ з
+  МДС-пов'язаними змінами (AML-MRC) за критеріями ВООЗ (мультилінійна
+  дисплазія АБО МДС-пов'язана цитогенетика АБО передуючий МДС/ХММЛ).
+  Фаза-3 Lancet 2018 (Lancet 2018;392:2088): мОВ 9.56 vs 5.95 міс для
+  7+3, HR 0.69; 5-р ОВ 18% vs 8%. Eligibility вік 60-75 + придатний
+  для інтенсивної хіміотерапії. Маршрутизує 1L ГМЛ до CPX-351-SECONDARY
+  поверх стандартного 7+3 при спрацюванні цього RF.
+
+trigger:
+  type: composite_score
+  any_of:
+    - finding: "therapy_related_aml"
+      value: true
+    - finding: "antecedent_mds"
+      value: true
+    - finding: "antecedent_cmml"
+      value: true
+    - finding: "aml_mrc"
+      value: true
+    - finding: "aml_secondary"
+      value: true
+    - finding: "aml_with_mds_related_changes"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+
+last_reviewed: "2026-05-01"
+draft: false
+
+notes: >
+  Distinguish from RF-AML-HIGH-RISK-BIOLOGY (broader ELN-adverse
+  category — includes TP53, complex karyotype, FLT3-ITD-no-NPM1, etc.):
+  this flag is the CPX-351-eligibility-specific subset. Both can fire
+  for the same patient; algorithm gates CPX-351 step BEFORE high-risk
+  fall-through to 7+3 so CPX-351 takes precedence when applicable.
+  Age constraint (60-75) + fitness gate live in
+  IND-AML-1L-CPX351-SECONDARY.applicable_to.demographic_constraints —
+  engine track-filter drops the indication for out-of-range patients.
+  Pre-existing engine routing for unfit patients (step 2 → ven+aza)
+  is preserved.
+notes_ua: >
+  Відрізняти від RF-AML-HIGH-RISK-BIOLOGY (ширша ELN-adverse категорія
+  — включає TP53, складний каріотип, FLT3-ITD-no-NPM1 тощо): цей флаг
+  — специфічна підгрупа CPX-351-прийнятності. Обидва можуть спрацьовувати
+  для одного пацієнта; алгоритм гейтить CPX-351 step ПЕРЕД high-risk
+  fall-through до 7+3, тому CPX-351 має пріоритет коли застосовно.
+  Обмеження за віком (60-75) + fitness gate живуть в
+  IND-AML-1L-CPX351-SECONDARY.applicable_to.demographic_constraints —
+  engine track-filter дропає indication для пацієнтів поза діапазоном.
+  Існуюча маршрутизація для unfit (step 2 → ven+aza) збережена.
