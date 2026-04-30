@@ -138,18 +138,28 @@ def _render_case_entry(disease_id: str, fill_pct: int, family: str, name: str) -
     file = f"auto_{short_lower}.json"
     cat = _category_for(disease_id, family)
     label_ua = f"{disease_id} — Auto-stub ({fill_pct}% наповненість)"
+    label_en = f"{disease_id} — Auto-stub ({fill_pct}% KB fill)"
     summary_ua = (
         f"Автогенерований мінімальний профіль для {name[:80]}. "
         f"Фактична наповненість бази для цієї хвороби — {fill_pct}%. "
         "Використовується для перевірки end-to-end engine + render — "
         "не для клінічних рішень."
     )
+    summary_en = (
+        f"Auto-generated minimal profile for {name[:80]}. "
+        f"Actual KB fill for this disease is {fill_pct}%. "
+        "Used to verify end-to-end engine + render — "
+        "not for clinical decisions."
+    )
+    bs = chr(92) + chr(34)  # \"
     return f"""    CaseEntry(
         case_id="{case_id}",
         file="{file}",
         label_ua="{label_ua}",
-        summary_ua="{summary_ua.replace('"', chr(92)+chr(34))}",
+        summary_ua="{summary_ua.replace('"', bs)}",
         badge="Auto-stub", badge_class="bdg-stub", category="{cat}",
+        label_en="{label_en}",
+        summary_en="{summary_en.replace('"', bs)}",
     ),"""
 
 

@@ -59,7 +59,7 @@ from knowledge_base.engine import (
 from knowledge_base.clients.ctgov_client import search_trials
 from knowledge_base import __version__ as OPENONCO_VERSION
 from knowledge_base import __release_date__ as OPENONCO_RELEASE_DATE
-from knowledge_base.stats import collect_stats, format_html_widget
+from knowledge_base.stats import collect_stats
 from scripts.site_cases import CASE_CATEGORIES, CASES, CaseEntry
 from scripts.site_styles import STYLESHEET as _STYLE_CSS
 
@@ -474,15 +474,22 @@ def bundle_examples(output_dir: Path) -> dict:
         if not p.exists():
             continue
         ex_json = json.loads(p.read_text(encoding="utf-8"))
+        # Both UA and EN labels travel in the manifest so the inlined
+        # JS constant on /try.html (UA) vs /ukr/try.html — wait, EN is
+        # at root → /try.html serves EN labels — can pick the right
+        # one per page locale at render time.
+        label_en = c.label_en or c.label_ua
         payload.append({
             "case_id": c.case_id,
             "label": c.label_ua,
+            "label_en": label_en,
             "file": c.file,
             "json": ex_json,
         })
         manifest.append({
             "case_id": c.case_id,
             "label": c.label_ua,
+            "label_en": label_en,
             "disease_icd": (
                 ex_json.get("disease", {}).get("icd_o_3_morphology")
                 if isinstance(ex_json, dict) else None
@@ -1353,7 +1360,7 @@ def _gallery_case_disease_meta() -> list[dict]:
     return out
 
 
-def render_gallery(stats_widget_html: str, *, target_lang: str = "en") -> str:
+def render_gallery(*, target_lang: str = "en") -> str:
     """Disease-grouped gallery (CSD UX rev 2026-04-27).
 
     Initial view is a tiled grid of diseases — each tile lists the
@@ -1428,16 +1435,18 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "en") -> str:
                 f'{("Form not yet available — opens as JSON on Try-it" if is_en else "Опитувальник для цієї хвороби ще не готовий — на Try-it відкриється як JSON")}'
                 f'">JSON-only</span>'
             )
+            card_label = (c.label_en or c.label_ua) if is_en else c.label_ua
+            card_summary = (c.summary_en or c.summary_ua) if is_en else c.summary_ua
             cards.append(
                 f"""<a class="case-card" href="{case_path_prefix}{c.case_id}.html"
    data-default-order="{item['default_order']}"
-   data-name="{_html.escape(c.label_ua)}">
+   data-name="{_html.escape(card_label)}">
   <div class="case-badge-row">
     <div class="case-badge {c.badge_class}">{c.badge}</div>
     {json_only_pill}
   </div>
-  <h3>{_html.escape(c.label_ua)}</h3>
-  <p>{_html.escape(c.summary_ua)}</p>
+  <h3>{_html.escape(card_label)}</h3>
+  <p>{_html.escape(card_summary)}</p>
   <div class="case-foot">{c.file}</div>
 </a>"""
             )
@@ -1518,10 +1527,6 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "en") -> str:
     <div id="caseListContainer">
     {case_lists_html}
     </div>
-  </section>
-
-  <section class="kb-stats">
-    {stats_widget_html}
   </section>
 
   <footer class="page-foot">
@@ -1715,7 +1720,7 @@ def render_try(
         data.examples.forEach(function(ex, i) {{
           var opt = document.createElement('option');
           opt.value = i;
-          opt.textContent = ex.label;
+          opt.textContent = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
           frag2.appendChild(opt);
         }});
         es.innerHTML = '';
@@ -3249,7 +3254,7 @@ function repopulateExamples(activeQuestIdx) {{
     }}
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = ex.label;
+    opt.textContent = {'(ex.label_en || ex.label)' if target_lang == 'en' else 'ex.label'};
     exampleSelect.appendChild(opt);
     n++;
   }});
@@ -6908,7 +6913,6 @@ def build_site(output_dir: Path) -> dict:
     landing_assets = _copy_landing_assets(output_dir)
 
     stats = collect_stats()
-    stats_widget = format_html_widget(stats, embed_style=True)
 
     # Build engine bundle FIRST so we can stamp its content-hash into
     # try.html as a cache-buster (?v=<hash>). Without this, GitHub Pages
@@ -6938,7 +6942,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "capabilities.html").write_text(
         render_capabilities(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "gallery.html").write_text(
-        render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+        render_gallery(target_lang="en"), encoding="utf-8")
     (output_dir / "diseases.html").write_text(
         render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "specs.html").write_text(
@@ -6963,7 +6967,7 @@ def build_site(output_dir: Path) -> dict:
     (output_dir / "ukr" / "specs.html").write_text(
         render_specs(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "gallery.html").write_text(
-        render_gallery(stats_widget, target_lang="uk"), encoding="utf-8")
+        render_gallery(target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "diseases.html").write_text(
         render_diseases(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "try.html").write_text(

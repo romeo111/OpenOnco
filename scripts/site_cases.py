@@ -29,6 +29,13 @@ class CaseEntry:
     # "myeloma", "myeloid", "lymphoblastic", "solid", "diagnostic".
     # See CASE_CATEGORIES below.
     category: str = "b_aggressive"
+    # English mirrors of label_ua / summary_ua. Empty default → render
+    # falls back to UA. The auto-generators (generate_auto_examples.py
+    # + generate_variant_examples.py) populate both fields. Hand-written
+    # entries should populate label_en + summary_en when they ship; until
+    # then the EN gallery shows the UA text for those cases.
+    label_en: str = ""
+    summary_en: str = ""
 
 
 CASE_CATEGORIES: list[tuple[str, str, str]] = [
@@ -828,6 +835,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Angioimmunoblastic T-Cell Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Angioimmunoblastic T-Cell Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-alcl",
@@ -835,13 +844,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Anaplastic Large Cell Lymphoma, Systemic. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Anaplastic Large Cell Lymphoma, Systemic. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-aml",
         file="auto_aml.json",
-        label_ua="DIS-AML — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Acute Myeloid Leukemia. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-AML — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Acute Myeloid Leukemia. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Acute Myeloid Leukemia. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-apl",
@@ -849,6 +862,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Acute Promyelocytic Leukemia. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Acute Promyelocytic Leukemia. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-atll",
@@ -856,6 +871,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Adult T-Cell Leukemia/Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Adult T-Cell Leukemia/Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-b_all",
@@ -863,6 +880,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для B-Lymphoblastic Leukemia/Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for B-Lymphoblastic Leukemia/Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-breast",
@@ -870,6 +889,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Invasive breast cancer. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Invasive breast cancer. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-burkitt",
@@ -877,6 +898,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Burkitt Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Burkitt Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-cervical",
@@ -884,6 +907,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Cervical carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Cervical carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-chl",
@@ -891,13 +916,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Classical Hodgkin Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Classical Hodgkin Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-cholangiocarcinoma",
         file="auto_cholangiocarcinoma.json",
-        label_ua="DIS-CHOLANGIOCARCINOMA — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Cholangiocarcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-CHOLANGIOCARCINOMA — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Cholangiocarcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Cholangiocarcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-chondrosarcoma",
@@ -905,6 +934,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Chondrosarcoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Chondrosarcoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-cll",
@@ -912,6 +943,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CLL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Chronic Lymphocytic Leukemia / Small Lymphocytic Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Chronic Lymphocytic Leukemia / Small Lymphocytic Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-cml",
@@ -919,6 +952,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Chronic Myeloid Leukemia. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Chronic Myeloid Leukemia. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-crc",
@@ -926,6 +961,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Colorectal carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Colorectal carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-dlbcl_nos",
@@ -933,6 +970,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Diffuse Large B-Cell Lymphoma, Not Otherwise Specified. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Diffuse Large B-Cell Lymphoma, Not Otherwise Specified. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-eatl",
@@ -940,6 +979,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Enteropathy-Associated T-Cell Lymphoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Enteropathy-Associated T-Cell Lymphoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-endometrial",
@@ -947,6 +988,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Endometrial carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Endometrial carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-esophageal",
@@ -954,6 +997,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ESOPHAGEAL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Esophageal carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Esophageal carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-et",
@@ -961,6 +1006,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Essential Thrombocythemia. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Essential Thrombocythemia. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-fl",
@@ -968,6 +1015,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Follicular Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Follicular Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-gastric",
@@ -975,6 +1024,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GASTRIC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Gastric and gastroesophageal junction adenocarcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Gastric and gastroesophageal junction adenocarcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-gbm",
@@ -982,6 +1033,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Glioblastoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Glioblastoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-gist",
@@ -989,6 +1042,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Gastrointestinal stromal tumor. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Gastrointestinal stromal tumor. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-glioma_low_grade",
@@ -996,6 +1051,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Low-grade glioma. Фактична наповненість бази для цієї хвороби — 50%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GLIOMA-LOW-GRADE — Auto-stub (50% KB fill)",
+        summary_en="Auto-generated minimal profile for Low-grade glioma. Actual KB fill for this disease is 50%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hcc",
@@ -1003,6 +1060,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Hepatocellular carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Hepatocellular carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hcl",
@@ -1010,6 +1069,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Hairy Cell Leukemia. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Hairy Cell Leukemia. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hcv_mzl",
@@ -1017,6 +1078,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для HCV-associated Marginal Zone Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for HCV-associated Marginal Zone Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hgbl_dh",
@@ -1024,6 +1087,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для High-Grade B-Cell Lymphoma, Double-Hit / Triple-Hit. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for High-Grade B-Cell Lymphoma, Double-Hit / Triple-Hit. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hnscc",
@@ -1031,6 +1096,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HNSCC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Head and neck squamous cell carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Head and neck squamous cell carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-hstcl",
@@ -1038,20 +1105,26 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Hepatosplenic T-Cell Lymphoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Hepatosplenic T-Cell Lymphoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-ifs",
         file="auto_ifs.json",
-        label_ua="DIS-IFS — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Infantile fibrosarcoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-IFS — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Infantile fibrosarcoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Infantile fibrosarcoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-imt",
         file="auto_imt.json",
-        label_ua="DIS-IMT — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Inflammatory myofibroblastic tumor. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-IMT — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Inflammatory myofibroblastic tumor. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Inflammatory myofibroblastic tumor. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mastocytosis",
@@ -1059,6 +1132,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Advanced systemic mastocytosis. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Advanced systemic mastocytosis. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mcl",
@@ -1066,6 +1141,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Mantle Cell Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Mantle Cell Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mds_hr",
@@ -1073,6 +1150,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Myelodysplastic Syndromes — Higher Risk. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Myelodysplastic Syndromes — Higher Risk. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mds_lr",
@@ -1080,6 +1159,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-LR — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Myelodysplastic Syndromes — Lower Risk. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Myelodysplastic Syndromes — Lower Risk. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-melanoma",
@@ -1087,6 +1168,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MELANOMA — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Cutaneous melanoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Cutaneous melanoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mf_sezary",
@@ -1094,6 +1177,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Mycosis Fungoides / Sézary Syndrome. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Mycosis Fungoides / Sézary Syndrome. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mm",
@@ -1101,6 +1186,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Multiple Myeloma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Multiple Myeloma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mpnst",
@@ -1108,13 +1195,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Malignant peripheral nerve sheath tumor. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Malignant peripheral nerve sheath tumor. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-mtc",
         file="auto_mtc.json",
-        label_ua="DIS-MTC — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Medullary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-MTC — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Medullary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Medullary thyroid carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-nk_t_nasal",
@@ -1122,6 +1213,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Extranodal NK/T-Cell Lymphoma, Nasal Type. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Extranodal NK/T-Cell Lymphoma, Nasal Type. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-nlpbl",
@@ -1129,6 +1222,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Nodular Lymphocyte-Predominant B-cell Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Nodular Lymphocyte-Predominant B-cell Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-nodal_mzl",
@@ -1136,6 +1231,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Nodal Marginal Zone Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Nodal Marginal Zone Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-nsclc",
@@ -1143,6 +1240,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Non-small cell lung cancer. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Non-small cell lung cancer. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-ovarian",
@@ -1150,6 +1249,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Ovarian carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Ovarian carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-pcnsl",
@@ -1157,6 +1258,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Primary CNS Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Primary CNS Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-pdac",
@@ -1164,6 +1267,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Pancreatic ductal adenocarcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Pancreatic ductal adenocarcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-pmbcl",
@@ -1171,6 +1276,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Primary Mediastinal Large B-Cell Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Primary Mediastinal Large B-Cell Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-pmf",
@@ -1178,6 +1285,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Primary Myelofibrosis. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Primary Myelofibrosis. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-prostate",
@@ -1185,6 +1294,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Prostate adenocarcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Prostate adenocarcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-ptcl_nos",
@@ -1192,6 +1303,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Peripheral T-Cell Lymphoma, NOS. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Peripheral T-Cell Lymphoma, NOS. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-ptld",
@@ -1199,6 +1312,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Post-Transplant Lymphoproliferative Disorder. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Post-Transplant Lymphoproliferative Disorder. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-pv",
@@ -1206,6 +1321,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Polycythemia Vera. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Polycythemia Vera. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-rcc",
@@ -1213,6 +1330,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Renal cell carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Renal cell carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-salivary",
@@ -1220,6 +1339,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Salivary gland carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Salivary gland carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-sclc",
@@ -1227,6 +1348,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Small cell lung cancer. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Small cell lung cancer. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-splenic_mzl",
@@ -1234,6 +1357,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Splenic Marginal Zone Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Splenic Marginal Zone Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-t_all",
@@ -1241,6 +1366,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для T-Lymphoblastic Leukemia/Lymphoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for T-Lymphoblastic Leukemia/Lymphoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-t_pll",
@@ -1248,6 +1375,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для T-Cell Prolymphocytic Leukemia. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for T-Cell Prolymphocytic Leukemia. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-thyroid_anaplastic",
@@ -1255,13 +1384,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Anaplastic thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Anaplastic thyroid carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-thyroid_papillary",
         file="auto_thyroid_papillary.json",
-        label_ua="DIS-THYROID-PAPILLARY — Auto-stub (62% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Papillary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 62%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-THYROID-PAPILLARY — Auto-stub (75% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Papillary thyroid carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Papillary thyroid carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-urothelial",
@@ -1269,6 +1402,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL — Auto-stub (75% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Urothelial carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL — Auto-stub (75% KB fill)",
+        summary_en="Auto-generated minimal profile for Urothelial carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-wm",
@@ -1276,6 +1411,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM — Auto-stub (88% наповненість)",
         summary_ua="Автогенерований мінімальний профіль для Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     # ── /AUTO-GENERATED ──
 
@@ -1286,6 +1423,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aitl-organ-dysf",
@@ -1293,6 +1432,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aitl-infection-hbv",
@@ -1300,6 +1441,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aitl-relapsed-2l",
@@ -1307,6 +1450,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aitl-biomarker-act",
@@ -1314,6 +1459,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aitl-high-risk",
@@ -1321,6 +1468,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-AITL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-AITL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-frail",
@@ -1328,6 +1477,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-organ-dysf",
@@ -1335,6 +1486,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-infection-hbv",
@@ -1342,6 +1495,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-relapsed-2l",
@@ -1349,6 +1504,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-biomarker-act",
@@ -1356,6 +1513,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-alcl-high-risk",
@@ -1363,48 +1522,62 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ALCL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ALCL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-frail",
         file="variant_aml_frail.json",
         label_ua="DIS-AML · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-organ-dysf",
         file="variant_aml_organ_dysf.json",
         label_ua="DIS-AML · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-infection-hbv",
         file="variant_aml_infection_hbv.json",
         label_ua="DIS-AML · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-relapsed-2l",
         file="variant_aml_relapsed_2l.json",
         label_ua="DIS-AML · Релапс / 2-а лінія",
-        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-biomarker-act",
         file="variant_aml_biomarker_act.json",
         label_ua="DIS-AML · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-aml-high-risk",
         file="variant_aml_high_risk.json",
         label_ua="DIS-AML · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-AML · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-frail",
@@ -1412,6 +1585,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-organ-dysf",
@@ -1419,6 +1594,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-infection-hbv",
@@ -1426,6 +1603,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-relapsed-2l",
@@ -1433,6 +1612,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-biomarker-act",
@@ -1440,6 +1621,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-apl-high-risk",
@@ -1447,6 +1630,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-APL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-APL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-frail",
@@ -1454,6 +1639,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-organ-dysf",
@@ -1461,6 +1648,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-infection-hbv",
@@ -1468,6 +1657,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-relapsed-2l",
@@ -1475,6 +1666,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-biomarker-act",
@@ -1482,6 +1675,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-atll-high-risk",
@@ -1489,6 +1684,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ATLL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-ATLL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-frail",
@@ -1496,6 +1693,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-organ-dysf",
@@ -1503,6 +1702,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-infection-hbv",
@@ -1510,6 +1711,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-relapsed-2l",
@@ -1517,6 +1720,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-biomarker-act",
@@ -1524,6 +1729,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-b_all-high-risk",
@@ -1531,6 +1738,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-B-ALL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-B-ALL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-frail",
@@ -1538,6 +1747,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 6 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-organ-dysf",
@@ -1545,6 +1756,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 6 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-infection-hbv",
@@ -1552,6 +1765,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 6 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-relapsed-2l",
@@ -1559,6 +1774,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-biomarker-act",
@@ -1566,6 +1783,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 6 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-breast-high-risk",
@@ -1573,6 +1792,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BREAST · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 6 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-BREAST · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 6 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-frail",
@@ -1580,6 +1801,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-organ-dysf",
@@ -1587,6 +1810,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-infection-hbv",
@@ -1594,6 +1819,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-relapsed-2l",
@@ -1601,6 +1828,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-biomarker-act",
@@ -1608,6 +1837,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-burkitt-high-risk",
@@ -1615,6 +1846,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-BURKITT · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-BURKITT · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cervical-frail",
@@ -1622,6 +1855,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cervical-organ-dysf",
@@ -1629,6 +1864,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cervical-infection-hbv",
@@ -1636,6 +1873,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cervical-biomarker-act",
@@ -1643,6 +1882,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cervical-high-risk",
@@ -1650,6 +1891,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CERVICAL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CERVICAL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-frail",
@@ -1657,6 +1900,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-organ-dysf",
@@ -1664,6 +1909,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-infection-hbv",
@@ -1671,6 +1918,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-relapsed-2l",
@@ -1678,6 +1927,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-biomarker-act",
@@ -1685,6 +1936,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chl-high-risk",
@@ -1692,6 +1945,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-CHL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cholangiocarcinoma-frail",
@@ -1699,6 +1954,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHOLANGIOCARCINOMA · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cholangiocarcinoma-organ-dysf",
@@ -1706,6 +1963,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHOLANGIOCARCINOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cholangiocarcinoma-infection-hbv",
@@ -1713,6 +1972,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHOLANGIOCARCINOMA · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
+    ),
+    CaseEntry(
+        case_id="variant-cholangiocarcinoma-relapsed-2l",
+        file="variant_cholangiocarcinoma_relapsed_2l.json",
+        label_ua="DIS-CHOLANGIOCARCINOMA · Релапс / 2-а лінія",
+        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cholangiocarcinoma-biomarker-act",
@@ -1720,6 +1990,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHOLANGIOCARCINOMA · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cholangiocarcinoma-high-risk",
@@ -1727,6 +1999,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHOLANGIOCARCINOMA · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHOLANGIOCARCINOMA · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chondrosarcoma-frail",
@@ -1734,6 +2008,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chondrosarcoma-organ-dysf",
@@ -1741,6 +2017,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chondrosarcoma-infection-hbv",
@@ -1748,6 +2026,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chondrosarcoma-biomarker-act",
@@ -1755,6 +2035,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-chondrosarcoma-high-risk",
@@ -1762,27 +2044,35 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CHONDROSARCOMA · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CHONDROSARCOMA · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-frail",
         file="variant_cll_frail.json",
         label_ua="DIS-CLL · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-organ-dysf",
         file="variant_cll_organ_dysf.json",
         label_ua="DIS-CLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-infection-hbv",
         file="variant_cll_infection_hbv.json",
         label_ua="DIS-CLL · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-relapsed-2l",
@@ -1790,20 +2080,26 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CLL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-biomarker-act",
         file="variant_cll_biomarker_act.json",
         label_ua="DIS-CLL · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cll-high-risk",
         file="variant_cll_high_risk.json",
         label_ua="DIS-CLL · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-CLL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-frail",
@@ -1811,6 +2107,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-organ-dysf",
@@ -1818,6 +2116,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-infection-hbv",
@@ -1825,6 +2125,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-relapsed-2l",
@@ -1832,6 +2134,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-biomarker-act",
@@ -1839,6 +2143,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-cml-high-risk",
@@ -1846,6 +2152,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CML · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-CML · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-frail",
@@ -1853,6 +2161,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-organ-dysf",
@@ -1860,6 +2170,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-infection-hbv",
@@ -1867,6 +2179,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-relapsed-2l",
@@ -1874,6 +2188,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-biomarker-act",
@@ -1881,6 +2197,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-crc-high-risk",
@@ -1888,6 +2206,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-CRC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-CRC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-frail",
@@ -1895,6 +2215,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-organ-dysf",
@@ -1902,6 +2224,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-infection-hbv",
@@ -1909,6 +2233,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-relapsed-2l",
@@ -1916,6 +2242,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-biomarker-act",
@@ -1923,6 +2251,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-dlbcl_nos-high-risk",
@@ -1930,6 +2260,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-DLBCL-NOS · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-DLBCL-NOS · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-eatl-frail",
@@ -1937,6 +2269,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-eatl-organ-dysf",
@@ -1944,6 +2278,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-eatl-infection-hbv",
@@ -1951,6 +2287,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-eatl-biomarker-act",
@@ -1958,6 +2296,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-eatl-high-risk",
@@ -1965,6 +2305,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-EATL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-EATL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-frail",
@@ -1972,6 +2314,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-organ-dysf",
@@ -1979,6 +2323,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-infection-hbv",
@@ -1986,6 +2332,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-relapsed-2l",
@@ -1993,6 +2341,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-biomarker-act",
@@ -2000,6 +2350,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-endometrial-high-risk",
@@ -2007,27 +2359,35 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ENDOMETRIAL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ENDOMETRIAL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-frail",
         file="variant_esophageal_frail.json",
         label_ua="DIS-ESOPHAGEAL · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-organ-dysf",
         file="variant_esophageal_organ_dysf.json",
         label_ua="DIS-ESOPHAGEAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-infection-hbv",
         file="variant_esophageal_infection_hbv.json",
         label_ua="DIS-ESOPHAGEAL · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-relapsed-2l",
@@ -2035,20 +2395,26 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ESOPHAGEAL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-biomarker-act",
         file="variant_esophageal_biomarker_act.json",
         label_ua="DIS-ESOPHAGEAL · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-esophageal-high-risk",
         file="variant_esophageal_high_risk.json",
         label_ua="DIS-ESOPHAGEAL · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-ESOPHAGEAL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-frail",
@@ -2056,6 +2422,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-organ-dysf",
@@ -2063,6 +2431,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-infection-hbv",
@@ -2070,6 +2440,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-relapsed-2l",
@@ -2077,6 +2449,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-biomarker-act",
@@ -2084,6 +2458,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-et-high-risk",
@@ -2091,6 +2467,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-ET · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-ET · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-fl-frail",
@@ -2098,6 +2476,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-fl-organ-dysf",
@@ -2105,6 +2485,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-fl-infection-hbv",
@@ -2112,6 +2494,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-fl-biomarker-act",
@@ -2119,6 +2503,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-fl-high-risk",
@@ -2126,48 +2512,62 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-FL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-FL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-frail",
         file="variant_gastric_frail.json",
         label_ua="DIS-GASTRIC · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-organ-dysf",
         file="variant_gastric_organ_dysf.json",
         label_ua="DIS-GASTRIC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-infection-hbv",
         file="variant_gastric_infection_hbv.json",
         label_ua="DIS-GASTRIC · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-relapsed-2l",
         file="variant_gastric_relapsed_2l.json",
         label_ua="DIS-GASTRIC · Релапс / 2-а лінія",
-        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-biomarker-act",
         file="variant_gastric_biomarker_act.json",
         label_ua="DIS-GASTRIC · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gastric-high-risk",
         file="variant_gastric_high_risk.json",
         label_ua="DIS-GASTRIC · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GASTRIC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gbm-frail",
@@ -2175,6 +2575,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gbm-organ-dysf",
@@ -2182,6 +2584,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gbm-infection-hbv",
@@ -2189,6 +2593,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gbm-biomarker-act",
@@ -2196,6 +2602,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gbm-high-risk",
@@ -2203,6 +2611,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GBM · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GBM · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gist-frail",
@@ -2210,6 +2620,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gist-organ-dysf",
@@ -2217,6 +2629,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gist-infection-hbv",
@@ -2224,6 +2638,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gist-biomarker-act",
@@ -2231,6 +2647,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-gist-high-risk",
@@ -2238,6 +2656,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-GIST · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-GIST · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcc-frail",
@@ -2245,6 +2665,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcc-organ-dysf",
@@ -2252,6 +2674,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcc-infection-hbv",
@@ -2259,6 +2683,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcc-biomarker-act",
@@ -2266,6 +2692,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcc-high-risk",
@@ -2273,6 +2701,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HCC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-frail",
@@ -2280,6 +2710,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-organ-dysf",
@@ -2287,6 +2719,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-infection-hbv",
@@ -2294,6 +2728,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-relapsed-2l",
@@ -2301,6 +2737,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-biomarker-act",
@@ -2308,6 +2746,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcl-high-risk",
@@ -2315,6 +2755,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-frail",
@@ -2322,6 +2764,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-organ-dysf",
@@ -2329,6 +2773,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-infection-hbv",
@@ -2336,6 +2782,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-relapsed-2l",
@@ -2343,6 +2791,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-biomarker-act",
@@ -2350,6 +2800,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hcv_mzl-high-risk",
@@ -2357,6 +2809,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HCV-MZL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-HCV-MZL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-frail",
@@ -2364,6 +2818,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-organ-dysf",
@@ -2371,6 +2827,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-infection-hbv",
@@ -2378,6 +2836,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-relapsed-2l",
@@ -2385,6 +2845,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-biomarker-act",
@@ -2392,6 +2854,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hgbl_dh-high-risk",
@@ -2399,41 +2863,53 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HGBL-DH · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-HGBL-DH · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hnscc-frail",
         file="variant_hnscc_frail.json",
         label_ua="DIS-HNSCC · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hnscc-organ-dysf",
         file="variant_hnscc_organ_dysf.json",
         label_ua="DIS-HNSCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hnscc-infection-hbv",
         file="variant_hnscc_infection_hbv.json",
         label_ua="DIS-HNSCC · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hnscc-biomarker-act",
         file="variant_hnscc_biomarker_act.json",
         label_ua="DIS-HNSCC · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hnscc-high-risk",
         file="variant_hnscc_high_risk.json",
         label_ua="DIS-HNSCC · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-HNSCC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hstcl-frail",
@@ -2441,6 +2917,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hstcl-organ-dysf",
@@ -2448,6 +2926,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hstcl-infection-hbv",
@@ -2455,6 +2935,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hstcl-biomarker-act",
@@ -2462,6 +2944,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-hstcl-high-risk",
@@ -2469,6 +2953,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-HSTCL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-HSTCL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ifs-frail",
@@ -2476,6 +2962,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IFS · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ifs-organ-dysf",
@@ -2483,6 +2971,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IFS · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ifs-infection-hbv",
@@ -2490,6 +2980,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IFS · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ifs-biomarker-act",
@@ -2497,6 +2989,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IFS · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ifs-high-risk",
@@ -2504,6 +2998,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IFS · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IFS · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-imt-frail",
@@ -2511,6 +3007,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IMT · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-imt-organ-dysf",
@@ -2518,6 +3016,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IMT · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-imt-infection-hbv",
@@ -2525,6 +3025,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IMT · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-imt-biomarker-act",
@@ -2532,6 +3034,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IMT · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-imt-high-risk",
@@ -2539,6 +3043,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-IMT · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-IMT · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mastocytosis-frail",
@@ -2546,6 +3052,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mastocytosis-organ-dysf",
@@ -2553,6 +3061,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mastocytosis-infection-hbv",
@@ -2560,6 +3070,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mastocytosis-biomarker-act",
@@ -2567,6 +3079,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mastocytosis-high-risk",
@@ -2574,6 +3088,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MASTOCYTOSIS · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MASTOCYTOSIS · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-frail",
@@ -2581,6 +3097,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-organ-dysf",
@@ -2588,6 +3106,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-infection-hbv",
@@ -2595,6 +3115,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-relapsed-2l",
@@ -2602,6 +3124,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-biomarker-act",
@@ -2609,6 +3133,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mcl-high-risk",
@@ -2616,6 +3142,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MCL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-MCL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-frail",
@@ -2623,6 +3151,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-organ-dysf",
@@ -2630,6 +3160,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-infection-hbv",
@@ -2637,6 +3169,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-relapsed-2l",
@@ -2644,6 +3178,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-biomarker-act",
@@ -2651,6 +3187,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_hr-high-risk",
@@ -2658,27 +3196,35 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-HR · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-HR · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-frail",
         file="variant_mds_lr_frail.json",
         label_ua="DIS-MDS-LR · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-organ-dysf",
         file="variant_mds_lr_organ_dysf.json",
         label_ua="DIS-MDS-LR · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-infection-hbv",
         file="variant_mds_lr_infection_hbv.json",
         label_ua="DIS-MDS-LR · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-relapsed-2l",
@@ -2686,41 +3232,53 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MDS-LR · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-biomarker-act",
         file="variant_mds_lr_biomarker_act.json",
         label_ua="DIS-MDS-LR · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mds_lr-high-risk",
         file="variant_mds_lr_high_risk.json",
         label_ua="DIS-MDS-LR · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-MDS-LR · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-frail",
         file="variant_melanoma_frail.json",
         label_ua="DIS-MELANOMA · Літній / крихкий пацієнт (age 78, ECOG 3)",
-        summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'frail'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-organ-dysf",
         file="variant_melanoma_organ_dysf.json",
         label_ua="DIS-MELANOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
-        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'organ_dysf'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-infection-hbv",
         file="variant_melanoma_infection_hbv.json",
         label_ua="DIS-MELANOMA · HBV-позитивний (HBsAg+, anti-HBc+)",
-        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'infection_hbv'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-relapsed-2l",
@@ -2728,20 +3286,26 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MELANOMA · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-biomarker-act",
         file="variant_melanoma_biomarker_act.json",
         label_ua="DIS-MELANOMA · Actionable біомаркер present",
-        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'biomarker_act'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-melanoma-high-risk",
         file="variant_melanoma_high_risk.json",
         label_ua="DIS-MELANOMA · High-risk biology / bulky disease",
-        summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'high_risk'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MELANOMA · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-frail",
@@ -2749,6 +3313,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-organ-dysf",
@@ -2756,6 +3322,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-infection-hbv",
@@ -2763,6 +3331,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-relapsed-2l",
@@ -2770,6 +3340,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-biomarker-act",
@@ -2777,6 +3349,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mf_sezary-high-risk",
@@ -2784,6 +3358,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MF-SEZARY · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-MF-SEZARY · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-frail",
@@ -2791,6 +3367,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-organ-dysf",
@@ -2798,6 +3376,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-infection-hbv",
@@ -2805,6 +3385,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-relapsed-2l",
@@ -2812,6 +3394,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-biomarker-act",
@@ -2819,6 +3403,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mm-high-risk",
@@ -2826,6 +3412,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MM · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloma",
+        label_en="DIS-MM · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mpnst-frail",
@@ -2833,6 +3421,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mpnst-organ-dysf",
@@ -2840,6 +3430,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mpnst-infection-hbv",
@@ -2847,6 +3439,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mpnst-biomarker-act",
@@ -2854,6 +3448,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mpnst-high-risk",
@@ -2861,6 +3457,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MPNST · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MPNST · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mtc-frail",
@@ -2868,6 +3466,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MTC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mtc-organ-dysf",
@@ -2875,6 +3475,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MTC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mtc-infection-hbv",
@@ -2882,6 +3484,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MTC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mtc-biomarker-act",
@@ -2889,6 +3493,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MTC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-mtc-high-risk",
@@ -2896,6 +3502,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-MTC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-MTC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-frail",
@@ -2903,6 +3511,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-organ-dysf",
@@ -2910,6 +3520,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-infection-hbv",
@@ -2917,6 +3529,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-relapsed-2l",
@@ -2924,6 +3538,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-biomarker-act",
@@ -2931,6 +3547,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nk_t_nasal-high-risk",
@@ -2938,6 +3556,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NK-T-NASAL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-NK-T-NASAL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-frail",
@@ -2945,6 +3565,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-organ-dysf",
@@ -2952,6 +3574,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-infection-hbv",
@@ -2959,6 +3583,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-relapsed-2l",
@@ -2966,6 +3592,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-biomarker-act",
@@ -2973,6 +3601,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nlpbl-high-risk",
@@ -2980,6 +3610,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NLPBL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="hodgkin",
+        label_en="DIS-NLPBL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-frail",
@@ -2987,6 +3619,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-organ-dysf",
@@ -2994,6 +3628,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-infection-hbv",
@@ -3001,6 +3637,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-relapsed-2l",
@@ -3008,6 +3646,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-biomarker-act",
@@ -3015,6 +3655,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nodal_mzl-high-risk",
@@ -3022,6 +3664,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NODAL-MZL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 4 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-NODAL-MZL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 4 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-frail",
@@ -3029,6 +3673,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-organ-dysf",
@@ -3036,6 +3682,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-infection-hbv",
@@ -3043,13 +3691,17 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-relapsed-2l",
         file="variant_nsclc_relapsed_2l.json",
         label_ua="DIS-NSCLC · Релапс / 2-а лінія",
-        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 13 tracks. Синтетичний профіль — не для клінічних рішень.",
+        summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 14 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 14 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-biomarker-act",
@@ -3057,6 +3709,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-nsclc-high-risk",
@@ -3064,6 +3718,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-NSCLC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 5 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-NSCLC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 5 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-frail",
@@ -3071,6 +3727,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-organ-dysf",
@@ -3078,6 +3736,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-infection-hbv",
@@ -3085,6 +3745,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-relapsed-2l",
@@ -3092,6 +3754,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 9 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 9 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-biomarker-act",
@@ -3099,6 +3763,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ovarian-high-risk",
@@ -3106,6 +3772,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-OVARIAN · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-OVARIAN · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-frail",
@@ -3113,6 +3781,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-organ-dysf",
@@ -3120,6 +3790,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-infection-hbv",
@@ -3127,6 +3799,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-relapsed-2l",
@@ -3134,6 +3808,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-biomarker-act",
@@ -3141,6 +3817,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pcnsl-high-risk",
@@ -3148,6 +3826,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PCNSL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PCNSL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pdac-frail",
@@ -3155,6 +3835,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pdac-organ-dysf",
@@ -3162,6 +3844,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pdac-infection-hbv",
@@ -3169,6 +3853,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pdac-biomarker-act",
@@ -3176,6 +3862,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pdac-high-risk",
@@ -3183,6 +3871,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PDAC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PDAC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-frail",
@@ -3190,6 +3880,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-organ-dysf",
@@ -3197,6 +3889,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-infection-hbv",
@@ -3204,6 +3898,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-relapsed-2l",
@@ -3211,6 +3907,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-biomarker-act",
@@ -3218,6 +3916,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmbcl-high-risk",
@@ -3225,6 +3925,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMBCL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PMBCL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-frail",
@@ -3232,6 +3934,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-organ-dysf",
@@ -3239,6 +3943,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-infection-hbv",
@@ -3246,6 +3952,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-relapsed-2l",
@@ -3253,6 +3961,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-biomarker-act",
@@ -3260,6 +3970,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pmf-high-risk",
@@ -3267,6 +3979,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PMF · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PMF · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-prostate-frail",
@@ -3274,6 +3988,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-prostate-organ-dysf",
@@ -3281,6 +3997,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-prostate-infection-hbv",
@@ -3288,6 +4006,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-prostate-biomarker-act",
@@ -3295,6 +4015,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-prostate-high-risk",
@@ -3302,6 +4024,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PROSTATE · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-PROSTATE · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-frail",
@@ -3309,6 +4033,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-organ-dysf",
@@ -3316,6 +4042,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-infection-hbv",
@@ -3323,6 +4051,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-relapsed-2l",
@@ -3330,6 +4060,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-biomarker-act",
@@ -3337,6 +4069,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptcl_nos-high-risk",
@@ -3344,6 +4078,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTCL-NOS · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-PTCL-NOS · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-frail",
@@ -3351,6 +4087,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-organ-dysf",
@@ -3358,6 +4096,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-infection-hbv",
@@ -3365,6 +4105,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-relapsed-2l",
@@ -3372,6 +4114,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-biomarker-act",
@@ -3379,6 +4123,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-ptld-high-risk",
@@ -3386,6 +4132,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PTLD · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_aggressive",
+        label_en="DIS-PTLD · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-frail",
@@ -3393,6 +4141,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-organ-dysf",
@@ -3400,6 +4150,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-infection-hbv",
@@ -3407,6 +4159,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-relapsed-2l",
@@ -3414,6 +4168,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-biomarker-act",
@@ -3421,6 +4177,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-pv-high-risk",
@@ -3428,6 +4186,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-PV · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="myeloid",
+        label_en="DIS-PV · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-frail",
@@ -3435,6 +4195,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-organ-dysf",
@@ -3442,6 +4204,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-infection-hbv",
@@ -3449,6 +4213,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-relapsed-2l",
@@ -3456,6 +4222,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-biomarker-act",
@@ -3463,6 +4231,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-rcc-high-risk",
@@ -3470,6 +4240,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-RCC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-RCC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-salivary-frail",
@@ -3477,6 +4249,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-salivary-organ-dysf",
@@ -3484,6 +4258,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-salivary-infection-hbv",
@@ -3491,6 +4267,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-salivary-biomarker-act",
@@ -3498,6 +4276,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-salivary-high-risk",
@@ -3505,6 +4285,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SALIVARY · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SALIVARY · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-sclc-frail",
@@ -3512,6 +4294,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-sclc-organ-dysf",
@@ -3519,6 +4303,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-sclc-infection-hbv",
@@ -3526,6 +4312,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-sclc-biomarker-act",
@@ -3533,6 +4321,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-sclc-high-risk",
@@ -3540,6 +4330,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SCLC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-SCLC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-frail",
@@ -3547,6 +4339,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-organ-dysf",
@@ -3554,6 +4348,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-infection-hbv",
@@ -3561,6 +4357,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-relapsed-2l",
@@ -3568,6 +4366,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-biomarker-act",
@@ -3575,6 +4375,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-splenic_mzl-high-risk",
@@ -3582,6 +4384,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-SPLENIC-MZL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-SPLENIC-MZL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-frail",
@@ -3589,6 +4393,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-organ-dysf",
@@ -3596,6 +4402,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-infection-hbv",
@@ -3603,6 +4411,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-relapsed-2l",
@@ -3610,6 +4420,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-biomarker-act",
@@ -3617,6 +4429,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_all-high-risk",
@@ -3624,6 +4438,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-ALL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="lymphoblastic",
+        label_en="DIS-T-ALL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-frail",
@@ -3631,6 +4447,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-organ-dysf",
@@ -3638,6 +4456,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-infection-hbv",
@@ -3645,6 +4465,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-relapsed-2l",
@@ -3652,6 +4474,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-biomarker-act",
@@ -3659,6 +4483,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-t_pll-high-risk",
@@ -3666,6 +4492,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-T-PLL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="t_cell",
+        label_en="DIS-T-PLL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_anaplastic-frail",
@@ -3673,6 +4501,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_anaplastic-organ-dysf",
@@ -3680,6 +4510,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_anaplastic-infection-hbv",
@@ -3687,6 +4519,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_anaplastic-biomarker-act",
@@ -3694,6 +4528,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_anaplastic-high-risk",
@@ -3701,6 +4537,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_papillary-frail",
@@ -3708,6 +4546,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-PAPILLARY · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_papillary-organ-dysf",
@@ -3715,6 +4555,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-PAPILLARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_papillary-infection-hbv",
@@ -3722,6 +4564,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-PAPILLARY · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_papillary-biomarker-act",
@@ -3729,6 +4573,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-PAPILLARY · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-thyroid_papillary-high-risk",
@@ -3736,6 +4582,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-THYROID-PAPILLARY · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 1 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-THYROID-PAPILLARY · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 1 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-urothelial-frail",
@@ -3743,6 +4591,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-urothelial-organ-dysf",
@@ -3750,6 +4600,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-urothelial-infection-hbv",
@@ -3757,6 +4609,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-urothelial-biomarker-act",
@@ -3764,6 +4618,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-urothelial-high-risk",
@@ -3771,6 +4627,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-UROTHELIAL · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="solid",
+        label_en="DIS-UROTHELIAL · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-frail",
@@ -3778,6 +4636,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · Літній / крихкий пацієнт (age 78, ECOG 3)",
         summary_ua="Автогенерований variant 'frail'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · Elderly / frail patient (age 78, ECOG 3)",
+        summary_en="Auto-generated variant 'frail'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-organ-dysf",
@@ -3785,6 +4645,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · Дисфункція органів (CrCl 25, bili 3.5×ULN)",
         summary_ua="Автогенерований variant 'organ_dysf'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · Organ dysfunction (CrCl 25, bili 3.5×ULN)",
+        summary_en="Auto-generated variant 'organ_dysf'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-infection-hbv",
@@ -3792,6 +4654,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · HBV-позитивний (HBsAg+, anti-HBc+)",
         summary_ua="Автогенерований variant 'infection_hbv'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · HBV-positive (HBsAg+, anti-HBc+)",
+        summary_en="Auto-generated variant 'infection_hbv'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-relapsed-2l",
@@ -3799,6 +4663,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · Релапс / 2-а лінія",
         summary_ua="Автогенерований variant 'relapsed_2l'. Engine: 3 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · Relapsed / 2nd line",
+        summary_en="Auto-generated variant 'relapsed_2l'. Engine: 3 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-biomarker-act",
@@ -3806,6 +4672,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · Actionable біомаркер present",
         summary_ua="Автогенерований variant 'biomarker_act'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · Actionable biomarker present",
+        summary_en="Auto-generated variant 'biomarker_act'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="variant-wm-high-risk",
@@ -3813,6 +4681,8 @@ CASES: list[CaseEntry] = [
         label_ua="DIS-WM · High-risk biology / bulky disease",
         summary_ua="Автогенерований variant 'high_risk'. Engine: 2 tracks. Синтетичний профіль — не для клінічних рішень.",
         badge="Variant", badge_class="bdg-stub", category="b_indolent",
+        label_en="DIS-WM · High-risk biology / bulky disease",
+        summary_en="Auto-generated variant 'high_risk'. Engine: 2 tracks. Synthetic profile — not for clinical decisions.",
     ),
     # ── /AUTO-GENERATED-VARIANTS ──
 

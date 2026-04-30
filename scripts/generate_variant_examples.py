@@ -138,13 +138,25 @@ def _build_high_risk(disease_id, bio_id, bio_value):
     return p
 
 
-VARIANTS: list[tuple[str, callable, str]] = [
-    ("frail", _build_frail, "Літній / крихкий пацієнт (age 78, ECOG 3)"),
-    ("organ_dysf", _build_organ_dysf, "Дисфункція органів (CrCl 25, bili 3.5×ULN)"),
-    ("infection_hbv", _build_infection_hbv, "HBV-позитивний (HBsAg+, anti-HBc+)"),
-    ("relapsed_2l", _build_relapsed, "Релапс / 2-а лінія"),
-    ("biomarker_act", _build_biomarker_act, "Actionable біомаркер present"),
-    ("high_risk", _build_high_risk, "High-risk biology / bulky disease"),
+VARIANTS: list[tuple[str, callable, str, str]] = [
+    ("frail", _build_frail,
+     "Літній / крихкий пацієнт (age 78, ECOG 3)",
+     "Elderly / frail patient (age 78, ECOG 3)"),
+    ("organ_dysf", _build_organ_dysf,
+     "Дисфункція органів (CrCl 25, bili 3.5×ULN)",
+     "Organ dysfunction (CrCl 25, bili 3.5×ULN)"),
+    ("infection_hbv", _build_infection_hbv,
+     "HBV-позитивний (HBsAg+, anti-HBc+)",
+     "HBV-positive (HBsAg+, anti-HBc+)"),
+    ("relapsed_2l", _build_relapsed,
+     "Релапс / 2-а лінія",
+     "Relapsed / 2nd line"),
+    ("biomarker_act", _build_biomarker_act,
+     "Actionable біомаркер present",
+     "Actionable biomarker present"),
+    ("high_risk", _build_high_risk,
+     "High-risk biology / bulky disease",
+     "High-risk biology / bulky disease"),
 ]
 
 
@@ -200,14 +212,20 @@ def _patch_site_cases(entries: list[str]) -> None:
 
 
 def _render_case_entry(
-    disease_id: str, var_name: str, var_desc: str, file: str, category: str, msg: str
+    disease_id: str, var_name: str, var_desc_ua: str, var_desc_en: str,
+    file: str, category: str, msg: str,
 ) -> str:
     short_lower = disease_id.replace("DIS-", "").lower().replace("-", "_")
     case_id = f"variant-{short_lower}-{var_name.replace('_', '-')}"
-    label_ua = f"{disease_id} · {var_desc}"
+    label_ua = f"{disease_id} · {var_desc_ua}"
+    label_en = f"{disease_id} · {var_desc_en}"
     summary_ua = (
         f"Автогенерований variant '{var_name}'. Engine: {msg}. "
         "Синтетичний профіль — не для клінічних рішень."
+    ).replace('"', '\\"')
+    summary_en = (
+        f"Auto-generated variant '{var_name}'. Engine: {msg}. "
+        "Synthetic profile — not for clinical decisions."
     ).replace('"', '\\"')
     return (
         f'    CaseEntry(\n'
@@ -216,6 +234,8 @@ def _render_case_entry(
         f'        label_ua="{label_ua}",\n'
         f'        summary_ua="{summary_ua}",\n'
         f'        badge="Variant", badge_class="bdg-stub", category="{category}",\n'
+        f'        label_en="{label_en}",\n'
+        f'        summary_en="{summary_en}",\n'
         f'    ),'
     )
 
@@ -242,7 +262,7 @@ def main() -> int:
         bio_id, bio_value = _representative_biomarker(disease_id, load.entities_by_id)
         category = _category_for(disease_id, r["family"])
 
-        for var_name, builder, var_desc in VARIANTS:
+        for var_name, builder, var_desc_ua, var_desc_en in VARIANTS:
             profile = builder(disease_id, bio_id, bio_value)
             ok, msg = _verify(profile)
             if not ok:
@@ -256,7 +276,7 @@ def main() -> int:
                 encoding="utf-8",
             )
             case_entries.append(
-                _render_case_entry(disease_id, var_name, var_desc, file, category, msg)
+                _render_case_entry(disease_id, var_name, var_desc_ua, var_desc_en, file, category, msg)
             )
             written += 1
 
