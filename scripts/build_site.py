@@ -3478,60 +3478,119 @@ if ('serviceWorker' in navigator) {{
 
 def _wrap_case_html(rendered_html: str, case: CaseEntry,
                     *, target_lang: str = "en") -> str:
-    """Insert a thin sticky bar with back-link + per-case feedback + lang
-    switcher into the rendered Plan/Brief HTML. No auth gate — landing
-    is fully public."""
-    bar_style = (
+    """Insert the full sticky site top-bar (brand + nav + lang switch +
+    Try CTA) plus a case-context sub-bar (back-to-gallery + feedback)
+    into the rendered Plan/Brief HTML. No auth gate — landing is fully
+    public.
+
+    The Plan/Brief page is otherwise self-contained (own inline CSS,
+    no /style.css link), so we inline a self-contained copy of the
+    top-bar's styles here to avoid loading the full site stylesheet
+    (which would override Plan-specific .page / body rules)."""
+
+    # Self-contained top-bar CSS, mirroring docs/style.css §"Top bar"
+    # but stripped to what the case page actually renders. Wrapped in
+    # `.oo-topbar-host` so the Plan's own styles are unaffected and the
+    # Plan's `body { font-family / color / background }` still wins for
+    # the rest of the page.
+    topbar_style = (
         '<style>'
-        '.case-bar{position:sticky;top:0;z-index:99;background:#0a2e1a;'
-        'color:#dcfce7;padding:10px 24px;display:flex;justify-content:space-between;'
-        'align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}'
+        # Sticky positioning so the header stays visible while the
+        # doctor scrolls the (long) Plan body. z-index above any
+        # Plan-internal sticky elements.
+        '.oo-topbar-host{position:sticky;top:0;z-index:100;}'
+        '.oo-topbar-host .top-bar{background:#0a2e1a;color:#dcfce7;'
+        'padding:12px 24px;display:flex;justify-content:space-between;'
+        'align-items:center;font-family:Source Sans 3,sans-serif;}'
+        '.oo-topbar-host .brand-line{display:flex;align-items:center;'
+        'gap:12px;margin-right:28px;}'
+        '.oo-topbar-host .brand-mini{font-family:Playfair Display,Georgia,serif;'
+        'font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}'
+        '.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;'
+        'font-size:10.5px;color:#dcfce7;opacity:.55;'
+        'background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;'
+        'letter-spacing:.5px;align-self:center;}'
+        '.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;'
+        'margin:0 24px 0 16px;gap:4px;}'
+        '.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;'
+        'text-decoration:none;font-size:13px;border-radius:4px;}'
+        '.oo-topbar-host .top-nav a:hover{color:white;background:rgba(255,255,255,.05);}'
+        '.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;'
+        'flex-shrink:0;}'
+        '.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;'
+        'background:rgba(255,255,255,.08);border-radius:4px;'
+        'font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;'
+        'overflow:hidden;flex-shrink:0;}'
+        '.oo-topbar-host .lang-switch .lang-current,'
+        '.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;'
+        'padding:4px 9px;display:inline-flex;align-items:center;'
+        'justify-content:center;gap:5px;}'
+        '.oo-topbar-host .lang-switch .lang-current{background:rgba(255,255,255,.15);'
+        'color:white;font-weight:600;}'
+        '.oo-topbar-host .lang-switch .lang-other{color:#dcfce7;'
+        'text-decoration:none;transition:background .12s;}'
+        '.oo-topbar-host .lang-switch .lang-other:hover{background:rgba(255,255,255,.12);'
+        'color:white;}'
+        '.oo-topbar-host .lang-switch .lang-flag{display:inline-block;'
+        'width:14px;height:10px;border-radius:1.5px;'
+        'box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}'
+        '.oo-topbar-host .lang-switch .lang-flag.flag-ua{'
+        'background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}'
+        '.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 '
+        "url(\"data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E\") center/cover no-repeat;}"
+        '.oo-topbar-host .btn-cta-try{background:linear-gradient(135deg,#16a34a 0%,#0d9488 100%);'
+        'color:white;padding:11px 22px;border-radius:7px;font-weight:600;'
+        'font-size:15px;text-decoration:none;border:none;'
+        'box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 1px 4px rgba(0,0,0,.15);'
+        'white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;'
+        'display:inline-block;}'
+        '.oo-topbar-host .btn-cta-try:hover{filter:brightness(1.05);}'
+        # Sub-bar with case context (back-to-gallery + feedback)
+        '.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;'
+        'display:flex;justify-content:space-between;align-items:center;'
+        'font-family:Source Sans 3,sans-serif;font-size:13px;}'
         '.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}'
         '.case-bar a:hover{text-decoration:underline;}'
-        '.case-bar .lang-mini{font-family:JetBrains Mono,monospace;font-size:10px;'
-        'background:rgba(255,255,255,.1);padding:3px 7px;border-radius:3px;'
-        'margin-left:14px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:5px;}'
-        '.case-bar .lang-mini-current{font-family:JetBrains Mono,monospace;'
-        'font-size:11px;background:rgba(255,255,255,.18);padding:3px 8px;'
-        'border-radius:3px;letter-spacing:.5px;font-weight:600;'
-        'display:inline-flex;align-items:center;gap:5px;}'
-        '.case-bar .mini-flag{display:inline-block;width:14px;height:10px;'
-        'border-radius:1.5px;vertical-align:middle;'
-        'box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}'
-        '.case-bar .mini-flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}'
-        '.case-bar .mini-flag-en{background:#012169 '
-        "url(\"data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E\") center/cover no-repeat;}"
-        '@media print{.case-bar{display:none;}}'
+        '@media print{.oo-topbar-host,.case-bar{display:none;}}'
+        '@media (max-width:700px){'
+        '.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}'
+        '.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}'
+        '.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}'
+        '}'
         '</style>\n'
     )
 
     back_label = "← Back to gallery" if target_lang == "en" else "← Назад до галереї"
     feedback_label = "Feedback on this case" if target_lang == "en" else "Feedback на цей кейс"
     gallery_href = "/gallery.html" if target_lang == "en" else "/ukr/gallery.html"
-    cur_flag_cls = "mini-flag-ua" if target_lang == "uk" else "mini-flag-en"
-    other_flag_cls = "mini-flag-en" if target_lang == "uk" else "mini-flag-ua"
-    cur_lang_label = "UA" if target_lang == "uk" else "EN"
-    other_lang_label = "EN" if target_lang == "uk" else "UA"
-    other_lang_href = _lang_switch_href("case", target_lang, case.case_id)
 
-    bar_html = (
+    # Full top-bar (brand + nav + lang switch + Try CTA), pointing the
+    # lang switcher at the matching case in the other language so a
+    # mid-read switch lands on the same content.
+    case_lang_href = _lang_switch_href("case", target_lang, case.case_id)
+    topbar_html = (
+        '<div class="oo-topbar-host no-print">'
+        + _render_top_bar(active="", target_lang=target_lang,
+                          lang_switch_href=case_lang_href)
+        + '</div>\n'
+    )
+
+    case_label = case.label_en if (target_lang == "en" and getattr(case, "label_en", None)) else case.label_ua
+    sub_bar_html = (
         '<div class="case-bar no-print">'
-        f'<div><span class="lang-mini-current" title="Active language">'
-        f'<span class="mini-flag {cur_flag_cls}" aria-hidden="true"></span>{cur_lang_label}</span>'
-        f' · OpenOnco · <strong>{case.label_ua}</strong></div>'
+        f'<div>OpenOnco · <strong>{case_label}</strong></div>'
         '<div>'
         f'<a href="{gallery_href}">{back_label}</a>'
         f'<a href="{GH_NEW_ISSUE}?title=%5Bfeedback%5D+'
         f'{case.case_id}&labels=tester-feedback" target="_blank" rel="noopener">'
         f'{feedback_label}</a>'
-        f'<a class="lang-mini" href="{other_lang_href}" title="Switch to {other_lang_label}">'
-        f'<span class="mini-flag {other_flag_cls}" aria-hidden="true"></span>{other_lang_label}</a>'
         '</div>'
         '</div>\n'
     )
 
-    out = rendered_html.replace("</head>", bar_style + "</head>", 1)
-    out = out.replace('<div class="page">', bar_html + '<div class="page">', 1)
+    out = rendered_html.replace("</head>", topbar_style + "</head>", 1)
+    out = out.replace('<div class="page">',
+                      topbar_html + sub_bar_html + '<div class="page">', 1)
     return out
 
 
