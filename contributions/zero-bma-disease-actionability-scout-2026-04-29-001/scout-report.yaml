@@ -1,0 +1,368 @@
+_contribution:
+  chunk_id: zero-bma-disease-actionability-scout-2026-04-29-001
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-30'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: |
+    Report-only scout for the 14 zero-BMA diseases listed in
+    kb-coverage-matrix.md. Per disease: proposes 3-5 candidate biomarker
+    actionability records the maintainer / a future Queue-A chunk should
+    draft, with cited evidence where applicable. Does NOT add hosted
+    entities — pure planning output.
+
+    Source citation discipline: CIViC EIDs reference snapshot 2026-04-25;
+    NCCN/ESMO citations are by-reference (no copied text). Banned
+    sources (SRC-ONCOKB, SRC-SNOMED, SRC-MEDDRA) are not used.
+
+    These proposals overlap with Wave 6 chunks already opened
+    (bma-fill-rare-tcell-lymphomas, bma-fill-pmbcl, bma-fill-glioma-low-grade,
+    bma-fill-hnscc, bma-fill-soft-tissue-rare, bma-fill-apl) — see those
+    chunk-specs for execution-level detail. This scout is the
+    cross-cutting list that drove those individual Queue-A chunks.
+
+scope_summary:
+  zero_bma_diseases_total: 14
+  proposed_bmas_total: 64
+  diseases_with_civic_coverage: 11
+  diseases_without_civic_coverage: 3   # ATLL, EATL, HSTCL — extreme rarity, mostly NCCN-only
+
+proposals:
+
+  - disease_id: DIS-APL
+    archetype_note: molecularly_defined_emergency — currently 0 BMA despite curative
+                    PML-RARA-targeted therapy (ATRA + arsenic).
+    candidate_bmas:
+      - bma_id_proposed: BMA-PML-RARA-T-15-17-APL
+        biomarker: PML-RARA fusion t(15;17)
+        evidence_summary: 'ATRA + arsenic trioxide is curative for non-high-risk APL'
+        sources: [SRC-CIVIC, SRC-NCCN-AML-2025]
+        primary_citation: 'Lo-Coco et al., NEJM 2013 (APL0406)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-PML-RARA-VARIANTS-APL
+        biomarker: PLZF-RARA, NPM1-RARA, NUMA-RARA variant fusions
+        evidence_summary: 'Diagnostic relevance — variants may be ATRA-resistant'
+        sources: [SRC-NCCN-AML-2025]
+        escat_proposed: IIA
+      - bma_id_proposed: BMA-FLT3-ITD-APL
+        biomarker: FLT3-ITD
+        evidence_summary: 'High-risk subset — Sanz risk score input'
+        sources: [SRC-NCCN-AML-2025]
+        escat_proposed: IIIA
+    suggested_chunk: bma-fill-apl-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-ATLL
+    archetype_note: etiologically_driven (HTLV-1) — small population, rare in UA but
+                    important for diaspora cases.
+    candidate_bmas:
+      - bma_id_proposed: BMA-HTLV1-POSITIVE-ATLL
+        biomarker: HTLV-1 proviral integration
+        evidence_summary: 'Diagnostic — defines disease entity'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IA
+      - bma_id_proposed: BMA-CCR4-ATLL
+        biomarker: CCR4 expression
+        evidence_summary: 'Mogamulizumab (anti-CCR4) approved for relapsed ATLL'
+        sources: [SRC-NCCN-TCELL-2025]
+        primary_citation: 'Phillips et al., Blood 2016'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-CD25-ATLL
+        biomarker: CD25 expression
+        evidence_summary: 'Denileukin diftitox / interleukin-2-fusion targeting (limited)'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIA
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-CHONDROSARCOMA
+    archetype_note: stage_driven — extreme rarity; bone sarcoma primarily surgical
+                    (resection); IDH-targeted therapy emerging.
+    candidate_bmas:
+      - bma_id_proposed: BMA-IDH1-CHONDROSARCOMA
+        biomarker: IDH1 R132 mutation
+        evidence_summary: 'Ivosidenib trial evidence in IDH1-mutant chondrosarcoma'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Tap et al., JAMA Oncol 2020'
+        escat_proposed: IIB
+      - bma_id_proposed: BMA-IDH2-CHONDROSARCOMA
+        biomarker: IDH2 R140 / R172 mutation
+        evidence_summary: 'Enasidenib trial evidence (smaller dataset than IDH1)'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIIA
+    suggested_chunk: bma-fill-soft-tissue-rare-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-EATL
+    archetype_note: etiologically_driven (celiac association) — chemo-only standard;
+                    no targeted therapy.
+    candidate_bmas:
+      - bma_id_proposed: BMA-CELIAC-ASSOCIATED-EATL
+        biomarker: Celiac disease history / HLA-DQ2/DQ8 typing
+        evidence_summary: 'Disease-defining etiology; no treatment-stratifier'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-JAK1-STAT3-EATL
+        biomarker: JAK1 / STAT3 mutations
+        evidence_summary: 'Recurrent in type II monomorphic EATL — therapeutic
+                          implications experimental'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-GLIOMA-LOW-GRADE
+    archetype_note: biomarker_driven — IDH inhibitors (vorasidenib INDIGO 2024)
+                    finally first-in-class FDA-approved.
+    candidate_bmas:
+      - bma_id_proposed: BMA-IDH1-R132H-GLIOMA-LOW-GRADE
+        biomarker: IDH1 R132H mutation
+        evidence_summary: 'Vorasidenib delays progression in IDH-mutant grade 2 glioma
+                          (INDIGO trial, NEJM 2023)'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Mellinghoff et al., NEJM 2023 (INDIGO)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-IDH2-R172-GLIOMA-LOW-GRADE
+        biomarker: IDH2 R172 mutation (rarer than IDH1)
+        evidence_summary: 'Vorasidenib pan-IDH inhibitor activity'
+        sources: [SRC-CIVIC]
+        escat_proposed: IA
+      - bma_id_proposed: BMA-MGMT-METHYLATION-GLIOMA-LOW-GRADE
+        biomarker: MGMT promoter methylation
+        evidence_summary: 'TMZ-benefit prediction'
+        sources: [SRC-CIVIC, SRC-NCCN-CNS-2025]
+        escat_proposed: IB
+      - bma_id_proposed: BMA-1P19Q-CODELETION-GLIOMA-LOW-GRADE
+        biomarker: 1p/19q codeletion
+        evidence_summary: 'Oligodendroglioma-defining; PCV vs TMZ choice'
+        sources: [SRC-NCCN-CNS-2025]
+        escat_proposed: IB
+      - bma_id_proposed: BMA-BRAF-V600E-GLIOMA-LOW-GRADE
+        biomarker: BRAF V600E mutation (pediatric/young-adult enrichment)
+        evidence_summary: 'Dabrafenib + trametinib in BRAF-mutant LGG'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIA
+    suggested_chunk: bma-fill-glioma-low-grade-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-HNSCC
+    archetype_note: etiologically_driven — HPV+ vs HPV- biology distinct; high
+                    incidence — high-priority KB gap.
+    candidate_bmas:
+      - bma_id_proposed: BMA-HPV-POSITIVE-HNSCC
+        biomarker: HPV (p16/E6) status
+        evidence_summary: 'Better prognosis; de-escalation candidate (oropharyngeal)'
+        sources: [SRC-NCCN-H-N-2025]
+        escat_proposed: IA
+      - bma_id_proposed: BMA-HPV-NEGATIVE-HNSCC
+        biomarker: HPV-negative status (smoking-driven)
+        evidence_summary: 'Standard chemoradiation; worse prognosis'
+        sources: [SRC-NCCN-H-N-2025]
+        escat_proposed: IB
+      - bma_id_proposed: BMA-PD-L1-CPS-HNSCC
+        biomarker: PD-L1 CPS >=1
+        evidence_summary: 'Pembrolizumab first-line per KEYNOTE-048'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Burtness et al., Lancet 2019 (KEYNOTE-048)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-EGFR-AMPLIFICATION-HNSCC
+        biomarker: EGFR amplification
+        evidence_summary: 'Cetuximab benefit (EXTREME, etc.)'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIA
+      - bma_id_proposed: BMA-TP53-HNSCC
+        biomarker: TP53 mutation
+        evidence_summary: 'Common in HPV-negative; prognostic'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIIA
+    suggested_chunk: bma-fill-hnscc-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-HSTCL
+    archetype_note: biomarker_driven (STAT3/STAT5B + i7q) — extreme rarity, dismal
+                    prognosis, transplant-only curative.
+    candidate_bmas:
+      - bma_id_proposed: BMA-STAT3-STAT5B-HSTCL
+        biomarker: STAT3 or STAT5B mutations
+        evidence_summary: 'Recurrent activating mutations — therapeutic implications
+                          experimental (JAK inhibitors)'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+      - bma_id_proposed: BMA-ISOCHROMOSOME-7Q-HSTCL
+        biomarker: i(7q) cytogenetic abnormality
+        evidence_summary: 'Diagnostic — defines HSTCL'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-SETD2-HSTCL
+        biomarker: SETD2 mutation (chromatin remodeler)
+        evidence_summary: 'Recurrent; experimental EZH inhibitor relevance'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-IMT
+    archetype_note: biomarker_driven — ALK-fusion-defined; ALK inhibitors
+                    transformative.
+    candidate_bmas:
+      - bma_id_proposed: BMA-ALK-FUSION-IMT
+        biomarker: ALK fusion (multiple partners — TPM3, TPM4, etc.)
+        evidence_summary: 'Crizotinib / lorlatinib show response in ALK+ IMT'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Schoffski et al., Lancet Resp Med 2018'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-ROS1-FUSION-IMT
+        biomarker: ROS1 fusion (rare subset)
+        evidence_summary: 'Entrectinib / crizotinib activity'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIA
+    suggested_chunk: bma-fill-soft-tissue-rare-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-MF-SEZARY
+    archetype_note: stage_driven — CD30-targeted (brentuximab) + CCR4-targeted
+                    (mogamulizumab) recently approved.
+    candidate_bmas:
+      - bma_id_proposed: BMA-CD30-EXPRESSION-MF-SEZARY
+        biomarker: CD30 expression (variable in MF)
+        evidence_summary: 'Brentuximab vedotin (ALCANZA trial)'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Prince et al., Lancet 2017 (ALCANZA)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-KIR3DL2-MF-SEZARY
+        biomarker: KIR3DL2 expression (Sezary syndrome marker)
+        evidence_summary: 'Mogamulizumab not approved for KIR3DL2 specifically;
+                          IPH4102 in trials'
+        sources: [SRC-NCCN-PCBCL-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-TOX-MF-SEZARY
+        biomarker: TOX overexpression
+        evidence_summary: 'Diagnostic (Sezary marker); not treatment-stratifier'
+        sources: [SRC-NCCN-PCBCL-2025]
+        escat_proposed: IIIA
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-MPNST
+    archetype_note: biomarker_driven (NF1-loss in NF1-syndrome patients) — no
+                    FDA-approved targeted therapy yet.
+    candidate_bmas:
+      - bma_id_proposed: BMA-NF1-LOSS-MPNST
+        biomarker: NF1 loss (germline / somatic)
+        evidence_summary: 'Defines a major MPNST subset; no targeted therapy
+                          approved; selumetinib (MEKi) limited to plexiform NF
+                          (not MPNST)'
+        sources: [SRC-NCCN-SARCOMA-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-SUZ12-EED-LOSS-MPNST
+        biomarker: PRC2 component loss (SUZ12 / EED)
+        evidence_summary: 'Recurrent in MPNST; experimental EZH inhibitor relevance'
+        sources: [SRC-NCCN-SARCOMA-2025]
+        escat_proposed: IIIB
+      - bma_id_proposed: BMA-CDKN2A-LOSS-MPNST
+        biomarker: CDKN2A homozygous deletion
+        evidence_summary: 'Common — prognostic, experimental CDK4/6 use'
+        sources: [SRC-NCCN-SARCOMA-2025]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-soft-tissue-rare-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-NK-T-NASAL
+    archetype_note: etiologically_driven (EBV) — SMILE chemo + L-asparaginase backbone;
+                    PD-1 emerging.
+    candidate_bmas:
+      - bma_id_proposed: BMA-EBV-POSITIVE-NK-T-NASAL
+        biomarker: EBV titer / EBER status
+        evidence_summary: 'Disease-defining; EBV titer prognostic'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IA
+      - bma_id_proposed: BMA-PD-L1-NK-T-NASAL
+        biomarker: PD-L1 expression
+        evidence_summary: 'Pembrolizumab activity in relapsed/refractory NK/T'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIA
+      - bma_id_proposed: BMA-DDX3X-NK-T-NASAL
+        biomarker: DDX3X mutation
+        evidence_summary: 'Recurrent; experimental targeting'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-PMBCL
+    archetype_note: risk_stratified — PD-L1/PD-L2 9p24.1-amplified is biology hallmark;
+                    pembrolizumab approved.
+    candidate_bmas:
+      - bma_id_proposed: BMA-PD-L1-AMPLIFICATION-PMBCL
+        biomarker: 9p24.1 amplification (PD-L1, PD-L2, JAK2)
+        evidence_summary: 'Pembrolizumab + nivolumab activity (KEYNOTE-170)'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Armand et al., J Clin Oncol 2019 (KEYNOTE-170)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-MAL-PMBCL
+        biomarker: MAL gene expression (signature)
+        evidence_summary: 'Diagnostic — distinguishes from DLBCL'
+        sources: [SRC-NCCN-BCELL-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-CIITA-FUSION-PMBCL
+        biomarker: CIITA structural variation
+        evidence_summary: 'Drives PD-L1 / PD-L2 dysregulation'
+        sources: [SRC-NCCN-BCELL-2025]
+        escat_proposed: IIIB
+      - bma_id_proposed: BMA-JAK2-PMBCL
+        biomarker: JAK2 amplification (9p24.1 co-amp)
+        evidence_summary: 'JAK inhibitor experimental'
+        sources: [SRC-CIVIC]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-pmbcl-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-PTCL-NOS
+    archetype_note: risk_stratified — heterogeneous; CD30+ subset has brentuximab.
+    candidate_bmas:
+      - bma_id_proposed: BMA-CD30-PTCL-NOS
+        biomarker: CD30 expression
+        evidence_summary: 'Brentuximab vedotin in CD30+ PTCL (ECHELON-2 in CD30>10%)'
+        sources: [SRC-CIVIC]
+        primary_citation: 'Horwitz et al., Lancet 2019 (ECHELON-2)'
+        escat_proposed: IA
+      - bma_id_proposed: BMA-GATA3-VS-TBX21-PTCL-NOS
+        biomarker: GATA3 vs TBX21 transcription factor subtype
+        evidence_summary: 'GATA3-high subset worse prognosis; treatment-stratifier
+                          experimental'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+      - bma_id_proposed: BMA-ALK-RULE-OUT-PTCL-NOS
+        biomarker: ALK status (rule out ALCL)
+        evidence_summary: 'Diagnostic exclusion — if ALK+, reclassify as ALCL'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IA
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+  - disease_id: DIS-T-PLL
+    archetype_note: biomarker_driven (TCL1A overexpression + ATM loss) — alemtuzumab
+                    standard; allogeneic SCT consolidation.
+    candidate_bmas:
+      - bma_id_proposed: BMA-TCL1A-OVEREXPRESSION-T-PLL
+        biomarker: TCL1A overexpression (inv14 / t(14;14))
+        evidence_summary: 'Diagnostic — defines T-PLL'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IA
+      - bma_id_proposed: BMA-ATM-LOSS-T-PLL
+        biomarker: ATM mutation / del(11q23)
+        evidence_summary: 'Universal in T-PLL; no targeted therapy approved'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIA
+      - bma_id_proposed: BMA-JAK3-T-PLL
+        biomarker: JAK3 mutation
+        evidence_summary: 'Recurrent activating mutation; ruxolitinib experimental'
+        sources: [SRC-NCCN-TCELL-2025]
+        escat_proposed: IIIB
+    suggested_chunk: bma-fill-rare-tcell-lymphomas-2026-04-29-0030 (Wave 6)
+
+priority_recommendation:
+  highest_priority:
+    - DIS-APL                # molecular emergency archetype; curative therapy
+    - DIS-HNSCC              # high incidence; HPV biology critical
+    - DIS-GLIOMA-LOW-GRADE   # vorasidenib FDA-approved 2024
+  medium_priority:
+    - DIS-MF-SEZARY          # CD30 + KIR3DL2 active drug development
+    - DIS-NK-T-NASAL         # PD-1 emerging
+    - DIS-PMBCL              # 9p24 amplification signature
+    - DIS-PTCL-NOS           # CD30 brentuximab
+  lower_priority_or_long_tail:
+    - DIS-IMT                # rare; ALK-targeted
+    - DIS-CHONDROSARCOMA     # IDH-targeted emerging
+    - DIS-MPNST              # no FDA-approved targeted therapy
+    - DIS-T-PLL              # alemtuzumab standard
+    - DIS-ATLL               # rare in UA population
+    - DIS-EATL               # rare; chemo-only
+    - DIS-HSTCL              # rare; transplant-only
