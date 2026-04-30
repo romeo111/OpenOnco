@@ -700,7 +700,6 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "try":          return f"{en_prefix}/try.html"
         if page_kind == "case":         return f"{en_prefix}/cases/{case_id}.html"
         if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
-        if page_kind == "limitations":  return f"{en_prefix}/limitations.html"
         if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{en_prefix}/contribute.html"
     else:
@@ -710,7 +709,6 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "try":          return "/try.html"
         if page_kind == "case":         return f"/cases/{case_id}.html"
         if page_kind == "capabilities": return "/capabilities.html"
-        if page_kind == "limitations":  return "/limitations.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/contribute.html"
     return "/"
@@ -720,8 +718,8 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
                     lang_switch_href: str = "/en/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
-    - reading-only nav (Home, Examples, optional Capabilities/Limitations
-      on UA, GitHub) in the middle
+    - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
+      Contribute, Examples, GitHub) in the middle
     - language switcher (UA / EN toggle) on the right
     - prominent CTA "Try it" button on the far right (action, not reading)
 
@@ -735,14 +733,14 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     gallery_path = "/gallery.html" if target_lang == "uk" else "/en/gallery.html"
     try_path = "/try.html" if target_lang == "uk" else "/en/try.html"
 
-    # Capabilities + Limitations now have EN mirrors; Specs stays UA-only
-    # (the spec documents themselves are UA, so no point routing EN nav to them).
+    # Capabilities now folds in the former Limitations section; Specs stays
+    # UA-only (the spec documents themselves are UA, so no point routing EN
+    # nav to them).
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
             f'<a href="/diseases.html"{cls("diseases")}>Хвороби</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
-            f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
             f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
             f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
@@ -750,7 +748,6 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
         extra_links = (
             f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
-            f'<a href="/en/limitations.html"{cls("limitations")}>Limitations</a>'
             f'<a href="/en/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
@@ -906,6 +903,27 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "received. The first real-patient plans were rated strong by practising "
              "oncologists. The KB grows weekly, but it is already the densest open "
              "evidence-to-plan layer for Ukrainian oncology that exists. No reason to wait."),
+            ("CIViC actionability — fully open, fully citable",
+             "Our biomarker-to-drug evidence layer comes from <strong>CIViC (CC0)</strong>, "
+             "the Clinical Interpretation of Variants in Cancer at WashU — not OncoKB "
+             "(closed, non-commercial-only). The engine reads a nightly YAML snapshot, "
+             "matches variants <strong>fusion-aware</strong> (BCR::ABL1, KMT2A rearrangements, "
+             "etc.), renders ESCAT-tier as the eye-level signal with CIViC evidence rating "
+             "underneath. A monthly CI refresh diffs upstream changes — no silent drift."),
+            ("Per-disease coverage matrix — public, honest",
+             f"<a href=\"/en/diseases.html\"><strong>/diseases.html</strong></a> shows, for each "
+             f"of the {n_diseases} diseases, exactly what we have: biomarker counts, drugs, "
+             "indications, regimens, red flags, 1L/2L algorithm checkmarks, questionnaire "
+             "status, fill% and verified%. Grouped by lymphoid heme / myeloid heme / solid "
+             "tumours. Same data also exposed as <code>disease_coverage.json</code> for "
+             "machine consumption. No «trust us, it's in there» — see the matrix."),
+            ("Verify our algorithms with your AI tokens",
+             "The remaining bottleneck isn't code — it's two-reviewer sign-off on each "
+             "Indication. <strong>TaskTorrent</strong> is our distributed-AI contribution "
+             "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
+             "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
+             "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
+             "clinical co-leads sign off. <a href=\"/en/contribute.html\"><strong>How to start →</strong></a>"),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -1026,6 +1044,29 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "клінічний sign-off отриманий. Перші реальні плани вже верифіковані "
              "практикуючими онкологами як сильні. KB росте щотижня, але це вже найщільніший "
              "відкритий шар «доказ → план» для української онкології, що існує. Немає сенсу чекати."),
+            ("CIViC actionability — повністю відкрита, повністю citable",
+             "Шар biomarker→drug evidence ми взяли з <strong>CIViC (CC0)</strong> — "
+             "Clinical Interpretation of Variants in Cancer (WashU), а не з OncoKB "
+             "(закритий, non-commercial-only). Engine читає nightly YAML snapshot, "
+             "матчить варіанти <strong>fusion-aware</strong> (BCR::ABL1, KMT2A "
+             "rearrangements тощо), рендерить ESCAT-tier як головний сигнал з CIViC "
+             "evidence rating під ним. Monthly CI refresh diff-ить upstream — без "
+             "тихого дрейфу."),
+            ("Per-disease coverage matrix — публічна і чесна",
+             f"<a href=\"/diseases.html\"><strong>/diseases.html</strong></a> показує для "
+             f"кожної з {n_diseases} хвороб, що саме у нас є: counts по біомаркерах, "
+             "препаратах, показаннях, режимах, red flags, checkmarks для алгоритмів 1L/2L, "
+             "статус анкети, fill% і verified%. Згрупована за лімфоїдною / мієлоїдною "
+             "гематологією і солідними пухлинами. Ті ж дані доступні машинно як "
+             "<code>disease_coverage.json</code>. Без «там же є щось» — є матриця."),
+            ("Верифікувати наші алгоритми токенами вашого AI",
+             "Залишковий bottleneck — не код, а two-reviewer sign-off на кожній Indication. "
+             "<strong>TaskTorrent</strong> — наша полка розподілених AI-контрибуцій: "
+             "maintainer публікує structured chunks (~100k–300k токенів роботи кожен), "
+             "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
+             "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
+             "drafting; clinical co-leads потім signoff'ять. "
+             "<a href=\"/contribute.html\"><strong>Як почати →</strong></a>"),
         ]
         why_today_foot = (
             "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
@@ -1168,8 +1209,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
-    Жодних реальних пацієнтських даних · CHARTER §9.3.
-    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+    {'No real patient data · CHARTER §9.3. Informational tool for clinicians, not a medical device (CHARTER §15 + §11).' if target_lang == 'en' else 'Жодних реальних пацієнтських даних · CHARTER §9.3. Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).'}
   </footer>
 </main>
 </body>
@@ -3620,14 +3660,10 @@ def _render_capabilities_uk(stats) -> str:
     n_dis_2l = cov["diseases_with_2l_plus"]
     n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
     n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
-
-    # Live KB metric (moved here from landing). Per-disease coverage is
-    # computed once and re-used in the cards block below.
     diseases_full = sum(
         1 for d in stats.diseases
         if d.coverage_status in {"stub_full_chain", "reviewed"}
     )
-    diseases_partial = sum(1 for d in stats.diseases if d.coverage_status == "partial")
 
     return f"""<!DOCTYPE html>
 <html lang="uk">
@@ -3646,24 +3682,37 @@ def _render_capabilities_uk(stats) -> str:
   <section class="info-page">
     <h1>Можливості</h1>
     <p class="lead">
-      OpenOnco приймає JSON-профіль пацієнта і повертає структурований план
-      лікування або діагностичний brief, з повним trace кожного рішення і
-      цитуваннями всіх джерел. Жодного «чорного ящика»: усе рішення складається
-      з декларативних правил, які можна прочитати у KB і відстежити в trace.
-      Нижче — детально, як ми працюємо з даними, джерелами і запитами.
+      OpenOnco — декларативний rule engine для онкологічних рекомендацій.
+      На вході — JSON-профіль пацієнта (FHIR R4 / mCODE сумісний). На виході —
+      <strong>Plan</strong> із ≥2 альтернативними треками (стандартний +
+      агресивний) або <strong>DiagnosticPlan</strong> з workup brief, якщо
+      гістологія ще не підтверджена. Кожна claim — з citation на джерело,
+      кожен крок алгоритму — у trace. Сторінка нижче — повний і чесний
+      опис того, що ми <em>робимо</em>, а в кінці — те, чого
+      <em>навмисно не робимо</em>, і де лікар лишається finальною інстанцією.
     </p>
 
+    <div class="callout callout-hard">
+      <strong>STUB-статус усього клінічного контенту.</strong>
+      Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
+      (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
+      Indication, перш ніж її можна вважати «published»). Зараз — це
+      proposed-plan: structured data + algorithm + sources на місці, але
+      без dual sign-off. Стан станом на <code>{stats.generated_at_utc}</code>.
+      Це інструмент підтримки рішень, не медичний пристрій.
+    </div>
+
     <div class="promo-info" role="img" aria-label="OpenOnco — інфографіка можливостей">
-      <div class="promo-eyebrow">OpenOnco · v0.1 · engine у двох словах</div>
+      <div class="promo-eyebrow">OpenOnco · v{OPENONCO_VERSION} · engine у двох словах</div>
       <h2 class="promo-headline">
         Один JSON-профіль → <em>два альтернативні плани лікування</em>
         з цитатою під кожною рекомендацією.
       </h2>
       <p class="promo-sub">
         Декларативний rule engine на <strong>{n_diseases} хворобах</strong>,
-        реферує <strong>{stats.corpus_references_total:,}+ публікацій</strong> під
-        <strong>{n_sources} джерелами верхнього рівня</strong>. Без LLM у клінічному рішенні,
-        без серверу, без логів. Patient JSON ніколи не покидає машину.
+        {n_redflags} red flags, {n_indications} показань, {n_regimens} режимів.
+        Без LLM у клінічному рішенні, без серверу, без логів.
+        Patient JSON ніколи не покидає машину.
       </p>
 
       <div class="promo-stats">
@@ -3672,8 +3721,8 @@ def _render_capabilities_uk(stats) -> str:
           <div class="promo-stat-lbl">Хвороб у KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">{stats.corpus_references_total:,}<span class="promo-stat-plus">+</span></div>
-          <div class="promo-stat-lbl">Клінічних публікацій</div>
+          <div class="promo-stat-num">{n_indications}</div>
+          <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
           <div class="promo-stat-num">{n_sources}</div>
@@ -3701,16 +3750,16 @@ def _render_capabilities_uk(stats) -> str:
         <div class="promo-flow-arrow" aria-hidden="true">→</div>
         <div class="promo-flow-card">
           <div class="promo-flow-tag">Engine · 6 стадій</div>
-          <div class="promo-flow-title">Алгоритм + RedFlags</div>
+          <div class="promo-flow-title">Алгоритм + RedFlags + CIViC</div>
           <div class="promo-flow-desc">
             Resolve → flatten → eval RedFlags → walk algorithm → materialize tracks → resolve regimens.
-            Все з KB readonly.
+            Actionability — з CIViC nightly snapshot.
           </div>
         </div>
         <div class="promo-flow-arrow" aria-hidden="true">→</div>
         <div class="promo-flow-card is-output">
           <div class="promo-flow-tag">Вихід</div>
-          <div class="promo-flow-title">Plan з ≥2 tracks + trace</div>
+          <div class="promo-flow-title">Plan з ≥2 tracks + trace + AccessMatrix</div>
           <div class="promo-flow-desc">
             Кожна рекомендація з paraphrased citation, page/section, FDA Crit. 4 fields.
           </div>
@@ -3743,8 +3792,8 @@ def _render_capabilities_uk(stats) -> str:
           <div>
             <div class="promo-pillar-title">Кожна claim з citation</div>
             <div class="promo-pillar-desc">
-              source_id + position + paraphrased quote + page. FDA Criterion 4 —
-              лікар перевіряє підставу.
+              source_id + position + paraphrased quote + page. Render-time
+              citation guard перевіряє кожну.
             </div>
           </div>
         </div>
@@ -3771,8 +3820,95 @@ def _render_capabilities_uk(stats) -> str:
       </div>
     </div>
 
+    <div class="info-section">
+      <h2>0. Що нового за останній тиждень</h2>
+      <p class="info-text">
+        Останні дні KB і engine отримали кілька структурних апдейтів —
+        вони міняють те, як engine працює, не лише наповнення:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">CIViC</div>
+          <div class="num-lbl">Actionability — повна заміна OncoKB</div>
+          <p class="num-text">
+            Перейшли з закритого OncoKB (несумісний з CHARTER §2 — non-commercial)
+            на <strong>CIViC (CC0)</strong>. Engine читає nightly YAML snapshot
+            через <code>SnapshotCIViCClient</code>, fusion-aware matcher
+            обробляє і point mutations, і fusions (BCR::ABL1 тощо).
+            Render видає ESCAT-primary з CIViC-detailed deep-dive.
+            <strong>Monthly snapshot refresh у CI</strong> + diff-only update,
+            щоб не дрейфувало.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Phases</div>
+          <div class="num-lbl">Multi-phase regimens (PR1-3)</div>
+          <p class="num-text">
+            <code>Regimen.phases</code> декомпозує курс на впорядковані
+            named blocks (induction → consolidation → maintenance).
+            <code>bridging_options</code> — це список регіменів-мостів між
+            фазами (наприклад, для CAR-T). Render — phases-aware, кожна фаза
+            рендериться з власним cycle schedule. Back-compat: старі
+            однофазні YAMLs auto-wrap у one-phase form.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Guard</div>
+          <div class="num-lbl">Citation-presence guard у HTML рендері</div>
+          <p class="num-text">
+            <strong>Жодна BMA-claim не виходить у HTML без явної citation.</strong>
+            Render-time guard перевіряє статус кожної комірки в actionability
+            таблиці; якщо джерела немає — рядок отримує warn-badge або
+            відсікається у strict mode. Це Layer 3 трирівневої системи —
+            попередньо є background <em>citation verifier</em> (3-layer
+            grounding для всіх sidecar PRs) і loader-level <em>SRC-* referential
+            integrity</em>.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">Matrix</div>
+          <div class="num-lbl">/diseases.html — coverage matrix</div>
+          <p class="num-text">
+            Per-disease таблиця: bio / drug / ind / reg / rf counts, 1L+2L
+            checkmarks, questionnaire status, fill% + verified%. Згрупована
+            за лімфоїдною / мієлоїдною гематологією і солідними пухлинами,
+            з family-level avg-показниками. Канонічна UI-поверхня для
+            <code>disease_coverage.json</code>.
+            <a href="/diseases.html"><strong>→ Подивитись матрицю</strong></a>
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">Gallery</div>
+          <div class="num-lbl">586 кейсів = 159 курованих + 362 варіанти + 65 auto-base</div>
+          <p class="num-text">
+            Disease-grouped drill-down замість плоскої сітки. 159 hand-curated
+            випадків (включно з останнім chunked feat'ом — Phase 2: NSCLC × 12,
+            BREAST × 8, CRC × 6, AML × 4, DLBCL × 3, …, ~60 нових за 4 дні)
+            + 362 verified variant profiles, які engine генерує з базових
+            профілів через variant generator + 65 auto-base (по одному на
+            хворобу). Кожен — повний Plan або Diagnostic Brief з усіма
+            цитатами.
+            <a href="/gallery.html"><strong>→ Дивитись приклади</strong></a>
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">TT</div>
+          <div class="num-lbl">TaskTorrent — розподілені AI-контрибуції</div>
+          <p class="num-text">
+            Ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один
+            structured chunk (~100k–300k токенів роботи), виконує за 1-3
+            години і відкриває PR. Maintainer + Clinical Co-Lead перевіряють
+            і мерджать. За останні 4 дні — <strong>7 хвиль</strong>,
+            десятки chunks, ~73 BMA-кандидати, 23 BMA-драфти, 53 source
+            stubs. Деталі — у розділі «Як допомогти» нижче.
+            <a href="/contribute.html"><strong>→ Допомогти токенами</strong></a>
+          </p>
+        </div>
+      </div>
+    </div>
+
     <section class="numbers numbers-on-info">
-      <h2>Що вже зроблено</h2>
+      <h2>1. Що вже зроблено — числа з реальної KB</h2>
       <div class="num-grid num-grid--rich">
 
         <div class="num-card">
@@ -3780,12 +3916,12 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">Хвороби в KB</div>
           <div class="num-detail">{n_heme} гематологічних · {n_solid} солідних · {diseases_full} з повним ланцюгом · {n_dis_2l} мають 2L+ алгоритм</div>
           <p class="num-text">
-            Кожна хвороба має свій <strong>archetype</strong> (etiologically_driven як
-            HCV-MZL, risk_stratified як MM, biomarker_driven як NSCLC/EGFR або
-            HGBL/MYC-BCL2, stage_driven як cervical), що визначає логіку алгоритму
-            вибору лікування. Зараз 1L покрито для всіх {n_diseases} хвороб
-            ({n_algos_1l} алгоритмів), 2L+ — для {n_dis_2l_heme} гематологічних
-            та {n_dis_2l_solid} солідних ({n_algos_2l} алгоритмів).
+            Кожна хвороба має свій <strong>archetype</strong>
+            (etiologically_driven, risk_stratified, biomarker_driven,
+            stage_driven), що визначає логіку алгоритму вибору лікування.
+            Зараз 1L покрито для всіх {n_diseases} ({n_algos_1l} алгоритмів),
+            2L+ — для {n_dis_2l_heme} гематологічних та {n_dis_2l_solid}
+            солідних ({n_algos_2l} алгоритмів).
           </p>
         </div>
 
@@ -3794,10 +3930,11 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">Лікарі-скіли (віртуальні спеціалісти)</div>
           <div class="num-detail">кожен скіл має свою версію, sources, last_reviewed</div>
           <p class="num-text">
-            Гематолог, патолог, інфекціоніст-гепатолог, радіолог, молекулярний генетик,
-            клінічний фармацевт, радіотерапевт, паліативна допомога та інші — кожен
-            активується на конкретні тригери у профілі пацієнта і додає свої open-questions
-            + supportive care recommendations до плану.
+            Гематолог, патолог, інфекціоніст-гепатолог, радіолог,
+            молекулярний генетик, клінічний фармацевт, радіотерапевт,
+            паліативна допомога та інші — кожен активується на конкретні
+            тригери у профілі і додає свої open-questions + supportive
+            care recommendations до плану.
           </p>
         </div>
 
@@ -3806,11 +3943,11 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">Workups (триаж)</div>
           <div class="num-detail">pre-biopsy діагностичний шлях</div>
           <p class="num-text">
-            Коли в пацієнта ще немає підтвердженої гістології (CHARTER §15.2 C7 забороняє
-            treatment Plan без неї), engine вмикає <strong>diagnostic mode</strong>: видає
-            Workup Brief зі списком тестів, biopsy approach, IHC panel, та переліком ролей
-            що мають бути в triage MDT. Як тільки histology підтверджено — diagnostic plan
-            promote-иться в treatment plan через <code>revise_plan(...)</code>.
+            Коли гістологія ще не підтверджена (CHARTER §15.2 C7 забороняє
+            treatment Plan без неї), engine вмикає <strong>diagnostic mode</strong>:
+            видає Workup Brief з тестами, biopsy approach, IHC panel і ролями
+            triage MDT. Як тільки histology підтверджено — diagnostic plan
+            promote-иться у treatment plan через <code>revise_plan(...)</code>.
           </p>
         </div>
 
@@ -3819,26 +3956,29 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">тригери ескалації або розслідування</div>
           <p class="num-text">
-            Червоні прапорці — структуровані клінічні умови, що автоматично змінюють план:
-            <em>RF-BULKY-DISEASE</em> (нодальна маса &gt;7 см) перемикає HCV-MZL з antiviral-first
-            на BR + DAA, <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p), gain 1q)
-            ескалує MM з триплету VRd до квадруплету D-VRd. Кожен RedFlag прив'язаний до
-            domain-role, який «виловлює» його у MDT brief.
+            Структуровані клінічні умови, що автоматично змінюють план:
+            <em>RF-BULKY-DISEASE</em> (нодальна маса &gt;7 см) перемикає
+            HCV-MZL з antiviral-first на BR + DAA;
+            <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p),
+            gain 1q) ескалує MM з триплету VRd до квадруплету D-VRd.
+            Кожен RF прив'язаний до domain-role, який «виловлює» його у
+            MDT brief. Алмост-універсальне RF-trigger alias-purpose
+            cover'ить ~76% попередніх «unevaluated RedFlag» warnings.
           </p>
         </div>
 
         <div class="num-card">
           <div class="num-big">{n_regimens}</div>
           <div class="num-lbl">Режими лікування</div>
-          <div class="num-detail">{n_indications} показань ({n_inds_1l} першої лінії · {n_inds_2l} 2L+)</div>
+          <div class="num-detail">{n_indications} показань ({n_inds_1l} 1L · {n_inds_2l} 2L+)</div>
           <p class="num-text">
-            Кожна схема — список drugs з дозами, шкалою циклів, dose adjustments
-            (для renal impairment, FIB-4, frailty), premedications, mandatory supportive
-            care та monitoring schedule. Кожна <em>Indication</em> (сполучення
-            disease + line_of_therapy + biomarker / stage / demographic-фільтрів) гейтить
-            конкретний Regimen — наприклад, MGMT-METHYLATION для GBM Stupp, CD79B/COO/IPI
-            для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL, MYC+BCL2 rearrangements
-            для HGBL-DH, AFP для HCC, FLIPI для FL.
+            Кожна схема — список drugs з дозами, шкалою циклів, dose
+            adjustments (renal impairment, FIB-4, frailty), premedications,
+            mandatory supportive care і monitoring schedule. <em>Indication</em>
+            (disease + line + biomarker / stage / demographic-фільтри) гейтить
+            конкретний Regimen — наприклад, MGMT-METHYLATION для GBM Stupp,
+            CD79B/COO/IPI для DLBCL R-CHOP vs Pola-R-CHP, t(11;14)/MIPI для MCL,
+            MYC+BCL2 rearrangements для HGBL-DH, AFP для HCC, FLIPI для FL.
           </p>
         </div>
 
@@ -3846,9 +3986,12 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-big">{n_drugs}</div>
           <div class="num-lbl">Препарати</div>
           <p class="num-text">
-            ATC/RxNorm-кодовані. Кожен з регуляторним статусом FDA/EMA/MOЗ + НСЗУ
-            reimbursement (наприклад, daratumumab наразі НЕ реімбурсується НСЗУ —
-            це блокер для D-VRd, явно фіксований у плані).
+            ATC/RxNorm-кодовані. Кожен з регуляторним статусом FDA/EMA/MOЗ +
+            НСЗУ reimbursement (наприклад, daratumumab наразі НЕ
+            реімбурсується НСЗУ — це блокер для D-VRd, явно фіксований у
+            плані). Останні поповнення: cell therapies (cilta-cel, liso-cel,
+            loncastuximab-tesirine), antiemetics, FN-empirical antibacterials,
+            antifungals.
           </p>
         </div>
 
@@ -3856,55 +3999,37 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-big">{n_tests}</div>
           <div class="num-lbl">Тести / процедури</div>
           <p class="num-text">
-            LOINC-кодовані лабораторні + imaging + histology + IHC + genomic тести.
-            Кожен має <code>priority_class</code> (critical / standard / desired /
-            calculation_based) — рендеряться у Plan як «pre-treatment investigations»
-            таблиця.
+            LOINC-кодовані лабораторні + imaging + histology + IHC +
+            genomic тести. Кожен має <code>priority_class</code>
+            (critical / standard / desired / calculation_based) — рендеряться
+            у Plan як «pre-treatment investigations» таблиця.
           </p>
         </div>
 
         <div class="num-card num-card--accent">
           <div class="num-big">{n_sources}</div>
           <div class="num-lbl">Джерела (top-level guidelines + RCTs)</div>
-          <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA</div>
+          <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Під цими {n_sources} джерелами — <strong>{stats.corpus_references_total:,}+ primary
-            clinical publications</strong> (RCTs, мета-аналізи, когортні дослідження)
-            і <strong>{stats.corpus_pages_total:,} сторінок керівництв</strong>. Сама лише
-            NCCN B-Cell Lymphomas guideline — ~500 сторінок з ~700 references.
-            Кожна Indication / Regimen / RedFlag цитує конкретні джерела з
-            <em>position</em> (supports / contradicts / context), paraphrased
-            quote, page/section. FDA Criterion 4 — лікар незалежно перевіряє
-            підставу кожної рекомендації.
+            Під цими {n_sources} джерелами — десятки тисяч primary clinical
+            publications (RCTs, мета-аналізи, когортні дослідження) і тисячі
+            сторінок керівництв. Кожна Indication / Regimen / RedFlag цитує
+            конкретні джерела з <em>position</em> (supports / contradicts /
+            context), paraphrased quote, page/section. FDA Criterion 4 —
+            лікар незалежно перевіряє підставу кожної рекомендації.
           </p>
         </div>
 
-        <div class="num-card">
-          <div class="num-big">{stats.specs_count}</div>
-          <div class="num-lbl">Специфікації</div>
-          <p class="num-text">
-            CHARTER (governance + FDA позиціювання), CLINICAL_CONTENT_STANDARDS,
-            KNOWLEDGE_SCHEMA, DATA_STANDARDS, SOURCE_INGESTION, REFERENCE_CASE,
-            MDT_ORCHESTRATOR, DIAGNOSTIC_MDT, WORKUP_METHODOLOGY, SKILL_ARCHITECTURE.
-          </p>
-        </div>
-
-      </div>
-      <div class="num-foot">
-        Зріз станом на <code>{stats.generated_at_utc}</code>.
-        Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-        — увесь клінічний контент позначено як <strong>STUB</strong> до dual-sign-off
-        Clinical Co-Lead. Це інструмент підтримки рішень, не медичний пристрій.
       </div>
     </section>
 
     <div class="info-section">
-      <h2>1. Як обробляється запит</h2>
+      <h2>2. Як обробляється запит — 6 стадій engine</h2>
       <p class="info-text">
-        Лікар дає engine'у JSON-профіль пацієнта (FHIR/mCODE-сумісний у
-        майбутньому, спрощений dict у MVP). Engine виконує 6 послідовних
-        стадій і повертає Plan з ≥2 альтернативними tracks (CHARTER §2 —
-        обидва треки в одному документі, alternative не сховано).
+        Лікар дає engine'у JSON-профіль (FHIR/mCODE-сумісний у майбутньому,
+        спрощений dict у MVP). Engine виконує 6 послідовних стадій і повертає
+        Plan з ≥2 альтернативними tracks (CHARTER §2 — обидва треки в одному
+        документі, alternative не сховано).
       </p>
       <div class="flow-strip">
         <div class="flow-step">
@@ -3912,25 +4037,26 @@ def _render_capabilities_uk(stats) -> str:
           <div class="flow-title">Disease + Algorithm resolve</div>
           <div class="flow-desc">
             <code>disease.icd_o_3_morphology</code> або <code>disease.id</code>
-            → знайти Disease entity. Disease + <code>line_of_therapy</code>
-            → знайти відповідний Algorithm.
+            → знайти Disease entity. Disease + <code>line_of_therapy</code> +
+            <code>disease_state</code> → знайти Algorithm.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 2</div>
           <div class="flow-title">Findings flattening</div>
           <div class="flow-desc">
-            Об'єднує <code>demographics</code> + <code>biomarkers</code>
-            + <code>findings</code> в один flat dict для evaluation.
+            Об'єднує <code>demographics</code> + <code>biomarkers</code> +
+            <code>findings</code> в один flat dict для evaluation.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Кожен з {n_redflags} RedFlag-ів перевіряється проти findings.
-            Boolean rule engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
-            clauses з threshold-ами.
+            Кожен з {n_redflags} RF перевіряється проти findings. Boolean
+            engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
+            clauses з threshold-ами. RF-trigger alias map зменшила «unevaluated»
+            warnings ~на 76%.
           </div>
         </div>
         <div class="flow-step">
@@ -3946,22 +4072,24 @@ def _render_capabilities_uk(stats) -> str:
           <div class="flow-num">Stage 5</div>
           <div class="flow-title">Tracks materialization</div>
           <div class="flow-desc">
-            ВСІ Indication з <code>algorithm.output_indications</code> стають
-            окремими tracks (standard / aggressive / surveillance). Selected
-            = default, перший. Решта — alternative.
+            Усі Indication з <code>algorithm.output_indications</code> стають
+            окремими tracks (standard / aggressive / surveillance). Біомаркер-
+            aware <em>track filter</em> виключає треки, що не задовольняють
+            <code>biomarker_requirements_excluded</code>.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 6</div>
           <div class="flow-title">Per-track resolution</div>
           <div class="flow-desc">
-            Indication → Regimen → MonitoringSchedule + SupportiveCare +
-            Contraindications. Все resolve'иться з KB readonly.
+            Indication → Regimen (з phases) → MonitoringSchedule +
+            SupportiveCare + Contraindications + AccessMatrix row.
+            CIViC actionability hits — окрема секція деталі.
           </div>
         </div>
       </div>
       <p class="info-text">
-        Час обробки одного пацієнта — 50-200&nbsp;ms (KB load домінує). У
+        Час обробки одного пацієнта — 50-200&nbsp;мс (KB load домінує). У
         Pyodide перший запуск 8-15&nbsp;сек (завантаження runtime), наступні
         — як локальний CLI. <strong>Серверу немає</strong> — engine крутиться
         локально (CLI) або у браузері користувача (Pyodide). Patient JSON
@@ -3970,7 +4098,150 @@ def _render_capabilities_uk(stats) -> str:
     </div>
 
     <div class="info-section">
-      <h2>2. Як ми працюємо з даними пацієнта</h2>
+      <h2>3. Coverage matrix — публічна картинка прогресу</h2>
+      <p class="info-text">
+        <strong>Сторінка <a href="/diseases.html"><code>/diseases.html</code></a></strong>
+        — це per-disease таблиця, що показує, що наявне у KB для кожної з
+        {n_diseases} хвороб. Згрупована у три родини: лімфоїдна
+        гематологія, мієлоїдна гематологія, солідні пухлини. Для кожної
+        хвороби: counts по біомаркерах / препаратах / показаннях / режимах /
+        red flags, checkmarks для алгоритмів 1L і 2L, статус анкети
+        (real / stub / none), fill% і verified%. Family-рівневі avg-показники
+        у footer кожної таблиці. Це канонічна UI-поверхня для
+        <code>/disease_coverage.json</code> — той самий dataset, доступний
+        машинно.
+      </p>
+      <div class="callout">
+        <strong>Навіщо матриця:</strong> публічно показує, яка хвороба наскільки
+        «жива» — щоб лікар не покладався на «ну там же є Y» і одразу бачив,
+        чи є у нас 2L алгоритм для цього випадку, чи ні. Для контрибуторів —
+        матриця показує, де найбільші gaps і куди йти спочатку.
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>4. CIViC actionability — як ми визначаємо «що з біомаркером робити»</h2>
+      <p class="info-text">
+        До недавнього часу actionability (рівень доказів для biomarker→drug
+        зв'язків) приходила з <strong>OncoKB</strong>. OncoKB ToS заборонив
+        non-commercial public derivatives — це конфлікт з CHARTER §2 (free
+        public resource). Ми мігрували на <strong>CIViC (CC0)</strong>
+        — Clinical Interpretation of Variants in Cancer, відкритий ресурс
+        WashU. Нижче — як це працює зараз:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card">
+          <div class="num-big">snap</div>
+          <div class="num-lbl">Nightly YAML snapshot</div>
+          <p class="num-text">
+            Engine не звертається до CIViC API в runtime — читає
+            локальний snapshot з <code>knowledge_base/hosted/civic/&lt;date&gt;/</code>.
+            Це гарантує детермінізм результатів і працює офлайн.
+            <code>SnapshotCIViCClient</code> — публічний інтерфейс до цього
+            snapshot.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">match</div>
+          <div class="num-lbl">Fusion-aware variant matcher</div>
+          <p class="num-text">
+            <code>civic_variant_matcher</code> обробляє і point mutations
+            (BRAF V600E), і <strong>fusions</strong> (BCR::ABL1 — обидва
+            компоненти індексовано), і structural variants. Fusion-агностичні
+            запити («ABL1») і component-specific запити мапляться однаково.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">render</div>
+          <div class="num-lbl">ESCAT-primary, CIViC-detailed</div>
+          <p class="num-text">
+            У Plan render: ESCAT tier (I-A, II-B, …) — primary signal, на
+            рівні ока. CIViC evidence rating (A/B/C/D, supports/does-not-support)
+            + clinical-significance — у details-розкривашці. Без OncoKB-level
+            fields у render.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">CI</div>
+          <div class="num-lbl">Monthly snapshot refresh + diff CI</div>
+          <p class="num-text">
+            <code>civic-monthly-refresh.yml</code> в GitHub Actions щомісяця
+            тягне новий CIViC dump, генерує snapshot, рахує diff проти
+            попередньої версії. Якщо новий snapshot змінив N entities —
+            відкриває PR з diff-чек-лістом для review. Без сюрпризів у
+            рекомендаціях через silent upstream changes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>5. Multi-phase regimens — induction → consolidation → maintenance</h2>
+      <p class="info-text">
+        До PR1-3 з phases-refactor режим був плоским списком drugs з одним
+        cycle schedule. Зараз <code>Regimen.phases</code> — це впорядкований
+        список named blocks, кожен зі своїм компонентним списком, циклами,
+        тривалістю, тригером переходу до наступної фази. Це коректно
+        відображає реальні протоколи: R-CHOP × 6 → maintenance, AML 7+3 →
+        HiDAC consolidation, axi-cel bridging → infusion → preemptive
+        tocilizumab maintenance.
+      </p>
+      <p class="info-text">
+        <code>Regimen.bridging_options</code> — список ID режимів-мостів
+        між фазами (наприклад, для CAR-T: bridging chemo між apheresis і
+        infusion). Render — phases-aware: кожна фаза рендериться як
+        окремий блок з власним cycle schedule, premedications, monitoring.
+      </p>
+      <div class="callout callout-good">
+        <strong>Back-compat:</strong> старі однофазні YAMLs (де
+        <code>components:</code> на верхньому рівні без <code>phases:</code>)
+        автоматично wrap'аться у one-phase form через
+        <code>auto_wrap_legacy_components()</code> при load. One-way only:
+        якщо автор YAML вказав <code>phases:</code> явно —
+        <code>components</code> не торкаємо. 18 high-stakes регіменів
+        мігровано вручну (PR3).
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>6. Citation guard — нічого не виходить у HTML без джерела</h2>
+      <p class="info-text">
+        Трирівнева система верифікації цитувань — три точки, де ми ловимо
+        claims без джерел:
+      </p>
+      <table class="kv-table">
+        <thead><tr><th>Layer</th><th>Де ловить</th><th>Що робить</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Layer 1</strong> — Loader</td>
+            <td>YAML load time (Pydantic)</td>
+            <td>Перевіряє <strong>SRC-* referential integrity</strong>:
+            кожне <code>source_id</code> в Indication/Regimen/RedFlag
+            повинно резолвитись у Source entity. Невідомий SRC-ID → load fail.</td>
+          </tr>
+          <tr>
+            <td><strong>Layer 2</strong> — Background verifier</td>
+            <td>Sidecar PR audit (CI)</td>
+            <td><code>citation-verifier</code>: three-layer grounding для
+            кожної AI-generated claim у sidecar — чи джерело існує, чи
+            paraphrase grounded в оригінальному тексті, чи claim-anchor
+            координати потрапляють у цитований розділ. Тригериться на
+            кожен contributor PR.</td>
+          </tr>
+          <tr>
+            <td><strong>Layer 3</strong> — Render guard</td>
+            <td>HTML output time</td>
+            <td><code>_citation_guard</code>: на render-time перевіряє
+            кожну BMA-комірку. Без citation → warn-badge у lenient mode або
+            cell skip у <code>strict_citation_guard=True</code>. Гарантує:
+            те, що ви бачите в HTML, має джерело.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-section">
+      <h2>7. Як ми працюємо з даними пацієнта</h2>
       <p class="info-text">
         Engine читає лише структуровані поля з patient profile. Кожне поле
         має чітку семантику: або тригерить RedFlag, або filter'ує доступні
@@ -3982,7 +4253,7 @@ def _render_capabilities_uk(stats) -> str:
         <tbody>
           <tr>
             <td>Disease (вхідна точка)</td>
-            <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code></td>
+            <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code> · <code>disease_state</code></td>
             <td>визначає який Algorithm запускати</td>
           </tr>
           <tr>
@@ -3998,11 +4269,11 @@ def _render_capabilities_uk(stats) -> str:
           <tr>
             <td>Biomarkers</td>
             <td>будь-які <code>BIO-X</code> з KB як ключі: <code>BIO-CLL-HIGH-RISK-GENETICS</code>, <code>BIO-MM-CYTOGENETICS-HR</code>, <code>BIO-HCV-RNA</code>, ...</td>
-            <td>тригерять RedFlags, filter'ять Indications</td>
+            <td>тригерять RedFlags, filter'ять Indications, мапляться у CIViC actionability</td>
           </tr>
           <tr>
             <td>Findings</td>
-            <td>{n_redflags}+ структурованих полів — <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>creatinine_clearance_ml_min</code>, <code>blastoid_morphology</code>, <code>tp53_mutation</code>, <code>del_17p</code>, ...</td>
+            <td>сотні структурованих полів — <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>creatinine_clearance_ml_min</code>, <code>blastoid_morphology</code>, <code>tp53_mutation</code>, <code>del_17p</code>, ...</td>
             <td>thresholds у RedFlag triggers</td>
           </tr>
           <tr>
@@ -4020,77 +4291,7 @@ def _render_capabilities_uk(stats) -> str:
     </div>
 
     <div class="info-section">
-      <h2>3. Як ми працюємо з джерелами — і чому це наша ключова перевага</h2>
-      <div class="hero-corpus" style="max-width:none; margin-bottom:18px;">
-        <div class="hcorpus-num">{stats.corpus_references_total:,}+</div>
-        <div class="hcorpus-text">
-          <strong>{stats.corpus_references_total:,}+ primary clinical publications</strong>
-          (RCTs, мета-аналізи, когортні дослідження) реферуються під
-          <strong>{n_sources} обраними top-level guidelines</strong>.
-          Сумарно — <strong>{stats.corpus_pages_total:,} сторінок керівництв</strong>.
-          Жоден лікар фізично не може опрацювати такий обсяг для кожного пацієнта;
-          engine реферує його за вас і повертає Plan з phrased citations + page links.
-        </div>
-      </div>
-      <p class="info-text">
-        Кожне джерело — це окрема <code>Source</code> entity з власним ID
-        (наприклад <code>SRC-NCCN-BCELL-2025</code>), title, version, license,
-        access mode (referenced vs hosted per SOURCE_INGESTION_SPEC §1.4).
-        Зараз у KB <strong>{n_sources}</strong> джерел:
-      </p>
-      <table class="kv-table">
-        <thead><tr><th>Source ID</th><th>Тип</th><th>Сторінок</th><th>Primary refs</th><th>Роль у корпусі</th></tr></thead>
-        <tbody>
-          <tr><td><code>SRC-NCCN-BCELL-2025</code></td><td>NCCN B-Cell Lymphomas v.2.2025</td><td class="num">500</td><td class="num">700</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-MM-2025</code></td><td>NCCN Multiple Myeloma 2025</td><td class="num">400</td><td class="num">600</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-AML-2025</code></td><td>NCCN AML 2025</td><td class="num">350</td><td class="num">500</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-MPN-2025</code></td><td>NCCN MPN 2025</td><td class="num">300</td><td class="num">400</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-EASL-HCV-2023</code></td><td>EASL HCV Guidelines 2023</td><td class="num">80</td><td class="num">250</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-WHO-LNSC-2023</code></td><td>WHO Lymph Node, Spleen, Thymus Cytopathology</td><td class="num">150</td><td class="num">200</td><td>diagnostic_methodology</td></tr>
-          <tr><td><code>SRC-CTCAE-V5</code></td><td>NCI CTCAE v5.0 (toxicity terminology)</td><td class="num">150</td><td class="num">30</td><td>terminology</td></tr>
-          <tr><td><code>SRC-ESMO-MZL-2024</code></td><td>ESMO Marginal Zone Lymphomas 2024</td><td class="num">30</td><td class="num">150</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-BSH-MZL-2024</code></td><td>BSH MZL Guideline 2024</td><td class="num">50</td><td class="num">120</td><td>regional_guideline</td></tr>
-          <tr><td><code>SRC-EHA-WORKUP-2024</code></td><td>EHA Practical Workup Guidelines 2024</td><td class="num">40</td><td class="num">100</td><td>diagnostic_methodology</td></tr>
-          <tr><td><code>SRC-MOZ-UA-LYMPH-2024</code></td><td>МОЗ Україна — Лімфоми (placeholder)</td><td class="num">60</td><td class="num">50</td><td>regional_guideline</td></tr>
-          <tr><td><code>SRC-ARCAINI-2014</code></td><td>IELSG-19 RCT — MALT lymphoma</td><td class="num">10</td><td class="num">50</td><td>rct_publication</td></tr>
-          <tr><td><code>SRC-FDA-CDS-2026</code></td><td>FDA CDS Software Guidance 2026</td><td class="num">30</td><td class="num">20</td><td>regulatory</td></tr>
-          <tr><td colspan="2"><strong>Сумарно</strong></td><td class="num"><strong>{stats.corpus_pages_total:,}</strong></td><td class="num"><strong>{stats.corpus_references_total:,}+</strong></td><td>—</td></tr>
-        </tbody>
-      </table>
-      <p class="info-text">
-        <strong>Кожна клінічна claim у KB має citation</strong>. Indication,
-        Regimen, RedFlag, Algorithm — всі мають поле <code>sources: list</code>
-        де для кожного джерела вказано:
-      </p>
-      <div class="q-list">
-        <h4>Структура citation</h4>
-        <ul>
-          <li><code>source_id</code> — посилання на Source entity</li>
-          <li><code>position</code> — <em>supports</em> / <em>contradicts</em> / <em>context</em></li>
-          <li><code>relevant_quote_paraphrase</code> — паніфразоване твердження з guideline (не дослівне copy-paste для license safety)</li>
-          <li><code>page_or_section</code> — точна локалізація в документі</li>
-        </ul>
-      </div>
-      <p class="info-text">
-        Render layer показує <strong>повний список cited sources</strong>
-        під кожною Indication у Plan. Це і є FDA Criterion 4 (CHARTER §15.2):
-        лікар може незалежно перевірити підставу кожної рекомендації, не
-        довіряючись engine на віру.
-      </p>
-      <div class="callout callout-good">
-        <strong>Source hosting за замовчуванням — referenced.</strong>
-        Ми не дублюємо бази (NCCN, ESMO, etc.) — посилаємось. Hosting
-        потребує explicit H1-H5 justification (CHARTER §15.2 referenced
-        vs hosted vs mixed). Виключення: PDF документи (FDA CDS, CTCAE)
-        збережено локально для archive stability.
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>4. Як ми обробляємо запити</h2>
-      <p class="info-text">
-        Три способи запустити engine, жоден не серверний:
-      </p>
+      <h2>8. Способи запустити engine — три, жоден не серверний</h2>
       <div class="num-grid num-grid--rich">
         <div class="num-card">
           <div class="num-big">CLI</div>
@@ -4105,9 +4306,9 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">У браузері (try.html)</div>
           <p class="num-text">
             Pyodide v0.26.4 завантажує Python WebAssembly runtime, micropip
-            ставить pydantic+pyyaml, розпаковує engine bundle (~302KB) у
+            ставить pydantic+pyyaml, розпаковує engine bundle (~2.4 МБ) у
             in-memory FS. Engine крутиться у браузері. Patient JSON не
-            покидає машину.
+            покидає машину. Service worker кешує bundle для offline-режиму.
           </p>
         </div>
         <div class="num-card">
@@ -4115,7 +4316,8 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">Python import</div>
           <p class="num-text">
             <code>from knowledge_base.engine import generate_plan, revise_plan</code>
-            — інтеграція з EHR, CSV pipelines, batch testing. Stateless, deterministic.
+            — інтеграція з EHR, CSV pipelines, batch testing. Stateless,
+            deterministic.
           </p>
         </div>
       </div>
@@ -4128,33 +4330,32 @@ def _render_capabilities_uk(stats) -> str:
     </div>
 
     <div class="info-section">
-      <h2>5. Що повертаємо назад</h2>
-      <p class="info-text">
-        Engine повертає <strong>Plan</strong> (treatment mode) або
-        <strong>DiagnosticPlan</strong> (workup brief). Кожен Plan містить:
-      </p>
+      <h2>9. Що повертаємо назад — Plan / DiagnosticPlan</h2>
       <table class="kv-table">
         <thead><tr><th>Поле</th><th>Що містить</th></tr></thead>
         <tbody>
-          <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first), кожен з indication + regimen + monitoring + supportive_care + contraindications</td></tr>
+          <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first), кожен з indication + regimen (+ phases) + monitoring + supportive_care + contraindications</td></tr>
+          <tr><td><code>access_matrix</code></td><td>per-track agg-table: UA-реєстрації, НСЗУ-покриття, cost orientation (₴ ranges), primary <code>AccessPathway</code>. Render-time only. Stale-cost warning при <code>cost_last_updated</code> &gt; 180 днів.</td></tr>
+          <tr><td><code>experimental_options</code></td><td>третій трек: <code>enumerate_experimental_options</code> запитує ClinicalTrials.gov v2 за disease + biomarker + line, повертає sites_ua / countries metadata. 7-day on-disk TTL cache.</td></tr>
+          <tr><td><code>actionability_hits</code></td><td>CIViC matches з ESCAT-primary level + CIViC details (variant, evidence rating, clinical significance, source citations)</td></tr>
           <tr><td><code>fda_compliance</code></td><td>FDA Criterion 4 fields: intended_use, hcp_user_specification, patient_population_match, algorithm_summary, data_sources_summary, data_limitations, automation_bias_warning</td></tr>
           <tr><td><code>trace</code></td><td>покрокова історія walk_algorithm: step / outcome / branch / fired_red_flags для кожного кроку</td></tr>
-          <tr><td><code>knowledge_base_state</code></td><td>snapshot версії KB на момент генерації (audit per CHARTER §10.2)</td></tr>
-          <tr><td><code>kb_resolved</code></td><td>всі referenced entities (Disease, Tests, RedFlags, Algorithm) для render layer</td></tr>
-          <tr><td><code>warnings</code></td><td>schema/ref errors, time_critical disqualifications, missing data hints</td></tr>
+          <tr><td><code>knowledge_base_state</code></td><td>snapshot версії KB на момент генерації (audit per CHARTER §10.2) + civic_snapshot_date</td></tr>
+          <tr><td><code>warnings</code></td><td>schema/ref errors, time_critical disqualifications, missing data hints, citation-guard warnings</td></tr>
           <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>версійний chain між plans для тієї ж пацієнта</td></tr>
         </tbody>
       </table>
       <p class="info-text">
-        Опціонально вмикається <strong>MDT brief</strong> — orchestrate_mdt() читає Plan +
-        патієнтський профіль і додає required/recommended/optional ролі (з {n_skills}
-        віртуальних спеціалістів), open questions, provenance graph. Renders як inline
+        Опціонально вмикається <strong>MDT brief</strong> —
+        <code>orchestrate_mdt()</code> читає Plan + патієнтський профіль і
+        додає required/recommended/optional ролі (з {n_skills} віртуальних
+        спеціалістів), open questions, provenance graph. Renders як inline
         section у Plan HTML.
       </p>
     </div>
 
     <div class="info-section">
-      <h2>6. Як план оновлюється при появі нових даних</h2>
+      <h2>10. Як план оновлюється при появі нових даних</h2>
       <p class="info-text">
         <code>revise_plan(updated_patient, previous_plan, revision_trigger)</code>
         приймає оновлений профіль і генерує нову версію плану з
@@ -4171,88 +4372,406 @@ def _render_capabilities_uk(stats) -> str:
         </tbody>
       </table>
       <p class="info-text">
-        Попередній plan <strong>не мутується</strong> — повертається deep copy
-        з <code>superseded_by</code> заповненим. Caller (CLI / EHR) сам вирішує
-        що робити з обома версіями. Per CHARTER §10.2 — стара версія
+        Попередній plan <strong>не мутується</strong> — повертається deep
+        copy з <code>superseded_by</code> заповненим. Caller (CLI / EHR) сам
+        вирішує що робити з обома версіями. Per CHARTER §10.2 — стара версія
         зберігається indefinitely.
       </p>
-      <div class="callout callout-good">
-        <strong>Що тригерить новий plan:</strong> зміна будь-якого з ~30 структурованих
-        полів — нові biomarkers (del(17p) виявлено), нова стадія (ECOG 1→3),
-        нові findings (bulky disease на restaging), нові infectious flags (HBV
-        reactivation), pregnancy detected. Зміна <code>clinical_record</code>
-        free-text НЕ тригерить regeneration (engine не читає free text).
+    </div>
+
+    <div class="info-section">
+      <h2>11. Examples gallery — 586 кейсів</h2>
+      <p class="info-text">
+        <a href="/gallery.html"><code>/gallery.html</code></a> —
+        disease-grouped drill-down. Початковий вигляд: tile-сітка хвороб з
+        counts. Клік → drill у case list для цієї хвороби. Кожен case —
+        повний Plan (або Diagnostic Brief), згенерований engine'ом з
+        реалістичного профілю. Це <strong>не реальні пацієнти</strong>
+        (CHARTER §9.3), а курована демонстрація engine output. Зараз
+        у галереї <strong>586 кейсів</strong>:
+      </p>
+      <ul>
+        <li><strong>159 hand-curated кейсів</strong> — у тому числі ~60
+        нових за останній тиждень (Phase 2 chunked feat: NSCLC × 12
+        biomarker variants, BREAST × 8 receptor-subtypes, CRC × 6 line
+        variants, MELANOMA × 5 BRAF/IO variants, AML × 4 subtypes,
+        DLBCL × 3 line variants, та інші — 12 chunks загалом).</li>
+        <li><strong>362 verified variant profiles</strong> — engine
+        будує їх із базових патернів через <code>variant generator</code>,
+        кожен verified валідатором.</li>
+        <li><strong>65 auto-base кейсів</strong> — по одному на хворобу,
+        автогенеровані як seed для drill-down.</li>
+      </ul>
+    </div>
+
+    <hr style="margin:48px 0; border:none; border-top:2px solid var(--bg-strong);">
+
+    <h2 style="margin-top:0;">Межі — те, чого engine навмисно не робить</h2>
+    <p class="info-text">
+      Знати межі так само важливо, як знати можливості. Розділи нижче — повний
+      і чесний список того, де engine відмовляється генерувати рішення без
+      даних, де клінічне рішення лишається за лікарем, і які архітектурні
+      позиції ми <strong>не плануємо</strong> змінювати.
+    </p>
+
+    <div class="info-section">
+      <h2>12. Open Questions — як engine відмовляється від рішень без даних</h2>
+      <p class="info-text">
+        Engine <strong>не приймає рішення без потрібних даних</strong>. Замість
+        мовчазного default'у він явно фіксує які поля бракує і якого тесту чи
+        висновку потребує. Це механізм <strong>Open Questions</strong> —
+        частина MDT-orchestrator (Q1-Q6 + DQ1-DQ4 rules per
+        MDT_ORCHESTRATOR_SPEC §3).
+      </p>
+      <div class="q-list">
+        <h4>Treatment-mode Open Questions (Q1-Q6) — приклади з реального коду</h4>
+        <ul>
+          <li><strong>Q1 — Histology not confirmed:</strong> якщо <code>disease.id</code> резолвиться але немає <code>biopsy_date</code> чи <code>histology_report</code> — emit warning «Treatment Plan generated against ICD-O-3 code only; recommend confirming primary histology before initiating therapy».</li>
+          <li><strong>Q2 — Stage missing:</strong> якщо Algorithm.decision_tree посилається на staging але profile немає <code>stage</code> — fall-through на default з flag «Lugano/Ann Arbor stage required for confident risk-stratification».</li>
+          <li><strong>Q3 — RedFlag clause references findings absent:</strong> якщо <code>RF-MM-HIGH-RISK-CYTOGENETICS</code> перевіряє <code>tp53_mutation</code> + <code>del_17p</code> + <code>t_4_14</code> + <code>gain_1q</code>, а в profile є тільки <code>del_17p</code> — engine не дає false negative; emit «Cytogenetic panel incomplete; high-risk status assessed with partial data».</li>
+          <li><strong>Q4 — Biomarker required by Indication missing:</strong> якщо <code>IND-CLL-1L-VENO</code> вимагає <code>BIO-CLL-HIGH-RISK-GENETICS</code> для default-track selection — emit «IGHV mutation status + FISH del(17p) required to confirm 1L recommendation».</li>
+          <li><strong>Q5 — Performance status missing:</strong> якщо <code>ecog</code> відсутній — fall на conservative default (тільки standard track), emit «ECOG performance status required for transplant-eligibility assessment».</li>
+          <li><strong>Q6 — Drug availability flag:</strong> якщо selected Regimen містить препарат позначений як <code>nszu_reimbursement: false</code> (наприклад daratumumab у MM) — emit «D-VRd: daratumumab not currently NSZU-reimbursed in Ukraine; verify funding pathway before initiation».</li>
+        </ul>
+      </div>
+      <div class="q-list">
+        <h4>Diagnostic-mode Open Questions (DQ1-DQ4) — для pre-biopsy режиму</h4>
+        <ul>
+          <li><strong>DQ1 — Tissue location missing:</strong> якщо <code>suspicion.tissue_locations</code> empty — workup match не може ranжувати, emit «Тип ткани локалізації потрібно вказати для матчингу workup».</li>
+          <li><strong>DQ2 — Lineage hint absent:</strong> без <code>lineage_hint</code> engine використовує тільки tissue + presentation для matching, lower confidence.</li>
+          <li><strong>DQ3 — Presentation free-text empty:</strong> presentation_keywords scoring × 0; only lineage + tissue brati участь.</li>
+          <li><strong>DQ4 — Working hypotheses not provided:</strong> engine не має preferred direction, переважає найбільш generic workup.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Чому не «беремо default тихо»:</strong> CHARTER §15.2 C6 (anti
+        automation-bias) — engine не може робити вигляд, що знає, коли не
+        знає. Кожна missing-data ситуація має бути візуально помітна лікарю.
+        Open Questions рендеряться у Plan як окрема section, не сховано.
       </div>
     </div>
 
     <div class="info-section">
-      <h2>7. Що ще робимо</h2>
-      <div class="num-grid num-grid--rich">
-        <div class="num-card">
-          <div class="num-big">{n_workups}</div>
-          <div class="num-lbl">Diagnostic workups</div>
-          <p class="num-text">
-            Pre-biopsy режим: коли histology ще немає, engine видає
-            <strong>Workup Brief</strong> зі списком тестів, biopsy approach,
-            IHC panel і ролей triage MDT. Per CHARTER §15.2 C7 — без
-            histology treatment Plan не генерується.
+      <h2>13. Що engine навмисно не робить — gap-и персоналізації</h2>
+      <p class="info-text">
+        «Персоналізація» в OpenOnco — це rule-based <strong>вибір з фіксованих
+        варіантів</strong>, а не AI-генерація. Це навмисна архітектурна позиція
+        (CHARTER §8.3). Конкретні gap-и:
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="gap-tag">Gap 1</div>
+          <h3>Без per-patient dose calculation</h3>
+          <p>
+            Regimen зберігає <strong>стандартну дозу</strong>
+            (<code>bortezomib 1.3 mg/m²</code>), не множиться на BSA пацієнта
+            і не зменшується під CrCl 30 мл/хв автоматично. Лікар сам
+            перераховує. Це принципово, щоб уникнути класифікації як FDA
+            medical device.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">MDT</div>
-          <div class="num-lbl">Multidisciplinary brief</div>
-          <p class="num-text">
-            Orchestrator читає Plan + profile і призначає required/recommended/
-            optional ролі ({n_skills} catalog), формулює open questions
-            (Q1-Q6 + DQ1-DQ4), будує decision provenance graph.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 2</div>
+          <h3>Без response-adapted cycle adjustment</h3>
+          <p>
+            Regimen фіксує <code>total_cycles: 6 + 2 maintenance</code>.
+            Engine не адаптується автоматично на основі response (PR vs CR
+            після PET2). Re-staging plan генерується через окремий
+            <code>revise_plan</code> з новим profile — лікар явно тригерить.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">stats</div>
-          <div class="num-lbl">KB dashboard</div>
-          <p class="num-text">
-            <code>python -m knowledge_base.stats</code> — actual entity counts
-            + per-disease coverage matrix + reviewer signoff ratio. Доступне
-            як CLI / JSON / embeddable HTML widget для landing page.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 3</div>
+          <h3>Genomic matching обмежений curated biomarkers</h3>
+          <p>
+            CIViC покриває велику частину actionable variants. Поза CIViC
+            (rare, novel, unverified variants) engine emits warning
+            «no actionability evidence in current snapshot», але не
+            «creative» інтерпретації. Це обмеження coverage, не engine-логіки.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">render</div>
-          <div class="num-lbl">A4 print-friendly HTML</div>
-          <p class="num-text">
-            Single-file HTML з embedded CSS, без external assets крім Google Fonts.
-            Adapt'ується під A4 print через <code>@page</code> + <code>@media print</code>.
-            Tracks side-by-side, alternative не сховано (anti automation-bias per CHARTER §15.2 C6).
+        <div class="gap-card">
+          <div class="gap-tag">Gap 4</div>
+          <h3>SupportiveCare однакова для всіх на одному режимі</h3>
+          <p>
+            PJP prophylaxis attached до D-VRd для всіх — навіть для пацієнта
+            з алергією на bactrim. Engine не знає альтернатив (dapsone
+            замість bactrim). Лікар сам substitute'ить.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">trials</div>
-          <div class="num-lbl">Experimental options (Phase C — done)</div>
-          <p class="num-text">
-            <code>enumerate_experimental_options(...)</code> запитує
-            ClinicalTrials.gov v2 за disease + biomarker + line_of_therapy і
-            повертає <code>ExperimentalOption</code> з UA-availability metadata
-            (sites_ua, countries) — render-time, engine не використовує trial
-            як сигнал вибору. Status filter: RECRUITING /
-            ACTIVE_NOT_RECRUITING / ENROLLING_BY_INVITATION; інтегровано у
-            <code>generate_plan</code>, render показує третій трек у Plan;
-            7-day on-disk TTL cache для офлайн-запусків.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">access</div>
-          <div class="num-lbl">Access Matrix (Phase D)</div>
-          <p class="num-text">
-            Кожен Plan містить <code>AccessMatrix</code> — per-track agg-table
-            UA-реєстрації, НСЗУ-покриття, cost orientation (₴ ranges) і
-            primary <code>AccessPathway</code>. Render-time only (CHARTER §8.3,
-            invariant test guarantee). Stale-cost warning при
-            <code>cost_last_updated</code> &gt; 180 днів. Trial-рядки додаються
-            автоматично коли experimental track активний.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 5</div>
+          <h3>Без cumulative-toxicity tracking між lines</h3>
+          <p>
+            2L+ алгоритми вже існують для {n_dis_2l_heme} гематологічних
+            хвороб ({n_inds_2l} показань 2L+), але profile не carrier'ить
+            <code>prior_treatment_history</code> як structured field. 2L plan
+            для пацієнта що отримав bortezomib у 1L з grade 2 нейропатією —
+            engine не знає про попередній exposure якщо нічого нового не
+            вказано; лікар сам інтерпретує prior_lines з вільного тексту.
           </p>
         </div>
       </div>
     </div>
+
+    <div class="info-section">
+      <h2>14. CHARTER-обмеження — will not change</h2>
+      <p class="info-text">
+        Це не technical debt — це принципові архітектурні рішення, що
+        визначають позицію проекту як non-device CDS і gатекіпять
+        FDA / клінічну безпеку.
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §8.3</div>
+          <h3>LLM не приймає клінічні рішення</h3>
+          <p>
+            LLM-и допомагають лише з: boilerplate code, doc drafts,
+            extraction з clinical documents (з human verification),
+            translation з clinical review. <strong>Не</strong>: вибір
+            режиму, генерація доз, інтерпретація biomarker для therapy
+            selection.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C7</div>
+          <h3>Без histology — без treatment Plan</h3>
+          <p>
+            Treatment Plan генерується тільки якщо <code>disease.id</code>
+            або <code>icd_o_3_morphology</code> підтверджені. Інакше engine
+            відмовляється і вмикає DiagnosticPlan mode.
+            <code>revise_plan</code> з treatment назад в diagnostic —
+            <strong>заборонено</strong>, raises ValueError.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C5</div>
+          <h3>Без time-critical recommendations</h3>
+          <p>
+            Engine не призначений для emergency oncology (oncologic
+            emergencies, time-sensitive infusion reactions). Це б тригернуло
+            device classification. Якщо Indication позначена
+            <code>time_critical: true</code> — engine додає disqualification
+            warning у FDA compliance.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §6.1</div>
+          <h3>Two-reviewer merge для clinical content</h3>
+          <p>
+            Будь-яка зміна під <code>knowledge_base/hosted/content/</code>
+            що affects clinical recommendations потребує два з трьох Clinical
+            Co-Lead approvals. Без цього Indication залишається STUB.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C6</div>
+          <h3>Anti automation-bias mandatory</h3>
+          <p>
+            Engine ніколи не показує тільки одну рекомендацію — завжди ≥2
+            tracks side-by-side. Alternative не buried, не «click to expand»,
+            не fine-print. Лікар бачить, що це вибір, не директива.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §9.3</div>
+          <h3>Patient data ніколи не у repo / public artifact</h3>
+          <p>
+            <code>patient_plans/</code> gitignored. Будь-які patient HTML —
+            gitignored pattern. Site (<code>docs/</code>) показує тільки
+            synthetic examples. Збір telemetry заборонений без explicit
+            consent.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>15. Поточне покриття — де ще STUB і чого ще немає</h2>
+      <p class="info-text">
+        OpenOnco — work in progress. Зараз модельовано <strong>{n_diseases}
+        захворювань</strong> ({n_heme} гематологічних + {n_solid} солідних)
+        — це далеко не повний WHO-HAEM5 / WHO Classification of Tumours.
+        Конкретно:
+      </p>
+      <table class="kv-table">
+        <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
+        <tbody>
+          <tr><td>Хвороби з повним ланцюгом</td><td>{diseases_full} / {n_diseases}</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>Перша лінія покрита для всіх {n_diseases} хвороб</td></tr>
+          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Друга-четверта лінія: {n_dis_2l_heme} гематологічних + {n_dis_2l_solid} солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
+          <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
+          <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
+          <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
+          <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
+          <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — окремий backlog</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Більшість контенту — STUB. Capacity план: {stats.reviewer_signoffs_total} → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>Що НЕ означає STUB:</strong> structured data + algorithm logic
+        + sources вже є. Що STUB означає: <strong>не пройшло dual sign-off
+        Clinical Co-Lead</strong>. Тобто ми маємо «proposed plan», який треба
+        перевірити, не «approved plan».
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>16. Що engine ніколи не робить — explicit boundary list</h2>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не сховує alternative track</h3>
+          <p>Обидві рекомендації завжди показані. UI не has «expand to see alternative» pattern.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не генерує нову Indication LLM-ом</h3>
+          <p>Усе вибирається з уже-curated KB. Якщо немає підходящої Indication — emit warning, не «creative invention».</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не модифікує дози «під пацієнта»</h3>
+          <p>Дози зі стандартного NCCN/ESMO. Adjustments тільки через explicit dose_modification_rules у Regimen YAML, ніяких ad hoc calculations.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не оцінює «що краще» між tracks</h3>
+          <p>Algorithm обирає default, але не вирішує що default «кращий». Лікар має повну autonomy обрати alternative — задокументовано у automation_bias_warning.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не інтерпретує imaging</h3>
+          <p>«Bulky disease» приходить як structured field <code>dominant_nodal_mass_cm</code>, не з аналізу зображень. Image analysis = device classification.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Не робить cohort matching</h3>
+          <p>«У базі з N пацієнтів M% обрали X» — окремий future feature, потребує persisted patient registry + privacy review. Поки недоступно.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>17. Як з цим жити — workflow для лікаря</h2>
+      <p class="info-text">
+        Цей engine задумано як <strong>підготовку до tumor-board</strong>, не
+        заміну. Лікар вводить profile, отримує structured draft з усіма
+        sources і open questions, далі:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card">
+          <div class="num-big">1</div>
+          <div class="num-lbl">Перевіряє sources</div>
+          <p class="num-text">
+            Кожна claim у плані має citation. Лікар може прочитати оригінальний
+            NCCN/ESMO/МОЗ розділ і підтвердити, що engine не misquote'ить.
+            Citation guard вже відсікав комірки без джерел.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">2</div>
+          <div class="num-lbl">Заповнює Open Questions</div>
+          <p class="num-text">
+            Якщо engine emit'ить «cytogenetic panel incomplete» — лікар замовляє
+            тест, додає у profile, запускає <code>revise_plan</code>. Plan
+            оновлюється, OpenQuestion закривається.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">3</div>
+          <div class="num-lbl">Адаптує під пацієнта</div>
+          <p class="num-text">
+            Дози пере-перевіряє, supportive care substitute'ить за алергіями,
+            Ukraine-availability перевіряє вручну. Engine — draft, лікар — final.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">4</div>
+          <div class="num-lbl">Tumor board discusses</div>
+          <p class="num-text">
+            MDT brief показує, які ролі activated і які питання відкриті. Це
+            structured agenda для board meeting. Decisions з board fixед'аться
+            як provenance events.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin:48px 0; border:none; border-top:2px solid var(--bg-strong);">
+
+    <div class="info-section" id="contribute-tokens">
+      <h2>18. Як долучитись — верифікувати алгоритми токенами вашого AI</h2>
+      <p class="info-text">
+        Найбільший gap на цій сторінці —
+        <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
+        dual-reviewer sign-off. Це bottleneck, який не вирішується новим
+        кодом — він вирішується <em>контрибуторами з AI-tool'ами</em>, які
+        беруть structured chunks роботи і виконують їх кожен у свій
+        worktree. Ми називаємо це <strong>TaskTorrent</strong>.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">1</div>
+          <div class="num-lbl">Що це таке</div>
+          <p class="num-text">
+            Maintainer публікує «чанк» — одну конкретну, завершену задачу
+            (~100k–300k токенів структурованої AI-роботи): «реверифікувати
+            BMA evidence для DLBCL × 17 entities» або «backfill source-license
+            для 8 sources». Контрибутор бере чанк, AI-агент виконує, відкриває PR.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">2</div>
+          <div class="num-lbl">Що від вас потрібно</div>
+          <p class="num-text">
+            AI-tool з token budget на чанк (Claude Code Pro+, Codex, Cursor,
+            ChatGPT з web access). GitHub account + <code>gh</code> CLI.
+            Python 3.10+. ~1-3 години часу. <strong>Без клінічної експертизи</strong>
+            — ви не пишете medical advice; ви тригерите structured drafting,
+            а лікарі-co-leads потім signoff'ять.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">3</div>
+          <div class="num-lbl">8-line bootstrap</div>
+          <p class="num-text">
+            Скопіюйте 8-рядковий промпт з
+            <a href="/contribute.html"><code>/contribute.html</code></a>
+            у свій AI-агент. Він сам знайде наступний доступний chunk,
+            прочитає його spec, claim'не його, виконає роботу під
+            <code>contributions/&lt;chunk-id&gt;/</code>, прогоне валідатор,
+            відкриє PR.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">4</div>
+          <div class="num-lbl">Що буде з PR</div>
+          <p class="num-text">
+            Maintainer перевіряє mechanical частину (валідатор, schema
+            integrity). Clinical Co-Lead робить sample review semantic
+            частини (CHARTER §6.1). Після merge — sidecar landing у master,
+            потім upsert у hosted KB, потім у render для пацієнтів. Внесок
+            із атрибуцією у <code>_contribution_meta.yaml</code> (ai_tool +
+            ai_model).
+          </p>
+        </div>
+      </div>
+      <div class="cta-row" style="margin-top:24px;">
+        <a class="btn btn-primary" href="/contribute.html">Допомогти токенами →</a>
+        <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
+        <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Активні чанки →</a>
+      </div>
+      <div class="callout callout-good" style="margin-top:18px;">
+        <strong>Що це дає Україні.</strong> Кожен верифікований BMA — це одна
+        actionability claim, яку ми можемо рендерити як «approved» а не «STUB»
+        для українських лікарів. Це безпосередньо переводить engine з
+        proposed-plan у published. Один контрибутор за вечір з токенами свого
+        Pro+ підписки може просунути 10-20 BMA через signoff prep — це
+        тиждень роботи однієї людини за іншою моделлю.
+      </div>
+    </div>
+
   </section>
 
   <footer class="page-foot">
@@ -4292,7 +4811,6 @@ def _render_capabilities_en(stats) -> str:
         1 for d in stats.diseases
         if d.coverage_status in {"stub_full_chain", "reviewed"}
     )
-    diseases_partial = sum(1 for d in stats.diseases if d.coverage_status == "partial")
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -4311,25 +4829,39 @@ def _render_capabilities_en(stats) -> str:
   <section class="info-page">
     <h1>Capabilities</h1>
     <p class="lead">
-      OpenOnco takes a JSON patient profile and returns a structured treatment
-      plan or a diagnostic brief, with a full trace of every decision and
-      citations for every claim. There is no black box: every recommendation
-      comes from declarative rules you can read in the knowledge base and
-      follow through the trace. The rest of this page details how we work
-      with data, sources, and requests.
+      OpenOnco is a declarative rule engine for oncology recommendations.
+      Input: a JSON patient profile (FHIR R4 / mCODE-compatible). Output:
+      a <strong>Plan</strong> with ≥2 alternative tracks (standard +
+      aggressive), or a <strong>DiagnosticPlan</strong> with a workup
+      brief if histology isn't yet confirmed. Every claim ships with a
+      citation; every algorithm step is traced. This page is a complete,
+      honest description of what we <em>do</em>, and at the bottom — what
+      we <em>deliberately don't do</em>, where the clinician remains the
+      final authority.
     </p>
 
+    <div class="callout callout-hard">
+      <strong>STUB status across all clinical content.</strong>
+      Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
+      (CHARTER §6.1 requires two Clinical Co-Lead approvals for any
+      Indication before it can be considered «published»). Right now this
+      is a proposed plan: structured data + algorithm + sources are in
+      place, but without dual sign-off. State as of
+      <code>{stats.generated_at_utc}</code>. This is a decision-support
+      tool, not a medical device.
+    </div>
+
     <div class="promo-info" role="img" aria-label="OpenOnco — capabilities infographic">
-      <div class="promo-eyebrow">OpenOnco · v0.1 · the engine, distilled</div>
+      <div class="promo-eyebrow">OpenOnco · v{OPENONCO_VERSION} · the engine in two sentences</div>
       <h2 class="promo-headline">
-        One JSON profile → <em>two alternative treatment plans</em>,
-        a citation under every recommendation.
+        One JSON profile → <em>two alternative treatment plans</em>
+        with a citation under every recommendation.
       </h2>
       <p class="promo-sub">
-        A declarative rule engine across <strong>{n_diseases} diseases</strong>,
-        backed by <strong>{stats.corpus_references_total:,}+ clinical publications</strong>
-        under <strong>{n_sources} top-level guidelines</strong>. No LLM in the clinical
-        decision, no server, no logs. Patient JSON never leaves the machine.
+        A declarative rule engine over <strong>{n_diseases} diseases</strong>,
+        {n_redflags} red flags, {n_indications} indications, {n_regimens} regimens.
+        No LLM in the clinical decision, no server, no logs.
+        The patient JSON never leaves the machine.
       </p>
 
       <div class="promo-stats">
@@ -4338,8 +4870,8 @@ def _render_capabilities_en(stats) -> str:
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">{stats.corpus_references_total:,}<span class="promo-stat-plus">+</span></div>
-          <div class="promo-stat-lbl">Clinical publications</div>
+          <div class="promo-stat-num">{n_indications}</div>
+          <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
           <div class="promo-stat-num">{n_sources}</div>
@@ -4358,27 +4890,27 @@ def _render_capabilities_en(stats) -> str:
       <div class="promo-flow">
         <div class="promo-flow-card">
           <div class="promo-flow-tag">Input</div>
-          <div class="promo-flow-title">Patient JSON profile</div>
+          <div class="promo-flow-title">JSON patient profile</div>
           <div class="promo-flow-desc">
-            FHIR / mCODE-friendly. <code>disease</code>, <code>biomarkers</code>,
+            FHIR / mCODE-compatible. <code>disease</code>, <code>biomarkers</code>,
             <code>findings</code>, <code>line_of_therapy</code>.
           </div>
         </div>
         <div class="promo-flow-arrow" aria-hidden="true">→</div>
         <div class="promo-flow-card">
           <div class="promo-flow-tag">Engine · 6 stages</div>
-          <div class="promo-flow-title">Algorithm + RedFlags</div>
+          <div class="promo-flow-title">Algorithm + RedFlags + CIViC</div>
           <div class="promo-flow-desc">
             Resolve → flatten → eval RedFlags → walk algorithm → materialize tracks → resolve regimens.
-            All from a readonly KB.
+            Actionability — from CIViC nightly snapshot.
           </div>
         </div>
         <div class="promo-flow-arrow" aria-hidden="true">→</div>
         <div class="promo-flow-card is-output">
           <div class="promo-flow-tag">Output</div>
-          <div class="promo-flow-title">Plan with ≥2 tracks + trace</div>
+          <div class="promo-flow-title">Plan with ≥2 tracks + trace + AccessMatrix</div>
           <div class="promo-flow-desc">
-            Each recommendation carries paraphrased citation, page/section, FDA Crit. 4 fields.
+            Each recommendation with paraphrased citation, page/section, FDA Crit. 4 fields.
           </div>
           <div class="promo-flow-tracks">
             <div class="promo-flow-track">
@@ -4397,10 +4929,10 @@ def _render_capabilities_en(stats) -> str:
         <div class="promo-pillar">
           <div class="promo-pillar-num">01</div>
           <div>
-            <div class="promo-pillar-title">No black box</div>
+            <div class="promo-pillar-title">Not a black box</div>
             <div class="promo-pillar-desc">
-              Every algorithm step in the trace. LLMs do not make clinical
-              decisions (CHARTER §8.3).
+              Every algorithm step in the trace. The LLM does not make
+              clinical decisions (CHARTER §8.3).
             </div>
           </div>
         </div>
@@ -4409,8 +4941,8 @@ def _render_capabilities_en(stats) -> str:
           <div>
             <div class="promo-pillar-title">Every claim cited</div>
             <div class="promo-pillar-desc">
-              source_id + position + paraphrased quote + page. FDA Criterion 4 —
-              the clinician verifies the basis.
+              source_id + position + paraphrased quote + page. A render-time
+              citation guard checks every one.
             </div>
           </div>
         </div>
@@ -4419,8 +4951,8 @@ def _render_capabilities_en(stats) -> str:
           <div>
             <div class="promo-pillar-title">Privacy by design</div>
             <div class="promo-pillar-desc">
-              CLI / Pyodide / Python import. No server. Patient JSON stays
-              on the user's machine.
+              CLI / Pyodide / Python import. No server. The patient JSON
+              stays on the machine.
             </div>
           </div>
         </div>
@@ -4429,43 +4961,130 @@ def _render_capabilities_en(stats) -> str:
           <div>
             <div class="promo-pillar-title">The plan is alive</div>
             <div class="promo-pillar-desc">
-              <code>revise_plan(...)</code> updates recommendations as new
-              biomarkers and findings come in.
+              <code>revise_plan(...)</code> updates the recommendation as
+              soon as new biomarkers or findings appear.
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <div class="info-section">
+      <h2>0. What's new this past week</h2>
+      <p class="info-text">
+        The KB and engine picked up several structural updates over the
+        past few days — they change <em>how</em> the engine works, not
+        only what it knows:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">CIViC</div>
+          <div class="num-lbl">Actionability — full OncoKB replacement</div>
+          <p class="num-text">
+            Migrated from closed OncoKB (incompatible with CHARTER §2 —
+            non-commercial) to <strong>CIViC (CC0)</strong>. The engine
+            reads a nightly YAML snapshot via <code>SnapshotCIViCClient</code>;
+            a fusion-aware matcher handles both point mutations and
+            fusions (BCR::ABL1 etc.). Render is ESCAT-primary with
+            CIViC-detailed deep-dive. <strong>Monthly snapshot refresh in
+            CI</strong> + diff-only update so nothing drifts silently.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Phases</div>
+          <div class="num-lbl">Multi-phase regimens (PR1-3)</div>
+          <p class="num-text">
+            <code>Regimen.phases</code> decomposes a course into ordered,
+            named blocks (induction → consolidation → maintenance).
+            <code>bridging_options</code> lists bridging-regimen IDs (e.g.
+            for CAR-T). Render is phases-aware: every phase renders with
+            its own cycle schedule. Back-compat: legacy single-phase YAMLs
+            auto-wrap to one-phase form.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">Guard</div>
+          <div class="num-lbl">Citation-presence guard at HTML render</div>
+          <p class="num-text">
+            <strong>No BMA claim ships in HTML without an explicit citation.</strong>
+            A render-time guard checks every cell in the actionability
+            table; missing-source rows get a warn-badge or are dropped in
+            strict mode. This is Layer 3 of a three-tier system —
+            preceded by a background <em>citation verifier</em> (3-layer
+            grounding for all sidecar PRs) and loader-level <em>SRC-*
+            referential integrity</em>.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">Matrix</div>
+          <div class="num-lbl">/diseases.html — coverage matrix</div>
+          <p class="num-text">
+            Per-disease table: bio / drug / ind / reg / rf counts, 1L+2L
+            checkmarks, questionnaire status, fill% + verified%. Grouped
+            by lymphoid heme, myeloid heme, solid tumours; family-level
+            avg metrics. The canonical UI surface for
+            <code>disease_coverage.json</code>.
+            <a href="/en/diseases.html"><strong>→ See the matrix</strong></a>
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">Gallery</div>
+          <div class="num-lbl">586 cases = 159 curated + 362 variants + 65 auto-base</div>
+          <p class="num-text">
+            Disease-grouped drill-down replaces the flat tile grid. 159
+            hand-curated cases (including the latest chunked feat — Phase 2:
+            NSCLC × 12, BREAST × 8, CRC × 6, AML × 4, DLBCL × 3, …, ~60
+            new cases in the past 4 days) + 362 verified variant profiles
+            the engine generates from base profiles via variant generator
+            + 65 auto-base seeds (one per disease). Each — a full Plan or
+            Diagnostic Brief with all citations.
+            <a href="/en/gallery.html"><strong>→ See examples</strong></a>
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">TT</div>
+          <div class="num-lbl">TaskTorrent — distributed AI contributions</div>
+          <p class="num-text">
+            Your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one
+            structured chunk (~100k–300k tokens of work), completes it in
+            1–3 hours, and opens a PR. Maintainer + Clinical Co-Lead
+            review and merge. In the past 4 days — <strong>7 waves</strong>,
+            dozens of chunks, ~73 BMA candidates, 23 BMA drafts, 53 source
+            stubs. Details in the «How to help» section below.
+            <a href="/en/contribute.html"><strong>→ Contribute tokens</strong></a>
+          </p>
+        </div>
+      </div>
+    </div>
+
     <section class="numbers numbers-on-info">
-      <h2>What's already in</h2>
+      <h2>1. What's done — numbers from the live KB</h2>
       <div class="num-grid num-grid--rich">
 
         <div class="num-card">
           <div class="num-big">{n_diseases}</div>
-          <div class="num-lbl">Diseases in the KB</div>
-          <div class="num-detail">{n_heme} hematologic · {n_solid} solid · {diseases_full} with the full chain · {n_dis_2l} carry a 2L+ algorithm</div>
+          <div class="num-lbl">Diseases in KB</div>
+          <div class="num-detail">{n_heme} heme · {n_solid} solid · {diseases_full} with full chain · {n_dis_2l} have 2L+ algorithm</div>
           <p class="num-text">
-            Each disease carries an <strong>archetype</strong>
-            (etiologically_driven like HCV-MZL, risk_stratified like MM,
-            biomarker_driven like NSCLC/EGFR or HGBL/MYC-BCL2, stage_driven
-            like cervical) which determines the algorithm logic for treatment
-            selection. 1L is covered for all {n_diseases} diseases
-            ({n_algos_1l} algorithms); 2L+ is covered for {n_dis_2l_heme}
-            hematologic and {n_dis_2l_solid} solid diseases ({n_algos_2l} algorithms).
+            Each disease has its own <strong>archetype</strong>
+            (etiologically_driven, risk_stratified, biomarker_driven,
+            stage_driven) which determines the treatment-selection
+            algorithm. 1L is covered for all {n_diseases}
+            ({n_algos_1l} algorithms), 2L+ — for {n_dis_2l_heme} heme
+            and {n_dis_2l_solid} solid ({n_algos_2l} algorithms).
           </p>
         </div>
 
         <div class="num-card num-card--accent">
           <div class="num-big">{n_skills}</div>
-          <div class="num-lbl">Clinician skills (virtual specialists)</div>
-          <div class="num-detail">each skill carries its own version, sources, last_reviewed</div>
+          <div class="num-lbl">Doctor-skills (virtual specialists)</div>
+          <div class="num-detail">each skill has its own version, sources, last_reviewed</div>
           <p class="num-text">
-            Hematologist, pathologist, infectious-disease/hepatologist,
-            radiologist, molecular geneticist, clinical pharmacist, radiation
-            oncologist, palliative care and others — each is activated by
-            specific triggers in the patient profile and contributes its own
-            open questions and supportive-care recommendations to the plan.
+            Hematologist, pathologist, hepatologist-infectious-disease,
+            radiologist, molecular geneticist, clinical pharmacist,
+            radiation oncologist, palliative care and others — each
+            activates on specific profile triggers and adds open-questions
+            + supportive-care recommendations to the plan.
           </p>
         </div>
 
@@ -4474,13 +5093,12 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">Workups (triage)</div>
           <div class="num-detail">pre-biopsy diagnostic path</div>
           <p class="num-text">
-            When histology is not yet confirmed (CHARTER §15.2 C7 forbids a
-            treatment Plan without it), the engine switches into
+            When histology isn't yet confirmed (CHARTER §15.2 C7 forbids a
+            treatment Plan without it), the engine switches to
             <strong>diagnostic mode</strong>: it emits a Workup Brief with
-            the test list, biopsy approach, IHC panel, and the roles required
-            in the triage MDT. Once histology is confirmed, the diagnostic
-            plan is promoted to a treatment plan via
-            <code>revise_plan(...)</code>.
+            tests, biopsy approach, IHC panel, and triage-MDT roles. Once
+            histology is confirmed — the diagnostic plan is promoted to a
+            treatment plan via <code>revise_plan(...)</code>.
           </p>
         </div>
 
@@ -4489,28 +5107,30 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">escalation or investigation triggers</div>
           <p class="num-text">
-            Red flags are structured clinical conditions that automatically
-            change the plan: <em>RF-BULKY-DISEASE</em> (nodal mass &gt;7 cm)
-            switches HCV-MZL from antiviral-first to BR + DAA;
-            <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p), gain 1q)
-            escalates MM from triplet VRd to quadruplet D-VRd. Every RedFlag
-            is bound to a domain role that "catches" it in the MDT brief.
+            Structured clinical conditions that automatically rewrite the
+            plan: <em>RF-BULKY-DISEASE</em> (nodal mass &gt;7 cm) flips
+            HCV-MZL from antiviral-first to BR + DAA;
+            <em>RF-MM-HIGH-RISK-CYTOGENETICS</em> (t(4;14), del(17p),
+            gain 1q) escalates MM from triplet VRd to quadruplet D-VRd.
+            Every RF is bound to a domain-role that picks it up in the
+            MDT brief. An almost-universal RF-trigger alias map covers
+            ~76% of previous «unevaluated RedFlag» warnings.
           </p>
         </div>
 
         <div class="num-card">
           <div class="num-big">{n_regimens}</div>
-          <div class="num-lbl">Treatment regimens</div>
-          <div class="num-detail">{n_indications} indications ({n_inds_1l} first-line · {n_inds_2l} 2L+)</div>
+          <div class="num-lbl">Regimens</div>
+          <div class="num-detail">{n_indications} indications ({n_inds_1l} 1L · {n_inds_2l} 2L+)</div>
           <p class="num-text">
-            Each regimen is a list of drugs with doses, cycle schedule, dose
-            adjustments (renal impairment, FIB-4, frailty), premedications,
-            mandatory supportive care, and a monitoring schedule. Every
-            <em>Indication</em> (the combination of disease + line_of_therapy +
-            biomarker / stage / demographic filters) gates a specific Regimen —
-            e.g. MGMT-METHYLATION for GBM Stupp; CD79B / COO-Hans / IPI for DLBCL
-            R-CHOP vs Pola-R-CHP; t(11;14) / MIPI for MCL; MYC + BCL2 rearrangements
-            for HGBL-DH; AFP for HCC; FLIPI for FL.
+            Every regimen is a list of drugs with doses, cycle schedule,
+            dose adjustments (renal impairment, FIB-4, frailty),
+            premedications, mandatory supportive care, and monitoring
+            schedule. An <em>Indication</em> (disease + line + biomarker /
+            stage / demographic filters) gates a specific Regimen — e.g.
+            MGMT-METHYLATION for GBM Stupp, CD79B/COO/IPI for DLBCL
+            R-CHOP vs Pola-R-CHP, t(11;14)/MIPI for MCL, MYC+BCL2
+            rearrangements for HGBL-DH, AFP for HCC, FLIPI for FL.
           </p>
         </div>
 
@@ -4518,10 +5138,12 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-big">{n_drugs}</div>
           <div class="num-lbl">Drugs</div>
           <p class="num-text">
-            ATC/RxNorm-coded. Each carries its FDA/EMA/local-MoH regulatory
-            status plus reimbursement flags (e.g. daratumumab is currently
-            NOT reimbursed by Ukraine's NHSU — a hard blocker for D-VRd,
-            surfaced explicitly in the plan).
+            ATC/RxNorm-coded. Each carries FDA/EMA/MoH regulatory status +
+            NHSU reimbursement (e.g. daratumumab is currently NOT
+            reimbursed by NHSU — a blocker for D-VRd, surfaced explicitly
+            in the plan). Recent additions: cell therapies (cilta-cel,
+            liso-cel, loncastuximab-tesirine), antiemetics, FN-empirical
+            antibacterials, antifungals.
           </p>
         </div>
 
@@ -4530,59 +5152,37 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">Tests / procedures</div>
           <p class="num-text">
             LOINC-coded labs + imaging + histology + IHC + genomic tests.
-            Each carries a <code>priority_class</code> (critical / standard /
-            desired / calculation_based) — rendered in every Plan as the
-            "pre-treatment investigations" table.
+            Each has a <code>priority_class</code> (critical / standard /
+            desired / calculation_based) — rendered in the Plan as a
+            «pre-treatment investigations» table.
           </p>
         </div>
 
         <div class="num-card num-card--accent">
           <div class="num-big">{n_sources}</div>
           <div class="num-lbl">Sources (top-level guidelines + RCTs)</div>
-          <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · MoH UA · WHO · CTCAE · FDA</div>
+          <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · MoH · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Behind these {n_sources} curated sources sit
-            <strong>{stats.corpus_references_total:,}+ primary clinical
-            publications</strong> (RCTs, meta-analyses, cohort studies) and
-            <strong>{stats.corpus_pages_total:,} pages of guideline text</strong>.
-            The NCCN B-Cell Lymphomas guideline alone is ~500 pages with
-            ~700 references. Every Indication / Regimen / RedFlag cites
-            specific sources with a <em>position</em> (supports / contradicts
-            / context), a paraphrased quote, and page/section locator. FDA
-            Criterion 4 — the clinician independently verifies the basis
-            for every recommendation.
+            Beneath these {n_sources} sources sit tens of thousands of
+            primary clinical publications (RCTs, meta-analyses, cohort
+            studies) and thousands of guideline pages. Each Indication /
+            Regimen / RedFlag cites specific sources with <em>position</em>
+            (supports / contradicts / context), paraphrased quote,
+            page/section. FDA Criterion 4 — the clinician independently
+            verifies the basis of every recommendation.
           </p>
         </div>
 
-        <div class="num-card">
-          <div class="num-big">{stats.specs_count}</div>
-          <div class="num-lbl">Specifications</div>
-          <p class="num-text">
-            CHARTER (governance + FDA positioning), CLINICAL_CONTENT_STANDARDS,
-            KNOWLEDGE_SCHEMA, DATA_STANDARDS, SOURCE_INGESTION, REFERENCE_CASE,
-            MDT_ORCHESTRATOR, DIAGNOSTIC_MDT, WORKUP_METHODOLOGY,
-            SKILL_ARCHITECTURE.
-          </p>
-        </div>
-
-      </div>
-      <div class="num-foot">
-        Snapshot as of <code>{stats.generated_at_utc}</code>.
-        Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-        — all clinical content is marked <strong>STUB</strong> until two of
-        three Clinical Co-Leads sign it off. This is a decision-support tool,
-        not a medical device.
       </div>
     </section>
 
     <div class="info-section">
-      <h2>1. How a request is processed</h2>
+      <h2>2. How a request is processed — 6 engine stages</h2>
       <p class="info-text">
-        The clinician feeds the engine a JSON patient profile (FHIR/mCODE-aligned
-        in the future, a simplified dict in the MVP). The engine runs six
-        sequential stages and returns a Plan with ≥2 alternative tracks
-        (CHARTER §2 — both tracks live in the same document; alternatives
-        are never hidden).
+        The clinician hands the engine a JSON profile (FHIR/mCODE-compatible
+        in the future, simplified dict in MVP). The engine runs 6 sequential
+        stages and returns a Plan with ≥2 alternative tracks (CHARTER §2 —
+        both tracks in one document, alternative not hidden).
       </p>
       <div class="flow-strip">
         <div class="flow-step">
@@ -4590,8 +5190,8 @@ def _render_capabilities_en(stats) -> str:
           <div class="flow-title">Disease + Algorithm resolve</div>
           <div class="flow-desc">
             <code>disease.icd_o_3_morphology</code> or <code>disease.id</code>
-            → look up the Disease entity. Disease + <code>line_of_therapy</code>
-            → look up the matching Algorithm.
+            → find Disease entity. Disease + <code>line_of_therapy</code> +
+            <code>disease_state</code> → find Algorithm.
           </div>
         </div>
         <div class="flow-step">
@@ -4606,82 +5206,229 @@ def _render_capabilities_en(stats) -> str:
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Each of the {n_redflags} RedFlags is checked against the findings.
-            Boolean rule engine: <code>any_of</code> / <code>all_of</code> /
-            <code>none_of</code> clauses with thresholds.
+            Each of {n_redflags} RFs is checked against findings. Boolean
+            engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
+            clauses with thresholds. The RF-trigger alias map cut
+            «unevaluated» warnings by ~76%.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 4</div>
           <div class="flow-title">Algorithm walk</div>
           <div class="flow-desc">
-            Decision tree, step by step. Each step → outcome → branch
-            (<code>result</code> or <code>next_step</code>). The trace records
-            every fired_red_flags entry at each step.
+            Decision tree step by step. Each step → outcome → branch
+            (<code>result</code> or <code>next_step</code>). Trace stores
+            all fired_red_flags at each step.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 5</div>
           <div class="flow-title">Tracks materialization</div>
           <div class="flow-desc">
-            ALL Indications in <code>algorithm.output_indications</code> become
-            their own tracks (standard / aggressive / surveillance). The first
-            is the default; the rest are alternatives.
+            All Indications from <code>algorithm.output_indications</code>
+            become separate tracks (standard / aggressive / surveillance).
+            A biomarker-aware <em>track filter</em> drops tracks that
+            violate <code>biomarker_requirements_excluded</code>.
           </div>
         </div>
         <div class="flow-step">
           <div class="flow-num">Stage 6</div>
           <div class="flow-title">Per-track resolution</div>
           <div class="flow-desc">
-            Indication → Regimen → MonitoringSchedule + SupportiveCare +
-            Contraindications. Everything resolves from the read-only KB.
+            Indication → Regimen (with phases) → MonitoringSchedule +
+            SupportiveCare + Contraindications + AccessMatrix row. CIViC
+            actionability hits — separate detail section.
           </div>
         </div>
       </div>
       <p class="info-text">
         Per-patient processing time is 50–200&nbsp;ms (KB load dominates).
-        In Pyodide the first run takes 8–15&nbsp;sec (runtime download); subsequent
-        runs match a local CLI. <strong>There is no server</strong> — the engine
-        runs locally (CLI) or in the user's browser (Pyodide). The patient JSON
-        never leaves the machine.
+        In Pyodide the first run is 8–15&nbsp;s (runtime download); subsequent
+        runs are like a local CLI. <strong>There is no server</strong> — the
+        engine runs locally (CLI) or in the user's browser (Pyodide). The
+        patient JSON never leaves the machine.
       </p>
     </div>
 
     <div class="info-section">
-      <h2>2. How we work with patient data</h2>
+      <h2>3. Coverage matrix — public progress picture</h2>
       <p class="info-text">
-        The engine reads only structured fields from the patient profile.
-        Each field has a clear semantic role: it either triggers a RedFlag,
-        filters available Indications, or configures Regimen materialization.
-        Unknown fields are ignored — no hidden side effects.
+        The page <strong><a href="/en/diseases.html"><code>/diseases.html</code></a></strong>
+        is a per-disease table that shows what's in the KB for each of
+        {n_diseases} diseases. Grouped into three families: lymphoid heme,
+        myeloid heme, solid tumours. For each disease: counts of biomarkers /
+        drugs / indications / regimens / red flags, checkmarks for 1L and 2L
+        algorithms, questionnaire status (real / stub / none), fill% and
+        verified%. Family-level avg metrics in each table footer. This is
+        the canonical UI surface for <code>/disease_coverage.json</code> —
+        same dataset, machine-readable.
+      </p>
+      <div class="callout">
+        <strong>Why a matrix:</strong> publicly shows how «alive» each
+        disease is — so the clinician doesn't rely on «X must be in there
+        somewhere» and immediately sees whether we have a 2L algorithm for
+        this case or not. For contributors — the matrix shows where the
+        biggest gaps are and which work to take first.
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>4. CIViC actionability — how we decide «what to do with the biomarker»</h2>
+      <p class="info-text">
+        Until recently, actionability (the evidence level for biomarker→drug
+        relationships) came from <strong>OncoKB</strong>. The OncoKB ToS
+        forbids non-commercial public derivatives — a conflict with CHARTER
+        §2 (free public resource). We migrated to <strong>CIViC (CC0)</strong>
+        — Clinical Interpretation of Variants in Cancer, the open WashU
+        resource. How it works now:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card">
+          <div class="num-big">snap</div>
+          <div class="num-lbl">Nightly YAML snapshot</div>
+          <p class="num-text">
+            The engine doesn't call the CIViC API at runtime — it reads a
+            local snapshot from
+            <code>knowledge_base/hosted/civic/&lt;date&gt;/</code>. This
+            guarantees deterministic results and works offline.
+            <code>SnapshotCIViCClient</code> is the public interface.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">match</div>
+          <div class="num-lbl">Fusion-aware variant matcher</div>
+          <p class="num-text">
+            <code>civic_variant_matcher</code> handles both point mutations
+            (BRAF V600E) and <strong>fusions</strong> (BCR::ABL1 — both
+            components indexed) and structural variants. Fusion-agnostic
+            queries («ABL1») and component-specific queries map identically.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">render</div>
+          <div class="num-lbl">ESCAT-primary, CIViC-detailed</div>
+          <p class="num-text">
+            In Plan render: ESCAT tier (I-A, II-B, …) — primary signal,
+            eye-level. CIViC evidence rating (A/B/C/D, supports/does-not-support)
+            + clinical-significance — in a details accordion. No
+            OncoKB-level fields in render.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">CI</div>
+          <div class="num-lbl">Monthly snapshot refresh + diff CI</div>
+          <p class="num-text">
+            <code>civic-monthly-refresh.yml</code> in GitHub Actions pulls
+            a new CIViC dump monthly, regenerates the snapshot, computes a
+            diff against the previous version. If a new snapshot changes N
+            entities — opens a PR with a diff checklist for review. No
+            surprise recommendation drift from silent upstream changes.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>5. Multi-phase regimens — induction → consolidation → maintenance</h2>
+      <p class="info-text">
+        Before the PR1-3 phases-refactor, a regimen was a flat list of
+        drugs with one cycle schedule. Now <code>Regimen.phases</code> is
+        an ordered list of named blocks, each with its own component list,
+        cycles, duration, and trigger for transitioning to the next
+        phase. This properly models real protocols: R-CHOP × 6 →
+        maintenance, AML 7+3 → HiDAC consolidation, axi-cel bridging →
+        infusion → preemptive tocilizumab maintenance.
+      </p>
+      <p class="info-text">
+        <code>Regimen.bridging_options</code> is a list of bridging-regimen
+        IDs between phases (e.g. for CAR-T: bridging chemo between
+        apheresis and infusion). Render is phases-aware: each phase
+        renders as a separate block with its own cycle schedule,
+        premedications, monitoring.
+      </p>
+      <div class="callout callout-good">
+        <strong>Back-compat:</strong> legacy single-phase YAMLs (with
+        <code>components:</code> at top level and no <code>phases:</code>)
+        auto-wrap to one-phase form via
+        <code>auto_wrap_legacy_components()</code> at load. One-way only:
+        if the author wrote <code>phases:</code> explicitly, we don't
+        touch <code>components</code>. 18 high-stakes regimens migrated
+        manually (PR3).
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>6. Citation guard — nothing ships in HTML without a source</h2>
+      <p class="info-text">
+        A three-layer citation-verification system — three points where we
+        catch sourceless claims:
+      </p>
+      <table class="kv-table">
+        <thead><tr><th>Layer</th><th>Where it catches</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Layer 1</strong> — Loader</td>
+            <td>YAML load time (Pydantic)</td>
+            <td>Checks <strong>SRC-* referential integrity</strong>: every
+            <code>source_id</code> in Indication/Regimen/RedFlag must
+            resolve to a Source entity. Unknown SRC-ID → load fail.</td>
+          </tr>
+          <tr>
+            <td><strong>Layer 2</strong> — Background verifier</td>
+            <td>Sidecar PR audit (CI)</td>
+            <td><code>citation-verifier</code>: three-layer grounding for
+            each AI-generated claim in a sidecar — does the source exist,
+            is the paraphrase grounded in the original text, do the
+            claim-anchor coordinates fall inside the cited section. Runs
+            on every contributor PR.</td>
+          </tr>
+          <tr>
+            <td><strong>Layer 3</strong> — Render guard</td>
+            <td>HTML output time</td>
+            <td><code>_citation_guard</code>: at render time, checks every
+            BMA cell. Missing citation → warn-badge in lenient mode or
+            cell skip in <code>strict_citation_guard=True</code>. Guarantee:
+            what you see in HTML has a source.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-section">
+      <h2>7. How we read the patient profile</h2>
+      <p class="info-text">
+        The engine only reads structured fields from the patient profile.
+        Every field has clear semantics: it either fires a RedFlag, filters
+        available Indications, or configures Regimen materialization.
+        Unknown fields are ignored — no «hidden effects».
       </p>
       <table class="kv-table">
         <thead><tr><th>Category</th><th>What we read</th><th>How we use it</th></tr></thead>
         <tbody>
           <tr>
             <td>Disease (entry point)</td>
-            <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code></td>
+            <td><code>disease.id</code> · <code>icd_o_3_morphology</code> · <code>line_of_therapy</code> · <code>disease_state</code></td>
             <td>determines which Algorithm to run</td>
           </tr>
           <tr>
             <td>Diagnostic-mode trigger</td>
             <td><code>disease.suspicion.lineage_hint</code> · <code>tissue_locations</code> · <code>presentation</code></td>
-            <td>switches output to DiagnosticPlan instead of Plan (workup brief)</td>
+            <td>switches to DiagnosticPlan instead of Plan (workup brief)</td>
           </tr>
           <tr>
             <td>Demographics</td>
             <td><code>age</code> · <code>sex</code> · <code>ecog</code> · <code>fit_for_transplant</code> · <code>decompensated_cirrhosis</code> · <code>pregnancy_status</code></td>
-            <td>filter on <code>Indication.applicable_to.demographic_constraints</code></td>
+            <td>filter in <code>Indication.applicable_to.demographic_constraints</code></td>
           </tr>
           <tr>
             <td>Biomarkers</td>
-            <td>any <code>BIO-X</code> from the KB as keys: <code>BIO-CLL-HIGH-RISK-GENETICS</code>, <code>BIO-MM-CYTOGENETICS-HR</code>, <code>BIO-HCV-RNA</code>, …</td>
-            <td>fire RedFlags, filter Indications</td>
+            <td>any <code>BIO-X</code> from KB as keys: <code>BIO-CLL-HIGH-RISK-GENETICS</code>, <code>BIO-MM-CYTOGENETICS-HR</code>, <code>BIO-HCV-RNA</code>, ...</td>
+            <td>fire RedFlags, filter Indications, map to CIViC actionability</td>
           </tr>
           <tr>
             <td>Findings</td>
-            <td>{n_redflags}+ structured fields — <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>creatinine_clearance_ml_min</code>, <code>blastoid_morphology</code>, <code>tp53_mutation</code>, <code>del_17p</code>, …</td>
-            <td>thresholds inside RedFlag triggers</td>
+            <td>hundreds of structured fields — <code>dominant_nodal_mass_cm</code>, <code>ldh_ratio_to_uln</code>, <code>creatinine_clearance_ml_min</code>, <code>blastoid_morphology</code>, <code>tp53_mutation</code>, <code>del_17p</code>, ...</td>
+            <td>thresholds in RedFlag triggers</td>
           </tr>
           <tr>
             <td>Prior tests completed</td>
@@ -4691,85 +5438,14 @@ def _render_capabilities_en(stats) -> str:
           <tr>
             <td>Clinical record (free-form)</td>
             <td>any <code>clinical_record</code> envelope</td>
-            <td>not read by the engine — surfaced only by the render layer for context</td>
+            <td>not read by the engine — used only by render layer for context</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="info-section">
-      <h2>3. How we work with sources — and why this is our key advantage</h2>
-      <div class="hero-corpus" style="max-width:none; margin-bottom:18px;">
-        <div class="hcorpus-num">{stats.corpus_references_total:,}+</div>
-        <div class="hcorpus-text">
-          <strong>{stats.corpus_references_total:,}+ primary clinical
-          publications</strong> (RCTs, meta-analyses, cohort studies) sit
-          beneath <strong>{n_sources} curated top-level guidelines</strong>.
-          That is <strong>{stats.corpus_pages_total:,} pages of guideline
-          text</strong> in total. No clinician can physically work through
-          that volume for every patient; the engine indexes it for you and
-          returns a Plan with phrased citations and page-level locators.
-        </div>
-      </div>
-      <p class="info-text">
-        Each source is its own <code>Source</code> entity with a stable ID
-        (e.g. <code>SRC-NCCN-BCELL-2025</code>), title, version, license, and
-        access mode (referenced vs hosted per SOURCE_INGESTION_SPEC §1.4).
-        The KB currently holds <strong>{n_sources}</strong> sources:
-      </p>
-      <table class="kv-table">
-        <thead><tr><th>Source ID</th><th>Type</th><th>Pages</th><th>Primary refs</th><th>Role in the corpus</th></tr></thead>
-        <tbody>
-          <tr><td><code>SRC-NCCN-BCELL-2025</code></td><td>NCCN B-Cell Lymphomas v.2.2025</td><td class="num">500</td><td class="num">700</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-MM-2025</code></td><td>NCCN Multiple Myeloma 2025</td><td class="num">400</td><td class="num">600</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-AML-2025</code></td><td>NCCN AML 2025</td><td class="num">350</td><td class="num">500</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-NCCN-MPN-2025</code></td><td>NCCN MPN 2025</td><td class="num">300</td><td class="num">400</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-EASL-HCV-2023</code></td><td>EASL HCV Guidelines 2023</td><td class="num">80</td><td class="num">250</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-WHO-LNSC-2023</code></td><td>WHO Lymph Node, Spleen, Thymus Cytopathology</td><td class="num">150</td><td class="num">200</td><td>diagnostic_methodology</td></tr>
-          <tr><td><code>SRC-CTCAE-V5</code></td><td>NCI CTCAE v5.0 (toxicity terminology)</td><td class="num">150</td><td class="num">30</td><td>terminology</td></tr>
-          <tr><td><code>SRC-ESMO-MZL-2024</code></td><td>ESMO Marginal Zone Lymphomas 2024</td><td class="num">30</td><td class="num">150</td><td>primary_guideline</td></tr>
-          <tr><td><code>SRC-BSH-MZL-2024</code></td><td>BSH MZL Guideline 2024</td><td class="num">50</td><td class="num">120</td><td>regional_guideline</td></tr>
-          <tr><td><code>SRC-EHA-WORKUP-2024</code></td><td>EHA Practical Workup Guidelines 2024</td><td class="num">40</td><td class="num">100</td><td>diagnostic_methodology</td></tr>
-          <tr><td><code>SRC-MOZ-UA-LYMPH-2024</code></td><td>Ukraine MoH — Lymphomas (placeholder)</td><td class="num">60</td><td class="num">50</td><td>regional_guideline</td></tr>
-          <tr><td><code>SRC-ARCAINI-2014</code></td><td>IELSG-19 RCT — MALT lymphoma</td><td class="num">10</td><td class="num">50</td><td>rct_publication</td></tr>
-          <tr><td><code>SRC-FDA-CDS-2026</code></td><td>FDA CDS Software Guidance 2026</td><td class="num">30</td><td class="num">20</td><td>regulatory</td></tr>
-          <tr><td colspan="2"><strong>Total</strong></td><td class="num"><strong>{stats.corpus_pages_total:,}</strong></td><td class="num"><strong>{stats.corpus_references_total:,}+</strong></td><td>—</td></tr>
-        </tbody>
-      </table>
-      <p class="info-text">
-        <strong>Every clinical claim in the KB has a citation</strong>.
-        Indication, Regimen, RedFlag, Algorithm — all carry a
-        <code>sources: list</code> field where each source is annotated with:
-      </p>
-      <div class="q-list">
-        <h4>Citation structure</h4>
-        <ul>
-          <li><code>source_id</code> — points to the Source entity</li>
-          <li><code>position</code> — <em>supports</em> / <em>contradicts</em> / <em>context</em></li>
-          <li><code>relevant_quote_paraphrase</code> — paraphrased statement from the guideline (not verbatim copy-paste, for license safety)</li>
-          <li><code>page_or_section</code> — exact locator inside the document</li>
-        </ul>
-      </div>
-      <p class="info-text">
-        The render layer surfaces the <strong>full list of cited sources</strong>
-        below every Indication in the Plan. This is FDA Criterion 4
-        (CHARTER §15.2): the clinician can independently verify the basis
-        for every recommendation, instead of taking the engine on faith.
-      </p>
-      <div class="callout callout-good">
-        <strong>Source hosting defaults to referenced.</strong> We do not
-        mirror external databases (NCCN, ESMO, etc.) — we link to them.
-        Hosting requires an explicit H1–H5 justification (CHARTER §15.2,
-        referenced vs hosted vs mixed). Exception: regulatory PDFs (FDA CDS,
-        CTCAE) are kept locally for archive stability.
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>4. How we run requests</h2>
-      <p class="info-text">
-        Three ways to run the engine — none of them server-bound:
-      </p>
+      <h2>8. Three ways to run the engine — none server-side</h2>
       <div class="num-grid num-grid--rich">
         <div class="num-card">
           <div class="num-big">CLI</div>
@@ -4783,10 +5459,11 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-big">Pyodide</div>
           <div class="num-lbl">In the browser (try.html)</div>
           <p class="num-text">
-            Pyodide v0.26.4 loads the Python WebAssembly runtime, micropip
-            installs pydantic + pyyaml, and the engine bundle (~302 KB) is
-            unpacked into the in-memory FS. The engine runs in the browser.
-            Patient JSON never leaves the machine.
+            Pyodide v0.26.4 loads a Python WebAssembly runtime, micropip
+            installs pydantic+pyyaml, the engine bundle (~2.4 MB) is
+            unpacked into in-memory FS. The engine runs in the browser.
+            The patient JSON never leaves the machine. A service worker
+            caches the bundle for offline use.
           </p>
         </div>
         <div class="num-card">
@@ -4794,153 +5471,475 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">Python import</div>
           <p class="num-text">
             <code>from knowledge_base.engine import generate_plan, revise_plan</code>
-            — integration with EHRs, CSV pipelines, batch testing. Stateless
-            and deterministic.
+            — integration with EHR, CSV pipelines, batch testing.
+            Stateless, deterministic.
           </p>
         </div>
       </div>
       <div class="callout callout-good">
-        <strong>Privacy by design.</strong> Patient JSON never leaves the
-        user's machine. There are no logs, no database, no accidental
-        leakage. Reproducibility:
+        <strong>Privacy by design.</strong> The patient JSON never leaves
+        the user's machine. No logs, no DB, no accidental leakage.
+        Reproducibility:
         <code>Plan.knowledge_base_state.algorithm_version</code> pins the
-        KB version — same input + same KB = same output.
+        KB version → same input + same KB = same output.
       </div>
     </div>
 
     <div class="info-section">
-      <h2>5. What we return</h2>
-      <p class="info-text">
-        The engine returns a <strong>Plan</strong> (treatment mode) or a
-        <strong>DiagnosticPlan</strong> (workup brief). Each Plan contains:
-      </p>
+      <h2>9. What we return — Plan / DiagnosticPlan</h2>
       <table class="kv-table">
         <thead><tr><th>Field</th><th>Contents</th></tr></thead>
         <tbody>
-          <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first), each with indication + regimen + monitoring + supportive_care + contraindications</td></tr>
+          <tr><td><code>tracks[]</code></td><td>≥2 alternative tracks (default first), each with indication + regimen (+ phases) + monitoring + supportive_care + contraindications</td></tr>
+          <tr><td><code>access_matrix</code></td><td>per-track agg-table: UA registration, NHSU coverage, cost orientation (₴ ranges), primary <code>AccessPathway</code>. Render-time only. Stale-cost warning when <code>cost_last_updated</code> &gt; 180 days.</td></tr>
+          <tr><td><code>experimental_options</code></td><td>third track: <code>enumerate_experimental_options</code> queries ClinicalTrials.gov v2 by disease + biomarker + line, returns sites_ua / countries metadata. 7-day on-disk TTL cache.</td></tr>
+          <tr><td><code>actionability_hits</code></td><td>CIViC matches with ESCAT-primary level + CIViC details (variant, evidence rating, clinical significance, source citations)</td></tr>
           <tr><td><code>fda_compliance</code></td><td>FDA Criterion 4 fields: intended_use, hcp_user_specification, patient_population_match, algorithm_summary, data_sources_summary, data_limitations, automation_bias_warning</td></tr>
-          <tr><td><code>trace</code></td><td>step-by-step history of walk_algorithm: step / outcome / branch / fired_red_flags for every step</td></tr>
-          <tr><td><code>knowledge_base_state</code></td><td>snapshot of the KB version at generation time (audit per CHARTER §10.2)</td></tr>
-          <tr><td><code>kb_resolved</code></td><td>all referenced entities (Disease, Tests, RedFlags, Algorithm) for the render layer</td></tr>
-          <tr><td><code>warnings</code></td><td>schema/ref errors, time-critical disqualifications, missing-data hints</td></tr>
-          <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>version chain across plans for the same patient</td></tr>
+          <tr><td><code>trace</code></td><td>step-by-step walk_algorithm history: step / outcome / branch / fired_red_flags per step</td></tr>
+          <tr><td><code>knowledge_base_state</code></td><td>snapshot of KB version at generation (audit per CHARTER §10.2) + civic_snapshot_date</td></tr>
+          <tr><td><code>warnings</code></td><td>schema/ref errors, time_critical disqualifications, missing-data hints, citation-guard warnings</td></tr>
+          <tr><td><code>supersedes</code> / <code>superseded_by</code></td><td>version chain between plans for the same patient</td></tr>
         </tbody>
       </table>
       <p class="info-text">
-        Optionally, a <strong>MDT brief</strong> is added by
-        orchestrate_mdt(): it reads the Plan + patient profile and appends
-        required / recommended / optional roles (drawn from {n_skills} virtual
-        specialists), open questions, and a provenance graph. It renders as
-        an inline section inside the Plan HTML.
+        Optional <strong>MDT brief</strong> via <code>orchestrate_mdt()</code>
+        reads Plan + profile and adds required/recommended/optional roles
+        (from {n_skills} virtual specialists), open questions, decision
+        provenance graph. Renders as an inline section in Plan HTML.
       </p>
     </div>
 
     <div class="info-section">
-      <h2>6. How a plan updates when new data arrives</h2>
+      <h2>10. How the plan updates as new data arrives</h2>
       <p class="info-text">
         <code>revise_plan(updated_patient, previous_plan, revision_trigger)</code>
-        takes the updated profile and produces a new plan version with a
-        <code>supersedes</code> / <code>superseded_by</code> chain. Three
+        takes an updated profile and produces a new plan version with a
+        <code>supersedes</code>/<code>superseded_by</code> chain. Three
         legal transitions plus one prohibition:
       </p>
       <table class="kv-table">
-        <thead><tr><th>From</th><th>With changes</th><th>Transition</th><th>Result</th></tr></thead>
+        <thead><tr><th>From</th><th>With change</th><th>Transition</th><th>Result</th></tr></thead>
         <tbody>
           <tr><td>DiagnosticPlan vN</td><td>only suspicion (no histology)</td><td>diagnostic → diagnostic</td><td>DiagnosticPlan v(N+1)</td></tr>
           <tr><td>DiagnosticPlan vN</td><td>confirmed histology</td><td>diagnostic → treatment <strong>(promotion)</strong></td><td>Plan v1 (first treatment)</td></tr>
-          <tr><td>Plan vN</td><td>any update with histology present</td><td>treatment → treatment</td><td>Plan v(N+1)</td></tr>
+          <tr><td>Plan vN</td><td>any update with histology</td><td>treatment → treatment</td><td>Plan v(N+1)</td></tr>
           <tr><td>Plan vN</td><td>histology removed</td><td colspan="2"><span style="color:var(--red);font-weight:600;">ILLEGAL — ValueError, CHARTER §15.2 C7</span></td></tr>
         </tbody>
       </table>
       <p class="info-text">
-        The previous plan <strong>is not mutated</strong> — a deep copy is
-        returned with <code>superseded_by</code> filled in. The caller (CLI
-        or EHR) decides what to do with both versions. Per CHARTER §10.2,
-        the older version is kept indefinitely.
+        The previous plan is <strong>not mutated</strong> — a deep copy is
+        returned with <code>superseded_by</code> set. The caller (CLI / EHR)
+        decides what to do with both versions. Per CHARTER §10.2 — the old
+        version is retained indefinitely.
       </p>
-      <div class="callout callout-good">
-        <strong>What triggers a new plan:</strong> any change to one of the
-        ~30 structured fields — new biomarkers (del(17p) detected), new stage
-        (ECOG 1 → 3), new findings (bulky disease on restaging), new infectious
-        flags (HBV reactivation), pregnancy detected. Changes to the
-        <code>clinical_record</code> free-text do <strong>not</strong> trigger
-        regeneration (the engine does not read free text).
+    </div>
+
+    <div class="info-section">
+      <h2>11. Examples gallery — 586 cases</h2>
+      <p class="info-text">
+        <a href="/en/gallery.html"><code>/gallery.html</code></a> is a
+        disease-grouped drill-down. Initial view: a tile grid of diseases
+        with case counts. Click → drill into the case list for that
+        disease. Each case is a full Plan (or Diagnostic Brief) generated
+        by the engine from a realistic profile. These are <strong>not
+        real patients</strong> (CHARTER §9.3), but a curated demonstration
+        of engine output. Currently <strong>586 cases</strong> in the
+        gallery:
+      </p>
+      <ul>
+        <li><strong>159 hand-curated cases</strong> — including ~60 new
+        in the past week (Phase 2 chunked feat: NSCLC × 12 biomarker
+        variants, BREAST × 8 receptor-subtypes, CRC × 6 line variants,
+        MELANOMA × 5 BRAF/IO variants, AML × 4 subtypes, DLBCL × 3 line
+        variants, and others — 12 chunks total).</li>
+        <li><strong>362 verified variant profiles</strong> — built from
+        base patterns via <code>variant generator</code>, each verified by
+        the validator.</li>
+        <li><strong>65 auto-base cases</strong> — one per disease,
+        autogenerated as drill-down seeds.</li>
+      </ul>
+    </div>
+
+    <hr style="margin:48px 0; border:none; border-top:2px solid var(--bg-strong);">
+
+    <h2 style="margin-top:0;">Boundaries — what the engine deliberately doesn't do</h2>
+    <p class="info-text">
+      Knowing the boundaries matters as much as knowing the capabilities.
+      The sections below are a complete and honest list of where the engine
+      refuses to generate decisions without data, where the clinical call
+      remains with the clinician, and which architectural positions we
+      <strong>do not plan</strong> to change.
+    </p>
+
+    <div class="info-section">
+      <h2>12. Open Questions — how the engine refuses to decide without data</h2>
+      <p class="info-text">
+        The engine <strong>does not make decisions without the data it
+        needs</strong>. Instead of silently defaulting, it explicitly
+        records which fields are missing and which test or finding is
+        required. This is the <strong>Open Questions</strong> mechanism —
+        part of MDT-orchestrator (Q1-Q6 + DQ1-DQ4 rules per
+        MDT_ORCHESTRATOR_SPEC §3).
+      </p>
+      <div class="q-list">
+        <h4>Treatment-mode Open Questions (Q1-Q6) — examples from real code</h4>
+        <ul>
+          <li><strong>Q1 — Histology not confirmed:</strong> if <code>disease.id</code> resolves but there's no <code>biopsy_date</code> or <code>histology_report</code> — emit warning «Treatment Plan generated against ICD-O-3 code only; recommend confirming primary histology before initiating therapy».</li>
+          <li><strong>Q2 — Stage missing:</strong> if Algorithm.decision_tree references staging but the profile has no <code>stage</code> — fall through to default with flag «Lugano/Ann Arbor stage required for confident risk-stratification».</li>
+          <li><strong>Q3 — RedFlag clause references absent findings:</strong> if <code>RF-MM-HIGH-RISK-CYTOGENETICS</code> checks <code>tp53_mutation</code> + <code>del_17p</code> + <code>t_4_14</code> + <code>gain_1q</code>, and the profile only has <code>del_17p</code> — engine doesn't false-negative; emit «Cytogenetic panel incomplete; high-risk status assessed with partial data».</li>
+          <li><strong>Q4 — Biomarker required by Indication missing:</strong> if <code>IND-CLL-1L-VENO</code> requires <code>BIO-CLL-HIGH-RISK-GENETICS</code> for default-track selection — emit «IGHV mutation status + FISH del(17p) required to confirm 1L recommendation».</li>
+          <li><strong>Q5 — Performance status missing:</strong> if <code>ecog</code> is absent — fall to a conservative default (only standard track), emit «ECOG performance status required for transplant-eligibility assessment».</li>
+          <li><strong>Q6 — Drug availability flag:</strong> if the selected Regimen contains a drug marked <code>nszu_reimbursement: false</code> (e.g. daratumumab in MM) — emit «D-VRd: daratumumab not currently NSZU-reimbursed in Ukraine; verify funding pathway before initiation».</li>
+        </ul>
+      </div>
+      <div class="q-list">
+        <h4>Diagnostic-mode Open Questions (DQ1-DQ4) — for pre-biopsy mode</h4>
+        <ul>
+          <li><strong>DQ1 — Tissue location missing:</strong> if <code>suspicion.tissue_locations</code> is empty — workup match can't rank, emit «Tissue location must be provided for workup matching».</li>
+          <li><strong>DQ2 — Lineage hint absent:</strong> without <code>lineage_hint</code> the engine uses only tissue + presentation for matching, lower confidence.</li>
+          <li><strong>DQ3 — Presentation free-text empty:</strong> presentation_keywords scoring × 0; only lineage + tissue contribute.</li>
+          <li><strong>DQ4 — Working hypotheses not provided:</strong> the engine has no preferred direction; the most generic workup wins.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Why not «default silently»:</strong> CHARTER §15.2 C6 (anti
+        automation-bias) — the engine cannot pretend to know when it doesn't.
+        Every missing-data situation must be visible to the clinician. Open
+        Questions render in the Plan as a separate section, not hidden.
       </div>
     </div>
 
     <div class="info-section">
-      <h2>7. What else we do</h2>
-      <div class="num-grid num-grid--rich">
-        <div class="num-card">
-          <div class="num-big">{n_workups}</div>
-          <div class="num-lbl">Diagnostic workups</div>
-          <p class="num-text">
-            Pre-biopsy mode: when histology is missing, the engine emits a
-            <strong>Workup Brief</strong> with the test list, biopsy approach,
-            IHC panel, and triage MDT roles. Per CHARTER §15.2 C7, no
-            treatment Plan is generated without histology.
+      <h2>13. What the engine deliberately doesn't do — personalization gaps</h2>
+      <p class="info-text">
+        «Personalization» in OpenOnco is rule-based <strong>selection from
+        fixed options</strong>, not AI generation. This is a deliberate
+        architectural position (CHARTER §8.3). Concrete gaps:
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card">
+          <div class="gap-tag">Gap 1</div>
+          <h3>No per-patient dose calculation</h3>
+          <p>
+            The Regimen stores a <strong>standard dose</strong>
+            (<code>bortezomib 1.3 mg/m²</code>); we don't multiply by the
+            patient's BSA or auto-reduce for CrCl 30 mL/min. The clinician
+            recalculates. This is intentional, to avoid FDA-medical-device
+            classification.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">MDT</div>
-          <div class="num-lbl">Multidisciplinary brief</div>
-          <p class="num-text">
-            The orchestrator reads the Plan + profile and assigns required /
-            recommended / optional roles ({n_skills} catalog), formulates open
-            questions (Q1–Q6 + DQ1–DQ4), and builds the decision-provenance
-            graph.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 2</div>
+          <h3>No response-adapted cycle adjustment</h3>
+          <p>
+            Regimen pins <code>total_cycles: 6 + 2 maintenance</code>. The
+            engine doesn't auto-adapt based on response (PR vs CR after
+            PET2). A re-staging plan is generated via a separate
+            <code>revise_plan</code> with a new profile — the clinician
+            triggers it explicitly.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">stats</div>
-          <div class="num-lbl">KB dashboard</div>
-          <p class="num-text">
-            <code>python -m knowledge_base.stats</code> — actual entity counts
-            + per-disease coverage matrix + reviewer sign-off ratio. Available
-            as CLI / JSON / embeddable HTML widget for the landing page.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 3</div>
+          <h3>Genomic matching limited to curated biomarkers</h3>
+          <p>
+            CIViC covers most actionable variants. Outside CIViC (rare,
+            novel, unverified variants) the engine emits a warning «no
+            actionability evidence in current snapshot» — never «creative»
+            interpretation. This is a coverage limit, not engine logic.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">render</div>
-          <div class="num-lbl">A4 print-friendly HTML</div>
-          <p class="num-text">
-            Single-file HTML with embedded CSS, no external assets beyond
-            Google Fonts. Adapts to A4 print via <code>@page</code> and
-            <code>@media print</code>. Tracks are shown side by side; the
-            alternative is never hidden (anti automation-bias per
-            CHARTER §15.2 C6).
+        <div class="gap-card">
+          <div class="gap-tag">Gap 4</div>
+          <h3>SupportiveCare uniform per regimen</h3>
+          <p>
+            PJP prophylaxis is attached to D-VRd for everyone — even a
+            patient with bactrim allergy. The engine doesn't know
+            alternatives (dapsone instead of bactrim). The clinician
+            substitutes manually.
           </p>
         </div>
-        <div class="num-card">
-          <div class="num-big">trials</div>
-          <div class="num-lbl">Experimental options (Phase C — done)</div>
-          <p class="num-text">
-            <code>enumerate_experimental_options(...)</code> queries
-            ClinicalTrials.gov v2 by disease + biomarker + line_of_therapy
-            and returns <code>ExperimentalOption</code> entries with
-            UA-availability metadata (sites_ua, countries) — render-time
-            only; the engine never uses a trial as a selection signal.
-            Status filter: RECRUITING / ACTIVE_NOT_RECRUITING /
-            ENROLLING_BY_INVITATION; integrated into <code>generate_plan</code>,
-            rendered as a third Plan track; 7-day on-disk TTL cache for
-            offline runs.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">access</div>
-          <div class="num-lbl">Access Matrix (Phase D)</div>
-          <p class="num-text">
-            Every Plan carries an <code>AccessMatrix</code> — per-track
-            aggregation of UA registration, НСЗУ coverage, ₴ cost
-            orientation, and primary <code>AccessPathway</code>. Render-time
-            only (CHARTER §8.3, guaranteed by the invariant test). Stale-cost
-            warning fires when <code>cost_last_updated</code> &gt; 180 days.
-            Trial rows are appended automatically when the experimental
-            track is active.
+        <div class="gap-card">
+          <div class="gap-tag">Gap 5</div>
+          <h3>No cumulative-toxicity tracking across lines</h3>
+          <p>
+            2L+ algorithms exist for {n_dis_2l_heme} heme diseases
+            ({n_inds_2l} indications 2L+), but the profile doesn't carry
+            <code>prior_treatment_history</code> as a structured field. A 2L
+            plan for a patient who got bortezomib in 1L with grade 2
+            neuropathy — the engine doesn't know about prior exposure
+            unless explicitly stated; the clinician interprets prior_lines
+            from free text.
           </p>
         </div>
       </div>
     </div>
+
+    <div class="info-section">
+      <h2>14. CHARTER constraints — will not change</h2>
+      <p class="info-text">
+        These are not technical debt — they are principled architectural
+        decisions that position the project as non-device CDS and gate
+        FDA / clinical safety.
+      </p>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §8.3</div>
+          <h3>The LLM does not make clinical decisions</h3>
+          <p>
+            LLMs help only with: boilerplate code, doc drafts, extraction
+            from clinical documents (with human verification), translation
+            with clinical review. <strong>Not</strong>: regimen selection,
+            dose generation, biomarker interpretation for therapy choice.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C7</div>
+          <h3>No histology — no treatment Plan</h3>
+          <p>
+            A treatment Plan is generated only if <code>disease.id</code>
+            or <code>icd_o_3_morphology</code> is confirmed. Otherwise the
+            engine refuses and switches to DiagnosticPlan mode.
+            <code>revise_plan</code> from treatment back to diagnostic is
+            <strong>forbidden</strong> and raises ValueError.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C5</div>
+          <h3>No time-critical recommendations</h3>
+          <p>
+            The engine isn't designed for emergency oncology (oncologic
+            emergencies, time-sensitive infusion reactions). That would
+            trigger device classification. If an Indication is marked
+            <code>time_critical: true</code> — the engine adds a
+            disqualification warning to FDA compliance.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §6.1</div>
+          <h3>Two-reviewer merge for clinical content</h3>
+          <p>
+            Any change under <code>knowledge_base/hosted/content/</code>
+            that affects clinical recommendations needs two of three
+            Clinical Co-Lead approvals. Without that the Indication
+            stays STUB.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §15.2 C6</div>
+          <h3>Anti automation-bias mandatory</h3>
+          <p>
+            The engine never shows only one recommendation — always ≥2
+            tracks side-by-side. Alternative is not buried, not «click to
+            expand», not fine-print. The clinician sees this as a choice,
+            not a directive.
+          </p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">CHARTER §9.3</div>
+          <h3>Patient data never in repo / public artifact</h3>
+          <p>
+            <code>patient_plans/</code> is gitignored. Any patient HTML —
+            gitignored pattern. The site (<code>docs/</code>) shows only
+            synthetic examples. Telemetry collection is forbidden without
+            explicit consent.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>15. Current coverage — what's still STUB and what's missing</h2>
+      <p class="info-text">
+        OpenOnco is work-in-progress. Right now we model
+        <strong>{n_diseases} diseases</strong> ({n_heme} heme + {n_solid}
+        solid) — far from complete WHO-HAEM5 / WHO Classification of
+        Tumours. Concretely:
+      </p>
+      <table class="kv-table">
+        <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Diseases with full chain</td><td>{diseases_full} / {n_diseases}</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>First line is covered for all {n_diseases} diseases</td></tr>
+          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Second to fourth line: {n_dis_2l_heme} heme + {n_dis_2l_solid} solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
+          <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
+          <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is part of multimodal Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modelled as a separate entity with technical parameters (dose/fractions/target volumes)</td></tr>
+          <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
+          <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</td><td>Most content is STUB. Capacity plan: {stats.reviewer_signoffs_total} → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">
+        <strong>What STUB does NOT mean:</strong> structured data + algorithm
+        logic + sources are in place. What STUB DOES mean: <strong>not yet
+        passed dual sign-off by Clinical Co-Lead</strong>. So we have a
+        «proposed plan» that needs verification, not an «approved plan».
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>16. What the engine never does — explicit boundary list</h2>
+      <div class="gap-grid">
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never hides alternative track</h3>
+          <p>Both recommendations always shown. UI has no «expand to see alternative» pattern.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never invents an Indication via LLM</h3>
+          <p>Everything is selected from the curated KB. No matching Indication → emit warning, no «creative invention».</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never modifies doses «for the patient»</h3>
+          <p>Doses are standard NCCN/ESMO. Adjustments only via explicit dose_modification_rules in Regimen YAML, no ad-hoc calculations.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never judges «which is better» between tracks</h3>
+          <p>The Algorithm picks default but doesn't decide that default is «better». The clinician has full autonomy to pick alternative — documented in automation_bias_warning.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never interprets imaging</h3>
+          <p>«Bulky disease» comes as a structured field <code>dominant_nodal_mass_cm</code>, not from image analysis. Image analysis = device classification.</p>
+        </div>
+        <div class="gap-card gap-hard">
+          <div class="gap-tag">Never</div>
+          <h3>Never does cohort matching</h3>
+          <p>«N patients in our DB chose X» — a separate future feature, requires a persisted patient registry + privacy review. Currently unavailable.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>17. How to live with this — clinician workflow</h2>
+      <p class="info-text">
+        This engine is designed as <strong>preparation for a tumour
+        board</strong>, not a replacement. The clinician feeds in a
+        profile, gets a structured draft with all sources and open
+        questions, and then:
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card">
+          <div class="num-big">1</div>
+          <div class="num-lbl">Verifies sources</div>
+          <p class="num-text">
+            Every claim in the plan has a citation. The clinician can read
+            the original NCCN/ESMO/MoH section and confirm the engine
+            didn't misquote. The citation guard already filtered out
+            sourceless cells.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">2</div>
+          <div class="num-lbl">Closes Open Questions</div>
+          <p class="num-text">
+            If the engine emits «cytogenetic panel incomplete» — the
+            clinician orders the test, adds it to the profile, runs
+            <code>revise_plan</code>. The plan updates, the OpenQuestion
+            closes.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">3</div>
+          <div class="num-lbl">Adapts to the patient</div>
+          <p class="num-text">
+            Re-checks doses, substitutes supportive care for allergies,
+            verifies Ukraine availability manually. The engine is the
+            draft, the clinician is the final.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">4</div>
+          <div class="num-lbl">Tumor board discusses</div>
+          <p class="num-text">
+            The MDT brief shows which roles activated and which questions
+            are open. It's a structured agenda for a board meeting.
+            Decisions from the board are pinned as provenance events.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr style="margin:48px 0; border:none; border-top:2px solid var(--bg-strong);">
+
+    <div class="info-section" id="contribute-tokens">
+      <h2>18. How to contribute — verify algorithms with your AI tokens</h2>
+      <p class="info-text">
+        The biggest gap on this page —
+        <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
+        dual-reviewer sign-off. This bottleneck isn't solved by more code;
+        it's solved by <em>contributors with AI tools</em> who take
+        structured chunks of work and execute each in their own worktree.
+        We call this <strong>TaskTorrent</strong>.
+      </p>
+      <div class="num-grid num-grid--rich">
+        <div class="num-card num-card--accent">
+          <div class="num-big">1</div>
+          <div class="num-lbl">What it is</div>
+          <p class="num-text">
+            The maintainer publishes a «chunk» — one concrete, complete
+            task (~100k–300k tokens of structured AI work): «re-verify BMA
+            evidence for DLBCL × 17 entities» or «backfill source-license
+            for 8 sources». The contributor takes the chunk, the AI agent
+            does the work, opens a PR.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">2</div>
+          <div class="num-lbl">What you need</div>
+          <p class="num-text">
+            An AI tool with token budget per chunk (Claude Code Pro+,
+            Codex, Cursor, ChatGPT with web access). GitHub account +
+            <code>gh</code> CLI. Python 3.10+. ~1–3 hours.
+            <strong>No clinical expertise</strong> — you don't write
+            medical advice; you trigger structured drafting, and the
+            clinical co-leads then sign off.
+          </p>
+        </div>
+        <div class="num-card">
+          <div class="num-big">3</div>
+          <div class="num-lbl">8-line bootstrap</div>
+          <p class="num-text">
+            Copy the 8-line prompt from
+            <a href="/en/contribute.html"><code>/contribute.html</code></a>
+            into your AI agent. It will find the next available chunk on
+            its own, read the spec, claim it, do the work under
+            <code>contributions/&lt;chunk-id&gt;/</code>, run the
+            validator, open a PR.
+          </p>
+        </div>
+        <div class="num-card num-card--accent">
+          <div class="num-big">4</div>
+          <div class="num-lbl">What happens to the PR</div>
+          <p class="num-text">
+            The maintainer reviews the mechanical part (validator, schema
+            integrity). A Clinical Co-Lead samples the semantic part
+            (CHARTER §6.1). After merge — the sidecar lands in master,
+            then upserts into hosted KB, then renders for patients.
+            Attribution lives in <code>_contribution_meta.yaml</code>
+            (ai_tool + ai_model).
+          </p>
+        </div>
+      </div>
+      <div class="cta-row" style="margin-top:24px;">
+        <a class="btn btn-primary" href="/en/contribute.html">Contribute tokens →</a>
+        <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
+        <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Active chunks →</a>
+      </div>
+      <div class="callout callout-good" style="margin-top:18px;">
+        <strong>Why this matters.</strong> Each verified BMA is one
+        actionability claim we can render as «approved» rather than «STUB»
+        for clinicians. This directly moves the engine from proposed-plan
+        toward published. One contributor, one evening, with their Pro+
+        tokens — can push 10-20 BMAs through signoff prep. That's a week
+        of one person's work in another model.
+      </div>
+    </div>
+
   </section>
 
   <footer class="page-foot">
@@ -4954,8 +5953,6 @@ def _render_capabilities_en(stats) -> str:
 </html>
 """
 
-
-# ── Diseases coverage page ────────────────────────────────────────────────
 
 
 def _build_disease_coverage_rows() -> list[dict]:
@@ -5082,6 +6079,7 @@ def _disease_row_html(r: dict, lbl: dict) -> str:
         f'<td class="num pct {ver_class}">{r["verified_pct"]}%</td>'
         '</tr>'
     )
+
 
 
 def render_diseases(stats, *, target_lang: str = "uk") -> str:
@@ -5255,731 +6253,6 @@ def bundle_disease_coverage(output_dir: Path) -> dict:
     out = output_dir / "disease_coverage.json"
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     return {"path": "disease_coverage.json", "count": len(rows)}
-
-
-# ── Limitations page ──────────────────────────────────────────────────────
-
-
-def render_limitations(stats, *, target_lang: str = "uk") -> str:
-    if target_lang == "en":
-        return _render_limitations_en(stats)
-    return _render_limitations_uk(stats)
-
-
-def _render_limitations_uk(stats) -> str:
-    by_type = {e.type: e.count for e in stats.entities}
-    n_diseases = by_type.get("diseases", 0)
-    n_indications = by_type.get("indications", 0)
-    n_redflags = by_type.get("redflags", 0)
-    diseases_full = sum(1 for d in stats.diseases if d.coverage_status in {"stub_full_chain", "reviewed"})
-    cov = _coverage_breakdown()
-    n_heme = cov["heme_diseases"]
-    n_solid = cov["solid_diseases"]
-    n_inds_1l = cov["indications_1l"]
-    n_inds_2l = cov["indications_2l_plus"]
-    n_dis_2l = cov["diseases_with_2l_plus"]
-    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
-    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
-    heme_2l_list = cov["diseases_2l_heme_list"]
-    solid_2l_list = cov["diseases_2l_solid_list"]
-    solid_disease_list = cov["solid_disease_list"]
-
-    return f"""<!DOCTYPE html>
-<html lang="uk">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Обмеження</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="/style.css" rel="stylesheet">
-</head>
-<body>
-{_render_top_bar(active="limitations", target_lang="uk", lang_switch_href=_lang_switch_href("limitations", "uk"))}
-
-<main>
-  <section class="info-page">
-    <h1>Обмеження</h1>
-    <p class="lead">
-      OpenOnco свідомо не намагається замінити лікаря або повноцінну
-      MDT-команду. Цей розділ — повний і чесний список того, що engine
-      <strong>не робить</strong>, де він <strong>відмовляється</strong>
-      генерувати план без додаткових даних, і де клінічне рішення
-      залишається за лікарем. Знати обмеження так само важливо, як
-      знати можливості.
-    </p>
-
-    <div class="callout callout-hard">
-      <strong>STUB-статус усього клінічного контенту.</strong>
-      Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-      (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
-      Indication, перш ніж її можна вважати «published»). Зараз весь контент
-      — STUB. Це інструмент демонстрації архітектури, не клінічна довідка
-      для реальних пацієнтів. Стан станом на <code>{stats.generated_at_utc}</code>.
-    </div>
-
-    <div class="info-section">
-      <h2>1. Виявлення відсутніх даних — Open Questions механізм</h2>
-      <p class="info-text">
-        Engine <strong>не приймає рішення без потрібних даних</strong>. Замість
-        того, щоб мовчки brati default, він явно фіксує які поля бракує і
-        якого тесту/висновку потребує. Цей механізм називається
-        <strong>Open Questions</strong> і він — цілеспрямована частина
-        MDT-orchestrator (Q1-Q6 + DQ1-DQ4 rules per MDT_ORCHESTRATOR_SPEC §3).
-      </p>
-      <div class="q-list">
-        <h4>Treatment-mode Open Questions (Q1-Q6) — приклади з реального коду</h4>
-        <ul>
-          <li><strong>Q1 — Histology not confirmed:</strong> якщо <code>disease.id</code> резолвиться але немає <code>biopsy_date</code> чи <code>histology_report</code> — engine emits warning «Treatment Plan generated against ICD-O-3 code only; recommend confirming primary histology before initiating therapy».</li>
-          <li><strong>Q2 — Stage missing:</strong> якщо Algorithm.decision_tree посилається на staging але profile немає <code>stage</code> — fall-through на default з flag «Lugano/Ann Arbor stage required for confident risk-stratification».</li>
-          <li><strong>Q3 — RedFlag clause references findings absent:</strong> якщо <code>RF-MM-HIGH-RISK-CYTOGENETICS</code> перевіряє <code>tp53_mutation</code> + <code>del_17p</code> + <code>t_4_14</code> + <code>gain_1q</code>, а в profile є тільки <code>del_17p</code> — engine не дає false negative; emits «Cytogenetic panel incomplete; high-risk status assessed with partial data».</li>
-          <li><strong>Q4 — Biomarker required by Indication missing:</strong> якщо <code>IND-CLL-1L-VENO</code> вимагає <code>BIO-CLL-HIGH-RISK-GENETICS</code> для default-track selection — engine emits «IGHV mutation status + FISH del(17p) required to confirm 1L recommendation».</li>
-          <li><strong>Q5 — Performance status missing:</strong> якщо <code>ecog</code> відсутній — fall на conservative default (тільки standard track), emits «ECOG performance status required for transplant-eligibility assessment».</li>
-          <li><strong>Q6 — Drug availability flag:</strong> якщо selected Regimen містить препарат позначений як <code>nszu_reimbursement: false</code> (наприклад daratumumab у MM) — emits «D-VRd: daratumumab not currently NSZU-reimbursed in Ukraine; verify funding pathway before initiation».</li>
-        </ul>
-      </div>
-      <div class="q-list">
-        <h4>Diagnostic-mode Open Questions (DQ1-DQ4) — для pre-biopsy режиму</h4>
-        <ul>
-          <li><strong>DQ1 — Tissue location missing:</strong> якщо <code>suspicion.tissue_locations</code> empty — workup match не може ranжувати, emits «Тип ткани локалізації потрібно вказати для матчингу workup».</li>
-          <li><strong>DQ2 — Lineage hint absent:</strong> без <code>lineage_hint</code> engine використовує тільки tissue + presentation для matching, lower confidence.</li>
-          <li><strong>DQ3 — Presentation free-text empty:</strong> presentation_keywords scoring × 0; only lineage + tissue brati участь.</li>
-          <li><strong>DQ4 — Working hypotheses not provided:</strong> engine не має preferred direction, переважає найбільш generic workup (наприклад <code>WORKUP-LYMPHADENOPATHY-NONSPECIFIC</code> замість <code>WORKUP-SUSPECTED-LYMPHOMA</code>).</li>
-        </ul>
-      </div>
-      <div class="callout">
-        <strong>Чому не «беремо default тихо»:</strong> CHARTER §15.2 C6 (anti
-        automation-bias) — engine не може робити вигляд що знає коли не знає.
-        Кожна missing-data ситуація має бути візуально помітна лікарю.
-        Open Questions рендеряться у Plan як окрема section, не сховано.
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>2. П'ять gap-ів персоналізації</h2>
-      <p class="info-text">
-        «Персоналізація» в OpenOnco — це rule-based <strong>вибір з фіксованих
-        варіантів</strong>, а не AI-генерація. Цe навмисна архітектурна позиція
-        (CHARTER §8.3 — заборонені prompt patterns). Конкретні gap-и:
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card">
-          <div class="gap-tag">Gap 1</div>
-          <h3>Без per-patient dose calculation</h3>
-          <p>
-            Regimen зберігає <strong>стандартну дозу</strong> (<code>bortezomib 1.3 mg/m²</code>),
-            не множиться на BSA пацієнта і не зменшується під CrCl 30 мл/хв
-            автоматично. Лікар сам перераховує. Це принципово, щоб уникнути
-            класифікації як FDA medical device.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 2</div>
-          <h3>Без response-adapted cycle adjustment</h3>
-          <p>
-            Regimen фіксує <code>total_cycles: 6 + 2 maintenance</code>.
-            Engine не адаптується автоматично на основі response (PR vs CR
-            після PET2). Re-staging plan генерується через окремий
-            <code>revise_plan</code> з новим profile — лікар явно тригерить.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 3</div>
-          <h3>Genomic matching обмежений curated biomarkers</h3>
-          <p>
-            Якщо у пацієнта виявили PD-L1 78%, engine не запропонує pembrolizumab —
-            бо немає Indication з відповідним biomarker_requirement у KB.
-            Це обмеження coverage (треба додати entity), не engine-логіки.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 4</div>
-          <h3>SupportiveCare однакова для всіх на одному режимі</h3>
-          <p>
-            PJP prophylaxis attached до D-VRd для всіх — навіть для пацієнта
-            з алергією на bactrim. Engine не знає альтернатив (dapsone замість
-            bactrim). Лікар сам substitute'ить.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 5</div>
-          <h3>Без cumulative-toxicity tracking між lines</h3>
-          <p>
-            2L+ алгоритми вже існують для {n_dis_2l} гематологічних хвороб
-            ({n_inds_2l} показань 2L+), але profile не carrier'ить
-            <code>prior_treatment_history</code> як structured field. 2L plan
-            для пацієнта що отримав bortezomib у 1L з grade 2 нейропатією —
-            engine не знає про попередній exposure якщо нічого нового не
-            вказано; лікар сам інтерпретує prior_lines з вільного тексту.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>3. Жорсткі CHARTER-обмеження (will not change)</h2>
-      <p class="info-text">
-        Це не technical debt — це принципові архітектурні рішення
-        що визначають позицію проекту як non-device CDS і
-        gатекіпять FDA / клінічну безпеку.
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §8.3</div>
-          <h3>LLM не приймає клінічні рішення</h3>
-          <p>
-            LLM-и допомагають лише з: boilerplate code, doc drafts,
-            extraction з clinical documents (з human verification),
-            translation з clinical review. <strong>Не</strong>: вибір
-            режиму, генерація доз, інтерпретація biomarker для
-            therapy selection.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C7</div>
-          <h3>Без histology — без treatment Plan</h3>
-          <p>
-            Treatment Plan генерується тільки якщо <code>disease.id</code>
-            або <code>icd_o_3_morphology</code> підтверджені. Інакше
-            engine відмовляється і вмикає DiagnosticPlan mode (workup brief).
-            <code>revise_plan</code> з treatment назад в diagnostic —
-            <strong>заборонено</strong>, raises ValueError.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C5</div>
-          <h3>Без time-critical recommendations</h3>
-          <p>
-            Engine не призначений для emergency oncology (oncologic
-            emergencies, time-sensitive infusion reactions). Це б тригернуло
-            device classification. Якщо Indication позначена
-            <code>time_critical: true</code> — engine додає disqualification
-            warning у FDA compliance.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §6.1</div>
-          <h3>Two-reviewer merge для clinical content</h3>
-          <p>
-            Будь-яка зміна під <code>knowledge_base/hosted/content/</code>
-            що affects clinical recommendations потребує два з трьох Clinical
-            Co-Lead approvals. Без цього Indication залишається STUB.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C6</div>
-          <h3>Anti automation-bias mandatory</h3>
-          <p>
-            Engine ніколи не показує тільки одну рекомендацію — завжди ≥2
-            tracks side-by-side. Alternative не buried, не «click to expand»,
-            не fine-print. Лікар бачить що це вибір, не директива.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §9.3</div>
-          <h3>Patient data ніколи не у repo / public artifact</h3>
-          <p>
-            <code>patient_plans/</code> gitignored. Будь-які patient HTML —
-            gitignored pattern. Site (<code>docs/</code>) показує тільки
-            synthetic examples. Збір telemetry заборонений без explicit consent.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>4. Coverage limits (поточний стан KB)</h2>
-      <p class="info-text">
-        OpenOnco — work in progress. Зараз модельовано <strong>{n_diseases}
-        захворювань</strong> ({n_heme} гематологічних + {n_solid} солідних) —
-        це далеко не повний WHO-HAEM5 / WHO Classification of Tumours. Конкретно:
-      </p>
-      <table class="kv-table">
-        <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
-        <tbody>
-          <tr><td>Хвороби з повним ланцюгом</td><td>{diseases_full} / {n_diseases}</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>Перша лінія покрита для всіх {n_diseases} хвороб</td></tr>
-          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Друга-четверта лінія: {n_dis_2l_heme} гематологічних хвороб ({heme_2l_list}) + {n_dis_2l_solid} солідних ({solid_2l_list}). Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
-          <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
-          <tr><td>Solid tumors</td><td>{n_solid}</td><td>{solid_disease_list} — переважно 1L. 2L+ і ад'ювантні контексти — частково.</td></tr>
-          <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
-          <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
-          <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
-          <tr><td>Маркетингових даних доступу до режимів (НСЗУ formulary live)</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — це окремий backlog item</td></tr>
-          <tr><td>Experimental options (clinical trials)</td><td>integrated</td><td>Phase C done: <code>enumerate_experimental_options</code> + ExperimentalOption schema, інтеграція у <code>generate_plan</code>, render третього треку, 7-day on-disk TTL cache. Що ще: курований мапінг trials ↔ patient-eligibility (а не лише disease+biomarker)</td></tr>
-          <tr><td>Access Matrix (UA-availability per Plan)</td><td>integrated</td><td>Phase D: <code>AccessMatrix</code> + <code>AccessMatrixRow</code> агрегують registered/НСЗУ/cost/pathway по треках, рендеряться у Plan. Що ще: curated <code>AccessPathway</code> seed (~30 препаратів) — потребує two-reviewer signoff per CHARTER §6.1</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">
-        <strong>Що НЕ означає STUB:</strong> structured data + algorithm logic
-        + sources вже є. Що STUB означає: <strong>не пройшло dual sign-off
-        Clinical Co-Lead</strong>. Тобто фактично ми маємо «proposed plan»
-        який треба перевірити, не «approved plan».
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>5. Що engine ніколи не робить</h2>
-      <p class="info-text">
-        Прозорий список заборонених patterns — щоб усі знали межі:
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не сховує alternative track</h3>
-          <p>Обидві рекомендації завжди показані. UI не has «expand to see alternative» pattern.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не генерує нову Indication LLM-ом</h3>
-          <p>Усе вибирається з уже-curated KB. Якщо немає підходящої Indication — engine emits warning, не «creative invention».</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не модифікує дози «під пацієнта»</h3>
-          <p>Дози зі стандартного NCCN/ESMO. Adjustments тільки через explicit dose_modification_rules у Regimen YAML, ніяких ad hoc calculations.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не оцінює «що краще» між tracks</h3>
-          <p>Algorithm обирає default, але не вирішує що default «кращий». Лікар має повну autonomy обрати alternative — це задокументовано у automation_bias_warning.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не інтерпретує imaging</h3>
-          <p>«Bulky disease» приходить як structured field <code>dominant_nodal_mass_cm</code>, не з аналізу зображень. Image analysis = device classification.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Не робить cohort matching</h3>
-          <p>«У базі з N пацієнтів M% обрали X» — це окремий future feature, потребує persisted patient registry + privacy review. Поки що недоступне.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>6. Як з цим жити</h2>
-      <p class="info-text">
-        Цей engine задумано як <strong>підготовку до tumor-board</strong>,
-        не заміну. Лікар вводить profile, отримує structured draft з усіма
-        sources і open questions, а далі:
-      </p>
-      <div class="num-grid num-grid--rich">
-        <div class="num-card">
-          <div class="num-big">1</div>
-          <div class="num-lbl">Перевіряє sources</div>
-          <p class="num-text">
-            Кожна claim у плані має citation. Лікар може прочитати оригінальний
-            NCCN/ESMO/МОЗ розділ і підтвердити що engine не misquote'ить.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">2</div>
-          <div class="num-lbl">Заповнює Open Questions</div>
-          <p class="num-text">
-            Якщо engine emit'ить «cytogenetic panel incomplete» — лікар замовляє
-            тест, додає у profile, запускає <code>revise_plan</code>. Plan
-            оновлюється, OpenQuestion закривається.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">3</div>
-          <div class="num-lbl">Адаптує під пацієнта</div>
-          <p class="num-text">
-            Дози пере-перевіряє, supportive care substitute'ить за алергіями,
-            Ukraine-availability перевіряє вручну. Engine — draft, лікар — final.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">4</div>
-          <div class="num-lbl">Tumor board discusses</div>
-          <p class="num-text">
-            MDT brief показує які ролі activated і які питання відкриті. Це
-            structured agenda для board meeting. Decisions з board fixед'аться
-            як provenance events.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="page-foot">
-    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
-    <br>
-    Жодних реальних пацієнтських даних · CHARTER §9.3.
-    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
-  </footer>
-</main>
-</body>
-</html>
-"""
-
-
-def _render_limitations_en(stats) -> str:
-    by_type = {e.type: e.count for e in stats.entities}
-    n_diseases = by_type.get("diseases", 0)
-    n_indications = by_type.get("indications", 0)
-    n_redflags = by_type.get("redflags", 0)
-    diseases_full = sum(1 for d in stats.diseases if d.coverage_status in {"stub_full_chain", "reviewed"})
-    cov = _coverage_breakdown()
-    n_heme = cov["heme_diseases"]
-    n_solid = cov["solid_diseases"]
-    n_inds_1l = cov["indications_1l"]
-    n_inds_2l = cov["indications_2l_plus"]
-    n_dis_2l = cov["diseases_with_2l_plus"]
-    n_dis_2l_heme = cov["diseases_with_2l_plus_heme"]
-    n_dis_2l_solid = cov["diseases_with_2l_plus_solid"]
-    heme_2l_list = cov["diseases_2l_heme_list"]
-    solid_2l_list = cov["diseases_2l_solid_list"]
-    solid_disease_list = cov["solid_disease_list"]
-
-    return f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Limitations</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="/style.css" rel="stylesheet">
-</head>
-<body>
-{_render_top_bar(active="limitations", target_lang="en", lang_switch_href=_lang_switch_href("limitations", "en"))}
-
-<main>
-  <section class="info-page">
-    <h1>Limitations</h1>
-    <p class="lead">
-      OpenOnco deliberately does not try to replace a clinician or a full
-      MDT. This page is the complete, honest list of what the engine
-      <strong>does not do</strong>, where it <strong>refuses</strong> to
-      generate a plan without additional data, and where the clinical
-      decision stays with the clinician. Knowing the limitations is as
-      important as knowing the capabilities.
-    </p>
-
-    <div class="callout callout-hard">
-      <strong>All clinical content is STUB-status.</strong>
-      Reviewer sign-offs ≥ 2: <strong>{stats.reviewer_signoffs_reviewed}/{stats.reviewer_signoffs_total}</strong>
-      (CHARTER §6.1 requires two Clinical Co-Lead approvals before any
-      Indication can be considered "published"). Right now everything is
-      STUB. This is an architecture demo, not a clinical reference for real
-      patients. Snapshot as of <code>{stats.generated_at_utc}</code>.
-    </div>
-
-    <div class="info-section">
-      <h2>1. Detecting missing data — the Open Questions mechanism</h2>
-      <p class="info-text">
-        The engine <strong>does not make a decision when required data is
-        missing</strong>. Instead of silently picking a default, it
-        explicitly records which fields are missing and which test or
-        finding is needed. This mechanism is called <strong>Open
-        Questions</strong> and it is a deliberate part of the MDT
-        orchestrator (Q1–Q6 + DQ1–DQ4 rules per
-        MDT_ORCHESTRATOR_SPEC §3).
-      </p>
-      <div class="q-list">
-        <h4>Treatment-mode Open Questions (Q1–Q6) — examples from real code</h4>
-        <ul>
-          <li><strong>Q1 — Histology not confirmed:</strong> if <code>disease.id</code> resolves but there is no <code>biopsy_date</code> or <code>histology_report</code>, the engine emits "Treatment Plan generated against ICD-O-3 code only; recommend confirming primary histology before initiating therapy".</li>
-          <li><strong>Q2 — Stage missing:</strong> if Algorithm.decision_tree references staging but the profile has no <code>stage</code>, the walker falls through to default with a flag "Lugano/Ann Arbor stage required for confident risk-stratification".</li>
-          <li><strong>Q3 — RedFlag clause references findings absent:</strong> if <code>RF-MM-HIGH-RISK-CYTOGENETICS</code> checks <code>tp53_mutation</code> + <code>del_17p</code> + <code>t_4_14</code> + <code>gain_1q</code> and only <code>del_17p</code> is in the profile, the engine does not produce a false negative; it emits "Cytogenetic panel incomplete; high-risk status assessed with partial data".</li>
-          <li><strong>Q4 — Biomarker required by Indication missing:</strong> if <code>IND-CLL-1L-VENO</code> requires <code>BIO-CLL-HIGH-RISK-GENETICS</code> for default-track selection, the engine emits "IGHV mutation status + FISH del(17p) required to confirm 1L recommendation".</li>
-          <li><strong>Q5 — Performance status missing:</strong> if <code>ecog</code> is absent, the engine falls back to a conservative default (standard track only) and emits "ECOG performance status required for transplant-eligibility assessment".</li>
-          <li><strong>Q6 — Drug availability flag:</strong> if the selected Regimen contains a drug flagged <code>nszu_reimbursement: false</code> (e.g. daratumumab in MM), the engine emits "D-VRd: daratumumab not currently NHSU-reimbursed in Ukraine; verify funding pathway before initiation".</li>
-        </ul>
-      </div>
-      <div class="q-list">
-        <h4>Diagnostic-mode Open Questions (DQ1–DQ4) — for pre-biopsy mode</h4>
-        <ul>
-          <li><strong>DQ1 — Tissue location missing:</strong> if <code>suspicion.tissue_locations</code> is empty, workup matching cannot rank candidates; emits "Tissue location is required to match a workup".</li>
-          <li><strong>DQ2 — Lineage hint absent:</strong> without <code>lineage_hint</code> the engine matches on tissue + presentation only, with lower confidence.</li>
-          <li><strong>DQ3 — Presentation free-text empty:</strong> presentation_keywords scoring × 0; only lineage + tissue contribute.</li>
-          <li><strong>DQ4 — Working hypotheses not provided:</strong> the engine has no preferred direction and prefers the most generic workup (e.g. <code>WORKUP-LYMPHADENOPATHY-NONSPECIFIC</code> over <code>WORKUP-SUSPECTED-LYMPHOMA</code>).</li>
-        </ul>
-      </div>
-      <div class="callout">
-        <strong>Why we don't pick defaults silently:</strong> CHARTER §15.2 C6
-        (anti automation-bias) — the engine cannot pretend to know what it
-        does not know. Every missing-data situation must be visually obvious
-        to the clinician. Open Questions are rendered in the Plan as their
-        own section, never hidden.
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>2. Five personalization gaps</h2>
-      <p class="info-text">
-        "Personalization" in OpenOnco is rule-based <strong>selection from
-        fixed options</strong>, not AI generation. This is an intentional
-        architectural stance (CHARTER §8.3 — forbidden prompt patterns).
-        The concrete gaps:
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card">
-          <div class="gap-tag">Gap 1</div>
-          <h3>No per-patient dose calculation</h3>
-          <p>
-            A Regimen stores the <strong>standard dose</strong>
-            (<code>bortezomib 1.3 mg/m²</code>); it is not multiplied by
-            patient BSA and not auto-reduced for CrCl &lt; 30 mL/min. The
-            clinician recalculates. This is deliberate — it keeps OpenOnco
-            out of FDA medical-device classification.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 2</div>
-          <h3>No response-adapted cycle adjustment</h3>
-          <p>
-            A Regimen pins <code>total_cycles: 6 + 2 maintenance</code>.
-            The engine does not auto-adapt based on response (PR vs CR
-            after PET2). A re-staging plan is generated through a separate
-            <code>revise_plan</code> with a new profile — the clinician
-            triggers it explicitly.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 3</div>
-          <h3>Genomic matching is bounded by curated biomarkers</h3>
-          <p>
-            If a patient turns up with PD-L1 78%, the engine will not
-            propose pembrolizumab — because no Indication with the
-            corresponding biomarker_requirement exists in the KB. This is a
-            coverage limit (add an entity), not an engine-logic limit.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 4</div>
-          <h3>SupportiveCare is uniform per regimen</h3>
-          <p>
-            PJP prophylaxis is attached to D-VRd for everyone — even for a
-            patient allergic to bactrim. The engine does not know about
-            alternatives (dapsone instead of bactrim). The clinician
-            substitutes.
-          </p>
-        </div>
-        <div class="gap-card">
-          <div class="gap-tag">Gap 5</div>
-          <h3>No cumulative-toxicity tracking across lines</h3>
-          <p>
-            2L+ algorithms are now in for {n_dis_2l} hematologic diseases
-            ({n_inds_2l} 2L+ indications), but the profile does not yet
-            carry <code>prior_treatment_history</code> as a structured
-            field. A 2L plan for a patient who received bortezomib in 1L
-            with grade 2 neuropathy — the engine does not know about the
-            prior exposure unless something new is added; the clinician
-            interprets prior_lines from free text.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>3. Hard CHARTER constraints (will not change)</h2>
-      <p class="info-text">
-        These are not technical debt — they are deliberate architectural
-        decisions that establish the project's position as non-device CDS
-        and gate FDA / clinical safety.
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §8.3</div>
-          <h3>LLMs do not make clinical decisions</h3>
-          <p>
-            LLMs only assist with: boilerplate code, doc drafts, extraction
-            from clinical documents (with human verification), translation
-            with clinical review. <strong>Not</strong>: regimen selection,
-            dose generation, biomarker interpretation for therapy choice.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C7</div>
-          <h3>No histology → no treatment Plan</h3>
-          <p>
-            A treatment Plan is generated only when <code>disease.id</code>
-            or <code>icd_o_3_morphology</code> is confirmed. Otherwise the
-            engine refuses and switches to DiagnosticPlan mode (workup
-            brief). <code>revise_plan</code> from treatment back to
-            diagnostic is <strong>forbidden</strong> and raises ValueError.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C5</div>
-          <h3>No time-critical recommendations</h3>
-          <p>
-            The engine is not designed for emergency oncology (oncologic
-            emergencies, time-sensitive infusion reactions). That would
-            trigger device classification. If an Indication is flagged
-            <code>time_critical: true</code>, the engine adds a
-            disqualification warning to FDA compliance.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §6.1</div>
-          <h3>Two-reviewer merge for clinical content</h3>
-          <p>
-            Any change under <code>knowledge_base/hosted/content/</code>
-            that affects clinical recommendations needs two of three
-            Clinical Co-Lead approvals. Without that, the Indication stays
-            STUB.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §15.2 C6</div>
-          <h3>Anti automation-bias is mandatory</h3>
-          <p>
-            The engine never shows a single recommendation — always ≥2
-            tracks side by side. The alternative is never buried, never
-            "click to expand", never fine-print. The clinician sees this is
-            a choice, not a directive.
-          </p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">CHARTER §9.3</div>
-          <h3>Patient data never in repo / public artifacts</h3>
-          <p>
-            <code>patient_plans/</code> is gitignored. Any patient HTML
-            files are gitignored by pattern. The site (<code>docs/</code>)
-            ships only synthetic examples. Telemetry collection is
-            forbidden without explicit consent.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>4. Coverage limits (current KB state)</h2>
-      <p class="info-text">
-        OpenOnco is a work in progress. <strong>{n_diseases} diseases</strong>
-        are currently modeled ({n_heme} hematologic + {n_solid} solid tumors)
-        — far short of the full WHO-HAEM5 / WHO Classification of Tumours.
-        Specifically:
-      </p>
-      <table class="kv-table">
-        <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
-        <tbody>
-          <tr><td>Diseases with the full chain</td><td>{diseases_full} / {n_diseases}</td><td>The rest are partially modeled; the engine may emit "no Algorithm found for disease=X"</td></tr>
-          <tr><td>Indications 1L</td><td>{n_inds_1l}</td><td>First line covered for all {n_diseases} diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>{n_inds_2l}</td><td>Second-to-fourth line: {n_dis_2l_heme} hematologic diseases ({heme_2l_list}) + {n_dis_2l_solid} solid ({solid_2l_list}). The rest of solid-tumor 2L+ is partial (CRC, breast, urothelial), not systematic.</td></tr>
-          <tr><td>RedFlags</td><td>{n_redflags}</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own RFs added</td></tr>
-          <tr><td>Solid tumors</td><td>{n_solid}</td><td>{solid_disease_list} — mostly 1L. 2L+ and adjuvant contexts are partial.</td></tr>
-          <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — separate specialization track</td></tr>
-          <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is wired into multimodality Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modeled as a separate entity with technical parameters (dose / fractions / target volumes)</td></tr>
-          <tr><td>Surgery plans</td><td>not modeled</td><td>Surgical-oncology indications are absent</td></tr>
-          <tr><td>Live regimen-availability data (NHSU formulary live feed)</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog item</td></tr>
-          <tr><td>Experimental options (clinical trials)</td><td>integrated</td><td>Phase C done: <code>enumerate_experimental_options</code> + ExperimentalOption schema, integrated into <code>generate_plan</code>, third Plan track is rendered, 7-day on-disk TTL cache. Still missing: curated trial ↔ patient-eligibility mapping (not just disease+biomarker)</td></tr>
-          <tr><td>Access Matrix (UA-availability per Plan)</td><td>integrated</td><td>Phase D: <code>AccessMatrix</code> + <code>AccessMatrixRow</code> aggregate registered/НСЗУ/cost/pathway across tracks; rendered in Plan. Still missing: a curated <code>AccessPathway</code> seed (~30 drugs) — gated on two-reviewer signoff per CHARTER §6.1</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">
-        <strong>What STUB does NOT mean:</strong> the structured data,
-        algorithm logic, and sources are already in. What STUB
-        <strong>does</strong> mean: <strong>two-of-three Clinical Co-Lead
-        sign-off has not happened yet</strong>. So in effect we have a
-        "proposed plan" that needs review, not an "approved plan".
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>5. What the engine never does</h2>
-      <p class="info-text">
-        A transparent list of forbidden patterns — so the boundaries are
-        clear:
-      </p>
-      <div class="gap-grid">
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Hide the alternative track</h3>
-          <p>Both recommendations are always shown. The UI never has an "expand to see alternative" pattern.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Generate a new Indication via LLM</h3>
-          <p>Everything is selected from already-curated KB. If no matching Indication exists, the engine emits a warning — never "creative invention".</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Adjust doses "for the patient"</h3>
-          <p>Doses come from standard NCCN/ESMO. Adjustments live only inside explicit dose_modification_rules in the Regimen YAML — no ad-hoc calculations.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Score "which is better" between tracks</h3>
-          <p>The Algorithm picks a default but does not declare the default "better". The clinician retains full autonomy to choose the alternative — documented in automation_bias_warning.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Interpret imaging</h3>
-          <p>"Bulky disease" arrives as a structured field <code>dominant_nodal_mass_cm</code>, not from image analysis. Image analysis = device classification.</p>
-        </div>
-        <div class="gap-card gap-hard">
-          <div class="gap-tag">Never</div>
-          <h3>Cohort matching</h3>
-          <p>"In the cohort of N patients, M% picked X" is a future feature requiring a persisted patient registry + privacy review. Not available yet.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-section">
-      <h2>6. How to live with this</h2>
-      <p class="info-text">
-        This engine is intended as <strong>tumor-board preparation</strong>,
-        not a replacement. The clinician inputs a profile, receives a
-        structured draft with all sources and open questions, and then:
-      </p>
-      <div class="num-grid num-grid--rich">
-        <div class="num-card">
-          <div class="num-big">1</div>
-          <div class="num-lbl">Verifies the sources</div>
-          <p class="num-text">
-            Every claim in the plan carries a citation. The clinician can
-            read the original NCCN / ESMO / local-MoH section and confirm
-            the engine did not misquote it.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">2</div>
-          <div class="num-lbl">Closes Open Questions</div>
-          <p class="num-text">
-            If the engine flags "cytogenetic panel incomplete", the
-            clinician orders the test, adds it to the profile, and runs
-            <code>revise_plan</code>. The plan refreshes, the OpenQuestion
-            closes.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">3</div>
-          <div class="num-lbl">Adapts for the patient</div>
-          <p class="num-text">
-            Re-checks doses, substitutes supportive care for known
-            allergies, manually verifies local-availability constraints.
-            The engine produces a draft; the clinician produces the final.
-          </p>
-        </div>
-        <div class="num-card">
-          <div class="num-big">4</div>
-          <div class="num-lbl">Tumor board discusses</div>
-          <p class="num-text">
-            The MDT brief shows which roles are activated and which
-            questions are open. That is the structured agenda for the board
-            meeting. Decisions taken at the board are captured as
-            provenance events.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="page-foot">
-    Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
-    <br>
-    No real patient data · CHARTER §9.3.
-    Informational tool for clinicians, not a medical device (CHARTER §15 + §11).
-  </footer>
-</main>
-</body>
-</html>
-"""
 
 
 # ── Specs page ────────────────────────────────────────────────────────────
@@ -6420,7 +6693,6 @@ def build_site(output_dir: Path) -> dict:
     # ── UA build (default at site root) ──
     (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
     (output_dir / "capabilities.html").write_text(render_capabilities(stats), encoding="utf-8")
-    (output_dir / "limitations.html").write_text(render_limitations(stats), encoding="utf-8")
     (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
     (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
     (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
@@ -6440,8 +6712,6 @@ def build_site(output_dir: Path) -> dict:
         render_landing(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "capabilities.html").write_text(
         render_capabilities(stats, target_lang="en"), encoding="utf-8")
-    (output_dir / "en" / "limitations.html").write_text(
-        render_limitations(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "gallery.html").write_text(
         render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
     (output_dir / "en" / "diseases.html").write_text(
