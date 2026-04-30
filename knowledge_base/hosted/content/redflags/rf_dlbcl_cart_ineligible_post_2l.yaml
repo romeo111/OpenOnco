@@ -1,0 +1,91 @@
+id: RF-DLBCL-CART-INELIGIBLE-POST-2L
+definition: >
+  Relapsed/refractory DLBCL post ≥2 prior systemic therapies, NOT a
+  candidate for anti-CD19 CAR-T (axi-cel / liso-cel / tisa-cel) due to
+  frailty, organ dysfunction, comorbidity burden, manufacturing-window
+  risk, prior CAR-T failure, or absent funded referral pathway. Routes
+  3L+ to loncastuximab tesirine (LOTIS-2 Caimi 2021 Lancet Oncol; ORR
+  48%, CR 24%, mPFS 4.9 mo, mOS 9.5 mo) — off-the-shelf outpatient
+  ADC ideally suited for non-CAR-T-eligible frail patient. Distinct
+  from universal RF-CAR-T-INELIGIBLE-AGE-COMORBID (which gates on
+  age ≥75 + Charlson ≥4) — this flag covers the broader DLBCL-specific
+  ineligibility composite including UA access constraints (no funded
+  international referral pathway).
+definition_ua: >
+  Рецидивна/рефрактерна DLBCL після ≥2 попередніх системних терапій,
+  НЕ кандидат для анти-CD19 CAR-T (axi-cel / liso-cel / tisa-cel)
+  через frailty, органну дисфункцію, коморбідне навантаження,
+  manufacturing-window ризик, попередню невдачу CAR-T або відсутність
+  funded referral pathway. Маршрутизує 3L+ на лонкастуксимаб тезирин
+  (LOTIS-2 Caimi 2021; ORR 48%, CR 24%, мПФВ 4.9 міс, мОВ 9.5 міс)
+  — off-the-shelf амбулаторний ADC ідеально для non-CAR-T-eligible
+  frail пацієнта. Відрізняти від універсального
+  RF-CAR-T-INELIGIBLE-AGE-COMORBID (вік ≥75 + Charlson ≥4) — цей
+  флаг охоплює ширший DLBCL-специфічний композит ineligibility,
+  включаючи UA-access обмеження (без funded міжнародного referral pathway).
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "prior_lines_count"
+          threshold: 2
+          comparator: ">="
+        - finding: "post_pola_failure"
+          value: true
+        - finding: "primary_refractory"
+          value: true
+    - any_of:
+        - finding: "cart_ineligibility_reason"
+        - finding: "cart_ineligible"
+          value: true
+        - all_of:
+            - finding: "ecog"
+              threshold: 2
+              comparator: ">="
+            - finding: "age"
+              threshold: 70
+              comparator: ">="
+        - red_flag: RF-CAR-T-INELIGIBLE-AGE-COMORBID
+        - red_flag: RF-CAR-T-INELIGIBLE-ORGAN
+
+clinical_direction: intensify
+
+severity: major
+priority: 55
+category: prior-therapy-class
+
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm:
+  - ALGO-DLBCL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-05-01"
+draft: false
+
+notes: >
+  Truthy lookup of `cart_ineligibility_reason` — if patient JSON sets
+  this field to ANY explanatory string, the trigger fires. Provides
+  flexibility for clinicians documenting case-specific rationale (e.g.,
+  "frailty_age_71_ECOG_2_no_international_referral_pathway",
+  "prior_axicel_failure", "manufacturing_window_too_short_for_pd_kinetics").
+  Alternative composite path: explicit ECOG ≥2 + age ≥70 (frail older
+  cohort) as observed in LOTIS-2 enrollment criteria. Universal
+  CAR-T-ineligible RFs (age ≥75 + Charlson ≥4 OR organ dysfunction)
+  are folded in via red_flag refs — this composite RF is the broader
+  DLBCL-specific ineligibility signal.
+notes_ua: >
+  Truthy lookup `cart_ineligibility_reason` — якщо patient JSON встановлює
+  це поле на БУДЬ-ЯКИЙ explanatory string, тригер спрацьовує. Забезпечує
+  гнучкість для клініцистів які документують case-specific обґрунтування
+  (наприклад "frailty_age_71_ECOG_2_no_international_referral_pathway",
+  "prior_axicel_failure", "manufacturing_window_too_short_for_pd_kinetics").
+  Альтернативний композитний шлях: явні ECOG ≥2 + вік ≥70 (frail older
+  cohort) як в критеріях зарахування LOTIS-2. Універсальні
+  CAR-T-ineligible RFs (вік ≥75 + Charlson ≥4 АБО органна дисфункція)
+  включені через red_flag refs — цей композитний RF є ширшим
+  DLBCL-специфічним сигналом ineligibility.
