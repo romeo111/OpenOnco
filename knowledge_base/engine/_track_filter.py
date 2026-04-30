@@ -176,10 +176,12 @@ def _matches_excluded_value(patient_value: Any, exclusion_spec: Any) -> bool:
 
     pv = (variant or "").strip().lower()
     if not pv:
-        # Patient is gene-level positive ("positive"/True) and the
-        # exclusion is qualified — be conservative and treat any positive
-        # presence as a match (lenient toward exclusion when explicit).
-        return True
+        # Patient is gene-level positive (no specific variant string), but
+        # the exclusion is qualified by a value_constraint. The patient has
+        # not reported the qualifying condition, so don't drop the track —
+        # consistent with the file's "missing biomarkers do not drop a
+        # track" stance. The clinician decides on the more nuanced data.
+        return False
 
     for expected in expected_values:
         ev = expected.strip().lower()
