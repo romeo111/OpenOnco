@@ -1,0 +1,84 @@
+id: REG-REVUMENIB-AML
+name: "Revumenib monotherapy for R/R KMT2A-rearranged AML"
+name_ua: "Ревуменіб монотерапія для R/R KMT2A-перебудованої ГМЛ"
+alternate_names:
+  - "Revumenib mono"
+  - "Revuforj mono"
+
+components:
+  - drug_id: DRUG-REVUMENIB
+    dose: "163 mg PO q12h with strong CYP3A inhibitor (cobicistat) co-administration; OR 270 mg PO q12h without CYP3A inhibitor"
+    schedule: "continuous, 28-day cycles, until progression / unacceptable toxicity / proceed to alloHCT in CR"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity; proceed to alloHCT in fit responders"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic PRN"
+  - "Baseline + serial ECG; correct K+ ≥4.0 mEq/L and Mg++ ≥2.0 mg/dL before initiation and during therapy"
+  - "Baseline differentiation-syndrome education + corticosteroid kit (dexamethasone 10 mg IV q12h available on demand)"
+  - "TLS prophylaxis (allopurinol; hydration) in high-burden disease"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "QTc >480 ms"
+    modification: "Hold; resume at reduced dose when QTc ≤450 ms; permanent discontinuation if recurrent or QTc >500 ms"
+    rationale: "Risk of torsades de pointes / sudden death; revumenib has dose-dependent QTc effect"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Differentiation syndrome (fever, dyspnea, weight gain, effusions, leukocytosis)"
+    modification: "Dexamethasone 10 mg IV q12h + hydroxyurea if hyperleukocytosis; hold revumenib until resolution; resume at full dose"
+    rationale: "DS fatal if untreated; corticosteroids + cytoreduction lifesaving (~16% incidence in AUGMENT-101)"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Concomitant strong CYP3A4 inducer unavoidable"
+    modification: "Avoid combination if possible; consider higher revumenib dose with PK monitoring (no fixed dose recommendation)"
+    rationale: "Strong inducer reduces revumenib exposure; loss of efficacy"
+    source_refs:
+      - SRC-NCCN-AML-2025
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Avoid; insufficient PK data"
+    rationale: "Hepatic CYP3A4 metabolism predominant; no dose recommendation in severe impairment"
+    source_refs:
+      - SRC-NCCN-AML-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Revumenib NOT registered in Ukraine. International referral or compassionate-use pathway (Syndax EAP) required."
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+
+last_reviewed: "2026-04-30"
+notes: >
+  Standard 2L+ for R/R KMT2A-rearranged AML per AUGMENT-101 (FDA
+  approval Nov 2024). Bridge to alloHCT for fit candidates achieving
+  CR/CRh — revumenib monotherapy is not curative; durable responses
+  in trial were largely consolidated by alloHCT. Differentiation
+  syndrome (~16%) is the signature AE — same dexamethasone protocol
+  as ivosidenib / enasidenib. QTc prolongation requires baseline +
+  serial ECG. Trial source SRC-AUGMENT-101 pending — citing umbrella
+  SRC-NCCN-AML-2025. STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Стандарт 2L+ для R/R KMT2A-перебудованої ГМЛ за AUGMENT-101
+  (FDA-схвалено листопад 2024). Міст до алоТГСК для придатних
+  кандидатів, що досягли ПР/ПРн — ревуменіб монотерапія не
+  курабельна; тривалі відповіді у дослідженні переважно
+  консолідовані алоТГСК. Синдром диференціації (~16%) — сигнатурний
+  НЯ; той же дексаметазон-протокол, як для івосиденібу / енасиденібу.
+  Подовження QTc — baseline + серійні ЕКГ. Джерело дослідження
+  SRC-AUGMENT-101 очікується — посилання на umbrella SRC-NCCN-AML-2025.
+  STUB — очікує схвалення співкерівника.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

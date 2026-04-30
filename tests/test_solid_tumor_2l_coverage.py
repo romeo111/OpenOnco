@@ -222,7 +222,14 @@ def test_all_csd4_2l_indications_reviewer_signoffs_zero(csd4_2l_indications):
     pre-publish state so a stray sign-off bump has to be explicit."""
     bad: list[tuple[str, int]] = []
     for ind_id, data in csd4_2l_indications.items():
-        signoffs = int(data.get("reviewer_signoffs") or 0)
+        raw = data.get("reviewer_signoffs")
+        # Accept legacy int form and structured list form interchangeably.
+        if isinstance(raw, list):
+            signoffs = len(raw)
+        elif isinstance(raw, int):
+            signoffs = raw
+        else:
+            signoffs = 0
         if signoffs != 0:
             bad.append((ind_id, signoffs))
     assert not bad, (

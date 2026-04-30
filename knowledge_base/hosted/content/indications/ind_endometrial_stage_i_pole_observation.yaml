@@ -1,0 +1,109 @@
+id: IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION
+plan_track: surveillance
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  line_of_therapy: 1
+  stage_requirements: ["I", "IA", "IB"]
+  biomarker_requirements_required:
+    - biomarker_id: BIO-POLE-HYPERMUTATOR
+      required: false
+      value_constraint: "positive (any pathogenic POLE-EDM variant) OR BIO-POLD1-HYPERMUTATOR positive — at least one must be present"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+
+recommended_regimen:
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "n/a (post-surgical surveillance — no systemic / radiation therapy)"
+  complete_response: "n/a"
+  progression_free_survival: "Stage I POLE-EDM 5-year PFS ~95-100% per PORTEC-3 / TransPORTEC pooled analysis"
+  overall_survival_5y: ">95% (excellent prognosis driven by hypermutator phenotype + early stage)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-ENDOMETRIAL-HIGH-RISK-BIOLOGY
+  - RF-ENDOMETRIAL-TRANSFORMATION-PROGRESSION
+  - RF-ENDOMETRIAL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-ER-PR-IHC
+desired_tests: []
+
+rationale: >
+  PORTEC-3 / TransPORTEC pooled analyses demonstrated that Stage I
+  endometrial carcinoma harboring a pathogenic POLE exonuclease-domain
+  (POLE-EDM) mutation has near-100% recurrence-free survival regardless of
+  histologic grade, and adjuvant chemoradiation provides NO incremental
+  benefit. POLD1-EDM is rarer but mechanistically equivalent and grouped
+  with POLE in TCGA / ESGO-ESTRO integrated risk classification.
+  Following total hysterectomy + bilateral salpingo-oophorectomy,
+  observation alone is the standard recommendation per NCCN Uterine 2025
+  and ESGO-ESTRO-ESP 2025 guidelines. Avoids unnecessary toxicity and
+  cost in a population with excellent biology. Lynch screening still
+  appropriate if any MMR/MSI features co-occur; germline counseling for
+  POLD1 cases (PPAP differential).
+
+rationale_ua: >
+  Об'єднані аналізи PORTEC-3 / TransPORTEC продемонстрували, що Stage I
+  ендометріальна карцинома з патогенною мутацією exonuclease-домену
+  POLE (POLE-EDM) має майже 100% виживання без рецидиву незалежно від
+  гістологічного grade, а ад'ювантна хіміо-RT не дає додаткової користі.
+  POLD1-EDM рідший, але механістично еквівалентний і згрупований з POLE
+  в інтегрованій TCGA / ESGO-ESTRO класифікації ризику. Після тотальної
+  гістеректомії + двосторонньої сальпінго-оофоректомії лише
+  спостереження є стандартною рекомендацією NCCN Uterine 2025 та
+  ESGO-ESTRO-ESP 2025. Уникає непотрібної токсичності та вартості у
+  популяції з відмінною біологією. Lynch screening залишається доречним
+  при супутніх MMR/MSI ознаках; гермінальне консультування для випадків
+  POLD1 (PPAP диференціал).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-NCCN-UTERINE-2025
+    position: supports
+    relevant_quote_paraphrase: "Stage I POLE-mutated endometrial carcinoma — observation only after surgical staging; no adjuvant therapy indicated"
+  - source_id: SRC-ESMO-ENDOMETRIAL-2022
+    position: supports
+    relevant_quote_paraphrase: "ESMO endorses TCGA/TransPORTEC molecular classification with POLE-mutated as favorable-prognosis subtype not requiring adjuvant therapy in early stage"
+  - source_id: SRC-ESGO-ENDOMETRIAL-2025
+    position: supports
+    relevant_quote_paraphrase: "ESGO-ESTRO-ESP 2025 endometrial guideline: POLE-mutated Stage I — observation; treat per molecular class, not stage/grade alone"
+
+known_controversies:
+  - topic: "Defining 'pathogenic' POLE-EDM variants in non-canonical positions"
+    positions:
+      - position: "Restrict to TCGA / TransPORTEC validated hotspot list (e.g., P286R, V411L, S297F, A456P, S459F)"
+        sources: [SRC-NCCN-UTERINE-2025]
+      - position: "Functional / in-silico classification of any EDM variant in codons 268-471"
+        sources: [SRC-ESGO-ENDOMETRIAL-2025]
+    our_default: "Use validated hotspot list; non-hotspot exonuclease-domain variants of unknown significance should NOT trigger de-escalation without molecular pathology review"
+    rationale: "Mis-classification risks under-treating an aggressive Stage I tumor"
+
+do_not_do:
+  - "Не призначати ад'ювантну хіміотерапію / RT для Stage I POLE-EDM — PORTEC-3/TransPORTEC показали відсутність користі."
+  - "Не покладатися лише на IHC — POLE/POLD1 потребує NGS-секвенування проксимального exonuclease-домену."
+  - "Не плутати POLE-hypermutator з MSI-H — це окремий TCGA-підтип; патерни лікування різні (ICI ефективна в обох, але Stage I logic відрізняється)."
+  - "Не пропускати оцінку high-grade морфології в звіті — Stage I POLE-EDM з high-grade ще лишається observation, але документація обов'язкова для multidisciplinary review."
+  - "Не екстраполювати observation-only на Stage II+ POLE-EDM — дані обмежені; advanced-stage логіка лишається стандартною."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — surveillance / observation track for Stage I endometrial with
+  POLE-EDM or POLD1-EDM hypermutator phenotype. Requires clinical
+  co-lead signoff. Orphan vs algorithm: ALGO-ENDOMETRIAL-STAGE-I does
+  not yet exist; orchestrator should wire when authored. Existing
+  algorithms (ALGO-ENDOMETRIAL-ADVANCED-1L, ALGO-ENDOMETRIAL-2L) are
+  Stage IV and 2L respectively and intentionally untouched in this
+  chunk.

@@ -1,0 +1,62 @@
+id: BIO-IDH1-R132C
+names:
+  preferred: "IDH1 R132C mutation (glioma / cholangiocarcinoma / AML)"
+  ukrainian: "Мутація IDH1 R132C (гліома / холангіокарцинома / ГМЛ)"
+  english: "IDH1 R132C"
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "IDH1"
+  exon: "4"
+  variant_type: "missense"
+  hgvs_protein: "p.R132C"
+  functional_impact: "neomorphic — converts α-KG to 2-hydroxyglutarate (oncometabolite); DNA hypermethylation"
+
+measurement:
+  method: "NGS panel (R132C is IHC-negative with the R132H-specific antibody — requires sequencing). Liquid-biopsy ctDNA assays also detect R132C."
+  units: "categorical (positive | negative)"
+specimen_requirements: ["FFPE tumor (glioma, cholangiocarcinoma, chondrosarcoma)", "BM aspirate (AML)"]
+
+related_biomarkers: [BIO-IDH1-R132H, BIO-IDH-MUTATION, BIO-MGMT-METHYLATION]
+sources: [SRC-NCCN-CNS-2025, SRC-EANO-GBM-2024, SRC-ESMO-AML-2020]
+
+# Per oncokb_integration_safe_rollout_v3.md §4: variant-specific lookup
+# for the IDH1-R132C residue. Most enriched in cholangiocarcinoma (~25-30%
+# of IDH1-mutant CCA) where ClarIDHy established ivosidenib benefit.
+actionability_lookup:
+  gene: IDH1
+  variant: R132C
+external_ids:
+  hgnc_symbol: "IDH1"
+  hgvs_protein: "p.R132C"
+  oncokb_url: "https://www.oncokb.org/gene/IDH1/R132C"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Second most common IDH1 variant. Distribution differs by disease:
+  R132C is the dominant IDH1 variant in cholangiocarcinoma (~25-30% of
+  IDH1-mutant CCA per ClarIDHy) and chondrosarcoma; in glioma it is
+  rarer than R132H (<5%); in AML R132C accounts for ~30% of IDH1
+  mutations. Critically, R132C is IHC-NEGATIVE with the R132H-specific
+  antibody (clone H09) — relying on IHC alone misses these patients.
+  Ivosidenib (Tibsovo) is approved for IDH1-mutant cholangiocarcinoma
+  (ClarIDHy 2L+) and IDH1-mutant AML (AGILE in combination with
+  azacitidine 1L unfit; monotherapy R/R) — labels cover all IDH1
+  variants on the proven hotspot list (R132C/R132G/R132H/R132L/R132S),
+  not just R132H. Reuses existing REG-IVOSIDENIB and IDH1-keyed
+  indications via this biomarker entity.
+notes_ua: >
+  Другий за поширеністю варіант IDH1. Розподіл відрізняється за
+  захворюванням: R132C є домінантним варіантом IDH1 у холангіокарциномі
+  (~25-30% IDH1-мутантних CCA за ClarIDHy) та хондросаркомі; у гліомі
+  рідший за R132H (<5%); у ГМЛ R132C становить ~30% мутацій IDH1.
+  Критично: R132C IHC-НЕГАТИВНИЙ з R132H-специфічним антитілом
+  (клон H09) — покладання лише на IHC пропускає цих пацієнтів.
+  Івосиденіб (Tibsovo) схвалений для IDH1-мутантної холангіокарциноми
+  (ClarIDHy 2L+) та IDH1-мутантного ГМЛ (AGILE у комбінації з
+  азацитидином 1L unfit; монотерапія R/R) — мітки охоплюють усі
+  варіанти IDH1 з підтвердженого hotspot-списку
+  (R132C/R132G/R132H/R132L/R132S), не лише R132H. Повторно використовує
+  наявний REG-IVOSIDENIB та показання за ключем IDH1 через цю сутність.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -76,6 +76,7 @@ class DiseaseRow:
     sources_cited: set[str] = field(default_factory=set)
     has_questionnaire: bool = False
     molecular_subtypes_count: int = 0
+    curated_count: int = 0
 
 
 def safe_pct(num: int, den: int) -> str:
@@ -96,6 +97,11 @@ def main() -> int:
     biomarkers = load_all("biomarkers")
     algorithms = load_all("algorithms")
 
+    # Reuse the disease-id ↔ filename-prefix mapping from the per-disease
+    # coverage matrix script so the two reports stay consistent.
+    from scripts.disease_coverage_matrix import _count_curated_cases
+    curated_counts = _count_curated_cases(REPO_ROOT / "examples")
+
     rows: dict[str, DiseaseRow] = {}
     for d in diseases:
         did = d.get("id", "")
@@ -106,6 +112,7 @@ def main() -> int:
             name_ua=names.get("ukrainian") or "",
             archetype=d.get("archetype") or "",
             molecular_subtypes_count=len(d.get("molecular_subtypes") or []),
+            curated_count=curated_counts.get(did, 0),
         )
 
     # BMA pass
@@ -321,10 +328,10 @@ def main() -> int:
     lines.append("")
     lines.append(
         "| Disease | Archetype | Subtypes | BMA | ESCAT% | CIViC% | UA✓ | IND | "
-        "Outcomes% | NCCN% | RF | RF cats | Regimens | Sources | Quest |"
+        "Outcomes% | NCCN% | RF | RF cats | Regimens | Sources | Quest | #Curated |"
     )
     lines.append(
-        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|"
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|:---:|---:|"
     )
 
     sorted_rows = sorted(
@@ -337,7 +344,7 @@ def main() -> int:
             continue  # in gap section
         lines.append(
             "| {name} | {arch} | {sub} | {bma} | {escat} | {civic} | {ua} | "
-            "{ind} | {out} | {nccn} | {rf} | {rfcat} | {reg} | {src} | {q} |".format(
+            "{ind} | {out} | {nccn} | {rf} | {rfcat} | {reg} | {src} | {q} | {cur} |".format(
                 name=f"{r.name} ({r.id.replace('DIS-', '')})",
                 arch=r.archetype or "—",
                 sub=r.molecular_subtypes_count or "—",
@@ -353,6 +360,7 @@ def main() -> int:
                 reg=len(r.regimens_referenced),
                 src=len(r.sources_cited),
                 q="✓" if r.has_questionnaire else "—",
+                cur=r.curated_count if r.curated_count > 0 else "—",
             )
         )
     lines.append("")

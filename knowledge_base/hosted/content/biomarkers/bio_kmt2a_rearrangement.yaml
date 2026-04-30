@@ -1,0 +1,67 @@
+id: BIO-KMT2A-REARRANGEMENT
+names:
+  preferred: "KMT2A rearrangement (MLL fusion)"
+  ukrainian: "Перебудова KMT2A (фузія MLL)"
+  english: "KMT2A rearrangement"
+  synonyms:
+    - "MLL rearrangement"
+    - "MLL fusion"
+    - "11q23 rearrangement"
+    - "KMT2A-r"
+biomarker_type: gene_fusion
+
+mutation_details:
+  gene: "KMT2A"
+  partners: ["MLLT3 (AF9, t(9;11))", "MLLT1 (ENL, t(11;19))", "AFDN (AF6, t(6;11))", "ELL, t(11;19)", "AFF1 (AF4, t(4;11))", "MLLT10 (AF10)"]
+  variant_type: "chromosomal rearrangement (typically 11q23 translocation)"
+  functional_impact: "Aberrant transcriptional activation of HOX-A cluster (HOXA9 / MEIS1) via menin-MLL complex; leukemogenic"
+
+measurement:
+  method: "Karyotype + FISH (KMT2A break-apart probe) at diagnosis; RT-PCR / RNA-NGS for fusion partner identification"
+  units: "categorical (positive | negative); fusion partner reported when known"
+specimen_requirements:
+  - "Bone marrow aspirate (preferred at diagnosis)"
+  - "Peripheral blood acceptable when blast count high"
+
+related_biomarkers:
+  - BIO-NPM1  # menin inhibitors active in both KMT2A-r and NPM1-mut AML
+
+sources: [SRC-NCCN-AML-2025, SRC-ELN-AML-2022]
+
+# Fusion biomarker — actionability lookups for fusions are deferred per
+# safe-rollout MVP (multiple partner combinations confound variant-level
+# normalization). Engine surfaces actionability via the dedicated
+# RF-AML-KMT2A-ACTIONABLE → menin inhibitor (revumenib) routing.
+oncokb_skip_reason: fusion_mvp
+external_ids:
+  hgnc_symbol: "KMT2A"
+
+last_reviewed: "2026-04-30"
+notes: >
+  KMT2A rearrangements occur in ~5-10% of adult AML and ~70% of infant
+  ALL/AML; ELN-2022 classifies as adverse risk in AML. Mechanism: KMT2A
+  fusion proteins recruit menin to drive HOXA / MEIS1 expression —
+  menin-MLL interaction is the therapeutic target. Revumenib (menin
+  inhibitor; AUGMENT-101 phase 1/2) FDA-approved Nov 2024 for relapsed/
+  refractory KMT2A-rearranged acute leukemia (≥1 prior line). ORR ~63%
+  with CR/CRh ~23% in KMT2A-r AML. Differentiation syndrome (~16%) and
+  QTc prolongation are signature AEs. Ziftomenib is alternative menin
+  inhibitor in late-phase trials. Common partners: AF9 (t(9;11)) and
+  AF4 (t(4;11)) — diagnostic karyotype + FISH break-apart probe is
+  standard; fusion partner identification by RT-PCR or RNA-NGS informs
+  prognosis (some partners higher risk than others).
+notes_ua: >
+  Перебудови KMT2A зустрічаються в ~5-10% дорослої ГМЛ та ~70%
+  дитячого ГЛЛ/ГМЛ; ELN-2022 класифікує як несприятливий ризик у ГМЛ.
+  Механізм: химерні білки KMT2A залучають менін для активації HOXA /
+  MEIS1 — взаємодія менін-MLL є мішенню терапії. Ревуменіб (інгібітор
+  меніну; AUGMENT-101 фаза 1/2) FDA-схвалено листопад 2024 для
+  рецидивуючої / рефрактерної KMT2A-перебудованої гострої лейкемії
+  (≥1 попередня лінія). ORR ~63%, ПР/ПРн ~23% у KMT2A-r ГМЛ. Синдром
+  диференціації (~16%) та подовження QTc — сигнатурні НЯ. Зіфтоменіб —
+  альтернативний інгібітор меніну в пізніх фазах досліджень. Часті
+  партнери: AF9 (t(9;11)) та AF4 (t(4;11)) — каріотип + FISH break-apart
+  стандарт; ідентифікація партнера слиття через RT-PCR або RNA-NGS
+  інформує прогноз.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

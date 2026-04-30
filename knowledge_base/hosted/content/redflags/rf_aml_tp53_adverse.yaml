@@ -1,0 +1,96 @@
+id: RF-AML-TP53-ADVERSE
+definition: >
+  TP53-mutated AML — ELN-2022 adverse-risk classifier and WHO 5th-
+  edition entity. ~10-15% of de-novo AML; enriched (~30-40%) in
+  therapy-related and AML-MRC. Median OS 5-9 months on standard chemo
+  or HMA-based therapy; alloHCT carries higher relapse risk vs TP53-WT
+  AML but remains the only potentially curative pathway. Multi-hit
+  (biallelic) predicts even worse outcome than mono-hit. Routes to:
+  (1) alloHCT consideration when fit, (2) ven+aza backbone for unfit,
+  (3) clinical-trial referral preferentially.
+definition_ua: >
+  TP53-мутована ГМЛ — класифікатор несприятливого ризику ELN-2022
+  та сутність WHO 5-го видання. ~10-15% de-novo ГМЛ; збагачена
+  (~30-40%) у терапія-пов'язаній ГМЛ та ГМЛ-MRC. Медіана ЗВ 5-9
+  місяців на стандартній хімії або HMA-базованій терапії; алоТГСК
+  має вищий ризик рецидиву vs TP53-WT ГМЛ, але залишається єдиним
+  потенційно курабельним шляхом. Мульти-хіт (біалельна) предиктує
+  ще гірший прогноз ніж моно-хіт. Маршрутизує на: (1) розгляд
+  алоТГСК у придатних, (2) ven+aza бекбон для непридатних, (3)
+  направлення на клінічне дослідження preferentially.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "aml_tp53_adverse"
+      value: true
+    - all_of:
+        - finding: "disease"
+          value: "AML"
+        - finding: "tp53_mutation"
+          value: true
+    - all_of:
+        - finding: "disease"
+          value: "AML"
+        - finding: "tp53_biallelic"
+          value: true
+    - all_of:
+        - finding: "disease"
+          value: "AML"
+        - finding: "del_17p"
+          value: true
+    - all_of:
+        - finding: "disease"
+          value: "AML"
+        - finding: "tp53_vaf_pct"
+          threshold: 10
+          comparator: ">="
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+  - ALGO-AML-2L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-IPSS-M-BERNARD-2022
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Detection: NGS myeloid panel at diagnosis (mandatory per ELN-2022)
+  + FISH for del(17p13.1). VAF % critical — ≥10% threshold often used
+  for adverse classification (lower-VAF subclonal TP53 may not drive
+  prognosis). Multi-hit definition: biallelic TP53 by either two
+  mutations, mutation + del(17p), or LOH on SNP array. Active research
+  questions: ven+aza (CR ~40% but PFS short ~5 mo), magrolimab+aza
+  (failed phase-3 ENHANCE), eprenetapopt+aza (mixed phase 2/3).
+  Distinct from RF-MDS-TP53-MUTATION (MDS-specific) — AML-scoped
+  routing is more aggressive (alloHCT priority). Algorithm wiring
+  deferred — RF surfaces as adverse-risk annotation; ven+aza backbone
+  + alloHCT bridge for fit per existing ALGO-AML-1L step routing.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Виявлення: NGS-мієлоїдна панель при діагностиці (обов'язкова за
+  ELN-2022) + FISH для del(17p13.1). VAF % критично — ≥10% поріг
+  часто використовується для класифікації несприятливого ризику
+  (нижче-VAF субклональний TP53 може не керувати прогнозом).
+  Визначення мульти-хіт: біалельна TP53 через дві мутації, мутація
+  + del(17p), або LOH на SNP-масиві. Активні наукові питання: ven+aza
+  (ПР ~40%, але БПВ коротка ~5 міс), magrolimab+aza (провалив
+  фазу-3 ENHANCE), eprenetapopt+aza (змішані фаза 2/3).
+  Відрізняється від RF-MDS-TP53-MUTATION (МДС-специфічний) —
+  ГМЛ-обмежений маршрут більш агресивний (пріоритет алоТГСК).
+  Маршрутизація алгоритмом відкладена — RF поверхне як
+  несприятливо-ризикова анотація; ven+aza бекбон + алоТГСК-міст
+  для придатних відповідно до існуючої маршрутизації кроків
+  ALGO-AML-1L. STUB — потребує схвалення клінічного співкерівника.

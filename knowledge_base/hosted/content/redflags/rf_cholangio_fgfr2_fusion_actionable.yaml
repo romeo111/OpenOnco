@@ -1,0 +1,75 @@
+id: RF-CHOLANGIO-FGFR2-FUSION-ACTIONABLE
+definition: >
+  FGFR2 fusion or rearrangement in advanced/metastatic intrahepatic
+  cholangiocarcinoma (~10–20% of iCCA; rare in extrahepatic / gallbladder).
+  Treatment-defining for 2L+: pemigatinib (FIGHT-202 ORR 35.5%, mPFS
+  6.9 mo, mOS 21.1 mo; FDA Apr 2020) preferred when FGFR2 fusion
+  confirmed; futibatinib (FOENIX-CCA2) covalent FGFR-TKI alternative,
+  including some pemigatinib-resistance variants. Common partners:
+  BICC1-FGFR2, FGFR2-AHCYL1, FGFR2-CCDC6.
+definition_ua: >
+  Фузія / перебудова FGFR2 у поширеній / метастатичній
+  інтрагепатальній холангіокарциномі (~10–20% iCCA; рідко в позапечінкових
+  / жовчного міхура). Лікування-визначальний маркер для 2L+:
+  пеміґатиніб (FIGHT-202 ORR 35.5%, мПФВ 6.9 міс, мЗВ 21.1 міс;
+  FDA квітень 2020) переважно при підтвердженій фузії FGFR2;
+  футибатиніб (FOENIX-CCA2) — ковалентний FGFR-TKI як альтернатива,
+  у т. ч. при деяких варіантах резистентності до пеміґатинібу.
+  Поширені партнери: BICC1-FGFR2, FGFR2-AHCYL1, FGFR2-CCDC6.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "fgfr2_fusion"
+      value: true
+    - finding: "fgfr2_rearrangement"
+      value: "positive"
+    - finding: "fgfr2_status"
+      value: "fusion_positive"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 52
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CHOLANGIOCARCINOMA
+
+shifts_algorithm:
+  - ALGO-CHOLANGIO-2L
+
+branch_targets:
+  ALGO-CHOLANGIO-2L: "step-1"
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+  - SRC-FIGHT-202
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Detection: RNA-NGS preferred (captures fusion partners); DNA-NGS
+  with fusion-aware caller acceptable; FISH break-apart secondary.
+  Mandatory pre-treatment NGS in advanced iCCA (NCCN cat 1 testing).
+  Class toxicity: hyperphosphatemia (~50%) — phosphate binders +
+  low-phosphate diet; retinal pigment epithelial detachment (serous
+  retinopathy) — baseline + serial ophtho exam; nail / skin / mucosal
+  toxicity; alopecia. Resistance: gatekeeper V564F + molecular-brake
+  mutations; futibatinib retains some activity. UA access: neither
+  pemigatinib nor futibatinib registered — named-patient / EAP only.
+  SRC-FIGHT-202 currently a stub (citation TBD); flagged for source
+  ingestion completion.
+notes_ua: >
+  Виявлення: RNA-NGS переважно (захоплює партнерів фузії); DNA-NGS
+  з fusion-aware caller прийнятна; FISH break-apart — вторинно.
+  Обов'язкове передлікувальне NGS у поширеній iCCA (NCCN cat 1).
+  Класова токсичність: гіперфосфатемія (~50%) — фосфат-зв'язувачі +
+  низько-фосфатна дієта; відшарування пігментного епітелію сітківки
+  (серозна ретинопатія) — baseline + серійний офтальмологічний огляд;
+  токсичність нігтів / шкіри / слизових; алопеція. Резистентність:
+  gatekeeper V564F + molecular-brake мутації; футибатиніб зберігає
+  частину активності. UA-доступ: ані пеміґатиніб, ані футибатиніб не
+  зареєстровані — named-patient / EAP лише.

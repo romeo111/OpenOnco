@@ -22,6 +22,7 @@ output_indications:
   - IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
   - IND-NSCLC-2L-MET-EX14-CAPMATINIB
   - IND-NSCLC-2L-MET-EX14-TEPOTINIB
+  - IND-NSCLC-2L-MET-AMP-CAPMATINIB
   - IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
   - IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
   - IND-NSCLC-2L-NTRK-LAROTRECTINIB
@@ -145,7 +146,7 @@ decision_tree:
     if_true:
       next_step: 11
     if_false:
-      next_step: 12
+      next_step: 100
 
   - step: 11
     # MET ex14 2L: once-daily preference → tepotinib; otherwise capmatinib.
@@ -158,6 +159,22 @@ decision_tree:
     if_false:
       result: IND-NSCLC-2L-MET-EX14-CAPMATINIB
     notes: "MDT-only — capmatinib BID vs tepotinib once-daily is a preference call; default capmatinib."
+
+  # ── Step 100: MET amplification (high-level, distinct from ex14) ───
+  # Parallel to MET ex14 — fires only when ex14 absent. High-level MET
+  # amplification (FISH MET/CEP7 ≥4 OR mean GCN ≥10) routes to capmatinib
+  # (off-label expansion supported by GEOMETRY mono-1 high-amp cohort:
+  # ORR ~40%, mPFS ~5.5 mo). Step number 100 to avoid renumbering existing
+  # downstream steps (12-16); engine resolves steps by id, not by order.
+  - step: 100
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-MET-AMP-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-2L-MET-AMP-CAPMATINIB
+    if_false:
+      next_step: 12
+    notes: "MET amplification is distinct from ex14 skipping; capmatinib off-label use supported by NCCN/ESMO 2024-2025 (Cat 2A)."
 
   # ── Step 12: BRAF V600E ───────────────────────────────────────────
   - step: 12

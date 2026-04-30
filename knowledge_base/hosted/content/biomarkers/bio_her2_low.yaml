@@ -1,0 +1,58 @@
+id: BIO-HER2-LOW
+names:
+  preferred: "HER2-low (breast — IHC 1+ OR IHC 2+ ISH-negative)"
+  ukrainian: "HER2-low (РМЗ — ІГХ 1+ АБО ІГХ 2+ ISH-)"
+  english: "HER2-low breast"
+  synonyms: ["ERBB2-low", "HER2 IHC 1+", "HER2 IHC 2+/ISH-"]
+
+biomarker_type: protein_expression_ihc
+
+measurement:
+  method: "IHC (4B5 / HercepTest); reflex ISH (FISH/CISH/SISH) for IHC 2+. Breast scoring uses 2018 ASCO/CAP criteria — circumferential membranous staining ≥10%."
+  units: "IHC 0 | 1+ | 2+ (ISH-non-amplified) — HER2-low = IHC 1+ OR (IHC 2+ AND ISH HER2/CEP17 ratio <2.0 AND HER2 signals/cell <4.0)"
+
+specimen_requirements:
+  - "FFPE tumor tissue; primary or metastatic site acceptable (concordance imperfect — re-biopsy on progression preferred when feasible)"
+
+related_biomarkers:
+  - BIO-HER2-SOLID  # gastric/GEJ/CRC sibling — same gene, distinct scoring criteria
+  - BIO-ESTROGEN-RECEPTOR  # HR-status drives line/sequence (HR+ vs TNBC HER2-low)
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-DESTINY-BREAST04-MODI-2022
+
+# IHC-only call (not a sequence variant) — actionability lookup not
+# applicable. CIViC / OncoKB key on (gene, variant); HER2-low is a
+# protein-expression-tier classification, not a variant.
+oncokb_skip_reason: ihc_no_variant
+
+external_ids:
+  hgnc_symbol: "ERBB2"
+
+last_reviewed: "2026-04-29"
+notes: >
+  HER2-low (IHC 1+ OR IHC 2+/ISH-) covers ~50-55% of HER2-non-positive
+  breast cancers. DESTINY-Breast04 (Modi 2022) established T-DXd
+  efficacy 2L+ in HER2-low metastatic breast (HR+ post-endocrine + ≥1
+  prior chemo, OR TNBC post-≥1 prior chemo): mPFS 9.9 vs 5.1 mo, OS
+  23.4 vs 16.8 mo. DESTINY-Breast06 extended signal to HER2-ultralow
+  (IHC ≥0 with membrane staining) post-endocrine in HR+. Pathology
+  challenge: IHC 1+ vs 0 has poor inter-observer reproducibility —
+  ASCO/CAP 2023 update ongoing. ILD class warning (~12% any-grade,
+  1-2% G≥3) is dominant safety concern. Distinct from BIO-HER2-SOLID
+  (which is named/scoped for gastric/GEJ/CRC scoring conventions).
+notes_ua: >
+  HER2-low (ІГХ 1+ АБО ІГХ 2+/ISH-) охоплює ~50-55% HER2-непозитивних
+  РМЗ. DESTINY-Breast04 (Modi 2022) встановив ефективність T-DXd 2L+
+  при метастатичному HER2-low РМЗ (HR+ після ендокрин + ≥1 хіміо,
+  АБО TNBC після ≥1 хіміо): мПФВ 9.9 vs 5.1 міс, ЗВ 23.4 vs 16.8 міс.
+  DESTINY-Breast06 розширив сигнал на HER2-ultralow (ІГХ ≥0 з
+  мембранним забарвленням) після ендокрин при HR+. Патоморфологічний
+  виклик: ІГХ 1+ vs 0 має погану відтворюваність — оновлення ASCO/CAP
+  2023 триває. Класове застереження ILD (~12% будь-який ступінь,
+  1-2% ≥G3) — домінантна проблема безпеки. Відрізняється від
+  BIO-HER2-SOLID (іменована/скопована під шкалу гастро/ГЕЗ/КРР).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
