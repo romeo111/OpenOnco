@@ -580,6 +580,45 @@ h3 {
 .drug-list .drug-name { font-weight: 600; }
 .drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
 .drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+
+/* Treatment phases — multi-phase regimen rendering (PR2 of phases-refactor).
+   Each phase is a discrete block with its own heading + drug list. Legacy
+   auto-wrapped single-phase regimens (name="main") render the wrapper but
+   suppress the heading, keeping the visual close to pre-PR2 for unmigrated
+   YAMLs. Multi-phase regimens (lymphodepletion → main_infusion for axi-cel,
+   etc.) render as visually separated blocks per
+   docs/reviews/regimen-phases-refactor-plan-2026-04-28.md §4.4. */
+.phase-block {
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    padding: 10px 14px; margin-bottom: 8px; background: var(--gray-50);
+}
+.phase-block:last-child { margin-bottom: 4px; }
+.phase-block[data-phase="main"]:only-of-type {
+    /* Auto-wrapped legacy regimen — single block, no border noise. */
+    border: none; padding: 0; background: transparent;
+}
+.phase-block .phase-heading {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--green-700); margin: 0 0 6px 0; font-weight: 700;
+}
+.phase-block .drug-list { margin: 0; }
+
+/* Bridging options block — CAR-T / TIL manufacturing-window slot. Lists
+   acceptable bridging regimen IDs; rendered after all phase blocks. */
+.bridging-options {
+    margin-top: 10px; padding: 10px 14px; background: var(--blue-bg);
+    border-left: 3px solid var(--blue-700); border-radius: 4px;
+}
+.bridging-options .bridging-options-label {
+    font-size: 12px; color: var(--blue-700);
+    font-weight: 600; margin-bottom: 4px;
+}
+.bridging-options-list {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px; color: var(--gray-700);
+}
+.bridging-options-list li.bridging-option { padding: 2px 0; }
 """
 
 

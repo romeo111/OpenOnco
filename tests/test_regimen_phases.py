@@ -188,10 +188,22 @@ def test_no_regression_r_chop():
 
 
 def test_no_regression_axicel():
+    """axi-cel has been migrated to multi-phase shape (PR2). The YAML
+    carries `components: []` and authors `phases:` explicitly with
+    lymphodepletion + main. The auto-wrap MUST NOT fire (phases is
+    non-empty on input). Total drug count across phases (3) exceeds the
+    flat `components` length (0) — the new shape is canonical."""
     raw, r = _load_regimen("reg_car_t_axicel.yaml")
-    assert len(r.phases) >= 1
-    assert len(r.components) == _raw_component_count(raw)
-    assert sum(len(p.components) for p in r.phases) == len(r.components)
+    assert len(r.phases) == 2, "post-migration axi-cel must carry exactly two phases"
+    assert [p.name for p in r.phases] == ["lymphodepletion", "main"]
+    # Components is the no-op shape (loader-side opt-out from auto-wrap)
+    assert len(r.components) == _raw_component_count(raw) == 0
+    # Drugs flow via phases now
+    drug_ids_in_phases = [c.drug_id for p in r.phases for c in p.components]
+    assert "DRUG-CYCLOPHOSPHAMIDE" in drug_ids_in_phases
+    assert "DRUG-FLUDARABINE" in drug_ids_in_phases
+    assert "DRUG-AXICABTAGENE-CILOLEUCEL" in drug_ids_in_phases
+    assert len(drug_ids_in_phases) == 3
 
 
 def test_no_regression_lifileucel():
@@ -203,11 +215,18 @@ def test_no_regression_lifileucel():
 
 def test_no_regression_all_244_legacy_yamls_load():
     """Catch-all: every existing regimen YAML loads under the new schema.
-    Auto-wrap invariant: phases is non-empty iff components is non-empty
-    (a single legitimate surveillance "regimen" carries 0 components and
-    therefore stays at 0 phases).
 
-    Drives the load-bearing claim of PR1: zero existing YAML breaks.
+    Three valid shapes after PR2 (one regimen migrated to multi-phase):
+
+    * **legacy auto-wrapped** — `phases:` absent, `components: [drugs…]`
+      → after validate, `phases = [{name: 'main', components: drugs…}]`.
+    * **explicitly authored multi-phase** — `phases: [...]` populated,
+      `components: []` (axi-cel post-PR2; the curator-canonical form).
+      Auto-wrap MUST NOT fire — phases is preserved as authored.
+    * **surveillance-only** — both fields empty (e.g. observation-only
+      "regimen" with no drugs). The render layer routes this differently.
+
+    Drives the load-bearing claim of PR1+PR2: zero existing YAML breaks.
     """
     yaml_paths = sorted(KB_REGIMENS.glob("*.yaml"))
     assert len(yaml_paths) >= 240, (
@@ -215,44 +234,272 @@ def test_no_regression_all_244_legacy_yamls_load():
         "fixture changed?"
     )
 
-    nonempty_count = 0
+    legacy_autowrap_count = 0
+    explicit_multiphase_count = 0
     empty_count = 0
     for path in yaml_paths:
         raw = yaml.safe_load(path.read_text(encoding="utf-8"))
         r = Regimen.model_validate(raw)
         raw_count = _raw_component_count(raw)
-        # Component preservation (idempotent on the legacy schema)
+        raw_has_phases = bool(raw.get("phases"))
+
+        # Component preservation (the validator never adds/drops top-level)
         assert len(r.components) == raw_count, (
             f"{path.name}: components count drifted "
             f"({raw_count} raw vs {len(r.components)} model)"
         )
-        # Auto-wrap invariant
-        if raw_count > 0:
+
+        if raw_has_phases:
+            # Explicit author — auto-wrap suppressed, phases as written
             assert len(r.phases) >= 1, (
-                f"{path.name}: components={raw_count} but phases empty "
-                "— auto-wrap failed"
+                f"{path.name}: phases authored explicitly but model has 0"
+            )
+            # Drugs live in phases now; top-level components is the no-op
+            phase_drugs = sum(len(p.components) for p in r.phases)
+            assert phase_drugs > 0, (
+                f"{path.name}: explicit phases must have ≥1 component"
+            )
+            explicit_multiphase_count += 1
+        elif raw_count > 0:
+            # Legacy auto-wrap — single phase named "main"
+            assert len(r.phases) == 1, (
+                f"{path.name}: components={raw_count} but auto-wrap produced "
+                f"{len(r.phases)} phases"
             )
             assert r.phases[0].name == "main", (
                 f"{path.name}: auto-wrapped phase has unexpected name "
                 f"{r.phases[0].name!r} (expected 'main')"
             )
-            nonempty_count += 1
+            legacy_autowrap_count += 1
         else:
-            # Surveillance-only "regimen" with components: [] — phases
-            # also stays empty. Render layer is responsible for routing
-            # this kind of entity differently.
+            # Surveillance — zero components AND no authored phases.
+            # Render is responsible for routing this kind of entity
+            # differently (e.g. follow-up schedule rather than drug list).
             assert len(r.phases) == 0, (
-                f"{path.name}: zero components but phases populated "
-                "— auto-wrap fired spuriously"
+                f"{path.name}: zero components AND no authored phases, "
+                "but model has phases populated — auto-wrap fired spuriously"
             )
             empty_count += 1
 
-    # Sanity: vast majority of regimens have ≥1 component
-    assert nonempty_count >= 240, (
-        f"expected ~243 non-empty regimens, got {nonempty_count}"
+    # Sanity: vast majority of regimens are still legacy auto-wrap shape
+    # (PR2 migrates only axi-cel; PR3 migrates the remaining 17).
+    assert legacy_autowrap_count >= 240, (
+        f"expected ~242 legacy auto-wrap regimens, got {legacy_autowrap_count}"
     )
-    # Documented exception
+    # PR2 migrated exactly one regimen so far
+    assert explicit_multiphase_count == 1, (
+        f"expected exactly one explicit multi-phase regimen (axi-cel), "
+        f"got {explicit_multiphase_count}"
+    )
+    # Documented exception (surveillance / observation-only "regimen")
     assert empty_count == 1, (
         f"expected exactly one zero-component surveillance regimen, "
         f"got {empty_count}"
     )
+
+
+# ── 5. Render layer (PR2 of regimen-phases-refactor) ─────────────────────────
+#
+# These tests exercise `_render_treatment_phases` (the visible render
+# entry point per the regimen track block). Two integration tests drive
+# a real end-to-end Plan → HTML render against the migrated axi-cel YAML
+# and against a legacy R-CHOP regimen, asserting the phase-block visual
+# contract (axi-cel: two blocks; R-CHOP: still one). A third unit test
+# constructs a minimal `PlanTrack` to drive `bridging_options` rendering
+# in isolation (no production regimen has bridging_options yet).
+
+import json  # noqa: E402 — imports grouped above schema imports above on purpose
+
+from knowledge_base.engine.render import _render_treatment_phases  # noqa: E402
+from knowledge_base.schemas import Plan, PlanTrack  # noqa: E402
+
+REPO_ROOT = Path(__file__).parent.parent
+EXAMPLES = REPO_ROOT / "examples"
+KB_CONTENT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
+
+
+def _patient(name: str) -> dict:
+    return json.loads((EXAMPLES / name).read_text(encoding="utf-8"))
+
+
+def test_render_axicel_emits_two_phase_blocks():
+    """Post-migration axi-cel renders as TWO `<section class="phase-block">`
+    elements — one per phase (lymphodepletion + main). Each phase block
+    carries a `data-phase` attribute with the canonical phase name and a
+    UA heading that includes the curator-authored `purpose_ua`. Drug
+    components flow into the right phase: cyclophosphamide + fludarabine
+    under lymphodepletion, axi-cel under main.
+
+    Drives the migrated YAML through the render path directly — the
+    engine routing rules for an HGBL-double-hit patient → axi-cel are
+    out of scope for THIS test (and would couple the test to indication
+    selection). Loading the YAML via Pydantic gives us the canonical
+    post-migration shape; calling `_render_treatment_phases` with that
+    `regimen_data` exercises the render contract end-to-end.
+    """
+    raw_axicel = yaml.safe_load(
+        (KB_REGIMENS / "reg_car_t_axicel.yaml").read_text(encoding="utf-8")
+    )
+    track = PlanTrack(
+        track_id="aggressive",
+        label="axi-cel test track",
+        indication_id="IND-TEST-AXICEL",
+        is_default=True,
+        regimen_data=raw_axicel,
+    )
+
+    html_out = _render_treatment_phases(
+        track,
+        drugs_lookup={},  # render uses drug_id when names lookup is empty
+        patient_disease_id="",
+        disease_names={},
+        target_lang="uk",
+    )
+
+    # Exactly two phase-block sections — lymphodepletion + main
+    assert html_out.count('class="phase-block"') == 2, (
+        f"expected 2 phase-block sections, got {html_out.count('class=phase-block')}"
+    )
+    assert 'data-phase="lymphodepletion"' in html_out
+    assert 'data-phase="main"' in html_out
+
+    # Heading text — UA prefix + purpose_ua come through escaped
+    assert "Перед основною терапією: лімфодеплеція" in html_out, (
+        "phase heading prefix for lymphodepletion missing"
+    )
+    assert "виснаження лімфоцитів перед CAR-T" in html_out, (
+        "lymphodepletion purpose_ua not surfaced in heading"
+    )
+
+    # Drug routing per phase — slice the lymphodepletion section out and
+    # assert cyclo + fludarabine inside it; assert axi-cel is OUTSIDE it
+    # (in the main block).
+    lymph_start = html_out.find('data-phase="lymphodepletion"')
+    assert lymph_start > 0
+    lymph_end = html_out.find("</section>", lymph_start)
+    lymph_block = html_out[lymph_start:lymph_end]
+    assert "DRUG-CYCLOPHOSPHAMIDE" in lymph_block
+    assert "DRUG-FLUDARABINE" in lymph_block
+    assert "DRUG-AXICABTAGENE-CILOLEUCEL" not in lymph_block, (
+        "axi-cel infusion belongs in the main phase, not lymphodepletion"
+    )
+
+    # And axi-cel IS in the main block
+    main_start = html_out.find('data-phase="main"')
+    assert main_start > 0
+    main_end = html_out.find("</section>", main_start)
+    main_block = html_out[main_start:main_end]
+    assert "DRUG-AXICABTAGENE-CILOLEUCEL" in main_block
+
+
+def test_render_legacy_regimen_visually_unchanged():
+    """Legacy R-CHOP YAML (no `phases:` field) still renders all 5 drugs
+    in a single auto-wrapped phase block named "main". The render-time
+    fallback in `_render_treatment_phases` synthesises a single phase
+    when the loaded dict has no `phases` key — symmetric with the
+    Pydantic auto-wrap (which never runs on the loader-dict path).
+
+    Visual-similarity contract: the legacy auto-wrap MUST suppress the
+    phase-heading (`<h4>`) so an unmigrated regimen doesn't grow
+    spurious "основна терапія" labels above its drug list. The CSS rule
+    `.phase-block[data-phase="main"]:only-of-type` further strips the
+    wrapper border."""
+    raw_rchop = yaml.safe_load(
+        (KB_REGIMENS / "r_chop.yaml").read_text(encoding="utf-8")
+    )
+    # Sanity: R-CHOP is still in the legacy shape (no phases authored)
+    assert "phases" not in raw_rchop or not raw_rchop.get("phases"), (
+        "fixture invariant: r_chop.yaml is legacy; if it gains phases, "
+        "this test should swap to another single-phase legacy regimen"
+    )
+
+    track = PlanTrack(
+        track_id="standard",
+        label="R-CHOP test track",
+        indication_id="IND-TEST-RCHOP",
+        is_default=True,
+        regimen_data=raw_rchop,
+    )
+
+    html_out = _render_treatment_phases(
+        track,
+        drugs_lookup={},
+        patient_disease_id="",
+        disease_names={},
+        target_lang="uk",
+    )
+
+    # All 5 R-CHOP drugs visible
+    for drug_id in (
+        "DRUG-RITUXIMAB",
+        "DRUG-CYCLOPHOSPHAMIDE",
+        "DRUG-DOXORUBICIN",
+        "DRUG-VINCRISTINE",
+        "DRUG-PREDNISONE",
+    ):
+        assert drug_id in html_out, f"{drug_id} missing from R-CHOP render"
+
+    # Single auto-wrapped phase
+    assert html_out.count('class="phase-block"') == 1
+    assert 'data-phase="main"' in html_out
+
+    # No heading emitted for the legacy single phase (visual-similarity
+    # contract). The mapping `_PHASE_HEADING_PREFIX_UK["main"]` is None,
+    # which suppresses the <h4>.
+    assert 'class="phase-heading"' not in html_out, (
+        "legacy auto-wrap must NOT emit a phase-heading <h4> — it would "
+        "introduce spurious 'основна терапія' chrome above unmigrated "
+        "regimens"
+    )
+
+    # And no lymphodepletion prefix (this is R-CHOP, not CAR-T)
+    assert "Перед основною терапією" not in html_out
+
+
+def test_render_bridging_options():
+    """`bridging_options` renders as a separate visible block listing the
+    accepted bridging-regimen IDs. Constructed in-test because no
+    production regimen YAML has `bridging_options:` populated yet (PR3
+    will add them to ~8 indications referencing CAR-T / TIL)."""
+    track = PlanTrack(
+        track_id="aggressive",
+        label="Test track",
+        indication_id="IND-TEST",
+        is_default=False,
+        regimen_data={
+            "id": "REG-FAKE-CART",
+            "name": "fake CART",
+            "phases": [
+                {
+                    "name": "lymphodepletion",
+                    "purpose_ua": "test lymphodepletion",
+                    "components": [{"drug_id": "DRUG-CYCLOPHOSPHAMIDE"}],
+                },
+                {
+                    "name": "main",
+                    "purpose_ua": "test main",
+                    "components": [{"drug_id": "DRUG-AXICABTAGENE-CILOLEUCEL"}],
+                },
+            ],
+            "components": [],
+            "bridging_options": ["REG-RICE", "REG-DHAP"],
+        },
+    )
+
+    html_out = _render_treatment_phases(
+        track,
+        drugs_lookup={},  # empty lookup — drug name falls back to drug_id
+        patient_disease_id="",
+        disease_names={},
+        target_lang="uk",
+    )
+
+    # Bridging block rendered with both regimen IDs visible
+    assert "bridging-options" in html_out
+    assert "REG-RICE" in html_out
+    assert "REG-DHAP" in html_out
+    # UA label present
+    assert "Якщо очікування на основну терапію" in html_out
+    # And the phase blocks rendered too
+    assert 'data-phase="lymphodepletion"' in html_out
+    assert 'data-phase="main"' in html_out

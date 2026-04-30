@@ -60,6 +60,45 @@ def _h(s) -> str:
     return html.escape(str(s))
 
 
+# ── Regimen phase iteration (PR2 of regimen-phases-refactor) ─────────────
+#
+# `regimen_data` flows through render as a raw dict from the YAML loader
+# (knowledge_base/validation/loader.py stores `"data": raw`). Pydantic's
+# `Regimen._auto_wrap_legacy_components` validator never runs on this
+# path, so we cannot rely on `phases` being populated post-load — the
+# dict has whatever the YAML literally has:
+#
+#   * legacy YAML — `phases` absent, `components: [...]` → use components
+#   * migrated YAML (axi-cel post-PR2) — `phases: [...]`, `components: []`
+#     → iterate phases[*].components; ignore the empty top-level list
+#   * (theoretical authored) — both populated → phases is canonical
+#
+# The helper below is the single source of truth. Three render call
+# sites consume it — `_render_treatment_phases`, `_render_drugs_plain`
+# (patient bundle), `_render_ask_doctor_section` (predicate decoration).
+# Without it, migrated regimens would silently drop drugs from the
+# patient HTML and the ask-doctor questions.
+def _iter_regimen_components(regimen_dict: Optional[dict]):
+    """Yield component dicts from `phases[*].components` if populated,
+    else fall back to top-level `components`. Skips non-dict entries
+    defensively (loader returns plain Python types, but YAML errors can
+    leave None inside lists)."""
+    if not regimen_dict:
+        return
+    phases = regimen_dict.get("phases") or []
+    if phases:
+        for phase in phases:
+            if not isinstance(phase, dict):
+                continue
+            for comp in phase.get("components") or []:
+                if isinstance(comp, dict):
+                    yield comp
+        return
+    for comp in regimen_dict.get("components") or []:
+        if isinstance(comp, dict):
+            yield comp
+
+
 # ── Sign-off badge (CHARTER §6.1) ─────────────────────────────────────────
 #
 # Indications carry `reviewer_signoffs_v2: list[ReviewerSignoff]` after the
@@ -1276,6 +1315,49 @@ _NSZU_DRUGS_LABEL = {
 }
 
 
+# ── Phase-aware render labels (PR2 of regimen-phases-refactor) ──────────
+#
+# Maps the curator-facing `phase.name` vocabulary
+# (KNOWLEDGE_SCHEMA_SPECIFICATION §6.4) to a UA/EN heading prefix. The
+# block heading combines the prefix with the phase's `purpose_ua` so a
+# clinician sees both the role ("Перед основною терапією") and the
+# specific intent ("виснаження лімфоцитів перед CAR-T"). Auto-wrapped
+# legacy phases use name="main", which renders without a heading-prefix
+# noise — the visible behavior stays close to pre-PR2.
+_PHASE_HEADING_PREFIX_UK = {
+    "lymphodepletion": "Перед основною терапією: лімфодеплеція",
+    "bridging": "Бриджинг до основної терапії",
+    "induction": "Індукція",
+    "consolidation": "Консолідація",
+    "maintenance": "Підтримуюча терапія",
+    "main": None,  # auto-wrapped legacy — no heading prefix
+    "premedication": "Премедикація",
+    "conditioning": "Кондиціонування",
+    "salvage_induction": "Salvage-індукція",
+    "alternating_block_a": "Чергуючий блок A",
+    "alternating_block_b": "Чергуючий блок B",
+    "il2_support": "IL-2 підтримка",
+}
+_PHASE_HEADING_PREFIX_EN = {
+    "lymphodepletion": "Before main therapy: lymphodepletion",
+    "bridging": "Bridging to main therapy",
+    "induction": "Induction",
+    "consolidation": "Consolidation",
+    "maintenance": "Maintenance",
+    "main": None,
+    "premedication": "Premedication",
+    "conditioning": "Conditioning",
+    "salvage_induction": "Salvage induction",
+    "alternating_block_a": "Alternating block A",
+    "alternating_block_b": "Alternating block B",
+    "il2_support": "IL-2 support",
+}
+_BRIDGING_OPTIONS_LABEL = {
+    "uk": "Якщо очікування на основну терапію >2 тиж — допустимий бриджинг",
+    "en": "If wait for main therapy >2 weeks — acceptable bridging regimens",
+}
+
+
 def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_lang="uk") -> str:
     """One drug → one `<span class="nszu-badge nszu-{status}">…</span>`.
 
@@ -1295,55 +1377,180 @@ def _render_nszu_badge(drug_entity, patient_disease_id, disease_names, target_la
     return f'<span class="{cls}"{title_attr}>{_h(label)}</span>'
 
 
-def _render_track_drug_list(
+def _render_drug_row(
+    comp: dict,
+    drugs_lookup: dict,
+    patient_disease_id: str,
+    disease_names: dict,
+    target_lang: str,
+) -> str:
+    """Render a single component dict as one `<li class="drug-row">` with
+    drug name + dose/schedule/route + NSZU availability badge.
+
+    Extracted from the legacy `_render_track_drug_list` so multi-phase
+    regimens can reuse the same per-drug formatting inside each phase
+    block. Returns "" when the component has no `drug_id` (defensive)."""
+    drug_id = comp.get("drug_id")
+    if not drug_id:
+        return ""
+    drug = drugs_lookup.get(drug_id)
+    # Drug display name — prefer ukrainian when rendering UA, else preferred
+    names = (drug or {}).get("names") or {}
+    if (target_lang or "uk").lower().startswith("en"):
+        name = names.get("english") or names.get("preferred") or drug_id
+    else:
+        name = names.get("ukrainian") or names.get("preferred") or drug_id
+    dose_bits: list[str] = []
+    for k in ("dose", "schedule", "route"):
+        v = comp.get(k)
+        if v:
+            dose_bits.append(str(v))
+    dose_str = " · ".join(dose_bits)
+    nszu = _render_nszu_badge(drug, patient_disease_id, disease_names, target_lang)
+    meta = (
+        f'<span class="drug-name">{_h(name)}</span>'
+        f' <span class="drug-id">({_h(drug_id)})</span>'
+    )
+    if dose_str:
+        meta += f' <span class="drug-dose">{_h(dose_str)}</span>'
+    return f'<li class="drug-row">{meta} {nszu}</li>'
+
+
+def _render_treatment_phases(
     track,
     drugs_lookup: dict,
     patient_disease_id: str,
     disease_names: dict,
     target_lang: str = "uk",
 ) -> str:
-    """Render the regimen's drug components as a `<dt>/<dd>` block with
-    an NSZU availability badge per drug. Returns empty string when the
-    track has no regimen / no components — keeps the dl tidy."""
+    """Render the regimen as one or more phase blocks (PR2 of
+    regimen-phases-refactor; replaces the flat single-block drug list).
+
+    Each phase becomes a `<section class="phase-block">` with:
+      - heading combining the phase-name prefix
+        (`_PHASE_HEADING_PREFIX_UK[phase.name]`) and the curator-authored
+        `purpose_ua`. Auto-wrapped legacy phases (`name="main"`) skip
+        the prefix to keep the visual close to pre-PR2.
+      - the phase's drug rows formatted by `_render_drug_row`.
+
+    Falls back to the regimen's flat `components` when the loaded
+    `regimen_data` dict has no `phases` key — covers legacy YAMLs that
+    have not been migrated to multi-phase shape (the Pydantic auto-wrap
+    only runs at `model_validate`, not at render time when YAML is loaded
+    into a raw dict). See `_iter_regimen_components` docstring.
+
+    Returns empty string when no drug components are renderable — keeps
+    the `<dl>` tidy and matches the legacy contract.
+
+    `bridging_options` (CAR-T / TIL manufacturing-window slot) renders as
+    a separate `<div class="bridging-options">` block listed AFTER the
+    phase blocks, naming the acceptable bridging regimen IDs.
+    """
     reg = track.regimen_data or {}
-    components = reg.get("components") or []
-    if not components:
+    if not reg:
         return ""
-    rows: list[str] = []
-    for comp in components:
-        if not isinstance(comp, dict):
-            continue
-        drug_id = comp.get("drug_id")
-        if not drug_id:
-            continue
-        drug = drugs_lookup.get(drug_id)
-        # Drug display name — prefer ukrainian when rendering UA, else preferred
-        names = (drug or {}).get("names") or {}
-        if (target_lang or "uk").lower().startswith("en"):
-            name = names.get("english") or names.get("preferred") or drug_id
-        else:
-            name = names.get("ukrainian") or names.get("preferred") or drug_id
-        dose_bits: list[str] = []
-        for k in ("dose", "schedule", "route"):
-            v = comp.get(k)
-            if v:
-                dose_bits.append(str(v))
-        dose_str = " · ".join(dose_bits)
-        nszu = _render_nszu_badge(drug, patient_disease_id, disease_names, target_lang)
-        meta = (
-            f'<span class="drug-name">{_h(name)}</span>'
-            f' <span class="drug-id">({_h(drug_id)})</span>'
-        )
-        if dose_str:
-            meta += f' <span class="drug-dose">{_h(dose_str)}</span>'
-        rows.append(f'<li class="drug-row">{meta} {nszu}</li>')
-    if not rows:
-        return ""
+
     label = _NSZU_DRUGS_LABEL.get(
         "en" if (target_lang or "uk").lower().startswith("en") else "uk",
         _NSZU_DRUGS_LABEL["uk"],
     )
-    return f'<dt>{_h(label)}</dt><dd><ul class="drug-list">{"".join(rows)}</ul></dd>'
+
+    # Build the phase list — explicit phases when populated, else a synthetic
+    # single phase wrapping the flat components list (mirrors the schema's
+    # auto-wrap; needed at render time because regimen_data is the raw dict,
+    # not a validated Regimen).
+    phases: list[dict] = []
+    raw_phases = reg.get("phases") or []
+    if raw_phases:
+        for ph in raw_phases:
+            if isinstance(ph, dict):
+                phases.append(ph)
+    elif reg.get("components"):
+        phases.append({
+            "name": "main",
+            "purpose_ua": "основна терапія",
+            "components": reg.get("components") or [],
+        })
+
+    prefix_map = (
+        _PHASE_HEADING_PREFIX_EN
+        if (target_lang or "uk").lower().startswith("en")
+        else _PHASE_HEADING_PREFIX_UK
+    )
+
+    blocks: list[str] = []
+    for ph in phases:
+        ph_name = ph.get("name") or ""
+        ph_components = ph.get("components") or []
+        ph_rows = [
+            _render_drug_row(
+                c, drugs_lookup, patient_disease_id, disease_names, target_lang
+            )
+            for c in ph_components
+            if isinstance(c, dict)
+        ]
+        ph_rows = [r for r in ph_rows if r]
+        if not ph_rows:
+            continue
+
+        # Heading: prefix (when defined for this phase name) + purpose_ua.
+        # Legacy auto-wrap (name="main") gets prefix=None → no heading;
+        # the block wrapper alone is a discreet structural marker so it
+        # does not look broken next to a real two-phase render.
+        prefix = prefix_map.get(ph_name)
+        if (target_lang or "uk").lower().startswith("en"):
+            purpose = ph.get("purpose_en") or ph.get("purpose_ua") or ""
+        else:
+            purpose = ph.get("purpose_ua") or ph.get("purpose_en") or ""
+
+        heading_html = ""
+        if prefix:
+            heading = prefix
+            if purpose and purpose.strip():
+                heading = f"{prefix} — {purpose.strip()}"
+            heading_html = f'<h4 class="phase-heading">{_h(heading)}</h4>'
+
+        # data-phase carries the canonical phase name for tests + tooling
+        # (legacy auto-wrap → "main"; explicit phases → curator-authored).
+        blocks.append(
+            f'<section class="phase-block" data-phase="{_h(ph_name)}">'
+            f'{heading_html}'
+            f'<ul class="drug-list">{"".join(ph_rows)}</ul>'
+            f'</section>'
+        )
+
+    bridging_html = ""
+    bridging_ids = reg.get("bridging_options") or []
+    if bridging_ids:
+        items = "".join(
+            f'<li class="bridging-option">{_h(bid)}</li>'
+            for bid in bridging_ids
+            if isinstance(bid, str) and bid
+        )
+        if items:
+            br_label = _BRIDGING_OPTIONS_LABEL.get(
+                "en" if (target_lang or "uk").lower().startswith("en") else "uk",
+                _BRIDGING_OPTIONS_LABEL["uk"],
+            )
+            bridging_html = (
+                f'<div class="bridging-options">'
+                f'<div class="bridging-options-label">{_h(br_label)}</div>'
+                f'<ul class="bridging-options-list">{items}</ul>'
+                f'</div>'
+            )
+
+    if not blocks and not bridging_html:
+        return ""
+
+    inner = "".join(blocks) + bridging_html
+    return f'<dt>{_h(label)}</dt><dd>{inner}</dd>'
+
+
+# Back-compat alias — `_render_track_drug_list` was the pre-PR2 entry point.
+# Kept as a thin wrapper so any out-of-tree code that imported the legacy
+# name keeps working. The internal call site below now calls the new
+# function directly.
+_render_track_drug_list = _render_treatment_phases
 
 
 # ── Variant actionability (ESCAT) ───────────────────────────────────────
@@ -1690,9 +1897,13 @@ def render_plan_html(
             f'<dt>Hard contraindications</dt><dd>{_h(", ".join(c.get("id", "?") for c in t.contraindications_data))}</dd>'
             if t.contraindications_data else ""
         )
-        # Drug components with NSZU availability badges (render-time only;
-        # engine never reads these — same contract as ESCAT tiers).
-        drugs_dd = _render_track_drug_list(
+        # Treatment phases — phase-aware drug list (PR2 of phases-refactor).
+        # Each phase renders as its own <section class="phase-block">.
+        # Legacy single-phase regimens (auto-wrapped from `components`) emit
+        # a single block without a heading prefix, visually close to pre-PR2.
+        # Engine never reads any of this — render-time metadata only,
+        # same contract as ESCAT tiers / NSZU badges.
+        drugs_dd = _render_treatment_phases(
             t, drugs_lookup, plan_result.disease_id or "", disease_names, target_lang
         )
         # TODO(phase-4): inline resistance-conflict banner once the
@@ -1906,11 +2117,10 @@ def _render_drugs_plain(plan_result: PlanResult) -> str:
     blocks: list[str] = []
 
     for t in plan.tracks:
-        regimen = t.regimen_data or {}
-        components = regimen.get("components") or []
-        for comp in components:
-            if not isinstance(comp, dict):
-                continue
+        # Iterate via _iter_regimen_components — covers both legacy
+        # (`components: [...]`) and post-PR2 phase-aware (`phases:` populated,
+        # `components: []`) regimen shapes. See helper docstring.
+        for comp in _iter_regimen_components(t.regimen_data):
             drug_id = comp.get("drug_id") or ""
             if not drug_id or drug_id in seen_drug_ids:
                 continue
@@ -2025,10 +2235,11 @@ def _render_ask_doctor_section(plan_result: PlanResult) -> str:
     seen: set[str] = set()
     if plan is not None:
         for t in plan.tracks:
-            regimen = t.regimen_data or {}
-            for comp in regimen.get("components") or []:
-                if not isinstance(comp, dict):
-                    continue
+            # Iterate via _iter_regimen_components — phase-aware fallback;
+            # see helper docstring. The decorated `recommended_drugs` feeds
+            # _ask_doctor predicates, which must surface every drug across
+            # phases (lymphodepletion + main for axi-cel, etc.).
+            for comp in _iter_regimen_components(t.regimen_data):
                 did = comp.get("drug_id") or ""
                 if not did or did in seen:
                     continue
