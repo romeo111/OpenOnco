@@ -1,6 +1,6 @@
 # KB Coverage Strategy
 
-**Status:** v0.1 draft, 2026-04-28. Lives alongside the auto-generated [`kb-coverage-matrix.md`](kb-coverage-matrix.md) which is the live snapshot of where we are. This doc explains _how to read it, where v1.0 ends, and how chunks should reference it._
+**Status:** v0.2 draft, 2026-04-30. Lives alongside the auto-generated [`kb-coverage-matrix.md`](kb-coverage-matrix.md) which is the live snapshot of where we are. This doc explains _how to read it, where v1.0 ends, and how chunks should reference it._
 
 ## What this is for
 
@@ -57,9 +57,15 @@ The matrix surfaces three orthogonal axes; each generates its own queue. They sh
 - `trial-source-ingest-pubmed` (+25 SRC, merged 2026-04-28 via PR #29)
 
 **Examples next:**
-- 14 zero-BMA diseases need ≥3 BMAs each (~42 new BMA records). Priority on UA-frequent rare lymphomas (PTCL-NOS, NK/T-Nasal, MF-Sezary).
+- 14 zero-BMA diseases need ≥3 BMAs each (~42 new BMA records). Apply the
+  Tier-2 volume proxy until UA epidemiology is measured: HNSCC, low-grade
+  glioma, MPNST, chondrosarcoma — all higher-volume than the rare lymphomas.
+  PTCL-NOS / NK-T-Nasal / MF-Sezary are also zero-BMA but should wait for
+  explicit clinical-co-lead UA-frequency confirmation.
 - 25 thin-BMA diseases need 2-3 more each (~60 BMA records).
-- HNSCC (zero BMA, etiologically_driven) — needs HPV-positive vs HPV-negative actionability split + EGFR amplification.
+- HNSCC (zero BMA, etiologically_driven) — needs HPV-positive vs HPV-negative
+  actionability split + EGFR amplification. Highest-priority candidate by
+  volume.
 
 **Risk profile:** low. Chunks here are scriptable + verifiable.
 
@@ -99,6 +105,7 @@ The matrix surfaces three orthogonal axes; each generates its own queue. They sh
 - Add `line_of_therapy_evidence_source` to all 302 indications (currently `evidence_level` is set but not tied to a specific RCT citation).
 - Add `tasktorrent_version` to all sidecars (per L-21).
 - Add ESMO ESCAT references explicitly when reconstruction work surfaces them.
+- **Living-data refresh automation (top-2 sources first).** NCCN guideline poller (per-disease, ~6-monthly) and FDA approvals weekly poller. Each is a Queue-C effort that produces a Queue-A pipeline. Without these, the "Sources `current_as_of <365d` ≥60%" target is unreachable through manual labor (243 of 269 sources are currently >1y stale; manual re-verification doesn't scale at this volume + cadence). Trial pivotal-readout monitoring and UA-registration sync are the next two after these land.
 
 **Risk profile:** front-loaded. Get the schema right (Pydantic, validators), then mass-fill is mechanical.
 
@@ -152,19 +159,52 @@ For each of 65 diseases:
 
 | Entity | Current | v1.0 target |
 |---|---|---|
-| BMA UA-signed-off | 0% | 100% (bottleneck: Co-Lead queue) |
+| BMA UA-signed-off | 0% | 100% (precondition: Co-Lead capacity — see Capacity assumptions below) |
 | BMA with CIViC evidence | 74% | 95%+ (recover the 104 legacy BMAs) |
-| BMA with valid ESCAT tier | 100% | 100% **and ≥85% verified** (B2 audit shows nominal 100% has ~10% overclaim risk) |
-| Indications with `expected_outcomes` | 100% | 100% **and ≥90% citation-traceable** to a specific RCT |
+| BMA with ESCAT tier set (presence-of-field) | 100% | 100% (already met; necessary but not sufficient) |
+| BMA with ESCAT tier audited + verified | ~3% (12/399 in B2 subset) | ≥85% verified across all 399 (B2 subset projects ~25% mistier rate at full scale, so the headline 100% is misleading until audited) |
+| Indications with `expected_outcomes` (presence) | 100% | 100% (already met) |
+| Indications with `expected_outcomes` citation-traceable to a specific RCT | not yet measured | ≥90% |
 | Sources `current_as_of <365d` | 10% | ≥60% (243 of 269 sources currently >1y stale-by-date) |
 | Sources with license declared | 89% | 100% (29 sources need license backfill) |
 | Drugs UA-registered | 70% | 75%+ (15 percentage points to gain via НСЗУ + DEC.gov.ua sync) |
 | RF with `last_reviewed` | 100% | 100% (current hosted files have no missing `last_reviewed` values) |
 
-Queue-D work should be prioritized before more broad expansion when a disease or
-entity family already has unverified claims. A plan with fewer but traceable,
-fresh, licensed, reviewed records is better than a larger plan whose evidence
-state is unclear.
+### Capacity assumptions
+
+The targets above are unreachable without throughput to match. Treat these as
+first-class targets, not parentheticals. Without explicit numbers here,
+"BMA UA-signed-off 100%" is aspirational rather than falsifiable.
+
+| Resource | Current throughput | v1.0 requirement | Gap |
+|---|---|---|---|
+| Co-Lead BMA signoff | 0/week (queue cold) | ≥10 BMA/week sustained, or ≥40/month batched | unblocking this is the single biggest precondition for v1.0 |
+| Co-Lead RF/IND review | ad-hoc | ≥1 batched review day/month | minor compared to BMA queue |
+| Refresh automation chunks | 1 (CIViC monthly) | ≥3 (CIViC + NCCN + FDA) | 2 chunks need owners — see Queue C |
+| ESCAT verification budget | 12 BMAs audited (B2 subset) | full 399 audited | ~830k tokens, 1 chunk (already in Queue B "Examples next") |
+
+The capacity numbers above are placeholders pending Co-Lead calibration; the
+structure is the proposal. Surface the Co-Lead-queue blocker in every
+quarterly governance review until throughput is non-zero. A roadmap that
+depends on a stalled bottleneck is not a roadmap.
+
+### Queue A / Queue D triage rule
+
+Both queues run in parallel. Use these guard rails instead of a blanket
+"verify before expand" rule (which would freeze the KB, since every BMA
+family has unverified claims):
+
+- Queue D **blocks** Queue A only on the same `disease × axis` cell currently
+  under active verification (don't add new BMAs to a disease whose existing
+  BMAs are mid-audit).
+- Queue D **takes priority** for diseases that already have ≥3 BMAs but
+  unresolved evidence-quality gaps (104 BMAs missing CIViC, ~120 projected
+  ESCAT overclaims).
+- Queue A **proceeds freely** for the 14 zero-BMA diseases — no verification
+  work is gated on records that don't exist yet.
+- A plan with fewer traceable, fresh, licensed, reviewed records beats a
+  larger plan with unclear evidence state — but this is a per-cell
+  prioritization, not a global gate.
 
 ### Living-data targets (continuous)
 
@@ -179,28 +219,61 @@ state is unclear.
 
 ## What we don't yet measure (and should)
 
-The current matrix covers presence-of-field. It doesn't yet measure:
+The current matrix covers presence-of-field. The gaps below are split by
+whether they block v1.0 credibility or can wait. Acknowledging the gap
+honestly is more useful than measuring fake completeness — but credibility-
+blocking gaps need explicit owners, not deferral.
 
-1. **Citation density per claim** — how many independent sources back each clinical recommendation. Distribution histogram per entity type.
-2. **Recency of cited evidence** — % of citations from <2020 / 2020-2024 / 2024+. Beyond source's `current_as_of`, the citations themselves age.
-3. **Coverage of trial readouts per regimen** — out of 244 regimens, how many have an attached `expected_outcomes` block (median OS, ORR, CR rate). Hint: probably <50% — trial-outcome ingestion is a future Queue-C chunk.
-4. **Toxicity-profile completeness per regimen** — CTCAE v5 grading per regimen.
-5. **UA epidemiology weighting** — which 14 zero-BMA diseases are most common in Ukrainian patient population? (Requires one-off pull from МОЗ/НСЗУ statistics.) Without this weighting, "fill all 14" is a 6-month chunk batch; with it, "fill the 4 most common first" is 2 weeks.
-6. **Per-disease patient-scenario coverage** — out of N reference cases (anonymized), what % can the engine fully process given current KB state?
+### v0.2 — must add before v1.0 sign-off
 
-These six are deferred to v0.2 of this strategy doc. Acknowledging the gap honestly is more useful than measuring fake completeness.
+1. **Citation density per claim.** How many independent sources back each
+   clinical recommendation. Without this, "BMA with sources" remains
+   presence-of-field — one source counts the same as five, even though
+   evidence-quality differs sharply. Distribution histogram per entity type.
+   Already flagged as a Queue-D "Examples next" item; promote to active.
+2. **Recency of cited evidence.** % of citations from <2020 / 2020-2024 /
+   2024+. Source-level `current_as_of` is necessary but not sufficient —
+   the underlying citations themselves age. Critical for oncology where
+   2018 evidence is often superseded.
+
+### v0.3+ — deferred but tracked
+
+3. **Coverage of trial readouts per regimen** — out of 244 regimens, how
+   many have an attached `expected_outcomes` block (median OS, ORR, CR
+   rate). Probably <50%; trial-outcome ingestion is a future Queue-C chunk.
+4. **Toxicity-profile completeness per regimen** — CTCAE v5 grading per
+   regimen.
+5. **UA epidemiology weighting** — which 14 zero-BMA diseases are most
+   common in Ukrainian patient population? (Requires one-off pull from
+   МОЗ/НСЗУ statistics.) Without this, "fill all 14" is a 6-month chunk
+   batch; with it, "fill the 4 most common first" is 2 weeks. Listed in
+   v0.3 not because it's unimportant but because it's a one-off pull, not
+   a continuous metric.
+6. **Per-disease patient-scenario coverage** — out of N reference cases
+   (anonymized), what % can the engine fully process given current KB
+   state? End-to-end completeness signal; depends on having reference
+   cases curated first.
 
 ## How to use this doc + matrix
 
 ### For maintainers picking the next chunk
 
-1. Open `kb-coverage-matrix.md`
-2. Look at `Coverage gaps` and `Quality gaps` sections
-3. Pick a cell that:
-   - Has high gap-magnitude (zero or low %)
-   - Has UA-population priority (rare lymphomas if epidemiology-weighted; otherwise volume)
-   - Has scriptable methodology (don't open chunks where the work would be one expert reading 5 papers)
-4. Open chunk-spec referencing the specific cell
+1. Open `kb-coverage-matrix.md`.
+2. Look at `Coverage gaps` and `Quality gaps` sections.
+3. Apply the **Queue A / Queue D triage rule** above to filter candidates.
+4. Rank surviving candidates by this strict lexicographic order — only break
+   ties at the next tier:
+   - **Tier 1 — gap magnitude.** Zero-coverage cells before thin-coverage
+     before quality-gap cells. Within each, larger absolute gap wins.
+   - **Tier 2 — UA epidemiology weight.** Until measured (v0.3 deferred
+     metric), use volume proxy: NSCLC / breast / CRC / prostate beat rare
+     lymphomas. Override only with explicit clinical-co-lead direction.
+   - **Tier 3 — scriptability.** Cells where work is N records of mechanical
+     extraction beat cells requiring expert read-through of 5 papers.
+   - **Tier 4 — cost.** Lowest expert-hours estimate wins.
+5. Open chunk-spec referencing both the specific cell and the priority tier
+   it satisfied. Without that, the chunk-spec linter has no way to tell
+   "what's quick" apart from "what closes the highest-leverage gap."
 
 ### For contributors (Codex, Claude, others)
 
