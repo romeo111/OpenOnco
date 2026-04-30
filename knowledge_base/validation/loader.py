@@ -109,6 +109,42 @@ def _extract(obj: dict, dotted: str):
     return cur
 
 
+def _sync_regimen_phases_to_components(raw: dict) -> None:
+    """Phases-aware regimen migration back-compat shim.
+
+    PR2/PR3 of regimen-phases-refactor migrated 18 high-stakes regimens to
+    `phases: [...]` shape with `components: []` at the top level. The render
+    layer iterates `phases` preferentially via `_iter_regimen_components`,
+    but **engine-side consumers** read `regimen_data["components"]` directly
+    (e.g., `test_burkitt_engine::test_codoxm_ivac_includes_methotrexate`,
+    `test_mcl_engine::test_intensive_regimen_uses_alternating_chop_dhap`).
+
+    To keep both consumer styles working without touching ~30 engine code
+    sites, we **populate `components` as the flat concatenation of
+    `phases[*].components`** when phases is authored and components is empty.
+    The render layer is unaffected (still iterates phases first); engine
+    code that reads components keeps seeing the same drug list it used to.
+
+    No-op for legacy regimens (phases empty, components populated) and for
+    regimens that explicitly authored both fields.
+    """
+    phases = raw.get("phases") or []
+    if not phases:
+        return  # legacy shape; components is already canonical
+    components = raw.get("components") or []
+    if components:
+        return  # both populated; treat phases as canonical, leave alone
+    flat: list[dict] = []
+    for phase in phases:
+        if not isinstance(phase, dict):
+            continue
+        for comp in phase.get("components") or []:
+            if isinstance(comp, dict):
+                flat.append(comp)
+    if flat:
+        raw["components"] = flat
+
+
 # Module-level cache: load_content() walks ~1700 YAMLs and Pydantic-validates
 # every one (~3.7s on the current KB), and engine entry points (generate_plan,
 # orchestrate_mdt, generate_diagnostic_brief, evaluate_partial) each call it
@@ -169,6 +205,11 @@ def _load_content_impl(root: Path) -> LoadResult:
             except ValidationError as e:
                 result.schema_errors.append((path, str(e)))
                 continue
+
+            # Phases-aware regimen migration back-compat shim — see
+            # _sync_regimen_phases_to_components docstring above.
+            if entity_dir == "regimens":
+                _sync_regimen_phases_to_components(raw)
 
             entity_id = raw.get("id")
             if not entity_id:
