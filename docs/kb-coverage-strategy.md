@@ -23,6 +23,23 @@ Every new chunk-spec (per `tasktorrent` v0.4 schema) should reference the matrix
 
 The chunk-spec linter does not enforce this (yet) — it's a writing discipline. Without it, chunks tend to drift toward "what's quick" rather than "what closes a known gap."
 
+### Data-quality rule for all future chunks
+
+Coverage movement is not sufficient. Every new plan or chunk that touches KB
+data must also state its **quality gate**: provenance, recency, license/terms,
+clinical-strength verification, UA applicability, or signoff readiness.
+
+Use `docs/plans/kb_data_quality_plan_2026-04-29.md` as the quality contract for
+chunk authoring. In practice, this means each chunk-spec should declare:
+
+1. The baseline quality gap it addresses.
+2. The manifest IDs it owns.
+3. The quality field expected to move.
+4. The evidence standard for accepting sidecars.
+5. The validator or audit command that proves the work did not regress.
+
+Unresolved findings are acceptable when they are explicit. Silent gaps are not.
+
 ## Three classes of work, three distinct queues
 
 The matrix surfaces three orthogonal axes; each generates its own queue. They should not compete for the same shelf slot.
@@ -85,6 +102,36 @@ The matrix surfaces three orthogonal axes; each generates its own queue. They sh
 
 **Risk profile:** front-loaded. Get the schema right (Pydantic, validators), then mass-fill is mechanical.
 
+### Queue D — Data-quality gates
+
+**Driver:** the dedicated data-quality plan and the matrix's quality-gap
+sections: source license, source recency, CIViC/no-match status, ESCAT
+verification, citation anchors, UA access, and signoff readiness.
+
+**Metric:** quality risk down, not just entity count up. A successful Queue-D
+chunk may add zero new hosted entities and still be high value if it converts
+unknowns into verified values or explicit unresolved reasons.
+
+**Examples already opened (2026-04-29):**
+- `bma-civic-backfill-*` chunks (#43-#63): backfill CIViC evidence or record
+  no-match reasons.
+- `bma-ua-signoff-prep-*` chunks (#64-#83): prepare BMA records for Ukrainian
+  clinical signoff.
+- `source-license-backfill-*` chunks (#84-#91): close license/terms gaps.
+- `source-recency-refresh-*` chunks (#92-#121): refresh source dates and
+  supersession status.
+- `drug-ua-nszu-access-audit-*` chunks (#122-#141): verify Ukrainian
+  registration and NSZU/reimbursement state.
+
+**Examples next:**
+- Require a `Quality Gate` section in every TaskTorrent chunk spec.
+- Add citation-density and claim-anchor columns to `kb-coverage-matrix.md`.
+- Promote "unresolved reason present" to a first-class success state for
+  CIViC, source license, and UA access audits.
+
+**Risk profile:** medium. Most work is mechanical, but acceptance depends on
+reviewer-readable evidence and conservative handling of uncertainty.
+
 ## v1.0 target state — what "done" looks like
 
 Concrete, falsifiable numbers per axis. Below is a draft proposal; numbers may need clinical-co-lead calibration before adoption.
@@ -112,7 +159,12 @@ For each of 65 diseases:
 | Sources `current_as_of <365d` | 10% | ≥60% (243 of 269 sources currently >1y stale-by-date) |
 | Sources with license declared | 89% | 100% (29 sources need license backfill) |
 | Drugs UA-registered | 70% | 75%+ (15 percentage points to gain via НСЗУ + DEC.gov.ua sync) |
-| RF with `last_reviewed` | 92% | 100% (32 RFs need recheck-and-stamp) |
+| RF with `last_reviewed` | 100% | 100% (current hosted files have no missing `last_reviewed` values) |
+
+Queue-D work should be prioritized before more broad expansion when a disease or
+entity family already has unverified claims. A plan with fewer but traceable,
+fresh, licensed, reviewed records is better than a larger plan whose evidence
+state is unclear.
 
 ### Living-data targets (continuous)
 
