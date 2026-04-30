@@ -441,7 +441,18 @@ def render_markdown_table(rows: list[dict]) -> str:
     return "\n".join(out)
 
 
+def _force_utf8_stdout() -> None:
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8")
+            except Exception:  # pylint: disable=broad-except
+                pass
+
+
 def main() -> int:
+    _force_utf8_stdout()
     rows = per_disease_metrics(REPO_ROOT / "knowledge_base" / "hosted" / "content")
     print(render_markdown_table(rows))
     return 0
