@@ -71,6 +71,46 @@ def test_helper_negative_value_does_not_drop():
     assert is_track_excluded(ind, {"MSI-STATUS": "MSS"}) is False
 
 
+def test_helper_gene_level_positive_does_not_satisfy_qualifier():
+    """Patient reports gene-level positive (e.g. 'positive', True) but the
+    exclusion is qualified by a specific value_constraint. The patient has
+    NOT reported the qualifying condition, so the track must not be dropped.
+
+    Regression for the S1 NSCLC T790M case (PR #150 KB-drift signal #1):
+    IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ excludes 'histologic transformation'
+    on BIO-EGFR-MUTATION. Patient with BIO-EGFR-MUTATION='positive' has not
+    reported transformation status — track must remain available.
+    """
+    ind = {
+        "applicable_to": {
+            "biomarker_requirements_excluded": [
+                {
+                    "biomarker_id": "BIO-EGFR-MUTATION",
+                    "value_constraint": "histologic transformation",
+                },
+            ]
+        }
+    }
+    assert is_track_excluded(ind, {"BIO-EGFR-MUTATION": "positive"}) is False
+    assert is_track_excluded(ind, {"EGFR": "positive"}) is False
+    assert is_track_excluded(ind, {"BIO-EGFR-MUTATION": True}) is False
+
+
+def test_helper_gene_level_positive_still_drops_unqualified_exclusion():
+    """Counter-case: when the exclusion has NO value_constraint (gene-level
+    only), gene-level positive in the patient should still drop the track.
+    Confirms the fix only affects qualified exclusions."""
+    ind = {
+        "applicable_to": {
+            "biomarker_requirements_excluded": [
+                {"biomarker_id": "BIO-MSI-STATUS"},
+            ]
+        }
+    }
+    assert is_track_excluded(ind, {"MSI-STATUS": "positive"}) is True
+    assert is_track_excluded(ind, {"MSI": True}) is True
+
+
 def test_helper_handles_none_and_non_dict():
     assert is_track_excluded(None, {"X": "Y"}) is False
     assert is_track_excluded({}, {"X": "Y"}) is False

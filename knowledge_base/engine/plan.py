@@ -155,13 +155,50 @@ def _find_disease_id(patient: dict, entities_by_id: dict) -> Optional[str]:
     return None
 
 
-def _find_algorithm(disease_id: str, line: int, entities_by_id: dict) -> Optional[dict]:
-    for eid, info in entities_by_id.items():
+def _find_algorithm(
+    disease_id: str,
+    line: int,
+    entities_by_id: dict,
+    disease_state: Optional[str] = None,
+) -> Optional[dict]:
+    """Find the algorithm matching disease + line, with optional disease_state
+    disambiguation.
+
+    When multiple algorithms exist for the same disease + line (e.g. prostate
+    mHSPC vs mCRPC), the patient's `disease_state` selects the right one.
+    Match priority: state-matched > state-agnostic. State-mismatched
+    algorithms are never returned.
+    """
+    state_matched: list[dict] = []
+    state_agnostic: list[dict] = []
+    state_specific_any: list[dict] = []  # legacy fallback only
+    patient_state = (disease_state or "").strip().lower() or None
+    for info in entities_by_id.values():
         if info["type"] != "algorithms":
             continue
         d = info["data"]
-        if d.get("applicable_to_disease") == disease_id and d.get("applicable_to_line_of_therapy") == line:
-            return d
+        if d.get("applicable_to_disease") != disease_id:
+            continue
+        if d.get("applicable_to_line_of_therapy") != line:
+            continue
+        algo_state_raw = d.get("applicable_to_disease_state")
+        if algo_state_raw is None:
+            state_agnostic.append(d)
+            continue
+        state_specific_any.append(d)
+        algo_state = str(algo_state_raw).strip().lower()
+        if patient_state and algo_state == patient_state:
+            state_matched.append(d)
+        # else: state set on algorithm but does not match patient → skip
+    if state_matched:
+        return state_matched[0]
+    if state_agnostic:
+        return state_agnostic[0]
+    # Legacy patient profile (no disease_state) and only state-specific
+    # algorithms exist → load-order fallback to avoid breaking older cases.
+    # The caller emits a warning so the gap is visible.
+    if patient_state is None and state_specific_any:
+        return state_specific_any[0]
     return None
 
 
@@ -346,12 +383,26 @@ def generate_plan(
     result.disease_id = disease_id
 
     line = int(patient.get("line_of_therapy", 1))
-    algo = _find_algorithm(disease_id, line, entities)
+    patient_disease_state = patient.get("disease_state") or (
+        (patient.get("disease") or {}).get("state")
+        if isinstance(patient.get("disease"), dict)
+        else None
+    )
+    algo = _find_algorithm(disease_id, line, entities, disease_state=patient_disease_state)
     if algo is None:
+        state_suffix = f", disease_state={patient_disease_state}" if patient_disease_state else ""
         result.warnings.append(
-            f"No Algorithm found for disease={disease_id}, line_of_therapy={line}"
+            f"No Algorithm found for disease={disease_id}, line_of_therapy={line}{state_suffix}"
         )
         return result
+    if (
+        patient_disease_state is None
+        and algo.get("applicable_to_disease_state") is not None
+    ):
+        result.warnings.append(
+            f"patient.disease_state is missing — fell back to {algo['id']} by load-order; "
+            f"set disease_state explicitly to disambiguate (e.g. 'mHSPC' vs 'mCRPC')"
+        )
     result.algorithm_id = algo["id"]
 
     # Flatten findings + biomarkers + demographics for clause evaluation
