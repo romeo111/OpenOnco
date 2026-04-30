@@ -1,0 +1,63 @@
+id: ALGO-CHOLANGIO-2L
+applicable_to_disease: DIS-CHOLANGIOCARCINOMA
+applicable_to_line_of_therapy: 2
+purpose: >
+  2L+ routing for advanced / metastatic biliary tract / cholangiocarcinoma
+  post-chemo (gem+cis ± durvalumab) progression. Driver-mutation
+  routing first: FGFR2 fusion → pemigatinib (FIGHT-202; futibatinib
+  alternative). Future branches: IDH1-mutant intrahepatic (ivosidenib
+  ClarIDHy), HER2-amp (T-DXd / tucatinib-trastuzumab), BRAF V600E
+  (dab+tram), MSI-H/dMMR (pembrolizumab) — pending dedicated
+  indications. Default: FOLFOX 2L (ABC-06).
+
+output_indications:
+  - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+  - IND-CHOLANGIO-ADVANCED-GEM-CIS  # placeholder default; replaced when 2L FOLFOX indication authored
+
+default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
+alternative_indication: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+
+decision_tree:
+  # Step 1 — FGFR2 fusion / rearrangement (~10–20% of intrahepatic CCA).
+  # Treatment-defining for 2L: pemigatinib (FIGHT-202) preferred;
+  # futibatinib (FOENIX-CCA2) alternative including post-pemigatinib
+  # resistance. Surfaced via known_controversies in indication.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-CHOLANGIO-FGFR2-FUSION-ACTIONABLE
+        - condition: "FGFR2 fusion or rearrangement confirmed by RNA-NGS / DNA-NGS fusion-aware / FISH break-apart"
+    if_true:
+      result: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+    if_false:
+      next_step: 2
+
+  # Step 2 — default 2L (placeholder routing back to ABC-02 gem+cis
+  # indication; FOLFOX-2L (ABC-06) and future driver branches — IDH1
+  # ivosidenib, HER2 T-DXd, BRAF V600E dab+tram, MSI-H pembrolizumab —
+  # to be added in subsequent biomarker-expansion chunks).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
+    if_true:
+      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+    if_false:
+      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+  - SRC-FIGHT-202
+
+last_reviewed: "2026-04-30"
+reviewer_signoffs: 0
+notes: >
+  STUB scaffold — created in W1.B2 chunk. FGFR2 fusion is the only
+  fully-wired 2L driver branch in this version; default falls back to
+  ABC-02 gem+cis as placeholder. Future chunks should add: (1) 2L
+  FOLFOX (ABC-06) as proper default for non-driver progression; (2)
+  IDH1-mutant ivosidenib (ClarIDHy); (3) HER2-amp T-DXd (DESTINY-PanTumor02)
+  / tucatinib-trastuzumab; (4) BRAF V600E dab+tram (ROAR); (5) MSI-H
+  pembrolizumab (KEYNOTE-158). Out-of-scope: locoregional therapies
+  (radioembolization, intraarterial chemotherapy).

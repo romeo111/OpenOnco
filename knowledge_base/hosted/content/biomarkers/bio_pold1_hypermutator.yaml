@@ -1,0 +1,54 @@
+id: BIO-POLD1-HYPERMUTATOR
+names:
+  preferred: "POLD1 hypermutator phenotype (proofreading-domain mutation)"
+  ukrainian: "POLD1 гіпермутаторний фенотип (мутація proofreading-домену)"
+  english: "POLD1-mutated hypermutator"
+  synonyms: ["POLD1 EDM (exonuclease domain mutation)"]
+biomarker_type: clinical_composite
+
+mutation_details:
+  gene: "POLD1"
+  exon: "6-12 (proofreading / exonuclease domain)"
+  variant_type: "missense (pathogenic exonuclease-domain)"
+  functional_impact: "loss of proofreading fidelity → ultra-high TMB, hypermutator phenotype (analogous to POLE-EDM)"
+
+measurement:
+  method: "NGS panel covering POLD1 exonuclease domain. Pathogenic somatic or germline variants confer hypermutator phenotype. Less common than POLE-EDM but mechanistically analogous; co-call with TMB."
+  units: "categorical (pathogenic_EDM | non-pathogenic / wild-type)"
+specimen_requirements: ["FFPE tumor block (endometrial primary); paired germline saliva / blood if Lynch-like syndrome suspected"]
+
+interpretation_notes: >
+  POLD1 proofreading-domain mutations produce a hypermutator phenotype
+  mechanistically analogous to POLE-EDM. Less prevalent than POLE in
+  endometrial cancer (<1-2% vs ~7%) but molecularly behaves similarly.
+  TCGA / TransPORTEC integrated classifications group POLE/POLD1 EDM
+  together as the "ultramutated / POLE-mutated" prognostic subtype.
+  Stage I tumors have excellent prognosis and do not benefit from adjuvant
+  therapy (NCCN Uterine 2025; observational data given the rarity).
+  Germline POLD1 variants are part of polymerase-proofreading-associated
+  polyposis (PPAP) — Lynch-like predisposition syndrome; positive cases
+  warrant genetic counseling.
+
+related_biomarkers: [BIO-POLE-HYPERMUTATOR, BIO-DMMR-IHC, BIO-MSI-STATUS]
+sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022, SRC-ESGO-ENDOMETRIAL-2025]
+
+# Multiple driver-specific variants in a single proofreading domain;
+# clinical rule lives in the RF / IND directly. No POLD1-targeted drug.
+oncokb_skip_reason: clinical_composite
+
+last_reviewed: "2026-04-29"
+notes: >
+  Less frequent than POLE-EDM but mechanistically equivalent. Grouped with
+  POLE in TCGA/TransPORTEC integrated endometrial classification. Triggers
+  the same Stage I de-escalation logic (RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK
+  + IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION). Germline variants implicate
+  PPAP — refer to genetic counseling.
+notes_ua: >
+  Менш поширений, ніж POLE-EDM, але механістично еквівалентний. Згрупований
+  з POLE в інтегрованій TCGA/TransPORTEC класифікації ендометрія.
+  Запускає ту саму Stage I логіку де-ескалації
+  (RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK +
+  IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION). Гермінальні варіанти
+  свідчать про PPAP — направлення на генетичне консультування.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

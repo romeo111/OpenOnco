@@ -1,0 +1,63 @@
+id: BIO-POLE-HYPERMUTATOR
+names:
+  preferred: "POLE hypermutator phenotype (proofreading-domain mutation)"
+  ukrainian: "POLE гіпермутаторний фенотип (мутація proofreading-домену)"
+  english: "POLE-mutated hypermutator"
+  synonyms: ["POLE-ultramutated", "POLE EDM (exonuclease domain mutation)"]
+biomarker_type: clinical_composite
+
+mutation_details:
+  gene: "POLE"
+  exon: "9-14 (proofreading / exonuclease domain)"
+  variant_type: "missense (pathogenic exonuclease-domain)"
+  functional_impact: "loss of proofreading fidelity → ultra-high TMB (>100 mut/Mb), hypermutator phenotype"
+
+measurement:
+  method: "NGS panel covering POLE exonuclease domain (codons 268-471). Pathogenic variants per TransPORTEC / TCGA list (e.g., P286R, V411L, S297F, A456P, S459F, others) confer hypermutator phenotype. Some panels co-call TMB which serves as supportive evidence."
+  units: "categorical (pathogenic_EDM | non-pathogenic / wild-type)"
+specimen_requirements: ["FFPE tumor block (endometrial primary)"]
+
+interpretation_notes: >
+  POLE hypermutator is an integrated TCGA molecular subtype of endometrial
+  carcinoma (alongside MSI-H, copy-number-low, copy-number-high/p53-abnormal).
+  Despite often presenting with high-grade morphology, POLE-mutated
+  endometrial cancer has EXCELLENT prognosis — Stage I tumors have
+  near-100% 5-year recurrence-free survival without adjuvant therapy
+  (PORTEC-3 / TransPORTEC pooled analysis). NCCN Uterine 2025 endorses
+  observation-only for Stage I POLE-mutated endometrial. This is a
+  DE-ESCALATION biomarker, not a treatment-selection biomarker — there
+  is no POLE-directed drug; the clinical action is to AVOID adjuvant
+  chemotherapy / radiotherapy that other Stage I high-grade tumors would
+  receive.
+
+related_biomarkers: [BIO-POLD1-HYPERMUTATOR, BIO-DMMR-IHC, BIO-MSI-STATUS]
+sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022, SRC-ESGO-ENDOMETRIAL-2025]
+
+# Multiple driver-specific variants in a single proofreading domain;
+# TCGA molecular subtype rather than a single actionable point variant.
+# Engine should not issue per-variant CIViC lookups — clinical rule lives
+# in the RF / IND directly.
+oncokb_skip_reason: clinical_composite
+
+last_reviewed: "2026-04-29"
+notes: >
+  Endometrial-specific TCGA molecular subtype (~7% of endometrial cancers).
+  Pathogenic exonuclease-domain (EDM) variants drive hypermutator phenotype
+  with TMB typically >100 mut/Mb. PORTEC-3 / TransPORTEC stratification
+  showed Stage I POLE-EDM tumors do not benefit from adjuvant therapy —
+  observation only. POLE-mutated endometrial carcinoma also enriches for
+  immune infiltration and may respond to ICI in advanced setting (covered
+  by existing dMMR/MSI-H / TMB-high indications). This biomarker primarily
+  enables Stage I de-escalation via RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK +
+  IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION.
+notes_ua: >
+  Ендометрій-специфічний TCGA молекулярний підтип (~7% ендометріальних
+  раків). Патогенні варіанти exonuclease-домену (EDM) визначають
+  гіпермутаторний фенотип з TMB зазвичай >100 mut/Mb. Стратифікація
+  PORTEC-3 / TransPORTEC показала, що Stage I POLE-EDM пухлини не
+  отримують користі від ад'ювантної терапії — лише спостереження.
+  POLE-мутований ендометріальний рак також збагачений на імунну
+  інфільтрацію і може відповідати на ICI у поширеному статусі
+  (покривається наявними dMMR/MSI-H / TMB-high показаннями).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,75 @@
+id: RF-AML-KMT2A-ACTIONABLE
+definition: >
+  KMT2A rearrangement (MLL fusion at 11q23) in AML — ~5-10% prevalence
+  in adult AML; ELN-2022 adverse-risk classifier. Revumenib (menin
+  inhibitor; AUGMENT-101 phase 1/2) FDA-approved Nov 2024 for relapsed/
+  refractory KMT2A-rearranged acute leukemia after ≥1 prior line
+  (ORR ~63%, CR/CRh ~23%). Ziftomenib alternative menin inhibitor in
+  late-phase trials. Common partners: AF9 (t(9;11)) and AF4 (t(4;11)).
+definition_ua: >
+  Перебудова KMT2A (фузія MLL у 11q23) при ГМЛ — ~5-10% поширеність
+  у дорослій ГМЛ; класифікатор несприятливого ризику ELN-2022.
+  Ревуменіб (інгібітор меніну; AUGMENT-101 фаза 1/2) FDA-схвалено
+  листопад 2024 для рецидивуючої / рефрактерної KMT2A-перебудованої
+  гострої лейкемії після ≥1 попередньої лінії (ORR ~63%, ПР/ПРн ~23%).
+  Зіфтоменіб — альтернативний інгібітор меніну в пізніх фазах. Часті
+  партнери: AF9 (t(9;11)) та AF4 (t(4;11)).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "kmt2a_rearrangement"
+      value: true
+    - finding: "kmt2a_fusion"
+      value: true
+    - finding: "mll_rearrangement"
+      value: true
+    - finding: "mll_fusion"
+      value: true
+    - finding: "kmt2a_status"
+      value: "rearranged"
+    - finding: "karyotype_11q23"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+  - ALGO-AML-2L
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Detection: karyotype + FISH break-apart probe at diagnosis; RT-PCR
+  or RNA-NGS for fusion partner identification. Differentiation
+  syndrome on revumenib (~16%) — monitor for fever, dyspnea, weight
+  gain, effusions; treat with dexamethasone + hold revumenib until
+  resolution. QTc prolongation requires baseline + serial ECG with
+  K+/Mg++ correction. AlloHCT bridge for fit responders — revumenib
+  alone NOT curative. Algorithm wiring deferred — IND-AML-2L-KMT2A-
+  REVUMENIB created but not yet routed by ALGO-AML-2L (would require
+  step-restructure, out of chunk scope). MDT review during chunk
+  rollout. STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Виявлення: каріотип + FISH break-apart probe при діагностиці;
+  RT-PCR або RNA-NGS для ідентифікації партнера слиття. Синдром
+  диференціації на ревуменібі (~16%) — моніторинг лихоманки, задишки,
+  набору ваги, випотів; лікування дексаметазоном + пауза ревуменібу
+  до вирішення. Подовження QTc — baseline + серійні ЕКГ з корекцією
+  K+/Mg++. Алo-ТГСК-міст для придатних респондерів — ревуменіб
+  монотерапія НЕ курабельний. Маршрутизація алгоритмом відкладена —
+  IND-AML-2L-KMT2A-REVUMENIB створено, але ще не підключено до
+  ALGO-AML-2L (потребує реструктуризації кроків, поза обсягом
+  чанку). МДК-розгляд під час впровадження. STUB — потребує
+  схвалення клінічного співкерівника.

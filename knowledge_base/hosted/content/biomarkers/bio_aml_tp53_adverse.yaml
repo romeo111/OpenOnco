@@ -1,0 +1,78 @@
+id: BIO-AML-TP53-ADVERSE
+names:
+  preferred: "TP53-mutated AML (adverse risk)"
+  ukrainian: "ГМЛ з мутацією TP53 (несприятливий ризик)"
+  english: "TP53-mutated AML"
+  synonyms:
+    - "TP53-AML adverse"
+    - "AML TP53-mut"
+    - "AML p53"
+
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "TP53"
+  variant_type: "missense / nonsense / frameshift / splice / 17p deletion"
+  functional_impact: "loss_of_function (tumor suppressor); ELN-2022 adverse-risk classifier"
+
+measurement:
+  method: "NGS panel (myeloid) + FISH for del(17p13.1); VAF reported (mono- vs biallelic distinction critical)"
+  units: "categorical (mutated | wild-type); VAF % + zygosity (mono- / biallelic / multi-hit)"
+specimen_requirements:
+  - "Bone marrow aspirate (preferred at diagnosis)"
+  - "Peripheral blood acceptable when blast count high"
+
+related_biomarkers:
+  - BIO-TP53-MUTATION
+  - BIO-MDS-DEL-5Q  # del(5q) + TP53 co-occurrence predicts MDS→AML transformation
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ELN-AML-2022
+  - SRC-IPSS-M-BERNARD-2022
+
+# Composite/clinical biomarker — combines TP53 mutation status with
+# AML-specific adverse-risk classification per ELN-2022. Variant-level
+# actionability lookups for TP53 are not therapeutically actionable in
+# AML (no TP53-restoration agent approved); this biomarker drives the
+# RF-AML-TP53-ADVERSE risk-stratification flag, not a targeted therapy
+# selection.
+oncokb_skip_reason: clinical_composite
+external_ids:
+  hgnc_symbol: "TP53"
+
+last_reviewed: "2026-04-30"
+notes: >
+  TP53-mutated AML is its own ELN-2022 adverse-risk category and a
+  WHO 5th-edition entity. Median OS 5-9 months on standard chemo or
+  HMA-based therapy; alloHCT carries higher relapse risk vs TP53-WT
+  AML but remains the only potentially curative pathway. Multi-hit
+  (biallelic, often via del(17p) + point mutation) predicts even
+  worse outcome than mono-hit. Active research questions: ven+aza
+  (modest CR rate ~40% but short PFS), magrolimab+aza (failed ENHANCE
+  phase-3), eprenetapopt+aza (mixed phase 2/3). NOT clear best
+  regimen — flag triggers RF-AML-TP53-ADVERSE which routes to: (1)
+  alloHCT consideration when fit, (2) ven+aza backbone for unfit, (3)
+  clinical-trial referral preferentially. Distinct from
+  BIO-TP53-MUTATION (the cross-disease standalone marker entity) and
+  RF-MDS-TP53-MUTATION (MDS-specific RF) — this AML-scoped composite
+  exists because the AML adverse-risk routing is distinct from MDS.
+notes_ua: >
+  TP53-мутована ГМЛ — окрема категорія несприятливого ризику ELN-2022
+  та сутність WHO 5-го видання. Медіана ЗВ 5-9 місяців на стандартній
+  хімії або HMA-базованій терапії; алоТГСК має вищий ризик рецидиву
+  vs TP53-WT ГМЛ, але залишається єдиним потенційно курабельним
+  шляхом. Мульти-хіт (біалельна, часто через del(17p) + точкова
+  мутація) предиктує ще гірший прогноз ніж моно-хіт. Активні наукові
+  питання: ven+aza (помірна частота ПР ~40%, але коротка БПВ),
+  magrolimab+aza (провалив фазу-3 ENHANCE), eprenetapopt+aza
+  (змішані фаза 2/3). Найкраща схема НЕ ясна — прапор запускає
+  RF-AML-TP53-ADVERSE, що маршрутизує на: (1) розгляд алоТГСК у
+  придатних, (2) ven+aza бекбон для непридатних, (3) направлення на
+  клінічне дослідження preferentially. Відрізняється від
+  BIO-TP53-MUTATION (cross-disease standalone маркер) та
+  RF-MDS-TP53-MUTATION (МДС-специфічний RF) — цей ГМЛ-обмежений
+  композит існує тому, що ГМЛ-маршрут несприятливого ризику
+  відрізняється від МДС.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

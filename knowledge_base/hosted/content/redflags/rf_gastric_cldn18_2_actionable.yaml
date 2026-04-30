@@ -1,0 +1,69 @@
+id: RF-GASTRIC-CLDN18-2-ACTIONABLE
+definition: >
+  CLDN18.2 expression positive (≥75% of tumor cells with 2+/3+
+  membranous staining on VENTANA CLDN18 (43-14A) RxDx) in HER2-negative
+  metastatic / unresectable gastric or GEJ adenocarcinoma — eligibility
+  for zolbetuximab + fluoropyrimidine/oxaliplatin 1L (SPOTLIGHT
+  mFOLFOX6 mOS 18.2 vs 15.5 mo HR 0.75; GLOW CAPOX mOS 14.4 vs 12.2 mo
+  HR 0.77). Treatment-defining for the ~38% of HER2-negative gastric
+  cohort. Hierarchy: HER2+ trastuzumab supersedes; MSI-H pembrolizumab
+  supersedes; otherwise CLDN18.2+ → zolbetuximab.
+definition_ua: >
+  Позитивна експресія CLDN18.2 (≥75% пухлинних клітин із 2+/3+
+  мембранним фарбуванням за VENTANA CLDN18 (43-14A) RxDx) у HER2-
+  негативній метастатичній / нерезектабельній шлунковій / GEJ
+  аденокарциномі — підстава для зольбетуксимаб + фторпіримідин/
+  оксаліплатин 1L (SPOTLIGHT mFOLFOX6 мЗВ 18.2 vs 15.5 міс HR 0.75;
+  GLOW CAPOX мЗВ 14.4 vs 12.2 міс HR 0.77). Лікування-визначальний
+  маркер для ~38% HER2-негативної шлункової когорти. Ієрархія:
+  HER2+ трастузумаб > MSI-H пембролізумаб > CLDN18.2+ зольбетуксимаб.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "cldn18_2_status"
+      value: "positive"
+    - finding: "cldn18_2_ihc_2_3_pct"
+      operator: ">="
+      value: 75
+    - finding: "claudin_18_2"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 52
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-GASTRIC
+
+shifts_algorithm:
+  - ALGO-GASTRIC-METASTATIC-1L
+
+branch_targets:
+  ALGO-GASTRIC-METASTATIC-1L: "step-2"
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Companion diagnostic VENTANA CLDN18 (43-14A) RxDx required (FDA-
+  approved alongside zolbetuximab Oct 2024). Cutoff: ≥75% of tumor
+  cells with 2+/3+ membranous staining. Major toxicity: nausea/vomiting
+  (~70% any grade — severe in cycle 1, mitigated by aggressive
+  prophylaxis + slow infusion + post-cycle 1 desensitization). Trial
+  source stubs SPOTLIGHT (Shitara 2023) and GLOW (Shah 2023) not yet
+  in KB — flagged for source-ingestion follow-up.
+notes_ua: >
+  Супутній діагностичний тест VENTANA CLDN18 (43-14A) RxDx обов'язковий.
+  Поріг: ≥75% пухлинних клітин із 2+/3+ мембранним фарбуванням.
+  Основна токсичність: нудота/блювання (~70% будь-якого ступеня —
+  тяжке у 1-му циклі; пом'якшується агресивною профілактикою + повільною
+  інфузією + десенсибілізацією після 1-го циклу). Джерела SPOTLIGHT
+  (Shitara 2023) і GLOW (Shah 2023) ще не в KB — позначено для
+  наступного source-ingestion раунду.

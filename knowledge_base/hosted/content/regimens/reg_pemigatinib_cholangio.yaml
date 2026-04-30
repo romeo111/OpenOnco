@@ -1,0 +1,84 @@
+id: REG-PEMIGATINIB-CHOLANGIO
+name: "Pemigatinib monotherapy (FIGHT-202) — 2L+ FGFR2-fusion cholangiocarcinoma"
+name_ua: "Пеміґатиніб монотерапія (FIGHT-202) — 2L+ FGFR2-fusion CCA"
+alternate_names:
+  - "Pemigatinib"
+  - "Pemazyre"
+
+components:
+  - drug_id: DRUG-PEMIGATINIB
+    dose: "13.5 mg PO once daily, 14 days on / 7 days off"
+    schedule: "PO daily, 21-day cycle (14 on / 7 off)"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Class FGFR-TKI supportive-care protocol (encoded in notes / dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Baseline + serial ophthalmologic exam (q2 cycles initially) for
+#    retinal pigment epithelial detachment / serous retinopathy
+#  - Baseline + pre-cycle serum phosphate; phosphate binder (sevelamer)
+#    protocol + low-phosphate diet for hyperphosphatemia
+#  - Pre-treatment confirmation of FGFR2 fusion / rearrangement by NGS
+#    (RNA preferred) or FISH
+
+dose_adjustments:
+  - condition: "Hyperphosphatemia >5.5 mg/dL"
+    modification: "Initiate / intensify low-phosphate diet + phosphate binder (sevelamer 800 mg TID); recheck weekly"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >7.0 mg/dL despite binder"
+    modification: "Hold pemigatinib until ≤5.5 mg/dL, resume at next lower dose level (13.5 → 9 → 4.5 mg)"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >9.0 mg/dL OR end-organ mineralization"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Symptomatic serous retinal detachment OR vision loss"
+    modification: "Hold pemigatinib; ophthalmology consult; resume at lower dose only if asymptomatic resolution; permanent discontinuation if recurrent"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Strong CYP3A4 inhibitor concomitant"
+    modification: "Reduce pemigatinib dose by ~50% (13.5 → 9 mg, 9 → 4.5 mg); avoid where possible"
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — pemigatinib exposure substantially reduced"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Пеміґатиніб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA квітень 2020, EMA 2021). НЕ входить до НСЗУ.
+    Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Incyte EAP — обмежено для FGFR2-fusion CCA пост-1L;
+    - Cross-border (EU): EU гепатобіліарні центри (наказ МОЗ 988);
+    - Clinical trials: FIGHT-302 (1L vs gem+cis) post-marketing.
+    Альтернатива: futibatinib (також не зареєстрований в UA);
+    при недоступних FGFR-TKI — стандартна 2L хіміо (FOLFOX, або
+    клінічне дослідження).
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+  - SRC-FIGHT-202
+last_reviewed: "2026-04-30"
+
+notes: >
+  FIGHT-202 phase 2 (Abou-Alfa Lancet Oncol 2020): pemigatinib 13.5 mg
+  PO daily 14d on/7d off in advanced/metastatic cholangiocarcinoma
+  post-≥1L systemic therapy. Cohort A (FGFR2 fusion / rearrangement,
+  n=107): ORR 35.5% (38/107), DCR 82%, mPFS 6.9 mo, mOS 21.1 mo. FDA
+  accelerated approval Apr 2020; converted to traditional approval
+  after confirmatory data. Class FGFR-TKI toxicity: hyperphosphatemia
+  (~60-90%, class effect from FGF23 axis), serous retinopathy / RPE
+  detachment, nail / hair / mucosal toxicity. Resistance: gatekeeper
+  V564F and molecular-brake mutations; futibatinib (covalent FGFR1-4
+  TKI, FOENIX-CCA2) retains activity against some pemigatinib-
+  resistance variants. STUB pending Clinical Co-Lead sign-off;
+  SRC-FIGHT-202 currently a stub source — full citation pending.

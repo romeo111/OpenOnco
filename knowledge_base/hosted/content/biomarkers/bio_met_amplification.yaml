@@ -1,0 +1,67 @@
+id: BIO-MET-AMPLIFICATION
+names:
+  preferred: "MET amplification (high-level copy-number gain)"
+  ukrainian: "MET ампліфікація (високорівневе підвищення копій гена)"
+  english: "MET amplification"
+  synonyms: ["MET CN-amp", "MET high-level amplification", "MET HLA"]
+
+biomarker_type: copy_number
+
+mutation_details:
+  gene: "MET"
+  gene_hugo_id: "HGNC:7029"
+  variant_type: "amplification"
+  functional_impact: "Constitutive HGF-independent MET signaling (high-level CN-amp)"
+
+measurement:
+  method: "FISH (MET/CEP7 ratio) preferred; tumor-tissue NGS or ctDNA NGS with copy-number calling acceptable; IHC alone is screening only"
+  units: "MET/CEP7 ratio (≥4.0 = high-level) OR mean MET gene-copy-number (GCN) per cell (≥10 = high-level)"
+  sensitivity_requirement: "Concordance between FISH and NGS imperfect; thresholds vary by assay (Cappuzzo/Schildhaus criteria most-cited). Low-level amp (GCN 5-9) NOT actionable as monotherapy target."
+
+specimen_requirements:
+  - "FFPE tumor tissue (primary or metastatic), minimum 20% tumor cellularity"
+  - "Plasma ctDNA acceptable for amplification calling when tissue inadequate (Guardant360 / FoundationOne Liquid)"
+
+related_biomarkers:
+  - BIO-MET  # parent entity covering ex14 + amplification umbrella
+  - BIO-EGFR-MUTATION  # MET amplification is the dominant non-T790M osimertinib-resistance mechanism
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-GEOMETRY-WOLF-2020
+
+# CN-amp threshold + assay-method composite (FISH ratio vs GCN vs NGS
+# CN-call) — not a single sequence variant. Actionability extractor
+# can't lookup a variant from a CN-amp call.
+oncokb_skip_reason: clinical_composite
+
+external_ids:
+  hgnc_symbol: "MET"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Distinct from MET ex14 skipping (BIO-MET parent entity covers both;
+  this entity is the high-level CN-amp subset). Two clinical contexts:
+  (1) De-novo MET-amp NSCLC (~1-5% high-level) — capmatinib (GEOMETRY
+  mono-1 high-amp cohort: ORR 40%, mPFS 5.5 mo; off-label expansion
+  beyond ex14 label) and tepotinib (VISION cohort B). (2) Acquired
+  MET-amp post-osimertinib resistance in EGFR-mut NSCLC — osimertinib
+  + savolitinib (SAVANNAH; ORR ~49%; not yet FDA-approved). High-level
+  MET amplification also drives subsets of HCC and papillary RCC.
+  Critical: low-level amp (GCN 5-9) NOT actionable — must be high-level
+  (GCN ≥10 OR MET/CEP7 ≥4.0).
+notes_ua: >
+  Відрізняється від MET ex14 skipping (батьківська BIO-MET охоплює
+  обидва; ця сутність — підмножина високорівневої CN-амп). Два клінічні
+  контексти: (1) De-novo MET-амп НДРЛ (~1-5% високорівнева) —
+  капматиніб (GEOMETRY mono-1 high-amp когорта: ORR 40%, мПФВ 5.5
+  міс; off-label розширення поза ex14) та тепотиніб (VISION когорта B).
+  (2) Набута MET-амп після резистентності до осимертинібу при
+  EGFR-mut НДРЛ — осимертиніб + саволітиніб (SAVANNAH; ORR ~49%; ще
+  не схвалено FDA). Високорівнева MET ампліфікація також драйвер
+  підмножин ГЦР та папілярного НКР. Критично: низькорівнева ампліфікація
+  (GCN 5-9) НЕ actionable — має бути високорівнева (GCN ≥10 АБО
+  MET/CEP7 ≥4.0).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
