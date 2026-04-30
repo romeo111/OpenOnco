@@ -20,6 +20,7 @@ This module covers two layers:
 
 from __future__ import annotations
 
+import functools
 from pathlib import Path
 
 import pytest
@@ -36,10 +37,19 @@ KB_ROOT = REPO_ROOT / "knowledge_base" / "hosted" / "content"
 FIXTURE_ROOT = REPO_ROOT / "tests" / "fixtures" / "redflags"
 
 
+# NOTE: Caches below shave ~14 minutes off the full pytest suite.
+# `test_redflag_fixture` is parametrized over ~864 fixture YAMLs and was
+# rebuilding the entire RedFlag map (rglob + yaml.safe_load over ~500
+# files) on EVERY invocation. With lru_cache, the walk happens once per
+# pytest session. KB YAMLs are immutable during a test session, so the
+# cache is safe.
+
+@functools.lru_cache(maxsize=4096)
 def _load_yaml(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
+@functools.lru_cache(maxsize=1)
 def _load_redflags() -> dict[str, dict]:
     """All RedFlag YAMLs, keyed by id."""
     rfs: dict[str, dict] = {}
@@ -51,6 +61,7 @@ def _load_redflags() -> dict[str, dict]:
     return rfs
 
 
+@functools.lru_cache(maxsize=1)
 def _load_algorithms() -> dict[str, dict]:
     algs: dict[str, dict] = {}
     for p in sorted((KB_ROOT / "algorithms").glob("*.yaml")):
