@@ -1,0 +1,32 @@
+_contribution:
+  chunk_id: bma-civic-backfill-2026-04-29-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-04-29'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert (either no gene match, no disease overlap, or BMA already has
+    CIViC evidence). Per chunk-spec: ''do not invent treatment claims when CIViC has
+    no suitable evidence item.'''
+no_match_rows:
+- bma_id: BMA-CCND1-T1114-MM
+  gene: CCND1
+  disease_id: DIS-MM
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 17
+- bma_id: BMA-CD30-ALCL
+  gene: CD30
+  disease_id: DIS-ALCL
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+- bma_id: BMA-CD30-CHL
+  gene: CD30
+  disease_id: DIS-CHL
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+- bma_id: BMA-CHEK2-GERMLINE-BREAST
+  gene: CHEK2
+  disease_id: DIS-BREAST
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 6
+not_found_in_master: []
