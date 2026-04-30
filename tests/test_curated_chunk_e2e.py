@@ -96,7 +96,7 @@ CASE_TREATMENT_GOLDENS: dict[str, str] = {
     "patient_hcc_durva_treme_stride.json": "IND-HCC-SYSTEMIC-1L-DURVA-TREME",
     "patient_hnscc_cps_high_pembro_mono.json": "IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH",
     "patient_hnscc_extreme_cetux_platin_5fu.json": "IND-HNSCC-RM-1L-PEMBRO-CHEMO",
-    "patient_mcl_pirtobrutinib_3l_post_btki.json": "IND-MCL-2L-ACALABRUTINIB",
+    "patient_mcl_pirtobrutinib_3l_post_btki.json": "IND-MCL-3L-PIRTOBRUTINIB",
     "patient_melanoma_adjuvant_pembro_stage_iii.json": "IND-MELANOMA-METASTATIC-1L-NIVO-IPI",
     "patient_melanoma_braf_v600_dab_tram.json": "IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME",
     "patient_melanoma_braf_v600_nivo_ipi.json": "IND-MELANOMA-METASTATIC-1L-NIVO-IPI",
