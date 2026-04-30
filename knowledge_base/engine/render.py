@@ -269,6 +269,28 @@ def _h_t(text, target_lang: str = "uk", source_lang: str = "uk") -> str:
     return html.escape(_translate_kb_text(str(text), target_lang, source_lang))
 
 
+def _pick_name(names: dict | None, target_lang: str = "uk", default: str = "") -> str:
+    """Pick the right localized name from a `names: {ukrainian, english,
+    preferred, ...}` block based on target_lang.
+
+    UA: ukrainian → preferred → english → default
+    EN: english → preferred → ukrainian → default
+
+    Used uniformly across tests / drugs / workups / mdt_skills lookups so a
+    single helper change controls every name-emission site."""
+    if not isinstance(names, dict):
+        return default
+    if target_lang == "en":
+        order = ("english", "preferred", "ukrainian")
+    else:
+        order = ("ukrainian", "preferred", "english")
+    for key in order:
+        v = names.get(key)
+        if v:
+            return str(v)
+    return default
+
+
 # ── i18n: UI label dictionary (UA + EN) ───────────────────────────────────
 #
 # Used by render to switch static section headers / banners / disclaimers
@@ -400,6 +422,64 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "actionability_empty":         {"uk": "Не знайдено клінічно значущих варіантів у цьому профілі.",
                                     "en": "No clinically actionable variants matched in this profile."},
     "actionability_gene_level":    {"uk": "(гено-рівень)", "en": "(gene-level)"},
+    # Experimental options (clinical-trial track)
+    "exp_heading":                 {"uk": "Експериментальні опції (клінічні дослідження)",
+                                    "en": "Experimental options (clinical trials)"},
+    "exp_unset_sub":               {"uk": "Третій трек плану — open-enrollment trials з ClinicalTrials.gov.",
+                                    "en": "Third plan track — open-enrollment trials from ClinicalTrials.gov."},
+    "exp_unset_msg":               {"uk": "🔬 Дані недоступні — синхронізація з ClinicalTrials.gov не виконана. "
+                                          "Передайте experimental_search_fn у generate_plan() "
+                                          "або синхронізуйте офлайн (per ua-ingestion plan §3.3).",
+                                    "en": "🔬 Data unavailable — ClinicalTrials.gov sync has not run. "
+                                          "Pass experimental_search_fn to generate_plan() "
+                                          "or sync offline (per ua-ingestion plan §3.3)."},
+    "exp_last_synced_prefix":      {"uk": "Останнє оновлення:", "en": "Last synced:"},
+    "exp_empty_default":           {"uk": "Жодного активного трайла для цього сценарію в ctgov не знайдено.",
+                                    "en": "No active trials matched this scenario in ctgov."},
+    "exp_table_sub":               {"uk": "Третій трек плану — open-enrollment trials з ClinicalTrials.gov. "
+                                          "Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3).",
+                                    "en": "Third plan track — open-enrollment trials from ClinicalTrials.gov. "
+                                          "Render-time metadata; engine selection is not affected by this block (CHARTER §8.3)."},
+    "exp_th_nct":                  {"uk": "NCT", "en": "NCT"},
+    "exp_th_title":                {"uk": "Назва", "en": "Title"},
+    "exp_th_phase":                {"uk": "Фаза", "en": "Phase"},
+    "exp_th_status":               {"uk": "Статус", "en": "Status"},
+    "exp_th_sponsor":              {"uk": "Спонсор", "en": "Sponsor"},
+    "exp_th_ua":                   {"uk": "UA", "en": "UA"},
+    "exp_th_eligibility":          {"uk": "Включення (фрагмент)", "en": "Eligibility (excerpt)"},
+    "exp_disclaimer":              {"uk": "Перевіряти статус набору безпосередньо у дослідницькому центрі. "
+                                          "Дані ctgov можуть відставати від поточного статусу UA-сайтів.",
+                                    "en": "Verify recruitment status directly with the trial site. "
+                                          "ctgov data can lag behind current UA-site status."},
+    # Access matrix
+    "matrix_heading":              {"uk": "Доступність опцій в Україні",
+                                    "en": "Option availability in Ukraine"},
+    "matrix_sub":                  {"uk": "Per-track UA registration · НСЗУ · cost · access pathway. "
+                                          "Render-time metadata; engine selection не залежить від цих полів (CHARTER §8.3).",
+                                    "en": "Per-track UA registration · NSZU · cost · access pathway. "
+                                          "Render-time metadata; engine selection does not depend on these fields (CHARTER §8.3)."},
+    "matrix_th_option":            {"uk": "Опція", "en": "Option"},
+    "matrix_th_registration":      {"uk": "Реєстрація UA", "en": "UA registration"},
+    "matrix_th_nszu":              {"uk": "НСЗУ", "en": "NSZU"},
+    "matrix_th_cost":              {"uk": "Cost orientation", "en": "Cost orientation"},
+    "matrix_th_pathway":           {"uk": "Access pathway", "en": "Access pathway"},
+    "matrix_avail_registered":     {"uk": "зареєстровано", "en": "registered"},
+    "matrix_avail_not_registered": {"uk": "не зареєстровано", "en": "not registered"},
+    "matrix_avail_covered":        {"uk": "покривається", "en": "covered"},
+    "matrix_avail_oop":            {"uk": "out-of-pocket", "en": "out-of-pocket"},
+    "matrix_avail_unknown":        {"uk": "— невідомо", "en": "— unknown"},
+    "matrix_path_trial_sponsor":   {"uk": "Trial sponsor", "en": "Trial sponsor"},
+    "matrix_path_nszu_formulary":  {"uk": "НСЗУ formulary", "en": "NSZU formulary"},
+    "matrix_path_not_recorded":    {"uk": "not recorded", "en": "not recorded"},
+    "matrix_cost_trial":           {"uk": "0 для пацієнта (sponsor pays)",
+                                    "en": "0 for patient (sponsor pays)"},
+    "matrix_cost_unknown":         {"uk": "₴-? — verify pathway",
+                                    "en": "₴-? — verify pathway"},
+    "matrix_cost_label_nszu":      {"uk": "НСЗУ:", "en": "NSZU:"},
+    "matrix_cost_label_selfpay":   {"uk": "self-pay:", "en": "self-pay:"},
+    "matrix_disclaimer":           {"uk": "Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті.",
+                                    "en": "Cost information is orientation. Verify with a specific pharmacy / foundation / trial site."},
+    "matrix_status_updated":       {"uk": "Status updated:", "en": "Status updated:"},
 }
 
 
@@ -486,11 +566,51 @@ def _doc_shell(title: str, body: str, target_lang: str = "uk") -> str:
     )
 
 
+# EN-side display labels for MDT role_id values. The canonical UA labels
+# live in `mdt_orchestrator._ROLE_CATALOG` (out of scope per the render
+# refactor brief — render.py is the only file we modify). This dict is
+# the render-side EN mirror; when a role_id is missing, we fall back to
+# the UA label that the orchestrator already baked into r.role_name.
+# Keys here MUST match the keys in `_ROLE_CATALOG` — when a role is added
+# upstream, mirror the entry here too.
+_ROLE_NAME_EN: dict[str, str] = {
+    "hematologist": "Hematologist / oncohematologist",
+    "medical_oncologist": "Medical oncologist (solid-tumor chemotherapist)",
+    "infectious_disease_hepatology": "Infectious disease / hepatology",
+    "radiologist": "Radiologist",
+    "pathologist": "Pathologist (general)",
+    "hematopathologist": "Hematopathologist (lymphoma / leukemia / myeloma)",
+    "molecular_geneticist": "Molecular geneticist / molecular oncologist",
+    "clinical_pharmacist": "Clinical pharmacist",
+    "radiation_oncologist": "Radiation oncologist",
+    "surgical_oncologist": "Surgical oncologist",
+    "transplant_specialist": "Transplant specialist (BMT)",
+    "cellular_therapy_specialist": "Cellular therapy specialist (CAR-T)",
+    "psychologist": "Psycho-oncologist",
+    "palliative_care": "Palliative care",
+    "social_worker_case_manager": "Social worker / case manager",
+    "primary_care": "Primary care / family physician",
+}
+
+
+def _localized_role_name(role_id: str, fallback_name: str,
+                         target_lang: str = "uk") -> str:
+    """EN side: prefer `_ROLE_NAME_EN[role_id]`; otherwise emit the UA
+    label baked in by the orchestrator. UA side: pass through unchanged."""
+    if (target_lang or "uk").lower().startswith("en"):
+        return _ROLE_NAME_EN.get(role_id) or fallback_name
+    return fallback_name
+
+
 def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                         target_lang: str = "uk") -> str:
     if mdt is None:
         return ""
     parts: list[str] = []
+    # `Owns` and `Open questions` are emitted in English on both sides
+    # today (UA team chose to keep these MDT-internal labels in English);
+    # `_localize_html` is a no-op for them. If a UA-translated form is
+    # ever desired, add keys to `_UI_STRINGS` and route through `_t`.
 
     def _skill_meta_html(r) -> str:
         """One-line metadata strip showing skill version + last-reviewed
@@ -522,9 +642,10 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
                 f'<div class="role-questions">Owns: {_h(", ".join(r.linked_questions))}</div>'
                 if r.linked_questions else ""
             )
+            display_name = _localized_role_name(r.role_id, r.role_name, target_lang)
             items.append(
                 f"<li>"
-                f'<span class="role-name">{_h(r.role_name)}</span> '
+                f'<span class="role-name">{_h(display_name)}</span> '
                 f'<span class="badge {badge_cls}">{_h(r.priority)}</span>'
                 f'<div class="role-reason">{_h_t(r.reason, target_lang)}</div>'
                 f"{qs}"
@@ -537,13 +658,13 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         )
 
     parts.append(_role_block(
-        "Скіли (required) — обов'язкові віртуальні спеціалісти",
+        _t("skills_required", target_lang),
         "badge--required", mdt.required_roles))
     parts.append(_role_block(
-        "Скіли (recommended) — рекомендовані для розгляду",
+        _t("skills_recommended", target_lang),
         "badge--recommended", mdt.recommended_roles))
     parts.append(_role_block(
-        "Скіли (optional) — опціональні",
+        _t("skills_optional", target_lang),
         "badge--optional", mdt.optional_roles))
 
     qs = mdt.open_questions
@@ -589,9 +710,14 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         sid = s["skill_id"]
         is_active = sid in activated_ids
         cls = "activated" if is_active else "dormant"
+        # `s["name"]` is the UA-only `name` field on mdt_skills/<role>.yaml
+        # (no `names:` block, no `name_en` today). EN-side render maps via
+        # `_ROLE_NAME_EN` keyed on skill_id (== role_id); falls back to the
+        # baked UA label when no entry is registered.
+        display_name = _localized_role_name(sid, s["name"], target_lang)
         catalog_rows.append(
             f'<tr class="{cls}">'
-            f'<td>{_h(s["name"])}</td>'
+            f'<td>{_h(display_name)}</td>'
             f'<td><code>{_h(sid)}</code></td>'
             f'<td class="ver">v{_h(s["version"])}</td>'
             f'<td>{_h(s["last_reviewed"])}</td>'
@@ -601,19 +727,26 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
         )
     parts.append(
         '<div class="skill-catalog">'
-        f'<h3>Skill catalog ({len(activated_ids)}/{len(full)} активовано в цьому плані)</h3>'
-        '<div class="section-sub">Усі зареєстровані віртуальні спеціалісти. '
-        '✓ — активовано для цього кейсу; ○ — не активовано (доступні для інших клінічних сценаріїв).</div>'
+        f'<h3>{_h(_t("skill_catalog_prefix", target_lang))} '
+        f'({len(activated_ids)}/{len(full)} {_h(_t("skill_catalog_active_in", target_lang))})</h3>'
+        f'<div class="section-sub">{_h(_t("skill_catalog_legend", target_lang))}</div>'
         '<table><thead><tr>'
-        '<th>Спеціаліст</th><th>skill_id</th><th>Версія</th>'
-        '<th>Last reviewed</th><th>Sign-offs</th><th>Domain</th>'
+        f'<th>{_h(_t("th_specialist", target_lang))}</th>'
+        f'<th>{_h(_t("th_skill_id", target_lang))}</th>'
+        f'<th>{_h(_t("th_version", target_lang))}</th>'
+        f'<th>{_h(_t("th_last_reviewed", target_lang))}</th>'
+        f'<th>{_h(_t("th_signoffs", target_lang))}</th>'
+        f'<th>{_h(_t("th_domain", target_lang))}</th>'
         "</tr></thead><tbody>"
         f'{"".join(catalog_rows)}'
         "</tbody></table>"
         "</div>"
     )
 
-    return f'<section><h2>MDT brief</h2><div class="mdt">{"".join(parts)}</div></section>'
+    return (
+        f'<section><h2>{_h(_t("mdt_brief", target_lang))}</h2>'
+        f'<div class="mdt">{"".join(parts)}</div></section>'
+    )
 
 
 def _render_fda_disclosure(text: str) -> str:
@@ -644,24 +777,30 @@ _MEDICAL_DISCLAIMER = (
 # ── Section helpers (treatment Plan) ──────────────────────────────────────
 
 
-def _render_etiological_driver(disease: Optional[dict]) -> str:
+def _render_etiological_driver(disease: Optional[dict],
+                               target_lang: str = "uk") -> str:
     """Etiologically-driven archetype gets a featured card explaining WHY
     a particular driver (HCV, H. pylori, EBV, etc.) shapes treatment.
-    Returns empty string for non-etiologically_driven diseases."""
+    Returns empty string for non-etiologically_driven diseases.
+
+    Disease name uses `_pick_name` so EN-side renders surface
+    `names.english`/`names.preferred` when present (EN side previously
+    leaked the raw UA name)."""
     if not disease:
         return ""
     archetype = disease.get("archetype")
     if archetype != "etiologically_driven":
         return ""
     factors = disease.get("etiological_factors") or []
-    name = (disease.get("names") or {}).get("ukrainian") or (
-        disease.get("names") or {}).get("preferred") or disease.get("id", "")
+    name = _pick_name(
+        disease.get("names"), target_lang, default=disease.get("id", "")
+    )
     factor_items = "".join(f"<li>{_h(f)}</li>" for f in factors) or "<li>—</li>"
     return (
         '<section>'
-        '<h2>Етіологічний драйвер</h2>'
+        f'<h2>{_h(_t("etiological_driver", target_lang))}</h2>'
         '<div class="etiology-card">'
-        '<div class="label">Etiological driver · etiologically_driven archetype</div>'
+        f'<div class="label">{_h(_t("etiological_driver_label", target_lang))}</div>'
         f'<div class="archetype">{_h(name)}</div>'
         f'<ul>{factor_items}</ul>'
         '</div>'
@@ -675,6 +814,21 @@ _PRIORITY_LABEL_UA = {
     "desired": "Бажано",
     "calculation_based": "Розрахунок",
 }
+_PRIORITY_LABEL_EN = {
+    "critical": "Critical",
+    "standard": "Standard",
+    "desired": "Desired",
+    "calculation_based": "Calculation",
+}
+
+
+def _priority_label(priority: str, target_lang: str = "uk") -> str:
+    """priority_class → localized badge text."""
+    table = _PRIORITY_LABEL_EN if (target_lang or "uk").lower().startswith("en") \
+        else _PRIORITY_LABEL_UA
+    return table.get(priority, priority)
+
+
 _PRIORITY_BADGE_CLS = {
     "critical": "badge--required",
     "standard": "badge--recommended",
@@ -684,11 +838,19 @@ _PRIORITY_BADGE_CLS = {
 _PRIORITY_RANK = {"critical": 0, "standard": 1, "desired": 2, "calculation_based": 3}
 
 
-def _render_pretreatment_investigations(plan, kb_resolved: dict) -> str:
+def _render_pretreatment_investigations(
+    plan, kb_resolved: dict, target_lang: str = "uk"
+) -> str:
     """Pre-treatment investigations table: union of required + desired tests
     across all tracks, sorted by priority_class. Each row shows test name,
     priority badge, category, and which tracks need it.
-    Per REFERENCE_CASE_SPECIFICATION §3.5."""
+    Per REFERENCE_CASE_SPECIFICATION §3.5.
+
+    Names route through `_pick_name` so EN-side renders pull
+    `names.english`/`names.preferred` (TEST-* YAMLs already carry both).
+    Section/column labels and the priority badge text resolve via the
+    `_t` UI dictionary; "all tracks" / "desired (...)" scope strings
+    use the `scope_*` keys in `_UI_STRINGS`."""
     tests_lookup = (kb_resolved or {}).get("tests") or {}
     if not tests_lookup:
         return ""
@@ -706,6 +868,9 @@ def _render_pretreatment_investigations(plan, kb_resolved: dict) -> str:
     if not test_use:
         return ""
 
+    scope_all = _t("scope_all_tracks", target_lang)
+    scope_desired_prefix = _t("scope_desired_prefix", target_lang)
+
     rows = []
     for tid, use in sorted(
         test_use.items(),
@@ -715,21 +880,20 @@ def _render_pretreatment_investigations(plan, kb_resolved: dict) -> str:
         ),
     ):
         test = tests_lookup.get(tid) or {}
-        names = test.get("names") or {}
-        name = names.get("ukrainian") or names.get("preferred") or tid
+        name = _pick_name(test.get("names"), target_lang, default=tid)
         priority = test.get("priority_class") or "standard"
         category = test.get("category") or "—"
         # If required by every track → "all"; else list which tracks
         all_track_ids = {t.track_id for t in plan.tracks}
         if use["required_by"] == all_track_ids:
-            scope = "усі треки"
+            scope = scope_all
         elif use["required_by"]:
             scope = ", ".join(sorted(use["required_by"]))
         else:
-            scope = "бажано (" + ", ".join(sorted(use["desired_by"])) + ")"
+            scope = f"{scope_desired_prefix} (" + ", ".join(sorted(use["desired_by"])) + ")"
         priority_badge = (
             f'<span class="badge {_PRIORITY_BADGE_CLS.get(priority, "badge--optional")}">'
-            f'{_h(_PRIORITY_LABEL_UA.get(priority, priority))}</span>'
+            f'{_h(_priority_label(priority, target_lang))}</span>'
         )
         rows.append(
             f'<tr><td>{_h(tid)}</td><td>{_h(name)}</td>'
@@ -739,12 +903,14 @@ def _render_pretreatment_investigations(plan, kb_resolved: dict) -> str:
 
     return (
         '<section>'
-        '<h2>Pre-treatment investigations</h2>'
-        '<div class="section-sub">Дослідження перед стартом терапії · '
-        'критичні / стандарт / бажано · поєднані по треках</div>'
+        f'<h2>{_h(_t("pretreatment", target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t("pretreatment_sub", target_lang))}</div>'
         '<table class="tbl">'
-        '<thead><tr><th>ID</th><th>Назва</th><th>Пріоритет</th>'
-        '<th>Категорія</th><th>Потрібно для</th></tr></thead>'
+        f'<thead><tr><th>{_h(_t("th_id", target_lang))}</th>'
+        f'<th>{_h(_t("th_name", target_lang))}</th>'
+        f'<th>{_h(_t("th_priority", target_lang))}</th>'
+        f'<th>{_h(_t("th_category", target_lang))}</th>'
+        f'<th>{_h(_t("th_needed_for", target_lang))}</th></tr></thead>'
         f'<tbody>{"".join(rows)}</tbody>'
         '</table>'
         '</section>'
@@ -1098,7 +1264,7 @@ def _render_timeline(plan) -> str:
 # ── Experimental-options track (Phase C) ─────────────────────────────────
 
 
-def _render_experimental_options(option) -> str:
+def _render_experimental_options(option, target_lang: str = "uk") -> str:
     """Render the clinical-trial track surfaced after engine selection.
 
     `option` is an `ExperimentalOption` (or None when no `search_fn` was
@@ -1108,30 +1274,34 @@ def _render_experimental_options(option) -> str:
     When option is None: emit a small placeholder so clinicians know the
     track exists but ctgov sync hasn't run. When option is present but
     has zero open trials, emit an empty-state message instead of a table.
-    """
+
+    All static UA labels route through `_t(...)` so the EN render emits
+    English at the source rather than relying on `_localize_html`
+    post-processing."""
+
+    heading = _t("exp_heading", target_lang)
 
     if option is None:
         return (
             '<section class="experimental-track experimental-track--unset">'
-            '<h2>Експериментальні опції (клінічні дослідження)</h2>'
-            '<div class="section-sub">Третій трек плану — open-enrollment trials з ClinicalTrials.gov.</div>'
-            '<p class="empty-state">'
-            '🔬 Дані недоступні — синхронізація з ClinicalTrials.gov не виконана. '
-            'Передайте <code>experimental_search_fn</code> у <code>generate_plan()</code> '
-            'або синхронізуйте офлайн (per ua-ingestion plan §3.3).'
-            '</p>'
+            f'<h2>{_h(heading)}</h2>'
+            f'<div class="section-sub">{_h(_t("exp_unset_sub", target_lang))}</div>'
+            f'<p class="empty-state">{_h(_t("exp_unset_msg", target_lang))}</p>'
             '</section>'
         )
 
     trials = option.trials or []
     last_synced = option.last_synced or ""
+    last_synced_prefix = _t("exp_last_synced_prefix", target_lang)
 
     if not trials:
-        msg = option.notes or "Жодного активного трайла для цього сценарію в ctgov не знайдено."
+        # `option.notes` is curator-authored UA free-text; only fall back
+        # to the localized default when it is empty.
+        msg = option.notes or _t("exp_empty_default", target_lang)
         return (
             '<section class="experimental-track experimental-track--empty">'
-            '<h2>Експериментальні опції (клінічні дослідження)</h2>'
-            f'<div class="section-sub">Останнє оновлення: {_h(last_synced)} · ctgov.</div>'
+            f'<h2>{_h(heading)}</h2>'
+            f'<div class="section-sub">{_h(last_synced_prefix)} {_h(last_synced)} · ctgov.</div>'
             f'<p class="empty-state">{_h(msg)}</p>'
             '</section>'
         )
@@ -1158,23 +1328,24 @@ def _render_experimental_options(option) -> str:
 
     return (
         '<section class="experimental-track">'
-        '<h2>Експериментальні опції (клінічні дослідження)</h2>'
+        f'<h2>{_h(heading)}</h2>'
         '<div class="section-sub">'
-        f'Третій трек плану — open-enrollment trials з ClinicalTrials.gov. '
-        f'Останнє оновлення: {_h(last_synced)}. '
-        f'<em>Render-time metadata; engine selection не змінюється цим блоком (CHARTER §8.3).</em>'
+        f'{_h(_t("exp_table_sub", target_lang))} '
+        f'{_h(last_synced_prefix)} {_h(last_synced)}.'
         '</div>'
         '<table class="trials-table">'
         '<thead><tr>'
-        '<th>NCT</th><th>Назва</th><th>Фаза</th><th>Статус</th>'
-        '<th>Спонсор</th><th>UA</th><th>Включення (фрагмент)</th>'
+        f'<th>{_h(_t("exp_th_nct", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_title", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_phase", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_status", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_sponsor", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_ua", target_lang))}</th>'
+        f'<th>{_h(_t("exp_th_eligibility", target_lang))}</th>'
         '</tr></thead>'
         f'<tbody>{"".join(rows)}</tbody>'
         '</table>'
-        '<p class="trial-disclaimer">'
-        'Перевіряти статус набору безпосередньо у дослідницькому центрі. '
-        'Дані ctgov можуть відставати від поточного статусу UA-сайтів.'
-        '</p>'
+        f'<p class="trial-disclaimer">{_h(_t("exp_disclaimer", target_lang))}</p>'
         '</section>'
     )
 
@@ -1195,17 +1366,18 @@ def _fmt_uah_range(lo, hi, per_unit) -> str:
     return f"₴{int(val):,}{suffix}".replace(",", " ")
 
 
-def _avail_badge(value, *, true_label: str, false_label: str) -> str:
+def _avail_badge(value, *, true_label: str, false_label: str,
+                 target_lang: str = "uk") -> str:
     """Tri-state status cell — True/False/None each render distinctly so
     the matrix never silently coalesces 'unknown' into 'no'."""
     if value is True:
         return f'<span class="badge badge--ok">✓ {_h(true_label)}</span>'
     if value is False:
         return f'<span class="badge badge--no">✗ {_h(false_label)}</span>'
-    return '<span class="badge badge--unknown">— невідомо</span>'
+    return f'<span class="badge badge--unknown">{_h(_t("matrix_avail_unknown", target_lang))}</span>'
 
 
-def _render_access_matrix(matrix) -> str:
+def _render_access_matrix(matrix, target_lang: str = "uk") -> str:
     """Render the per-Plan Access Matrix block (ua-ingestion plan §4).
 
     The matrix surfaces UA-availability metadata — registered, reimbursed,
@@ -1237,18 +1409,20 @@ def _render_access_matrix(matrix) -> str:
             regimen_label = f"<strong>{_h(r.regimen_name)}</strong> <span class='regimen-id'>({_h(r.regimen_id)})</span>"
 
         cost_cell_parts: list[str] = []
-        # Reimbursed bucket first (НСЗУ tariff), self-pay second (retail)
+        # Reimbursed bucket first (NSZU/НСЗУ tariff), self-pay second (retail)
+        nszu_cost_label = _t("matrix_cost_label_nszu", target_lang)
+        selfpay_cost_label = _t("matrix_cost_label_selfpay", target_lang)
         reimb_cell = _fmt_uah_range(r.cost_reimbursed_min, r.cost_reimbursed_max, r.cost_per_unit)
         if reimb_cell != "—":
-            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>НСЗУ:</span> {reimb_cell}</div>")
+            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>{_h(nszu_cost_label)}</span> {reimb_cell}</div>")
         sp_cell = _fmt_uah_range(r.cost_self_pay_min, r.cost_self_pay_max, r.cost_per_unit)
         if sp_cell != "—":
-            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>self-pay:</span> {sp_cell}</div>")
+            cost_cell_parts.append(f"<div class='cost-row'><span class='cost-label'>{_h(selfpay_cost_label)}</span> {sp_cell}</div>")
         if not cost_cell_parts:
             if r.track_id.startswith("trial:"):
-                cost_cell_parts.append("<span class='cost-trial'>0 для пацієнта (sponsor pays)</span>")
+                cost_cell_parts.append(f"<span class='cost-trial'>{_h(_t('matrix_cost_trial', target_lang))}</span>")
             else:
-                cost_cell_parts.append("<span class='cost-unknown'>₴-? — verify pathway</span>")
+                cost_cell_parts.append(f"<span class='cost-unknown'>{_h(_t('matrix_cost_unknown', target_lang))}</span>")
 
         # Pathway cell
         if r.primary_pathway_id:
@@ -1256,11 +1430,11 @@ def _render_access_matrix(matrix) -> str:
             if r.pathway_alternative_ids:
                 path_cell += f' <span class="alt-paths">(+{len(r.pathway_alternative_ids)})</span>'
         elif r.track_id.startswith("trial:"):
-            path_cell = "Trial sponsor"
+            path_cell = _h(_t("matrix_path_trial_sponsor", target_lang))
         elif r.reimbursed_nszu:
-            path_cell = "НСЗУ formulary"
+            path_cell = _h(_t("matrix_path_nszu_formulary", target_lang))
         else:
-            path_cell = "<em>not recorded</em>"
+            path_cell = f'<em>{_h(_t("matrix_path_not_recorded", target_lang))}</em>'
 
         # Notes cell — collapse to one line, full list on hover
         notes_cell = ""
@@ -1277,8 +1451,8 @@ def _render_access_matrix(matrix) -> str:
             f'<tr class="{track_class}">'
             f'<td class="track-cell"><strong>{_h(r.track_label)}</strong>'
             f'<div class="regimen-name">{regimen_label}</div>{notes_cell}</td>'
-            f'<td>{_avail_badge(r.registered_in_ua, true_label="зареєстровано", false_label="не зареєстровано")}</td>'
-            f'<td>{_avail_badge(r.reimbursed_nszu, true_label="покривається", false_label="out-of-pocket")}</td>'
+            f'<td>{_avail_badge(r.registered_in_ua, true_label=_t("matrix_avail_registered", target_lang), false_label=_t("matrix_avail_not_registered", target_lang), target_lang=target_lang)}</td>'
+            f'<td>{_avail_badge(r.reimbursed_nszu, true_label=_t("matrix_avail_covered", target_lang), false_label=_t("matrix_avail_oop", target_lang), target_lang=target_lang)}</td>'
             f'<td class="cost-cell">{"".join(cost_cell_parts)}</td>'
             f'<td class="pathway-cell">{path_cell}</td>'
             f'</tr>'
@@ -1292,20 +1466,22 @@ def _render_access_matrix(matrix) -> str:
     return (
         f'<section class="access-matrix">'
         f'<details{open_attr}>'
-        f'<summary><h2>Доступність опцій в Україні</h2>'
-        f'<span class="section-sub">Per-track UA registration · НСЗУ · cost · access pathway. '
-        f'Render-time metadata; engine selection не залежить від цих полів (CHARTER §8.3).</span></summary>'
+        f'<summary><h2>{_h(_t("matrix_heading", target_lang))}</h2>'
+        f'<span class="section-sub">{_h(_t("matrix_sub", target_lang))}</span></summary>'
         f'{plan_notes}'
         f'<table class="access-matrix-table">'
         f'<thead><tr>'
-        f'<th>Опція</th><th>Реєстрація UA</th><th>НСЗУ</th>'
-        f'<th>Cost orientation</th><th>Access pathway</th>'
+        f'<th>{_h(_t("matrix_th_option", target_lang))}</th>'
+        f'<th>{_h(_t("matrix_th_registration", target_lang))}</th>'
+        f'<th>{_h(_t("matrix_th_nszu", target_lang))}</th>'
+        f'<th>{_h(_t("matrix_th_cost", target_lang))}</th>'
+        f'<th>{_h(_t("matrix_th_pathway", target_lang))}</th>'
         f'</tr></thead>'
         f'<tbody>{"".join(rows_html)}</tbody>'
         f'</table>'
         f'<p class="matrix-disclaimer">'
-        f'Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті. '
-        f'Status updated: {_h((matrix.generated_at or "")[:10])}.'
+        f'{_h(_t("matrix_disclaimer", target_lang))} '
+        f'{_h(_t("matrix_status_updated", target_lang))} {_h((matrix.generated_at or "")[:10])}.'
         f'</p>'
         f'</details>'
         f'</section>'
@@ -1400,12 +1576,9 @@ def _render_drug_row(
     if not drug_id:
         return ""
     drug = drugs_lookup.get(drug_id)
-    # Drug display name — prefer ukrainian when rendering UA, else preferred
-    names = (drug or {}).get("names") or {}
-    if (target_lang or "uk").lower().startswith("en"):
-        name = names.get("english") or names.get("preferred") or drug_id
-    else:
-        name = names.get("ukrainian") or names.get("preferred") or drug_id
+    # Drug display name — `_pick_name` enforces the lang priority chain
+    # uniformly across every name-emission site (tests/drugs/workups).
+    name = _pick_name((drug or {}).get("names"), target_lang, default=drug_id)
     dose_bits: list[str] = []
     for k in ("dose", "schedule", "route"):
         v = comp.get(k)
@@ -1962,7 +2135,7 @@ def render_plan_html(
 
     # Etiological driver — only for etiologically_driven archetype
     body.append(_render_etiological_driver(
-        (plan_result.kb_resolved or {}).get("disease")
+        (plan_result.kb_resolved or {}).get("disease"), target_lang
     ))
 
     # Variant actionability (ESCAT) — inserted between the
@@ -2064,7 +2237,7 @@ def render_plan_html(
 
     # Pre-treatment investigations · RedFlag PRO/CONTRA · What NOT to do ·
     # Monitoring phases · Timeline (REFERENCE_CASE_SPECIFICATION §1.3)
-    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved))
+    body.append(_render_pretreatment_investigations(plan, plan_result.kb_resolved, target_lang))
     body.append(_render_red_flags_pro_contra(plan, plan_result.kb_resolved, target_lang))
     body.append(_render_what_not_to_do(plan, target_lang))
 
@@ -2091,10 +2264,10 @@ def render_plan_html(
         body.append(f"<section><h2>Sources cited</h2><ul class='sources'>{items}</ul></section>")
 
     # Experimental options (Phase C — clinical-trial track)
-    body.append(_render_experimental_options(plan_result.experimental_options))
+    body.append(_render_experimental_options(plan_result.experimental_options, target_lang))
 
     # Access Matrix (Phase D — UA-availability per track)
-    body.append(_render_access_matrix(plan.access_matrix))
+    body.append(_render_access_matrix(plan.access_matrix, target_lang))
 
     # Footer
     body.append('<div class="doc-footer">')
