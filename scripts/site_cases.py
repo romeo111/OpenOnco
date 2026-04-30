@@ -61,6 +61,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="HCV-MZL · Reference Case (Patient Zero)",
+        summary_en="Man 49, ECOG 1, 5.3 cm tongue-base lesion, HCV genotype 1b, indolent presentation. Acceptance test for P0.",
     ),
     CaseEntry(
         case_id="hcv-mzl-bulky",
@@ -70,6 +72,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="HCV-MZL · Aggressive Burden (BR + concurrent DAA)",
+        summary_en="HCV-MZL with bulky disease (>7 cm) — RF-BULKY-DISEASE fired. Engine selects BR (bendamustine+rituximab) + concurrent DAA. Merges former patient_zero_bulky with new aggressive_burden fixture.",
     ),
     CaseEntry(
         case_id="hcv-mzl-post-daa",
@@ -79,6 +83,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="HCV-MZL · Post-DAA Responder (Surveillance)",
+        summary_en="Post-DAA patient with SVR12 + lymphoma response — engine selects surveillance only; plan covers re-treatment trigger at relapse.",
     ),
     CaseEntry(
         case_id="mm-standard-risk",
@@ -88,6 +94,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="myeloma",
+        label_en="Multiple Myeloma · Standard-Risk",
+        summary_en="Newly-diagnosed MM, t(11;14) + hyperdiploid, R-ISS II — engine selects VRd triplet as default.",
     ),
     CaseEntry(
         case_id="mm-high-risk",
@@ -97,6 +105,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="myeloma",
+        label_en="Multiple Myeloma · High-Risk",
+        summary_en="Newly-diagnosed MM, t(4;14) + gain 1q21, R2-ISS III — RF-MM-HIGH-RISK-CYTOGENETICS, engine selects D-VRd quadruplet.",
     ),
     CaseEntry(
         case_id="diagnostic-lymphoma-suspect",
@@ -106,6 +116,8 @@ CASES: list[CaseEntry] = [
         badge="Diagnostic Brief",
         badge_class="bdg-diag",
         category="diagnostic",
+        label_en="Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)",
+        summary_en="Pre-biopsy mode — engine emits Workup Brief, not Treatment Plan (CHARTER §15.2 C7 — no histology, no treatment).",
     ),
     CaseEntry(
         case_id="diagnostic-lymphoma-confirmed",
@@ -115,6 +127,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="diagnostic",
+        label_en="Lymphoma Confirmed · Post-Biopsy (Treatment Plan)",
+        summary_en="Same patient after histology confirmation — diagnostic→treatment promotion via revise_plan.",
     ),
     # ── Tier 1 lymphomas (DLBCL, FL, CLL, MCL — added in marathon block) ──
     CaseEntry(
@@ -125,6 +139,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="DLBCL NOS · Low-IPI (R-CHOP standard)",
+        summary_en="Man 54, ECOG 1, IPI 1, GCB cell-of-origin — engine selects R-CHOP × 6 cycles as default. Most common aggressive lymphoma (~30% NHL).",
     ),
     CaseEntry(
         case_id="dlbcl-high-ipi",
@@ -134,6 +150,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="DLBCL NOS · High-IPI (Pola-R-CHP)",
+        summary_en="Woman 67, IPI 4, multiple extranodal — RF-DLBCL-HIGH-IPI fired. Engine escalates to Pola-R-CHP (POLARIX trial); Ukraine-funding caveat.",
     ),
     CaseEntry(
         case_id="fl-low-burden",
@@ -143,6 +161,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Follicular · Low Burden (Watch-and-Wait)",
+        summary_en="FL grade 1-2, asymptomatic, no GELF criteria — engine selects surveillance track (3 plans usable side-by-side, default = W&W).",
     ),
     CaseEntry(
         case_id="fl-high-burden",
@@ -152,6 +172,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Follicular · High Burden (BR)",
+        summary_en="FL with 8 cm mass + B-symptoms + LDH↑ — RF-FL-HIGH-TUMOR-BURDEN-GELF fired. Engine selects BR (bendamustine + rituximab); reuses REG-BR-STANDARD from HCV-MZL.",
     ),
     CaseEntry(
         case_id="fl-transformation",
@@ -161,6 +183,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Follicular · Transformation Suspect (R-CHOP)",
+        summary_en="FL with rapid progression + LDH doubling — RF-FL-TRANSFORMATION-SUSPECT fired. Engine selects R-CHOP (treats as DLBCL pathway).",
     ),
     CaseEntry(
         case_id="cll-low-risk",
@@ -170,6 +194,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="CLL/SLL · Low-Risk (BTKi continuous)",
+        summary_en="CLL standard-risk (no TP53/del 17p/IGHV-unmut) — engine selects acalabrutinib continuous; modern era replaces FCR/BR.",
     ),
     CaseEntry(
         case_id="cll-high-risk",
@@ -179,6 +205,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="CLL/SLL · High-Risk (VenO time-limited)",
+        summary_en="CLL with TP53 mutation + IGHV-unmut + complex karyotype — RF-CLL-HIGH-RISK fired. Engine escalates to venetoclax+obinutuzumab (CLL14).",
     ),
     CaseEntry(
         case_id="mcl-fit-younger",
@@ -188,6 +216,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="Mantle Cell · Fit Younger (Intensive + autoSCT)",
+        summary_en="MCL age 58, ECOG 0, TP53-wt — engine selects intensive R-CHOP/R-DHAP × 6 + autoSCT + R-maintenance × 3 years (Nordic protocol).",
     ),
     CaseEntry(
         case_id="mcl-unfit-tp53",
@@ -197,6 +227,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="Mantle Cell · Unfit / TP53-mutant (BTKi+R)",
+        summary_en="MCL age 71, ECOG 2, TP53 mutation — RF-MCL-BLASTOID-OR-TP53 fired. Engine selects acalabrutinib + rituximab (BTKi-based).",
     ),
     # ── More Tier 1 (MZL splenic + nodal, Burkitt, HCL, WM, HGBL-DH) ────
     CaseEntry(
@@ -207,6 +239,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Splenic MZL · HCV-positive (DAA antiviral)",
+        summary_en="Splenic MZL HCV-positive — engine selects DAA antiviral (sofosbuvir/velpatasvir 12 weeks) as 1L; reuses REG-DAA-SOF-VEL from HCV-MZL extranodal.",
     ),
     CaseEntry(
         case_id="smzl-hcv-negative",
@@ -216,6 +250,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Splenic MZL · HCV-negative (Rituximab mono)",
+        summary_en="Splenic MZL HCV-negative — engine selects rituximab monotherapy (4 weekly + 2-year maintenance).",
     ),
     CaseEntry(
         case_id="nmzl-low-burden",
@@ -225,6 +261,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Nodal MZL · Low Burden (W&W)",
+        summary_en="Nodal MZL without GELF criteria — engine selects surveillance track (mirrors FL paradigm).",
     ),
     CaseEntry(
         case_id="burkitt-low-risk",
@@ -234,6 +272,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="Burkitt · Low/Intermediate Risk (DA-EPOCH-R)",
+        summary_en="Burkitt without CNS+, normal LDH — engine selects DA-EPOCH-R (CALGB 10002, ~90% CR including HIV+).",
     ),
     CaseEntry(
         case_id="burkitt-high-risk",
@@ -243,6 +283,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="Burkitt · High Risk (CODOX-M / IVAC)",
+        summary_en="Burkitt with CNS involvement + LDH >3× ULN + bulky abdomen — RF-BURKITT-HIGH-RISK fired. Engine selects Magrath protocol with HD-MTX + IT MTX/cytarabine.",
     ),
     CaseEntry(
         case_id="hcl-typical",
@@ -252,6 +294,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Hairy Cell Leukemia (Cladribine 7-day)",
+        summary_en="Hairy cell leukemia with cytopenia + splenomegaly — engine selects 1 course cladribine 7 days. ~85% durable CR.",
     ),
     CaseEntry(
         case_id="wm-myd88-positive",
@@ -261,6 +305,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_indolent",
+        label_en="Waldenström · MYD88-positive (Zanubrutinib)",
+        summary_en="WM with MYD88 L265P + iwWM treatment indication — engine selects zanubrutinib (ASPEN — superior to ibrutinib).",
     ),
     CaseEntry(
         case_id="hgbl-double-hit",
@@ -270,6 +316,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="b_aggressive",
+        label_en="HGBL · Double-Hit (DA-EPOCH-R)",
+        summary_en="High-Grade B-Cell Lymphoma with MYC + BCL2 break-apart — engine selects DA-EPOCH-R (substantial OS improvement vs R-CHOP); reuses regimens from Burkitt.",
     ),
     # ── T-cell block + Hodgkin (final marathon block) ──────────────────────
     CaseEntry(
@@ -280,6 +328,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="ALCL · ALK-negative (CHP-Bv)",
+        summary_en="Systemic anaplastic large cell lymphoma, ALK-negative — universally CD30+. Engine selects CHP-Bv (ECHELON-2: brentuximab replaces vincristine).",
     ),
     CaseEntry(
         case_id="ptcl-cd30-negative",
@@ -289,6 +339,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="PTCL NOS · CD30-negative (CHOEP)",
+        summary_en="Peripheral T-cell lymphoma, CD30-negative — engine selects CHOEP (CHOP + etoposide). CD30+ variant would escalate to CHP-Bv.",
     ),
     CaseEntry(
         case_id="aitl-cd30-positive",
@@ -298,6 +350,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="AITL · CD30-positive (CHP-Bv)",
+        summary_en="Angioimmunoblastic T-cell lymphoma, CD30+ — RF-TCELL-CD30-POSITIVE fired. Engine selects CHP-Bv.",
     ),
     CaseEntry(
         case_id="chl-advanced",
@@ -307,6 +361,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="hodgkin",
+        label_en="Classical Hodgkin · Advanced (A+AVD)",
+        summary_en="Stage IV cHL — RF-CHL-ADVANCED-STAGE fired. Engine selects A+AVD (ECHELON-1: brentuximab replaces bleomycin, superior OS).",
     ),
     CaseEntry(
         case_id="chl-early",
@@ -316,6 +372,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="hodgkin",
+        label_en="Classical Hodgkin · Early Stage (ABVD)",
+        summary_en="Stage IIA cHL, no advanced criteria — engine selects ABVD × 2-4 + ISRT (response-adapted).",
     ),
     CaseEntry(
         case_id="nlpbl-early",
@@ -325,6 +383,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="hodgkin",
+        label_en="NLPBL · Early Stage (Observation / RT)",
+        summary_en="Nodular lymphocyte-predominant B-cell lymphoma (reclassified by WHO 5th-ed from NLPHL into B-cell) — early stage. Engine selects observation / ISRT alone.",
     ),
     # ── Tier 3 deepening: AITL CD30-neg + MF/Sézary block + NLPBL alt arm ──
     CaseEntry(
@@ -335,6 +395,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="AITL · CD30-negative (CHOEP + AITL-specific workup)",
+        summary_en="AITL with CD30-negative biopsy — engine selects AITL-specific CHOEP. Layered workup: EBER-ISH (EBV+ B-cell microenvironment), IgG quant (paraneoplastic hypogamma), DAT (AIHA risk).",
     ),
     CaseEntry(
         case_id="mf-early-stage",
@@ -344,6 +406,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="Mycosis Fungoides · Early Stage (Skin-Directed)",
+        summary_en="MF stage IB without B2/LCT — engine selects skin-directed (NBUVB / topicals / TSEBT). No systemic regimen — preserves chemo for progression. Workup rules out occult Sézary (B2 count) + LCT.",
     ),
     CaseEntry(
         case_id="sezary-advanced",
@@ -353,6 +417,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="Sézary Syndrome · Advanced (Mogamulizumab)",
+        summary_en="Sézary syndrome (B2 leukemic, generalized erythroderma) — RF-MF-SEZARY-LEUKEMIC fired. Engine selects mogamulizumab (MAVORIC: anti-CCR4 ADCC, best blood-compartment response).",
     ),
     CaseEntry(
         case_id="mf-advanced-cd30",
@@ -362,6 +428,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="t_cell",
+        label_en="MF · Advanced + CD30+ LCT (Brentuximab mono)",
+        summary_en="Advanced MF stage IIB with large-cell transformation, CD30+ — RF-MF-LARGE-CELL-TRANSFORMATION + RF-TCELL-CD30-POSITIVE fired. Engine selects brentuximab vedotin monotherapy (ALCANZA).",
     ),
     CaseEntry(
         case_id="nlpbl-ia-rituximab",
@@ -371,6 +439,8 @@ CASES: list[CaseEntry] = [
         badge="Treatment Plan",
         badge_class="bdg-plan",
         category="hodgkin",
+        label_en="NLPBL · IA + RT-contraindicated (Rituximab mono)",
+        summary_en="NLPBL stage IA in young woman with cervical adenopathy — RT-contraindicated due to breast/thyroid field overlap. Engine selects rituximab monotherapy alternative (CD20+ B-cell biology, NOT ABVD).",
     ),
     # ── B-cell aggressive: extra DLBCL/HGBL/PMBCL/PCNSL (relapsed + new diseases) ──
     CaseEntry(
@@ -379,6 +449,8 @@ CASES: list[CaseEntry] = [
         label_ua="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)",
         summary_ua="DLBCL з primary refractory disease (PD на R-CHOP) — engine обирає axi-cel CAR-T (ZUMA-7: 2L CAR-T > salvage+autoSCT для early-failure).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)",
+        summary_en="DLBCL with primary refractory disease (PD on R-CHOP) — engine selects axi-cel CAR-T (ZUMA-7: 2L CAR-T > salvage+autoSCT for early-failure).",
     ),
     CaseEntry(
         case_id="dlbcl-relapsed-te-ineligible",
@@ -386,6 +458,8 @@ CASES: list[CaseEntry] = [
         label_ua="DLBCL NOS · Relapsed (Transplant-Ineligible)",
         summary_ua="DLBCL relapsed, transplant-ineligible через age + comorbidity — engine обирає Pola-BR (POLARGO) або loncastuximab tesirine.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="DLBCL NOS · Relapsed (Transplant-Ineligible)",
+        summary_en="DLBCL relapsed, transplant-ineligible due to age + comorbidity — engine selects Pola-BR (POLARGO) or loncastuximab tesirine.",
     ),
     CaseEntry(
         case_id="hgbl-primary-refractory",
@@ -393,6 +467,8 @@ CASES: list[CaseEntry] = [
         label_ua="HGBL · Primary Refractory (Early CAR-T)",
         summary_ua="HGBL-DH що не відповів на DA-EPOCH-R — engine обирає axi-cel CAR-T (ZUMA-7); chemosensitivity-test позитивний для late-relapse → salvage+autoSCT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="HGBL · Primary Refractory (Early CAR-T)",
+        summary_en="HGBL-DH non-responsive to DA-EPOCH-R — engine selects axi-cel CAR-T (ZUMA-7); chemosensitivity-test positive for late-relapse → salvage+autoSCT.",
     ),
     CaseEntry(
         case_id="pmbcl-typical",
@@ -400,6 +476,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMBCL · Typical (DA-EPOCH-R)",
         summary_ua="Молода жінка з anterior mediastinal mass — engine обирає DA-EPOCH-R без RT (NCI 2013: ~93% EFS, обхід RT-токсичності для AYA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PMBCL · Typical (DA-EPOCH-R)",
+        summary_en="Young woman with anterior mediastinal mass — engine selects DA-EPOCH-R without RT (NCI 2013: ~93% EFS, bypasses RT toxicity for AYA).",
     ),
     CaseEntry(
         case_id="pmbcl-bulky-svc",
@@ -407,6 +485,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMBCL · Bulky + SVC Syndrome",
         summary_ua="PMBCL з bulky mediastinal mass + SVC compression — engine додає upfront pre-phase steroids + airway management до DA-EPOCH-R.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PMBCL · Bulky + SVC Syndrome",
+        summary_en="PMBCL with bulky mediastinal mass + SVC compression — engine adds upfront pre-phase steroids + airway management to DA-EPOCH-R.",
     ),
     CaseEntry(
         case_id="pmbcl-relapsed-post-rchop",
@@ -414,6 +494,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)",
         summary_ua="PMBCL relapsed/refractory після R-CHOP — engine обирає R-ICE+autoSCT (eligible) або pembrolizumab (KEYNOTE-170, ineligible/refractory).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PMBCL · Relapsed post-R-CHOP (Pembrolizumab)",
+        summary_en="PMBCL relapsed/refractory after R-CHOP — engine selects R-ICE+autoSCT (eligible) or pembrolizumab (KEYNOTE-170, ineligible/refractory).",
     ),
     CaseEntry(
         case_id="pcnsl-typical",
@@ -421,6 +503,8 @@ CASES: list[CaseEntry] = [
         label_ua="PCNSL · Typical (R-MPV → autoSCT)",
         summary_ua="Імунокомпетентний пацієнт з biopsy-confirmed PCNSL — engine обирає R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PCNSL · Typical (R-MPV → autoSCT)",
+        summary_en="Immunocompetent patient with biopsy-confirmed PCNSL — engine selects R-MPV induction → thiotepa-based autoSCT consolidation (MATRix/IELSG 32).",
     ),
     CaseEntry(
         case_id="pcnsl-elderly-frail",
@@ -428,6 +512,8 @@ CASES: list[CaseEntry] = [
         label_ua="PCNSL · Elderly Frail (R-MTX-attenuated)",
         summary_ua="PCNSL вік 75, ECOG 2 — engine обирає attenuated MTX-based induction без autoSCT consolidation; lenalidomide maintenance як альтернатива.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PCNSL · Elderly Frail (R-MTX-attenuated)",
+        summary_en="PCNSL age 75, ECOG 2 — engine selects attenuated MTX-based induction without autoSCT consolidation; lenalidomide maintenance as alternative.",
     ),
     CaseEntry(
         case_id="pcnsl-immunocompromised-ebv",
@@ -435,6 +521,8 @@ CASES: list[CaseEntry] = [
         label_ua="PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
         summary_ua="PCNSL у HIV+/post-transplant пацієнта, EBER+ — engine додає immune-restoration (HAART / RIS) перед HD-MTX; rituximab якщо CD20+.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="PCNSL · Immunocompromised + EBV+ (Restore Immunity)",
+        summary_en="PCNSL in HIV+/post-transplant patient, EBER+ — engine adds immune-restoration (HAART / RIS) before HD-MTX; rituximab if CD20+.",
     ),
     # ── B-cell indolent: relapsed + new diseases ──
     CaseEntry(
@@ -443,6 +531,8 @@ CASES: list[CaseEntry] = [
         label_ua="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)",
         summary_ua="CLL з прогресією на covalent BTKi — engine обирає pirtobrutinib (BRUIN, non-covalent) або venetoclax+rituximab (MURANO).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)",
+        summary_en="CLL with progression on covalent BTKi — engine selects pirtobrutinib (BRUIN, non-covalent) or venetoclax+rituximab (MURANO).",
     ),
     CaseEntry(
         case_id="hcl-relapsed-braf",
@@ -450,6 +540,8 @@ CASES: list[CaseEntry] = [
         label_ua="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)",
         summary_ua="HCL relapsed з BRAF-V600E+ — engine обирає vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)",
+        summary_en="HCL relapsed with BRAF-V600E+ — engine selects vemurafenib+rituximab (Tiacci); BRAF-WT route → cladribine retreatment.",
     ),
     CaseEntry(
         case_id="wm-cxcr4-mut",
@@ -457,6 +549,8 @@ CASES: list[CaseEntry] = [
         label_ua="Waldenström · CXCR4-mutant (BR fixed-duration)",
         summary_ua="WM з MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 знижує BTKi response). Engine обирає BR fixed-duration або zanubrutinib з extended observation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="Waldenström · CXCR4-mutant (BR fixed-duration)",
+        summary_en="WM with MYD88+ AND CXCR4-mutant — RF-WM-CXCR4-MUT fired (CXCR4 reduces BTKi response). Engine selects BR fixed-duration or zanubrutinib with extended observation.",
     ),
     CaseEntry(
         case_id="nmzl-high-burden",
@@ -464,6 +558,8 @@ CASES: list[CaseEntry] = [
         label_ua="Nodal MZL · High Burden (BR)",
         summary_ua="Нодальна MZL з GELF+ — engine обирає BR (1L); 2L після rituximab/W&W failure теж BR.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="Nodal MZL · High Burden (BR)",
+        summary_en="Nodal MZL with GELF+ — engine selects BR (1L); 2L after rituximab/W&W failure also BR.",
     ),
     # ── T-cell: ALCL ALK+ + relapsed + PTCL CD30+ + EATL/HSTCL/T-PLL/ATLL/NK-T/PTLD ──
     CaseEntry(
@@ -472,6 +568,8 @@ CASES: list[CaseEntry] = [
         label_ua="ALCL · ALK-positive Typical (CHP-Bv)",
         summary_ua="Молода особа з ALK+ ALCL — engine обирає CHP-Bv (ECHELON-2). ALK+ має значно кращий прогноз vs ALK-.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="ALCL · ALK-positive Typical (CHP-Bv)",
+        summary_en="Young person with ALK+ ALCL — engine selects CHP-Bv (ECHELON-2). ALK+ has substantially better prognosis vs ALK-.",
     ),
     CaseEntry(
         case_id="alcl-relapsed-bv-naive",
@@ -479,6 +577,8 @@ CASES: list[CaseEntry] = [
         label_ua="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)",
         summary_ua="Relapsed ALCL без попереднього brentuximab — engine обирає brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="ALCL · Relapsed BV-naive (Brentuximab → autoSCT)",
+        summary_en="Relapsed ALCL without prior brentuximab — engine selects brentuximab mono → autoSCT consolidation; BV maintenance per ECHELON-2 update.",
     ),
     CaseEntry(
         case_id="ptcl-cd30-positive",
@@ -486,6 +586,8 @@ CASES: list[CaseEntry] = [
         label_ua="PTCL NOS · CD30-positive (CHP-Bv)",
         summary_ua="PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine обирає CHP-Bv (ECHELON-2 inclusion threshold).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="PTCL NOS · CD30-positive (CHP-Bv)",
+        summary_en="PTCL NOS, CD30≥10% — RF-TCELL-CD30-POSITIVE fired. Engine selects CHP-Bv (ECHELON-2 inclusion threshold).",
     ),
     CaseEntry(
         case_id="ptcl-relapsed",
@@ -493,6 +595,8 @@ CASES: list[CaseEntry] = [
         label_ua="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)",
         summary_ua="PTCL NOS relapsed після autoSCT — engine обирає romidepsin або pralatrexate; alloHCT як curative-intent для chemosensitive.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)",
+        summary_en="PTCL NOS relapsed after autoSCT — engine selects romidepsin or pralatrexate; alloHCT as curative-intent for chemosensitive.",
     ),
     CaseEntry(
         case_id="aitl-relapsed-2l",
@@ -500,6 +604,8 @@ CASES: list[CaseEntry] = [
         label_ua="AITL · Relapsed 2L (Azacitidine)",
         summary_ua="AITL relapsed з TET2/DNMT3A epigenetic profile — engine обирає azacitidine (epigenetic targeting; AITL — найбільш azacitidine-responsive TCL subtype).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="AITL · Relapsed 2L (Azacitidine)",
+        summary_en="AITL relapsed with TET2/DNMT3A epigenetic profile — engine selects azacitidine (epigenetic targeting; AITL — most azacitidine-responsive TCL subtype).",
     ),
     CaseEntry(
         case_id="eatl-typical",
@@ -507,6 +613,8 @@ CASES: list[CaseEntry] = [
         label_ua="EATL · Typical (Celiac, CHOEP → autoSCT)",
         summary_ua="EATL у пацієнта з celiac disease — engine обирає CHOEP induction → autoSCT consolidation (NLG-T-01).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="EATL · Typical (Celiac, CHOEP → autoSCT)",
+        summary_en="EATL in patient with celiac disease — engine selects CHOEP induction → autoSCT consolidation (NLG-T-01).",
     ),
     CaseEntry(
         case_id="eatl-relapsed-post-choep",
@@ -514,6 +622,8 @@ CASES: list[CaseEntry] = [
         label_ua="EATL · Relapsed post-CHOEP (ICE Salvage)",
         summary_ua="EATL relapsed після CHOEP — engine обирає ICE salvage; alloHCT для chemosensitive.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="EATL · Relapsed post-CHOEP (ICE Salvage)",
+        summary_en="EATL relapsed after CHOEP — engine selects ICE salvage; alloHCT for chemosensitive.",
     ),
     CaseEntry(
         case_id="hstcl-fit-younger",
@@ -521,6 +631,8 @@ CASES: list[CaseEntry] = [
         label_ua="HSTCL · Fit Younger (ICE/IVAC → alloHCT)",
         summary_ua="Hepatosplenic T-cell Lymphoma у молодої особи, ECOG 0 — engine обирає intensive ICE/IVAC → upfront alloHCT (CHOP неадекватний).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="HSTCL · Fit Younger (ICE/IVAC → alloHCT)",
+        summary_en="Hepatosplenic T-cell Lymphoma in young person, ECOG 0 — engine selects intensive ICE/IVAC → upfront alloHCT (CHOP inadequate).",
     ),
     CaseEntry(
         case_id="hstcl-iatrogenic-ibd",
@@ -528,6 +640,8 @@ CASES: list[CaseEntry] = [
         label_ua="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)",
         summary_ua="HSTCL у IBD-пацієнта на тривалій thiopurine+anti-TNF therapy — engine припиняє imunosuppression + CHOEP-unfit fallback з branching algorithm.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)",
+        summary_en="HSTCL in IBD patient on long-term thiopurine+anti-TNF therapy — engine stops immunosuppression + CHOEP-unfit fallback with branching algorithm.",
     ),
     CaseEntry(
         case_id="t-pll-typical",
@@ -535,6 +649,8 @@ CASES: list[CaseEntry] = [
         label_ua="T-PLL · Typical (Alemtuzumab IV)",
         summary_ua="T-PLL з ATM mutation + TCL1A rearrangement — engine обирає alemtuzumab IV (~90% ORR) → alloHCT consolidation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="T-PLL · Typical (Alemtuzumab IV)",
+        summary_en="T-PLL with ATM mutation + TCL1A rearrangement — engine selects alemtuzumab IV (~90% ORR) → alloHCT consolidation.",
     ),
     CaseEntry(
         case_id="t-pll-alem-refractory",
@@ -542,6 +658,8 @@ CASES: list[CaseEntry] = [
         label_ua="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)",
         summary_ua="T-PLL refractory до alemtuzumab mono — engine обирає venetoclax + alemtuzumab combo (Boidol/Hampel).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)",
+        summary_en="T-PLL refractory to alemtuzumab mono — engine selects venetoclax + alemtuzumab combo (Boidol/Hampel).",
     ),
     CaseEntry(
         case_id="atll-acute",
@@ -549,6 +667,8 @@ CASES: list[CaseEntry] = [
         label_ua="ATLL · Acute (mLSG15 / EPOCH)",
         summary_ua="Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine обирає intensive mLSG15 або EPOCH; alloHCT consolidation для responders.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="ATLL · Acute (mLSG15 / EPOCH)",
+        summary_en="Adult T-cell Leukemia/Lymphoma, acute subtype, HTLV-1+ — engine selects intensive mLSG15 or EPOCH; alloHCT consolidation for responders.",
     ),
     CaseEntry(
         case_id="atll-indolent-smoldering",
@@ -556,6 +676,8 @@ CASES: list[CaseEntry] = [
         label_ua="ATLL · Indolent / Smoldering (Watchful Waiting)",
         summary_ua="ATLL indolent/smoldering — engine обирає observation; system trigger для transformation.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="ATLL · Indolent / Smoldering (Watchful Waiting)",
+        summary_en="ATLL indolent/smoldering — engine selects observation; system trigger for transformation.",
     ),
     CaseEntry(
         case_id="nk-t-nasal-localized",
@@ -563,6 +685,8 @@ CASES: list[CaseEntry] = [
         label_ua="NK/T-Nasal · Localized (P-GEMOX + RT)",
         summary_ua="Localized extranodal NK/T-cell lymphoma, nasal type — engine обирає concurrent P-GEMOX + RT (anthracycline-resistant biology).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="NK/T-Nasal · Localized (P-GEMOX + RT)",
+        summary_en="Localized extranodal NK/T-cell lymphoma, nasal type — engine selects concurrent P-GEMOX + RT (anthracycline-resistant biology).",
     ),
     CaseEntry(
         case_id="nk-t-nasal-relapsed",
@@ -570,6 +694,8 @@ CASES: list[CaseEntry] = [
         label_ua="NK/T-Nasal · Relapsed (Avelumab)",
         summary_ua="NK/T-nasal relapsed — engine обирає avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="NK/T-Nasal · Relapsed (Avelumab)",
+        summary_en="NK/T-nasal relapsed — engine selects avelumab (NCCN-listed PD-L1 inhibitor; promoted from stub).",
     ),
     CaseEntry(
         case_id="mf-relapsed-post-moga",
@@ -577,6 +703,8 @@ CASES: list[CaseEntry] = [
         label_ua="MF · Relapsed post-Mogamulizumab (Bexarotene)",
         summary_ua="MF/Sézary relapsed після mogamulizumab — engine обирає bexarotene 2L з low-dose maintenance (RXR-targeted oral retinoid).",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="MF · Relapsed post-Mogamulizumab (Bexarotene)",
+        summary_en="MF/Sézary relapsed after mogamulizumab — engine selects bexarotene 2L with low-dose maintenance (RXR-targeted oral retinoid).",
     ),
     CaseEntry(
         case_id="ptld-polymorphic-ebv",
@@ -584,6 +712,8 @@ CASES: list[CaseEntry] = [
         label_ua="PTLD · Polymorphic EBV+ (RIS + Rituximab)",
         summary_ua="Post-transplant LPD, polymorphic EBV+ — engine обирає RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="PTLD · Polymorphic EBV+ (RIS + Rituximab)",
+        summary_en="Post-transplant LPD, polymorphic EBV+ — engine selects RIS (reduce immunosuppression) + sequential PTLD-1 rituximab maintenance.",
     ),
     CaseEntry(
         case_id="ptld-monomorphic-dlbcl-like",
@@ -591,6 +721,8 @@ CASES: list[CaseEntry] = [
         label_ua="PTLD · Monomorphic DLBCL-like (R-CHOP)",
         summary_ua="Monomorphic PTLD з DLBCL morphology — engine обирає R-CHOP після RIS-failure; sequential treatment per PTLD-1.",
         badge="Treatment Plan", badge_class="bdg-plan", category="t_cell",
+        label_en="PTLD · Monomorphic DLBCL-like (R-CHOP)",
+        summary_en="Monomorphic PTLD with DLBCL morphology — engine selects R-CHOP after RIS-failure; sequential treatment per PTLD-1.",
     ),
     # ── Hodgkin: pediatric + relapsed ──
     CaseEntry(
@@ -599,6 +731,8 @@ CASES: list[CaseEntry] = [
         label_ua="cHL · AYA Stage IIB Bulky Mediastinal",
         summary_ua="AYA пацієнт з cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.",
         badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
+        label_en="cHL · AYA Stage IIB Bulky Mediastinal",
+        summary_en="AYA patient with cHL stage IIB + bulky mediastinal mass + B-symptoms — RF-CHL-BULKY-MEDIASTINAL fired. Response-adapted intensification.",
     ),
     CaseEntry(
         case_id="chl-relapsed-salvage",
@@ -606,6 +740,8 @@ CASES: list[CaseEntry] = [
         label_ua="cHL · Relapsed (Salvage → autoSCT + BV maint.)",
         summary_ua="cHL relapsed після ABVD/A+AVD — engine обирає salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="hodgkin",
+        label_en="cHL · Relapsed (Salvage → autoSCT + BV maint.)",
+        summary_en="cHL relapsed after ABVD/A+AVD — engine selects salvage chemo (ICE/DHAP) → autoSCT → brentuximab maintenance (AETHERA).",
     ),
     # ── Myeloma: relapsed (post-VRd + triple-class refractory) ──
     CaseEntry(
@@ -614,6 +750,8 @@ CASES: list[CaseEntry] = [
         label_ua="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)",
         summary_ua="MM relapsed після VRd induction — engine обирає daratumumab+pomalidomide+dex (APOLLO) або isatuximab+Pd (ICARIA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
+        label_en="Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)",
+        summary_en="MM relapsed after VRd induction — engine selects daratumumab+pomalidomide+dex (APOLLO) or isatuximab+Pd (ICARIA).",
     ),
     CaseEntry(
         case_id="mm-triple-class-refractory",
@@ -621,6 +759,8 @@ CASES: list[CaseEntry] = [
         label_ua="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)",
         summary_ua="MM triple-class refractory (PI + IMiD + anti-CD38) — engine обирає cilta-cel/ide-cel CAR-T або teclistamab BCMA-T-cell engager.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloma",
+        label_en="Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)",
+        summary_en="MM triple-class refractory (PI + IMiD + anti-CD38) — engine selects cilta-cel/ide-cel CAR-T or teclistamab BCMA-T-cell engager.",
     ),
     # ── Myeloid: AML / APL / CML / MDS-HR / MDS-LR / PV / ET / PMF ──
     CaseEntry(
@@ -629,6 +769,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · Fit 1L (7+3 Induction)",
         summary_ua="Newly-diagnosed AML, fit, ELN intermediate — engine обирає 7+3 induction (cytarabine + daunorubicin) → consolidation HiDAC.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · Fit 1L (7+3 Induction)",
+        summary_en="Newly-diagnosed AML, fit, ELN intermediate — engine selects 7+3 induction (cytarabine + daunorubicin) → consolidation HiDAC.",
     ),
     CaseEntry(
         case_id="aml-unfit-ven-aza",
@@ -636,6 +778,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · Unfit (Venetoclax + Azacitidine)",
         summary_ua="AML вік 78, ECOG 2 — engine обирає ven+aza (VIALE-A: ~65% CR/CRi, OS 14.7 mo, краще ніж aza alone).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · Unfit (Venetoclax + Azacitidine)",
+        summary_en="AML age 78, ECOG 2 — engine selects ven+aza (VIALE-A: ~65% CR/CRi, OS 14.7 mo, better than aza alone).",
     ),
     CaseEntry(
         case_id="aml-flt3-relapse",
@@ -643,6 +787,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · FLT3-mutant Relapse (Gilteritinib)",
         summary_ua="AML relapsed з FLT3-ITD/TKD — engine обирає gilteritinib mono (ADMIRAL: superior до salvage chemo); alloHCT для responders.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · FLT3-mutant Relapse (Gilteritinib)",
+        summary_en="AML relapsed with FLT3-ITD/TKD — engine selects gilteritinib mono (ADMIRAL: superior to salvage chemo); alloHCT for responders.",
     ),
     CaseEntry(
         case_id="apl-low-risk",
@@ -650,6 +796,8 @@ CASES: list[CaseEntry] = [
         label_ua="APL · Low Risk (ATRA + ATO chemo-free)",
         summary_ua="APL з WBC <10K (low-risk Sanz) — engine обирає ATRA+ATO chemo-free (APL0406: ~98% CR, без anthracycline).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="APL · Low Risk (ATRA + ATO chemo-free)",
+        summary_en="APL with WBC <10K (low-risk Sanz) — engine selects ATRA+ATO chemo-free (APL0406: ~98% CR, no anthracycline).",
     ),
     CaseEntry(
         case_id="apl-high-risk",
@@ -657,6 +805,8 @@ CASES: list[CaseEntry] = [
         label_ua="APL · High Risk + DIC (ATRA + ATO + Idarubicin)",
         summary_ua="APL з WBC >10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine додає idarubicin до ATRA+ATO; emergency cryoprecipitate/platelets.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="APL · High Risk + DIC (ATRA + ATO + Idarubicin)",
+        summary_en="APL with WBC >10K + active DIC — RF-APL-DIC + RF-APL-HIGH-RISK fired. Engine adds idarubicin to ATRA+ATO; emergency cryoprecipitate/platelets.",
     ),
     CaseEntry(
         case_id="cml-chronic-newdx",
@@ -664,6 +814,8 @@ CASES: list[CaseEntry] = [
         label_ua="CML · Chronic Phase Newly Diagnosed (TKI 1L)",
         summary_ua="Newly-diagnosed CML chronic phase, BCR-ABL1+ — engine обирає imatinib (low-risk Sokal) або 2G TKI (intermediate/high).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="CML · Chronic Phase Newly Diagnosed (TKI 1L)",
+        summary_en="Newly-diagnosed CML chronic phase, BCR-ABL1+ — engine selects imatinib (low-risk Sokal) or 2G TKI (intermediate/high).",
     ),
     CaseEntry(
         case_id="cml-t315i",
@@ -671,6 +823,8 @@ CASES: list[CaseEntry] = [
         label_ua="CML · T315I-mutated (Ponatinib / Asciminib)",
         summary_ua="CML з T315I gatekeeper mutation post-2G TKI — engine обирає ponatinib (PACE) або asciminib (allosteric STAMP-inhibitor).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="CML · T315I-mutated (Ponatinib / Asciminib)",
+        summary_en="CML with T315I gatekeeper mutation post-2G TKI — engine selects ponatinib (PACE) or asciminib (allosteric STAMP-inhibitor).",
     ),
     CaseEntry(
         case_id="cml-blast-crisis",
@@ -678,6 +832,8 @@ CASES: list[CaseEntry] = [
         label_ua="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)",
         summary_ua="CML що дебютує як blast crisis — engine обирає TKI + intensive chemo bridge → urgent alloHCT (без alloHCT медіана OS <12 mo).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)",
+        summary_en="CML presenting as blast crisis — engine selects TKI + intensive chemo bridge → urgent alloHCT (without alloHCT median OS <12 mo).",
     ),
     CaseEntry(
         case_id="mds-hr-transplant-eligible",
@@ -685,6 +841,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)",
         summary_ua="MDS IPSS-R high, fit, donor available — engine обирає azacitidine bridge → upfront alloHCT (curative).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)",
+        summary_en="MDS IPSS-R high, fit, donor available — engine selects azacitidine bridge → upfront alloHCT (curative).",
     ),
     CaseEntry(
         case_id="mds-hr-unfit-aza",
@@ -692,6 +850,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-HR · Unfit (Azacitidine Maintenance)",
         summary_ua="MDS-HR transplant-ineligible — engine обирає azacitidine indefinite (AZA-001: median OS 24 mo vs 15 mo для conventional care).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-HR · Unfit (Azacitidine Maintenance)",
+        summary_en="MDS-HR transplant-ineligible — engine selects azacitidine indefinite (AZA-001: median OS 24 mo vs 15 mo for conventional care).",
     ),
     CaseEntry(
         case_id="mds-hr-progression-aml",
@@ -699,6 +859,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-HR · Progression to Secondary AML",
         summary_ua="MDS на azacitidine з progression до sAML — engine реагує AML-reroute: ven+aza або 7+3 induction (за fitness).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-HR · Progression to Secondary AML",
+        summary_en="MDS on azacitidine with progression to sAML — engine reacts AML-reroute: ven+aza or 7+3 induction (per fitness).",
     ),
     CaseEntry(
         case_id="mds-lr-del5q",
@@ -706,6 +868,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-LR · del(5q) (Lenalidomide)",
         summary_ua="MDS-LR з isolated del(5q) syndrome — engine обирає lenalidomide (MDS-004: ~67% transfusion-independence).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-LR · del(5q) (Lenalidomide)",
+        summary_en="MDS-LR with isolated del(5q) syndrome — engine selects lenalidomide (MDS-004: ~67% transfusion-independence).",
     ),
     CaseEntry(
         case_id="mds-lr-rs-luspatercept",
@@ -713,6 +877,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-LR · RS+ EPO-failure (Luspatercept)",
         summary_ua="MDS-LR з ring sideroblasts + EPO-high (>500) → ESA-failure — engine обирає luspatercept (COMMANDS).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-LR · RS+ EPO-failure (Luspatercept)",
+        summary_en="MDS-LR with ring sideroblasts + EPO-high (>500) → ESA-failure — engine selects luspatercept (COMMANDS).",
     ),
     CaseEntry(
         case_id="mds-lr-hypoplastic-ist",
@@ -720,6 +886,8 @@ CASES: list[CaseEntry] = [
         label_ua="MDS-LR · Hypoplastic / IST candidate",
         summary_ua="Hypoplastic MDS, mimics aplastic anemia — engine обирає immunosuppressive therapy (ATG+CsA) як alternative до transfusion-only.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="MDS-LR · Hypoplastic / IST candidate",
+        summary_en="Hypoplastic MDS, mimics aplastic anemia — engine selects immunosuppressive therapy (ATG+CsA) as alternative to transfusion-only.",
     ),
     CaseEntry(
         case_id="pv-high-risk-hu",
@@ -727,6 +895,8 @@ CASES: list[CaseEntry] = [
         label_ua="Polycythemia Vera · High Risk (HU 1L)",
         summary_ua="PV вік >60 + thrombosis history — engine обирає phlebotomy + low-dose ASA + cytoreduction hydroxyurea.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="Polycythemia Vera · High Risk (HU 1L)",
+        summary_en="PV age >60 + thrombosis history — engine selects phlebotomy + low-dose ASA + cytoreduction hydroxyurea.",
     ),
     CaseEntry(
         case_id="pv-hu-resistant-rux",
@@ -734,6 +904,8 @@ CASES: list[CaseEntry] = [
         label_ua="PV · HU-resistant (Ruxolitinib 2L)",
         summary_ua="PV з HU-intolerance/resistance per ELN — engine обирає ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="PV · HU-resistant (Ruxolitinib 2L)",
+        summary_en="PV with HU-intolerance/resistance per ELN — engine selects ruxolitinib (RESPONSE-2: hematocrit control + symptom relief).",
     ),
     CaseEntry(
         case_id="pv-pregnancy-planning",
@@ -741,6 +913,8 @@ CASES: list[CaseEntry] = [
         label_ua="PV · Pregnancy Planning (Peg-IFN)",
         summary_ua="Reproductive-age жінка з PV, planning pregnancy — engine обирає peg-IFN α-2a (non-teratogenic, fetus-safe).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="PV · Pregnancy Planning (Peg-IFN)",
+        summary_en="Reproductive-age woman with PV, planning pregnancy — engine selects peg-IFN α-2a (non-teratogenic, fetus-safe).",
     ),
     CaseEntry(
         case_id="et-high-risk-hu",
@@ -748,6 +922,8 @@ CASES: list[CaseEntry] = [
         label_ua="Essential Thrombocythemia · High Risk (HU)",
         summary_ua="ET high-risk (age >60 + JAK2+ + thrombosis) — engine обирає hydroxyurea + ASA; anagrelide як 2L (PT-1).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="Essential Thrombocythemia · High Risk (HU)",
+        summary_en="ET high-risk (age >60 + JAK2+ + thrombosis) — engine selects hydroxyurea + ASA; anagrelide as 2L (PT-1).",
     ),
     CaseEntry(
         case_id="pmf-anemia-dominant",
@@ -755,6 +931,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMF · Anemia-Dominant (Momelotinib)",
         summary_ua="PMF DIPSS-Plus int-1, anemia-dominant — engine обирає momelotinib (MOMENTUM: anemia-friendly JAKi).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="PMF · Anemia-Dominant (Momelotinib)",
+        summary_en="PMF DIPSS-Plus int-1, anemia-dominant — engine selects momelotinib (MOMENTUM: anemia-friendly JAKi).",
     ),
     CaseEntry(
         case_id="pmf-int2-symptomatic-rux",
@@ -762,6 +940,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMF · Int-2 Symptomatic (Ruxolitinib)",
         summary_ua="PMF DIPSS-Plus int-2 з splenomegaly + constitutional symptoms — engine обирає ruxolitinib (COMFORT-I/II).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="PMF · Int-2 Symptomatic (Ruxolitinib)",
+        summary_en="PMF DIPSS-Plus int-2 with splenomegaly + constitutional symptoms — engine selects ruxolitinib (COMFORT-I/II).",
     ),
     CaseEntry(
         case_id="pmf-post-rux-allohct",
@@ -769,6 +949,8 @@ CASES: list[CaseEntry] = [
         label_ua="PMF · Post-Rux alloHCT Bridge (Urgent)",
         summary_ua="PMF post-ruxolitinib failure з massive splenomegaly + transfusion-dependence — engine обирає alloHCT bridge (curative-intent, urgent).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="PMF · Post-Rux alloHCT Bridge (Urgent)",
+        summary_en="PMF post-ruxolitinib failure with massive splenomegaly + transfusion-dependence — engine selects alloHCT bridge (curative-intent, urgent).",
     ),
     # ── Lymphoblastic: B-ALL / T-ALL / T-LBL ──
     CaseEntry(
@@ -777,6 +959,8 @@ CASES: list[CaseEntry] = [
         label_ua="B-ALL · Ph+ Adult (TKI + Chemo)",
         summary_ua="Adult B-ALL Ph+ (BCR-ABL1+) — engine обирає dasatinib + chemo (hyper-CVAD або pediatric-inspired); alloHCT для CR1 high-risk.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
+        label_en="B-ALL · Ph+ Adult (TKI + Chemo)",
+        summary_en="Adult B-ALL Ph+ (BCR-ABL1+) — engine selects dasatinib + chemo (hyper-CVAD or pediatric-inspired); alloHCT for CR1 high-risk.",
     ),
     CaseEntry(
         case_id="b-all-mrd-positive",
@@ -784,6 +968,8 @@ CASES: list[CaseEntry] = [
         label_ua="B-ALL · MRD-positive (Blinatumomab)",
         summary_ua="B-ALL MRD-positive після induction — engine обирає blinatumomab (BLAST: MRD eradication у >75%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
+        label_en="B-ALL · MRD-positive (Blinatumomab)",
+        summary_en="B-ALL MRD-positive after induction — engine selects blinatumomab (BLAST: MRD eradication in >75%).",
     ),
     CaseEntry(
         case_id="b-all-t315i-post-tki",
@@ -791,6 +977,8 @@ CASES: list[CaseEntry] = [
         label_ua="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)",
         summary_ua="Ph+ B-ALL relapsed з T315I gatekeeper — engine обирає ponatinib + chemo bridge → alloHCT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
+        label_en="B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)",
+        summary_en="Ph+ B-ALL relapsed with T315I gatekeeper — engine selects ponatinib + chemo bridge → alloHCT.",
     ),
     CaseEntry(
         case_id="t-all-relapsed",
@@ -798,6 +986,8 @@ CASES: list[CaseEntry] = [
         label_ua="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)",
         summary_ua="T-ALL relapsed після hyper-CVAD — engine обирає nelarabine (T-cell selective; alloHCT consolidation).",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
+        label_en="T-ALL · Relapsed post-hyper-CVAD (Nelarabine)",
+        summary_en="T-ALL relapsed after hyper-CVAD — engine selects nelarabine (T-cell selective; alloHCT consolidation).",
     ),
     CaseEntry(
         case_id="t-lbl-mediastinal",
@@ -805,6 +995,8 @@ CASES: list[CaseEntry] = [
         label_ua="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)",
         summary_ua="T-lymphoblastic lymphoma з mediastinal mass — engine обирає pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis обов'язкове.",
         badge="Treatment Plan", badge_class="bdg-plan", category="lymphoblastic",
+        label_en="T-LBL · Mediastinal Mass (Pediatric-inspired ALL)",
+        summary_en="T-lymphoblastic lymphoma with mediastinal mass — engine selects pediatric-inspired ALL regimen (CALGB 10403 / GMALL); CNS prophylaxis mandatory.",
     ),
     # ── Solid tumors: Cervical / GBM / Ovarian ──
     CaseEntry(
@@ -813,6 +1005,8 @@ CASES: list[CaseEntry] = [
         label_ua="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
         summary_ua="Locally advanced cervical cancer (FIGO IIB-IVA) — engine обирає cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Cervical · Locally Advanced (CCRT + Pembrolizumab)",
+        summary_en="Locally advanced cervical cancer (FIGO IIB-IVA) — engine selects cisplatin-based CCRT + brachytherapy; pembrolizumab maintenance (KEYNOTE-A18).",
     ),
     CaseEntry(
         case_id="gbm-stupp",
@@ -820,6 +1014,8 @@ CASES: list[CaseEntry] = [
         label_ua="Glioblastoma · Newly Diagnosed (Stupp Protocol)",
         summary_ua="GBM IDH-WT WHO grade 4 — engine обирає Stupp: maximal safe resection → RT + concurrent TMZ → adjuvant TMZ × 6; TTFields для MGMT-methylated.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Glioblastoma · Newly Diagnosed (Stupp Protocol)",
+        summary_en="GBM IDH-WT WHO grade 4 — engine selects Stupp: maximal safe resection → RT + concurrent TMZ → adjuvant TMZ × 6; TTFields for MGMT-methylated.",
     ),
     CaseEntry(
         case_id="ovarian-advanced-hrd",
@@ -827,6 +1023,8 @@ CASES: list[CaseEntry] = [
         label_ua="Ovarian · Advanced HRD+ (PARPi maintenance)",
         summary_ua="Advanced high-grade serous ovarian, HRD+ — engine обирає platinum-doublet → PARPi maintenance (olaparib/niraparib; SOLO-1, PRIMA).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Ovarian · Advanced HRD+ (PARPi maintenance)",
+        summary_en="Advanced high-grade serous ovarian, HRD+ — engine selects platinum-doublet → PARPi maintenance (olaparib/niraparib; SOLO-1, PRIMA).",
     ),
     # ── AUTO-GENERATED disease-coverage stubs (do not hand-edit; regen via scripts/generate_auto_examples.py) ──
     CaseEntry(
@@ -4699,6 +4897,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)",
         summary_ua="Метастатична NSCLC аденокарцинома, ніколи-курив. Engine: ALGO-1L step 2 → IND-NSCLC-EGFR-MUT-MET-1L (osimertinib FLAURA, mPFS 18.9 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)",
+        summary_en="Metastatic NSCLC adenocarcinoma, never-smoker. Engine: ALGO-1L step 2 → IND-NSCLC-EGFR-MUT-MET-1L (osimertinib FLAURA, mPFS 18.9 mo).",
     ),
     CaseEntry(
         case_id="nsclc-alk-1l",
@@ -4706,6 +4906,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · ALK-перебудований · 1L Alectinib (ALEX)",
         summary_ua="Метастатична NSCLC, EML4-ALK варіант 1, brain mets. Engine: ALGO-1L step 3 → IND-NSCLC-ALK-MET-1L (alectinib ALEX, mPFS 34.8 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · ALK-rearranged · 1L Alectinib (ALEX)",
+        summary_en="Metastatic NSCLC, EML4-ALK variant 1, brain mets. Engine: ALGO-1L step 3 → IND-NSCLC-ALK-MET-1L (alectinib ALEX, mPFS 34.8 mo).",
     ),
     CaseEntry(
         case_id="nsclc-pdl1-high-pembro-mono",
@@ -4713,6 +4915,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)",
         summary_ua="Метастатична NSCLC squamous, ex-курий, PD-L1 TPS 85%, driver-negative. Engine: step 5 → IND-NSCLC-PDL1-HIGH-MET-1L (pembro mono, 5-yr OS 31.9%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)",
+        summary_en="Metastatic NSCLC squamous, ex-smoker, PD-L1 TPS 85%, driver-negative. Engine: step 5 → IND-NSCLC-PDL1-HIGH-MET-1L (pembro mono, 5-yr OS 31.9%).",
     ),
     CaseEntry(
         case_id="nsclc-pdl1-low-chemo-io",
@@ -4720,6 +4924,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)",
         summary_ua="Метастатична NSCLC adeno non-sq, PD-L1 TPS 25%, driver-negative. Engine: step 5 default → IND-NSCLC-PDL1-LOW-NONSQ-MET-1L (pembro+carbo+pem KEYNOTE-189).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)",
+        summary_en="Metastatic NSCLC adeno non-sq, PD-L1 TPS 25%, driver-negative. Engine: step 5 default → IND-NSCLC-PDL1-LOW-NONSQ-MET-1L (pembro+carbo+pem KEYNOTE-189).",
     ),
     CaseEntry(
         case_id="nsclc-tmb-high-pembro-mono",
@@ -4727,6 +4933,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo",
         summary_ua="TMB 18 mut/Mb, PD-L1 low, driver-negative. Engine default = PDL1-LOW-NONSQ; IND-NSCLC-TMB-HIGH-MET-1L surfaces як alternative track для HCP.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo",
+        summary_en="TMB 18 mut/Mb, PD-L1 low, driver-negative. Engine default = PDL1-LOW-NONSQ; IND-NSCLC-TMB-HIGH-MET-1L surfaces as alternative track for HCP.",
     ),
     CaseEntry(
         case_id="nsclc-egfr-t790m-2l",
@@ -4734,6 +4942,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)",
         summary_ua="L858R → erlotinib 24 мо → acquired T790M. Algo резолвить IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ; post-filter dropає (KB drift documented in comment).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)",
+        summary_en="L858R → erlotinib 24 mo → acquired T790M. Algo resolves IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ; post-filter drops (KB drift documented in comment).",
     ),
     CaseEntry(
         case_id="nsclc-alk-2l-lorlatinib",
@@ -4741,6 +4951,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · ALK 2L · Lorlatinib post-alectinib",
         summary_ua="Post-alectinib 22 мо → CNS PD з новими brain mets. Engine: ALGO-2L step 4-5 → IND-NSCLC-ALK-2L-LORLATINIB (CROWN follow-up).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · ALK 2L · Lorlatinib post-alectinib",
+        summary_en="Post-alectinib 22 mo → CNS PD with new brain mets. Engine: ALGO-2L step 4-5 → IND-NSCLC-ALK-2L-LORLATINIB (CROWN follow-up).",
     ),
     CaseEntry(
         case_id="nsclc-ros1-2l-entrectinib",
@@ -4748,6 +4960,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · ROS1 2L · Entrectinib post-chemoIO",
         summary_ua="ROS1 fusion (CD74-ROS1) виявлено на RNA-NGS після 1L PD. Engine: step 6-7 → IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB (intracranial ORR 79%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · ROS1 2L · Entrectinib post-chemoIO",
+        summary_en="ROS1 fusion (CD74-ROS1) detected on RNA-NGS after 1L PD. Engine: step 6-7 → IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB (intracranial ORR 79%).",
     ),
     CaseEntry(
         case_id="nsclc-kras-g12c-2l-sotorasib",
@@ -4755,6 +4969,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)",
         summary_ua="ex-курий, KRAS G12C, post-pembro+chemo PD. Engine: step 8-9 → IND-NSCLC-2L-KRAS-G12C-SOTORASIB (mPFS 5.6 мо vs docetaxel).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)",
+        summary_en="Ex-smoker, KRAS G12C, post-pembro+chemo PD. Engine: step 8-9 → IND-NSCLC-2L-KRAS-G12C-SOTORASIB (mPFS 5.6 mo vs docetaxel).",
     ),
     CaseEntry(
         case_id="nsclc-braf-v600e-2l",
@@ -4762,6 +4978,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib",
         summary_ua="BRAF V600E confirmed на rebiopsy після 1L pembro+chemo. Engine: step 12 → IND-NSCLC-2L-BRAF-V600E-DAB-TRAM (BRF113928, ORR 64%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib",
+        summary_en="BRAF V600E confirmed on rebiopsy after 1L pembro+chemo. Engine: step 12 → IND-NSCLC-2L-BRAF-V600E-DAB-TRAM (BRF113928, ORR 64%).",
     ),
     CaseEntry(
         case_id="nsclc-metex14-2l-capmatinib",
@@ -4769,6 +4987,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)",
         summary_ua="Ніколи-курила 73, autoimmune RA (chemo-only 1L). Engine: step 10-11 → IND-NSCLC-2L-MET-EX14-CAPMATINIB (ORR 41% pretreated).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)",
+        summary_en="Never-smoker 73, autoimmune RA (chemo-only 1L). Engine: step 10-11 → IND-NSCLC-2L-MET-EX14-CAPMATINIB (ORR 41% pretreated).",
     ),
     CaseEntry(
         case_id="nsclc-ret-fusion-2l-selpercatinib",
@@ -4776,6 +4996,8 @@ CASES: list[CaseEntry] = [
         label_ua="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)",
         summary_ua="KIF5B-RET виявлено на RNA-NGS rebiopsy. Engine: step 13 → IND-NSCLC-2L-RET-FUSION-SELPERCATINIB (intracranial ORR 91%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)",
+        summary_en="KIF5B-RET detected on RNA-NGS rebiopsy. Engine: step 13 → IND-NSCLC-2L-RET-FUSION-SELPERCATINIB (intracranial ORR 91%).",
     ),
 
     # S2 BREAST receptor-subtype variants (8)
@@ -4785,6 +5007,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)",
         summary_ua="Метастатична HR+/HER2-, postmenopausal. Engine: ALGO-1L → IND-BREAST-HR-POS-MET-1L-CDKI (PALOMA-2 mPFS 27.6 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)",
+        summary_en="Metastatic HR+/HER2-, postmenopausal. Engine: ALGO-1L → IND-BREAST-HR-POS-MET-1L-CDKI (PALOMA-2 mPFS 27.6 mo).",
     ),
     CaseEntry(
         case_id="breast-hr-pos-pik3ca-alpelisib",
@@ -4792,6 +5016,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)",
         summary_ua="Прогрес на CDK4/6i, PIK3CA H1047R hot-spot. Engine drift: HER2-2L дефолт; alpelisib+fulvestrant анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)",
+        summary_en="Progression on CDK4/6i, PIK3CA H1047R hot-spot. Engine drift: HER2-2L default; alpelisib+fulvestrant anchor in comment.",
     ),
     CaseEntry(
         case_id="breast-her2-pos-early-katherine",
@@ -4799,6 +5025,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
         summary_ua="HER2+ early-stage, неоадʼювантна TCHP → adjuvant T-DM1 при non-pCR (KATHERINE 50% iDFS benefit). Drift: engine routes до met-1L.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
+        summary_en="HER2+ early-stage, neoadjuvant TCHP → adjuvant T-DM1 at non-pCR (KATHERINE 50% iDFS benefit). Drift: engine routes to met-1L.",
     ),
     CaseEntry(
         case_id="breast-her2-pos-met-1l-thp",
@@ -4806,6 +5034,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)",
         summary_ua="HER2+ метастатична 1L, docetaxel+trastuzumab+pertuzumab. Engine: ALGO-1L → IND-BREAST-HER2-POS-MET-1L-THP (CLEOPATRA mOS 57 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)",
+        summary_en="HER2+ metastatic 1L, docetaxel+trastuzumab+pertuzumab. Engine: ALGO-1L → IND-BREAST-HER2-POS-MET-1L-THP (CLEOPATRA mOS 57 mo).",
     ),
     CaseEntry(
         case_id="breast-her2-pos-met-2l-tdxd",
@@ -4813,6 +5043,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)",
         summary_ua="HER2+ метастатична 2L після THP. Engine: ALGO-HER2-POS-2L → IND-BREAST-HER2-POS-MET-2L-TDXD (DB03 mPFS 28.8 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)",
+        summary_en="HER2+ metastatic 2L after THP. Engine: ALGO-HER2-POS-2L → IND-BREAST-HER2-POS-MET-2L-TDXD (DB03 mPFS 28.8 mo).",
     ),
     CaseEntry(
         case_id="breast-tnbc-neoadj-kn522",
@@ -4820,6 +5052,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)",
         summary_ua="TNBC II-III, неоадʼювантна pembro+carbo+pacli→AC (pCR 64%). Drift: engine routes до HR+ default; clinical anchor у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)",
+        summary_en="TNBC II-III, neoadjuvant pembro+carbo+pacli→AC (pCR 64%). Drift: engine routes to HR+ default; clinical anchor in comment.",
     ),
     CaseEntry(
         case_id="breast-brca-germline-olaparib",
@@ -4827,6 +5061,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · BRCA1 germline met · Olaparib (OlympiAD)",
         summary_ua="BRCA1 germline pathogenic, метастатична HER2-. PARPi мono. Drift: engine routes до HR+/HER2- 1L CDK4/6i default; clinical anchor у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · BRCA1 germline met · Olaparib (OlympiAD)",
+        summary_en="BRCA1 germline pathogenic, metastatic HER2-. PARPi mono. Drift: engine routes to HR+/HER2- 1L CDK4/6i default; clinical anchor in comment.",
     ),
     CaseEntry(
         case_id="breast-tnbc-met-2l-sacituzumab",
@@ -4834,6 +5070,8 @@ CASES: list[CaseEntry] = [
         label_ua="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)",
         summary_ua="TNBC метастатична 2L+. Drift: engine routes до HER2-2L default; sacituzumab анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)",
+        summary_en="TNBC metastatic 2L+. Drift: engine routes to HER2-2L default; sacituzumab anchor in comment.",
     ),
 
     # S3 CRC line-of-therapy variants (6)
@@ -4843,6 +5081,8 @@ CASES: list[CaseEntry] = [
         label_ua="CRC · stage III adjuvant FOLFOX (MOSAIC)",
         summary_ua="Stage III після резекції. Drift: KB не має adjuvant CRC algo; engine default = mCRC FOLFOX+bev (анкер MOSAIC у comment).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="CRC · stage III adjuvant FOLFOX (MOSAIC)",
+        summary_en="Stage III after resection. Drift: KB has no adjuvant CRC algo; engine default = mCRC FOLFOX+bev (MOSAIC anchor in comment).",
     ),
     CaseEntry(
         case_id="crc-mcrc-ras-wt-left-folfox-cetux",
@@ -4850,6 +5090,8 @@ CASES: list[CaseEntry] = [
         label_ua="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)",
         summary_ua="RAS-WT левобічна mCRC. Engine: ALGO step 2 → IND-CRC-METASTATIC-1L-RAS-WT-LEFT (CRYSTAL/FIRE-3).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)",
+        summary_en="RAS-WT left-sided mCRC. Engine: ALGO step 2 → IND-CRC-METASTATIC-1L-RAS-WT-LEFT (CRYSTAL/FIRE-3).",
     ),
     CaseEntry(
         case_id="crc-mcrc-ras-mut-folfox-bev",
@@ -4857,6 +5099,8 @@ CASES: list[CaseEntry] = [
         label_ua="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab",
         summary_ua="KRAS-мутована mCRC, 1L FOLFOX+bevacizumab. Engine: ALGO default → IND-CRC-METASTATIC-1L-FOLFOX-BEV.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab",
+        summary_en="KRAS-mutated mCRC, 1L FOLFOX+bevacizumab. Engine: ALGO default → IND-CRC-METASTATIC-1L-FOLFOX-BEV.",
     ),
     CaseEntry(
         case_id="crc-mcrc-msi-h-pembro",
@@ -4864,6 +5108,8 @@ CASES: list[CaseEntry] = [
         label_ua="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)",
         summary_ua="MSI-high mCRC. Engine: ALGO step 1 (MSI-H fires) → IND-CRC-METASTATIC-1L-MSI-H-PEMBRO (KEYNOTE-177 mPFS 16.5 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)",
+        summary_en="MSI-high mCRC. Engine: ALGO step 1 (MSI-H fires) → IND-CRC-METASTATIC-1L-MSI-H-PEMBRO (KEYNOTE-177 mPFS 16.5 mo).",
     ),
     CaseEntry(
         case_id="crc-mcrc-2l-folfiri-bev",
@@ -4871,6 +5117,8 @@ CASES: list[CaseEntry] = [
         label_ua="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)",
         summary_ua="Прогрес на FOLFOX+bev 1L. Engine: ALGO-2L → IND-CRC-METASTATIC-2L-FOLFIRI-BEV (continuum-of-care).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)",
+        summary_en="Progression on FOLFOX+bev 1L. Engine: ALGO-2L → IND-CRC-METASTATIC-2L-FOLFIRI-BEV (continuum-of-care).",
     ),
     CaseEntry(
         case_id="crc-mcrc-3l-regorafenib",
@@ -4878,6 +5126,8 @@ CASES: list[CaseEntry] = [
         label_ua="mCRC · 3L+ Regorafenib (CORRECT)",
         summary_ua="Хеморефрактерна mCRC. Drift: engine default = TAS-102+bev (SUNLIGHT); regorafenib як alternative track.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · 3L+ Regorafenib (CORRECT)",
+        summary_en="Chemorefractory mCRC. Drift: engine default = TAS-102+bev (SUNLIGHT); regorafenib as alternative track.",
     ),
 
     # S4 MELANOMA BRAF/IO variants (5)
@@ -4887,6 +5137,8 @@ CASES: list[CaseEntry] = [
         label_ua="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)",
         summary_ua="BRAF V600 метастатична. Engine: → IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME (COMBI-d/v).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)",
+        summary_en="BRAF V600 metastatic. Engine: → IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME (COMBI-d/v).",
     ),
     CaseEntry(
         case_id="melanoma-braf-v600-nivo-ipi",
@@ -4894,6 +5146,8 @@ CASES: list[CaseEntry] = [
         label_ua="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)",
         summary_ua="BRAF V600 метастатична, IO doublet. Engine: → IND-MELANOMA-METASTATIC-1L-NIVO-IPI (CM-067 5-yr OS 52%).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)",
+        summary_en="BRAF V600 metastatic, IO doublet. Engine: → IND-MELANOMA-METASTATIC-1L-NIVO-IPI (CM-067 5-yr OS 52%).",
     ),
     CaseEntry(
         case_id="melanoma-braf-wt-pembro-mono",
@@ -4901,6 +5155,8 @@ CASES: list[CaseEntry] = [
         label_ua="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)",
         summary_ua="BRAF-WT метастатична. Drift: KEYNOTE-006 не wired у KB; engine fallback до nivo+ipi; анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)",
+        summary_en="BRAF-WT metastatic. Drift: KEYNOTE-006 not wired in KB; engine fallback to nivo+ipi; anchor in comment.",
     ),
     CaseEntry(
         case_id="melanoma-nivo-relatlimab",
@@ -4908,6 +5164,8 @@ CASES: list[CaseEntry] = [
         label_ua="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)",
         summary_ua="Drift: KB scopeє nivo+rela до 2L post-BRAFi; модельовано як 2L з frailty. RELATIVITY-047 анкер 1L FDA.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)",
+        summary_en="Drift: KB scopes nivo+rela to 2L post-BRAFi; modeled as 2L with frailty. RELATIVITY-047 anchor 1L FDA.",
     ),
     CaseEntry(
         case_id="melanoma-adjuvant-pembro-stage-iii",
@@ -4915,6 +5173,8 @@ CASES: list[CaseEntry] = [
         label_ua="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)",
         summary_ua="Drift: adjuvant melanoma algo не існує в KB; engine output = met-1L IO doublet. KEYNOTE-054 анкер у comment, motivation для майбутнього ALGO-MELANOMA-ADJUVANT.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)",
+        summary_en="Drift: adjuvant melanoma algo does not exist in KB; engine output = met-1L IO doublet. KEYNOTE-054 anchor in comment, motivation for future ALGO-MELANOMA-ADJUVANT.",
     ),
 
     # S5 PROSTATE (1 of 5; 4 dropped per disease_state schema gap)
@@ -4924,6 +5184,8 @@ CASES: list[CaseEntry] = [
         label_ua="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)",
         summary_ua="mCRPC з BRCA-pathogenic, PARPi мono. Engine: ALGO-PROSTATE-MCRPC-1L step 1 → IND-PROSTATE-MCRPC-1L-PARPI (PROfound mPFS 7.4 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)",
+        summary_en="mCRPC with BRCA-pathogenic, PARPi mono. Engine: ALGO-PROSTATE-MCRPC-1L step 1 → IND-PROSTATE-MCRPC-1L-PARPI (PROfound mPFS 7.4 mo).",
     ),
 
     # S6 GU+SKIN+GYN tail (6)
@@ -4933,6 +5195,8 @@ CASES: list[CaseEntry] = [
         label_ua="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
         summary_ua="Clear-cell RCC IMDC intermediate-poor. Drift: engine default = pembro+axi; nivo+ipi анкер CM-214 у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
+        summary_en="Clear-cell RCC IMDC intermediate-poor. Drift: engine default = pembro+axi; nivo+ipi anchor CM-214 in comment.",
     ),
     CaseEntry(
         case_id="rcc-imdc-fav-axi-pembro",
@@ -4940,6 +5204,8 @@ CASES: list[CaseEntry] = [
         label_ua="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
         summary_ua="Clear-cell RCC IMDC favorable. Engine: → IND-RCC-METASTATIC-1L-PEMBRO-AXI (KEYNOTE-426 5-yr OS).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
+        summary_en="Clear-cell RCC IMDC favorable. Engine: → IND-RCC-METASTATIC-1L-PEMBRO-AXI (KEYNOTE-426 5-yr OS).",
     ),
     CaseEntry(
         case_id="urothelial-muc-ev-pembro",
@@ -4947,6 +5213,8 @@ CASES: list[CaseEntry] = [
         label_ua="Urothelial · mUC 1L · EV+pembro (EV-302)",
         summary_ua="Метастатична мUC. Drift: free-text condition unevaluable; engine default = platinum+avelumab; EV-302 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Urothelial · mUC 1L · EV+pembro (EV-302)",
+        summary_en="Metastatic mUC. Drift: free-text condition unevaluable; engine default = platinum+avelumab; EV-302 anchor in comment.",
     ),
     CaseEntry(
         case_id="endometrial-dmmr-pembro-kn775",
@@ -4954,6 +5222,8 @@ CASES: list[CaseEntry] = [
         label_ua="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)",
         summary_ua="Advanced/recurrent dMMR endometrial. Engine: → IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO (NRG-GY018 mPFS NR vs 7.6).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)",
+        summary_en="Advanced/recurrent dMMR endometrial. Engine: → IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO (NRG-GY018 mPFS NR vs 7.6).",
     ),
     CaseEntry(
         case_id="endometrial-p53-abn-dosta-ruby",
@@ -4961,6 +5231,8 @@ CASES: list[CaseEntry] = [
         label_ua="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)",
         summary_ua="Advanced p53-abnormal endometrial. Drift: engine default = pembro+chemo; RUBY dostarlimab анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)",
+        summary_en="Advanced p53-abnormal endometrial. Drift: engine default = pembro+chemo; RUBY dostarlimab anchor in comment.",
     ),
     CaseEntry(
         case_id="ovarian-hrd-neg-no-parpi",
@@ -4968,6 +5240,8 @@ CASES: list[CaseEntry] = [
         label_ua="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance",
         summary_ua="HRD-negative ovarian (контраст до patient_ovarian_advanced_hrd). Engine: → IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance",
+        summary_en="HRD-negative ovarian (contrast to patient_ovarian_advanced_hrd). Engine: → IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG.",
     ),
 
     # S7 GI remaining (6)
@@ -4977,6 +5251,8 @@ CASES: list[CaseEntry] = [
         label_ua="HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)",
         summary_ua="HCC Child-Pugh A, fit. Engine: → IND-HCC-SYSTEMIC-1L-ATEZO-BEV (IMbrave150 mOS 19.2 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)",
+        summary_en="HCC Child-Pugh A, fit. Engine: → IND-HCC-SYSTEMIC-1L-ATEZO-BEV (IMbrave150 mOS 19.2 mo).",
     ),
     CaseEntry(
         case_id="hcc-durva-treme-stride",
@@ -4984,6 +5260,8 @@ CASES: list[CaseEntry] = [
         label_ua="HCC · 1L · Durva+treme (HIMALAYA STRIDE)",
         summary_ua="HCC з high-risk varices. Engine: RF-HCC-VARICEAL-BLEED step 1 → IND-HCC-SYSTEMIC-1L-DURVA-TREME (HIMALAYA mOS 16.4 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="HCC · 1L · Durva+treme (HIMALAYA STRIDE)",
+        summary_en="HCC with high-risk varices. Engine: RF-HCC-VARICEAL-BLEED step 1 → IND-HCC-SYSTEMIC-1L-DURVA-TREME (HIMALAYA mOS 16.4 mo).",
     ),
     CaseEntry(
         case_id="gastric-her2-pos-toga",
@@ -4991,6 +5269,8 @@ CASES: list[CaseEntry] = [
         label_ua="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)",
         summary_ua="Метастатична HER2+ gastric. Engine: RF-HIGH-RISK-BIOLOGY → IND-GASTRIC-METASTATIC-1L-HER2-TOGA (TOGA mOS 13.8 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)",
+        summary_en="Metastatic HER2+ gastric. Engine: RF-HIGH-RISK-BIOLOGY → IND-GASTRIC-METASTATIC-1L-HER2-TOGA (TOGA mOS 13.8 mo).",
     ),
     CaseEntry(
         case_id="gastric-pdl1-cps-chemo-nivo",
@@ -4998,6 +5278,8 @@ CASES: list[CaseEntry] = [
         label_ua="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)",
         summary_ua="Метастатична HER2- CPS≥5 gastric. Engine: HER2- step 2 → IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI (CM-649 mOS 14.4 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)",
+        summary_en="Metastatic HER2- CPS≥5 gastric. Engine: HER2- step 2 → IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI (CM-649 mOS 14.4 mo).",
     ),
     CaseEntry(
         case_id="esophageal-cross-then-nivo",
@@ -5005,6 +5287,8 @@ CASES: list[CaseEntry] = [
         label_ua="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)",
         summary_ua="Resectable adeno з ypT+/ypN+ residual. Drift: ALGO-1L emit only CROSS-NEOADJUVANT; CheckMate-577 adjuvant nivo неreachable (PROPOSAL §17 territory).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)",
+        summary_en="Resectable adeno with ypT+/ypN+ residual. Drift: ALGO-1L emits only CROSS-NEOADJUVANT; CheckMate-577 adjuvant nivo unreachable (PROPOSAL §17 territory).",
     ),
     CaseEntry(
         case_id="pdac-folfirinox-fit",
@@ -5012,6 +5296,8 @@ CASES: list[CaseEntry] = [
         label_ua="PDAC · met fit · FOLFIRINOX (PRODIGE-4)",
         summary_ua="Fit метастатична PDAC. Drift: ALGO step 3 condition free-text; engine default = gem-nab-pac; FOLFIRINOX як alternative track.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="PDAC · met fit · FOLFIRINOX (PRODIGE-4)",
+        summary_en="Fit metastatic PDAC. Drift: ALGO step 3 condition free-text; engine default = gem-nab-pac; FOLFIRINOX as alternative track.",
     ),
 
     # S8 SCLC + HNSCC (4)
@@ -5021,6 +5307,8 @@ CASES: list[CaseEntry] = [
         label_ua="SCLC · LS · Chemo + concurrent RT",
         summary_ua="Limited-stage SCLC. RT не modellable per CHARTER §17 — engine emit chemo backbone EP, RT як free-text. Drift: engine default = ES-1L.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="SCLC · LS · Chemo + concurrent RT",
+        summary_en="Limited-stage SCLC. RT not modellable per CHARTER §17 — engine emits chemo backbone EP, RT as free-text. Drift: engine default = ES-1L.",
     ),
     CaseEntry(
         case_id="sclc-es-atezo-impower133",
@@ -5028,6 +5316,8 @@ CASES: list[CaseEntry] = [
         label_ua="SCLC · ES · Atezo+carbo+etoposide (IMpower133)",
         summary_ua="Extensive-stage SCLC. Engine: → IND-SCLC-EXTENSIVE-1L. Drift: дефолт REG-EP-DURVA не IMpower133 атезо; атезо regimen не wired.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="SCLC · ES · Atezo+carbo+etoposide (IMpower133)",
+        summary_en="Extensive-stage SCLC. Engine: → IND-SCLC-EXTENSIVE-1L. Drift: default REG-EP-DURVA is not IMpower133 atezo; atezo regimen not wired.",
     ),
     CaseEntry(
         case_id="hnscc-cps-high-pembro-mono",
@@ -5035,6 +5325,8 @@ CASES: list[CaseEntry] = [
         label_ua="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)",
         summary_ua="R/M HNSCC CPS≥20. Engine: → IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH (KEYNOTE-048 mOS 14.9 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)",
+        summary_en="R/M HNSCC CPS≥20. Engine: → IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH (KEYNOTE-048 mOS 14.9 mo).",
     ),
     CaseEntry(
         case_id="hnscc-extreme-cetux-platin",
@@ -5042,6 +5334,8 @@ CASES: list[CaseEntry] = [
         label_ua="HNSCC · R/M EXTREME · Cetux+platin+5FU",
         summary_ua="Drift: IND-HNSCC-RM-1L-EXTREME не authored у KB; engine fallback = pembro+chemo. EXTREME анкер у comment, highest content gap.",
         badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="HNSCC · R/M EXTREME · Cetux+platin+5FU",
+        summary_en="Drift: IND-HNSCC-RM-1L-EXTREME not authored in KB; engine fallback = pembro+chemo. EXTREME anchor in comment, highest content gap.",
     ),
 
     # H1 AML subtype variants (4)
@@ -5051,6 +5345,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)",
         summary_ua="Fit AML FLT3-ITD. Engine: ALGO-1L → IND-AML-1L-7-3 (default); midostaurin/RATIFY як regimen-layer note у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)",
+        summary_en="Fit AML FLT3-ITD. Engine: ALGO-1L → IND-AML-1L-7-3 (default); midostaurin/RATIFY as regimen-layer note in comment.",
     ),
     CaseEntry(
         case_id="aml-cbf-inv16-7-3-go",
@@ -5058,6 +5354,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)",
         summary_ua="Fit CBF AML. Drift: 7+3+GO indication відсутня; engine default = 7+3 plain; ALFA-0701 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)",
+        summary_en="Fit CBF AML. Drift: 7+3+GO indication absent; engine default = 7+3 plain; ALFA-0701 anchor in comment.",
     ),
     CaseEntry(
         case_id="aml-secondary-cpx351",
@@ -5065,6 +5363,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · secondary/t-AML · CPX-351 (Vyxeos)",
         summary_ua="Secondary AML post-MDS. Drift: CPX-351 indication відсутня у ALGO-1L; engine default = 7+3; Vyxeos анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · secondary/t-AML · CPX-351 (Vyxeos)",
+        summary_en="Secondary AML post-MDS. Drift: CPX-351 indication absent in ALGO-1L; engine default = 7+3; Vyxeos anchor in comment.",
     ),
     CaseEntry(
         case_id="aml-rr-gilteritinib",
@@ -5072,6 +5372,8 @@ CASES: list[CaseEntry] = [
         label_ua="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)",
         summary_ua="Primary-refractory FLT3-TKD AML. Engine: ALGO-2L → IND-AML-2L-GILTERITINIB-FLT3 (ADMIRAL mOS 9.3 мо vs salvage chemo).",
         badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+        label_en="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)",
+        summary_en="Primary-refractory FLT3-TKD AML. Engine: ALGO-2L → IND-AML-2L-GILTERITINIB-FLT3 (ADMIRAL mOS 9.3 mo vs salvage chemo).",
     ),
 
     # H2 DLBCL line-of-therapy variants (3)
@@ -5081,6 +5383,8 @@ CASES: list[CaseEntry] = [
         label_ua="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)",
         summary_ua="ASCT-ineligible cardiac-comorbidity, late relapse. Engine: ALGO-2L → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (distinct від існуючого relapsed_transplant_ineligible).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)",
+        summary_en="ASCT-ineligible cardiac-comorbidity, late relapse. Engine: ALGO-2L → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (distinct from existing relapsed_transplant_ineligible).",
     ),
     CaseEntry(
         case_id="dlbcl-3l-axi-cel",
@@ -5088,6 +5392,8 @@ CASES: list[CaseEntry] = [
         label_ua="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)",
         summary_ua="Прогрес після RCHOP→Pola-BR. Engine: ALGO-2L default = Pola-BR; axi-cel surfaces як aggressive alternative track. Distinct від chemorefractory_for_cart.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)",
+        summary_en="Progression after RCHOP→Pola-BR. Engine: ALGO-2L default = Pola-BR; axi-cel surfaces as aggressive alternative track. Distinct from chemorefractory_for_cart.",
     ),
     CaseEntry(
         case_id="dlbcl-primary-refractory-loncast",
@@ -5095,6 +5401,8 @@ CASES: list[CaseEntry] = [
         label_ua="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)",
         summary_ua="Primary-refractory frail non-CAR-T-eligible. Drift: REG-LONCASTUXIMAB-TESIRINE відсутній; engine default = Pola-BR (re-MMAE inappropriate); LOTIS-2 анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+        label_en="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)",
+        summary_en="Primary-refractory frail non-CAR-T-eligible. Drift: REG-LONCASTUXIMAB-TESIRINE absent; engine default = Pola-BR (re-MMAE inappropriate); LOTIS-2 anchor in comment.",
     ),
 
     # H3 Indolent B-cell variants (2 of 4; 2 dropped per KB wiring gaps)
@@ -5104,6 +5412,8 @@ CASES: list[CaseEntry] = [
         label_ua="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)",
         summary_ua="Post-acalabrutinib PD без C481/BCL2-resistance. Engine: ALGO-CLL-2L step 2 (RF-PRIOR-BTKI-PROGRESSION) → IND-CLL-2L-VENR-MURANO (24-mo, mPFS 53.6 мо).",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)",
+        summary_en="Post-acalabrutinib PD without C481/BCL2-resistance. Engine: ALGO-CLL-2L step 2 (RF-PRIOR-BTKI-PROGRESSION) → IND-CLL-2L-VENR-MURANO (24-mo, mPFS 53.6 mo).",
     ),
     CaseEntry(
         case_id="mcl-pirtobrutinib-3l",
@@ -5111,6 +5421,8 @@ CASES: list[CaseEntry] = [
         label_ua="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
         summary_ua="Post-covalent-BTKi прогрес з LVEF 38% (CAR-T ineligible). Drift: ALGO-MCL-2L step 3 free-text; engine default = acalabrutinib; BRUIN анкер у comment.",
         badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+        label_en="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
+        summary_en="Post-covalent-BTKi progression with LVEF 38% (CAR-T ineligible). Drift: ALGO-MCL-2L step 3 free-text; engine default = acalabrutinib; BRUIN anchor in comment.",
     ),
 
     # D1 Diagnostic pre-biopsy solid (3)
@@ -5120,6 +5432,8 @@ CASES: list[CaseEntry] = [
         label_ua="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy",
         summary_ua="Pre-biopsy: pальпабельне утворення, BI-RADS 4-5. Engine: WORKUP-SUSPECTED-BREAST (mammography + US + MRI + core biopsy + IHC). Diagnostic Brief mode (CHARTER §15.2 C7).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy",
+        summary_en="Pre-biopsy: palpable mass, BI-RADS 4-5. Engine: WORKUP-SUSPECTED-BREAST (mammography + US + MRI + core biopsy + IHC). Diagnostic Brief mode (CHARTER §15.2 C7).",
     ),
     CaseEntry(
         case_id="diagnostic-lung-mass-prebiopsy",
@@ -5127,6 +5441,8 @@ CASES: list[CaseEntry] = [
         label_ua="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy",
         summary_ua="Pre-biopsy: incidental lung mass, smoker 30 pack-years. Engine: WORKUP-SUSPECTED-NSCLC (CT-guided biopsy + NGS + PD-L1 IHC + staging FDG-PET + brain MRI).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy",
+        summary_en="Pre-biopsy: incidental lung mass, smoker 30 pack-years. Engine: WORKUP-SUSPECTED-NSCLC (CT-guided biopsy + NGS + PD-L1 IHC + staging FDG-PET + brain MRI).",
     ),
     CaseEntry(
         case_id="diagnostic-prostate-psa-prebiopsy",
@@ -5134,6 +5450,8 @@ CASES: list[CaseEntry] = [
         label_ua="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy",
         summary_ua="Pre-biopsy: PSA 12.4 ng/mL, mp-MRI PI-RADS 4. Engine: WORKUP-SUSPECTED-PROSTATE (transperineal mp-MRI-targeted biopsy + Gleason + PSMA-PET if int/high-risk).",
         badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy",
+        summary_en="Pre-biopsy: PSA 12.4 ng/mL, mp-MRI PI-RADS 4. Engine: WORKUP-SUSPECTED-PROSTATE (transperineal mp-MRI-targeted biopsy + Gleason + PSMA-PET if int/high-risk).",
     ),
     # ── /CURATED CHUNK 2026-04-29-0313 ──
 
