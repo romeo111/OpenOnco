@@ -768,10 +768,15 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
             f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
-    cur_flag_cls = "flag-ua" if target_lang == "uk" else "flag-en"
-    other_flag_cls = "flag-en" if target_lang == "uk" else "flag-ua"
-    cur_lang = "UA" if target_lang == "uk" else "EN"
-    other_lang = "EN" if target_lang == "uk" else "UA"
+    # Stable visual order is always [UA · EN] regardless of which language
+    # is current — clicking the toggle must NOT swap pill positions, only
+    # which one is highlighted (CSS .lang-current vs .lang-other).
+    is_uk = target_lang == "uk"
+    ua_cls = "lang-current" if is_uk else "lang-other"
+    en_cls = "lang-other" if is_uk else "lang-current"
+    # Tags: <span> for the current pill (no link), <a> for the other.
+    ua_tag, ua_attr = ("span", "") if is_uk else ("a", f' href="{lang_switch_href}"')
+    en_tag, en_attr = ("a", f' href="{lang_switch_href}"') if is_uk else ("span", "")
 
     return f"""<header class="top-bar">
   <div class="brand-line">
@@ -786,8 +791,8 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
-      <span class="lang-current"><span class="lang-flag {cur_flag_cls}" aria-hidden="true"></span>{cur_lang}</span>
-      <a class="lang-other" href="{lang_switch_href}"><span class="lang-flag {other_flag_cls}" aria-hidden="true"></span>{other_lang}</a>
+      <{ua_tag} class="{ua_cls}"{ua_attr}><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</{ua_tag}>
+      <{en_tag} class="{en_cls}"{en_attr}><span class="lang-flag flag-en" aria-hidden="true"></span>EN</{en_tag}>
     </div>
     <a href="{try_path}" class="btn-cta-try" {'aria-current="page"' if active == "try" else ""}>{labels['try_cta']}</a>
   </div>
@@ -851,7 +856,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
         )
         trust_3_strong = "only to scientific databases"
         trust_3_text_pre = "Lookups go"
-        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, NCCN/ESMO, MoH."
+        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC (CC0), NCCN/ESMO/EHA/ASH/BSH, MoH."
         df_aria = "OpenOnco — data flow from patient profile to two treatment plans"
         df1_title = "Patient profile"
         df1_body = (
@@ -889,7 +894,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "An LLM is not the decision-maker — a declarative rule engine is, with "
              "public code and a public KB. Plans are built <strong>without external LLM "
              "calls</strong>; only scientific databases (PubMed, ClinicalTrials.gov, "
-             "DailyMed, openFDA) are queried. The clinician sees every &laquo;why&raquo; "
+             "DailyMed, openFDA, CIViC) are queried. The clinician sees every &laquo;why&raquo; "
              "alongside every &laquo;what&raquo;."),
             ("Biomarkers you won&rsquo;t miss",
              "TP53, CD30, MYD88, eGFR, hepatic function — every flag automatically "
@@ -994,7 +999,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
         )
         trust_3_strong = "лише в наукові бази"
         trust_3_text_pre = "Запити йдуть"
-        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, NCCN/ESMO, МОЗ."
+        trust_3_text_post = ": PubMed, ClinicalTrials.gov, DailyMed, openFDA, CIViC (CC0), NCCN/ESMO/EHA/ASH/BSH, МОЗ."
         df_aria = "OpenOnco — потік даних від профілю пацієнта до двох планів лікування"
         df1_title = "Профіль пацієнта"
         df1_body = (
@@ -1032,7 +1037,7 @@ def render_landing(stats, *, target_lang: str = "en") -> str:
              "Не LLM вирішує лікування, а декларативний rule engine із публічним кодом "
              "і публічною KB. План будується <strong>без викликів зовнішніх LLM</strong> "
              "— лише запити в наукові бази (PubMed, ClinicalTrials.gov, DailyMed, "
-             "openFDA). Лікар бачить кожне &laquo;чому&raquo; поряд із кожним "
+             "openFDA, CIViC). Лікар бачить кожне &laquo;чому&raquo; поряд із кожним "
              "&laquo;що&raquo;."),
             ("Біомаркери, які не пропустиш",
              "TP53, CD30, MYD88, eGFR, печінкова функція — кожен прапорець автоматично "
