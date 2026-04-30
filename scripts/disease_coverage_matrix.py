@@ -24,6 +24,15 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+
+def _signoff_count(value) -> int:
+    """Count reviewer sign-offs across legacy int + structured list shapes."""
+    if isinstance(value, list):
+        return len(value)
+    if isinstance(value, int):
+        return value
+    return 0
+
 from knowledge_base.validation.loader import load_content  # noqa: E402
 
 
@@ -210,7 +219,7 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
         if inds:
             verified = sum(
                 1 for ind in inds
-                if int(ind.get("reviewer_signoffs", 0) or 0) >= 2
+                if _signoff_count(ind.get("reviewer_signoffs")) >= 2
             )
             verified_pct = round(100 * verified / len(inds))
         else:

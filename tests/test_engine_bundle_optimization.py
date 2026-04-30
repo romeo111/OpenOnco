@@ -50,13 +50,14 @@ def bundle_out(tmp_path_factory) -> dict:
 
 def test_core_and_index_and_disease_dir_present(bundle_out: dict):
     out = Path(bundle_out["_dir"])
-    assert (out / "openonco-engine.zip").is_file(), "monolithic fallback missing"
     assert (out / "openonco-engine-core.zip").is_file(), "core bundle missing"
     assert (out / "openonco-engine-index.json").is_file(), "bundle index missing"
     assert (out / "disease").is_dir(), "per-disease dir missing"
     # At least 5 per-disease bundles (KB has 60+ diseases — sanity floor)
     bundles = list((out / "disease").glob("openonco-*.zip"))
     assert len(bundles) >= 5, f"expected ≥5 per-disease bundles, got {len(bundles)}"
+    # Monolithic openonco-engine.zip retired in CSD-9C (2026-04-27);
+    # build_engine() actively deletes any stale copy on disk. No assertion.
 
 
 def test_core_bundle_under_size_ceiling(bundle_out: dict):
@@ -94,7 +95,7 @@ def test_bundle_index_is_valid_and_lists_existing_bundles(bundle_out: dict):
     index = load_bundle_index(out / "openonco-engine-index.json")
 
     assert index["core"] == "openonco-engine-core.zip"
-    assert index.get("monolithic") == "openonco-engine.zip"
+    # `monolithic` key retired in CSD-9C — index no longer carries it.
     assert "core_version" in index and len(index["core_version"]) == 12
     diseases = index.get("diseases") or {}
     assert diseases, "bundle index lists no diseases"
@@ -285,28 +286,8 @@ def test_url_for_disease_returns_none_for_unknown_disease(bundle_out: dict):
     assert url_for_disease(index, "DIS-DOES-NOT-EXIST") is None
 
 
-# ── Back-compat: monolithic still works ──────────────────────────────────
-
-
-def test_monolithic_bundle_is_self_sufficient(bundle_out: dict, tmp_path: Path):
-    """Old clients still fetch openonco-engine.zip. Unpacking it alone
-    must produce a working KB — proving the monolithic fallback is
-    intact for /try.html until the JS lazy-load handler ships."""
-    out_dir = Path(bundle_out["_dir"])
-    target = tmp_path / "monolithic_kb"
-    target.mkdir()
-    with zipfile.ZipFile(out_dir / "openonco-engine.zip") as zf:
-        zf.extractall(target)
-
-    content_root = target / "knowledge_base" / "hosted" / "content"
-    assert content_root.is_dir()
-    # DLBCL files present without any lazy-load step
-    assert (content_root / "indications" / "ind_dlbcl_1l_rchop.yaml").exists()
-    assert (content_root / "diseases" / "dlbcl_nos.yaml").exists()
-
-    clear_load_cache()
-    summary = apply_disease_module(content_root)
-    assert summary["ok"], f"monolithic KB invalid: {summary}"
-    assert summary["total_entities"] > 1000, (
-        f"monolithic KB suspiciously small: {summary}"
-    )
+# Monolithic back-compat tests removed 2026-04-30: the legacy
+# `openonco-engine.zip` was retired in CSD-9C (2026-04-27,
+# scripts/build_site.py:272-278 actively deletes any stale monolithic
+# on every build). The lazy-load core + per-disease pathway is exercised
+# by the tests above and in test_engine_bundle_extended.py.
