@@ -1,0 +1,96 @@
+id: IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) or unresectable locally advanced gastric / GEJ adenocarcinoma"
+    - "No prior systemic therapy for advanced disease"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CLDN18-2
+      required: true
+      value_constraint: "positive — ≥75% of tumor cells with 2+/3+ membranous staining (VENTANA CLDN18 (43-14A) RxDx)"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "HER2-positive excluded — TOGA trastuzumab+chemo supersedes (HER2+ takes priority)"
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab supersedes (separate algorithm step)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ZOLBETUXIMAB-CHEMO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~60-65% (SPOTLIGHT/GLOW combined zolbetuximab + chemo arms; consistent with chemo backbone alone but durable)"
+  progression_free_survival: "Median PFS 10.6 mo (SPOTLIGHT mFOLFOX6) / 8.2 mo (GLOW CAPOX)"
+  overall_survival_5y: "Median OS 18.2 mo (SPOTLIGHT) / 14.4 mo (GLOW); HR ~0.75 vs chemo alone"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-GASTRIC-FRAILTY-AGE
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Zolbetuximab + fluoropyrimidine/oxaliplatin (mFOLFOX6 SPOTLIGHT or
+  CAPOX GLOW) is the new 1L standard for HER2-negative MSI-stable
+  CLDN18.2-positive (≥75% 2+/3+) metastatic gastric/GEJ adenocarcinoma
+  — first FDA approval Oct 2024. SPOTLIGHT mPFS 10.6 vs 8.7 mo (HR
+  0.75); mOS 18.2 vs 15.5 mo (HR 0.75). GLOW mPFS 8.2 vs 6.8 mo (HR
+  0.69); mOS 14.4 vs 12.2 mo (HR 0.77). ~38% of HER2-negative gastric
+  cohort meets the threshold. Companion diagnostic VENTANA CLDN18
+  (43-14A) RxDx required. UA access barrier: zolbetuximab not
+  registered (named-patient / EAP only).
+
+sources:
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+    relevant_quote_paraphrase: "Zolbetuximab + fluoropyrimidine/platinum is a category 1 1L option for HER2-negative CLDN18.2-positive (≥75% 2+/3+ membranous) locally advanced unresectable / metastatic gastric or GEJ adenocarcinoma (SPOTLIGHT, GLOW); FDA-approved Oct 2024"
+  - source_id: SRC-ESMO-GASTRIC-2024
+    position: supports
+    relevant_quote_paraphrase: "CLDN18.2 testing recommended in HER2-negative metastatic gastric/GEJ; zolbetuximab + chemo is a 1L option upon access"
+
+known_controversies:
+  - topic: "Zolbetuximab+chemo vs nivolumab+chemo (CheckMate-649) for HER2-/MSS/CLDN18.2+/PD-L1 CPS≥5 patients"
+    positions:
+      - position: "Zolbetuximab+chemo: targeted, mature OS benefit (HR 0.75); cycle-1 nausea is dominant tolerability issue"
+        sources: [SRC-NCCN-GASTRIC-2025]
+      - position: "Nivolumab+chemo: CheckMate-649 mOS 14.4 vs 11.1 mo CPS≥5 (HR 0.71); reimbursed in UA; durable responder tail"
+        sources: [SRC-NCCN-GASTRIC-2025]
+        evidence_note: "Direct head-to-head comparison absent; MDT decision balancing biomarker overlap (CLDN18.2+ AND CPS≥5 dual-positives), durability (ICI tail) vs depth (zolbetuximab early benefit), and access"
+    our_default: "Zolbetuximab+chemo when CLDN18.2≥75% AND CPS<5; nivolumab+chemo when CPS≥5 AND CLDN18.2<75%; MDT decision when dual-positive (consider CPS magnitude, fitness, access)"
+    rationale: "Both are category 1 1L options; mutually exclusive on label timing (1L); access pathway often decides in UA"
+
+do_not_do:
+  - "НЕ розпочинати zolbetuximab без підтвердженого CLDN18.2 ≥75% 2+/3+ за VENTANA RxDx — поза цим діапазоном користь не доведена."
+  - "НЕ призначати zolbetuximab у HER2+ пацієнтів — TOGA трастузумаб+chemo має пріоритет."
+  - "НЕ призначати zolbetuximab у MSI-H пацієнтів 1L — пембролізумаб (KEYNOTE-859) має перевагу."
+  - "НЕ розпочинати без триплет-антиеметичної профілактики (5-HT3 + NK1-RA + dex) для циклу 1 — нудота/блювання тяжкі без неї."
+  - "НЕ комбінувати з иппіленумабом/ICI поза дослідженнями — комбінаторна безпека невідома."
+  - "НЕ підтверджувати план без funding pathway — zolbetuximab не зареєстрований в UA."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L for
+  HER2-/MSS/CLDN18.2+ metastatic gastric/GEJ. NCCN cat 1 (2025);
+  FDA Oct 2024. Trial-specific source stubs SRC-SPOTLIGHT
+  (Shitara Lancet 2023) and SRC-GLOW (Shah Nat Med 2023) not yet in
+  KB — flagged for source-ingestion follow-up. UA access:
+  named-patient pathway only.

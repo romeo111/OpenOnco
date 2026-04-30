@@ -1,0 +1,55 @@
+id: BIO-IDH1-R132G
+names:
+  preferred: "IDH1 R132G mutation (glioma / AML)"
+  ukrainian: "Мутація IDH1 R132G (гліома / ГМЛ)"
+  english: "IDH1 R132G"
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "IDH1"
+  exon: "4"
+  variant_type: "missense"
+  hgvs_protein: "p.R132G"
+  functional_impact: "neomorphic — converts α-KG to 2-hydroxyglutarate (oncometabolite); DNA hypermethylation"
+
+measurement:
+  method: "NGS panel (R132G is IHC-negative with the R132H-specific antibody — requires sequencing). Co-call with TMB / methylation profiling where available."
+  units: "categorical (positive | negative)"
+specimen_requirements: ["FFPE tumor (glioma, cholangiocarcinoma)", "BM aspirate (AML)"]
+
+related_biomarkers: [BIO-IDH1-R132H, BIO-IDH-MUTATION, BIO-MGMT-METHYLATION]
+sources: [SRC-NCCN-CNS-2025, SRC-EANO-GBM-2024, SRC-ESMO-AML-2020]
+
+# Per oncokb_integration_safe_rollout_v3.md §4: variant-specific lookup
+# for the IDH1-R132G residue. Less prevalent than R132H/R132C but on the
+# ivosidenib hotspot list — reuses REG-IVOSIDENIB via existing IDH1
+# indications.
+actionability_lookup:
+  gene: IDH1
+  variant: R132G
+external_ids:
+  hgnc_symbol: "IDH1"
+  hgvs_protein: "p.R132G"
+  oncokb_url: "https://www.oncokb.org/gene/IDH1/R132G"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Less prevalent IDH1 variant (~3-5% of IDH1-mutant glioma; rarer in
+  AML and cholangiocarcinoma). IHC-negative with the R132H-specific
+  antibody (clone H09) — NGS required. On the ivosidenib hotspot list
+  alongside R132H/R132C/R132L/R132S; reuses existing REG-IVOSIDENIB and
+  IDH1-keyed indications. Vorasidenib (INDIGO 2024 — grade 2 IDH-mut
+  glioma post-resection) covers IDH1/IDH2 variants broadly. Engine
+  should treat as functionally equivalent to R132H for ICI / IDH-i
+  treatment selection logic.
+notes_ua: >
+  Менш поширений варіант IDH1 (~3-5% IDH1-мутантних гліом; рідший у
+  ГМЛ та холангіокарциномі). IHC-негативний з R132H-специфічним
+  антитілом (клон H09) — потрібна NGS. У hotspot-списку івосиденібу
+  поряд з R132H/R132C/R132L/R132S; повторно використовує наявний
+  REG-IVOSIDENIB та IDH1-keyed показання. Vorasidenib (INDIGO 2024 —
+  grade 2 IDH-mut гліома після резекції) охоплює варіанти IDH1/IDH2
+  широко. Engine повинен розглядати функціонально еквівалентно R132H
+  для логіки відбору ICI / IDH-i терапії.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

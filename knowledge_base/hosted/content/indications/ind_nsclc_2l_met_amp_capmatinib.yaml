@@ -1,0 +1,111 @@
+id: IND-NSCLC-2L-MET-AMP-CAPMATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic NSCLC with high-level MET amplification (MET/CEP7 ratio ≥4.0 OR mean GCN ≥10)"
+    - "Disease progression on 1L therapy (typically platinum + ICI for driver-negative; OR osimertinib for EGFR-mut with acquired MET-amp resistance)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MET-AMPLIFICATION
+      value_constraint: "High-level MET amplification (MET/CEP7 ≥4.0 OR mean GCN ≥10) confirmed by FISH OR NGS with assay-specific high-amp threshold"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MET
+      value_constraint: "MET ex14 skipping (separate IND-NSCLC-2L-MET-EX14-CAPMATINIB)"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CAPMATINIB-NSCLC
+concurrent_therapy: []
+followed_by:
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~40% (GEOMETRY mono-1 high-amp GCN ≥10 cohort)"
+  progression_free_survival: "Median PFS ~5.5 mo (high-amp cohort)"
+  overall_survival_5y: "Mature OS evolving"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-NSCLC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # FISH OR NGS with high-amp threshold; DNA-only NGS often misses MET amplification calls
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  High-level MET amplification (MET/CEP7 ≥4.0 OR mean GCN ≥10) is a
+  distinct actionable subset from MET ex14 skipping in metastatic NSCLC
+  (~1-5% de-novo, plus acquired post-osimertinib resistance in
+  EGFR-mutant disease). Capmatinib (selective MET-TKI) showed
+  meaningful response in the GEOMETRY mono-1 high-amp cohort (GCN ≥10:
+  ORR ~40%, mPFS ~5.5 mo). Tepotinib (VISION cohort B) is alternative
+  with similar efficacy. CRITICAL: FDA capmatinib label is for MET ex14
+  skipping NSCLC only — MET-amp use is OFF-LABEL but supported by
+  GEOMETRY mono-1 data and NCCN/ESMO 2024-2025 listing as 2A
+  recommendation. Low-level amp (GCN 5-9) NOT actionable as monotherapy
+  — must be high-level. Acquired post-osimertinib MET-amp: SAVANNAH
+  (osimertinib + savolitinib) ORR ~49% but not FDA-approved; alternative
+  is amivantamab + lazertinib (covers MET arm in MARIPOSA-2). Detection
+  via FISH preferred (Cappuzzo / Schildhaus criteria); NGS copy-number
+  calls require assay-specific high-amp threshold.
+
+sources:
+  - source_id: SRC-GEOMETRY-WOLF-2020
+    position: supports
+    relevant_quote_paraphrase: "Capmatinib in MET-amp NSCLC GCN ≥10 cohort: ORR ~40%, mPFS ~5.5 mo (off-label expansion beyond ex14 label)"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "MET amplification (high-level) is recommended actionable target in metastatic NSCLC; capmatinib OR tepotinib options"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "MET amplification (FISH MET/CEP7 ≥4 OR GCN ≥10) — selective MET-TKI 2L+ in driver-negative metastatic NSCLC; OR ARSI-resistance signal in EGFR-mut post-osimertinib"
+
+known_controversies:
+  - topic: "MET-amp threshold and assay (FISH vs NGS) for capmatinib eligibility"
+    positions:
+      - position: "FISH MET/CEP7 ≥4.0 (Cappuzzo / Schildhaus criteria) — most-cited high-amp threshold"
+        sources: [SRC-GEOMETRY-WOLF-2020]
+      - position: "Mean GCN ≥10 — alternative threshold; concordance with FISH imperfect"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "NGS copy-number calls require assay-specific high-amp threshold; DNA-only panels miss many calls — confirmation by FISH preferred"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "Either FISH MET/CEP7 ≥4.0 OR mean GCN ≥10 acceptable; FISH preferred for confirmation when discordant or when NGS coverage low"
+    rationale: "Both thresholds map to high-level amp population that responded in GEOMETRY mono-1 GCN-stratified cohort"
+
+do_not_do:
+  - "НЕ використовувати капматиніб при низькорівневій MET ампліфікації (GCN 5-9) — мінімальна користь монотерапії."
+  - "НЕ підтверджувати MET ампліфікацію на ІГХ окремо — обов'язкове підтвердження FISH або NGS."
+  - "НЕ ігнорувати baseline + serial LFTs — гепатотоксичність ≥G3 потребує hold."
+  - "НЕ ігнорувати periferichni nabryaki — proactive diuretics + compression; reduce dose if persistent G≥2."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers — exposure shifts."
+  - "НЕ підтверджувати план без funding pathway — capmatinib не зареєстрований в Україні; off-label MET-amp use ускладнює EAP."
+  - "НЕ використовувати при baseline pneumonitis або severe lung disease — ILD ризик додатковий."
+  - "НЕ припиняти за isolated mild edema — manageable з conservative measures."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Distinct from
+  IND-NSCLC-2L-MET-EX14-CAPMATINIB (MET ex14 skipping, FDA label).
+  Off-label MET-amp use supported by GEOMETRY mono-1 high-amp cohort
+  + NCCN/ESMO 2024-2025 listing. Tepotinib alternative (separate
+  Indication or shared with MET-amp; this chunk uses capmatinib as
+  default per existing REG-CAPMATINIB-NSCLC reuse). Acquired-resistance
+  context (post-osimertinib in EGFR-mut) currently routes to amivantamab
+  + lazertinib via existing IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ; this
+  IND addresses primarily the de-novo MET-amp NSCLC population.

@@ -1,0 +1,86 @@
+id: REG-ZOLBETUXIMAB-CHEMO
+name: "Zolbetuximab + mFOLFOX6 (SPOTLIGHT) — 1L CLDN18.2-positive HER2-negative gastric/GEJ"
+name_ua: "Зольбетуксимаб + mFOLFOX6 (SPOTLIGHT) — 1L CLDN18.2+ HER2- шлунок/GEJ"
+alternate_names:
+  - "Zolbetuximab + CAPOX (GLOW alternative)"
+  - "Zolbe-FOLFOX"
+
+components:
+  - drug_id: DRUG-ZOLBETUXIMAB
+    dose: "Loading 800 mg/m² IV cycle 1 day 1; maintenance 600 mg/m² IV q2w"
+    schedule: "IV q2w (with mFOLFOX6 backbone)"
+    route: IV
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m² IV day 1"
+    schedule: "IV day 1 q2w"
+    route: IV
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m² IV day 1"
+    schedule: "IV day 1 q2w"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus day 1, then 2400 mg/m² IV continuous infusion over 46 h"
+    schedule: "IV q2w"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Until progression / unacceptable toxicity (oxaliplatin commonly capped at 8-12 cycles for cumulative neuropathy; zolbetuximab + 5-FU/LV maintenance continues)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Triple antiemetic prophylaxis MANDATORY for cycle 1 — 5-HT3 (palonosetron) + NK1-RA (aprepitant/fosaprepitant) + dexamethasone; consider olanzapine add-on (high-emetogenic risk in cycle 1)"
+  - "Slow zolbetuximab infusion: cycle 1 ≥4 hours; subsequent cycles ≥2 hours"
+  - "Anti-H1 (diphenhydramine) optional for infusion-reaction prophylaxis"
+  - "Oxaliplatin: standard premedication (5-HT3 + dex)"
+
+mandatory_supportive_care: [SUP-ANTIEMETIC-PREMED]
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Zolbetuximab grade 3-4 nausea/vomiting despite triple antiemetic prophylaxis"
+    modification: "Hold zolbetuximab; pause infusion; resume at slower rate after recovery; consider dose reduction (no formal step-down — guidance: skip dose, rechallenge slow)"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Zolbetuximab grade ≥3 infusion reaction"
+    modification: "Permanent discontinuation of zolbetuximab"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "Oxaliplatin grade 2-3 peripheral neuropathy"
+    modification: "Reduce oxaliplatin to 65 mg/m² OR hold until ≤Grade 1; consider oxaliplatin discontinuation with 5-FU/LV + zolbetuximab maintenance"
+    source_refs: [SRC-NCCN-GASTRIC-2025]
+  - condition: "5-FU grade 3-4 stomatitis or diarrhea"
+    modification: "Hold 5-FU until ≤Grade 1, resume at 75% dose"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Зольбетуксимаб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA жовтень 2024). Хіміо-беккбон (oxaliplatin /
+    leucovorin / 5-FU) — зареєстрований + НСЗУ-реімбурсується.
+    Шляхи доступу зольбетуксимабу:
+    - Named-patient import — за рахунок пацієнта;
+    - Astellas compassionate use / EAP — обмежено;
+    - Cross-border (EU): EU онкоцентр (наказ МОЗ 988);
+    - Clinical trials: пост-маркетингові SPOTLIGHT/GLOW дослідження.
+    Альтернатива при недоступному зольбетуксимабі: стандартний
+    FOLFOX/CAPOX ± nivolumab (CheckMate-649 при PD-L1 CPS≥5) як
+    1L; зольбетуксимаб додається коли стає доступним.
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+  - SRC-ESMO-GASTRIC-2024
+last_reviewed: "2026-04-30"
+
+notes: >
+  SPOTLIGHT (Shitara Lancet 2023) registrational: zolbetuximab +
+  mFOLFOX6 vs mFOLFOX6 in CLDN18.2+ (≥75% 2+/3+) HER2- 1L metastatic
+  gastric/GEJ — mPFS 10.6 vs 8.7 mo (HR 0.75); mOS 18.2 vs 15.5 mo
+  (HR 0.75). GLOW (Shah Nat Med 2023) parallel CAPOX backbone —
+  consistent benefit (mOS 14.4 vs 12.2 mo). FDA approval Oct 2024.
+  Cycle-1 nausea/vomiting is the principal tolerability challenge —
+  triple-antiemetic prophylaxis + slow infusion mandatory; tolerance
+  improves cycles 2+. Hierarchy when multiple actionable signals
+  co-occur: HER2+ trastuzumab supersedes; MSI-H pembrolizumab
+  supersedes; otherwise CLDN18.2+ → zolbetuximab. STUB pending
+  Clinical Co-Lead sign-off; SRC-SPOTLIGHT + SRC-GLOW source
+  ingestion outstanding.

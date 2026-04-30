@@ -1,0 +1,53 @@
+id: BIO-TROP2-EXPRESSION
+names:
+  preferred: "TROP2 expression (Trophoblast cell-surface antigen 2)"
+  ukrainian: "Експресія TROP2 (трофобластний поверхневий антиген 2)"
+  english: "TROP2 expression"
+  synonyms: ["TACSTD2", "EGP-1", "GA733-1"]
+biomarker_type: protein_expression_ihc
+
+measurement:
+  method: "IHC (TROP2 antibody — clones SP295 / EPR20043 / MOR-T2). Scoring not standardized for clinical decision; ASCENT/TROPiCS-02 enrolled biomarker-unselected populations and showed benefit independent of TROP2 expression level."
+  units: "categorical (positive | negative) — informational only; no validated clinical cutoff for sacituzumab eligibility"
+specimen_requirements: ["FFPE tumor block (breast / urothelial)"]
+
+interpretation_notes: >
+  TROP2 is broadly expressed in epithelial tumors (>80% of TNBC, >85% of
+  urothelial carcinoma). Sacituzumab govitecan (Trodelvy) is a TROP2-directed
+  ADC: payload is SN-38 (irinotecan active metabolite). Pivotal trials
+  (ASCENT for TNBC, TROPHY-U-01 for urothelial, TROPiCS-02 for HR+/HER2-
+  breast, EVOKE-01 for NSCLC) did NOT use TROP2 expression as an enrollment
+  biomarker — clinical activity is not gated by IHC status. TROP2 IHC is
+  informational / explanatory only; the engine should NOT use TROP2-status
+  as a gating biomarker for sacituzumab eligibility.
+
+related_biomarkers: []
+sources: [SRC-NCCN-BREAST-2025, SRC-NCCN-BLADDER-2025, SRC-ASCENT-BARDIA-2021]
+
+# Per oncokb_integration_safe_rollout_v3.md §4: IHC marker without a
+# variant — actionability lookup is not meaningful. Sacituzumab eligibility
+# is disease + line + prior-therapy-driven, not biomarker-driven.
+oncokb_skip_reason: ihc_no_variant
+
+last_reviewed: "2026-04-29"
+notes: >
+  Informational marker for sacituzumab govitecan ADC therapy. Existing
+  regimens (REG-SACITUZUMAB-TNBC for ASCENT 2L+ mTNBC; sacituzumab in
+  urothelial post-platinum/IO via TROPHY-U-01) do not require TROP2
+  testing for eligibility — broad epithelial expression and pivotal-trial
+  design (biomarker-unselected) make IHC explanatory rather than
+  gating. Documented here so render layer can surface "TROP2-directed ADC"
+  rationale for clinicians without introducing a false gate. No new
+  indication or regimen entity in this chunk — sacituzumab regimens
+  already exist.
+notes_ua: >
+  Інформаційний маркер для ADC-терапії sacituzumab govitecan. Наявні
+  режими (REG-SACITUZUMAB-TNBC для ASCENT 2L+ mTNBC; sacituzumab в
+  уротеліальному після платини/IO за TROPHY-U-01) не потребують
+  тестування TROP2 для відбору — широка експресія в епітеліальних
+  пухлинах та дизайн ключових випробувань (без біомаркерного відбору)
+  робить IHC пояснювальним, а не gating. Документується тут, щоб
+  render-шар міг відображати обґрунтування "TROP2-спрямований ADC"
+  без введення хибного gate.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

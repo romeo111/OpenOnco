@@ -1,0 +1,85 @@
+id: RF-PROSTATE-AR-V7-ARSI-RESISTANCE
+definition: >
+  AR-V7 (androgen receptor splice variant 7) detected in CTCs / ctDNA
+  in mCRPC — predictive marker of ARSI (abiraterone, enzalutamide,
+  apalutamide, darolutamide) failure. PROPHECY (Antonarakis 2019):
+  AR-V7-positive on Epic CTC IHC associated with HR ~3 for inferior
+  PFS/OS on ARSI vs AR-V7-negative; switch to taxane (docetaxel,
+  cabazitaxel) recovers responses. INFORMATIONAL — FDA has NOT
+  approved any therapy decision keyed on AR-V7; surfaces in MDT brief
+  to flag patients in whom ARSI-after-ARSI is unlikely to work.
+definition_ua: >
+  AR-V7 (сплайс-варіант 7 рецептора андрогену), виявлений у CTC /
+  ctDNA при мКРРПЗ — предиктивний маркер невдачі ARSI (абіратерон,
+  ензалутамід, апалутамід, даролутамід). PROPHECY (Antonarakis 2019):
+  AR-V7-позитивні на Epic CTC IHC мають HR ~3 для гіршого ПФВ/ЗВ на
+  ARSI порівняно з AR-V7-негативними; перехід на таксан (доцетаксел,
+  кабазітаксел) відновлює відповіді. ІНФОРМАЦІЙНИЙ — FDA НЕ схвалив
+  жодного терапевтичного рішення на основі AR-V7; з'являється в
+  MDT-брифі для позначення пацієнтів, у яких ARSI-після-ARSI
+  малоймовірно працюватиме.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ar_v7"
+      value: "positive"
+    - finding: "ar_v7_ctc"
+      value: "positive"
+    - finding: "ar_v7_status"
+      value: "positive"
+    - finding: "androgen_receptor_splice_variant_7"
+      value: "positive"
+
+clinical_direction: investigate
+
+severity: major
+priority: 75
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-PROSTATE
+# Informational — does NOT shift any algorithm in this chunk. Tx-modifying
+# signal ("switch ARSI → taxane") would require a new taxane-mCRPC IND
+# branched on AR-V7 (deferred). RF surfaces in MDT brief only.
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Detection: Epic AR-V7 Nucleus Detect (CTC-IHC) is the most-validated
+  platform; requires ≥5 CTC per 7.5 mL blood for an interpretable result
+  (lower CTC counts are non-informative, not negative). Alternatives:
+  PCR-based AR-V7 mRNA on CTCs (Antonarakis 2014), ctDNA-based assays
+  (less validated). Clinical use: in mCRPC patient who has progressed
+  on first-line ARSI and is being considered for second-line ARSI
+  (abiraterone-after-enzalutamide or vice-versa), AR-V7-positive status
+  is a strong argument for switching to taxane chemotherapy or
+  radioligand 177Lu-PSMA-617 (if PSMA-positive on PSMA-PET) instead.
+  AR-V7-negative does NOT guarantee ARSI response (other resistance
+  mechanisms exist — AR L702H/T878A/F877L LBD mutations, AR amplification,
+  GR upregulation, lineage plasticity). KB scope choice (this chunk):
+  ships as biomarker + RF (informational) only — no new IND, no
+  algorithm step. Tx-modifying signal deferred to future chunk that
+  authors a taxane-mCRPC IND branched on AR-V7 status.
+notes_ua: >
+  Виявлення: Epic AR-V7 Nucleus Detect (CTC-IHC) — найбільш валідована
+  платформа; потребує ≥5 CTC на 7.5 мл крові для інтерпретованого
+  результату (менша кількість CTC — неінформативна, не негативна).
+  Альтернативи: PCR на AR-V7 mRNA в CTC (Antonarakis 2014), ctDNA-аналізи
+  (менш валідовані). Клінічне застосування: у пацієнта з мКРРПЗ, який
+  прогресував на першій лінії ARSI, та розглядається другий ARSI
+  (абіратерон після ензалутаміду чи навпаки), AR-V7-позитивний статус —
+  сильний аргумент для переходу на таксан або радіоліганд 177Lu-PSMA-617
+  (за PSMA-позитивності на PSMA-PET). AR-V7-негативний результат НЕ
+  гарантує відповіді на ARSI (існують інші механізми резистентності —
+  мутації AR LBD L702H/T878A/F877L, ампліфікація AR, активація GR,
+  лінійна пластичність). Обсяг у KB (цей чанк): постачається як
+  біомаркер + RF (інформаційний) — без нового IND, без кроку алгоритму.
+  Tx-модифікуючий сигнал відкладено до майбутнього чанку, який створить
+  taxane-mCRPC IND з гілкуванням на статус AR-V7.

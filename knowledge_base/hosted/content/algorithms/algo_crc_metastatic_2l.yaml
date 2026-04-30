@@ -62,17 +62,21 @@ decision_tree:
 
   # Step 4 — HER2 amplified (~3% of mCRC) AND RAS-WT. MOUNTAINEER
   # tucatinib + trastuzumab default; T-DXd alternative noted in
-  # algorithm purpose / indication controversies.
+  # algorithm purpose / indication controversies. RF-CRC-HER2-AMP-
+  # ACTIONABLE added as additive any_of clause in W1.B2 chunk
+  # (2026-04-30); free-text conditions retained for back-compat.
   - step: 4
     evaluate:
-      all_of:
-        - condition: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
-        - condition: "RAS wild-type (MOUNTAINEER eligibility)"
+      any_of:
+        - red_flag: RF-CRC-HER2-AMP-ACTIONABLE
+        - all_of:
+            - condition: "HER2 amplified (IHC 3+ OR IHC 2+/ISH+)"
+            - condition: "RAS wild-type (MOUNTAINEER eligibility)"
     if_true:
       result: IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
     if_false:
       next_step: 5
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "RF-CRC-HER2-AMP-ACTIONABLE wired W1.B2 (2026-04-30); free-text conditions retained for back-compat."
 
   # Step 5 — Anti-EGFR rechallenge (3L+; positioned here so 2L candidates
   # without driver mutations route to standard cytotoxic-switch first).
