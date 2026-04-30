@@ -1288,20 +1288,41 @@ def _gallery_case_disease_meta() -> list[dict]:
     """For each CaseEntry, derive (disease_id, disease label UA/EN, ICD)
     by loading its example JSON. Cases whose JSON is missing or carries
     no recognised disease land in a synthetic 'OTHER' bucket so the UI
-    still surfaces them."""
+    still surfaces them.
+
+    Resolution order:
+      1. `disease.id` — direct DIS-* lookup against KB name map. Catches
+         all `auto_*.json` and `variant_*.json` stubs that carry only
+         `disease: {id: "DIS-X"}` without ICD-O-3 morphology. Without
+         this fallback, ~half of all KB diseases collapse into OTHER
+         because their auto-generated examples don't set ICD codes.
+      2. `disease.icd_o_3_morphology` via the ICD→DIS map (kept for
+         curated cases whose JSON sometimes carries only ICD).
+      3. OTHER bucket if neither resolves.
+    """
     icd_map = _icd_to_disease_id_map()
     name_map = _load_disease_name_map()
     out: list[dict] = []
     for c in CASES:
         p = EXAMPLES / c.file
+        did: str | None = None
         icd = None
         if p.exists():
             try:
                 ex = json.loads(p.read_text(encoding="utf-8"))
-                icd = ((ex or {}).get("disease") or {}).get("icd_o_3_morphology")
+                disease_block = (ex or {}).get("disease") or {}
+                # Step 1: direct disease.id lookup
+                raw_id = disease_block.get("id")
+                if isinstance(raw_id, str) and raw_id.upper().startswith("DIS-"):
+                    candidate = raw_id.upper()
+                    if candidate in name_map:
+                        did = candidate
+                # Step 2: ICD fallback
+                icd = disease_block.get("icd_o_3_morphology")
+                if did is None and icd:
+                    did = icd_map.get(str(icd))
             except Exception:
-                icd = None
-        did = icd_map.get(str(icd)) if icd else None
+                pass
         if did:
             names = name_map.get(did, {"ua": did, "en": did})
             out.append({
