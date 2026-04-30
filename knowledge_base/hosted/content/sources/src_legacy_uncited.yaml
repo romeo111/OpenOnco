@@ -1,0 +1,46 @@
+id: SRC-LEGACY-UNCITED
+source_type: tracking
+title: "Legacy uncited outcome value (Phase 2 placeholder)"
+version: "2026-05-01"
+access_level: open_access
+currency_status: current
+current_as_of: "2026-05-01"
+hosting_mode: referenced
+ingestion:
+  method: none
+license:
+  name: "n/a — internal tracking sentinel"
+attribution:
+  required: false
+commercial_use_allowed: false
+redistribution_allowed: false
+modifications_allowed: false
+legal_review:
+  status: reviewed
+  date: "2026-05-01"
+  notes: "Internal tracking sentinel; not a real publication — no licensing concern."
+last_verified: "2026-05-01"
+notes: >
+  Auto-generated placeholder for outcome values that pre-date the
+  Phase 2 `OutcomeValue` schema migration (Pivotal Trial Outcomes
+  Ingestion Plan, `docs/plans/pivotal_trial_outcomes_ingestion_plan_2026-04-30.md`,
+  §"Schema evolution"). NOT a real citation. Whenever an
+  `Indication.expected_outcomes.<field>` carries a plain string in
+  YAML (the 312-indication legacy state captured by the Phase 1
+  audit at `docs/audits/expected_outcomes_traceability_2026-05-01.md`),
+  the Pydantic loader coerces that string into
+  `OutcomeValue(value=<str>, source="SRC-LEGACY-UNCITED")` so the
+  schema invariant "every populated outcome carries a source pointer"
+  holds without forcing a same-PR rewrite of every indication YAML.
+
+  Phase 3 (gap-fill) replaces these placeholders with real SRC-*
+  ids as outcome values get traced back to their pivotal-trial
+  publications via PubMed / NCT primary-results / FDA labels.
+  Open Question §4 in the plan suggests the matrix should turn
+  this red 90 days after Phase 2 lands (target: 2026-07-30).
+
+  This entity is render-suppressed: surfacing "SRC-LEGACY-UNCITED"
+  to the patient view is a render-layer bug. The render layer
+  treats it as "outcome present, citation pending" — equivalent to
+  the pre-Phase-2 display.
+corpus_role: tracking
