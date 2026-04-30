@@ -1,6 +1,6 @@
 """Build the CSD Lab partnership demo HTML.
 
-Generates `docs/plans/csd_1_demo_report.html` — a standalone, A4-printable
+Generates `docs/plans/archive/csd_1_demo_report.html` — a standalone, A4-printable
 HTML page demonstrating end-to-end OpenOnco interpretation of a synthetic
 mCRC + BRAF V600E NGS report. Accompanies the CSD Lab pitch email.
 
@@ -37,7 +37,7 @@ Run:
 
     python scripts/build_csd_1_demo.py
 
-Output: docs/plans/csd_1_demo_report.html (overwrites if present).
+Output: docs/plans/archive/csd_1_demo_report.html (overwrites if present).
 """
 
 from __future__ import annotations

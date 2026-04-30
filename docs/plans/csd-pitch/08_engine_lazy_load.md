@@ -147,7 +147,7 @@ py -3.12 -m pytest tests/test_engine_bundle_optimization.py
 ## Profile script
 
 `scripts/profile_engine_bundle.py` walks the monolithic zip and writes
-a Markdown report under `docs/plans/csd_5_bundle_profile_<date>.md`
+a Markdown report under `docs/plans/archive/csd_5_bundle_profile_<date>.md`
 showing weight by subtree, entity type, and attributed disease, plus
 the largest individual files. Run it whenever you want to size the
 next iteration of the split.
