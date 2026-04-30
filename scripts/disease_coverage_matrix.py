@@ -61,6 +61,63 @@ def _family(disease_id: str) -> str:
     return "Солідні пухлини"
 
 
+# Disease-id ↔ examples/patient_*.json filename-prefix mapping.
+# Each value is a list of stem prefixes (after `examples/patient_`) that
+# attribute a curated chunk case to this disease. Both treatment cases
+# (e.g. `nsclc_alk_1l_*`) and pre-biopsy diagnostic cases
+# (e.g. `diagnostic_lung_mass_*` for NSCLC, `diagnostic_breast_lump_*`
+# for BREAST) count toward the same disease.
+#
+# Only diseases that actually have curated chunk cases (under the
+# 60-file PR #150 set or future curated chunks) need entries — diseases
+# without a key get #Curated = 0.
+_DISEASE_PREFIXES: dict[str, list[str]] = {
+    # Lymphoid heme
+    "DIS-CLL": ["cll_"],
+    "DIS-DLBCL-NOS": ["dlbcl_"],
+    "DIS-MCL": ["mcl_"],
+    # Myeloid heme
+    "DIS-AML": ["aml_"],
+    # Solid tumors
+    "DIS-BREAST": ["breast_", "diagnostic_breast_"],
+    "DIS-CRC": ["crc_"],
+    "DIS-ENDOMETRIAL": ["endometrial_"],
+    "DIS-ESOPHAGEAL": ["esophageal_"],
+    "DIS-GASTRIC": ["gastric_"],
+    "DIS-HCC": ["hcc_"],
+    "DIS-HNSCC": ["hnscc_"],
+    "DIS-MELANOMA": ["melanoma_"],
+    "DIS-NSCLC": ["nsclc_", "diagnostic_lung_"],
+    "DIS-OVARIAN": ["ovarian_"],
+    "DIS-PDAC": ["pdac_"],
+    "DIS-PROSTATE": ["prostate_", "diagnostic_prostate_"],
+    "DIS-RCC": ["rcc_"],
+    "DIS-SCLC": ["sclc_"],
+    "DIS-UROTHELIAL": ["urothelial_"],
+}
+
+
+def _count_curated_cases(examples_root: Path) -> dict[str, int]:
+    """Count `examples/patient_<prefix>*.json` curated chunk cases per
+    disease id. Excludes `auto_*` and `variant_*` (different test
+    contracts) — those don't live under `patient_` anyway, so the glob
+    already excludes them, but we re-state the invariant for safety."""
+    if not examples_root.is_dir():
+        return {}
+    counts: dict[str, int] = defaultdict(int)
+    for f in examples_root.glob("patient_*.json"):
+        # Defensive: skip if somehow auto/variant snuck under patient_
+        name = f.name
+        if "auto_" in name or "variant_" in name:
+            continue
+        stem = name[len("patient_"):-len(".json")]  # drop prefix + ext
+        for did, prefixes in _DISEASE_PREFIXES.items():
+            if any(stem.startswith(p) for p in prefixes):
+                counts[did] += 1
+                break
+    return dict(counts)
+
+
 # ── Walkers ───────────────────────────────────────────────────────────────
 
 
@@ -162,6 +219,7 @@ def _has_entity(entities_by_id: dict, etype: str, predicate) -> bool:
 def per_disease_metrics(load_root: Path) -> list[dict]:
     load = load_content(load_root)
     coll = _collect_biomarkers_and_drugs(load.entities_by_id)
+    curated_counts = _count_curated_cases(REPO_ROOT / "examples")
 
     rows: list[dict] = []
     for eid, info in sorted(load.entities_by_id.items()):
@@ -242,6 +300,7 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
             "has_workup": has_workup,
             "fill_pct": fill_pct,
             "verified_pct": verified_pct,
+            "n_curated": curated_counts.get(eid, 0),
         })
 
     return rows
@@ -269,6 +328,8 @@ def render_markdown_table(rows: list[dict]) -> str:
     n_with_quest_stub = sum(1 for r in rows if r["has_quest"] and r["is_stub_quest"])
     n_with_algo_1l = sum(1 for r in rows if r["algo_1l"])
     n_with_algo_2l = sum(1 for r in rows if r["algo_2l"])
+    total_curated = sum(r["n_curated"] for r in rows)
+    n_with_curated = sum(1 for r in rows if r["n_curated"] > 0)
 
     out.append("## Summary")
     out.append("")
@@ -276,6 +337,7 @@ def render_markdown_table(rows: list[dict]) -> str:
     out.append(f"- Diseases with ≥1 verified indication: **{n_signed_at_least_one}/{len(rows)}**")
     out.append(f"- Hand-authored questionnaires: **{n_with_quest_real}** | STUB questionnaires: **{n_with_quest_stub}**")
     out.append(f"- Has 1L algorithm: **{n_with_algo_1l}/{len(rows)}** | Has 2L+ algorithm: **{n_with_algo_2l}/{len(rows)}**")
+    out.append(f"- Curated chunk cases: **{total_curated}** total across **{n_with_curated}/{len(rows)}** diseases")
     out.append("")
 
     for family in ("Лімфоїдна гематологія", "Мієлоїдна гематологія", "Солідні пухлини"):
@@ -284,8 +346,8 @@ def render_markdown_table(rows: list[dict]) -> str:
             continue
         out.append(f"## {family} ({len(flist)} хвороб)")
         out.append("")
-        out.append("| Disease | ICD-10 | #Bio | #Drug | #Ind | #Reg | #RF | 1L | 2L | Quest | Fill% | Ver% |")
-        out.append("|---------|--------|------|-------|------|------|-----|----|----|-------|-------|------|")
+        out.append("| Disease | ICD-10 | #Bio | #Drug | #Ind | #Reg | #RF | 1L | 2L | Quest | #Curated | Fill% | Ver% |")
+        out.append("|---------|--------|------|-------|------|------|-----|----|----|-------|---------:|-------|------|")
         # Sort by fill desc then name
         for r in sorted(flist, key=lambda x: (-x["fill_pct"], x["name"])):
             algo_1l_mark = "✓" if r["algo_1l"] else "—"
@@ -294,18 +356,22 @@ def render_markdown_table(rows: list[dict]) -> str:
                 quest_mark = "STUB" if r["is_stub_quest"] else "✓"
             else:
                 quest_mark = "—"
+            curated_cell = str(r["n_curated"]) if r["n_curated"] > 0 else "—"
             short_id = r["id"].replace("DIS-", "")
             short_name = r["name"][:36] + ("…" if len(r["name"]) > 36 else "")
             out.append(
                 f"| **{short_id}** {short_name} | {r['icd10']} | "
                 f"{r['n_bios']} | {r['n_drugs']} | {r['n_inds']} | {r['n_regs']} | {r['n_rfs']} | "
-                f"{algo_1l_mark} | {algo_2l_mark} | {quest_mark} | "
+                f"{algo_1l_mark} | {algo_2l_mark} | {quest_mark} | {curated_cell} | "
                 f"**{r['fill_pct']}%** | {r['verified_pct']}% |"
             )
-        # Family avg
+        # Family avg + total curated
         f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
         f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
-        out.append(f"| _Avg_ |  |  |  |  |  |  |  |  |  | _{f_fill}%_ | _{f_ver}%_ |")
+        f_curated = sum(r["n_curated"] for r in flist)
+        out.append(
+            f"| _Avg_ |  |  |  |  |  |  |  |  |  | _{f_curated}_ | _{f_fill}%_ | _{f_ver}%_ |"
+        )
         out.append("")
 
     out.append("## Метрики")
@@ -315,6 +381,7 @@ def render_markdown_table(rows: list[dict]) -> str:
     out.append("- **#Ind / #Reg / #RF** — Indications / Regimens / RedFlags для цієї хвороби")
     out.append("- **1L / 2L** — наявність Algorithm для першої / другої+ лінії")
     out.append("- **Quest** — `✓` hand-authored questionnaire / `STUB` auto-generated / `—` відсутній")
+    out.append("- **#Curated** — кількість curated chunk patient-кейсів `examples/patient_<prefix>_*.json` (включно з pre-biopsy `diagnostic_*` файлами для відповідної хвороби); auto/variant виключені — у них інший test contract")
     out.append("- **Fill%** = composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup")
     out.append("- **Ver%** = % indications цієї хвороби з `reviewer_signoffs ≥ 2` (CHARTER §6.1)")
     out.append("")
