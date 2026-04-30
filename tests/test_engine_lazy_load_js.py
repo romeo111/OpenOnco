@@ -3,8 +3,8 @@
 Asserts that the rendered try.html contains the bundle lazy-load
 infrastructure (helpers + index reference + service-worker register)
 and that the bundle index actually ships an `icd_to_disease_id` map
-the JS can resolve against. Also covers the EN mirror at /en/try.html
-and the standalone `docs/sw.js`.
+the JS can resolve against. Also covers the UA mirror at /ukr/try.html
+(EN-default flip in commit 48eb804e) and the standalone `docs/sw.js`.
 
 These are structural smoke tests — they don't load Pyodide. They guard
 against the regression "someone refactored render_try() and accidentally
@@ -32,7 +32,7 @@ def site_dir(tmp_path_factory) -> Path:
 # ── try.html JS structure ─────────────────────────────────────────────────
 
 
-@pytest.mark.parametrize("page", ["try.html", "en/try.html"])
+@pytest.mark.parametrize("page", ["try.html", "ukr/try.html"])
 def test_try_html_contains_lazy_load_helpers(site_dir: Path, page: str):
     html = (site_dir / page).read_text(encoding="utf-8")
     # Every helper added in CSD-6E must be present so the on-load path
@@ -51,7 +51,7 @@ def test_try_html_contains_lazy_load_helpers(site_dir: Path, page: str):
         assert needle in html, f"{page} missing lazy-load token: {needle}"
 
 
-@pytest.mark.parametrize("page", ["try.html", "en/try.html"])
+@pytest.mark.parametrize("page", ["try.html", "ukr/try.html"])
 def test_try_html_drops_monolithic_fallback(site_dir: Path, page: str):
     """CSD-9C dropped monolithic. render_try() must NOT reference the old
     openonco-engine.zip path or FALLBACK_MONOLITHIC_URL — index path is canonical."""
@@ -65,14 +65,14 @@ def test_try_html_drops_monolithic_fallback(site_dir: Path, page: str):
     assert "FALLBACK_MONOLITHIC_URL" not in html
 
 
-@pytest.mark.parametrize("page", ["try.html", "en/try.html"])
+@pytest.mark.parametrize("page", ["try.html", "ukr/try.html"])
 def test_try_html_registers_service_worker(site_dir: Path, page: str):
     html = (site_dir / page).read_text(encoding="utf-8")
     assert "serviceWorker" in html and "navigator.serviceWorker.register" in html
     assert "/sw.js" in html
 
 
-@pytest.mark.parametrize("page", ["try.html", "en/try.html"])
+@pytest.mark.parametrize("page", ["try.html", "ukr/try.html"])
 def test_try_html_calls_disease_module_in_run_engine(site_dir: Path, page: str):
     """The Generate path must call loadDiseaseModule() with the resolved
     disease_id — otherwise the per-disease zips ship to the browser but
