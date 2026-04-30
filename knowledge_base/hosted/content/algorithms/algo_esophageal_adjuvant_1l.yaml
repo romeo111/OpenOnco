@@ -1,0 +1,46 @@
+id: ALGO-ESOPHAGEAL-ADJUVANT-1L
+applicable_to_disease: DIS-ESOPHAGEAL
+applicable_to_line_of_therapy: 1
+applicable_to_disease_state: adjuvant
+purpose: >
+  Adjuvant 1L esophageal carcinoma post-CROSS-then-resection with
+  residual disease (ypT+ and/or ypN+; no pCR) per CheckMate-577 —
+  adjuvant nivolumab × 1 year doubled DFS (22 vs 11 mo placebo, HR
+  0.69). Both adenocarcinoma and squamous-cell histology benefit;
+  histology-agnostic in this scaffold. pCR patients are excluded from
+  CheckMate-577 and from this algorithm.
+
+output_indications:
+  - IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
+default_indication: IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-ESOPHAGEAL-POST-CROSS-NON-PCR
+    if_true:
+      result: IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
+    if_false:
+      result: IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
+    notes: >
+      Single-branch scaffold — current curated patient profiles do not
+      carry `disease_state: "adjuvant"`, so this algorithm is reached
+      only when the orchestrator explicitly sets it. The resectable-1L
+      algorithm carries an additive step 0
+      (RF-ESOPHAGEAL-POST-CROSS-NON-PCR) that re-routes post-CROSS
+      non-pCR biology to this Indication without requiring the patient
+      JSON migration.
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+  - SRC-ESMO-ESOPHAGEAL-2024
+
+last_reviewed: "2026-04-30"
+notes: >
+  Future scaffolding. Engine wiring for the existing curated case
+  patient_esophageal_adeno_neoadj_cross_then_nivo.json comes via an
+  additive step 0 in ALGO-ESOPH-RESECTABLE-1L (load-order fallback),
+  not via this state-tagged algorithm. Once the curated JSON migrates
+  to set `disease_state: "adjuvant"`, traffic shifts here directly.

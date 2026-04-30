@@ -7,12 +7,14 @@ trigger:
   any_of:
     - finding: "del_5q_isolated"
       value: true
+    - finding: "isolated_del_5q"
+      value: true
+    - finding: "mds_del_5q"
+      value: "positive"
     - all_of:
         - finding: "del_5q"
           value: true
         - finding: "monosomy_7"
-          value: false
-        - finding: "del_7q"
           value: false
         - finding: "complex_karyotype"
           value: false
@@ -23,13 +25,13 @@ severity: major
 category: high-risk-biology
 relevant_diseases:
   - DIS-MDS-LR
-shifts_algorithm: []
+shifts_algorithm: []  # clinical_direction=investigate per REDFLAG_AUTHORING_GUIDE §4 rule 2 — must remain empty even when algorithm step references this RF; fixture-test gates this invariant.
 
 sources:
   - SRC-NCCN-AML-2025
   - SRC-ESMO-MDS-2021
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-30"
 notes: >
   Direction "investigate" — surfaces a treatment-option annotation
   (lenalidomide track) rather than a binary indication switch.

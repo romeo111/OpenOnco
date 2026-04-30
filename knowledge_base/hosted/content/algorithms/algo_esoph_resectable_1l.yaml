@@ -1,14 +1,24 @@
 id: ALGO-ESOPH-RESECTABLE-1L
 applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 1
-purpose: 'Scaffold algorithm for esophageal carcinoma resectable 1L. Currently models ONE pathway (CROSS chemo backbone for both histologies). Full histology stratification (FLOT preferred for adeno per FLOT4-extension data, definitive CRT for squamous unresectable, adjuvant nivolumab CheckMate-577) awaits PROPOSAL §17 ratification + clinical authoring.
+purpose: 'Scaffold algorithm for esophageal carcinoma resectable 1L. Currently models two pathways — neoadjuvant CROSS (default for resectable presentation) and adjuvant nivolumab post-CROSS-non-pCR (CheckMate-577 redirect via step 0). Full histology stratification (FLOT preferred for adeno per FLOT4-extension data, definitive CRT for squamous unresectable) awaits PROPOSAL §17 ratification + clinical authoring.
 
   '
 output_indications:
 - IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
+- IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
 default_indication: IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT
 alternative_indication: null
 decision_tree:
+- step: 0
+  evaluate:
+    any_of:
+    - red_flag: RF-ESOPHAGEAL-POST-CROSS-NON-PCR
+  if_true:
+    result: IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS
+  if_false:
+    next_step: 1
+  notes: 'W5b drift fix (2026-04-30) — adjuvant-redirect step. Patients who completed CROSS neoadjuvant + esophagectomy and have residual ypT+/ypN+ disease (no pCR) bypass the neoadjuvant default and route to adjuvant nivolumab × 1 year per CheckMate-577. Until curated patient JSONs migrate to `disease_state: "adjuvant"` so ALGO-ESOPHAGEAL-ADJUVANT-1L picks them up directly, this load-order fallback step is the engine wiring for the existing curated case.'
 - step: 1
   evaluate:
     all_of:
@@ -23,7 +33,7 @@ decision_tree:
   notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
 sources:
 - SRC-NCCN-ESOPHAGEAL-2025
-last_reviewed: '2026-04-26'
-notes: 'Single-indication scaffold; histology branching + adjuvant nivolumab + FLOT for adeno + definitive CRT alternative await full authoring.
+last_reviewed: '2026-04-30'
+notes: 'Two-indication scaffold post-W5b — neoadjuvant CROSS default + adjuvant nivolumab post-CROSS-non-pCR redirect (step 0). Histology branching + FLOT for adeno + definitive CRT alternative await full authoring.
 
   '

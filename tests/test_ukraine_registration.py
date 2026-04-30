@@ -33,6 +33,17 @@ DRUGS_DIR = KB_ROOT / "drugs"
 # string in its `last_verified` field.
 EXPECTED_LAST_VERIFIED = "2026-04-27"
 
+# Drugs added after CSD-2 carry their own verification date and are
+# exempt from the point-in-time CSD-2 stamp check. Add a drug ID here
+# when it lands in master with a `last_verified` newer than 2026-04-27.
+_POST_CSD2_DRUGS: frozenset[str] = frozenset({
+    # Tier-1 biomarker expansion (PR #166, last_verified=2026-04-30)
+    "DRUG-ENASIDENIB",
+    "DRUG-PEMIGATINIB",
+    "DRUG-REVUMENIB",
+    "DRUG-ZOLBETUXIMAB",
+})
+
 # Pathway keywords that satisfy the "unregistered drug must mention an
 # access route" rule. Mix of EN + UA — clinicians authored notes in
 # both. Lower-case substring match (see _has_pathway_keyword).
@@ -143,9 +154,12 @@ def test_all_drugs_have_reimbursed_nszu_set(drug_yamls):
 def test_all_drugs_have_last_verified_2026_04_27(drug_yamls):
     """Every drug touched by CSD-2 must carry the stamp date verbatim.
     A different date (incl. an earlier 2026-04-25/26 from pre-CSD-2)
-    fails — the verification batch was point-in-time."""
+    fails — the verification batch was point-in-time. Drugs added after
+    CSD-2 are exempt via _POST_CSD2_DRUGS."""
     failures: list[str] = []
     for path, drug, _raw in drug_yamls:
+        if drug.get("id") in _POST_CSD2_DRUGS:
+            continue
         ua = _ua_block(drug)
         lv = ua.get("last_verified")
         if lv != EXPECTED_LAST_VERIFIED:
