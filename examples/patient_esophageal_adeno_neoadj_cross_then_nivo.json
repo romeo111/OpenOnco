@@ -1,0 +1,41 @@
+{
+  "patient_id": "ESOPH-CROSS-CM577-001",
+  "comment": "Synthetic resectable distal esophageal adenocarcinoma, cT3N1M0, Barrett-driven, ECOG 1, no severe dysphagia. Engine routes ALGO-ESOPH-RESECTABLE-1L step 1 (resectable + ECOG-fit) → IND-ESOPH-RESECTABLE-CROSS-NEOADJUVANT (carboplatin+paclitaxel weekly + RT 41.4 Gy, 5-yr OS ~47%, NCCN cat 1). KB drift: ALGO-ESOPH-RESECTABLE-1L only emits CROSS-NEOADJUVANT; IND-ESOPH-ADJUVANT-NIVOLUMAB-POST-CROSS (CheckMate-577 adjuvant nivolumab × 1y for ypT+/ypN+ residual, DFS 22 vs 11 mo) is not wired into algorithm output_indications, so engine surfaces only the neoadjuvant phase. Findings include not_pcr / residual disease flags so a future revise-step (line 2) could reach the adjuvant IND once ALGO is extended (PROPOSAL §17 phasing).",
+  "disease": {"id": "DIS-ESOPHAGEAL"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-HER2-SOLID": "negative",
+    "BIO-PDL1-CPS": 4,
+    "BIO-MSI-STATUS": "MSS"
+  },
+  "demographics": {
+    "age": 60,
+    "sex": "male",
+    "ecog": 1
+  },
+  "findings": {
+    "histology": "adenocarcinoma",
+    "primary_site": "distal_esophagus",
+    "barrett_esophagus_history": true,
+    "stage": "cT3N1M0",
+    "resectability": "resectable",
+    "her2_status": "negative",
+    "pdl1_cps": 4,
+    "pdl1_cps_22c3": 4,
+    "msi_status": "MSS",
+    "severe_dysphagia": false,
+    "aspiration_risk_active": false,
+    "post_cross_residual_disease_ypT_or_ypN_positive": true,
+    "post_cross_pCR": false,
+    "weeks_post_surgery": 8,
+    "creatinine_clearance_ml_min": 88,
+    "bilirubin_uln_x": 0.8,
+    "absolute_neutrophil_count_k_ul": 3.6,
+    "platelets_k_ul": 250,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "autoimmune_disease_active": false
+  }
+}

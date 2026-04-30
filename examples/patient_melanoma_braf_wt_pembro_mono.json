@@ -1,0 +1,48 @@
+{
+  "patient_id": "MELANOMA-BRAFWT-PEMBROMONO-001",
+  "comment": "Synthetic Stage IV cutaneous melanoma, 72F, ECOG 1, BRAF/NRAS/KIT wild-type by NGS. Patient has well-controlled autoimmune Hashimoto thyroiditis on stable levothyroxine + age 72 — relative contraindication to ipi+nivo Grade 3-4 irAE risk (~50%). Anchor target: KEYNOTE-006 pembrolizumab monotherapy. KB DRIFT NOTE: ALGO-MELANOMA-METASTATIC-1L has only two output indications (IND-MELANOMA-METASTATIC-1L-NIVO-IPI default + IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME aggressive). There is NO 1L pembrolizumab-monotherapy indication in the metastatic-1L algorithm at this baseline (gap explicitly listed in algo_melanoma_metastatic_2l notes wiring-gap #2). Engine routes ALGO-MELANOMA-METASTATIC-1L step 0 (KIT absent) → step 1 (BRAF-V600-ACTIONABLE absent — branch result IND-MELANOMA-METASTATIC-1L-NIVO-IPI). Per intent the case still surfaces nivo+ipi as the standard-track default; an MDT note is appropriate to flag pembro-mono as an off-algorithm de-escalation for the irAE-frail subset (NCCN cat 1 KEYNOTE-006). Aggressive-track BRAFi+MEKi correctly suppressed since BRAF-WT.",
+  "disease": {"id": "DIS-MELANOMA"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-BRAF-V600E": "negative",
+    "BIO-BRAF-V600K": "negative",
+    "BIO-NRAS": "wild_type",
+    "BIO-KIT": "wild_type"
+  },
+  "demographics": {
+    "age": 72,
+    "sex": "female",
+    "ecog": 1
+  },
+  "findings": {
+    "histology": "cutaneous_melanoma",
+    "stage": "IV",
+    "stage_iv": true,
+    "metastatic_sites": ["lung", "subcutaneous"],
+    "brain_mets": false,
+    "symptomatic_cns_metastases": false,
+    "ldh_uln_x": 1.1,
+    "ldh_elevated": false,
+    "braf_v600e_mutation": false,
+    "braf_v600k_mutation": false,
+    "braf_v600": "negative",
+    "nras_mutation": false,
+    "kit_mutation": false,
+    "prior_io_received": false,
+    "autoimmune_history": true,
+    "autoimmune_diagnosis": "hashimoto_thyroiditis_controlled",
+    "thyroid_replacement_stable": true,
+    "frailty_score": "moderate",
+    "creatinine_clearance_ml_min": 78,
+    "bilirubin_uln_x": 0.8,
+    "absolute_neutrophil_count_k_ul": 3.0,
+    "platelets_k_ul": 220,
+    "alt_uln_x": 1.0,
+    "ast_uln_x": 1.0,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "pregnancy_status": "not_applicable"
+  }
+}

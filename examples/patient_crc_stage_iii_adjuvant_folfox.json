@@ -1,0 +1,43 @@
+{
+  "patient_id": "CRC-STAGE3-ADJ-001",
+  "comment": "Synthetic stage III colon adenocarcinoma, post-curative resection (R0), 62F, ECOG 0, intended adjuvant FOLFOX 6 mo (MOSAIC). KB DRIFT: there is currently NO adjuvant CRC algorithm in knowledge_base/hosted/content/algorithms/ — only ALGO-CRC-METASTATIC-1L and ALGO-CRC-METASTATIC-2L exist. The engine matches algorithms strictly by (disease_id, line_of_therapy), so a CRC line=1 patient — adjuvant or metastatic — routes through ALGO-CRC-METASTATIC-1L and surfaces metastatic 1L tracks. The intended IND-CRC-ADJUVANT-STAGE3-FOLFOX never appears (it is in NO algorithm's output_indications). Engine actually routes step 4 default → IND-CRC-METASTATIC-1L-FOLFOX-BEV (clinically wrong for adjuvant; bevacizumab is not standard adjuvant per NSABP-C-08). This case is preserved as an audit artifact demonstrating the wired-vs-intended gap; the comment is the load-bearing piece, not the rendered plan. Fix requires authoring algo_crc_adjuvant.yaml referencing IND-CRC-ADJUVANT-STAGE3-FOLFOX (Phase-2 KB work, out of scope here).",
+  "disease": {"id": "DIS-CRC"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-MSI-STATUS": "stable",
+    "BIO-BRAF-V600E": "negative"
+  },
+  "demographics": {
+    "age": 62,
+    "sex": "female",
+    "ecog": 0
+  },
+  "findings": {
+    "primary_site": "sigmoid_colon",
+    "histology": "adenocarcinoma",
+    "stage": "III",
+    "stage_iii": true,
+    "tnm_t": "T3",
+    "tnm_n": "N1b",
+    "tnm_m": "M0",
+    "post_resection_r0": true,
+    "post_curative_resection": true,
+    "weeks_since_surgery": 4,
+    "msi_status": "stable",
+    "dmmr_status": "proficient",
+    "kras_status": "wild_type",
+    "nras_status": "wild_type",
+    "ras_status": "wild_type",
+    "extended_ras_status": "wild_type",
+    "braf_v600e_mutation": false,
+    "cea_ng_ml": 3.2,
+    "creatinine_clearance_ml_min": 92,
+    "bilirubin_uln_x": 0.8,
+    "absolute_neutrophil_count_k_ul": 4.1,
+    "platelets_k_ul": 280,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  }
+}

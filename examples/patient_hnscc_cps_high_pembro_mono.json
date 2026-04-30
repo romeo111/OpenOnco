@@ -1,0 +1,51 @@
+{
+  "patient_id": "HNSCC-CPS-HIGH-001",
+  "comment": "Synthetic recurrent / metastatic HNSCC, male 64, oropharyngeal SCC, HPV-negative (p16 IHC negative), heavy ex-smoker + alcohol, ECOG 1, recurrence at 14 months post-definitive cisplatin-RT, now with new lung metastases. PD-L1 CPS 35 by 22C3 IHC, no rapid progression / visceral crisis. CLINICAL TARGET: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH (KEYNOTE-048 Burtness Lancet 2019, mOS 14.9 mo, ~35% 24-mo OS, mDOR ~22 mo). ENGINE ROUTING: ALGO-HNSCC-RM-1L step 1 fires RF-HNSCC-TRANSFORMATION-PROGRESSION because the new_distant_metastasis trigger is satisfied (any_of clause does not require concurrent locoregional recurrence). Engine therefore selects IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH as default (matching clinical target by route, even though the upstream trigger semantic is broader than the algorithm's free-text 'CPS ≥20' description suggests). KB-DRIFT NOTE: the algorithm's step-1 condition ('PD-L1 CPS ≥20 AND no rapid progression AND ECOG 0-2') is free-text and cannot be evaluated — the structured RF that drives the branch is RF-HNSCC-TRANSFORMATION-PROGRESSION, which fires on ANY new distant metastasis regardless of CPS. A patient with CPS 0 + new mets would also be routed to pembro-mono today; that is incorrect clinically. RF authoring gap flagged: a CPS-stratifying RedFlag is needed for HNSCC R/M 1L, and the transformation-progression RF should be tightened (require co-occurring locoregional / airway / carotid signal, not standalone new-mets).",
+  "disease": {"id": "DIS-HNSCC"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-PDL1-CPS": 35,
+    "BIO-HPV-STATUS": "negative"
+  },
+  "demographics": {
+    "age": 64,
+    "sex": "male",
+    "ecog": 1,
+    "smoking_status": "former_heavy_smoker",
+    "pack_years": 42
+  },
+  "findings": {
+    "histology": "squamous_cell_carcinoma",
+    "primary_site": "oropharynx",
+    "tumor_subsite": "base_of_tongue",
+    "p16_ihc": "negative",
+    "hpv_status": "negative",
+    "pdl1_cps": 35,
+    "pdl1_cps_22c3": 35,
+    "pdl1_cps_high": true,
+    "stage": "IVc",
+    "stage_iv": true,
+    "recurrent_disease": true,
+    "metastatic_disease": true,
+    "metastatic_sites": ["lung"],
+    "locoregional_recurrence": false,
+    "months_since_definitive_therapy": 14,
+    "new_distant_metastasis": true,
+    "carotid_encasement_imaging": false,
+    "airway_compromise": false,
+    "rapid_progression": false,
+    "visceral_crisis": false,
+    "amenable_to_curative_local_therapy": false,
+    "alcohol_use_heavy": true,
+    "creatinine_clearance_ml_min": 70,
+    "bilirubin_uln_x": 0.9,
+    "absolute_neutrophil_count_k_ul": 4.2,
+    "platelets_k_ul": 215,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "autoimmune_disease_active": false,
+    "interstitial_lung_disease": false
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "patient_id": "DLBCL-3L-AXICEL-002",
+  "comment": "Synthetic 3L axi-cel candidate. Distinct from existing patient_dlbcl_chemorefractory_for_cart.json (which is pre-decision CAR-T candidate from 1L R-CHOP → 2L R-ICE / chemorefractory archetype). This case is the post-decision continuation of the H2 line-of-therapy chain: 1L R-CHOP CR → late relapse → 2L Pola-BR → progression at 7 mo → 3L axi-cel administration plan. Age 56 fit ECOG 1, CD19+ confirmed, no CNS disease. Engine routes ALGO-DLBCL-2L: standard-track DEFAULT = IND-DLBCL-2L-POLA-R-BENDAMUSTINE (step 3 false branch fallback), aggressive-track ALTERNATIVE = IND-DLBCL-3L-AXICEL-CART (ZUMA-1; ORR ~83%, CR ~58%, 5y OS ~43%). The 3L axi-cel intent surfaces correctly as the aggressive-track curative-intent option presented to the MDT. KB-DRIFT NOTE: this case sets line_of_therapy=2 because ALGO-DLBCL-2L applicable_to_line_of_therapy=2, even though clinically this is 3L (post 2 prior lines); existing chemorefractory_for_cart.json sets line_of_therapy=3 and consequently fails algorithm match at baseline (exit=1, Algorithm: None) — there is no ALGO-DLBCL-3L in KB. Surfacing this drift: KB should add ALGO-DLBCL-3L or generalize line_of_therapy matching to ≥. Secondary drift: ALGO-DLBCL-2L step 1 references RF-ASCT-ELIGIBLE-COMPOSITE which doesn't fully model post-decline state, so step 2 axi-cel branch never fires deterministically as default (gated on multiple findings + RF wiring gaps noted in algo notes).",
+  "disease": {
+    "id": "DIS-DLBCL-NOS",
+    "icd_o_3_morphology": "9680/3"
+  },
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-CD20-IHC": "positive"
+  },
+  "demographics": {
+    "age": 56,
+    "sex": "female",
+    "ecog": 1,
+    "fit_for_transplant": true
+  },
+  "findings": {
+    "prior_lines_count": 2,
+    "prior_regimens": ["R-CHOP x 6", "Pola-BR x 6"],
+    "primary_refractory_or_early_relapse": false,
+    "cd19_positive": true,
+    "cd20_positive": true,
+    "cns_disease_present": false,
+    "cns_status": "CNS-1",
+    "active_uncontrolled_infection": false,
+    "ldh_ratio_to_uln": 1.6,
+    "ipi_score": 2,
+    "high_ipi": false,
+    "lvef_percent": 58,
+    "creatinine_clearance_ml_min": 92,
+    "bilirubin_uln_x": 0.8,
+    "absolute_neutrophil_count_k_ul": 2.4,
+    "platelets_k_ul": 142,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "biopsy_shows_dlbcl": true,
+    "double_expressor_status": false,
+    "bridging_chemo_planned": true,
+    "comorbidity_grade2_count": 0
+  },
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Diffuse Large B-Cell Lymphoma, NOS — relapsed/refractory after 2 prior lines",
+        "icd_o_3": "9680/3",
+        "icd_10": "C83.3"
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "R-CHOP x 6",
+          "best_response": "CR",
+          "progression_at_months": 14
+        },
+        "second_line": {
+          "regimen": "Pola-BR x 6",
+          "best_response": "PR",
+          "progression_at_months": 7
+        }
+      },
+      "transplant_assessment": {
+        "eligible_for_autoSCT": false,
+        "rationale": "Already declined autoSCT pathway at 2L (Pola-BR chosen instead); current relapse is post-2 lines → CAR-T pathway"
+      }
+    },
+    "cd19_status": {"method": "flow_cytometry", "result": "positive"},
+    "infectious_status": {
+      "HBV": {"HBsAg": "negative", "anti_HBc": "negative"},
+      "HCV": "negative",
+      "HIV": "negative"
+    },
+    "cart_eligibility": {
+      "cart_center_referral": "international (Germany / Poland / Israel; UA referral pathway)",
+      "manufacturing_window_estimate_weeks": 4,
+      "bridging_plan": "rituximab + low-dose corticosteroid only (avoid lymphodepletion until LD chemo)"
+    }
+  }
+}

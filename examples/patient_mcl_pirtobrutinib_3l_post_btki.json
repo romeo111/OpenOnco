@@ -1,0 +1,64 @@
+{
+  "patient_id": "MCL-3L-PIRTO-001",
+  "comment": "Synthetic r/r MCL post-cBTKi: 1L R-bendamustine + acalabrutinib (NCCN unfit-track), progression at 14 mo with BTK-C481S mutation documented on repeat NGS. Age 74, ECOG 2, LVEF 38% → fails RF-CAR-T-ELIGIBLE composite (LVEF<40 fails). Engine routes via ALGO-MCL-2L (line_of_therapy=2 wires the algo): step 1 false (RF-PRIOR-BTKI-PROGRESSION fires, none_of fails) → step 2 true (RF-PRIOR-BTKI-PROGRESSION matches) → step 21 false (CAR-T-ineligible) → step 3 free-text conditions (post-cBTKi failure + C481-mut). KNOWN DRIFT: ALGO-MCL-2L step 3 conditions are not yet RF-wired (algo notes 'Free-text condition without matching disease-scoped RF; engine routes to default'), so default lands on IND-MCL-2L-ACALABRUTINIB despite the patient already having failed acalabrutinib clinically. IND-MCL-3L-PIRTOBRUTINIB IS surfaced as a standard alternative track (BRUIN MCL-321, ORR 50% post-cBTKi). Tumor-board reviewer should pick the alternative pirtobrutinib track, not the engine default; this case primarily illustrates the post-cBTKi alternative-track presentation. Distinct from existing MCL fit-younger / unfit-or-tp53 cases (those are 1L).",
+  "disease": {
+    "id": "DIS-MCL",
+    "icd_o_3_morphology": "9673/3"
+  },
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-CD20-IHC": "positive",
+    "BIO-CYCLIN-D1-IHC": "positive"
+  },
+  "demographics": {
+    "age": 74,
+    "sex": "male",
+    "ecog": 2,
+    "fit_for_transplant": false
+  },
+  "findings": {
+    "blastoid_morphology": false,
+    "pleomorphic_morphology": false,
+    "ki67_above_30_percent": true,
+    "tp53_mutation": false,
+    "del_17p": false,
+    "prior_lines_count": 1,
+    "prior_regimens": ["Bendamustine + rituximab + acalabrutinib (1L, 14 mo, PD)"],
+    "prior_btki_received": true,
+    "prior_btki_progression": true,
+    "best_response_to_btki": "PD",
+    "btk_c481_mutation": true,
+    "lvef_percent": 38,
+    "creatinine_clearance_ml_min": 52,
+    "bilirubin_ratio_to_uln": 1.0,
+    "active_cns_disease": false,
+    "active_uncontrolled_infection": false,
+    "absolute_lymphocyte_count_k_ul": 14,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  },
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Mantle Cell Lymphoma — relapsed post-cBTKi, BTK-C481S+",
+        "icd_o_3": "9673/3"
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "Bendamustine + rituximab + acalabrutinib (R-BAC-style unfit track)",
+          "best_response": "PR",
+          "duration_months": 14,
+          "progression": true
+        }
+      },
+      "molecular": {
+        "btk_c481_status": "mutated_S",
+        "tp53_status": "wild_type",
+        "ki67_percent": 45,
+        "cyclin_d1_status": "positive"
+      }
+    }
+  }
+}

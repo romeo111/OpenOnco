@@ -1,0 +1,79 @@
+{
+  "patient_id": "AML-SECONDARY-CPX351-1L-001",
+  "comment": "Synthetic fit-older AML 1L patient, age 67, therapy-related AML (t-AML) post breast-cancer adjuvant epirubicin/cyclophosphamide 4 yrs prior, with antecedent low-grade MDS and AML-MRC features (multilineage dysplasia + del(5q) + monosomy 7 → ELN-adverse). KNOWN ENGINE DRIFT vs clinical anchor: ALGO-AML-1L has no dedicated branch to IND-AML-1L-CPX351-SECONDARY; engine routes step 1 (no emergency) → step 2 (no frailty — patient is fit) → step 3 (no CBF) → step 5 (RF-AML-HIGH-RISK-BIOLOGY fires via therapy_related_aml=true + complex_karyotype + monosomy_7 + del_5q) → IND-AML-1L-7-3. CPX-351 (Vyxeos) substitution is regimen-layer / MDT-level per IND-AML-1L-CPX351-SECONDARY criteria (age 60-75 + fit + tAML/AML-MRC; phase-3 Lancet 2018 mOS 9.56 vs 5.95 mo, HR 0.69, 5-y OS 18% vs 8%). Honest routing acknowledged — no KB edit attempted.",
+
+  "disease": {
+    "id": "DIS-AML",
+    "icd_o_3_morphology": "9920/3"
+  },
+  "line_of_therapy": 1,
+
+  "biomarkers": {},
+
+  "demographics": {
+    "age": 67,
+    "sex": "female",
+    "ecog": 1,
+    "fit_for_intensive_chemo": true,
+    "fit_for_transplant": true
+  },
+
+  "findings": {
+    "wbc_k_ul": 8,
+    "blast_percent_pb": 18,
+    "blast_percent_bm": 32,
+    "antecedent_mds": true,
+    "therapy_related_aml": true,
+    "aml_with_myelodysplasia_related_changes": true,
+    "multilineage_dysplasia": true,
+    "prior_cytotoxic_exposure": "epirubicin + cyclophosphamide (TC×4 adjuvant for HER2-negative breast cancer, 2022)",
+    "prior_radiation": false,
+    "npm1": "negative",
+    "flt3_itd": false,
+    "flt3_tkd": false,
+    "tp53_mutation": false,
+    "complex_karyotype": true,
+    "monosomal_karyotype": true,
+    "monosomy_7": true,
+    "del_5q": true,
+    "aml_eln_risk": "adverse",
+    "core_binding_factor": "negative",
+    "active_uncontrolled_infection": false,
+    "hct_ci_score": 2,
+    "lvef_percent": 58,
+    "creatinine_mg_dl": 0.9,
+    "creatinine_clearance_ml_min": 68,
+    "bilirubin_mg_dl": 0.8,
+    "total_bilirubin_ulnratio": 0.7,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_ab": "negative",
+    "hiv_ag_ab": "negative",
+    "pregnancy": "not_applicable"
+  },
+
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Therapy-related Acute Myeloid Leukemia (t-AML) with myelodysplasia-related changes (AML-MRC) post adjuvant breast-cancer chemotherapy; ELN 2022 adverse-risk (complex karyotype, monosomal karyotype, monosomy 7, del(5q))",
+        "icd_o_3": "9920/3",
+        "icd_10": "C92.0",
+        "who_classification_5th_ed": "AML, myelodysplasia-related (AML-MR), therapy-related (t-AML)"
+      },
+      "eln_2022_risk": "adverse",
+      "fitness_assessment": {
+        "hct_ci": 2,
+        "ecog": 1,
+        "fit_for_intensive_chemo": true,
+        "rationale": "Age 67, HCT-CI 2, ECOG 1, LVEF 58%, CrCl 68 mL/min → fit for intensive induction; meets IND-AML-1L-CPX351-SECONDARY age 60-75 + fit + secondary-AML criteria"
+      },
+      "prior_oncologic_history": {
+        "primary": "Stage IIA HER2-negative ER+ breast cancer (2022)",
+        "adjuvant_systemic": "TC×4 (docetaxel + cyclophosphamide) + endocrine therapy (anastrozole, ongoing)",
+        "anthracycline_exposure": "epirubicin cumulative ~360 mg/m² (note: in actual practice TC is non-anthracycline; recorded here for synthetic illustration of cytotoxic exposure)",
+        "latency_to_aml_months": 48
+      }
+    },
+    "planned_regimen_notes": "Engine output IND-AML-1L-7-3 — MDT to substitute CPX-351 (Vyxeos) liposomal cytarabine 100 units/m² + daunorubicin 5 units/m² d1, d3, d5 per Lancet 2018 (FDA-approved for tAML / AML-MRC age 60-75 fit). CRITICAL dosing note: units/m² NOT mg/m² — fatal errors documented when liposomal product confused with free drug. Pre-cycle ECHO + cumulative anthracycline tracking; alloHCT bridge in CR1 (adverse-risk + tAML); G-CSF + transfusion support for prolonged cytopenia (often >day 35). Ukraine: not registered, international referral / compassionate-use only."
+  }
+}

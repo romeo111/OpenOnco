@@ -1,0 +1,69 @@
+{
+  "patient_id": "CLL-2L-VENR-MURANO-001",
+  "comment": "Synthetic CLL 2L post-1L acalabrutinib progression at 28 mo, BCL2-naive, no BTK-C481 mutation detected. Engine routes via ALGO-CLL-2L: step 1 false (no RF-CLL-POST-BTKI-C481-ACTIONABLE since C481-WT, no transformation) → step 2 true (RF-PRIOR-BTKI-PROGRESSION fires, no RF-CLL-VEN-RESISTANT-ACTIONABLE) → IND-CLL-2L-VENR-MURANO (Venetoclax + Rituximab fixed-duration 24-mo schedule, MURANO trial; 4-yr PFS 57%). Distinct from existing CLL cases: low_risk = 1L BTKi (acalabrutinib), high_risk = 1L VenO, post_btki_progression = 3L pirtobrutinib post-acal+post-FCR with C481-mut. This case = 2L VenR class-switch from BTKi without C481 resistance. Note brief calls for 'post-1L FCR or BR'; modern 2026 practice uses 1L BTKi → 2L VenR class-switch (mechanism-of-action), which is also MURANO-supported and yields cleaner step-2 engine routing.",
+  "disease": {
+    "id": "DIS-CLL",
+    "icd_o_3_morphology": "9823/3"
+  },
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-CLL-HIGH-RISK-GENETICS": "standard_risk",
+    "BIO-CD20-IHC": "positive"
+  },
+  "demographics": {
+    "age": 67,
+    "sex": "male",
+    "ecog": 1,
+    "fit_for_chemoimmunotherapy": false
+  },
+  "findings": {
+    "iwcll_indication_present": true,
+    "tp53_mutation": false,
+    "del_17p": false,
+    "ighv_unmutated": false,
+    "complex_karyotype": false,
+    "afib_history": false,
+    "bleeding_risk_high": false,
+    "absolute_lymphocyte_count_k_ul": 38,
+    "bulky_lymph_nodes_5cm": false,
+    "prior_lines_count": 1,
+    "prior_regimens": ["Acalabrutinib monotherapy x 28 mo, PD"],
+    "prior_btki_received": true,
+    "prior_btki_progression": true,
+    "best_response_to_btki": "PD",
+    "btk_c481_mutation": false,
+    "prior_venetoclax_received": false,
+    "venetoclax_resistance": false,
+    "creatinine_clearance_ml_min": 78,
+    "bilirubin_ratio_to_uln": 0.9,
+    "absolute_neutrophil_count_k_ul": 2.4,
+    "platelets_k_ul": 165,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "uric_acid_mg_dl": 6.2
+  },
+  "clinical_record": {
+    "diagnosis": {
+      "primary_diagnosis": {
+        "disease_entity": "Chronic Lymphocytic Leukemia — 2L post-acalabrutinib progression, BCL2-naive",
+        "icd_o_3": "9823/3"
+      },
+      "treatment_history": {
+        "first_line": {
+          "regimen": "Acalabrutinib monotherapy",
+          "best_response": "PR",
+          "duration_months": 28,
+          "progression": true
+        }
+      },
+      "molecular": {
+        "btk_c481_status": "wild_type",
+        "tp53_status": "wild_type",
+        "ighv_status": "mutated",
+        "bcl2_g101v_status": "not_detected"
+      }
+    }
+  }
+}

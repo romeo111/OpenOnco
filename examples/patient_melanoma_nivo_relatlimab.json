@@ -1,0 +1,53 @@
+{
+  "patient_id": "MELANOMA-NIVO-RELATLIMAB-001",
+  "comment": "Synthetic Stage IV cutaneous melanoma, 82F, ECOG 2, BRAF V600E confirmed by NGS. 1L received dabrafenib+trametinib (visceral-crisis biology) with progression at 11 mo — IO-naive at 2L. Age 82 + ECOG 2 + baseline limited-cutaneous psoriasis make ipi+nivo Grade 3-4 irAE risk (~50%) prohibitive. KB DRIFT NOTE: plan anchor was '1L nivolumab+relatlimab fixed-dose (RELATIVITY-047)' but at this KB baseline the only nivo+rela indication is IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB scoped to line_of_therapy=2 IO-naive post-BRAFi (RELATIVITY-047 was 1L per FDA; KB positions it as 2L IO-alternative for ipi-frail patients, off-label per indication notes). Case modeled at 2L accordingly. Engine routes ALGO-MELANOMA-METASTATIC-2L step 1 (KIT absent) → step 2 (RF-MELANOMA-IO-RESISTANT absent — IO-naive) → step 4 (RF-MELANOMA-BRAF-V600-ACTIONABLE fires) → step 41 (free-text ipi+nivo unfit — falls through) → step 5 (RF-MELANOMA-FRAILTY-AGE fires age≥80 + ECOG≥2) → IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB. UA access caveat: relatlimab unregistered — named-patient import pathway required.",
+  "disease": {"id": "DIS-MELANOMA"},
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-BRAF-V600E": "positive",
+    "BIO-NRAS": "wild_type",
+    "BIO-KIT": "wild_type"
+  },
+  "demographics": {
+    "age": 82,
+    "sex": "female",
+    "ecog": 2
+  },
+  "findings": {
+    "histology": "cutaneous_melanoma",
+    "stage": "IV",
+    "stage_iv": true,
+    "metastatic_sites": ["liver", "lung", "lymph_node"],
+    "brain_mets": false,
+    "symptomatic_cns_metastases": false,
+    "ldh_uln_x": 1.6,
+    "ldh_elevated": true,
+    "braf_v600e_mutation": true,
+    "braf_v600": "positive",
+    "braf_mutation": "V600E",
+    "nras_mutation": false,
+    "kit_mutation": false,
+    "prior_lines": 1,
+    "prior_therapy": ["dabrafenib_trametinib"],
+    "prior_brafi_meki_received": true,
+    "prior_io_received": false,
+    "progression_on_brafi_meki": true,
+    "autoimmune_history": true,
+    "autoimmune_diagnosis": "limited_cutaneous_psoriasis",
+    "frailty_score": "high",
+    "ipi_nivo_unfit": true,
+    "age_years": 82,
+    "ecog_status": 2,
+    "creatinine_clearance_ml_min": 70,
+    "bilirubin_uln_x": 0.9,
+    "absolute_neutrophil_count_k_ul": 3.6,
+    "platelets_k_ul": 230,
+    "alt_uln_x": 1.1,
+    "ast_uln_x": 1.0,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative",
+    "pregnancy_status": "not_applicable"
+  }
+}

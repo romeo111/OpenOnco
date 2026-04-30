@@ -1,0 +1,49 @@
+{
+  "patient_id": "BREAST-HER2-EARLY-001",
+  "comment": "Synthetic stage IIB HER2+ early-stage breast cancer, female 51 premenopausal, cT2N1M0 (3.4 cm tumor + 1 axillary LN clinically positive), HER2 IHC 3+, ER 60% / PR 40%. Anchor: TCHP neoadjuvant → KATHERINE T-DM1 if non-pCR (residual ypT+ or ypN+) — captured in KB as IND-BREAST-HER2-POS-EARLY-NEOADJUVANT.followed_by REG-TDM1-ADJUVANT. Engine drift: ALGO-BREAST-1L step 1 HER2-amp-RF True → step 2 free-text 'Stage I-III (early)' resolves False (no disease-scoped RF for early-stage) → IND-BREAST-HER2-POS-MET-1L-THP fires as default. The HER2+ early neoadj indication still surfaces as an alternative track. Anchor preserves intent; KB algo step-2 RF gap is logged for follow-up.",
+  "disease": {"id": "DIS-BREAST"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-HER2-SOLID": "positive",
+    "BIO-ER": "positive",
+    "BIO-PR": "positive"
+  },
+  "demographics": {
+    "age": 51,
+    "sex": "female",
+    "ecog": 0,
+    "menopausal_status": "premenopausal",
+    "pregnancy_status": "not_pregnant"
+  },
+  "findings": {
+    "her2_status": "positive",
+    "her2_ihc": "3+",
+    "her2_ish": "amplified",
+    "er_status": "positive",
+    "pr_status": "positive",
+    "er_percent": 60,
+    "pr_percent": 40,
+    "brca1_germline": "wild_type",
+    "brca2_germline": "wild_type",
+    "histology": "invasive_ductal_carcinoma_NST",
+    "tumor_grade": 3,
+    "ki67_percent": 35,
+    "stage": "IIB",
+    "stage_clinical_t": "T2",
+    "stage_clinical_n": "N1",
+    "stage_clinical_m": "M0",
+    "tumor_size_cm": 3.4,
+    "node_positive_clinical": true,
+    "stage_iv": false,
+    "creatinine_clearance_ml_min": 110,
+    "bilirubin_uln_x": 0.7,
+    "absolute_neutrophil_count_k_ul": 4.1,
+    "platelets_k_ul": 280,
+    "lvef_percent": 64,
+    "neuropathy_grade": 0,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  }
+}

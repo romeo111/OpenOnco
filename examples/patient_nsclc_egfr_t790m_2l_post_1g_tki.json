@@ -1,0 +1,37 @@
+{
+  "patient_id": "NSCLC-EGFR-T790M-001",
+  "comment": "Synthetic metastatic NSCLC adenocarcinoma, female 54, EGFR L858R initially → 24 mo on erlotinib (1G TKI) → progression with acquired T790M on ctDNA + repeat tissue NGS. Line of therapy = 2. Engine algorithm correctly resolves ALGO-NSCLC-METASTATIC-2L step 1 (T790M fires) → step 2 (no ex20ins) → step 3 → IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ (MARIPOSA-2 ami+laz). KB-DRIFT NOTE: post-filter currently drops POST-OSI-AMI-LAZ via overly-broad biomarker_requirements_excluded (the YAML excludes histologic transformation but the engine matches by BIO-EGFR-MUTATION ID alone), so default falls to IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB. Surfaces a real engine/KB issue worth a follow-up. Clinically: T790M post-1G/2G TKI → osimertinib 2L is the textbook path (AURA3); KB does not yet have a dedicated post-1G/2G osi-naïve T790M Indication.",
+  "disease": {"id": "DIS-NSCLC"},
+  "line_of_therapy": 2,
+  "biomarkers": {
+    "BIO-EGFR-MUTATION": "positive",
+    "BIO-EGFR-T790M": "positive"
+  },
+  "demographics": {
+    "age": 54,
+    "sex": "female",
+    "ecog": 1,
+    "smoking_status": "never_smoker"
+  },
+  "findings": {
+    "egfr_t790m": true,
+    "egfr_mutation": "T790M",
+    "egfr_l858r_history": true,
+    "histology": "adenocarcinoma",
+    "stage": "IV",
+    "stage_iv": true,
+    "metastatic_sites": ["bone", "liver"],
+    "brain_mets": false,
+    "prior_lines": [
+      {"line": 1, "regimen": "erlotinib 150 mg PO daily", "drug_class": "1G EGFR-TKI", "duration_months": 24, "best_response": "PR", "outcome": "PD with acquired T790M on ctDNA + tissue rebiopsy"}
+    ],
+    "creatinine_clearance_ml_min": 95,
+    "bilirubin_uln_x": 0.9,
+    "absolute_neutrophil_count_k_ul": 3.6,
+    "platelets_k_ul": 222,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  }
+}

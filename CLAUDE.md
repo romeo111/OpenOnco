@@ -206,10 +206,17 @@ worktree merge conflict at integration time.
 - Implement Pydantic schemas, ingestion loaders, validators, client refactors autonomously.
 - Run pre-flight checks before every write.
 - Stop and report when stop conditions hit.
+- Push completed feature-branch work to `origin` once all gates pass —
+  working tree clean, KB validator + pytest + pre-commit hooks green,
+  no merge / cherry-pick / stash conflicts, branch is not `master`/`main`,
+  push is not a force-push and does not require `--no-verify`. No further
+  confirmation needed in this case (authorized 2026-04-29). If any gate
+  fails or the push would touch `master` directly, force-push, or skip
+  hooks → still ask first.
 
 **Do not:**
 - Commit patient-specific data, ever.
-- Push to `origin` without explicit user instruction.
+- Push directly to `master`/`main` without explicit user instruction.
 - Delete branches without explicit user instruction.
 - Force-push without explicit user instruction.
 - Use `git add -A` / `git add .` / `--no-verify`.

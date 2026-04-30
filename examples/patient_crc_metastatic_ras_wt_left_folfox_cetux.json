@@ -1,0 +1,48 @@
+{
+  "patient_id": "CRC-MET-RAS-WT-LEFT-1L-001",
+  "comment": "Synthetic metastatic CRC, 58M, ECOG 1, left-sided sigmoid primary, extended-RAS WT (KRAS exons 2/3/4 + NRAS exons 2/3/4 all WT) + BRAF-WT + MSS. Engine routes ALGO-CRC-METASTATIC-1L step 1 (no MSI-H) → step 2 (RF-CRC-RAS-WT fires + 'Left-sided primary (splenic flexure or distal)' literal-key clause truthy) → IND-CRC-METASTATIC-1L-RAS-WT-LEFT (FOLFOX + cetuximab, CRYSTAL/FIRE-3/CALGB-80405 left-sided benefit). Wiring note: the sidedness criterion is currently a free-text condition string evaluated as a literal finding-key lookup (no dedicated RF for primary-tumour location); patient profile sets that exact string truthy to fire step 2. A future RF-CRC-LEFT-SIDED-PRIMARY would be cleaner.",
+  "disease": {"id": "DIS-CRC"},
+  "line_of_therapy": 1,
+  "biomarkers": {
+    "BIO-MSI-STATUS": "stable",
+    "BIO-BRAF-V600E": "negative",
+    "KRAS": "wild_type",
+    "NRAS": "wild_type"
+  },
+  "demographics": {
+    "age": 58,
+    "sex": "male",
+    "ecog": 1
+  },
+  "findings": {
+    "primary_site": "sigmoid_colon",
+    "primary_sidedness": "left",
+    "Left-sided primary (splenic flexure or distal)": true,
+    "histology": "adenocarcinoma",
+    "stage": "IV",
+    "stage_iv": true,
+    "metastatic_sites": ["liver", "lung"],
+    "liver_lesion_count": 5,
+    "largest_lesion_cm": 3.8,
+    "msi_status": "stable",
+    "dmmr_status": "proficient",
+    "kras_status": "wild_type",
+    "kras_mutation": false,
+    "kras_extended_status": "wild_type",
+    "nras_status": "wild_type",
+    "nras_mutation": false,
+    "ras_status": "wild_type",
+    "extended_ras_status": "wild_type",
+    "braf_v600e_mutation": false,
+    "her2_amplified": false,
+    "cea_ng_ml": 142,
+    "creatinine_clearance_ml_min": 88,
+    "bilirubin_uln_x": 1.0,
+    "absolute_neutrophil_count_k_ul": 3.6,
+    "platelets_k_ul": 245,
+    "hbsag": "negative",
+    "anti_hbc_total": "negative",
+    "hcv_status": "negative",
+    "hiv_status": "negative"
+  }
+}

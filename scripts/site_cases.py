@@ -3816,4 +3816,455 @@ CASES: list[CaseEntry] = [
     ),
     # ── /AUTO-GENERATED-VARIANTS ──
 
+    # ── CURATED CHUNK 2026-04-29-0313 (60 cases across 12 chunks) ──
+    # Phase-1 plan: docs/plans/curated_examples_expansion_2026-04-29-0313.md
+    # Each clinically-rich case anchored to a pivotal trial / regimen path.
+    # KB drift documented in case JSON `comment` where engine resolution
+    # differs from intended anchor.
+
+    # S1 NSCLC biomarker variants (12)
+    CaseEntry(
+        case_id="nsclc-egfr-ex19del-1l",
+        file="patient_nsclc_egfr_ex19del_1l_osimertinib.json",
+        label_ua="NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)",
+        summary_ua="Метастатична NSCLC аденокарцинома, ніколи-курив. Engine: ALGO-1L step 2 → IND-NSCLC-EGFR-MUT-MET-1L (osimertinib FLAURA, mPFS 18.9 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-alk-1l",
+        file="patient_nsclc_alk_1l_alectinib.json",
+        label_ua="NSCLC · ALK-перебудований · 1L Alectinib (ALEX)",
+        summary_ua="Метастатична NSCLC, EML4-ALK варіант 1, brain mets. Engine: ALGO-1L step 3 → IND-NSCLC-ALK-MET-1L (alectinib ALEX, mPFS 34.8 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-pdl1-high-pembro-mono",
+        file="patient_nsclc_pdl1_high_pembro_mono.json",
+        label_ua="NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)",
+        summary_ua="Метастатична NSCLC squamous, ex-курий, PD-L1 TPS 85%, driver-negative. Engine: step 5 → IND-NSCLC-PDL1-HIGH-MET-1L (pembro mono, 5-yr OS 31.9%).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-pdl1-low-chemo-io",
+        file="patient_nsclc_pdl1_low_chemo_io.json",
+        label_ua="NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)",
+        summary_ua="Метастатична NSCLC adeno non-sq, PD-L1 TPS 25%, driver-negative. Engine: step 5 default → IND-NSCLC-PDL1-LOW-NONSQ-MET-1L (pembro+carbo+pem KEYNOTE-189).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-tmb-high-pembro-mono",
+        file="patient_nsclc_tmb_high_pembro_mono.json",
+        label_ua="NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo",
+        summary_ua="TMB 18 mut/Mb, PD-L1 low, driver-negative. Engine default = PDL1-LOW-NONSQ; IND-NSCLC-TMB-HIGH-MET-1L surfaces як alternative track для HCP.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-egfr-t790m-2l",
+        file="patient_nsclc_egfr_t790m_2l_post_1g_tki.json",
+        label_ua="NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)",
+        summary_ua="L858R → erlotinib 24 мо → acquired T790M. Algo резолвить IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ; post-filter dropає (KB drift documented in comment).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-alk-2l-lorlatinib",
+        file="patient_nsclc_alk_2l_lorlatinib.json",
+        label_ua="NSCLC · ALK 2L · Lorlatinib post-alectinib",
+        summary_ua="Post-alectinib 22 мо → CNS PD з новими brain mets. Engine: ALGO-2L step 4-5 → IND-NSCLC-ALK-2L-LORLATINIB (CROWN follow-up).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-ros1-2l-entrectinib",
+        file="patient_nsclc_ros1_2l_entrectinib.json",
+        label_ua="NSCLC · ROS1 2L · Entrectinib post-chemoIO",
+        summary_ua="ROS1 fusion (CD74-ROS1) виявлено на RNA-NGS після 1L PD. Engine: step 6-7 → IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB (intracranial ORR 79%).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-kras-g12c-2l-sotorasib",
+        file="patient_nsclc_kras_g12c_2l_sotorasib.json",
+        label_ua="NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)",
+        summary_ua="ex-курий, KRAS G12C, post-pembro+chemo PD. Engine: step 8-9 → IND-NSCLC-2L-KRAS-G12C-SOTORASIB (mPFS 5.6 мо vs docetaxel).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-braf-v600e-2l",
+        file="patient_nsclc_braf_v600e_2l_dab_tram.json",
+        label_ua="NSCLC · BRAF V600E 2L · Dabrafenib+trametinib",
+        summary_ua="BRAF V600E confirmed на rebiopsy після 1L pembro+chemo. Engine: step 12 → IND-NSCLC-2L-BRAF-V600E-DAB-TRAM (BRF113928, ORR 64%).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-metex14-2l-capmatinib",
+        file="patient_nsclc_metex14_2l_capmatinib.json",
+        label_ua="NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)",
+        summary_ua="Ніколи-курила 73, autoimmune RA (chemo-only 1L). Engine: step 10-11 → IND-NSCLC-2L-MET-EX14-CAPMATINIB (ORR 41% pretreated).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="nsclc-ret-fusion-2l-selpercatinib",
+        file="patient_nsclc_ret_fusion_2l_selpercatinib.json",
+        label_ua="NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)",
+        summary_ua="KIF5B-RET виявлено на RNA-NGS rebiopsy. Engine: step 13 → IND-NSCLC-2L-RET-FUSION-SELPERCATINIB (intracranial ORR 91%).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S2 BREAST receptor-subtype variants (8)
+    CaseEntry(
+        case_id="breast-hr-pos-met-1l-cdk46i",
+        file="patient_breast_hr_pos_her2_neg_met_1l_cdk46i.json",
+        label_ua="Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)",
+        summary_ua="Метастатична HR+/HER2-, postmenopausal. Engine: ALGO-1L → IND-BREAST-HR-POS-MET-1L-CDKI (PALOMA-2 mPFS 27.6 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-hr-pos-pik3ca-alpelisib",
+        file="patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib.json",
+        label_ua="Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)",
+        summary_ua="Прогрес на CDK4/6i, PIK3CA H1047R hot-spot. Engine drift: HER2-2L дефолт; alpelisib+fulvestrant анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-her2-pos-early-katherine",
+        file="patient_breast_her2_pos_early_neoadj_kn522_path.json",
+        label_ua="Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1",
+        summary_ua="HER2+ early-stage, неоадʼювантна TCHP → adjuvant T-DM1 при non-pCR (KATHERINE 50% iDFS benefit). Drift: engine routes до met-1L.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-her2-pos-met-1l-thp",
+        file="patient_breast_her2_pos_met_1l_thp.json",
+        label_ua="Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)",
+        summary_ua="HER2+ метастатична 1L, docetaxel+trastuzumab+pertuzumab. Engine: ALGO-1L → IND-BREAST-HER2-POS-MET-1L-THP (CLEOPATRA mOS 57 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-her2-pos-met-2l-tdxd",
+        file="patient_breast_her2_pos_met_2l_tdxd.json",
+        label_ua="Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)",
+        summary_ua="HER2+ метастатична 2L після THP. Engine: ALGO-HER2-POS-2L → IND-BREAST-HER2-POS-MET-2L-TDXD (DB03 mPFS 28.8 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-tnbc-neoadj-kn522",
+        file="patient_breast_tnbc_neoadj_kn522_pembro_chemo.json",
+        label_ua="Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)",
+        summary_ua="TNBC II-III, неоадʼювантна pembro+carbo+pacli→AC (pCR 64%). Drift: engine routes до HR+ default; clinical anchor у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-brca-germline-olaparib",
+        file="patient_breast_brca_germline_met_olaparib.json",
+        label_ua="Breast · BRCA1 germline met · Olaparib (OlympiAD)",
+        summary_ua="BRCA1 germline pathogenic, метастатична HER2-. PARPi мono. Drift: engine routes до HR+/HER2- 1L CDK4/6i default; clinical anchor у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="breast-tnbc-met-2l-sacituzumab",
+        file="patient_breast_tnbc_met_sacituzumab_2l.json",
+        label_ua="Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)",
+        summary_ua="TNBC метастатична 2L+. Drift: engine routes до HER2-2L default; sacituzumab анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S3 CRC line-of-therapy variants (6)
+    CaseEntry(
+        case_id="crc-stage-iii-adjuvant-folfox",
+        file="patient_crc_stage_iii_adjuvant_folfox.json",
+        label_ua="CRC · stage III adjuvant FOLFOX (MOSAIC)",
+        summary_ua="Stage III після резекції. Drift: KB не має adjuvant CRC algo; engine default = mCRC FOLFOX+bev (анкер MOSAIC у comment).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="crc-mcrc-ras-wt-left-folfox-cetux",
+        file="patient_crc_metastatic_ras_wt_left_folfox_cetux.json",
+        label_ua="mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)",
+        summary_ua="RAS-WT левобічна mCRC. Engine: ALGO step 2 → IND-CRC-METASTATIC-1L-RAS-WT-LEFT (CRYSTAL/FIRE-3).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="crc-mcrc-ras-mut-folfox-bev",
+        file="patient_crc_metastatic_ras_mut_folfox_bev.json",
+        label_ua="mCRC · RAS-mutated 1L · FOLFOX+bevacizumab",
+        summary_ua="KRAS-мутована mCRC, 1L FOLFOX+bevacizumab. Engine: ALGO default → IND-CRC-METASTATIC-1L-FOLFOX-BEV.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="crc-mcrc-msi-h-pembro",
+        file="patient_crc_metastatic_msi_h_pembro_mono.json",
+        label_ua="mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)",
+        summary_ua="MSI-high mCRC. Engine: ALGO step 1 (MSI-H fires) → IND-CRC-METASTATIC-1L-MSI-H-PEMBRO (KEYNOTE-177 mPFS 16.5 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="crc-mcrc-2l-folfiri-bev",
+        file="patient_crc_metastatic_2l_folfiri_bev.json",
+        label_ua="mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)",
+        summary_ua="Прогрес на FOLFOX+bev 1L. Engine: ALGO-2L → IND-CRC-METASTATIC-2L-FOLFIRI-BEV (continuum-of-care).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="crc-mcrc-3l-regorafenib",
+        file="patient_crc_metastatic_3l_regorafenib.json",
+        label_ua="mCRC · 3L+ Regorafenib (CORRECT)",
+        summary_ua="Хеморефрактерна mCRC. Drift: engine default = TAS-102+bev (SUNLIGHT); regorafenib як alternative track.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S4 MELANOMA BRAF/IO variants (5)
+    CaseEntry(
+        case_id="melanoma-braf-v600-dab-tram",
+        file="patient_melanoma_braf_v600_dab_tram.json",
+        label_ua="Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)",
+        summary_ua="BRAF V600 метастатична. Engine: → IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME (COMBI-d/v).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="melanoma-braf-v600-nivo-ipi",
+        file="patient_melanoma_braf_v600_nivo_ipi.json",
+        label_ua="Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)",
+        summary_ua="BRAF V600 метастатична, IO doublet. Engine: → IND-MELANOMA-METASTATIC-1L-NIVO-IPI (CM-067 5-yr OS 52%).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="melanoma-braf-wt-pembro-mono",
+        file="patient_melanoma_braf_wt_pembro_mono.json",
+        label_ua="Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)",
+        summary_ua="BRAF-WT метастатична. Drift: KEYNOTE-006 не wired у KB; engine fallback до nivo+ipi; анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="melanoma-nivo-relatlimab",
+        file="patient_melanoma_nivo_relatlimab.json",
+        label_ua="Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)",
+        summary_ua="Drift: KB scopeє nivo+rela до 2L post-BRAFi; модельовано як 2L з frailty. RELATIVITY-047 анкер 1L FDA.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="melanoma-adjuvant-pembro-stage-iii",
+        file="patient_melanoma_adjuvant_pembro_stage_iii.json",
+        label_ua="Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)",
+        summary_ua="Drift: adjuvant melanoma algo не існує в KB; engine output = met-1L IO doublet. KEYNOTE-054 анкер у comment, motivation для майбутнього ALGO-MELANOMA-ADJUVANT.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S5 PROSTATE (1 of 5; 4 dropped per disease_state schema gap)
+    CaseEntry(
+        case_id="prostate-mcrpc-brca-olaparib",
+        file="patient_prostate_mcrpc_brca_olaparib_profound.json",
+        label_ua="Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)",
+        summary_ua="mCRPC з BRCA-pathogenic, PARPi мono. Engine: ALGO-PROSTATE-MCRPC-1L step 1 → IND-PROSTATE-MCRPC-1L-PARPI (PROfound mPFS 7.4 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S6 GU+SKIN+GYN tail (6)
+    CaseEntry(
+        case_id="rcc-imdc-int-nivo-ipi",
+        file="patient_rcc_imdc_int_nivo_ipi.json",
+        label_ua="RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)",
+        summary_ua="Clear-cell RCC IMDC intermediate-poor. Drift: engine default = pembro+axi; nivo+ipi анкер CM-214 у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="rcc-imdc-fav-axi-pembro",
+        file="patient_rcc_imdc_fav_axi_pembro.json",
+        label_ua="RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)",
+        summary_ua="Clear-cell RCC IMDC favorable. Engine: → IND-RCC-METASTATIC-1L-PEMBRO-AXI (KEYNOTE-426 5-yr OS).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="urothelial-muc-ev-pembro",
+        file="patient_urothelial_muc_ev_pembro.json",
+        label_ua="Urothelial · mUC 1L · EV+pembro (EV-302)",
+        summary_ua="Метастатична мUC. Drift: free-text condition unevaluable; engine default = platinum+avelumab; EV-302 анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="endometrial-dmmr-pembro-kn775",
+        file="patient_endometrial_dmmr_pembro_kn775.json",
+        label_ua="Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)",
+        summary_ua="Advanced/recurrent dMMR endometrial. Engine: → IND-ENDOMETRIAL-ADVANCED-1L-PEMBRO-CHEMO (NRG-GY018 mPFS NR vs 7.6).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="endometrial-p53-abn-dosta-ruby",
+        file="patient_endometrial_p53_abn_dosta_kn775.json",
+        label_ua="Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)",
+        summary_ua="Advanced p53-abnormal endometrial. Drift: engine default = pembro+chemo; RUBY dostarlimab анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="ovarian-hrd-neg-no-parpi",
+        file="patient_ovarian_hrd_neg_carbo_pacli_no_parpi.json",
+        label_ua="Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance",
+        summary_ua="HRD-negative ovarian (контраст до patient_ovarian_advanced_hrd). Engine: → IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S7 GI remaining (6)
+    CaseEntry(
+        case_id="hcc-atezo-bev-imbrave150",
+        file="patient_hcc_atezo_bev_imbrave150.json",
+        label_ua="HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)",
+        summary_ua="HCC Child-Pugh A, fit. Engine: → IND-HCC-SYSTEMIC-1L-ATEZO-BEV (IMbrave150 mOS 19.2 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="hcc-durva-treme-stride",
+        file="patient_hcc_durva_treme_stride.json",
+        label_ua="HCC · 1L · Durva+treme (HIMALAYA STRIDE)",
+        summary_ua="HCC з high-risk varices. Engine: RF-HCC-VARICEAL-BLEED step 1 → IND-HCC-SYSTEMIC-1L-DURVA-TREME (HIMALAYA mOS 16.4 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="gastric-her2-pos-toga",
+        file="patient_gastric_her2_pos_toga.json",
+        label_ua="Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)",
+        summary_ua="Метастатична HER2+ gastric. Engine: RF-HIGH-RISK-BIOLOGY → IND-GASTRIC-METASTATIC-1L-HER2-TOGA (TOGA mOS 13.8 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="gastric-pdl1-cps-chemo-nivo",
+        file="patient_gastric_pdl1_cps_high_chemo_nivo.json",
+        label_ua="Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)",
+        summary_ua="Метастатична HER2- CPS≥5 gastric. Engine: HER2- step 2 → IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI (CM-649 mOS 14.4 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="esophageal-cross-then-nivo",
+        file="patient_esophageal_adeno_neoadj_cross_then_nivo.json",
+        label_ua="Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)",
+        summary_ua="Resectable adeno з ypT+/ypN+ residual. Drift: ALGO-1L emit only CROSS-NEOADJUVANT; CheckMate-577 adjuvant nivo неreachable (PROPOSAL §17 territory).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="pdac-folfirinox-fit",
+        file="patient_pdac_metastatic_folfirinox_fit.json",
+        label_ua="PDAC · met fit · FOLFIRINOX (PRODIGE-4)",
+        summary_ua="Fit метастатична PDAC. Drift: ALGO step 3 condition free-text; engine default = gem-nab-pac; FOLFIRINOX як alternative track.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # S8 SCLC + HNSCC (4)
+    CaseEntry(
+        case_id="sclc-ls-chemo-rt",
+        file="patient_sclc_ls_chemo_rt.json",
+        label_ua="SCLC · LS · Chemo + concurrent RT",
+        summary_ua="Limited-stage SCLC. RT не modellable per CHARTER §17 — engine emit chemo backbone EP, RT як free-text. Drift: engine default = ES-1L.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="sclc-es-atezo-impower133",
+        file="patient_sclc_es_atezo_chemo_impower133.json",
+        label_ua="SCLC · ES · Atezo+carbo+etoposide (IMpower133)",
+        summary_ua="Extensive-stage SCLC. Engine: → IND-SCLC-EXTENSIVE-1L. Drift: дефолт REG-EP-DURVA не IMpower133 атезо; атезо regimen не wired.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="hnscc-cps-high-pembro-mono",
+        file="patient_hnscc_cps_high_pembro_mono.json",
+        label_ua="HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)",
+        summary_ua="R/M HNSCC CPS≥20. Engine: → IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH (KEYNOTE-048 mOS 14.9 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+    CaseEntry(
+        case_id="hnscc-extreme-cetux-platin",
+        file="patient_hnscc_extreme_cetux_platin_5fu.json",
+        label_ua="HNSCC · R/M EXTREME · Cetux+platin+5FU",
+        summary_ua="Drift: IND-HNSCC-RM-1L-EXTREME не authored у KB; engine fallback = pembro+chemo. EXTREME анкер у comment, highest content gap.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+    ),
+
+    # H1 AML subtype variants (4)
+    CaseEntry(
+        case_id="aml-flt3-itd-midostaurin",
+        file="patient_aml_flt3_itd_midostaurin_7_3.json",
+        label_ua="AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)",
+        summary_ua="Fit AML FLT3-ITD. Engine: ALGO-1L → IND-AML-1L-7-3 (default); midostaurin/RATIFY як regimen-layer note у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+    ),
+    CaseEntry(
+        case_id="aml-cbf-inv16-7-3-go",
+        file="patient_aml_cbf_inv16_7_3_go.json",
+        label_ua="AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)",
+        summary_ua="Fit CBF AML. Drift: 7+3+GO indication відсутня; engine default = 7+3 plain; ALFA-0701 анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+    ),
+    CaseEntry(
+        case_id="aml-secondary-cpx351",
+        file="patient_aml_secondary_cpx351.json",
+        label_ua="AML · secondary/t-AML · CPX-351 (Vyxeos)",
+        summary_ua="Secondary AML post-MDS. Drift: CPX-351 indication відсутня у ALGO-1L; engine default = 7+3; Vyxeos анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+    ),
+    CaseEntry(
+        case_id="aml-rr-gilteritinib",
+        file="patient_aml_rr_gilteritinib.json",
+        label_ua="AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)",
+        summary_ua="Primary-refractory FLT3-TKD AML. Engine: ALGO-2L → IND-AML-2L-GILTERITINIB-FLT3 (ADMIRAL mOS 9.3 мо vs salvage chemo).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="myeloid",
+    ),
+
+    # H2 DLBCL line-of-therapy variants (3)
+    CaseEntry(
+        case_id="dlbcl-2l-pola-r-b",
+        file="patient_dlbcl_2l_pola_r_b.json",
+        label_ua="DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)",
+        summary_ua="ASCT-ineligible cardiac-comorbidity, late relapse. Engine: ALGO-2L → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (distinct від існуючого relapsed_transplant_ineligible).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+    ),
+    CaseEntry(
+        case_id="dlbcl-3l-axi-cel",
+        file="patient_dlbcl_3l_axi_cel.json",
+        label_ua="DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)",
+        summary_ua="Прогрес після RCHOP→Pola-BR. Engine: ALGO-2L default = Pola-BR; axi-cel surfaces як aggressive alternative track. Distinct від chemorefractory_for_cart.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+    ),
+    CaseEntry(
+        case_id="dlbcl-primary-refractory-loncast",
+        file="patient_dlbcl_primary_refractory_loncast_post_pola.json",
+        label_ua="DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)",
+        summary_ua="Primary-refractory frail non-CAR-T-eligible. Drift: REG-LONCASTUXIMAB-TESIRINE відсутній; engine default = Pola-BR (re-MMAE inappropriate); LOTIS-2 анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="b_aggressive",
+    ),
+
+    # H3 Indolent B-cell variants (2 of 4; 2 dropped per KB wiring gaps)
+    CaseEntry(
+        case_id="cll-venr-2l-murano",
+        file="patient_cll_venr_2l_murano.json",
+        label_ua="CLL · 2L post-BTKi · VenR fixed-duration (MURANO)",
+        summary_ua="Post-acalabrutinib PD без C481/BCL2-resistance. Engine: ALGO-CLL-2L step 2 (RF-PRIOR-BTKI-PROGRESSION) → IND-CLL-2L-VENR-MURANO (24-mo, mPFS 53.6 мо).",
+        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+    ),
+    CaseEntry(
+        case_id="mcl-pirtobrutinib-3l",
+        file="patient_mcl_pirtobrutinib_3l_post_btki.json",
+        label_ua="MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)",
+        summary_ua="Post-covalent-BTKi прогрес з LVEF 38% (CAR-T ineligible). Drift: ALGO-MCL-2L step 3 free-text; engine default = acalabrutinib; BRUIN анкер у comment.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="b_indolent",
+    ),
+
+    # D1 Diagnostic pre-biopsy solid (3)
+    CaseEntry(
+        case_id="diagnostic-breast-lump-prebiopsy",
+        file="patient_diagnostic_breast_lump_prebiopsy.json",
+        label_ua="Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy",
+        summary_ua="Pre-biopsy: pальпабельне утворення, BI-RADS 4-5. Engine: WORKUP-SUSPECTED-BREAST (mammography + US + MRI + core biopsy + IHC). Diagnostic Brief mode (CHARTER §15.2 C7).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+    ),
+    CaseEntry(
+        case_id="diagnostic-lung-mass-prebiopsy",
+        file="patient_diagnostic_lung_mass_smoker_prebiopsy.json",
+        label_ua="Diagnostic · Suspect lung mass · Smoker hx pre-biopsy",
+        summary_ua="Pre-biopsy: incidental lung mass, smoker 30 pack-years. Engine: WORKUP-SUSPECTED-NSCLC (CT-guided biopsy + NGS + PD-L1 IHC + staging FDG-PET + brain MRI).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+    ),
+    CaseEntry(
+        case_id="diagnostic-prostate-psa-prebiopsy",
+        file="patient_diagnostic_prostate_psa_elevated_prebiopsy.json",
+        label_ua="Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy",
+        summary_ua="Pre-biopsy: PSA 12.4 ng/mL, mp-MRI PI-RADS 4. Engine: WORKUP-SUSPECTED-PROSTATE (transperineal mp-MRI-targeted biopsy + Gleason + PSMA-PET if int/high-risk).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+    ),
+    # ── /CURATED CHUNK 2026-04-29-0313 ──
+
 ]
