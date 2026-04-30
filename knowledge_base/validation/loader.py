@@ -7,6 +7,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -83,6 +84,107 @@ REVIEWER_SIGNOFF_TYPES: tuple[str, ...] = (
 )
 
 
+# PR4 — citation-verifier slice 1: SRC-* referential integrity
+#
+# `_SRC_TOKEN_RE` is greedy (`+`) so multi-segment IDs like
+# `SRC-NCCN-BCELL-2025` capture in one token, not in pieces. The trailing
+# `(?=$|[^A-Z0-9_-])` is a manual word-end so we don't truncate at digits.
+_SRC_TOKEN_RE = re.compile(r"\bSRC-[A-Z0-9_-]+(?=$|[^A-Z0-9_-])")
+
+# Banned-source IDs per CHARTER §2 (non-commercial-only KB) — referencing
+# any of these as an unresolved citation gets a "banned" hint instead of
+# "did you mean…" or "file a stub". Note: `SRC-ONCOKB` IS currently defined
+# as a Source entity (legacy migration metadata), so structural references
+# resolve normally; banned-detection only fires on UNRESOLVED IDs that
+# happen to match one of these names.
+BANNED_SOURCE_IDS: frozenset[str] = frozenset({
+    "SRC-ONCOKB",
+    "SRC-SNOMED",
+    "SRC-MEDDRA",
+})
+
+# Narrative free-text fields where authors mention SRC-XXX inline. The
+# loader scans these for unresolved tokens (warn-only by default — see
+# `strict_source_refs` on `load_content`).
+_NARRATIVE_FIELDS: tuple[str, ...] = (
+    "notes",
+    "evidence_summary",
+    "rationale",
+)
+
+
+def _levenshtein(a: str, b: str, cap: int = 3) -> int:
+    """Bounded Levenshtein. Returns `cap` if distance ≥ cap (so we don't
+    waste cycles on long mismatches). Used only for typo suggestions on
+    unresolved SRC-* IDs — call sites compare ≤ 2.
+    """
+    if a == b:
+        return 0
+    la, lb = len(a), len(b)
+    if abs(la - lb) >= cap:
+        return cap
+    # Standard DP, single-row optimization
+    prev = list(range(lb + 1))
+    for i, ca in enumerate(a, 1):
+        curr = [i] + [0] * lb
+        row_min = curr[0]
+        for j, cb in enumerate(b, 1):
+            cost = 0 if ca == cb else 1
+            curr[j] = min(
+                prev[j] + 1,        # deletion
+                curr[j - 1] + 1,    # insertion
+                prev[j - 1] + cost, # substitution
+            )
+            if curr[j] < row_min:
+                row_min = curr[j]
+        if row_min >= cap:
+            return cap
+        prev = curr
+    return min(prev[lb], cap)
+
+
+def _categorize_unresolved_src(
+    ref: str, known_src_ids: set[str]
+) -> tuple[str, str]:
+    """Bucket an unresolved SRC-* token + format the actionable hint.
+
+    Returns ``(category, hint)`` where category is one of:
+      - ``"banned"``   — matches CHARTER §2 banned list
+      - ``"typo"``     — Levenshtein ≤ 2 to a known SRC-* ID
+      - ``"gap"``      — neither; authentic missing Source entity
+    """
+    if ref in BANNED_SOURCE_IDS:
+        return "banned", "banned per CHARTER §2 — non-commercial KB only"
+
+    best: tuple[int, str] | None = None
+    for known in known_src_ids:
+        d = _levenshtein(ref, known, cap=3)
+        if d <= 2 and (best is None or d < best[0]):
+            best = (d, known)
+            if d == 1:
+                break
+    if best is not None:
+        return "typo", f"did you mean {best[1]!r}?"
+
+    return "gap", f"file a source_stub_{ref.lower()}.yaml under sources/"
+
+
+def _format_unresolved_src_msg(
+    ref: str,
+    field_label: str,
+    known_src_ids: set[str],
+) -> str:
+    """Standard error/warning text for an unresolved SRC-* citation.
+
+    Format anchors test #1's substring assertion ('Unresolved citation ref').
+    """
+    _category, hint = _categorize_unresolved_src(ref, known_src_ids)
+    return (
+        f"Unresolved citation ref {ref!r} at field {field_label!r} — "
+        f"no entity defined under sources/. Hint: {hint}"
+    )
+
+
 @dataclass
 class LoadResult:
     entities_by_id: dict[str, dict] = field(default_factory=dict)
@@ -151,11 +253,11 @@ def _sync_regimen_phases_to_components(raw: dict) -> None:
 # fresh on every invocation. A batch build of 99 × 2 cases issues ~400 such
 # calls — over an hour of redundant CPU work in aggregate.
 #
-# Caching is keyed on the *resolved* path so that "knowledge_base/hosted/content"
-# (relative) and the same dir given absolutely hit the same entry. Tests that
+# Caching is keyed on the *resolved* path PLUS the strict-flag, so toggling
+# `strict_source_refs` between calls returns fresh results. Tests that
 # need a fresh load (e.g., after writing a temporary KB to a tmp_path) call
 # `clear_load_cache()` explicitly.
-_LOAD_CACHE: dict[Path, "LoadResult"] = {}
+_LOAD_CACHE: dict[tuple[Path, bool], "LoadResult"] = {}
 
 
 def clear_load_cache() -> None:
@@ -164,21 +266,39 @@ def clear_load_cache() -> None:
     _LOAD_CACHE.clear()
 
 
-def load_content(root: Path) -> LoadResult:
+def load_content(
+    root: Path,
+    *,
+    strict_source_refs: bool = False,
+) -> LoadResult:
     """Walk hosted/content/, validate each YAML against its schema, then do
-    a referential-integrity pass. Result is cached per resolved root path —
-    re-calls with the same KB return the same instance.
+    a referential-integrity pass. Result is cached per (resolved-root,
+    strict_source_refs) tuple — re-calls with the same KB return the same
+    instance.
+
+    Parameters
+    ----------
+    strict_source_refs:
+        When False (default), unresolved SRC-* citations land in
+        `result.contract_warnings` — the load still reports `ok=True`, so
+        legacy callers and existing tests continue to pass. When True,
+        unresolved SRC-* citations land in `result.ref_errors` and break
+        `ok` (suitable for production CI gates).
     """
-    key = Path(root).resolve()
+    key = (Path(root).resolve(), bool(strict_source_refs))
     cached = _LOAD_CACHE.get(key)
     if cached is not None:
         return cached
-    result = _load_content_impl(key)
+    result = _load_content_impl(key[0], strict_source_refs=key[1])
     _LOAD_CACHE[key] = result
     return result
 
 
-def _load_content_impl(root: Path) -> LoadResult:
+def _load_content_impl(
+    root: Path,
+    *,
+    strict_source_refs: bool = False,
+) -> LoadResult:
     """The real loader (uncached). Public callers go through `load_content`."""
     result = LoadResult()
 
@@ -233,10 +353,26 @@ def _load_content_impl(root: Path) -> LoadResult:
     for eid, info in result.entities_by_id.items():
         by_type.setdefault(info["type"], set()).add(eid)
 
+    # PR4 — SRC-* index, used for typo-suggestion + structural resolution
+    known_src_ids: set[str] = by_type.get("sources", set())
+
     def check_ref(path: Path, ref_id, target_type: str, field_label: str) -> None:
         if ref_id is None or ref_id == "":
             return
         if ref_id not in result.entities_by_id:
+            # SRC-* citations get enriched diagnostics (typo / banned / gap)
+            # and respect the `strict_source_refs` toggle.
+            if (
+                target_type == "sources"
+                and isinstance(ref_id, str)
+                and ref_id.startswith("SRC-")
+            ):
+                msg = _format_unresolved_src_msg(ref_id, field_label, known_src_ids)
+                if strict_source_refs:
+                    result.ref_errors.append((path, msg))
+                else:
+                    result.contract_warnings.append((path, msg))
+                return
             result.ref_errors.append(
                 (path, f"{field_label}: '{ref_id}' not found in any loaded entity")
             )
@@ -265,6 +401,20 @@ def _load_content_impl(root: Path) -> LoadResult:
                 check_ref(path, comp.get("drug_id"), "drugs", f"components[{i}].drug_id")
             for sid in data.get("mandatory_supportive_care") or []:
                 check_ref(path, sid, "supportive_care", "mandatory_supportive_care[]")
+            # PR4 — dose_adjustments[].source_refs[] are SRC-* citations.
+            # Drafts skip resolution because authors leave SRC-TODO placeholders.
+            if not data.get("draft"):
+                for da_i, adj in enumerate(data.get("dose_adjustments") or []):
+                    if not isinstance(adj, dict):
+                        continue
+                    for j, sid in enumerate(adj.get("source_refs") or []):
+                        if isinstance(sid, str):
+                            check_ref(
+                                path,
+                                sid,
+                                "sources",
+                                f"dose_adjustments[{da_i}].source_refs[{j}]",
+                            )
         elif etype == "algorithms":
             for sid in data.get("output_indications") or []:
                 check_ref(path, sid, "indications", "output_indications[]")
@@ -307,6 +457,21 @@ def _load_content_impl(root: Path) -> LoadResult:
                 )
             for i, sid in enumerate(primary):
                 check_ref(path, sid, "sources", f"primary_sources[{i}]")
+            # PR4 — evidence_sources[].source are SRC-* citations (CIViC,
+            # NCCN, OncoKB legacy, …). Drafts skip; authors may leave
+            # placeholders during reconstruction.
+            if not data.get("draft"):
+                for j, es in enumerate(data.get("evidence_sources") or []):
+                    if not isinstance(es, dict):
+                        continue
+                    sid = es.get("source")
+                    if isinstance(sid, str):
+                        check_ref(
+                            path,
+                            sid,
+                            "sources",
+                            f"evidence_sources[{j}].source",
+                        )
         elif etype == "workups":
             for sid in data.get("required_tests") or []:
                 check_ref(path, sid, "tests", "required_tests[]")
@@ -339,6 +504,36 @@ def _load_content_impl(root: Path) -> LoadResult:
                         "reviewers",
                         f"reviewer_signoffs[{i}].reviewer_id",
                     )
+
+    # Pass 2.5 — narrative SRC-* token scan. Authors mention citation IDs
+    # inline in `notes:`, `evidence_summary:`, `rationale:` fields. Those
+    # mentions aren't structural FKs (they're prose), but if they reference
+    # a SRC-* ID that doesn't exist, downstream rendering surfaces a
+    # dangling reference. Track them so the citation-verifier workstream
+    # has a complete unresolved-ID inventory to work from.
+    #
+    # Drafts skip — author work-in-progress may include placeholders.
+    seen_unresolved: set[tuple[str, str]] = set()  # (path, src_id) — dedupe
+    for eid, info in result.entities_by_id.items():
+        data = info["data"]
+        if data.get("draft"):
+            continue
+        path = info["path"]
+        for fld in _NARRATIVE_FIELDS:
+            text = data.get(fld)
+            if not isinstance(text, str):
+                continue
+            for token in _SRC_TOKEN_RE.findall(text):
+                if token in result.entities_by_id:
+                    continue
+                if (str(path), token) in seen_unresolved:
+                    continue
+                seen_unresolved.add((str(path), token))
+                msg = _format_unresolved_src_msg(token, fld, known_src_ids)
+                if strict_source_refs:
+                    result.ref_errors.append((path, msg))
+                else:
+                    result.contract_warnings.append((path, msg))
 
     # Pass 3: entity-contract checks (semantics beyond schema)
     _check_redflag_contracts(result)
@@ -582,13 +777,21 @@ def main() -> int:
     parser.add_argument(
         "--strict", action="store_true", help="Exit non-zero on ref errors (on by default)."
     )
+    parser.add_argument(
+        "--strict-source-refs",
+        action="store_true",
+        help=(
+            "Promote unresolved SRC-* citations from contract_warnings to "
+            "ref_errors. Off by default for back-compat — production CI flips on."
+        ),
+    )
     args = parser.parse_args()
 
     if not args.root.is_dir():
         print(f"ERROR: not a directory: {args.root}", file=sys.stderr)
         return 2
 
-    result = load_content(args.root)
+    result = load_content(args.root, strict_source_refs=args.strict_source_refs)
     print(f"Loaded {len(result.entities_by_id)} entities.")
 
     by_type: dict[str, int] = {}
