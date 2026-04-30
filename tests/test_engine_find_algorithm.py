@@ -113,3 +113,36 @@ def test_disease_id_mismatch_returns_none():
 def test_line_mismatch_returns_none():
     entities = _build_entities()
     assert _find_algorithm("DIS-PROSTATE", 2, entities, disease_state="mCRPC") is None
+
+
+# ── End-to-end via generate_plan: breast 2L subtype routing ─────────────
+
+
+def test_breast_2l_subtype_routing_via_disease_state():
+    """Three breast 2L algorithms (HER2-POS, HR-POS, TNBC) collide on
+    disease + line. With disease_state populated on both algorithms and
+    patients, each subtype routes to its correct algorithm.
+
+    Regression for PR #150 KB-drift signal #3 (S2 BREAST chunk):
+    load-order silently picked HER2-POS-2L for TNBC and HR-POS patients.
+    """
+    import json
+    from pathlib import Path
+    from knowledge_base.engine import generate_plan
+
+    repo_root = Path(__file__).parent.parent
+    kb_root = repo_root / "knowledge_base" / "hosted" / "content"
+    cases = {
+        "patient_breast_her2_pos_met_2l_tdxd.json": "ALGO-BREAST-HER2-POS-2L",
+        "patient_breast_tnbc_met_sacituzumab_2l.json": "ALGO-BREAST-TNBC-2L",
+        "patient_breast_hr_pos_post_cdk46i_pik3ca_alpelisib.json": "ALGO-BREAST-HR-POS-2L",
+    }
+    for fname, expected_algo in cases.items():
+        path = repo_root / "examples" / fname
+        with path.open(encoding="utf-8") as fh:
+            patient = json.load(fh)
+        result = generate_plan(patient, kb_root=kb_root)
+        assert result.algorithm_id == expected_algo, (
+            f"{fname}: expected {expected_algo}, got {result.algorithm_id}; "
+            f"disease_state={patient.get('disease_state')}"
+        )
