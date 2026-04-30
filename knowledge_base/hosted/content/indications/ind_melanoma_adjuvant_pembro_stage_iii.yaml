@@ -1,0 +1,102 @@
+id: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  stage_stratum: STAGE_III_REGIONAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resected stage III (any sub-stage IIIA/IIIB/IIIC/IIID per AJCC 8) cutaneous melanoma"
+    - "Sentinel lymph node biopsy positive OR clinically detected nodal disease, surgically resected (CLND or therapeutic neck dissection per surgical judgment)"
+    - "Adjuvant therapy initiated within 12 weeks of definitive surgery"
+    - "Also applicable to resected stage IV (M1a/M1b/M1c/M1d) per KEYNOTE-054 expansion + KEYNOTE-716 stage IIB/IIC scope"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-PEMBRO-ADJUVANT-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "N/A — adjuvant disease-free setting (microscopic / no measurable disease)"
+  progression_free_survival: "12-mo RFS 75.4% vs 61.0% placebo (HR 0.57); 5-yr RFS 55.4% vs 38.3% (HR 0.61)"
+  overall_survival_5y: "5-yr OS data still maturing per KEYNOTE-054 long-term follow-up; OS benefit not yet formally demonstrated, but RFS magnitude is substantial"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+desired_tests: []
+
+rationale: >
+  Adjuvant pembrolizumab × 12 months is Category 1 standard-track
+  adjuvant therapy for resected stage III cutaneous melanoma per
+  KEYNOTE-054 / EORTC-1325 (Eggermont NEJM 2018; 5-yr update Lancet
+  Oncol 2021). 5-yr RFS 55.4% vs 38.3% with placebo (HR 0.61); benefit
+  consistent across PD-L1+ and PD-L1- subgroups, BRAF-mutant and
+  BRAF-WT, and across stage III sub-stages. Adjuvant nivolumab
+  (CheckMate-238) is interchangeable alternative with comparable
+  efficacy. BRAF-mutant patients have additional option of adjuvant
+  dabrafenib + trametinib (COMBI-AD; 5-yr RFS 52% vs 36%) — clinical
+  choice driven by toxicity profile, prior IO exposure, patient
+  preference; head-to-head data lacking. Start within 12 weeks of
+  definitive surgery; complete 18 cycles unless recurrence /
+  intolerance.
+
+rationale_ua: >
+  Ад'ювантний пембролізумаб × 12 міс. — Cat 1 standard-track ад'ювантна терапія резекованої меланоми стадії III per KEYNOTE-054 / EORTC-1325 (Eggermont NEJM 2018; 5-річне оновлення Lancet Oncol 2021). 5-річний RFS 55.4% проти 38.3% з плацебо (HR 0.61); виграш стабільний у PD-L1+ і PD-L1-, BRAF-мутант і BRAF-WT, по всіх підстадіях III. Ад'ювантний ніволумаб (CheckMate-238) — взаємозамінна альтернатива зі співставною ефективністю. BRAF-мутантні пацієнти мають додаткову опцію ад'ювантного дабрафенібу + траметинібу (COMBI-AD; 5-річний RFS 52% проти 36%) — клінічний вибір залежить від токсичного профілю, попередньої IO-експозиції, вподобань пацієнта; head-to-head дані відсутні. Почати в межах 12 тижнів після операції; завершити 18 циклів якщо немає рецидиву / непереносимості.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-MELANOMA-2025
+    weight: primary
+  - source_id: SRC-ESMO-MELANOMA-2024
+    weight: primary
+  - source_id: SRC-KEYNOTE-054-EGGERMONT-2018
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-054: adjuvant pembrolizumab × 12 mo improves RFS vs placebo in resected stage III melanoma; benefit independent of PD-L1, BRAF, or stage III sub-stage."
+  - source_id: SRC-CHECKMATE-238-WEBER-2017
+    position: supports
+    relevant_quote_paraphrase: "CheckMate-238: adjuvant nivolumab is interchangeable alternative with comparable efficacy."
+
+known_controversies:
+  - topic: "Adjuvant pembro vs adjuvant nivo vs adjuvant dabra+trame for BRAF-mutant resected stage III"
+    positions:
+      - position: "Adjuvant pembro / nivo: IO benefit independent of BRAF; durable response potential; standard for BRAF-WT"
+        sources: [SRC-KEYNOTE-054-EGGERMONT-2018, SRC-CHECKMATE-238-WEBER-2017]
+      - position: "Adjuvant dabra+trame (COMBI-AD): BRAF-V600+ only; 5-yr RFS 52% vs 36% placebo; finite 12-mo course; IO-naive"
+        sources: [SRC-COMBI-AD-LONG-2017]
+    our_default: "BRAF-WT → adjuvant pembro (KEYNOTE-054) or nivo (CheckMate-238). BRAF-mut → either IO OR dabra+trame; institutional + patient preference; IO preferred when irAE-tolerable for durable benefit."
+    rationale: "All three are NCCN cat 1 adjuvant options for the relevant biomarker context; head-to-head data absent."
+
+do_not_do:
+  - "Не починати ад'ювантну IO без negative baseline brain MRI з контрастом — окультні церебральні метастази є частою картиною."
+  - "Не пропускати baseline TSH / cortisol / glucose — ендокринні irAE найчастіші, і pre-існуючі ендокринопатії змінюють management."
+  - "Не починати після 12 тижнів від операції — KEYNOTE-054 окно короткіше; benefit poorly characterized після цього."
+  - "Не продовжувати при gr ≥3 irAE без переоцінки користі/ризику — adjuvant — curative intent, threshold для permanent discontinuation lower ніж metastatic."
+  - "Не комбінувати з імуносупресією або live vaccines."
+  - "Не пропускати pre-treatment counseling — irAE можуть бути permanent (ендокринопатії) і вплинути на quality of life більше ніж рецидив у деяких сценаріях."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track adjuvant
+  indication for resected stage III melanoma. Surfaced by curated case
+  patient_melanoma_adjuvant_pembro_stage_iii.json (KB drift note: no
+  adjuvant Stage III indication or algorithm existed; metastatic-1L
+  algorithm was incorrectly resolving for resected disease). Wiring
+  into a future ALGO-MELANOMA-ADJUVANT is engine work and out of scope
+  for this commit. Pairs with KEYNOTE-006 metastatic-1L pembro mono
+  indication (same drug, different stage / intent).

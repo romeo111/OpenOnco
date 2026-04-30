@@ -5,11 +5,36 @@ alternate_names:
   - "AlloHCT CML"
   - "Allogeneic SCT advanced CML"
 
-components:
-  - drug_id: DRUG-CYTARABINE
-    dose: "Conditioning regimen (variable per institution): typically myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older"
-    schedule: "Pre-transplant conditioning days -7 to -1"
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: conditioning
+    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Cy/TBI) для фіт-молодих; редукованої інтенсивності (Flu/Mel) для старших; включає цитарабін за інституційним протоколом дні -7 до -1"
+    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older; cytarabine per institutional protocol days -7 to -1"
+    duration: "7 days, days -7 to -1 before HCT"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -7
+    optional: false
+    components:
+      - drug_id: DRUG-CYTARABINE
+        dose: "Conditioning regimen (variable per institution): typically myeloablative (Bu/Cy or Cy/TBI) for fit younger; reduced-intensity (Flu/Mel) for older"
+        schedule: "Pre-transplant conditioning days -7 to -1"
+        route: IV
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-ELN-CML-2020
+  - name: allohct
+    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція в бластному кризі CML або після провалу кількох ТКІ; пост-ТГСК підтримка ТКІ ≥2 років"
+    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for CML blast crisis or multi-TKI failure; post-HCT TKI maintenance ≥2 years"
+    duration: "single transplant procedure"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # AlloHCT — pathway placeholder, no drug components
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-ELN-CML-2020
 
 cycle_length_days:
 total_cycles: "Single transplant procedure; post-HCT TKI maintenance (typically dasatinib or imatinib) for ≥2 years per institution"

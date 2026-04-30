@@ -4,16 +4,44 @@ name_ua: "CODOX-M / IVAC по черзі × 4 циклів (протокол М�
 alternate_names: ["Magrath", "LMB-style"]
 
 # Components listed are the core agents — actual schedule is alternating
-# CODOX-M and IVAC blocks; details encoded in notes for brevity.
-components:
-  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
-  - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV per CODOX-M block", route: IV}
-  - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
-  - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 + day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
-  - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV per IVAC block", route: IV}
-  - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per IVAC block", route: IV}
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
-  - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
+# CODOX-M and IVAC blocks; details encoded in phase components per block.
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  # Block A — CODOX-M
+  - name: alternating_block_a
+    purpose_ua: "блок A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-методreксат з IT-CNS-профілактикою; з ритуксимабом для CD20+; чергує з блоком B (IVAC) × 4 разом"
+    purpose_en: "block A (CODOX-M): cyclophosphamide-vincristine-doxorubicin + HD-MTX with IT-CNS prophylaxis; with rituximab for CD20+; alternates with block B (IVAC) × 4 total"
+    duration: "21 days per CODOX-M block × 2 (cycles 1, 3 of 4 alternating)"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "800 mg/m² day 1 + 200 mg/m² days 2-5 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
+      - {drug_id: DRUG-VINCRISTINE, dose: "1.5 mg/m² day 1 (cap 2 mg)", schedule: "IV per CODOX-M block", route: IV}
+      - {drug_id: DRUG-DOXORUBICIN, dose: "40 mg/m² day 1 (CODOX-M)", schedule: "IV per CODOX-M block", route: IV}
+      - {drug_id: DRUG-METHOTREXATE, dose: "3 g/m² day 10 (HD-MTX) + 12 mg IT day 1 + day 3", schedule: "CODOX-M HD + IT", route: IV/IT}
+      # Shared — applies to all blocks
+      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
+      - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
+    sources:
+      - SRC-NCCN-BCELL-2025
+  # Block B — IVAC
+  - name: alternating_block_b
+    purpose_ua: "блок B (IVAC): ifosfamide + HD-cytarabine + etoposide; з ритуксимабом для CD20+; чергує з блоком A (CODOX-M) × 4 разом"
+    purpose_en: "block B (IVAC): ifosfamide + HD-cytarabine + etoposide; with rituximab for CD20+; alternates with block A (CODOX-M) × 4 total"
+    duration: "21 days per IVAC block × 2 (cycles 2, 4 of 4 alternating)"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components:
+      - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² q12h × 4 doses (IVAC)", schedule: "IV per IVAC block", route: IV}
+      - {drug_id: DRUG-ETOPOSIDE, dose: "60 mg/m² days 1-5 (IVAC)", schedule: "IV per IVAC block", route: IV}
+      # Shared — applies to all blocks
+      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m² day 1 each block (when CD20+, R-CODOX-M/R-IVAC)", schedule: "IV", route: IV}
+      - {drug_id: DRUG-FILGRASTIM, dose: "5 µg/kg/day", schedule: "SC from day 13 each block until ANC recovery", route: SC}
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
 total_cycles: "4 alternating blocks (CODOX-M, IVAC, CODOX-M, IVAC)"

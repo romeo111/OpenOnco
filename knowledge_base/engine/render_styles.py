@@ -580,6 +580,74 @@ h3 {
 .drug-list .drug-name { font-weight: 600; }
 .drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
 .drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+
+/* Treatment phases — multi-phase regimen rendering (PR2 of phases-refactor).
+   Each phase is a discrete block with its own heading + drug list. Legacy
+   auto-wrapped single-phase regimens (name="main") render the wrapper but
+   suppress the heading, keeping the visual close to pre-PR2 for unmigrated
+   YAMLs. Multi-phase regimens (lymphodepletion → main_infusion for axi-cel,
+   etc.) render as visually separated blocks per
+   docs/reviews/regimen-phases-refactor-plan-2026-04-28.md §4.4. */
+.phase-block {
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    padding: 10px 14px; margin-bottom: 8px; background: var(--gray-50);
+}
+.phase-block:last-child { margin-bottom: 4px; }
+.phase-block[data-phase="main"]:only-of-type {
+    /* Auto-wrapped legacy regimen — single block, no border noise. */
+    border: none; padding: 0; background: transparent;
+}
+.phase-block .phase-heading {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--green-700); margin: 0 0 6px 0; font-weight: 700;
+}
+.phase-block .drug-list { margin: 0; }
+
+/* Bridging options block — CAR-T / TIL manufacturing-window slot. Lists
+   acceptable bridging regimen IDs; rendered after all phase blocks. */
+.bridging-options {
+    margin-top: 10px; padding: 10px 14px; background: var(--blue-bg);
+    border-left: 3px solid var(--blue-700); border-radius: 4px;
+}
+.bridging-options .bridging-options-label {
+    font-size: 12px; color: var(--blue-700);
+    font-weight: 600; margin-bottom: 4px;
+}
+.bridging-options-list {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px; color: var(--gray-700);
+}
+.bridging-options-list li.bridging-option { padding: 2px 0; }
+
+/* PR5 — citation-presence guard
+   `.no-citation-badge` is the WARN-mode flag rendered inline at the top of
+   any Regimen / Indication / BMA cell whose declared sources fail to
+   resolve to a real Source entity. It uses a soft amber palette so it
+   reads as a warning without overpowering surrounding clinical content.
+   `.stripped-block` is the STRICT-mode placeholder that replaces the
+   block body when the same condition fires.
+
+   Source: docs/reviews/cross-repo-task_torrent-sync-plan-2026-04-28.md
+   §6 verifier algorithms — item #1 "Cite-or-strip at render". */
+.no-citation-badge {
+  display: inline-block;
+  background: #fff8e1;
+  color: #6d4c00;
+  border: 1px solid #ffd54f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+.stripped-block {
+  background: #fafafa;
+  border: 1px dashed #bbb;
+  color: #888;
+  padding: 8px;
+  font-style: italic;
+  text-align: center;
+}
 """
 
 

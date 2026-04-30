@@ -40,7 +40,7 @@ from .questionnaire import (
 )
 from ._reviewer_signoff import ReviewerSignoff
 from .red_flag import RedFlag
-from .regimen import Regimen
+from .regimen import Regimen, RegimenComponent, RegimenPhase
 from .reviewer_profile import ReviewerProfile, SignOffScope
 from .source import Source
 from .supportive_care import SupportiveCare
@@ -103,6 +103,8 @@ __all__ = [
     "Questionnaire",
     "RedFlag",
     "Regimen",
+    "RegimenComponent",
+    "RegimenPhase",
     "RegulatoryApproval",
     "ReviewerProfile",
     "ReviewerSignoff",

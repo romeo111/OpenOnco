@@ -1,0 +1,90 @@
+id: REG-EXTREME-HNSCC
+name: "EXTREME (cetuximab + cisplatin/carboplatin + 5-FU; HNSCC R/M, 1L)"
+name_ua: "EXTREME (цетуксимаб + цисплатин/карбоплатин + 5-ФУ; HNSCC рецидивна/метастатична, 1L)"
+alternate_names:
+  - "EXTREME regimen"
+  - "Cetuximab + platinum + 5-FU"
+  - "Vermorken 2008 regimen"
+
+components:
+  - drug_id: DRUG-CETUXIMAB
+    dose: "Loading 400 mg/m² IV day 1; then 250 mg/m² IV weekly"
+    schedule: "Loading dose week 1; weekly maintenance through chemotherapy and beyond as monotherapy until progression / toxicity"
+    route: IV
+  - drug_id: DRUG-CISPLATIN
+    dose: "100 mg/m² IV day 1 (preferred when ECOG 0-1, GFR ≥60, no neuropathy / ototoxicity / heart failure)"
+    schedule: "Day 1 of 21-day cycle, for up to 6 cycles"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV day 1 (substitute for cisplatin if contraindicated — GFR <60, neuropathy, hearing loss, congestive heart failure, or ECOG 2)"
+    schedule: "Day 1 of 21-day cycle, for up to 6 cycles (in lieu of cisplatin)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "1000 mg/m² IV continuous infusion days 1-4 (96-hour infusion)"
+    schedule: "Days 1-4 of 21-day cycle, for up to 6 cycles"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 6 cycles of chemotherapy backbone; cetuximab continued weekly as monotherapy until progression or unacceptable toxicity"
+toxicity_profile: severe
+
+premedication:
+  - "Cetuximab: H1-antagonist (diphenhydramine 50 mg IV) 30-60 min pre-infusion; especially loading dose. Premedicate also for subsequent doses if prior reaction."
+  - "Cisplatin: pre/post-hydration ≥2 L NS, mannitol/furosemide forced diuresis, antiemetic 5HT3 + NK1 + dexamethasone"
+  - "Carboplatin: standard antiemetic prophylaxis (5HT3 + dexamethasone)"
+  - "5-FU: oral cryotherapy for mucositis prophylaxis; consider DPD testing if not already done"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cetuximab grade 3-4 infusion reaction (more common in southeastern US / Bible Belt due to alpha-gal IgE; ~3% incidence overall)"
+    modification: "Permanent discontinuation of cetuximab"
+    rationale: "Anaphylaxis risk; alpha-gal IgE testing if pre-treatment screening warranted"
+    source_refs:
+      - SRC-NCCN-HNSCC-2025
+  - condition: "Severe acneiform rash (grade ≥3)"
+    modification: "Hold cetuximab; topical / oral antibiotics (doxycycline 100 mg BID) + topical steroid; resume at 200 mg/m²/wk on recovery to grade ≤2"
+    rationale: "Acneiform rash is class effect of EGFR inhibitors; prophylactic doxycycline + emollient + sunscreen reduces severity"
+    source_refs:
+      - SRC-EXTREME-VERMORKEN-2008
+      - SRC-NCCN-HNSCC-2025
+  - condition: "Cisplatin ototoxicity (gr ≥2 hearing loss) or peripheral neuropathy gr ≥2"
+    modification: "Switch to carboplatin AUC 5"
+    rationale: "Cumulative cisplatin toxicity"
+    source_refs:
+      - SRC-NCCN-HNSCC-2025
+  - condition: "Cisplatin nephrotoxicity (creatinine increase >25% baseline OR GFR <60)"
+    modification: "Switch to carboplatin AUC 5; aggressive hydration if continuing cisplatin at reduced dose"
+    rationale: "Renal preservation"
+  - condition: "5-FU mucositis gr ≥3 or hand-foot syndrome"
+    modification: "Reduce 5-FU dose 25% next cycle; consider DPD testing if severe early-cycle toxicity"
+    rationale: "5-FU exposure-related toxicity; DPD-deficient patients have catastrophic toxicity"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Cisplatin, carboplatin, 5-FU widely available and НСЗУ-covered. Cetuximab registered in Ukraine; reimbursement varies — primary НСЗУ programme covers RAS-WT mCRC, not HNSCC R/M. HNSCC use typically requires self-pay / private insurance / EAP. Practical access barrier exists despite no licensing barrier."
+
+sources:
+  - SRC-EXTREME-VERMORKEN-2008
+  - SRC-NCCN-HNSCC-2025
+  - SRC-ESMO-HNSCC-2020
+
+last_reviewed: "2026-04-30"
+reviewer_signoffs: []
+notes: >
+  EXTREME (Vermorken NEJM 2008): cetuximab + platinum + 5-FU vs
+  platinum + 5-FU alone in 1L R/M SCCHN. Median OS 10.1 vs 7.4 mo
+  (HR 0.80); ORR 36% vs 20%. Standard 1L for R/M SCCHN before
+  KEYNOTE-048 (2019). Now positioned as preferred 1L for: (1) PD-L1
+  CPS <1 (where pembro-chemo benefit is attenuated — KEYNOTE-048 CPS<1
+  subgroup HR for OS crossed 1.0); (2) IO-contraindicated patients
+  (autoimmune disease, prior SOT, severe interstitial lung disease).
+  Also serves as IO-fallback after IO failure or rapid progression.
+  Cisplatin preferred over carboplatin when feasible. 5-FU CIVI is
+  resource-intensive (PICC line, ambulatory pump); modified TPF and
+  cisplatin + cetuximab + paclitaxel are alternatives in some centers.
+notes_ua: >
+  EXTREME (Vermorken NEJM 2008): цетуксимаб + платина + 5-ФУ проти платини + 5-ФУ моно в 1L р/м SCCHN. Медіана ЗВ 10.1 проти 7.4 міс. (HR 0.80); ORR 36% проти 20%. Стандарт 1L для р/м SCCHN до KEYNOTE-048 (2019). Тепер позиціонується як переважний 1L для: (1) PD-L1 CPS <1 (де chemo-IO виграш послаблений — підгрупа CPS<1 KEYNOTE-048 HR для ЗВ перетнула 1.0); (2) IO-протипоказаних пацієнтів (аутоімунне захворювання, попередня SOT, важка інтерстиціальна хвороба легень). Також служить IO-fallback після невдачі IO або швидкого прогресування. Цисплатин переважний над карбоплатином коли можливо. 5-ФУ CIVI ресурсомістка (PICC-катетер, амбулаторна помпа); modified TPF і цисплатин + цетуксимаб + paclitaxel — альтернативи в деяких центрах.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

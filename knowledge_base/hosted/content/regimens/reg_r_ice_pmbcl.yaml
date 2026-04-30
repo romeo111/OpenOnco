@@ -4,23 +4,50 @@ name_ua: R-ICE salvage з консолідацією autoSCT (рецидивна
 alternate_names:
   - R-ICE → autoSCT
   - Salvage R-ICE
-components:
-  - drug_id: DRUG-RITUXIMAB
-    dose: 375 mg/m²
-    schedule: IV day 1
-    route: IV
-  - drug_id: DRUG-IFOSFAMIDE
-    dose: 5000 mg/m² (with mesna)
-    schedule: CI day 2
-    route: IV
-  - drug_id: DRUG-CARBOPLATIN
-    dose: AUC 5 (max 800 mg)
-    schedule: IV day 2
-    route: IV
-  - drug_id: DRUG-ETOPOSIDE
-    dose: 100 mg/m²
-    schedule: IV days 1-3
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: salvage_induction
+    purpose_ua: "сальвадж-індукція R-ICE × 2-3 цикли — для рецидивної/рефрактерної PMBCL перед BEAM-кондиціонованою ASCT"
+    purpose_en: "salvage induction R-ICE × 2-3 cycles — for r/r PMBCL before BEAM-conditioned autoSCT"
+    duration: "2-3 cycles × 14 days each"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-RITUXIMAB
+        dose: 375 mg/m²
+        schedule: IV day 1
+        route: IV
+      - drug_id: DRUG-IFOSFAMIDE
+        dose: 5000 mg/m² (with mesna)
+        schedule: CI day 2
+        route: IV
+      - drug_id: DRUG-CARBOPLATIN
+        dose: AUC 5 (max 800 mg)
+        schedule: IV day 2
+        route: IV
+      - drug_id: DRUG-ETOPOSIDE
+        dose: 100 mg/m²
+        schedule: IV days 1-3
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+  - name: consolidation_autosct
+    purpose_ua: "консолідація BEAM-кондиціонованою аутологічною ТГСК після PR/CR на сальвадж-індукцію"
+    purpose_en: "consolidation with BEAM-conditioned autologous HCT after PR/CR to salvage induction"
+    duration: "single transplant procedure (post PET-CT response assessment)"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # BEAM-conditioned autoSCT — institution-specific
+                   # conditioning; not enumerated as drug components here
+                   # (placeholder per plan-doc §5 Group C)
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+
 cycle_length_days: 14
 total_cycles: 2-3 cycles → restage → autoSCT if chemosensitive
 toxicity_profile: high

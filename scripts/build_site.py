@@ -676,8 +676,10 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 
 _NAV_LABELS = {
-    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →", "diseases": "Хвороби"},
-    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →", "diseases": "Diseases"},
+    "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
+           "diseases": "Хвороби", "contribute": "Допомогти"},
+    "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
+           "diseases": "Diseases", "contribute": "Contribute"},
 }
 
 
@@ -700,6 +702,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
         if page_kind == "limitations":  return f"{en_prefix}/limitations.html"
         if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
+        if page_kind == "contribute":   return f"{en_prefix}/contribute.html"
     else:
         # EN page → switcher points to UA root
         if page_kind == "home":         return "/"
@@ -709,6 +712,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "limitations":  return "/limitations.html"
         if page_kind == "diseases":     return "/diseases.html"
+        if page_kind == "contribute":   return "/contribute.html"
     return "/"
 
 
@@ -740,12 +744,14 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
             f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
             f'<a href="/limitations.html"{cls("limitations")}>Обмеження</a>'
             f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
+            f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
             f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
             f'<a href="/en/limitations.html"{cls("limitations")}>Limitations</a>'
+            f'<a href="/en/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
     cur_flag_cls = "flag-ua" if target_lang == "uk" else "flag-en"

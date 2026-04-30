@@ -3,12 +3,25 @@ name: "SMILE (Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide), 2-4 cycl
 name_ua: "SMILE — стероїд + MTX + іфосфамід + L-аспарагіназа + етопозид, 2-4 цикли"
 alternate_names: ["SMILE", "Yamaguchi protocol"]
 
-components:
-  - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 2-4", route: PO}
-  - {drug_id: DRUG-METHOTREXATE, dose: "2 g/m²", schedule: "IV 6h infusion day 1; leucovorin rescue", route: IV}
-  - {drug_id: DRUG-IFOSFAMIDE, dose: "1.5 g/m²", schedule: "IV days 2-4; mesna co-administration", route: IV}
-  - {drug_id: DRUG-L-ASPARAGINASE, dose: "6000 IU/m²", schedule: "IM days 8, 10, 12, 14, 16, 18, 20", route: IM}
-  - {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 2-4", route: IV}
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: induction
+    purpose_ua: "SMILE-індукція 2-4 цикли — комбінований режим Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide для extranodal NK/T-cell lymphoma; провадить до RT 50 Gy при локалізованих stage I/II"
+    purpose_en: "SMILE induction 2-4 cycles — combined regimen Steroid + MTX + Ifosfamide + L-asparaginase + Etoposide for extranodal NK/T-cell lymphoma; followed by RT 50 Gy for localized stage I/II"
+    duration: "2-4 cycles × 28 days each"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 2-4", route: PO}
+      - {drug_id: DRUG-METHOTREXATE, dose: "2 g/m²", schedule: "IV 6h infusion day 1; leucovorin rescue", route: IV}
+      - {drug_id: DRUG-IFOSFAMIDE, dose: "1.5 g/m²", schedule: "IV days 2-4; mesna co-administration", route: IV}
+      - {drug_id: DRUG-L-ASPARAGINASE, dose: "6000 IU/m²", schedule: "IM days 8, 10, 12, 14, 16, 18, 20", route: IM}
+      - {drug_id: DRUG-ETOPOSIDE, dose: "100 mg/m²", schedule: "IV days 2-4", route: IV}
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 28
 total_cycles: "2-4 cycles induction; followed by RT 50 Gy для localized stage I/II"

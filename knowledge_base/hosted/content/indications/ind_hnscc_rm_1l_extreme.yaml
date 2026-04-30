@@ -1,0 +1,93 @@
+id: IND-HNSCC-RM-1L-EXTREME
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Recurrent / metastatic HNSCC, not amenable to curative-intent local therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      required: false
+      value_constraint: "EXTREME is preferred 1L when PD-L1 CPS <1 (where chemo-IO benefit is attenuated per KEYNOTE-048 subgroup analysis); EXTREME is alternative 1L when IO is contraindicated regardless of CPS"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-EXTREME-HNSCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~36% (vs 20% platin+5-FU; EXTREME)"
+  progression_free_survival: "Median PFS 5.6 vs 3.3 mo (HR 0.54)"
+  overall_survival_5y: "Median OS 10.1 vs 7.4 mo (HR 0.80, p=0.04); long-term survival rare in R/M SCCHN historically (5-yr OS <5%)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests: []
+desired_tests: []
+
+rationale: >
+  EXTREME (cetuximab + platinum + 5-FU) is Category 1 standard 1L for
+  R/M SCCHN per Vermorken NEJM 2008 (mOS 10.1 vs 7.4 mo, HR 0.80).
+  Position post-KEYNOTE-048: preferred 1L for PD-L1 CPS <1 (where
+  chemo-IO subgroup OS HR crossed 1.0 — pembro-chemo benefit
+  attenuated) and for IO-contraindicated patients (autoimmune disease,
+  prior solid-organ transplant, severe interstitial lung disease,
+  ECOG ≥2 with IO-toxicity concerns). Also serves as IO-fallback after
+  IO failure or rapid progression on chemo-IO. Cisplatin preferred
+  over carboplatin when feasible (younger fit, GFR ≥60, no
+  neuropathy). HPV-positive R/M SCCHN treated identically — no
+  de-escalation in recurrent setting. Cetuximab continued as weekly
+  monotherapy after 6 cycles of chemotherapy until progression.
+
+rationale_ua: >
+  EXTREME (цетуксимаб + платина + 5-ФУ) — стандарт Cat 1 для 1L р/м SCCHN per Vermorken NEJM 2008 (мОВ 10.1 проти 7.4 міс., HR 0.80). Позиція після KEYNOTE-048: переважна 1L при PD-L1 CPS <1 (де chemo-IO підгрупа OS HR перетнула 1.0 — користь pembro-chemo послаблена) і для IO-протипоказаних пацієнтів (аутоімунне захворювання, попередня SOT, важка інтерстиціальна хвороба легень, ECOG ≥2 з IO-токсичною стурбованістю). Також IO-fallback після невдачі IO або швидкого прогресування на chemo-IO. Цисплатин переважний над карбоплатином коли можливо (молодші fit, GFR ≥60, немає нейропатії). HPV-позитивна р/м SCCHN лікується однаково — без де-ескалації в рецидивному сетингу. Цетуксимаб продовжується як тижнева монотерапія після 6 циклів хіміо до прогресування.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    weight: primary
+  - source_id: SRC-ESMO-HNSCC-2020
+    weight: primary
+  - source_id: SRC-EXTREME-VERMORKEN-2008
+    position: supports
+    relevant_quote_paraphrase: "EXTREME phase-3: cetuximab + platinum + 5-FU vs platinum + 5-FU; mOS 10.1 vs 7.4 mo (HR 0.80, p=0.04); ORR 36% vs 20%. Established cetuximab as 1L standard for R/M SCCHN."
+
+known_controversies:
+  - topic: "EXTREME vs pembro-chemo (KEYNOTE-048) for 1L R/M SCCHN with CPS <1"
+    positions:
+      - position: "Pembro-chemo: KEYNOTE-048 overall positive but CPS <1 subgroup HR for OS ~1.0 — benefit attenuated"
+        sources: [SRC-NCCN-HNSCC-2025]
+      - position: "EXTREME: established mOS benefit, no CPS dependency, established standard for IO-contraindicated"
+        sources: [SRC-EXTREME-VERMORKEN-2008, SRC-NCCN-HNSCC-2025]
+    our_default: "EXTREME for CPS <1 OR IO-contraindicated; pembro-chemo for CPS ≥1; pembro-mono for CPS ≥20 with toxicity concerns"
+    rationale: "PD-L1 CPS stratification + IO contraindications drive selection; EXTREME retains role despite IO era"
+
+do_not_do:
+  - "Не призначати EXTREME без HPV-тестування — HPV+ статус не змінює EXTREME-вибір у рецидивному сетингу, але важливий для прогнозу + зворотного зв'язку клініциста."
+  - "Не пропускати baseline GFR / audiogram / neuropathy assessment перед цисплатином — карбоплатин — приcceptable substitute якщо є будь-які протипоказання."
+  - "Не використовувати цетуксимаб без премедикації при першій інфузії — anaphylaxis risk особливо в SE US (alpha-gal IgE)."
+  - "Не пропускати prophylactic doxycycline + emollient + sunscreen для acneiform rash — суттєво зменшує тяжкість + покращує adherence."
+  - "Не починати 5-FU без обговорення DPD-тестування — DPD-deficient пацієнти можуть мати фатальну токсичність."
+  - "Не пропускати моніторинг magnesium / electrolytes — цетуксимаб + цисплатин істотно знижують Mg; replacement обов'язковий."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 1L option
+  for R/M SCCHN, especially CPS <1 or IO-contraindicated. Surfaced by
+  curated case patient_hnscc_extreme_cetux_platin_5fu.json (KB drift
+  note: ALGO-HNSCC-RM-1L explicitly noted "CPS <1 R/M HNSCC ideally
+  routes to EXTREME ... explicit IND-HNSCC-RM-1L-EXTREME is deferred
+  to a follow-up content session"). Algorithm wiring (EXTREME branch
+  for CPS <1 + IO-contraindicated) is engine work and out of scope.

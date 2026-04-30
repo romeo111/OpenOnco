@@ -1,0 +1,95 @@
+id: IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable stage III or stage IV (metastatic) cutaneous melanoma"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBRO-MONO-MELANOMA
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~33-42% (KEYNOTE-006 pembro Q2W / Q3W arms)"
+  complete_response: "~13-14%"
+  progression_free_survival: "Median PFS ~8.4 mo (Q2W) / 5.5 mo (Q3W); 6-mo PFS 47% (vs 26% ipi)"
+  overall_survival_5y: "5-yr OS ~38-39% pembro vs ~31% ipi; 7-yr OS ~37% vs ~25%"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+desired_tests: []
+
+rationale: >
+  Pembrolizumab monotherapy is a Category 1 preferred 1L for advanced /
+  metastatic melanoma (KEYNOTE-006). PD-L1-agnostic — used regardless
+  of CPS / TPS. Particularly preferred over ipi+nivo combination when
+  combination irAE profile (~55% grade 3-4) is unacceptable: irAE-frail
+  patients (autoimmune comorbidity, prior solid-organ transplant
+  contraindication aside, age ≥75, ECOG 2). Lower G3-4 irAE rate (~17%)
+  with comparable single-agent IO efficacy. BRAF-mutated patients have
+  the alternative of BRAFi+MEKi (dabrafenib+trametinib) — choice
+  driven by tumor burden, LDH, symptomatic disease, and patient/
+  clinician preference; IO is generally preferred for durable response
+  potential. Combination ipi+nivo remains preferred where tolerable
+  (younger fit, low autoimmune risk, brain mets).
+
+rationale_ua: >
+  пембролізумаб монотерапія — переважна Cat 1 опція 1L для поширеної / метастатичної меланоми (KEYNOTE-006). PD-L1-агностично — використовується незалежно від CPS / TPS. Особливо переважна над ipi+nivo комбінацією коли її irAE-профіль (~55% gr 3-4) неприйнятний: irAE-frail пацієнти (аутоімунна коморбідність, похилий вік ≥75, ECOG 2). Нижча частота gr 3-4 irAE (~17%) при співставній single-agent IO ефективності. BRAF-мутовані пацієнти мають альтернативу BRAFi+MEKi (дабрафеніб+траметиніб) — вибір залежить від тумор-burden, LDH, симптоматичності, і вподобань пацієнта/клініциста; IO загалом переважна для durable response. Комбінація ipi+nivo залишається переважною коли її переносимість можлива (молодші fit, низький аутоімунний ризик, церебральні метастази).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-MELANOMA-2025
+    weight: primary
+  - source_id: SRC-ESMO-MELANOMA-2024
+    weight: primary
+  - source_id: SRC-KEYNOTE-006-ROBERT-2015
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-006 — pembrolizumab vs ipilimumab in advanced melanoma; superior PFS / OS, lower G3-4 toxicity. PD-L1-agnostic benefit."
+
+known_controversies:
+  - topic: "Pembrolizumab monotherapy vs ipi+nivo combination for 1L metastatic melanoma"
+    positions:
+      - position: "Ipi+nivo: deepest response (5-yr OS 52% CheckMate-067), preferred when tolerable"
+        sources: [SRC-CHECKMATE-067-LARKIN-2019, SRC-NCCN-MELANOMA-2025]
+      - position: "Pembro mono: comparable durable response, much lower irAE burden, preferred for frail / autoimmune-comorbid"
+        sources: [SRC-KEYNOTE-006-ROBERT-2015, SRC-NCCN-MELANOMA-2025]
+    our_default: "Ipi+nivo when fit + low autoimmune risk + brain mets / symptomatic; pembro mono when irAE-frail or unable to tolerate combination toxicity"
+    rationale: "Combination has deepest response but higher toxicity; mono preserves long-tail benefit at fraction of toxicity"
+
+do_not_do:
+  - "Не починати пембролізумаб без baseline TSH / cortisol / glucose — ендокринні irAE найчастіші."
+  - "Не ігнорувати активне аутоімунне захворювання — relative contraindication, оцінити ризик/користь з ревматологом."
+  - "Не пропускати baseline brain MRI з контрастом — церебральні метастази часто asymptomatic в melanoma."
+  - "Не продовжувати при gr ≥3 irAE без високих доз стероїдів (1-2 mg/kg преднізолон-еквівалент) — затримка управління може бути фатальною."
+  - "Не комбінувати з імуносупресорами / live-vaccines під час лікування."
+  - "Не призначати при ECOG ≥3 — обмежені дані, паліативний підхід доречніший."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 1L option for
+  advanced / metastatic melanoma. Surfaced by curated case
+  patient_melanoma_braf_wt_pembro_mono.json (KB drift note: indication
+  did not exist; algorithm wiring to ALGO-MELANOMA-METASTATIC-1L is
+  separate engine work). PD-L1-agnostic per KEYNOTE-006. Most relevant
+  for irAE-frail BRAF-WT or BRAF-mut patients who prefer IO over targeted
+  therapy. Pairs with adjuvant pembro indication (KEYNOTE-054).
