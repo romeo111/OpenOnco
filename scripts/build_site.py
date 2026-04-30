@@ -680,9 +680,9 @@ def bundle_questionnaires(output_dir: Path) -> dict:
 
 _NAV_LABELS = {
     "uk": {"home": "Головна", "gallery": "Приклади", "try_cta": "Спробувати →",
-           "diseases": "Хвороби", "contribute": "Допомогти"},
+           "diseases": "Хвороби", "contribute": "Допомогти", "specs": "Специфікації"},
     "en": {"home": "Home", "gallery": "Examples", "try_cta": "Try it →",
-           "diseases": "Diseases", "contribute": "Contribute"},
+           "diseases": "Diseases", "contribute": "Contribute", "specs": "Specs"},
 }
 
 
@@ -706,6 +706,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/contribute.html"
+        if page_kind == "specs":        return "/specs.html"
     else:
         # EN page (at root) → switcher points to UA mirror at /ukr/
         if page_kind == "home":         return f"{uk_prefix}/"
@@ -715,6 +716,7 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
         if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
         if page_kind == "contribute":   return f"{uk_prefix}/contribute.html"
+        if page_kind == "specs":        return f"{uk_prefix}/specs.html"
     return "/"
 
 
@@ -739,9 +741,10 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
     gallery_path = "/ukr/gallery.html" if target_lang == "uk" else "/gallery.html"
     try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
 
-    # Capabilities now folds in the former Limitations section; Specs stays
-    # UA-only (the spec documents themselves are UA, so no point routing EN
-    # nav to them).
+    # Capabilities now folds in the former Limitations section. The Specs
+    # page is now rendered in both languages — the underlying markdown specs
+    # in /specs/ are still UA-first, but the catalog overview page is
+    # bilingual.
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
@@ -754,6 +757,7 @@ def _render_top_bar(active: str = "", target_lang: str = "en",
         extra_links = (
             f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
             f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
+            f'<a href="/specs.html"{cls("specs")}>Specs</a>'
             f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
@@ -1618,11 +1622,9 @@ def render_try(
 {_render_top_bar(active="try", target_lang=target_lang, lang_switch_href=_lang_switch_href("try", target_lang))}
 
 <main class="try-page">
-  <h1>Спробувати з віртуальним пацієнтом</h1>
+  <h1>{'Try it with a virtual patient' if target_lang == 'en' else 'Спробувати з віртуальним пацієнтом'}</h1>
   <p class="lead">
-    Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide)
-    одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських
-    даних.</strong> Чернетка зберігається у browser localStorage.
+    {'Fill in a short questionnaire for a specific disease — the in-browser engine (Pyodide) shows you immediately which fields move the plan. <strong>No real patient data.</strong> Drafts are stored in your browser localStorage.' if target_lang == 'en' else 'Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide) одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських даних.</strong> Чернетка зберігається у browser localStorage.'}
   </p>
 
   <!-- Top status banner — prominent, sticky-ish, animated while loading
@@ -1630,28 +1632,28 @@ def render_try(
        is mid-fetch. Mirrors the smaller #status in the sidebar. -->
   <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
     <span class="status-top-spinner" aria-hidden="true"></span>
-    <span class="status-top-text">Завантажую опитувальники…</span>
+    <span class="status-top-text">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</span>
   </div>
 
   <div class="quest-toolbar">
     <label class="qt-label">
-      Хвороба
+      {'Disease' if target_lang == 'en' else 'Хвороба'}
       <select id="diseaseSelect">
-        <option value="">— оберіть —</option>
+        <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>
       </select>
     </label>
     <label class="qt-label">
-      Завантажити приклад
+      {'Load an example' if target_lang == 'en' else 'Завантажити приклад'}
       <select id="exampleSelect">
-        <option value="">— оберіть —</option>
+        <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>
       </select>
     </label>
     <div class="qt-spacer"></div>
     <div class="qt-modes">
-      <button id="modeFormBtn" class="mode-btn active" data-mode="form">Форма</button>
+      <button id="modeFormBtn" class="mode-btn active" data-mode="form">{'Form' if target_lang == 'en' else 'Форма'}</button>
       <button id="modeJsonBtn" class="mode-btn" data-mode="json">Raw JSON (advanced)</button>
     </div>
-    <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
+    <button id="resetBtn" class="btn btn-secondary qt-reset">{'Clear' if target_lang == 'en' else 'Очистити'}</button>
   </div>
 
   <!-- Early-paint warmup: a tiny synchronous script that runs before the
@@ -1671,7 +1673,7 @@ def render_try(
       if (ds && data && Array.isArray(data.questionnaires)) {{
         var frag = document.createDocumentFragment();
         var ph = document.createElement('option');
-        ph.value = ''; ph.textContent = '— оберіть —';
+        ph.value = ''; ph.textContent = '{"— select —" if target_lang == "en" else "— оберіть —"}';
         frag.appendChild(ph);
         data.questionnaires.forEach(function(q, i) {{
           var opt = document.createElement('option');
@@ -1687,7 +1689,7 @@ def render_try(
       if (es && data && Array.isArray(data.examples)) {{
         var frag2 = document.createDocumentFragment();
         var ph2 = document.createElement('option');
-        ph2.value = ''; ph2.textContent = '— оберіть приклад —';
+        ph2.value = ''; ph2.textContent = '{"— select an example —" if target_lang == "en" else "— оберіть приклад —"}';
         frag2.appendChild(ph2);
         data.examples.forEach(function(ex, i) {{
           var opt = document.createElement('option');
@@ -1707,17 +1709,16 @@ def render_try(
       <div id="questIntro" class="quest-intro" hidden></div>
       <div id="exampleLockBanner" class="example-lock-banner" hidden>
         <div class="elb-text">
-          <strong>📋 Завантажено приклад.</strong>
-          Заповнені поля заблоковано, щоб випадково не змінити дані прикладу.
-          Натисни кнопку, щоб редагувати все.
+          <strong>📋 {'Example loaded.' if target_lang == 'en' else 'Завантажено приклад.'}</strong>
+          {'Filled fields are locked so you do not accidentally change the example data. Click the button to edit anything.' if target_lang == 'en' else 'Заповнені поля заблоковано, щоб випадково не змінити дані прикладу. Натисни кнопку, щоб редагувати все.'}
         </div>
         <button id="personalizeBtn" type="button" class="btn btn-secondary elb-btn">
-          Персоналізувати цей приклад
+          {'Personalise this example' if target_lang == 'en' else 'Персоналізувати цей приклад'}
         </button>
       </div>
       <div id="questGroups"></div>
       <div id="questEmpty" class="quest-empty">
-        Оберіть хворобу зі списку вище, щоб почати опитування.
+        {'Pick a disease from the list above to start the questionnaire.' if target_lang == 'en' else 'Оберіть хворобу зі списку вище, щоб почати опитування.'}
       </div>
     </section>
 
@@ -1734,7 +1735,7 @@ def render_try(
 
     <aside class="quest-side">
       <div class="quest-impact-card">
-        <h3>Імпакт на план</h3>
+        <h3>{'Plan impact' if target_lang == 'en' else 'Імпакт на план'}</h3>
         <div class="impact-progress">
           <div class="impact-bar">
             <div class="impact-bar-fill" id="progressFill"></div>
@@ -1745,15 +1746,15 @@ def render_try(
           </div>
         </div>
         <div class="impact-section" id="impactMissingCritical">
-          <h4>⚠️ Критичні поля без відповіді</h4>
+          <h4>⚠️ {'Critical fields without an answer' if target_lang == 'en' else 'Критичні поля без відповіді'}</h4>
           <ul></ul>
         </div>
         <div class="impact-section" id="impactRedflags">
-          <h4>🚩 Red flags активовано</h4>
+          <h4>🚩 {'Red flags triggered' if target_lang == 'en' else 'Red flags активовано'}</h4>
           <ul></ul>
         </div>
         <div class="impact-section" id="impactSelected">
-          <h4>📋 Поточний default</h4>
+          <h4>📋 {'Current default' if target_lang == 'en' else 'Поточний default'}</h4>
           <p id="impactSelectedText">—</p>
         </div>
         <div class="impact-section" id="impactWarnings" hidden>
@@ -1775,7 +1776,7 @@ def render_try(
         </button>
       </div>
 
-      <div id="status" class="status">Завантажую опитувальники…</div>
+      <div id="status" class="status">{'Loading questionnaires…' if target_lang == 'en' else 'Завантажую опитувальники…'}</div>
       <div id="error" class="error" hidden></div>
     </aside>
   </div>
@@ -1803,32 +1804,32 @@ def render_try(
   </div>
 
   <footer class="page-foot">
-    Якщо щось не працює — <a href="{GH_NEW_ISSUE}?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
+    {'Something not working? <a href="' + GH_NEW_ISSUE + '?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">Open an issue</a>.' if target_lang == 'en' else 'Якщо щось не працює — <a href="' + GH_NEW_ISSUE + '?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.'}
     Pyodide v{_PYODIDE_VERSION} · engine bundle <code>openonco-engine-core.zip</code> + per-disease modules.
   </footer>
 </main>
 
 <div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
   <div class="init-card">
-    <h3>Готую двигун OpenOnco</h3>
-    <p class="init-lead">Перший запуск триває ~10–20 секунд — двигун завантажується безпосередньо у твій браузер. Дані пацієнта не лишають твого пристрою.</p>
+    <h3>{'Starting the OpenOnco engine' if target_lang == 'en' else 'Готую двигун OpenOnco'}</h3>
+    <p class="init-lead">{'The first launch takes ~10–20 seconds — the engine loads directly into your browser. Patient data never leaves your device.' if target_lang == 'en' else 'Перший запуск триває ~10–20 секунд — двигун завантажується безпосередньо у твій браузер. Дані пацієнта не лишають твого пристрою.'}</p>
     <ol class="init-stages" id="initStages">
-      <li data-stage="pyodide" class="stage pending">Готую обчислювач у браузері (~6 МБ)</li>
-      <li data-stage="pydeps" class="stage pending">Налаштовую середовище</li>
-      <li data-stage="bundle" class="stage pending">Завантажую базу знань OpenOnco</li>
-      <li data-stage="validate" class="stage pending">Звіряю клінічну базу</li>
-      <li data-stage="generate" class="stage pending">Будую персональний план</li>
+      <li data-stage="pyodide" class="stage pending">{'Loading the in-browser runtime (~6 MB)' if target_lang == 'en' else 'Готую обчислювач у браузері (~6 МБ)'}</li>
+      <li data-stage="pydeps" class="stage pending">{'Setting up the environment' if target_lang == 'en' else 'Налаштовую середовище'}</li>
+      <li data-stage="bundle" class="stage pending">{'Loading the OpenOnco knowledge base' if target_lang == 'en' else 'Завантажую базу знань OpenOnco'}</li>
+      <li data-stage="validate" class="stage pending">{'Verifying the clinical KB' if target_lang == 'en' else 'Звіряю клінічну базу'}</li>
+      <li data-stage="generate" class="stage pending">{'Building a personalised plan' if target_lang == 'en' else 'Будую персональний план'}</li>
     </ol>
-    <p class="init-hint" id="initHint">Якщо зараз вийшло, наступного разу буде ~5 с — двигун залишається в пам'яті.</p>
+    <p class="init-hint" id="initHint">{"If it's working now, next time it'll be ~5 s — the engine stays in memory." if target_lang == 'en' else "Якщо зараз вийшло, наступного разу буде ~5 с — двигун залишається в пам'яті."}</p>
   </div>
 </div>
 
 <div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
   <div class="generating-card">
     <div class="generating-spinner" aria-hidden="true"></div>
-    <h3>Генерую план…</h3>
-    <p>Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.</p>
-    <p class="generating-hint" id="generatingHint">Запускаю двигун…</p>
+    <h3>{'Generating plan…' if target_lang == 'en' else 'Генерую план…'}</h3>
+    <p>{'Hold on 5–15 s. Fields are locked so the result matches the current input.' if target_lang == 'en' else 'Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.'}</p>
+    <p class="generating-hint" id="generatingHint">{'Starting the engine…' if target_lang == 'en' else 'Запускаю двигун…'}</p>
   </div>
 </div>
 
@@ -2260,8 +2261,8 @@ function renderQuestion(q) {{
     case 'boolean':
       inputHtml = `<select id="${{fieldId}}" data-field="${{q.field}}" data-type="boolean">
         <option value="">—</option>
-        <option value="true">Так</option>
-        <option value="false">Ні</option>
+        <option value="true">{'Yes' if target_lang == 'en' else 'Так'}</option>
+        <option value="false">{'No' if target_lang == 'en' else 'Ні'}</option>
       </select>`;
       break;
     case 'enum':
@@ -2269,7 +2270,7 @@ function renderQuestion(q) {{
         `<option value="${{escHtml(JSON.stringify(o.value))}}">${{escHtml(o.label)}}</option>`
       ).join('');
       inputHtml = `<select id="${{fieldId}}" data-field="${{q.field}}" data-type="enum">
-        <option value="">— оберіть —</option>${{opts}}
+        <option value="">{'— select —' if target_lang == 'en' else '— оберіть —'}</option>${{opts}}
       </select>`;
       break;
     case 'text':
@@ -2484,11 +2485,11 @@ async function runWhatIf(currentResult) {{
       if (q.type !== 'boolean' && q.type !== 'enum') continue;
       const currentVal = answers[q.field];
       if (q.type === 'boolean') {{
-        if (currentVal === true) specs.push({{field: q.field, alt_value: false, label: 'Ні'}});
-        else if (currentVal === false) specs.push({{field: q.field, alt_value: true, label: 'Так'}});
+        if (currentVal === true) specs.push({{field: q.field, alt_value: false, label: '{"No" if target_lang == "en" else "Ні"}'}});
+        else if (currentVal === false) specs.push({{field: q.field, alt_value: true, label: '{"Yes" if target_lang == "en" else "Так"}'}});
         else {{
-          specs.push({{field: q.field, alt_value: true, label: 'Так'}});
-          specs.push({{field: q.field, alt_value: false, label: 'Ні'}});
+          specs.push({{field: q.field, alt_value: true, label: '{"Yes" if target_lang == "en" else "Так"}'}});
+          specs.push({{field: q.field, alt_value: false, label: '{"No" if target_lang == "en" else "Ні"}'}});
         }}
       }} else if (q.type === 'enum') {{
         for (const opt of q.options || []) {{
@@ -2593,7 +2594,7 @@ function renderWhatIfMarks(results) {{
     if (!wrap) continue;
     const box = document.createElement('div');
     box.className = 'quest-whatif';
-    let html = '<div class="whatif-head">Якщо це поле буде іншим:</div><ul>';
+    let html = '<div class="whatif-head">{"If this field were different:" if target_lang == "en" else "Якщо це поле буде іншим:"}</div><ul>';
     for (const it of byField[field]) {{
       const parts = [];
       if (it.diff.indication_now) {{
@@ -2624,9 +2625,9 @@ function updateImpactPanelLocal() {{
     setProgress(0, 0);
     impactMissingCritical.querySelector('ul').innerHTML = '';
     impactRedflags.querySelector('ul').innerHTML =
-      '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+      '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
     impactSelectedText.innerHTML =
-      '<span class="muted">— оберіть хворобу і заповніть форму —</span>';
+      '<span class="muted">{"— pick a disease and fill the form —" if target_lang == "en" else "— оберіть хворобу і заповніть форму —"}</span>';
     impactWarnings.hidden = true;
     return;
   }}
@@ -2649,11 +2650,11 @@ function updateImpactPanelLocal() {{
     ? missing.map(m =>
         `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`
       ).join('')
-    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
   impactRedflags.querySelector('ul').innerHTML =
-    '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+    '<li class="muted">{"Click «Generate» to see red flags" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити red flags"}</li>';
   impactSelectedText.innerHTML =
-    '<span class="muted">Натисни «Згенерувати», щоб побачити рекомендований Indication</span>';
+    '<span class="muted">{"Click «Generate» to see the recommended Indication" if target_lang == "en" else "Натисни «Згенерувати», щоб побачити рекомендований Indication"}</span>';
   impactWarnings.hidden = true;
 }}
 
@@ -2677,7 +2678,7 @@ function updateImpactPanel(result) {{
   const miss = result.missing_critical || [];
   impactMissingCritical.querySelector('ul').innerHTML = miss.length
     ? miss.map(m => `<li><strong>${{escHtml(m.label)}}</strong> <span class="muted">(${{escHtml(m.group)}})</span></li>`).join('')
-    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+    : '<li class="muted">{"All critical fields filled ✓" if target_lang == "en" else "Усі critical поля заповнені ✓"}</li>';
 
   const rfs = result.fired_redflags || [];
   const rfDetail = result.fired_redflags_detail || [];
@@ -2705,11 +2706,11 @@ function updateImpactPanel(result) {{
           ${{sources ? `<div class="rf-fired-srcs">${{sources}}</div>` : ''}}
         </li>`;
       }}).join('')
-    : '<li class="muted">Жодного RedFlag поки не активовано</li>';
+    : '<li class="muted">{"No RedFlag triggered yet" if target_lang == "en" else "Жодного RedFlag поки не активовано"}</li>';
 
   impactSelectedText.innerHTML = result.would_select_indication
     ? `<code>${{escHtml(result.would_select_indication)}}</code>`
-    : '— (бракує даних для вибору)';
+    : '{"— (not enough data to choose)" if target_lang == "en" else "— (бракує даних для вибору)"}';
 
   if ((result.warnings || []).length) {{
     impactWarnings.hidden = false;
@@ -2783,7 +2784,7 @@ async function loadCoreBundle() {{
   if (!bundleIndex || !bundleIndex.core) {{
     throw new Error('Bundle index missing core entry — cannot load engine');
   }}
-  setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+  setStatus('{"Loading the engine core (~1.4 MB)…" if target_lang == "en" else "Завантажую ядро двигуна (~1.4 МБ)…"}');
   const ver = bundleIndex.core_version || '';
   const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
@@ -2829,7 +2830,7 @@ async function loadDiseaseModule(diseaseId) {{
     try {{ localStorage.removeItem(cacheKey); }} catch (_) {{}}
   }}
 
-  setStatus('Завантажую модуль ' + diseaseId + '…');
+  setStatus('{"Loading module " if target_lang == "en" else "Завантажую модуль "}' + diseaseId + '…');
   const url = '/' + relUrl + (ver ? '?v=' + ver : '');
   const r = await fetch(url);
   if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
@@ -2876,7 +2877,7 @@ async function ensureEngine() {{
   try {{
     stage = 'pyodide';
     initStageStart(stage);
-    setStatus('Завантажую Pyodide…');
+    setStatus('{"Loading Pyodide…" if target_lang == "en" else "Завантажую Pyodide…"}');
     await yieldToBrowser(50);
     const _loadPyodide = await ensurePyodideLoader();
     pyodide = await _loadPyodide({{indexURL: "https://cdn.jsdelivr.net/pyodide/v{_PYODIDE_VERSION}/full/"}});
@@ -2884,7 +2885,7 @@ async function ensureEngine() {{
 
     stage = 'pydeps';
     initStageStart(stage);
-    setStatus('Встановлюю pydantic + pyyaml…');
+    setStatus('{"Installing pydantic + pyyaml…" if target_lang == "en" else "Встановлюю pydantic + pyyaml…"}');
     await yieldToBrowser(50);
     await pyodide.loadPackage(['micropip']);
     await yieldToBrowser();
@@ -2896,7 +2897,7 @@ await micropip.install(['pydantic', 'pyyaml'])
 
     stage = 'bundle';
     initStageStart(stage);
-    setStatus('Завантажую двигун OpenOnco…');
+    setStatus('{"Loading the OpenOnco engine…" if target_lang == "en" else "Завантажую двигун OpenOnco…"}');
     await yieldToBrowser(50);
     // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
     // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
@@ -2907,7 +2908,7 @@ await micropip.install(['pydantic', 'pyyaml'])
 
     stage = 'validate';
     initStageStart(stage);
-    setStatus('Перевіряю базу…');
+    setStatus('{"Verifying the KB…" if target_lang == "en" else "Перевіряю базу…"}');
     await yieldToBrowser(50);
     const validationSummary = await pyodide.runPythonAsync(`
 from pathlib import Path
@@ -2929,10 +2930,10 @@ _summary
     initStageDone(stage);
     enginReady = true;
     if (validationSummary === 'ok') {{
-      setStatus('Двигун готовий ✓', 'ok');
+      setStatus('{"Engine ready ✓" if target_lang == "en" else "Двигун готовий ✓"}', 'ok');
     }} else {{
       console.warn('[OpenOnco] KB validation did not pass — engine loaded anyway for testing.\\n' + validationSummary);
-      setStatus('Двигун готовий ⚠ KB неверифіковано (деталі в консолі)', 'warn');
+      setStatus('{"Engine ready ⚠ KB not verified (details in console)" if target_lang == "en" else "Двигун готовий ⚠ KB неверифіковано (деталі в консолі)"}', 'warn');
     }}
     return pyodide;
   }} catch (e) {{
@@ -2948,7 +2949,7 @@ async function runEngine() {{
   setError(null);
   const profile = buildProfile();
   if (!profile) {{
-    setError('Не вдалося зібрати профіль (форма / JSON порожні).');
+    setError('{"Could not assemble a profile (form / JSON empty)." if target_lang == "en" else "Не вдалося зібрати профіль (форма / JSON порожні)."}');
     return;
   }}
 
@@ -2977,7 +2978,7 @@ async function runEngine() {{
     try {{
       await ensureEngine();
     }} catch (e) {{
-      setError('Двигун не завантажився: ' + (e.message || e));
+      setError('{"The engine failed to load: " if target_lang == "en" else "Двигун не завантажився: "}' + (e.message || e));
       setStatus('');
       return;
     }}
@@ -2992,7 +2993,7 @@ async function runEngine() {{
       console.warn('[OpenOnco] disease module load failed (continuing):', e);
     }}
     initStageStart('generate');
-    setStatus('Будую персональний план…');
+    setStatus('{"Building a personalised plan…" if target_lang == "en" else "Будую персональний план…"}');
     await yieldToBrowser(30);
     const _ooTPython = performance.now();
     try {{
@@ -3034,12 +3035,12 @@ html
       pdfBtn.disabled = false;
       modalPdfBtn.disabled = false;
       openPlanModal();
-      setStatus('Plan готовий ✓', 'ok');
+      setStatus('{"Plan ready ✓" if target_lang == "en" else "Plan готовий ✓"}', 'ok');
       const _ooTNow = performance.now();
       console.log(`[OO] generate ${{(_ooTNow - _ooT0).toFixed(0)}}ms total (engine-load ${{(_ooTPython - _ooT0).toFixed(0)}}ms + python ${{(_ooTNow - _ooTPython).toFixed(0)}}ms)`);
     }} catch (e) {{
       initStageError('generate', e && e.message);
-      setError('Двигун повернув помилку:\\n' + (e.message || e));
+      setError('{"The engine returned an error:" if target_lang == "en" else "Двигун повернув помилку:"}\\n' + (e.message || e));
       setStatus('');
     }}
   }} finally {{
@@ -3152,7 +3153,7 @@ function saveManifestsToCache() {{
 
 async function loadAssets() {{
   // Populate dropdowns from manifests — instant, no network fetch.
-  diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
+  diseaseSelect.innerHTML = '<option value="">{"— select —" if target_lang == "en" else "— оберіть —"}</option>';
   QUESTIONNAIRES_MANIFEST.forEach((q, i) => {{
     const opt = document.createElement('option');
     opt.value = i;
@@ -3188,13 +3189,13 @@ async function loadAssets() {{
       }}
       if (draft.jsonText) textarea.value = draft.jsonText;
       if (draft.mode === 'json') setMode('json');
-      setStatus('Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий.', 'ok');
+      setStatus('{"Draft restored ✓ Click «Generate» when you are ready." if target_lang == "en" else "Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий."}', 'ok');
       updateRunBtnEnabled();
       updateImpactPanelLocal();
     }}
   }} else {{
     // Initial load done — hide the top busy banner; sidebar still shows hint.
-    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
+    setStatus('{"Pick a disease from the list to start." if target_lang == "en" else "Оберіть хворобу зі списку, щоб почати."}', 'info', 'hide');
     updateRunBtnEnabled();
     updateImpactPanelLocal();
   }}
@@ -3217,8 +3218,8 @@ function repopulateExamples(activeQuestIdx) {{
   const placeholder = document.createElement('option');
   placeholder.value = '';
   placeholder.textContent = wantCode == null
-    ? '— оберіть приклад —'
-    : '— оберіть приклад для цієї хвороби —';
+    ? '{"— select an example —" if target_lang == "en" else "— оберіть приклад —"}'
+    : '{"— select an example for this disease —" if target_lang == "en" else "— оберіть приклад для цієї хвороби —"}';
   exampleSelect.appendChild(placeholder);
   let n = 0;
   EXAMPLES_MANIFEST.forEach((ex, i) => {{
@@ -3235,7 +3236,7 @@ function repopulateExamples(activeQuestIdx) {{
     const noneOpt = document.createElement('option');
     noneOpt.value = '';
     noneOpt.disabled = true;
-    noneOpt.textContent = '(прикладів для цієї хвороби поки немає)';
+    noneOpt.textContent = '{"(no examples for this disease yet)" if target_lang == "en" else "(прикладів для цієї хвороби поки немає)"}';
     exampleSelect.appendChild(noneOpt);
   }}
 }}
@@ -3334,7 +3335,7 @@ exampleSelect.addEventListener('change', async () => {{
     // No questionnaire match: still show the prebuilt plan if a case file
     // exists for this example.
     if (ex.case_id) loadExamplePlan(ex.case_id);
-    setStatus('Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)', 'ok');
+    setStatus('{"Example loaded as JSON (no questionnaire for this disease yet)" if target_lang == "en" else "Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)"}', 'ok');
   }}
   saveDraft();
   updateRunBtnEnabled();
@@ -3344,7 +3345,7 @@ exampleSelect.addEventListener('change', async () => {{
 const personalizeBtn = document.getElementById('personalizeBtn');
 personalizeBtn && personalizeBtn.addEventListener('click', () => {{
   unlockAllFields();
-  setStatus('Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий.', 'ok');
+  setStatus('{"Fields unlocked — edit anything. Click «Generate» when you are ready." if target_lang == "en" else "Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий."}', 'ok');
 }});
 
 modeFormBtn.addEventListener('click', () => setMode('form'));
@@ -3352,7 +3353,7 @@ modeJsonBtn.addEventListener('click', () => setMode('json'));
 formatBtn && formatBtn.addEventListener('click', () => {{
   setError(null);
   try {{ textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }}
-  catch (e) {{ setError('Невалідний JSON: ' + e.message); }}
+  catch (e) {{ setError('{"Invalid JSON: " if target_lang == "en" else "Невалідний JSON: "}' + e.message); }}
 }});
 textarea.addEventListener('input', () => {{
   markPlanDirty();
@@ -3362,7 +3363,7 @@ textarea.addEventListener('input', () => {{
 }});
 
 resetBtn.addEventListener('click', () => {{
-  if (!confirm('Очистити форму і прибрати чернетку?')) return;
+  if (!confirm('{"Clear the form and drop the draft?" if target_lang == "en" else "Очистити форму і прибрати чернетку?"}')) return;
   answers = {{}};
   textarea.value = '';
   diseaseSelect.value = '';
@@ -3371,7 +3372,7 @@ resetBtn.addEventListener('click', () => {{
   localStorage.removeItem(STORAGE_KEY);
   updateImpactPanelLocal();
   updateRunBtnEnabled();
-  setStatus('Очищено.');
+  setStatus('{"Cleared." if target_lang == "en" else "Очищено."}');
 }});
 
 runBtn.addEventListener('click', runEngine);
@@ -3429,14 +3430,14 @@ async function loadFromUrlHash() {{
 
     const banner = document.createElement('div');
     banner.className = 'case-token-banner';
-    banner.textContent = '✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля.';
+    banner.textContent = '{"✓ Profile loaded from QR code. Click «Generate» to build the plan, or edit any field." if target_lang == "en" else "✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля."}';
     mainTryEl.parentNode.insertBefore(banner, mainTryEl);
-    setStatus('Профіль із QR завантажено ✓', 'ok');
+    setStatus('{"Profile loaded from QR ✓" if target_lang == "en" else "Профіль із QR завантажено ✓"}', 'ok');
   }} catch (err) {{
     console.error('Failed to decode case token:', err);
     const banner = document.createElement('div');
     banner.className = 'case-token-banner-error';
-    banner.textContent = '⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад.';
+    banner.textContent = '{"⚠ Failed to load profile from QR code. Enter JSON manually or pick an example." if target_lang == "en" else "⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад."}';
     mainTryEl.parentNode.insertBefore(banner, mainTryEl);
     setError('QR token decode failed: ' + (err.message || err));
   }}
@@ -6268,115 +6269,183 @@ _SPECS_CATALOG: list[dict] = [
     {
         "id": "CHARTER",
         "file": "CHARTER.md",
-        "title": "Charter та Governance",
         "tag": "governance",
-        "summary": (
+        "title_uk": "Charter та Governance",
+        "title_en": "Charter & Governance",
+        "summary_uk": (
             "Управління проектом, scope (що проект робить і чого не робить), "
             "FDA non-device CDS positioning (§15 з constraints C1-C7), two-reviewer rule "
             "для clinical content (§6.1), patient-data privacy (§9.3), forbidden prompt "
             "patterns для LLM (§8.3 — LLM не приймає клінічні рішення)."
         ),
+        "summary_en": (
+            "Project governance, scope (what it does and what it explicitly does not), "
+            "FDA non-device CDS positioning (§15 with constraints C1-C7), the two-reviewer "
+            "rule for clinical content (§6.1), patient-data privacy (§9.3), forbidden "
+            "prompt patterns for LLMs (§8.3 — LLMs do not make clinical decisions)."
+        ),
     },
     {
         "id": "CLINICAL_CONTENT_STANDARDS",
         "file": "CLINICAL_CONTENT_STANDARDS.md",
-        "title": "Clinical Content Standards",
         "tag": "clinical",
-        "summary": (
+        "title_uk": "Clinical Content Standards",
+        "title_en": "Clinical Content Standards",
+        "summary_uk": (
             "Стандарти клінічного контенту: citation format (source_id + position + "
             "paraphrase + page), evidence-level taxonomy (Tier 1-6), reviewer signoff "
             "workflow, STUB → reviewed transition criteria. Кожна claim у Indication / "
             "Regimen / RedFlag має посилання на Source entity."
         ),
+        "summary_en": (
+            "Clinical content standards: citation format (source_id + position + "
+            "paraphrase + page), evidence-level taxonomy (Tier 1-6), reviewer sign-off "
+            "workflow, STUB → reviewed transition criteria. Every claim in an Indication / "
+            "Regimen / RedFlag links to a Source entity."
+        ),
     },
     {
         "id": "DATA_STANDARDS",
         "file": "DATA_STANDARDS.md",
-        "title": "Data Standards — Patient Model",
         "tag": "data",
-        "summary": (
+        "title_uk": "Data Standards — Patient Model",
+        "title_en": "Data Standards — Patient Model",
+        "summary_uk": (
             "Patient profile data model. FHIR R4/R5 + mCODE alignment у плані. "
             "Кодові системи: LOINC + ICD-10/O-3 + RxNorm + CTCAE v5.0. Без SNOMED CT, "
             "без MedDRA у MVP (license gates). Поля профілю та semantic interoperability."
+        ),
+        "summary_en": (
+            "Patient profile data model. FHIR R4/R5 + mCODE alignment on the roadmap. "
+            "Code systems: LOINC + ICD-10/O-3 + RxNorm + CTCAE v5.0. No SNOMED CT and no "
+            "MedDRA in the MVP (license gates). Profile fields and semantic interoperability."
         ),
     },
     {
         "id": "KNOWLEDGE_SCHEMA_SPECIFICATION",
         "file": "KNOWLEDGE_SCHEMA_SPECIFICATION.md",
-        "title": "Knowledge Schema Specification",
         "tag": "schema",
-        "summary": (
+        "title_uk": "Knowledge Schema Specification",
+        "title_en": "Knowledge Schema Specification",
+        "summary_uk": (
             "Pydantic schemas всіх KB entities — Disease / Indication / Regimen / "
             "Algorithm / Biomarker / Drug / Test / Workup / RedFlag / Contraindication / "
             "MonitoringSchedule / SupportiveCare / Source. Defines fields, validators, "
             "referential integrity rules, migration roadmap до PostgreSQL."
         ),
+        "summary_en": (
+            "Pydantic schemas for every KB entity — Disease / Indication / Regimen / "
+            "Algorithm / Biomarker / Drug / Test / Workup / RedFlag / Contraindication / "
+            "MonitoringSchedule / SupportiveCare / Source. Defines fields, validators, "
+            "referential-integrity rules, and the migration roadmap to PostgreSQL."
+        ),
     },
     {
         "id": "SOURCE_INGESTION_SPEC",
         "file": "SOURCE_INGESTION_SPEC.md",
-        "title": "Source Ingestion & Licensing",
         "tag": "sources",
-        "summary": (
+        "title_uk": "Source Ingestion & Licensing",
+        "title_en": "Source Ingestion & Licensing",
+        "summary_uk": (
             "Як інгестимо джерела: hosting matrix (referenced vs hosted vs mixed) з H1-H5 "
             "justification, license classification gates, add-a-source checklist (§8), "
             "hosted-source checklist (§20), SourceClient protocol для live APIs."
+        ),
+        "summary_en": (
+            "How we ingest sources: the hosting matrix (referenced vs hosted vs mixed) with "
+            "H1-H5 justification, license-classification gates, the add-a-source checklist "
+            "(§8), the hosted-source checklist (§20), and the SourceClient protocol for "
+            "live APIs."
         ),
     },
     {
         "id": "REFERENCE_CASE_SPECIFICATION",
         "file": "REFERENCE_CASE_SPECIFICATION.md",
-        "title": "Reference Case — \"Patient Zero\"",
         "tag": "testing",
-        "summary": (
+        "title_uk": "Reference Case — \"Patient Zero\"",
+        "title_en": "Reference Case — \"Patient Zero\"",
+        "summary_uk": (
             "Synthetic HCV-MZL reference case як P0 acceptance test. Defines всі required "
             "fields у patient profile (§2 templates), critical structural assertions для "
             "Plan render output (§1.3), milestones M1-M6 для розширення coverage."
+        ),
+        "summary_en": (
+            "A synthetic HCV-MZL reference case as the P0 acceptance test. Defines every "
+            "required patient-profile field (§2 templates), the critical structural "
+            "assertions for Plan render output (§1.3), and milestones M1-M6 for expanding "
+            "coverage."
         ),
     },
     {
         "id": "MDT_ORCHESTRATOR_SPEC",
         "file": "MDT_ORCHESTRATOR_SPEC.md",
-        "title": "MDT Orchestrator + Decision Provenance",
         "tag": "engine",
-        "summary": (
+        "title_uk": "MDT Orchestrator + Decision Provenance",
+        "title_en": "MDT Orchestrator + Decision Provenance",
+        "summary_uk": (
             "Orchestrate_mdt rules (R1-R9 для treatment, D1-D6 для diagnostic), "
             "role activation logic (required / recommended / optional), Open Questions "
             "механізм (Q1-Q6 + DQ1-DQ4 — engine не приймає рішення без потрібних даних), "
             "decision provenance graph для audit-grade explanation."
         ),
+        "summary_en": (
+            "Orchestrate_mdt rules (R1-R9 for treatment, D1-D6 for diagnostic), role "
+            "activation logic (required / recommended / optional), the Open Questions "
+            "mechanism (Q1-Q6 + DQ1-DQ4 — the engine refuses to decide without the "
+            "required data), and a decision-provenance graph for audit-grade explanation."
+        ),
     },
     {
         "id": "DIAGNOSTIC_MDT_SPEC",
         "file": "DIAGNOSTIC_MDT_SPEC.md",
-        "title": "Diagnostic-Phase MDT (Pre-biopsy)",
         "tag": "engine",
-        "summary": (
+        "title_uk": "Diagnostic-Phase MDT (Pre-biopsy)",
+        "title_en": "Diagnostic-Phase MDT (Pre-biopsy)",
+        "summary_uk": (
             "Pre-biopsy режим: коли histology ще немає, engine emit DiagnosticPlan з "
             "workup brief замість treatment Plan. CHARTER §15.2 C7 hard rule. "
             "DiagnosticWorkup + DiagnosticPlan schemas, generate_diagnostic_brief(), "
             "polymorphic orchestrate_mdt з DQ1-DQ4 rules."
         ),
+        "summary_en": (
+            "Pre-biopsy mode: when histology is not yet available the engine emits a "
+            "DiagnosticPlan with a workup brief instead of a treatment Plan. CHARTER §15.2 "
+            "C7 hard rule. DiagnosticWorkup + DiagnosticPlan schemas, "
+            "generate_diagnostic_brief(), polymorphic orchestrate_mdt with DQ1-DQ4 rules."
+        ),
     },
     {
         "id": "WORKUP_METHODOLOGY_SPEC",
         "file": "WORKUP_METHODOLOGY_SPEC.md",
-        "title": "Workup Research Methodology",
         "tag": "clinical",
-        "summary": (
+        "title_uk": "Workup Research Methodology",
+        "title_en": "Workup Research Methodology",
+        "summary_uk": (
             "Як ми будуємо basic workup для будь-якої онкологічної області. Source "
             "hierarchy (Tier 1: NCCN/ESMO/EHA/BSH/WHO/ASH), Test/Workup completeness "
             "checklists, 7-step process для нової domain extension, anti-patterns."
+        ),
+        "summary_en": (
+            "How we build a basic workup for any oncology area. Source hierarchy "
+            "(Tier 1: NCCN/ESMO/EHA/BSH/WHO/ASH), Test/Workup completeness checklists, the "
+            "7-step process for extending coverage to a new domain, anti-patterns."
         ),
     },
     {
         "id": "SKILL_ARCHITECTURE_SPEC",
         "file": "SKILL_ARCHITECTURE_SPEC.md",
-        "title": "Skill-Oriented Architecture (MDT Roles as Skills)",
         "tag": "engine",
-        "summary": (
+        "title_uk": "Skill-Oriented Architecture (MDT Roles as Skills)",
+        "title_en": "Skill-Oriented Architecture (MDT Roles as Skills)",
+        "summary_uk": (
             "Formalізує MDT ролі (гематолог / патолог / радіолог / etc.) як "
             "clinically-verified skills — кожен skill має version, sources, "
+            "last_reviewed, clinical_lead. Sizing horizon (~12-15 MVP → 50-60 "
+            "comprehensive), 8-domain layout, 5-phase refactor plan."
+        ),
+        "summary_en": (
+            "Formalises MDT roles (haematologist / pathologist / radiologist / etc.) as "
+            "clinically-verified skills — each skill carries version, sources, "
             "last_reviewed, clinical_lead. Sizing horizon (~12-15 MVP → 50-60 "
             "comprehensive), 8-domain layout, 5-phase refactor plan."
         ),
@@ -6404,7 +6473,11 @@ _SPEC_TAG_COLORS = {
 }
 
 
-def render_specs(stats) -> str:
+def render_specs(stats, *, target_lang: str = "en") -> str:
+    is_en = target_lang == "en"
+    title_key = "title_en" if is_en else "title_uk"
+    summary_key = "summary_en" if is_en else "summary_uk"
+
     spec_cards = []
     for sp in _SPECS_CATALOG:
         gh_url = (
@@ -6415,17 +6488,19 @@ def render_specs(stats) -> str:
         )
         color = _SPEC_TAG_COLORS.get(sp["tag"], "var(--gray-500)")
         tag_label = _SPEC_TAG_LABELS.get(sp["tag"], sp["tag"])
+        read_label = "Read on GitHub →" if is_en else "Читати на GitHub →"
+        raw_label = "Raw markdown" if is_en else "Raw markdown"
         spec_cards.append(f"""
         <div class="spec-card">
           <div class="spec-card-head">
             <span class="spec-tag" style="background:{color}">{tag_label}</span>
             <code class="spec-id">{sp['file']}</code>
           </div>
-          <h3>{sp['title']}</h3>
-          <p>{sp['summary']}</p>
+          <h3>{sp[title_key]}</h3>
+          <p>{sp[summary_key]}</p>
           <div class="spec-card-foot">
-            <a href="{gh_url}" target="_blank" rel="noopener">Read on GitHub →</a>
-            <a href="{raw_url}" target="_blank" rel="noopener" class="spec-raw">Raw markdown</a>
+            <a href="{gh_url}" target="_blank" rel="noopener">{read_label}</a>
+            <a href="{raw_url}" target="_blank" rel="noopener" class="spec-raw">{raw_label}</a>
           </div>
         </div>
         """)
@@ -6433,47 +6508,175 @@ def render_specs(stats) -> str:
     cards_html = "".join(spec_cards)
     n_specs = len(_SPECS_CATALOG)
 
+    if is_en:
+        page_title = "Specifications"
+        h1 = "Specifications"
+        lead = (
+            f"OpenOnco is a specifications-first project. Every architectural, clinical, "
+            f"and governance detail is pinned in a markdown document under <code>specs/</code> "
+            f"that is versioned and open to public review. {n_specs} active specifications "
+            f"cover everything from FDA non-device CDS positioning to the shape of every "
+            f"YAML entity in the KB. The full text lives at "
+            f"<a href=\"https://github.com/{GH_REPO}/tree/master/specs\" target=\"_blank\" "
+            f"rel=\"noopener\">github.com/{GH_REPO}/specs</a>."
+        )
+        callout = (
+            "<strong>Source-of-truth hierarchy</strong> (from CLAUDE.md): when specs "
+            "conflict, the binding order is <strong>1.</strong> CHARTER.md → "
+            "<strong>2.</strong> other <code>specs/*.md</code> → <strong>3.</strong> "
+            "CLAUDE.md → <strong>4.</strong> README.md. Anything under <code>legacy/</code> "
+            "is not authoritative."
+        )
+        active_specs_h = f"Active specifications ({n_specs})"
+        regulatory_h = "Regulatory source (PDF)"
+        regulatory_p = (
+            "The official FDA guidance on non-device CDS classification under "
+            "§520(o)(1)(E). Hosted under <code>specs/</code> as a PDF. CHARTER §15 cites "
+            "concrete criteria 1-4 from this document to justify OpenOnco's non-device "
+            "positioning."
+        )
+        regulatory_link = "View PDF on GitHub →"
+        process_h = "How we update the specifications"
+        process_p1 = (
+            "Any change under <code>specs/</code> or <code>knowledge_base/hosted/content/</code> "
+            "that affects clinical recommendations requires a <strong>two-reviewer merge</strong> "
+            "(CHARTER §6.1) — two of three Clinical Co-Lead approvals. This is the hard rule "
+            "that gates clinical-content quality. Technical specs (schemas, engine, ingestion) "
+            "can merge with a single reviewer to keep development moving, but clinical content "
+            "always needs dual sign-off."
+        )
+        process_p2 = (
+            "All specifications are written Ukrainian-first (the interface and the clinical "
+            "reviewers are UA), but technical terms and license names stay in English inline. "
+            "Versioning is via git: every spec carries <code>v0.1 (draft)</code> in the header "
+            "and is bumped on minor/major depending on breaking changes."
+        )
+        compliance_h = "Compliance + privacy (quick view)"
+        compliance_th = ("Guarantee", "Specification", "What it means")
+        compliance_rows = [
+            ("FDA non-device CDS", "CHARTER.md §15",
+             "OpenOnco is designed for the §520(o)(1)(E) carve-out — not a medical device. Constraints C1-C7 are hard-enforced."),
+            ("No patient data", "CHARTER.md §9.3",
+             "<code>patient_plans/</code> and any patient HTML are gitignored. All examples are synthetic."),
+            ("Two-reviewer merge", "CHARTER.md §6.1",
+             "Clinical content needs 2 of 3 Clinical Co-Lead approvals; otherwise the Indication stays STUB."),
+            ("No LLM clinical judgment", "CHARTER.md §8.3",
+             "LLMs do not pick regimens, do not generate doses, and do not interpret biomarkers for therapy selection."),
+            ("No treatment without histology", "CHARTER.md §15.2 C7",
+             "The engine refuses to generate a treatment Plan without <code>disease.id</code> or <code>icd_o_3_morphology</code> — only a DiagnosticPlan."),
+            ("Anti automation-bias", "CHARTER.md §15.2 C6",
+             "≥2 alternative tracks are always shown side-by-side; the alternative is never hidden."),
+            ("Source hosting default = referenced", "SOURCE_INGESTION_SPEC.md §1.4",
+             "We do not duplicate external databases; hosting requires explicit H1-H5 justification."),
+            ("Free public resource → non-commercial", "CHARTER.md §2",
+             "Many licences (ESMO CC-BY-NC-ND, OncoKB academic, ATC) depend on this. A paid tier would trigger a license audit."),
+        ]
+        footer_disclaimer = "Informational tool for clinicians, not a medical device (CHARTER §15 + §11)."
+    else:
+        page_title = "Специфікації"
+        h1 = "Специфікації"
+        lead = (
+            f"OpenOnco — це specifications-first проект. Кожна архітектурна, клінічна, або "
+            f"governance деталь зафіксована у markdown-документі під <code>specs/</code>, "
+            f"який підлягає версіонуванню та public review. {n_specs} активних специфікацій "
+            f"описують все: від FDA non-device CDS positioning до структури кожної YAML "
+            f"entity у KB. Усі тексти живуть у <a href=\"https://github.com/{GH_REPO}/tree/master/specs\" "
+            f"target=\"_blank\" rel=\"noopener\">github.com/{GH_REPO}/specs</a>."
+        )
+        callout = (
+            "<strong>Source-of-truth ієрархія</strong> (з CLAUDE.md): коли специфікації "
+            "конфліктують, обов'язковий порядок: <strong>1.</strong> CHARTER.md → "
+            "<strong>2.</strong> інші <code>specs/*.md</code> → <strong>3.</strong> CLAUDE.md → "
+            "<strong>4.</strong> README.md. Контент під <code>legacy/</code> не authoritative."
+        )
+        active_specs_h = f"Активні специфікації ({n_specs})"
+        regulatory_h = "Регуляторне джерело (PDF)"
+        regulatory_p = (
+            "Офіційне керівництво FDA про non-device CDS classification under "
+            "§520(o)(1)(E). Лежить у <code>specs/</code> як hosted PDF. CHARTER §15 "
+            "цитує конкретні criteria 1-4 з цього документа для обґрунтування OpenOnco "
+            "positioning як non-device."
+        )
+        regulatory_link = "View PDF on GitHub →"
+        process_h = "Як ми оновлюємо специфікації"
+        process_p1 = (
+            "Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code> "
+            "що affects clinical recommendations потребує <strong>two-reviewer merge</strong> "
+            "(CHARTER §6.1) — два з трьох Clinical Co-Lead approvals. Це жорстке правило "
+            "gатекіпить якість клінічного контенту. Технічні специфікації (схеми, engine, "
+            "ingestion) можуть merge'итися single-reviewer для прискорення розробки, але "
+            "clinical content — завжди dual sign-off."
+        )
+        process_p2 = (
+            "Усі специфікації Ukrainian-first (мова інтерфейсу + клінічних reviewers UA), "
+            "але technical terms та license names залишаються English inline. Версіонування "
+            "— через git: кожна специфікація має <code>v0.1 (draft)</code> у header, bump "
+            "на minor/major залежно від breaking changes."
+        )
+        compliance_h = "Compliance + Privacy (короткий зріз)"
+        compliance_th = ("Гарантія", "Specification", "Що це означає")
+        compliance_rows = [
+            ("FDA non-device CDS", "CHARTER.md §15",
+             "OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced."),
+            ("No patient data", "CHARTER.md §9.3",
+             "<code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic."),
+            ("Two-reviewer merge", "CHARTER.md §6.1",
+             "Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB."),
+            ("No LLM clinical judgment", "CHARTER.md §8.3",
+             "LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection."),
+            ("No treatment without histology", "CHARTER.md §15.2 C7",
+             "Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan."),
+            ("Anti automation-bias", "CHARTER.md §15.2 C6",
+             "Завжди показуються ≥2 alternative tracks side-by-side; alternative не сховано."),
+            ("Source hosting default = referenced", "SOURCE_INGESTION_SPEC.md §1.4",
+             "Не дублюємо external бази; hosting потребує explicit H1-H5 justification."),
+            ("Free public resource → non-commercial", "CHARTER.md §2",
+             "Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit."),
+        ]
+        footer_disclaimer = "Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11)."
+
+    compliance_rows_html = "\n".join(
+        f"          <tr>\n"
+        f"            <td><strong>{g}</strong></td>\n"
+        f"            <td><code>{s}</code></td>\n"
+        f"            <td>{m}</td>\n"
+        f"          </tr>"
+        for (g, s, m) in compliance_rows
+    )
+
     return f"""<!DOCTYPE html>
-<html lang="uk">
+<html lang="{'en' if is_en else 'uk'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Специфікації</title>
+<title>OpenOnco · {page_title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="style.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>
 <body>
-{_render_top_bar(active="specs")}
+{_render_top_bar(active="specs", target_lang=target_lang, lang_switch_href=_lang_switch_href("specs", target_lang))}
 
 <main>
   <section class="info-page">
-    <h1>Специфікації</h1>
+    <h1>{h1}</h1>
     <p class="lead">
-      OpenOnco — це specifications-first проект. Кожна архітектурна, клінічна, або
-      governance деталь зафіксована у markdown-документі під <code>specs/</code>,
-      який підлягає версіонуванню та public review. {n_specs} активних специфікацій
-      описують все: від FDA non-device CDS positioning до структури кожної YAML
-      entity у KB. Усі тексти живуть у <a href="https://github.com/{GH_REPO}/tree/master/specs"
-      target="_blank" rel="noopener">github.com/{GH_REPO}/specs</a>.
+      {lead}
     </p>
 
     <div class="callout">
-      <strong>Source-of-truth ієрархія</strong> (з CLAUDE.md): коли специфікації
-      конфліктують, обов'язковий порядок: <strong>1.</strong> CHARTER.md →
-      <strong>2.</strong> інші <code>specs/*.md</code> → <strong>3.</strong> CLAUDE.md →
-      <strong>4.</strong> README.md. Контент під <code>legacy/</code> не authoritative.
+      {callout}
     </div>
 
     <div class="info-section">
-      <h2>Активні специфікації ({n_specs})</h2>
+      <h2>{active_specs_h}</h2>
       <div class="spec-grid">
         {cards_html}
       </div>
     </div>
 
     <div class="info-section">
-      <h2>Регуляторне джерело (PDF)</h2>
+      <h2>{regulatory_h}</h2>
       <div class="spec-card">
         <div class="spec-card-head">
           <span class="spec-tag" style="background:var(--gray-700)">Regulatory PDF</span>
@@ -6481,82 +6684,31 @@ def render_specs(stats) -> str:
         </div>
         <h3>FDA Clinical Decision Support Software Guidance</h3>
         <p>
-          Офіційне керівництво FDA про non-device CDS classification under
-          §520(o)(1)(E). Лежить у <code>specs/</code> як hosted PDF. CHARTER §15
-          цитує конкретні criteria 1-4 з цього документа для обґрунтування OpenOnco
-          positioning як non-device.
+          {regulatory_p}
         </p>
         <div class="spec-card-foot">
           <a href="https://github.com/{GH_REPO}/blob/master/specs/Guidance-Clinical-Decision-Software_5.pdf"
-             target="_blank" rel="noopener">View PDF on GitHub →</a>
+             target="_blank" rel="noopener">{regulatory_link}</a>
         </div>
       </div>
     </div>
 
     <div class="info-section">
-      <h2>Як ми оновлюємо специфікації</h2>
+      <h2>{process_h}</h2>
       <p class="info-text">
-        Кожна зміна під <code>specs/</code> або <code>knowledge_base/hosted/content/</code>
-        що affects clinical recommendations потребує <strong>two-reviewer merge</strong>
-        (CHARTER §6.1) — два з трьох Clinical Co-Lead approvals. Це жорстке правило
-        gатекіпить якість клінічного контенту. Технічні специфікації (схеми, engine,
-        ingestion) можуть merge'итися single-reviewer для прискорення розробки, але
-        clinical content — завжди dual sign-off.
+        {process_p1}
       </p>
       <p class="info-text">
-        Усі специфікації Ukrainian-first (мова інтерфейсу + клінічних reviewers UA),
-        але technical terms та license names залишаються English inline. Версіонування
-        — через git: кожна специфікація має <code>v0.1 (draft)</code> у header, bump
-        на minor/major залежно від breaking changes.
+        {process_p2}
       </p>
     </div>
 
     <div class="info-section">
-      <h2>Compliance + Privacy (короткий зріз)</h2>
+      <h2>{compliance_h}</h2>
       <table class="kv-table">
-        <thead><tr><th>Гарантія</th><th>Specification</th><th>Що це означає</th></tr></thead>
+        <thead><tr><th>{compliance_th[0]}</th><th>{compliance_th[1]}</th><th>{compliance_th[2]}</th></tr></thead>
         <tbody>
-          <tr>
-            <td><strong>FDA non-device CDS</strong></td>
-            <td><code>CHARTER.md §15</code></td>
-            <td>OpenOnco проектується під §520(o)(1)(E) carve-out — не медичний пристрій. Constraints C1-C7 hard-enforced.</td>
-          </tr>
-          <tr>
-            <td><strong>No patient data</strong></td>
-            <td><code>CHARTER.md §9.3</code></td>
-            <td><code>patient_plans/</code> + будь-які patient HTML gitignored. Усі examples — synthetic.</td>
-          </tr>
-          <tr>
-            <td><strong>Two-reviewer merge</strong></td>
-            <td><code>CHARTER.md §6.1</code></td>
-            <td>Clinical content потребує 2 з 3 Clinical Co-Lead approvals; інакше Indication залишається STUB.</td>
-          </tr>
-          <tr>
-            <td><strong>No LLM clinical judgment</strong></td>
-            <td><code>CHARTER.md §8.3</code></td>
-            <td>LLM не вибирає режими, не генерує дози, не інтерпретує biomarkers для therapy selection.</td>
-          </tr>
-          <tr>
-            <td><strong>No treatment without histology</strong></td>
-            <td><code>CHARTER.md §15.2 C7</code></td>
-            <td>Engine відмовляється generate'ити treatment Plan без <code>disease.id</code> або <code>icd_o_3_morphology</code>; тільки DiagnosticPlan.</td>
-          </tr>
-          <tr>
-            <td><strong>Anti automation-bias</strong></td>
-            <td><code>CHARTER.md §15.2 C6</code></td>
-            <td>Завжди показуються ≥2 alternative tracks side-by-side; alternative не сховано.</td>
-          </tr>
-          <tr>
-            <td><strong>Source hosting default = referenced</strong></td>
-            <td><code>SOURCE_INGESTION_SPEC.md §1.4</code></td>
-            <td>Не дублюємо external бази; hosting потребує explicit H1-H5 justification.</td>
-          </tr>
-          <tr>
-            <td><strong>Free public resource → non-commercial</strong></td>
-            <td><code>CHARTER.md §2</code></td>
-            <!-- TODO(phase-5-cleanup): rephrase license-audit example without naming the rejected vendor (currently retained as policy-context only — not surfaced as clinical content). -->
-            <td>Багато ліцензій (ESMO CC-BY-NC-ND, OncoKB academic, ATC) залежать від цього. Paid tier тригернув би license audit.</td>
-          </tr>
+{compliance_rows_html}
         </tbody>
       </table>
     </div>
@@ -6565,7 +6717,7 @@ def render_specs(stats) -> str:
   <footer class="page-foot">
     Open-source · MIT-style usage · <a href="https://github.com/{GH_REPO}">{GH_REPO}</a>
     <br>
-    Це інформаційний інструмент для лікаря, не медичний пристрій (CHARTER §15 + §11).
+    {footer_disclaimer}
   </footer>
 </main>
 </body>
@@ -6709,6 +6861,8 @@ def build_site(output_dir: Path) -> dict:
         render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
     (output_dir / "diseases.html").write_text(
         render_diseases(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "specs.html").write_text(
+        render_specs(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(
             target_lang="en",
@@ -6718,17 +6872,16 @@ def build_site(output_dir: Path) -> dict:
         ), encoding="utf-8")
 
     # ── UA build (mirror at /ukr/) ──
-    # Specs page stays UA-only (the spec documents themselves are UA, so an
-    # EN render would be useless). Body copy of try.html is still partly UA
-    # in both locales — full EN translation of the form/JS strings is a
-    # separate workstream. Per-case Plan/Brief HTMLs ARE rendered in both
-    # languages — that's where 80% of the user-facing content lives.
+    # Specs catalog page is rendered in both locales — the underlying
+    # markdown specs in /specs/ are still UA-first, but the catalog overview
+    # has both UA and EN copy. Per-case Plan/Brief HTMLs ARE rendered in
+    # both languages — that's where 80% of the user-facing content lives.
     (output_dir / "ukr" / "index.html").write_text(
         render_landing(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "capabilities.html").write_text(
         render_capabilities(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "specs.html").write_text(
-        render_specs(stats), encoding="utf-8")
+        render_specs(stats, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "gallery.html").write_text(
         render_gallery(stats_widget, target_lang="uk"), encoding="utf-8")
     (output_dir / "ukr" / "diseases.html").write_text(
