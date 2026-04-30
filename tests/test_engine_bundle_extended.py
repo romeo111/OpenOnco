@@ -286,51 +286,9 @@ def test_lazy_load_disease_merges_with_core(
     assert dlbcl_files, "no DLBCL indication YAMLs found post-merge"
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# Section C — Backward compatibility
-# ──────────────────────────────────────────────────────────────────────────
-
-
-def test_monolithic_bundle_still_built(bundle_out: dict) -> None:
-    """`docs/openonco-engine.zip` (monolithic fallback) must still be
-    produced by `bundle_engine()` — JS clients that haven't migrated to
-    the lazy-load index depend on it."""
-    monolithic = Path(bundle_out["_dir"]) / "openonco-engine.zip"
-    assert monolithic.is_file(), (
-        "monolithic openonco-engine.zip is missing — back-compat broken"
-    )
-    # Sanity: it should be larger than the core bundle (it carries
-    # everything; core carries only the shared subset).
-    core = Path(bundle_out["_dir"]) / "openonco-engine-core.zip"
-    assert monolithic.stat().st_size > core.stat().st_size, (
-        "monolithic bundle should be larger than the core bundle"
-    )
-
-
-def test_monolithic_bundle_loads_via_loader(
-    bundle_out: dict, tmp_path: Path
-) -> None:
-    """Round-trip: unpack the monolithic zip → run `load_content()` →
-    KB validates clean. This is the back-compat guarantee for any client
-    still fetching the legacy bundle."""
-    out_dir = Path(bundle_out["_dir"])
-    target = tmp_path / "monolithic_kb"
-    target.mkdir()
-    _unpack(out_dir / "openonco-engine.zip", target)
-
-    content_root = target / "knowledge_base" / "hosted" / "content"
-    assert content_root.is_dir()
-
-    clear_load_cache()
-    result = load_content(content_root)
-    clear_load_cache()
-    assert result.ok, (
-        f"monolithic KB failed to load: schema={len(result.schema_errors)} "
-        f"ref={len(result.ref_errors)} contract={len(result.contract_errors)}"
-    )
-    # Smoke-level entity count assertion — the monolithic bundle should
-    # carry the full KB (>1000 entities).
-    assert len(result.entities_by_id) > 1000, (
-        f"monolithic KB suspiciously small: {len(result.entities_by_id)} "
-        "entities loaded"
-    )
+# Section C (back-compat for monolithic bundle) was removed 2026-04-30:
+# the legacy `openonco-engine.zip` was retired in CSD-9C (2026-04-27,
+# scripts/build_site.py:272-278 deletes any stale monolithic on build).
+# Tests that asserted its presence have been deleted; the lazy-load
+# core + per-disease bundles are tested in Sections A and B above and
+# in test_engine_bundle_optimization.py.

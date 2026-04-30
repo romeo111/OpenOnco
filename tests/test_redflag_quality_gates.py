@@ -61,20 +61,11 @@ SPEC_CATEGORIES = (
 # Each will close as the disease-specific RF families land in subsequent
 # CSDs; whitelisted now so the matrix gate still fails on regressions
 # elsewhere.
-DISEASES_WITH_GAPS_BASELINE: set[str] = {
-    "DIS-CHOLANGIOCARCINOMA",
-    "DIS-CHONDROSARCOMA",
-    "DIS-GIST",
-    "DIS-GLIOMA-LOW-GRADE",
-    "DIS-HNSCC",
-    "DIS-IFS",
-    "DIS-IMT",
-    "DIS-MPNST",
-    "DIS-MTC",
-    "DIS-SALIVARY",
-    "DIS-THYROID-ANAPLASTIC",
-    "DIS-THYROID-PAPILLARY",
-}
+DISEASES_WITH_GAPS_BASELINE: set[str] = set()
+# All 12 previously-allowed gap diseases now cover the 5-type matrix as of
+# 2026-04-30. Keep this set as the extension point: when a new disease is
+# added that hasn't yet seeded its 5-type RF family, add the disease ID
+# here with a dated comment explaining why CI tolerates the gap.
 
 # Per spec §2: "Якщо для хвороби якась з категорій клінічно нерелевантна
 # ... постав <rf>.notes: з обґрунтуванням замість заглушки." We model that
