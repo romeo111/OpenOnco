@@ -43,6 +43,7 @@ import argparse
 import html
 import json
 import shutil
+import sys
 import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -7000,7 +7001,18 @@ def build_site(output_dir: Path) -> dict:
     }
 
 
+def _force_utf8_stdout() -> None:
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8")
+            except Exception:  # pylint: disable=broad-except
+                pass
+
+
 def main(argv: list[str] | None = None) -> int:
+    _force_utf8_stdout()
     parser = argparse.ArgumentParser(description="Build OpenOnco static site for GitHub Pages.")
     parser.add_argument("--output", default="docs", help="Output directory (default: docs/)")
     parser.add_argument("--clean", action="store_true", help="Wipe output directory before building.")

@@ -9,6 +9,7 @@ Run: py -3.12 scripts/_pkg3_normalize.py
 from __future__ import annotations
 
 import re
+import sys
 from pathlib import Path
 
 KB = Path(__file__).resolve().parent.parent / "knowledge_base/hosted/content/drugs"
@@ -502,7 +503,18 @@ def process(path: Path, drug_id: str) -> dict:
     return {"path": str(path), "drug_id": drug_id, "changes": []}
 
 
+def _force_utf8_stdout() -> None:
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8")
+            except Exception:  # pylint: disable=broad-except
+                pass
+
+
 def main():
+    _force_utf8_stdout()
     # Map filename stem → DRUG-ID for safety check
     pkg3 = {
         "adagrasib": "DRUG-ADAGRASIB",

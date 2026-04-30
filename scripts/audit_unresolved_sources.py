@@ -121,7 +121,18 @@ def _format_markdown(report: dict) -> str:
     return "\n".join(out)
 
 
+def _force_utf8_stdout() -> None:
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(encoding="utf-8")
+            except Exception:  # pylint: disable=broad-except
+                pass
+
+
 def main() -> int:
+    _force_utf8_stdout()
     parser = argparse.ArgumentParser(
         description="List unresolved SRC-* citations grouped by category.",
     )
