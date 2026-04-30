@@ -10,6 +10,15 @@ from ._reviewer_signoff import ReviewerSignoff, _migrate_int_signoffs
 from .base import Base, Citation, EvidenceLevel, StrengthOfRecommendation
 
 
+# Sentinel SRC-* id assigned to outcome values that pre-date the Phase 2
+# schema migration (Pivotal Trial Outcomes Ingestion Plan §"Schema
+# evolution"). Defined as a Source entity at
+# `knowledge_base/hosted/content/sources/src_legacy_uncited.yaml` so the
+# referential integrity check succeeds. Phase 3 (gap-fill) replaces these
+# with real SRC-* ids as values get traced back to pivotal trials.
+LEGACY_UNCITED_SOURCE_ID = "SRC-LEGACY-UNCITED"
+
+
 class BiomarkerRequirement(Base):
     biomarker_id: str
     required: bool = True
@@ -26,15 +35,75 @@ class IndicationApplicability(Base):
     # e.g. {age_min: 18, age_max: null, ecog_max: 2, fit_for_chemo: true}
 
 
-class ExpectedOutcomes(Base):
-    """Per REFERENCE_CASE_SPECIFICATION §3.7 — aligns with HCV-MZL fields."""
+class OutcomeValue(Base):
+    """Citation-bearing wrapper around a clinical-trial outcome value.
 
-    overall_response_rate: Optional[str] = None
-    complete_response: Optional[str] = None
-    progression_free_survival: Optional[str] = None
-    overall_survival_5y: Optional[str] = None
-    hcv_cure_rate_svr12: Optional[str] = None
-    # extra='allow' handles disease-specific fields
+    Phase 2 of the Pivotal Trial Outcomes Ingestion Plan
+    (`docs/plans/pivotal_trial_outcomes_ingestion_plan_2026-04-30.md`).
+    Plain-string outcome values are coerced to
+    ``OutcomeValue(value=<str>, source="SRC-LEGACY-UNCITED")`` by
+    ``ExpectedOutcomes._coerce_legacy_string`` so the Phase-1 audit can
+    flag pre-migration entries; Phase 3 replaces those placeholders with
+    real ``SRC-*`` ids as outcomes get traced to their pivotal-trial
+    publications.
+    """
+
+    value: str
+    source: str
+    confidence_interval: Optional[str] = None  # e.g. "95% CI 4.7-6.5"
+    median_followup_months: Optional[float] = None
+
+
+# The schema-declared outcome fields on `ExpectedOutcomes`. Disease-
+# specific extras admitted via `extra='allow'` are deliberately NOT
+# coerced — they keep their raw shape (string, int, dict, …) until a
+# future migration formalizes each one.
+_OUTCOME_FIELDS: tuple[str, ...] = (
+    "overall_response_rate",
+    "complete_response",
+    "progression_free_survival",
+    "overall_survival_5y",
+    "overall_survival_median",
+    "disease_free_survival_hr",
+    "hcv_cure_rate_svr12",
+)
+
+
+class ExpectedOutcomes(Base):
+    """Per REFERENCE_CASE_SPECIFICATION §3.7 — aligns with HCV-MZL fields.
+
+    Each outcome field accepts EITHER a plain string (legacy, pre-Phase-2
+    YAML — coerced to ``OutcomeValue(value=str, source="SRC-LEGACY-UNCITED")``)
+    OR an ``OutcomeValue`` dict (Phase 2+ format). The
+    ``_coerce_legacy_string`` validator runs in ``mode="before"`` so the
+    coercion happens before Pydantic's per-field type check; ``None`` and
+    dict shapes pass through untouched.
+    """
+
+    overall_response_rate: Optional[OutcomeValue] = None
+    complete_response: Optional[OutcomeValue] = None
+    progression_free_survival: Optional[OutcomeValue] = None
+    overall_survival_5y: Optional[OutcomeValue] = None
+    overall_survival_median: Optional[OutcomeValue] = None  # Phase 2 (new)
+    disease_free_survival_hr: Optional[OutcomeValue] = None  # Phase 2 (new — adjuvant)
+    hcv_cure_rate_svr12: Optional[OutcomeValue] = None
+    # extra='allow' (inherited from Base) handles disease-specific fields
+
+    @field_validator(*_OUTCOME_FIELDS, mode="before")
+    @classmethod
+    def _coerce_legacy_string(cls, v):
+        """Plain string → OutcomeValue(value=str, source="SRC-LEGACY-UNCITED").
+
+        Backward-compat shim for Phase 2: the 312 indication YAMLs all
+        carry plain-string outcomes today. Coercing here preserves the
+        loader contract (KB validator stays green) while exposing a
+        `source` pointer to render-layer code and to Phase 3 gap-fill.
+        ``None`` (absent field) and ``dict`` (already-migrated) values
+        pass through unchanged.
+        """
+        if isinstance(v, str):
+            return {"value": v, "source": LEGACY_UNCITED_SOURCE_ID}
+        return v
 
 
 class ControversyPosition(Base):

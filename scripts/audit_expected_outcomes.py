@@ -53,16 +53,27 @@ Usage
 -----
 ::
 
-    py -3.12 scripts/audit_expected_outcomes.py
+    py -3.12 scripts/audit_expected_outcomes.py            # full markdown audit
+    py -3.12 scripts/audit_expected_outcomes.py --matrix   # tab-separated
+                                                           # disease-id ↦ %-cited
+                                                           # (loose) for the
+                                                           # disease-coverage
+                                                           # matrix integration
 
-CLI flags are intentionally minimal — the script always writes to the
-canonical paths above. Override only via direct edit when refreshing for
-a new audit date.
+CLI flags are intentionally minimal — the markdown-audit mode always writes
+to the canonical paths above. Override only via direct edit when refreshing
+for a new audit date. The ``--matrix`` mode (Phase 2 deliverable for the
+Pivotal Trial Outcomes Ingestion Plan) emits a stable ``DIS-*\\t<pct>``
+stream consumed by ``scripts/disease_coverage_matrix.py`` so the per-
+disease coverage matrix gains an ``Outcomes-Cited %`` column without
+duplicating the bucketing logic.
 """
 
 from __future__ import annotations
 
+import argparse
 import re
+import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -1105,29 +1116,83 @@ def render_appendix(
     return "\n".join(lines)
 
 
-# ── Main ────────────────────────────────────────────────────────────────────
+# ── Public helpers (Phase 2 — matrix integration) ───────────────────────────
 
 
-def main() -> int:
-    if not INDICATIONS_DIR.is_dir():
-        print(f"FATAL: indications dir not found: {INDICATIONS_DIR}")
-        return 2
-    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
-
+def _classify_all() -> tuple[list[IndicationStats], dict[str, DiseaseRollup]]:
+    """Run the audit's classification pass and return (per-indication stats,
+    per-disease rollups). Shared between the markdown-audit mode and the
+    matrix-emit mode so bucketing logic stays single-sourced."""
     source_titles = load_source_titles()
-    disease_names = load_disease_names()
-
     all_stats: list[IndicationStats] = []
-    skipped: list[Path] = []
     for path in sorted(INDICATIONS_DIR.glob("*.yaml")):
         data = _safe_load(path)
         if data is None:
-            skipped.append(path)
             continue
         all_stats.append(classify_indication(data, source_titles))
     all_stats.sort(key=lambda s: s.indication_id)
+    return all_stats, rollup_by_disease(all_stats)
 
-    rollups = rollup_by_disease(all_stats)
+
+def disease_outcomes_cited_pct() -> dict[str, float]:
+    """Return ``{disease_id: outcomes_cited_pct (loose)}`` for every disease
+    that owns ≥1 indication.
+
+    Phase 2 deliverable — consumed by
+    ``scripts/disease_coverage_matrix.py`` to populate the new
+    ``Outcomes-Cited %`` column without re-implementing the bucketing.
+
+    "Loose" = ``(cited + probably-cited) / populated``, matching the
+    headline metric in the markdown audit. Diseases with zero populated
+    outcome fields return 0.0 (vs. ``n/a`` in the markdown — the matrix
+    column needs a numeric value for sorting).
+    """
+    _, rollups = _classify_all()
+    return {did: r.outcomes_cited_pct for did, r in rollups.items()}
+
+
+# ── Main ────────────────────────────────────────────────────────────────────
+
+
+def _run_matrix_mode() -> int:
+    """Emit ``<DIS-*>\\t<pct>`` lines to stdout. Stable order: by disease id."""
+    pct_map = disease_outcomes_cited_pct()
+    for did in sorted(pct_map):
+        print(f"{did}\t{pct_map[did]:.2f}")
+    return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Audit `Indication.expected_outcomes` traceability. "
+            "Default mode writes the markdown audit; --matrix emits "
+            "tab-separated disease-id ↦ outcomes-cited % for the "
+            "coverage-matrix integration."
+        )
+    )
+    parser.add_argument(
+        "--matrix",
+        action="store_true",
+        help=(
+            "Emit `<DIS-*>\\t<pct>` lines (loose outcomes-cited %) to "
+            "stdout instead of writing the markdown audit. "
+            "Consumed by scripts/disease_coverage_matrix.py."
+        ),
+    )
+    args = parser.parse_args(argv)
+
+    if not INDICATIONS_DIR.is_dir():
+        print(f"FATAL: indications dir not found: {INDICATIONS_DIR}")
+        return 2
+
+    if args.matrix:
+        return _run_matrix_mode()
+
+    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
+    disease_names = load_disease_names()
+
+    all_stats, rollups = _classify_all()
 
     # Identify worst-3 disease ids — they go inline; the rest into the appendix.
     worst3_ids = {
@@ -1143,6 +1208,12 @@ def main() -> int:
 
     MAIN_OUT.write_text(main_md, encoding="utf-8")
     APPENDIX_OUT.write_text(appendix_md, encoding="utf-8")
+
+    skipped = [
+        path
+        for path in sorted(INDICATIONS_DIR.glob("*.yaml"))
+        if _safe_load(path) is None
+    ]
 
     print(f"Wrote {MAIN_OUT.relative_to(REPO_ROOT)}")
     print(f"Wrote {APPENDIX_OUT.relative_to(REPO_ROOT)}")
