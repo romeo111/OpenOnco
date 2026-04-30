@@ -1,0 +1,83 @@
+id: RF-MCL-POST-BTKI-C481-ACTIONABLE
+definition: >
+  MCL with acquired BTK C481S (rarely C481R/F/Y) mutation after progression
+  on covalent BTK inhibitor (ibrutinib, acalabrutinib, zanubrutinib).
+  C481S abolishes covalent binding of cBTKi to BTK; non-covalent BTKi
+  pirtobrutinib retains activity (BRUIN MCL-321, Wang Lancet Oncol 2024;
+  pirtobrutinib in cBTKi-pretreated MCL ORR 51%, mPFS 7.4 mo). Routes
+  3L+ post-cBTKi MCL with confirmed C481-axis resistance to pirtobrutinib
+  over chemoimmunotherapy or alternative cBTKi (which would not regain
+  activity given the on-target resistance mechanism).
+definition_ua: >
+  МКЛ із набутою BTK C481S (рідко C481R/F/Y) мутацією після прогресії
+  на ковалентному BTK-інгібіторі (ібрутиніб, акалабрутиніб, занубрутиніб).
+  C481S скасовує ковалентне зв'язування cBTKi з BTK; нековалентний
+  піртобрутиніб зберігає активність (BRUIN MCL-321, Wang Lancet Oncol
+  2024; піртобрутиніб у cBTKi-предлікованих МКЛ ORR 51%, мПФВ 7.4 міс).
+  Маршрутизує 3L+ post-cBTKi МКЛ з підтвердженою C481-axis резистентністю
+  на піртобрутиніб замість chemoimmuno або альтернативного cBTKi (який
+  не відновить активність через on-target механізм резистентності).
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "prior_btki_received"
+          value: true
+        - finding: "prior_cbtki_received"
+          value: true
+    - any_of:
+        - finding: "btk_c481s_mutation"
+          value: true
+        - finding: "btk_c481_mutation"
+          value: "positive"
+        - finding: "btk_resistance_mutation"
+          value: "C481S"
+        - finding: "plcg2_mutation"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: prior-therapy-class
+
+relevant_diseases:
+  - DIS-MCL
+shifts_algorithm:
+  - ALGO-MCL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MCL-2024
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Distinguish from RF-PRIOR-BTKI-PROGRESSION (universal, broad) — that
+  flag fires on any cBTKi PD; this flag is mutation-confirmed C481S
+  resistance, the canonical mechanism of acquired cBTKi resistance in
+  MCL (similar prevalence to CLL ~80% on cBTKi PD). PLCG2 mutations
+  (R665W, S707F/Y, L845F) are an alternative resistance mechanism
+  (~15%) — also responds to pirtobrutinib. Test at PD by ddPCR or NGS
+  on peripheral-blood mononuclear cells. Brexucabtagene autoleucel
+  (CAR-T, ZUMA-2) is the alternative for CAR-T-eligible post-cBTKi
+  MCL; pirtobrutinib preferred for CAR-T-ineligible (age, comorbidity,
+  organ dysfunction). Access UA: pirtobrutinib not yet NSZU-listed;
+  international early-access pathways.
+notes_ua: >
+  Відрізняти від RF-PRIOR-BTKI-PROGRESSION (універсальний, широкий) — той
+  спрацьовує на будь-яку cBTKi PD; цей — мутаційно-підтверджена C481S
+  резистентність, канонічний механізм набутої резистентності до cBTKi
+  у МКЛ (поширеність схожа з ХЛЛ ~80% при cBTKi PD). PLCG2 мутації
+  (R665W, S707F/Y, L845F) — альтернативний механізм (~15%) — теж
+  відповідає на піртобрутиніб. Тестувати при PD ddPCR або NGS на
+  периферичних мононуклеарах. Брексукабтаген автолейцел (CAR-T,
+  ZUMA-2) — альтернатива для CAR-T-eligible post-cBTKi МКЛ;
+  піртобрутиніб переважно для CAR-T-ineligible (вік, коморбідність,
+  органна дисфункція). Доступ в Україні: піртобрутиніб ще не в
+  НСЗУ-списку; міжнародні early-access шляхи.
+
+# MISSING SOURCE: SRC-BRUIN-MCL-321-WANG-2024 (Lancet Oncology 2024) —
+# pirtobrutinib in cBTKi-pretreated MCL pivotal data. Tier-2.

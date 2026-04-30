@@ -5,19 +5,39 @@ purpose: >
   Select 1L systemic therapy for recurrent / metastatic HNSCC by
   PD-L1 CPS stratum (KEYNOTE-048 framework). CPS ≥20: pembrolizumab
   monotherapy (less toxicity, equivalent OS). CPS 1-19: pembrolizumab
-  + 5-FU + platinum (chemo-IO superior OS to EXTREME). CPS <1: chemo-
-  IO with attenuated benefit OR EXTREME (cetuximab + 5-FU + platinum)
-  — fallback EXTREME indication is deferred (not authored). Locally
+  + 5-FU + platinum (chemo-IO superior OS to EXTREME). CPS <1:
+  EXTREME (cetuximab + 5-FU + platinum) — chemo-IO benefit attenuated
+  in CPS<1 subgroup of KEYNOTE-048 (OS HR crossed 1.0). Locally
   advanced (curative-intent) HNSCC is out of scope for this algorithm.
 
 output_indications:
   - IND-HNSCC-RM-1L-PEMBRO-CHEMO
   - IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
+  - IND-HNSCC-RM-1L-EXTREME
 
 default_indication: IND-HNSCC-RM-1L-PEMBRO-CHEMO
 alternative_indication: IND-HNSCC-RM-1L-PEMBRO-MONO-CPS-HIGH
 
 decision_tree:
+  # Step 0 — CPS<1 → EXTREME (Vermorken NEJM 2008). Direct finding lookup
+  # on patient.findings.pdl1_cps_negative (true when CPS=0) OR pdl1_cps
+  # numeric < 1. Engine resolves `condition: pdl1_cps_negative` via
+  # _resolve_finding to the patient's boolean. W5b drift fix (2026-04-30) —
+  # additive only; original step 1 + step 2 preserved verbatim below.
+  - step: 0
+    evaluate:
+      any_of:
+        - condition: "pdl1_cps_negative"
+        - all_of:
+            - finding: "pdl1_cps"
+              threshold: 1
+              comparator: "<"
+    if_true:
+      result: IND-HNSCC-RM-1L-EXTREME
+    if_false:
+      next_step: 1
+    notes: "EXTREME for CPS<1 (chemo-IO benefit attenuated per KEYNOTE-048 subgroup)."
+
   - step: 1
     evaluate:
       any_of:
@@ -39,11 +59,16 @@ decision_tree:
 
 sources:
   - SRC-NCCN-HNSCC-2025
-last_reviewed: '2026-04-26'
+  - SRC-EXTREME-VERMORKEN-2008
+last_reviewed: '2026-04-30'
 notes: >
-  CPS <1 R/M HNSCC ideally routes to EXTREME (cetuximab + 5-FU +
-  platinum) or chemo-IO with attenuated OS benefit; explicit
-  IND-HNSCC-RM-1L-EXTREME is deferred to a follow-up content session.
+  W5b drift fix (2026-04-30): added step 0 only — CPS<1 → EXTREME via
+  IND-HNSCC-RM-1L-EXTREME. Step 1 + step 2 preserved verbatim per
+  brief's "additive only" gate. The pre-existing notes about the
+  free-text "CPS ≥20" branch and the RF-HNSCC-TRANSFORMATION-PROGRESSION
+  drift documented in `patient_hnscc_cps_high_pembro_mono.json` remain
+  unchanged — that is a separate KB drift to be addressed in a
+  follow-up RF-authoring session, NOT in W5b.
   Genotype-driven 1L (HRAS-mutant tipifarnib, NTRK-fusion
   larotrectinib/entrectinib, BRAF V600E dabra+trame) are
   investigational / accelerated and not authored as 1L Indications

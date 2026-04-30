@@ -1,0 +1,78 @@
+id: RF-PDAC-FIT-FOR-FOLFIRINOX
+definition: >
+  Fitness for FOLFIRINOX in metastatic PDAC per PRODIGE-4 / ACCORD-11
+  inclusion criteria (Conroy NEJM 2011): ECOG 0-1, age ≤75 (≤76 by
+  protocol; convention <=70-75 in real-world), bilirubin ≤1.5× ULN
+  (resolved post-biliary stenting if needed), no significant cardiac
+  comorbidity, adequate hepatic / renal / bone-marrow function. Selects
+  IND-PDAC-METASTATIC-1L-FOLFIRINOX over IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+  (mOS 11.1 vs 6.8 mo in PRODIGE-4; toxicity tradeoff acceptable in fit
+  patients). Frail / ECOG ≥2 / bilirubin elevated → de-escalate to
+  gem-nab-paclitaxel (MPACT, Von Hoff NEJM 2013).
+definition_ua: >
+  Придатність до FOLFIRINOX при метастатичному PDAC за критеріями
+  PRODIGE-4 / ACCORD-11 (Conroy NEJM 2011): ECOG 0-1, вік ≤75 (≤76 за
+  протоколом; конвенція <=70-75 у реальній практиці), білірубін ≤1.5×
+  ВМН (вирішений після стентування жовчних шляхів за потреби), відсутність
+  значущої кардіальної коморбідності, адекватна функція печінки / нирок /
+  кісткового мозку. Обирає IND-PDAC-METASTATIC-1L-FOLFIRINOX над
+  IND-PDAC-METASTATIC-1L-GEM-NAB-PAC (мЗВ 11.1 vs 6.8 міс у PRODIGE-4;
+  токсичність прийнятна у придатних пацієнтів). Слабкі / ECOG ≥2 /
+  білірубін підвищений → де-ескалація до gem-nab-paclitaxel (MPACT,
+  Von Hoff NEJM 2013).
+
+trigger:
+  type: composite_score
+  all_of:
+    - finding: "bilirubin_uln_x"
+      threshold: 1.5
+      comparator: "<="
+    - finding: "ecog"
+      threshold: 1
+      comparator: "<="
+    - finding: "age"
+      threshold: 75
+      comparator: "<="
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-PDAC
+shifts_algorithm:
+  - ALGO-PDAC-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-ESMO-PANCREATIC-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Trigger uses `bilirubin_uln_x` (alias `bilirubin_ratio_to_uln`,
+  `total_bilirubin_ulnratio` per FINDING_ALIASES). Bilirubin threshold
+  ≤1.5× ULN matches PRODIGE-4 inclusion; clinical practice tolerates
+  resolved-post-stenting cases with biliary obstruction history. ECOG
+  ≤1 and age ≤75 are the canonical fitness gates. Note that
+  RF-PDAC-FRAILTY-AGE already encodes the de-escalation direction
+  (gem-nab-pac) and fires earlier in ALGO-PDAC-METASTATIC-1L step 2;
+  this RF intensifies into FOLFIRINOX at step 3 only AFTER step 2
+  rejects frailty. NALIRIFOX (NAPOLI-3) emerging as 1L alternative —
+  separate Indication when added; trigger may need to widen with
+  liposomal-irinotecan-eligible criterion if route forks.
+notes_ua: >
+  Тригер використовує `bilirubin_uln_x` (псевдоніми
+  `bilirubin_ratio_to_uln`, `total_bilirubin_ulnratio` за FINDING_ALIASES).
+  Поріг білірубіну ≤1.5× ВМН відповідає включенню PRODIGE-4; клінічна
+  практика толерує випадки з вирішеним після стентування біліарним
+  обструкцією. ECOG ≤1 та вік ≤75 — канонічні гейти придатності.
+  Зауважте, RF-PDAC-FRAILTY-AGE вже кодує напрямок де-ескалації
+  (gem-nab-pac) і спрацьовує раніше у ALGO-PDAC-METASTATIC-1L крок 2;
+  цей RF інтенсифікує до FOLFIRINOX на кроці 3 лише ПІСЛЯ того, як крок 2
+  відхиляє слабкість.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
