@@ -87,7 +87,7 @@ contract warnings про "<2 sources" для цього RF.
 ## B. Wiring orphan RFs
 
 **Status (станом на 2026-04-25):** з 3 початкових orphans **2 вже wired-овані**
-(см. `docs/plans/rf_wiring_audit_2026-04-25.md`). Лишився **1 відкритий**
+(см. `docs/plans/archive/rf_wiring_audit_2026-04-25.md`). Лишився **1 відкритий**
 clinical-decision item:
 
 | RF | Algorithm | Status |

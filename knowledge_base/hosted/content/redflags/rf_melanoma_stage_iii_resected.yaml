@@ -1,0 +1,87 @@
+id: RF-MELANOMA-STAGE-III-RESECTED
+definition: >
+  Resected stage III cutaneous melanoma — adjuvant-eligible biology
+  (positive sentinel-lymph-node biopsy or clinically detected nodal
+  disease, surgically resected via wide local excision ± completion
+  lymphadenectomy or therapeutic neck/inguinal dissection per surgical
+  judgment). Treatment-defining: shifts the patient out of the
+  metastatic 1L pathway into adjuvant immunotherapy (KEYNOTE-054
+  pembrolizumab × 12 months, CheckMate-238 nivolumab × 12 months) or
+  adjuvant BRAFi+MEKi (COMBI-AD dabrafenib + trametinib) for BRAF V600
+  mutants. Adjuvant therapy initiated within 12 weeks of definitive
+  surgery per the registration trials.
+definition_ua: >
+  Резекована меланома стадії III — ад'ювант-прийнятна біологія
+  (позитивна біопсія сторожового лімфовузла або клінічно виявлене
+  ураження вузлів, хірургічно резековане через широке локальне
+  висічення ± completion-лімфаденектомія або терапевтична дисекція шиї
+  / паху за хірургічним рішенням). Лікування-визначальна: переводить
+  пацієнта з метастатичного 1L шляху на ад'ювантну імунотерапію
+  (KEYNOTE-054 пембролізумаб × 12 міс., CheckMate-238 ніволумаб × 12
+  міс.) або ад'ювантний BRAFi+MEKi (COMBI-AD дабрафеніб + траметиніб)
+  для BRAF V600 мутантів. Ад'ювантна терапія розпочинається в межах
+  12 тижнів після операції.
+
+trigger:
+  type: stage_resection_composite
+  all_of:
+    - finding: "stage_iii"
+      value: true
+    - finding: "stage_iv"
+      value: false
+    - any_of:
+        - finding: "resection_status"
+          value: "R0_resected"
+        - finding: "resection_status"
+          value: "R1_resected"
+        - finding: "wide_local_excision_completed"
+          value: true
+
+clinical_direction: intensify
+
+severity: critical
+priority: 50
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm:
+  - ALGO-MELANOMA-METASTATIC-1L
+  - ALGO-MELANOMA-ADJUVANT-1L
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-KEYNOTE-054-EGGERMONT-2018
+  - SRC-CHECKMATE-238-WEBER-2017
+  - SRC-COMBI-AD-LONG-2017
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Engine wiring: when resected-stage-III biology is detected on a
+  patient profile that lacks `disease_state` (so the metastatic-1L
+  algorithm is the only line=1 algorithm available by load-order
+  fallback), this RedFlag fires inside ALGO-MELANOMA-METASTATIC-1L
+  step 0 to redirect the engine to the adjuvant indication
+  (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III) instead of the
+  metastatic-1L default. Once curated patient JSONs migrate to set
+  `disease_state: "adjuvant"`, ALGO-MELANOMA-ADJUVANT-1L picks them up
+  directly and this step 0 becomes redundant (still safe — it's
+  additive). KEYNOTE-054 BRAF-WT and BRAF-mut both eligible — adjuvant
+  pembro is the standard-track default; aggressive-track substitution
+  to dabra+trame (COMBI-AD) is BRAF-mut subgroup only.
+notes_ua: >
+  Інженерне вмонтування: коли резекована-стадія-III біологія виявлена
+  на профілі пацієнта, який не має `disease_state` (отже метастатичний-1L
+  алгоритм — єдиний line=1 алгоритм доступний через load-order
+  fallback), цей RedFlag спрацьовує в ALGO-MELANOMA-METASTATIC-1L крок
+  0 щоб перенаправити двигун на ад'ювантну індикацію
+  (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III) замість метастатичного-1L
+  дефолту. Як тільки куровані профілі мігрують на
+  `disease_state: "adjuvant"`, ALGO-MELANOMA-ADJUVANT-1L підхоплює їх
+  прямо і цей крок 0 стає надлишковим (досі безпечно — additive).
+  KEYNOTE-054 покриває BRAF-WT і BRAF-mut — ад'ювантний пембро —
+  standard-track дефолт; aggressive-track заміна на дабра+траме
+  (COMBI-AD) — підгрупа лише BRAF-mut.

@@ -15,6 +15,7 @@ purpose: >
 output_indications:
   - IND-AML-2L-GILTERITINIB-FLT3
   - IND-AML-1L-VEN-AZA
+  - IND-AML-2L-IDH2-ENASIDENIB
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
@@ -70,24 +71,40 @@ decision_tree:
     if_false:
       next_step: 5
 
-  # Step 5 — IDH1 / IDH2 actionable at relapse → IDHi monotherapy
-  # (ivosidenib / enasidenib FDA-approved R/R-AML). No dedicated IDHi
-  # Indication in KB yet (PROD-5 deferred); pin to ven+aza backbone
-  # with MDT annotation to switch to IDHi monotherapy.
+  # Step 5 — IDH2-actionable at relapse (FLT3-WT) → enasidenib
+  # monotherapy per AG221-AML-001 (FDA Aug 2017 R/R IDH2-mut AML).
+  # Additive 2026-04-30 — IDH2-positive patients now route to dedicated
+  # IND-AML-2L-IDH2-ENASIDENIB rather than ven+aza backbone. IDH1
+  # still falls through to step 6 ven+aza backbone with MDT
+  # annotation (no dedicated IDH1 IND in KB).
   - step: 5
     evaluate:
       any_of:
-        - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
         - red_flag: RF-AML-IDH2-MUT-ACTIONABLE
+    if_true:
+      result: IND-AML-2L-IDH2-ENASIDENIB
+    if_false:
+      next_step: 6
+    notes: "Wired via RF-AML-IDH2-MUT-ACTIONABLE — IDH2 R140Q/R172K routes to enasidenib monotherapy (AG221-AML-001 phase 1/2; ORR 38%, CR 19%, mOS 9.3 mo). Bridge to alloHCT for fit responders. Ukraine: not registered, EU CHMP negative; international referral / compassionate-use only."
+
+  # Step 6 — IDH1 actionable at relapse → IDHi monotherapy
+  # (ivosidenib FDA-approved R/R-AML). No dedicated IDH1 Indication in
+  # KB yet (PROD-5 deferred); pin to ven+aza backbone with MDT
+  # annotation to switch to ivosidenib monotherapy. IDH2 already
+  # captured by step 5.
+  - step: 6
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
     if_true:
       result: IND-AML-1L-VEN-AZA
     if_false:
-      next_step: 6
-    notes: "MDT-only — IDH1/IDH2 R/R: switch to ivosidenib (IDH1, AG-120) or enasidenib (IDH2, AG-221) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDHi Indication in KB)."
+      next_step: 7
+    notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
 
-  # Step 6 — frailty / organ dysfunction at relapse → ven+aza (lower
+  # Step 7 — frailty / organ dysfunction at relapse → ven+aza (lower
   # toxicity than re-induction; also covers FLT3-WT R/R unfit).
-  - step: 6
+  - step: 7
     evaluate:
       any_of:
         - red_flag: RF-AML-FRAILTY-AGE
@@ -95,13 +112,13 @@ decision_tree:
     if_true:
       result: IND-AML-1L-VEN-AZA
     if_false:
-      next_step: 7
+      next_step: 8
 
-  # Step 7 — default FLT3 wild-type R/R: ven+aza for unfit / fallback;
+  # Step 8 — default FLT3 wild-type R/R: ven+aza for unfit / fallback;
   # re-induction (off-algorithm) or clinical trial preferred for fit
   # patients. Algorithm pins to ven+aza so plan generator surfaces the
   # clinical-trial / BSC annotation rather than silently failing.
-  - step: 7
+  - step: 8
     evaluate:
       any_of:
         - condition: "FLT3 wild-type R/R AML; clinical-trial / re-induction / BSC routing surfaced as annotation"
@@ -116,14 +133,16 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-ADMIRAL-PERL-2019
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-30"
 notes: >
   ALGO-AML-2L primarily routes FLT3-actionable patients to gilteritinib;
-  non-actionable (FLT3-WT) patients fall back to ven+aza or are routed
-  off-algorithm to clinical trial / re-induction (7+3 / FLAG-IDA) / BSC.
-  CPX-351 (IND-AML-1L-CPX351-SECONDARY) and quizartinib
-  (IND-AML-1L-QUIZARTINIB-FLT3ITD) belong to ALGO-AML-1L stratification
-  (AML-MRC / therapy-related; de-novo FLT3-ITD respectively), not 2L.
-  AlloHCT bridge is parallel layer for any responder. RF re-test of
-  FLT3 at relapse is mandatory before gilteritinib selection. STUB —
-  requires clinical co-lead signoff.
+  IDH2-actionable patients to enasidenib (step 4b — added 2026-04-30,
+  AG221-AML-001); non-actionable (FLT3-WT, IDH-WT) patients fall back to
+  ven+aza or are routed off-algorithm to clinical trial / re-induction
+  (7+3 / FLAG-IDA) / BSC. CPX-351 (IND-AML-1L-CPX351-SECONDARY) and
+  quizartinib (IND-AML-1L-QUIZARTINIB-FLT3ITD) belong to ALGO-AML-1L
+  stratification (AML-MRC / therapy-related; de-novo FLT3-ITD
+  respectively), not 2L. AlloHCT bridge is parallel layer for any
+  responder. RF re-test of FLT3 / IDH2 at relapse is mandatory before
+  gilteritinib / enasidenib selection. STUB — requires clinical co-lead
+  signoff.

@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-AML-1L-VEN-AZA
   - IND-AML-1L-7-3
+  - IND-AML-1L-7-3-GO-CBF
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -55,20 +56,24 @@ decision_tree:
     if_false:
       next_step: 5
 
-  # Step 4 — CBF-favorable + fit → 7+3 (no alloHCT in CR1 per ELN-2022
-  # favorable risk). Fitness gate redundant after step 2 but kept
-  # explicit so the trace records the fitness RF firing for the CBF
-  # cohort branch.
+  # Step 4 — CBF-favorable + fit + CD33+ → 7+3 + fractionated GO
+  # (ALFA-0701 Castaigne 2012; Hills meta 2014: ~20% relative
+  # mortality reduction in favorable / intermediate risk; no benefit
+  # in adverse). CD33-positivity (≥20% blasts by flow) is a
+  # treatment-defining gate; CBF AML is routinely CD33+ but the
+  # explicit finding is required (some pediatric / KIT-mut subsets
+  # CD33-low / negative). Fall-through to plain 7+3 if CD33-status
+  # unknown / negative or GO inaccessible. Additive 2026-04-30.
   - step: 4
     evaluate:
-      any_of:
-        - red_flag: RF-FITNESS-ECOG-FIT
-        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+      all_of:
+        - red_flag: RF-AML-CORE-BINDING-FACTOR-FAVORABLE
+        - {finding: cd33_positive, value: true}
     if_true:
-      result: IND-AML-1L-7-3
+      result: IND-AML-1L-7-3-GO-CBF
     if_false:
-      result: IND-AML-1L-7-3
-    notes: "CBF-favorable AML — fitness gate already cleared at step 2; CBF cohort is treatment-defining for standard 7+3 (no alloHCT in CR1 per ELN-2022 favorable risk)."
+      next_step: 5
+    notes: "Wired via RF-AML-CORE-BINDING-FACTOR-FAVORABLE + cd33_positive=true (explicit; ≥20% blasts by flow per ALFA-0701 entry criterion). Daunorubicin 60 mg/m² (not 90) when GO added per ALFA-0701. NOT for adverse-risk (TP53-mut, complex karyotype). Falls through to plain 7+3 if CD33 not documented or GO inaccessible — current 7+3 routing preserved by default."
 
   # Step 5 — high-risk biology (TP53, complex karyotype) AND FLT3+ AND
   # NPM1-favorable — fit patients escalate to 7+3 (with concurrent alloHCT
@@ -120,12 +125,19 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-VIALE-A-DINARDO-2020
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-30"
 notes: >
   Fit-vs-unfit triage is the dominant decision. FLT3-ITD/TKD adds
   midostaurin via REG-AML-7-3 component dose_adjustment, not via
-  separate algorithm branch. Transplant eligibility is a parallel
+  separate algorithm branch. CBF + CD33+ adds fractionated GO via
+  IND-AML-1L-7-3-GO-CBF (step 4 — additive 2026-04-30, ALFA-0701);
+  CBF without explicit CD33-positivity remains on plain 7+3 path
+  preserving prior behavior. Transplant eligibility is a parallel
   layer captured in regimen + supportive care planning.
   RF-AML-INFECTION-SCREENING is "investigate"-equivalent and surfaces
-  as an annotation, not a tree branch. STUB — requires clinical co-lead
-  signoff.
+  as an annotation, not a tree branch. CPX-351 (IND-AML-1L-CPX351-
+  SECONDARY) for tAML / AML-MRC age 60-75 fit remains unwired in this
+  algorithm — wiring would redirect curated case patient_aml_secondary_
+  cpx351.json (golden IND-AML-1L-7-3) breaking the e2e fixture; deferred
+  pending fixture-golden refresh in a follow-up chunk. STUB — requires
+  clinical co-lead signoff.

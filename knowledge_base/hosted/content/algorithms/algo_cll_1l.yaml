@@ -9,6 +9,7 @@ purpose: >
 output_indications:
   - IND-CLL-1L-BTKI
   - IND-CLL-1L-VENO
+  - IND-CLL-1L-ZANUBRUTINIB
 
 default_indication: IND-CLL-1L-BTKI
 alternative_indication: IND-CLL-1L-VENO
@@ -33,7 +34,7 @@ decision_tree:
       result: IND-CLL-1L-BTKI
     if_false:
       next_step: 3
-    notes: "Wired via RF-BINET-B-C / RF-RAI-HIGH (CSD-8A): treatment indication established by stage; standard-risk genetics route to BTKi 1L."
+    notes: "Wired via RF-BINET-B-C / RF-RAI-HIGH (CSD-8A): treatment indication established by stage; standard-risk genetics route to BTKi 1L. Both IND-CLL-1L-BTKI (acalabrutinib) and IND-CLL-1L-ZANUBRUTINIB (output_indication added 2026-04-30, SEQUOIA / ALPINE) are Cat 1 second-generation BTKi options — engine pins to acalabrutinib as default per UA access; render surfaces zanubrutinib as alternative ALPINE-superiority track."
   - step: 3
     evaluate:
       any_of:
@@ -46,9 +47,15 @@ decision_tree:
     notes: "Wired via RF-BINET-A / RF-RAI-LOW (CSD-8A): early-stage CLL without iwCLL treatment indication — engine pins to BTKi as default but plan render surfaces watch-and-wait recommendation."
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-30"
 notes: >
   Both tracks are NCCN Cat 1; choice reflects risk + patient preference
-  (continuous vs finite-duration). Asymptomatic CLL without iwCLL
-  indication routes to active surveillance — handled at higher level
-  (no plan generated).
+  (continuous vs finite-duration). IND-CLL-1L-ZANUBRUTINIB added to
+  output_indications 2026-04-30 (SEQUOIA 1L; ALPINE r/r superior to
+  ibrutinib HR 0.65 PFS, 5.2% vs 13.3% AF) — routes parallel to
+  IND-CLL-1L-BTKI (acalabrutinib) as Cat 1 second-generation BTKi
+  alternative. Engine continues to pin acalabrutinib via existing
+  step 2/3 result clauses (UA access default); render layer surfaces
+  zanubrutinib as alternative-track BTKi when applicable. Asymptomatic
+  CLL without iwCLL indication routes to active surveillance —
+  handled at higher level (no plan generated).

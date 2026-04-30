@@ -92,7 +92,7 @@ remain as decision-records but are subordinate to this document.
 | A10 | Token rotation cadence (manual? annual?) | account UI | Operational SLA gap |
 | A11 | `treatments[].pmids` is structured array | inspection | Parsing layer adapts |
 
-**Phase 0 deliverable:** `docs/plans/oncokb_api_evidence.md` — table with results + sanitized sample responses as reference fixtures.
+**Phase 0 deliverable:** `docs/plans/archive/oncokb_api_evidence.md` — table with results + sanitized sample responses as reference fixtures.
 
 ---
 

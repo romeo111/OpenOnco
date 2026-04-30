@@ -1,6 +1,6 @@
 # CIViC integration plan v1 — 2026-04-27
 
-Replaces `docs/plans/oncokb_integration_safe_rollout_v3.md` after the
+Replaces `docs/plans/archive/oncokb_integration_safe_rollout_v3.md` after the
 OncoKB ToS audit (`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`).
 
 ## Why CIViC
