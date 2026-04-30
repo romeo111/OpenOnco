@@ -118,7 +118,7 @@ openonco/
 
 **Engine / render / infrastructure.** Standard PR — `pytest` must pass, new code needs tests. Schema and spec changes go through CHARTER §6 review.
 
-**Become a Clinical Co-Lead.** Hematology / oncology / clinical pharmacology sub-specialty depth needed to dual-sign content out of STUB. Email **[8054345@gmail.com](mailto:8054345@gmail.com)** with "OpenOnco Co-Lead", your area, and a CV / public profile link.
+**Become a Clinical Co-Lead.** Hematology / oncology / clinical pharmacology sub-specialty depth needed to dual-sign content out of STUB. **[Open a PR](https://github.com/romeo111/OpenOnco/compare)** that adds your name + area + CV / public profile link to [`specs/CLINICAL_LEADS.md`](specs/CLINICAL_LEADS.md), or **[open an issue](https://github.com/romeo111/OpenOnco/issues/new?labels=co-lead-application&title=Co-Lead+application:+%5Byour+area%5D)** with the same — public audit trail by design.
 
 ---
 
