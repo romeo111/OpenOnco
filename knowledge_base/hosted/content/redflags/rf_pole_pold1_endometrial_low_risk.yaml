@@ -1,0 +1,51 @@
+id: RF-POLE-POLD1-ENDOMETRIAL-LOW-RISK
+definition: "Stage I endometrial carcinoma with pathogenic POLE or POLD1 exonuclease-domain mutation (POLE-EDM / POLD1-EDM hypermutator phenotype) — TCGA / TransPORTEC integrated classification predicts excellent recurrence-free survival; adjuvant chemotherapy/radiotherapy is NOT indicated. NCCN Uterine 2025 endorses observation only."
+definition_ua: "Ендометріальна карцинома Stage I з патогенною мутацією exonuclease-домену POLE або POLD1 (POLE-EDM / POLD1-EDM гіпермутаторний фенотип) — інтегрована класифікація TCGA / TransPORTEC прогнозує відмінне виживання без рецидиву; ад'ювантна хіміотерапія/променева терапія НЕ показана. NCCN Uterine 2025 підтримує лише спостереження."
+
+trigger:
+  type: biomarker_composite
+  all_of:
+    - {finding: stage, value: I}
+    - any_of:
+        - {finding: BIO-POLE-HYPERMUTATOR, value: positive}
+        - {finding: BIO-POLD1-HYPERMUTATOR, value: positive}
+
+clinical_direction: de-escalate
+severity: major
+priority: 90
+category: risk-score
+
+relevant_diseases: [DIS-ENDOMETRIAL]
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESMO-ENDOMETRIAL-2022
+  - SRC-ESGO-ENDOMETRIAL-2025
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  PORTEC-3 / TransPORTEC pooled analyses showed Stage I POLE-mutated
+  endometrial carcinoma has near-100% recurrence-free survival without
+  adjuvant therapy, even with high-grade morphology. POLD1-EDM is rarer
+  but mechanistically equivalent and grouped with POLE in TCGA / ESGO-ESTRO
+  integrated risk classification. de-escalate direction reflects avoidance
+  of chemo/RT that would otherwise be considered for high-grade Stage I
+  endometrial cancer. Routes care to IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION.
+  shifts_algorithm: empty because there is no Stage I endometrial algorithm
+  yet — orchestrator should wire when ALGO-ENDOMETRIAL-STAGE-I lands. NCCN
+  Uterine 2025 §UN-A and ESGO-ESTRO 2025 endometrial guideline both
+  endorse observation for POLE-EDM Stage I.
+notes_ua: >
+  Об'єднані аналізи PORTEC-3 / TransPORTEC показали, що Stage I
+  POLE-мутована ендометріальна карцинома має майже 100% виживання
+  без рецидиву без ад'ювантної терапії, навіть з high-grade морфологією.
+  POLD1-EDM рідший, але механістично еквівалентний і згрупований з POLE
+  в інтегрованій TCGA / ESGO-ESTRO класифікації ризику. Напрямок
+  de-escalate відображає уникнення хіміо/RT, що інакше були б розглянуті
+  для high-grade Stage I ендометріального раку. Спрямовує допомогу до
+  IND-ENDOMETRIAL-STAGE-I-POLE-OBSERVATION.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
