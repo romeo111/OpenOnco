@@ -9,6 +9,12 @@ For each Disease in the KB:
   - has_workup (boolean)
   - fill_pct: composite % across 8 expected entity types
   - verified_pct: weighted % of indications with reviewer_signoffs ≥ 2
+  - outcomes_cited_pct: loose %-cited from
+    ``scripts/audit_expected_outcomes.disease_outcomes_cited_pct``
+    (Phase 2 — Pivotal Trial Outcomes Ingestion Plan). Reuses the
+    audit's bucketing instead of duplicating it; if the audit module
+    fails to import (e.g. PyYAML missing in a stripped harness),
+    the column falls back to ``n/a``.
 
 Outputs Markdown table grouped by disease family (lymphoid heme,
 myeloid heme, solid tumor) for readability.
@@ -216,10 +222,29 @@ def _has_entity(entities_by_id: dict, etype: str, predicate) -> bool:
 # ── Per-disease metric ────────────────────────────────────────────────────
 
 
+def _outcomes_cited_pct_map() -> dict[str, float] | None:
+    """Lazy import of the audit's helper. Returns ``None`` if the module
+    cannot be imported (rare — keeps the matrix script usable on a
+    stripped Python harness without PyYAML, even though that's not a
+    supported configuration). Phase 2 — Pivotal Trial Outcomes
+    Ingestion Plan."""
+    try:
+        from scripts.audit_expected_outcomes import (
+            disease_outcomes_cited_pct,
+        )
+    except Exception:
+        return None
+    try:
+        return disease_outcomes_cited_pct()
+    except Exception:
+        return None
+
+
 def per_disease_metrics(load_root: Path) -> list[dict]:
     load = load_content(load_root)
     coll = _collect_biomarkers_and_drugs(load.entities_by_id)
     curated_counts = _count_curated_cases(REPO_ROOT / "examples")
+    outcomes_pct = _outcomes_cited_pct_map() or {}
 
     rows: list[dict] = []
     for eid, info in sorted(load.entities_by_id.items()):
@@ -283,6 +308,11 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
         else:
             verified_pct = 0
 
+        # Outcomes-Cited % from Phase 2 audit. Diseases the audit didn't
+        # rollup (e.g. zero indications, or a stripped harness where the
+        # audit module failed to import) get None → render as "n/a".
+        outcomes_cited_pct = outcomes_pct.get(eid)
+
         rows.append({
             "id": eid,
             "name": name,
@@ -301,6 +331,7 @@ def per_disease_metrics(load_root: Path) -> list[dict]:
             "fill_pct": fill_pct,
             "verified_pct": verified_pct,
             "n_curated": curated_counts.get(eid, 0),
+            "outcomes_cited_pct": outcomes_cited_pct,
         })
 
     return rows
@@ -340,14 +371,19 @@ def render_markdown_table(rows: list[dict]) -> str:
     out.append(f"- Curated chunk cases: **{total_curated}** total across **{n_with_curated}/{len(rows)}** diseases")
     out.append("")
 
+    def _outcomes_cell(pct: float | None) -> str:
+        if pct is None:
+            return "n/a"
+        return f"{pct:.1f}%"
+
     for family in ("Лімфоїдна гематологія", "Мієлоїдна гематологія", "Солідні пухлини"):
         flist = families.get(family, [])
         if not flist:
             continue
         out.append(f"## {family} ({len(flist)} хвороб)")
         out.append("")
-        out.append("| Disease | ICD-10 | #Bio | #Drug | #Ind | #Reg | #RF | 1L | 2L | Quest | #Curated | Fill% | Ver% |")
-        out.append("|---------|--------|------|-------|------|------|-----|----|----|-------|---------:|-------|------|")
+        out.append("| Disease | ICD-10 | #Bio | #Drug | #Ind | #Reg | #RF | 1L | 2L | Quest | #Curated | Fill% | Ver% | Outcomes-Cited% |")
+        out.append("|---------|--------|------|-------|------|------|-----|----|----|-------|---------:|-------|------|-----------------|")
         # Sort by fill desc then name
         for r in sorted(flist, key=lambda x: (-x["fill_pct"], x["name"])):
             algo_1l_mark = "✓" if r["algo_1l"] else "—"
@@ -363,14 +399,22 @@ def render_markdown_table(rows: list[dict]) -> str:
                 f"| **{short_id}** {short_name} | {r['icd10']} | "
                 f"{r['n_bios']} | {r['n_drugs']} | {r['n_inds']} | {r['n_regs']} | {r['n_rfs']} | "
                 f"{algo_1l_mark} | {algo_2l_mark} | {quest_mark} | {curated_cell} | "
-                f"**{r['fill_pct']}%** | {r['verified_pct']}% |"
+                f"**{r['fill_pct']}%** | {r['verified_pct']}% | "
+                f"{_outcomes_cell(r['outcomes_cited_pct'])} |"
             )
-        # Family avg + total curated
+        # Family avg + total curated. Outcomes-Cited avg ignores diseases
+        # the audit didn't rollup (None entries) so the average reflects
+        # only diseases with measurable expected_outcomes coverage.
         f_fill = round(sum(r["fill_pct"] for r in flist) / max(1, len(flist)), 1)
         f_ver = round(sum(r["verified_pct"] for r in flist) / max(1, len(flist)), 1)
         f_curated = sum(r["n_curated"] for r in flist)
+        f_outcomes_vals = [r["outcomes_cited_pct"] for r in flist if r["outcomes_cited_pct"] is not None]
+        if f_outcomes_vals:
+            f_outcomes = f"{sum(f_outcomes_vals) / len(f_outcomes_vals):.1f}%"
+        else:
+            f_outcomes = "n/a"
         out.append(
-            f"| _Avg_ |  |  |  |  |  |  |  |  |  | _{f_curated}_ | _{f_fill}%_ | _{f_ver}%_ |"
+            f"| _Avg_ |  |  |  |  |  |  |  |  |  | _{f_curated}_ | _{f_fill}%_ | _{f_ver}%_ | _{f_outcomes}_ |"
         )
         out.append("")
 
@@ -384,6 +428,12 @@ def render_markdown_table(rows: list[dict]) -> str:
     out.append("- **#Curated** — кількість curated chunk patient-кейсів `examples/patient_<prefix>_*.json` (включно з pre-biopsy `diagnostic_*` файлами для відповідної хвороби); auto/variant виключені — у них інший test contract")
     out.append("- **Fill%** = composite з 8 ентити-типів: ≥1 indication, ≥1 regimen, ≥1 biomarker, ≥1 drug, ≥1 redflag, 1L algo, questionnaire, workup")
     out.append("- **Ver%** = % indications цієї хвороби з `reviewer_signoffs ≥ 2` (CHARTER §6.1)")
+    out.append(
+        "- **Outcomes-Cited%** = loose %-cited over populated `expected_outcomes` "
+        "fields per `scripts/audit_expected_outcomes.disease_outcomes_cited_pct` "
+        "(Phase 2, Pivotal Trial Outcomes Ingestion Plan). "
+        "v1.0 target ≥90%."
+    )
     out.append("")
     out.append("> **Verified взагалі = 0** для всіх — діє dev-mode signoff exemption (`project_charter_dev_mode_exemptions`)")
     out.append("> до призначення Clinical Co-Leads. Це навмисно, не bug.")
