@@ -1,0 +1,76 @@
+id: BIO-AR-V7
+names:
+  preferred: "AR-V7 (androgen receptor splice variant 7)"
+  ukrainian: "AR-V7 (сплайс-варіант 7 рецептора андрогену)"
+  english: "AR-V7"
+  synonyms: ["AR splice variant 7", "ARv7", "AR3"]
+
+biomarker_type: gene_fusion  # closest type token; technically a splice variant
+
+mutation_details:
+  gene: "AR"
+  gene_hugo_id: "HGNC:644"
+  variant_type: "splice"
+  functional_impact: "Constitutively-active ligand-binding-domain-truncated AR isoform — loss of LBD = AR-targeting agents (enzalutamide, abiraterone, apalutamide, darolutamide) unable to bind"
+
+measurement:
+  method: "Circulating tumor cells (CTC) — Epic AR-V7 Nucleus Detect IHC (Scher 2018) OR PCR-based AR-V7 mRNA (Antonarakis 2014) OR ctDNA-based whole-transcriptome readout"
+  units: "categorical (positive | negative)"
+  sensitivity_requirement: "CTC-IHC requires ≥5 CTC per 7.5 mL blood for an interpretable result; lower CTC counts are non-informative (not negative)"
+
+specimen_requirements:
+  - "Whole blood (CTC isolation — CellSearch + Epic platform OR alternative CTC enrichment)"
+  - "ctDNA-based assays available but less validated than CTC-IHC"
+
+related_biomarkers:
+  - BIO-AR-MUTATION  # ligand-binding-domain mutations (T878A, F877L, L702H) — alternative ARSI-resistance mechanism
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+
+# AR-V7 detection composites assay-platform + CTC-count threshold +
+# splice-variant readout — not a (gene, variant-string) pair. Also not
+# Tx-modifying per FDA labels: PROPHECY (Antonarakis 2019) showed
+# predictive (not prognostic-only) signal but FDA has not approved any
+# Tx decision keyed on AR-V7. Used informationally in MDT brief.
+oncokb_skip_reason: clinical_composite
+
+external_ids:
+  hgnc_symbol: "AR"
+
+last_reviewed: "2026-04-29"
+notes: >
+  AR-V7 is a constitutively-active splice variant of the androgen receptor
+  lacking the ligand-binding domain. Detected most commonly on circulating
+  tumor cells (CTCs) by Epic AR-V7 Nucleus Detect IHC. Clinical relevance
+  in mCRPC: AR-V7-positive patients have markedly inferior PFS/OS on
+  abiraterone or enzalutamide compared to AR-V7-negative (PROPHECY,
+  Antonarakis 2019, J Clin Oncol — HR ~3 for inferior survival). Switch
+  to taxane chemotherapy (docetaxel, cabazitaxel) recovers responses.
+  HOWEVER: FDA has NOT approved any therapy decision keyed on AR-V7;
+  guidelines treat it as investigational / informational. Use in MDT
+  brief to flag patients in whom ARSI-after-ARSI is unlikely to work
+  and for whom a switch to taxane (or radioligand 177Lu-PSMA-617 if
+  PSMA-positive) should be discussed. KB scope choice: AR-V7 ships as
+  biomarker + RF (informational) only — no new IND, no algorithm step
+  in this chunk. Tx-modifying signal ("switch ARSI → taxane") would
+  require a new taxane-mCRPC IND branched on AR-V7, which is deferred.
+notes_ua: >
+  AR-V7 — конститутивно-активний сплайс-варіант рецептора андрогену
+  без ліганд-зв'язуючого домену. Виявляється переважно на CTC за
+  методикою Epic AR-V7 Nucleus Detect IHC. Клінічне значення при
+  мКРРПЗ: AR-V7-позитивні пацієнти мають помітно гірший ПФВ/ЗВ на
+  абіратероні або ензалутаміді порівняно з AR-V7-негативними (PROPHECY,
+  Antonarakis 2019, J Clin Oncol — HR ~3 для гіршого виживання).
+  Перехід на таксан (доцетаксел, кабазітаксел) відновлює відповіді.
+  ОДНАК: FDA НЕ схвалив жодного терапевтичного рішення на основі
+  AR-V7; настанови розглядають його як експериментальний / інформаційний.
+  Використовується в MDT-брифі для виявлення пацієнтів, у яких
+  ARSI-після-ARSI малоймовірно працюватиме, та для обговорення
+  переходу на таксан (або 177Lu-PSMA-617 при PSMA-позитивності).
+  Обсяг у KB: AR-V7 поставляється як біомаркер + RF (інформаційний)
+  — без нового IND, без кроку алгоритму в цьому чанку. Tx-модифікуючий
+  сигнал ("ARSI → таксан") потребує нового taxane-mCRPC IND з
+  гілкуванням на AR-V7, що відкладено.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
