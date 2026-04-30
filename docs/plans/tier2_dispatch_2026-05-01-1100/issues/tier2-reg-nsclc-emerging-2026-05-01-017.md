@@ -28,7 +28,7 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 ## Reference YAML pattern
 
-`git show origin/master:knowledge_base/hosted/content/regimens/regimen_alectinib_alk.yaml`
+`git show origin/master:knowledge_base/hosted/content/regimens/reg_alectinib_nsclc.yaml`
 
 ## Sources to cite
 

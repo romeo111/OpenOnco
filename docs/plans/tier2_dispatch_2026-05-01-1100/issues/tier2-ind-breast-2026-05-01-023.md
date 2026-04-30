@@ -30,7 +30,7 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 ## Reference YAML pattern
 
-`git show origin/master:knowledge_base/hosted/content/indications/indication_breast_hr_pos_2l_alpelisib.yaml`
+`git show origin/master:knowledge_base/hosted/content/indications/ind_breast_hr_pos_2l_pik3ca_alpelisib.yaml`
 
 ## Sources to cite
 

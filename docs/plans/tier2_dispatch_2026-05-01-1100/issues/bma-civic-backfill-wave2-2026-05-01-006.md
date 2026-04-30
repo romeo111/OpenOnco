@@ -4,7 +4,7 @@
 
 This chunk advances `kb-coverage-matrix.md > Quality gaps > Q1 BMA-CIViC backfill wave-2` from 295/399 BMAs (74%) toward 399/399 (100%) for the manifest IDs below.
 
-Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-01-1100.md > W12a -- BMA-CIViC backfill wave-2`. Pattern mirrors closed `bma-civic-backfill-2026-04-29-007` (issue #49).
+Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-01-1100.md > W12a -- BMA-CIViC backfill wave-2`. Pattern mirrors closed `bma-civic-backfill-2026-04-29-007` (issue #43).
 
 ## Chunk Spec
 
@@ -88,7 +88,7 @@ Review each hosted BMA in the manifest for possible CIViC evidence linkage. Add 
 
 ## Reference pattern
 
-`git show origin/master:contributions/bma-civic-backfill-2026-04-29-007/`
+`git show origin/master:contributions/bma-civic-backfill-2026-04-29-001/`
 
 ## Branch + commit + push
 

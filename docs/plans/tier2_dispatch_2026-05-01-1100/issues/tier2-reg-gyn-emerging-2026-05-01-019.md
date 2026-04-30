@@ -27,7 +27,7 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 ## Reference YAML pattern
 
-`git show origin/master:knowledge_base/hosted/content/regimens/regimen_pembrolizumab_solid.yaml`
+`git show origin/master:knowledge_base/hosted/content/regimens/reg_pembrolizumab_maintenance.yaml`
 
 ## Sources to cite
 

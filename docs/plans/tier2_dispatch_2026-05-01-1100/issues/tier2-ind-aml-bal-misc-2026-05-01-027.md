@@ -30,7 +30,7 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 ## Reference YAML pattern
 
-`git show origin/master:knowledge_base/hosted/content/indications/indication_aml_rr_ivosidenib.yaml`
+`git show origin/master:knowledge_base/hosted/content/indications/ind_aml_2l_idh2_enasidenib.yaml`
 
 ## Sources to cite
 

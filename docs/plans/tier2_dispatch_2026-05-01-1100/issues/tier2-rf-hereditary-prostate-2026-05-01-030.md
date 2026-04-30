@@ -28,7 +28,7 @@ Tier-2 roadmap reference: `docs/plans/biomarker_expansion_tier2_roadmap_2026-05-
 
 ## Reference YAML pattern
 
-`git show origin/master:knowledge_base/hosted/content/redflags/rf_prostate_brca_olaparib_candidate.yaml`
+`git show origin/master:knowledge_base/hosted/content/redflags/rf_prostate_ar_v7_arsi_resistance.yaml`
 
 ## Sources to cite
 
