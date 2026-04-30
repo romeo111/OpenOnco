@@ -13,8 +13,12 @@ decision_tree:
 - step: 1
   evaluate:
     all_of:
-    - condition: dMMR / MSI-high tumor (confirmed by IHC or PCR/NGS)
-    - condition: No prior ICI exposure in 1L
+    - any_of:
+      - {finding: mmr_status, value: deficient}
+      - {finding: msi_status, value: MSI-H}
+      - {finding: msi_status, value: MSI-high}
+    - none_of:
+      - red_flag: RF-PRIOR-IO-PROGRESSION
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
@@ -22,19 +26,18 @@ decision_tree:
     result: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
   if_false:
     next_step: 2
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Fully wired (W5c-finish 2026-04-30): replaced free-text 'dMMR/MSI-H' with structured finding lookups + replaced 'No prior ICI exposure in 1L' with none_of(RF-PRIOR-IO-PROGRESSION) — universal RF triggers on any documented prior anti-PD-(L)1 PD or recent IO exposure within 6mo."
 - step: 2
   evaluate:
     all_of:
-    - condition: Disease progression after 1L platinum-based chemo
+    - red_flag: RF-PRIOR-PLATINUM-RESISTANT
     - red_flag: RF-FITNESS-ECOG-FIT
-    - condition: lenvatinib toxicity tolerance required
-    - condition: Adequate organ function (BP controllable, no recent surgery, no active GI bleed)
+    - red_flag: RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO
   if_true:
     result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
   if_false:
     result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Fully wired (W5c-finish 2026-04-30): replaced 3 free-text conditions ('Disease progression after 1L platinum-based chemo', 'lenvatinib toxicity tolerance required', 'Adequate organ function...') with RF-PRIOR-PLATINUM-RESISTANT (universal) + new RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO (composite organ function from KEYNOTE-775 prerequisites). Both branches still route to PEMBRO-LENVA-PMMR — gates serve MDT brief surfacing rather than indication switching here."
 sources:
 - SRC-NCCN-UTERINE-2025
 - SRC-ESMO-ENDOMETRIAL-2022

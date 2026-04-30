@@ -11,6 +11,7 @@ purpose: >
 output_indications:
   - IND-MDS-LR-1L-ESA
   - IND-MDS-LR-1L-LUSPATERCEPT
+  - IND-MDS-LR-LENALIDOMIDE-DEL5Q
 
 default_indication: IND-MDS-LR-1L-ESA
 alternative_indication: IND-MDS-LR-1L-LUSPATERCEPT
@@ -28,8 +29,25 @@ decision_tree:
     if_false:
       next_step: 2
 
-  # Step 2 — frailty → ESA preferred (lower cost + tolerability)
+  # Step 2 — del(5q) isolated cytogenetics → lenalidomide track
+  # (MDS-004 Fenaux Blood 2011: 56% RBC TI vs 5.9% placebo at 26 wks).
+  # Additive 2026-04-30 — pulls forward IND-MDS-LR-LENALIDOMIDE-DEL5Q
+  # ahead of generic ESA backbone. Frailty / risk-escalation already
+  # caught at step 1; this step reaches only IPSS-LR del(5q) patients.
+  # TP53 co-mutation NOT excluded here — TP53-mut + del(5q) gets
+  # alloHCT consideration at MDT level (surfaced in IND notes).
   - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-MDS-DEL-5Q-ISOLATED
+    if_true:
+      result: IND-MDS-LR-LENALIDOMIDE-DEL5Q
+    if_false:
+      next_step: 3
+    notes: "Wired via RF-MDS-DEL-5Q-ISOLATED — isolated del(5q) (or del(5q) + 1 non-7 abnormality) routes to lenalidomide 10 mg PO d1-21/28d (MDS-004; 56% RBC TI vs 5.9% placebo). НСЗУ-reimbursed in Ukraine. REMS / pregnancy gating mandatory."
+
+  # Step 3 — frailty → ESA preferred (lower cost + tolerability)
+  - step: 3
     evaluate:
       any_of:
         - red_flag: RF-MDS-FRAILTY-AGE
@@ -37,10 +55,10 @@ decision_tree:
     if_true:
       result: IND-MDS-LR-1L-ESA
     if_false:
-      next_step: 3
+      next_step: 4
 
-  # Step 3 — default = ESA (Ukraine context — luspatercept not registered)
-  - step: 3
+  # Step 4 — default = ESA (Ukraine context — luspatercept not registered)
+  - step: 4
     evaluate:
       all_of:
         - condition: "Default LR-MDS symptomatic anemia"
@@ -55,11 +73,12 @@ sources:
   - SRC-ESMO-MDS-2021
   - SRC-COMMANDS-FENAUX-2020
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-04-30"
 notes: >
-  RF-MDS-DEL-5Q-ISOLATED and RF-MDS-INFECTION-SCREENING are
-  "investigate"-direction flags surfacing as annotations
-  (lenalidomide track for del 5q; HBV pre-HMA screening). When
-  luspatercept becomes accessible in Ukraine, this algorithm should
-  swap default to luspatercept for non-frail. STUB — requires
-  clinical co-lead signoff.
+  RF-MDS-DEL-5Q-ISOLATED now wired at step 2 (additive 2026-04-30) —
+  routes to dedicated IND-MDS-LR-LENALIDOMIDE-DEL5Q rather than
+  surfacing only as annotation. RF-MDS-INFECTION-SCREENING remains
+  "investigate"-direction surfacing as annotation (HBV pre-HMA
+  screening). When luspatercept becomes accessible in Ukraine, this
+  algorithm should swap default to luspatercept for non-frail. STUB —
+  requires clinical co-lead signoff.

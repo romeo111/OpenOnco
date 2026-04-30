@@ -1,0 +1,93 @@
+id: RF-RCC-IMDC-INTERMEDIATE-POOR-RISK
+definition: >
+  IMDC (International Metastatic RCC Database Consortium) intermediate or
+  poor risk score in metastatic clear-cell RCC (Heng JCO 2009). Six adverse
+  factors: KPS <80%, time from diagnosis to systemic therapy <1 year,
+  hemoglobin < lower-limit-of-normal (≈12 g/dL), corrected calcium > ULN,
+  neutrophils > ULN, platelets > ULN. 0 factors = favorable; 1-2 =
+  intermediate; ≥3 = poor. CheckMate-214 (Motzer NEJM 2018) established
+  superiority of nivolumab + ipilimumab over sunitinib for intermediate
+  and poor-risk subgroups (mOS 47 vs 26 mo, ITT). KEYNOTE-426 (pembro+axi)
+  benefits across all risk groups; nivo+ipi preferred in int/poor by
+  long-term durable-response signal. Routes ALGO-RCC-METASTATIC-1L step 1
+  to IND-RCC-METASTATIC-1L-NIVO-IPI; favorable risk falls through to
+  default IND-RCC-METASTATIC-1L-PEMBRO-AXI.
+definition_ua: >
+  IMDC (International Metastatic RCC Database Consortium) проміжний або
+  поганий ризик при метастатичному світлоклітинному РКР (Heng JCO 2009).
+  Шість несприятливих факторів: KPS <80%, час від діагнозу до системної
+  терапії <1 року, гемоглобін < нижньої межі норми (≈12 г/дл), кальцій
+  скоригований > ВМН, нейтрофіли > ВМН, тромбоцити > ВМН. 0 факторів =
+  сприятливий; 1-2 = проміжний; ≥3 = поганий. CheckMate-214 (Motzer
+  NEJM 2018) встановило перевагу ніволумаб + іпілімумаб над сунітинібом
+  у проміжному/поганому ризику (мЗВ 47 vs 26 міс, ITT). KEYNOTE-426
+  (пембро+акситиніб) ефективний у всіх ризикових групах; ніво+іпі
+  переважно у проміжному/поганому за довгостроковими тривалими
+  відповідями. Маршрутизує ALGO-RCC-METASTATIC-1L крок 1 до
+  IND-RCC-METASTATIC-1L-NIVO-IPI; сприятливий ризик переходить до
+  IND-RCC-METASTATIC-1L-PEMBRO-AXI.
+
+trigger:
+  type: risk_score
+  any_of:
+    - finding: "imdc_risk"
+      value: "intermediate"
+    - finding: "imdc_risk"
+      value: "poor"
+    - finding: "imdc_risk"
+      value: "int"
+    - finding: "imdc_risk_score"
+      value: "intermediate"
+    - finding: "imdc_risk_score"
+      value: "poor"
+    - finding: "imdc_risk_score"
+      value: "int"
+    - finding: "imdc_risk_factors_count"
+      threshold: 1
+      comparator: ">="
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: risk-score
+
+relevant_diseases:
+  - DIS-RCC
+shifts_algorithm:
+  - ALGO-RCC-METASTATIC-1L
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Trigger fires on the categorical `imdc_risk` field (favorable /
+  intermediate / poor) when present, or as a fall-back on
+  `imdc_risk_factors_count >= 1` (any IMDC adverse factor). Aggregate
+  computation from raw inputs (KPS, hemoglobin, calcium, neutrophils,
+  platelets, time-to-tx) is left to upstream questionnaire scoring; this
+  RF consumes the already-derived risk category. Conflict-resolution: if
+  RF-RCC-FRAILTY-AGE fires alongside (de-escalate), frailty wins by
+  direction-precedence (de-escalate > intensify? — note: actually
+  intensify > de-escalate in current matrix, so this RF would dominate;
+  reviewers may prefer to add explicit frail-disqualifies-IO logic at
+  algorithm level rather than reordering severity matrix). Brief authoring
+  for W5c chunk 2026-04-30; engine smoke covered by
+  patient_rcc_imdc_int_nivo_ipi.json (intermediate, expects nivo+ipi)
+  and patient_rcc_imdc_fav_axi_pembro.json (favorable, expects pembro+axi).
+notes_ua: >
+  Тригер спрацьовує по категоріальному полю `imdc_risk` (favorable /
+  intermediate / poor) при наявності або як запасний варіант по
+  `imdc_risk_factors_count >= 1` (будь-який несприятливий фактор IMDC).
+  Агрегатне обчислення з сирих вхідних даних (KPS, гемоглобін, кальцій,
+  нейтрофіли, тромбоцити, час до лікування) залишене для оцінки на рівні
+  опитувальника; цей RF споживає вже виведену категорію ризику.
+  Авторовано для W5c chunk 2026-04-30; engine smoke покритий
+  patient_rcc_imdc_int_nivo_ipi.json (intermediate, очікує ніво+іпі)
+  та patient_rcc_imdc_fav_axi_pembro.json (favorable, очікує пембро+акситиніб).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -2,39 +2,59 @@ id: ALGO-MELANOMA-METASTATIC-1L
 applicable_to_disease: DIS-MELANOMA
 applicable_to_line_of_therapy: 1
 purpose: "Select 1L metastatic melanoma by BRAF + clinical context."
-output_indications: [IND-MELANOMA-METASTATIC-1L-NIVO-IPI, IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME]
+output_indications:
+  - IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+  - IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+  - IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
+  - IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO
 default_indication: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
 alternative_indication: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
 decision_tree:
-  # Step 0 — KIT-actionable mucosal/acral subset annotation. No dedicated
+  # Step 0a — resected stage III biology overrides metastatic-1L routing.
+  # Until curated patient JSONs migrate to `disease_state: "adjuvant"` so
+  # ALGO-MELANOMA-ADJUVANT-1L can pick them up directly, this load-order
+  # fallback algorithm is the only line=1 melanoma algorithm reached.
+  # RF-MELANOMA-STAGE-III-RESECTED fires on stage_iii=true + stage_iv=false
+  # + R0/R1 resection — re-routes to adjuvant pembro per KEYNOTE-054.
+  - step: 0
+    evaluate:
+      any_of:
+        - red_flag: RF-MELANOMA-STAGE-III-RESECTED
+    if_true:
+      result: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+    if_false:
+      next_step: 1
+    notes: "Adjuvant-redirect step (W5b drift fix). Off-pathway for stage-IV metastatic patients (stage_iv=true → falls through)."
+
+  # Step 1 — KIT-actionable mucosal/acral subset annotation. No dedicated
   # 1L KIT-imatinib indication in this KB (Carvajal 2013 — imatinib is
   # off-label and conventionally 2L+ in melanoma). Annotation only:
   # standard IO-doublet 1L while flagging the KIT-mut for MDT to
   # consider trial / 2L imatinib at progression.
-  - step: 0
+  - step: 1
     evaluate:
       any_of:
         - red_flag: RF-MELANOMA-KIT-MUT-ACTIONABLE
     if_true:
-      next_step: 1
+      next_step: 2
     if_false:
-      next_step: 1
+      next_step: 2
     notes: "Annotation step — KIT-mut surfaces 2L-imatinib readiness; 1L still defaults to IO-doublet (no 1L KIT-imatinib Indication in KB)."
 
-  # Step 1 — BRAF V600E/K detected → next step checks visceral-crisis /
+  # Step 2 — BRAF V600E/K detected → next step checks visceral-crisis /
   # rapid-progression context (1L BRAFi+MEKi only when crisis dominates;
   # otherwise DREAMseq favors IO-first). Split from old single any_of so
   # the biomarker arm wires additively to RF-MELANOMA-BRAF-V600-ACTIONABLE.
-  - step: 1
+  - step: 2
     evaluate:
       any_of:
         - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
     if_true:
-      next_step: 2
+      next_step: 3
     if_false:
-      result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+      next_step: 4
 
-  - step: 2
+  - step: 3
     # BRAF V600+ + crisis/progression → BRAFi+MEKi 1L. Otherwise IO-doublet
     # per DREAMseq sequencing.
     evaluate:
@@ -45,6 +65,35 @@ decision_tree:
     if_false:
       result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
     notes: "MDT-only — visceral-crisis / rapid-progression check; default IO-doublet per DREAMseq when no crisis."
-sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024]
+
+  # Step 4 — BRAF-WT branch. irAE-frail / autoimmune-comorbidity / age-≥75 /
+  # ECOG-2 patients should de-escalate from ipi+nivo combination
+  # (~55% gr 3-4 irAE) to pembrolizumab monotherapy (KEYNOTE-006) —
+  # comparable single-agent IO efficacy at fraction of toxicity. Direct
+  # finding-condition lookups (no dedicated RF authored — gate is patient-
+  # profile shape, not a clinical risk-stratification flag).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "autoimmune_history"
+        - all_of:
+            - finding: "age"
+              threshold: 75
+              comparator: ">="
+        - all_of:
+            - finding: "ecog"
+              threshold: 2
+              comparator: ">="
+    if_true:
+      result: IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO
+    if_false:
+      result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+    notes: "irAE-frail BRAF-WT → pembro mono (KEYNOTE-006). Otherwise ipi+nivo combination."
+sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024, SRC-KEYNOTE-006-ROBERT-2015, SRC-KEYNOTE-054-EGGERMONT-2018]
 last_reviewed: null
-notes: "DREAMseq: ICI-doublet → BRAFi+MEKi sequence preferred over reverse."
+notes: >
+  DREAMseq: ICI-doublet → BRAFi+MEKi sequence preferred over reverse.
+  W5b drift fixes (2026-04-30): added step 0 (resected-stage-III →
+  adjuvant pembro per KEYNOTE-054) and step 4 (irAE-frail BRAF-WT →
+  pembro mono per KEYNOTE-006). Both are additive to the original
+  BRAF/crisis decision tree; no existing branch behavior changed.

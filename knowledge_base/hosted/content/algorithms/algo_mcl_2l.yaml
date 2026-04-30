@@ -45,13 +45,17 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: Post-cBTKi failure AND CAR-T-ineligible
-    - condition: BTK-C481 mutation documented
+    - all_of:
+      - red_flag: RF-PRIOR-BTKI-PROGRESSION
+      - any_of:
+        - red_flag: RF-CAR-T-INELIGIBLE-AGE-COMORBID
+        - red_flag: RF-CAR-T-INELIGIBLE-ORGAN
+    - red_flag: RF-MCL-POST-BTKI-C481-ACTIONABLE
   if_true:
     result: IND-MCL-3L-PIRTOBRUTINIB
   if_false:
     result: IND-MCL-2L-ACALABRUTINIB
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+  notes: "Fully wired (W5c-finish 2026-04-30): replaced 2 free-text conditions ('Post-cBTKi failure AND CAR-T-ineligible' → all_of[RF-PRIOR-BTKI-PROGRESSION + any_of[RF-CAR-T-INELIGIBLE-*]]; 'BTK-C481 mutation documented' → new RF-MCL-POST-BTKI-C481-ACTIONABLE mirroring CLL pattern). Pirtobrutinib (BRUIN MCL-321) for CAR-T-ineligible post-cBTKi or C481-mut-confirmed; else acalabrutinib default."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-MCL-2024

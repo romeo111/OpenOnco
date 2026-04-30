@@ -1,0 +1,95 @@
+id: RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO
+definition: >
+  Endometrial carcinoma 2L candidate with adequate organ function and
+  controllable comorbidities to tolerate pembrolizumab + lenvatinib
+  combination per KEYNOTE-775 (Makker NEJM 2022). Captures the prereq
+  bundle: BP controllable on antihypertensives, no recent major surgery
+  (<3 weeks), no active GI bleeding, no severe cardiac dysfunction
+  (LVEF >=45%), and no uncontrolled proteinuria (UP/C <1.0 g/g) — these
+  are the dose-modifying triggers for lenvatinib that, if uncontrolled
+  at baseline, gate combination eligibility per FDA label.
+definition_ua: >
+  Кандидат на 2L ендометріальної карциноми з адекватною функцією
+  органів та контрольованими коморбідностями для переносимості
+  комбінації пембролізумаб + ленватініб per KEYNOTE-775 (Makker NEJM
+  2022). Охоплює пакет передумов: контрольований АТ на
+  антигіпертензивних, відсутність нещодавньої великої операції
+  (<3 тижнів), відсутність активної ШКТ-кровотечі, відсутність
+  важкої серцевої дисфункції (ЛВЕФ ≥45%), відсутність неконтрольованої
+  протеїнурії (UP/C <1.0 г/г) — це тригери модифікації дози
+  ленватинібу, які, якщо неконтрольовані на базовому рівні, гейтять
+  прийнятність комбінації per FDA label.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "uncontrolled_hypertension"
+          value: false
+        - finding: "blood_pressure_systolic_mmhg"
+          threshold: 150
+          comparator: "<"
+    - any_of:
+        - finding: "recent_surgery_within_3_weeks"
+          value: false
+        - finding: "weeks_since_last_surgery"
+          threshold: 3
+          comparator: ">="
+    - any_of:
+        - finding: "active_gi_bleed"
+          value: false
+        - finding: "gi_bleed_history_recent"
+          value: false
+    - any_of:
+        - finding: "lvef_percent"
+          threshold: 45
+          comparator: ">="
+        - finding: "severe_cardiac_dysfunction"
+          value: false
+    - any_of:
+        - finding: "proteinuria_uncontrolled"
+          value: false
+        - finding: "up_c_ratio_g_per_g"
+          threshold: 1.0
+          comparator: "<"
+
+clinical_direction: intensify
+
+severity: minor
+priority: 30
+category: fitness-eligibility
+
+relevant_diseases:
+  - DIS-ENDOMETRIAL
+shifts_algorithm:
+  - ALGO-ENDOMETRIAL-2L
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+  - SRC-ESMO-ENDOMETRIAL-2022
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Aggregates the "Adequate organ function" + "lenvatinib toxicity
+  tolerance required" gates from ALGO-ENDOMETRIAL-2L step 2. Each
+  trigger axis defaults to "false" (i.e., NOT contraindicated) when
+  finding absent — so patients without explicit contraindication
+  documentation pass the gate. This is permissive-by-default which
+  matches clinical practice (assume eligible unless documented
+  ineligible). MDT brief should still surface lenvatinib-specific
+  prerequisites for verbal confirmation. Patients flagged ineligible
+  fall back to single-agent options (doxorubicin, paclitaxel
+  re-challenge) outside current KB scope.
+notes_ua: >
+  Агрегує гейти "Адекватна функція органів" + "переносимість
+  токсичності ленватинібу" зі step 2 ALGO-ENDOMETRIAL-2L. Кожна
+  тригер-вісь дефолтиться на "false" (тобто НЕ протипоказано) коли
+  finding відсутній — тому пацієнти без явної документації
+  протипоказання проходять гейт. Це permissive-by-default що
+  відповідає клінічній практиці (припускаємо прийнятність якщо не
+  задокументовано неприйнятність). MDT-brief має все одно виносити
+  специфічні для ленватинібу передумови для усного підтвердження.
+  Пацієнти позначені як неприйнятні fall back на single-agent опції
+  (доксорубіцин, паклітаксел re-challenge) поза поточним KB-скоупом.
