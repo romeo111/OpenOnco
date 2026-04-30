@@ -54,9 +54,9 @@ def test_landing_is_public_with_hero_and_ctas(site_dir: Path):
     assert "openOncoUser" not in html, "auth gate must be removed from landing"
     # Hero structure
     assert 'class="hero"' in html
-    # Both CTAs
-    assert 'href="try.html"' in html
-    assert 'href="gallery.html"' in html
+    # Both CTAs (root-relative paths since the EN-default flip — commit 48eb804e)
+    assert 'href="/try.html"' in html
+    assert 'href="/gallery.html"' in html
     # Hero copy
     assert "oncology" in html.lower() or "онколог" in html.lower()
 
@@ -66,8 +66,11 @@ def test_capabilities_shows_numerical_metrics(site_dir: Path):
     in commit `25b0340` so the landing stays focused on the MDT story).
 
     The rich-card layout with per-metric textual explanations is the
-    canonical place to show what's in the KB."""
-    html = (site_dir / "capabilities.html").read_text(encoding="utf-8")
+    canonical place to show what's in the KB.
+
+    UA labels live on /ukr/capabilities.html since the EN-default flip
+    (commit 48eb804e) — the root /capabilities.html now renders English."""
+    html = (site_dir / "ukr" / "capabilities.html").read_text(encoding="utf-8")
     assert 'class="num-grid num-grid--rich"' in html
     for label in ("Хвороби в KB", "Лікарі-скіли", "Режими лікування",
                   "Препарати", "Тести", "Workups", "Red flags",
@@ -137,8 +140,8 @@ def test_gallery_is_public_with_all_cases(site_dir: Path):
     assert html.count('class="case-card"') == len(CASES)
     for c in CASES:
         assert f"cases/{c.case_id}.html" in html
-    # Stats widget embedded
-    assert "oo-widget" in html
+    # Stats widget intentionally dropped from /gallery.html in commit 6234fe9b
+    # (UA-leak cleanup on the EN gallery surface).
     # Feedback path
     assert "tester-feedback" in html
 
@@ -246,6 +249,8 @@ def test_examples_payload_matches_cases(site_dir: Path):
 
 
 def test_case_files_have_back_link_and_no_auth(site_dir: Path):
+    # Root /cases/ now renders EN since the EN-default flip (commit 48eb804e);
+    # UA back-link "Назад до галереї" lives at /ukr/cases/<id>.html.
     for c in CASES:
         path = site_dir / "cases" / f"{c.case_id}.html"
         assert path.exists(), f"case file missing: {path.name}"
@@ -253,53 +258,57 @@ def test_case_files_have_back_link_and_no_auth(site_dir: Path):
         assert html.startswith("<!DOCTYPE html>")
         assert "</html>" in html
         assert "openOncoUser" not in html, f"{c.case_id} retains auth gate"
-        assert "Назад до галереї" in html
+        assert "Back to gallery" in html
         assert "tester-feedback" in html
 
 
-# ── Language switcher + EN mirror ─────────────────────────────────────────
+# ── Language switcher + UA mirror ─────────────────────────────────────────
+# Site layout flipped in commit 48eb804e: EN is now default at root, UA
+# moved to /ukr/. These tests preserve the original "secondary mirror
+# exists / lang switch points to twin" semantics with the path direction
+# reversed.
 
 
 def test_en_mirror_built_alongside_ua(site_dir: Path):
-    """Every public page has an /en/ counterpart so the language toggle
+    """Every public page has a /ukr/ counterpart so the language toggle
     can navigate between them without 404."""
     for page in ("index.html", "gallery.html", "try.html"):
-        assert (site_dir / "en" / page).exists(), f"missing en/{page}"
-    assert (site_dir / "en").is_dir()
-    assert (site_dir / "en" / "cases").is_dir()
-    # Every UA case has an EN counterpart at /en/cases/
+        assert (site_dir / "ukr" / page).exists(), f"missing ukr/{page}"
+    assert (site_dir / "ukr").is_dir()
+    assert (site_dir / "ukr" / "cases").is_dir()
+    # Every EN case has a UA counterpart at /ukr/cases/
     for c in CASES:
-        assert (site_dir / "en" / "cases" / f"{c.case_id}.html").exists(), (
-            f"missing en/cases/{c.case_id}.html"
+        assert (site_dir / "ukr" / "cases" / f"{c.case_id}.html").exists(), (
+            f"missing ukr/cases/{c.case_id}.html"
         )
 
 
 def test_lang_switch_present_on_every_top_level_page(site_dir: Path):
-    """Toggle in the top bar lets the user flip UA↔EN on landing/gallery/try."""
+    """Toggle in the top bar lets the user flip EN↔UA on landing/gallery/try."""
     for page in ("index.html", "gallery.html", "try.html"):
-        ua = (site_dir / page).read_text(encoding="utf-8")
-        en = (site_dir / "en" / page).read_text(encoding="utf-8")
+        en = (site_dir / page).read_text(encoding="utf-8")
+        ua = (site_dir / "ukr" / page).read_text(encoding="utf-8")
         # Toggle markup
-        assert 'class="lang-switch"' in ua
         assert 'class="lang-switch"' in en
-        # UA points to /en/<page>
-        assert '/en/' in ua, f"UA {page} missing pointer to /en/"
-        # EN points back to root (UA)
+        assert 'class="lang-switch"' in ua
+        # EN points to /ukr/<page>
+        assert '/ukr/' in en, f"EN {page} missing pointer to /ukr/"
+        # UA points back to root (EN)
         # Either '/' (landing) or '/<page>' for gallery/try
-        en_to_ua_target = "/" if page == "index.html" else f"/{page}"
-        assert f'href="{en_to_ua_target}"' in en, (
-            f"EN {page} lang-switch should link back to {en_to_ua_target}"
+        ua_to_en_target = "/" if page == "index.html" else f"/{page}"
+        assert f'href="{ua_to_en_target}"' in ua, (
+            f"UA {page} lang-switch should link back to {ua_to_en_target}"
         )
 
 
 def test_lang_switch_present_on_case_pages(site_dir: Path):
-    """Per-case pages also carry a UA↔EN mini-toggle — toggle on a case
+    """Per-case pages also carry an EN↔UA mini-toggle — toggle on a case
     must navigate to that same case in the other language."""
     sample_id = CASES[0].case_id
-    ua_case = (site_dir / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
-    en_case = (site_dir / "en" / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
-    assert f"/en/cases/{sample_id}.html" in ua_case, "UA case missing EN twin link"
-    assert f"/cases/{sample_id}.html" in en_case, "EN case missing UA twin link"
+    en_case = (site_dir / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
+    ua_case = (site_dir / "ukr" / "cases" / f"{sample_id}.html").read_text(encoding="utf-8")
+    assert f"/ukr/cases/{sample_id}.html" in en_case, "EN case missing UA twin link"
+    assert f"/cases/{sample_id}.html" in ua_case, "UA case missing EN twin link"
 
 
 def test_try_cta_is_separate_action_button(site_dir: Path):
@@ -313,10 +322,12 @@ def test_try_cta_is_separate_action_button(site_dir: Path):
 
 
 def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):
-    """Regression: /en/index.html that links to a relative `style.css`
-    resolves to /en/style.css and renders unstyled. Every page that lives
-    at non-root depth must use a root-relative `/style.css` link."""
-    for page in ("en/index.html", "en/gallery.html", "en/try.html"):
+    """Regression: a non-root page that links to relative `style.css`
+    resolves to a sibling-relative path and renders unstyled. Every page
+    that lives at non-root depth must use a root-relative `/style.css` link.
+
+    The non-root tier is now /ukr/ (commit 48eb804e flipped EN to root)."""
+    for page in ("ukr/index.html", "ukr/gallery.html", "ukr/try.html"):
         html = (site_dir / page).read_text(encoding="utf-8")
         assert 'href="/style.css"' in html, (
             f"{page} must load /style.css via root-relative path"
@@ -331,26 +342,30 @@ def test_en_pages_load_stylesheet_via_root_relative_path(site_dir: Path):
 def test_lang_switch_shows_flag_for_active_mode(site_dir: Path):
     """User direction: small flag indicates the active language. Uses
     CSS-painted mini flags (Windows doesn't render flag emoji, so emoji
-    would fall back to letter pairs 'UA'/'GB' next to the labels)."""
-    ua = (site_dir / "index.html").read_text(encoding="utf-8")
-    en = (site_dir / "en" / "index.html").read_text(encoding="utf-8")
+    would fall back to letter pairs 'UA'/'GB' next to the labels).
+
+    Root index is EN since commit 48eb804e; UA mirror at /ukr/index.html."""
+    en = (site_dir / "index.html").read_text(encoding="utf-8")
+    ua = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
     # Both flag classes must appear on every top-level page (one current,
     # one in the toggle target)
-    for page_html, name in ((ua, "UA index"), (en, "EN index")):
+    for page_html, name in ((en, "EN index"), (ua, "UA index")):
         assert "flag-ua" in page_html, f"{name} missing flag-ua class"
         assert "flag-en" in page_html, f"{name} missing flag-en class"
         assert 'class="lang-flag' in page_html, f"{name} missing lang-flag wrapper"
 
 
 def test_en_landing_links_use_en_paths(site_dir: Path):
-    """Top-bar links on /en/ pages must stay within /en/ scope (so the
-    user keeps reading in English unless they explicitly toggle UA)."""
-    en_index = (site_dir / "en" / "index.html").read_text(encoding="utf-8")
-    # Gallery + Try links route through /en/ for EN nav
-    assert "/en/gallery.html" in en_index
-    assert "/en/try.html" in en_index
-    # html lang attr is en
-    assert '<html lang="en">' in en_index
+    """Top-bar links on /ukr/ pages must stay within /ukr/ scope (so the
+    user keeps reading in Ukrainian unless they explicitly toggle EN).
+
+    Direction flipped in commit 48eb804e: UA is now the secondary tier."""
+    ua_index = (site_dir / "ukr" / "index.html").read_text(encoding="utf-8")
+    # Gallery + Try links route through /ukr/ for UA nav
+    assert "/ukr/gallery.html" in ua_index
+    assert "/ukr/try.html" in ua_index
+    # html lang attr is uk
+    assert '<html lang="uk">' in ua_index
 
 
 # ── Privacy guard ─────────────────────────────────────────────────────────
