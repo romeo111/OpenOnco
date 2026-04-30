@@ -1,0 +1,97 @@
+id: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic intrahepatic cholangiocarcinoma"
+    - "Disease progression on ≥1 prior systemic therapy (typically gem+cis ± durvalumab 1L)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-FGFR2
+      required: true
+      value_constraint: "FGFR2 fusion or rearrangement positive (RNA-NGS preferred; DNA-NGS fusion-aware OR FISH break-apart acceptable)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMIGATINIB-CHOLANGIO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~35.5% (FIGHT-202 cohort A FGFR2 fusion / rearrangement)"
+  complete_response: "~3%"
+  progression_free_survival: "Median PFS 6.9 mo (FIGHT-202)"
+  overall_survival_5y: "Median OS 21.1 mo (FIGHT-202); long-term f/u pending"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CHOLANGIOCARCINOMA-FRAILTY-AGE
+  - RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Pemigatinib for FGFR2-fusion / rearrangement advanced
+  cholangiocarcinoma post ≥1 prior systemic line — ORR 35.5%, mPFS
+  6.9 mo, mOS 21.1 mo (FIGHT-202). FDA accelerated approval Apr 2020;
+  traditional approval after FIGHT-302 confirmatory data. FGFR2
+  fusion ~10–20% of intrahepatic CCA; targetable signal with durable
+  responses in a disease with poor prognosis post chemotherapy
+  failure. Class FGFR-TKI toxicity (hyperphosphatemia, serous
+  retinopathy) requires dedicated supportive-care protocol. UA access
+  barrier: pemigatinib not registered (named-patient / EAP only).
+  Alternative: futibatinib (FOENIX-CCA2 ORR 42%; covalent FGFR-TKI
+  active against some pemigatinib-resistance variants) where
+  available; also not registered in UA.
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: "Pemigatinib is a recommended option for FGFR2-fusion / rearrangement advanced cholangiocarcinoma post ≥1 prior line (FIGHT-202); FDA-approved Apr 2020"
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: "FGFR2 fusion testing recommended in advanced biliary tract cancer; pemigatinib or futibatinib is the standard 2L option upon FGFR2-fusion confirmation"
+  - source_id: SRC-FIGHT-202
+    position: supports
+    relevant_quote_paraphrase: "FIGHT-202 cohort A (FGFR2 fusion/rearrangement, n=107): pemigatinib 13.5 mg PO daily 14 on/7 off; ORR 35.5%, mPFS 6.9 mo, mOS 21.1 mo"
+
+known_controversies:
+  - topic: "Pemigatinib vs futibatinib for FGFR2-fusion CCA 2L"
+    positions:
+      - position: "Pemigatinib: first-approved (Apr 2020), longest follow-up; reversible inhibitor; mature mOS 21.1 mo (FIGHT-202)"
+        sources: [SRC-NCCN-HEPATOBILIARY]
+      - position: "Futibatinib: covalent irreversible FGFR1-4 TKI; FOENIX-CCA2 ORR 42%; retains activity vs some pemigatinib-resistance variants (gatekeeper, molecular-brake)"
+        sources: [SRC-NCCN-HEPATOBILIARY]
+        evidence_note: "No head-to-head; futibatinib preferred when pemigatinib resistance documented; choice often by access"
+    our_default: "Pemigatinib as default 2L FGFR2-fusion CCA; futibatinib reserved for pemigatinib-resistance / progression"
+    rationale: "Longer follow-up + traditional approval favor pemigatinib first-line of FGFR-TKI sequence; futibatinib retains activity against pemigatinib-resistance variants"
+
+do_not_do:
+  - "НЕ призначати без RNA-NGS (або DNA-NGS fusion-aware / FISH break-apart) підтвердження FGFR2 fusion — амплифікація сама по собі недостатня для цього показання."
+  - "НЕ розпочинати без baseline офтальмологічного огляду — серозна ретинопатія / RPE detachment — класова токсичність."
+  - "НЕ ігнорувати моніторинг фосфату — гіперфосфатемія потребує дієти + sevelamer; затримка / зниження дози при >7 мг/дл."
+  - "НЕ комбінувати з потужними CYP3A4 індукторами — експозиція pemigatinib різко знижується."
+  - "НЕ підтверджувати план без funding pathway — pemigatinib не зареєстрований в UA."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  FGFR2-fusion CCA. NCCN cat 2A (2025); FDA Apr 2020. SRC-FIGHT-202
+  source stub in KB — citation detail (Abou-Alfa Lancet Oncol 2020,
+  PMID 32203698) pending verification + ingest. UA access:
+  named-patient pathway only.

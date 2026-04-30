@@ -1,0 +1,76 @@
+id: RF-CRC-HER2-AMP-ACTIONABLE
+definition: >
+  HER2 amplification in metastatic colorectal cancer — IHC 3+ OR
+  (IHC 2+ AND ISH amplified, HER2/CEP17 ≥2.0). Present in ~3% of mCRC,
+  enriched in left-sided RAS-WT tumors. Treatment-defining for
+  RAS-WT subset: tucatinib + trastuzumab (MOUNTAINEER ORR 38%, mPFS
+  8.2 mo, mOS 24.1 mo; FDA Jan 2023) as 2L+/3L+ standard; T-DXd
+  (DESTINY-CRC01) as alternative for IHC 3+ heavily pretreated.
+  Excludes RAS-mutant (MOUNTAINEER eligibility) and MSI-H (pembrolizumab
+  supersedes). Distinct from BIO-HER2-SOLID composite IHC marker:
+  this red-flag is the actionability gate that fires for the CRC
+  HER2-amp + RAS-WT subset specifically.
+definition_ua: >
+  Ампліфікація HER2 у метастатичному колоректальному раку — ІГХ 3+
+  АБО (ІГХ 2+ АБО ISH-ампліфікація, HER2/CEP17 ≥2.0). Зустрічається
+  у ~3% мКРР, переважно в лівобічних RAS-дикого типу пухлинах.
+  Лікування-визначальний маркер для RAS-WT підгрупи: тукатиніб +
+  трастузумаб (MOUNTAINEER ORR 38%, мПФВ 8.2 міс, мЗВ 24.1 міс;
+  FDA січень 2023) як 2L+/3L+ стандарт; T-DXd (DESTINY-CRC01) як
+  альтернатива для ІГХ 3+ значно передлікованих. Виключає RAS-мутантні
+  (за критеріями MOUNTAINEER) та MSI-H (пембролізумаб переважає).
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "her2_status"
+          value: "amplified"
+        - finding: "her2_status"
+          value: "positive"
+        - finding: "her2_ihc"
+          value: "3+"
+        - finding: "her2_ish"
+          value: "amplified"
+    - finding: "ras_status"
+      value: "wild_type"
+
+clinical_direction: intensify
+
+severity: critical
+priority: 52
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-CRC
+
+shifts_algorithm:
+  - ALGO-CRC-METASTATIC-2L
+
+branch_targets:
+  ALGO-CRC-METASTATIC-2L: "step-4"
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+  - SRC-MOUNTAINEER-STRICKLER-2022
+
+last_reviewed: "2026-04-30"
+draft: false
+
+notes: >
+  Hierarchy in 2L mCRC: MSI-H (KEYNOTE-164) > BRAF V600E (BEACON) >
+  KRAS G12C (CodeBreaK 300) > HER2-amp + RAS-WT (MOUNTAINEER /
+  DESTINY-CRC01) > EGFRi rechallenge > FOLFIRI + bev. Captured in
+  ALGO-CRC-METASTATIC-2L decision tree. UA access barrier: tucatinib
+  not registered (named-patient pathway only); trastuzumab biosimilar
+  available but NSZU does not fund CRC HER2-amp indication. T-DXd
+  registered for breast / not CRC. RF informational; engine step 4 is
+  free-text condition (not modified by this chunk).
+notes_ua: >
+  Ієрархія в 2L мКРР: MSI-H > BRAF V600E > KRAS G12C > HER2-амп +
+  RAS-WT > повторне використання EGFRi > FOLFIRI + bev. Враховано в
+  ALGO-CRC-METASTATIC-2L. UA-доступ: тукатиніб не зареєстрований
+  (named-patient); трастузумаб біосиміляр доступний, але НСЗУ не
+  фінансує CRC HER2-амп показання. T-DXd зареєстрований для РМЗ /
+  не для КРР.

@@ -10,6 +10,7 @@ purpose: >
 
 output_indications:
   - IND-GASTRIC-METASTATIC-1L-HER2-TOGA
+  - IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
   - IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
 
 default_indication: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
@@ -26,13 +27,30 @@ decision_tree:
     if_false:
       next_step: 2
 
-  # Step 2 — HER2- + PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649). Note:
+  # Step 2 — CLDN18.2+ HER2-negative → zolbetuximab + chemo
+  # (SPOTLIGHT/GLOW; FDA Oct 2024). Added in W1.B2 chunk
+  # (2026-04-30); positioned after step 1 so HER2+ patients (which
+  # also fire RF-GASTRIC-HIGH-RISK-BIOLOGY) continue to route to TOGA
+  # — preserves prior behavior for HER2+ cohort. CLDN18.2+ patients
+  # who are also HER2-negative and not MSI-H take this branch.
+  - step: 2
+    evaluate:
+      all_of:
+        - red_flag: RF-GASTRIC-CLDN18-2-ACTIONABLE
+        - {finding: her2_status, value: negative}
+    if_true:
+      result: IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
+    if_false:
+      next_step: 3
+    notes: "CLDN18.2 branch added W1.B2 (2026-04-30). MSI-H pembrolizumab branch still pending — surfaces via known_controversies in indication."
+
+  # Step 3 — HER2- + PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649). Note:
   # FDA strict label is CPS ≥5; EMA broader label is CPS ≥1.
   # RF-GASTRIC-PDL1-CPS-1-PLUS captures the broader CPS ≥1 cohort; the
   # MDT note in the indication discusses CPS 1-5 vs ≥5 magnitude-of-
   # benefit. HER2-negative gate kept as MDT-text (HER2+ already routed
   # at step 1; HER2-low not yet a separate gastric branch).
-  - step: 2
+  - step: 3
     evaluate:
       all_of:
         - red_flag: RF-GASTRIC-PDL1-CPS-1-PLUS
@@ -47,10 +65,17 @@ sources:
   - SRC-NCCN-GASTRIC-2025
   - SRC-ESMO-GASTRIC-2024
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-04-30"
 notes: >
-  HER2+ branch added (RF-GASTRIC-HIGH-RISK-BIOLOGY fires on any of
-  HER2+/CLDN18.2+/MSI-H/EBV+ — ALGO step 1 currently routes all to
-  TOGA which is correct for HER2+ but suboptimal for the rare
-  CLDN18.2-only subset; revisit when zolbetuximab regimen is added).
-  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable.
+  HER2+ branch (step 1) routes to TOGA via RF-GASTRIC-HIGH-RISK-BIOLOGY.
+  CLDN18.2-positive HER2-negative branch (step 2) added W1.B2 chunk
+  2026-04-30 — routes to zolbetuximab+chemo (SPOTLIGHT/GLOW; FDA Oct
+  2024). PD-L1 CPS≥1 + HER2-negative branch (step 3, formerly step 2)
+  routes to nivolumab+chemo (CheckMate-649). The CLDN18.2 step
+  precedes PD-L1 because zolbetuximab + chemo is treatment-defining
+  when CLDN18.2≥75% AND PD-L1<5; for dual-positive CLDN18.2≥75% AND
+  PD-L1≥5 the indication's known_controversies surfaces the MDT
+  trade-off.
+  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable, MSI-H
+  KEYNOTE-859 pembrolizumab as separate algorithm branch (pending
+  dedicated indication).
