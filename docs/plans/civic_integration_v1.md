@@ -1,5 +1,10 @@
 # CIViC integration plan v1 — 2026-04-27
 
+**Status: COMPLETE — 2026-05-01.** All five phases (0, 1, 1.5, 2, 3, 3.5,
+4, 5) have landed on `master`. Retained as the historical record of the
+OncoKB → CIViC pivot. Subsequent CIViC work (BMA backfill waves, snapshot
+refresh CI tuning, etc.) tracked in separate plans / PRs.
+
 Replaces `docs/plans/archive/oncokb_integration_safe_rollout_v3.md` after the
 OncoKB ToS audit (`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`).
 
@@ -67,24 +72,60 @@ OncoKB ToS audit (`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`).
 - Commit `94cd7be docs(reviews): Phase 3-O — J-drafts vs CIViC side-by-side diff`
   — 5 of 23 J-drafts CIViC-confirmable; 18 need NCCN/ESMO re-attribution.
 
-## What's pending
+## What's landed since 2026-04-27 (Phases 3.5, 4, 5)
 
 ### Phase 3.5: matcher case-fix
-- Phase 3-O surfaced a `civic_variant_matcher.py:171` case-sensitivity
-  bug (NPM1 `W288fs` vs CIViC `W288FS`). 1-line fix.
+- Commit `611c7543 fix(engine): civic_variant_matcher case-insensitive Rule 1 (Phase 3.5)`
+  — fixes the `W288fs` vs `W288FS` (and lowercase gene-symbol) trap. Two
+  regression tests added (`test_23_rule1_case_insensitive_variant_npm1_w288fs`,
+  `test_24_rule1_case_insensitive_gene_lowercase_braf` in
+  `tests/test_civic_variant_matcher.py`).
 
-### Phase 4: render + spec + docs (in parallel, including this doc)
-- **4-P:** render layer pivot — ESCAT primary + CIViC detail; SRC-ONCOKB
-  skip per ToS; fallback for empty `evidence_sources`.
-- **4-Q:** `specs/KNOWLEDGE_SCHEMA_SPECIFICATION` + `specs/SOURCE_INGESTION_SPEC`
-  updates (owned by Q in parallel).
-- **4-R:** this doc + supersede notice on legacy plan.
+### Phase 4: render + spec + docs
+
+- **4-P (render layer pivot) — DONE.** Commits `3439660a feat(render):
+  ESCAT-primary + CIViC-detailed actionability rendering` + `f5572c91
+  feat(render): Phase 4 — OncoKB layer (HCP-only, 23 tests green)` +
+  `77dc401b feat(render): Phase 4.1 — FDA badge sources truth from Drug
+  entity`. ESCAT tier is the prominent badge; CIViC level + significance
+  + EID links render in the detail row; `SRC-ONCOKB` filtered out per
+  ToS via `_is_skipped_source` / `_RENDER_SKIP_SOURCES` in
+  `knowledge_base/engine/render.py`; empty-`evidence_sources` fallback
+  promotes `primary_sources` (sans OncoKB) into citation cards. Patient-mode
+  firewall preserved (cross-checked by `tests/test_patient_render.py`).
+  Pinned by `tests/test_actionability_render.py` (28 tests green).
+- **4-Q (specs) — DONE.** Commit `4bd41758 docs(specs): update
+  KNOWLEDGE_SCHEMA + SOURCE_INGESTION for CIViC pivot`.
+  `specs/KNOWLEDGE_SCHEMA_SPECIFICATION.md` carries the pivot callout
+  (lines 11–22) and the canonical `evidence_sources` schema for BMA
+  (§4.4.1 onward), including the `SRC-ONCOKB`-as-legacy-metadata rule
+  (§4.4.4). `specs/SOURCE_INGESTION_SPEC.md` codifies OncoKB-rejected
+  in §16.4 plus the matrix entries that point to CIViC as the primary
+  actionability source. Remaining OncoKB references in both specs are
+  intentional historical context (rejection rationale, legacy-token
+  vocabulary, ToS-audit cross-references).
+- **4-R (plan docs) — DONE.** Commit `41410c43 docs(plans): supersede
+  oncokb_integration_safe_rollout_v3 with civic_integration_v1`. Legacy
+  plan at `docs/plans/archive/oncokb_integration_safe_rollout_v3.md`
+  carries the supersede banner at lines 1–18. This file's "Status:
+  COMPLETE" header above is the closing update (commit pending — the
+  PR you are reading).
 
 ### Phase 5: verification
-- Full test suite green (`pytest tests/`).
-- Validator clean (`python -m knowledge_base.validation`).
-- Render sample-grep `OncoKB` → 0 hits in HCP-mode rendered output.
-- Cherry-pick audit `b4aba91` from origin onto `feat/civic-primary`.
+
+- Commit `d204a502 chore(engine): remove OncoKB back-compat aliases (Phase 5 cleanup)`
+  + `b2ce0654 fix(tests): mechanical pre-existing failures + categorize remaining (Phase 5+)`
+  + `4b36794c feat(kb): Phase 5+ — J-draft re-attribution from primary_sources`.
+- Validator clean (`python -m knowledge_base.validation.loader knowledge_base/hosted/content`
+  → `OK — all entities valid, all references resolve.`).
+- HCP-mode render OncoKB-grep → 0 hits (verified by Phase 5 agent + 28
+  `tests/test_actionability_render.py` cases including
+  `test_render_actionability_section_skips_oncokb_in_hcp_mode` and
+  `test_render_actionability_section_filters_oncokb_from_primary_sources_column`).
+- Audit `b4aba91` cherry-pick landed earlier in the wave; `feat/civic-primary`
+  merged via PR #13 (commit `e03a4c32`) followed by post-merge BMA
+  reconstruction sidecars (PR #14, commit `bc7677d0`) and the bma-civic
+  EID re-check (PR #39, commit `6e31603c` — 0/10 768 EIDs deprecated).
 
 ## Architectural carry-over from OncoKB plan
 
