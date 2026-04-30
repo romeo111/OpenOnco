@@ -34,6 +34,12 @@ from typing import Optional, Union
 import yaml
 
 from ._ask_doctor import select_questions as _select_ask_doctor_questions
+from ._citation_guard import (
+    needs_guard as _citation_needs_guard,
+    render_citation_warn_badge as _render_citation_warn_badge,
+    render_stripped_block as _render_stripped_block,
+    resolve_citation_status as _resolve_citation_status,
+)
 from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
 from ._nszu import lookup_nszu_status, nszu_label
 from ._patient_vocabulary import (
@@ -1739,13 +1745,20 @@ def _format_evidence_sources(
     return '<span style="color:var(--gray-500)">—</span>'
 
 
-def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
+def _render_variant_actionability(
+    plan, target_lang: str = "uk", *, strict_citation_guard: bool = False
+) -> str:
     """Render the ESCAT tier-badges + per-source evidence section.
 
     Inserted between the diagnostic profile (patient strip + etiological
     driver) and the treatment-plan tracks. When the patient has no
     matching BMA cells, render a single placeholder row — the section
     is always present so HCPs see that the lookup ran.
+
+    PR5 citation-presence guard: each BMA hit row gets a status check on
+    its `primary_sources` + `evidence_sources`. WARN mode prepends a
+    `❓ без цитати` badge to the biomarker cell; STRICT mode replaces
+    the row's body with a single stripped-block placeholder cell.
     """
     hits = list(getattr(plan, "variant_actionability", None) or [])
 
@@ -1770,6 +1783,24 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
         )
     else:
         for h in hits:
+            # PR5 — per-cell citation-presence: feed a hit-shaped dict
+            # into the resolver. Hits expose primary_sources +
+            # evidence_sources at the top level, mirroring BMA YAML.
+            cell_data = {
+                "primary_sources": list(h.primary_sources or []),
+                "evidence_sources": list(getattr(h, "evidence_sources", None) or []),
+            }
+            cell_status = _resolve_citation_status(cell_data)
+
+            # STRICT mode: redact the entire row
+            if strict_citation_guard and _citation_needs_guard(cell_status["status"]):
+                rows.append(
+                    '<tr class="stripped-row">'
+                    f'<td colspan="7">{_render_stripped_block(target_lang)}</td>'
+                    '</tr>'
+                )
+                continue
+
             biomarker = _h(h.biomarker_id or "")
             qualifier = h.variant_qualifier
             variant_cell = (
@@ -1797,9 +1828,18 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
                 "".join(f"<li>{_h(s)}</li>" for s in visible_sources)
                 or '<li style="color:var(--gray-500)">—</li>'
             )
+
+            # WARN-mode badge prepended to biomarker cell when status is
+            # uncited / broken. Strict mode is handled above (early-continue).
+            badge_html = (
+                _render_citation_warn_badge(target_lang)
+                if _citation_needs_guard(cell_status["status"])
+                else ""
+            )
+
             rows.append(
                 "<tr>"
-                f'<td><span class="gene">{biomarker}</span></td>'
+                f'<td>{badge_html}<span class="gene">{biomarker}</span></td>'
                 f'<td><span class="variant">{variant_cell}</span></td>'
                 f'<td><span class="tier-badge {escat_cls}">{escat_label}</span></td>'
                 f'<td class="evidence">{evidence_cell}</td>'
@@ -1818,6 +1858,47 @@ def _render_variant_actionability(plan, target_lang: str = "uk") -> str:
     )
 
 
+# ── Citation-presence guard helpers (PR5) ───────────────────────────────────
+
+
+def _track_citation_dd(
+    indication_id: str,
+    regimen_label: str,
+    ind_status: dict,
+    reg_status: dict,
+    target_lang: str,
+    strict: bool,
+) -> tuple[str, str]:
+    """Build the `<dd>` cell content for the Indication and Regimen rows
+    in a track block, applying the PR5 citation-presence guard.
+
+    Returns `(indication_dd, regimen_dd)` — each is a complete `<dd>...</dd>`
+    string. WARN mode prepends a badge; STRICT mode replaces the cell
+    body with a stripped-block placeholder."""
+    if _citation_needs_guard(ind_status["status"]):
+        if strict:
+            ind_dd = f"<dd>{_render_stripped_block(target_lang)}</dd>"
+        else:
+            ind_dd = (
+                f'<dd>{_render_citation_warn_badge(target_lang)} '
+                f'{_h(indication_id)}</dd>'
+            )
+    else:
+        ind_dd = f'<dd>{_h(indication_id)}</dd>'
+
+    if _citation_needs_guard(reg_status["status"]):
+        if strict:
+            reg_dd = f"<dd>{_render_stripped_block(target_lang)}</dd>"
+        else:
+            reg_dd = (
+                f'<dd>{_render_citation_warn_badge(target_lang)} '
+                f'{_h(regimen_label)}</dd>'
+            )
+    else:
+        reg_dd = f'<dd>{_h(regimen_label)}</dd>'
+    return ind_dd, reg_dd
+
+
 # ── Treatment Plan render ─────────────────────────────────────────────────
 
 
@@ -1827,6 +1908,7 @@ def render_plan_html(
     *,
     target_lang: str = "uk",
     mode: str = "clinician",
+    strict_citation_guard: bool = False,
 ) -> str:
     """Render a PlanResult as a single-file HTML document.
 
@@ -1839,7 +1921,18 @@ def render_plan_html(
     from `_patient_vocabulary`. Emergency RedFlags surface as a banner
     via `_emergency_rf`; an 'ask your doctor' section is generated via
     `_ask_doctor`. CHARTER §8.3 invariant — patient-mode never changes
-    the engine's track selection."""
+    the engine's track selection.
+
+    `strict_citation_guard=False` (default) is WARN mode: any
+    Regimen / Indication / BMA cell whose declared sources fail to
+    resolve to a real Source entity gets a visible
+    ``<aside class="no-citation-badge">❓ без цитати</aside>`` flag, but
+    the underlying clinical content still renders.
+    `strict_citation_guard=True` is STRICT mode: those cells'
+    bodies are replaced with a ``<div class="stripped-block">`` placeholder
+    so unsourced content cannot reach the patient. STRICT is the
+    target post-cleanup; WARN is the current-state default for KB
+    drift visibility (PR5)."""
     if (mode or "").lower() == "patient":
         return _render_patient_mode(plan_result, target_lang)
 
@@ -1875,7 +1968,9 @@ def render_plan_html(
     # Variant actionability (ESCAT) — inserted between the
     # diagnostic profile and the treatment-plan tracks. Render-time
     # context only; engine never re-reads tier values to rank tracks.
-    body.append(_render_variant_actionability(plan, target_lang))
+    body.append(_render_variant_actionability(
+        plan, target_lang, strict_citation_guard=strict_citation_guard
+    ))
 
     # Tracks
     drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
@@ -1911,13 +2006,45 @@ def render_plan_html(
         # actionability_layer is populated. Surface-only — the inline
         # banner is the T3 mitigation for clinicians scrolling top-down.
         actionability_inline = ""
+
+        # PR5 citation-presence guard — Indication + Regimen each get an
+        # independent check. Two badges (vs. one worst-of) is more truthful
+        # and lets clinicians see exactly which entity broke the chain.
+        # Surveillance / watch-and-wait tracks have no regimen by design;
+        # we suppress the regimen guard for those (no entity → no badge)
+        # to avoid spurious flags that would conflate "missing citation"
+        # with "no regimen exists". Same guard applies to a missing
+        # indication_data (degenerate case — track wouldn't normally
+        # render meaningfully anyway).
+        _CITED_NOOP = {
+            "status": "cited", "cited_count": 0,
+            "resolved_count": 0, "unresolved_ids": [],
+        }
+        ind_status = (
+            _resolve_citation_status(t.indication_data)
+            if t.indication_data is not None
+            else _CITED_NOOP
+        )
+        reg_status = (
+            _resolve_citation_status(t.regimen_data)
+            if t.regimen_data is not None
+            else _CITED_NOOP
+        )
+        ind_dd, reg_dd = _track_citation_dd(
+            indication_id=t.indication_id,
+            regimen_label=regimen_str,
+            ind_status=ind_status,
+            reg_status=reg_status,
+            target_lang=target_lang,
+            strict=strict_citation_guard,
+        )
         track_html.append(
             f'<div class="{track_class}">'
             f'<div class="track-head"><div class="track-name">{_h(t.label)}</div>{badge}</div>'
             f'{actionability_inline}'
             f'<dl>'
-            f'<dt>Indication</dt><dd>{_h(t.indication_id)}</dd>'
-            f'<dt>Regimen</dt><dd>{_h(regimen_str)}</dd>'
+            f'<dt>Indication</dt>{ind_dd}'
+            f'<dt>Regimen</dt>{reg_dd}'
             f'{drugs_dd}'
             f'{sup}'
             f'{ci}'
@@ -2351,7 +2478,17 @@ def render_diagnostic_brief_html(
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
     target_lang: str = "uk",
+    strict_citation_guard: bool = False,
 ) -> str:
+    """Render a DiagnosticPlanResult as a single-file HTML document.
+
+    `strict_citation_guard` is plumbed for signature consistency with
+    `render_plan_html`. Diagnostic-brief blocks (workup steps, mandatory
+    questions) don't carry source citations in the same shape as
+    Regimen/Indication/BMA, so the guard currently has no in-band
+    effect — added so callers can pass a single flag through any render
+    entry point."""
+    _ = strict_citation_guard  # reserved for future diagnostic guard
     dp = diag_result.diagnostic_plan
     if dp is None:
         return _doc_shell("OpenOnco — empty diagnostic brief", "<p>Empty DiagnosticPlanResult.</p>")
@@ -2472,9 +2609,13 @@ def render_revision_note_html(
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
     target_lang: str = "uk",
+    strict_citation_guard: bool = False,
 ) -> str:
     """Renders a revision note: shows transition + prev/new IDs, then
-    renders the new result inline (so reviewer sees the latest state)."""
+    renders the new result inline (so reviewer sees the latest state).
+
+    `strict_citation_guard` is forwarded to the inner Plan / Diagnostic
+    render so revision notes inherit the same warn/strict policy."""
 
     prev_id = (
         previous.diagnostic_plan.id if isinstance(previous, DiagnosticPlanResult)
@@ -2512,9 +2653,15 @@ def render_revision_note_html(
     # localization itself; here we render in UA and let the outer wrap
     # localize the entire revision-note HTML in one pass.
     if isinstance(new_result, DiagnosticPlanResult):
-        inner = render_diagnostic_brief_html(new_result, mdt=mdt, target_lang="uk")
+        inner = render_diagnostic_brief_html(
+            new_result, mdt=mdt, target_lang="uk",
+            strict_citation_guard=strict_citation_guard,
+        )
     else:
-        inner = render_plan_html(new_result, mdt=mdt, target_lang="uk")
+        inner = render_plan_html(
+            new_result, mdt=mdt, target_lang="uk",
+            strict_citation_guard=strict_citation_guard,
+        )
     start = inner.find('<div class="page">')
     end = inner.rfind('</div>\n</body>')
     if start >= 0 and end >= 0:
@@ -2534,11 +2681,18 @@ def render(
     mdt: Optional[MDTOrchestrationResult] = None,
     *,
     target_lang: str = "uk",
+    strict_citation_guard: bool = False,
 ) -> str:
     """Auto-dispatch by result type."""
     if isinstance(result, DiagnosticPlanResult):
-        return render_diagnostic_brief_html(result, mdt=mdt, target_lang=target_lang)
-    return render_plan_html(result, mdt=mdt, target_lang=target_lang)
+        return render_diagnostic_brief_html(
+            result, mdt=mdt, target_lang=target_lang,
+            strict_citation_guard=strict_citation_guard,
+        )
+    return render_plan_html(
+        result, mdt=mdt, target_lang=target_lang,
+        strict_citation_guard=strict_citation_guard,
+    )
 
 
 __all__ = [
