@@ -31,6 +31,20 @@ from typing import Any
 import yaml
 
 
+def _signoff_count(value: Any) -> int:
+    """Count reviewer sign-offs across legacy + structured shapes.
+
+    The legacy YAML shape was `reviewer_signoffs: <int>` (just a counter);
+    the structured form (CSD-5A) is `reviewer_signoffs: [{reviewer_id: ...}, ...]`.
+    Mixed YAML on disk is normal during the migration window.
+    """
+    if isinstance(value, list):
+        return len(value)
+    if isinstance(value, int):
+        return value
+    return 0
+
+
 # ── Layout ────────────────────────────────────────────────────────────────
 
 _PKG_ROOT = Path(__file__).resolve().parent
@@ -198,7 +212,7 @@ def _build_coverage(
                 workup_count += 1
 
         signoffs_max = max(
-            (int(ind.get("reviewer_signoffs", 0) or 0) for ind in d_inds),
+            (_signoff_count(ind.get("reviewer_signoffs")) for ind in d_inds),
             default=0,
         )
         out.append(
@@ -242,7 +256,7 @@ def collect_stats() -> Stats:
         for d in loaded:
             if "reviewer_signoffs" in d:
                 reviewer_total += 1
-                if int(d.get("reviewer_signoffs") or 0) >= 2:
+                if _signoff_count(d.get("reviewer_signoffs")) >= 2:
                     reviewer_reviewed += 1
         if dir_name == "diseases":
             diseases_yaml = loaded
