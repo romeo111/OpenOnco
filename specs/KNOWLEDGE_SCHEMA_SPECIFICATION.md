@@ -634,6 +634,14 @@ reviewers: [reviewer-id-1, reviewer-id-2]
 
 Лікувальна схема — комбінація препаратів з графіком.
 
+> **Зміна 2026-04-29 — phase-aware schema (PR1 of regimen-phases-refactor).**
+> Додано опційні поля `phases:` (`list[RegimenPhase]`) та
+> `bridging_options:` (`list[regimen_id]`). `components:` лишається; для
+> легасі-YAML без `phases:` loader auto-wrap'ить `components` у єдину
+> фазу `name: "main"`. Деталі — §6.4 нижче. План: [`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
+> Manual YAML migration (18 файлів CAR-T/TIL/SCT/multi-block) — окремий
+> PR2.
+
 ### 6.1. Schema
 
 ```yaml
@@ -648,7 +656,9 @@ names:
   acronym: "BR"
   ukrainian: "Бендамустин + Ритуксимаб (BR)"
 
-# Components
+# Components — flat list, kept for back-compat. New phase-aware regimens
+# may also author the `phases:` block below; legacy YAMLs without
+# `phases:` are auto-wrapped by the loader into a single "main" phase.
 components:
   - drug_id: DRUG-BENDAMUSTINE
     dose: "90 mg/m²"
@@ -661,6 +671,40 @@ components:
     schedule: "day 1 of each cycle"
     order: 2
     notes: "May be given as day 0 per institutional protocol"
+
+# Phases (added 2026-04-29). Optional. Render layer iterates this when
+# present, otherwise falls back to auto-wrap of `components` into a
+# single phase named "main". See §6.4 for shape + vocabulary.
+# Example (multi-phase axi-cel CAR-T):
+#
+# phases:
+#   - name: lymphodepletion
+#     purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
+#     duration: "3 days, days -5 to -3"
+#     timing_relative_to: main_infusion
+#     timing_offset_days: -5
+#     optional: false
+#     components:
+#       - drug_id: DRUG-CYCLOPHOSPHAMIDE
+#         dose: "500 mg/m²/day"
+#         schedule: "IV days -5, -4, -3"
+#         route: IV
+#       - drug_id: DRUG-FLUDARABINE
+#         dose: "30 mg/m²/day"
+#         schedule: "IV days -5, -4, -3"
+#         route: IV
+#   - name: main
+#     purpose_ua: "основна терапія — інфузія CAR-T"
+#     components:
+#       - drug_id: DRUG-AXICABTAGENE-CILOLEUCEL
+#         schedule: "Single IV infusion day 0"
+#         route: IV
+
+# Bridging options (added 2026-04-29). For therapies with a manufacturing
+# window (CAR-T, TIL): list of acceptable bridging Regimen IDs. Render
+# surfaces these as a separate "Якщо очікування на основну терапію >2 тижні"
+# section. Empty list → no bridging structurally available.
+bridging_options: []
 
 # Cycle structure
 cycle_length_days: 28
@@ -757,6 +801,73 @@ For each toxicity category, use enum:
 - `variable` (з описом в `notes`)
 
 Numeric rates (where available) в окремих полях з джерелом.
+
+### 6.4. RegimenPhase (додано 2026-04-29)
+
+Phase-aware декомпозиція курсу терапії. Закриває структурний пробіл,
+виявлений на патієнт-нульовому фідбеку: "чому план не показав
+циклофосфамід *перед* основною терапією?" — lymphodepletion / bridging /
+conditioning / IL-2 support колишньою плоскою `components` + рядковою
+`premedication` ховались у деталях one-block render. План:
+[`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
+
+**Поля:**
+
+| Поле | Тип | Опис |
+|---|---|---|
+| `name` | str | Назва фази (відкритий рядок; куратор-facing вокабуляр нижче) |
+| `purpose_ua` | str | UA-опис мети фази для render (наприклад, "виснаження лімфоцитів перед CAR-T") |
+| `purpose_en` | Optional[str] | EN-опис (опційно) |
+| `components` | list[RegimenComponent] | Drug-компоненти саме цієї фази |
+| `duration` | Optional[str] | Тривалість, наприклад "3 days, days -5 to -3" |
+| `timing_relative_to` | Optional[str] | `main_infusion` \| `next_phase` \| `absolute` \| `previous_phase_completion` |
+| `timing_offset_days` | Optional[int] | Зсув у днях; `-5` = "за 5 днів до main_infusion" |
+| `optional` | bool | bridging — `true`; lymphodepletion — `false` |
+| `sources` | list[str] | Source IDs, що документують цю фазу |
+
+**Куратор-facing vocabulary для `name`:**
+
+```
+lymphodepletion | bridging | induction | consolidation | maintenance |
+main | premedication | conditioning | salvage_induction |
+alternating_block_a | alternating_block_b | il2_support
+```
+
+Schema поки не enum'ить це — PR1 лишає `name: str`, бо нові кейси
+з'являтимуться під час PR2 manual migration. Якщо вокабуляр
+стабілізується — закрити enum'ом у наступному PR.
+
+### 6.5. Back-compat інваріант (auto-wrap)
+
+Усі легасі-YAML без `phases:` після завантаження мають
+`regimen.phases == [RegimenPhase(name="main", purpose_ua="основна терапія",
+components=regimen.components)]`. `regimen.components` лишається
+непорожнім та збігається з `regimen.phases[0].components` для легасі-YAML.
+
+Логіка живе у Pydantic `@model_validator(mode="after")` на класі
+`Regimen` (`knowledge_base/schemas/regimen.py`). Loader автоматично
+наслідує цю поведінку через `Regimen.model_validate(raw)`.
+
+**Контракти:**
+
+- Якщо `phases:` авторизовано явно — auto-wrap НЕ спрацьовує. `phases`
+  і `components` лишаються незалежними на вході.
+- Якщо `components:` порожній — `phases:` теж порожній. Render-шар
+  має маршрутизувати такі сутності окремо (наприклад, surveillance-only
+  "regimen" `REG-DAA-OBSERVATION-HCV-MZL`).
+- `regimen.components` НЕ deprecated. Видаляти його в PR1/PR2 не
+  плануємо.
+
+Покриття: `tests/test_regimen_phases.py` (10 тестів, у т.ч. catch-all
+по всіх 244 регімен-YAML).
+
+### 6.6. bridging_options
+
+`Regimen.bridging_options: list[str]` — список регімен-ID, прийнятних
+як bridging therapy під час manufacturing window для CAR-T / TIL.
+Default — порожній список. Render-шар (PR2) виносить цей блок окремою
+секцією "Якщо очікування на основну терапію >2 тижнів". Заповнення
+для існуючих CAR-T/TIL регіменів — частина PR2 ручної міграції.
 
 ---
 
