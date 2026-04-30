@@ -1,0 +1,129 @@
+id: IND-AML-1L-7-3-GO-CBF
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 1
+  stage_requirements:
+    - "Newly-diagnosed de-novo AML, fit for intensive induction"
+    - "ELN 2022 favorable-risk OR intermediate-risk cytogenetics (CBF — inv(16)/t(16;16)/CBFB::MYH11 or t(8;21)/RUNX1::RUNX1T1 — particular benefit)"
+    - "CD33-positive blasts (≥20% by flow cytometry) — gemtuzumab targets CD33"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-TP53-MUTATION
+      required: false
+      value_constraint: "TP53-mutant AML — exclude (no GO benefit per Hills meta-analysis adverse-risk subset)"
+  demographic_constraints:
+    age_min: 18
+    age_max: 70
+    ecog_max: 2
+    fit_for_intensive_chemo: true
+
+recommended_regimen: REG-AML-7-3-GO
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80-90% CR/CRi in CBF/favorable; ~70% in intermediate (vs ~70-80%/60% with 7+3 alone)"
+  complete_response: "~70-80% in CBF/favorable subset"
+  progression_free_survival: "2-yr EFS 40.8% vs 17.1% (ALFA-0701 overall); CBF subset particularly favorable"
+  overall_survival_5y: "2-yr OS 53.2% vs 41.9% (ALFA-0701, HR 0.69); 5-yr OS reduced mortality by ~20% in favorable + intermediate per Hills 2014"
+
+hard_contraindications:
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE
+red_flags_triggering_alternative:
+  - RF-AML-FRAILTY-AGE
+  - RF-AML-ORGAN-DYSFUNCTION
+  - RF-AML-EMERGENCY-TLS-LEUKOSTASIS
+  - RF-AML-HIGH-RISK-BIOLOGY
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-D-DIMER
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-KARYOTYPE
+  - TEST-FISH-PANEL
+  - TEST-NGS-MYELOID-PANEL
+desired_tests: []
+
+rationale: >
+  Fractionated gemtuzumab ozogamicin (3 mg/m² days 1, 4, 7) added to
+  standard 7+3 induction is Category 1 1L for fit CD33+ AML with CBF
+  / favorable / intermediate cytogenetics (NCCN preferred). ALFA-0701
+  (Castaigne Lancet 2012): 2-yr EFS 40.8% vs 17.1% (HR 0.58);
+  2-yr OS 53.2% vs 41.9% (HR 0.69). Hills meta-analysis 2014: GO
+  reduces 5-yr mortality ~20% in favorable-risk (HR 0.47) +
+  intermediate-risk (HR 0.84); NO benefit in adverse-risk (HR 1.03).
+  CBF AML — inv(16)/CBFB::MYH11, t(8;21)/RUNX1::RUNX1T1 — derives
+  greatest benefit. Daunorubicin 60 mg/m² (not 90) with concurrent
+  GO due to additive cardiotoxicity. NOT for adverse-risk
+  (complex karyotype, TP53-mutant, monosomy 7) — standard 7+3 alone
+  + alloHCT-bridge is the appropriate path for that subset. Hepatic
+  VOD/SOS is dominant safety concern — careful LFT monitoring +
+  alloHCT timing (avoid GO within 90 days of planned transplant).
+
+rationale_ua: >
+  Фракційний гемтузумаб озогаміцин (3 мг/м² дні 1, 4, 7) доданий до стандарту 7+3 індукція — Cat 1 1L для fit CD33+ ОМЛ з CBF / favorable / intermediate цитогенетикою (NCCN preferred). ALFA-0701 (Castaigne Lancet 2012): 2-річна EFS 40.8% проти 17.1% (HR 0.58); 2-річна OS 53.2% проти 41.9% (HR 0.69). Hills meta-аналіз 2014: GO зменшує 5-річну смертність ~20% у favorable-risk (HR 0.47) + intermediate-risk (HR 0.84); БЕЗ виграшу в adverse-risk (HR 1.03). CBF ОМЛ — inv(16)/CBFB::MYH11, t(8;21)/RUNX1::RUNX1T1 — отримує найбільший виграш. Daunorubicin 60 мг/м² (не 90) з конкурентним GO через адитивну кардіотоксичність. НЕ для adverse-risk (complex karyotype, TP53-мутант, monosomy 7) — стандарт 7+3 тільки + alloHCT-bridge — правильний шлях для тієї підгрупи. Печінкова VOD/SOS — домінантна стурбованість безпеки — ретельний моніторинг LFT + час планування alloHCT (уникати GO протягом 90 днів до планового трансплантату).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    weight: primary
+  - source_id: SRC-ELN-AML-2022
+    weight: primary
+  - source_id: SRC-ALFA-0701-CASTAIGNE-2012
+    position: supports
+    relevant_quote_paraphrase: "ALFA-0701: fractionated GO 3 mg/m² × 3 doses added to 7+3 improves 2-yr EFS 40.8 vs 17.1% and 2-yr OS 53.2 vs 41.9% in 1L de-novo AML age 50-70."
+
+known_controversies:
+  - topic: "Universal 7+3+GO for fit CBF/favorable AML vs 7+3 alone with GO reserved for sub-optimal response"
+    positions:
+      - position: "Universal addition: ALFA-0701 + Hills meta-analysis demonstrate consistent OS benefit; CBF particularly responsive"
+        sources: [SRC-ALFA-0701-CASTAIGNE-2012, SRC-NCCN-AML-2025]
+      - position: "Selective addition: VOD/SOS risk + access barriers in many settings; reasonable to start 7+3 alone in lower-risk countries / centers"
+        sources: [SRC-ELN-AML-2022]
+    our_default: "Add fractionated GO when accessible AND favorable / intermediate cytogenetics + CD33+ + age ≤70 + LVEF preserved + no planned alloHCT within 90 days"
+    rationale: "Benefit-risk strongly favors GO addition in the eligible subset; access is the practical limiter, especially Ukraine where GO is not registered"
+
+do_not_do:
+  - "Не додавати GO в adverse-risk AML (TP53-mutant, complex karyotype, monosomy 7) — користь відсутня + токсичність зберігається."
+  - "Не використовувати daunorubicin 90 мг/м² з GO — кардіотоксичність + ранній mortality signal у SWOG-S0106 саме через цю комбінацію."
+  - "Не додавати GO без CD33-валідації — CD33-flow ≥20% blasts необхідний; CD33-low/negative AML — без сигналу benefit."
+  - "Не призначати GO протягом 90 днів до планового alloHCT — VOD/SOS-ризик у post-transplant вікні драматично підвищується."
+  - "Не пропускати baseline LFT + щоденний моніторинг bilirubin / weight gain під час GO — VOD/SOS — домінантна стурбованість безпеки."
+  - "Не пропускати ECHO — анттрациклінова кардіотоксичність + GO-specific cardiac signal вимагають LVEF tracking."
+  - "Не пропускати TLS-профілактику + HBV/HCV/HIV скринінг — стандарт 7+3 vigilance."
+
+time_critical: false
+last_reviewed: "2026-04-30"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L
+  refinement of standard 7+3 for fit CD33+ AML with favorable /
+  intermediate cytogenetics. Surfaced by curated case
+  patient_aml_cbf_inv16_7_3_go.json which routed to IND-AML-1L-7-3
+  but flagged "no dedicated 7+3+GO indication in KB". Pairs with
+  IND-AML-1L-7-3 (the parent indication for AML 1L without GO add-
+  on); engine algorithm wiring to choose between the two based on
+  CBF / cytogenetic risk + GO accessibility is engine work and out
+  of scope for this commit.
