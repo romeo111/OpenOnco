@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenOnco · Спробувати</title>
+<title>OpenOnco · Try it</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="/style.css" rel="stylesheet">
@@ -15,17 +15,17 @@
     <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
   </div>
   <nav class="top-nav">
-    <a href="/">Головна</a>
-    <a href="/diseases.html">Хвороби</a><a href="/capabilities.html">Можливості</a><a href="/specs.html">Специфікації</a><a href="/contribute.html">Допомогти</a>
-    <a href="/gallery.html">Приклади</a>
+    <a href="/">Home</a>
+    <a href="/diseases.html">Diseases</a><a href="/capabilities.html">Capabilities</a><a href="/contribute.html">Contribute</a>
+    <a href="/gallery.html">Examples</a>
     <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
   </nav>
   <div class="top-right">
     <div class="lang-switch" role="group" aria-label="Language">
-      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
-      <a class="lang-other" href="/en/try.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+      <a class="lang-other" href="/ukr/try.html"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
     </div>
-    <a href="/try.html" class="btn-cta-try" aria-current="page">Спробувати →</a>
+    <a href="/try.html" class="btn-cta-try" aria-current="page">Try it →</a>
   </div>
 </header>
 
@@ -176,14 +176,14 @@
 
       <div class="try-actions quest-cta">
         <button id="runBtn" class="btn btn-primary" disabled>
-          Згенерувати повний Plan
+          Generate full Plan
         </button>
         <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
-          Показати план
+          Show plan
         </button>
         <button id="pdfBtn" class="btn btn-primary" type="button" disabled
-                title="Зберегти як PDF через діалог друку браузера">
-          Скачати PDF
+                title="Save as PDF via your browser print dialog">
+          Download PDF
         </button>
       </div>
 
@@ -193,21 +193,21 @@
   </div>
 
   <div id="planModal" class="plan-modal" hidden role="dialog" aria-modal="true"
-       aria-label="План лікування">
+       aria-label="Treatment plan">
     <div class="plan-modal-card">
       <div class="plan-modal-toolbar">
-        <div class="rt-lang-group" role="group" aria-label="Мова плану">
-          <span class="rt-lang-label">Мова:</span>
+        <div class="rt-lang-group" role="group" aria-label="Plan language">
+          <span class="rt-lang-label">Language:</span>
           <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
           <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
         </div>
         <div class="plan-modal-actions">
           <button id="modalPdfBtn" class="rt-btn" type="button"
-                  title="Зберегти як PDF через діалог друку браузера">
-            <span aria-hidden="true">📄</span> Скачати PDF
+                  title="Save as PDF via your browser print dialog">
+            <span aria-hidden="true">📄</span> Download PDF
           </button>
           <button id="planModalClose" class="rt-btn rt-btn-ghost" type="button"
-                  aria-label="Закрити">✕</button>
+                  aria-label="Close">✕</button>
         </div>
       </div>
       <iframe id="resultFrame"></iframe>
@@ -339,10 +339,10 @@ let lastPreviewResult = null;    // most recent preview result, fed to
 const PREVIEW_DEBOUNCE_MS = 400;
 const WHATIF_DEBOUNCE_MS = 1500;
 
-// Initial render language follows the page lang (UA on /try.html, EN on
-// /en/try.html). User can switch via the buttons in the result toolbar
+// Initial render language follows the page lang (EN on /try.html, UA on
+// /ukr/try.html). User can switch via the buttons in the result toolbar
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
-let currentResultLang = 'uk';
+let currentResultLang = 'en';
 
 // planSource tracks where the plan currently shown in the modal came from:
 //   null        — no plan yet (form not generated, no example loaded)
@@ -433,9 +433,9 @@ async function switchResultLang(newLang) {
   if (newLang === currentResultLang) return;
   if (planSource === 'example') {
     // Pre-built case file: just swap the iframe src to the matching
-    // language variant. UA at /cases/<id>.html, EN at /en/cases/<id>.html.
+    // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
     if (!activeExampleCaseId) return;
-    resultFrame.src = (newLang === 'en' ? '/en/cases/' : '/cases/') + activeExampleCaseId + '.html';
+    resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
     currentResultLang = newLang;
     highlightLangButtons();
     return;
@@ -473,7 +473,7 @@ function loadExamplePlan(caseId) {
   if (!caseId) return;
   activeExampleCaseId = caseId;
   resultFrame.removeAttribute('srcdoc');
-  resultFrame.src = (currentResultLang === 'en' ? '/en/cases/' : '/cases/') + caseId + '.html';
+  resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
   viewPlanBtn.disabled = false;
@@ -1739,7 +1739,7 @@ exampleSelect.addEventListener('change', async () => {
     // a generated plan, so we display it directly instead of pretending
     // Generate would do new work.
     loadExamplePlan(ex.case_id);
-    setStatus('Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.', 'ok');
+    setStatus('Example loaded ✓ Plan shown — edit any field to generate your own.', 'ok');
   } else {
     setMode('json');
     textarea.value = JSON.stringify(ex.json, null, 2);

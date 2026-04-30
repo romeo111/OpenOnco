@@ -364,7 +364,10 @@ def write_service_worker(output_dir: Path, *, core_version: str = "") -> dict:
     SHA-256 prefix) automatically invalidates stale bundles on next
     fetch. CSD-6E polish — speeds up cold loads on repeat visits past
     what localStorage can hold (entire core + all visited diseases)."""
-    cache_name = "openonco-bundle-" + (core_version or "v1")
+    # 'l2' = layout v2 (EN-default at root, UA at /ukr/). Bumping the
+    # layout prefix forces a hard cache invalidation for users who still
+    # had the v1 layout (UA at root, EN at /en/) cached on their device.
+    cache_name = "openonco-bundle-l2-" + (core_version or "v1")
     sw_js = """// OpenOnco bundle service worker (CSD-6E + CSD-11A swr)
 // Two strategies in one SW:
 //   1. Cache-first for engine bundle artifacts (large, infrequent).
@@ -378,13 +381,13 @@ const PRECACHE = [
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
   '/try.html',
-  '/en/try.html',
+  '/ukr/try.html',
   '/style.css',
 ];
 // Routes that use stale-while-revalidate (instant from cache, refresh
 // in background). HTML pages must be on this list — never cache-first,
 // or the user gets stuck on an old build.
-const SWR_PATHS = ['/try.html', '/en/try.html', '/style.css'];
+const SWR_PATHS = ['/try.html', '/ukr/try.html', '/style.css'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -686,24 +689,16 @@ _NAV_LABELS = {
 def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> str:
     """Build the URL the language-toggle should point to.
 
-    page_kind: 'home' | 'gallery' | 'try' | 'case' | 'capabilities' | 'limitations'
+    page_kind: 'home' | 'gallery' | 'try' | 'case' | 'capabilities' | 'contribute' | 'diseases'
     target_lang: UA-side render asks where the EN mirror lives;
                  EN-side render asks where the UA mirror lives.
 
+    Site layout: EN is the default at root (/), UA lives at /ukr/.
     Uses root-relative absolute paths so any nesting depth resolves
     correctly on openonco.info."""
-    en_prefix = "/en"
+    uk_prefix = "/ukr"
     if target_lang == "uk":
-        # UA page → switcher points to EN mirror
-        if page_kind == "home":         return f"{en_prefix}/"
-        if page_kind == "gallery":      return f"{en_prefix}/gallery.html"
-        if page_kind == "try":          return f"{en_prefix}/try.html"
-        if page_kind == "case":         return f"{en_prefix}/cases/{case_id}.html"
-        if page_kind == "capabilities": return f"{en_prefix}/capabilities.html"
-        if page_kind == "diseases":     return f"{en_prefix}/diseases.html"
-        if page_kind == "contribute":   return f"{en_prefix}/contribute.html"
-    else:
-        # EN page → switcher points to UA root
+        # UA page (at /ukr/...) → switcher points to EN mirror at root
         if page_kind == "home":         return "/"
         if page_kind == "gallery":      return "/gallery.html"
         if page_kind == "try":          return "/try.html"
@@ -711,11 +706,20 @@ def _lang_switch_href(page_kind: str, target_lang: str, case_id: str = "") -> st
         if page_kind == "capabilities": return "/capabilities.html"
         if page_kind == "diseases":     return "/diseases.html"
         if page_kind == "contribute":   return "/contribute.html"
+    else:
+        # EN page (at root) → switcher points to UA mirror at /ukr/
+        if page_kind == "home":         return f"{uk_prefix}/"
+        if page_kind == "gallery":      return f"{uk_prefix}/gallery.html"
+        if page_kind == "try":          return f"{uk_prefix}/try.html"
+        if page_kind == "case":         return f"{uk_prefix}/cases/{case_id}.html"
+        if page_kind == "capabilities": return f"{uk_prefix}/capabilities.html"
+        if page_kind == "diseases":     return f"{uk_prefix}/diseases.html"
+        if page_kind == "contribute":   return f"{uk_prefix}/contribute.html"
     return "/"
 
 
-def _render_top_bar(active: str = "", target_lang: str = "uk",
-                    lang_switch_href: str = "/en/") -> str:
+def _render_top_bar(active: str = "", target_lang: str = "en",
+                    lang_switch_href: str = "/ukr/") -> str:
     """Top navigation bar with:
     - brand on the left → links to home
     - reading-only nav (Home, Diseases, Capabilities, Specs UA-only,
@@ -724,14 +728,16 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     - prominent CTA "Try it" button on the far right (action, not reading)
 
     Per user direction: 'Спробувати' is an action and gets a separate CTA
-    button styled distinctly from the nav links."""
+    button styled distinctly from the nav links.
+
+    Site layout: EN is the default at root (/), UA lives at /ukr/."""
     def cls(name: str) -> str:
         return ' class="active"' if active == name else ""
 
-    labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["uk"])
-    home_path = "/" if target_lang == "uk" else "/en/"
-    gallery_path = "/gallery.html" if target_lang == "uk" else "/en/gallery.html"
-    try_path = "/try.html" if target_lang == "uk" else "/en/try.html"
+    labels = _NAV_LABELS.get(target_lang, _NAV_LABELS["en"])
+    home_path = "/ukr/" if target_lang == "uk" else "/"
+    gallery_path = "/ukr/gallery.html" if target_lang == "uk" else "/gallery.html"
+    try_path = "/ukr/try.html" if target_lang == "uk" else "/try.html"
 
     # Capabilities now folds in the former Limitations section; Specs stays
     # UA-only (the spec documents themselves are UA, so no point routing EN
@@ -739,16 +745,16 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
     extra_links = ""
     if target_lang == "uk":
         extra_links = (
-            f'<a href="/diseases.html"{cls("diseases")}>Хвороби</a>'
-            f'<a href="/capabilities.html"{cls("capabilities")}>Можливості</a>'
-            f'<a href="/specs.html"{cls("specs")}>Специфікації</a>'
-            f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
+            f'<a href="/ukr/diseases.html"{cls("diseases")}>Хвороби</a>'
+            f'<a href="/ukr/capabilities.html"{cls("capabilities")}>Можливості</a>'
+            f'<a href="/ukr/specs.html"{cls("specs")}>Специфікації</a>'
+            f'<a href="/ukr/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
     else:  # target_lang == "en"
         extra_links = (
-            f'<a href="/en/diseases.html"{cls("diseases")}>Diseases</a>'
-            f'<a href="/en/capabilities.html"{cls("capabilities")}>Capabilities</a>'
-            f'<a href="/en/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
+            f'<a href="/diseases.html"{cls("diseases")}>Diseases</a>'
+            f'<a href="/capabilities.html"{cls("capabilities")}>Capabilities</a>'
+            f'<a href="/contribute.html"{cls("contribute")}>{labels["contribute"]}</a>'
         )
 
     cur_flag_cls = "flag-ua" if target_lang == "uk" else "flag-en"
@@ -777,7 +783,7 @@ def _render_top_bar(active: str = "", target_lang: str = "uk",
 </header>"""
 
 
-def render_landing(stats, *, target_lang: str = "uk") -> str:
+def render_landing(stats, *, target_lang: str = "en") -> str:
     # Most corpus-mass cards live on /capabilities.html. The landing pulls
     # only the headline counters (diseases, redflags, indications, regimens,
     # algorithms) so the "Ready for patients today" / "Red flags" cards stay
@@ -799,9 +805,9 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
         )
         cta_primary = "Try with a virtual patient →"
         cta_secondary = "See examples"
-        try_href = "/en/try.html"
-        gallery_href = "/en/gallery.html"
-        capabilities_href = "/en/capabilities.html"
+        try_href = "/try.html"
+        gallery_href = "/gallery.html"
+        capabilities_href = "/capabilities.html"
         how_h2 = "Why it matters and how it works"
         how_lead_1 = (
             "To prescribe a treatment, an oncologist or clinical pharmacologist spends "
@@ -911,7 +917,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "etc.), renders ESCAT-tier as the eye-level signal with CIViC evidence rating "
              "underneath. A monthly CI refresh diffs upstream changes — no silent drift."),
             ("Per-disease coverage matrix — public, honest",
-             f"<a href=\"/en/diseases.html\"><strong>/diseases.html</strong></a> shows, for each "
+             f"<a href=\"/diseases.html\"><strong>/diseases.html</strong></a> shows, for each "
              f"of the {n_diseases} diseases, exactly what we have: biomarker counts, drugs, "
              "indications, regimens, red flags, 1L/2L algorithm checkmarks, questionnaire "
              "status, fill% and verified%. Grouped by lymphoid heme / myeloid heme / solid "
@@ -923,7 +929,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "shelf: maintainer publishes structured chunks (~100k–300k tokens of work each), "
              "your AI agent (Claude Code, Codex, Cursor, ChatGPT) takes one and opens a PR "
              "in 1–3 hours. No clinical expertise needed — you trigger structured drafting; "
-             "clinical co-leads sign off. <a href=\"/en/contribute.html\"><strong>How to start →</strong></a>"),
+             "clinical co-leads sign off. <a href=\"/contribute.html\"><strong>How to start →</strong></a>"),
         ]
         why_today_foot = (
             "Every missed biomarker can cost a life. Every hour of manual cross-checking "
@@ -942,9 +948,9 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
         )
         cta_primary = "Спробувати з віртуальним пацієнтом →"
         cta_secondary = "Дивитись приклади"
-        try_href = "try.html"
-        gallery_href = "gallery.html"
-        capabilities_href = "capabilities.html"
+        try_href = "/ukr/try.html"
+        gallery_href = "/ukr/gallery.html"
+        capabilities_href = "/ukr/capabilities.html"
         how_h2 = "Чому це потрібно і як це працює"
         how_lead_1 = (
             "Щоб призначити лікування, лікар або клінічний фармаколог витрачає "
@@ -1053,7 +1059,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "evidence rating під ним. Monthly CI refresh diff-ить upstream — без "
              "тихого дрейфу."),
             ("Per-disease coverage matrix — публічна і чесна",
-             f"<a href=\"/diseases.html\"><strong>/diseases.html</strong></a> показує для "
+             f"<a href=\"/ukr/diseases.html\"><strong>/ukr/diseases.html</strong></a> показує для "
              f"кожної з {n_diseases} хвороб, що саме у нас є: counts по біомаркерах, "
              "препаратах, показаннях, режимах, red flags, checkmarks для алгоритмів 1L/2L, "
              "статус анкети, fill% і verified%. Згрупована за лімфоїдною / мієлоїдною "
@@ -1066,7 +1072,7 @@ def render_landing(stats, *, target_lang: str = "uk") -> str:
              "ваш AI-агент (Claude Code, Codex, Cursor, ChatGPT) бере один і відкриває PR "
              "за 1-3 години. Клінічна експертиза не потрібна — ви тригерите structured "
              "drafting; clinical co-leads потім signoff'ять. "
-             "<a href=\"/contribute.html\"><strong>Як почати →</strong></a>"),
+             "<a href=\"/ukr/contribute.html\"><strong>Як почати →</strong></a>"),
         ]
         why_today_foot = (
             "Кожен пропущений біомаркер може коштувати життя. Кожна година ручного "
@@ -1322,7 +1328,7 @@ def _gallery_case_disease_meta() -> list[dict]:
     return out
 
 
-def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
+def render_gallery(stats_widget_html: str, *, target_lang: str = "en") -> str:
     """Disease-grouped gallery (CSD UX rev 2026-04-27).
 
     Initial view is a tiled grid of diseases — each tile lists the
@@ -1332,7 +1338,7 @@ def render_gallery(stats_widget_html: str, *, target_lang: str = "uk") -> str:
     intentionally drops the old category-chip filter."""
     import html as _html
     is_en = target_lang == "en"
-    case_path_prefix = "/en/cases/" if is_en else "/cases/"
+    case_path_prefix = "/cases/" if is_en else "/ukr/cases/"
     n_cases = len(CASES)
 
     quest_codes = _questionnaire_icd_o_3_codes()
@@ -1581,14 +1587,14 @@ _PYODIDE_VERSION = "0.26.4"
 
 def render_try(
     *,
-    target_lang: str = "uk",
+    target_lang: str = "en",
     bundle_version: str = "",
     questionnaires_manifest: list = None,
     examples_manifest: list = None,
 ) -> str:
     # Pyodide assets live at site root — root-relative paths work for both
-    # /try.html (UA) and /en/try.html (EN). The Pyodide engine bundle is
-    # a single shared copy.
+    # /try.html (EN, default) and /ukr/try.html (UA mirror). The Pyodide
+    # engine bundle is a single shared copy.
     #
     # Dropdown manifests (~15 KB total) are inlined as JS constants so the
     # form populates instantly. Full questionnaires.json (~640 KB) and
@@ -1921,8 +1927,8 @@ let lastPreviewResult = null;    // most recent preview result, fed to
 const PREVIEW_DEBOUNCE_MS = 400;
 const WHATIF_DEBOUNCE_MS = 1500;
 
-// Initial render language follows the page lang (UA on /try.html, EN on
-// /en/try.html). User can switch via the buttons in the result toolbar
+// Initial render language follows the page lang (EN on /try.html, UA on
+// /ukr/try.html). User can switch via the buttons in the result toolbar
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
 let currentResultLang = '{target_lang}';
 
@@ -2015,9 +2021,9 @@ async function switchResultLang(newLang) {{
   if (newLang === currentResultLang) return;
   if (planSource === 'example') {{
     // Pre-built case file: just swap the iframe src to the matching
-    // language variant. UA at /cases/<id>.html, EN at /en/cases/<id>.html.
+    // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
     if (!activeExampleCaseId) return;
-    resultFrame.src = (newLang === 'en' ? '/en/cases/' : '/cases/') + activeExampleCaseId + '.html';
+    resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
     currentResultLang = newLang;
     highlightLangButtons();
     return;
@@ -2055,7 +2061,7 @@ function loadExamplePlan(caseId) {{
   if (!caseId) return;
   activeExampleCaseId = caseId;
   resultFrame.removeAttribute('srcdoc');
-  resultFrame.src = (currentResultLang === 'en' ? '/en/cases/' : '/cases/') + caseId + '.html';
+  resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
   viewPlanBtn.disabled = false;
@@ -3470,7 +3476,7 @@ if ('serviceWorker' in navigator) {{
 
 
 def _wrap_case_html(rendered_html: str, case: CaseEntry,
-                    *, target_lang: str = "uk") -> str:
+                    *, target_lang: str = "en") -> str:
     """Insert a thin sticky bar with back-link + per-case feedback + lang
     switcher into the rendered Plan/Brief HTML. No auth gate — landing
     is fully public."""
@@ -3500,7 +3506,7 @@ def _wrap_case_html(rendered_html: str, case: CaseEntry,
 
     back_label = "← Back to gallery" if target_lang == "en" else "← Назад до галереї"
     feedback_label = "Feedback on this case" if target_lang == "en" else "Feedback на цей кейс"
-    gallery_href = "/en/gallery.html" if target_lang == "en" else "/gallery.html"
+    gallery_href = "/gallery.html" if target_lang == "en" else "/ukr/gallery.html"
     cur_flag_cls = "mini-flag-ua" if target_lang == "uk" else "mini-flag-en"
     other_flag_cls = "mini-flag-en" if target_lang == "uk" else "mini-flag-ua"
     cur_lang_label = "UA" if target_lang == "uk" else "EN"
@@ -3633,7 +3639,7 @@ def _coverage_breakdown() -> dict:
     }
 
 
-def render_capabilities(stats, *, target_lang: str = "uk") -> str:
+def render_capabilities(stats, *, target_lang: str = "en") -> str:
     if target_lang == "en":
         return _render_capabilities_en(stats)
     return _render_capabilities_uk(stats)
@@ -3867,14 +3873,14 @@ def _render_capabilities_uk(stats) -> str:
         </div>
         <div class="num-card">
           <div class="num-big">Matrix</div>
-          <div class="num-lbl">/diseases.html — coverage matrix</div>
+          <div class="num-lbl">/ukr/diseases.html — coverage matrix</div>
           <p class="num-text">
             Per-disease таблиця: bio / drug / ind / reg / rf counts, 1L+2L
             checkmarks, questionnaire status, fill% + verified%. Згрупована
             за лімфоїдною / мієлоїдною гематологією і солідними пухлинами,
             з family-level avg-показниками. Канонічна UI-поверхня для
             <code>disease_coverage.json</code>.
-            <a href="/diseases.html"><strong>→ Подивитись матрицю</strong></a>
+            <a href="/ukr/diseases.html"><strong>→ Подивитись матрицю</strong></a>
           </p>
         </div>
         <div class="num-card">
@@ -3888,7 +3894,7 @@ def _render_capabilities_uk(stats) -> str:
             профілів через variant generator + 65 auto-base (по одному на
             хворобу). Кожен — повний Plan або Diagnostic Brief з усіма
             цитатами.
-            <a href="/gallery.html"><strong>→ Дивитись приклади</strong></a>
+            <a href="/ukr/gallery.html"><strong>→ Дивитись приклади</strong></a>
           </p>
         </div>
         <div class="num-card num-card--accent">
@@ -3901,7 +3907,7 @@ def _render_capabilities_uk(stats) -> str:
             і мерджать. За останні 4 дні — <strong>7 хвиль</strong>,
             десятки chunks, ~73 BMA-кандидати, 23 BMA-драфти, 53 source
             stubs. Деталі — у розділі «Як допомогти» нижче.
-            <a href="/contribute.html"><strong>→ Допомогти токенами</strong></a>
+            <a href="/ukr/contribute.html"><strong>→ Допомогти токенами</strong></a>
           </p>
         </div>
       </div>
@@ -4100,7 +4106,7 @@ def _render_capabilities_uk(stats) -> str:
     <div class="info-section">
       <h2>3. Coverage matrix — публічна картинка прогресу</h2>
       <p class="info-text">
-        <strong>Сторінка <a href="/diseases.html"><code>/diseases.html</code></a></strong>
+        <strong>Сторінка <a href="/ukr/diseases.html"><code>/ukr/diseases.html</code></a></strong>
         — це per-disease таблиця, що показує, що наявне у KB для кожної з
         {n_diseases} хвороб. Згрупована у три родини: лімфоїдна
         гематологія, мієлоїдна гематологія, солідні пухлини. Для кожної
@@ -4382,7 +4388,7 @@ def _render_capabilities_uk(stats) -> str:
     <div class="info-section">
       <h2>11. Examples gallery — 586 кейсів</h2>
       <p class="info-text">
-        <a href="/gallery.html"><code>/gallery.html</code></a> —
+        <a href="/ukr/gallery.html"><code>/ukr/gallery.html</code></a> —
         disease-grouped drill-down. Початковий вигляд: tile-сітка хвороб з
         counts. Клік → drill у case list для цієї хвороби. Кожен case —
         повний Plan (або Diagnostic Brief), згенерований engine'ом з
@@ -4737,7 +4743,7 @@ def _render_capabilities_uk(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Скопіюйте 8-рядковий промпт з
-            <a href="/contribute.html"><code>/contribute.html</code></a>
+            <a href="/ukr/contribute.html"><code>/ukr/contribute.html</code></a>
             у свій AI-агент. Він сам знайде наступний доступний chunk,
             прочитає його spec, claim'не його, виконає роботу під
             <code>contributions/&lt;chunk-id&gt;/</code>, прогоне валідатор,
@@ -4758,7 +4764,7 @@ def _render_capabilities_uk(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/contribute.html">Допомогти токенами →</a>
+        <a class="btn btn-primary" href="/ukr/contribute.html">Допомогти токенами →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Активні чанки →</a>
       </div>
@@ -5024,7 +5030,7 @@ def _render_capabilities_en(stats) -> str:
             by lymphoid heme, myeloid heme, solid tumours; family-level
             avg metrics. The canonical UI surface for
             <code>disease_coverage.json</code>.
-            <a href="/en/diseases.html"><strong>→ See the matrix</strong></a>
+            <a href="/diseases.html"><strong>→ See the matrix</strong></a>
           </p>
         </div>
         <div class="num-card">
@@ -5038,7 +5044,7 @@ def _render_capabilities_en(stats) -> str:
             the engine generates from base profiles via variant generator
             + 65 auto-base seeds (one per disease). Each — a full Plan or
             Diagnostic Brief with all citations.
-            <a href="/en/gallery.html"><strong>→ See examples</strong></a>
+            <a href="/gallery.html"><strong>→ See examples</strong></a>
           </p>
         </div>
         <div class="num-card num-card--accent">
@@ -5051,7 +5057,7 @@ def _render_capabilities_en(stats) -> str:
             review and merge. In the past 4 days — <strong>7 waves</strong>,
             dozens of chunks, ~73 BMA candidates, 23 BMA drafts, 53 source
             stubs. Details in the «How to help» section below.
-            <a href="/en/contribute.html"><strong>→ Contribute tokens</strong></a>
+            <a href="/contribute.html"><strong>→ Contribute tokens</strong></a>
           </p>
         </div>
       </div>
@@ -5253,7 +5259,7 @@ def _render_capabilities_en(stats) -> str:
     <div class="info-section">
       <h2>3. Coverage matrix — public progress picture</h2>
       <p class="info-text">
-        The page <strong><a href="/en/diseases.html"><code>/diseases.html</code></a></strong>
+        The page <strong><a href="/diseases.html"><code>/diseases.html</code></a></strong>
         is a per-disease table that shows what's in the KB for each of
         {n_diseases} diseases. Grouped into three families: lymphoid heme,
         myeloid heme, solid tumours. For each disease: counts of biomarkers /
@@ -5537,7 +5543,7 @@ def _render_capabilities_en(stats) -> str:
     <div class="info-section">
       <h2>11. Examples gallery — 586 cases</h2>
       <p class="info-text">
-        <a href="/en/gallery.html"><code>/gallery.html</code></a> is a
+        <a href="/gallery.html"><code>/gallery.html</code></a> is a
         disease-grouped drill-down. Initial view: a tile grid of diseases
         with case counts. Click → drill into the case list for that
         disease. Each case is a full Plan (or Diagnostic Brief) generated
@@ -5905,7 +5911,7 @@ def _render_capabilities_en(stats) -> str:
           <div class="num-lbl">8-line bootstrap</div>
           <p class="num-text">
             Copy the 8-line prompt from
-            <a href="/en/contribute.html"><code>/contribute.html</code></a>
+            <a href="/contribute.html"><code>/contribute.html</code></a>
             into your AI agent. It will find the next available chunk on
             its own, read the spec, claim it, do the work under
             <code>contributions/&lt;chunk-id&gt;/</code>, run the
@@ -5926,7 +5932,7 @@ def _render_capabilities_en(stats) -> str:
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px;">
-        <a class="btn btn-primary" href="/en/contribute.html">Contribute tokens →</a>
+        <a class="btn btn-primary" href="/contribute.html">Contribute tokens →</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/blob/master/docs/contributing/CONTRIBUTOR_QUICKSTART.md" target="_blank" rel="noopener">Contributor Quickstart (GitHub)</a>
         <a class="btn btn-secondary" href="https://github.com/{GH_REPO}/issues?q=is%3Aissue+is%3Aopen+label%3Achunk-task+label%3Astatus-active" target="_blank" rel="noopener">Active chunks →</a>
       </div>
@@ -6082,14 +6088,14 @@ def _disease_row_html(r: dict, lbl: dict) -> str:
 
 
 
-def render_diseases(stats, *, target_lang: str = "uk") -> str:
+def render_diseases(stats, *, target_lang: str = "en") -> str:
     """Per-disease coverage page. Pulls live metrics from
     disease_coverage_matrix.per_disease_metrics so this page is the
     canonical UI surface for the same data exported as
     /disease_coverage.json."""
     import html as _html
     rows = _build_disease_coverage_rows()
-    lbl = _DISEASES_PAGE_LABELS.get(target_lang, _DISEASES_PAGE_LABELS["uk"])
+    lbl = _DISEASES_PAGE_LABELS.get(target_lang, _DISEASES_PAGE_LABELS["en"])
 
     n = len(rows)
     avg_fill = round(sum(r["fill_pct"] for r in rows) / max(1, n), 1)
@@ -6609,10 +6615,10 @@ def _build_all_cases_parallel(output_dir: Path) -> tuple[list[dict], list[dict]]
 
 
 def build_one_case(case: CaseEntry, output_dir: Path,
-                   *, target_lang: str = "uk") -> Path:
+                   *, target_lang: str = "en") -> Path:
     """Render one case to HTML in `target_lang`. Output path:
-    - target_lang='uk' → output_dir/cases/<id>.html
-    - target_lang='en' → output_dir/en/cases/<id>.html
+    - target_lang='en' → output_dir/cases/<id>.html  (EN is default at root)
+    - target_lang='uk' → output_dir/ukr/cases/<id>.html
     """
     patient_path = EXAMPLES / case.file
     patient = json.loads(patient_path.read_text(encoding="utf-8"))
@@ -6632,7 +6638,7 @@ def build_one_case(case: CaseEntry, output_dir: Path,
         html = render_plan_html(result, mdt=mdt, target_lang=target_lang)
 
     wrapped = _wrap_case_html(html, case, target_lang=target_lang)
-    sub = "en/cases" if target_lang == "en" else "cases"
+    sub = "ukr/cases" if target_lang == "uk" else "cases"
     out_path = output_dir / sub / f"{case.case_id}.html"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(wrapped, encoding="utf-8")
@@ -6662,8 +6668,8 @@ def _copy_landing_assets(output_dir: Path) -> list[str]:
 def build_site(output_dir: Path) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "cases").mkdir(parents=True, exist_ok=True)
-    (output_dir / "en").mkdir(parents=True, exist_ok=True)
-    (output_dir / "en" / "cases").mkdir(parents=True, exist_ok=True)
+    (output_dir / "ukr").mkdir(parents=True, exist_ok=True)
+    (output_dir / "ukr" / "cases").mkdir(parents=True, exist_ok=True)
     (output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (output_dir / "CNAME").write_text(CUSTOM_DOMAIN + "\n", encoding="utf-8")
     (output_dir / "style.css").write_text(_STYLE_CSS, encoding="utf-8")
@@ -6690,35 +6696,46 @@ def build_site(output_dir: Path) -> dict:
     questionnaires_manifest = questionnaires_payload.get("manifest", [])
     examples_manifest = examples_payload.get("manifest", [])
 
-    # ── UA build (default at site root) ──
-    (output_dir / "index.html").write_text(render_landing(stats), encoding="utf-8")
-    (output_dir / "capabilities.html").write_text(render_capabilities(stats), encoding="utf-8")
-    (output_dir / "specs.html").write_text(render_specs(stats), encoding="utf-8")
-    (output_dir / "gallery.html").write_text(render_gallery(stats_widget), encoding="utf-8")
-    (output_dir / "diseases.html").write_text(render_diseases(stats), encoding="utf-8")
+    # ── EN build (default at site root) ──
+    # English is the primary language; the root URLs (/, /capabilities.html,
+    # /diseases.html, /gallery.html, /try.html, /cases/<id>.html) all serve
+    # English. Bookmarks of the previous UA-default layout are broken — UA
+    # users now land via /ukr/ (or click the language switcher).
+    (output_dir / "index.html").write_text(
+        render_landing(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "capabilities.html").write_text(
+        render_capabilities(stats, target_lang="en"), encoding="utf-8")
+    (output_dir / "gallery.html").write_text(
+        render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
+    (output_dir / "diseases.html").write_text(
+        render_diseases(stats, target_lang="en"), encoding="utf-8")
     (output_dir / "try.html").write_text(
         render_try(
+            target_lang="en",
             bundle_version=bundle_version,
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
         ), encoding="utf-8")
 
-    # ── EN build (mirror at /en/) ──
-    # Body copy of landing/gallery/try is currently UA — nav + lang attribute
-    # + try-CTA labels translated; full EN body copy is a separate workstream.
-    # Per-case Plan/Brief HTMLs ARE rendered in EN via target_lang="en" —
-    # that's where 80% of the user-facing content lives.
-    (output_dir / "en" / "index.html").write_text(
-        render_landing(stats, target_lang="en"), encoding="utf-8")
-    (output_dir / "en" / "capabilities.html").write_text(
-        render_capabilities(stats, target_lang="en"), encoding="utf-8")
-    (output_dir / "en" / "gallery.html").write_text(
-        render_gallery(stats_widget, target_lang="en"), encoding="utf-8")
-    (output_dir / "en" / "diseases.html").write_text(
-        render_diseases(stats, target_lang="en"), encoding="utf-8")
-    (output_dir / "en" / "try.html").write_text(
+    # ── UA build (mirror at /ukr/) ──
+    # Specs page stays UA-only (the spec documents themselves are UA, so an
+    # EN render would be useless). Body copy of try.html is still partly UA
+    # in both locales — full EN translation of the form/JS strings is a
+    # separate workstream. Per-case Plan/Brief HTMLs ARE rendered in both
+    # languages — that's where 80% of the user-facing content lives.
+    (output_dir / "ukr" / "index.html").write_text(
+        render_landing(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "capabilities.html").write_text(
+        render_capabilities(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "specs.html").write_text(
+        render_specs(stats), encoding="utf-8")
+    (output_dir / "ukr" / "gallery.html").write_text(
+        render_gallery(stats_widget, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "diseases.html").write_text(
+        render_diseases(stats, target_lang="uk"), encoding="utf-8")
+    (output_dir / "ukr" / "try.html").write_text(
         render_try(
-            target_lang="en",
+            target_lang="uk",
             bundle_version=bundle_version,
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,

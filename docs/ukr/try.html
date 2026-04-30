@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Спробувати</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a><a href="/ukr/contribute.html">Допомогти</a>
+    <a href="/ukr/gallery.html">Приклади</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/try.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/ukr/try.html" class="btn-cta-try" aria-current="page">Спробувати →</a>
+  </div>
+</header>
+
+<main class="try-page">
+  <h1>Спробувати з віртуальним пацієнтом</h1>
+  <p class="lead">
+    Заповни короткий опитувальник по конкретній хворобі — engine у браузері (Pyodide)
+    одразу показує які поля тригерять зміну плану. <strong>Жодних реальних пацієнтських
+    даних.</strong> Чернетка зберігається у browser localStorage.
+  </p>
+
+  <!-- Top status banner — prominent, sticky-ish, animated while loading
+       so the user sees that something is happening even when the engine
+       is mid-fetch. Mirrors the smaller #status in the sidebar. -->
+  <div id="statusTop" class="status-top is-busy" data-kind="info" role="status" aria-live="polite">
+    <span class="status-top-spinner" aria-hidden="true"></span>
+    <span class="status-top-text">Завантажую опитувальники…</span>
+  </div>
+
+  <div class="quest-toolbar">
+    <label class="qt-label">
+      Хвороба
+      <select id="diseaseSelect">
+        <option value="">— оберіть —</option>
+      </select>
+    </label>
+    <label class="qt-label">
+      Завантажити приклад
+      <select id="exampleSelect">
+        <option value="">— оберіть —</option>
+      </select>
+    </label>
+    <div class="qt-spacer"></div>
+    <div class="qt-modes">
+      <button id="modeFormBtn" class="mode-btn active" data-mode="form">Форма</button>
+      <button id="modeJsonBtn" class="mode-btn" data-mode="json">Raw JSON (advanced)</button>
+    </div>
+    <button id="resetBtn" class="btn btn-secondary qt-reset">Очистити</button>
+  </div>
+
+  <!-- Early-paint warmup: a tiny synchronous script that runs before the
+       module-script below. Populates dropdowns from a localStorage cache
+       (written on the previous successful boot) so repeat visitors see
+       a filled dropdown the moment the toolbar renders, without waiting
+       for the Pyodide-importing module script to download + parse. The
+       module script later re-renders from the inline manifest, which
+       wins if the cached version is stale. -->
+  <script>
+  (function() {
+    try {
+      var raw = localStorage.getItem('openonco-manifests-v1');
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      var ds = document.getElementById('diseaseSelect');
+      if (ds && data && Array.isArray(data.questionnaires)) {
+        var frag = document.createDocumentFragment();
+        var ph = document.createElement('option');
+        ph.value = ''; ph.textContent = '— оберіть —';
+        frag.appendChild(ph);
+        data.questionnaires.forEach(function(q, i) {
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = q.title;
+          frag.appendChild(opt);
+        });
+        ds.innerHTML = '';
+        ds.appendChild(frag);
+        ds.dataset.warmedUp = '1';
+      }
+      var es = document.getElementById('exampleSelect');
+      if (es && data && Array.isArray(data.examples)) {
+        var frag2 = document.createDocumentFragment();
+        var ph2 = document.createElement('option');
+        ph2.value = ''; ph2.textContent = '— оберіть приклад —';
+        frag2.appendChild(ph2);
+        data.examples.forEach(function(ex, i) {
+          var opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = ex.label;
+          frag2.appendChild(opt);
+        });
+        es.innerHTML = '';
+        es.appendChild(frag2);
+      }
+    } catch (e) { /* silent */ }
+  })();
+  </script>
+
+  <div class="quest-grid">
+    <section class="quest-form-pane" id="formPane">
+      <div id="questIntro" class="quest-intro" hidden></div>
+      <div id="exampleLockBanner" class="example-lock-banner" hidden>
+        <div class="elb-text">
+          <strong>📋 Завантажено приклад.</strong>
+          Заповнені поля заблоковано, щоб випадково не змінити дані прикладу.
+          Натисни кнопку, щоб редагувати все.
+        </div>
+        <button id="personalizeBtn" type="button" class="btn btn-secondary elb-btn">
+          Персоналізувати цей приклад
+        </button>
+      </div>
+      <div id="questGroups"></div>
+      <div id="questEmpty" class="quest-empty">
+        Оберіть хворобу зі списку вище, щоб почати опитування.
+      </div>
+    </section>
+
+    <section class="quest-form-pane" id="jsonPane" hidden>
+      <label class="qt-label">
+        Patient profile (JSON)
+        <textarea id="patientJson" rows="28" spellcheck="false"
+                  placeholder='{"patient_id": "...", "disease": {"icd_o_3_morphology": "9699/3"}, ...}'></textarea>
+      </label>
+      <div class="try-actions">
+        <button id="formatBtn" class="btn btn-secondary">Format JSON</button>
+      </div>
+    </section>
+
+    <aside class="quest-side">
+      <div class="quest-impact-card">
+        <h3>Імпакт на план</h3>
+        <div class="impact-progress">
+          <div class="impact-bar">
+            <div class="impact-bar-fill" id="progressFill"></div>
+          </div>
+          <div class="impact-stats">
+            <span id="progressText">0 / 0</span>
+            <span class="impact-pct" id="progressPct">0%</span>
+          </div>
+        </div>
+        <div class="impact-section" id="impactMissingCritical">
+          <h4>⚠️ Критичні поля без відповіді</h4>
+          <ul></ul>
+        </div>
+        <div class="impact-section" id="impactRedflags">
+          <h4>🚩 Red flags активовано</h4>
+          <ul></ul>
+        </div>
+        <div class="impact-section" id="impactSelected">
+          <h4>📋 Поточний default</h4>
+          <p id="impactSelectedText">—</p>
+        </div>
+        <div class="impact-section" id="impactWarnings" hidden>
+          <h4>⚙️ Engine warnings</h4>
+          <ul></ul>
+        </div>
+      </div>
+
+      <div class="try-actions quest-cta">
+        <button id="runBtn" class="btn btn-primary" disabled>
+          Згенерувати повний Plan
+        </button>
+        <button id="viewPlanBtn" class="btn btn-primary" type="button" disabled>
+          Показати план
+        </button>
+        <button id="pdfBtn" class="btn btn-primary" type="button" disabled
+                title="Зберегти як PDF через діалог друку браузера">
+          Скачати PDF
+        </button>
+      </div>
+
+      <div id="status" class="status">Завантажую опитувальники…</div>
+      <div id="error" class="error" hidden></div>
+    </aside>
+  </div>
+
+  <div id="planModal" class="plan-modal" hidden role="dialog" aria-modal="true"
+       aria-label="План лікування">
+    <div class="plan-modal-card">
+      <div class="plan-modal-toolbar">
+        <div class="rt-lang-group" role="group" aria-label="Мова плану">
+          <span class="rt-lang-label">Мова:</span>
+          <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
+          <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
+        </div>
+        <div class="plan-modal-actions">
+          <button id="modalPdfBtn" class="rt-btn" type="button"
+                  title="Зберегти як PDF через діалог друку браузера">
+            <span aria-hidden="true">📄</span> Скачати PDF
+          </button>
+          <button id="planModalClose" class="rt-btn rt-btn-ghost" type="button"
+                  aria-label="Закрити">✕</button>
+        </div>
+      </div>
+      <iframe id="resultFrame"></iframe>
+    </div>
+  </div>
+
+  <footer class="page-foot">
+    Якщо щось не працює — <a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Btry-page%5D+&labels=tester-feedback" target="_blank" rel="noopener">відкрий issue</a>.
+    Pyodide v0.26.4 · engine bundle <code>openonco-engine-core.zip</code> + per-disease modules.
+  </footer>
+</main>
+
+<div id="initOverlay" class="init-overlay" hidden role="status" aria-live="polite">
+  <div class="init-card">
+    <h3>Готую двигун OpenOnco</h3>
+    <p class="init-lead">Перший запуск триває ~10–20 секунд — двигун завантажується безпосередньо у твій браузер. Дані пацієнта не лишають твого пристрою.</p>
+    <ol class="init-stages" id="initStages">
+      <li data-stage="pyodide" class="stage pending">Готую обчислювач у браузері (~6 МБ)</li>
+      <li data-stage="pydeps" class="stage pending">Налаштовую середовище</li>
+      <li data-stage="bundle" class="stage pending">Завантажую базу знань OpenOnco</li>
+      <li data-stage="validate" class="stage pending">Звіряю клінічну базу</li>
+      <li data-stage="generate" class="stage pending">Будую персональний план</li>
+    </ol>
+    <p class="init-hint" id="initHint">Якщо зараз вийшло, наступного разу буде ~5 с — двигун залишається в пам'яті.</p>
+  </div>
+</div>
+
+<div id="generatingOverlay" class="generating-overlay" hidden role="dialog" aria-live="polite" aria-modal="true">
+  <div class="generating-card">
+    <div class="generating-spinner" aria-hidden="true"></div>
+    <h3>Генерую план…</h3>
+    <p>Зачекай 5–15 с. Поля заблоковано, щоб результат відповідав поточному вводу.</p>
+    <p class="generating-hint" id="generatingHint">Запускаю двигун…</p>
+  </div>
+</div>
+
+<script type="module">
+// Pyodide is loaded lazily on first Generate-click so a slow CDN fetch
+// (~few-100 KB module + parse) doesn't block dropdown population.
+// Static `import …` would gate the entire module-script body on
+// pyodide.mjs being fetched & parsed — meaning the form looked frozen
+// on cold visits even though the manifests are already in this HTML.
+let loadPyodide = null;
+async function ensurePyodideLoader() {
+  if (loadPyodide) return loadPyodide;
+  const mod = await import("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.mjs");
+  loadPyodide = mod.loadPyodide;
+  return loadPyodide;
+}
+
+const STORAGE_KEY = 'openonco-try-draft-v1';
+
+// ── DOM refs ──────────────────────────────────────────────────────────────
+const status = document.getElementById('status');
+const statusTop = document.getElementById('statusTop');
+const statusTopText = statusTop ? statusTop.querySelector('.status-top-text') : null;
+const errorBox = document.getElementById('error');
+const runBtn = document.getElementById('runBtn');
+const formatBtn = document.getElementById('formatBtn');
+const resetBtn = document.getElementById('resetBtn');
+const diseaseSelect = document.getElementById('diseaseSelect');
+const exampleSelect = document.getElementById('exampleSelect');
+const textarea = document.getElementById('patientJson');
+const resultFrame = document.getElementById('resultFrame');
+const pdfBtn = document.getElementById('pdfBtn');
+const modalPdfBtn = document.getElementById('modalPdfBtn');
+const viewPlanBtn = document.getElementById('viewPlanBtn');
+const planModal = document.getElementById('planModal');
+const planModalClose = document.getElementById('planModalClose');
+const langUaBtn = document.getElementById('langUaBtn');
+const langEnBtn = document.getElementById('langEnBtn');
+const formPane = document.getElementById('formPane');
+const jsonPane = document.getElementById('jsonPane');
+const questGroups = document.getElementById('questGroups');
+const questIntro = document.getElementById('questIntro');
+const questEmpty = document.getElementById('questEmpty');
+const modeFormBtn = document.getElementById('modeFormBtn');
+const modeJsonBtn = document.getElementById('modeJsonBtn');
+
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const progressPct = document.getElementById('progressPct');
+const impactMissingCritical = document.getElementById('impactMissingCritical');
+const impactRedflags = document.getElementById('impactRedflags');
+const impactSelected = document.getElementById('impactSelected');
+const impactSelectedText = document.getElementById('impactSelectedText');
+const impactWarnings = document.getElementById('impactWarnings');
+const generatingOverlay = document.getElementById('generatingOverlay');
+const generatingHint = document.getElementById('generatingHint');
+const mainTryEl = document.querySelector('main.try-page');
+const initOverlay = document.getElementById('initOverlay');
+const initStagesEl = document.getElementById('initStages');
+
+// ── State ─────────────────────────────────────────────────────────────────
+let pyodide = null;
+let enginReady = false;
+// CSD-6E + CSD-9C: bundle lazy-load state. `bundleIndex` is the parsed
+// index (resolved from /openonco-engine-index.json); `coreBundleLoaded`
+// is set after the first core extract; `loadedDiseases` remembers which
+// per-disease modules we've already merged so re-runs against the same
+// disease don't re-fetch. The legacy monolithic fallback was retired in
+// CSD-9C — lazy-load is the only path now.
+const BUNDLE_INDEX_URL = '/openonco-engine-index.json';
+const CORE_BUNDLE_URL = '/openonco-engine-core.zip';
+let bundleIndex = null;
+let coreBundleLoaded = false;
+const loadedDiseases = new Set();
+// Build-time manifests — instant dropdown population, no fetch.
+const QUESTIONNAIRES_MANIFEST = [{"id": "QUEST-AITL-1L-STUB", "title": "Angioimmunoblastic T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9705/3"}, {"id": "QUEST-ALCL-1L-STUB", "title": "Anaplastic Large Cell Lymphoma, Systemic — first line (auto-generated STUB)", "disease_icd": "9714/3"}, {"id": "QUEST-AML-1L-STUB", "title": "Acute Myeloid Leukemia — first line (auto-generated STUB)", "disease_icd": "9861/3"}, {"id": "QUEST-APL-1L-STUB", "title": "Acute Promyelocytic Leukemia — first line (auto-generated STUB)", "disease_icd": "9866/3"}, {"id": "QUEST-ATLL-1L-STUB", "title": "Adult T-Cell Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9827/3"}, {"id": "QUEST-B-ALL-1L-STUB", "title": "B-Lymphoblastic Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9811/3"}, {"id": "QUEST-BREAST-1L-STUB", "title": "Invasive breast cancer — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-BURKITT-1L-STUB", "title": "Burkitt Lymphoma — first line (auto-generated STUB)", "disease_icd": "9687/3"}, {"id": "QUEST-CERVICAL-1L-STUB", "title": "Cervical carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-CHL-1L-STUB", "title": "Classical Hodgkin Lymphoma — first line (auto-generated STUB)", "disease_icd": "9650/3"}, {"id": "QUEST-CHOLANGIOCARCINOMA-1L-STUB", "title": "Cholangiocarcinoma — first line (auto-generated STUB)", "disease_icd": "8160/3"}, {"id": "QUEST-CHONDROSARCOMA-1L-STUB", "title": "Chondrosarcoma — first line (auto-generated STUB)", "disease_icd": "9220/3"}, {"id": "QUEST-CLL-1L", "title": "Chronic Lymphocytic Leukemia / SLL — first line", "disease_icd": "9823/3"}, {"id": "QUEST-CML-1L-STUB", "title": "Chronic Myeloid Leukemia — first line (auto-generated STUB)", "disease_icd": "9863/3"}, {"id": "QUEST-CRC-1L-STUB", "title": "Colorectal carcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-DLBCL-NOS-1L-STUB", "title": "Diffuse Large B-Cell Lymphoma, Not Otherwise Specified — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-EATL-1L-STUB", "title": "Enteropathy-Associated T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9717/3"}, {"id": "QUEST-ENDOMETRIAL-1L-STUB", "title": "Endometrial carcinoma — first line (auto-generated STUB)", "disease_icd": "8380/3"}, {"id": "QUEST-ESOPHAGEAL-1L-STUB", "title": "Esophageal carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-ET-1L-STUB", "title": "Essential Thrombocythemia — first line (auto-generated STUB)", "disease_icd": "9962/3"}, {"id": "QUEST-FL-1L-STUB", "title": "Follicular Lymphoma — first line (auto-generated STUB)", "disease_icd": "9690/3"}, {"id": "QUEST-GASTRIC-1L-STUB", "title": "Gastric and gastroesophageal junction adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-GBM-1L-STUB", "title": "Glioblastoma — first line (auto-generated STUB)", "disease_icd": "9440/3"}, {"id": "QUEST-GIST-1L-STUB", "title": "Gastrointestinal stromal tumor — first line (auto-generated STUB)", "disease_icd": "8936/3"}, {"id": "QUEST-GLIOMA-LOW-GRADE-1L-STUB", "title": "Low-grade glioma — first line (auto-generated STUB)", "disease_icd": "9400/3"}, {"id": "QUEST-HCC-1L-STUB", "title": "Hepatocellular carcinoma — first line (auto-generated STUB)", "disease_icd": "8170/3"}, {"id": "QUEST-HCL-1L-STUB", "title": "Hairy Cell Leukemia — first line (auto-generated STUB)", "disease_icd": "9940/3"}, {"id": "QUEST-HCV-MZL-1L", "title": "HCV-asociated Marginal Zone Lymphoma — first line", "disease_icd": "9699/3"}, {"id": "QUEST-HGBL-DH-1L-STUB", "title": "High-Grade B-Cell Lymphoma, Double-Hit / Triple-Hit — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-HNSCC-1L-STUB", "title": "Head and neck squamous cell carcinoma — first line (auto-generated STUB)", "disease_icd": "8070/3"}, {"id": "QUEST-HSTCL-1L-STUB", "title": "Hepatosplenic T-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9716/3"}, {"id": "QUEST-IFS-1L-STUB", "title": "Infantile fibrosarcoma — first line (auto-generated STUB)", "disease_icd": "8814/3"}, {"id": "QUEST-IMT-1L-STUB", "title": "Inflammatory myofibroblastic tumor — first line (auto-generated STUB)", "disease_icd": "8825/1"}, {"id": "QUEST-MASTOCYTOSIS-1L-STUB", "title": "Advanced systemic mastocytosis — first line (auto-generated STUB)", "disease_icd": "9740/3"}, {"id": "QUEST-MCL-1L-STUB", "title": "Mantle Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9673/3"}, {"id": "QUEST-MDS-HR-1L-STUB", "title": "Myelodysplastic Syndromes — Higher Risk — first line (auto-generated STUB)", "disease_icd": "9983/3"}, {"id": "QUEST-MDS-LR-1L-STUB", "title": "Myelodysplastic Syndromes — Lower Risk — first line (auto-generated STUB)", "disease_icd": "9989/3"}, {"id": "QUEST-MELANOMA-1L-STUB", "title": "Cutaneous melanoma — first line (auto-generated STUB)", "disease_icd": "8720/3"}, {"id": "QUEST-MF-SEZARY-1L-STUB", "title": "Mycosis Fungoides / Sézary Syndrome — first line (auto-generated STUB)", "disease_icd": "9700/3"}, {"id": "QUEST-MM-1L", "title": "Multiple Myeloma — newly diagnosed (1L)", "disease_icd": "9732/3"}, {"id": "QUEST-MPNST-1L-STUB", "title": "Malignant peripheral nerve sheath tumor — first line (auto-generated STUB)", "disease_icd": "9540/3"}, {"id": "QUEST-MTC-1L-STUB", "title": "Medullary thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8345/3"}, {"id": "QUEST-NK-T-NASAL-1L-STUB", "title": "Extranodal NK/T-Cell Lymphoma, Nasal Type — first line (auto-generated STUB)", "disease_icd": "9719/3"}, {"id": "QUEST-NLPBL-1L-STUB", "title": "Nodular Lymphocyte-Predominant B-cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9659/3"}, {"id": "QUEST-NODAL-MZL-1L-STUB", "title": "Nodal Marginal Zone Lymphoma — first line (auto-generated STUB)", "disease_icd": "9699/3"}, {"id": "QUEST-NSCLC-1L-STUB", "title": "Non-small cell lung cancer — first line (auto-generated STUB)", "disease_icd": "8046/3"}, {"id": "QUEST-OVARIAN-1L-STUB", "title": "Ovarian carcinoma — first line (auto-generated STUB)", "disease_icd": "8441/3"}, {"id": "QUEST-PCNSL-1L-STUB", "title": "Primary CNS Lymphoma — first line (auto-generated STUB)", "disease_icd": "9680/3"}, {"id": "QUEST-PDAC-1L-STUB", "title": "Pancreatic ductal adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-PMBCL-1L-STUB", "title": "Primary Mediastinal Large B-Cell Lymphoma — first line (auto-generated STUB)", "disease_icd": "9679/3"}, {"id": "QUEST-PMF-1L-STUB", "title": "Primary Myelofibrosis — first line (auto-generated STUB)", "disease_icd": "9961/3"}, {"id": "QUEST-PROSTATE-1L-STUB", "title": "Prostate adenocarcinoma — first line (auto-generated STUB)", "disease_icd": "8140/3"}, {"id": "QUEST-PTCL-NOS-1L-STUB", "title": "Peripheral T-Cell Lymphoma, NOS — first line (auto-generated STUB)", "disease_icd": "9702/3"}, {"id": "QUEST-PTLD-1L-STUB", "title": "Post-Transplant Lymphoproliferative Disorder — first line (auto-generated STUB)", "disease_icd": "9971/3"}, {"id": "QUEST-PV-1L-STUB", "title": "Polycythemia Vera — first line (auto-generated STUB)", "disease_icd": "9950/3"}, {"id": "QUEST-RCC-1L-STUB", "title": "Renal cell carcinoma — first line (auto-generated STUB)", "disease_icd": "8312/3"}, {"id": "QUEST-SALIVARY-1L-STUB", "title": "Salivary gland carcinoma — first line (auto-generated STUB)", "disease_icd": "8500/3"}, {"id": "QUEST-SCLC-1L-STUB", "title": "Small cell lung cancer — first line (auto-generated STUB)", "disease_icd": "8041/3"}, {"id": "QUEST-SPLENIC-MZL-1L-STUB", "title": "Splenic Marginal Zone Lymphoma — first line (auto-generated STUB)", "disease_icd": "9689/3"}, {"id": "QUEST-T-ALL-1L-STUB", "title": "T-Lymphoblastic Leukemia/Lymphoma — first line (auto-generated STUB)", "disease_icd": "9837/3"}, {"id": "QUEST-T-PLL-1L-STUB", "title": "T-Cell Prolymphocytic Leukemia — first line (auto-generated STUB)", "disease_icd": "9834/3"}, {"id": "QUEST-THYROID-ANAPLASTIC-1L-STUB", "title": "Anaplastic thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8021/3"}, {"id": "QUEST-THYROID-PAPILLARY-1L-STUB", "title": "Papillary thyroid carcinoma — first line (auto-generated STUB)", "disease_icd": "8260/3"}, {"id": "QUEST-UROTHELIAL-1L-STUB", "title": "Urothelial carcinoma — first line (auto-generated STUB)", "disease_icd": "8120/3"}, {"id": "QUEST-WM-1L-STUB", "title": "Waldenström Macroglobulinemia / Lymphoplasmacytic Lymphoma — first line (auto-generated STUB)", "disease_icd": "9671/3"}];
+const EXAMPLES_MANIFEST = [{"case_id": "hcv-mzl-reference", "label": "HCV-MZL · Reference Case (Patient Zero)", "disease_icd": "9699/3"}, {"case_id": "hcv-mzl-bulky", "label": "HCV-MZL · Aggressive Burden (BR + concurrent DAA)", "disease_icd": "9699/3"}, {"case_id": "hcv-mzl-post-daa", "label": "HCV-MZL · Post-DAA Responder (Surveillance)", "disease_icd": "9699/3"}, {"case_id": "mm-standard-risk", "label": "Multiple Myeloma · Standard-Risk", "disease_icd": "9732/3"}, {"case_id": "mm-high-risk", "label": "Multiple Myeloma · High-Risk", "disease_icd": "9732/3"}, {"case_id": "diagnostic-lymphoma-suspect", "label": "Suspect Lymphoma · Pre-Biopsy (Diagnostic Brief)", "disease_icd": null}, {"case_id": "diagnostic-lymphoma-confirmed", "label": "Lymphoma Confirmed · Post-Biopsy (Treatment Plan)", "disease_icd": "9699/3"}, {"case_id": "dlbcl-low-ipi", "label": "DLBCL NOS · Low-IPI (R-CHOP standard)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-high-ipi", "label": "DLBCL NOS · High-IPI (Pola-R-CHP)", "disease_icd": "9680/3"}, {"case_id": "fl-low-burden", "label": "Follicular · Low Burden (Watch-and-Wait)", "disease_icd": "9690/3"}, {"case_id": "fl-high-burden", "label": "Follicular · High Burden (BR)", "disease_icd": "9690/3"}, {"case_id": "fl-transformation", "label": "Follicular · Transformation Suspect (R-CHOP)", "disease_icd": "9690/3"}, {"case_id": "cll-low-risk", "label": "CLL/SLL · Low-Risk (BTKi continuous)", "disease_icd": "9823/3"}, {"case_id": "cll-high-risk", "label": "CLL/SLL · High-Risk (VenO time-limited)", "disease_icd": "9823/3"}, {"case_id": "mcl-fit-younger", "label": "Mantle Cell · Fit Younger (Intensive + autoSCT)", "disease_icd": "9673/3"}, {"case_id": "mcl-unfit-tp53", "label": "Mantle Cell · Unfit / TP53-mutant (BTKi+R)", "disease_icd": "9673/3"}, {"case_id": "smzl-hcv-positive", "label": "Splenic MZL · HCV-positive (DAA antiviral)", "disease_icd": "9689/3"}, {"case_id": "smzl-hcv-negative", "label": "Splenic MZL · HCV-negative (Rituximab mono)", "disease_icd": "9689/3"}, {"case_id": "nmzl-low-burden", "label": "Nodal MZL · Low Burden (W&W)", "disease_icd": null}, {"case_id": "burkitt-low-risk", "label": "Burkitt · Low/Intermediate Risk (DA-EPOCH-R)", "disease_icd": "9687/3"}, {"case_id": "burkitt-high-risk", "label": "Burkitt · High Risk (CODOX-M / IVAC)", "disease_icd": "9687/3"}, {"case_id": "hcl-typical", "label": "Hairy Cell Leukemia (Cladribine 7-day)", "disease_icd": "9940/3"}, {"case_id": "wm-myd88-positive", "label": "Waldenström · MYD88-positive (Zanubrutinib)", "disease_icd": "9671/3"}, {"case_id": "hgbl-double-hit", "label": "HGBL · Double-Hit (DA-EPOCH-R)", "disease_icd": null}, {"case_id": "alcl-alk-negative", "label": "ALCL · ALK-negative (CHP-Bv)", "disease_icd": "9714/3"}, {"case_id": "ptcl-cd30-negative", "label": "PTCL NOS · CD30-negative (CHOEP)", "disease_icd": "9702/3"}, {"case_id": "aitl-cd30-positive", "label": "AITL · CD30-positive (CHP-Bv)", "disease_icd": "9705/3"}, {"case_id": "chl-advanced", "label": "Classical Hodgkin · Advanced (A+AVD)", "disease_icd": "9650/3"}, {"case_id": "chl-early", "label": "Classical Hodgkin · Early Stage (ABVD)", "disease_icd": "9650/3"}, {"case_id": "nlpbl-early", "label": "NLPBL · Early Stage (Observation / RT)", "disease_icd": "9659/3"}, {"case_id": "aitl-cd30-negative", "label": "AITL · CD30-negative (CHOEP + AITL-specific workup)", "disease_icd": "9705/3"}, {"case_id": "mf-early-stage", "label": "Mycosis Fungoides · Early Stage (Skin-Directed)", "disease_icd": "9700/3"}, {"case_id": "sezary-advanced", "label": "Sézary Syndrome · Advanced (Mogamulizumab)", "disease_icd": "9700/3"}, {"case_id": "mf-advanced-cd30", "label": "MF · Advanced + CD30+ LCT (Brentuximab mono)", "disease_icd": "9700/3"}, {"case_id": "nlpbl-ia-rituximab", "label": "NLPBL · IA + RT-contraindicated (Rituximab mono)", "disease_icd": "9659/3"}, {"case_id": "dlbcl-chemorefractory-cart", "label": "DLBCL NOS · Primary Chemorefractory (CAR-T axi-cel)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-relapsed-te-ineligible", "label": "DLBCL NOS · Relapsed (Transplant-Ineligible)", "disease_icd": "9680/3"}, {"case_id": "hgbl-primary-refractory", "label": "HGBL · Primary Refractory (Early CAR-T)", "disease_icd": "9680/3"}, {"case_id": "pmbcl-typical", "label": "PMBCL · Typical (DA-EPOCH-R)", "disease_icd": "9679/3"}, {"case_id": "pmbcl-bulky-svc", "label": "PMBCL · Bulky + SVC Syndrome", "disease_icd": "9679/3"}, {"case_id": "pmbcl-relapsed-post-rchop", "label": "PMBCL · Relapsed post-R-CHOP (Pembrolizumab)", "disease_icd": "9679/3"}, {"case_id": "pcnsl-typical", "label": "PCNSL · Typical (R-MPV → autoSCT)", "disease_icd": "9680/3"}, {"case_id": "pcnsl-elderly-frail", "label": "PCNSL · Elderly Frail (R-MTX-attenuated)", "disease_icd": "9680/3"}, {"case_id": "pcnsl-immunocompromised-ebv", "label": "PCNSL · Immunocompromised + EBV+ (Restore Immunity)", "disease_icd": "9680/3"}, {"case_id": "cll-post-btki", "label": "CLL/SLL · Post-BTKi Progression (Pirtobrutinib / VenR)", "disease_icd": "9823/3"}, {"case_id": "hcl-relapsed-braf", "label": "HCL · Relapsed BRAF-V600E+ (Vemurafenib + Rituximab)", "disease_icd": "9940/3"}, {"case_id": "wm-cxcr4-mut", "label": "Waldenström · CXCR4-mutant (BR fixed-duration)", "disease_icd": "9671/3"}, {"case_id": "nmzl-high-burden", "label": "Nodal MZL · High Burden (BR)", "disease_icd": "9699/3"}, {"case_id": "alcl-alk-positive-typical", "label": "ALCL · ALK-positive Typical (CHP-Bv)", "disease_icd": "9714/3"}, {"case_id": "alcl-relapsed-bv-naive", "label": "ALCL · Relapsed BV-naive (Brentuximab → autoSCT)", "disease_icd": "9714/3"}, {"case_id": "ptcl-cd30-positive", "label": "PTCL NOS · CD30-positive (CHP-Bv)", "disease_icd": "9702/3"}, {"case_id": "ptcl-relapsed", "label": "PTCL NOS · Relapsed post-autoSCT (Romidepsin / Pralatrexate)", "disease_icd": "9702/3"}, {"case_id": "aitl-relapsed-2l", "label": "AITL · Relapsed 2L (Azacitidine)", "disease_icd": "9705/3"}, {"case_id": "eatl-typical", "label": "EATL · Typical (Celiac, CHOEP → autoSCT)", "disease_icd": "9717/3"}, {"case_id": "eatl-relapsed-post-choep", "label": "EATL · Relapsed post-CHOEP (ICE Salvage)", "disease_icd": "9717/3"}, {"case_id": "hstcl-fit-younger", "label": "HSTCL · Fit Younger (ICE/IVAC → alloHCT)", "disease_icd": "9716/3"}, {"case_id": "hstcl-iatrogenic-ibd", "label": "HSTCL · Iatrogenic IBD (CHOEP-unfit fallback)", "disease_icd": "9716/3"}, {"case_id": "t-pll-typical", "label": "T-PLL · Typical (Alemtuzumab IV)", "disease_icd": "9834/3"}, {"case_id": "t-pll-alem-refractory", "label": "T-PLL · Alemtuzumab-refractory (Venetoclax + Alem)", "disease_icd": "9834/3"}, {"case_id": "atll-acute", "label": "ATLL · Acute (mLSG15 / EPOCH)", "disease_icd": "9827/3"}, {"case_id": "atll-indolent-smoldering", "label": "ATLL · Indolent / Smoldering (Watchful Waiting)", "disease_icd": "9827/3"}, {"case_id": "nk-t-nasal-localized", "label": "NK/T-Nasal · Localized (P-GEMOX + RT)", "disease_icd": "9719/3"}, {"case_id": "nk-t-nasal-relapsed", "label": "NK/T-Nasal · Relapsed (Avelumab)", "disease_icd": "9719/3"}, {"case_id": "mf-relapsed-post-moga", "label": "MF · Relapsed post-Mogamulizumab (Bexarotene)", "disease_icd": "9700/3"}, {"case_id": "ptld-polymorphic-ebv", "label": "PTLD · Polymorphic EBV+ (RIS + Rituximab)", "disease_icd": "9971/3"}, {"case_id": "ptld-monomorphic-dlbcl-like", "label": "PTLD · Monomorphic DLBCL-like (R-CHOP)", "disease_icd": "9971/3"}, {"case_id": "chl-pediatric-bulky", "label": "cHL · AYA Stage IIB Bulky Mediastinal", "disease_icd": "9650/3"}, {"case_id": "chl-relapsed-salvage", "label": "cHL · Relapsed (Salvage → autoSCT + BV maint.)", "disease_icd": "9650/3"}, {"case_id": "mm-post-vrd-progression", "label": "Multiple Myeloma · Post-VRd Progression (DPd / IsaPd)", "disease_icd": "9732/3"}, {"case_id": "mm-triple-class-refractory", "label": "Multiple Myeloma · Triple-Class Refractory (CAR-T / Teclistamab)", "disease_icd": "9732/3"}, {"case_id": "aml-fit-1l-7-3", "label": "AML · Fit 1L (7+3 Induction)", "disease_icd": "9861/3"}, {"case_id": "aml-unfit-ven-aza", "label": "AML · Unfit (Venetoclax + Azacitidine)", "disease_icd": "9861/3"}, {"case_id": "aml-flt3-relapse", "label": "AML · FLT3-mutant Relapse (Gilteritinib)", "disease_icd": "9861/3"}, {"case_id": "apl-low-risk", "label": "APL · Low Risk (ATRA + ATO chemo-free)", "disease_icd": "9866/3"}, {"case_id": "apl-high-risk", "label": "APL · High Risk + DIC (ATRA + ATO + Idarubicin)", "disease_icd": "9866/3"}, {"case_id": "cml-chronic-newdx", "label": "CML · Chronic Phase Newly Diagnosed (TKI 1L)", "disease_icd": "9863/3"}, {"case_id": "cml-t315i", "label": "CML · T315I-mutated (Ponatinib / Asciminib)", "disease_icd": "9863/3"}, {"case_id": "cml-blast-crisis", "label": "CML · Blast Crisis at Presentation (TKI + Chemo + alloHCT)", "disease_icd": "9863/3"}, {"case_id": "mds-hr-transplant-eligible", "label": "MDS-HR · Transplant-Eligible (Aza Bridge → alloHCT)", "disease_icd": "9989/3"}, {"case_id": "mds-hr-unfit-aza", "label": "MDS-HR · Unfit (Azacitidine Maintenance)", "disease_icd": "9989/3"}, {"case_id": "mds-hr-progression-aml", "label": "MDS-HR · Progression to Secondary AML", "disease_icd": "9989/3"}, {"case_id": "mds-lr-del5q", "label": "MDS-LR · del(5q) (Lenalidomide)", "disease_icd": "9989/3"}, {"case_id": "mds-lr-rs-luspatercept", "label": "MDS-LR · RS+ EPO-failure (Luspatercept)", "disease_icd": "9982/3"}, {"case_id": "mds-lr-hypoplastic-ist", "label": "MDS-LR · Hypoplastic / IST candidate", "disease_icd": "9989/3"}, {"case_id": "pv-high-risk-hu", "label": "Polycythemia Vera · High Risk (HU 1L)", "disease_icd": "9950/3"}, {"case_id": "pv-hu-resistant-rux", "label": "PV · HU-resistant (Ruxolitinib 2L)", "disease_icd": "9950/3"}, {"case_id": "pv-pregnancy-planning", "label": "PV · Pregnancy Planning (Peg-IFN)", "disease_icd": "9950/3"}, {"case_id": "et-high-risk-hu", "label": "Essential Thrombocythemia · High Risk (HU)", "disease_icd": "9962/3"}, {"case_id": "pmf-anemia-dominant", "label": "PMF · Anemia-Dominant (Momelotinib)", "disease_icd": "9961/3"}, {"case_id": "pmf-int2-symptomatic-rux", "label": "PMF · Int-2 Symptomatic (Ruxolitinib)", "disease_icd": "9961/3"}, {"case_id": "pmf-post-rux-allohct", "label": "PMF · Post-Rux alloHCT Bridge (Urgent)", "disease_icd": "9961/3"}, {"case_id": "b-all-ph-pos-adult", "label": "B-ALL · Ph+ Adult (TKI + Chemo)", "disease_icd": "9836/3"}, {"case_id": "b-all-mrd-positive", "label": "B-ALL · MRD-positive (Blinatumomab)", "disease_icd": "9811/3"}, {"case_id": "b-all-t315i-post-tki", "label": "B-ALL · T315I-mutated post-TKI (Ponatinib + alloHCT)", "disease_icd": "9836/3"}, {"case_id": "t-all-relapsed", "label": "T-ALL · Relapsed post-hyper-CVAD (Nelarabine)", "disease_icd": "9837/3"}, {"case_id": "t-lbl-mediastinal", "label": "T-LBL · Mediastinal Mass (Pediatric-inspired ALL)", "disease_icd": "9837/3"}, {"case_id": "cervical-locally-advanced", "label": "Cervical · Locally Advanced (CCRT + Pembrolizumab)", "disease_icd": null}, {"case_id": "gbm-stupp", "label": "Glioblastoma · Newly Diagnosed (Stupp Protocol)", "disease_icd": null}, {"case_id": "ovarian-advanced-hrd", "label": "Ovarian · Advanced HRD+ (PARPi maintenance)", "disease_icd": null}, {"case_id": "auto-aitl", "label": "DIS-AITL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-alcl", "label": "DIS-ALCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-aml", "label": "DIS-AML — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-apl", "label": "DIS-APL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-atll", "label": "DIS-ATLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-b_all", "label": "DIS-B-ALL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-breast", "label": "DIS-BREAST — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-burkitt", "label": "DIS-BURKITT — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cervical", "label": "DIS-CERVICAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-chl", "label": "DIS-CHL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cholangiocarcinoma", "label": "DIS-CHOLANGIOCARCINOMA — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-chondrosarcoma", "label": "DIS-CHONDROSARCOMA — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-cll", "label": "DIS-CLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-cml", "label": "DIS-CML — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-crc", "label": "DIS-CRC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-dlbcl_nos", "label": "DIS-DLBCL-NOS — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-eatl", "label": "DIS-EATL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-endometrial", "label": "DIS-ENDOMETRIAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-esophageal", "label": "DIS-ESOPHAGEAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-et", "label": "DIS-ET — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-fl", "label": "DIS-FL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gastric", "label": "DIS-GASTRIC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gbm", "label": "DIS-GBM — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-gist", "label": "DIS-GIST — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-glioma_low_grade", "label": "DIS-GLIOMA-LOW-GRADE — Auto-stub (50% наповненість)", "disease_icd": null}, {"case_id": "auto-hcc", "label": "DIS-HCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hcl", "label": "DIS-HCL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-hcv_mzl", "label": "DIS-HCV-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hgbl_dh", "label": "DIS-HGBL-DH — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hnscc", "label": "DIS-HNSCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-hstcl", "label": "DIS-HSTCL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-ifs", "label": "DIS-IFS — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-imt", "label": "DIS-IMT — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mastocytosis", "label": "DIS-MASTOCYTOSIS — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mcl", "label": "DIS-MCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mds_hr", "label": "DIS-MDS-HR — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mds_lr", "label": "DIS-MDS-LR — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-melanoma", "label": "DIS-MELANOMA — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mf_sezary", "label": "DIS-MF-SEZARY — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mm", "label": "DIS-MM — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-mpnst", "label": "DIS-MPNST — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-mtc", "label": "DIS-MTC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-nk_t_nasal", "label": "DIS-NK-T-NASAL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nlpbl", "label": "DIS-NLPBL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nodal_mzl", "label": "DIS-NODAL-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-nsclc", "label": "DIS-NSCLC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-ovarian", "label": "DIS-OVARIAN — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pcnsl", "label": "DIS-PCNSL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pdac", "label": "DIS-PDAC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pmbcl", "label": "DIS-PMBCL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pmf", "label": "DIS-PMF — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-prostate", "label": "DIS-PROSTATE — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-ptcl_nos", "label": "DIS-PTCL-NOS — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-ptld", "label": "DIS-PTLD — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-pv", "label": "DIS-PV — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-rcc", "label": "DIS-RCC — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-salivary", "label": "DIS-SALIVARY — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-sclc", "label": "DIS-SCLC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-splenic_mzl", "label": "DIS-SPLENIC-MZL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-t_all", "label": "DIS-T-ALL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-t_pll", "label": "DIS-T-PLL — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "auto-thyroid_anaplastic", "label": "DIS-THYROID-ANAPLASTIC — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-thyroid_papillary", "label": "DIS-THYROID-PAPILLARY — Auto-stub (62% наповненість)", "disease_icd": null}, {"case_id": "auto-urothelial", "label": "DIS-UROTHELIAL — Auto-stub (75% наповненість)", "disease_icd": null}, {"case_id": "auto-wm", "label": "DIS-WM — Auto-stub (88% наповненість)", "disease_icd": null}, {"case_id": "variant-aitl-frail", "label": "DIS-AITL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-aitl-organ-dysf", "label": "DIS-AITL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-aitl-infection-hbv", "label": "DIS-AITL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-aitl-relapsed-2l", "label": "DIS-AITL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-aitl-biomarker-act", "label": "DIS-AITL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-aitl-high-risk", "label": "DIS-AITL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-alcl-frail", "label": "DIS-ALCL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-alcl-organ-dysf", "label": "DIS-ALCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-alcl-infection-hbv", "label": "DIS-ALCL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-alcl-relapsed-2l", "label": "DIS-ALCL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-alcl-biomarker-act", "label": "DIS-ALCL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-alcl-high-risk", "label": "DIS-ALCL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-aml-frail", "label": "DIS-AML · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-aml-organ-dysf", "label": "DIS-AML · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-aml-infection-hbv", "label": "DIS-AML · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-aml-relapsed-2l", "label": "DIS-AML · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-aml-biomarker-act", "label": "DIS-AML · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-aml-high-risk", "label": "DIS-AML · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-apl-frail", "label": "DIS-APL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-apl-organ-dysf", "label": "DIS-APL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-apl-infection-hbv", "label": "DIS-APL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-apl-relapsed-2l", "label": "DIS-APL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-apl-biomarker-act", "label": "DIS-APL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-apl-high-risk", "label": "DIS-APL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-atll-frail", "label": "DIS-ATLL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-atll-organ-dysf", "label": "DIS-ATLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-atll-infection-hbv", "label": "DIS-ATLL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-atll-relapsed-2l", "label": "DIS-ATLL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-atll-biomarker-act", "label": "DIS-ATLL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-atll-high-risk", "label": "DIS-ATLL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-b_all-frail", "label": "DIS-B-ALL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-b_all-organ-dysf", "label": "DIS-B-ALL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-b_all-infection-hbv", "label": "DIS-B-ALL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-b_all-relapsed-2l", "label": "DIS-B-ALL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-b_all-biomarker-act", "label": "DIS-B-ALL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-b_all-high-risk", "label": "DIS-B-ALL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-breast-frail", "label": "DIS-BREAST · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-breast-organ-dysf", "label": "DIS-BREAST · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-breast-infection-hbv", "label": "DIS-BREAST · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-breast-relapsed-2l", "label": "DIS-BREAST · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-breast-biomarker-act", "label": "DIS-BREAST · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-breast-high-risk", "label": "DIS-BREAST · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-burkitt-frail", "label": "DIS-BURKITT · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-burkitt-organ-dysf", "label": "DIS-BURKITT · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-burkitt-infection-hbv", "label": "DIS-BURKITT · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-burkitt-relapsed-2l", "label": "DIS-BURKITT · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-burkitt-biomarker-act", "label": "DIS-BURKITT · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-burkitt-high-risk", "label": "DIS-BURKITT · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-cervical-frail", "label": "DIS-CERVICAL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-cervical-organ-dysf", "label": "DIS-CERVICAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-cervical-infection-hbv", "label": "DIS-CERVICAL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-cervical-biomarker-act", "label": "DIS-CERVICAL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-cervical-high-risk", "label": "DIS-CERVICAL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-chl-frail", "label": "DIS-CHL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-chl-organ-dysf", "label": "DIS-CHL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-chl-infection-hbv", "label": "DIS-CHL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-chl-relapsed-2l", "label": "DIS-CHL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-chl-biomarker-act", "label": "DIS-CHL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-chl-high-risk", "label": "DIS-CHL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-cholangiocarcinoma-frail", "label": "DIS-CHOLANGIOCARCINOMA · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-cholangiocarcinoma-organ-dysf", "label": "DIS-CHOLANGIOCARCINOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-cholangiocarcinoma-infection-hbv", "label": "DIS-CHOLANGIOCARCINOMA · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-cholangiocarcinoma-biomarker-act", "label": "DIS-CHOLANGIOCARCINOMA · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-cholangiocarcinoma-high-risk", "label": "DIS-CHOLANGIOCARCINOMA · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-chondrosarcoma-frail", "label": "DIS-CHONDROSARCOMA · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-chondrosarcoma-organ-dysf", "label": "DIS-CHONDROSARCOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-chondrosarcoma-infection-hbv", "label": "DIS-CHONDROSARCOMA · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-chondrosarcoma-biomarker-act", "label": "DIS-CHONDROSARCOMA · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-chondrosarcoma-high-risk", "label": "DIS-CHONDROSARCOMA · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-cll-frail", "label": "DIS-CLL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-cll-organ-dysf", "label": "DIS-CLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-cll-infection-hbv", "label": "DIS-CLL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-cll-relapsed-2l", "label": "DIS-CLL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-cll-biomarker-act", "label": "DIS-CLL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-cll-high-risk", "label": "DIS-CLL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-cml-frail", "label": "DIS-CML · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-cml-organ-dysf", "label": "DIS-CML · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-cml-infection-hbv", "label": "DIS-CML · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-cml-relapsed-2l", "label": "DIS-CML · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-cml-biomarker-act", "label": "DIS-CML · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-cml-high-risk", "label": "DIS-CML · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-crc-frail", "label": "DIS-CRC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-crc-organ-dysf", "label": "DIS-CRC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-crc-infection-hbv", "label": "DIS-CRC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-crc-relapsed-2l", "label": "DIS-CRC · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-crc-biomarker-act", "label": "DIS-CRC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-crc-high-risk", "label": "DIS-CRC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-frail", "label": "DIS-DLBCL-NOS · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-organ-dysf", "label": "DIS-DLBCL-NOS · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-infection-hbv", "label": "DIS-DLBCL-NOS · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-relapsed-2l", "label": "DIS-DLBCL-NOS · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-biomarker-act", "label": "DIS-DLBCL-NOS · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-dlbcl_nos-high-risk", "label": "DIS-DLBCL-NOS · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-eatl-frail", "label": "DIS-EATL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-eatl-organ-dysf", "label": "DIS-EATL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-eatl-infection-hbv", "label": "DIS-EATL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-eatl-biomarker-act", "label": "DIS-EATL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-eatl-high-risk", "label": "DIS-EATL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-endometrial-frail", "label": "DIS-ENDOMETRIAL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-endometrial-organ-dysf", "label": "DIS-ENDOMETRIAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-endometrial-infection-hbv", "label": "DIS-ENDOMETRIAL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-endometrial-relapsed-2l", "label": "DIS-ENDOMETRIAL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-endometrial-biomarker-act", "label": "DIS-ENDOMETRIAL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-endometrial-high-risk", "label": "DIS-ENDOMETRIAL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-esophageal-frail", "label": "DIS-ESOPHAGEAL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-esophageal-organ-dysf", "label": "DIS-ESOPHAGEAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-esophageal-infection-hbv", "label": "DIS-ESOPHAGEAL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-esophageal-relapsed-2l", "label": "DIS-ESOPHAGEAL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-esophageal-biomarker-act", "label": "DIS-ESOPHAGEAL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-esophageal-high-risk", "label": "DIS-ESOPHAGEAL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-et-frail", "label": "DIS-ET · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-et-organ-dysf", "label": "DIS-ET · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-et-infection-hbv", "label": "DIS-ET · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-et-relapsed-2l", "label": "DIS-ET · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-et-biomarker-act", "label": "DIS-ET · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-et-high-risk", "label": "DIS-ET · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-fl-frail", "label": "DIS-FL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-fl-organ-dysf", "label": "DIS-FL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-fl-infection-hbv", "label": "DIS-FL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-fl-biomarker-act", "label": "DIS-FL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-fl-high-risk", "label": "DIS-FL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-gastric-frail", "label": "DIS-GASTRIC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-gastric-organ-dysf", "label": "DIS-GASTRIC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-gastric-infection-hbv", "label": "DIS-GASTRIC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-gastric-relapsed-2l", "label": "DIS-GASTRIC · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-gastric-biomarker-act", "label": "DIS-GASTRIC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-gastric-high-risk", "label": "DIS-GASTRIC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-gbm-frail", "label": "DIS-GBM · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-gbm-organ-dysf", "label": "DIS-GBM · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-gbm-infection-hbv", "label": "DIS-GBM · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-gbm-biomarker-act", "label": "DIS-GBM · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-gbm-high-risk", "label": "DIS-GBM · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-gist-frail", "label": "DIS-GIST · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-gist-organ-dysf", "label": "DIS-GIST · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-gist-infection-hbv", "label": "DIS-GIST · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-gist-biomarker-act", "label": "DIS-GIST · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-gist-high-risk", "label": "DIS-GIST · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hcc-frail", "label": "DIS-HCC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hcc-organ-dysf", "label": "DIS-HCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hcc-infection-hbv", "label": "DIS-HCC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hcc-biomarker-act", "label": "DIS-HCC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hcc-high-risk", "label": "DIS-HCC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hcl-frail", "label": "DIS-HCL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hcl-organ-dysf", "label": "DIS-HCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hcl-infection-hbv", "label": "DIS-HCL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hcl-relapsed-2l", "label": "DIS-HCL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-hcl-biomarker-act", "label": "DIS-HCL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hcl-high-risk", "label": "DIS-HCL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hcv_mzl-frail", "label": "DIS-HCV-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hcv_mzl-organ-dysf", "label": "DIS-HCV-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hcv_mzl-infection-hbv", "label": "DIS-HCV-MZL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hcv_mzl-relapsed-2l", "label": "DIS-HCV-MZL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-hcv_mzl-biomarker-act", "label": "DIS-HCV-MZL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hcv_mzl-high-risk", "label": "DIS-HCV-MZL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hgbl_dh-frail", "label": "DIS-HGBL-DH · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hgbl_dh-organ-dysf", "label": "DIS-HGBL-DH · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hgbl_dh-infection-hbv", "label": "DIS-HGBL-DH · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hgbl_dh-relapsed-2l", "label": "DIS-HGBL-DH · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-hgbl_dh-biomarker-act", "label": "DIS-HGBL-DH · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hgbl_dh-high-risk", "label": "DIS-HGBL-DH · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hnscc-frail", "label": "DIS-HNSCC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hnscc-organ-dysf", "label": "DIS-HNSCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hnscc-infection-hbv", "label": "DIS-HNSCC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hnscc-biomarker-act", "label": "DIS-HNSCC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hnscc-high-risk", "label": "DIS-HNSCC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-hstcl-frail", "label": "DIS-HSTCL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-hstcl-organ-dysf", "label": "DIS-HSTCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-hstcl-infection-hbv", "label": "DIS-HSTCL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-hstcl-biomarker-act", "label": "DIS-HSTCL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-hstcl-high-risk", "label": "DIS-HSTCL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-ifs-frail", "label": "DIS-IFS · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-ifs-organ-dysf", "label": "DIS-IFS · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-ifs-infection-hbv", "label": "DIS-IFS · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-ifs-biomarker-act", "label": "DIS-IFS · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-ifs-high-risk", "label": "DIS-IFS · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-imt-frail", "label": "DIS-IMT · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-imt-organ-dysf", "label": "DIS-IMT · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-imt-infection-hbv", "label": "DIS-IMT · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-imt-biomarker-act", "label": "DIS-IMT · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-imt-high-risk", "label": "DIS-IMT · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mastocytosis-frail", "label": "DIS-MASTOCYTOSIS · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mastocytosis-organ-dysf", "label": "DIS-MASTOCYTOSIS · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mastocytosis-infection-hbv", "label": "DIS-MASTOCYTOSIS · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mastocytosis-biomarker-act", "label": "DIS-MASTOCYTOSIS · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mastocytosis-high-risk", "label": "DIS-MASTOCYTOSIS · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mcl-frail", "label": "DIS-MCL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mcl-organ-dysf", "label": "DIS-MCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mcl-infection-hbv", "label": "DIS-MCL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mcl-relapsed-2l", "label": "DIS-MCL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-mcl-biomarker-act", "label": "DIS-MCL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mcl-high-risk", "label": "DIS-MCL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mds_hr-frail", "label": "DIS-MDS-HR · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mds_hr-organ-dysf", "label": "DIS-MDS-HR · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mds_hr-infection-hbv", "label": "DIS-MDS-HR · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mds_hr-relapsed-2l", "label": "DIS-MDS-HR · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-mds_hr-biomarker-act", "label": "DIS-MDS-HR · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mds_hr-high-risk", "label": "DIS-MDS-HR · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mds_lr-frail", "label": "DIS-MDS-LR · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mds_lr-organ-dysf", "label": "DIS-MDS-LR · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mds_lr-infection-hbv", "label": "DIS-MDS-LR · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mds_lr-relapsed-2l", "label": "DIS-MDS-LR · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-mds_lr-biomarker-act", "label": "DIS-MDS-LR · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mds_lr-high-risk", "label": "DIS-MDS-LR · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-melanoma-frail", "label": "DIS-MELANOMA · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-melanoma-organ-dysf", "label": "DIS-MELANOMA · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-melanoma-infection-hbv", "label": "DIS-MELANOMA · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-melanoma-relapsed-2l", "label": "DIS-MELANOMA · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-melanoma-biomarker-act", "label": "DIS-MELANOMA · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-melanoma-high-risk", "label": "DIS-MELANOMA · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mf_sezary-frail", "label": "DIS-MF-SEZARY · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mf_sezary-organ-dysf", "label": "DIS-MF-SEZARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mf_sezary-infection-hbv", "label": "DIS-MF-SEZARY · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mf_sezary-relapsed-2l", "label": "DIS-MF-SEZARY · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-mf_sezary-biomarker-act", "label": "DIS-MF-SEZARY · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mf_sezary-high-risk", "label": "DIS-MF-SEZARY · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mm-frail", "label": "DIS-MM · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mm-organ-dysf", "label": "DIS-MM · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mm-infection-hbv", "label": "DIS-MM · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mm-relapsed-2l", "label": "DIS-MM · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-mm-biomarker-act", "label": "DIS-MM · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mm-high-risk", "label": "DIS-MM · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mpnst-frail", "label": "DIS-MPNST · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mpnst-organ-dysf", "label": "DIS-MPNST · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mpnst-infection-hbv", "label": "DIS-MPNST · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mpnst-biomarker-act", "label": "DIS-MPNST · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mpnst-high-risk", "label": "DIS-MPNST · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-mtc-frail", "label": "DIS-MTC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-mtc-organ-dysf", "label": "DIS-MTC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-mtc-infection-hbv", "label": "DIS-MTC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-mtc-biomarker-act", "label": "DIS-MTC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-mtc-high-risk", "label": "DIS-MTC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-frail", "label": "DIS-NK-T-NASAL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-organ-dysf", "label": "DIS-NK-T-NASAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-infection-hbv", "label": "DIS-NK-T-NASAL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-relapsed-2l", "label": "DIS-NK-T-NASAL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-biomarker-act", "label": "DIS-NK-T-NASAL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-nk_t_nasal-high-risk", "label": "DIS-NK-T-NASAL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-nlpbl-frail", "label": "DIS-NLPBL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-nlpbl-organ-dysf", "label": "DIS-NLPBL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-nlpbl-infection-hbv", "label": "DIS-NLPBL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-nlpbl-relapsed-2l", "label": "DIS-NLPBL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-nlpbl-biomarker-act", "label": "DIS-NLPBL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-nlpbl-high-risk", "label": "DIS-NLPBL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-nodal_mzl-frail", "label": "DIS-NODAL-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-nodal_mzl-organ-dysf", "label": "DIS-NODAL-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-nodal_mzl-infection-hbv", "label": "DIS-NODAL-MZL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-nodal_mzl-relapsed-2l", "label": "DIS-NODAL-MZL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-nodal_mzl-biomarker-act", "label": "DIS-NODAL-MZL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-nodal_mzl-high-risk", "label": "DIS-NODAL-MZL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-nsclc-frail", "label": "DIS-NSCLC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-nsclc-organ-dysf", "label": "DIS-NSCLC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-nsclc-infection-hbv", "label": "DIS-NSCLC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-nsclc-relapsed-2l", "label": "DIS-NSCLC · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-nsclc-biomarker-act", "label": "DIS-NSCLC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-nsclc-high-risk", "label": "DIS-NSCLC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-ovarian-frail", "label": "DIS-OVARIAN · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-ovarian-organ-dysf", "label": "DIS-OVARIAN · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-ovarian-infection-hbv", "label": "DIS-OVARIAN · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-ovarian-relapsed-2l", "label": "DIS-OVARIAN · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-ovarian-biomarker-act", "label": "DIS-OVARIAN · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-ovarian-high-risk", "label": "DIS-OVARIAN · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-pcnsl-frail", "label": "DIS-PCNSL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-pcnsl-organ-dysf", "label": "DIS-PCNSL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-pcnsl-infection-hbv", "label": "DIS-PCNSL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-pcnsl-relapsed-2l", "label": "DIS-PCNSL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-pcnsl-biomarker-act", "label": "DIS-PCNSL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-pcnsl-high-risk", "label": "DIS-PCNSL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-pdac-frail", "label": "DIS-PDAC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-pdac-organ-dysf", "label": "DIS-PDAC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-pdac-infection-hbv", "label": "DIS-PDAC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-pdac-biomarker-act", "label": "DIS-PDAC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-pdac-high-risk", "label": "DIS-PDAC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-pmbcl-frail", "label": "DIS-PMBCL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-pmbcl-organ-dysf", "label": "DIS-PMBCL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-pmbcl-infection-hbv", "label": "DIS-PMBCL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-pmbcl-relapsed-2l", "label": "DIS-PMBCL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-pmbcl-biomarker-act", "label": "DIS-PMBCL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-pmbcl-high-risk", "label": "DIS-PMBCL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-pmf-frail", "label": "DIS-PMF · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-pmf-organ-dysf", "label": "DIS-PMF · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-pmf-infection-hbv", "label": "DIS-PMF · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-pmf-relapsed-2l", "label": "DIS-PMF · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-pmf-biomarker-act", "label": "DIS-PMF · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-pmf-high-risk", "label": "DIS-PMF · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-prostate-frail", "label": "DIS-PROSTATE · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-prostate-organ-dysf", "label": "DIS-PROSTATE · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-prostate-infection-hbv", "label": "DIS-PROSTATE · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-prostate-biomarker-act", "label": "DIS-PROSTATE · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-prostate-high-risk", "label": "DIS-PROSTATE · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-ptcl_nos-frail", "label": "DIS-PTCL-NOS · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-ptcl_nos-organ-dysf", "label": "DIS-PTCL-NOS · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-ptcl_nos-infection-hbv", "label": "DIS-PTCL-NOS · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-ptcl_nos-relapsed-2l", "label": "DIS-PTCL-NOS · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-ptcl_nos-biomarker-act", "label": "DIS-PTCL-NOS · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-ptcl_nos-high-risk", "label": "DIS-PTCL-NOS · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-ptld-frail", "label": "DIS-PTLD · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-ptld-organ-dysf", "label": "DIS-PTLD · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-ptld-infection-hbv", "label": "DIS-PTLD · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-ptld-relapsed-2l", "label": "DIS-PTLD · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-ptld-biomarker-act", "label": "DIS-PTLD · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-ptld-high-risk", "label": "DIS-PTLD · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-pv-frail", "label": "DIS-PV · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-pv-organ-dysf", "label": "DIS-PV · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-pv-infection-hbv", "label": "DIS-PV · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-pv-relapsed-2l", "label": "DIS-PV · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-pv-biomarker-act", "label": "DIS-PV · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-pv-high-risk", "label": "DIS-PV · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-rcc-frail", "label": "DIS-RCC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-rcc-organ-dysf", "label": "DIS-RCC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-rcc-infection-hbv", "label": "DIS-RCC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-rcc-relapsed-2l", "label": "DIS-RCC · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-rcc-biomarker-act", "label": "DIS-RCC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-rcc-high-risk", "label": "DIS-RCC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-salivary-frail", "label": "DIS-SALIVARY · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-salivary-organ-dysf", "label": "DIS-SALIVARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-salivary-infection-hbv", "label": "DIS-SALIVARY · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-salivary-biomarker-act", "label": "DIS-SALIVARY · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-salivary-high-risk", "label": "DIS-SALIVARY · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-sclc-frail", "label": "DIS-SCLC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-sclc-organ-dysf", "label": "DIS-SCLC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-sclc-infection-hbv", "label": "DIS-SCLC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-sclc-biomarker-act", "label": "DIS-SCLC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-sclc-high-risk", "label": "DIS-SCLC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-splenic_mzl-frail", "label": "DIS-SPLENIC-MZL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-splenic_mzl-organ-dysf", "label": "DIS-SPLENIC-MZL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-splenic_mzl-infection-hbv", "label": "DIS-SPLENIC-MZL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-splenic_mzl-relapsed-2l", "label": "DIS-SPLENIC-MZL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-splenic_mzl-biomarker-act", "label": "DIS-SPLENIC-MZL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-splenic_mzl-high-risk", "label": "DIS-SPLENIC-MZL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-t_all-frail", "label": "DIS-T-ALL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-t_all-organ-dysf", "label": "DIS-T-ALL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-t_all-infection-hbv", "label": "DIS-T-ALL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-t_all-relapsed-2l", "label": "DIS-T-ALL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-t_all-biomarker-act", "label": "DIS-T-ALL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-t_all-high-risk", "label": "DIS-T-ALL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-t_pll-frail", "label": "DIS-T-PLL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-t_pll-organ-dysf", "label": "DIS-T-PLL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-t_pll-infection-hbv", "label": "DIS-T-PLL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-t_pll-relapsed-2l", "label": "DIS-T-PLL · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-t_pll-biomarker-act", "label": "DIS-T-PLL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-t_pll-high-risk", "label": "DIS-T-PLL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-thyroid_anaplastic-frail", "label": "DIS-THYROID-ANAPLASTIC · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-thyroid_anaplastic-organ-dysf", "label": "DIS-THYROID-ANAPLASTIC · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-thyroid_anaplastic-infection-hbv", "label": "DIS-THYROID-ANAPLASTIC · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-thyroid_anaplastic-biomarker-act", "label": "DIS-THYROID-ANAPLASTIC · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-thyroid_anaplastic-high-risk", "label": "DIS-THYROID-ANAPLASTIC · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-thyroid_papillary-frail", "label": "DIS-THYROID-PAPILLARY · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-thyroid_papillary-organ-dysf", "label": "DIS-THYROID-PAPILLARY · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-thyroid_papillary-infection-hbv", "label": "DIS-THYROID-PAPILLARY · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-thyroid_papillary-biomarker-act", "label": "DIS-THYROID-PAPILLARY · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-thyroid_papillary-high-risk", "label": "DIS-THYROID-PAPILLARY · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-urothelial-frail", "label": "DIS-UROTHELIAL · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-urothelial-organ-dysf", "label": "DIS-UROTHELIAL · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-urothelial-infection-hbv", "label": "DIS-UROTHELIAL · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-urothelial-biomarker-act", "label": "DIS-UROTHELIAL · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-urothelial-high-risk", "label": "DIS-UROTHELIAL · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "variant-wm-frail", "label": "DIS-WM · Літній / крихкий пацієнт (age 78, ECOG 3)", "disease_icd": null}, {"case_id": "variant-wm-organ-dysf", "label": "DIS-WM · Дисфункція органів (CrCl 25, bili 3.5×ULN)", "disease_icd": null}, {"case_id": "variant-wm-infection-hbv", "label": "DIS-WM · HBV-позитивний (HBsAg+, anti-HBc+)", "disease_icd": null}, {"case_id": "variant-wm-relapsed-2l", "label": "DIS-WM · Релапс / 2-а лінія", "disease_icd": null}, {"case_id": "variant-wm-biomarker-act", "label": "DIS-WM · Actionable біомаркер present", "disease_icd": null}, {"case_id": "variant-wm-high-risk", "label": "DIS-WM · High-risk biology / bulky disease", "disease_icd": null}, {"case_id": "nsclc-egfr-ex19del-1l", "label": "NSCLC · EGFR ex19del · 1L Osimertinib (FLAURA)", "disease_icd": null}, {"case_id": "nsclc-alk-1l", "label": "NSCLC · ALK-перебудований · 1L Alectinib (ALEX)", "disease_icd": null}, {"case_id": "nsclc-pdl1-high-pembro-mono", "label": "NSCLC · PD-L1 TPS≥50% · 1L Pembro mono (KEYNOTE-024)", "disease_icd": null}, {"case_id": "nsclc-pdl1-low-chemo-io", "label": "NSCLC · PD-L1 1-49% · 1L Pembro+chemo (KEYNOTE-189)", "disease_icd": null}, {"case_id": "nsclc-tmb-high-pembro-mono", "label": "NSCLC · TMB-high (≥10 mut/Mb) · 1L Pembro+chemo", "disease_icd": null}, {"case_id": "nsclc-egfr-t790m-2l", "label": "NSCLC · EGFR T790M post-1G TKI · 2L (MARIPOSA-2)", "disease_icd": null}, {"case_id": "nsclc-alk-2l-lorlatinib", "label": "NSCLC · ALK 2L · Lorlatinib post-alectinib", "disease_icd": null}, {"case_id": "nsclc-ros1-2l-entrectinib", "label": "NSCLC · ROS1 2L · Entrectinib post-chemoIO", "disease_icd": null}, {"case_id": "nsclc-kras-g12c-2l-sotorasib", "label": "NSCLC · KRAS G12C 2L · Sotorasib (CodeBreaK 200)", "disease_icd": null}, {"case_id": "nsclc-braf-v600e-2l", "label": "NSCLC · BRAF V600E 2L · Dabrafenib+trametinib", "disease_icd": null}, {"case_id": "nsclc-metex14-2l-capmatinib", "label": "NSCLC · MET ex14 skipping 2L · Capmatinib (GEOMETRY mono-1)", "disease_icd": null}, {"case_id": "nsclc-ret-fusion-2l-selpercatinib", "label": "NSCLC · RET fusion 2L · Selpercatinib (LIBRETTO-001)", "disease_icd": null}, {"case_id": "breast-hr-pos-met-1l-cdk46i", "label": "Breast · HR+/HER2- met 1L · AI+palbociclib (PALOMA-2)", "disease_icd": null}, {"case_id": "breast-hr-pos-pik3ca-alpelisib", "label": "Breast · HR+ post-CDK4/6i · PIK3CA H1047R · Alpelisib (SOLAR-1)", "disease_icd": null}, {"case_id": "breast-her2-pos-early-katherine", "label": "Breast · HER2+ early · Neoadj TCHP → KATHERINE T-DM1", "disease_icd": null}, {"case_id": "breast-her2-pos-met-1l-thp", "label": "Breast · HER2+ met 1L · Docetaxel+THP (CLEOPATRA)", "disease_icd": null}, {"case_id": "breast-her2-pos-met-2l-tdxd", "label": "Breast · HER2+ met 2L · T-DXd (DESTINY-Breast03)", "disease_icd": null}, {"case_id": "breast-tnbc-neoadj-kn522", "label": "Breast · TNBC stage II-III · Neoadj pembro+chemo (KEYNOTE-522)", "disease_icd": null}, {"case_id": "breast-brca-germline-olaparib", "label": "Breast · BRCA1 germline met · Olaparib (OlympiAD)", "disease_icd": null}, {"case_id": "breast-tnbc-met-2l-sacituzumab", "label": "Breast · TNBC met 2L · Sacituzumab govitecan (ASCENT)", "disease_icd": null}, {"case_id": "crc-stage-iii-adjuvant-folfox", "label": "CRC · stage III adjuvant FOLFOX (MOSAIC)", "disease_icd": null}, {"case_id": "crc-mcrc-ras-wt-left-folfox-cetux", "label": "mCRC · RAS-WT left-sided 1L · FOLFOX+cetuximab (CRYSTAL)", "disease_icd": null}, {"case_id": "crc-mcrc-ras-mut-folfox-bev", "label": "mCRC · RAS-mutated 1L · FOLFOX+bevacizumab", "disease_icd": null}, {"case_id": "crc-mcrc-msi-h-pembro", "label": "mCRC · MSI-H 1L · Pembrolizumab mono (KEYNOTE-177)", "disease_icd": null}, {"case_id": "crc-mcrc-2l-folfiri-bev", "label": "mCRC · 2L FOLFIRI+bev post-FOLFOX (E3200/ML18147)", "disease_icd": null}, {"case_id": "crc-mcrc-3l-regorafenib", "label": "mCRC · 3L+ Regorafenib (CORRECT)", "disease_icd": null}, {"case_id": "melanoma-braf-v600-dab-tram", "label": "Melanoma · BRAF V600 · 1L Dab+tram (COMBI-d/v)", "disease_icd": null}, {"case_id": "melanoma-braf-v600-nivo-ipi", "label": "Melanoma · BRAF V600 · 1L Nivo+ipi (CheckMate-067)", "disease_icd": null}, {"case_id": "melanoma-braf-wt-pembro-mono", "label": "Melanoma · BRAF-WT · 1L Pembro mono (KEYNOTE-006)", "disease_icd": null}, {"case_id": "melanoma-nivo-relatlimab", "label": "Melanoma · 1L Nivolumab+relatlimab (RELATIVITY-047)", "disease_icd": null}, {"case_id": "melanoma-adjuvant-pembro-stage-iii", "label": "Melanoma · Stage III resected · Adjuvant pembro (KEYNOTE-054)", "disease_icd": null}, {"case_id": "prostate-mcrpc-brca-olaparib", "label": "Prostate · mCRPC · BRCA-mut · Olaparib (PROfound)", "disease_icd": null}, {"case_id": "rcc-imdc-int-nivo-ipi", "label": "RCC · IMDC int/poor 1L · Nivo+ipi (CheckMate-214)", "disease_icd": null}, {"case_id": "rcc-imdc-fav-axi-pembro", "label": "RCC · IMDC favorable 1L · Axi+pembro (KEYNOTE-426)", "disease_icd": null}, {"case_id": "urothelial-muc-ev-pembro", "label": "Urothelial · mUC 1L · EV+pembro (EV-302)", "disease_icd": null}, {"case_id": "endometrial-dmmr-pembro-kn775", "label": "Endometrial · advanced dMMR · Pembro+chemo (NRG-GY018)", "disease_icd": null}, {"case_id": "endometrial-p53-abn-dosta-ruby", "label": "Endometrial · p53-abnormal · Carbo+pacli+dostarlimab (RUBY)", "disease_icd": null}, {"case_id": "ovarian-hrd-neg-no-parpi", "label": "Ovarian · HRD-neg · Carbo+pacli, no PARPi maintenance", "disease_icd": null}, {"case_id": "hcc-atezo-bev-imbrave150", "label": "HCC · Child-Pugh A 1L · Atezo+bev (IMbrave150)", "disease_icd": null}, {"case_id": "hcc-durva-treme-stride", "label": "HCC · 1L · Durva+treme (HIMALAYA STRIDE)", "disease_icd": null}, {"case_id": "gastric-her2-pos-toga", "label": "Gastric · met HER2+ 1L · Trastuzumab+chemo (TOGA)", "disease_icd": null}, {"case_id": "gastric-pdl1-cps-chemo-nivo", "label": "Gastric · met CPS≥5 1L · Chemo+nivolumab (CheckMate-649)", "disease_icd": null}, {"case_id": "esophageal-cross-then-nivo", "label": "Esophageal · adeno · Neoadj CROSS → adjuvant nivolumab (CheckMate-577)", "disease_icd": null}, {"case_id": "pdac-folfirinox-fit", "label": "PDAC · met fit · FOLFIRINOX (PRODIGE-4)", "disease_icd": null}, {"case_id": "sclc-ls-chemo-rt", "label": "SCLC · LS · Chemo + concurrent RT", "disease_icd": null}, {"case_id": "sclc-es-atezo-impower133", "label": "SCLC · ES · Atezo+carbo+etoposide (IMpower133)", "disease_icd": null}, {"case_id": "hnscc-cps-high-pembro-mono", "label": "HNSCC · R/M CPS≥1 1L · Pembro mono (KEYNOTE-048)", "disease_icd": null}, {"case_id": "hnscc-extreme-cetux-platin", "label": "HNSCC · R/M EXTREME · Cetux+platin+5FU", "disease_icd": null}, {"case_id": "aml-flt3-itd-midostaurin", "label": "AML · FLT3-ITD fit · 7+3 + Midostaurin (RATIFY)", "disease_icd": "9861/3"}, {"case_id": "aml-cbf-inv16-7-3-go", "label": "AML · CBF inv(16) · 7+3 + Gemtuzumab (ALFA-0701)", "disease_icd": "9871/3"}, {"case_id": "aml-secondary-cpx351", "label": "AML · secondary/t-AML · CPX-351 (Vyxeos)", "disease_icd": "9920/3"}, {"case_id": "aml-rr-gilteritinib", "label": "AML · R/R FLT3-mut · Gilteritinib (ADMIRAL)", "disease_icd": "9861/3"}, {"case_id": "dlbcl-2l-pola-r-b", "label": "DLBCL · 2L · Pola-R-B transplant-ineligible (POLARIX 2L)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-3l-axi-cel", "label": "DLBCL · 3L+ · Axi-cel post-2L (ZUMA-1)", "disease_icd": "9680/3"}, {"case_id": "dlbcl-primary-refractory-loncast", "label": "DLBCL · primary-refractory · Loncastuximab post-pola (LOTIS-2)", "disease_icd": "9680/3"}, {"case_id": "cll-venr-2l-murano", "label": "CLL · 2L post-BTKi · VenR fixed-duration (MURANO)", "disease_icd": "9823/3"}, {"case_id": "mcl-pirtobrutinib-3l", "label": "MCL · 3L+ · Pirtobrutinib post-covalent-BTKi (BRUIN MCL-321)", "disease_icd": "9673/3"}, {"case_id": "diagnostic-breast-lump-prebiopsy", "label": "Diagnostic · Suspect breast lump · BI-RADS 4-5 pre-biopsy", "disease_icd": null}, {"case_id": "diagnostic-lung-mass-prebiopsy", "label": "Diagnostic · Suspect lung mass · Smoker hx pre-biopsy", "disease_icd": null}, {"case_id": "diagnostic-prostate-psa-prebiopsy", "label": "Diagnostic · Elevated PSA · mp-MRI PI-RADS 4 pre-biopsy", "disease_icd": null}];
+let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
+let examples = null;         // lazy-fetched from /examples.json on first need
+let _questionnairesPromise = null;
+let _examplesPromise = null;
+let activeQuest = null;      // currently selected questionnaire
+let generating = false;      // true while runEngine is mid-flight; blocks
+                             // input via <main inert> + overlay so the
+                             // rendered plan matches a stable snapshot
+let previewToken = 0;        // bumped on each runLivePreview start AND on
+                             // runEngine start; stale results are discarded
+let answers = {};          // {dotted_path: value}
+let mode = 'form';           // 'form' | 'json'
+let evalDebounceTimer = null;    // preview debounce
+let whatIfDebounceTimer = null;  // what-if debounce — separate + longer so
+                                 // dropdowns/typing don't trigger expensive
+                                 // shadow evals every 400ms
+let lastPreviewResult = null;    // most recent preview result, fed to
+                                 // what-if when its (longer) timer fires
+const PREVIEW_DEBOUNCE_MS = 400;
+const WHATIF_DEBOUNCE_MS = 1500;
+
+// Initial render language follows the page lang (EN on /try.html, UA on
+// /ukr/try.html). User can switch via the buttons in the result toolbar
+// without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
+let currentResultLang = 'uk';
+
+// planSource tracks where the plan currently shown in the modal came from:
+//   null        — no plan yet (form not generated, no example loaded)
+//   'example'   — pre-built case HTML loaded from /cases/<case_id>.html;
+//                 generate stays disabled because plan IS already generated,
+//                 we don't want to lie that clicking does new work
+//   'generated' — engine produced this plan from the current profile
+// planDirty flips to true the moment the user edits any field (form or JSON)
+// after a plan has been shown, which re-enables Generate so the user can
+// recompute against the modified profile.
+let planSource = null;
+let planDirty = false;
+let activeExampleCaseId = null;
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function setStatus(msg, kind = 'info', topMode = 'auto') {
+  status.textContent = msg;
+  status.dataset.kind = kind;
+  // Mirror to the prominent top banner.
+  //  topMode='busy'  → spinner, blue
+  //  topMode='ok'    → green ✓
+  //  topMode='warn'  → amber
+  //  topMode='hide'  → hide top banner (sidebar still updates)
+  //  topMode='auto'  → kind=info shows busy, ok→green, warn→amber
+  if (!statusTop || !statusTopText) return;
+  let mode = topMode;
+  if (mode === 'auto') {
+    if (kind === 'ok') mode = 'ok';
+    else if (kind === 'warn') mode = 'warn';
+    else if (!msg) mode = 'hide';
+    else mode = 'busy';
+  }
+  if (mode === 'hide' || !msg) {
+    statusTop.hidden = true;
+    return;
+  }
+  statusTop.hidden = false;
+  statusTopText.textContent = msg;
+  statusTop.dataset.kind = kind;
+  statusTop.classList.toggle('is-busy', mode === 'busy');
+  statusTop.classList.toggle('is-ok', mode === 'ok');
+  statusTop.classList.toggle('is-warn', mode === 'warn');
+}
+function setError(msg) {
+  if (msg) {
+    errorBox.hidden = false;
+    errorBox.textContent = msg;
+  } else {
+    errorBox.hidden = true;
+    errorBox.textContent = '';
+  }
+}
+
+// ── Plan modal + lang switcher ────────────────────────────────────────────
+function highlightLangButtons() {
+  langUaBtn.classList.toggle('is-active', currentResultLang === 'uk');
+  langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
+}
+
+function openPlanModal() {
+  if (!planModal) return;
+  planModal.hidden = false;
+  highlightLangButtons();
+}
+function closePlanModal() {
+  if (!planModal) return;
+  planModal.hidden = true;
+}
+
+function downloadPdf() {
+  // Browser-native print → "Save as PDF" works on every modern browser.
+  // The render layer ships A4-print-friendly CSS (@page + @media print)
+  // so the iframe content paginates cleanly without any extra deps.
+  if (planSource == null) return;
+  // Modal must be visible so iframe contentWindow is fully laid out and
+  // print() picks up the right document.
+  const wasHidden = planModal && planModal.hidden;
+  if (wasHidden) openPlanModal();
+  try {
+    resultFrame.contentWindow.focus();
+    resultFrame.contentWindow.print();
+  } catch (e) {
+    setError('Print failed: ' + (e.message || e));
+  }
+}
+
+async function switchResultLang(newLang) {
+  if (newLang === currentResultLang) return;
+  if (planSource === 'example') {
+    // Pre-built case file: just swap the iframe src to the matching
+    // language variant. EN at /cases/<id>.html, UA at /ukr/cases/<id>.html.
+    if (!activeExampleCaseId) return;
+    resultFrame.src = (newLang === 'en' ? '/cases/' : '/ukr/cases/') + activeExampleCaseId + '.html';
+    currentResultLang = newLang;
+    highlightLangButtons();
+    return;
+  }
+  if (!pyodide) return;
+  // Disable buttons during re-render so user can't double-click
+  langUaBtn.disabled = true;
+  langEnBtn.disabled = true;
+  try {
+    pyodide.globals.set('_target_lang', newLang);
+    const html = await pyodide.runPythonAsync(`
+if _oo_mode == 'diagnostic':
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+else:
+    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+html
+`);
+    resultFrame.removeAttribute('src');
+    resultFrame.srcdoc = html;
+    currentResultLang = newLang;
+    highlightLangButtons();
+  } catch (e) {
+    setError('Re-render failed: ' + (e.message || e));
+  } finally {
+    langUaBtn.disabled = false;
+    langEnBtn.disabled = false;
+  }
+}
+
+function loadExamplePlan(caseId) {
+  // Show the pre-built case HTML for the just-loaded example so the user
+  // sees a plan immediately — without spinning up Pyodide and without
+  // pretending the engine just ran. Generate stays disabled until the
+  // user edits something (which sets planDirty).
+  if (!caseId) return;
+  activeExampleCaseId = caseId;
+  resultFrame.removeAttribute('srcdoc');
+  resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
+  planSource = 'example';
+  planDirty = false;
+  viewPlanBtn.disabled = false;
+  pdfBtn.disabled = false;
+  modalPdfBtn.disabled = false;
+  openPlanModal();
+}
+
+function clearPlanState() {
+  planSource = null;
+  planDirty = false;
+  activeExampleCaseId = null;
+  resultFrame.removeAttribute('src');
+  resultFrame.removeAttribute('srcdoc');
+  viewPlanBtn.disabled = true;
+  pdfBtn.disabled = true;
+  modalPdfBtn.disabled = true;
+  closePlanModal();
+}
+
+pdfBtn.addEventListener('click', downloadPdf);
+modalPdfBtn.addEventListener('click', downloadPdf);
+viewPlanBtn.addEventListener('click', openPlanModal);
+planModalClose.addEventListener('click', closePlanModal);
+planModal.addEventListener('click', (ev) => {
+  if (ev.target === planModal) closePlanModal();
+});
+document.addEventListener('keydown', (ev) => {
+  if (ev.key === 'Escape' && !planModal.hidden) closePlanModal();
+});
+langUaBtn.addEventListener('click', () => switchResultLang('uk'));
+langEnBtn.addEventListener('click', () => switchResultLang('en'));
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[c]);
+}
+
+function saveDraft() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      questId: activeQuest ? activeQuest.id : null,
+      answers,
+      mode,
+      jsonText: textarea.value,
+    }));
+  } catch (e) { /* private mode etc — silent fail */ }
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+// ── Form rendering ────────────────────────────────────────────────────────
+const IMPACT_LABEL = {
+  critical: 'CRITICAL',
+  required: 'Required',
+  recommended: 'Recommended',
+  optional: 'Optional',
+};
+
+// Decoupled from engine readiness — button is clickable as soon as
+// there is something to send. The engine itself loads lazily on click
+// (and also kicks off in the background after first interaction so the
+// live impact panel can populate without waiting for a click).
+//
+// Disabled when a plan is already shown for the current input — either
+// because the user just generated it, or because they loaded an example
+// (which auto-displays the pre-built case HTML). Re-enables the moment
+// the user edits any field (planDirty), so they can recompute.
+function updateRunBtnEnabled() {
+  let hasInput = false;
+  if (mode === 'form') hasInput = !!activeQuest;
+  else hasInput = textarea.value.trim().length > 0;
+  const planFresh = planSource !== null && !planDirty;
+  runBtn.disabled = !hasInput || planFresh;
+}
+
+// Mark the currently-shown plan as out-of-sync with the current input.
+// Called from every input handler so the next click on Generate runs
+// against the modified profile, not the cached/example plan.
+function markPlanDirty() {
+  if (planSource !== null) {
+    planDirty = true;
+    updateRunBtnEnabled();
+  }
+}
+
+let engineKickoffStarted = false;
+function kickoffEngineLoad() {
+  if (engineKickoffStarted) return;
+  engineKickoffStarted = true;
+  // Don't await — let it run in background so live preview can populate
+  // as soon as it's ready. Errors surface via setError on real click.
+  ensureEngine().catch(e => console.warn('engine bg load failed:', e));
+}
+
+function hideExampleLockBanner() {
+  const banner = document.getElementById('exampleLockBanner');
+  if (banner) banner.hidden = true;
+}
+function showExampleLockBanner() {
+  const banner = document.getElementById('exampleLockBanner');
+  if (banner) banner.hidden = false;
+}
+
+function lockFilledFields() {
+  // Mark every form field that already has an answer as disabled and
+  // tag its wrapper for visual distinction. Fields without a value stay
+  // editable so the user can complete anything missing.
+  const wrappers = formPane.querySelectorAll('.quest-q');
+  wrappers.forEach(wrap => {
+    const field = wrap.dataset.field;
+    if (!field) return;
+    const inp = wrap.querySelector('input,select,textarea');
+    if (!inp) return;
+    if (answers[field] !== undefined && answers[field] !== null && answers[field] !== '') {
+      inp.disabled = true;
+      wrap.classList.add('locked');
+    } else {
+      inp.disabled = false;
+      wrap.classList.remove('locked');
+    }
+  });
+}
+
+function unlockAllFields() {
+  formPane.querySelectorAll('.quest-q').forEach(wrap => {
+    wrap.classList.remove('locked');
+    const inp = wrap.querySelector('input,select,textarea');
+    if (inp) inp.disabled = false;
+  });
+  hideExampleLockBanner();
+}
+
+function renderForm(quest) {
+  activeQuest = quest;
+  answers = {};
+  questGroups.innerHTML = '';
+  hideExampleLockBanner();
+  if (!quest) {
+    questEmpty.style.display = '';
+    questIntro.hidden = true;
+    updateRunBtnEnabled();
+    return;
+  }
+  questEmpty.style.display = 'none';
+  if (quest.intro) {
+    questIntro.hidden = false;
+    questIntro.textContent = quest.intro;
+  } else {
+    questIntro.hidden = true;
+  }
+  for (const group of quest.groups || []) {
+    const groupEl = document.createElement('div');
+    groupEl.className = 'quest-group';
+    groupEl.innerHTML = `
+      <h3>${escHtml(group.title || '')}</h3>
+      ${group.description ? `<p class="quest-group-desc">${escHtml(group.description)}</p>` : ''}
+    `;
+    for (const q of group.questions || []) {
+      groupEl.appendChild(renderQuestion(q));
+    }
+    questGroups.appendChild(groupEl);
+  }
+  updateRunBtnEnabled();
+}
+
+function renderQuestion(q) {
+  const wrap = document.createElement('div');
+  wrap.className = 'quest-q';
+  wrap.dataset.field = q.field;
+  const impact = q.impact || 'optional';
+  wrap.dataset.impact = impact;
+  const fieldId = 'fld-' + q.field.replace(/[^A-Za-z0-9]/g, '_');
+
+  const triggers = (q.triggers || []).map(t => `<span class="trigger-pill">${escHtml(t)}</span>`).join('');
+
+  let inputHtml = '';
+  const placeholder = q.range_min !== undefined && q.range_max !== undefined
+    ? `${q.range_min}–${q.range_max}` : '';
+  switch (q.type) {
+    case 'integer':
+    case 'float':
+      inputHtml = `<input type="number" id="${fieldId}" data-field="${q.field}"
+        ${q.range_min !== undefined ? `min="${q.range_min}"` : ''}
+        ${q.range_max !== undefined ? `max="${q.range_max}"` : ''}
+        ${q.type === 'float' ? 'step="0.1"' : 'step="1"'}
+        ${placeholder ? `placeholder="${placeholder}"` : ''}>`;
+      break;
+    case 'boolean':
+      inputHtml = `<select id="${fieldId}" data-field="${q.field}" data-type="boolean">
+        <option value="">—</option>
+        <option value="true">Так</option>
+        <option value="false">Ні</option>
+      </select>`;
+      break;
+    case 'enum':
+      const opts = (q.options || []).map(o =>
+        `<option value="${escHtml(JSON.stringify(o.value))}">${escHtml(o.label)}</option>`
+      ).join('');
+      inputHtml = `<select id="${fieldId}" data-field="${q.field}" data-type="enum">
+        <option value="">— оберіть —</option>${opts}
+      </select>`;
+      break;
+    case 'text':
+    default:
+      inputHtml = `<input type="text" id="${fieldId}" data-field="${q.field}">`;
+  }
+
+  wrap.innerHTML = `
+    <div class="quest-q-head">
+      <label for="${fieldId}" class="quest-q-label">${escHtml(q.label)}</label>
+      <span class="impact-pill impact-${impact}">${IMPACT_LABEL[impact] || impact}</span>
+    </div>
+    ${inputHtml}
+    ${q.units ? `<span class="quest-units">${escHtml(q.units)}</span>` : ''}
+    ${q.helper ? `<p class="quest-helper">${escHtml(q.helper)}</p>` : ''}
+    ${triggers ? `<div class="quest-triggers">${triggers}</div>` : ''}
+  `;
+
+  // Apply default value
+  const inp = wrap.querySelector('input,select');
+  if (q.default_value !== undefined && q.default_value !== null) {
+    if (q.type === 'boolean') inp.value = String(q.default_value);
+    else if (q.type === 'enum') inp.value = JSON.stringify(q.default_value);
+    else inp.value = q.default_value;
+    answers[q.field] = q.default_value;
+  }
+  inp.addEventListener('input', onAnswerChange);
+  inp.addEventListener('change', onAnswerChange);
+  return wrap;
+}
+
+function readValue(input, type) {
+  const v = input.value;
+  if (v === '') return undefined;
+  switch (type) {
+    case 'boolean': return v === 'true';
+    case 'enum':
+      try { return JSON.parse(v); } catch { return v; }
+    case 'integer': return parseInt(v, 10);
+    case 'float': return parseFloat(v);
+    default: return v;
+  }
+}
+
+function onAnswerChange(ev) {
+  const inp = ev.target;
+  const field = inp.dataset.field;
+  if (!field) return;
+  const type = inp.dataset.type
+    || (inp.type === 'number' ? (inp.step === '0.1' ? 'float' : 'integer') : 'text');
+  const val = readValue(inp, type);
+  if (val === undefined) delete answers[field];
+  else answers[field] = val;
+  markPlanDirty();
+  saveDraft();
+  updateRunBtnEnabled();
+  updateImpactPanelLocal();
+}
+
+function scheduleEval() {
+  if (evalDebounceTimer) clearTimeout(evalDebounceTimer);
+  if (whatIfDebounceTimer) clearTimeout(whatIfDebounceTimer);
+  evalDebounceTimer = setTimeout(runLivePreview, PREVIEW_DEBOUNCE_MS);
+  whatIfDebounceTimer = setTimeout(triggerWhatIfFromState, WHATIF_DEBOUNCE_MS);
+}
+
+function triggerWhatIfFromState() {
+  whatIfDebounceTimer = null;
+  if (!enginReady || !activeQuest || generating || !lastPreviewResult) return;
+  runWhatIf(lastPreviewResult).catch(e => console.warn('what-if eval error:', e));
+}
+
+// Cancel any pending preview/what-if when user starts interacting with the
+// toolbar (disease/example dropdown, mode buttons, reset). Bumps tokens so
+// any in-flight Pyodide call's result is discarded the moment it lands.
+// We can't interrupt a synchronous wasm call mid-flight, but this prevents
+// new evals from starting while the user is choosing from a dropdown —
+// which is when native <select> popup needs the main thread free.
+function pauseEvalForToolbar() {
+  if (evalDebounceTimer) { clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }
+  if (whatIfDebounceTimer) { clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }
+  ++previewToken;
+  ++whatIfToken;
+}
+
+// ── Mode switch ───────────────────────────────────────────────────────────
+function setMode(newMode) {
+  mode = newMode;
+  modeFormBtn.classList.toggle('active', mode === 'form');
+  modeJsonBtn.classList.toggle('active', mode === 'json');
+  formPane.hidden = mode !== 'form';
+  jsonPane.hidden = mode !== 'json';
+  if (mode === 'json' && activeQuest) {
+    // Sync form → JSON
+    textarea.value = JSON.stringify(buildProfile(), null, 2);
+  }
+  saveDraft();
+  updateRunBtnEnabled();
+}
+
+// ── Profile assembly + live preview ───────────────────────────────────────
+function buildProfile() {
+  if (mode === 'json') {
+    try { return JSON.parse(textarea.value); } catch { return null; }
+  }
+  if (!activeQuest) return null;
+  // Deep-merge fixed_fields + expand dotted-path answers
+  const profile = JSON.parse(JSON.stringify(activeQuest.fixed_fields || {}));
+  for (const [path, val] of Object.entries(answers)) {
+    if (val === undefined || val === null) continue;
+    const parts = path.split('.');
+    let cur = profile;
+    for (let i = 0; i < parts.length - 1; i++) {
+      const seg = parts[i];
+      if (typeof cur[seg] !== 'object' || cur[seg] === null) cur[seg] = {};
+      cur = cur[seg];
+    }
+    cur[parts[parts.length - 1]] = val;
+  }
+  return profile;
+}
+
+async function runLivePreview() {
+  const _ooT0 = performance.now();
+  const myToken = ++previewToken;
+  const profile = buildProfile();
+  if (!profile || !activeQuest) {
+    updateImpactPanel(null);
+    return;
+  }
+  // Local-only progress before Pyodide ready
+  const total = (activeQuest.groups || []).reduce(
+    (acc, g) => acc + (g.questions || []).length, 0);
+  const filled = Object.keys(answers).length;
+  setProgress(filled, total);
+
+  // Call evaluator if engine ready
+  if (!enginReady) return;
+  try {
+    pyodide.globals.set('_profile_json', JSON.stringify(profile));
+    pyodide.globals.set('_quest_id', activeQuest.id);
+    const resultJson = await pyodide.runPythonAsync(`
+import json
+from pathlib import Path
+from knowledge_base.engine import evaluate_partial
+from knowledge_base.validation.loader import load_content
+profile = json.loads(_profile_json)
+KB = Path('knowledge_base/hosted/content')
+ld = load_content(KB)
+quest = next((info['data'] for eid, info in ld.entities_by_id.items()
+              if info['type'] == 'questionnaires' and info['data'].get('id') == _quest_id), None)
+if quest is None:
+    _preview_result = json.dumps({'error': f'Questionnaire {_quest_id} not found'})
+else:
+    _preview_eval = evaluate_partial(profile, quest, kb_root=KB)
+    _payload = _preview_eval.to_dict()
+    # P4: enrich fired_redflags with definition + sources so the live
+    # impact panel can show meaningful context, not just IDs.
+    _rf_lookup = {
+        info['data'].get('id'): info['data']
+        for info in ld.entities_by_id.values()
+        if info['type'] == 'redflags' and info['data'].get('id')
+    }
+    _payload['fired_redflags_detail'] = [
+        {
+            'id': rid,
+            'definition_ua': (_rf_lookup.get(rid) or {}).get('definition_ua'),
+            'definition': (_rf_lookup.get(rid) or {}).get('definition'),
+            'clinical_direction': (_rf_lookup.get(rid) or {}).get('clinical_direction'),
+            'severity': (_rf_lookup.get(rid) or {}).get('severity', 'major'),
+            'sources': (_rf_lookup.get(rid) or {}).get('sources') or [],
+        }
+        for rid in (_payload.get('fired_redflags') or [])
+    ]
+    _preview_result = json.dumps(_payload)
+_preview_result
+`);
+    if (myToken !== previewToken) {
+      console.log(`[OO] preview ${(performance.now() - _ooT0).toFixed(0)}ms (stale, discarded)`);
+      return;
+    }
+    const result = JSON.parse(resultJson);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    updateImpactPanel(result);
+    lastPreviewResult = result;
+    console.log(`[OO] preview ${(performance.now() - _ooT0).toFixed(0)}ms`);
+    // What-if shadow evaluation runs from its own timer (WHATIF_DEBOUNCE_MS,
+    // longer than preview) so rapid typing / dropdown interaction doesn't
+    // trigger 10-30 sequential Pyodide evals that block the main thread and
+    // make <select> popups laggy.
+  } catch (e) {
+    /* Don't spam errors during typing — just log */
+    console.warn('preview eval error:', e);
+  }
+}
+
+// ── What-if shadow evaluation ─────────────────────────────────────────────
+let whatIfToken = 0;
+
+async function runWhatIf(currentResult) {
+  if (!enginReady || !activeQuest || !currentResult) return;
+  const _ooT0 = performance.now();
+  const myToken = ++whatIfToken;
+
+  const specs = [];
+  for (const group of activeQuest.groups || []) {
+    for (const q of group.questions || []) {
+      if (q.impact !== 'critical' && q.impact !== 'required') continue;
+      if (q.type !== 'boolean' && q.type !== 'enum') continue;
+      const currentVal = answers[q.field];
+      if (q.type === 'boolean') {
+        if (currentVal === true) specs.push({field: q.field, alt_value: false, label: 'Ні'});
+        else if (currentVal === false) specs.push({field: q.field, alt_value: true, label: 'Так'});
+        else {
+          specs.push({field: q.field, alt_value: true, label: 'Так'});
+          specs.push({field: q.field, alt_value: false, label: 'Ні'});
+        }
+      } else if (q.type === 'enum') {
+        for (const opt of q.options || []) {
+          if (JSON.stringify(opt.value) === JSON.stringify(currentVal)) continue;
+          specs.push({field: q.field, alt_value: opt.value, label: opt.label});
+        }
+      }
+    }
+  }
+
+  if (specs.length === 0) { clearWhatIfMarks(); return; }
+
+  const profile = buildProfile();
+  if (!profile) return;
+
+  pyodide.globals.set('_wf_profile', JSON.stringify(profile));
+  pyodide.globals.set('_wf_quest_id', activeQuest.id);
+  pyodide.globals.set('_wf_specs', JSON.stringify(specs));
+  pyodide.globals.set('_wf_main_ind', currentResult.would_select_indication || '');
+  pyodide.globals.set('_wf_main_rfs', JSON.stringify(currentResult.fired_redflags || []));
+
+  let raw;
+  try {
+    raw = await pyodide.runPythonAsync(`
+import json, copy
+from pathlib import Path
+from knowledge_base.engine import evaluate_partial
+from knowledge_base.validation.loader import load_content
+profile = json.loads(_wf_profile)
+specs = json.loads(_wf_specs)
+main_ind = _wf_main_ind
+main_rfs = set(json.loads(_wf_main_rfs))
+KB = Path('knowledge_base/hosted/content')
+ld = load_content(KB)
+quest = next((info['data'] for eid, info in ld.entities_by_id.items()
+              if info['type'] == 'questionnaires' and info['data'].get('id') == _wf_quest_id), None)
+
+def _set_path(d, dotted, val):
+    parts = dotted.split('.')
+    cur = d
+    for p in parts[:-1]:
+        if not isinstance(cur.get(p), dict):
+            cur[p] = {}
+        cur = cur[p]
+    cur[parts[-1]] = val
+
+results = []
+if quest is not None:
+    for spec in specs:
+        sp = copy.deepcopy(profile)
+        _set_path(sp, spec['field'], spec['alt_value'])
+        try:
+            sr = evaluate_partial(sp, quest, kb_root=KB, loaded_kb=ld).to_dict()
+        except Exception:
+            continue
+        diff = {}
+        si = sr.get('would_select_indication') or ''
+        if si != main_ind:
+            diff['indication_now'] = si
+        srfs = set(sr.get('fired_redflags') or [])
+        added = sorted(srfs - main_rfs)
+        removed = sorted(main_rfs - srfs)
+        if added: diff['rf_added'] = added
+        if removed: diff['rf_removed'] = removed
+        if diff:
+            results.append({
+                'field': spec['field'],
+                'alt_value': spec['alt_value'],
+                'label': spec.get('label', ''),
+                'diff': diff,
+            })
+_wf_result_json = json.dumps(results)
+_wf_result_json
+`);
+  } catch (e) {
+    console.warn('what-if eval error:', e);
+    return;
+  }
+
+  if (myToken !== whatIfToken) {
+    console.log(`[OO] whatif ${(performance.now() - _ooT0).toFixed(0)}ms (stale, discarded)`);
+    return;
+  }
+  let results;
+  try { results = JSON.parse(raw); } catch { return; }
+  renderWhatIfMarks(results);
+  console.log(`[OO] whatif ${(performance.now() - _ooT0).toFixed(0)}ms (${specs.length} specs, ${results.length} differing)`);
+}
+
+function clearWhatIfMarks() {
+  formPane.querySelectorAll('.quest-whatif').forEach(n => n.remove());
+}
+
+function renderWhatIfMarks(results) {
+  clearWhatIfMarks();
+  const byField = {};
+  for (const r of results) {
+    (byField[r.field] = byField[r.field] || []).push(r);
+  }
+  for (const field of Object.keys(byField)) {
+    const wrap = formPane.querySelector(`.quest-q[data-field="${CSS.escape(field)}"]`);
+    if (!wrap) continue;
+    const box = document.createElement('div');
+    box.className = 'quest-whatif';
+    let html = '<div class="whatif-head">Якщо це поле буде іншим:</div><ul>';
+    for (const it of byField[field]) {
+      const parts = [];
+      if (it.diff.indication_now) {
+        parts.push(`Indication → <code>${escHtml(it.diff.indication_now)}</code>`);
+      }
+      if (it.diff.rf_added && it.diff.rf_added.length) {
+        parts.push('<span class="wf-add">+RF</span> ' + it.diff.rf_added.map(r => `<code>${escHtml(r)}</code>`).join(' '));
+      }
+      if (it.diff.rf_removed && it.diff.rf_removed.length) {
+        parts.push('<span class="wf-rm">−RF</span> ' + it.diff.rf_removed.map(r => `<code>${escHtml(r)}</code>`).join(' '));
+      }
+      const altLabel = it.label || JSON.stringify(it.alt_value);
+      html += `<li><span class="whatif-alt">${escHtml(altLabel)}:</span> ${parts.join(' · ')}</li>`;
+    }
+    html += '</ul>';
+    box.innerHTML = html;
+    wrap.appendChild(box);
+  }
+}
+
+// Local-only impact panel update — runs WITHOUT Pyodide so form interaction
+// stays snappy. Computes progress + missing critical fields directly from
+// the questionnaire schema. Engine-dependent sections (red flags, indication)
+// show "click Generate" placeholders. Replaces the auto-fired runLivePreview
+// path which was costing 4–5 s per keystroke once KB grew past ~30 diseases.
+function updateImpactPanelLocal() {
+  if (!activeQuest) {
+    setProgress(0, 0);
+    impactMissingCritical.querySelector('ul').innerHTML = '';
+    impactRedflags.querySelector('ul').innerHTML =
+      '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+    impactSelectedText.innerHTML =
+      '<span class="muted">— оберіть хворобу і заповніть форму —</span>';
+    impactWarnings.hidden = true;
+    return;
+  }
+  let total = 0, filled = 0;
+  const missing = [];
+  for (const group of activeQuest.groups || []) {
+    for (const q of group.questions || []) {
+      total++;
+      const val = answers[q.field];
+      const isFilled = val !== undefined && val !== null && val !== '';
+      if (isFilled) filled++;
+      else if (q.impact === 'critical') {
+        missing.push({ label: q.label, group: group.title || '' });
+      }
+    }
+  }
+  setProgress(filled, total);
+  const ul = impactMissingCritical.querySelector('ul');
+  ul.innerHTML = missing.length
+    ? missing.map(m =>
+        `<li><strong>${escHtml(m.label)}</strong> <span class="muted">(${escHtml(m.group)})</span></li>`
+      ).join('')
+    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+  impactRedflags.querySelector('ul').innerHTML =
+    '<li class="muted">Натисни «Згенерувати», щоб побачити red flags</li>';
+  impactSelectedText.innerHTML =
+    '<span class="muted">Натисни «Згенерувати», щоб побачити рекомендований Indication</span>';
+  impactWarnings.hidden = true;
+}
+
+function setProgress(filled, total) {
+  progressText.textContent = `${filled} / ${total}`;
+  const pct = total ? Math.round(filled * 100 / total) : 0;
+  progressPct.textContent = `${pct}%`;
+  progressFill.style.width = `${pct}%`;
+}
+
+function updateImpactPanel(result) {
+  if (!result) {
+    impactMissingCritical.querySelector('ul').innerHTML = '';
+    impactRedflags.querySelector('ul').innerHTML = '';
+    impactSelectedText.textContent = '—';
+    impactWarnings.hidden = true;
+    return;
+  }
+  setProgress(result.filled_count, result.total_questions);
+
+  const miss = result.missing_critical || [];
+  impactMissingCritical.querySelector('ul').innerHTML = miss.length
+    ? miss.map(m => `<li><strong>${escHtml(m.label)}</strong> <span class="muted">(${escHtml(m.group)})</span></li>`).join('')
+    : '<li class="muted">Усі critical поля заповнені ✓</li>';
+
+  const rfs = result.fired_redflags || [];
+  const rfDetail = result.fired_redflags_detail || [];
+  // Build detail-keyed map so we can join id -> {definition, sources}
+  const detailById = {};
+  for (const d of rfDetail) detailById[d.id] = d;
+
+  const dirEmoji = {
+    'hold': '🛑', 'intensify': '⚡', 'de-escalate': '🔻', 'investigate': '🔍'
+  };
+
+  impactRedflags.querySelector('ul').innerHTML = rfs.length
+    ? rfs.map(r => {
+        const d = detailById[r] || {};
+        const defn = d.definition_ua || d.definition || '';
+        const dir = d.clinical_direction || '';
+        const emoji = dirEmoji[dir] || '';
+        const sources = (d.sources || []).map(
+          s => `<span class="rf-src-chip">${escHtml(s)}</span>`
+        ).join('');
+        return `<li class="rf-fired-item">
+          <div class="rf-fired-head"><code>${escHtml(r)}</code> ${emoji}
+            <span class="rf-dir rf-dir-${escHtml(dir)}">${escHtml(dir)}</span></div>
+          ${defn ? `<div class="rf-fired-defn">${escHtml(defn)}</div>` : ''}
+          ${sources ? `<div class="rf-fired-srcs">${sources}</div>` : ''}
+        </li>`;
+      }).join('')
+    : '<li class="muted">Жодного RedFlag поки не активовано</li>';
+
+  impactSelectedText.innerHTML = result.would_select_indication
+    ? `<code>${escHtml(result.would_select_indication)}</code>`
+    : '— (бракує даних для вибору)';
+
+  if ((result.warnings || []).length) {
+    impactWarnings.hidden = false;
+    impactWarnings.querySelector('ul').innerHTML =
+      result.warnings.map(w => `<li>${escHtml(w)}</li>`).join('');
+  } else {
+    impactWarnings.hidden = true;
+  }
+  // ready_to_generate is advisory — don't block the button on it; the
+  // user can still try to generate even with missing critical fields
+  // and the engine will surface the gaps.
+}
+
+// ── Bundle lazy-load (CSD-6E + CSD-9C) ────────────────────────────────────
+// Two-tier bundle: fetch openonco-engine-core.zip first (~1.4 MB), then
+// fetch the matching per-disease module (~15-40 KB) once we know the
+// patient's disease_id. CSD-9C (2026-04-27) drops the legacy monolithic
+// fallback — the lazy-load path is the canonical path now. The index
+// fetch retries once on transient failure before giving up; if that
+// fails too we surface a clear error rather than silently downloading
+// 3+ MB of fallback that no longer ships.
+
+async function loadBundleIndex() {
+  if (bundleIndex !== null) return bundleIndex;
+  // One retry to absorb a transient CDN hiccup before failing the load.
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await fetch(BUNDLE_INDEX_URL + '?t=' + Date.now());
+      if (!r.ok) throw new Error('Index fetch HTTP ' + r.status);
+      bundleIndex = await r.json();
+      return bundleIndex;
+    } catch (e) {
+      lastErr = e;
+      if (attempt === 0) {
+        console.warn('[OpenOnco] bundle index fetch failed — retrying once:', e);
+        await yieldToBrowser(250);
+      }
+    }
+  }
+  console.error('[OpenOnco] bundle index unavailable after retry:', lastErr);
+  throw new Error('Bundle index unavailable: ' + (lastErr && lastErr.message || lastErr));
+}
+
+// Resolve a disease_id from whatever the patient profile / form gives us.
+// Order: explicit disease.id (or top-level disease_id) → active
+// questionnaire's disease_id → ICD-O-3 morphology → null.
+function resolveDiseaseId(profile) {
+  if (!profile) return null;
+  const d = profile.disease || {};
+  if (typeof d.id === 'string' && d.id.startsWith('DIS-')) return d.id.toUpperCase();
+  if (typeof profile.disease_id === 'string' && profile.disease_id.startsWith('DIS-')) {
+    return profile.disease_id.toUpperCase();
+  }
+  if (activeQuest && typeof activeQuest.disease_id === 'string'
+      && activeQuest.disease_id.startsWith('DIS-')) {
+    return activeQuest.disease_id.toUpperCase();
+  }
+  const code = d.icd_o_3_morphology;
+  if (code && bundleIndex && bundleIndex.icd_to_disease_id) {
+    const did = bundleIndex.icd_to_disease_id[String(code)];
+    if (did) return did;
+  }
+  return null;
+}
+
+async function loadCoreBundle() {
+  if (coreBundleLoaded) return;
+  // CSD-9C: index is required — monolithic fallback retired.
+  await loadBundleIndex();
+  if (!bundleIndex || !bundleIndex.core) {
+    throw new Error('Bundle index missing core entry — cannot load engine');
+  }
+  setStatus('Завантажую ядро двигуна (~1.4 МБ)…');
+  const ver = bundleIndex.core_version || '';
+  const url = '/' + bundleIndex.core + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Core bundle fetch HTTP ' + r.status);
+  const buf = await r.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  coreBundleLoaded = true;
+}
+
+// Per-disease module: tiny zip with the disease's indications, regimens,
+// algorithms, redflags, and biomarker_actionability cells. Cached in
+// localStorage keyed by disease_id + version so subsequent visits skip
+// the fetch entirely. Quota is ~5-10 MB; we only cache one disease at a
+// time per slot and drop silently on quota errors.
+async function loadDiseaseModule(diseaseId) {
+  if (!diseaseId) return;
+  if (loadedDiseases.has(diseaseId)) return;
+  if (!bundleIndex || !bundleIndex.diseases) return;
+  const relUrl = bundleIndex.diseases[diseaseId];
+  if (!relUrl) {
+    // Disease has no per-disease bundle — its content is fully in core.
+    loadedDiseases.add(diseaseId);
+    return;
+  }
+  const ver = (bundleIndex.disease_versions || {})[diseaseId] || '';
+  const cacheKey = 'openonco-disease-' + diseaseId + '-' + ver;
+
+  // localStorage cache hit: decode base64 → ArrayBuffer → unpack.
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const bin = atob(cached);
+      const u8 = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      pyodide.unpackArchive(u8.buffer, 'zip');
+      loadedDiseases.add(diseaseId);
+      console.log('[OO] disease module ' + diseaseId + ' loaded from localStorage cache');
+      return;
+    }
+  } catch (e) {
+    console.warn('[OpenOnco] disease cache read failed for ' + diseaseId + ':', e);
+    try { localStorage.removeItem(cacheKey); } catch (_) {}
+  }
+
+  setStatus('Завантажую модуль ' + diseaseId + '…');
+  const url = '/' + relUrl + (ver ? '?v=' + ver : '');
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Disease module fetch HTTP ' + r.status + ' for ' + diseaseId);
+  const buf = await r.arrayBuffer();
+  await yieldToBrowser();
+  pyodide.unpackArchive(buf, 'zip');
+  loadedDiseases.add(diseaseId);
+
+  // Re-validate after merge so the next generate_plan() sees the new YAMLs.
+  // apply_disease_module() drops the loader cache; cheap enough to run on
+  // every disease swap.
+  try {
+    await pyodide.runPythonAsync(
+      "from knowledge_base.engine import apply_disease_module\n" +
+      "from pathlib import Path\n" +
+      "apply_disease_module(Path('knowledge_base/hosted/content'))\n"
+    );
+  } catch (e) {
+    console.warn('[OpenOnco] apply_disease_module failed (continuing):', e);
+  }
+
+  // Cache for next visit. Skip silently on quota or encoding errors.
+  try {
+    let bin = '';
+    const u8 = new Uint8Array(buf);
+    const chunk = 0x8000;
+    for (let i = 0; i < u8.length; i += chunk) {
+      bin += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+    }
+    localStorage.setItem(cacheKey, btoa(bin));
+  } catch (e) {
+    // Quota exceeded or encoding hiccup — just don't cache.
+  }
+}
+
+// ── Pyodide loader ────────────────────────────────────────────────────────
+// Lazy: runs only when user clicks Generate. Drives the init overlay's
+// 4 setup stages (pyodide / pydeps / bundle / validate) with explicit
+// yields between each so the browser can repaint and process input
+// (F12, scroll, keyboard) instead of locking up for 10–20 s straight.
+async function ensureEngine() {
+  if (enginReady) return pyodide;
+  let stage = null;
+  try {
+    stage = 'pyodide';
+    initStageStart(stage);
+    setStatus('Завантажую Pyodide…');
+    await yieldToBrowser(50);
+    const _loadPyodide = await ensurePyodideLoader();
+    pyodide = await _loadPyodide({indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/"});
+    initStageDone(stage);
+
+    stage = 'pydeps';
+    initStageStart(stage);
+    setStatus('Встановлюю pydantic + pyyaml…');
+    await yieldToBrowser(50);
+    await pyodide.loadPackage(['micropip']);
+    await yieldToBrowser();
+    await pyodide.runPythonAsync(`
+import micropip
+await micropip.install(['pydantic', 'pyyaml'])
+`);
+    initStageDone(stage);
+
+    stage = 'bundle';
+    initStageStart(stage);
+    setStatus('Завантажую двигун OpenOnco…');
+    await yieldToBrowser(50);
+    // CSD-6E + CSD-9C: lazy-load core bundle (~1.4 MB). Monolithic
+    // fallback retired (CSD-9C 2026-04-27) — the index + core + per-
+    // disease modules are the only path. Per-disease modules are
+    // fetched later in runEngine() once disease_id is known.
+    await loadCoreBundle();
+    initStageDone(stage);
+
+    stage = 'validate';
+    initStageStart(stage);
+    setStatus('Перевіряю базу…');
+    await yieldToBrowser(50);
+    const validationSummary = await pyodide.runPythonAsync(`
+from pathlib import Path
+from knowledge_base.validation.loader import load_content
+_r = load_content(Path('knowledge_base/hosted/content'))
+if _r.ok:
+    _summary = "ok"
+else:
+    _parts = []
+    if _r.schema_errors:
+        _parts.append(f"schema({len(_r.schema_errors)}): " + "; ".join(f"{p.name}: {m}" for p, m in _r.schema_errors[:3]))
+    if _r.ref_errors:
+        _parts.append(f"ref({len(_r.ref_errors)}): " + "; ".join(f"{p.name}: {m}" for p, m in _r.ref_errors[:3]))
+    if _r.contract_errors:
+        _parts.append(f"contract({len(_r.contract_errors)}): " + "; ".join(f"{p.name}: {m}" for p, m in _r.contract_errors[:3]))
+    _summary = " | ".join(_parts)
+_summary
+`);
+    initStageDone(stage);
+    enginReady = true;
+    if (validationSummary === 'ok') {
+      setStatus('Двигун готовий ✓', 'ok');
+    } else {
+      console.warn('[OpenOnco] KB validation did not pass — engine loaded anyway for testing.\n' + validationSummary);
+      setStatus('Двигун готовий ⚠ KB неверифіковано (деталі в консолі)', 'warn');
+    }
+    return pyodide;
+  } catch (e) {
+    if (stage) initStageError(stage, e && e.message);
+    throw e;
+  }
+}
+
+// ── Generate full plan ────────────────────────────────────────────────────
+async function runEngine() {
+  if (generating) return;  // double-click / re-entry guard
+  const _ooT0 = performance.now();
+  setError(null);
+  const profile = buildProfile();
+  if (!profile) {
+    setError('Не вдалося зібрати профіль (форма / JSON порожні).');
+    return;
+  }
+
+  // Lock the form so input during generation can't desync the rendered
+  // plan from a moving profile. <main inert> hard-blocks pointer + keyboard
+  // focus; init overlay (sibling of <main>) explains what's happening.
+  generating = true;
+  if (mainTryEl) mainTryEl.inert = true;
+  if (evalDebounceTimer) { clearTimeout(evalDebounceTimer); evalDebounceTimer = null; }
+  if (whatIfDebounceTimer) { clearTimeout(whatIfDebounceTimer); whatIfDebounceTimer = null; }
+  ++previewToken;
+  ++whatIfToken;
+  initStagesReset();
+  // If engine is already loaded from a prior click, fast-forward setup
+  // stages so the doctor sees only "Будую план" active. First run lights
+  // up all 5 stages.
+  if (enginReady) {
+    initStageDone('pyodide');
+    initStageDone('pydeps');
+    initStageDone('bundle');
+    initStageDone('validate');
+  }
+  initShow();
+
+  try {
+    try {
+      await ensureEngine();
+    } catch (e) {
+      setError('Двигун не завантажився: ' + (e.message || e));
+      setStatus('');
+      return;
+    }
+    // CSD-6E: lazy-fetch the per-disease module before generate. No-op
+    // when the disease has no per-disease bundle (its content is in
+    // core). Failures are surfaced but non-fatal — generate_plan()
+    // will fall back to whatever's already loaded.
+    try {
+      const did = resolveDiseaseId(profile);
+      if (did) await loadDiseaseModule(did);
+    } catch (e) {
+      console.warn('[OpenOnco] disease module load failed (continuing):', e);
+    }
+    initStageStart('generate');
+    setStatus('Будую персональний план…');
+    await yieldToBrowser(30);
+    const _ooTPython = performance.now();
+    try {
+      pyodide.globals.set('_patient_json', JSON.stringify(profile));
+      pyodide.globals.set('_target_lang', currentResultLang);
+      const html = await pyodide.runPythonAsync(`
+import json
+from pathlib import Path
+from knowledge_base.engine import (
+    generate_plan, generate_diagnostic_brief, is_diagnostic_profile,
+    orchestrate_mdt, render_plan_html, render_diagnostic_brief_html,
+)
+patient = json.loads(_patient_json)
+KB = Path('knowledge_base/hosted/content')
+if is_diagnostic_profile(patient):
+    _oo_result = generate_diagnostic_brief(patient, kb_root=KB)
+    _oo_mdt = orchestrate_mdt(patient, _oo_result, kb_root=KB)
+    _oo_mode = 'diagnostic'
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+else:
+    # Pyodide can't reach api.clinicaltrials.gov directly — pass the
+    # baked cache_root only (no search_fn). Cache hits surface trials;
+    # misses fall through to the "search not configured" empty bundle.
+    _oo_result = generate_plan(
+        patient, kb_root=KB, experimental_cache_root=KB / 'cache' / 'ctgov',
+    )
+    _oo_mdt = orchestrate_mdt(patient, _oo_result, kb_root=KB)
+    _oo_mode = 'treatment'
+    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+html
+`);
+      initStageDone('generate');
+      resultFrame.removeAttribute('src');
+      resultFrame.srcdoc = html;
+      planSource = 'generated';
+      planDirty = false;
+      activeExampleCaseId = null;
+      viewPlanBtn.disabled = false;
+      pdfBtn.disabled = false;
+      modalPdfBtn.disabled = false;
+      openPlanModal();
+      setStatus('Plan готовий ✓', 'ok');
+      const _ooTNow = performance.now();
+      console.log(`[OO] generate ${(_ooTNow - _ooT0).toFixed(0)}ms total (engine-load ${(_ooTPython - _ooT0).toFixed(0)}ms + python ${(_ooTNow - _ooTPython).toFixed(0)}ms)`);
+    } catch (e) {
+      initStageError('generate', e && e.message);
+      setError('Двигун повернув помилку:\n' + (e.message || e));
+      setStatus('');
+    }
+  } finally {
+    generating = false;
+    if (mainTryEl) mainTryEl.inert = false;
+    // Brief delay so the doctor sees green checkmarks before the overlay
+    // fades — purely cosmetic confirmation that all stages succeeded.
+    setTimeout(initHide, 600);
+    updateRunBtnEnabled();
+  }
+}
+
+function setGeneratingUI(on, hint) {
+  generatingOverlay.hidden = !on;
+  // <main inert> hard-blocks pointer + keyboard focus on every interactive
+  // element inside (form fields, toolbar, runBtn). The overlay is a sibling
+  // of <main>, so it stays interactive — but we don't currently put any
+  // controls in it (no cancel — Pyodide runPythonAsync is not interruptable).
+  if (mainTryEl) mainTryEl.inert = on;
+  if (on && hint) setGeneratingHint(hint);
+}
+
+function setGeneratingHint(text) {
+  if (generatingHint) generatingHint.textContent = text;
+}
+
+// ── Init overlay (one-time engine load with named stages) ─────────────────
+// Shown on first Generate click; doctor sees what's happening instead of a
+// mystery lag. Yields to the browser between stages so F12, scrolling, and
+// keyboard input remain responsive even though wasm chunks block the main
+// thread internally.
+function initShow() { if (initOverlay) initOverlay.hidden = false; }
+function initHide() { if (initOverlay) initOverlay.hidden = true; }
+
+function initStageStart(id) {
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${id}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'done', 'error');
+  li.classList.add('active');
+}
+function initStageDone(id) {
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${id}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'active', 'error');
+  li.classList.add('done');
+}
+function initStageError(id, msg) {
+  if (!initStagesEl) return;
+  const li = initStagesEl.querySelector(`[data-stage="${id}"]`);
+  if (!li) return;
+  li.classList.remove('pending', 'active', 'done');
+  li.classList.add('error');
+  if (msg) li.title = String(msg);
+}
+function initStagesReset() {
+  if (!initStagesEl) return;
+  initStagesEl.querySelectorAll('.stage').forEach(li => {
+    li.classList.remove('active', 'done', 'error');
+    li.classList.add('pending');
+  });
+}
+
+// Yield to the browser so it can repaint + process input between heavy
+// synchronous wasm chunks (Pyodide loadPackage / unpackArchive / Python
+// eval). 16ms ≈ one frame; 50ms gives visibly snappier dropdowns.
+function yieldToBrowser(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms == null ? 16 : ms));
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+//
+// Lazy-loaders for full questionnaire/example data. Dropdowns populate
+// instantly from the build-time manifests above; the full ~870 KB payload
+// is fetched only after the user picks something.
+async function ensureQuestionnaires() {
+  if (questionnaires) return questionnaires;
+  if (!_questionnairesPromise) {
+    _questionnairesPromise = fetch('/questionnaires.json')
+      .then(r => r.json())
+      .then(data => { questionnaires = data; return data; });
+  }
+  return _questionnairesPromise;
+}
+async function ensureExamples() {
+  if (examples) return examples;
+  if (!_examplesPromise) {
+    _examplesPromise = fetch('/examples.json')
+      .then(r => r.json())
+      .then(data => { examples = data; return data; });
+  }
+  return _examplesPromise;
+}
+
+// Persist dropdown manifests across visits. Read by the early-paint
+// warmup at the top of the script body, written by loadAssets after a
+// successful boot so the next cold visit can paint dropdowns from
+// localStorage even before the new HTML's inline manifest is parsed.
+const MANIFEST_CACHE_KEY = 'openonco-manifests-v1';
+function saveManifestsToCache() {
+  try {
+    localStorage.setItem(MANIFEST_CACHE_KEY, JSON.stringify({
+      ts: Date.now(),
+      questionnaires: QUESTIONNAIRES_MANIFEST,
+      examples: EXAMPLES_MANIFEST,
+    }));
+  } catch (e) { /* quota or private mode — silent skip */ }
+}
+
+async function loadAssets() {
+  // Populate dropdowns from manifests — instant, no network fetch.
+  diseaseSelect.innerHTML = '<option value="">— оберіть —</option>';
+  QUESTIONNAIRES_MANIFEST.forEach((q, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = q.title;
+    diseaseSelect.appendChild(opt);
+  });
+  saveManifestsToCache();
+
+  // Examples selector — initial population shows all; narrows once a
+  // disease is picked.
+  repopulateExamples(null);
+
+  // Restore draft
+  const draft = loadDraft();
+  if (draft && draft.questId) {
+    const idx = QUESTIONNAIRES_MANIFEST.findIndex(q => q.id === draft.questId);
+    if (idx >= 0) {
+      diseaseSelect.value = idx;
+      // Draft restore needs full data — lazy-fetch now
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[idx]);
+      repopulateExamples(idx);
+      // Apply saved answers
+      if (draft.answers) {
+        for (const [field, val] of Object.entries(draft.answers)) {
+          const inp = formPane.querySelector(`[data-field="${CSS.escape(field)}"]`);
+          if (!inp) continue;
+          if (typeof val === 'boolean') inp.value = String(val);
+          else if (inp.dataset.type === 'enum') inp.value = JSON.stringify(val);
+          else inp.value = val;
+          answers[field] = val;
+        }
+      }
+      if (draft.jsonText) textarea.value = draft.jsonText;
+      if (draft.mode === 'json') setMode('json');
+      setStatus('Чернетку відновлено ✓ Натисни «Згенерувати» коли готовий.', 'ok');
+      updateRunBtnEnabled();
+      updateImpactPanelLocal();
+    }
+  } else {
+    // Initial load done — hide the top busy banner; sidebar still shows hint.
+    setStatus('Оберіть хворобу зі списку, щоб почати.', 'info', 'hide');
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+  }
+
+  // Engine is fully lazy now — Pyodide loads only when the user clicks
+  // «Згенерувати». Form interaction stays Pyodide-free and snappy.
+}
+
+// ── Examples filtering by selected disease ────────────────────────────────
+// We narrow the example dropdown to those whose disease.icd_o_3_morphology
+// matches the active questionnaire — otherwise the picker overwhelms with
+// 35 cases for which we don't have a form.
+function repopulateExamples(activeQuestIdx) {
+  // Filter from manifest only — no need to await full examples payload
+  // just to populate a dropdown (manifest carries label + disease_icd).
+  const wantCode = activeQuestIdx == null
+    ? null
+    : (QUESTIONNAIRES_MANIFEST[activeQuestIdx] || {}).disease_icd;
+  exampleSelect.innerHTML = '';
+  const placeholder = document.createElement('option');
+  placeholder.value = '';
+  placeholder.textContent = wantCode == null
+    ? '— оберіть приклад —'
+    : '— оберіть приклад для цієї хвороби —';
+  exampleSelect.appendChild(placeholder);
+  let n = 0;
+  EXAMPLES_MANIFEST.forEach((ex, i) => {
+    if (wantCode != null) {
+      if (ex.disease_icd !== wantCode) return;
+    }
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = ex.label;
+    exampleSelect.appendChild(opt);
+    n++;
+  });
+  if (wantCode != null && n === 0) {
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.disabled = true;
+    noneOpt.textContent = '(прикладів для цієї хвороби поки немає)';
+    exampleSelect.appendChild(noneOpt);
+  }
+}
+
+// ── Event wiring ──────────────────────────────────────────────────────────
+diseaseSelect.addEventListener('change', async () => {
+  const i = diseaseSelect.value;
+  // Switching disease invalidates whatever plan was on screen — there is
+  // no longer any example or generated plan that matches the new form.
+  clearPlanState();
+  if (i === '') {
+    renderForm(null);
+    repopulateExamples(null);
+    updateRunBtnEnabled();
+    return;
+  }
+  const idx = parseInt(i, 10);
+  const fullList = await ensureQuestionnaires();
+  renderForm(fullList[idx]);
+  repopulateExamples(idx);
+  exampleSelect.value = '';
+  saveDraft();
+  updateRunBtnEnabled();
+  updateImpactPanelLocal();
+});
+
+function findQuestionnaireForProfile(profile) {
+  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
+  // to wait for full questionnaires payload.
+  const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
+  if (!code) return -1;
+  return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
+}
+
+function getByPath(obj, dotted) {
+  let cur = obj;
+  for (const seg of dotted.split('.')) {
+    if (cur === null || typeof cur !== 'object') return undefined;
+    cur = cur[seg];
+  }
+  return cur;
+}
+
+function populateFormFromProfile(quest, profile) {
+  // Walk every form question and try to read its dotted-path value
+  // out of the example profile. Unset inputs stay empty (will count as
+  // not-filled so user can finish anything missing).
+  for (const group of quest.groups || []) {
+    for (const q of group.questions || []) {
+      const path = q.field;
+      if (!path) continue;
+      const val = getByPath(profile, path);
+      if (val === undefined || val === null) continue;
+      const inp = formPane.querySelector(`[data-field="${CSS.escape(path)}"]`);
+      if (!inp) continue;
+      if (q.type === 'boolean') inp.value = String(val);
+      else if (q.type === 'enum') inp.value = JSON.stringify(val);
+      else inp.value = val;
+      answers[path] = val;
+    }
+  }
+}
+
+exampleSelect.addEventListener('change', async () => {
+  const i = exampleSelect.value;
+  if (i === '') return;
+  const fullExamples = await ensureExamples();
+  const ex = fullExamples[parseInt(i, 10)];
+  setError(null);
+  // Prefer form mode: find a questionnaire that matches this example's
+  // disease and populate it. Fall back to JSON view only when no
+  // matching questionnaire exists (most diseases don't have one yet).
+  const qIdx = findQuestionnaireForProfile(ex.json);
+  if (qIdx >= 0) {
+    diseaseSelect.value = qIdx;
+    const fullList = await ensureQuestionnaires();
+    renderForm(fullList[qIdx]);
+    repopulateExamples(qIdx);
+    exampleSelect.value = i;
+    populateFormFromProfile(fullList[qIdx], ex.json);
+    setMode('form');
+    // Lock filled fields and reveal the personalize banner so the user
+    // can opt-in to editing the example's data.
+    lockFilledFields();
+    showExampleLockBanner();
+    // Keep the JSON mirror in sync so toggling to JSON shows the loaded data
+    textarea.value = JSON.stringify(buildProfile(), null, 2);
+    // Show the pre-built case plan in the modal — the example IS already
+    // a generated plan, so we display it directly instead of pretending
+    // Generate would do new work.
+    loadExamplePlan(ex.case_id);
+    setStatus('Приклад завантажено ✓ План показано — зміни поле, щоб згенерувати власний.', 'ok');
+  } else {
+    setMode('json');
+    textarea.value = JSON.stringify(ex.json, null, 2);
+    // No questionnaire match: still show the prebuilt plan if a case file
+    // exists for this example.
+    if (ex.case_id) loadExamplePlan(ex.case_id);
+    setStatus('Приклад завантажено як JSON (ще немає опитувальника для цієї хвороби)', 'ok');
+  }
+  saveDraft();
+  updateRunBtnEnabled();
+  updateImpactPanelLocal();
+});
+
+const personalizeBtn = document.getElementById('personalizeBtn');
+personalizeBtn && personalizeBtn.addEventListener('click', () => {
+  unlockAllFields();
+  setStatus('Поля розблоковано — редагуй що завгодно. Натисни «Згенерувати» коли готовий.', 'ok');
+});
+
+modeFormBtn.addEventListener('click', () => setMode('form'));
+modeJsonBtn.addEventListener('click', () => setMode('json'));
+formatBtn && formatBtn.addEventListener('click', () => {
+  setError(null);
+  try { textarea.value = JSON.stringify(JSON.parse(textarea.value), null, 2); }
+  catch (e) { setError('Невалідний JSON: ' + e.message); }
+});
+textarea.addEventListener('input', () => {
+  markPlanDirty();
+  saveDraft();
+  updateRunBtnEnabled();
+  // No live preview from JSON — engine runs only on Generate click.
+});
+
+resetBtn.addEventListener('click', () => {
+  if (!confirm('Очистити форму і прибрати чернетку?')) return;
+  answers = {};
+  textarea.value = '';
+  diseaseSelect.value = '';
+  renderForm(null);
+  clearPlanState();
+  localStorage.removeItem(STORAGE_KEY);
+  updateImpactPanelLocal();
+  updateRunBtnEnabled();
+  setStatus('Очищено.');
+});
+
+runBtn.addEventListener('click', runEngine);
+
+// Pause pending evals the moment the user reaches for a toolbar control —
+// fires before the native <select> popup opens, so the main thread is free
+// to render it. Covers both dropdowns + mode/reset buttons.
+[diseaseSelect, exampleSelect, modeFormBtn, modeJsonBtn, resetBtn].forEach(el => {
+  if (!el) return;
+  el.addEventListener('mousedown', pauseEvalForToolbar);
+  el.addEventListener('focus', pauseEvalForToolbar);
+});
+
+// ── Case-token URL handler (CSD-3-qr-token) ───────────────────────────────
+// QR codes printed on CSD Lab NGS reports encode the patient profile in the
+// URL hash: openonco.info/try.html#p=<base64-gzip-json>. We decode entirely
+// in the browser — CHARTER §9.3, no PHI ever touches a server.
+async function loadFromUrlHash() {
+  const hash = window.location.hash.slice(1);  // strip #
+  if (!hash) return;
+  const params = new URLSearchParams(hash);
+  const token = params.get('p');
+  if (!token) return;
+
+  try {
+    // urlsafe-base64 → bytes (re-add padding) → gunzip → JSON
+    const padded = token + '='.repeat((-token.length) & 3);
+    const binStr = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
+    const bytes = Uint8Array.from(binStr, c => c.charCodeAt(0));
+    const ds = new DecompressionStream('gzip');
+    const stream = new Response(bytes).body.pipeThrough(ds);
+    const json = await new Response(stream).text();
+    const patient = JSON.parse(json);
+
+    // Try to match a disease questionnaire so the form mode picks up the
+    // profile cleanly — same flow as the example loader.
+    const qIdx = findQuestionnaireForProfile(patient);
+    if (qIdx >= 0) {
+      diseaseSelect.value = qIdx;
+      const fullList = await ensureQuestionnaires();
+      renderForm(fullList[qIdx]);
+      repopulateExamples(qIdx);
+      populateFormFromProfile(fullList[qIdx], patient);
+      setMode('form');
+      lockFilledFields();
+      showExampleLockBanner();
+      textarea.value = JSON.stringify(buildProfile(), null, 2);
+    } else {
+      setMode('json');
+      textarea.value = JSON.stringify(patient, null, 2);
+    }
+    saveDraft();
+    updateRunBtnEnabled();
+    updateImpactPanelLocal();
+
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner';
+    banner.textContent = '✓ Профіль завантажено з QR-коду. Натисніть «Згенерувати», щоб побудувати план, або відредагуйте поля.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setStatus('Профіль із QR завантажено ✓', 'ok');
+  } catch (err) {
+    console.error('Failed to decode case token:', err);
+    const banner = document.createElement('div');
+    banner.className = 'case-token-banner-error';
+    banner.textContent = '⚠ Не вдалося завантажити профіль із QR-коду. Введіть JSON вручну або оберіть приклад.';
+    mainTryEl.parentNode.insertBefore(banner, mainTryEl);
+    setError('QR token decode failed: ' + (err.message || err));
+  }
+}
+
+// Run after loadAssets so questionnaires + examples are populated and
+// findQuestionnaireForProfile/populateFormFromProfile can do their job.
+loadAssets()
+  .then(() => loadFromUrlHash())
+  .catch(e => setError('Initialization failed: ' + e));
+window.addEventListener('hashchange', loadFromUrlHash);
+
+// CSD-6E: kick off the bundle index fetch as soon as the page loads —
+// it's tiny (~5 KB) and lets resolveDiseaseId() pre-resolve from
+// ICD-O-3 codes before the user clicks Generate. Best-effort, never
+// blocks UI.
+loadBundleIndex().catch(() => {});
+
+// CSD-6E polish: register the cache-first service worker so repeat
+// visits skip the network for the engine bundle entirely. Best-effort
+// — falls through silently when the SW API is unavailable (private
+// mode, ITP, file://, etc.).
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((e) => {
+      console.warn('[OpenOnco] service worker registration failed:', e);
+    });
+  });
+}
+</script>
+</body>
+</html>
