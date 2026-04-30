@@ -45,13 +45,18 @@ decision_tree:
 - step: 3
   evaluate:
     any_of:
-    - condition: Post-cBTKi failure AND CAR-T-ineligible
-    - condition: BTK-C481 mutation documented
+    - red_flag: RF-PRIOR-BTKI-PROGRESSION
+    - finding: btk_c481_mutation
+      value: true
+    - finding: btk_c481_status
+      value: mutated_S
+    - finding: btk_c481_status
+      value: mutated
   if_true:
     result: IND-MCL-3L-PIRTOBRUTINIB
   if_false:
     result: IND-MCL-2L-ACALABRUTINIB
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+  notes: "Wired via universal RF-PRIOR-BTKI-PROGRESSION (post-cBTKi failure) OR structured btk_c481_mutation/btk_c481_status finding (BRUIN MCL-321: pirtobrutinib ORR 58% post-cBTKi, retains activity vs C481-mut). Free-text 'CAR-T-ineligible' from prior version is implicit — step 21 already gates fit + CAR-T-eligible patients to brexucel before falling through to step 3, so step 3 inherently captures CAR-T-ineligible post-cBTKi cases."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-MCL-2024

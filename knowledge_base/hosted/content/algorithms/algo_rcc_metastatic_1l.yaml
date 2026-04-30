@@ -9,10 +9,10 @@ decision_tree:
   - step: 1
     evaluate:
       any_of:
-        - {condition: "IMDC intermediate or poor risk"}
+        - {red_flag: RF-RCC-IMDC-INTERMEDIATE-POOR-RISK}
     if_true: {result: IND-RCC-METASTATIC-1L-NIVO-IPI}
     if_false: {result: IND-RCC-METASTATIC-1L-PEMBRO-AXI}
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Wired via RF-RCC-IMDC-INTERMEDIATE-POOR-RISK (W5c chunk 2026-04-30): trigger fires on imdc_risk in {intermediate, poor, int} or imdc_risk_factors_count >= 1; favorable falls through to default IND-RCC-METASTATIC-1L-PEMBRO-AXI."
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
 last_reviewed: null
 notes: "Default to pembro+axi for IMDC favorable; nivo+ipi for intermediate/poor."
