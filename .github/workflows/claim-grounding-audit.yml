@@ -1,0 +1,102 @@
+name: KB claim-grounding audit
+
+# Periodic audit of claim-bearing KB prose: do clinical assertions on
+# Indication/Regimen/BMA entities cite a SRC-* anchor? Implements Q4+Q5 of
+# docs/plans/kb_data_quality_plan_2026-04-29.md.
+#
+# Default mode: detection-only (no API calls, no secret needed). Forks
+# without an ANTHROPIC_API_KEY get a useful coverage report each Monday.
+# Manual workflow_dispatch supports an opt-in semantic grounding pass
+# (calls the Claude API; consumes ~$5-15 per full run).
+#
+# When the report changes, the workflow opens a small PR to refresh
+# `docs/kb-claim-grounding-report.md` + `.json`. We mirror the
+# civic-monthly-refresh.yml pattern (same peter-evans action, same
+# label conventions) for operator familiarity.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      semantic:
+        description: "Run semantic check (requires ANTHROPIC_API_KEY secret; ~$5-15 cost)"
+        type: boolean
+        default: false
+      limit:
+        description: "Cap entities checked (smoke runs); leave blank for full audit"
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml pydantic
+          if [ "${{ github.event.inputs.semantic }}" = "true" ]; then
+            pip install 'anthropic>=0.40,<1.0'
+          fi
+
+      - name: Run audit (detection or semantic)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -e
+          ARGS=""
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            ARGS="$ARGS --limit ${{ github.event.inputs.limit }}"
+          fi
+          if [ "${{ github.event.inputs.semantic }}" = "true" ]; then
+            if [ -z "$ANTHROPIC_API_KEY" ]; then
+              echo "::warning::semantic requested but ANTHROPIC_API_KEY missing — falling back to detection-only"
+            else
+              ARGS="$ARGS --semantic"
+            fi
+          fi
+          # shellcheck disable=SC2086
+          python -m scripts.audit_claim_grounding $ARGS
+
+      - name: Detect report changes
+        id: diff
+        run: |
+          if git diff --quiet -- docs/kb-claim-grounding-report.md docs/kb-claim-grounding-report.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open refresh PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: kb-claim-grounding-refresh-${{ github.run_id }}
+          title: "chore(kb): claim-grounding audit refresh"
+          add-paths: |
+            docs/kb-claim-grounding-report.md
+            docs/kb-claim-grounding-report.json
+          commit-message: "chore(kb): refresh claim-grounding audit report"
+          body: |
+            Automated refresh of the KB claim-anchor grounding report.
+
+            See `docs/kb-claim-grounding-report.md` for the human-readable
+            summary and `docs/kb-claim-grounding-report.json` for the
+            structured payload. This is an audit, not a gate — no quality
+            decisions are made here. Tracks Q4 + Q5 of
+            `docs/plans/kb_data_quality_plan_2026-04-29.md`.
+          labels: |
+            kb-quality
+            kb-audit-refresh
