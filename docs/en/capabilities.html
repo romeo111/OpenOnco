@@ -12,7 +12,7 @@
 <header class="top-bar">
   <div class="brand-line">
     <a href="/en/" class="brand-mini">OpenOnco</a>
-    <span class="brand-version" title="Released 2026-04-27">v0.1.1 · 2026-04-27</span>
+    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
   </div>
   <nav class="top-nav">
     <a href="/en/">Home</a>
@@ -46,24 +46,24 @@
 
     <div class="callout callout-hard">
       <strong>STUB status across all clinical content.</strong>
-      Reviewer sign-offs ≥ 2: <strong>15/307</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/317</strong>
       (CHARTER §6.1 requires two Clinical Co-Lead approvals for any
       Indication before it can be considered «published»). Right now this
       is a proposed plan: structured data + algorithm + sources are in
       place, but without dual sign-off. State as of
-      <code>2026-04-30 16:54 UTC</code>. This is a decision-support
+      <code>2026-04-30 17:20 UTC</code>. This is a decision-support
       tool, not a medical device.
     </div>
 
     <div class="promo-info" role="img" aria-label="OpenOnco — capabilities infographic">
-      <div class="promo-eyebrow">OpenOnco · v0.1.1 · the engine in two sentences</div>
+      <div class="promo-eyebrow">OpenOnco · v0.1.2 · the engine in two sentences</div>
       <h2 class="promo-headline">
         One JSON profile → <em>two alternative treatment plans</em>
         with a citation under every recommendation.
       </h2>
       <p class="promo-sub">
         A declarative rule engine over <strong>65 diseases</strong>,
-        426 red flags, 306 indications, 249 regimens.
+        434 red flags, 312 indications, 253 regimens.
         No LLM in the clinical decision, no server, no logs.
         The patient JSON never leaves the machine.
       </p>
@@ -74,7 +74,7 @@
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">306</div>
+          <div class="promo-stat-num">312</div>
           <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
@@ -82,7 +82,7 @@
           <div class="promo-stat-lbl">Cited sources</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">426</div>
+          <div class="promo-stat-num">434</div>
           <div class="promo-stat-lbl">Red flags</div>
         </div>
         <div class="promo-stat">
@@ -268,14 +268,14 @@
         <div class="num-card">
           <div class="num-big">65</div>
           <div class="num-lbl">Diseases in KB</div>
-          <div class="num-detail">37 heme · 28 solid · 64 with full chain · 43 have 2L+ algorithm</div>
+          <div class="num-detail">37 heme · 28 solid · 64 with full chain · 44 have 2L+ algorithm</div>
           <p class="num-text">
             Each disease has its own <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven) which determines the treatment-selection
             algorithm. 1L is covered for all 65
             (65 algorithms), 2L+ — for 34 heme
-            and 9 solid (45 algorithms).
+            and 10 solid (46 algorithms).
           </p>
         </div>
 
@@ -307,7 +307,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">426</div>
+          <div class="num-big">434</div>
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">escalation or investigation triggers</div>
           <p class="num-text">
@@ -323,9 +323,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">249</div>
+          <div class="num-big">253</div>
           <div class="num-lbl">Regimens</div>
-          <div class="num-detail">306 indications (177 1L · 129 2L+)</div>
+          <div class="num-detail">312 indications (179 1L · 133 2L+)</div>
           <p class="num-text">
             Every regimen is a list of drugs with doses, cycle schedule,
             dose adjustments (renal impairment, FIB-4, frailty),
@@ -339,7 +339,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">216</div>
+          <div class="num-big">220</div>
           <div class="num-lbl">Drugs</div>
           <p class="num-text">
             ATC/RxNorm-coded. Each carries FDA/EMA/MoH regulatory status +
@@ -410,7 +410,7 @@
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Each of 426 RFs is checked against findings. Boolean
+            Each of 434 RFs is checked against findings. Boolean
             engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
             clauses with thresholds. The RF-trigger alias map cut
             «unevaluated» warnings by ~76%.
@@ -868,7 +868,7 @@
           <h3>No cumulative-toxicity tracking across lines</h3>
           <p>
             2L+ algorithms exist for 34 heme diseases
-            (129 indications 2L+), but the profile doesn't carry
+            (133 indications 2L+), but the profile doesn't carry
             <code>prior_treatment_history</code> as a structured field. A 2L
             plan for a patient who got bortezomib in 1L with grade 2
             neuropathy — the engine doesn't know about prior exposure
@@ -964,14 +964,14 @@
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
           <tr><td>Diseases with full chain</td><td>64 / 65</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>177</td><td>First line is covered for all 65 diseases</td></tr>
-          <tr><td>Indications 2L+</td><td>129</td><td>Second to fourth line: 34 heme + 9 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
-          <tr><td>RedFlags</td><td>426</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
+          <tr><td>Indications 1L</td><td>179</td><td>First line is covered for all 65 diseases</td></tr>
+          <tr><td>Indications 2L+</td><td>133</td><td>Second to fourth line: 34 heme + 10 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
+          <tr><td>RedFlags</td><td>434</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
           <tr><td>Radiation therapy plans</td><td>partial</td><td>RT is part of multimodal Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), but not yet modelled as a separate entity with technical parameters (dose/fractions/target volumes)</td></tr>
           <tr><td>Surgical oncology plans</td><td>not modelled</td><td>Surgical-oncology indications absent</td></tr>
           <tr><td>NHSU formulary live feed</td><td>static flag</td><td>Currently hard-coded on regimens; not auto-refreshed from NHSU — separate backlog</td></tr>
-          <tr><td>Reviewer dual-signoff</td><td>15/307</td><td>Most content is STUB. Capacity plan: 307 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>15/317</td><td>Most content is STUB. Capacity plan: 317 → ≥85% verified — our main bottleneck metric, described in kb_coverage_strategy v0.2</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -1074,7 +1074,7 @@
       <h2>18. How to contribute — verify algorithms with your AI tokens</h2>
       <p class="info-text">
         The biggest gap on this page —
-        <strong>15/307</strong>
+        <strong>15/317</strong>
         dual-reviewer sign-off. This bottleneck isn't solved by more code;
         it's solved by <em>contributors with AI tools</em> who take
         structured chunks of work and execute each in their own worktree.
