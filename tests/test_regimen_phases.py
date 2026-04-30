@@ -207,10 +207,23 @@ def test_no_regression_axicel():
 
 
 def test_no_regression_lifileucel():
+    """lifileucel has been migrated to multi-phase shape (PR3). The YAML
+    carries `components: []` and authors `phases:` explicitly with
+    lymphodepletion + main + il2_support. The il2_support phase has empty
+    components (no DRUG-ALDESLEUKIN entity in KB yet) but a structured
+    `purpose_ua` capturing the IL-2 dose/schedule. Lymphodepletion holds
+    cyclophosphamide + fludarabine; main holds the TIL product
+    (DRUG-LIFILEUCEL)."""
     raw, r = _load_regimen("reg_lifileucel_til_melanoma.yaml")
-    assert len(r.phases) >= 1
-    assert len(r.components) == _raw_component_count(raw)
-    assert sum(len(p.components) for p in r.phases) == len(r.components)
+    assert len(r.phases) == 3, "post-migration lifileucel must carry exactly three phases"
+    assert [p.name for p in r.phases] == ["lymphodepletion", "main", "il2_support"]
+    # Components is the no-op shape (loader-side opt-out from auto-wrap)
+    assert len(r.components) == _raw_component_count(raw) == 0
+    # Drugs flow via phases now
+    drug_ids_in_phases = [c.drug_id for p in r.phases for c in p.components]
+    assert "DRUG-CYCLOPHOSPHAMIDE" in drug_ids_in_phases
+    assert "DRUG-FLUDARABINE" in drug_ids_in_phases
+    assert "DRUG-LIFILEUCEL" in drug_ids_in_phases
 
 
 def test_no_regression_all_244_legacy_yamls_load():
@@ -282,20 +295,73 @@ def test_no_regression_all_244_legacy_yamls_load():
             empty_count += 1
 
     # Sanity: vast majority of regimens are still legacy auto-wrap shape
-    # (PR2 migrates only axi-cel; PR3 migrates the remaining 17).
-    assert legacy_autowrap_count >= 240, (
-        f"expected ~242 legacy auto-wrap regimens, got {legacy_autowrap_count}"
+    # (PR2 migrated axi-cel; PR3 migrated 17 more high-stakes regimens —
+    # CAR-T A4, TIL B1, induction→autoSCT C4, induction→alloSCT D4,
+    # multi-block / alternating E4. Total 18 explicit multi-phase.)
+    assert legacy_autowrap_count >= 220, (
+        f"expected ~225 legacy auto-wrap regimens after PR3, got {legacy_autowrap_count}"
     )
-    # PR2 migrated exactly one regimen so far
-    assert explicit_multiphase_count == 1, (
-        f"expected exactly one explicit multi-phase regimen (axi-cel), "
-        f"got {explicit_multiphase_count}"
+    # PR2 migrated 1 (axi-cel); PR3 migrated 17 more → 18 total
+    assert explicit_multiphase_count == 18, (
+        f"expected exactly 18 explicit multi-phase regimens (PR2 axi-cel "
+        f"+ PR3 17 high-stakes), got {explicit_multiphase_count}"
     )
     # Documented exception (surveillance / observation-only "regimen")
     assert empty_count == 1, (
         f"expected exactly one zero-component surveillance regimen, "
         f"got {empty_count}"
     )
+
+
+def test_18_migrated_yamls_have_multi_phase():
+    """All 18 high-stakes regimens (PR2 axi-cel + PR3 the remaining 17 per
+    regimen-phases-refactor plan §5) are migrated to multi-phase shape:
+    `phases:` is authored explicitly in the raw YAML, every phase carries
+    a meaningful `purpose_ua`, and no phase relies on the auto-wrap
+    fallback.
+
+    A single semantically-meaningful phase is acceptable for files that
+    do not decompose cleanly (e.g. SMILE, MATRix induction); the contract
+    is "explicit phases in YAML + purpose_ua present", not "≥2 phases".
+    """
+    migrated = [
+        # Group A — CAR-T (Lymphodepletion + main_infusion)
+        "reg_car_t_axicel.yaml",  # PR2 reference
+        "reg_car_t_axicel_fl.yaml",
+        "reg_car_t_axicel_hgbl.yaml",
+        "reg_car_t_brexucel_mcl.yaml",
+        "reg_tisagenlecleucel_b_all.yaml",
+        # Group B — TIL with 3 phases
+        "reg_lifileucel_til_melanoma.yaml",
+        # Group C — Induction → autoSCT
+        "r_dhap_autosct.yaml",
+        "reg_rdhap_burkitt.yaml",
+        "reg_rice_burkitt.yaml",
+        "reg_r_ice_pmbcl.yaml",
+        # Group D — Induction → conditioning → alloSCT
+        "reg_choep_allosct_consolidation.yaml",
+        "reg_allohct_pmf.yaml",
+        "reg_allohct_mds_hr.yaml",
+        "reg_allohct_cml_advanced.yaml",
+        # Group E — Multi-block / alternating
+        "hyper_cvad_r.yaml",
+        "codox_m_ivac.yaml",
+        "matrix.yaml",
+        "smile.yaml",
+    ]
+    assert len(migrated) == 18, "the brief specifies 18 high-stakes regimens"
+    for filename in migrated:
+        raw, r = _load_regimen(filename)
+        assert "phases" in raw, (
+            f"{filename}: phases not authored explicitly in YAML "
+            "(would auto-wrap into a generic 'main' phase)"
+        )
+        assert raw["phases"], f"{filename}: phases authored but empty"
+        assert len(r.phases) >= 1, f"{filename}: model has no phases after load"
+        for phase in r.phases:
+            assert phase.purpose_ua, (
+                f"{filename}: phase '{phase.name}' missing purpose_ua"
+            )
 
 
 # ── 5. Render layer (PR2 of regimen-phases-refactor) ─────────────────────────

@@ -3,27 +3,63 @@ name: "CHOEP × 6 + allogeneic SCT consolidation in CR1 (fit transplant-eligible
 name_ua: "CHOEP × 6 + алогенна ТКМ в CR1 (придатні до трансплантації PTCL NOS)"
 alternate_names: ["CHOEP-alloSCT", "Aggressive 1L PTCL NOS"]
 
-components:
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "750 mg/m²"
-    schedule: "IV day 1 of each 21-day cycle × 6 (induction)"
-    route: IV
-  - drug_id: DRUG-DOXORUBICIN
-    dose: "50 mg/m²"
-    schedule: "IV day 1 each cycle × 6"
-    route: IV
-  - drug_id: DRUG-VINCRISTINE
-    dose: "1.4 mg/m² (cap 2 mg)"
-    schedule: "IV day 1 each cycle × 6"
-    route: IV
-  - drug_id: DRUG-ETOPOSIDE
-    dose: "100 mg/m²"
-    schedule: "IV days 1-3 each cycle × 6"
-    route: IV
-  - drug_id: DRUG-PREDNISONE
-    dose: "100 mg"
-    schedule: "PO days 1-5 each cycle × 6"
-    route: PO
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: induction
+    purpose_ua: "індукція CHOEP × 6 циклів — анти-CD20-незалежний CHOP+етопозид режим для досягнення CR1 в фіт-молодих PTCL NOS"
+    purpose_en: "induction CHOEP × 6 cycles — CHOP + etoposide regimen to achieve CR1 in fit younger PTCL NOS"
+    duration: "~18 weeks (6 × 21-day cycles)"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "750 mg/m²"
+        schedule: "IV day 1 of each 21-day cycle × 6 (induction)"
+        route: IV
+      - drug_id: DRUG-DOXORUBICIN
+        dose: "50 mg/m²"
+        schedule: "IV day 1 each cycle × 6"
+        route: IV
+      - drug_id: DRUG-VINCRISTINE
+        dose: "1.4 mg/m² (cap 2 mg)"
+        schedule: "IV day 1 each cycle × 6"
+        route: IV
+      - drug_id: DRUG-ETOPOSIDE
+        dose: "100 mg/m²"
+        schedule: "IV days 1-3 each cycle × 6"
+        route: IV
+      - drug_id: DRUG-PREDNISONE
+        dose: "100 mg"
+        schedule: "PO days 1-5 each cycle × 6"
+        route: PO
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-PTCL-2024
+  - name: conditioning_allohct
+    purpose_ua: "кондиціонування перед ало-ТГСК — RIC (Flu/Mel або Flu/Bu2) для старших/коморбідних, мієлоаблятивне для молодших фіт-пацієнтів; інституційно специфічне"
+    purpose_en: "conditioning before allo-HCT — RIC (Flu/Mel or Flu/Bu2) for older/comorbid; myeloablative for fit younger; institution-specific"
+    duration: "single conditioning regimen (institution-specific) before HCT"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # Conditioning regimen is institution-specific (RIC vs MA);
+                   # not enumerated as drug components here (placeholder per
+                   # plan-doc §5 Group D)
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-PTCL-2024
+  - name: allohct
+    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — консолідація CR1 з донором (sibling > matched unrelated > haploidentical)"
+    purpose_en: "allogeneic hematopoietic cell transplant — consolidation in CR1 (sibling > matched unrelated > haploidentical donor)"
+    duration: "single transplant procedure"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # AlloHCT — pathway placeholder, no drug components
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-PTCL-2024
 
 cycle_length_days: 21
 total_cycles: "6 induction → restage by PET-CT → if CR1 in fit transplant-eligible: alloSCT consolidation (RIC or myeloablative based on age + comorbidity)"

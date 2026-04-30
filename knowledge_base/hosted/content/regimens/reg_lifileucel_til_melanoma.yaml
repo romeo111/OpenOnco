@@ -3,12 +3,56 @@ name: "Lifileucel TIL therapy (Amtagvi, melanoma 3L+)"
 name_ua: "Ліфілеуцел TIL-терапія (Amtagvi, меланома 3L+)"
 alternate_names: ["Amtagvi", "C-144-01 regimen", "TIL"]
 
-components:
-  - drug_id: DRUG-LIFILEUCEL
-    dose: "Single IV infusion of 7.5 × 10⁹ to 72 × 10⁹ viable autologous TIL cells"
-    schedule: "Once, after lymphodepletion; followed by IL-2 supportive bolus regimen"
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед TIL для приживлення клітин (NMA-Cy/Flu)"
+    purpose_en: "lymphocyte depletion before TIL infusion to enable engraftment (NMA-Cy/Flu)"
+    duration: "7 days: cyclophosphamide 60 mg/kg × 2 days, then fludarabine 25 mg/m² × 5 days"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -7
+    optional: false
+    components:
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "60 mg/kg/day"
+        schedule: "IV × 2 days (lymphodepletion)"
+        route: IV
+      - drug_id: DRUG-FLUDARABINE
+        dose: "25 mg/m²/day"
+        schedule: "IV × 5 days (lymphodepletion, after cyclophosphamide)"
+        route: IV
+    sources:
+      - SRC-C14401-CHESNEY-2024
+      - SRC-NCCN-MELANOMA-2025
+  - name: main
+    purpose_ua: "основна TIL інфузія (Amtagvi)"
+    purpose_en: "main TIL infusion (Amtagvi)"
     duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-LIFILEUCEL
+        dose: "Single IV infusion of 7.5 × 10⁹ to 72 × 10⁹ viable autologous TIL cells"
+        schedule: "Once, after lymphodepletion; followed by IL-2 supportive bolus regimen"
+        route: IV
+        duration: "single infusion"
+    sources:
+      - SRC-C14401-CHESNEY-2024
+      - SRC-NCCN-MELANOMA-2025
+  - name: il2_support
+    purpose_ua: "IL-2 (aldesleukin) болюсна підтримка для розширення TIL клітин: 600 000 МО/кг IV q8-12h, до 6 доз, розпочато протягом 24 год після інфузії TIL"
+    purpose_en: "IL-2 (aldesleukin) bolus support for TIL expansion: 600,000 IU/kg IV q8-12h, max 6 doses, started within 24 h of TIL infusion"
+    duration: "up to 6 doses q8-12h, started within 24 h of TIL infusion"
+    timing_relative_to: "previous_phase_completion"
+    timing_offset_days: 0
+    optional: false
+    components: []  # aldesleukin (IL-2) details captured in purpose_ua/duration —
+                   # no DRUG-ALDESLEUKIN entity exists in the KB yet (PR4 scope).
+    sources:
+      - SRC-C14401-CHESNEY-2024
 
 cycle_length_days: null
 total_cycles: "Single TIL infusion (one-time treatment intent); ~6-week inpatient pathway including lymphodepletion + TIL + IL-2 + recovery"
@@ -17,8 +61,6 @@ toxicity_profile: severe
 premedication:
   - "Tumor procurement (~1.5 cm³ resection) → central manufacturing ~22 days"
   - "Bridging therapy permitted during manufacturing window if disease threatening"
-  - "Lymphodepletion: cyclophosphamide 60 mg/kg/day IV × 2 days, then fludarabine 25 mg/m²/day IV × 5 days"
-  - "Aldesleukin (IL-2) 600,000 IU/kg IV q8-12h, max 6 doses, started within 24 h of TIL infusion"
   - "G-CSF support starting D+1 post-TIL"
   - "Antimicrobial prophylaxis: PCP, HSV, fungal during prolonged neutropenia"
 

@@ -3,27 +3,53 @@ name: "R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) × 2-3 cycles �
 name_ua: "R-ICE × 2-3 циклів → ASCT в CR2 (рятувальна терапія рефрактерної Беркітта)"
 alternate_names: ["R-ICE Burkitt salvage", "R-ICE-ASCT"]
 
-components:
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 1 of each 14-day cycle × 2-3"
-    route: IV
-  - drug_id: DRUG-IFOSFAMIDE
-    dose: "5 g/m²"
-    schedule: "IV continuous 24h day 2; mesna co-administration"
-    route: IV
-  - drug_id: DRUG-CARBOPLATIN
-    dose: "AUC 5 (max 800 mg)"
-    schedule: "IV day 2"
-    route: IV
-  - drug_id: DRUG-ETOPOSIDE
-    dose: "100 mg/m²"
-    schedule: "IV days 1-3"
-    route: IV
-  - drug_id: DRUG-METHOTREXATE
-    dose: "12 mg IT"
-    schedule: "IT each cycle (CNS prophylaxis / treatment)"
-    route: IT
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: salvage_induction
+    purpose_ua: "сальвадж-індукція R-ICE × 2-3 цикли — іфосфамід + карбоплатин + етопозид з ритуксимабом для рефрактерної/рецидивної Беркітт-лімфоми перед ASCT"
+    purpose_en: "salvage induction R-ICE × 2-3 cycles — ifosfamide + carboplatin + etoposide with rituximab for r/r Burkitt before ASCT"
+    duration: "2-3 cycles × 14 days each"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-RITUXIMAB
+        dose: "375 mg/m²"
+        schedule: "IV day 1 of each 14-day cycle × 2-3"
+        route: IV
+      - drug_id: DRUG-IFOSFAMIDE
+        dose: "5 g/m²"
+        schedule: "IV continuous 24h day 2; mesna co-administration"
+        route: IV
+      - drug_id: DRUG-CARBOPLATIN
+        dose: "AUC 5 (max 800 mg)"
+        schedule: "IV day 2"
+        route: IV
+      - drug_id: DRUG-ETOPOSIDE
+        dose: "100 mg/m²"
+        schedule: "IV days 1-3"
+        route: IV
+      - drug_id: DRUG-METHOTREXATE
+        dose: "12 mg IT"
+        schedule: "IT each cycle (CNS prophylaxis / treatment)"
+        route: IT
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-BURKITT-2024
+  - name: consolidation_autosct
+    purpose_ua: "консолідація BEAM-кондиціонованою ASCT після PET-CR2 на сальвадж-індукцію (або алоТКМ при рефрактерності)"
+    purpose_en: "consolidation with BEAM-conditioned ASCT after PET-CR2 to salvage induction (or alloSCT for refractory cases)"
+    duration: "single transplant procedure (post PET-CT restaging)"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # BEAM-conditioned ASCT or alloSCT — institution-specific
+                   # conditioning; not enumerated as drug components here
+                   # (placeholder per plan-doc §5 Group C)
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-BURKITT-2024
 
 cycle_length_days: 14
 total_cycles: "2-3 cycles induction → restage by PET-CT → BEAM-conditioned ASCT in CR2 (fit transplant-eligible) OR alloSCT (refractory after R-ICE)"

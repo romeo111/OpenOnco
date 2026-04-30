@@ -3,27 +3,53 @@ name: "R-DHAP (Rituximab + Dexamethasone + HD-Cytarabine + Cisplatin) × 2-3 cyc
 name_ua: "R-DHAP × 2-3 циклів → ASCT/алоТКМ (рятувальна терапія Беркітта; не перехресно-резистентна до R-ICE)"
 alternate_names: ["R-DHAP Burkitt salvage"]
 
-components:
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 1 of each cycle"
-    route: IV
-  - drug_id: DRUG-DEXAMETHASONE
-    dose: "40 mg"
-    schedule: "IV/PO days 1-4 each cycle"
-    route: IV
-  - drug_id: DRUG-CYTARABINE
-    dose: "2 g/m² q12h × 2 doses"
-    schedule: "IV day 2 each cycle (HiDAC component)"
-    route: IV
-  - drug_id: DRUG-CISPLATIN
-    dose: "100 mg/m²"
-    schedule: "IV continuous 24h day 1 each cycle"
-    route: IV
-  - drug_id: DRUG-METHOTREXATE
-    dose: "12 mg IT"
-    schedule: "IT each cycle (CNS prophylaxis / treatment)"
-    route: IT
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: salvage_induction
+    purpose_ua: "сальвадж-індукція R-DHAP × 2-3 цикли — цисплатин + HiDAC + стероїд для рефрактерної/рецидивної Беркітт-лімфоми перед консолідацією трансплантацією"
+    purpose_en: "salvage induction R-DHAP × 2-3 cycles — cisplatin + HiDAC + steroid for r/r Burkitt before transplant consolidation"
+    duration: "2-3 cycles × 21 days each"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-RITUXIMAB
+        dose: "375 mg/m²"
+        schedule: "IV day 1 of each cycle"
+        route: IV
+      - drug_id: DRUG-DEXAMETHASONE
+        dose: "40 mg"
+        schedule: "IV/PO days 1-4 each cycle"
+        route: IV
+      - drug_id: DRUG-CYTARABINE
+        dose: "2 g/m² q12h × 2 doses"
+        schedule: "IV day 2 each cycle (HiDAC component)"
+        route: IV
+      - drug_id: DRUG-CISPLATIN
+        dose: "100 mg/m²"
+        schedule: "IV continuous 24h day 1 each cycle"
+        route: IV
+      - drug_id: DRUG-METHOTREXATE
+        dose: "12 mg IT"
+        schedule: "IT each cycle (CNS prophylaxis / treatment)"
+        route: IT
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-BURKITT-2024
+  - name: consolidation_autosct
+    purpose_ua: "консолідація аутологічною (або алогенною за рефрактерним перебігом) ТГСК після PET-CR2 на сальвадж-індукцію"
+    purpose_en: "consolidation with autologous (or allogeneic for refractory) HCT after PET-CR2 to salvage induction"
+    duration: "single transplant procedure (post PET-CT restaging)"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # ASCT (BEAM-conditioned) or alloSCT pathway —
+                   # institution-specific conditioning; not enumerated as
+                   # drug components here (placeholder per plan-doc §5 Group C)
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-BURKITT-2024
 
 cycle_length_days: 21
 total_cycles: "2-3 cycles induction → restage by PET-CT → ASCT in CR2 (fit transplant-eligible) OR alloSCT (refractory)"

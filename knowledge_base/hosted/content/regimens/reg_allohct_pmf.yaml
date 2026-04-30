@@ -5,11 +5,45 @@ alternate_names:
   - "AlloHCT PMF"
   - "Allogeneic SCT myelofibrosis"
 
-components:
-  - drug_id: DRUG-RUXOLITINIB
-    dose: "JAKi optimization 3-6 months pre-HCT (5-20 mg PO BID by baseline plt) to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
-    schedule: "Pre-HCT bridging; conditioning regimen institution-specific (myeloablative Bu/Flu or Bu/Cy for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
-    route: PO
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: bridging
+    purpose_ua: "JAKi-бриджинг 3-6 місяців перед ало-ТГСК — оптимізація рoxolitinib для зменшення селезінки + симптоматичного навантаження; taper за 5-7 днів до кондиціонування"
+    purpose_en: "JAKi bridging 3-6 months pre-HCT — ruxolitinib optimization to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
+    duration: "3-6 months pre-HCT"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -180
+    optional: false
+    components:
+      - drug_id: DRUG-RUXOLITINIB
+        dose: "JAKi optimization 3-6 months pre-HCT (5-20 mg PO BID by baseline plt) to reduce spleen volume + symptom burden; taper 5-7 days before conditioning"
+        schedule: "Pre-HCT bridging; conditioning regimen institution-specific (myeloablative Bu/Flu or Bu/Cy for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
+        route: PO
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-DIPSS-PLUS-GANGAT-2011
+  - name: conditioning_allohct
+    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Flu або Bu/Cy) для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних; інституційно специфічне"
+    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Flu or Bu/Cy) for fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
+    duration: "single conditioning regimen (institution-specific) before HCT"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # Conditioning regimen institution-specific; not enumerated
+                   # as drug components here (placeholder per plan-doc §5 Group D)
+    sources:
+      - SRC-NCCN-MPN-2025
+  - name: allohct
+    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція для PMF; donor: sibling > matched unrelated > haplo > cord"
+    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for PMF; donor priority: sibling > matched unrelated > haplo > cord"
+    duration: "single transplant procedure"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # AlloHCT — pathway placeholder, no drug components
+    sources:
+      - SRC-NCCN-MPN-2025
 
 cycle_length_days:
 total_cycles: "Single transplant procedure; consider post-HCT JAKi resumption (off-label) if early molecular relapse signal; donor lymphocyte infusion (DLI) for relapse"

@@ -6,19 +6,44 @@ alternate_names:
   - "Kymriah B-ALL"
   - "ELIANA regimen"
 
-components:
-  - drug_id: DRUG-FLUDARABINE
-    dose: "30 mg/m² IV daily × 4 days (lymphodepleting conditioning)"
-    schedule: "Days -4 to -1 before CAR-T infusion"
-    route: IV
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "500 mg/m² IV daily × 2 days (lymphodepleting conditioning)"
-    schedule: "Days -4 to -3 before CAR-T infusion"
-    route: IV
-  - drug_id: DRUG-TISAGENLECLEUCEL
-    dose: "Single IV infusion: 0.2 to 5.0 × 10⁶ CAR-positive viable T cells per kg for patients ≤50 kg; 0.1 to 2.5 × 10⁸ CAR-positive viable T cells (not weight-based) for patients >50 kg"
-    schedule: "Single infusion day 0 after lymphodepletion completion; no maintenance"
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (ELIANA-style: Flu × 4 days + Cy × 2 days)"
+    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (ELIANA-style: Flu × 4 days + Cy × 2 days)"
+    duration: "4 days, days -4 to -1"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -4
+    optional: false
+    components:
+      - drug_id: DRUG-FLUDARABINE
+        dose: "30 mg/m² IV daily × 4 days (lymphodepleting conditioning)"
+        schedule: "Days -4 to -1 before CAR-T infusion"
+        route: IV
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "500 mg/m² IV daily × 2 days (lymphodepleting conditioning)"
+        schedule: "Days -4 to -3 before CAR-T infusion"
+        route: IV
+    sources:
+      - SRC-ELIANA-MAUDE-2018
+      - SRC-NCCN-BCELL-2025
+  - name: main
+    purpose_ua: "основна CAR-T інфузія"
+    purpose_en: "main CAR-T infusion"
+    duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-TISAGENLECLEUCEL
+        dose: "Single IV infusion: 0.2 to 5.0 × 10⁶ CAR-positive viable T cells per kg for patients ≤50 kg; 0.1 to 2.5 × 10⁸ CAR-positive viable T cells (not weight-based) for patients >50 kg"
+        schedule: "Single infusion day 0 after lymphodepletion completion; no maintenance"
+        route: IV
+    sources:
+      - SRC-ELIANA-MAUDE-2018
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days:
 total_cycles: "Single infusion procedure; no maintenance; bridge chemo during 3-4 week manufacturing window for active disease"

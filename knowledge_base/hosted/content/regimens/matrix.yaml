@@ -3,11 +3,24 @@ name: "MATRix (HD-Methotrexate + HD-Cytarabine + Thiotepa + Rituximab), 4 cycles
 name_ua: "MATRix — HD-MTX + HD-Cytarabine + тіотепа + ритуксимаб, 4 цикли"
 alternate_names: ["MATRix", "IELSG32 induction"]
 
-components:
-  - {drug_id: DRUG-METHOTREXATE, dose: "3.5 g/m²", schedule: "IV 24h infusion day 1; leucovorin rescue from h+24", route: IV}
-  - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² BID", schedule: "IV days 2-3 (4 doses total)", route: IV}
-  - {drug_id: DRUG-THIOTEPA, dose: "30 mg/m²", schedule: "IV day 4", route: IV}
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV days -5, 0", route: IV}
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: induction
+    purpose_ua: "індукція MATRix × 4 цикли — HD-MTX + HD-Cytarabine + тіотепа + ритуксимаб для PCNSL; провадить до окремого регімену autoSCT-консолідації (BCNU + thiotepa)"
+    purpose_en: "MATRix induction × 4 cycles — HD-MTX + HD-Cytarabine + thiotepa + rituximab for PCNSL; followed by separate autoSCT consolidation regimen (BCNU + thiotepa)"
+    duration: "4 cycles × 21 days each"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - {drug_id: DRUG-METHOTREXATE, dose: "3.5 g/m²", schedule: "IV 24h infusion day 1; leucovorin rescue from h+24", route: IV}
+      - {drug_id: DRUG-CYTARABINE, dose: "2 g/m² BID", schedule: "IV days 2-3 (4 doses total)", route: IV}
+      - {drug_id: DRUG-THIOTEPA, dose: "30 mg/m²", schedule: "IV day 4", route: IV}
+      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV days -5, 0", route: IV}
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
 total_cycles: "4 cycles induction; followed by autoSCT consolidation (BCNU + thiotepa)"

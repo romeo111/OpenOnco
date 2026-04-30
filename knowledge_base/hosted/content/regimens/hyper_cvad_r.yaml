@@ -3,20 +3,47 @@ name: "Hyper-CVAD + Rituximab (CD20+) — alternating courses A/B, 8 cycles tota
 name_ua: "Hyper-CVAD + ритуксимаб (для CD20+) — чергуючі цикли A/B, 8 циклів"
 alternate_names: ["Hyper-CVAD-R", "MD Anderson protocol", "MDACC ALL"]
 
-components:
-  # Course A (cycles 1, 3, 5, 7) — Hyper-CVAD
-  - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "300 mg/m² q12h × 6 doses", schedule: "IV days 1-3 (Course A only)", route: IV}
-  - {drug_id: DRUG-VINCRISTINE, dose: "2 mg flat dose", schedule: "IV days 4 + 11 (Course A only)", route: IV}
-  - {drug_id: DRUG-DOXORUBICIN, dose: "50 mg/m²", schedule: "IV day 4 (Course A only)", route: IV}
-  - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 1-4 + 11-14 (Course A only)", route: PO}
-  # Course B (cycles 2, 4, 6, 8) — HD-MTX + HD-cytarabine
-  - {drug_id: DRUG-METHOTREXATE, dose: "1 g/m²", schedule: "IV 24h infusion day 1 (Course B only); leucovorin rescue", route: IV}
-  - {drug_id: DRUG-CYTARABINE, dose: "3 g/m² q12h × 4 doses", schedule: "IV days 2-3 (Course B only)", route: IV}
-  # Rituximab (cycles 1-4 для CD20+)
-  - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV days 1 + 11 (cycles 1-4 для CD20+ only)", route: IV}
-  # CNS prophylaxis (all cycles)
-  - {drug_id: DRUG-METHOTREXATE, dose: "12 mg IT", schedule: "IT day 2 each cycle", route: IT}
-  - {drug_id: DRUG-CYTARABINE, dose: "100 mg IT", schedule: "IT day 8 each cycle", route: IT}
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  # Course A (cycles 1, 3, 5, 7) — Hyper-CVAD: cyclophosphamide + vincristine + doxorubicin + dexamethasone
+  - name: alternating_block_a
+    purpose_ua: "блок A (Hyper-CVAD): cyclophosphamide + vincristine + doxorubicin + dexamethasone — цикли 1, 3, 5, 7; з ритуксимабом для CD20+ (цикли 1-4) та IT-CNS-профілактикою"
+    purpose_en: "block A (Hyper-CVAD): cyclophosphamide + vincristine + doxorubicin + dexamethasone — cycles 1, 3, 5, 7; with rituximab for CD20+ (cycles 1-4) and IT-CNS prophylaxis"
+    duration: "21 days per cycle × 4 A-cycles (cycles 1, 3, 5, 7)"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - {drug_id: DRUG-CYCLOPHOSPHAMIDE, dose: "300 mg/m² q12h × 6 doses", schedule: "IV days 1-3 (Course A only)", route: IV}
+      - {drug_id: DRUG-VINCRISTINE, dose: "2 mg flat dose", schedule: "IV days 4 + 11 (Course A only)", route: IV}
+      - {drug_id: DRUG-DOXORUBICIN, dose: "50 mg/m²", schedule: "IV day 4 (Course A only)", route: IV}
+      - {drug_id: DRUG-DEXAMETHASONE, dose: "40 mg", schedule: "PO/IV days 1-4 + 11-14 (Course A only)", route: PO}
+      # Rituximab — applies to A-cycles 1, 3 (within cycles 1-4 для CD20+)
+      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV days 1 + 11 (cycles 1-4 для CD20+ only)", route: IV}
+      # CNS prophylaxis (all cycles, including A)
+      - {drug_id: DRUG-METHOTREXATE, dose: "12 mg IT", schedule: "IT day 2 each cycle", route: IT}
+      - {drug_id: DRUG-CYTARABINE, dose: "100 mg IT", schedule: "IT day 8 each cycle", route: IT}
+    sources:
+      - SRC-NCCN-BCELL-2025
+  # Course B (cycles 2, 4, 6, 8) — MA: HD-MTX + HD-cytarabine
+  - name: alternating_block_b
+    purpose_ua: "блок B (MA): high-dose methotrexate + HD-cytarabine — цикли 2, 4, 6, 8; з ритуксимабом для CD20+ (цикли 1-4) та IT-CNS-профілактикою"
+    purpose_en: "block B (MA): high-dose methotrexate + HD-cytarabine — cycles 2, 4, 6, 8; with rituximab for CD20+ (cycles 1-4) and IT-CNS prophylaxis"
+    duration: "21 days per cycle × 4 B-cycles (cycles 2, 4, 6, 8)"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components:
+      - {drug_id: DRUG-METHOTREXATE, dose: "1 g/m²", schedule: "IV 24h infusion day 1 (Course B only); leucovorin rescue", route: IV}
+      - {drug_id: DRUG-CYTARABINE, dose: "3 g/m² q12h × 4 doses", schedule: "IV days 2-3 (Course B only)", route: IV}
+      # Rituximab — applies to B-cycles 2, 4 (within cycles 1-4 для CD20+)
+      - {drug_id: DRUG-RITUXIMAB, dose: "375 mg/m²", schedule: "IV days 1 + 11 (cycles 1-4 для CD20+ only)", route: IV}
+      # CNS prophylaxis (all cycles, including B)
+      - {drug_id: DRUG-METHOTREXATE, dose: "12 mg IT", schedule: "IT day 2 each cycle", route: IT}
+      - {drug_id: DRUG-CYTARABINE, dose: "100 mg IT", schedule: "IT day 8 each cycle", route: IT}
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
 total_cycles: "8 alternating cycles (A/B/A/B/A/B/A/B); maintenance POMP × 30 months Ph-, або continuous TKI Ph+"

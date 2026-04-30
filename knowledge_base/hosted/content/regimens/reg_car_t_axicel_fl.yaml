@@ -3,22 +3,48 @@ name: "Axicabtagene ciloleucel (axi-cel) CAR-T for r/r FL — single infusion af
 name_ua: "Аксікабтаген цилолейцел (axi-cel) CAR-T для рефрактерної ФЛ — одна інфузія після лімфодеплеції (ZUMA-5)"
 alternate_names: ["Axi-cel FL", "Yescarta FL", "ZUMA-5 regimen"]
 
-components:
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "500 mg/m²/day"
-    schedule: "IV days -5, -4, -3 (lymphodepletion, with fludarabine 30 mg/m²/day same days)"
-    route: IV
-  - drug_id: DRUG-AXICABTAGENE-CILOLEUCEL
-    dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
-    schedule: "Single IV infusion day 0, after lymphodepletion completed"
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин"
+    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment"
+    duration: "3 days, days -5 to -3"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -5
+    optional: false
+    components:
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "500 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+      - drug_id: DRUG-FLUDARABINE
+        dose: "30 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - name: main
+    purpose_ua: "основна CAR-T інфузія"
+    purpose_en: "main CAR-T infusion"
+    duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-AXICABTAGENE-CILOLEUCEL
+        dose: "Target 2 × 10^6 anti-CD19 CAR+ T-cells/kg (max 2 × 10^8 total)"
+        schedule: "Single IV infusion day 0, after lymphodepletion completed"
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days:
 total_cycles: "Single infusion (one-time therapy)"
 toxicity_profile: severe
 
 premedication:
-  - "Lymphodepletion: fludarabine 30 mg/m² + cyclophosphamide 500 mg/m² IV days -5 to -3"
   - "Acetaminophen 650 mg PO + diphenhydramine 12.5 mg IV pre-infusion"
   - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
   - "Tocilizumab MUST be on-site (≥2 doses available) BEFORE infusion — for emergency CRS rescue"

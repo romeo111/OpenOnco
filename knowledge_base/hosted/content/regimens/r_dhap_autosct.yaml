@@ -3,35 +3,59 @@ name: "Intensive 1L MCL: alternating R-CHOP / R-DHAP × 6 cycles + autoSCT conso
 name_ua: "Інтенсивна 1L MCL: альтернація R-CHOP / R-DHAP × 6 циклів + autoSCT + R-підтримка"
 alternate_names: ["Nordic regimen", "MCL Younger", "R-DHAP/R-CHOP alternating"]
 
-components:
-  - drug_id: DRUG-RITUXIMAB
-    dose: "375 mg/m²"
-    schedule: "IV day 1 each cycle (R-CHOP + R-DHAP)"
-    route: IV
-  - drug_id: DRUG-CYCLOPHOSPHAMIDE
-    dose: "750 mg/m²"
-    schedule: "IV day 1 of R-CHOP cycles only"
-    route: IV
-  - drug_id: DRUG-DOXORUBICIN
-    dose: "50 mg/m²"
-    schedule: "IV day 1 of R-CHOP cycles only"
-    route: IV
-  - drug_id: DRUG-VINCRISTINE
-    dose: "1.4 mg/m² (cap 2 mg)"
-    schedule: "IV day 1 of R-CHOP cycles only"
-    route: IV
-  - drug_id: DRUG-PREDNISONE
-    dose: "100 mg"
-    schedule: "PO days 1-5 of R-CHOP cycles"
-    route: PO
-  - drug_id: DRUG-DEXAMETHASONE
-    dose: "40 mg"
-    schedule: "IV days 1-4 of R-DHAP cycles only"
-    route: IV
-  - drug_id: DRUG-CYTARABINE
-    dose: "2 g/m² q12h"
-    schedule: "IV day 2 of R-DHAP cycles (HiDAC component)"
-    route: IV
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: induction
+    purpose_ua: "індукція: 6 чергуючих циклів R-CHOP та R-DHAP (3 + 3); анти-CD20 з anthracycline-вмісним та HiDAC-вмісним блоками для максимальної ремісії перед autoSCT"
+    purpose_en: "induction: 6 alternating cycles R-CHOP and R-DHAP (3 + 3); anti-CD20 with anthracycline-containing and HiDAC-containing blocks for maximum remission before autoSCT"
+    duration: "~18 weeks (6 × 21-day cycles)"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-RITUXIMAB
+        dose: "375 mg/m²"
+        schedule: "IV day 1 each cycle (R-CHOP + R-DHAP)"
+        route: IV
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "750 mg/m²"
+        schedule: "IV day 1 of R-CHOP cycles only"
+        route: IV
+      - drug_id: DRUG-DOXORUBICIN
+        dose: "50 mg/m²"
+        schedule: "IV day 1 of R-CHOP cycles only"
+        route: IV
+      - drug_id: DRUG-VINCRISTINE
+        dose: "1.4 mg/m² (cap 2 mg)"
+        schedule: "IV day 1 of R-CHOP cycles only"
+        route: IV
+      - drug_id: DRUG-PREDNISONE
+        dose: "100 mg"
+        schedule: "PO days 1-5 of R-CHOP cycles"
+        route: PO
+      - drug_id: DRUG-DEXAMETHASONE
+        dose: "40 mg"
+        schedule: "IV days 1-4 of R-DHAP cycles only"
+        route: IV
+      - drug_id: DRUG-CYTARABINE
+        dose: "2 g/m² q12h"
+        schedule: "IV day 2 of R-DHAP cycles (HiDAC component)"
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - name: consolidation_autosct
+    purpose_ua: "консолідація аутологічною ТГСК після відповіді на індукцію (BEAM/CBV кондиціонування)"
+    purpose_en: "consolidation with autologous HCT after response to induction (BEAM/CBV conditioning)"
+    duration: "single transplant procedure"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # BEAM/CBV conditioning + autoSCT — institution-specific;
+                   # not enumerated as drug components in this regimen entity
+                   # (consolidation pathway placeholder per plan-doc §5 Group C)
+    sources:
+      - SRC-NCCN-BCELL-2025
 
 cycle_length_days: 21
 total_cycles: "6 alternating (3 R-CHOP + 3 R-DHAP), then BEAM/CBV-conditioned autoSCT, then R maintenance every 2 mo × 3 years"

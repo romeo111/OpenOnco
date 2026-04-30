@@ -5,11 +5,45 @@ alternate_names:
   - "AlloHCT MDS-HR"
   - "Allogeneic SCT MDS"
 
-components:
-  - drug_id: DRUG-AZACITIDINE
-    dose: "Pre-HCT cytoreduction: azacitidine 75 mg/m² SC days 1-7 q28d × 4-6 cycles to reduce blast burden + bridge to HCT"
-    schedule: "Bridging until donor identified + transplant slot available; conditioning regimen institution-specific (myeloablative Bu/Cy or Bu/Flu for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
-    route: SC
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: bridging
+    purpose_ua: "HMA-бриджинг 4-6 циклів азацитидину перед ало-ТГСК — зменшити навантаження бластами + bridge до пошуку донора"
+    purpose_en: "HMA bridging 4-6 cycles of azacitidine pre-HCT — reduce blast burden + bridge to donor search"
+    duration: "4-6 cycles × 28 days each (until donor identified + transplant slot available)"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -120
+    optional: false
+    components:
+      - drug_id: DRUG-AZACITIDINE
+        dose: "Pre-HCT cytoreduction: azacitidine 75 mg/m² SC days 1-7 q28d × 4-6 cycles to reduce blast burden + bridge to HCT"
+        schedule: "Bridging until donor identified + transplant slot available; conditioning regimen institution-specific (myeloablative Bu/Cy or Bu/Flu for fit younger; reduced-intensity Flu/Mel or Flu/Bu for older / comorbid)"
+        route: SC
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ESMO-MDS-2021
+  - name: conditioning_allohct
+    purpose_ua: "кондиціонування перед ало-ТГСК — мієлоаблятивне (Bu/Cy або Bu/Flu) для фіт-молодших; редукованої інтенсивності (Flu/Mel або Flu/Bu) для старших/коморбідних; інституційно специфічне"
+    purpose_en: "conditioning before allo-HCT — myeloablative (Bu/Cy or Bu/Flu) for fit younger; reduced-intensity (Flu/Mel or Flu/Bu) for older/comorbid; institution-specific"
+    duration: "single conditioning regimen (institution-specific) before HCT"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # Conditioning regimen institution-specific; not enumerated
+                   # as drug components here (placeholder per plan-doc §5 Group D)
+    sources:
+      - SRC-NCCN-AML-2025
+  - name: allohct
+    purpose_ua: "алогенна трансплантація гемопоетичних клітин (ало-ТГСК) — єдина куративна опція для MDS-HR; пост-ТГСК підтримка азацитидином опціонально × 12 місяців"
+    purpose_en: "allogeneic hematopoietic cell transplant (allo-HCT) — only curative option for MDS-HR; post-HCT azacitidine maintenance optional × 12 months"
+    duration: "single transplant procedure"
+    timing_relative_to: "previous_phase_completion"
+    optional: false
+    components: []  # AlloHCT — pathway placeholder, no drug components
+    sources:
+      - SRC-NCCN-AML-2025
 
 cycle_length_days:
 total_cycles: "Single transplant procedure; HMA bridging 4-6 cycles pre-HCT; post-HCT azacitidine maintenance optional ×12 months for high-risk subset"
