@@ -1,0 +1,53 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-007
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose primary URL did not return
+    2xx and (where applicable) DOI fallback also failed. NEJM 403s are publisher
+    bot-blocking (real browser would succeed); NCBI/PubMed 403 likely transient
+    rate-limit + bot heuristics. CALGB-10801 stub has no URL. current_as_of NOT
+    bumped on any of these per spec. Maintainer browser-verify before next action.'
+rows:
+- id: SRC-CALGB-10801
+  url: null
+  status_code: null
+  url_status: dead
+  url_replacement_needed: true
+  current_as_of_existing: null
+  notes: 'Auto-stub has no URL field. Suggested PubMed search: "CALGB 10801 KIT-mutant
+    AML" (the trial reference appears to correspond to ClinicalTrials.gov NCT00006363
+    — CALGB 10801 / Larson et al. Daunorubicin/cytarabine ± gemtuzumab in AML;
+    maintainer should verify exact citation and add canonical URL or PMID).'
+- id: SRC-BOLERO2-BASELGA-2012
+  url: https://www.nejm.org/doi/full/10.1056/NEJMoa1109653
+  status_code: 403
+  url_status: blocked_by_bot_protection
+  url_replacement_needed: false
+  current_as_of_existing: '2012-02-09'
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1109653
+  doi_fallback_status_code: 403
+  notes: 'NEJM full-text 403 for OpenOnco-recency-bot UA; DOI fallback redirects
+    to same NEJM URL also 403. Bot-protection — content unchanged in browser.
+    current_as_of NOT bumped per spec.'
+- id: SRC-POLLUX-DIMOPOULOS-2016
+  url: https://pubmed.ncbi.nlm.nih.gov/27705273
+  status_code: 403
+  url_status: blocked_by_bot_protection
+  url_replacement_needed: false
+  current_as_of_existing: '2016-10-06'
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1607751
+  doi_fallback_status_code: 403
+  notes: 'PubMed landing 403 for OpenOnco-recency-bot UA (likely NCBI bot heuristics);
+    DOI fallback redirects to NEJM, also 403. current_as_of NOT bumped per spec.'
+- id: SRC-NAVIGATE-DRILON-2018
+  url: https://pubmed.ncbi.nlm.nih.gov/29466156/
+  status_code: 403
+  url_status: blocked_by_bot_protection
+  url_replacement_needed: false
+  current_as_of_existing: '2018-02-22'
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1714448
+  doi_fallback_status_code: 403
+  notes: 'PubMed landing 403 for OpenOnco-recency-bot UA; DOI fallback redirects
+    to NEJM, also 403. current_as_of NOT bumped per spec.'
