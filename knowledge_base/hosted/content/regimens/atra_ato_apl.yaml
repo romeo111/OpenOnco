@@ -63,6 +63,66 @@ sources:
   - SRC-ELN-APL-2019
   - SRC-APL0406-LOCOCO-2013
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Differentiation syndrome (DS) is the signature ER event — sudden
+# fluid retention + dyspnea + fever in the first 21 days of induction.
+# QT prolongation from ATO + ATRA-related headache/pseudotumor are the
+# other key axes. STUB pending §6.1 two-Co-Lead signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль на тлі ATRA"
+    action_ua: "Поширений у перший тиждень — занотуйте інтенсивність, обговоріть на візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Сухість шкіри або губ, лусковий висип"
+    action_ua: "Очікувано від ATRA — використовуйте зволожувач, занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Week 2+"
+    sources:
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Помірна нудота протягом перших днів"
+    action_ua: "Приймайте призначені протиблювотні; занотуйте, якщо нудота утруднює прийом їжі"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Швидкий набір ваги (≥2 кг за добу), набряки гомілок або обличчя"
+    action_ua: "Подзвоніть у клініку того ж дня — це може бути ранній синдром диференціювання, що потребує негайного початку дексаметазону"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21 (induction)"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Лихоманка вище 38°C — особливо в перші 3 тижні"
+    action_ua: "Подзвоніть у клініку того ж дня — лихоманка може свідчити про синдром диференціювання або інфекцію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Незвичні синці, кровотечі ясен або носа, що довго не спиняються"
+    action_ua: "Подзвоніть у клініку того ж дня — на ранніх тижнях APL ризик кровотеч високий, потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-ELN-APL-2019
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова тяжка задишка, біль у грудях, неможливість лежати рівно"
+    action_ua: "Звертайтесь у лікарню негайно — це може бути тяжкий синдром диференціювання, що потребує невідкладної допомоги"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Раптова втрата свідомості, серцебиття, що відчувається ненормально швидким або повільним"
+    action_ua: "Звертайтесь у лікарню негайно — арсен може подовжувати інтервал QT, ризик небезпечної аритмії"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for low/intermediate-risk APL (Sanz WBC ≤10). APL0406:

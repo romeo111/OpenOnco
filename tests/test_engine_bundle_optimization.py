@@ -61,15 +61,17 @@ def test_core_and_index_and_disease_dir_present(bundle_out: dict):
 
 
 def test_core_bundle_under_size_ceiling(bundle_out: dict):
-    """Core bundle target: ≤2.5 MB compressed today (~2.25 MB observed
-    2026-04-27 after CIViC pivot + solid-tumor expansion), with eventual
-    goal ≤1.5 MB once more disease-scoped content (drugs, regimens,
-    indications) is moved out of core into per-disease modules. Ceiling
-    sized for headroom; tighten as the split matures."""
+    """Core bundle target: ≤2.6 MB compressed today (~2.51 MB observed
+    2026-05-01 after Wave 1 patient-watchpoints authoring across 11
+    anchor regimens — adds ~12 KB compressed of clinical content into
+    shared regimen YAMLs). Eventual goal ≤1.5 MB once more disease-
+    scoped content (drugs, regimens, indications) is moved out of core
+    into per-disease modules. Ceiling sized for headroom; tighten as
+    the split matures."""
     core_zip = Path(bundle_out["_dir"]) / "openonco-engine-core.zip"
     size = core_zip.stat().st_size
-    assert size < 2_500_000, (
-        f"core bundle exceeds 2.5MB compressed: {size} bytes — split is "
+    assert size < 2_600_000, (
+        f"core bundle exceeds 2.6MB compressed: {size} bytes — split is "
         "leaking disease-scoped content into core or shared content has bloated"
     )
 
