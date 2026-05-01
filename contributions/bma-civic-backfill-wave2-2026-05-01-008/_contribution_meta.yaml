@@ -1,0 +1,22 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-008
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 BMA-CIViC backfill — closes #189. Local CIViC snapshot
+    2026-04-25. Conservative matching: gene match + disease-token overlap required;
+    additional variant-aware filter applied where alteration class is well-defined
+    (e.g. BMA-HER2-AMP-CRC restricted to ERBB2 Amplification, excluding ERBB2 point
+    mutations and Mutation-class molecular profiles). 3 of 5 manifest IDs received
+    CIViC evidence upserts (BMA-BCL2-REARRANGEMENT-FL, BMA-HER2-AMP-CRC,
+    BMA-MLH1-SOMATIC-ENDOMETRIAL); 2 (MSH6 prostate, PMS2 ovarian) had no
+    disease-overlapping CIViC evidence and are recorded in audit-report.yaml.'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'Per-BMA upsert touches only: evidence_sources (replaces
+    existing list), actionability_review_required (kept true). All other fields
+    untouched. Maintainer adjudicates direction/significance/level interpretation
+    plus variant-fit fine-tuning (e.g. BCL2 Mutation/F104I evidence is technically
+    point-mutation evidence and the BMA scopes t(14;18) IGH/BCL2 rearrangement —
+    flagged in per-sidecar notes_for_reviewer for Co-Lead adjudication).'
