@@ -1,0 +1,99 @@
+id: REG-INOTUZUMAB-BALL-ADULT-RR
+name: "Inotuzumab ozogamicin monotherapy (adult R/R B-ALL, CD22+)"
+name_ua: "Інотузумаб озогаміцин моно (дорослі рецидив/рефрактерний B-ALL, CD22+)"
+alternate_names:
+  - "Besponsa R/R B-ALL"
+  - "INO-VATE ALL regimen"
+  - "InO"
+
+components:
+  - drug_id: DRUG-INOTUZUMAB-OZOGAMICIN
+    dose: "Cycle 1: 0.8 mg/m² IV day 1, then 0.5 mg/m² IV days 8 and 15 (total 1.8 mg/m²). Subsequent cycles in CR/CRi: 0.5 mg/m² IV days 1, 8, 15 (total 1.5 mg/m²) per 28-day cycle."
+    schedule: "Day 1, 8, 15 of 21-day cycle 1; day 1, 8, 15 of 28-day cycles 2+. Up to 2 cycles for non-responders, up to 6 cycles for responders (or up to 3 if proceeding to allogeneic HSCT)."
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Up to 6 (responders) or up to 3 (responders proceeding to allogeneic HSCT); up to 2 (non-responders, then discontinue)"
+toxicity_profile: severe
+
+premedication:
+  - "Confirm CD22 expression on tumor (flow cytometry / IHC, ≥1% blasts CD22+)"
+  - "Cytoreduction with hydroxyurea / steroids if peripheral blast count >10,000/µL — reduce TLS + VOD/SOS risk"
+  - "Pre-medication: corticosteroid + antipyretic + antihistamine 1 hour before each infusion (infusion reactions ~10%)"
+  - "Baseline LFTs + bilirubin — VOD/SOS risk monitoring"
+  - "Document allogeneic HSCT plan early — limit to ≤2 cycles before HSCT to reduce VOD/SOS risk"
+  - "Avoid concurrent dual-alkylator conditioning (busulfan + melphalan + thiotepa) — VOD/SOS risk multiplier"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hepatic veno-occlusive disease / sinusoidal obstruction syndrome (VOD/SOS) — any grade"
+    modification: "Permanently discontinue inotuzumab; supportive care + defibrotide if severe; hepatology consult"
+    rationale: "INO-VATE — VOD/SOS ~11% overall, ~22% post-HSCT; BOXED WARNING; strongest predictor = dual-alkylator conditioning + ≥3 prior inotuzumab cycles"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+      - SRC-NCCN-ALL-2025
+  - condition: "Total bilirubin >1.5× ULN OR AST/ALT >2.5× ULN"
+    modification: "Hold; resume once recovered to ≤1.5× / ≤2.5× ULN; permanently discontinue if not recovered within 7 days OR recurrent"
+    rationale: "Hepatotoxicity precedes VOD/SOS; trend matters more than single value"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "Grade 4 thrombocytopenia (platelets <25 × 10⁹/L) sustained ≥7 days"
+    modification: "Hold next dose; resume at same dose once platelets ≥50; reduce to 0.4 mg/m² for that infusion if recurrent"
+    rationale: "INO-VATE — Grade ≥3 thrombocytopenia ~37%; baseline marrow disease confounds attribution"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "Grade 4 neutropenia + febrile neutropenia"
+    modification: "Hold; broad-spectrum antibiotics + G-CSF; resume at same dose once ANC ≥1.0; consider dose reduction to 0.4 mg/m² if recurrent"
+    rationale: "Marrow suppression + immunosuppression"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "QT prolongation (QTcF >500 ms or change >60 ms)"
+    modification: "Hold; correct electrolytes (K, Mg); discontinue concurrent QT-prolonging drugs; resume once QTcF <480 ms"
+    rationale: "Class effect; baseline + periodic ECG required"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "Allogeneic HSCT planned"
+    modification: "Limit to ≤2 cycles inotuzumab pre-HSCT; avoid dual-alkylator conditioning (use single-alkylator + TBI instead)"
+    rationale: "INO-VATE post-HSCT VOD/SOS 22% with dual alkylator vs ~5% with single alkylator + TBI"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Inotuzumab ozogamicin (Besponsa) registered in Ukraine. NSZU reimbursement is partial / case-by-case for adult R/R B-ALL — many patients face partial out-of-pocket cost. Available at specialized hematology centers with allo-HSCT capability (Kyiv NCSHC, Lviv, Dnipro)."
+
+sources:
+  - SRC-INOVATE-KANTARJIAN-2016
+  - SRC-NCCN-ALL-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  CD22-directed antibody-drug conjugate (calicheamicin payload) for adult
+  R/R Ph-negative or Ph-positive B-ALL. INO-VATE ALL (Phase III, n=326,
+  inotuzumab vs investigator's-choice intensive chemo, R/R B-ALL) —
+  CR/CRi 80.7% vs 29.4% (p<0.001); MRD-negative CR 78.4%; mPFS 5.0 vs 1.8
+  mo; mOS 7.7 vs 6.7 mo (HR 0.77, p=0.04). Bridge to allo-HSCT — 41% vs
+  11% transitioned. BOXED WARNING: hepatotoxicity / VOD/SOS, especially
+  post-HSCT with dual-alkylator conditioning. Limit to ≤2 cycles pre-HSCT.
+  Combination strategies (mini-hyper-CVD + InO ± blinatumomab — Jabbour /
+  MD Anderson) are separate regimen entities. Pending Co-Lead sign-off.
+notes_ua: >
+  CD22-спрямований антитіло-лікарський кон'югат (каліхеаміциновий payload)
+  для дорослих рецидиву/рефрактерного Ph-негативного або Ph-позитивного
+  B-ALL. INO-VATE ALL (Фаза III, n=326, інотузумаб проти інтенсивної
+  хіміотерапії за вибором дослідника, Р/Р B-ALL) — CR/CRi 80.7% проти
+  29.4% (p<0.001); MRD-негативна CR 78.4%; mPFS 5.0 проти 1.8 міс;
+  mOS 7.7 проти 6.7 міс (HR 0.77, p=0.04). Bridge до алло-ТГСК — 41%
+  проти 11% перейшли. ЗАСТЕРЕЖЕННЯ В РАМЦІ: гепатотоксичність / ВОЗ/СОС,
+  особливо після ТГСК з режимом подвійного алкілятора. Обмежити до ≤2
+  циклів перед ТГСК. Комбіновані стратегії (mini-hyper-CVD + InO ±
+  блінатумомаб — Jabbour / MD Anderson) є окремими сутностями схем.
+  Очікує підпис клінічного Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
