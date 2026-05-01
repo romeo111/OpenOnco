@@ -199,6 +199,8 @@ def test_patient_html_has_required_sections(patient_html: str):
       * `<div class="patient-report">` — root wrapper
       * `<section class="what-was-found">` — molecular findings
       * `<section class="what-now">` — drug recommendations
+      * `<section class="why-this-plan">` — Phase 3 rationale
+      * `<section class="between-visits">` — Phase 4 between-visit watchpoints
       * `<section class="emergency-signals">` — emergency banner
       * `<div class="ask-doctor"…>` — question list
       * `<footer class="patient-disclaimer">` — disclaimer
@@ -207,6 +209,8 @@ def test_patient_html_has_required_sections(patient_html: str):
         '<div class="patient-report">',
         '<section class="what-was-found">',
         '<section class="what-now">',
+        '<section class="why-this-plan">',
+        '<section class="between-visits">',
         '<section class="emergency-signals">',
         '<div class="ask-doctor"',
         '<footer class="patient-disclaimer">',
@@ -779,3 +783,278 @@ def test_information_parity_smoke():
             f"Regimen {rid!r} missing from patient bundle "
             f"(present in clinician: {rid in clinician_html})"
         )
+
+
+# ── Section J — Phase 4: between-visit watchpoints ───────────────────
+
+
+def test_between_visits_section_renders_fallback_when_unauthored():
+    """A regimen with no `between_visit_watchpoints` produces the
+    fallback string per PATIENT_MODE_SPEC §3.4 — never fabricates."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    if result.plan is None or not result.plan.tracks:
+        pytest.skip("Synthetic mCRC plan should produce at least 1 track")
+    # Defensive: clear any watchpoints that might leak from KB.
+    for t in result.plan.tracks:
+        if isinstance(t.regimen_data, dict):
+            t.regimen_data["between_visit_watchpoints"] = []
+    html = render_plan_html(result, mode="patient")
+    assert '<section class="between-visits">' in html
+    visible = _visible_text(html)
+    assert "ще не узгоджено клінічною командою" in visible
+
+
+def test_between_visits_section_renders_authored_watchpoints():
+    """When watchpoints are present they group by urgency tier and the
+    headings appear in the rendered section."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    if result.plan is None or not result.plan.tracks:
+        pytest.skip("Synthetic mCRC plan should produce at least 1 track")
+    # Inject fixture watchpoints into the first track's regimen_data.
+    t = result.plan.tracks[0]
+    if not isinstance(t.regimen_data, dict):
+        pytest.skip("Track has no regimen_data dict to inject into")
+    t.regimen_data["between_visit_watchpoints"] = [
+        {
+            "trigger_ua": "Сильна слабкість на 7-10 день циклу",
+            "action_ua": "Це нормально для цього курсу — занотуйте і обговоріть на наступному візиті",
+            "urgency": "log_at_next_visit",
+            "cycle_day_window": "Day 7-14",
+        },
+        {
+            "trigger_ua": "Лихоманка вище 38°C",
+            "action_ua": "Подзвоніть у клініку того ж дня — нейтрофіли можуть бути низькі",
+            "urgency": "call_clinic_same_day",
+        },
+    ]
+    html = render_plan_html(result, mode="patient")
+    visible = _visible_text(html)
+    # Both urgency-group headings present
+    assert "Занотуйте і обговоріть на наступному візиті" in visible
+    assert "Подзвоніть у клініку того ж дня" in visible
+    # Both trigger texts surface
+    assert "Сильна слабкість на 7-10 день циклу" in visible
+    assert "Лихоманка вище 38°C" in visible
+    # Cycle window rendered for the first watchpoint
+    assert "Day 7-14" in visible
+    # CSS modifier classes present
+    assert 'bv-urgency-group bv-log' in html
+    assert 'bv-urgency-group bv-call' in html
+
+
+def test_between_visits_dedupe_with_emergency_banner():
+    """An `er_now` watchpoint whose `trigger_ua` first-sentence matches
+    an emergency RF gets dropped from `between-visits` (it surfaces in
+    the emergency banner instead). Per PATIENT_MODE_SPEC §3.4."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    if result.plan is None or not result.plan.tracks:
+        pytest.skip("Synthetic mCRC plan should produce at least 1 track")
+    # Inject a critical RF whose first-sentence matches a watchpoint.
+    rf_text = "Тяжка фебрильна нейтропенія потребує негайного звернення"
+    result.kb_resolved.setdefault("red_flags", {})["RF-DEDUPE-TEST"] = {
+        "id": "RF-DEDUPE-TEST",
+        "severity": "critical",
+        "definition_ua": rf_text + ". Подальше — деталі.",
+    }
+    # Watchpoint with matching trigger should be dropped, non-matching kept.
+    t = result.plan.tracks[0]
+    if not isinstance(t.regimen_data, dict):
+        pytest.skip("Track has no regimen_data dict to inject into")
+    t.regimen_data["between_visit_watchpoints"] = [
+        {
+            "trigger_ua": rf_text,  # exactly the same first sentence
+            "action_ua": "Викличте швидку",
+            "urgency": "er_now",
+        },
+        {
+            "trigger_ua": "Поява нової задишки",  # not in emergency list
+            "action_ua": "Викличте швидку, не чекайте візиту",
+            "urgency": "er_now",
+        },
+    ]
+    html = render_plan_html(result, mode="patient")
+    bv_match = re.search(
+        r'<section class="between-visits">.*?</section>',
+        html, flags=re.DOTALL,
+    )
+    assert bv_match
+    bv_block = bv_match.group(0)
+    # Non-matching `er_now` item still in between-visits.
+    assert "Поява нової задишки" in bv_block
+    # Matching item dropped from between-visits (still allowed elsewhere).
+    assert rf_text not in bv_block
+    # But does surface in the emergency banner.
+    em_match = re.search(
+        r'<section class="emergency-signals">.*?</section>',
+        html, flags=re.DOTALL,
+    )
+    assert em_match and rf_text in em_match.group(0)
+
+
+def test_between_visits_per_track_when_two_tracks():
+    """Two-track plans render a `bv-track` block per track, each with
+    its own dedicated fallback-or-watchpoints area."""
+    result = _build_hcv_mzl_two_track_plan()
+    if result.plan is None or len(result.plan.tracks) < 2:
+        pytest.skip("Reference HCV-MZL plan should produce ≥2 tracks")
+    html = render_plan_html(result, mode="patient")
+    bv_match = re.search(
+        r'<section class="between-visits">.*?</section>',
+        html, flags=re.DOTALL,
+    )
+    assert bv_match
+    bv_block = bv_match.group(0)
+    # Two `bv-track` cards (one per track).
+    track_card_count = bv_block.count('class="bv-track"')
+    assert track_card_count == 2, (
+        f"Expected 2 bv-track cards for a 2-track plan, got {track_card_count}"
+    )
+    # Both Cyrillic prefixes present.
+    visible = _visible_text(bv_block)
+    assert "А)" in visible and "Б)" in visible
+
+
+def test_between_visits_schema_rejects_bad_urgency():
+    """Pydantic Literal type on `urgency` blocks bogus values at load
+    time so the renderer never has to defend against typos."""
+    from knowledge_base.schemas.regimen import Regimen
+    from pydantic import ValidationError
+
+    with pytest.raises(ValidationError):
+        Regimen(
+            id="REG-BAD", name="Bad", components=[{"drug_id": "D"}],
+            between_visit_watchpoints=[
+                {"trigger_ua": "x", "action_ua": "y", "urgency": "asap_now"},
+            ],
+        )
+
+
+def test_between_visits_schema_accepts_three_tier_set():
+    """All three urgency tiers parse without error."""
+    from knowledge_base.schemas.regimen import Regimen
+
+    r = Regimen(
+        id="REG-OK", name="OK", components=[{"drug_id": "D"}],
+        between_visit_watchpoints=[
+            {"trigger_ua": "a1", "action_ua": "b1", "urgency": "log_at_next_visit"},
+            {"trigger_ua": "a2", "action_ua": "b2", "urgency": "call_clinic_same_day"},
+            {"trigger_ua": "a3", "action_ua": "b3", "urgency": "er_now"},
+        ],
+    )
+    urgencies = [w.urgency for w in r.between_visit_watchpoints]
+    assert urgencies == ["log_at_next_visit", "call_clinic_same_day", "er_now"]
+
+
+# ── Section K — Phase 5: Latin/abbreviation render gate ──────────────
+
+
+def _flag_unallowed_acronyms(visible_text: str) -> list[str]:
+    """Return uppercase abbreviation tokens in `visible_text` that are
+    NOT on the patient-mode allowlist. Tokens matching the trial-prefix
+    rule (KEYNOTE-189, etc.) pass."""
+    from knowledge_base.engine._patient_vocabulary import is_allowlisted_acronym
+    pattern = re.compile(r"\b[A-Z]{2,}[a-z]?(?:-[A-Z0-9]+)*\b")
+    found = set(pattern.findall(visible_text))
+    return sorted(t for t in found if not is_allowlisted_acronym(t))
+
+
+def _flag_unallowed_latin_words(visible_text: str) -> list[str]:
+    """Return Latin lowercase ≥4-char tokens in `visible_text` that are
+    NOT on the patient-mode allowlist."""
+    from knowledge_base.engine._patient_vocabulary import is_allowlisted_latin_word
+    pattern = re.compile(r"\b[a-z]{4,}\b")
+    found = set(pattern.findall(visible_text))
+    return sorted(t for t in found if not is_allowlisted_latin_word(t))
+
+
+# Anchor cases the gates run against. Each tuple is (label, fixture-builder).
+# Adding a fixture here surfaces any new Latin token introduced by KB shifts
+# or render-layer changes — the failure message points at the fixture.
+_GATE_CASES = [
+    ("synthetic mCRC + BRAF V600E", _build_synthetic_braf_v600e_mcrc_plan),
+    ("reference HCV-MZL two-track", _build_hcv_mzl_two_track_plan),
+]
+
+
+@pytest.mark.parametrize("label,builder", _GATE_CASES, ids=lambda x: getattr(x, "__name__", str(x)))
+def test_patient_html_no_latin_abbreviations_in_visible_text(label, builder):
+    """Visible patient body MUST NOT contain uppercase abbreviations
+    outside the allowlist. PATIENT_MODE_SPEC §5.4."""
+    if not callable(builder):
+        return
+    result = builder()
+    if result.plan is None:
+        pytest.skip(f"{label!r}: builder produced no plan")
+    html = render_plan_html(result, mode="patient")
+    visible = _visible_text(html)
+    leaks = _flag_unallowed_acronyms(visible)
+    assert not leaks, (
+        f"[{label}] Unallowed uppercase abbreviations leaked into the patient body:\n"
+        f"  {leaks}\n"
+        f"Fix options:\n"
+        f"  1. Rewrite the offending renderer-controlled prose to drop the abbreviation.\n"
+        f"  2. Add a first-use expansion to ABBREVIATION_FIRST_USE_UA in _patient_vocabulary.py.\n"
+        f"  3. Add the token to PATIENT_ALLOWLIST_ACRONYMS if it's a canonical clinical name.\n"
+    )
+
+
+@pytest.mark.parametrize("label,builder", _GATE_CASES, ids=lambda x: getattr(x, "__name__", str(x)))
+def test_patient_html_no_bare_latin_words(label, builder):
+    """Visible patient body MUST NOT contain Latin lowercase words
+    ≥4 chars outside the allowlist. PATIENT_MODE_SPEC §5.4."""
+    if not callable(builder):
+        return
+    result = builder()
+    if result.plan is None:
+        pytest.skip(f"{label!r}: builder produced no plan")
+    html = render_plan_html(result, mode="patient")
+    visible = _visible_text(html)
+    leaks = _flag_unallowed_latin_words(visible)
+    assert not leaks, (
+        f"[{label}] Unallowed Latin words leaked into the patient body:\n"
+        f"  {leaks}\n"
+        f"Fix options:\n"
+        f"  1. Rewrite the offending renderer-controlled prose to use Ukrainian.\n"
+        f"  2. Add the word to PATIENT_ALLOWLIST_LATIN_WORDS if it's a canonical loanword,\n"
+        f"     biology stem, or unavoidable KB regimen-name fragment.\n"
+    )
+
+
+def test_first_use_expansion_inserts_gloss_for_escat():
+    """When the patient body mentions ESCAT, the first occurrence is
+    expanded to include the parenthesized gloss."""
+    from knowledge_base.engine._patient_vocabulary import expand_first_use
+
+    sample = "<p>За шкалою ESCAT це найвищий рівень доказів.</p>"
+    out = expand_first_use(sample)
+    # First use becomes the expanded form.
+    assert "ESCAT (рівень доказів" in out
+    # Idempotency sentinel attached.
+    assert "abbrev-expanded" in out
+
+
+def test_first_use_expansion_idempotent():
+    """Calling `expand_first_use` twice on the same input is a no-op
+    after the first call (sentinel guard). Lets render flows toggle
+    audience / language without double-expanding."""
+    from knowledge_base.engine._patient_vocabulary import expand_first_use
+
+    sample = "<p>ESCAT — це шкала.</p>"
+    once = expand_first_use(sample)
+    twice = expand_first_use(once)
+    assert once == twice
+
+
+def test_first_use_expansion_skips_when_key_absent():
+    """If a key from `ABBREVIATION_FIRST_USE_UA` doesn't appear in the
+    text, no replacement happens for that key — only the sentinel is
+    appended."""
+    from knowledge_base.engine._patient_vocabulary import expand_first_use
+
+    sample = "<p>Самі лише українські слова — без жодних абревіатур.</p>"
+    out = expand_first_use(sample)
+    # No expansion text should be inserted.
+    assert "рівень доказів" not in out
+    assert "вірус гепатиту" not in out
+    # Sentinel still appended.
+    assert "abbrev-expanded" in out

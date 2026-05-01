@@ -793,6 +793,51 @@ PATIENT_MODE_CSS = """
   color: #78350f;
 }
 
+/* "Between visits" section — patient watchpoints grouped by urgency.
+   PATIENT_MODE_SPEC §3.4. The same `er_now` items can also surface in
+   the emergency-signals banner; the renderer dedupes on trigger_ua text
+   so a patient never sees the same call-to-action twice. */
+.between-visits {
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  padding: 18px 22px;
+  border-radius: 4px;
+  margin: 24px 0;
+}
+.between-visits h2 {
+  border-bottom-color: #bae6fd;
+}
+.between-visits .bv-track {
+  margin: 12px 0 18px;
+}
+.between-visits .bv-track + .bv-track { margin-top: 22px; }
+.between-visits .bv-urgency-group {
+  margin: 10px 0 14px;
+}
+.between-visits .bv-urgency-group h3 {
+  font-size: 1em;
+  font-weight: 700;
+  margin: 6px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.between-visits .bv-log h3 { color: #0c4a6e; }
+.between-visits .bv-call h3 { color: #b45309; }
+.between-visits .bv-er h3 { color: #991b1b; }
+.between-visits ul { margin: 4px 0 0 20px; }
+.between-visits li { margin: 6px 0; }
+.between-visits .bv-trigger { font-weight: 600; }
+.between-visits .bv-action { color: #475569; }
+.between-visits .bv-window {
+  font-size: 0.85em;
+  color: #64748b;
+  font-family: 'JetBrains Mono', Menlo, monospace;
+}
+.between-visits .bv-fallback {
+  font-style: italic;
+  color: #475569;
+}
+
 /* Cross-link chip — anchors patient ↔ clinician bundles in their headers
    so a doctor reading the patient bundle can jump to canonical version,
    and a patient reading the clinician bundle can jump to plain UA. */

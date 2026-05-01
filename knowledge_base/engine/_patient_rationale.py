@@ -198,8 +198,8 @@ def build_track_rationale(plan_result: Any, track: Any) -> list[str]:
     )
     if is_default and not fired_rf_ids and len(bullets) < 4:
         bullets.append(
-            "Стандартний варіант рекомендовано, бо немає сигналів "
-            "(redflags), що вимагали б іншого підходу."
+            "Стандартний варіант рекомендовано, бо немає клінічних "
+            "сигналів-тривоги, що вимагали б іншого підходу."
         )
 
     # ── 3. Fired-RF lines ───────────────────────────────────────────
