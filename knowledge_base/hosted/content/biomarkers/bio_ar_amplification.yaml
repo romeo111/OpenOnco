@@ -1,0 +1,88 @@
+id: BIO-AR-AMPLIFICATION
+names:
+  preferred: "AR amplification (high-level androgen receptor copy-number gain)"
+  ukrainian: "AR ампліфікація (високорівневе підвищення копій гена рецептора андрогену)"
+  english: "AR amplification"
+  synonyms: ["AR CN-amp", "AR high-level amplification", "AR HLA", "androgen receptor amplification"]
+
+biomarker_type: copy_number
+
+mutation_details:
+  gene: "AR"
+  gene_hugo_id: "HGNC:644"
+  variant_type: "amplification"
+  functional_impact: "Increased AR protein abundance / pathway hyperactivation under castrate testosterone — drives ARSI resistance via receptor-overexpression hypersensitivity to residual androgen"
+
+measurement:
+  method: "ctDNA NGS with copy-number calling (Guardant360, FoundationOne Liquid) preferred in mCRPC; tumor-tissue NGS acceptable; FISH for AR locus (Xq12) confirmatory"
+  units: "ctDNA AR copy-number ≥2.5 (Guardant) OR tumor-tissue NGS CN-call ≥4 OR FISH AR/CEP-X ratio ≥2.0 = high-level"
+  sensitivity_requirement: "ctDNA tumor fraction ≥1-2% required for reliable AR-CN call; low tumor fraction → false-negative. Threshold heterogeneity across assays — interpret with assay-specific cutoffs."
+
+specimen_requirements:
+  - "Plasma ctDNA (preferred in mCRPC — non-invasive, captures clonal + subclonal AR-amp)"
+  - "FFPE tumor tissue (primary or metastatic biopsy) acceptable; metastatic biopsy preferred over archival prostatectomy (AR-amp emerges under ARSI selection)"
+
+related_biomarkers:
+  - BIO-AR-V7  # alternative AR-driven ARSI-resistance mechanism (splice variant); AR-amp + AR-V7 can co-occur
+  - BIO-AR-MUTATION  # ligand-binding-domain mutations (T878A, F877L, L702H) — third AR-driven ARSI-resistance axis
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+  - SRC-EAU-PROSTATE-2024
+
+# CN-amp threshold + assay-method composite (ctDNA CN-call vs FISH ratio
+# vs tumor-tissue NGS) — not a single sequence variant. Actionability
+# extractor cannot lookup a variant from a CN-amp call. Also: no FDA
+# Tx label keyed on AR-amp; usage is informational / prognostic in MDT
+# brief, not Tx-modifying as monotherapy target.
+oncokb_skip_reason: clinical_composite
+
+external_ids:
+  hgnc_symbol: "AR"
+
+last_reviewed: "2026-04-29"
+notes: >
+  AR amplification is one of three dominant AR-pathway-driven ARSI-resistance
+  mechanisms in mCRPC (alongside AR-V7 splice variant and AR ligand-binding-
+  domain mutations). High-level AR-amp (ctDNA CN ≥2.5 by Guardant360, or
+  tissue NGS CN ≥4) is detectable in 30-50% of mCRPC progressing on
+  abiraterone or enzalutamide and correlates with shorter PFS/OS on
+  continued ARSI. Distinct from AR-V7 (splice variant — see BIO-AR-V7):
+  AR-amp = wild-type-AR overexpression (still ligand-binding-domain
+  competent; can still respond to higher-affinity ARSI in some cases),
+  AR-V7 = constitutively-active LBD-truncated isoform (ligand-independent,
+  ARSI cannot bind). Clinical use: ctDNA AR-CN trajectory under ARSI
+  monitors clonal selection; rising AR-CN signals impending progression.
+  HOWEVER: NO FDA-approved Tx decision keyed on AR-amp; guidelines
+  (NCCN, ESMO, EAU) treat it as informational / prognostic. Use in MDT
+  brief to flag patients at risk of ARSI-resistance and to discuss
+  switch to taxane (docetaxel, cabazitaxel), 177Lu-PSMA-617 (PSMA-positive),
+  or PARPi (HRR-mutated). Trial sources for ARSI-resistance trajectory
+  literature (PROfound exploratory ctDNA, SU2C-PCF dream-team) flagged
+  as missing source IDs in this chunk — to be added when ingesting
+  prostate-trial Source bundle.
+notes_ua: >
+  AR ампліфікація — один із трьох домінантних AR-залежних механізмів
+  резистентності до ARSI при мКРРПЗ (поряд із сплайс-варіантом AR-V7
+  та мутаціями ліганд-зв'язуючого домену AR). Високорівнева AR-амп
+  (ctDNA CN ≥2.5 за Guardant360 або тканина NGS CN ≥4) виявляється у
+  30-50% мКРРПЗ, що прогресують на абіратероні чи ензалутаміді, і
+  корелює з коротшим ПФВ/ЗВ при продовженні ARSI. Відрізняється від
+  AR-V7 (сплайс-варіант — див. BIO-AR-V7): AR-амп = надекспресія
+  дикого типу AR (ліганд-зв'язуючий домен збережений; теоретично може
+  відповідати на ARSI вищої афінності), AR-V7 = конститутивно-активна
+  LBD-усічена ізоформа (ліганд-незалежна, ARSI не зв'язується).
+  Клінічне використання: траєкторія AR-CN ctDNA під ARSI відображає
+  клональну селекцію; зростання AR-CN сигналізує про наближення
+  прогресії. ОДНАК: жодне рішення Tx не схвалене FDA на основі AR-амп;
+  настанови (NCCN, ESMO, EAU) розглядають як інформаційне / прогностичне.
+  Використовується в MDT-брифі для виявлення пацієнтів із ризиком
+  ARSI-резистентності та обговорення переходу на таксан (доцетаксел,
+  кабазітаксел), 177Lu-PSMA-617 (PSMA-позитивні) або PARPi (HRR-мутації).
+  Джерела рівня клінічних випробувань для літератури з ARSI-резистентності
+  (PROfound exploratory ctDNA, SU2C-PCF dream-team) позначені як відсутні
+  ID джерел у цьому чанку — будуть додані при ingesting prostate-trial
+  Source bundle.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
