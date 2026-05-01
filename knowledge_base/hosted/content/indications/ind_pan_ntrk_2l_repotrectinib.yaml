@@ -1,0 +1,108 @@
+id: IND-PAN-NTRK-2L-REPOTRECTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC  # primary listed disease; tumor-agnostic FDA scope (see notes)
+  molecular_subtype: NTRK_FUSION
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced or metastatic NTRK1/2/3 fusion-positive solid tumor (tumor-agnostic FDA approval 2024-06)"
+    - "Disease progression on prior TRK inhibitor (larotrectinib OR entrectinib) — typical resistance: solvent-front G595R / G667C / xDFG-motif mutations"
+    - "OR TKI-naïve NTRK-fusion+ tumor when repotrectinib is selected as first targeted agent"
+    - "Common tumor types: NSCLC (~0.2%), thyroid, colorectal, sarcoma, salivary gland, secretory breast, IFS"
+    - "Listed primarily under DIS-NSCLC for engine integration; tumor-agnostic application requires separate per-disease Indication wiring"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-NTRK-FUSION
+      value_constraint: "NTRK1/2/3 fusion confirmed by RNA-NGS (preferred — captures partner) or pan-TRK IHC ≥1+ confirmed by NGS/FISH; resistance mutation NGS at progression"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-REPOTRECTINIB-NSCLC  # same regimen ID; tumor-agnostic dosing identical to ROS1+
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~58% TRK-naïve; ~50% post-prior TKI (TRIDENT-1 NTRK arm tumor-agnostic, n=88)"
+  duration_of_response: "TRK-naïve mDOR not reached at 24-mo follow-up; post-TKI mDOR ~10 mo"
+  progression_free_survival: "TRK-naïve mPFS not reached; post-TKI mPFS ~7 mo"
+  intracranial_orr: "~50% NTRK-fusion+ tumors with measurable CNS disease"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # RNA-NGS critical for both fusion detection + resistance characterization
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Repotrectinib (next-generation macrocyclic ROS1 / NTRK / ALK TKI with
+  solvent-front activity) for NTRK1/2/3 fusion-positive locally
+  advanced or metastatic solid tumors, particularly post-prior TRK
+  inhibitor (larotrectinib / entrectinib) with characterized solvent-
+  front resistance (G595R / G667C / xDFG-motif). TRIDENT-1 NTRK
+  tumor-agnostic arm (n=88): TRK-naïve ORR ~58%; post-TKI ORR ~50%
+  including resistance-mutation+ cases. FDA tumor-agnostic approval
+  2024-06 — second TRK inhibitor with this scope. Aggressive-track
+  preferred over re-treatment with same TRK inhibitor at progression
+  with documented resistance. Lead-in dosing (160 mg daily x14 days,
+  then 160 mg BID) and CNS-AE counseling identical to ROS1+ context.
+  Long-term skeletal-fracture surveillance class signal. Tumor-
+  agnostic structurally — same Indication framework applies to other
+  NTRK-fusion+ solid tumors per individual disease integration.
+
+sources:
+  - source_id: SRC-TRIDENT1-DRILON-2024
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib in NTRK-fusion+ tumors TRIDENT-1 tumor-agnostic arm: TRK-naïve ORR 58%, post-TKI ORR 50% including solvent-front resistance mutations (G595R / G667C); intracranial ORR 50%"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib is recommended for NTRK fusion-positive NSCLC and tumor-agnostic application post-prior TRK inhibitor with solvent-front resistance (G595R / G667C); Cat 1; FDA tumor-agnostic 2024"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib is the preferred next-generation TRK inhibitor for NTRK-fusion+ NSCLC and pan-tumor application post-prior TRK inhibitor failure with characterized resistance"
+
+known_controversies:
+  - topic: "Repotrectinib 1L vs 2L for NTRK-fusion+ tumors (vs larotrectinib / entrectinib 1L → repotrectinib 2L)"
+    positions:
+      - position: "Larotrectinib 1L default: best tolerated, longest track record, tumor-agnostic FDA 2018"
+        sources: [SRC-NAVIGATE-DRILON-2018]
+      - position: "Repotrectinib 1L for CNS-dominant or aggressive disease: best-in-class CNS activity (50% IC-ORR), solvent-front-active"
+        sources: [SRC-TRIDENT1-DRILON-2024]
+      - position: "Repotrectinib 2L for documented solvent-front resistance (G595R / G667C) post-larotrectinib / entrectinib failure"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Larotrectinib 1L (best tolerated); repotrectinib 2L for solvent-front resistance OR 1L for CNS-dominant disease in fit patients"
+    rationale: "Tolerability + access drive 1L; resistance characterization drives 2L+; shared regimen with ROS1+ application"
+
+do_not_do:
+  - "НЕ пропускати NGS resistance characterization at progression — solvent-front (G595R/G667C/xDFG) drives repotrectinib selection."
+  - "НЕ пропускати lead-in dosing (14 days at 160 mg daily before BID)."
+  - "НЕ ігнорувати vestibular AE counseling — adapts через 4-8 тижнів зазвичай."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers без dose modification."
+  - "НЕ ігнорувати long-term skeletal fracture monitoring — bone density q-yearly."
+  - "НЕ припиняти за reversible Grade 1-2 dizziness — reduction до 120 mg BID при Grade 3."
+  - "НЕ підтверджувати план без funding pathway — repotrectinib не зареєстрований в Україні."
+  - "НЕ використовувати при baseline severe vestibular dysfunction — additive CNS toxicity."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Tumor-agnostic FDA approval
+  2024-06 for NTRK-fusion+ solid tumors post-prior TRK inhibitor.
+  Listed under DIS-NSCLC for engine wiring (NSCLC NTRK fusion ~0.2%
+  primary disease scope); separate per-disease Indications required
+  for full tumor-agnostic application (CRC, sarcoma, salivary, etc.).
+  TRIDENT-1 source already in KB (SRC-TRIDENT1-DRILON-2024).
