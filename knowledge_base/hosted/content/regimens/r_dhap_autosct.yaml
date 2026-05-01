@@ -83,6 +83,51 @@ ukraine_availability:
   notes: "All R-CHOP + R-DHAP components reimbursed via НСЗУ; autoSCT performed at major hematology centers"
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# R-DHAP + autoSCT consolidation for fit MCL or DLBCL salvage.
+# Cisplatin/cytarabine are toxic; HiDAC adds neurotoxicity + cytopenia.
+# AutoSCT phase: prolonged severe pancytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями після кожного циклу і особливо після SCT"
+    action_ua: "Очікувано — кістковий мозок відновлюється повільно після високих доз"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зниження апетиту, нудота, мукозит"
+    action_ua: "Поширене — приймайте призначені протиблювотні; полоскання порожнини рота; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Шум у вухах або зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Розмиття мислення, утруднена мова, плутаність — після високих доз цитарабіну"
+    action_ua: "Подзвоніть у клініку того ж дня — HiDAC рідко може спричиняти церебелярну токсичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо після SCT у вікно engraftment"
+    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, високий ризик сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена слабкість, плутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for fit transplant-eligible MCL (age <65, ECOG 0-1).

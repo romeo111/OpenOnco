@@ -50,6 +50,47 @@ ukraine_availability:
 sources:
   - SRC-NCCN-THYROID-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Cabozantinib for MTC 1L (EXAM trial). Multi-kinase TKI: similar
+# pattern to sorafenib (HFS, diarrhea, BP) plus higher rates of GI
+# perforation/fistula and bone-loss. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, біль на долонях і стопах"
+    action_ua: "Hand-foot синдром — крем, м'яке взуття; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Помірна діарея (1-3 рази на день)"
+    action_ua: "Зазвичай контролюється лоперамідом — занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Кабозантиніб часто підвищує тиск — вимірюйте 1-2 рази на тиждень"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція; ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильні набряки, виражене збільшення ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця і нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Сильний біль у щелепі або зубах, повільне загоєння після стоматологічних процедур"
+    action_ua: "Подзвоніть у клініку того ж дня — кабозантиніб підвищує ризик остеонекрозу щелепи; уникайте інвазивної стоматології"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Раптовий гострий біль у животі, ригідність, висока температура"
+    action_ua: "Звертайтесь у лікарню негайно — рідко кабозантиніб може спричиняти перфорацію кишківника"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-THYROID-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   EXAM (Schoffski 2012): cabozantinib 140 mg vs placebo improved PFS
