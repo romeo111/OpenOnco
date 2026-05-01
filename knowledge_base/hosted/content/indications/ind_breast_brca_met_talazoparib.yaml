@@ -1,0 +1,77 @@
+id: IND-BREAST-BRCA-MET-TALAZOPARIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HR_POS_HER2_NEG
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: true
+    - biomarker_id: BIO-BRCA1-BRCA2-GERMLINE
+      value_constraint: "pathogenic OR likely-pathogenic germline variant"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    progression_on_prior_endocrine_cdk46i: true
+    prior_chemo_lines_for_metastatic_max: 3
+    # EMBRACA enrolled both HR+/HER2- AND TNBC HER2- gBRCA-mutant.
+    # This indication covers HR+/HER2- BRCA-mut after endocrine ± CDK4/6i
+    # exhaustion. TNBC variant is IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB
+    # (separate file). Olaparib (OlympiAD) is overlapping option;
+    # head-to-head not done.
+
+recommended_regimen: REG-TALAZOPARIB-MONO-BREAST
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  median_progression_free_survival_months: 9
+  notes: "EMBRACA ITT: PFS 8.6 vs 5.6 mo (HR 0.54); ORR 62.6% vs 27.2%. Benefit consistent in HR+ and TNBC subgroups."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-GERMLINE-BRCA-PANEL
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-EMBRACA-LITTON-2018
+    weight: primary
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: confirmatory
+
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  EMBRACA (NCT01945775): Phase III, gBRCA1/2-mutant HER2- locally
+  advanced or metastatic breast cancer (≤3 prior cytotoxic regimens
+  for advanced disease). Talazoparib 1 mg PO daily vs physician's-
+  choice single-agent chemo. Median PFS 8.6 vs 5.6 mo (HR 0.54);
+  ORR 62.6% vs 27.2%. OS not significantly different at final
+  analysis (HR 0.85, p=0.17). FDA approval Oct 2018. This indication
+  is the HR+/HER2- BRCA-mut variant; TNBC variant is IND-BREAST-TNBC
+  -2L-BRCA-TALAZOPARIB. Olaparib OlympiAD (PFS 7.0 vs 4.2 mo, HR
+  0.58) is overlapping option; selection driven by AE profile —
+  talazoparib has higher anemia / transfusion burden (~39% G≥3 vs
+  ~16% with olaparib) but greater PARP-trapping potency. Pre-start:
+  germline BRCA1/2 panel (peripheral blood) confirmed
+  pathogenic/likely-pathogenic. UA access: talazoparib registered;
+  NSZU does not cover for breast — out-of-pocket.
