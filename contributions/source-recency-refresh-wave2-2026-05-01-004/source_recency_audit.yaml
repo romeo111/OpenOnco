@@ -1,0 +1,87 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Per-source recency audit per issue #206 Output Requirements. Combines
+    URL-verification outcome with content-supersession review. Per-source
+    upsert YAMLs and unreachable.yaml carry the structural changes; this
+    file is the human-readable audit summary.
+audits:
+  - id: SRC-ATA-THYROID-2015
+    url_verified: 'no'
+    url_status_code: 403
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: keep_existing
+    license_status: pending
+    notes: >
+      PubMed link returns HTTP 403 to httpx (bot-protection); citation valid
+      via PMID 26462967 / DOI 10.1089/thy.2015.0020. 2015 ATA DTC guidelines
+      remain the current authoritative document; no superseding ATA full
+      revision published as of 2026-05-01 (ATA published topical updates
+      e.g. RAI dose 2019, but the 2015 framework is unchanged for management
+      of nodules and DTC). No upsert proposed because 403 is publisher
+      bot-wall, not URL death — maintainer should consider DOI canonical URL.
+  - id: SRC-MOZ-UA-LYMPH-2013
+    url_verified: 'yes'
+    url_status_code: 200
+    url_status: reachable
+    content_current: 'yes'
+    proposed_current_as_of: '2026-05-01'
+    license_status: reviewed
+    notes: >
+      МОЗ України PDF reachable (HEAD 200). Order #866 from 2013-10-30
+      remains the current legal Ukrainian floor for lymphoma; no superseding
+      МОЗ order published. CLL handled separately by SRC-MOZ-UA-CLL-2022.
+      Upsert sidecar bumps current_as_of from "2024-XX-XX" placeholder to
+      2026-05-01, last_verified to 2026-05-01.
+  - id: SRC-CARVAJAL-KIT-MELANOMA-2013
+    url_verified: 'no'
+    url_status_code: 403
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: keep_existing
+    license_status: reviewed
+    notes: >
+      JAMA Network link returns HTTP 403 to httpx; citation valid via
+      PMID 22271878 / DOI 10.1001/jama.2011.746. Carvajal et al. 2011 phase-2
+      remains the foundational KIT-mutant melanoma trial; subsequent
+      confirmatory studies (Hodi 2013, Guo 2017) reproduced findings; no
+      supersession (the trial is the trial). Imatinib for KIT-exon-11/13
+      mutant mucosal/acral melanoma remains ESCAT IIA. No upsert proposed
+      (bot-wall).
+  - id: SRC-INOVATE-KANTARJIAN-2016
+    url_verified: 'no'
+    url_status_code: 403
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: keep_existing
+    license_status: reviewed
+    notes: >
+      NEJM link returns HTTP 403 to httpx; citation valid via PMID 27292104 /
+      DOI 10.1056/NEJMoa1509277. INO-VATE phase-3 (Kantarjian 2016) remains
+      the registrational trial for inotuzumab ozogamicin in R/R Ph- B-ALL;
+      no supersession. Long-term follow-up (DeAngelo Blood 2017, Jabbour
+      Lancet Haematol 2018) reproduced the efficacy/VOD signal but does not
+      replace the primary publication. No upsert proposed (bot-wall).
+  - id: SRC-ECHELON-1-CONNORS-2018
+    url_verified: 'no'
+    url_status_code: 403
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: keep_existing
+    license_status: reviewed
+    notes: >
+      PubMed link returns HTTP 403 to httpx; citation valid via PMID 29224502 /
+      DOI 10.1056/NEJMoa1708984. ECHELON-1 (Connors 2018) remains the
+      registrational publication for A+AVD in 1L stage III-IV cHL; OS update
+      (Ansell NEJM 2022) extends but does not supersede primary findings.
+      No supersession. No upsert proposed (bot-wall).
+gates:
+  manifest_ids_addressed: 5
+  manifest_ids_silently_skipped: 0
+  hosted_kb_files_modified: 0
+  banned_sources_referenced: 0

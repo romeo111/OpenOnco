@@ -1,0 +1,17 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source recency refresh — closes #206. Real HTTP HEAD/GET checks
+    via httpx (30s timeout, 3 retries, redirects followed, 403 retry once after 15s)
+    on the 5 sources from the chunk manifest. Pattern mirrors
+    contributions/source-recency-refresh-2026-04-29-001/ (issue #92).'
+  tasktorrent_version: 2026-04-29
+  notes_for_reviewer: 'Per-source upsert touches only: current_as_of, last_recency_check,
+    recency_check_status_code, last_verified. Content/license/attribution unchanged.
+    4 of 5 publisher URLs returned HTTP 403 (PubMed, JAMA, NEJM bot-protection);
+    persisted 403 after retry-after-15s — captured in unreachable.yaml as report-only
+    flags (no current_as_of bump). 1 upsert (SRC-MOZ-UA-LYMPH-2013, HTTP 200).'
