@@ -1,0 +1,109 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-006
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert. All 5 manifest IDs evaluated against four chunk-spec gates:
+    disease context, biomarker alteration, therapy, evidence direction. Per chunk-spec:
+    ''do not invent treatment claims when CIViC has no suitable evidence item.''
+    Snapshot reused: 2026-04-25 (latest available). Several of these IDs were also
+    no-match in the original wave-1 audit (issue #43); this wave-2 pass reproduces
+    the verdict and adds a borderline-rejection row for PMS2-endometrial that
+    passes 2 of 4 gates but fails alteration-class and therapy-anchor checks.'
+no_match_rows:
+- bma_id: BMA-BCL2-EXPRESSION-MCL
+  gene: BCL2
+  disease_id: DIS-MCL
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 7
+  civic_gene_disease_set:
+  - Diffuse Large B-cell Lymphoma
+  - Follicular Lymphoma
+  - Chronic Lymphocytic Leukemia/small Lymphocytic Lymphoma
+  - Chronic Lymphocytic Leukemia
+  reason: BCL2 evidence in CIViC is restricted to DLBCL, FL, and CLL/SLL; no
+    mantle-cell-lymphoma evidence item exists. BCL2 high-expression in MCL is
+    universal (cyclin-D1-driven survival pathway), but CIViC has not curated
+    an MCL-specific evidence item for venetoclax-containing regimens. Note
+    PMID 29562156 (Tam et al. NEJM 2018, AIM trial — venetoclax + ibrutinib
+    in R/R MCL) is the relevant primary source; ingest as a stub in a
+    separate source-ingest chunk if maintainer wants this evidence attached.
+- bma_id: BMA-FANCA-GERMLINE-OVARIAN
+  gene: FANCA
+  disease_id: DIS-OVARIAN
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+  reason: FANCA is not represented in the 2026-04-25 CIViC snapshot
+    (4842 evidence items, 0 for FANCA). FANCA is a Fanconi-anemia-pathway
+    gene; CIViC's HRR coverage is concentrated in BRCA1/2, ATM, PALB2,
+    BARD1, RAD51-family and CHEK2. FANCL (a related FA gene) is on the
+    PROfound HRR list but FANCA is not a per-gene actionability target in
+    CIViC at this snapshot.
+- bma_id: BMA-MLH1-GERMLINE-UROTHELIAL
+  gene: MLH1
+  disease_id: DIS-UROTHELIAL
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 27
+  civic_gene_disease_set:
+  - Stomach Carcinoma
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Villous Adenoma
+  reason: MLH1 evidence in CIViC is concentrated in CRC, gastric, endometrial
+    and villous adenoma; no urothelial/transitional-cell-carcinoma evidence
+    for MLH1 specifically. (MSH6 has an urothelial item EID1878 — different
+    gene.) The pan-tumor MSI-H pembrolizumab approval (FDA 2017) underpins
+    the actionability claim here, but CIViC does not encode the
+    tissue-agnostic ICI label as an MLH1 + urothelial evidence item.
+    Maintainer may want to ingest the FDA tissue-agnostic label citation as
+    a non-CIViC primary source.
+- bma_id: BMA-MSH6-GERMLINE-GASTRIC
+  gene: MSH6
+  disease_id: DIS-GASTRIC
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 6
+  civic_gene_disease_set:
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Transitional Cell Carcinoma
+  reason: MSH6 evidence in CIViC is restricted to CRC, endometrial and
+    transitional-cell carcinoma; no gastric/stomach evidence item for MSH6.
+    MSI-H gastric actionability is primarily backed by CheckMate-649
+    (nivolumab + chemo) and KEYNOTE-859 (pembrolizumab + chemo) in the
+    MSI-H subgroup, plus the pan-tumor MSI-H label — none currently
+    encoded as an MSH6-specific CIViC evidence item.
+- bma_id: BMA-PMS2-GERMLINE-ENDOMETRIAL
+  gene: PMS2
+  disease_id: DIS-ENDOMETRIAL
+  verdict: gene_disease_match_but_alteration_mismatch_and_no_therapy_anchor
+  civic_gene_evidence_count_any_disease: 2
+  civic_gene_disease_set:
+  - Glioblastoma
+  - Endometrial Cancer
+  candidate_evidence_id: EID1832
+  candidate_evidence_pmid: '25111426'
+  candidate_evidence_civic_url: https://civicdb.org/links/evidence_items/1832
+  gate_check:
+    disease_context: pass (Endometrial Cancer ↔ DIS-ENDOMETRIAL)
+    biomarker_alteration: fail (CIViC item is somatic `PMS2 R315*` truncating;
+      BMA targets germline LOF — different alteration class although both yield
+      dMMR/MSI-H phenotype)
+    therapy: fail (CIViC item has empty therapies list; BMA's actionability is
+      pembrolizumab/dostarlimab in dMMR — no therapy anchor in the CIViC item)
+    evidence_direction: pass (Supports), but significance is Oncogenicity
+      (not Sensitivity/Response — does not directly support a treatment claim)
+  reason: PMS2 has only 2 CIViC items in the 2026-04-25 snapshot — EID1214
+    (glioblastoma, somatic K706FS*19) and EID1832 (endometrial cancer, somatic
+    R315*). Only EID1832 has disease-token overlap with DIS-ENDOMETRIAL, but
+    it fails the alteration-class gate (somatic vs germline) and the therapy
+    gate (empty therapies list, Oncogenicity-only significance). Per chunk-spec
+    ('Do not invent treatment claims when CIViC has no suitable evidence item.'
+    and 'Each proposed CIViC link is checked against disease context, biomarker
+    alteration, therapy, and evidence direction.'), this candidate is not
+    sufficient to populate evidence_sources. The actionability claim for
+    germline-PMS2-LOF + pembrolizumab/dostarlimab in dMMR endometrial rests on
+    KEYNOTE-158, GARNET, RUBY (NEJM 2023), NRG-GY018, and the FDA tissue-agnostic
+    MSI-H label — none currently encoded as a PMS2-specific CIViC evidence item.
+not_found_in_master: []
