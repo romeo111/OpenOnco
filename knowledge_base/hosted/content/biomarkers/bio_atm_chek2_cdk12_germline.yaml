@@ -1,0 +1,81 @@
+id: BIO-ATM-CHEK2-CDK12-GERMLINE
+names:
+  preferred: "Germline ATM / CHEK2 / CDK12 pathogenic variant (HRR/DDR composite)"
+  ukrainian: "Зародкові патогенні варіанти ATM / CHEK2 / CDK12 (DDR-композит)"
+  english: "Germline ATM, CHEK2, or CDK12 mutation"
+  synonyms: ["gATM", "gCHEK2", "gCDK12", "non-BRCA HRR germline"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "ATM, CHEK2, CDK12"
+  variant_type: "loss-of-function (frameshift, nonsense, splice, deletions); CHEK2 c.1100delC most common founder allele"
+  functional_impact: "DNA damage response / HRR pathway compromise"
+  inheritance: "germline"
+
+measurement:
+  method: "Germline multi-gene hereditary-cancer NGS panel on whole blood or saliva. CHEK2 c.1100delC requires explicit panel coverage (some panels miss it)."
+  units: "categorical: pathogenic | likely_pathogenic | VUS | benign | absent"
+
+specimen_requirements:
+  - "Whole blood EDTA or saliva — germline DNA"
+
+interpretation_notes: >
+  Composite biomarker grouping three moderate-penetrance DDR/HRR genes
+  with overlapping but distinct clinical implications. Composite (vs
+  three separate entries) reflects how NCCN hereditary-panel testing
+  is ordered and reported — same panel, similar surveillance, similar
+  PARPi positioning. Per-gene nuances:
+
+    • ATM (germline): cohort A in PROfound (BRCA1/2, ATM) — pooled
+      olaparib benefit in mCRPC; OR for pancreatic/breast moderate
+      (~3-4x). Note: somatic ATM and germline ATM combined in PROfound.
+    • CHEK2 (germline, esp. c.1100delC founder): moderate breast risk
+      (~2x); not in PROfound cohort A. PARPi response weaker than
+      BRCA/ATM. Less clear ovarian / prostate signal.
+    • CDK12 (germline): rare; biology distinct (tandem-duplicator
+      phenotype rather than pure HRR-deficiency). PARPi response
+      generally poor; immunotherapy response signal in mCRPC under
+      investigation.
+
+  Treatment implication: PARPi consideration in HRR-context tumors per
+  NCCN, but tier varies by gene and disease. Decision-engine should
+  branch on the specific gene rather than treating as a single block.
+
+related_biomarkers:
+  - BIO-BRCA-GERMLINE
+  - BIO-BRCA1-BRCA2-GERMLINE
+  - BIO-BRCA-SOMATIC
+  - BIO-PALB2-GERMLINE
+
+sources:
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-CIVIC
+
+oncokb_skip_reason: germline_no_somatic
+
+external_ids:
+  hgnc_symbol: "ATM"
+  civic_url: "https://civicdb.org/genes/ATM/summary"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Authored as composite (vs three separate biomarkers) per chunk
+  schema-readout: NCCN orders these on the same hereditary panel and
+  reports them together; 1:1:1 split would create three near-identical
+  files. If downstream rules need gene-specific behavior (likely for
+  CDK12, whose biology diverges), split this entry then — the
+  composite is a v0.1 grouping, not a permanent decision. Track the
+  split in roadmap if/when MDT requests it.
+notes_ua: >
+  Створено як композитний біомаркер (замість трьох окремих) згідно
+  зі схемою цього чанку: NCCN призначає ці гени на тій самій
+  спадковій панелі та звітує разом; розділення 1:1:1 створило б три
+  майже ідентичних файли. Якщо подальші правила вимагатимуть
+  ген-специфічної поведінки (ймовірно для CDK12, чия біологія
+  відрізняється), розділіть тоді — композит є v0.1 групуванням,
+  не остаточним рішенням.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
