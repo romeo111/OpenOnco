@@ -1,0 +1,46 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-007
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert (gene absent from CIViC, or gene present but no disease
+    overlap). Per chunk-spec: ''do not invent treatment claims when CIViC has no
+    suitable evidence item.'' CIViC snapshot 2026-04-25.'
+no_match_rows:
+- bma_id: BMA-FANCL-GERMLINE-OVARIAN
+  gene: FANCL
+  disease_id: DIS-OVARIAN
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+  reason: 'No accepted CIViC evidence items for gene=FANCL in snapshot 2026-04-25.
+    FANCL is on PROfound HRR panel and ESCAT IIIA / OncoKB Level 3B, but not
+    represented in CIViC. Heterozygous-carrier actionability remains uncertain;
+    PARPi off-label per HRD-positive status.'
+- bma_id: BMA-MSH6-GERMLINE-OVARIAN
+  gene: MSH6
+  disease_id: DIS-OVARIAN
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 6
+  civic_diseases_seen:
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Transitional Cell Carcinoma
+  reason: 'CIViC has 6 accepted MSH6 evidence items but none in ovarian cancer
+    (DIS-OVARIAN ↔ Ovarian Carcinoma / Tubo-ovarian / Fallopian / Primary
+    peritoneal). Cross-tumor borrowing not asserted per chunk-spec invention
+    prohibition. MSI-H tissue-agnostic ICI label still applies clinically.'
+- bma_id: BMA-PMS2-GERMLINE-GASTRIC
+  gene: PMS2
+  disease_id: DIS-GASTRIC
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  civic_diseases_seen:
+  - Glioblastoma
+  - Endometrial Cancer
+  reason: 'CIViC has 2 accepted PMS2 evidence items, neither in gastric / GEJ
+    adenocarcinoma (DIS-GASTRIC ↔ Stomach Carcinoma / GEJ). Cross-tumor borrowing
+    not asserted per chunk-spec invention prohibition. MSI-H tissue-agnostic ICI
+    label still applies clinically.'
+not_found_in_master: []
