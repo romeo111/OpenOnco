@@ -1,0 +1,61 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-013
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert (gene not in CIViC, no disease overlap, or BMA already has
+    CIViC evidence). Per chunk-spec: ''do not invent treatment claims when CIViC has
+    no suitable evidence item.'''
+no_match_rows:
+- bma_id: BMA-CCND1-IHC-MCL
+  gene: CCND1
+  disease_id: DIS-MCL
+  variant_qualifier: cyclin D1 IHC (universal in MCL; defines diagnosis with t(11;14)
+    FISH)
+  verdict: already_has_civic_evidence
+  current_eid_count: 3
+  no_civic_match_reason: Hosted BMA already carries SRC-CIVIC evidence_sources from
+    a prior backfill wave. Wave-2 does not redo prior linkage; maintainer adjudicates
+    if EID set needs refresh.
+- bma_id: BMA-HRD-STATUS-PDAC
+  gene: HRD
+  disease_id: DIS-PDAC
+  variant_qualifier: germline BRCA1/2 (gBRCAm) — primary FDA-actionable subset (~5-7%
+    of pancreatic ductal adenocarcinoma); somatic BRCA / PALB2 with growing evidence
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+  no_civic_match_reason: CIViC snapshot 2026-04-25 has zero evidence_items with gene='HRD'.
+    Token derived from BMA-id; for panel/composite biomarkers (HRD-status, dMMR-IHC,
+    etc.) the BMA-id token is not a single CIViC gene. Promoting BRCA1/BRCA2/component-gene
+    evidence into a panel BMA is out of scope for this chunk per issue 194 'no invented
+    treatment claims' rule.
+- bma_id: BMA-MSH2-GERMLINE-CRC
+  gene: MSH2
+  disease_id: DIS-CRC
+  variant_qualifier: MSH2 germline loss-of-function (dMMR / MSI-H)
+  verdict: already_has_civic_evidence
+  current_eid_count: 3
+  no_civic_match_reason: Hosted BMA already carries SRC-CIVIC evidence_sources from
+    a prior backfill wave. Wave-2 does not redo prior linkage; maintainer adjudicates
+    if EID set needs refresh.
+- bma_id: BMA-MSH6-SOMATIC-OVARIAN
+  gene: MSH6
+  disease_id: DIS-OVARIAN
+  variant_qualifier: MSH6 somatic loss-of-function (dMMR / MSI-H)
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 6
+  no_civic_match_reason: 'CIViC snapshot 2026-04-25 has 6 evidence_items with gene=''MSH6''
+    but none with disease overlap on DIS-OVARIAN (token set: [''ovarian'']). Cross-disease
+    evidence not borrowed.'
+- bma_id: BMA-PMS2-SOMATIC-GASTRIC
+  gene: PMS2
+  disease_id: DIS-GASTRIC
+  variant_qualifier: PMS2 somatic loss-of-function (dMMR / MSI-H)
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  no_civic_match_reason: 'CIViC snapshot 2026-04-25 has 2 evidence_items with gene=''PMS2''
+    but none with disease overlap on DIS-GASTRIC (token set: [''gastric'', ''stomach'']).
+    Cross-disease evidence not borrowed.'
+not_found_in_master: []
