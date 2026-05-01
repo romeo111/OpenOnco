@@ -24038,5 +24038,417 @@
         "schistosomiasis_endemic_exposure": false
       }
     }
+  },
+  {
+    "case_id": "diagnostic-lymphadenopathy-undifferentiated",
+    "label": "Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+    "label_en": "Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+    "file": "patient_diagnostic_lymphadenopathy_undifferentiated.json",
+    "json": {
+      "_comment": "Pre-biopsy diagnostic profile: 35F with bilateral cervical + right axillary LAD × 7 weeks, no B-symptoms, no infectious exposures. Reactive vs lymphoma vs metastatic still ambiguous. Engine should match WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage workup before lymphoma-specific path) and emit Diagnostic Brief — CBC + CMP + LDH + ESR/CRP + viral serologies + excisional biopsy of largest accessible node before specific Tx.",
+      "patient_id": "PZ-DIAG-LAD-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "lymphadenopathy_workup",
+          "tissue_locations": [
+            "lymph_node"
+          ],
+          "presentation": "35F nurse presents with persistent palpable_lymph_node bilateral cervical chains (left 1.8 cm, right 2.2 cm) + right axillary node 1.5 cm × 7 weeks. No tenderness. No B-symptoms (no fevers, night sweats <1 episode/wk only, weight stable). No recent infections, no animal/tick exposures, no foreign travel. CBC normal, ESR mildly elevated 38, LDH normal. Mono spot negative, EBV / CMV serologies pending. CT neck/chest/abd: bilateral cervical + right axillary lymphadenopathy + small mediastinal nodes 8-10 mm. No splenomegaly. No primary malignancy identified on imaging. Lymphadenitis vs reactive vs early lymphoma vs metastatic carcinoma — needs excisional biopsy of largest cervical node for histology before further workup.",
+          "presentation_keywords": [
+            "lymphadenopathy",
+            "lymph_node_enlargement",
+            "palpable_lymph_node",
+            "reactive_node_suspect"
+          ],
+          "working_hypotheses": [
+            "DIS-CHL",
+            "DIS-DLBCL-NOS",
+            "DIS-FL",
+            "reactive_lymphadenopathy"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 35,
+        "sex": "female",
+        "ecog": 0
+      },
+      "findings": {
+        "cervical_lad_present": true,
+        "axillary_lad_present": true,
+        "node_largest_cm": 2.2,
+        "esr_mm_hr": 38,
+        "ldh_u_l": 195,
+        "b_symptoms_present": false,
+        "splenomegaly": false,
+        "duration_weeks": 7,
+        "fever_celsius": 36.7
+      },
+      "history": {
+        "recent_infections": false,
+        "tick_or_animal_exposure": false,
+        "foreign_travel_past_year": false,
+        "occupational_healthcare": true,
+        "prior_malignancy": null,
+        "tb_exposure_known": false
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-metastatic-prostate-rising-psa",
+    "label": "Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+    "label_en": "Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+    "file": "patient_diagnostic_metastatic_prostate_rising_psa.json",
+    "json": {
+      "_comment": "Workup profile: 73M with biopsy-confirmed prostate adeno (Gleason 4+5=9) on radical prostatectomy 4 yrs ago, now with rising PSA (current 12.4, doubling time 4 mo) + new bone pain + suspected mets on bone scan. Engine should match WORKUP-METASTATIC-PROSTATE (post-confirmed-disease metastatic-staging workup) and emit Diagnostic Brief — full staging restage with PSMA-PET + germline BRCA panel + somatic HRR panel + testosterone confirmation before mHSPC vs mCRPC Tx selection.",
+      "patient_id": "PZ-DIAG-METPRO-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "prostate_cancer_metastatic",
+          "tissue_locations": [
+            "prostate",
+            "bone",
+            "lymph_nodes_pelvic"
+          ],
+          "icd_o_3_topography": [
+            "C61.9"
+          ],
+          "presentation": "73M with prostate_cancer_metastatic suspect — biopsy-confirmed prostate adeno (Gleason 4+5=9, pT3a, ISUP 5) on radical prostatectomy 4 yrs ago, post-op PSA nadir 0.05. Rising_psa over past 12 months: 0.05 → 0.8 → 4.2 → 12.4 ng/mL (PSA doubling time 4 months — rapid). New onset of right hip and lumbar back pain × 6 weeks. NM bone scan: increased uptake L3 vertebral body + right iliac wing → bone_metastases suspect. Pelvic MRI: prostate fossa unremarkable, but 2 new pelvic lymph nodes 1.4 + 1.1 cm. Testosterone 480 ng/dL (castrate-sensitive — mhspc vs early progression). Pre-existing hypertension + T2DM + CrCl 62. No prior systemic therapy (post-op surveillance only). Needs PSMA-PET for accurate staging + germline + somatic HRR before Tx (ARPI doublet vs triplet, PARPi if BRCA+).",
+          "presentation_keywords": [
+            "prostate_cancer_metastatic",
+            "rising_psa",
+            "bone_metastases",
+            "mhspc"
+          ],
+          "working_hypotheses": [
+            "DIS-PROSTATE"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 73,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "psa_ng_ml": 12.4,
+        "psa_doubling_time_months": 4,
+        "testosterone_ng_dl": 480,
+        "gleason_score": 9,
+        "isup_grade": 5,
+        "bone_lesions_suspect": 2,
+        "pelvic_ln_count": 2,
+        "pelvic_ln_largest_cm": 1.4,
+        "bone_pain": true,
+        "creatinine_clearance_ml_min": 62,
+        "prior_radical_prostatectomy": true,
+        "years_since_prostatectomy": 4
+      },
+      "history": {
+        "prior_systemic_therapy": false,
+        "germline_brca_tested": false,
+        "family_history_prostate_or_breast": "father prostate Ca age 76",
+        "comorbidities": [
+          "hypertension",
+          "t2dm"
+        ]
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-mgus-incidental-m-spike",
+    "label": "Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+    "label_en": "Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+    "file": "patient_diagnostic_mgus_incidental_m_spike.json",
+    "json": {
+      "_comment": "Pre-biopsy diagnostic profile: 71M asymptomatic with incidental M-spike (IgG-kappa 8 g/L) on routine SPEP done for hyperglobulinemia noted on annual labs. No CRAB criteria, no symptoms. Engine should match WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (MGUS triage workup, not full MM workup) and emit Diagnostic Brief — IMWG 2014 criteria stratification (MGUS vs smoldering MM vs active MM), serum FLC ratio, urine immunofixation, BM biopsy if FLC ratio abnormal or M-spike >1.5 g/L, before risk-stratified surveillance vs Tx.",
+      "patient_id": "PZ-DIAG-MGUS-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "monoclonal_gammopathy_unknown_significance",
+          "tissue_locations": [
+            "bone_marrow",
+            "blood"
+          ],
+          "presentation": "71M asymptomatic, comes for routine annual physical. PCP labs revealed serum_globulin_high 4.8 g/dL (total protein 8.4, albumin 3.6 — elevated globulin gap). Reflex SPEP confirmed monoclonal_protein 8 g/L IgG-kappa (m_spike_incidental finding). No CRAB criteria — Hgb 13.2, Cr 0.9 (CrCl 78), Ca 9.4, no skeletal symptoms, no lytic lesions on screening skeletal survey. No fatigue, no recurrent infections, no peripheral neuropathy, no hyperviscosity symptoms. Serum free light chains: kappa 24, lambda 18, ratio 1.33 (NORMAL <1.65). β2-microglobulin 2.1 (normal). Per IMWG 2014 criteria — likely low-risk MGUS (size <1.5 g/L, IgG type, normal FLC ratio = ZERO risk factors). Needs IMWG risk stratification + paraprotein_screen + BM biopsy decision (skip if low-risk + normal FLC ratio per current 2014 guidelines).",
+          "presentation_keywords": [
+            "monoclonal_protein",
+            "m_spike_incidental",
+            "paraprotein_screen",
+            "mgus_evaluation",
+            "serum_globulin_high"
+          ],
+          "working_hypotheses": [
+            "DIS-MM",
+            "mgus",
+            "smoldering_myeloma"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 71,
+        "sex": "male",
+        "ecog": 0
+      },
+      "findings": {
+        "ig_g_kappa_m_protein_g_l": 8,
+        "kappa_lambda_ratio": 1.33,
+        "beta2_microglobulin_mg_l": 2.1,
+        "hemoglobin_g_dl": 13.2,
+        "creatinine_clearance_ml_min": 78,
+        "corrected_calcium_mg_dl": 9.4,
+        "lytic_lesion_present": false,
+        "bone_pain": false,
+        "neuropathy_symptoms": false,
+        "infection_recurrent": false,
+        "hyperviscosity_symptoms": false,
+        "imwg_risk_factors_count": 0
+      },
+      "history": {
+        "prior_mgus_diagnosis": false,
+        "prior_serum_globulin_check_normal_within_2yr": true,
+        "amyloidosis_family_history": false,
+        "prior_radiation": false
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-lung-cancer-indeterminate",
+    "label": "Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+    "label_en": "Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+    "file": "patient_diagnostic_lung_cancer_indeterminate.json",
+    "json": {
+      "_comment": "Pre-biopsy diagnostic profile: 65M heavy smoker with 3.2 cm RUL lung mass + 2 hilar nodes on screening LDCT, NSCLC vs SCLC vs metastatic still unknown. Engine should match WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup pre-histology, before NSCLC-specific NGS panel) and emit Diagnostic Brief — bronchoscopy/CT-guided biopsy + EBUS-LN sampling + cytology + IHC (TTF-1, CK7, CK5/6, p40 for NSCLC subtype + synaptophysin/chromogranin for neuroendocrine) + staging CT/PET-CT before NGS panel and Tx.",
+      "patient_id": "PZ-DIAG-LUNG-DX-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "lung_cancer_suspect",
+          "tissue_locations": [
+            "lung",
+            "hilar_lymph_nodes"
+          ],
+          "icd_o_3_topography": [
+            "C34.1"
+          ],
+          "presentation": "65M heavy smoker (40 pack-years, current) referred from screening LDCT program — 3.2 cm spiculated mass right upper lobe + 2 enlarged right hilar nodes (largest 1.4 cm). solitary_pulmonary_nodule on initial LDCT actually evolved into mass on diagnostic CT. Subsequent CT chest with contrast: irregular lung_mass with mediastinal LAD level 4R + 7. PET-CT showed FDG-avid primary + LN + small adrenal nodule (1.1 cm, equivocal). No bone uptake. No brain MRI yet. Persistent_cough × 4 months, mild hemoptysis × 2 episodes. Histology pending bronchoscopic biopsy (scheduled). NSCLC vs SCLC vs metastatic carcinoma differential — central location + smoker raises SCLC concern but no paraneoplastic syndromes. Workup at the post-imaging / pre-histology stage where NSCLC-vs-SCLC differentiation matters for Tx pathway selection.",
+          "presentation_keywords": [
+            "lung_mass",
+            "lung_cancer_suspect",
+            "hemoptysis",
+            "persistent_cough",
+            "lung_nodule"
+          ],
+          "working_hypotheses": [
+            "DIS-NSCLC",
+            "DIS-SCLC",
+            "DIS-LUNG-METASTATIC-FROM-OTHER"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 65,
+        "sex": "male",
+        "ecog": 1
+      },
+      "findings": {
+        "lung_mass_cm": 3.2,
+        "lung_mass_location": "RUL",
+        "lung_mass_central": false,
+        "hilar_lad": true,
+        "mediastinal_lad": true,
+        "ldct_screening_finding": true,
+        "smoking_pack_years": 40,
+        "smoking_status": "current",
+        "hemoptysis": true,
+        "persistent_cough": true,
+        "fdg_avid_primary": true,
+        "adrenal_nodule_equivocal": true
+      },
+      "history": {
+        "prior_lung_cancer_screening": true,
+        "asbestos_exposure": false,
+        "occupational_silica_exposure": false,
+        "family_history_lung_cancer": "father lung Ca age 68 (smoker)"
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-cup-unknown-primary",
+    "label": "Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+    "label_en": "Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+    "file": "patient_diagnostic_cup_unknown_primary.json",
+    "json": {
+      "_comment": "Pre-biopsy diagnostic profile: 67F with multiple liver metastases on imaging + bony lesions + slightly elevated CA 19-9 + CEA + adenocarcinoma on liver-mass biopsy IHC (CK7+/CK20-/TTF-1-/GATA3-) — pattern suggests upper-GI / pancreaticobiliary / lung-non-small primary, but no primary identified on PET-CT. Cancer of Unknown Primary (CUP). Engine should match WORKUP-SUSPECTED-SOLID-TUMOR (generic catch-all when site not yet specified) and emit Diagnostic Brief — extensive panel for primary identification + molecular profiling (NGS, MSI/MMR, BRAF, EGFR for CUP-favorable subsets) + tissue-of-origin classifier before site-directed Tx.",
+      "patient_id": "PZ-DIAG-CUP-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "carcinoma",
+          "tissue_locations": [
+            "liver",
+            "bone"
+          ],
+          "presentation": "67F presents with 8-week fatigue + 6 kg weight loss + new mid-thoracic back pain. CT abd/pelvis (with contrast): multiple liver lesion x4, largest 4.2 cm, hypovascular pattern. CT chest: no lung mass, small mediastinal nodes <1 cm. Bone scan + skeletal MRI: lytic+sclerotic mixed lesions T6, T9, right iliac wing. CEA 24 (mildly elevated), CA 19-9 280 (elevated), CA 125 38 (mildly elevated), AFP normal. Liver-mass biopsy histology: poorly-differentiated adenocarcinoma. IHC pattern: CK7-positive, CK20-negative, TTF-1-negative, GATA3-negative, ER-negative, p40-negative. Pattern is non-specific upper-GI / pancreaticobiliary / lung-non-small primary, but no primary tumor seen on diagnostic imaging. PET-CT revealed only known liver+bone+nodal disease, no FDG-avid primary visible. CUP per ESMO criteria. Tumor-of-origin classifier (e.g., CancerType ID, methylation panel) + comprehensive NGS for actionable drivers needed.",
+          "presentation_keywords": [
+            "mass",
+            "lesion",
+            "nodule"
+          ],
+          "working_hypotheses": [
+            "DIS-CUP",
+            "DIS-PDAC-OCCULT",
+            "DIS-CHOLANGIOCARCINOMA-OCCULT",
+            "DIS-NSCLC-OCCULT"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 67,
+        "sex": "female",
+        "ecog": 1
+      },
+      "findings": {
+        "liver_lesion_count": 4,
+        "liver_lesion_largest_cm": 4.2,
+        "bone_lesions_present": true,
+        "bone_lesion_count": 3,
+        "cea_ng_ml": 24,
+        "ca_19_9_u_ml": 280,
+        "ca_125_u_ml": 38,
+        "afp_ng_ml": 4,
+        "weight_loss_kg": 6,
+        "biopsy_histology_done": "liver_mass_adenocarcinoma_poorly_differentiated",
+        "ihc_ck7_positive": true,
+        "ihc_ck20_negative": true,
+        "ihc_ttf1_negative": true,
+        "ihc_gata3_negative": true,
+        "no_primary_on_pet_ct": true
+      },
+      "history": {
+        "prior_malignancy": null,
+        "smoking_pack_years": 18,
+        "smoking_status": "former_quit_15yr",
+        "alcohol_use_current": false,
+        "family_history_gi_or_pancreatic": "mother PDAC age 71"
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-breast-post-imaging-staging",
+    "label": "Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+    "label_en": "Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+    "file": "patient_diagnostic_breast_post_imaging_staging.json",
+    "json": {
+      "_comment": "Post-imaging confirmed diagnostic profile: 47F with biopsy-confirmed left breast invasive ductal carcinoma (core biopsy ER+/PR+/HER2-low IHC 2+ FISH-) on BIRADS-5 imaging, ready for staging + receptor confirmation + germline + Oncotype-DX before final Tx. Distinct from WORKUP-SUSPECTED-BREAST (pre-biopsy lump) — this is the post-histology staging workup. Engine should match WORKUP-BREAST-DIAGNOSIS (post-biopsy staging path) and emit Diagnostic Brief — staging CT + receptor confirmation IHC + germline BRCA + Oncotype-DX + axillary US + sentinel-LN-biopsy planning before adjuvant Tx selection.",
+      "patient_id": "PZ-DIAG-BREAST-DX-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "breast_cancer_suspect",
+          "tissue_locations": [
+            "breast",
+            "axillary_lymph_nodes"
+          ],
+          "icd_o_3_topography": [
+            "C50.4"
+          ],
+          "presentation": "47F with biopsy-confirmed solid_tumor_breast — invasive ductal carcinoma G2 on left upper-outer quadrant core biopsy (BIRADS-5 mammography 2.6 cm spiculated mass + targeted core biopsy). IHC: ER 95%+, PR 70%+, HER2 IHC 2+ → reflex FISH HER2/CEP17 1.6 (NEGATIVE per ASCO/CAP 2023). Ki-67 18%. Strong family history (mother breast Ca age 51, maternal aunt ovarian Ca age 47) — likely BRCA candidate. axillary_lymphadenopathy on US (one 1.4 cm node — needs core biopsy / FNA). Pre-staging mammographic_abnormality reviewed; bilateral mammo with 3D tomosynthesis + MRI breast both done. No contralateral lesions, no multifocal disease. BMI 28, no DM, no cardiac comorbidity. eGFR 92 (preserved). Needs staging CT chest/abdomen/pelvis + germline panel + Oncotype-DX (luminal-A vs luminal-B distinction matters for chemo-omission decision) + sentinel-LN biopsy planning. Receptor confirmation on surgical specimen (definitive ER/PR/HER2) before final Tx. Workup at the post-histology / pre-staging stage.",
+          "presentation_keywords": [
+            "breast_lump",
+            "breast_mass",
+            "mammographic_abnormality",
+            "axillary_lymphadenopathy"
+          ],
+          "working_hypotheses": [
+            "DIS-BREAST"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 47,
+        "sex": "female",
+        "ecog": 0
+      },
+      "findings": {
+        "breast_mass_cm": 2.6,
+        "birads_score": 5,
+        "core_biopsy_done": true,
+        "histology_invasive_ductal": true,
+        "grade": 2,
+        "er_status": "positive",
+        "er_percent": 95,
+        "pr_status": "positive",
+        "her2_ihc_score": "2+",
+        "her2_fish_ratio": 1.6,
+        "her2_status_overall": "negative",
+        "her2_low_ihc_2plus": true,
+        "ki67_percent": 18,
+        "axillary_node_short_axis_cm": 1.4,
+        "menopausal_status": "premenopausal",
+        "bmi": 28
+      },
+      "history": {
+        "family_history_breast_ovarian": "mother breast Ca age 51, maternal aunt ovarian Ca age 47",
+        "prior_chest_radiation": false,
+        "current_hrt": false,
+        "germline_brca_tested": false,
+        "prior_breast_cancer_contralateral": false
+      }
+    }
+  },
+  {
+    "case_id": "diagnostic-gu-skin-gyn-combined",
+    "label": "Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+    "label_en": "Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+    "file": "patient_diagnostic_gu_skin_gyn_combined.json",
+    "json": {
+      "_comment": "Pre-biopsy diagnostic profile: 56F postmenopausal with concurrent multi-system findings: 4.0 cm right renal mass (incidental on CT) + atypical pigmented dorsal-foot lesion (1.1 cm, ABCDE+) + endometrial thickening 12 mm on TVUS (clinically asymptomatic). Multi-modality concurrent suspicion across GU+skin+gyn. Engine should match WORKUP-SOLID-GENITOURINARY-SKIN-GYN (combined workup) and emit Diagnostic Brief — coordinated biopsy planning + germline panel (HRR + Lynch + BAP1 + others for multi-cancer susceptibility) + tumor-board consensus on biopsy sequencing.",
+      "patient_id": "PZ-DIAG-MULTI-001",
+      "disease": {
+        "suspicion": {
+          "lineage_hint": "solid_tumor_kidney_rcc",
+          "tissue_locations": [
+            "kidney",
+            "skin",
+            "endometrium"
+          ],
+          "presentation": "56F postmenopausal × 4 yrs presents with multi-system concerning findings discovered during workup of unrelated symptoms: (1) Workup of microscopic hematuria revealed 4.0 cm contrast-enhancing exophytic kidney_mass right upper pole on CT (RENAL nephrometry 8); (2) Routine dermatology screening identified atypical pigmented growth on dorsal foot 1.1 cm with ABCDE positive (asymmetry + irregular border + variegated color + diameter + recent enlargement) — melanoma_suspect; (3) TVUS during postmenopausal cervical screening showed endometrial_thickening 12 mm without clinical symptoms (no PMB) — endometrial workup also indicated. PCP appropriately concerned for synchronous multi-primary cancers vs metastatic disease vs hereditary cancer syndrome. No family history of specific cancers but limited family knowledge. Workup needs coordinated biopsy planning across 3 sites + germline panel for multi-cancer susceptibility (BAP1, BRCA1/2, HRR, Lynch).",
+          "presentation_keywords": [
+            "kidney_mass",
+            "melanoma_suspect",
+            "endometrial_thickening"
+          ],
+          "working_hypotheses": [
+            "DIS-RCC",
+            "DIS-MELANOMA",
+            "DIS-ENDOMETRIAL"
+          ]
+        }
+      },
+      "demographics": {
+        "age": 56,
+        "sex": "female",
+        "ecog": 0
+      },
+      "findings": {
+        "renal_mass_cm": 4.0,
+        "renal_mass_enhancing": true,
+        "renal_nephrometry_score": 8,
+        "skin_lesion_diameter_mm": 11,
+        "abcde_asymmetry": true,
+        "abcde_border": true,
+        "abcde_color_variation": true,
+        "abcde_diameter_gt_6mm": true,
+        "abcde_evolving": true,
+        "endometrial_stripe_mm": 12,
+        "menopausal_status": "postmenopausal",
+        "microscopic_hematuria": true
+      },
+      "history": {
+        "family_history_multi_cancer": false,
+        "germline_panel_tested": false,
+        "fitzpatrick_skin_type": 2,
+        "uv_exposure_significant": true,
+        "smoking_status": "never_smoker"
+      }
+    }
   }
 ]
