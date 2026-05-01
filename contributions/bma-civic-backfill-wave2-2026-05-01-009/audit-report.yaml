@@ -1,0 +1,151 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-009
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >-
+    Report-only: BMAs in this chunk's manifest where CIViC backfill produced
+    no upsert. Each row evaluated against the four chunk-spec gates (disease
+    context, biomarker alteration, therapy, evidence direction). Per chunk-spec
+    'do not invent treatment claims when CIViC has no suitable evidence item.'
+    Snapshot reused 2026-04-25 (latest available). BMA-MLH1-SOMATIC-GASTRIC is
+    recorded as already_backfilled — the upsert script replaces evidence_sources
+    wholesale, so re-emitting the same EIDs would generate noise without
+    changing master state.
+no_match_rows:
+- bma_id: BMA-BCL2-REARRANGEMENT-HGBL-DH
+  gene: BCL2
+  disease_id: DIS-HGBL-DH
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 7
+  civic_gene_disease_set:
+  - Diffuse Large B-cell Lymphoma
+  - Follicular Lymphoma
+  - Chronic Lymphocytic Leukemia/small Lymphocytic Lymphoma
+  - Chronic Lymphocytic Leukemia
+  reason: >-
+    BCL2 evidence in CIViC is restricted to DLBCL, FL, and CLL/SLL; no HGBL-DH
+    / double-hit / triple-hit lymphoma evidence item exists. The closest items
+    are EID407 (reg_e@[IGH]::BCL2 rearrangement, DLBCL, Diagnostic B / Supports
+    Positive) and EID423 (BCL2 Overexpression, DLBCL, Prognostic B / Supports
+    Poor Outcome) but DIS-HGBL-DH is a distinct hosted disease (WHO 5th ed.
+    high-grade B-cell lymphoma with MYC + BCL2/BCL6 rearrangements; ICD-10
+    C83.3) — not a synonym of DIS-DLBCL-NOS, even though the two share
+    morphology family ICD-O 9680/3. Per chunk-spec invention prohibition,
+    cross-disease borrowing is not allowed. Parallels wave-2-006 verdict for
+    BMA-BCL2-EXPRESSION-MCL. Treatment claim (DA-EPOCH-R 1L preferred) is
+    anchored on SRC-NCCN-BCELL-2025; no CIViC EID required. Maintainer may
+    want to ingest a primary-source stub for the canonical double-hit
+    treatment-selection evidence (Petrich 2014, Howlett 2015 series, Dunleavy
+    DA-EPOCH-R prospective data) in a separate source-ingest chunk.
+- bma_id: BMA-HER2-AMP-ESOPHAGEAL
+  gene: ERBB2
+  gene_aliases_searched:
+  - HER2
+  - ERBB2
+  disease_id: DIS-ESOPHAGEAL
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 146
+  civic_gene_disease_set_excerpt:
+  - Breast Cancer
+  - Her2-receptor Positive Breast Cancer
+  - Gastric Adenocarcinoma
+  - Stomach Cancer
+  - Colorectal Adenocarcinoma
+  - Lung Adenocarcinoma
+  - Bladder Carcinoma
+  - Endometrial Cancer
+  - Cholangiocarcinoma
+  - Pancreatic Adenocarcinoma
+  - Salivary Gland Carcinoma
+  - Solid Tumor
+  reason: >-
+    ERBB2 (HER2) has 146 evidence items in the 2026-04-25 CIViC snapshot, but
+    zero with disease tokens matching esophageal / gastroesophageal junction /
+    GEJ / esophageal adenocarcinoma. CIViC encodes ERBB2 amplification +
+    therapy items for breast and gastric primarily. The ToGA trial (Bang et
+    al. 2010, Lancet — trastuzumab + chemo in HER2+ gastric/GEJ) and
+    KEYNOTE-811 (pembrolizumab + trastuzumab + chemo in HER2+ GEJ
+    adenocarcinoma) and DESTINY-Gastric01 (T-DXd in HER2+ advanced
+    gastric/GEJ) are the canonical primary sources; per the BMA file, these
+    are tracked as source-gap stubs (SRC-TOGA-BANG-2010, SRC-KEYNOTE-811,
+    SRC-DESTINY-GASTRIC01 not ingested). CIViC has not curated ToGA-style or
+    DESTINY items under an esophageal disease token, only under gastric. Per
+    chunk-spec four-gate check, disease context fails (CIViC gastric ≠
+    DIS-ESOPHAGEAL even though the two diseases share GEJ-Siewert overlap
+    clinically). Maintainer call. Option (a) expand BMA-HER2-AMP-ESOPHAGEAL's
+    disease targeting to include DIS-GASTRIC's gastric-curated CIViC items if
+    cross-disease borrowing is acceptable for GEJ-adjacent cells. Option (b)
+    wait for CIViC to curate esophageal-specific items. Option (c) ingest the
+    canonical primary sources as non-CIViC stubs in a follow-up source-ingest
+    chunk.
+- bma_id: BMA-MSH6-GERMLINE-UROTHELIAL
+  gene: MSH6
+  disease_id: DIS-UROTHELIAL
+  verdict: matched_upserted
+  civic_gene_evidence_count_any_disease: 6
+  matched_evidence_ids:
+  - EID1878
+  match_summary: >-
+    MSH6 LOSS / Transitional Cell Carcinoma / Predictive C / Supports
+    Sensitivity/Response to Durvalumab + Anti-PD-1 Monoclonal Antibody
+    MEDI0680. Direct ICI-prediction item with explicit therapy anchors and
+    disease-token overlap (Transitional Cell Carcinoma is the CIViC term for
+    urothelial carcinoma). Upsert sidecar bma_msh6_germline_urothelial.yaml.
+  note: >-
+    This row is included in audit-report.yaml for completeness only; the
+    upsert sidecar is the canonical action. Recorded here so the audit file
+    shows one outcome row per manifest ID.
+- bma_id: BMA-PMS2-GERMLINE-PROSTATE
+  gene: PMS2
+  disease_id: DIS-PROSTATE
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  civic_gene_disease_set:
+  - Glioblastoma
+  - Endometrial Cancer
+  reason: >-
+    PMS2 has only 2 evidence items in the 2026-04-25 CIViC snapshot — EID1214
+    (K706FS*19 / Glioblastoma / Predictive C / Supports Sensitivity/Response /
+    Nivolumab) and EID1832 (R315* / Endometrial Cancer / Oncogenic C /
+    Supports Oncogenicity). Neither has prostate disease-token overlap.
+    Reproduces the wave-2-006 PMS2 finding that PMS2 has only 2 CIViC items,
+    neither prostate. Treatment claim (pembrolizumab in mCRPC after NHA/taxane
+    via tissue-agnostic MSI-H/dMMR label) is anchored on SRC-NCCN-PROSTATE-2025
+    and the FDA pan-tumor MSI-H label, not on CIViC. Maintainer may want to
+    ingest KEYNOTE-158 / GARNET stubs and the FDA tissue-agnostic label
+    citation in a follow-up source-ingest chunk.
+- bma_id: BMA-MLH1-SOMATIC-GASTRIC
+  gene: MLH1
+  disease_id: DIS-GASTRIC
+  verdict: already_backfilled_master_state_reproduces_current_snapshot
+  master_state_evidence_ids:
+  - EID1680
+  - EID1315
+  current_snapshot_match:
+    EID1680: >-
+      MLH1 EXPRESSION / Stomach Carcinoma / Prognostic B / Supports Poor
+      Outcome / no therapy — reproduces master state.
+    EID1315: >-
+      MLH1 METHYLATION / Stomach Carcinoma / Predictive B / Supports
+      Resistance to Oxaliplatin — reproduces master state.
+  civic_gene_evidence_count_any_disease: 27
+  civic_gene_disease_set:
+  - Stomach Carcinoma
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Villous Adenoma
+  reason: >-
+    BMA-MLH1-SOMATIC-GASTRIC already has evidence_sources populated on master
+    at HEAD (EID1680, EID1315) from a prior backfill pass. The upsert script
+    replaces evidence_sources wholesale; emitting an idempotent rewrite of
+    the same two EIDs adds noise without changing master state. The
+    2026-04-25 CIViC snapshot reproduces the same two items with identical
+    molecular_profile / disease / level / direction / significance / therapies.
+    Recording as already_backfilled rather than silently skipping (chunk-spec
+    rejection criterion 'Any manifest ID is silently skipped' requires every
+    manifest ID to have a documented outcome). Maintainer call. If a future
+    CIViC snapshot adds new MLH1 + Stomach-Carcinoma items, a follow-up
+    backfill chunk can re-run the match and emit a true upsert.
+not_found_in_master: []
