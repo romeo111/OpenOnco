@@ -72,7 +72,9 @@ def test_render_uk_target_no_client_calls(monkeypatch):
 
 def test_render_en_no_client_no_translation_no_crash(monkeypatch):
     """target_lang='en' with NO client configured → render still works,
-    UA text stays as-is, no exception."""
+    no exception. With curated `do_not_do_en` populated on every
+    Indication, the EN list renders directly; the UA list is suppressed
+    on EN renders."""
     monkeypatch.delenv("DEEPL_API_KEY", raising=False)
     monkeypatch.delenv("LIBRETRANSLATE_URL", raising=False)
     _set_translate_client(None)
@@ -84,16 +86,30 @@ def test_render_en_no_client_no_translation_no_crash(monkeypatch):
     # Document still produced, well-formed
     assert html.startswith("<!DOCTYPE html>")
     assert '<html lang="en">' in html
-    # UA do_not_do bullets still in original UA (no client to translate)
-    assert "Не починати" in html or "Не призначати" in html
+    # Curated `do_not_do_en` bullets emit instead of UA. The DLBCL
+    # indications all carry EN bullets; UA "Не "/"НЕ " stems should
+    # no longer appear inside the do_not section. (`_localize_html`
+    # post-pass also catches MDT orchestrator UA text registered in
+    # `_UI_STRINGS`, so the surrounding HTML is EN too.)
+    assert "What NOT to do" in html
+    do_not_section = html.split("What NOT to do", 1)[1].split("</section>", 1)[0]
+    assert "Не " not in do_not_section and "НЕ " not in do_not_section, (
+        "EN render should prefer curated do_not_do_en over UA fallback"
+    )
 
 
 # ── Phase B core: client invoked for long UA fields ──────────────────────
 
 
-def test_en_render_translates_do_not_do_bullets():
-    """do_not_do is the highest-value translation target — every bullet
-    should reach the translate client."""
+def test_en_render_prefers_do_not_do_en_over_translator():
+    """When `do_not_do_en` is curated, EN render uses it directly and
+    skips the translate client for those bullets — saves API quota +
+    uses authoritative wording (mirrors the bilingual-field policy in
+    `test_en_render_uses_bilingual_field_when_available`).
+
+    The DLBCL fixture indications all ship curated `do_not_do_en`, so
+    the client should never see a UA "Не "/"НЕ " bullet originating
+    from `Indication.do_not_do`."""
     stub = _StubTranslateClient()
     _set_translate_client(stub)
 
@@ -101,17 +117,20 @@ def test_en_render_translates_do_not_do_bullets():
     plan = generate_plan(p, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=None, target_lang="en")
 
-    # do_not_do bullets are UA — should each go through the client
     do_not_calls = [
         c for c in stub.calls
         if "Не " in c[0] or "НЕ " in c[0]
     ]
-    assert len(do_not_calls) >= 3, (
-        f"expected ≥3 do_not_do bullets translated; got {len(do_not_calls)}: "
-        f"{[c[0][:80] for c in stub.calls]}"
+    assert do_not_calls == [], (
+        f"do_not_do bullets should be served from do_not_do_en, not "
+        f"translated; client received: {[c[0][:80] for c in do_not_calls]}"
     )
-    # Translated output present in HTML
-    assert "EN(" in html
+    # Curated EN bullets render in the do_not section
+    assert "What NOT to do" in html
+    do_not_section = html.split("What NOT to do", 1)[1].split("</section>", 1)[0]
+    assert "Do not" in do_not_section or "Do NOT" in do_not_section, (
+        "expected curated EN bullets to appear under 'What NOT to do'"
+    )
 
 
 def test_redflag_definitions_skip_translator_when_en_field_present():
@@ -196,8 +215,11 @@ def test_translation_does_not_run_on_uk_render():
 
 
 def test_translation_failure_falls_back_to_original():
-    """If the translator raises, render returns the original UA text
-    — never crashes and never returns empty."""
+    """If the translator raises, render returns the original text without
+    crashing. With curated `do_not_do_en` the translator is no longer in
+    the do_not_do path at all; this test now verifies (a) render still
+    succeeds end-to-end despite a failing client, and (b) curated EN
+    bullets surface unaffected."""
     class _FailingClient:
         name = "failing"
 
@@ -212,5 +234,7 @@ def test_translation_failure_falls_back_to_original():
 
     # Document still produced
     assert html.startswith("<!DOCTYPE html>")
-    # Original UA do_not_do bullets still present (fell back gracefully)
-    assert "Не " in html or "Не призначати" in html
+    # Curated EN do_not_do bullets render, untouched by the failing client
+    assert "What NOT to do" in html
+    do_not_section = html.split("What NOT to do", 1)[1].split("</section>", 1)[0]
+    assert "Do not" in do_not_section or "Do NOT" in do_not_section
