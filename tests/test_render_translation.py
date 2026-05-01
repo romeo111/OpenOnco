@@ -1,14 +1,16 @@
-"""Phase B test: live translation of long free-text in rendered Plan.
+"""Phase B / C tests: translation of long free-text in rendered Plan.
 
-Verifies that when a translate client is configured AND target_lang
-differs from source UA, the render layer routes long UA fields
-(do_not_do, RedFlag definitions, MDT role reasons, open-question
-question + rationale) through the translation client. Uses a stub
-client to avoid network — the production stack (DeepL+LibreTranslate
-fallback) is exercised separately in test_translate_client.py.
+Resolution order (per `_translation_overrides.lookup`):
+1. Inline `OVERRIDES_UK_TO_EN` — engine-emitted code-side strings
+   (MDT role reasons, open questions, rationale).
+2. `_do_not_do_en.json` sidecar — KB free-text (do_not_do bullets).
+3. Escalation-suffix split for mutated reason strings.
+4. Live translate client (DeepL / LibreTranslate) for anything else.
+5. Original UA text — graceful degrade when no client is available.
 
-Also verifies graceful degrade: with NO client configured, render
-still produces a usable document; UA text remains in place.
+These tests verify each path: strings covered by overrides translate
+deterministically without a client; strings outside overrides reach
+the client when configured and fall back to UA otherwise.
 """
 
 from __future__ import annotations
@@ -70,9 +72,12 @@ def test_render_uk_target_no_client_calls(monkeypatch):
     assert stub.calls == [], "uk render should not invoke translator"
 
 
-def test_render_en_no_client_no_translation_no_crash(monkeypatch):
-    """target_lang='en' with NO client configured → render still works,
-    UA text stays as-is, no exception."""
+def test_render_en_no_client_overrides_still_translate(monkeypatch):
+    """target_lang='en' with NO client configured → render still works
+    AND the deterministic override pipeline still translates engine-
+    emitted strings + KB do_not_do bullets covered by the JSON sidecar.
+    Strings outside the overrides fall back to UA (graceful degrade).
+    """
     monkeypatch.delenv("DEEPL_API_KEY", raising=False)
     monkeypatch.delenv("LIBRETRANSLATE_URL", raising=False)
     _set_translate_client(None)
@@ -84,16 +89,25 @@ def test_render_en_no_client_no_translation_no_crash(monkeypatch):
     # Document still produced, well-formed
     assert html.startswith("<!DOCTYPE html>")
     assert '<html lang="en">' in html
-    # UA do_not_do bullets still in original UA (no client to translate)
-    assert "Не починати" in html or "Не призначати" in html
+    # Override-translated MDT reason present (from inline OVERRIDES_UK_TO_EN)
+    assert "Lymphoma diagnosis" in html or "Confirm lymphoma histology" in html, (
+        "expected EN MDT reason from inline overrides"
+    )
+    # Override-translated do_not_do bullet present (from JSON sidecar)
+    assert "Do not " in html or "Do NOT " in html, (
+        "expected EN do_not_do bullets from sidecar overrides"
+    )
 
 
 # ── Phase B core: client invoked for long UA fields ──────────────────────
 
 
 def test_en_render_translates_do_not_do_bullets():
-    """do_not_do is the highest-value translation target — every bullet
-    should reach the translate client."""
+    """do_not_do bullets render in EN. Strings present in the JSON
+    sidecar are served deterministically (never reach the client);
+    strings missing from the sidecar fall through to the live client.
+    With every current bullet covered by the sidecar, the client should
+    see at most a handful of misses (e.g. drift between KB and sidecar)."""
     stub = _StubTranslateClient()
     _set_translate_client(stub)
 
@@ -101,17 +115,14 @@ def test_en_render_translates_do_not_do_bullets():
     plan = generate_plan(p, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=None, target_lang="en")
 
-    # do_not_do bullets are UA — should each go through the client
-    do_not_calls = [
-        c for c in stub.calls
-        if "Не " in c[0] or "НЕ " in c[0]
-    ]
-    assert len(do_not_calls) >= 3, (
-        f"expected ≥3 do_not_do bullets translated; got {len(do_not_calls)}: "
-        f"{[c[0][:80] for c in stub.calls]}"
+    # No raw UA do_not_do bullets in the HTML — overrides covered them
+    assert "Не починати" not in html
+    assert "Не призначати" not in html
+    # Several EN-translated bullets are present
+    en_bullets = html.count("Do not ") + html.count("Do NOT ")
+    assert en_bullets >= 3, (
+        f"expected ≥3 EN do_not_do bullets; got {en_bullets}"
     )
-    # Translated output present in HTML
-    assert "EN(" in html
 
 
 def test_redflag_definitions_skip_translator_when_en_field_present():
@@ -139,25 +150,20 @@ def test_redflag_definitions_skip_translator_when_en_field_present():
 
 
 def test_en_render_translates_mdt_role_reasons():
-    """MDT role.reason fields (UA Ukrainian sentences) route through
-    translator on EN render."""
-    stub = _StubTranslateClient()
-    _set_translate_client(stub)
-
+    """MDT role.reason fields (engine-emitted UA strings) translate
+    deterministically via inline overrides — no client invocation
+    needed. Verifies the EN reason text appears in the rendered HTML."""
     p = _patient("patient_dlbcl_high_ipi.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     mdt = orchestrate_mdt(p, plan, kb_root=KB_ROOT)
-    render_plan_html(plan, mdt=mdt, target_lang="en")
+    html = render_plan_html(plan, mdt=mdt, target_lang="en")
 
-    # Hematologist's reason for required role contains UA "Лімфомний"
-    # or "провідна спеціальність" — should be translated
-    has_lymphoma_reason = any(
-        "Лімфом" in c[0] or "спеціальніст" in c[0]
-        for c in stub.calls
+    # Hematologist reason from inline overrides; UA original removed.
+    assert "Lymphoma diagnosis" in html, (
+        "expected EN MDT role reason from inline overrides"
     )
-    assert has_lymphoma_reason, (
-        f"expected MDT role.reason translation; client saw: "
-        f"{[c[0][:80] for c in stub.calls[:10]]}"
+    assert "Лімфомний діагноз" not in html, (
+        "raw UA reason leaked to EN render"
     )
 
 
@@ -196,8 +202,12 @@ def test_translation_does_not_run_on_uk_render():
 
 
 def test_translation_failure_falls_back_to_original():
-    """If the translator raises, render returns the original UA text
-    — never crashes and never returns empty."""
+    """If a string is missing from overrides AND the live client raises,
+    `_translate_kb_text` returns the original text — never crashes.
+    Verifies graceful degrade at the unit level (HTML render is mostly
+    covered by overrides today, so we exercise the helper directly)."""
+    from knowledge_base.engine.render import _translate_kb_text
+
     class _FailingClient:
         name = "failing"
 
@@ -206,11 +216,13 @@ def test_translation_failure_falls_back_to_original():
 
     _set_translate_client(_FailingClient())
 
+    # A UA string we know is NOT in overrides — falls through to the
+    # failing client, which raises, and we return the original text.
+    needle = "Випадковий рядок який точно не в овверайдах для тесту fallback."
+    assert _translate_kb_text(needle, "en") == needle
+
+    # Render still produces a document end-to-end
     p = _patient("patient_dlbcl_high_ipi.json")
     plan = generate_plan(p, kb_root=KB_ROOT)
     html = render_plan_html(plan, mdt=None, target_lang="en")
-
-    # Document still produced
     assert html.startswith("<!DOCTYPE html>")
-    # Original UA do_not_do bullets still present (fell back gracefully)
-    assert "Не " in html or "Не призначати" in html

@@ -6,7 +6,7 @@ the browser (Pyodide) where no translation API is reachable, and avoids
 hitting paid APIs at build time for code-side strings whose translation
 is fixed and reviewed.
 
-Two tables:
+Three tables:
 
 - `OVERRIDES_UK_TO_EN`: exact-match UA → EN. Keys must match the
   runtime-concatenated form emitted by the engine, NOT the source-code
@@ -19,12 +19,32 @@ Two tables:
   (DRUG-X, DRUG-Y)? ..."). The matcher replaces the UA prefix with the
   EN one and keeps the trailing variable text intact.
 
-Per CHARTER §8.3 these EN strings are reviewed code-side translations,
-not machine output requiring clinical sign-off — they describe
-specialty-routing rationale, not clinical recommendations.
+- `_do_not_do_en.json` sidecar: large machine-translated KB free-text
+  pool — every unique `Indication.do_not_do` bullet (~1300 strings)
+  pre-translated by an LLM agent. Loaded lazily on first lookup.
+  Per CHARTER §8.3 these are machine translations and should be
+  clinically reviewed before content is promoted out of `draft`/`stub`;
+  the engine surfaces them as best-effort EN renders today and the
+  underlying YAML source-of-truth remains UA.
+
+Per CHARTER §8.3 the inline `OVERRIDES_*` strings are reviewed
+code-side translations of specialty-routing rationale, not clinical
+recommendations.
 """
 
 from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+# Matches the suffix appended by mdt_orchestrator._apply_role_rules when a
+# RedFlag fires with clinical_direction in {intensify, hold} and escalates a
+# role's priority to required. Pattern: " Ескальовано через RedFlag <RF_ID>
+# (clinical_direction=<intensify|hold>)."
+_ESCALATION_SUFFIX_RE = re.compile(
+    r" Ескальовано через RedFlag ([\w-]+) \(clinical_direction=(\w+)\)\.$"
+)
 
 
 OVERRIDES_UK_TO_EN: dict[str, str] = {
@@ -142,11 +162,43 @@ PREFIX_OVERRIDES_UK_TO_EN: list[tuple[str, str]] = [
 ]
 
 
+_KB_SIDECAR_PATH = Path(__file__).parent / "_do_not_do_en.json"
+_KB_SIDECAR: dict[str, str] | None = None
+_KB_SIDECAR_LOADED = False
+
+
+def _kb_sidecar() -> dict[str, str]:
+    """Lazy-load the machine-translated KB free-text sidecar. Cached for
+    the process lifetime. Returns an empty dict if the file is missing
+    (graceful degrade — engine still renders, just falls back to UA)."""
+    global _KB_SIDECAR, _KB_SIDECAR_LOADED
+    if _KB_SIDECAR_LOADED:
+        return _KB_SIDECAR or {}
+    _KB_SIDECAR_LOADED = True
+    try:
+        with _KB_SIDECAR_PATH.open(encoding="utf-8") as fh:
+            _KB_SIDECAR = json.load(fh)
+    except (OSError, ValueError):
+        _KB_SIDECAR = {}
+    return _KB_SIDECAR or {}
+
+
 def lookup(text: str) -> str | None:
-    """Try exact match first, then prefix-substitution. Return EN string
+    """Try exact-match overrides first (inline + KB sidecar), then
+    escalation-suffix split, then prefix-substitution. Return EN string
     if a translation rule applies, else None.
 
-    The prefix rule is greedy: if a UA fragment starts with a known
+    Resolution order:
+    1. `OVERRIDES_UK_TO_EN` — engine-emitted code-side strings.
+    2. `_do_not_do_en.json` — KB free-text (do_not_do bullets).
+    3. Escalation-suffix split — when a role reason has been mutated
+       by `mdt_orchestrator._apply_role_rules` to append a UA
+       "Ескальовано через RedFlag X (clinical_direction=Y)." tail,
+       strip the tail, look up the head, re-attach EN tail.
+    4. `PREFIX_OVERRIDES_UK_TO_EN` — partial substitution for strings
+       with interpolated IDs / hypothesis lists.
+
+    The prefix rule is greedy: if a UA fragment contains a known
     prefix, replace it; the trailing text (drug IDs, hypothesis names,
     numeric IDs) is left untouched. Multiple prefixes can match in one
     string; all are applied in order."""
@@ -156,6 +208,17 @@ def lookup(text: str) -> str | None:
     hit = OVERRIDES_UK_TO_EN.get(stripped)
     if hit is not None:
         return hit
+    hit = _kb_sidecar().get(stripped)
+    if hit is not None:
+        return hit
+    # Escalation-suffix split — recurse on the head, re-attach EN tail.
+    m = _ESCALATION_SUFFIX_RE.search(stripped)
+    if m:
+        head = stripped[: m.start()]
+        rf_id, direction = m.group(1), m.group(2)
+        head_en = OVERRIDES_UK_TO_EN.get(head) or _kb_sidecar().get(head)
+        if head_en is not None:
+            return f"{head_en} Escalated via RedFlag {rf_id} (clinical_direction={direction})."
     # Prefix-replace pass — accumulate substitutions
     out = text
     changed = False
