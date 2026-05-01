@@ -75,6 +75,45 @@ ukraine_availability:
   notes: "Усі компоненти НСЗУ-доступні. Ponatinib обмежено доступний; dasatinib generic available."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Hyper-CVAD + R for B-ALL or aggressive Burkitt-like lymphomas.
+# Highly intensive 8-cycle alternating regimen with HD-MTX/HiDAC
+# in even cycles. Inpatient. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, мукозит порожнини рота"
+    action_ua: "Поширене — полоскання, м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Випадання волосся, помірна нудота"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Вінкристин спричиняє нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки — у дні HD-MTX (парні цикли)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен суворий контроль функції нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Розмиття мислення після HiDAC-доз"
+    action_ua: "Подзвоніть у клініку того ж дня — церебелярна токсичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — тривала нейтропенія, ризик сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   STUB — pending Clinical Co-Lead approval. MD Anderson regimen (Kantarjian

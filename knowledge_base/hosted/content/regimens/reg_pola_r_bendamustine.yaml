@@ -65,6 +65,45 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-DLBCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pola-R-bendamustine for R/R DLBCL transplant-ineligible (GO29365).
+# Polatuzumab neuropathy + bendamustine cytopenia + rituximab IRR.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Полатузумаб може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
+    action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання стає сильним болем"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози полатузумабу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна реакція на інфузію ритуксимабу"
+    action_ua: "Повідомте медсестру негайно — інфузію сповільнюють"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція або сепсис"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   GO29365 randomized phase 1b/2 (Sehn 2020): in r/r DLBCL ineligible for

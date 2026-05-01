@@ -41,6 +41,42 @@ sources:
   - SRC-ESMO-MELANOMA-2024
   - SRC-RELATIVITY-047-TAWBI-2022
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Relatlimab + nivolumab (Opdualag) for melanoma 1L (RELATIVITY-047).
+# LAG-3 + PD-1 dual checkpoint — slightly higher irAE rate than
+# nivo mono but lower than nivo+ipi. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — імунна реакція щитоподібної залози або новий діабет"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   RELATIVITY-047 phase 2/3: nivo+rela vs nivo mono in 1L melanoma —

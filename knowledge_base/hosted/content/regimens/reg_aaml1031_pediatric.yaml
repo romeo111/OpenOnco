@@ -68,6 +68,43 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ESMO-AML-2020
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# AAML1031 pediatric AML 1L. Same induction toxicity as adult 7+3 +
+# pediatric-specific concerns (growth, fertility, late effects).
+# STUB pending §6.1 signoff. Watchpoints written for the parent.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома у дитини, що триває тижнями"
+    action_ua: "Очікувано — кістковий мозок відновлюється повільно; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C у дитини"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії інфекція може швидко переходити у сепсис"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа у дитини"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

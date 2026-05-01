@@ -56,6 +56,43 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# 5-FU + LV + bevacizumab for mCRC patients with CKD (CrCl <30 where
+# capecitabine + oxaliplatin contraindicated). Inherits FU + bev
+# pattern. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, легка діарея"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Бевацизумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Зменшення кількості сечі, погіршення набряків"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі CKD потрібен суворий контроль функції нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна діарея >4 разів/день"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення особливо небезпечний при CKD"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — рідко бевацизумаб може спричиняти перфорацію кишківника"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

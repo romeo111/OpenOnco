@@ -49,6 +49,52 @@ ukraine_availability:
   notes: "Cetuximab typically out-of-pocket; selective NSZU coverage for RAS-WT left-sided mCRC pathway."
 
 sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# FOLFOX + cetuximab for RAS-WT-left mCRC 1L. Inherits FOLFOX
+# neuropathy + cold sensitivity + cytopenia + cetuximab rash + IRR.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Оксаліплатин — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Чутливість до холоду"
+    action_ua: "Уникайте холодного питва і повітря на обличчя"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Акнеформний висип"
+    action_ua: "Цетуксимаб — використовуйте призначені креми"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна діарея >4 разів/день"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Виражений висип з пухирями"
+    action_ua: "Подзвоніть у клініку того ж дня — тяжка шкірна реакція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна реакція на інфузію"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

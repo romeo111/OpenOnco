@@ -62,6 +62,43 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-DLBCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Loncastuximab tesirine CD19 ADC for R/R DLBCL 3L+ (LOTIS-2). PBD
+# payload signature: photosensitivity, edema, pleural effusions, GI.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Чутливість шкіри до сонця, легкі опіки"
+    action_ua: "Завжди користуйтесь сонцезахисним кремом SPF 50+ і одягом, що закриває шкіру; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Набряки гомілок, обличчя"
+    action_ua: "Поширене — підніміть ноги відпочиваючи; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена задишка при навантаженні, біль у грудях"
+    action_ua: "Подзвоніть у клініку того ж дня — лонкастуксимаб може спричиняти випіт у грудній порожнині"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-LOTIS-2-CAIMI-2021
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка у спокої"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий легеневий випіт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-30"
 reviewer_signoffs: []
 notes: >
