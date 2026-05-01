@@ -30,6 +30,49 @@ ukraine_availability:
   notes: "Not registered in Ukraine. Off-label access; major barrier."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lorlatinib for ALK+ NSCLC 2L+ (post-alectinib/crizotinib). Distinct
+# tox profile: weight gain + lipid elevation + cognitive / mood
+# changes are signature. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Набір ваги, підвищення холестерину при аналізах"
+    action_ua: "Поширений побічний ефект — обговоріть з лікарем стратегії харчування на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Набряки гомілок"
+    action_ua: "Зустрічається — занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Зміни настрою, розмиття мислення, проблеми зі сном"
+    action_ua: "Лорлатиніб може впливати на психічний стан — обов'язково повідомте лікаря на візиті, потрібна оцінка"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптові виражені зміни поведінки, плутаність свідомості"
+    action_ua: "Подзвоніть у клініку того ж дня — лорлатиніб може спричиняти серйозні психіатричні побічні ефекти"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — лорлатиніб може впливати на провідність серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко лорлатиніб може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   CROWN: 3-year PFS 64% (lorlatinib) vs 19% (crizotinib) — most active

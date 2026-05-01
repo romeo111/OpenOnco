@@ -39,6 +39,56 @@ ukraine_availability:
   notes: "Atezolizumab reimbursement varies; chemo backbone reimbursed."
 
 sources: [SRC-NCCN-SCLC-2025, SRC-ESMO-SCLC-2021]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Etoposide + carbo + atezolizumab for SCLC extensive-stage 1L
+# (IMpower133). Cytopenia + IO irAEs + alopecia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, особливо у перші 1-2 тижні циклу"
+    action_ua: "Очікувано — відпочивайте більше"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Випадання волосся (на 2-3 тижні)"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Помірна нудота, зниження апетиту"
+    action_ua: "Приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — карбо+етопозид дають глибоку нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт або прогресування"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Сильна реакція на інфузію (задишка, набряк обличчя)"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SCLC-2025
+
 last_reviewed:
 notes: >
   IMpower133: median OS 12.3 (EP+atezo) vs 10.3 months (EP alone) in
