@@ -1,0 +1,78 @@
+id: BIO-BRCA-SOMATIC
+names:
+  preferred: "Somatic BRCA1/BRCA2 pathogenic variant"
+  ukrainian: "Соматичний патогенний варіант BRCA1/BRCA2"
+  english: "Somatic BRCA1/BRCA2 mutation (tumor-only)"
+  synonyms: ["sBRCA1", "sBRCA2", "tumor BRCA"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "BRCA1, BRCA2"
+  variant_type: "loss-of-function (frameshift, nonsense, splice, large deletions)"
+  functional_impact: "loss of homologous recombination repair"
+  inheritance: "somatic"
+
+measurement:
+  method: "Tumor NGS (FFPE) — paired germline NGS strongly preferred to distinguish somatic vs germline; tumor-only calls require orthogonal germline testing for confirmation."
+  units: "categorical: pathogenic | likely_pathogenic | VUS | benign | absent"
+  typical_range: null
+
+specimen_requirements:
+  - "FFPE tumor block (≥20% tumor cellularity preferred for somatic variant calling)"
+  - "Paired blood / saliva for germline subtraction (when feasible)"
+
+interpretation_notes: >
+  Somatic-only BRCA1/2 alterations behave biologically like germline loss
+  for HRR deficiency and PARPi response, but lack the cascade-testing
+  implication for relatives. Stratification matters by disease:
+
+    • mCRPC (PROfound): cohort-A (BRCA1/2, ATM) showed largest olaparib
+      benefit (mPFS 7.4 vs 3.6 mo, HR 0.34); somatic and germline pooled.
+    • Ovarian (PAOLA-1, SOLO-1): HRD-positive includes somatic BRCA;
+      maintenance olaparib / niraparib indication post-platinum.
+    • Pancreatic (POLO): germline-only indication labeled — somatic
+      BRCA falls to off-label / NCCN "consider" category.
+    • Breast (OlympiA, EMBRACA): adjuvant + advanced PARPi indications
+      currently restricted to germline BRCA; somatic BRCA breast is
+      investigational.
+
+  Interpretation rule: PARPi tier varies by disease — confirm against
+  disease-specific NCCN before treatment recommendation.
+
+related_biomarkers:
+  - BIO-BRCA-GERMLINE
+  - BIO-BRCA1-BRCA2-GERMLINE
+  - BIO-PALB2-GERMLINE
+  - BIO-ATM-CHEK2-CDK12-GERMLINE
+
+sources:
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-CIVIC
+
+oncokb_skip_reason: multi_allele_mvp
+
+external_ids:
+  hgnc_symbol: "BRCA1"
+  civic_url: "https://civicdb.org/genes/BRCA1/summary"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Distinct entity from BIO-BRCA-GERMLINE: same HRR-deficient phenotype
+  but absent the inherited-cancer-risk implication and (in some labels)
+  reduced PARPi access. Confirmation of somatic vs germline status
+  requires paired germline testing — tumor-only NGS reports a "BRCA"
+  call that may in fact be germline in ~40% of cases (per ASCO/CAP
+  germline-implications guidance).
+notes_ua: >
+  Окрема сутність від BIO-BRCA-GERMLINE: той самий HRR-дефіцитний
+  фенотип, але без спадкового онкологічного ризику для родини та
+  (у деяких показаннях) з обмеженим доступом до PARPi. Підтвердження
+  соматичного статусу проти гермінального потребує парного
+  гермінального тестування — пухлинно-тільки NGS повідомляє "BRCA"
+  виклик, який у ~40% випадків насправді гермінальний (за
+  рекомендаціями ASCO/CAP щодо гермінальних імплікацій).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,89 @@
+id: BIO-LYNCH-PANEL-SPLIT
+names:
+  preferred: "Lynch syndrome germline panel — gene-resolved (MLH1 / MSH2 / MSH6 / PMS2 / EPCAM)"
+  ukrainian: "Гермінальна Lynch-панель — з розшифровкою гена (MLH1 / MSH2 / MSH6 / PMS2 / EPCAM)"
+  english: "Lynch syndrome germline panel — gene-specific result"
+  synonyms: ["Lynch germline", "HNPCC germline", "germline MMR"]
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "MLH1, MSH2, MSH6, PMS2, EPCAM"
+  variant_type: "loss-of-function (frameshift, nonsense, splice, large deletions); EPCAM 3' deletions silence MSH2"
+  functional_impact: "germline mismatch-repair deficiency"
+  inheritance: "germline"
+
+measurement:
+  method: "Germline multi-gene hereditary-cancer NGS panel on whole blood / saliva, with MLPA or equivalent for large rearrangements (PMS2 has high pseudogene homology — specialty assays required to distinguish gene from PMS2P pseudogenes)."
+  units: "categorical per gene: pathogenic | likely_pathogenic | VUS | benign | absent"
+
+specimen_requirements:
+  - "Whole blood EDTA or saliva — germline DNA"
+  - "PMS2 confirmatory long-range-PCR or LR-NGS when initial panel positive (pseudogene contamination)"
+
+interpretation_notes: >
+  Authored as a SINGLE composite biomarker (vs four separate entries)
+  per chunk schema-readout: existing BIO-DMMR-IHC and BIO-MSI-STATUS
+  already cover the tumor-side phenotype in one entry each; the
+  germline-side counterpart should mirror that grain.
+
+  Per-gene clinical implications (gene field carries the resolution):
+
+    • MLH1 germline: highest colorectal / endometrial cancer risk
+      (~50–70% lifetime CRC in women; ~50% in men). Most-common Lynch
+      gene. Note: tumor MLH1 IHC loss can be SPORADIC via promoter
+      hypermethylation — BRAF V600E + MLH1 methylation rules out
+      Lynch in a sporadic CRC.
+    • MSH2 germline: similar high risk profile to MLH1; also includes
+      Muir-Torre (sebaceous neoplasms) in some families.
+    • MSH6 germline: lower CRC risk (~20%), higher relative risk for
+      endometrial cancer, later age of onset.
+    • PMS2 germline: lowest penetrance Lynch gene (~15-20% CRC); often
+      missed historically due to pseudogene confounding.
+    • EPCAM 3' deletions: silence adjacent MSH2 epigenetically →
+      Lynch phenotype with normal MSH2 sequence.
+
+  Therapeutic implications largely flow through the tumor MMR/MSI
+  status (BIO-DMMR-IHC, BIO-MSI-STATUS): pembrolizumab / nivolumab in
+  MSI-H/dMMR tumors regardless of histology (KEYNOTE-177, CheckMate-8HW).
+  The germline panel's role is hereditary-cancer surveillance and
+  cascade testing, not direct treatment selection.
+
+related_biomarkers:
+  - BIO-DMMR-IHC
+  - BIO-MSI-STATUS
+  - BIO-TMB-HIGH
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-CIVIC
+
+oncokb_skip_reason: germline_no_somatic
+
+external_ids:
+  hgnc_symbol: "MLH1"
+  civic_url: "https://civicdb.org/genes/MLH1/summary"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Surveillance / cascade-testing biomarker. v0.1 grouping is a single
+  composite entry to mirror BIO-DMMR-IHC / BIO-MSI-STATUS at the same
+  resolution; the gene-resolved field carries the actual gene called.
+  If the engine needs to branch on MLH1 vs MSH6 (e.g., gene-specific
+  surveillance starting age, gene-specific colorectal cancer risk
+  tiers), split into BIO-MLH1-GERMLINE / BIO-MSH2-GERMLINE / etc. in
+  a follow-on chunk. Cascade-testing recommendation is uniform
+  across the five genes; differentiation kicks in at surveillance
+  cadence and risk counseling.
+notes_ua: >
+  Біомаркер для нагляду / каскадного тестування. У v0.1 — одна
+  композитна сутність, що відповідає рівню деталізації
+  BIO-DMMR-IHC / BIO-MSI-STATUS; ген-специфічне поле передає
+  фактичний виклик гена. Якщо двигун потребуватиме розгалуження
+  за MLH1 vs MSH6 (наприклад, ген-специфічний вік старту нагляду
+  чи рівні ризику колоректального раку), розділіть на
+  BIO-MLH1-GERMLINE / BIO-MSH2-GERMLINE тощо у наступному чанку.
+  Рекомендація щодо каскадного тестування є однаковою для всіх
+  п'яти генів; диференціація проявляється у частоті нагляду та
+  консультуванні щодо ризику.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
