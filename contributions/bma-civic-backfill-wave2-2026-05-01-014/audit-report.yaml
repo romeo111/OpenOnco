@@ -1,0 +1,80 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-014
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert. Per chunk-spec: ''do not invent treatment claims when CIViC
+    has no suitable evidence item.'' Variant-aware filter + synonym expansion was
+    applied (HRR-panel for BMA-HRD-STATUS-PROSTATE only). All counts derived from
+    CIViC snapshot 2026-04-25 (4842 evidence items, accepted only).'
+no_match_rows:
+- bma_id: BMA-CCND1-IHC-MM
+  gene: CCND1
+  disease_id: DIS-MM
+  variant_qualifier: 'CCND1 expression / cyclin D1 IHC (often surrogate for t(11;14))'
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 17
+  civic_gene_diseases_seen:
+  - Breast Cancer
+  - Lung Non-small Cell Carcinoma
+  - Head And Neck Squamous Cell Carcinoma
+  - Mantle Cell Lymphoma
+  - Estrogen-receptor Positive Breast Cancer
+  - Skin Melanoma
+  - Renal Cell Carcinoma
+  - Ovarian Cancer
+  - Childhood B-cell Acute Lymphoblastic Leukemia
+  - Cancer
+  rationale: 'No CIViC evidence item links CCND1 (or cyclin D1 surrogate) to Multiple
+    Myeloma. The MM-specific actionability claim (CCND1 / t(11;14) → BCL2 dependence
+    → venetoclax response) rests on multiple-myeloma trials (e.g. BELLINI, CANOVA;
+    Kumar Lancet Oncol 2020) that are not represented as CIViC accepted evidence
+    in the 2026-04-25 snapshot. Maintainer should source these via SRC-* primary-trial
+    stubs rather than CIViC.'
+- bma_id: BMA-MSH2-GERMLINE-ENDOMETRIAL
+  gene: MSH2
+  disease_id: DIS-ENDOMETRIAL
+  variant_qualifier: 'MSH2 germline loss-of-function (dMMR / MSI-H)'
+  verdict: already_has_civic_evidence
+  current_eid_count: 2
+  current_eids:
+  - EID1790
+  - EID1837
+  rationale: 'Hosted BMA already carries SRC-CIVIC evidence_sources (level=C,
+    Supports Oncogenicity, EID1790 + EID1837) from prior backfill. CIViC snapshot
+    2026-04-25 contains no additional MSH2-Endometrial evidence items beyond these
+    two. No upsert produced — re-emitting identical state would create a no-op
+    diff. Conservative gate prevents redundant maintainer review burden.'
+- bma_id: BMA-MSH6-SOMATIC-PROSTATE
+  gene: MSH6
+  disease_id: DIS-PROSTATE
+  variant_qualifier: 'MSH6 somatic loss-of-function (dMMR / MSI-H)'
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 6
+  civic_gene_diseases_seen:
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Transitional Cell Carcinoma
+  rationale: 'No CIViC evidence item links MSH6 to prostate cancer. The clinical
+    claim (MSH6 somatic loss in mCRPC → MSI-H → tissue-agnostic pembrolizumab) rests
+    on KEYNOTE-158 (Marabelle Lancet Oncol 2020) and tissue-agnostic FDA approval
+    (2017). These are pan-tumor MSI-H evidence rather than gene-specific MSH6 +
+    prostate evidence in CIViC. Maintainer may consider linking via BMA-MSI-H-PROSTATE
+    parent entity (if exists) or via primary KEYNOTE-158 source stub.'
+- bma_id: BMA-PMS2-SOMATIC-OVARIAN
+  gene: PMS2
+  disease_id: DIS-OVARIAN
+  variant_qualifier: 'PMS2 somatic loss-of-function (dMMR / MSI-H)'
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  civic_gene_diseases_seen:
+  - Glioblastoma
+  - Endometrial Cancer
+  rationale: 'No CIViC evidence item links PMS2 to ovarian cancer. CIViC PMS2 coverage
+    is sparse (2 evidence items total, both in non-ovarian tumors). The clinical
+    claim (PMS2 somatic loss → MSI-H → tissue-agnostic pembrolizumab in EOC) again
+    rests on KEYNOTE-158 / tissue-agnostic FDA approval rather than gene-specific
+    CIViC evidence. Same maintainer routing recommendation as MSH6-PROSTATE.'
+not_found_in_master: []
