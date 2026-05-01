@@ -1,0 +1,108 @@
+id: REG-BLINA-INOTUZUMAB-CONSOLIDATION-BALL
+name: "Blinatumomab + inotuzumab sequential consolidation (R/R Ph-negative B-ALL, MRD-directed bridge to alloHSCT)"
+name_ua: "Блінатумомаб + інотузумаб послідовна консолідація (Р/Р Ph-негативний B-ALL, MRD-спрямований bridge до алло-ТГСК)"
+alternate_names:
+  - "Blina + InO sequential"
+  - "Sequential immunotherapy bridge to HSCT"
+
+components:
+  - drug_id: DRUG-BLINATUMOMAB
+    dose: "Induction (CD19+ disease): 9 µg/day CIVI days 1-7, then 28 µg/day CIVI days 8-28 (cycle 1); 28 µg/day CIVI days 1-28 (cycle 2). Up to 2 induction cycles for morphologic CR + MRD eradication."
+    schedule: "Continuous IV infusion 28 days + 14 days rest = 42-day cycle. Used FIRST if disease is CD19+ and MRD-directed cytoreduction is the goal."
+    route: IV
+  - drug_id: DRUG-INOTUZUMAB-OZOGAMICIN
+    dose: "Following blinatumomab CR / MRD-negative CR (or as up-front cytoreductor for high-blast disease): 0.8 mg/m² IV day 1, 0.5 mg/m² IV days 8 + 15 (cycle 1, 21-day cycle); 0.5 mg/m² IV days 1, 8, 15 (cycle 2, 28-day cycle). Limit to ≤2 cycles before allo-HSCT to minimize VOD/SOS."
+    schedule: "Days 1, 8, 15. Up to 2 cycles pre-HSCT; sequential bridge after blinatumomab response or as alternative cytoreductor."
+    route: IV
+
+cycle_length_days: 42
+total_cycles: "Sequential: up to 2 cycles blinatumomab + up to 2 cycles inotuzumab → allo-HSCT in eligible patients; tailored to MRD response and HSCT donor availability"
+toxicity_profile: severe
+
+premedication:
+  - "Confirm CD19+ AND CD22+ expression by flow cytometry / IHC at baseline"
+  - "Confirm Ph-negative status (BCR::ABL1 by RT-PCR) — Ph+ B-ALL uses TKI-based combinations instead"
+  - "Document allo-HSCT eligibility + donor search at start of immunotherapy bridge — sequencing depends on HSCT timing"
+  - "Cytoreduction with hydroxyurea / steroids if peripheral blast count >10,000/µL before initiation"
+  - "Hospitalization for blinatumomab cycle 1 days 1-9 + cycle 2 days 1-2 (CRS / neurotoxicity monitoring)"
+  - "Dexamethasone 20 mg IV pretreatment per blinatumomab protocol; antipyretic + antihistamine + steroid pre-inotuzumab infusion reactions"
+  - "Avoid dual-alkylator conditioning regimens for HSCT — increases VOD/SOS multiplicatively after inotuzumab exposure"
+  - "Baseline LFTs / bilirubin / LVEF / lumbar puncture per institutional protocols"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3 CRS during blinatumomab"
+    modification: "Hold; dexamethasone 8 mg IV q8h + tocilizumab 8 mg/kg IV; resume at 9 µg/day; permanently discontinue blinatumomab if Grade 4"
+    rationale: "TOWER + meta-analysis — blinatumomab Grade ≥3 CRS ~5%; mitigated by step-up dosing + dex prophylaxis"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Grade 3-4 neurotoxicity during blinatumomab"
+    modification: "Hold ≥3 days until ≤Grade 1; dex 8 mg IV q8h; resume at 9 µg/day; permanently discontinue if Grade 4 OR seizure"
+    rationale: "BiTE-related ICANS-like syndrome ~9% Grade ≥3"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Hepatic VOD/SOS — any grade"
+    modification: "Permanently discontinue inotuzumab; defibrotide if severe; defer HSCT if active VOD"
+    rationale: "Sequential blinatumomab → inotuzumab does NOT eliminate VOD risk; ≤2 inotuzumab cycles + avoid dual-alkylator conditioning"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+      - SRC-NCCN-ALL-2025
+  - condition: "Total bilirubin >1.5× ULN OR AST/ALT >2.5× ULN during inotuzumab"
+    modification: "Hold inotuzumab; resume once recovered; permanently discontinue if not recovered within 7 days OR recurrent"
+    rationale: "Predictor of VOD/SOS; HSCT timing may need to advance"
+    source_refs:
+      - SRC-INOVATE-KANTARJIAN-2016
+  - condition: "MRD-positive after 2 blinatumomab cycles"
+    modification: "Switch to inotuzumab × 2 cycles → allo-HSCT (do not extend blinatumomab beyond 2 induction cycles in MRD+ disease)"
+    rationale: "Resistance pattern (CD19 loss / lineage switch) — switch antigen target; HSCT remains curative-intent goal"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "CD19 antigen loss / lineage switch on relapse during blinatumomab"
+    modification: "Discontinue blinatumomab; switch to inotuzumab (CD22) OR CD19 CAR-T if CD19 retained; HSCT as available"
+    rationale: "Antigen escape ~20-30% of blinatumomab failures; biopsy at relapse + immunophenotyping mandatory"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Both blinatumomab + inotuzumab registered in Ukraine; NSZU reimbursement is partial / case-by-case for adult R/R B-ALL. Sequential immunotherapy bridge requires specialized hematology center with allo-HSCT capability (Kyiv NCSHC, Lviv, Dnipro). Real-world cost USD 100-200K all-in including HSCT."
+
+sources:
+  - SRC-INOVATE-KANTARJIAN-2016
+  - SRC-NCCN-ALL-2025
+  - SRC-BLAST-GOKBUGET-2018
+
+last_reviewed: "2026-04-29"
+notes: >
+  Sequential immunotherapy strategy for adult R/R Ph-negative B-ALL using
+  blinatumomab + inotuzumab as bridge to allogeneic HSCT — order tailored
+  to disease burden and antigen expression. Rationale: TOWER + INO-VATE
+  individually showed 40-80% CR rates; sequential application can rescue
+  blinatumomab failures (CD19-loss escape) with inotuzumab and vice versa.
+  Real-world series (MD Anderson Jabbour, others) show MRD-negative CR
+  rates ~60-80% with bridge-to-HSCT in 50-70% of responders. Limit
+  inotuzumab to ≤2 cycles pre-HSCT and avoid dual-alkylator conditioning
+  (busulfan + melphalan + thiotepa) — VOD/SOS risk multiplies. STUB —
+  pending TOWER ingestion + Co-Lead sign-off; sequencing details depend
+  on local HSCT timing protocols.
+notes_ua: >
+  Послідовна імунотерапевтична стратегія для дорослих рецидиву/рефрактерного
+  Ph-негативного B-ALL з використанням блінатумомабу + інотузумабу як bridge
+  до алогенної ТГСК — порядок підлаштовано під обсяг хвороби та експресію
+  антигенів. Обґрунтування: TOWER + INO-VATE окремо показали 40-80% CR;
+  послідовне застосування може рятувати після невдачі блінатумомабу
+  (CD19-втрата) інотузумабом і навпаки. Реальні серії (MD Anderson Jabbour,
+  інші) показують MRD-негативну CR ~60-80% з bridge-to-HSCT у 50-70%
+  респондерів. Обмежити інотузумаб до ≤2 циклів перед ТГСК і уникати
+  режимів подвійного алкілятора (бусульфан + мелфалан + тіотепа) — ризик
+  ВОЗ/СОС мультиплікується. STUB — очікує ingestion TOWER та підпис
+  клінічного Co-Lead; деталі послідовності залежать від локальних
+  протоколів ТГСК.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
