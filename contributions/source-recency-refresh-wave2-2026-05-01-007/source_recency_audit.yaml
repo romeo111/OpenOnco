@@ -1,0 +1,57 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-007
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source recency audit per issue #209 output requirements
+    (id, url_verified, content_current, proposed_current_as_of, license_status,
+    notes). Mirrors task spec field names verbatim. Does not duplicate metadata
+    captured in src_*.yaml upserts or unreachable.yaml.'
+entries:
+- id: SRC-CALGB-10801
+  url_verified: 'no'
+  content_current: 'no'
+  proposed_current_as_of: null
+  license_status: pending_review
+  notes: 'Auto-stub with no URL field; legal_review.status=pending in hosted YAML.
+    No content_current determination possible without canonical citation. Flagged
+    in unreachable.yaml; maintainer should add NCT/PMID and resolve stub.'
+- id: SRC-NCCN-AML-2025
+  url_verified: 'yes'
+  content_current: 'yes'
+  proposed_current_as_of: '2026-05-01'
+  license_status: present
+  notes: 'HTTP 200 on https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1411.
+    NCCN proprietary license + permissions URL present in YAML; legal_review.status=reviewed
+    (2026-04-25). Version still placeholder ''v.X.2025'' — separate clinical-review
+    item. Bumped current_as_of from ''2025-XX-XX'' placeholder.'
+- id: SRC-BOLERO2-BASELGA-2012
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: present
+  notes: 'NEJM URL 403 (publisher bot-blocking); DOI fallback also 403. NEJM
+    subscription license present; legal_review.status=reviewed. Clinical content
+    (BOLERO-2 phase-3) is established 2L+ standard for HR+/HER2- post-AI breast
+    — not superseded. current_as_of NOT bumped per blocked-by-bot-protection
+    spec rule. See unreachable.yaml.'
+- id: SRC-POLLUX-DIMOPOULOS-2016
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: present
+  notes: 'PubMed URL 403 + DOI fallback 403 (NEJM). NEJM subscription license
+    present; legal_review.status=reviewed. POLLUX phase-3 / DRd remains 2L+
+    standard for R/R MM with FDA approval Nov 2016 — not superseded. current_as_of
+    NOT bumped. See unreachable.yaml.'
+- id: SRC-NAVIGATE-DRILON-2018
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: pending_review
+  notes: 'PubMed URL 403 + DOI fallback 403 (NEJM). NEJM subscription license
+    name present BUT legal_review.status=pending in hosted YAML — separate review
+    item. Larotrectinib NTRK-fusion+ pooled analysis remains tumor-agnostic
+    foundational evidence — not superseded. current_as_of NOT bumped. See
+    unreachable.yaml.'
