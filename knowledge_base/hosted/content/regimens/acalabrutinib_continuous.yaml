@@ -32,6 +32,42 @@ ukraine_availability:
   notes: "Acalabrutinib registered but NOT reimbursed via НСЗУ — funding gap; ibrutinib (REG-IBRUTINIB-CLL or similar) may substitute as fallback"
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Acalabrutinib continuous for CLL 1L (ELEVATE-TN). BTKi pattern:
+# headache, GI, bleeding, AF, infections. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль протягом перших тижнів"
+    action_ua: "Часто минає за 1-2 місяці — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота, легка діарея"
+    action_ua: "Зазвичай легкі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi підвищують ризик кровотеч"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Прискорене серцебиття, нерівномірний пульс"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива миготлива аритмія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка з ознобом"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія підвищує ризик інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильна тривала кровотеча або раптовий сильний головний біль"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Preferred BTKi for CLL 1L per NCCN 2025 (over ibrutinib due to less

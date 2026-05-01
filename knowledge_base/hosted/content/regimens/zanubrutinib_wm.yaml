@@ -20,6 +20,43 @@ dose_adjustments:
 
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Zanubrutinib NOT НСЗУ-reimbursed; ibrutinib substitute (also BTKi, more cardiac toxicity but reimbursed)"}
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Zanubrutinib for WM (Waldenström macroglobulinemia). BTKi pattern;
+# WM patients often have elevated IgM hyperviscosity at baseline.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль, нудота"
+    action_ua: "Часто минає за місяць — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Поширене — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi підвищують ризик кровотеч"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка з ознобом, кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильний головний біль, розмиття зору, шум у вухах — ознаки гіпервіскозного синдрому"
+    action_ua: "Подзвоніть у клініку того ж дня — у WM ризик гіпервіскозності, потрібна оцінка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна головний біль із порушенням зору або мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тромб або гіпервіскозна криза"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   ASPEN trial demonstrated superior hematologic + safety profile vs

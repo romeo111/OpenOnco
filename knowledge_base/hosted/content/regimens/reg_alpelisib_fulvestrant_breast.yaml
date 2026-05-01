@@ -37,6 +37,51 @@ ukraine_availability:
   notes: "Alpelisib registered, NSZU does not cover; fulvestrant reimbursed. Out-of-pocket for alpelisib. Major access barrier."
 
 sources: [SRC-SOLAR1-ANDRE-2019, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Alpelisib + fulvestrant for PIK3CA-mut HR+/HER2- breast 2L+
+# (SOLAR-1). Signature: hyperglycemia (frequent and significant —
+# can require insulin) + rash + diarrhea. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Часті позиви до сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — алпелісіб часто спричиняє гіперглікемію; може знадобитись метформін або інсулін"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-SOLAR1-ANDRE-2019
+  - trigger_ua: "Висип на тілі"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко алпелісіб може спричиняти тяжкі шкірні реакції; рання оцінка важлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-SOLAR1-ANDRE-2019
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Поширене — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірний біль, почервоніння або вузол у місці ін'єкції фулвестранту"
+    action_ua: "Поширене — занотовуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Виражений висип з пухирями, лущенням, ураженням слизових"
+    action_ua: "Звертайтесь у лікарню негайно — може бути SJS / TEN"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-SOLAR1-ANDRE-2019
+  - trigger_ua: "Тяжка слабкість, плутаність свідомості, нудота і блювота — ознаки кетоацидозу"
+    action_ua: "Звертайтесь у лікарню негайно — гіперглікемія може швидко переходити у кетоацидоз"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   SOLAR-1: PIK3CA-mutant cohort PFS 11.0 vs 5.7 mo (HR 0.65). PIK3CA

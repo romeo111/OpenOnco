@@ -30,6 +30,44 @@ ukraine_availability:
   notes: "Elacestrant not registered in Ukraine. Named-patient import / EAP / cross-border (EU) only. Major access barrier; ESR1-mutation testing (ctDNA) also a UA-availability issue."
 
 sources: [SRC-EMERALD-BIDARD-2022, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Elacestrant for ESR1-mut HR+/HER2- breast 2L+ (EMERALD). Oral SERD;
+# generally well-tolerated. Key axes: GI, hot flashes, fatigue,
+# liver. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втрата апетиту"
+    action_ua: "Зустрічається — приймайте препарат з їжею"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Гарячі припливи, легка втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна діарея, нудота"
+    action_ua: "Зазвичай легкі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — елацестрант може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — гормональна терапія + рак підвищують ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   EMERALD: ESR1-mutant cohort PFS 3.8 vs 1.9 mo (HR 0.55). Benefit
