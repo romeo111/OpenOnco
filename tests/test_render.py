@@ -86,6 +86,59 @@ def test_treatment_plan_renders_mdt_when_provided():
     assert "hematologist" in html or "Гематолог" in html
 
 
+# ── Pre-treatment "Where to order" column ─────────────────────────────────
+
+
+def _ovarian_brca_plan():
+    """Fixture that exercises TEST-GERMLINE-BRCA-PANEL → CSD M089."""
+    fixture = json.loads(
+        (REPO_ROOT / "tests" / "fixtures" / "cases" / "csd_4_ovarian_brca1_plat_sens_2l.json")
+        .read_text(encoding="utf-8")
+    )
+    return generate_plan(fixture, kb_root=KB_ROOT)
+
+
+def test_pretreatment_table_has_where_to_order_column_uk_and_en():
+    plan = _ovarian_brca_plan()
+    html_uk = render_plan_html(plan, target_lang="uk")
+    html_en = render_plan_html(plan, target_lang="en")
+    assert "Де замовити" in html_uk
+    assert "Where to order" in html_en
+
+
+def test_pretreatment_renders_verified_csd_product_code_with_link():
+    """A test entity with `lab_availability_ua.product_code` set must surface
+    as a clickable chip pointing at the lab's public catalog."""
+    plan = _ovarian_brca_plan()
+    html = render_plan_html(plan, target_lang="uk")
+    assert "TEST-GERMLINE-BRCA-PANEL" in html
+    assert "M089" in html
+    assert 'class="lab-chip"' in html
+    assert "csdlab.ua" in html
+    # External link hardening
+    assert 'target="_blank"' in html
+    assert 'rel="noopener"' in html
+
+
+def test_pretreatment_renders_category_only_chip_with_tbc_marker():
+    """A test entity with `lab_availability_ua` but no product_code must
+    render as a soft chip indicating the category is confirmed but the
+    specific code is TBC."""
+    fixture = json.loads(
+        (REPO_ROOT / "tests" / "fixtures" / "cases" / "csd_4_nsclc_egfr_post_osi_2l.json")
+        .read_text(encoding="utf-8")
+    )
+    plan = generate_plan(fixture, kb_root=KB_ROOT)
+    html_uk = render_plan_html(plan, target_lang="uk")
+    html_en = render_plan_html(plan, target_lang="en")
+    # PD-L1 IHC is category-only confirmed
+    assert "TEST-PDL1-IHC" in html_uk
+    assert "код TBC" in html_uk
+    assert "code TBC" in html_en
+    # The check-mark is the visual indicator for category-only confirmation
+    assert "✓" in html_uk
+
+
 # ── Diagnostic brief render ───────────────────────────────────────────────
 
 

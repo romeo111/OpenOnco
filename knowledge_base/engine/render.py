@@ -372,6 +372,9 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "th_priority":                 {"uk": "Пріоритет", "en": "Priority"},
     "th_category":                 {"uk": "Категорія", "en": "Category"},
     "th_needed_for":               {"uk": "Потрібно для", "en": "Needed for"},
+    "th_where_to_order":           {"uk": "Де замовити", "en": "Where to order"},
+    "lab_avail_code_tbc":          {"uk": "код TBC", "en": "code TBC"},
+    "lab_avail_none":              {"uk": "—", "en": "—"},
     "th_phase":                    {"uk": "Фаза", "en": "Phase"},
     "th_window":                   {"uk": "Вікно", "en": "Window"},
     "th_tests":                    {"uk": "Тести", "en": "Tests"},
@@ -838,6 +841,39 @@ _PRIORITY_BADGE_CLS = {
 _PRIORITY_RANK = {"critical": 0, "standard": 1, "desired": 2, "calculation_based": 3}
 
 
+def _render_lab_availability_cell(test: dict, target_lang: str = "uk") -> str:
+    """Render the per-test "Where to order" cell from `lab_availability_ua`.
+
+    Each entry becomes one chip: `<lab>: <code>` if a product code is verified,
+    `<lab> ✓` if only the category is confirmed. Chips link to the lab's
+    public catalog page; coverage_notes go in a `title` tooltip. Multiple
+    entries (e.g. M081 + M065 fallback for NSCLC NGS) join with `<br>`.
+    """
+    entries = test.get("lab_availability_ua") or []
+    if not entries:
+        return _h(_t("lab_avail_none", target_lang))
+
+    chips: list[str] = []
+    for e in entries:
+        lab = e.get("lab") or ""
+        code = e.get("product_code")
+        url = e.get("url") or ""
+        notes = e.get("coverage_notes") or e.get("product_name") or ""
+        if code:
+            label = f"{lab}: {code}"
+        else:
+            label = f"{lab} ✓ ({_t('lab_avail_code_tbc', target_lang)})"
+        title_attr = f' title="{_h(notes.strip())}"' if notes else ""
+        if url:
+            chips.append(
+                f'<a class="lab-chip" href="{_h(url)}" target="_blank" '
+                f'rel="noopener"{title_attr}>{_h(label)}</a>'
+            )
+        else:
+            chips.append(f'<span class="lab-chip"{title_attr}>{_h(label)}</span>')
+    return "<br>".join(chips)
+
+
 def _render_pretreatment_investigations(
     plan, kb_resolved: dict, target_lang: str = "uk"
 ) -> str:
@@ -895,10 +931,13 @@ def _render_pretreatment_investigations(
             f'<span class="badge {_PRIORITY_BADGE_CLS.get(priority, "badge--optional")}">'
             f'{_h(_priority_label(priority, target_lang))}</span>'
         )
+        lab_cell = _render_lab_availability_cell(test, target_lang)
         rows.append(
             f'<tr><td>{_h(tid)}</td><td>{_h(name)}</td>'
             f'<td>{priority_badge}</td>'
-            f'<td>{_h(category)}</td><td>{_h(scope)}</td></tr>'
+            f'<td>{_h(category)}</td>'
+            f'<td class="lab-avail-cell">{lab_cell}</td>'
+            f'<td>{_h(scope)}</td></tr>'
         )
 
     return (
@@ -910,6 +949,7 @@ def _render_pretreatment_investigations(
         f'<th>{_h(_t("th_name", target_lang))}</th>'
         f'<th>{_h(_t("th_priority", target_lang))}</th>'
         f'<th>{_h(_t("th_category", target_lang))}</th>'
+        f'<th>{_h(_t("th_where_to_order", target_lang))}</th>'
         f'<th>{_h(_t("th_needed_for", target_lang))}</th></tr></thead>'
         f'<tbody>{"".join(rows)}</tbody>'
         '</table>'

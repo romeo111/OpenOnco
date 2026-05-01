@@ -49,7 +49,7 @@
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз — це
       proposed-plan: structured data + algorithm + sources на місці, але
-      без dual sign-off. Стан станом на <code>2026-04-30 22:59 UTC</code>.
+      без dual sign-off. Стан станом на <code>2026-05-01 08:28 UTC</code>.
       Це інструмент підтримки рішень, не медичний пристрій.
     </div>
 
@@ -61,7 +61,7 @@
       </h2>
       <p class="promo-sub">
         Декларативний rule engine на <strong>65 хворобах</strong>,
-        440 red flags, 312 показань, 253 режимів.
+        442 red flags, 312 показань, 253 режимів.
         Без LLM у клінічному рішенні, без серверу, без логів.
         Patient JSON ніколи не покидає машину.
       </p>
@@ -76,11 +76,11 @@
           <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">271</div>
+          <div class="promo-stat-num">272</div>
           <div class="promo-stat-lbl">Цитованих джерел</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">440</div>
+          <div class="promo-stat-num">442</div>
           <div class="promo-stat-lbl">Red flags</div>
         </div>
         <div class="promo-stat">
@@ -303,7 +303,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">440</div>
+          <div class="num-big">442</div>
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">тригери ескалації або розслідування</div>
           <p class="num-text">
@@ -358,11 +358,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">271</div>
+          <div class="num-big">272</div>
           <div class="num-lbl">Джерела (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Під цими 271 джерелами — десятки тисяч primary clinical
+            Під цими 272 джерелами — десятки тисяч primary clinical
             publications (RCTs, мета-аналізи, когортні дослідження) і тисячі
             сторінок керівництв. Кожна Indication / Regimen / RedFlag цитує
             конкретні джерела з <em>position</em> (supports / contradicts /
@@ -404,7 +404,7 @@
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Кожен з 440 RF перевіряється проти findings. Boolean
+            Кожен з 442 RF перевіряється проти findings. Boolean
             engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
             clauses з threshold-ами. RF-trigger alias map зменшила «unevaluated»
             warnings ~на 76%.
@@ -951,7 +951,7 @@
           <tr><td>Хвороби з повним ланцюгом</td><td>64 / 65</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
           <tr><td>Indications 1L</td><td>179</td><td>Перша лінія покрита для всіх 65 хвороб</td></tr>
           <tr><td>Indications 2L+</td><td>133</td><td>Друга-четверта лінія: 34 гематологічних + 10 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
-          <tr><td>RedFlags</td><td>440</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
+          <tr><td>RedFlags</td><td>442</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
           <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
