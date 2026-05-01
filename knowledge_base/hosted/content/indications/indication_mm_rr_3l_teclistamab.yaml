@@ -1,0 +1,134 @@
+id: IND-MM-RR-3L-TECLISTAMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed/refractory multiple myeloma"
+    - "Triple-class exposed/refractory (post-PI, post-IMiD, post-anti-CD38)"
+    - "≥3 prior systemic lines"
+    - "Active progressive disease (IMWG criteria)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_min: 18
+
+recommended_regimen: REG-TECLISTAMAB
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~63% (MajesTEC-1; Moreau 2022 NEJM)"
+  complete_response: "~39% sCR / CR"
+  progression_free_survival: "Median PFS ~11.3 mo"
+  overall_survival_median: "Median OS ~22 mo (mature follow-up)"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative:
+  - RF-MM-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-WHOLE-BODY-MRI
+
+rationale: >
+  Teclistamab (BCMA × CD3 bispecific) for triple-class exposed/refractory
+  R/R multiple myeloma after ≥3 prior lines including PI, IMiD, and
+  anti-CD38 antibody. MajesTEC-1 (Moreau 2022 NEJM): ORR 63%, CR/sCR
+  39%, mPFS ~11.3 mo, mOS ~22 mo — substantially better than historical
+  triple-class-refractory outcomes (mOS ~6 mo with conventional therapy).
+  Off-the-shelf availability (no manufacturing window, unlike CAR-T) is a
+  major operational advantage in rapidly progressive disease, but
+  prolonged + severe immunosuppression (universal hypogammaglobulinemia,
+  high opportunistic-infection burden) is the dominant safety dimension.
+  Step-up dosing with inpatient observation REQUIRED (CRS Grade 1-2 in
+  ~70% during step-up; Grade ≥3 ~1%). IVIG support throughout treatment;
+  PJP + HSV/VZV prophylaxis mandatory. Ukraine access: not registered
+  (2026-04); international referral required.
+
+rationale_ua: >
+  Теклістамаб (BCMA × CD3 біспецифічне антитіло) для тричі-класно-
+  експонованої/рефрактерної р/р множинної мієломи після ≥3 попередніх
+  ліній, включно з PI, IMiD та анти-CD38. MajesTEC-1 (Moreau 2022 NEJM):
+  ORR 63%, CR/sCR 39%, mPFS ~11.3 міс., mOS ~22 міс. — суттєво краще за
+  історичні результати тричі-класно-рефрактерних пацієнтів (mOS ~6 міс.
+  на стандартній терапії). Відсутність виробничого вікна (на відміну від
+  CAR-T) — значна операційна перевага у швидко прогресуючій хворобі,
+  але тривала + важка імуносупресія (універсальна гіпогаммаглобулінемія,
+  високий ризик опортуністичних інфекцій) — домінантний вимір безпеки.
+  Step-up dosing зі стаціонарним спостереженням ОБОВ'ЯЗКОВЕ (CRS
+  ступеня 1-2 у ~70% під час step-up; ≥3 ступеня ~1%). ВВІГ-підтримка
+  упродовж лікування; PJP + HSV/VZV профілактика обов'язкові. Доступ в
+  Україні: не зареєстрований (2026-04); потрібне міжнародне направлення.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-MAJESTEC-1-MOREAU-2022
+    position: supports
+    relevant_quote_paraphrase: "Teclistamab in triple-class exposed R/R MM (MajesTEC-1 phase 1/2): ORR 63%, ≥CR 39%, mPFS ~11.3 mo at median follow-up 14.1 mo (Moreau 2022 NEJM)"
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Teclistamab is recommended for triple-class refractory MM after ≥3 prior lines including a PI, IMiD, and anti-CD38 mAb (Cat 2A/Cat 1 per regulatory cohort)"
+  - source_id: SRC-ESMO-MM-2023
+    position: supports
+    relevant_quote_paraphrase: "BCMA bispecifics (teclistamab, elranatamab) recommended for triple-class refractory MM where CAR-T not feasible or rapid progression precludes manufacturing window"
+
+do_not_do:
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик HBV реактивації."
+  - "Не пропускати step-up dosing і стаціонарне спостереження — ризик CRS під час нарощування дози."
+  - "Не пропускати IVIG-замісну терапію — універсальна гіпогаммаглобулінемія підвищує ризик важких інфекцій."
+  - "Не пропускати PJP + HSV/VZV профілактику — пролонгована імуносупресія значно підвищує ризик опортуністичних інфекцій."
+  - "Не призначати при активній неконтрольованій інфекції — ризик летальної інфекції на тлі CRS/імуносупресії."
+  - "Не плутати показання з CARTITUDE-4 (2L cilta-cel) — теклістамаб для ≥3 ліній, не для раннього R/R."
+
+known_controversies:
+  - topic: BCMA bispecific (teclistamab) vs BCMA CAR-T (cilta-cel/ide-cel) for triple-class refractory MM
+    positions:
+      - position: BCMA bispecific (teclistamab) — off-the-shelf, no manufacturing window, ORR ~63%
+        sources:
+          - SRC-MAJESTEC-1-MOREAU-2022
+        evidence_note: "Operational advantage when manufacturing window not feasible; deeper immunosuppression than CAR-T"
+      - position: BCMA CAR-T (cilta-cel) — ORR ~98%, mPFS ~35 mo, deeper + more durable responses
+        sources:
+          - SRC-CARTITUDE-1-BERDEJA-2021
+        evidence_note: "Better efficacy when manufacturing window tolerable + no prior BCMA exposure"
+    our_default: Teclistamab when CAR-T not feasible (rapid progression, no manufacturing slot, prior BCMA exposure); cilta-cel preferred when manufacturing window tolerable
+    rationale: BCMA CAR-T has superior depth + durability of response; teclistamab as off-the-shelf BCMA option
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — requires two clinical co-lead signoffs before publication
+  (CHARTER §6.1). Sibling to existing IND-MM-4L-TECLISTAMAB (4L
+  framing); this entity uses RR-3L framing per Tier-2 manifest
+  (tier2-ind-mm-2026-05-01-021). MajesTEC-1 source available;
+  NCCN-MM-2025 + ESMO-MM-2023 supplementary citations satisfy Q4
+  ≥2-source axis.
