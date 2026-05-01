@@ -1,0 +1,178 @@
+id: RF-PAN-CTDNA-MRD-POSITIVE
+definition: >
+  Post-treatment ctDNA-detected molecular residual disease (MRD) — any
+  positive call by a tumor-informed (Signatera, RaDaR) or tumor-agnostic
+  liquid-biopsy assay after curative-intent surgery / chemoradiation, in
+  the absence of imaging-detectable disease. Tumor-type-agnostic concept;
+  best validated in resected stage II-III colon cancer (GALAXY /
+  CIRCULATE-Japan, Kotani Nat Med 2023; ALTAIR planned readout) — ctDNA-
+  positive at week 4 post-op carries 6-12× higher 24-month recurrence
+  hazard vs ctDNA-negative, identifying the subgroup that benefits from
+  adjuvant chemo intensification (oxaliplatin-doublet vs observation,
+  pending randomized confirmation). Emerging evidence in muscle-
+  invasive bladder (IMvigor010 ctDNA subgroup, atezolizumab benefit
+  restricted to ctDNA+), early breast (c-TRAK-TN, talazoparib re-
+  initiation), early NSCLC (LIBRETTO-001 surveillance), and resected
+  HR+ breast (lead-time over imaging by 6-18 months in retrospective
+  series). Action: escalate surveillance cadence, eligibility for
+  adjuvant intensification trials, or consideration of switch-therapy
+  if recurrence is biopsy-confirmed.
+definition_ua: >
+  Після-лікувальна ctDNA-виявлена молекулярна залишкова хвороба (МЗХ) —
+  будь-який позитивний результат tumor-informed (Signatera, RaDaR) або
+  tumor-agnostic liquid-biopsy аналізу після куративної хірургії /
+  хіміопроменевої терапії, при відсутності візуалізаційно-виявленої
+  хвороби. Tumor-type-agnostic концепція; найкраще валідована при
+  резектованому раку товстої кишки стадії II-III (GALAXY / CIRCULATE-
+  Japan, Kotani Nat Med 2023; ALTAIR — заплановані дані) — ctDNA-
+  позитивний на 4-му тижні після операції несе 6-12× вищий 24-міс
+  ризик рецидиву vs ctDNA-негативний, ідентифікуючи підгрупу, що
+  отримує користь від інтенсифікації ад'юванта (oxaliplatin-дублет
+  vs спостереження, очікуються рандомізовані дані). Накопичуються
+  дані при м'язово-інвазивному раку сечового міхура (IMvigor010
+  ctDNA-підгрупа, атезолізумаб лише при ctDNA+), ранньому РМЗ
+  (c-TRAK-TN, повторне призначення талазопарибу), ранньому НДРЛ
+  (LIBRETTO-001 нагляд), і резектованому HR+ РМЗ (випередження
+  візуалізації на 6-18 міс у ретроспективі). Дія: ескалація частоти
+  нагляду, eligibility до досліджень інтенсифікації ад'юванта, або
+  розгляд switch-терапії при біопсійно-підтвердженому рецидиві.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ctdna_mrd"
+      value: "positive"
+    - finding: "ctdna_mrd_status"
+      value: "positive"
+    - finding: "ctdna_mrd_post_treatment"
+      value: "positive"
+    - finding: "ctdna_mrd_signatera"
+      value: "positive"
+    - finding: "ctdna_mrd_tumor_informed"
+      value: "positive"
+    - finding: "ctdna_mrd_call"
+      value: true
+    - finding: "ctdna_mtm_per_ml"
+      threshold: 0
+      comparator: ">"
+
+clinical_direction: investigate
+
+severity: major
+priority: 60
+category: transformation-progression
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []  # Tumor-type-agnostic surveillance / intensification
+                     # signal. Concrete algorithm-branching is disease-
+                     # specific (CRC GALAXY-pattern, bladder IMvigor010-
+                     # pattern); pending per-disease adjuvant-intensification
+                     # algorithms before wiring branch_targets.
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+  - SRC-CIVIC
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  **Why pan-tumor:** ctDNA-MRD positivity is a lineage-agnostic post-
+  treatment risk-stratification signal — the underlying assay technology
+  and recurrence-hazard pattern reproduce across CRC (GALAXY), bladder
+  (IMvigor010 retrospective), early breast (c-TRAK-TN, ZEST), early
+  NSCLC, esophagogastric (CRITICS-II), HCC (post-resection liquid
+  surveillance), and pancreatic (post-Whipple Signatera pilot data).
+  The MVP wiring is "investigate" — surveillance-cadence escalation +
+  trial-eligibility surface — not direct algorithm-branching, because:
+  - Adjuvant-chemo intensification on ctDNA+ alone is NOT yet RCT-
+    proven (CIRCULATE-Japan ALTAIR, GALAXY randomized step, COBRA, are
+    in flight; first-readout phase 3 confirmation pending).
+  - Switching adjuvant from observation to chemo solely on ctDNA+
+    without biopsy/imaging confirmation risks over-treatment of false-
+    positive calls (~5-10% specificity loss in tumor-agnostic panels).
+  - Disease-specific algorithms each have distinct intensification
+    options (oxaliplatin-doublet in CRC, atezolizumab in bladder,
+    PARPi in BRCA+ breast) — these belong in disease-anchored
+    algorithm steps, not in a universal RF.
+
+  **Required follow-up actions when this RF fires:**
+  1. Confirmatory ctDNA at 4-6 week interval (clearance vs persistence
+     distinguishes shedder-without-recurrence-yet from likely true
+     positive).
+  2. Imaging escalation (MRI / CT) at 4-6 weeks — many ctDNA+ patients
+     have sub-radiographic disease that becomes detectable within
+     weeks.
+  3. MDT discussion of trial enrolment (intensification arm if
+     available) vs SOC surveillance.
+  4. Biopsy of any radiographically suspicious lesion to confirm
+     recurrence histology — informs systemic treatment selection.
+
+  **Assay-platform caveats:**
+  - Tumor-informed (Signatera) requires primary tumor block for assay
+    design — 2-4 week turnaround.
+  - Tumor-agnostic (Guardant Reveal, Natera Signatera-naive variant)
+    can be deployed without primary tumor — lower per-call sensitivity
+    in sub-clonal MRD.
+  - Both have analytical-validity LoD ~0.01-0.05% VAF; clinical-validity
+    cut-points are disease-specific.
+  - Pre-analytical: Streck or EDTA tube per platform; centrifugation
+    within 4-6h to prevent gDNA contamination.
+
+  **Negative space (when NOT to fire this RF):**
+  - On-treatment ctDNA dynamics (decline) — separate biomarker
+    (treatment-response, not residual-disease).
+  - Pre-operative ctDNA at diagnosis — staging biomarker, not MRD.
+  - ctDNA mutation-tracking for resistance (e.g., EGFR T790M emergence)
+    — distinct concept (clonal evolution monitoring).
+notes_ua: >
+  **Чому pan-tumor:** ctDNA-MRD позитивність — лінійно-агностичний
+  післялікувальний сигнал стратифікації ризику; технологія аналізу
+  та патерн hazard-рецидиву відтворюються при CRC (GALAXY), сечовому
+  міхурі (IMvigor010 ретроспектива), ранньому РМЗ (c-TRAK-TN, ZEST),
+  ранньому НДРЛ, esophagogastric (CRITICS-II), HCC (післярезекційний
+  liquid-нагляд), панкреатичному (Whipple Signatera пілот). MVP-wiring
+  — "investigate" (ескалація нагляду + trial-eligibility), не пряме
+  гілкування алгоритму, бо:
+  - Інтенсифікація ад'юванта лише за ctDNA+ ще не РКД-доведена
+    (CIRCULATE-Japan ALTAIR, GALAXY рандомізований крок, COBRA — в
+    процесі; первинне підтвердження фази 3 очікується).
+  - Перехід з observation на хіміо лише за ctDNA+ без біопсійного /
+    візуалізаційного підтвердження ризикує over-treatment false-
+    positive (~5-10% втрата специфічності tumor-agnostic панелей).
+  - Disease-specific алгоритми мають окремі опції інтенсифікації
+    (oxaliplatin-дублет у CRC, атезолізумаб у міхурі, PARPi у
+    BRCA+ РМЗ) — їх місце в disease-anchored кроках алгоритму, а не
+    в універсальному RF.
+
+  **Обов'язкові дії при спрацюванні RF:**
+  1. Підтверджуючий ctDNA через 4-6 тижнів (кліренс vs персистенція
+     розрізняє shedder-без-рецидиву від ймовірно істинного позитива).
+  2. Ескалація візуалізації (МРТ / КТ) на 4-6 тижні — багато ctDNA+
+     пацієнтів мають субрадіографічну хворобу, що стає виявленою
+     протягом тижнів.
+  3. MDT-обговорення залучення в дослідження (інтенсифікаційне
+     рамено за наявності) vs SOC-нагляд.
+  4. Біопсія будь-якого радіографічно-підозрілого вогнища для
+     підтвердження гістології рецидиву — інформує вибір системної
+     терапії.
+
+  **Застереження платформ аналізу:**
+  - Tumor-informed (Signatera) потребує блок первинної пухлини для
+    дизайну аналізу — 2-4 тижні turnaround.
+  - Tumor-agnostic (Guardant Reveal, Natera Signatera-naive variant)
+    — без первинної пухлини, нижча per-call чутливість при сабклональній
+    МЗХ.
+  - Аналітична валідність LoD ~0.01-0.05% VAF; клінічно-валідні
+    cut-points — disease-specific.
+  - Преаналітика: Streck або EDTA пробірка за платформою; центрифугування
+    у 4-6 год для запобігання gDNA-контамінації.
+
+  **Negative space (коли НЕ спрацьовувати):**
+  - Динаміка ctDNA на терапії (зниження) — окремий біомаркер
+    (treatment-response, не residual-disease).
+  - До-операційна ctDNA на діагнозі — staging-біомаркер, не МЗХ.
+  - ctDNA mutation-tracking для резистентності (напр. EGFR T790M
+    emergence) — окрема концепція (clonal evolution monitoring).
