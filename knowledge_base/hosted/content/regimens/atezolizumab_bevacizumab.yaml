@@ -41,6 +41,57 @@ ukraine_availability:
   notes: "Out-of-pocket / charitable / clinical-trial pathway in Ukraine; biosimilar bevacizumab improves access."
 
 sources: [SRC-NCCN-HCC-2025, SRC-AASLD-HCC-2023]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# IMbrave150 standard for advanced HCC. Atezolizumab adds irAEs;
+# bevacizumab adds BP / proteinuria / bleeding (especially varices in
+# cirrhotic patients). STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузій"
+    action_ua: "Очікувано в перші дні циклу — відпочивайте, занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Бевацизумаб може підвищувати тиск — занотовуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Легкий шкірний свербіж або сухість шкіри"
+    action_ua: "Часта і зазвичай легка реакція на атезолізумаб — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі, ясний кал"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція в печінці або погіршення цирозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — атезолізумаб може спричиняти імунний коліт; рання оцінка важлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або сеча, що піниться"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Кровотеча з вен стравоходу — блювота червоною кров'ю або чорний кал"
+    action_ua: "Звертайтесь у лікарню негайно — у пацієнтів з цирозом і варикозом стравоходу бевацизумаб підвищує ризик кровотечі"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HCC-2025
+      - SRC-AASLD-HCC-2023
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю або сильним болем у животі)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HCC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

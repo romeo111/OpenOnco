@@ -14,6 +14,61 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Immune-mediated AE G≥2", modification: "Hold; corticosteroids"}]
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Out-of-pocket"}
 sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Combo nivo+ipi has the highest irAE rate of any standard checkpoint
+# regimen — ~55% grade 3-4 immune AEs in CheckMate-067. Watchpoints
+# emphasize early irAE recognition. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, легкий шкірний свербіж або сухість"
+    action_ua: "Часто і зазвичай легко — використовуйте зволожувач, занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Біль у суглобах легкий"
+    action_ua: "Зустрічається — занотовуйте інтенсивність, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — комбінація нiвo+іпі часто спричиняє коліт; рання оцінка важлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит зустрічається на нiвo+іпі"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна слабкість, постійна спрага, втрата ваги, нудота"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або гіпофіза"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт потребує госпіталізації і високих доз стероїдів"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Раптовий стан тяжкої слабкості, плутаність свідомості, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — може бути криз надниркових залоз (рідкісний імунний ускладнення)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+
 last_reviewed:
 notes: "CheckMate-067 7.5y OS 49%. Higher ipi dose (3 mg/kg) than RCC (1 mg/kg)."
 notes_ua: CheckMate-067 7.5-річна ЗВ 49%. Higher ipi доза (3 mg/kg) than RCC (1 mg/kg).

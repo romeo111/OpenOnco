@@ -45,6 +45,49 @@ sources:
   - SRC-ESMO-MELANOMA-2024
   - SRC-COLUMBUS-DUMMETT-2018
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# BRAFi+MEKi combo for BRAF V600 melanoma. Encorafenib+binimetinib
+# best-tolerated of the BRAFi+MEKi pairs. Key axes: febrile reactions
+# (very common!), GI, ocular toxicity (binimetinib retinal), cardiac,
+# secondary skin cancers (less than BRAFi mono). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Періодичні гарячкові епізоди (підвищення температури до 38-39°C з ознобом, що минає за кілька годин)"
+    action_ua: "Поширений побічний ефект BRAFi+MEKi — занотуйте частоту й температуру, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Помірна нудота, втома, біль у суглобах"
+    action_ua: "Зустрічаються — занотовуйте інтенсивність, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Розмиття зору, тимчасові плями в полі зору"
+    action_ua: "Поширене на тлі бініметинібу — занотовуйте, обов'язково повідомте лікаря на найближчому візиті; потрібна оцінка очей"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Лихоманка вище 38°C, що триває кілька днів"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка джерела і можливо тимчасова пауза в препаратах"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нові плями на шкірі або зміна вже існуючих родимок"
+    action_ua: "Подзвоніть у клініку того ж дня — BRAFi може спричиняти вторинні шкірні пухлини, потрібен дерматологічний огляд"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття, виражена задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Раптова втрата зору, сильний біль в очах"
+    action_ua: "Звертайтесь у лікарню негайно — рідко бініметиніб може спричиняти серйозні зміни в сітківці"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   COLUMBUS phase 3: ENCO 450 + BINI 45 BID vs vemurafenib in 1L/2L

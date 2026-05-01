@@ -37,6 +37,51 @@ ukraine_availability:
   notes: "Nab-paclitaxel out-of-pocket / charitable in Ukraine; gemcitabine NSZU-funded."
 
 sources: [SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Gemcitabine + nab-paclitaxel for PDAC patients less fit for
+# FOLFIRINOX. Less-toxic profile but still significant: cytopenia,
+# neuropathy (nab-paclitaxel), fatigue, hepatic. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, особливо в перші тижні"
+    action_ua: "Очікувано — відпочивайте більше, занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Нейропатія від наб-паклітакселу — занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Випадання волосся, легка нудота"
+    action_ua: "Очікувано — приймайте призначені протиблювотні; волосся повертається"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива нейтропенія і ризик інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — гемцитабін може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотечі"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — рідко гемцитабін може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

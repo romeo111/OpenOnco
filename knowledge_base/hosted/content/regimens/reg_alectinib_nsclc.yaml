@@ -29,6 +29,49 @@ ukraine_availability:
   notes: "Registered; reimbursement under negotiation. Out-of-pocket; major access barrier for ALK+ population."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Alectinib daily oral pill, long-term in ALK+ NSCLC. Generally well-
+# tolerated; key axes: photosensitivity (boxed for sun protection),
+# myalgia/elevated CK, hepatic, rare bradycardia, ILD. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Легкі м'язові болі"
+    action_ua: "Зустрічається у частини пацієнтів — занотовуйте інтенсивність, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Чутливість шкіри до сонця (швидко обпікається)"
+    action_ua: "Завжди користуйтесь сонцезахисним кремом SPF 50+ і одягом, що закриває шкіру; занотуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірний запор, набір ваги"
+    action_ua: "Зустрічаються — пийте достатньо води, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі або біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — алектиніб може впливати на печінку; потрібен аналіз"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний м'язовий біль з темною сечею"
+    action_ua: "Подзвоніть у клініку того ж дня — це може бути ушкодження м'язів (рабдоміоліз)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко алектиніб може спричиняти ушкодження легень (інтерстиціальна хвороба)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильне запаморочення, втрата свідомості, відчуття дуже повільного серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — алектиніб може спричиняти брадикардію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   ALEX: superior to crizotinib 1L (PFS 35 vs 11 months; intracranial

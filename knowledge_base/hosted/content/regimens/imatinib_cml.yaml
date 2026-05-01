@@ -52,6 +52,49 @@ sources:
   - SRC-ESMO-CML-2017
   - SRC-IRIS-OBRIEN-2003
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Imatinib is taken long-term (often years). Most patients tolerate
+# well; key axes are GI side effects, fluid retention, muscle cramps,
+# and rare cardiac/hepatic toxicity. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, особливо якщо приймаєте препарат натще"
+    action_ua: "Приймайте іматиніб з їжею і повною склянкою води — це часто вирішує проблему. Занотуйте, якщо нудота триває"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ELN-CML-2020
+  - trigger_ua: "М'язові судоми, біль у м'язах"
+    action_ua: "Поширений побічний ефект — пийте достатньо води, додавайте магній за порадою лікаря. Занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ELN-CML-2020
+  - trigger_ua: "Легкі набряки під очима або на гомілках"
+    action_ua: "Поширене на іматинібі — занотовуйте, обговоріть на наступному візиті, особливо якщо набряки збільшуються"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ELN-CML-2020
+  - trigger_ua: "Висип, який поширюється або свербіж шкіри"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка реакції; може знадобитись пауза в препараті"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця або потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко іматиніб може впливати на печінку; потрібен аналіз крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-ELN-CML-2020
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова виражена задишка або різке збільшення набряків"
+    action_ua: "Звертайтесь у лікарню негайно — рідко іматиніб може спричиняти затримку рідини у легенях"
+    urgency: er_now
+    sources:
+      - SRC-ELN-CML-2020
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка з ознобом, виражена слабкість"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові й виключення інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for low-risk CML chronic phase, elderly, comorbid patients,
