@@ -1,0 +1,137 @@
+id: BIO-HRD-ASSAY-DISTINCTION
+names:
+  preferred: "HRD assay distinction (Myriad myChoice CDx vs FoundationOne CDx)"
+  ukrainian: "Розмежування HRD-аналізів (Myriad myChoice CDx vs FoundationOne CDx)"
+  english: "HRD assay distinction"
+  synonyms: ["HRD platform comparison", "GIS vs LOH/TAI/LST"]
+biomarker_type: composite
+
+measurement:
+  method: >
+    Two FDA-approved companion diagnostic platforms with different scoring
+    systems: (a) Myriad myChoice CDx — Genomic Instability Score (GIS)
+    combining LOH + TAI + LST as a single composite, threshold GIS >=42
+    for HRD-positive; (b) FoundationOne CDx HRD — reports LOH-high
+    (>=16% genomic LOH) plus BRCA1/2 status; aggregates LOH only, no TAI
+    or LST. Both run on FFPE tumor.
+  units: "categorical (HRD-positive | HRD-negative); platform-specific cut-points are not interchangeable"
+specimen_requirements: ["FFPE tumor block (>=20% tumor cellularity for both assays)"]
+
+related_biomarkers: [BIO-HRD-STATUS, BIO-BRCA1-BRCA2-GERMLINE]
+
+sources: [SRC-NCCN-COLON-2025, SRC-CIVIC]
+
+oncokb_skip_reason: clinical_composite
+
+last_reviewed: "2026-04-29"
+notes: >
+  Scope: this entity is a methodological / assay-distinction layer on
+  top of BIO-HRD-STATUS. The clinical concept (HRD as a PARPi-response
+  predictor) lives in BIO-HRD-STATUS. This entity records the technical
+  caveats clinicians need when interpreting an HRD report from a
+  specific platform.
+
+  **Why two assays diverge:**
+  - **Myriad myChoice CDx (companion to olaparib + bevacizumab in PAOLA-1
+    and niraparib in NOVA / PRIMA):**
+    - Composite Genomic Instability Score (GIS) = LOH + TAI + LST
+    - Threshold: GIS >=42 OR BRCA1/2 mutation -> HRD-positive
+    - Captures three independent genome-scarring footprints (LOH = loss
+      of heterozygosity; TAI = telomeric allelic imbalance;
+      LST = large-scale state transitions)
+  - **FoundationOne CDx HRD (companion to rucaparib in ARIEL3 design;
+    olaparib HRRm-positive subset):**
+    - LOH-high threshold: %LOH >=16% across genome
+    - Does NOT include TAI or LST
+    - More permissive on some BRCA-wt high-grade serous tumors,
+      stricter on others — discordance with myChoice runs ~10-20% in
+      head-to-head series
+
+  **Clinical implications of the discordance:**
+  - A patient classified HRD-positive on one platform may be classified
+    HRD-negative on the other; this is a known pre-analytic limitation.
+  - **Drug-label fidelity matters:** the FDA label for each PARPi
+    references the specific companion diagnostic used in its
+    registration trial. Using the wrong assay to gate access is an
+    off-label practice — clinically defensible but not label-strict.
+  - Niraparib + olaparib + bevacizumab access decisions in ovarian
+    cancer should ideally use myChoice CDx (per PAOLA-1 / PRIMA / NOVA);
+    rucaparib decisions can use FoundationOne HRD or BRCA1/2 alone
+    (per ARIEL3 design).
+  - **Both assays converge on BRCA1/2-mutant tumors:** mutation status
+    alone is sufficient for HRD-positive call regardless of GIS / LOH
+    score.
+
+  **Other HRD assays (research / non-FDA-cleared in 2026):** SOPHiA
+  GENETICS HRD, OncoScan, AmoyDx HRD Focus Panel; outputs not
+  cross-validated against PARPi outcomes at level-1 evidence.
+
+  clinical_composite skip-reason: this entity describes a methodological
+  distinction between platforms, not a sequence variant — actionability
+  lookup happens via the underlying biomarkers (BRCA1/2 mutations,
+  HRD-positive call from BIO-HRD-STATUS), not via this assay-distinction
+  entity itself.
+
+  TODO source citations (flagged for chunk follow-up; primary assay
+  documentation not yet ingested as src_*.yaml stubs):
+    - Myriad myChoice CDx Technical Information (Myriad Genetics)
+    - FoundationOne CDx HRD Technical Specifications (Foundation Medicine)
+    - PAOLA-1 (Ray-Coquard et al., NEJM 2019) — anchors GIS >=42
+    - ARIEL3 (Coleman et al., Lancet 2017) — anchors LOH-high definition
+notes_ua: >
+  Сфера: ця сутність — методологічний шар розмежування аналізів поверх
+  BIO-HRD-STATUS. Клінічна концепція (HRD як предиктор відповіді на
+  PARPi) розкрита в BIO-HRD-STATUS. Тут зафіксовано технічні
+  застереження, потрібні клініцисту при інтерпретації HRD-звіту з
+  конкретної платформи.
+
+  **Чому два аналізи розходяться:**
+  - **Myriad myChoice CDx (компаньйон для olaparib + bevacizumab у
+    PAOLA-1 і niraparib у NOVA / PRIMA):**
+    - Композитний Genomic Instability Score (GIS) = LOH + TAI + LST
+    - Поріг: GIS >=42 АБО мутація BRCA1/2 -> HRD-позитивний
+    - Враховує три незалежні відбитки рубцювання геному (LOH = втрата
+      гетерозиготності; TAI = теломерний алельний дисбаланс;
+      LST = великомасштабні стан-переходи)
+  - **FoundationOne CDx HRD (компаньйон для rucaparib за дизайном
+    ARIEL3; olaparib HRRm-позитивна підгрупа):**
+    - Поріг LOH-high: %LOH >=16% по геному
+    - НЕ включає TAI чи LST
+    - Більш дозволений до деяких BRCA-wt high-grade серозних пухлин,
+      суворіший до інших — невідповідність із myChoice ~10-20% у
+      головних порівняльних серіях
+
+  **Клінічні наслідки невідповідності:**
+  - Пацієнт, класифікований HRD-позитивним на одній платформі, може
+    бути класифікований HRD-негативним на іншій; це відоме
+    пре-аналітичне обмеження.
+  - **Точність ярлика препарату важлива:** ярлик FDA для кожного PARPi
+    посилається на конкретний компаньйон-діагностичний тест із
+    реєстраційного дослідження. Використання неправильного аналізу
+    для гейтингу доступу — off-label практика, клінічно захисна, але
+    не сувора за ярликом.
+  - Доступ до niraparib + olaparib + bevacizumab у раку яєчників має
+    використовувати myChoice CDx (за PAOLA-1 / PRIMA / NOVA); рішення
+    щодо rucaparib можуть використовувати FoundationOne HRD або BRCA1/2
+    окремо (за дизайном ARIEL3).
+  - **Обидва аналізи сходяться на BRCA1/2-мутантних пухлинах:** статусу
+    мутації достатньо для виклику HRD-позитивного незалежно від GIS / LOH.
+
+  **Інші HRD-аналізи (дослідницькі / не FDA-cleared у 2026):** SOPHiA
+  GENETICS HRD, OncoScan, AmoyDx HRD Focus Panel; виходи не
+  крос-валідовані проти результатів PARPi на рівні-1 доказів.
+
+  Skip-reason clinical_composite: ця сутність описує методологічну
+  різницю між платформами, не варіант послідовності — actionability
+  lookup відбувається через підлеглі біомаркери (мутації BRCA1/2,
+  HRD-позитивний виклик з BIO-HRD-STATUS), а не через цю сутність
+  розмежування аналізів.
+
+  TODO цитування джерел (для подальшого чанку; первинна документація
+  аналізів ще не імпортована як src_*.yaml стаби):
+    - Myriad myChoice CDx Technical Information (Myriad Genetics)
+    - FoundationOne CDx HRD Technical Specifications (Foundation Medicine)
+    - PAOLA-1 (Ray-Coquard et al., NEJM 2019) — закріплює GIS >=42
+    - ARIEL3 (Coleman et al., Lancet 2017) — закріплює LOH-high визначення
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
