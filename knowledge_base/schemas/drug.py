@@ -34,7 +34,7 @@ class Drug(Base):
     notes: Optional[str] = None
 
     # Patient-mode lay-language blurb (1-2 sentences, Ukrainian, friendly
-    # tone). Read by `engine.render._render_drugs_plain` when present;
+    # tone). Read by `engine.render._render_track_drugs` when present;
     # otherwise the renderer falls back to the drug_class vocabulary entry
     # in `engine._patient_vocabulary.DRUG_CLASS_PLAIN_UA` and finally to a
     # generic placeholder. NEVER consulted as a treatment-selection signal

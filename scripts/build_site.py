@@ -1822,10 +1822,23 @@ def render_try(
           <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
           <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
         </div>
+        <div class="rt-lang-group" role="group" aria-label="{'Audience' if target_lang == 'en' else 'Аудиторія'}">
+          <span class="rt-lang-label">{'View:' if target_lang == 'en' else 'Версія:'}</span>
+          <button id="modeClinicianBtn" class="rt-lang-btn is-active" type="button"
+                  data-mode="clinician"
+                  title="{'Full tumor-board brief — for clinicians' if target_lang == 'en' else 'Повний tumor-board brief — для лікаря'}">{'Clinician' if target_lang == 'en' else 'Лікар'}</button>
+          <button id="modePatientBtn" class="rt-lang-btn" type="button"
+                  data-mode="patient"
+                  title="{'Plain-Ukrainian simplified report — for patients' if target_lang == 'en' else 'Спрощений звіт зрозумілою мовою — для пацієнта'}">{'Patient' if target_lang == 'en' else 'Пацієнт'}</button>
+        </div>
         <div class="plan-modal-actions">
+          <button id="modalHtmlBtn" class="rt-btn" type="button" disabled
+                  title="{'Save the current view as a single-file HTML' if target_lang == 'en' else 'Зберегти поточну версію як один HTML-файл'}">
+            <span aria-hidden="true">⬇</span> HTML
+          </button>
           <button id="modalPdfBtn" class="rt-btn" type="button"
                   title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-            <span aria-hidden="true">📄</span> {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+            <span aria-hidden="true">📄</span> PDF
           </button>
           <button id="planModalClose" class="rt-btn rt-btn-ghost" type="button"
                   aria-label="{'Close' if target_lang == 'en' else 'Закрити'}">✕</button>
@@ -1900,6 +1913,9 @@ const planModal = document.getElementById('planModal');
 const planModalClose = document.getElementById('planModalClose');
 const langUaBtn = document.getElementById('langUaBtn');
 const langEnBtn = document.getElementById('langEnBtn');
+const modeClinicianBtn = document.getElementById('modeClinicianBtn');
+const modePatientBtn = document.getElementById('modePatientBtn');
+const modalHtmlBtn = document.getElementById('modalHtmlBtn');
 const formPane = document.getElementById('formPane');
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1965,6 +1981,13 @@ const WHATIF_DEBOUNCE_MS = 1500;
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
 let currentResultLang = '{target_lang}';
 
+// Audience mode for the plan render — 'clinician' (default, full tumor-
+// board brief) or 'patient' (plain-UA simplified report). Per
+// PATIENT_MODE_SPEC §3, patient mode is treatment-plan only; the toggle
+// is disabled for diagnostic-mode results and for example-mode bundles
+// (pre-built /cases/<id>.html files don't have a patient-rendered twin).
+let currentResultMode = 'clinician';
+
 // planSource tracks where the plan currently shown in the modal came from:
 //   null        — no plan yet (form not generated, no example loaded)
 //   'example'   — pre-built case HTML loaded from /cases/<case_id>.html;
@@ -2023,6 +2046,39 @@ function highlightLangButtons() {{
   langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
 }}
 
+function highlightModeButtons() {{
+  modeClinicianBtn.classList.toggle('is-active', currentResultMode === 'clinician');
+  modePatientBtn.classList.toggle('is-active', currentResultMode === 'patient');
+}}
+
+// Patient mode is render-only on top of an already-generated treatment
+// PlanResult. It can't toggle for:
+//   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
+//   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
+//   * pre-generation (planSource === null)
+function refreshModeButtonAvailability() {{
+  const canPatient = (
+    pyodide
+    && planSource === 'generated'
+    && !planDirty
+  );
+  modePatientBtn.disabled = !canPatient;
+  if (!canPatient) {{
+    modePatientBtn.title = (
+      planSource === 'example'
+        ? '{ "Patient view is available for plans you generate yourself — not for example bundles yet" if target_lang == "en" else "Пацієнтська версія доступна лише для планів, які ви згенерували — не для прикладів" }'
+        : '{ "Generate a plan first to enable Patient view" if target_lang == "en" else "Згенеруйте план, щоб увімкнути пацієнтську версію" }'
+    );
+    if (currentResultMode === 'patient') {{
+      currentResultMode = 'clinician';
+      highlightModeButtons();
+    }}
+  }} else {{
+    modePatientBtn.title = '{ "Plain-Ukrainian simplified report — for patients" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
+  }}
+  modeClinicianBtn.disabled = (planSource === null);
+}}
+
 function openPlanModal() {{
   if (!planModal) return;
   planModal.hidden = false;
@@ -2050,6 +2106,63 @@ function downloadPdf() {{
   }}
 }}
 
+async function switchResultMode(newMode) {{
+  if (newMode === currentResultMode) return;
+  if (modePatientBtn.disabled && newMode === 'patient') return;
+  if (!pyodide || planSource !== 'generated') return;
+  modeClinicianBtn.disabled = true;
+  modePatientBtn.disabled = true;
+  try {{
+    pyodide.globals.set('_target_lang', currentResultLang);
+    pyodide.globals.set('_target_mode', newMode);
+    const html = await pyodide.runPythonAsync(`
+if _oo_mode == 'diagnostic':
+    # Patient mode is treatment-only per PATIENT_MODE_SPEC §3 — fall back
+    # to the clinician diagnostic brief regardless of mode toggle.
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+else:
+    html = render_plan_html(
+        _oo_result, mdt=_oo_mdt, target_lang=_target_lang, mode=_target_mode,
+    )
+html
+`);
+    resultFrame.removeAttribute('src');
+    resultFrame.srcdoc = html;
+    currentResultMode = newMode;
+    highlightModeButtons();
+  }} catch (e) {{
+    setError('Re-render failed: ' + (e.message || e));
+  }} finally {{
+    refreshModeButtonAvailability();
+  }}
+}}
+
+function downloadHtml() {{
+  if (planSource == null) return;
+  let html = resultFrame.srcdoc;
+  if (!html) {{
+    try {{
+      html = '<!DOCTYPE html>\\n' + resultFrame.contentDocument.documentElement.outerHTML;
+    }} catch (e) {{
+      setError('Could not read the rendered document: ' + (e.message || e));
+      return;
+    }}
+  }}
+  const blob = new Blob([html], {{ type: 'text/html;charset=utf-8' }});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  // Filename encodes audience + lang so a doctor downloading both for the
+  // same patient gets distinct files: openonco-plan.<mode>.<lang>.html
+  const stamp = new Date().toISOString().slice(0, 10);
+  const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
+  a.href = url;
+  a.download = `openonco-plan${{modePart}}.${{currentResultLang}}.${{stamp}}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}}
+
 async function switchResultLang(newLang) {{
   if (newLang === currentResultLang) return;
   if (planSource === 'example') {{
@@ -2067,11 +2180,14 @@ async function switchResultLang(newLang) {{
   langEnBtn.disabled = true;
   try {{
     pyodide.globals.set('_target_lang', newLang);
+    pyodide.globals.set('_target_mode', currentResultMode);
     const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 else:
-    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+    html = render_plan_html(
+        _oo_result, mdt=_oo_mdt, target_lang=_target_lang, mode=_target_mode,
+    )
 html
 `);
     resultFrame.removeAttribute('src');
@@ -2097,9 +2213,16 @@ function loadExamplePlan(caseId) {{
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
+  // Example bundles are always rendered as the clinician view (the
+  // pre-built /cases/*.html doesn't have a patient twin yet — see
+  // PATIENT_MODE_SPEC §3 + roadmap).
+  currentResultMode = 'clinician';
+  highlightModeButtons();
+  refreshModeButtonAvailability();
   viewPlanBtn.disabled = false;
   pdfBtn.disabled = false;
   modalPdfBtn.disabled = false;
+  modalHtmlBtn.disabled = false;
   openPlanModal();
 }}
 
@@ -2112,11 +2235,16 @@ function clearPlanState() {{
   viewPlanBtn.disabled = true;
   pdfBtn.disabled = true;
   modalPdfBtn.disabled = true;
+  modalHtmlBtn.disabled = true;
+  currentResultMode = 'clinician';
+  highlightModeButtons();
+  refreshModeButtonAvailability();
   closePlanModal();
 }}
 
 pdfBtn.addEventListener('click', downloadPdf);
 modalPdfBtn.addEventListener('click', downloadPdf);
+modalHtmlBtn.addEventListener('click', downloadHtml);
 viewPlanBtn.addEventListener('click', openPlanModal);
 planModalClose.addEventListener('click', closePlanModal);
 planModal.addEventListener('click', (ev) => {{
@@ -2127,6 +2255,8 @@ document.addEventListener('keydown', (ev) => {{
 }});
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
 langEnBtn.addEventListener('click', () => switchResultLang('en'));
+modeClinicianBtn.addEventListener('click', () => switchResultMode('clinician'));
+modePatientBtn.addEventListener('click', () => switchResultMode('patient'));
 
 function escHtml(s) {{
   return String(s).replace(/[&<>"']/g, c => ({{
@@ -3063,9 +3193,15 @@ html
       planSource = 'generated';
       planDirty = false;
       activeExampleCaseId = null;
+      // Fresh generation always lands on clinician view; user toggles to
+      // patient view via the toolbar (PATIENT_MODE_SPEC §3.5).
+      currentResultMode = 'clinician';
+      highlightModeButtons();
+      refreshModeButtonAvailability();
       viewPlanBtn.disabled = false;
       pdfBtn.disabled = false;
       modalPdfBtn.disabled = false;
+      modalHtmlBtn.disabled = false;
       openPlanModal();
       setStatus('{"Plan ready ✓" if target_lang == "en" else "Plan готовий ✓"}', 'ok');
       const _ooTNow = performance.now();
