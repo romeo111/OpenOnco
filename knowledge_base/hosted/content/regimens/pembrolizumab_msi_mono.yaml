@@ -32,7 +32,66 @@ ukraine_availability:
   all_components_reimbursed: false
   notes: "Pembrolizumab out-of-pocket in Ukraine; MSI-H pan-cancer indication has selective charitable / clinical-trial pathway access."
 
-sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024, SRC-KEYNOTE-177-ANDRE-2020]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembrolizumab is generally well-tolerated; the dominant axes are
+# immune-related adverse events (irAEs) which can affect any organ —
+# colitis, pneumonitis, hepatitis, thyroiditis, hypophysitis. Most are
+# manageable with steroids if caught early. The watchpoint pattern here
+# is reusable across other anti-PD-1 / anti-PD-L1 monotherapies
+# (nivolumab, atezolizumab, durvalumab) per Wave 1 priority.
+# STUB pending §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузії"
+    action_ua: "Очікувано перші дні після інфузії — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3 of each infusion"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Легкий шкірний свербіж або сухість шкіри"
+    action_ua: "Часта і зазвичай легка реакція — використовуйте зволожувач, занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день без крові)"
+    action_ua: "Подзвоніть у клініку того ж дня — пембролізумаб може спричиняти імунний коліт, який важливо лікувати рано"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка, сухий кашель, болі в грудях"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція в легенях (пневмоніт), потрібна оцінка КТ"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, темна сеча або біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція в печінці (гепатит)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена слабкість, постійна спрага, часте сечовипускання, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або підшлункової (новий діабет)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю або сильним болем у животі)"
+    action_ua: "Звертайтесь у лікарню негайно — це може бути тяжкий імунний коліт, що потребує госпіталізації і високих доз стероїдів"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна задишка у спокої, неможливість лежати рівно, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — можлива тяжка імунна реакція в легенях"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-26"
 
 notes: >
