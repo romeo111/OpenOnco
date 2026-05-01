@@ -1,0 +1,104 @@
+id: IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: DRIVER_NEGATIVE
+  stage_stratum: STAGE_IV_METASTATIC
+  pdl1_tps_stratum: TPS_HIGH
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic driver-negative NSCLC"
+    - "PD-L1 TPS ≥50% scored specifically with Dako 22C3 pharmDx companion diagnostic (the FDA-required clone for pembrolizumab eligibility per KEYNOTE-024)"
+    - "Driver-negative: EGFR / ALK / ROS1 / BRAF V600E / RET / MET ex14 / NTRK / KRAS-G12C / HER2-mut all WT"
+    - "Track preserves clone-specificity for label adherence; cf. IND-NSCLC-PDL1-HIGH-MET-1L which accepts any TPS clone"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-22C3-CLONE
+      value_constraint: "TPS ≥50% scored on Dako 22C3 pharmDx — FDA-required companion diagnostic for pembrolizumab"
+      required: true
+    - biomarker_id: BIO-PDL1-TPS
+      value_constraint: "≥50"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBRO-MONO-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  five_year_overall_survival: "32% pembro mono vs 16% chemo (KEYNOTE-024 5-year update)"
+  median_overall_survival: "26.3 mo pembro vs 13.4 mo chemo (KEYNOTE-024)"
+  progression_free_survival: "mPFS 7.7 mo pembro vs 5.5 mo chemo (KEYNOTE-024)"
+  overall_response_rate: "~45% pembro mono"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-PDL1-IHC  # must be Dako 22C3 pharmDx for label adherence
+  - TEST-CECT-CAP
+desired_tests:
+  - TEST-BRAIN-MRI-CONTRAST
+
+rationale: >
+  Pembrolizumab monotherapy 1L for PD-L1 TPS ≥50% driver-negative
+  metastatic NSCLC, with **explicit PD-L1 22C3 clone requirement** for
+  FDA-label adherence (KEYNOTE-024 used Dako 22C3 pharmDx as companion
+  diagnostic; FDA pembrolizumab label specifies 22C3). Clinical
+  reality: many labs use SP263 (Ventana) or other clones with Blueprint
+  PD-L1 IHC Phase 2 inter-clone concordance data. Concordance is high
+  but NOT 1:1 — for label-strict pembrolizumab eligibility, 22C3 is
+  the required assay. This Indication preserves the clone-specific
+  pathway alongside the more permissive IND-NSCLC-PDL1-HIGH-MET-1L
+  (which accepts any TPS scoring clone). Aggressive-track positioning
+  reflects the label-adherence specificity; standard-track default
+  remains the more permissive Indication. Use this track when the
+  patient's PD-L1 scoring was specifically performed on 22C3 and
+  label-strict adherence is the priority (e.g., regulatory audit,
+  insurance prior-auth requiring 22C3 assay documentation, clinical
+  trial eligibility requiring specific clone).
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Pembrolizumab monotherapy is recommended 1L for PD-L1 TPS ≥50% metastatic NSCLC; Dako 22C3 pharmDx is FDA companion diagnostic per KEYNOTE-024; SP263 acceptable per Blueprint Phase 2 concordance data"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Pembrolizumab 1L for PD-L1 TPS ≥50% driver-negative NSCLC is standard of care; clone selection per local pathology workflow with Blueprint inter-clone concordance support; 22C3 remains FDA-label clone"
+
+known_controversies:
+  - topic: "PD-L1 22C3 clone-specific vs any-clone pembrolizumab eligibility (label adherence vs Blueprint concordance)"
+    positions:
+      - position: "Strict 22C3 (FDA label / companion diagnostic): regulatory adherence, insurance approval, trial eligibility"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Any validated clone (Blueprint Phase 2 concordance): SP263, 28-8 acceptable for clinical decision; lab-driven workflow"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "Default to clone-permissive (IND-NSCLC-PDL1-HIGH-MET-1L); use this clone-specific track when label adherence is required"
+    rationale: "Clinical decision typically clone-permissive; this track exists to surface clone specificity for label-strict scenarios"
+
+do_not_do:
+  - "НЕ використовувати поза TPS ≥50% — pembro mono efficacy drops sharply for TPS 1-49%."
+  - "НЕ ігнорувати driver mutation panel — actionable driver (EGFR, ALK, etc.) routes to targeted therapy first."
+  - "НЕ використовувати при active autoimmune disease без consultation."
+  - "НЕ ігнорувати baseline thyroid + adrenal function — endocrine irAE class signal."
+  - "НЕ ігнорувати steroid-stratified pneumonitis management — interrupt for Grade 2, permanently discontinue Grade ≥3."
+  - "НЕ підтверджувати план без documented PD-L1 IHC clone — assay traceability required."
+  - "НЕ комбінувати з chemo ad hoc у TPS ≥50% — pembro mono is the trial-validated regimen unless EXPRESSING different consideration (e.g., bulky disease, KEYNOTE-189)."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track for
+  label-strict pembrolizumab 1L eligibility (22C3 clone-specific).
+  Companion to standard-track IND-NSCLC-PDL1-HIGH-MET-1L (any TPS
+  clone). KEYNOTE-024 evidence base shared; this Indication adds
+  clone-specificity per W7f scope.

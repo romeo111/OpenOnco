@@ -1,0 +1,96 @@
+id: IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: EGFR_MUTANT
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 3
+  stage_requirements:
+    - "Stage IV metastatic EGFR-mutant NSCLC (any sensitizing mutation: ex19del, L858R, T790M-acquired)"
+    - "Disease progression on prior osimertinib (1L or 2L) AND prior platinum-based chemotherapy"
+    - "Typical 3L+ position: post-osi + post-platinum"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EGFR
+      value_constraint: "EGFR sensitizing mutation (ex19del / L858R / T790M-acquired) confirmed"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PATRITUMAB-DXD-NSCLC-POST-EGFR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~30% blinded independent central review (HERTHENA-Lung01 phase II, n=225)"
+  progression_free_survival: "mPFS 5.5 mo (95% CI 5.1-5.9)"
+  duration_of_response: "mDOR 5.6 mo"
+  intracranial_orr: "~33% non-irradiated brain metastases"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Patritumab deruxtecan (HER3-DXd, HER3-directed ADC with topoisomerase-I
+  payload) for EGFR-mutant metastatic NSCLC post-osimertinib + platinum.
+  HERTHENA-Lung01 phase II (n=225): BICR ORR ~30%, mPFS 5.5 mo, mDOR 5.6
+  mo across heterogeneously pretreated EGFR-mut population (post-osi
+  diverse resistance: MET-amp, C797S, transformations). Intracranial
+  activity clinically meaningful (~33% IC-ORR). FDA accelerated approval
+  withdrawn 2024 after phase III HERTHENA-Lung02 (vs platinum doublet)
+  read out negative for OS — indication-status fluid; clinical access
+  largely via expanded-access / trial. Aggressive-track 3L+ option for
+  EGFR-mut patients exhausting standard targeted + cytotoxic options,
+  particularly with CNS disease. ILD class risk + neutropenia + nausea
+  dominate AE profile.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Patritumab deruxtecan emerged as an option for EGFR-mutant NSCLC progressing on osimertinib + platinum (HERTHENA-Lung01); regulatory status evolving post-HERTHENA-Lung02"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "HER3-DXd (patritumab deruxtecan) is investigational option for EGFR-mut NSCLC post-osimertinib failure; HERTHENA-Lung01 phase II ORR ~30%, ILD class signal requires monitoring"
+
+known_controversies:
+  - topic: "Patritumab-DXd post-HERTHENA-Lung02 negative phase III — ongoing role?"
+    positions:
+      - position: "Drop from routine — phase III negative; reserve for trial only"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+      - position: "Heterogeneous post-osi resistance population justifies continued availability for selected patients with no other options; HERTHENA-Lung01 ORR 30% remains clinically meaningful"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Reserve for 3L+ EGFR-mut post-osi + platinum patients lacking other options; preferentially via clinical trial; document HERTHENA-Lung02 informed-consent context"
+    rationale: "Phase III did not confirm OS benefit but ORR 30% in heavily pretreated population still useful for selected aggressive-track patients without alternatives"
+
+do_not_do:
+  - "НЕ використовувати при baseline ILD або history of pneumonitis — class-effect risk."
+  - "НЕ ігнорувати baseline + serial pulmonary monitoring (HRCT, pulse oximetry, symptoms)."
+  - "НЕ продовжувати при Grade ≥2 ILD — permanently discontinue."
+  - "НЕ використовувати без NGS-based resistance characterization — patients without identifiable resistance mechanism may benefit less."
+  - "НЕ ігнорувати neutropenia + G-CSF prophylaxis per institutional policy."
+  - "НЕ підтверджувати план без funding pathway + informed consent re HERTHENA-Lung02 negative phase III — patritumab-DXd FDA-accelerated approval status fluid; не зареєстрований в Україні."
+  - "НЕ комбінувати з other ADCs concurrently — additive ILD risk."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+ for
+  EGFR-mut NSCLC post-osimertinib + platinum. HERTHENA-Lung01 source
+  stub not yet in KB — citation flagged in commit body for
+  source-ingest follow-up. Regulatory status fluid post-HERTHENA-Lung02.
