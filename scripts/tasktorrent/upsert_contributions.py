@@ -44,6 +44,8 @@ PREFIX_TO_DIR = {
     "bio_": "biomarkers",
     "drug_": "drugs",
     "ind_": "indications",
+    "src_": "sources",          # in-place source upsert (recency refresh,
+                                # license update, etc) — keep filename
     "source_stub_": "sources",  # source stubs land in sources/, but the
                                 # filename will be normalized to src_*.yaml
 }
