@@ -697,12 +697,28 @@ def _render_mdt_section(mdt: Optional[MDTOrchestrationResult],
     crit = dq.get("missing_critical_fields") or []
     rec = dq.get("missing_recommended_fields") or []
     unevaluated = dq.get("unevaluated_red_flags") or []
+    field_unlocks = dq.get("field_unlocks") or {}
+
+    def _dq_field(f: str) -> str:
+        rfs = field_unlocks.get(f)
+        if not rfs:
+            return _h(f)
+        rf_txt = _h(", ".join(rfs))
+        return (
+            f'{_h(f)} <span style="color:var(--gray-500);font-size:11px;">'
+            f"blocks: {rf_txt}</span>"
+        )
+
     if crit or rec or unevaluated:
         parts.append("<h3>Data quality</h3><ul>")
         if crit:
-            parts.append(f"<li>Missing critical: {_h(', '.join(crit))}</li>")
+            parts.append(
+                f"<li>Missing critical: {', '.join(_dq_field(f) for f in crit)}</li>"
+            )
         if rec:
-            parts.append(f"<li>Missing recommended: {_h(', '.join(rec))}</li>")
+            parts.append(
+                f"<li>Missing recommended: {', '.join(_dq_field(f) for f in rec)}</li>"
+            )
         if unevaluated:
             parts.append(f"<li>Unevaluated RedFlags: {_h(', '.join(unevaluated))}</li>")
         parts.append("</ul>")
