@@ -42,6 +42,7 @@ from ._citation_guard import (
 )
 from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
 from ._nszu import lookup_nszu_status, nszu_label
+from ._patient_rationale import build_track_rationale_html as _build_track_rationale_html
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
@@ -80,7 +81,7 @@ def _h(s) -> str:
 #   * (theoretical authored) — both populated → phases is canonical
 #
 # The helper below is the single source of truth. Three render call
-# sites consume it — `_render_treatment_phases`, `_render_drugs_plain`
+# sites consume it — `_render_treatment_phases`, `_render_track_drugs`
 # (patient bundle), `_render_ask_doctor_section` (predicate decoration).
 # Without it, migrated regimens would silently drop drugs from the
 # patient HTML and the ask-doctor questions.
@@ -2082,6 +2083,7 @@ def render_plan_html(
     target_lang: str = "uk",
     mode: str = "clinician",
     strict_citation_guard: bool = False,
+    sibling_link: Optional[str] = None,
 ) -> str:
     """Render a PlanResult as a single-file HTML document.
 
@@ -2096,6 +2098,12 @@ def render_plan_html(
     `_ask_doctor`. CHARTER §8.3 invariant — patient-mode never changes
     the engine's track selection.
 
+    `sibling_link` (PATIENT_MODE_SPEC §3.5) — relative URL of the
+    cross-mode bundle. When set, both modes render a header chip
+    pointing at the sibling. CLI `--render-mode both` populates this
+    automatically; single-mode callers may pass a placeholder or leave
+    `None` to suppress the chip.
+
     `strict_citation_guard=False` (default) is WARN mode: any
     Regimen / Indication / BMA cell whose declared sources fail to
     resolve to a real Source entity gets a visible
@@ -2107,7 +2115,7 @@ def render_plan_html(
     target post-cleanup; WARN is the current-state default for KB
     drift visibility (PR5)."""
     if (mode or "").lower() == "patient":
-        return _render_patient_mode(plan_result, target_lang)
+        return _render_patient_mode(plan_result, target_lang, sibling_link=sibling_link)
 
     plan = plan_result.plan
     if plan is None:
@@ -2117,11 +2125,13 @@ def render_plan_html(
 
     # Header
     body: list[str] = []
+    cross_link = _render_mode_toggle(sibling_link, "Версія для пацієнта →")
     body.append(
         '<div class="doc-header">'
         '<div class="doc-label">OpenOnco · Treatment Plan</div>'
         f'<div class="doc-title">План лікування — {_h(plan_result.disease_id)}</div>'
         f'<div class="doc-sub">{_h(plan.id)} · v{_h(plan.version)} · {_h(plan.generated_at[:10])}</div>'
+        f'{cross_link}'
         '</div>'
     )
 
@@ -2396,13 +2406,139 @@ def _render_findings_plain(plan_result: PlanResult) -> str:
     return "".join(parts)
 
 
-def _render_drugs_plain(plan_result: PlanResult) -> str:
-    """Plain-UA rendering of recommended drugs across all tracks.
+def _render_mode_toggle(sibling_link: Optional[str], label_ua: str) -> str:
+    """Cross-link chip per PATIENT_MODE_SPEC §3.5.
 
-    Each drug renders as a `<div class="drug-explanation">` block with
-    drug name + lay-language explanation (`drug.notes_patient` if
-    present, else `_explain_patient(drug.drug_class)`, else a generic
-    fallback) + NSZU patient badge."""
+    Renders an `<a class="mode-toggle">` pointing at the sibling bundle.
+    `sibling_link=None` suppresses the chip entirely (callers that
+    don't know the sibling URL upfront — e.g. single-mode renders that
+    will never have a sibling — get nothing). Empty string `""` and
+    `"#"` are treated as placeholder values: the chip renders so a
+    downstream caller (web app, CLI rewrite) can patch the href."""
+    if sibling_link is None:
+        return ""
+    href = sibling_link if sibling_link else "#"
+    return f'<a class="mode-toggle" href="{_h(href)}">{_h(label_ua)}</a>'
+
+
+def _track_label_ua(track_index: int, track_count: int, t) -> tuple[str, str]:
+    """Return (display_label, css_modifier) for a patient-mode track card.
+
+    Single-track plans get a bare label without the А/Б prefix; multi-
+    track plans use Cyrillic enumeration so no Latin leaks into visible
+    text. `is_default` drives the CSS modifier so the default track gets
+    the green border and the alternative gets indigo (per §3.2)."""
+    if track_count <= 1:
+        base = "Рекомендований план"
+    else:
+        prefix = "А" if track_index == 0 else "Б"
+        suffix = "Стандартний варіант" if getattr(t, "is_default", False) else "Альтернативний варіант"
+        base = f"{prefix}) {suffix}"
+    modifier = "default" if getattr(t, "is_default", False) else "alternative"
+    return base, modifier
+
+
+def _regimen_schedule_ua(regimen_data: Optional[dict]) -> str:
+    """One-line plain-UA schedule summary for a regimen, or empty string.
+
+    Composes from `cycle_length_days` × `total_cycles` when both are
+    present and integer-castable. Strings like 'Continuous until
+    progression' for `total_cycles` are passed through verbatim
+    (KNOWLEDGE_SCHEMA_SPECIFICATION §6.2 currently allows free-form)."""
+    if not isinstance(regimen_data, dict):
+        return ""
+    cycle = regimen_data.get("cycle_length_days")
+    total = regimen_data.get("total_cycles")
+    if cycle is None and total is None:
+        return ""
+    if isinstance(total, str) and total.strip():
+        return f"Тривалість: {_h(total)}; цикл — {_h(cycle)} днів" if cycle else f"Тривалість: {_h(total)}"
+    try:
+        c = int(cycle) if cycle is not None else None
+        t_int = int(total) if total is not None else None
+    except (TypeError, ValueError):
+        return ""
+    if c and t_int:
+        return f"{t_int} цикл(и) по {c} днів"
+    if c:
+        return f"Цикл — {c} днів"
+    if t_int:
+        return f"{t_int} цикл(и)"
+    return ""
+
+
+def _render_track_drugs(
+    plan_result: PlanResult,
+    t,
+    drugs_lookup: dict,
+    disease_names: Optional[dict],
+) -> str:
+    """Render the drug-explanation blocks for a single track.
+
+    Per PATIENT_MODE_SPEC §3.2, dedupe is *within* a track only — the
+    same drug appearing in both Standard and Aggressive must surface in
+    both cards so the patient sees what each plan actually contains."""
+    seen_drug_ids: set[str] = set()
+    blocks: list[str] = []
+    for comp in _iter_regimen_components(t.regimen_data):
+        drug_id = comp.get("drug_id") or ""
+        if not drug_id or drug_id in seen_drug_ids:
+            continue
+        seen_drug_ids.add(drug_id)
+
+        drug = drugs_lookup.get(drug_id) or {}
+        label = _patient_drug_label(drug, drug_id)
+        drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
+
+        # Lay-language explanation: prefer notes_patient (drug-author'd
+        # patient-facing blurb) → drug_class vocabulary entry → generic.
+        lay = ""
+        if isinstance(drug, dict):
+            lay = (drug.get("notes_patient") or "").strip()
+        if not lay and drug_class:
+            lay = _explain_patient(drug_class) or ""
+        if not lay:
+            lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
+
+        # NSZU badge — patient-friendly label, render only when we can
+        # resolve coverage. Falls back silently when drug entity is
+        # missing (don't fabricate a badge).
+        badge_html = ""
+        if isinstance(drug, dict) and drug:
+            try:
+                badge = lookup_nszu_status(
+                    drug,
+                    plan_result.disease_id or "",
+                    disease_names=disease_names if isinstance(disease_names, dict) else None,
+                )
+                p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
+                if p_label:
+                    cls = f"patient-nszu patient-nszu-{badge.status}"
+                    badge_html = (
+                        f'<div class="{cls}" data-nszu-status="{_h(badge.status)}">'
+                        f"{_h(p_label)}</div>"
+                    )
+            except Exception:
+                badge_html = ""
+
+        blocks.append(
+            f'<div class="drug-explanation" data-source-id="{_h(drug_id)}">'
+            f"<h3>{_h(label)}</h3>"
+            f'<p class="lay-language">{_h(lay)}</p>'
+            f"{badge_html}"
+            "</div>"
+        )
+    return "".join(blocks)
+
+
+def _render_tracks_plain(plan_result: PlanResult) -> str:
+    """Plain-UA per-track rendering for the `what-now` section.
+
+    Each track becomes a `<article class="track-card track-card--{mod}">`
+    with a Cyrillic А/Б prefix when multi-track. Information parity rule
+    (PATIENT_MODE_SPEC §4): the patient never sees fewer tracks than the
+    clinician version. Verification anchors via `data-source-id` on each
+    card (regimen ID) and each drug-explanation block (drug ID)."""
     plan = plan_result.plan
     if plan is None or not plan.tracks:
         return (
@@ -2413,68 +2549,102 @@ def _render_drugs_plain(plan_result: PlanResult) -> str:
     drugs_lookup = (plan_result.kb_resolved or {}).get("drugs") or {}
     disease_data = (plan_result.kb_resolved or {}).get("disease") or {}
     disease_names = disease_data.get("names") if isinstance(disease_data, dict) else None
-    seen_drug_ids: set[str] = set()
-    blocks: list[str] = []
+    track_count = len(plan.tracks)
 
-    for t in plan.tracks:
-        # Iterate via _iter_regimen_components — covers both legacy
-        # (`components: [...]`) and post-PR2 phase-aware (`phases:` populated,
-        # `components: []`) regimen shapes. See helper docstring.
-        for comp in _iter_regimen_components(t.regimen_data):
-            drug_id = comp.get("drug_id") or ""
-            if not drug_id or drug_id in seen_drug_ids:
-                continue
-            seen_drug_ids.add(drug_id)
-
-            drug = drugs_lookup.get(drug_id) or {}
-            label = _patient_drug_label(drug, drug_id)
-            drug_class = (drug.get("drug_class") or "") if isinstance(drug, dict) else ""
-
-            # Lay-language explanation: prefer notes_patient (drug-author'd
-            # patient-facing blurb) → drug_class vocabulary entry → generic.
-            lay = ""
-            if isinstance(drug, dict):
-                lay = (drug.get("notes_patient") or "").strip()
-            if not lay and drug_class:
-                lay = _explain_patient(drug_class) or ""
-            if not lay:
-                lay = "препарат для лікування вашого захворювання — деталі обговоріть з лікарем"
-
-            # NSZU badge — patient-friendly label, render only when we can
-            # resolve coverage. Falls back silently when drug entity is
-            # missing (don't fabricate a badge).
-            badge_html = ""
-            if isinstance(drug, dict) and drug:
-                try:
-                    badge = lookup_nszu_status(
-                        drug,
-                        plan_result.disease_id or "",
-                        disease_names=disease_names if isinstance(disease_names, dict) else None,
-                    )
-                    p_label = NSZU_PATIENT_LABEL.get(badge.status, "")
-                    if p_label:
-                        cls = f"patient-nszu patient-nszu-{badge.status}"
-                        badge_html = (
-                            f'<div class="{cls}" data-nszu-status="{_h(badge.status)}">'
-                            f"{_h(p_label)}</div>"
-                        )
-                except Exception:
-                    badge_html = ""
-
-            blocks.append(
-                '<div class="drug-explanation">'
-                f"<h3>{_h(label)}</h3>"
-                f'<p class="lay-language">{_h(lay)}</p>'
-                f"{badge_html}"
-                "</div>"
+    cards: list[str] = []
+    for idx, t in enumerate(plan.tracks):
+        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        regimen_data = t.regimen_data or {}
+        regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
+        regimen_name = (
+            regimen_data.get("name", "") if isinstance(regimen_data, dict) else ""
+        )
+        schedule_str = _regimen_schedule_ua(regimen_data)
+        signoff_badge = _render_signoff_badge_patient(t.indication_data)
+        drug_blocks = _render_track_drugs(plan_result, t, drugs_lookup, disease_names)
+        if not drug_blocks:
+            drug_blocks = (
+                "<p>Конкретний список препаратів для цього варіанту буде "
+                "уточнений лікарем.</p>"
             )
 
-    if not blocks:
-        return (
-            "<p>Конкретний список препаратів буде сформовано лікарем "
-            "після перегляду усіх ваших аналізів.</p>"
+        regimen_line = (
+            f'<p class="track-title">{_h(regimen_name)}</p>'
+            if regimen_name else ""
         )
-    return "".join(blocks)
+        schedule_line = (
+            f'<p class="regimen-schedule">{schedule_str}</p>'
+            if schedule_str else ""
+        )
+
+        cards.append(
+            f'<article class="track-card track-card--{_h(modifier)}" '
+            f'data-source-id="{_h(regimen_id)}">'
+            f'<p class="track-label">{_h(title_ua)}</p>'
+            f'{regimen_line}'
+            f'{schedule_line}'
+            f'{signoff_badge}'
+            f'{drug_blocks}'
+            "</article>"
+        )
+
+    grid_class = "tracks-grid tracks-grid--two" if track_count == 2 else "tracks-grid"
+    return f'<div class="{grid_class}">{"".join(cards)}</div>'
+
+
+def _render_why_section(plan_result: PlanResult) -> str:
+    """Per-track 'why this for you' section.
+
+    Phase 2 emits a placeholder shell so structural anchors exist for
+    tests + downstream consumers. Phase 3 (`_patient_rationale.py`)
+    fills in the bullets from `PlanResult.trace`. The shell still
+    surfaces the section heading + per-track cards so the bundle layout
+    is stable across phases."""
+    plan = plan_result.plan
+    if plan is None or not plan.tracks:
+        return (
+            '<section class="why-this-plan">'
+            "<h2>Чому саме цей план</h2>"
+            '<p class="why-fallback">Деталі — у технічній версії звіту.</p>'
+            "</section>"
+        )
+
+    track_count = len(plan.tracks)
+    track_blocks: list[str] = []
+    for idx, t in enumerate(plan.tracks):
+        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        regimen_data = t.regimen_data or {}
+        regimen_id = regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
+        bullets_html = _build_why_bullets_html(plan_result, t)
+        track_blocks.append(
+            f'<div class="why-track" data-source-id="{_h(regimen_id)}">'
+            f'<p class="track-label">{_h(title_ua)}</p>'
+            f"{bullets_html}"
+            "</div>"
+        )
+
+    return (
+        '<section class="why-this-plan">'
+        "<h2>Чому саме цей план</h2>"
+        f'{"".join(track_blocks)}'
+        "</section>"
+    )
+
+
+def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
+    """Phase 3: rationale bullets from `PlanResult.trace`.
+
+    Delegates to `_patient_rationale.build_track_rationale_html`, which
+    composes 1-4 plain-UA bullets per track based on:
+
+      * Variant actionability hits (ESCAT IA/IB → strong-tier wording).
+      * Default vs alternative track distinction.
+      * Up to 2 fired RedFlag definitions (first-sentence Ukrainian).
+      * Fallback strings when none of the above produce a signal.
+
+    HTML escaping is handled inside the rationale builder so KB content
+    with markup-sensitive characters cannot break the document."""
+    return _build_track_rationale_html(plan_result, track)
 
 
 def _render_emergency_section(plan_result: PlanResult) -> str:
@@ -2589,13 +2759,22 @@ _PATIENT_DISCLAIMER_HTML = (
 )
 
 
-def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
+def _render_patient_mode(
+    plan_result: PlanResult,
+    target_lang: str,
+    *,
+    sibling_link: Optional[str] = None,
+) -> str:
     """Render a Plan as a plain-Ukrainian patient-facing single-file HTML.
 
     `target_lang` is currently honoured only for the document `<html lang>`
     attribute — the body stays Ukrainian per the patient-mode spec. EN
-    patient bundles are out of scope for the current iteration (see
-    CSD-3 plan)."""
+    patient bundles are out of scope for the current iteration
+    (PATIENT_MODE_SPEC §9).
+
+    `sibling_link` populates the cross-link chip in the header
+    (PATIENT_MODE_SPEC §3.5). Set by the CLI when `--render-mode both`
+    or by web embeds; otherwise None to suppress the chip."""
     plan = plan_result.plan
     if plan is None:
         return _patient_doc_shell(
@@ -2607,12 +2786,14 @@ def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
     disease_label = _patient_disease_label(plan_result)
     body_parts: list[str] = []
 
-    # Header
+    # Header (PATIENT_MODE_SPEC §3.1 + §3.5)
+    cross_link = _render_mode_toggle(sibling_link, "Технічна версія для лікаря →")
     body_parts.append(
         "<header>"
         "<h1>Ваш персональний план</h1>"
         '<p class="patient-subhead">Що показав аналіз і що це означає для вас</p>'
         f'<p><strong>Діагноз:</strong> {_h(disease_label)}</p>'
+        f'{cross_link}'
         "</header>"
     )
 
@@ -2626,9 +2807,11 @@ def _render_patient_mode(plan_result: PlanResult, target_lang: str) -> str:
     body_parts.append(
         '<section class="what-now">'
         "<h2>Що це означає для лікування</h2>"
-        f"{_render_drugs_plain(plan_result)}"
+        f"{_render_tracks_plain(plan_result)}"
         "</section>"
     )
+
+    body_parts.append(_render_why_section(plan_result))
 
     body_parts.append(_render_emergency_section(plan_result))
     body_parts.append(_render_ask_doctor_section(plan_result))

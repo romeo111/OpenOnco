@@ -167,6 +167,35 @@ def _print_diagnostic_brief(result) -> None:
             print(f"  - {w}")
 
 
+def _render_outputs(base_path: Path, render_mode: str) -> list[dict]:
+    """Resolve `(path, mode, sibling_link)` triples for `--render-mode`.
+
+    `clinician` (default, back-compat) → write `<base>` as clinician HTML,
+    no sibling chip.
+
+    `patient` → write `<base>` as patient HTML, no sibling chip.
+
+    `both` → write `<base>` as clinician HTML and `<base>.patient.html`
+    (or `<base>.patient<ext>` when base has an explicit extension) as
+    patient HTML, with cross-link `href` resolving to each sibling's
+    filename so the chips actually navigate
+    (PATIENT_MODE_SPEC §3.5)."""
+    if render_mode == "clinician":
+        return [{"path": base_path, "mode": "clinician", "sibling": None}]
+    if render_mode == "patient":
+        return [{"path": base_path, "mode": "patient", "sibling": None}]
+    # "both" — derive a sibling filename by inserting `.patient` before
+    # the suffix. Use just the basename for href (callers may move files
+    # around; same-directory delivery is the common case).
+    suffix = base_path.suffix or ".html"
+    stem = base_path.stem
+    patient_path = base_path.with_name(f"{stem}.patient{suffix}")
+    return [
+        {"path": base_path, "mode": "clinician", "sibling": patient_path.name},
+        {"path": patient_path, "mode": "patient", "sibling": base_path.name},
+    ]
+
+
 def _run_list_versions(patient_id: str, root: Path) -> int:
     versions = list_versions(patient_id, root=root)
     if not versions:
@@ -381,6 +410,15 @@ def main() -> int:
         help=("Render result to a single-file HTML document (A4 print-friendly). "
               "Works with treatment plan, diagnostic brief, and --revise (revision note)."),
     )
+    parser.add_argument(
+        "--render-mode",
+        choices=("clinician", "patient", "both"),
+        default="clinician",
+        help=("Audience for --render (PATIENT_MODE_SPEC §8). 'clinician' "
+              "(default) emits the technical tumor-board brief; 'patient' "
+              "emits the plain-UA simplified report; 'both' emits both files "
+              "(<OUT>.html + <OUT>.patient.html) with cross-link chips wired."),
+    )
     # Actionability flags. The OncoKB-specific --oncokb-proxy / --oncokb-timeout
     # were removed in Phase 1 of the CIViC pivot (the proxy is gone; see
     # docs/reviews/oncokb-public-civic-coverage-2026-04-27.md). Phase 2 will
@@ -518,9 +556,15 @@ def main() -> int:
             return 2
 
     if args.render and result.plan is not None:
-        html_str = render_plan_html(result, mdt=mdt)
-        args.render.write_text(html_str, encoding="utf-8")
-        print(f"\nHTML rendered: {args.render}")
+        for spec in _render_outputs(args.render, args.render_mode):
+            html_str = render_plan_html(
+                result,
+                mdt=mdt,
+                mode=spec["mode"],
+                sibling_link=spec["sibling"],
+            )
+            spec["path"].write_text(html_str, encoding="utf-8")
+            print(f"\nHTML rendered ({spec['mode']}): {spec['path']}")
 
     if not result.default_indication_id:
         return 1

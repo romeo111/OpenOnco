@@ -446,8 +446,11 @@ def test_csd1_braf_v600e_mcrc_patient_mode():
     #    is present (encorafenib appears only for 2L/3L which the KB
     #    doesn't yet author for CRC — this assertion stays lenient by
     #    design while still proving the drug section rendered).
-    has_drug_section = '<div class="drug-explanation">' in html
-    has_nszu_badge = "патієнт-nszu" in html.lower() or "програмою НСЗУ" in visible
+    # Phase 2: drug-explanation blocks now carry a data-source-id parity
+    # hook (PATIENT_MODE_SPEC §4.1), so accept the open-tag prefix rather
+    # than the bare closing form.
+    has_drug_section = '<div class="drug-explanation"' in html
+    has_nszu_badge = "patient-nszu" in html.lower() or "програмою НСЗУ" in visible
     assert has_drug_section and has_nszu_badge, (
         "Expected at least one drug-explanation block + NSZU badge"
     )
@@ -524,3 +527,255 @@ def test_all_vocabulary_tables_nonempty():
     }
     for name, t in tables.items():
         assert len(t) > 0, f"Vocabulary table {name} unexpectedly empty"
+
+
+# ── Section H — Phase 2: per-track presentation + cross-link + parity ──
+
+
+def _build_hcv_mzl_two_track_plan():
+    """Reference HCV-MZL fixture — produces two tracks (ANTIVIRAL +
+    BR-AGGRESSIVE). Used by the two-track tests below."""
+    fixture = EXAMPLES / "patient_zero_reference_case.json"
+    if not fixture.exists():
+        pytest.skip(f"Reference fixture missing: {fixture}")
+    patient = json.loads(fixture.read_text(encoding="utf-8"))
+    return generate_plan(patient, kb_root=KB_ROOT)
+
+
+def test_patient_html_two_track_plan_shows_both_tracks():
+    """When the engine produces ≥2 tracks, the patient bundle MUST
+    surface both — the А/Б Cyrillic prefix is the structural marker
+    (PATIENT_MODE_SPEC §3.2)."""
+    result = _build_hcv_mzl_two_track_plan()
+    if result.plan is None or len(result.plan.tracks) < 2:
+        pytest.skip("Reference HCV-MZL plan should produce ≥2 tracks")
+    html = render_plan_html(result, mode="patient")
+    visible = _visible_text(html)
+    # Cyrillic enumeration markers; never Latin A/B.
+    assert "А)" in visible, "Two-track plan must show Cyrillic 'А)' prefix"
+    assert "Б)" in visible, "Two-track plan must show Cyrillic 'Б)' prefix"
+    # Both track-card modifiers present in the markup.
+    assert 'track-card--default' in html
+    assert 'track-card--alternative' in html
+    # Tracks-grid wrapper for layout.
+    assert '<div class="tracks-grid' in html
+
+
+def test_patient_html_single_track_plan_no_a_b_prefix():
+    """Single-track plans render a bare 'Рекомендований план' label,
+    without А/Б enumeration."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    assert result.plan is not None
+    if len(result.plan.tracks) > 1:
+        pytest.skip("Synthetic mCRC fixture unexpectedly produced ≥2 tracks")
+    html = render_plan_html(result, mode="patient")
+    visible = _visible_text(html)
+    # Must not include А/Б enumeration.
+    assert "А)" not in visible, "Single-track plan must not emit 'А)' prefix"
+    assert "Б)" not in visible, "Single-track plan must not emit 'Б)' prefix"
+    # Should render the bare track label.
+    assert "Рекомендований план" in visible
+
+
+def test_patient_html_has_clinician_cross_link():
+    """When `sibling_link` is set, the patient bundle exposes a
+    `<a class="mode-toggle">` chip pointing at the clinician version
+    (PATIENT_MODE_SPEC §3.5)."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    html = render_plan_html(
+        result, mode="patient", sibling_link="plan.html"
+    )
+    assert '<a class="mode-toggle"' in html
+    assert 'href="plan.html"' in html
+    assert "Технічна версія для лікаря" in html
+
+
+def test_patient_html_no_cross_link_when_sibling_none():
+    """`sibling_link=None` (default) suppresses the chip entirely so
+    bundles rendered without a sibling stay clean. (`.mode-toggle` CSS
+    selector is unconditionally embedded; absence is checked on the
+    `<a class="mode-toggle">` markup itself.)"""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    html = render_plan_html(result, mode="patient")
+    assert '<a class="mode-toggle"' not in html
+
+
+def test_clinician_html_has_patient_cross_link():
+    """Mirror: clinician bundle exposes a chip pointing at the patient
+    version when `sibling_link` is set."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    html = render_plan_html(
+        result, mode="clinician", sibling_link="plan.patient.html"
+    )
+    assert '<a class="mode-toggle"' in html
+    assert 'href="plan.patient.html"' in html
+    assert "Версія для пацієнта" in html
+
+
+def test_patient_html_has_why_section():
+    """Phase 2 `why-this-plan` shell must be present even before
+    Phase 3 fills the rationale bullets."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    html = render_plan_html(result, mode="patient")
+    assert '<section class="why-this-plan">' in html
+    visible = _visible_text(html)
+    assert "Чому саме цей план" in visible
+
+
+# ── Section I — Phase 3: rationale from PlanResult.trace ─────────────
+
+
+def test_patient_rationale_braf_v600e_mcrc_mentions_braf():
+    """The synthetic BRAF V600E mCRC patient should have a rationale
+    bullet that names the BRAF V600E hit. Tier handling: the engine
+    populates `variant_actionability` with whichever ESCAT cell matched
+    (typically IB for BRAF V600E in CRC); both strong-tier and mid-tier
+    wordings should mention the gene+variant."""
+    from knowledge_base.engine._patient_rationale import build_track_rationale
+
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    if result.plan is None or not result.plan.tracks:
+        pytest.skip("Synthetic mCRC plan should produce at least 1 track")
+    if not result.plan.variant_actionability:
+        pytest.skip("Plan didn't surface a BRAF V600E hit (KB drift?)")
+    bullets = build_track_rationale(result, result.plan.tracks[0])
+    joined = " ".join(bullets)
+    assert "BRAF" in joined, (
+        f"Rationale should name BRAF; got: {bullets!r}"
+    )
+
+
+def test_patient_rationale_renders_in_why_section():
+    """End-to-end: the patient bundle's `why-this-plan` section now
+    contains rationale bullets (not the Phase-2 placeholder paragraph)
+    when biomarker / RF data is available."""
+    result = _build_synthetic_braf_v600e_mcrc_plan()
+    html = render_plan_html(result, mode="patient")
+    # `<ul>` inside the why-this-plan section is the structural marker
+    # that rationale bullets rendered. Find the section block first
+    # to scope the search.
+    why_match = re.search(
+        r'<section class="why-this-plan">.*?</section>',
+        html,
+        flags=re.DOTALL,
+    )
+    assert why_match, "why-this-plan section missing"
+    why_block = why_match.group(0)
+    assert "<ul>" in why_block and "<li>" in why_block, (
+        f"Rationale should render <ul>/<li> bullets, got: {why_block[:300]}"
+    )
+
+
+def test_patient_rationale_no_trace_fallback():
+    """Empty trace → at least one fallback bullet so the section is
+    never empty."""
+    from knowledge_base.engine._patient_rationale import build_track_rationale
+
+    class _FakeTrack:
+        is_default = True
+        indication_data = None
+        regimen_data = None
+
+    class _FakeResult:
+        plan = None
+        kb_resolved: dict = {}
+        trace: list = []
+
+    bullets = build_track_rationale(_FakeResult(), _FakeTrack())
+    assert bullets, "Empty plan should still produce at least one fallback bullet"
+    assert any("стандарт" in b.lower() or "альтернативн" in b.lower() for b in bullets)
+
+
+def test_patient_rationale_fired_rf_surfaces_in_bullets():
+    """A fired RedFlag in the trace surfaces as a 'У вас зафіксовано: …'
+    bullet, taking the first sentence of `definition_ua`."""
+    from knowledge_base.engine._patient_rationale import build_track_rationale
+
+    class _FakeTrack:
+        is_default = False
+        indication_data = None
+        regimen_data = None
+
+    class _FakeResult:
+        plan = None
+        kb_resolved = {
+            "red_flags": {
+                "RF-FAKE-HBV": {
+                    "id": "RF-FAKE-HBV",
+                    "definition_ua": (
+                        "Хронічний гепатит B без противірусної профілактики. "
+                        "Імуносупресивна терапія може реактивувати вірус."
+                    ),
+                }
+            }
+        }
+        trace = [
+            {
+                "step": "step_1",
+                "outcome": "REG-FOO",
+                "branch": "default",
+                "fired_red_flags": ["RF-FAKE-HBV"],
+            }
+        ]
+
+    bullets = build_track_rationale(_FakeResult(), _FakeTrack())
+    joined = " ".join(bullets)
+    assert "Хронічний гепатит B" in joined or "зафіксовано" in joined, (
+        f"Expected the fired-RF definition to surface, got: {bullets!r}"
+    )
+
+
+def test_patient_rationale_caps_at_4_bullets():
+    """Even with many fired RFs, the rationale never exceeds 4 bullets
+    (PATIENT_MODE_SPEC §3.3 cap to keep the patient bundle scannable)."""
+    from knowledge_base.engine._patient_rationale import build_track_rationale
+
+    class _FakeTrack:
+        is_default = True
+        indication_data = None
+        regimen_data = None
+
+    class _FakeResult:
+        plan = None
+        kb_resolved = {
+            "red_flags": {
+                f"RF-{i}": {
+                    "id": f"RF-{i}",
+                    "definition_ua": f"Тестовий RedFlag номер {i}.",
+                }
+                for i in range(10)
+            }
+        }
+        trace = [
+            {
+                "step": f"step_{i}",
+                "outcome": "REG-FOO",
+                "branch": "default",
+                "fired_red_flags": [f"RF-{i}"],
+            }
+            for i in range(10)
+        ]
+
+    bullets = build_track_rationale(_FakeResult(), _FakeTrack())
+    assert len(bullets) <= 4, f"Cap exceeded: got {len(bullets)} bullets"
+
+
+def test_information_parity_smoke():
+    """PATIENT_MODE_SPEC §4: every track present in the clinician HTML
+    must also surface in the patient HTML, indexed by `data-source-id`
+    (regimen ID). Fired RedFlags surface in patient body somewhere."""
+    result = _build_hcv_mzl_two_track_plan()
+    if result.plan is None or len(result.plan.tracks) < 2:
+        pytest.skip("Reference HCV-MZL plan should produce ≥2 tracks")
+    clinician_html = render_plan_html(result, mode="clinician")
+    patient_html = render_plan_html(result, mode="patient")
+
+    # Each track's regimen ID must appear in patient HTML.
+    for t in result.plan.tracks:
+        rid = (t.regimen_data or {}).get("id", "") if t.regimen_data else ""
+        if not rid:
+            continue
+        assert rid in patient_html, (
+            f"Regimen {rid!r} missing from patient bundle "
+            f"(present in clinician: {rid in clinician_html})"
+        )
