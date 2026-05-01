@@ -1,0 +1,84 @@
+id: RF-NSCLC-TROP2-DATO-CANDIDATE
+definition: >
+  TROP2 expression in NSCLC — datopotamab deruxtecan (Dato-DXd) is a
+  TROP2-directed deruxtecan antibody-drug conjugate. TROPION-Lung01
+  (Ahn 2023) phase-3 randomized previously-treated metastatic NSCLC
+  to Dato-DXd vs docetaxel (mPFS 4.4 vs 3.7 mo, HR 0.75; benefit
+  concentrated in non-squamous subgroup mPFS 5.6 vs 3.7 mo, HR 0.63).
+  TROP2 is broadly expressed across NSCLC histologies (IHC enrollment
+  not required) — TROP2 IHC is informational, not gating. Candidate
+  RF positions Dato-DXd in 2L+ non-squamous NSCLC as a non-platinum
+  cytotoxic alternative to docetaxel.
+definition_ua: >
+  Експресія TROP2 при НДРЛ — датопотамаб деруксtекан (Dato-DXd) —
+  кон'югат антитіло-препарат деруксtекан, спрямований на TROP2.
+  TROPION-Lung01 (Ahn 2023) фаза-3 рандомізував попередньо лікований
+  метастатичний НДРЛ до Dato-DXd проти доцетакселу (мПФВ 4.4 проти 3.7
+  міс, HR 0.75; виграш концентрувався в неплоскоклітинній підгрупі
+  мПФВ 5.6 проти 3.7 міс, HR 0.63). TROP2 широко експресується в
+  гістологіях НДРЛ (рекрутинг IHC не обов'язковий) — TROP2 IHC
+  інформаційний, не gating. RF-кандидат позиціонує Dato-DXd у 2L+
+  неплоскоклітинному НДРЛ як неплатинову цитотоксичну альтернативу
+  доцетакселу.
+
+trigger:
+  type: biomarker
+  all_of:
+    - finding: "nsclc_histology"
+      value: "non-squamous"
+    - finding: "prior_systemic_therapy"
+      value: true
+  none_of:
+    - finding: "actionable_driver"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 92
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-29"
+draft: true
+
+notes: >
+  Candidate RF — TROPION-Lung01 trial-Source not yet ingested
+  (SRC-TROPION-LUNG01-AHN-2024 flag for ingestion chunk). TROP2 IHC
+  is informational, NOT a gating biomarker — pivotal trial enrolled
+  unselected populations. Histology-based gate (non-squamous) reflects
+  the subgroup analysis showing benefit concentration. clinical_direction
+  = investigate because absolute PFS benefit modest (~0.7 mo overall;
+  ~1.9 mo non-squamous) and OS not reported significantly improved at
+  primary analysis. Excludes patients with actionable drivers
+  (EGFR/ALK/ROS1/BRAF/MET/RET/NTRK/KRAS-G12C/HER2-mut) — those have
+  driver-targeted 2L. ILD class warning per deruxtecan platform —
+  pneumonitis ~3-9% all-grade. Promote to draft:false after trial-Source
+  ingestion + clearer FDA label decision (FDA AdComm 2024-2025
+  outcomes pending). Note: TROPION-Lung02 (Dato-DXd + pembro 1L)
+  separate trial; out of scope here.
+notes_ua: >
+  Кандидатний RF — джерело випробування TROPION-Lung01 ще не
+  інгестоване (SRC-TROPION-LUNG01-AHN-2024 позначено для chunk
+  інгестії). TROP2 IHC — інформаційний, НЕ gating-біомаркер — ключове
+  випробування рекрутувало невідібрані популяції. Gate на основі
+  гістології (неплоскоклітинна) відображає підгруповий аналіз,
+  що показав концентрацію виграшу. clinical_direction = investigate,
+  оскільки абсолютний виграш ПФВ скромний (~0.7 міс загалом;
+  ~1.9 міс неплоскоклітинна) і ЗВ значуще не покращене на первинному
+  аналізі. Виключає пацієнтів з actionable-драйверами
+  (EGFR/ALK/ROS1/BRAF/MET/RET/NTRK/KRAS-G12C/HER2-мут) — ті мають
+  драйвер-таргетну 2L. Класове застереження ILD за платформою
+  деруксtекану — пневмоніт ~3-9% всіх ступенів. Перевести на
+  draft:false після інгестії джерела випробування + чіткішого рішення
+  щодо мітки FDA (результати FDA AdComm 2024-2025 очікуються).
+  Примітка: TROPION-Lung02 (Dato-DXd + pembro 1L) — окреме
+  випробування; поза сферою тут.

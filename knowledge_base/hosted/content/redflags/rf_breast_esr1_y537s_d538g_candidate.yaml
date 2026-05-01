@@ -1,0 +1,83 @@
+id: RF-BREAST-ESR1-Y537S-D538G-CANDIDATE
+definition: >
+  ESR1 ligand-binding-domain hotspot Y537S or D538G — the two dominant
+  hotspots (~70% of all ESR1-LBD mutations) acquired in HR+/HER2-
+  metastatic breast progressing on aromatase inhibitor. EMERALD
+  (Bidard 2022) randomized post-AI ± CDK4/6i HR+ MBC to elacestrant vs
+  endocrine standard-of-care; PFS benefit was concentrated in the
+  ESR1-mutant subgroup (mPFS 3.8 vs 1.9 mo, HR 0.55). Y537S is
+  associated with more aggressive biology than D538G in some series.
+  Candidate RF refines RF-BREAST-ESR1-MUT-ACTIONABLE for the
+  predominant hotspots specifically targeted by elacestrant data.
+definition_ua: >
+  Hotspot ліганд-зв'язуючого домену ESR1 Y537S або D538G — два
+  домінуючі hotspot (~70% усіх мутацій ESR1-LBD), набуті при HR+/HER2-
+  метастатичному РМЗ під час прогресування на інгібіторі ароматази.
+  EMERALD (Bidard 2022) рандомізував HR+ МРМЗ після AI ± CDK4/6i до
+  елацестранту проти стандартної ендокринотерапії; виграш ПФВ
+  концентрувався в ESR1-мутантній підгрупі (мПФВ 3.8 проти 1.9 міс,
+  HR 0.55). Y537S асоційована з агресивнішою біологією, ніж D538G,
+  у деяких серіях. RF-кандидат уточнює RF-BREAST-ESR1-MUT-ACTIONABLE
+  для домінуючих hotspot, на які націлені дані елацестранту.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "esr1_y537s"
+      value: true
+    - finding: "esr1_d538g"
+      value: true
+    - finding: "esr1_hotspot"
+      value: "Y537S"
+    - finding: "esr1_hotspot"
+      value: "D538G"
+    - finding: "esr1_mutation"
+      value: "Y537S"
+    - finding: "esr1_mutation"
+      value: "D538G"
+
+clinical_direction: intensify
+
+severity: major
+priority: 67
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-EMERALD-BIDARD-2022
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Hotspot-specific narrowing of RF-BREAST-ESR1-MUT-ACTIONABLE. Y537S +
+  D538G together account for ~70% of LBD mutations and are the
+  hotspots most consistently represented in EMERALD subgroup analyses.
+  Test on ctDNA at progression on AI ± CDK4/6i — preferred specimen
+  due to subclonal + polyclonal nature of ESR1 mutations in tissue.
+  Priority 67 sits between the broad ESR1-MUT-ACTIONABLE (70) and the
+  AKT/PIK3CA family (65) — the engine should fire both this hotspot
+  RF and the broader ESR1 RF when applicable; conflict resolution
+  defers to clinical_direction (both intensify, no conflict). When
+  ESR1-WT post-AI: elacestrant did not show benefit; switch to
+  fulvestrant + capivasertib / alpelisib if PIK3CA / AKT1 / PTEN
+  altered. EMERALD trial Source ingested (SRC-EMERALD-BIDARD-2022).
+notes_ua: >
+  Hotspot-специфічне уточнення RF-BREAST-ESR1-MUT-ACTIONABLE. Y537S +
+  D538G разом становлять ~70% LBD-мутацій і є hotspot, найбільш
+  послідовно представленими в підгрупових аналізах EMERALD. Тестування
+  на цоДНК при прогресуванні на AI ± CDK4/6i — переважний зразок через
+  субклональну + поліклональну природу мутацій ESR1 у тканині.
+  Пріоритет 67 — між широким ESR1-MUT-ACTIONABLE (70) та родиною
+  AKT/PIK3CA (65) — двигун має активувати і цей hotspot RF, і ширший
+  RF ESR1 при застосовності; розв'язання конфлікту покладається на
+  clinical_direction (обидва intensify, конфлікту немає). При ESR1-WT
+  після AI: елацестрант не показав виграшу; перехід на фулвестрант +
+  капівасертиб / алпелісиб при альтерації PIK3CA / AKT1 / PTEN.
+  Джерело EMERALD інгестоване (SRC-EMERALD-BIDARD-2022).

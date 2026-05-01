@@ -1,0 +1,78 @@
+id: RF-BREAST-AKT1-E17K-CAPIVASERTIB-CANDIDATE
+definition: >
+  AKT1 E17K activating hotspot specifically positioning capivasertib +
+  fulvestrant in HR+/HER2- metastatic breast post-endocrine ± CDK4/6i.
+  CAPItello-291 (Turner 2023) enrolled patients with PIK3CA / AKT1 /
+  PTEN-altered tumors; AKT1 E17K accounted for ~7% of the altered
+  cohort. Capivasertib + fulvestrant mPFS 7.3 vs 3.1 mo (HR 0.50,
+  p<0.001) in the altered population. AKT1 E17K is the dominant (>90%)
+  AKT1 hotspot. Candidate RF specifically anchors the E17K → capivasertib
+  pairing distinct from the broader RF-BREAST-AKT1-E17K-ACTIONABLE.
+definition_ua: >
+  Активуючий hotspot AKT1 E17K, що специфічно позиціонує
+  капівасертиб + фулвестрант при HR+/HER2- метастатичному РМЗ після
+  ендокринотерапії ± CDK4/6i. CAPItello-291 (Turner 2023) включало
+  пацієнтів із PIK3CA / AKT1 / PTEN-альтерованими пухлинами; AKT1
+  E17K складало ~7% альтерованої когорти. Капівасертиб + фулвестрант
+  мПФВ 7.3 проти 3.1 міс (HR 0.50, p<0.001) у альтерованій популяції.
+  AKT1 E17K — домінуючий (>90%) hotspot AKT1. RF-кандидат специфічно
+  фіксує парування E17K → капівасертиб, відмінне від ширшого
+  RF-BREAST-AKT1-E17K-ACTIONABLE.
+
+trigger:
+  type: biomarker
+  all_of:
+    - finding: "akt1_e17k"
+      value: true
+  any_of:
+    - finding: "prior_endocrine_therapy"
+      value: true
+    - finding: "prior_cdk46i_progression"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 66
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-CAPITELLO291-TURNER-2023
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Pairs AKT1 E17K with prior-therapy class gate (post-endocrine ±
+  CDK4/6i) — closer to actual CAPItello-291 enrollment criterion than
+  the broader RF-BREAST-AKT1-E17K-ACTIONABLE (priority 65, fires on
+  E17K alone). Priority 66 sits adjacent so engine resolution behavior
+  is deterministic when both fire (same clinical_direction = intensify).
+  Toxicity: diarrhea (~70%), rash (~35%), hyperglycemia (~16%) — class
+  on-target effects; lower hyperglycemia rate vs alpelisib. Pre-treatment
+  fasting glucose + HbA1c required; diabetes optimization plan.
+  Concurrent PIK3CA + AKT1 + PTEN testing recommended at first AI ±
+  CDK4/6i progression — any single alteration triggers pathway-targeted
+  therapy. CAPItello-291 trial Source ingested (SRC-CAPITELLO291-TURNER-
+  2023).
+notes_ua: >
+  Поєднує AKT1 E17K з gate класу попередньої терапії (post-endocrine ±
+  CDK4/6i) — ближче до фактичного критерію включення CAPItello-291,
+  ніж ширший RF-BREAST-AKT1-E17K-ACTIONABLE (пріоритет 65, спрацьовує
+  лише на E17K). Пріоритет 66 розташований поруч, щоб поведінка
+  вирішення двигуна була детермінованою при одночасному спрацьовуванні
+  (однаковий clinical_direction = intensify). Токсичність: діарея
+  (~70%), висип (~35%), гіперглікемія (~16%) — класові on-target
+  ефекти; нижчий рівень гіперглікемії порівняно з алпелісибом.
+  Необхідні передтерапевтична глюкоза натще + HbA1c; план оптимізації
+  діабету. Рекомендоване одночасне тестування PIK3CA + AKT1 + PTEN при
+  першому прогресуванні на AI ± CDK4/6i — будь-яка єдина альтерація
+  активує таргетну терапію шляху. Джерело CAPItello-291 інгестоване
+  (SRC-CAPITELLO291-TURNER-2023).
