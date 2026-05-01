@@ -1,0 +1,56 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-008
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list per issue #210: sources whose
+    URL HEAD/GET did not return 2xx and (where applicable) DOI fallback also
+    failed. Three HTTP 403 are publisher bot-blocking (PubMed/NEJM/JCO) — a
+    real browser would succeed; per issue rule current_as_of is NOT bumped
+    for these. One stub has no URL — replacement_needed.'
+rows:
+  - id: SRC-COIFFIER-2012-ROMIDEPSIN-PTCL
+    url: https://pubmed.ncbi.nlm.nih.gov/22271479
+    status_code: 403
+    error: Forbidden (PubMed bot protection)
+    doi_fallback_url: https://doi.org/10.1200/JCO.2011.37.4223
+    doi_fallback_status_code: 403
+    doi_fallback_final_url: https://ascopubs.org/doi/10.1200/JCO.2011.37.4223
+    doi_fallback_error: Forbidden (ASCO/JCO subscription gate)
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2026-04-29'
+    replacement_needed: false
+  - id: SRC-MONALEESA-2-HORTOBAGYI-2016
+    url: https://pubmed.ncbi.nlm.nih.gov/27717303
+    status_code: 403
+    error: Forbidden (PubMed bot protection)
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1609709
+    doi_fallback_status_code: 403
+    doi_fallback_final_url: https://www.nejm.org/doi/10.1056/NEJMoa1609709
+    doi_fallback_error: Forbidden (NEJM publisher bot-block)
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2016-11-03'
+    replacement_needed: false
+  - id: SRC-MURANO-SEYMOUR-2018
+    url: https://pubmed.ncbi.nlm.nih.gov/29562156
+    status_code: 403
+    error: Forbidden (PubMed bot protection)
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1713976
+    doi_fallback_status_code: 403
+    doi_fallback_final_url: https://www.nejm.org/doi/10.1056/NEJMoa1713976
+    doi_fallback_error: Forbidden (NEJM publisher bot-block)
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2018-03-22'
+    replacement_needed: false
+  - id: SRC-COG
+    url: null
+    status_code: null
+    error: no_url_on_stub
+    url_status: dead
+    current_as_of_existing: null
+    replacement_needed: true
+    suggestion: 'No PMID/DOI available on the generic Children''s Oncology
+      Group stub. Recommend resolving each citing entity to a specific COG
+      protocol (e.g. AAML1031 NCT01371981, ANBL0532 NCT00567567) or NCT
+      registration record, then retiring this generic stub.'
