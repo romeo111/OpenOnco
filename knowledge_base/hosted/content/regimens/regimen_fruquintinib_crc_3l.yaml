@@ -1,0 +1,98 @@
+id: REG-FRUQUINTINIB-CRC-3L
+name: "Fruquintinib monotherapy (FRESCO-2) — 3L+ refractory metastatic CRC"
+name_ua: "Фруквінтиніб монотерапія (FRESCO-2) — 3L+ рефрактерний мКРР"
+alternate_names:
+  - "Fruquintinib"
+  - "Fruzaqla"
+  - "HMPL-013"
+
+components:
+  - drug_id: DRUG-FRUQUINTINIB
+    dose: "5 mg PO once daily, days 1-21 of 28-day cycle"
+    schedule: "PO daily 21 days on / 7 days off"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Class VEGFR-TKI supportive-care protocol (encoded in dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Pre-treatment + on-treatment BP monitoring (home BP log; weekly x4
+#    then monthly); initiate / titrate antihypertensives early
+#  - Baseline urinalysis + serum creatinine; monitor proteinuria
+#    (UPCR) q-cycle
+#  - Baseline LFTs + on-treatment q2 weeks initially
+#  - Hand-foot syndrome (palmar-plantar erythrodysesthesia) — emollients,
+#    early dose hold for grade ≥2
+
+dose_adjustments:
+  - condition: "Grade 3 hypertension (>160/100) despite optimal antihypertensives"
+    modification: "Hold fruquintinib until ≤grade 1; resume at next lower dose level (5 → 4 → 3 mg)"
+    source_refs: [SRC-NCCN-COLON-2025, SRC-ESMO-CRC-2024]
+  - condition: "Grade 4 hypertension OR hypertensive crisis"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Proteinuria ≥2 g/24h (or UPCR ≥2)"
+    modification: "Hold fruquintinib until <2 g/24h; resume at next lower dose level"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Nephrotic syndrome"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Grade ≥3 hand-foot syndrome"
+    modification: "Hold until ≤grade 1; resume at next lower dose level; aggressive emollient therapy"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Grade ≥3 hemorrhage OR any GI perforation / fistula"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-COLON-2025]
+  - condition: "Strong CYP3A4 inhibitor concomitant"
+    modification: "Avoid combination; if unavoidable monitor for toxicity, consider dose reduction"
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — fruquintinib exposure substantially reduced"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Фруквінтиніб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA листопад 2023, EMA червень 2024). НЕ входить
+    до НСЗУ. Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Takeda EAP (Fruzaqla) — обмежено для 3L+ мКРР після
+      fluoropyrimidine + oxaliplatin + irinotecan ± anti-VEGF ± anti-EGFR;
+    - Cross-border (EU): EU онко-центри (наказ МОЗ 988);
+    - Clinical trials: пост-marketing combination studies.
+
+    Альтернатива в 3L+ мКРР (доступне в UA):
+    - Регорафеніб (зареєстрований в UA, обмежений доступ через НСЗУ);
+    - TAS-102 (трифлуридин/типірацил) ± бевацизумаб — реєстрація
+      окремих компонентів див. drug-level YAML;
+    - Клінічні дослідження.
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-CRC-2024
+  - SRC-FRESCO-2-DASARI-2023
+last_reviewed: "2026-04-29"
+
+notes: >
+  FRESCO-2 phase 3 (Dasari Lancet 2023): fruquintinib 5 mg PO daily
+  21d on / 7d off vs placebo, refractory metastatic CRC after
+  fluoropyrimidine + oxaliplatin + irinotecan ± anti-VEGF ± anti-EGFR
+  ± TAS-102 ± regorafenib (n=691; 461 fruq vs 230 placebo). Met
+  primary endpoint mOS 7.4 vs 4.8 mo (HR 0.66, p<0.001), mPFS 3.7
+  vs 1.8 mo (HR 0.32). Prior FRESCO (Li JAMA 2018, Chinese cohort
+  only) showed comparable benefit and supported FDA bridging.
+  FDA approval Nov 2023; EMA Jun 2024. Fruquintinib is a highly
+  selective VEGFR1/2/3 TKI (lower off-target activity than
+  regorafenib / cabozantinib → more favorable HFS / fatigue profile
+  in cross-trial). Class toxicity: hypertension (~36%, grade ≥3 14%),
+  proteinuria, HFS, asthenia, hypothyroidism. STUB pending Clinical
+  Co-Lead sign-off. NCCN-COLON-2025 includes fruquintinib as preferred
+  category 1 option in 3L+ refractory mCRC.

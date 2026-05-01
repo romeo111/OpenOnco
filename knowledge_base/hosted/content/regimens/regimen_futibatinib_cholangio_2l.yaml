@@ -1,0 +1,88 @@
+id: REG-FUTIBATINIB-CHOLANGIO-2L
+name: "Futibatinib monotherapy (FOENIX-CCA2) — 2L+ FGFR2-fusion cholangiocarcinoma"
+name_ua: "Футибатиніб монотерапія (FOENIX-CCA2) — 2L+ FGFR2-fusion CCA"
+alternate_names:
+  - "Futibatinib"
+  - "Lytgobi"
+  - "TAS-120"
+
+components:
+  - drug_id: DRUG-FUTIBATINIB
+    dose: "20 mg PO once daily, continuous"
+    schedule: "PO daily, no break (21-day cycle for accounting)"
+    route: PO
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Class FGFR-TKI supportive-care protocol (encoded in dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Baseline + serial ophthalmologic exam (q2 cycles initially) for
+#    retinal pigment epithelial detachment / serous retinopathy
+#  - Baseline + pre-cycle serum phosphate; phosphate binder (sevelamer)
+#    protocol + low-phosphate diet for hyperphosphatemia
+#  - Pre-treatment confirmation of FGFR2 fusion / rearrangement by NGS
+#    (RNA preferred) or FISH
+
+dose_adjustments:
+  - condition: "Hyperphosphatemia >5.5 mg/dL"
+    modification: "Initiate / intensify low-phosphate diet + phosphate binder (sevelamer 800 mg TID); recheck weekly"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >7.0 mg/dL despite binder"
+    modification: "Hold futibatinib until ≤5.5 mg/dL, resume at next lower dose level (20 → 16 → 12 mg)"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >9.0 mg/dL OR end-organ mineralization (cutaneous calcinosis)"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Symptomatic serous retinal detachment OR vision loss"
+    modification: "Hold futibatinib; ophthalmology consult; resume at lower dose only if asymptomatic resolution; permanent discontinuation if recurrent"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Strong CYP3A4 inhibitor concomitant"
+    modification: "Avoid combination — futibatinib AUC substantially increased; if unavoidable reduce one dose level"
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — futibatinib exposure substantially reduced"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Футибатиніб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA вересень 2022 — accelerated approval; EMA червень
+    2023). НЕ входить до НСЗУ. Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Taiho EAP — обмежено для FGFR2-fusion CCA пост-1L;
+    - Cross-border (EU): EU гепатобіліарні центри (наказ МОЗ 988);
+    - Clinical trials: FOENIX-CCA3 (1L vs gem+cis) post-marketing.
+    Альтернатива: пеміґатиніб (також не зареєстрований в UA);
+    при недоступних FGFR-TKI — стандартна 2L хіміо (FOLFOX) або
+    клінічне дослідження. Футибатиніб може зберігати активність
+    проти деяких пеміґатиніб-резистентних варіантів (gatekeeper
+    V564F, molecular-brake) завдяки covalent FGFR1-4 binding.
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+  - SRC-FOENIX-CCA2
+last_reviewed: "2026-04-29"
+
+notes: >
+  FOENIX-CCA2 phase 2 (Goyal NEJM 2023): futibatinib 20 mg PO daily,
+  continuous, in advanced/metastatic intrahepatic cholangiocarcinoma
+  with FGFR2 fusion / rearrangement, post-≥1L systemic therapy
+  (n=103). ORR 41.7% (43/103), DCR 82.5%, mDoR 9.7 mo, mPFS 9.0 mo,
+  mOS 21.7 mo. FDA accelerated approval Sep 2022; EMA Jun 2023.
+  Futibatinib is a covalent (irreversible) pan-FGFR1-4 TKI; differs
+  mechanistically from reversible FGFR-TKIs (pemigatinib, infigratinib)
+  and retains activity against some gatekeeper / molecular-brake
+  resistance mutations after pemigatinib failure (sequencing data
+  ASCO 2023). Class toxicity: hyperphosphatemia (~85%), nail / hair
+  toxicity, dry mouth, alopecia, retinal detachment (less frequent
+  than pemigatinib in cross-trial). STUB pending Clinical Co-Lead
+  sign-off.

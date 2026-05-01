@@ -1,0 +1,84 @@
+id: REG-INFIGRATINIB-CHOLANGIO-2L
+name: "Infigratinib monotherapy (CBGJ398X2204) — 2L+ FGFR2-fusion cholangiocarcinoma (HISTORICAL)"
+name_ua: "Інфіґратиніб монотерапія (CBGJ398X2204) — 2L+ FGFR2-fusion CCA (ВІДКЛИКАНО)"
+alternate_names:
+  - "Infigratinib"
+  - "Truseltiq"
+  - "BGJ398"
+
+components:
+  - drug_id: DRUG-INFIGRATINIB
+    dose: "125 mg PO once daily, days 1-21 of 28-day cycle (HISTORICAL — drug withdrawn from US/EU 2022)"
+    schedule: "PO daily 21 days on / 7 days off"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity (HISTORICAL — drug no longer marketed)"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Class FGFR-TKI supportive-care protocol (same as pemigatinib /
+# futibatinib — hyperphosphatemia management + serial ophthalmologic
+# exam). See FOENIX-CCA2 / FIGHT-202 reference regimens.
+
+dose_adjustments:
+  - condition: "Hyperphosphatemia >5.5 mg/dL"
+    modification: "Initiate / intensify low-phosphate diet + phosphate binder (sevelamer 800 mg TID); recheck weekly"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >7.0 mg/dL despite binder"
+    modification: "Hold infigratinib until ≤5.5 mg/dL, resume at next lower dose level (125 → 100 → 75 mg)"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Hyperphosphatemia >9.0 mg/dL OR end-organ mineralization"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+  - condition: "Symptomatic serous retinal detachment OR vision loss"
+    modification: "Hold infigratinib; ophthalmology consult; resume at lower dose only if asymptomatic resolution; permanent discontinuation if recurrent"
+    source_refs: [SRC-NCCN-HEPATOBILIARY]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    ВАЖЛИВО — ПРЕПАРАТ ВІДКЛИКАНО: Інфіґратиніб (Truseltiq) добровільно
+    знято з ринку США (Helsinn / QED Therapeutics, серпень 2022) та
+    з ринку EU (вересень 2022) — комерційні причини, не безпекові.
+    Препарат недоступний для нових пацієнтів станом на 2026-04-30.
+    НЕ зареєстровано в UA (drlz.com.ua); НЕ входить до НСЗУ.
+
+    Цей режим збережено в KB як ІСТОРИЧНИЙ референс для:
+    - інтерпретації клінічної історії пацієнтів, які отримували
+      інфіґратиніб до 2022;
+    - розуміння класу FGFR-TKI (CBGJ398X2204 був першим pivotal
+      trial для FGFR2-fusion CCA, що проклав шлях для пеміґатинібу
+      та футибатинібу).
+
+    Для нових пацієнтів з FGFR2-fusion CCA 2L+ використовуйте
+    REG-PEMIGATINIB-CHOLANGIO або REG-FUTIBATINIB-CHOLANGIO-2L.
+    Render layer повинен позначати цей режим як HISTORICAL і
+    НЕ пропонувати його як активний варіант.
+
+sources:
+  - SRC-NCCN-HEPATOBILIARY
+  - SRC-ESMO-BTC-2023
+last_reviewed: "2026-04-29"
+
+notes: >
+  CBGJ398X2204 (Javle JCO 2018, Javle Lancet Gastroenterol Hepatol
+  2021): infigratinib 125 mg PO daily 21d on / 7d off, advanced /
+  metastatic cholangiocarcinoma with FGFR2 fusion / rearrangement
+  post-≥1L gemcitabine-based therapy (n=108). ORR 23.1% (25/108),
+  DCR 84.3%, mDoR 5.0 mo, mPFS 7.3 mo, mOS 12.2 mo. FDA accelerated
+  approval May 2021. WITHDRAWN voluntarily Aug-Sep 2022 (Helsinn
+  divested oncology portfolio; QED Therapeutics ceased commercial
+  operations) — NOT a safety withdrawal. Subsequent FGFR-TKIs
+  (pemigatinib FIGHT-202, futibatinib FOENIX-CCA2) replaced
+  infigratinib in NCCN / ESMO guidance. Class toxicity profile
+  identical to other reversible FGFR1-3 TKIs: hyperphosphatemia
+  (~76%), retinal detachment, alopecia, nail toxicity. STUB pending
+  Clinical Co-Lead sign-off; flagged HISTORICAL — render layer must
+  not surface as an active recommendation. Trial source SRC-CBGJ398X2204
+  not yet authored in KB; cited via NCCN-HEPATOBILIARY + ESMO-BTC-2023.

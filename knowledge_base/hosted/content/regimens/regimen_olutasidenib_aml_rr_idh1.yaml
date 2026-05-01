@@ -1,0 +1,109 @@
+id: REG-OLUTASIDENIB-AML-RR-IDH1
+name: "Olutasidenib monotherapy (Study 2102-HEM-101) — R/R AML with susceptible IDH1 mutation"
+name_ua: "Олутасидениб монотерапія (Study 2102-HEM-101) — R/R ГМЛ з IDH1-мутацією"
+alternate_names:
+  - "Olutasidenib"
+  - "Rezlidhia"
+  - "FT-2102"
+
+components:
+  - drug_id: DRUG-OLUTASIDENIB
+    dose: "150 mg PO twice daily, on an empty stomach (≥1h before or 2h after a meal)"
+    schedule: "PO BID, continuous (28-day cycle for accounting)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity / loss of clinical benefit (minimum 6 months recommended for response assessment per FDA label)"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# IDH1 inhibitor supportive-care protocol (encoded in dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Pre-treatment confirmation of IDH1 R132 mutation (Abbott RealTime
+#    IDH1 Assay companion diagnostic OR comprehensive NGS); only the
+#    R132 hotspot variants (R132H, R132C, R132G, R132S, R132L) are
+#    susceptible to olutasidenib
+#  - Baseline + weekly LFTs x first 2 months, then q-cycle —
+#    olutasidenib has a hepatotoxicity boxed warning (drug-induced
+#    liver injury, including fatal cases)
+#  - Daily clinical assessment for differentiation syndrome
+#    (fever, dyspnea, hypoxia, peripheral edema, pleuropericardial
+#    effusion, rash, leukocytosis) — high mortality if untreated;
+#    initiate dexamethasone 10 mg IV q12h + hemodynamic monitoring
+#    at first suspicion
+#  - Baseline + on-treatment ECG (QTc) — less prominent QT signal
+#    than ivosidenib but monitored per label
+#  - Tumor lysis prophylaxis at initiation (allopurinol, hydration)
+
+dose_adjustments:
+  - condition: "Differentiation syndrome (any grade — high clinical suspicion)"
+    modification: "Initiate dexamethasone 10 mg IV q12h immediately + hemodynamic monitoring + diuretics for fluid overload; HOLD olutasidenib only if severe (grade ≥3) or no improvement in 48h; resume at same dose after resolution"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Drug-induced liver injury (ALT/AST >3× ULN with bilirubin >2× ULN, OR ALT/AST >5× ULN)"
+    modification: "Hold olutasidenib; weekly LFTs until resolution; resume at next lower dose level (150 → 150 mg once daily) only if benefit > risk and no alternative cause identified; permanent discontinuation if rechallenge fails"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Grade 3 non-hematologic toxicity"
+    modification: "Hold until ≤grade 1; resume at 150 mg once daily; second occurrence → discontinue"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "QTc >480 ms"
+    modification: "Hold olutasidenib; correct electrolytes (K, Mg, Ca); resume at next lower dose level when QTc <480 ms"
+    source_refs: [SRC-NCCN-AML-2025]
+  - condition: "Strong CYP3A4 inhibitor concomitant"
+    modification: "Reduce olutasidenib to 150 mg once daily; monitor closely for toxicity"
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — olutasidenib exposure substantially reduced; loss of efficacy expected"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Олутасидениб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA грудень 2022; EMA — pending). НЕ входить
+    до НСЗУ. Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Rigel EAP (Rezlidhia) — обмежено для R/R AML з підтвердженою
+      IDH1-мутацією (R132);
+    - Cross-border (EU): EU гематоонко-центри (наказ МОЗ 988);
+    - Companion diagnostic: Abbott RealTime IDH1 Assay або
+      comprehensive NGS з покриттям IDH1 R132 — обов'язково
+      перед призначенням;
+    - Clinical trials: post-marketing combination studies
+      (olutasidenib + azacitidine для нових 1L IDH1-mut AML).
+
+    Альтернатива в R/R IDH1-mut AML (доступне в UA дуже обмежено):
+    - Івосидениб (Tibsovo) — також не зареєстрований в UA, але
+      довша історія і більше реєстрових даних; named-patient
+      import доступний;
+    - Венетоклакс + азацитидин (поза-IDH1, реєстрація компонентів
+      див. drug-level YAML);
+    - Інтенсивна реіндукція (FLAG-IDA, MEC) — для відібраних
+      fit пацієнтів;
+    - Клінічні дослідження.
+
+sources:
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-AML-2020
+last_reviewed: "2026-04-29"
+
+notes: >
+  Study 2102-HEM-101 (de Botton Blood 2023; Cortes EHA 2022) phase
+  1/2, single-arm: olutasidenib 150 mg PO BID continuous, in
+  relapsed / refractory AML with IDH1 R132 mutation (n=153 R/R AML
+  efficacy cohort). CR + CRh rate 35% (95% CI 27-43); among CR + CRh
+  responders, median DoR 25.9 mo, median time to CR + CRh 1.9 mo,
+  56-day mortality 8%. Transfusion independence achieved in 56% of
+  baseline-dependent patients. FDA accelerated approval Dec 2022.
+  Mechanistically: olutasidenib is a more selective mutant-IDH1
+  inhibitor than ivosidenib (in vitro selectivity for mIDH1 R132
+  variants over WT-IDH1 / IDH2). Differentiation syndrome incidence
+  ~14% (similar to ivosidenib); hepatotoxicity boxed warning is
+  distinguishing feature vs ivosidenib (no boxed warning). QTc
+  prolongation less frequent than ivosidenib in cross-trial. STUB
+  pending Clinical Co-Lead sign-off. Trial source SRC-2102-HEM-101
+  (or SRC-OLUTASIDENIB-DEBOTTON-2023) not yet authored in KB; cited
+  via NCCN-AML-2025 + ESMO-AML-2020.
