@@ -1,0 +1,86 @@
+id: RF-PROSTATE-TMPRSS2-ERG-PROGNOSTIC
+definition: >
+  TMPRSS2-ERG fusion detected on tumor RNA / FISH / IHC for ERG in
+  localized or metastatic prostate cancer — INFORMATIONAL prognostic
+  signal. Most common recurrent gene fusion in prostate cancer (~40-50%
+  of localized PCa, ~15-30% of mCRPC). Conflicting prognostic literature:
+  some series report worse PSA-relapse-free survival post-prostatectomy,
+  others report no independent prognostic value after adjusting for
+  Gleason / PSA / stage. NO predictive role established for ARSI,
+  PARPi, taxane, or radioligand selection — does NOT modify treatment
+  algorithm. Surfaces in MDT brief as: (1) molecular subtyping
+  context, (2) potential clinical-trial enrollment criterion (ERG-positive
+  cohorts in some experimental studies), (3) helpful for confirming
+  prostate origin in metastatic-of-unknown-primary workup
+  (TMPRSS2-ERG is highly prostate-specific).
+definition_ua: >
+  Злиття TMPRSS2-ERG, виявлене на пухлинному РНК / FISH / IHC на ERG
+  при локалізованому чи метастатичному раку простати — ІНФОРМАЦІЙНИЙ
+  прогностичний сигнал. Найпоширеніше повторюване генне злиття при раку
+  простати (~40-50% локалізованого РПЗ, ~15-30% мКРРПЗ). Суперечлива
+  прогностична література: деякі серії повідомляють гіршу безрецидивну
+  виживаність після простатектомії, інші — про відсутність незалежної
+  прогностичної цінності після поправки на Глісон / PSA / стадію.
+  ЖОДНОЇ предиктивної ролі для вибору ARSI, PARPi, таксану чи
+  радіоліганду НЕ встановлено — НЕ модифікує лікувальний алгоритм.
+  З'являється в MDT-брифі як: (1) контекст молекулярного субтипування,
+  (2) потенційний критерій включення в клінічні випробування
+  (когорти ERG-позитивних у деяких експериментальних дослідженнях),
+  (3) допомога для підтвердження простатичного походження при роботі
+  з метастазом невідомого первинного (TMPRSS2-ERG високо
+  простато-специфічне).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "tmprss2_erg_fusion"
+      value: "positive"
+    - finding: "tmprss2_erg"
+      value: "positive"
+    - finding: "erg_rearrangement"
+      value: "positive"
+    - finding: "erg_ihc"
+      value: "positive"
+
+clinical_direction: investigate
+
+severity: minor
+priority: 90
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-PROSTATE
+# Informational — no algorithm shift. No predictive evidence supports
+# branching ARSI / PARPi / taxane / 177Lu-PSMA-617 selection on
+# TMPRSS2-ERG status.
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  References BIO-TMPRSS2-ERG-FUSION. Detection: FISH break-apart probe
+  is gold standard; ERG IHC (anti-ERG monoclonal) is a high-sensitivity
+  surrogate (~95-99% concordance with FISH for ERG-rearranged tumors).
+  RNA-seq detects the specific fusion partner. Severity = minor and
+  priority = 90 reflect informational-only status (lower clinical
+  weight than AR-amp / AR-V7 which inform sequencing decisions even if
+  not algorithm-shifting). Distinguishes molecular subtype but does
+  not shift the treatment plan in 2026 evidence base. Useful as a
+  histogenesis confirmation tool in metastasis-of-unknown-primary
+  workup with adenocarcinoma morphology.
+notes_ua: >
+  Посилається на BIO-TMPRSS2-ERG-FUSION. Виявлення: FISH break-apart
+  probe — золотий стандарт; IHC на ERG (анти-ERG моноклональне) —
+  високочутливий сурогат (~95-99% узгодженість з FISH для
+  ERG-перебудованих пухлин). РНК-сек виявляє конкретного партнера
+  злиття. Severity = minor і priority = 90 відображають винятково
+  інформаційний статус (нижча клінічна вага, ніж AR-amp / AR-V7, які
+  впливають на рішення секвенування навіть без зсуву алгоритму).
+  Розрізняє молекулярний підтип, але не зсуває план лікування в базі
+  доказів 2026. Корисний як інструмент підтвердження гістогенезу
+  при роботі з метастазом невідомого первинного з аденокарциномою.

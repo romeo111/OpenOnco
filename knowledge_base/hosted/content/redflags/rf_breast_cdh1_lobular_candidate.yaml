@@ -1,0 +1,80 @@
+id: RF-BREAST-CDH1-LOBULAR-CANDIDATE
+definition: >
+  Germline CDH1 (E-cadherin) pathogenic variant in invasive lobular
+  breast carcinoma — INFORMATIONAL signal. CDH1 is the hereditary
+  diffuse gastric cancer (HDGC) gene; carriers face ~40-50% lifetime
+  invasive lobular breast cancer risk and ~70% diffuse gastric cancer
+  risk. No PARPi indication and no breast-cancer-specific systemic
+  therapy decision keyed on CDH1 status. Surfaces in MDT brief to
+  trigger: (1) cascade testing of first-degree relatives, (2)
+  prophylactic total gastrectomy discussion (HDGC management standard
+  per NCCN hereditary GI), (3) enhanced breast surveillance vs
+  risk-reducing mastectomy counseling. Lobular subtype itself
+  influences endocrine-therapy selection (CDK4/6i + AI typical;
+  some chemotherapy regimens less effective in lobular vs ductal),
+  but that is subtype-driven, not CDH1-genotype-driven.
+definition_ua: >
+  Зародкова патогенна варіація CDH1 (Е-кадгерин) при інвазивній
+  лобулярній карциномі молочної залози — ІНФОРМАЦІЙНИЙ сигнал. CDH1 —
+  ген спадкового дифузного раку шлунка (HDGC); носії мають довічний
+  ризик інвазивного лобулярного РМЗ ~40-50% та дифузного раку шлунка
+  ~70%. Немає показань для PARPi, немає рішень з системної терапії
+  РМЗ на основі статусу CDH1. З'являється в MDT-брифі для запуску:
+  (1) каскадного тестування родичів першого ступеня, (2) обговорення
+  профілактичної тотальної гастректомії (стандарт ведення HDGC за
+  NCCN hereditary GI), (3) посиленого спостереження РМЗ проти
+  консультування щодо ризик-знижувальної мастектомії. Лобулярний
+  підтип сам впливає на вибір ендокринотерапії (CDK4/6i + AI типово;
+  деякі хіміорежими менш ефективні при лобулярному проти протокового
+  РМЗ), але це обумовлено підтипом, не генотипом CDH1.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "cdh1_germline"
+      value: "pathogenic"
+    - finding: "cdh1_status"
+      value: "pathogenic"
+    - finding: "germline_cdh1"
+      value: "pathogenic"
+    - finding: "cdh1_pathogenic"
+      value: true
+
+clinical_direction: investigate
+
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+  - DIS-GASTRIC
+# Informational — no algorithm shift in this chunk. Lobular-specific
+# regimen adaptation is subtype-driven, not CDH1-driven, and lives in
+# the standard breast 1L/2L decision tree without a separate RF.
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-GASTRIC-2025
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  References BIO-CDH1-GERMLINE. Genetic counseling mandatory; total
+  prophylactic gastrectomy is the established HDGC standard
+  (endoscopic surveillance is INADEQUATE for diffuse-type detection).
+  No NCCN hereditary-cancer panel source exists in KB — disease-specific
+  NCCN sources used; flagged in commit body. Family-history red-flag
+  pattern: lobular breast + diffuse gastric in same kindred is the
+  canonical CDH1 presentation. RF distinct from any future breast
+  RF that would key on lobular HISTOLOGY (subtype != genotype).
+notes_ua: >
+  Посилається на BIO-CDH1-GERMLINE. Обов'язкове генетичне
+  консультування; тотальна профілактична гастректомія — встановлений
+  стандарт HDGC (ендоскопічне спостереження НЕДОСТАТНЄ для виявлення
+  дифузного типу). У KB відсутнє джерело панелі спадкового раку NCCN —
+  використано джерела NCCN за дисциплінами; позначено в тілі коміту.
+  Родинний патерн red-flag: лобулярний РМЗ + дифузний рак шлунка в одній
+  родині — канонічна презентація CDH1.
