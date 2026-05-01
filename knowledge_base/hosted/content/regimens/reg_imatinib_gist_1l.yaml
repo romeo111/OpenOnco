@@ -50,6 +50,49 @@ sources:
   - SRC-NCCN-GIST-2025
   - SRC-IRIS-OBRIEN-2003
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Imatinib daily, long-term in GIST KIT/PDGFRA-sensitive. Same toxicity
+# pattern as imatinib in CML — GI, fluid retention, cramps, rare hepatic.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, особливо натщесерце"
+    action_ua: "Приймайте іматиніб з їжею і повною склянкою води"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "М'язові судоми, легкі набряки під очима"
+    action_ua: "Поширені побічні ефекти — пийте достатньо води"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Зустрічається — занотовуйте частоту, приймайте лоперамід за порадою лікаря"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип, який поширюється"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка реакції на препарат"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця або потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко іматиніб впливає на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка з ознобом, виражена слабкість"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові і виключення інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова виражена задишка або значне збільшення набряків"
+    action_ua: "Звертайтесь у лікарню негайно — рідко іматиніб може спричиняти затримку рідини у легенях"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-GIST-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 notes: >
   Standard 1L for advanced / metastatic GIST with imatinib-sensitive

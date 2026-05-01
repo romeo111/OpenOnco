@@ -30,6 +30,54 @@ ukraine_availability:
   notes: "Out-of-pocket / charitable / clinical-trial pathway."
 
 sources: [SRC-NCCN-ESOPHAGEAL-2025, SRC-ESMO-ESOPHAGEAL-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Nivolumab adjuvant after CROSS without pCR (CheckMate-577).
+# Anti-PD-1 monotherapy — irAEs are the dominant axis.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузій"
+    action_ua: "Очікувано — відпочивайте більше; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Шкірний свербіж або сухість шкіри"
+    action_ua: "Часто і зазвичай легко — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або новий діабет"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

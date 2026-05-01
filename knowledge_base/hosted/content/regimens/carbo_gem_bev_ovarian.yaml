@@ -44,6 +44,57 @@ ukraine_availability:
   notes: "Усі три компоненти НСЗУ-фінансовані для відповідних показань (карбо/гем — широко; бев — для рецидивного раку яєчників у комбінації). Найдоступніший платиночутливий 2L регламент в Україні."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-OCEANS-AGHAJANIAN-2012]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Carbo+gem+bev for platinum-sensitive recurrent ovarian. Adds
+# bevacizumab BP / proteinuria / bleeding risks on top of carbo+gem
+# cytopenia + gem hepatotoxicity. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після кожної інфузії"
+    action_ua: "Очікувано — відпочивайте більше у дні 1-3 циклу"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Бевацизумаб може підвищувати тиск — занотовуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Помірна нудота, легке зниження апетиту"
+    action_ua: "Приймайте призначені протиблювотні; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — карбо+гем дають нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або сеча, що піниться"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — гемцитабін може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне ускладнення бевацизумабу (перфорація кишківника)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Кровохаркання або значна кровотеча, що не спиняється"
+    action_ua: "Звертайтесь у лікарню негайно — бевацизумаб підвищує ризик кровотеч"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >
