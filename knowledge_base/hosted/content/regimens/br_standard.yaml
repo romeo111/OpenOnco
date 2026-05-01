@@ -52,6 +52,61 @@ sources:
   - SRC-ESMO-MZL-2024
   - SRC-NCCN-BCELL-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Bendamustine has a deep + prolonged nadir window (Day 14-21);
+# rituximab adds infusion-reaction risk + HBV-reactivation watch.
+# STUB pending §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома протягом 1-2 тижнів після циклу"
+    action_ua: "Очікувано — приділяйте більше уваги відпочинку, занотуйте, якщо триває довше за 2 тижні"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-14"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Легке випадання волосся (рідше, ніж при CHOP)"
+    action_ua: "Можливе при бендамустині — занотуйте і обговоріть"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 14-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота протягом перших 1-3 днів циклу"
+    action_ua: "Приймайте призначені протиблювотні; занотуйте, якщо нудота утруднює прийом їжі"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 2-3 тижні після циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — на цей період бендамустин дає найнижчу кількість нейтрофілів і найбільший ризик інфекції"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип у вигляді почервонілих плям, які злущуються або вкриваються пухирями"
+    action_ua: "Подзвоніть у клініку того ж дня — бендамустин рідко може спричиняти тяжкі шкірні реакції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Легка або помірна реакція під час інфузії ритуксимабу: озноб, легка лихоманка, незначне утруднення дихання"
+    action_ua: "Повідомте медсестру негайно — інфузію зазвичай сповільнюють або призупиняють"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція на ритуксимаб: різке утруднення дихання, набряк обличчя, втрата свідомості"
+    action_ua: "Якщо в клініці — медперсонал реагує негайно. Якщо реакція виникла вдома (рідко після першого циклу) — викликайте швидку"
+    urgency: er_now
+    cycle_day_window: "Day 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Озноб + лихоманка + різке погіршення стану"
+    action_ua: "Звертайтесь у лікарню негайно — на низькому рівні нейтрофілів інфекція може швидко переходити у сепсис"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-24"
 notes: >
   Standard chemoimmunotherapy regimen for indolent B-cell lymphomas.

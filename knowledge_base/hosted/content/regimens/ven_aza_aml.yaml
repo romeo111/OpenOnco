@@ -60,6 +60,62 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-VIALE-A-DINARDO-2020
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Tumor lysis syndrome (TLS) is the signature ER event in the venetoclax
+# ramp-up window (cycle 1, days 1-3); deep prolonged cytopenia + invasive
+# fungal infection are the other major risks. AML-unfit population is
+# typically older — extra weight on falls, infections, frailty.
+# STUB pending §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Втома, що триває кілька днів після старту венетоклаксу"
+    action_ua: "Очікувано — більше відпочивайте у перший тиждень; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7 of cycle 1"
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Помірна нудота, зниження апетиту"
+    action_ua: "Приймайте призначені протиблювотні; занотуйте, якщо нудота утруднює прийом їжі або препаратів"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — на цій схемі ризик інфекції високий протягом усього курсу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кашель з мокротинням, що погіршується, або задишка нова"
+    action_ua: "Подзвоніть у клініку того ж дня — підвищений ризик грибкової інфекції легень при тривалій нейтропенії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки або біль у боках"
+    action_ua: "Подзвоніть у клініку того ж дня — особливо в перший тиждень може бути синдром розпаду пухлини, що потребує негайної оцінки"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-7 of cycle 1"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-VIALE-A-DINARDO-2020
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа, що довго не спиняється"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна слабкість, серцебиття ненормальне, болі в м'язах"
+    action_ua: "Звертайтесь у лікарню негайно — особливо в перший тиждень може бути тяжкий синдром розпаду пухлини з небезпечними змінами електролітів"
+    urgency: er_now
+    cycle_day_window: "Day 1-3 of cycle 1"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-VIALE-A-DINARDO-2020
+  - trigger_ua: "Сплутаність свідомості, дезорієнтація, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії інфекція може швидко переходити у сепсис"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for AML unfit for intensive 7+3 (VIALE-A: median OS 14.7

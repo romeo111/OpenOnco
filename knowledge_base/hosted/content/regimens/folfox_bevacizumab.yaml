@@ -46,6 +46,62 @@ ukraine_availability:
   notes: "FOLFOX components NSZU-funded; bevacizumab biosimilars increasingly available; original molecule typically out-of-pocket."
 
 sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Inherits FOLFOX's neuropathy + cold-sensitivity + cytopenia pattern;
+# bevacizumab adds BP, proteinuria, bleeding-tendency, and rare bowel-
+# perforation watchpoints. STUB pending §6.1 two-Co-Lead signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Характерна ознака оксаліплатину — занотуйте і обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Бевацизумаб може підвищувати тиск — занотуйте показники, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Чутливість до холоду — холодне питво або повітря викликають дискомфорт"
+    action_ua: "Очікувано перші 3-5 днів циклу — уникайте холодного"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива низька кількість нейтрофілів"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або сеча, що піниться більше звичайного"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб може впливати на нирки; потрібен аналіз сечі"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний головний біль або запаморочення з підвищеним тиском"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива гіпертонічна криза, що потребує корекції лікування"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Сильна діарея — більше 4 разів на день, особливо з кров'ю"
+    action_ua: "Подзвоніть у клініку того ж дня — 5-фторурацил може спричиняти зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне ускладнення бевацизумабу (перфорація кишківника)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Кровохаркання або значна кровотеча, що не спиняється"
+    action_ua: "Звертайтесь у лікарню негайно — бевацизумаб підвищує ризик кровотеч"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

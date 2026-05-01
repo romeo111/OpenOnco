@@ -70,6 +70,67 @@ ukraine_availability:
 sources:
   - SRC-NCCN-MM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Inherits VRd's neuropathy + dexamethasone + thrombosis pattern;
+# daratumumab adds infusion-reaction risk (especially first dose) +
+# increased infection susceptibility from anti-CD38 immunosuppression.
+# STUB pending §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або легке оніміння в стопах і кистях"
+    action_ua: "Бортезоміб може викликати нейропатію — занотовуйте інтенсивність, обговоріть на візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Безсоння у дні прийому дексаметазону"
+    action_ua: "Очікувано — приймайте дексаметазон зранку, якщо лікар не призначив інакше"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-4 of each cycle"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Закладеність носа або сухий кашель після інфузії даратумумабу"
+    action_ua: "Очікувано — даратумумаб часто викликає легку реакцію верхніх дихальних шляхів. Занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1 of each cycle (first cycles)"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Поколювання стає сильним болем або заважає ходити"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий тромб у глибоких венах (ризик від леналідоміду)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — даратумумаб посилює імуносупресію, ризик інфекції підвищений"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна реакція під час інфузії даратумумабу: озноб, легка лихоманка, кашель"
+    action_ua: "Повідомте медсестру негайно — інфузію зазвичай сповільнюють і додають преміедикацію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Тяжка інфузійна реакція на даратумумаб: різке утруднення дихання, набряк обличчя, втрата свідомості"
+    action_ua: "Якщо в клініці — медперсонал реагує негайно. Якщо вдома (рідко після першого циклу) — викликайте швидку"
+    urgency: er_now
+    cycle_day_window: "Day 1"
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях або кашель з кров'ю"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Quadruplet induction — preferred for transplant-eligible newly-diagnosed

@@ -658,6 +658,8 @@ PATIENT_ALLOWLIST_LATIN_WORDS: frozenset[str] = frozenset({
     "consolidation", "maintenance", "lymphodepletion", "bridging",
     "salvage", "adjuvant", "neoadjuvant", "first", "second", "third",
     "high", "low", "risk", "trial", "stage", "line", "grade",
+    # Cycle-day-window structural vocabulary (PATIENT_MODE_SPEC §3.4)
+    "each", "infusion", "infusions", "dose", "doses",
     # URL / tooling
     "github", "issues", "info", "html", "https", "www", "openonco",
     "claude", "code", "src", "noopener", "noreferrer",
