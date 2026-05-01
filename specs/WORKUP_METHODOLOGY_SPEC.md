@@ -1,54 +1,55 @@
 # Workup Methodology Specification
 
-**Проєкт:** OpenOnco
-**Документ:** Workup Research Methodology — як ми будуємо basic workup для будь-якої онкологічної області
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з Clinical Co-Leads
-**Попередні документи:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
+**Project:** OpenOnco
+**Document:** Workup Research Methodology — how we build a basic workup for any oncology domain
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with Clinical Co-Leads
+**Preceding documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DIAGNOSTIC_MDT_SPEC.md, SOURCE_INGESTION_SPEC.md
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-OpenOnco масштабується від HCV-MZL → онкогематологія загалом → solid
-tumours → інші нозології. Кожне розширення вимагає **детального basic
-workup** для відповідної підозри: які тести потрібні для diagnosis +
+OpenOnco is scaling from HCV-MZL → hematological oncology broadly → solid
+tumors → other conditions. Each expansion requires a **detailed basic workup**
+for the relevant suspicion: which tests are needed for diagnosis +
 staging + pre-treatment baseline.
 
-Без формалізованої методології workup-катастрофа: різні нозології
-покриті різною глибиною, рев'юер не знає чи `WORKUP-X` написаний по
-NCCN чи "з голови", критеріїв inclusion/exclusion немає.
+Without a formalized methodology, workup quality becomes chaotic: different
+conditions covered at different depths, reviewers have no way to tell whether
+`WORKUP-X` was written following NCCN or "from memory," and there are no
+inclusion/exclusion criteria.
 
-Цей документ — **процес** як перетворити нозологію → DiagnosticWorkup +
-підмножину Test entities у KB. Аналогічно `SOURCE_INGESTION_SPEC` для
-data sources, тільки для clinical workup content.
+This document is the **process** for converting a condition into a DiagnosticWorkup +
+a subset of Test entities in the KB — analogous to `SOURCE_INGESTION_SPEC`
+for data sources, but for clinical workup content.
 
-**Перший застосунок:** comprehensive hematology workup catalog (HCV-MZL,
-acute leukemia, multiple myeloma, MPN/MDS, недиференційована
-лімфаденопатія, цитопенії, моноклональна гаммопатія).
+**First application:** comprehensive hematology workup catalog (HCV-MZL,
+acute leukemia, multiple myeloma, MPN/MDS, undifferentiated lymphadenopathy,
+cytopenias, monoclonal gammopathy).
 
 ---
 
-## 1. Принципи
+## 1. Principles
 
-### 1.1. Workup = "що зробити", не "як лікувати"
+### 1.1. Workup = "what to do," not "how to treat"
 
-`DiagnosticWorkup` описує **діагностичні дії** (тести, біопсія,
-imaging, IHC, молекулярні), а **не** therapeutic recommendations.
-Останнє — `Indication` / `Regimen` після підтвердженої гістології.
-Це чіткий boundary: workup methodology НЕ виходить за scope FDA
-non-device CDS Criterion 3 (не "specific treatment directive").
+`DiagnosticWorkup` describes **diagnostic actions** (tests, biopsy,
+imaging, IHC, molecular), not therapeutic recommendations.
+The latter belongs to `Indication` / `Regimen` after confirmed histology.
+This is a clear boundary: workup methodology does NOT extend beyond the scope
+of FDA non-device CDS Criterion 3 (not a "specific treatment directive").
 
 ### 1.2. Conservative first — extend per evidence
 
-`DiagnosticWorkup.required_tests` має містити **тести-кандидати у 95%
-відповідних випадків**, не "all possible tests if anything is unclear".
-Edge cases і disease-specific розширення — через додаткові поля
-(`required_ihc_panel.if_b_cell` etc.) або окремі workup variants.
+`DiagnosticWorkup.required_tests` should contain **tests indicated in 95%
+of relevant cases**, not "all possible tests if anything is unclear."
+Edge cases and disease-specific extensions belong in additional fields
+(`required_ihc_panel.if_b_cell`, etc.) or in separate workup variants.
 
-Інакше "comprehensive" workup стає inflated checklist що ніхто не
-встигає виконати реально.
+Otherwise a "comprehensive" workup becomes an inflated checklist that
+nobody can realistically order.
 
 ### 1.3. Universal-to-specific decomposition
 
@@ -61,238 +62,238 @@ WORKUP-CYTOPENIA-EVALUATION (broad triage)
     └─→ findings: unexplained → WORKUP-MDS-EVALUATION
 ```
 
-Декомпозиція через `applicable_to.lineage_hints` +
-`applicable_to.presentation_keywords`. Engine matcher дозволяє
-**broader workup перейти у specific** коли findings уточнюються
-(revisions workflow per DIAGNOSTIC_MDT_SPEC §7.1).
+Decomposition via `applicable_to.lineage_hints` +
+`applicable_to.presentation_keywords`. The engine matcher allows
+**a broader workup to transition into a specific one** as findings are
+refined (revisions workflow per DIAGNOSTIC_MDT_SPEC §7.1).
 
 ### 1.4. Cite-able provenance per Test attribute
 
-Кожен Test має посилатись на authority через `sources:` поле
-(існуючий механізм Source entities). Не вільне "everyone knows that".
-Це посилює Criterion 4 transparency — лікар може tracé why X test is
-listed in this workup.
+Each Test must reference an authority through the `sources:` field
+(the existing Source entities mechanism). Not a vague "everyone knows that."
+This strengthens Criterion 4 transparency — a clinician can trace why
+test X is listed in this workup.
 
 ---
 
-## 2. Source hierarchy для workup research
+## 2. Source hierarchy for workup research
 
-### 2.1. Tier 1 — обов'язково консультуємо для кожного workup
+### 2.1. Tier 1 — mandatory consultation for every workup
 
-| Авторитет | Призначення | Frontmatter в Source entity |
+| Authority | Purpose | Frontmatter in Source entity |
 |---|---|---|
-| **NCCN Guidelines** | US standard of care; найдетальніша initial workup секція в "WORKUP" і "DIAGNOSIS" sub-tables | `evidence_tier: 1`, `hosting_mode: referenced` (NCCN copyright) |
-| **ESMO Clinical Practice Guidelines** | EU equivalent; часто стисліше, але explicit на initial assessment | `evidence_tier: 1` |
-| **WHO Classification of Tumours (5th ed.)** | Канонічна класифікація + diagnostic criteria per disease | `evidence_tier: 1`, `hosting_mode: referenced` |
-| **EHA Guidelines (для гематології)** | European Hematology Association — деталі на molecular workup, нюанси per subtype | `evidence_tier: 1` |
-| **BSH Guidelines (для гематології, UK)** | British Society for Haematology — практичні підходи, добре organized | `evidence_tier: 1` |
-| **ASH (American Society of Hematology) Pocket Guides + Education Program** | Сучасні консенсуси, особливо emerging entities | `evidence_tier: 1-2` |
+| **NCCN Guidelines** | US standard of care; the most detailed initial workup sections in "WORKUP" and "DIAGNOSIS" sub-tables | `evidence_tier: 1`, `hosting_mode: referenced` (NCCN copyright) |
+| **ESMO Clinical Practice Guidelines** | EU equivalent; often more concise, but explicit on initial assessment | `evidence_tier: 1` |
+| **WHO Classification of Tumours (5th ed.)** | Canonical classification + diagnostic criteria per disease | `evidence_tier: 1`, `hosting_mode: referenced` |
+| **EHA Guidelines (for hematology)** | European Hematology Association — detail on molecular workup, nuances per subtype | `evidence_tier: 1` |
+| **BSH Guidelines (for hematology, UK)** | British Society for Haematology — practical approaches, well organized | `evidence_tier: 1` |
+| **ASH (American Society of Hematology) Pocket Guides + Education Program** | Contemporary consensus, especially for emerging entities | `evidence_tier: 1-2` |
 
-### 2.2. Tier 2 — додатковий контекст
+### 2.2. Tier 2 — additional context
 
-| Авторитет | Призначення |
+| Authority | Purpose |
 |---|---|
-| **Cochrane Systematic Reviews** | Якщо існує review про конкретний test/protocol |
-| **МОЗ України клінічні протоколи** | Локальна practice + reimbursement context (для НСЗУ) |
-| **Major textbooks (Williams Hematology, Wintrobe's, Hoffman)** | Background reading; не primary source |
-| **Peer-reviewed РКД у JCO / Blood / Lancet Onc / NEJM** | Specific evidence для confirmation tests чи novel diagnostic markers |
+| **Cochrane Systematic Reviews** | Where a review of a specific test/protocol exists |
+| **Ukrainian Ministry of Health clinical protocols** | Local practice + reimbursement context (for NSZU) |
+| **Major textbooks (Williams Hematology, Wintrobe's, Hoffman)** | Background reading; not a primary source |
+| **Peer-reviewed RCTs in JCO / Blood / Lancet Oncol / NEJM** | Specific evidence for confirmation tests or novel diagnostic markers |
 
-### 2.3. Tier 3 — допускається тільки явно
+### 2.3. Tier 3 — permitted only explicitly
 
-| Авторитет | Коли допускається |
+| Authority | When permitted |
 |---|---|
-| **Expert opinion / case series** | Тільки якщо вище нічого нема, **і** позначити в Test.notes "expert opinion only — pending higher-tier evidence" |
-| **Single-institution practice** | Тільки як приклад, не основа |
+| **Expert opinion / case series** | Only when nothing higher exists, **and** flagged in Test.notes as "expert opinion only — pending higher-tier evidence" |
+| **Single-institution practice** | Only as an example, not a foundation |
 
-### 2.4. Що **не** є Tier джерелом
+### 2.4. What is **not** a Tier source
 
-- UpToDate (proprietary, paid, не open)
-- Wikipedia (не authoritative)
-- LLM-generated content без human verification
+- UpToDate (proprietary, paid, not open)
+- Wikipedia (not authoritative)
+- LLM-generated content without human verification
 - Pharma marketing materials
 
 ---
 
 ## 3. Test entity attribute completeness checklist
 
-Для кожного нового / оновленого Test перевірити:
+Check the following for each new or updated Test:
 
-### 3.1. Обов'язкові поля (no Test merges without these)
+### 3.1. Required fields (no Test merges without these)
 
-- [ ] `id` — формат `TEST-<SHORT-SLUG>`
+- [ ] `id` — format `TEST-<SHORT-SLUG>`
 - [ ] `names.preferred` (English) + `names.ukrainian`
 - [ ] `category` ∈ {`lab`, `imaging`, `histology`, `genomic`, `clinical_assessment`}
-- [ ] `purpose` — одна речення українською: **навіщо** робимо
+- [ ] `purpose` — one sentence explaining **why** we perform this test
 - [ ] `priority_class` ∈ {`critical`, `standard`, `desired`, `calculation_based`}
-- [ ] `sources` — мінімум 1 Tier 1 reference
+- [ ] `sources` — minimum 1 Tier 1 reference
 
-### 3.2. Бажано (рекомендовано)
+### 3.2. Recommended
 
-- [ ] `loinc_codes` — якщо існує LOINC; null допустимо для специфічних panels (cytogenetics, FISH)
-- [ ] `specimen` — який biological matrix
-- [ ] `turnaround_time` — typical lab turnaround (1-3 hours / same day / 1-3 days / 7-14 days etc.)
-- [ ] `availability_ukraine` — дослід у Ukraine context (state_funded, typical_cost_uah, regional availability)
+- [ ] `loinc_codes` — if a LOINC code exists; null is acceptable for specific panels (cytogenetics, FISH)
+- [ ] `specimen` — which biological matrix
+- [ ] `turnaround_time` — typical lab turnaround (1-3 hours / same day / 1-3 days / 7-14 days, etc.)
+- [ ] `availability_ukraine` — test in the Ukrainian context (state_funded, typical_cost_uah, regional availability)
 
-### 3.3. Опційно (per test type)
+### 3.3. Optional (per test type)
 
 - `synonyms` — alternate names
 - `notes` — caveats, when not applicable, common pitfalls
 
-### 3.4. Anti-patterns (rejection criteria у клінічному ревю)
+### 3.4. Anti-patterns (rejection criteria in clinical review)
 
-❌ Test без `purpose` (нема **why**)
-❌ Test з `priority_class: critical` без cite-able rationale у Tier 1
-❌ Test з proprietary marker name тільки (e.g., commercial assay name without generic description)
-❌ Test з turnaround_time `null` коли він добре відомий (ленощі, не unknown)
+❌ Test without `purpose` (no **why**)
+❌ Test with `priority_class: critical` without cite-able rationale in Tier 1
+❌ Test with only a proprietary marker name (e.g., commercial assay name without generic description)
+❌ Test with `turnaround_time: null` when it is well known (laziness, not genuine unknown)
 
 ---
 
 ## 4. DiagnosticWorkup entity completeness checklist
 
-### 4.1. Обов'язкові поля
+### 4.1. Required fields
 
-- [ ] `id` — формат `WORKUP-<PRESENTATION-OR-SUSPICION>`
-- [ ] `applicable_to.lineage_hints` — мінімум 1 controlled-vocabulary hint
-- [ ] `applicable_to.tissue_locations` АБО `applicable_to.presentation_keywords` — мінімум одна категорія
-- [ ] `required_tests` — мінімум 3 (інакше це не "workup", це "single test")
-- [ ] `mandatory_questions_to_resolve` — мінімум 2 (інакше workup тривіальний)
-- [ ] `triggers_mdt_roles.required` — мінімум 1
+- [ ] `id` — format `WORKUP-<PRESENTATION-OR-SUSPICION>`
+- [ ] `applicable_to.lineage_hints` — minimum 1 controlled-vocabulary hint
+- [ ] `applicable_to.tissue_locations` OR `applicable_to.presentation_keywords` — minimum one category
+- [ ] `required_tests` — minimum 3 (otherwise this is not a "workup," it's a "single test")
+- [ ] `mandatory_questions_to_resolve` — minimum 2 (otherwise the workup is trivial)
+- [ ] `triggers_mdt_roles.required` — minimum 1
 - [ ] `expected_timeline_days` — realistic estimate
-- [ ] `sources` — мінімум 2 Tier 1 references
+- [ ] `sources` — minimum 2 Tier 1 references
 - [ ] `last_reviewed` + (after publishing) `reviewers` ≥ 2
 
-### 4.2. Бажано
+### 4.2. Recommended
 
-- `biopsy_approach` — preferred + alternatives + rationale, для будь-якого suspicion де біопсія part of standard
-- `required_ihc_panel` — baseline + conditional (if_b_cell / if_t_cell / if_aggressive / if_solid) — для suspicions де histology завжди part of workup
-- `expected_workup_cost_uah_estimate` — для Ukraine financial planning
+- `biopsy_approach` — preferred + alternatives + rationale, for any suspicion where biopsy is part of the standard
+- `required_ihc_panel` — baseline + conditional (if_b_cell / if_t_cell / if_aggressive / if_solid) — for suspicions where histology is always part of the workup
+- `expected_workup_cost_uah_estimate` — for Ukrainian financial planning
 - `triggers_mdt_roles.recommended` + `optional`
 
-### 4.3. Композиція workups
+### 4.3. Workup composition
 
-Складніші presentations можуть **підняти кілька workups одночасно**:
-- Patient має cytopenias + lymphadenopathy → match BOTH
+More complex presentations can **raise multiple workups simultaneously**:
+- A patient with cytopenias + lymphadenopathy → match BOTH
   `WORKUP-CYTOPENIA-EVALUATION` AND `WORKUP-SUSPECTED-LYMPHOMA`
-- Engine має додавати тести з обох (deduplicated)
-- MVP: matcher повертає top-1 match. Future: composition matcher
-  (item у roadmap)
+- The engine should add tests from both (deduplicated)
+- MVP: the matcher returns the top-1 match. Future: composition matcher
+  (roadmap item)
 
 ---
 
-## 5. Process: extending OpenOnco до нової онкологічної області
+## 5. Process: extending OpenOnco to a new oncology domain
 
-Кожне розширення (e.g., "додати solid tumour breast cancer") пройти ці кроки:
+Each expansion (e.g., "add solid tumor — breast cancer") should follow these steps:
 
 ### Step 1: Survey authoritative guidelines (Tier 1)
 
-- NCCN Guideline для нозології (Initial Workup секція)
+- NCCN Guideline for the condition (Initial Workup section)
 - ESMO Clinical Practice Guideline
 - WHO Classification subtype detail
-- Specialty society (для breast — NABCO, ABS, EBCC; для GI — DDW etc.)
+- Specialty society (for breast — NABCO, ABS, EBCC; for GI — DDW, etc.)
 
-Артефакт: `references/<domain>/guidelines_survey.md` зі списком consulted documents + URLs + version dates.
+Artifact: `references/<domain>/guidelines_survey.md` listing consulted documents + URLs + version dates.
 
-### Step 2: Identify базові tests + diagnostic studies
+### Step 2: Identify baseline tests + diagnostic studies
 
-Для кожної нозології з Step 1 виокремити:
+For each condition from Step 1, identify:
 - **Initial assessment** (history, exam, basic labs)
-- **Confirmatory** (biopsy, imaging для diagnosis)
+- **Confirmatory** (biopsy, imaging for diagnosis)
 - **Staging** (extent of disease)
 - **Pre-treatment baseline** (organ function, fertility, vaccination)
 - **Risk stratification** (prognostic markers)
 
-Усі — окремі Test entities. Reuse існуючих де можливо (CBC, LFT — universal).
+All are separate Test entities. Reuse existing ones where possible (CBC, LFT — universal).
 
-### Step 3: Build / extend KB
+### Step 3: Build / extend the KB
 
 Per Test:
-- Створити YAML за §3 checklist
+- Create YAML per §3 checklist
 - Links to Tier 1 sources
 
 Per Workup:
-- Створити YAML за §4 checklist
-- `triggers_mdt_roles` — який team склад потрібен
+- Create YAML per §4 checklist
+- `triggers_mdt_roles` — what team composition is required
 
 ### Step 4: Patient profile fields
 
-Якщо нова нозологія потребує специфічних profile fields (e.g., breast
-exam, mammographic findings) — додати у DATA_STANDARDS під відповідну
-секцію + adjust engine matcher per `presentation_keywords`.
+If a new condition requires specific profile fields (e.g., breast exam,
+mammographic findings) — add them to DATA_STANDARDS under the relevant
+section + adjust the engine matcher per `presentation_keywords`.
 
 ### Step 5: Engine integration
 
-Якщо потрібно — нові D-rules у `mdt_orchestrator._apply_diagnostic_role_rules`
-для domain-specific role recommendations (e.g., breast surgical
-oncologist для будь-якої breast suspicion).
+If needed — add new D-rules to `mdt_orchestrator._apply_diagnostic_role_rules`
+for domain-specific role recommendations (e.g., breast surgical oncologist
+for any breast suspicion).
 
 ### Step 6: Clinical review
 
-CHARTER §6.1 standard process: **2 з 3 Clinical Co-Leads** мусять
-підписати content. Reviewer A — domain expert (e.g., breast oncologist
-для breast workup). Reviewer B — методологічний reviewer.
+CHARTER §6.1 standard process: **2 of 3 Clinical Co-Leads** must sign off
+on content. Reviewer A — domain expert (e.g., breast oncologist for a breast
+workup). Reviewer B — methodological reviewer.
 
-Після підпису — `Test.reviewer_signoffs: 2` AND `Workup.reviewer_signoffs: 2`.
-До цього — все STUB і явно labelled.
+After sign-off — `Test.reviewer_signoffs: 2` AND `Workup.reviewer_signoffs: 2`.
+Until then — everything is STUB and explicitly labelled.
 
 ### Step 7: Update WORKUP_METHODOLOGY_SPEC.md changelog
 
-Додати рядок у §7 про domain extension з посиланням на guidelines
-survey та responsible reviewers.
+Add a row in §7 for the domain extension, referencing the guidelines survey
+and responsible reviewers.
 
 ---
 
-## 6. Anti-patterns та bias detection
+## 6. Anti-patterns and bias detection
 
 ### 6.1. Anti-pattern: "kitchen sink" workup
 
-Тенденція додавати кожен mentioned тест → 30+ обов'язкових тестів.
-Реально лікар не зможе це призначити, ще й коштує цілий бюджет.
+The tendency to add every mentioned test → 30+ required tests.
+In practice a clinician cannot order all of them, and the cost is prohibitive.
 
-**Mitigation:** використовувати `priority_class`:
-- `critical` — без цього план не може просуватись (≤ 5-7 на workup)
-- `standard` — 95% випадків (≤ 10-15)
-- `desired` — додатково при специфічних findings (умови вказати у Test.notes)
-- `calculation_based` — derived з інших (FIB-4, HCT etc.)
+**Mitigation:** use `priority_class`:
+- `critical` — without this the plan cannot proceed (≤ 5-7 per workup)
+- `standard` — 95% of cases (≤ 10-15)
+- `desired` — additional for specific findings (state conditions in Test.notes)
+- `calculation_based` — derived from others (FIB-4, HCT, etc.)
 
 ### 6.2. Anti-pattern: Western-only practice
 
-NCCN/ESMO припускають доступ до PET, NGS panels, monoclonal antibodies.
-В Ukraine context це може бути недоступно.
+NCCN/ESMO assume access to PET, NGS panels, and monoclonal antibodies.
+In the Ukrainian context these may be unavailable.
 
 **Mitigation:** `availability_ukraine.state_funded: false` flag + alternative test
-references. МОЗ протоколи — Tier 1 для Ukraine baseline.
+references. Ukrainian Ministry of Health protocols are Tier 1 for the Ukrainian baseline.
 
 ### 6.3. Anti-pattern: outdated workup
 
 Diagnostics evolves. Old cytogenetic panels → NGS. Old imaging → PET-MR.
 
-**Mitigation:** `last_reviewed` дата + quarterly audit (CLINICAL_CONTENT_STANDARDS §9.1).
-Test з last_reviewed > 2 years → quality gate flag.
+**Mitigation:** `last_reviewed` date + quarterly audit (CLINICAL_CONTENT_STANDARDS §9.1).
+A Test with `last_reviewed` > 2 years → quality gate flag.
 
-### 6.4. Anti-pattern: AI-generated workup без джерел
+### 6.4. Anti-pattern: AI-generated workup without sources
 
-Спокуса використати LLM щоб згенерувати "comprehensive workup" для
-нової нозології швидко.
+The temptation to use an LLM to rapidly generate a "comprehensive workup"
+for a new condition.
 
-**Mitigation:** CHARTER §8.3 hard rule — LLM не клінічний
-decision-maker. Workup content **завжди** human-authored з cite-able
-sources. LLM допустимий для extraction з PDF (per CHARTER §8.1) при
-human verification, не для inventing нових recommendations.
+**Mitigation:** CHARTER §8.3 hard rule — an LLM is not the clinical
+decision-maker. Workup content is **always** human-authored with cite-able
+sources. LLMs are permitted for extraction from PDFs (per CHARTER §8.1)
+with human verification — not for inventing new recommendations.
 
 ---
 
 ## 7. Domain extensions log
 
-| Дата | Domain | Workups added | Tests added | Reviewer A | Reviewer B | Spec update |
+| Date | Domain | Workups added | Tests added | Reviewer A | Reviewer B | Spec update |
 |---|---|---|---|---|---|---|
 | 2026-04-25 | Hematology — initial broad coverage | WORKUP-SUSPECTED-LYMPHOMA (expanded), -ACUTE-LEUKEMIA, -MULTIPLE-MYELOMA, -MPN-MDS, -CYTOPENIA-EVALUATION, -LYMPHADENOPATHY-NONSPECIFIC, -MONOCLONAL-GAMMOPATHY | ~30 hematology Tests | TBD | TBD | This document v0.1 |
 
-(Future entries додавати при extension.)
+(Add future entries upon each extension.)
 
 ---
 
-## 8. Зміни у цьому документі
+## 8. Change log
 
-| Версія | Дата | Зміни |
+| Version | Date | Changes |
 |---|---|---|
-| v0.1 | 2026-04-25 | Початковий MVP. Принципи (§1), Source hierarchy (§2), Test/Workup completeness (§3-§4), Domain extension process (§5), Anti-patterns (§6), Domain extensions log (§7). |
+| v0.1 | 2026-04-25 | Initial MVP. Principles (§1), Source hierarchy (§2), Test/Workup completeness (§3-§4), Domain extension process (§5), Anti-patterns (§6), Domain extensions log (§7). |

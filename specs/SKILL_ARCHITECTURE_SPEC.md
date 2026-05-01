@@ -1,92 +1,94 @@
 # Skill-Oriented Architecture Specification
 
-**Проєкт:** OpenOnco
-**Документ:** Skill-Oriented Architecture — MDT roles as clinically-verified skills
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з Clinical Co-Leads. Не запускає refactor —
-лише формалізує модель.
-**Попередні документи:** CHARTER.md (особливо §1, §6, §8.3, §15),
+**Project:** OpenOnco
+**Document:** Skill-Oriented Architecture — MDT roles as clinically-verified skills
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with Clinical Co-Leads. Does not trigger a
+refactor — only formalizes the model.
+**Preceding documents:** CHARTER.md (especially §1, §6, §8.3, §15),
 MDT_ORCHESTRATOR_SPEC.md, DIAGNOSTIC_MDT_SPEC.md,
 WORKUP_METHODOLOGY_SPEC.md.
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Зафіксувати mental model, який вже **implicit** у нашій архітектурі і
-зробити його **explicit** як direction для подальшого розвитку.
+To capture the mental model that is already **implicit** in our architecture
+and make it **explicit** as a direction for future development.
 
-**Теза:** профільний лікар у MDT (гематолог, патолог, радіолог тощо) —
-це по суті **clinically-verified skill**, який:
+**Thesis:** a specialist physician in an MDT (hematologist, pathologist,
+radiologist, etc.) is essentially a **clinically-verified skill** that:
 
-1. Приймає **input** = patient profile + поточні плани/висновки
-2. Має **deterministic behavior** = набір правил коли його залучати +
-   що він зазвичай запитує з KB + які питання адресує іншим скілам
-3. Verified = пройшов CHARTER §6.1 two-reviewer merge клінічними
-   co-leads (тому він "clinically-verified")
-4. **Output** = два типи запитів:
-   - до **shared knowledge base** (Test catalog, Source citations,
+1. Accepts **input** = patient profile + current plans/conclusions
+2. Has **deterministic behavior** = a set of rules for when to engage it +
+   what it typically queries from the KB + which questions it addresses to
+   other skills
+3. Is verified = has passed CHARTER §6.1 two-reviewer merge by clinical
+   co-leads (hence "clinically-verified")
+4. Produces **output** = two types of queries:
+   - to the **shared knowledge base** (Test catalog, Source citations,
      Indication / Workup attributes)
-   - до **інших skills** (відкриті питання `OpenQuestion.owner_role`)
+   - to **other skills** (open questions `OpenQuestion.owner_role`)
 
-Цей документ описує модель, її обмеження, і запропонований шлях
-рефакторингу `mdt_orchestrator.py` під per-skill modules.
+This document describes the model, its constraints, and the proposed path for
+refactoring `mdt_orchestrator.py` into per-skill modules.
 
 ---
 
-## 1. Принципи
+## 1. Principles
 
 ### 1.1. Skill ≠ autonomous agent
 
-Skill — це **declarative codification** of clinical patterns
-(коли залучати → що запитати → що передати далі). Це **не**
-autonomous reasoning agent. Skills:
+A skill is a **declarative codification** of clinical patterns
+(when to engage → what to query → what to pass forward). It is **not**
+an autonomous reasoning agent. Skills:
 
-- НЕ містять LLM (CHARTER §8.3)
-- НЕ роблять inter-agent message-passing у real time (немає event loop,
-  немає queue, немає async)
-- НЕ "думають" — тільки **матчать input проти заздалегідь верифікованих
-  rules**
+- Do NOT contain LLMs (CHARTER §8.3)
+- Do NOT perform inter-agent message-passing in real time (no event loop,
+  no queue, no async)
+- Do NOT "think" — they only **match input against pre-verified rules**
 
-Якщо хтось з контрибуторів запропонує "давайте додамо LLM-based
-hematologist skill що чате з pathologist skill" — це автоматично
-порушує:
-- CHARTER §8.3 (LLM не клінічний decision-maker)
-- CHARTER §15.2 C5 (sources must be established) — autonomous LLM
-  output не є established source
-- FDA non-device CDS Criterion 4 — HCP не може незалежно review
-  basis опкої LLM reasoning chain
+If any contributor proposes "let's add an LLM-based hematologist skill
+that chats with the pathologist skill" — this automatically violates:
+- CHARTER §8.3 (LLM is not the clinical decision-maker)
+- CHARTER §15.2 C5 (sources must be established) — autonomous LLM output
+  is not an established source
+- FDA non-device CDS Criterion 4 — an HCP cannot independently review the
+  basis of any LLM reasoning chain
 
 **Hard rule:** skill modules — pure Python rule code + KB content
-references. Жодного LLM call inside `skills/`.
+references. No LLM calls inside `skills/`.
 
-### 1.2. Skill ≠ replacement of real specialist
+### 1.2. Skill ≠ replacement of a real specialist
 
-Skill emits "потрібен патолог + ось питання що його чекають". Реальний
-**патолог відповідає** на питання — його judgment не replicated.
+A skill emits "a pathologist is needed + here are the questions awaiting
+them." The real **pathologist answers** those questions — their judgment
+is not replicated.
 
-Скіл — це **scaffolding for the doctor's question**, не **the doctor's
+A skill is **scaffolding for the doctor's question**, not **the doctor's
 answer**.
 
-Це core thesis MDT Orchestrator (`MDT_ORCHESTRATOR_SPEC §1.2`):
-- system визначає team composition + open questions + provenance
-- system НЕ дає клінічних відповідей
-- skill-orient framing цього не змінює — воно посилює explicit-ність
+This is the core thesis of the MDT Orchestrator (`MDT_ORCHESTRATOR_SPEC §1.2`):
+- The system determines team composition + open questions + provenance
+- The system does NOT provide clinical answers
+- The skill-oriented framing does not change this — it reinforces explicitness
 
 ### 1.3. Skill = unit of clinical responsibility
 
-Ключова перевага per-skill modules — **independent клінічний review**.
+The key advantage of per-skill modules is **independent clinical review**.
 
-Коли Reviewer A (онкогематолог) має підписати клінічний контент, зараз
-вона/він читає 1000-рядковий `mdt_orchestrator.py` де R1-R9 + D1-D6 +
-escalation rules + дедуп +data quality + provenance — все змішане.
+When Reviewer A (a hemato-oncologist) must sign off on clinical content,
+they currently read a 1,000-line `mdt_orchestrator.py` where R1-R9 + D1-D6 +
+escalation rules + deduplication + data quality + provenance are all mixed
+together.
 
-Якщо переходимо до per-skill modules:
-- Reviewer A читає тільки `skills/hematologist.py` (≤200 рядків)
-- Що скіл триггерить, що питає, що пере-передає далі — все локально
-- Підпис is meaningful, бо обсяг scoping clear
+When we move to per-skill modules:
+- Reviewer A reads only `skills/hematologist.py` (≤200 lines)
+- What the skill triggers, what it queries, what it passes forward — all local
+- The sign-off is meaningful because the scope is clearly bounded
 
-CHARTER §6.1 process стає operationally практичним замість evident-only.
+The CHARTER §6.1 process becomes operationally practical rather than
+merely formal.
 
 ---
 
@@ -122,40 +124,40 @@ class Skill(Protocol):
         per MDT_ORCHESTRATOR_SPEC §3-Esc)."""
 
     def reason(self, ctx: SkillContext) -> str:
-        """UA-language clinical justification for the role
+        """Ukrainian-language clinical justification for the role
         recommendation. Cite-able by clinicians."""
 
     def kb_queries(self, ctx: SkillContext) -> list[KBQuery]:
         """What this skill 'knows to look up' from the shared knowledge
         base — Test IDs, Source IDs, IHC panel components, etc.
-        Surfaces in MDT brief як "this role would consult these KB items"."""
+        Surfaces in MDT brief as "this role would consult these KB items"."""
 
     def inter_skill_queries(self, ctx: SkillContext) -> list[OpenQuestion]:
         """OpenQuestions this skill raises for OTHER skills.
-        Already exists в `mdt_orchestrator._apply_open_question_rules` —
+        Already exists in `mdt_orchestrator._apply_open_question_rules` —
         skill-paradigm just reorganizes by owner."""
 
     def linked_findings(self, ctx: SkillContext) -> list[str]:
         """Profile fields / biomarker IDs / RedFlag IDs that triggered
-        this skill. Surfaces у MDTRequiredRole.linked_findings."""
+        this skill. Surfaces in MDTRequiredRole.linked_findings."""
 ```
 
-`SkillContext` — read-only struct з patient, current plan/diagnostic
-brief, loaded entities, fired RedFlags. Skill methods НЕ mutate
-context (deterministic).
+`SkillContext` — a read-only struct containing the patient, the current
+plan/diagnostic brief, loaded entities, and fired RedFlags. Skill methods
+do NOT mutate context (deterministic).
 
-`KBQuery` — pointer у KB:
+`KBQuery` — a pointer into the KB:
 ```python
 @dataclass
 class KBQuery:
     target_type: Literal["test", "source", "biomarker", "indication", "regimen", ...]
     target_id: str
-    relevance: str  # UA-language: "for staging", "for prognostic risk", etc.
+    relevance: str  # Ukrainian-language: "for staging", "for prognostic risk", etc.
 ```
 
 ### 2.2. Engine integration
 
-Existing `mdt_orchestrator.orchestrate_mdt()` стає dispatcher:
+The existing `mdt_orchestrator.orchestrate_mdt()` becomes a dispatcher:
 
 ```python
 def orchestrate_mdt(patient, plan_or_diagnostic, kb_root):
@@ -177,19 +179,19 @@ def orchestrate_mdt(patient, plan_or_diagnostic, kb_root):
         inter_skill_qs.extend(skill.inter_skill_queries(ctx))
 
     # then existing dedup + escalation + provenance logic
-    # (RedFlag-driven escalation залишається у orchestrator — крос-скіл concern)
+    # (RedFlag-driven escalation stays in orchestrator — cross-skill concern)
     ...
 ```
 
-Behavior — ідентичний сьогоднішньому output, але організація per-domain.
+Behavior is identical to today's output, but the organization is per-domain.
 
 ---
 
-## 3. Запропонований skills/ layout
+## 3. Proposed skills/ layout
 
-Layout проектується під **~60-skill horizon** (повний oncology MDT) —
-з достатнім structure щоб не перетворитись на flat-folder pile, але без
-over-engineering (≤2 рівнів вкладеності).
+The layout is designed for a **~60-skill horizon** (a complete oncology MDT) —
+with enough structure to avoid a flat-folder pile, but without over-engineering
+(≤2 levels of nesting).
 
 ```
 knowledge_base/skills/
@@ -200,8 +202,8 @@ knowledge_base/skills/
 
   shared/                # domain-agnostic; reused across diseases
     __init__.py
-    pathologist.py       # generic pathologist (deferred to subspecialty якщо є)
-    radiologist.py       # generic; subspecialties у sub-modules якщо потрібно
+    pathologist.py       # generic pathologist (deferred to subspecialty if present)
+    radiologist.py       # generic; subspecialties in sub-modules if needed
     clinical_pharmacist.py
     nurse_navigator.py
     primary_care.py
@@ -247,7 +249,7 @@ knowledge_base/skills/
     __init__.py
     radiologist_neuro.py
     radiologist_thoracic.py
-    radiologist_msk.py               # musculoskeletal — критично для sarcoma
+    radiologist_msk.py               # musculoskeletal — critical for sarcoma
     nuclear_medicine.py              # PET interpretation, theranostics
 
   supportive/            # ~7 skills
@@ -257,42 +259,42 @@ knowledge_base/skills/
     nutritionist.py
     physical_therapist.py
     psychologist.py
-    psychiatrist.py                  # окремо від psychologist (medication management)
+    psychiatrist.py                  # separate from psychologist (medication management)
     social_worker_case_manager.py
     spiritual_care.py
 ```
 
-**Принципи layout:**
-- 8 top-level domain folders + `shared/` — clinical mental-map alignment
-- `shared/` — domain-agnostic (rendering pipeline не імпортує доменні)
-- Auto-discovery: `registry.py` глибує `skills/**/*.py`, collects Skill-protocol-conforming exports
+**Layout principles:**
+- 8 top-level domain folders + `shared/` — aligned with the clinical mental map
+- `shared/` — domain-agnostic (the rendering pipeline does not import domain modules)
+- Auto-discovery: `registry.py` globs `skills/**/*.py`, collects Skill-protocol-conforming exports
 - One file per (domain, role) — clinical review scope = one file
-- Subspecialty separation тільки коли rules відрізняються істотно
-  (наприклад radiologist_neuro vs radiologist_msk — різні KB queries)
-- **Maximum nesting: 2 levels** (`skills/<domain>/<role>.py`). Глибше —
-  ознака over-engineering.
+- Subspecialty separation only when rules differ substantially
+  (e.g., radiologist_neuro vs radiologist_msk — different KB queries)
+- **Maximum nesting: 2 levels** (`skills/<domain>/<role>.py`). Deeper nesting
+  is a sign of over-engineering.
 
 ### 3.1. Sizing horizon
 
-| Horizon | Active skills | Що додаємо | When |
+| Horizon | Active skills | What we add | When |
 |---|---|---|---|
-| **Сьогодні (HCV-MZL focus)** | ~7 active | (з 13 у `_ROLE_CATALOG`; решта catalog-only) | done |
-| **MVP refactor** | **12-15** | Extract існуючі rules + 2-3 нові: hematopath, transplant_hematologist, nurse_navigator | next 1-3 commits |
-| **Повна гематологія** | **~18-20** | + coag specialist, transfusion medicine, pain, окремий psychiatrist | 6 міс |
-| **+ Solid tumors (CHARTER §3 future)** | **~35-40** | 10 organ-specific oncology skills + pharmacogenomics + germline counselor | 12-18 міс |
-| **Comprehensive** | **~50-60** | + subspecialty radiology + radiation modalities + supportive expansions + ops/coordination | 24+ міс |
+| **Today (HCV-MZL focus)** | ~7 active | (from 13 in `_ROLE_CATALOG`; rest are catalog-only) | done |
+| **MVP refactor** | **12-15** | Extract existing rules + 2-3 new: hematopath, transplant_hematologist, nurse_navigator | next 1-3 commits |
+| **Full hematology** | **~18-20** | + coag specialist, transfusion medicine, pain, separate psychiatrist | 6 months |
+| **+ Solid tumors (CHARTER §3 future)** | **~35-40** | 10 organ-specific oncology skills + pharmacogenomics + germline counselor | 12-18 months |
+| **Comprehensive** | **~50-60** | + subspecialty radiology + radiation modalities + supportive expansions + ops/coordination | 24+ months |
 
-**Sanity check:** layout (§3) витримує 60-skill горизонт без re-architecting.
-Поточний 1000-рядковий моноліт — **не витримує**. Refactor на skills/ —
-**not optional** для scope expansion past hematology.
+**Sanity check:** the layout (§3) can sustain a 60-skill horizon without
+re-architecting. The current 1,000-line monolith **cannot**. Refactoring
+to skills/ is **not optional** for scope expansion past hematology.
 
 ### 3.2. SimpleSkill helper for trivial cases
 
-Спостереження: **~80% skills будуть однорядкові** — "коли disease lineage
-∈ {X, Y, Z} → recommend role R з reason 'standard MDT participant for ...'".
-Повний `Skill` protocol implementation — overkill для них.
+Observation: **~80% of skills will be single-rule** — "when disease lineage
+∈ {X, Y, Z} → recommend role R with reason 'standard MDT participant for ...'".
+A full `Skill` protocol implementation is overkill for these.
 
-Helper у `skills/_helpers.py`:
+Helper in `skills/_helpers.py`:
 
 ```python
 @dataclass
@@ -306,7 +308,7 @@ class SimpleRoleSkill:
     lineage_match: list[str]              # set of lineage_hints; OR-match
     presentation_keywords: list[str] = field(default_factory=list)
     priority_value: Priority = "recommended"
-    reason_template: str = "Standard MDT participant для {lineage}."
+    reason_template: str = "Standard MDT participant for {lineage}."
     kb_query_templates: list[KBQuery] = field(default_factory=list)
     applies_in_modes: set[str] = field(default_factory=lambda: {"diagnostic", "treatment"})
     sources: list[str] = field(default_factory=list)
@@ -319,33 +321,34 @@ class SimpleRoleSkill:
     def linked_findings(self, ctx): ...        # disease_id from ctx
 ```
 
-Тоді 80% skills декларуються в один step:
+80% of skills are then declared in one step:
 
 ```python
 # skills/hematology/transplant_hematologist.py
 SKILL = SimpleRoleSkill(
     role_id="transplant_hematologist",
-    role_name="Гематолог-трансплантолог",
+    role_name="Transplant Hematologist",
     domain="hematology",
     lineage_match=["aml", "all", "mds_high_risk", "mm_transplant_eligible"],
     priority_value="recommended",
-    reason_template="alloHSCT/autoHSCT candidacy assessment для {lineage}.",
+    reason_template="alloHSCT/autoHSCT candidacy assessment for {lineage}.",
     sources=["SRC-NCCN-AML-2025"],
 )
 ```
 
-20% складніших skills (hematologist з 4-rule trigger logic + RedFlag-driven
-escalation) — повний Skill protocol implementation, ~80-150 рядків.
+The 20% of more complex skills (hematologist with 4-rule trigger logic +
+RedFlag-driven escalation) use the full Skill protocol implementation,
+~80-150 lines.
 
 ### 3.3. Skill versioning
 
-Кожен skill module має:
+Each skill module has:
 - `__version__` (semver)
 - `__last_reviewed__` (ISO date)
-- `__reviewers__` (list of reviewer IDs після підпису)
+- `__reviewers__` (list of reviewer IDs after sign-off)
 
-При load — engine варніф warning якщо `last_reviewed > 6 місяців` per
-CLINICAL_CONTENT_STANDARDS §9.1.
+At load time — the engine emits a warning if `last_reviewed > 6 months`
+per CLINICAL_CONTENT_STANDARDS §9.1.
 
 ### 3.4. Skill testing convention
 
@@ -355,57 +358,57 @@ CLINICAL_CONTENT_STANDARDS §9.1.
 - `test_kb_queries_includes_expected_tests`
 - `test_inter_skill_queries_owner_routing`
 
-Per skill: 4-8 focused tests. 200-line test file max. Easy to maintain.
+Per skill: 4-8 focused tests. 200-line test file maximum. Easy to maintain.
 
 ---
 
 ## 4. Hard rules (CHARTER alignment)
 
-### 4.1. CHARTER §8.3 — LLM не клінічний decision-maker
+### 4.1. CHARTER §8.3 — LLM is not the clinical decision-maker
 
-Skills **не** import LLM clients. `skills/` directory має CI lint
-правило: `import anthropic`, `import openai`, etc. — **fail build**.
-LLM використання дозволене тільки у:
+Skills do **not** import LLM clients. The `skills/` directory has a CI lint
+rule: `import anthropic`, `import openai`, etc. — **fail build**.
+LLM usage is permitted only in:
 - `knowledge_base/ingestion/moz_extractor.py` (PDF extraction with
   human verification per CHARTER §8.1)
-- `legacy/` (archived autoresearch — не в активному коді)
+- `legacy/` (archived autoresearch — not in active code)
 
 ### 4.2. CHARTER §15.2 C5 — sources must be established
 
-Кожен skill module має `__sources__: list[str]` — IDs of Source
-entities що підтверджують **кожен rule** у скілі. CI gate: skill
-without `__sources__` (or with empty list) — fail merge.
+Each skill module has `__sources__: list[str]` — IDs of Source entities
+that support **each rule** in the skill. CI gate: a skill without
+`__sources__` (or with an empty list) — fails merge.
 
 ### 4.3. CHARTER §15.2 C6 — automation bias mitigation
 
-Skill output **NEVER** включає "system says X is true". Завжди:
+Skill output **NEVER** includes "system says X is true." Always:
 - Role recommendation = "this role should review"
 - KB query = "this role would consult these references"
 - Inter-skill query = "this question awaits answer from role Y"
 
-Render layer (existing) вже відображає це коректно через
-MDTOrchestrationResult — skill refactor просто перенумеровує
-**де** rules живуть, не **що** вони видають.
+The render layer (existing) already represents this correctly through
+MDTOrchestrationResult — the skill refactor simply reorganizes
+**where** rules live, not **what** they produce.
 
 ### 4.4. CHARTER §15.2 C7 — diagnostic vs treatment mode
 
-Skills повинні оголошувати applicability в кожному mode:
+Skills must declare applicability in each mode:
 ```python
 class HematologistSkill:
     applies_in_modes: set[str] = {"diagnostic", "treatment"}
 ```
 
-`infectious_disease_hepatology` skill triggers у diagnostic mode на
-suspicion рівні (HCV/HBV unresolved); у treatment mode — на confirmed
-HCV+ regimen. Один skill, two modes — `applies_to(ctx)` бачить
-`ctx.mode` і відповідно reasons differ.
+The `infectious_disease_hepatology` skill triggers in diagnostic mode at the
+suspicion level (HCV/HBV unresolved); in treatment mode — on a confirmed
+HCV+ regimen. One skill, two modes — `applies_to(ctx)` reads `ctx.mode`
+and the reasons differ accordingly.
 
 ---
 
-## 5. Refactor plan (deferred — не виконується у цьому commit)
+## 5. Refactor plan (deferred — not executed in this commit)
 
-Цей spec **зараз** — лише формалізація моделі. Refactor — окремий
-workstream після clarification з Clinical Co-Leads.
+This spec **at present** is only a formalization of the model. The refactor
+is a separate workstream pending clarification from Clinical Co-Leads.
 
 ### Phase 1 — Foundation (1 commit)
 - `knowledge_base/skills/base.py` — Skill protocol, SkillContext,
@@ -419,9 +422,9 @@ workstream після clarification з Clinical Co-Leads.
   R6 (radiation_oncologist), R7 (social_worker_case_manager),
   R8 (palliative_care), R9 (molecular_geneticist) → per-skill modules
 - Same for D1-D6 (diagnostic-mode rules)
-- `mdt_orchestrator._apply_role_rules` стає простий dispatcher що
+- `mdt_orchestrator._apply_role_rules` becomes a simple dispatcher that
   iterates skills + collects results
-- Existing tests should pass без modification (behavioral identity)
+- Existing tests should pass without modification (behavioral identity)
 
 ### Phase 3 — Per-skill independent tests (1 commit)
 - `tests/skills/test_hematologist.py` etc.
@@ -433,70 +436,69 @@ workstream після clarification з Clinical Co-Leads.
 - README sections: "How to add a new skill"
 
 ### Phase 5 — Skill versioning + audit (future)
-- skill `__last_reviewed__` enforcement
-- audit dashboard: skills overdue for re-review
+- Enforcement of skill `__last_reviewed__`
+- Audit dashboard: skills overdue for re-review
 
-**Acceptance criterion для cumulative refactor:** `pytest -q` проходить
-після всіх 4 phases без regression. Behavioral output of `orchestrate_mdt`
-identical to pre-refactor stdout/JSON for всіх існуючих тест-кейсів.
+**Acceptance criterion for the cumulative refactor:** `pytest -q` passes
+after all 4 phases without regression. Behavioral output of `orchestrate_mdt`
+is identical to pre-refactor stdout/JSON for all existing test cases.
 
 ---
 
-## 6. Що ця формалізація **не** змінює
+## 6. What this formalization does **not** change
 
 - Existing KB content (Indications, Regimens, Tests, Workups, Sources) —
-  той самий
-- Engine for clinical decisions (Algorithm.decision_tree) — лишається
+  unchanged
+- Engine for clinical decisions (Algorithm.decision_tree) — remains
   declarative
-- Plan / DiagnosticPlan / Revisions / Persistence — той самий
-- FDA non-device positioning — тільки посилюється через explicit
+- Plan / DiagnosticPlan / Revisions / Persistence — unchanged
+- FDA non-device positioning — only strengthened through explicit
   per-skill source citations
-- LLM scope — той самий: extraction with human verification only
-- Render layer (commit 192c818) — той самий output, але per-skill
-  source provenance стає explicit у future render iterations
+- LLM scope — unchanged: extraction with human verification only
+- Render layer (commit 192c818) — same output, but per-skill source
+  provenance becomes explicit in future render iterations
 
 ---
 
-## 7. Що формалізація **робить можливим**
+## 7. What this formalization **makes possible**
 
-1. **Per-domain extension легше** — додати онколога-уролога = додати
-   `skills/solid_tumor/medical_oncologist_uro.py` + клінічний review
-   тільки цього файлу
-2. **Independent клінічний review** — Reviewer A відкриває один файл,
-   не 1000-рядковий orchestrator
-3. **Skill-rule audit** — з аудитного запиту "чому цей патієнт отримав
-   recommendation для радіолога?" → log instantly показує
+1. **Per-domain extension is easier** — adding a uro-oncologist means adding
+   `skills/solid_tumor/medical_oncologist_uro.py` + clinical review of only
+   that file
+2. **Independent clinical review** — Reviewer A opens one file, not a
+   1,000-line orchestrator
+3. **Skill-rule audit** — given an audit query "why did this patient receive
+   a recommendation for a radiologist?" → the log instantly shows
    `skills/shared/radiologist.py:applies_to:line 42`
-4. **Multi-version skill A/B testing** — eventually можна тримати
-   `radiologist_v2.py` поряд з `radiologist.py`, дозволяти clinical
-   leads порівнювати behavior на synthetic case-suite перед switching
-5. **Reusable skill registry** — інші OpenOnco-like проекти можуть
-   зрелити власні skills використовуючи той самий Skill protocol
+4. **Multi-version skill A/B testing** — eventually, `radiologist_v2.py` can
+   be kept alongside `radiologist.py`, allowing clinical leads to compare
+   behavior on a synthetic case suite before switching
+5. **Reusable skill registry** — other OpenOnco-like projects can register
+   their own skills using the same Skill protocol
 
 ---
 
 ## 8. Clinical Co-Lead questions
 
-Перед refactor execution потрібен sign-off на:
+The following require sign-off before the refactor is executed:
 
-1. **Skill domain partitioning** — пропоновано `hematology/`, `solid_tumor/`,
-   `shared/`, `molecular/`. Узгоджується з вашою специальностнею
-   ментальною мапою?
+1. **Skill domain partitioning** — proposed: `hematology/`, `solid_tumor/`,
+   `shared/`, `molecular/`. Does this align with your specialty mental map?
 2. **Per-skill version aging policy** — `last_reviewed > 6 months` →
-   warning, чи escalate до error на CI?
-3. **Skill source citation depth** — перелік Source IDs на module level,
-   чи per-rule (тоді richer audit)?
+   warning, or escalate to a CI error?
+3. **Skill source citation depth** — list of Source IDs at the module level,
+   or per-rule (richer audit)?
 4. **Naming convention** — skill class names (`HematologistSkill`) vs
    functional names (`hematologist_skill`) vs neither (single
    module-level instance)?
 
-Без цих рішень refactor буде під ризиком rework коли co-leads побачать
-готову реалізацію.
+Without these decisions the refactor risks rework once co-leads see the
+finished implementation.
 
 ---
 
-## 9. Зміни у цьому документі
+## 9. Change log
 
-| Версія | Дата | Зміни |
+| Version | Date | Changes |
 |---|---|---|
-| v0.1 | 2026-04-25 | Початковий MVP. Принципи (§1), Skill protocol (§2), Layout (§3), CHARTER alignment (§4), Refactor plan (§5), What this doesn't change / does enable (§6, §7), Co-Lead questions (§8). Refactor execution **deferred** — чекає на §8 sign-off. |
+| v0.1 | 2026-04-25 | Initial MVP. Principles (§1), Skill protocol (§2), Layout (§3), CHARTER alignment (§4), Refactor plan (§5), What this doesn't change / does enable (§6, §7), Co-Lead questions (§8). Refactor execution **deferred** — awaiting §8 sign-off. |

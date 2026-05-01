@@ -1,319 +1,319 @@
-# MDT Orchestrator та Decision Provenance Specification
+# MDT Orchestrator and Decision Provenance Specification
 
-**Проєкт:** OpenOnco
-**Документ:** MDT Orchestrator + Decision Provenance
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з Clinical Co-Leads
-**Попередні документи:** CHARTER.md (особливо §1, §2, §6, §8.3, §15),
+**Project:** OpenOnco
+**Document:** MDT Orchestrator + Decision Provenance
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with Clinical Co-Leads
+**Prerequisite documents:** CHARTER.md (especially §1, §2, §6, §8.3, §15),
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DATA_STANDARDS.md,
 REFERENCE_CASE_SPECIFICATION.md, SOURCE_INGESTION_SPEC.md
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Закриває явну прогалину, зафіксовану у `KNOWLEDGE_SCHEMA_SPECIFICATION.md`
-§1306 ("Не моделюються: clinical trial matching, genetic syndromes,
+Addresses the explicit gap noted in `KNOWLEDGE_SCHEMA_SPECIFICATION.md`
+§1306 ("Not modelled: clinical trial matching, genetic syndromes,
 **multidisciplinary coordination**").
 
-OpenOnco **не приймає клінічних рішень** (CHARTER §1, §8.3) і не
-виставляє себе як "розумніше за лікаря" — навпаки, він готує
-**структурований пакет для онкоконсиліуму (MDT — multidisciplinary
-team / тумор-борд)**, який допомагає зрозуміти:
+OpenOnco **does not make clinical decisions** (CHARTER §1, §8.3) and
+does not position itself as "smarter than the physician" — instead, it
+prepares a **structured package for the tumor board (MDT — multidisciplinary
+team)** that helps understand:
 
-1. **Хто має бути за столом** (роль-рекомендація / role recommendation)
-2. **Які питання залишаються відкритими** (OpenQuestion)
-3. **Які дані відсутні або сумнівні** (data quality summary)
-4. **Хто і коли що зробив** (decision provenance / audit trail)
+1. **Who should be at the table** (role recommendation)
+2. **What questions remain open** (OpenQuestion)
+3. **What data is missing or uncertain** (data quality summary)
+4. **Who did what and when** (decision provenance / audit trail)
 
-MDT Orchestrator — це окремий шар поверх rule-engine, що **не змінює**
-вибір regimen або жодну іншу клінічну рекомендацію. Усі терапевтичні
-рекомендації лишаються прерогативою curated knowledge base + rule
-engine (CHARTER §8.3).
+The MDT Orchestrator is a separate layer on top of the rule engine that
+**does not change** the regimen selection or any other clinical recommendation.
+All therapeutic recommendations remain the prerogative of the curated
+knowledge base + rule engine (CHARTER §8.3).
 
 ---
 
-## 1. Принципи
+## 1. Principles
 
-### 1.1. Що Orchestrator робить
+### 1.1. What the Orchestrator does
 
-- Аналізує `patient` profile + `PlanResult` з rule engine
-- За набором детермінованих правил визначає, **яких ролей бракує**
-  для повного MDT
-- За правилами та аналізом profile fields визначає, **що відсутнє у
-  даних** і блокує впевнене ведення (формує `OpenQuestion`)
-- Створює initial `ProvenanceEvent` записи: "engine згенерував план",
-  "engine ідентифікував required role X", "engine підняв питання Y"
-- Пакує результат у `MDTOrchestrationResult` — структурований brief
-  для тумор-борду
+- Analyses the `patient` profile + `PlanResult` from the rule engine
+- Using a set of deterministic rules, identifies **which roles are missing**
+  for a complete MDT
+- Using rules and profile field analysis, identifies **what is absent from
+  the data** and prevents confident management (generates `OpenQuestion`)
+- Creates initial `ProvenanceEvent` records: "engine generated plan",
+  "engine identified required role X", "engine raised question Y"
+- Packages the result into an `MDTOrchestrationResult` — a structured brief
+  for the tumor board
 
-### 1.2. Що Orchestrator не робить
+### 1.2. What the Orchestrator does not do
 
-- **Не змінює** `default_indication_id` чи будь-який інший вихід
-  rule engine
-- **Не пропонує** нових клінічних рекомендацій (зміна regimen, dose,
-  додавання препарату — суворо `Indication` / `Regimen` / curated
-  KB)
-- **Не використовує LLM** для клінічного reasoning (CHARTER §8.3) —
-  всі правила декларативні і зрозумілі рев'юеру
-- **Не імітує** експертну оцінку лікаря — лише **запитує** її
-- **Не приймає рішень за пацієнта** і не виходить за scope HCP
-  (CHARTER §15.2 C1)
+- **Does not change** `default_indication_id` or any other rule engine output
+- **Does not propose** new clinical recommendations (changing regimen, dose,
+  adding a drug — strictly `Indication` / `Regimen` / curated KB)
+- **Does not use LLMs** for clinical reasoning (CHARTER §8.3) —
+  all rules are declarative and transparent to the reviewer
+- **Does not simulate** expert physician judgment — it only **requests** it
+- **Does not make decisions on behalf of the patient** and does not exceed
+  HCP scope (CHARTER §15.2 C1)
 
-### 1.3. Що з інфографічного AI-шару OpenOnco свідомо НЕ робить
+### 1.3. What the infographic AI layer of OpenOnco deliberately does NOT do
 
-Інфографіка `infograph/mdt_with_ai_layer_light_theme.html` показує
-шість блоків AI-шару (бази/гайдлайни, література, геноміка, клінічні
-дослідження, аналіз зображень, подібні випадки). OpenOnco як
-non-device CDS реалізує **не всі** з них:
+The infographic `infograph/mdt_with_ai_layer_light_theme.html` shows
+six AI-layer blocks (databases/guidelines, literature, genomics, clinical
+trials, image analysis, similar cases). OpenOnco as non-device CDS implements
+**not all** of them:
 
-| Інфографічний блок | OpenOnco | Чому |
+| Infographic block | OpenOnco | Why |
 |---|---|---|
-| AI-аналіз баз/гайдлайнів | ✅ rule engine + KB | core scope |
-| Літературний пошук | ✅ live `pubmed_client.py` | structured metadata, не full-text |
-| Геномна інтерпретація | ✅ CIViC hosted, OncoKB client (roadmap) | через established evidence-graded KBs |
-| Клінічні дослідження | ✅ live `clinicaltrials_client.py` | metadata + recruiting status |
-| **Аналіз зображень (CT/MRI/PET pixel-level)** | ❌ **навмисно поза scope** | FDA Criterion 1 (image processing) → device classification (CHARTER §15.2 C3) |
-| **Подібні випадки (cohort matching)** | ❌ не у MVP | потребує persisted patient-plan registry + privacy/de-identification layer; великий окремий roadmap item |
+| AI analysis of databases/guidelines | ✅ rule engine + KB | core scope |
+| Literature search | ✅ live `pubmed_client.py` | structured metadata, not full-text |
+| Genomic interpretation | ✅ CIViC hosted, OncoKB client (roadmap) | via established evidence-graded KBs |
+| Clinical trials | ✅ live `clinicaltrials_client.py` | metadata + recruiting status |
+| **Image analysis (CT/MRI/PET pixel-level)** | ❌ **intentionally out of scope** | FDA Criterion 1 (image processing) → device classification (CHARTER §15.2 C3) |
+| **Similar cases (cohort matching)** | ❌ not in MVP | requires persisted patient-plan registry + privacy/de-identification layer; a large separate roadmap item |
 
-Цей розділ **обмежує** scope orchestrator-а: ані MVP, ані наступні
-ітерації не повинні ingest'ити raw image/signal/NGS reads без явного
+This section **limits** the orchestrator's scope: neither MVP nor future
+iterations should ingest raw image/signal/NGS reads without explicit
 re-classification per CHARTER §15.3.
 
-### 1.4. Сумісність з FDA non-device CDS positioning (CHARTER §15)
+### 1.4. Compatibility with FDA non-device CDS positioning (CHARTER §15)
 
-MDT Orchestrator **посилює** FDA Criterion 4 ("HCP can independently
+The MDT Orchestrator **strengthens** FDA Criterion 4 ("HCP can independently
 review the basis"):
 
-- Робить explicit "що ми НЕ знаємо" (Open Questions, data quality)
-- Робить explicit "хто має дати другу думку" (required roles)
-- Робить explicit "що сказала система і коли" (provenance log)
+- Makes explicit "what we do NOT know" (Open Questions, data quality)
+- Makes explicit "who should provide a second opinion" (required roles)
+- Makes explicit "what the system said and when" (provenance log)
 
-Це знижує automation bias (FDA Guidance §IV(4)) — лікар бачить, що
-система **визнає межі своєї компетенції** і просить експертного
-ревю там, де треба.
+This reduces automation bias (FDA Guidance §IV(4)) — the physician sees that
+the system **acknowledges the limits of its competence** and requests expert
+review where appropriate.
 
 ---
 
-## 2. Сутності даних
+## 2. Data entities
 
-Усі сутності — **JSON-serializable Python dataclasses**. Persistence
-у MVP — in-memory + опціональний JSON-серіалізатор; БД shape (event
-log, append-only) описана у §6 нижче, але реалізація відкладена до
-наступної ітерації.
+All entities are **JSON-serializable Python dataclasses**. Persistence
+in MVP — in-memory + optional JSON serializer; DB shape (event log,
+append-only) is described in §6 below, but implementation is deferred
+to a future iteration.
 
 ### 2.1. `MDTRequiredRole`
 
-Одна роль, яку треба запросити на тумор-борд (або principle of
-referral) для повного ведення цього пацієнта.
+One role to invite to the tumor board (or as a principle of referral)
+for complete management of this patient.
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
-| `role_id` | `str` | Канонічний ID ролі: `hematologist`, `pathologist`, `radiologist`, `infectious_disease_hepatology`, `clinical_pharmacist`, `radiation_oncologist`, `surgical_oncologist`, `palliative_care`, `social_worker_case_manager`, … |
-| `role_name` | `str` | Українською: "Гематолог / онкогематолог", "Патолог / гематопатолог" тощо |
-| `reason` | `str` | Коротке клінічне обґрунтування **українською** для рев'юера |
+| `role_id` | `str` | Canonical role ID: `hematologist`, `pathologist`, `radiologist`, `infectious_disease_hepatology`, `clinical_pharmacist`, `radiation_oncologist`, `surgical_oncologist`, `palliative_care`, `social_worker_case_manager`, … |
+| `role_name` | `str` | In Ukrainian: "Гематолог / онкогематолог", "Патолог / гематопатолог", etc. |
+| `reason` | `str` | Brief clinical rationale **in Ukrainian** for the reviewer |
 | `trigger_type` | `enum` | `missing_data` \| `diagnosis_complexity` \| `treatment_domain` \| `safety_risk` \| `molecular_data` \| `local_availability` \| `palliative_need` |
 | `priority` | `enum` | `required` \| `recommended` \| `optional` |
-| `linked_findings` | `list[str]` | Ідентифікатори findings/biomarkers/RedFlags, що тригернули правило |
-| `linked_questions` | `list[str]` | ID OpenQuestion, на які ця роль має дати відповідь |
+| `linked_findings` | `list[str]` | Identifiers of findings/biomarkers/RedFlags that triggered the rule |
+| `linked_questions` | `list[str]` | IDs of OpenQuestions that this role should answer |
 
 ### 2.2. `OpenQuestion`
 
-Питання, на яке система не може відповісти автоматично і яке має
-бути закрите перед фінальним прийняттям плану.
+A question the system cannot answer automatically and that must be
+resolved before the plan is finalized.
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
 | `id` | `str` | `OQ-<short-slug>` |
-| `question` | `str` | Питання українською мовою |
-| `owner_role` | `str` | `role_id` ролі, що зазвичай дає відповідь (`hematologist`, `radiologist`, тощо) |
-| `blocking` | `bool` | Чи блокує це питання прийняття плану |
-| `rationale` | `str` | Чому це питання важливе |
-| `linked_findings` | `list[str]` | Які поля profile відсутні/неоднозначні |
+| `question` | `str` | Question in Ukrainian |
+| `owner_role` | `str` | `role_id` of the role that typically provides the answer (`hematologist`, `radiologist`, etc.) |
+| `blocking` | `bool` | Whether this question blocks plan adoption |
+| `rationale` | `str` | Why this question is important |
+| `linked_findings` | `list[str]` | Which profile fields are absent/ambiguous |
 
 ### 2.3. `MDTOrchestrationResult`
 
-Top-level контейнер, що повертає `orchestrate_mdt(...)`.
+Top-level container returned by `orchestrate_mdt(...)`.
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
-| `patient_id` | `Optional[str]` | З `patient.patient_id`; `null` якщо anonymous |
-| `plan_id` | `Optional[str]` | З `PlanResult.plan.id`, якщо план згенеровано |
-| `disease_id` | `Optional[str]` | З `PlanResult.disease_id` |
+| `patient_id` | `Optional[str]` | From `patient.patient_id`; `null` if anonymous |
+| `plan_id` | `Optional[str]` | From `PlanResult.plan.id`, if a plan was generated |
+| `disease_id` | `Optional[str]` | From `PlanResult.disease_id` |
 | `required_roles` | `list[MDTRequiredRole]` | priority `required` |
 | `recommended_roles` | `list[MDTRequiredRole]` | priority `recommended` |
 | `optional_roles` | `list[MDTRequiredRole]` | priority `optional` |
-| `open_questions` | `list[OpenQuestion]` | Усі питання, у тому числі blocking |
-| `data_quality_summary` | `dict` | Лічильники: missing fields, ambiguous, unknown red-flag inputs |
-| `aggregation_summary` | `dict` | Explicit "AI-агрегація" артефакт (інфографіка step 2): `kb_entities_loaded`, `kb_sources_cited`, `indications_evaluated`, `biomarkers_referenced`, `red_flags_total_in_kb`, `red_flags_fired`, `open_questions_raised`, `live_api_clients_available`, `live_api_clients_invoked` |
-| `warnings` | `list[str]` | Технічні warning'и (entity не знайдено, тощо) |
+| `open_questions` | `list[OpenQuestion]` | All questions, including blocking ones |
+| `data_quality_summary` | `dict` | Counts: missing fields, ambiguous, unknown red-flag inputs |
+| `aggregation_summary` | `dict` | Explicit "AI-aggregation" artifact (infographic step 2): `kb_entities_loaded`, `kb_sources_cited`, `indications_evaluated`, `biomarkers_referenced`, `red_flags_total_in_kb`, `red_flags_fired`, `open_questions_raised`, `live_api_clients_available`, `live_api_clients_invoked` |
+| `warnings` | `list[str]` | Technical warnings (entity not found, etc.) |
 | `provenance` | `DecisionProvenanceGraph` | Initial events |
 
 ### 2.4. `ProvenanceEvent` (event-log shape — append-only)
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
 | `event_id` | `str` | Globally unique, e.g. `EV-<plan_id>-001` |
 | `timestamp` | `str` | ISO-8601 UTC |
-| `actor_role` | `str` | `engine` \| `hematologist` \| … (canonical role_id або системний) |
-| `actor_id` | `Optional[str]` | Конкретний рев'юер (e.g. `dr-coleadX`); `null` для engine або anonymous |
+| `actor_role` | `str` | `engine` \| `hematologist` \| … (canonical role_id or system) |
+| `actor_id` | `Optional[str]` | Specific reviewer (e.g. `dr-coleadX`); `null` for engine or anonymous |
 | `event_type` | `enum` | `confirmed` \| `modified` \| `rejected` \| `added_question` \| `approved` \| `requested_data` \| `flagged_risk` |
 | `target_type` | `enum` | `diagnosis` \| `staging` \| `regimen` \| `contraindication` \| `red_flag` \| `source` \| `plan_section` |
-| `target_id` | `str` | Канонічний id (e.g. `IND-HCV-MZL-1L-ANTIVIRAL`, `RF-BULKY-DISEASE`) |
-| `summary` | `str` | Коротко українською |
-| `evidence_refs` | `list[str]` | Source IDs / citation IDs, що підкріплюють |
+| `target_id` | `str` | Canonical id (e.g. `IND-HCV-MZL-1L-ANTIVIRAL`, `RF-BULKY-DISEASE`) |
+| `summary` | `str` | Brief summary in Ukrainian |
+| `evidence_refs` | `list[str]` | Source IDs / citation IDs supporting this event |
 
 ### 2.5. `DecisionProvenanceGraph`
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
-| `nodes` | `list[dict]` | Канонічні вузли: `{id, type, label}` (наприклад diagnosis-вузол, regimen-вузол) |
-| `edges` | `list[dict]` | Зв'язки між вузлами: `{from, to, kind}` (наприклад `regimen → contraindication` `kind=triggers`) |
-| `events` | `list[ProvenanceEvent]` | Послідовний лог |
-| `plan_version` | `int` | Версія Plan, до якої прив'язаний цей граф |
+| `nodes` | `list[dict]` | Canonical nodes: `{id, type, label}` (e.g. diagnosis node, regimen node) |
+| `edges` | `list[dict]` | Links between nodes: `{from, to, kind}` (e.g. `regimen → contraindication` `kind=triggers`) |
+| `events` | `list[ProvenanceEvent]` | Sequential log |
+| `plan_version` | `int` | Version of the Plan this graph is tied to |
 
 ---
 
-## 3. Правила role recommendation (для HCV-MZL reference case)
+## 3. Role recommendation rules (for the HCV-MZL reference case)
 
-Усі правила — детерміновані; якщо умова виконується, додається
-відповідна роль. Правила розширюються per-disease у міру зростання KB.
+All rules are deterministic; if the condition is met, the corresponding
+role is added. Rules are expanded per-disease as the KB grows.
 
-| # | Тригер | Роль | Priority | trigger_type |
+| # | Trigger | Role | Priority | trigger_type |
 |---|---|---|---|---|
-| R1 | `Disease.lineage` містить `lymphoma` АБО `Disease.codes.icd_o_3_morphology` у діапазоні mature B/T-cell lymphoma (9590–9729 / 9760–9769) | `hematologist` | `required` | `diagnosis_complexity` |
-| R2 | HCV-біомаркер позитивний (BIO-HCV-RNA == positive) АБО HBV-серологія позитивна | `infectious_disease_hepatology` | `recommended` | `molecular_data` |
-| R3 | Будь-які imaging fields присутні у profile (`dominant_nodal_mass_cm`, `mediastinal_ratio`, `pet_ct_date`, `ct_findings`, `lugano_stage`) | `radiologist` | `recommended` (escalates per §3-Esc) | `diagnosis_complexity` |
-| R4 | Лімфомний diagnosis (CD20-IHC, biopsy-related fields) АБО ризик трансформації під ревю | `pathologist` | `recommended` | `diagnosis_complexity` |
-| R5 | Дефолтний/альтернативний track має `plan_track == "aggressive"` (chemoimmunotherapy) | `clinical_pharmacist` | `recommended` | `treatment_domain` |
-| R6 | Disease — extranodal MALT (ICD-O-3 morphology starts with `9699`) — RT може бути локально-ефективною | `radiation_oncologist` | `optional` | `treatment_domain` |
-| R7 | Лікувальний план потребує препаратів з `reimbursed_nszu == false` | `social_worker_case_manager` | `recommended` | `local_availability` |
-| R8 | ECOG ≥ 3 АБО декомпенсована коморбідність → паліативна оцінка | `palliative_care` | `recommended` | `palliative_need` |
-| R9 | Indication.applicable_to.biomarker_requirements_required посилається на Biomarker з `biomarker_type` у `_ACTIONABLE_GENOMIC_TYPES` (gene_mutation, fusion, amplification, deletion, copy_number, msi_status, tmb, methylation) | `molecular_geneticist` | `recommended` | `molecular_data` |
+| R1 | `Disease.lineage` contains `lymphoma` OR `Disease.codes.icd_o_3_morphology` falls in the mature B/T-cell lymphoma range (9590–9729 / 9760–9769) | `hematologist` | `required` | `diagnosis_complexity` |
+| R2 | HCV biomarker positive (BIO-HCV-RNA == positive) OR HBV serology positive | `infectious_disease_hepatology` | `recommended` | `molecular_data` |
+| R3 | Any imaging fields present in the profile (`dominant_nodal_mass_cm`, `mediastinal_ratio`, `pet_ct_date`, `ct_findings`, `lugano_stage`) | `radiologist` | `recommended` (escalates per §3-Esc) | `diagnosis_complexity` |
+| R4 | Lymphoma diagnosis (CD20-IHC, biopsy-related fields) OR transformation risk under review | `pathologist` | `recommended` | `diagnosis_complexity` |
+| R5 | Default/alternative track has `plan_track == "aggressive"` (chemoimmunotherapy) | `clinical_pharmacist` | `recommended` | `treatment_domain` |
+| R6 | Disease — extranodal MALT (ICD-O-3 morphology starts with `9699`) — RT may be locally effective | `radiation_oncologist` | `optional` | `treatment_domain` |
+| R7 | Treatment plan requires drugs with `reimbursed_nszu == false` | `social_worker_case_manager` | `recommended` | `local_availability` |
+| R8 | ECOG ≥ 3 OR decompensated comorbidity → palliative assessment | `palliative_care` | `recommended` | `palliative_need` |
+| R9 | Indication.applicable_to.biomarker_requirements_required references a Biomarker with `biomarker_type` in `_ACTIONABLE_GENOMIC_TYPES` (gene_mutation, fusion, amplification, deletion, copy_number, msi_status, tmb, methylation) | `molecular_geneticist` | `recommended` | `molecular_data` |
 
-### §3-Esc. Ескалація priority через RedFlag
+### §3-Esc. Priority escalation via RedFlag
 
-Якщо в `PlanResult.plan.trace.fired_red_flags` присутній RedFlag з
-`clinical_direction in {"intensify", "hold"}`, його доменна роль
-ескалюється до `required`. Доменна мапа (MVP):
+If `PlanResult.plan.trace.fired_red_flags` contains a RedFlag with
+`clinical_direction in {"intensify", "hold"}`, its domain role is
+escalated to `required`. Domain map (MVP):
 
 | RedFlag | Domain role |
 |---|---|
 | `RF-BULKY-DISEASE` (intensify) | `radiologist` |
 | `RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION` (intensify) | `pathologist` |
 | `RF-HBV-COINFECTION` (hold) | `infectious_disease_hepatology` |
-| `RF-DECOMP-CIRRHOSIS` (de-escalate) | _не ескалюється_ — direction поза множиною |
+| `RF-DECOMP-CIRRHOSIS` (de-escalate) | _not escalated_ — direction outside the escalation set |
 
-Розширюється у `_REDFLAG_DOMAIN_ROLE` коли додаються нові RedFlag-и.
+Extended in `_REDFLAG_DOMAIN_ROLE` as new RedFlags are added.
 
-**Дедублікація:** одна `role_id` зустрічається у result не більше одного разу. Якщо різні правила дають різні priority — береться **найвищий** (`required` > `recommended` > `optional`). Це стосується і ескалації §3-Esc.
+**Deduplication:** a single `role_id` appears in the result at most once.
+If different rules assign different priorities — the **highest** is used
+(`required` > `recommended` > `optional`). This applies to escalation in
+§3-Esc as well.
 
-**Покриття trigger_type:** MVP rules використовують 5 з 7 значень:
+**trigger_type coverage:** MVP rules use 5 of the 7 values:
 `diagnosis_complexity`, `molecular_data`, `treatment_domain`,
-`local_availability`, `palliative_need`. Значення `missing_data` і
-`safety_risk` зарезервовані для майбутніх правил (extension points).
+`local_availability`, `palliative_need`. Values `missing_data` and
+`safety_risk` are reserved for future rules (extension points).
 
 ---
 
-## 4. Правила Open Questions (для HCV-MZL reference case)
+## 4. Open Question rules (for the HCV-MZL reference case)
 
-Поява `OpenQuestion` означає: rule engine не міг впевнено відповісти,
-бо вхідні дані відсутні або суперечливі.
+An `OpenQuestion` appearing means: the rule engine could not answer
+confidently because the input data is absent or contradictory.
 
-| # | Тригер | Питання | owner_role | blocking |
+| # | Trigger | Question | owner_role | blocking |
 |---|---|---|---|---|
-| Q1 | Disease — HCV-MZL АБО HCV+ І `hbsag` / `anti_hbc_total` відсутні | "Чи проведена серологія HBV (HBsAg, anti-HBc total)? HBV reactivation risk перед anti-CD20 therapy." | `infectious_disease_hepatology` | `true` |
-| Q2 | HCV+ І `child_pugh_class` / `decompensated_cirrhosis` / `fib4_index` відсутні | "Який стадій фіброзу/цирозу печінки? Це впливає на вибір DAA та dosing бендамустину." | `infectious_disease_hepatology` | `true` |
-| Q3 | Лімфома І відсутня confirmation `cd20_ihc_status` / `biopsy_confirmed` | "Чи підтверджено CD20+ статус гістологією? Без CD20+ rituximab/obinutuzumab не показані." | `pathologist` | `true` |
-| Q4 | Лімфома І відсутні staging fields (Lugano stage, PET-CT date) | "Чи виконано повне стадіювання (Lugano + PET/CT)?" | `radiologist` | `false` |
-| Q5 | Aggressive track обраний, відсутній `ldh_ratio_to_uln` | "Який актуальний LDH? Це маркер пухлинного навантаження і трансформації." | `hematologist` | `false` |
-| Q6 | Будь-який regimen має drug з `reimbursed_nszu == false` | "Чи доступний препарат X для пацієнта (out-of-pocket vs program)? Чи потрібен social work consult?" | `social_worker_case_manager` | `false` |
+| Q1 | Disease — HCV-MZL OR HCV+ AND `hbsag` / `anti_hbc_total` absent | "Has HBV serology been performed (HBsAg, anti-HBc total)? HBV reactivation risk before anti-CD20 therapy." | `infectious_disease_hepatology` | `true` |
+| Q2 | HCV+ AND `child_pugh_class` / `decompensated_cirrhosis` / `fib4_index` absent | "What is the fibrosis/cirrhosis stage? This affects DAA selection and bendamustine dosing." | `infectious_disease_hepatology` | `true` |
+| Q3 | Lymphoma AND `cd20_ihc_status` / `biopsy_confirmed` confirmation absent | "Has CD20+ status been confirmed by histology? Without CD20+, rituximab/obinutuzumab are not indicated." | `pathologist` | `true` |
+| Q4 | Lymphoma AND staging fields absent (Lugano stage, PET-CT date) | "Has complete staging been performed (Lugano + PET/CT)?" | `radiologist` | `false` |
+| Q5 | Aggressive track selected, `ldh_ratio_to_uln` absent | "What is the current LDH? This is a marker of tumor burden and transformation." | `hematologist` | `false` |
+| Q6 | Any regimen has a drug with `reimbursed_nszu == false` | "Is drug X available to the patient (out-of-pocket vs program)? Is a social work consult needed?" | `social_worker_case_manager` | `false` |
 
-**Розширюваність:** правила додаються per-disease. У MVP реалізовано
-підмножину для HCV-MZL.
+**Extensibility:** rules are added per-disease. In MVP, the subset for
+HCV-MZL is implemented.
 
 ---
 
 ## 5. Data quality summary
 
-Метаінформація для тумор-борду:
+Meta-information for the tumor board:
 
 ```python
 {
-    "missing_critical_fields": [...],      # поля, відсутність яких блокує впевнене ведення
-    "missing_recommended_fields": [...],   # поля, бажані але не блокуючі
-    "ambiguous_findings": [...],           # MVP: завжди []; розширення у наступних ітераціях
-    "unevaluated_red_flags": [...],        # RedFlag IDs, які не вдалось evaluate через відсутні findings
+    "missing_critical_fields": [...],      # fields whose absence prevents confident management
+    "missing_recommended_fields": [...],   # fields desired but not blocking
+    "ambiguous_findings": [...],           # MVP: always []; extended in future iterations
+    "unevaluated_red_flags": [...],        # RedFlag IDs that could not be evaluated due to absent findings
     "fields_present_count": int,
     "fields_expected_count": int,
 }
 ```
 
-**Механіка `unevaluated_red_flags`:** orchestrator проходить по всіх
-RedFlag entities у KB (фільтруючи за `relevant_diseases`, якщо вказано),
-рекурсивно витягує усі referenced field-keys з `trigger.any_of/all_of/none_of`
-(`finding`, `condition`, `lab`, `symptom`). Якщо хоч один key відсутній
-у patient findings — RedFlag вважається incompletely-evaluatable і
-потрапляє у список. Дозволяє рев'юеру побачити "ми не знаємо чи цей
-ризик реалізувався", замість того щоб тихо вважати його неактуальним.
+**Mechanics of `unevaluated_red_flags`:** the orchestrator iterates over
+all RedFlag entities in the KB (filtering by `relevant_diseases` if
+specified), recursively extracts all referenced field-keys from
+`trigger.any_of/all_of/none_of` (`finding`, `condition`, `lab`, `symptom`).
+If any key is absent from patient findings — the RedFlag is considered
+incompletely-evaluatable and enters the list. This allows the reviewer
+to see "we don't know whether this risk has materialized", rather than
+silently treating it as irrelevant.
 
-Це **не нова клінічна рекомендація**; це чесний звіт про повноту даних,
-який допомагає рев'юеру зрозуміти, наскільки впевнено система могла
-працювати з тим, що мала.
+This is **not a new clinical recommendation**; it is an honest report on
+data completeness that helps the reviewer understand how confidently the
+system was able to operate with what it had.
 
 ---
 
 ## 6. Decision Provenance — append-only event log
 
-### 6.1. Призначення
+### 6.1. Purpose
 
-Кожна зміна в Plan / MDT context — це **подія**. Подія immutable,
-події утворюють лог, лог реконструює історію формування плану.
-Підтримує:
+Every change in the Plan / MDT context is an **event**. Events are
+immutable, events form a log, the log reconstructs the history of how
+the plan was created. Supports:
 
-- Audit trail для regulatory inquiry (CHARTER §10.2, §15.1 Criterion 4)
-- Reproducibility: будь-який Plan можна відновити до стану на
-  визначений timestamp
-- Attribution: видно, **хто** саме (роль + опційно лікар) додав
-  питання, схвалив рекомендацію, відхилив pathway
-- Базу для майбутньої persistence (БД-ready shape)
+- Audit trail for regulatory inquiry (CHARTER §10.2, §15.1 Criterion 4)
+- Reproducibility: any Plan can be restored to its state at a given timestamp
+- Attribution: visible **who** exactly (role + optionally physician) added
+  a question, approved a recommendation, rejected a pathway
+- Foundation for future persistence (DB-ready shape)
 
-### 6.2. Ініціальні події (генеруються автоматично)
+### 6.2. Initial events (generated automatically)
 
-При першому виклику `orchestrate_mdt(...)`:
+On the first call to `orchestrate_mdt(...)`:
 
-1. `confirmed` / `plan_section` — "engine згенерував Plan версії N"
-2. Для кожної required/recommended ролі — `requested_data` / `plan_section`
-   з summary "потрібен ревю з боку ролі X"
-3. Для кожного OpenQuestion — `added_question` / `plan_section`
-4. Якщо RedFlag спрацював → `flagged_risk` / `red_flag` для кожного
+1. `confirmed` / `plan_section` — "engine generated Plan version N"
+2. For each required/recommended role — `requested_data` / `plan_section`
+   with summary "review required from role X"
+3. For each OpenQuestion — `added_question` / `plan_section`
+4. If a RedFlag fired → `flagged_risk` / `red_flag` for each
 
-### 6.3. Подальші події (наступні ітерації, не у MVP)
+### 6.3. Subsequent events (future iterations, not in MVP)
 
-Після MVP: додається API додавання events від клініцистів —
-- `confirmed` / `diagnosis` від pathologist
-- `modified` / `regimen` від hematologist (з прив'язкою до нового
-  Plan version)
-- `approved` / `plan_section` від tumor board (фінальний підпис)
+After MVP: an API for adding events from clinicians is added —
+- `confirmed` / `diagnosis` from the pathologist
+- `modified` / `regimen` from the hematologist (tied to a new Plan version)
+- `approved` / `plan_section` from the tumor board (final sign-off)
 
-### 6.4. Persistence (наступний крок, не у MVP)
+### 6.4. Persistence (next step, not in MVP)
 
-Подієвий лог за дизайном append-only — природно лягає на:
-- SQLite / Postgres event_log table з `event_id PRIMARY KEY`,
+The event log is append-only by design — naturally fits:
+- SQLite / Postgres event_log table with `event_id PRIMARY KEY`,
   `(target_type, target_id, timestamp)` index
-- Або JSONL файл `patient_plans/<patient_id>/events.jsonl`
-- Або immutable object storage (S3/MinIO) для compliance use cases
+- Or a JSONL file `patient_plans/<patient_id>/events.jsonl`
+- Or immutable object storage (S3/MinIO) for compliance use cases
 
-У MVP реалізація — in-memory + JSON-серіалізація на запит. БД-міграція
-описана у roadmap.
+In MVP: in-memory + JSON serialization on demand. DB migration
+described in the roadmap.
 
 ---
 
-## 7. Інтеграція з існуючим engine
+## 7. Integration with the existing engine
 
 ### 7.1. API
 
-Новий публічний модуль `knowledge_base/engine/mdt_orchestrator.py`:
+New public module `knowledge_base/engine/mdt_orchestrator.py`:
 
 ```python
 def orchestrate_mdt(
@@ -324,13 +324,13 @@ def orchestrate_mdt(
     ...
 ```
 
-`generate_plan(...)` **не змінюється** — MDT context опційний шар.
+`generate_plan(...)` **is not changed** — the MDT context is an optional layer.
 
 ### 7.2. CLI
 
-Прапорець `--mdt` у `knowledge_base/engine/cli.py`. Без `--mdt`
-поведінка CLI ідентична поточній. З `--mdt` після Plan summary
-друкується:
+Flag `--mdt` in `knowledge_base/engine/cli.py`. Without `--mdt`
+the CLI behaviour is identical to the current one. With `--mdt`, after
+the Plan summary, the following is printed:
 
 ```
 === MDT Brief ===
@@ -342,38 +342,38 @@ Recommended roles:
 Optional roles:
   - radiation_oncologist: ...
 Open questions (3, 2 blocking):
-  - [BLOCKING] OQ-HBV-SEROLOGY: Чи проведена серологія HBV? (owner: infectious_disease_hepatology)
+  - [BLOCKING] OQ-HBV-SEROLOGY: Has HBV serology been performed? (owner: infectious_disease_hepatology)
   ...
 Data quality:
   Missing critical fields: 2
   Unevaluated red flags: 0
 ```
 
-### 7.3. Інваріанти у тестах
+### 7.3. Invariants in tests
 
-`test_mdt_orchestrator.py` явно перевіряє: після `orchestrate_mdt(...)`
-значення `plan_result.default_indication_id` **незмінне**. Це механічна
-гарантія non-interference.
+`test_mdt_orchestrator.py` explicitly verifies: after `orchestrate_mdt(...)`,
+the value `plan_result.default_indication_id` is **unchanged**. This is a
+mechanical guarantee of non-interference.
 
 ---
 
-## 8. Розширення в майбутньому (не у MVP)
+## 8. Future extensions (not in MVP)
 
-- Per-disease правила role/question (не лише HCV-MZL)
-- Інтеграція з `Indication.required_tests` / `desired_tests` →
-  автоматична генерація OpenQuestion для відсутніх тестів
+- Per-disease role/question rules (not only HCV-MZL)
+- Integration with `Indication.required_tests` / `desired_tests` →
+  automatic OpenQuestion generation for missing tests
 - Persistence event log
-- API для додавання `ProvenanceEvent` від клініцистів (REST endpoint
-  або CLI команда `record-event`)
-- Render layer: візуалізація `DecisionProvenanceGraph` як interactive
-  графа у UI плану
-- Підтримка annotations на Plan (`Plan.annotations[]`) — координація
-  з `PlanAnnotation` модель з `knowledge_base/schemas/plan.py`
+- API for adding `ProvenanceEvent` from clinicians (REST endpoint
+  or CLI command `record-event`)
+- Render layer: visualisation of `DecisionProvenanceGraph` as an interactive
+  graph in the plan UI
+- Support for annotations on Plan (`Plan.annotations[]`) — coordination
+  with the `PlanAnnotation` model from `knowledge_base/schemas/plan.py`
 
 ---
 
-## 9. Зміни у цьому документі
+## 9. Changes in this document
 
-| Версія | Дата | Зміни |
+| Version | Date | Changes |
 |---|---|---|
-| v0.1 | 2026-04-25 | Початковий MVP-spec; покриває HCV-MZL reference case + загальні правила |
+| v0.1 | 2026-04-25 | Initial MVP spec; covers HCV-MZL reference case + general rules |

@@ -63,8 +63,10 @@ not stage, do not move without explicit user instruction.
 
 ## Critical invariants
 
-- **Language:** specs are in Ukrainian and stay Ukrainian. Don't translate
-  unilaterally. Technical terms and license names may stay English inline.
+- **Language:** specs and READMEs are English-canonical. Ukrainian originals
+  are preserved in `uk/` subfolders (e.g. `specs/uk/`, `knowledge_base/uk/`).
+  New spec content should be written in English. Technical terms and license
+  names stay English inline.
 - **LLMs are not the clinical decision-maker** (CHARTER §8.3). Clinical
   recommendations come from a declarative rule engine reading a versioned
   knowledge base. LLMs do only: boilerplate code, doc drafts, extraction
