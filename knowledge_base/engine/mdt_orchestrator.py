@@ -756,6 +756,32 @@ def _unevaluated_red_flags(
     return sorted(out)
 
 
+def _field_unlocks_map(
+    missing_fields: list[str],
+    disease_data: Optional[dict],
+    entities: dict,
+) -> dict[str, list[str]]:
+    """Return {field: [rf_id, ...]} for each missing field that is referenced
+    by at least one relevant RedFlag trigger. Used to cross-link the 'missing'
+    and 'unevaluated' sections so a clinician sees why a field matters."""
+    if not missing_fields or not entities:
+        return {}
+    disease_id = (disease_data or {}).get("id")
+    result: dict[str, list[str]] = {f: [] for f in missing_fields}
+    for eid, info in entities.items():
+        if info.get("type") != "redflags":
+            continue
+        rf = info.get("data") or {}
+        relevant = rf.get("relevant_diseases") or []
+        if relevant and disease_id and disease_id not in relevant:
+            continue
+        refs = set(_trigger_referenced_fields(rf.get("trigger") or {}))
+        for field in missing_fields:
+            if field in refs:
+                result[field].append(eid)
+    return {f: sorted(rfs) for f, rfs in result.items() if rfs}
+
+
 def _data_quality(
     findings: dict[str, Any],
     disease_data: Optional[dict],
@@ -768,12 +794,16 @@ def _data_quality(
     missing_critical = [f for f in critical if not _has(findings, f)]
     missing_recommended = [f for f in recommended if not _has(findings, f)]
     unevaluated = _unevaluated_red_flags(findings, disease_data, entities)
+    field_unlocks = _field_unlocks_map(
+        missing_critical + missing_recommended, disease_data, entities
+    )
 
     return {
         "missing_critical_fields": missing_critical,
         "missing_recommended_fields": missing_recommended,
         "ambiguous_findings": [],
         "unevaluated_red_flags": unevaluated,
+        "field_unlocks": field_unlocks,
         "fields_present_count": sum(1 for v in findings.values() if v not in (None, "")),
         "fields_expected_count": len(critical) + len(recommended),
     }
