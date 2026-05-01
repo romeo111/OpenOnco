@@ -1,0 +1,169 @@
+id: IND-CLL-3L-LISOCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CLL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed / refractory CLL / SLL after ≥2 prior systemic lines including a BTK inhibitor and a BCL-2 inhibitor (covalent BTKi: ibrutinib / acalabrutinib / zanubrutinib; BCL-2i: venetoclax)"
+    - "Progression on or intolerance to both cBTKi and BCL-2i (double-exposed CLL)"
+    - "ECOG 0-2 (TRANSCEND CLL-004 enrolment)"
+    - "Adequate organ function for fludarabine + cyclophosphamide lymphodepletion (ANC ≥1.0, plt ≥75, AST/ALT ≤3× ULN, creatinine clearance ≥60)"
+    - "No prior CD19-directed CAR-T (or sufficient washout per protocol)"
+    - "Manufacturing slot available (~3-week wait acceptable; bridging chemotherapy permitted in window)"
+    - "No active Richter transformation at time of leukapheresis (transformed disease handled per DLBCL pathway)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD19+ confirmed (CD19 typically retained on CLL); CD20 status confirmed at original diagnosis"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+
+recommended_regimen:  # No dedicated CLL liso-cel regimen entity in KB; lymphodepletion + dose mirror DLBCL liso-cel REGIMEN-LISOCEL-DLBCL-3L until CLL-specific REG- entity authored
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~47% (TRANSCEND CLL-004 primary cohort, n≈87 evaluable, double-exposed cBTKi + BCL-2i progression)"
+  complete_response: "~18% (CR + CRi with undetectable MRD ~64% of CR responders)"
+  progression_free_survival: "Median PFS ~12 months overall; deeper / longer in CR + uMRD subset (median PFS not reached at primary analysis)"
+  overall_survival_5y: "Median OS ~30+ months at primary analysis; long-term follow-up ongoing"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+
+red_flags_triggering_alternative:
+  - RF-CLL-INFECTION-SCREENING
+  - RF-CLL-POST-BTKI-C481-ACTIONABLE  # alternative pirtobrutinib pathway if BTK-C481 mutation
+  - RF-CLL-VEN-RESISTANT-ACTIONABLE
+  - RF-CLL-TRANSFORMATION-PROGRESSION  # Richter exclusion
+  - RF-CLL-TP53-DELETION-ACTIONABLE  # high-risk biology consideration
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-MRI-BRAIN-CONTRAST
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Lisocabtagene maraleucel (liso-cel; Breyanzi) received FDA accelerated
+  approval (March 2024) for relapsed/refractory CLL/SLL after ≥2 prior
+  systemic lines including a BTK inhibitor and a BCL-2 inhibitor — the
+  first CAR-T product approved for CLL. Defined 1:1 CD4:CD8 cell
+  composition with 4-1BB costimulation. TRANSCEND CLL-004 (Siddiqi
+  et al., Lancet 2023; updated J Clin Oncol 2024): primary cohort of
+  double-exposed CLL (progression on cBTKi + BCL-2i, n≈87 evaluable)
+  — ORR ~47%, CR + CRi ~18% with deep MRD-negative responses, median
+  PFS ~12 months overall but durable in CR + uMRD subset. CRS profile
+  predominantly low-grade (any ~85%, G≥3 ~9%); ICANS any ~30%,
+  G≥3 ~20% (higher than MCL / DLBCL liso-cel — CLL-specific neurotox
+  signal). Fills critical unmet need in double-exposed CLL where
+  remaining options (pirtobrutinib non-covalent BTKi, alloHCT) have
+  limited durable remissions. Pirtobrutinib (IND-CLL-3L-PIRTOBRUTINIB)
+  remains preferred non-CAR-T 3L option for fit patients with isolated
+  cBTKi resistance (BTK-C481 mutation); liso-cel preferred for
+  pirtobrutinib-failure or rapidly progressing double-exposed disease.
+  Ukraine context: not registered, no domestic CAR-T capacity;
+  international referral pathway (Israel / Poland / Germany / Spain)
+  required. Aggressive-track option for fit double-exposed CLL patients
+  with international referral access.
+
+rationale_ua: >
+  Лісокабтаген маралейцел (liso-cel; Breyanzi) отримав прискорене
+  схвалення FDA (березень 2024) для рецидивної/рефрактерної ХЛЛ/ДЛЛ
+  після ≥2 попередніх системних ліній, включно з BTK інгібітором та
+  BCL-2 інгібітором — перший CAR-T продукт, схвалений для ХЛЛ.
+  Визначене 1:1 співвідношення CD4:CD8 з 4-1BB костимуляцією. TRANSCEND
+  CLL-004 (Siddiqi et al., Lancet 2023; оновлено J Clin Oncol 2024):
+  первинна когорта двічі-експонованої ХЛЛ (прогресія на cBTKi + BCL-2i,
+  n≈87 оцінюваних) — ORR ~47%, ПВ + CRi ~18% з глибокими MRD-негативними
+  відповідями, медіана PFS ~12 місяців загалом, але стійка у підгрупі
+  ПВ + uMRD. Профіль CRS переважно низькоступеневий (будь-який ~85%,
+  G≥3 ~9%); ICANS будь-який ~30%, G≥3 ~20% (вищий за MCL / DLBCL
+  liso-cel — специфічний нейротокс. сигнал у ХЛЛ). Закриває критичну
+  непокриту потребу у двічі-експонованій ХЛЛ, де решта варіантів
+  (піртобрутиніб неконвалентний BTKi, аллоТГСК) мають обмежені стійкі
+  ремісії. Піртобрутиніб (IND-CLL-3L-PIRTOBRUTINIB) залишається
+  переважним некарт 3L варіантом для здатних пацієнтів з ізольованою
+  cBTKi резистентністю (BTK-C481 мутація); liso-cel переважний при
+  невдачі піртобрутинібу або швидкій прогресії двічі-експонованої
+  хвороби. Контекст України: не зареєстрований, немає домашньої
+  CAR-T інфраструктури; необхідне міжнародне направлення (Ізраїль /
+  Польща / Німеччина / Іспанія). Агресивний варіант для здатних
+  пацієнтів з двічі-експонованою ХЛЛ з доступом до міжнародного
+  направлення.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Lisocabtagene maraleucel is a Category 2A preferred third-line+ option for r/r CLL/SLL after progression on both a BTK inhibitor and a BCL-2 inhibitor, per TRANSCEND CLL-004 — first CAR-T approved in CLL."
+  - source_id: SRC-ESMO-CLL-2024
+    position: supports
+    relevant_quote_paraphrase: "CD19 CAR-T cell therapy (lisocabtagene maraleucel) is a recommended option for r/r CLL/SLL with progression on both BTKi and BCL-2i; data from TRANSCEND CLL-004 demonstrate durable remissions in a subset of double-exposed patients."
+
+known_controversies:
+  - topic: "Liso-cel vs pirtobrutinib vs alloHCT for r/r CLL post-cBTKi + BCL-2i"
+    positions:
+      - position: "Pirtobrutinib (non-covalent BTKi) — oral, well-tolerated, ORR ~73% in BRUIN post-cBTKi cohort; preferred for fit patients with isolated cBTKi resistance (BTK-C481 mutation) where BCL-2i has not yet been used or has produced durable response"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Liso-cel — single CAR-T infusion with deep MRD-negative responses in subset; preferred for pirtobrutinib-failure or rapidly progressing double-exposed disease where durable remission is the goal"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Allogeneic HCT — historically the only curative option for r/r CLL; high toxicity (TRM ~15-25%); reserved for young / fit patients where CAR-T inaccessible or failed"
+        sources: [SRC-ESMO-CLL-2024]
+    our_default: "Pirtobrutinib first for fit double-exposed CLL when BTK-C481 actionable; liso-cel for pirtobrutinib-failure or rapidly progressing disease where durable MRD-negative remission valued; alloHCT reserved for selected younger fit patients without other options. In Ukraine pirtobrutinib accessibility variable; CAR-T requires international referral; alloHCT available domestically at major haematology centres."
+    rationale: >
+      Sequencing in double-exposed r/r CLL is unsettled and evolving.
+      MRD-negative depth of response with liso-cel may translate to
+      curative-intent durability in subset; pirtobrutinib provides
+      non-immunotherapy oral option that preserves CAR-T as later
+      salvage. Patient fitness, prior BTK-C481 mutation status, and
+      access pathway drive sequencing decision.
+
+do_not_do:
+  - "НЕ призначати prophylactic systemic corticosteroids — пригнічує CAR-T expansion + знижує efficacy."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) ДО інфузії — fatal CRS можливе."
+  - "НЕ робити в центрі без CAR-T accreditation (FACT/JACIE/REMS) — toxicity management потребує спеціалізованої команди + ICU доступу; ХЛЛ ICANS-сигнал помітно вищий за DLBCL / MCL liso-cel."
+  - "НЕ ігнорувати baseline brain MRI — pre-existing CNS вияви ХЛЛ або транзиторна ішемія підвищують ризик fatal ICANS."
+  - "НЕ призначати при active Richter transformation — трансформоване захворювання обробляється за DLBCL шляхом (окрема Indication, future)."
+  - "НЕ призначати при active uncontrolled infection — лімфодеплеція + CRS = high mortality; ХЛЛ пацієнти типово мають baseline imune dysfunction + hypogammaglobulinemia."
+  - "НЕ забути IVIG для довготривалої hypogammaglobulinemia (IgG <400 + recurrent infections) — ХЛЛ пацієнти часто потребують IVIG довічно через дисфункцію imуноглобулінів незалежно від CAR-T."
+  - "НЕ пропускати pre-treatment HBV / HCV / HIV скринінг — реактивація HBV вимагає entecavir / tenofovir prophylaxis при HBcAb+; CMV / EBV моніторинг бажаний."
+
+time_critical: false
+last_reviewed: "2026-05-01"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+ option
+  for r/r double-exposed CLL/SLL (post-cBTKi + post-BCL-2i) per TRANSCEND
+  CLL-004 — first CAR-T approval in CLL (FDA March 2024). Trial source
+  SRC-TRANSCEND-CLL-004-SIDDIQI-2023 absent from KB at chunk authoring
+  time — citing NCCN-BCELL-2025 + ESMO-CLL-2024 pending source-stub
+  creation (flagged for trial-source ingest follow-up). Missing entity
+  flag: dedicated REG- entity for CLL liso-cel not authored
+  (recommended_regimen empty); lymphodepletion + dose mirrors DLBCL
+  REGIMEN-LISOCEL-DLBCL-3L until CLL-specific regimen authored —
+  flagged for REG follow-up. Pirtobrutinib (IND-CLL-3L-PIRTOBRUTINIB)
+  is preferred non-CAR-T 3L alternative; sequencing driven by patient
+  fitness, BTK-C481 mutation status, and access pathway.
