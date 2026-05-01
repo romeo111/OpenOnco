@@ -65,6 +65,39 @@ ukraine_availability:
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-DLBCL-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Axi-cel for HGBL (high-grade B-cell lymphoma) — same axi-cel pattern
+# as DLBCL. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура у перші 1-2 тижні"
+    action_ua: "Подзвоніть у клініку того ж дня — будь-яка лихоманка може бути CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців"
+    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: '2026-04-27'
 notes: 'ZUMA-1 (Locke 2019): axi-cel in r/r aggressive B-NHL — CR ~58%, durable response ~40% at 24 mo. ZUMA-7 (Locke 2022, NEJM): superior to standard salvage + autoSCT in early-relapse/primary-refractory. CRS + ICANS toxicity require certified CAR-T center.'
 notes_ua: >-

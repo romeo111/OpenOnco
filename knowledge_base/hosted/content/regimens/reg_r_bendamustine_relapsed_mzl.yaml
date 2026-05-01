@@ -37,6 +37,34 @@ ukraine_availability:
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-MZL-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# R-bendamustine for relapsed SMZL/NMZL 2L. Same BR pattern as
+# REG-BR-STANDARD. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
+    action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип, що поширюється або злущується"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко тяжка шкірна реакція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка реакція на ритуксимаб або сепсис"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: '2026-04-27'
 notes: Standard 2L for SMZL/NMZL after rituximab monotherapy failure. ORR ~85-90%; median PFS ~3-4 years. PJP prophylaxis ≥6 mo post-anti-CD20; HBV reactivation surveillance mandatory.
 notes_ua: >-
