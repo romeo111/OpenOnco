@@ -162,6 +162,16 @@ h3 {
 .badge--consult { background: var(--gray-100); color: var(--gray-700); }
 .badge--other { background: var(--gray-100); color: var(--gray-700); }
 
+/* Per-test "Where to order" cell — pre-treatment investigations */
+.lab-avail-cell { font-size: 12px; line-height: 1.5; }
+.lab-chip {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    background: var(--blue-bg); color: var(--blue-700);
+    font-family: var(--font-mono); font-size: 11px;
+    text-decoration: none; white-space: nowrap;
+}
+a.lab-chip:hover { text-decoration: underline; }
+
 /* Lists */
 .role-list { list-style: none; padding: 0; }
 .role-list li {
