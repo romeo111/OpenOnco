@@ -1,0 +1,95 @@
+id: BIO-BRAF-CLASS-II-III
+names:
+  preferred: "BRAF non-V600 mutation (Class II / Class III)"
+  ukrainian: "Мутація BRAF не-V600 (клас II / клас III)"
+  english: "BRAF non-V600 (Class II/III)"
+  synonyms:
+    - "BRAF Class II"
+    - "BRAF Class III"
+    - "BRAF G469A"
+    - "BRAF G469V"
+    - "BRAF K601E"
+    - "BRAF L597"
+    - "BRAF D594"
+    - "BRAF G466"
+    - "BRAF N581"
+
+biomarker_type: gene_mutation
+mutation_details:
+  gene: "BRAF"
+  gene_hugo_id: "HGNC:1097"
+  hotspots:
+    - "Class II (RAS-independent dimers, intermediate-to-high kinase activity): G469A/V/R, K601E, L597Q/R/V"
+    - "Class III (kinase-impaired, RAS-dependent amplifiers): D594G/N/E/V/A, G466V/A/E, N581S/D/I, G596R"
+  variant_type: "missense (non-V600)"
+  functional_impact: >
+    Class II — RAF dimer formation independent of upstream RAS activation;
+    intermediate kinase activity; resistant to monomer-selective Type-I RAF
+    inhibitors (vemurafenib / dabrafenib / encorafenib alone).
+    Class III — kinase-dead or impaired; signal via heterodimerisation with
+    wild-type CRAF; require upstream RTK / RAS activation to drive MAPK
+    signalling.
+
+measurement:
+  method: "DNA-NGS panel (preferred) OR ctDNA NGS. PCR hot-spot panels limited to V600 — miss non-V600."
+  units: "categorical; report variant + class (II vs III) explicitly"
+  sensitivity_requirement: "Standard NGS; tumor cellularity ≥20% recommended"
+
+specimen_requirements:
+  - "FFPE tumor tissue, minimum 20% tumor cellularity"
+  - "Plasma ctDNA acceptable for monitoring; coverage of full BRAF coding region required (not V600-only)"
+
+related_biomarkers:
+  - BIO-BRAF-V600E
+  - BIO-BRAF-V600K
+  - BIO-KRAS  # often co-occurs with Class III; co-mutation alters response
+
+# Schema note: BRAF non-V600 spans 9+ distinct hotspots across two functional
+# classes with class-specific therapeutic implications. Single-variant
+# actionability_lookup cannot represent the class-level decision logic. CIViC
+# annotates several non-V600 hotspots individually; engine resolution for
+# Class II/III decisions belongs at the BMA layer, not biomarker layer.
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-CIVIC
+
+oncokb_skip_reason: multi_allele_mvp
+
+external_ids:
+  hgnc_symbol: "BRAF"
+
+last_reviewed: "2026-04-29"
+notes: >
+  ~5-10% of BRAF-mutant tumors overall (NSCLC, melanoma, CRC) are non-V600;
+  proportion higher in lung adeno where Class II / Class III combined
+  approach the V600 cohort. Distinct from V600 in BOTH biology and therapy.
+  Class II (G469A, K601E, L597) — RAF dimer formation drives signalling;
+  monomer-selective BRAF inhibitors fail; MEK inhibitor (trametinib /
+  binimetinib) monotherapy may show partial activity; pan-RAF dimer
+  inhibitors (e.g., naporafenib / belvarafenib / exarafenib, lifirafenib)
+  in trial. Class III (D594, G466, N581) — kinase-impaired; require
+  upstream RTK activity; treat per RTK driver if present (e.g., EGFR or
+  KRAS-G12C co-mutation), else MEK inhibition limited rationale.
+  CRC Class II / III almost always co-occur with RAS or other MAPK
+  alteration — distinct from V600E CRC (which is targetable per BEACON).
+  Practice gap: PCR-only V600 hot-spot testing misses non-V600 entirely;
+  full BRAF-region NGS required to detect.
+notes_ua: >
+  ~5-10% усіх BRAF-мутантних пухлин (НДРЛ, меланома, КРР) є не-V600;
+  частка вище в аденокарциномі легені де Клас II / Клас III разом
+  наближаються до когорти V600. Відрізняються від V600 і в біології, і в
+  терапії. Клас II (G469A, K601E, L597) — формування димерів RAF керує
+  сигналізацією; монoмер-селективні інгібітори BRAF не діють; монотерапія
+  інгібітором MEK (траметиніб / биниметиніб) може показати часткову
+  активність; пан-RAF димерні інгібітори (напорафеніб / белварафеніб /
+  екзарафеніб, лифирафеніб) у дослідженнях. Клас III (D594, G466, N581) —
+  кіназно-ослаблені; потребують upstream RTK активності; лікувати за RTK
+  драйвером, якщо є (EGFR або KRAS-G12C ко-мутація), інакше MEK-інгібіція
+  обмежено обґрунтована. Класи II / III при КРР майже завжди співіснують
+  з RAS / іншою MAPK альтерацією — відрізняється від V600E КРР (таргетується
+  за BEACON). Практична прогалина: PCR-тестування лише V600 пропускає
+  не-V600 повністю; необхідно повне NGS BRAF-регіону.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
