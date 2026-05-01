@@ -55,6 +55,33 @@ sources:
   - SRC-MAJESTEC-1-MOREAU-2022
   - SRC-NCCN-MM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Teclistamab step-up dosing (cycle 1 inpatient). CRS peak during
+# step-up. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура у дні step-up"
+    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-7 step-up"
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-MAJESTEC-1-MOREAU-2022
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Реакція в місці підшкірної ін'єкції"
+    action_ua: "Чергуйте місця ін'єкцій"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-05-01"
 notes: >
   One-time inpatient step-up induction phase prior to weekly

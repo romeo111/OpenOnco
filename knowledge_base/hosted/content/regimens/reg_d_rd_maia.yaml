@@ -66,6 +66,49 @@ sources:
   - SRC-NCCN-MM-2025
   - SRC-ESMO-MM-2023
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Daratumumab + lenalidomide + dexamethasone (D-Rd) for MM 1L
+# transplant-ineligible (MAIA). Combines dara IRR + len thrombosis +
+# dex insomnia. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Безсоння у дні дексаметазону"
+    action_ua: "Очікувано — приймайте дексаметазон зранку"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-4 of cycle"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Закладеність носа, кашель після інфузії дара"
+    action_ua: "Очікувано від даратумумабу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірна втома, легка нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від дара"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Тяжка реакція на інфузію дара"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

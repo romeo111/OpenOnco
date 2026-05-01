@@ -46,6 +46,47 @@ ukraine_availability:
   notes: "Carboplatin + bevacizumab НСЗУ-фінансовані для рецидивного раку яєчників (часткове покриття); PLD здебільшого OOP. Альтернатива з більшим UA-доступом — REG-CARBO-GEM-BEV-OVARIAN (карбо + гемцитабін + бев)."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-GOG0213-COLEMAN-2017]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Carbo + PLD + bev for platinum-sensitive recurrent ovarian.
+# PLD HFS + bev VTE/HTN/proteinuria. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, болючі тріщини на долонях і стопах"
+    action_ua: "HFS від PLD — крем, м'яке взуття, уникайте тертя"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Бевацизумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Виражений біль на долонях / стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози PLD"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Раптовий гострий біль у животі або задишка"
+    action_ua: "Звертайтесь у лікарню негайно — перфорація або PE"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >
