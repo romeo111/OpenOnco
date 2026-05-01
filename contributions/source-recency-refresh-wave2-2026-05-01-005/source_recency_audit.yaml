@@ -1,0 +1,103 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-005
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit summary required by issue #207. Each entry
+    records URL verification outcome, content currency check (literature-search
+    based), proposed current_as_of, license status, and notes. Maintainer to
+    browser-verify 403s before upserting current_as_of bumps.'
+issue_number: 207
+manifest_count: 5
+audit:
+  - id: SRC-B2222-DEMETRI
+    url_verified: 'no'
+    url_status: missing_url_field
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: pending
+    notes: |
+      Auto-stub source (review_status: pending_clinical_signoff). YAML has no
+      url, doi, or pmid field. Cannot be HTTP-verified. Citation TODO still
+      open per existing notes. B2222 is the historic phase-2 trial of imatinib
+      in advanced GIST (Demetri et al., NEJM 2002; PMID 12181401; DOI
+      10.1056/NEJMoa020461) — clinical content remains a foundational landmark,
+      superseded operationally by S0033 / EORTC 62005 dose-finding and SSG XVIII
+      adjuvant data but still cited as the proof-of-concept reference.
+      Maintainer action needed: backfill citation/url fields before next
+      recency wave can verify URL reachability.
+  - id: SRC-NAVIGATOR
+    url_verified: 'no'
+    url_status: missing_url_field
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: pending
+    notes: |
+      Auto-stub source (review_status: pending_clinical_signoff). YAML has no
+      url, doi, or pmid field. Cannot be HTTP-verified. NAVIGATOR is the
+      single-arm phase-1 trial of avapritinib in PDGFRA D842V-mutant GIST
+      (Heinrich et al., Lancet Oncol 2020; PMID 32615108; DOI
+      10.1016/S1470-2045(20)30269-2). Clinical content remains current
+      (FDA approval Jan 2020 still standard for PDGFRA D842V GIST; no
+      superseding head-to-head). Maintainer action needed: backfill
+      citation/url fields before next recency wave.
+  - id: SRC-BRIM-3-CHAPMAN-2011
+    url_verified: 'no'
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed
+    notes: |
+      HTTP GET to https://pubmed.ncbi.nlm.nih.gov/21639808 returned 403
+      Forbidden (3 attempts including 15s retry-after-403; same result
+      against doi.org canonical). Pattern matches NCBI/NIH bot-protection
+      observed across wave-1 chunks — real browser would succeed.
+      current_as_of NOT bumped from "2011-06-30" because URL reachability
+      not independently confirmed from this client. Content remains current
+      as historical landmark — vemurafenib is still in active use though
+      largely superseded by BRAFi+MEKi combos (already noted in source
+      yaml). License (NEJM subscription) unchanged. Maintainer:
+      browser-verify URL then upsert current_as_of.
+  - id: SRC-BRF113928-PLANCHARD-2016
+    url_verified: replaced-with-https://linkinghub.elsevier.com/retrieve/pii/S1470204516301462
+    url_status: blocked_by_bot_protection_at_pubmed
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed
+    notes: |
+      HTTP GET to https://pubmed.ncbi.nlm.nih.gov/27283860/ returned 403
+      Forbidden (3 attempts). However GET to canonical DOI
+      https://doi.org/10.1016/S1470-2045(16)30146-2 returned 200 via
+      Elsevier (linkinghub.elsevier.com/retrieve/pii/S1470204516301462).
+      DOI is reachable; PubMed mirror is bot-blocked. current_as_of NOT
+      bumped from "2016-07-01" pending maintainer signoff on URL
+      replacement. Clinical content remains current — dabrafenib +
+      trametinib still labelled for BRAF V600E NSCLC; encorafenib +
+      binimetinib (PHAROS, 2023) is alternative not superseder. License
+      (Lancet Oncol subscription) unchanged. Maintainer: confirm URL
+      replacement to Elsevier or DOI canonical, then upsert.
+  - id: SRC-ELIANA-MAUDE-2018
+    url_verified: 'no'
+    url_status: blocked_by_bot_protection
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed
+    notes: |
+      HTTP GET to https://www.nejm.org/doi/full/10.1056/NEJMoa1709866
+      returned 403 Forbidden (3 attempts including 15s retry; same
+      result against doi.org canonical). Pattern matches NEJM
+      bot-protection observed across wave-1 chunks (e.g. ADMIRAL in
+      29-001) — real browser would succeed. current_as_of NOT bumped
+      from "2018-02-01" because URL reachability not independently
+      confirmed from this client. Content remains current — tisa-cel
+      ELIANA still pivotal evidence for B-ALL ≤25 yrs FDA approval; no
+      head-to-head superseder (CAR-T product comparisons remain
+      cross-trial). License (NEJM subscription) unchanged. Maintainer:
+      browser-verify URL then upsert current_as_of.
+status_distribution:
+  ok: 0
+  http_403_bot_blocked: 3
+  missing_url_field: 2
+unresolved_count: 5
+upserts_count: 0

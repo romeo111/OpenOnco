@@ -1,0 +1,18 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-005
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 batch — closes #207. Real HTTP GET checks on 5 manifest
+    sources via stdlib urllib (browser UA, 30s timeout, 3 retries, 403 retry-after-15s).
+    Pattern mirrors source-recency-refresh-2026-04-29-001 (issues #92-#121).'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'Per-source upserts touch only: current_as_of, last_recency_check,
+    recency_check_status_code. Two manifest IDs (SRC-B2222-DEMETRI, SRC-NAVIGATOR)
+    are auto-stubs without URL fields — flagged unresolved in unreachable.yaml. The
+    other three returned HTTP 403 (publisher bot-blocking, real browser would
+    succeed) — flagged in unreachable.yaml; current_as_of NOT bumped because URL
+    not independently confirmed reachable from this client. Content/license/
+    attribution unchanged in all upsert sidecars.'
