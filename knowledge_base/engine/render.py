@@ -245,17 +245,25 @@ def _set_translate_client(client) -> None:
 
 
 def _translate_kb_text(text: str, target_lang: str, source_lang: str = "uk") -> str:
-    """Translate a UA free-text fragment to target_lang via the configured
-    client. Returns the original text if:
-    - target_lang is the source language (no translation needed)
-    - text is empty or whitespace-only
-    - no translate client configured (graceful degrade)
-    - the client raises (network failure, quota, etc.)
+    """Translate a UA free-text fragment to target_lang. Resolution order:
+
+    1. Built-in deterministic UA→EN overrides (engine-emitted strings —
+       MDT reasons, open questions, etc.) — works in Pyodide / offline.
+    2. Live translation client (DeepL / LibreTranslate) if configured.
+    3. Original text as graceful degrade.
+
+    Returns the original text if target_lang is source_lang, text is empty,
+    or no rule + no client matches.
     """
     if not text or not text.strip():
         return text
     if target_lang == source_lang or not target_lang:
         return text
+    if (target_lang or "").lower().startswith("en") and source_lang == "uk":
+        from ._translation_overrides import lookup as _override_lookup
+        hit = _override_lookup(text)
+        if hit is not None:
+            return hit
     client = _get_translate_client()
     if client is None:
         return text
@@ -1070,21 +1078,21 @@ def _render_red_flags_pro_contra(plan, kb_resolved: dict, target_lang: str = "uk
 
     pro_html = (
         '<div class="pc-col pc-col--pro">'
-        '<h3>PRO-AGGRESSIVE</h3>'
-        '<div class="section-sub">Тригери що штовхають до агресивного треку</div>'
+        f'<h3>{_h(_t("pro_aggressive", target_lang))}</h3>'
+        f'<div class="section-sub">{_h(_t("pro_aggressive_sub", target_lang))}</div>'
         f'<ul>{"".join(_rf_li(r) for r in sorted(pro_ids)) or "<li>—</li>"}</ul>'
         '</div>'
     )
     contra_html = (
         '<div class="pc-col pc-col--contra">'
-        '<h3>CONTRA-AGGRESSIVE</h3>'
-        '<div class="section-sub">Жорсткі протипоказання до ескалації</div>'
+        f'<h3>{_h(_t("contra_aggressive", target_lang))}</h3>'
+        f'<div class="section-sub">{_h(_t("contra_aggressive_sub", target_lang))}</div>'
         f'<ul>{"".join(_ci_li(c) for c in contra_items) or "<li>—</li>"}</ul>'
         '</div>'
     )
     return (
         '<section>'
-        '<h2>Red flags — PRO / CONTRA aggressive</h2>'
+        f'<h2>{_h(_t("redflags_pro_contra", target_lang))}</h2>'
         f'<div class="pro-contra">{pro_html}{contra_html}</div>'
         '</section>'
     )
@@ -1113,18 +1121,22 @@ def _render_what_not_to_do(plan, target_lang: str = "uk") -> str:
         return ""
     return (
         '<section>'
-        '<h2>Що НЕ робити</h2>'
-        '<div class="section-sub">Прямі прохібітивні правила, кожне з обґрунтуванням у regimen / supportive care / contraindication</div>'
+        f'<h2>{_h(_t("what_not", target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t("what_not_sub", target_lang))}</div>'
         f'{"".join(blocks)}'
         '</section>'
     )
 
 
-def _render_monitoring_phases(plan) -> str:
+def _render_monitoring_phases(plan, target_lang: str = "uk") -> str:
     """Monitoring schedule phases as a per-track table.
     Per REFERENCE_CASE_SPECIFICATION §1.3 critical."""
     blocks = []
     seen_monitoring_ids: set[str] = set()
+    th_phase = _h(_t("th_phase", target_lang))
+    th_window = _h(_t("th_window", target_lang))
+    th_tests = _h(_t("th_tests", target_lang))
+    th_checks = _h(_t("th_checkpoints", target_lang))
     for t in plan.tracks:
         mon = t.monitoring_data
         if not mon:
@@ -1142,20 +1154,20 @@ def _render_monitoring_phases(plan) -> str:
             checks = ph.get("checkpoints") or []
             checks_html = (
                 "<ul style='padding-left:16px;margin:0;'>"
-                + "".join(f"<li>{_h(c)}</li>" for c in checks)
+                + "".join(f"<li>{_h_t(c, target_lang)}</li>" for c in checks)
                 + "</ul>"
             ) if checks else "—"
             rows.append(
-                f'<tr><td><strong>{_h(ph.get("name", "?"))}</strong></td>'
-                f'<td>{_h(ph.get("window", "—"))}</td>'
-                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h(tests)}</td>'
+                f'<tr><td><strong>{_h_t(ph.get("name", "?"), target_lang)}</strong></td>'
+                f'<td>{_h_t(ph.get("window", "—"), target_lang)}</td>'
+                f'<td style="font-family:var(--font-mono);font-size:11px;">{_h_t(tests, target_lang)}</td>'
                 f'<td>{checks_html}</td></tr>'
             )
         blocks.append(
             f'<h3>{_h(t.label)} · {_h(mid)}</h3>'
             '<table class="tbl">'
-            '<thead><tr><th>Фаза</th><th>Вікно</th>'
-            '<th>Тести</th><th>Контрольні точки</th></tr></thead>'
+            f'<thead><tr><th>{th_phase}</th><th>{th_window}</th>'
+            f'<th>{th_tests}</th><th>{th_checks}</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody>'
             '</table>'
         )
@@ -1163,14 +1175,14 @@ def _render_monitoring_phases(plan) -> str:
         return ""
     return (
         '<section>'
-        '<h2>Monitoring schedule</h2>'
-        '<div class="section-sub">Графік моніторингу за фазами лікування</div>'
+        f'<h2>{_h(_t("monitoring", target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t("monitoring_sub", target_lang))}</div>'
         f'{"".join(blocks)}'
         '</section>'
     )
 
 
-def _render_timeline(plan) -> str:
+def _render_timeline(plan, target_lang: str = "uk") -> str:
     """Horizontal timeline strip composed from Regimen.cycle_length_days +
     total_cycles + MonitoringSchedule.phases. CSS-only, no SVG/JS.
     Per REFERENCE_CASE_SPECIFICATION §1.3 should-have."""
@@ -1195,8 +1207,8 @@ def _render_timeline(plan) -> str:
         if baseline:
             phases_html.append(
                 '<div class="tl-phase tl-phase--baseline">'
-                '<div class="name">Baseline</div>'
-                f'<div class="window">{_h(baseline.get("window", "—"))}</div>'
+                f'<div class="name">{_h(_t("tl_baseline", target_lang))}</div>'
+                f'<div class="window">{_h_t(baseline.get("window", "—"), target_lang)}</div>'
                 '</div>'
             )
 
@@ -1212,7 +1224,7 @@ def _render_timeline(plan) -> str:
             )
             phases_html.append(
                 '<div class="tl-phase tl-phase--induction">'
-                f'<div class="name">Induction · {_h(reg.get("name", "—")[:30])}</div>'
+                f'<div class="name">{_h(_t("tl_induction", target_lang))} · {_h(reg.get("name", "—")[:30])}</div>'
                 f'<div class="window">{_h(window)}</div>'
                 '</div>'
             )
@@ -1222,8 +1234,8 @@ def _render_timeline(plan) -> str:
         if ra:
             phases_html.append(
                 '<div class="tl-phase tl-phase--response">'
-                '<div class="name">Response assessment</div>'
-                f'<div class="window">{_h(ra.get("window", "—"))}</div>'
+                f'<div class="name">{_h(_t("tl_response", target_lang))}</div>'
+                f'<div class="window">{_h_t(ra.get("window", "—"), target_lang)}</div>'
                 '</div>'
             )
 
@@ -1232,8 +1244,8 @@ def _render_timeline(plan) -> str:
         if maint:
             phases_html.append(
                 '<div class="tl-phase tl-phase--maintenance">'
-                '<div class="name">Maintenance</div>'
-                f'<div class="window">{_h(maint.get("window", "—"))}</div>'
+                f'<div class="name">{_h(_t("tl_maintenance", target_lang))}</div>'
+                f'<div class="window">{_h_t(maint.get("window", "—"), target_lang)}</div>'
                 '</div>'
             )
 
@@ -1245,8 +1257,8 @@ def _render_timeline(plan) -> str:
         if fu:
             phases_html.append(
                 '<div class="tl-phase tl-phase--followup">'
-                '<div class="name">Follow-up</div>'
-                f'<div class="window">{_h(fu.get("window", "—"))}</div>'
+                f'<div class="name">{_h(_t("tl_followup", target_lang))}</div>'
+                f'<div class="window">{_h_t(fu.get("window", "—"), target_lang)}</div>'
                 '</div>'
             )
 
@@ -1260,8 +1272,8 @@ def _render_timeline(plan) -> str:
         return ""
     return (
         '<section>'
-        '<h2>Timeline</h2>'
-        '<div class="section-sub">Хронологія лікування — derived from regimen + monitoring schedule</div>'
+        f'<h2>{_h(_t("timeline", target_lang))}</h2>'
+        f'<div class="section-sub">{_h(_t("timeline_sub", target_lang))}</div>'
         f'{"".join(blocks)}'
         '</section>'
     )
@@ -2267,8 +2279,8 @@ def render_plan_html(
     # a richer card-grid view.
     # actionability_layer = getattr(plan_result, "actionability_layer", None)
 
-    body.append(_render_monitoring_phases(plan))
-    body.append(_render_timeline(plan))
+    body.append(_render_monitoring_phases(plan, target_lang))
+    body.append(_render_timeline(plan, target_lang))
 
     # MDT brief inline
     body.append(_render_mdt_section(mdt, target_lang))
