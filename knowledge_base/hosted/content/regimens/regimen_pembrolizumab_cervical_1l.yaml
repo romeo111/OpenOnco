@@ -1,0 +1,100 @@
+id: REG-PEMBROLIZUMAB-CERVICAL-1L
+name: "Pembrolizumab + carboplatin + paclitaxel ± bevacizumab (persistent/recurrent/metastatic cervical 1L PD-L1 CPS ≥1, KEYNOTE-826)"
+name_ua: "Пембролізумаб + карбоплатин + паклітаксель ± бевацизумаб (персистуючий/рецидивний/метастатичний рак шийки матки 1L, PD-L1 CPS ≥1, KEYNOTE-826)"
+alternate_names:
+  - "KEYNOTE-826"
+  - "Pembro + carbo/pacli ± bev cervical"
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg flat IV (alternative 400 mg q6 weeks)"
+    schedule: "Day 1 of each 21-day cycle (or 400 mg q6 weeks) until progression, unacceptable toxicity, or 35 total cycles (~24 months)"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV"
+    schedule: "Day 1 of each 21-day cycle × 6 cycles"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "175 mg/m² IV over 3 hours"
+    schedule: "Day 1 of each 21-day cycle × 6 cycles"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg IV (optional — add if no contraindication: no fistula risk, no prior pelvic RT bowel injury, controlled BP)"
+    schedule: "Day 1 of each 21-day cycle, continued as maintenance with pembrolizumab until progression / toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Chemo × 6 cycles; pembrolizumab + bevacizumab maintenance until progression / toxicity / 35 pembro cycles total"
+
+toxicity_profile: severe
+
+premedication:
+  - "Dexamethasone + diphenhydramine + H2 blocker before paclitaxel (hypersensitivity prophylaxis)"
+  - "5-HT3 antagonist + dexamethasone before chemo (carboplatin/paclitaxel emetogenicity)"
+  - "Acetaminophen ± diphenhydramine for first pembrolizumab cycle (mild infusion reactions)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Reduce paclitaxel by one dose level (175 → 135 mg/m²); discontinue paclitaxel if Grade ≥3 persists"
+    rationale: "Paclitaxel class effect"
+  - condition: "Grade ≥3 hematologic toxicity"
+    modification: "Hold chemo until recovery to ≤Grade 1; reduce carboplatin to AUC 4 and paclitaxel to 135 mg/m²; G-CSF prophylaxis as indicated"
+  - condition: "Grade 2 immune-related AE (pneumonitis, hepatitis, colitis, nephritis)"
+    modification: "Hold pembrolizumab; start prednisolone 0.5–1 mg/kg/day; resume on resolution to ≤Grade 1"
+    rationale: "PD-1 class irAE management"
+    source_refs: [SRC-NCCN-CERVICAL-2025]
+  - condition: "Grade ≥3 immune-related AE (excluding endocrine + skin)"
+    modification: "Permanent discontinuation of pembrolizumab; high-dose steroids (1–2 mg/kg/day); subspecialty consult"
+    source_refs: [SRC-NCCN-CERVICAL-2025]
+  - condition: "Endocrine irAE (thyroiditis, hypophysitis, adrenal insufficiency)"
+    modification: "Hormone replacement; pembrolizumab continues"
+  - condition: "Bevacizumab — Grade ≥3 hypertension despite optimal medical therapy"
+    modification: "Hold bevacizumab; discontinue if uncontrolled or recurrent Grade 4"
+  - condition: "Bevacizumab — proteinuria >2 g/24h"
+    modification: "Hold until <2 g/24h; permanently discontinue if nephrotic syndrome"
+  - condition: "Bevacizumab — GI perforation, fistula (genitourinary, gastrointestinal), severe arterial thromboembolic event"
+    modification: "Permanent discontinuation"
+    rationale: "Cervical-specific risk: prior pelvic RT increases fistula risk"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: "Пембролізумаб, карбоплатин, паклітаксель і бевацизумаб зареєстровані в Україні. Пембролізумаб відшкодовується НСЗУ для деяких показань (NSCLC 1L PD-L1+, меланома, інші) — для раку шийки матки 1L PD-L1 CPS ≥1 наразі НЕ входить у програму НСЗУ; доступ через приватну оплату або благодійні програми. Карбо/пакліксель/бевацизумаб — широко доступні. Передумова: тестування PD-L1 (CPS) методом 22C3 IHC — обмежено доступне у референсних патологічних лабораторіях."
+
+sources:
+  - SRC-KEYNOTE-826-COLOMBO-2021
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-04-29"
+notes: >
+  KEYNOTE-826 (Colombo NEJM 2021, n=617) established pembrolizumab +
+  platinum-doublet (carboplatin or cisplatin + paclitaxel) ± bevacizumab
+  as 1L standard for persistent / recurrent / metastatic cervical
+  cancer with PD-L1 CPS ≥1 (which is ~88% of cervical cancers). PFS HR
+  0.65 (95% CI 0.53–0.79), OS HR 0.67 (95% CI 0.54–0.84) in CPS ≥1
+  population; benefit consistent across all pre-specified subgroups
+  including bevacizumab-add stratum. FDA approval Oct 2021 (CPS ≥1);
+  EMA approval 2022. Bevacizumab add-on per investigator discretion in
+  KEYNOTE-826 — recommended where no contraindication (no high fistula
+  risk from prior pelvic RT, no controlled hypertension, no recent
+  surgery, no thromboembolic history). PD-L1 CPS testing by 22C3 IHC
+  is the companion biomarker. Standard PD-1 irAE spectrum +
+  bevacizumab class AEs (HTN, proteinuria, fistula risk); cervical-
+  specific fistula concern given prior pelvic RT in many patients.
+notes_ua: >
+  KEYNOTE-826 (Colombo NEJM 2021, n=617) встановило пембролізумаб +
+  платиновий дублет (карбоплатин або цисплатин + паклітаксель) ±
+  бевацизумаб як стандарт 1L для персистуючого / рецидивного /
+  метастатичного раку шийки матки з PD-L1 CPS ≥1 (~88% випадків).
+  PFS HR 0.65, OS HR 0.67 у популяції CPS ≥1 — користь стабільна по
+  всіх підгрупах, у тому числі стратифікація з/без бевацизумабу. FDA
+  — жовтень 2021; EMA — 2022. Додавання бевацизумабу — за рішенням
+  лікаря: рекомендовано за відсутності протипоказань (високий ризик
+  фістули після опромінення тазу, неконтрольована гіпертензія,
+  тромбоемболії). Біомаркер: PD-L1 CPS методом 22C3 IHC — обов'язкове
+  тестування перед призначенням.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

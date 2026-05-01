@@ -1,0 +1,88 @@
+id: REG-RETIFANLIMAB-CARBO-PACLI-ANAL-1L
+name: "Retifanlimab + carboplatin + paclitaxel (advanced anal SCC 1L, POD1UM-303)"
+name_ua: "Ретифанлімаб + карбоплатин + паклітаксель (поширений анальний плоскоклітинний рак 1L, POD1UM-303)"
+alternate_names:
+  - "Zynyz + carbo/pacli"
+  - "POD1UM-303"
+
+components:
+  - drug_id: DRUG-RETIFANLIMAB
+    dose: "500 mg flat IV over 30 minutes"
+    schedule: "Q4 weeks (every 4 weeks) — given on day 1 of every other 21-day chemo cycle to align with Q4W schedule, continued as monotherapy after 6 cycles of chemo until progression / unacceptable toxicity / 24 months total"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV"
+    schedule: "Day 1 of each 21-day cycle × 6 cycles"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "175 mg/m² IV"
+    schedule: "Day 1 of each 21-day cycle × 6 cycles"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Chemo × 6 cycles; retifanlimab Q4W up to 24 months total or until progression / unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Dexamethasone + diphenhydramine + H2 blocker before paclitaxel (hypersensitivity prophylaxis)"
+  - "5-HT3 antagonist + dexamethasone before chemo (carboplatin/paclitaxel emetogenicity)"
+  - "Acetaminophen ± diphenhydramine for first retifanlimab cycle (mild infusion reactions)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy"
+    modification: "Reduce paclitaxel by one dose level (175 → 135 mg/m²); discontinue paclitaxel if Grade ≥3 persists"
+    rationale: "Paclitaxel class effect; retifanlimab does not require neuropathy adjustment"
+  - condition: "Grade ≥3 hematologic toxicity (neutropenia / thrombocytopenia)"
+    modification: "Hold chemo until recovery to ≤Grade 1; reduce carboplatin to AUC 4 and paclitaxel to 135 mg/m²; G-CSF prophylaxis as indicated"
+  - condition: "Grade 2 immune-related AE (pneumonitis, hepatitis, colitis, nephritis)"
+    modification: "Hold retifanlimab; start prednisolone 0.5–1 mg/kg/day; resume on resolution to ≤Grade 1 with steroid taper ≥1 month"
+    rationale: "PD-1 class irAE management"
+  - condition: "Grade ≥3 immune-related AE (excluding endocrine + skin)"
+    modification: "Permanent discontinuation of retifanlimab; high-dose steroids (1–2 mg/kg/day); subspecialty consult; consider infliximab / mycophenolate if steroid-refractory"
+  - condition: "Endocrine irAE (thyroiditis, hypophysitis, adrenal insufficiency, T1DM)"
+    modification: "Hormone replacement; usually NOT a discontinuation reason — retifanlimab can continue with replacement therapy"
+  - condition: "Grade ≥3 myocarditis / encephalitis / Stevens-Johnson syndrome"
+    modification: "Permanent discontinuation; high-dose IV steroids; multidisciplinary management"
+  - condition: "Grade ≥3 hypersensitivity to paclitaxel despite premedication"
+    modification: "Discontinue paclitaxel; consider substitution with nab-paclitaxel or docetaxel per institutional protocol"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Ретифанлімаб (Zynyz) не зареєстровано в Україні станом на 2026-04-29 (drlz.com.ua). Карбоплатин і паклітаксель — широко доступні і відшкодовуються НСЗУ. Доступ до ретифанлімабу — через named-patient import (DEC спецдозвіл МОЗ) або EAP Incyte Corporation. Альтернативні PD-1 інгібітори (пембролізумаб, ніволумаб) у деяких країнах застосовуються off-label у анальному SCC до Zynyz, але не зареєстровані в цій нозології."
+
+sources:
+  - SRC-CIVIC
+
+last_reviewed: "2026-04-29"
+notes: >
+  POD1UM-303 (KEYNOTE-style design): 1L randomized Phase III of
+  retifanlimab + carboplatin + paclitaxel vs placebo + carbo/pacli in
+  advanced/metastatic squamous cell carcinoma of the anal canal —
+  reported positive PFS 2024, supporting label expansion beyond the
+  2L monotherapy indication established by POD1UM-202 (n=94, ORR 14%,
+  mDOR 9.5 mo). Retifanlimab is the first PD-1 inhibitor approved
+  (FDA accelerated Mar 2023; EMA Aug 2023) for anal SCC 2L+ post-
+  platinum; POD1UM-303 advances the same agent into the 1L combination
+  setting. Standard PD-1 irAE spectrum (pneumonitis, colitis,
+  endocrinopathies, hepatitis, nephritis, myocarditis) — baseline
+  TSH/T4, cortisol, and full irAE counseling required. Missing source
+  IDs to flag for follow-up: SRC-POD1UM-202, SRC-POD1UM-303,
+  SRC-FDA-ZYNYZ, SRC-NCCN-ANAL-202X, SRC-ESMO-ANAL not yet authored
+  in this KB — citation provisionally via SRC-CIVIC until trial /
+  guideline sources added.
+notes_ua: >
+  POD1UM-303 — рандомізоване дослідження III фази 1L: ретифанлімаб +
+  карбоплатин + паклітаксель проти плацебо + карбо/пакліксель при
+  поширеному / метастатичному плоскоклітинному раку анального каналу
+  — показало позитивний PFS у 2024 році, що обґрунтовує розширення
+  показань поза 2L монотерапію (POD1UM-202). Стандартний спектр irAE
+  PD-1 інгібітора — обов'язкові базові ТТГ/Т4, кортизол і повне
+  консультування пацієнта щодо імуноопосередкованих побічних дій.
+  Брак опорних ідентифікаторів джерел SRC-POD1UM-202, SRC-POD1UM-303,
+  SRC-NCCN-ANAL — позначено для подальшого додавання.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
