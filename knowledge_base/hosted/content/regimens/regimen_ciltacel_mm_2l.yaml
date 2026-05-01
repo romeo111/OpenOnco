@@ -1,0 +1,163 @@
+id: REG-CILTACEL-MM-2L
+name: "Ciltacabtagene autoleucel (cilta-cel) BCMA CAR-T for lenalidomide-refractory R/R multiple myeloma after 1-3 prior lines — single infusion after Flu/Cy lymphodepletion (CARTITUDE-4)"
+name_ua: "Цилтакабтаген аутолейцел (cilta-cel) BCMA CAR-T для леналідомід-рефрактерної р/р множинної мієломи після 1-3 попередніх ліній — одна інфузія після лімфодеплеції Flu/Cy (CARTITUDE-4)"
+alternate_names:
+  - "Cilta-cel 2L"
+  - "Carvykti 2L"
+  - "CARTITUDE-4 regimen"
+
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (CARTITUDE-4 Flu/Cy 300)"
+    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (CARTITUDE-4 Flu/Cy 300)"
+    duration: "3 days, days -5 to -3"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -5
+    optional: false
+    components:
+      - drug_id: DRUG-FLUDARABINE
+        dose: "30 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "300 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+    sources:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+      - SRC-NCCN-MM-2025
+  - name: main
+    purpose_ua: "основна BCMA CAR-T інфузія (раніша лінія — CARTITUDE-4)"
+    purpose_en: "main BCMA CAR-T infusion (earlier line — CARTITUDE-4)"
+    duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-CILTACABTAGENE-AUTOLEUCEL
+        dose: "Target dose 0.75 × 10⁶ CAR-positive viable T cells per kg (range 0.5–1.0 × 10⁶/kg per CARTITUDE-4); single IV infusion"
+        schedule: "Single IV infusion day 0, after lymphodepletion completed (typical interval lymphodepletion → infusion 5-7 days)"
+        route: IV
+    sources:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+      - SRC-NCCN-MM-2025
+
+cycle_length_days:
+total_cycles: "Single infusion (one-time therapy); no maintenance; bridging therapy during 4-6 week manufacturing window for active progressive disease"
+toxicity_profile: severe
+
+premedication:
+  - "Acetaminophen 650-1000 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min before CAR-T infusion"
+  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy"
+  - "Tocilizumab MUST be on-site (≥2 doses, 8 mg/kg each available) BEFORE infusion — for emergency CRS rescue"
+  - "Confirm BCMA expression on plasma cells (universal in MM but documented per protocol)"
+  - "Confirm REMS / FACT-JACIE accreditation of administering center"
+  - "Bridging therapy during 4-6 week manufacturing window — CARTITUDE-4 design used a single PVd / DPd cycle as bridging; minimize steroid exposure in 2 weeks pre-lymphodepletion"
+  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI + neurocognitive baseline"
+  - "IVIG availability for prolonged hypogammaglobulinemia post-CAR-T"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+  - SUP-TLS-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cytokine release syndrome (CRS) Grade 2"
+    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h; ICU monitoring"
+    rationale: "Grade ≥3 CRS lower in CARTITUDE-4 (~1-2%) than CARTITUDE-1 due to earlier-line use + lower tumor burden + protocol mitigation; tocilizumab still first-line"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS"
+    rationale: "Boxed warning persists despite earlier-line use"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "Movement-and-neurocognitive treatment-emergent adverse events (MNT — parkinsonism, cranial-nerve palsy, cerebellar signs)"
+    modification: "High-dose corticosteroids (methylprednisolone 1 g/day × 3 days) + neurology consult; monitor weeks 5-12 post-infusion"
+    rationale: "Cilta-cel-specific delayed-onset neurotoxicity; CARTITUDE-4 incidence reduced (~1%) vs CARTITUDE-1 (~5%) by mitigation strategies (low tumor burden, prompt CRS treatment, neurocognitive screening)"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "Persistent severe cytopenia >Day +30"
+    modification: "G-CSF support; transfusions; thrombopoietin agonist; IVIG for IgG <400 + recurrent infections"
+    rationale: "Prolonged cytopenia common (~25%) post-cilta-cel; on-target / off-tumor BCMA expression on normal plasma cells contributes to hypogammaglobulinemia"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "Lenalidomide-NAIVE or lenalidomide-sensitive disease"
+    modification: "Reconsider — CARTITUDE-4 enrolled lenalidomide-refractory patients only; cilta-cel benefit vs continued IMiD-based therapy in lenalidomide-sensitive disease unproven"
+    rationale: "CARTITUDE-4 eligibility criterion; outside-criterion use lacks RCT evidence"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "Active uncontrolled infection at planned infusion"
+    modification: "Defer infusion until infection resolved; repeat lymphodepletion if interval >2 weeks"
+    rationale: "Lymphodepletion + CRS in active infection = high mortality"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Cilta-cel (Carvykti) NOT registered in Ukraine; NO domestic CAR-T
+    manufacturing. Lymphodepleting fludarabine + cyclophosphamide
+    registered + reimbursed via НСЗУ. International referral pathway
+    required (Israel, Poland, Germany, Spain), USD 400-550K all-in.
+    The 2L indication (CARTITUDE-4) addresses lenalidomide-refractory
+    early-relapse patients — the most common access scenario in
+    Ukraine where lenalidomide is reimbursed but CD38-based triplets
+    less consistently available, producing earlier triple-class
+    exposure than US/EU benchmarks.
+
+sources:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  CARTITUDE-4 (NCT04181827, San-Miguel NEJM 2023, PMID 37272512):
+  randomized phase-3 of single-infusion cilta-cel vs investigator's
+  choice (PVd or DPd) in lenalidomide-refractory R/R multiple
+  myeloma after 1-3 prior lines (n=419, 1:1 randomization).
+  Cilta-cel arm: ORR 84.6%, sCR 73.1%; mPFS not reached vs 11.8 mo
+  control (HR 0.26, p<0.001); 12-mo PFS 75.9% vs 48.6%. Established
+  cilta-cel as superior to standard-of-care triplets in
+  lenalidomide-refractory 2L+ MM. FDA approval Apr 2024 (this 2L
+  indication). MNT mitigation strategies (low tumor burden via
+  bridging, prompt CRS/ICANS rx) reduced delayed-onset
+  neurotoxicity from ~5% (CARTITUDE-1) to ~1% (CARTITUDE-4).
+  Centre must be FACT/JACIE/REMS-accredited. Boxed warnings unchanged
+  from CARTITUDE-1 (CRS, ICANS, MNT, HLH/MAS, prolonged cytopenia,
+  secondary T-cell malignancy). Single curative-intent attempt;
+  no maintenance.
+  STUB — pending Co-Lead sign-off.
+  TODO source: SRC-CARTITUDE-4-SAN-MIGUEL-2023 (NEJM PMID 37272512)
+  not yet registered in KB; CARTITUDE-1 source cited as proxy for
+  trial-design + cilta-cel-specific safety information until
+  CARTITUDE-4 source ingested.
+notes_ua: >
+  CARTITUDE-4 (NCT04181827, San-Miguel NEJM 2023, PMID 37272512):
+  рандомізоване дослідження фази 3 одноразової інфузії cilta-cel
+  vs вибір дослідника (PVd або DPd) у леналідомід-рефрактерній р/р
+  множинній мієломі після 1-3 попередніх ліній (n=419, рандомізація
+  1:1). Група cilta-cel: ORR 84.6%, sCR 73.1%; mPFS не досягнуто
+  vs 11.8 міс. контроль (HR 0.26, p<0.001); 12-міс. PFS 75.9% vs
+  48.6%. Встановлено перевагу cilta-cel над стандартними триплетами
+  у леналідомід-рефрактерній 2L+ MM. Реєстрація FDA — квітень 2024
+  (це 2L показання). Стратегії пом'якшення MNT (низький пухлинний
+  тягар через bridging, швидка терапія CRS/ICANS) зменшили частоту
+  відстроченої нейротоксичності з ~5% (CARTITUDE-1) до ~1%
+  (CARTITUDE-4). Центр має бути FACT/JACIE/REMS-акредитований.
+  Спеціальні попередження в інструкції незмінні з CARTITUDE-1 (CRS,
+  ICANS, MNT, HLH/MAS, тривала цитопенія, вторинні T-клітинні
+  злоякісні новоутворення). Одноразова куративна спроба;
+  підтримуюча терапія відсутня.
+  STUB — очікує клінічного підтвердження Co-Lead.
+  TODO джерело: SRC-CARTITUDE-4-SAN-MIGUEL-2023 (NEJM PMID 37272512)
+  ще не зареєстроване в KB; CARTITUDE-1 джерело цитується як
+  проксі для дизайну дослідження + специфічної для cilta-cel
+  інформації безпеки до моменту іnгестії CARTITUDE-4 джерела.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
