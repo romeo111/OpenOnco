@@ -31,6 +31,39 @@ ukraine_availability:
   notes: "Mogamulizumab NOT registered in Ukraine. Access only via МОЗ exception import OR clinical trial enrollment. Fallback: brentuximab vedotin monotherapy if CD30+, or skin-directed + methotrexate per IA stage."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Mogamulizumab (anti-CCR4) for MF/Sézary 2L+ (MAVORIC). Signature
+# rash + infusion reactions + immune depletion. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Висип на тілі"
+    action_ua: "Очікувано — занотовуйте, фотографуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Виражений висип з пухирями, лущенням, ураженням слизових"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко могамулізумаб може спричиняти SJS"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C, кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія підвищує ризик інфекцій"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "First infusions"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   MAVORIC trial (Kim 2018, Lancet Oncol): mogamulizumab 28% ORR vs

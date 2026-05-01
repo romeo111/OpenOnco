@@ -56,6 +56,50 @@ sources:
   - SRC-NCCN-GASTRIC-2025
   - SRC-ESMO-GASTRIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Paclitaxel + ramucirumab for gastric 2L (RAINBOW). Inherits paclitaxel
+# neuropathy + IRR + ramucirumab anti-VEGF watch axes. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Паклітаксел нейропатія — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Випадання волосся, біль у м'язах через 2-3 дні після паклі"
+    action_ua: "Очікувано — парацетамол допомагає"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 2-7"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Рамуцирумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — рамуцирумаб впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Кровотеча зі шлунка — блювота кров'ю або чорний кал"
+    action_ua: "Звертайтесь у лікарню негайно — у пацієнтів з гастричною пухлиною ризик підвищений"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Сильна реакція на інфузію паклітакселу"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycles 1-2"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+
 last_reviewed: "2026-04-26"
 notes: >
   RAINBOW trial (Wilke 2014): 2L gastric/GEJ adenocarcinoma post-platinum/

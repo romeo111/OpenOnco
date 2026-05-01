@@ -43,6 +43,38 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Brentuximab vedotin monotherapy for relapsed systemic ALCL.
+# Same BV pattern. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Брентуксимаб може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання стає сильним болем"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка реакція на інфузію"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   SGN-35-005 trial (Pro 2012, follow-up 2017): r/r systemic ALCL
