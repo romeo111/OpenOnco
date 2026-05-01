@@ -1,0 +1,102 @@
+id: REG-ERDAFITINIB-UROTHELIAL-2L
+name: "Erdafitinib monotherapy (THOR cohort 1) — 2L+ FGFR2/3-altered metastatic urothelial carcinoma"
+name_ua: "Ерфаданітиніб монотерапія (THOR когорта 1) — 2L+ FGFR2/3-altered мУК"
+alternate_names:
+  - "Erdafitinib"
+  - "Balversa"
+  - "JNJ-42756493"
+
+components:
+  - drug_id: DRUG-ERDAFITINIB
+    dose: "8 mg PO once daily, with up-titration to 9 mg PO once daily on day 14-21 if serum phosphate <5.5 mg/dL and no significant toxicity"
+    schedule: "PO daily, continuous (28-day cycle for accounting)"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+# Class FGFR-TKI supportive-care protocol (encoded in dose_adjustments
+# below; no dedicated SUP entity yet — flagged for future supportive_care
+# expansion):
+#  - Pre-treatment confirmation of FGFR2/3 alteration (mutation OR fusion)
+#    by an FDA-approved companion diagnostic (Therascreen FGFR RGQ
+#    RT-PCR Kit) or comprehensive NGS; THOR enrolled FGFR3 mutations
+#    (S249C, R248C, G370C, Y373C) and FGFR2/3 fusions
+#  - Baseline + serial ophthalmologic exam (q month x4 then q3 mo) for
+#    central serous retinopathy / RPE detachment
+#  - Baseline + pre-cycle serum phosphate; up-titration to 9 mg ONLY
+#    if phosphate <5.5 mg/dL on day 14-21 of cycle 1
+#  - Phosphate binder (sevelamer) protocol + low-phosphate diet
+#  - Nail / skin / mucosal care protocol (high-incidence onycholysis,
+#    paronychia, stomatitis)
+
+dose_adjustments:
+  - condition: "Hyperphosphatemia 5.5-7.0 mg/dL"
+    modification: "Initiate / intensify low-phosphate diet + phosphate binder (sevelamer 800 mg TID); recheck weekly; do NOT up-titrate from 8 to 9 mg"
+    source_refs: [SRC-NCCN-BLADDER-2025]
+  - condition: "Hyperphosphatemia >7.0 mg/dL despite binder"
+    modification: "Hold erdafitinib until ≤5.5 mg/dL, resume at next lower dose level (9 → 8 → 6 → 5 → 4 mg)"
+    source_refs: [SRC-NCCN-BLADDER-2025]
+  - condition: "Hyperphosphatemia >9.0 mg/dL OR end-organ mineralization (cutaneous calcinosis, nephrocalcinosis)"
+    modification: "Discontinue permanently"
+    source_refs: [SRC-NCCN-BLADDER-2025]
+  - condition: "Symptomatic central serous retinopathy OR vision loss (any grade)"
+    modification: "Hold erdafitinib; ophthalmology consult; resume at lower dose only if asymptomatic resolution AND OCT improvement; permanent discontinuation if recurrent or grade ≥3"
+    source_refs: [SRC-NCCN-BLADDER-2025]
+  - condition: "Grade 3 nail toxicity / paronychia / hand-foot syndrome"
+    modification: "Hold until ≤grade 1; resume at next lower dose level; aggressive nail / skin care"
+    source_refs: [SRC-NCCN-BLADDER-2025]
+  - condition: "Strong CYP3A4 OR CYP2C9 inhibitor concomitant"
+    modification: "Avoid combination — erdafitinib AUC substantially increased; if unavoidable monitor for toxicity"
+  - condition: "Strong CYP3A4 inducer concomitant"
+    modification: "Avoid combination — erdafitinib exposure substantially reduced"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: |
+    Ерфаданітиніб НЕ зареєстровано в UA (drlz.com.ua станом на
+    2026-04-30; FDA квітень 2019 — accelerated approval; FDA
+    повне затвердження січень 2024 на основі THOR; EMA — pending).
+    НЕ входить до НСЗУ. Шляхи доступу:
+    - Named-patient import — за рахунок пацієнта;
+    - Janssen EAP (Balversa) — обмежено для FGFR2/3-altered мУК
+      після платини- або PD-(L)1-вмісної терапії;
+    - Cross-border (EU): EU онко-центри (наказ МОЗ 988);
+    - Companion diagnostic: Therascreen FGFR RGQ RT-PCR Kit або
+      comprehensive NGS — обов'язково перед призначенням;
+    - Clinical trials: post-marketing combination studies.
+
+    Альтернатива в 2L+ мУК (доступне в UA):
+    - Енфортумаб ведотин ± пембролізумаб (EV-302, 1L preferred —
+      реєстрація див. drug-level YAML);
+    - Платина-вмісна хіміо (якщо не отримана раніше);
+    - Клінічні дослідження.
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+last_reviewed: "2026-04-29"
+
+notes: >
+  THOR (Loriot NEJM 2023) phase 3, cohort 1: erdafitinib 8 mg PO
+  daily (with up-titration to 9 mg if phosphate <5.5 mg/dL day 14)
+  vs investigator-choice chemotherapy (docetaxel OR vinflunine) in
+  metastatic urothelial carcinoma with selected FGFR2/3 alterations
+  (mutation S249C / R248C / G370C / Y373C OR FGFR2/3 fusion), after
+  ≥1 prior line including PD-(L)1 inhibitor (n=266; 136 erda vs 130
+  chemo). Met primary endpoint mOS 12.1 vs 7.8 mo (HR 0.64,
+  p=0.005), mPFS 5.6 vs 2.7 mo (HR 0.58), ORR 35.3% vs 8.5%. THOR
+  cohort 2 (erda vs pembrolizumab in PD-(L)1-naive) was negative
+  and not used to support labeling. FDA converted accelerated to
+  full approval Jan 2024 based on THOR cohort 1. Class toxicity:
+  hyperphosphatemia (~76%), nail toxicity (~57%), stomatitis,
+  central serous retinopathy (~25%, usually reversible). STUB
+  pending Clinical Co-Lead sign-off. Trial source SRC-THOR-LORIOT-2023
+  not yet authored in KB; cited via NCCN-BLADDER-2025 (urothelial
+  ESMO guideline not yet in KB either — flagged in commit body).
