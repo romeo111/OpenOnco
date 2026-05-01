@@ -42,6 +42,44 @@ ukraine_availability:
     pathway. Servier Ukraine PAP (де доступна).
 
 sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Trifluridine-tipiracil (TAS-102) for mCRC 3L+ (RECOURSE). Oral
+# fluoropyrimidine. Cytopenia + GI dominate. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Приймайте препарат після їжі; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна діарея або запор"
+    action_ua: "Занотовуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — TAS-102 дає значну нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 
 notes: >

@@ -49,6 +49,38 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Bendamustine monotherapy for relapsed PTCL. Same as BR pattern but
+# without rituximab IRR. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, помірна нудота"
+    action_ua: "Зустрічається — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 14-21 день"
+    action_ua: "Подзвоніть у клініку того ж дня — бендамустин дає глибоку тривалу нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип у вигляді почервонілих плям, які злущуються"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко бендамустин може спричиняти тяжкі шкірні реакції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сепсис: лихоманка з ознобом, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   BENTLY trial (Damaj 2013): r/r PTCL — ORR 50%, CR 28% in mixed cohort

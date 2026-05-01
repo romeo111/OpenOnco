@@ -22,6 +22,45 @@ dose_adjustments:
 
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# DRC (dexa + R + cyclophos) for WM 1L. Lower-toxicity alt.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Безсоння у дні дексаметазону"
+    action_ua: "Очікувано — приймайте дексаметазон зранку"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід дає нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід може спричиняти геморагічний цистит; пийте багато води"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильний головний біль, розмиття зору, шум у вухах"
+    action_ua: "Подзвоніть у клініку того ж дня — у WM ризик гіпервіскозного синдрому"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція на ритуксимаб"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Time-limited (6 months) chemoimmuno for WM — preferred when BTKi

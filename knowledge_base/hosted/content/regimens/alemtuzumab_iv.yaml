@@ -36,6 +36,46 @@ ukraine_availability:
   notes: "Alemtuzumab — обмежений у Україні (off-label використання для T-PLL; on-label для MS). Імпортний access required."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Alemtuzumab IV for T-PLL or rare T-cell lymphomas. Anti-CD52 mAb —
+# profound prolonged immunosuppression (CD4 < 200 for months);
+# infusion reactions are dramatic. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузій"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка з ознобом, кашель"
+    action_ua: "Звертайтесь у лікарню негайно — алемтузумаб дає глибоку тривалу імуносупресію; критично виключити інфекцію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип у вигляді пухирців на смузі шкіри"
+    action_ua: "Подзвоніть у клініку того ж дня — реактивація опериєзу часта"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сухий кашель, нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі лімфопенії можлива опортуністична інфекція легень (PJP)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція: задишка, гарячка, висип, втрата свідомості"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "First infusions"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сплутаність свідомості, виражена слабкість"
+    action_ua: "Звертайтесь у лікарню негайно — можливий сепсис або реактивація CMV"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   STUB. SC alemtuzumab менш efektivна для T-PLL — IV preferred. Severe
