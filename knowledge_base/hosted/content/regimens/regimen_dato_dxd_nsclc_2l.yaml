@@ -1,0 +1,65 @@
+id: REG-DATO-DXD-NSCLC-2L
+name: "Datopotamab deruxtecan monotherapy (TROPION-Lung01) — 2L+ NSCLC"
+name_ua: "Датопотамаб дерукстекан моно (TROPION-Lung01) — 2L+ НДРЛ"
+alternate_names:
+  - "Dato-DXd"
+  - "Datroway"
+  - "DS-1062"
+
+components:
+  - drug_id: DRUG-DATOPOTAMAB-DERUXTECAN
+    dose: "6 mg/kg IV every 21 days"
+    schedule: "Day 1 of every 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic prophylaxis per institutional standard (moderate emetogenic risk)"
+  - "Consider steroid-containing eye drops + preservative-free artificial tears for ocular toxicity prophylaxis"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Interstitial lung disease (ILD) / pneumonitis any grade"
+    modification: "Hold for Grade 1; permanently discontinue for Grade ≥2 (per Dato-DXd ILD adjudication framework)"
+    rationale: "ILD is the key class-effect risk for deruxtecan-based ADCs; lower threshold than T-DXd given Dato-DXd ILD experience"
+  - condition: "Stomatitis / oral mucositis Grade ≥2"
+    modification: "Hold; supportive care (steroid mouthwash, dexamethasone oral rinse); resume at reduced dose if persistent"
+  - condition: "Keratitis / ocular surface toxicity Grade ≥2"
+    modification: "Ophthalmology consult; preservative-free lubricants; hold and reduce dose for persistent Grade ≥2"
+  - condition: "Neutropenia Grade ≥3"
+    modification: "Hold until ≤Grade 1; resume at reduced dose; G-CSF per institutional policy"
+  - condition: "Infusion reactions"
+    modification: "Slow infusion; premedication for subsequent cycles; permanent discontinuation for severe reactions"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Datopotamab deruxtecan NOT registered in UA. FDA-approved 2025-01 for
+    EGFR-mutant NSCLC post-targeted-therapy + chemotherapy (TROPION-Lung05
+    + TROPION-Lung01 EGFR subgroup). Access via Daiichi Sankyo / AstraZeneca
+    named-patient pathway, cross-border (EU) per наказ МОЗ 988, or clinical
+    trial.
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+# TODO(source-ingest): TROPION-Lung01 primary trial Source not yet in KB.
+# Citation pending: Ahn et al. JCO 2025 (TROPION-Lung01 phase III);
+# nonsquamous PFS HR 0.84 (95% CI 0.74-0.95) vs docetaxel; ITT OS not
+# significant. Subgroup benefit anchored in actionable-mutation
+# (EGFR-mutant) and nonsquamous histology. Flag per chunk Quality Gate.
+
+last_reviewed: "2026-04-29"
+notes: >
+  TROPION-Lung01 (phase III, n=604): Dato-DXd vs docetaxel in 2L+ advanced
+  NSCLC after platinum-based chemo + checkpoint inhibitor. Nonsquamous
+  PFS benefit (mPFS 5.6 vs 3.7 mo, HR 0.84) drove FDA approval scope
+  restriction to EGFR-mutant NSCLC (TROPION-Lung05 supporting). Squamous
+  subgroup did not benefit. ILD adjudicated rate ~8% all-grade; ocular
+  + stomatitis are dominant non-pulmonary AEs. Patient selection: prefer
+  for nonsquamous, especially EGFR-mutant post-osimertinib + chemo.

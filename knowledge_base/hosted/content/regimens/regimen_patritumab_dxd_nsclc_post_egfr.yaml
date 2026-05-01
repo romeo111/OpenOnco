@@ -1,0 +1,66 @@
+id: REG-PATRITUMAB-DXD-NSCLC-POST-EGFR
+name: "Patritumab deruxtecan monotherapy (HERTHENA-Lung01) — EGFR-mutant NSCLC post-osimertinib + platinum"
+name_ua: "Патритумаб дерукстекан моно (HERTHENA-Lung01) — EGFR-мут НДРЛ після осимертинібу + платини"
+alternate_names:
+  - "HER3-DXd"
+  - "U3-1402"
+
+components:
+  - drug_id: DRUG-PATRITUMAB-DERUXTECAN
+    dose: "5.6 mg/kg IV every 21 days"
+    schedule: "Day 1 of every 21-day cycle"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Antiemetic prophylaxis per institutional standard (moderate emetogenic risk)"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Interstitial lung disease (ILD) / pneumonitis any grade"
+    modification: "Hold for Grade 1 with steroids; permanently discontinue for Grade ≥2"
+    rationale: "Adjudicated ILD ~5% in HERTHENA-Lung01, with rare Grade 5 events; class-effect for deruxtecan ADCs"
+  - condition: "Thrombocytopenia Grade ≥3"
+    modification: "Hold until ≤Grade 1; resume at reduced dose (4.8 → 4.0 mg/kg)"
+    rationale: "Thrombocytopenia is the dominant hematologic AE; cumulative across cycles"
+  - condition: "Neutropenia Grade ≥3 / febrile neutropenia"
+    modification: "Hold until ≤Grade 1; resume at reduced dose; G-CSF support"
+  - condition: "Fatigue Grade ≥3"
+    modification: "Symptom management; dose reduction if persistent"
+  - condition: "Infusion reactions"
+    modification: "Slow infusion; premedication for subsequent cycles"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Patritumab deruxtecan NOT registered in UA and NOT FDA-approved as of
+    2026-04 (FDA CRL 2024-06 over manufacturing, BLA resubmission pending).
+    Access via Daiichi Sankyo / Merck named-patient pathway, cross-border
+    (EU) per наказ МОЗ 988, or HERTHENA-Lung02 / -Lung03 clinical trial.
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+# TODO(source-ingest): HERTHENA-Lung01 primary trial Source not yet in KB.
+# Citation pending: Yu et al. JCO 2023 (HERTHENA-Lung01 phase II);
+# n=225 EGFR-mutant NSCLC post-EGFR-TKI + platinum. ORR 29.8%, mDOR 6.4
+# mo, mPFS 5.5 mo, mOS 11.9 mo. Fixed 5.6 mg/kg dose. Activity across
+# diverse osimertinib resistance mechanisms (C797S, MET, HER2, etc.).
+# Flag per chunk Quality Gate.
+
+last_reviewed: "2026-04-29"
+notes: >
+  HERTHENA-Lung01 (phase II, n=225): patritumab deruxtecan in EGFR-mutant
+  NSCLC after EGFR-TKI (≥80% post-osimertinib) + platinum-based chemo.
+  ORR 29.8%, mDOR 6.4 mo, mPFS 5.5 mo, intracranial ORR 33.3% in
+  measurable brain mets. Activity independent of HER3 expression (no
+  selection biomarker required). HERTHENA-Lung02 phase III vs platinum
+  chemo (post-osimertinib) read out 2024 with PFS benefit but no OS
+  benefit; FDA CRL 2024-06 cited manufacturing concerns, not efficacy.
+  Distinct from Dato-DXd (TROP2 target) — sequencing question post-
+  HERTHENA-Lung02 / TROPION-Lung05.

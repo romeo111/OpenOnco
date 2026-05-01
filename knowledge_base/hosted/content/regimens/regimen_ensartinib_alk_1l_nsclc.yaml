@@ -1,0 +1,69 @@
+id: REG-ENSARTINIB-ALK-1L-NSCLC
+name: "Ensartinib monotherapy (eXalt3) — ALK+ NSCLC, 1L metastatic"
+name_ua: "Енсартиніб моно (eXalt3) — ALK+ НДРЛ, 1L метастатичний"
+alternate_names:
+  - "Ensacove"
+  - "X-396"
+
+components:
+  - drug_id: DRUG-ENSARTINIB
+    dose: "225 mg PO once daily"
+    schedule: "Continuous"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication: []
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Rash Grade ≥2 (dominant AE)"
+    modification: "Topical steroids + antihistamines; hold for Grade ≥3 until ≤Grade 1; resume at reduced dose (200 → 175 → 150 mg QD)"
+    rationale: "Rash is the most distinctive AE vs other ALK-TKIs (~67% all-grade in eXalt3); usually manageable with dermatologic support"
+  - condition: "Hepatic transaminase elevation Grade ≥3"
+    modification: "Hold; resume at lower dose after recovery"
+  - condition: "Pruritus Grade ≥2"
+    modification: "Antihistamines, topical care; dose hold if intolerable"
+  - condition: "Edema (peripheral / periorbital) Grade ≥2"
+    modification: "Diuretics, leg elevation; dose reduction if persistent"
+  - condition: "Severe hepatic impairment (Child-Pugh C)"
+    modification: "Reduce to 150 mg QD; close monitoring"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Ensartinib NOT registered in UA. FDA-approved 2024-12 for ALK+
+    metastatic NSCLC not previously treated with an ALK inhibitor. Access
+    via Xcovery / BeiGene named-patient pathway, cross-border (EU) per
+    наказ МОЗ 988, or clinical trial. Within ALK 1L armamentarium,
+    alectinib (ALEX) and brigatinib (ALTA-1L) remain primary preference;
+    ensartinib is an option where alectinib/brigatinib are unavailable
+    or contraindicated, given less mature OS data.
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+# TODO(source-ingest): eXalt3 primary trial Source not yet in KB.
+# Citation pending: Horn et al. JAMA Oncol 2021 (eXalt3 phase III);
+# n=290 ALK-TKI-naive ALK+ NSCLC; ensartinib vs crizotinib. mPFS 25.8
+# vs 12.7 mo (HR 0.51), independent-review ORR 74 vs 67%, intracranial
+# response in CNS-baseline subset 64 vs 21%. Flag per chunk Quality Gate.
+
+last_reviewed: "2026-04-29"
+notes: >
+  eXalt3 (phase III, n=290): ensartinib vs crizotinib in 1L ALK-TKI-naive
+  ALK+ advanced NSCLC. mPFS 25.8 vs 12.7 mo (HR 0.51), CNS ORR 64 vs 21%
+  in patients with baseline brain mets. Distinguishing AE profile: rash
+  + pruritus dominate (67% all-grade rash; ~12% Grade ≥3) vs alectinib's
+  myalgia/hepatic profile or brigatinib's early pulmonary events.
+  Single daily dose convenient. Choice within ALK 1L: alectinib (ALEX)
+  remains the cross-trial reference for OS + tolerability; brigatinib
+  (ALTA-1L) preferred for high CNS burden; ensartinib is a viable
+  alternative when access / tolerability dictate, but generally not
+  preferred over alectinib/brigatinib/lorlatinib (CROWN) where available.
+  Lorlatinib (CROWN) shows the deepest 1L PFS but with neurocognitive
+  trade-offs.

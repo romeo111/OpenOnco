@@ -1,0 +1,72 @@
+id: REG-ZENOCUTUZUMAB-NRG1-NSCLC
+name: "Zenocutuzumab monotherapy (eNRGy) — NRG1-fusion+ NSCLC (pan-tumor activity)"
+name_ua: "Зенокутузумаб моно (eNRGy) — NRG1-fusion+ НДРЛ (активний у солідних пухлинах з NRG1)"
+alternate_names:
+  - "Bizengri"
+  - "MCLA-128"
+  - "zeno"
+
+components:
+  - drug_id: DRUG-ZENOCUTUZUMAB
+    dose: "750 mg IV every 14 days"
+    schedule: "Day 1 of every 14-day cycle"
+    route: IV
+
+cycle_length_days: 14
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication:
+  - "Antiemetic prophylaxis per institutional standard"
+  - "Acetaminophen + antihistamine pre-infusion (cycle 1) for infusion reaction prophylaxis"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Infusion reactions Grade ≥2"
+    modification: "Slow infusion; premedicate for subsequent cycles; permanent discontinuation for severe (Grade ≥3) reactions"
+    rationale: "Infusion reactions are the dominant AE in eNRGy (~13% all-grade); first-dose split (375 mg + 375 mg) has been used to mitigate"
+  - condition: "Diarrhea Grade ≥3"
+    modification: "Hold; loperamide; resume at lower dose if persistent"
+  - condition: "Hepatic transaminase elevation Grade ≥3"
+    modification: "Hold until recovery; resume at lower dose"
+  - condition: "LVEF decrease ≥10% to <50%"
+    modification: "Hold; cardiology evaluation; HER2/HER3-directed agents carry small cardiac risk"
+  - condition: "Asthenia / fatigue Grade ≥3"
+    modification: "Symptom management; dose hold/reduction if persistent"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Zenocutuzumab NOT registered in UA. FDA-approved 2024-12 for advanced
+    NRG1-fusion+ NSCLC and pancreatic adenocarcinoma (accelerated approval,
+    eNRGy). Access via Merus named-patient pathway, cross-border (EU) per
+    наказ МОЗ 988, or eNRGy / pan-tumor expansion clinical trial. NRG1
+    fusion testing requires RNA-based fusion panel — DNA-based panels
+    routinely miss NRG1 (intronic / large genomic distance).
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+# TODO(source-ingest): eNRGy primary trial Source not yet in KB.
+# Citation pending: Schram et al. Nat Med 2025 (eNRGy phase I/II
+# pan-tumor); n=204 NRG1-fusion+ solid tumors (NSCLC n=93,
+# pancreatic n=36, others n=75). NSCLC ORR 37.2%, mDOR 14.9 mo, mPFS
+# 6.8 mo. Pancreatic ORR 42%, mDOR 9.1 mo. Activity across NRG1
+# partner genes (CD74, SLC3A2, ATP1B1, others). Flag per chunk
+# Quality Gate.
+
+last_reviewed: "2026-04-29"
+notes: >
+  eNRGy (phase I/II pan-tumor, n=204): zenocutuzumab is a HER2 x HER3
+  bispecific that uniquely blocks NRG1-driven HER3 dimerization. NSCLC
+  (n=93) ORR 37.2%, mDOR 14.9 mo, mPFS 6.8 mo. Pancreatic adenocarcinoma
+  (n=36) ORR 42%. Activity independent of fusion partner. FDA approval
+  2024-12 covers BOTH NSCLC and pancreatic. NRG1 fusion prevalence ~0.2%
+  pan-cancer; testing gap is the practical bottleneck — DNA-only NGS
+  routinely misses NRG1 (large intronic breakpoints), RNA fusion assays
+  required. This file is NSCLC-anchored (~46% of treated population);
+  same regimen applies to NRG1-fusion+ pancreatic and other solid
+  tumors. Generally well-tolerated; infusion reactions + diarrhea +
+  fatigue are dominant AEs; rare LVEF decreases.
