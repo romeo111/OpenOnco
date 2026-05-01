@@ -128,9 +128,28 @@ CASE_DIAGNOSTIC_GOLDENS: dict[str, str] = {
     "patient_diagnostic_breast_lump_prebiopsy.json": "WORKUP-SUSPECTED-BREAST",
     "patient_diagnostic_lung_mass_smoker_prebiopsy.json": "WORKUP-SUSPECTED-NSCLC",
     "patient_diagnostic_prostate_psa_elevated_prebiopsy.json": "WORKUP-SUSPECTED-PROSTATE",
+    # Diagnostic-mode expansion 2026-05-01 (13 new cases — covers
+    # workups that had no curated example before): acute leukemia,
+    # CRC, endometrial, GBM, HCC, melanoma, MDS-pancytopenia
+    # (cytopenia-eval), MPN polycythemia, MM, ovarian, RCC, SCLC,
+    # urothelial. Each emits Diagnostic Brief, NOT Treatment Plan
+    # (CHARTER §15.2 C7).
+    "patient_diagnostic_acute_leukemia_circulating_blasts.json": "WORKUP-SUSPECTED-ACUTE-LEUKEMIA",
+    "patient_diagnostic_crc_lgib_iron_deficiency.json": "WORKUP-SUSPECTED-CRC",
+    "patient_diagnostic_endometrial_pmb.json": "WORKUP-SUSPECTED-ENDOMETRIAL",
+    "patient_diagnostic_gbm_focal_neuro_deficit.json": "WORKUP-SUSPECTED-GBM",
+    "patient_diagnostic_hcc_cirrhosis_li_rads.json": "WORKUP-SUSPECTED-HCC",
+    "patient_diagnostic_melanoma_atypical_lesion.json": "WORKUP-SUSPECTED-MELANOMA",
+    "patient_diagnostic_mm_bone_pain_m_protein.json": "WORKUP-SUSPECTED-MULTIPLE-MYELOMA",
+    "patient_diagnostic_mpn_mds_pancytopenia.json": "WORKUP-CYTOPENIA-EVALUATION",
+    "patient_diagnostic_mpn_polycythemia_pruritus.json": "WORKUP-SUSPECTED-MPN-MDS",
+    "patient_diagnostic_ovarian_pelvic_mass_ca125.json": "WORKUP-SUSPECTED-OVARIAN",
+    "patient_diagnostic_rcc_incidental_mass.json": "WORKUP-SUSPECTED-RCC",
+    "patient_diagnostic_sclc_central_lung_siadh.json": "WORKUP-SUSPECTED-SCLC",
+    "patient_diagnostic_urothelial_gross_hematuria.json": "WORKUP-SUSPECTED-UROTHELIAL",
 }
 
-# Combined param list: 60 cases (57 treatment + 3 diagnostic).
+# Combined param list: 73 cases (57 treatment + 16 diagnostic).
 ALL_CASES: list[str] = sorted(
     list(CASE_TREATMENT_GOLDENS.keys()) + list(CASE_DIAGNOSTIC_GOLDENS.keys())
 )
@@ -165,17 +184,20 @@ def kb_validator() -> dict[str, Any]:
 # ── Sanity ────────────────────────────────────────────────────────────────
 
 
-def test_curated_case_count_matches_pr150_scope():
+def test_curated_case_count_matches_expected_scope():
     """Guard against silent drift in the curated case set.
 
-    PR #150 shipped exactly 60 curated patient_*.json files (57
-    treatment + 3 diagnostic). If this count changes, update the
-    golden dicts deliberately rather than letting parametrize drift."""
-    assert len(ALL_CASES) == 60, (
-        f"expected 60 curated cases (PR #150 scope); got {len(ALL_CASES)}"
+    PR #150 shipped 60 curated patient_*.json files (57 treatment +
+    3 diagnostic). The 2026-05-01 diagnostic-mode expansion added 13
+    new diagnostic cases, bringing total to 73 (57 treatment + 16
+    diagnostic). If this count changes, update the golden dicts
+    deliberately rather than letting parametrize drift."""
+    assert len(ALL_CASES) == 73, (
+        f"expected 73 curated cases (PR #150 + 2026-05-01 diagnostic "
+        f"expansion); got {len(ALL_CASES)}"
     )
     assert len(CASE_TREATMENT_GOLDENS) == 57
-    assert len(CASE_DIAGNOSTIC_GOLDENS) == 3
+    assert len(CASE_DIAGNOSTIC_GOLDENS) == 16
 
 
 def test_golden_files_exist_on_disk():

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco · Workup Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --green-900: #0a2e1a; --green-800: #0d3f24; --green-700: #14532d;
+    --green-600: #166534; --green-500: #16a34a; --green-400: #22c55e;
+    --green-300: #4ade80; --green-200: #86efac; --green-100: #dcfce7;
+    --green-50: #f0fdf4; --teal: #0d9488; --teal-dark: #115e59;
+    --red-alert: #dc2626; --red-bg: #fef2f2;
+    --amber-alert: #d97706; --amber-bg: #fffbeb;
+    --blue-bg: #eff6ff; --blue-700: #1d4ed8;
+    --purple-bg: #faf5ff; --purple-700: #7e22ce;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+    font-family: var(--font-body); color: var(--gray-900);
+    background: var(--gray-50); line-height: 1.55;
+}
+.page {
+    max-width: 920px; margin: 0 auto; padding: 32px 48px;
+    background: white; min-height: 100vh;
+    box-shadow: 0 0 24px rgba(0,0,0,.04);
+}
+@media print {
+    body { background: white; }
+    .page { box-shadow: none; padding: 16mm; max-width: 100%; }
+    @page { size: A4; margin: 12mm; }
+    .no-print { display: none; }
+    section { page-break-inside: avoid; }
+}
+
+/* Header */
+.doc-header {
+    border-bottom: 2px solid var(--green-700);
+    padding-bottom: 18px; margin-bottom: 24px;
+}
+.doc-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--green-700); margin-bottom: 8px;
+}
+.doc-title {
+    font-family: var(--font-display); font-size: 32px; line-height: 1.15;
+    color: var(--green-900); margin-bottom: 6px;
+}
+.doc-sub {
+    font-size: 14px; color: var(--gray-500);
+    font-family: var(--font-mono);
+}
+
+/* Patient strip */
+.patient-strip {
+    background: var(--green-50); border-left: 4px solid var(--green-600);
+    padding: 14px 18px; margin-bottom: 22px; border-radius: 4px;
+}
+.patient-strip .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--green-700); margin-bottom: 4px;
+}
+.patient-strip .value { font-size: 15px; color: var(--gray-900); }
+
+/* Banner — diagnostic phase */
+.banner {
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 22px;
+    border-left: 4px solid; font-size: 14px; line-height: 1.55;
+}
+.banner--diagnostic {
+    background: var(--amber-bg); border-color: var(--amber-alert);
+    color: #92400e;
+}
+.banner--diagnostic strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.banner--info {
+    background: var(--green-50); border-color: var(--green-500);
+    color: var(--green-800);
+}
+.banner--alert {
+    background: var(--red-bg); border-color: var(--red-alert);
+    color: #991b1b;
+}
+
+/* Sections */
+section { margin-bottom: 28px; }
+h2 {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
+    color: var(--green-800); margin-bottom: 12px;
+}
+.section-sub {
+    font-size: 13px; color: var(--gray-500); margin-bottom: 14px;
+    font-family: var(--font-mono);
+}
+h3 {
+    font-size: 14px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin: 18px 0 10px; color: var(--gray-700);
+}
+
+/* Tracks (treatment plan) */
+.tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.track {
+    border: 1px solid var(--gray-200); border-radius: 10px; padding: 18px;
+    background: white;
+}
+.track--default { border-left: 4px solid var(--green-600); }
+.track--alternative { border-left: 4px solid var(--gray-500); }
+.track--surveillance { border-left: 4px solid var(--teal); }
+.track--palliative { border-left: 4px solid var(--purple-700); }
+.track-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+}
+.track-name { font-family: var(--font-display); font-size: 18px; }
+.track-default-badge {
+    background: var(--green-100); color: var(--green-700);
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); text-transform: uppercase;
+}
+.track dl { font-size: 13px; }
+.track dt { font-weight: 700; color: var(--gray-700); margin-top: 8px; }
+.track dd { color: var(--gray-700); margin-left: 0; }
+.track ul { font-size: 13px; padding-left: 18px; }
+
+/* Tables — workup steps, etc. */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th {
+    background: var(--green-700); color: white; padding: 8px 10px;
+    text-align: left; font-size: 11px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.tbl td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr:nth-child(even) td { background: var(--gray-50); }
+
+/* Badges */
+.badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; font-family: var(--font-mono);
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge--required { background: var(--red-bg); color: #b91c1c; }
+.badge--recommended { background: var(--blue-bg); color: var(--blue-700); }
+.badge--optional { background: var(--gray-100); color: var(--gray-700); }
+.badge--blocking { background: var(--red-bg); color: #b91c1c; }
+.badge--default { background: var(--green-100); color: var(--green-700); }
+.badge--lab { background: var(--blue-bg); color: var(--blue-700); }
+.badge--imaging { background: var(--purple-bg); color: var(--purple-700); }
+.badge--histology { background: var(--amber-bg); color: #92400e; }
+.badge--consult { background: var(--gray-100); color: var(--gray-700); }
+.badge--other { background: var(--gray-100); color: var(--gray-700); }
+
+/* Lists */
+.role-list { list-style: none; padding: 0; }
+.role-list li {
+    padding: 10px 0; border-bottom: 1px dashed var(--gray-200);
+}
+.role-list li:last-child { border-bottom: none; }
+.role-list .role-name { font-weight: 600; color: var(--gray-900); }
+.role-list .role-reason {
+    font-size: 13px; color: var(--gray-700); margin-top: 4px;
+}
+.role-list .role-questions {
+    font-size: 12px; color: var(--gray-500); margin-top: 4px;
+    font-family: var(--font-mono);
+}
+
+.q-list { list-style: none; padding: 0; }
+.q-list li {
+    padding: 12px 14px; margin-bottom: 8px;
+    border-radius: 6px; background: var(--gray-50);
+    border-left: 3px solid var(--gray-200);
+}
+.q-list li.blocking {
+    border-left-color: var(--red-alert); background: var(--red-bg);
+}
+.q-list .q-id {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--gray-500); margin-bottom: 4px;
+}
+.q-list .q-text { font-size: 14px; color: var(--gray-900); margin-bottom: 4px; }
+.q-list .q-rationale { font-size: 12px; color: var(--gray-700); font-style: italic; }
+.q-list .q-owner {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--green-700); margin-top: 4px;
+}
+
+/* MDT block */
+.mdt {
+    background: var(--green-50); border-radius: 10px; padding: 18px;
+    margin-top: 14px;
+}
+
+/* Steps timeline (workup) */
+.steps { padding-left: 0; list-style: none; }
+.steps li {
+    padding: 10px 0 10px 36px; position: relative;
+    border-bottom: 1px solid var(--gray-100);
+}
+.steps li:last-child { border-bottom: none; }
+.steps .step-num {
+    position: absolute; left: 0; top: 12px; width: 24px; height: 24px;
+    background: var(--green-600); color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--font-mono);
+}
+.steps .step-name { font-weight: 600; color: var(--gray-900); }
+.steps .step-rationale { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* Sources */
+.sources { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.sources li { padding: 4px 0; }
+
+/* Etiological driver — featured card for etiologically_driven archetype */
+.etiology-card {
+    background: linear-gradient(135deg, var(--green-50) 0%, white 100%);
+    border-left: 4px solid var(--teal); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 22px;
+}
+.etiology-card .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+}
+.etiology-card .archetype {
+    font-family: var(--font-display); font-size: 18px; color: var(--green-900);
+    margin-bottom: 8px;
+}
+.etiology-card ul { padding-left: 20px; font-size: 14px; color: var(--gray-700); }
+.etiology-card ul li { padding: 3px 0; }
+
+/* PRO/CONTRA — two-column grid for red flags */
+.pro-contra { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pc-col { border: 1px solid var(--gray-200); border-radius: 8px; padding: 14px; }
+.pc-col--pro { border-left: 4px solid var(--amber-alert); background: var(--amber-bg); }
+.pc-col--contra { border-left: 4px solid var(--red-alert); background: var(--red-bg); }
+.pc-col h3 { color: var(--gray-900); margin-top: 0; }
+.pc-col ul { padding-left: 20px; font-size: 13px; color: var(--gray-700); }
+.pc-col li { padding: 4px 0; }
+.pc-col .rf-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    display: block; margin-top: 2px;
+}
+
+/* Branch-explanation — actually-fired RFs from the engine trace, with
+   the conflict-resolution winner highlighted. Distinct from PRO/CONTRA
+   above (which lists possible triggers in the abstract). */
+.branch-explanation { margin: 18px 0; }
+.branch-explanation .branch-step {
+    background: var(--green-bg, #ecfdf5); border-left: 4px solid var(--green-700, #047857);
+    padding: 10px 14px; border-radius: 6px; margin-bottom: 10px;
+}
+.branch-explanation .branch-step-head {
+    font-size: 13px; color: var(--gray-700); margin-bottom: 6px; font-weight: 600;
+}
+.branch-explanation .branch-step ul {
+    margin: 0; padding-left: 20px; font-size: 13px; color: var(--gray-700);
+}
+.branch-explanation .branch-step li { padding: 3px 0; line-height: 1.5; }
+.branch-explanation .rf-winner-tag {
+    font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.5px;
+    background: var(--green-700, #047857); color: white;
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px; vertical-align: 1px;
+}
+.branch-explanation .src-chip {
+    font-family: var(--font-mono); font-size: 9.5px;
+    background: var(--gray-100); color: var(--gray-700);
+    padding: 1px 6px; border-radius: 3px; margin-left: 4px;
+}
+
+/* Do-not — strongly framed prohibitive list */
+.do-not {
+    background: var(--red-bg); border-left: 4px solid var(--red-alert);
+    border-radius: 6px; padding: 14px 18px; margin-bottom: 12px;
+}
+.do-not .track-name {
+    font-family: var(--font-display); font-size: 15px; color: var(--gray-900);
+    margin-bottom: 8px;
+}
+.do-not ul { padding-left: 20px; font-size: 13px; color: #7f1d1d; }
+.do-not li { padding: 3px 0; }
+
+/* Timeline — horizontal phase strip */
+.timeline {
+    display: flex; gap: 4px; margin-top: 8px;
+    overflow-x: auto; padding-bottom: 8px;
+}
+.tl-phase {
+    flex: 1; min-width: 120px;
+    background: var(--green-100); border-radius: 6px;
+    padding: 10px 12px; border-top: 3px solid var(--green-600);
+}
+.tl-phase--baseline { border-top-color: var(--teal); background: #ccfbf1; }
+.tl-phase--induction { border-top-color: var(--green-600); background: var(--green-100); }
+.tl-phase--response { border-top-color: var(--amber-alert); background: var(--amber-bg); }
+.tl-phase--maintenance { border-top-color: var(--blue-700); background: var(--blue-bg); }
+.tl-phase--followup { border-top-color: var(--gray-500); background: var(--gray-100); }
+.tl-phase .name {
+    font-weight: 700; font-size: 12px; color: var(--gray-900);
+    margin-bottom: 4px;
+}
+.tl-phase .window {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+}
+
+/* Footer */
+.doc-footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+    font-size: 11px; color: var(--gray-500); line-height: 1.6;
+}
+.fda-disclosure {
+    background: var(--gray-50); padding: 14px; border-radius: 6px;
+    margin-bottom: 14px; font-size: 12px; color: var(--gray-700);
+}
+.fda-disclosure strong { color: var(--gray-900); }
+.version-chain {
+    font-family: var(--font-mono); font-size: 11px;
+    background: var(--gray-100); padding: 8px 12px; border-radius: 4px;
+    margin-bottom: 10px;
+}
+.medical-disclaimer {
+    font-style: italic; color: var(--gray-700); font-size: 11px;
+    border-left: 2px solid var(--gray-200); padding-left: 12px;
+}
+
+/* Skill metadata badge inline with each role */
+.skill-meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--gray-500); margin-top: 4px;
+    display: flex; flex-wrap: wrap; gap: 10px;
+}
+.skill-meta .pill {
+    padding: 1px 6px; border-radius: 3px; background: var(--gray-100);
+}
+.skill-meta .pill--reviewed { background: var(--green-100); color: var(--green-700); }
+.skill-meta .pill--stub { background: var(--amber-bg); color: var(--amber); }
+
+/* Skill catalog block */
+.skill-catalog { margin-top: 18px; }
+.skill-catalog table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.skill-catalog th {
+    text-align: left; padding: 6px 8px; background: var(--gray-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--gray-700);
+}
+.skill-catalog td {
+    padding: 6px 8px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.skill-catalog tr.activated td:first-child::before {
+    content: "✓ "; color: var(--green-600); font-weight: 700;
+}
+.skill-catalog tr.dormant { color: var(--gray-500); }
+.skill-catalog tr.dormant td:first-child::before {
+    content: "○ "; color: var(--gray-500);
+}
+.skill-catalog .ver {
+    font-family: var(--font-mono); color: var(--gray-700);
+}
+
+/* Access Matrix (ua-ingestion plan §4) */
+.access-matrix { margin-top: 32px; padding: 20px; background: var(--green-50);
+    border: 1px solid var(--green-200); border-radius: 6px;
+}
+.access-matrix details { width: 100%; }
+.access-matrix summary {
+    cursor: pointer; list-style: none; display: flex; flex-direction: column;
+    gap: 4px; padding: 4px 0;
+}
+.access-matrix summary::-webkit-details-marker { display: none; }
+.access-matrix summary::before {
+    content: "▶ "; color: var(--green-700); font-size: 12px; margin-right: 4px;
+}
+.access-matrix details[open] summary::before { content: "▼ "; }
+.access-matrix summary h2 {
+    display: inline; font-family: var(--font-display); font-size: 22px;
+    color: var(--green-900); margin: 0;
+}
+.access-matrix .section-sub { font-size: 12px; color: var(--gray-700); }
+.access-matrix-table {
+    width: 100%; border-collapse: collapse; margin-top: 14px;
+    font-size: 12.5px; background: white;
+}
+.access-matrix-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-100);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; color: var(--green-700);
+    border-bottom: 1px solid var(--green-200);
+}
+.access-matrix-table td {
+    padding: 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top;
+}
+.access-matrix-table tr:last-child td { border-bottom: none; }
+.access-matrix-table .track-cell { width: 32%; }
+.access-matrix-table .regimen-name {
+    font-size: 11.5px; color: var(--gray-700); margin-top: 3px;
+}
+.access-matrix-table .regimen-id {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .cost-cell { width: 22%; font-variant-numeric: tabular-nums; }
+.access-matrix-table .cost-row { line-height: 1.5; }
+.access-matrix-table .cost-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-500);
+    margin-right: 4px;
+}
+.access-matrix-table .cost-trial {
+    color: var(--green-700); font-style: italic;
+}
+.access-matrix-table .cost-unknown {
+    color: var(--amber-alert); font-style: italic;
+}
+.access-matrix-table .pathway-cell { width: 22%; font-size: 11.5px; }
+.access-matrix-table .pathway-cell .alt-paths {
+    font-size: 10px; color: var(--gray-500);
+}
+.access-matrix-table .badge--ok { background: var(--green-100); color: var(--green-700); }
+.access-matrix-table .badge--no { background: var(--red-bg); color: var(--red-alert); }
+.access-matrix-table .badge--unknown { background: var(--gray-100); color: var(--gray-500); }
+.access-matrix-table .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.access-matrix-table tr.track-trial { background: var(--purple-bg); }
+.access-matrix-table .notes {
+    font-size: 11px; color: var(--gray-700); margin-top: 4px; font-style: italic;
+}
+.access-matrix-table .notes-stale {
+    font-size: 11px; color: var(--amber-alert); margin-top: 4px; font-weight: 600;
+}
+.access-matrix-table .more-notes {
+    cursor: help; color: var(--gray-500); font-size: 10px; margin-left: 4px;
+    border-bottom: 1px dotted var(--gray-500);
+}
+.access-matrix .matrix-disclaimer {
+    margin-top: 10px; font-size: 11px; color: var(--gray-500); font-style: italic;
+}
+.access-matrix .matrix-plan-notes {
+    margin: 10px 0 4px 0; padding: 8px 12px; background: var(--amber-bg);
+    border-left: 3px solid var(--amber-alert); list-style: none; font-size: 12px;
+    color: var(--gray-900);
+}
+@media print {
+    .access-matrix { background: white; border: 1px solid var(--gray-200); }
+    .access-matrix details { width: 100%; }
+    .access-matrix summary::before { content: ""; }
+    .access-matrix details:not([open]) > *:not(summary) { display: block; }
+}
+
+/* Variant actionability — ESCAT tier badges */
+.variant-actionability { margin: 22px 0; }
+.variant-actionability h2 { color: var(--green-800); }
+.variant-actionability .section-sub {
+    font-size: 12px; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--font-mono);
+}
+.actionability-table {
+    width: 100%; border-collapse: collapse; font-size: 12.5px;
+    background: white; border: 1px solid var(--gray-200); border-radius: 6px;
+    overflow: hidden;
+}
+.actionability-table th {
+    text-align: left; padding: 8px 10px; background: var(--green-700); color: white;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase; font-weight: 600;
+}
+.actionability-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--gray-100);
+    vertical-align: top; color: var(--gray-700);
+}
+.actionability-table tr:last-child td { border-bottom: none; }
+.actionability-table tbody tr:nth-child(even) td { background: var(--gray-50); }
+.actionability-table .gene { font-family: var(--font-mono); font-weight: 600; color: var(--gray-900); }
+.actionability-table .variant { font-family: var(--font-mono); color: var(--gray-700); }
+.actionability-table .summary { font-size: 12px; color: var(--gray-700); }
+.actionability-table .combos { font-size: 12px; color: var(--gray-700); }
+.actionability-table .src-list {
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--gray-500);
+}
+.actionability-table .src-list li { padding: 1px 0; list-style: none; }
+.actionability-table .empty-row td {
+    text-align: center; color: var(--gray-500); font-style: italic;
+    padding: 14px 10px;
+}
+
+/* Tier badges — ESCAT (IA/IB green; IIA/IIB yellow; IIIA/IIIB orange;
+   IV light gray; X gray). Per-source level details render via
+   .evidence-sources <ul> in the same row. */
+.tier-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.4px; white-space: nowrap;
+}
+.escat-IA, .escat-IB { background: #16a34a; color: white; }
+.escat-IIA, .escat-IIB { background: #facc15; color: #713f12; }
+.escat-IIIA, .escat-IIIB { background: #f97316; color: white; }
+.escat-IV { background: var(--gray-100); color: var(--gray-700); }
+.escat-X { background: var(--gray-200); color: var(--gray-700); }
+
+/* Per-source evidence list inside each actionability row */
+.evidence-sources {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px;
+}
+.evidence-sources li { padding: 1px 0; color: var(--gray-700); }
+.evidence-sources .evidence-meta { color: var(--gray-500); font-size: 10px; }
+.evidence-sources a { color: var(--green-700); text-decoration: none; }
+.evidence-sources a:hover { text-decoration: underline; }
+
+/* Resistance evidence flag — ⚠ badge for direction="Does Not Support"
+   or significance contains "Resistance" (CIViC anti-evidence). */
+.evidence-resistance {
+    display: inline-block; padding: 0 6px; margin-left: 4px;
+    border-radius: 3px;
+    background: #fee2e2; color: #991b1b;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+}
+
+/* Fallback rendering — when leveled evidence is unavailable,
+   primary_sources are promoted as citation cards without a level.
+   Visually muted relative to leveled evidence. */
+.evidence-sources--fallback li.evidence-fallback {
+    color: var(--gray-600); font-style: italic;
+}
+.evidence-fallback-note {
+    margin-top: 4px;
+    font-size: 10px; color: var(--gray-500);
+    font-family: var(--font-sans); font-style: italic;
+}
+
+/* NSZU availability badges — per-drug coverage flag rendered alongside
+   each component in the track's drug list. Render-time metadata only
+   (engine never reads these — CHARTER §8.3 invariant). */
+.nszu-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; white-space: nowrap;
+    margin-left: 6px; vertical-align: middle;
+}
+.nszu-covered { background: #d4edda; color: #155724; }
+.nszu-partial { background: #fff3cd; color: #856404; }
+.nszu-oop { background: #ffe5cc; color: #804000; }
+.nszu-not-registered { background: #f8d7da; color: #721c24; }
+
+/* ── Sign-off badges (CHARTER §6.1) ──────────────────────────────
+   Surfaces Clinical Co-Lead approval state on each track in the
+   treatment Plan render. Emitted by render._render_signoff_badge.
+   Mirrored in docs/style.css for the static-site renderer. */
+.track-signoff { margin: 4px 0 8px 0; }
+.signoff-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 4px;
+    font-size: 0.85em; font-weight: 600; line-height: 1.3;
+    border: 1px solid transparent;
+}
+.signoff-pending {
+    background: #fef2f2; color: #991b1b; border-color: #fecaca;
+}
+.signoff-partial {
+    background: #fffbeb; color: #92400e; border-color: #fde68a;
+}
+.signoff-complete {
+    background: #ecfdf5; color: #065f46; border-color: #a7f3d0;
+}
+
+.drug-list { list-style: none; padding-left: 0; margin: 4px 0; }
+.drug-list .drug-row { padding: 3px 0; line-height: 1.5; }
+.drug-list .drug-name { font-weight: 600; }
+.drug-list .drug-id { font-family: var(--font-mono); font-size: 11px; color: var(--gray-500); }
+.drug-list .drug-dose { color: var(--gray-700); font-size: 12px; margin-left: 4px; }
+
+/* Treatment phases — multi-phase regimen rendering (PR2 of phases-refactor).
+   Each phase is a discrete block with its own heading + drug list. Legacy
+   auto-wrapped single-phase regimens (name="main") render the wrapper but
+   suppress the heading, keeping the visual close to pre-PR2 for unmigrated
+   YAMLs. Multi-phase regimens (lymphodepletion → main_infusion for axi-cel,
+   etc.) render as visually separated blocks per
+   docs/reviews/regimen-phases-refactor-plan-2026-04-28.md §4.4. */
+.phase-block {
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    padding: 10px 14px; margin-bottom: 8px; background: var(--gray-50);
+}
+.phase-block:last-child { margin-bottom: 4px; }
+.phase-block[data-phase="main"]:only-of-type {
+    /* Auto-wrapped legacy regimen — single block, no border noise. */
+    border: none; padding: 0; background: transparent;
+}
+.phase-block .phase-heading {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--green-700); margin: 0 0 6px 0; font-weight: 700;
+}
+.phase-block .drug-list { margin: 0; }
+
+/* Bridging options block — CAR-T / TIL manufacturing-window slot. Lists
+   acceptable bridging regimen IDs; rendered after all phase blocks. */
+.bridging-options {
+    margin-top: 10px; padding: 10px 14px; background: var(--blue-bg);
+    border-left: 3px solid var(--blue-700); border-radius: 4px;
+}
+.bridging-options .bridging-options-label {
+    font-size: 12px; color: var(--blue-700);
+    font-weight: 600; margin-bottom: 4px;
+}
+.bridging-options-list {
+    list-style: none; padding-left: 0; margin: 0;
+    font-family: var(--font-mono); font-size: 11px; color: var(--gray-700);
+}
+.bridging-options-list li.bridging-option { padding: 2px 0; }
+
+/* PR5 — citation-presence guard
+   `.no-citation-badge` is the WARN-mode flag rendered inline at the top of
+   any Regimen / Indication / BMA cell whose declared sources fail to
+   resolve to a real Source entity. It uses a soft amber palette so it
+   reads as a warning without overpowering surrounding clinical content.
+   `.stripped-block` is the STRICT-mode placeholder that replaces the
+   block body when the same condition fires.
+
+   Source: docs/reviews/cross-repo-task_torrent-sync-plan-2026-04-28.md
+   §6 verifier algorithms — item #1 "Cite-or-strip at render". */
+.no-citation-badge {
+  display: inline-block;
+  background: #fff8e1;
+  color: #6d4c00;
+  border: 1px solid #ffd54f;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  margin: 4px 0;
+}
+.stripped-block {
+  background: #fafafa;
+  border: 1px dashed #bbb;
+  color: #888;
+  padding: 8px;
+  font-style: italic;
+  text-align: center;
+}
+</style>
+<style>.oo-topbar-host{position:sticky;top:0;z-index:100;}.oo-topbar-host .top-bar{background:#0a2e1a;color:#dcfce7;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;}.oo-topbar-host .brand-line{display:flex;align-items:center;gap:12px;margin-right:28px;}.oo-topbar-host .brand-mini{font-family:Playfair Display,Georgia,serif;font-size:26px;color:#dcfce7;text-decoration:none;letter-spacing:.2px;}.oo-topbar-host .brand-version{font-family:JetBrains Mono,monospace;font-size:10.5px;color:#dcfce7;opacity:.55;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:3px;letter-spacing:.5px;align-self:center;}.oo-topbar-host .top-nav{display:flex;align-items:center;flex:1;margin:0 24px 0 16px;gap:4px;}.oo-topbar-host .top-nav a{color:#dcfce7;padding:4px 10px;text-decoration:none;font-size:13px;border-radius:4px;}.oo-topbar-host .top-nav a:hover{color:white;background:rgba(255,255,255,.05);}.oo-topbar-host .top-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}.oo-topbar-host .lang-switch{display:inline-flex;align-items:center;gap:0;background:rgba(255,255,255,.08);border-radius:4px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.5px;overflow:hidden;flex-shrink:0;}.oo-topbar-host .lang-switch .lang-current,.oo-topbar-host .lang-switch .lang-other{width:56px;box-sizing:border-box;padding:4px 9px;display:inline-flex;align-items:center;justify-content:center;gap:5px;}.oo-topbar-host .lang-switch .lang-current{background:rgba(255,255,255,.15);color:white;font-weight:600;}.oo-topbar-host .lang-switch .lang-other{color:#dcfce7;text-decoration:none;transition:background .12s;}.oo-topbar-host .lang-switch .lang-other:hover{background:rgba(255,255,255,.12);color:white;}.oo-topbar-host .lang-switch .lang-flag{display:inline-block;width:14px;height:10px;border-radius:1.5px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset;}.oo-topbar-host .lang-switch .lang-flag.flag-ua{background:linear-gradient(to bottom,#0057b7 50%,#ffd500 50%);}.oo-topbar-host .lang-switch .lang-flag.flag-en{background:#012169 url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='2'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E") center/cover no-repeat;}.oo-topbar-host .btn-cta-try{background:linear-gradient(135deg,#16a34a 0%,#0d9488 100%);color:white;padding:11px 22px;border-radius:7px;font-weight:600;font-size:15px;text-decoration:none;border:none;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 1px 4px rgba(0,0,0,.15);white-space:nowrap;min-width:180px;box-sizing:border-box;text-align:center;display:inline-block;}.oo-topbar-host .btn-cta-try:hover{filter:brightness(1.05);}.case-bar{background:#0d3f24;color:#dcfce7;padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-family:Source Sans 3,sans-serif;font-size:13px;}.case-bar a{color:#86efac;text-decoration:none;margin-left:14px;}.case-bar a:hover{text-decoration:underline;}@media print{.oo-topbar-host,.case-bar{display:none;}}@media (max-width:700px){.oo-topbar-host .top-bar{flex-wrap:wrap;gap:8px;}.oo-topbar-host .top-nav{order:3;flex-basis:100%;margin:0;justify-content:center;}.oo-topbar-host .btn-cta-try{min-width:120px;padding:8px 14px;font-size:13px;}}</style>
+</head>
+<body>
+<div class="oo-topbar-host no-print"><header class="top-bar">
+  <div class="brand-line">
+    <a href="/ukr/" class="brand-mini">OpenOnco</a>
+    <span class="brand-version" title="Released 2026-04-30">v0.1.2 · 2026-04-30</span>
+  </div>
+  <nav class="top-nav">
+    <a href="/ukr/">Головна</a>
+    <a href="/ukr/diseases.html">Хвороби</a><a href="/ukr/capabilities.html">Можливості</a><a href="/ukr/specs.html">Специфікації</a><a href="/ukr/contribute.html">Допомогти</a>
+    <a href="/ukr/gallery.html">Приклади</a>
+    <a href="https://github.com/romeo111/OpenOnco" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <span class="lang-current"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</span>
+      <a class="lang-other" href="/cases/diagnostic-mpn-polycythemia-pruritus.html"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</a>
+    </div>
+    <a href="/ukr/try.html" class="btn-cta-try" >Спробувати →</a>
+  </div>
+</header></div>
+<div class="case-bar no-print"><div>OpenOnco · <strong>Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus</strong></div><div><a href="/ukr/gallery.html">← Назад до галереї</a><a href="https://github.com/romeo111/OpenOnco/issues/new?title=%5Bfeedback%5D+diagnostic-mpn-polycythemia-pruritus&labels=tester-feedback" target="_blank" rel="noopener">Feedback на цей кейс</a></div></div>
+<div class="page"><div class="doc-header"><div class="doc-label">OpenOnco · Workup Brief · DIAGNOSTIC PHASE</div><div class="doc-title">Brief підготовки до тумор-борду</div><div class="doc-sub">DPLAN-PZ-DIAG-MPN-001-V1 · v1 · 2026-05-01</div></div><div class="banner banner--diagnostic"><strong>⚠ DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE</strong>DIAGNOSTIC PHASE — TREATMENT PLAN NOT YET APPLICABLE. Histology required before any therapy discussion (CHARTER §15.2 C7).</div><div class="patient-strip"><div class="label">Patient</div><div class="value">PZ-DIAG-MPN-001 · suspicion lineage: polycythemia_vera</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">Tissues: bone_marrow, spleen · Hypotheses: DIS-PV, DIS-ET</div><div class="value" style="margin-top:6px;font-size:13px;color:var(--gray-700);">58M presents with 6-month history of aquagenic pruritus (intense itching after warm shower), facial plethora, occasional headache, blurred vision, and one episode of digital ischemia (transient erythromelalgia) of right index finger. CBC over 3 visits: Hgb 19.2 g/dL (markedly elevated, baseline 14.8 two years prior), Hct 58%, WBC 13.4 (leukocytosis), platelets 562 (mild thrombocytosis), erythrocytosis confirmed. Splenomegaly 16 cm on US. Serum erythropoietin LOW 2.1 mU/mL (suppressed — appropriate for primary erythrocytosis vs elevated in secondary). LDH mildly elevated 245. No tobacco / no chronic hypoxic disease / no testosterone supplementation / no high-altitude exposure. JAK2 V617F testing pending. Strong suspicion of polycythemia vera per WHO 2022 major criteria 1 (Hgb &gt;16.5 M / &gt;16 F) + minor low EPO.</div></div><div class="banner banner--info"><strong>Matched workup:</strong> WORKUP-SUSPECTED-MPN-MDS · <strong>Очікуваний термін:</strong> ~14 днів</div><section><h2>Workup steps (25)</h2><ul class="steps"><li><span class="step-num">1</span><span class="step-name"><span class="badge badge--lab">lab</span> Complete Blood Count with Differential</span><div class="step-rationale">Baseline cytopenia assessment and ongoing monitoring of myelosuppression.</div></li><li><span class="step-num">2</span><span class="step-name"><span class="badge badge--lab">lab</span> Peripheral Blood Smear (manual review)</span><div class="step-rationale">Морфологія еритроцитів, лейкоцитів, тромбоцитів — детекція бластів, dysplasia, schistocytes, abnormal lymphoid forms; обов&#x27;язково при будь-якій незрозумілій цитопенії або leukocytosis.</div></li><li><span class="step-num">3</span><span class="step-name"><span class="badge badge--lab">lab</span> Reticulocyte Count</span><div class="step-rationale">Розрізняє hypoproliferative vs hemolytic/blood-loss anemia. Обов&#x27;язково при будь-якій непоясненій анемії перед extensive workup.</div></li><li><span class="step-num">4</span><span class="step-name"><span class="badge badge--lab">lab</span> Comprehensive Metabolic Panel</span><div class="step-rationale">Електроліти (Na, K, Cl, HCO3), креатинін + BUN (renal function), глюкоза, кальцій, альбумін, total protein. Базова метаболічна оцінка перед будь-якою терапією + основа TLS risk + dosing adjustments.</div></li><li><span class="step-num">5</span><span class="step-name"><span class="badge badge--lab">lab</span> Liver Function Tests</span><div class="step-rationale">Assess hepatic function — baseline + during BR cycles + DAA therapy + HBV reactivation monitoring.</div></li><li><span class="step-num">6</span><span class="step-name"><span class="badge badge--lab">lab</span> Lactate Dehydrogenase</span><div class="step-rationale">Tumor burden surrogate; rising LDH suggests transformation or progression in indolent lymphoma.</div></li><li><span class="step-num">7</span><span class="step-name"><span class="badge badge--lab">lab</span> Iron Studies (Ferritin, TSAT, TIBC, Serum Iron)</span><div class="step-rationale">Розрізняє iron deficiency vs anemia of chronic disease (ACD) vs hemochromatosis. Обов&#x27;язково при анемії невідомого генезу + перед прийняттям рішення про етіологію.</div></li><li><span class="step-num">8</span><span class="step-name"><span class="badge badge--lab">lab</span> Vitamin B12 + Folate</span><div class="step-rationale">Megaloblastic anemia workup; macrocytosis (MCV &gt;100 fL) на CBC потребує B12+folate level.</div></li><li><span class="step-num">9</span><span class="step-name"><span class="badge badge--lab">lab</span> ESR + C-Reactive Protein</span><div class="step-rationale">Markers of systemic inflammation. У гематологічному workup: differential diagnosis запальних vs neoplastic причин лімфаденопатії; ESR &gt; 100 mm/h при myeloma / advanced lymphoma.</div></li><li><span class="step-num">10</span><span class="step-name"><span class="badge badge--lab">lab</span> Coagulation Panel (PT/INR, aPTT, Fibrinogen)</span><div class="step-rationale">Pre-biopsy assessment + DIC screen + baseline перед anticoagulant-affected procedures. Обов&#x27;язково перед excisional/core biopsy + bone marrow.</div></li><li><span class="step-num">11</span><span class="step-name"><span class="badge badge--lab">lab</span> D-Dimer</span><div class="step-rationale">Маркер фібринолізу. При гематологічному workup — DIC suspect (особливо APL), VTE risk, тромботичні ускладнення MPN.</div></li><li><span class="step-num">12</span><span class="step-name"><span class="badge badge--lab">lab</span> Serum Uric Acid</span><div class="step-rationale">Baseline перед cytoreductive therapy + TLS (tumor lysis syndrome) risk assessment. Elevated uric acid + high tumor burden → TLS prophylaxis (allopurinol / rasburicase).</div></li><li><span class="step-num">13</span><span class="step-name"><span class="badge badge--lab">lab</span> Hepatitis B Serology Panel</span><div class="step-rationale">Mandatory before any anti-CD20 therapy or rituximab-containing regimen — identify HBV reactivation risk.</div></li><li><span class="step-num">14</span><span class="step-name"><span class="badge badge--lab">lab</span> HCV Antibody (Anti-HCV)</span><div class="step-rationale">Скринінг на HCV. Якщо позитивний → confirm з HCV RNA quantitative (TEST-HCV-RNA). Mandatory для лімфомного workup (HCV-associated MZL, B-cell lymphomas) і перед anti-CD20.</div></li><li><span class="step-num">15</span><span class="step-name"><span class="badge badge--lab">lab</span> HIV Serology (HIV-1/2 Ab + p24)</span><div class="step-rationale">Mandatory baseline для будь-якого пацієнта з лімфомою (HIV-associated lymphomas — DLBCL, Burkitt, primary CNS), цитопеніями невідомого генезу. Впливає на treatment intensity + ART continuation.</div></li><li><span class="step-num">16</span><span class="step-name"><span class="badge badge--imaging">imaging</span> Echocardiography (TTE) with LVEF assessment</span><div class="step-rationale">Baseline LVEF + cardiac structure перед anthracycline-containing chemotherapy + alloHSCT planning. Mandatory перед R-CHOP, ABVD, doxorubicin-based regimens.</div></li><li><span class="step-num">17</span><span class="step-name"><span class="badge badge--lab">lab</span> Beta-HCG (Pregnancy Test)</span><div class="step-rationale">Mandatory screen у childbearing-age жінок перед cytotoxic / teratogenic therapy + перед PET-CT, certain imaging. Більшість chemotherapy схем teratogenic.</div></li><li><span class="step-num">18</span><span class="step-name"><span class="badge badge--histology">histology</span> Bone Marrow Aspirate (cytology + flow + cytogenetics + molecular)</span><div class="step-rationale">Cytologic + immunophenotypic + cytogenetic + molecular characterization. Mandatory у acute leukemia, MDS, MM, MPN. Often combined з trephine (BMAT). Provides material для multiple downstream tests.</div></li><li><span class="step-num">19</span><span class="step-name"><span class="badge badge--histology">histology</span> Bone Marrow Trephine Biopsy (Core)</span><div class="step-rationale">Architecture + cellularity + fibrosis grade (важливо у MPN/PMF) + IHC for staging lymphomas (15-20% NHL з marrow involvement). Component of bone marrow study (зазвичай combined з aspirate).</div></li><li><span class="step-num">20</span><span class="step-name"><span class="badge badge--histology">histology</span> Flow Cytometry (Immunophenotyping)</span><div class="step-rationale">Immunophenotypic characterization of leukocytes — discriminates lymphoid vs myeloid lineage, B vs T vs NK, mature vs immature, monoclonal vs reactive. Mandatory у acute leukemia + lymphoma + MDS + MPN workup.</div></li><li><span class="step-num">21</span><span class="step-name"><span class="badge badge--other">other</span> Conventional Cytogenetics (Karyotype)</span><div class="step-rationale">Detect chromosomal aberrations: t(9;22) CML, t(15;17) APL, t(8;14) Burkitt, complex karyotype (poor prognosis у MDS/AML/MM). Mandatory у acute leukemia + MDS + MM workup.</div></li><li><span class="step-num">22</span><span class="step-name"><span class="badge badge--other">other</span> FISH Panel (disease-specific)</span><div class="step-rationale">Targeted detection of recurring translocations / deletions. Disease-specific panels: MM (del 17p, t(4;14), t(14;16), 1q gain, del 1p); AML (PML-RARα, RUNX1-RUNX1T1, CBFB-MYH11, MLL); CLL (del 11q, del 13q, del 17p, trisomy 12); MPN (BCR-ABL); lymphoma (MYC, BCL2, BCL6 break-apart).</div></li><li><span class="step-num">23</span><span class="step-name"><span class="badge badge--other">other</span> Targeted Molecular: BCR-ABL1 + JAK2 V617F + CALR + MPL</span><div class="step-rationale">Diagnostic core для MPN: BCR-ABL1 (CML); JAK2 V617F (PV ~95%, ET ~50%, PMF ~50%); CALR (ET / PMF JAK2-negative); MPL (rare ET / PMF). Послідовність: JAK2 first → if neg, CALR → if neg, MPL.</div></li><li><span class="step-num">24</span><span class="step-name"><span class="badge badge--other">other</span> NGS Myeloid Panel (AML/MDS/MPN)</span><div class="step-rationale">Targeted next-generation sequencing for: FLT3 (ITD, TKD), NPM1, IDH1/IDH2, CEBPA, RUNX1, TP53, ASXL1, DNMT3A, TET2, SRSF2, U2AF1, JAK2, CALR, MPL, KIT (D816V). Determines risk stratification + targeted therapy eligibility (FLT3i, IDH1i, IDH2i, midostaurin, etc.).</div></li><li><span class="step-num">25</span><span class="step-name"><span class="badge badge--histology">histology</span> Tissue biopsy + IHC panel + ancillary molecular</span><div class="step-rationale">Trephine критична для MPN diagnosis: megakaryocyte morphology (clustering, atypia) + reticulin/collagen fibrosis grade (MF-0 to MF-3) — основа WHO 2022 differentials між ET, PV, early-PMF, overt-PMF.
+</div><div class="step-rationale" style="margin-top:6px;"><strong>Biopsy preferred:</strong> Bone marrow aspirate + trephine biopsy (trephine essential for fibrosis grading у PMF / overlap MPN)</div><div class="step-rationale" style="margin-top:4px;"><strong>IHC baseline:</strong> CD34, CD117, reticulin staining, collagen staining (Masson trichrome), megakaryocyte markers (CD41, CD61)</div></li></ul></section><section><h2>Питання що мають бути закриті (9)</h2><ul style="padding-left:20px;font-size:14px;line-height:1.7;color:var(--gray-700);"><li>MDS vs MPN vs MDS/MPN overlap (CMML, atypical CML, JMML)?</li><li>Якщо MPN — JAK2/CALR/MPL status визначає subtype + prognostic</li><li>Якщо MDS — IPSS-R or IPSS-M risk stratification?</li><li>BCR-ABL1 status — CML excluded?</li><li>Driver mutation absence (triple-negative MPN ~10%) — додаткові molecular?</li><li>Reactive vs neoplastic cytosis (consider EPO level for PV exclusion)?</li><li>Risk of thrombosis (MPN) — anticoagulation indication?</li><li>Risk of progression to AML (MDS high-risk, post-MPN AML)?</li><li>AlloHSCT candidacy (особливо MDS high-risk + PMF intermediate-2 / high)?</li></ul></section><section><h2>MDT brief</h2><div class="mdt"><h3>Скіли (required) — обов&#x27;язкові віртуальні спеціалісти (2)</h3><ul class="role-list"><li><span class="role-name">Патолог (загальний)</span> <span class="badge badge--required">required</span><div class="role-reason">Будь-яка підозра вимагає біопсії — патолог планує вибір місця, IHC панель, ancillary tests.</div><div class="role-questions">Owns: DQ-DIFFERENTIAL</div><div class="skill-meta"><span class="pill">skill: <code>pathologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li><li><span class="role-name">Лікар-радіолог</span> <span class="badge badge--required">required</span><div class="role-reason">Stage / restaging imaging + biopsy guidance — радіолог.</div><div class="skill-meta"><span class="pill">skill: <code>radiologist</code></span><span class="pill">v0.1.0</span><span class="pill">reviewed 2026-04-25</span><span class="pill pill--stub">STUB</span><span class="pill">sign-offs: 0</span><span class="pill">lead: TBD</span></div></li></ul><h3>Open questions (1, 0 blocking)</h3><ul class="q-list"><li class=""><div class="q-id">DQ-DIFFERENTIAL</div><div class="q-text">Який план диференціальної діагностики між гіпотезами: DIS-PV, DIS-ET? Які молекулярні / IHC тести розрізняють?</div><div class="q-rationale">Множинні гіпотези — розрізнити їх перед treatment discussion.</div><div class="q-owner">→ pathologist</div></li></ul><div class="skill-catalog"><h3>Skill catalog (2/16 активовано в цьому плані)</h3><div class="section-sub">Усі зареєстровані віртуальні спеціалісти. ✓ — активовано для цього кейсу; ○ — не активовано (доступні для інших клінічних сценаріїв).</div><table><thead><tr><th>Спеціаліст</th><th>skill_id</th><th>Версія</th><th>Last reviewed</th><th>Sign-offs</th><th>Domain</th></tr></thead><tbody><tr class="dormant"><td>Спеціаліст з клітинної терапії (CAR-T)</td><td><code>cellular_therapy_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr><tr class="dormant"><td>Клінічний фармацевт</td><td><code>clinical_pharmacist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>clinical_pharmacy</td></tr><tr class="dormant"><td>Гематолог / онкогематолог</td><td><code>hematologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematology_oncology</td></tr><tr class="dormant"><td>Гематопатолог (специфічно для лімфом / лейкозів / мієломи)</td><td><code>hematopathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>hematopathology</td></tr><tr class="dormant"><td>Інфекціоніст / гепатолог</td><td><code>infectious_disease_hepatology</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>infectious_diseases</td></tr><tr class="dormant"><td>Медичний онколог (хіміотерапевт солідних пухлин)</td><td><code>medical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>solid_oncology</td></tr><tr class="dormant"><td>Молекулярний генетик / молекулярний онколог</td><td><code>molecular_geneticist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>molecular_oncology</td></tr><tr class="dormant"><td>Паліативна допомога</td><td><code>palliative_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>palliative_care</td></tr><tr class="activated"><td>Патолог (загальний)</td><td><code>pathologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>pathology</td></tr><tr class="dormant"><td>Сімейний лікар / терапевт</td><td><code>primary_care</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>primary_care</td></tr><tr class="dormant"><td>Психолог / онкопсихолог</td><td><code>psychologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Радіотерапевт (променева терапія)</td><td><code>radiation_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>radiation_oncology</td></tr><tr class="activated"><td>Лікар-радіолог</td><td><code>radiologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>diagnostic_imaging</td></tr><tr class="dormant"><td>Соціальний працівник / кейс-менеджер</td><td><code>social_worker_case_manager</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>psychosocial</td></tr><tr class="dormant"><td>Хірург-онколог</td><td><code>surgical_oncologist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>surgical_oncology</td></tr><tr class="dormant"><td>Спеціаліст з трансплантації (BMT)</td><td><code>transplant_specialist</code></td><td class="ver">v0.1.0</td><td>2026-04-25</td><td>0</td><td>cellular_therapy</td></tr></tbody></table></div></div></section><div class="doc-footer"><div class="version-chain">plan_id: DPLAN-PZ-DIAG-MPN-001-V1 | version: 1 | generated: 2026-05-01T00:23:17.101085+00:00</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> Diagnostic-phase MDT support: structure the workup, identify the team, surface unresolved questions. Not a medical device; not a treatment plan.</div><div class="fda-disclosure"><strong>Per FDA non-device CDS positioning (CHARTER §15):</strong> DIAGNOSTIC PHASE — this output describes diagnostic workup only. Treatment plan generation is blocked until histology is confirmed (CHARTER §15.2 C7). Do not treat on suspicion.</div><div class="medical-disclaimer">Цей документ — інформаційний ресурс для підтримки обговорення в тумор-борді (per CHARTER §11). Не система, що приймає клінічні рішення. Усі рекомендації потребують перевірки лікуючим лікарем.</div></div></div>
+</body>
+</html>
