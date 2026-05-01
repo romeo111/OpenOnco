@@ -1,0 +1,69 @@
+id: BIO-CD79B-MUTATION
+names:
+  preferred: "CD79B mutation (ITAM domain, e.g. Y196)"
+  ukrainian: "Мутація CD79B (ITAM-домен, напр. Y196)"
+  english: "CD79B mutation"
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "CD79B"
+  variant_type: "missense in ITAM Y196 (most commonly Y196F/H/N/S/I)"
+  functional_impact: "loss of negative regulation → chronic active BCR signaling → NF-κB activation"
+
+measurement: {method: "NGS panel covering ITAM hotspots (Y196, Y197)", units: "categorical (positive | negative)"}
+specimen_requirements: ["FFPE tumor biopsy for DLBCL/PCNSL", "BM/PB for CLL"]
+
+related_biomarkers:
+  - BIO-CD79B-IHC
+sources:
+  - SRC-CIVIC
+  - SRC-NCCN-BCELL-2025
+
+oncokb_skip_reason: multi_allele_mvp
+external_ids:
+  hgnc_symbol: "CD79B"
+last_reviewed: "2026-04-29"
+notes: >
+  Distinct from BIO-CD79B-IHC (which captures protein expression as
+  polatuzumab-vedotin target). This biomarker captures activating
+  *mutations* in the ITAM domain (most commonly Y196F/H/N/S/I) that
+  drive chronic active BCR signaling.
+
+  Cross-disease relevance:
+
+  - **DLBCL (MCD / C5 cluster)** (~20% of ABC-DLBCL): co-mutates with
+    MYD88 L265P → defines LymphGen MCD subtype. BTKi-sensitive
+    (ibrutinib monotherapy ORR ~80% in MCD R/R DLBCL; rationale for
+    R-CHOP + ibrutinib in fit MCD 1L per PHOENIX subgroup).
+  - **PCNSL** (~30-50%): also co-clusters with MYD88 L265P; ibrutinib
+    crosses BBB and shows R/R activity (Grommes 2017).
+  - **CLL** (~3%): rare; no current treatment-decision driver.
+
+  Currently a LymphGen MCD-classifier component in DLBCL/PCNSL; engine
+  uses presence as input to BCR-pathway-targeted regimen selection.
+  `multi_allele_mvp` skip reason: ITAM-Y196 has multiple recurring
+  alleles without a single canonical hotspot — defer per-variant
+  actionability lookup to post-MVP.
+notes_ua: >
+  Відмінний від BIO-CD79B-IHC (який captures експресія білка як
+  мішень полатузумабу ведотину). Цей біомаркер captures активуючі
+  *мутації* в ITAM-домені (найчастіше Y196F/H/N/S/I), що
+  drive хронічне активне BCR-сигналювання.
+
+  Cross-хвороба relevance:
+
+  - **DLBCL (MCD / C5 cluster)** (~20% of ABC-DLBCL): co-mutates with
+    MYD88 L265P → defines LymphGen MCD subtype. BTKi-чутливий
+    (ібрутиніб монотерапія ORR ~80% in MCD R/R DLBCL; rationale for
+    R-CHOP + ібрутиніб in fit MCD 1L per PHOENIX subgroup).
+  - **PCNSL** (~30-50%): also co-clusters with MYD88 L265P; ібрутиніб
+    crosses BBB and shows R/R activity (Grommes 2017).
+  - **CLL** (~3%): рідкісний; no current treatment-decision driver.
+
+  Currently a LymphGen MCD-classifier component in DLBCL/PCNSL; engine
+  uses presence as input to BCR-pathway-targeted regimen selection.
+  `multi_allele_mvp` skip reason: ITAM-Y196 має кілька рекурентних
+  алелей without a single canonical hotspot — defer per-variant
+  actionability lookup to post-MVP.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
