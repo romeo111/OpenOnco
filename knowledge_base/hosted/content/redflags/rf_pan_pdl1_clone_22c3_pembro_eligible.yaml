@@ -1,0 +1,206 @@
+id: RF-PAN-PDL1-CLONE-22C3-PEMBRO-ELIGIBLE
+definition: >
+  PD-L1 IHC result generated using the Dako 22C3 pharmDx clone — the
+  FDA-approved companion-diagnostic clone for pembrolizumab indications
+  across NSCLC (TPS), gastric / GEJ adenocarcinoma (CPS), esophageal
+  squamous (CPS), urothelial (CPS), TNBC (CPS), cervical (CPS), and
+  H&N squamous (CPS). Clone-platform identity matters because the
+  Blueprint PD-L1 Comparison phase 1 + 2 studies (Hirsch JTO 2017;
+  Tsao JTO 2018) showed 22C3 / 28-8 / SP263 as analytically near-
+  equivalent for tumor-cell staining (NSCLC TPS), but SP142 (Ventana,
+  atezolizumab CDx) markedly under-stains tumor cells and is NOT
+  interchangeable. CPS (combined positive score; tumor + lymphocyte +
+  macrophage staining) is operationally clone-22C3-anchored across
+  pembrolizumab indications — substituting SP263 / 28-8 / SP142 for
+  CPS-driven indication selection is off-label. Action: confirm 22C3
+  on the report; if a non-22C3 clone is the only PD-L1 source for a
+  pembrolizumab-CPS-driven decision (gastric CPS≥1/5, cervical CPS≥1,
+  TNBC CPS≥10, H&N CPS≥1, urothelial CPS≥10), recommend 22C3 reflex
+  test on the same FFPE block.
+definition_ua: >
+  Результат PD-L1 ІГХ, отриманий клоном Dako 22C3 pharmDx — FDA-
+  схвалений companion-діагностичний клон для індикацій пембролізумабу
+  при НДРЛ (TPS), gastric / GEJ-аденокарциномі (CPS), стравохідній
+  плоскоклітинній (CPS), уротеліальній (CPS), TNBC (CPS), шийковій
+  (CPS), H&N плоскоклітинній (CPS). Ідентичність клон-платформи має
+  значення, бо дослідження Blueprint PD-L1 Comparison phase 1 + 2
+  (Hirsch JTO 2017; Tsao JTO 2018) показали 22C3 / 28-8 / SP263 як
+  аналітично майже еквівалентні для забарвлення пухлинних клітин
+  (TPS у НДРЛ), але SP142 (Ventana, атезолізумаб-CDx) суттєво
+  недо-фарбує пухлинні клітини і НЕ взаємозамінний. CPS (combined
+  positive score; пухлина + лімфоцит + макрофаг) операційно якорено
+  клоном 22C3 для всіх pembrolizumab-індикацій — заміна SP263 / 28-8
+  / SP142 для CPS-driven вибору індикації — off-label. Дія: підтвердити
+  22C3 у звіті; якщо не-22C3 клон — єдине джерело PD-L1 для
+  pembrolizumab-CPS-driven рішення (gastric CPS≥1/5, cervical CPS≥1,
+  TNBC CPS≥10, H&N CPS≥1, urothelial CPS≥10), рекомендувати 22C3
+  reflex-тест на тому ж FFPE-блоці.
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "pdl1_ihc_clone"
+          value: "22C3"
+        - finding: "pdl1_ihc_clone"
+          value: "dako_22c3"
+        - finding: "pdl1_assay_platform"
+          value: "dako_22c3_pharmdx"
+        - finding: "pdl1_clone"
+          value: "22C3"
+    - any_of:
+        - finding: "pdl1_tps"
+          threshold: 1
+          comparator: ">="
+        - finding: "pdl1_cps"
+          threshold: 1
+          comparator: ">="
+        - finding: "pdl1_status"
+          value: "positive"
+        - finding: "pdl1_expression"
+          value: "positive"
+
+clinical_direction: investigate
+
+severity: minor
+priority: 75
+category: high-risk-biology
+
+relevant_diseases:
+  - "*"
+shifts_algorithm: []  # Pan-tumor disambiguation flag; pembrolizumab-
+                     # eligibility branching lives in disease-specific
+                     # algorithms (NSCLC-1L TPS≥50, gastric-1L CPS≥1/5,
+                     # TNBC-1L CPS≥10, etc.). RF surfaces clone-22C3
+                     # confirmation prerequisite.
+
+sources:
+  - SRC-CIVIC
+  - SRC-NCCN-NSCLC-2025
+  - SRC-NCCN-BREAST-2025
+  - SRC-KEYNOTE-024-RECK-2016
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  **Why clone identity matters (Blueprint PD-L1 Comparison summary):**
+
+  Clone | Platform | Companion drug | Interchangeable for TPS? |
+  Interchangeable for CPS?
+  --------------------------------------------------------------
+  22C3 | Dako Autostainer Link 48 | pembrolizumab | reference |
+  reference
+  28-8 | Dako | nivolumab | yes (TPS within 5%) | not validated for
+  pembro-CPS thresholds
+  SP263 | Ventana BenchMark | durvalumab / atezolizumab (some) |
+  yes (TPS within 5%) | not validated for pembro-CPS thresholds
+  SP142 | Ventana | atezolizumab | NO — under-stains tumor cells,
+  separate "IC%" score | NO
+
+  **Indication-specific 22C3 cut-points (pembrolizumab):**
+  - NSCLC 1L mono: TPS ≥50 (KEYNOTE-024)
+  - NSCLC 1L combo eligibility: TPS ≥1 (KEYNOTE-189 / -407)
+  - Gastric / GEJ adeno 1L combo: CPS ≥1 (KEYNOTE-859); FDA
+    pivot to ≥5 in subgroups (label evolution 2024)
+  - Esophageal squamous 1L combo: CPS ≥10 (KEYNOTE-590)
+  - TNBC 1L combo: CPS ≥10 (KEYNOTE-355)
+  - Cervical 1L combo: CPS ≥1 (KEYNOTE-826)
+  - H&N squamous 1L: CPS ≥1 (KEYNOTE-048 mono); CPS ≥20 mono-
+    superior subgroup
+  - Urothelial 1L: CPS ≥10 (KEYNOTE-052 cisplatin-ineligible);
+    label evolution 2024 narrowed mono use
+
+  **Action when this RF fires:**
+  1. Confirm 22C3 clone on the IHC report (look for "Dako pharmDx"
+     or kit lot reference).
+  2. If non-22C3 clone (28-8 / SP263 / SP142 / lab-developed) and a
+     pembrolizumab-CPS-driven indication is being considered → request
+     22C3 reflex on existing FFPE block (turnaround 3-7 days at most
+     reference labs).
+  3. If 22C3 unavailable in the testing region (resource-limited
+     setting), document substitution-rationale + cite the Blueprint
+     concordance data + accept ~5-10% mis-classification risk; prefer
+     CPS-anchored indications where ≥10 cut-point provides safety
+     margin over the discordance band.
+  4. **Atezolizumab caveat:** SP142 IC≥1% (TNBC pre-IMpassion130-
+     withdrawal; HCC + NSCLC select indications) — that is its own
+     workflow; the SP142 platform is NOT interchangeable with 22C3
+     for any pembrolizumab decision. Treat atezolizumab eligibility
+     as a separate biomarker workflow.
+
+  **Negative space (when NOT to fire):**
+  - PD-L1-negative result by 22C3 (TPS / CPS below cut-point) —
+    distinct RF (PD-L1-negative may still indicate combo IO + chemo
+    in NSCLC / TNBC; not a clone-disambiguation issue).
+  - SP142 (atezolizumab) result with TNBC question — informational
+    only post-IMpassion130 label withdrawal (US 2021); pembrolizumab +
+    chemo (KEYNOTE-355) is the SOC pivot, requires 22C3 CPS≥10.
+
+  **Why pan-tumor relevant_diseases:** The clone-identity disambiguation
+  is identical across all CPS-anchored pembrolizumab indications;
+  encoding per-disease would duplicate the same logic. Disease-specific
+  cut-points and algorithm-branching live in the per-indication RFs
+  (e.g., RF-NSCLC-PDL1-50-PLUS, RF-GASTRIC-PDL1-CPS-1-PLUS, RF-
+  CERVICAL-PDL1-CPS-1-PLUS) which assume 22C3 as the reference clone.
+notes_ua: >
+  **Чому ідентичність клону важлива (Blueprint PD-L1 Comparison):**
+
+  Клон | Платформа | Companion-препарат | Взаємозамін. TPS? |
+  Взаємозамін. CPS?
+  --------------------------------------------------------------
+  22C3 | Dako Autostainer Link 48 | пембролізумаб | reference |
+  reference
+  28-8 | Dako | ніволумаб | так (TPS ±5%) | не валідовано для
+  pembro-CPS порогів
+  SP263 | Ventana BenchMark | дурвалумаб / атезолізумаб | так
+  (TPS ±5%) | не валідовано для pembro-CPS порогів
+  SP142 | Ventana | атезолізумаб | НІ — недо-фарбує пухлинні клітини,
+  окремий "IC%" скор | НІ
+
+  **Індикаційно-специфічні 22C3 cut-points (пембролізумаб):**
+  - НДРЛ 1L моно: TPS ≥50 (KEYNOTE-024)
+  - НДРЛ 1L комбо eligibility: TPS ≥1 (KEYNOTE-189 / -407)
+  - Gastric / GEJ адено 1L комбо: CPS ≥1 (KEYNOTE-859); FDA-зсув
+    до ≥5 у підгрупах (еволюція label 2024)
+  - Стравохідна плоскоклітинна 1L комбо: CPS ≥10 (KEYNOTE-590)
+  - TNBC 1L комбо: CPS ≥10 (KEYNOTE-355)
+  - Шийкова 1L комбо: CPS ≥1 (KEYNOTE-826)
+  - H&N плоскоклітинна 1L: CPS ≥1 (KEYNOTE-048 моно); CPS ≥20
+    моно-superior підгрупа
+  - Уротеліальна 1L: CPS ≥10 (KEYNOTE-052 cisplatin-ineligible);
+    еволюція label 2024 звузила mono-використання
+
+  **Дія при спрацюванні RF:**
+  1. Підтвердити 22C3 клон у звіті ІГХ (шукати "Dako pharmDx" або
+     посилання на kit lot).
+  2. Якщо не-22C3 клон (28-8 / SP263 / SP142 / lab-developed) і
+     розглядається pembrolizumab-CPS-driven індикація → запит
+     22C3 reflex на існуючому FFPE-блоці (turnaround 3-7 днів у
+     більшості референс-лабораторій).
+  3. Якщо 22C3 недоступний у регіоні тестування (ресурс-обмежене
+     середовище), задокументувати обґрунтування заміни + цитувати
+     Blueprint-конкордантність + прийняти ~5-10% ризик
+     мискласифікації; обирати CPS-якірні індикації, де cut-point
+     ≥10 створює запас безпеки понад зону розбіжності.
+  4. **Засторога atezolizumab:** SP142 IC≥1% (TNBC до-IMpassion130-
+     withdrawal; HCC + НДРЛ окремі індикації) — окремий workflow;
+     SP142-платформа НЕ взаємозамінна з 22C3 для жодного
+     pembrolizumab-рішення. Eligibility на atezolizumab — окремий
+     біомаркер-workflow.
+
+  **Negative space (коли НЕ спрацьовувати):**
+  - PD-L1-негативний результат за 22C3 (TPS / CPS нижче cut-point) —
+    окремий RF (PD-L1-негативний може все одно показувати combo IO +
+    хіміо у НДРЛ / TNBC; це не питання disambiguation клону).
+  - SP142 (atezolizumab) результат з TNBC-питанням — лише
+    інформаційно після відкликання IMpassion130 label (США 2021);
+    пембролізумаб + хіміо (KEYNOTE-355) — SOC-зсув, потребує 22C3
+    CPS≥10.
+
+  **Чому pan-tumor relevant_diseases:** disambiguation ідентичності
+  клону — однаковий для всіх CPS-якірних pembrolizumab-індикацій;
+  кодування per-disease дублювало б ту ж логіку. Disease-specific
+  cut-points + гілкування алгоритму живуть у per-indication RFs
+  (напр., RF-NSCLC-PDL1-50-PLUS, RF-GASTRIC-PDL1-CPS-1-PLUS,
+  RF-CERVICAL-PDL1-CPS-1-PLUS), що припускають 22C3 як референс-клон.

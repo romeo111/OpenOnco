@@ -1,0 +1,141 @@
+id: RF-MELANOMA-NF1-MUT-CANDIDATE
+definition: >
+  Cutaneous melanoma with somatic NF1 loss-of-function mutation
+  (frameshift / nonsense / splice / large deletion) and absent canonical
+  BRAF V600 / NRAS Q61 driver — corresponds to the NF1 subtype of the
+  TCGA Cell 2015 four-genome classification (~14% of cutaneous
+  melanomas). Informational only at MVP: there is no FDA-approved
+  NF1-directed targeted therapy in melanoma (2026); MEK inhibitor
+  monotherapy (selumetinib, trametinib) has shown activity in
+  RASopathy-associated MPNST and plexiform neurofibroma but is not
+  approved for NF1-mutant melanoma. Phenotype: high-UV-mutational-burden,
+  sun-exposed sites, often older patients — typically excellent
+  candidates for ICI (anti-PD-1 monotherapy or ipi/nivo) given the high
+  TMB. Flag exists to surface (a) trial-eligibility for MEK / SHP2 / RAS
+  inhibitor studies and (b) the implicit "no BRAF / NRAS driver" status
+  that pre-empts targeted-therapy first-line.
+definition_ua: >
+  Шкірна меланома з соматичною NF1 LOF-мутацією (frameshift / nonsense /
+  splice / велика делеція) і відсутністю канонічного BRAF V600 / NRAS Q61
+  драйвера — відповідає NF1-підтипу TCGA Cell 2015 чотиригеномної
+  класифікації (~14% шкірних меланом). На MVP — лише інформаційний:
+  FDA-схваленої NF1-направленої таргетної терапії при меланомі не існує
+  (2026); MEK-інгібітор монотерапія (селуметиніб, траметиніб) має
+  активність при RASopathy-асоційованій MPNST та плексиформній
+  нейрофібромі, але не схвалена для NF1-mut меланоми. Фенотип: висока
+  UV-мутаційна навантаження, сонцеекспоновані ділянки, переважно
+  старші пацієнти — типово відмінні кандидати на ICI (anti-PD-1
+  монотерапія або ipi/nivo) через високу TMB. Прапорець потрібен щоб
+  поверхневити (а) eligibility до MEK / SHP2 / RAS-інгібітор досліджень
+  та (б) імпліцитний "no BRAF / NRAS driver" статус, що виключає
+  таргетну терапію 1L.
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "nf1_mutation"
+          value: "pathogenic"
+        - finding: "nf1_mutation"
+          value: true
+        - finding: "nf1_status"
+          value: "loss_of_function"
+        - finding: "nf1_lof"
+          value: true
+    - any_of:
+        - finding: "braf_v600"
+          value: false
+        - finding: "braf_v600_status"
+          value: "wild_type"
+        - finding: "braf_mutation"
+          value: false
+    - any_of:
+        - finding: "nras_q61"
+          value: false
+        - finding: "nras_status"
+          value: "wild_type"
+        - finding: "nras_mutation"
+          value: false
+
+clinical_direction: investigate
+
+severity: minor
+priority: 80
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm: []  # Informational — does not branch metastatic-1L
+                     # algorithm; ICI remains the SOC pick. Surfaces
+                     # trial eligibility + targeted-therapy de-prioritization.
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+  - SRC-ESMO-MELANOMA-2024
+  - SRC-CIVIC
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  TCGA cutaneous-melanoma subtype assignment (Cell 2015): BRAF-mut
+  (~50%), RAS-mut (~28%), NF1-mut (~14%), triple-WT (~9%). NF1-mut
+  melanomas often co-occur with secondary RAS-pathway alterations
+  (RASA2, PTPN11) but the canonical hot-spots BRAF V600 and NRAS Q61
+  are typically absent. UV-signature mutational burden is among the
+  highest of the four subtypes — translates to ICI sensitivity.
+
+  **Therapeutic implications (MVP-conservative):**
+  - First-line: anti-PD-1 monotherapy (pembrolizumab / nivolumab) OR
+    ipilimumab + nivolumab combo (CheckMate-067) per fitness and brain-met
+    status — same as for triple-WT or general ICI-eligible melanoma.
+  - No BRAF/MEK targeted-therapy indication (BRAF V600 absent). Trametinib
+    monotherapy off-label for NF1-mut melanoma has shown limited single-
+    agent activity (case series, ORR <20%) and is not endorsed by NCCN /
+    ESMO 2024.
+  - Trial-eligibility: SHP2 inhibitors (e.g., RMC-4630, TNO155),
+    pan-RAS inhibitors (e.g., RMC-6236), MEK + SHP2 combinations are
+    in early-phase trials enrolling NF1-LOF tumors.
+
+  **Why a separate RF (vs. just "no driver"):** NF1-LOF carries an
+  implicit RAS-pathway-active state that argues against future single-
+  agent MEK-inhibitor compassionate-use requests, and is a positive
+  marker for trial-screening. Distinct from triple-WT (where the
+  trial pool differs).
+
+  Detection: NGS panel covering NF1 truncating / splice / CNV events —
+  hot-spot panels miss NF1 LOF. Tumor-only NGS detects somatic events;
+  a germline pathogenic NF1 (NF1 syndrome / neurofibromatosis type 1)
+  is a separate phenotype with its own surveillance implications.
+notes_ua: >
+  TCGA-підтипізація шкірної меланоми (Cell 2015): BRAF-mut (~50%),
+  RAS-mut (~28%), NF1-mut (~14%), triple-WT (~9%). NF1-mut меланоми
+  часто мають вторинні RAS-pathway альтерації (RASA2, PTPN11), але
+  канонічні гарячі точки BRAF V600 та NRAS Q61 зазвичай відсутні.
+  UV-сигнатурне мутаційне навантаження — серед найвищих з чотирьох
+  підтипів, що транслюється у чутливість до ICI.
+
+  **Терапевтичні наслідки (MVP-консервативно):**
+  - Перша лінія: anti-PD-1 монотерапія (пембролізумаб / ніволумаб)
+    АБО іпілімумаб + ніволумаб комбо (CheckMate-067) за fitness і
+    статусом мет в мозок — як і для triple-WT / загального ICI-eligible
+    меланоми.
+  - Немає BRAF/MEK таргетної індикації (BRAF V600 відсутній).
+    Траметиніб монотерапія off-label для NF1-mut меланоми показала
+    обмежену активність (case series, ORR <20%) — не рекомендовано
+    NCCN / ESMO 2024.
+  - Eligibility до досліджень: SHP2-інгібітори (RMC-4630, TNO155),
+    pan-RAS-інгібітори (RMC-6236), MEK + SHP2 комбо — у ранніх фазах
+    залучають NF1-LOF пухлини.
+
+  **Чому окремий RF (а не просто "no driver"):** NF1-LOF несе
+  імпліцитний активний RAS-pathway статус, що аргументує проти
+  майбутніх compassionate-use запитів на single-agent MEK, і є
+  позитивним маркером для скринінгу досліджень. Відрізняється від
+  triple-WT (де trial-пул інший).
+
+  Виявлення: NGS-панель з покриттям NF1 truncating / splice / CNV —
+  hot-spot панелі пропускають NF1 LOF. Tumor-only NGS виявляє
+  соматичні події; зародкова патогенна NF1 (NF1-синдром /
+  нейрофіброматоз 1 типу) — окремий фенотип з власними
+  surveillance-наслідками.

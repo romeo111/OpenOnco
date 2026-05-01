@@ -1,0 +1,166 @@
+id: RF-UVEAL-MELANOMA-BAP1-MUT-CANDIDATE
+definition: >
+  Uveal (intraocular — choroidal, ciliary-body, iris) melanoma with
+  somatic BAP1 loss-of-function mutation OR loss of BAP1 nuclear
+  staining by IHC. BAP1-loss in uveal melanoma is the strongest single
+  prognostic marker for metastasis-prone disease — class-2 GEP
+  (gene-expression profile) tumors per Harbour 2010 / Onken 2010
+  carry ~70-80% 5-year metastasis rate vs. ~5% for class-1 (BAP1-
+  intact) tumors. Metastatic uveal melanoma was historically
+  unresponsive to ICI (ORR <5% with anti-PD-1 mono; ORR ~12-18% with
+  ipi/nivo combo) due to low TMB; tebentafusp (gp100 × CD3 ImmTAC,
+  IMCgp100-202 phase 3, Nathan NEJM 2021) is the first approved
+  systemic therapy for HLA-A*02:01+ metastatic uveal melanoma, with
+  mOS 21.7 vs 16.0 mo vs investigator-choice. Informational at MVP:
+  uveal melanoma is not a separately-modeled disease (DIS-UVEAL not
+  defined); RF surfaces (a) the BAP1-loss → high-metastasis-risk
+  prognostic shift and (b) tebentafusp HLA-A*02:01 testing prompt
+  for metastatic disease.
+definition_ua: >
+  Увеальна (внутрішньоочна — хоріоїдальна, циліарного тіла, райдужки)
+  меланома з соматичною BAP1 LOF-мутацією АБО втратою ядерного
+  забарвлення BAP1 за ІГХ. BAP1-loss в увеальній меланомі — найсильніший
+  окремий прогностичний маркер метастаз-схильної хвороби: class-2 GEP
+  (gene-expression profile) пухлини за Harbour 2010 / Onken 2010 мають
+  ~70-80% 5-річну частоту метастазування проти ~5% для class-1 (BAP1-
+  intact) пухлин. Метастатична увеальна меланома історично не
+  відповідала на ICI (ORR <5% при anti-PD-1 монотерапії; ORR ~12-18%
+  при ipi/nivo комбо) через низьку TMB; tebentafusp (gp100 × CD3 ImmTAC,
+  IMCgp100-202 phase 3, Nathan NEJM 2021) — перша схвалена системна
+  терапія для HLA-A*02:01+ метастатичної увеальної меланоми, мОВ 21.7
+  проти 16.0 міс vs investigator-choice. На MVP — лише інформаційний:
+  увеальна меланома не моделюється окремо (DIS-UVEAL не визначено);
+  RF поверхневлює (а) прогностичний зсув "BAP1-loss → високий ризик
+  метастазів" і (б) запит на HLA-A*02:01 тестування для tebentafusp при
+  метастатичній хворобі.
+
+trigger:
+  type: biomarker
+  all_of:
+    - any_of:
+        - finding: "tumor_subtype"
+          value: "uveal_melanoma"
+        - finding: "tumor_subtype"
+          value: "uveal"
+        - finding: "anatomic_site"
+          value: "uveal"
+        - finding: "anatomic_site"
+          value: "choroid"
+        - finding: "anatomic_site"
+          value: "ciliary_body"
+        - finding: "anatomic_site"
+          value: "iris"
+    - any_of:
+        - finding: "bap1_mutation"
+          value: "pathogenic"
+        - finding: "bap1_mutation"
+          value: true
+        - finding: "bap1_status"
+          value: "loss_of_function"
+        - finding: "bap1_ihc"
+          value: "loss"
+        - finding: "bap1_nuclear_staining"
+          value: "lost"
+
+clinical_direction: investigate
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MELANOMA
+shifts_algorithm: []  # Uveal melanoma not separately modeled at MVP
+                     # (DIS-UVEAL deferred). RF surfaces prognostic
+                     # warning + tebentafusp HLA-A*02:01 testing prompt.
+
+sources:
+  - SRC-CIVIC
+  - SRC-NCCN-MELANOMA-2025
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  **Why uveal melanoma is biologically distinct from cutaneous:**
+  Uveal arises from choroidal/ciliary/iris melanocytes (neural-crest
+  origin, post-migration to the eye), drivers are GNAQ / GNA11 / CYSLTR2 /
+  PLCB4 (Gαq-pathway, ~95%), NOT BRAF / NRAS / NF1. Mutational burden is
+  ~10× lower than cutaneous (low TMB → poor ICI substrate). BAP1 (3p21)
+  is the second hit in ~50% of metastatic-prone uveal — the seminal
+  Harbour Science 2010 finding that linked BAP1-loss to class-2 GEP
+  and metastatic dissemination.
+
+  **Prognostic stratification (uveal-specific):**
+  - Class-1A GEP (BAP1-intact, low PRAME): 5-yr metastasis ~2-5%
+  - Class-1B GEP (BAP1-intact, high PRAME): 5-yr metastasis ~20%
+  - Class-2 GEP (BAP1-loss): 5-yr metastasis 70-80%
+  Liver is the dominant metastatic site (>90% of metastases involve
+  liver as first site).
+
+  **Therapeutic implications (metastatic uveal):**
+  - HLA-A*02:01-positive: tebentafusp (FDA-approved 2022) — required
+    HLA testing before treatment selection. mOS 21.7 mo (IMCgp100-202).
+    Cytokine-release toxicity dominates — initial inpatient or
+    monitored-outpatient escalation per protocol.
+  - HLA-A*02:01-negative: ipilimumab + nivolumab off-label (per
+    GEM1402 / single-arm phase 2 data, ORR ~18%, mOS ~13 mo) — clinical-
+    trial preferred. Liver-directed therapy (radioembolization, hepatic
+    arterial infusion melphalan via percutaneous hepatic perfusion -
+    HEPZATO) where disease is liver-dominant.
+  - Adjuvant after enucleation / brachytherapy: NO standard adjuvant
+    (sunitinib, dacarbazine, ICI all negative in randomized trials);
+    surveillance with q3-6mo liver imaging is the SOC.
+
+  **Germline-BAP1 caveat:** Germline BAP1 (BAP1 tumor predisposition
+  syndrome) carries lifetime risk of uveal melanoma + mesothelioma +
+  cutaneous melanocytic BAP1-inactivated tumors (MBAITs) + clear-cell
+  RCC — cascade-test relatives if germline confirmed.
+
+  **Coverage gap acknowledged:** A future DIS-UVEAL entity with its
+  own GNAQ / GNA11 / CYSLTR2 driver model and tebentafusp algorithm is
+  the proper home for uveal-specific decision-tree branching. This RF
+  is a stop-gap surfacing the BAP1-loss prognostic + tebentafusp-
+  testing-prompt pending that work.
+notes_ua: >
+  **Чому увеальна меланома біологічно відрізняється від шкірної:**
+  Увеальна виникає з хоріоїдальних / циліарних / райдужних меланоцитів
+  (нейроектодермальне походження, постміграція в око); драйвери —
+  GNAQ / GNA11 / CYSLTR2 / PLCB4 (Gαq-шлях, ~95%), НЕ BRAF / NRAS / NF1.
+  Мутаційне навантаження ~10× нижче за шкірну (низька TMB → поганий
+  субстрат для ICI). BAP1 (3p21) — другий "hit" у ~50% метастаз-схильних
+  увеальних, ключове відкриття Harbour Science 2010, що пов'язало
+  BAP1-loss з class-2 GEP і метастатичною дисемінацією.
+
+  **Прогностична стратифікація (увеал-специфічна):**
+  - Class-1A GEP (BAP1-intact, low PRAME): 5-р. метастази ~2-5%
+  - Class-1B GEP (BAP1-intact, high PRAME): 5-р. метастази ~20%
+  - Class-2 GEP (BAP1-loss): 5-р. метастази 70-80%
+  Печінка — домінуюче місце метастазування (>90% мають печінку як
+  першу локацію).
+
+  **Терапевтичні наслідки (метастатична увеальна):**
+  - HLA-A*02:01-позитивні: тебентафусп (FDA-схвалено 2022) — обов'язкове
+    HLA-тестування перед вибором терапії. мОВ 21.7 міс (IMCgp100-202).
+    Cytokine-release токсичність домінує — стаціонарне або моніторинг-
+    амбулаторне підвищення дози за протоколом.
+  - HLA-A*02:01-негативні: іпілімумаб + ніволумаб off-label (GEM1402 /
+    single-arm phase 2 data, ORR ~18%, мОВ ~13 міс) — клінічне дослідження
+    переважно. Печінково-направлена терапія (радіоемболізація, hepatic
+    arterial infusion мелфалан через percutaneous hepatic perfusion —
+    HEPZATO) при печінково-домінантній хворобі.
+  - Ад'ювант після енуклеації / брахітерапії: НЕМАЄ стандартного
+    ад'юванту (сунітиніб, дакарбазін, ICI — всі негативні в РКД);
+    нагляд з q3-6 міс візуалізацією печінки — SOC.
+
+  **Зародкова BAP1-засторога:** Зародкова BAP1 (BAP1 tumor
+  predisposition syndrome) — пожиттєвий ризик увеальної меланоми +
+  мезотеліоми + шкірних BAP1-інактивованих меланоцитарних пухлин
+  (MBAITs) + світлоклітинного RCC — каскадне тестування родичів при
+  підтвердженій зародковій.
+
+  **Визнаний пробіл покриття:** Майбутня DIS-UVEAL сутність з власною
+  GNAQ / GNA11 / CYSLTR2 моделлю драйверів та алгоритмом тебентафуспу —
+  правильне місце для увеал-специфічного гілкування дерева рішень.
+  Цей RF — тимчасовий, поверхневлює прогноз BAP1-loss + запит
+  HLA-тестування до завершення тієї роботи.
