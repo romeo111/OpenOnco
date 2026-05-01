@@ -1,0 +1,116 @@
+id: IND-CRC-3L-FRUQUINTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 3
+  stage_requirements:
+    - "Stage IV metastatic mCRC"
+    - "Disease progression on ≥2 prior standard regimens including fluoropyrimidine, oxaliplatin, irinotecan, anti-VEGF biologic, and (if RAS-WT left-sided) anti-EGFR (FRESCO-2 entry criteria)"
+    - "Prior TAS-102 OR regorafenib exposure permitted (FRESCO-2 enrolled post-TAS-102 / post-regorafenib patients)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H excluded — pembrolizumab continues 3L+ for MSI-H mCRC if not yet received"
+    - biomarker_id: BIO-BRAF-V600E
+      value_constraint: "BRAF V600E excluded — encorafenib + cetuximab preferred (BEACON regimen) if not yet received"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-FRUQUINTINIB-CRC-3L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~1.5% (FRESCO-2; biologic effect dominated by disease stabilization, DCR ~55.5%)"
+  progression_free_survival: "Median PFS 3.7 mo vs 1.8 mo placebo (FRESCO-2; HR 0.32)"
+  overall_survival_5y: "Median OS 7.4 mo vs 4.8 mo placebo (FRESCO-2; HR 0.66)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+  - RF-CRC-EMERGENCY-OBSTRUCTION-PERFORATION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests: []
+
+rationale: >
+  Fruquintinib monotherapy for refractory mCRC after ≥2 prior lines
+  including fluoropyrimidine, oxaliplatin, irinotecan, anti-VEGF, and
+  (if RAS-WT left) anti-EGFR. FRESCO-2 (Dasari Lancet 2023, n=691,
+  global): mOS 7.4 vs 4.8 mo placebo (HR 0.66, p<0.001), mPFS 3.7 vs
+  1.8 mo (HR 0.32). Highly selective oral VEGFR1/2/3 TKI; FDA
+  approval Nov 2023; EMA approval Jun 2024; first new Cat 1 3L+
+  option in mCRC since SUNLIGHT (TAS-102 + bev). Fruquintinib enrolled
+  pts post TAS-102 / post regorafenib — establishes a true 3L+ /
+  4L+ option after standard salvage. Class VEGFR-TKI toxicity
+  (hypertension, proteinuria, hand-foot syndrome, hoarseness, hemorrhage,
+  hepatotoxicity) — see regimen REG-FRUQUINTINIB-CRC-3L for monitoring
+  and dose-modification protocol. UA access barrier: not registered;
+  named-patient / cross-border (EU) only. Sequencing: TAS-102+bev
+  3L (preferred where available) → fruquintinib 4L; OR fruquintinib
+  3L if oral monotherapy preferred / TAS-102 funding unavailable.
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: "Fruquintinib is a Cat 1 option for chemo-refractory mCRC 3L+ post fluoropyrimidine + oxaliplatin + irinotecan + anti-VEGF + (if applicable) anti-EGFR (FRESCO-2)"
+  - source_id: SRC-ESMO-CRC-2024
+    position: supports
+    relevant_quote_paraphrase: "Fruquintinib added as a recommended 3L+ option for refractory mCRC alongside TAS-102+bev and regorafenib; choice driven by tolerability + access"
+  - source_id: SRC-FRESCO-2-DASARI-2023
+    position: supports
+    relevant_quote_paraphrase: "FRESCO-2 phase 3 (Dasari Lancet 2023, n=691): fruquintinib 5 mg PO daily 21/28 vs placebo; mOS 7.4 vs 4.8 mo (HR 0.66, p<0.001), mPFS 3.7 vs 1.8 mo (HR 0.32); refractory mCRC post ≥2 prior lines"
+
+known_controversies:
+  - topic: "Sequencing fruquintinib vs TAS-102+bev vs regorafenib in 3L+ mCRC"
+    positions:
+      - position: "TAS-102+bev 3L (SUNLIGHT mOS 10.8 mo, HR 0.61) → fruquintinib 4L (FRESCO-2 mOS 7.4 mo, HR 0.66)"
+        sources: [SRC-NCCN-COLON-2025]
+      - position: "Fruquintinib 3L → TAS-102+bev 4L (oral monotherapy preference; better-tolerated VEGFR-TKI vs regorafenib)"
+        sources: [SRC-ESMO-CRC-2024]
+        evidence_note: "No prospective head-to-head; FRESCO-2 enrolled ~55% post-TAS-102 — supports activity in heavily pretreated"
+    our_default: "TAS-102+bev 3L → fruquintinib 4L (or fruquintinib 3L if TAS-102 funding unavailable / oral preferred); regorafenib alternative 3L/4L if neither accessible"
+    rationale: "SUNLIGHT mOS edge + IV regimen tolerability data favor TAS-102+bev as default 3L; fruquintinib better-tolerated than regorafenib among VEGFR-TKIs"
+  - topic: "Fruquintinib vs regorafenib head-to-head"
+    positions:
+      - position: "Fruquintinib better-tolerated (lower HFSR, lower hepatotoxicity); FRESCO-2 mOS 7.4 mo vs CORRECT mOS 6.4 mo — cross-trial only"
+        sources: [SRC-NCCN-COLON-2025, SRC-FRESCO-2-DASARI-2023]
+      - position: "Regorafenib has longer real-world experience; ReDOS dose-escalation closes tolerability gap"
+        sources: [SRC-NCCN-COLON-2025]
+        evidence_note: "No head-to-head trial; choice often driven by access + tolerability"
+    our_default: "Fruquintinib preferred over regorafenib among VEGFR-TKIs in 3L+/4L+ where accessible (better tolerability + numerical OS edge)"
+    rationale: "Cross-trial OS edge + better-tolerated AE profile of fruquintinib; regorafenib remains alternative"
+
+do_not_do:
+  - "НЕ призначати при ECOG ≥2 — FRESCO-2 виключив ECOG ≥2; ризик токсичності переважає benefit."
+  - "НЕ призначати при MSI-H mCRC, якщо pembrolizumab ще не отримано — ICI 3L+ забезпечує тривалу відповідь."
+  - "НЕ призначати при BRAF V600E mCRC, якщо encorafenib+cetuximab (BEACON) ще не отримано."
+  - "НЕ ігнорувати baseline AT — неконтрольована HTN >150/95 потребує оптимізації перед стартом."
+  - "НЕ ігнорувати proteinuria моніторинг — UPCR ≥2 потребує hold + dose reduction."
+  - "НЕ продовжувати при Grade 4 hypertension OR hypertensive crisis — discontinue permanently."
+  - "НЕ розпочинати протягом 4 тижнів від major surgery — wound healing impairment + bleeding ризик."
+  - "НЕ підтверджувати план без funding pathway — fruquintinib не зареєстрований в UA (named-patient / EU cross-border only)."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+ for
+  chemo-refractory mCRC. NCCN Cat 1 (2025); FDA Nov 2023; EMA Jun
+  2024. SRC-FRESCO-2-DASARI-2023 source live in KB (Dasari Lancet
+  2023). Pairs with IND-CRC-METASTATIC-3L-REGORAFENIB and
+  IND-CRC-METASTATIC-3L-TAS102-BEV in 3L+ mCRC sequencing landscape.
+  Position vs TAS-102+bev: SUNLIGHT preferred 3L where accessible;
+  fruquintinib 3L alternative if TAS-102 funding unavailable, OR
+  fruquintinib 4L after TAS-102+bev. UA access: named-patient / EU
+  cross-border only.
