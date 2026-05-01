@@ -1,0 +1,60 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-011
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC
+    backfill produced no new upsert (either no disease-overlap evidence in CIViC
+    snapshot 2026-04-25, or hosted record already carries the matching evidence).
+    Per chunk-spec: ''do not invent treatment claims when CIViC has no suitable
+    evidence item.'''
+no_match_rows:
+- bma_id: BMA-MLH1-SOMATIC-PROSTATE
+  gene:
+  - MLH1
+  disease_id: DIS-PROSTATE
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 27
+  civic_disease_overlap_count: 0
+  notes: 'CIViC 2026-04-25 has 27 MLH1 evidence items spanning colorectal cancer,
+    endometrial cancer, stomach carcinoma, and villous adenoma. No prostate-context
+    item present. Off-disease borrowing prohibited per chunk-spec.'
+- bma_id: BMA-PMS2-SOMATIC-CRC
+  gene:
+  - PMS2
+  disease_id: DIS-CRC
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  civic_disease_overlap_count: 0
+  notes: 'CIViC 2026-04-25 has only 2 PMS2 evidence items: EID1214 (Glioblastoma /
+    Sensitivity to Nivolumab) and EID1832 (Endometrial Cancer / Oncogenicity).
+    No colorectal-context item present. Off-disease borrowing prohibited.'
+already_populated_rows:
+- bma_id: BMA-CALR-ET
+  gene:
+  - CALR
+  disease_id: DIS-ET
+  verdict: already_populated_no_diff_vs_civic_snapshot
+  civic_disease_overlap_count: 2
+  civic_disease_overlap_eids:
+  - EID6382
+  - EID1482
+  notes: 'Hosted record already contains both disease-overlap CIViC entries
+    (EID6382 L=A Supports/Positive diagnostic; EID1482 L=B Supports/Sensitivity-
+    Response Peginterferon Alfa-2a) from a prior backfill. Re-emitting an upsert
+    would be a no-op replace; chunk skips the per-BMA upsert and records the
+    no-change here.'
+- bma_id: BMA-MSH6-SOMATIC-ENDOMETRIAL
+  gene:
+  - MSH6
+  disease_id: DIS-ENDOMETRIAL
+  verdict: already_populated_no_diff_vs_civic_snapshot
+  civic_disease_overlap_count: 1
+  civic_disease_overlap_eids:
+  - EID1839
+  notes: 'Hosted record already contains the single disease-overlap CIViC entry
+    (EID1839 L=C Supports/Oncogenicity, Endometrial Cancer) from a prior backfill.
+    Re-emitting an upsert would be a no-op replace; chunk skips the per-BMA
+    upsert and records the no-change here.'
+not_found_in_master: []
