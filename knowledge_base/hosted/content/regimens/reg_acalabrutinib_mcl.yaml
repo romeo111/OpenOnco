@@ -44,6 +44,48 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-MCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Acalabrutinib BTKi for R/R MCL. Continuous oral. Same BTKi pattern
+# as acalabrutinib CLL — atrial fibrillation, bleeding, infections,
+# headache. Lower AF rate vs ibrutinib. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль, особливо у перші тижні"
+    action_ua: "Часто проходить через 1-2 місяці — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Зазвичай легкі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi підвищують ризик кровотеч"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Прискорене серцебиття, нерівномірний пульс"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi може спричиняти миготливу аритмію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка з ознобом, кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi пригнічує імунну систему"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильна тривала кровотеча, що не спиняється"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий головний біль із порушенням зору або мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі BTKi підвищений ризик внутрішньочерепної кровотечі"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   ACE-LY-004 trial (Wang 2018, follow-up 2020): r/r MCL after ≥1

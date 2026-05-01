@@ -38,6 +38,44 @@ ukraine_availability:
   notes: "Talazoparib registered in Ukraine for HER2- BRCA-mutant metastatic breast (EMBRACA indication). NSZU does not cover for breast as of 2026-04 — patients pay out-of-pocket or charity. Major access barrier despite registration."
 
 sources: [SRC-EMBRACA-LITTON-2018, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Talazoparib for BRCA+ HER2- metastatic breast (EMBRACA). Same PARPi
+# pattern as olaparib + higher rates of cytopenia (especially anemia
+# requiring transfusions). STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано в перші тижні — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна нудота"
+    action_ua: "Часто проходить — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Виражена втома, задишка при навантаженні, блідість"
+    action_ua: "Подзвоніть у клініку того ж дня — талазопариб часто спричиняє анемію, що потребує трансфузій"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-EMBRACA-LITTON-2018
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — потрібно виключити PE або серцеву подію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed:
 notes: >
   EMBRACA (NCT01945775): Phase III, gBRCA1/2-mutant HER2- locally

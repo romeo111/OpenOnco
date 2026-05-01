@@ -32,6 +32,50 @@ ukraine_availability:
   notes: "Not registered in Ukraine. Access via international referral (EU centers — Germany, Czech Republic). Major access barrier; flagged for clinical-review queue."
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lutetium-177 PSMA radioligand for PSMA+ mCRPC post-ARPI/taxane
+# (VISION trial). Signature: dry mouth (salivary uptake), cytopenia
+# (radiation marrow), fatigue, GI. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Сухість у роті, утруднене ковтання сухої їжі"
+    action_ua: "Очікувано — пийте більше води, використовуйте штучну слину; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Помірна втома, що триває тижнями після кожної дози"
+    action_ua: "Очікувано після радіолігандної терапії — відпочивайте більше"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Помірна нудота"
+    action_ua: "Часто проходить за тиждень — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — Lu-PSMA може спричиняти анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива через тижні після дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — Lu-PSMA може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+
 last_reviewed:
 notes: >
   VISION trial: significant rPFS + OS benefit in PSMA-PET-positive mCRPC

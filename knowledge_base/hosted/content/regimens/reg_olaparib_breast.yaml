@@ -30,6 +30,44 @@ ukraine_availability:
   notes: "Reimbursed for breast indication — OlympiAD/OlympiA covered."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Olaparib for BRCA-germline HER2- metastatic breast (OlympiAD) and
+# adjuvant high-risk HER2- (OlympiA). PARPi pattern from olaparib-
+# ovarian. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, особливо в перші тижні"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна нудота, зниження апетиту"
+    action_ua: "Часто проходить через 2-3 місяці — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — олапариб може спричиняти анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — олапариб може знижувати тромбоцити"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко олапариб може спричиняти пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed:
 notes: >
   OlympiAD: PFS benefit in BRCA-mutant HER2- metastatic. OlympiA:

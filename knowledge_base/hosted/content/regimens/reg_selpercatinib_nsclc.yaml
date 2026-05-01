@@ -46,6 +46,48 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Selpercatinib for RET-fusion NSCLC 1L+ (LIBRETTO-001). Generally
+# well-tolerated TKI: hypertension, transaminitis, dry mouth,
+# QT prolongation. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Сухість у роті, легкі набряки, помірна втома"
+    action_ua: "Зустрічається на тлі селперкатинібу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Селперкатиніб може підвищувати тиск — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна діарея, нудота"
+    action_ua: "Зазвичай легкі — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — селперкатиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильні набряки, виражене збільшення ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця і нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормально швидке або повільне"
+    action_ua: "Звертайтесь у лікарню негайно — селперкатиніб може подовжувати інтервал QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   LIBRETTO-001 NSCLC: pretreated ORR 64% (mPFS 16.5 mo); TKI-naive

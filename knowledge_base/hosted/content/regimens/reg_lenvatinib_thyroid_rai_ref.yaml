@@ -22,6 +22,52 @@ evidence_level: moderate
 sources:
   - SRC-NCCN-THYROID-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lenvatinib for RAI-refractory differentiated thyroid cancer
+# (SELECT trial). Multi-kinase TKI: hypertension, fatigue, GI,
+# proteinuria, HFS. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Ленватиніб часто значно підвищує тиск — обов'язково контролюйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Помірна діарея (1-3 рази на день)"
+    action_ua: "Контролюється лоперамідом — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Помірна втома, нудота, втрата ваги"
+    action_ua: "Зустрічається — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний головний біль із підвищеним тиском"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція антигіпертензивної терапії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Кров у сечі або сеча, що піниться"
+    action_ua: "Подзвоніть у клініку того ж дня — ленватиніб може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — рідко ленватиніб може спричиняти перфорацію кишківника"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Кровохаркання або значна кровотеча"
+    action_ua: "Звертайтесь у лікарню негайно — ленватиніб підвищує ризик кровотеч"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-THYROID-2025
+
 reviewer_signoffs: 0
 notes: >
   STUB scaffold. Dosing summary only.
