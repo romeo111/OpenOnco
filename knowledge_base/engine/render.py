@@ -40,12 +40,17 @@ from ._citation_guard import (
     render_stripped_block as _render_stripped_block,
     resolve_citation_status as _resolve_citation_status,
 )
-from ._emergency_rf import filter_emergency_rfs, patient_emergency_label
+from ._emergency_rf import (
+    filter_emergency_rfs,
+    is_emergency_rf,
+    patient_emergency_label,
+)
 from ._nszu import lookup_nszu_status, nszu_label
 from ._patient_rationale import build_track_rationale_html as _build_track_rationale_html
 from ._patient_vocabulary import (
     NSZU_PATIENT_LABEL,
     ESCAT_TIER_PATIENT_LABEL,
+    expand_first_use as _expand_first_use,
     explain as _explain_patient,
 )
 from .diagnostic import _DIAGNOSTIC_BANNER, DiagnosticPlanResult
@@ -2647,6 +2652,165 @@ def _build_why_bullets_html(plan_result: PlanResult, track) -> str:
     return _build_track_rationale_html(plan_result, track)
 
 
+# Urgency tiers from Regimen.between_visit_watchpoints, mapped to the
+# patient-bundle headings. Order is important: log → call → ER, so the
+# patient sees calmer items first and the most urgent last (the tier
+# they're most likely to act on stays at the bottom right above the
+# emergency banner).
+_BV_URGENCY_ORDER: tuple[str, ...] = (
+    "log_at_next_visit",
+    "call_clinic_same_day",
+    "er_now",
+)
+_BV_URGENCY_HEADING_UA: dict[str, str] = {
+    "log_at_next_visit": "Занотуйте і обговоріть на наступному візиті",
+    "call_clinic_same_day": "Подзвоніть у клініку того ж дня",
+    "er_now": "Звертайтесь у лікарню негайно",
+}
+_BV_URGENCY_CSS_CLASS: dict[str, str] = {
+    "log_at_next_visit": "bv-urgency-group bv-log",
+    "call_clinic_same_day": "bv-urgency-group bv-call",
+    "er_now": "bv-urgency-group bv-er",
+}
+_BV_FALLBACK_HTML = (
+    '<p class="bv-fallback">Список того, на що звернути увагу між '
+    "візитами, для цього курсу ще не узгоджено клінічною командою. "
+    "Запитайте лікаря на наступному візиті, які симптоми треба "
+    "занотовувати, а які — приводи дзвонити в клініку.</p>"
+)
+
+
+def _emergency_trigger_keys(plan_result: PlanResult) -> set[str]:
+    """Return the lowercase first-sentence text of each emergency-tier
+    RedFlag definition. PATIENT_MODE_SPEC §3.4 dedupe rule: an `er_now`
+    watchpoint whose `trigger_ua` matches any emergency RF text is
+    suppressed so the patient doesn't see the same call-to-action in
+    both `between-visits` and `emergency-signals`."""
+    rf_lookup = (plan_result.kb_resolved or {}).get("red_flags") or {}
+    keys: set[str] = set()
+    if not isinstance(rf_lookup, dict):
+        return keys
+    for rf in rf_lookup.values():
+        if not isinstance(rf, dict):
+            continue
+        if not is_emergency_rf(rf):
+            continue
+        text = (rf.get("definition_ua") or rf.get("definition") or "")
+        # Match patient_emergency_label() truncation — first sentence only.
+        first = str(text).split(".")[0].strip().lower()
+        if first:
+            keys.add(first)
+    return keys
+
+
+def _render_between_visits_section(plan_result: PlanResult) -> str:
+    """Per-track 'на що звертати увагу між візитами' section.
+
+    Source: `track.regimen_data['between_visit_watchpoints']` (list of
+    BetweenVisitWatchpoint dicts after Pydantic round-trip). Empty list
+    or missing field → fallback string per PATIENT_MODE_SPEC §3.4.
+    Renderer NEVER fabricates content.
+
+    Dedupe with the emergency banner: an `er_now` item whose
+    `trigger_ua` first-sentence matches any emergency RF is dropped
+    here (it surfaces in the emergency banner instead). Per §3.4.
+    """
+    plan = plan_result.plan
+    if plan is None or not plan.tracks:
+        return (
+            '<section class="between-visits">'
+            "<h2>На що звернути увагу між візитами</h2>"
+            f"{_BV_FALLBACK_HTML}"
+            "</section>"
+        )
+
+    track_count = len(plan.tracks)
+    emergency_keys = _emergency_trigger_keys(plan_result)
+    track_blocks: list[str] = []
+    any_authored = False
+
+    for idx, t in enumerate(plan.tracks):
+        regimen_data = t.regimen_data or {}
+        regimen_id = (
+            regimen_data.get("id", "") if isinstance(regimen_data, dict) else ""
+        )
+        watchpoints = []
+        if isinstance(regimen_data, dict):
+            watchpoints = list(regimen_data.get("between_visit_watchpoints") or [])
+
+        # Dedupe er_now items vs emergency banner.
+        kept: list[dict] = []
+        for w in watchpoints:
+            if not isinstance(w, dict):
+                continue
+            if (w.get("urgency") or "") == "er_now":
+                trig = (w.get("trigger_ua") or "").split(".")[0].strip().lower()
+                if trig and trig in emergency_keys:
+                    continue
+            kept.append(w)
+
+        title_ua, modifier = _track_label_ua(idx, track_count, t)
+        if not kept:
+            track_blocks.append(
+                f'<div class="bv-track" data-source-id="{_h(regimen_id)}">'
+                f'<p class="track-label">{_h(title_ua)}</p>'
+                f"{_BV_FALLBACK_HTML}"
+                "</div>"
+            )
+            continue
+
+        any_authored = True
+        # Group within the track by urgency tier, in canonical order.
+        groups_html: list[str] = []
+        by_urgency: dict[str, list[dict]] = {u: [] for u in _BV_URGENCY_ORDER}
+        for w in kept:
+            urg = (w.get("urgency") or "").strip()
+            if urg not in by_urgency:
+                continue  # defensive: schema rejects bogus values, but be safe
+            by_urgency[urg].append(w)
+        for urg in _BV_URGENCY_ORDER:
+            items = by_urgency.get(urg) or []
+            if not items:
+                continue
+            cls = _BV_URGENCY_CSS_CLASS[urg]
+            heading = _BV_URGENCY_HEADING_UA[urg]
+            li_parts: list[str] = []
+            for w in items:
+                trigger = _h(w.get("trigger_ua") or "")
+                action = _h(w.get("action_ua") or "")
+                window = w.get("cycle_day_window") or ""
+                window_html = (
+                    f' <span class="bv-window">({_h(window)})</span>'
+                    if window else ""
+                )
+                li_parts.append(
+                    "<li>"
+                    f'<span class="bv-trigger">{trigger}</span>{window_html}'
+                    f' — <span class="bv-action">{action}</span>'
+                    "</li>"
+                )
+            groups_html.append(
+                f'<div class="{cls}">'
+                f"<h3>{_h(heading)}</h3>"
+                f'<ul>{"".join(li_parts)}</ul>'
+                "</div>"
+            )
+
+        track_blocks.append(
+            f'<div class="bv-track" data-source-id="{_h(regimen_id)}">'
+            f'<p class="track-label">{_h(title_ua)}</p>'
+            f'{"".join(groups_html)}'
+            "</div>"
+        )
+
+    return (
+        '<section class="between-visits">'
+        "<h2>На що звернути увагу між візитами</h2>"
+        f'{"".join(track_blocks)}'
+        "</section>"
+    )
+
+
 def _render_emergency_section(plan_result: PlanResult) -> str:
     """Filter the plan's red flags and render emergency-tier ones as a
     `<section class="emergency-signals">` with one banner item per RF.
@@ -2812,6 +2976,7 @@ def _render_patient_mode(
     )
 
     body_parts.append(_render_why_section(plan_result))
+    body_parts.append(_render_between_visits_section(plan_result))
 
     body_parts.append(_render_emergency_section(plan_result))
     body_parts.append(_render_ask_doctor_section(plan_result))
@@ -2820,9 +2985,11 @@ def _render_patient_mode(
         f'<footer class="patient-disclaimer">{_PATIENT_DISCLAIMER_HTML}</footer>'
     )
 
-    return _patient_doc_shell(
-        "Ваш персональний онкологічний план",
-        "".join(body_parts),
+    return _expand_first_use(
+        _patient_doc_shell(
+            "Ваш персональний онкологічний план",
+            "".join(body_parts),
+        )
     )
 
 
