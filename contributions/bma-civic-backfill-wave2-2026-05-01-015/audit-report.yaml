@@ -1,0 +1,66 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-015
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert (no disease-token overlap with CIViC evidence for the matching
+    gene, or gene absent from CIViC entirely). Per chunk-spec: "do not invent
+    treatment claims when CIViC has no suitable evidence item." Variant-aware filter
+    + synonym expansion both applied; results below reflect strict gene + disease
+    intersection on the local CIViC snapshot 2026-04-25.'
+no_match_rows:
+- bma_id: BMA-IGHV-UNMUTATED-CLL
+  gene: IGHV
+  disease_id: DIS-CLL
+  verdict: gene_absent_from_civic
+  civic_gene_evidence_count_any_disease: 0
+  no_civic_match_reason: 'CIViC does not catalog IGHV mutational status as a
+    molecular profile; gene tokens IGHV / IGH return zero accepted evidence items
+    in snapshot 2026-04-25. IGHV is a clinical risk-stratifier (sequencing of
+    IGHV gene segments to determine somatic hypermutation status) rather than a
+    point-mutation or copy-number variant of the type CIViC curates. Hosted file
+    cites SRC-NCCN-BCELL-2025, SRC-ESMO-CLL-2024, SRC-MOZ-UA-CLL-2022 plus
+    foundational trials (CLL14 Fischer NEJM 2019, ECOG E1912 Shanafelt NEJM 2019)
+    — these remain the appropriate primary sources, no CIViC supplement available.'
+- bma_id: BMA-MSH2-GERMLINE-GASTRIC
+  gene: MSH2
+  disease_id: DIS-GASTRIC
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 7
+  no_civic_match_reason: 'MSH2 has 7 accepted CIViC evidence items in snapshot
+    2026-04-25, but none is annotated to gastric cancer (DOID:10534) or stomach
+    cancer. CIViC MSH2 evidence covers Endometrial Cancer (EID1790, EID1837),
+    Colorectal Cancer (EID1826, EID1827, EID1834), Transitional Cell Carcinoma
+    (EID1877), and pan-tumor "Cancer" with combined MSH2/MLH1 Loss + Nivolumab
+    (EID11677). The pan-tumor item EID11677 (variant "Loss OR MLH1 Loss",
+    disease "Cancer", DOID:162) is intentionally excluded here because (a) its
+    variant phrasing is a logical OR over MLH1 + MSH2 rather than MSH2-specific
+    and (b) including it would constitute cross-disease borrowing prohibited by
+    chunk-spec. Hosted KEYNOTE-158 / KEYNOTE-859 / CheckMate-649 evidence is
+    appropriately captured via SRC-NCCN-GASTRIC-2025 / SRC-ESMO-GASTRIC-2024.'
+- bma_id: BMA-PMS2-SOMATIC-PROSTATE
+  gene: PMS2
+  disease_id: DIS-PROSTATE
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  no_civic_match_reason: 'PMS2 has 2 accepted CIViC evidence items in snapshot
+    2026-04-25, neither in prostate cancer: EID1214 (K706FS*19, Glioblastoma,
+    Nivolumab) and EID1832 (R315*, Endometrial Cancer, oncogenicity). No
+    disease-token overlap with DIS-PROSTATE; both off-disease items excluded per
+    chunk-spec invention prohibition. Pan-tumor pembrolizumab MSI-H/dMMR pathway
+    is captured via SRC-NCCN-PROSTATE-2025 / SRC-ESMO-PROSTATE-2024 in the hosted
+    file — no CIViC supplement available for this disease + gene cell.'
+not_found_in_master: []
+manifest_summary:
+  total_manifest_ids: 5
+  upserts_with_civic_evidence: 2
+  audit_no_match_rows: 3
+  upsert_ids:
+  - BMA-CCND1-T1114-MCL
+  - BMA-MSH6-SOMATIC-UROTHELIAL
+  no_match_ids:
+  - BMA-IGHV-UNMUTATED-CLL
+  - BMA-MSH2-GERMLINE-GASTRIC
+  - BMA-PMS2-SOMATIC-PROSTATE
