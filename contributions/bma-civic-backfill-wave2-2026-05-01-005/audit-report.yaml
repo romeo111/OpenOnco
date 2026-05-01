@@ -1,0 +1,41 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-005
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where CIViC backfill
+    produced no upsert (gene present in CIViC snapshot 2026-04-25 but no disease-token
+    overlap with the BMA disease). Per chunk-spec: ''do not invent treatment claims
+    when CIViC has no suitable evidence item.'''
+no_match_rows:
+- bma_id: BMA-MLH1-GERMLINE-PROSTATE
+  gene: MLH1
+  disease_id: DIS-PROSTATE
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 27
+  civic_diseases_present:
+  - Colorectal Cancer
+  - Endometrial Cancer
+  - Stomach Carcinoma
+  - Villous Adenoma
+  reason: 'MLH1 has 27 evidence items in CIViC 2026-04-25 but none scoped to prostate
+    cancer. The BMA''s MSI-H/dMMR ICI actionability in prostate is anchored on
+    SRC-NCCN-PROSTATE-2025 + SRC-ESMO-PROSTATE-2024 + tissue-agnostic FDA
+    pembrolizumab label, not on a prostate-specific MLH1 CIViC item. Cross-disease
+    borrowing rejected per chunk-spec invention prohibition.'
+- bma_id: BMA-PMS2-GERMLINE-CRC
+  gene: PMS2
+  disease_id: DIS-CRC
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 2
+  civic_diseases_present:
+  - Glioblastoma
+  - Endometrial Cancer
+  reason: 'PMS2 has only 2 evidence items in CIViC 2026-04-25 (EID1214 K706FS*19 in
+    glioblastoma; EID1832 R315* in endometrial cancer) — neither scoped to CRC.
+    The BMA''s MSI-H/dMMR ICI actionability in CRC is anchored on SRC-NCCN-COLON-2025
+    + SRC-ESMO-COLON-2024 + KEYNOTE-177 + tissue-agnostic FDA pembrolizumab label,
+    not on a CRC-specific PMS2 CIViC item. Cross-disease borrowing rejected per
+    chunk-spec invention prohibition.'
+not_found_in_master: []
