@@ -48,6 +48,58 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Oxaliplatin-driven cold-sensitivity + peripheral neuropathy is the
+# signature pattern; 5-FU adds diarrhea + cytopenia. Anaphylactoid
+# reactions on cycles 5+ are rare but ER-tier.
+# STUB pending CHARTER §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Це характерна ознака оксаліплатину — занотуйте, і обговоріть на наступному візиті, особливо якщо поколювання заважає в побуті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7 of each cycle"
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Чутливість до холоду — холодне питво, морозильник, холодне повітря викликають дискомфорт у горлі або кистях"
+    action_ua: "Очікувано в перші 3-5 днів циклу — уникайте холодного питва і холодного повітря на обличчя; занотуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна втома і нудота протягом 3-7 днів після циклу"
+    action_ua: "Поширене; приймайте призначені протиблювотні. Занотуйте, якщо нудота утруднює прийом їжі"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — на 7-14 день циклу можлива низька кількість нейтрофілів і ризик інфекції"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна діарея — більше 4 разів на день або з кров'ю"
+    action_ua: "Подзвоніть у клініку того ж дня — 5-фторурацил може спричиняти зневоднення; може знадобитись корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання стає таким сильним, що складно тримати дрібні предмети або відчувати стопи"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейропатії; можлива корекція дози оксаліплатину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена задишка, тиск у грудях або відчуття стиснення горла під час інфузії оксаліплатину (зазвичай на циклах 5+)"
+    action_ua: "Повідомте медсестру негайно під час інфузії; якщо виникло вдома — викликайте швидку. Це може бути алергічна реакція"
+    urgency: er_now
+    cycle_day_window: "Cycle 5+"
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-26"
 notes: >
   Standard adjuvant for stage III colon, also stage II high-risk

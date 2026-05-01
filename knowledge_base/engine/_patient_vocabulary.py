@@ -50,7 +50,7 @@ from typing import Optional
 
 DRUG_CLASS_PLAIN_UA: dict[str, str] = {
     # Targeted small molecules — kinase inhibitors & co.
-    "BRAFi": "препарат, який блокує мутацію BRAF — ключовий 'driver' пухлини",
+    "BRAFi": "препарат, який блокує мутацію BRAF — ключову рушійну мутацію пухлини",
     "MEKi": "препарат, який блокує сигнал нижче за BRAF — у комбінації працює краще",
     "BRAF+MEK": "комбінація BRAFi + MEKi — стандартна для BRAF V600 меланоми та деяких NSCLC",
     "PARPi": "препарат, який блокує DNA-repair фермент — пухлина гине, бо не може лагодити свою ДНК",
@@ -164,7 +164,7 @@ DRUG_CLASS_PLAIN_UA: dict[str, str] = {
 
 VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     # BRAF
-    "V600E": "конкретна заміна валіну на глутамат у позиції 600 BRAF — найчастіша 'driver' мутація",
+    "V600E": "конкретна заміна валіну на глутамат у позиції 600 BRAF — найчастіша рушійна мутація",
     "V600K": "схожа на V600E, але lysine замість глутамату — поведінкою близько ідентична",
     "V600": "будь-яка заміна у позиції 600 BRAF — клас V600E/K/D/R разом",
     "BRAF non-V600": "інші BRAF-мутації (наприклад G469A, K601E) — потребують індивідуальної оцінки",
@@ -172,8 +172,8 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     # EGFR
     "T790M": "часто виникає як стійкість до 1-ї та 2-ї лінії EGFR-інгібіторів",
     "C797S": "стійкість до 3-ї лінії EGFR-інгібіторів (osimertinib)",
-    "Ex19del": "видалення в exon 19 EGFR — перший EGFR-driver мутація",
-    "L858R": "точкова заміна в exon 21 EGFR — другий EGFR-driver",
+    "Ex19del": "видалення в 19-му екзоні EGFR — перша значуща EGFR-рушійна мутація",
+    "L858R": "точкова заміна в 21-му екзоні EGFR — друга значуща EGFR-рушійна мутація",
     "Ex20ins": "вставка в exon 20 EGFR — гірше відповідає на стандартні EGFR-інгібітори",
     "G719X": "uncommon EGFR — частково чутливий до afatinib/osimertinib",
     "L861Q": "uncommon EGFR — частково чутливий до afatinib/osimertinib",
@@ -231,7 +231,7 @@ VARIANT_TYPE_PLAIN_UA: dict[str, str] = {
     "TPS": "Tumor Proportion Score — стандарт для PD-L1 у NSCLC",
 
     # Lymphoma-specific
-    "double-hit lymphoma": "лімфома з двома 'driver' translocations (MYC + BCL2) — агресивніша",
+    "double-hit lymphoma": "лімфома з двома рушійними транслокаціями (MYC + BCL2) — агресивніша",
     "triple-hit lymphoma": "MYC + BCL2 + BCL6 — найагресивніший підтип",
     "GCB": "germinal center B-cell — підтип DLBCL з кращим прогнозом",
     "ABC": "activated B-cell — підтип DLBCL з гіршим прогнозом",
@@ -401,19 +401,19 @@ AE_PLAIN_UA: dict[str, str] = {
     "infusion reaction": "реакція на введення препарату — лихоманка, озноб, задишка під час інфузії; повідомляйте медсестрі негайно",
     "anaphylaxis": "тяжка алергічна реакція — задишка, набряк, гіпотензія; невідкладна медична допомога",
     "CRS": "cytokine release syndrome — лихоманка, гіпотензія, гіпоксія після CAR-T або bispecifics; ургентний стан",
-    "ICANS": "immune effector cell-associated neurotoxicity — сплутаність свідомості, тремор після CAR-T",
+    "ICANS": "нейротоксичність, пов'язана з імунною клітинною терапією — сплутаність свідомості, тремор після CAR-T",
     "pneumonitis": "запалення легень — задишка, кашель; рідко але серйозно",
     "interstitial lung disease": "ускладнення деяких таргетних препаратів — задишка, кашель; терміново",
     "hepatotoxicity": "токсичність для печінки — слабість, жовте забарвлення шкіри/очей, темна сеча; терміново",
     "hepatitis": "запалення печінки — частіше від імунотерапії; стежать ALT/AST",
-    "cardiotoxicity": "токсичність для серця (anthracyclines, trastuzumab) — задишка, набряки, прискорене серцебиття",
+    "cardiotoxicity": "токсичність для серця (від антрациклінів, трастузумабу) — задишка, набряки, прискорене серцебиття",
     "QT prolongation": "подовження QT-інтервалу — ризик аритмії; контроль ЕКГ",
     "hypertension": "підвищений артеріальний тиск — частий ефект VEGFi та TKI",
     "thromboembolism": "тромбози — підвищений ризик при IMiD та деяких хіміотерапіях",
     "neuropathy": "поколювання, оніміння кистей/стіп (taxanes, vinca alkaloids, platinum); часто незворотна",
     "peripheral neuropathy": "те саме, що neuropathy — конкретно про периферичні нерви",
-    "ototoxicity": "втрата слуху або шум у вухах — ризик при cisplatin",
-    "nephrotoxicity": "ушкодження нирок — особливо при cisplatin, methotrexate; контроль креатиніну",
+    "ototoxicity": "втрата слуху або шум у вухах — ризик від цисплатину",
+    "nephrotoxicity": "ушкодження нирок — особливо від цисплатину чи метотрексату; контроль креатиніну",
     "hemorrhagic cystitis": "кров у сечі від cyclophosphamide/ifosfamide; запобігаємо MESNA та гідратацією",
     "tumor lysis syndrome": "TLS — масовий розпад пухлинних клітин → розлад електролітів; небезпечно у перший тиждень лікування",
     "differentiation syndrome": "ускладнення ATRA/IDHi у AML — задишка, набряки, лихоманка; терміново стероїди",
@@ -425,7 +425,7 @@ AE_PLAIN_UA: dict[str, str] = {
     "CMV reactivation": "цитомегаловірус — особливо важливий після алло-ТСК",
     "PJP": "Pneumocystis jirovecii pneumonia — рідкісна, але смертельна без TMP/SMX профілактики",
     "secondary malignancy": "ризик другої пухлини через роки після хіміотерапії — важливо знати",
-    "infertility": "тимчасова або постійна втрата фертильності — обговорити cryopreservation перед стартом",
+    "infertility": "тимчасова або постійна втрата фертильності — обговорити кріоконсервацію репродуктивних клітин перед стартом",
     "menopausal symptoms": "припливи, сухість слизових — ефект hormonal-терапії",
     "weight gain": "набирання ваги — частий ефект стероїдів та hormonal-блокаторів",
     "weight loss": "втрата ваги — типова при поширеній пухлині та хіміотерапії",
@@ -447,7 +447,7 @@ AE_PLAIN_UA: dict[str, str] = {
     "renal toxicity (ICI)": "імунно-опосередкований нефрит — підвищений креатинін; стероїди",
     "skin toxicity (EGFRi)": "акнеформний висип на тлі EGFRi — фактично свідчить про активність препарату",
     "paronychia": "запалення нігтьового валика на тлі EGFRi/MEKi",
-    "ocular toxicity (MEKi)": "тимчасові порушення зору на тлі trametinib/cobimetinib",
+    "ocular toxicity (MEKi)": "тимчасові порушення зору на тлі траметинібу/кобіметинібу",
     "GVHD": "graft-versus-host disease — імунна реакція донорських клітин проти ваших тканин після allo-HSCT",
     "VOD/SOS": "veno-occlusive disease / sinusoidal obstruction syndrome — ускладнення HSCT",
     "engraftment syndrome": "ранні дні після HSCT — лихоманка, висип, набряки",
@@ -569,6 +569,174 @@ NSZU_PATIENT_LABEL: dict[str, str] = {
 }
 
 
+# ── First-use abbreviation expansion (Phase 5) ───────────────────────
+#
+# Acronyms that the patient should see expanded the first time they
+# appear in renderer-controlled prose. Renderer applies via
+# `expand_first_use()` once per bundle. Subsequent occurrences stay
+# bare. Engine MUST NOT consult this table (CHARTER §8.3).
+
+ABBREVIATION_FIRST_USE_UA: dict[str, str] = {
+    "ESCAT": "ESCAT (рівень доказів — як міцно доведено, що препарат працює)",
+    "FDA": "FDA (Управління з продовольства й медикаментів США)",
+    "MDT": "MDT (мультидисциплінарна команда лікарів)",
+    "ECOG": "ECOG (шкала функціонального стану пацієнта)",
+    "MSI": "MSI (індекс мікросателітної нестабільності пухлини)",
+    "PD-L1": "PD-L1 (білок на пухлинних клітинах, що блокує імунну атаку)",
+    "PD-1": "PD-1 (білок-перемикач імунної системи)",
+    "HCV": "HCV (вірус гепатиту C)",
+    "HBV": "HBV (вірус гепатиту B)",
+    "CAR-T": "CAR-T (терапія модифікованими T-клітинами пацієнта)",
+}
+
+
+# ── Allowlist for the no-Latin / no-abbreviation render gate ─────────
+#
+# PATIENT_MODE_SPEC §5.3 + §5.4. Tokens here may appear in the rendered
+# patient body without triggering the test gate.
+
+# Uppercase abbreviations that may stay bare. Includes gene symbols,
+# regimen acronyms widely used in patient-facing material, drug brand
+# acronyms, lab abbreviations, and the keys of ABBREVIATION_FIRST_USE_UA
+# (the gate treats post-expansion bare occurrences as fine).
+PATIENT_ALLOWLIST_ACRONYMS: frozenset[str] = frozenset({
+    # Gene symbols + biomarkers (subset; full list grows per disease)
+    "BRAF", "EGFR", "KRAS", "NRAS", "BRCA", "BRCA1", "BRCA2", "ALK",
+    "ROS1", "RET", "MET", "HER2", "PD-1", "PD-L1", "KIT", "FGFR3",
+    "JAK2", "BCR-ABL1", "MGMT", "IDH1", "IDH2", "FLT3", "NPM1", "TP53",
+    "PIK3CA", "PTEN", "RB1", "MYC", "BCL2", "CDKN2A", "CD20", "CD30",
+    "CD38", "CD52", "CD79", "CCR4", "VEGF", "CTLA-4", "LAG3", "TIGIT",
+    "MMR", "HRD", "CPS", "AFP", "PSA",
+    # Disease abbreviations the patient may search
+    "AML", "ALL", "CLL", "DLBCL", "FL", "MM", "MZL", "MCL", "NHL", "WM",
+    "HL", "TNBC", "NSCLC", "SCLC", "RCC", "HCC", "MDS", "MPN", "CML",
+    "APL", "PMF", "PV", "ET", "AITL", "ALCL", "MGUS", "GIST", "GBM",
+    "HNSCC", "PDAC", "CRC", "PTCL", "PTLD", "ATLL", "T-ALL", "HCL",
+    "EATL", "HSTCL", "PMBCL", "PCNSL", "MF", "CTCL", "NLPBL", "NLPHL",
+    "iNHL", "T-PLL", "FLT3-ITD",
+    # Toxicities / outcomes
+    "TLS", "CRS", "GVHD", "VOD", "SOS", "DIC", "ICANS", "PFS", "OS",
+    "DFS", "EFS", "RFS", "CR", "PR", "SD", "PD", "ORR", "DCR", "MRD",
+    "ANC", "LVEF", "INR", "PFT", "DLCO", "ECG", "EKG", "ICU", "MRI",
+    "MUGA", "CTCAE", "QT", "QTc", "BMI", "LDH", "CRP", "BMD",
+    # Drug names that travel as acronyms (INN/brand)
+    "5-FU", "BCG", "ATRA", "ATO", "TKI", "ADC", "FU",
+    # Standard regimen acronyms (widely cited in patient guides)
+    "ABVD", "BEACOPP", "CHOP", "CHP", "CHOEP", "RCHOP", "RCHP", "RCVP",
+    "BR", "RB", "RFC", "FCR", "RDHA", "RICE", "ICE", "EPOCH", "DEPOC",
+    "FOLFOX", "FOLFIRI", "FOLFIRINOX", "CAPOX", "XELOX", "FOLFOXIRI",
+    "BV", "AVD", "VAD", "DA-EPOCH", "DRC", "BVD", "VRD", "VTD", "DVD",
+    "PVAG", "GEMOX", "GEMCIS", "MAGIC", "FLOT", "STRIDE", "DAA",
+    # First-use-expanded abbreviations
+    "ESCAT", "FDA", "MDT", "ECOG", "MSI", "HCV", "HBV", "HIV", "EBV",
+    "CMV", "TB",
+    # Allowed Latin biology fragments
+    "DNA", "RNA", "mRNA", "MoA", "AE",
+    # ESCAT tier labels
+    "IA", "IB", "IIA", "IIB", "IIIA", "IIIB", "IV", "X",
+    # Site / tooling
+    "OpenOnco", "GitHub", "MIT", "API", "URL",
+    # Routes / common short tokens
+    "IV", "PO", "SC", "IM", "IT", "CT", "UA", "EN", "PHI", "CD",
+    "NSZU",  # already Cyrillic in body but ASCII-only HTML attrs
+})
+
+
+# Lowercase Latin words that may stay bare. Loanwords, biology stems,
+# URL fragments, and unavoidable KB regimen-name vocabulary (CHARTER
+# §6.1 prevents unilateral KB rewrites — the gate accepts these
+# contextually rather than blocking the whole feature on translation).
+PATIENT_ALLOWLIST_LATIN_WORDS: frozenset[str] = frozenset({
+    # Biology / pharmacology stems
+    "anti", "post", "pre", "non", "neo", "auto", "allo", "alpha", "beta",
+    "gamma", "delta", "kappa", "lambda", "wild", "type",
+    # KB regimen-name vocabulary
+    "cycle", "cycles", "week", "weeks", "month", "months", "year",
+    "years", "day", "days", "course", "courses", "phase", "phases",
+    "cohort", "regimen", "regimens", "monotherapy", "continuous",
+    "until", "progression", "toxicity", "unacceptable", "induction",
+    "consolidation", "maintenance", "lymphodepletion", "bridging",
+    "salvage", "adjuvant", "neoadjuvant", "first", "second", "third",
+    "high", "low", "risk", "trial", "stage", "line", "grade",
+    # Cycle-day-window structural vocabulary (PATIENT_MODE_SPEC §3.4)
+    "each", "infusion", "infusions", "dose", "doses",
+    # URL / tooling
+    "github", "issues", "info", "html", "https", "www", "openonco",
+    "claude", "code", "src", "noopener", "noreferrer",
+    # Tooling sentinel that may surface in <!-- comments --> stripped
+    # by _visible_text — defensive
+    "abbrev", "expanded",
+})
+
+
+# Trial-name prefixes — any acronym starting with these passes the
+# uppercase gate without an explicit listing.
+PATIENT_ALLOWLIST_TRIAL_PREFIXES: tuple[str, ...] = (
+    "KEYNOTE", "CHECKMATE", "JAVELIN", "MURANO", "VENICE", "CASTOR",
+    "POLLUX", "ALEX", "ALCANZA", "MAVORIC", "ECHELON", "ECHO", "ELOQUENT",
+    "FLAURA", "AURA", "OAK", "POPLAR", "IMPOWER", "PACIFIC", "STRIDE",
+    "EMERALD", "VIALE", "RATIFY", "APL0406", "IRIS", "RESPONSE", "COMFORT",
+    "COMMANDS", "BEACON", "TOGA", "MPACT", "POLO", "SUNLIGHT", "BCFI",
+    "STAMPEDE", "ATLAS", "OLYMPIA", "MIRROR", "PROFOUND", "EMBARK",
+    "GALACTIC", "ARASENS", "CHAARTED", "LATITUDE", "TITAN", "TROPICAL",
+    "DESTINY", "EMBRACA", "PALOMA", "MONALEESA", "MONARCH", "RUBY",
+    "ATTRACTION", "TROPiCS", "POSEIDON", "GEMINI", "MARS",
+)
+
+
+def is_allowlisted_acronym(token: str) -> bool:
+    """True if `token` is on the patient-mode acronym allowlist —
+    either explicitly listed or matches a clinical-trial prefix."""
+    if not token:
+        return False
+    if token in PATIENT_ALLOWLIST_ACRONYMS:
+        return True
+    upper_prefix = token.split("-", 1)[0].upper()
+    if upper_prefix in PATIENT_ALLOWLIST_TRIAL_PREFIXES:
+        return True
+    return False
+
+
+def is_allowlisted_latin_word(token: str) -> bool:
+    """True if `token` (lowercase Latin word ≥4 chars) is on the
+    allowlist of accepted loanwords, biology stems, or KB regimen
+    vocabulary."""
+    return bool(token) and token.lower() in PATIENT_ALLOWLIST_LATIN_WORDS
+
+
+def expand_first_use(html: str) -> str:
+    """Inject first-use expansions for `ABBREVIATION_FIRST_USE_UA` keys
+    into a rendered patient HTML.
+
+    Rule: the **first** unbracketed occurrence of each key in body
+    prose is replaced with the expansion; subsequent occurrences stay
+    bare. Idempotent — a sentinel HTML comment marks expanded bundles
+    so re-renders (mode toggle, language switch) don't double-expand."""
+    import re as _re
+
+    sentinel = "<!-- abbrev-expanded -->"
+    if sentinel in html:
+        return html
+
+    out = html
+    for key, expansion in ABBREVIATION_FIRST_USE_UA.items():
+        # `\b` plus a negative-lookbehind/ahead that excludes Latin
+        # letters, Cyrillic letters, dashes, and digits — so `PD-1`
+        # doesn't match inside `BCR-PD-1` and `MSI` doesn't match
+        # inside `MSIH`.
+        pattern = _re.compile(
+            r"(?<![A-Za-zА-Яа-яЇїІіЄєҐґ\-])"
+            + _re.escape(key)
+            + r"(?![A-Za-zА-Яа-яЇїІіЄєҐґ0-9])"
+        )
+        m = pattern.search(out)
+        if not m:
+            continue
+        # Replace only the first occurrence.
+        out = out[:m.start()] + expansion + out[m.end():]
+    return out + sentinel
+
+
 def total_term_count() -> int:
     """Return total number of unique vocabulary entries across all categories.
 
@@ -587,6 +755,13 @@ __all__ = [
     "SCREENING_PLAIN_UA",
     "ESCAT_TIER_PATIENT_LABEL",
     "NSZU_PATIENT_LABEL",
+    "ABBREVIATION_FIRST_USE_UA",
+    "PATIENT_ALLOWLIST_ACRONYMS",
+    "PATIENT_ALLOWLIST_LATIN_WORDS",
+    "PATIENT_ALLOWLIST_TRIAL_PREFIXES",
+    "expand_first_use",
+    "is_allowlisted_acronym",
+    "is_allowlisted_latin_word",
     "explain",
     "total_term_count",
 ]

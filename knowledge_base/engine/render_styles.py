@@ -740,6 +740,138 @@ PATIENT_MODE_CSS = """
   color: #2c3e50;
 }
 
+/* Per-track wrapper inside `what-now` / `why-this-plan` / `between-visits`
+   sections. Renders side-by-side on wide screens, stacks on mobile. Class
+   modifier tracks the engine track_id so CSS reuse with the clinician
+   bundle stays consistent. */
+.tracks-grid {
+  display: grid;
+  gap: 18px;
+  margin: 16px 0 24px;
+}
+@media (min-width: 720px) {
+  .tracks-grid--two { grid-template-columns: 1fr 1fr; }
+}
+.track-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #94a3b8;
+  border-radius: 6px;
+  padding: 18px 20px;
+}
+.track-card--default { border-left-color: #16a34a; }
+.track-card--alternative { border-left-color: #6366f1; }
+.track-card .track-label {
+  font-family: 'JetBrains Mono', Menlo, monospace;
+  font-size: 0.85em;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #64748b;
+  margin: 0 0 4px;
+}
+.track-card .track-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #1a3a5c;
+  margin: 0 0 8px;
+}
+.track-card .regimen-schedule {
+  font-size: 0.95em;
+  color: #475569;
+  margin: 4px 0 12px;
+}
+
+/* "Why this plan for you" — rationale per track, plain UA bullets. */
+.why-this-plan {
+  background: #fefce8;
+  border-left: 4px solid #eab308;
+  padding: 18px 22px;
+  border-radius: 4px;
+  margin: 24px 0;
+}
+.why-this-plan h2 {
+  border-bottom-color: #fde68a;
+}
+.why-this-plan .why-track {
+  margin: 12px 0;
+}
+.why-this-plan .why-track + .why-track { margin-top: 18px; }
+.why-this-plan ul { margin: 8px 0 0 20px; }
+.why-this-plan li { margin: 6px 0; }
+.why-this-plan .why-fallback {
+  font-style: italic;
+  color: #78350f;
+}
+
+/* "Between visits" section — patient watchpoints grouped by urgency.
+   PATIENT_MODE_SPEC §3.4. The same `er_now` items can also surface in
+   the emergency-signals banner; the renderer dedupes on trigger_ua text
+   so a patient never sees the same call-to-action twice. */
+.between-visits {
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  padding: 18px 22px;
+  border-radius: 4px;
+  margin: 24px 0;
+}
+.between-visits h2 {
+  border-bottom-color: #bae6fd;
+}
+.between-visits .bv-track {
+  margin: 12px 0 18px;
+}
+.between-visits .bv-track + .bv-track { margin-top: 22px; }
+.between-visits .bv-urgency-group {
+  margin: 10px 0 14px;
+}
+.between-visits .bv-urgency-group h3 {
+  font-size: 1em;
+  font-weight: 700;
+  margin: 6px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.between-visits .bv-log h3 { color: #0c4a6e; }
+.between-visits .bv-call h3 { color: #b45309; }
+.between-visits .bv-er h3 { color: #991b1b; }
+.between-visits ul { margin: 4px 0 0 20px; }
+.between-visits li { margin: 6px 0; }
+.between-visits .bv-trigger { font-weight: 600; }
+.between-visits .bv-action { color: #475569; }
+.between-visits .bv-window {
+  font-size: 0.85em;
+  color: #64748b;
+  font-family: 'JetBrains Mono', Menlo, monospace;
+}
+.between-visits .bv-fallback {
+  font-style: italic;
+  color: #475569;
+}
+
+/* Cross-link chip — anchors patient ↔ clinician bundles in their headers
+   so a doctor reading the patient bundle can jump to canonical version,
+   and a patient reading the clinician bundle can jump to plain UA. */
+.mode-toggle {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.95em;
+  font-family: 'JetBrains Mono', Menlo, monospace;
+  background: #f1f5f9;
+  color: #1e293b;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: 1px solid #cbd5e1;
+}
+.mode-toggle:hover {
+  background: #e0f2fe;
+  color: #075985;
+  border-color: #38bdf8;
+}
+@media print {
+  .mode-toggle { display: none; }
+}
+
 .emergency-list {
   background: #fff5f5;
   border-left: 4px solid #dc2626;
