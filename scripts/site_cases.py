@@ -5581,4 +5581,80 @@ CASES: list[CaseEntry] = [
     ),
     # ── /DIAGNOSTIC-MODE EXPANSION 2026-05-01 ──
 
+    # ── DIAGNOSTIC-MODE COMPLETION 2026-05-01 (7 cases — 100% workup coverage) ──
+    # Closes the last 7 uncovered workups so all 24 KB workups have at
+    # least one curated diagnostic case. Adds:
+    #   - lymphadenopathy nonspecific (triage workup)
+    #   - metastatic prostate (post-confirmed-disease staging)
+    #   - MGUS incidental (asymptomatic M-spike, non-CRAB)
+    #   - NSCLC diagnosis (lung mass before NSCLC vs SCLC differentiation)
+    #   - solid tumor / CUP (cancer of unknown primary)
+    #   - breast diagnosis (post-biopsy staging path, distinct from
+    #     pre-biopsy SUSPECTED-BREAST)
+    #   - GU+skin+gyn combined (multi-system synchronous suspicion)
+    CaseEntry(
+        case_id="diagnostic-lymphadenopathy-undifferentiated",
+        file="patient_diagnostic_lymphadenopathy_undifferentiated.json",
+        label_ua="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+        summary_ua="Pre-biopsy: 35F з білатеральною LAD × 7 тижнів, ESR 38, без B-симптомів. Engine: WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage; CBC + LDH + ESR + viral serology + excisional biopsy найбільшого вузла).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+        summary_en="Pre-biopsy: 35F with bilateral LAD × 7 weeks, ESR 38, no B-symptoms. Engine: WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage; CBC + LDH + ESR + viral serology + excisional biopsy of largest node).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-metastatic-prostate-rising-psa",
+        file="patient_diagnostic_metastatic_prostate_rising_psa.json",
+        label_ua="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+        summary_ua="Post-confirmed: Gleason 9 prostate post-RP 4 yr, PSA 0.05→12.4, новий біль + bone scan позитивний. Engine: WORKUP-METASTATIC-PROSTATE (PSMA-PET + germline BRCA + somatic HRR + testosterone для mHSPC vs mCRPC Tx).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+        summary_en="Post-confirmed: Gleason 9 prostate post-RP 4 yr, PSA 0.05→12.4, new pain + positive bone scan. Engine: WORKUP-METASTATIC-PROSTATE (PSMA-PET + germline BRCA + somatic HRR + testosterone for mHSPC vs mCRPC Tx).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-mgus-incidental-m-spike",
+        file="patient_diagnostic_mgus_incidental_m_spike.json",
+        label_ua="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+        summary_ua="Pre-biopsy: 71M asymptomatic, M-spike 8 g/L, no CRAB criteria, FLC ratio 1.33. Engine: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (IMWG 2014 risk stratification — low-risk MGUS, BM biopsy може бути skipped).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+        summary_en="Pre-biopsy: 71M asymptomatic, M-spike 8 g/L, no CRAB criteria, FLC ratio 1.33. Engine: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (IMWG 2014 risk stratification — low-risk MGUS, BM biopsy may be skipped).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-lung-cancer-indeterminate",
+        file="patient_diagnostic_lung_cancer_indeterminate.json",
+        label_ua="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+        summary_ua="Pre-biopsy: heavy smoker 40 PY + 3.2 cm RUL mass на LDCT screening + persistent cough + hemoptysis. Engine: WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup — bronchoscopy + cytology + IHC TTF-1/CK7/p40/synaptophysin для NSCLC vs SCLC).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+        summary_en="Pre-biopsy: heavy smoker 40 PY + 3.2 cm RUL mass on LDCT screening + persistent cough + hemoptysis. Engine: WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup — bronchoscopy + cytology + IHC TTF-1/CK7/p40/synaptophysin for NSCLC vs SCLC).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-cup-unknown-primary",
+        file="patient_diagnostic_cup_unknown_primary.json",
+        label_ua="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+        summary_ua="Pre-biopsy: 67F з multiple liver mets + bone + CK7+/CK20-/TTF-1- adenoCa, primary не знайдено на PET. Engine: WORKUP-SUSPECTED-SOLID-TUMOR (CUP catch-all; tumor-of-origin classifier + comprehensive NGS).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+        summary_en="Pre-biopsy: 67F with multiple liver mets + bone + CK7+/CK20-/TTF-1- adenoCa, primary not found on PET. Engine: WORKUP-SUSPECTED-SOLID-TUMOR (CUP catch-all; tumor-of-origin classifier + comprehensive NGS).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-breast-post-imaging-staging",
+        file="patient_diagnostic_breast_post_imaging_staging.json",
+        label_ua="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+        summary_ua="Post-biopsy: 47F з invasive ductal G2 ER+/HER2-low (IHC 2+ FISH-) + 1.4 cm axillary node + strong family hx. Engine: WORKUP-BREAST-DIAGNOSIS (staging CT + germline + Oncotype-DX + sentinel-LN planning).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+        summary_en="Post-biopsy: 47F with invasive ductal G2 ER+/HER2-low (IHC 2+ FISH-) + 1.4 cm axillary node + strong family hx. Engine: WORKUP-BREAST-DIAGNOSIS (staging CT + germline + Oncotype-DX + sentinel-LN planning).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-gu-skin-gyn-combined",
+        file="patient_diagnostic_gu_skin_gyn_combined.json",
+        label_ua="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+        summary_ua="Pre-biopsy: 56F з 4.0 cm right kidney mass + ABCDE-positive foot lesion + endometrial stripe 12 mm. Engine: WORKUP-SOLID-GU-SKIN-GYN (coordinated biopsy planning + germline panel BAP1/BRCA/HRR/Lynch для multi-cancer susceptibility).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+        summary_en="Pre-biopsy: 56F with 4.0 cm right kidney mass + ABCDE-positive foot lesion + endometrial stripe 12 mm. Engine: WORKUP-SOLID-GU-SKIN-GYN (coordinated biopsy planning + germline panel BAP1/BRCA/HRR/Lynch for multi-cancer susceptibility).",
+    ),
+    # ── /DIAGNOSTIC-MODE COMPLETION 2026-05-01 ──
+
 ]

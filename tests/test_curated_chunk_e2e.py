@@ -147,9 +147,17 @@ CASE_DIAGNOSTIC_GOLDENS: dict[str, str] = {
     "patient_diagnostic_rcc_incidental_mass.json": "WORKUP-SUSPECTED-RCC",
     "patient_diagnostic_sclc_central_lung_siadh.json": "WORKUP-SUSPECTED-SCLC",
     "patient_diagnostic_urothelial_gross_hematuria.json": "WORKUP-SUSPECTED-UROTHELIAL",
+    # Diagnostic-mode completion 2026-05-01 (7 more — 100% workup coverage)
+    "patient_diagnostic_lymphadenopathy_undifferentiated.json": "WORKUP-LYMPHADENOPATHY-NONSPECIFIC",
+    "patient_diagnostic_metastatic_prostate_rising_psa.json": "WORKUP-METASTATIC-PROSTATE",
+    "patient_diagnostic_mgus_incidental_m_spike.json": "WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL",
+    "patient_diagnostic_lung_cancer_indeterminate.json": "WORKUP-NSCLC-DIAGNOSIS",
+    "patient_diagnostic_cup_unknown_primary.json": "WORKUP-SUSPECTED-SOLID-TUMOR",
+    "patient_diagnostic_breast_post_imaging_staging.json": "WORKUP-BREAST-DIAGNOSIS",
+    "patient_diagnostic_gu_skin_gyn_combined.json": "WORKUP-SOLID-GU-SKIN-GYN",
 }
 
-# Combined param list: 73 cases (57 treatment + 16 diagnostic).
+# Combined param list: 80 cases (57 treatment + 23 diagnostic).
 ALL_CASES: list[str] = sorted(
     list(CASE_TREATMENT_GOLDENS.keys()) + list(CASE_DIAGNOSTIC_GOLDENS.keys())
 )
@@ -192,12 +200,12 @@ def test_curated_case_count_matches_expected_scope():
     new diagnostic cases, bringing total to 73 (57 treatment + 16
     diagnostic). If this count changes, update the golden dicts
     deliberately rather than letting parametrize drift."""
-    assert len(ALL_CASES) == 73, (
-        f"expected 73 curated cases (PR #150 + 2026-05-01 diagnostic "
-        f"expansion); got {len(ALL_CASES)}"
+    assert len(ALL_CASES) == 80, (
+        f"expected 80 curated cases (PR #150 + 2026-05-01 diagnostic "
+        f"expansion + completion); got {len(ALL_CASES)}"
     )
     assert len(CASE_TREATMENT_GOLDENS) == 57
-    assert len(CASE_DIAGNOSTIC_GOLDENS) == 16
+    assert len(CASE_DIAGNOSTIC_GOLDENS) == 23
 
 
 def test_golden_files_exist_on_disk():
