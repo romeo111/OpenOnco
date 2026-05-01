@@ -46,6 +46,54 @@ ukraine_availability:
     Sankyo PAP (де доступна).
 
 sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Trastuzumab deruxtecan (T-DXd) ADC for HER2+ CRC 3L+ (DESTINY-CRC).
+# Same template usable for HER2+ breast / gastric T-DXd. Signature
+# tox: ILD/pneumonitis (boxed warning) + cytopenia + nausea + alopecia.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, нудота протягом перших 1-2 тижнів циклу"
+    action_ua: "Очікувано — приймайте призначені протиблювотні; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — T-DXd має ризик ушкодження легень (інтерстиціальна хвороба) — критично оцінити рано"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття, набряки ніг"
+    action_ua: "Подзвоніть у клініку того ж дня — компонент трастузумабу впливає на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Тяжка задишка, синюшність губ, неможливість лежати рівно"
+    action_ua: "Звертайтесь у лікарню негайно — тяжке ушкодження легень від T-DXd може бути смертельним без термінової терапії"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-ESMO-COLON-2024
+  - trigger_ua: "Тяжка реакція на інфузію"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >

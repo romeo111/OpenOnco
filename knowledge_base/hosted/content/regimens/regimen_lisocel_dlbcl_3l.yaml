@@ -116,6 +116,52 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-DLBCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lisocabtagene maraleucel CD19 CAR-T for r/r DLBCL 3L+ (TRANSCEND
+# NHL-001). 4-1BB construct → lower CRS/ICANS rates than axi-cel.
+# Outpatient feasible at experienced centres. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, зниження апетиту"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна температура, легкий головний біль протягом перших 1-2 тижнів"
+    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+  - trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
+    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-TRANSCEND-NHL-001-ABRAMSON-2020
+  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Судомний напад, втрата свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців після CAR-T"
+    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia триває роки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-05-01"
 
 notes: >
