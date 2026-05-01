@@ -67,6 +67,44 @@ ukraine_availability:
 sources:
   - SRC-NCCN-MM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Talquetamab GPRC5D × CD3 bispecific for R/R MM 4L+. Unique GPRC5D
+# tox: dysgeusia (severe taste changes — affects nutrition), skin/nail
+# changes, weight loss. Plus standard bispecific CRS/ICANS.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена зміна або втрата смаку (їжа здається картонною)"
+    action_ua: "Очікувано на тлі талкетамабу — впливає на апетит. Занотовуйте, обговоріть з нутриціологом стратегії підтримки ваги"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Сухість шкіри, зміни нігтів, легке випадання волосся"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Втрата ваги ≥5% від базової"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна нутриційна підтримка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірна температура, кашель, інфекція"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія підвищує ризик інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можлива нейротоксичність бісспецифіку"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Висока лихоманка (>38.5°C), низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-05-01"
 notes: >
   Full-dose monotherapy phase of talquetamab (first-in-class GPRC5D ×

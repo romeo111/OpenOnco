@@ -44,6 +44,43 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Entrectinib for ROS1+ / NTRK-fusion NSCLC + tumor-agnostic 1L.
+# TKI signature: weight gain, dysgeusia, dizziness, cognitive,
+# QT, cardiac. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Зміни смаку, набір ваги, легке запаморочення"
+    action_ua: "Зустрічається на тлі ентректинібу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна втома, помірна нудота"
+    action_ua: "Зазвичай легкі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зміни настрою, плутаність мислення"
+    action_ua: "Подзвоніть у клініку того ж дня — ентректиніб може впливати на психічний стан"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-STARTRK2-DRILON-2020
+  - trigger_ua: "Нова задишка при навантаженні, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — ентректиніб може подовжувати QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Integrated ALKA-372-001 / STARTRK-1 / STARTRK-2: ROS1+ NSCLC ORR
