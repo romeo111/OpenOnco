@@ -86,6 +86,50 @@ sources:
   - SRC-NCCN-MELANOMA-2025
   - SRC-C14401-CHESNEY-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lifileucel TIL therapy for advanced melanoma post-checkpoint. Highly
+# intensive: lymphodepletion + cell infusion + 6 doses IL-2. Toxicity
+# is dominated by IL-2 capillary leak + cytopenia; entire course is
+# inpatient. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями після курсу"
+    action_ua: "Очікувано — кістковий мозок відновлюється повільно; відпочивайте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Виражений висип, лущення шкіри"
+    action_ua: "Очікувано від IL-2 — використовуйте зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо в перші тижні після виписки"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі тривалої нейтропенії ризик інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражені набряки, задишка, набір ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — IL-2-залежний синдром капілярного просочування може зберігатись"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+      - SRC-C14401-CHESNEY-2024
+  - trigger_ua: "Зменшення кількості сечі, біль у попереку"
+    action_ua: "Подзвоніть у клініку того ж дня — IL-2 може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Раптова сильна задишка, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий капілярний витік або серцева подія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 notes: >
   C-144-01 pooled cohorts (n=153): ORR 31.4%, mDoR not reached at

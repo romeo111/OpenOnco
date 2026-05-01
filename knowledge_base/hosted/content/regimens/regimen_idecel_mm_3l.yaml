@@ -109,6 +109,46 @@ sources:
   - SRC-KARMMA-MUNSHI-2021
   - SRC-NCCN-MM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Idecabtagene vicleucel BCMA CAR-T for R/R MM 3L+ (KarMMa). Same
+# CRS/ICANS pattern as B-cell CAR-Ts; BCMA target adds prolonged
+# hypogammaglobulinemia → infection risk. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, зниження апетиту після інфузії"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірна температура протягом перших 1-2 тижнів"
+    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-KARMMA-MUNSHI-2021
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS або PE"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Лихоманка, кашель, або інша інфекція протягом року після CAR-T"
+    action_ua: "Подзвоніть у клініку того ж дня — гіпогаммаглобулінемія від BCMA-таргета триває довго; може знадобитись IVIG"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-04-29"
 notes: >
   KarMMa (NCT03361748, Munshi NEJM 2021): single-infusion ide-cel

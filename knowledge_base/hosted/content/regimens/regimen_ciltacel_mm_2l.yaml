@@ -115,6 +115,52 @@ sources:
   - SRC-CARTITUDE-1-BERDEJA-2021
   - SRC-NCCN-MM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ciltacabtagene autoleucel BCMA CAR-T for R/R MM 2L+ (CARTITUDE).
+# Same CRS/ICANS pattern as ide-cel; cilta-cel has higher rates of
+# delayed neurotoxicity (parkinsonism, cranial neuropathy) reported.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, зниження апетиту після інфузії"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Легке тремтіння рук, зміни мови, повільніші рухи (тижні-місяці після інфузії)"
+    action_ua: "Подзвоніть у клініку того ж дня — цілта-цел має рідкісну, але задокументовану відстрочену нейротоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - trigger_ua: "Помірна температура протягом перших 1-2 тижнів"
+    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості — у перший місяць"
+    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Часті інфекції протягом місяців-року після CAR-T"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка і можливо IVIG"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-04-29"
 notes: >
   CARTITUDE-4 (NCT04181827, San-Miguel NEJM 2023, PMID 37272512):

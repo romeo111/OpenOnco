@@ -91,6 +91,54 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-DLBCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Axicabtagene ciloleucel CD19 CAR-T for r/r DLBCL ≥2L. Same CRS /
+# ICANS template as tisagenlecleucel; axi-cel has higher Grade 3+
+# CRS rate (~13%) and Grade 3+ ICANS (~28%) than 4-1BB constructs.
+# Inpatient during peak risk window. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, зниження апетиту після інфузії"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна температура (37.5-38°C), легкий головний біль протягом перших 1-2 тижнів"
+    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+  - trigger_ua: "Розмиття мови, плутаність, утруднене писання — навіть легке"
+    action_ua: "Звертайтесь у лікарню негайно — це може бути ICANS; рання оцінка критична"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+  - trigger_ua: "Висока лихоманка (>38.5°C), низький тиск, прискорене серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS; потрібен тоцилізумаб"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-DLBCL-2024
+  - trigger_ua: "Раптова сильна задишка, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — можливий тяжкий CRS з ушкодженням легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Судомний напад, втрата свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий ICANS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців після CAR-T"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка; B-cell aplasia триває роки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   ZUMA-1 (r/r DLBCL, ≥2 prior lines): ORR ~83%, CR ~58%, durable ~40%

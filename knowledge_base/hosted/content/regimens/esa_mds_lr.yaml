@@ -49,6 +49,44 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ESMO-MDS-2021
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Erythropoiesis-stimulating agent (epoetin / darbepoetin) for MDS-LR
+# transfusion-dependent anemia. Generally well-tolerated; key axes:
+# hypertension, rare thrombosis, hyperviscosity if Hgb rises too fast.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Реакція в місці підшкірної ін'єкції — почервоніння, легкий біль"
+    action_ua: "Зустрічається — чергуйте місця ін'єкцій; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Легкий головний біль після ін'єкцій"
+    action_ua: "Зазвичай мінімальний — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Подзвоніть у клініку того ж дня — ESA може підвищувати тиск, особливо якщо гемоглобін зростає швидко"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Сильний головний біль або запаморочення"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка тиску і можливо корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — ESA рідко може підвищувати ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   1L for MDS-LR symptomatic anemia if endogenous EPO ≤500 mU/mL AND

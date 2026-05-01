@@ -52,6 +52,38 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-FL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Mosunetuzumab CD20×CD3 bispecific for R/R FL 3L+. Lower CRS rates
+# than DLBCL bispecifics (less aggressive disease). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, зниження апетиту після інфузій"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна температура у перші 1-2 цикли"
+    action_ua: "Подзвоніть у клініку того ж дня — навіть невелика лихоманка може бути першою ознакою CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка, кашель або інша інфекція"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від анти-CD20"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можлива нейротоксичність"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск, прискорене серцебиття"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки тяжкого CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   GO29781 (Budde 2022): r/r FL after ≥2 prior lines (median 3 prior

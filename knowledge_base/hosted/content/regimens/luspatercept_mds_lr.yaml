@@ -45,6 +45,43 @@ sources:
   - SRC-ESMO-MDS-2021
   - SRC-COMMANDS-FENAUX-2020
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Luspatercept SC q3w for transfusion-dependent MDS-LR. Most patients
+# are older. Tolerability profile: fatigue, GI, occasional thrombosis,
+# rare HTN. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, помірний головний біль"
+    action_ua: "Зустрічаються — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Реакція в місці підшкірної ін'єкції — почервоніння, легкий біль"
+    action_ua: "Зустрічається — чергуйте місця ін'єкцій"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Помірна діарея, нудота"
+    action_ua: "Зазвичай мінімальні — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Подзвоніть у клініку того ж дня — лусперцепт може підвищувати тиск"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
+    action_ua: "Подзвоніть у клініку того ж дня — лусперцепт рідко може підвищувати ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, біль у грудях, кашель з кров'ю"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Originally established as 2L (MEDALIST: RS-MDS post-ESA failure).

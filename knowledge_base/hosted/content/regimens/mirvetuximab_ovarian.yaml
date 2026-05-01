@@ -39,6 +39,50 @@ ukraine_availability:
   notes: "Мірветуксимаб соравтансин не зареєстрований в Україні станом на 2026-04. Доступ виключно через клінічне дослідження або благодійний/іменний імпорт. Потрібен супутній доступ до VENTANA FOLR1 RxDx асаю — також обмежений; референсна патологія (Roche-сертифікована лабораторія) обов'язкова."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-MIRASOL-MOORE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Mirvetuximab soravtansine (FRα ADC) for platinum-resistant FRα+
+# ovarian. Signature toxicity: ocular (keratopathy, blurry vision)
+# requires baseline + serial ophthalmology. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Розмиття зору, відчуття сухості або піску в очах"
+    action_ua: "Очікувано на тлі мірветуксимабу — використовуйте призначені очні краплі (preservative-free); занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-MIRASOL-MOORE-2024
+  - trigger_ua: "Помірна втома, нудота, помірна діарея"
+    action_ua: "Зустрічається — приймайте призначені протиблювотні; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Можлива нейропатія — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Виражене розмиття зору, біль в очах, чутливість до світла"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна термінова оцінка офтальмолога; може знадобитись пауза в препараті"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-MIRASOL-MOORE-2024
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова виражена задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко мірветуксимаб може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Раптова втрата зору"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне тяжке око-токсичне ускладнення"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >
