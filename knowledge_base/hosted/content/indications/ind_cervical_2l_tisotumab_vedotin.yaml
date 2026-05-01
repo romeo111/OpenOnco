@@ -1,0 +1,105 @@
+id: IND-CERVICAL-2L-TISOTUMAB-VEDOTIN
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CERVICAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic cervical carcinoma (squamous, adenocarcinoma, or adenosquamous)"
+    - "Disease progression on or after platinum-based chemotherapy (with or without bevacizumab + pembrolizumab in 1L per PD-L1 CPS)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-TISOTUMAB-VEDOTIN-CERVICAL-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~24% (innovaTV 204, Coleman 2021); 17.8% vs 5.2% chemo (innovaTV 301, Vergote 2024)"
+  complete_response: "~7% (innovaTV 204)"
+  progression_free_survival: "Median PFS 4.2 mo (innovaTV 204); 4.2 vs 2.9 mo (innovaTV 301, HR 0.67)"
+  overall_survival_5y: "Median OS 12.1 mo (innovaTV 204); 11.5 vs 9.5 mo (innovaTV 301, HR 0.70, p=0.0038)"
+
+hard_contraindications: []
+
+red_flags_triggering_alternative:
+  - RF-CERVICAL-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Tisotumab vedotin (Tivdak) for recurrent / metastatic cervical
+  carcinoma 2L+ post-platinum — first and only ADC approved in this
+  setting. Pivotal innovaTV 204 (Coleman Lancet Oncol 2021, n=101):
+  ORR 24%, mDOR 8.3 mo, mPFS 4.2 mo, mOS 12.1 mo → FDA accelerated
+  approval Sep 20, 2021. Confirmatory innovaTV 301 (Vergote NEJM 2024,
+  n=502, randomized vs investigator-choice chemo): mOS 11.5 vs 9.5 mo
+  (HR 0.70, p=0.0038), mPFS 4.2 vs 2.9 mo (HR 0.67), ORR 17.8% vs 5.2%
+  → FDA full approval Apr 29, 2024. NCCN-Cervical 2025 + ESMO-Cervical
+  2024 list as category 1 / preferred 2L+ option regardless of PD-L1
+  CPS or prior pembrolizumab exposure. Tissue factor (TF) is broadly
+  expressed on cervical carcinoma — no companion biomarker testing
+  required. Dominant treatment-limiting toxicity is ocular
+  (conjunctivitis, keratitis, vision changes — BOXED WARNING) requiring
+  baseline ophthalmology + per-cycle exams for first 9 cycles, plus
+  prophylactic eye-drop / cooling-pad protocol. UA access barrier:
+  tisotumab vedotin not registered in Ukraine as of 2026-04-29
+  (drlz.com.ua) — named-patient import (DEC спецдозвіл МОЗ), Pfizer/
+  Seagen EAP, or transborder treatment under MOH order 988 only.
+
+sources:
+  - source_id: SRC-NCCN-CERVICAL-2025
+    position: supports
+    relevant_quote_paraphrase: "Tisotumab vedotin is a category 1 / preferred option for recurrent or metastatic cervical cancer following progression on platinum-based chemotherapy (with or without prior bevacizumab and pembrolizumab); innovaTV 301 confirmatory phase 3 supports full FDA approval Apr 2024"
+  - source_id: SRC-ESMO-CERVICAL-2024
+    position: supports
+    relevant_quote_paraphrase: "ESMO Clinical Practice Guidelines (2024) recommend tisotumab vedotin in second-line and beyond recurrent / metastatic cervical cancer post-platinum, irrespective of PD-L1 CPS or prior immune-checkpoint exposure"
+
+known_controversies:
+  - topic: "Tisotumab vedotin vs investigator-choice chemo (topotecan, vinorelbine, gemcitabine, irinotecan, pemetrexed) 2L+"
+    positions:
+      - position: "Tisotumab vedotin: phase-3 OS + PFS + ORR superiority (innovaTV 301); preferred when access available"
+        sources: [SRC-NCCN-CERVICAL-2025]
+      - position: "Single-agent chemo: longstanding 2L standard prior to tisotumab approval; mOS ~6.5–9.5 mo; widely accessible and reimbursed"
+        sources: [SRC-ESMO-CERVICAL-2024]
+        evidence_note: "innovaTV 301 control arm mOS 9.5 mo with investigator-choice chemo provides modern benchmark"
+    our_default: "Tisotumab vedotin as default 2L+ aggressive-track option when accessible; single-agent chemo (топотекан / вінорельбін / гемцитабін / іринотекан / пеметрексед) standard track when tisotumab not accessible"
+    rationale: "First and only therapy with phase-3 OS benefit in platinum-progressed cervical cancer; access barrier in Ukraine routes most patients to single-agent chemo by default"
+
+do_not_do:
+  - "НЕ розпочинати без базового офтальмологічного огляду (slit-lamp + visual acuity) — окулярна токсичність є домінуючою (BOXED WARNING: conjunctivitis, keratitis, vision changes including blindness)."
+  - "НЕ пропускати щоциклові огляди офтальмолога перші 9 циклів — раннє виявлення кератиту критично важливе."
+  - "НЕ пропускати протокол очних крапель + охолоджувальних пакетів на повіки під час інфузії та ≥6× на день впродовж терапії."
+  - "НЕ продовжувати при Grade ≥3 окулярних подіях / виразці рогівки / втраті зору — постійне припинення."
+  - "НЕ призначати при Grade ≥3 периферичній нейропатії на старті (MMAE-payload клас-ефект)."
+  - "НЕ ігнорувати ризик кровотечі (TF-таргет на ендотелії) — Grade ≥3 hemorrhage потребує тимчасового припинення."
+  - "НЕ підтверджувати план без funding pathway — тисотумаб ведотин не зареєстрований в UA, доступ виключно через named-patient import / EAP / транскордонне лікування."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  recurrent / metastatic cervical carcinoma post-platinum. NCCN-
+  Cervical 2025 cat 1 / preferred; ESMO-Cervical 2024 recommended.
+  FDA accelerated Sep 2021 (innovaTV 204) → full approval Apr 2024
+  (innovaTV 301 confirmatory). No biomarker prerequisite — TF broadly
+  expressed on cervical carcinoma. Missing trial-level source IDs to
+  flag for follow-up: SRC-INNOVATV-204 (Coleman Lancet Oncol 2021,
+  PMID 33845034), SRC-INNOVATV-301 (Vergote NEJM 2024, PMID 39413376),
+  SRC-FDA-TIVDAK — not yet authored in this KB; citation provisionally
+  via SRC-NCCN-CERVICAL-2025 + SRC-ESMO-CERVICAL-2024 until
+  trial-level sources added. UA access: named-patient pathway only.
