@@ -1,0 +1,42 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  claim_method: formal-issue
+  ai_session_notes: 'Wave-2 BMA-CIViC backfill — closes #185. Variant-precision retry
+    for 5 manifest IDs. Three of the five (BCL2-DLBCL-NOS, MSH6-CRC, PDGFRA-EXON14-GIST)
+    have wave-1 sidecars on master that have not yet been merged into hosted/. This
+    wave-2 contribution is intended to supersede the wave-1 entries for variant-precision
+    reasons: wave-1 used gene + disease-token overlap and over-included evidence
+    items whose CIViC variant did not match the BMA''s variant_qualifier. Per chunk
+    spec: each proposed CIViC link must check disease, biomarker alteration, therapy,
+    and direction.'
+  tasktorrent_version: 2026-05-01-pending-first-commit
+  notes_for_reviewer: 'Per-BMA upsert touches only: evidence_sources (replaces empty
+    list) and actionability_review_required (kept true). All other fields untouched.
+    No-match rows recorded in audit-report.yaml. CIViC snapshot 2026-04-25 used as
+    reference. Maintainer adjudicates direction/significance/level interpretation.
+
+    Per-ID outcomes:
+    - BMA-BCL2-EXPRESSION-DLBCL-NOS: match — EID423 only (BCL2 Overexpression in
+      DLBCL, Poor Outcome). EID407 (reg_e@[IGH]::BCL2 rearrangement) excluded —
+      variant_qualifier explicitly excludes rearrangement; supersedes wave-1
+      chunk-001 which included EID407.
+    - BMA-EPCAM-GERMLINE-ENDOMETRIAL: match — EID1901 (EPCAM 3'' Exon Deletion in
+      Lynch Syndrome, Predisposition). Variant matches BMA exactly; disease is
+      Lynch Syndrome which is the underlying syndrome that produces dMMR
+      endometrial cancer in this BMA — clinically the same alteration.
+    - BMA-MLH1-GERMLINE-OVARIAN: no match — CIViC has zero MLH1 evidence with
+      ovarian disease overlap. Recorded in audit-report.yaml.
+    - BMA-MSH6-GERMLINE-CRC: match — EID1825, EID1829, EID1831, EID1840 (MSH6 LOF
+      point mutations / frameshift in CRC, Oncogenicity). Same set as wave-1
+      chunk-014; this entry confirms the call.
+    - BMA-PDGFRA-EXON14-GIST: no match — CIViC PDGFRA-GIST evidence covers D842V
+      / D842I / D842Y / I843DEL / V561A / V561D / Exon 18; none at exon 14
+      (N659K, N659Y). Recorded in audit-report.yaml. Supersedes wave-1
+      chunk-018 which over-included 17 unrelated PDGFRA-GIST EIDs.
+
+    '
