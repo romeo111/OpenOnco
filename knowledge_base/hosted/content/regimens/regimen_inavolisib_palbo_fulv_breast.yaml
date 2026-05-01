@@ -1,0 +1,64 @@
+id: REG-INAVOLISIB-PALBO-FULV-BREAST
+name: "Inavolisib + palbociclib + fulvestrant (HR+/HER2- PIK3CA-mutant 1L metastatic post-adjuvant ET recurrence)"
+name_ua: "Інаволісіб + палбоцикліб + фулвестрант (HR+/HER2- PIK3CA-mut 1L метастаз після рецидиву на ад'юв ET)"
+alternate_names: ["INAVO120 regimen"]
+
+components:
+  - drug_id: DRUG-INAVOLISIB
+    dose: "9 mg PO once daily continuous"
+    schedule: "Continuous, no off-day"
+    route: PO
+  - drug_id: DRUG-PALBOCICLIB
+    dose: "125 mg PO once daily, 3 weeks on / 1 week off"
+    schedule: "Days 1-21 of 28-day cycle, off days 22-28"
+    route: PO
+  - drug_id: DRUG-FULVESTRANT
+    dose: "500 mg IM days 1, 15, 29, then monthly"
+    schedule: "Loading days 1, 15, 29; then q4w maintenance"
+    route: IM
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate-severe
+
+premedication:
+  - "Pre-treatment HbA1c + fasting glucose; if HbA1c ≥6.5% or FG ≥126, optimize before start"
+  - "Baseline LFTs, lipid panel"
+  - "Patient counseling on stomatitis prevention (alcohol-free mouthwash, ice chips during meals first 2 weeks)"
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Hyperglycemia G≥2 (FG ≥160 mg/dL)"
+    modification: "Initiate metformin first-line; recheck within 7 days; if G≥3 hold inavolisib until ≤G1, resume at 6 mg → 3 mg PO daily"
+  - condition: "Stomatitis G≥2"
+    modification: "Topical corticosteroid mouthwash (dexamethasone swish-and-spit); hold inavolisib if G≥3 until ≤G1; resume at reduced dose"
+  - condition: "Diarrhea G≥2"
+    modification: "Loperamide; hydration; hold inavolisib if persistent G≥2 or any G≥3 until ≤G1"
+  - condition: "Neutropenia G≥3 (combination effect, palbociclib-driven)"
+    modification: "Hold palbociclib until ≤G2; resume at 100 mg → 75 mg PO daily per palbociclib label"
+  - condition: "Rash G≥3"
+    modification: "Hold inavolisib; topical/systemic corticosteroids; resume at reduced dose"
+  - condition: "Pneumonitis suspect"
+    modification: "Hold inavolisib immediately; pulmonology evaluation; permanent discontinuation if confirmed G≥2"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Inavolisib not registered in Ukraine; palbociclib registered (NSZU does not cover for breast metastatic); fulvestrant reimbursed. Named-patient import / EAP only for inavolisib. Major access barrier."
+
+sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+last_reviewed:
+notes: >
+  INAVO120 (NCT04191499): Phase III, PIK3CA-mut HR+/HER2- metastatic
+  breast cancer with disease recurrence on/after adjuvant endocrine
+  therapy. Inavolisib + palbociclib + fulvestrant vs placebo +
+  palbociclib + fulvestrant. Median PFS 15.0 vs 7.3 mo (HR 0.43).
+  FDA approval Oct 2024 (Itovebi). Pre-treatment PIK3CA testing
+  (tissue NGS or ctDNA) required. Mutant-selective inavolisib design
+  yields lower hyperglycemia + rash burden than alpelisib while
+  preserving efficacy. Trial-source SRC-INAVO120-TURNER-2024 not yet
+  ingested into KB — citation falls back to NCCN + ESMO guideline
+  Sources; flagged for follow-up source-stub generation.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
