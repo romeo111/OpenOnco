@@ -1,0 +1,104 @@
+id: REGIMEN-EPCORITAMAB-MONO-DLBCL-3L
+name: "Epcoritamab SC monotherapy for r/r DLBCL ≥3L (EPCORE NHL-1)"
+name_ua: "Епкоритамаб монотерапія підшкірно для р/р DLBCL у ≥3-й лінії (EPCORE NHL-1)"
+alternate_names:
+  - "Epcoritamab mono DLBCL"
+  - "Epkinly DLBCL 3L"
+  - "EPCORE NHL-1 regimen"
+
+components:
+  - drug_id: DRUG-EPCORITAMAB
+    dose: "Cycle 1 step-up: 0.16 mg SC day 1 → 0.8 mg SC day 8 → 48 mg SC day 15 + day 22; then 48 mg SC weekly cycles 1-3, every 2 weeks cycles 4-9, every 4 weeks cycles 10+ until progression or unacceptable toxicity"
+    schedule: "28-day cycles; SC injection (abdomen / thigh); first 48 mg dose (cycle 1 day 15) requires 24h hospital monitoring for CRS"
+    route: SC
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity (no fixed duration)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Cycle 1 mandatory prophylaxis BEFORE each step-up dose AND first 48 mg full dose (day 1, day 8, day 15, day 22):"
+  - "  - Prednisolone 100 mg PO/IV (or equivalent) day of dose + days +1, +2, +3 (4-day course)"
+  - "  - Acetaminophen 650-1000 mg PO 30-60 min pre-dose"
+  - "  - Diphenhydramine 25-50 mg PO/IV 30-60 min pre-dose"
+  - "Hospital admission for 24-hour monitoring required for the first 48 mg full dose (cycle 1 day 15) — CRS observation window"
+  - "Pre-treatment infectious workup (HBV / HCV / HIV) — HBV reactivation risk; entecavir / tenofovir prophylaxis if HBcAb+"
+  - "Adequate hydration day-of-dose"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CRS Grade 1 (fever ≥38°C without hypotension/hypoxia)"
+    modification: "Supportive care + antipyretics; continue scheduled dosing; outpatient observation acceptable for repeat full doses if cycle 1 day 15 dose tolerated"
+    rationale: "EPCORE NHL-1 any-grade CRS ~50%, predominantly Grade 1-2 and confined to cycle 1; step-up + prophylactic corticosteroids substantially reduce risk"
+    source_refs: []
+  - condition: "CRS Grade 2 (hypotension responsive to fluids OR hypoxia low-flow O₂)"
+    modification: "Hold next dose; tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h; resume after resolution"
+    rationale: "IL-6R blockade is first-line; class precedent from CAR-T CRS management"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "CRS Grade 3-4"
+    modification: "Hold; tocilizumab + high-dose dexamethasone (10-20 mg q6h) or methylprednisolone 1 g/day; ICU; permanent discontinuation for recurrent G3 or any G4"
+    rationale: "Severe CRS may be fatal if untreated; aggressive immunomodulation indicated"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "ICANS any grade"
+    modification: "Hold epcoritamab; dexamethasone 10 mg IV q6h for G≥2; intensify per CAR-T-style protocols for G3-4; permanent discontinuation for G4"
+    rationale: "ICANS rare with bispecifics (~6% any grade in EPCORE) but managed similarly to CAR-T ICANS"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Severe / opportunistic infection (G≥3)"
+    modification: "Hold epcoritamab until resolved; broad-spectrum antimicrobials; consider IVIG if IgG <400 + recurrent infections"
+    rationale: "B-cell aplasia + hypogammaglobulinaemia common with sustained CD20×CD3 bispecific exposure"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Missed dose >2 weeks"
+    modification: "Consider re-introduction of step-up dosing if interval prolonged; consult prescribing information"
+    rationale: "Re-step-up mitigates CRS risk after prolonged interruption"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Epcoritamab (Epkinly / Tepkinly) NOT registered in Ukraine as of
+    2026-04-29; no NSZU reimbursement pathway. Subcutaneous administration
+    profile is potentially well-suited to Ukrainian outpatient oncology
+    workflow (less infusion-chair burden than IV bispecifics or CAR-T) but
+    cycle 1 day 15 hospital-monitoring requirement assumes a 24-hour
+    inpatient bed. Access via international clinical trial or
+    compassionate-use only at this time. Cost — out-of-pocket if accessed
+    abroad — comparable to other novel lymphoma biologics.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-05-01"
+
+notes: >
+  First-in-class subcutaneous CD20×CD3 bispecific T-cell engager for
+  relapsed/refractory diffuse large B-cell lymphoma after ≥2 prior lines
+  (including patients ineligible for or relapsed after CAR-T). EPCORE
+  NHL-1 (Thieblemont et al., J Clin Oncol 2023): in r/r LBCL ≥3L (n=157,
+  ~39% prior CAR-T) — ORR ~63%, CR ~39%, median DOR ~12 months, median
+  PFS ~4.4 mo, median OS not reached at primary analysis. Step-up dosing
+  (0.16 → 0.8 → 48 mg) + cycle-1 corticosteroid prophylaxis reduce CRS
+  to predominantly Grade 1-2 (any-grade ~50%, G≥3 ~3%). ICANS ~6%
+  any-grade. SC route + ambulatory schedule favourable vs IV bispecifics
+  for outpatient-heavy practices. Continuous indefinite dosing (vs 12-cycle
+  fixed-duration glofitamab) is the principal sequencing trade-off.
+  See REGIMEN-EPCORITAMAB-STEP-UP-DOSING for the standalone cycle-1
+  step-up sub-schedule. Trial source SRC-EPCORE-NHL-1-THIEBLEMONT-2023
+  absent from KB at chunk authoring time — citing NCCN-BCELL-2025 +
+  ESMO-DLBCL-2024 pending source-stub creation.
+notes_ua: >
+  Перший у класі підшкірний CD20×CD3 біспецифічний Т-клітинний енгейджер для рецидивної/рефрактерної дифузної великоклітинної B-клітинної лімфоми після ≥2 попередніх ліній (включно з пацієнтами, непридатними для CAR-T або з рецидивом після нього). EPCORE NHL-1 (Thieblemont et al., J Clin Oncol 2023): у р/р ВКЛ ≥3L (n=157, ~39% попередня CAR-T) — ORR ~63%, ПВ ~39%, медіана DOR ~12 місяців, медіана PFS ~4.4 міс, медіана ЗВ не досягнута на момент первинного аналізу. Покрокове дозування (0.16 → 0.8 → 48 мг) + кортикостероїдна профілактика циклу 1 знижують CRS переважно до 1-2 ступеня (будь-який ступінь ~50%, G≥3 ~3%). ICANS ~6% будь-якого ступеня. Підшкірний шлях + амбулаторний графік — перевага порівняно з IV біспецифіками для практик з акцентом на амбулаторне ведення. Безперервне невизначене дозування (на відміну від 12-циклового фіксованого глофітамабу) — головний компроміс послідовності. Див. REGIMEN-EPCORITAMAB-STEP-UP-DOSING для окремого підграфіка ескалації циклу 1. Джерело випробування SRC-EPCORE-NHL-1-THIEBLEMONT-2023 відсутнє в БЗ на момент авторингу чанку — цитуються NCCN-BCELL-2025 + ESMO-DLBCL-2024 до створення стабу джерела.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
