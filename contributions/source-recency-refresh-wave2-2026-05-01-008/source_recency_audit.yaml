@@ -1,0 +1,68 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-008
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'One row per manifest source with structured outcome per
+    issue #210 schema (id, url_verified, content_current, proposed_current_as_of,
+    license_status, notes).'
+audit:
+  - id: SRC-COG
+    url_verified: 'no'
+    content_current: 'no'
+    proposed_current_as_of: null
+    license_status: pending_clinical_signoff
+    notes: 'Auto-stub with no URL on hosted record (only TODO title). Cannot
+      perform recency check. Replacement metadata suggestion: COG protocols are
+      published as registered trials (e.g. specific protocol IDs at
+      https://childrensoncologygroup.org/) — recommend resolving the citing
+      entity to a specific COG protocol (e.g. AAML1031, ANBL0532) or to a
+      specific NCT id, then retiring this generic stub. No current_as_of bump.'
+  - id: SRC-NCCN-BCELL-2025
+    url_verified: 'yes'
+    content_current: 'yes'
+    proposed_current_as_of: '2026-05-01'
+    license_status: confirmed_referenced_only
+    notes: 'GET https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1480
+      returned 200 OK. NCCN B-Cell Lymphomas v.2.2025 remains the active
+      published version. License (NCCN proprietary, no redistribution) and
+      attribution unchanged. Hosted current_as_of placeholder ''2025-XX-XX''
+      replaced with chunk run date 2026-05-01 to record the verified-still-current
+      check. No clinical content fields modified.'
+  - id: SRC-COIFFIER-2012-ROMIDEPSIN-PTCL
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed_referenced_only
+    notes: 'PubMed canonical URL https://pubmed.ncbi.nlm.nih.gov/22271479
+      returned 403 (NCBI bot-block on automated UA — humans access fine).
+      DOI fallback https://doi.org/10.1200/JCO.2011.37.4223 redirected to
+      ASCO Publications and also returned 403 (ASCO/JCO subscription gate).
+      Per issue rule: do NOT bump current_as_of when blocked_by_bot_protection.
+      Content remains current — no superseding RCT in R/R PTCL space; no
+      action needed. Maintainer can browser-verify or accept on faith.'
+  - id: SRC-MONALEESA-2-HORTOBAGYI-2016
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed_referenced_only
+    notes: 'PubMed canonical URL https://pubmed.ncbi.nlm.nih.gov/27717303
+      returned 403 (NCBI bot-block). DOI fallback https://doi.org/10.1056/NEJMoa1609709
+      redirected to https://www.nejm.org/doi/10.1056/NEJMoa1609709 and also
+      returned 403 (NEJM persistent publisher bot-block, same pattern as
+      SRC-ADMIRAL-PERL-2019 in wave-7). Per issue rule: blocked_by_bot_protection,
+      do NOT bump current_as_of. Content current (MONALEESA-2 with 2022 OS
+      update remains primary citation for ribociclib 1L HR+/HER2- ABC).'
+  - id: SRC-MURANO-SEYMOUR-2018
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: confirmed_referenced_only
+    notes: 'PubMed canonical URL https://pubmed.ncbi.nlm.nih.gov/29562156
+      returned 403 (NCBI bot-block). DOI fallback https://doi.org/10.1056/NEJMoa1713976
+      redirected to https://www.nejm.org/doi/10.1056/NEJMoa1713976 and also
+      returned 403 (NEJM publisher bot-block). Per issue rule:
+      blocked_by_bot_protection, do NOT bump current_as_of. Content current
+      (MURANO with 7-yr update remains primary citation for time-limited
+      ven+R in R/R CLL).'
