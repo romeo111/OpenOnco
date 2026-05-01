@@ -1,0 +1,161 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-017
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: all 5 BMAs in this chunk resolved to
+    audit rows. CIViC snapshot 2026-04-25 (4842 evidence items, 551 genes)
+    queried with conservative matching: gene-name (with synonym + variant-
+    aware extraction) AND disease-token overlap required. Per chunk-spec:
+    do not invent treatment claims when CIViC has no suitable evidence
+    item. No upsert sidecars produced; no hosted KB edits.'
+
+snapshot_used: knowledge_base/hosted/civic/2026-04-25/evidence.yaml
+match_method:
+  gene_extraction: |
+    Primary: token-1 of BMA-id (e.g. BMA-MSH2-GERMLINE-PROSTATE -> MSH2).
+    Synonym expansion: when token-1 is a non-HGNC symbol (e.g. CD30, NTRK),
+    variant_qualifier is parsed for HGNC-symbol candidates (e.g. ETV6-NTRK3
+    -> NTRK3) and protein-name -> HGNC-gene mapping is applied (CD30 ->
+    TNFRSF8). Both the original token and the expanded symbol are queried.
+  disease_match: |
+    Disease-token list per DIS-id (e.g. DIS-PROSTATE -> 'prostate'). A CIViC
+    evidence_item disease string must contain at least one listed token,
+    case-insensitive. Generic 'Cancer' disease entries are not accepted as
+    matches for tissue-specific BMAs (would be tissue-agnostic borrowing).
+
+no_match_rows:
+- bma_id: BMA-CD30-ALCL
+  biomarker_id: BIO-CD30-IHC
+  variant_qualifier: 'CD30 expression — universal (~100%) in systemic anaplastic
+    large-cell lymphoma (ALK-positive and ALK-negative)'
+  disease_id: DIS-ALCL
+  gene_token_primary: CD30
+  gene_token_synonyms_tried:
+  - TNFRSF8
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+  rationale: 'CD30 is a protein/IHC marker; HGNC symbol is TNFRSF8. Neither
+    "CD30" nor "TNFRSF8" appears as a gene field in CIViC snapshot 2026-04-25.
+    No CIViC evidence item available for backfill. Hosted clinical content
+    (BV+CHP per ECHELON-2, BV monotherapy per Pro JCO 2012) remains backed
+    by SRC-NCCN-BCELL-2025 and SRC-ESMO-PTCL-2024.'
+  evidence_consulted:
+  - source: civic-snapshot-2026-04-25
+    query: gene == "CD30" OR gene == "TNFRSF8"
+    hits: 0
+
+- bma_id: BMA-KIT-EXON13-17-GIST
+  biomarker_id: BIO-KIT
+  variant_qualifier: 'exon 13/14 (ATP-binding) or exon 17/18 (activation loop)
+    secondary mutation post-imatinib'
+  disease_id: DIS-GIST
+  gene_token_primary: KIT
+  gene_token_synonyms_tried: []
+  verdict: already_has_civic_evidence
+  civic_gene_evidence_count_any_disease: 113
+  current_civic_block_count: 16
+  current_civic_eid_count: 76
+  rationale: 'Hosted entity already carries 16 SRC-CIVIC evidence_sources
+    blocks (76 EIDs, levels A-D) from a prior backfill wave. Re-running the
+    matcher would either duplicate those blocks or wipe and replace them
+    (both undesirable). Per reference-worker convention: skip and audit.
+    Maintainer adjudication only — no upsert proposed.'
+  evidence_consulted:
+  - source: hosted/biomarker_actionability/bma_kit_exon13_17_gist.yaml
+    query: any(e.source == "SRC-CIVIC" for e in evidence_sources)
+    hits: 16
+
+- bma_id: BMA-MSH2-GERMLINE-PROSTATE
+  biomarker_id: BIO-DMMR-IHC
+  variant_qualifier: 'MSH2 germline loss-of-function (dMMR / MSI-H)'
+  disease_id: DIS-PROSTATE
+  gene_token_primary: MSH2
+  gene_token_synonyms_tried: []
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 7
+  rationale: 'MSH2 has 7 CIViC evidence items in snapshot 2026-04-25, but
+    none annotate prostate disease. Disease distribution: Colorectal Cancer
+    (3), Endometrial Cancer (2), Transitional Cell Carcinoma (1), generic
+    "Cancer" (1, EID11677, Nivolumab Sensitivity/Response). Generic "Cancer"
+    is rejected per match-method (would be tissue-agnostic borrowing into
+    a tissue-specific BMA). Hosted clinical content rests on tumor-agnostic
+    pembrolizumab MSI-H/dMMR FDA approval (KEYNOTE-158) and prostate-
+    specific guidance from SRC-NCCN-PROSTATE-2025 and SRC-ESMO-PROSTATE-2024.'
+  evidence_consulted:
+  - source: civic-snapshot-2026-04-25
+    query: gene == "MSH2" AND disease contains any-of ("prostate")
+    hits: 0
+  - source: civic-snapshot-2026-04-25
+    query: gene == "MSH2"
+    hits: 7
+    diseases:
+    - 'Colorectal Cancer (3)'
+    - 'Endometrial Cancer (2)'
+    - 'Transitional Cell Carcinoma (1)'
+    - 'Cancer / tissue-agnostic (1)'
+
+- bma_id: BMA-NTRK-ETV6-SALIVARY
+  biomarker_id: BIO-NTRK-FUSION
+  variant_qualifier: 'ETV6-NTRK3 fusion'
+  disease_id: DIS-SALIVARY
+  gene_token_primary: NTRK
+  gene_token_synonyms_tried:
+  - NTRK1
+  - NTRK2
+  - NTRK3
+  variant_aware_gene_resolved: NTRK3
+  verdict: gene_in_civic_no_disease_overlap
+  civic_gene_evidence_count_any_disease: 4
+  rationale: 'Variant-aware extraction: variant_qualifier "ETV6-NTRK3 fusion"
+    yields HGNC symbol NTRK3 (fusion-partner-specific). NTRK3 has 4 CIViC
+    evidence items in snapshot 2026-04-25, distributed across Gastrointestinal
+    Stromal Tumor (1, larotrectinib resistance), Lung Non-small Cell
+    Carcinoma (2), and generic "Cancer" (1, entrectinib does-not-support).
+    No salivary-gland-annotated evidence; generic "Cancer" rejected per
+    match-method. Hosted content (larotrectinib / entrectinib tumor-agnostic
+    NTRK-fusion approvals) remains backed by SRC-FDA-CDS-2026.'
+  evidence_consulted:
+  - source: civic-snapshot-2026-04-25
+    query: gene == "NTRK3" AND disease contains any-of ("salivary")
+    hits: 0
+  - source: civic-snapshot-2026-04-25
+    query: gene == "NTRK3"
+    hits: 4
+    diseases:
+    - 'Gastrointestinal Stromal Tumor (1)'
+    - 'Lung Non-small Cell Carcinoma (2)'
+    - 'Cancer / tissue-agnostic (1)'
+  - source: civic-snapshot-2026-04-25
+    query: gene == "NTRK1"
+    hits: 5
+    note: 'Reviewed but not applicable — variant_qualifier specifies NTRK3 fusion partner.'
+
+- bma_id: BMA-RAD51C-GERMLINE-BREAST
+  biomarker_id: BIO-HRR-PANEL
+  variant_qualifier: 'RAD51C germline pathogenic'
+  disease_id: DIS-BREAST
+  gene_token_primary: RAD51C
+  gene_token_synonyms_tried: []
+  verdict: gene_not_in_civic
+  civic_gene_evidence_count_any_disease: 0
+  rationale: 'RAD51C is the canonical HGNC symbol; no synonym expansion
+    needed. RAD51C absent from gene index of CIViC snapshot 2026-04-25
+    (551 genes total). No CIViC evidence available for backfill. Hosted
+    moderate-risk-allele guidance (PARPi off-label in HRD context) remains
+    backed by SRC-NCCN-BREAST-2025.'
+  evidence_consulted:
+  - source: civic-snapshot-2026-04-25
+    query: gene == "RAD51C"
+    hits: 0
+
+summary:
+  total_manifest_ids: 5
+  upserts: 0
+  audit_rows: 5
+  not_found_in_master: 0
+  per_verdict:
+    gene_not_in_civic: 2
+    gene_in_civic_no_disease_overlap: 2
+    already_has_civic_evidence: 1
