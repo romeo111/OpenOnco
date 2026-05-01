@@ -1,0 +1,65 @@
+id: BIO-PDL1-22C3-CLONE
+names:
+  preferred: "PD-L1 IHC — Dako 22C3 pharmDx clone"
+  ukrainian: "PD-L1 ІГХ — клон Dako 22C3 pharmDx"
+  english: "PD-L1 22C3 (Dako pharmDx)"
+  synonyms: ["22C3", "PD-L1 22C3 pharmDx", "Dako 22C3"]
+biomarker_type: protein_expression_ihc
+
+measurement:
+  method: >
+    IHC with Dako 22C3 pharmDx companion diagnostic on Autostainer Link 48.
+    Scoring depends on tumor type:
+    - NSCLC: TPS (Tumor Proportion Score, % membranous tumor-cell staining)
+    - Gastric/GEJ, esophageal, cervical, urothelial, H&N, TNBC: CPS
+      (Combined Positive Score, including tumor + lymphocytes + macrophages)
+  units: "TPS % OR CPS score (assay-specific cut-points by indication)"
+  typical_range: [0, 100]
+
+specimen_requirements:
+  - "FFPE tumor block, ≤3 years old preferred"
+  - "Minimum 100 viable tumor cells for valid TPS/CPS scoring"
+
+interpretation_notes: >
+  22C3 is the FDA-approved companion diagnostic for pembrolizumab indications.
+  Cut-points are indication-specific:
+  - NSCLC 1L monotherapy: TPS ≥50% (KEYNOTE-024)
+  - NSCLC 1L combo: TPS ≥1% complementary (KEYNOTE-189 non-squamous,
+    KEYNOTE-407 squamous; combo benefit independent of TPS but magnitude
+    tracks with expression)
+  - Gastric/GEJ adenocarcinoma: CPS ≥1 (formerly), ≥5 stratum-driven
+  - Cervical: CPS ≥1
+  - TNBC (1L pembro+chemo): CPS ≥10
+  - Urothelial: CPS ≥10 (post-platinum) or TPS-based criteria (1L
+    cisplatin-ineligible)
+  Blueprint Phase 2 (J Thorac Oncol 2017) showed 22C3 and SP263 are
+  analytically concordant on tumor-cell staining; SP142 stains
+  systematically lower on tumor cells (immune-cell-weighted).
+
+related_biomarkers: [BIO-PDL1-EXPRESSION, BIO-PDL1-TPS, BIO-PDL1-CPS]
+sources:
+  - SRC-KEYNOTE-024-RECK-2016
+  - SRC-KEYNOTE-189-GANDHI-2018
+  - SRC-KEYNOTE-407-PAZ-ARES-2018
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-04-29"
+oncokb_skip_reason: ihc_no_variant
+external_ids:
+  hgnc_symbol: "CD274"
+notes: >
+  Companion-diagnostic clone-specific entity. Distinct from BIO-PDL1-TPS
+  / BIO-PDL1-CPS (scoring conventions) because the assay clone matters:
+  pembrolizumab indications require 22C3 specifically per FDA labeling,
+  and 22C3 vs SP142 are NOT interchangeable on immune-cell-weighted
+  scoring. Used by render layer to surface assay-validity warnings when
+  a patient profile reports PD-L1 testing with a non-22C3 clone for a
+  pembrolizumab-routed indication.
+notes_ua: >
+  Клон-специфічна сутність companion diagnostic. Відрізняється від
+  BIO-PDL1-TPS / BIO-PDL1-CPS (умови підрахунку) тим, що клон імпортує:
+  показання до пембролізумабу за маркуванням FDA вимагають саме 22C3,
+  і 22C3 vs SP142 НЕ є взаємозамінними при оцінці на імунних клітинах.
+  Використовується рендером для попередження про невалідність аналізу,
+  якщо пацієнт має тест PD-L1 з не-22C3 клоном для пембролізумаб-маршруту.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,71 @@
+id: BIO-PDL1-SP142-CLONE
+names:
+  preferred: "PD-L1 IHC — Ventana SP142 clone"
+  ukrainian: "PD-L1 ІГХ — клон Ventana SP142"
+  english: "PD-L1 SP142 (Ventana)"
+  synonyms: ["SP142", "VENTANA PD-L1 (SP142)", "Ventana SP142"]
+biomarker_type: protein_expression_ihc
+
+measurement:
+  method: >
+    IHC with VENTANA PD-L1 (SP142) Assay on BenchMark ULTRA / XT.
+    Scoring is IMMUNE-CELL-WEIGHTED (distinct from 22C3 / SP263):
+    - TNBC: IC score = % tumor area occupied by PD-L1+ immune cells of
+      any intensity; positive cut-off IC ≥1%.
+    - Urothelial (historical): IC ≥5%.
+    - NSCLC (atezolizumab IMpower150 era): TC ≥50% OR IC ≥10%
+      ("TC3 or IC3").
+  units: "IC% (immune-cell area) and/or TC% (tumor-cell %), assay-specific"
+  typical_range: [0, 100]
+
+specimen_requirements:
+  - "FFPE tumor block"
+  - "Pathologist trained in SP142 IC scoring (immune-cell area, not cell count)"
+
+interpretation_notes: >
+  SP142 is the companion diagnostic for atezolizumab (Tecentriq).
+  CRITICAL: SP142 is NOT analytically concordant with 22C3 / SP263 —
+  Blueprint Phase 1/2 (J Thorac Oncol 2017/2018) showed SP142 stains
+  systematically LOWER on tumor cells but emphasizes immune-cell
+  staining; results are NOT interchangeable with the other clones.
+  Indications relying on SP142:
+  - TNBC 1L atezolizumab + nab-paclitaxel: IC ≥1% (IMpassion130
+    Schmid 2018; FDA approval later withdrawn 2021 after IMpassion131
+    failed to confirm — SP142 retained as the analytically validated
+    cut-point but pembro+chemo with 22C3 CPS≥10 became the preferred
+    regimen).
+  - Urothelial 1L cisplatin-ineligible (historical, now restricted).
+  - NSCLC (IMpower150 atezo+bev+chemo) — TC3/IC3 stratum.
+
+related_biomarkers: [BIO-PDL1-EXPRESSION, BIO-PDL1-TPS]
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-NCCN-BLADDER-2025
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-04-29"
+oncokb_skip_reason: ihc_no_variant
+external_ids:
+  hgnc_symbol: "CD274"
+notes: >
+  Companion-diagnostic clone-specific entity for atezolizumab. Important
+  for engine: a TNBC patient with a 22C3 CPS result CANNOT be routed
+  through an SP142-IC-based atezo regimen and vice versa — clones are
+  not interchangeable. Render layer should surface assay-mismatch
+  warnings.
+
+  TRIAL ANCHOR: IMpassion130 (Schmid et al, NEJM 2018) — primary
+  validating trial; full Source stub TBD (flag for source-ingest
+  follow-up). Currently citing NCCN guidelines that summarize the
+  evidence and SP142-specific cut-points.
+notes_ua: >
+  Клон-специфічна сутність companion diagnostic для атезолізумабу.
+  Важливо для движка: пацієнт з ТНРМЗ і результатом 22C3 CPS НЕ може
+  бути маршрутизований через SP142-IC-залежний режим атезо і навпаки —
+  клони не є взаємозамінними. Рендер має попереджати про невідповідність.
+
+  ТРИАЛ-ЯКОР: IMpassion130 (Schmid та ін., NEJM 2018) — первинний
+  валідаційний триал; повний Source-stub TBD (позначено для подальшого
+  ingest). Наразі цитуємо настанови NCCN, що підсумовують докази і
+  SP142-специфічні cut-points.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
