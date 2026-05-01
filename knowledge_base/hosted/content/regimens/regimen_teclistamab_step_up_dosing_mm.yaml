@@ -1,0 +1,74 @@
+id: REGIMEN-TECLISTAMAB-STEP-UP-DOSING-MM
+name: "Teclistamab BCMA × CD3 bispecific — inpatient step-up dosing schedule"
+name_ua: "Теклістамаб BCMA × CD3 біспецифік — стаціонарна схема step-up dosing"
+alternate_names:
+  - "Teclistamab step-up"
+  - "Tecvayli induction"
+  - "MajesTEC-1 step-up phase"
+
+components:
+  - drug_id: DRUG-TECLISTAMAB
+    dose: >
+      Step-up dose 1: 0.06 mg/kg SC on day 1.
+      Step-up dose 2: 0.3 mg/kg SC on day 4 (≥48h after dose 1).
+      First full treatment dose: 1.5 mg/kg SC on day 7 (≥48h after dose 2).
+    schedule: "Days 1, 4, 7 of a one-time 7-day inpatient induction window"
+    route: SC
+
+cycle_length_days: 7
+total_cycles: "1 (one-time step-up; transition to REGIMEN-TECLISTAMAB-MONO-MM weekly)"
+toxicity_profile: severe
+
+premedication:
+  - "Pre-step-up doses (each of 3 doses): dexamethasone 16 mg IV/PO + diphenhydramine 50 mg IV/PO + acetaminophen 650 mg PO 1-3h before dosing — required for CRS mitigation."
+  - "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
+  - "Hospitalize for ≥48h after each step-up dose AND first full dose (CRS / ICANS surveillance)."
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+
+dose_adjustments:
+  - condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
+    modification: "Acetaminophen + observation; do not advance to next step-up dose until afebrile ≥48h; consider holding next dose 48-72h."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
+    modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive care; do not advance step-up until CRS resolved."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day; ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary review."
+    rationale: "Severe CRS / ICANS may be fatal if untreated."
+  - condition: "Step-up dose delayed >7 days"
+    modification: "Restart step-up at the previous tolerated dose level (per FDA label / MajesTEC-1 protocol)."
+    source_refs: [SRC-MAJESTEC-1-MOREAU-2022]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Teclistamab NOT registered in Ukraine; NOT available domestically.
+    Step-up dosing requires inpatient capability with continuous
+    monitoring + tocilizumab on-site + ICU access. International
+    referral only.
+
+sources:
+  - SRC-MAJESTEC-1-MOREAU-2022
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-01"
+notes: >
+  One-time inpatient step-up induction phase prior to weekly
+  monotherapy (REGIMEN-TECLISTAMAB-MONO-MM). MajesTEC-1 schedule:
+  0.06 → 0.3 → 1.5 mg/kg SC at days 1, 4, 7 with ≥48h between doses.
+  Hospitalization for ≥48h after each step-up dose AND first full
+  dose required by FDA label and EMA SmPC due to CRS risk
+  (~72% any-grade, ~1% Grade 3-4 in MajesTEC-1).
+notes_ua: >
+  Одноразова стаціонарна фаза step-up індукції перед щотижневою
+  монотерапією (REGIMEN-TECLISTAMAB-MONO-MM). Схема MajesTEC-1:
+  0.06 → 0.3 → 1.5 мг/кг п/ш у дні 1, 4, 7 з ≥48 год між дозами.
+  Госпіталізація на ≥48 год після кожної step-up дози ТА першої
+  повної дози вимагається маркуванням FDA та SmPC EMA через ризик
+  CRS (~72% будь-якого ступеня, ~1% Grade 3-4 у MajesTEC-1).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
