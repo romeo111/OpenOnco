@@ -1,0 +1,50 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-018
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL GET (with
+    DOI fallback where applicable) did not return 2xx/3xx. HTTP 403
+    typically indicates publisher bot-blocking (NCBI/Elsevier/NEJM/ASCO
+    gate non-browser User-Agents); a real browser would normally succeed.
+    Two stub sources have no top-level url field and were flagged
+    unreachable.no_url per chunk-brief rule. Maintainer browser-verify
+    recommended before next action.'
+rows:
+- id: SRC-ESMO-SALIVARY
+  url: null
+  status_code: null
+  reason: no_url
+  error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+  current_as_of_existing: null
+- id: SRC-PATHFINDER
+  url: null
+  status_code: null
+  reason: no_url
+  error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+  current_as_of_existing: null
+- id: SRC-REVEL-GARON-2014
+  url: https://pubmed.ncbi.nlm.nih.gov/24933332/
+  doi_fallback_url: https://doi.org/10.1016/S0140-6736(14)60845-X
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2014-08-09'
+- id: SRC-APHINITY-VONMINCKWITZ-2017
+  url: https://pubmed.ncbi.nlm.nih.gov/28581356
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1703643
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2026-04-29'
+- id: SRC-LANCET-CPX351-2018
+  url: https://ascopubs.org/doi/10.1200/JCO.2017.77.6112
+  doi_fallback_url: https://doi.org/10.1200/JCO.2017.77.6112
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2018-09-01'
