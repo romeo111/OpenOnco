@@ -40,6 +40,57 @@ ukraine_availability:
   notes: "Darolutamide registered but reimbursement under negotiation 2025; out-of-pocket for most patients. Docetaxel + leuprolide reimbursed."
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# ADT + darolutamide + 6× docetaxel for mHSPC high-volume (ARASENS).
+# Triple combo brings ADT side effects + docetaxel chemo + ARPI.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Гарячі припливи, втрата лібідо, втома"
+    action_ua: "Очікувані ефекти від ADT — занотовуйте інтенсивність, обговоріть стратегії допомоги на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Випадання волосся (від доцетакселу, на 2-3 тижні)"
+    action_ua: "Очікувано — повертається після завершення хіміотерапії"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Біль у м'язах і суглобах через 2-3 дні після доцетакселу"
+    action_ua: "Поширений побічний ефект — зазвичай минає за тиждень"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 2-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Доцетаксел може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — доцетаксел дає нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена втома, постійна спрага, новий діабет"
+    action_ua: "Подзвоніть у клініку того ж дня — даролутамід і ADT можуть викликати метаболічні зміни"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Сильна реакція на інфузію доцетакселу: задишка, висип, набряк обличчя"
+    action_ua: "Інфузія в клініці — повідомте медсестру негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycles 1-2"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+
 last_reviewed:
 notes: >
   ARASENS: significant OS benefit for triplet vs ADT + docetaxel in

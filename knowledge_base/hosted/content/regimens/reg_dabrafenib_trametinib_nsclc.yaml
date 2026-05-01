@@ -34,6 +34,54 @@ ukraine_availability:
   notes: "Registered; reimbursement variable. Out-of-pocket for many."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Dabrafenib + trametinib for BRAF V600E NSCLC. BRAFi+MEKi pyrexia is
+# the signature side effect; cardiac, ocular, hepatic round out.
+# Same pattern as encorafenib+binimetinib melanoma. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Періодичні гарячкові епізоди (підвищення температури до 38-39°C з ознобом, минає за кілька годин)"
+    action_ua: "Поширений побічний ефект BRAFi+MEKi — занотуйте частоту й температуру"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна нудота, втома, біль у суглобах"
+    action_ua: "Зустрічаються — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Розмиття зору, тимчасові плями в полі зору"
+    action_ua: "Поширене на тлі траметинібу — обов'язково повідомте на найближчому візиті, потрібен огляд очей"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C, що триває кілька днів"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка джерела і можливо тимчасова пауза в препаратах"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нові плями на шкірі або зміна вже існуючих родимок"
+    action_ua: "Подзвоніть у клініку того ж дня — BRAFi може спричиняти вторинні шкірні пухлини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка або сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібно виключити імунний пневмоніт або серцеву недостатність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова втрата зору, сильний біль в очах"
+    action_ua: "Звертайтесь у лікарню негайно — рідко траметиніб може спричиняти серйозні зміни в сітківці"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   BRF113928: ORR ~64% in 1L BRAF V600E+ NSCLC. Pyrexia management

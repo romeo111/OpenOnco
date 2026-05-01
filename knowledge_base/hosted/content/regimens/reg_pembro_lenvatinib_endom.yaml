@@ -53,6 +53,55 @@ ukraine_availability:
     pembro+lenva access unavailable.
 
 sources: [SRC-NCCN-UTERINE-2025, SRC-ESMO-ENDOMETRIAL-2022]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembro + lenvatinib for advanced endometrial 2L+ (KEYNOTE-775).
+# Lenvatinib brings BP, proteinuria, hand-foot syndrome, hepatic, hypothyroid;
+# pembro brings irAEs. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Підвищений артеріальний тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Ленватиніб часто підвищує тиск — занотовуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Почервоніння, лущення або біль на долонях і стопах"
+    action_ua: "Hand-foot синдром від ленватинібу — використовуйте крем, носіть м'яке взуття; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Помірна втома, нудота, помірна діарея"
+    action_ua: "Очікувано на тлі ленватинібу — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або сеча, що піниться"
+    action_ua: "Подзвоніть у клініку того ж дня — ленватиніб може впливати на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Подзвоніть у клініку того ж дня — пембролізумаб може спричиняти тяжкий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — обидва препарати можуть впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Сильний головний біль, порушення зору або мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — ленватиніб з гіпертензією може спричиняти інсульт або PRES (рідкісне ускладнення)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-UTERINE-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >
