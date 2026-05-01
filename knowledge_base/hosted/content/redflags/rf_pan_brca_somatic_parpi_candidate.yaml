@@ -1,0 +1,85 @@
+id: RF-PAN-BRCA-SOMATIC-PARPI-CANDIDATE
+definition: >
+  Somatic (tumor-only) BRCA1 or BRCA2 pathogenic variant identified on
+  tumor NGS — pan-tumor PARPi-candidate signal. Disease applicability
+  varies: ovarian (PAOLA-1, SOLO-1 — somatic BRCA pooled with germline
+  in HRD-positive maintenance indication), mCRPC (PROfound cohort-A —
+  olaparib mPFS 7.4 vs 3.6 mo, HR 0.34, somatic + germline pooled),
+  pancreatic PDAC (POLO label is germline-only — somatic BRCA falls to
+  off-label / NCCN "consider" tier), breast (OlympiAD / EMBRACA / OlympiA
+  labels are germline-only — somatic BRCA breast remains investigational).
+  Confirm somatic vs germline status via paired germline NGS before
+  cascade-testing decisions (~40% of tumor-only "BRCA" calls are in
+  fact germline per ASCO/CAP guidance).
+definition_ua: >
+  Соматичний (пухлинно-тільки) патогенний варіант BRCA1 або BRCA2,
+  виявлений на пухлинному NGS — пан-пухлинний сигнал кандидата на
+  PARPi. Застосовність залежить від диспохи: яєчник (PAOLA-1, SOLO-1 —
+  соматичний BRCA об'єднано з гермінальним у HRD-позитивному показанні
+  підтримання), мКРРПЗ (PROfound когорта-A — олапариб мПФВ 7.4 проти
+  3.6 міс, HR 0.34, соматичний + гермінальний об'єднано), панкреатична
+  PDAC (мітка POLO — лише гермінальна — соматичний BRCA off-label /
+  NCCN "розглянути"), молочна залоза (OlympiAD / EMBRACA / OlympiA —
+  лише гермінальні — соматичний BRCA при РМЗ залишається дослідницьким).
+  Підтвердити соматичний проти гермінального статус парним гермінальним
+  NGS до рішень про каскадне тестування (~40% пухлинно-тільки "BRCA"
+  викликів насправді гермінальні за рекомендаціями ASCO/CAP).
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "brca1_brca2_somatic"
+      value: "pathogenic"
+    - finding: "brca1_somatic"
+      value: "pathogenic"
+    - finding: "brca2_somatic"
+      value: "pathogenic"
+    - finding: "brca_tumor_status"
+      value: "somatic_pathogenic"
+    - finding: "tumor_brca_pathogenic"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-OVARIAN
+  - DIS-PROSTATE
+  - DIS-PDAC
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-OVARIAN-ADVANCED-1L
+  - ALGO-OVARIAN-2L
+  - ALGO-PROSTATE-MCRPC-1L
+  - ALGO-PDAC-METASTATIC-1L
+
+sources:
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-NCCN-PANCREATIC-2025
+  - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Distinct trigger keys from RF-OVARIAN-BRCA-MUT-ACTIONABLE and
+  RF-PROSTATE-HIGH-RISK-BIOLOGY to avoid double-firing on germline
+  cases — this RF keys specifically on "*_somatic" / "tumor_*" findings.
+  Breast included as informational (no shifts_algorithm wiring on
+  ALGO-BREAST-* since label is germline-only); somatic BRCA in PDAC
+  also weak-evidence — flagged for MDT discussion rather than
+  algorithm-shifting. References BIO-BRCA-SOMATIC.
+notes_ua: >
+  Окремі тригерні ключі від RF-OVARIAN-BRCA-MUT-ACTIONABLE та
+  RF-PROSTATE-HIGH-RISK-BIOLOGY для уникнення подвійного спрацювання
+  на гермінальних випадках — цей RF спирається спецично на ключі
+  "*_somatic" / "tumor_*". РМЗ включено як інформаційний (без
+  shifts_algorithm на ALGO-BREAST-*, оскільки мітка лише
+  гермінальна); соматичний BRCA у PDAC також слабкі докази — позначено
+  для MDT-обговорення, не для зсуву алгоритму. Посилається на
+  BIO-BRCA-SOMATIC.

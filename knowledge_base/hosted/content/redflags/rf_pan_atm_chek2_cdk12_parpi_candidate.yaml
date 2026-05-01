@@ -1,0 +1,88 @@
+id: RF-PAN-ATM-CHEK2-CDK12-PARPI-CANDIDATE
+definition: >
+  Germline pathogenic variant in ATM, CHEK2, or CDK12 (composite
+  HRR-pathway RF). Disease-specific evidence varies sharply: ATM
+  contributes to PROfound cohort-A (mCRPC) — pooled with BRCA1/2 for
+  olaparib mPFS 7.4 vs 3.6 mo (HR 0.34). CDK12 — strong
+  prostate-specific actionability (cohort-B in PROfound; immune-hot
+  phenotype with elevated tumor neoantigens — emerging
+  immunotherapy / PARPi rationale). CHEK2 — moderate-penetrance
+  breast/prostate risk gene; weakest PARPi-response evidence (cohort-B
+  in PROfound, smaller absolute benefit). Pan-tumor framing:
+  treatment-modifying primarily in mCRPC; informational MDT signal in
+  breast / pancreatic / ovarian where label-grade evidence is absent.
+definition_ua: >
+  Зародкова патогенна варіація в ATM, CHEK2 або CDK12 (композитний
+  HRR-pathway RF). Докази за дисциплінами різко різні: ATM — у когорті-A
+  PROfound (мКРРПЗ), об'єднано з BRCA1/2, олапариб мПФВ 7.4 проти 3.6
+  міс (HR 0.34). CDK12 — сильна простато-специфічна актіонабельність
+  (когорта-B у PROfound; "імунно-гарячий" фенотип з підвищеними
+  пухлинними неоантигенами — обґрунтування для імунотерапії / PARPi).
+  CHEK2 — ген ризику РМЗ/простати помірної пенетрантності; найслабші
+  докази відповіді на PARPi (когорта-B у PROfound, менший абсолютний
+  виграш). Пан-пухлинне рамкування: модифікуюче лікування здебільшого
+  при мКРРПЗ; інформаційний MDT-сигнал при РМЗ / панкреатичному /
+  яєчнику, де відсутні докази мітки.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "atm_germline"
+      value: "pathogenic"
+    - finding: "chek2_germline"
+      value: "pathogenic"
+    - finding: "cdk12_germline"
+      value: "pathogenic"
+    - finding: "atm_status"
+      value: "pathogenic"
+    - finding: "chek2_status"
+      value: "pathogenic"
+    - finding: "cdk12_status"
+      value: "pathogenic"
+    - finding: "hrr_panel_atm_chek2_cdk12"
+      value: "positive"
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-PROSTATE
+  - DIS-BREAST
+  - DIS-PDAC
+shifts_algorithm:
+  - ALGO-PROSTATE-MCRPC-1L
+
+sources:
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Composite RF references BIO-ATM-CHEK2-CDK12-GERMLINE. Distinct from
+  RF-PROSTATE-HIGH-RISK-BIOLOGY (which keys on broad
+  hrr_pathway_mutation flag) — this RF surfaces gene-specific findings
+  for nuanced MDT discussion. Algorithm wiring restricted to
+  ALGO-PROSTATE-MCRPC-1L because that is the only disease with
+  label-grade PARPi evidence; breast / pancreatic listed under
+  relevant_diseases for MDT awareness without algorithm shift.
+  CDK12 + immunotherapy is an active research signal — flag for
+  clinical trial referral consideration. CHEK2 c.1100delC contributes
+  ~moderate breast risk; counseling differs from BRCA1/2.
+notes_ua: >
+  Композитний RF посилається на BIO-ATM-CHEK2-CDK12-GERMLINE.
+  Відрізняється від RF-PROSTATE-HIGH-RISK-BIOLOGY (який спирається на
+  широкий прапор hrr_pathway_mutation) — цей RF виносить
+  ген-специфічні знахідки для нюансованого MDT-обговорення. Прив'язку
+  до алгоритму обмежено лише ALGO-PROSTATE-MCRPC-1L, оскільки це
+  єдина дисципліна з доказами рівня мітки для PARPi; РМЗ / панкреас —
+  перелічено у relevant_diseases для усвідомлення на MDT без зсуву
+  алгоритму. CDK12 + імунотерапія — активний дослідницький сигнал —
+  позначити для розгляду клінічних випробувань. CHEK2 c.1100delC дає
+  помірний ризик РМЗ; консультування відрізняється від BRCA1/2.
