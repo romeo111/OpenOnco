@@ -1,0 +1,87 @@
+id: REGIMEN-TALQUETAMAB-QW-Q2W-MM
+name: "Talquetamab GPRC5D × CD3 bispecific — Q2W maintenance schedule (MonumenTAL-1 cohort B)"
+name_ua: "Талквотамаб GPRC5D × CD3 біспецифік — підтримуюча схема раз на 2 тижні (MonumenTAL-1 когорта B)"
+alternate_names:
+  - "Talquetamab Q2W"
+  - "Talvey Q2W"
+  - "MonumenTAL-1 Q2W cohort"
+
+components:
+  - drug_id: DRUG-TALQUETAMAB
+    dose: >
+      0.8 mg/kg SC every 2 weeks (after completion of Q2W-target step-up
+      schedule — see REGIMEN-TALQUETAMAB-STEP-UP-DOSING-MM, Q2W variant
+      with four step-up doses 0.01 → 0.06 → 0.4 → 0.8 mg/kg).
+    schedule: "Day 1 of every 14-day cycle, continuous"
+    route: SC
+
+cycle_length_days: 14
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: severe
+
+premedication:
+  - "Premedication discontinued after step-up unless symptomatic CRS recurs at maintenance dose."
+  - "Tocilizumab 8 mg/kg IV must remain on-site for emergency CRS management throughout therapy."
+  - "Oral / dental / nutrition assessment at baseline + ≥q3 months."
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+
+dose_adjustments:
+  - condition: "CRS Grade 1 during Q2W phase"
+    modification: "Acetaminophen + observation; hold next dose until afebrile ≥48h."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CRS Grade 2-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab 8 mg/kg IV ± dexamethasone; escalate to high-dose steroids / ICU per institutional CRS protocol."
+    rationale: "Severe CRS / ICANS may be fatal if untreated."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Active infection any time during therapy"
+    modification: "Hold talquetamab + targeted antibiotics; resume after resolution; consider IVIG if hypogammaglobulinemic."
+    rationale: "Infection risk lower than with BCMA bispecifics but still significant."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Severe dysgeusia / weight loss >10% / inability to maintain oral intake"
+    modification: "Dose hold until improvement to Grade ≤1; consider extending interval (Q2W→Q3W) or dose reduction; nutrition consult."
+    rationale: "GPRC5D on-target oral / taste / weight toxicities are dose-limiting; Q2W cohort already represents an interval-extension strategy from QW dosing with similar efficacy and improved tolerability."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade 3+ skin / nail toxicity"
+    modification: "Topical corticosteroids; emollients; dose hold for severe / symptomatic cases until Grade ≤1; consider further interval extension on resumption."
+    rationale: "On-target GPRC5D expression in keratinized epithelia."
+  - condition: "IgG <400 mg/dL"
+    modification: "IVIG 0.4 g/kg q4 weeks (or until IgG >500); continue throughout talquetamab + ≥6 mo post-discontinuation."
+    source_refs: [SRC-NCCN-MM-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Talquetamab NOT registered in Ukraine; NOT available domestically.
+    International referral only. Q2W schedule preferred when feasible
+    — fewer in-clinic visits, lower cumulative toxicity exposure,
+    similar efficacy to QW per MonumenTAL-1.
+
+sources:
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-01"
+notes: >
+  Q2W maintenance schedule cohort of MonumenTAL-1 (Chari 2022, NEJM):
+  triple-class refractory MM, ORR ~72%, mDOR ~13 mo, with reduced
+  dysgeusia / weight loss vs the 0.4 mg/kg QW cohort. FDA approved
+  this schedule in 2023 alongside QW. Preferred maintenance schedule
+  when patient tolerated step-up to 0.8 mg/kg target. The QW
+  alternative is documented in REGIMEN-TALQUETAMAB-MONO-MM. Trial
+  Source SRC-MONUMENTAL-1-CHARI-2022 not yet ingested into KB —
+  citing NCCN-MM-2025 only; trial Source ingestion pending (flagged
+  in commit body).
+notes_ua: >
+  Підтримуюча схема Q2W когорти MonumenTAL-1 (Chari 2022, NEJM):
+  triple-class рефрактерна ММ, ORR ~72%, mDOR ~13 міс., зі зниженою
+  частотою дисгевзії / втрати ваги порівняно з когортою 0.4 мг/кг QW.
+  FDA схвалено цю схему у 2023 році разом з QW. Бажана підтримуюча
+  схема, якщо пацієнт переніс step-up до цільової дози 0.8 мг/кг.
+  Альтернатива QW описана у REGIMEN-TALQUETAMAB-MONO-MM. Джерело-стаб
+  дослідження SRC-MONUMENTAL-1-CHARI-2022 ще не внесене у KB —
+  цитуємо лише NCCN-MM-2025; завантаження джерела очікує.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
