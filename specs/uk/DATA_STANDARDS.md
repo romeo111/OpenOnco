@@ -1,70 +1,72 @@
 # Data Standards Specification
 
-**Project:** OpenOnco
-**Document:** Data Standards — Patient Model and Interoperability
-**Version:** v0.1 (draft)
-**Status:** Draft for discussion with the team
-**Preceding documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md, KNOWLEDGE_SCHEMA_SPECIFICATION.md
+**Проєкт:** OpenOnco
+**Документ:** Data Standards — Patient Model and Interoperability
+**Версія:** v0.1 (draft)
+**Статус:** Draft для обговорення з командою
+**Попередні документи:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md, KNOWLEDGE_SCHEMA_SPECIFICATION.md
 
 ---
 
-## Purpose of this document
+## Мета документа
 
-This document defines **how patient data are modelled at system input**
-and how the system interoperates with external sources (EHR,
+Цей документ визначає, **як моделюються пацієнтські дані на вході в
+систему** і як система інтероперує з зовнішніми джерелами (EHR,
 lab systems, imaging).
 
-Knowledge Schema (Document 2) is the knowledge side.
-Data Standards (Document 3) is the patient side.
-The Rule Engine connects them.
+Knowledge Schema (Document 2) — це сторона знань.
+Data Standards (Document 3) — це сторона пацієнта.
+Rule Engine з'єднує їх.
 
-Without this document:
-- There is no clear patient-input structure — UI developers do not know
-  which fields to model
-- There is no path to integration with EHR/eHealth
-- Testing the engine on realistic datasets is impossible
-- Developers model the patient ad-hoc
+Без цього документа:
+- Немає чіткої структури patient input — UI-розробники не знають,
+  які поля моделювати
+- Немає шляху до інтеграції з EHR/eHealth
+- Неможливо тестувати engine на realistic datasets
+- Розробники моделюють пацієнта ad-hoc
 
 ---
 
-## 1. Principles
+## 1. Принципи
 
 ### 1.1. Standards-first
 
-We **do not invent** a patient schema from scratch. We take **FHIR R4** and
-profile it for oncology via **mCODE** (minimal Common Oncology Data
-Elements, HL7 FHIR IG).
+Ми **не винаходимо** схему пацієнта з нуля. Беремо **FHIR R4** і
+профілюємо його для онкології через **mCODE** (minimal Common
+Oncology Data Elements, HL7 FHIR IG).
 
-**Rationale:**
-- mCODE is the ASCO standard for oncology data
-- FHIR is the de facto standard for medical interoperability
-- Future integrations with EHR (including Ukrainian eHealth) will be
-  significantly simpler with a FHIR-compatible model
-- We do not spend effort on problems already solved by the community
+**Мотивація:**
+- mCODE — стандарт ASCO для онкологічних даних
+- FHIR — фактичний стандарт медичної інтероперабельності
+- Майбутні інтеграції з EHR (включно з українським eHealth) значно
+  простіші з FHIR-сумісною моделлю
+- Не тратимо зусилля на проблеми, які вже розв'язані community
 
 ### 1.2. Subset, not superset
 
-For the MVP we take the **minimum subset** of mCODE sufficient for the
-first nosology. We expand later. We do not try to cover all of mCODE on day one.
+Для MVP беремо **мінімальне підмножина** mCODE, достатню для першої
+нозології. Розширяємо пізніше. Не намагаємось покрити всю mCODE з
+першого дня.
 
 ### 1.3. Explicit unknowns
 
-The difference between "field not filled in" and "explicitly unknown" is
-critical for clinical safety. We use FHIR `dataAbsentReason`.
+Різниця між "поле не заповнене" і "явно невідомо" — критична для
+clinical safety. Використовуємо FHIR dataAbsentReason.
 
 ### 1.4. Local adaptation layer
 
-Some fields require Ukrainian adaptation — drug codes from the State Formulary,
-the official Ukrainian ICD-10 translation, NHSU institutional codes.
+Деякі поля потребують української адаптації — коди препаратів за
+Державним формуляром, ICD-10 офіційний український переклад,
+інституційні коди НСЗУ.
 
 ### 1.5. No PHI in public repos
 
-Real patient data — never in public git. Test cases —
-synthetic or retired/de-identified via the governance process.
+Реальні пацієнтські дані — ніколи в public git. Test cases —
+synthetic або retired/deidentified з governance процесу.
 
 ---
 
-## 2. Patient data architecture
+## 2. Архітектура даних пацієнта
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -109,7 +111,7 @@ synthetic or retired/de-identified via the governance process.
 
 ## 3. Core Patient profile
 
-### 3.1. Minimum Patient resource
+### 3.1. Мінімальний Patient resource
 
 ```json
 {
@@ -141,21 +143,21 @@ synthetic or retired/de-identified via the governance process.
 ### 3.2. Required fields
 
 - `resourceType`: "Patient"
-- `id`: unique identifier within the project
+- `id`: унікальний ідентифікатор в проекті
 - `gender`: "male" | "female" | "other" | "unknown"
-- `birthDate` OR `_birthDate.extension` (if masked)
+- `birthDate` OR `_birthDate.extension` (якщо замасковано)
 
 ### 3.3. Privacy defaults
 
-- We do not store name, address, or contact details
-- `birthDate` — year only (for MVP)
-- `identifier` — project-local ID, not a passport/medical card number
+- Не зберігаємо name, address, contact details
+- birthDate — тільки рік (для MVP)
+- identifier — project-local ID, не passport/medical card
 
 ---
 
 ## 4. Primary Cancer Diagnosis
 
-We use mCODE **PrimaryCancerCondition**.
+Використовуємо mCODE **PrimaryCancerCondition**.
 
 ### 4.1. Example
 
@@ -229,24 +231,24 @@ We use mCODE **PrimaryCancerCondition**.
 
 - `code` with at least one standard coding (prefer ICD-O-3 + ICD-10)
 - `bodySite` if applicable
-- `verificationStatus`: "confirmed" for biopsy-confirmed diagnoses
-- `subject`: reference to Patient
+- `verificationStatus`: "confirmed" для біопсично-підтверджених
+- `subject`: reference до Patient
 
-### 4.3. Mapping to Knowledge Schema
+### 4.3. Mapping до Knowledge Schema
 
-The engine maps the FHIR `code.coding[icd-o-3]` → KS `Disease.codes.icd_o_3`
-to find the relevant Disease entity in the knowledge base.
+Engine маппить FHIR `code.coding[icd-o-3]` → KS `Disease.codes.icd_o_3`
+для знаходження релевантної Disease entity в knowledge base.
 
 ---
 
 ## 5. Staging
 
-### 5.1. TNM or disease-specific
+### 5.1. TNM або disease-specific
 
-For solid tumors — TNM via mCODE TNMClinicalStageGroup.
-For lymphomas — Lugano / Ann Arbor via a separate Observation.
+Для solid tumors — TNM через mCODE TNMClinicalStageGroup.
+Для лімфом — Lugano / Ann Arbor через окремий Observation.
 
-### 5.2. Example (Lugano for lymphoma)
+### 5.2. Example (Lugano для лімфоми)
 
 ```json
 {
@@ -291,9 +293,10 @@ For lymphomas — Lugano / Ann Arbor via a separate Observation.
 
 ### 5.3. Notes
 
-- "unknown" for staging is a valid value; use `dataAbsentReason`
-- Combined staging systems — separate Observations (e.g.,
-  ISS + R-ISS for multiple myeloma)
+- "unknown" на staging — це valid value, треба використовувати
+  dataAbsentReason
+- Combination staging systems — окремі Observation (наприклад,
+  ISS + R-ISS для MM)
 
 ---
 
@@ -463,17 +466,18 @@ For lymphomas — Lugano / Ann Arbor via a separate Observation.
 ### 7.2. Valid values
 
 - ECOG: 0, 1, 2, 3, 4, 5
-- Karnofsky: 0-100 (step 10) — separate mCODE KarnofskyPerformanceStatus profile
-- Unknown → `dataAbsentReason`
+- Karnofsky: 0-100 (step 10) — окремий profile mCODE KarnofskyPerformanceStatus
+- Невідомо → dataAbsentReason
 
 ---
 
 ## 8. Lab values
 
-Standard FHIR Observations with LOINC codes. Critical for the engine —
-lab values that affect dose modification or contraindications.
+Standard FHIR Observations з LOINC кодами. Критично для engine —
+лабораторні значення, що впливають на dose modification або
+contraindications.
 
-### 8.1. Minimum set for MVP (hemato-oncology)
+### 8.1. Мінімальний набір для MVP (онкогематологія)
 
 ```
 CBC:
@@ -485,10 +489,10 @@ CBC:
   - 731-0    Lymphocytes [#/volume] in Blood by Automated count
 
 Liver panel:
-  - 1742-6   Alanine aminotransferase [Enzymatic activity/volume] (ALT)
-  - 1920-8   Aspartate aminotransferase [Enzymatic activity/volume] (AST)
-  - 6768-6   Alkaline phosphatase [Enzymatic activity/volume] (ALP)
-  - 2324-2   Gamma glutamyl transferase (GGT)
+  - 1742-6   Alanine aminotransferase [Enzymatic activity/volume] (АЛТ)
+  - 1920-8   Aspartate aminotransferase [Enzymatic activity/volume] (АСТ)
+  - 6768-6   Alkaline phosphatase [Enzymatic activity/volume] (ЛФ)
+  - 2324-2   Gamma glutamyl transferase (ГГТ)
   - 1975-2   Bilirubin.total [Mass/volume] in Serum or Plasma
   - 1751-7   Albumin [Mass/volume] in Serum or Plasma
 
@@ -546,7 +550,7 @@ Coagulation:
 
 ### 9.1. mCODE CancerRelatedMedicationRequest
 
-For prior systemic therapy.
+Для попередньої системної терапії.
 
 ```json
 {
@@ -572,7 +576,7 @@ For prior systemic therapy.
 
 ### 9.2. Line of therapy tracking
 
-A separate extension — which line of therapy this is, with associated outcomes.
+Окреме розширення — яка це лінія терапії, з якими outcomes.
 
 ```json
 "extension": [{
@@ -587,13 +591,13 @@ A separate extension — which line of therapy this is, with associated outcomes
 
 ### 10.1. Height, weight, BSA
 
-For dose calculations — required Observations:
+Для dose calculations — необхідні Observations:
 
 - LOINC 8302-2: Body height
 - LOINC 29463-7: Body weight
-- BSA calculated from height/weight (not stored separately; calculated)
+- BSA calculated from height/weight (не зберігається окремо; calculated)
 
-The engine uses the DuBois formula by default:
+Engine використовує DuBois формулу за замовчуванням:
 ```
 BSA = 0.007184 × height^0.725 × weight^0.425
 (height in cm, weight in kg, BSA in m²)
@@ -606,21 +610,21 @@ Cockcroft-Gault:
 CrCl = ((140 - age) × weight × (0.85 if female)) / (72 × serum_creatinine)
 ```
 
-The engine calculates automatically when creatinine + age + weight are available.
+Engine автоматично обчислює якщо є креатинін + вік + вага.
 
-### 10.3. FIB-4 (for HCV context)
+### 10.3. FIB-4 (для HCV context)
 
 ```
 FIB-4 = (age × AST) / (platelet_count × √ALT)
 ```
 
-Critical for bendamustine dosing. Calculated by the engine.
+Критичний для bendamustine dosing. Обчислюється engine.
 
 ---
 
 ## 11. Structured input for MVP UI
 
-For the first UI, a **simplified subset** of FHIR-compatible format:
+Для першого UI, **спрощений субсет** FHIR-compatible формату:
 
 ```json
 {
@@ -704,63 +708,63 @@ For the first UI, a **simplified subset** of FHIR-compatible format:
 }
 ```
 
-The engine converts this to a FHIR Bundle internally when required for
-integrations. The simplified format is used for the UI.
+Engine конвертує це в FHIR Bundle внутрішньо, якщо потрібно для
+інтеграцій. Для UI використовується спрощений формат.
 
 ---
 
 ## 12. DataAbsentReason codes
 
-For explicit representation of unknowns:
+Для явного representation невідомого:
 
-| Code | When to use |
+| Code | Коли використовувати |
 |---|---|
-| `unknown` | The value is genuinely unknown |
-| `asked-unknown` | The patient was asked but does not know |
-| `temp-unknown` | Test result is pending |
-| `not-asked` | Was not asked |
-| `asked-declined` | Patient declined to answer |
-| `masked` | Known but concealed (for privacy) |
-| `not-applicable` | Does not apply to this patient |
-| `unsupported` | The format does not support this data type |
-| `as-text` | Available only as free text |
-| `error` | Measurement error |
-| `not-a-number` | Test could not be performed |
+| `unknown` | Значення справді невідоме |
+| `asked-unknown` | Пацієнта спитали, він не знає |
+| `temp-unknown` | Результат тесту очікується |
+| `not-asked` | Не питали |
+| `asked-declined` | Пацієнт відмовився відповідати |
+| `masked` | Відомо, але приховано (для privacy) |
+| `not-applicable` | Не застосовується до цього пацієнта |
+| `unsupported` | Формат не підтримує цей тип даних |
+| `as-text` | Доступне тільки як free text |
+| `error` | Помилка вимірювання |
+| `not-a-number` | Тест не вдалося виконати |
 | `negative-infinity` / `positive-infinity` | Off-scale |
-| `not-performed` | Test was not performed |
-| `not-permitted` | Prohibited from returning |
+| `not-performed` | Тест не виконувався |
+| `not-permitted` | Заборонено повертати |
 
 ### 12.1. Engine behavior
 
-The engine distinguishes:
-- **Missing with reason** (e.g., "not-performed"): the test may be recommended
-  as a required pre-treatment step
-- **Unknown-unknown** (field simply not filled in): triggers UI validation
-  to ask the clinician
-- **Explicitly excluded** (not-applicable): the engine does not recommend performing the test
+Engine розрізняє:
+- **Missing with reason** (e.g., "not-performed"): tests може бути рекомендований
+  як необхідний pre-treatment
+- **Unknown-unknown** (field просто не заповнено): triggers UI validation
+  to ask clinician
+- **Explicitly excluded** (not-applicable): engine не рекомендує перевіряти
 
 ---
 
 ## 13. Ukraine-specific extensions
 
-### 13.1. Official ICD-10 code (Ukrainian translation)
+### 13.1. Код МКХ-10 офіційний (український переклад)
 
-We use the official Ukrainian ICD-10 version from the Ministry of Health + ICD-10
-International. We store both:
+Використовуємо офіційну українську версію МКХ-10 від МОЗ + ICD-10
+International. Зберігаємо обидва:
 
 ```json
 "code": {
   "coding": [
     {"system": "http://hl7.org/fhir/sid/icd-10", "code": "C85.1"},
     {"system": "http://moz.gov.ua/icd-10-uk", "code": "C85.1",
-     "display": "B-cell lymphoma, unspecified (Ukrainian official)"}
+     "display": "Лімфома В-клітинна, неуточнена"}
   ]
 }
 ```
 
-### 13.2. State Formulary of Ukraine
+### 13.2. Державний формуляр України
 
-For drugs — an extension with a reference to the State Formulary:
+Для препаратів — розширення з reference в Державний формуляр:
 
 ```json
 {
@@ -776,57 +780,59 @@ For drugs — an extension with a reference to the State Formulary:
       "coding": [{
         "system": "http://oncoopen.ua/nszu-reimbursement",
         "code": "reimbursed",
-        "display": "Reimbursed by NHSU"
+        "display": "Відшкодовується НСЗУ"
       }]
     }
   }]
 }
 ```
 
-### 13.3. Integration with eHealth
+### 13.3. Інтеграція з eHealth
 
-Future work (not MVP). Ukrainian eHealth uses FHIR R4, so the patient
-model must be import-compatible. Specific mapping details — after MVP
-stabilization.
+Майбутня робота (не MVP). eHealth України використовує FHIR R4, тому
+patient model має бути import-compatible. Конкретні mapping details
+— після стабілізації MVP.
 
 ---
 
 ## 14. De-identification requirements
 
-### 14.1. For test cases
+### 14.1. Для test cases
 
-None of the following should be present in public repos:
-- First name, last name, initials
-- Full dates (of birth, biopsy, hospitalisation)
-- The institution where treatment was administered
-- Region, city (except major cities >100k population for demographics)
-- Unique identifying combinations (rare cancer + rare occupation + age to the year)
-- Medical identifiers (chart number, insurance number)
+Жодна з наступних не повинна бути в public repos:
+- Ім'я, прізвище, ініціали
+- Повні дати (народження, біопсії, госпіталізації)
+- Заклад, де проходило лікування
+- Регіон, місто (крім великих міст >100k населення для demographics)
+- Унікальні комбінації, що ідентифікують (рідкісний рак + рідкісна
+  професія + вік з точністю до року)
+- Медичні ідентифікатори (номер картки, страховий номер)
 
 ### 14.2. Safe tokens
 
-For test cases, use:
-- Relative dates: "day 0" instead of "2026-04-07"
-- Age ranges: "50-55" instead of "52"
+Для test cases використовуються:
+- Relative dates: "day 0" замість "2026-04-07"
+- Age ranges: "50-55" замість "52"
 - Institutional tokens: "[tertiary-oncology-center]"
-- Patient IDs: "case-001", not real identifiers
+- Patient IDs: "case-001", не реальні
 
 ### 14.3. Re-identification review
 
-Before publishing any test case derived from a real patient:
+Перед публікацією будь-якого test case з реального пацієнта:
 1. Hypothetical re-identification attempt
-2. Review by a clinician who was not involved in the case
-3. Sign-off from governance
+2. Review клініцистом, що не був причетний до case
+3. Sign-off від governance
 
 ---
 
 ## 15. Validation schema
 
-For every incoming patient document:
+Для кожного вхідного patient document:
 
 ### 15.1. Schema validation
 
-Validate against FHIR R4 + mCODE StructureDefinitions via standard tools:
+Validate проти FHIR R4 + mCODE StructureDefinitions через standard
+tools:
 
 - **HAPI FHIR Validator** (Java)
 - **fhir.resources** (Python)
@@ -834,24 +840,24 @@ Validate against FHIR R4 + mCODE StructureDefinitions via standard tools:
 
 ### 15.2. Semantic validation
 
-Additionally, the engine checks:
-- Code system consistency (ICD-O + ICD-10 are aligned)
-- Units consistency (SI and US customary are not mixed)
-- Temporal logic (biopsy is not in the future; labs are not excessively old)
-- Reference resolution (all `Reference` values resolve)
+Додатково engine перевіряє:
+- Code system consistency (ICD-O + ICD-10 узгоджені)
+- Units consistency (не змішано SI і US customary)
+- Temporal logic (біопсія не в майбутньому, лабораторні не занадто старі)
+- Reference resolution (всі `Reference` resolve)
 
-### 15.3. Completeness for the engine
+### 15.3. Completeness для engine
 
-The engine verifies whether patient data are sufficient to operate:
-- Disease identified → yes
-- Biomarkers relevant to the disease → critical hit list
-- Labs relevant to proposed regimens → checked
-- Performance status → mandatory
-- If anything is missing → the engine generates a list of required tests
+Engine перевіряє, чи patient data достатні для роботи:
+- Disease identified → так
+- Biomarkers relevant до disease → hit list критичних
+- Labs relevant до proposed regimens → перевірка
+- Performance status → обов'язковий
+- Якщо чогось бракує → engine генерує list of required tests
 
 ---
 
-## 16. Example: complete minimal Patient Bundle
+## 16. Example: повний minimal Patient Bundle
 
 ```json
 {
@@ -909,7 +915,7 @@ If required data missing:
 
 ### 18.1. FHIR import
 
-Future: accepting FHIR Bundles from an external EHR. Standard FHIR R4
+Майбутнє: прийом FHIR Bundles з external EHR. Стандартний FHIR R4
 POST endpoint:
 ```
 POST /fhir/Patient-Bundle
@@ -919,52 +925,52 @@ Authorization: Bearer [token]
 
 ### 18.2. FHIR export
 
-Generated treatment plans can be exported as a FHIR CarePlan
-resource for import back into an EHR (if the EHR supports it).
+Згенеровані плани лікування можна експортувати як FHIR CarePlan
+resource для import назад в EHR (якщо EHR підтримує).
 
 ### 18.3. HL7 v2 bridge
 
-For legacy systems without FHIR — a bridge via HL7 v2 OMP^O09 messages
-(as the closest analogue). This is separate work, not for MVP.
+Для legacy систем без FHIR — bridge через HL7 v2 OMP^O09 messages
+(як найближчий analog). Це окрема робота не для MVP.
 
 ### 18.4. Ukrainian eHealth
 
-A future phase. Integration via the eHealth Central API. Project registration
-as a learning platform / research tool will be required.
+Фаза майбутнього. Інтеграція через API eHealth Central. Потрібна
+реєстрація проекту як learning platform / research tool.
 
 ---
 
-## 19. Governance of this document
+## 19. Governance цього документа
 
-- Major changes (breaking patient schema) — consensus of Tech Lead +
-  all Clinical Co-Leads + 14 days of public comment
-- Minor additions (new optional fields) — Tech Lead + one Co-Lead
-- Field deprecation — 6 months' notice with a migration guide
-- Changelog in CHANGELOG-DATA-STANDARDS.md
+- Major changes (breaking patient schema) — consensus Tech Lead +
+  all Clinical Co-Leads + 14 днів public comment
+- Minor additions (нові optional fields) — Tech Lead + один Co-Lead
+- Field deprecation — 6 місяців notice з migration guide
+- Changelog в CHANGELOG-DATA-STANDARDS.md
 
 ---
 
-## 20. Current status and limitations
+## 20. Поточний статус і обмеження
 
 **v0.1:**
-- Minimum subset of FHIR/mCODE for the first nosology
-- Does not cover all mCODE profiles
+- Мінімальне підмножина FHIR/mCODE для першої нозології
+- Не покриває всі mCODE profiles
 - Ukraine-specific extensions — draft only
-- eHealth integration — future phase
+- eHealth integration — фаза майбутнього
 
-**Known limitations:**
-- Not modelled: genetic counseling, family history, advanced directives
-- Imaging — via references only, not detailed DICOM metadata
-- Pathology reports — as text, not structured (NLP phase later)
-- Translational/research data — out of scope for MVP
+**Відомі обмеження:**
+- Не моделюємо: genetic counseling, family history, advanced directives
+- Imaging — тільки через references, не detailed DICOM metadata
+- Pathology reports — як text, не structured (NLP phase later)
+- Translational/research data — out of scope для MVP
 
-**What is needed after v0.1:**
-- Implementation of HCV-MZL input in this schema
-- Validation that the engine can read a real case
-- Calibration against the real UI workflow
-- If anything is missing — add it
+**Що треба після v0.1:**
+- Реалізація HCV-MZL input у цій схемі
+- Validation що engine може прочитати реальний case
+- Calibration під реальний UI workflow
+- Якщо щось не вистачає — додати
 
 ---
 
-**Pull requests — welcomed. Especially regarding Ukrainian extensions and
+**Pull requests — welcomed. Особливо щодо Ukrainian extensions і
 real-world FHIR compatibility.**

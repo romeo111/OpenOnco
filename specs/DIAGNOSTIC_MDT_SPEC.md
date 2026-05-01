@@ -1,76 +1,77 @@
 # Diagnostic-Phase MDT Specification
 
-**Проєкт:** OpenOnco
-**Документ:** Diagnostic-Phase MDT — pre-biopsy / pre-histology workup
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з Clinical Co-Leads
-**Попередні документи:** CHARTER.md (особливо §1, §2, §15), MDT_ORCHESTRATOR_SPEC.md,
+**Project:** OpenOnco
+**Document:** Diagnostic-Phase MDT — pre-biopsy / pre-histology workup
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with Clinical Co-Leads
+**Prerequisite documents:** CHARTER.md (especially §1, §2, §15), MDT_ORCHESTRATOR_SPEC.md,
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DATA_STANDARDS.md
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Закриває реальний клінічний use case: **первинна онкологічна
-консультація / тумор-борд ДО підтвердженої гістології**. Пацієнт
-прийшов з підозрою (об'ємне утворення, цитопенії, B-симптоми),
-біопсії ще нема — але MDT вже має зібратись щоб:
+Addresses a real clinical use case: **initial oncology consultation / tumor
+board BEFORE confirmed histology**. The patient presents with a suspicion
+(a mass, cytopenias, B-symptoms), biopsy is not yet available — but the
+MDT must already convene to:
 
-1. Визначити правильний підхід до біопсії (де брати, як, який IHC панель)
-2. Запланувати staging studies (PET/CT, костномозкова трепанобіопсія)
-3. Визначити склад команди для конкретного suspicion pattern
-4. Зафіксувати відкриті питання, які треба закрити **до** будь-яких
-   обговорень терапії
+1. Determine the correct biopsy approach (where, how, which IHC panel)
+2. Plan staging studies (PET/CT, bone marrow trephine biopsy)
+3. Identify the team composition for the specific suspicion pattern
+4. Document open questions that must be resolved **before** any
+   therapy discussion
 
-OpenOnco до цього commit-у вимагав підтверджений `disease_id` для
-будь-якого Plan generation — тобто покривав фазу **після** гістології.
-Цей spec додає **другий operational mode**, що покриває фазу **до**.
+Prior to this commit, OpenOnco required a confirmed `disease_id` for
+any Plan generation — i.e., it covered the phase **after** histology.
+This spec adds a **second operational mode** covering the phase **before**.
 
 ---
 
-## 1. Принципи
+## 1. Principles
 
-### 1.1. Два operational modes (взаємовиключні)
+### 1.1. Two operational modes (mutually exclusive)
 
-| Mode | Тригер | Output | Patient profile shape |
+| Mode | Trigger | Output | Patient profile shape |
 |---|---|---|---|
-| **`treatment_planning`** (existing) | `patient.disease.id` АБО `patient.disease.icd_o_3_morphology` присутній | `Plan` з ≥2 `tracks` (treatment alternatives) + MDT brief | confirmed diagnosis |
-| **`diagnostic`** (new) | `patient.disease.suspicion` присутній І `patient.disease.id` ВІДСУТНІЙ | `DiagnosticPlan` (workup steps, mandatory questions, MDT brief) — **жодних treatment tracks** | suspicion only |
+| **`treatment_planning`** (existing) | `patient.disease.id` OR `patient.disease.icd_o_3_morphology` is present | `Plan` with ≥2 `tracks` (treatment alternatives) + MDT brief | confirmed diagnosis |
+| **`diagnostic`** (new) | `patient.disease.suspicion` is present AND `patient.disease.id` is ABSENT | `DiagnosticPlan` (workup steps, mandatory questions, MDT brief) — **no treatment tracks** | suspicion only |
 
-Mode визначається **automatically** з patient profile — клієнт явно
-не вказує. CLI прапорець `--diagnostic` опційний, для UI/UX зручності
-(force diagnostic mode навіть якщо diagnosis заявлений але рев'юер
-хоче перепідтвердити workup).
+The mode is determined **automatically** from the patient profile — the
+client does not specify it explicitly. The CLI flag `--diagnostic` is
+optional, for UI/UX convenience (forces diagnostic mode even if a diagnosis
+is stated but the reviewer wants to re-confirm the workup).
 
-### 1.2. Hard rule: жодних treatment Plan без histology
+### 1.2. Hard rule: no treatment Plan without histology
 
-**Реалізується механічно у коді, не суб'єктивне judgment:**
+**Enforced mechanically in code, not subjective judgment:**
 
-- `generate_plan(patient)` повертає **error / empty PlanResult** якщо
-  `patient.disease.id` AND `patient.disease.icd_o_3_morphology`
-  обидва відсутні
-- `generate_diagnostic_brief(patient)` повертає **error** якщо
-  `patient.disease.id` присутній (рев'юер має використовувати treatment
-  mode для confirmed diagnosis)
-- Якщо рев'юер хоче "симуляцію" treatment Plan для suspected diagnosis
-  — це окрема дія `simulate_plan_for_hypothesis()` що **не** генерує
-  справжній Plan і явно маркує output як hypothesis-driven (поза MVP)
+- `generate_plan(patient)` returns an **error / empty PlanResult** if
+  both `patient.disease.id` AND `patient.disease.icd_o_3_morphology`
+  are absent
+- `generate_diagnostic_brief(patient)` returns an **error** if
+  `patient.disease.id` is present (the reviewer should use treatment
+  mode for a confirmed diagnosis)
+- If a reviewer wants a "simulation" of a treatment Plan for a suspected
+  diagnosis — this is a separate action `simulate_plan_for_hypothesis()`
+  that does **not** produce a real Plan and explicitly marks the output
+  as hypothesis-driven (out of MVP scope)
 
-### 1.3. Чому це посилює FDA non-device CDS positioning
+### 1.3. Why this strengthens the FDA non-device CDS positioning
 
-Diagnostic-phase MDT — **навіть більш чисто** non-device CDS, ніж
+Diagnostic-phase MDT is **even more clearly** non-device CDS than
 treatment planning:
 
-- Workup recommendations — це "list of preventive/diagnostic options"
+- Workup recommendations are "a list of preventive/diagnostic options"
   (FDA Guidance §IV(3) Example V.A.10) — exactly the carve-out pattern
-- Тут зовсім нема **treatment** directives → жодного ризику
+- There are no **treatment** directives at all → no risk of a
   "specific treatment output" disqualifier
-- Open questions і mandatory questions explicit → HCP independent
-  review базується на чесних gaps
+- Open questions and mandatory questions are explicit → HCP independent
+  review is based on honest acknowledgment of gaps
 
-→ доповнення **CHARTER §15.2 C7**: "no treatment recommendations
-without confirmed histology" — це нова hard constraint, що
-формалізується тут.
+→ Addition to **CHARTER §15.2 C7**: "no treatment recommendations
+without confirmed histology" — this is a new hard constraint formalized
+here.
 
 ---
 
@@ -106,24 +107,24 @@ without confirmed histology" — це нова hard constraint, що
 }
 ```
 
-`suspicion.lineage_hint` — controlled vocabulary, виражений канонічним
-тегом (див. §3.2 матрицю). Інші поля опційні; що більше profile
-заповнений, то точніше DiagnosticWorkup можна підібрати і то менше
-OpenQuestion підніметься.
+`suspicion.lineage_hint` — controlled vocabulary expressed as a canonical
+tag (see the §3.2 matrix). Other fields are optional; the more complete
+the profile, the more precisely the DiagnosticWorkup can be matched and
+the fewer OpenQuestions will be raised.
 
-`working_hypotheses` — list of `Disease` IDs, які клініцист розглядає.
-Якщо вказані — orchestrator може провести **диференціальну** оцінку
-(показати, які тести потрібні щоб розрізнити hypothesis A від
-hypothesis B). У MVP — тільки інформативно, не drive рекомендацій.
+`working_hypotheses` — list of `Disease` IDs that the clinician is
+considering. If specified, the orchestrator can perform a **differential**
+assessment (showing which tests are needed to distinguish hypothesis A
+from hypothesis B). In MVP — informational only, not driving recommendations.
 
 ---
 
-## 3. Сутності даних
+## 3. Data entities
 
 ### 3.1. `DiagnosticWorkup` (KB content entity)
 
-Curated content, живе під `knowledge_base/hosted/content/workups/`.
-Аналогічно `Indication` для treatment-mode, але **без** regimen/dose.
+Curated content, lives under `knowledge_base/hosted/content/workups/`.
+Analogous to `Indication` in treatment mode, but **without** regimen/dose.
 
 ```yaml
 id: WORKUP-SUSPECTED-LYMPHOMA
@@ -155,12 +156,12 @@ required_tests:
 biopsy_approach:
   preferred: "Excisional biopsy of largest accessible lymph node"
   alternatives:
-    - "Core needle biopsy if excisional не feasible"
-    - "Ultrasound-guided biopsy для глибоких локалізацій"
+    - "Core needle biopsy if excisional not feasible"
+    - "Ultrasound-guided biopsy for deep-seated lesions"
   rationale: >
-    Архітектура лімфовузла критична для класифікації лімфоми
-    (follicular vs diffuse, nodular vs interfollicular). FNA
-    недостатня — пропускає architectural pattern.
+    Lymph node architecture is critical for lymphoma classification
+    (follicular vs diffuse, nodular vs interfollicular). FNA is
+    insufficient — it misses the architectural pattern.
 
 required_ihc_panel:
   baseline: ["CD20", "CD3", "CD5", "CD10", "CD23", "BCL2", "BCL6", "Ki67"]
@@ -168,13 +169,13 @@ required_ihc_panel:
   if_aggressive: ["MYC", "BCL6 break-apart FISH"]
 
 mandatory_questions_to_resolve:
-  - "Чи це лімфома, реактивна гіперплазія, чи інша малігнізація?"
-  - "Якщо лімфома — підтип за WHO Classification?"
-  - "Чи є ознаки трансформації / aggressive component?"
-  - "Чи потрібен молекулярний тест (translocation, FISH)?"
+  - "Is this lymphoma, reactive hyperplasia, or another malignancy?"
+  - "If lymphoma — what subtype per WHO Classification?"
+  - "Are there signs of transformation / aggressive component?"
+  - "Is molecular testing required (translocation, FISH)?"
 
 expected_timeline_days: 14
-expected_workup_cost_uah_estimate: 8000  # рамкова оцінка для українського контексту
+expected_workup_cost_uah_estimate: 8000  # approximate estimate for the Ukrainian context
 
 triggers_mdt_roles:
   required: [hematologist, pathologist, radiologist]
@@ -192,8 +193,8 @@ notes: >
 
 ### 3.2. `DiagnosticPlan` (per-patient artifact, gitignored)
 
-Аналогічно treatment `Plan` (per CHARTER §9.3 — patient-specific,
-не у public KB).
+Analogous to the treatment `Plan` (per CHARTER §9.3 — patient-specific,
+not in the public KB).
 
 ```yaml
 id: DPLAN-PZ-DIAG-001-V1
@@ -233,7 +234,7 @@ workup_steps:
     ihc_panel: { ...inline from workup... }
 
 mandatory_questions:  # from workup, surfaced explicitly
-  - "Чи це лімфома, реактивна гіперплазія, чи інша малігнізація?"
+  - "Is this lymphoma, reactive hyperplasia, or another malignancy?"
   - ...
 
 expected_timeline_days: 14
@@ -244,57 +245,56 @@ trace: []  # diagnostic mode has no algorithm decision tree
 warnings: []
 ```
 
-`DiagnosticPlan` instances **не** йдуть у public KB. Зберігаються
-поза репо, аналогічно treatment Plan.
+`DiagnosticPlan` instances do **not** go into the public KB. They are
+stored outside the repo, analogous to treatment Plans.
 
-### 3.3. Зв'язок з MDT Orchestrator
+### 3.3. Relationship with the MDT Orchestrator
 
-`orchestrate_mdt()` приймає **або** `PlanResult` **або**
-`DiagnosticPlanResult`. Внутрішньо detect mode → застосовує
-відповідний rule set:
+`orchestrate_mdt()` accepts **either** a `PlanResult` **or** a
+`DiagnosticPlanResult`. Internally it detects the mode → applies the
+appropriate rule set:
 
-- Treatment mode: existing R1-R9 (роль базується на disease + tracks
+- Treatment mode: existing R1-R9 (role based on disease + tracks
   + biomarkers + regimen)
-- Diagnostic mode: D1-D6 (роль базується на tissue_location +
+- Diagnostic mode: D1-D6 (role based on tissue_location +
   lineage_hint + workup steps)
 
-Output type — той самий `MDTOrchestrationResult` — але з diagnostic
-context-specific reasons у `MDTRequiredRole.reason`.
+The output type is the same `MDTOrchestrationResult` — but with diagnostic
+context-specific reasons in `MDTRequiredRole.reason`.
 
 ---
 
 ## 4. Diagnostic-mode MDT rules (D1-D6)
 
-| # | Тригер | Роль | Priority | trigger_type |
+| # | Trigger | Role | Priority | trigger_type |
 |---|---|---|---|---|
-| D1 | `suspicion.lineage_hint` містить `lymphoma` | `hematologist` | `required` | `diagnosis_complexity` |
-| D2 | Будь-який suspicion → потрібна біопсія | `pathologist` | `required` | `diagnosis_complexity` |
-| D3 | `suspicion.tissue_locations` non-empty АБО imaging fields у findings | `radiologist` | `required` | `diagnosis_complexity` |
-| D4 | `suspicion.lineage_hint` ∈ {`solid_tumor_*`, generic carcinoma з surgical-relevant локалізацією} | `surgical_oncologist` | `recommended` | `treatment_domain` |
-| D5 | `suspicion.lineage_hint` містить `lymphoma` І history містить HCV/HBV (або не виключено) | `infectious_disease_hepatology` | `recommended` | `molecular_data` |
-| D6 | ECOG ≥ 3 АБО `suspicion.presentation` містить B-симптоми + decompensation | `palliative_care` | `recommended` (early goals-of-care) | `palliative_need` |
+| D1 | `suspicion.lineage_hint` contains `lymphoma` | `hematologist` | `required` | `diagnosis_complexity` |
+| D2 | Any suspicion → biopsy required | `pathologist` | `required` | `diagnosis_complexity` |
+| D3 | `suspicion.tissue_locations` is non-empty OR imaging fields present in findings | `radiologist` | `required` | `diagnosis_complexity` |
+| D4 | `suspicion.lineage_hint` ∈ {`solid_tumor_*`, generic carcinoma with surgically relevant location} | `surgical_oncologist` | `recommended` | `treatment_domain` |
+| D5 | `suspicion.lineage_hint` contains `lymphoma` AND history contains HCV/HBV (or not yet excluded) | `infectious_disease_hepatology` | `recommended` | `molecular_data` |
+| D6 | ECOG ≥ 3 OR `suspicion.presentation` contains B-symptoms + decompensation | `palliative_care` | `recommended` (early goals-of-care) | `palliative_need` |
 
-**Ключова відмінність від treatment-mode:**
-- `clinical_pharmacist` НЕ recommended (ще нема regimen)
-- `radiation_oncologist` НЕ recommended (treatment-domain decision відкладений)
-- `social_worker_case_manager` НЕ recommended за non-reimbursed drug
-  (no drugs yet); але recommended якщо `suspicion.expected_workup_cost_uah_estimate`
-  значний AND patient має фінансові обмеження (поза MVP)
+**Key difference from treatment mode:**
+- `clinical_pharmacist` NOT recommended (no regimen yet)
+- `radiation_oncologist` NOT recommended (treatment-domain decision deferred)
+- `social_worker_case_manager` NOT recommended for non-reimbursed drugs
+  (no drugs yet); but recommended if `suspicion.expected_workup_cost_uah_estimate`
+  is significant AND the patient has financial constraints (out of MVP scope)
 
 ---
 
 ## 5. Diagnostic-mode OpenQuestions (DQ1-DQ4)
 
-| # | Тригер | Питання | owner_role | blocking |
+| # | Trigger | Question | owner_role | blocking |
 |---|---|---|---|---|
-| DQ1 | `suspicion.lineage_hint` містить `lymphoma` І `cd20_ihc_status` відсутній | "Який результат CD20 IHC після біопсії? Базис для choice anti-CD20." | `pathologist` | true |
-| DQ2 | Lymphoma suspicion І HBV serology відсутня | "Серологія HBV до anti-CD20 — обов'язкова вже зараз." | `infectious_disease_hepatology` | true |
-| DQ3 | Lymphoma suspicion І imaging staging відсутня | "Чи виконано PET/CT для staging?" | `radiologist` | true |
-| DQ4 | Multiple working_hypotheses у suspicion (≥2) | "Який план диференціальної діагностики? Які молекулярні тести потрібні щоб обрати між {hypothesis A vs B}?" | `pathologist` | false |
+| DQ1 | `suspicion.lineage_hint` contains `lymphoma` AND `cd20_ihc_status` is absent | "What is the CD20 IHC result after biopsy? This is the basis for anti-CD20 selection." | `pathologist` | true |
+| DQ2 | Lymphoma suspicion AND HBV serology absent | "HBV serology before anti-CD20 is mandatory immediately." | `infectious_disease_hepatology` | true |
+| DQ3 | Lymphoma suspicion AND imaging staging absent | "Has PET/CT been performed for staging?" | `radiologist` | true |
+| DQ4 | Multiple working_hypotheses in suspicion (≥2) | "What is the differential diagnosis plan? What molecular tests are needed to choose between {hypothesis A vs B}?" | `pathologist` | false |
 
-OpenQuestions з treatment-mode (Q1-Q6) **не застосовуються** у
-diagnostic — там немає Plan з regimen, до якого можна прив'язати
-питання.
+OpenQuestions from treatment mode (Q1-Q6) **do not apply** in diagnostic
+mode — there is no Plan with a regimen to which questions can be linked.
 
 ---
 
@@ -341,14 +341,14 @@ python -m knowledge_base.engine.cli patient.json --diagnostic  # force
 python -m knowledge_base.engine.cli patient.json --mdt         # MDT brief on top
 ```
 
-Auto-detection rule: patient.disease has `id` чи `icd_o_3_morphology`
-→ treatment mode. Інакше якщо є `suspicion` → diagnostic mode.
-Інакше → error "patient profile has neither confirmed diagnosis nor
+Auto-detection rule: if patient.disease has `id` or `icd_o_3_morphology`
+→ treatment mode. Otherwise if `suspicion` is present → diagnostic mode.
+Otherwise → error "patient profile has neither confirmed diagnosis nor
 suspicion".
 
 ### 6.4. CLI banner — DIAGNOSTIC PHASE
 
-Diagnostic-mode output **обов'язково починається** з:
+Diagnostic-mode output **must begin** with:
 
 ```
 =========================================================
@@ -357,81 +357,81 @@ Diagnostic-mode output **обов'язково починається** з:
 =========================================================
 ```
 
-Це механічний guard проти automation bias (CHARTER §15.2 C6).
+This is a mechanical guard against automation bias (CHARTER §15.2 C6).
 
 ---
 
-## 7. Що залишається ОДНАКОВИМ для двох modes
+## 7. What remains THE SAME for both modes
 
-- `MDTOrchestrationResult` shape (той самий dataclass)
-- `ProvenanceEvent` shape (те саме provenance.py)
-- FDA Criterion 4 fields у output (intended_use, hcp_user_specification, …)
+- `MDTOrchestrationResult` shape (same dataclass)
+- `ProvenanceEvent` shape (same provenance.py)
+- FDA Criterion 4 fields in output (intended_use, hcp_user_specification, …)
 - Source citations
-- Audit trail / version chain (supersedes/superseded_by — реалізація у §7.1)
-- Termination criterion: коли histology підтверджено →
-  diagnostic-mode `DiagnosticPlan` стає `superseded_by` treatment-mode
-  `Plan` (формальна transition; supersedes-link перетинає mode boundary)
+- Audit trail / version chain (supersedes/superseded_by — implementation in §7.1)
+- Termination criterion: when histology is confirmed →
+  the diagnostic-mode `DiagnosticPlan` becomes `superseded_by` a treatment-mode
+  `Plan` (formal transition; the supersedes-link crosses a mode boundary)
 
-### 7.1. Revisions — закриття step 5 з інфографіки
+### 7.1. Revisions — closing step 5 from the infographic
 
-`knowledge_base/engine/revisions.py` містить
+`knowledge_base/engine/revisions.py` contains
 `revise_plan(updated_patient, previous, revision_trigger, kb_root)`,
-що повертає **`(previous_with_superseded_by_set, new_result)`** — обидві
-сторони supersedes-chain. Попередній результат **не мутується** —
-повертається deep copy з заповненим `superseded_by`.
+which returns **`(previous_with_superseded_by_set, new_result)`** — both
+sides of the supersedes-chain. The previous result is **not mutated** —
+a deep copy is returned with `superseded_by` populated.
 
-**Три легальні переходи** (auto-detect зі shapes):
+**Three legal transitions** (auto-detected from shapes):
 
 | Previous | Updated patient | Transition | New |
 |---|---|---|---|
 | `DiagnosticPlan` vN | suspicion-only | `diagnostic → diagnostic` | `DiagnosticPlan` v(N+1) |
-| `DiagnosticPlan` vN | confirmed `disease.id` | `diagnostic → treatment` | `Plan` v1 (перший treatment) |
+| `DiagnosticPlan` vN | confirmed `disease.id` | `diagnostic → treatment` | `Plan` v1 (first treatment) |
 | `Plan` vN | confirmed `disease.id` | `treatment → treatment` | `Plan` v(N+1) |
 
-**Заборонений перехід:**
+**Forbidden transition:**
 
 | `Plan` vN | suspicion-only (no `.id`) | `treatment → diagnostic` | **`ValueError`** — CHARTER §15.2 C7 |
 
-Сенс: якщо вже є treatment Plan, відкат до diagnostic не дозволений
-автоматично — це знаменує клінічну невизначеність, що потребує
-окремого decision (наприклад нова первинна підозра — створи
-**окремий** новий `DiagnosticPlan` без revision-link).
+Rationale: if a treatment Plan already exists, reverting to diagnostic
+mode is not permitted automatically — this signifies clinical uncertainty
+that requires a separate decision (e.g. a new primary suspicion — create
+a **separate** new `DiagnosticPlan` with no revision-link).
 
-**Provenance:** новий plan отримує `modified` ProvenanceEvent у
-`trace`: `summary = "Plan revised from PREV_ID (trigger: ...). This
-is version N of patient X."` Audit trail завжди показує **звідки**
-прийшла нова версія.
+**Provenance:** the new plan receives a `modified` ProvenanceEvent in
+its `trace`: `summary = "Plan revised from PREV_ID (trigger: ...). This
+is version N of patient X."` The audit trail always shows **where**
+the new version came from.
 
 **CLI:** `--revise PREV.json --revision-trigger "biopsy 2026-05-10 →
-DLBCL confirmed"`. PREV.json — це попередній output `--json-output`
-від попереднього run.
+DLBCL confirmed"`. PREV.json is the previous `--json-output` from the
+prior run.
 
-**Persistence:** як і раніше, plan instances не у public KB —
-лежать у `patient_plans/<patient_id>/<plan_id>.json` (gitignored
-per CHARTER §9.3). Реалізація — `knowledge_base/engine/persistence.py`
-(див. §7.2).
+**Persistence:** as before, plan instances are not in the public KB —
+they are stored under `patient_plans/<patient_id>/<plan_id>.json`
+(gitignored per CHARTER §9.3). Implementation in
+`knowledge_base/engine/persistence.py` (see §7.2).
 
 ### 7.2. Persistence layer
 
-`knowledge_base/engine/persistence.py` надає:
+`knowledge_base/engine/persistence.py` provides:
 
-| API | Дія |
+| API | Action |
 |---|---|
-| `save_result(result, root=patient_plans/)` | Серіалізує `PlanResult` / `DiagnosticPlanResult` у `<root>/<patient_id>/<plan_id>.json`. Повертає шлях. |
-| `load_result(path_or_plan_id, root=patient_plans/)` | Реконструює result з file path АБО з plan_id (resolve через glob `<root>/*/<plan_id>.json`). |
-| `list_versions(patient_id, root=patient_plans/)` | Повертає `[{plan_id, version, mode, supersedes, superseded_by, path}]` відсортовано: diagnostic → treatment, потім за `version`. |
-| `update_superseded_by_on_disk(plan_id, new_id, root=patient_plans/)` | In-place мутує `superseded_by` у збереженому файлі. Використовується revisions workflow для синхронізації on-disk chain. |
-| `latest_version_path(patient_id, root=patient_plans/)` | Шлях до найсвіжішої версії або `None`. |
+| `save_result(result, root=patient_plans/)` | Serializes `PlanResult` / `DiagnosticPlanResult` to `<root>/<patient_id>/<plan_id>.json`. Returns the path. |
+| `load_result(path_or_plan_id, root=patient_plans/)` | Reconstructs result from a file path OR from a plan_id (resolved via glob `<root>/*/<plan_id>.json`). |
+| `list_versions(patient_id, root=patient_plans/)` | Returns `[{plan_id, version, mode, supersedes, superseded_by, path}]` sorted: diagnostic → treatment, then by `version`. |
+| `update_superseded_by_on_disk(plan_id, new_id, root=patient_plans/)` | In-place mutates `superseded_by` in the saved file. Used by the revisions workflow to synchronize the on-disk chain. |
+| `latest_version_path(patient_id, root=patient_plans/)` | Path to the most recent version, or `None`. |
 
 **Hard guarantees:**
-- `patient_plans/` у `.gitignore` за замовчуванням (CHARTER §9.3).
-- `save_result` відмовляє коли `patient_id` відсутній — відмовляється
-  тихо писати в `ANONYMOUS/`.
-- `update_superseded_by_on_disk` raises `FileNotFoundError` якщо
-  попередньої версії немає на диску — caller дізнається явно.
-- Format = JSON (не YAML, бо PlanResult / DiagnosticPlanResult
-  серіалізуються через dataclass `to_dict()` + Pydantic `model_dump()`,
-  що natively JSON).
+- `patient_plans/` is in `.gitignore` by default (CHARTER §9.3).
+- `save_result` refuses to write when `patient_id` is absent — it will
+  not silently write to `ANONYMOUS/`.
+- `update_superseded_by_on_disk` raises `FileNotFoundError` if the
+  previous version is not on disk — the caller learns explicitly.
+- Format = JSON (not YAML, because PlanResult / DiagnosticPlanResult
+  are serialized via dataclass `to_dict()` + Pydantic `model_dump()`,
+  which is natively JSON).
 
 **CLI integration:**
 
@@ -443,8 +443,8 @@ python -m knowledge_base.engine.cli patient.json --save
 # Show all saved versions for a patient
 python -m knowledge_base.engine.cli --list-versions PZ-001
 
-# Revise: --revise приймає plan_id (resolves через persistence layer)
-# АБО explicit JSON path. With --save: writes new + updates previous in place.
+# Revise: --revise accepts a plan_id (resolved via persistence layer)
+# OR an explicit JSON path. With --save: writes new + updates previous in place.
 python -m knowledge_base.engine.cli patient_v2.json \
     --revise PLAN-PZ-001-V1 \
     --revision-trigger "new lab 2026-05-10: FIB-4 worsened" \
@@ -453,35 +453,35 @@ python -m knowledge_base.engine.cli patient_v2.json \
 # → patient_plans/PZ-001/PLAN-PZ-001-V1.json (updated: superseded_by=...-V2)
 ```
 
-**Що не входить у MVP:**
-- Database backend (SQLite/Postgres) — JSON files достатньо для current scale
-- Encryption-at-rest — patient data але development-only зараз;
-  якщо deployment у хмарі — додамо
-- Network sync / cloud backup — розглядається коли буде > 1 OpenOnco
-  installation
-- Search / cross-patient analytics — окремий "Case cohort matching"
-  workstream у roadmap
+**Out of MVP scope:**
+- Database backend (SQLite/Postgres) — JSON files are sufficient at current scale
+- Encryption-at-rest — patient data but development-only for now;
+  add if deployed to cloud
+- Network sync / cloud backup — to be considered when > 1 OpenOnco
+  installation exists
+- Search / cross-patient analytics — separate "Case cohort matching"
+  workstream in the roadmap
 
 ---
 
-## 8. Розширення (не у MVP)
+## 8. Extensions (not in MVP)
 
 - `simulate_plan_for_hypothesis(patient, hypothesis_disease_id)` —
-  показати що було б у treatment plan ЯКЩО diagnosis підтвердиться
-  як hypothesis Y. Strict marking "HYPOTHETICAL — not for clinical
+  show what the treatment plan would look like IF the diagnosis is
+  confirmed as hypothesis Y. Strict marking "HYPOTHETICAL — not for clinical
   decision".
-- DiagnosticPlan → treatment Plan transition automation: коли
-  pathology report додано і `disease.id` resolved, автоматично
-  generate_plan() з previous DiagnosticPlan як `supersedes`.
-- Цінова оцінка workup-кошику (НСЗУ vs out-of-pocket) для
-  патієнтського financial planning.
-- Відстеження timeline: "минуло 7 з очікуваних 14 днів workup,
-  все ще нема histology" → escalation to MDT.
+- DiagnosticPlan → treatment Plan transition automation: when a
+  pathology report is added and `disease.id` is resolved, automatically
+  call generate_plan() with the previous DiagnosticPlan as `supersedes`.
+- Cost estimate for the workup basket (NHSU vs out-of-pocket) for
+  patient financial planning.
+- Timeline tracking: "7 of the expected 14 workup days have elapsed,
+  histology still unavailable" → escalation to MDT.
 
 ---
 
-## 9. Зміни у цьому документі
+## 9. Changes in this document
 
-| Версія | Дата | Зміни |
+| Version | Date | Changes |
 |---|---|---|
-| v0.1 | 2026-04-25 | Початковий MVP-spec; diagnostic mode з 1 seed workup (lymphoma); D1-D6 + DQ1-DQ4 правила; hard rule "no treatment without histology". |
+| v0.1 | 2026-04-25 | Initial MVP spec; diagnostic mode with 1 seed workup (lymphoma); D1-D6 + DQ1-DQ4 rules; hard rule "no treatment without histology". |

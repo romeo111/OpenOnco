@@ -1,110 +1,109 @@
 # Reference Case Specification
 
-**Проєкт:** OpenOnco
-**Документ:** Reference Case Specification — "Patient Zero"
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення; фінальне введення пацієнтських даних
-відкладається до отримання формальної згоди
-**Попередні документи:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
+**Project:** OpenOnco
+**Document:** Reference Case Specification — "Patient Zero"
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion; final entry of patient data
+is deferred until formal consent is obtained
+**Prerequisite documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md,
 KNOWLEDGE_SCHEMA_SPECIFICATION.md, DATA_STANDARDS.md
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Цей документ формалізує **референсний клінічний випадок**, який служить:
+This document formalizes the **reference clinical case**, which serves as:
 
-1. **Acceptance criterion** для першої робочої версії системи — "коли
-   система згенерує щось еквівалентне, ми знаємо, що вона працює"
-2. **Calibration benchmark** — конкретний матеріал, на якому валідуються
-   Clinical Content Standards, Knowledge Schema, Data Standards
-3. **Working contract** між Clinical Co-Leads і розробниками — що саме
-   ми будуємо
-4. **Demonstration case** для pitch і публічних матеріалів (після
-   деідентифікації і отримання згоди)
+1. **Acceptance criterion** for the first working version of the system — "when
+   the system generates something equivalent, we know it works"
+2. **Calibration benchmark** — concrete material against which Clinical Content
+   Standards, Knowledge Schema, and Data Standards are validated
+3. **Working contract** between Clinical Co-Leads and developers — exactly
+   what we are building
+4. **Demonstration case** for pitches and public materials (after
+   de-identification and obtaining consent)
 
-Референсний випадок — HCV-asociated marginal zone lymphoma (HCV-MZL).
-Обраний тому, що:
-- Існує вже expert-verified документ еквівалентного рівня
-- Archetype (etiologically_driven) добре покриває всі елементи Knowledge
-  Schema
-- Клінічно значимий, але рідкий — демонструє цінність автоматизації
-- HCV-компонент дає природний міжнауковий зв'язок (гематологія +
-  гепатологія + інфекціоністика)
+The reference case is HCV-associated marginal zone lymphoma (HCV-MZL).
+Chosen because:
+- An expert-verified document of equivalent quality already exists
+- The archetype (etiologically_driven) covers all elements of the Knowledge
+  Schema well
+- Clinically significant but rare — demonstrates the value of automation
+- The HCV component provides a natural interdisciplinary link (hematology +
+  hepatology + infectious disease)
 
 ---
 
-## Критичне застереження про статус
+## Critical caveat on status
 
-**На момент v0.1 цього документа:**
+**As of v0.1 of this document:**
 
-- Реальні patient-level дані **не включені** в цей документ
-- Всі приклади представлені як **structural placeholders**
-- Включення реальних даних вимагає:
-  1. Формальної **письмової згоди пацієнта** на використання його
-     випадку як публічного референсного
-  2. Повної **деідентифікації** per Data Standards §14
-  3. **Re-identification review** незалежним клініцистом
-  4. Approval від всіх Clinical Co-Leads
+- Real patient-level data is **not included** in this document
+- All examples are presented as **structural placeholders**
+- Inclusion of real data requires:
+  1. Formal **written patient consent** to use their case as a public reference
+  2. Full **de-identification** per Data Standards §14
+  3. **Re-identification review** by an independent clinician
+  4. Approval from all Clinical Co-Leads
 
-До виконання цих умов документ функціонує як **template**, що
-описує структуру і вимоги. Після виконання — реальні дані вносяться
-через governance процес у визначені секції.
+Until these conditions are met, the document functions as a **template**
+describing the structure and requirements. After they are met, real data is
+entered through the governance process into the designated sections.
 
 ---
 
 ## 1. Reference document (existing artifact)
 
-### 1.1. Що ми маємо
+### 1.1. What we have
 
-Проект має у своєму розпорядженні один **expert-verified документ** —
-пара планів лікування (стандартний + агресивний варіанти) для пацієнта
-з HCV-MZL. Документ верифікований гематологом як "один з найкращих по
-структурі, що я бачив".
+The project has one **expert-verified document** at its disposal —
+a pair of treatment plans (standard + aggressive options) for a patient
+with HCV-MZL. The document was verified by a hematologist as "one of the
+best-structured documents I have seen".
 
-Це **target output**. Питання для системи: чи може вона згенерувати
-функціонально еквівалентний документ з структурованого patient input?
+This is the **target output**. The question for the system: can it generate
+a functionally equivalent document from structured patient input?
 
-### 1.2. Ключові характеристики target output
+### 1.2. Key characteristics of the target output
 
-Без відтворення пацієнтських специфіки, структура документа містить:
+Without reproducing patient-specific details, the document structure contains:
 
-**Слайд 1 — Title**: диагноз, версія плану, базова пацієнтська довідка
-**Слайд 2 — Disclaimer**: медичний disclaimer + пріоритетна мета плану
-**Слайд 3 — Diagnosis summary**: 4 cards — гістологія, маркери,
-клінічний контекст, imaging
-**Слайд 4 — Etiological driver**: чому HCV-status принципово важливий
-**Слайд 5 — Safety layer**: HBV screening, HCC screening, interactions
-**Слайд 6 — Pre-treatment investigations**: таблиця з priority (critical/
+**Slide 1 — Title**: diagnosis, plan version, basic patient summary
+**Slide 2 — Disclaimer**: medical disclaimer + primary goal of the plan
+**Slide 3 — Diagnosis summary**: 4 cards — histology, markers,
+clinical context, imaging
+**Slide 4 — Etiological driver**: why HCV status is critically important
+**Slide 5 — Safety layer**: HBV screening, HCC screening, interactions
+**Slide 6 — Pre-treatment investigations**: table with priority (critical/
 standard/desired/calculation)
-**Слайд 7 — Timeline**: хронологія лікування з milestones
-**Слайд 8 — Regimen details**: препарати, дози, дні, particularities
-**Слайд 9 — Expected outcomes**: честне порівняння з числами, HR, CI
-**Слайд 10 — Alternative monotherapy option**: коли підходить/не підходить
-**Слайд 11 — Shared components**: що спільного між стандартним і
-агресивним планами
-**Слайд 12 — Decision algorithm**: крок 1 → крок 2 для вибору між варіантами
-**Слайд 13 — What NOT to do**: заборонені дії + evidence
-**Слайд 14 — Patient assessment**: параметри/статус/implications таблиця
-**Слайд 15 — Supportive care**: PJP, antiviral, allopurinol, calcium/D,
+**Slide 7 — Timeline**: treatment chronology with milestones
+**Slide 8 — Regimen details**: drugs, doses, days, particularities
+**Slide 9 — Expected outcomes**: honest comparison with numbers, HR, CI
+**Slide 10 — Alternative monotherapy option**: when it fits / does not fit
+**Slide 11 — Shared components**: what the standard and
+aggressive plans have in common
+**Slide 12 — Decision algorithm**: step 1 → step 2 for choosing between options
+**Slide 13 — What NOT to do**: prohibited actions + evidence
+**Slide 14 — Patient assessment**: parameters/status/implications table
+**Slide 15 — Supportive care**: PJP, antiviral, allopurinol, calcium/D,
 vaccinations, lifestyle
-**Слайд 16 — Monitoring schedule**: phases з частотами
-**Слайд 17 — Red flags**: категорії + список симптомів
-**Слайд 18 — Next steps**: першочергові + наступні дії
-**Слайд 19 — Closing**: "остаточний план визначає МДК"
+**Slide 16 — Monitoring schedule**: phases with frequencies
+**Slide 17 — Red flags**: categories + symptom list
+**Slide 18 — Next steps**: immediate + subsequent actions
+**Slide 19 — Closing**: "the final plan is determined by the MDT"
 
-### 1.3. Acceptance criteria (структурні)
+### 1.3. Acceptance criteria (structural)
 
-Система v1.0 вважається passing reference case test, якщо згенерований
-output містить:
+System v1.0 is considered to pass the reference case test if the generated
+output contains:
 
-**Обов'язково (critical):**
-- [ ] Два варіанти плану (стандартний + агресивний)
-- [ ] Явний disclaimer з CCS §11 formulating
-- [ ] Diagnosis summary з histology + stage + key markers + context
+**Mandatory (critical):**
+- [ ] Two plan options (standard + aggressive)
+- [ ] Explicit disclaimer with CCS §11 formulation
+- [ ] Diagnosis summary with histology + stage + key markers + context
 - [ ] Etiological driver section (for etiologically_driven archetype)
-- [ ] Pre-treatment investigations з priority class
-- [ ] Regimen details (drug, dose, schedule, particularities) для
+- [ ] Pre-treatment investigations with priority class
+- [ ] Regimen details (drug, dose, schedule, particularities) for
       both plans
 - [ ] Decision algorithm (step 1 → step 2)
 - [ ] Red flags: both PRO aggressive + CONTRA aggressive
@@ -116,24 +115,23 @@ output містить:
 - [ ] Knowledge base version stamp + generation timestamp
 - [ ] All recommendations sourced (per CCS §5.2)
 
-**Бажано (should have):**
+**Desired (should have):**
 - [ ] Timeline visualization
 - [ ] Side-by-side comparison of plans
 - [ ] Shared components section
 - [ ] Alternative monotherapy option (if applicable)
 - [ ] Ukrainian localization (primary output language)
 
-**Acceptable gap для v1.0:**
-- [ ] Advanced visualizations (timelines, charts) — можуть бути простіші
-- [ ] Perfectly polished prose — може потребувати human editing
+**Acceptable gap for v1.0:**
+- [ ] Advanced visualizations (timelines, charts) — simpler versions are acceptable
+- [ ] Perfectly polished prose — may require human editing
 - [ ] Comprehensive patient education layer — Phase 2
 
 ---
 
 ## 2. Patient profile template
 
-Заповнюється реальними деідентифікованими даними після governance-
-approved процесу.
+To be filled with real de-identified data after the governance-approved process.
 
 ### 2.1. Demographics (template)
 
@@ -175,7 +173,7 @@ approved процесу.
 
 ### 2.3. Molecular/IHC profile (template)
 
-Базуючись на reference document structure:
+Based on the reference document structure:
 
 ```json
 {
@@ -217,7 +215,7 @@ approved процесу.
 
 ### 2.5. Laboratory values (template)
 
-Baseline перед лікуванням:
+Baseline prior to treatment:
 
 ```json
 {
@@ -311,7 +309,7 @@ Baseline перед лікуванням:
 
 ## 3. Expected system behavior
 
-Для описаного patient profile, engine має виконати наступну логіку:
+For the described patient profile, the engine must execute the following logic:
 
 ### 3.1. Disease matching
 
@@ -448,11 +446,11 @@ EXPECTED output structure:
 
 ## 4. Validation protocol
 
-Як ми перевіряємо, що system output еквівалентний reference document.
+How we verify that the system output is equivalent to the reference document.
 
 ### 4.1. Structural validation (automated)
 
-Script перевіряє, що engine output містить:
+Script verifies that the engine output contains:
 
 ```python
 # Pseudocode
@@ -467,7 +465,7 @@ def validate_structure(output):
 
 ### 4.2. Content validation (semi-automated)
 
-Script перевіряє конкретні елементи:
+Script verifies specific elements:
 
 ```python
 def validate_content(output, reference):
@@ -480,75 +478,75 @@ def validate_content(output, reference):
 
 ### 4.3. Expert validation (human)
 
-Clinical Co-Lead проходить side-by-side comparison:
+A Clinical Co-Lead performs a side-by-side comparison:
 
 **Checklist:**
-- [ ] Основна рекомендація збігається (обидва варіанти)
-- [ ] Дози коректні
-- [ ] Timeline коректний
-- [ ] Red flags правильно категоризовані
-- [ ] Джерела цитовані вірно
-- [ ] Нічого критичного не пропущено
-- [ ] Нічого суттєво зайвого не додано
-- [ ] Українська термінологія коректна
-- [ ] Формулювання neutral (per CCS §3.3)
-- [ ] Output clinically usable у tumor board
+- [ ] The primary recommendation matches (both options)
+- [ ] Doses are correct
+- [ ] Timeline is correct
+- [ ] Red flags are correctly categorized
+- [ ] Sources are cited correctly
+- [ ] Nothing critical is omitted
+- [ ] Nothing substantially extraneous is added
+- [ ] Ukrainian terminology is correct
+- [ ] Wording is neutral (per CCS §3.3)
+- [ ] Output is clinically usable in a tumor board
 
 **Scoring:**
-- Pass: система клінічно використовна, може замінити manual preparation
-- Needs revision: gaps identified, не блокери, але треба виправити
-- Fail: серйозні клінічні помилки, система не готова
+- Pass: the system is clinically usable and can replace manual preparation
+- Needs revision: gaps identified, not blockers, but need to be fixed
+- Fail: serious clinical errors, system is not ready
 
 ### 4.4. Iteration protocol
 
-Якщо validation виявляє gaps:
+If validation identifies gaps:
 
 1. **Classify gap:** knowledge base issue | engine logic issue | rendering issue
-2. **Fix через standard governance** (CCS §6 для KB changes)
-3. **Re-run engine** для cases
-4. **Re-validate** з same reviewer (не новим, щоб забезпечити consistency)
-5. **Повторити** до pass або до documented acceptable limitations
+2. **Fix through standard governance** (CCS §6 for KB changes)
+3. **Re-run engine** on cases
+4. **Re-validate** with the same reviewer (not a new one, to ensure consistency)
+5. **Repeat** until pass or until limitations are documented as acceptable
 
-Limit of iterations — немає, але якщо після 5 iterations не досягли
-pass, це сигнал для архітектурного обговорення.
+There is no iteration limit, but if pass has not been achieved after 5 iterations,
+that is a signal for an architectural discussion.
 
 ---
 
 ## 5. Testing with variations
 
-Один пацієнтський case — недостатньо для повної валідації. Створюємо
-**варіації** на базі reference case для тестування edge cases.
+A single patient case is insufficient for complete validation. We create
+**variations** based on the reference case to test edge cases.
 
 ### 5.1. Test variant generation
 
-Від основного case робимо hypothetical variations:
+From the primary case, we derive hypothetical variations:
 
 **Variant A: Red flag AGAINST aggressive**
-Оригінальні дані + hypothetical LVEF 40%
+Original data + hypothetical LVEF 40%
 Expected output: STANDARD plan, aggressive NOT offered due to cardiac risk
 
 **Variant B: Red flag FOR aggressive**
-Оригінальні дані + hypothetical B-symptoms present
+Original data + hypothetical B-symptoms present
 Expected output: AGGRESSIVE plan should be shown as default option
 
 **Variant C: Cirrhosis present**
-Оригінальні дані + hypothetical FIB-4 = 4.2
+Original data + hypothetical FIB-4 = 4.2
 Expected output: Bendamustine dose reduction to 70 mg/m² flagged
 
 **Variant D: HBV co-infection**
-Оригінальні дані + hypothetical HBsAg positive
+Original data + hypothetical HBsAg positive
 Expected output: Mandatory entecavir prophylaxis added
 
 **Variant E: Missing critical data**
-Оригінальні дані, але Ki-67 = unknown, LVEF = unknown
+Original data, but Ki-67 = unknown, LVEF = unknown
 Expected output: System requests these tests before full recommendation
 
 **Variant F: Age >75**
-Оригінальні дані + age = 78
+Original data + age = 78
 Expected output: Dose reduction considered, functional assessment flagged
 
 **Variant G: Concurrent amiodarone**
-Оригінальні дані + hypothetical current medication = amiodarone
+Original data + hypothetical current medication = amiodarone
 Expected output: Hard contraindication for sofosbuvir, alternative DAA
 proposed
 
@@ -564,27 +562,27 @@ proposed
 | F | Elderly | Dose modifications, functional assessment |
 | G | Amiodarone | Alternative DAA proposed |
 
-Кожен variant — окремий structured patient JSON + expected
+Each variant is a separate structured patient JSON + expected
 structured output. Stored in `test_cases/reference_variants/`.
 
 ### 5.3. Coverage goals
 
-Для v1.0 system acceptance:
+For v1.0 system acceptance:
 - All 7 variants above pass
-- Plus original reference case passes
-- Plus 3 completely different synthetic cases (не HCV-MZL) fail
-  gracefully з "not yet supported" повідомленням
+- Plus the original reference case passes
+- Plus 3 completely different synthetic cases (not HCV-MZL) fail
+  gracefully with a "not yet supported" message
 
 ---
 
 ## 6. Known limitations and acceptable gaps
 
-Для чесності з команди і потенційними користувачами.
+For honesty with the team and potential users.
 
-### 6.1. Що reference case НЕ тестує
+### 6.1. What the reference case does NOT test
 
 - Multi-line therapy decisions (relapsed/refractory)
-- Pediatric пацієнти
+- Pediatric patients
 - Other archetypes (biomarker_driven, stage_driven, etc.)
 - Solid tumors
 - Radiation therapy planning
@@ -592,40 +590,39 @@ structured output. Stored in `test_cases/reference_variants/`.
 - Psychosocial assessment
 - Palliative-only scenarios
 
-### 6.2. Архітектурні обмеження на v1.0
+### 6.2. Architectural limitations at v1.0
 
-- Engine — rule-based, не ML
-- No learning from patient outcomes (clinicians review, не data pipeline
-  feeds back)
+- Engine — rule-based, not ML
+- No learning from patient outcomes (clinicians review; a data pipeline
+  does not feed back)
 - Knowledge base manual curation bottleneck
-- Document rendering — template-based, limited creativity vs human-written
+- Document rendering — template-based, limited creativity compared to a human-written
   document
-- Ukrainian NLP для free-text input — не MVP
+- Ukrainian NLP for free-text input — not in MVP
 
-### 6.3. Що вважається acceptable gap
+### 6.3. What counts as an acceptable gap
 
-Для v1.0 acceptable:
-- Слайд layout може візуально відрізнятися від reference
-- Prose формулювання може потребувати human editing перед публічним
-  використанням
-- Precise numeric statistics можуть варіюватися ±10% якщо множинні
-  sources дають різні числа
-- Level of detail в supportive care може бути спрощеним
+Acceptable for v1.0:
+- Slide layout may visually differ from the reference
+- Prose wording may require human editing before public use
+- Precise numeric statistics may vary by ±10% if multiple
+  sources give different numbers
+- Level of detail in supportive care may be simplified
 
-Не acceptable навіть для v1.0:
+Not acceptable even for v1.0:
 - Wrong regimen recommendation
 - Wrong dose
 - Missed hard contraindication
-- Missed emergency indication (like amiodarone + sofosbuvir)
+- Missed emergency indication (such as amiodarone + sofosbuvir)
 - Fabricated citations
-- Recommendations без sources
+- Recommendations without sources
 
 ---
 
 ## 7. Path to production
 
-Reference case visualizes заповнення gap між current state (nothing)
-і production-ready v1.0.
+The reference case visualizes the gap between the current state (nothing)
+and a production-ready v1.0.
 
 ### 7.1. Phase structure
 
@@ -638,15 +635,15 @@ Contraindications, Red Flags, Tests, Supportive Care, Monitoring,
 Algorithms) per Knowledge Schema. Target: 1-2 months with dedicated
 time.
 
-**Phase 2 — Engine Implementation:** Developers build rule execution
-engine that reads YAML knowledge base and applies to patient input.
-Target: 2-3 months parallel з Phase 1.
+**Phase 2 — Engine Implementation:** Developers build a rule execution
+engine that reads the YAML knowledge base and applies it to patient input.
+Target: 2-3 months, parallel with Phase 1.
 
 **Phase 3 — Document Rendering:** Template-based rendering system
-that transforms structured Plan → HTML/PDF. Target: 1-2 months.
+that transforms a structured Plan → HTML/PDF. Target: 1-2 months.
 
-**Phase 4 — Reference Case Validation:** Full end-to-end test з
-reference case (після consent) + 7 variants. Target: 2 weeks.
+**Phase 4 — Reference Case Validation:** Full end-to-end test with the
+reference case (after consent) + 7 variants. Target: 2 weeks.
 
 **Phase 5 — Iteration:** Fix gaps found in validation. Target: 1-2
 months.
@@ -655,107 +652,106 @@ months.
 (e.g., Helicobacter-related MALT lymphoma) to validate schema
 generalizability. Target: 1 month.
 
-**Total estimate to usable v1.0:** 6-9 months з active team of 5-7
-people з ~50% time commitment.
+**Total estimate to usable v1.0:** 6-9 months with an active team of 5-7
+people at ~50% time commitment.
 
 ### 7.2. Milestones
 
 - **M1:** Phase 0 complete — all 4 foundational documents approved by
   Clinical Co-Leads
 - **M2:** HCV-MZL knowledge base 80% populated
-- **M3:** Engine MVP runs on synthetic test case
-- **M4:** Engine runs on reference case, generates first document
+- **M3:** Engine MVP runs on a synthetic test case
+- **M4:** Engine runs on the reference case, generates the first document
 - **M5:** Reference case passes expert validation
 - **M6:** Second disease added and validated
-- **M7:** v1.0 release (educational/research positioning, not medical
+- **M7:** v1.0 release (educational/research positioning, not a medical
   device)
 
 ---
 
 ## 8. What this means for the pitch
 
-Для demonstration перед клініцистами-співзасновниками і потенційними
-партнерами:
+For demonstrations to clinician co-founders and potential partners:
 
-### 8.1. Що показувати зараз
+### 8.1. What to show now
 
-- CHARTER.md — наша governance логіка
-- CLINICAL_CONTENT_STANDARDS.md — наш редакційний підхід
-- KNOWLEDGE_SCHEMA_SPECIFICATION.md — технічна структура
-- DATA_STANDARDS.md — патієнтський модель, FHIR/mCODE-compliant
-- Цей документ — target output на прикладі HCV-MZL
-- Сам reference document (HCV-MZL) — як "ось, що ми хочемо генерувати
-  автоматично" (за consent)
+- CHARTER.md — our governance logic
+- CLINICAL_CONTENT_STANDARDS.md — our editorial approach
+- KNOWLEDGE_SCHEMA_SPECIFICATION.md — the technical structure
+- DATA_STANDARDS.md — the patient model, FHIR/mCODE-compliant
+- This document — target output using HCV-MZL as the example
+- The reference document itself (HCV-MZL) — as "here is what we want to generate
+  automatically" (with consent)
 
-### 8.2. Чесне commitment
+### 8.2. Honest commitment
 
-- 6-9 місяців до функціонального v1.0
-- Потрібна full-team робота, не вечірній hobby
-- Knowledge curation — bottleneck, не coding
-- Не обіцяємо "AI, що лікує" — обіцяємо "structured information
-  support, яка економить 2-4 години підготовки tumor board"
+- 6-9 months to a functional v1.0
+- Requires full-team effort, not an evening hobby project
+- Knowledge curation is the bottleneck, not coding
+- We do not promise "AI that heals" — we promise "structured information
+  support that saves 2-4 hours of tumor board preparation"
 
-### 8.3. Чому це не Watson
+### 8.3. Why this is not Watson
 
-Коротка перевірка для скептиків:
+A brief check for skeptics:
 
-| Watson problem | Наш підхід |
+| Watson problem | Our approach |
 |---|---|
-| Тренували на synthetic cases | Валідуємо на real expert-verified document |
-| Рекомендації з "single authority" preferences | Рекомендації з multiple published guidelines |
-| "Black box" scoring | Transparent evidence levels з GRADE |
+| Trained on synthetic cases | Validated against a real expert-verified document |
+| Recommendations from "single authority" preferences | Recommendations from multiple published guidelines |
+| "Black box" scoring | Transparent evidence levels with GRADE |
 | LLM generates recommendations | LLM only formats; rules generate recommendations |
-| No human medical review per rec | Dual medical review mandatory |
-| Scaled before validation | Scope свідомо обмежений до validated domains |
+| No human medical review per recommendation | Dual medical review mandatory |
+| Scaled before validation | Scope deliberately limited to validated domains |
 | Sold as "decision maker" | Positioned as "information support" |
 
 ---
 
-## 9. Governance цього документа
+## 9. Governance of this document
 
-- Template зміни (без пацієнтських даних) — consensus Tech Lead +
-  один Clinical Co-Lead
-- Incorporation реальних деідентифікованих даних — full dual medical
+- Template changes (without patient data) — consensus of Tech Lead +
+  one Clinical Co-Lead
+- Incorporation of real de-identified data — full dual medical
   review + Project Coordinator approval + documented consent
-- Re-identification re-review — через 12 місяців після публікації, і
-  при будь-якій суттєвій зміні
-- Version bump при кожному change
+- Re-identification re-review — 12 months after publication, and
+  at any material change
+- Version bump at each change
 
 ---
 
-## 10. Поточний статус і обмеження
+## 10. Current status and limitations
 
 **v0.1:**
-- Structural template готовий
-- Реальні patient дані — placeholder, чекають consent
-- Test variants (Section 5) — hypothetical, потребують clinical
-  validation що вони корректні edge cases
-- Validation protocol (Section 4) — не implemented в code
+- Structural template is ready
+- Real patient data — placeholder, awaiting consent
+- Test variants (Section 5) — hypothetical, require clinical
+  validation that they are correct edge cases
+- Validation protocol (Section 4) — not implemented in code
 
-**Що треба:**
-- [ ] Отримати формальну письмову згоду reference patient
-- [ ] Провести деідентифікацію per Data Standards §14
+**What is needed:**
+- [ ] Obtain formal written consent from the reference patient
+- [ ] Carry out de-identification per Data Standards §14
 - [ ] Re-identification review
-- [ ] Заповнити Sections 2 з real deidentified data
-- [ ] Calibrate test variants з Clinical Co-Leads
+- [ ] Fill in Section 2 with real de-identified data
+- [ ] Calibrate test variants with Clinical Co-Leads
 - [ ] Implement validation scripts
 
 ---
 
-## 11. Summary: чому цей документ важливий
+## 11. Summary: why this document matters
 
-Four documents разом (Charter, Content Standards, Knowledge Schema,
-Data Standards) визначили **як** ми будуємо систему. Цей документ
-визначає **що саме** ми будуємо — конкретну цільову функціональність,
-проти якої все інше валідується.
+Four documents together (Charter, Content Standards, Knowledge Schema,
+Data Standards) defined **how** we build the system. This document
+defines **what exactly** we are building — the concrete target functionality
+against which everything else is validated.
 
-Без reference case попередні документи залишаються абстрактними. З
-reference case команда знає, що саме має бути згенеровано, і може
-йти до цієї цілі методично.
+Without the reference case, the previous documents remain abstract. With
+the reference case, the team knows exactly what must be generated and can
+work toward that goal methodically.
 
-Це — наш контракт сам з собою і з майбутніми користувачами.
+This is our contract with ourselves and with future users.
 
 ---
 
-**Questions, pull requests, suggestions — всі вітаються через
+**Questions, pull requests, suggestions — all are welcome through the
 governance process (CHARTER §6).**
