@@ -31,6 +31,53 @@ ukraine_availability:
   notes: "Registered; reimbursement under negotiation. Out-of-pocket for most patients in Ukraine — major access barrier for EGFR-mut metastatic + adjuvant indications."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Osimertinib daily oral pill, taken long-term in EGFR+ NSCLC.
+# Generally well-tolerated; key axes: rash, diarrhea, rare ILD
+# (interstitial lung disease — boxed warning), QT prolongation,
+# cardiac function decline. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Легкий висип на обличчі або тілі (поширений у перші місяці)"
+    action_ua: "Зазвичай легкий — використовуйте зволожувач і м'яке очищення; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна діарея (1-3 епізоди на день)"
+    action_ua: "Зазвичай контролюється лоперамідом — занотовуйте частоту, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сухість шкіри, нігтів, тріщини на пальцях"
+    action_ua: "Очікувані зміни — використовуйте зволожувач для шкіри і нігтів; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Виражений висип, особливо з пухирями або злущуванням"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю або сильним болем у животі)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція; ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка при невеликому навантаженні, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — це може бути ушкодження легень (інтерстиціальна хвороба легень) на тлі осимертинібу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-ESMO-NSCLC-METASTATIC-2024
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормально швидке або повільне"
+    action_ua: "Звертайтесь у лікарню негайно — осимертиніб може подовжувати інтервал QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   FLAURA: superior PFS/OS vs 1G TKIs in 1L EGFR-mut metastatic.

@@ -56,6 +56,55 @@ sources:
   - SRC-ESMO-MPN-2015
   - SRC-RESPONSE-VANNUCCHI-2015
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# HU + low-dose aspirin is taken long-term in PV/ET to lower blood
+# counts and reduce thrombosis risk. Major axes: thrombosis (the very
+# event the regimen prevents — but breakthrough events happen),
+# bleeding (aspirin), cytopenia (HU), skin changes (HU). STUB pending
+# §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота на тлі гідроксисечовини, особливо натще"
+    action_ua: "Приймайте препарат з їжею; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Зміни на шкірі — сухість, виразки на ногах, темні плями"
+    action_ua: "На тривалому прийомі гідроксисечовини бувають шкірні зміни — занотовуйте, фотографуйте, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Незвичні синці або легкі кровотечі (ясна, ніс)"
+    action_ua: "Аспірин підвищує ризик невеликих кровотеч — занотовуйте частоту, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі HU можлива нейтропенія і ризик інфекції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова виразка на нозі, особливо болюча, що не загоюється"
+    action_ua: "Подзвоніть у клініку того ж дня — гідроксисечовина рідко спричиняє виразки, що потребують зміни препарату"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — це ознаки можливого інсульту; PV/ET підвищують ризик тромбозу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
+    action_ua: "Звертайтесь у лікарню негайно — це може бути тромб у глибоких венах"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сильна тривала кровотеча, що не спиняється"
+    action_ua: "Звертайтесь у лікарню негайно — особливо якщо приймаєте аспірин"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L cytoreduction for high-risk PV (age >60 OR prior thrombosis)

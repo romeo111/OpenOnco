@@ -34,6 +34,52 @@ ukraine_availability:
   notes: "Letrozole reimbursed (generic). Palbociclib registered; reimbursement gap — out-of-pocket for most patients in Ukraine. Funding pathway must be confirmed pre-start."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# AI + palbociclib taken long-term in HR+/HER2- metastatic breast.
+# Key axes: cytopenia (palbociclib — predictable cycle nadir), GI
+# (mild), hot flashes (AI), QT/cardiac (palbociclib rare).
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, особливо в перші тижні"
+    action_ua: "Очікувано — занотовуйте інтенсивність, відпочивайте більше"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Гарячі припливи, легкий біль у суглобах"
+    action_ua: "Поширені на тлі інгібіторів ароматази — занотовуйте, обговоріть стратегії допомоги на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ESMO-BREAST-METASTATIC-2024
+  - trigger_ua: "Нудота легка, втрата апетиту"
+    action_ua: "Зазвичай зникає протягом 2-3 циклів — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 2-3 тижні циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — палбоцикліб дає нейтропенію; критично виключити інфекцію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-28"
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний біль у кістках"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка причини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі (особливо литка)"
+    action_ua: "Подзвоніть у клініку того ж дня — рак та інгібітори CDK підвищують ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова задишка, біль у грудях, кашель з кров'ю"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+
 last_reviewed:
 notes: >
   PALOMA-2: PFS benefit (~10-month improvement vs letrozole alone) in
