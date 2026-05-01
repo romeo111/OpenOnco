@@ -1,0 +1,109 @@
+id: RF-BALL-CD22-POS-INO-CANDIDATE
+definition: >
+  CD22 expression on lymphoblasts in relapsed/refractory B-cell
+  acute lymphoblastic leukemia (B-ALL) — CD22 expressed on >90%
+  B-ALL blasts; flow cytometric / IHC confirmation typically
+  available at diagnosis. Gates inotuzumab ozogamicin (INO;
+  anti-CD22 calicheamicin ADC) for R/R adult B-ALL. INO-VATE
+  ALL (Kantarjian 2016 NEJM): inotuzumab vs standard chemotherapy
+  in R/R B-ALL — CR/CRi 80.7% vs 29.4%, MRD-negative 78.4% of
+  responders, mPFS 5.0 vs 1.8 mo, mOS 7.7 vs 6.7 mo. Bridge to
+  alloHCT is the curative-intent goal — INO-induced remission +
+  prompt transplant in MRD-negative responders associated with
+  durable disease control. Distinct from blinatumomab (anti-CD19
+  BiTE) — alternative or sequential R/R B-ALL option. CD22-loss
+  escape uncommon; Ph-positive B-ALL also eligible (combined
+  with TKI).
+definition_ua: >
+  Експресія CD22 на лімфобластах при рецидивному/рефрактерному
+  B-клітинному гострому лімфобластному лейкозі (B-ALL) — CD22
+  експресується на >90% B-ALL бластів; проточно-цитометрична /
+  ІГХ верифікація зазвичай доступна при діагнозі. Гейтить
+  інотузумаб озогаміцин (INO; анти-CD22 каліхеаміциновий ADC)
+  для R/R дорослого B-ALL. INO-VATE ALL (Kantarjian 2016 NEJM):
+  інотузумаб vs стандартна хіміотерапія при R/R B-ALL — ПР/ПРі
+  80.7% vs 29.4%, MRD-негативні 78.4% респондерів, мПФВ 5.0 vs
+  1.8 міс, мОВ 7.7 vs 6.7 міс. Bridge до алоТГСК — куративна
+  ціль; INO-індукована ремісія + швидка трансплантація у MRD-
+  негативних респондерів асоційовані з тривалим контролем.
+  Відрізняти від блінатумомабу (анти-CD19 BiTE) — альтернативна
+  або послідовна опція R/R B-ALL. CD22-loss escape рідкісна;
+  Ph-позитивна B-ALL також прийнятна (комбінується з ІТК).
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "cd22_expression"
+          value: "positive"
+        - finding: "cd22_status"
+          value: "expressed"
+        - finding: "cd22_flow"
+          value: "positive"
+        - finding: "cd22_blast_percent"
+          threshold: 20
+          comparator: ">="
+    - any_of:
+        - finding: "prior_lines_count"
+          threshold: 1
+          comparator: ">="
+        - finding: "relapsed_refractory_ball"
+          value: true
+        - finding: "primary_refractory"
+          value: true
+        - finding: "post_blinatumomab_failure"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-B-ALL
+shifts_algorithm:
+  - ALGO-B-ALL-2L
+
+sources:
+  - SRC-INOVATE-KANTARJIAN-2016
+  - SRC-NCCN-ALL-2025
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Dosing: cycle 1 0.8 mg/m² day 1, 0.5 mg/m² days 8 + 15;
+  cycles 2-6 (responders) 0.5 mg/m² days 1/8/15. Hepatic
+  veno-occlusive disease / sinusoidal obstruction syndrome
+  (VOD/SOS): ~11% any time, ~22% in post-alloHCT recipients
+  bridged from INO — rate strongly tied to dual-alkylator
+  conditioning (especially busulfan-based). Mitigation:
+  shorter INO duration (2 cycles maximum pre-HCT in MRD-
+  negative responders), avoid dual-alkylator conditioning,
+  defibrotide standby. QTc prolongation, hyperbilirubinemia,
+  thrombocytopenia G3+ ~37%. Pre-medication: corticosteroid
+  + antihistamine + acetaminophen. Sequencing: INO → alloHCT
+  bridge superior; INO post-blinatumomab feasible (different
+  antigen). NCCN-ALL-2025 supports both INO and blinatumomab
+  in R/R adult B-ALL; choice driven by CD22/CD19 expression,
+  prior exposure, donor availability, comorbidity profile.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Дозування: цикл 1 0.8 мг/м² день 1, 0.5 мг/м² дні 8 + 15;
+  цикли 2-6 (респондери) 0.5 мг/м² дні 1/8/15. Печінкова
+  вено-окклюзивна хвороба / синусоїдальна обструкція (VOD/SOS):
+  ~11% будь-коли, ~22% у post-alloHCT реципієнтів з мостом
+  від INO — частота сильно пов'язана з dual-alkylator
+  кондиціонуванням (особливо бусульфан-вмісним). Мінімізація:
+  коротша тривалість INO (максимум 2 цикли перед ТГСК у MRD-
+  негативних респондерів), уникати dual-alkylator
+  кондиціонування, дефібротид у standby. Подовження QTc,
+  гіпербілірубінемія, тромбоцитопенія G3+ ~37%. Премедикація:
+  кортикостероїд + антигістамін + ацетамінофен. Послідовність:
+  INO → alloHCT міст переважніший; INO після блінатумомабу
+  можливий (інший антиген). NCCN-ALL-2025 підтримує і INO,
+  і блінатумомаб при R/R дорослому B-ALL; вибір визначається
+  експресією CD22/CD19, попередньою експозицією, доступністю
+  донора, профілем коморбідності.
+  STUB — потребує схвалення клінічного співкерівника.
