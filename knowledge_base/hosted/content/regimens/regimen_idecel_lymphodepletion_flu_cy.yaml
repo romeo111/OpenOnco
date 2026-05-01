@@ -1,0 +1,89 @@
+id: REG-IDECEL-LYMPHODEPLETION-FLU-CY
+name: "Lymphodepleting fludarabine + cyclophosphamide conditioning before idecabtagene vicleucel (ide-cel) CAR-T"
+name_ua: "Лімфодеплеційне кондиціонування флударабін + циклофосфамід перед ідекабтаген віклейцел (ide-cel) CAR-T"
+alternate_names:
+  - "Flu/Cy ide-cel conditioning"
+  - "KarMMa lymphodepletion"
+  - "Abecma lymphodepletion"
+
+components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m²/day"
+    schedule: "IV days -5, -4, -3 (3 consecutive days starting 5 days before CAR-T infusion)"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "300 mg/m²/day"
+    schedule: "IV days -5, -4, -3 (3 consecutive days starting 5 days before CAR-T infusion)"
+    route: IV
+
+cycle_length_days:
+total_cycles: "Single 3-day course immediately preceding ide-cel infusion (no repeat unless lymphodepletion-to-infusion interval exceeds 2 weeks due to operational delay)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetic prophylaxis (5-HT3 antagonist + dexamethasone-sparing regimen — corticosteroids reduce CAR-T expansion + must be avoided)"
+  - "Allopurinol 300 mg PO daily ± rasburicase per TLS risk for high tumor burden"
+  - "Mesna with cyclophosphamide per institutional protocol (uroprotection)"
+  - "Confirm absolute neutrophil count + platelet recovery acceptable per KarMMa criteria before initiating lymphodepletion"
+  - "Confirm REMS / FACT-JACIE accreditation of administering center + tocilizumab on-site (≥2 doses)"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CrCl 30-70 mL/min"
+    modification: "Reduce fludarabine to 24 mg/m²/day; cyclophosphamide unchanged"
+    rationale: "Fludarabine is renally cleared; reduced dose for moderate renal impairment per KarMMa label"
+    source_refs:
+      - SRC-KARMMA-MUNSHI-2021
+  - condition: "CrCl <30 mL/min"
+    modification: "Defer CAR-T pathway; consult treating CAR-T center; reduced or alternate conditioning per institutional CAR-T protocol"
+    rationale: "Severe renal impairment excluded from KarMMa; conditioning toxicity unacceptable"
+    source_refs:
+      - SRC-KARMMA-MUNSHI-2021
+  - condition: "Active uncontrolled infection"
+    modification: "Defer lymphodepletion until infection controlled — neutropenia post-conditioning + CRS post-CAR-T = high mortality"
+    rationale: "Absolute pre-conditioning contraindication"
+  - condition: "CAR-T infusion delayed >2 weeks after lymphodepletion"
+    modification: "Repeat full Flu/Cy lymphodepleting course before infusion"
+    rationale: "Lymphocyte recovery degrades CAR-T expansion + efficacy"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Fludarabine + cyclophosphamide both registered in Ukraine + reimbursed
+    via НСЗУ for hematologic indications. The lymphodepleting CONTEXT
+    (pre-CAR-T) is operational — both drugs are administered domestically
+    as preparation for international CAR-T referral. Coordination with
+    receiving CAR-T center essential: lymphodepletion → CAR-T infusion
+    interval typically 2-7 days; >14 days requires repeat conditioning.
+
+sources:
+  - SRC-KARMMA-MUNSHI-2021
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  Lymphodepleting conditioning phase for ide-cel (idecabtagene
+  vicleucel, REG-IDECEL-MM-3L). Standardized in KarMMa pivotal phase-2
+  trial (Munshi NEJM 2021): fludarabine 30 mg/m² + cyclophosphamide
+  300 mg/m² IV daily × 3 days, days -5 to -3. Distinct from the
+  500 mg/m² Cy regimen used with axi-cel / brexu-cel — ide-cel pivotal
+  trial used 300 mg/m². Single course immediately preceding CAR-T
+  infusion; no maintenance. Coordinated administration before the
+  CAR-T centre receives the patient. STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Лімфодеплеційне кондиціонування для ide-cel (ідекабтаген віклейцел,
+  REG-IDECEL-MM-3L). Стандартизовано у реєстраційному дослідженні
+  KarMMa фази-2 (Munshi NEJM 2021): флударабін 30 мг/м² +
+  циклофосфамід 300 мг/м² в/в щодня × 3 дні, дні -5 до -3. Відмінно
+  від схеми Cy 500 мг/м² для axi-cel / brexu-cel — реєстраційне
+  дослідження ide-cel використовувало 300 мг/м². Одноразовий курс
+  безпосередньо перед інфузією CAR-T; підтримуюча терапія відсутня.
+  STUB — очікує клінічного підтвердження Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

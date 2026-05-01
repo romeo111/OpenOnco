@@ -1,0 +1,146 @@
+id: REG-IDECEL-MM-3L
+name: "Idecabtagene vicleucel (ide-cel) BCMA CAR-T for triple-class-exposed R/R multiple myeloma — single infusion after Flu/Cy lymphodepletion (KarMMa)"
+name_ua: "Ідекабтаген віклейцел (ide-cel) BCMA CAR-T для тричі-класно-експонованої р/р множинної мієломи — одна інфузія після лімфодеплеції Flu/Cy (KarMMa)"
+alternate_names:
+  - "Ide-cel"
+  - "Abecma"
+  - "bb2121"
+  - "KarMMa regimen"
+
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly. PR3 of
+                # regimen-phases-refactor — see plan-doc 2026-04-28 §4 + §5.
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (KarMMa Flu/Cy 300)"
+    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (KarMMa Flu/Cy 300)"
+    duration: "3 days, days -5 to -3"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -5
+    optional: false
+    components:
+      - drug_id: DRUG-FLUDARABINE
+        dose: "30 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "300 mg/m²/day"
+        schedule: "IV days -5, -4, -3"
+        route: IV
+    sources:
+      - SRC-KARMMA-MUNSHI-2021
+      - SRC-NCCN-MM-2025
+  - name: main
+    purpose_ua: "основна BCMA CAR-T інфузія"
+    purpose_en: "main BCMA CAR-T infusion"
+    duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-IDECABTAGENE-VICLEUCEL
+        dose: "Target dose 450 × 10⁶ CAR-positive viable T cells (range 150–510 × 10⁶ per KarMMa); single IV infusion"
+        schedule: "Single IV infusion day 0, after lymphodepletion completed (typical interval lymphodepletion → infusion 2-7 days)"
+        route: IV
+    sources:
+      - SRC-KARMMA-MUNSHI-2021
+      - SRC-NCCN-MM-2025
+
+cycle_length_days:
+total_cycles: "Single infusion (one-time therapy); no maintenance; bridging therapy during 4-6 week manufacturing window for active progressive disease"
+toxicity_profile: severe
+
+premedication:
+  - "Acetaminophen 650-1000 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min before CAR-T infusion"
+  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + efficacy (rescue dexamethasone permitted for Grade ≥2 CRS / ICANS only)"
+  - "Tocilizumab MUST be on-site (≥2 doses, 8 mg/kg each available) BEFORE infusion — for emergency CRS rescue"
+  - "Confirm BCMA expression on plasma cells (immunohistochemistry or flow on baseline marrow biopsy — universal in MM but documented per protocol)"
+  - "Confirm REMS / FACT-JACIE accreditation of administering center"
+  - "Bridging therapy during 4-6 week manufacturing window for active disease (PI/IMiD/anti-CD38-based regimen per prior response; minimize steroid exposure in 2 weeks pre-lymphodepletion)"
+  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI"
+  - "IVIG availability for prolonged hypogammaglobulinemia post-CAR-T"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+  - SUP-TLS-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Cytokine release syndrome (CRS) Grade 2 (hypotension responsive to fluids OR hypoxia requiring low-flow O₂)"
+    modification: "Tocilizumab 8 mg/kg IV (max 800 mg); ± dexamethasone 10 mg IV q6h; supportive care; ICU monitoring"
+    rationale: "Boxed warning — Grade ≥3 CRS ~5-9% in KarMMa; tocilizumab IL-6R blockade is first-line; dexamethasone rescue only when CRS active"
+    source_refs:
+      - SRC-KARMMA-MUNSHI-2021
+  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab + high-dose dexamethasone (10-20 mg q6h) OR methylprednisolone 1 g/day; ICU; anakinra for refractory ICANS; permanent discontinuation possible for life-threatening events"
+    rationale: "Boxed warning — severe CRS / ICANS may be fatal; aggressive immunomodulation indicated"
+    source_refs:
+      - SRC-KARMMA-MUNSHI-2021
+  - condition: "Persistent severe cytopenia >Day +30"
+    modification: "G-CSF support; transfusions; consider thrombopoietin agonist; IVIG for IgG <400 + recurrent infections"
+    rationale: "Prolonged cytopenia ~40% in KarMMa; on-target / off-tumor BCMA expression on normal plasma cells contributes to hypogammaglobulinemia"
+    source_refs:
+      - SRC-KARMMA-MUNSHI-2021
+  - condition: "Active uncontrolled infection at planned infusion"
+    modification: "Defer infusion until infection resolved; repeat lymphodepletion if interval >2 weeks"
+    rationale: "Lymphodepletion + CRS in active infection = high mortality"
+  - condition: "ECOG ≥2 OR significant organ dysfunction"
+    modification: "Re-evaluate CAR-T candidacy; KarMMa enrolled ECOG 0-1 only — frail patients face disproportionate CRS / ICANS mortality"
+    rationale: "KarMMa eligibility criteria; outside-trial use carries unproven safety profile"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Ide-cel (Abecma) NOT registered in Ukraine; NO domestic CAR-T
+    manufacturing. Lymphodepleting fludarabine + cyclophosphamide
+    registered + reimbursed via НСЗУ. International referral pathway
+    required (typical: Israel, Poland, Germany, Spain), USD 350-500K
+    all-in incl. travel + bridging therapy + caregiver-presence
+    4 weeks post-infusion. Bridge chemotherapy during 4-6 week
+    manufacturing window must be coordinated with referring center.
+    Ide-cel pricing typically cheaper per-dose than cilta-cel but
+    PFS shorter (KarMMa-3 mPFS ~13.3 mo vs CARTITUDE-4 superior PFS).
+
+sources:
+  - SRC-KARMMA-MUNSHI-2021
+  - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  KarMMa (NCT03361748, Munshi NEJM 2021): single-infusion ide-cel
+  (BCMA-directed CAR-T, 4-1BB costimulation, murine scFv) in
+  heavily pretreated R/R multiple myeloma after ≥3 prior lines
+  including PI + IMiD + anti-CD38 (n=128, median 6 prior lines).
+  ORR 73% overall, 81% at 450×10⁶ dose; sCR 33%; mPFS 8.8 mo
+  (450×10⁶ dose 12.1 mo); mOS 24.8 mo. KarMMa-3 (Rodriguez-Otero
+  NEJM 2023, separate publication TODO source) expanded to 2L+ in
+  triple-class-exposed patients with superior PFS vs standard
+  triplet (mPFS 13.3 vs 4.4 mo). FDA approval Mar 2021 (3L+),
+  expanded Apr 2024 (2L+ triple-class-exposed). Centre must be
+  FACT/JACIE/REMS-accredited. Boxed warnings: CRS, ICANS,
+  HLH/MAS, prolonged cytopenia, secondary T-cell malignancy
+  (FDA 2024 class warning). Single curative-intent attempt;
+  no maintenance. STUB — pending Co-Lead sign-off.
+notes_ua: >
+  KarMMa (NCT03361748, Munshi NEJM 2021): одноразова інфузія ide-cel
+  (BCMA-направлена CAR-T, 4-1BB костимуляція, мишачий scFv) у
+  важко-пролікованій р/р множинній мієломі після ≥3 попередніх ліній
+  включно з PI + IMiD + анти-CD38 (n=128, медіана 6 попередніх ліній).
+  ORR 73% загалом, 81% на дозі 450×10⁶; sCR 33%; mPFS 8.8 міс.
+  (доза 450×10⁶ — 12.1 міс.); mOS 24.8 міс. KarMMa-3 (Rodriguez-Otero
+  NEJM 2023, окрема публікація — джерело TODO) розширила показання
+  на 2L+ для тричі-класно-експонованих пацієнтів із вищим PFS
+  порівняно зі стандартним триплетом (mPFS 13.3 vs 4.4 міс.).
+  Реєстрація FDA — березень 2021 (3L+), розширення — квітень 2024
+  (2L+ тричі-класно-експоновані). Центр має бути
+  FACT/JACIE/REMS-акредитований. Спеціальні попередження в інструкції:
+  CRS, ICANS, HLH/MAS, тривала цитопенія, вторинні T-клітинні
+  злоякісні новоутворення (класове попередження FDA 2024).
+  Одноразова куративна спроба; підтримуюча терапія відсутня.
+  STUB — очікує клінічного підтвердження Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
