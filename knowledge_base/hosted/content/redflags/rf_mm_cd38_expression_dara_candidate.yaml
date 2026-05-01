@@ -1,0 +1,113 @@
+id: RF-MM-CD38-EXPRESSION-DARA-CANDIDATE
+definition: >
+  CD38 expression on plasma cells in newly-diagnosed or relapsed/
+  refractory multiple myeloma — universally high on malignant
+  plasma cells (>95% MM), making CD38-targeting monoclonal
+  antibodies a backbone class. Daratumumab (anti-CD38 IgG1κ;
+  IV original / SC formulation post-2020) integrated into
+  multiple regimens: D-VRd / D-VTd induction (transplant-eligible
+  newly-diagnosed), D-Rd (MAIA Facon 2019 NEJM — mPFS not reached
+  vs 31.9 mo, OS HR 0.66 in transplant-ineligible NDMM), D-Vd
+  (CASTOR Palumbo 2016 NEJM — mPFS 16.7 vs 7.1 mo), D-Rd post-Len
+  exposure (POLLUX Dimopoulos 2016 NEJM — mPFS 44.5 vs 17.5 mo),
+  D-VMP (ALCYONE Mateos 2018 NEJM — mPFS not reached vs 19.3 mo
+  in transplant-ineligible NDMM). Isatuximab (anti-CD38 IgG1κ;
+  alternative CD38 mAb; IKEMA, ICARIA-MM data). Gates
+  CD38-mAb-naive cohort; addresses CD38-loss-of-expression escape
+  on prior CD38 exposure (~30-50% transient downregulation).
+definition_ua: >
+  Експресія CD38 на плазматичних клітинах при вперше діагностованій
+  або рецидивній/рефрактерній множинній мієломі — універсально
+  висока на злоякісних плазматичних клітинах (>95% ММ), що робить
+  CD38-таргетні моноклональні антитіла backbone класом. Даратумумаб
+  (анти-CD38 IgG1κ; в/в оригінальний / п/ш форма з 2020) інтегрований
+  у множину режимів: D-VRd / D-VTd індукція (transplant-eligible
+  нововиявлена), D-Rd (MAIA Facon 2019 NEJM — мПФВ не досягнуто
+  vs 31.9 міс, ЗВ HR 0.66 у transplant-ineligible NDMM), D-Vd
+  (CASTOR Palumbo 2016 NEJM — мПФВ 16.7 vs 7.1 міс), D-Rd після
+  Len-експозиції (POLLUX Dimopoulos 2016 NEJM — мПФВ 44.5 vs 17.5 міс),
+  D-VMP (ALCYONE Mateos 2018 NEJM — мПФВ не досягнуто vs 19.3 міс
+  у transplant-ineligible NDMM). Ісатуксимаб (анти-CD38 IgG1κ;
+  альтернативне CD38 mAb; дані IKEMA, ICARIA-MM). Гейтить
+  CD38-mAb-naive когорту; враховує CD38-loss-of-expression escape
+  після попередньої CD38-експозиції (~30-50% транзиторна
+  downregulation).
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "cd38_expression"
+          value: "positive"
+        - finding: "cd38_status"
+          value: "expressed"
+        - finding: "cd38_flow"
+          value: "positive"
+        - finding: "cd38_ihc"
+          value: "positive"
+    - any_of:
+        - finding: "prior_cd38_mab_exposure"
+          value: false
+        - finding: "cd38_mab_naive"
+          value: true
+        - finding: "newly_diagnosed_mm"
+          value: true
+        - finding: "relapsed_refractory_mm"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 70
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm:
+  - ALGO-MM-1L
+  - ALGO-MM-2L
+
+sources:
+  - SRC-MAIA-FACON-2019
+  - SRC-CASTOR-PALUMBO-2016
+  - SRC-POLLUX-DIMOPOULOS-2016
+  - SRC-ALCYONE-MATEOS-2018
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  CD38 expression is universal in MM — RF acts as enabler/eligibility
+  signal rather than rare-event flag. Severity = moderate (rather
+  than major) reflects this: it routes the patient toward a
+  CD38-mAb-containing arm but does not flag adverse biology.
+  Daratumumab SC (1800 mg + hyaluronidase) preferred over IV for
+  IRR mitigation (~13% SC vs ~50% IV any grade). Pre-medication:
+  acetaminophen 650-1000 mg + dexamethasone 20 mg + diphenhydramine
+  25-50 mg + montelukast 10 mg (cycle 1). Schedule: weekly cycles
+  1-2, q2w cycles 3-6, q4w cycle 7+. Interferes with type-and-screen
+  (anti-CD38 binds RBC CD38) — pre-transfusion phenotype required.
+  HBV reactivation risk — screening + prophylaxis. CD38 loss-of-
+  expression after prior daratumumab exposure typically transient;
+  re-treatment feasibility depends on duration off-therapy + flow
+  re-assessment.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Експресія CD38 універсальна в ММ — RF діє як enabler/eligibility
+  сигнал, а не як рідкісний adverse флаг. Severity = moderate
+  (а не major) це відображає: маршрутизує пацієнта в CD38-mAb
+  arm, але не сигналізує про несприятливу біологію. Даратумумаб
+  п/ш (1800 мг + гіалуронідаза) переважніше за в/в для зниження
+  IRR (~13% п/ш vs ~50% в/в будь-якого ступеня). Премедикація:
+  ацетамінофен 650-1000 мг + дексаметазон 20 мг + дифенгідрамін
+  25-50 мг + монтелукаст 10 мг (цикл 1). Схема: щотижня цикли
+  1-2, кожні 2 тижні цикли 3-6, кожні 4 тижні цикл 7+. Інтерферує
+  з типуванням групи крові (анти-CD38 зв'язується з еритроцитарним
+  CD38) — необхідне передтрансфузійне фенотипування. Ризик
+  реактивації HBV — скринінг + профілактика. CD38 loss-of-expression
+  після попередньої експозиції даратумумабу зазвичай транзиторна;
+  доцільність повторного лікування залежить від тривалості перерви +
+  перепроведеної проточної цитометрії.
+  STUB — потребує схвалення клінічного співкерівника.

@@ -1,0 +1,104 @@
+id: RF-AML-CD33-POS-GO-CANDIDATE
+definition: >
+  CD33 expression on myeloblasts in newly-diagnosed AML
+  (favorable / intermediate cytogenetic risk; non-APL) — CD33
+  expressed on >85% of AML blasts; quantitative flow / IHC
+  threshold not formally required but high-MFI cohorts derive
+  greatest benefit. Gates gemtuzumab ozogamicin (GO; anti-CD33
+  calicheamicin ADC) addition to 7+3 induction. ALFA-0701
+  (Castaigne 2012 Lancet): fractionated GO 3 mg/m² days 1/4/7 +
+  7+3 in de-novo AML — EFS HR 0.58, OS HR 0.69, greatest benefit
+  in favorable + intermediate cytogenetics; no benefit in adverse
+  cytogenetics. Excluded: APL (PML-RARA — different therapy),
+  adverse cytogenetics (TP53/CK/-7/-5q — VOD risk + no efficacy
+  signal), prior allogeneic HCT.
+definition_ua: >
+  Експресія CD33 на мієлобластах при вперше діагностованій ГМЛ
+  (сприятливий / проміжний цитогенетичний ризик; не-APL) — CD33
+  експресується на >85% ГМЛ-бластів; кількісний поріг flow / ІГХ
+  формально не потрібен, але cohorts з високим MFI отримують
+  найбільшу користь. Гейтить додавання гемтузумаб озогаміцину
+  (GO; анти-CD33 каліхеаміциновий ADC) до індукції 7+3.
+  ALFA-0701 (Castaigne 2012 Lancet): фракціонований GO 3 мг/м²
+  дні 1/4/7 + 7+3 при de-novo ГМЛ — EFS HR 0.58, ЗВ HR 0.69,
+  найбільша користь при сприятливій + проміжній цитогенетиці;
+  немає користі при несприятливій цитогенетиці. Виключено: APL
+  (PML-RARA — інша терапія), несприятлива цитогенетика
+  (TP53/CK/-7/-5q — ризик VOD + відсутність сигналу
+  ефективності), попередня алогенна ТГСК.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "cd33_expression"
+          value: "positive"
+        - finding: "cd33_status"
+          value: "expressed"
+        - finding: "cd33_flow"
+          value: "positive"
+        - finding: "cd33_blast_percent"
+          threshold: 20
+          comparator: ">="
+    - any_of:
+        - finding: "newly_diagnosed_aml"
+          value: true
+        - finding: "aml_treatment_naive"
+          value: true
+    - any_of:
+        - finding: "cytogenetic_risk"
+          value: "favorable"
+        - finding: "cytogenetic_risk"
+          value: "intermediate"
+        - finding: "eln_2022_risk"
+          value: "favorable"
+        - finding: "eln_2022_risk"
+          value: "intermediate"
+
+clinical_direction: intensify
+
+severity: major
+priority: 65
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-AML
+shifts_algorithm:
+  - ALGO-AML-1L
+
+sources:
+  - SRC-ALFA-0701-CASTAIGNE-2012
+  - SRC-NCCN-AML-2025
+  - SRC-ESMO-AML-2020
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Fractionated GO dosing (3 mg/m² days 1/4/7) — single-dose 6 mg/m²
+  schedule (used in early SWOG-S0106) was abandoned due to VOD/SOS
+  excess; ALFA-0701 fractionation is current standard. Hepatic
+  veno-occlusive disease (VOD/SOS): ~1-2% with fractionated dosing,
+  higher in adverse-cytogenetics + post-alloHCT subjects. Defibrotide
+  is treatment of choice. Concomitant TLS prophylaxis (high-leukocytosis
+  AML). Exclusion: APL (separate algorithm — ATRA + arsenic),
+  CBF-AML may benefit even in ASCEND/AMLSG protocols. Pediatric/
+  young-adult use: mixed evidence — UK MRC AML17 supportive,
+  COG-AAML0531 supportive in standard-risk pediatric. Ukrainian
+  access: GO available via funded reimbursement post-2020 NSZU
+  inclusion (verify current status). STUB — requires clinical
+  co-lead signoff.
+notes_ua: >
+  Фракціоноване дозування GO (3 мг/м² дні 1/4/7) — схема разової
+  дози 6 мг/м² (рання SWOG-S0106) відмовилася через надлишок
+  VOD/SOS; фракціонування ALFA-0701 — поточний стандарт. Печінкова
+  вено-окклюзивна хвороба (VOD/SOS): ~1-2% при фракціонованому
+  дозуванні, вище при несприятливій цитогенетиці + post-alloHCT.
+  Дефібротид — лікування вибору. Супутня профілактика TLS
+  (high-leukocytosis ГМЛ). Виключення: APL (окремий алгоритм —
+  ATRA + миш'як), CBF-ГМЛ може отримати користь навіть в ASCEND/
+  AMLSG протоколах. Педіатричне / young-adult використання:
+  суперечливі дані — UK MRC AML17 підтримує, COG-AAML0531
+  підтримує при standard-risk педіатричному. Український доступ:
+  GO доступний через НСЗУ після 2020 (звірити поточний статус).
+  STUB — потребує схвалення клінічного співкерівника.
