@@ -1,0 +1,84 @@
+id: BIO-HER2-ULTRALOW
+names:
+  preferred: "HER2-ultralow (breast — IHC > 0 < 1+; faint/incomplete membrane staining ≤10%)"
+  ukrainian: "HER2-ultralow (РМЗ — ІГХ > 0 < 1+; слабке/неповне мембранне забарвлення ≤10%)"
+  english: "HER2-ultralow breast"
+  synonyms:
+    - "ERBB2-ultralow"
+    - "HER2 IHC >0 <1+"
+    - "HER2 0 with membrane staining"
+
+biomarker_type: protein_expression_ihc
+
+measurement:
+  method: >
+    IHC (4B5 / HercepTest) — HER2-ultralow defined operationally as IHC > 0
+    but < 1+: faint / barely perceptible incomplete membrane staining in
+    ≤10% of tumor cells (DESTINY-Breast06 enrollment criterion). This
+    sub-category sits between IHC 0 (absent) and IHC 1+ (faint complete
+    membrane staining > 10%). Pathology reproducibility is poor — central
+    review variability documented in DESTINY-Breast06.
+  units: "IHC ultralow | 0 | 1+ | 2+ | 3+ (HER2-ultralow excludes 0, 1+, 2+, 3+)"
+
+specimen_requirements:
+  - "FFPE tumor tissue; metastatic biopsy strongly preferred (heterogeneity + treatment-induced HER2 loss)"
+  - "Whole-tissue section (not TMA cores) for accurate ultralow scoring — focal staining patterns easily missed"
+
+related_biomarkers:
+  - BIO-HER2-LOW       # adjacent IHC tier (IHC 1+ or 2+/ISH-)
+  - BIO-HER2-SOLID     # HER2-positive (3+ or 2+/ISH+)
+  - BIO-ESTROGEN-RECEPTOR  # HR-status drives endocrine prerequisite for ultralow eligibility
+
+# IHC-only score, not a sequence variant — actionability_lookup not applicable.
+# CIViC / OncoKB key on (gene, variant); HER2-ultralow is an expression-tier
+# classification mapped to a specific clinical-trial enrollment criterion.
+# Same skip rationale as BIO-HER2-LOW.
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+  - SRC-CIVIC
+
+oncokb_skip_reason: ihc_no_variant
+
+external_ids:
+  hgnc_symbol: "ERBB2"
+
+last_reviewed: "2026-04-29"
+notes: >
+  HER2-ultralow extends the HER2 expression spectrum below IHC 1+. DESTINY-
+  Breast06 (ASCO 2024 plenary; Bardia et al.) randomized HR+ HER2-low or
+  HER2-ultralow metastatic breast post-endocrine + CDK4/6i (chemo-naive in
+  metastatic setting) to T-DXd vs investigator-choice chemotherapy. Primary
+  PFS endpoint met in HER2-low cohort (mPFS 13.2 vs 8.1 mo, HR 0.62,
+  p<0.0001); HER2-ultralow exploratory cohort (n=153) showed consistent
+  benefit (mPFS 13.2 vs 8.3 mo, HR 0.78). FDA approval anticipated 2026
+  expanding T-DXd label below HER2-low. Pathology challenge dominant: IHC 0
+  vs ultralow is not part of standard ASCO/CAP scoring guideline (2018 /
+  2023 update); DESTINY-Breast06 used central pathology review and reported
+  inter-observer kappa lower for ultralow than for HER2-low. Practical
+  consequence: routine pathology reports today rarely distinguish ultralow
+  from 0 — re-review of biopsy with ultralow scoring criteria required
+  before T-DXd consideration. ILD class warning unchanged from HER2-low /
+  HER2-positive T-DXd indications. Trial-Source SRC-DESTINY-BREAST06-BARDIA-
+  2024 not yet ingested — flag for ingestion chunk.
+notes_ua: >
+  HER2-ultralow розширює спектр експресії HER2 нижче ІГХ 1+. Дослідження
+  DESTINY-Breast06 (ASCO 2024 пленарне; Bardia et al.) рандомізувало
+  HR+ HER2-low або HER2-ultralow метастатичний РМЗ після ендокрин + CDK4/6i
+  (хіміо-naive у метастатичному стані) до T-DXd проти хіміотерапії за
+  вибором дослідника. Первинна кінцева точка ПФВ досягнута в HER2-low
+  когорті (мПФВ 13.2 проти 8.1 міс, HR 0.62, p<0.0001); експлораторна
+  HER2-ultralow когорта (n=153) показала послідовний виграш (мПФВ 13.2 проти
+  8.3 міс, HR 0.78). Схвалення FDA очікується в 2026 з розширенням мітки
+  T-DXd нижче HER2-low. Патологічний виклик домінує: ІГХ 0 проти ultralow
+  не входить до стандартного протоколу ASCO/CAP (оновлення 2018 / 2023);
+  DESTINY-Breast06 використовував центральний патоморфологічний перегляд
+  і повідомив нижчий каппа-індекс відтворюваності для ultralow ніж для
+  HER2-low. Практичний наслідок: рутинні патоморфологічні звіти сьогодні
+  рідко відрізняють ultralow від 0 — необхідний повторний перегляд біопсії
+  з критеріями ultralow перед розглядом T-DXd. Класове застереження ILD
+  без змін від показань T-DXd при HER2-low / HER2-позитивний. Джерело
+  випробування SRC-DESTINY-BREAST06-BARDIA-2024 ще не інгестоване —
+  позначено для chunk інгестії.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,90 @@
+id: BIO-NRG1-FUSION
+names:
+  preferred: "NRG1 fusion (gene rearrangement)"
+  ukrainian: "Перебудова / фузія NRG1"
+  english: "NRG1 fusion"
+  synonyms: ["NRG1 rearrangement", "neuregulin-1 fusion", "CD74-NRG1", "SLC3A2-NRG1", "ATP1B1-NRG1"]
+
+biomarker_type: gene_fusion
+mutation_details:
+  gene: "NRG1"
+  gene_hugo_id: "HGNC:7997"
+  variant_type: "fusion"
+  functional_impact: >
+    Aberrant NRG1 (neuregulin-1) ligand expression on tumor cell surface →
+    paracrine / autocrine ERBB3 (HER3) activation → ERBB2-ERBB3 heterodimer
+    signalling. Driver event in fusion-positive tumors; targetable by HER2 +
+    HER3 dual blockade (zenocutuzumab).
+  hgvs_protein: ""
+  hgvs_coding: ""
+
+measurement:
+  method: >
+    RNA-based NGS (preferred — DNA panels miss many breakpoints because NRG1
+    introns are very large). Targeted RNA fusion panels OR whole-transcriptome
+    RNA-seq. FISH break-apart possible but lower sensitivity. IHC for HER3
+    activation is not specific.
+  units: "categorical (positive | negative)"
+  sensitivity_requirement: >
+    RNA-NGS recommended; DNA-only panels report 30-40% false-negative rate for
+    NRG1 fusions due to breakpoint variability and large intron size.
+
+specimen_requirements:
+  - "FFPE tumor tissue with ≥20% tumor cellularity (RNA quality permitting)"
+  - "Plasma ctDNA (RNA / cfTNA assays — emerging) acceptable when tissue insufficient"
+
+related_biomarkers:
+  - BIO-ALK-FUSION  # tumor-agnostic fusion analogy — RNA-NGS workflow
+  - BIO-ROS1
+  - BIO-RET-FUSION
+
+# NRG1 fusion is a tumor-agnostic driver across many tumor types (NSCLC
+# invasive mucinous adenocarcinoma highest prevalence ~7-27%; pancreatic
+# KRAS-WT ~3-5%; cholangio, breast, colorectal, sarcoma at lower rates).
+# Pan-tumor zenocutuzumab approval (FDA Dec 2024) makes this an actionable
+# tumor-agnostic biomarker. CIViC has NRG1 fusion entries; OncoKB lists
+# zenocutuzumab Level 1 for NSCLC NRG1+ and Level 2 across other tumors.
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+  - SRC-CIVIC
+
+# Schema constraint: actionability_lookup is single (gene, variant). Fusion
+# breakpoints are heterogeneous and source-specific — this biomarker uses
+# fusion_mvp skip reason consistent with bio_alk_fusion / bio_ros1.
+oncokb_skip_reason: fusion_mvp
+
+external_ids:
+  hgnc_symbol: "NRG1"
+
+last_reviewed: "2026-04-29"
+notes: >
+  Rare but tumor-agnostic actionable driver. Highest prevalence in invasive
+  mucinous adenocarcinoma of lung (~7-27% of KRAS-WT IMA), pancreatic
+  KRAS-WT (~3-5%), and isolated cholangio / breast / sarcoma cases.
+  Zenocutuzumab (Bizengri, MCLA-128) — first-in-class HER2 × HER3 bispecific
+  IgG1 — granted FDA accelerated approval 4 Dec 2024 for advanced unresectable
+  / metastatic NSCLC and pancreatic cancer with NRG1 fusion who progressed on
+  prior systemic therapy. eNRGy phase-2 trial (n=204): ORR 33% NSCLC, 42%
+  pancreatic; mDOR ~7-9 mo. Pan-tumor approval reflects rarity (no head-to-head
+  alternative). RNA-NGS testing critical — fusion missed by DNA-only panels in
+  30-40% of cases. Clinical practice gap: most KRAS-WT pancreatic / IMA-NSCLC
+  patients still not tested at progression. Trial-Source SRC-ENRGY-SCHRAM-2024
+  not yet ingested — flag for ingestion chunk.
+notes_ua: >
+  Рідкісний, але пухлино-агностичний дієвий драйвер. найвища поширеність у
+  інвазивній муцинозній аденокарциномі легені (~7-27% KRAS-WT IMA),
+  KRAS-WT панкреатичній (~3-5%), окремих холангіо- / РМЗ- / саркомних
+  випадках. Зеноцутузумаб (Bizengri, MCLA-128) — перший у класі біспецифічний
+  IgG1 HER2 × HER3 — отримав прискорене схвалення FDA 4 грудня 2024 для
+  поширеного неоперабельного / метастатичного НДРЛ та раку підшлункової
+  залози з фузією NRG1, які прогресували на попередній системній терапії.
+  Дослідження eNRGy фаза-2 (n=204): ORR 33% НДРЛ, 42% панкреатичний; мПФВ
+  ~7-9 міс. Пан-туморне схвалення відображає рідкість (немає прямих
+  альтернатив). Тестування RNA-NGS критичне — фузія пропускається DNA-only
+  панелями у 30-40% випадків. Клінічна прогалина: більшість KRAS-WT
+  панкреатичних / IMA-НДРЛ пацієнтів не тестуються при прогресуванні.
+  Джерело випробування SRC-ENRGY-SCHRAM-2024 ще не інгестоване — позначено
+  для chunk інгестії.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
