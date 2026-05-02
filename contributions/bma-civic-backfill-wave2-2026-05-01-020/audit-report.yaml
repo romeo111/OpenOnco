@@ -1,0 +1,259 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-020
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: null
+  target_entity_id: null
+  notes_for_reviewer: 'Read-only audit-report covering all five manifest IDs.
+    One outcome row per BMA. CIViC snapshot 2026-04-25. Variant-aware filter +
+    synonym expansion applied per chunk spec. Pattern mirrors closed #43 and
+    wave2 chunks #182-#199.'
+
+snapshot_used: knowledge_base/hosted/civic/2026-04-25/evidence.yaml
+snapshot_date: '2026-04-25'
+total_civic_accepted_evidence_items: 4842
+
+outcomes:
+
+- bma_id: BMA-CHEK2-GERMLINE-PROSTATE
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 3 SRC-CIVIC blocks spanning 4
+    EIDs (EID11205 level A; EID1854 level B Does-Not-Support; EID1850, EID1852
+    level B Supports)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 6 accepted evidence items where
+    gene == "CHEK2". Disease-token overlap with DIS-PROSTATE: 4 items
+    (EID1850, EID1852, EID1854 in "Prostate Cancer" DOID:10283 and
+    EID11205 in "Castration-resistant Prostate Carcinoma" DOID:0080909).
+    The 2 remaining CHEK2 EIDs (EID531 Loss-of-function, EID7962 R474C)
+    have disease="Cancer" (DOID:162) — pan-tumor — and are excluded per
+    closed-#43 off-disease policy.
+
+    The 4 strict-match prostate EIDs are EXACTLY the 4 EIDs already
+    populated in the hosted file. No upsert required; hosted state
+    already reflects the strict variant-aware + disease-aware CIViC
+    snapshot.
+  variant_aware_strict_eids:
+  - EID1850   # CHEK2 1100DELC, Prostate Cancer, level B, Supports Predisposition, PMID 26629066
+  - EID1852   # CHEK2 I157T, Prostate Cancer, level B, Supports Predisposition, PMID 26629066
+  - EID1854   # CHEK2 IVS2+1G>A, Prostate Cancer, level B, Does Not Support Predisposition, PMID 26629066
+  - EID11205  # CHEK2 mutation, CRPC, level A, Supports Sensitivity/Response (Olaparib), PMID 32343890
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_chek2_germline_prostate.yaml
+  recommended_followup: 'No action. Hosted block faithfully reflects current
+    CIViC snapshot. Re-check on next CIViC nightly refresh.'
+
+- bma_id: BMA-MET-EX14-NSCLC
+  outcome: civic_match
+  hosted_state_before: 'evidence_sources contains 2 SRC-CIVIC blocks spanning
+    9 EIDs: 5 exon-14 (EID797, EID1185, EID1186, EID1651, EID4786 — all
+    Lung Adenocarcinoma) plus 4 MET amplification (EID836, EID890, EID1392,
+    EID1692 — Lung Adenocarcinoma / Lung Squamous Cell Carcinoma)'
+  proposed_action: upsert
+  proposed_sidecar: bma_met_ex14_nsclc.yaml
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 37 accepted evidence items for
+    gene == "MET". Variant-aware filter (variant matches "Exon 14
+    Skipping Mutation") narrows to 12 items. Disease-aware filter
+    (disease ∈ {Lung Adenocarcinoma, Lung Non-small Cell Carcinoma})
+    yields 9 strict-match EIDs.
+
+    Of those 9 strict-match EIDs, the hosted file already contains 5
+    (EID797, EID1185, EID1186, EID1651, EID4786 — all Lung Adenocarcinoma).
+    The remaining 4 strict-match EIDs are MISSING from the hosted file:
+    EID7272 (Tepotinib level B), EID7642 (Crizotinib level B), EID7643
+    (Crizotinib level C), and **EID8847 (Capmatinib level A)** — all in
+    Lung Non-small Cell Carcinoma (DOID:3908). EID8847 is the highest-
+    actionability item (level A, GEOMETRY mono-1 PMID 32877583) and a
+    significant gap in the hosted block.
+
+    Per the wave2 invariant ("no destructive narrowing"), the 4 hosted
+    MET amplification EIDs are PRESERVED. Diverges from the wave2-018
+    KIT-EXON9 pattern because that case was a strict subset (existing ⊃
+    strict-match); here the relationship is overlap (existing has
+    amplification entries the strict variant filter does not, and is
+    missing 4 strict-match exon-14 entries — including a level A item).
+
+    Upsert action: APPEND new evidence_sources entries for the 4 missing
+    strict-match exon-14 NSCLC EIDs. PRESERVE all existing entries.
+    Maintainer adjudicates whether the 4 amplification EIDs should be
+    pruned (out of variant_qualifier scope) or retained (out-of-scope
+    cross-reference for the broader BIO-MET biomarker).
+  variant_aware_strict_eids:
+  - EID797    # MET Exon 14 Skipping Mutation, Lung Adenocarcinoma, level C, Crizotinib, PMID 25971939 [HOSTED]
+  - EID1185   # Lung Adenocarcinoma, level C, Crizotinib, PMID 26729443 [HOSTED]
+  - EID1186   # Lung Adenocarcinoma, level C, Capmatinib, PMID 25971938 [HOSTED]
+  - EID1651   # Lung Adenocarcinoma, level C, Crizotinib, PMID 26845194 [HOSTED]
+  - EID4786   # Lung Adenocarcinoma, level C, Crizotinib, PMID 25769807 [HOSTED]
+  - EID7272   # Lung Non-small Cell Carcinoma, level B, Tepotinib [NEW]
+  - EID7642   # Lung Non-small Cell Carcinoma, level B, Crizotinib [NEW]
+  - EID7643   # Lung Non-small Cell Carcinoma, level C, Crizotinib, PMID 26892698 [NEW]
+  - EID8847   # Lung Non-small Cell Carcinoma, level A, Capmatinib, PMID 32877583 [NEW]
+  pan_tumor_excluded:
+  - EID736    # MET Exon 14, disease="Cancer", level D Crizotinib (off-disease)
+  - EID7797   # MET Exon 14, disease="Cancer", level D Capmatinib (off-disease)
+  off_disease_excluded:
+  - EID6571_class  # 1 Histiocytic And Dendritic Cell Cancer entry (off-disease)
+  amplification_in_hosted_preserved:
+  - EID836    # MET Amplification, Lung Adenocarcinoma, level C, Crizotinib (NOT exon 14)
+  - EID890    # MET Amplification, Lung Squamous Cell Carcinoma, level C, Crizotinib (NOT exon 14)
+  - EID1392   # MET Amplification, Lung Adenocarcinoma, level C, Resistance Gefitinib/Erlotinib (NOT exon 14)
+  - EID1692   # MET Amplification, Lung Adenocarcinoma, level C, Crizotinib (NOT exon 14)
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_met_ex14_nsclc.yaml
+  - pmid: '32877583'  # GEOMETRY mono-1 — Capmatinib level A
+  - pmid: '26892698'  # EID7643 supporting publication
+  caveat: 'Additive-only upsert: 4 missing strict-match exon-14 NSCLC EIDs
+    appended; 4 existing MET amplification EIDs preserved (out of strict
+    variant_qualifier scope but already on hosted). Maintainer decides
+    whether to prune amplification entries — narrowing requires explicit
+    Co-Lead approval per CHARTER §6.1 and would be a separate chunk.'
+
+- bma_id: BMA-MSH2-SOMATIC-ENDOMETRIAL
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 1 SRC-CIVIC block spanning
+    2 EIDs (EID1790 R383*, EID1837 E483G — both Endometrial Cancer level C
+    Supports Oncogenicity)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 7 accepted evidence items where
+    gene == "MSH2". Disease-token overlap with DIS-ENDOMETRIAL (terms:
+    "endometr", "uterine"): 2 items — EID1790 (R383*) and EID1837 (E483G),
+    both Endometrial Cancer DOID:1380, level C Supports Oncogenicity,
+    PMID 25111426.
+
+    Pan-tumor "Cancer" DOID:162 entries: 1 item (EID11677, MSH2 Loss OR
+    MLH1 Loss, level B Supports Sensitivity/Response Nivolumab) excluded
+    per off-disease policy. Other-disease entries: 4 items (Colorectal
+    Cancer, Transitional Cell Carcinoma) out of scope.
+
+    The 2 strict-match endometrial EIDs are EXACTLY the 2 EIDs already
+    populated in the hosted file. No upsert required.
+  variant_aware_strict_eids:
+  - EID1790   # MSH2 R383*, Endometrial Cancer, level C, Supports Oncogenicity, PMID 25111426
+  - EID1837   # MSH2 E483G, Endometrial Cancer, level C, Supports Oncogenicity, PMID 25111426
+  pan_tumor_excluded:
+  - EID11677  # MSH2 Loss OR MLH1 Loss, "Cancer" DOID:162, level B, Nivolumab (off-disease per closed-#43)
+  off_disease_excluded:
+  - 4 EIDs in Colorectal Cancer / Transitional Cell Carcinoma (out of scope for endometrial BMA)
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_somatic_endometrial.yaml
+  - pmid: '25111426'
+  recommended_followup: 'CIViC variant strings (R383*, E483G) do not
+    distinguish germline vs somatic — both EIDs are equally applicable to
+    BMA-MSH2-GERMLINE-ENDOMETRIAL (parallel BMA). Maintainer adjudicates.
+    Hosted block faithfully reflects current CIViC snapshot for somatic-
+    scoped BMA. Re-check on next CIViC nightly refresh.'
+
+- bma_id: BMA-NTRK-FUSION-IFS
+  outcome: civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: upsert
+  proposed_sidecar: bma_ntrk_fusion_ifs.yaml
+  rationale: |
+    Synonym expansion required: hosted variant_qualifier is "ETV6-NTRK3
+    fusion (defining lesion)" and disease_id DIS-IFS = "Infantile
+    fibrosarcoma". CIViC catalogs the same disease as "Congenital
+    Fibrosarcoma" (DOID:8418) — these are synonymous (CFS/IFS — congenital
+    infantile fibrosarcoma is the same WHO entity). Synonym match
+    confirmed via DOID and clinical literature.
+
+    Snapshot 2026-04-25 contains 15 accepted evidence items with
+    disease == "Congenital Fibrosarcoma" (DOID:8418), all NTRK-fusion
+    variants. By gene-record:
+      ETV6::NTRK3: 8 EIDs (variant_qualifier strict match)
+      EML4::NTRK3: 4 EIDs (different fusion partner)
+      SQSTM1::NTRK1: 2 EIDs (different gene + fusion partner)
+      LMNA::NTRK1: 1 EID (different gene + fusion partner)
+
+    Variant-aware strict filter (matches hosted variant_qualifier
+    "ETV6-NTRK3 fusion"): 8 EIDs only. The other 7 EIDs share the same
+    disease and same drug class (TRK inhibitor) but use alternate fusion
+    partners — clinically equivalent for actionability purposes (the
+    biomarker_id BIO-NTRK-FUSION is a generic NTRK-fusion biomarker, not
+    ETV6::NTRK3-specific), but the hosted variant_qualifier is the
+    narrower scope.
+
+    Per closed-#43 strict variant-aware policy and consistency with
+    wave2-018 ("variant-aware filter applied"), populate evidence_sources
+    with the 8 strict-match ETV6::NTRK3 EIDs. The 7 alternate-fusion EIDs
+    are NOT included in the upsert; they are listed below for maintainer
+    awareness. Maintainer can broaden the variant_qualifier to "NTRK
+    fusion (any partner)" and re-run the backfill in a follow-up chunk
+    if BIO-NTRK-FUSION's generic scope is intended to dominate.
+  variant_aware_strict_eids:
+  - EID6099   # ETV6::NTRK3 Fusion, Congenital Fibrosarcoma, level A, Larotrectinib Sensitivity/Response, PMID 29606586 [SCOUT pediatric]
+  - EID6473   # ETV6::NTRK3 Fusion, level C, Larotrectinib Sensitivity/Response, PMID 27093299
+  - EID7418   # ETV6::NTRK3 Fusion, level C, Larotrectinib Sensitivity/Response, PMID 30204247
+  - EID8332   # ETV6::NTRK3 Fusion, level A, Supports Positive (no therapy), PMID 9462753
+  - EID10502  # ETV6::NTRK3 Fusion, level C, Supports Oncogenicity (no therapy), PMID 9462753
+  - EID10717  # ETV6::NTRK3 Fusion, level C, Larotrectinib Sensitivity/Response, PMID 32223937
+  - EID11276  # ETV6::NTRK3 Fusion, level B, Supports Positive (no therapy), PMID 10895816
+  - EID11277  # ETV6::NTRK3 Fusion, level B, Supports Positive (no therapy), PMID 11242790
+  alternate_fusion_partner_eids_NOT_included_pending_maintainer_review:
+  - EID6103   # SQSTM1::NTRK1 Fusion, level C, Larotrectinib Sensitivity/Response, PMID 29606586
+  - EID8865   # SQSTM1::NTRK1 Fusion, level C, Larotrectinib Sensitivity/Response, PMID 30204247
+  - EID8878   # LMNA::NTRK1 Fusion, level C, Crizotinib Sensitivity/Response, PMID 30709876
+  - EID10379  # EML4::NTRK3 Fusion, level D, Supports Oncogenicity, PMID 27148571
+  - EID10419  # EML4::NTRK3 Fusion, level C, Supports Positive, PMID 29099503
+  - EID11517  # EML4::NTRK3 Fusion, level C, Supports Positive, PMID 27148571
+  - EID11859  # EML4::NTRK3 Fusion, level C, Entrectinib Sensitivity/Response, PMID 35395680
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_ifs.yaml
+  - pmid: '29606586'  # SCOUT pediatric — Laetsch Lancet Oncol 2018
+  - pmid: '32223937'
+  - pmid: '9462753'
+  - pmid: '10895816'
+  - pmid: '11242790'
+  - pmid: '27093299'
+  - pmid: '30204247'
+  - synonym_resolution: 'CIViC "Congenital Fibrosarcoma" (DOID:8418) ≡
+      OpenOnco DIS-IFS "Infantile fibrosarcoma" — synonymous WHO entity'
+  caveat: 'Strict variant-aware reading (8 ETV6::NTRK3 EIDs) chosen for
+    consistency with closed-#43 wave-1 and wave2-018 precedents. The
+    BIO-NTRK-FUSION biomarker is generic and the hosted recommended_combinations
+    are pan-NTRK-TKIs, suggesting maintainer may prefer broader scope (15
+    EIDs across all fusion partners). Maintainer adjudicates — follow-up
+    chunk needed if broadening is preferred.'
+
+- bma_id: BMA-RAD51C-SOMATIC-OVARIAN
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains zero accepted evidence items where
+    gene == "RAD51C". Synonym expansion: also checked RAD51 paralog genes
+    (RAD51, RAD51B, RAD51D, FANCO/RAD51C-alias). Found 3 paralog entries
+    (EID1111 RAD51D R186* in Breast Cancer; EID11212 RAD51B mutation in
+    CRPC; EID11214 RAD51D mutation in CRPC). None are RAD51C-specific and
+    none are in ovarian — applying the closed-#43 disease-token-overlap
+    rule, no synonym-broadened match either.
+
+    Pan-tumor "Cancer" DOID:162: zero RAD51C entries. RAD51C HRR-deficiency
+    actionability is captured in the PARPi trial program (PAOLA-1
+    olaparib+bev, NOVA niraparib non-gBRCA, ARIEL3 rucaparib LOH-high)
+    which CIViC has not catalogued at the EID level for RAD51C-specific
+    subgroups. Same conclusion as wave2-018 BMA-RAD51C-GERMLINE-OVARIAN
+    (paralog-scoped no-match).
+  no_civic_match_reason: 'gene_absent_from_civic_snapshot'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_rad51c_somatic_ovarian.yaml
+  recommended_followup: 'Source-gap: RAD51C-specific ESCAT IIB actionability
+    is anchored on the PAOLA-1 / ARIEL3 / NOVA HRD-positive subgroup
+    analyses. Consider ingesting SRC-PAOLA-1, SRC-ARIEL3, SRC-NOVA-NIRAPARIB
+    as primary_sources. CIViC backfill not applicable for current snapshot.
+    Re-check on next CIViC nightly refresh.'
+
+summary:
+  total_manifest_ids: 5
+  civic_match_with_upsert: 2          # MET-EX14-NSCLC, NTRK-FUSION-IFS
+  no_civic_match: 1                   # RAD51C-SOMATIC-OVARIAN
+  already_populated_no_action: 2      # CHEK2-GERMLINE-PROSTATE, MSH2-SOMATIC-ENDOMETRIAL
