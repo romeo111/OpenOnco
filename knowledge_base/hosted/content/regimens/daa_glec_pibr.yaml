@@ -31,6 +31,33 @@ ukraine_availability:
 sources:
   - SRC-EASL-HCV-2023
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Glecaprevir/pibrentasvir 8-12 weeks for HCV. Pan-genotypic DAA alt
+# to SOF/VEL. Generally well-tolerated. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль, втома"
+    action_ua: "Поширене на початку — занотовуйте"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Помірна нудота"
+    action_ua: "Приймайте з їжею"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-EASL-HCV-2023
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений висип, що поширюється"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка реакції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Alternative pan-genotypic DAA, shorter duration than SOF/VEL.

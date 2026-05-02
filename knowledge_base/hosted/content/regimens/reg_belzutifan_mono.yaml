@@ -25,6 +25,38 @@ ukraine_availability:
     referral (EU centers) or compassionate-use programme. Out-of-pocket
     cost prohibitive for most patients without foundation support.
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Belzutifan HIF-2α inhibitor for VHL-associated RCC + advanced RCC
+# 3L+ (LITESPARK). Signature: anemia (universal — boxed), hypoxia.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — белзутифан майже завжди спричиняє анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Задишка, що погіршується, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — белзутифан може спричиняти гіпоксію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Помірна нудота, помірний головний біль"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Запаморочення при стоянні, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — оцінка анемії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Раптова сильна задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — PE або тяжка анемія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+
 last_reviewed: "2026-04-26"
 notes: >
   Used in two distinct contexts:

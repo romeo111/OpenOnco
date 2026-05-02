@@ -30,6 +30,38 @@ ukraine_availability:
   notes: "Out-of-pocket / charitable pathway."
 
 sources: [SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Olaparib maintenance for BRCA-germline metastatic PDAC post-platinum
+# (POLO). Same PARPi pattern. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Часто проходить через 2-3 місяці"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Виражена втома, задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — олапариб може спричиняти анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

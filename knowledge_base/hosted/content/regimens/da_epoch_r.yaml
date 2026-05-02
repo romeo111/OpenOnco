@@ -37,6 +37,45 @@ dose_adjustments:
 
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# DA-EPOCH-R for HGBL / PMBCL / Burkitt-like 1L. Inpatient continuous
+# infusion. Cytopenia + cardiac + neuropathy. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, мукозит"
+    action_ua: "Поширене — м'яка їжа, полоскання"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Випадання волосся, нудота"
+    action_ua: "Очікувано — протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання в кистях/стопах"
+    action_ua: "Вінкристин нейропатія — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — тривала нейтропенія"
+    urgency: er_now
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція на ритуксимаб"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Dose-adjustment up/down based on prior-cycle ANC nadir is the
