@@ -1,0 +1,327 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-019
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: null
+  target_entity_id: null
+  notes_for_reviewer: 'Read-only audit-report covering all five manifest IDs.
+    One outcome row per BMA. CIViC snapshot 2026-04-25. Variant-aware filter +
+    strict disease-token-overlap policy applied per closed-#43 / wave2-018
+    precedent. No per-BMA entity sidecars (no upserts proposed) — two
+    already_populated, three no_civic_match.'
+
+snapshot_used: knowledge_base/hosted/civic/2026-04-25/evidence.yaml
+snapshot_date: '2026-04-25'
+total_civic_accepted_evidence_items: 4842
+
+outcomes:
+
+- bma_id: BMA-CHEK2-GERMLINE-BREAST
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 6 accepted evidence items where
+    gene == "CHEK2". Disease-token distribution:
+      - "Cancer" (DOID:162, pan-tumor) — 2 items (EID531 Loss-of-function
+        Predisposition; EID7962 R474C c.1420C>T Predisposition).
+      - "Prostate Cancer" (DOID:10283) — 3 items (EID1850 1100DELC
+        Predisposition; EID1852 I157T Predisposition; EID1854 IVS2+1G>A
+        Does Not Support Predisposition).
+      - "Castration-resistant Prostate Carcinoma" (DOID:0080909) — 1 item
+        (EID11205 CHEK2 mutation + Olaparib level A Sensitivity/Response,
+        PMID 32343890 — PROfound).
+    Zero items with disease token "Breast Cancer" (DOID:1612) or any
+    breast-scoped synonym. Per closed-#43 strict disease-token-overlap
+    policy, pan-tumor "Cancer" entries are excluded (off-disease borrowing
+    not introduced). EID11205 is the most adversarial candidate (level A,
+    Olaparib sensitivity) but its disease scope is mCRPC and the BMA scope
+    is DIS-BREAST; importing it would also CONFLICT with the hosted
+    contraindicated_monotherapy "PARPi monotherapy (no demonstrated
+    benefit)" claim, which is breast-specific (anchored on TBCRC-048 CHEK2
+    cohort minimal response). Variant-aware filter rejects all 6 EIDs.
+  considered_civic_eids:
+  - eid: EID531
+    disease: Cancer (DOID:162)
+    variant: Loss-of-function
+    excluded_because: pan_tumor_DOID_162_off_disease
+  - eid: EID1850
+    disease: Prostate Cancer (DOID:10283)
+    variant: 1100DELC
+    excluded_because: prostate_disease_scope_not_DIS_BREAST
+  - eid: EID1852
+    disease: Prostate Cancer (DOID:10283)
+    variant: I157T
+    excluded_because: prostate_disease_scope_not_DIS_BREAST
+  - eid: EID1854
+    disease: Prostate Cancer (DOID:10283)
+    variant: IVS2+1G>A
+    excluded_because: prostate_disease_scope_not_DIS_BREAST
+  - eid: EID7962
+    disease: Cancer (DOID:162)
+    variant: R474C c.1420C>T
+    excluded_because: pan_tumor_DOID_162_off_disease
+  - eid: EID11205
+    disease: Castration-resistant Prostate Carcinoma (DOID:0080909)
+    variant: mutation
+    therapies: [Olaparib]
+    level: A
+    excluded_because: prostate_disease_scope_not_DIS_BREAST_AND_inverts_breast_TBCRC048_negative_PARPi_finding
+  no_civic_match_reason: 'no_disease_token_overlap_with_DIS_BREAST'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_chek2_germline_breast.yaml
+  recommended_followup: 'Source-gap: TBCRC-048 (Tung et al, J Clin Oncol 2020,
+    PMID 32352931 — olaparib expanded HRR cohort showing minimal CHEK2 breast
+    response) is the canonical primary source for the breast-specific
+    contraindication claim. Already noted in hosted evidence_summary. Consider
+    ingesting SRC-TBCRC-048 as a primary_source. CIViC backfill not applicable
+    for current snapshot.'
+
+- bma_id: BMA-MET-AMP-RCC-PAPILLARY
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 1 SRC-CIVIC block referencing
+    EID796 (level B, Foretinib, Sensitivity/Response)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains exactly one accepted evidence item
+    with disease == "Papillary Renal Cell Carcinoma" (DOID:4465) across the
+    entire database: EID796 (MET Mutation, Foretinib, level B,
+    Sensitivity/Response, PMID 23213094 — Choueiri JCO 2013). The hosted
+    file already contains EID796 in its evidence_sources block, captured
+    by a prior backfill pass.
+
+    Variant-aware re-check: BMA variant_qualifier is "amplification or
+    activating mutation (papillary type-1 context)". EID796's variant
+    "Mutation" matches the "or activating mutation" branch — strict-filter
+    accepts. No additional EIDs match (other MET items are NSCLC/Lung
+    Adenocarcinoma/Gastric/CRC/Glioblastoma/Melanoma/HNSCC/Solid Tumor —
+    none are papillary RCC). Pan-tumor "Cancer" DOID:162 entries excluded.
+    No upsert proposed; hosted state already reflects the strict-match.
+  variant_aware_strict_eids:
+  - eid: EID796
+    disease: Papillary Renal Cell Carcinoma (DOID:4465)
+    variant: Mutation
+    therapies: [Foretinib]
+    direction: Supports
+    significance: Sensitivity/Response
+    level: B
+    pmid: '23213094'
+    civic_url: https://civicdb.org/links/evidence_items/796
+    hosted_status: already_in_evidence_sources_block
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_met_amp_rcc_papillary.yaml
+  - pmid: '23213094'
+  recommended_followup: 'No CIViC action needed. Trial-source gap for
+    SRC-PAPMET (Pal Lancet 2021, PMID 33812485 — cabozantinib > sunitinib
+    in MET-driven pRCC) and SRC-SAVOIR (Choueiri JCO 2020, PMID 32422828 —
+    savolitinib vs sunitinib futility) remains, already noted in hosted
+    notes field. Consider ingesting SRC-PAPMET / SRC-SAVOIR as
+    primary_sources in a separate chunk.'
+
+- bma_id: BMA-MSH2-SOMATIC-CRC
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 1 SRC-CIVIC block referencing
+    EID1826, EID1827, EID1834 (level C, Supports Oncogenicity)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 7 accepted evidence items where
+    gene == "MSH2". Disease-token distribution:
+      - "Colorectal Cancer" (DOID:9256) — 3 items (EID1826 V273FS;
+        EID1827 E28FS; EID1834 K172*) — all evidence_type=Oncogenic,
+        Supports Oncogenicity, level C, PMID 25111426 (Bonneville JCO PO 2017).
+      - "Endometrial Cancer" (DOID:1380) — 2 items (EID1790 R383*;
+        EID1837 E483G) — out of disease scope.
+      - "Transitional Cell Carcinoma" (DOID:2671, urothelial) — 1 item
+        (EID1877 Loss + Durvalumab/MEDI0680 combo) — out of disease scope.
+      - "Cancer" (DOID:162, pan-tumor) — 1 item (EID11677 MSH2 Loss OR
+        MLH1 Loss + Nivolumab level B) — excluded per off-disease policy.
+
+    Strict variant-aware + disease-token filter for DIS-CRC yields exactly
+    EID1826 / EID1827 / EID1834 — all already present in the hosted
+    evidence_sources block. No upsert proposed.
+
+    Variant-qualifier note: BMA scope is "MSH2 somatic loss-of-function";
+    CIViC variant tokens for the 3 matched EIDs are V273FS / E28FS / K172*
+    (all frameshift/nonsense LoF variants in tumor samples, consistent
+    with somatic LoF interpretation). EID11677 (which uses Nivolumab as
+    therapy and would have given an additional therapy-level annotation)
+    is properly excluded as pan-tumor DOID:162.
+  variant_aware_strict_eids:
+  - eid: EID1826
+    disease: Colorectal Cancer (DOID:9256)
+    variant: V273FS
+    direction: Supports
+    significance: Oncogenicity
+    level: C
+    pmid: '25111426'
+    hosted_status: already_in_evidence_sources_block
+  - eid: EID1827
+    disease: Colorectal Cancer (DOID:9256)
+    variant: E28FS
+    direction: Supports
+    significance: Oncogenicity
+    level: C
+    pmid: '25111426'
+    hosted_status: already_in_evidence_sources_block
+  - eid: EID1834
+    disease: Colorectal Cancer (DOID:9256)
+    variant: K172*
+    direction: Supports
+    significance: Oncogenicity
+    level: C
+    pmid: '25111426'
+    hosted_status: already_in_evidence_sources_block
+  evidence_excluded:
+  - eid: EID11677
+    disease: Cancer (DOID:162, pan-tumor)
+    excluded_because: pan_tumor_DOID_162_off_disease
+  - eid: EID1877
+    disease: Transitional Cell Carcinoma (DOID:2671)
+    excluded_because: urothelial_disease_scope_not_DIS_CRC
+  - eid: EID1790
+    disease: Endometrial Cancer (DOID:1380)
+    excluded_because: endometrial_disease_scope_not_DIS_CRC
+  - eid: EID1837
+    disease: Endometrial Cancer (DOID:1380)
+    excluded_because: endometrial_disease_scope_not_DIS_CRC
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_somatic_crc.yaml
+  - pmid: '25111426'
+  recommended_followup: 'No CIViC action needed. Source-gap for KEYNOTE-177
+    (Andre NEJM 2020, PMID 33264544 — pembrolizumab 1L MSI-H mCRC),
+    KEYNOTE-158 (Marabelle JCO 2020, PMID 31682550 — pan-tumor MSI-H),
+    Cercek 2022 (NEJM 387 — neoadjuvant dostarlimab dMMR rectal) remain
+    open if not yet ingested as primary_sources. CIViC has no
+    therapy-specific annotation for the matched MSH2-CRC EIDs (all
+    Oncogenicity), so the regulatory and evidence_summary content is the
+    primary trial-anchor — not CIViC-derivable.'
+
+- bma_id: BMA-NTRK-FUSION-GIST
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 9 accepted evidence items across
+    NTRK1 (5), NTRK2 (0), NTRK3 (4), plus fusion-partner entries
+    (NTRK3::SCAPER for melanocytoma; MET::ATXN7L1 etc. for other genes).
+
+    Disease-token filter for DIS-GIST (DOID:9253):
+      - One item matches: EID9592 (NTRK3 F617L in Gastrointestinal Stromal
+        Tumor + Larotrectinib, level C, Supports Resistance, PMID 30624546
+        — Cocco Cancer Discovery 2019).
+
+    Variant-aware filter on EID9592: BMA variant_qualifier is "NTRK1/3
+    fusion (rare in KIT/PDGFRA wild-type GIST)". EID9592 variant is
+    "F617L" — a kinase-domain point mutation that arises as acquired
+    resistance AFTER initial TRK-inhibitor response in fusion-positive
+    tumors. F617L is NOT a fusion variant; it is a secondary resistance
+    mutation. Per closed-#43 / chunk-spec strict variant-aware filter
+    ("exclude evidence inverting clinical message" — and more strictly,
+    "EID variant must match BMA variant_qualifier scope"), EID9592 is
+    rejected: it neither matches "fusion" variant scope, nor would
+    importing it accurately represent the BMA's primary-actionability
+    claim of fusion → larotrectinib/entrectinib sensitivity.
+
+    Synonym expansion checked:
+      - NTRK1/2/3 fusion partners (EML4, ETV6, TPM3, LMNA, TFG, SCAPER,
+        ATXN7L1) for GIST disease overlap — none in snapshot.
+      - Pan-tumor "Solid Tumor" DOID:'' — EID10170 (NTRK1 Amplification
+        + Larotrectinib level C) is amplification not fusion; rejected
+        by variant-aware filter regardless of disease-token.
+      - Pan-tumor "Cancer" DOID:162 entries (EID2958 NTRK1/2/3
+        Amplification + Entrectinib level B Does Not Support;
+        EID2959 NTRK3 Amplification + Entrectinib level B Does Not
+        Support) — both amplification not fusion, AND off-disease.
+
+    Tumor-agnostic NTRK-fusion actionability (larotrectinib FDA 2018,
+    entrectinib FDA 2019) is captured in the hosted regulatory_approval
+    block and recommended_combinations — not CIViC-derivable in current
+    snapshot for fusion-variant scope.
+  considered_civic_eids:
+  - eid: EID9592
+    disease: Gastrointestinal Stromal Tumor (DOID:9253)
+    gene: NTRK3
+    variant: F617L
+    therapies: [Larotrectinib]
+    direction: Supports
+    significance: Resistance
+    level: C
+    pmid: '30624546'
+    excluded_because: variant_F617L_is_acquired_resistance_point_mutation_NOT_fusion_does_not_match_BMA_variant_qualifier_NTRK1_3_fusion
+  no_civic_match_reason: 'no_eid_with_fusion_variant_AND_DIS_GIST_disease_token'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_gist.yaml
+  recommended_followup: 'Source-gap: SRC-NCCN-SARCOMA / SRC-NCCN-GIST-2025
+    not yet ingested per hosted notes. Tumor-agnostic FDA approvals for
+    larotrectinib (2018) and entrectinib (2019) are regulatory-anchored
+    rather than CIViC-anchored. Re-check on next CIViC nightly refresh
+    once tumor-agnostic NTRK fusion EIDs are catalogued under DOID:9253
+    or DOID:162 with fusion variant scope.'
+
+- bma_id: BMA-RAD51C-SOMATIC-BREAST
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains zero accepted evidence items where
+    gene == "RAD51C". Synonym expansion checked:
+      - HGNC alias for RAD51C: none (RAD51C is the canonical HGNC symbol;
+        FANCO is a Fanconi-anemia complementation-group alias rarely
+        used as a primary symbol — also absent from snapshot).
+      - RAD51 paralogs (RAD51, RAD51B, RAD51D) considered but NOT
+        substituted: per closed-#43 / wave2-018 precedent, synonym
+        expansion is reserved for HGNC symbol aliases (e.g. HER2 ≡
+        ERBB2, CD30 ≡ TNFRSF8), not for paralog substitution. RAD51C
+        and RAD51D are separate HGNC genes encoding distinct
+        Rad51-paralog proteins; their HRR-pathway functional homology
+        does not justify CIViC evidence borrowing under this chunk's
+        strict-filter policy.
+      - For completeness: RAD51 has limited entries; RAD51B has
+        EID11212 (mutation + Olaparib in CRPC level A, PMID 32343890 —
+        PROfound) — wrong gene + wrong disease. RAD51D has EID1111
+        (R186* in Breast Cancer DOID:1612 level C, evidence_direction=N/A,
+        significance=N/A — predisposition without clinical direction)
+        and EID11214 (mutation + Olaparib in CRPC level A) — wrong gene.
+
+    No EID matches gene=RAD51C + disease in DIS-BREAST.
+  considered_civic_eids:
+  - eid: EID1111
+    gene: RAD51D
+    disease: Breast Cancer (DOID:1612)
+    variant: R186*
+    direction: N/A
+    significance: N/A
+    level: C
+    excluded_because: wrong_gene_RAD51D_not_RAD51C_AND_no_clinical_direction
+  - eid: EID11212
+    gene: RAD51B
+    disease: Castration-resistant Prostate Carcinoma (DOID:0080909)
+    excluded_because: wrong_gene_RAD51B_not_RAD51C_AND_off_disease_CRPC
+  - eid: EID11214
+    gene: RAD51D
+    disease: Castration-resistant Prostate Carcinoma (DOID:0080909)
+    excluded_because: wrong_gene_RAD51D_not_RAD51C_AND_off_disease_CRPC
+  no_civic_match_reason: 'gene_absent_from_civic_snapshot_RAD51C_paralog_substitution_disallowed'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_rad51c_somatic_breast.yaml
+  recommended_followup: 'Source-gap: RAD51C-specific somatic-LoF actionability
+    in breast is anchored on the HRD-positive subgroup analyses of the
+    PARPi trial program (OlympiA olaparib adjuvant gBRCA + somatic-HRD
+    extrapolation, BROCADE3 veliparib, EMBRACA talazoparib gBRCA — RAD51C
+    not specifically powered). ESCAT IIIA tier reflects the limited
+    evidence base. Consider ingesting SRC-OLYMPIA / SRC-EMBRACA as
+    primary_sources for the broader HRR/BRCA program. CIViC backfill
+    not applicable for current snapshot.'
+
+summary:
+  total_manifest_ids: 5
+  civic_match_with_upsert: 0
+  no_civic_match: 3
+  already_populated_no_action: 2
