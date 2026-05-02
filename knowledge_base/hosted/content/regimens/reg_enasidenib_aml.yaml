@@ -65,6 +65,38 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ELN-AML-2022
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Enasidenib for IDH2-mutated R/R AML. IDHi signature: differentiation
+# syndrome (boxed warning, 14% incidence — like APL DS), GI, hyperbil.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втрата апетиту"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — енасиденіб може спричиняти підвищення білірубіну"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Швидкий набір ваги (≥2 кг/добу), набряки гомілок, задишка"
+    action_ua: "Звертайтесь у лікарню негайно — можливий синдром диференціювання, потребує дексаметазону"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-AML-2022
+  - trigger_ua: "Лихоманка з висипом і набряками"
+    action_ua: "Звертайтесь у лікарню негайно — синдром диференціювання"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-30"
 notes: >
   Standard 2L+ for R/R IDH2-mutated AML per AG221-AML-001 (FDA approval

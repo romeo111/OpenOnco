@@ -37,6 +37,44 @@ ukraine_availability:
   notes: "Durvalumab reimbursement variable."
 
 sources: [SRC-NCCN-SCLC-2025, SRC-ESMO-SCLC-2021]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Etoposide + carbo + durvalumab for SCLC ext-stage 1L (CASPIAN).
+# Same as EP-atezo pattern. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, нудота"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — глибока нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SCLC-2025
+
 last_reviewed:
 notes: >
   CASPIAN: median OS 13.0 (durva) vs 10.3 months (EP). ESMO preferred

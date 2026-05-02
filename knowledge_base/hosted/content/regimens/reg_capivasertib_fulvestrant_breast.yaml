@@ -39,6 +39,39 @@ ukraine_availability:
   notes: "Capivasertib not registered in Ukraine; fulvestrant reimbursed. Named-patient import / EAP only for capivasertib. Major access barrier."
 
 sources: [SRC-CAPITELLO291-TURNER-2023, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Capivasertib + fulvestrant for AKT1/PIK3CA/PTEN-altered HR+/HER2-
+# breast 2L+ (CAPITELLO-291). AKTi: hyperglycemia, rash, GI.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Поширене на капівасертибі — лоперамід"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірний висип, нудота, втома"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Часті позиви до сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — гіперглікемія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CAPITELLO291-TURNER-2023
+  - trigger_ua: "Тяжка діарея (≥6 разів/день)"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений висип з пухирями"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко тяжкі шкірні реакції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 notes: >
   CAPItello-291: AKT-pathway-altered (PIK3CA / AKT1 / PTEN) cohort

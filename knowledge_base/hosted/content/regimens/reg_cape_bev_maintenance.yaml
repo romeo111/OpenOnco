@@ -52,6 +52,42 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Capecitabine + bevacizumab maintenance after FOLFOX/CAPOX induction
+# for mCRC (CAIRO3). Capecitabine HFS + bev HTN/proteinuria/bleeding.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення на долонях/стопах"
+    action_ua: "HFS від капецитабіну — крем"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Лоперамід"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Бевацизумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Виражений біль на долонях/стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Раптовий гострий біль у животі або кровохаркання"
+    action_ua: "Звертайтесь у лікарню негайно — перфорація або кровотеча"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

@@ -42,6 +42,37 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-HODGKIN-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Brentuximab maintenance after autoSCT for high-risk cHL (AETHERA).
+# Same BV pattern: neuropathy, IRR. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Брентуксимаб нейропатія — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання стає сильним болем"
+    action_ua: "Подзвоніть у клініку того ж дня — корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка реакція на інфузію"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   AETHERA trial (Moskowitz 2015, follow-up 2018): post-ASCT cHL with

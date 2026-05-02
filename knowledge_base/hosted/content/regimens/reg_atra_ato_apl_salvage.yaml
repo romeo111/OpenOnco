@@ -66,6 +66,42 @@ sources:
   - SRC-ELN-APL-2019
   - SRC-APL-RELAPSE-LENGFELDER-2017
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Salvage ATRA + ATO for R/R APL. Same APL pattern as 1L.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль на тлі ATRA"
+    action_ua: "Поширене — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Сухість шкіри, лусковий висип"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Швидкий набір ваги, набряки гомілок або обличчя"
+    action_ua: "Подзвоніть у клініку того ж дня — синдром диференціювання"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ELN-APL-2019
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — диференціювання або інфекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Раптова тяжка задишка"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий синдром диференціювання"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — арсен подовжує QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Salvage ATRA + ATO for R/R APL post front-line (especially
