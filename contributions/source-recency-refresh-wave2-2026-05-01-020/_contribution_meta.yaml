@@ -1,0 +1,24 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-020
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  claim_method: formal-issue
+  issue_number: 222
+  ai_session_notes: 'Wave-2 source recency refresh — closes #222. Real HTTP HEAD
+    checks via httpx 0.28.1 (UA "Mozilla/5.0 (compatible; OpenOnco-recency-bot)",
+    timeout=30s, retries=3, follow_redirects=True) on the 5 manifest sources.
+    Per chunk brief: HEAD chosen over GET because wave-1 HEAD passed publisher
+    bot-walls. On 403, fallback chain: DOI HEAD -> PubMed canonical HEAD ->
+    unreachable.blocked. SRC-ESMO-SARCOMA-2024 + SRC-SCOUT are auto-stubs with
+    no url/pmid/doi on master -> unreachable.no_url + suggest. The remaining 3
+    sources (COMBI-D-LONG-2014, OLYMPIAD-ROBSON-2017, KEYNOTE-407-PAZ-ARES-2018)
+    all returned 403 on primary AND DOI AND PubMed fallback -> unreachable.blocked
+    (no current_as_of bump per brief). Zero upserts produced.'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'No upsert sidecars produced this chunk: 2 stubs (no_url) +
+    3 publisher-blocked sources. unreachable.yaml carries structured reasons for
+    each. No content / license / attribution fields modified. Probe script
+    _recency_probe.py + raw output _probe_results.json retained for audit.'
