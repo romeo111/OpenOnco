@@ -1,0 +1,22 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-026
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source recency refresh — closes #228. Real httpx
+    HEAD checks on 4 sources from chunk manifest. UA Mozilla/5.0 (compatible;
+    OpenOnco-recency-bot), 30s timeout, 3 retries, follow_redirects=True.
+    Probe script committed alongside (_recency_probe.py). One manifest ID
+    (SRC-FORTITUDE-101) lacks a top-level `url` field in its hosted YAML
+    (auto-stub awaiting clinical signoff); per chunk-brief rule "No URL →
+    unreachable" flagged unreachable.no_url. Three remaining publisher URLs
+    returned HTTP 403 on direct HEAD and HTTP 403 on DOI fallback (both
+    PubMed primary and NEJM DOI gate non-browser HEAD requests); PubMed
+    canonical fallback equals primary URL for all three so was skipped per
+    probe logic — flagged unreachable.blocked.'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'Zero upserts proposed — brief rule path produced no
+    2xx/3xx outcome for any manifest ID. All four flagged unreachable in
+    audit. No hosted KB files modified; sidecar-only.'
