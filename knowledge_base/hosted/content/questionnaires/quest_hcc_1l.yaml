@@ -11,10 +11,10 @@ _stub_reason: |
   thresholds and biomarker enums may need clinician adjustment per CHARTER §6.1.
 
 intro: >
-  ⚠ STUB-опитувальник для Hepatocellular carcinoma. Заповнено автоматично з KB
-  metadata. Дозволяє запустити end-to-end engine + render для розуміння
-  алгоритмічного маршруту, але клінічних деталей бракує — питання
-  спрощені, дефолти консервативні. Очікує clinical co-lead review.
+  ⚠ STUB questionnaire for Hepatocellular carcinoma. Auto-filled from KB
+  metadata. Allows running end-to-end engine + render to understand
+  the algorithmic pathway, but clinical details are lacking — questions
+  are simplified, defaults are conservative. Awaiting clinical co-lead review.
 
 fixed_fields:
   disease:
@@ -22,31 +22,31 @@ fixed_fields:
   line_of_therapy: 1
 
 groups:
-  - title: "Демографія + базовий статус"
-    description: "Базові поля. ECOG 4 → engine піде у palliative track."
+  - title: "Demographics + baseline status"
+    description: "Base fields. ECOG 4 → engine routes to palliative track."
     questions:
       - field: "patient_id"
-        label: "ID пацієнта (synthetic)"
+        label: "Patient ID (synthetic)"
         type: "text"
         impact: "required"
         default_value: "VIRTUAL-HCC-001"
 
       - field: "demographics.age"
-        label: "Вік"
+        label: "Age"
         type: "integer"
         impact: "critical"
         range_min: 18
         range_max: 110
-        units: "років"
+        units: "years"
         default_value: 60
 
       - field: "demographics.sex"
-        label: "Стать"
+        label: "Sex"
         type: "enum"
         impact: "optional"
         options:
-          - {value: "male", label: "Чоловіча"}
-          - {value: "female", label: "Жіноча"}
+          - {value: "male", label: "Male"}
+          - {value: "female", label: "Female"}
 
       - field: "demographics.ecog"
         label: "ECOG Performance Status"
@@ -58,28 +58,28 @@ groups:
           - {value: 2, label: "2"}
           - {value: 3, label: "3"}
           - {value: 4, label: "4"}
-        helper: "ECOG 4 → engine не запропонує active treatment."
+        helper: "ECOG 4 → engine will not propose active treatment."
 
       - field: "line_of_therapy"
-        label: "Лінія терапії"
+        label: "Line of therapy"
         type: "integer"
         impact: "critical"
         range_min: 1
         range_max: 5
         default_value: 1
-        helper: "Цей опитувальник орієнтований на 1L. Для 2L+ скористайтеся розширеним JSON-режимом."
+        helper: "This questionnaire targets 1L. For 2L+ use the extended JSON mode."
 
-  - title: "Біомаркери (auto-extracted з indications)"
-    description: "Поля автоматично згенеровані з biomarker_requirements у Indications цієї хвороби. Уточнить клініцист."
+  - title: "Biomarkers (auto-extracted from indications)"
+    description: "Fields auto-generated from biomarker_requirements in disease Indications. To be refined by clinician."
     questions:
       - field: "biomarkers.BIO-AFP"
         label: "Alpha-fetoprotein (serum)"
         type: "enum"
         impact: "recommended"
         options:
-          - {value: "positive", label: "Позитивний"}
-          - {value: "negative", label: "Негативний"}
-          - {value: "unknown", label: "Невідомо / pending"}
+          - {value: "positive", label: "Positive"}
+          - {value: "negative", label: "Negative"}
+          - {value: "unknown", label: "Unknown / pending"}
         default_value: "unknown"
         helper: "Source: KB BIO-AFP."
 
@@ -88,9 +88,9 @@ groups:
         type: "enum"
         impact: "recommended"
         options:
-          - {value: "positive", label: "Позитивний"}
-          - {value: "negative", label: "Негативний"}
-          - {value: "unknown", label: "Невідомо / pending"}
+          - {value: "positive", label: "Positive"}
+          - {value: "negative", label: "Negative"}
+          - {value: "unknown", label: "Unknown / pending"}
         default_value: "unknown"
         helper: "Source: KB BIO-HBV-STATUS."
 
@@ -99,23 +99,23 @@ groups:
         type: "enum"
         impact: "recommended"
         options:
-          - {value: "positive", label: "Позитивний"}
-          - {value: "negative", label: "Негативний"}
-          - {value: "unknown", label: "Невідомо / pending"}
+          - {value: "positive", label: "Positive"}
+          - {value: "negative", label: "Negative"}
+          - {value: "unknown", label: "Unknown / pending"}
         default_value: "unknown"
         helper: "Source: KB BIO-HCV-STATUS."
 
-  - title: "Базова безпека (вірусологія + кров)"
-    description: "Skrining перед systemic therapy. Engine використовує для RF-HBV-REACTIVATION-RISK тощо."
+  - title: "Baseline safety (virology + blood)"
+    description: "Screening before systemic therapy. Engine uses this for RF-HBV-REACTIVATION-RISK etc."
     questions:
       - field: "findings.hbsag"
         label: "HBsAg"
         type: "enum"
         impact: "critical"
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний"}
-        helper: "HBsAg+ → entecavir prophylaxis перед anti-CD20/anti-CD38/cytotoxic immunosuppressive."
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive"}
+        helper: "HBsAg+ → entecavir prophylaxis before anti-CD20/anti-CD38/cytotoxic immunosuppressive."
         default_value: "negative"
 
       - field: "findings.anti_hbc_total"
@@ -123,8 +123,8 @@ groups:
         type: "enum"
         impact: "required"
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний (occult)"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive (occult)"}
         default_value: "negative"
 
       - field: "findings.hcv_status"
@@ -132,7 +132,7 @@ groups:
         type: "enum"
         impact: "recommended"
         options:
-          - {value: "negative", label: "HCV-Ab негативний"}
+          - {value: "negative", label: "HCV-Ab negative"}
           - {value: "cured", label: "Anti-HCV+, RNA undetectable (cured / SVR)"}
           - {value: "active", label: "Active HCV (RNA+)"}
         default_value: "negative"
@@ -142,26 +142,26 @@ groups:
         type: "enum"
         impact: "recommended"
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive_controlled", label: "Позитивний, на ART, vRNA undetectable"}
-          - {value: "positive_uncontrolled", label: "Позитивний, не контрольований"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive_controlled", label: "Positive, on ART, vRNA undetectable"}
+          - {value: "positive_uncontrolled", label: "Positive, uncontrolled"}
         default_value: "negative"
 
-  - title: "Додаткові показники"
-    description: "Заповніть наявні; решта — engine фолбекне на безпечні defaults."
+  - title: "Additional parameters"
+    description: "Fill in what is available; the rest — engine will fall back to safe defaults."
     questions:
       - field: "findings.creatinine_clearance_ml_min"
-        label: "Кліренс креатиніну (CrCl, мл/хв)"
+        label: "Creatinine clearance (CrCl, mL/min)"
         type: "integer"
         impact: "recommended"
         range_min: 5
         range_max: 200
-        units: "мл/хв"
-        helper: "<30 → renal-impaired regimens; <60 → dose modify багатьох cytotoxics."
+        units: "mL/min"
+        helper: "<30 → renal-impaired regimens; <60 → dose modify many cytotoxics."
         default_value: 90
 
       - field: "findings.bilirubin_uln_x"
-        label: "Білірубін × ULN"
+        label: "Bilirubin × ULN"
         type: "float"
         impact: "recommended"
         range_min: 0
@@ -178,17 +178,17 @@ groups:
         range_min: 0
         range_max: 50
         units: "K/μL"
-        helper: "<1.0 K/μL — engine додасть G-CSF prophylaxis."
+        helper: "<1.0 K/μL — engine will add G-CSF prophylaxis."
         default_value: 2.5
 
       - field: "findings.platelets_k_ul"
-        label: "Тромбоцити (K/μL)"
+        label: "Platelets (K/μL)"
         type: "integer"
         impact: "recommended"
         range_min: 0
         range_max: 1000
         units: "K/μL"
-        helper: "<75 — багато regimens dose-modify; <50 — hold більшості cytotoxics."
+        helper: "<75 — many regimens dose-modify; <50 — hold most cytotoxics."
         default_value: 200
 
 sources: []

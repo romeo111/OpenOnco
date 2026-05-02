@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Static-site builder for the OpenOnco GitHub Pages landing.
 
 Two goals (per user direction):
