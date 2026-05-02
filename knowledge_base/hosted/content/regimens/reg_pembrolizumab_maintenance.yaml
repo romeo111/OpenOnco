@@ -46,6 +46,36 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembrolizumab maintenance NSCLC (KEYNOTE-189/407). PD-1: pneumonitis-
+# dominant irAE in NSCLC. Colitis / hepatitis / endocrinopathy. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Легкий свербіж шкіри"
+    action_ua: "Очікувано — зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка, кашель або зниження переносимості навантаження"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт (провідна причина смерті від пембролізумабу при НМРЛ)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, виражена слабкість"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит або тиреоїдит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Різка задишка у спокої"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   KEYNOTE-189 (non-squamous, with pemetrexed maintenance) and

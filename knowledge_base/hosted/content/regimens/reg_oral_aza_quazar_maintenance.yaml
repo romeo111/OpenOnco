@@ -50,6 +50,31 @@ sources:
   - SRC-QUAZAR-WEI-2020
   - SRC-NCCN-AML-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Oral azacitidine (Onureg) AML maintenance (QUAZAR). GI dominant
+# (nausea/diarrhea days 1-14) + cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Нудота, блювання у дні прийому таблеток (1-14 дні циклу)"
+    action_ua: "Очікувано — приймайте призначені протиблювотні за 30 хв до таблетки; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-QUAZAR-WEI-2020
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея або блювання, що заважає пити та їсти"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-QUAZAR-WEI-2020
+
 last_reviewed: "2026-04-27"
 notes: >
   QUAZAR AML-001 (Wei 2020): oral azacitidine 300 mg PO daily × 14 d

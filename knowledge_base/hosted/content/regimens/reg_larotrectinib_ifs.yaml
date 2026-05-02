@@ -23,5 +23,26 @@ sources:
   - SRC-NAVIGATE-DRILON-2018
 
 reviewer_signoffs: 0
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Larotrectinib (NTRK TKI) for NTRK-fusion IFS. Generally well-tolerated
+# oral TKI; dizziness + hepatotoxicity + cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Запаморочення, нудота, втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NAVIGATE-DRILON-2018
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NAVIGATE-DRILON-2018
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 notes: >
   STUB scaffold. Dosing summary only.

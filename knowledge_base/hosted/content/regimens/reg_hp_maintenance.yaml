@@ -45,6 +45,31 @@ sources:
   - SRC-NCCN-BREAST-2025
   - SRC-ESMO-BREAST-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# HP (trastuzumab + pertuzumab) maintenance. HER2-mAb: cardiotoxicity
+# (LVEF decline) + infusion reactions. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Легка втома, головний біль"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Задишка при підйомі сходами або набряки ніг"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий вплив препаратів на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна задишка у спокої, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
