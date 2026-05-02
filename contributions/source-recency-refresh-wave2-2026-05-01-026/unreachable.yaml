@@ -1,0 +1,44 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-026
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL HEAD (with
+    DOI fallback where applicable) did not return 2xx/3xx. HTTP 403
+    typically indicates publisher bot-blocking (NCBI + NEJM gate
+    non-browser HEAD requests); a real browser would normally succeed.
+    One stub source has no top-level url field and was flagged
+    unreachable.no_url per chunk-brief rule. Maintainer browser-verify
+    recommended before next action.'
+rows:
+- id: SRC-FORTITUDE-101
+  url: null
+  status_code: null
+  reason: no_url
+  error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+  current_as_of_existing: null
+- id: SRC-BR21-SHEPHERD-2005
+  url: https://pubmed.ncbi.nlm.nih.gov/16014883
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa050753
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2026-04-29'
+- id: SRC-KEYNOTE-006-ROBERT-2015
+  url: https://pubmed.ncbi.nlm.nih.gov/25891173
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1503093
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2015-06-25'
+- id: SRC-COMBI-AD-LONG-2017
+  url: https://pubmed.ncbi.nlm.nih.gov/28891408
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1708539
+  status_code: 403
+  doi_fallback_status_code: 403
+  reason: blocked
+  error: Forbidden (primary + DOI fallback)
+  current_as_of_existing: '2026-04-29'
