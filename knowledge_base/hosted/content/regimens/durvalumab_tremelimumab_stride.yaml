@@ -36,6 +36,47 @@ ukraine_availability:
   notes: "Tremelimumab not registered in Ukraine; access via clinical-trial / off-label pathway only."
 
 sources: [SRC-NCCN-HCC-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Durvalumab + tremelimumab (STRIDE) for HCC. CTLA-4 + PD-L1 — colitis +
+# hypophysitis come earlier and harder than PD-1 mono. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Шкірний свербіж, помірна втома"
+    action_ua: "Очікувано — зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Помірна діарея або кров у стільці"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт від CTLA-4"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит на тлі вже хворої печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Сильний головний біль, нудота, проблеми з зором"
+    action_ua: "Подзвоніть у клініку того ж дня — гіпофізит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага, потемніння шкіри"
+    action_ua: "Подзвоніть у клініку того ж дня — наднирникова недостатність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HCC-2025
+  - trigger_ua: "Тяжка діарея, сильний біль у животі або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HCC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

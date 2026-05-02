@@ -41,6 +41,47 @@ sources:
   - SRC-NCCN-OVARIAN-2025
   - SRC-ESMO-OVARIAN-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Bevacizumab maintenance after carbo-paclitaxel for ovarian. Anti-VEGF
+# signature: HTN + proteinuria + GI perforation + thrombosis. STUB
+# pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищений тиск на домашньому тонометрі"
+    action_ua: "Бевацизумаб може підвищувати тиск; занотовуйте показники для лікаря"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Кров у сечі, піна в сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Тиск стійко >160/100 попри ліки"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція терапії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Кровотеча з носа, що довго не зупиняється"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — можлива перфорація кишечника"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Раптова сильна задишка, біль у грудях, набряк ноги"
+    action_ua: "Звертайтесь у лікарню негайно — тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >
