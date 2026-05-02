@@ -1,0 +1,57 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-022
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL HEAD (with
+    DOI fallback then PubMed canonical fallback per chunk-brief 403 ladder)
+    did not return 2xx/3xx. HTTP 403 typically indicates publisher
+    bot-blocking (NCBI / NEJM / Elsevier / ASCO gate non-browser
+    User-Agents); a real browser would normally succeed. Two stub sources
+    have no top-level url field and were flagged unreachable.no_url per
+    chunk-brief rule. Maintainer browser-verify recommended before next
+    action.'
+rows:
+  - id: SRC-FIGHT
+    url: null
+    status_code: null
+    reason: no_url
+    error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+    current_as_of_existing: null
+  - id: SRC-VOYAGER
+    url: null
+    status_code: null
+    reason: no_url
+    error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+    current_as_of_existing: null
+  - id: SRC-RESPONSE-VANNUCCHI-2015
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa1409002
+    status_code: 403
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1409002
+    doi_fallback_status_code: 403
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/25629741/
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary + DOI fallback + PubMed canonical fallback)
+    current_as_of_existing: '2015-01-29'
+  - id: SRC-MONARCH-2-SLEDGE-2017
+    url: https://pubmed.ncbi.nlm.nih.gov/28580882
+    status_code: 403
+    doi_fallback_url: https://doi.org/10.1200/JCO.2017.73.7585
+    doi_fallback_status_code: 403
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/28580882/
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary + DOI fallback + PubMed canonical fallback)
+    current_as_of_existing: '2017-09-01'
+  - id: SRC-IMC-HTLV-2017
+    url: https://ascopubs.org/doi/10.1200/JCO.18.00501
+    status_code: 403
+    doi_fallback_url: https://doi.org/10.1200/JCO.18.00501
+    doi_fallback_status_code: 403
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/30657736/
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary + DOI fallback + PubMed canonical fallback)
+    current_as_of_existing: '2019-01-18'
