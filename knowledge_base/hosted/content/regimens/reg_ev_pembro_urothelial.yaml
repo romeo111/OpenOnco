@@ -14,6 +14,44 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Hyperglycemia (Nectin-4 ADC)", modification: "Diabetes management"}, {condition: "Skin reactions / TEN-like", modification: "Hold; dermatology"}]
 ukraine_availability: {all_components_registered: false, all_components_reimbursed: false, notes: "EV not registered in Ukraine — major access barrier"}
 sources: [SRC-NCCN-BLADDER-2025, SRC-EAU-BLADDER-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Enfortumab vedotin + pembrolizumab for urothelial 1L (EV-302).
+# EV signature: hyperglycemia, severe skin reactions (TEN/SJS!),
+# peripheral neuropathy, ocular. Plus pembro irAEs. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "EV нейропатія — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Часті позиви до сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — EV може спричиняти гіперглікемію навіть без діабету в анамнезі"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Висип, що поширюється — ОСОБЛИВО з пухирями або в роті"
+    action_ua: "Звертайтесь у лікарню негайно — EV може спричиняти SJS/TEN, потенційно смертельне"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BLADDER-2025
+      - SRC-EAU-BLADDER-2024
+  - trigger_ua: "Розмиття зору, сухість очей"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка офтальмолога"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт від пембро"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Тяжка слабкість, постійна спрага, біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — кетоацидоз можливий"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BLADDER-2025
+
 last_reviewed:
 notes: "EV-302 paradigm 1L mUC. OS 31.5 vs 16.1 months."
 notes_ua: EV-302 paradigm 1L mUC. OS 31.5 проти 16.1 місяців.

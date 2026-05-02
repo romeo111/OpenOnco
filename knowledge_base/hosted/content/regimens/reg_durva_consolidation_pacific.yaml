@@ -27,6 +27,39 @@ ukraine_availability:
   notes: "Registered; reimbursement variable. Out-of-pocket for most patients."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-EARLY-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Durvalumab consolidation post-CRT for stage III NSCLC (PACIFIC).
+# Anti-PD-L1 irAEs + post-RT pneumonitis risk increased.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі попередньої RT ризик пневмоніту вищий; критично виключити"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-ESMO-NSCLC-EARLY-2024
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   PACIFIC: 5-year OS 43% (durva) vs 33% (placebo) post-concurrent CRT

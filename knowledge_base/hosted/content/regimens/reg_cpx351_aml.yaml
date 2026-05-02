@@ -62,6 +62,43 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-LANCET-CPX351-2018
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# CPX-351 (Vyxeos) for secondary AML / t-AML 1L (LANCET). Liposomal
+# cytarabine + daunorubicin. Inpatient. Same 7+3 toxicity pattern with
+# delayed/prolonged cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка при навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — антрациклін впливає на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка"
+    action_ua: "Звертайтесь у лікарню негайно — сепсис"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   FDA-approved specifically for newly-dx tAML or AML-MRC in older

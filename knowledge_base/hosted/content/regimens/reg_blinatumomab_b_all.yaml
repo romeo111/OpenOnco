@@ -66,6 +66,39 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-BLAST-GOKBUGET-2018
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Blinatumomab BiTE CD19×CD3 for MRD+ or relapsed B-ALL. Continuous
+# IV infusion 28 days. CRS + ICANS pattern (less than CAR-T but
+# present). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура, легкий головний біль у перші дні"
+    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-BLAST-GOKBUGET-2018
+  - trigger_ua: "Розмиття мови, плутаність, тремор"
+    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність блінатумомабу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Несправність помпи / насоса для безперервної інфузії"
+    action_ua: "Подзвоніть у клініку того ж дня — пропуск >4 годин потребує переоцінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців після курсу"
+    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Bispecific T-cell engager (BiTE) for MRD+ post-induction or R/R

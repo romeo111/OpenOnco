@@ -83,6 +83,38 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-MCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Brexucabtagene autoleucel for relapsed MCL (ZUMA-2). Same axi-cel-
+# adjacent CRS/ICANS pattern. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура у перші 1-2 тижні"
+    action_ua: "Подзвоніть у клініку того ж дня — будь-яка лихоманка може бути CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мови, плутаність"
+    action_ua: "Звертайтесь у лікарню негайно — ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців"
+    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   ZUMA-2 trial (Wang 2020): r/r MCL after prior cBTKi (median 3 prior
