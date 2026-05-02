@@ -1,0 +1,118 @@
+id: BMA-MET-EX14-NSCLC
+biomarker_id: BIO-MET
+variant_qualifier: exon 14 skipping
+disease_id: DIS-NSCLC
+escat_tier: IA
+evidence_summary: 'MET exon 14 skipping in advanced NSCLC (~3-4% of adenocarcinoma):
+  capmatinib (GEOMETRY mono-1, Wolf 2020 — ORR 68% 1L / 41% prior-tx) and tepotinib
+  (VISION, Paik 2020 — ORR 46% liquid + tissue) are selective MET-TKIs with FDA approval.
+  Crizotinib has activity but is inferior; selective inhibitors preferred.
+
+  '
+evidence_summary_ua: 'MET exon 14 skipping in поширений NSCLC (~3-4% of adenocarcinoma):
+  капматиніб (GEOMETRY mono-1, Wolf 2020 — ORR 68% 1L / 41% prior-tx) and тепотиніб
+  (VISION, Paik 2020 — ORR 46% liquid + tissue) are селективний MET-TKIs with FDA
+  схвалення. кризотиніб has activity but is поступається; селективний інгібітори переважний.
+
+  '
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+regulatory_approval:
+  fda:
+  - capmatinib — METex14-skipping metastatic NSCLC (FDA accelerated 2020, full 2022)
+  - tepotinib — METex14-skipping metastatic NSCLC (FDA accelerated 2021, full 2024)
+  ema:
+  - tepotinib — METex14-skipping metastatic NSCLC (EMA approved 2022)
+  - capmatinib — METex14-skipping NSCLC (EMA approved 2022)
+  ukraine: []
+recommended_combinations:
+- capmatinib monotherapy
+- tepotinib monotherapy
+contraindicated_monotherapy:
+- crizotinib (active but inferior; reserve when selective MET-TKI unavailable)
+primary_sources:
+- SRC-NCCN-NSCLC-2025
+- SRC-ESMO-NSCLC-METASTATIC-2024
+last_verified: '2026-04-27'
+evidence_sources:
+- source: SRC-CIVIC
+  level: C
+  evidence_ids:
+  - EID1392
+  direction: Supports
+  significance: Resistance
+  note: 'CIViC snapshot 2026-04-25: Supports Resistance evidence for therapies: Erlotinib,
+    Gefitinib.'
+- source: SRC-CIVIC
+  level: C
+  evidence_ids:
+  - EID797
+  - EID836
+  - EID890
+  - EID1185
+  - EID1186
+  - EID1651
+  - EID1692
+  - EID4786
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'CIViC snapshot 2026-04-25: Supports Sensitivity/Response evidence for therapies:
+    Capmatinib, Crizotinib.'
+- source: SRC-CIVIC
+  level: A
+  evidence_ids:
+  - EID8847
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'CIViC snapshot 2026-04-25: MET Exon 14 Skipping Mutation in Lung Non-small
+    Cell Carcinoma (DOID:3908) Supports Sensitivity/Response to Capmatinib (PMID
+    32877583, GEOMETRY mono-1). Highest-actionability evidence for METex14 NSCLC
+    in CIViC snapshot — variant-aware strict-match addition.'
+- source: SRC-CIVIC
+  level: B
+  evidence_ids:
+  - EID7272
+  - EID7642
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'CIViC snapshot 2026-04-25: MET Exon 14 Skipping Mutation in Lung Non-small
+    Cell Carcinoma (DOID:3908) Supports Sensitivity/Response — EID7272 Tepotinib,
+    EID7642 Crizotinib. Variant-aware strict-match additions.'
+- source: SRC-CIVIC
+  level: C
+  evidence_ids:
+  - EID7643
+  direction: Supports
+  significance: Sensitivity/Response
+  note: 'CIViC snapshot 2026-04-25: MET Exon 14 Skipping Mutation in Lung Non-small
+    Cell Carcinoma (DOID:3908) Supports Sensitivity/Response to Crizotinib (PMID
+    26892698). Variant-aware strict-match addition.'
+actionability_review_required: true
+notes: 'ESCAT IA. OncoKB Level 1. Detection: RNA-NGS preferred (DNA panels may miss
+  splice-site variants in deep intronic regions). Trial-source gap: SRC-GEOMETRY-MONO-1
+  / SRC-VISION-PAIK-2020 not yet ingested.
+
+  '
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-020
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: upsert
+  target_entity_id: BMA-MET-EX14-NSCLC
+  notes_for_reviewer: 'CIViC backfill (additive-only): variant-aware strict filter
+    (gene=MET AND variant matches "Exon 14 Skipping Mutation") + disease-aware
+    filter (Lung Adenocarcinoma OR Lung Non-small Cell Carcinoma) yields 9 strict-
+    match EIDs. Hosted file already had 5 of those (EID797, EID1185, EID1186,
+    EID1651, EID4786 — Lung Adenocarcinoma). 4 strict-match EIDs added this pass:
+    EID8847 (level A, Capmatinib, GEOMETRY mono-1 PMID 32877583), EID7272 (level
+    B, Tepotinib), EID7642 (level B, Crizotinib), EID7643 (level C, Crizotinib
+    PMID 26892698). EID8847 closes the highest-actionability gap. PRESERVED:
+    existing 4 MET amplification EIDs (EID836, EID890, EID1392, EID1692) — out
+    of strict variant_qualifier scope but already on hosted; pruning would be a
+    destructive narrowing requiring separate Co-Lead-approved chunk per CHARTER
+    §6.1 (cf. wave2-018 KIT-EXON9 precedent). Pan-tumor "Cancer" DOID:162 EIDs
+    (EID736, EID7797) NOT included per off-disease policy. Off-disease
+    Histiocytic And Dendritic Cell Cancer EID NOT included.
+    actionability_review_required: true preserved.'
