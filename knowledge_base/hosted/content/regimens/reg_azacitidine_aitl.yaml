@@ -46,6 +46,42 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Azacitidine SC/IV monotherapy for r/r AITL (off-label epigenetic).
+# Cytopenia + SC site reactions + slow-onset response (≥6 cycles).
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, болючість, свербіж у місцях ін'єкцій"
+    action_ua: "Очікувано — холодні компреси, чергуйте місця ін'єкцій"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота в дні ін'єкцій"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — нефротоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   RUYUAN-2 / Lemonnier 2018-2023: emerging epigenetic therapy
