@@ -55,6 +55,38 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-ADMIRAL-PERL-2019
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Gilteritinib FLT3i for R/R FLT3-mutated AML (ADMIRAL). Tox:
+# differentiation syndrome (boxed), QT, hepatic, cytopenia.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, помірна діарея, втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Швидкий набір ваги, набряки, задишка"
+    action_ua: "Звертайтесь у лікарню негайно — синдром диференціювання"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ADMIRAL-PERL-2019
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — гілтеритиніб може подовжувати QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 2L+ for R/R FLT3-mutated AML per ADMIRAL. Bridge to

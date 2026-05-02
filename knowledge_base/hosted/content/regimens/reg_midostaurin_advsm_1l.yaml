@@ -46,6 +46,36 @@ ukraine_availability:
 sources:
   - SRC-NCCN-SM-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Midostaurin for advanced systemic mastocytosis 1L. Multi-kinase
+# inhibitor: GI dominates, hepatic, QT. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена нудота, блювота, діарея"
+    action_ua: "Часто на початку — приймайте призначені протиблювотні; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Помірна втома, легке зниження апетиту"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Тяжка діарея або блювота"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — мідостаурин може подовжувати QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SM-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   D-RIVE / CPKC412D2201 (Gotlib NEJM 2016): midostaurin 100 mg BID in

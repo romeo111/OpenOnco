@@ -62,6 +62,39 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-INOVATE-KANTARJIAN-2016
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Inotuzumab CD22 ADC for R/R B-ALL (INO-VATE). Signature: VOD risk
+# (boxed warning, especially post-SCT), cytopenia, IRR.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Жовтяниця, набір ваги, біль у правому верхньому квадранті"
+    action_ua: "Звертайтесь у лікарню негайно — інотузумаб може спричиняти веноокклюзивну хворобу печінки (VOD); особливо при наступному alloHCT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-INOVATE-KANTARJIAN-2016
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока нейтропенія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка інфузійна реакція"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Anti-CD22 ADC for R/R Ph- B-ALL. INO-VATE: CR/CRi 80.7% vs
