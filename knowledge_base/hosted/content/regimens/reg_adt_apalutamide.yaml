@@ -34,6 +34,48 @@ ukraine_availability:
   notes: "Apalutamide registered but not currently NSZU-reimbursed; out-of-pocket. Verify funding pathway pre-start."
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# ADT + apalutamide for mHSPC/nmCRPC (TITAN/SPARTAN). Same ARPI
+# pattern as enzalutamide + higher rash rate. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Гарячі припливи, втома, втрата лібідо"
+    action_ua: "Очікувані ефекти від ADT"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Помірний висип"
+    action_ua: "Поширене на апалутамідi — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Помірне запаморочення, падіння"
+    action_ua: "Вставайте повільно"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Виражений висип з пухирями, лущенням"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко SJS"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — метаболічні зміни"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Раптовий судомний напад"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Сильний головний біль із порушенням мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+
 last_reviewed:
 notes: >
   TITAN: mHSPC benefit. SPARTAN: nmCRPC benefit. Distinguishing AE: rash

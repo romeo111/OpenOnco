@@ -77,6 +77,45 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-ELN-CML-2020
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Allogeneic HCT for advanced CML. Highly intensive — entire course
+# inpatient. Watchpoints apply to discharge follow-up window.
+# Signature: GVHD (acute + chronic), prolonged immunosuppression,
+# infections (CMV, EBV, fungal). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває місяцями"
+    action_ua: "Очікувано — кістковий мозок і імунна система відновлюються повільно"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Висип, що поширюється; діарея; жовтяниця — у перші 100 днів"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива гостра GVHD; рання оцінка критична"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-100"
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Лихоманка вище 38°C — у будь-який час до 1 року після SCT"
+    action_ua: "Звертайтесь у лікарню негайно — глибока імуносупресія, ризик опортуністичних інфекцій"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея або кровотеча з кишківника"
+    action_ua: "Звертайтесь у лікарню негайно — тяжка GVHD кишківника"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива GVHD печінки або VOD"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сухість очей, рота; склероподібні зміни шкіри — після 100 днів"
+    action_ua: "Занотовуйте — ознаки можливої хронічної GVHD; обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   AlloHCT remains the only curative option for CML in blast crisis
