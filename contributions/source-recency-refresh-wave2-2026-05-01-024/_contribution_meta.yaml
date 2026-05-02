@@ -1,0 +1,25 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-024
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: >
+    Wave-2 source recency refresh — closes #226. Real httpx HEAD (UA
+    "Mozilla/5.0 (compatible; OpenOnco-recency-bot)", 30s timeout, 3
+    retries, follow_redirects=True) on 4 sources from chunk manifest.
+    Per spec, on 403 the worker fell back to DOI HEAD then PubMed canonical
+    HEAD; all primary + fallback URLs returned 403 (publisher bot-blocking
+    is the dominant pattern for NEJM / Elsevier / Lancet HEAD requests
+    from non-browser agents — same observation as #92-#121 wave-1).
+    SRC-FIGHT-207 has no URL field at all (auto-stub), so it is recorded
+    as unreachable.no_url.
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: >
+    No upserts produced this round — every URL HEAD returned 403 or had no
+    URL to begin with. Maintainer browser-verify recommended; on confirm,
+    re-run with a higher-fidelity client (Selenium/Playwright with full
+    browser headers) or accept the wave-1 convention that 403 from these
+    publishers means "URL fine; bot-blocked" and bump current_as_of in a
+    follow-up chunk.
