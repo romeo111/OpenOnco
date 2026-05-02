@@ -6,7 +6,7 @@
 //      background, so the dropdowns aren't gated on the HTML download.
 // Cache name is stamped with the core bundle's SHA-256 prefix so a KB
 // push automatically rotates the cache key.
-const CACHE_NAME = 'openonco-bundle-l2-899b515098e3';
+const CACHE_NAME = 'openonco-bundle-l2-95a8d6e5dcc3';
 const PRECACHE = [
   '/openonco-engine-index.json',
   '/openonco-engine-core.zip',
