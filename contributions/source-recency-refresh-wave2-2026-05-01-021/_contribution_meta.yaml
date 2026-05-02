@@ -1,0 +1,21 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-021
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source recency refresh batch -- closes #223. httpx HEAD
+    checks (UA Mozilla/5.0 compatible; OpenOnco-recency-bot, 30s timeout, 3 retries,
+    follow_redirects=True). Worker at contributions/<chunk>/_batch_worker.py.
+
+    Outcome: 0 upserts, 5 unreachable (3 publisher-blocked, 2 no_url stubs).
+    All three URL-bearing sources (PubMed/NEJM/DOI) returned HTTP 403 across primary
+    + DOI fallback + PubMed canonical fallback. Per task spec these go to
+    unreachable.blocked with no current_as_of bump. Two stub sources (SRC-EXPLORER,
+    SRC-SSG-XVIII) have no URL field -- recorded as unreachable.no_url and surfaced
+    for stub backfill via the appropriate ingest client.'
+  tasktorrent_version: 2026-04-29
+  notes_for_reviewer: 'No hosted-content edits in this chunk. All entries are
+    report-only audit/summary/unreachable -- maintainer browser-verify recommended
+    for the 3 blocked NEJM/PubMed targets before any current_as_of bump.'
