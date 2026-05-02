@@ -60,6 +60,49 @@ ukraine_availability:
 sources:
   - SRC-NCCN-HNSCC-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembro + 5-FU + cisplatin/carbo for HNSCC R/M 1L (KEYNOTE-048).
+# Combines IO irAEs with platinum nephro/oto + 5-FU GI.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, мукозит"
+    action_ua: "Полоскання порожнини рота, м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HNSCC-2025
+  - trigger_ua: "Шкірний свербіж"
+    action_ua: "Очікувано — зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HNSCC-2025
+  - trigger_ua: "Шум у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HNSCC-2025
+  - trigger_ua: "Зменшення сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — нефротоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HNSCC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт або 5-ФУ"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HNSCC-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HNSCC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   KEYNOTE-048 (Burtness Lancet 2019): in PD-L1 CPS ≥1 R/M HNSCC,

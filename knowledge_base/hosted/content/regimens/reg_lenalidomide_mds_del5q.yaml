@@ -64,6 +64,43 @@ sources:
   - SRC-ESMO-MDS-2021
   - SRC-MDS-004-FENAUX-2011
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lenalidomide for MDS del(5q) (MDS-004). Cytopenia (especially
+# neutropenia + thrombocytopenia early on) + thrombosis.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Помірна діарея або висип"
+    action_ua: "Занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія типова в перших циклах"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard for transfusion-dependent del(5q) LR-MDS. ~56% achieve

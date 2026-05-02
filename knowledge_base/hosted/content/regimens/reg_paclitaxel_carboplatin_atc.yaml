@@ -27,5 +27,38 @@ sources:
   - SRC-NCCN-THYROID-2025
 
 reviewer_signoffs: 0
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Paclitaxel + carboplatin palliative 1L for anaplastic thyroid carcinoma.
+# Pacli neuropathy + hypersensitivity; carbo cytopenia + ototoxicity.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Поколювання у пальцях рук і ніг"
+    action_ua: "Очікувано від паклітакселу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Шум у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — карбоплатин впливає на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Сильна задишка, висип, набряк обличчя під час інфузії або одразу після"
+    action_ua: "Звертайтесь у лікарню негайно — гіперчутливість до паклітакселу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-THYROID-2025
+
 notes: >
   STUB scaffold. Dosing summary only.

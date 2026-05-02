@@ -26,6 +26,45 @@ evidence_level: moderate
 sources:
   - SRC-NCCN-CNS-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Gemcitabine + cisplatin for cholangiocarcinoma 1L (ABC-02).
+# Cisplatin nephro/oto + gem cytopenia/hepatic. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Приймайте призначені протиблювотні; пийте багато води"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Шум у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин може впливати на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зменшення кількості сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — рідко гем може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CNS-2025
+
 reviewer_signoffs: 0
 notes: >
   STUB scaffold. Dosing summary only.

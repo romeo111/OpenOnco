@@ -31,6 +31,37 @@ ukraine_availability:
   notes: "Nivolumab out-of-pocket / charitable / clinical-trial pathway in Ukraine; not NSZU-funded for esophageal."
 
 sources: [SRC-NCCN-ESOPHAGEAL-2025, SRC-ESMO-ESOPHAGEAL-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Nivolumab mono for esophageal 2L (ATTRACTION-3). Anti-PD-1 irAEs.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, свербіж шкіри"
+    action_ua: "Очікувано — зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >
