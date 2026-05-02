@@ -1,0 +1,86 @@
+id: BMA-NTRK-FUSION-NSCLC
+biomarker_id: BIO-NTRK-FUSION
+variant_qualifier: NTRK1/3 fusion (rare ~0.1-0.5%)
+disease_id: DIS-NSCLC
+escat_tier: IA
+evidence_summary: 'NTRK fusion in NSCLC is rare (~0.1-0.5%). Larotrectinib and entrectinib
+  are FDA tumor-agnostic; NSCLC subset of pooled trials shows durable responses including
+  CNS activity (entrectinib has superior CNS penetrance). Tumor-agnostic actionability
+  — NTRK testing is part of comprehensive NGS panels in NSCLC.
+
+  '
+evidence_summary_ua: 'NTRK злиття in NSCLC is рідкісний (~0.1-0.5%). ларотрексиніб
+  and ентректиніб are FDA пухлина-agnostic; NSCLC subset of pooled trials shows durable
+  responses включаючи активність в ЦНС (ентректиніб has перевершує CNS penetrance).
+  пухлина-agnostic actionability — NTRK testing is part of comprehensive NGS panels
+  in NSCLC.
+
+  '
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+regulatory_approval:
+  fda:
+  - larotrectinib — NTRK-fusion solid tumors (FDA tumor-agnostic 2018)
+  - entrectinib — NTRK-fusion solid tumors (FDA tumor-agnostic 2019)
+  ema:
+  - larotrectinib / entrectinib — NTRK-fusion solid tumors (EMA tumor-agnostic 2019/2020)
+  ukraine: []
+recommended_combinations:
+- entrectinib monotherapy (preferred for CNS disease)
+- larotrectinib monotherapy
+contraindicated_monotherapy: []
+primary_sources:
+- SRC-NCCN-NSCLC-2025
+- SRC-ESMO-NSCLC-METASTATIC-2024
+last_verified: '2026-04-27'
+evidence_sources:
+- source: SRC-CIVIC
+  level: C
+  evidence_ids:
+  - EID11515
+  - EID11516
+  direction: Supports
+  significance: Mixed (Resistance + Sensitivity/Response)
+  note: 'CIViC snapshot 2026-04-25: NTRK3 G623R AND EML4::NTRK3 Fusion in Lung
+    Non-small Cell Carcinoma (DOID:3908) — acquired-resistance evidence cohort
+    (PMID 34625502). EID11515 Supports Resistance to Entrectinib (post-fusion
+    kinase-domain mutation context). EID11516 Supports Sensitivity/Response to
+    Repotrectinib in the same molecular profile (next-line salvage). Both items
+    are level C. Treatment-naive tumor-agnostic Sensitivity/Response evidence is
+    NOT in CIViC under DOID:3908 — that actionability is captured via hosted
+    regulatory_approval (FDA/EMA tumor-agnostic larotrectinib/entrectinib) and
+    primary_sources (NCCN/ESMO). EID9593 (NTRK1 G595R+G667S Resistance to
+    Larotrectinib, PMID 30624546) excluded by strict variant-aware filter
+    (no "Fusion" token in variant string) — flagged in audit-report for
+    maintainer review.'
+actionability_review_required: true
+notes: 'ESCAT IA (tumor-agnostic actionability). OncoKB Level 1. Detection: RNA-NGS
+  preferred; pan-TRK IHC as screen.
+
+  '
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-021
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: upsert
+  target_entity_id: BMA-NTRK-FUSION-NSCLC
+  notes_for_reviewer: 'CIViC backfill: gene IN (NTRK1, NTRK2, NTRK3) + variant
+    contains "Fusion" token + disease-token overlap on Lung Non-small Cell
+    Carcinoma (DOID:3908) → NSCLC. EID11515 + EID11516 are the strict-match
+    accepted evidence items (single PMID 34625502 cohort, EML4::NTRK3 fusion
+    background, level C acquired-resistance + next-line salvage). Both EIDs
+    grouped under one SRC-CIVIC level=C evidence_sources block because they
+    share level + direction (Supports) + PMID and reflect a single resistance-
+    profile evidence cluster; significance differs per therapy
+    (Resistance for Entrectinib in EID11515, Sensitivity/Response for
+    Repotrectinib in EID11516) — captured in the note field. EID9593 (NTRK1
+    G595R + G667S Resistance to Larotrectinib in NSCLC, PMID 30624546)
+    excluded by strict variant-aware filter — variant string lacks explicit
+    "Fusion" token; flagged in audit-report.yaml for maintainer follow-up.
+    Other NTRK EIDs in snapshot (EID1972 neuroblastoma; EID2958 pan-tumor
+    Does-Not-Support; EID2959 pan-tumor Does-Not-Support; EID9592 GIST;
+    EID10170 solid tumor; EID12120 esophageal) are out-of-scope by disease
+    token. evidence_sources populated; no other hosted fields modified.
+    actionability_review_required: true preserved. PubMed: 34625502.'
