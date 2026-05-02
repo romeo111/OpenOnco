@@ -53,6 +53,31 @@ sources:
   - SRC-ESMO-MDS-2021
   - SRC-IMERGE-PLATZBECKER-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Imetelstat for LR-MDS (IMerge). Cytopenia dominant + IRR + hepatotoxicity.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано від анемії — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-IMERGE-PLATZBECKER-2024
+
 last_reviewed: "2026-04-25"
 notes: >
   Telomerase inhibitor for transfusion-dependent LR-MDS post-ESA

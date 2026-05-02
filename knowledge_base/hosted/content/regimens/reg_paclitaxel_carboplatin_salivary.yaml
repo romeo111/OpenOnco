@@ -27,5 +27,32 @@ sources:
   - SRC-NCCN-THYROID-2025
 
 reviewer_signoffs: 0
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Paclitaxel + carboplatin palliative (salivary gland carcinoma).
+# Taxane HSR + neuropathy. Platinum ototoxicity + cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння у пальцях рук і ніг"
+    action_ua: "Очікувано від паклітакселу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Шум у вухах або зниження слуху"
+    action_ua: "Занотовуйте і повідомте лікаря — ототоксичність карбоплатину"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-THYROID-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип, задишка або раптова слабкість під час/одразу після інфузії"
+    action_ua: "Звертайтесь у лікарню негайно — анафілаксія від паклітакселу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-THYROID-2025
+
 notes: >
   STUB scaffold. Dosing summary only.
