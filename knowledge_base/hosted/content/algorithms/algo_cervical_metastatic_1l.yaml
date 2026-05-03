@@ -1,0 +1,62 @@
+id: ALGO-CERVICAL-METASTATIC-1L
+applicable_to_disease: DIS-CERVICAL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L regimen for metastatic / persistent / recurrent cervical cancer
+  (FIGO IVB or R/M not amenable to curative-intent therapy). Primary path:
+  pembrolizumab + paclitaxel + carboplatin ± bevacizumab for PD-L1 CPS ≥1
+  (KEYNOTE-826). Fitness gates via pan-disease RFs. Pembro-ineligible
+  (CPS <1 or autoimmune contraindication) → chemo ± bev (pending
+  separate indication authoring).
+
+output_indications:
+  - IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+
+default_indication: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "FIGO IVB (metastatic) OR persistent / recurrent cervical cancer not amenable to curative-intent therapy"
+        - any_of:
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      next_step: 2
+    if_false:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+    notes: "Fitness gate via CSD-7A pan-disease RFs. ECOG 2 (intermediate) eligible per KEYNOTE-826 enrolment criteria — not excluded."
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-CERVICAL-PDL1-CPS-1-PLUS
+    if_true:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+    if_false:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+    notes: >
+      Both branches resolve to the same Indication for now (the Indication itself
+      carries the CPS ≥1 requirement in biomarker_requirements_required).
+      CPS-negative or autoimmune-contraindication pembro-ineligible path
+      (chemo ± bev only) deferred — separate Indication to be authored.
+      Engine/MDT will flag the biomarker constraint at render time.
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-05-03"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Single-indication scaffold for metastatic/recurrent cervical 1L.
+  Closes the gap noted in algo_cervical_locally_advanced_1l.yaml.
+  Deferred paths:
+  - CPS <1 / pembro-contraindicated: chemo ± bev only (no ICI) — needs
+    separate IND-CERVICAL-METASTATIC-1L-CHEMO-BEV-ONLY
+  - KEYNOTE-A18: pembro + concurrent CRT for high-risk locally advanced
+    FIGO IIIB-IVA — belongs in ALGO-CERVICAL-LOCALLY-ADVANCED-1L update
+  - 2L+: tisotumab vedotin (innovaTV-204); cemiplimab (EMPOWER-Cervical-1)
+    — deferred to algo_cervical_metastatic_2l (not yet authored)
