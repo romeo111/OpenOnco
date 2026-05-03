@@ -1,0 +1,114 @@
+id: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GI-NET
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable locally advanced or metastatic GI-NET (midgut, foregut, hindgut or unknown primary)"
+    - "Well-differentiated G1 (Ki67 <3%) or G2 (Ki67 3–20%)"
+    - "Non-functioning OR functional (carcinoid syndrome) — SSA appropriate for both antiproliferative intent and symptom control"
+    - "Stable, slowly progressive, or newly diagnosed (SSA is appropriate regardless of documented progression per CLARINET design)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KI67-PROLIFERATION
+      required: false
+      value_constraint: "Ki67 ≤20% (well-differentiated G1/G2); if Ki67 >20% see RF-NET-HIGH-GRADE-G3 — MDT decision required"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-LANREOTIDE-AUTOGEL-GI-NET
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~3% (partial response; stable disease is the primary endpoint — 65% in CLARINET lanreotide arm)"
+  complete_response: "<1%"
+  progression_free_survival: "mPFS not reached (lanreotide arm) vs 18.0 mo placebo (HR 0.47, CLARINET)"
+  overall_survival_5y: "No OS benefit demonstrated in CLARINET (low event rate, cross-over); OS secondary endpoint"
+
+hard_contraindications: []
+
+red_flags_triggering_alternative:
+  - RF-NET-HIGH-GRADE-G3
+  - RF-FITNESS-ECOG-POOR
+
+required_tests: []
+
+desired_tests: []
+
+rationale: >
+  Lanreotide 120 mg SC q4w for well-differentiated G1/G2 GEP-NET (GI origin).
+  CLARINET (Caplin NEJM 2014): mPFS not reached vs 18.0 mo (HR 0.47, p<0.001)
+  in n=204 patients with non-functioning GEP-NET. PROMID (Rinke JCO 2009):
+  octreotide LAR 30 mg q4w for midgut NET: mPFS 14.3 vs 6.0 mo (HR 0.34).
+  Both SSAs are NCCN Category 1 for GI-NET. SSA is the only systemic therapy
+  with both antiproliferative AND symptom-control (carcinoid syndrome)
+  properties. DOTATATE PET positivity strongly predicts SSA response and
+  PRRT eligibility for future lines.
+
+rationale_ua: >
+  Ланреотид 120 мг SC q4w для добре-диференційованої G1/G2 ГЕП-НЕП (ШКТ походження).
+  CLARINET (Caplin NEJM 2014): мВБП не досягнуто проти 18.0 міс (HR 0.47, p<0.001)
+  у n=204 пацієнтів із нефункціональною ГЕП-НЕП. PROMID (Rinke JCO 2009):
+  октреотид LAR 30 мг q4w для середньокишкової НЕП: мВБП 14.3 проти 6.0 міс
+  (HR 0.34). Обидва SSA є NCCN Категорія 1 для GI-NET. SSA є єдиною системною
+  терапією з обома антипроліферативними ТА симптомо-контролюючими
+  (карциноїдний синдром) властивостями. DOTATATE PET позитивність сильно
+  передбачає відповідь на SSA та придатність до PRRT для майбутніх ліній.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CLARINET-CAPLIN-2014
+    position: supports
+    relevant_quote_paraphrase: "Lanreotide significantly prolonged PFS vs placebo in non-functioning GEP-NET (HR 0.47, p<0.001) — CLARINET"
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+    relevant_quote_paraphrase: "Lanreotide (and octreotide LAR) are Category 1 antiproliferative therapy for well-differentiated GI-NET G1/G2"
+
+do_not_do:
+  - "Не призначати SSA-монотерапію при погано-диференційованій NEC (Ki67 >55%) — протипоказано для антипроліферативного застосування"
+  - "Не пропускати DOTATATE PET/CT — підтверджує SSTR2+ status; від'ємний scan означає низьку ймовірність відповіді на SSA"
+  - "Не забувати IV октреотид перед хірургічним втручанням або емболізацією — ризик карциноїдного кризу"
+  - "Не ігнорувати ехокардіографію при клінічному карциноїдному синдромі — хвороба серця у ~20%"
+
+known_controversies:
+  - topic: "Lanreotide vs octreotide LAR for GI-NET 1L"
+    positions:
+      - position: "No head-to-head RCT; CLARINET (lanreotide) and PROMID (octreotide LAR) both Category 1. Both are acceptable."
+        sources:
+          - SRC-NCCN-NET-2025
+      - position: "Lanreotide has broader CLARINET GEP-NET dataset (pNET + GI-NET + unknown primary). Octreotide LAR better studied in midgut specifically (PROMID)"
+        sources:
+          - SRC-CLARINET-CAPLIN-2014
+    our_default: "Lanreotide as default (CLARINET data); octreotide LAR acceptable equivalent. Choice by availability + patient preference."
+    rationale: "Both are NCCN Category 1; institutional/country availability and cost often determine choice"
+  - topic: "SSA for non-progressive GEP-NET — start immediately or watch and wait?"
+    positions:
+      - position: "CLARINET enrolled patients with stable disease — SSA beneficial even without documented progression; early treatment reduces PFS events"
+        sources:
+          - SRC-CLARINET-CAPLIN-2014
+      - position: "Active surveillance acceptable for incidentally found G1 NET with low tumour burden and no symptoms; defer SSA until progression"
+        sources:
+          - SRC-NCCN-NET-2025
+    our_default: "Start SSA for symptomatic (carcinoid syndrome), high Ki67 G2, or substantial tumour burden; surveillance reasonable for G1, low burden, asymptomatic"
+    rationale: "MDT decision based on rate of growth, Ki67, and patient preference"
+
+time_critical: false
+last_reviewed: "2026-05-03"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — requires clinical co-lead signoff (CHARTER §6.1 dev-mode exemption).
+  PRRT (¹⁷⁷Lu-DOTATATE; NETTER-1 trial, Strosberg NEJM 2017) is the major
+  2L option after SSA progression for SSTR2+ GI-NET. NETTER-1 showed ORR
+  18% and mPFS not reached vs 8.4 mo (HR 0.21). PRRT requires DOTATATE PET
+  eligibility and specialized centre. Deferred for separate KB SSTR biomarker
+  scaffolding + drug entity (DRUG-LUTETIUM-177-DOTATATE).
