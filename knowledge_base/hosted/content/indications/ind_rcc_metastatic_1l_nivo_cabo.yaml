@@ -1,0 +1,84 @@
+id: IND-RCC-METASTATIC-1L-NIVO-CABO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-RCC
+  histologic_subtype: CLEAR_CELL
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active autoimmune disease requiring systemic treatment"
+    - "Prior solid organ transplant"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIVO-CABO-RCC
+concurrent_therapy: []
+followed_by:
+  - "Nivolumab may continue until progression or 2 years maximum; cabozantinib until progression"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival: "mPFS 16.6 mo vs 8.3 mo sunitinib (HR 0.51, p<0.001)"
+  overall_survival_median: "mOS 37.7 vs 34.3 mo (HR 0.70, p=0.001)"
+  overall_response_rate: "55.7% vs 27.1% (sunitinib)"
+  notes: "CheckMate-9ER, N=651, all IMDC risk groups."
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior solid organ transplant"
+  - "ECOG PS ≥ 3"
+  - "Active uncontrolled hemorrhage or recent (within 6 months) major arterial thromboembolic event"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - "CBC, CMP, LFTs, creatinine, TSH baseline"
+  - "Blood pressure baseline (hypertension monitoring — cabozantinib)"
+  - "CT chest/abdomen/pelvis"
+
+desired_tests:
+  - "Brain MRI (IMDC poor-risk or neurologic symptoms)"
+  - "Bone scan if skeletal symptoms (cabozantinib has anti-bone-metastasis activity)"
+
+rationale: >
+  CheckMate-9ER (NCT03141177): nivolumab 240mg q2w + cabozantinib 40mg/d vs
+  sunitinib in untreated advanced ccRCC (n=651, all IMDC risk groups). PFS HR 0.51
+  (p<0.001), mOS 37.7 vs 34.3 mo (HR 0.70, p=0.001), ORR 55.7% vs 27.1%.
+  Benefit consistent across IMDC risk subgroups (including favorable). Cabozantinib
+  dose 40mg in combination (vs 60mg monotherapy) for better tolerability.
+  Preferred when bone metastases are present (cabozantinib reduces SRE risk via
+  MET/AXL inhibition), or when patient profile suits this combination toxicity
+  profile (less hypertension than lenv+pembro; less immune toxicity vs nivo+ipi).
+
+rationale_ua: >
+  CheckMate-9ER: ніволумаб + кабозантиніб vs сунітиніб. PFS HR 0.51, mOS HR 0.70.
+  Перевага у всіх підгрупах IMDC. Доза кабозантинібу 40 мг (знижена для комбінації).
+  Особливо ефективний при кістковому ураженні.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CHECKMATE9ER-CHOUEIRI-2021
+    position: supports
+  - source_id: SRC-NCCN-KIDNEY-2025
+    position: supports
+  - source_id: SRC-ESMO-RCC-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use cabozantinib 60mg in combination — use 40mg per CheckMate-9ER protocol"
+  - "Do NOT use in active autoimmune disease"
+  - "Do NOT extend nivolumab beyond 2 years (NCCN guidance)"
+  - "Do NOT add anti-VEGF agents (bevacizumab/sunitinib) — triplet not studied"
+
+last_reviewed: "2026-05-03"
+notes: >
+  Nivo+cabo provides balanced ICI+TKI combination with good tolerability profile
+  relative to lenv+pembro. Especially preferred in patients with bone metastases
+  (cabozantinib MET/AXL inhibition), ECOG 1-2 patients where lenvatinib hypertension
+  is a concern, or where simpler dosing schedule is preferred.

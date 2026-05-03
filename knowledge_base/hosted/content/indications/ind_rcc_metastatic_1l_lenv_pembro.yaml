@@ -1,0 +1,88 @@
+id: IND-RCC-METASTATIC-1L-LENV-PEMBRO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-RCC
+  histologic_subtype: CLEAR_CELL
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active autoimmune disease requiring systemic treatment"
+    - "Prior solid organ transplant"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-LENV-PEMBRO-RCC
+concurrent_therapy: []
+followed_by:
+  - "Lenvatinib may continue beyond pembro completion (max 2 years pembro)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  progression_free_survival: "mPFS 23.9 mo vs 9.2 mo sunitinib (HR 0.39, p<0.001)"
+  overall_survival_median: "OS HR 0.66 (p=0.005) at interim; mOS 33.6 vs 29.5 mo"
+  overall_response_rate: "71% vs 36% (sunitinib)"
+  notes: "CLEAR, N=1069, all IMDC risk groups. Largest PFS gain in 1L ccRCC."
+
+hard_contraindications:
+  - "ECOG PS ≥ 2 (lenvatinib toxicity unacceptable in frail patients)"
+  - "Uncontrolled hypertension (≥160/100 despite treatment)"
+  - "Active autoimmune disease"
+  - "Severe hepatic impairment (Child-Pugh C)"
+  - "Recent major surgery within 2 weeks"
+  - "Active bleeding or significant thrombotic event within 6 months"
+
+red_flags_triggering_alternative:
+  - RF-RCC-FRAILTY-ECOG2
+
+required_tests:
+  - "CBC, CMP, LFTs, creatinine, TSH, UPCR (lenvatinib baseline)"
+  - "Blood pressure baseline"
+  - "CT chest/abdomen/pelvis"
+
+desired_tests:
+  - "Brain MRI (if neurologic symptoms or poor-risk features)"
+  - "Echocardiogram if cardiac history"
+
+rationale: >
+  CLEAR (NCT02811861): lenvatinib 20mg/d + pembrolizumab 200mg q3w vs sunitinib
+  in untreated advanced ccRCC (n=1069, all IMDC risk groups). PFS HR 0.39 (p<0.001),
+  ORR 71% vs 36%, OS HR 0.66 (p=0.005). The largest magnitude PFS improvement
+  seen in any 1L ccRCC trial to date. High toxicity: hypertension G3-4 ~36%,
+  dose reductions in 69% of patients on lenvatinib arm. Appropriate for fit
+  (ECOG 0-1) patients where maximal response is the priority: high tumor burden,
+  conversion to resectability, symptomatic disease. Not suitable for frail patients
+  or those with uncontrolled hypertension.
+
+rationale_ua: >
+  CLEAR: ленватиніб 20мг + пембролізумаб vs сунітиніб. PFS HR 0.39 — найбільше
+  покращення серед усіх 1L досліджень НКК. ORR 71%. Для fit пацієнтів з ECOG 0-1.
+  Висока токсичність — гіпертензія G3-4 у ~36%, зниження дози у 69%.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CLEAR-MOTZER-2021
+    position: supports
+  - source_id: SRC-NCCN-KIDNEY-2025
+    position: supports
+  - source_id: SRC-ESMO-RCC-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use in ECOG ≥ 2 — lenvatinib toxicity (hypertension, proteinuria, stomatitis) is poorly tolerated"
+  - "Do NOT use with uncontrolled hypertension — manage BP to <140/90 before starting"
+  - "Do NOT add sunitinib or other TKI — triplet not studied and expected additive toxicity"
+  - "Do NOT extend pembrolizumab beyond 2 years (35 cycles)"
+  - "Do NOT apply CLEAR dose (lenvatinib 20mg) without monitoring — dose reductions are common and expected"
+
+last_reviewed: "2026-05-03"
+notes: >
+  Highest response rate and PFS of 1L ccRCC options. Reserve for fit, hypertension-
+  manageable patients where response magnitude matters most. Active BP management
+  is essential from day 1. Lenvatinib dose reductions (20→14→10→8 mg) are very
+  common (69%) and do not appear to compromise efficacy.
