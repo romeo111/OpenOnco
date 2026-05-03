@@ -1,0 +1,131 @@
+id: ALGO-CRC-ADJUVANT
+applicable_to_disease: DIS-CRC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select adjuvant chemotherapy regimen for resected stage II-III colon cancer
+  based on MMR status (treatment-defining gate for stage II), stage/risk
+  grouping (T/N substage), and regimen preference (FOLFOX vs CAPOX).
+  Rectal cancer with prior neoadjuvant CRT/TNT follows a separate pathway
+  (pending schema extension — not addressed here).
+
+output_indications:
+  - IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX
+  - IND-CRC-ADJUVANT-STAGE3-FOLFOX
+  - IND-CRC-ADJUVANT-STAGE3-CAPOX
+
+decision_tree:
+  # Step 1 — Stage gate. Algorithm applies to stage II or III only.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Stage II (T3-4 N0 M0) post-R0 resection"
+        - condition: "Stage III (any T, N1-2, M0) post-R0 resection"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "Stage I — observation; Stage IV — metastatic algorithm applies."
+
+  # Step 2 — MMR/MSI status (mandatory pre-decision test for stage II;
+  # prognostic for stage III but does not change chemotherapy choice there).
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Stage II (T3-4 N0 M0)"
+        - red_flag: RF-CRC-MSI-H-ACTIONABILITY
+    if_true:
+      result: null
+      notes: >
+        dMMR/MSI-H stage II — do NOT offer adjuvant chemotherapy.
+        5-FU-based regimens provide no benefit; dMMR stage II has excellent
+        prognosis (5-yr DFS ~80%) without chemotherapy. Observation only.
+        Refer for Lynch syndrome germline testing (MLH1/MSH2/MSH6/PMS2/EPCAM).
+    if_false:
+      next_step: 3
+
+  # Step 3 — Stage II: low-risk vs high-risk stratification.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Stage II (T3-4 N0 M0)"
+        - condition: "High-risk features absent: T3, ≥12 nodes examined, no perforation, no obstruction, no LVI, no PNI, moderately differentiated"
+    if_true:
+      result: null
+      notes: >
+        Low-risk stage II MSS — observation preferred. Absolute chemotherapy
+        benefit is <2% and does not outweigh toxicity in unselected stage II.
+        Discuss with patient; ctDNA positivity (if available) shifts risk upward.
+    if_false:
+      next_step: 4
+
+  # Step 4 — Stage II high-risk OR Stage III: route to correct algorithm branch.
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Stage III (any T, N1-2, M0)"
+        - condition: "Stage II high-risk (T4 OR <12 nodes OR perforation OR obstruction OR LVI OR PNI OR poor differentiation)"
+    if_true:
+      next_step: 5
+
+  # Step 5 — Stage III: IDEA risk group determines duration.
+  # Step 5a — Stage III low-risk → CAPOX 3 months preferred (IDEA).
+  - step: 5
+    evaluate:
+      all_of:
+        - condition: "Stage III (N1-2 M0)"
+        - condition: "Low-risk: T1-3 N1 (not T4, not N2)"
+    if_true:
+      result: IND-CRC-ADJUVANT-STAGE3-CAPOX
+      notes: >
+        Low-risk stage III (T1-3 N1): 3-month CAPOX is preferred (IDEA
+        non-inferiority; 68% less neuropathy). FOLFOX 6 months is the
+        alternative if capecitabine contraindicated (CrCl <30) or patient
+        strongly prefers IV. FOLFOX 3 months is inferior to 6 months —
+        do not use shortened FOLFOX for low-risk stage III.
+    if_false:
+      next_step: 6
+
+  # Step 6 — Stage III high-risk OR Stage II high-risk → 6 months oxaliplatin-based.
+  - step: 6
+    evaluate:
+      any_of:
+        - condition: "Stage III high-risk: T4 or N2"
+        - condition: "Stage II high-risk (T4 OR adverse features, MSS)"
+    if_true:
+      next_step: 7
+
+  # Step 7 — FOLFOX vs CAPOX preference (6 months).
+  - step: 7
+    evaluate:
+      any_of:
+        - condition: "CrCl <30 mL/min OR patient cannot reliably take oral medications"
+    if_true:
+      result: IND-CRC-ADJUVANT-STAGE3-FOLFOX
+      notes: "FOLFOX 6 months (mFOLFOX6 q2w × 12 cycles). Renal contraindication to capecitabine."
+    if_false:
+      result: IND-CRC-ADJUVANT-STAGE3-CAPOX
+      notes: >
+        High-risk stage III or stage II high-risk: CAPOX 6 months (8 cycles)
+        or FOLFOX 6 months (12 cycles) — equivalent efficacy.
+        CAPOX preferred for patient convenience (oral PO, no port for pump).
+        For stage II high-risk: IND-CRC-ADJUVANT-STAGE2-HIGHRISK-FOLFOX
+        also applies (same regimen, different indication ID).
+
+sources:
+  - SRC-MOSAIC-ANDRE-2004
+  - SRC-IDEA-GROTHEY-2018
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+last_reviewed: "2026-05-03"
+notes: >
+  Colon cancer adjuvant algorithm only. Rectal cancer adjuvant (post-CRT
+  or post-TNT) is pending separate schema work — the step-logic for rectal
+  differs (oxaliplatin duration already consumed by induction; capecitabine
+  mono common; watch for bowel toxicity from prior pelvic radiation).
+  ctDNA (circulating tumour DNA): not yet formally validated but increasingly
+  used as a prognostic modifier for stage II decision. ctDNA-positive
+  post-resection = significantly higher relapse risk; strengthens case for
+  adjuvant chemotherapy even in otherwise low-risk stage II.
+  Timing: adjuvant must begin within 8 weeks of surgery. Delay >8 weeks
+  is associated with reduced benefit; >12 weeks — clinically unacceptable.

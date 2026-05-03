@@ -1,0 +1,99 @@
+id: IND-CRC-ADJUVANT-STAGE3-CAPOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage III colon cancer (any T, N1-2, M0), post-curative R0 resection"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CAPOX
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+duration_guidance:
+  low_risk_T1_3_N1:
+    duration_months: 3
+    cycles: 4
+    rationale: "IDEA: 3 mo CAPOX non-inferior to 6 mo for T1-3 N1 (HR 0.85, 95% CI 0.71-1.01); substantially less grade ≥2 neuropathy (16% vs 48%)"
+    nccn_preference: "Preferred over 6 months for low-risk per NCCN 2025"
+  high_risk_T4_or_N2:
+    duration_months: 6
+    cycles: 8
+    rationale: "IDEA: insufficient evidence for 3-month non-inferiority in T4 or N2; 6 months preferred"
+
+expected_outcomes:
+  overall_response_rate: "Adjuvant — DFS endpoint"
+  complete_response: "n/a (post-resection)"
+  progression_free_survival: "5-yr DFS: ~73% stage III (all) with oxaliplatin-based adjuvant"
+  overall_survival_5y: "5-yr OS ~75-85% stage III; low-risk T1-3 N1 ~85%"
+
+hard_contraindications:
+  - "CrCl <30 mL/min (capecitabine contraindicated)"
+  - "ECOG ≥ 3"
+  - "Severe hepatic impairment"
+
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+
+required_tests:
+  - "CBC, CMP, creatinine (renal function gates capecitabine dose)"
+  - "CEA baseline post-resection"
+
+desired_tests:
+  - "Circulating tumour DNA (ctDNA) — emerging prognostic marker"
+
+rationale: >
+  CAPOX is an NCCN category 1 alternative to FOLFOX for stage III adjuvant
+  colon cancer. The oral fluoropyrimidine backbone (capecitabine) replaces
+  infusional 5-FU/leucovorin, eliminating the need for a central venous port
+  and 46-hour CIV pump. Equivalent efficacy to FOLFOX; preference determined
+  by patient convenience, renal function, and IDEA duration data.
+  IDEA collaboration (Grothey 2018, NEJM N=12,834): 3 months CAPOX
+  non-inferior to 6 months for T1-3 N1 (low-risk), with 68% reduction
+  in grade ≥2 neuropathy. This makes 3-month CAPOX the preferred option
+  for low-risk stage III per NCCN 2025 and ESMO 2024.
+  High-risk (T4 or N2): 6 months remains standard (3 mo FOLFOX also
+  inferior to 6 mo; 3 mo CAPOX borderline — use clinical judgment).
+
+rationale_ua: >
+  CAPOX — категорія 1 NCCN як альтернатива FOLFOX для ад'ювантного
+  лікування III стадії. Пероральний прийом капецитабіну усуває потребу
+  у центральному катетері та 46-годинній інфузії. IDEA: 3 міс CAPOX
+  не гірше 6 міс для T1-3 N1, зі значно меншою нейропатією (16% vs 48%).
+  3 місяці CAPOX — переважний варіант при низькому ризику (T1-3 N1).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-IDEA-GROTHEY-2018
+    position: supports
+  - source_id: SRC-MOSAIC-ANDRE-2004
+    position: background
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use CAPOX if CrCl <30 mL/min — capecitabine renally cleared"
+  - "Do NOT add bevacizumab — adjuvant bevacizumab NSABP C-08 negative"
+  - "Do NOT apply IDEA 3-month data from CAPOX to FOLFOX (FOLFOX 3 mo was inferior)"
+  - "Do NOT delay adjuvant beyond 8 weeks post-surgery"
+  - "Do NOT continue oxaliplatin past Grade 2 functional neuropathy — switch to capecitabine alone"
+
+last_reviewed: "2026-05-03"
+notes: >
+  CAPOX vs FOLFOX choice: patient preference (oral vs IV), renal function,
+  access to infusion centre. Low-risk stage III → CAPOX 3 months is now
+  the preferred standard (less neuropathy, equivalent survival).
+  High-risk stage III → 6 months either regimen, with clinical discussion
+  about neuropathy burden.

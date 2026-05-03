@@ -9,6 +9,7 @@ purpose: >
 output_indications:
   - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
   - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
+  - IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
   - IND-CRC-METASTATIC-1L-FOLFOX-BEV
 
 default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
@@ -40,43 +41,74 @@ decision_tree:
       next_step: 3
     notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type cetuximab eligibility (vs RF-CRC-RAS-MUTANT → bev+chemo); left-sided primary criterion remains MDT-text (no primary-location RF authored)."
 
-  # Step 3 — BRAF V600E (poor prognosis) — bev + intensified chemo
-  # (FOLFOXIRI+bev preferred but FOLFOX+bev is the simpler scaffolded
-  # option until FOLFOXIRI regimen is authored).
+  # Step 3 — BRAF V600E (poor prognosis) → FOLFOXIRI+bev if ECOG 0-1
+  # (TRIBE/TRIBE2 support; ESMO 2024 preferred for fit BRAF V600E 1L).
+  # BEACON encorafenib+cetuximab is the 2L standard after this induction.
   - step: 3
+    evaluate:
+      all_of:
+        - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+        - condition: "ECOG PS 0-1 AND age <75"
+    if_true:
+      result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
+      notes: "BRAF V600E + fit: FOLFOXIRI+bev preferred (TRIBE; ESMO 2024). Plan BEACON 2L after progression."
+    if_false:
+      next_step: 3b
+
+  # Step 3b — BRAF V600E but frail/older → de-escalate to doublet.
+  - step: 3b
     evaluate:
       any_of:
         - red_flag: RF-CRC-BRAF-V600E-POOR-PROGNOSIS
     if_true:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+      notes: "BRAF V600E + ECOG ≥2 or age ≥75: FOLFOX+bev (tolerable doublet); BEACON 2L after progression."
     if_false:
       next_step: 4
 
-  # Step 4 — frailty de-escalation (sentinel; same indication as step 5
-  # in this scaffold but trace records the RF firing).
+  # Step 4 — Fit patient with high tumour burden / conversion intent
+  # (non-BRAF, non-MSI-H, ECOG 0-1) → consider FOLFOXIRI+bev.
   - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-1 AND age <75"
+        - condition: "High tumour burden OR liver-limited disease with conversion-to-surgery intent"
+    if_true:
+      result: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
+      notes: "Fit + high-burden/conversion intent: FOLFOXIRI+bev (TRIBE OS benefit; higher ORR/R0 rate). MDT resectability review before starting."
+    if_false:
+      next_step: 5
+
+  # Step 5 — frailty de-escalation.
+  - step: 5
     evaluate:
       any_of:
         - red_flag: RF-CRC-FRAILTY-AGE
     if_true:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+      notes: "Frail/older: dose-modified FOLFOX+bev. Palliative-intent 5-FU/LV mono awaits dedicated geriatric indication."
     if_false:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
+  - SRC-TRIBE-LOUPAKIS-2014
+  - SRC-TRIBE2-CREMOLINI-2020
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-03"
 notes: >
-  Scaffold algorithm covering 3 indications (MSI-H pembro, RAS-WT
-  left-cetux, RAS-mut/right-WT bev). Missing from scaffold (deferred
-  to clinical authoring): FOLFOXIRI + bev for fit-young aggressive
-  disease, encorafenib + cetuximab BEACON for BRAF V600E 2L+,
-  HER2+ trastuzumab + tucatinib (MOUNTAINEER), regorafenib /
-  trifluridine-tipiracil 3L+. Right-sided RAS-WT routes to step 4
-  default (FOLFOX+bev) per CALGB-80405 sidedness analysis.
+  Algorithm covering 4 indications: MSI-H pembro (1L standard), RAS-WT
+  left-sided cetux (CALGB-80405), FOLFOXIRI+bev for fit BRAF V600E or
+  high-burden conversion intent (TRIBE/TRIBE2), FOLFOX+bev default.
+  Still missing (deferred): HER2+ trastuzumab+tucatinib (MOUNTAINEER —
+  2L, already authored), regorafenib/TAS-102 3L+, palliative 5-FU/LV
+  mono for frail patients.
 
-  Frailty (step 4) currently routes to FOLFOX+bev — clinically dose-
-  modified or palliative-intent 5-FU/LV mono is more appropriate but
-  awaits dedicated geriatric-oncology indication entry.
+  Frailty (step 5) routes to FOLFOX+bev — clinically dose-modified or
+  palliative-intent 5-FU/LV mono is more appropriate but awaits dedicated
+  geriatric-oncology indication entry.
+
+  BRAF V600E routing: fit patients → FOLFOXIRI+bev 1L then BEACON 2L
+  (encorafenib+cetuximab). Frail/older BRAF V600E → FOLFOX+bev 1L then
+  BEACON 2L (no age bar for BEACON, only PS restriction).
