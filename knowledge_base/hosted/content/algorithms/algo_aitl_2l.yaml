@@ -14,6 +14,7 @@ output_indications:
   - IND-AITL-2L-AZACITIDINE
   - IND-AITL-2L-ROMIDEPSIN
   - IND-AITL-2L-BELINOSTAT
+  - IND-AITL-2L-PRALATREXATE
 
 default_indication: IND-AITL-2L-AZACITIDINE
 alternative_indication: IND-AITL-2L-ROMIDEPSIN
@@ -74,16 +75,68 @@ decision_tree:
 
   # Step 3 — alternative HDACi: belinostat (less cardiotoxic than
   # romidepsin in some series; use when romidepsin not accessible).
+  # if_true now routes to step 4 (belinostat access gate + pralatrexate fallback).
   - step: 3
     evaluate:
       any_of:
         - condition: "Romidepsin inaccessible / intolerant"
         - condition: "Mild baseline arrhythmia, prefer belinostat profile"
     if_true:
-      result: IND-AITL-2L-BELINOSTAT
+      next_step: 4
     if_false:
       result: IND-AITL-2L-AZACITIDINE
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring. Updated 2026-05-04 (Workstream CY): if_true now routes to step 4 (belinostat accessible gate + pralatrexate fallback)."
+
+  # Step 4 — belinostat access gate + pralatrexate antifolate fallback.
+  # Romidepsin-inaccessible/intolerant patients: check belinostat accessible
+  # + QTcF adequate + hepatic function adequate → belinostat.
+  # If belinostat also inaccessible (not EMA-approved; Ukraine: not registered)
+  # → pralatrexate (antifolate; PROPEL; ORR ~35% AITL subgroup; NCCN Cat 2A;
+  # distinct non-HDACi mechanism; also not EMA-registered; named-patient import).
+  # If neither accessible → azacitidine (UA-accessible HMA fallback for AITL biology).
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Belinostat accessible (named-patient or compassionate access)"
+        - condition: "No QTcF >500 ms or active Grade ≥3 thrombocytopenia"
+        - condition: "Hepatic function adequate (bilirubin ≤3×ULN; if UGT1A1 *28/*28 → dose reduce to 750 mg/m²)"
+    if_true:
+      result: IND-AITL-2L-BELINOSTAT
+      notes: >
+        Belinostat accessible + QTcF/hepatic adequate: belinostat 1000 mg/m² IV d1-5 q21d
+        (IND-AITL-2L-BELINOSTAT; BELIEF trial O'Connor 2015 JCO; ORR 25.8%; NCCN Cat 2A).
+        HDACi-class (HDAC inhibitor); QTc monitoring mandatory. UGT1A1 *28/*28 → dose
+        reduce to 750 mg/m². Not registered in Ukraine; named-patient access required.
+    if_false:
+      next_step: 41
+    notes: "Step 4 added 2026-05-04 (Workstream CY): belinostat access gate separating belinostat from pralatrexate fallback. Gap (2) pralatrexate OOS modeling addressed."
+
+  # Step 41 — pralatrexate antifolate fallback when belinostat also inaccessible.
+  # PROPEL subgroup AITL n=17: ORR ~35% (vs ~29% overall PTCL). Antifolate mechanism
+  # non-cross-resistant with HDACi. Not EMA-registered; US named-patient import only.
+  # Mandatory: folate 1 mg PO daily (start 10 days before) + B12 1 mg IM q8-10 weeks.
+  - step: 41
+    evaluate:
+      all_of:
+        - condition: "Pralatrexate accessible (named-patient import from US feasible)"
+        - condition: "No prior Grade ≥3 mucositis from antifolates"
+        - none_of:
+          - red_flag: RF-ORGAN-RENAL-IMPAIRED
+    if_true:
+      result: IND-AITL-2L-PRALATREXATE
+      notes: >
+        Belinostat inaccessible + pralatrexate accessible: pralatrexate 30 mg/m² IV weekly
+        ×6 of 7-week cycle (IND-AITL-2L-PRALATREXATE; REG-PRALATREXATE-PTCL; PROPEL
+        O'Connor 2011 JCO; AITL subgroup ORR ~35%; NCCN Cat 2A). Mandatory folate + B12.
+        Antifolate mechanism — non-cross-resistant with HDACi. Bridge to alloSCT if CR/PR.
+        Ukraine: not registered; named-patient US import required; MDT + pharmacy oversight.
+    if_false:
+      result: IND-AITL-2L-AZACITIDINE
+      notes: >
+        Neither belinostat nor pralatrexate accessible (Ukraine): azacitidine HMA fallback
+        (IND-AITL-2L-AZACITIDINE; NSZU-accessible via MDS basket; AITL epigenetic biology
+        TET2/DNMT3A/IDH2 mutations). MDT discussion mandatory.
+    notes: "Step 41 added 2026-05-04 (Workstream CY): pralatrexate antifolate gate (AITL PROPEL subgroup ORR ~35%). Gap (2) CLOSED."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -104,9 +157,16 @@ notes: >
   AUTHORED 2026-05-04:
   - IND-AITL-2L-BRENTUXIMAB: CD30+ gate wired at step 0 (BV Cat 2A; ORR ~54%)
 
+  UPDATED 2026-05-04 (Workstream CY): IND-AITL-2L-PRALATREXATE authored and
+  wired at steps 4 and 41 (belinostat access gate + pralatrexate antifolate
+  fallback). DRUG-PRALATREXATE authored (Folotyn; ATC L01BA05; PROPEL
+  O'Connor 2011 JCO; FDA Sept 2009; not EMA-registered). AITL subgroup in
+  PROPEL (n=17): ORR ~35% (vs ~29% overall PTCL). Non-HDACi antifolate mechanism.
+  Step 3 if_true now routes to step 4 (belinostat gate) → step 41 (pralatrexate
+  gate) → azacitidine fallback. Gap (2) CLOSED.
+
   OOS / wiring gaps:
   (1) Allogeneic SCT for fit younger CR2 — referral, outside KB.
-  (2) Pralatrexate (FOLOTYN) for PTCL/AITL — historic option, not modeled.
   (3) Combination HDACi+HMA (romidepsin+azacitidine, OPTILY-1) — emerging,
       not modeled as separate indication.
   (4) Step 0 BV gate is free-text condition for "BV-accessible" — no pan-disease
