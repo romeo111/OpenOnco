@@ -32,6 +32,7 @@ output_indications:
   - IND-NSCLC-2L-HER2-MUT-T-DXD
   - IND-NSCLC-2L-DATO-DXD
   - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+  - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
 
 default_indication: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL  # driver-negative cytotoxic fallback
 alternative_indication: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # most-common driver-targeted aggressive track
@@ -325,8 +326,28 @@ decision_tree:
         Squamous NSCLC or histology unknown: docetaxel ± ramucirumab (REVEL Garon 2014
         Lancet; mOS 10.5 vs 9.1 mo; HR 0.86; NCCN Cat 1). DATO-DXd excluded —
         TROPION-Lung01 squamous subgroup showed no PFS/OS benefit. Single-agent
-        docetaxel or paclitaxel-weekly is the UA-accessible funded fallback when
-        ramucirumab is not NSZU-reimbursed.
+        docetaxel (IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL) is default; docetaxel +
+        ramucirumab is Cat 1 preferred for fit patients with funding — see alternatives.
+        Ukraine: ramucirumab not NSZU-reimbursed; single-agent docetaxel is the
+        practical standard fallback.
+      alternatives:
+        - indication_id: IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+          nccn_category: "1"
+          criteria: >
+            Squamous or non-squamous NSCLC; 2L after 1L chemo+ICI failure; driver-negative
+            (EGFR-wt, ALK-neg); ECOG 0-2; no active hemoptysis; no uncontrolled HTN
+            >160/100; no major surgery within 28 days (ramucirumab VEGFR2 contraindications);
+            ramucirumab access confirmed (funding pathway identified). If ramucirumab
+            inaccessible (UA default): IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL (single-agent
+            docetaxel) is the NSZU-accessible fallback.
+          note: >
+            Docetaxel + ramucirumab (REVEL; Garon 2014 Lancet; NCCN Cat 1): mOS 10.5
+            vs 9.1 months (HR 0.86; p=0.023); mPFS 4.5 vs 3.0 months (HR 0.76); ORR
+            23% vs 14%. Ramucirumab 10 mg/kg IV + docetaxel 75 mg/m² q21d. Benefit
+            across squamous and non-squamous histology (subgroup consistent). Preferred
+            over docetaxel alone for fit patients with access.
+            Ukraine: ramucirumab not NSZU-reimbursed — single-agent docetaxel remains
+            UA-accessible 2L cytotoxic default.
     notes: "Step 161 added 2026-05-04 (Workstream CF): nonsquamous histology gate — nonsquamous → DATO-DXd (TROPION-Lung01; NCCN Cat 2A); squamous/unknown → docetaxel±ram (Cat 1). Gap CLOSED."
 
 sources:
@@ -393,6 +414,12 @@ notes: >
   to output_indications; wired as Cat 1 alternative at step 14 NTRK branch.
   Post-1G-TKI resistance mutations (G595R/G667C/xDFG-motif); TRIDENT-1
   (Drilon 2024 NEJM; ORR ~58% post-1G); tumor-agnostic FDA Jun 2024.
+
+  UPDATED 2026-05-04 (Workstream FM): IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB added
+  to output_indications; wired as Cat 1 alternative at step 161 if_false (squamous
+  or histology-unknown 2L fallback). REVEL (Garon 2014 Lancet); mOS 10.5 vs 9.1 mo
+  (HR 0.86); preferred over single-agent docetaxel for fit patients with access;
+  UA fallback remains single-agent docetaxel (not NSZU-reimbursed for ramucirumab).
 
   REMAINING WIRING GAPS:
   - RF-NSCLC-FRAILTY-AGE wired only via free-text condition; needs
