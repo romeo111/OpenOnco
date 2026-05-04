@@ -157,16 +157,35 @@ decision_tree:
       next_step: 10
 
   - step: 9
-    # KRAS G12C 2L: active brain mets → adagrasib; otherwise sotorasib.
-    # Brain-met fitness modifier has no dedicated RF; condition retained.
+    # KRAS G12C 2L: THREE options. Active brain mets → adagrasib preferred.
+    # Sotorasib is default (avoid if PPI use — acid-dependent dissolution).
+    # Glecirasib (KRYSTAL-6; FDA Oct 2024) is NCCN Cat 2A third option.
     evaluate:
       any_of:
         - condition: "Active untreated brain metastases (adagrasib intracranial ORR ~33%)"
     if_true:
       result: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
+      alternatives:
+        - indication: IND-NSCLC-2L-KRAS-G12C-GLECIRASIB
+          criteria: "Glecirasib 400 mg BID when adagrasib inaccessible; KRYSTAL-6; FDA Oct 2024; NCCN Cat 2A; third KRAS G12C inhibitor; QTc monitoring required"
+          nccn_category: "2A"
     if_false:
       result: IND-NSCLC-2L-KRAS-G12C-SOTORASIB
-    notes: "MDT-only — sotorasib vs adagrasib choice driven by brain-met status (no dedicated RF for active untreated brain mets in NSCLC); default sotorasib."
+      alternatives:
+        - indication: IND-NSCLC-2L-KRAS-G12C-ADAGRASIB
+          criteria: "PPI use contraindicated with sotorasib (acid-dependent dissolution) → adagrasib preferred; or adagrasib when CNS activity needed"
+          nccn_category: 1
+        - indication: IND-NSCLC-2L-KRAS-G12C-GLECIRASIB
+          criteria: "Glecirasib 400 mg BID — NCCN Cat 2A; third option when sotorasib/adagrasib inaccessible; FDA Oct 2024 (KRYSTAL-6); QTc monitoring required"
+          nccn_category: "2A"
+    notes: >
+      KRAS G12C 2L — THREE KRAS G12C inhibitors available:
+      Cat 1: Sotorasib 960 mg QD (CodeBreaK-200; default when no active CNS + no PPI).
+      Cat 1: Adagrasib 600 mg BID (KRYSTAL-1; brain-met preferred; QTc monitoring).
+      Cat 2A: Glecirasib 400 mg BID (KRYSTAL-6; FDA Oct 2024; third option when 1st two inaccessible).
+      PPI interaction: sotorasib requires acidic environment (avoid PPIs);
+      adagrasib and glecirasib have no PPI interaction — prefer adagrasib/glecirasib if PPI required.
+      MDT-only — brain-met status and drug access drive choice.
 
   # ── Step 10: MET ex14 ─────────────────────────────────────────────
   - step: 10
