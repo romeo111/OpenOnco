@@ -1,0 +1,67 @@
+id: REG-PEMBRO-GEMCIS-BILIARY
+name: "Pembrolizumab + gemcitabine + cisplatin for advanced biliary tract cancer (1L, KEYNOTE-966)"
+name_ua: "Пембролізумаб + гемцитабін + цисплатин при поширеному раку жовчних шляхів (1 лінія)"
+alternate_names: ["KEYNOTE-966 regimen", "pembro+GemCis BTC", "Keytruda+gemcitabine+cisplatin biliary"]
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV Q3W (during gem-cis) then 200 mg IV Q3W maintenance"
+    schedule: "Q21D continuous (no planned stop); give pembrolizumab before chemotherapy"
+    route: IV
+    notes: "Pembrolizumab continues beyond 8 cycles of gem-cis chemotherapy. Max duration 2 years per FDA label (35 cycles). Administer over 30 min."
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "IV days 1 and 8 Q21D × up to 8 cycles"
+    route: IV
+    notes: "30-min infusion on days 1 and 8. After 8 cycles, gemcitabine discontinued — pembrolizumab continues as maintenance."
+  - drug_id: DRUG-CISPLATIN
+    dose: "25 mg/m² IV"
+    schedule: "IV days 1 and 8 Q21D × up to 8 cycles"
+    route: IV
+    notes: "Low-dose cisplatin. Hold for CrCl <45 mL/min; substitute carboplatin AUC 4. Stop after 8 cycles maximum."
+
+cycle_length_days: 21
+number_of_cycles: "8 cycles of triplet; then pembrolizumab Q3W maintenance (up to 35 cycles total)"
+
+premedications:
+  - "5-HT3 antagonist + dexamethasone (cisplatin moderately emetogenic)"
+  - "IV hydration: 1-2 L NaCl 0.9% before and after cisplatin"
+  - "Magnesium 20-40 mEq MgSO4 IV with cisplatin"
+  - "No routine premedication for pembrolizumab after first dose"
+
+supportive_care:
+  - "CrCl/eGFR: before each cycle (cisplatin nephrotoxicity)"
+  - "CBC, CMP: before each cycle"
+  - "LFTs + bilirubin: before each cycle"
+  - "irAE monitoring: TSH, glucose, LFTs each cycle"
+  - "Biliary drainage: adequate decompression required before starting"
+
+dose_modifications:
+  - toxicity: "CrCl <45 mL/min"
+    action: "Hold cisplatin; substitute carboplatin AUC 4; continue gem+pembro"
+  - toxicity: "Grade 3 immune-related AE"
+    action: "Hold pembrolizumab; corticosteroids 1-2 mg/kg/day prednisone; restart when Grade ≤1"
+  - toxicity: "Grade 4 immune-related AE or Grade 3+ pneumonitis"
+    action: "PERMANENTLY DISCONTINUE pembrolizumab; IV methylprednisolone"
+
+special_requirements:
+  - "Biliary drainage: ensure decompression before starting (obstructed biliary tree worsens chemo tolerability)"
+  - "ECOG PS 0-2"
+  - "No prior systemic therapy for advanced BTC"
+  - "Cisplatin: limit to 8 cycles"
+  - "Pembrolizumab: up to 35 cycles (2 years) per FDA label"
+
+sources:
+  - SRC-NCCN-BTC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  KEYNOTE-966 (Kelley RK et al. Lancet 2023; NCT04003636): Phase 3, n=1069 patients
+  with advanced biliary tract cancer. Pembrolizumab+GemCis vs GemCis:
+  mOS 12.7 vs 10.9 months (HR 0.83; 95% CI 0.72-0.95; p=0.0034).
+  FDA approved April 2023. NCCN BTC 2025: Category 1 for advanced BTC 1L.
+  This regimen and REG-DURVALUMAB-GEMCIS-BILIARY (TOPAZ-1) are both NCCN Cat 1
+  for advanced BTC 1L. Selection based on drug access and MDT decision.
+  PDL1 expression: benefit observed regardless of CPS score.
+  Cisplatin-ineligible: carboplatin AUC 4-5 substitution acceptable.

@@ -1,0 +1,68 @@
+id: REG-DURVALUMAB-GEMCIS-BILIARY
+name: "Durvalumab + gemcitabine + cisplatin for advanced biliary tract cancer (1L, TOPAZ-1)"
+name_ua: "Дурвалумаб + гемцитабін + цисплатин при поширеному раку жовчних шляхів (1 лінія)"
+alternate_names: ["TOPAZ-1 regimen", "durvalumab+GemCis BTC", "Imfinzi+gemcitabine+cisplatin"]
+
+components:
+  - drug_id: DRUG-DURVALUMAB
+    dose: "1500 mg IV Q3W (cycles 1-8) then 1500 mg IV Q4W (maintenance)"
+    schedule: "Q21D × 8 cycles with gem-cis, then Q28D monotherapy maintenance"
+    route: IV
+    notes: "Give durvalumab before gemcitabine. Administer over 60 min. Maintenance continues until progression or unacceptable toxicity."
+  - drug_id: DRUG-GEMCITABINE
+    dose: "1000 mg/m² IV"
+    schedule: "IV days 1 and 8 Q21D × up to 8 cycles"
+    route: IV
+    notes: "Administer over 30 min on days 1 and 8. Standard dose; reduce to 800 mg/m² for Grade 3+ hematologic toxicity."
+  - drug_id: DRUG-CISPLATIN
+    dose: "25 mg/m² IV"
+    schedule: "IV days 1 and 8 Q21D × up to 8 cycles (stop cisplatin after 8 cycles)"
+    route: IV
+    notes: "Low-dose cisplatin (25 mg/m²); renal protection required. Hold cisplatin for CrCl <45 mL/min. STOP cisplatin after 8 cycles — durvalumab maintenance continues."
+
+cycle_length_days: 21
+number_of_cycles: "8 cycles of triplet; then durvalumab maintenance Q4W until progression"
+
+premedications:
+  - "5-HT3 antagonist + dexamethasone (cisplatin moderately emetogenic at 25 mg/m²)"
+  - "IV hydration: 1-2 L NaCl 0.9% before and after cisplatin"
+  - "Magnesium replacement: 20-40 mEq MgSO4 in 250 mL NS IV with cisplatin"
+  - "Antihistamine + acetaminophen before durvalumab (first dose)"
+
+supportive_care:
+  - "Renal function (CrCl/eGFR): before each cycle (cisplatin nephrotoxicity)"
+  - "CBC: before each cycle"
+  - "LFTs + bilirubin: before each cycle (biliary obstruction can worsen; adequate drainage required)"
+  - "Immune-related AEs: TSH, glucose, LFTs each cycle"
+  - "Biliary drainage: ensure adequate biliary decompression before starting chemotherapy"
+
+dose_modifications:
+  - toxicity: "CrCl <45 mL/min"
+    action: "HOLD cisplatin; substitute with carboplatin AUC 4 (NCCN alternative) or continue gem alone"
+  - toxicity: "Grade 3 immune-related AE"
+    action: "Hold durvalumab; corticosteroids 1-2 mg/kg/day; restart when resolved to Grade ≤1"
+  - toxicity: "Grade 4 immune-related AE"
+    action: "PERMANENTLY DISCONTINUE durvalumab; IV methylprednisolone + organ-specific management"
+  - toxicity: "Grade 3+ neutropenia at Day 1"
+    action: "Hold gem-cis until ANC ≥1.0; G-CSF for Grade 4 febrile neutropenia"
+
+special_requirements:
+  - "Biliary patency required: adequate biliary drainage (ERCP/PTCA if obstructed) BEFORE starting"
+  - "Performance status: ECOG 0-2 required"
+  - "Cisplatin duration limited to 8 cycles (cumulative nephrotoxicity)"
+  - "No prior systemic therapy for advanced biliary tract cancer"
+
+sources:
+  - SRC-NCCN-BTC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  TOPAZ-1 (Oh DY et al. NEJM Evid 2022; NCT03875235): Phase 3, n=685 patients
+  with advanced BTC (intrahepatic/extrahepatic cholangiocarcinoma, gallbladder cancer).
+  Durvalumab+GemCis vs GemCis: mOS 12.8 vs 11.5 months (HR 0.80; 95% CI 0.66-0.97;
+  p=0.021). 24-month OS: 24.9% vs 10.4%. NCCN BTC 2025: Category 1 for advanced BTC 1L.
+  FDA approved September 2022.
+  Applies to all biliary tract cancer subtypes: iCCA, eCCA, GBC.
+  Cisplatin-ineligible patients: substitute with carboplatin AUC 4-5 (per KEYNOTE-966
+  and TOPAZ-1 carboplatin subgroup — similar efficacy signal).

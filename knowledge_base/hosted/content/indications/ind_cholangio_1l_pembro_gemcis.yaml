@@ -1,0 +1,74 @@
+id: IND-CHOLANGIO-1L-PEMBRO-GEMCIS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced, unresectable, or metastatic biliary tract cancer"
+    - "Intrahepatic cholangiocarcinoma (iCCA), extrahepatic cholangiocarcinoma (eCCA), or gallbladder cancer (GBC)"
+    - "No prior systemic therapy for advanced disease"
+  biomarker_requirements:
+    - "PDL1: not required; benefit observed regardless of PD-L1 expression (KEYNOTE-966)"
+    - "Molecular testing: obtain NGS for 2L planning (FGFR2, IDH1, BRAF V600E, HER2, MSI)"
+
+recommended_regimen: REG-PEMBRO-GEMCIS-BILIARY
+
+concurrent_therapy: []
+
+followed_by:
+  - "Pembrolizumab maintenance (200 mg Q3W) after 8 gem-cis cycles (up to 35 cycles total)"
+  - "2L routing: FGFR2 → pemigatinib/futibatinib; IDH1 → ivosidenib; BRAF V600E → dab+tram; HER2 → T-DXd; MSI-H → pembrolizumab (if not progressed on pembro)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_overall_survival_months: 12.7
+  os_control_arm_months: 10.9
+  os_hr: 0.83
+  os_p_value: 0.0034
+  notes: "KEYNOTE-966 (Kelley RK Lancet 2023; n=1069): pembro+GemCis vs GemCis. mOS 12.7 vs 10.9 months (HR 0.83; p=0.0034). FDA approved April 2023."
+
+hard_contraindications:
+  - "Active autoimmune disease requiring >10 mg prednisone/day equivalent"
+  - "Biliary obstruction without adequate drainage"
+  - "Prior systemic therapy for advanced BTC"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - RF-CHOLANGIO-BILIARY-OBSTRUCTION
+  - RF-CHOLANGIO-CISPLATIN-INELIGIBLE
+  - RF-CHOLANGIO-AUTOIMMUNE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BILIRUBIN
+  - TEST-CREATININE-CL
+  - TEST-CECT-CAP
+  - "Biliary drainage status"
+  - "NGS panel: FGFR2/3, IDH1/2, BRAF V600E, HER2, MSI/MMR (2L planning)"
+
+desired_tests:
+  - "PD-L1 CPS (prognostic; not required for eligibility)"
+
+rationale: >
+  KEYNOTE-966 demonstrated pembrolizumab (PD-1 inhibitor) + GemCis improved OS in advanced
+  BTC (mOS 12.7 vs 10.9 months; HR 0.83; p=0.0034). FDA approved April 2023. NCCN BTC 2025:
+  Category 1 alongside REG-DURVALUMAB-GEMCIS-BILIARY (TOPAZ-1). Both pembrolizumab and
+  durvalumab combinations are equivalent NCCN Cat 1; selection based on access and MDT preference.
+  Pembrolizumab advantage: max 2-year (35 cycles) duration limit per FDA label provides planned
+  treatment discontinuation endpoint; patients achieving CR can stop at 2 years.
+
+sources:
+  - SRC-NCCN-BTC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream EB). Biliary 1L pembro+gem-cis (KEYNOTE-966).
+  Two-reviewer clinical signoff required.

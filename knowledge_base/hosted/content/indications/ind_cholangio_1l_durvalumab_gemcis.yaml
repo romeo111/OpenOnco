@@ -1,0 +1,79 @@
+id: IND-CHOLANGIO-1L-DURVALUMAB-GEMCIS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced, unresectable, or metastatic biliary tract cancer"
+    - "Intrahepatic cholangiocarcinoma (iCCA), extrahepatic cholangiocarcinoma (eCCA), or gallbladder cancer (GBC)"
+    - "No prior systemic therapy for advanced disease"
+  biomarker_requirements:
+    - "PDL1 testing: not required for eligibility; benefit observed across PD-L1 expression levels"
+    - "FGFR2 fusion/rearrangement: if FGFR2+ consider FGFR inhibitor (pemigatinib) 2L; proceed with gem-cis+ICI 1L"
+    - "IDH1 mutation: proceed with 1L gem-cis+ICI; ivosidenib available 2L for IDH1-mutant"
+
+recommended_regimen: REG-DURVALUMAB-GEMCIS-BILIARY
+
+concurrent_therapy: []
+
+followed_by:
+  - "Durvalumab maintenance (1500 mg Q4W) after 8 gem-cis cycles until progression"
+  - "2L: FGFR2 fusion → pemigatinib/futibatinib; IDH1 → ivosidenib; BRAF V600E → dabrafenib+trametinib; HER2 → trastuzumab deruxtecan; MSI-H → pembrolizumab"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_overall_survival_months: 12.8
+  os_control_arm_months: 11.5
+  os_hr: 0.80
+  os_p_value: 0.021
+  os_24_month: "24.9% vs 10.4%"
+  notes: "TOPAZ-1 (Oh DY NEJM Evid 2022; n=685): durvalumab+GemCis vs GemCis. mOS 12.8 vs 11.5 months (HR 0.80; p=0.021). FDA approved September 2022."
+
+hard_contraindications:
+  - "Active autoimmune disease requiring >10 mg prednisone/day equivalent"
+  - "Active severe infections"
+  - "Biliary obstruction: must have adequate drainage BEFORE starting"
+  - "ECOG PS 3-4 (durvalumab+chemo poorly tolerated)"
+  - "Prior systemic therapy for advanced BTC"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - RF-CHOLANGIO-BILIARY-OBSTRUCTION
+  - RF-CHOLANGIO-CISPLATIN-INELIGIBLE
+  - RF-CHOLANGIO-AUTOIMMUNE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BILIRUBIN
+  - TEST-CREATININE-CL
+  - TEST-CECT-CAP
+  - "Biliary imaging (MRCP or CT cholangiography): assess drainage status"
+  - "NGS panel: FGFR2, IDH1, BRAF V600E, HER2, MMR/MSI (for 2L planning)"
+
+desired_tests:
+  - "PD-L1 CPS (IHC 22C3): not required for eligibility but prognostic"
+  - "ctDNA NGS (optional)"
+
+rationale: >
+  TOPAZ-1 demonstrated that adding durvalumab (PD-L1 inhibitor) to gemcitabine+cisplatin
+  improved OS in advanced BTC (mOS 12.8 vs 11.5 months; HR 0.80; p=0.021). FDA approved
+  September 2022. NCCN BTC 2025: Category 1 for advanced BTC 1L alongside
+  REG-PEMBRO-GEMCIS-BILIARY (KEYNOTE-966). Applies to all BTC subtypes (iCCA, eCCA, GBC).
+  Cisplatin-ineligible patients: substitute carboplatin AUC 4. Biliary drainage is
+  essential before starting — obstructed bile duct → cholangitis risk with chemotherapy.
+
+sources:
+  - SRC-NCCN-BTC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream EB). Biliary 1L durvalumab+gem-cis (TOPAZ-1).
+  Two-reviewer clinical signoff required.
