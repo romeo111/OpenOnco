@@ -8,6 +8,7 @@ purpose: >
 
 output_indications:
   - IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+  - IND-CRC-METASTATIC-1L-MSI-H-NIVO-IPI
   - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
   - IND-CRC-METASTATIC-1L-RAS-WT-LEFT-PANI
   - IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
@@ -19,13 +20,27 @@ default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
 
 decision_tree:
-  # Step 1 — MSI-H/dMMR overrides everything (KEYNOTE-177).
+  # Step 1 — MSI-H/dMMR overrides everything (KEYNOTE-177; CheckMate-8HW).
+  # Two NCCN Cat 1 options: pembrolizumab (default) and nivo+ipi (alternative).
   - step: 1
     evaluate:
       any_of:
         - red_flag: RF-CRC-MSI-H-ACTIONABILITY
     if_true:
       result: IND-CRC-METASTATIC-1L-MSI-H-PEMBRO
+      alternatives:
+        - indication: IND-CRC-METASTATIC-1L-MSI-H-NIVO-IPI
+          criteria: "Doublet ICI preferred by MDT or patient; CheckMate-8HW PFS HR 0.21 vs chemo; NCCN Cat 1; note higher irAE burden vs pembro monotherapy"
+          nccn_category: 1
+      notes: >
+        MSI-H/dMMR (~5% of mCRC) — TWO NCCN Cat 1 ICI options:
+        DEFAULT: Pembrolizumab monotherapy 200 mg Q3W (KEYNOTE-177; PFS HR 0.60; ORR 44%;
+        5-year follow-up data available; single-agent; lower irAE burden).
+        ALTERNATIVE: Nivolumab 240 mg Q2W + ipilimumab 1 mg/kg Q6W (CheckMate-8HW;
+        PFS HR 0.21; ORR ~45%; doublet ICI; FDA ~2024; potentially superior durability).
+        DOSING NOTE: nivo+ipi CRC uses NIVO 240 mg Q2W + IPI 1 mg/kg Q6W (nivo-dominant)
+        — NOT the HCC dosing (nivo 1 mg/kg + ipi 3 mg/kg Q6W).
+        MDT select based on irAE tolerance, Lynch syndrome implications, and patient preference.
     if_false:
       next_step: 2
 
@@ -141,9 +156,13 @@ notes: >
   FOLFOXIRI+bev; (5) frailty gate → step 51; (51) ECOG 0-2 frail → cape+bev; (51 if_false)
   ECOG ≥3 → BSC-adjacent capecitabine mono; (5 if_false) default → FOLFOX+bev.
 
-  Algorithm covering 6 indications now: MSI-H pembro, RAS-WT left-sided cetux,
-  FOLFOXIRI+bev (fit BRAF V600E or high-burden), FOLFOX+bev default, cape+bev frail (AVEX),
-  PS3+ BSC-adjacent mono.
+  UPDATED 2026-05-04 (Workstream EM): IND-CRC-METASTATIC-1L-MSI-H-NIVO-IPI added to
+  output_indications; step 1 expanded with alternatives block — nivo+ipi (CheckMate-8HW;
+  PFS HR 0.21; FDA ~2024; NCCN Cat 1) as second Cat 1 option alongside pembrolizumab.
+
+  Algorithm covering 7 indications now: MSI-H pembro + nivo+ipi (alt), RAS-WT left-sided
+  cetux, FOLFOXIRI+bev (fit BRAF V600E or high-burden), FOLFOX+bev default, cape+bev frail
+  (AVEX), PS3+ BSC-adjacent mono.
 
   Still deferred/OOS: HER2+ trastuzumab+tucatinib (MOUNTAINEER — 2L, already authored);
   regorafenib/TAS-102 3L+; BRAF V600E frail subgroup (step 3b frail → FOLFOX+bev → BEACON

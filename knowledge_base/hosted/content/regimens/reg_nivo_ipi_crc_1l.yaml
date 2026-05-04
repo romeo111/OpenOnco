@@ -1,0 +1,83 @@
+id: REG-NIVO-IPI-CRC-1L
+name: "Nivolumab + ipilimumab for MSI-H/dMMR mCRC 1L (CheckMate-8HW)"
+name_ua: "Ніволумаб + іпілімумаб при MSI-H мКРР 1Л (CheckMate-8HW)"
+alternate_names: ["nivo+ipi CRC 1L", "CM-8HW regimen", "Opdivo+Yervoy MSI-H CRC"]
+
+components:
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "240 mg IV over 30 min"
+    schedule: "Q2W (every 2 weeks)"
+    route: IV
+    notes: >
+      CRITICAL DOSING NOTE: CRC/MSI-H regimen uses NIVOLUMAB 240 mg Q2W +
+      ipilimumab 1 mg/kg Q6W — NIVO DOMINANT (opposite of HCC regimen where
+      ipi 3 mg/kg is dominant). Do NOT confuse with HCC nivo+ipi dosing
+      (nivo 1 mg/kg + ipi 3 mg/kg Q6W — completely different ratios).
+      Administer nivolumab over 30 min; ipilimumab infused after nivolumab
+      on Q6W dosing days.
+      After 12 doses (24 weeks) of combined nivo+ipi: switch to nivolumab
+      480 mg IV Q4W (flat dose) monotherapy maintenance until progression.
+  - drug_id: DRUG-IPILIMUMAB
+    dose: "1 mg/kg IV over 30 min"
+    schedule: "Q6W (every 6 weeks); co-administered with nivolumab on Q6W day"
+    route: IV
+    notes: >
+      1 mg/kg Q6W (NOT the 3 mg/kg Q6W used in HCC).
+      Combined with nivolumab 240 mg Q2W for induction (up to 24 weeks /
+      12 cycles of nivo; ~4 cycles of ipi), then nivolumab monotherapy
+      maintenance. Ipilimumab administered after nivolumab completion.
+
+cycle_length_days: 14  # nivolumab cycle; ipilimumab every 3 nivolumab cycles
+number_of_cycles: >
+  Induction: nivolumab 240 mg Q2W + ipilimumab 1 mg/kg Q6W for up to 24 weeks
+  (12 nivolumab doses; ~4 ipilimumab doses).
+  Maintenance: nivolumab 480 mg IV Q4W until progression or unacceptable toxicity.
+
+premedications:
+  - "Corticosteroid premedication: NOT routinely given (blunts ICI response)"
+  - "Antihistamine/acetaminophen optional for infusion reactions per protocol"
+
+supportive_care:
+  - "LFTs, bilirubin: before each nivolumab dose (immune-mediated hepatitis)"
+  - "CBC, CMP: before each nivolumab dose"
+  - "TSH: every 2-3 cycles (immune-mediated thyroid toxicity)"
+  - "Cortisol/ACTH: if adrenal insufficiency symptoms (fatigue, hypotension)"
+  - "irAE monitoring: colitis, pneumonitis, hepatitis, endocrinopathies, skin toxicity"
+  - "CT CAP: every 2-3 cycles for response assessment"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 immune-mediated hepatitis (AST/ALT >5× ULN)"
+    action: "Hold both drugs; corticosteroids 1-2 mg/kg/day prednisone; hepatology consult; PERMANENTLY DISCONTINUE if Grade 4"
+  - toxicity: "Grade 3-4 colitis (diarrhea ≥7 stools/day)"
+    action: "Hold; corticosteroids 1-2 mg/kg/day; infliximab 5 mg/kg if steroid-refractory"
+  - toxicity: "Grade 3-4 pneumonitis"
+    action: "Hold; corticosteroids 2 mg/kg/day; PERMANENTLY DISCONTINUE if Grade 4"
+  - toxicity: "Grade 3 endocrinopathy"
+    action: "Hold; hormone replacement; may resume once stable on hormone replacement"
+  - toxicity: "Grade 2 immune-mediated hepatitis (AST/ALT 3-5× ULN)"
+    action: "Hold until resolves to ≤Grade 1; resume at same doses; low-dose corticosteroids if worsening"
+
+special_requirements:
+  - "MSI-H or dMMR status confirmed by validated assay (PCR-MSI, NGS-MSI, or IHC dMMR) BEFORE starting"
+  - "MSI-H/dMMR is treatment-defining — applies regardless of RAS/BRAF/HER2 status"
+  - "No active autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone)"
+  - "No prior organ transplant"
+  - "ECOG PS 0-2 (CheckMate-8HW enrolled ECOG 0-1 primarily)"
+  - "CRITICAL DOSING NOTE: nivo 240 mg Q2W + ipi 1 mg/kg Q6W (NIVO dominant) — not the HCC dosing (nivo 1 mg/kg + ipi 3 mg/kg Q6W)"
+
+sources:
+  - SRC-CM8HW-LENZ-2024
+  - SRC-NCCN-COLON-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  CheckMate-8HW (Lenz HJ et al., Lancet 2024): Phase 3 nivo+ipi vs chemo in
+  1L MSI-H/dMMR mCRC. PFS HR ~0.21 (p<0.0001) — dramatic benefit. ORR ~45%.
+  FDA approval for 1L MSI-H/dMMR mCRC ~2024. NCCN COLON 2025: Category 1.
+  DOSING CRITICAL: nivo 240 mg Q2W + ipi 1 mg/kg Q6W — OPPOSITE ratio vs HCC
+  (nivo 1 mg/kg + ipi 3 mg/kg Q6W in CheckMate-9DW). Confusion is a patient
+  safety risk. Must verify exact NCT, publication details, and maintenance
+  transition schedule against primary source.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

@@ -1,0 +1,100 @@
+id: IND-CRC-METASTATIC-1L-MSI-H-NIVO-IPI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) MSI-H or dMMR colorectal cancer"
+    - "No prior systemic therapy for metastatic disease"
+  biomarker_requirements:
+    - "MSI-H confirmed by PCR (microsatellite instability-high) OR dMMR by IHC — MANDATORY"
+    - "MSI-H/dMMR is treatment-defining — overrides RAS/BRAF/HER2 status"
+    - "MSI-H prevalence in mCRC: ~5% (less common than in stage II-III CRC ~15-20%)"
+
+recommended_regimen: REG-NIVO-IPI-CRC-1L
+
+concurrent_therapy: []
+
+followed_by:
+  - "After 12 nivolumab doses (24 weeks): nivolumab 480 mg IV Q4W maintenance until progression"
+  - "At progression: reassess MSI status; consider cetuximab if KRAS WT; or clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pfs_hr_vs_chemo: 0.21
+  pfs_p_value: "<0.0001"
+  overall_response_rate: "~45% (CheckMate-8HW; nivo+ipi arm)"
+  orr_control_arm: "~29% (chemotherapy arm; CheckMate-8HW)"
+  notes: >
+    CheckMate-8HW (Lenz HJ et al.; Lancet 2024; Phase 3):
+    Nivolumab 240 mg Q2W + ipilimumab 1 mg/kg Q6W vs chemotherapy in 1L MSI-H/dMMR mCRC.
+    PFS HR ~0.21 (p<0.0001) — among the strongest PFS effects in mCRC treatment history.
+    Median PFS not reached for nivo+ipi arm. ORR ~45% vs ~29% (chemo).
+    OS data positive/maturing; long-term follow-up ongoing.
+    FDA approval for 1L MSI-H/dMMR mCRC ~2024. NCCN COLON 2025: Category 1.
+    Comparison to pembrolizumab (KEYNOTE-177; PFS HR 0.60; ORR 44%):
+    No head-to-head trial; nivo+ipi has numerically better PFS HR but different
+    control arm composition; cross-trial comparison requires caution.
+    CAUTION: exact values require clinical reviewer verification.
+
+hard_contraindications:
+  - "MSS (microsatellite stable) or pMMR mCRC: ICI monotherapy/doublet inactive in MSS disease"
+  - "Active autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone)"
+  - "Prior organ transplant (solid organ or stem cell)"
+  - "Active severe colitis at baseline (ICI-colitis risk additive)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "High-volume liver metastases requiring rapid tumor debulking: consider pembrolizumab + bevacizumab-based chemo combination (investigational) or FOLFOXIRI-bev → pembro maintenance; nivo+ipi has slower onset than chemo"
+  - "Patient with inflammatory bowel disease (Crohn's, UC) at baseline: higher irAE-colitis risk; consider pembrolizumab monotherapy instead"
+  - "Prior ipilimumab exposure: do not re-challenge without specialist review"
+
+required_tests:
+  - "MSI/MMR testing: PCR (MSI-H/MSS) AND/OR IHC (MLH1/MSH2/MSH6/PMS2) — MANDATORY before treatment"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH (baseline thyroid function)"
+  - "CT CAP for staging"
+
+desired_tests:
+  - "MLH1 promoter methylation + BRAF V600E (if MLH1 IHC lost — differentiates sporadic from Lynch syndrome)"
+  - "Lynch syndrome germline testing (genetic counseling referral if MLH1 loss not methylation-related)"
+  - "ctDNA baseline (molecular response monitoring)"
+  - "RAS/BRAF/HER2 testing (for 2L planning at progression)"
+
+rationale: >
+  MSI-H/dMMR mCRC (~5% of metastatic cases, ~15% of stage II-III) carries
+  defective DNA mismatch repair, generating high tumor mutational burden and
+  neoantigen load — making it exquisitely sensitive to ICI.
+  CheckMate-8HW demonstrated that nivolumab+ipilimumab (nivo 240 mg Q2W +
+  ipi 1 mg/kg Q6W) improves PFS with HR 0.21 vs chemotherapy — dramatic
+  benefit. FDA approval 1L MSI-H/dMMR mCRC ~2024.
+  NCCN COLON 2025: Category 1 preferred alongside pembrolizumab (KEYNOTE-177).
+  CRITICAL DOSING NOTE: nivo 240 mg Q2W + ipi 1 mg/kg Q6W (nivo dominant)
+  is OPPOSITE ratio to HCC dosing (nivo 1 mg/kg + ipi 3 mg/kg Q6W in CheckMate-9DW).
+  Clinical differentiators from pembrolizumab (KEYNOTE-177):
+  — Nivo+ipi: doublet ICI (higher irAE rate but potentially superior durability)
+  — Pembrolizumab: monotherapy (lower irAE burden; established 5-year follow-up data)
+  — No head-to-head: both Cat 1; MDT selection based on irAE tolerance and patient profile.
+
+sources:
+  - SRC-CM8HW-LENZ-2024
+  - SRC-NCCN-COLON-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EM 2026-05-04. CheckMate-8HW nivo+ipi for 1L MSI-H mCRC.
+  Second NCCN Cat 1 ICI doublet option alongside pembrolizumab (KEYNOTE-177).
+  PFS HR 0.21 — landmark Phase 3 result. Standard-track.
+  DOSING IS DISTINCT from HCC nivo+ipi: nivo 240mg Q2W + ipi 1mg/kg Q6W
+  (nivo-dominant) vs HCC nivo 1mg/kg + ipi 3mg/kg Q6W (ipi-dominant).
+  Citation details require clinical reviewer verification per SRC-CM8HW-LENZ-2024.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
