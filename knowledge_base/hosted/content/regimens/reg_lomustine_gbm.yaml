@@ -1,0 +1,56 @@
+id: REG-LOMUSTINE-GBM
+name: "Lomustine monotherapy (recurrent GBM; CCNU 110 mg/m²)"
+name_ua: "Ломустин монотерапія (рецидивна ГБМ; CCNU 110 мг/м²)"
+alternate_names: ["CCNU GBM", "lomustine recurrent glioblastoma", "Cecenu GBM"]
+components:
+  - drug_id: DRUG-LOMUSTINE
+    dose: "110 mg/m² PO (single oral dose day 1 of each cycle)"
+    schedule: "Single dose on day 1 ONLY; repeat q42 days (6 weeks). Do NOT redose until CBC recovery."
+    route: PO
+    notes: "Give on empty stomach to reduce nausea. Take with ondansetron 8 mg PO 30 min prior. CRITICAL: CBC nadir at WEEK 4-6 (NOT week 2) — do not dose before 6 weeks and CBC recovery."
+cycle_length_days: 42
+total_cycles: "Until progression or unacceptable toxicity; 6 cycles typical maximum (cumulative myelosuppression and pulmonary toxicity)"
+toxicity_profile: moderate
+premedication:
+  - "Ondansetron 8 mg PO 30 min before lomustine (nausea peak 2-6h post-dose)"
+  - "Dexamethasone 4 mg PO (if tumor-related cerebral edema — may need to continue from baseline steroid)"
+mandatory_supportive_care:
+  - "CBC with differential at day 21 AND day 42 (NADIR monitoring): count must fully recover before next dose (ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L)"
+  - "LFTs before each cycle (hepatotoxicity monitoring; hold if bilirubin >3× ULN)"
+  - "Pulmonary function testing (PFTs) baseline and after every 2 cycles — cumulative pulmonary fibrosis risk"
+  - "Antiemetic: ondansetron mandatory (nausea occurs 2-6 hours post-dose)"
+  - "PJP prophylaxis: co-trimoxazole 480 mg 3×/week if dexamethasone ≥4 mg/day concurrently (immunosuppression additive)"
+monitoring_schedule_id:
+dose_adjustments:
+  - condition: "ANC 1.0-1.5×10⁹/L OR PLT 50-100×10⁹/L at nadir"
+    modification: "Delay next cycle until recovery; reduce to 75 mg/m² on resumption"
+  - condition: "ANC <1.0×10⁹/L OR PLT <50×10⁹/L at nadir (Grade 3-4)"
+    modification: "Delay until recovery; reduce to 75 mg/m² → 50 mg/m²; consider discontinuation if recurrent Grade 4"
+  - condition: "Hepatotoxicity Grade 2 (ALT/AST >3× ULN)"
+    modification: "Hold until Grade ≤1; reduce dose by 25% on resumption"
+  - condition: "Pulmonary toxicity Grade 2 (dyspnea, cough, radiological infiltrates)"
+    modification: "Hold lomustine; corticosteroids; consider permanent discontinuation"
+drug_interactions:
+  - "Concurrent carmustine / other nitrosoureas: additive cumulative myelosuppression and pulmonary toxicity — avoid"
+  - "Cimetidine: increases lomustine AUC by ~50% (CYP inhibition) — use ranitidine/famotidine instead"
+  - "Dexamethasone (concurrent steroids): can mask early pulmonary toxicity signs"
+notes: >
+  CRITICAL DOSING SAFETY NOTE: Lomustine is a SINGLE oral dose every 6 weeks.
+  Multiple fatalities have occurred from overdose due to confusion with daily dosing.
+  The total dose (e.g., ~200 mg for 1.8 m² patient) is taken as a SINGLE ORAL DOSE.
+  Cycle length is 42 days (6 weeks) — not 28 days.
+
+  DELAYED MYELOSUPPRESSION: Nadir at 4-6 weeks post-dose (unlike most cytotoxics).
+  CBC must be checked at week 4 AND week 6. Do not redose based on week 2 CBC.
+
+  MGMT methylation: predicts sensitivity to lomustine (and TMZ). MGMT-unmethylated
+  recurrent GBM has minimal benefit from lomustine (ORR ~5-10% vs ~20% methylated).
+
+  EF-11 trial (Stupp 2012 EJC): lomustine was the control arm (ORR 10%; mOS 7.8 mo;
+  mPFS 2.9 mo) vs TTFields — both arms had similar outcomes; lomustine established
+  as the standard comparator in recurrent GBM trials.
+
+  BELOB (Taal 2014 Lancet Oncol): lomustine 110 mg/m² alone (n=30) vs bev+lom (n=32)
+  vs bev alone (n=28); 6-mo PFS: lom+bev 41%, bev alone 38%, lom alone 13%.
+  Combo benefit modest; not practice-changing but used in selected patients.
+last_reviewed: "2026-05-04"

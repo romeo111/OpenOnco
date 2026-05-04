@@ -1,0 +1,178 @@
+id: IND-GBM-RECURRENT-LOMUSTINE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GBM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent / progressive GBM (IDH-WT, WHO grade 4) after Stupp protocol (RT + concurrent TMZ + adjuvant TMZ)"
+    - "MGMT promoter methylated (methylation-specific PCR or pyrosequencing) — lomustine benefit limited in MGMT-unmethylated (ORR ~5-10% vs ~20% methylated)"
+    - "True progression confirmed on MRI (RANO criteria) or biopsy — pseudoprogression excluded"
+    - "Prior TMZ therapy completed (≥6 adjuvant cycles or discontinued due to confirmed progression)"
+    - "No prior lomustine or other nitrosourea (carmustine, fotemustine): cumulative myelosuppression + pulmonary toxicity"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, Hb ≥9 g/dL, CrCl ≥30 mL/min (lomustine is renally excreted)"
+    - "LFTs: bilirubin ≤3× ULN, ALT/AST ≤3× ULN (lomustine hepatotoxicity)"
+    - "No active uncontrolled infection (myelosuppression risk)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MGMT-METHYLATION
+      required: true
+      value_constraint: "MGMT promoter methylated"
+      notes: >
+        MGMT promoter methylation predicts sensitivity to lomustine (and TMZ).
+        MGMT removes O6-alkylguanine DNA adducts — the critical cytotoxic lesion.
+        MGMT-methylated tumors have lower MGMT expression → adducts persist → cell death.
+        MGMT-unmethylated GBM has very low lomustine ORR (~5-10% vs ~20% methylated).
+        Use lomustine preferentially in MGMT-methylated disease; bevacizumab is the
+        preferred agent when MGMT status is unmethylated or unknown.
+  biomarker_requirements_excluded:
+    - "MGMT unmethylated: lomustine benefit minimal (ORR ~5-10%); bevacizumab preferred (IND-GBM-RECURRENT-BEVACIZUMAB)"
+    - "Prior nitrosourea (carmustine, lomustine, fotemustine): cumulative myelosuppression + pulmonary fibrosis risk"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      GBM recurrence is palliative intent regardless of regimen. Any systemic therapy at
+      recurrence in ECOG ≥3 is unlikely to benefit and may add toxicity. Best supportive
+      care + corticosteroids for symptom management if ECOG ≥3.
+
+recommended_regimen: REG-LOMUSTINE-GBM
+alternative_regimens:
+  - regimen_id: IND-GBM-RECURRENT-BEVACIZUMAB
+    description: >
+      Bevacizumab 10 mg/kg IV q2w (FDA approved 2009 for recurrent GBM; NCCN 2A).
+      Preferred when: MGMT unmethylated, lomustine contraindicated, or bevacizumab
+      not yet used. PFS improvement (mPFS ~4-6 mo) and steroid-sparing without OS benefit.
+  - regimen_id: null
+    description: >
+      Lomustine 110 mg/m² q6w + bevacizumab 10 mg/kg q2w (BELOB combination):
+      BELOB (Taal 2014 Lancet Oncol; 3-arm phase 2; n=90): 6-mo PFS 41% lom+bev vs
+      13% lom alone vs 38% bev alone. Modest combination benefit; not practice-changing
+      but used in selected MGMT-methylated patients at MDT discretion.
+      Not modeled as separate indication; use REG-LOMUSTINE-GBM with concurrent bev.
+
+concurrent_therapy:
+  - "Dexamethasone: continue baseline steroid for cerebral edema; lomustine does NOT require steroid co-administration unless tumor-related edema present"
+  - "PJP prophylaxis: co-trimoxazole 480 mg 3×/week if dexamethasone ≥4 mg/day (immunosuppression additive)"
+  - "Antiemetic: ondansetron 8 mg PO 30 min before lomustine dose (mandatory — nausea 2-6h post-dose)"
+  - "Bevacizumab concurrent option (BELOB): bev 10 mg/kg q2w if MGMT-methylated + no contraindication to bevacizumab (hypertension, proteinuria, wound healing, CNS hemorrhage risk)"
+
+followed_by:
+  - "CBC at day 21 AND day 42 (nadir monitoring): ANC ≥1.5×10⁹/L + PLT ≥100×10⁹/L required before next cycle"
+  - "MRI brain q2 cycles (every 12 weeks) for response assessment (RANO criteria)"
+  - "Typical maximum 6 cycles (cumulative myelosuppression + pulmonary toxicity risk)"
+  - "After lomustine progression: bevacizumab monotherapy (if not yet used); clinical trial; best supportive care"
+  - "After bevacizumab + lomustine both used: best supportive care; re-irradiation (focal, MDT-selected cases)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~10% (EF-11, Stupp 2012 EJC, lomustine control arm; all-comers); ~20% in MGMT-methylated subgroup"
+  disease_control_rate: "~50% (SD + PR; EF-11 lomustine control arm)"
+  median_pfs_months: "2.9 months (EF-11 lomustine control arm, all-comers)"
+  median_os_months: "7.8 months (EF-11 lomustine control arm, all-comers)"
+  notes: >
+    EF-11 (Stupp 2012 Eur J Cancer; Phase 3; n=237):
+    Lomustine 110 mg/m² q6w (control arm) vs TTFields device at recurrence.
+    Primary endpoint: OS. Neither arm demonstrated superiority.
+    Lomustine control arm: ORR 10%, DCR ~50%, mPFS 2.9 mo, mOS 7.8 mo.
+    EF-11 established lomustine as the standard comparator for recurrent GBM trials.
+
+    BELOB (Taal 2014 Lancet Oncol; Phase 2; n=90):
+    3-arm: lomustine 110 mg/m² alone (n=30) vs bev 10 mg/kg q2w alone (n=28) vs lom+bev (n=32).
+    6-mo OS: lom+bev 63%, bev 38%, lom 43%. 6-mo PFS: lom+bev 41%, bev 38%, lom 13%.
+    Combination benefit modest — not practice-changing but informs MDT decisions.
+
+    MGMT-methylated benefit: retrospective data suggest ORR ~20% and mPFS ~3-4 mo
+    in methylated GBM (vs ~5-10% ORR in unmethylated). Methylation testing is critical.
+
+    CAVEAT: All recurrent GBM treatment is palliative intent. No agent has demonstrated
+    OS benefit in a positive phase 3 RCT at recurrence. Lomustine ORR is low (10%) but
+    cytotoxic mechanism is distinct from bevacizumab and may offer disease control in
+    chemosensitive (MGMT-methylated) patients.
+
+hard_contraindications:
+  - "Prior lomustine or nitrosourea (carmustine, fotemustine): cumulative myelosuppression + pulmonary fibrosis"
+  - "CrCl <30 mL/min: lomustine renally excreted; severe renal impairment"
+  - "Bilirubin >3× ULN: severe hepatic impairment; lomustine hepatotoxicity"
+  - "Active uncontrolled infection: myelosuppression at nadir (week 4-6) would be life-threatening"
+  - "Prior pulmonary toxicity from nitrosourea class: additive pulmonary fibrosis risk"
+
+red_flags_triggering_alternative:
+  - condition: "MGMT unmethylated or unknown → IND-GBM-RECURRENT-BEVACIZUMAB (lomustine benefit minimal without methylation)"
+  - condition: "CrCl <30 or bilirubin >3× ULN → IND-GBM-RECURRENT-BEVACIZUMAB"
+  - condition: "Prior nitrosourea → IND-GBM-RECURRENT-BEVACIZUMAB"
+  - condition: "RF-FITNESS-ECOG-PS-POOR → best supportive care (ECOG ≥3: systemic therapy not beneficial)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "MGMT promoter methylation status (MSP-PCR or pyrosequencing): mandatory gate for lomustine selection"
+  - "CrCl (CKD-EPI or 24h urine creatinine): must be ≥30 mL/min before lomustine"
+  - "Pulmonary function tests (PFTs): baseline (lomustine cumulative pulmonary toxicity risk)"
+  - "MRI brain with contrast (RANO criteria): confirm true progression vs pseudoprogression before initiating"
+
+desired_tests:
+  - "IDH1/2 mutation status (if not done at initial diagnosis): IDH-mutant tumors have different biology"
+  - "TERT promoter + EGFR amplification + CDKN2A/B deletion: molecular recurrence profiling for trial matching"
+  - "Re-biopsy at recurrence (if accessible): exclude pseudoprogression; identify acquired resistance alterations (EGFR vIII loss, PI3K pathway)"
+
+rationale: >
+  Lomustine (CCNU) is a nitrosourea alkylating agent that crosses the blood-brain barrier
+  efficiently due to high lipophilicity. It cross-links DNA (O6-alkylguanine, N1-alkylguanine,
+  N3-alkylcytosine adducts) and carbamoylates proteins. Cell-cycle non-specific.
+
+  MGMT promoter methylation determines sensitivity: MGMT removes O6-alkylguanine adducts —
+  the key cytotoxic lesion. MGMT-methylated tumors express less MGMT → adducts persist →
+  cell death. Without methylation, MGMT-mediated repair circumvents lomustine damage.
+
+  KEY SAFETY DISTINGUISHER vs bevacizumab:
+  - Lomustine: cytotoxic, myelosuppression (DELAYED nadir at 4-6 weeks), nausea, pulmonary toxicity
+  - Bevacizumab: anti-angiogenic, hypertension, proteinuria, wound healing, CNS hemorrhage risk
+  Both are palliative; lomustine offers cytoreduction (measurable ORR ~10-20% MGMT-methylated);
+  bevacizumab offers steroid-sparing and PFS extension without ORR.
+
+  PRESCRIBING SAFETY: Lomustine is a SINGLE oral dose per 6-week cycle. Multiple fatalities
+  have occurred from daily dosing errors. Total dose (e.g., ~200 mg for 1.8 m²) is taken
+  as a SINGLE oral dose at home. CBC nadir at week 4-6 — not week 2.
+
+rationale_ua: >
+  Ломустин (CCNU) 110 мг/м² однократно перорально кожні 6 тижнів при рецидивній ГБМ.
+  КЛЮЧОВЕ: одноразовий прийом q6тижнів (НЕ щоденно). Нейропенія/тромбоцитопенія — надир
+  тижні 4-6 (не тиждень 2). ОАК на 21-й та 42-й дні. MGMT-метилований — переважна перевага.
+  EF-11 (Stupp 2012 EJC): ломустин — контрольне плече порівняно з TTFields; ЧВ 10%, мОВ 7.8 міс.
+  В Україні: ломустин (Cecenu) — статус варіює; може потребувати МДК або НПП.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Ломустин щоденно: ЛЕТАЛЬНО — ОДНА доза q6тижнів (110 мг/м² разово)"
+  - "ОАК лише на тижні 2: надир тижні 4-6; обов'язковий контроль на днях 21 та 42"
+  - "Ломустин при MGMT-неметильованих пухлинах: ЧВ ~5%; бевацизумаб кращий"
+  - "Без ФЗД перед стартом: кумулятивний легеневий фіброз"
+  - "Повторна доза до відновлення ОАК: ризик тяжкої мієлосупресії"
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CNS Tumors 2025: lomustine (CCNU) 110 mg/m² q6w is a Category 2A option for
+      recurrent GBM; preferred in MGMT-methylated patients. Bevacizumab is Category 2A
+      for steroid-sparing. Clinical trial preferred for all fit recurrent GBM patients.
+  - source_id: SRC-EF14-STUPP-2015
+    position: supports
+    relevant_quote_paraphrase: >
+      EF-11 (Stupp 2012 Eur J Cancer; Phase 3; n=237): lomustine 110 mg/m² q6w was the
+      standard control arm vs TTFields at recurrence. Lomustine ORR 10%, mPFS 2.9 mo,
+      mOS 7.8 mo. Established lomustine as the reference comparator in recurrent GBM trials.
+      (Note: SRC-EF14-STUPP-2015 documents the EF-14 study; EF-11 source not yet ingested.)
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
