@@ -1,0 +1,73 @@
+id: REG-OSIMERTINIB-CARBO-PEM-NSCLC
+name: "Osimertinib + carboplatin + pemetrexed for EGFR-mutant NSCLC 1L (FLAURA2)"
+name_ua: "Осимертиніб + карбоплатин + пеметрексед при НМРЛ з мутацією EGFR (1 лінія, FLAURA2)"
+alternate_names: ["FLAURA2 regimen", "osimertinib+chemo EGFR NSCLC", "osi+carbo+pem", "osimertinib chemotherapy combination"]
+
+components:
+  - drug_id: DRUG-OSIMERTINIB
+    dose: "80 mg PO QD"
+    schedule: "Continuous daily — throughout both induction and maintenance phases"
+    route: PO
+    notes: "Continue osimertinib throughout and after carboplatin/pemetrexed completion. Dose reduce to 40mg QD for Grade 3+ toxicity."
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV over 30 min"
+    schedule: "Day 1 Q21D × 4 cycles; then STOP carboplatin"
+    route: IV
+    notes: "AUC-based dosing (Calvert formula). Stop after 4 cycles (cumulative nephrotoxicity; myelosuppression). Osimertinib and pemetrexed continue as maintenance."
+  - drug_id: DRUG-PEMETREXED
+    dose: "500 mg/m² IV over 10 min"
+    schedule: "Day 1 Q21D; continue as maintenance after carboplatin stops"
+    route: IV
+    notes: "Folic acid + B12 supplementation MANDATORY. Dexamethasone premedication for skin toxicity reduction."
+
+cycle_length_days: 21
+number_of_cycles: "4 cycles triplet (osimertinib + carbo + pem), then osimertinib + pem maintenance until progression"
+
+premedications:
+  - "Folic acid 400 µg PO QD: start ≥7 days before first pemetrexed; continue throughout"
+  - "Vitamin B12 1000 µg IM: start ≥7 days before first pemetrexed; repeat Q9 weeks"
+  - "Dexamethasone 4 mg PO BID × 3 days (day before/day of/day after pemetrexed) for skin toxicity"
+  - "5-HT3 antagonist + dexamethasone: carboplatin antiemetic prophylaxis (moderately emetogenic)"
+
+supportive_care:
+  - "CBC with differential: before each cycle — ANC ≥1500/mm³, platelets ≥100K/mm³ required"
+  - "CMP + CrCl: before each pemetrexed dose (hold if CrCl <45 mL/min)"
+  - "LFTs: periodic (osimertinib hepatotoxicity risk)"
+  - "ECG: baseline and during osimertinib (QTc prolongation risk; rare)"
+  - "CT CAP: every 2-3 cycles for response assessment"
+  - "Interstitial lung disease (ILD) monitoring: dyspnea, cough, fever — hold osimertinib"
+
+dose_modifications:
+  - toxicity: "QTc >500ms (osimertinib)"
+    action: "Hold osimertinib; identify and correct contributing factors; restart at 40 mg QD when QTc ≤481ms"
+  - toxicity: "Grade 3-4 ILD/pneumonitis"
+    action: "PERMANENTLY DISCONTINUE osimertinib; corticosteroids (1-2 mg/kg/day); pulmonology consult"
+  - toxicity: "ANC <1000/mm³ or platelets <75K/mm³"
+    action: "Hold carboplatin/pemetrexed; restart with G-CSF prophylaxis when recovered"
+  - toxicity: "CrCl <45 mL/min"
+    action: "Hold pemetrexed; may continue osimertinib + carboplatin (dose-reduced carboplatin if CrCl 30-44)"
+  - toxicity: "Grade 3+ rash or Grade 3 diarrhea"
+    action: "Hold osimertinib; symptomatic management; restart at 40 mg QD when ≤Grade 1"
+
+special_requirements:
+  - "Folic acid + B12 supplementation MANDATORY before pemetrexed (prevents fatal cytopenias)"
+  - "EGFR ex19del or L858R confirmed (FLAURA2 enrolled classical sensitizing mutations only)"
+  - "Non-squamous histology required (pemetrexed not effective in squamous NSCLC)"
+  - "ECOG PS 0-1 preferred (higher toxicity vs osimertinib monotherapy; ECOG 2 with caution)"
+  - "CrCl ≥45 mL/min for pemetrexed (dose-hold for renal impairment)"
+  - "PICC line or port for carboplatin infusion"
+  - "NOT for EGFR exon 20 insertion (use REG-AMIVANTAMAB-CARBO-PEM-NSCLC)"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  FLAURA2 (Planchard D NEJM 2023; NCT04035048): Phase 3, n=557 EGFR ex19del/L858R 1L NSCLC.
+  Osimertinib+carbo+pem vs osimertinib: mPFS 25.5 vs 16.7 months (HR 0.62; 95% CI 0.49-0.78;
+  p<0.001); OS HR 0.75 (p=0.0096) — statistically significant OS improvement.
+  FDA approved August 19, 2024 for 1L EGFR ex19del/L858R NSCLC with carboplatin+pemetrexed.
+  NCCN NSCLC 2025: Category 1. Higher toxicity vs osimertinib monotherapy (Grade 3+ AEs ~64% vs
+  28%); recommended for patients with high disease burden and good PS (ECOG 0-1).

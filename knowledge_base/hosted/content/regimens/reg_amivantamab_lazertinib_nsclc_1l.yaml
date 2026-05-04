@@ -1,0 +1,85 @@
+id: REG-AMIVANTAMAB-LAZERTINIB-NSCLC-1L
+name: "Amivantamab + lazertinib for classical EGFR-mutant NSCLC 1L (MARIPOSA)"
+name_ua: "Амівантамаб + лазертініб при НМРЛ з класичною мутацією EGFR (1 лінія, MARIPOSA)"
+alternate_names: ["MARIPOSA regimen", "ami+laz 1L", "amivantamab+lazertinib EGFR 1L", "Rybrevant+Lazcluze 1L"]
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1400 mg IV (<80 kg) or 1750 mg IV (≥80 kg)"
+    schedule: >
+      Cycle 1 (28 days): Day 1 split infusion (350 mg day 1 + remainder day 2),
+      then weekly on days 8, 15, 22.
+      Cycle 2+: Q2W (days 1 and 15 of each 28-day cycle).
+    route: IV
+    notes: >
+      Weight-based flat dosing: <80 kg = 1400 mg; ≥80 kg = 1750 mg.
+      INFUSION-RELATED REACTION (IRR) common (~65% without premed → ~5% with full protocol).
+      Mandatory premedication before ALL doses. SC formulation (PALOMA-3) preferred where
+      available — reduces IRR to <10% and eliminates split-day cycle 1 requirement.
+  - drug_id: DRUG-LAZERTINIB
+    dose: "240 mg PO once daily"
+    schedule: "Continuous daily; start day 1"
+    route: PO
+    notes: >
+      Third-generation EGFR TKI; CNS-penetrant. Take at same time each day, with or without food.
+      Hold for Grade 3+ ILD; dose reduce to 120 mg QD for Grade 3 rash/toxicity.
+
+cycle_length_days: 28
+number_of_cycles: "Continuous until progression or unacceptable toxicity"
+
+premedications:
+  - "AMIVANTAMAB IRR PROPHYLAXIS (mandatory): diphenhydramine 25-50 mg IV + acetaminophen 650-1000 mg PO + dexamethasone 8 mg IV — administer 30-60 min before amivantamab. Continue antihistamine premedication for ALL subsequent doses."
+  - "DOAC VTE PROPHYLAXIS (mandatory first 4 months): apixaban 2.5 mg PO BID or rivaroxaban 10 mg QD — per MARIPOSA protocol due to ~37% VTE rate with ami+laz combination."
+
+supportive_care:
+  - "CBC, CMP, LFTs: before each cycle — ANC ≥1500/mm³, platelets ≥100K/mm³ required"
+  - "Dermatologic monitoring: EGFR-class toxicities (acneiform rash, paronychia, xerosis)"
+  - "Dermatologic management: topical antibiotics; doxycycline/minocycline for papulopustular rash"
+  - "VTE surveillance: assess for DVT/PE symptoms throughout treatment"
+  - "CT CAP: every 2-3 cycles for response assessment"
+  - "ILD/pneumonitis monitoring: dyspnea, cough, fever — hold both drugs immediately"
+  - "ECG baseline: QTc monitoring (lazertinib)"
+  - "Amivantamab IRR monitoring: vital signs Q15 min during infusion"
+
+dose_modifications:
+  - toxicity: "Grade 1-2 IRR during amivantamab infusion"
+    action: "Stop infusion; manage symptoms; restart at 50% rate when resolved; escalate gradually"
+  - toxicity: "Grade 3-4 IRR"
+    action: "Permanently discontinue amivantamab for that dose; corticosteroids + diphenhydramine; reassess rechallenge at next cycle with maximum premedication"
+  - toxicity: "Grade 3-4 ILD/pneumonitis"
+    action: "PERMANENTLY DISCONTINUE both drugs; corticosteroids (1-2 mg/kg/day); pulmonology consult"
+  - toxicity: "Grade 3 acneiform rash or paronychia"
+    action: "Hold amivantamab; oral doxycycline 100 mg BID; resume at lower frequency when ≤Grade 1"
+  - toxicity: "Grade 3+ hepatic transaminase elevation"
+    action: "Hold lazertinib; resume at 120 mg QD after recovery to ≤Grade 1"
+  - toxicity: "VTE event despite prophylaxis"
+    action: "Therapeutic anticoagulation (LMWH preferred); continue ami+laz unless contraindicated"
+  - toxicity: "ANC <1000/mm³"
+    action: "Hold; G-CSF; restart when ANC ≥1500/mm³"
+
+special_requirements:
+  - "EGFR ex19del or L858R confirmed — classical sensitizing mutations ONLY"
+  - "Non-squamous histology preferred (most EGFR-sensitizing mutations in adenocarcinoma)"
+  - "ECOG PS 0-1 required (higher toxicity vs osimertinib monotherapy; ECOG 2 with extreme caution)"
+  - "DOAC VTE prophylaxis MANDATORY for first 4 months (apixaban or rivaroxaban)"
+  - "No active VTE or bleeding disorder (relative contraindication to DOAC prophylaxis)"
+  - "Central venous access or port for amivantamab administration"
+  - "NOT for EGFR exon 20 insertion (use REG-AMIVANTAMAB-CARBO-PEM-NSCLC)"
+
+sources:
+  - SRC-MARIPOSA-PASSARO-2024
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  MARIPOSA (Passaro A NEJM 2024; NCT04487080): Phase 3, n=1074 EGFR ex19del/L858R 1L NSCLC.
+  Amivantamab+lazertinib vs osimertinib monotherapy: mPFS 23.7 vs 16.6 months (HR 0.70;
+  95% CI 0.58-0.85; p<0.001). OS HR 0.80 (p=0.10) — trend favoring ami+laz (not yet
+  significant). Grade 3+ AEs ~75% vs 43%; VTE ~37% vs 10% with ami+laz.
+  FDA approved August 19, 2024 for 1L EGFR ex19del/L858R NSCLC.
+  NCCN NSCLC 2025: Category 1. Higher toxicity than osimertinib mono and FLAURA2;
+  DOAC prophylaxis mandatory; recommended for fit (ECOG 0-1) patients willing to
+  accept combination toxicity burden. SC amivantamab (PALOMA-3) preferred when available.
+  Distinct from REG-AMIVANTAMAB-LAZERTINIB-NSCLC-2L (MARIPOSA-2; post-osimertinib 2L setting).

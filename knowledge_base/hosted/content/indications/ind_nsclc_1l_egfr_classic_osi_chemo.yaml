@@ -1,0 +1,93 @@
+id: IND-NSCLC-1L-EGFR-CLASSIC-OSI-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (Stage IV) or locally advanced unresectable NSCLC not amenable to curative therapy"
+    - "Non-squamous histology required (pemetrexed component not effective in squamous)"
+  biomarker_requirements:
+    - "EGFR exon 19 deletion or L858R point mutation — classical sensitizing mutations ONLY"
+    - "NOT for EGFR exon 20 insertion (use IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO)"
+    - "NOT for EGFR exon 20 insertion — osimertinib has no meaningful activity against ex20ins"
+
+recommended_regimen: REG-OSIMERTINIB-CARBO-PEM-NSCLC
+
+concurrent_therapy: []
+
+followed_by:
+  - "Osimertinib + pemetrexed maintenance after 4 cycles of triplet induction"
+  - "Continue until progression or unacceptable toxicity"
+  - "At progression: comprehensive rebiopsy + liquid biopsy for resistance mechanisms"
+  - "Post-progression 2L options per IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ or clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_pfs_months: 25.5
+  pfs_control_arm_months: 16.7
+  pfs_hr: 0.62
+  pfs_p_value: "p<0.001"
+  os_hr: 0.75
+  os_p_value: "p=0.0096"
+  notes: >
+    FLAURA2 (Planchard D NEJM 2023; NCT04035048; n=557): osimertinib+carbo+pem vs
+    osimertinib monotherapy. mPFS 25.5 vs 16.7 months (HR 0.62; 95% CI 0.49-0.78;
+    p<0.001); OS HR 0.75 (p=0.0096) — statistically significant OS improvement.
+    Grade 3+ AEs: 64% (combo) vs 28% (mono).
+    FDA approved August 19, 2024 for 1L EGFR ex19del/L858R NSCLC with carbo+pem.
+    NCCN NSCLC 2025: Category 1.
+
+hard_contraindications:
+  - "EGFR exon 20 insertion (different drug required — amivantamab+carbo+pem; osimertinib INACTIVE)"
+  - "Squamous cell carcinoma histology (pemetrexed not indicated)"
+  - "CrCl <45 mL/min (pemetrexed renal requirement)"
+  - "ECOG PS 3-4 (higher toxicity than osimertinib monotherapy)"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Active severe autoimmune disease requiring systemic immunosuppression"
+
+red_flags_triggering_alternative:
+  - "ECOG PS 2: consider osimertinib monotherapy (IND-NSCLC-EGFR-MUT-MET-1L) — lower toxicity burden"
+  - "Low disease burden: osimertinib monotherapy acceptable (FLAURA; mPFS 18.9m; comparable outcome, less toxicity)"
+  - "Patient preference for oral-only regimen: osimertinib monotherapy"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CREATININE-CL
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - "Brain MRI with contrast (brain metastasis baseline staging)"
+  - "NGS comprehensive panel: EGFR ex19del or L858R confirmation (mandatory)"
+  - "Histology confirmation: non-squamous required"
+  - "Baseline ECG (osimertinib QTc monitoring)"
+
+desired_tests:
+  - "PD-L1 TPS (prognostic context; not a treatment selection criterion here)"
+  - "MET amplification baseline (resistance mechanism tracking)"
+  - "ctDNA/liquid biopsy baseline (resistance monitoring during treatment)"
+
+rationale: >
+  FLAURA2 demonstrated that adding carboplatin+pemetrexed to osimertinib significantly
+  improves both PFS (HR 0.62) and OS (HR 0.75) versus osimertinib monotherapy in 1L
+  EGFR ex19del/L858R NSCLC. The combination is FDA-approved (Aug 19, 2024) and NCCN
+  Category 1. However, Grade 3+ AE rate doubles (64% vs 28%), so patient selection is
+  critical: high-burden disease, ECOG 0-1, non-squamous histology, adequate renal function.
+  For lower-burden disease or PS 2, osimertinib monotherapy (IND-NSCLC-EGFR-MUT-MET-1L)
+  remains standard. Pemetrexed requires mandatory folic acid + B12 supplementation.
+  NOT for EGFR exon 20 insertion — those require amivantamab-based therapy.
+
+sources:
+  - SRC-FLAURA2-PLANCHARD-2023
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EG 2026-05-04. FLAURA2 osimertinib+chemo 1L EGFR classical sensitizing.
+  Third NCCN Cat 1 option alongside osimertinib mono (FLAURA) and ami+laz (MARIPOSA).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

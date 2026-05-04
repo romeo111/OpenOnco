@@ -1,0 +1,98 @@
+id: IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (Stage IV) or locally advanced unresectable NSCLC not amenable to curative therapy"
+    - "Non-squamous histology predominantly (EGFR sensitizing mutations rare in squamous)"
+  biomarker_requirements:
+    - "EGFR exon 19 deletion or L858R point mutation — classical sensitizing mutations ONLY"
+    - "NOT for EGFR exon 20 insertion (use IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO)"
+    - "NOT for EGFR exon 20 insertion — amivantamab+carbo+pem is the appropriate ex20ins regimen"
+
+recommended_regimen: REG-AMIVANTAMAB-LAZERTINIB-NSCLC-1L
+
+concurrent_therapy:
+  - "DOAC VTE prophylaxis (apixaban 2.5 mg BID or rivaroxaban 10 mg QD) mandatory for first 4 months"
+
+followed_by:
+  - "Continue amivantamab + lazertinib until progression or unacceptable toxicity"
+  - "At progression: rebiopsy for EGFR/MET resistance mechanisms; consider clinical trial"
+  - "Post-progression 2L: per resistance mechanism — platinum-based chemo, amivantamab+chemo"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_pfs_months: 23.7
+  pfs_control_arm_months: 16.6
+  pfs_hr: 0.70
+  pfs_p_value: "p<0.001"
+  os_hr: 0.80
+  os_p_value: "p=0.10 (trend; not yet statistically significant)"
+  notes: >
+    MARIPOSA (Passaro A NEJM 2024; NCT04487080; n=1074): amivantamab+lazertinib vs
+    osimertinib monotherapy. mPFS 23.7 vs 16.6 months (HR 0.70; 95% CI 0.58-0.85;
+    p<0.001). OS HR 0.80 (p=0.10) — trend favoring ami+laz, not yet statistically
+    significant. Grade 3+ AEs ~75% vs 43%; VTE ~37% with ami+laz.
+    FDA approved August 19, 2024 for 1L EGFR ex19del/L858R NSCLC.
+    NCCN NSCLC 2025: Category 1.
+
+hard_contraindications:
+  - "EGFR exon 20 insertion (use amivantamab+carbo+pem via PAPILLON protocol)"
+  - "Active VTE or major bleeding (DOAC prophylaxis mandatory — relative contraindication)"
+  - "ECOG PS 2-4 (higher toxicity than osimertinib monotherapy — not studied in PS 2)"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Active severe autoimmune disease"
+  - "Concurrent anticoagulation contraindication (VTE prophylaxis cannot be safely given)"
+
+red_flags_triggering_alternative:
+  - "ECOG PS 2: strongly prefer osimertinib monotherapy — ami+laz not studied in PS 2"
+  - "High VTE risk or prior VTE: discuss risk-benefit of DOAC prophylaxis requirement"
+  - "Patient preference: oral-only regimen → osimertinib monotherapy preferred"
+  - "High disease burden with non-squamous: osimertinib+chemo (FLAURA2) may be preferred"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CREATININE-CL
+  - TEST-CECT-CAP
+  - "Brain MRI with contrast (baseline staging)"
+  - "NGS: EGFR ex19del or L858R confirmation (mandatory)"
+  - "Baseline ECG (lazertinib QTc)"
+  - "Coagulation studies (baseline before DOAC prophylaxis)"
+
+desired_tests:
+  - "PD-L1 TPS (prognostic; not a treatment selection criterion)"
+  - "MET amplification baseline (resistance tracking)"
+  - "ctDNA baseline (monitoring)"
+  - "Lower extremity Doppler ultrasound if VTE symptoms develop"
+
+rationale: >
+  MARIPOSA demonstrated that amivantamab+lazertinib significantly improves PFS (HR 0.70)
+  versus osimertinib monotherapy in 1L EGFR ex19del/L858R NSCLC. OS shows a favorable
+  trend (HR 0.80) that has not yet reached statistical significance. The combination is
+  FDA-approved (Aug 19, 2024) and NCCN Category 1. The toxicity burden is substantial
+  (~75% Grade 3+ AEs) and VTE rate is high (~37%) — mandatory DOAC prophylaxis for
+  first 4 months is non-negotiable. Best suited for fit ECOG 0-1 patients accepting
+  IV+oral combination with VTE prophylaxis. For less fit patients, osimertinib monotherapy
+  (IND-NSCLC-EGFR-MUT-MET-1L) remains standard. Amivantamab SC formulation (PALOMA-3)
+  reduces IRR burden when available.
+
+sources:
+  - SRC-MARIPOSA-PASSARO-2024
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EG 2026-05-04. MARIPOSA ami+laz 1L EGFR classical sensitizing.
+  Third NCCN Cat 1 option alongside osimertinib mono (FLAURA) and osi+chemo (FLAURA2).
+  VTE prophylaxis is the key practical differentiator vs other 1L options.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
+  Distinct from IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ (MARIPOSA-2; post-osimertinib).

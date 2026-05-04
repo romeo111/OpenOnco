@@ -11,6 +11,8 @@ purpose: >
 output_indications:
   - IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO
   - IND-NSCLC-EGFR-MUT-MET-1L
+  - IND-NSCLC-1L-EGFR-CLASSIC-OSI-CHEMO
+  - IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB
   - IND-NSCLC-ALK-MET-1L
   - IND-NSCLC-ROS1-1L-REPOTRECTINIB
   - IND-NSCLC-MET-EX14-1L-CAPMATINIB
@@ -54,7 +56,15 @@ decision_tree:
       next_step: 25
     notes: "Workstream EF 2026-05-04: Exon 20 insertion split from classical EGFR. Prior routing incorrectly sent ex20ins to osimertinib (IND-NSCLC-EGFR-MUT-MET-1L). Fixed: ex20ins -> amivantamab+chemo (PAPILLON Cat 1)."
 
-  # Step 25 — Classical EGFR sensitizing mutation (ex19del / L858R → osimertinib).
+  # Step 25 — Classical EGFR sensitizing mutation (ex19del / L858R).
+  # Three NCCN Cat 1 options (all FDA-approved as of Aug 2024):
+  # 1. Osimertinib monotherapy (FLAURA; mPFS 18.9m; mOS 38.6m) — default: best tolerated,
+  #    oral-only, suitable ECOG 0-2.
+  # 2. Osimertinib+carbo+pem (FLAURA2; mPFS 25.5m; OS HR 0.75) — for high-burden disease,
+  #    ECOG 0-1, non-squamous; higher toxicity (64% Grade 3+).
+  # 3. Amivantamab+lazertinib (MARIPOSA; mPFS 23.7m; OS HR 0.80 trend) — fit ECOG 0-1,
+  #    IV+oral combination, DOAC prophylaxis mandatory; highest toxicity (~75% Grade 3+).
+  # Algorithm routes to osimertinib monotherapy as default; alternatives noted for clinician.
   - step: 25
     evaluate:
       any_of:
@@ -62,12 +72,25 @@ decision_tree:
         - condition: "EGFR L858R or other classical sensitizing mutation"
     if_true:
       result: IND-NSCLC-EGFR-MUT-MET-1L
+      alternatives:
+        - indication: IND-NSCLC-1L-EGFR-CLASSIC-OSI-CHEMO
+          criteria: "High disease burden + ECOG 0-1 + non-squamous + adequate renal function (CrCl ≥45)"
+          nccn_category: 1
+        - indication: IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB
+          criteria: "Fit patient ECOG 0-1 + no VTE/bleeding contraindication + willing to accept IV+oral + DOAC prophylaxis"
+          nccn_category: 1
       notes: >
-        Classical EGFR sensitizing (ex19del/L858R): osimertinib 80 mg QD (FLAURA;
-        mPFS 18.9m; mOS 38.6m; HR 0.80 OS). For high-burden disease: osimertinib + pemetrexed
-        + carbo (FLAURA2; HR 0.62 PFS) as alternative. NOT for exon 20 insertion.
+        Classical EGFR sensitizing (ex19del/L858R) — THREE NCCN Cat 1 options (all FDA Aug 2024):
+        DEFAULT: Osimertinib 80 mg QD (FLAURA; mPFS 18.9m; mOS 38.6m; IND-NSCLC-EGFR-MUT-MET-1L)
+        — oral-only, best tolerated, broad PS eligibility.
+        ALTERNATIVE 1 (high-burden): Osimertinib+carbo+pem (FLAURA2; mPFS 25.5m; OS HR 0.75;
+        IND-NSCLC-1L-EGFR-CLASSIC-OSI-CHEMO) — non-squamous ECOG 0-1, Grade 3+ AEs 64%.
+        ALTERNATIVE 2 (fit patients): Amivantamab+lazertinib (MARIPOSA; mPFS 23.7m; OS HR 0.80 trend;
+        IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB) — ECOG 0-1, DOAC mandatory, Grade 3+ ~75%.
+        NOT for exon 20 insertion (step 2 above routes ex20ins to amivantamab+carbo+pem).
     if_false:
       next_step: 3
+    notes: "Updated 2026-05-04 (Workstream EG): Added FLAURA2 and MARIPOSA Cat 1 alternatives. All three FDA-approved Aug 19, 2024 (FLAURA2) or older (osimertinib mono). Osimertinib mono remains default due to best tolerability."
 
   # Step 3 — ALK fusion.
   - step: 3
