@@ -1,0 +1,105 @@
+id: IND-HNSCC-RM-2L-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic HNSCC (oral cavity, oropharynx, hypopharynx, or larynx)"
+    - "Progression during or after platinum-based chemotherapy"
+    - "ICI-naive at 2L (no prior anti-PD-(L)1 therapy)"
+    - "ECOG PS 0-1 (KEYNOTE-040 enrolled ECOG 0-1)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior anti-PD-(L)1 therapy — ICI re-challenge not validated"
+  demographic_constraints:
+    ecog_max: 1
+    notes: "KEYNOTE-040 enrolled ECOG 0-1; ECOG 2 acceptable clinically per NCCN if otherwise eligible"
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+followed_by:
+  - "CT CAP response assessment q9 weeks (q3 cycles)"
+  - "Continue up to 2 years or until progression/toxicity"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  os_hr: 0.80
+  median_os_pembro_months: 8.4
+  median_os_comparator_months: 6.9
+  orr_pembro: "14.6%"
+  cps_ge20_os_hr: 0.53
+  cps_ge1_os_hr: 0.74
+  notes: >
+    KEYNOTE-040 (Cohen 2019, Lancet; n=495): pembrolizumab vs investigator-choice chemo
+    (methotrexate, docetaxel, or cetuximab) in platinum-refractory ICI-naive HNSCC.
+    mOS 8.4 vs 6.9 months (HR 0.80). CPS ≥20: OS HR 0.53; CPS ≥1: HR 0.74.
+    Nominal p=0.0161 (did not meet pre-specified threshold of p=0.0175).
+    Grade 3/4 AE: 13% vs 36% — favorable toxicity profile.
+    CheckMate-141 (nivolumab) met primary endpoint; nivolumab has slightly stronger
+    regulatory evidence but pembrolizumab is NCCN Category 1 for same indication.
+    CPS ≥20 subgroup: pembrolizumab HR 0.53 — strong signal for high PD-L1 expressors.
+
+hard_contraindications:
+  - "Prior anti-PD-(L)1 therapy"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Active interstitial lung disease"
+  - "Solid organ transplant"
+
+red_flags_triggering_alternative:
+  - condition: "Prior pembrolizumab 1L: nivolumab re-challenge also not supported; use platinum chemotherapy"
+  - condition: "CPS <1: pembrolizumab benefit uncertain; nivolumab PD-L1-negative subgroup also borderline; consider chemotherapy"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH + cortisol (baseline)"
+  - "PD-L1 CPS by 22C3 pharmDx (informative — CPS ≥20 predicts strong benefit; not required for prescribing)"
+
+rationale: >
+  KEYNOTE-040 (Cohen 2019, Lancet; n=495): pembrolizumab 200 mg q3w vs investigator-choice
+  chemotherapy in platinum-refractory, ICI-naive R/M HNSCC. mOS 8.4 vs 6.9 months (HR 0.80).
+  Nominal p=0.0161 — missed hierarchical significance threshold slightly. CPS ≥20: HR 0.53.
+  Grade 3/4 AE 13% vs 36% (significantly better tolerability vs chemo). FDA approved
+  August 2019. NCCN Category 1 for platinum-refractory ICI-naive HNSCC. In 2025/2026,
+  pembrolizumab 2L is most relevant for CPS <1 EXTREME-treated ICI-naive patients,
+  and specifically preferred over nivolumab for CPS ≥20 patients based on HR 0.53 subgroup.
+
+rationale_ua: >
+  KEYNOTE-040 (n=495): пембролізумаб vs хіміотерапія при рефрактерному до платини HNSCC.
+  mOS 8.4 vs 6.9 міс (HR 0.80). CPS ≥20: HR 0.53. Значно нижча токсичність (Grade 3/4:
+  13% vs 36%). NCCN Категорія 1. Переважний при CPS ≥20 (краща відповідь).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE040-COHEN-2019
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-040 (n=495): pembrolizumab vs chemo, platinum-refractory ICI-naive HNSCC; mOS 8.4 vs 6.9m (HR 0.80); CPS ≥20 HR 0.53; Grade 3/4 AE 13% vs 36%; NCCN Cat 1"
+
+do_not_do:
+  - "Не призначати при попередньому ICI — повторний anti-PD-1 не підтверджений"
+  - "Не відміняти при ендокринних іrAE — тільки гормональна замісна терапія"
+  - "Не додавати пembro до хіміотерапії в цьому сетингу — тільки монотерапія"
+
+known_controversies:
+  - topic: "Nivolumab vs pembrolizumab as preferred 2L ICI for ICI-naive HNSCC"
+    positions:
+      - position: "Nivolumab preferred: CheckMate-141 met primary endpoint (p=0.01); OS HR 0.70"
+        sources: [SRC-CHECKMATE141-FERRIS-2016]
+      - position: "Pembrolizumab preferred for CPS ≥20: HR 0.53 in CPS ≥20 subgroup (KEYNOTE-040)"
+        sources: [SRC-KEYNOTE040-COHEN-2019]
+    our_default: "Both NCCN Cat 1; prefer nivolumab as default, pembrolizumab when CPS ≥20 strongly expressed"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
