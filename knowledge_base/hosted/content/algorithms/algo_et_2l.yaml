@@ -3,54 +3,79 @@ applicable_to_disease: DIS-ET
 applicable_to_line_of_therapy: 2
 purpose: >
   Select 2L+ ET cytoreduction Indication for hydroxyurea-failure /
-  intolerance / pregnancy. Default route is anagrelide (platelet-
-  selective, no leukemogenic risk, ELN/NCCN 2L standard). Free-text
-  alternative is pegylated interferon (peg-IFN α-2a / ropeginterferon)
-  for younger patients, those with JAK2-V617F driving disease, or
-  pregnancy/planning — not modeled as a dedicated IND-ET-2L-PEG-IFN
-  yet (surfaced as MDT note; see notes).
+  intolerance / pregnancy. Three tracks: (1) pregnancy or planning →
+  IND-ET-2L-PEG-IFN (only safe cytoreductive in pregnancy; ELN/BSH
+  preferred); (2) young (<50) or high JAK2 allele burden → IND-ET-2L-
+  PEG-IFN (disease modification; allele burden reduction); (3) default
+  HU-failure older or anagrelide-preferred → IND-ET-2L-ANAGRELIDE
+  (platelet-selective; NCCN Cat 2A).
 
-  2L entry is triggered by: HU resistance (platelets ≥600 ×10^9/L
-  on max-tolerated HU at ≥3 months), HU intolerance (cytopenia,
-  mucocutaneous toxicity, leg ulcers, GI), thrombosis on HU, or
-  pregnancy/planning where HU is contraindicated.
+  2L entry triggered by: HU resistance (platelets ≥600 ×10^9/L on max
+  HU ≥3 months), HU intolerance, thrombosis on HU, or pregnancy.
 
 output_indications:
   - IND-ET-2L-ANAGRELIDE
+  - IND-ET-2L-PEG-IFN
 
 default_indication: IND-ET-2L-ANAGRELIDE
-alternative_indication: IND-ET-2L-ANAGRELIDE
+alternative_indication: IND-ET-2L-PEG-IFN
 
 decision_tree:
   # Step 1 — pregnancy / planning: HU teratogenic, anagrelide also
-  # contraindicated → free-text routes to peg-IFN (preferred in
-  # pregnancy per ELN/BSH). Default placeholder remains anagrelide
-  # to keep algo deterministic; trace must surface "peg-IFN preferred
-  # in pregnancy" MDT note.
+  # contraindicated → peg-IFN α-2a (Pegasys) or ropeginterferon (ELN/BSH
+  # preferred; only safe cytoreductive option in pregnancy).
   - step: 1
     evaluate:
       any_of:
         - red_flag: RF-PV-ET-PREGNANCY-OR-PLANNING
     if_true:
-      result: IND-ET-2L-ANAGRELIDE  # placeholder; see notes — peg-IFN preferred
+      result: IND-ET-2L-PEG-IFN
+      notes: >
+        Pregnancy or planning pregnancy: peg-IFN α-2a (Pegasys 45-180 µg/week SC)
+        or ropeginterferon (if accessible). MANDATORY — both HU and anagrelide are
+        teratogenic and contraindicated. ELN 2018 and BSH 2024 recommend peg-IFN
+        as the only safe cytoreductive option in pregnancy. TSH monitoring q3 months.
     if_false:
       next_step: 2
 
-  # Step 2 — HU failure / intolerance / thrombosis on HU → anagrelide
-  # (NCCN/ELN 2L preferred, especially in younger fit patients without
-  # CV/cardiac contraindication).
+  # Step 2 — HU failure / intolerance / thrombosis on HU → step 21
+  # to pick between peg-IFN (young/JAK2+) vs anagrelide (older/default).
   - step: 2
     evaluate:
       any_of:
         - condition: "HU resistance (platelets ≥600 ×10^9/L on max-tolerated HU ≥3mo)"
         - condition: "HU intolerance (cytopenia, mucocutaneous toxicity, leg ulcers, GI)"
         - condition: "Thrombotic event on HU therapy"
-        - condition: "Age <60 preferring non-cytotoxic option"
         - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
     if_true:
-      result: IND-ET-2L-ANAGRELIDE
+      next_step: 21
     if_false:
       next_step: 3
+
+  # Step 21 — peg-IFN preferred for young patients (<50) or high JAK2 allele burden
+  # (disease modification benefit; JAK2 allele burden reduction unique to IFN).
+  # Otherwise default to anagrelide (older patients; anagrelide cardiac safety profile
+  # considered acceptable; simpler monitoring requirements).
+  - step: 21
+    evaluate:
+      any_of:
+        - condition: "Age <50 years (young ET patient preferring disease-modifying therapy)"
+        - condition: "High JAK2-V617F allele burden (>50% by quantitative PCR; IFN reduces allele burden)"
+        - condition: "Anagrelide cardiac contraindication (LVEF <50%, severe CAD, uncontrolled arrhythmia)"
+    if_true:
+      result: IND-ET-2L-PEG-IFN
+      notes: >
+        Young (<50y) or high JAK2 allele burden: peg-IFN preferred (ELN 2018 / BSH 2024).
+        Disease modification (JAK2 allele burden reduction ~15-30% CR); not achievable
+        with anagrelide or HU. TSH q3 months; psychiatric screen. In Ukraine: Pegasys
+        (peg-IFN α-2a) registered and accessible off-label for ET.
+    if_false:
+      result: IND-ET-2L-ANAGRELIDE
+      notes: >
+        Older patients (≥50) or psychiatric contraindication to IFN: anagrelide preferred
+        (0.5 mg bid → titrate; platelet-selective; no leukemogenic risk; no molecular benefit
+        but adequate platelet control). NCCN/ELN standard 2L.
+    notes: "Peg-IFN vs anagrelide sub-decision added 2026-05-04 (Workstream AQ). Free-text age/allele conditions; MDT validation."
 
   # Step 3 — default: anagrelide for any 2L+ ET indication.
   - step: 3
@@ -67,24 +92,17 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-ESMO-MPN-2015
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
+  AUTHORED 2026-05-04: IND-ET-2L-PEG-IFN created and wired at step 1
+  (pregnancy → peg-IFN mandatory; HU/anagrelide contraindicated) and
+  step 21 (young <50 or JAK2 allele burden high → peg-IFN preferred;
+  Workstream AQ). ROUTING SUMMARY: (1) pregnancy → peg-IFN (mandatory);
+  (2) young/JAK2+ → peg-IFN (disease modification); (3) default → anagrelide.
   OOS / wiring gaps:
-  (1) IND-ET-2L-PEG-IFN (pegylated interferon α-2a / ropeginterferon
-  for younger patients, JAK2-V617F dominant disease, pregnancy) is
-  the true preferred alternative per ELN 2018 and BSH 2024 — no
-  dedicated indication YAML exists yet. IND-PV-1L-ROPEGINTERFERON
-  exists for PV but is not directly reusable for ET (different
-  disease_id, different stage_requirements). Step 1 routes to
-  anagrelide placeholder; trace must surface "peg-IFN α-2a preferred
-  in pregnancy / younger JAK2+ patient" as free-text MDT note.
-  (2) Busulfan / pipobroman as 3L cytoreduction in elderly HU-
-  intolerant — not modeled (leukemogenic risk; reserved for end-
-  of-life palliation).
-  (3) Anagrelide cardiac contraindication (LVEF <50%, severe CAD,
-  uncontrolled arrhythmia) handled at indication-level CI-* check;
-  algorithm assumes patient is anagrelide-eligible.
-  (4) Thrombosis-prevention (low-dose aspirin) continues regardless
-  of cytoreduction switch — handled in SUP layer, not algorithm.
-  (5) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals
-  per CHARTER §6.1.
+  (1) Busulfan / pipobroman as 3L cytoreduction in elderly HU-intolerant — not
+  modeled (leukemogenic risk; reserved for end-of-life palliation).
+  (2) Thrombosis-prevention (low-dose aspirin) continues regardless of
+  cytoreduction switch — handled in SUP layer, not algorithm.
+  (3) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals per
+  CHARTER §6.1.

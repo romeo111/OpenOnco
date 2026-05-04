@@ -1,0 +1,168 @@
+id: IND-ET-2L-PEG-IFN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ET
+  line_of_therapy: 2
+  stage_requirements:
+    - "Essential thrombocythemia (ET) — high-risk (age ≥60, prior thrombosis, platelet >1500×10⁹/L) requiring cytoreduction"
+    - "Hydroxyurea (HU) failure (platelets ≥600×10⁹/L on max-tolerated HU ≥3 months) OR HU intolerance"
+    - "Preferred indications for peg-IFN over anagrelide: (a) pregnancy or planning pregnancy; (b) younger patient <50 years; (c) high JAK2-V617F allele burden (disease-modifying potential); (d) anagrelide intolerance (cardiac)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Severe autoimmune disease (e.g., SLE, autoimmune hepatitis — IFN can worsen autoimmune conditions)"
+    - "Severe psychiatric history (severe depression — IFN causes mood disturbance)"
+    - "Retinopathy, optic neuritis (IFN contraindicated in ocular autoimmune disease)"
+    - "Thyroid dysfunction (autoimmune thyroiditis): relative CI — monitor TSH; manageable with levothyroxine"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No upper age restriction. However, elderly patients (>70) with cardiac comorbidity
+      may tolerate anagrelide better (peg-IFN requires weekly/biweekly SC injections,
+      flu-like symptoms, potential mood effects). Pregnancy: ABSOLUTE PREFERRED indication
+      — both HU and anagrelide are teratogenic; peg-IFN is the only safe cytoreductive
+      option in pregnancy (Category B/C).
+
+recommended_regimen: REG-ROPEGINTERFERON-PV
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Pegylated interferon alpha-2a (Pegasys) 45 µg SC/week × 4 weeks; titrate up
+      to 90-180 µg/week based on response. Traditional peg-IFN for ET (pre-ropeginterferon
+      era); ELN 2018 and BSH 2024 reference. Monthly CBC + TSH monitoring.
+      Lower dosing frequency than ropeginterferon (weekly vs biweekly) but equivalent
+      efficacy in non-head-to-head comparison. Widely available (registered in Ukraine).
+  - regimen_id: null
+    description: >
+      Interferon alfa-2b conventional (non-pegylated; 3×/week SC) — lower cost,
+      registered in Ukraine; more injection burden; tolerable for younger patients;
+      use when peg-IFN unavailable or unaffordable. Dose: 3 MU SC 3×/week.
+
+concurrent_therapy:
+  - "Low-dose aspirin 81-100 mg PO daily (thrombosis prevention; continue throughout peg-IFN treatment)"
+
+followed_by:
+  - "Continue indefinitely if tolerating and responding (peg-IFN is not time-limited in ET)"
+  - "Platelet normalization target: <600×10⁹/L; JAK2 allele burden reduction after ≥1 year"
+  - "Pregnancy: continue peg-IFN throughout pregnancy if cytoreduction required; dose adjustments in 3rd trimester MDT-guided"
+  - "After peg-IFN intolerance: anagrelide 0.5 mg bid → titrate (IND-ET-2L-ANAGRELIDE)"
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~80% platelet normalization (platelets <400×10⁹/L) at 24 months (ELN series; peg-IFN α-2a in ET)"
+  cr_rate: "~15-30% molecular response (JAK2-V617F allele burden reduction ≥50%; unique to IFN; not achieved with anagrelide/HU)"
+  notes: >
+    Peg-IFN α-2a in ET:
+    - Carobbio 2010 (Leuk Res): peg-IFN α-2a 90-135 µg/week in ET; hematologic ORR ~80%;
+      CR (platelets <400) ~40-50%; JAK2 allele burden reduction in responders.
+    - ELN 2018 recommendations: peg-IFN as PREFERRED cytoreductive agent for:
+      (1) pregnancy/planning; (2) age <40 (disease-modifying, reduces transformation risk);
+      (3) JAK2-V617F allele burden >50%.
+    - BSH 2024: peg-IFN first-line for young ET patients; reduces thrombosis risk comparable
+      to HU; disease modification (JAK2 allele burden reduction) uniquely beneficial.
+    - Ropeginterferon (Besremi; PROUD-PV + CONTINUATION-PV): FDA/EMA approved for PV;
+      off-label use for ET based on excellent tolerability and biweekly dosing convenience.
+      Not dedicated ET RCT data but used widely off-label (ELN/BSH clinical practice).
+    - Key advantage vs anagrelide: disease modification (JAK2 allele burden reduction);
+      safe in pregnancy; no cardiac contraindication.
+
+hard_contraindications:
+  - "Severe active autoimmune disease (e.g., SLE with renal involvement, autoimmune hepatitis) — IFN exacerbates autoimmune conditions"
+  - "Severe depression or suicide risk (current or history) — IFN causes mood disorders including suicidal ideation; absolute contraindication in active severe depression"
+  - "Decompensated liver disease (Child-Pugh C) — IFN hepatotoxic"
+  - "Uncontrolled seizure disorder (IFN may lower seizure threshold)"
+  - "Retinal disease / optic neuritis (IFN contraindicated)"
+  - "Active solid organ transplantation on immunosuppression"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Severe psychiatric history / active depression → IND-ET-2L-ANAGRELIDE (no CNS/mood effect)"
+  - condition: "Age >70 with cardiac comorbidity → IND-ET-2L-ANAGRELIDE (better tolerated; less injection burden)"
+  - condition: "Autoimmune disease exacerbation on IFN → IND-ET-2L-ANAGRELIDE"
+  - condition: "Anagrelide cardiac contraindication (LVEF <50%, severe arrhythmia) + NOT pregnant → peg-IFN preferred (no cardiac effect)"
+  - condition: "Pregnancy: peg-IFN is MANDATORY if cytoreduction required; HU and anagrelide absolutely contraindicated"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH baseline and every 3 months: peg-IFN causes thyroid dysfunction (hypothyroidism or hyperthyroidism ~10-20%)"
+  - "LFT baseline and monthly × 3, then q3 months: peg-IFN hepatotoxic"
+  - "Fundoscopic exam: baseline retinal assessment (IFN retinopathy)"
+  - "Psychiatric screen: baseline PHQ-9 or equivalent depression assessment"
+  - "Pregnancy test (urine hCG): for women of childbearing age before initiation"
+  - "JAK2-V617F allele burden: baseline quantitative PCR (tracks molecular response — marker of disease modification)"
+
+desired_tests:
+  - "CALR/MPL mutation testing: if JAK2-V617F negative (different disease biology; peg-IFN efficacy similar)"
+  - "Bone marrow biopsy baseline: degree of fibrosis assessment (ET progression risk); repeat at ≥2 years if allele burden not declining"
+  - "Serum ferritin + iron studies: interferons can unmask iron-deficiency"
+
+rationale: >
+  Pegylated interferon (peg-IFN) is the PREFERRED cytoreductive therapy over
+  anagrelide in three specific ET 2L scenarios:
+  (1) PREGNANCY / PLANNING: HU (teratogenic Cat D) and anagrelide (Cat C) are
+      contraindicated; peg-IFN α-2a is Category B and is the ELN/BSH-recommended
+      cytoreductive option for pregnant ET patients requiring platelet control.
+  (2) YOUNG PATIENTS (<40-50 years): Peg-IFN provides disease modification
+      (JAK2-V617F allele burden reduction ~15-30% complete molecular responses)
+      that neither HU nor anagrelide achieves. Reducing JAK2 allele burden may
+      reduce long-term leukemic transformation risk (hypothesis; not proven RCT).
+  (3) HIGH JAK2-V617F ALLELE BURDEN: Molecular response may reduce thrombosis
+      recurrence risk and disease progression.
+
+  Evidence:
+  - ELN 2018 (Barbui): peg-IFN PREFERRED for young (<40), pregnancy, allele burden.
+  - BSH 2024: peg-IFN first-line consideration for young high-risk ET.
+  - PROUD-PV (ropeginterferon vs HU in PV; Gisslinger 2020 Lancet Haematol): superiority
+    in JAK2 allele burden reduction; off-label extrapolation for ET.
+  - Carobbio 2010: peg-IFN α-2a in ET; ORR ~80%; molecular responses documented.
+  - NCCN MPN 2025 Category 2A: interferons as cytoreductive option for ET.
+
+  Ukraine:
+  - Pegasys (peg-IFN α-2a): registered in Ukraine (hepatology/oncology indications);
+    off-label for ET but accessible. Lower cost than ropeginterferon.
+  - Ropeginterferon (Besremi): NOT registered in Ukraine (licensed EU/US for PV);
+    named-patient import if needed.
+  - Conventional interferon (non-pegylated): accessible/affordable in Ukraine.
+
+rationale_ua: >
+  Пег-IFN (пегасіс або ропегінтерферон) — НККН кат.2A для ЕТ 2L.
+  Перевагу над анагрелідом при: (1) вагітність/планування: HU та анагреліл
+  тератогенні — пег-IFN безпечний (Кат.B); (2) молодий вік <50: молекулярна
+  відповідь (зниження алельного тягаря JAK2-V617F); (3) Висока частка алелів JAK2.
+  ELN 2018: пег-IFN КРАЩИЙ при вагітності та молодих пацієнтах.
+  ТТГ кожні 3 міс (тиреотоксичність ~10-20%). Депресія — протипоказання.
+  В Україні: Пегасіс (реєстрація є; off-label для ЕТ); ропегінтерферон —
+  тільки іменний імпорт; конвенційний IFN-α доступний + дешевий.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-MPN-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN MPN 2025 Category 2A: interferons (pegylated or conventional) as cytoreductive
+      option for ET. ELN 2018 recommends peg-IFN as preferred for young patients and
+      pregnancy.
+  - source_id: SRC-ESMO-MPN-2015
+    position: context
+
+do_not_do:
+  - "НІКОЛИ не призначати HU або анагрелід при вагітності — тератогени; пег-IFN єдиний безпечний варіант"
+  - "Активна важка депресія: пег-IFN абсолютно протипоказаний (суїцидальні ідеї); анагрелід"
+  - "Важка аутоімунна хвороба (ВКВ з нирковим ур): IFN посилює — анагрелід або клінічний нагляд"
+  - "ТТГ кожні 3 міс — гіпотиреоз ~10-20%; замісна терапія L-тироксином; не відміняти IFN при компенсованому гіпотиреозі"
+  - "Фундоскопія до початку: ретинопатія є абсолютним протипоказанням"
+  - "Ропегінтерферон (Besremi): не зареєстрований в Україні для ЕТ; тільки іменний імпорт при необхідності"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
