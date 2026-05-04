@@ -9,6 +9,7 @@ output_indications:
 - IND-WM-2L-VRD
 - IND-WM-2L-CARFILZOMIB-CXCR4MUT
 - IND-WM-2L-BR
+- IND-WM-2L-PIRTOBRUTINIB
 default_indication: IND-WM-2L-ZANUBRUTINIB
 alternative_indication: IND-WM-2L-BR
 decision_tree:
@@ -43,9 +44,31 @@ decision_tree:
     - condition: MYD88-WT (BTKi response markedly weaker)
     - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
   if_true:
-    next_step: 4
+    next_step: 31
   if_false:
     result: IND-WM-2L-ZANUBRUTINIB
+- step: 31
+  evaluate:
+    all_of:
+    - condition: "Post-cBTKi failure or intolerance (ibrutinib, acalabrutinib, or zanubrutinib)"
+    - red_flag: RF-WM-MYD88-L265P-ACTIONABLE
+    - condition: "No prior pirtobrutinib or other non-covalent BTK inhibitor"
+    - condition: "ECOG PS 0-2 (pirtobrutinib oral; adequate for continuous dosing)"
+  if_true:
+    result: IND-WM-2L-PIRTOBRUTINIB
+    notes: >
+      Post-cBTKi WM + MYD88-L265P-positive: pirtobrutinib 200 mg PO daily
+      (REG-PIRTOBRUTINIB; BRUIN WM cohort Mato 2021 Lancet; ORR ~68%; NCCN Cat 2A).
+      Non-covalent BTKi overcomes C481-S/R resistance mutation (most common cBTKi
+      resistance mechanism). Cardiac safety advantage vs ibrutinib (afib ~3-5%).
+      Access barrier: pirtobrutinib NOT registered in Ukraine — named-patient import
+      required. If inaccessible → VRd (IND-WM-2L-VRD) is the practical fallback.
+  if_false:
+    next_step: 4
+    notes: >
+      Not post-cBTKi OR MYD88-WT OR prior pirtobrutinib: proceed to BR/VRd gate (step 4).
+      MYD88-WT patients have poor BTKi response (class effect); VRd preferred.
+  notes: "Step 31 added 2026-05-04 (Workstream BQ): post-cBTKi WM pirtobrutinib gate. IND-WM-2L-PIRTOBRUTINIB wired. Gap (1) CLOSED. Free-text conditions; MDT-evaluated access constraints."
 - step: 4
   evaluate:
     all_of:
@@ -73,6 +96,6 @@ sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-WM-2024
 last_reviewed: '2026-05-04'
-notes: 'UPDATED 2026-05-04 (Workstream BG): IND-WM-2L-BR authored and wired at step 4 for chemo-sensitive late-relapse WM (Rummel 2013 StiL Lancet; NCCN Cat 2A; ORR ~70-80%; REG-BR-STANDARD). Gap (2) CLOSED. OOS / wiring gaps: (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled (no IND-WM yet). (3) Hyperviscosity emergency at relapse routes via RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not decision-tree branch. (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut, TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
+notes: 'UPDATED 2026-05-04 (Workstream BQ): IND-WM-2L-PIRTOBRUTINIB authored and wired at step 31 (post-cBTKi WM + MYD88-L265P → pirtobrutinib; BRUIN Mato 2021 Lancet; ORR ~68%; NCCN Cat 2A). Gap (1) CLOSED. Step 3 if_true now routes to step 31 (pirtobrutinib gate) then step 4 (BR/VRd gate). ROUTING SUMMARY: (1) CXCR4-WHIM-mut → carfilzomib; (2) cBTKi-naive + MYD88-L265P + cardiac OK → zanubrutinib; (3) post-cBTKi + MYD88-L265P → pirtobrutinib (Cat 2A); (4) chemo-sensitive late relapse / MYD88-WT → BR; (fallback) → VRd. OOS / wiring gaps: (3) Hyperviscosity emergency routes via RF-WM-HYPERVISCOSITY (plasmapheresis); not decision-tree branch. (4) MYD88-WT WM covered by RF-WM-HIGH-RISK-BIOLOGY → VRd or BR.
 
   '

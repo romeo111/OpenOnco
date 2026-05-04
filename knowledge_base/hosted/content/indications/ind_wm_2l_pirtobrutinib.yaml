@@ -1,0 +1,165 @@
+id: IND-WM-2L-PIRTOBRUTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-WM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory WM (Waldenström macroglobulinemia / lymphoplasmacytic lymphoma) after ≥1 prior systemic line including a covalent BTK inhibitor (ibrutinib, acalabrutinib, or zanubrutinib)"
+    - "Documented progression on cBTKi OR cBTKi intolerance (Grade ≥3 cardiac toxicity, bleeding, atrial fibrillation)"
+    - "MYD88-L265P-positive (non-covalent BTKi has robust activity in MYD88-mutated WM) — MYD88-WT subgroup has limited BTKi benefit generally"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L, CrCl ≥30 mL/min, AST/ALT ≤3× ULN"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MYD88-L265P
+      required: true
+      value_constraint: "MYD88-L265P positive"
+      notes: >
+        Pirtobrutinib has clearest evidence in MYD88-L265P-positive WM (the majority, ~90-95%).
+        MYD88-WT WM has poor overall BTKi class response; for WT patients, VRd or clinical trial
+        is preferred over pirtobrutinib. BRUIN WM cohort was predominantly MYD88-L265P-positive.
+  biomarker_requirements_excluded:
+    - "MYD88-WT WM (~5-10%): poor BTKi response (covalent or non-covalent); VRd preferred (IND-WM-2L-VRD)"
+    - "Prior pirtobrutinib exposure: no evidence for re-challenge; progression on pirto → VRd or clinical trial"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      WM patient population typically older (median age ~70). Pirtobrutinib oral daily dosing
+      with no food restrictions is practical for elderly patients. No dose adjustment required
+      for age alone. Renal impairment (CrCl 15-29): use with caution; pirtobrutinib data sparse.
+
+recommended_regimen: REG-PIRTOBRUTINIB
+alternative_regimens:
+  - regimen_id: IND-WM-2L-VRD
+    description: >
+      Bortezomib-rituximab-dexamethasone (VRd): preferred when pirtobrutinib inaccessible
+      (not registered in Ukraine), MYD88-WT, or post-pirtobrutinib progression.
+      Mechanism switch (PI → alkylator/PI) is key when BTKi class has failed.
+  - regimen_id: IND-WM-2L-BR
+    description: >
+      Bendamustine-rituximab (BR): alternative when chemo-sensitive late relapse (≥24 mo
+      from last BR); pirtobrutinib preferred post-cBTKi if MYD88-L265P-positive and accessible.
+
+concurrent_therapy:
+  - "IgM monitoring monthly (pirtobrutinib → IgM flare can occur in first 1-2 cycles; do not stop unless viscosity crisis)"
+  - "Hyperviscosity surveillance: serum viscosity + symptoms; plasmapheresis if symptomatic (not pirtobrutinib dose adjustment)"
+  - "Anticoagulation: BTKi class carries bleeding risk; review concurrent anticoagulants (warfarin, apixaban); no absolute contraindication but requires monitoring"
+  - "Blood pressure monitoring: pirtobrutinib has lower HTN burden than ibrutinib but monitor q-visit"
+  - "HBV: screen + entecavir prophylaxis if HBsAg+ or anti-HBc+ (rituximab co-administered in some protocols)"
+
+followed_by:
+  - "Continue pirtobrutinib until progression or unacceptable toxicity"
+  - "IgM + serum protein electrophoresis q2-3 months (response assessment)"
+  - "CT chest/abdomen/pelvis baseline and q6 months (or symptom-driven)"
+  - "After pirtobrutinib progression: VRd (IND-WM-2L-VRD); clinical trial; allogeneic SCT referral for young/fit patients"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~68% (BRUIN WM cohort; Mato 2021; post-cBTKi subset)"
+  disease_control_rate: "~85% (SD + PR; BRUIN WM cohort)"
+  median_pfs_months: "~21 months (BRUIN WM cohort; small cohort, immature data)"
+  notes: >
+    BRUIN trial (Mato 2021 Lancet; Phase 1/2): pirtobrutinib 200 mg PO daily in heavily
+    pretreated B-cell malignancies including a WM cohort. WM cohort ORR ~68% post-cBTKi;
+    deeper responses in MYD88-L265P-positive subgroup. Non-covalent binding mechanism is
+    C481-independent — overcomes BTK-C481-S mutations that confer resistance to ibrutinib,
+    acalabrutinib, zanubrutinib. Key: same BTK target, but pirtobrutinib rebinds after BTK
+    is resynthesized, maintaining continuous pathway suppression.
+
+    Cardiac safety advantage over ibrutinib: afib ~3-5% vs 7-15% with ibrutinib.
+    Particularly relevant in WM patients (older population with higher baseline cardiac risk).
+
+    CAVEAT: WM cohort in BRUIN is small; larger dedicated WM study data maturing.
+    Evidence is Phase 1/2 basket cohort, not a dedicated Phase 3 RCT in WM.
+
+hard_contraindications:
+  - "MYD88-WT WM: poor BTKi response; VRd preferred"
+  - "Prior pirtobrutinib or other non-covalent BTKi: no evidence for benefit after non-cBTKi progression"
+  - "Active Richter transformation / aggressive histologic transformation: chemotherapy (R-CHOP or similar) required"
+
+red_flags_triggering_alternative:
+  - condition: "MYD88-WT (RF-WM-HIGH-RISK-BIOLOGY): pirtobrutinib less likely to benefit → IND-WM-2L-VRD"
+  - condition: "Post-pirtobrutinib progression → IND-WM-2L-VRD or clinical trial"
+  - condition: "RF-WM-TRANSFORMATION-PROGRESSION: aggressive histology → DLBCL pathway"
+  - condition: "Pirtobrutinib inaccessible in Ukraine (not registered) → IND-WM-2L-VRD as practical fallback"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-SERUM-PROTEIN-ELECTROPHORESIS
+  - TEST-IMMUNOGLOBULINS
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - "MYD88-L265P PCR / allele-specific PCR (bone marrow or blood): confirm MYD88-L265P status before pirtobrutinib"
+  - "CXCR4 mutation status (WHIM-type): CXCR4-mut WM may have reduced BTKi response even with non-covalent agent"
+  - "Serum viscosity: baseline (hyperviscosity risk if IgM >40 g/L)"
+  - "CT chest/abdomen/pelvis: baseline staging"
+  - "Bone marrow biopsy: confirm relapse + exclude transformation before pirtobrutinib"
+
+desired_tests:
+  - "BTK C481 mutation status (NGS from PB or BM): confirms cBTKi resistance mechanism (C481S/R); not required for pirtobrutinib selection but confirms rationale"
+  - "PLCG2 mutation: alternative resistance pathway (pirtobrutinib may have less activity for PLCG2-driven resistance)"
+
+rationale: >
+  Pirtobrutinib is a non-covalent, reversible BTK inhibitor that binds BTK independently
+  of cysteine C481 — the residue mutated in the most common resistance mechanism (BTK-C481-S/R)
+  to covalent BTKi (ibrutinib, acalabrutinib, zanubrutinib).
+
+  WM is essentially BTKi-driven: MYD88-L265P activates BCR/BTK signaling and confers oncogenic
+  survival dependence. ~90-95% of WM patients are MYD88-L265P-positive. After cBTKi resistance
+  develops (C481-mutation or non-C481 mechanisms), pirtobrutinib re-establishes pathway suppression
+  because its binding is C481-independent.
+
+  Compared to the chemo alternative (VRd) in post-cBTKi WM:
+  - Pirtobrutinib: oral daily, no IV infusion, no peripheral neuropathy (bortezomib-free)
+  - VRd: requires IV bortezomib (neuropathy, infusion logistics), dexamethasone toxicity
+  - Pirtobrutinib cardiac safety advantage: afib ~3-5% vs ibrutinib 7-15% (relevant for older WM patients)
+
+  PRIMARY LIMITATION in Ukraine: pirtobrutinib (Jaypirca) is NOT registered in Ukraine as of 2026.
+  Named-patient import or compassionate use required. If inaccessible: VRd is the registered
+  alternative (bortezomib + rituximab available; dexamethasone available).
+
+rationale_ua: >
+  Піртобрутиніб (некоковалентний оборотний BTKi) для р/р WM після кБТКіназ.
+  Долає С481-мутацію (найпоширеніша резистентність до ібрутинібу/занубрутинібу).
+  BRUIN дослідження (Mato 2021 Lancet): ORR ~68% в WM після кБТКі.
+  Перевага: пероральний прийом, без нейропатії (на відміну від VRd).
+  В Україні: не зареєстрований (Jaypirca); потрібен НПП або МДК-рішення.
+  Практична альтернатива: IND-WM-2L-VRD (бортезоміб+ритуксимаб).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Піртобрутиніб при MYD88-WT WM: недостатньо доказів; перевагу надати VRd"
+  - "Піртобрутиніб як 1L WM: лише після кБТКіназ; zanubrutinib/ibrutinib для кБТКі-naive"
+  - "Без MYD88 статусу перед призначенням: статус MYD88-L265P визначає доцільність"
+  - "Ігнорувати IgM-флер у 1-2 циклах: очікуваний; не припиняти терапію"
+  - "Без HBV-скринінгу перед ритуксимабом (якщо додається): реактивація HBV летальна"
+
+sources:
+  - source_id: SRC-BRUIN-MATO-2021
+    position: supports
+    relevant_quote_paraphrase: >
+      BRUIN trial (Mato 2021 Lancet): pirtobrutinib 200 mg PO daily in B-cell malignancies
+      post-cBTKi. WM cohort ORR ~68%; non-covalent binding overcomes BTK-C481-S/R mutations.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Cat 2A: pirtobrutinib for r/r WM after cBTKi progression.
+  - source_id: SRC-ESMO-WM-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO WM 2024: non-covalent BTK inhibitors (pirtobrutinib) are emerging standard
+      for post-cBTKi WM; oral, well-tolerated, cardiac-safer than ibrutinib.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
