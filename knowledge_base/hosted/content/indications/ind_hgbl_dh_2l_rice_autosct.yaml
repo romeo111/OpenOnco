@@ -1,0 +1,194 @@
+id: IND-HGBL-DH-2L-RICE-AUTOSCT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HGBL-DH
+  line_of_therapy: 2
+  stage_requirements:
+    - "High-grade B-cell lymphoma with MYC + BCL2 and/or BCL6 rearrangements (HGBL double-hit / triple-hit)"
+    - "LATE relapse only: ≥12 months from end of 1L therapy (DA-EPOCH-R or R-CHOP with CNS prophylaxis)"
+    - "Chemosensitive disease — must achieve ≥PR after 2-3 cycles of platinum-based salvage to proceed to autoSCT"
+    - "Transplant-eligible: ECOG 0-2, age ≤65-70, LVEF ≥50%, CrCl ≥50 mL/min, bilirubin ≤2× ULN"
+    - "No active CNS involvement at relapse (LP + MRI mandatory)"
+    - "No prior autoSCT"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20+ confirmed at relapse biopsy (IHC; rituximab-based salvage component)"
+      notes: >
+        CD20 retest at relapse biopsy recommended — rare CD20 loss possible after
+        repeated rituximab exposure. If CD20 lost, platinum salvage without rituximab
+        is an option but outcomes are significantly worse; clinical trial preferred.
+    - biomarker_id: BIO-MYC-FISH
+      required: true
+      value_constraint: "MYC rearrangement confirmed (FISH at original diagnosis or at relapse); drives HGBL-DH classification"
+  biomarker_requirements_excluded:
+    - "Primary refractory (PD on 1L) — autoSCT not standard; CAR-T eligible → IND-HGBL-DH-2L-CART-AXICEL preferred"
+    - "Early relapse (<12 months from 1L completion) — historically poor autoSCT outcome in HGBL-DH; CAR-T preferred → IND-HGBL-DH-2L-CART-AXICEL"
+    - "Active CNS disease at relapse — CNS-directed therapy first (IT MTX + HD-MTX); autoSCT + CNS conditioning modification required (MDT)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Age ≤65-70 is a practical upper bound for BEAM-autoSCT conditioning tolerance,
+      not an absolute cutoff. Physiological fitness and organ function determine
+      eligibility. ECOG 0-2 required. Frail patients → IND-HGBL-DH-2L-CART-AXICEL
+      (if CAR-T eligible) or palliative Pola-R-benda.
+
+recommended_regimen: REG-R-ICE-DLBCL
+alternative_regimens:
+  - regimen_id: REG-RDHAP-BURKITT
+    condition: "Cisplatin-eligible (CrCl ≥60 mL/min, ECOG 0-1, no Grade ≥2 neuropathy)"
+    notes: >
+      R-DHAP (cisplatin 100 mg/m² d1 + HiDAC 2g/m² q12h d2 + dexamethasone 40 mg d1-4 +
+      rituximab 375 mg/m² d0; q21d × 2-3 cycles) achieves similar ORR (~63%) to R-ICE
+      in CORAL trial (Gisselbrecht 2010 JCO); no significant EFS difference.
+      Preferred in HGBL-DH with bulky CNS-adjacent disease (superior CNS penetration
+      of HiDAC vs standard etoposide in R-ICE).
+  - regimen_id: null
+    description: >
+      RICE alternative: R-GDP (rituximab 375 mg/m² d1 + gemcitabine 1000 mg/m² d1+8 +
+      dexamethasone 40 mg d1-4 + cisplatin 75 mg/m² d1; q21d × 3 cycles) — lower
+      neutropenia burden; used when ICE not tolerated or carboplatin-sensitive context.
+      NCIC CTG LY.12 (Crump 2014 JCO): similar outcomes to R-DHAP in DLBCL; ORR ~45%;
+      less commonly used for HGBL-DH specifically.
+
+concurrent_therapy:
+  - "G-CSF (filgrastim or pegfilgrastim) after each R-ICE or R-DHAP cycle — mandatory for neutropenia prevention and PBSC mobilization"
+  - "PBSC mobilization with G-CSF (±plerixafor) after cycle 2 or 3 of salvage (harvest target ≥2×10⁶ CD34+/kg)"
+
+followed_by:
+  - "BEAM-autoSCT consolidation for ≥PR responders (BCNU 300 mg/m² d-6; etoposide 100 mg/m² q12h d-5 to d-2; cytarabine 200 mg/m² q12h d-5 to d-2; melphalan 140 mg/m² d-1; Day 0 PBSC infusion)"
+  - "Post-autoSCT PET-CT at day +90: CR → observation; PR/SD → consider consolidation RT for residual site or clinical trial"
+  - "CNS-directed consolidation if originally CNS-adjacent disease: ASCT + IT consolidation protocol (MDT decision)"
+  - "Post-autoSCT relapse: if <12mo post-ASCT → CAR-T referral (IND-HGBL-DH-2L-CART-AXICEL or equivalent); if ≥12mo → re-salvage (MDT)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr_salvage: "~50-63% (extrapolated from CORAL DLBCL data; HGBL-DH subgroup smaller but consistent)"
+  cr_rate: "~25-35% post-salvage in chemosensitive patients"
+  proportion_reaching_autosct: "~45-55% (chemosensitive responders proceed to BEAM)"
+  autosct_3yr_pfs: "~35-42% (CORAL DLBCL data; HGBL-DH outcomes generally inferior to DLBCL-NOS due to high-risk biology)"
+  notes: >
+    Evidence base for HGBL-DH 2L autoSCT is extrapolated from DLBCL salvage trials:
+    - CORAL trial (Gisselbrecht 2010, JCO; n=396): R-ICE vs R-DHAP salvage × 3 cycles →
+      BEAM-autoSCT; ORR ~63% both arms; 3yr EFS 26-35%; no significant arm difference.
+      HGBL-DH not stratified separately — subgroup data limited.
+    - PARMA trial (Philip 1995, NEJM): autoSCT vs salvage alone in chemo-sensitive relapse;
+      3yr EFS 46% vs 12% — established autoSCT standard for chemosensitive relapse.
+    - HGBL-DH-specific: Randomization data unavailable; HGBL-DH historically excluded
+      or rare in transplant RCTs. Retrospective DLBCL registry data (CIBMTR) show lower
+      post-ASCT PFS in double-hit vs non-DH DLBCL (~30-35% at 3yr in DH vs ~42% non-DH).
+    - Late relapse (≥12 months): this is the subgroup most likely to benefit from autoSCT.
+      Early relapse (<12 months) and primary refractory HGBL-DH have such poor salvage
+      rates (~15-20% achieving ≥PR) that CAR-T (axi-cel) is the preferred 2L approach.
+    - NCCN B-cell 2025 Cat 1: salvage chemo → autoSCT for transplant-eligible chemosensitive
+      relapse, covering HGBL-DH within DLBCL section.
+
+hard_contraindications:
+  - "Primary refractory HGBL-DH (no CR/PR to 1L) — autoSCT NOT appropriate; CAR-T (IND-HGBL-DH-2L-CART-AXICEL) preferred"
+  - "Early relapse <12 months — autoSCT outcome inferior; CAR-T preferred"
+  - "Failure to achieve ≥PR to 2-3 cycles of platinum salvage (chemorefractory) — proceed to CAR-T referral"
+  - "ECOG PS ≥3 (frailty precludes BEAM conditioning)"
+  - "LVEF <45% (BCNU cardiotoxicity in BEAM conditioning)"
+  - "CrCl <30 mL/min (melphalan/carboplatin dose-limiting renal failure)"
+  - "Active uncontrolled infection at time of planned conditioning"
+  - "Active CNS lymphoma not under control with IT/HD-MTX"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Early relapse (<12 months) or primary refractory → IND-HGBL-DH-2L-CART-AXICEL (CAR-T preferred; autoSCT outcome poor)"
+  - condition: "Chemorefractory (<PR to 2-3 salvage cycles) → IND-HGBL-DH-2L-CART-AXICEL (CAR-T CD19 for refractory HGBL-DH)"
+  - condition: "CAR-T ineligible AND chemorefractory AND transplant-ineligible → Pola-R-benda palliative (MDT decision)"
+  - condition: "CNS relapse confirmed → CNS-directed salvage first; then re-evaluate autoSCT feasibility"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "LVEF echocardiography: BEAM conditioning requires LVEF ≥50% (BCNU cardiotoxic)"
+  - "CrCl (Cockroft-Gault or 24h urine): melphalan + carboplatin renally cleared"
+  - "CT chest/abdomen/pelvis + PET-CT: baseline at relapse + interim assessment after cycle 2"
+  - "Brain MRI + LP (CSF cytology + flow cytometry): active CNS involvement is exclusion"
+  - "Restaging biopsy at relapse: mandatory — re-confirm HGBL-DH histology (transformation or grade evolution); re-test CD20, MYC, BCL2, BCL6"
+  - "Bone marrow biopsy: staging at relapse (trephine + aspirate)"
+  - "HLA typing: allogeneic contingency planning (post-autoSCT failure)"
+
+desired_tests:
+  - "MYC IHC co-expression (>40%): prognostic in HGBL-DH salvage; predicts lower autoSCT benefit (may support CAR-T preference)"
+  - "LDH: HGBL-DH with elevated LDH at relapse → worse salvage outcomes"
+  - "Beta-2 microglobulin: IPI component at relapse"
+  - "FISH MYC, BCL2, BCL6 at relapse biopsy: confirm DH/TH status retained (rare clonal evolution)"
+
+rationale: >
+  In HGBL-DH (double-hit / triple-hit lymphoma; MYC + BCL2 and/or BCL6 rearrangements),
+  the 2L treatment landscape is bifurcated by time-to-relapse:
+
+  EARLY relapse (<12 months from 1L) or primary refractory:
+  - AutoSCT outcomes are poor in early-relapse HGBL-DH (~15-20% ORR to salvage;
+    even chemosensitive responders have inferior post-ASCT PFS vs DLBCL-NOS).
+  - CAR-T (axi-cel; IND-HGBL-DH-2L-CART-AXICEL) is preferred per NCCN B-cell 2025
+    and ESMO DLBCL 2024 based on ZUMA-7 data (EFS HR 0.24 vs SOC in DLBCL; HGBL-DH
+    enrolled as aggressive LBCL subgroup).
+
+  LATE relapse (≥12 months from end of 1L):
+  - Chemosensitive late-relapse HGBL-DH patients are candidates for platinum-based
+    salvage (R-ICE or R-DHAP) → BEAM-autoSCT. This is the CORAL/PARMA-derived
+    standard that remains NCCN Cat 1 for transplant-eligible chemosensitive relapse.
+  - AutoSCT consolidation after chemosensitive salvage offers 35-42% 3-yr PFS
+    in DLBCL subgroup data (extrapolated to HGBL-DH with expected slightly inferior
+    outcomes due to high-risk molecular biology).
+  - R-ICE (rituximab + ifosfamide + carboplatin + etoposide) and R-DHAP (rituximab +
+    cisplatin + HiDAC + dexamethasone) both achieve ~63% ORR in DLBCL (CORAL);
+    R-DHAP preferred if CNS-adjacent disease (HiDAC CNS penetration).
+
+  Ukraine context:
+  - R-ICE: all components registered and available in Ukraine; PBSC mobilization feasible
+    in transplant centres (Kyiv, Lviv). BEAM-autoSCT performed domestically.
+  - R-DHAP: cisplatin + cytarabine + dexamethasone registered; high-dose cytarabine
+    (2 g/m²) available. Equally accessible.
+  - CAR-T (axi-cel): not available domestically; international referral required.
+    In late-relapse chemosensitive HGBL-DH, autoSCT domestic pathway avoids the
+    access barrier, cost, and manufacturing delay associated with CAR-T referral.
+
+rationale_ua: >
+  HGBL з подвійним ударом (MYC + BCL2/BCL6) — 2L при пізньому рецидиві (≥12 міс):
+  R-ICE або R-DHAP × 2-3 цикли (CORAL: ОРВ ~63% обидва режими) → BEAM-аутоТГСК
+  для хіміочутливих пацієнтів (≥ЧВ). NCCN кат.1 (у секції DLBCL; HGBL-DH включений).
+  Ранній рецидив (<12 міс) або первинно-рефрактерний: CAR-T (аксі-сел) пріоритетний
+  — аутоТГСК дає гіршу результат при ранньому рецидиві HGBL-DH.
+  В Україні: R-ICE/R-DHAP доступні; BEAM-аутоТГСК виконується в Києві/Львові.
+  CAR-T — тільки міжнародне направлення (ЄС/Ізраїль/Туреччина).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: salvage chemo (R-ICE or R-DHAP) → BEAM-autoSCT
+      for transplant-eligible chemosensitive relapsed/refractory DLBCL (HGBL-DH
+      included within DLBCL category). Early-relapse/primary refractory: CAR-T preferred.
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO DLBCL 2024: platinum salvage → autoSCT remains standard for late chemosensitive
+      relapse in DLBCL including HGBL-DH subtype. HGBL-DH has worse prognosis; early relapse
+      favors CAR-T; late relapse chemosensitive → autoSCT feasible.
+
+do_not_do:
+  - "Не призначати аутоТГСК при первинно-рефрактерному HGBL-DH або ранньому рецидиві (<12 міс): ОВ гірше, ніж при CAR-T; направляти на аксі-сел"
+  - "Не починати BEAM-кондиціонування без документованого ≥ЧВ після сальважу: трансплантація при прогресуванні хвороби — летальна без кінцевого ефекту"
+  - "ЦНС ураження до кондиціонування — IT MTX + ВД-МТХ сальваж першочергово; потім переоцінка для аутоТГСК"
+  - "Не ігнорувати збір PBSC: мобілізація G-CSF (±плериксафор) після 2-3 циклу сальважу — до BEAM; без адекватного збору (≥2×10⁶ CD34+/кг) аутоТГСК неможливий"
+  - "Рецидив після аутоТГСК <12 міс → CAR-T (аксі-сел) — це єдиний потенційно куративний варіант; аутоТГСК повторно — не стандарт"
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

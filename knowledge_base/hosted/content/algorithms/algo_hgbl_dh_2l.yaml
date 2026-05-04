@@ -1,11 +1,12 @@
 id: ALGO-HGBL-DH-2L
 applicable_to_disease: DIS-HGBL-DH
 applicable_to_line_of_therapy: 2
-purpose: "Select 2L Indication for relapsed/refractory high-grade B-cell lymphoma with MYC + BCL2 (and/or BCL6) rearrangements (HGBL-DH/TH). Routing branches on time-to-relapse from 1L:\n- EARLY relapse (<12 months from end of 1L) OR primary refractory\n  OR chemorefractory: IND-HGBL-DH-2L-CART-AXICEL (axi-cel CD19\n  CAR-T, ZUMA-7-aligned early-line CAR-T paradigm; HGBL-DH\n  behaves like aggressive DLBCL with poor salvage outcomes).\n\n- LATE relapse (≥12 months from end of 1L) AND chemosensitive\n  to salvage: salvage chemo (R-ICE / R-DHAP) → BEAM-autoSCT.\n  No dedicated IND-HGBL-DH-2L-RICE-AUTOSCT; routes via free-text\n  MDT note (see notes).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP), OR primary refractoriness (residual FDG-avid disease at end-of-treatment Deauville 4-5), OR chemorefractoriness (failure to achieve PR after 2 cycles of any salvage attempt).\n"
+purpose: "Select 2L Indication for relapsed/refractory high-grade B-cell lymphoma with MYC + BCL2 (and/or BCL6) rearrangements (HGBL-DH/TH). Routing branches on time-to-relapse from 1L:\n- EARLY relapse (<12 months from end of 1L) OR primary refractory\n  OR chemorefractory: IND-HGBL-DH-2L-CART-AXICEL (axi-cel CD19\n  CAR-T; ZUMA-7-aligned early-line CAR-T paradigm; HGBL-DH\n  behaves like aggressive DLBCL with poor salvage outcomes).\n\n- LATE relapse (≥12 months from end of 1L) AND transplant-eligible\n  AND chemosensitive to salvage: IND-HGBL-DH-2L-RICE-AUTOSCT\n  (R-ICE or R-DHAP × 2-3 cycles → BEAM-autoSCT; CORAL/PARMA;\n  NCCN Cat 1; Workstream AS 2026-05-04).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP), OR primary refractoriness (residual FDG-avid disease at end-of-treatment Deauville 4-5), OR chemorefractoriness (failure to achieve PR after 2 cycles of any salvage attempt).\n"
 output_indications:
 - IND-HGBL-DH-2L-CART-AXICEL
+- IND-HGBL-DH-2L-RICE-AUTOSCT
 default_indication: IND-HGBL-DH-2L-CART-AXICEL
-alternative_indication: IND-HGBL-DH-2L-CART-AXICEL
+alternative_indication: IND-HGBL-DH-2L-RICE-AUTOSCT
 decision_tree:
 - step: 1
   evaluate:
@@ -41,10 +42,16 @@ decision_tree:
     - condition: Chemosensitive disease (≥PR to 2 cycles of salvage)
     - condition: CD20+ confirmed at relapse biopsy
   if_true:
-    result: IND-HGBL-DH-2L-CART-AXICEL
+    result: IND-HGBL-DH-2L-RICE-AUTOSCT
+    notes: >
+      Late relapse (≥12mo) + transplant-eligible + chemosensitive: R-ICE or R-DHAP
+      × 2-3 cycles → BEAM-autoSCT (CORAL; Gisselbrecht 2010 JCO; ORR ~63%;
+      PARMA NEJM 1995; NCCN B-cell Cat 1). R-DHAP preferred for CNS-adjacent
+      disease (HiDAC CNS penetration). PBSC mobilization after cycle 2-3 mandatory.
+      Workstream AS 2026-05-04.
   if_false:
     next_step: 4
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired — fitness/eligibility gates wired via CSD-7A pan-disease RFs; late-relapse timing and chemosensitivity criteria remain MDT-text (time-from-1L and PR-to-salvage not RF-modelled). if_true now routes to IND-HGBL-DH-2L-RICE-AUTOSCT (Workstream AS 2026-05-04)."
 - step: 4
   evaluate:
     any_of:
@@ -57,7 +64,16 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
-last_reviewed: '2026-04-27'
-notes: 'OOS / wiring gaps: (1) IND-HGBL-DH-2L-RICE-AUTOSCT (R-ICE / R-DHAP salvage → BEAM-autoSCT for late chemosensitive relapse) — not modeled. Step 3 routes to CAR-T placeholder; trace must surface "late relapse ≥12mo + chemosensitive → salvage chemo → BEAM-autoSCT (NCCN preferred for chemosensitive late relapse)" as free-text MDT note. (2) Liso-cel (TRANSFORM trial) and tisa-cel (BELINDA) — not modeled; axi-cel covers the early-line CAR-T niche. (3) Bispecifics (epcoritamab EPCORE-NHL, glofitamab) for ≥3L HGBL-DH — not modeled. UA access ≈zero. (4) Allogeneic SCT for post-CAR-T relapse — referral, outside KB. (5) Time-to-relapse threshold 12mo derived from ZUMA-7 / TRANSFORM early-vs-late relapse distinction in DLBCL; transferred to HGBL-DH biologically. (6) Histologic transformation routing not applicable (HGBL-DH is already at the aggressive end of the B-NHL spectrum; re-biopsy at relapse is mandatory but routes within ALGO-HGBL- DH-2L itself). (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+last_reviewed: '2026-05-04'
+notes: 'UPDATED 2026-05-04 (Workstream AS): IND-HGBL-DH-2L-RICE-AUTOSCT authored and wired
+  at step 3 (late relapse ≥12mo + transplant-eligible + chemosensitive → R-ICE/R-DHAP
+  salvage → BEAM-autoSCT; CORAL/PARMA NCCN Cat 1). Gap (1) CLOSED.
+  OOS / wiring gaps: (2) Liso-cel (TRANSFORM) and tisa-cel (BELINDA) — not modeled; axi-cel
+  covers early-line CAR-T niche. (3) Bispecifics (epcoritamab EPCORE-NHL, glofitamab) for
+  ≥3L HGBL-DH — not modeled; UA access ≈zero. (4) Allogeneic SCT for post-CAR-T relapse —
+  referral outside KB scope. (5) Time-to-relapse 12mo threshold derived from ZUMA-7/TRANSFORM
+  DLBCL distinction; applied to HGBL-DH biologically. (6) Histologic re-biopsy mandatory at
+  relapse (confirm DH status); routes within ALGO-HGBL-DH-2L. (7) reviewer_signoffs: 0 —
+  pending two Clinical Co-Lead approvals.
 
   '
