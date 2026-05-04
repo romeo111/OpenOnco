@@ -1,0 +1,131 @@
+id: IND-BREAST-HR-POS-2L-PIK3CA-INAVOLISIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HR_POS_HER2_NEG
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "HR+/HER2- metastatic or locally advanced inoperable breast cancer"
+    - "Progression on or after CDK4/6 inhibitor + aromatase inhibitor"
+  biomarker_requirements:
+    - "PIK3CA activating hotspot mutation — MANDATORY (tissue NGS or ctDNA; ctDNA preferred for real-time status)"
+    - "PIK3CA mutation is distinct from AKT1 and PTEN alterations — inavolisib does NOT cover AKT1/PTEN (use capivasertib for those)"
+    - "HR+: ER ≥1% and/or PR ≥1% by IHC"
+    - "HER2-negative: IHC 0, IHC 1+, or IHC 2+/ISH-"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive (≥1%)"
+      required: true
+    - biomarker_id: BIO-PIK3CA-MUTATION
+      value_constraint: "activating hotspot mutation confirmed by tissue NGS or ctDNA"
+      required: true
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive (IHC 3+ or IHC 2+/ISH+)"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    prior_cdk46i_required: true
+    # INAVO120 (Turner NC NEJM 2024; NCT04191499): enrolled patients who had
+    # progressed on or after CDK4/6 inhibitor + aromatase inhibitor therapy.
+    # This is the post-CDK4/6i setting (2L metastatic).
+
+recommended_regimen: REG-INAVOLISIB-PALBO-FULV-BREAST
+
+concurrent_therapy: []
+
+followed_by:
+  - "Continue until progression or unacceptable toxicity"
+  - "At progression: next-line per biomarkers (ESR1 → elacestrant; HER2-low → T-DXd; gBRCA → PARPi; no biomarker → BOLERO-2 backbone or chemotherapy)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_progression_free_survival_months: 15.0
+  pfs_hr: 0.43
+  pfs_p_value: "<0.001"
+  overall_response_rate: "58% (INAVO120; inavolisib+palbociclib+fulvestrant arm)"
+  orr_control_arm: "25% (placebo+palbociclib+fulvestrant arm)"
+  notes: >
+    INAVO120 (Turner NC NEJM 2024; NCT04191499; Phase 3):
+    Inavolisib 9 mg QD + palbociclib 125 mg 3/4wk + fulvestrant 500 mg Q4W vs
+    placebo + palbociclib + fulvestrant in PIK3CA-mutant HR+/HER2- mBC after
+    prior CDK4/6i + AI. mPFS 15.0 vs 7.3 months (HR 0.43; p<0.001); ORR 58% vs 25%.
+    FDA approved October 2024 (Itovebi, brand of inavolisib).
+    NCCN BREAST 2025: Category 1 preferred for PIK3CA-mutant post-CDK4/6i mBC.
+    Key advantage over alpelisib (PI3Kα): mutant-selective → lower hyperglycemia
+    (Grade 3+: 5% vs ~35% alpelisib) and lower rash burden.
+    Key advantage over capivasertib (AKT inhibitor): inavolisib is PIK3CA-specific;
+    capivasertib covers broader PI3K/AKT/PTEN pathway (3 genes) but with different
+    toxicity profile (intermittent dosing required for tolerability).
+
+hard_contraindications:
+  - "PIK3CA wild-type (NGS or ctDNA) — inavolisib is PI3Kα inhibitor; inactive without PIK3CA mutation"
+  - "AKT1 mutation without PIK3CA mutation — use capivasertib instead"
+  - "PTEN loss without PIK3CA mutation — use capivasertib instead"
+  - "Uncontrolled diabetes mellitus (Grade 2+ hyperglycemia at baseline — inavolisib causes hyperglycemia)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "AKT1 mutation or PTEN loss co-present: capivasertib+fulvestrant covers broader pathway (3 genes)"
+  - "Baseline hyperglycemia Grade 2+ or uncontrolled diabetes: consider capivasertib+fulvestrant (lower glycemic risk with intermittent dosing)"
+  - "Prior CDK4/6i not received: inavolisib+palbociclib+fulvestrant is for post-CDK4/6i setting; 1L → AI+CDK4/6i first"
+
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - "PIK3CA mutation testing: tissue NGS or ctDNA — MANDATORY before starting"
+  - TEST-CBC
+  - TEST-CMP
+  - "Fasting blood glucose + HbA1c (hyperglycemia monitoring — inavolisib)"
+  - TEST-LFT
+  - TEST-CECT-CAP
+
+desired_tests:
+  - "ctDNA NGS (broader panel): ESR1 mutation co-detection; identify early resistance mutations"
+  - "AKT1 mutation + PTEN IHC: if PIK3CA confirmed, these don't change inavolisib decision but inform resistance pathway"
+  - "Bone scan or FDG-PET: bone metastasis assessment"
+
+rationale: >
+  PIK3CA activating hotspot mutations occur in ~40% of HR+/HER2- mBC and are
+  the dominant oncogenic driver of endocrine resistance. Inavolisib is a mutant-
+  selective PI3Kα inhibitor (inhibits PIK3CA mutant >> wild-type) — designed to
+  preserve normal PI3K signaling while blocking cancer-driving mutations.
+  INAVO120 (Turner NC NEJM 2024) demonstrated PFS HR 0.43 (p<0.001) and ORR 58%
+  vs 25% with inavolisib+palbociclib+fulvestrant vs placebo+palbociclib+fulvestrant
+  in PIK3CA-mutant HR+/HER2- post-CDK4/6i mBC. FDA approved October 2024.
+  NCCN BREAST 2025: Category 1 preferred for PIK3CA-mutant 2L mBC.
+  Mutant-selective design markedly reduces hyperglycemia vs pan-PI3K alpelisib
+  (Grade 3+ hyperglycemia 5% vs ~35%) — clinically meaningful tolerability advantage.
+  Competes with capivasertib+fulvestrant (CAPItello-291; PIK3CA/AKT1/PTEN; HR 0.50)
+  in the PIK3CA-mutant subset; both are Cat 1 but inavolisib offers lower glycemic risk
+  at the cost of narrower biomarker coverage (PIK3CA only vs 3-gene pathway).
+
+sources:
+  - source_id: SRC-INAVO120-TURNER-2024
+    position: supports
+    relevant_quote_paraphrase: "Inavolisib+palbociclib+fulvestrant in PIK3CA-mutant HR+/HER2- mBC post-CDK4/6i: mPFS 15.0 vs 7.3 mo (HR 0.43); ORR 58% vs 25%; FDA Oct 2024"
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EN 2026-05-04 correction: Prior draft (tier2-ind-breast-2026-05-01-023)
+  incorrectly set line_of_therapy: 1 and stated "CDK4/6i excluded" in demographic
+  constraints. SRC-INAVO120-TURNER-2024 (NEJM 2024; DOI 10.1056/NEJMoa2404426)
+  confirms this is a post-CDK4/6i trial (2L setting). Corrected to line_of_therapy: 2,
+  updated entry criteria to reflect prior CDK4/6i + AI required. Source added.
+  File renamed from ind_breast_hr_pos_1l_pik3ca_inavolisib.yaml to
+  ind_breast_hr_pos_2l_pik3ca_inavolisib.yaml. ID updated to IND-BREAST-HR-POS-2L-PIK3CA-INAVOLISIB.
+  Wired into ALGO-BREAST-HR-POS-2L step 1 alongside capivasertib and alpelisib.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

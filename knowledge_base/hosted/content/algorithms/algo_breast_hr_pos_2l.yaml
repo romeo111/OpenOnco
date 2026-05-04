@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB
   - IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+  - IND-BREAST-HR-POS-2L-PIK3CA-INAVOLISIB
   - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
   - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
   - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
@@ -37,10 +38,11 @@ decision_tree:
       next_step: 1
     notes: "MDT-only — 2L PARPi entry assumes PARPi-naive at 1L (OlympiAD line-position varied; ESMO 2024 supports 2L+ when PARPi not yet given); MDT confirms not-already-exposed before this branch fires."
 
-  # Step 1 — PIK3CA / AKT1 / PTEN alteration → capivasertib preferred
-  # (broader pathway coverage + intermittent dosing tolerability);
-  # alpelisib alternative when only PIK3CA mutation present and
-  # capivasertib not accessible.
+  # Step 1 — PIK3CA / AKT1 / PTEN alteration.
+  # THREE Cat 1 options for PIK3CA-mutant; TWO for AKT1/PTEN (no inavolisib).
+  # DEFAULT: capivasertib+fulvestrant (broader: 3-gene pathway; Cat 1).
+  # ALTERNATIVE 1 (PIK3CA only): inavolisib+palbociclib+fulvestrant (Cat 1; lower hyperglycemia).
+  # ALTERNATIVE 2 (PIK3CA only, access): alpelisib+fulvestrant (Cat 2A; higher hyperglycemia).
   - step: 1
     evaluate:
       any_of:
@@ -49,6 +51,23 @@ decision_tree:
         - condition: "PTEN loss-of-function (biallelic NGS or complete IHC loss + NGS confirmation)"
     if_true:
       result: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
+      alternatives:
+        - indication: IND-BREAST-HR-POS-2L-PIK3CA-INAVOLISIB
+          criteria: "PIK3CA mutation only (NOT AKT1/PTEN) + no uncontrolled diabetes + post-CDK4/6i + AI; INAVO120 (Turner NEJM 2024); mPFS 15.0 vs 7.3 mo (HR 0.43); ORR 58%; FDA Oct 2024 (Itovebi); NCCN Cat 1 preferred; lower hyperglycemia vs alpelisib (5% vs 35% Grade 3+)"
+          nccn_category: 1
+        - indication: IND-BREAST-HR-POS-2L-PIK3CA-ALPELISIB
+          criteria: "PIK3CA mutation only + capivasertib and inavolisib inaccessible; SOLAR-1; NCCN Cat 2A; high hyperglycemia burden (Grade 3+ ~35%) — second-line access option"
+          nccn_category: "2A"
+      notes: >
+        PIK3CA/AKT1/PTEN pathway — THREE options by biomarker specificity:
+        DEFAULT: Capivasertib 400 mg BID 4d/7d + fulvestrant (CAPItello-291; PIK3CA/AKT1/PTEN;
+        HR 0.60 all-comer, HR 0.50 biomarker-selected; NCCN Cat 1; broader 3-gene coverage).
+        PREFERRED (PIK3CA-only): Inavolisib 9 mg QD + palbociclib + fulvestrant (INAVO120;
+        PIK3CA-specific; mPFS 15.0 mo, HR 0.43; ORR 58%; FDA Oct 2024; NCCN Cat 1 preferred;
+        lower hyperglycemia risk — Grade 3+ 5% vs alpelisib 35%).
+        ACCESS FALLBACK (PIK3CA-only): Alpelisib 300 mg QD + fulvestrant (SOLAR-1; NCCN Cat 2A;
+        significant hyperglycemia/rash burden; for settings where capivasertib+inavolisib not available).
+        AKT1 mutation or PTEN loss without PIK3CA: capivasertib only (inavolisib and alpelisib inactive).
     if_false:
       next_step: 2
 
