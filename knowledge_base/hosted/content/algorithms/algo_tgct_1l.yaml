@@ -1,0 +1,146 @@
+id: ALGO-TGCT-1L
+applicable_to_disease: DIS-TGCT
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select treatment approach for tenosynovial giant cell tumor (TGCT; also known as
+  pigmented villonodular synovitis, PVNS, or giant cell tumor of tendon sheath).
+  Routes by: (1) TGCT subtype (localized vs diffuse), (2) surgical feasibility
+  assessment, (3) performance status and hepatic function for pexidartinib eligibility.
+  KEY PRINCIPLE: Surgery is FIRST-LINE for all TGCT. Pexidartinib is reserved for
+  symptomatic TGCT not amenable to improvement with surgery.
+
+output_indications:
+  - IND-TGCT-1L-PEXIDARTINIB
+
+default_indication: IND-TGCT-1L-PEXIDARTINIB
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Histological confirmation and TGCT subtype.
+  # Localized vs diffuse-type: different surgical prognosis and drug eligibility.
+  # Both types are eligible for pexidartinib if surgery inadequate.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "TGCT diagnosis confirmed by histopathology (WHO Soft Tissue Tumours 5th ed)"
+        - condition: "MRI of affected joint performed for local staging and tumor volume assessment"
+    if_true:
+      next_step: 2
+      notes: >
+        TGCT confirmed — proceed to surgical assessment. Histological diagnosis required
+        (giant cells, hemosiderin deposits, histiocyte-like cells on pathology).
+        MRI (preferably 3T) is mandatory for full extent mapping, especially for
+        diffuse-type TGCT where synovial involvement may extend beyond the joint.
+        Multidisciplinary orthopedic sarcoma team input strongly recommended.
+    if_false:
+      result: null
+      notes: "Diagnose first. TGCT can mimic other synovial proliferative conditions (synovial chondromatosis, pigmented synovitis from hemorrhagic disease) — histological confirmation required."
+
+  # Step 2 — TGCT subtype assessment: localized vs diffuse.
+  # Localized (nodular): complete surgical excision curative in >80%; recurrence rare.
+  # Diffuse (D-TGCT): total synovectomy feasible but 40-80% recurrence; systemic therapy frequently needed.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Diffuse-type TGCT (D-TGCT; PVNS; diffuse intra-articular involvement on MRI)"
+        - condition: "Localized TGCT with prior surgical failure (local recurrence) or involvement precluding complete resection"
+        - condition: "Localized TGCT with anatomically inaccessible lesion or high surgical morbidity (e.g., hip joint, spine)"
+    if_true:
+      next_step: 3
+      notes: >
+        Diffuse-type TGCT OR localized with surgical failure: proceed to systemic therapy
+        assessment. Diffuse-type TGCT has 40-80% recurrence after total synovectomy
+        and often requires multiple surgeries; pexidartinib is the primary systemic option.
+        Even in diffuse-type, surgical debulking remains part of the management approach.
+    if_false:
+      result: null
+      notes: >
+        Localized TGCT (nodular type, tendon sheath lesion) with accessible lesion:
+        SURGERY FIRST. Complete surgical excision (arthroscopic or open synovectomy)
+        achieves cure in >80% of localized TGCT. Recurrence rate <20% after complete
+        excision. Reserve pexidartinib for recurrence or failure of complete excision.
+        Refer to orthopedic oncology for excision planning.
+
+  # Step 3 — Surgical feasibility gate.
+  # Pexidartinib FDA indication: surgery would NOT adequately improve disease.
+  # If surgery is feasible: attempt surgery first; pexidartinib at failure.
+  # If surgery is not feasible or has already failed: pexidartinib is indicated.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Surgery previously attempted with recurrence or progressive disease"
+        - condition: "Surgery not feasible: joint destruction risk, major limb-threatening surgery, unresectable anatomy"
+        - condition: "Patient refuses or is unfit for surgery (anesthesia risk)"
+        - condition: "Surgeon assessment: complete excision not achievable; disease would not adequately improve with surgery"
+    if_true:
+      next_step: 4
+      notes: "Surgical failure or surgery not indicated: assess eligibility for pexidartinib."
+    if_false:
+      result: null
+      notes: >
+        Surgery feasible and not yet attempted: refer to orthopedic oncology for
+        surgical planning. Arthroscopic synovectomy preferred where feasible; open
+        synovectomy for complex diffuse-type involvement.
+        Consider adjuvant radiation therapy at specialized centers for diffuse-type
+        TGCT after synovectomy to reduce recurrence (moderate evidence; not standard-of-care).
+        After surgical failure: return to step 3 for systemic therapy consideration.
+
+  # Step 4 — Pexidartinib eligibility: hepatic function gate.
+  # REMS and ILLUMINATE eligibility require baseline ALT/AST ≤1.5× ULN.
+  # Performance status and hepatic function are the two eligibility gates.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "AST and ALT ≤1.5× ULN at baseline (ILLUMINATE eligibility criterion + REMS gate)"
+        - condition: "Total bilirubin ≤ULN at baseline"
+        - condition: "Symptomatic TGCT with functional limitation (not asymptomatic)"
+    if_true:
+      result: IND-TGCT-1L-PEXIDARTINIB
+      notes: >
+        Pexidartinib eligible: 400 mg PO BID with food. REMS enrollment mandatory
+        before first prescription (prescriber + pharmacy + patient).
+        Weekly LFTs × 8 weeks per REMS requirement.
+        ILLUMINATE: ORR 38% (RECIST) and 56% (TTP-MRI) vs 0% placebo (p<0.0001).
+        mDOR not reached at 23 months. FDA-approved August 2019; EMA 2020.
+        NCCN Category 1 for symptomatic TGCT not amenable to surgical improvement.
+        Ukraine: not registered; named-patient import USD ~25K/month; clinical trial preferred.
+    if_false:
+      result: null
+      notes: >
+        Pexidartinib ineligible (hepatic dysfunction, ECOG ≥3, or asymptomatic disease):
+        - Elevated baseline LFTs: treat underlying hepatic disease; reassess when normalized.
+        - ECOG ≥3: best supportive care, symptom management, palliative orthopedic intervention.
+        - Asymptomatic TGCT: watchful waiting; no systemic therapy indicated without symptoms.
+        - Alternative systemic options (imatinib, nilotinib — off-label CSF1R activity) have
+          minimal evidence; clinical trial enrollment preferred.
+        Multidisciplinary sarcoma center referral strongly recommended for all cases.
+
+sources:
+  - SRC-ILLUMINATE-TAP-2019
+  - SRC-NCCN-SARCOMA
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  TGCT is a rare benign-behaving but locally aggressive synovial neoplasm.
+  Malignant transformation (malignant TGCT) is extremely rare (<1%); if suspected,
+  molecular testing and oncology consultation required — pexidartinib efficacy in
+  malignant TGCT is not established.
+
+  SURGERY FIRST PRINCIPLE: This algorithm routes to surgery for resectable disease.
+  Pexidartinib is only for patients where surgery cannot adequately control disease.
+  The orthopedic oncology team assessment determines the surgery/systemic therapy branch.
+
+  POST-PEXIDARTINIB: No approved 2L systemic therapy exists for TGCT after pexidartinib
+  failure. Clinical trial enrollment is the preferred option at progression.
+  Investigational approaches: dose escalation, combination with radiation, imatinib
+  off-label (CSF1R/KIT inhibition), or investigational CSF1R antibodies (cabiralizumab,
+  emactuzumab — Phase 1/2 trials).
+
+  REMS CRITICAL NOTE: The TURALIO REMS program is a US regulatory requirement.
+  Outside the US, equivalent hepatic monitoring is expected per local regulatory
+  authority (EMA equivalent safeguards in EU). In Ukraine, named-patient import
+  requires MoH authorization with equivalent hepatotoxicity monitoring documentation.
+
+  Authored 2026-05-04 (Workstream DH). DIS-TGCT algorithm gap CLOSED.
