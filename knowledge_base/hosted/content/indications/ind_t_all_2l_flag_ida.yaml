@@ -1,0 +1,138 @@
+id: IND-T-ALL-2L-FLAG-IDA
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-T-ALL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory T-ALL or T-LBL after ≥1 prior line (hyper-CVAD, BFM-derivative, or equivalent)"
+    - "Nelarabine inaccessible (not registered in Ukraine; named-patient/international supply unavailable) OR nelarabine contraindicated (pre-existing central neurological toxicity, Grade ≥2 neurotoxicity)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function for high-dose cytarabine and idarubicin (see dose modifications)"
+    - "No active uncontrolled infection at time of treatment start"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior FLAG-IDA or equivalent (fludarabine + high-dose cytarabine-based regimen) failure at this line"
+    - "Severe cerebellar dysfunction (high-dose cytarabine absolute contraindication)"
+    - "Lifetime anthracycline limit reached (calculate prior doxorubicin exposure; idarubicin 30 mg/m² = ~120 mg/m² doxorubicin equivalent)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 3 is a relative contraindication; aplasia mortality risk is substantially higher at ECOG 3."
+
+recommended_regimen: REG-FLAG-IDA-TALL
+concurrent_therapy: []
+followed_by:
+  - "AlloSCT consolidation for fit patients achieving CR or CRi — the only curative option for r/r T-ALL/T-LBL"
+
+evidence_level: low_moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~40-55% (phase II series in r/r ALL; extrapolated from B-ALL + T-ALL combined cohorts)"
+  cr_rate: "~25-40%"
+  median_os_months: "Bridge intent — alloSCT needed for sustained benefit; OS without alloSCT <6 months"
+  notes: >
+    FLAG-IDA evidence in T-ALL specifically is limited to retrospective series and
+    phase II trials pooling B-ALL and T-ALL. ORR ~40-55% reflects combined ALL
+    populations. T-ALL may respond differently from B-ALL (no CD20 for rituximab
+    augmentation; T-cell biology distinct from ABC-ALL). Response should be assessed
+    at day 28-35 with bone marrow biopsy + MRD (flow cytometry or PCR).
+    Nelarabine (NCCN Cat 1; ORR ~36-41%; first-choice for T-ALL 2L) is superior
+    in evidence quality — FLAG-IDA is reserved for nelarabine-inaccessible patients.
+    Long-term remission requires bridge to consolidative alloSCT; FLAG-IDA
+    as single-agent maintenance has no curative potential.
+
+hard_contraindications:
+  - "Severe cerebellar dysfunction or prior high-dose cytarabine neurotoxicity (Grade ≥3)"
+  - "Lifetime anthracycline cumulative dose at or near limit (prior dox + idarubicin equivalent)"
+  - "Active uncontrolled infection (aplasia from FLAG-IDA in active infection = high early mortality)"
+  - "ECOG PS ≥4 (ECOG hard gate — engine)"
+
+red_flags_triggering_alternative:
+  - condition: "Nelarabine accessible (supply restored, named-patient approved) → IND-T-ALL-2L-NELARABINE (NCCN Cat 1 preferred; higher quality evidence)"
+  - condition: "CR/CRi achieved → alloSCT referral (curative consolidation — FLAG-IDA is a bridge, not definitive therapy)"
+  - condition: "FLAG-IDA failure (no CR/CRi) → clinical trial preferred; clofarabine 40 mg/m²/d × 5d is an alternative (NCCN Cat 2B for adult r/r ALL; Faderl 2010, JCO; ORR ~26%) — no strong T-ALL–specific data"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - "Uric acid: before cycle start (tumour lysis risk)"
+  - "Bone marrow aspirate + biopsy: within 1 week before FLAG-IDA (confirm disease status, cytogenetics, MRD baseline)"
+  - "ECHO or MUGA: before idarubicin (LVEF ≥50% required)"
+  - "Lumbar puncture + CSF cytology: if CNS involvement suspected (CNS relapse common in T-ALL)"
+  - "MRD by flow cytometry (10-color) or PCR: at baseline and on day 28-35 (response assessment)"
+
+desired_tests:
+  - "Next-generation sequencing (NGS) panel including NOTCH1, FBXW7, PTEN, TP53, PHF6, JAK/STAT mutations — prognostic and identifies NOTCH inhibitor eligibility"
+  - "Cytogenetics/FISH: del(9p), t(9;22), complex karyotype"
+  - "Flow cytometry immunophenotype: mature T vs early T precursor (ETP-ALL) — ETP-ALL has distinct biology and worse prognosis with standard T-ALL protocols"
+
+rationale: >
+  FLAG-IDA (fludarabine 30 mg/m² + cytarabine 2 g/m² + idarubicin 10 mg/m², days 1-5/1-3,
+  + G-CSF) is a salvage intensive chemotherapy regimen used for r/r ALL and AML in
+  European academic centers. In T-ALL, it is indicated when nelarabine (NCCN Cat 1
+  preferred choice) is inaccessible due to lack of Ukraine registration and
+  international supply constraints.
+
+  Evidence in r/r ALL: phase II series report ORR ~40-55% (B-ALL dominant; T-ALL
+  subgroup data limited). No randomized comparison against nelarabine. FLAG-IDA
+  mechanism: fludarabine inhibits DNA repair and enhances arabinosylcytosine-
+  triphosphate (ara-CTP) accumulation in leukemic blasts via inhibition of
+  SAMHD1-mediated triphosphate cleavage → synergistic anti-leukemic effect.
+  Idarubicin adds topoisomerase II inhibition.
+
+  Key safety concerns:
+  (1) High-dose cytarabine (2 g/m²) cerebellar toxicity — neurological assessment
+  mandatory before each dose; irreversible cerebellar syndrome if not stopped promptly.
+  (2) Ocular: dexamethasone eye drops mandatory throughout.
+  (3) Myelosuppression: 3-4 weeks of severe aplasia expected — prophylactic
+  antibacterials, antifungals, antivirals essential; G-CSF mandatory.
+  (4) Anthracycline: prior hyper-CVAD doxorubicin (50 mg/m² × multiple cycles) +
+  additional idarubicin may approach lifetime limit — calculate before prescribing.
+
+  NCCN Category 2A for r/r ALL salvage when primary agents unavailable.
+  Not FDA-approved specifically for T-ALL; used off-label in this setting.
+
+  Clofarabine (40 mg/m²/d × 5d) is a secondary alternative for nelarabine-inaccessible
+  T-ALL (Faderl 2010, JCO; ORR ~26% in adult r/r ALL; NCCN Cat 2B). Clofarabine
+  has less severe cerebellar risk than FLAG-IDA but substantial hepatotoxicity.
+
+rationale_ua: >
+  FLAG-IDA (флударабін 30 мг/м² + цитарабін 2 г/м² + ідарубіцин 10 мг/м², д1-5/1-3,
+  + Г-КСФ) — сальвадж-режим для р/р Т-ОЛЛ при недоступності нелараліну.
+  Нелараліб (NCCN кат.1; ORR ~36-41%) є кращим вибором; FLAG-IDA — резервний
+  при відсутності реєстрації нелараліну в Україні.
+  Механізм: флударабін посилює накопичення ара-ЦТФ у бластах (через SAMHD1) +
+  ідарубіцин (інгібітор ТопоII).
+  КРИТИЧНО: нейрологічне обстеження щодня під час цитарабіну (ризик
+  мозочкової токсичності); краплі очей з дексаметазоном обов'язкові.
+  MRD-негативна CR на д28-35 → напрямлення на алоТГСК (єдиний потенційно
+  куративний шлях при р/р Т-ОЛЛ).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN ALL 2025: FLAG-IDA listed as Category 2A salvage option for r/r ALL when primary agents (nelarabine for T-ALL; blinatumomab/inotuzumab for B-ALL) are unavailable or contraindicated."
+
+do_not_do:
+  - "НІКОЛИ не починати без неврологічного обстеження — висока доза цитарабіну (2 г/м²) спричиняє незворотну мозочкову атаксію; зупинити негайно при атаксії або дизартрії"
+  - "НЕ пропускати краплі очей дексаметазон 0.1% — кератит від цитарабіну є болісним і попереджуваним ускладненням"
+  - "НЕ застосовувати при активній неконтрольованій інфекції — аплазія + сепсис = висока летальність"
+  - "Розрахувати кумулятивні антрацикліни перед ідарубіцином — Hyper-CVAD вже включає доксорубіцин (~300 мг/м² за всі цикли)"
+  - "Алопуринол або расбуриказа + гідратація обов'язкові — синдром лізису пухлини у Т-ОЛЛ/Т-ЛБЛ"
+  - "При досягненні CR/CRi — негайне направлення на алоТГСК (нема куративного потенціалу без консолідації)"
+  - "Якщо нелараліб доступний — перейти на нелараліб (NCCN кат.1; краща доказова база для Т-ОЛЛ)"
+
+time_critical: true
+time_critical_note: "Rapidly progressive r/r T-ALL — initiate within 1-2 weeks of confirmed relapse. Delay reduces CR rate and narrows alloSCT window."
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

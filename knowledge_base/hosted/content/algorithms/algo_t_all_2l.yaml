@@ -9,24 +9,70 @@ purpose: >
 
 output_indications:
   - IND-T-ALL-2L-NELARABINE
+  - IND-T-ALL-2L-FLAG-IDA
 
 default_indication: IND-T-ALL-2L-NELARABINE
-alternative_indication: IND-T-ALL-2L-NELARABINE
+alternative_indication: IND-T-ALL-2L-FLAG-IDA
 
 decision_tree:
+  # Step 1 — Confirm r/r T-ALL/T-LBL eligibility for 2L.
   - step: 1
     evaluate:
       any_of:
-        - condition: "R/R T-ALL or T-LBL after ≥1 prior systemic line"
+        - condition: "R/R T-ALL or T-LBL after ≥1 prior systemic line (hyper-CVAD or equivalent)"
         - red_flag: RF-T-ALL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-T-ALL-2L-NELARABINE
+      next_step: 2
     if_false:
       result: IND-T-ALL-2L-NELARABINE
+      notes: "Fallback to nelarabine as default — MDT evaluation required if eligibility unclear."
 
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
-last_reviewed: "2026-04-27"
+  # Step 2 — Nelarabine access gate (dominant UA constraint).
+  # Nelarabine (Arranon) is NCCN Cat 1 for r/r T-ALL; T-cell purine nucleotide
+  # analogue; ORR ~36-41%; FDA-approved. NOT registered in Ukraine — international
+  # named-patient supply required. If accessible: preferred over FLAG-IDA.
+  # If inaccessible OR pre-existing CNS toxicity (nelarabine causes severe
+  # peripheral and central neurotoxicity, especially if prior IT or CNS RT):
+  # FLAG-IDA (NCCN Cat 2A salvage) is the alternative.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Nelarabine accessible via named-patient import, compassionate access, or international clinical trial AND no prior Grade ≥2 peripheral neuropathy from prior therapy"
+    if_true:
+      result: IND-T-ALL-2L-NELARABINE
+      notes: >
+        Nelarabine accessible + eligible: nelarabine 1500 mg/m² IV d1,3,5 q21d
+        (REG-NELARABINE-TCELL). NCCN Cat 1 for r/r T-ALL.
+        ORR ~36-41% (DeAngelo 2007; Gökbuget 2017). Bridge to alloSCT in
+        responding fit patients. Key neurotoxicity: peripheral neuropathy (15-25%;
+        Grade ≥3 somnolence, seizures uncommon); grade according to NCI-CTCAE.
+        Concurrent IT chemotherapy may increase neurotoxicity — avoid unless
+        documented CNS relapse.
+    if_false:
+      result: IND-T-ALL-2L-FLAG-IDA
+      notes: >
+        Nelarabine inaccessible OR pre-existing neurological contraindication:
+        FLAG-IDA salvage (fludarabine + cytarabine 2 g/m² + idarubicin + G-CSF;
+        REG-FLAG-IDA-TALL). NCCN Cat 2A alternative. ORR ~40-55% (r/r ALL
+        phase II series; T-ALL data extrapolated). Bridge to alloSCT for CR/CRi.
+        Clofarabine (40 mg/m²/d × 5d; NCCN Cat 2B; Faderl 2010 ORR ~26%) is a
+        secondary alternative if FLAG-IDA is also inaccessible or contraindicated.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-PTCL-2024
+last_reviewed: "2026-05-04"
 notes: >
-  Single-track default pending FLAG-IDA / clofarabine indication
-  authorship. Nelarabine accessibility is dominant UA constraint —
-  international supply required.
+  UPDATED 2026-05-04: IND-T-ALL-2L-FLAG-IDA authored and wired as step 2 if_false
+  (nelarabine inaccessible or contraindicated). Step 1 now routes to step 2 (access gate)
+  rather than directly to nelarabine.
+
+  Nelarabine (NCCN Cat 1) remains the preferred 2L T-ALL agent; FLAG-IDA is the
+  clinically appropriate fallback for the Ukrainian context where nelarabine
+  requires costly international named-patient import.
+
+  Clofarabine (NCCN Cat 2B; Faderl 2010; ORR ~26% r/r adult ALL) is a tertiary
+  option for patients in whom both nelarabine and FLAG-IDA are unavailable or
+  have failed — not yet modeled as a separate indication.
+
+  AlloSCT is the only curative consolidation — all 2L regimens are bridges.

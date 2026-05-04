@@ -1,0 +1,113 @@
+id: REG-FLAG-IDA-TALL
+disease_context: DIS-T-ALL
+line_of_therapy: 2
+plan_track: aggressive
+
+regimen_type: "inpatient_chemo"
+protocol_name: "FLAG-IDA (fludarabine + cytarabine + G-CSF + idarubicin) salvage for r/r T-ALL"
+notes: >
+  FLAG-IDA salvage regimen for relapsed/refractory T-ALL when nelarabine is
+  inaccessible. Standard inpatient salvage regimen used broadly in Europe for
+  r/r ALL and AML. No phase 3 RCT in T-ALL specifically; extrapolated from
+  r/r ALL phase II series and NCCN Category 2A listing for salvage ALL.
+  Bridge to alloSCT for fit responders achieving CR or CR with incomplete
+  count recovery (CRi).
+
+agents:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m² IV daily"
+    route: IV
+    schedule: "Days 1-5 (30-minute IV infusion)"
+    administration_notes: >
+      Administer fludarabine as a 30-minute IV infusion on days 1-5.
+      Cytarabine must follow fludarabine by 4 hours to maximize nucleoside
+      synergy (fludarabine triphosphate enhances arabinosylcytosine-TP
+      accumulation via SAMHD1 dephosphorylation inhibition).
+  - drug_id: DRUG-CYTARABINE
+    dose: "2000 mg/m² IV daily"
+    route: IV
+    schedule: "Days 1-5 (4-hour IV infusion, beginning 4 hours after fludarabine)"
+    administration_notes: >
+      2 g/m²/day as a 4-hour continuous infusion (not bolus) on days 1-5.
+      Must start exactly 4 hours after fludarabine dose each day.
+      Ocular prophylaxis: steroid (dexamethasone 0.1%) eye drops bid during
+      cytarabine and for 48 hours after (prevent cytarabine-induced
+      keratitis — mandatory at high-dose cytarabine ≥1 g/m²).
+      Neurological monitoring: high-dose ara-C (≥1 g/m²) risk of cerebellar
+      toxicity — discontinue and do NOT re-expose if cerebellar ataxia, dysarthria.
+  - drug_id: DRUG-IDARUBICIN
+    dose: "10 mg/m² IV daily"
+    route: IV
+    schedule: "Days 1, 2, 3 (15-30-minute IV infusion)"
+    administration_notes: >
+      Idarubicin 10 mg/m²/day IV on days 1-3 (some protocols use 12 mg/m²
+      × 3d; 10 mg/m² × 3d in our standard = 30 mg/m² total).
+      Anthracycline cumulative dose tracking mandatory: add to prior doxorubicin
+      (idarubicin:doxorubicin potency ratio ~4:1; 30 mg/m² idarubicin ≈ 120 mg/m²
+      doxorubicin equivalent). Do NOT proceed if lifetime anthracycline limit reached.
+      Requires central venous access (vesicant).
+  - drug_id: DRUG-GCSF
+    dose: "5 mcg/kg SC once daily (or 300 mcg fixed < 75 kg, 480 mcg fixed ≥75 kg)"
+    route: SC
+    schedule: "Day 0 (24h before fludarabine day 1) — continue until ANC ≥0.5×10⁹/L after nadir"
+    administration_notes: >
+      G-CSF is the 'G' in FLAG — must start on day 0 (day BEFORE chemotherapy begins).
+      Prime progenitor cells for cytarabine uptake (marrow mobilization rationale) and
+      support recovery after nadir. Continue subcutaneously until ANC ≥0.5×10⁹/L on
+      two consecutive measurements. Do NOT give within 24h of chemotherapy on days 1-5
+      (give at least 12h after last chemotherapy dose each day).
+
+when_to_use: >
+  2L r/r T-ALL/T-LBL when nelarabine (preferred, NCCN Cat 1) is inaccessible
+  (not registered in Ukraine; named-patient supply unavailable). Also applicable
+  when nelarabine is contraindicated by pre-existing central neurologic toxicity.
+  FLAG-IDA ORR ~40-55% in r/r ALL (phase II series; NCCN Cat 2A).
+  Aim: achieve CR/CRi as bridge to consolidative alloSCT — only curative path.
+  MRD monitoring after FLAG-IDA critical: MRD-negative CR → proceed to alloSCT
+  conditioning; MRD-positive or PR → discuss blinatumomab (B-ALL only), clinical trial.
+
+premedication:
+  - "Allopurinol 300 mg/day OR rasburicase (if high tumour burden) for tumour lysis prophylaxis — start 24h before chemotherapy"
+  - "Aggressive IV hydration 2-3 L/m²/day during chemotherapy days 1-5"
+  - "Dexamethasone 0.1% eye drops twice daily: start day 1 of cytarabine, continue until 48h after last dose (arabinoside-C keratitis prophylaxis)"
+  - "Ciprofloxacin 500 mg BD or levofloxacin 500 mg QD: antibacterial prophylaxis during aplasia"
+  - "Fluconazole 400 mg QD or posaconazole 300 mg QD: antifungal prophylaxis"
+  - "Acyclovir 400 mg TID or valacyclovir 500 mg BD: antiviral prophylaxis (HSV/VZV) during neutropenia"
+  - "PCP prophylaxis: TMP/SMX or pentamidine inhaled qMonthly during and after treatment"
+
+growth_factor_support:
+  mandatory: true
+  protocol: "G-CSF 5 mcg/kg SC starting day 0 (before chemotherapy). Continue until ANC ≥0.5×10⁹/L after nadir (typically day 20-28)."
+
+monitoring:
+  - "CBC + differential: daily during days 1-5, then every 2-3 days during aplasia. Expected nadir: ANC <0.1×10⁹/L days 7-20."
+  - "Electrolytes + uric acid + LDH: daily during days 1-3 (tumour lysis monitoring)"
+  - "Creatinine, LFTs: every 2-3 days"
+  - "Neurological assessment: daily during cytarabine days 1-5 (cerebellar toxicity)"
+  - "Daily temperature + infection screen: during aplasia (days 7-21)"
+  - "Bone marrow aspirate + MRD assessment: day 28-35 after cycle start (CR/CRi evaluation)"
+
+cycle_length_days: 28
+total_planned_cycles: "1 induction cycle; reassess for alloSCT in CR/CRi. Second cycle if suboptimal response and no alloSCT window — decide at MDT."
+
+special_precautions:
+  - "CEREBELLAR TOXICITY: High-dose ara-C (≥1 g/m²) risk. Neurological exam before each dose. Discontinue immediately for ataxia, dysarthria, nystagmus, or altered mental status — do NOT rechallenge."
+  - "OCULAR: Dexamethasone eye drops mandatory — failure causes chemical conjunctivitis/keratitis."
+  - "ANTHRACYCLINE CUMULATIVE DOSE: Calculate prior anthracycline exposure before administering idarubicin. Hyper-CVAD contains doxorubicin — likely near lifetime limits in r/r T-ALL."
+  - "TUMOUR LYSIS SYNDROME: T-ALL/T-LBL high risk of TLS. Aggressive hydration + allopurinol/rasburicase mandatory."
+  - "MYELOSUPPRESSION: Prolonged aplasia expected (2-4 weeks). GCSF mandatory. Infectious death in aplasia is leading cause of early mortality with FLAG-IDA — prophylactic antibiotics, antifungals, antivirals mandatory."
+
+watchpoints_ua:
+  - "КРИТИЧНО: ОЦС-токсичність цитарабіну — неврологічне обстеження перед кожною дозою; зупинити при атаксії, дизартрії, ністагмі"
+  - "КРИТИЧНО: Краплі очей з дексаметазоном 0.1% двічі на день з д1 цитарабіну до 48г після останньої дози (профілактика кератиту)"
+  - "КРИТИЧНО: Розрахувати кумулятивну дозу антрациклінів — Hyper-CVAD містить доксорубіцин; перевірити ліміт перед ідарубіцином"
+  - "КРИТИЧНО: Профілактика синдрому лізису пухлини (алопуринол/расбуриказа + гідратація 2-3 л/м²/добу) до та під час ХТ"
+  - "УВАГА: MRD-оцінка на д28-35 — мета CR/CRi з МРД-негативністю для мосту до алоТГСК"
+  - "УВАГА: FLAG-IDA = FLAG + ідарубіцин; застосовують при недоступності нелараліну для Т-ОЛЛ"
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
