@@ -1,0 +1,166 @@
+id: IND-PTCL-2L-BRENTUXIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PTCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory PTCL-NOS (peripheral T-cell lymphoma, not otherwise specified)"
+    - "CD30+ confirmed by IHC: ≥10% tumor cells staining positive (any intensity)"
+    - "Prior ≥1 systemic line (typically CHOP or CHOEP based 1L)"
+    - "NOT prior brentuximab vedotin (BV-naive or BV-non-refractory)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L, CrCl ≥30 mL/min"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD30-IHC
+      required: true
+      value_constraint: "≥10% tumor cells CD30+ by IHC — threshold used in clinical trials for PTCL; lower expression may have diminished benefit"
+      notes: >
+        Re-biopsy at relapse preferred — CD30 expression can change from 1L to relapse.
+        Any intensity of staining acceptable (IHC 1+/2+/3+); ≥10% tumor cells criterion.
+        If CD30 expression is 1-9% or negative: brentuximab not indicated here; proceed
+        to HDACi/antifolate track (romidepsin, pralatrexate, belinostat).
+  biomarker_requirements_excluded:
+    - "CD30-negative (<10% tumor cells) — brentuximab vedotin inactive; HDACi/antifolate track"
+    - "Prior brentuximab vedotin exposure (refractory to BV): ADC resistance expected"
+    - "Pre-existing Grade ≥2 peripheral neuropathy (BV cumulative neuropathy; dose reduction required; Grade ≥2 baseline is relative contraindication)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      PTCL-NOS primarily affects adults median age 60s. Brentuximab vedotin (BV) is an
+      antibody-drug conjugate (ADC): anti-CD30 antibody linked to MMAE (tubulin toxin).
+      Key toxicities: cumulative peripheral neuropathy (~50% any grade; 5-10% Grade 3-4),
+      neutropenia, and fatigue. Prior neuropathy is the main eligibility limiter.
+      Ukraine: brentuximab vedotin (Adcetris) registered for Hodgkin lymphoma and sALCL;
+      PTCL-NOS = off-label; MDT request for compassionate/off-label use required.
+
+recommended_regimen: REG-BV-MONO-SYSTEMIC-ALCL
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Brentuximab vedotin dose-adjusted (1.2 mg/kg q3w if Grade 2 neuropathy or prior
+      Grade 3 neuropathy): dose reduction from standard 1.8 mg/kg; maintains CD30 ADC
+      delivery but reduces cumulative MMAE neuropathy.
+  - regimen_id: null
+    description: >
+      Romidepsin or belinostat (HDACi; IND-PTCL-2L-ROMIDEPSIN / IND-PTCL-2L-BELINOSTAT):
+      fallback when CD30-negative or brentuximab inaccessible. ORR ~25-30% (vs BV ~41%
+      in CD30+ PTCL-NOS); lower efficacy in CD30+ tumors vs BV.
+
+concurrent_therapy:
+  - "G-CSF (filgrastim or pegfilgrastim): consider prophylaxis after cycle 1 if ANC nadir <0.5 or prior febrile neutropenia"
+  - "Neuropathy assessment: CTCAE grading before each cycle; hold for Grade ≥3; reduce to 1.2 mg/kg for Grade 2 persisting after hold"
+  - "Pre-infusion medication: diphenhydramine + acetaminophen + dexamethasone 20 mg IV 30 min before infusion (IRR prevention, especially cycle 1)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg bid during treatment + 3 months after (BV immunosuppression)"
+
+followed_by:
+  - "Continue BV until disease progression, unacceptable toxicity, or maximum 16 cycles"
+  - "Response assessment CT q2 cycles (q6 weeks); PET-CT at cycle 4 and end of treatment"
+  - "Allogeneic SCT consolidation in CR or PR: refer to transplant center if responder (ORR ~41% → subset eligible for allo-SCT bridge)"
+  - "After BV failure: clinical trial enrollment preferred; HDACi (romidepsin/belinostat) salvage; PTCL has poor prognosis post-BV failure"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~41% (CD30+ PTCL-NOS; Bartlett 2014 JCO; n=35 PTCL-NOS in Phase 2)"
+  cr_rate: "~24% (CD30+ PTCL-NOS; Bartlett 2014)"
+  median_dor_months: "~7.2 months (Bartlett 2014)"
+  notes: >
+    Phase 2 brentuximab vedotin in relapsed/refractory CD30+ PTCL (Bartlett 2014 JCO;
+    Fanale 2014 JCO): Phase 2 BV 1.8 mg/kg q3w in r/r PTCL-NOS (n=35) and ALK-neg ALCL.
+    PTCL-NOS ORR ~41% (CD30+ selected); CR ~24%; mDOR ~7.2 months.
+    Fanale 2014: broader CD30+ T-NHL cohort ORR 54% (includes AITL, enteropathy-associated).
+    Key caveat: CD30 expression level correlates with BV ORR — high expressors (IHC 3+)
+    respond better than low expressors (1+/2+). The ≥10% threshold captures most responders
+    but response rates are higher with higher CD30%.
+    NCCN 2025 T-cell lymphoma guidelines: BV monotherapy Cat 2A for CD30+ relapsed PTCL-NOS
+    (not a randomized trial vs other salvage agents; Phase 2 single-arm evidence base).
+    Compared to romidepsin/pralatrexate (ORR ~25-30%): BV has superior ORR in CD30+ tumors.
+
+hard_contraindications:
+  - "CD30-negative (<10% tumor cells by IHC) — BV ADC mechanism requires CD30 target expression"
+  - "Prior brentuximab vedotin refractory — re-treatment generally ineffective post-BV failure"
+  - "Grade ≥3 baseline peripheral neuropathy — MMAE (tubulin toxin) causes additive neurotoxicity; absolute contraindication"
+  - "ECOG PS ≥3 (performance status precludes benefit)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "CD30-negative → IND-PTCL-2L-ROMIDEPSIN (HDACi) or IND-PTCL-2L-PRALATREXATE (antifolate)"
+  - condition: "Grade 2 baseline neuropathy: dose reduce to 1.2 mg/kg q3w; discuss risk-benefit; HDACi track if neuropathy severe"
+  - condition: "Brentuximab inaccessible for PTCL in Ukraine (off-label) → IND-PTCL-2L-ROMIDEPSIN"
+  - condition: "After BV failure: HDACi salvage (romidepsin/belinostat); clinical trial preferred"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CD30 IHC on relapse biopsy: ≥10% tumor cells required — most recent biopsy preferred"
+  - "Peripheral neuropathy assessment (CTCAE): Grade ≥3 = contraindication; Grade 2 = dose reduce"
+  - "CT chest/abdomen/pelvis: baseline staging + q2 cycles response"
+  - "PET-CT (preferred): baseline + interim + end-of-treatment"
+  - "LFTs: monthly (MMAE hepatotoxicity; dose delay for Grade ≥3)"
+
+desired_tests:
+  - "CD30 quantification (H-score or intensity): higher CD30% predicts higher ORR"
+  - "Serum uric acid + LDH: TLS risk (bulky T-NHL with rapid kinetics)"
+  - "Bone marrow biopsy: if cytopenias suggest marrow involvement"
+  - "EBV PCR: PTCL-NOS occasionally EBV-associated; affects differential diagnosis"
+
+rationale: >
+  Brentuximab vedotin (BV) is an antibody-drug conjugate targeting CD30. The anti-CD30
+  antibody (cAC10) is linked to the tubulin toxin MMAE via a cathepsin-cleavable linker.
+  CD30 binding → internalization → MMAE release → microtubule disruption → apoptosis.
+  "Bystander effect" (released MMAE diffuses to CD30-negative adjacent cells) extends
+  activity even in heterogeneous tumors.
+
+  In PTCL-NOS, CD30 expression varies widely (~20-50% of cases show ≥10% CD30+). BV
+  is specifically indicated for the CD30+ subset, where ORR ~41% significantly exceeds
+  romidepsin/belinostat/pralatrexate (ORR ~25-30%).
+
+  Clinical framework:
+  - CD30+ PTCL-NOS 2L: BV monotherapy preferred over HDACi/antifolate (higher ORR ~41% vs ~25%)
+  - CD30-negative PTCL-NOS 2L: romidepsin, pralatrexate, or belinostat (HDACi/antifolate class)
+  - All agents are bridges to allo-SCT in fit responders
+
+  Ukraine: brentuximab vedotin (Adcetris) registered for cHL and sALCL; PTCL-NOS is an
+  off-label use. MDT compassionate use request required; accessibility significantly
+  limited vs HDACi. For most UA PTCL patients: romidepsin (when accessible) or
+  belinostat/pralatrexate fallback; BV for specific CD30+ cases with MDT approval.
+
+rationale_ua: >
+  CD30+ ПТЦЛ-НОС (~20-50% випадків мають CD30 ≥10%): бренту. ведотин (BV) ADC
+  ORR ~41%, CR ~24% (Bartlett 2014 JCO; n=35; NCCN кат.2A). Перевага над HDACi
+  (ромідепсин ~25-30%) при CD30+ пухлині. IHC CD30 на рецидивній біопсії: ≥10% →
+  BV; <10% → ромідепсин/пралатрексат/беліностат. Нейропатія: MMAE накопичувальна;
+  Grade ≥3 — протипоказання; Grade 2 → знижування дози до 1.2 мг/кг. В Україні:
+  Adcetris зареєстрований для ХЛ/sALCL; ПТЦЛ-НОС — off-label, MDT запит потрібен.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN T-cell lymphoma 2025 Category 2A: brentuximab vedotin monotherapy for
+      CD30+ (≥10%) relapsed/refractory PTCL-NOS (Bartlett 2014 JCO Phase 2; ORR ~41%).
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO PTCL 2024: brentuximab vedotin recommended for CD30+ relapsed PTCL-NOS;
+      IHC testing mandatory before prescribing.
+
+do_not_do:
+  - "Без CD30 IHC: BV неактивний при CD30-негативній пухлині; обов'язкова гістологія на рецидиві"
+  - "Grade ≥3 базова нейропатія — MMAE кумулятивна нейропатія; абсолютне протипоказання"
+  - "Без ПЕТ-контролю: BV може давати метаболічну відповідь без CR на КТ; ПЕТ визначає трансплантаційний відбір"
+  - "Після невдачі BV: HDACi (ромідепсин/беліностат) або клінічне дослідження; не повторний BV"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
