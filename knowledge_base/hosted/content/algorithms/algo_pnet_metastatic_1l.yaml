@@ -3,16 +3,20 @@ applicable_to_disease: DIS-PNET
 applicable_to_line_of_therapy: 1
 purpose: >
   Select 1L systemic therapy for unresectable / metastatic pNET.
-  Primary decision gate: grade (Ki67). G1/G2 (≤20%): everolimus 10 mg/day
-  (RADIANT-3) as standard. G3 (>20%) or poorly differentiated NEC: MDT
-  review — may require chemotherapy (EP/IP/CAPTEM). Fitness gates via
-  pan-disease RFs.
+  Primary decision gate: grade (Ki67). G1/G2 (≤20%): two equivalent NCCN Cat 1 options —
+  sunitinib 37.5 mg/day continuously (SUN1111; Raymond 2011 NEJM; mPFS 11.4 mo HR 0.42)
+  OR everolimus 10 mg/day (RADIANT-3; Yao 2011 NEJM; mPFS 11.0 mo HR 0.35).
+  Cardiovascular gate: LVEF <50% or prior VEGFR-TKI → everolimus preferred;
+  otherwise → sunitinib (cardiac toxicity lower with everolimus in cardiac-impaired patients).
+  G3 (>20%) or poorly differentiated NEC: MDT review — may require chemotherapy.
+  Fitness gates via pan-disease RFs.
 
 output_indications:
   - IND-PNET-METASTATIC-1L-EVEROLIMUS
+  - IND-PNET-METASTATIC-1L-SUNITINIB
 
 default_indication: IND-PNET-METASTATIC-1L-EVEROLIMUS
-alternative_indication: null
+alternative_indication: IND-PNET-METASTATIC-1L-SUNITINIB
 
 decision_tree:
   - step: 1
@@ -31,31 +35,65 @@ decision_tree:
           - red_flag: RF-FITNESS-ECOG-FIT
           - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
     if_true:
-      result: IND-PNET-METASTATIC-1L-EVEROLIMUS
+      next_step: 21
     if_false:
       result: IND-PNET-METASTATIC-1L-EVEROLIMUS
     notes: >
-      Both branches resolve to same indication. ECOG ≥2 — discuss
-      dose reduction (everolimus 5 mg/day) or palliative care; ECOG 3+ →
-      engine ECOG PS ≥4 hard gate already suppresses active tracks.
-      Sunitinib alternative (REG-SUNITINIB-MONO-PNET) deferred — pending
-      IND-PNET-METASTATIC-1L-SUNITINIB authoring.
+      ECOG fit/intermediate: proceed to step 21 (sunitinib vs everolimus gate).
+      ECOG ≥3 or poor: everolimus 5 mg/day dose reduction + MDT goals-of-care;
+      ECOG PS ≥4 → engine hard gate suppresses active tracks.
+
+  # Step 21 — Sunitinib vs everolimus gate (both NCCN Cat 1, no head-to-head).
+  # Cardiovascular function gate: LVEF <50% or active cardiac disease → everolimus preferred.
+  # Prior VEGFR-TKI → everolimus (cross-resistance within class).
+  # Suitable cardiac function + no prior VEGFR-TKI → sunitinib preferred
+  # (Raymond 2011 NEJM mPFS 11.4 mo HR 0.42 vs placebo; NCCN Cat 1).
+  # Everolimus remains equally valid (RADIANT-3 mPFS 11.0 mo HR 0.35; NCCN Cat 1).
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "LVEF ≥50% (baseline echocardiogram adequate cardiac function for sunitinib)"
+        - condition: "No prior VEGFR-TKI therapy (sunitinib, sorafenib, axitinib, pazopanib) — cross-class resistance"
+        - condition: "No uncontrolled hypertension (SBP ≤140/90 on or off anti-HTN therapy)"
+    if_true:
+      result: IND-PNET-METASTATIC-1L-SUNITINIB
+      notes: >
+        Adequate cardiac function + no prior VEGFR-TKI: sunitinib 37.5 mg PO daily
+        continuous (REG-SUNITINIB-MONO-PNET; SUN1111 Raymond 2011 NEJM; mPFS 11.4 mo
+        HR 0.42; ORR 9.3%; NCCN Cat 1). CRITICAL: continuous 37.5 mg/day — NOT RCC
+        4-week on/2-week off schedule. LVEF monitoring q3 months.
+        Everolimus (IND-PNET-METASTATIC-1L-EVEROLIMUS) is an equally valid alternative —
+        MDT choice based on comorbidity profile, access, and patient preference.
+    if_false:
+      result: IND-PNET-METASTATIC-1L-EVEROLIMUS
+      notes: >
+        LVEF <50% or prior VEGFR-TKI or uncontrolled HTN: everolimus preferred
+        (REG-EVEROLIMUS-MONO-PNET; RADIANT-3 Yao 2011 NEJM; mPFS 11.0 mo HR 0.35;
+        NCCN Cat 1). mTOR mechanism avoids cardiac/VEGFR toxicities of sunitinib.
+    notes: "Step 21 added 2026-05-04 (Workstream BO): sunitinib vs everolimus cardiac function gate. IND-PNET-METASTATIC-1L-SUNITINIB wired for LVEF-adequate patients. Deferred gap CLOSED. Free-text conditions; MDT-evaluated."
 
 sources:
   - SRC-RADIANT3-YAO-2011
   - SRC-NCCN-NET-2025
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-04"
 review_status: pending_clinical_signoff
 drafted_by: claude_extraction
 notes: >
-  Single-indication scaffold. Deferred paths:
-  - Sunitinib 1L (Raymond 2011 NEJM) — equivalent to everolimus; DRUG-SUNITINIB
-    created; REG + IND to follow as separate PR
-  - SSA concurrent / sequential: octreotide/lanreotide may be added to
-    everolimus or sunitinib; not modelled as separate track (MDT/clinical
-    judgment)
-  - Chemotherapy for poorly differentiated NEC: platinum-etoposide (CAPEOX/EP)
-    — separate disease entity DIS-GEP-NEC needed
-  - PRRT for SSTR2+ pNET: requires SSTR biomarker scaffolding
-    (DRUG-LUTETIUM-177-DOTATATE) — future PR
+  UPDATED 2026-05-04 (Workstream BO): IND-PNET-METASTATIC-1L-SUNITINIB authored
+  and wired at step 21 (SUN1111; Raymond 2011 NEJM; sunitinib 37.5 mg continuous;
+  mPFS 11.4 mo HR 0.42; NCCN Cat 1). Step 2 restructured to route to step 21 for
+  sunitinib/everolimus cardiovascular gate. Deferred gap CLOSED.
+
+  ROUTING SUMMARY:
+  - G3/high-grade: everolimus (with MDT G3 warning)
+  - ECOG fit + LVEF ≥50% + no prior VEGFR-TKI: sunitinib (Cat 1)
+  - LVEF <50% / prior VEGFR-TKI / uncontrolled HTN: everolimus (Cat 1)
+
+  Remaining deferred paths:
+  - SSA (octreotide LAR, lanreotide): CLARINET Cat 1 for SSTR2+ G1/G2 pNET;
+    not modeled as dedicated 1L indication (SSA often concurrent with sunitinib/everolimus)
+  - Chemotherapy for poorly differentiated NEC: platinum-etoposide (EP/IP) —
+    separate disease entity DIS-GEP-NEC needed
+  - PRRT (lutetium-177-DOTATATE) for SSTR2+ pNET: requires SSTR biomarker
+    scaffolding (DRUG-LUTETIUM-177-DOTATATE) — future PR

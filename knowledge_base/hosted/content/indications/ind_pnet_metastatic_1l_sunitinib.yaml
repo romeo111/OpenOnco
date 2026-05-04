@@ -1,0 +1,178 @@
+id: IND-PNET-METASTATIC-1L-SUNITINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PNET
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable locally advanced or metastatic pNET (any stage IV, or unresectable stage III)"
+    - "Well-differentiated G1 (Ki67 <3%) or G2 (Ki67 3–20%) — SUN1111 enrolled G1/G2 pNET only"
+    - "Progressive disease (documented radiological progression per RECIST 1.1 within preceding 12 months, OR symptomatic tumor burden)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, Hb ≥9 g/dL, CrCl ≥30 mL/min, ALT/AST ≤2.5× ULN (≤5× if liver mets), bilirubin ≤1.5× ULN"
+    - "LVEF ≥50% (sunitinib → cardiotoxicity; baseline echo required)"
+    - "No uncontrolled hypertension (BP ≤140/90 before sunitinib start)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KI67-PROLIFERATION
+      required: false
+      value_constraint: "Ki67 ≤20% (well-differentiated G1/G2 pNET); if Ki67 >20% → MDT review (may be poorly differentiated NEC → chemotherapy preferred)"
+      notes: >
+        SUN1111 enrolled well-differentiated Grade 1-2 pNET. Sunitinib has NOT been
+        validated in poorly differentiated Grade 3 NEC (Ki67 >20%) — these require
+        platinum-etoposide chemotherapy (different disease). Grade 3 well-differentiated
+        pNET (rare; Ki67 20-55% with low mitotic index) may benefit from sunitinib per
+        MDT judgment, but evidence is limited.
+  biomarker_requirements_excluded:
+    - "Poorly differentiated pNEC (Ki67 >55%): chemotherapy indicated (platinum+etoposide); sunitinib NOT appropriate"
+    - "Prior sunitinib or other VEGFR-TKI (axitinib, sorafenib, pazopanib): unlikely to benefit; cross-resistance"
+    - "Active uncontrolled cardiac disease: LVEF <50% or Grade ≥3 cardiac failure; sunitinib cardiotoxicity risk"
+    - "Severe hepatic impairment (Child-Pugh C): sunitinib hepatically metabolized"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      pNET primary: pancreatic. Patient population includes MEN1 patients (hereditary).
+      No strict age cutoff. Older patients with adequate ECOG and organ function can
+      receive sunitinib; dosing adjustments may be required for age-related renal decline.
+      Sunitinib is preferred over everolimus when:
+      (1) Prior pneumonitis or high risk for everolimus-related interstitial lung disease
+      (2) Diabetic patients where mTOR hyperglycemia is a concern
+      (3) Carcinoid syndrome symptoms where anti-angiogenic cytoreduction is prioritized
+      (4) MDT preference based on comorbidity profile
+      Both everolimus (NCCN Cat 1) and sunitinib (NCCN Cat 1) are equivalent first-line
+      options; selection is individualized based on toxicity profile and access.
+
+recommended_regimen: REG-SUNITINIB-MONO-PNET
+alternative_regimens:
+  - regimen_id: REG-EVEROLIMUS-MONO-PNET
+    description: >
+      Everolimus 10 mg PO daily (RADIANT-3; Yao 2011 NEJM; mPFS 11.0 vs 4.6 mo HR 0.35).
+      NCCN Cat 1 equivalent to sunitinib. Preferred when: sunitinib inaccessible, prior
+      VEGFR-TKI, significant cardiovascular disease, or patient preference for non-IV oral
+      agent with different toxicity profile (stomatitis, pneumonitis vs hypertension, fatigue).
+  - regimen_id: null
+    description: >
+      Somatostatin analogues (octreotide LAR 30 mg q4w IM or lanreotide 120 mg q4w SC):
+      CLARINET (Caplin 2014 NEJM; mPFS not reached vs 18 mo placebo HR 0.47; Grade 1/2
+      pNET SSTR2+ patients). SSA is NCCN Cat 1 for SSTR2+ G1/G2 pNET; may be preferred
+      in patients with carcinoid syndrome symptoms, low-burden disease, or very indolent
+      progression. Not modeled as separate pNET 1L indication in current KB.
+  - regimen_id: null
+    description: >
+      CAPTEM (capecitabine 750 mg/m² BID d1-14 + temozolomide 200 mg/m² d10-14 q28d):
+      NCCN Cat 2A for progressive pNET (Strosberg 2011; ORR 70% in MGMT-low pNET);
+      data mostly retrospective; considered for high-burden rapidly progressive pNET.
+
+concurrent_therapy:
+  - "SSA continuation: if patient was receiving octreotide LAR or lanreotide, continue concurrently with sunitinib"
+  - "Anti-hypertensive therapy: initiate if SBP >140 mmHg during sunitinib (amlodipine or ACE inhibitor preferred)"
+  - "Levothyroxine: start when TSH >5 mU/L (hypothyroidism in ~29%)"
+  - "Urea/salicylic acid cream 40% for hand-foot syndrome (PPE); emollient cream prophylaxis from day 1"
+  - "Proton pump inhibitor: omeprazole 20 mg PO daily (gastric acid reduction; sunitinib → nausea/mucositis)"
+
+followed_by:
+  - "Continue until progression or unacceptable toxicity"
+  - "Response assessment CT chest/abdomen/pelvis q12 weeks (RECIST 1.1); CgA + NSE trending"
+  - "After progression: everolimus 1L was not given → switch to everolimus; or SSA if low-burden; clinical trial"
+  - "After sunitinib + everolimus both progressed: CAPTEM; PRRT (if SSTR2+, 68Ga-DOTATATE PET); clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "9.3% (SUN1111; Raymond 2011 NEJM; n=86 sunitinib arm)"
+  disease_control_rate: "~73% (SD + PR; similar to everolimus)"
+  median_pfs_months: "11.4 months (HR 0.42 vs placebo; p<0.001; SUN1111)"
+  median_os_months: "not mature at primary analysis; OS HR 0.41 (95% CI 0.19-0.89) at early analysis — immature; crossover confounds OS"
+  notes: >
+    SUN1111 (Raymond 2011 NEJM; Phase 3; n=171):
+    Sunitinib 37.5 mg/day continuous vs placebo in progressive well-differentiated pNET.
+    Primary endpoint: PFS. Trial stopped early by DSMB for efficacy.
+    mPFS: 11.4 vs 5.5 months (HR 0.42; 95% CI 0.26-0.66; p<0.001).
+    ORR: 9.3% vs 0%.
+    OS HR 0.41 (95% CI 0.19-0.89) at early look — immature data; crossover confounds.
+    Important caveat: RCT stopped early; early stopping inflates treatment effect.
+    Nevertheless, NCCN Cat 1 alongside everolimus (RADIANT-3 mPFS 11.0 vs 4.6 mo HR 0.35).
+    Direct head-to-head comparison vs everolimus not available; both are valid 1L choices.
+    Common Grade ≥3 toxicities: neutropenia 17%, hypertension 13%, PPE 6%, fatigue 5%.
+
+hard_contraindications:
+  - "LVEF <50% (cardiac dysfunction): sunitinib cardiotoxicity risk → everolimus preferred"
+  - "Poorly differentiated NEC (Ki67 >55%): sunitinib not appropriate; use platinum+etoposide"
+  - "Prior VEGFR-TKI (sorafenib, axitinib, pazopanib, cabozantinib): cross-resistance; everolimus preferred"
+  - "Uncontrolled hypertension despite anti-HTN therapy: sunitinib VEGFR inhibition exacerbates"
+  - "Active bleeding (GI or other): sunitinib → anti-VEGF-mediated bleeding risk"
+
+red_flags_triggering_alternative:
+  - condition: "RF-NET-HIGH-GRADE-G3: Ki67 >20% → MDT review; poorly differentiated NEC → platinum+etoposide"
+  - condition: "Significant cardiac disease (LVEF <50%, arrhythmia, active CHF) → IND-PNET-METASTATIC-1L-EVEROLIMUS"
+  - condition: "Prior sunitinib-related severe toxicity → IND-PNET-METASTATIC-1L-EVEROLIMUS (different mechanism)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "LVEF by ECHO or MUGA: baseline mandatory (sunitinib cardiotoxicity gate)"
+  - "TSH + free T4: baseline + q3 months (sunitinib → hypothyroidism 29%)"
+  - "BP measurement: baseline; must be controlled before start"
+  - "Ki67 (IHC): confirm Grade 1-2 pNET (exclude G3 NEC)"
+  - "CgA (chromogranin A) + NSE (neuron-specific enolase): baseline tumor markers; trending for response"
+  - "68Ga-DOTATATE PET/CT: SSTR2 expression assessment (informs SSA eligibility + PRRT eligibility at progression)"
+  - "CT chest/abdomen/pelvis: baseline staging"
+
+desired_tests:
+  - "DAXX/ATRX IHC: loss correlates with higher-grade pNET and worse prognosis — can inform surveillance interval"
+  - "Fasting insulin + glucose: pNET may be functional (insulinoma, glucagonoma) — rule out active hormonal syndrome before sunitinib"
+  - "24h urine 5-HIAA: if carcinoid features present"
+
+rationale: >
+  Sunitinib is a multi-targeted VEGFR 1-3, PDGFRα/β, KIT, FLT3, CSF-1R, and RET
+  inhibitor. pNETs are highly vascular tumors with constitutive VEGF overexpression.
+  Angiogenesis inhibition with sunitinib reduces tumor vascular density and induces
+  stable disease/partial responses in most patients.
+
+  Unlike the 4-on/2-off RCC schedule, pNET patients use CONTINUOUS 37.5 mg/day
+  dosing (SUN1111 protocol) — this is a critical prescribing difference to avoid.
+
+  Sunitinib vs everolimus (no head-to-head):
+  - Both NCCN Cat 1; both achieve mPFS ~11 months
+  - Sunitinib toxicity: cardiovascular (HTN, cardiotoxicity), hypothyroidism, PPE, fatigue
+  - Everolimus toxicity: stomatitis, pneumonitis (ILD ~14%), hyperglycemia, immunosuppression
+  - Sunitinib preferred: cardiac risk is lower, diabetes is concern for mTOR hyperglycemia
+  - Everolimus preferred: prior VEGFR-TKI, active cardiac disease, HTN difficult to control
+
+  NCCN NET 2025: sunitinib is Category 1 for well-differentiated G1/G2 progressive pNET
+  alongside everolimus. Clinician choice based on toxicity profile, access, comorbidities.
+
+rationale_ua: >
+  Сунітиніб 37.5 мг/добу безперервно (SUN1111; Raymond 2011 NEJM; мПВЗ 11.4 міс;
+  HR 0.42; NCCN кат.1) — альтернатива еверолімусу для G1/G2 прогресуючої pNET.
+  ОБОВ'ЯЗКОВО: БЕЗПЕРЕРВНИЙ прийом 37.5 мг (НЕ 4тижні/2 тижні як при НКК).
+  ЕхоКГ перед стартом (кардіотоксичність). Моніторинг АТ, ТТГ, ЗАК.
+  В Україні: сунітиніб зареєстрований для НКК/ГІСТ; при pNET — поза-реєстраційне
+  застосування (МДК). Еверолімус доступніший варіант за реєстраційним статусом.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Neuroendocrine Tumors 2025 Category 1: sunitinib 37.5 mg PO continuously
+      for progressive well-differentiated G1/G2 pNET (SUN1111 Raymond 2011 NEJM basis).
+      Equivalent recommendation alongside everolimus; no head-to-head; clinical selection
+      based on toxicity profile.
+
+do_not_do:
+  - "Сунітиніб 50 мг 4-тиж/2-тиж (режим НКК) при pNET: НЕПРАВИЛЬНО — доза 37.5 мг/добу безперервно (SUN1111)"
+  - "При погано диференційованому NEC (Ki67 >55%): сунітиніб неефективний; платина+етопозид"
+  - "Без ЕхоКГ: сунітиніб → кардіотоксичність; базальна ФВЛШ перед стартом ОБОВ'ЯЗКОВО"
+  - "Без моніторингу ТТГ: гіпотиреоз у 29%; замісна терапія левотироксином при ТТГ >5 мО/л"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
