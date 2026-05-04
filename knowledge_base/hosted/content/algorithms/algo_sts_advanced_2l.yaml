@@ -1,0 +1,148 @@
+id: ALGO-STS-ADVANCED-2L
+applicable_to_disease: DIS-SOFT-TISSUE-SARCOMA
+applicable_to_disease_state: advanced
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for advanced/metastatic STS after anthracycline-based 1L.
+  Routes by: (1) STS subtype (leiomyosarcoma/UPS → GemDoc; liposarcoma → trabectedin
+  or pazopanib; other non-adipocytic → pazopanib or GemDoc), (2) ECOG PS gate, and
+  (3) organ function for chemotherapy vs targeted therapy.
+  GemDoc (SARC002) is the preferred cytotoxic 2L; pazopanib (PALETTE) is the
+  preferred targeted 2L for non-adipocytic STS. Trabectedin is the preferred 2L
+  for liposarcoma/LMS (ET-743-SAR-3007) but has limited Ukraine access.
+
+output_indications:
+  - IND-STS-ADVANCED-2L-GEMDOC
+  - IND-STS-ADVANCED-2L-PAZOPANIB
+
+default_indication: IND-STS-ADVANCED-2L-GEMDOC
+alternative_indication: IND-STS-ADVANCED-2L-PAZOPANIB
+
+decision_tree:
+  # Step 1 — Subtype exclusion gate.
+  # GIST, Ewing, RMS: out of scope (different disease pathways).
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "STS subtype confirmed as non-GIST, non-Ewing, non-RMS"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        GIST: use imatinib/sunitinib/regorafenib pathway (out of scope).
+        Ewing sarcoma: IE, VIE, high-dose protocols (out of scope — NCCN Ewing).
+        Rhabdomyosarcoma: pediatric/specialized protocols (out of scope).
+
+  # Step 2 — ECOG PS gate.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "ECOG PS 0-2"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: systemic chemotherapy not appropriate. Best supportive care.
+        Consider palliative RT for painful/bleeding lesions.
+
+  # Step 3 — STS subtype routing gate.
+  # Leiomyosarcoma (uterine or extra-uterine) and UPS: GemDoc has strongest evidence.
+  # Liposarcoma (adipocytic): trabectedin preferred (ET-743-SAR-3007) if available;
+  # pazopanib alternative (though PALETTE excluded liposarcoma).
+  # Other non-adipocytic STS: pazopanib (PALETTE) or GemDoc.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "STS subtype = leiomyosarcoma (uterine LMS or extra-uterine LMS) OR undifferentiated pleomorphic sarcoma (UPS)"
+    if_true:
+      result: IND-STS-ADVANCED-2L-GEMDOC
+      notes: >
+        Leiomyosarcoma + UPS: GemDoc preferred 2L (SARC002: PFS 6.2 vs 3.0 months;
+        ORR 16% vs 8%; LMS subgroup greatest benefit). G-CSF mandatory.
+        Gemcitabine 90-min infusion at 10 mg/m²/min CRITICAL.
+        Pazopanib (IND-STS-ADVANCED-2L-PAZOPANIB) is an alternative, especially
+        after GemDoc failure or if chemotherapy is poorly tolerated.
+    if_false:
+      next_step: 4
+
+  # Step 4 — Liposarcoma gate.
+  # Liposarcoma: trabectedin preferred where available (ET-743-SAR-3007;
+  # ORR 9.9% vs dox 6.9% NS; PFS HR 0.88 NS but disease-specific endpoint;
+  # FDA approved for unresectable LPS/LMS). In Ukraine: limited access.
+  # Eribulin also for liposarcoma (ERIBULIN-312; OS benefit in LPS subgroup).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "STS subtype = liposarcoma (well-differentiated, dedifferentiated, myxoid, pleomorphic)"
+    if_true:
+      result: null
+      notes: >
+        Liposarcoma 2L: trabectedin 1.5 mg/m² 24h CIV q21d preferred where available
+        (ET-743-SAR-3007; FDA approved Oct 2015 for unresectable LPS or LMS post-anthracycline).
+        Eribulin 1.4 mg/m² d1,8 q21d (ERIBULIN-312: OS benefit in liposarcoma subgroup;
+        HR 0.51 for LPS subset). Pazopanib has limited evidence in liposarcoma (excluded
+        from PALETTE) but used in practice.
+        IND-STS-ADVANCED-2L-TRABECTEDIN not yet authored — use trabectedin regimen
+        per NCCN if available. Ukraine access: trabectedin named-patient import or
+        international referral. GemDoc has poor evidence in liposarcoma vs LMS.
+    if_false:
+      next_step: 5
+
+  # Step 5 — Other non-adipocytic STS: chemotherapy tolerance assessment.
+  # Non-LMS, non-UPS, non-liposarcoma STS (synovial sarcoma, angiosarcoma,
+  # fibrosarcoma, MPNST, etc.): pazopanib is NCCN Cat 1 (PALETTE enrolled
+  # these histologies). GemDoc is acceptable if chemo appropriate.
+  - step: 5
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2 AND adequate renal function (CrCl ≥30 mL/min)"
+        - condition: "No severe peripheral neuropathy (Grade ≥2)"
+    if_true:
+      result: IND-STS-ADVANCED-2L-GEMDOC
+      notes: >
+        Other non-adipocytic STS (synovial, angiosarcoma, MPNST, fibrosarcoma, etc.):
+        GemDoc is an option (SARC002 enrolled heterogeneous STS). Pazopanib is equally
+        valid for non-adipocytic STS (PALETTE); clinician choice based on toxicity
+        preference, comorbidities, and patient preference (IV vs oral).
+    if_false:
+      result: IND-STS-ADVANCED-2L-PAZOPANIB
+      notes: >
+        Renal impairment (CrCl <30) or neuropathy contraindication for gemcitabine/docetaxel:
+        pazopanib 800 mg PO QD is preferred (PALETTE; non-renal excretion; NCCN Cat 1).
+        Hepatic function and BP monitoring mandatory. Not for liposarcoma.
+
+sources:
+  - SRC-SARC002-MAKI-2007
+  - SRC-PALETTE-VAN-DER-GRAAF-2012
+  - SRC-NCCN-STS-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  STS 2L ROUTING SUMMARY:
+
+  Post-anthracycline ± ifosfamide (1L):
+  1. LMS / UPS → GemDoc (SARC002 Cat 1; LMS-preferential benefit)
+  2. Liposarcoma → trabectedin (ET-743-SAR-3007; FDA approved) or eribulin (ERIBULIN-312 LPS subset)
+  3. Other non-adipocytic → pazopanib (PALETTE Cat 1) or GemDoc
+  4. Synovial sarcoma → ifosfamide (if not used 1L) or pazopanib; GemDoc less active in SS
+
+  Resequencing options:
+  - If doxorubicin 1L: ifosfamide 2L (if not prior); GemDoc; pazopanib
+  - If dox+ifo 1L (AI): GemDoc → pazopanib → trabectedin/eribulin sequence
+
+  GAPS:
+  - IND-STS-ADVANCED-2L-TRABECTEDIN: trabectedin for liposarcoma/LMS
+    (ET-743-SAR-3007, PMID 26527776) not yet authored
+  - IND-STS-ADVANCED-2L-ERIBULIN: eribulin for liposarcoma
+    (ERIBULIN-312; OS HR 0.51 in LPS subgroup; PMID 26441396) not yet authored
+  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE: high-dose ifosfamide 2L
+    (if not used in 1L) not yet authored
+  - SRC-NCCN-STS-2025 is referenced — confirm this source ID exists in KB
+
+  Subtype nuances (not captured in algorithm):
+  - Angiosarcoma: paclitaxel or gem preferred (angiosarcoma is taxane-sensitive)
+  - Alveolar soft part sarcoma: sunitinib/cediranib preferred (vascular)
+  - Desmoplastic small round cell tumor: specialized protocols
+  All require MDT discussion.
