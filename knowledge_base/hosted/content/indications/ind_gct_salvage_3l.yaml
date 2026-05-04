@@ -1,0 +1,161 @@
+id: IND-GCT-SALVAGE-3L
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-TESTICULAR-GCT
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed or refractory GCT (NSGCT or seminoma) after ≥2 prior cisplatin-containing lines"
+    - "Failure of both 1L (BEP or EP) AND 2L salvage (TIP or HDCT+ASCT)"
+    - "ECOG PS 0-2 (ECOG ≥3: best supportive care; clinical trial if available)"
+    - "Adequate organ function: creatinine ≤2× ULN; hepatic function adequate for paclitaxel"
+    - "NO absolute platinum-refractory disease (may still be chemotherapy-sensitive, especially if late relapse)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-AFP
+      value_constraint: "AFP at current relapse — track trajectory (rising AFP = relapse marker)"
+    - biomarker_id: BIO-HCG-SERUM
+      value_constraint: "hCG at current relapse — track trajectory"
+  biomarker_requirements_excluded:
+    - "Active uncontrolled infection — aplasia risk"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG ≥3: systemic chemotherapy not appropriate in most cases.
+      Discuss goals of care. Clinical trial only if ECOG 3 with good functional
+      trajectory at referral center. GCT patients are often young — aggressive
+      support warranted.
+
+recommended_regimen: REG-GEMPACLITAXEL-GCT
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Gemcitabine + oxaliplatin (GEMOX): gemcitabine 1000 mg/m² d1 +
+      oxaliplatin 130 mg/m² d1 q21d — NCCN Category 2B; alternative to
+      GemPac when paclitaxel neuropathy contraindication or unavailability.
+      ORR ~15-20% in salvage GCT.
+  - regimen_id: null
+    description: >
+      Oxaliplatin-based combinations (e.g., oxaliplatin + ifosfamide + bleomycin
+      or BOP — bleomycin + vincristine + oxaliplatin) — institutional protocols;
+      NCCN Category 2B.
+concurrent_therapy: []
+followed_by:
+  - "Residual mass RPLND: for patients achieving CR or PR with marker normalization — resection of residual mass ≥1 cm is potentially curative (teratoma or necrosis at pathology). Refer to GCT specialty center with RPLND expertise."
+  - "AlloSCT: for select fit patients with highly chemo-sensitive relapse (rare but curative; requires GCT specialty center with program)"
+  - "Clinical trial enrollment: NCCN strongly recommends clinical trial as priority in 3L+ GCT — enroll if available"
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~20-32% (GemPac phase 2 series and institutional data; Kollmannsberger 1999 series ORR 31%)"
+  cr_rate: "~10-15% (durable CRs achievable; especially with subsequent RPLND)"
+  median_os_months: "~9-12 (median; curative potential exists in complete responders with RPLND)"
+  notes: >
+    No randomized phase 3 trial for GCT 3L salvage. Evidence is from:
+    (1) Kollmannsberger C, et al. (1999, JCO): Paclitaxel+gemcitabine in
+        cisplatin-refractory GCT; ORR 31% including complete responses.
+    (2) Pectasides D, et al. (2004, Eur Urol): GemPac in platinum-refractory GCT.
+    (3) NCCN TGCT 2025 Expert Panel consensus: GemPac Category 2A.
+    GCT is among the most chemotherapy-sensitive solid tumors — even at 3L,
+    complete responses with curative intent (marker normalization + RPLND)
+    occur in ~10-15%. Refer all 3L patients to GCT specialty center.
+    Late relapse (>2 years from last chemotherapy): higher likelihood of
+    chemo-sensitivity; surgical resection often primary option if localized.
+
+hard_contraindications:
+  - "Grade ≥3 residual peripheral neuropathy from prior paclitaxel or taxane (paclitaxel risk additive) → GEMOX alternative (oxaliplatin neuropathy is different)"
+  - "Prior severe hypersensitivity to paclitaxel (Grade 4 HSR) → GEMOX or alternative non-paclitaxel regimen"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Platinum-resistant pure seminoma late relapse: RT may be appropriate for oligometastatic; systemic only if RT not feasible"
+
+red_flags_triggering_alternative:
+  - condition: "Grade ≥2 peripheral neuropathy from prior cisplatin/paclitaxel → GEMOX (gemcitabine+oxaliplatin) preferred (REG description in alternative_regimens; NCCN Cat 2B)"
+  - condition: "Clinical trial available for 3L GCT → enroll in trial first (novel agents, immunotherapy combinations); NCCN priority recommendation"
+  - condition: "Resectable isolated residual mass with marker normalization → RPLND may be curative alone (no systemic GemPac needed if residual teratoma/necrosis)"
+  - condition: "HDCT/ASCT not attempted at 2L AND patient fit AND cisplatin-sensitive relapse → consider HDCT+ASCT (IND-GCT-SALVAGE-2L-HDCT-ASCT) before GemPac"
+  - condition: "Late relapse >2 years from last chemo + localized disease → surgical resection primary; MDT at GCT center"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "AFP: required (marker trajectory)"
+  - "hCG: required"
+  - "LDH: required"
+  - "CT chest/abdomen/pelvis + MRI brain if CNS suspected (GCT brain relapse rare but life-threatening)"
+  - "Testicular US if contralateral mass (synchronous primary vs metastasis)"
+  - "Neurological exam: baseline (paclitaxel cumulative neuropathy — assess existing neuropathy grade before treatment)"
+
+desired_tests:
+  - "FISH for i(12p): confirms GCT diagnosis if biopsy of relapsed mass obtained (some late relapses are non-GCT secondary malignancy)"
+  - "Germline DNA banking: young patients with late relapse — platinum-based chemotherapy mutagenic; fertility counseling"
+  - "Fertility counseling and sperm banking (if not done at diagnosis — still relevant before additional chemotherapy)"
+  - "GCT specialty center referral: strongly recommended for all 3L GCT — complex salvage decisions require experienced team"
+
+rationale: >
+  Gemcitabine + paclitaxel (GemPac) is the preferred third-line regimen for
+  relapsed/refractory GCT after failure of standard 2L salvage (TIP or HDCT+ASCT).
+  It represents a non-crossresistant combination with a distinct mechanism from
+  cisplatin-based regimens:
+  - Gemcitabine: nucleoside analogue inhibiting DNA synthesis via SAMHD1-dependent
+    deoxynucleotide pool depletion
+  - Paclitaxel: microtubule stabilizer (distinct from vinca alkaloids used in VeIP/VBL)
+
+  Evidence (NCCN Category 2A):
+  - Kollmannsberger (1999, JCO): ORR 31% in cisplatin-refractory GCT (n=35; some patients
+    had prior HDCT); 5 complete responses; 2-year survival ~20% in that population.
+  - Institutional series from Indiana University, Memorial Sloan Kettering, European
+    GCT centers confirm GemPac activity in 3L+ setting.
+  - No randomized comparison vs GEMOX or other salvage regimens.
+
+  Key principle: GCT curative potential persists at 3L. Achieving complete marker
+  normalization + surgical resection of residual disease (RPLND or pulmonary
+  resection) can produce durable cures even after multiple chemotherapy failures.
+  This is unique among solid tumors. All 3L GCT patients should be evaluated at
+  a center with GCT-dedicated surgical expertise.
+
+  Prognostic note: Late relapse GCT (>2 years from last chemo) — distinct biology,
+  often platinum-resistant, predominantly mature teratoma or non-GCT somatic
+  transformation. Surgical consultation primary for late relapse. GemPac may be
+  used as cytoreduction before resection but surgery is the principal intent.
+
+rationale_ua: >
+  GemPac (гемцитабін + паклітаксел) — кращий 3L режим для р/р ГКП після невдачі
+  TIP або ВДХТ/АТГСК. Некросрезистентна комбінація: гемцитабін (нуклеозидний
+  аналог) + паклітаксел (стабілізатор мікротрубочок — відмінний від вінка-алкалоїдів).
+  NCCN Категорія 2A. ORR ~20-32%; CRs ~10-15% з можливістю нормалізації маркерів
+  та RPLND → виліковання навіть при множинних рецидивах.
+  Пізні рецидиви ГКП (>2 р. від останньої хімії): хірургічна консультація першочергова.
+  ОБОВ'ЯЗКОВО: направлення до спеціалізованого ГКП центру у 3L.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-TESTICULAR-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Testicular Cancer 2025: gemcitabine+paclitaxel listed as Category 2A
+      third-line or subsequent salvage for relapsed/refractory GCT after ≥2 prior
+      cisplatin-containing regimens. GEMOX listed as Category 2B alternative.
+
+do_not_do:
+  - "НЕ пропускати премедикацію перед паклітакселем — ризик важкої гіперчутливості без дексаметазону/антигістаміну"
+  - "НЕ застосовувати при ≥2 ступ. периферичної нейропатії — GemOx є альтернативою"
+  - "КЛІНІЧНИЙ ПРОТОКОЛ — пріоритет перед GemPac у 3L ГКП; завжди перевіряти доступність"
+  - "НЕ ігнорувати залишкові маси після відповіді — RPLND після нормалізації маркерів може бути куративним"
+  - "Направлення до спеціалізованого ГКП центру ОБОВ'ЯЗКОВЕ у 3L"
+  - "Консультація щодо збереження фертильності перед хімієтерапією — молоді пацієнти, чоловіки"
+
+time_critical: true
+time_critical_note: >
+  Rapidly rising tumor markers (doubling time <7 days) indicate explosive relapse —
+  initiate within days. For marker plateau or slow rise, a few weeks to clinical
+  trial screening is acceptable.
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

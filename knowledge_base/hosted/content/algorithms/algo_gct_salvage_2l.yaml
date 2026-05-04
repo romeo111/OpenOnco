@@ -14,6 +14,7 @@ output_indications:
   - IND-GCT-METASTATIC-1L-BEP
   - IND-GCT-SALVAGE-2L-TIP
   - IND-GCT-SALVAGE-2L-HDCT-ASCT
+  - IND-GCT-SALVAGE-3L
 
 default_indication: IND-GCT-SALVAGE-2L-TIP
 alternative_indication: IND-GCT-SALVAGE-2L-HDCT-ASCT
@@ -125,13 +126,20 @@ notes: >
 
   AUTHORED 2026-05-04:
   - REG-HDCT-ASCT-GCT: Indiana HDCT (carbo 700 mg/m²/d×3 + VP-16 750 mg/m²/d×3 × 2 tandem ASCT); wired to IND-GCT-SALVAGE-2L-HDCT-ASCT
+  - IND-GCT-SALVAGE-3L + REG-GEMPACLITAXEL-GCT: GemPac 3L salvage (paclitaxel
+    110 mg/m² + gemcitabine 1000 mg/m² d1+8 q21d; NCCN Cat 2A; ORR ~20-32%).
+    Not wired as a formal algorithm step (3L post-2L-failure is beyond this
+    algorithm's scope); referenced via IND-GCT-SALVAGE-2L-TIP followed_by
+    and IND-GCT-SALVAGE-3L itself. See ALGO-GCT-SALVAGE-3L (to be authored)
+    for full 3L routing.
 
   REMAINING GAPS:
-  - IND-GCT-SALVAGE-3L: third-line salvage (gemcitabine+paclitaxel, oxaliplatin-based)
-    not yet authored
   - Residual mass RPLND decision: IND-GCT-SALVAGE-RPLND not yet authored
+    (post-chemotherapy RPLND is a surgical indication; requires MDT input)
   - Seminoma late relapse (>2 years): carboplatin-based salvage has different
     considerations; not separately modeled
+  - ALGO-GCT-SALVAGE-3L: full 3L algorithm (IND-GCT-SALVAGE-3L authored but
+    dedicated routing algorithm not yet created)
 
   Curative intent: GCT is one of the most chemotherapy-sensitive solid tumors.
   Even multiply-relapsed patients can achieve long-term remission with HDCT+ASCT.
