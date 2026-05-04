@@ -1,0 +1,177 @@
+id: IND-GASTRIC-METASTATIC-2L-PACLITAXEL-WEEKLY
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced gastric or gastroesophageal junction (GEJ) adenocarcinoma"
+    - "Disease progression on or after 1L platinum + fluoropyrimidine ± ICI"
+    - "Ramucirumab inaccessible (not NSZU-funded, not available at treating centre, or contraindicated)"
+    - "ECOG PS 0-2"
+    - "HER2-negative (confirmed on 1L biopsy or reconfirmed at relapse); OR HER2 3+ but T-DXd inaccessible"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "MSI-H/dMMR + ICI-naive — preferred: pembrolizumab monotherapy (IND-GASTRIC-METASTATIC-2L-MSI-H-PEMBROLIZUMAB; superior ORR ~45-57%)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 2 patients may receive paclitaxel weekly with modified dose or schedule
+      at MDT discretion. ECOG ≥3: best supportive care; chemotherapy at ECOG 3+
+      rarely beneficial in gastric 2L and may hasten toxicity.
+
+recommended_regimen: REG-PACLITAXEL-WEEKLY-GASTRIC
+alternative_regimens:
+  - regimen_id: REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC
+    description: >
+      Ramucirumab + paclitaxel (RAINBOW; Wilke 2014 Lancet Oncol; ORR ~28%; mOS 9.6 mo;
+      NCCN Cat 1 preferred) — use when ramucirumab becomes accessible. Paclitaxel weekly
+      monotherapy is the UA-accessible fallback pending ramucirumab reimbursement.
+
+concurrent_therapy:
+  - "Antiemetic: 5-HT3 ± dexamethasone PRN (low-moderate emetogenicity)"
+  - "HBV screen before cycle 1; entecavir prophylaxis if HBsAg+ or anti-HBc+"
+  - "Neuropathy assessment each cycle (NCI-CTCAE)"
+  - "CBC day 1 and day 8; LFT baseline + q4 weeks"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q8-12 weeks (response assessment; RECIST 1.1)"
+  - "Continue until confirmed radiologic progression or unacceptable toxicity"
+  - "At progression: TAS-102 (IND-GASTRIC-METASTATIC-3L-TAS102; TAGS trial; NCCN Cat 1 3L) if ECOG ≤2"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~16-20% (paclitaxel alone arm, RAINBOW; Wilke 2014 Lancet Oncol)"
+  complete_response: "<1%"
+  progression_free_survival: "Median PFS ~2.9 months (paclitaxel alone, RAINBOW)"
+  overall_survival_5y: "Median OS ~7.4 months (paclitaxel alone, RAINBOW; vs 9.6 mo pac+ram)"
+  notes: >
+    PRIMARY EVIDENCE: RAINBOW (Wilke et al. 2014 Lancet Oncol; phase 3 RCT; N=665):
+    - Ramucirumab + paclitaxel vs paclitaxel alone in 2L metastatic gastric/GEJ
+    - Paclitaxel alone arm (N=335): ORR ~16%; mPFS 2.9 months; mOS 7.4 months
+    - Pac+ram adds survival benefit (HR 0.81; mOS 9.6 vs 7.4 mo) — ramucirumab
+      is the preferred combination partner when accessible
+    - NCCN Gastric 2025: paclitaxel ± ramucirumab both Category 1 2L; ramucirumab
+      addition recommended when feasible but paclitaxel alone acceptable when not
+
+    UKRAINE CONTEXT:
+    Ramucirumab (Cyramza) is registered in Ukraine but NSZU reimbursement in
+    the oncology package is limited and facility-dependent as of 2026. Paclitaxel
+    is widely accessible and NSZU-reimbursed — making weekly paclitaxel monotherapy
+    the standard UA-accessible 2L option pending ramucirumab funding availability.
+
+hard_contraindications:
+  - "ECOG ≥3 (chemotherapy rarely beneficial; BSC preferred)"
+  - "Grade ≥2 peripheral neuropathy at baseline (paclitaxel cumulative neurotoxicity)"
+  - "Known paclitaxel or Cremophor hypersensitivity without adequate premedication protocol"
+
+red_flags_triggering_alternative:
+  - RF-GASTRIC-EMERGENCY-BLEED-OBSTRUCTION
+  - RF-GASTRIC-FRAILTY-AGE
+
+required_tests:
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+
+desired_tests:
+  - "HER2 IHC/ISH re-biopsy at progression if HER2 status unknown or negative on archival specimen (HER2 conversion possible)"
+  - "MSI/dMMR status if not tested in 1L (pembro eligibility gate for ICI-naive patients)"
+
+rationale: >
+  Weekly paclitaxel 80 mg/m² (days 1, 8, 15 of a 28-day cycle) as second-line
+  therapy for HER2-negative metastatic gastric/GEJ adenocarcinoma when ramucirumab
+  is not accessible.
+
+  EVIDENCE BASIS: RAINBOW (Wilke et al. 2014 Lancet Oncol; phase 3 RCT; N=665)
+  established paclitaxel as the standard 2L cytotoxic backbone for metastatic
+  gastric cancer. Paclitaxel alone arm achieved ORR ~16%, mPFS 2.9 months,
+  mOS 7.4 months — the addition of ramucirumab (VEGFR-2 antibody) improved
+  ORR to ~28%, mPFS to 4.4 months, and mOS to 9.6 months (HR 0.81; p=0.0169).
+  NCCN Gastric 2025 Category 1 lists "paclitaxel ± ramucirumab" as the standard
+  HER2-negative 2L option, acknowledging paclitaxel monotherapy as acceptable when
+  ramucirumab is unavailable.
+
+  UKRAINE ACCESS: Paclitaxel is NSZU-reimbursed and universally accessible in
+  Ukraine. Ramucirumab (Cyramza) is registered but NSZU reimbursement is limited
+  as of 2026. This creates a clinically significant access gap: Ukrainian patients
+  who would otherwise receive pac+ram (mOS 9.6 mo; NCCN Cat 1 preferred) instead
+  receive paclitaxel monotherapy (mOS 7.4 mo; NCCN Cat 1 acceptable).
+  The survival difference (~2.2 months median OS) should be documented in the
+  treatment plan with a note that pac+ram should be pursued via NSZU petition,
+  named-patient import, or oncology support program when feasible.
+
+  ALTERNATIVE CYTOTOXICS: Docetaxel, irinotecan, and FOLFIRI are also 2L options
+  per NCCN Cat 2A for patients with paclitaxel hypersensitivity or platinum-containing
+  regimen in 1L where taxane was already used. MDT discussion required for
+  anthracycline-pretreated or taxane-pretreated patients.
+
+rationale_ua: >
+  Паклітаксел щотижнево 80 мг/м² (д1,8,15/28) як 2Л терапія HER2-негативного
+  метастатичного раку шлунку/ГЕЗ при недоступності рамуцирумабу.
+
+  RAINBOW (Wilke 2014 Lancet Oncol): паклітаксел самостійно — ORR ~16%, мВБП 2,9 міс,
+  мЗВ 7,4 міс (проти мЗВ 9,6 міс при паклітаксел+рамуцирумаб; ВР 0,81). NCCN Gastric
+  2025 Категорія 1: "паклітаксел ± рамуцирумаб" — монотерапія паклітакселом допустима
+  при недоступності рамуцирумабу. Паклітаксел відшкодується НСЗУ та широко доступний
+  в Україні. Рамуцирумаб (Cyramza) зареєстрований, але відшкодування НСЗУ обмежене
+  станом на 2026 рік. Різниця у медіані ЗВ (~2,2 міс) повинна бути задокументована
+  у плані лікування з рекомендацією домогтись схвалення рамуцирумабу через НСЗУ.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ застосовувати без трипрепаратного премедикаційного протоколу (дексаметазон + Н1-антигістамін + Н2-блокатор) — реакції гіперчутливості можуть бути фатальними"
+  - "НЕ продовжувати при Grade ≥3 периферичній нейропатії без редукції дози"
+  - "НЕ пропустити MSI/dMMR тестування — MSI-H пацієнти краще реагують на пембролізумаб (ORR ~45-57%)"
+  - "НЕ застосовувати при ECOG ≥3 — ризик перевищує користь; краще СПД"
+  - "НЕ ігнорувати HER2 перевірку — HER2+ (3+) → T-DXd є кращим варіантом якщо доступний"
+  - "НЕ забувати скринінг HBV перед початком — дексаметазон (премедикація) може реактивувати HBV"
+  - "НЕ ігнорувати TAS-102 (IND-GASTRIC-METASTATIC-3L-TAS102) при прогресії — TAGS-підтверджений 3Л варіант"
+
+sources:
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Gastric 2025 Category 1: paclitaxel ± ramucirumab for HER2-negative 2L
+      metastatic gastric/GEJ adenocarcinoma (RAINBOW; Wilke 2014 Lancet Oncol).
+      Paclitaxel monotherapy is acceptable when ramucirumab is not accessible —
+      paclitaxel component provides the cytotoxic backbone.
+  - source_id: SRC-ESMO-GASTRIC-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO Gastric 2024: ramucirumab + paclitaxel is the recommended 2L standard for
+      HER2-negative metastatic gastric cancer (RAINBOW); paclitaxel alone remains
+      acceptable when ramucirumab unavailable.
+
+known_controversies:
+  - topic: "Paclitaxel weekly vs docetaxel or irinotecan for gastric 2L"
+    positions:
+      - position: "Paclitaxel weekly (RAINBOW schedule) — best-evidenced 2L backbone; established in phase 3 RCT; widely used"
+        sources: [SRC-NCCN-GASTRIC-2025]
+      - position: "Irinotecan (FOLFIRI / irinotecan mono) — alternative in paclitaxel-refractory or taxane-intolerant patients; NCCN Cat 2A"
+        sources: [SRC-NCCN-GASTRIC-2025]
+      - position: "Docetaxel — alternative when paclitaxel contraindicated; lower frequency of dosing"
+        sources: [SRC-ESMO-GASTRIC-2024]
+    our_default: "Weekly paclitaxel for most 2L patients; irinotecan or docetaxel alternatives for taxane-intolerant or hypersensitivity cases."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L for ramucirumab-
+  inaccessible HER2-negative metastatic gastric/GEJ adenocarcinoma. Wired at
+  ALGO-GASTRIC-2L step 31 (ramucirumab access gate; Workstream CV 2026-05-04).
+  Gap (3) in ALGO-GASTRIC-2L CLOSED: UA-funded paclitaxel fallback now a separate
+  Indication. RAINBOW (Wilke 2014 Lancet Oncol) is the primary evidence base.
+  Source stub SRC-RAINBOW-WILKE-2014 absent from KB — citing via SRC-NCCN-GASTRIC-2025
+  and SRC-ESMO-GASTRIC-2024 pending source-stub creation.

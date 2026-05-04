@@ -6,6 +6,7 @@ purpose: 'Select 2L+ metastatic gastric/GEJ Indication. Four tracks: (1) HER2+ (
   '
 output_indications:
 - IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
+- IND-GASTRIC-METASTATIC-2L-PACLITAXEL-WEEKLY
 - IND-GASTRIC-METASTATIC-2L-HER2-TDXD
 - IND-GASTRIC-METASTATIC-3L-TAS102
 - IND-GASTRIC-METASTATIC-2L-MSI-H-PEMBROLIZUMAB
@@ -46,8 +47,8 @@ decision_tree:
   if_true:
     next_step: 21
   if_false:
-    result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
-  notes: "Partially wired (CSD-7A). if_true → step 21 (MSI-H ICI-naive gate). if_false → pac+ram (patients not meeting fitness/HER2-neg criteria may still proceed at MDT discretion but default to pac+ram)."
+    next_step: 31
+  notes: "Partially wired (CSD-7A). if_true → step 21 (MSI-H ICI-naive gate). if_false → step 31 (ramucirumab access gate: pac+ram if accessible; paclitaxel weekly if not). Updated 2026-05-04 (Workstream CV)."
 
   # Step 21 — MSI-H ICI-naive gate → pembrolizumab monotherapy.
   # In modern 1L practice (post-KEYNOTE-859), most MSI-H gastric patients received
@@ -69,17 +70,58 @@ decision_tree:
       pac+ram in unselected 2L (~26-28% ORR). Re-check HER2 at relapse —
       if HER2 3+ → T-DXd preferred (step 1; higher ORR ~51%).
   if_false:
+    next_step: 31
+    notes: >
+      MSS/pMMR or ICI-experienced → step 31 (ramucirumab access gate):
+      pac+ram if accessible (RAINBOW; ORR ~28%; mOS 9.6 mo; NCCN Cat 1);
+      paclitaxel weekly if ramucirumab inaccessible (NSZU-fallback; mOS 7.4 mo).
+      Pembro monotherapy ineffective in MSS gastric.
+  notes: "MSI-H ICI-naive gate added 2026-05-04 (Workstream AL). if_false updated 2026-05-04 (Workstream CV) → step 31 (ramucirumab access gate)."
+
+  # Step 31 — Ramucirumab access gate for standard 2L pac+ram vs paclitaxel-weekly.
+  # RAINBOW (Wilke 2014 Lancet Oncol; N=665): pac+ram vs paclitaxel alone.
+  # Pac+ram preferred (mOS 9.6 vs 7.4 mo; HR 0.81; mPFS 4.4 vs 2.9 mo); ORR 28% vs 16%.
+  # Ramucirumab (Cyramza) registered in Ukraine but NSZU reimbursement limited (2026).
+  # Paclitaxel weekly is NSZU-reimbursed and widely accessible — UA-funded fallback.
+- step: 31
+  evaluate:
+    all_of:
+    - condition: "Ramucirumab accessible at treating centre (NSZU-funded or compassionate-use)"
+  if_true:
     result: IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL
     notes: >
-      MSS/pMMR or ICI-experienced: standard 2L pac+ram
-      (RAINBOW; ORR ~28%; PFS 4.4 mo). Pembro monotherapy ineffective
-      in MSS gastric; ICI re-challenge after progression unproven.
-  notes: "MSI-H ICI-naive gate added 2026-05-04 (Workstream AL). Uses RF-GASTRIC-MSI-H-ACTIONABLE (biomarker trigger) + RF-PRIOR-IO-PROGRESSION (none_of = ICI-naive)."
+      Ramucirumab accessible: pac+ram preferred (RAINBOW; Wilke 2014 Lancet Oncol;
+      REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC; ORR ~28%; mPFS 4.4 mo; mOS 9.6 mo;
+      NCCN Cat 1). Ramucirumab 8 mg/kg IV d1+d15 + paclitaxel 80 mg/m² d1,8,15 q28d.
+  if_false:
+    result: IND-GASTRIC-METASTATIC-2L-PACLITAXEL-WEEKLY
+    notes: >
+      Ramucirumab inaccessible (not NSZU-funded): paclitaxel 80 mg/m² weekly mono
+      (REG-PACLITAXEL-WEEKLY-GASTRIC; RAINBOW paclitaxel-alone arm; ORR ~16%;
+      mPFS 2.9 mo; mOS 7.4 mo; NCCN Cat 1 acceptable). Document ramucirumab
+      access barrier; advise patient to pursue NSZU petition or support program.
+  notes: "Step 31 added 2026-05-04 (Workstream CV): ramucirumab access gate for gastric 2L. Pac+ram if accessible; paclitaxel weekly if not. Gap (3) CLOSED."
 sources:
 - SRC-NCCN-GASTRIC-2025
 - SRC-ESMO-GASTRIC-2024
 - SRC-KEYNOTE158-ANAL-MARABELLE-2020
 last_reviewed: '2026-05-04'
-notes: 'AUTHORED 2026-05-04: IND-GASTRIC-METASTATIC-2L-MSI-H-PEMBROLIZUMAB wired at step 21 (MSI-H ICI-naive gate; KEYNOTE-158 ORR ~45-57%; NCCN Cat 1; Workstream AL). ROUTING SUMMARY: (1) HER2 3+ → T-DXd; (2) ≥2 prior lines → TAS-102; (3) MSI-H + ICI-naive → pembro mono; (4) default → pac+ram. OOS / wiring gaps: (1) Zolbetuximab + chemo for CLDN18.2+ patients (SPOTLIGHT/GLOW trials) is a 1L indication when zolbetuximab access exists — not in 2L scope. (2) Nivolumab single-agent / ipi-nivo for late-line MSI-H not modeled (rare scenario; ICI-exposed in 1L is now standard). (3) Single-agent paclitaxel weekly is the UA-funded fallback when ramucirumab unavailable — surfaced in regimen notes, not separate indication.
-
+notes: >
+  AUTHORED 2026-05-04: IND-GASTRIC-METASTATIC-2L-MSI-H-PEMBROLIZUMAB wired at step 21
+  (MSI-H ICI-naive gate; KEYNOTE-158 ORR ~45-57%; NCCN Cat 1; Workstream AL).
+  UPDATED 2026-05-04 (Workstream CV): IND-GASTRIC-METASTATIC-2L-PACLITAXEL-WEEKLY
+  authored and wired at step 31 (ramucirumab access gate; RAINBOW paclitaxel-alone arm;
+  mOS 7.4 mo; NCCN Cat 1 acceptable fallback). Steps 3 if_false and 21 if_false now
+  route to step 31 instead of direct pac+ram result. Gap (3) CLOSED.
+  ROUTING SUMMARY:
+  (1) HER2 3+ reconfirmed + prior trastuzumab + ECOG ≤1 → T-DXd;
+  (2) ≥2 prior regimens → TAS-102;
+  (3→21) MSI-H + ICI-naive → pembrolizumab mono;
+  (3→21→31) MSS or ICI-experienced → step 31 (ramucirumab gate);
+  (31) ramucirumab accessible → pac+ram (preferred; mOS 9.6 mo; Cat 1);
+  (31) ramucirumab inaccessible → paclitaxel weekly (UA-fallback; mOS 7.4 mo; Cat 1 acceptable).
+  OOS / wiring gaps:
+  (1) Zolbetuximab + chemo for CLDN18.2+ patients (SPOTLIGHT/GLOW) is a 1L option — not 2L.
+  (2) Nivolumab/ipi-nivo for late-line MSI-H not separately modeled (ICI-exposed in modern 1L).
   '
+

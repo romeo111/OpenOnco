@@ -1,0 +1,119 @@
+id: REG-PACLITAXEL-WEEKLY-GASTRIC
+name: "Paclitaxel 80 mg/m² IV weekly (metastatic gastric/GEJ 2L; ramucirumab-inaccessible fallback)"
+name_ua: "Паклітаксел 80 мг/м² IV щотижнево (метастатичний рак шлунку/ГЕЗ 2Л; резервна схема без рамуцирумабу)"
+alternate_names:
+  - "weekly paclitaxel gastric"
+  - "paclitaxel mono gastric 2L"
+  - "RAINBOW paclitaxel control arm"
+
+disease_context: DIS-GASTRIC
+line_of_therapy: 2
+plan_track: standard
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "80 mg/m² IV over 60 minutes"
+    schedule: "Days 1, 8, 15 of a 28-day cycle (3 of 4 weeks on; 1 week rest)"
+    route: IV
+    administration_notes: >
+      RAINBOW trial schedule (Wilke 2014 Lancet Oncol): 80 mg/m² on days 1, 8, 15
+      of a q28d cycle. Premedication mandatory to prevent hypersensitivity reactions.
+      When ramucirumab is accessible, add ramucirumab 8 mg/kg IV on days 1 and 15
+      (see REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC) — pac+ram is the preferred NCCN Cat 1
+      regimen; this regimen is the Ukraine-accessible fallback.
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Dexamethasone 10-20 mg IV (or 20 mg PO 12h + 6h before) — HSR prevention mandatory"
+  - "Diphenhydramine 50 mg IV (or equivalent H1-antihistamine) 30 min before paclitaxel"
+  - "Ranitidine 50 mg IV (or famotidine 20 mg IV) — H2 blocker 30 min before paclitaxel"
+  - "Antiemetic: low-moderate emetogenicity — 5-HT3 ± dexamethasone PRN"
+  - "HBV screen before cycle 1 (taxane + dexamethasone premedication → reactivation risk)"
+
+mandatory_supportive_care:
+  - "CBC day 1 and day 8: hold if ANC <1.0×10⁹/L or PLT <75×10⁹/L on scheduled dosing day"
+  - "Neuropathy assessment every cycle (NCI-CTCAE sensory neuropathy; cumulative MMAE)"
+  - "LFT and bilirubin baseline + q4 weeks (paclitaxel hepatic metabolism)"
+  - "Alopecia counselling mandatory"
+
+dose_adjustments:
+  - condition: "Grade 2 peripheral neuropathy"
+    modification: "Reduce to 60 mg/m² weekly"
+    rationale: "Cumulative taxane neuropathy — early reduction preserves treatment duration"
+    source_refs:
+      - SRC-NCCN-GASTRIC-2025
+  - condition: "Grade ≥3 peripheral neuropathy"
+    modification: "Hold until recovery to Grade ≤1; resume 60 mg/m²; consider switch to docetaxel"
+    rationale: "Irreversible neuropathy risk"
+    source_refs:
+      - SRC-NCCN-GASTRIC-2025
+  - condition: "ANC <1.0×10⁹/L or PLT <75×10⁹/L on dosing day"
+    modification: "Skip that week's dose; do not make up; continue schedule next week if counts recovered"
+    rationale: "Weekly schedule provides built-in recovery — missed weeks are omitted, not delayed"
+    source_refs:
+      - SRC-NCCN-GASTRIC-2025
+  - condition: "Bilirubin 1.5-3× ULN"
+    modification: "Reduce to 60 mg/m²"
+    rationale: "Hepatic impairment increases paclitaxel exposure"
+    source_refs:
+      - SRC-NCCN-GASTRIC-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Paclitaxel is NSZU-reimbursed and widely available in Ukraine. This is the
+    preferred UA-accessible 2L cytotoxic option when ramucirumab (Cyramza) is
+    not NSZU-funded or not accessible at the treating centre.
+    Ramucirumab is registered in Ukraine but NSZU reimbursement is limited —
+    verify per current NSZU oncology package. When ramucirumab is accessible,
+    REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC is preferred (RAINBOW; mOS 9.6 vs 7.4 mo).
+
+sources:
+  - SRC-NCCN-GASTRIC-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Оніміння або поколювання у руках чи ногах"
+    action_ua: "Занотовуйте і повідомте лікаря — периферична нейропатія (паклітаксел)"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип, утруднене дихання або тиск у грудях під час або після введення"
+    action_ua: "Негайно зверніться до медсестри або лікаря — реакція гіперчутливості"
+    urgency: go_to_emergency
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Сильна нудота / блювання, неможливість їсти або пити"
+    action_ua: "Подзвоніть у клініку того ж дня — дегідратація"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
+last_reviewed: "2026-05-04"
+notes: >
+  Paclitaxel 80 mg/m² weekly (d1,8,15/28) as RAINBOW control arm.
+  RAINBOW (Wilke 2014 Lancet Oncol): pac+ram vs paclitaxel alone;
+  paclitaxel alone arm: ORR ~16%, mPFS 2.9 months, mOS 7.4 months.
+  Pac+ram remains preferred (mOS 9.6 vs 7.4 mo; HR 0.81); this regimen
+  is the UA-accessible fallback when ramucirumab is not NSZU-funded.
+  NCCN Gastric 2025: paclitaxel ± ramucirumab both Category 1 2L
+  (ramucirumab adds benefit but paclitaxel alone acceptable when unavailable).
+  STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Паклітаксел 80 мг/м² щотижнево (д1,8,15/28) — контрольна гілка дослідження
+  RAINBOW. Паклітаксел самостійно: ORR ~16%, мВБП 2,9 міс, мЗВ 7,4 міс.
+  Паклітаксел+рамуцирумаб залишається кращим варіантом (мЗВ 9,6 міс проти 7,4 міс;
+  ВР 0,81); цей режим є доступним в Україні резервним варіантом, коли рамуцирумаб
+  не відшкодовується НСЗУ. NCCN Gastric 2025: обидва Категорія 1 2Л.
+  STUB — очікує підпис Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
