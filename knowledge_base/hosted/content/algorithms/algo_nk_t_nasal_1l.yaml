@@ -7,8 +7,9 @@ purpose: 'NK/T-cell nasal 1L — asparaginase-based regimens are essential (P-gl
 output_indications:
 - IND-NK-T-NASAL-1L-SMILE
 - IND-NK-T-NASAL-1L-P-GEMOX
+- IND-NK-T-NASAL-1L-DDGP
 default_indication: IND-NK-T-NASAL-1L-SMILE
-alternative_indication: IND-NK-T-NASAL-1L-P-GEMOX
+alternative_indication: IND-NK-T-NASAL-1L-DDGP
 decision_tree:
 - step: 1
   evaluate:
@@ -21,15 +22,35 @@ decision_tree:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
     - condition: L-asparaginase access available
   if_true:
-    result: IND-NK-T-NASAL-1L-SMILE
+    next_step: 11
   if_false:
     result: IND-NK-T-NASAL-1L-P-GEMOX
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired — fitness/eligibility gates wired via CSD-7A RFs; asparaginase-access condition stays MDT-evaluated text. Step 1 if_true → step 11 (DDGP vs SMILE stage gate)."
+- step: 11
+  evaluate:
+    all_of:
+    - condition: "Stage III/IV advanced extranodal NK/T-cell lymphoma (Ann Arbor III/IV)"
+    - condition: "CrCl ≥60 mL/min (cisplatin component of DDGP; standard hydration-eligible)"
+    - condition: "No Grade ≥3 baseline hearing loss (cisplatin ototoxicity contraindication)"
+  if_true:
+    result: IND-NK-T-NASAL-1L-DDGP
+    notes: >
+      Stage III/IV + adequate renal + no hearing impairment: DDGP preferred
+      (Wang 2015 J Hematol Oncol; Phase 3 RCT; DDGP vs SMILE; 5-yr OS 72.6% vs 50.5%;
+      ORR 89.8% vs 79.2%; NCCN Cat 2A). DDGP replaces SMILE's HD-MTX with cisplatin.
+      Requires aggressive hydration (cisplatin); audiometry baseline mandatory.
+  if_false:
+    result: IND-NK-T-NASAL-1L-SMILE
+    notes: >
+      Localized stage I/II or cisplatin-ineligible (CrCl <60, hearing impairment):
+      SMILE (steroid + HD-MTX + ifosfamide + L-asparaginase + etoposide; Yamaguchi 2008;
+      NCCN Cat 1). SMILE + concurrent RT 50 Gy for localized stage I/II.
+  notes: "Step 11 added 2026-05-04 (Workstream BS): DDGP vs SMILE stage/renal gate. IND-NK-T-NASAL-1L-DDGP wired for stage III/IV. Gap CLOSED. Free-text conditions; MDT-evaluated."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-PTCL-2024
 last_reviewed: '2026-04-27'
-notes: 'P-GEMOX preferred for older / renal-impaired / centers with intermittent asparaginase access. DDGP (cisplatin variant) not yet modeled as separate indication.
+notes: 'UPDATED 2026-05-04 (Workstream BS): IND-NK-T-NASAL-1L-DDGP authored and wired at step 11 for stage III/IV NK/T-nasal lymphoma (Wang 2015 J Hematol Oncol Phase 3; DDGP vs SMILE ORR 89.8% vs 79.2%; 5-yr OS 72.6% vs 50.5%; NCCN Cat 2A). Gap CLOSED. ROUTING SUMMARY: (1) Fit + asparaginase + adequate renal: step 11 (DDGP if III/IV or SMILE if I/II); (2) Not fit/renal-impaired/no asparaginase: P-GEMOX. P-GEMOX preferred for older / renal-impaired / asparaginase-unavailable centers.
 
   EBV-DNA monitoring (added 2026-04-27 documentation): EBV-DNA is THE pharmacodynamic biomarker for NK/T-nasal lymphoma. RF-NK-T-NASAL- INFECTION-SCREENING captures the trigger (baseline ≥10^4 copies/mL OR persistent post-induction). Monitoring schedule: baseline → q-cycle (q3w) → end-of-induction → q3mo surveillance ×2 yr. Persistent/rising EBV-DNA = consolidation intensification trigger (autoSCT-CR1, RT boost, early move to NK/T-2L PD-1 track).
 

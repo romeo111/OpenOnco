@@ -1,0 +1,180 @@
+id: IND-NK-T-NASAL-1L-DDGP
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NK-T-NASAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Extranodal NK/T-cell lymphoma, nasal type (ENKTL-NT) — EBER-positive confirmed on biopsy"
+    - "Stage III/IV disseminated disease (Ann Arbor) OR relapsed/refractory localized (after prior CHOP-based failure)"
+    - "ECOG PS 0-2"
+    - "CrCl ≥60 mL/min (cisplatin component: nephrotoxicity; minimum CrCl for standard cisplatin dosing)"
+    - "Adequate hearing function (cisplatin ototoxicity; baseline audiometry)"
+    - "L-asparaginase access available (pegaspargase preferred; Erwinia or native E.coli asparaginase as alternatives)"
+    - "No prior asparaginase-based regimen (SMILE, P-GEMOX with asparaginase, DDGP): asparaginase-naive preferred"
+    - "ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, Hb ≥8 g/dL"
+    - "Bilirubin ≤1.5× ULN; ALT/AST ≤3× ULN (hepatotoxicity monitoring)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-EBV-DNA
+      required: true
+      value_constraint: "EBER-positive on biopsy (diagnostic confirmation) + baseline EBV-DNA quantitative (copies/mL) for response monitoring"
+      notes: >
+        EBV is the pathogenic driver of NK/T-cell lymphoma. EBER ISH on biopsy is the
+        diagnostic gold standard. EBV-DNA quantitative (plasma PCR) is the pharmacodynamic
+        response surrogate: declining EBV-DNA correlates with treatment response;
+        rising EBV-DNA during treatment signals treatment failure. Monitor every cycle.
+  biomarker_requirements_excluded:
+    - "CrCl <45 mL/min: cisplatin contraindicated at standard doses (consider carboplatin DDGP variant but less evidence)"
+    - "Grade ≥3 baseline hearing loss (cisplatin ototoxicity risk): substitute SMILE or P-GEMOX"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      DDGP requires adequate renal function (CrCl ≥60) for cisplatin dosing. In patients ≥70
+      with CrCl 45-60: consider reducing cisplatin to 20 mg/m²/day or substituting carboplatin
+      AUC4. DDGP is preferred over SMILE for stage III/IV in ALL age groups given superior Wang
+      2015 OS data — but renal assessment is essential. Older patients: careful magnesium/electrolyte
+      management (cisplatin → hypomagnesemia particularly prominent in elderly).
+
+recommended_regimen: REG-DDGP-NK-T
+alternative_regimens:
+  - regimen_id: IND-NK-T-NASAL-1L-SMILE
+    description: >
+      SMILE (steroid + HD-MTX + ifosfamide + L-asparaginase + etoposide): alternative when
+      cisplatin is contraindicated (severe hearing loss, severe cisplatin hypersensitivity) but
+      CrCl ≥50 mL/min (HD-MTX requires adequate renal function). SMILE may be preferred for
+      localized stage I/II when MTX CNS penetration is prioritized. NCCN Cat 1.
+  - regimen_id: IND-NK-T-NASAL-1L-P-GEMOX
+    description: >
+      P-GEMOX (dexamethasone + gemcitabine + oxaliplatin): no asparaginase component; use when
+      L-asparaginase supply unavailable, asparaginase-intolerant (allergy to all formulations),
+      or CrCl <60 (oxaliplatin less nephrotoxic than cisplatin). NCCN Cat 1.
+
+concurrent_therapy:
+  - "Concurrent radiotherapy (RT 50 Gy) for localized stage I/II: concurrent or sequential with DDGP (MDT decision)"
+  - "G-CSF: pegfilgrastim day 9 or filgrastim d9-13 (myelosuppression prophylaxis)"
+  - "PJP prophylaxis: TMP-SMX 3×/week (dexamethasone + asparaginase immunosuppression)"
+  - "Antifungal: fluconazole 200 mg/day or voriconazole for high-risk patients (lymphoma + steroid immunosuppression)"
+  - "Antiviral: acyclovir 400 mg TID (herpes zoster reactivation with asparaginase/steroid)"
+  - "Antiemetics: 5-HT3 + NK1 (full triple antiemetic on cisplatin days; corticosteroid already in regimen)"
+
+followed_by:
+  - "Response assessment after cycle 2 and cycle 4 (PET-CT preferred; CT + EBV-DNA if PET unavailable)"
+  - "Complete responders (CR) after 4 cycles: RT 45-50 Gy to primary site (if not given concurrently) + autoSCT consideration for high-risk (stage III/IV, Ki67 >50%, disseminated)"
+  - "Partial responders: complete full 6 cycles then reassess; RT + consolidation SCT for fit patients"
+  - "EBV-DNA surveillance q3 months × 2 years post-remission"
+  - "At progression after DDGP: 2L options — PD-1 inhibitor (avelumab/pembrolizumab for relapsed NK/T); IND-NK-T-NASAL-2L-AVELUMAB"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "89.8% (Wang 2015 J Hematol Oncol; Phase 3 RCT; n=49 DDGP arm; stage III/IV NKTCL)"
+  complete_response: "71.4% (Wang 2015; DDGP arm)"
+  median_pfs_months: "not reached at 31.6 months median follow-up (Wang 2015 DDGP arm)"
+  median_os_months: "not reached (Wang 2015 DDGP arm; vs 6.7 months for SMILE arm in stage III/IV)"
+  notes: >
+    Wang et al. 2015 J Hematol Oncol (Phase 3 RCT; n=97; stage III/IV NKTCL):
+    DDGP vs SMILE — primary endpoint OS for stage III/IV advanced NKTCL.
+    DDGP arm (n=49): ORR 89.8%, CR 71.4%, mOS not reached (31.6 months follow-up).
+    SMILE arm (n=48): ORR 79.2%, CR 54.2%, mOS 6.7 months.
+    5-year OS: DDGP 72.6% vs SMILE 50.5% (p=0.02).
+    5-year PFS: DDGP 64.2% vs SMILE 40.2% (p=0.03).
+
+    DDGP notably better in stage III/IV compared to SMILE.
+    For localized stage I/II: both DDGP and SMILE are reasonable; SMILE + concurrent RT is
+    the more established combination (Yamaguchi 2008 landmark data).
+
+    TOXICITY COMPARISON:
+    DDGP: Grade ≥3 neutropenia 40%, thrombocytopenia 38%, nausea/vomiting (cisplatin).
+    SMILE: Grade ≥3 neutropenia 56%, mucositis 20%, neurotoxicity (MTX).
+    DDGP toxicity is predominantly hematologic and renal; SMILE has more neurotoxic/mucosal toxicity.
+
+hard_contraindications:
+  - "CrCl <45 mL/min: cisplatin contraindicated; use SMILE (if CrCl ≥50) or P-GEMOX"
+  - "Grade ≥3 hearing loss at baseline: cisplatin ototoxicity; P-GEMOX preferred"
+  - "All asparaginase formulations contraindicated (rare; prior severe anaphylaxis all formulations): P-GEMOX (no asparaginase)"
+  - "Active CNS lymphoma (parenchymal brain): HD-MTX (SMILE or modified MATRix-like) preferred for CNS penetration"
+
+red_flags_triggering_alternative:
+  - condition: "CrCl <60 → substitute carboplatin DDGP variant OR IND-NK-T-NASAL-1L-SMILE (if CrCl ≥50) OR IND-NK-T-NASAL-1L-P-GEMOX (if CrCl <50)"
+  - condition: "Stage I/II localized disease: SMILE + concurrent RT is more established for localized; DDGP also acceptable"
+  - condition: "Asparaginase supply failure (supply-chain issue): complete cycle with P-GEMOX backbone (omit asparaginase; acknowledge reduced efficacy)"
+  - condition: "RF-FITNESS-ECOG-PS-POOR (ECOG ≥3): any intensive chemotherapy is high-risk; goals-of-care MDT"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-COAG-PANEL
+  - "EBV-DNA quantitative PCR (plasma): baseline mandatory; pharmacodynamic monitoring q-cycle"
+  - "CrCl (CKD-EPI or 24h urine): must be ≥60 mL/min for standard cisplatin dosing"
+  - "Audiometry (pure-tone audiogram): baseline (cisplatin ototoxicity monitoring)"
+  - "Antithrombin III activity: baseline + before each cycle (asparaginase → AT-III depletion)"
+  - "Fibrinogen: baseline + q-cycle"
+  - "EBER ISH on biopsy tissue: confirm NK/T histology diagnosis"
+  - "CD56, CD2, CD3ε IHC: NK/T-cell immunophenotype confirmation"
+  - "PET-CT chest/abdomen/pelvis + ENT": baseline staging"
+  - "BM biopsy: bone marrow staging"
+  - "MRI nasal passages/sinuses: baseline (nasal primary extent)"
+
+desired_tests:
+  - "LDH, β2-microglobulin: PINK prognostic index (age >60, stage III/IV, distant LN involvement, non-nasal type)"
+  - "Echocardiogram: baseline (dexamethasone + chemotherapy cardiotoxicity monitoring in older patients)"
+  - "Pegaspargase availability check: contact pharmacy/supplier before committing to DDGP"
+
+rationale: >
+  DDGP uses an asparaginase-based backbone (critical for P-glycoprotein bypass in NK/T
+  lymphoma) with cisplatin + gemcitabine replacing the MTX + ifosfamide + etoposide of SMILE.
+  Asparaginase is the essential cytotoxic agent in NK/T lymphoma because NK/T cells are
+  asparagine synthetase-low (high asparagine dependence → asparaginase depletes asparagine →
+  cell death). Cisplatin and gemcitabine provide complementary DNA cross-linking and
+  nucleoside analog killing. Dexamethasone provides lymphocytotoxic and CNS-penetrating activity.
+
+  SUPERIOR EVIDENCE FOR STAGE III/IV: Wang 2015 Phase 3 RCT demonstrated DDGP's superiority
+  over SMILE specifically in stage III/IV NK/T lymphoma (5-yr OS 72.6% vs 50.5%; p=0.02).
+  This establishes DDGP as the preferred asparaginase-based regimen for advanced-stage disease.
+  For stage I/II localized: both DDGP and SMILE are reasonable options (no head-to-head
+  comparison in localized disease); concurrent RT is the key adjunct regardless of chemotherapy.
+
+  UKRAINE CONTEXT: Cisplatin is available (NSZU-funded); gemcitabine is available;
+  L-asparaginase or pegaspargase availability is the limiting factor (same as SMILE). DDGP is
+  a viable alternative to SMILE when available at any center treating NK/T lymphoma.
+
+rationale_ua: >
+  DDGP (дексаметазон + цисплатин + гемцитабін + пегаспарагаза) для стадії III/IV NK/T-клітинної
+  назальної лімфоми. Wang 2015 J Hematol Oncol (фаза 3, n=97): ORR 89.8%, 5-річна ОВ 72.6%
+  проти SMILE 50.5% (p=0.02). DDGP переважніший за SMILE при поширеній стадії.
+  ОБОВ'ЯЗКОВО: CrCl ≥60 мл/хв (цисплатин); агресивна гідратація; аудіометрія базово.
+  В Україні: цисплатин + гемцитабін НСЗУ-фінансовані; пегаспарагаза — наявність уточнювати.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "DDGP без базової аудіограми: цисплатин → ототоксичність; задокументувати до початку"
+  - "DDGP при CrCl <45: нефротоксичність цисплатину; P-GEMOX або SMILE краща альтернатива"
+  - "Пропустити аспарагіназний компонент через брак постачання: аспарагіназа є ключовим компонентом; якщо недоступна → P-GEMOX"
+  - "Без AT-III моніторингу: аспарагіназа → тромбоз + кровотеча через виснаження антитромбіну"
+  - "ЗАК не перевіряти перед днем 8: гемцитабін день 8 вводити лише при ANC ≥1.0"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Cat 2A: DDGP (dexamethasone + cisplatin + gemcitabine + pegaspargase)
+      for NK/T-cell nasal lymphoma; alternative to SMILE for stage III/IV disease; Wang 2015
+      Phase 3 data showing superior OS vs SMILE in advanced-stage NKTCL.
+  - source_id: SRC-ESMO-PTCL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO PTCL 2024: asparaginase-based regimens (SMILE, DDGP, GELOX, P-GEMOX) are the
+      standard backbone for NK/T-cell lymphoma. DDGP cisplatin-based variant preferred for
+      advanced stage per Wang 2015 Phase 3 RCT.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
