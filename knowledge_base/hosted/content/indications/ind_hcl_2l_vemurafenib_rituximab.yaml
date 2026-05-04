@@ -1,0 +1,195 @@
+id: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory classic HCL after ≥1 prior purine analog (cladribine or pentostatin)"
+    - "BRAF V600E mutation confirmed at relapse (~100% of classic HCL; re-confirm if NGS not done at 1L)"
+    - "ECOG PS 0-3 (oral vemurafenib feasible across broad performance status; rituximab IV requires day-hospital access)"
+    - "Adequate hepatic function: ALT/AST ≤3× ULN; bilirubin ≤1.5× ULN (vemurafenib hepatically cleared)"
+    - "QTc ≤500 ms at baseline (vemurafenib QTc prolongation; absolute contraindication above 500 ms)"
+    - "No active uncontrolled infection"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600E
+      required: true
+      value_constraint: "BRAF V600E activating mutation — required; ~100% of classic HCL; absent in HCL-variant and borderline HCL-like diseases"
+      notes: >
+        BRAF V600E present in virtually all classic HCL but absent in HCL-variant
+        (IGHV4-34, BRAF-WT). If original 1L testing was on bone marrow biopsy, repeat
+        NGS at relapse is optional (mutation is stable clonal event) unless diagnostic
+        uncertainty. Pyrosequencing or allele-specific PCR acceptable; standard myeloid
+        NGS panel preferred.
+  biomarker_requirements_excluded:
+    - "BRAF V600E absent: vemurafenib has no mechanism of action; route to cladribine re-treatment (IND-HCL-2L-CLADRIBINE-RETREATMENT)"
+    - "HCL-variant (BRAF-WT, IGHV4-34+): vemurafenib contraindicated — paradoxical MAPK activation; route to rituximab-based 2L"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      Vemurafenib is oral (960 mg BID × 8 weeks); rituximab requires 8 IV infusions
+      over ~24 weeks. ECOG 3: proceed with MDT discussion — can patient attend IV infusions?
+      If IV access impractical, vemurafenib monotherapy (IND-HCL-2L-VEMURAFENIB) may be
+      considered as fallback, though combination yields deeper MRD-negative responses.
+      ECOG ≥4: CHARTER goals-of-care gate applies.
+
+recommended_regimen: REG-VEMURAFENIB-HCL-RELAPSED
+alternative_regimens:
+  - regimen_id: IND-HCL-2L-VEMURAFENIB
+    description: >
+      Vemurafenib monotherapy — use if rituximab is inaccessible (e.g., in settings
+      where IV infusion infrastructure is unavailable). Monotherapy ORR ~96% but mostly
+      PRs (CR only ~35%); MRD-negative remissions rare. Substantially inferior to
+      combination — reserve monotherapy only when rituximab truly inaccessible.
+      Evidence: Tiacci 2015 NEJM phase 2 (n=26); NCCN Cat 2A for monotherapy.
+  - regimen_id: IND-HCL-2L-CLADRIBINE-RETREATMENT
+    description: >
+      Cladribine re-treatment — preferred when vemurafenib inaccessible (not NSZU-funded
+      for HCL in Ukraine). ORR ~80-92% for late relapse (≥12 months from 1L cladribine);
+      less effective for early relapse. Accessible and NSZU-funded in Ukraine.
+      NCCN Category 1. Cumulative myelosuppression + immunosuppression with repeated courses.
+
+concurrent_therapy:
+  - "ECG MANDATORY: baseline QTc (Fridericia formula) before starting; repeat at day 14-28 (vemurafenib QTc risk). Maintain K+ >4 mEq/L, Mg2+ >2 mg/dL."
+  - "PHOTOSENSITIVITY COUNSELLING: SPF 50+ broadspectrum sunscreen + UV-protective clothing from day 1; patient must understand sun avoidance is mandatory (severe phototoxic burns occur with routine outdoor exposure)"
+  - "DERMATOLOGY REFERRAL at baseline: scheduled q6-weekly during vemurafenib for cuSCC/keratoacanthoma surveillance; biopsy any new/changing skin lesions"
+  - "HBV SEROLOGY before rituximab (HBsAg + anti-HBc): positive → antiviral prophylaxis (entecavir) from day 1 through 12 months after last rituximab dose"
+  - "RITUXIMAB PREMEDICATION: acetaminophen 500-1000 mg PO + diphenhydramine 25-50 mg IV 30-60 min before each infusion"
+  - "CBC q2-4 weeks (myelosuppression from rituximab + HCL disease control); CMP + LFT q4 weeks (vemurafenib hepatotoxicity)"
+
+followed_by:
+  - "Bone marrow biopsy at week 8-10 (after completion of vemurafenib): morphologic response + MRD flow cytometry (assess uMRD status)"
+  - "Maintenance rituximab not established as standard; re-treat with rituximab maintenance if peripheral blood MRD+ at month 6 (per some protocols)"
+  - "Response duration: median PFS not reached at 37-month follow-up (Tiacci 2021) — most patients remain in durable remission without maintenance"
+  - "At relapse: second vemurafenib + rituximab course (feasible; off-label); cladribine retreatment; clinical trial"
+  - "Fit patients with multiply-relapsed refractory disease: allogeneic SCT referral (outside KB scope)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~100% (Tiacci 2021 NEJM; 26/26 in per-protocol analysis)"
+  complete_response: "~87% CR (26/30 all-enrolled; 26/26 per-protocol)"
+  mrd_negative_cr: "~66.7% uMRD (bone marrow MRD-negative by flow cytometry, 20/30)"
+  progression_free_survival: "Median PFS not reached at 37-month median follow-up; estimated 4-yr PFS >85%"
+  notes: >
+    PRIMARY EVIDENCE: Tiacci et al. 2021 NEJM (NCT01711632; phase 2 single-arm):
+    - n=30 relapsed/refractory BRAF-V600E classic HCL after ≥1 prior purine analog
+    - Protocol: vemurafenib 960 mg BID PO × 8 weeks + rituximab 375 mg/m² IV
+      q2 weeks × 4 (weeks 1, 3, 5, 7), then q4 weeks × 4 (weeks 11, 15, 19, 23)
+    - ORR 100% (30/30 all, 26/26 per-protocol); CR 87% (26/30); uMRD 66.7% (20/30)
+    - Median PFS not reached (median follow-up 37 months); OS 100% at 37 months
+    - Grade ≥3 AEs: arthralgia (7%), rash (7%), photosensitivity (3%); no unexpected toxicities
+
+    COMPARISON TO VEMURAFENIB MONOTHERAPY:
+    Tiacci 2015 NEJM phase 2 monotherapy (n=26): ORR 96%; CR only 35%;
+    uMRD rare. Addition of rituximab deepens responses substantially:
+    CR rate 87% vs 35%; uMRD 67% vs near-zero. Combination is now NCCN Category 1;
+    monotherapy is Category 2A — combination preferred when rituximab accessible.
+
+    MECHANISM:
+    Vemurafenib inhibits constitutively-active BRAF V600E → reduces MAPK/ERK
+    signalling → restores normal cell-cycle regulation in HCL clones.
+    Rituximab depletes CD20+ HCL cells (residual disease, non-dividing clones that
+    vemurafenib debulks but may not fully eliminate). Combination produces synergistic
+    MRD-eradication — targeting both cycling (vemurafenib) and quiescent (rituximab) HCL.
+
+    UKRAINE CONTEXT:
+    Vemurafenib (Zelboraf) registered for melanoma in Ukraine — off-label for HCL;
+    not NSZU-reimbursed for HCL. Rituximab is NSZU-accessible for hematologic
+    malignancies. When vemurafenib unavailable: cladribine re-treatment (NSZU-funded)
+    is the practical standard for most Ukrainian HCL patients.
+
+hard_contraindications:
+  - "BRAF V600E mutation absent: vemurafenib has no mechanism; do not use"
+  - "HCL-variant (BRAF-WT, IGHV4-34+): paradoxical MAPK activation risk — contraindicated"
+  - "QTc >500 ms at baseline: absolute contraindication; correct electrolytes + review QT-prolonging drugs before considering"
+  - "Active Grade ≥3 hepatic impairment (bilirubin >3× ULN): vemurafenib hepatotoxicity; insufficient data — avoid"
+
+red_flags_triggering_alternative:
+  - condition: "Vemurafenib inaccessible (not NSZU-funded for HCL; patient cannot afford off-label cost) → IND-HCL-2L-CLADRIBINE-RETREATMENT (accessible, NSZU-funded, ORR ~80-92% for late relapse)"
+  - condition: "BRAF V600E absent (HCL-variant, BRAF-WT) → IND-HCL-2L-CLADRIBINE-RETREATMENT or rituximab-based protocols (not vemurafenib)"
+  - condition: "Rituximab inaccessible (IV infrastructure unavailable) → IND-HCL-2L-VEMURAFENIB monotherapy as fallback (NCCN Cat 2A; ORR ~96% but mostly PRs)"
+  - condition: "QTc >500 ms and not correctable → IND-HCL-2L-CLADRIBINE-RETREATMENT"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-HBV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - "BRAF V600E mutation status (NGS myeloid panel or BRAF-specific PCR): mandatory before vemurafenib"
+  - "ECG with QTc (Fridericia formula): baseline gate (<500 ms required)"
+  - "Electrolytes (K+, Mg2+): QTc management"
+  - "Dermatology baseline exam: document pre-existing skin lesions before starting vemurafenib"
+
+desired_tests:
+  - "MRD flow cytometry (peripheral blood + bone marrow at baseline): establishes pre-treatment MRD level for comparison at response assessment"
+  - "HLA typing (if alloSCT ever considered for multiply-relapsed refractory disease): early typing allows faster donor search"
+  - TEST-ECHO
+
+rationale: >
+  Vemurafenib + rituximab for BRAF V600E-positive relapsed/refractory classic HCL
+  (Tiacci 2021 NEJM; ORR ~100%; CR ~87%; uMRD ~67%; NCCN Category 1).
+
+  BRAF V600E MUTATION IN HCL:
+  Present in ~100% of classic HCL (Tiacci 2011 NEJM). Absent in HCL-variant
+  (MAP2K1, KLF2 mutations). BRAF V600E constitutively activates MAPK/ERK → blocked
+  differentiation + survival of HCL cells. Targeted inhibition + CD20 depletion
+  produces MRD-negative remissions achievable with no chemotherapy.
+
+  WHY COMBINATION SUPERIOR TO MONOTHERAPY:
+  Vemurafenib mono (Tiacci 2015): CR only 35% — mostly partial responses.
+  Rituximab adds CD20-targeted depletion of residual HCL clones. Together:
+  CR 87%, uMRD 67%. mPFS NR at 37 months vs significantly shorter for mono.
+  Addition of rituximab is not just incrementally better — it transforms PR→CR
+  conversion and enables MRD-negative remissions.
+
+  ACCESS IN UKRAINE:
+  Vemurafenib not NSZU-funded for HCL. Rituximab NSZU-accessible.
+  When vemurafenib funding secured: combination preferred. When inaccessible:
+  cladribine re-treatment remains highly effective (ORR ~80-92% late relapse) and
+  is NSZU-funded. Vemurafenib monotherapy (without rituximab) is a rarely-justified
+  intermediate — discuss with MDT only if rituximab uniquely inaccessible.
+
+rationale_ua: >
+  Вемурафеніб 960 мг PO двічі на добу × 8 тижнів + ритуксимаб 375 мг/м² × 8 доз
+  для BRAF V600E-позитивного рецидивного/рефрактерного класичного ВКЛ.
+  Tiacci 2021 NEJM (фаза 2; n=30): ЗВ 100%; ПВ 87%; уМЗХ (МЗХ-негативний КМ) 66,7%;
+  мВБП не досягнута (спостереження 37 міс). NCCN Cat 1.
+  МЕХАНІЗМ: вемурафеніб блокує конститутивно активний BRAF V600E; ритуксимаб
+  усуває залишкові CD20+ клони ВКЛ. Комбінація значно глибша, ніж монотерапія
+  (ПВ 87% vs 35% при монотерапії вемурафенібом).
+  В Україні: вемурафеніб — позареєстроване для ВКЛ (доступний для меланоми);
+  НСЗУ не відшкодовує для ВКЛ → індивідуальне фінансування або МДГ-рішення.
+  Ритуксимаб — НСЗУ-доступний. При недоступності вемурафенібу → кладрибін
+  (повторний курс, ЗВ ~80-92%, НСЗУ).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати без підтвердженої мутації BRAF V600E — вемурафеніб неефективний без молекулярної мішені; при HCL-варіанті (BRAF-WT) — парадоксальна активація MAPK"
+  - "Не ігнорувати фотосенсибілізацію — SPF 50+ обов'язково з першого дня; опіки від звичайної прогулянки можливі"
+  - "Не починати при QTc >500 мс — абсолютне протипоказання; корекція електролітів спочатку"
+  - "Не пропускати базовий дерматологічний огляд — ПКР/кератоакантоми (20% при тривалому прийомі)"
+  - "Не застосовувати без HBV-скринінгу перед ритуксимабом — ризик реактивації вірусного гепатиту B"
+  - "Не переходити на монотерапію вемурафенібом без причини — комбінація значно ефективніша (ПВ 87% vs 35%)"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell Lymphomas / HCL 2025 Category 1: vemurafenib + rituximab for
+      relapsed/refractory BRAF V600E-mutated HCL (Tiacci 2021 NEJM). Preferred
+      over vemurafenib monotherapy (Category 2A) due to significantly deeper
+      MRD-negative responses. BRAF V600E confirmation mandatory before initiating.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -22,10 +22,11 @@ purpose: >
   course).
 
 output_indications:
+  - IND-HCL-2L-VEMURAFENIB-RITUXIMAB
   - IND-HCL-2L-VEMURAFENIB
   - IND-HCL-2L-CLADRIBINE-RETREATMENT
 
-default_indication: IND-HCL-2L-VEMURAFENIB
+default_indication: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
 alternative_indication: IND-HCL-2L-CLADRIBINE-RETREATMENT
 
 decision_tree:
@@ -45,7 +46,8 @@ decision_tree:
 
   # Step 2 — BRAF-V600E POSITIVE (classic HCL ~100%): vemurafenib
   # + rituximab is the chemo-free targeted 2L preferred per NCCN /
-  # NEJM Tiacci 2021 (median PFS not reached, deep MRD-).
+  # NEJM Tiacci 2021 (median PFS not reached, deep MRD-negative).
+  # Routes to IND-HCL-2L-VEMURAFENIB-RITUXIMAB (combination, Cat 1).
   - step: 2
     evaluate:
       all_of:
@@ -53,10 +55,10 @@ decision_tree:
           comparator: "positive"
         - condition: "HCL relapse documented (cytopenia, splenomegaly, marrow infiltration) OR primary refractory after 1L purine"
     if_true:
-      result: IND-HCL-2L-VEMURAFENIB
+      result: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
     if_false:
       next_step: 3
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Updated 2026-05-04 (Workstream CL): routes to IND-HCL-2L-VEMURAFENIB-RITUXIMAB (combo, Cat 1) instead of monotherapy. Gap (4) CLOSED. MDT-only after CSD-7A audit — composite is biomarker/disease-specific; no pan-disease RF applies."
 
   # Step 3 — BRAF-V600E NEGATIVE (HCL-variant) OR vemurafenib
   # contraindicated/inaccessible: cladribine retreatment (>1y
@@ -84,17 +86,18 @@ decision_tree:
     if_false:
       next_step: 4
 
-  # Step 4 — default: BRAF-V600E+ classic HCL → vemurafenib +
-  # rituximab.
+  # Step 4 — default fall-through: BRAF-V600E+ classic HCL →
+  # vemurafenib + rituximab combination (preferred NCCN Cat 1).
   - step: 4
     evaluate:
       any_of:
         - condition: "Classic HCL (BRAF-V600E+), 2L+ relapsed/refractory"
         - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-HCL-2L-VEMURAFENIB
+      result: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
     if_false:
-      result: IND-HCL-2L-VEMURAFENIB
+      result: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
+    notes: "Updated 2026-05-04 (Workstream CL): routes to IND-HCL-2L-VEMURAFENIB-RITUXIMAB (combo, Cat 1; Tiacci 2021 NEJM). Gap (4) CLOSED."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -105,16 +108,18 @@ notes: >
   and wired at step 3 if_true (BRAF-V600E negative/vemurafenib-inaccessible/late relapse
   >1y → cladribine retreatment; REG-CLADRIBINE-SINGLE reused; ORR ~80-92%; NCCN Cat 1;
   PJP + antiviral prophylaxis mandatory). Gap (1) CLOSED.
+  UPDATED 2026-05-04 (Workstream CL): IND-HCL-2L-VEMURAFENIB-RITUXIMAB authored and
+  wired at steps 2 and 4 (vemurafenib 960 mg BID × 8w + rituximab × 8 doses; Tiacci
+  2021 NEJM; ORR ~100%; CR ~87%; uMRD ~67%; NCCN Cat 1). DRUG-VEMURAFENIB entity
+  authored. REG-VEMURAFENIB-HCL-RELAPSED updated to include DRUG-VEMURAFENIB component
+  and Tiacci 2021 scheduling details. IND-HCL-2L-VEMURAFENIB (monotherapy) retained as
+  alternative when rituximab inaccessible. Gap (4) CLOSED.
 
   OOS / wiring gaps:
   (2) IND-HCL-2L-PENTOSTATIN-SWITCH — not modeled.
   (3) Moxetumomab pasudotox (anti-CD22 immunotoxin, FDA 2018) for
   ≥3L HCL — withdrawn from market 2023 (sponsor decision), not
   modeled.
-  (4) IND-HCL-2L-VEMURAFENIB exists as monotherapy; vemurafenib
-  + rituximab combo (Tiacci NEJM 2021, deeper response) is
-  preferred per NCCN — surface as MDT note "consider adding
-  rituximab x 8 weeks per Tiacci 2021 protocol".
   (5) Allogeneic SCT for chemo-refractory young HCL — referral,
   outside KB.
   (6) Splenectomy historic 2L for symptomatic hypersplenism in
