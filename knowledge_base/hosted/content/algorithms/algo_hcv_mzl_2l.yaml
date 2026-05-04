@@ -26,9 +26,10 @@ purpose: >
 
 output_indications:
   - IND-HCV-MZL-POST-DAA-SURVEILLANCE
+  - IND-HCV-MZL-2L-BR
 
 default_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
-alternative_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
+alternative_indication: IND-HCV-MZL-2L-BR
 
 decision_tree:
   # Step 1 — histologic transformation suspected → upstream re-biopsy
@@ -58,20 +59,29 @@ decision_tree:
       next_step: 3
 
   # Step 3 — SVR12 achieved + lymphoma relapse (HCV cleared, MZL
-  # now antigen-independent / clonal escape) → BR. Surveillance
-  # indication remains the default route; clinician escalates to
-  # BR via MDT free-text trigger when relapse documented.
+  # now antigen-independent / clonal escape) → BR. Histologic
+  # transformation exclusion (re-biopsy) is mandatory before BR.
+  # BR ORR ~70-80% (REG-R-BENDAMUSTINE-RELAPSED-MZL; Rummel 2013 StiL;
+  # extrapolated from SMZL/NMZL relapsed; NCCN Cat 2A for relapsed MZL).
   - step: 3
     evaluate:
       all_of:
         - biomarker: BIO-HCV-RNA
           comparator: "undetectable at SVR12 (HCV cleared)"
         - condition: "Documented lymphoma progression on imaging or biopsy after DAA"
+        - condition: "Histologic transformation excluded on relapse biopsy (DLBCL ruled out)"
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — BR salvage
+      result: IND-HCV-MZL-2L-BR
+      notes: >
+        SVR12-achieved HCV-MZL relapse (antigen-independent): BR (bendamustine 90 mg/m²
+        d1-2 + rituximab 375 mg/m² d1 q28d × 4-6 cycles; REG-R-BENDAMUSTINE-RELAPSED-MZL;
+        NCCN Cat 2A). ORR ~70-80%; mPFS ~24-36 months. HBV screen + entecavir mandatory
+        before rituximab. HCV-RNA must be undetectable (SVR12) before starting BR.
+        Rebiopsy at relapse is mandatory — transformation to DLBCL in ~10-15% of relapses
+        requires aggressive salvage (not BR). Ukraine: BR both NSZU-funded; accessible.
     if_false:
       next_step: 4
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Step 3 updated 2026-05-04 (Workstream BK): SVR12-achieved relapse → IND-HCV-MZL-2L-BR (wired; placeholder removed). Gap (2) CLOSED. Free-text conditions; MDT rebiopsy + HCV-RNA verification mandatory."
 
   # Step 4 — default: routine post-DAA surveillance (~70% of patients
   # achieve durable lymphoma response from HCV eradication alone).
@@ -92,17 +102,17 @@ sources:
   - SRC-BSH-MZL-2024
   - SRC-EASL-HCV-2023
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream BK): IND-HCV-MZL-2L-BR authored and wired at
+  step 3 for SVR12-achieved HCV-MZL relapse (NCCN Cat 2A; Rummel 2013 StiL;
+  REG-R-BENDAMUSTINE-RELAPSED-MZL; ORR ~70-80%). Gap (2) CLOSED.
   OOS / wiring gaps:
   (1) IND-HCV-MZL-2L-DAA-RETREATMENT (SOF/VEL/VOX or GLE/PIB ±
   concurrent BR) — not modeled as dedicated indication. Step 2
   routes to surveillance placeholder; trace must surface "SVR12
   not achieved → DAA retreatment per EASL 2023; add BR if
   lymphoma progressing" as free-text MDT note.
-  (2) IND-HCV-MZL-2L-BR (BR for SVR12-achieved + lymphoma relapse)
-  — not modeled as HCV-MZL-specific indication. Step 3 placeholder;
-  trace surfaces "SVR12-achieved relapse → BR salvage" MDT note.
   (3) Histologic transformation routing must be resolved at upstream
   disease-resolution stage (re-biopsy mandatory at any clinical
   progression in HCV-MZL given baseline transformation risk).

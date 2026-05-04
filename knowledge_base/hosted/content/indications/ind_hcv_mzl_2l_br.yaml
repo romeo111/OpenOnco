@@ -1,0 +1,171 @@
+id: IND-HCV-MZL-2L-BR
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "HCV-associated marginal zone lymphoma (extranodal or nodal), previously treated with direct-acting antivirals (DAA) achieving SVR12 (HCV RNA undetectable at 12 weeks post-DAA)"
+    - "Documented lymphoma progression or relapse after SVR12 — disease now antigen-independent (clonal escape from HCV stimulation)"
+    - "Histologic transformation to aggressive lymphoma EXCLUDED (must be confirmed by re-biopsy at relapse)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L, CrCl ≥30 mL/min, bilirubin ≤1.5×ULN"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-RNA
+      required: true
+      value_constraint: "HCV-RNA UNDETECTABLE at SVR12 (≥12 weeks post-DAA completion) — confirms virologic cure before BR start; if HCV-RNA detectable → DAA retreatment first (IND-HCV-MZL-2L-DAA-RETREATMENT)"
+      notes: >
+        SVR12 is mandatory before BR. If HCV-RNA is still detectable, BR in the presence
+        of active HCV is suboptimal (anti-CD20 ribavirin interaction; HCV reactivation
+        risk with immunosuppression). DAA retreatment (SOF/VEL/VOX) must be completed
+        and SVR12 confirmed before starting BR.
+  biomarker_requirements_excluded:
+    - "HCV-RNA detectable at start of BR: active HCV contradicts rituximab; DAA retreatment first"
+    - "Histologic transformation to DLBCL at relapse biopsy: R-CHOP or appropriate aggressive-lymphoma salvage, not BR"
+    - "Prior BR-REFRACTORY (relapse ≤6 months from last BR): re-treatment unlikely beneficial; MDT discussion re: R-CHOP or clinical trial"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      HCV-associated MZL primarily affects patients with a history of chronic HCV infection
+      (often treated injection drug use population or endemic HCV areas). After SVR12,
+      ~70% achieve lymphoma remission (antigen-driven lymphoma responds to viral eradication).
+      The ~30% with residual disease or late relapse require chemo-immunotherapy.
+      Key pathophysiologic transition: post-SVR12 relapse indicates clonal independence
+      from HCV antigen drive → treat as conventional relapsed indolent MZL.
+      Ukraine: HCV is highly prevalent (~3-4% population); DAA (sofosbuvir-based) widely
+      used; HCV-MZL is recognized in UA hematology centers.
+
+recommended_regimen: REG-R-BENDAMUSTINE-RELAPSED-MZL
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      R-CHOP (rituximab + cyclophosphamide + doxorubicin + vincristine + prednisone):
+      NCCN Cat 2A for relapsed MZL; ORR ~70-80%; higher toxicity than BR (alopecia,
+      cardiotoxicity). Consider when BR is contraindicated (CrCl <30) or patient
+      preference. Less preferred than BR in most guidelines for indolent MZL.
+  - regimen_id: null
+    description: >
+      Obinutuzumab + bendamustine (GADOLIN-like): anti-CD20 type II + bendamustine;
+      data from FL; reasonable extrapolation for rituximab-refractory MZL (<6 months
+      from prior rituximab). More toxic than BR; reserve for true rituximab-refractoriness.
+  - regimen_id: null
+    description: >
+      Rituximab monotherapy: if patient fit and prior rituximab ≥12 months ago (not
+      rituximab-refractory); ORR ~70-80% in HCV-MZL post-SVR12 (IELSG26-derived data);
+      applicable for patients not tolerating bendamustine combination.
+
+concurrent_therapy:
+  - "HBV prophylaxis: entecavir 0.5 mg PO daily if HBsAg+ or HBcAb+ — mandatory before rituximab (B-cell depletion → HBV reactivation; anti-HCV treatment does NOT prevent HBV)"
+  - "HCV monitoring: HCV-RNA q3 months during BR (confirm sustained virologic response maintained; late relapse rare but possible)"
+  - "PJP prophylaxis: co-trimoxazole 480 mg 3×/week (bendamustine T-cell depletion)"
+  - "Pre-rituximab premedication: diphenhydramine 25 mg IV + acetaminophen 650 mg PO + dexamethasone 20 mg IV (IRR prevention)"
+  - "Anti-nausea: 5-HT3 antagonist before bendamustine (days 1-2; moderate emesis)"
+
+followed_by:
+  - "Continue BR × 4-6 cycles; response assessment after cycle 3 (CT chest/abdomen/pelvis + serum protein electrophoresis)"
+  - "Maintenance rituximab: 375 mg/m² q2-3 months × 2 years in responders (extrapolated from indolent B-NHL; reduces relapse rate)"
+  - "After BR completion: surveillance CT q6 months × 2 years; SPEP q6 months"
+  - "Post-BR HCV monitoring: HCV-RNA annually (durable SVR unlikely to relapse, but confirm)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~70-80% (extrapolated from relapsed extranodal/nodal MZL BR series; Rummel 2013 StiL for indolent B-NHL)"
+  cr_rate: "~25-40% CR (relapsed indolent MZL; MZL-specific BR data limited)"
+  median_pfs_months: "~24-36 months (indolent MZL + BR; MALT/NMZL BR extrapolation)"
+  notes: >
+    HCV-MZL-specific BR evidence: No dedicated Phase 3 trial. Evidence extrapolated from:
+    (1) SMZL/NMZL/MALT relapsed BR series (ORR ~70-80%; Rummel 2013 StiL; BRISQ SMZL data)
+    (2) IELSG26 HCV-MZL natural history study: ~30% of HCV-MZL do not achieve durable
+    remission with DAA alone; BR is the standard salvage in these cases per NCCN/BSH.
+    (3) BSH MZL 2024: For HCV-MZL post-SVR12 progression, BR is recommended (same
+    approach as rituximab-sensitive relapsed MZL).
+    Clinical context: Post-SVR12 relapse indicates antigen-independent disease (clonal
+    escape); pathophysiology is identical to non-HCV MZL at this stage. Treatment approach
+    follows indolent MZL salvage principles (NCCN Cat 2A: BR preferred over R-CHOP
+    for indolent MZL for lower toxicity with comparable efficacy).
+
+hard_contraindications:
+  - "HCV-RNA detectable (viremia active): rituximab immunosuppression + active HCV → immune dysregulation; ensure SVR12 first"
+  - "Histologic transformation confirmed (DLBCL at relapse biopsy): BR inadequate; requires aggressive salvage"
+  - "CrCl <30 mL/min: bendamustine not recommended at standard doses"
+  - "ECOG PS ≥3 (myelosuppression + immunosuppression burden)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "HCV-RNA detectable → DAA retreatment (SOF/VEL/VOX or GLE/PIB) before BR"
+  - condition: "Histologic transformation (DLBCL) at biopsy → aggressive salvage (R-CHOP or DICE/ICE per situation)"
+  - condition: "Prior BR-refractory (<6 months) → R-CHOP or obinutuzumab+benda; MDT discussion"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HCV-RNA (quantitative PCR): MANDATORY before BR — SVR12 must be confirmed; BR in active HCV is contraindicated"
+  - "HBV serology (HBsAg, HBcAb total): mandatory before rituximab; entecavir if HBsAg+ or HBcAb+"
+  - "Rebiopsy at relapse: mandatory to exclude transformation to DLBCL before starting BR"
+  - "CT chest/abdomen/pelvis: baseline + response (q3 cycles)"
+  - "Serum protein electrophoresis (SPEP): for M-protein tracking (MZL may secrete monoclonal Ig)"
+
+desired_tests:
+  - "Bone marrow biopsy: if peripheral cytopenias suggest marrow involvement"
+  - "Anti-HCV antibody + HCV genotype: already known if previously treated; confirm genotype documentation for any future DAA if viral relapse"
+
+rationale: >
+  HCV-associated MZL arises through antigen-driven B-cell clonal expansion stimulated by
+  HCV glycoproteins (particularly E2-CD81 signaling). DAA eradication of HCV removes the
+  antigenic stimulus, causing regression in ~70% of cases. In the ~30% who relapse after
+  SVR12, the lymphoma has acquired autonomous proliferation signals (clonal escape),
+  independent of HCV antigen drive.
+
+  At this stage, HCV-MZL is clinically and biologically equivalent to non-HCV relapsed
+  indolent MZL — the same chemo-immunotherapy protocols apply. BR is the preferred
+  regimen because:
+  (1) Superior PFS vs R-CHOP for indolent B-NHL (Rummel 2013 StiL: mTTP 69.5 vs 31.2 months)
+  (2) Lower alopecia, cardiotoxicity, neuropathy compared to R-CHOP
+  (3) CD20 expression maintained in MZL (rituximab active)
+  (4) HCV-cured patients: no HCV-rituximab interaction concern; HBV co-screen mandatory
+
+  Ukraine: HCV is highly prevalent; bendamustine + rituximab both NSZU-funded for
+  indolent B-NHL; accessible for HCV-MZL post-SVR12 relapse.
+
+rationale_ua: >
+  HCV-МЛЗ після SVR12-досягнення та рецидиву лімфоми: захворювання стало
+  антиген-незалежним (клональна автономія від HCV стимуляції). Підхід як при
+  рецидивній не-HCV МЛЗ. BR (бендамустин + ритуксимаб; NCCN кат.2A): ORR ~70-80%;
+  мПВЗ ~24-36 міс. ОБОВ'ЯЗКОВО: підтвердження HCV-RNA невизначуваний (SVR12)
+  перед BR — ритуксимаб при активному HCV протипоказаний. HBV скринінг перед
+  ритуксимабом ОБОВ'ЯЗКОВО. Ребіопсія при рецидиві: виключення трансформації у
+  ДВКЛ ПЕРЕД стартом BR. В Україні: бендамустин + ритуксимаб — НСЗУ.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025: For HCV-MZL progressing after or not responding to antiviral
+      therapy, chemo-immunotherapy (BR preferred for indolent histology; NCCN Cat 2A)
+      is recommended — same approach as non-HCV relapsed MZL.
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      BSH MZL 2024: Post-SVR12 HCV-MZL relapse → chemo-immunotherapy (BR or R-CHOP);
+      no further antiviral benefit once SVR12 achieved; histologic transformation
+      must be excluded at relapse biopsy.
+
+do_not_do:
+  - "Без підтвердження SVR12: BR з ритуксимабом при активному HCV — В-клітинна деплеція + вірусна реплікація → імунна дисфункція"
+  - "Без ребіопсії при рецидиві: трансформація у ДВКЛ (~10-15% рецидивів) вимагає агресивного лікування; BR неадекватний для ДВКЛ"
+  - "Без HBV скринінгу: анти-CD20 + HCV-ко-інфекція (HBV коенд.) → реактивація HBV; ентекавір при HBsAg+ або HBcAb+"
+  - "Повторний BR при рефрактерності <6 міс: новий курс неефективний; МДК щодо об'єктутузумабу+бендамустину або R-CHOP"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
