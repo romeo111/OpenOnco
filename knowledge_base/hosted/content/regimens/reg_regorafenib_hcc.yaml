@@ -1,0 +1,66 @@
+id: REG-REGORAFENIB-HCC
+disease_context: DIS-HCC
+line_of_therapy: 2
+plan_track: standard
+
+agents:
+  - drug_id: DRG-REGORAFENIB
+    dose: "160 mg PO once daily with low-fat breakfast (< 600 kcal, < 30% fat)"
+    route: PO
+    schedule: "Days 1–21 of 28-day cycle (3 weeks on, 1 week off)"
+    dose_modifications:
+      - trigger: "Grade 2 hand-foot skin reaction (HFSR) — blistering, painful swelling"
+        action: "Reduce to 120 mg/day; interrupt until Grade ≤1; topical urea 20-40% cream"
+      - trigger: "Grade 3 HFSR OR Grade 3 hypertension OR Grade 3 fatigue"
+        action: "Hold; reduce to 120 mg/day when resolved to ≤Grade 1; max 2 dose reductions then discontinue"
+      - trigger: "AST/ALT > 5× ULN (Grade 3 hepatotoxicity)"
+        action: "Interrupt; monitor LFTs weekly; resume at 120 mg only when normalized; permanent discontinue at Grade 4 or recurrence"
+      - trigger: "Grade 4 any toxicity"
+        action: "Permanently discontinue"
+
+premedication:
+  - "Low-fat breakfast before each dose (< 600 kcal, < 30% fat) — food increases AUC ~48%; fasting or high-fat meal changes exposure substantially"
+  - "Topical urea 20-40% cream or ammonium lactate cream prophylaxis for HFSR (high incidence ~54% all grade)"
+  - "Antihypertensives PRN — BP monitoring at each visit"
+
+cycle_length_days: 28
+total_planned_cycles: "Continue until progression or unacceptable toxicity; 3-weeks-on/1-week-off schedule"
+
+monitoring:
+  - "LFTs (AST, ALT, bilirubin): baseline, week 2, week 4, then q4 weeks — hepatotoxicity; HCC patients at baseline risk"
+  - "Blood pressure: baseline then q2 weeks — target BP < 150/100"
+  - "AFP: q8 weeks — response biomarker in HCC"
+  - "CT CAP: q8-12 weeks for response (mRECIST or RECIST 1.1)"
+  - "Dermatologic assessment: each visit — HFSR management critical for dose maintenance"
+  - "CBC, CMP q4 weeks"
+  - "Thyroid function q8-12 weeks"
+
+key_toxicities:
+  - toxicity: "Hand-foot skin reaction (HFSR)"
+    grade_3_4_incidence: "~13%"
+    management: "Topical urea cream prophylaxis; dose reduction; avoid friction/pressure on palms/soles; comfortable footwear"
+  - toxicity: "Hypertension"
+    grade_3_4_incidence: "~15%"
+    management: "Amlodipine or ACEi/ARB; dose reduction if Grade 3 despite treatment"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~9%"
+    management: "Supportive; evaluate underlying causes (anemia, thyroid, pain)"
+  - toxicity: "Hepatotoxicity (elevated LFTs)"
+    grade_3_4_incidence: "~7-10%"
+    management: "Weekly LFT monitoring in first 2 months; interrupt at Grade 3; discontinue at Grade 4"
+  - toxicity: "Diarrhea"
+    grade_3_4_incidence: "~3%"
+    management: "Loperamide; dose reduction"
+
+watchpoints_ua:
+  - "УВАГА: Реголарафеніб приймати під час сніданку з низьким вмістом жиру (<30%); AUC змінюється при голодуванні або жирній їжі — важливо для дотримання режиму"
+  - "УВАГА: HFSR (шкірна реакція долонь/стоп) у ~54% пацієнтів — профілактична крем з сечовиною 20-40%; зручне взуття; зменшення дози при Grade 3"
+  - "УВАГА: Гепатотоксичність — ЛФТ моніторинг щотижнево перші 2 місяці; ризик посилений при ЦП; призупинити при AST/ALT >5× ULN"
+  - "УВАГА: Контроль АТ кожні 2 тижні; цільовий АТ <150/100; реголарафеніб пригнічує VEGFR і підвищує АТ"
+  - "УВАГА: ЛФТ + АФП + CT кожні 8 тижнів для оцінки відповіді — відсутність відповіді AFP може передбачати прогресування раніше за CT"
+  - "УВАГА: Стандарт призначення: соративній пацієнт; якщо соративній не застосовувався або погано переносився — алгоритм повинен вказати відповідну 2L"
+  - "УВАГА: Реголарафеніб не зареєстрований для ГЦК в Україні — уточнити доступність міжнародної аптеки"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,138 @@
+id: ALGO-HCC-SYSTEMIC-2L
+applicable_to_disease: DIS-HCC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for advanced/unresectable HCC after progression on 1L
+  systemic treatment. Routes by performance status, Child-Pugh score, prior 1L
+  backbone (TKI-based vs ICI-containing), and AFP for biomarker-selected ramucirumab
+  (AFP ≥400 ng/mL). All 2L options are palliative intent; median OS ~8-11 months.
+
+output_indications:
+  - IND-HCC-SYSTEMIC-2L-REGORAFENIB
+  - IND-HCC-SYSTEMIC-2L-CABOZANTINIB
+  - IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB
+
+default_indication: IND-HCC-SYSTEMIC-2L-REGORAFENIB
+alternative_indication: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
+
+decision_tree:
+  # Step 1 — Performance status and liver function gate.
+  # All 2L phase 3 trials (RESORCE, CELESTIAL, REACH-2) enrolled ECOG 0-1
+  # and Child-Pugh A. Child-Pugh B/C: standard 2L therapy is not established;
+  # clinical trial or best supportive care.
+  - step: 1
+    evaluate:
+      all_of:
+        - any_of:
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - none_of:
+          - red_flag: RF-HCC-CHILD-PUGH-B-C
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3 OR Child-Pugh B/C: standard 2L systemic therapy NOT indicated.
+        ECOG ≥3: consider best supportive care + symptom management.
+        Child-Pugh B/C: liver function limits systemic therapy tolerance — all 2L
+        RCTs excluded CP-B/C. Clinical trial enrollment preferred; BSC if no trial.
+        Assess reversible causes of hepatic decompensation (portal HTN, infection).
+
+  # Step 2 — Prior 1L backbone determines available 2L options.
+  # After TKI-based 1L (sorafenib or lenvatinib): RESORCE/CELESTIAL/REACH-2
+  # evidence applies directly.
+  # After ICI-containing 1L (atezo+bev or durva+treme): no phase 3 RCT data;
+  # TKI-based 2L is used by expert consensus (Cat 2A per NCCN).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Prior 1L was TKI-based (sorafenib OR lenvatinib monotherapy)"
+    if_true:
+      next_step: 3
+      notes: "Post-TKI 1L: RCT-supported 2L options available (RESORCE, CELESTIAL, REACH-2). AFP gate determines best agent."
+    if_false:
+      next_step: 4
+      notes: "Post-ICI-containing 1L (atezo+bev or durva+treme): no dedicated phase 3 2L RCT. NCCN Cat 2A: TKI-based 2L by expert consensus."
+
+  # Step 3 — After TKI 1L: AFP gate for biomarker-selected ramucirumab,
+  # and sorafenib-tolerance gate for regorafenib eligibility.
+  # AFP ≥400 + sorafenib-tolerant: regorafenib preferred (HR 0.63, RESORCE);
+  # AFP ≥400 + sorafenib-intolerant: ramucirumab (well-tolerated, HR 0.71);
+  # AFP <400 + sorafenib-tolerant: regorafenib (RESORCE; AFP not required);
+  # AFP <400 + sorafenib-intolerant: cabozantinib (does not require sorafenib tolerance).
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Sorafenib was tolerated in 1L (≥21 days at ≥400 mg/d, stopped for progression not toxicity)"
+    if_true:
+      result: IND-HCC-SYSTEMIC-2L-REGORAFENIB
+      notes: >
+        Sorafenib-tolerant post-TKI 1L: regorafenib 160 mg d1-21 q28d is the
+        preferred 2L (RESORCE Cat 1; mOS HR 0.63 vs placebo; sequential sorafenib→
+        regorafenib OS ~26 mo from 1L start). AFP ≥400: ramucirumab is a
+        biomarker-selected alternative if HFSR/oral TKI toxicity concerns —
+        IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB has well-tolerated IV-only profile
+        (HR 0.71 vs placebo post-sorafenib AFP≥400, REACH-2). AFP <400:
+        regorafenib is the only Cat 1 option (ramucirumab AFP-gated).
+    if_false:
+      result: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
+      notes: >
+        Sorafenib-intolerant (or post-lenvatinib 1L): cabozantinib preferred
+        (CELESTIAL Cat 1; enrolled 1-2 prior lines regardless of sorafenib
+        tolerance; mOS HR 0.76). AFP ≥400: ramucirumab is an alternative
+        (REACH-2; well-tolerated IV-only; HR 0.71). Cabozantinib covers MET/AXL
+        pathways implicated in sorafenib resistance — potentially more active
+        in sorafenib-resistant/intolerant disease.
+
+  # Step 4 — After ICI-containing 1L (atezo+bev or durva+treme).
+  # No phase 3 RCT data in this setting. Expert consensus: TKI-based 2L.
+  # Cabozantinib most studied in broad post-systemic HCC setting (CELESTIAL
+  # enrolled post-ANY prior systemic); regorafenib acceptable (Cat 2A post-ICI).
+  # If TKI-naive (e.g., patient got ICI first without prior sorafenib):
+  # sorafenib or lenvatinib are also options (SHARP/REFLECT data in 1L setting).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Child-Pugh A AND ECOG 0-1 AND no prior TKI in 1L"
+    if_true:
+      result: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
+      notes: >
+        Post-ICI 1L + TKI-naive: cabozantinib 60 mg QD (NCCN Cat 2A post-ICI;
+        CELESTIAL enrolled 1-2 prior systemic lines) OR sorafenib 400 mg BID
+        (SHARP; TKI-naive patients; NCCN Cat 2A post-ICI). Cabozantinib
+        preferred over sorafenib in this setting per expert consensus (MET/AXL
+        coverage; better tolerated). AFP ≥400: ramucirumab also viable
+        (REACH-2 did not restrict to post-sorafenib in protocol; primarily
+        post-sorafenib but biomarker-selection remains valid).
+    if_false:
+      result: IND-HCC-SYSTEMIC-2L-CABOZANTINIB
+      notes: >
+        Post-ICI 1L + prior TKI in 1L (rare — e.g., sorafenib→ICI→ICI
+        2nd ICI failed): cabozantinib (Cat 2A). Clinical trial strongly preferred
+        in this setting. Very limited evidence for 3L+ systemic therapy.
+
+sources:
+  - SRC-RESORCE-BRUIX-2017
+  - SRC-CELESTIAL-ABOU-ALFA-2018
+  - SRC-REACH2-ZHU-2019
+  - SRC-NCCN-HCC-2025
+  - SRC-AASLD-HCC-2023
+
+last_reviewed: "2026-05-04"
+notes: >
+  HCC 2L algorithm: 4-step routing by PS/CP gate → prior 1L backbone →
+  sorafenib tolerance → AFP biomarker.
+
+  Three output indications (all Cat 1 post-TKI-1L):
+  - IND-HCC-SYSTEMIC-2L-REGORAFENIB (standard; sorafenib-tolerant; RESORCE HR 0.63)
+  - IND-HCC-SYSTEMIC-2L-CABOZANTINIB (aggressive; sorafenib-intolerant or post-ICI; CELESTIAL HR 0.76)
+  - IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB (AFP≥400 biomarker-selected; REACH-2 HR 0.71; well-tolerated IV)
+
+  Post-ICI 2L (Cat 2A): cabozantinib used most commonly per expert consensus;
+  no dedicated phase 3 RCT. Lenvatinib, sorafenib also listed by NCCN.
+
+  Note: IND-HCC-SYSTEMIC-1L-SORAFENIB source references need updating (SHARP
+  trial source SRC-SHARP-LLOVET-2008 not yet in KB; flagged as future ingestion).
+  Also: sorafenib and lenvatinib indications should ideally have their respective
+  SHARP and REFLECT trial sources added.
