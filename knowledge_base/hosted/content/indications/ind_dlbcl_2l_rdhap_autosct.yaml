@@ -1,0 +1,120 @@
+id: IND-DLBCL-2L-RDHAP-AUTOSCT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "CD20+ DLBCL-NOS (or transformed DLBCL from FL) — first or second relapse"
+    - "ECOG PS 0-2 (transplant-eligible)"
+    - "Age generally ≤70 (no absolute cutoff but physiological age determines eligibility)"
+    - "Adequate organ function: LVEF ≥50%, CrCl ≥30 mL/min, bilirubin ≤2 × ULN"
+    - "No active uncontrolled infection"
+    - "Chemosensitive disease — must achieve ≥PR to salvage to proceed to autoSCT consolidation"
+    - "Prior R-CHOP (or equivalent anthracycline + rituximab 1L) — platinum-sensitive (not platinum-exposed)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Primary refractory DLBCL (progressive disease on 1L) AND not achieving ≥PR to salvage — autoSCT not appropriate if chemorefractory"
+    - "DLBCL transformation from CLL/SLL (Richter): distinct biology, different outcomes"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-R-ICE-DLBCL
+alternative_regimens:
+  - regimen_id: REG-RDHAP-BURKITT
+    condition: "Cisplatin-eligible (GFR ≥60 mL/min, ECOG 0-1, no Grade ≥2 neuropathy): R-DHAP achieves similar ORR (~63%) to R-ICE in CORAL trial; preferred in many European centers"
+    notes: "R-DHAP uses cisplatin + HiDAC vs R-ICE carboplatin + standard etoposide; CORAL showed no significant difference (ORR 63% each; 3yr EFS NS)"
+followed_by:
+  - "BEAM-autoSCT consolidation for patients achieving ≥PR to salvage (standard: BCNU 300 mg/m² d-6, etoposide 100 mg/m² q12h × 4 d-5 to -2, cytarabine 200 mg/m² q12h × 4 d-5 to -2, melphalan 140 mg/m² d-1, Day 0 PBSC infusion)"
+  - "Rituximab maintenance post-autoSCT (MAINTENANCE 1 trial — 2y DFS benefit)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr_salvage: "~63% (CORAL; either R-ICE or R-DHAP)"
+  cr_rate: "~26-33% post-salvage"
+  proportion_reaching_autosct: "~51-59% (CORAL)"
+  autosct_3yr_pfs: "~42% (CORAL; from autoSCT)"
+  overall_3yr_efs: "~26-35% (CORAL; from start of salvage)"
+  notes: >
+    CORAL trial (Gisselbrecht 2010, JCO; n=396): R-ICE vs R-DHAP × 3 cycles → BEAM-autoSCT.
+    Both regimens achieved ~63% ORR; no significant difference in 3-year EFS (26% vs 35%;
+    p=0.14). PARMA trial (Philip 1995, NEJM): established superiority of autoSCT consolidation
+    over salvage chemo alone in chemosensitive relapsed DLBCL (3yr EFS 46% vs 12%).
+    Key prognostic factors: relapse >12 months from end of 1L (late relapse) better than
+    early relapse; non-GCB phenotype predicts worse salvage outcome; prior rituximab reduces
+    ORR vs pre-rituximab era (CORAL main insight).
+    In 2025/2026 context: patients who progress on R-CHOP are still candidates for R-ICE
+    salvage → autoSCT if transplant-eligible. Patients with primary refractory disease
+    (PD on 1L) have ~20% ORR to salvage — autoSCT rarely applicable; CAR-T preferred.
+
+hard_contraindications:
+  - "Primary refractory DLBCL with no response to 2L salvage (< PR) — autoSCT NOT appropriate; CAR-T eligible if suitable (IND-DLBCL-3L-AXICEL-CART)"
+  - "ECOG PS ≥3"
+  - "LVEF <45% (cardiac exclusion for BEAM conditioning including BCNU)"
+  - "No ASCT-capable center available"
+  - "Active uncontrolled infection at time of conditioning"
+  - "Second malignancy with active disease"
+
+red_flags_triggering_alternative:
+  - condition: "Transplant-ineligible (age >70, ECOG ≥2, organ dysfunction) → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (Pola-R-bendamustine; POLARIX 2L data)"
+  - condition: "≥2 prior lines failed, CAR-T-eligible → IND-DLBCL-3L-AXICEL-CART (ZUMA-7: axi-cel vs R-ICE→autoSCT; axi-cel superior for early-relapse 2L)"
+  - condition: "Post-CAR-T relapse or CAR-T failure → IND-DLBCL-3L-LONCASTUXIMAB (LOTIS-2; ORR 48%)"
+  - condition: "Prior autoSCT failure → allo-SCT referral or bispecific (epcoritamab, glofitamab) — outside KB"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "CrCl/GFR (carboplatin Calvert dosing; cisplatin eligibility for R-DHAP)"
+  - "Cardiac ECHO (LVEF ≥50% required for BEAM-BCNU conditioning)"
+  - "PFTs (pulmonary function for BEAM-BCNU — risk of BCNU pulmonary toxicity)"
+  - "PET/CT (FDG) at relapse and after cycle 2 salvage (Deauville score — response assessment)"
+  - "Peripheral blood CD34+ count (stem cell mobilization assessment after G-CSF)"
+  - "Bone marrow biopsy (if cytopenias suggest marrow involvement)"
+  - "HIV serology (if not previously done — impacts rituximab safety + transplant eligibility)"
+  - "CMV serology (transplant-related CMV risk)"
+
+rationale: >
+  For transplant-eligible CD20+ DLBCL with first/second chemosensitive relapse, R-ICE or
+  R-DHAP salvage → BEAM-autoSCT remains the NCCN Category 1 standard approach. CORAL
+  (Gisselbrecht 2010): R-ICE vs R-DHAP both achieve ~63% ORR; 3yr EFS ~26-35% from start
+  of salvage; ~42% 3yr PFS from autoSCT. PARMA (Philip 1995): established autoSCT superiority
+  over chemo alone in chemosensitive relapse (3yr EFS 46% vs 12%).
+  2025/2026 note: axi-cel CAR-T (ZUMA-7) showed superiority over R-ICE→autoSCT specifically
+  for early-relapse (≤12 months from 1L completion) DLBCL — ZUMA-7 EFS HR 0.40. For early
+  relapse, axi-cel may be preferred over R-ICE→autoSCT in CAR-T-eligible patients. For late
+  relapse (>12 months) R-ICE→autoSCT remains standard. MDT discussion required for borderline cases.
+
+rationale_ua: >
+  CORAL (n=396): R-ICE vs R-DHAP × 3 → BEAM-aotoSCT; ORR ~63% обидва; 3-річний EFS 26-35%;
+  3-річний PFS від аутоТКМ ~42%. PARMA (1995): аутоТКМ перевершує хіміотерапію при хімічно-
+  чутливому рецидиві (3-річний EFS 46% vs 12%). NCCN Категорія 1.
+  2026 контекст: аксі-sel (ZUMA-7) перевершив R-ICE→аутоТКМ при ранньому рецидиві (≤12 міс);
+  для пізнього рецидиву (>12 міс) R-ICE→аутоТКМ залишається стандартом.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CORAL-GISSELBRECHT-2010
+    position: supports
+    relevant_quote_paraphrase: "CORAL (n=396): R-ICE vs R-DHAP × 3 → BEAM-autoSCT in r/r DLBCL; ORR ~63% each; 3yr EFS 26-35% (NS); autoSCT 3yr PFS ~42%; NCCN Cat 1"
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+
+do_not_do:
+  - "Не переходити до аутоТКМ при відсутності відповіді на сальваж-хіміотерапію (<PR після 2-3 циклів) — аутоТКМ неефективний при хіміорефрактерній ДВККЛП"
+  - "При ранньому рецидиві (≤12 міс від 1L): розглянути аксі-sel CAR-T (ZUMA-7; EFS HR 0.40 vs R-ICE→аутоТКМ) — MDT обговорення"
+  - "Не ігнорувати месну при іфосфаміді — обов'язкова захист від уротоксичності"
+  - "Не переходити до BEAM без ECHO (ФВ ≥50% обов'язково для BCNU-кондиціонування)"
+
+time_critical: true
+time_critical_note: "Salvage response assessment (PET/CT after cycle 2) is time-sensitive; delay risks disease progression precluding autoSCT eligibility"
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

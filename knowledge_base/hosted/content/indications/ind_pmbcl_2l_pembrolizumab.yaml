@@ -1,0 +1,109 @@
+id: IND-PMBCL-2L-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PMBCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory primary mediastinal large B-cell lymphoma (PMBCL)"
+    - "≥2 prior lines of therapy (including 1L DA-EPOCH-R or R-CHOP ± mediastinal RT)"
+    - "Transplant-ineligible OR R-ICE-refractory (progression on or after salvage chemotherapy → BEAM-autoSCT pathway failed)"
+    - "ECOG PS 0-1"
+    - "No prior anti-PD-1 or anti-PD-L1 therapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior pembrolizumab, nivolumab, or other PD-1/PD-L1 inhibitor — cross-resistance expected"
+    - "Active autoimmune disease requiring systemic corticosteroids >10 mg/day prednisone equivalent"
+    - "Prior allogeneic SCT (risk of graft-versus-host exacerbation with ICI)"
+  demographic_constraints:
+    ecog_max: 1
+    notes: "KEYNOTE-170 enrolled ECOG 0-1; ECOG 2 patients should be evaluated carefully"
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "45.3% (KEYNOTE-170; n=53)"
+  cr_rate: "11.3%"
+  median_dor: "Not reached (median 24-month follow-up; responses durable)"
+  os_12mo_pct: "58%"
+  notes: >
+    KEYNOTE-170 (Armand 2019, JCO; n=53 PMBCL ≥2nd-line): pembrolizumab 200 mg q3w.
+    ORR 45.3%; CR 11.3%; median DOR not reached (24-month DOR rate 47%).
+    FDA approved June 2018 for r/r PMBCL ≥2 prior lines. Regular approval 2021.
+    PMBCL has exceptional ICI sensitivity vs DLBCL-NOS due to 9p24.1 amplification
+    → PD-L1/PD-L2 overexpression (~70% of PMBCL). This is the defining molecular
+    feature distinguishing PMBCL ICI sensitivity from DLBCL-NOS.
+    Responses are durable (unlike most chemotherapy in this setting): 12-month DOR ~47%.
+    KEYNOTE-013 PMBCL cohort (n=19): ORR 41%; combined with KEYNOTE-170 = pooled ORR 48%.
+
+hard_contraindications:
+  - "Prior PD-1/PD-L1 therapy (cross-resistance; pembrolizumab rechallenge not indicated)"
+  - "ECOG PS ≥3"
+  - "Active autoimmune disease with systemic immunosuppression requirement"
+  - "Organ transplant history (risk of rejection)"
+  - "Uncontrolled infection (viral, fungal, or bacterial requiring IV antibiotics)"
+
+red_flags_triggering_alternative:
+  - condition: "Transplant-eligible + chemosensitive → IND-PMBCL-2L-RICE-AUTOSCT (R-ICE salvage → BEAM-autoSCT; curative intent preferred for eligible patients)"
+  - condition: "Prior pembrolizumab 1L (pembrolizumab-naïve PMBCL increasingly uncommon) → ICI rechallenge not appropriate"
+  - condition: "CAR-T eligible post-2L → ICI bridging to CAR-T; MDT decision"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "PET/CT at baseline (Deauville score; response assessment on treatment at cycles 3 and 6)"
+  - "Re-biopsy at progression on pembrolizumab (confirm PMBCL vs Richter-equivalent transformation)"
+  - "Thyroid function (TSH): baseline + every 3 months (pembrolizumab thyroiditis — most common irAE)"
+  - "Pregnancy test: baseline in women of reproductive age"
+  - "Hepatitis B serology: HBsAg + anti-HBc (reactivation risk with ICI in HBcAb+ patients)"
+  - "CMV serology (relevant if CAR-T consideration downstream)"
+
+desired_tests:
+  - "9p24.1 amplification / FISH for PD-L1 (confirms PMBCL molecular signature; informs expected pembrolizumab benefit)"
+
+rationale: >
+  PMBCL has ~70% frequency of 9p24.1 amplification leading to PD-L1/PD-L2 overexpression —
+  the highest ICI sensitivity among B-cell lymphoma subtypes. KEYNOTE-170 (Armand 2019;
+  n=53): pembrolizumab achieved 45.3% ORR with durable responses (median DOR not reached).
+  FDA approved June 2018 (accelerated); converted to regular approval 2021.
+  For transplant-ineligible r/r PMBCL or patients progressing after salvage chemo → autoSCT,
+  pembrolizumab is the only FDA-approved and NCCN Category 1 option after ≥2 prior lines.
+  Key safety note: prior mediastinal RT (common in PMBCL) increases risk of ICI-related
+  radiation recall pneumonitis — baseline PFTs and close pulmonary monitoring required.
+
+rationale_ua: >
+  KEYNOTE-170 (n=53 ПМВКЛП ≥2L): пембролізумаб 200 мг q3w; ORR 45.3%; CR 11.3%;
+  медіана ДOR не досягнута (24-місячний DOR 47%). FDA схвалено 2018. NCCN Категорія 1.
+  ПМВКЛП: 9p24.1 ампліфікація (~70%) → PD-L1/L2 надексп → унікальна ICI-чутливість.
+  Після ≥2 ліній при неможливості ТКМ — пембролізумаб є єдиним FDA/NCCN-схваленим варіантом.
+  При попередній RT середостіння — пильний моніторинг пневмоніту.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE170-ARMAND-2019
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-170 (n=53 PMBCL ≥2nd-line): pembrolizumab ORR 45.3%; CR 11.3%; median DOR not reached; FDA approved June 2018; NCCN Cat 1"
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати пембролізумаб при попередній анти-ПД-1/ПД-Л1 терапії — перехресна резистентність"
+  - "Не ігнорувати попередню RT середостіння — підвищений ризик радіаційного recall пневмоніту при ICI"
+  - "Не призначати при ECOG ≥3 або активній автоімунній хворобі з потребою в системній ГКС"
+  - "Перевірити HBsAg + anti-HBc — реактивація гепатиту B можлива під ICI"
+  - "При трансплант-придатних пацієнтах → R-ICE→аутоТКМ залишається пріоритетним (куративний намір); пембролізумаб для трансплант-нездатних"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

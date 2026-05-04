@@ -1,11 +1,12 @@
 id: ALGO-PMBCL-2L
 applicable_to_disease: DIS-PMBCL
 applicable_to_line_of_therapy: 2
-purpose: "Select 2L Indication for relapsed/refractory primary mediastinal large B-cell lymphoma. Routing branches on transplant-eligibility:\n- Transplant-ELIGIBLE (fit, age ≤65-70, ECOG ≤1, adequate organ\n  function, chemosensitive to salvage): IND-PMBCL-2L-RICE-AUTOSCT\n  (R-ICE salvage → BEAM-autoSCT consolidation, the curative-\n  intent standard track).\n\n- Transplant-INELIGIBLE / R-ICE-refractory: pembrolizumab\n  monotherapy (KEYNOTE-170 — PMBCL has 9p24.1 amplification with\n  PD-L1 overexpression in ~70%, ORR 45% with durable responses).\n  No dedicated IND-PMBCL-2L-PEMBROLIZUMAB; routes via free-text\n  MDT note (see notes).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP ± mediastinal RT), OR primary refractoriness (residual mediastinal mass with persistent FDG- avidity Deauville 4-5 post-1L).\n"
+purpose: "Select 2L Indication for relapsed/refractory primary mediastinal large B-cell lymphoma. Routing branches on transplant-eligibility:\n- Transplant-ELIGIBLE (fit, age ≤65-70, ECOG ≤1, adequate organ\n  function, chemosensitive to salvage): IND-PMBCL-2L-RICE-AUTOSCT\n  (R-ICE salvage → BEAM-autoSCT consolidation, the curative-\n  intent standard track).\n\n- Transplant-INELIGIBLE / R-ICE-refractory: IND-PMBCL-2L-PEMBROLIZUMAB\n  (KEYNOTE-170 — PMBCL has 9p24.1 amplification with PD-L1 overexpression\n  in ~70%; ORR 45.3% durable; FDA June 2018; NCCN Cat 1).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP ± mediastinal RT), OR primary refractoriness (residual mediastinal mass with persistent FDG-avidity Deauville 4-5 post-1L).\n"
 output_indications:
 - IND-PMBCL-2L-RICE-AUTOSCT
+- IND-PMBCL-2L-PEMBROLIZUMAB
 default_indication: IND-PMBCL-2L-RICE-AUTOSCT
-alternative_indication: IND-PMBCL-2L-RICE-AUTOSCT
+alternative_indication: IND-PMBCL-2L-PEMBROLIZUMAB
 decision_tree:
 - step: 1
   evaluate:
@@ -14,7 +15,13 @@ decision_tree:
     - red_flag: RF-PMBCL-ORGAN-DYSFUNCTION
     - condition: Age >70 OR ECOG ≥2 OR LVEF <45% OR CrCl <50 (transplant-ineligible)
   if_true:
-    result: IND-PMBCL-2L-RICE-AUTOSCT
+    result: IND-PMBCL-2L-PEMBROLIZUMAB
+    notes: >
+      Transplant-ineligible r/r PMBCL: pembrolizumab 200 mg q3w (KEYNOTE-170; Armand 2019,
+      JCO; n=53). ORR 45.3%; CR 11.3%; median DOR not reached (24-month DOR 47%). FDA June 2018;
+      NCCN Cat 1. PMBCL 9p24.1 amplification → PD-L1/PD-L2 overexpression (~70%) = exceptional
+      ICI sensitivity. Requires: no prior PD-1/PD-L1 therapy; ECOG 0-1; no active autoimmune
+      disease. Prior mediastinal RT → monitor for radiation recall pneumonitis.
   if_false:
     next_step: 2
 - step: 2
@@ -23,10 +30,15 @@ decision_tree:
     - condition: R-ICE x 2 cycles completed
     - condition: Interim Deauville ≥4 (no metabolic response) — chemorefractory
   if_true:
-    result: IND-PMBCL-2L-RICE-AUTOSCT
+    result: IND-PMBCL-2L-PEMBROLIZUMAB
+    notes: >
+      R-ICE-refractory PMBCL (no metabolic response after 2 cycles salvage):
+      pembrolizumab 200 mg q3w (KEYNOTE-170). autoSCT consolidation not appropriate without
+      ≥PR to salvage; ICI offers ~45% ORR with durable responses. MDT decision — bridging
+      or direct pembrolizumab per functional status and prior RT history.
   if_false:
     next_step: 3
-  notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+  notes: "Partially wired — chemosensitivity criterion (Deauville ≥4 = no response) kept as MDT-evaluated text; no RF models interim PET response. Wireable via disease-specific RF in a future round."
 - step: 3
   evaluate:
     all_of:
@@ -55,7 +67,8 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
-last_reviewed: '2026-04-27'
-notes: 'OOS / wiring gaps: (1) IND-PMBCL-2L-PEMBROLIZUMAB (KEYNOTE-170, FDA-approved 2018 for r/r PMBCL ≥2 prior lines, ORR 45% durable) — not modeled as dedicated indication. Steps 1+2 route to R-ICE-autoSCT placeholder; trace must surface "transplant-ineligible OR R-ICE-refractory → pembrolizumab KEYNOTE-170 (200mg q3w)" as free-text MDT note. (2) BEAM-autoSCT consolidation is a procedure (not an indication); IND-PMBCL-2L-RICE-AUTOSCT name signals the expected consolidation downstream. (3) CAR-T (axi-cel ZUMA-12 included PMBCL; tisa-cel JULIET PMBCL cohort) for ≥3L or post-autoSCT relapse — not modeled. (4) Brentuximab vedotin for CD30+ PMBCL r/r — phase 2 ECOG-1412 data positive, not FDA-approved for PMBCL specifically; not modeled. (5) Mediastinal RT consolidation post-CR2 — radiation oncology referral, outside algorithm. (6) Allogeneic SCT for post-autoSCT relapse young patients — referral, outside KB. (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+- SRC-KEYNOTE170-ARMAND-2019
+last_reviewed: '2026-05-04'
+notes: 'AUTHORED 2026-05-04: IND-PMBCL-2L-PEMBROLIZUMAB wired at steps 1 (transplant-ineligible) and 2 (R-ICE-refractory); IND-PMBCL-2L-RICE-AUTOSCT retained at steps 3-4 for transplant-eligible chemosensitive track. OOS / wiring gaps: (1) BEAM-autoSCT consolidation is a procedure (not an indication); IND-PMBCL-2L-RICE-AUTOSCT name signals expected consolidation downstream. (2) CAR-T (axi-cel ZUMA-12 included PMBCL; tisa-cel JULIET PMBCL cohort) for ≥3L or post-autoSCT relapse — not modeled. (3) Brentuximab vedotin for CD30+ PMBCL r/r — phase 2 ECOG-1412 data positive, not FDA-approved for PMBCL specifically; not modeled. (4) Mediastinal RT consolidation post-CR2 — radiation oncology referral, outside algorithm. (5) Allogeneic SCT for post-autoSCT relapse — referral, outside KB. (6) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
 
   '

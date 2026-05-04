@@ -1,0 +1,99 @@
+id: REG-R-ICE-DLBCL
+disease_context: DIS-DLBCL-NOS
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy_salvage"
+protocol_name: "R-ICE (Rituximab + Ifosfamide + Carboplatin + Etoposide) — DLBCL 2L salvage"
+notes: >
+  Standard 2L salvage regimen for transplant-eligible chemosensitive relapsed DLBCL.
+  CORAL trial established equivalence with R-DHAP (~63% ORR each; no significant difference).
+  Choice between R-ICE and R-DHAP per center preference and cisplatin eligibility:
+  - R-ICE: carboplatin-based (preferred if CrCl 30-59 or cisplatin intolerance)
+  - R-DHAP: cisplatin-based (preferred if excellent renal function; potentially deeper responses per CORAL trends)
+  Goal: achieve ≥PR (partial response) after 2-3 cycles → proceed to BEAM-autoSCT consolidation.
+  ~51-59% of patients reach autoSCT in CORAL; ~40-50% do not respond and cannot proceed.
+
+agents:
+  - drug_id: DRG-RITUXIMAB
+    dose: "375 mg/m² IV over 1-3 hours"
+    route: IV
+    schedule: "Day 1 of each cycle"
+    administration_notes: "Day 1 dose may be split: day 1 or day -1 per center protocol. Premedicate with acetaminophen + diphenhydramine."
+  - drug_id: DRG-IFOSFAMIDE
+    dose: "5000 mg/m² IV as 24-hour continuous infusion"
+    route: IV
+    schedule: "Day 2 (24-hour CIV; mesna co-infused; central access strongly recommended)"
+    administration_notes: >
+      MESNA MANDATORY: mesna 5000 mg/m² CIV concurrently with ifosfamide (equal dose)
+      + mesna 3000 mg/m²/day × 2 days after ifosfamide completion = total mesna ≥8000 mg/m².
+      Alternative mesna: 20% bolus before + 60% over 12h + 40% over 12h after per 3-dose protocol.
+      IV hydration: 3-4 L/day during and after ifosfamide (hemorrhagic cystitis prevention).
+      ENCEPHALOPATHY WARNING: ifosfamide encephalopathy (confusion, somnolence) — if occurs,
+      stop ifosfamide immediately; treat with methylene blue 50 mg IV q4-6h.
+    dose_modifications:
+      - trigger: "CrCl <60 mL/min"
+        action: "Reduce ifosfamide to 3000 mg/m²/day or switch to R-DHAP protocol"
+      - trigger: "Prior ifosfamide encephalopathy"
+        action: "Avoid ifosfamide; use R-DHAP (cisplatin-based) or alternative"
+  - drug_id: DRG-CARBOPLATIN
+    dose: "AUC 5 IV (Calvert formula)"
+    route: IV
+    schedule: "Day 2 concurrent with ifosfamide CIV or after rituximab"
+    dose_modifications:
+      - trigger: "CrCl <30 mL/min"
+        action: "Carboplatin contraindicated; delay until renal function improves or switch to alternative regimen"
+  - drug_id: DRG-ETOPOSIDE
+    dose: "100 mg/m² IV over 60 minutes"
+    route: IV
+    schedule: "Days 1, 2, and 3 (d1 before rituximab in some protocols; d2-4 in others — follow center protocol)"
+    administration_notes: "Hypotension risk with rapid infusion; infuse slowly over ≥60 min"
+    dose_modifications:
+      - trigger: "Grade ≥3 mucositis or hepatic impairment (bilirubin >1.5 × ULN)"
+        action: "Reduce etoposide by 25-50%"
+
+when_to_use: >
+  2L salvage for transplant-eligible (ECOG ≤2, age ≤70, adequate organ function) r/r
+  CD20+ DLBCL (first or second relapse). Goal is to achieve CR or PR before BEAM-autoSCT.
+  CORAL trial (Gisselbrecht 2010, JCO): ORR ~63% for R-ICE or R-DHAP; ~51% reach autoSCT.
+  NCCN Category 1 for chemosensitive transplant-eligible DLBCL 2L. 3 cycles standard;
+  assess response (PET/CT) after cycle 2. Proceed to BEAM-autoSCT if ≥PR after salvage.
+
+premedication:
+  - "Acetaminophen 650 mg PO + diphenhydramine 25 mg IV 30 min before rituximab"
+  - "5-HT3 antagonist (ondansetron 16 mg IV or equivalent) + dexamethasone 12 mg IV + NK1 antagonist (aprepitant 125 mg then 80 mg × 2 days)"
+  - "IV hydration: 3-4 L/day on ifosfamide day (hemorrhagic cystitis prevention)"
+  - "Allopurinol 300 mg PO QD × 5-7 days (tumor lysis prevention — lymphoma high burden)"
+
+growth_factor_support:
+  mandatory: true
+  protocol: "G-CSF 5-10 mcg/kg/day SC starting day +4 (day after etoposide completion) until ANC ≥2.0 × 10⁹/L × 2 days. Mandatory for mobilization purposes (stem cell mobilization after cycle 2)"
+
+monitoring:
+  - "CBC + differential: before each cycle (ANC ≥1.0 × 10⁹/L, platelets ≥75 × 10⁹/L)"
+  - "Creatinine + GFR: before each cycle (Calvert carboplatin dosing)"
+  - "LFT + bilirubin: baseline; before each cycle"
+  - "Urinalysis + microscopy: daily during and 48h after ifosfamide (hemorrhagic cystitis monitoring)"
+  - "Neurological status: daily during ifosfamide day and 24h after (encephalopathy monitoring)"
+  - "PET/CT: after cycle 2 (Deauville score; ≥PR → proceed to stem cell collection + BEAM-autoSCT; no response → alternative salvage or palliative)"
+  - "Stem cell count (CD34+): check mobilization yield after G-CSF; target ≥4-8 × 10⁶ CD34+/kg"
+
+cycle_length_days: 21
+total_planned_cycles: "2-3 cycles (assess response after cycle 2; 3rd cycle only if partial response at cycle 2 and improving)"
+
+watchpoints_ua:
+  - "КРИТИЧНО: МЕСНА ОБОВ'ЯЗКОВА з іфосфамідом (ізоеквімолярна доза CIV) — без месни = геморагічний цистит"
+  - "КРИТИЧНО: Іфосфамідна енцефалопатія — якщо сплутаність свідомості/сонливість: ЗУПИНИТИ іфосфамід; метиленовий синій 50 мг IV q4-6h"
+  - "КРИТИЧНО: Гідратація 3-4 л/добу під час іфосфаміду — профілактика уротоксичності"
+  - "КРИТИЧНО: G-CSF ОБОВ'ЯЗКОВИЙ з дня +4 (мобілізація стовбурових клітин після циклу 2)"
+  - "КРИТИЧНО: ПЕТ/КТ після ЦИКЛУ 2 — Deauville ≥PR → перехід до збору стовбурових клітин + BEAM-аutoSCT; відсутність відповіді → альтернативна схема"
+  - "УВАГА: Карбоплатин за формулою Кальверта (AUC 5 × [GFR + 25]) — перераховувати перед кожним циклом"
+  - "УВАГА: Профілактика лізису пухлини (алопуринол) при об'ємному захворюванні — починати за день до хіміотерапії"
+
+sources:
+  - SRC-CORAL-GISSELBRECHT-2010
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
