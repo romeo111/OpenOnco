@@ -1,0 +1,93 @@
+id: IND-CRC-METASTATIC-2L-KRAS-G12C-ADAGRASIB-CETUXIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic (Stage IV) colorectal cancer"
+    - "After ≥1 prior line of systemic therapy (fluoropyrimidine-based, oxaliplatin-based, irinotecan-based)"
+  biomarker_requirements:
+    - "KRAS G12C mutation confirmed by validated NGS panel — MANDATORY"
+    - "KRAS G12C is distinct from other KRAS mutations (G12D, G12V, etc.) — does NOT apply to non-G12C mutations"
+    - "KRAS G12C prevalence in mCRC: ~3-4%"
+    - "MSI-H/dMMR patients should receive ICI first (MSI status trumps KRAS G12C)"
+    - "BRAF V600E co-mutation rare but would direct to different treatment"
+
+recommended_regimen: REG-ADAGRASIB-CETUXIMAB-CRC
+
+concurrent_therapy: []
+
+followed_by:
+  - "Continue until progression or unacceptable toxicity"
+  - "At progression: clinical trial; TAS-102 ± bevacizumab; fruquintinib; regorafenib"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  overall_response_rate: "46% (KRYSTAL-10; adagrasib+cetuximab)"
+  orr_monotherapy_comparison: "14% (adagrasib monotherapy historical; combination clearly superior)"
+  notes: >
+    KRYSTAL-10 (Yaeger R NEJM 2023; NCT04793958; Phase 1b/2):
+    Adagrasib 600 mg BID + cetuximab Q2W in KRAS G12C+ mCRC after prior therapy.
+    ORR 46%; mPFS ~7.3 months. Combination dramatically superior to adagrasib
+    monotherapy (ORR ~14%) due to EGFR feedback pathway inhibition by cetuximab.
+    FDA accelerated approval December 2023. NCCN COLON 2025: Category 1.
+    Compared to sotorasib+cetuximab (CodeBreaK 300): similar NCCN category;
+    adagrasib+cetuximab shows higher ORR (46% vs 26%) but cross-trial comparison
+    must be interpreted cautiously.
+
+hard_contraindications:
+  - "KRAS mutation other than G12C (e.g., G12D, G12V, G12R): KRAS G12C inhibitors are inactive"
+  - "MSI-H/dMMR status: pembrolizumab 1L should be tried first; MSI-H overrides KRAS pathway"
+  - "Prior cetuximab/panitumumab resistance from non-G12C KRAS mutations: different mechanism"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "QTc >500ms at baseline (adagrasib)"
+
+red_flags_triggering_alternative:
+  - "Concurrent strong CYP3A4 inducers or inhibitors that cannot be stopped: consider sotorasib+cetuximab instead (different metabolism)"
+  - "Prior Grade 3+ cetuximab hypersensitivity: switch to panitumumab (adagrasib+panitumumab; off-label but active)"
+
+required_tests:
+  - "KRAS G12C confirmation by NGS (tissue or ctDNA — both acceptable; ctDNA preferred for real-time molecular status)"
+  - "MSI/MMR testing if not previously done (MSI-H overrides to pembrolizumab)"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Baseline ECG (QTc assessment — adagrasib)"
+  - "Magnesium, potassium baseline"
+
+desired_tests:
+  - "Tumor sidedness (left-sided): KRAS G12C is more common in left-sided CRC"
+  - "Concurrent PIK3CA or BRAF mutations (resistance biomarkers)"
+  - "ctDNA dynamics: early molecular response predicts outcomes"
+
+rationale: >
+  KRAS G12C mutations occur in ~3-4% of mCRC and historically lacked targeted therapy.
+  Adagrasib+cetuximab (KRYSTAL-10) provides mechanistically rational combination:
+  adagrasib covalently inhibits KRAS G12C-GDP (inactive conformation); cetuximab
+  blocks EGFR-mediated feedback reactivation of RAS/MAPK. The combination yields
+  ORR 46% — 3× higher than adagrasib monotherapy. FDA accelerated approval December 2023.
+  NCCN COLON 2025: Category 1 alongside sotorasib+cetuximab (CodeBreaK 300).
+  Key distinguishing features from sotorasib+cetuximab:
+  — Adagrasib 600 mg BID vs sotorasib 960 mg QD
+  — No PPI interaction concern with adagrasib (unlike sotorasib acid-dependent dissolution)
+  — QTc monitoring required for adagrasib
+  — Higher ORR in KRYSTAL-10 (46%) vs CodeBreaK 300 (26%), but cross-trial comparison cautious
+
+sources:
+  - SRC-KRYSTAL-10-YAEGER-2023
+  - SRC-NCCN-COLON-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EK 2026-05-04. KRYSTAL-10 adagrasib+cetuximab for KRAS G12C mCRC 2L.
+  Second NCCN Cat 1 KRAS G12C option alongside sotorasib+cetuximab (CodeBreaK 300).
+  FDA accelerated approval December 2023. ORR 46% vs 26% (sotorasib+cet) — no head-
+  to-head comparison; cross-trial difference may reflect patient selection.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

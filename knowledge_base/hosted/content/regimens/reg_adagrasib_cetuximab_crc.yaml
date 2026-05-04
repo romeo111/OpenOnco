@@ -1,0 +1,77 @@
+id: REG-ADAGRASIB-CETUXIMAB-CRC
+name: "Adagrasib + cetuximab (KRYSTAL-10, KRAS G12C+ mCRC)"
+name_ua: "Адаграсіб + цетуксимаб (KRYSTAL-10, KRAS G12C+ мКРР)"
+alternate_names: ["KRYSTAL-10 doublet", "adagrasib+cetuximab CRC"]
+
+components:
+  - drug_id: DRUG-ADAGRASIB
+    dose: "600 mg PO BID (twice daily)"
+    schedule: "Continuous; take with or without food"
+    route: PO
+    notes: >
+      600 mg BID is the approved dose for CRC (same as NSCLC monotherapy dose).
+      Adagrasib is a CYP3A4 inducer and moderate CYP3A4 inhibitor — significant
+      drug interactions. Take at approximately the same time each day.
+  - drug_id: DRUG-CETUXIMAB
+    dose: "500 mg/m² IV over 120 min (first infusion); 500 mg/m² IV over 60 min (subsequent infusions, if tolerated)"
+    schedule: "Q14D (every 2 weeks)"
+    route: IV
+    notes: >
+      Q2W dosing (500 mg/m²) preferred over Q1W (400/250 mg/m²) dosing for convenience.
+      Mandatory premedication before each infusion (IRR risk).
+      Cetuximab is NOT for KRAS-mutant CRC outside KRAS G12C specifically — only the
+      G12C-specific combination uses cetuximab (mechanistic rationale: G12C inhibition
+      activates EGFR feedback; cetuximab blocks this escape pathway).
+
+cycle_length_days: 14
+number_of_cycles: "Continuous until progression or unacceptable toxicity"
+
+premedications:
+  - "Cetuximab IRR prophylaxis: diphenhydramine 50 mg IV + H2 antagonist (ranitidine/famotidine) + dexamethasone 8 mg IV — 30-60 min before each cetuximab infusion"
+  - "Adagrasib: no mandatory premedication; antiemetics PRN as needed"
+
+supportive_care:
+  - "CBC, CMP, LFTs: before each cycle (adagrasib hepatotoxicity; cetuximab electrolyte monitoring)"
+  - "Magnesium, potassium: replete aggressively (cetuximab-induced hypomagnesemia/hypokalemia)"
+  - "Dermatologic monitoring: EGFR-class acneiform rash, xerosis, paronychia (cetuximab)"
+  - "Topical clindamycin + sunscreen for rash management; systemic doxycycline 100 mg BID for Grade 2-3 rash"
+  - "QTc monitoring: adagrasib causes QTc prolongation — baseline ECG and periodic follow-up"
+  - "CT CAP: every 2 cycles for response assessment"
+
+dose_modifications:
+  - toxicity: "QTc prolongation >500ms (adagrasib)"
+    action: "Hold adagrasib; correct electrolytes (K+, Mg2+); reassess QTc; restart at 400 mg BID when QTc ≤481ms"
+  - toxicity: "Grade 3 hepatotoxicity (transaminases >5-20× ULN)"
+    action: "Hold adagrasib; resume at 400 mg BID when ≤Grade 1; permanently discontinue if Grade 4 or recurrent Grade 3"
+  - toxicity: "Grade 3 acneiform rash (cetuximab)"
+    action: "Hold cetuximab; systemic doxycycline/minocycline; resume at reduced dose (250 mg/m²) after resolution"
+  - toxicity: "Grade 3-4 cetuximab IRR"
+    action: "Permanently discontinue cetuximab; consider switching to panitumumab (lower IRR rate)"
+  - toxicity: "Severe hypomagnesemia (Mg <0.4 mmol/L)"
+    action: "IV magnesium supplementation; hold cetuximab if symptomatic (tetany, arrhythmia)"
+
+special_requirements:
+  - "KRAS G12C mutation confirmed by validated NGS (tissue or ctDNA) BEFORE starting"
+  - "KRAS G12C is a specific mutation — does NOT qualify for other KRAS mutations (G12D, G12V, etc.)"
+  - "Prior 1+ lines of standard therapy for mCRC required per FDA label"
+  - "AVOID strong CYP3A4 inducers (adagrasib plasma levels reduced)"
+  - "AVOID strong CYP3A4 inhibitors (adagrasib plasma levels increased)"
+  - "Monitor for QTc prolongation — avoid concurrent QTc-prolonging drugs"
+  - "Magnesium supplementation plan: anticipate hypomagnesemia from cetuximab"
+
+sources:
+  - SRC-KRYSTAL-10-YAEGER-2023
+  - SRC-NCCN-COLON-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  KRYSTAL-10 (Yaeger R NEJM 2023; NCT04793958): Phase 1b/2. Adagrasib 600 mg BID +
+  cetuximab Q2W in KRAS G12C mCRC after prior therapy.
+  ORR: 46% (vs 14% adagrasib monotherapy, historical). Combination superior to adagrasib
+  alone due to EGFR feedback pathway blockade by cetuximab.
+  FDA accelerated approval December 2023 for KRAS G12C+ mCRC after ≥1 prior therapy line.
+  NCCN COLON 2025: Category 1. Alongside sotorasib+cetuximab (CodeBreaK 300; ORR 26%).
+  QTc prolongation and hepatotoxicity are key adagrasib monitoring requirements.
+  Unlike sotorasib (acid-dependent), adagrasib has no PPI interaction issue.

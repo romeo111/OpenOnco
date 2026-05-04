@@ -12,6 +12,7 @@ output_indications:
   - IND-CRC-METASTATIC-2L-MSI-H-PEMBRO
   - IND-CRC-METASTATIC-2L-BRAF-BEACON
   - IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
+  - IND-CRC-METASTATIC-2L-KRAS-G12C-ADAGRASIB-CETUXIMAB
   - IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB
   - IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD
   - IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
@@ -49,7 +50,9 @@ decision_tree:
     if_false:
       next_step: 3
 
-  # Step 3 — KRAS G12C (~3-4% of mCRC). CodeBreaK 300 sotorasib + cetuximab.
+  # Step 3 — KRAS G12C (~3-4% of mCRC). Two NCCN Cat 1 options:
+  # DEFAULT: sotorasib+cetuximab (CodeBreaK 300; ORR 26%);
+  # ALTERNATIVE: adagrasib+cetuximab (KRYSTAL-10; ORR 46%; FDA Dec 2023).
   - step: 3
     evaluate:
       all_of:
@@ -57,6 +60,18 @@ decision_tree:
         - condition: "BRAF V600E excluded (ruled out via step 2)"
     if_true:
       result: IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB
+      alternatives:
+        - indication: IND-CRC-METASTATIC-2L-KRAS-G12C-ADAGRASIB-CETUXIMAB
+          criteria: "No concern for QTc prolongation + no strong CYP3A4 inhibitor/inducer interaction + no PPI use (adagrasib has no PPI dissolution issue; sotorasib does); KRYSTAL-10 ORR 46% vs CodeBreaK 300 ORR 26% — cross-trial comparison cautious"
+          nccn_category: 1
+      notes: >
+        KRAS G12C+ mCRC (~3-4%) — TWO NCCN Cat 1 options after ≥1 prior line:
+        DEFAULT: Sotorasib 960 mg QD + cetuximab (CodeBreaK 300; ORR 26%; FDA Aug 2023).
+        ALTERNATIVE: Adagrasib 600 mg BID + cetuximab Q2W (KRYSTAL-10; ORR 46%; FDA Dec 2023).
+        Key distinguishing factors: adagrasib requires QTc monitoring (no PPI interaction);
+        sotorasib requires acid-free environment (avoid PPIs — acid-dependent dissolution).
+        ORR difference (46% vs 26%) is cross-trial only; no head-to-head comparison.
+        Both are valid Cat 1 choices; MDT to select based on patient drug interactions and tolerability.
     if_false:
       next_step: 4
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
@@ -166,6 +181,11 @@ notes: >
   added to output_indications; step 71 added as sub-decision routing TAS-102+bev
   (preferred) vs fruquintinib (prior TAS-102 / IV-free preference / access).
   Gap (3) CLOSED.
+
+  UPDATED 2026-05-04 (Workstream EK): IND-CRC-METASTATIC-2L-KRAS-G12C-ADAGRASIB-CETUXIMAB
+  added to output_indications; step 3 expanded with alternatives block — adagrasib+cetuximab
+  (KRYSTAL-10; ORR 46%; FDA Dec 2023; NCCN Cat 1) alongside sotorasib+cetuximab (CodeBreaK 300;
+  ORR 26%; NCCN Cat 1). Both Cat 1; MDT selection by QTc/PPI/drug-interaction profile.
 
   Wiring gaps / future work:
   (1) RF-CRC-KRAS-G12C-ACTIONABILITY and RF-CRC-HER2-AMP-ACTIONABILITY
