@@ -28,6 +28,7 @@ output_indications:
   - IND-NSCLC-2L-BRAF-V600E-DAB-TRAM
   - IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
   - IND-NSCLC-2L-NTRK-LAROTRECTINIB
+  - IND-PAN-NTRK-2L-REPOTRECTINIB
   - IND-NSCLC-2L-HER2-MUT-T-DXD
   - IND-NSCLC-2L-DATO-DXD
   - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
@@ -252,6 +253,29 @@ decision_tree:
         - red_flag: RF-NSCLC-NTRK-FUSION-ACTIONABLE
     if_true:
       result: IND-NSCLC-2L-NTRK-LAROTRECTINIB
+      notes: >
+        NTRK fusion: larotrectinib preferred 2L (best-tolerated; ORR ~75%;
+        tumor-agnostic Cat 1). Repotrectinib preferred when post-1G TKI
+        resistance mutations present (G595R, G667C, xDFG-motif) — see
+        alternatives.
+      alternatives:
+        - indication_id: IND-PAN-NTRK-2L-REPOTRECTINIB
+          nccn_category: "1"
+          criteria: >
+            NTRK1/2/3 fusion confirmed; disease progression on prior TRK
+            inhibitor (larotrectinib OR entrectinib) with solvent-front
+            resistance mutations (G595R/G667C/xDFG-motif confirmed on
+            resistance-biopsy NGS); OR TKI-naive when repotrectinib selected
+            as first targeted agent; ECOG ≤2; pan-tumor FDA approval 2024.
+          note: >
+            Repotrectinib 2L post-TKI (TRIDENT-1; Drilon 2024 NEJM;
+            NCCN Cat 1; FDA tumor-agnostic approval Jun 2024): ORR ~58%
+            post-1G-TKI; covers solvent-front resistance mutations inactive
+            to larotrectinib/entrectinib. 160 mg QD lead-in × 14d →
+            160 mg BID. Also active in ROS1 fusion (separate 2L ROS1
+            indication). RNA-NGS preferred for NTRK fusion detection +
+            resistance mutation profiling at progression. Tumor-agnostic:
+            NSCLC listed as primary disease_id; applies across solid tumors.
     if_false:
       next_step: 15
 
@@ -364,6 +388,11 @@ notes: >
   (nonsquamous histology gate; TROPION-Lung01; mPFS HR 0.84 nonsquamous; ORR 26%;
   NCCN Cat 2A). Step 16 now routes to step 161 → nonsquamous: DATO-DXd; squamous:
   docetaxel±ram. Gap (DATO-DXd wiring) CLOSED.
+
+  UPDATED 2026-05-04 (Workstream FK): IND-PAN-NTRK-2L-REPOTRECTINIB added
+  to output_indications; wired as Cat 1 alternative at step 14 NTRK branch.
+  Post-1G-TKI resistance mutations (G595R/G667C/xDFG-motif); TRIDENT-1
+  (Drilon 2024 NEJM; ORR ~58% post-1G); tumor-agnostic FDA Jun 2024.
 
   REMAINING WIRING GAPS:
   - RF-NSCLC-FRAILTY-AGE wired only via free-text condition; needs

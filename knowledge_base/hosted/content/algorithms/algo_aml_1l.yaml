@@ -16,6 +16,7 @@ output_indications:
   - IND-AML-1L-CPX351-SECONDARY
   - IND-AML-1L-IDH1-IVOSIDENIB-AZA
   - IND-AML-1L-QUIZARTINIB-FLT3ITD
+  - IND-AML-CR1-ORAL-AZA-MAINTENANCE
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -196,9 +197,33 @@ decision_tree:
         - condition: "Fit for intensive chemotherapy (default if no fitness flags)"
     if_true:
       result: IND-AML-1L-7-3
+      notes: >
+        Default 7+3 induction. Post-induction: if CR/CRi achieved AND patient
+        ≥55 years OR not eligible for alloHCT, oral azacitidine maintenance
+        × 1 year is Cat 1 (QUAZAR-AML-001; NCCN Cat 1; see
+        IND-AML-CR1-ORAL-AZA-MAINTENANCE below).
+      alternatives:
+        - indication_id: IND-AML-CR1-ORAL-AZA-MAINTENANCE
+          nccn_category: "1"
+          criteria: >
+            Post-induction CR/CRi achieved after 7+3 (or any intensive
+            induction); patient ≥55 years OR not alloHCT candidate (frailty,
+            comorbidity, donor unavailable, patient preference); started
+            within 4 months of CR/CRi; adequate renal function; ECOG ≤2.
+            Does NOT replace alloHCT consolidation in transplant-eligible
+            patients (alloHCT preferred for high-risk disease when feasible).
+          note: >
+            Oral azacitidine (CC-486; Onureg) maintenance (QUAZAR-AML-001;
+            Wei 2020 NEJM; NCCN Cat 1): 300 mg PO QD d1-14 q28d × 1 year.
+            Median RFS 10.2 vs 4.8 months (HR 0.65; p<0.001); median OS
+            24.7 vs 14.8 months (HR 0.69; p<0.001). Enrolled ND AML ≥55
+            years achieving CR/CRi after induction ± consolidation. NOT
+            equivalent to IV azacitidine (different bioavailability/PK).
+            Monitor CBC q4w (myelosuppression). Ukraine: not registered;
+            named-patient import required.
     if_false:
       result: IND-AML-1L-7-3
-    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3."
+    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3. UPDATED 2026-05-04 (Workstream FK): IND-AML-CR1-ORAL-AZA-MAINTENANCE added as Cat 1 post-induction maintenance alternative for CR/CRi-achieving non-alloHCT patients ≥55 years."
 
 sources:
   - SRC-NCCN-AML-2025
@@ -209,6 +234,11 @@ sources:
 
 last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream FK): IND-AML-CR1-ORAL-AZA-MAINTENANCE added
+  to output_indications; wired as Cat 1 post-induction maintenance alternative
+  at step 7 (default 7+3 result). QUAZAR-AML-001 (Wei 2020 NEJM): oral aza
+  300 mg d1-14 q28d; mOS 24.7 vs 14.8 mo (HR 0.69); mRFS 10.2 vs 4.8 mo.
+  Applies post-CR/CRi from any intensive induction; ≥55 yr or non-alloHCT.
   UPDATED 2026-05-04 (Workstream EZ): IND-AML-1L-QUIZARTINIB-FLT3ITD wired at
   step 5 as Cat 1 aggressive-track alternative for confirmed FLT3-ITD+ AML
   (QuANTUM-First; Erba 2023 Lancet; mOS 31.9 vs 15.1 mo; HR 0.78; FDA Jul 2023).
