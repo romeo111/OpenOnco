@@ -1,0 +1,165 @@
+id: IND-HGBL-DH-2L-CART-LISOCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HGBL-DH
+  line_of_therapy: 2
+  stage_requirements:
+    - "Primary-refractory HGBL-DH (no CR to first-line DA-EPOCH-R / R-CHOP) OR relapse <12 months from completion of frontline therapy"
+    - "ECOG 0-1 (TRANSFORM enrolment criteria; HGBL-DH subgroup)"
+    - "Adequate organ function for fludarabine + cyclophosphamide lymphodepletion: ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L, AST/ALT ≤3× ULN, CrCl ≥60 mL/min"
+    - "No prior CD19-directed CAR-T therapy"
+    - "Manufacturing slot + funding pathway accessible at CAR-T referral centre"
+    - "Lisocabtagene maraleucel (liso-cel; Breyanzi) accessible at certified CAR-T centre"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD19 and CD20 positive (CD19 required for liso-cel targeting; confirm at relapse biopsy — CD19 loss under rituximab therapy possible)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 1
+    notes: >
+      HGBL-DH typically occurs in older adults (median ~60 years). Liso-cel preferred
+      over axi-cel for improved ICANS tolerability in older or CNS-risk patients
+      (ICANS G≥3: liso-cel ~4% vs axi-cel ~21%). ECOG 2: borderline; MDT case-by-case.
+      ECOG ≥3: use axi-cel only if accessible and patient recovers ECOG ≤2 before infusion.
+
+recommended_regimen: REGIMEN-LISOCEL-DLBCL-2L
+alternative_regimens:
+  - regimen_id: REG-CAR-T-AXICEL-HGBL
+    description: >
+      Axi-cel (axicabtagene ciloleucel; ZUMA-1/ZUMA-7; IND-HGBL-DH-2L-CART-AXICEL;
+      NCCN Cat 1) when liso-cel inaccessible. Equivalent Cat 1 efficacy.
+      ICANS G≥3 higher (~21% vs ~4%); requires intensive neuro-monitoring post-infusion.
+
+concurrent_therapy:
+  - "BRIDGING CHEMOTHERAPY: permitted during 3-4 week liso-cel manufacturing window; R-DHAP or R-GemOx preferred (disease control without excessive marrow suppression)"
+  - "LYMPHODEPLETION: fludarabine 30 mg/m² IV + cyclophosphamide 500 mg/m² IV daily × 3 days before infusion (days -5 to -3)"
+  - "CRS monitoring: daily assessment days 1-10 post-infusion; ICANS daily assessment; ICU-accessible CAR-T centre mandatory"
+  - "Tocilizumab available on-unit before infusion (CRS grade ≥2 management)"
+  - "HBV reactivation prophylaxis: entecavir if HBsAg+ or anti-HBc+ throughout therapy"
+  - "PJP prophylaxis post-CAR-T: co-trimoxazole 480 mg 3×/week × 6 months (T-cell aplasia)"
+  - "IgG monitoring: check at month 3 post-infusion; IVIG replacement if <400 mg/dL (prolonged B-cell aplasia)"
+
+followed_by:
+  - "Response assessment: PET-CT at day 90 post-infusion (LYRIC criteria)"
+  - "Durable CR: surveillance; no maintenance required for CAR-T"
+  - "Relapse post-liso-cel: bispecific (epcoritamab/glofitamab) or allogeneic SCT in fit patients; clinical trial"
+  - "LDH + clinical assessment q3 months × 2 years; PET-CT q4-6 months × 2 years then annually"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~86% (TRANSFORM phase 3 RCT in aggressive B-NHL including HGBL-DH subgroup; Kamdar 2022 Lancet)"
+  complete_response: "~74% (TRANSFORM)"
+  progression_free_survival: "EFS HR 0.35 vs standard salvage chemo + autoSCT (TRANSFORM)"
+  notes: >
+    PRIMARY EVIDENCE: TRANSFORM (Kamdar et al. 2022 Lancet; phase 3 RCT; N=184):
+    - Liso-cel vs standard salvage (R-DHAP/R-ICE) + autoSCT in early-relapse/primary-refractory DLBCL
+    - HGBL-DH included in aggressive B-cell lymphoma cohort (NCCN classification)
+    - ORR 86% vs 48%; CR 74% vs 43%; EFS HR 0.35 (p<0.0001)
+    - ICANS G≥3: ~4% (significantly lower than axi-cel ~21% in ZUMA-7)
+    - NCCN B-cell 2025 Category 1: liso-cel for 2L primary-refractory/early-relapse aggressive B-NHL including HGBL-DH
+
+    HGBL-DH-SPECIFIC CONTEXT:
+    HGBL-DH is classified as aggressive B-cell lymphoma by NCCN and treated per DLBCL 2L protocols.
+    TRANSFORM did not separate HGBL-DH as a standalone subgroup; NCCN B-cell 2025 lists liso-cel
+    as Cat 1 for aggressive B-NHL including HGBL-DH/TH. MYC rearrangement in HGBL-DH correlates
+    with higher CNS-risk biology — liso-cel's lower ICANS profile (~4% vs 21%) is particularly
+    relevant for HGBL-DH patients with CNS-risk features.
+
+    UKRAINE: Neither liso-cel nor axi-cel is registered in Ukraine; international CAR-T referral
+    required (Poland, Israel, EU certified centres). Significant access barrier; document explicitly.
+
+hard_contraindications:
+  - "ECOG ≥3 (lymphodepletion + CRS burden)"
+  - "Active uncontrolled infection at time of lymphodepletion (immunosuppression risk)"
+  - "LVEF <45% (cyclophosphamide lymphodepletion + CRS-related cardiac stress)"
+  - "Active uncontrolled CNS lymphomatous involvement (relative; discuss at MDT; CNS penetration of liso-cel is variable)"
+
+red_flags_triggering_alternative:
+  - condition: "Liso-cel inaccessible (no certified centre, manufacturing unavailable, funding barrier) → IND-HGBL-DH-2L-CART-AXICEL (axi-cel; NCCN Cat 1; higher ICANS monitoring required)"
+  - condition: "Late relapse (≥12 months) + transplant-eligible + chemosensitive → IND-HGBL-DH-2L-RICE-AUTOSCT before CAR-T"
+  - condition: "CD19 loss at relapse biopsy → CAR-T class not applicable; refer to clinical trial or bispecific"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-LN-CORE-BIOPSY
+  - TEST-ECHO
+  - TEST-BRAIN-MRI-CONTRAST
+  - "MYC/BCL2/BCL6 FISH at relapse biopsy (confirm persistent DH/TH status — DH loss possible at relapse)"
+  - "CD19 IHC/flow cytometry at relapse: confirm CD19 expression (CD19 loss after rituximab exposure possible)"
+  - "Ferritin, fibrinogen, triglycerides, D-dimer: baseline for HLH/CRS risk stratification"
+
+desired_tests:
+  - "Lumbar puncture if neurological symptoms or brain MRI changes (CNS involvement exclusion before CAR-T)"
+  - "Bone marrow biopsy if peripheral cytopenias or suspicious BM involvement on imaging"
+  - "IgG level at baseline (B-cell aplasia monitoring after CAR-T)"
+
+rationale: >
+  Lisocabtagene maraleucel (liso-cel; Breyanzi) CD19-directed CAR-T for primary-refractory or
+  early-relapse (<12 months) HGBL-DH. HGBL-DH is classified as aggressive B-cell lymphoma by
+  NCCN and treated per DLBCL 2L CAR-T protocols — liso-cel and axi-cel are both NCCN Cat 1.
+
+  TRANSFORM (Kamdar 2022 Lancet; phase 3 RCT; N=184):
+  Liso-cel vs standard salvage + autoSCT in primary-refractory/early-relapse aggressive B-NHL.
+  ORR 86% vs 48%; CR 74% vs 43%; EFS HR 0.35 (p<0.0001). ICANS G≥3 ~4%.
+
+  LISO-CEL vs AXI-CEL PREFERENCE IN HGBL-DH:
+  Both NCCN B-cell 2025 Cat 1 for 2L early-relapse/primary-refractory aggressive B-NHL.
+  Liso-cel preferred when accessible due to significantly lower ICANS G≥3 burden (~4% vs
+  axi-cel ~21% in ZUMA-7). HGBL-DH patients often older (median ~60) with MYC rearrangement
+  — higher CNS-risk biology correlates with CNS toxicity risk; liso-cel's lower ICANS profile
+  is particularly relevant. Axi-cel (IND-HGBL-DH-2L-CART-AXICEL) is the alternative when
+  liso-cel unavailable at the CAR-T referral centre.
+
+rationale_ua: >
+  Лісокабтаген марілеуцель (ліс-сел; Breyanzi) CD19-спрямований CAR-T для первинно-рефрак-
+  торного або ранньорецидивного (<12 міс.) HGBL-DH. NCCN Cat 1. TRANSFORM (Kamdar 2022 Lancet):
+  ORR 86%; CR 74%; EFS HR 0,35. ICANS G≥3 ~4% (vs аксі-сел ~21% при ZUMA-7).
+  Перевагу надають ліс-сел при доступності через нижчий профіль ICANS — особливо важливо
+  при MYC+ HGBL-DH із підвищеним ЦНС-ризиком.
+  В Україні: ліс-сел та аксі-сел не зареєстровані — необхідне міжнародне направлення до
+  сертифікованого центру CAR-T (Польща, Ізраїль, ЄС). Значний бар'єр доступу.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без підтвердження CD19+ на останній біопсії — не вводити (CD19 loss після ритуксимабу)"
+  - "Без лімфодеплеції (флударабін+циклофосфамід д-5 до д-3) — CAR-T не вводити"
+  - "Без доступного тоцилізумабу на місці та CRS/ICANS протоколу — не починати"
+  - "При активній неконтрольованій інфекції — відкласти до нормалізації, потім перерозглянути"
+
+sources:
+  - source_id: SRC-TRANSFORM-KAMDAR-2022
+    position: supports
+    relevant_quote_paraphrase: >
+      TRANSFORM phase 3 RCT (Kamdar 2022 Lancet): liso-cel vs standard salvage + autoSCT for
+      primary-refractory/early-relapse aggressive B-NHL (including HGBL-DH). ORR 86% vs 48%;
+      EFS HR 0.35; NCCN Cat 1. ICANS G≥3 ~4%.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: liso-cel for 2L primary-refractory/early-relapse
+      aggressive B-NHL including HGBL-DH. Liso-cel and axi-cel both Cat 1; liso-cel
+      preferred when accessible (lower ICANS G≥3 ~4% vs axi-cel ~21%).
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

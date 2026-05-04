@@ -3,10 +3,11 @@ applicable_to_disease: DIS-HGBL-DH
 applicable_to_line_of_therapy: 2
 purpose: "Select 2L Indication for relapsed/refractory high-grade B-cell lymphoma with MYC + BCL2 (and/or BCL6) rearrangements (HGBL-DH/TH). Routing branches on time-to-relapse from 1L:\n- EARLY relapse (<12 months from end of 1L) OR primary refractory\n  OR chemorefractory: IND-HGBL-DH-2L-CART-AXICEL (axi-cel CD19\n  CAR-T; ZUMA-7-aligned early-line CAR-T paradigm; HGBL-DH\n  behaves like aggressive DLBCL with poor salvage outcomes).\n\n- LATE relapse (≥12 months from end of 1L) AND transplant-eligible\n  AND chemosensitive to salvage: IND-HGBL-DH-2L-RICE-AUTOSCT\n  (R-ICE or R-DHAP × 2-3 cycles → BEAM-autoSCT; CORAL/PARMA;\n  NCCN Cat 1; Workstream AS 2026-05-04).\n\n2L entry triggered by: documented relapse on imaging/biopsy after 1L (DA-EPOCH-R or R-CHOP), OR primary refractoriness (residual FDG-avid disease at end-of-treatment Deauville 4-5), OR chemorefractoriness (failure to achieve PR after 2 cycles of any salvage attempt).\n"
 output_indications:
+- IND-HGBL-DH-2L-CART-LISOCEL
 - IND-HGBL-DH-2L-CART-AXICEL
 - IND-HGBL-DH-2L-RICE-AUTOSCT
-default_indication: IND-HGBL-DH-2L-CART-AXICEL
-alternative_indication: IND-HGBL-DH-2L-RICE-AUTOSCT
+default_indication: IND-HGBL-DH-2L-CART-LISOCEL
+alternative_indication: IND-HGBL-DH-2L-CART-AXICEL
 decision_tree:
 - step: 1
   evaluate:
@@ -26,9 +27,10 @@ decision_tree:
     - condition: 'Chemorefractory: failure to achieve PR after 2 cycles of any salvage'
     - red_flag: RF-HGBL-DH-HIGH-RISK-BIOLOGY
   if_true:
-    result: IND-HGBL-DH-2L-CART-AXICEL
+    next_step: 21
   if_false:
     next_step: 3
+  notes: "if_true updated 2026-05-04 (Workstream CQ): routes to step 21 (liso-cel vs axi-cel access gate) instead of direct axi-cel result."
 - step: 3
   evaluate:
     all_of:
@@ -58,22 +60,59 @@ decision_tree:
     - condition: HGBL-DH relapsed/refractory, CAR-T-eligible, no specific salvage-chemo+autoSCT preference
     - red_flag: RF-HGBL-DH-TRANSFORMATION-PROGRESSION
   if_true:
-    result: IND-HGBL-DH-2L-CART-AXICEL
+    next_step: 21
+  if_false:
+    next_step: 21
+
+  # Step 21 — liso-cel vs axi-cel product selection gate.
+  # Both NCCN Cat 1 for 2L early-relapse/primary-refractory HGBL-DH.
+  # TRANSFORM (Kamdar 2022 Lancet): liso-cel EFS HR 0.35; ICANS G≥3 ~4%.
+  # ZUMA-7 (Locke 2022 NEJM): axi-cel EFS HR 0.24; ICANS G≥3 ~21%.
+  # Liso-cel preferred when accessible (lower ICANS; especially relevant for
+  # HGBL-DH patients with MYC rearrangement and higher CNS-risk biology).
+  # Axi-cel when liso-cel inaccessible at CAR-T referral centre.
+  # Both require international referral from Ukraine (no domestic centres).
+- step: 21
+  evaluate:
+    all_of:
+    - condition: "Lisocabtagene maraleucel (liso-cel; Breyanzi) accessible at CAR-T referral centre (certified centre + manufacturing slot + funding pathway)"
+  if_true:
+    result: IND-HGBL-DH-2L-CART-LISOCEL
+    notes: >
+      Liso-cel accessible: lisocabtagene maraleucel (TRANSFORM; Kamdar 2022 Lancet;
+      EFS HR 0.35; ORR 86%; NCCN Cat 1; ICANS G≥3 ~4%). Preferred over axi-cel when
+      available — lower ICANS toxicity particularly relevant for HGBL-DH (MYC+; CNS-risk).
+      Bridging chemotherapy permitted during ~3-4 week manufacturing window.
+      Ukraine: international referral required (no domestic certified centres).
   if_false:
     result: IND-HGBL-DH-2L-CART-AXICEL
+    notes: >
+      Liso-cel inaccessible (formulary, manufacturing, funding):
+      axi-cel (ZUMA-7; Locke 2022 NEJM; EFS HR 0.24; ORR 83%; NCCN Cat 1).
+      Equivalent Cat 1 efficacy. ICANS G≥3 ~21% (higher than liso-cel ~4%)
+      — intensive neuro-monitoring required. Ukraine: international referral required.
+  notes: "Step 21 added 2026-05-04 (Workstream CQ): liso-cel vs axi-cel access gate for early-relapse/primary-refractory HGBL-DH 2L. Both NCCN Cat 1; liso-cel preferred (lower ICANS; MYC+ CNS-risk relevance); axi-cel when liso-cel unavailable. Gap (2) CLOSED."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
+- SRC-TRANSFORM-KAMDAR-2022
 last_reviewed: '2026-05-04'
 notes: 'UPDATED 2026-05-04 (Workstream AS): IND-HGBL-DH-2L-RICE-AUTOSCT authored and wired
   at step 3 (late relapse ≥12mo + transplant-eligible + chemosensitive → R-ICE/R-DHAP
   salvage → BEAM-autoSCT; CORAL/PARMA NCCN Cat 1). Gap (1) CLOSED.
-  OOS / wiring gaps: (2) Liso-cel (TRANSFORM) and tisa-cel (BELINDA) — not modeled; axi-cel
-  covers early-line CAR-T niche. (3) Bispecifics (epcoritamab EPCORE-NHL, glofitamab) for
-  ≥3L HGBL-DH — not modeled; UA access ≈zero. (4) Allogeneic SCT for post-CAR-T relapse —
-  referral outside KB scope. (5) Time-to-relapse 12mo threshold derived from ZUMA-7/TRANSFORM
-  DLBCL distinction; applied to HGBL-DH biologically. (6) Histologic re-biopsy mandatory at
-  relapse (confirm DH status); routes within ALGO-HGBL-DH-2L. (7) reviewer_signoffs: 0 —
-  pending two Clinical Co-Lead approvals.
+  UPDATED 2026-05-04 (Workstream CQ): IND-HGBL-DH-2L-CART-LISOCEL authored and wired at
+  step 21 (liso-cel vs axi-cel access gate for early-relapse/primary-refractory HGBL-DH).
+  Step 2 if_true → step 21 → liso-cel if accessible (TRANSFORM; EFS HR 0.35; ICANS G≥3 ~4%)
+  else axi-cel (ZUMA-7; EFS HR 0.24; ICANS G≥3 ~21%); both NCCN Cat 1. Gap (2) CLOSED.
+  ROUTING SUMMARY: (1) frailty/organ dysfunction → axi-cel direct (step 1); (2) early
+  relapse/primary-refractory/chemorefractory → step 21 (liso-cel if accessible; else axi-cel);
+  (3) late relapse + transplant-eligible + chemosensitive → R-ICE/R-DHAP → autoSCT;
+  (4) fallback → step 21 (liso-cel if accessible; else axi-cel).
+  OOS / wiring gaps: (3) Bispecifics (epcoritamab EPCORE-NHL, glofitamab) for ≥3L HGBL-DH
+  — not modeled; UA access ≈zero. (4) Allogeneic SCT for post-CAR-T relapse — referral
+  outside KB scope. (5) Tisa-cel (BELINDA) not modeled — inferior TRANSFORM outcomes; liso-cel
+  and axi-cel cover the CAR-T niche. (6) Histologic re-biopsy mandatory at relapse (confirm
+  DH status); routes within ALGO-HGBL-DH-2L. (7) reviewer_signoffs: 0 — pending two
+  Clinical Co-Lead approvals.
 
   '
