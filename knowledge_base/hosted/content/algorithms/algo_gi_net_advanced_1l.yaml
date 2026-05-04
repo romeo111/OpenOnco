@@ -10,9 +10,10 @@ purpose: >
 
 output_indications:
   - IND-GI-NET-ADVANCED-1L-LANREOTIDE
+  - IND-GI-NET-ADVANCED-1L-OCTREOTIDE
 
 default_indication: IND-GI-NET-ADVANCED-1L-LANREOTIDE
-alternative_indication: null
+alternative_indication: IND-GI-NET-ADVANCED-1L-OCTREOTIDE
 
 decision_tree:
   - step: 1
@@ -20,8 +21,8 @@ decision_tree:
       any_of:
         - red_flag: RF-NET-HIGH-GRADE-G3
     if_true:
-      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
-      notes: "G3 / Ki67 >20% — routes to lanreotide indication which carries hard_contraindication warning for poorly differentiated NEC. MDT must verify G3 well-differentiated vs NEC morphology before SSA."
+      next_step: 31
+      notes: "G3 / Ki67 >20% — SSA routes through step 31 (lanreotide vs octreotide access gate). Receiving SSA indication carries hard_contraindication warning for poorly differentiated NEC. MDT must verify G3 well-differentiated vs NEC morphology before SSA."
     if_false:
       next_step: 2
   - step: 2
@@ -29,8 +30,8 @@ decision_tree:
       any_of:
         - red_flag: RF-NET-CARCINOID-SYNDROME
     if_true:
-      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
-      notes: "Active carcinoid syndrome confirms SSA is mandatory for symptom control and antiproliferative intent."
+      next_step: 31
+      notes: "Active carcinoid syndrome confirms SSA is mandatory. Routes to step 31 (lanreotide vs octreotide access gate)."
     if_false:
       next_step: 3
   - step: 3
@@ -40,29 +41,57 @@ decision_tree:
           - red_flag: RF-FITNESS-ECOG-FIT
           - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
     if_true:
-      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+      next_step: 31
     if_false:
-      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+      next_step: 31
     notes: >
-      Both branches resolve to lanreotide (SSA is very well tolerated even
-      in frail patients). ECOG PS ≥4 hard gate in engine suppresses active
-      tracks regardless. Active surveillance (no systemic therapy) is
-      clinically appropriate for G1, asymptomatic, low-burden GI-NET —
-      modelled here as MDT decision, not a separate indication.
+      Both branches route to step 31 (SSA access gate — lanreotide vs octreotide LAR).
+      SSA is very well tolerated even in frail patients. ECOG PS ≥4 hard gate in engine
+      suppresses active tracks regardless. Active surveillance (no systemic therapy) is
+      clinically appropriate for G1, asymptomatic, low-burden GI-NET — MDT decision.
+
+  # Step 31 — Lanreotide vs octreotide LAR access gate (both NCCN Cat 1 equivalents).
+  # Lanreotide Autogel: SC self-injectable; broader CLARINET GEP-NET dataset.
+  # Octreotide LAR: IM clinic-administered; PROMID midgut NET Phase 3; often more
+  # accessible in Ukraine (wider hospital formulary, lower cost).
+  - step: 31
+    evaluate:
+      all_of:
+        - condition: "Lanreotide 120 mg Autogel accessible (registered + formulary-funded at prescribing centre + patient able to afford or access via programme)"
+    if_true:
+      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+      notes: >
+        Lanreotide accessible: lanreotide Autogel 120 mg SC q4w
+        (REG-LANREOTIDE-AUTOGEL-GI-NET; CLARINET Caplin NEJM 2014; HR 0.47; NCCN Cat 1).
+        SC self-injection possible after training; broader GEP-NET CLARINET dataset.
+    if_false:
+      result: IND-GI-NET-ADVANCED-1L-OCTREOTIDE
+      notes: >
+        Lanreotide inaccessible or unaffordable: octreotide LAR 30 mg IM q4w
+        (REG-OCTREOTIDE-LAR-GI-NET; PROMID Rinke JCO 2009; mTTP 14.3 vs 6.0 mo;
+        HR 0.34; NCCN Cat 1). IM administration at clinic required. Both Cat 1
+        equivalents — octreotide LAR is the practical alternative for Ukraine centres
+        where Sandostatin LAR is formulary-stocked but Somatuline unavailable.
+    notes: "Step 31 added 2026-05-04 (Workstream BU): lanreotide vs octreotide LAR access gate. IND-GI-NET-ADVANCED-1L-OCTREOTIDE wired. Gap CLOSED. Free-text condition; MDT-evaluated."
 
 sources:
   - SRC-CLARINET-CAPLIN-2014
   - SRC-NCCN-NET-2025
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-04"
 review_status: pending_clinical_signoff
 drafted_by: claude_extraction
 notes: >
-  Single-indication scaffold. Deferred paths:
+  UPDATED 2026-05-04 (Workstream BU): IND-GI-NET-ADVANCED-1L-OCTREOTIDE authored
+  and wired at step 31 for patients where lanreotide is inaccessible. DRUG-OCTREOTIDE
+  + REG-OCTREOTIDE-LAR-GI-NET created. Gap CLOSED.
+  ROUTING SUMMARY: (1) G3/NEC: step 31 → SSA (MDT warning); (2) Active carcinoid
+  syndrome: step 31 → SSA mandatory; (3) G1/G2 fit → step 31 → lanreotide if
+  accessible, else octreotide LAR.
+
+  Remaining deferred paths:
   - Active surveillance (watch-and-wait for G1 asymptomatic low-burden) —
     clinical judgment, not a separate KB indication
-  - Octreotide LAR 30 mg q4w (equivalent alternative to lanreotide;
-    PROMID data) — pending REG-OCTREOTIDE-LAR-GI-NET + DRUG-OCTREOTIDE
   - PRRT (¹⁷⁷Lu-DOTATATE; NETTER-1 2017) — 2L after SSA progression for
     SSTR2+ disease; requires SSTR biomarker scaffolding + DRUG-LUTETIUM-177-
     DOTATATE; separate future PR

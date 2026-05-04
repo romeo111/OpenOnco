@@ -1,0 +1,156 @@
+id: IND-GI-NET-ADVANCED-1L-OCTREOTIDE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GI-NET
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable locally advanced or metastatic GI-NET (midgut, foregut, hindgut or unknown primary)"
+    - "Well-differentiated G1 (Ki67 <3%) or G2 (Ki67 3–20%)"
+    - "Non-functioning OR functional (carcinoid syndrome) — SSA appropriate for both antiproliferative intent and symptom control"
+    - "Stable, slowly progressive, or newly diagnosed (SSA appropriate regardless of documented progression — PROMID enrolled non-progressive)"
+    - "Lanreotide Autogel unavailable or not accessible at prescribing centre (octreotide LAR selected as equivalent SSA alternative)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KI67-PROLIFERATION
+      required: false
+      value_constraint: "Ki67 ≤20% (well-differentiated G1/G2); if Ki67 >20% see RF-NET-HIGH-GRADE-G3 — MDT decision required"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OCTREOTIDE-LAR-GI-NET
+alternative_regimens:
+  - regimen_id: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+    description: >
+      Lanreotide Autogel 120 mg SC q4w (REG-LANREOTIDE-AUTOGEL-GI-NET; CLARINET
+      Caplin NEJM 2014; HR 0.47; NCCN Cat 1). Preferred over octreotide LAR when
+      accessible — broader GEP-NET dataset (midgut + pNET + hindgut) and SC
+      self-injection possible. Both are NCCN Category 1 equivalents.
+
+concurrent_therapy: []
+followed_by:
+  - "After SSA progression (new lesions or >20% growth per RECIST): reassess with DOTATATE PET-CT"
+  - "SSTR2+ on DOTATATE PET: consider PRRT (¹⁷⁷Lu-DOTATATE; NETTER-1 2017) — 2L referral to PRRT centre"
+  - "SSA progression + Ki67 <20% + liver-dominant: hepatic locoregional therapy (TACE, ablation) — MDT"
+  - "Everolimus (RADIANT-4 Yao Lancet 2016) — 2L for GI-NET non-functional after SSA failure; NCCN Cat 2A"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~3-5% (partial response; tumour stabilisation is primary endpoint)"
+  tumour_stabilisation_rate: "67% at 6 months (PROMID octreotide LAR arm)"
+  time_to_tumour_progression: "14.3 months (PROMID octreotide LAR arm vs 6.0 months placebo; HR 0.34)"
+  notes: >
+    PROMID (Rinke et al. JCO 2009; Phase 3 RCT; n=85):
+    Octreotide LAR 30 mg q4w vs placebo in midgut well-differentiated NET.
+    Primary endpoint: time to tumour progression.
+    mTTP: 14.3 months (octreotide LAR) vs 6.0 months (placebo); HR 0.34; p=0.000072.
+    Tumour stabilisation at 6 months: 67% vs 37%.
+
+    COMPARISON TO LANREOTIDE:
+    No head-to-head RCT between octreotide LAR and lanreotide for GI-NET.
+    CLARINET (lanreotide; Caplin NEJM 2014): mPFS not reached vs 18 mo; HR 0.47
+    in broader GEP-NET cohort (pNET + GI-NET). PROMID specifically midgut.
+    Both NCCN Category 1. Meta-analyses confirm SSA class antiproliferative
+    effect; choice driven by availability and route preference.
+
+    ROUTE DISTINCTION:
+    Octreotide LAR: IM deep gluteal (clinic administration required)
+    Lanreotide Autogel: SC self-injectable (patient can self-administer at home)
+
+hard_contraindications: []
+
+red_flags_triggering_alternative:
+  - condition: "RF-NET-HIGH-GRADE-G3 (Ki67 >20%) — poorly differentiated NEC: SSA not antiproliferative; MDT for chemotherapy (EP/IP)"
+  - condition: "RF-FITNESS-ECOG-POOR — goals-of-care MDT; SSA tolerable even in frail patients (low toxicity)"
+  - condition: "Lanreotide Autogel now accessible → switch to IND-GI-NET-ADVANCED-1L-LANREOTIDE preferred (broader evidence base)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Ki67 proliferation index on biopsy: MANDATORY grade confirmation (G1/G2 vs G3)"
+  - "DOTATATE PET-CT (¹⁶⁸Ga-DOTATATE or ¹⁸F-DOTATATE): SSTR2 expression baseline + staging"
+  - "Chromogranin A (CgA): serum baseline — tumour marker for response monitoring"
+  - "24h urine 5-HIAA or spot urine 5-HIAA/creatinine: carcinoid syndrome biomarker (serotonin excess)"
+  - "Fasting glucose, HbA1c: baseline glycaemia (octreotide modulates insulin/glucagon)"
+  - "Biliary ultrasound: baseline (cholelithiasis baseline prevalence; LAR causes gallstone formation)"
+  - "ECG: baseline (mild QTc effect with SSA)"
+
+desired_tests:
+  - "Echocardiogram: baseline for carcinoid heart disease (carcinoid syndrome → tricuspid/pulmonary valve disease in ~20%)"
+  - "TSH: baseline (long-term SSA → hypothyroidism)"
+  - "CT chest/abdomen/pelvis with contrast: baseline staging + response assessment q3-6 months"
+  - "LDH, NSE: baseline neuroendocrine tumour markers"
+
+rationale: >
+  Octreotide LAR 30 mg IM q4w for well-differentiated G1/G2 GI-NET as an
+  alternative to lanreotide Autogel when lanreotide is unavailable or not
+  formulary-funded at the prescribing centre.
+
+  PHARMACOLOGIC BASIS: Octreotide is a synthetic somatostatin octapeptide
+  analogue with high affinity for SSTR2 (predominant receptor in
+  well-differentiated GEP-NET) and SSTR5. LAR microsphere depot provides
+  sustained plasma levels for 4 weeks, avoiding multiple daily SC injections
+  of immediate-release octreotide.
+
+  ANTIPROLIFERATIVE MECHANISM: SSTR2-mediated inhibition of cell cycle
+  progression (G1 arrest) and induction of apoptosis in NET cells. Also
+  inhibits angiogenesis (VEGF pathway) and reduces IGF-1.
+
+  PROMID EVIDENCE: The PROMID trial (Rinke 2009 JCO) was the landmark
+  Phase 3 RCT demonstrating octreotide LAR's antiproliferative benefit in
+  midgut NET (mTTP 14.3 vs 6.0 months; HR 0.34). This established SSA as
+  a tumour-stabilising class (not merely palliative for carcinoid syndrome).
+
+  SELECTION RATIONALE OVER LANREOTIDE: Identical mechanism class; both NCCN
+  Cat 1 for GI-NET. Octreotide LAR is chosen when:
+  1. Lanreotide Autogel not registered or funded locally (common in Ukraine)
+  2. Patient preference for IM (clinic) vs SC (home) administration
+  3. Institutional formulary constraint (Sandostatin LAR widely stocked)
+  The CLARINET dataset (lanreotide in broader GEP-NET including pNET) remains
+  a slight evidence-base advantage for lanreotide, but for midgut GI-NET
+  specifically, PROMID provides equivalent-quality evidence.
+
+rationale_ua: >
+  Октреотид LAR 30 мг IM q4w для добре-диференційованої G1/G2 GI-NET як
+  альтернатива ланреотиду Autogel при недоступності ланреотиду.
+  PROMID (Rinke JCO 2009; фаза 3; n=85): mTTP 14.3 проти 6.0 міс
+  (HR 0.34; p=0.000072). NCCN Cat 1.
+  Вибір між октреотидом LAR та ланреотидом: обидва рівнозначні Cat 1; в Україні
+  октреотид LAR часто доступніший у лікарнях та дешевший.
+  ОБОВ'ЯЗКОВО: IM-введення у сідничну м'яз — потрібен медперсонал (не самоін'єкція).
+  Базова УЗД жовчного міхура — жовчнокам'яна хвороба при тривалому застосуванні.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати SSA-монотерапію при погано-диференційованій NEC (Ki67 >55%) — протипоказано для антипроліферативного застосування"
+  - "Не застосовувати октреотид LAR без базового підтвердження G1/G2 гістології — при NEC SSA неефективний"
+  - "Не пропускати базову УЗД жовчного міхура — жовчнокам'яна хвороба від SSA у ~15-20%"
+  - "Не ігнорувати ехокардіографію при клінічному карциноїдному синдромі — хвороба серця у ~20%"
+  - "Не забувати IV октреотид IR перед хірургічним втручанням або емболізацією — ризик карциноїдного кризу"
+
+sources:
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Neuroendocrine Tumors 2025 Category 1: octreotide LAR 20-30 mg IM q4w
+      for well-differentiated G1/G2 GI-NET; equivalent Category 1 to lanreotide
+      for antiproliferative therapy. PROMID Phase 3 basis.
+  - source_id: SRC-CLARINET-CAPLIN-2014
+    position: supports
+    relevant_quote_paraphrase: >
+      CLARINET (Caplin NEJM 2014): lanreotide (same SSA class as octreotide LAR)
+      demonstrated mPFS HR 0.47 in GEP-NET G1/G2. Cross-study comparison supports
+      octreotide LAR as equivalent mechanism/class agent.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

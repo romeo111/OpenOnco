@@ -1,0 +1,111 @@
+id: REG-OCTREOTIDE-LAR-GI-NET
+name: "Octreotide LAR 30 mg IM q4w (well-differentiated GI-NET G1/G2; PROMID)"
+name_ua: "Октреотид LAR 30 мг IM q4w (добре-диференційована GI-NET G1/G2; PROMID)"
+alternate_names:
+  - "PROMID regimen"
+  - "Sandostatin LAR NET"
+  - "Octreotide LAR GI-NET"
+  - "SSA antiproliferative GI-NET octreotide"
+
+components:
+  - drug_id: DRUG-OCTREOTIDE
+    dose: "30 mg IM deep gluteal injection"
+    schedule: "Every 4 weeks (q4w). Administered by healthcare professional. Alternate gluteal sides. Shake microsphere vial vigorously (30 sec) immediately before withdrawal and injection."
+    route: IM
+    notes: >
+      LAR = long-acting release microsphere depot. Allow kit to warm to room
+      temperature (30 min) before preparation. Reconstitute with provided diluent.
+      Inject immediately after reconstitution (suspension settles rapidly).
+      If patient is already on octreotide IR SC: continue IR for 2 weeks after
+      first LAR injection to bridge plasma levels.
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication: []
+
+mandatory_supportive_care:
+  - "Biliary ultrasound at baseline and every 12 months (cholelithiasis ~15-20% long-term)"
+  - "Fasting glucose and HbA1c at baseline and every 6 months (glycaemia modulation)"
+  - "TSH annually (long-term hypothyroidism risk)"
+  - "Vitamin B12 annually with prolonged use"
+  - "Octreotide IR 100-500 µg SC available at all times for breakthrough carcinoid symptoms"
+  - "IV octreotide 500 µg bolus + infusion 100-200 µg/h available for any planned procedure or surgical intervention (carcinoid crisis prevention)"
+
+dose_adjustments:
+  - condition: "Severe diarrhea despite octreotide LAR (>6 stools/day, carcinoid syndrome refractory)"
+    modification: "Add telotristat ethyl 250 mg PO TID (tryptophan hydroxylase inhibitor) for carcinoid syndrome diarrhea (TELESTAR trial)"
+    rationale: "FDA-approved for carcinoid syndrome diarrhea inadequately controlled on SSA"
+  - condition: "Cholelithiasis — symptomatic (cholecystitis, biliary colic)"
+    modification: "Surgical consultation; consider laparoscopic cholecystectomy; continue octreotide LAR unless surgical intervention immediate"
+    rationale: "Asymptomatic gallstones — no dose change; symptomatic → surgical management"
+  - condition: "Carcinoid crisis risk (planned surgery, hepatic artery embolisation, ablation, biopsy)"
+    modification: "IV octreotide 500 µg bolus before procedure + 100-200 µg/h infusion during + 12-24h post-procedure regardless of LAR schedule"
+    rationale: "Tumour manipulation → massive mediator release → carcinoid crisis (flushing, bronchospasm, haemodynamic instability)"
+  - condition: "Hepatic impairment (cirrhosis, Child-Pugh B/C)"
+    modification: "Reduce dose to 10-20 mg LAR q4w; octreotide is hepatically metabolised; accumulation risk"
+    rationale: "Hepatic clearance reduced in cirrhosis; dose-related adverse effects may increase"
+
+drug_interactions:
+  - "Cyclosporine: octreotide reduces cyclosporine bioavailability (gut motility effect) — transplant patients monitor levels"
+  - "Insulin / oral antidiabetics: octreotide modulates glucose; adjust antidiabetic therapy (risk of hypoglycaemia or hyperglycaemia)"
+  - "Bromocriptine: octreotide may increase bromocriptine bioavailability"
+  - "QTc-prolonging drugs: octreotide mild QTc prolongation; additive risk with Class III antiarrhythmics"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Октреотид LAR (Sandostatin LAR 10/20/30 мг) зареєстровано в Україні.
+    У ряді регіонів більш доступний, ніж ланреотид (нижча ціна).
+    НСЗУ-реімбурсація для GEP-NET — не включена до онкопакету 2025.
+    Октреотид IR (Sandostatin 0.1 мг/мл) зазвичай є у стаціонарі.
+
+sources:
+  - SRC-NCCN-NET-2025
+  - SRC-CLARINET-CAPLIN-2014
+
+between_visit_watchpoints:
+  - trigger_ua: "Ущільнення або біль у ділянці ін'єкції після введення"
+    action_ua: "Очікувано — зазвичай минає за 1–3 доби; занотовуйте при кожному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Припливи або діарея між ін'єкціями (прорив симптомів)"
+    action_ua: "Подзвоніть у клініку того ж дня — може потрібна рятувальна доза октреотиду IR або корекція схеми"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Біль у правому підребер'ї після їди"
+    action_ua: "Подзвоніть у клініку того ж дня — жовчнокам'яна хвороба від октреотиду"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Лихоманка вище 38°C з болем у животі або жовтяниця"
+    action_ua: "Звертайтесь у лікарню негайно — гострий холецистит"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Раптовий тяжкий прилив, бронхоспазм, падіння тиску"
+    action_ua: "Звертайтесь у лікарню негайно — карциноїдна криза"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-04"
+reviewer_signoffs: []
+notes: >
+  PROMID (Rinke JCO 2009; Phase 3 RCT; n=85): octreotide LAR 30 mg q4w
+  vs placebo in metastatic midgut well-differentiated NET.
+  Time to tumour progression: 14.3 vs 6.0 months (HR 0.34; p=0.000072).
+  Tumour stabilisation rate at 6 months: 67% vs 37%.
+  Both octreotide LAR and lanreotide Autogel are NCCN Category 1 for
+  GI-NET G1/G2. Octreotide LAR studied predominantly in midgut NET (PROMID);
+  lanreotide in broader GEP-NET including pNET and hindgut (CLARINET).
+  No head-to-head RCT — choice based on availability, patient/centre preference.
+  IMPORTANT distinction: octreotide LAR is IM (deep gluteal); lanreotide
+  Autogel is SC (self-injectable). IM requires clinic/nurse administration.
+  STUB pending §6.1 signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
