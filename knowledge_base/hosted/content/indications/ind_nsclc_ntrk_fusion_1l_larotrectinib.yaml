@@ -1,0 +1,64 @@
+id: IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic NSCLC with NTRK1/2/3 gene fusion"
+    - "NTRK fusion confirmed by DNA-NGS or RNA-NGS (not NTRK mutation without fusion)"
+    - "Treatment-naive or any prior line (tumor-agnostic approval applies regardless of line)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-NTRK-FUSION
+      value_constraint: "NTRK1, NTRK2, or NTRK3 gene fusion confirmed"
+      required: true
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-LAROTRECTINIB-PANTUMOR
+concurrent_therapy: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr_across_histologies: "~75% (Drilon 2018 NEJM; n=55 tumor-agnostic)"
+  duration_of_response: "12 months+ median DOR in most series"
+  notes: >
+    Drilon 2018 (NEJM; n=55 NTRK fusion+ tumors, multiple histologies including NSCLC):
+    larotrectinib ORR 75%; CR 22%; mDOR >12 months. NSCLC-specific data consistent
+    with pan-tumor data. FDA approved November 2018 (tumor-agnostic).
+    NTRK fusions in NSCLC are rare (~0.1-0.3%) — predominantly in never-smokers/
+    young patients. RNA-NGS is preferred for detection.
+    Entrectinib is an alternative (also CNS-active, NTRK + ROS1 + ALK inhibitor).
+
+hard_contraindications:
+  - "NTRK mutation without fusion (kinase domain mutations without partner gene)"
+  - "Strong CYP3A4 inducers (significantly reduce larotrectinib exposure)"
+
+required_tests:
+  - "NTRK fusion NGS (RNA-NGS preferred; DNA-NGS may miss some fusions)"
+  - TEST-CT-CAP
+  - TEST-LFT
+  - TEST-CBC
+  - "Brain MRI (NSCLC brain met screening — larotrectinib has CNS activity)"
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+
+rationale_ua: >
+  Ларотректиніб при NTRK-злиття+ пухлинах (ORR 75%; пухлино-агностичне схвалення FDA).
+  NTRK фузії в НДРЛ дуже рідкісні (~0.1-0.3%). РНК-NGS переважніший для детекції.
+  Ентректиніб — альтернатива (також ЦНС-активний).
+
+do_not_do:
+  - "Не призначати при NTRK мутації без фузії — тільки фузійні NTRK є показанням"
+  - "Не застосовувати з сильними CYP3A4 індукторами (рифампіцин тощо)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+ukrainian_review_status: pending_clinical_signoff

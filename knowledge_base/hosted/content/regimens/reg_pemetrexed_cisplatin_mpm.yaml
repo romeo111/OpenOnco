@@ -1,0 +1,81 @@
+id: REG-PEMETREXED-CISPLATIN-MPM
+disease_context: DIS-MESOTHELIOMA
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-PEMETREXED
+    dose: "500 mg/m² IV over 10 min"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    dose_modifications:
+      - trigger: "CrCl <45 mL/min"
+        action: "Do NOT administer pemetrexed (insufficient safety data below CrCl 45)"
+      - trigger: "Grade ≥3 mucositis despite vitamin supplementation"
+        action: "Reduce to 375 mg/m² for subsequent cycles"
+      - trigger: "Grade ≥3 skin rash despite dexamethasone prophylaxis"
+        action: "Reduce to 375 mg/m²"
+      - trigger: "ANC <1500 or platelets <75K on day 1"
+        action: "Delay until recovery"
+  - drug_id: DRG-CISPLATIN
+    dose: "75 mg/m² IV over 2h with aggressive hydration"
+    route: IV
+    schedule: "Day 1, 30 minutes after pemetrexed completion"
+    hydration: "1L NS over 2h pre-cisplatin; 1L NS over 2h post-cisplatin"
+    dose_modifications:
+      - trigger: "CrCl 30-60 mL/min"
+        action: "Reduce cisplatin to 60 mg/m²; enhanced hydration; consider carboplatin switch"
+      - trigger: "CrCl <30 mL/min"
+        action: "Switch to carboplatin AUC 5 (pemetrexed+carboplatin)"
+      - trigger: "Grade ≥3 peripheral neuropathy"
+        action: "Hold or reduce cisplatin; consider switch to carboplatin"
+
+essential_supplementation:
+  - "Folic acid 350-1000 mcg PO DAILY starting 7 days before first pemetrexed dose; continue throughout + 21 days after last dose — MANDATORY (prevents pemetrexed-related toxicity)"
+  - "Vitamin B12 1000 mcg IM injection every 9 weeks (≥7 days before first dose) — MANDATORY (reduces hematologic + GI toxicity)"
+  - "Dexamethasone 4 mg PO BID the day before, day of, and day after each pemetrexed dose — skin rash prevention"
+
+premedication:
+  - "Folic acid + B12 supplementation (see essential_supplementation — must begin ≥7 days before)"
+  - "Dexamethasone 4 mg BID × 3 days (starts day before)"
+  - "Antiemetics: moderately emetogenic protocol (5-HT3 + dexamethasone day 1)"
+  - "Aggressive IV hydration for cisplatin (see agents above)"
+
+cycle_length_days: 21
+total_planned_cycles: "6 cycles (standard; response-guided)"
+
+monitoring:
+  - "CBC + differential: day 1 each cycle; CBC day 10-14 nadir"
+  - "CrCl (Cockcroft-Gault): before each cycle — pemetrexed threshold CrCl ≥45 required"
+  - "BMP + Mg: before each cycle — cisplatin nephrotoxicity and hypomagnesemia"
+  - "LFT: before each cycle"
+  - "Mucositis assessment: each cycle — if Grade ≥3 despite B12+folate, reduce pemetrexed"
+  - "CT CAP + modified RECIST (MPM-specific): after 3 cycles and at completion"
+  - "Audiometry: baseline + post-cisplatin"
+
+key_toxicities:
+  - toxicity: "Myelosuppression (without vitamin supplementation: Grade 3/4 ~60%; with supplements: ~18%)"
+    grade_3_4_incidence: "~18% (with folic acid + B12)"
+    management: "Mandatory folic acid + B12 supplementation dramatically reduces toxicity; G-CSF secondary prophylaxis"
+  - toxicity: "Mucositis/stomatitis"
+    grade_3_4_incidence: "~10-15% (with supplements)"
+    management: "B12+folate supplementation prevents; dexamethasone skin rash prophylaxis"
+  - toxicity: "Cisplatin nephrotoxicity"
+    grade_3_4_incidence: "~10%"
+    management: "Aggressive hydration; avoid NSAIDs; magnesium supplementation"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~20-30%"
+    management: "Folic acid supplementation reduces; dose reduction if severe"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Фолієва кислота (щоденно за 7+ днів до старту) + вітамін B12 (ін'єкція кожні 9 тижнів) ОБОВ'ЯЗКОВІ — без них токсичність пеметрекседу (мієлосупресія, мукозит) значно вища (~60% Grade 3/4 vs 18%)"
+  - "УВАГА: Дексаметазон 4 мг двічі на день × 3 дні (день до, день і день після пеметрекседу) — профілактика шкірного висипу"
+  - "УВАГА: Пеметрексед ПРОТИПОКАЗАНИЙ при КК <45 мл/хв — ниркова екскреція ≥80%"
+  - "УВАГА: Агресивна гідратація цисплатину (1L NaCl 0.9% до/після) та уникнення НПЗЗ — нефротоксичність цисплатину"
+  - "УВАГА: Аудіограма базово та після завершення — цисплатин-індукована ототоксичність незворотна"
+  - "УВАГА: Оцінка відповіді за модифікованими критеріями RECIST для МПМ (площинні вимірювання плеврального ущільнення) — стандартні RECIST 1.1 недостатні для плеврального захворювання"
+  - "УВАГА: Цисплатин може бути замінений карбоплатином AUC 5 при нирковій недостатності або нейротоксичності (пеметрексед+карбоплатин — прийнятна альтернатива з схожою ефективністю)"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

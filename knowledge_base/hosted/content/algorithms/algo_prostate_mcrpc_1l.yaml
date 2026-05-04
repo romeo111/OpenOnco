@@ -3,33 +3,116 @@ applicable_to_disease: DIS-PROSTATE
 applicable_to_disease_state: mCRPC
 applicable_to_line_of_therapy: 1
 purpose: >
-  Select 1L mCRPC regimen for patient progressing on ADT (post-mHSPC ARPI
-  exposure assumed). HRR-mutant: PARPi-first (PROfound). Non-HRR-mutant:
-  switch ARPI or docetaxel based on prior exposure and visceral burden.
-  PSMA-PET-positive post-2-prior-line: Lu-PSMA candidacy.
+  Select systemic therapy for mCRPC (castration-resistant, progression on ADT).
+  Three main branches: (1) BRCA1/2 or HRR-mutant → PARPi (olaparib preferred for
+  BRCA2; PROfound); (2) PSMA-PET-positive post-ARPI + post-taxane → Lu-PSMA-617
+  (VISION; typically later line but algorithm-addressable here); (3) otherwise →
+  ARPI switch or docetaxel based on prior exposure and visceral burden.
 
 output_indications:
   - IND-PROSTATE-MCRPC-1L-ARPI
   - IND-PROSTATE-MCRPC-1L-PARPI
+  - IND-PROSTATE-MCRPC-2L-LU-PSMA
 
 default_indication: IND-PROSTATE-MCRPC-1L-ARPI
 alternative_indication: IND-PROSTATE-MCRPC-1L-PARPI
 
 decision_tree:
-  # Step 1 — HRR-mutant → PARPi (BRCA1/2 largest benefit)
+  # Step 1 — Somatic/germline HRR testing mandatory before proceeding.
+  # BRCA1/2 mutation = strongest PARPi signal (PROfound Cohort A).
+  # Other HRR genes (ATM, CDK12, PALB2, RAD51) = smaller/uncertain benefit.
   - step: 1
     evaluate:
       any_of:
         - red_flag: RF-PROSTATE-HIGH-RISK-BIOLOGY
+        - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant"
     if_true:
       result: IND-PROSTATE-MCRPC-1L-PARPI
+      notes: >
+        BRCA1/2 or HRR-mutant mCRPC: PARPi preferred (PROfound; olaparib vs
+        investigator choice — rPFS HR 0.49 Cohort A; OS HR 0.69 in BRCA1/2 subset).
+        Olaparib 300mg BID recommended for BRCA1/2; for non-BRCA HRR mutations
+        (ATM, CDK12) evidence is weaker — consider ARPI if no prior ARPI exposure.
+        TRITON3 (rucaparib vs docetaxel/second ARPI in BRCA1/2 mCRPC): rucaparib
+        rPFS HR 0.61 — alternative if olaparib not available.
+    if_false:
+      next_step: 2
+
+  # Step 2 — Prior ARPI exposure in mHSPC?
+  # If ARPI-naïve at mCRPC (e.g., got docetaxel in mHSPC without ARPI):
+  # switch to ARPI (enzalutamide or abiraterone) is the standard 1L mCRPC move.
+  # If prior ARPI in mHSPC: taxane-based or Lu-PSMA preferred.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "No prior ARPI (enzalutamide/abiraterone/apalutamide/darolutamide) in mHSPC"
+    if_true:
+      result: IND-PROSTATE-MCRPC-1L-ARPI
+      notes: >
+        ARPI-naive mCRPC: enzalutamide or abiraterone+prednisone are the 1L
+        standard (NCCN category 1). Enzalutamide preferred if no steroid concern;
+        abiraterone+prednisone if adrenal insufficiency risk or liver disease.
+        After ARPI failure → docetaxel or cabazitaxel (taxane-naïve) or Lu-PSMA.
+    if_false:
+      next_step: 3
+
+  # Step 3 — Prior ARPI exposure: taxane eligibility + PSMA-PET status.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "PSMA-PET/CT positive (all lesions PSMA-avid, no PSMA-negative sites with metastases)"
+        - condition: "Prior taxane AND prior ARPI both received (Lu-PSMA eligibility per VISION)"
+    if_true:
+      result: IND-PROSTATE-MCRPC-2L-LU-PSMA
+      notes: >
+        PSMA-PET-positive + post-taxane + post-ARPI: Lu-PSMA-617 (VISION;
+        mOS 15.3 vs 11.3 mo HR 0.62). PSMA-PET/CT required to confirm eligibility.
+        All sites must be PSMA-positive; any PSMA-negative site with metastasis = exclusion.
+    if_false:
+      next_step: 4
+
+  # Step 4 — Prior ARPI, taxane-naive or PSMA-not-eligible: docetaxel.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2 (docetaxel eligible)"
+        - condition: "No prior taxane in mHSPC or mCRPC"
+    if_true:
+      result: IND-PROSTATE-MCRPC-1L-ARPI
+      notes: >
+        Prior ARPI + taxane-naive + ECOG 0-2: docetaxel 75mg/m² q3w x 10 cycles
+        is the standard-of-care intensification. Indication IND-PROSTATE-MCRPC-1L-ARPI
+        routes here as ARPI-switch alternative; dedicated docetaxel mCRPC indication
+        stub is pending authoring. Consider cabazitaxel (CARD trial: superior to
+        2nd ARPI post-prior-ARPI+taxane) if docetaxel already given.
     if_false:
       result: IND-PROSTATE-MCRPC-1L-ARPI
+      notes: >
+        Fall-through (prior ARPI + prior taxane + PSMA-PET unavailable or negative):
+        ARPI switch (enzalutamide ↔ abiraterone) has modest activity after prior ARPI
+        (cross-resistance common). Consider clinical trial enrollment. NCCN: cabazitaxel
+        or olaparib (if HRR not yet tested) are acceptable alternatives.
 
-sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
-last_reviewed: null
+sources:
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-VISION-PSMA-SARTOR-2021
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+
+last_reviewed: "2026-05-03"
 notes: >
-  PARPi prioritized when HRR-mutant — best evidence (PROfound). Non-HRR
-  mCRPC defaults to ARPI switch (limited data; consider docetaxel if
-  visceral mets or rapid progression). PSMA-Lu typically 2L+ after
-  failure of taxane + ARPI.
+  Modern mCRPC algorithm assumes most patients received ARPI (abiraterone/
+  enzalutamide/darolutamide) in mHSPC per LATITUDE/ENZAMET/ARASENS. For those
+  ARPI-naive at mCRPC entry (docetaxel only in mHSPC), ARPI switch is the
+  clear 1L choice.
+
+  HRR testing (germline + somatic) is mandatory before treatment initiation
+  in mCRPC — gates PARPi eligibility. BRCA1/2 has the clearest benefit;
+  other HRR genes (ATM, CDK12) have weaker/uncertain evidence.
+
+  Lu-PSMA-617 (Pluvicto): requires PSMA-PET/CT before each cycle. Post-ARPI
+  + post-taxane are the VISION eligibility criteria. Earlier line use (PSMAfore,
+  PSMAddition trials) is emerging but not yet standard.
+
+  Docetaxel mCRPC indication stub is pending (currently addressed in notes only).
+  Cabazitaxel 2L post-docetaxel (CARD trial) also pending a dedicated indication.

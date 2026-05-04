@@ -1,0 +1,91 @@
+id: REG-DOXORUBICIN-IFOSFAMIDE-STS
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 1
+plan_track: aggressive
+
+agents:
+  - drug_id: DRG-DOXORUBICIN
+    dose: "75 mg/m² IV over 15–60 min"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    cumulative_dose_limit: "450–500 mg/m² lifetime cumulative dose (same limit as monotherapy)"
+    dose_modifications:
+      - trigger: "LVEF decline >10% to below 50%"
+        action: "Discontinue doxorubicin; may continue ifosfamide alone if clinical benefit"
+      - trigger: "Total bilirubin 1.2-3.0 mg/dL"
+        action: "Reduce doxorubicin 50%"
+      - trigger: "Total bilirubin >3.0 mg/dL"
+        action: "Reduce doxorubicin 75% or hold"
+  - drug_id: DRG-IFOSFAMIDE
+    dose: "2.5 mg/m²/day IV over 3h on days 1-4 (total 10 g/m² per cycle)"
+    route: IV
+    schedule: "Days 1-4 of each 21-day cycle (concurrent with ifosfamide fractionation)"
+    dose_modifications:
+      - trigger: "CrCl <45 mL/min"
+        action: "Reduce ifosfamide to 6 g/m² (1.5 g/m²/d × 4d); or switch to doxorubicin monotherapy"
+      - trigger: "Grade ≥2 ifosfamide encephalopathy"
+        action: "Discontinue ifosfamide; continue doxorubicin alone; methylene blue for encephalopathy"
+      - trigger: "Grade ≥3 hemorrhagic cystitis despite mesna"
+        action: "Discontinue ifosfamide; cystoscopy; consider carboplatin alternative"
+  - drug_id: DRG-MESNA
+    dose: "20% of ifosfamide dose as IV bolus immediately before, then 40% at 4h and 8h after each ifosfamide dose"
+    route: IV
+    schedule: "Days 1-4 concurrent with ifosfamide (total mesna = 60-100% of ifosfamide dose)"
+    notes: "Mesna is MANDATORY with ifosfamide — prevents hemorrhagic cystitis via acrolein binding"
+
+premedication:
+  - "G-CSF primary prophylaxis MANDATORY: pegfilgrastim day 5 or 6 (after 4-day ifosfamide) — Grade 3/4 neutropenia ~71% without G-CSF"
+  - "Aggressive IV hydration: 500 mL NS before ifosfamide each day; total urine output ≥100 mL/h during infusion"
+  - "Antiemetics: highly emetogenic protocol (5-HT3 + NK1 + dexamethasone)"
+  - "Ensure adequate IV access — doxorubicin is a vesicant"
+
+cycle_length_days: 21
+total_planned_cycles: "4-6 cycles (or until progression, dose limit, or unacceptable toxicity)"
+
+monitoring:
+  - "MUGA/Echo: baseline; every 2 cycles — doxorubicin cardiotoxicity"
+  - "CBC: day 1 each cycle; CBC day 10-14 nadir — more severe myelosuppression than monotherapy"
+  - "CrCl + urinalysis: before each cycle — ifosfamide nephrotoxicity + hemorrhagic cystitis check"
+  - "Urinalysis (hematuria): before each ifosfamide cycle; if hematuria → cystoscopy before next cycle"
+  - "Renal function panel (electrolytes, Mg, phosphate): Fanconi syndrome risk with repeated ifosfamide"
+  - "Neurological assessment: ifosfamide encephalopathy (confusion, somnolence, hallucinations) — days 1-5"
+  - "CT CAP: after 2-3 cycles (interim response)"
+
+key_toxicities:
+  - toxicity: "Myelosuppression (neutropenia)"
+    grade_3_4_incidence: "~71% (EORTC 62012)"
+    management: "G-CSF primary prophylaxis MANDATORY; delay until ANC ≥1500; febrile neutropenia protocol"
+  - toxicity: "Ifosfamide encephalopathy"
+    grade_3_4_incidence: "~5-15%"
+    management: "Methylene blue 50 mg IV q6h; discontinue ifosfamide; usually reversible in 24-48h; risk factors: prior cisplatin, low albumin, renal impairment"
+  - toxicity: "Hemorrhagic cystitis"
+    grade_3_4_incidence: "~5% with mesna prophylaxis (<1% with optimal protocol)"
+    management: "Adequate hydration; mesna MANDATORY; urinalysis before each cycle; cystoscopy if hematuria"
+  - toxicity: "Nephrotoxicity / Fanconi syndrome"
+    grade_3_4_incidence: "~5-10% (cumulative)"
+    management: "CrCl before each cycle; electrolyte monitoring; reduce dose if CrCl falls"
+  - toxicity: "Cardiomyopathy (doxorubicin)"
+    grade_3_4_incidence: "~5% (same as monotherapy)"
+    management: "LVEF monitoring q2 cycles; stop doxorubicin at cumulative 450-500 mg/m²"
+  - toxicity: "Nausea/vomiting"
+    grade_3_4_incidence: "~20-30% (highly emetogenic combination)"
+    management: "Triple antiemetic regimen throughout 4-day course"
+
+disambiguation_note: >
+  REG-DOXORUBICIN-IFOSFAMIDE-STS is the general adult STS AI regimen.
+  REG-DOXORUBICIN-IFOSFAMIDE-MPNST exists as a disease-specific variant
+  (same agents, same doses, but with MPNST-specific watchpoints and context).
+  The MPNST version can be updated to reference this regimen as base.
+
+watchpoints_ua:
+  - "УВАГА: AI — ЗНАЧНО вища токсичність ніж монотерапія доксорубіцином (ORR 26% vs 14%); але OS не відрізняється (EORTC 62012); призначайте лише якщо ПОТРІБНА відповідь пухлини (неоад'ювантна, швидке прогресування)"
+  - "КРИТИЧНО: Мезна ОБОВ'ЯЗКОВА з іфосфамідом — без неї ~30-40% ризик геморагічного циститу; загальне добове введення мезни = 60-100% від дози іфосфаміду"
+  - "УВАГА: Іфосфамідна енцефалопатія — сплутаність, сонливість, галюцинації (дні 1-5); фактори ризику: попередній цисплатин, гіпоальбумінемія, ниркова недостатність; лікування — метиленовий синій 50 мг IV"
+  - "УВАГА: G-КСФ (пегфілграстим день 5-6) ОБОВ'ЯЗКОВИЙ — 71% нейтропенії Grade 3/4 без профілактики; введення іфосфаміду 4 дні → затримати до дня 5-6 після закінчення хіміотерапії"
+  - "УВАГА: Кумулятивна доза доксорубіцину 450-500 мг/м² = ліміт кардіотоксичності; відстежувати через MUGA/ЕхоКГ; при ФВЛШ <50% — відмінити доксорубіцин"
+  - "УВАГА: Оцінка нирок (КК + аналіз сечі) перед кожним циклом — іфосфамід нефротоксичний; синдром Фанконі (тубулярна дисфункція) при повторних курсах"
+  - "УВАГА: Використовувати AI лише при ECOG 0-1 та нормальній функції нирок (КК ≥50 мл/хв); при ECOG ≥2 або дисфункції нирок → лише доксорубіцин монотерапія"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

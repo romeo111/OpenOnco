@@ -1,0 +1,67 @@
+id: IND-NSCLC-MET-EX14-1L-CAPMATINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic NSCLC (squamous or non-squamous)"
+    - "MET exon 14 skipping mutation confirmed (NGS preferred; RNA-seq for splice variants)"
+    - "Treatment-naive (1L setting)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MET-EX14
+      value_constraint: "MET exon 14 skipping mutation confirmed by NGS (DNA or RNA)"
+      required: true
+  biomarker_requirements_excluded:
+    - "Co-occurring EGFR sensitizing mutation (EGFR-directed therapy takes priority)"
+    - "Co-occurring ALK fusion (ALK-directed therapy takes priority)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CAPMATINIB-NSCLC
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr_treatment_naive: "67.9% (27/40 treatment-naive cohort; GEOMETRY mono-1)"
+  duration_of_response: "12.6 months median DOR (treatment-naive)"
+  pfs_months: "~12.4 (treatment-naive cohort)"
+  notes: >
+    GEOMETRY mono-1 (Wolf 2020, NEJM; n=364 total; treatment-naive cohort n=40):
+    Capmatinib 400 mg BID. Treatment-naive ORR 67.9%; mDOR 12.6 months; mPFS ~12.4m.
+    Previously-treated ORR 41%. Treatment-naive patients have markedly superior outcomes.
+    NCCN Category 1 for treatment-naive MET exon 14 NSCLC.
+
+hard_contraindications:
+  - "Hepatic impairment (Child-Pugh B/C) — capmatinib hepatically metabolized"
+  - "Co-existing EGFR mutation or ALK fusion (prioritize those drivers)"
+
+required_tests:
+  - "MET exon 14 NGS (DNA preferred; RNA-NGS for splice variant detection)"
+  - TEST-CT-CAP
+  - TEST-LFT
+  - TEST-CBC
+  - "MET IHC (optional — high-level MET amplification co-assessment)"
+
+sources:
+  - source_id: SRC-GEOMETRY-WOLF-2020
+    position: supports
+    relevant_quote_paraphrase: "GEOMETRY mono-1 (n=40 treatment-naive): capmatinib 400 mg BID; ORR 67.9%; mDOR 12.6m; NCCN Cat 1 for treatment-naive MET ex14 NSCLC"
+
+rationale_ua: >
+  GEOMETRY mono-1 (n=40 раніше нелікованих): капматиніб 400 мг BID;
+  ORR 67.9%; mDOR 12.6 міс. NCCN Категорія 1. Тестування MET екзон 14
+  (пропуск) методом NGS обов'язкове.
+
+do_not_do:
+  - "Не призначати без підтвердження MET екзон 14 пропуску — MET ампліфікація без ex14 пропуску не є показанням"
+  - "Не призначати при наявності EGFR/ALK — ці драйвери мають пріоритет"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+ukrainian_review_status: pending_clinical_signoff

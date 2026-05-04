@@ -1,0 +1,117 @@
+id: IND-STS-ADVANCED-1L-DOXORUBICIN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced or metastatic soft-tissue sarcoma (any histological subtype except GIST, bone sarcomas, Ewing, rhabdomyosarcoma)"
+    - "Unresectable locally advanced OR distant metastatic disease"
+    - "No prior anthracycline-based chemotherapy for advanced disease"
+    - "Neoadjuvant or adjuvant setting: acceptable if not previously anthracycline-exposed"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "GIST (use imatinib per separate indication)"
+  demographic_constraints:
+    ecog_max: 2
+    cardiac_constraint: "Baseline LVEF ≥50% required"
+
+recommended_regimen: REG-DOXORUBICIN-STS
+concurrent_therapy: []
+followed_by:
+  - "Response assessment (CT CAP) after 2-3 cycles"
+  - "Best response typically at 4-6 cycles — reassess for resectability"
+  - "Continue until progression, cumulative dose limit (450-500 mg/m²), or unacceptable toxicity"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~14% (EORTC 62012)"
+  progression_free_survival: "~4.6 months (EORTC 62012)"
+  overall_survival: "~12.8 months (EORTC 62012)"
+  notes: "Modest ORR reflects STS chemo-resistance; durable responses uncommon but disease control common"
+
+hard_contraindications:
+  - "Baseline LVEF <50% or symptomatic heart failure (cardiomyopathy risk)"
+  - "Prior anthracycline exposure close to cumulative dose limit"
+  - "Severe hepatic impairment (bilirubin >3× ULN) — doxorubicin hepatically cleared"
+
+red_flags_triggering_alternative:
+  - condition: "Cumulative doxorubicin dose approaching 400-500 mg/m² — switch to liposomal doxorubicin or non-anthracycline regimen"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "MUGA scan or echocardiogram (baseline LVEF)"
+
+desired_tests:
+  - "PET-CT (baseline — sensitive for metabolic response assessment)"
+  - "MDT discussion at specialized sarcoma center (strongly recommended)"
+  - "Molecular testing for targetable alterations (NTRK fusion, CDK4/MDM2 for liposarcoma)"
+
+rationale: >
+  Doxorubicin 75 mg/m² q21d is NCCN Category 1 and the global standard of care
+  for first-line advanced/metastatic soft-tissue sarcoma. Established in
+  multiple phase 2-3 trials as the most broadly active single agent in STS
+  (~14% ORR, median OS ~13 months — EORTC 62012). Despite its modest activity,
+  doxorubicin monotherapy is the preferred standard-track choice because:
+  (1) AI combination (dox+ifosfamide) does NOT improve OS despite higher ORR
+      (EORTC 62012: OS 12.8 vs 14.3 months, p=0.076);
+  (2) Dox mono has significantly lower toxicity (Grade 3/4 neutropenia 36% vs 71%);
+  (3) Palliative intent — tolerability and quality of life are primary concerns.
+  AI (dox+ifosfamide) reserved for response-critical situations (see IND-STS-ADVANCED-1L-AI).
+
+rationale_ua: >
+  Доксорубіцин 75 мг/м² q21d — NCCN Категорія 1 та глобальний стандарт 1L при
+  поширеній саркомі м'яких тканин. При паліативній меті — монотерапія доксорубіцином
+  є оптимальним вибором: AI (доксорубіцин+іфосфамід) НЕ покращує OS, попри вищий ORR
+  (EORTC 62012); токсичність AI значно вища. ORR ~14%, медіана OS ~13 місяців.
+  Дозова інтенсивність важлива — не знижувати без G-КСФ ескалації.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-EORTC62012-JUDSON-2014
+    position: supports
+    relevant_quote_paraphrase: "EORTC 62012 (n=455): doxorubicin mono ORR 14%, mPFS 4.6 mo, mOS 12.8 mo; AI combination did NOT improve OS (HR 0.83, p=0.076) — dox mono standard for palliative intent"
+  - source_id: SRC-NCCN-SARCOMA
+    position: supports
+    relevant_quote_paraphrase: "NCCN Category 1: doxorubicin 75 mg/m² monotherapy for advanced/metastatic adult STS"
+
+do_not_do:
+  - "Не перевищувати кумулятивну дозу доксорубіцину 450-500 мг/м² — кардіоміопатія"
+  - "Не вводити без підтвердженої прохідності IV доступу — доксорубіцин є везикантом"
+  - "Не призначати при ФВЛШ <50% — базова ехоКГ/MUGA обов'язкова"
+  - "Не використовувати для GIST (іматиніб) або саркоми Юїнга (VDC-IE) — окремі нозології"
+  - "Не продовжувати при прогресуванні після 2-3 циклів без клінічного обґрунтування"
+
+known_controversies:
+  - topic: "Doxorubicin mono vs AI combination (dox+ifosfamide)"
+    positions:
+      - position: "Dox mono preferred for palliative intent — EORTC 62012 showed no OS benefit with AI, significantly higher toxicity"
+        sources: [SRC-EORTC62012-JUDSON-2014]
+      - position: "AI preferred when response rate matters: neoadjuvant shrinkage goal, rapidly progressive disease, young fit patients with high-grade STS (ORR 26% vs 14%)"
+        sources: [SRC-EORTC62012-JUDSON-2014, SRC-NCCN-SARCOMA]
+    our_default: "Doxorubicin mono for palliative intent; AI for neoadjuvant or response-critical situations"
+    rationale: "Guideline-concordant based on EORTC 62012 OS non-significance"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  MDT at specialized sarcoma center is strongly recommended before starting
+  chemotherapy — histological subtype significantly affects regimen selection.
+  Key subtype-specific alternatives to consider at MDT:
+  - Leiomyosarcoma: gemcitabine+docetaxel has specific activity; may be preferred 2L
+  - Myxoid liposarcoma: trabectedin particularly effective (YONDELIS)
+  - Synovial sarcoma: ifosfamide-sensitive — AI preferred over dox alone at some centers
+  - WD/DD liposarcoma: doxorubicin active; CDK4/MDM2 targeted therapy in trials
+  - ASPS (alveolar soft part sarcoma): anti-VEGFR agents more active than anthracyclines

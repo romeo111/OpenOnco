@@ -1,0 +1,108 @@
+id: ALGO-GBM-RECURRENT
+applicable_to_disease: DIS-GBM
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select systemic therapy at first recurrence of GBM (IDH-WT, WHO grade 4)
+  after standard Stupp protocol (RT + TMZ) or elderly-adapted regimen. Routes
+  by ECOG fitness, prior treatment, and re-biopsy/MGMT status. Clinical trial
+  enrollment is the preferred option at recurrence for all fit patients.
+
+output_indications:
+  - IND-GBM-RECURRENT-BEVACIZUMAB
+
+default_indication: IND-GBM-RECURRENT-BEVACIZUMAB
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Clinical trial availability. At GBM recurrence, clinical
+  # trial is the preferred option (NCCN, EANO). Only proceed to step 2
+  # if no suitable trial is available or patient declines.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "No available clinical trial OR patient declines trial"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "Clinical trial preferred at recurrence for all ECOG 0-2 patients. Discuss with MDT. Enroll if trial available."
+
+  # Step 2 — Confirm true progression vs pseudoprogression.
+  # MRI at 12 weeks post-RT can show pseudoprogression (treatment effect
+  # mimicking recurrence). Requires MDT/radiological consensus before
+  # initiating salvage.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Progression confirmed on MRI (RANO criteria) OR biopsy-confirmed recurrence"
+        - condition: "Pseudoprogression excluded (>12 weeks from end of RT, or biopsy)"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: "Pseudoprogression must be excluded before systemic salvage. Continue observation ± MRI in 4-6 weeks. Perfusion MRI, MRS, or biopsy may help distinguish."
+
+  # Step 3 — Performance status gate.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      next_step: 4
+    if_false:
+      result: null
+      notes: "ECOG ≥ 3: systemic therapy unlikely to benefit. Best supportive care + corticosteroids for symptom management. Palliative/hospice referral."
+
+  # Step 4 — Prior TMZ exposure and MGMT status.
+  # MGMT-methylated + prior TMZ: can rechallenge with lomustine or TMZ dose-dense.
+  # All patients: bevacizumab for steroid-sparing + PFS improvement.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "MGMT promoter methylated"
+        - condition: "Prior TMZ completed (≥6 adjuvant cycles or discontinued due to progression)"
+        - condition: "No prior bevacizumab"
+    if_true:
+      result: IND-GBM-RECURRENT-BEVACIZUMAB
+      notes: >
+        MGMT-methylated + TMZ-pretreated + bev-naive: bevacizumab ± lomustine.
+        Consider lomustine 110mg/m² q6w + bevacizumab 10mg/kg q2w (BELOB trial:
+        3-arm phase 2; lom+bev improved 6-mo PFS to 41% vs 13% lom alone and
+        38% bev alone — borderline benefit for combo). Lomustine ± bev is MDT decision.
+        Alternatively: bevacizumab 10mg/kg q2w monotherapy (FDA approved, NCCN 2A).
+    if_false:
+      result: IND-GBM-RECURRENT-BEVACIZUMAB
+      notes: >
+        Non-methylated or bev-naive at recurrence: bevacizumab 10mg/kg q2w monotherapy.
+        Alternative: lomustine 110mg/m² q6w (cytotoxic; myelosuppression limits use).
+        Bevacizumab improves PFS (mPFS ~4-6 mo) and steroid-sparing without OS benefit.
+        Any systemic therapy at GBM recurrence is palliative intent.
+
+sources:
+  - SRC-EF14-STUPP-2015
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  GBM recurrence prognosis is poor (mOS ~6-9 months with any therapy).
+  No treatment has shown a survival benefit in a phase 3 randomized trial
+  at recurrence. Bevacizumab (FDA approved 2009, NCCN 2A) is the most used
+  agent for steroid-sparing and PFS improvement.
+
+  Key agents at recurrence (none are standard with OS benefit):
+  - Bevacizumab 10mg/kg q2w (FDA approved; PFS/steroid benefit only)
+  - Lomustine (CCNU) 110mg/m² q6w (cytotoxic; MGMT-methylated benefit)
+  - Lomustine + bevacizumab (BELOB — modest 6-mo PFS benefit; MDT decision)
+  - TMZ dose-dense rechallenge (50mg/m²/d continuous or 21/28 days;
+    MGMT-methylated only; limited evidence)
+  - Carboplatin ± bevacizumab (some phase 2 data)
+  - Re-irradiation (focal; select cases at MDT — not a systemic therapy)
+
+  TTFields (EF-11): phase 3 showed NO superiority vs physician's choice
+  at recurrence; TTFields not standard at recurrence (unlike newly diagnosed EF-14).
+
+  Indication IND-GBM-RECURRENT-BEVACIZUMAB models bevacizumab monotherapy;
+  lomustine combination is captured in the algorithm notes pending separate
+  indication authoring.

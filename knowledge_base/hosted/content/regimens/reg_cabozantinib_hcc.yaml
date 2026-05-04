@@ -1,0 +1,71 @@
+id: REG-CABOZANTINIB-HCC
+disease_context: DIS-HCC
+line_of_therapy: 2
+plan_track: standard
+
+agents:
+  - drug_id: DRG-CABOZANTINIB
+    dose: "60 mg PO once daily"
+    route: PO
+    schedule: "Continuous daily dosing; do not take with food (≥1h before or ≥2h after meal)"
+    dose_modifications:
+      - trigger: "Grade 3 hypertension, HFSR Grade 3, Grade 3 diarrhea"
+        action: "Hold; reduce to 40 mg/day when resolved to ≤Grade 1"
+      - trigger: "Grade 2 recurrent or Grade 4 toxicity"
+        action: "Reduce to 20 mg/day or permanently discontinue"
+      - trigger: "Hepatic impairment (Child-Pugh B) at baseline"
+        action: "Reduce to 40 mg/day; cabozantinib is hepatically metabolized (CYP3A4)"
+      - trigger: "Strong CYP3A4 inhibitors (ketoconazole, itraconazole, ritonavir)"
+        action: "Reduce cabozantinib to 40 mg/day"
+      - trigger: "Strong CYP3A4 inducers (rifampicin, carbamazepine, phenytoin)"
+        action: "Increase cabozantinib to 80 mg/day; avoid if possible"
+
+premedication:
+  - "No standard premedication required"
+  - "Topical urea cream for HFSR prophylaxis (class effect of multi-TKIs)"
+  - "Baseline LVEF (ECHO) if cardiac risk factors (rare cabozantinib QTc effect)"
+
+cycle_length_days: 28
+total_planned_cycles: "Continue until progression or unacceptable toxicity; continuous daily dosing"
+
+monitoring:
+  - "Blood pressure: baseline, week 2, week 4, then monthly — VEGFR inhibition; target <150/100"
+  - "LFTs, bilirubin: q4 weeks — hepatically metabolized; Child-Pugh monitoring critical in HCC"
+  - "AFP: q8 weeks — response biomarker"
+  - "CT CAP: q8-12 weeks for response"
+  - "CBC, CMP: q4 weeks"
+  - "Urine protein: baseline + q8 weeks (anti-VEGF class effect)"
+  - "Thyroid function: q8-12 weeks"
+
+key_toxicities:
+  - toxicity: "Hand-foot syndrome (HFSR)"
+    grade_3_4_incidence: "~17%"
+    management: "Urea cream prophylaxis; dose reduction; avoid physical pressure"
+  - toxicity: "Hypertension"
+    grade_3_4_incidence: "~16%"
+    management: "Standard antihypertensives; dose reduction if Grade 3 despite treatment"
+  - toxicity: "Elevated AST/ALT"
+    grade_3_4_incidence: "~12%"
+    management: "Monthly LFT monitoring; interrupt at Grade 3; hepatology consult if Grade 3+"
+  - toxicity: "Diarrhea"
+    grade_3_4_incidence: "~7%"
+    management: "Loperamide; dose reduction if persistent"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~10%"
+    management: "Supportive; evaluate reversible causes"
+  - toxicity: "Thrombotic events"
+    grade_3_4_incidence: "~5%"
+    management: "Discontinue for arterial thrombosis; dose reduction for venous"
+
+watchpoints_ua:
+  - "УВАГА: Кабозантиніб приймати натщесерце (≥1 год до або ≥2 год після їжі) — їжа збільшує AUC, посилюючи токсичність"
+  - "УВАГА: Child-Pugh B — знизити початкову дозу до 40 мг/день (гепатичний метаболізм CYP3A4); Child-Pugh C — протипоказано"
+  - "УВАГА: HFSR (реакція долонь/стоп) у ~54% — профілактична крем з сечовиною; зняти взуття з тиском на стопи"
+  - "УВАГА: Сильні інгібітори CYP3A4 (ітраконазол, кларитроміцин, ритонавір) — знизити дозу до 40 мг/день"
+  - "УВАГА: АФП моніторинг кожні 8 тижнів — зростання AFP при стабільному CT може вказувати на прогресування"
+  - "УВАГА: Важливо відрізняти REG-CABOZANTINIB-HCC (60 мг/день HCC 2L) від REG-NIVO-CABO-RCC (кабозантиніб 40 мг/день у комбінації з ніволумабом при нирково-клітинному раку)"
+  - "УВАГА: Кабозантиніб не зареєстрований для ГЦК в Україні — уточнити доступ"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,111 @@
+id: ALGO-HNSCC-RM-2L
+applicable_to_disease: DIS-HNSCC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for recurrent/metastatic HNSCC after 1L progression.
+  Key branch: (1) ICI-naive at 2L (received EXTREME 1L for CPS <1) → nivolumab or
+  pembrolizumab (CheckMate-141 / KEYNOTE-040); (2) ICI-experienced at 2L (received
+  pembrolizumab ± chemo 1L) → platinum-based or cetuximab-based chemotherapy.
+  Modern context (2025/2026): most 1L patients received pembrolizumab (KEYNOTE-048);
+  the ICI-naive 2L population is relatively small (CPS <1 EXTREME-treated patients).
+
+output_indications:
+  - IND-HNSCC-RM-2L-NIVOLUMAB
+  - IND-HNSCC-RM-2L-PEMBROLIZUMAB
+
+default_indication: IND-HNSCC-RM-2L-NIVOLUMAB
+alternative_indication: IND-HNSCC-RM-2L-PEMBROLIZUMAB
+
+decision_tree:
+  # Step 1 — ECOG PS gate.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG PS 0-2"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "ECOG ≥3: best supportive care; palliative RT for symptomatic sites."
+
+  # Step 2 — Prior ICI exposure gate.
+  # This is the dominant branch point in 2025/2026:
+  # - ICI-experienced (prior pembrolizumab 1L): ICI re-challenge is NOT supported.
+  # - ICI-naive (prior EXTREME 1L, CPS <1): nivolumab or pembrolizumab are standard.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "No prior anti-PD-(L)1 therapy (ICI-naive) — received EXTREME or platinum-only 1L without pembrolizumab"
+    if_true:
+      next_step: 3
+      notes: >
+        ICI-naive at 2L: most commonly patients who received EXTREME (cetuximab +
+        platinum + 5-FU) as 1L for CPS <1. Nivolumab (CheckMate-141) and pembrolizumab
+        (KEYNOTE-040) are both NCCN Category 1 for this setting.
+    if_false:
+      result: null
+      notes: >
+        ICI-experienced (prior pembrolizumab 1L or pembrolizumab+chemo 1L):
+        anti-PD-1 re-challenge is NOT supported — cross-resistance expected.
+        2L standard: platinum-based doublet chemotherapy (if platinum-eligible) or
+        single-agent (docetaxel, methotrexate, cetuximab if not prior cetuximab).
+        No formally authored indication for post-ICI chemotherapy 2L in HNSCC —
+        clinician should apply NCCN chemotherapy options. Cetuximab (EXTREME):
+        if not used in 1L (unlikely if EXTREME 1L given, but possible if pembro 1L),
+        cetuximab-based regimens are an option. Clinical trial preferred.
+        IND-HNSCC-RM-2L-CHEMO not yet authored — gap flagged.
+
+  # Step 3 — ICI-naive: PD-L1 CPS stratification for nivolumab vs pembrolizumab.
+  # CheckMate-141 (nivolumab): met primary endpoint OS HR 0.70 — stronger regulatory standing.
+  # KEYNOTE-040 (pembrolizumab): CPS ≥20 subgroup HR 0.53 — stronger signal for high CPS.
+  # Both NCCN Category 1.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "PD-L1 CPS ≥20 AND pembrolizumab available"
+    if_true:
+      result: IND-HNSCC-RM-2L-PEMBROLIZUMAB
+      notes: >
+        CPS ≥20 ICI-naive: pembrolizumab preferred (KEYNOTE-040 CPS ≥20 subgroup:
+        OS HR 0.53 — strongest benefit signal; also favorable AE profile vs chemo:
+        13% vs 36% Grade 3/4). Pembrolizumab 200 mg q3w or 400 mg q6w.
+    if_false:
+      result: IND-HNSCC-RM-2L-NIVOLUMAB
+      notes: >
+        CPS <20 or CPS not available: nivolumab preferred as default (CheckMate-141;
+        OS HR 0.70, p=0.01 — met primary endpoint; regulatory standard stronger than
+        KEYNOTE-040 which had nominal p=0.0161). PD-L1 ≥1% subgroup HR 0.55.
+        240 mg q2w or 480 mg q4w (flat dose).
+        Pembrolizumab is an acceptable alternative for all ICI-naive patients.
+
+sources:
+  - SRC-CHECKMATE141-FERRIS-2016
+  - SRC-KEYNOTE040-COHEN-2019
+  - SRC-NCCN-HNSCC-2025
+  - SRC-ESMO-HNSCC-2020
+
+last_reviewed: "2026-05-04"
+notes: >
+  HNSCC 2L ROUTING SUMMARY (2025/2026):
+
+  1L landscape (KEYNOTE-048):
+  - CPS ≥20: pembrolizumab monotherapy (1L) → at 2L: ICI-experienced → platinum chemo
+  - CPS 1-19: pembrolizumab + platinum + 5-FU (1L) → at 2L: ICI-experienced → chemo
+  - CPS <1: EXTREME (cetuximab + platinum + 5-FU, no ICI) → at 2L: ICI-NAIVE → nivolumab
+
+  The ICI-naive 2L population is therefore primarily the CPS <1 EXTREME cohort,
+  which represents ~15-20% of all R/M HNSCC patients. For the other 80-85% who
+  received pembrolizumab 1L, there is no validated 2L ICI option.
+
+  GAPS:
+  - IND-HNSCC-RM-2L-CHEMO: formal indication for post-ICI chemotherapy 2L not authored
+    (docetaxel, methotrexate, cetuximab options per NCCN). High priority gap.
+  - IND-HNSCC-RM-2L-CETUXIMAB: cetuximab monotherapy/combination for 2L HNSCC
+    (applies to patients who did not receive EXTREME 1L).
+  - Locally advanced HNSCC (definitive CRT, induction, larynx preservation):
+    completely separate algorithm not yet authored.
+  - Salivary gland carcinoma: separate histology; out of scope for this algorithm.
+
+  HPV oropharyngeal context: HPV+ HNSCC has better overall prognosis but same
+  treatment algorithm as HPV-. De-escalation trials (KEYNOTE-412, E1308) are
+  investigational, not yet standard.

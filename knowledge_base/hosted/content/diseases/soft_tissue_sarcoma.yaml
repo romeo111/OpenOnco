@@ -1,0 +1,102 @@
+id: DIS-SOFT-TISSUE-SARCOMA
+names:
+  preferred: "Soft tissue sarcoma (STS)"
+  ukrainian: "Саркома м'яких тканин"
+  english: "Soft tissue sarcoma"
+  synonyms:
+    - "STS"
+    - "Adult soft tissue sarcoma"
+    - "Sarcoma of soft tissues"
+
+codes:
+  icd_10: "C49.9"
+  icd_o_3_morphology: "8800/3"
+  oncotree_code: "ST"
+
+archetype: histology_driven
+lineage: "sarcoma_mesenchymal"
+
+scope: >
+  This entity covers adult soft tissue sarcomas (STS) as a class for systemic
+  chemotherapy decision support. Histology-specific variants (chondrosarcoma,
+  GIST, Ewing sarcoma, rhabdomyosarcoma, MPNST) have separate disease entities
+  with distinct treatment algorithms. GIST (imatinib) and bone sarcomas are
+  NOT covered here — use their respective disease entities.
+
+epidemiology:
+  incidence_us: "~13,000 new cases/year (USA, soft tissue + bone sarcomas)"
+  peak_age: "Variable by subtype; median age 50-65 years for most adult STS"
+  sex_ratio: "Approximately equal (slight male predominance in some subtypes)"
+
+histological_subtypes:
+  - subtype: "Undifferentiated pleomorphic sarcoma (UPS)"
+    frequency: "~20% of adult STS"
+    characteristics: "High-grade; formerly malignant fibrous histiocytoma (MFH); doxorubicin ± ifosfamide"
+  - subtype: "Liposarcoma"
+    frequency: "~20%"
+    characteristics: "WD/DD (retroperitoneum), myxoid/round cell (limb), pleomorphic; trabectedin effective for myxoid subtype; CDK4/MDM2 amplification in WD/DD"
+  - subtype: "Leiomyosarcoma (LMS)"
+    frequency: "~15%"
+    characteristics: "Retroperitoneal or uterine origin; gemcitabine+docetaxel has specific activity; doxorubicin also active"
+  - subtype: "Synovial sarcoma"
+    frequency: "~10%"
+    characteristics: "Young adults; SS18-SSX fusion; ifosfamide-sensitive; AI preferred"
+  - subtype: "Malignant peripheral nerve sheath tumor (MPNST)"
+    frequency: "~5%"
+    characteristics: "NF1-associated in 50%; aggressive; doxorubicin+ifosfamide; poor prognosis"
+  - subtype: "Angiosarcoma"
+    frequency: "~3-5%"
+    characteristics: "Radiation-induced or spontaneous; paclitaxel or anthracycline-based; anti-VEGF may help"
+  - subtype: "Solitary fibrous tumor (SFT) / Hemangiopericytoma"
+    frequency: "~2%"
+    characteristics: "Temozolomide+bevacizumab or sunitinib; distinct from other STS"
+  - subtype: "Alveolar soft part sarcoma (ASPS)"
+    frequency: "Rare"
+    characteristics: "Indolent but incurable; anti-VEGFR agents (sunitinib, cediranib, axitinib)"
+
+staging_system: "AJCC/TNM 8th edition (T stage based on size ≤5 cm vs >5 cm; deep vs superficial)"
+staging_notes: >
+  High-grade (G2-G3), deep, >5 cm tumors have ~50% risk of metastasis.
+  Low-grade (G1) rarely metastasize — chemotherapy not routinely indicated.
+  Metastatic disease: liver (LMS), lung (most subtypes); bone less common.
+
+key_molecular_alterations:
+  - "SS18-SSX1/SSX2 fusion — synovial sarcoma (100%; diagnostic)"
+  - "MDM2/CDK4 amplification — WD/DD liposarcoma (~100%; diagnostic)"
+  - "FUS-CHOP/EWSR1-CHOP — myxoid liposarcoma"
+  - "SYT-SSX — synovial sarcoma"
+  - "NF1 loss — MPNST (~50%)"
+  - "TP53 mutation — UPS, leiomyosarcoma"
+  - "PDGFRA/KIT mutations — GIST (separate entity)"
+  - "CDKN2A, RB1 deletions — multiple subtypes"
+
+actionable_biomarkers:
+  - "MDM2/CDK4 FISH (WD/DD liposarcoma — diagnostic; palbociclib in trials)"
+  - "SS18-SSX FISH or RT-PCR (synovial sarcoma — diagnostic; not yet therapy-modifying standard)"
+  - "NTRK fusion (rare pan-tumor; TRK inhibitors active)"
+  - "TMB-high (very rare in STS; pembrolizumab for TMB-H ≥10 mut/Mb)"
+
+prognosis:
+  localized_high_grade_5y: "~60% (high-grade localized with surgery ± RT)"
+  metastatic_5y: "~15-20%"
+  poor_risk_factors: "Grade 3, size >10 cm, deep location, positive margins, retroperitoneal"
+
+treatment_principles:
+  - "Localized resectable: wide resection ± RT; chemotherapy for high-risk (neoadjuvant or adjuvant — not standard but considered)"
+  - "Locally advanced/unresectable or metastatic: systemic chemotherapy — doxorubicin ± ifosfamide"
+  - "Doxorubicin mono: standard for palliative intent (EORTC 62012)"
+  - "AI (dox+ifo): preferred when response rate matters (neoadjuvant conversion, rapid progression)"
+  - "ECOG ≥3: best supportive care; doxorubicin mono reduced-dose for selected patients"
+  - "Subtype-specific agents (2L): gemcitabine+docetaxel (LMS), trabectedin (liposarcoma/LMS), pazopanib (non-adipocytic)"
+
+notes: >
+  STS is a heterogeneous family of >50 subtypes. Systemic chemotherapy is
+  moderately effective for most adult STS histologies. Doxorubicin is the
+  most broadly active single agent. Response rates are modest (~10-26%).
+  MDT discussion at a specialized sarcoma center is strongly recommended.
+  Histology matters: GIST → imatinib (separate); bone sarcomas → separate;
+  Ewing → VDC-IE; rhabdomyosarcoma → pediatric protocols.
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

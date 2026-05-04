@@ -1,0 +1,116 @@
+id: IND-PROSTATE-MCRPC-2L-DOCETAXEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "Progressive disease on ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
+    - "Taxane-naive — no prior docetaxel or cabazitaxel at any prior line"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PSA
+      value_constraint: "PSA baseline required (PCWG3 response/progression assessment)"
+    - biomarker_id: BIO-GLEASON-ISUP
+      value_constraint: "Gleason / ISUP grade group — mandatory pathologic stratifier"
+  biomarker_requirements_excluded:
+    - "BRCA1/2 or other HRR pathogenic variant without prior PARPi — PARPi-first preferred (IND-PROSTATE-MCRPC-1L-PARPI)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DOCETAXEL-MCRPC
+concurrent_therapy:
+  - "Ongoing ADT (castration-level testosterone maintained throughout)"
+followed_by:
+  - "Cabazitaxel (IND-PROSTATE-MCRPC-2L-CABAZITAXEL) at progression after docetaxel"
+  - "Reassess PSMA-PET at progression — Lu-PSMA may be eligible post-docetaxel (VISION criteria met)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  os_hr_vs_mitoxantrone: 0.76
+  median_os_months: "18.9 (TAX 327; mCRPC population)"
+  psa_decline_50pct: "45% (TAX 327)"
+  notes: >
+    TAX 327 (Tannock 2004, NEJM; n=1006): docetaxel 75 mg/m² q21d + prednisone vs
+    mitoxantrone + prednisone in mCRPC. Docetaxel q3w arm: mOS 18.9 vs 16.5 months
+    (HR 0.76, p=0.009); PSA decline ≥50%: 45% vs 32%; pain palliation 35% vs 22%.
+    This trial predates the mHSPC docetaxel era (CHAARTED/STAMPEDE); in 2026,
+    most patients receive docetaxel in mHSPC (high-volume disease). The taxane-naive
+    mCRPC population is therefore those who:
+    (a) Had low-volume mHSPC and received ARPI alone in mHSPC, then progressed to mCRPC;
+    (b) Deferred chemotherapy in mHSPC or mCRPC 1L (frailty, preference).
+    TAX 327 data remain valid for guiding docetaxel in the taxane-naive mCRPC population.
+
+hard_contraindications:
+  - "Prior taxane-based chemotherapy (docetaxel or cabazitaxel) — use IND-PROSTATE-MCRPC-2L-CABAZITAXEL for post-docetaxel patients"
+  - "Severe hepatic impairment (bilirubin >3 × ULN — docetaxel hepatically metabolized)"
+  - "ECOG PS ≥3"
+  - "ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L at initiation"
+
+red_flags_triggering_alternative:
+  - condition: "BRCA1/2 or HRR pathogenic variant not yet treated with PARPi → olaparib preferred first (IND-PROSTATE-MCRPC-1L-PARPI)"
+  - condition: "PSMA-PET-positive + prior ARPI + taxane (after docetaxel completes) → Lu-PSMA preferred at next relapse (IND-PROSTATE-MCRPC-2L-LU-PSMA)"
+  - condition: "Prior docetaxel at any line → cabazitaxel preferred (IND-PROSTATE-MCRPC-2L-CABAZITAXEL; CARD OS HR 0.64 vs second ARPI)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PSA-SERUM
+  - "Testosterone level (confirm castrate <50 ng/dL)"
+  - "HRR/BRCA1/2 somatic + germline testing (if not done — gates PARPi eligibility)"
+  - "CT CAP + bone scan (baseline staging)"
+  - TEST-ECG
+
+desired_tests:
+  - "PSMA-PET/CT (not required before docetaxel; perform at docetaxel completion to assess Lu-PSMA eligibility post-taxane)"
+  - "AR-V7 (liquid biopsy) — informative for ARPI resistance mechanism; does not change docetaxel selection"
+
+rationale: >
+  TAX 327 (Tannock 2004, NEJM, n=1006): randomized mCRPC patients to docetaxel 75 mg/m²
+  q3w + prednisone vs mitoxantrone + prednisone. Docetaxel q3w: OS HR 0.76 (18.9 vs 16.5m,
+  p=0.009). NCCN Category 1.
+  In the taxane-naive mCRPC patient who has progressed on ARPI (1L mCRPC setting),
+  docetaxel is the standard chemotherapy backbone. ARPI cross-resistance (AR pathway
+  convergence) limits utility of second ARPI; docetaxel's tubulin-polymerization mechanism
+  is independent of androgen receptor pathway. After docetaxel completion, cabazitaxel
+  (CARD: OS HR 0.64 vs second ARPI post-docetaxel) is the preferred subsequent line.
+  Mandatory ADT continuation throughout — castration is backbone of mCRPC management.
+
+rationale_ua: >
+  TAX 327 (Tannock 2004, NEJM; n=1006): доцетаксел 75 мг/м² q3w + преднізон;
+  OS HR 0.76 (18.9 vs 16.5 міс, p=0.009) vs мітоксантрон + преднізон. NCCN Категорія 1.
+  Для таксан-наївних пацієнтів mCRPC, що прогресують на АРПІ: доцетаксел є
+  стандартом 2L хіміотерапії. Перехресна резистентність АРПІ обмежує ефективність
+  другого АРПІ. ГДТ (АДТ) продовжується протягом усього курсу.
+  Після доцетакселю: кабазитаксел (CARD: OS HR 0.64 vs другий АРПІ).
+  Визначення HRR/BRCA ОБОВ'ЯЗКОВЕ — PARPi переважніший при мутаціях BRCA1/2.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-TAX327-TANNOCK-2004
+    position: supports
+    relevant_quote_paraphrase: "TAX 327 (n=1006): docetaxel 75 mg/m² q3w + prednisone vs mitoxantrone; mOS 18.9 vs 16.5m (HR 0.76, p=0.009); PSA ≥50% decline 45% vs 32%; NCCN Cat 1 for mCRPC"
+  - source_id: SRC-NCCN-PROSTATE-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати доцетаксел при попередньому таксані (доцетаксел або кабазитаксел) — використовувати кабазитаксел (CARD: OS HR 0.64 vs другий АРПІ)"
+  - "Не пропускати тестування HRR/BRCA — PARPi перевершує хіміотерапію при BRCA1/2-мутованих пацієнтах"
+  - "Не припиняти АДТ (ГДТ) під час хіміотерапії — кастраційний рівень тестостерону підтримується протягом усього лікування"
+  - "Не призначати при важкій печінковій недостатності (білірубін >3 × ВМН)"
+  - "Не забути 3-денний дексаметазон преmedication (8 мг двічі/добу) — профілактика затримки рідини та гіперчутливості"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

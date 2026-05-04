@@ -1,0 +1,86 @@
+id: REG-EV-MONO-UROTHELIAL
+disease_context: DIS-UROTHELIAL
+line_of_therapy: 2
+plan_track: standard
+
+agents:
+  - drug_id: DRG-ENFORTUMAB-VEDOTIN
+    dose: "1.25 mg/kg IV over 30 min (max dose: 125 mg for patients ≥100 kg)"
+    route: IV
+    schedule: "Days 1, 8, 15 of each 28-day cycle"
+    dose_modifications:
+      - trigger: "Grade ≥2 peripheral neuropathy"
+        action: "Hold until resolution to ≤Grade 1; reduce to 1.0 mg/kg for Grade 2; permanently discontinue for Grade ≥3"
+      - trigger: "Grade ≥3 skin reactions (severe skin toxicity, SJS, TEN suspicion)"
+        action: "Withhold; evaluate; permanently discontinue for Grade ≥3 confirmed"
+      - trigger: "Grade ≥3 hyperglycemia (blood glucose >250 mg/dL)"
+        action: "Hold; optimize glycemic control; resume at reduced dose when ≤Grade 2"
+      - trigger: "Grade ≥2 pneumonitis or interstitial lung disease"
+        action: "Hold; systemic steroids if Grade ≥2; permanently discontinue for Grade ≥3 or recurrent Grade 2"
+      - trigger: "ANC <1000 or platelets <75K on infusion day"
+        action: "Hold until ANC ≥1000 + platelets ≥75K; G-CSF secondary prophylaxis"
+
+when_to_use: >
+  EV monotherapy for previously treated (2L+) advanced urothelial carcinoma.
+  PRIMARY indication: patients who progressed on platinum-containing chemotherapy
+  AND a PD-(L)1 inhibitor (or avelumab maintenance) — EV-301 eligibility.
+  With EV+pembro as 1L standard (EV-302), EV monotherapy is most relevant for:
+  (1) Patients who received platinum 1L + avelumab maintenance → EV is 2L;
+  (2) Patients on ALTERNATIVE 1L platinum regimen who received a separate ICI line;
+  (3) EV+pembro was given 1L → 2L is typically platinum chemo (NOT EV re-challenge);
+  FGFR2/3 alteration: erdafitinib preferred over EV monotherapy if FGFR+ (THOR: HR 0.58).
+
+disambiguation_note: >
+  REG-EV-MONO-UROTHELIAL (1.25 mg/kg d1,8,15 q28d) — EV monotherapy for 2L UC.
+  REG-EV-PEMBRO-UROTHELIAL (EV 1.25 mg/kg d1,8,15 + pembro 200 mg q3w) — 1L combination.
+  Different regimens: monotherapy is single-agent MMAE-ADC; combination adds PD-1 inhibitor.
+
+premedication:
+  - "Antiemetics: moderately emetogenic protocol (ondansetron + dexamethasone on infusion days)"
+  - "No pre-hydration required (unlike cisplatin)"
+  - "Glucose monitoring: pre-dose blood glucose check each cycle — hyperglycemia risk"
+
+cycle_length_days: 28
+total_planned_cycles: "Until progression or unacceptable toxicity"
+
+monitoring:
+  - "Blood glucose: before each infusion — EV-associated hyperglycemia; optimize DM management"
+  - "Peripheral neuropathy assessment: each cycle — cumulative MMAE neuropathy (dose-limiting in many patients)"
+  - "Skin examination: each cycle — maculopapular rash, hand-foot syndrome, rare SJS/TEN"
+  - "Pulmonary symptoms: each visit — pneumonitis/ILD (<3% but can be severe)"
+  - "CBC: each cycle"
+  - "Ophthalmological: dry eye, keratopathy — refer to ophthalmology if symptomatic"
+  - "CT CAP: every 2 cycles (q8 weeks) for response assessment"
+
+key_toxicities:
+  - toxicity: "Peripheral neuropathy"
+    grade_3_4_incidence: "~8% (EV-301)"
+    management: "Dose reduction at Grade 2; discontinue at Grade 3; cumulative MMAE; may not fully reverse"
+  - toxicity: "Skin reactions (maculopapular rash, MMAE-related)"
+    grade_3_4_incidence: "~3-4%"
+    management: "Topical corticosteroids for mild; systemic steroids for severe; hold for Grade ≥3"
+  - toxicity: "Hyperglycemia"
+    grade_3_4_incidence: "~5%"
+    management: "Pre-dose glucose monitoring; diabetes management optimization; insulin or oral agents"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~3-5%"
+    management: "Supportive; dose reduction if severe"
+  - toxicity: "Alopecia"
+    grade_3_4_incidence: "~50% (expected; Grade 1-2)"
+    management: "Counsel patient; scalp cooling (partial)"
+  - toxicity: "Ocular toxicity (keratopathy, dry eyes)"
+    grade_3_4_incidence: "~10-15% (any grade)"
+    management: "Artificial tears; ophthalmology referral; do NOT use steroid eye drops without ophthalmology guidance"
+
+watchpoints_ua:
+  - "УВАГА: Периферична нейропатія — кумулятивна токсичність MMAE; оцінювати кожен цикл; при Grade 2 — знижувати дозу до 1.0 мг/кг; при Grade 3 — відміна"
+  - "УВАГА: Гіперглікемія — контроль рівня глюкози до кожної ін'єкції; оптимізувати антидіабетичну терапію; при ЦД нестабільний перебіг — розглянути альтернативу"
+  - "УВАГА: Шкірні реакції — висип, долонно-підошвовий синдром, рідкісний СДЖ/ТЕН; при Grade ≥3 шкірній токсичності — негайне утримання препарату та консультація дерматолога"
+  - "УВАГА: Пневмоніт/ІЛЗ — при нових дихальних симптомах або КТ-змінах — утримання препарату; при Grade ≥2 — системні ГКС"
+  - "УВАГА: Очна токсичність (сухий кератокон'юнктивіт, кератопатія) — штучні сльози; при погіршенні зору — офтальмологічна консультація"
+  - "УВАГА: При прогресуванні після EV+пембролізумаб 1L → наступна лінія є платиновмісна хіміотерапія (не повторне введення EV); EV монотерапія в цьому контексті не є стандартом"
+  - "УВАГА: При FGFR2/3 мутації/злитті → ердафітиніб (THOR дослідження; HR 0.58) переважає над хіміотерапією та EV монотерапією"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

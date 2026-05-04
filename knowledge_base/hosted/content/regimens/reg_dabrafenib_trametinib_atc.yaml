@@ -1,0 +1,84 @@
+id: REG-DAB-TRAM-ATC
+disease_context: DIS-THYROID-ANAPLASTIC
+line_of_therapy: 1
+plan_track: standard
+biomarker_required: BRAF V600E
+
+agents:
+  - drug_id: DRG-DABRAFENIB
+    brand_name: "Tafinlar"
+    dose: "150 mg PO BID (approximately every 12 hours)"
+    route: PO
+    schedule: "Continuous daily; fasting state (no food 1h before, 2h after)"
+    dose_modifications:
+      - trigger: "Grade 3 toxicity (pyrexia, rash, cardiac, other)"
+        action: "Hold dabrafenib; restart at reduced dose (100 mg BID) when resolved to ≤Grade 1"
+      - trigger: "Grade 4 toxicity or QTc >500ms"
+        action: "Permanently discontinue or restart at 75 mg BID after resolution"
+      - trigger: "Uveitis/iritis"
+        action: "Hold; ophthalmology consult; restart at same dose if resolved ≤4 weeks"
+  - drug_id: DRG-TRAMETINIB
+    brand_name: "Mekinist"
+    dose: "2 mg PO QD"
+    route: PO
+    schedule: "Continuous daily; fasting state (same timing window as dabrafenib or 1-2h before)"
+    dose_modifications:
+      - trigger: "Grade 3 skin toxicity, cardiac dysfunction (LVEF decrease ≥10% + below LLN)"
+        action: "Hold trametinib; restart at 1.5 mg QD when resolved to ≤Grade 1"
+      - trigger: "Retinal pigment epithelial detachment"
+        action: "Hold; ophthalmology; restart at 1.5 mg QD if resolved ≤3 weeks"
+
+critical_combination_note: >
+  BRAF inhibitor monotherapy is CONTRAINDICATED in BRAF V600E tumors with any RAS
+  pathway feedback activation potential — paradoxical MAPK activation can accelerate
+  tumor growth. MEK inhibitor (trametinib) is REQUIRED when using BRAF inhibitor.
+
+premedication:
+  - "No standard premedication required"
+  - "Baseline ECG (QTc), LVEF (ECHO or MUGA), ophthalmologic exam"
+  - "Electrolyte correction (K+, Mg²⁺) if QTc concerns"
+
+cycle_length_days: 28
+total_planned_cycles: "Continue until disease progression or unacceptable toxicity; responses can be durable (mDOR ~9 mo)"
+
+monitoring:
+  - "LVEF: baseline, week 4, then q8-12 weeks — trametinib cardiotoxicity"
+  - "ECG: baseline + as clinically indicated (QTc prolongation)"
+  - "Dermatologic exam q4-8 weeks — cutaneous squamous cell carcinoma / keratoacanthoma (class effect; less with combination vs mono)"
+  - "Ophthalmologic exam if visual symptoms — uveitis, retinal detachment (rare)"
+  - "LFTs monthly — hepatotoxicity (rare but reported)"
+  - "CT CAP q8 weeks — ATC grows rapidly; early response assessment critical"
+  - "Thyroid function if residual thyroid parenchyma — hypothyroidism"
+
+key_toxicities:
+  - toxicity: "Pyrexia (drug fever)"
+    grade_3_4_incidence: "~14%"
+    management: "Hold dabrafenib; corticosteroids (prednisone 10-20 mg QD × 5d) for persistent fever; restart at reduced dose"
+  - toxicity: "Hypertension"
+    grade_3_4_incidence: "~7-12%"
+    management: "Standard antihypertensives; dose reduction if Grade 3+"
+  - toxicity: "Rash/dermatitis"
+    grade_3_4_incidence: "~10%"
+    management: "Topical corticosteroids; systemic if widespread; hold for Grade 3+"
+  - toxicity: "Cutaneous SCC/keratoacanthoma"
+    grade_3_4_incidence: "~10% with dab monotherapy; <5% with combination"
+    management: "Dermatologic excision; do NOT discontinue combination therapy"
+  - toxicity: "LVEF decrease"
+    grade_3_4_incidence: "~5%"
+    management: "Hold trametinib; cardiology consult; restart at reduced dose if recovered"
+  - toxicity: "Uveitis/iritis"
+    grade_3_4_incidence: "<5%"
+    management: "Topical/systemic steroids; ophthalmology; hold if severe"
+
+watchpoints_ua:
+  - "УВАГА: НІКОЛИ не призначати дабрафеніб без траметинібу при BRAF V600E пухлині — монотерапія BRAFi викликає парадоксальну активацію MAPK та прискорення пухлинного росту"
+  - "УВАГА: Базовий ЕКГ + EхоКГ + офтальмологічний огляд до початку лікування; QTc >500 мс — протипоказання"
+  - "УВАГА: Піреxія є класовим ефектом дабрафенібу (~14% Grade 3) — може имітувати інфекцію; при першій пiреxії виключити інфекцію, потім призупинити дабрафеніб та відновити при нормалізації"
+  - "УВАГА: Рання діагностика BRAF V600E ATC — ініціювати тестування в день біопсії (RAID-протокол), оскільки ATC є онкологічною надзвичайною ситуацією (mOS ~5 міс. без ефективної терапії)"
+  - "УВАГА: Шкірний плоскоклітинний рак / кератоакантома — класовий ефект BRAFi; дерматологічний огляд кожні 4-8 тижнів; НЕ припиняти комбіновану терапію"
+  - "УВАГА: Трабектедин та дабрафеніб/траметиніб є субстратами CYP3A4 — уникати сильних інгібіторів/індукторів; перевірити взаємодії ліків"
+  - "УВАГА: ONIVYDE та дабрафеніб не зареєстровані в Україні — уточнити доступ до міжнародної аптеки або клінічного дослідження"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

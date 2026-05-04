@@ -1,0 +1,73 @@
+id: REG-NAL-IRI-5FU-LV-PDAC
+disease_context: DIS-PDAC
+line_of_therapy: 2
+plan_track: standard
+
+agents:
+  - drug_id: DRG-NAL-IRI
+    brand_name: "ONIVYDE (nanoliposomal irinotecan)"
+    dose: "70 mg/m² free base (= 80 mg/m² irinotecan HCl salt) IV over 90 min, day 1"
+    route: IV
+    schedule: "Day 1 q14 days"
+    dose_modifications:
+      - trigger: "Grade 3-4 neutropenia, Grade 3-4 diarrhea, or Grade 2 neuropathy"
+        action: "Reduce to 50 mg/m² free base (57.5 mg/m² salt); omit if not recovered"
+      - trigger: "UGT1A1*28 homozygous (*28/*28 genotype)"
+        action: "Reduce starting dose to 50 mg/m² free base — higher irinotecan AUC risk"
+  - drug_id: DRG-LEUCOVORIN
+    dose: "400 mg/m² IV over 30 min (begin after nal-IRI infusion), day 1"
+    route: IV
+    schedule: "Day 1 q14 days"
+  - drug_id: DRG-FLUOROURACIL
+    dose: "2400 mg/m² IV 46-hour continuous infusion (begin after LV), days 1-3"
+    route: IV_CI
+    schedule: "46h CI starting day 1, q14 days"
+    dose_modifications:
+      - trigger: "Grade 3 mucositis or Grade 3 hand-foot syndrome"
+        action: "Reduce 5-FU by 25%; consider uridine triacetate if severe toxicity"
+
+premedication:
+  - "G-CSF secondary prophylaxis after febrile neutropenia episode"
+  - "Atropine 0.25-1 mg IV/SQ for acute cholinergic syndrome (early-onset diarrhea, diaphoresis) during or within 30 min of nal-IRI"
+  - "Loperamide for late-onset diarrhea (≥24h post-infusion): 4 mg at onset, then 2 mg q2h until diarrhea-free 12h"
+  - "Antiemetics: moderate emetogenic protocol (5-HT3 antagonist + dexamethasone day 1)"
+
+cycle_length_days: 14
+total_planned_cycles: "Continue until progression or unacceptable toxicity"
+
+monitoring:
+  - "CBC with differential: before each cycle — ANC ≥1500, platelets ≥100K required"
+  - "CMP, LFTs, bilirubin before each cycle — hold if total bilirubin >2× ULN (irinotecan hepatic metabolism)"
+  - "UGT1A1 genotyping before starting (if available) — reduce dose in *28/*28"
+  - "CT CAP after every 2 cycles (8 weeks) for response assessment"
+  - "Patient diary for diarrhea tracking — late diarrhea can be severe and require hospitalization"
+
+key_toxicities:
+  - toxicity: "Diarrhea (late-onset, Grade 3-4)"
+    grade_3_4_incidence: "~13%"
+    management: "Aggressive loperamide; IV hydration if severe; reduce dose; UGT1A1*28 predisposes"
+  - toxicity: "Neutropenia"
+    grade_3_4_incidence: "~27%"
+    management: "G-CSF secondary prophylaxis; delay + reduce if persistent"
+  - toxicity: "Nausea/vomiting"
+    grade_3_4_incidence: "~11%"
+    management: "Optimal antiemetic prophylaxis; metoclopramide"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~14%"
+    management: "Supportive; evaluate for reversible causes (anemia, dehydration)"
+  - toxicity: "Acute cholinergic syndrome"
+    grade_3_4_incidence: "<5%"
+    management: "Atropine premedication; occurs within 30 min of infusion"
+
+watchpoints_ua:
+  - "УВАГА: НЕ призначати при тотальному білірубіні >2× ULN — nal-IRI печінковий метаболізм; жовтяниця підвищує токсичність"
+  - "УВАГА: Рання (холінергічна) та пізня діарея — різні механізми та лікування: атропін для ранньої (<30 хв); лоперамід агресивно для пізньої (≥24 год)"
+  - "УВАГА: UGT1A1*28 гомозиготи (*28/*28) — знизити початкову дозу до 50 мг/м² free base — вищий ризик нейтропенії та діареї"
+  - "УВАГА: НЕ починати цикл при ANC <1500 або тромбоцитах <100K"
+  - "УВАГА: Інфузійний порт або PICC-лінія необхідна — 46-годинна CI 5-FU не сумісна з периферичним доступом"
+  - "УВАГА: ONIVYDE (nal-IRI) не зареєстрований в Україні — значний бар'єр доступу; цисплатин-резистентний паклітаксел є альтернативою"
+  - "УВАГА: Лікування лише паліативне після 1L гемцитабін — очікувана ЗВ ~6 міс."
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,118 @@
+id: IND-HCC-SYSTEMIC-2L-REGORAFENIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced/unresectable HCC (BCLC C, or BCLC B not amenable to locoregional therapy)"
+    - "Disease progression on sorafenib 1L (not discontinued due to intolerance — RESORCE requirement)"
+    - "Must have tolerated sorafenib ≥21 days at ≥400 mg/day"
+    - "Child-Pugh A liver function"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-REGORAFENIB-HCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~11% ORR (RECIST 1.1); DCR 65% vs placebo 36% (RESORCE)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 3.1 mo vs 1.5 mo (HR 0.46, p<0.0001, RESORCE)"
+  overall_survival_5y: "Median OS 10.6 mo vs 7.8 mo (HR 0.63, 95% CI 0.50–0.79, p<0.0001, RESORCE); sequential sorafenib→regorafenib OS ~26 mo from 1L start"
+
+hard_contraindications:
+  - "Sorafenib discontinued due to intolerance (not progression) — RESORCE excluded these patients; tolerability of sorafenib predicts regorafenib tolerability"
+  - "Child-Pugh B or C"
+  - "Prior hepatic decompensation (ascites requiring repeated paracentesis, hepatic encephalopathy Grade ≥2)"
+
+red_flags_triggering_alternative:
+  - RF-HCC-CHILD-PUGH-B-C
+  - RF-HCC-VARICEAL-BLEED
+  - RF-HCC-FRAILTY-AGE
+
+required_tests:
+  - TEST-LFT
+  - TEST-BILIRUBIN-TOTAL
+  - TEST-AFP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CT-CAP
+  - TEST-CHILD-PUGH-SCORE
+
+desired_tests:
+  - TEST-ECG-BASELINE
+
+rationale: >
+  Regorafenib (160 mg PO daily d1-21 q28d) is FDA-approved (April 2017) and NCCN
+  Category 1 for HCC after sorafenib, based on RESORCE (Bruix, Lancet 2017, n=573,
+  phase 3 RCT). mOS 10.6 vs 7.8 mo (HR 0.63, p<0.0001); mPFS 3.1 vs 1.5 mo
+  (HR 0.46). Regorafenib is a multikinase inhibitor (VEGFR1/2/3, PDGFR, FGFR,
+  TIE2, KIT, RET, RAF, BRAF) — shares structural similarity with sorafenib
+  (same kinase targets with additional RAF/TIE2 activity). Key eligibility criterion:
+  patients must have TOLERATED sorafenib (sorafenib-intolerant patients have
+  higher regorafenib toxicity). Sequential sorafenib→regorafenib OS from 1L start:
+  ~26 months (Bruix 2017). HFSR is the most impactful toxicity (54% all grade,
+  13% Grade 3-4); prophylactic topical urea cream is essential.
+
+rationale_ua: >
+  Регорафеніб (160 мг PO щоденно д1-21 кожні 28 днів) є FDA-схваленим (квітень 2017)
+  та NCCN Категорія 1 для ГЦК після сорафенібу, на підставі RESORCE (Bruix, Lancet
+  2017, n=573). mOS 10.6 проти 7.8 міс. (HR 0.63); mPFS 3.1 проти 1.5 міс. (HR 0.46).
+  Ключовий критерій відбору: пацієнти повинні ПЕРЕНОСИТИ сорафеніб (відміна через
+  токсичність, не прогресування, виключає можливість). Послідовно сорафеніб→регорафеніб
+  ЗВ від початку 1L: ~26 місяців. HFSR є найбільш значущою токсичністю (54% всіх
+  ступенів, 13% Grade 3-4); профілактична крем з сечовиною є обов'язковою.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-RESORCE-BRUIX-2017
+    position: supports
+    relevant_quote_paraphrase: "Regorafenib vs placebo post-sorafenib HCC: mOS 10.6 vs 7.8 mo (HR 0.63, p<0.0001); FDA approved April 2017 (RESORCE phase 3)"
+  - source_id: SRC-NCCN-HCC-2025
+    position: supports
+    relevant_quote_paraphrase: "Regorafenib is NCCN Category 1 preferred 2L for HCC after sorafenib; tolerated sorafenib is an eligibility requirement"
+
+do_not_do:
+  - "Не призначати якщо сорафеніб був скасований через токсичність (не прогресування) — RESORCE включав тільки соративно-переносимих пацієнтів; непереносимість сорафенібу передбачає вищу токсичність регорафенібу"
+  - "Не призначати при Child-Pugh B/C — RESORCE включав тільки Child-Pugh A; гепатотоксичність підвищена при порушенні функції печінки"
+  - "Не пропускати профілактичну крем з сечовиною для HFSR — Grade 3 HFSR є основною причиною зменшення дози (54% всіх ступенів)"
+  - "Не ігнорувати прийом їжі — регорафеніб приймати під час сніданку з низьким вмістом жиру; голодування або жирна їжа значно змінює AUC"
+  - "Не призначати при ECOG >1 — RESORCE включав ECOG 0-1"
+  - "Перевірити гепатотоксичність: ЛФТ щотижнево перші 2 місяці — припинити при AST/ALT >5× ULN"
+
+known_controversies:
+  - topic: "Regorafenib vs cabozantinib in 2L post-sorafenib HCC"
+    positions:
+      - position: "Regorafenib is preferred 2L post-sorafenib when sorafenib was tolerated — direct phase 3 RCT (HR 0.63 OS), better studied dosing; sorafenib tolerance predicts tolerability"
+        sources:
+          - SRC-RESORCE-BRUIX-2017
+          - SRC-NCCN-HCC-2025
+      - position: "Cabozantinib (CELESTIAL HR 0.76) is an alternative when regorafenib intolerable; cabozantinib eligible for 1-2 prior lines and does NOT require prior sorafenib tolerance"
+        sources:
+          - SRC-CELESTIAL-ABOU-ALFA-2018
+    our_default: "Regorafenib 1st choice post-sorafenib when tolerated; cabozantinib when regorafenib intolerant or after ICI-based 1L"
+    rationale: "RESORCE eligibility (sorafenib-tolerant) is clinically predictive; cabozantinib adds MET/AXL coverage for sorafenib-resistant disease"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  RESORCE (PMID 27932016) is the landmark 2L HCC trial. The sorafenib-tolerance
+  requirement is clinically critical — patients who stopped sorafenib for toxicity
+  should receive cabozantinib or ramucirumab instead. AFP response during regorafenib
+  is prognostic (decline ≥20% associated with better OS).
+  After ICI-based 1L (atezo+bev, durva+treme): regorafenib is NCCN Cat 2A
+  (no specific phase 3 RCT post-ICI); expert consensus recommends TKI sequencing.

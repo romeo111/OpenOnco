@@ -1,0 +1,70 @@
+id: REG-RADIUM223-MCRPC
+disease_context: DIS-PROSTATE
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "radionuclide_therapy"
+
+agents:
+  - drug_id: DRG-RADIUM223
+    dose: "55 kBq/kg IV (body weight-based) over 1 min"
+    route: IV
+    schedule: "Once every 4 weeks × 6 injections (total course = 6 months)"
+    dose_modifications:
+      - trigger: "ANC <1.0 × 10⁹/L or platelets <50 × 10⁹/L before injection"
+        action: "Delay injection until recovery; if no recovery within 6-8 weeks, discontinue"
+      - trigger: "Grade ≥3 hematologic toxicity"
+        action: "Hold until ≤Grade 1; may resume if not due to progressive bone marrow infiltration"
+
+total_injections: 6
+total_course_months: 6
+
+when_to_use: >
+  mCRPC with symptomatic bone metastases AND no known visceral metastases AND ECOG 0-2.
+  Bone-targeting alpha emitter — concentrates at sites of osteoblastic bone turnover.
+  ALSYMPCA: mOS 14.9 vs 11.3 months (HR 0.70) vs placebo. 6 scheduled q4w injections.
+  Provides bone pain palliation benefit in addition to survival.
+  NOT for visceral metastases (Ra-223 does not distribute to soft tissue).
+  CRITICAL: Do NOT combine with docetaxel (ALSYMPCA+: increased toxicity) or
+  novel ARPIs (ERA 223: increased fracture risk + deaths with Ra-223 + abiraterone).
+
+radiological_considerations:
+  - "Nuclear medicine department with radiation therapy license required for administration"
+  - "Radiation safety precautions: avoid close contact with others, especially pregnant women/children, for 7-10 days after each injection"
+  - "Patient should flush toilet twice after use for 7 days post-injection"
+  - "Incontinence pad disposal per radioactive waste protocols"
+
+combination_contraindications:
+  - drug: "Docetaxel"
+    rationale: "ALSYMPCA+ study: Ra-223 + docetaxel showed increased toxicity without additional benefit"
+  - drug: "Abiraterone / Enzalutamide / Novel ARPIs"
+    rationale: "ERA 223: Ra-223 + abiraterone + prednisone resulted in increased fractures and deaths vs abiraterone alone — unexpected harm; combination CONTRAINDICATED"
+
+premedication:
+  - "No specific premedication required"
+  - "Ensure adequate bone marrow function: CBC before each injection"
+  - "Bone-protective agent (zoledronic acid or denosumab) may be continued separately"
+
+monitoring:
+  - "CBC before each injection — ANC and platelets thresholds"
+  - "PSA: monthly (response/progression marker)"
+  - "Alkaline phosphatase: monthly (ALSYMPCA: 47% normalization rate; bone activity marker)"
+  - "Bone pain assessment: each injection visit"
+  - "Bone imaging: baseline + every 2-3 injections (every 8-12 weeks)"
+  - "CT CAP: baseline + at injection 4 to rule out visceral progression (if visceral mets develop → stop Ra-223)"
+
+cycle_length_days: 28
+total_planned_cycles: 6
+
+watchpoints_ua:
+  - "КРИТИЧНО: Радій-223 ТІЛЬКИ при кісткових метастазах БЕЗ вісцеральних — він не діє на м'яктканинне захворювання; при вісцеральних метастазах — НЕ призначати"
+  - "КРИТИЧНО: ЗАБОРОНЕНО комбінувати з доцетакселем (ALSYMPCA+: підвищена токсичність) або абіратероном/ензалутамідом (ERA 223: підвищена частота переломів та смертність)"
+  - "КРИТИЧНО: Ядерно-медичний відділ з ліцензією на радіоактивні ізотопи ОБОВ'ЯЗКОВИЙ — тільки спеціалізовані центри"
+  - "УВАГА: Курс — 6 ін'єкцій кожні 4 тижні (6 місяців); не переривати без клінічних показань"
+  - "УВАГА: Лучева безпека — флушувати туалет двічі 7 днів після ін'єкції; уникати тісного контакту з вагітними та дітьми"
+  - "УВАГА: КЗА (КТ) на 4-й ін'єкції — переконатися у відсутності нових вісцеральних метастазів"
+  - "УВАГА: Деносумаб або золедронова кислота можуть застосовуватися паралельно (кісткова захисна терапія), але не новітні АРПІ одночасно"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

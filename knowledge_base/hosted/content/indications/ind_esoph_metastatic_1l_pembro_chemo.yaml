@@ -1,0 +1,92 @@
+id: IND-ESOPH-METASTATIC-1L-PEMBRO-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+    - "Any histology: squamous-cell (ESCC) OR adenocarcinoma (EAC, including GEJ Siewert I)"
+    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PD-L1-CPS
+      required: true
+      value_constraint: "PD-L1 CPS ≥10 (KEYNOTE-590 primary population with clearest OS benefit in both ESCC and EAC). CPS 1-9: benefit present but modest; NCCN acceptable for CPS≥1 in ESCC."
+  biomarker_requirements_excluded:
+    - "Active autoimmune disease requiring systemic immunosuppression"
+    - "Prior solid organ transplant"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBRO-CISPLATIN-5FU-ESOPH
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~51% (ESCC CPS≥10 pembro+chemo vs 26% chemo; KEYNOTE-590)"
+  progression_free_survival: "mPFS 7.5 vs 5.5 mo (ESCC CPS≥10, HR 0.51)"
+  overall_survival_median: "mOS 13.9 vs 8.8 mo (ESCC CPS≥10, HR 0.57, p<0.0001)"
+  notes: "KEYNOTE-590, N=749. Benefit in all-histology all-comers: mOS 12.4 vs 9.8 mo (HR 0.73)."
+
+hard_contraindications:
+  - "PD-L1 CPS < 1 (very limited benefit; chemo alone preferred)"
+  - "Active autoimmune disease"
+  - "Prior solid organ transplant"
+  - "ECOG PS ≥ 3"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - "Histology confirmation (ESCC or EAC)"
+  - "PD-L1 CPS (22C3 assay; mandatory for treatment selection)"
+  - "HER2 status for adenocarcinoma (HER2+ → consider trastuzumab + pembro + chemo)"
+  - "CBC, CMP, LFTs, TSH baseline"
+
+desired_tests:
+  - "MSI/MMR status (MSI-H rare in esophageal but pembro benefit further augmented)"
+  - "CT chest/abdomen/pelvis"
+
+rationale: >
+  KEYNOTE-590 (NCT03189719): pembrolizumab 200mg q3w + cisplatin 80mg/m² +
+  5-FU 800mg/m²/d D1-5 q3w vs chemo alone in untreated advanced esophageal
+  carcinoma (ESCC + EAC, n=749). ESCC CPS≥10: mOS 13.9 vs 8.8 mo (HR 0.57,
+  p<0.0001). All-ESCC: mOS 12.6 vs 9.8 mo (HR 0.72, p<0.001). All-comers:
+  mOS 12.4 vs 9.8 mo (HR 0.73, p<0.0001). EAC + GEJ Siewert I included but
+  not primary endpoint — benefit less pronounced vs ESCC.
+  Versus nivolumab+chemo (CheckMate-648): both are NCCN category 1 for ESCC.
+  Pembro+chemo covers both ESCC and EAC (histology-agnostic), while nivo+chemo
+  is ESCC-specific. No head-to-head comparison; choice is institution/patient
+  preference. Pembro preferred if both histologies present or if PD-L1 CPS≥10.
+
+rationale_ua: >
+  KEYNOTE-590: пембролізумаб + цисплатин + 5-ФУ для раку стравоходу 1L.
+  mOS 13.9 vs 8.8 міс при CPS≥10 (HR 0.57). Охоплює всі гістологічні типи.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE590-SUN-2021
+    position: supports
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use without PD-L1 CPS testing — benefit diminishes significantly at CPS <1"
+  - "Do NOT use in HER2+ adenocarcinoma without adding trastuzumab consideration (KEYNOTE-811 data for gastric/GEJ applies)"
+  - "Do NOT continue past 35 cycles (~2 years) of pembrolizumab"
+  - "Do NOT use in patients with prior ICI"
+
+last_reviewed: "2026-05-04"
+notes: >
+  REG-PEMBRO-CISPLATIN-5FU-ESOPH (pembrolizumab 200mg q3w + cisplatin 80mg/m²
+  D1 + 5-FU 800mg/m²/d D1-5 q3w) needs to be authored.
+  Carboplatin can substitute for cisplatin in cisplatin-ineligible patients
+  (AUC 5 q3w); less evidence but acceptable in clinical practice.
+  Maximum 35 cycles pembrolizumab (per KEYNOTE design); cisplatin typically
+  given for 6 cycles then 5-FU+pembro maintenance per institutional practice.

@@ -1,0 +1,74 @@
+id: REG-GEM-CARBO-UROTHELIAL
+disease_context: DIS-UROTHELIAL
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy"
+
+agents:
+  - drug_id: DRG-GEMCITABINE
+    dose: "1000 mg/m² IV over 30 min"
+    route: IV
+    schedule: "Days 1 and 8 q21d"
+    dose_modifications:
+      - trigger: "Grade ≥3 thrombocytopenia (platelets <50 × 10⁹/L on day 8)"
+        action: "Omit day 8 dose; restart next cycle on day 1 if recovered"
+      - trigger: "Grade ≥3 neutropenia (ANC <500 on day 8)"
+        action: "Omit day 8; add G-CSF prophylaxis next cycle"
+      - trigger: "Grade ≥3 mucositis"
+        action: "Reduce to 750 mg/m²"
+  - drug_id: DRG-CARBOPLATIN
+    dose: "AUC 5 IV over 30 min (Calvert formula: dose [mg] = AUC × [GFR + 25])"
+    route: IV
+    schedule: "Day 1 q21d (after gemcitabine infusion)"
+    dose_modifications:
+      - trigger: "CrCl 30-45 mL/min"
+        action: "Use AUC 4.5; increase hydration; monitor creatinine each cycle"
+      - trigger: "CrCl <30 mL/min"
+        action: "Carboplatin contraindicated — switch to single-agent gemcitabine or best supportive care"
+      - trigger: "Grade ≥3 thrombocytopenia (day 1 next cycle)"
+        action: "Reduce carboplatin to AUC 4; consider delay until platelets ≥100 × 10⁹/L"
+
+when_to_use: >
+  Cisplatin-ineligible (CrCl <60 mL/min, or GFR 30-59 mL/min, or ECOG 2, or Grade ≥2
+  peripheral neuropathy) patients with advanced/metastatic urothelial carcinoma (UC).
+  1L setting: established NCCN Category 1 for cisplatin-ineligible mUC.
+  2L setting: standard post-EV+pembrolizumab (EV-302 progressor) when FGFR2/3-negative
+  or untested; based on NCCN extrapolation of gem+carbo data. Carboplatin AUC 5 preferred
+  over AUC 6 in cisplatin-ineligible UC to balance efficacy and toxicity.
+  Cisplatin-eligible patients at 2L may receive gem+cis (REG-CISPLATIN-GEMCITABINE-UROTHELIAL)
+  if no prior cisplatin within 6 months and GFR ≥60 mL/min.
+
+premedication:
+  - "Antiemetic: ondansetron 8 mg IV (or equivalent 5-HT3 antagonist) before carboplatin"
+  - "Dexamethasone 8 mg IV (anti-emetic, day 1)"
+  - "IV hydration: 500 mL NS or LR pre-carboplatin; standard for AUC 5 regimen"
+  - "No mesna required (no ifosfamide or cyclophosphamide)"
+
+growth_factor_support:
+  primary_prophylaxis: "Not routinely required for AUC 5 carboplatin; consider for patients ≥70 or ECOG 2"
+  secondary_prophylaxis: "Mandatory after febrile neutropenia (Grade 4 ANC <500 × 10⁹/L with fever ≥38.5°C)"
+
+monitoring:
+  - "CBC + differential: before each cycle (ANC ≥1.0 × 10⁹/L and platelets ≥100 × 10⁹/L required)"
+  - "Creatinine/GFR: before each cycle (carboplatin dose recalculated each cycle using Calvert)"
+  - "LFT: baseline; q3 cycles if abnormal"
+  - "CT CAP: every 2-3 cycles (response assessment per RECIST 1.1)"
+  - "Urine cytology: if clinical concern for urothelial recurrence"
+
+cycle_length_days: 21
+total_planned_cycles: "4-6 cycles (until progression, unacceptable toxicity, or complete response)"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Карбоплатин дозується за формулою Кальверта (AUC 5 × [GFR + 25]) — перераховувати перед КОЖНИМ циклом, використовуючи актуальний GFR"
+  - "КРИТИЧНО: При CrCl <30 мл/хв — карбоплатин ПРОТИПОКАЗАНИЙ; замінити на монотерапію гемцитабіном або паліативну допомогу"
+  - "УВАГА: Тромбоцитопенія — основна токсичність (кумулятивна); пропускати дозу дня 8 при тромбоцитах <50 × 10⁹/л"
+  - "УВАГА: Гемцитабін 1000 мг/м² — стандартний 30-хвилинний режим (не 90-хвилинний, який застосовується при СТС); не плутати з дозуванням для саркоми"
+  - "УВАГА: При FGFR2/3-позитивному статусі — розглянути ердафітиніб (IND-UROTHELIAL-2L-ERDAFITINIB; THOR HR 0.58) перед хіміотерапією"
+
+sources:
+  - SRC-NCCN-BLADDER-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

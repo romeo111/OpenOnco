@@ -1,0 +1,115 @@
+id: IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic colorectal cancer (any RAS/BRAF status)"
+    - "ECOG PS 0-1 required"
+    - "Age ideally <75 (evaluate carefully in 70-74; generally avoid ≥75)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "MSI-H/dMMR — pembrolizumab 1L preferred (KEYNOTE-177)"
+    - "ECOG PS ≥ 2 — toxicity unacceptable; use doublet"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-FOLFOXIRI-BEV
+concurrent_therapy: []
+followed_by:
+  - "Maintenance bevacizumab ± fluoropyrimidine after 4-6 months induction (consider de-escalation)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+preferred_patient_profiles:
+  - "BRAF V600E mCRC (high tumour burden, aggressive biology — FOLFOXIRI+bev improves conversion and OS)"
+  - "RAS-mutant mCRC in fit patient where maximal response is the priority"
+  - "Liver-limited disease with potential conversion to resectability"
+  - "High tumour burden / symptomatic disease requiring fast response"
+
+expected_outcomes:
+  overall_response_rate: "65-70% (TRIBE; vs ~53% FOLFIRI+bev)"
+  complete_response: "~5%"
+  progression_free_survival: "mPFS 12.1 mo (TRIBE; HR 0.75 vs FOLFIRI+bev)"
+  overall_survival_median: "mOS 29.8 mo (TRIBE; HR 0.80 vs FOLFIRI+bev)"
+  overall_survival_5y: "~30% at 5 years (TRIBE long-term)"
+  r0_resection_rate: "15% vs 12% (TRIBE; higher conversion in liver-limited disease)"
+
+hard_contraindications:
+  - "ECOG PS ≥ 2"
+  - "Age ≥ 75 (relative; discuss risk-benefit)"
+  - "Prior pelvic radiation (bowel toxicity risk)"
+  - "Active bowel obstruction (bowel perforation risk from bevacizumab + irinotecan)"
+  - "Uncontrolled hypertension"
+  - "Recent major surgery within 28 days"
+  - "Active hemorrhage or thromboembolic event within 6 months"
+  - "UGT1A1 *28/*28 — use with caution; reduce irinotecan starting dose"
+
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+  - RF-CRC-MSI-H-ACTIONABILITY
+
+required_tests:
+  - "CBC with differential, CMP, LFTs, creatinine"
+  - "UPCR or 24h urine protein (bevacizumab baseline)"
+  - "Blood pressure baseline"
+  - "MSI/MMR status (if unknown — gates pembro 1L)"
+  - "UGT1A1 genotype (optional but recommended: *28/*28 → dose-reduce irinotecan)"
+
+desired_tests:
+  - "RAS (KRAS/NRAS exons 2-4) and BRAF V600E status"
+  - "Liver imaging (CT/MRI) — assess resectability intent before starting"
+  - "HER2 FISH if RAS-WT and BRAF-WT (rare; affects 2L planning)"
+
+rationale: >
+  FOLFOXIRI + bevacizumab is supported by two positive phase-3 trials.
+  TRIBE (Loupakis 2014, NEJM N=508): vs FOLFIRI+bev, improved mPFS 12.1 vs
+  9.7 mo (HR 0.75, p=0.006), mOS 29.8 vs 25.8 mo (HR 0.80, p=0.030),
+  higher R0 resection (15% vs 12%). TRIBE2 (Cremolini 2020, Lancet Oncol
+  N=679): confirms PFS2 superiority (19.2 vs 16.4 mo, HR 0.74) across
+  molecular subgroups.
+  BRAF V600E mCRC specifically: BRAF-mutated tumours are biologically
+  aggressive (mOS ~14 mo on standard doublets); triplet + bev achieves
+  higher response rates and is endorsed as preferred 1L induction by ESMO
+  2024 and NCCN 2025 for fit BRAF V600E patients (BEACON regimen is the
+  2L standard after FOLFOXIRI+bev induction).
+  Trade-off: substantially higher toxicity (grade 3-4 neutropenia ~50%,
+  diarrhea ~19%). G-CSF prophylaxis mandatory. Not for frail patients.
+
+rationale_ua: >
+  ФОЛФОКСІРІ + бевацизумаб підтриманий двома позитивними РКД.
+  TRIBE: mOS 29.8 vs 25.8 міс (HR 0.80), mPFS 12.1 vs 9.7 міс (HR 0.75).
+  TRIBE2: підтверджує перевагу у всіх молекулярних підгрупах.
+  При BRAF V600E mCRC: пухлини біологічно агресивні; потрійна схема +
+  бевацизумаб є кращим вибором 1L у fit пацієнтів (ESMO 2024, NCCN 2025).
+  Значна токсичність: нейтропенія ~50%, діарея ~19%. Обов'язково Г-КСФ.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-TRIBE-LOUPAKIS-2014
+    position: supports
+  - source_id: SRC-TRIBE2-CREMOLINI-2020
+    position: supports
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use in ECOG PS ≥ 2 — toxicity unacceptable; use doublet (FOLFOX+bev or FOLFIRI+bev)"
+  - "Do NOT use in MSI-H/dMMR patients — pembrolizumab 1L is preferred (KEYNOTE-177)"
+  - "Do NOT use without G-CSF prophylaxis — neutropenia rate ~50%"
+  - "Do NOT omit irinotecan pre-medication (atropine — cholinergic prevention)"
+  - "Do NOT add anti-EGFR (cetuximab/panitumumab) — triplet + anti-EGFR vs triplet + bev not superior per MACBETH/VOLFI; use one or the other"
+  - "Do NOT continue past disease progression — switch promptly to 2L"
+
+last_reviewed: "2026-05-03"
+notes: >
+  Reserve for fit patients (ECOG 0-1, ideally <75) with high-burden mCRC
+  where maximal response matters (BRAF V600E, conversion intent, symptomatic
+  high-volume disease). Plan de-escalation to maintenance (bev ± capecitabine)
+  after 4-6 months induction to limit cumulative neuropathy and fatigue.

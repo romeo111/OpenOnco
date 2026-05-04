@@ -1,0 +1,66 @@
+id: REG-RAMUCIRUMAB-HCC
+disease_context: DIS-HCC
+line_of_therapy: 2
+plan_track: standard
+biomarker_required: "AFP ≥ 400 ng/mL"
+
+agents:
+  - drug_id: DRG-RAMUCIRUMAB
+    brand_name: "Cyramza"
+    dose: "8 mg/kg IV over 60 minutes, day 1"
+    route: IV
+    schedule: "Day 1 q14 days (every 2 weeks)"
+    dose_modifications:
+      - trigger: "Grade 3 hypertension (uncontrolled) or Grade 3 proteinuria (UPCR ≥2)"
+        action: "Hold; restart when resolved to ≤Grade 1-2; reduce to 6 mg/kg if recurrent"
+      - trigger: "Grade 4 hypertension OR UPCR ≥3 g/24h OR arterial thromboembolic event"
+        action: "Permanently discontinue"
+      - trigger: "Grade 3-4 hemorrhage"
+        action: "Permanently discontinue"
+      - trigger: "Wound healing complications OR fistula"
+        action: "Permanently discontinue"
+
+premedication:
+  - "Diphenhydramine 25-50 mg IV (or equivalent H1 antihistamine) 30 min before each infusion — infusion reactions uncommon but possible"
+  - "Blood pressure check before each infusion"
+
+cycle_length_days: 14
+total_planned_cycles: "Continue until progression or unacceptable toxicity"
+
+monitoring:
+  - "AFP before each cycle — biomarker of eligibility AND response; decline ≥20% is associated with better prognosis"
+  - "Blood pressure: before each infusion — hypertension is main toxicity"
+  - "Urine protein (dipstick/UPCR): q4 weeks — anti-VEGFR2 class effect"
+  - "LFTs, bilirubin: q4 weeks — Child-Pugh monitoring in HCC"
+  - "CT CAP: q8 weeks for response (AFP decline often precedes CT response)"
+  - "CBC: q4 weeks"
+
+key_toxicities:
+  - toxicity: "Hypertension"
+    grade_3_4_incidence: "~13%"
+    management: "Standard antihypertensives; hold if Grade 3 uncontrolled; discontinue Grade 4"
+  - toxicity: "Hyponatremia"
+    grade_3_4_incidence: "~5%"
+    management: "Electrolyte replacement; fluid balance assessment"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~4%"
+    management: "Supportive"
+  - toxicity: "Proteinuria"
+    grade_3_4_incidence: "~3%"
+    management: "UPCR monitoring; hold if UPCR ≥2; discontinue if UPCR ≥3 g/24h"
+  - toxicity: "Infusion reactions"
+    grade_3_4_incidence: "<2%"
+    management: "Diphenhydramine premedication; slow infusion rate for mild reactions; discontinue for severe"
+
+watchpoints_ua:
+  - "УВАГА: Рамуцирумаб ТІЛЬКИ для AFP ≥400 нг/мл — FDA-схвалення є біомаркерно-вибірковим; пацієнти з AFP <400 нг/мл не мають клінічної користі (REACH-1 неselected популяція: HR 0.87, p=0.14)"
+  - "УВАГА: Контроль АТ перед кожним введенням; рамуцирумаб є анти-VEGFR2 MAb — клас-ефект гіпертензії у ~13% Grade 3-4"
+  - "УВАГА: Уникати у пацієнтів з активною кровотечею або підвищеним ризиком кровотечі (портальна гіпертензія, варикозне розширення вен)"
+  - "УВАГА: Припинити за ≥28 днів до планової великої операції — порушення загоєння ран"
+  - "УВАГА: АФП моніторинг кожні 2 тижні — рання відповідь AFP передбачає виживаність; зростання AFP при лікуванні може вказувати на прогресування"
+  - "УВАГА: Child-Pugh B/C — дані безпеки обмежені; розглядати лише при CP-A або Child-Pugh B7 з обережністю"
+  - "УВАГА: Рамуцирумаб не зареєстрований в Україні — значний бар'єр доступу"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,89 @@
+id: REG-BEP-GCT
+disease_context: DIS-TESTICULAR-GCT
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-BLEOMYCIN
+    dose: "30 IU IV push over 10 min (or 30 IU in 100 mL NS over 30 min)"
+    route: IV
+    schedule: "Days 2, 9, 16 of each 21-day cycle (once weekly per cycle)"
+    cumulative_dose_limit: "Do NOT exceed cumulative lifetime dose of 400 IU — irreversible pulmonary fibrosis risk; most protocols do not exceed 360 IU (12 doses × 30 IU)"
+    dose_modifications:
+      - trigger: "DLCO decline >25% from baseline"
+        action: "Hold bleomycin; reassess; may discontinue and continue EP alone"
+      - trigger: "Clinical bleomycin pneumonitis (dyspnea, dry cough, new infiltrates)"
+        action: "Permanently discontinue bleomycin; systemic corticosteroids"
+      - trigger: "CrCl <50 mL/min"
+        action: "Consider EP instead of BEP (bleomycin renally cleared)"
+  - drug_id: DRG-ETOPOSIDE
+    dose: "100 mg/m²/day IV over 60 min"
+    route: IV
+    schedule: "Days 1-5 of each 21-day cycle"
+    dose_modifications:
+      - trigger: "ANC <1000 or platelets <50K on day 1"
+        action: "Delay until ANC ≥1000 + platelets ≥75K; G-CSF secondary prophylaxis"
+  - drug_id: DRG-CISPLATIN
+    dose: "20 mg/m²/day IV over 60 min with aggressive hydration"
+    route: IV
+    schedule: "Days 1-5 of each 21-day cycle (total 100 mg/m² per cycle)"
+    hydration: "1L NS over 2h pre-cisplatin; 1L NS over 2h post-cisplatin; encourage oral fluid intake"
+    dose_modifications:
+      - trigger: "Creatinine clearance 30-60 mL/min"
+        action: "Reduce cisplatin to 15 mg/m²/day (days 1-5); enhanced hydration"
+      - trigger: "CrCl <30 mL/min"
+        action: "Switch to carboplatin AUC 5 (less nephrotoxic; slightly less effective — expert recommendation)"
+      - trigger: "Cisplatin-induced peripheral neuropathy Grade 3"
+        action: "Switch to EP or reduce cisplatin; consult"
+
+premedication:
+  - "Aggressive IV hydration: 500 mL-1L normal saline over 2h before each cisplatin dose"
+  - "Antiemetics: highly emetogenic protocol (5-HT3 + NK1 antagonist + dexamethasone; ondansetron + aprepitant + dexamethasone)"
+  - "G-CSF primary prophylaxis with pegfilgrastim day 7 of each cycle (especially for 4-cycle BEP or poor performance status)"
+  - "Anti-Raynaud prophylaxis: nifedipine if bleomycin-associated Raynaud's develops"
+
+cycle_length_days: 21
+total_planned_cycles: "3 cycles (good risk per IGCCC) OR 4 cycles (intermediate/poor risk per IGCCC)"
+
+monitoring:
+  - "PFTs (spirometry + DLCO): baseline; before cycle 3 and 4 (if 4-cycle protocol) — bleomycin pulmonary toxicity"
+  - "Serum tumor markers (AFP, beta-hCG, LDH): before each cycle and 1 week after last cycle — marker trajectory is primary response assessment"
+  - "CXR or CT chest: baseline; if new respiratory symptoms — bleomycin pneumonitis"
+  - "BMP, CrCl: before each cycle — cisplatin nephrotoxicity"
+  - "CBC with differential: day 1 of each cycle; CBC day 10-12 to assess nadir"
+  - "Audiometry: before cycle 1 and after completing BEP — cisplatin ototoxicity (permanent high-frequency hearing loss)"
+  - "CT CAP: after 2 cycles (interim) and after completing BEP — response assessment"
+  - "Avoidance of supplemental O₂: perioperative and post-BEP patients MUST limit FiO₂ <30% (bleomycin sensitizes to O₂ toxicity; can cause fatal pulmonary fibrosis with high FiO₂)"
+
+key_toxicities:
+  - toxicity: "Bleomycin pulmonary toxicity"
+    grade_3_4_incidence: "~3-5%"
+    management: "DLCO monitoring; discontinue if DLCO falls >25% or clinical pneumonitis; high-dose corticosteroids; AVOID high FiO₂ perioperatively — bleomycin potentiates O₂ toxicity"
+  - toxicity: "Cisplatin nephrotoxicity"
+    grade_3_4_incidence: "~10-15%"
+    management: "Aggressive hydration; avoid NSAIDs/aminoglycosides; magnesium supplementation; long-term GFR reduction common (monitor post-treatment)"
+  - toxicity: "Cisplatin ototoxicity"
+    grade_3_4_incidence: "~20-30%"
+    management: "Audiometry baseline + post-treatment; high-frequency hearing loss often permanent; amifostine not routinely used"
+  - toxicity: "Myelosuppression (neutropenia)"
+    grade_3_4_incidence: "~30-40%"
+    management: "G-CSF prophylaxis (primary pegfilgrastim day 7); febrile neutropenia protocol; delay cycle if ANC <1000 day 1"
+  - toxicity: "Raynaud's phenomenon"
+    grade_3_4_incidence: "~5-10% (bleomycin vascular effect)"
+    management: "Nifedipine; avoid cold exposure; bleomycin dose reduction"
+  - toxicity: "Nausea/vomiting"
+    grade_3_4_incidence: "~20-30% (highly emetogenic)"
+    management: "Triple antiemetic regimen; lorazepam for anticipatory nausea"
+
+watchpoints_ua:
+  - "УВАГА: BEP — ВИСОКА emetogenność (цисплатин); потрійна антиеметична терапія обов'язкова (5-HT3 + NK1 + дексаметазон)"
+  - "УВАГА: Блеоміцинова легенева токсичність — моніторинг DLCO перед кожним циклом; при падінні >25% — ВІДМІНИТИ блеоміцин та продовжити EP"
+  - "КРИТИЧНО: НІКОЛИ не давати FiO₂ >30% пацієнтам після BEP — блеоміцин поєднується з O₂ токсичністю; описані фатальні ускладнення при хірургічних процедурах у OВ-ВК"
+  - "УВАГА: Маркери (АФП, бета-хГЛ, ЛДГ) ПЕРЕД кожним циклом — зростання маркерів під час BEP може вказувати на рефрактерність або фальш-підвищення; проконсультуватись з GCT-фахівцем"
+  - "УВАГА: Активно гідратувати перед і після цисплатину (1L NaCl 0.9% до/після кожної дози); уникати НПЗЗ та аміноглікозидів — нефротоксичність"
+  - "УВАГА: Аудіограма до початку та після завершення BEP — цисплатин-індукована ототоксичність часто незворотна (висока частота)"
+  - "УВАГА: G-КСФ (пегфілграстим день 7 кожного циклу) — рекомендований первинна профілактика; GCT є потенційно курабельним захворюванням — підтримувати дозові інтенсивності"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
