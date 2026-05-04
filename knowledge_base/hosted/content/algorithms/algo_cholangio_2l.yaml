@@ -12,9 +12,9 @@ purpose: >
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
-  - IND-CHOLANGIO-ADVANCED-GEM-CIS  # placeholder default; replaced when 2L FOLFOX indication authored
+  - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
-default_indication: IND-CHOLANGIO-ADVANCED-GEM-CIS
+default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
 alternative_indication: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
 
 decision_tree:
@@ -32,32 +32,42 @@ decision_tree:
     if_false:
       next_step: 2
 
-  # Step 2 — default 2L (placeholder routing back to ABC-02 gem+cis
-  # indication; FOLFOX-2L (ABC-06) and future driver branches — IDH1
-  # ivosidenib, HER2 T-DXd, BRAF V600E dab+tram, MSI-H pembrolizumab —
-  # to be added in subsequent biomarker-expansion chunks).
+  # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
+  # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Replaces gem+cis
+  # placeholder. Future driver branches — IDH1 ivosidenib, HER2 T-DXd,
+  # BRAF V600E dab+tram, MSI-H pembrolizumab — pending authoring.
+  # Comprehensive molecular profiling MANDATORY at or before 2L start.
   - step: 2
     evaluate:
       any_of:
         - condition: "Disease progression on 1L gem+cis ± durvalumab; no actionable driver biomarker"
     if_true:
-      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+      result: IND-CHOLANGIO-2L-FOLFOX-ABC06
+      notes: >
+        2L non-driver BTC/CCA: mFOLFOX (REG-FOLFOX; oxaliplatin 85 mg/m² d1 +
+        5-FU 2400 mg/m² 46h q14d; ABC-06 Lamarca 2021 JCO; mOS 6.2 mo HR 0.69
+        p=0.031; NCCN Cat 1). Ensure comprehensive molecular profiling (FGFR2, IDH1,
+        BRAF, HER2, MSI, NTRK) BEFORE or AT this 2L decision — targeted therapy
+        available for driver subtypes with ORR 20-36% vs FOLFOX ~5%.
+        Biliary drainage required if bilirubin >3× ULN. Neuropathy screen baseline.
     if_false:
-      result: IND-CHOLANGIO-ADVANCED-GEM-CIS
+      result: IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 sources:
   - SRC-NCCN-HEPATOBILIARY
   - SRC-ESMO-BTC-2023
   - SRC-FIGHT-202
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-04"
 reviewer_signoffs: 0
 notes: >
-  STUB scaffold — created in W1.B2 chunk. FGFR2 fusion is the only
-  fully-wired 2L driver branch in this version; default falls back to
-  ABC-02 gem+cis as placeholder. Future chunks should add: (1) 2L
-  FOLFOX (ABC-06) as proper default for non-driver progression; (2)
-  IDH1-mutant ivosidenib (ClarIDHy); (3) HER2-amp T-DXd (DESTINY-PanTumor02)
-  / tucatinib-trastuzumab; (4) BRAF V600E dab+tram (ROAR); (5) MSI-H
-  pembrolizumab (KEYNOTE-158). Out-of-scope: locoregional therapies
-  (radioembolization, intraarterial chemotherapy).
+  UPDATED 2026-05-04 (Workstream AY): IND-CHOLANGIO-2L-FOLFOX-ABC06 authored and
+  wired at step 2 as proper default for non-driver 2L BTC/CCA (replaces gem+cis
+  placeholder). ABC-06 (Lamarca 2021 JCO; mOS 6.2 vs 5.3 mo HR 0.69; NCCN Cat 1).
+  Gap (1) CLOSED.
+  OOS / wiring gaps:
+  (2) IDH1-mutant ivosidenib (ClarIDHy; ~15-20% intrahepatic CCA) — not yet modeled.
+  (3) HER2-amp T-DXd (DESTINY-PanTumor02) / tucatinib-trastuzumab — not yet modeled.
+  (4) BRAF V600E dabrafenib+trametinib (ROAR) — not yet modeled.
+  (5) MSI-H pembrolizumab (KEYNOTE-158) — not yet modeled.
+  Out-of-scope: locoregional (radioembolization, TACE, SBRT) — outside KB scope.

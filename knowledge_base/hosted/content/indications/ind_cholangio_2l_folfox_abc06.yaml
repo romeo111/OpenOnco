@@ -1,0 +1,182 @@
+id: IND-CHOLANGIO-2L-FOLFOX-ABC06
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced / metastatic biliary tract cancer (BTC) / cholangiocarcinoma (intrahepatic, perihilar, distal CCA, or gallbladder carcinoma)"
+    - "Disease progression on or after 1L gemcitabine + cisplatin (± durvalumab per TOPAZ-1)"
+    - "No targetable driver mutation eligible for directed therapy (FGFR2 fusion/rearrangement, IDH1 mutation, BRAF V600E, HER2 amplification, MSI-H/dMMR, NTRK fusion — screen ALL patients for these)"
+    - "ECOG PS 0-1 (ABC-06 enrolled ECOG 0-1; ECOG 2 borderline — MDT assessment required)"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, platelets ≥100×10⁹/L, CrCl ≥50 mL/min, bilirubin ≤3× ULN (biliary obstruction common — biliary drainage required before starting if bilirubin >3× ULN)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "FGFR2 fusion/rearrangement → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB preferred (targeted therapy; ORR ~36%; NCCN Cat 1)"
+    - "IDH1 mutation → ivosidenib 500 mg/day (ClarIDHy; not yet modeled; NCCN Cat 1 for intrahepatic CCA)"
+    - "BRAF V600E → dabrafenib + trametinib (ROAR; not yet modeled; NCCN Cat 2A)"
+    - "MSI-H/dMMR → pembrolizumab (KEYNOTE-158; not yet modeled; NCCN Cat 2A)"
+    - "HER2 amplification (IHC 3+ or IHC 2+/ISH+) → T-DXd or tucatinib+trastuzumab (not yet modeled)"
+    - "Active biliary obstruction without adequate drainage — FOLFOX causes cholestasis in obstructed biliary tree; ensure biliary stent/drainage before chemotherapy"
+  demographic_constraints:
+    ecog_max: 1
+    notes: >
+      ABC-06 enrolled ECOG 0-1 strictly. ECOG 2 may be considered for fit elderly patients
+      with good biliary function; MDT discussion required. Biliary obstruction is common in
+      perihilar/distal CCA — ensure biliary drainage (ERCP or PTC stent) and bilirubin
+      normalization (<3× ULN) before starting FOLFOX. Peripheral neuropathy assessment
+      mandatory (oxaliplatin cumulative neuropathy common; pre-existing neuropathy may limit
+      oxaliplatin dose escalation).
+
+recommended_regimen: REG-FOLFOX
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Modified FOLFOX (mFOLFOX6 ABC-06 exact protocol if different from REG-FOLFOX):
+      oxaliplatin 85 mg/m² IV d1 + L-folinic acid 350 mg IV d1 + 5-FU 400 mg/m² IV bolus d1
+      + 5-FU 2400 mg/m² IV 46h continuous d1-2; q14d. BSC concurrent (analgesics,
+      antiemetics, biliary drain maintenance). Continue until progression or unacceptable
+      toxicity. ABC-06 median cycles: 6; maximum per protocol: 12.
+  - regimen_id: null
+    description: >
+      FOLFIRI (folinic acid + 5-FU + irinotecan): ORR ~10-20% in 2L CCA (small studies);
+      less evidence than FOLFOX in BTC but used when oxaliplatin contraindicated (prior
+      oxaliplatin, Grade ≥2 neuropathy). No randomized BTC-specific data vs FOLFOX.
+  - regimen_id: null
+    description: >
+      5-FU/capecitabine monotherapy (BSC-equivalent in ABC-06 control; ORR ~5%): used
+      for ECOG 2 patients or after FOLFOX failure; minimal evidence. Consider clinical trial.
+
+concurrent_therapy:
+  - "Best supportive care (BSC): mandatory per ABC-06 protocol; analgesics, antiemetics, biliary drain maintenance"
+  - "Antiemetic: ondansetron 8 mg IV + dexamethasone 8 mg IV before oxaliplatin (moderate-high emetogenicity)"
+  - "Cold sensitivity prevention (oxaliplatin): patient education — avoid cold drinks/food for 3-5 days post-infusion; warm gloves in cold weather (oxaliplatin cold-triggered neuropathy)"
+  - "5-FU rate monitoring: if infusing via pump at home, ensure pump patency and patient education on signs of pump failure/extravasation"
+
+followed_by:
+  - "Continue FOLFOX until disease progression or Grade ≥3 unacceptable toxicity"
+  - "Oxaliplatin cumulative neuropathy: consider dose reduction or oxaliplatin holiday after cycle 6 if Grade ≥2 neuropathy; continue 5-FU + LV (FLOX-stop modification)"
+  - "After FOLFOX failure: driver mutation check (if not done or new molecular testing available) — IDH1, HER2, BRAF; clinical trial enrollment; BSC"
+  - "If not yet screened for FGFR2/IDH1/BRAF/HER2: MANDATORY molecular profiling at or before 2L start"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~5% (ABC-06; Lamarca 2021 JCO; FOLFOX + BSC)"
+  disease_control_rate: "~54% (ABC-06)"
+  median_os_months: "6.2 vs 5.3 months (ABC-06 FOLFOX+BSC vs BSC; HR 0.69; p=0.031)"
+  median_pfs_months: "4.0 vs 1.4 months (ABC-06; HR 0.56)"
+  notes: >
+    ABC-06 (Lamarca 2021, JCO; n=162; 1:1 randomized): modified FOLFOX + BSC vs BSC alone
+    in 2L advanced BTC (post-gem+cis). Median OS 6.2 vs 5.3 months (HR 0.69; 95% CI 0.50-0.97;
+    p=0.031). mPFS 4.0 vs 1.4 months (HR 0.56). ORR 5% vs 1%; DCR 54% vs 39%.
+    Benefit most pronounced in cholangiocarcinoma subgroup vs gallbladder carcinoma.
+    Key limitation: modest absolute OS benefit (0.9 months); however, statistically
+    significant and clinically meaningful in a setting with no alternatives for non-driver CCA.
+    Enrollment: ECOG 0-1; 90-day landmark analysis — patients who survived ≥90 days had
+    mOS 11.5 vs 9.6 months (suggesting FOLFOX benefit in those with adequate performance status).
+    NCCN Hepatobiliary 2025 Category 1: mFOLFOX for 2L advanced BTC post-gem+cis.
+    ESMO BTC 2023: FOLFOX recommended as 2L standard for non-driver BTC/CCA.
+    Note: CCA patients should have comprehensive molecular profiling (FGFR2, IDH1/2, BRAF,
+    HER2, MSI, NTRK, RET, KRAS) BEFORE or at 2L start — driver-targeted options available
+    for specific molecular subtypes with superior ORR (~20-36% vs ~5% FOLFOX).
+
+hard_contraindications:
+  - "Actionable driver mutation available (FGFR2 fusion → pemigatinib; IDH1 mut → ivosidenib; BRAF V600E → dab+tram) — targeted therapy preferred over FOLFOX chemotherapy"
+  - "Grade ≥2 peripheral neuropathy at baseline (oxaliplatin contraindicated; use FOLFIRI or 5-FU/LV instead)"
+  - "Active biliary obstruction without drainage (bilirubin >3× ULN — FOLFOX metabolized hepatically; toxicity increased)"
+  - "Uncontrolled active infection or sepsis (biliary infections common in CCA; treat first)"
+  - "ECOG PS ≥3 (performance status precludes FOLFOX benefit; BSC only)"
+  - "DPD deficiency (UGT1A1 or DPYD variant): 5-FU life-threatening toxicity; test or omit 5-FU bolus"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2 fusion/rearrangement confirmed → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB (ORR 36%; NCCN Cat 1)"
+  - condition: "IDH1 mutation confirmed (intrahepatic CCA) → ivosidenib 500 mg/day (ClarIDHy; not yet modeled)"
+  - condition: "Grade ≥2 neuropathy at baseline → FOLFIRI or 5-FU/LV; omit oxaliplatin"
+  - condition: "Bilirubin >3× ULN → biliary drainage first; delay FOLFOX until <3× ULN"
+  - condition: "ECOG 2 → MDT discussion; consider dose-reduced FOLFOX or 5-FU/LV alone"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Bilirubin: must be <3× ULN before FOLFOX; biliary stent if needed"
+  - "Peripheral neuropathy assessment (NCI CTCAE): baseline; oxaliplatin contraindicated in Grade ≥2"
+  - "CT chest/abdomen/pelvis (+ MRI liver): baseline staging + response assessment q6-8 weeks (q3 cycles)"
+  - "DPYD genotyping (or UGT1A1): 5-FU life-threatening toxicity in DPD-deficient patients; test if available"
+  - "Comprehensive molecular profiling (NGS): FGFR2 fusion (RNA-seq), IDH1/2 (hotspot), BRAF V600E, HER2 IHC/ISH, MSI/MMR IHC, NTRK fusion (pan-TRK IHC ± FISH) — MANDATORY at 2L if not done at 1L"
+
+desired_tests:
+  - "CA 19-9 baseline (and q6-8 weeks): tumor marker for response monitoring in CCA (imperfect but useful trend)"
+  - "CEA baseline: additional marker for combined CA 19-9/CEA trend monitoring"
+  - "ERCP / PTC stent assessment: biliary drainage adequacy before starting FOLFOX"
+
+rationale: >
+  FOLFOX (mFOLFOX6) is the only Phase 3-validated 2L chemotherapy regimen for advanced
+  biliary tract cancer (BTC/CCA) in the general population without actionable driver mutations.
+
+  ABC-06 (Lamarca 2021, JCO; n=162): first randomized Phase 3 study demonstrating
+  survival benefit from 2L chemotherapy in BTC. Modified FOLFOX (oxaliplatin 85 mg/m²
+  + 5-FU 2400 mg/m² 46h + folinic acid 350 mg d1 q14d) + BSC vs BSC alone.
+  Primary endpoint: OS HR 0.69 (p=0.031); mOS 6.2 vs 5.3 months.
+  Established FOLFOX as the 2L standard of care for non-driver BTC/CCA.
+
+  Prior to ABC-06, 2L BTC had no standard; patients received BSC or off-label chemotherapy
+  (FOLFIRI, capecitabine). ABC-06 changed practice (NCCN Cat 1, ESMO 2023).
+
+  Targeted therapy context:
+  - FGFR2 fusion (~10-20% intrahepatic CCA): pemigatinib/futibatinib ORR ~36% >> FOLFOX ~5%
+  - IDH1 mutation (~15-20% intrahepatic CCA): ivosidenib OS HR 0.79 (ClarIDHy)
+  - These subtypes should NOT receive FOLFOX as preferred 2L — targeted > chemotherapy.
+  - Non-driver / pan-negative CCA: FOLFOX is Cat 1 standard.
+
+  Comprehensive molecular profiling is therefore mandatory — a 5% ORR with FOLFOX
+  vs 36% ORR with pemigatinib (FGFR2 fusion) makes molecular selection treatment-defining.
+
+  Ukraine:
+  - Oxaliplatin, 5-FU, folinic acid: all registered and accessible; FOLFOX is an
+    established regimen in UA oncology. mFOLFOX6 is familiar to oncology infusion units.
+  - Pemigatinib: registered in Ukraine (off-label); expensive; FGFR2 testing required.
+  - ivosidenib: NOT registered in Ukraine; named-patient import only.
+
+rationale_ua: >
+  FOLFOX 2L для холангіокарциноми (BTC): ABC-06 (Lamarca 2021 JCO; n=162): mOS
+  6.2 vs 5.3 міс (HR 0.69; p=0.031) — перша РКД, що підтвердила користь 2L ХТ
+  при BTC після гем+цис. NCCN кат.1. Молекулярний скринінг ОБОВ'ЯЗКОВИЙ (FGFR2,
+  IDH1, BRAF, HER2, MSI, NTRK) ДО 2L — ORR при FGFR2 ~36% vs FOLFOX ~5%.
+  Білірубін <3× ВМН до початку; стент якщо потрібно. Нейропатія: вихідна оцінка;
+  оксаліплатин протипоказаний при Grade ≥2. В Україні: оксаліплатин + 5-ФУ +
+  FA — зареєстровані та доступні.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary 2025 Category 1: modified FOLFOX (mFOLFOX) as 2L standard
+      for advanced BTC/CCA after gem+cis failure, in the absence of actionable driver
+      mutations (FGFR2, IDH1, BRAF, HER2, MSI).
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO BTC 2023: ABC-06 established mFOLFOX as 2L standard for non-driver BTC;
+      molecular profiling mandatory for all patients to identify targeted therapy candidates.
+
+do_not_do:
+  - "Починати FOLFOX без молекулярного профілювання: FGFR2/IDH1/BRAF/HER2/MSI/NTRK скрин обов'язковий — ORR при цільовій терапії 20-36% vs 5% FOLFOX"
+  - "При білірубіні >3× ВМН: дренування жовчних шляхів спочатку (стент ERCP або ПТД); лише потім FOLFOX — гепатотоксичність при обструкції значно вища"
+  - "Нейропатія ≥2 ступеня до лікування: оксаліплатин абсолютно протипоказаний; замінити на FOLFIRI або 5-ФУ/ФА"
+  - "Холодне питво/їжа 3-5 днів після оксаліплатину: холод-індукована нейропатія — рукавички, тепла їжа; попередити пацієнта"
+  - "FGFR2 злиття підтверджено: пемігатиніб переважає FOLFOX (ORR 36% vs 5%); не давати FOLFOX як основне лікування"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
