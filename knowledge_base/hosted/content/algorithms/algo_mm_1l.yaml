@@ -7,6 +7,7 @@ purpose: 'Select default + alternative Indication for first-line multiple myelom
 output_indications:
 - IND-MM-1L-VRD
 - IND-MM-1L-DVRD
+- IND-MM-ELDERLY-FRAIL-VRD-LIGHT
 default_indication: IND-MM-1L-VRD
 alternative_indication: IND-MM-1L-DVRD
 decision_tree:
@@ -27,6 +28,27 @@ decision_tree:
     - red_flag: RF-MM-FRAILTY-AGE
   if_true:
     result: IND-MM-1L-VRD
+    notes: >
+      Frailty or age ≥75 detected: VRD is default. For IMWG frailty score ≥2,
+      VRD-lite (weekly bortezomib + reduced lenalidomide) substantially reduces
+      toxicity — see IND-MM-ELDERLY-FRAIL-VRD-LIGHT in alternatives.
+    alternatives:
+      - indication_id: IND-MM-ELDERLY-FRAIL-VRD-LIGHT
+        nccn_category: "1"
+        criteria: >
+          Age ≥75 AND/OR IMWG frailty score ≥2 (Palumbo 2015 Lancet Oncol);
+          transplant-ineligible (no ASCT); standard full-dose VRD anticipated
+          to cause excessive toxicity (Grade ≥3 PN, cytopenias). CI-BORTEZOMIB-
+          SEVERE-NEUROPATHY and CI-LENALIDOMIDE-PREGNANCY absent.
+        note: >
+          VRD-lite for elderly/frail MM 1L (O'Donnell 2018 BJH; Gay 2017 Lancet
+          Oncol; NCCN Cat 1): bortezomib 1.3 mg/m² SC d1,8,15,22 (weekly) +
+          lenalidomide 15 mg PO d1-21 q35d + dexamethasone 20 mg PO weekly.
+          ORR ~86%; mPFS ~35 mo; Grade ≥3 PN ~5% (vs ~20% standard biweekly VRD).
+          Alternative for very frail (frailty score ≥3): D-Rd (MAIA; NCCN Cat 1)
+          daratumumab + lenalidomide + dex; mPFS NR vs 34.4 mo; 5-yr OS 66% vs 53%.
+          VTE prophylaxis mandatory (ASA 81-100 mg or LMWH/DOAC); bisphosphonate
+          (zoledronic acid or denosumab) + Ca/Vit D throughout.
   if_false:
     next_step: 3
 - step: 3
@@ -45,5 +67,5 @@ decision_tree:
 sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
-last_reviewed: '2026-04-27'
+last_reviewed: '2026-05-04'
 notes: "Cytogenetic risk + aggressive biology are the primary regimen determinants; frailty is recorded but doesn't switch regimen (handled at Regimen dose-modification layer). Transplant eligibility is a downstream consideration that affects total cycle count and post- induction pathway (ASCT + consolidation + maintenance vs continuous induction-then-maintenance), but not the induction regimen choice. Both Indications carry CI-LENALIDOMIDE-PREGNANCY and CI-BORTEZOMIB-SEVERE-NEUROPATHY; D-VRd additionally carries CI-HBV-NO-PROPHYLAXIS. RF-MM-RENAL-DYSFUNCTION (investigate) triggers dose adjustment but does not shift regimen choice. RF-MM-INFECTION-SCREENING (hold) operates via parallel SUP-HBV-PROPHYLAXIS, not a decision-tree branch.\nEtiology rails (parallel to indication selection):\n- HBV (HBsAg+ OR anti-HBc+) — entecavir 0.5 mg PO daily before first\n  daratumumab or isatuximab dose, continued through induction +\n  ≥12 months post-last-anti-CD38. Anti-CD38 mAbs have documented HBV\n  reactivation risk (FDA labels; NCCN MM 2.2025). For VRd-only (no\n  anti-CD38), HBV reactivation risk is lower but entecavir still\n  recommended in HBsAg+ on prolonged steroid pulse. CI-HBV-NO-\n  PROPHYLAXIS (extended 2026-04-27 to cover daratumumab) is a hard\n  contraindication on D-VRd, blocking plan finalization until\n  SUP-HBV-PROPHYLAXIS is acknowledged.\n\n- HCV — Less common in MM cohort; treat MM first and coordinate DAA\n  timing with hepatologist. Avoid sofosbuvir + amiodarone interaction.\n\nHIV+ MM is rare (older population, typically post-PCP / post-PJP era); manage per ART-aware MM consensus (continue ART, prefer integrase- inhibitor backbone, no empiric VRd dose-reduction). BIO-HBV-STATUS, BIO-HCV-STATUS, BIO-HIV-STATUS missing — flagged for future round.\n"

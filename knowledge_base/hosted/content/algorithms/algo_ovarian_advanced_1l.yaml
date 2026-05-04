@@ -11,6 +11,7 @@ output_indications:
   - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
   - IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
   - IND-OVARIAN-MAINTENANCE-OLAPARIB
+  - IND-OVARIAN-MAINT-BEV
 
 default_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-OLAP
 alternative_indication: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
@@ -83,6 +84,31 @@ decision_tree:
         - condition: "HRD-negative or unknown"
     if_true:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
+      notes: >
+        HRD-negative or unknown: carbo+pacli without PARPi maintenance is default.
+        Bevacizumab maintenance (GOG-218 / ICON7; Cat 1) is the VEGF-targeted option
+        for high-risk stage III/IV — preferred when suboptimal debulking or stage IV.
+        See IND-OVARIAN-MAINT-BEV in alternatives.
+      alternatives:
+        - indication_id: IND-OVARIAN-MAINT-BEV
+          nccn_category: "1"
+          criteria: >
+            FIGO III-IV high-grade serous ovarian / fallopian tube / primary peritoneal
+            carcinoma; HRD-negative OR BRCA-WT (BRCA+ → IND-OVARIAN-MAINTENANCE-OLAPARIB
+            at step 3; HRD+ non-BRCA → consider bev + olaparib PAOLA-1 at step 4);
+            bevacizumab introduced concurrent with carbo+pacli induction (cycle 2 onward
+            — not cycle 1 per wound-healing concern); ECOG ≤2; no active GI fistula,
+            GI perforation history, or uncontrolled HTN. Preferred when suboptimal
+            cytoreduction (≥1 cm residual) or stage IV.
+          note: >
+            Bevacizumab maintenance × 15-22 months total (GOG-218; Burger 2011 NEJM;
+            ICON7; Perren 2011 NEJM; NCCN Cat 1): mPFS 14.1 vs 10.3 mo (HR 0.72)
+            overall; high-risk subgroup (ICON7): mPFS 18.1 vs 14.5 mo; mOS 39.7 vs
+            30.2 mo. Bevacizumab 15 mg/kg IV q3w maintenance after induction.
+            Discontinue ≥4 weeks before major surgery. Hold/discontinue: GI perforation,
+            fistula, hemorrhage, hypertensive crisis, proteinuria >3.5 g/24h.
+            PAOLA-1 extension (Ray-Coquard 2019 NEJM): bev + olaparib for HRD+ non-BRCA
+            — mPFS 37.2 vs 17.7 mo. Ukraine: bev accessible; NSZU coverage varies.
     if_false:
       result: IND-OVARIAN-ADVANCED-1L-CARBO-PACLI-HRD-NEG
     notes: "Default fall-through — HRD-negative cohort routes to carbo+pacli without PARPi maintenance."
@@ -91,7 +117,7 @@ sources:
   - SRC-NCCN-OVARIAN-2025
   - SRC-ESMO-OVARIAN-2024
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-04"
 notes: >
   Scaffold algorithm focused on HRD-driven maintenance choice.
   Out-of-scope this commit: NACT vs primary debulking surgery branch

@@ -15,6 +15,7 @@ output_indications:
   - IND-GCT-SALVAGE-2L-TIP
   - IND-GCT-SALVAGE-2L-HDCT-ASCT
   - IND-GCT-SALVAGE-3L
+  - IND-GCT-SALVAGE-RPLND
 
 default_indication: IND-GCT-SALVAGE-2L-TIP
 alternative_indication: IND-GCT-SALVAGE-2L-HDCT-ASCT
@@ -77,6 +78,29 @@ decision_tree:
         Kondagunta 2005: CR 63% (durable NED 52%); favorable group CR 76%.
         NCCN Category 1. G-CSF + mesna mandatory.
         MDT at GCT specialty center recommended for all salvage decisions.
+        Post-TIP completion: if residual mass ≥1 cm + normalized markers →
+        PC-RPLND (IND-GCT-SALVAGE-RPLND; Cat 1) — see alternatives.
+      alternatives:
+        - indication_id: IND-GCT-SALVAGE-RPLND
+          nccn_category: "1"
+          criteria: >
+            Non-seminomatous GCT (NSGCT); post-chemotherapy residual mass ≥1 cm on CT;
+            AFP + beta-hCG + LDH normalized (or declining to nadir) after TIP or
+            HDCT+ASCT completion; ECOG PS 0-1 (surgical fitness for major retroperitoneal
+            surgery); pulmonary function adequate (prior bleomycin: DLCO checked);
+            GCT referral center with RPLND expertise accessible.
+            Seminoma: use FDG-PET to differentiate — PET-avid residual → RPLND/resection;
+            PET-negative residual <3 cm → observation preferred.
+            Rising AFP/hCG (active disease): NOT RPLND — salvage chemotherapy first.
+          note: >
+            Post-chemotherapy RPLND (PC-RPLND; NCCN GCT Cat 1; Indiana University /
+            MSKCC series): residual NSGCT masses contain teratoma ~40% (no response to
+            chemo; resection curative), viable GCT ~15% (→ 2 more BEP cycles post-RPLND),
+            or necrosis ~45% (no further treatment). RPLND is the only way to distinguish
+            these histologies and prevent teratoma malignant transformation (growing
+            teratoma syndrome). Complete resection achieved in >95% at experienced centers.
+            Ukraine: referral to specialized urologic oncology center (consider Poland /
+            Germany / Austria for complex cases).
 
   # Step 4 — ASCT candidacy gate for poor Indiana / incomplete responders.
   - step: 4
@@ -133,9 +157,14 @@ notes: >
     and IND-GCT-SALVAGE-3L itself. See ALGO-GCT-SALVAGE-3L (to be authored)
     for full 3L routing.
 
+  UPDATED 2026-05-04 (Workstream FO): IND-GCT-SALVAGE-RPLND added to
+  output_indications; wired as Cat 1 alternative at step 3 if_false (good/
+  intermediate Indiana score TIP track). Post-TIP residual mass ≥1 cm +
+  normalized markers → PC-RPLND (NSGCT; Indiana/MSKCC series; NCCN Cat 1).
+  Histology at RPLND drives post-op decision: teratoma → surveillance;
+  viable GCT → 2 more BEP; necrosis → observation. Gap CLOSED.
+
   REMAINING GAPS:
-  - Residual mass RPLND decision: IND-GCT-SALVAGE-RPLND not yet authored
-    (post-chemotherapy RPLND is a surgical indication; requires MDT input)
   - Seminoma late relapse (>2 years): carboplatin-based salvage has different
     considerations; not separately modeled
   - ALGO-GCT-SALVAGE-3L: CLOSED 2026-05-04 (Workstream DD): full 3L routing
