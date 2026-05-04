@@ -1,0 +1,123 @@
+id: REG-PENTOSTATIN-HCL
+name: "Pentostatin (DCF) for hairy cell leukemia (1L or 2L cross-over)"
+name_ua: "Пентостатин (ДКФ) для волосистоклітинного лейкозу (1Л або 2Л переключення)"
+alternate_names:
+  - "Pentostatin mono HCL"
+  - "Deoxycoformycin (DCF)"
+  - "Nipent"
+
+disease_context: DIS-HCL
+line_of_therapy: 2
+plan_track: aggressive
+
+components:
+  - drug_id: DRUG-PENTOSTATIN
+    dose: "4 mg/m² IV over 20-30 minutes"
+    schedule: "Every 2 weeks (q14d); continue until best response (typically 6-12 doses)"
+    route: IV
+    administration_notes: >
+      IV over 20-30 minutes in 25-50 mL NS or D5W. Vigorous IV hydration mandatory
+      (500-1000 mL IV normal saline before and after each dose) — pentostatin is
+      renally excreted and nephrotoxic at inadequate hydration.
+      Confirm CrCl ≥50 mL/min before each dose; see dose adjustments.
+      CBC before each infusion; do not administer if ANC <500/μL or PLT <50K without
+      growth factor support.
+      Response assessed by bone marrow biopsy after 6-8 doses; continue to CR or plateau.
+
+cycle_length_days: 14
+total_cycles: "Every 2 weeks × 6-12 doses (typically 3-6 months); stop at confirmed complete remission on BM biopsy; continue to 8-12 doses if partial response"
+
+toxicity_profile: moderate
+
+premedication:
+  - "IV hydration: 500-1000 mL NS before and after each pentostatin infusion (nephrotoxicity prevention)"
+  - "Antiemetic: mild emetogenicity — lorazepam or prochlorperazine PRN"
+  - "PJP prophylaxis (mandatory from day 1): TMP-SMX 160/800 mg 3×/week × 12 months post-treatment"
+  - "Herpes prophylaxis: acyclovir 400 mg BID or valacyclovir 500 mg daily × 12 months post-treatment"
+  - "HBV screen before first dose: HBsAg + anti-HBc; entecavir prophylaxis if positive"
+
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - "Prolonged immunosuppression monitoring: CD4 count at 3 months and 12 months post-treatment (pentostatin causes profound lymphodepletion)"
+  - "Live vaccine contraindicated during treatment and for 12 months after"
+  - "Respiratory virus screening in febrile neutropenic episodes (CMV, RSV, influenza)"
+
+dose_adjustments:
+  - condition: "CrCl 40-60 mL/min"
+    modification: "Reduce dose to 2-3 mg/m²; monitor creatinine closely"
+    rationale: "Pentostatin primarily renally excreted; renal impairment causes accumulation"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "CrCl <40 mL/min"
+    modification: "Hold; do not administer; consider alternative (cladribine if CrCl ≥30)"
+    rationale: "Severe nephrotoxicity risk; pentostatin contraindicated in severe renal impairment"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "ANC <500/μL or PLT <50×10⁹/L before scheduled dose"
+    modification: "Hold; reassess in 1-2 weeks; use G-CSF if prolonged nadir"
+    rationale: "Severe myelosuppression; hold until recovery before proceeding"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Grade ≥2 neurotoxicity (confusion, lethargy, somnolence)"
+    modification: "Hold; do not resume; pentostatin CNS toxicity can be irreversible"
+    rationale: "CNS toxicity is dose-limiting at higher doses; discontinue at G≥2 neuro"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Pentostatin (Nipent) availability in Ukraine is limited — not consistently
+    NSZU-reimbursed as of 2026. Cladribine (Litak/Biodribin) is the preferred
+    NSZU-accessible purine analog. Pentostatin may be available via named-patient
+    import or international pharmacy. Verify current UA availability before planning.
+    Cladribine retreatment (IND-HCL-2L-CLADRIBINE-RETREATMENT) is the recommended
+    fallback when pentostatin is inaccessible.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Негайно зверніться до клініки — нейтропенія / інфекція"
+    urgency: go_to_emergency
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровоточивість з ясен, синці, петехії"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сплутаність свідомості, сонливість, порушення координації"
+    action_ua: "Негайно зверніться до клініки — нейротоксичність пентостатину (може бути незворотною)"
+    urgency: go_to_emergency
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — ниркова токсичність (гідратація обов'язкова)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  Pentostatin (2'-deoxycoformycin; DCF): ADA inhibitor; causes profound and
+  prolonged lymphopenia. 4 mg/m² IV q2w × 6-12 doses. Key safety concerns:
+  nephrotoxicity (hydration mandatory), CNS toxicity (hold at G≥2 neuro),
+  prolonged immunosuppression (12-month PJP + antiviral prophylaxis, same as cladribine).
+  ORR ~95%; CR ~80-92% in HCL. Equivalent to cladribine but q2w schedule allows
+  dose interruption for toxicity (vs cladribine 7-day continuous infusion).
+  2L cross-over: when 1L was cladribine AND <1y from 1L (early relapse),
+  pentostatin switch preferred over cladribine retreatment (different mechanism,
+  allows shorter interval). NCCN Cat 1.
+  Ukraine: cladribine preferred (NSZU-funded); pentostatin availability limited.
+  STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Пентостатин (ДКФ): інгібітор аденозиндезамінази; 4 мг/м² IV q2w × 6-12 доз.
+  ORR ~95%; ПВ ~80-92% при ВКЛ. Обов'язкова гідратація (нефротоксичність).
+  Нейротоксичність — припинити при G≥2. 12 місяців профілактики ПЦП + герпес.
+  В Україні: кладрибін переважає (НСЗУ-доступний); пентостатин обмежено доступний.
+  STUB — очікує підпис Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

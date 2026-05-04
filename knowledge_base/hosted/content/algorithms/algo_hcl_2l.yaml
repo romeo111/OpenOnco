@@ -25,6 +25,7 @@ output_indications:
   - IND-HCL-2L-VEMURAFENIB-RITUXIMAB
   - IND-HCL-2L-VEMURAFENIB
   - IND-HCL-2L-CLADRIBINE-RETREATMENT
+  - IND-HCL-2L-PENTOSTATIN-SWITCH
 
 default_indication: IND-HCL-2L-VEMURAFENIB-RITUXIMAB
 alternative_indication: IND-HCL-2L-CLADRIBINE-RETREATMENT
@@ -75,16 +76,44 @@ decision_tree:
         - red_flag: RF-HCL-ORGAN-DYSFUNCTION
         - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-HCL-2L-CLADRIBINE-RETREATMENT
+      next_step: 31
       notes: >
         BRAF-V600E negative (HCL-variant) OR vemurafenib inaccessible/contraindicated
-        OR late relapse (>1y from 1L): cladribine retreatment (REG-CLADRIBINE-SINGLE;
-        same 7-day protocol as 1L). ORR ~80-92% (Else 2005 Blood; Saven 1992).
-        NCCN Cat 1. PJP prophylaxis (TMP-SMX) + antiviral (valacyclovir) MANDATORY
-        from day 1 through 12 months post-treatment. Ukraine: cladribine registered
-        + NSZU-funded; primary accessible 2L option for most UA HCL patients.
+        OR late relapse (>1y from 1L) → step 31 (purine cross-over gate): early
+        relapse / cladribine-refractory → pentostatin switch; late relapse (>1y) →
+        cladribine retreatment.
     if_false:
       next_step: 4
+
+  # Step 31 — Purine analog cross-over gate: pentostatin vs cladribine retreatment.
+  # Key clinical question: was 1L cladribine AND is it early relapse (<1y)?
+  # Early relapse (<1y from last cladribine dose) OR cladribine-refractory: pentostatin
+  # switch preferred — different mechanism allows response without sufficient purine interval.
+  # Late relapse (>1y from 1L): cladribine retreatment highly effective (ORR ~80-92%).
+  # NCCN HCL 2025: both pentostatin and cladribine are Category 1 for 2L; cross-over endorsed.
+  # Ukraine: cladribine (Litak/Biodribin) NSZU-funded; pentostatin access limited — if
+  # pentostatin inaccessible even for early relapse, cladribine retreatment is acceptable
+  # fallback (document shorter interval; monitor response carefully).
+  - step: 31
+    evaluate:
+      any_of:
+        - condition: "1L was cladribine AND relapse within 12 months of last cladribine dose (early relapse)"
+        - condition: "Cladribine-refractory: failure to achieve complete remission after 1L cladribine × 1-2 courses"
+    if_true:
+      result: IND-HCL-2L-PENTOSTATIN-SWITCH
+      notes: >
+        Early relapse (<1y from cladribine 1L) or cladribine-refractory: pentostatin
+        switch preferred (REG-PENTOSTATIN-HCL; 4 mg/m² IV q2w × 6-12 doses; ORR ~95%;
+        CR ~80-92%; NCCN Cat 1). Ukraine: if pentostatin inaccessible (not NSZU-funded)
+        → cladribine retreatment acceptable with documented shorter interval + close
+        monitoring; or vemurafenib+rituximab for BRAF V600E+ (IND-HCL-2L-VEMURAFENIB-RITUXIMAB).
+    if_false:
+      result: IND-HCL-2L-CLADRIBINE-RETREATMENT
+      notes: >
+        Late relapse (>1y from 1L cladribine) OR 1L was pentostatin: cladribine retreatment
+        (REG-CLADRIBINE-SINGLE; same 7-day protocol; ORR ~80-92%; NCCN Cat 1).
+        Ukraine: NSZU-funded + widely accessible. PJP + antiviral prophylaxis mandatory.
+    notes: "Step 31 added 2026-05-04 (Workstream CW): purine cross-over gate — early relapse (<1y) / cladribine-refractory → pentostatin (IND-HCL-2L-PENTOSTATIN-SWITCH); late relapse (>1y) → cladribine retreatment. Gap (2) CLOSED."
 
   # Step 4 — default fall-through: BRAF-V600E+ classic HCL →
   # vemurafenib + rituximab combination (preferred NCCN Cat 1).
@@ -115,16 +144,19 @@ notes: >
   and Tiacci 2021 scheduling details. IND-HCL-2L-VEMURAFENIB (monotherapy) retained as
   alternative when rituximab inaccessible. Gap (4) CLOSED.
 
+  UPDATED 2026-05-04 (Workstream CW): IND-HCL-2L-PENTOSTATIN-SWITCH authored and
+  wired at step 31 (early relapse <1y / cladribine-refractory → pentostatin cross-over;
+  REG-PENTOSTATIN-HCL authored; 4 mg/m² IV q2w × 6-12 doses; ORR ~95%; NCCN Cat 1).
+  Step 3 if_true now routes to step 31 instead of direct cladribine result. Gap (2) CLOSED.
+  ROUTING SUMMARY (full):
+  (1) frail/organ dysfunction → vemurafenib placeholder (BSC/R-mono MDT);
+  (2) BRAF V600E+ classic HCL → IND-HCL-2L-VEMURAFENIB-RITUXIMAB (Cat 1 preferred);
+  (3→31) BRAF V600E-neg / vemurafenib-inaccessible / late relapse → step 31 (purine cross-over);
+  (31) early relapse <1y / cladribine-refractory → pentostatin switch (IND-HCL-2L-PENTOSTATIN-SWITCH);
+  (31) late relapse >1y → cladribine retreatment (IND-HCL-2L-CLADRIBINE-RETREATMENT).
   OOS / wiring gaps:
-  (2) IND-HCL-2L-PENTOSTATIN-SWITCH — not modeled.
-  (3) Moxetumomab pasudotox (anti-CD22 immunotoxin, FDA 2018) for
-  ≥3L HCL — withdrawn from market 2023 (sponsor decision), not
-  modeled.
-  (5) Allogeneic SCT for chemo-refractory young HCL — referral,
-  outside KB.
-  (6) Splenectomy historic 2L for symptomatic hypersplenism in
-  chemo-ineligible — surgical referral, outside KB.
-  (7) HCL-variant (BRAF-V600E-WT, IGHV4-34+, more aggressive)
-  responds poorly to purine analogs; preferred 2L is rituximab +
-  bendamustine OR rituximab + cladribine — not modeled.
+  (3) Moxetumomab pasudotox — withdrawn from market 2023 (sponsor decision), not modeled.
+  (5) Allogeneic SCT for chemo-refractory young HCL — referral, outside KB.
+  (6) Splenectomy for symptomatic hypersplenism — surgical referral, outside KB.
+  (7) HCL-variant (BRAF-V600E-WT, IGHV4-34+): rituximab + bendamustine OR R + cladribine — not modeled.
   (8) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.

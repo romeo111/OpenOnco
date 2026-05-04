@@ -1,0 +1,179 @@
+id: IND-HCL-2L-PENTOSTATIN-SWITCH
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-HCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory hairy cell leukemia (HCL) after 1L cladribine"
+    - "Early relapse: progression within 12 months of last cladribine dose (interval too short for cladribine retreatment efficacy)"
+    - "OR cladribine-refractory: failure to achieve complete remission after 1L cladribine × 1-2 courses"
+    - "OR patient/institutional preference for q2w IV schedule over cladribine 7-day continuous infusion"
+    - "ECOG PS 0-3"
+    - "CrCl ≥40 mL/min (pentostatin renally excreted; nephrotoxic at lower CrCl)"
+    - "No active uncontrolled infection"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      Pentostatin and cladribine are NCCN Category 1 first-line equivalents for HCL.
+      As 2L cross-over after cladribine, pentostatin is the preferred option for
+      EARLY relapse (<1y from 1L cladribine) or cladribine-refractory disease
+      because: (1) different mechanism allows therapeutic response without full
+      purine analog interval; (2) q2w schedule permits closer monitoring and
+      dose interruption for toxicity vs cladribine 7-day CI. For LATE relapse
+      (>1y from 1L), cladribine retreatment is equally valid and often preferred
+      in Ukraine (NSZU-funded; IND-HCL-2L-CLADRIBINE-RETREATMENT).
+
+recommended_regimen: REG-PENTOSTATIN-HCL
+concurrent_therapy:
+  - "Mandatory PJP prophylaxis (TMP-SMX 160/800 mg 3×/week) from day 1 through 12 months post-treatment"
+  - "Mandatory herpes prophylaxis (acyclovir 400 mg BID or valacyclovir 500 mg daily) × 12 months post-treatment"
+  - "IV hydration 500-1000 mL NS before and after each infusion (nephrotoxicity prevention)"
+  - "CBC + creatinine before each dose (q2w monitoring)"
+
+followed_by:
+  - "Bone marrow biopsy after 6-8 doses: assess for complete remission (uMRD preferred); continue to 12 doses if partial response"
+  - "Complete remission confirmed: stop pentostatin; surveillance CBC q3 months × 2 years, then q6 months"
+  - "Partial response plateau after 12 doses: MDT discussion — continue rituximab consolidation (off-label) vs BRAF-targeted therapy"
+  - "Refractory/relapse after pentostatin: BRAF-targeted therapy (IND-HCL-2L-VEMURAFENIB-RITUXIMAB for BRAF V600E+ classic HCL)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~95% (pentostatin mono HCL; equivalent to cladribine 1L; ORR ~95% across multiple single-arm series)"
+  complete_response: "~80-92% (Grever 2003 Blood; Else 2005 Blood; pentostatin mono HCL trials)"
+  progression_free_survival: "Median PFS ~8-10 years in CR (equivalent to cladribine CR; long-term durable remissions in most HCL patients)"
+  notes: >
+    PRIMARY EVIDENCE: Multiple single-arm trials and case series (pre-RCT era):
+    - Grever et al. 2003 Blood: pentostatin for HCL CR ~80%; durable remissions ~10 years
+    - Else 2005 Blood: cladribine vs pentostatin cross-over efficacy comparison — equivalent outcomes
+    - NCCN Hairy Cell Leukemia 2025 (contained within NCCN B-cell 2025): both cladribine and
+      pentostatin are Category 1 equivalents for HCL; no head-to-head RCT exists; choice is
+      guided by patient factors, renal function, and 1L agent used
+    - Cross-over efficacy: after cladribine 1L, pentostatin 2L achieves ORR ~95% for classic HCL
+    - For early relapse (<1y) or refractory: pentostatin switch is preferred over cladribine
+      retreatment because sufficient interval from prior cladribine may not exist (typical
+      cladribine retreatment guidance: >1y from last dose)
+
+hard_contraindications:
+  - "CrCl <30 mL/min — pentostatin is renally excreted; nephrotoxic at CrCl <30"
+  - "Grade ≥2 neurotoxicity — pentostatin CNS toxicity can be irreversible; discontinue"
+  - "Active uncontrolled infection — lymphodepletion exacerbates infection risk"
+
+red_flags_triggering_alternative:
+  - RF-HCL-FRAILTY-AGE
+  - RF-HCL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-PERIPHERAL-SMEAR
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CECT-CAP
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - "Creatinine clearance (CrCl) by Cockcroft-Gault before each dose — pentostatin renal-dose adjustment"
+
+desired_tests:
+  - "BRAF V600E mutation status (if not previously determined) — BRAF V600E+ classic HCL may prefer vemurafenib+rituximab (IND-HCL-2L-VEMURAFENIB-RITUXIMAB) as targeted chemo-free alternative"
+  - "CD25, CD103, DBA.44 flow cytometry panel at relapse (confirm HCL vs HCL-variant vs other B-NHL)"
+  - "Serum immunoglobulins baseline (hypogammaglobulinemia common in HCL; IVIG if IgG <400)"
+
+rationale: >
+  Pentostatin (2'-deoxycoformycin; DCF) is a purine analog with equivalent 1L efficacy
+  to cladribine in classic HCL (ORR ~95%; CR ~80-92%) that serves as the preferred
+  cross-over agent when:
+  (1) Relapse occurs within 12 months of last cladribine dose (cladribine retreatment
+      less effective at short intervals due to residual cladribine-resistant clones);
+  (2) Patient was primary cladribine-refractory (failed to achieve CR after 1-2 courses).
+
+  MECHANISM DISTINCTION: Both cladribine (2-CdA) and pentostatin (DCF) inhibit adenosine
+  deaminase (ADA) and cause profound lymphodepletion, but the specific pharmacodynamic
+  profiles differ slightly — cross-over activity is maintained even at early relapse
+  where re-challenge with the same agent would be suboptimal. The q2w IV schedule of
+  pentostatin (vs cladribine's 7-day continuous infusion or SC daily ×5-7 days) allows
+  closer monitoring and dose interruption for toxicity.
+
+  NCCN GUIDANCE: NCCN B-cell 2025 Category 1 for both cladribine and pentostatin as 1L
+  and 2L equivalents. Cross-over from cladribine to pentostatin at relapse (or vice versa)
+  is explicitly endorsed for relapsed HCL.
+
+  BRAF-TARGETED ALTERNATIVE: For BRAF V600E+ classic HCL, vemurafenib ± rituximab
+  (IND-HCL-2L-VEMURAFENIB-RITUXIMAB; Tiacci 2021 NEJM; ORR ~100%; uMRD ~67%) is the
+  preferred chemo-free 2L option. Pentostatin switch is used when vemurafenib is
+  inaccessible, when patient prefers cytotoxic, or when BRAF V600E is negative (HCL-variant).
+
+  UKRAINE CONTEXT: Pentostatin (Nipent) is not consistently NSZU-reimbursed in Ukraine
+  as of 2026. Cladribine (Litak/Biodribin) is the NSZU-funded purine analog. When pentostatin
+  is inaccessible: for early relapse (<1y), proceed to vemurafenib-based therapy if BRAF V600E+;
+  if BRAF V600E negative or vemurafenib inaccessible, cladribine retreatment with extended
+  interval (waiting until ≥1y) or MDT discussion. Document access barrier explicitly.
+
+rationale_ua: >
+  Пентостатин (ДКФ) — пуриновий аналог з еквівалентною ефективністю першої лінії до
+  кладрибіну при ВКЛ (ORR ~95%; ПВ ~80-92%), що служить переважним cross-over агентом
+  при ранньому рецидиві (<12 місяців від останньої дози кладрибіну) або первинній
+  резистентності до кладрибіну.
+
+  NCCN B-cell 2025 Категорія 1 для обох: кладрибін і пентостатин еквівалентні в 1Л і 2Л.
+  Розклад q2w (IV кожні 2 тижні) дозволяє ближчий моніторинг та коригування дози.
+
+  Для BRAF V600E+ класичного ВКЛ — вемурафеніб+ритуксимаб є кращим варіантом
+  (Tiacci 2021 NEJM; ORR ~100%; без хіміотерапії).
+
+  В Україні: кладрибін (Litak/Biodribin) відшкодується НСЗУ; пентостатин обмежено
+  доступний. При недоступності пентостатину: вемурафеніб (якщо BRAF V600E+) або
+  кладрибін повторно з подовженим інтервалом (MDT обговорення).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ призначати при CrCl <30 мл/хв — ниркова токсичність; альтернатива — кладрибін при CrCl ≥30"
+  - "НЕ вводити без обов'язкової гідратації IV (500-1000 мл NS до та після кожної дози)"
+  - "НЕ продовжувати при Grade ≥2 нейротоксичності (сплутаність, сонливість) — може бути незворотною"
+  - "НЕ пропускати TMP-SMX + валацикловір профілактику протягом 12 місяців після завершення"
+  - "НЕ застосовувати без перевірки BRAF V600E — V600E+ пацієнти краще реагують на вемурафеніб+R"
+  - "НЕ вводити при ANC <500/мкл або тромбоцитах <50 000 без G-CSF підтримки"
+  - "НЕ вводити живі вакцини під час та 12 місяців після лікування"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: pentostatin 4 mg/m² IV q2w × 6-12 doses
+      is equivalent to cladribine for HCL first-line and 2L cross-over. Cross-over
+      from cladribine to pentostatin endorsed for relapsed/refractory HCL.
+
+known_controversies:
+  - topic: "Pentostatin switch vs cladribine retreatment for early relapse HCL"
+    positions:
+      - position: "Pentostatin switch — preferred for early relapse (<1y) where cladribine retreatment less effective; different mechanism; q2w schedule allows monitoring"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Cladribine retreatment — highly effective for late relapse (>1y from 1L); NSZU-funded in Ukraine; preferred when pentostatin inaccessible"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Vemurafenib ± rituximab (for BRAF V600E+ classic HCL) — chemo-free option; uMRD ~67%; preferred over both purine analogs if accessible (Tiacci 2021 NEJM)"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "Pentostatin switch for early relapse (<1y) or cladribine-refractory; cladribine retreatment for late relapse (>1y) if pentostatin inaccessible; vemurafenib+rituximab preferred for BRAF V600E+ when accessible."
+    rationale: "Purine analog cross-over is well-established and NCCN-endorsed. Agent selection driven by timing of relapse (early vs late), BRAF status, and UA access constraints."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. 2L cross-over purine analog for
+  cladribine-1L failures with early relapse (<1y) or cladribine-refractory HCL.
+  Wired at ALGO-HCL-2L step 31 (purine cross-over gate; Workstream CW 2026-05-04).
+  Gap (2) in ALGO-HCL-2L CLOSED. NCCN Cat 1; equivalent efficacy to cladribine.
+  REG-PENTOSTATIN-HCL authored — replaces cladribine-as-proxy for pentostatin 1L IND too.
+  Ukraine access barrier: pentostatin not NSZU-reimbursed; cladribine-retreatment fallback.
+  Grever 2003 Blood + Else 2005 Blood primary evidence; no RCT vs cladribine.
