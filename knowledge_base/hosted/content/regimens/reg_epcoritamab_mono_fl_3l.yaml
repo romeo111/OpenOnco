@@ -1,0 +1,108 @@
+id: REG-EPCORITAMAB-MONO-FL-3L
+name: "Epcoritamab SC monotherapy for r/r FL ≥3L (EPCORE NHL-1 FL cohort)"
+name_ua: "Епкоритамаб монотерапія підшкірно для р/р ФЛ у ≥3-й лінії (EPCORE NHL-1 FL-когорта)"
+alternate_names:
+  - "Epcoritamab mono FL"
+  - "Epkinly FL 3L"
+  - "EPCORE NHL-1 FL regimen"
+
+components:
+  - drug_id: DRUG-EPCORITAMAB
+    dose: >
+      Cycle 1 step-up: 0.16 mg SC day 1 (priming dose 1) →
+      0.8 mg SC day 8 (priming dose 2) →
+      48 mg SC day 15 + day 22 (first full doses).
+      Subsequent cycles: 48 mg SC weekly (days 1, 8, 15, 22) cycles 2-3;
+      every 2 weeks (days 1, 15) cycles 4-9;
+      every 4 weeks (day 1) cycles 10+ until progression or
+      unacceptable toxicity.
+    schedule: "28-day cycles; SC injection (abdomen / thigh); cycle 1 day 15 first 48 mg dose requires 24h hospital monitoring for CRS"
+    route: SC
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity (indefinite; same as DLBCL schedule)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Cycle 1 mandatory prophylaxis BEFORE each step-up dose (day 1, day 8, day 15, day 22):"
+  - "  - Prednisolone 100 mg PO/IV (or equivalent) day of dose + days +1, +2, +3 (4-day course)"
+  - "  - Acetaminophen 650-1000 mg PO 30-60 min pre-dose"
+  - "  - Diphenhydramine 25-50 mg PO/IV 30-60 min pre-dose"
+  - "Hospital admission for 24-hour monitoring required for the first 48 mg full dose (cycle 1 day 15) — CRS observation window"
+  - "Pre-treatment infectious workup (HBV / HCV / HIV) mandatory"
+  - "Adequate hydration day-of-dose"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+
+dose_adjustments:
+  - condition: "CRS Grade 1 (fever ≥38°C without hypotension/hypoxia)"
+    modification: "Supportive care + antipyretics; continue dosing; outpatient observation acceptable for subsequent full doses if cycle 1 day 15 tolerated"
+    rationale: "Any-grade CRS ~50% in FL; predominantly Grade 1-2; step-up + prophylactic corticosteroids substantially reduce risk"
+    source_refs:
+      - SRC-EPCORE-NHL-1-FL-2024
+  - condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂ hypoxia)"
+    modification: "Hold next dose; tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h; resume after resolution"
+    rationale: "IL-6R blockade first-line for CRS Grade ≥2; class precedent"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "CRS Grade 3-4"
+    modification: "Hold; tocilizumab + high-dose dexamethasone or methylprednisolone 1 g/day; ICU; permanent discontinuation for recurrent G3 or any G4"
+    rationale: "Severe CRS may be fatal without aggressive immunomodulation"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Grade ≥3 neutropenia (ANC <1.0)"
+    modification: "Hold until ANC ≥1.0; G-CSF at investigator discretion; no dose reduction"
+    rationale: "Hematologic toxicity in B-cell-depleted FL patients; myeloid recovery expected"
+    source_refs:
+      - SRC-EPCORE-NHL-1-FL-2024
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Epcoritamab (Epkinly) not registered in Ukraine. FL extension approval
+    (FDA Feb 29, 2024) also not registered. Access: international referral
+    to EU/US centre, compassionate use, or named-patient import only.
+
+sources:
+  - SRC-EPCORE-NHL-1-FL-2024
+  - SRC-NCCN-BCELL-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Будь-яка лихоманка у дні введення або протягом 48 годин після"
+    action_ua: "Звертайтесь у лікарню негайно — CRS може розвинутись швидко"
+    urgency: er_now
+    cycle_day_window: "Day 1-22 (step-up period)"
+    sources:
+      - SRC-EPCORE-NHL-1-FL-2024
+  - trigger_ua: "Задишка, низький тиск, підвищений пульс"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Плутаність свідомості, порушення мови"
+    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність (ICANS)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  FL-scoped epcoritamab SC monotherapy regimen (Workstream FD, 2026-05-04).
+  Step-up dosing schedule identical to REGIMEN-EPCORITAMAB-MONO-DLBCL-3L;
+  authored separately for disease-scoped traceability. Trial source
+  SRC-EPCORE-NHL-1-FL-2024 (NCT03625037 FL expansion, FDA Feb 29 2024).
+  Continuous indefinite dosing — principal schedule trade-off vs
+  time-limited mosunetuzumab (≤17 cycles).
+notes_ua: >
+  FL-scoped регімен епкоритамабу SC монотерапія (Workstream FD, 2026-05-04).
+  Графік ескалаційного дозування ідентичний REGIMEN-EPCORITAMAB-MONO-DLBCL-3L;
+  авторований окремо для трасування за хворобою.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

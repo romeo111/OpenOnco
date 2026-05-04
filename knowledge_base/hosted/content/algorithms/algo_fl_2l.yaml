@@ -10,6 +10,7 @@ output_indications:
 - IND-FL-3L-TAZEMETOSTAT
 - IND-FL-3L-AXICEL-CART
 - IND-FL-3L-MOSUNETUZUMAB
+- IND-FL-3L-EPCORITAMAB
 default_indication: IND-FL-2L-R2
 alternative_indication: IND-FL-2L-OBINU-BENDA
 decision_tree:
@@ -89,19 +90,44 @@ decision_tree:
     - condition: EZH2-WT and patient prefers chemo-free off-the-shelf
   if_true:
     result: IND-FL-3L-MOSUNETUZUMAB
+    notes: >
+      R/R FL ≥3L CAR-T-ineligible / CAR-T-inaccessible: mosunetuzumab
+      SC CD20×CD3 bispecific (GO29781; ORR 80%; CR 60%; mPFS 17.9 mo;
+      time-limited ≤17 cycles; NCCN Cat 2A). HBV screen mandatory.
+      ALTERNATIVE (Cat 2A): epcoritamab (IND-FL-3L-EPCORITAMAB; FDA Feb 2024;
+      ORR 82%; CR 68%; mPFS 25.2 mo; continuous indefinite SC dosing).
+      Choose mosunetuzumab if time-limited therapy valued; epcoritamab
+      if numerically higher CR/mPFS and continuous dosing acceptable.
+      Both require international referral in Ukraine.
+    alternatives:
+      - indication_id: IND-FL-3L-EPCORITAMAB
+        nccn_category: "2A"
+        criteria: >
+          R/R FL ≥2 prior lines including anti-CD20 + alkylator; CD20+ confirmed;
+          CAR-T ineligible or inaccessible; patient and oncologist prefer
+          continuous SC dosing over time-limited mosunetuzumab; ECOG ≤2.
+        note: >
+          Epcoritamab (Epkinly; NCCN Cat 2A; EPCORE NHL-1 FL cohort n=128;
+          ORR 82%; CR 68%; mPFS 25.2 months; FDA Feb 29, 2024). Continuous
+          indefinite SC dosing (vs mosunetuzumab ≤17 cycles). Same step-up
+          0.16 → 0.8 → 48 mg + 24h monitoring for cycle 1 day 15 first full dose.
+          No head-to-head vs mosunetuzumab. Schedule preference drives selection.
   if_false:
     result: IND-FL-3L-MOSUNETUZUMAB
-  notes: Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring.
+  notes: "Updated Workstream FD 2026-05-04: epcoritamab (Cat 2A) added as alternative to mosunetuzumab at step 3 (IND-FL-3L-EPCORITAMAB; FDA Feb 2024; EPCORE NHL-1 FL). Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-FL-2024
+- SRC-EPCORE-NHL-1-FL-2024
 last_reviewed: '2026-05-04'
-notes: 'UPDATED 2026-05-04 (Workstream AT): IND-FL-2L-R2 + step 0 (2L rituximab-sensitive).
+notes: >
+  UPDATED 2026-05-04 (Workstream AT): IND-FL-2L-R2 + step 0 (2L rituximab-sensitive).
   UPDATED 2026-05-04 (Workstream AX): IND-FL-2L-OBINU-BENDA + step 02 (2L rituximab-refractory
   → obinutuzumab+benda; GADOLIN; Sehn 2016 JCO; mPFS 29.2 mo HR 0.55; ORR 69%; NCCN Cat 1).
-  Gap (1) FULLY CLOSED: both R2 (rituximab-sensitive) and O-benda (rituximab-refractory) 2L.
-  OOS / wiring gaps: (2) Histologic transformation detection (RF-FL-TRANSFORMATION-SUSPECT)
-  routes to DLBCL algos — must be resolved upstream. (3) Loncastuximab tesirine, glofitamab
-  not modeled for 3L+. (4) Bridging therapy for axi-cel in Regimen/SUP layer.
+  UPDATED 2026-05-04 (Workstream FD): IND-FL-3L-EPCORITAMAB added to output_indications
+  and wired as Cat 2A alternative to mosunetuzumab at step 3 (EPCORE NHL-1 FL cohort n=128;
+  ORR 82%; CR 68%; mPFS 25.2 months; FDA Feb 29, 2024). Gap (3) CLOSED for epcoritamab FL 3L+.
+  OOS / remaining gaps: (2) Histologic transformation detection (RF-FL-TRANSFORMATION-SUSPECT)
+  routes to DLBCL algos — must be resolved upstream. (4) Bridging therapy for axi-cel in
+  Regimen/SUP layer. (5) Glofitamab for FL — EMA-approved, NCCN Cat 2A; separate future IND.
 
-  '
