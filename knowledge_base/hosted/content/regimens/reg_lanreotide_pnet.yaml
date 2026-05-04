@@ -1,0 +1,116 @@
+id: REG-LANREOTIDE-PNET
+name: "Lanreotide 120 mg SC q4w — unresectable/metastatic GEP-NET (CLARINET schedule)"
+name_ua: "Ланреотид 120 мг SC кожні 4 тижні — нерезектабельна/метастатична GEP-NET (режим CLARINET)"
+alternate_names:
+  - "Somatuline Depot 120 mg q4w"
+  - "Lanreotide Autogel 120 mg monthly"
+  - "SSA monotherapy pNET"
+
+disease_context: DIS-PNET
+line_of_therapy: 1
+plan_track: standard
+
+components:
+  - drug_id: DRUG-LANREOTIDE
+    dose: "120 mg SC (Autogel/Depot prefilled syringe)"
+    schedule: "Once every 28 days (monthly). Deep subcutaneous injection into upper outer quadrant of buttock, alternating sides. Administered by trained healthcare professional."
+    route: SC
+    administration_notes: >
+      Deep SC injection — not IV or IM. Inject into upper outer quadrant of the
+      gluteal region, alternating left and right every month. Do not rub the
+      injection site after administration. Pre-filled syringe comes at room
+      temperature (Somatuline Autogel); may be stored at 2-8°C; allow to warm
+      15-20 minutes before injection. Patient may self-administer after training
+      (applicable to Somatuline Depot 60/90/120 mg formulation).
+
+cycle_length_days: 28
+total_cycles: "Continuous until confirmed progression or unacceptable toxicity"
+
+toxicity_profile: low
+
+premedication:
+  - "Baseline abdominal ultrasound (gallstone screening before initiating long-term SSA)"
+  - "Baseline fasting blood glucose (glucose dysregulation monitoring)"
+  - "Baseline CgA (chromogranin A) + 24h urinary 5-HIAA (if functional NET)"
+  - "Ga-68-DOTATATE PET-CT or In-111-DTPA-octreotide scintigraphy (confirm SSTR expression before SSA)"
+
+mandatory_supportive_care:
+  - "Abdominal ultrasound q6-12 months (gallstone development — SSA class effect)"
+  - "Fasting glucose q3 months (glucose dysregulation)"
+  - "CgA q3 months (NET tumor marker response tracking)"
+  - "CT chest/abdomen/pelvis q3-6 months (RECIST 1.1 or equivalent NET response criteria)"
+
+dose_adjustments:
+  - condition: "Symptomatic cholelithiasis (gallstone colic or cholecystitis)"
+    modification: "Discuss cholecystectomy with surgical team; lanreotide continuation generally possible after cholecystectomy"
+    rationale: "Cholelithiasis is a class effect of SSA; rarely requires discontinuation"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Grade ≥3 diarrhea / steatorrhea"
+    modification: "Add pancreatic enzyme replacement (PERT); dietary fat restriction; no SSA dose reduction typically needed"
+    rationale: "SSA-induced pancreatic exocrine suppression; PERT restores digestion"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Tumor progression on 120 mg q4w"
+    modification: "Options: shorten interval to q3w (off-label intensification); switch to sunitinib or everolimus; add everolimus (NEAT/COOPERATE-2); MDT discussion"
+    rationale: "SSA dose intensification at progression has some evidence; targeted therapy addition preferred"
+    source_refs:
+      - SRC-NCCN-NET-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Lanreotide (Somatuline Depot/Autogel) is registered in Ukraine. NSZU
+    reimbursement for GEP-NET is limited — depot formulations expensive.
+    Octreotide LAR (Sandostatin LAR 20-30 mg IM monthly) is an alternative:
+    NSZU-reimbursed for acromegaly; available for NET off-label compassionate
+    use at many centres. For patients without lanreotide access:
+    octreotide LAR 20-30 mg IM monthly (PROMID evidence for midgut NET;
+    off-label for pNET but same class mechanism). Document access constraint.
+
+sources:
+  - SRC-NCCN-NET-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Біль у правому підребер'ї або жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — жовчнокам'яна хвороба (SSA клас-ефект)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Пульс <50 уд/хв або запаморочення"
+    action_ua: "Подзвоніть у клініку того ж дня — брадикардія (SSA ефект)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Сильна діарея або жировий стілець"
+    action_ua: "Занотовуйте та повідомте — можливо, потрібні панкреатичні ферменти (PERT)"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Посилення симптомів пухлини (припливи, діарея при функціональній NET)"
+    action_ua: "Повідомте лікаря на найближчому візиті — прогресування потребує переоцінки"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  CLARINET schedule (Caplin 2014 NEJM): lanreotide 120 mg SC q4w; G1/G2 GEP-NET
+  (pNET + midgut NET); mPFS NR vs 18.0 mo (HR 0.47; p<0.001); 24-mo PFS 65.1%
+  vs 33.0%; FDA approval August 2014. NCCN NET 2025 Category 1.
+  SSTR imaging (Ga-68-DOTATATE PET preferred; OctreoScan alternative) mandatory
+  to confirm SSTR expression before initiating (negative SSTR scan → SSA less
+  likely to be antiproliferative; functional symptom control still possible).
+  Gallstone ultrasound monitoring is the dominant long-term safety concern.
+  Ukraine: lanreotide registered; NSZU reimbursement variable; octreotide LAR
+  fallback if lanreotide inaccessible.
+  STUB pending Co-Lead sign-off.
+notes_ua: >
+  Режим CLARINET: ланреотид 120 мг SC кожні 28 днів; G1/G2 GEP-NET; мПВБ НД
+  проти 18,0 міс. (ВР 0,47; p<0,001); FDA серпень 2014; NCCN Кат 1.
+  SSTR-імпресіювання (Ga-68-DOTATATE ПЕТ або OctreoScan) обов'язково перед початком.
+  Жовчнокам'яна хвороба — основний побічний ефект SSA; УЗД q6-12 міс.
+  Україна: ланреотид зареєстрований; октреотид LAR — доступна альтернатива (НСЗУ).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

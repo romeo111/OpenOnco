@@ -14,11 +14,39 @@ purpose: >
 output_indications:
   - IND-PNET-METASTATIC-1L-EVEROLIMUS
   - IND-PNET-METASTATIC-1L-SUNITINIB
+  - IND-PNET-METASTATIC-1L-SSA
 
 default_indication: IND-PNET-METASTATIC-1L-EVEROLIMUS
 alternative_indication: IND-PNET-METASTATIC-1L-SUNITINIB
 
 decision_tree:
+  # Step 0 — SSA gate for SSTR2+ G1/G2 pNET with low-intermediate tumor burden.
+  # CLARINET (Caplin 2014 NEJM): lanreotide 120 mg SC q4w; HR 0.47; mPFS NR vs 18.0 mo;
+  # NCCN Cat 1. SSA preferred for indolent G1/G2 disease: low toxicity, functional control,
+  # antiproliferative effect via SSTR2/5 binding. SSTR imaging (Ga-68-DOTATATE PET or
+  # OctreoScan) required to confirm expression before initiating for antiproliferative intent.
+  # Rapidly progressive pNET (hepatic replacement >50%, short doubling time): skip to step 1
+  # (sunitinib/everolimus superior cytostatic activity for high-burden disease).
+  - step: 0
+    evaluate:
+      all_of:
+        - condition: "SSTR2 expression confirmed: Ga-68-DOTATATE PET-CT positive OR In-111-octreotide scintigraphy positive"
+        - condition: "G1 or G2 tumor grade (Ki67 ≤20%; well- or moderately-differentiated morphology)"
+        - condition: "Low to intermediate tumor burden (hepatic replacement <50%; stable or slow progression on prior imaging)"
+        - condition: "ECOG PS 0-2"
+    if_true:
+      result: IND-PNET-METASTATIC-1L-SSA
+      notes: >
+        SSTR2+ G1/G2 pNET + low-intermediate burden: lanreotide 120 mg SC q4w
+        (IND-PNET-METASTATIC-1L-SSA; REG-LANREOTIDE-PNET; CLARINET Caplin 2014 NEJM;
+        HR 0.47; 24-mo PFS 65.1%; NCCN Cat 1). Antiproliferative + anti-secretory
+        dual mechanism. Continue until progression — at progression add sunitinib or
+        everolimus (combination common practice). Gallstone ultrasound q6-12 months.
+        Ukraine: lanreotide registered; octreotide LAR off-label fallback (NSZU-accessible).
+    if_false:
+      next_step: 1
+    notes: "Step 0 added 2026-05-04 (Workstream DC): SSA gate — SSTR2+ + G1/G2 + low burden → IND-PNET-METASTATIC-1L-SSA (CLARINET Cat 1). Rapidly progressive or G3 → step 1 (sunitinib/everolimus). Gap CLOSED."
+
   - step: 1
     evaluate:
       any_of:
@@ -90,9 +118,13 @@ notes: >
   - ECOG fit + LVEF ≥50% + no prior VEGFR-TKI: sunitinib (Cat 1)
   - LVEF <50% / prior VEGFR-TKI / uncontrolled HTN: everolimus (Cat 1)
 
-  Remaining deferred paths:
-  - SSA (octreotide LAR, lanreotide): CLARINET Cat 1 for SSTR2+ G1/G2 pNET;
-    not modeled as dedicated 1L indication (SSA often concurrent with sunitinib/everolimus)
+  UPDATED 2026-05-04 (Workstream DC): IND-PNET-METASTATIC-1L-SSA authored and
+  wired at step 0 (SSTR2+ + G1/G2 + low-intermediate burden gate; lanreotide 120 mg
+  SC q4w; CLARINET Caplin 2014 NEJM; HR 0.47; NCCN Cat 1). DRUG-LANREOTIDE +
+  REG-LANREOTIDE-PNET authored. Gap (SSA not modeled as dedicated 1L) CLOSED.
+
+  Remaining deferred paths (still open):
+  - SSA gap: CLOSED (see above)
   - Chemotherapy for poorly differentiated NEC: platinum-etoposide (EP/IP) —
     separate disease entity DIS-GEP-NEC needed
   - PRRT (lutetium-177-DOTATATE) for SSTR2+ pNET: requires SSTR biomarker
