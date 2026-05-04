@@ -1,0 +1,67 @@
+id: REG-DRD
+name: "Daratumumab + Lenalidomide + Dexamethasone (DRd / D-Rd; POLLUX)"
+name_ua: "Даратумумаб + Леналідомід + Дексаметазон (DRd)"
+alternate_names:
+  - "DRd"
+  - "D-Rd"
+  - "POLLUX regimen"
+  - "Dara-Rd"
+
+components:
+  - drug_id: DRUG-DARATUMUMAB
+    dose: "16 mg/kg IV q1w cycles 1-2 (days 1,8,15,22), q2w cycles 3-6 (days 1,15), q4w cycles 7+ (day 1)"
+    route: IV
+    notes: >
+      SC daratumumab (1800 mg fixed dose with hyaluronidase SC; 3-5 min injection) acceptable
+      alternative if available — COLUMBA trial non-inferiority. Pre-infusion medications mandatory
+      (diphenhydramine, acetaminophen, dexamethasone 20 mg IV) before each IV dose.
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "25 mg PO days 1-21 of each 28-day cycle (reduce to 10 mg if CrCl 30-60; 15 mg if CrCl <30 not recommended)"
+    route: oral
+    notes: >
+      REMS mandatory (RevAssist or equivalent program): negative pregnancy test + mandatory
+      contraception before start. Dispensed in 28-day supply max. DVT/PE prophylaxis mandatory.
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg PO/IV weekly (20 mg if age >75); daratumumab pre-infusion dose counts as dex dose"
+    route: oral_or_iv
+    days: [1, 8, 15, 22]
+
+cycle_length_days: 28
+number_of_cycles: "continuous until progression or unacceptable toxicity"
+regimen_type: chemoimmunotherapy
+
+dosing_notes: >
+  POLLUX protocol (Dimopoulos 2016 NEJM; Mateos 2020 Leukemia update):
+  Daratumumab IV 16 mg/kg + lenalidomide 25 mg PO d1-21 + dexamethasone 40 mg PO/IV weekly.
+  Daratumumab schedule: q1w cycles 1-2, q2w cycles 3-6, q4w cycle 7+.
+  Pre-daratumumab medications: diphenhydramine 25 mg IV + acetaminophen 650 mg PO + dexamethasone
+  20 mg IV; 1h after each daratumumab infusion: dexamethasone 20 mg PO (as part of weekly dose).
+  DVT/PE prophylaxis: aspirin 81 mg PO daily (low risk) or LMWH (high risk per IMiD VTE score).
+  Lenalidomide REMS: mandatory enrollment; negative pregnancy test each cycle.
+  CBC monitoring: q2 weeks (lenalidomide myelosuppression + daratumumab cytopenia).
+  HBV prophylaxis: entecavir 0.5 mg/day if HBsAg+ or HBcAb+; screen all patients.
+  G-CSF prophylaxis: consider pegfilgrastim after cycle 1 if ANC nadir <0.5.
+
+key_toxicities:
+  - "Infusion-related reactions (IRR; ~48% first infusion; mostly Grade 1-2; pre-medicate)"
+  - "Neutropenia (Grade 3-4 ~40% DRd; G-CSF support; dose delay for ANC <1.0)"
+  - "Thrombocytopenia (~20% Grade 3-4)"
+  - "VTE — DVT/PE (lenalidomide class effect; ~5% per cycle; prophylaxis mandatory)"
+  - "Infections (pneumonia, URTI — immunosuppression from dara + lenalidomide combined)"
+  - "Fatigue (~50% any grade)"
+  - "Peripheral neuropathy (minimal — no bortezomib in DRd; uncommon)"
+  - "Second primary malignancy (lenalidomide cumulative long-term risk; monitor)"
+
+special_precautions:
+  - "HBV: daratumumab anti-CD38 B-cell depleting — HBV reactivation risk; mandatory screen + entecavir prophylaxis"
+  - "Thyroid monitoring: lenalidomide hypothyroidism (~7%) — TSH q3 months"
+  - "Fertility: lenalidomide teratogenic (FDA Cat X) — REMS mandatory; males must use condoms"
+  - "Renal dosing: CrCl 30-60 → lenalidomide 10 mg/day; CrCl <30 → lenalidomide not recommended"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg bid throughout therapy + 3 months after"
+  - "Ukraine: daratumumab (Darzalex) registered; NSZU coverage for MM; lenalidomide registered + NSZU"
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+last_reviewed: "2026-05-04"
+drafted_by: claude_extraction

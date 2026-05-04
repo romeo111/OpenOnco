@@ -1,15 +1,16 @@
 id: ALGO-MM-2L
 applicable_to_disease: DIS-MM
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/maintenance MM Indication based on prior exposures and ASCT status. Three tracks: (1) post-ASCT in CR/VGPR → IND-MM-POST- ASCT-LENALIDOMIDE-MAINTENANCE (continuous IMiD maintenance, OS benefit); (2) post-VRd progression, transplant-naive, anti-CD38-naive → IND-MM-2L-DKD (proteasome class switch carfilzomib + dara, CANDOR); (3) ≥3 lines exposed to IMiD + PI + anti-CD38 (triple-class refractory) → IND-MM-4L-TECLISTAMAB (BCMA bispecific, MajesTEC-1).
+purpose: 'Select 2L+/maintenance MM Indication based on prior exposures and ASCT status. Four tracks: (1) post-ASCT in CR/VGPR → IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE; (2) lenalidomide-naive + anti-CD38-naive → IND-MM-2L-DRD (POLLUX; mPFS HR 0.44; NCCN Cat 1); (3) lenalidomide-refractory/exposed → IND-MM-2L-DKD (carfilzomib-based, CANDOR; HR 0.59); (4) triple-class refractory (≥3 lines IMiD+PI+CD38) → IND-MM-4L-TECLISTAMAB (BCMA bispecific, MajesTEC-1).
 
   '
 output_indications:
 - IND-MM-2L-DKD
+- IND-MM-2L-DRD
 - IND-MM-4L-TECLISTAMAB
 - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 default_indication: IND-MM-2L-DKD
-alternative_indication: IND-MM-4L-TECLISTAMAB
+alternative_indication: IND-MM-2L-DRD
 decision_tree:
 - step: 1
   evaluate:
@@ -20,8 +21,25 @@ decision_tree:
   if_true:
     result: IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
   if_false:
-    next_step: 2
+    next_step: 15
   notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+- step: 15
+  evaluate:
+    all_of:
+    - condition: "Lenalidomide-NAIVE: did NOT receive lenalidomide in 1L induction or maintenance (e.g., received VCD/VMP/PAd, NOT VRd/DaraVRd)"
+    - condition: "Anti-CD38-naive OR ≥12 months from last daratumumab dose (non-daratumumab-refractory)"
+    - condition: "NOT triple-class refractory"
+    - condition: "CrCl ≥30 mL/min (lenalidomide renal dosing requirement)"
+  if_true:
+    result: IND-MM-2L-DRD
+    notes: >
+      Lenalidomide-naive 2L MM: DRd (POLLUX; Dimopoulos 2016 NEJM; mPFS not reached vs 18.4 mo
+      Rd alone; HR 0.44; ORR 92.9% vs 76.4%; NCCN Cat 1). DVT prophylaxis mandatory (aspirin
+      or LMWH). Lenalidomide REMS mandatory. HBV screen + entecavir. DRd preferred over DKd
+      in lenalidomide-naive patients (DKd reserved for lenalidomide-refractory; CANDOR).
+  if_false:
+    next_step: 2
+  notes: "Step 15 added 2026-05-04 (Workstream BE): DRd wired for lenalidomide-naive 2L MM (POLLUX; NCCN Cat 1). Gap (2) CLOSED. If lenalidomide-exposed or CrCl <30 → step 2 (triple-class check → DKd)."
 - step: 2
   evaluate:
     all_of:
@@ -58,7 +76,7 @@ decision_tree:
 sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) Maintenance is conceptually a separate algo (ALGO-MM-MAINTENANCE) not a 2L choice — included here pragmatically until the maintenance algo lands. Surface to hematologist: should we split? (2) DRd (daratumumab+lenalidomide+dex) for lenalidomide-naive 2L — not modeled. (3) Belantamab mafodotin (BCMA ADC) — withdrawn from market post DREAMM-3, not modeled. (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) for early-line triple-class — not modeled (UA access ≈zero). (5) Selinexor combos for penta-refractory — not modeled. (6) Plasma cell leukemia / extramedullary disease handled at RF-MM-TRANSFORMATION-PROGRESSION level (1L algo), not here.
+last_reviewed: '2026-05-04'
+notes: 'UPDATED 2026-05-04 (Workstream BE): IND-MM-2L-DRD + REG-DRD authored; wired at step 15 for lenalidomide-naive + anti-CD38-naive 2L MM (POLLUX; Dimopoulos 2016 NEJM; mPFS HR 0.44; ORR 92.9%; OS HR 0.73; NCCN Cat 1). Gap (2) CLOSED. OOS / wiring gaps: (1) Maintenance is conceptually a separate algo (ALGO-MM-MAINTENANCE) not a 2L choice — included here pragmatically until the maintenance algo lands. Surface to hematologist: should we split? (3) Belantamab mafodotin (BCMA ADC) — withdrawn from market post DREAMM-3, not modeled. (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) for early-line triple-class — not modeled (UA access ≈zero). (5) Selinexor combos for penta-refractory — not modeled. (6) Plasma cell leukemia / extramedullary disease handled at RF-MM-TRANSFORMATION-PROGRESSION level (1L algo), not here.
 
   '

@@ -1,0 +1,182 @@
+id: IND-MM-2L-DRD
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory multiple myeloma after ≥1 prior line of therapy"
+    - "Lenalidomide-NAIVE at time of 2L start (did NOT receive lenalidomide in 1L induction or maintenance)"
+    - "Anti-CD38-naive (no prior daratumumab or isatuximab); OR daratumumab re-treatment eligible (≥12 months from last dose with non-refractoriness)"
+    - "ECOG PS 0-2"
+    - "CrCl ≥30 mL/min (lenalidomide renal dosing; dose adjustment 10 mg if CrCl 30-60 mL/min)"
+    - "Adequate marrow function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Lenalidomide-REFRACTORY (progressed on or within 60 days of last lenalidomide dose): DRd inferior in lenalidomide-refractory MM; IND-MM-2L-DKD preferred (carfilzomib-based rescue)"
+    - "Anti-CD38-refractory (progressed on or within 60 days of daratumumab): DRd inferior; switch to non-daratumumab backbone"
+    - "Triple-class refractory (IMiD + PI + anti-CD38 exposed and refractory): IND-MM-4L-TECLISTAMAB (BCMA bispecific preferred)"
+    - "CrCl <30 mL/min: lenalidomide not recommended; IND-MM-2L-DKD (carfilzomib-based without lenalidomide)"
+    - "Active DVT/PE without adequate anticoagulation (lenalidomide VTE risk)"
+    - "Active HBV without antiviral prophylaxis (daratumumab HBV reactivation)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      POLLUX enrolled ECOG 0-2; elderly patients (>75) may benefit from dexamethasone dose
+      reduction (20 mg weekly) and lenalidomide starting at 15 mg. REMS mandatory for all
+      patients receiving lenalidomide (pregnancy testing + contraception protocol).
+      Renal dosing: lenalidomide 10 mg if CrCl 30-60 mL/min; monitor kidney function
+      every cycle. Daratumumab renal-safe (antibody metabolism).
+
+recommended_regimen: REG-DRD
+alternative_regimens:
+  - regimen_id: REG-DKD
+    description: >
+      DKd (daratumumab + carfilzomib + dexamethasone; CANDOR; IND-MM-2L-DKD): preferred when
+      lenalidomide-refractory (progressed on 1L lenalidomide-containing regimen). ORR 84%;
+      mPFS 28.6 vs 15.2 mo (HR 0.59); NCCN Cat 1. No lenalidomide in DKd — appropriate for
+      IMiD-refractory patients.
+  - regimen_id: null
+    description: >
+      Isatuximab + carfilzomib + dex (Isa-Kd; IKEMA; Shaw 2021 Lancet Oncol): alternative
+      anti-CD38 + PI combination; ORR 87%; PFS HR 0.53. Use when daratumumab preferred route
+      but PI-class preferred over IMiD (lenalidomide-refractory context). Not modeled separately.
+  - regimen_id: null
+    description: >
+      Rd (lenalidomide + dexamethasone; POLLUX control arm; NCCN Cat 1 for lenalidomide-naive):
+      appropriate if daratumumab inaccessible (Ukraine: dara NSZU-reimbursed; DRd preferred);
+      ORR 76%; mPFS 18.4 months (inferior to DRd but acceptable if dara unavailable).
+
+concurrent_therapy:
+  - "DVT/PE prophylaxis mandatory: aspirin 81 mg PO daily (low VTE risk) or LMWH prophylactic dose (high risk per International Myeloma Working Group VTE score — any 2 risk factors)"
+  - "HBV prophylaxis: entecavir 0.5 mg PO daily if HBsAg+ or HBcAb+ — screen all patients before daratumumab"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg PO bid throughout DRd + 3 months after last dose"
+  - "Pre-daratumumab infusion medications: diphenhydramine 25 mg IV + acetaminophen 650 mg PO + dexamethasone 20 mg IV 1h before each infusion"
+  - "Lenalidomide REMS: mandatory enrollment before dispensing (RevAssist or national equivalent)"
+
+followed_by:
+  - "Continue DRd until disease progression or unacceptable toxicity (no planned fixed duration)"
+  - "Response assessment: CBC q2w, SPEP/UPEP q month × 3 then q3 months; PET-CT if CR to confirm MRD status"
+  - "After DRd failure or lenalidomide-refractoriness: IND-MM-2L-DKD (carfilzomib-based); teclistamab/elranatamab (BCMA bispecific) if ≥3 prior lines"
+  - "MRD negativity monitoring (bone marrow aspirate ± flow cytometry): at deepest response; prognostic"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~92.9% (POLLUX; Dimopoulos 2016 NEJM; DRd vs 76.4% Rd)"
+  cr_rate: "~43.1% CR/sCR at extended follow-up (Mateos 2020 Leukemia)"
+  median_pfs_months: "not reached (44.3 months follow-up median; vs 18.4 months Rd; HR 0.44; p<0.001)"
+  mrd_negativity: "~22.4% MRD-negative (10⁻⁵ sensitivity) at any time point vs 4.6% Rd"
+  notes: >
+    POLLUX (Dimopoulos 2016 NEJM; Mateos 2020 Leukemia 5-year update; n=569, 1:1):
+    DRd vs Rd in relapsed/refractory MM after ≥1 prior line.
+    Primary endpoint (PFS): HR 0.44 (95% CI 0.35-0.55; p<0.001); mPFS DRd not reached vs
+    Rd 18.4 months (2016 primary); 5-year follow-up (Mateos 2020): DRd mPFS 44.5 months
+    vs Rd 17.5 months (HR 0.44).
+    ORR: 92.9% DRd vs 76.4% Rd; CR/sCR 43.1% vs 19.2% (5-year update).
+    OS: 5-year OS 52.2% DRd vs 43.2% Rd (HR 0.73; p=0.022; significant).
+    NCCN MM 2025 Category 1 for lenalidomide-naive R/R MM.
+    Key selection criterion: lenalidomide-NAIVE. DRd is inferior in lenalidomide-refractory MM
+    (where DKd with carfilzomib is preferred). Patient selection is treatment-defining.
+    t(4;14) and t(14;16) (high-risk cytogenetics): DRd maintains benefit; daratumumab partially
+    overcomes adverse cytogenetics prognosis.
+
+hard_contraindications:
+  - "Lenalidomide-REFRACTORY (progressed on lenalidomide): DRd inferior → IND-MM-2L-DKD"
+  - "CrCl <30 mL/min: lenalidomide not recommended in severe renal impairment"
+  - "Active DVT/PE without anticoagulation (lenalidomide VTE risk; ensure prophylaxis first)"
+  - "Active HBV without entecavir prophylaxis (daratumumab HBV reactivation)"
+  - "Pregnancy (lenalidomide absolutely contraindicated; REMS mandatory)"
+  - "ECOG PS ≥3 (performance status precludes benefit)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Lenalidomide-refractory (prior lenalidomide exposure + progression) → IND-MM-2L-DKD (CANDOR; carfilzomib-based)"
+  - condition: "Triple-class refractory (IMiD + PI + anti-CD38 all exposed and refractory) → IND-MM-4L-TECLISTAMAB"
+  - condition: "CrCl 30-60 mL/min: reduce lenalidomide to 10 mg; monitor closely"
+  - condition: "DVT/PE: adequate prophylaxis required before and during lenalidomide (LMWH for high-risk)"
+  - condition: "High cytogenetic risk t(4;14)/del17p: DRd benefits preserved; MDT discussion re: ASCT eligibility and consolidation"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Creatinine/CrCl: mandatory before starting lenalidomide; dose reduction if CrCl 30-60"
+  - "HBV serology (HBsAg, HBcAb total): mandatory before daratumumab; entecavir if positive"
+  - "SPEP/UPEP + serum free light chains: baseline M-protein quantification + q monthly response"
+  - "Bone marrow biopsy + cytogenetics (FISH: del17p, t(4;14), t(14;16), 1q21 gain): prognostic; not treatment-changing for DRd decision but guides maintenance planning"
+  - "Pregnancy test (females of childbearing potential): before each lenalidomide cycle (REMS)"
+  - "PET-CT or whole-body low-dose CT: baseline staging at relapse"
+
+desired_tests:
+  - "MRD (minimal residual disease) by next-gen flow cytometry or NGS: at suspected CR — MRD negativity predicts superior outcomes in POLLUX"
+  - "TSH q3 months: lenalidomide hypothyroidism ~7%"
+  - "Beta-2 microglobulin + LDH: ISS restaging at relapse"
+  - "Echocardiogram: if cardiac history (daratumumab IRR risk)"
+
+rationale: >
+  Daratumumab (DARA) is a monoclonal anti-CD38 antibody with multiple mechanisms:
+  ADCC (NK-cell mediated), CDC, ADCP, and direct apoptosis. Adding DARA to Rd achieves
+  deep responses via dual targeting: CD38 direct + IMiD cereblon pathway (IKZF1/IKZF3
+  degradation → T-cell activation + myeloma cell death).
+
+  POLLUX (Dimopoulos 2016 NEJM):
+  Phase 3, n=569, 1:1 DRd vs Rd. Lenalidomide-naive or lenalidomide-non-refractory patients.
+  mPFS DRd not reached vs Rd 18.4 months (HR 0.44; 2016 primary).
+  5-year follow-up (Mateos 2020): DRd mPFS 44.5 months; OS HR 0.73 (p=0.022).
+  This represents one of the largest absolute PFS improvements in R/R MM.
+
+  Treatment selection logic:
+  - Lenalidomide-NAIVE 2L → DRd (POLLUX; NCCN Cat 1)
+  - Lenalidomide-REFRACTORY 2L → DKd or Isa-Kd (carfilzomib-based; CANDOR/IKEMA)
+  These two populations are complementary and non-overlapping in selection.
+
+  Most patients receiving 1L VRd or D-VRd will have lenalidomide exposure. However:
+  - Patients who received VCD (bortezomib+cyclophosphamide+dex) or VMP or PAd (1L in
+    elderly without lenalidomide) → lenalidomide-naive → DRd indicated at 2L.
+  - D-VRd patients are daratumumab-exposed; at 2L DRd is less appropriate unless ≥12 months
+    from last DARA; DKd is preferred for daratumumab-refractory patients.
+
+  Ukraine: daratumumab (Darzalex IV + SC) NSZU-reimbursed for MM (2026 oncology package).
+  Lenalidomide NSZU-reimbursed for MM maintenance + relapsed MM. DRd is therefore the
+  fully-accessible NCCN Cat 1 combination for lenalidomide-naive 2L MM in Ukraine.
+
+rationale_ua: >
+  DRd (POLLUX; Dimopoulos 2016 NEJM; n=569): мВБП не досягнуто vs 18.4 міс (HR 0.44;
+  5-річний фоллоу-ап: 44.5 vs 17.5 міс); ОВ HR 0.73 (p=0.022); ORR 92.9% vs 76.4%.
+  NCCN кат.1 для леналідомід-naive рецидивуючої ММ. Ключова відмінність: пацієнти,
+  що НЕ отримували леналідомід у 1L (VCD/VMP/PAd замість VRd) → DRd є кращим 2L.
+  Леналідомід-рефрактерні → DKd (карфілзоміб). В Україні: дарат. (Дарзалекс) +
+  леналідомід — обидва НСЗУ. Профілактика ТВТ/ТЕЛА (аспірин/НМГ) ОБОВ'ЯЗКОВА.
+  HBV скринінг + ентекавір. REMS для леналідоміду (тератоген).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN MM 2025 Category 1: daratumumab + lenalidomide + dexamethasone (DRd) for
+      lenalidomide-naive relapsed/refractory MM (POLLUX Phase 3; mPFS HR 0.44; ORR 92.9%).
+  - source_id: SRC-ESMO-MM-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO MM 2023: DRd recommended for lenalidomide-naive R/R MM; 5-year POLLUX data
+      confirms durable PFS and OS benefit; anti-CD38 maintenance strategy evolving.
+
+do_not_do:
+  - "При леналідомід-рефрактерній ММ (прогресія на/після леналідоміду): DRd неефективний; переходити на IND-MM-2L-DKD (карфілзоміб)"
+  - "Без профілактики ТВТ/ТЕЛА: леналідомід + дарат. → ризик ТЕЛА/ТВТ; аспірин або НМГ ОБОВ'ЯЗКОВИЙ"
+  - "Без REMS реєстрації: леналідомід — FDA Cat X (тератоген); тест на вагітність + контрацепція до кожного циклу"
+  - "Без HBV скринінгу: дарат. анти-CD38 → деплеція B-клітин → реактивація HBV; ентекавір якщо HBsAg+ або HBcAb+"
+  - "КК <30 мл/хв: леналідомід не рекомендований; переходити на DKd (без леналідоміду)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
