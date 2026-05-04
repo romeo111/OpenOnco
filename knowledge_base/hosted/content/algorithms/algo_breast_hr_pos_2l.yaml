@@ -16,6 +16,7 @@ output_indications:
   - IND-BREAST-HR-POS-2L-ESR1-ELACESTRANT
   - IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
   - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+  - IND-BREAST-HR-POS-2L-DATO-DXD
   - IND-BREAST-BRCA-POS-MET-PARPI
 
 default_indication: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
@@ -109,16 +110,30 @@ decision_tree:
 
   # Step 5 — default: fulvestrant + everolimus (BOLERO-2 backbone, no
   # biomarker gating, broadly applicable when no targetable mutation
-  # and HER2-IHC=0).
+  # and HER2-IHC=0). Dato-DXd (IND-BREAST-HR-POS-2L-DATO-DXD) is Cat 1
+  # alternative for the HER2 IHC 0 subset with ≥1 prior chemo line
+  # (TROPION-Breast01; Bardia 2024 NEJM; PFS HR 0.63; FDA Jan 2025,
+  # Datroway). Lower ILD rate vs T-DXd (~3% vs ~12%).
   - step: 5
     evaluate:
       any_of:
         - condition: "No PIK3CA / AKT1 / PTEN / ESR1 alteration AND HER2 IHC 0"
     if_true:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
+      alternatives:
+        - indication: IND-BREAST-HR-POS-2L-DATO-DXD
+          criteria: "≥1 prior chemo line for metastatic disease + HER2 IHC 0 (NOT HER2-low — T-DXd step 4 takes priority for IHC 1+/2+); TROPION-Breast01 PFS HR 0.63; FDA Jan 2025 (Datroway); NCCN Cat 1; lower ILD ~3% vs T-DXd ~12%; TROP2 testing not required"
+          nccn_category: 1
     if_false:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
-    notes: "Default fall-through — no biomarker gating; expressed as plain condition for documentation."
+    notes: >
+      Default fall-through (HER2 IHC 0, no actionable biomarker). FUL-EVEROLIMUS
+      (BOLERO-2; Baselga 2012 NEJM; NCCN Cat 1) default: endocrine-based, no prior
+      chemo required. DATO-DXD alternative (NCCN Cat 1) when ≥1 prior chemo line
+      given (TROPION-Breast01; post-ET + 1-2 prior chemo; Datroway FDA Jan 2025).
+      HER2-low patients (IHC 1+/2+ ISH-) routed to T-DXd at step 4 — dato-DXd
+      only fires here for HER2-IHC 0 (true HER2-zero). Dato-DXd added 2026-05-04
+      (Workstream EQ).
 
 sources:
   - SRC-NCCN-BREAST-2025
@@ -128,8 +143,9 @@ sources:
   - SRC-EMERALD-BIDARD-2022
   - SRC-BOLERO2-BASELGA-2012
   - SRC-DESTINY-BREAST04-MODI-2022
+  - SRC-TROPION-BREAST01-BARDIA-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
   Subtype constraint: HR+/HER2- only — algorithm should be entered
   only after receptor-subtype branching at the disease-level dispatcher
@@ -150,3 +166,11 @@ notes: >
   handled by IND-BREAST-BRCA-POS-MET-PARPI in 1L; revisit at 2L if
   PARPi not yet given. Not in this algo's default tree to keep the
   decision focused on post-CDK4/6i targeted-therapy selection.
+
+  UPDATED 2026-05-04 (Workstream EQ): Dato-DXd (IND-BREAST-HR-POS-2L-
+  DATO-DXD) wired at step 5 as Cat 1 alternative to FUL-EVEROLIMUS for
+  HER2 IHC 0 patients with ≥1 prior chemo line (TROPION-Breast01;
+  PFS HR 0.63; FDA Jan 2025, Datroway). Source SRC-TROPION-BREAST01-
+  BARDIA-2024 stub not yet in KB — flagged for source ingestion.
+  Sequencing: T-DXd (step 4) takes priority for HER2-low (IHC 1+/2+
+  ISH-); dato-DXd is the HER2-IHC-0 post-chemo ADC option at step 5.
