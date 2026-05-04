@@ -1,0 +1,109 @@
+id: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced (stage IIIB/IV) non-small cell lung cancer (NSCLC) — squamous or non-squamous"
+    - "Previously treated with 1L platinum-based chemotherapy ± ICI, OR 1L ICI monotherapy (pembrolizumab)"
+    - "No actionable driver mutation OR all targeted therapy options exhausted"
+    - "ECOG PS 0-2"
+    - "For squamous NSCLC: this is the preferred 2L chemotherapy approach (DATO-DXd/irinotecan-based regimens not recommended in squamous)"
+    - "For non-squamous NSCLC: applicable when DATO-DXd or other preferred 2L options are inaccessible or contraindicated"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      This indication covers docetaxel + ramucirumab as the standard 2L chemotherapy
+      backbone for NSCLC progressing after 1L platinum-based chemotherapy or 1L ICI.
+      Ramucirumab + docetaxel preferred over docetaxel monotherapy when:
+      - Ramucirumab accessible (NSZU-reimbursed in Ukraine for NSCLC)
+      - ECOG PS 0-1 (richer toxicity with combination)
+      - No major vascular risk (VEGFR inhibition: HTN, hemorrhage, GI perforation risks)
+      Docetaxel monotherapy: for ECOG PS 2, ramucirumab inaccessibility, or
+      contraindications to ramucirumab (uncontrolled HTN, recent hemoptysis, GI perforation).
+      Prior ICI: no significant impact on docetaxel efficacy post-ICI (standard approach).
+      DATO-DXd (TROPION-Lung01): preferred for non-squamous 2L post-ICI in Ukraine
+      where accessible; docetaxel ± ramucirumab used when DATO-DXd not accessible.
+      Note on the indication name: "PD-L1-POST-IO" denotes the post-immunotherapy
+      context (2L after 1L ICI ± platinum); docetaxel is standard regardless of
+      PD-L1 expression level.
+
+recommended_regimen: REG-DOCETAXEL-RAMUCIRUMAB
+concurrent_therapy:
+  - "G-CSF secondary prophylaxis: if Grade 3-4 neutropenia in prior cycle"
+  - "Anti-emetic: 5-HT3 + dexamethasone (moderate emetogenicity with docetaxel)"
+  - "Dexamethasone premedication: 8 mg PO twice daily × 3 days starting day before docetaxel (hypersensitivity prophylaxis)"
+  - "Blood pressure monitoring: weekly (ramucirumab VEGFR2 inhibition → hypertension)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 8-9 weeks (RECIST 1.1)"
+  - "At progression: clinical trial preferred; best supportive care; additional lines limited (erlotinib historical 3L option)"
+  - "DATO-DXd (datopotamab deruxtecan): if non-squamous, TROP2-expressing — alternative 2L if accessible"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "22.9% (REVEL; docetaxel + ramucirumab) vs 13.6% (docetaxel monotherapy)"
+  complete_response: "<1%"
+  progression_free_survival: "mPFS 4.5 months (doc+ram) vs 3.0 months (docetaxel; HR 0.76; p<0.0001)"
+  overall_survival_5y: "mOS 10.5 months (doc+ram) vs 9.1 months (docetaxel mono; HR 0.86; p=0.023)"
+  notes: >
+    PRIMARY EVIDENCE: Garon EB et al. Lancet 2014;384:665-673 (REVEL Phase 3; N=1253):
+    docetaxel + ramucirumab vs docetaxel + placebo in 2L+ NSCLC post-platinum.
+    mOS 10.5 vs 9.1 months; HR 0.86; p=0.023. ORR 22.9% vs 13.6%.
+    FDA approval December 2014. EMA approval 2014. NCCN NSCLC Category 1.
+    Note: REVEL enrolled patients post-platinum; benefit observed regardless of
+    histology (squamous and non-squamous) — docetaxel + ramucirumab is the NCCN
+    preferred 2L regimen for squamous NSCLC (DATO-DXd not recommended squamous).
+
+hard_contraindications:
+  - "Active EGFR/ALK/ROS1/KRAS G12C driver mutation — targeted therapy preferred over chemotherapy"
+  - "Active serious bleeding/hemoptysis (ramucirumab anti-VEGFR contraindication)"
+  - "Uncontrolled hypertension (ramucirumab contraindication — docetaxel mono acceptable)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "Blood pressure: baseline (ramucirumab)"
+  - "Molecular profile: confirm no actionable driver mutation if not previously done"
+
+sources:
+  - source_id: SRC-REVEL-GARON-2014
+    position: supports
+    relevant_quote_paraphrase: >
+      REVEL Phase 3 (Garon 2014 Lancet; N=1253): docetaxel + ramucirumab vs docetaxel
+      + placebo in 2L+ NSCLC. mOS 10.5 vs 9.1 months; HR 0.86; p=0.023. ORR 22.9%
+      vs 13.6%. FDA/NCCN Cat 1 for squamous and non-squamous NSCLC.
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN NSCLC: docetaxel + ramucirumab Category 1 as 2L chemotherapy for
+      squamous NSCLC post-platinum. For non-squamous, DATO-DXd or other options
+      may be preferred; docetaxel ± ramucirumab is the standard fallback.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DQ) — wiring gap closure for ALGO-NSCLC-METASTATIC-2L.
+  This is the chemotherapy fallback indication for 2L NSCLC (driver-negative or driver-
+  exhausted) after 1L platinum ± ICI or after 1L ICI monotherapy.
+  Ramucirumab + docetaxel is preferred over docetaxel monotherapy based on REVEL OS benefit
+  (modest but statistically significant). Ukraine: ramucirumab is NSZU-reimbursed for NSCLC
+  per NCCN evidence; accessible combination.
+  For squamous NSCLC, this is the primary 2L option (DATO-DXd excluded in squamous;
+  TROPION-Lung01 squamous subgroup showed no benefit).
