@@ -1,0 +1,117 @@
+id: ALGO-SCLC-2L
+applicable_to_disease: DIS-SCLC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for relapsed or refractory SCLC after platinum-based 1L.
+  Routes by ECOG performance status (gate) and chemotherapy-free interval (CTFI)
+  from last platinum dose. Clinical trial enrollment is preferred for all ECOG 0-2
+  patients at recurrence.
+
+output_indications:
+  - IND-SCLC-RR-TOPOTECAN
+  - IND-SCLC-RR-LURBINECTEDIN
+
+default_indication: IND-SCLC-RR-TOPOTECAN
+alternative_indication: IND-SCLC-RR-LURBINECTEDIN
+
+decision_tree:
+  # Step 1 — Clinical trial. At SCLC recurrence, clinical trial is the
+  # preferred option for ECOG 0-2 patients (NCCN, ESMO). Proceed to Step 2
+  # only if no suitable trial is available or patient declines.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "No available clinical trial OR patient declines trial enrollment"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "Clinical trial preferred at recurrence for ECOG 0-2. Discuss with MDT. Enroll if suitable trial available."
+
+  # Step 2 — Performance status gate.
+  # ECOG ≥3: systemic therapy unlikely to benefit; BSC.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: "ECOG ≥3: systemic therapy benefit minimal. Best supportive care + corticosteroids for paraneoplastic symptoms. Palliative/hospice referral."
+
+  # Step 3 — Platinum sensitivity by CTFI.
+  # CTFI = time from last platinum dose to disease progression.
+  # ≥180 days (highly sensitive): platinum rechallenge (EP or CE) preferred.
+  #    NOTE: IND-SCLC-PLATINUM-RECHALLENGE not yet in KB — route to topotecan
+  #    as fallback pending indication authoring.
+  # 90-180 days (sensitive): lurbinectedin preferred (if accessible) or topotecan.
+  # 30-89 days (intermediate/resistant): lurbinectedin (aggressive track) or topotecan.
+  # <30 days (refractory): topotecan only — lurbinectedin outside FDA label (CTFI ≥30d required).
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "CTFI ≥ 30 days from last platinum dose"
+    if_true:
+      next_step: 4
+      notes: "CTFI ≥30 days: lurbinectedin is within FDA-label eligibility (accelerated approval requires CTFI ≥30d). Route to step 4 for access gate."
+    if_false:
+      result: IND-SCLC-RR-TOPOTECAN
+      notes: >
+        CTFI <30 days (true platinum-refractory): topotecan standard of care.
+        Lurbinectedin FDA label specifies CTFI ≥30 days from last platinum dose;
+        topotecan has demonstrated activity even in very short CTFI (ORR ~4-9%).
+        CAV (cyclophosphamide+doxorubicin+vincristine) is an alternative
+        (NCCN Category 2A) but rarely used due to superior topotecan tolerability.
+
+  # Step 4 — Lurbinectedin access gate.
+  # Lurbinectedin is preferred per NCCN Cat 2A when accessible (better ORR 35%
+  # vs topotecan ~24% platinum-sensitive, less neutropenia). However, it is NOT
+  # registered or reimbursed in Ukraine. Topotecan is the accessible standard.
+  # For CTFI ≥180 days: platinum rechallenge is actually preferred over either
+  # lurbinectedin or topotecan — route here as placeholder.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Lurbinectedin accessible (registered/reimbursed or international pharmacy available)"
+        - condition: "CTFI < 180 days (if CTFI ≥180 days: see note — platinum rechallenge preferred)"
+    if_true:
+      result: IND-SCLC-RR-LURBINECTEDIN
+      notes: >
+        Lurbinectedin accessible + CTFI 30-179 days: lurbinectedin 3.2 mg/m² IV q3w
+        preferred (NCCN Cat 2A; ORR 35% overall; 45% platinum-sensitive ≥90d CTFI;
+        Trigo Lancet Oncol 2020). Better toxicity profile vs topotecan (less G3-4
+        neutropenia, no oral unavailability in UA). ATLANTIS phase 3 failed OS
+        primary endpoint (HR 0.97) — lurbinectedin not proven superior on OS;
+        monotherapy use rests on basket trial.
+    if_false:
+      result: IND-SCLC-RR-TOPOTECAN
+      notes: >
+        Topotecan IV standard when: (a) lurbinectedin inaccessible (standard in Ukraine —
+        registered, reimbursable), OR (b) CTFI ≥180 days and platinum rechallenge declined/
+        ineligible (platinum rechallenge IND pending KB authoring — use topotecan as bridge).
+        CTFI ≥180 days + eligible: consider platinum rechallenge EP/CE first (NCCN; best ORR
+        in highly sensitive relapse) — add IND-SCLC-PLATINUM-RECHALLENGE when authored.
+
+sources:
+  - SRC-NCCN-SCLC-2025
+  - SRC-ESMO-SCLC-2021
+  - SRC-TRIGO-2020
+
+last_reviewed: "2026-05-04"
+notes: >
+  SCLC 2L routing: 4-step algorithm — clinical trial gate → PS gate →
+  CTFI gate (≥30 vs <30 days from last platinum) → lurbinectedin access gate.
+
+  Two active indications:
+  - IND-SCLC-RR-TOPOTECAN (standard; NCCN Cat 1; registered UA; CTFI any)
+  - IND-SCLC-RR-LURBINECTEDIN (aggressive; NCCN Cat 2A; not registered UA; CTFI ≥30d)
+
+  Known gap: IND-SCLC-PLATINUM-RECHALLENGE (EP or CE for CTFI ≥180d) not yet in KB.
+  CTFI ≥180 days is the highly platinum-sensitive category where rechallenge is often
+  preferred over novel agents — pending authoring.
+
+  CAV (cyclophosphamide+doxorubicin+vincristine) is NCCN Category 2A alternative for
+  CTFI ≥90 days but rarely used given topotecan non-inferiority and better tolerability
+  (von Pawel 1999 phase 3: equivalent OS, topotecan better QoL and hematologic profile).

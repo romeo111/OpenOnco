@@ -1,0 +1,125 @@
+id: IND-PDAC-METASTATIC-2L-NAL-IRI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic pancreatic adenocarcinoma with disease progression after gemcitabine-based 1L therapy"
+    - "NOTE: nal-IRI+5-FU/LV is post-gemcitabine; after FOLFIRINOX-based 1L → gemcitabine ± nab-paclitaxel 2L"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NAL-IRI-5FU-LV-PDAC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~16% ORR (nal-IRI+5-FU/LV arm, NAPOLI-1)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 3.1 mo (vs 1.5 mo 5-FU/LV alone; HR 0.56, NAPOLI-1)"
+  overall_survival_5y: "Median OS 6.1 mo vs 4.2 mo 5-FU/LV alone (HR 0.67, 95% CI 0.49–0.92, p=0.012, NAPOLI-1)"
+
+hard_contraindications:
+  - "Total bilirubin >2× ULN (irinotecan hepatic metabolism; biliary obstruction must be relieved first)"
+  - "Prior pelvic RT with active small bowel involvement (severe diarrhea risk)"
+  - "Active inflammatory bowel disease"
+
+red_flags_triggering_alternative:
+  - RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS
+  - RF-PDAC-FRAILTY-AGE
+  - RF-PDAC-INFECTION-SCREENING
+  - RF-PDAC-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BILIRUBIN-TOTAL
+  - TEST-CA19-9
+  - TEST-CECT-CAP
+
+desired_tests:
+  - TEST-UGT1A1-GENOTYPE
+
+rationale: >
+  Nal-IRI (nanoliposomal irinotecan, ONIVYDE) + 5-FU/LV is the FDA-approved
+  (October 2015) and NCCN Category 1 2L regimen for mPDAC after gemcitabine-
+  based 1L therapy, based on NAPOLI-1 (Wang-Gillam, Lancet 2016, n=417,
+  phase 3 RCT). Nal-IRI+5-FU/LV improved mOS 6.1 vs 4.2 mo (HR 0.67,
+  p=0.012) and mPFS 3.1 vs 1.5 mo (HR 0.56) vs 5-FU/LV alone. ORR 16%
+  vs 1% (post-gemcitabine). Nal-IRI monotherapy arm (without 5-FU/LV) did
+  NOT demonstrate OS benefit (HR 0.99) — combination required. Mechanism:
+  ONIVYDE (PEGylated liposomal irinotecan) delivers higher intra-tumoral
+  SN-38 concentrations vs conventional irinotecan; SN-38 is a potent
+  topoisomerase I inhibitor. Post-FOLFIRINOX-based 1L: gemcitabine±nab-
+  paclitaxel is preferred 2L (cross-resistance with nal-IRI + 5-FU backbone
+  possible if FOLFIRINOX was 1L). BRCA1/2-germline patients: olaparib
+  maintenance after ≥16 weeks platinum-1L (POLO trial) is a separate indication
+  (IND-PDAC-MAINTENANCE-OLAPARIB-BRCA).
+
+rationale_ua: >
+  Nal-IRI (наноліпосомальний іринотекан, ONIVYDE) + 5-FU/LV є FDA-схваленим
+  (жовтень 2015) та NCCN Категорія 1 2L режимом для мПДАК після гемцитабін-
+  базованої 1L терапії, на підставі NAPOLI-1 (Wang-Gillam, Lancet 2016, n=417,
+  фаза 3 РКД). Nal-IRI+5-FU/LV покращив mOS 6.1 проти 4.2 міс. (HR 0.67,
+  p=0.012) та mPFS 3.1 проти 1.5 міс. (HR 0.56) проти 5-FU/LV монотерапії.
+  ORR 16% проти 1% (після гемцитабіну). Nal-IRI монотерапія (без 5-FU/LV)
+  НЕ продемонструвала ЗВ-переваги (HR 0.99) — комбінація є обов'язковою.
+  Після FOLFIRINOX-базованої 1L: гемцитабін±наб-паклітаксел — кращий 2L
+  (перехресна резистентність з nal-IRI + 5-FU базовою схемою можлива якщо
+  FOLFIRINOX — 1L). BRCA1/2 зародкова лінія: оларапіб підтримуюча терапія
+  після ≥16 тижнів платиновою 1L (POLO) — окрема показа.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NAPOLI1-WANG-GILLAM-2016
+    position: supports
+    relevant_quote_paraphrase: "Nal-IRI+5-FU/LV improved OS vs 5-FU/LV alone post-gemcitabine mPDAC: mOS 6.1 vs 4.2 mo, HR 0.67, p=0.012 (NAPOLI-1 phase 3)"
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+    relevant_quote_paraphrase: "Nal-IRI+5-FU/LV is NCCN Category 1 preferred 2L after gemcitabine-based 1L for mPDAC"
+  - source_id: SRC-ESMO-PANCREATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "ESMO recommends nal-IRI+5-FU/LV as 2L post-gemcitabine for fit patients with mPDAC"
+
+do_not_do:
+  - "Не призначати при загальному білірубіні >2× ULN — спочатку дренувати жовчну обструкцію; іринотекан є гепатично метаболізованим"
+  - "Не використовувати nal-IRI монотерапію (без 5-FU/LV) — NAPOLI-1 монотерапевтична рука НЕ показала ЗВ-переваги (HR 0.99)"
+  - "Не призначати після FOLFIRINOX-базованої 1L — призначити гемцитабін ± наб-паклітаксел як 2L (перехресна резистентність по іринотекан/5-FU можлива)"
+  - "Не пропускати профілактику пізньої діареї лоперамідом — Grade 3-4 у ~13%; пацієнт повинен мати лоперамід вдома та знати схему"
+  - "Не починати при відсутності судинного доступу (PICC або порт) для 46-годинної CI 5-FU"
+
+known_controversies:
+  - topic: "Nal-IRI+5-FU/LV vs FOLFOX in 2L post-gemcitabine PDAC"
+    positions:
+      - position: "Nal-IRI+5-FU/LV is FDA-approved (Category 1) with phase 3 RCT data vs FOLFOX which has only retrospective/phase 2 data in 2L"
+        sources:
+          - SRC-NAPOLI1-WANG-GILLAM-2016
+          - SRC-NCCN-PANCREATIC-2025
+      - position: "FOLFOX (oxaliplatin+5-FU/LV) is an accessible alternative when ONIVYDE is unavailable — NCCN listed as 2L option"
+        sources:
+          - SRC-NCCN-PANCREATIC-2025
+    our_default: "Nal-IRI+5-FU/LV if accessible (ONIVYDE); FOLFOX or modified FOLFOX if nal-IRI unavailable (Ukraine access barrier)"
+    rationale: "ONIVYDE is not registered in Ukraine; FOLFOX is the accessible alternative with lower evidence quality"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  NAPOLI-1 (PMID 26524560) is the landmark RCT establishing nal-IRI+5-FU/LV as
+  Category 1 2L post-gemcitabine mPDAC. FDA approved October 2015 (ONIVYDE).
+  ONIVYDE not registered in Ukraine — significant access barrier. FOLFOX or
+  modified FOLFOX (NCCN-listed 2L option) is the accessible fallback.
+  Algorithm partner: ALGO-PDAC-METASTATIC-2L routes by prior 1L backbone.

@@ -2,20 +2,96 @@ id: ALGO-THYROID-ANAPLASTIC-1L
 applicable_to_disease: DIS-THYROID-ANAPLASTIC
 applicable_to_line_of_therapy: 1
 purpose: >
-  Palliative 1L systemic therapy for unresectable / metastatic ATC without BRAF V600E or with BRAFi unavailable. Median OS ~5-6 mo.
+  Select 1L systemic therapy for unresectable or metastatic anaplastic thyroid
+  carcinoma (ATC). Routes first by BRAF V600E status (present ~25-50% of ATC):
+  BRAF V600E-mutant → dabrafenib+trametinib (ROAR; ORR 69%, mOS ~14.5 mo);
+  BRAF wild-type or unknown → palliative chemotherapy (paclitaxel+carboplatin).
+  ATC is a clinical emergency — BRAF testing must be initiated on the day of biopsy.
 
 output_indications:
+  - IND-ATC-BRAF-V600E-DAB-TRAM
   - IND-ATC-PACLITAXEL-CARBOPLATIN
 
 default_indication: IND-ATC-PACLITAXEL-CARBOPLATIN
+alternative_indication: IND-ATC-BRAF-V600E-DAB-TRAM
 
 decision_tree:
+  # Step 1 — BRAF V600E molecular status.
+  # ATC is a clinical emergency: initiate BRAF V600E testing on the same day
+  # as biopsy ("RAID" workflow per NCCN). ~25-50% of ATC harbor V600E —
+  # dramatic survival benefit with dabrafenib+trametinib (mOS ~14.5 mo vs ~5 mo).
+  # BRAF inhibitor monotherapy is CONTRAINDICATED (paradoxical MAPK activation).
   - step: 1
     evaluate:
       any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
-    branch_target: IND-ATC-PACLITAXEL-CARBOPLATIN
+        - condition: "BRAF V600E mutation confirmed (IHC VE1 or sequencing)"
+    if_true:
+      next_step: 2
+      notes: "BRAF V600E confirmed: route to targeted therapy. Do NOT start chemotherapy first — BRAFi+MEKi offers dramatically superior outcomes."
+    if_false:
+      next_step: 3
+      notes: "BRAF V600E absent OR testing pending: route to chemotherapy. If testing still pending and patient requires immediate treatment, start chemotherapy; switch to BRAFi+MEKi if V600E confirmed."
 
+  # Step 2 — Performance status gate for BRAFi+MEKi.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - condition: "ECOG 0-2"
+    if_true:
+      result: IND-ATC-BRAF-V600E-DAB-TRAM
+      notes: >
+        BRAF V600E + ECOG 0-2: dabrafenib 150 mg BID + trametinib 2 mg QD.
+        ROAR basket trial: ORR 69% (n=29), mOS ~14.5 mo vs historical ~5 mo.
+        FDA-approved May 2018 (tumor-agnostic 2022). Consider neoadjuvant intent
+        if initially unresectable — reassess resectability after 2-4 cycles.
+        Baseline ECG, ECHO, and ophthalmologic exam required.
+    if_false:
+      result: IND-ATC-PACLITAXEL-CARBOPLATIN
+      notes: >
+        BRAF V600E + ECOG ≥3: BRAFi+MEKi toxicity may not be tolerated.
+        Palliative supportive care preferred; paclitaxel+carboplatin if patient
+        elects systemic therapy with adequate PS recovery. Multidisciplinary
+        palliative care consultation.
+
+  # Step 3 — BRAF wild-type or unknown: cytotoxic chemotherapy.
+  - step: 3
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - condition: "ECOG 0-2"
+    if_true:
+      result: IND-ATC-PACLITAXEL-CARBOPLATIN
+      notes: >
+        BRAF wild-type / non-V600E / unknown + ECOG 0-2: palliative
+        paclitaxel+carboplatin chemotherapy (historical 1L ATC; mOS ~5-6 mo).
+        If V600E result still pending, begin chemotherapy and switch to
+        dabrafenib+trametinib immediately upon V600E confirmation.
+        Lenvatinib±pembrolizumab (KEYNOTE-B54 emerging) is investigational.
+        Clinical trial enrollment preferred.
+    if_false:
+      result: null
+      notes: "BRAF wild-type + ECOG ≥3: best supportive care. ATC prognosis is extremely poor without effective therapy; palliative/hospice goals of care discussion."
+
+sources:
+  - SRC-ROAR-SUBBIAH-2018
+  - SRC-NCCN-THYROID-2025
+
+last_reviewed: "2026-05-04"
 reviewer_signoffs: 0
 notes: >
-  STUB scaffold. Single-branch algorithm.
+  Updated from 1-step stub to 3-step algorithm adding BRAF V600E gate.
+  IND-ATC-BRAF-V600E-DAB-TRAM added to output_indications (ROAR trial;
+  FDA approved May 2018). ~25-50% of ATC harbor BRAF V600E; testing urgency
+  is extreme (mOS ~5 mo without targeted therapy vs ~14.5 mo with BRAFi+MEKi).
+
+  IND-ATC-PACLITAXEL-CARBOPLATIN: still the default (BRAF wild-type) and
+  fallback (testing pending) — not yet authored as formal indication entity
+  (original stub had branch_target, not result). Authoring that indication
+  is a pending gap.
+
+  Note: lenvatinib-based combinations (NCCN 2A), immunotherapy combinations,
+  and multikinase inhibitors are investigational in ATC; not yet in KB.
+  SRC-ATA-THYROID-2015 predates BRAFi approval; SRC-NCCN-THYROID-2025 is current.
