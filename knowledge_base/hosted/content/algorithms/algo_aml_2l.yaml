@@ -17,6 +17,7 @@ output_indications:
   - IND-AML-1L-VEN-AZA
   - IND-AML-2L-IDH2-ENASIDENIB
   - IND-AML-2L-IDH1-IVOSIDENIB
+  - IND-AML-2L-KMT2A-REVUMENIB
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
@@ -107,8 +108,37 @@ decision_tree:
         bridge to alloHCT. Ukraine: not registered; compassionate-use Servier or
         named-patient. When inaccessible → ven+aza (IND-AML-1L-VEN-AZA) as fallback.
     if_false:
+      next_step: 62
+    notes: "Step 6 updated 2026-05-04 (Workstream CK): IDH1-mut R/R now routes to IND-AML-2L-IDH1-IVOSIDENIB (REG-IVOSIDENIB-AML; NCCN Cat 1) instead of ven+aza backbone. Gap (IDH1 IND deferred PROD-5) CLOSED. if_false now routes to step 62 (KMT2A gate) added Workstream FA 2026-05-04."
+
+  # Step 62 — KMT2A-rearranged R/R AML → revumenib monotherapy.
+  # Revumenib (Revuforj) is a menin inhibitor; KMT2A fusion proteins are
+  # dependent on menin–KMT2A protein-protein interaction for HOXA/MEIS1
+  # transcription. FDA approved November 2024 for R/R KMT2A-rearranged
+  # acute leukemia ≥1 prior line (AUGMENT-101 phase 1/2; ORR ~63%; CR/CRh
+  # ~23%). NCCN AML 2025: Category 2A. Bridge to alloHCT for responders.
+  # CRITICAL: differentiation syndrome (~16%); QTc prolongation; KMT2A
+  # confirmation mandatory at relapse.
+  - step: 62
+    evaluate:
+      any_of:
+        - red_flag: RF-AML-KMT2A-ACTIONABLE
+    if_true:
+      result: IND-AML-2L-KMT2A-REVUMENIB
+      notes: >
+        KMT2A rearrangement confirmed at relapse: revumenib (Revuforj) oral
+        monotherapy (REG-REVUMENIB-AML; AUGMENT-101; ORR ~63%; CR/CRh ~23%;
+        FDA Nov 2024; NCCN Cat 2A). Menin inhibitor blocks menin-KMT2A fusion
+        protein-driven HOXA/MEIS1 transcription.
+        CRITICAL safety: differentiation syndrome (~16%) — immediate
+        dexamethasone 10 mg IV BID if suspected (fever, dyspnea, weight gain,
+        pleural/pericardial effusion, leukocytosis); do NOT wait for confirmation.
+        QTc mandatory: baseline ECG, K+ ≥4.0 / Mg++ ≥2.0 before each cycle.
+        Bridge to alloHCT for fit responders (revumenib monotherapy NOT curative).
+        Ukraine: not registered; international referral or Syndax EAP only.
+    if_false:
       next_step: 7
-    notes: "Step 6 updated 2026-05-04 (Workstream CK): IDH1-mut R/R now routes to IND-AML-2L-IDH1-IVOSIDENIB (REG-IVOSIDENIB-AML; NCCN Cat 1) instead of ven+aza backbone. Gap (IDH1 IND deferred PROD-5) CLOSED."
+    notes: "Step 62 added 2026-05-04 (Workstream FA): KMT2A-rearrangement gate for revumenib (IND-AML-2L-KMT2A-REVUMENIB; FDA Nov 2024; NCCN Cat 2A). Gap CLOSED. Prior if_false was step 7; now step 6 → step 62 → step 7 for non-IDH1/KMT2A patients."
 
   # Step 7 — frailty / organ dysfunction at relapse → ven+aza (lower
   # toxicity than re-induction; also covers FLT3-WT R/R unfit).
@@ -140,12 +170,19 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ELN-AML-2022
   - SRC-ADMIRAL-PERL-2019
+  - SRC-AUGMENT-101
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream FA): IND-AML-2L-KMT2A-REVUMENIB wired at step 62
+  (KMT2A gate between IDH1 step 6 and frailty step 7). Revumenib (Revuforj; menin
+  inhibitor; AUGMENT-101; ORR ~63%; CR/CRh ~23%; FDA Nov 2024; NCCN Cat 2A).
+  RF-AML-KMT2A-ACTIONABLE fires on confirmed KMT2A rearrangement at relapse.
+  Step 6 if_false updated: 6 → 62 → 7 routing.
   ALGO-AML-2L routes: FLT3-actionable → gilteritinib; IDH2-actionable → enasidenib
   (step 5, added 2026-04-30); IDH1-actionable → ivosidenib (step 6, Workstream CK
-  2026-05-04); non-actionable (FLT3-WT, IDH-WT) → ven+aza backbone.
+  2026-05-04); KMT2A-rearranged → revumenib (step 62, Workstream FA 2026-05-04);
+  non-actionable (FLT3-WT, IDH-WT, KMT2A-neg) → ven+aza backbone.
   UPDATED 2026-05-04 (Workstream CK): IND-AML-2L-IDH1-IVOSIDENIB authored and wired
   at step 6 (AG-120-AML DiNardo 2018 NEJM; ORR 41.6%; CR 21.8%; NCCN Cat 1;
   REG-IVOSIDENIB-AML). Deferred IDH1 gap (PROD-5) CLOSED.
