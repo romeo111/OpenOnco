@@ -13,6 +13,7 @@ output_indications:
   - IND-CHL-2L-PEMBROLIZUMAB
   - IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
   - IND-CHL-2L-BV-SALVAGE
+  - IND-CHL-2L-NIVOLUMAB
 
 default_indication: IND-CHL-2L-PEMBROLIZUMAB
 alternative_indication: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
@@ -74,13 +75,37 @@ decision_tree:
         - red_flag: RF-CHL-FRAILTY-AGE
         - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-CHL-2L-PEMBROLIZUMAB
+      next_step: 21
     if_false:
       next_step: 3
+    notes: "Step 2 if_true updated 2026-05-04 (Workstream CJ): routes to step 21 (pembro vs nivo access gate) instead of direct pembro result."
+
+  # Step 21 — Pembrolizumab vs nivolumab access gate for PD-1 arm.
+  # Both KEYNOTE-204 (pembro) and CheckMate-205 (nivo) are NCCN Cat 1.
+  # ORR ~65-66% for both. Choice driven by access/formulary.
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "Pembrolizumab accessible (registered + funded at prescribing centre)"
+    if_true:
+      result: IND-CHL-2L-PEMBROLIZUMAB
+      notes: >
+        Pembrolizumab accessible: 200 mg IV q3w (REG-PEMBROLIZUMAB-CHL; KEYNOTE-204;
+        ORR 65.6%; CR 24.5%; mPFS 13.2 mo; NCCN Cat 1). Nivolumab is equally valid
+        Cat 1 alternative — access-driven choice. cHL PD-L1 overexpression (9p24.1)
+        makes it among the most ICI-responsive hematologic malignancies.
+    if_false:
+      result: IND-CHL-2L-NIVOLUMAB
+      notes: >
+        Pembrolizumab inaccessible: nivolumab 240 mg IV q2w or 480 mg IV q4w
+        (REG-NIVOLUMAB-MONO; CheckMate-205 Armand 2018 JCO; ORR ~66%; mPFS ~14.7 mo;
+        NCCN Cat 1). Equivalent to pembrolizumab; choice is access-driven.
+        cHL RS cells express constitutive PD-L1 (9p24.1 amplification) → high PD-1 sensitivity.
+    notes: "Step 21 added 2026-05-04 (Workstream CJ): pembro vs nivo access gate for r/r cHL. Both NCCN Cat 1. Gap (2) nivolumab not separately modeled — CLOSED."
 
   # Step 3 — default: 1st relapse, ASCT-eligible → BV salvage→ASCT then
-  # BV maintenance if high-risk; else pembrolizumab. Default surfaces
-  # pembrolizumab as the standard-track option (most realistic for UA).
+  # BV maintenance if high-risk; else PD-1 inhibitor. Default surfaces
+  # PD-1 (pembro/nivo via step 21) as the standard-track option (most realistic for UA).
   - step: 3
     evaluate:
       any_of:
@@ -88,9 +113,9 @@ decision_tree:
         - condition: "ASCT not accessible / patient declined"
         - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-CHL-2L-PEMBROLIZUMAB
+      next_step: 21
     if_false:
-      result: IND-CHL-2L-PEMBROLIZUMAB
+      next_step: 21
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -103,9 +128,12 @@ notes: >
   (0) ASCT-eligible + BV-naive → BV+benda salvage (bridge to ASCT);
   (1) post-ASCT + high-risk + BV-naive → BV maintenance (AETHERA);
   (2) post-ASCT relapse / transplant-ineligible → pembrolizumab (KEYNOTE-204).
+  UPDATED 2026-05-04 (Workstream CJ): IND-CHL-2L-NIVOLUMAB authored and wired at
+  step 21 (CheckMate-205; Armand 2018 JCO; ORR ~66%; mPFS ~14.7 mo; NCCN Cat 1;
+  REG-NIVOLUMAB-MONO). Steps 2 and 3 if_true/if_false now route to step 21 (pembro
+  vs nivo access gate): pembro accessible → pembro; else → nivolumab. Gap (2) CLOSED.
   OOS / wiring gaps:
   (1) BEAM-autoSCT itself is a procedure (not an indication) — not modeled.
-  (2) Nivolumab (CheckMate-205) — not modeled; pembrolizumab covers PD-1 niche.
   (3) BV+nivolumab combo (post-ASCT relapse) — not modeled.
   (4) Allogeneic SCT for post-PD-1 relapse — referral, outside KB.
   (5) ICE/DHAP/GDP salvage (platinum-based) — not separately modeled;

@@ -1,0 +1,149 @@
+id: IND-CHL-2L-NIVOLUMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory classical Hodgkin lymphoma after ≥2 prior lines of therapy (at least 1 including brentuximab vedotin or ASCT-ineligible)"
+    - "Post-ASCT relapse OR ASCT-ineligible OR BV-refractory/post-BV salvage failure"
+    - "Pembrolizumab inaccessible or unavailable at prescribing centre (nivolumab used as equivalent PD-1 alternative)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active autoimmune disease requiring >10 mg/day prednisone equivalent — irAE risk"
+    - "Prior solid organ transplant — PD-1 blockade causes allograft rejection"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Interchangeable alternative to pembrolizumab (IND-CHL-2L-PEMBROLIZUMAB) when
+      pembrolizumab is inaccessible. Both are NCCN Category 1. cHL overexpresses PD-L1
+      due to 9p24.1 amplification (RS cells) — constitutive PD-1/PD-L1 signaling makes
+      cHL one of the most ICI-sensitive malignancies (ORR ~65-66% with either PD-1 inhibitor).
+
+recommended_regimen: REG-NIVOLUMAB-MONO
+alternative_regimens:
+  - regimen_id: IND-CHL-2L-PEMBROLIZUMAB
+    description: >
+      Pembrolizumab 200 mg IV q3w (KEYNOTE-204; ORR 65.6%; CR 24.5%; mPFS 13.2 mo;
+      NCCN Cat 1). Interchangeable with nivolumab — preferred when pembrolizumab is
+      the NSZU-reimbursed option at the prescribing centre.
+
+concurrent_therapy:
+  - "TSH baseline and q6 weeks (immune thyroiditis ~10% with nivolumab)"
+  - "LFT + creatinine baseline and q3 cycles"
+  - "No routine steroid premedication (reduces ICI efficacy)"
+
+followed_by:
+  - "PET-CT q3-4 cycles (Deauville criteria): assess depth of response"
+  - "CR responders: consider consolidative alloSCT if ASCT-eligible and donor available"
+  - "Duration: until confirmed progression or unacceptable toxicity (no fixed duration defined in CheckMate-205)"
+  - "At progression: BV+bendamustine (if BV-naive); clinical trial; alloSCT referral for fit responders"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~66% (CheckMate-205; Armand 2018 JCO; B cohort — post-BV; post-ASCT)"
+  complete_response: "~16% (CheckMate-205 B cohort; higher CR in other cohorts)"
+  median_pfs_months: "~14.7 months (CheckMate-205 pooled; similar to pembrolizumab ~13.2 mo)"
+  notes: >
+    PRIMARY EVIDENCE: CheckMate-205 (Armand 2018 JCO; Younes 2016 Lancet Oncol):
+    - Phase 2 single-arm: nivolumab 3 mg/kg q2w in r/r cHL with ≥2 prior lines
+    - Cohort A (BV-naive): ORR 65%; CR 29%
+    - Cohort B (post-BV): ORR 68%; CR 13%
+    - Cohort C (post-ASCT + post-BV): ORR 73%; CR 12%
+    - Overall pooled ORR ~66%; mPFS ~14.7 months
+    - FDA approved 2016 (accelerated); expanded approval 2017
+
+    COMPARISON TO PEMBROLIZUMAB (IND-CHL-2L-PEMBROLIZUMAB):
+    KEYNOTE-204 vs CheckMate-205 cross-trial: ORR ~65-66% (nearly identical);
+    CR rates differ (~24.5% pembro vs ~16% nivo in comparable cohorts).
+    KEYNOTE-204 compared pembrolizumab to BV in a randomized setting (HR 0.65),
+    confirming superiority to BV. No direct head-to-head randomized trial exists.
+    Both are NCCN Category 1; considered clinically interchangeable.
+
+    MECHANISM IN cHL:
+    cHL Reed-Sternberg (RS) cells overexpress PD-L1 due to 9p24.1 amplification
+    (JAK2, CIITA, PD-L1/PD-L2 locus). This constitutive PD-L1 signaling drives
+    tumor immune escape. PD-1 blockade (nivolumab or pembrolizumab) restores
+    cytotoxic T-cell function against RS cells — cHL has among the highest
+    objective response rates to PD-1 inhibitors of any hematologic malignancy.
+
+    UKRAINE CONTEXT:
+    Nivolumab (Opdivo) registered in Ukraine. NSZU reimbursement for cHL may vary
+    by cycle/indication year. Use whichever PD-1 inhibitor is available at the
+    prescribing centre. Pembrolizumab (Keytruda) may be preferred where NSZU covers it.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic immunosuppression >10 mg/day prednisone — irAE risk compounded"
+  - "Prior solid organ transplant: PD-1 blockade causes allograft rejection"
+  - "Prior Grade ≥4 immune-related AE from any PD-1/CTLA-4 therapy — permanent discontinuation required"
+
+red_flags_triggering_alternative:
+  - condition: "Pembrolizumab accessible → IND-CHL-2L-PEMBROLIZUMAB (equivalent Cat 1; access-driven choice)"
+  - condition: "BV-naive + ASCT-eligible (1st relapse) → IND-CHL-2L-BV-SALVAGE (BV+benda; ORR 93%; bridge to ASCT)"
+  - condition: "Confirmed Grade ≥3 immune pneumonitis: permanently discontinue; no rechallenge with any PD-1 inhibitor"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-PET-CT
+  - "TSH + free T4 baseline — immune thyroiditis"
+  - "LN core biopsy at relapse (confirm cHL histology + CD30 status)"
+  - TEST-ECHO
+
+desired_tests:
+  - "ECG + troponin baseline (immune myocarditis 1-2% risk)"
+  - "Cortisol AM (adrenal insufficiency)"
+  - "EBV status (informative; most cHL is EBV+ in developing countries — no therapeutic implication)"
+
+rationale: >
+  Nivolumab for relapsed/refractory cHL — equivalent PD-1 inhibitor alternative
+  to pembrolizumab when pembrolizumab is inaccessible at the prescribing centre.
+
+  cHL is uniquely sensitive to PD-1 blockade:
+  1. 9p24.1 amplification in RS cells → constitutive PD-L1/PD-L2 overexpression
+  2. PD-1 signaling from surrounding microenvironment reinforces immunosuppression
+  3. PD-1 blockade (nivolumab/pembrolizumab) reverses this immune escape → high ORR
+
+  Both nivolumab (CheckMate-205; Armand 2018) and pembrolizumab (KEYNOTE-204;
+  Roemer 2020) achieve ~65-66% ORR in r/r cHL. The choice between agents is
+  access-driven, not evidence-driven.
+
+rationale_ua: >
+  Ніволумаб (480 мг IV q4w або 240 мг IV q2w) для рецидивної/рефрактерної кХЛ
+  після ≥2 попередніх ліній (включно з BV або post-ASCT) — рівноцінна альтернатива
+  пембролізумабу при його недоступності.
+  CheckMate-205 (Armand 2018 JCO): ЗВ ~66%; mВБП ~14.7 міс. NCCN Cat 1.
+  КС клітини надекспресують PD-L1 (ампліфікація 9p24.1) → найвища чутливість до
+  PD-1 блокади з усіх гематологічних злоякісних пухлин.
+  В Україні: ніволумаб (Opdivo) зареєстрований; НСЗУ для кХЛ — уточнити у центрі.
+  Використовувати, якщо пембролізумаб недоступний.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати при активному автоімунному захворюванні з імуносупресивною терапією >10 мг/добу"
+  - "Не призначати після трансплантації органів — відторгнення трансплантата"
+  - "Не ігнорувати базовий ТТГ — тиреоїдит ~10% при ніволумабі"
+  - "При Grade ≥3 пневмоніті — постійна відміна ніволумабу"
+  - "Не призначати без ПЕТ-КТ вихідно — оцінка відповіді за критеріями Deauville"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell/Hodgkin 2025 Category 1: nivolumab for relapsed/refractory cHL after
+      ≥2 prior lines (CheckMate-205 basis). Equivalent to pembrolizumab (KEYNOTE-204);
+      both recommended as standard Category 1 options for r/r cHL.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
