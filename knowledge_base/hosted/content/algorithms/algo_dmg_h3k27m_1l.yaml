@@ -1,0 +1,110 @@
+id: ALGO-DMG-H3K27M-1L
+applicable_to_disease: DIS-DMG-H3K27M
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select systemic therapy for H3K27M-mutant diffuse midline glioma (DMG) after
+  prior radiotherapy. Dordaviprone (ONC201; FDA April 2024; NCCN Cat 2A) is
+  the only FDA-approved systemic therapy for this entity. Algorithm gates on
+  H3K27M confirmation, prior RT (FDA label requirement), and ECOG PS.
+  Clinical trial enrollment is preferred at all stages.
+
+output_indications:
+  - IND-DMG-H3K27M-DORDAVIPRONE
+
+default_indication: IND-DMG-H3K27M-DORDAVIPRONE
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Clinical trial gate.
+  # H3K27M DMG has very limited approved treatments; trial preferred for all patients.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "No available clinical trial OR patient/family declines trial enrollment"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Clinical trial enrollment is strongly preferred for H3K27M DMG — limited
+        approved options and ongoing research into combination strategies.
+        Discuss PNOC, CONNECT, and international H3K27M-specific trial opportunities.
+
+  # Step 2 — H3K27M confirmation gate.
+  # FDA label REQUIRES H3K27M confirmation before initiating dordaviprone.
+  # IHC with RM-2118 antibody is the standard test (sensitive, specific, rapid).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "H3K27M mutation confirmed by IHC (RM-2118) or molecular sequencing"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        H3K27M NOT confirmed: dordaviprone is not indicated without biomarker confirmation.
+        Expedite IHC testing (RM-2118). If biopsy not feasible (pontine DIPG):
+        discuss risk-benefit of biopsy with neurosurgery — H3K27M testing is
+        recommended for all newly diagnosed DMG per WHO CNS 2021.
+        Without confirmation: RT alone is the standard (palliative RT 54 Gy);
+        best supportive care for rapid progression.
+
+  # Step 3 — Prior radiotherapy gate.
+  # FDA indication for dordaviprone: H3K27M DMG after prior RT.
+  # If RT not yet completed: complete RT first, then initiate dordaviprone.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Prior radiotherapy completed (RT 54 Gy in 30 fractions or equivalent)"
+    if_true:
+      next_step: 4
+    if_false:
+      result: null
+      notes: >
+        Prior RT not completed: FDA label requires prior RT. Complete standard
+        radiotherapy first (54 Gy / 30 fractions focal RT, or 39 Gy / 13 fractions
+        for hypofractionated if clinically indicated).
+        Dordaviprone timing: can initiate dordaviprone during RT (off-label) or
+        immediately after RT completion per institutional protocol — FDA label
+        does not specify the gap between RT and dordaviprone initiation.
+
+  # Step 4 — Performance status gate.
+  # Dordaviprone is oral and generally well-tolerated; ECOG 0-2 reasonable.
+  # ECOG ≥3: limited data; best supportive care + corticosteroids for edema.
+  - step: 4
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - condition: "ECOG PS 0-2"
+    if_true:
+      result: IND-DMG-H3K27M-DORDAVIPRONE
+      notes: >
+        H3K27M confirmed + prior RT + ECOG 0-2: dordaviprone 625 mg PO once weekly.
+        FDA accelerated approval April 2024. NCCN CNS 2025: Category 2A.
+        ORR ~33-35%; mOS improvement vs placebo in ACTION-1 (Phase 3).
+        First and only FDA-approved systemic therapy for H3K27M DMG.
+        IHC confirmation mandatory before first dose. ECG baseline required (QTc).
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: dordaviprone not recommended. Best supportive care (BSC):
+        dexamethasone for cerebral edema; anti-epileptic drugs; palliative RT
+        to symptomatic sites (reirradiation if feasible). Goals of care discussion;
+        palliative care/hospice referral if appropriate.
+
+sources:
+  - SRC-ACTION1-OU-2024
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EI 2026-05-04. H3K27M DMG algorithm with dordaviprone as the
+  single FDA-approved systemic therapy. New disease entity (DIS-DMG-H3K27M).
+  Primarily affects pediatric/young adult patients; neuro-oncology + pediatric
+  oncology MDT coordination essential.
+  Clinical trial enrollment always preferred — only 1 approved agent exists.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
