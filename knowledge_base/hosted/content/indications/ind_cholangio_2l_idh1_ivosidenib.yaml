@@ -1,0 +1,186 @@
+id: IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Intrahepatic cholangiocarcinoma (iCCA) ONLY — IDH1 mutations occur in ~15-20% of iCCA; perihilar/distal CCA or gallbladder carcinoma: test but mutation rare"
+    - "Advanced / metastatic iCCA — not surgically resectable"
+    - "Disease progression on or after 1L gemcitabine + cisplatin (± durvalumab per TOPAZ-1)"
+    - "ECOG PS 0-2 (ClarIDHy enrolled ECOG 0-1; ECOG 2 requires MDT assessment)"
+    - "Adequate organ function: bilirubin ≤3× ULN (biliary obstruction: stent first); AST/ALT ≤5× ULN; CrCl ≥45 mL/min"
+    - "QTc ≤480 ms at baseline (ivosidenib prolongs QTc)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-IDH1-HOTSPOT-MUT
+      required: true
+      value_constraint: "IDH1 hotspot mutation confirmed (R132C, R132H, R132G, R132S, or R132L) by PCR or NGS hotspot panel on tumor tissue or cfDNA"
+  biomarker_requirements_excluded:
+    - "IDH1 wildtype — ivosidenib inactive; IND-CHOLANGIO-2L-FOLFOX-ABC06 as default"
+    - "IDH2 mutation (not IDH1) — enasidenib, not ivosidenib"
+    - "FGFR2 fusion/rearrangement → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB preferred (higher ORR ~36%)"
+    - "QTc >480 ms at baseline: absolute contraindication (ivosidenib prolongs QTc ~24%)"
+    - "Strong QT-prolonging medications that cannot be discontinued: relative contraindication; cardiology consultation"
+    - "Active biliary obstruction without drainage (bilirubin >3× ULN) — resolve biliary obstruction first"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ClarIDHy enrolled ECOG 0-1; ECOG 2 requires MDT discussion. Ivosidenib is an
+      oral agent with favorable tolerability vs chemotherapy (no myelosuppression,
+      alopecia, neuropathy) — suitable for patients who cannot tolerate FOLFOX.
+      QTc monitoring mandatory throughout. Elderly patients (>70) with CCA and
+      renal impairment: ivosidenib dose unchanged (500 mg/day; hepatic metabolism);
+      biliary stent maintenance critical (obstructive jaundice affects drug metabolism).
+
+recommended_regimen: REG-IVOSIDENIB-CHOLANGIO
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06): appropriate for IDH1-mutant iCCA if
+      ivosidenib is unavailable (Ukraine: not registered, named-patient import only)
+      or contraindicated (QTc >480 ms, drug interactions). NCCN Cat 1 for 2L BTC.
+      However, ORR FOLFOX ~5% vs ivosidenib disease control ~55%; targeted therapy
+      preferred when accessible.
+  - regimen_id: null
+    description: >
+      Ivosidenib + azacitidine (IDH1-mutant AML combination; AG-120-218 trial):
+      not approved for CCA; investigational; not modeled.
+  - regimen_id: null
+    description: >
+      Clinical trial enrollment: preferred where available (KEYNOTE-966 follow-on
+      studies, IDH inhibitor combinations, IO/targeted trials in CCA). Always
+      explore trial eligibility before ivosidenib or FOLFOX in IDH1-mutant iCCA.
+
+concurrent_therapy:
+  - "ECG monitoring: baseline, day 8 of cycle 1, monthly × 3 cycles, then q3 months (QTc prolongation)"
+  - "Biliary drain maintenance: ERCP or PTC stent — biliary obstruction common in iCCA; bilirubin >3× ULN → stent before ivosidenib"
+  - "Avoid QT-prolonging co-medications (azithromycin, fluoroquinolones, antipsychotics) — additive QTc risk"
+  - "Statin interaction: ivosidenib inhibits CYP3A4/OATP1B1 → statin dose reduction or switch to pravastatin"
+
+followed_by:
+  - "Continue ivosidenib until disease progression or unacceptable toxicity (no fixed number of cycles)"
+  - "Response assessment CT chest/abdomen/pelvis q8-10 weeks (q3 cycles in 28-day schedule)"
+  - "After ivosidenib failure: FOLFOX if not yet given; clinical trial; BSC"
+  - "Molecular re-profiling at progression: acquired IDH1 resistance mutations (S280F, Q316E) may be detectable by liquid biopsy"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~2% (ClarIDHy; mainly disease stabilization, not objective response)"
+  disease_control_rate: "~55% (ClarIDHy; stable disease + PR)"
+  median_pfs_months: "2.7 vs 1.4 months (ClarIDHy ivosidenib vs placebo; HR 0.37; p<0.001)"
+  median_os_months: "10.3 vs 7.5 months (ClarIDHy primary; HR 0.79; p=0.093; crossover-adjusted HR ~0.49)"
+  notes: >
+    ClarIDHy (Abou-Alfa 2020 NEJM; 2023 JCO update; n=185, 2:1 randomized):
+    ivosidenib 500 mg/day vs placebo in IDH1-mutant previously-treated intrahepatic CCA.
+    Primary endpoint (PFS): HR 0.37 (95% CI 0.25-0.54; p<0.001); mPFS 2.7 vs 1.4 months.
+    OS primary analysis: HR 0.79 (p=0.093; nominally not significant by primary analysis due
+    to crossover design — 70% of placebo patients crossed over to ivosidenib per protocol).
+    2023 crossover-adjusted OS analysis: HR ~0.49 (significant). NCCN Hepatobiliary 2025
+    Category 1 despite modest HR due to being the only targeted option for IDH1-mutant iCCA.
+    Key context: IDH1-mutant iCCA is indolent vs FGFR2-fusion iCCA. ClarIDHy enrolled
+    patients with prior lines ≥1 (median: 1); median age 62; ECOG 0-1.
+    Low ORR (2%) reflects disease stabilization mechanism, not cytoreduction. Appropriate
+    for patients with controlled symptoms and indolent disease trajectory. For rapidly
+    progressive IDH1-mutant iCCA, FOLFOX may produce more clinical benefit.
+
+hard_contraindications:
+  - "IDH1 wildtype — ivosidenib inactive; no benefit"
+  - "QTc >480 ms at baseline — absolute contraindication; ivosidenib cannot be safely started"
+  - "Active biliary obstruction without drainage — resolve with ERCP/PTC stent before starting"
+  - "ECOG PS ≥3 (performance status precludes benefit; BSC only)"
+  - "Strong CYP3A4 inhibitors that cannot be discontinued (azole antifungals, clarithromycin) — require dose modification guidance not yet validated in CCA"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2 fusion confirmed → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB (ORR 36%; NCCN Cat 1 — FGFR2 takes precedence over IDH1 at 2L decision)"
+  - condition: "QTc 460-480 ms at baseline → cardiology consultation before starting; avoid additional QT-prolonging medications"
+  - condition: "Ivosidenib inaccessible (Ukraine: named-patient only) → IND-CHOLANGIO-2L-FOLFOX-ABC06 (NCCN Cat 1 default)"
+  - condition: "Rapidly progressive disease with high tumor burden → FOLFOX provides ~5% ORR vs ivosidenib ~2% ORR but FOLFOX cytoreduction more relevant in fast-progressing disease"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "IDH1 hotspot mutation: PCR or NGS (tissue or liquid biopsy) — R132C/H/G/S/L; tissue preferred; cfDNA acceptable if re-biopsy not feasible"
+  - "ECG with QTc measurement: baseline mandatory; repeat day 8 cycle 1, monthly × 3, then q3 months"
+  - "Bilirubin: must be <3× ULN before starting; biliary stent if needed"
+  - "CT chest/abdomen/pelvis (± MRI liver): baseline staging + q8-10 weeks response assessment"
+  - "Comprehensive molecular profiling (NGS): also assess FGFR2 fusion, BRAF V600E, HER2, MSI — rule out higher-priority targets before routing to ivosidenib"
+
+desired_tests:
+  - "FGFR2 fusion (RNA-seq): must be negative before routing here — FGFR2 targeted therapy (ORR 36%) outperforms ivosidenib (ORR 2%)"
+  - "CA 19-9 + CEA baseline: tumor marker trending for response assessment"
+  - "Echocardiogram: if QTc borderline or prior cardiac history"
+
+rationale: >
+  IDH1 hotspot mutations (R132C/H/G/S/L) occur in ~15-20% of intrahepatic CCA, making them
+  the second most prevalent actionable driver after FGFR2 fusions. Mutant IDH1 produces the
+  oncometabolite 2-hydroxyglutarate (2-HG), which drives epigenetic silencing, blocks
+  differentiation, and promotes CCA oncogenesis.
+
+  ClarIDHy (Abou-Alfa 2020 NEJM):
+  First randomized Phase 3 trial to demonstrate benefit of IDH1 inhibition in iCCA.
+  ivosidenib 500 mg/day vs placebo in IDH1-mutant previously-treated iCCA.
+  Primary PFS endpoint: HR 0.37 (p<0.001); mPFS 2.7 vs 1.4 months.
+  OS: HR 0.79 (p=0.093); crossover-adjusted HR ~0.49 (significant). mOS 10.3 vs 7.5 months.
+  NCCN Cat 1 since 2022 (Hepatobiliary 2025 maintains).
+
+  Treatment selection hierarchy in 2L iCCA:
+  1. FGFR2 fusion → pemigatinib/futibatinib (ORR ~36%; highest priority)
+  2. IDH1 mutation → ivosidenib (ORR ~2%; disease control ~55%; NCCN Cat 1)
+  3. BRAF V600E → dabrafenib + trametinib (ROAR; NCCN Cat 2A; not yet modeled)
+  4. MSI-H/dMMR → pembrolizumab (KEYNOTE-158; not yet modeled)
+  5. HER2-amp → T-DXd or tucatinib+trastuzumab (not yet modeled)
+  6. Pan-negative non-driver → FOLFOX (ABC-06; NCCN Cat 1)
+
+  Ivosidenib mechanism: stabilizes disease more than cytoreduces. The modest ORR (2%) and
+  small absolute OS benefit (2.8 months primary; larger crossover-adjusted) are clinically
+  meaningful in a setting with few targeted alternatives and IDH1-mutant iCCA's indolent
+  biology. Appropriate in patients with stable symptoms and preserved performance status.
+
+  Ukraine: ivosidenib NOT registered (Tibsovo; Servier). Named-patient import only.
+  For most UA patients: FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06) is the accessible 2L
+  standard. Ivosidenib should be flagged as the molecularly preferred option with access
+  barrier noted; patient and family should be counseled on named-patient pathway if feasible.
+
+rationale_ua: >
+  Мутація IDH1 (~15-20% іCCA): івосиденіб 500 мг/день (ClarIDHy; Abou-Alfa 2020 NEJM;
+  n=185): мВБП 2.7 vs 1.4 міс (HR 0.37; p<0.001); мОС 10.3 vs 7.5 міс (HR 0.79; NCCN кат.1).
+  Механізм: стабілізація захворювання (DCR ~55%), НЕ циторедукція. ORR лише ~2%.
+  ОБОВ'ЯЗКОВИЙ молекулярний скринінг перед початком: виключити FGFR2-злиття (пемігатиніб
+  ORR 36% — пріоритет над івосиденібом). ЕКГ до та під час терапії (подовження QTc ~24%).
+  В Україні: НЕ зареєстрований; лише named-patient ввезення (Tibsovo). Більшість пацієнтів
+  → IND-CHOLANGIO-2L-FOLFOX-ABC06. Інформувати сім'ю про можливість іменного ввезення.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary 2025 Category 1: ivosidenib 500 mg/day for IDH1-mutant
+      previously-treated intrahepatic CCA (ClarIDHy; HR 0.37 PFS; FDA-approved 2021).
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO BTC 2023: ivosidenib recommended for IDH1-mutant previously-treated iCCA;
+      molecular profiling mandatory for all patients at 1L to identify targeted therapy
+      candidates for 2L.
+
+do_not_do:
+  - "Без підтвердження мутації IDH1: івосиденіб неактивний при IDH1-WT; спочатку молекулярний скринінг"
+  - "При FGFR2-злитті: пемігатиніб/футибатиніб переважніший (ORR 36% vs 2%); не починати івосиденіб при виявленому FGFR2"
+  - "ЕКГ обов'ЯЗКОВА: QTc >480 мс до початку — абсолютне протипоказання; не починати без вихідної ЕКГ"
+  - "Перийогово/дистальна ХКА або ЖМ: IDH1 мутація рідкісна (<5%); тестувати але не маршрутизувати сюди без підтвердження"
+  - "Жовчна обструкція: білірубін >3× ВМН — дренування спочатку (ERCP/ПТД); лише потім івосиденіб"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

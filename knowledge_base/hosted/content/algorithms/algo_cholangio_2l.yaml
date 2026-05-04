@@ -3,15 +3,16 @@ applicable_to_disease: DIS-CHOLANGIOCARCINOMA
 applicable_to_line_of_therapy: 2
 purpose: >
   2L+ routing for advanced / metastatic biliary tract / cholangiocarcinoma
-  post-chemo (gem+cis ± durvalumab) progression. Driver-mutation
-  routing first: FGFR2 fusion → pemigatinib (FIGHT-202; futibatinib
-  alternative). Future branches: IDH1-mutant intrahepatic (ivosidenib
-  ClarIDHy), HER2-amp (T-DXd / tucatinib-trastuzumab), BRAF V600E
-  (dab+tram), MSI-H/dMMR (pembrolizumab) — pending dedicated
-  indications. Default: FOLFOX 2L (ABC-06).
+  post-chemo (gem+cis ± durvalumab) progression. Driver-mutation routing:
+  (1) FGFR2 fusion → pemigatinib (FIGHT-202; step 1);
+  (2) IDH1 hotspot mutation → ivosidenib (ClarIDHy; step 12; NCCN Cat 1);
+  (3) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
+  Pending branches: BRAF V600E (dab+tram; ROAR), HER2-amp (T-DXd),
+  MSI-H (pembrolizumab) — not yet modeled.
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+  - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
   - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -30,7 +31,27 @@ decision_tree:
     if_true:
       result: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
     if_false:
+      next_step: 12
+
+  # Step 12 — IDH1 hotspot mutation (~15-20% intrahepatic CCA).
+  # Ivosidenib 500 mg/day (ClarIDHy; Abou-Alfa 2020 NEJM; 2021 FDA);
+  # mPFS 2.7 vs 1.4 mo HR 0.37; mOS 10.3 vs 7.5 mo; NCCN Cat 1.
+  # QTc monitoring mandatory. UA: not registered; named-patient only.
+  - step: 12
+    evaluate:
+      any_of:
+        - condition: "IDH1 hotspot mutation confirmed (R132C/H/G/S/L) by NGS/PCR on tissue or cfDNA — intrahepatic CCA ONLY"
+    if_true:
+      result: IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
+      notes: >
+        IDH1-mutant iCCA: ivosidenib 500 mg/day (ClarIDHy; FDA 2021; NCCN Cat 1).
+        mPFS 2.7 vs 1.4 months (HR 0.37; p<0.001); mOS 10.3 vs 7.5 months.
+        QTc baseline ECG mandatory (>480 ms = contraindication). Biliary drainage
+        if bilirubin >3× ULN. Ukraine: not registered — named-patient import only;
+        FOLFOX as accessible alternative when ivosidenib unavailable.
+    if_false:
       next_step: 2
+    notes: "Step 12 added 2026-05-04 (Workstream BB): IDH1-mut intrahepatic CCA → ivosidenib. Gap (2) CLOSED."
 
   # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
   # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Replaces gem+cis
@@ -62,11 +83,11 @@ last_reviewed: "2026-05-04"
 reviewer_signoffs: 0
 notes: >
   UPDATED 2026-05-04 (Workstream AY): IND-CHOLANGIO-2L-FOLFOX-ABC06 authored and
-  wired at step 2 as proper default for non-driver 2L BTC/CCA (replaces gem+cis
-  placeholder). ABC-06 (Lamarca 2021 JCO; mOS 6.2 vs 5.3 mo HR 0.69; NCCN Cat 1).
-  Gap (1) CLOSED.
+  wired at step 2 as proper default for non-driver 2L BTC/CCA. Gap (1) CLOSED.
+  UPDATED 2026-05-04 (Workstream BB): IND-CHOLANGIO-2L-IDH1-IVOSIDENIB + DRUG-IVOSIDENIB
+  + REG-IVOSIDENIB-CHOLANGIO authored; wired at step 12 (ClarIDHy; mPFS HR 0.37;
+  mOS HR 0.79 crossover-adjusted ~0.49; NCCN Cat 1). Gap (2) CLOSED.
   OOS / wiring gaps:
-  (2) IDH1-mutant ivosidenib (ClarIDHy; ~15-20% intrahepatic CCA) — not yet modeled.
   (3) HER2-amp T-DXd (DESTINY-PanTumor02) / tucatinib-trastuzumab — not yet modeled.
   (4) BRAF V600E dabrafenib+trametinib (ROAR) — not yet modeled.
   (5) MSI-H pembrolizumab (KEYNOTE-158) — not yet modeled.
