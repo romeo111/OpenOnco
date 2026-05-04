@@ -1,0 +1,182 @@
+id: ALGO-PROSTATE-MCRPC-2L
+applicable_to_disease: DIS-PROSTATE
+applicable_to_disease_state: mCRPC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for mCRPC progressing after 1L treatment.
+  Routes by: (1) HRR/BRCA mutation status (PARPi if untreated), (2) PSMA-PET
+  positivity + prior taxane + prior ARPI (Lu-PSMA-617, VISION), (3) prior
+  taxane exposure (cabazitaxel post-docetaxel per CARD/TROPIC), and (4) bone
+  distribution (Ra-223 for bone-predominant, no visceral mets, ALSYMPCA).
+  Modern context: most patients received ARPI in mHSPC + docetaxel in
+  mHSPC or 1L mCRPC; many are post-ARPI + post-taxane at 2L.
+
+output_indications:
+  - IND-PROSTATE-MCRPC-1L-PARPI
+  - IND-PROSTATE-MCRPC-2L-LU-PSMA
+  - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
+  - IND-PROSTATE-MCRPC-2L-RADIUM223
+
+default_indication: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
+alternative_indication: IND-PROSTATE-MCRPC-2L-LU-PSMA
+
+decision_tree:
+  # Step 1 — ECOG PS gate.
+  # ECOG ≥3 mCRPC: best supportive care, palliative RT for symptomatic sites.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "ECOG PS 0-2"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: systemic therapy not appropriate. Best supportive care, pain
+        management, palliative RT for bone pain. Discuss goals of care.
+
+  # Step 2 — HRR/BRCA mutation gate.
+  # If BRCA1/2 or other HRR mutation AND no prior PARPi: PARPi-first regardless
+  # of prior therapy lines. PROfound: olaparib vs investigator choice in
+  # mCRPC post-ARPI; Cohort A (BRCA1/2) OS HR 0.69.
+  # Reuses IND-PROSTATE-MCRPC-1L-PARPI since same PARPi eligibility applies.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant (or ATM, CDK12, PALB2, RAD51C/D, BRIP1, FANCA)"
+        - condition: "No prior PARPi therapy (olaparib, rucaparib, niraparib)"
+    if_true:
+      result: IND-PROSTATE-MCRPC-1L-PARPI
+      notes: >
+        HRR-mutant mCRPC without prior PARPi: olaparib 300 mg BID preferred for BRCA1/2
+        (PROfound Cohort A; OS HR 0.69). Other HRR mutations (ATM, CDK12) have weaker
+        evidence — BRCA1/2 has the clearest benefit. Rucaparib is an alternative
+        (TRITON3: rPFS HR 0.61 for BRCA1/2 mCRPC). IND-PROSTATE-MCRPC-1L-PARPI
+        applies at any mCRPC line if PARPi-naive.
+    if_false:
+      next_step: 3
+
+  # Step 3 — PSMA-PET gate (Lu-PSMA-617 eligibility per VISION criteria).
+  # All metastatic lesions must be PSMA-avid on PET/CT.
+  # VISION enrolled: PSMA-PET+ AND ≥1 prior ARPI AND ≥1 prior taxane (or taxane-ineligible).
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "PSMA-PET/CT positive (68Ga-PSMA-11 or 18F-DCFPyL) — ALL metastatic lesions PSMA-avid; no PSMA-negative metastatic sites"
+        - condition: "Prior ARPI (enzalutamide, abiraterone, darolutamide, or apalutamide)"
+        - condition: "Prior taxane-based chemotherapy (docetaxel) OR documented taxane-ineligible"
+    if_true:
+      result: IND-PROSTATE-MCRPC-2L-LU-PSMA
+      notes: >
+        PSMA-PET-positive + post-ARPI + post-taxane: lutetium-177-PSMA-617 (Pluvicto)
+        standard of care (VISION; mOS 15.3 vs 11.3 months, HR 0.62; rPFS HR 0.40).
+        CRITICAL: Any PSMA-negative metastatic site = exclusion (bystander escape).
+        Liver metastases most likely to be PSMA-negative — CT must be reviewed alongside PET.
+        GFR ≥30 required (renal excretion). Nuclear medicine theranostics center required.
+        Ukraine access: Kyiv/Lviv academic centers or international referral.
+        Cabazitaxel (IND-PROSTATE-MCRPC-2L-CABAZITAXEL) is an alternative if Lu-PSMA
+        inaccessible or patient declines.
+    if_false:
+      next_step: 4
+      notes: "PSMA-PET negative or criteria not met: proceed to chemotherapy routing."
+
+  # Step 4 — Prior taxane gate (post-docetaxel vs taxane-naive).
+  # Determines whether cabazitaxel (post-docetaxel) or docetaxel (taxane-naive) is appropriate.
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Prior docetaxel-based chemotherapy (mHSPC or mCRPC setting)"
+    if_true:
+      next_step: 5
+      notes: >
+        Prior docetaxel: cabazitaxel is the standard 2L chemotherapy (CARD: superior to
+        second ARPI; TROPIC: OS benefit vs mitoxantrone). Route to step 5 for
+        bone distribution assessment (Ra-223 eligibility for bone-only disease).
+    if_false:
+      result: null
+      notes: >
+        Taxane-naive mCRPC post-ARPI: docetaxel 75 mg/m² q21d × 10 cycles is standard
+        (TAX 327; mCRPC docetaxel data). Use REG-DOCETAXEL-MCRPC.
+        IND-PROSTATE-MCRPC-DOCETAXEL not yet formally authored as a 2L indication —
+        clinician should apply docetaxel mCRPC standard per NCCN Category 1.
+        After docetaxel: re-enter algorithm as post-docetaxel (step 4 if_true path).
+
+  # Step 5 — Post-docetaxel: visceral metastasis gate for Ra-223 routing.
+  # Ra-223 is contraindicated if visceral (liver, lung, brain) mets present.
+  # If visceral mets → cabazitaxel is the standard.
+  # If bone-predominant only → step 6 (Ra-223 as alternative to or complement of cabazitaxel).
+  - step: 5
+    evaluate:
+      any_of:
+        - condition: "Visceral metastases present (liver, lung, brain, or peritoneal mets)"
+    if_true:
+      result: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
+      notes: >
+        Post-docetaxel + post-ARPI with visceral mets: cabazitaxel preferred (CARD:
+        iPFS HR 0.54; OS HR 0.64 vs second ARPI). Ra-223 is NOT appropriate (bone
+        distribution only; no efficacy in visceral disease).
+        Preferred dose: cabazitaxel 20 mg/m² (PROSELICA non-inferiority) + G-CSF mandatory.
+        Consider clinical trial enrollment if available.
+    if_false:
+      next_step: 6
+      notes: "Bone-predominant (no visceral mets): assess Ra-223 eligibility (step 6)."
+
+  # Step 6 — Bone-predominant, post-docetaxel: Ra-223 eligibility gate.
+  # ALSYMPCA: Ra-223 vs placebo, bone-predominant mCRPC; OS HR 0.70.
+  # CRITICAL: ERA 223 harm with concurrent ARPI → Ra-223 must be standalone.
+  # Cabazitaxel is also appropriate for bone-only disease — clinician choice.
+  - step: 6
+    evaluate:
+      all_of:
+        - condition: "Symptomatic bone metastases (bone pain or prior SSE)"
+        - condition: "ECOG PS 0-2"
+        - condition: "No concurrent novel ARPI planned (ERA 223 fracture harm)"
+        - condition: "Nuclear medicine theranostics center accessible"
+    if_true:
+      result: IND-PROSTATE-MCRPC-2L-RADIUM223
+      notes: >
+        Symptomatic bone-predominant mCRPC post-docetaxel: Ra-223 (ALSYMPCA; OS HR 0.70;
+        mOS 14.9 vs 11.3 months). 6 injections q4w over 6 months. Significant bone pain
+        palliation + SSE reduction (HR 0.66). Cabazitaxel is an equally valid alternative
+        — decision based on patient goals, toxicity preference, and infrastructure access.
+        Ra-223 may be followed by cabazitaxel post-course.
+        CRITICAL: Do NOT combine Ra-223 with docetaxel or novel ARPIs.
+    if_false:
+      result: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
+      notes: >
+        Bone-predominant but Ra-223 not eligible (asymptomatic, ERA 223 concern, no nuclear
+        medicine access): cabazitaxel standard (CARD/TROPIC). Preferred dose 20 mg/m²
+        + G-CSF primary prophylaxis mandatory. Reassess PSMA-PET at progression.
+
+sources:
+  - SRC-CARD-DE-BONO-2019
+  - SRC-TROPIC-DE-BONO-2010
+  - SRC-ALSYMPCA-PARKER-2013
+  - SRC-VISION-PSMA-SARTOR-2021
+  - SRC-PROFOUND-DEBONO-2020
+  - SRC-NCCN-PROSTATE-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  mCRPC 2L ROUTING SUMMARY (2025/2026):
+
+  Modern sequencing context:
+  - Most patients received ARPI (abiraterone/enzalutamide/darolutamide) in mHSPC
+  - Docetaxel given in mHSPC (high-volume disease, CHAARTED/STAMPEDE) or 1L mCRPC
+  - At 2L mCRPC, most patients are therefore post-ARPI + post-docetaxel
+
+  Priority cascade for post-ARPI + post-docetaxel patients:
+  1. BRCA/HRR mutation → PARPi (if not yet given)
+  2. PSMA-PET positive → Lu-PSMA-617 (VISION; OS HR 0.62)
+  3. Visceral mets → cabazitaxel (CARD; OS HR 0.64 vs second ARPI)
+  4. Bone-predominant, symptomatic → Ra-223 (ALSYMPCA; OS HR 0.70) OR cabazitaxel
+
+  GAPS in this algorithm:
+  - IND-PROSTATE-MCRPC-DOCETAXEL (formal 2L indication for taxane-naive patients) not yet authored
+  - Cabazitaxel + carboplatin (high-risk BRCA/HRR; CHAMP/KEYNOTE-991 data pending)
+  - PSMAddition (Lu-PSMA earlier line — pre-taxane) data emerging; not yet NCCN Cat 1
+  - Pembrolizumab for MSI-H/dMMR mCRPC (KEYNOTE-158 tumor-agnostic) not yet separately addressed
+
+  HRR testing mandatory: germline + somatic BRCA1/2 before any mCRPC systemic therapy.
+  PSMA-PET: 68Ga-PSMA-11 (Illuccix) or 18F-DCFPyL (Pylarify) preferred FDA-approved agents.
+  Ukraine: Lu-PSMA and Ra-223 require specialized nuclear medicine infrastructure.
