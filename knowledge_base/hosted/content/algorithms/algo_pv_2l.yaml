@@ -13,6 +13,7 @@ purpose: >
 output_indications:
   - IND-PV-2L-RUXOLITINIB
   - IND-PV-1L-ROPEGINTERFERON
+  - IND-PV-ANAGRELIDE-CONTINUOUS
 
 default_indication: IND-PV-2L-RUXOLITINIB
 alternative_indication: IND-PV-1L-ROPEGINTERFERON
@@ -37,6 +38,25 @@ decision_tree:
         - red_flag: RF-PV-HU-RESISTANCE-INTOLERANCE
     if_true:
       result: IND-PV-2L-RUXOLITINIB
+      notes: >
+        HU-resistant/intolerant PV: ruxolitinib preferred (NCCN Cat 1; RESPONSE trial
+        hematocrit control + spleen response). For patients where ruxolitinib is
+        inaccessible and thrombocytosis is the dominant concern: anagrelide (Cat 2A)
+        — see IND-PV-ANAGRELIDE-CONTINUOUS in alternatives.
+      alternatives:
+        - indication_id: IND-PV-ANAGRELIDE-CONTINUOUS
+          nccn_category: "2A"
+          criteria: >
+            PV; HU-resistant or HU-intolerant (ELN criteria); ruxolitinib inaccessible
+            or contraindicated; thrombocytosis dominant concern (platelet reduction as
+            primary goal); CrCl ≥30; ECOG 0-2. NOT preferred over ruxolitinib when
+            ruxolitinib accessible (higher arterial thrombosis risk in PT1 ET data).
+          note: >
+            Anagrelide 0.5-3 mg PO daily for PV after HU failure (NCCN Cat 2A; selective
+            megakaryocyte maturation inhibitor; platelet response ~70-80% ELN criteria;
+            PT1 Harrison 2005 NEJM — ET cohort, PV data extrapolated). Does NOT control
+            erythrocytosis — phlebotomy still required for Hct target. Prefer ruxolitinib
+            or ropeginterferon over anagrelide in PV when accessible.
     if_false:
       next_step: 3
 
@@ -70,7 +90,7 @@ sources:
   - SRC-ESMO-MPN-2015
   - SRC-RESPONSE-VANNUCCHI-2015
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
   Ropeginterferon-α-2b (Besremi) is conventionally a 1L alternative for
   younger lower-risk PV seeking molecular response; it is surfaced here
@@ -80,3 +100,6 @@ notes: >
   high-risk flag and is treated as already addressed by 1L cytoreduction
   selection in this 2L context. STUB — requires clinical co-lead
   signoff.
+  UPDATED 2026-05-04 (Workstream FV): IND-PV-ANAGRELIDE-CONTINUOUS wired as Cat 2A
+  alternative at step 2 if_true (HU resistance/intolerance track). Anagrelide accessible
+  fallback when ruxolitinib inaccessible; gap CLOSED.

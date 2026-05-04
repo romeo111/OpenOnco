@@ -10,6 +10,7 @@ purpose: >
 output_indications:
   - IND-SALIVARY-NTRK-LAROTRECTINIB
   - IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+  - IND-SALIVARY-HER2-TDXD
 
 default_indication: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
 
@@ -37,9 +38,25 @@ decision_tree:
     if_true:
       result: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
       notes: >
-        Paclitaxel 175mg/m² + carboplatin AUC 5 Q21D. Standard cytotoxic 1L for salivary gland
+        Paclitaxel 175 mg/m² + carboplatin AUC 5 Q21D. Standard cytotoxic 1L for salivary gland
         carcinoma without actionable mutation. ORR typically 30-50% in retrospective series;
-        no large randomized trial. HER2+ patients: T-DXd preferred 2L (IND-SALIVARY-HER2-TDXD).
+        no large randomized trial. HER2+ patients: T-DXd preferred at 2L (see alternatives).
+      alternatives:
+        - indication_id: IND-SALIVARY-HER2-TDXD
+          nccn_category: "2A"
+          criteria: >
+            Recurrent/metastatic salivary gland carcinoma; HER2-overexpressing (IHC 3+ OR IHC 2+
+            FISH-amplified); progressed on or after 1L platinum-based chemotherapy; ECOG 0-2;
+            no baseline ILD; baseline LFTs ≤2 × ULN. LOT=2 — plan HER2 IHC+FISH at diagnosis
+            to enable timely 2L access. Salivary duct carcinoma and adenocarcinoma NOS are
+            HER2+ in ~15-25%.
+          note: >
+            T-DXd (trastuzumab deruxtecan) for HER2+ recurrent/metastatic salivary gland
+            carcinoma at 2L (DESTINY-PanTumor02; Meric-Bernstam 2023 JCO; ORR 61% in
+            HER2+ salivary cohort N=15; mDOR 18.0 mo; NCCN Cat 2A; tumor-agnostic HER2+
+            approval). ILD class risk ~5-15% — monitor for pulmonary symptoms; grade ≥2 ILD:
+            permanently discontinue. NTRK+ patients who progress on larotrectinib also
+            eligible if HER2+ confirmed.
     if_false:
       result: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
       notes: "ECOG 3-4: dose-reduce carboplatin; MDT required. ECOG 4: BSC discussion."
@@ -56,3 +73,6 @@ notes: >
   IND-SALIVARY-HER2-TDXD authored) and AR IHC (androgen deprivation for AR+ salivary duct).
   Default: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO (cytotoxic 1L for mutation-negative).
   AR-directed therapy (enzalutamide/leuprolide) and HER2-directed 2L: out-of-scope for 1L algo.
+  UPDATED 2026-05-04 (Workstream FV): IND-SALIVARY-HER2-TDXD wired as Cat 2A alternative
+  at step 2 if_true (cytotoxic default). DESTINY-PanTumor02 salivary cohort ORR 61%;
+  HER2 IHC+FISH testing at diagnosis enables timely 2L access. Gap CLOSED.

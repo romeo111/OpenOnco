@@ -9,6 +9,7 @@ output_indications:
 - IND-DLBCL-1L-RCHOP
 - IND-DLBCL-1L-POLA-R-CHP
 - IND-DLBCL-1L-RCHOP-ISRT-EARLY
+- IND-DLBCL-RENAL-FAILURE-MOD-RCHOP
 default_indication: IND-DLBCL-1L-RCHOP
 alternative_indication: IND-DLBCL-1L-POLA-R-CHP
 decision_tree:
@@ -19,6 +20,23 @@ decision_tree:
     - red_flag: RF-DLBCL-ORGAN-DYSFUNCTION
   if_true:
     result: IND-DLBCL-1L-RCHOP
+    notes: >
+      Frailty or organ dysfunction: standard R-CHOP. Severe renal impairment (CrCl <30):
+      dose-modified R-CHOP required — see IND-DLBCL-RENAL-FAILURE-MOD-RCHOP in alternatives.
+    alternatives:
+      - indication_id: IND-DLBCL-RENAL-FAILURE-MOD-RCHOP
+        nccn_category: "2A"
+        criteria: >
+          DLBCL NOS; CrCl <30 mL/min or CKD stage 4-5 or dialysis; cyclophosphamide
+          −25% (CrCl 10-30) or −50%/omit (CrCl <10/dialysis); vincristine −25-50%
+          (uremic neuropathy risk); doxorubicin full dose if LVEF ≥50%; rituximab
+          full dose; CI-HBV-NO-PROPHYLAXIS cleared; ECOG ≤3.
+        note: >
+          Dose-modified R-CHOP for DLBCL + severe renal impairment (NCCN Cat 2A;
+          Ostgard 2014 retrospective CKD subgroup; ORR ~80% extrapolated): cyclophosphamide
+          dose-reduced per GFR; vincristine reduced (uremic neuropathy amplified);
+          doxorubicin at full dose if LVEF ≥50%; rituximab full dose (minimal renal
+          clearance). Nephrology MDT consultation mandatory before first cycle.
   if_false:
     next_step: 2
 - step: 2

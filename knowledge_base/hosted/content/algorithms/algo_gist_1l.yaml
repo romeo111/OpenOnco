@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-GIST-1L-IMATINIB
   - IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+  - IND-GIST-1L-WT-CLINICAL-TRIAL
 
 default_indication: IND-GIST-1L-IMATINIB
 alternative_indication: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
@@ -42,24 +43,42 @@ decision_tree:
       any_of:
         - condition: "KIT/PDGFRA wild-type (SDH-deficient OR NF1-mutant OR uncharacterized)"
     if_true:
-      result: IND-GIST-1L-IMATINIB
+      result: IND-GIST-1L-WT-CLINICAL-TRIAL
+      notes: >
+        KIT/PDGFRA WT GIST (SDH-deficient, NF1-mutant, or uncharacterized): imatinib is
+        NOT standard (WT GIST lacks the KIT/PDGFRA driver that imatinib targets; imatinib
+        ORR <10% in WT-GIST). Clinical trial enrollment is strongly preferred. If no trial
+        available: sunitinib or regorafenib empirically (VEGFR inhibitors; limited data).
+        Imatinib as accessible fallback only — see alternatives.
+      alternatives:
+        - indication_id: IND-GIST-1L-IMATINIB
+          nccn_category: "2B"
+          criteria: >
+            KIT/PDGFRA WT GIST; no clinical trial accessible; imatinib used empirically.
+            NOTE: imatinib is NOT the preferred treatment for WT GIST — clinical trial or
+            sunitinib/regorafenib are preferred over imatinib in WT disease. Use only when
+            no alternative accessible.
+          note: >
+            Imatinib 400 mg PO daily as accessible fallback for WT GIST (NCCN Cat 2B for
+            WT; imatinib ORR <10% in WT GIST vs ~80% in KIT/PDGFRA-mutant disease). Not
+            a recommended treatment; listed for access completeness. SDH-deficient GIST may
+            respond to sunitinib (ORR ~35%). Trial enrollment at specialized GIST center
+            strongly preferred.
     if_false:
       result: IND-GIST-1L-IMATINIB
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+    notes: "Step 3 updated 2026-05-04 (Workstream FV): WT GIST now routes to IND-GIST-1L-WT-CLINICAL-TRIAL (preferred; clinical trial) rather than imatinib (wrong target). Imatinib wired as Cat 2B accessible-only fallback alternative."
 
 sources:
   - SRC-NCCN-GIST-2025
   - SRC-ONCOKB
-last_reviewed: '2026-04-26'
+last_reviewed: '2026-05-04'
 notes: >
-  Decision tree intentionally simplified for MVP: KIT/PDGFRA-WT
-  (SDH-deficient or NF1-mutant) GIST is routed to imatinib as the
-  fallback default but is in fact imatinib-refractory — clinically
-  these patients should go to clinical trial / sunitinib /
-  regorafenib. Authoring an explicit IND-GIST-1L-WT-CLINICAL-TRIAL
-  is deferred (no trial-ID source dependency curated). KIT exon 9
-  dose-escalation (400 → 800 mg) is encoded inside
+  KIT exon 9 dose-escalation (400 → 800 mg) is encoded inside
   REG-IMATINIB-GIST-1L dose_adjustments; not a separate Indication.
+  UPDATED 2026-05-04 (Workstream FV): IND-GIST-1L-WT-CLINICAL-TRIAL wired at
+  step 3 if_true (WT GIST gate). Imatinib is NOT standard for WT GIST — step 3
+  now correctly routes WT to clinical trial preferred, with imatinib as Cat 2B
+  accessible-only fallback. WT-GIST gap CLOSED.
 
   POST-1L CASCADE: ALGO-GIST-2L authored 2026-05-04 (Workstream DF).
   Sequential NCCN Cat 1 cascade fully wired:

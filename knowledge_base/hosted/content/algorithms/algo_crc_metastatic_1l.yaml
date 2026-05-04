@@ -16,6 +16,7 @@ output_indications:
   - IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL
   - IND-CRC-PERFORMANCE-STATUS-3
   - IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV
+  - IND-CRC-RENAL-FAILURE-MOD-FOLFOX
 
 default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
@@ -140,6 +141,21 @@ decision_tree:
             tolerated (CAIRO3 reintroduction arm supported re-induction). Full stop
             acceptable for deep CR patients or patient preference (OPTIMOX stop-and-go
             approach). REG stub: REG-CAPE-BEV-MAINTENANCE pending authoring.
+        - indication_id: IND-CRC-RENAL-FAILURE-MOD-FOLFOX
+          nccn_category: "2A"
+          criteria: >
+            Stage IV unresectable mCRC; CrCl <30 mL/min or severe renal impairment (CKD
+            stage 4-5); oxaliplatin dose-reduced 25-50% (neurotoxicity + accumulation);
+            5-FU full dose (renally excreted minimally); bevacizumab held if nephrotic-range
+            proteinuria (urine protein:creatinine ratio >2); DPYD genotyping required;
+            nephrology consultation before initiation. ECOG 0-2.
+          note: >
+            Dose-modified FOLFOX for mCRC + severe renal impairment (NCCN Cat 2A; no
+            dedicated RCT — extrapolated from pharmacokinetic data and retrospective series):
+            oxaliplatin −25-50% per CrCl (neurotoxicity amplified by CKD-related neuropathy;
+            accumulation risk); 5-FU/LV at standard doses (minimal renal clearance);
+            bevacizumab: hold if urine protein:creatinine >2 (nephrotic protocol — AVOREN
+            exclusion criterion). REG-FOLFOX-RENAL-MOD entity. Nephrology MDT mandatory.
 
   # Step 51 — Frailty ECOG sub-stratification.
   # RF-CRC-FRAILTY-AGE positive patients reach this step.
