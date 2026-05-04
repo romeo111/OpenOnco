@@ -1,0 +1,84 @@
+id: REG-AMIVANTAMAB-CARBO-PEM-NSCLC
+name: "Amivantamab + carboplatin + pemetrexed for EGFR exon 20 insertion NSCLC (1L, PAPILLON)"
+name_ua: "Амівантамаб + карбоплатин + пеметрексед при НМРЛ з інсерцією екзону 20 EGFR (1 лінія)"
+alternate_names: ["PAPILLON regimen", "amivantamab+carbo+pem", "JNJ-61186372+carboplatin+pemetrexed", "Rybrevant+chemo"]
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1400 mg IV (<80 kg) or 1750 mg IV (≥80 kg)"
+    schedule: >
+      Cycles 1-2: Q14D (days 1 and 14 of each 21-day cycle).
+      Cycle 3+: Q21D (day 1 only) concurrent with pemetrexed maintenance.
+      After carboplatin completion (4 cycles): continue amivantamab Q21D or switch to Q42D
+      with pemetrexed.
+    route: IV
+    notes: >
+      Weight-based flat dosing: <80 kg = 1400 mg; ≥80 kg = 1750 mg.
+      INFUSION-RELATED REACTION (IRR) is very common — mandatory premedication before first dose.
+      First infusion should be split across 2 days (350 mg day 1, full dose day 2 of cycle 1)
+      if following original PAPILLON protocol OR use standard single-day infusion with aggressive
+      IRR premedication. Reduce infusion rate at any grade IRR.
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV over 30 min"
+    schedule: "Day 1 Q21D × 4 cycles; then STOP carboplatin"
+    route: IV
+    notes: "AUC-based dosing (Calvert formula). Stop after 4 cycles. Pemetrexed and amivantamab continue as maintenance."
+  - drug_id: DRUG-PEMETREXED
+    dose: "500 mg/m² IV over 10 min"
+    schedule: "Day 1 Q21D; continue as maintenance after carboplatin stops"
+    route: IV
+    notes: "Folate/B12 supplementation mandatory: folic acid 400 µg PO QD (start 1 week before and continue throughout); B12 1000 µg IM Q9 weeks. Dexamethasone 4 mg PO BID day before/day of/day after pemetrexed."
+
+cycle_length_days: 21
+number_of_cycles: "4 cycles triplet (amivantamab + carbo + pem), then amivantamab + pem maintenance until progression"
+
+premedications:
+  - "AMIVANTAMAB IRR PROPHYLAXIS (mandatory): diphenhydramine 25-50 mg IV + acetaminophen 650 mg PO + dexamethasone 8 mg IV — administer 30-60 min before amivantamab. Continue antihistamine premedication for ALL subsequent doses (IRR can recur)."
+  - "Pemetrexed: dexamethasone 4 mg PO BID × 3 days (day before, day of, day after) to reduce skin toxicity"
+  - "Folic acid: 400 µg PO QD starting ≥7 days before first pemetrexed; continue throughout"
+  - "Vitamin B12: 1000 µg IM starting ≥7 days before first pemetrexed; repeat Q9 weeks"
+  - "Carboplatin: 5-HT3 antagonist + dexamethasone (carboplatin moderately emetogenic)"
+
+supportive_care:
+  - "CBC, CMP: before each cycle — ANC ≥1500/mm³, platelets ≥100K/mm³ required"
+  - "Creatinine clearance (Cockcroft-Gault): before each pemetrexed dose — hold if CrCl <45 mL/min"
+  - "Dermatologic monitoring: EGFR-class toxicities (acneiform rash, paronychia, xerosis, stomatitis)"
+  - "Dermatologic care: topical antibiotics for papulopustular rash; urea cream for paronychia"
+  - "Eye exam: if severe ocular toxicity (keratitis rare but described with EGFR inhibition)"
+  - "Fluid restriction monitoring: pemetrexed third-space fluid accumulation (pleural effusion)"
+  - "Amivantamab IRR monitoring: vital signs Q15 min during infusion; grade and document"
+
+dose_modifications:
+  - toxicity: "Grade 1-2 IRR during amivantamab infusion"
+    action: "Stop infusion; manage symptoms; restart at 50% rate when resolved; increase gradually"
+  - toxicity: "Grade 3 IRR"
+    action: "Stop infusion permanently for that dose; administer steroids + diphenhydramine; consider dose omission vs rechallenge at next cycle with maximum premedication"
+  - toxicity: "Grade 3-4 acneiform rash"
+    action: "Hold amivantamab; oral antibiotics (doxycycline/minocycline); resume at reduced frequency when Grade ≤1"
+  - toxicity: "ANC <1000/mm³ at Day 1"
+    action: "Hold; G-CSF; restart carboplatin/pemetrexed when ANC ≥1500/mm³; consider G-CSF prophylaxis"
+  - toxicity: "CrCl <45 mL/min"
+    action: "Hold pemetrexed until recovery; may continue amivantamab"
+
+special_requirements:
+  - "EGFR exon 20 insertion confirmed by validated NGS panel BEFORE starting"
+  - "Folic acid and B12 supplementation MANDATORY (start ≥7 days before pemetrexed)"
+  - "Non-squamous histology required (pemetrexed not effective in squamous NSCLC)"
+  - "Central venous access or port for amivantamab + chemotherapy administration"
+  - "ECOG PS 0-2"
+  - "No active severe autoimmune disease (amivantamab immune-mediated toxicities)"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  PAPILLON (Zhou C et al. NEJM 2023; NCT04538664): Phase 3, n=308 EGFR exon 20 insertion
+  NSCLC. Amivantamab+carbo+pem vs carbo+pem: mPFS 11.4 vs 6.7 months (HR 0.40; 95% CI
+  0.30-0.53; p<0.001); ORR 73% vs 47%. FDA approved October 3, 2023.
+  NCCN NSCLC 2025: Category 1 for EGFR exon 20 insertion 1L.
+  Key: amivantamab is weight-based (not body surface area); IRR is common and requires
+  mandatory prophylaxis; pemetrexed requires folic acid + B12 supplementation.
+  Carboplatin limited to 4 cycles; amivantamab + pemetrexed maintenance continues.

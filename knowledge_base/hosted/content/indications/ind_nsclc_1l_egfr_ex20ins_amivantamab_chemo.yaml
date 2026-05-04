@@ -1,0 +1,88 @@
+id: IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic (Stage IV) or locally advanced unresectable NSCLC not amenable to curative therapy"
+    - "Non-squamous histology required (adenocarcinoma or NOS; pemetrexed component not effective in squamous)"
+  biomarker_requirements:
+    - "EGFR exon 20 insertion mutation confirmed by validated NGS panel — MANDATORY for eligibility"
+    - "EGFR exon 20 insertions are distinct from classical EGFR sensitizing mutations (exon 19 del, L858R)"
+    - "OSIMERTINIB AND OTHER EGFR TKIs ARE NOT ACTIVE AGAINST EXON 20 INSERTIONS — do not use"
+    - "EGFR exon 20 prevalence: ~4-9% of EGFR-mutant NSCLC; ~1-2% of all NSCLC"
+
+recommended_regimen: REG-AMIVANTAMAB-CARBO-PEM-NSCLC
+
+concurrent_therapy: []
+
+followed_by:
+  - "Amivantamab + pemetrexed maintenance after 4 cycles of amivantamab+carbo+pem triplet"
+  - "Continue until progression or unacceptable toxicity"
+  - "At progression: consider MARIPOSA-2 approach (amivantamab+lazertinib+chemo) or clinical trial"
+  - "Post-progression 2L: amivantamab monotherapy (IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB) if not already used"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_pfs_months: 11.4
+  pfs_control_arm_months: 6.7
+  pfs_hr: 0.40
+  pfs_p_value: "p<0.001"
+  orr_percent: 73
+  orr_control_arm_percent: 47
+  notes: >
+    PAPILLON (Zhou C NEJM 2023; NCT04538664; n=308): amivantamab+carbo+pem vs carbo+pem.
+    mPFS 11.4 vs 6.7 months (HR 0.40; 95% CI 0.30-0.53; p<0.001); ORR 73% vs 47%.
+    FDA approved October 3, 2023 for 1L EGFR exon 20 insertion NSCLC.
+    NCCN NSCLC 2025: Category 1 for EGFR exon 20 insertion 1L.
+
+hard_contraindications:
+  - "EGFR exon 20 insertion NOT confirmed (mandatory biomarker requirement)"
+  - "Squamous cell carcinoma histology (pemetrexed not indicated in squamous)"
+  - "CrCl <45 mL/min (pemetrexed renal requirement)"
+  - "Active severe autoimmune disease"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Using osimertinib or erlotinib for ex20ins is INCORRECT — osimertinib has no meaningful activity in exon 20 insertions"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CREATININE-CL
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - "Brain MRI with contrast (brain metastasis baseline staging)"
+  - "NGS comprehensive panel with EGFR exon 20 insertion detection (mandatory)"
+  - "Histology confirmation: non-squamous required (adenocarcinoma or NOS)"
+
+desired_tests:
+  - "PD-L1 TPS (prognostic; amivantamab has activity regardless)"
+  - "MET amplification baseline (relevant for resistance tracking)"
+  - "Folic acid + B12 compliance confirmation before first pemetrexed"
+
+rationale: >
+  EGFR exon 20 insertion mutations are oncogenic drivers insensitive to classical EGFR-TKIs
+  (osimertinib, erlotinib, gefitinib, afatinib). Amivantamab (EGFR×MET bispecific antibody) +
+  carboplatin + pemetrexed (PAPILLON) demonstrated mPFS 11.4 vs 6.7 months (HR 0.40) in 1L
+  exon 20 insertion NSCLC. FDA approved October 2023; NCCN NSCLC 2025: Category 1.
+  This represents the first FDA-approved targeted 1L therapy for EGFR exon 20 insertion NSCLC,
+  replacing chemotherapy alone as standard of care. Critically distinct from classical EGFR
+  mutations (ex19del, L858R) where osimertinib is standard — these require DIFFERENT treatment.
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream EF). NSCLC 1L EGFR exon 20 insertion amivantamab+chemo.
+  CRITICAL: Exon 20 insertion ≠ classical EGFR sensitizing mutations; different drug, different
+  regimen. Current algo_nsclc_metastatic_1l.yaml step 2 incorrectly routes ex20ins to osimertinib.
+  This indication corrects that routing. Two-reviewer clinical signoff required.

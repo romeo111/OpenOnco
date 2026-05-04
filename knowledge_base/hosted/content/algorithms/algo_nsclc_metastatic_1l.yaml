@@ -9,6 +9,7 @@ purpose: >
   → BRAF V600E → NTRK fusion → PD-L1 stratified ICI ± chemo.
 
 output_indications:
+  - IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO
   - IND-NSCLC-EGFR-MUT-MET-1L
   - IND-NSCLC-ALK-MET-1L
   - IND-NSCLC-ROS1-1L-REPOTRECTINIB
@@ -36,19 +37,35 @@ decision_tree:
     if_false:
       next_step: 9
 
-  # Step 2 — EGFR sensitizing mutation (ex19del / L858R / ex20ins).
+  # Step 2 — EGFR exon 20 insertion (amivantamab+chemo; PAPILLON; FDA Oct 2023).
+  # IMPORTANT: Exon 20 insertions are NOT sensitive to classical EGFR TKIs (osimertinib).
+  # Must be split from classical sensitizing mutations before reaching step 25.
   - step: 2
     evaluate:
       any_of:
-        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
         - red_flag: RF-NSCLC-EGFR-EX20INS-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-1L-EGFR-EX20INS-AMIVANTAMAB-CHEMO
+      notes: >
+        EGFR exon 20 insertion: amivantamab 1400/1750 mg + carboplatin AUC 5 + pemetrexed
+        (PAPILLON; Zhou C NEJM 2023; mPFS 11.4 vs 6.7 months; HR 0.40; FDA Oct 2023;
+        NCCN Cat 1). NOT osimertinib — osimertinib is inactive against exon 20 insertions.
+    if_false:
+      next_step: 25
+    notes: "Workstream EF 2026-05-04: Exon 20 insertion split from classical EGFR. Prior routing incorrectly sent ex20ins to osimertinib (IND-NSCLC-EGFR-MUT-MET-1L). Fixed: ex20ins -> amivantamab+chemo (PAPILLON Cat 1)."
+
+  # Step 25 — Classical EGFR sensitizing mutation (ex19del / L858R → osimertinib).
+  - step: 25
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
         - condition: "EGFR L858R or other classical sensitizing mutation"
     if_true:
       result: IND-NSCLC-EGFR-MUT-MET-1L
       notes: >
-        EGFR sensitizing (ex19del/L858R): osimertinib 80 mg QD (FLAURA; mOS 38.6m).
-        EGFR ex20ins: amivantamab+carboplatin+pemetrexed (PAPILLON; PFS HR 0.40)
-        or amivantamab+lazertinib (MARIPOSA). Routing handled within IND-NSCLC-EGFR-MUT-MET-1L.
+        Classical EGFR sensitizing (ex19del/L858R): osimertinib 80 mg QD (FLAURA;
+        mPFS 18.9m; mOS 38.6m; HR 0.80 OS). For high-burden disease: osimertinib + pemetrexed
+        + carbo (FLAURA2; HR 0.62 PFS) as alternative. NOT for exon 20 insertion.
     if_false:
       next_step: 3
 
