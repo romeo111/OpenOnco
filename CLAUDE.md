@@ -230,12 +230,11 @@ worktree merge conflict at integration time.
   files you don't fully understand) to "make a problem go away" — diagnose
   the root cause, ask the user when uncertain.
 
-## Current state (as of 2026-04-27)
+## Current state (as of 2026-05-04)
 
 - All six specs drafted at v0.1. Specs naming locked: OpenOnco.
-- KB scale: 65 diseases, ~400 biomarker_actionability, 111 biomarkers, 109+
-  sources, 216 drugs, 294 indications, ~292 redflags. **Note:** prior
-  documentation said "28 diseases" — that figure is stale.
+- KB scale: **78 diseases, 435 biomarker_actionability, 170 biomarkers, 335
+  sources, 241 drugs, 390 indications, 469 redflags.**
 - API clients live under `knowledge_base/clients/`.
 - RedFlag quality phases 1-7 done (2026-04-25/26): clinical sign-off received.
 - 9-agent parallel run (2026-04-27 morning): ~73 biomarkers tagged with

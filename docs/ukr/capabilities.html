@@ -45,11 +45,11 @@
 
     <div class="callout callout-hard">
       <strong>STUB-статус усього клінічного контенту.</strong>
-      Reviewer sign-offs ≥ 2: <strong>15/349</strong>
+      Reviewer sign-offs ≥ 2: <strong>15/383</strong>
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз — це
       proposed-plan: structured data + algorithm + sources на місці, але
-      без dual sign-off. Стан станом на <code>2026-05-03 20:27 UTC</code>.
+      без dual sign-off. Стан станом на <code>2026-05-04 09:38 UTC</code>.
       Це інструмент підтримки рішень, не медичний пристрій.
     </div>
 
@@ -60,27 +60,27 @@
         з цитатою під кожною рекомендацією.
       </h2>
       <p class="promo-sub">
-        Декларативний rule engine на <strong>65 хворобах</strong>,
-        467 red flags, 343 показань, 293 режимів.
+        Декларативний rule engine на <strong>78 хворобах</strong>,
+        469 red flags, 390 показань, 328 режимів.
         Без LLM у клінічному рішенні, без серверу, без логів.
         Patient JSON ніколи не покидає машину.
       </p>
 
       <div class="promo-stats">
         <div class="promo-stat">
-          <div class="promo-stat-num">65</div>
+          <div class="promo-stat-num">78</div>
           <div class="promo-stat-lbl">Хвороб у KB</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">343</div>
+          <div class="promo-stat-num">390</div>
           <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">272</div>
+          <div class="promo-stat-num">335</div>
           <div class="promo-stat-lbl">Цитованих джерел</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">467</div>
+          <div class="promo-stat-num">469</div>
           <div class="promo-stat-lbl">Red flags</div>
         </div>
         <div class="promo-stat">
@@ -263,16 +263,16 @@
       <div class="num-grid num-grid--rich">
 
         <div class="num-card">
-          <div class="num-big">65</div>
+          <div class="num-big">78</div>
           <div class="num-lbl">Хвороби в KB</div>
-          <div class="num-detail">37 гематологічних · 28 солідних · 64 з повним ланцюгом · 44 мають 2L+ алгоритм</div>
+          <div class="num-detail">38 гематологічних · 40 солідних · 70 з повним ланцюгом · 53 мають 2L+ алгоритм</div>
           <p class="num-text">
             Кожна хвороба має свій <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven), що визначає логіку алгоритму вибору лікування.
-            Зараз 1L покрито для всіх 65 (67 алгоритмів),
-            2L+ — для 34 гематологічних та 10
-            солідних (46 алгоритмів).
+            Зараз 1L покрито для всіх 78 (76 алгоритмів),
+            2L+ — для 34 гематологічних та 19
+            солідних (55 алгоритмів).
           </p>
         </div>
 
@@ -303,7 +303,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">467</div>
+          <div class="num-big">469</div>
           <div class="num-lbl">Red flags</div>
           <div class="num-detail">тригери ескалації або розслідування</div>
           <p class="num-text">
@@ -319,9 +319,9 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">293</div>
+          <div class="num-big">328</div>
           <div class="num-lbl">Режими лікування</div>
-          <div class="num-detail">343 показань (183 1L · 160 2L+)</div>
+          <div class="num-detail">390 показань (210 1L · 180 2L+)</div>
           <p class="num-text">
             Кожна схема — список drugs з дозами, шкалою циклів, dose
             adjustments (renal impairment, FIB-4, frailty), premedications,
@@ -334,7 +334,7 @@
         </div>
 
         <div class="num-card">
-          <div class="num-big">239</div>
+          <div class="num-big">241</div>
           <div class="num-lbl">Препарати</div>
           <p class="num-text">
             ATC/RxNorm-кодовані. Кожен з регуляторним статусом FDA/EMA/MOЗ +
@@ -358,11 +358,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">272</div>
+          <div class="num-big">335</div>
           <div class="num-lbl">Джерела (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Під цими 272 джерелами — десятки тисяч primary clinical
+            Під цими 335 джерелами — десятки тисяч primary clinical
             publications (RCTs, мета-аналізи, когортні дослідження) і тисячі
             сторінок керівництв. Кожна Indication / Regimen / RedFlag цитує
             конкретні джерела з <em>position</em> (supports / contradicts /
@@ -404,7 +404,7 @@
           <div class="flow-num">Stage 3</div>
           <div class="flow-title">RedFlag evaluation</div>
           <div class="flow-desc">
-            Кожен з 467 RF перевіряється проти findings. Boolean
+            Кожен з 469 RF перевіряється проти findings. Boolean
             engine: <code>any_of</code>/<code>all_of</code>/<code>none_of</code>
             clauses з threshold-ами. RF-trigger alias map зменшила «unevaluated»
             warnings ~на 76%.
@@ -453,7 +453,7 @@
       <p class="info-text">
         <strong>Сторінка <a href="/ukr/diseases.html"><code>/ukr/diseases.html</code></a></strong>
         — це per-disease таблиця, що показує, що наявне у KB для кожної з
-        65 хвороб. Згрупована у три родини: лімфоїдна
+        78 хвороб. Згрупована у три родини: лімфоїдна
         гематологія, мієлоїдна гематологія, солідні пухлини. Для кожної
         хвороби: counts по біомаркерах / препаратах / показаннях / режимах /
         red flags, checkmarks для алгоритмів 1L і 2L, статус анкети
@@ -855,7 +855,7 @@
           <h3>Без cumulative-toxicity tracking між lines</h3>
           <p>
             2L+ алгоритми вже існують для 34 гематологічних
-            хвороб (160 показань 2L+), але profile не carrier'ить
+            хвороб (180 показань 2L+), але profile не carrier'ить
             <code>prior_treatment_history</code> як structured field. 2L plan
             для пацієнта що отримав bortezomib у 1L з grade 2 нейропатією —
             engine не знає про попередній exposure якщо нічого нового не
@@ -940,23 +940,23 @@
     <div class="info-section">
       <h2>15. Поточне покриття — де ще STUB і чого ще немає</h2>
       <p class="info-text">
-        OpenOnco — work in progress. Зараз модельовано <strong>65
-        захворювань</strong> (37 гематологічних + 28 солідних)
+        OpenOnco — work in progress. Зараз модельовано <strong>78
+        захворювань</strong> (38 гематологічних + 40 солідних)
         — це далеко не повний WHO-HAEM5 / WHO Classification of Tumours.
         Конкретно:
       </p>
       <table class="kv-table">
         <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
         <tbody>
-          <tr><td>Хвороби з повним ланцюгом</td><td>64 / 65</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>183</td><td>Перша лінія покрита для всіх 65 хвороб</td></tr>
-          <tr><td>Indications 2L+</td><td>160</td><td>Друга-четверта лінія: 34 гематологічних + 10 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
-          <tr><td>RedFlags</td><td>467</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
+          <tr><td>Хвороби з повним ланцюгом</td><td>70 / 78</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>210</td><td>Перша лінія покрита для всіх 78 хвороб</td></tr>
+          <tr><td>Indications 2L+</td><td>180</td><td>Друга-четверта лінія: 34 гематологічних + 19 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
+          <tr><td>RedFlags</td><td>469</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>
           <tr><td>Радіотерапія планів</td><td>частково</td><td>RT входить у мультимодальні Indications (cervical CRT, GBM Stupp, PMBCL R-CHOP+RT, esophageal CROSS), але як окрема сутність з технічними параметрами (доза/фракції/target volumes) ще не моделюється</td></tr>
           <tr><td>Хірургія планів</td><td>не модельовано</td><td>Surgical oncology indications відсутні</td></tr>
           <tr><td>НСЗУ formulary live-feed</td><td>статичний flag</td><td>Поки що hard-coded на режимах; не auto-refresh з НСЗУ — окремий backlog</td></tr>
-          <tr><td>Reviewer dual-signoff</td><td>15/349</td><td>Більшість контенту — STUB. Capacity план: 349 → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
+          <tr><td>Reviewer dual-signoff</td><td>15/383</td><td>Більшість контенту — STUB. Capacity план: 383 → ≥85% verified — це наша основна bottleneck-метрика, описана у kb_coverage_strategy v0.2</td></tr>
         </tbody>
       </table>
       <div class="callout">
@@ -1055,7 +1055,7 @@
       <h2>18. Як долучитись — верифікувати алгоритми токенами вашого AI</h2>
       <p class="info-text">
         Найбільший gap на цій сторінці —
-        <strong>15/349</strong>
+        <strong>15/383</strong>
         dual-reviewer sign-off. Це bottleneck, який не вирішується новим
         кодом — він вирішується <em>контрибуторами з AI-tool'ами</em>, які
         беруть structured chunks роботи і виконують їх кожен у свій
