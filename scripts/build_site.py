@@ -460,6 +460,21 @@ self.addEventListener('fetch', (event) => {
     return {"path": "sw.js", "cache_name": cache_name}
 
 
+import re as _re
+_STUB_SUFFIX_RE = _re.compile(r'\s*[—\-]+\s*Auto-stub\s*\([^)]*\)', _re.IGNORECASE)
+_AUTO_STUB_QUEST_RE = _re.compile(r'\s*\(auto-generated STUB\)', _re.IGNORECASE)
+
+
+def _clean_label(label: str) -> str:
+    """Strip auto-stub annotations from display labels."""
+    return _STUB_SUFFIX_RE.sub("", label).strip()
+
+
+def _clean_quest_title(title: str) -> str:
+    """Strip '(auto-generated STUB)' from questionnaire titles."""
+    return _AUTO_STUB_QUEST_RE.sub("", title).strip()
+
+
 def _dis_id_to_icd_map() -> dict[str, str]:
     """Direct `{DIS-...: ICD-O-3 code}` map built by reading disease YAMLs.
 
@@ -534,8 +549,8 @@ def bundle_examples(output_dir: Path) -> dict:
         })
         manifest.append({
             "case_id": c.case_id,
-            "label": c.label_ua,
-            "label_en": label_en,
+            "label": _clean_label(c.label_ua),
+            "label_en": _clean_label(label_en),
             "disease_icd": _resolve_disease_icd(ex_json, dis_id_to_icd),
         })
     out = output_dir / "examples.json"
@@ -704,7 +719,7 @@ def bundle_questionnaires(output_dir: Path) -> dict:
                     payload.append(data)
                     manifest.append({
                         "id": data.get("id"),
-                        "title": data.get("title"),
+                        "title": _clean_quest_title(data.get("title") or ""),
                         "disease_icd": (
                             (data.get("fixed_fields") or {})
                             .get("disease", {})

@@ -5320,6 +5320,15 @@ CASES: list[CaseEntry] = [
         label_en="mCRC · 3L+ Regorafenib (CORRECT)",
         summary_en="Chemorefractory mCRC. Drift: engine default = TAS-102+bev (SUNLIGHT); regorafenib as alternative track.",
     ),
+    CaseEntry(
+        case_id="crc-mcrc-kras-g12c-mss-2l-adagrasib-cetux",
+        file="patient_crc_kras_g12c_mss_2l_adagrasib_cetux.json",
+        label_ua="mCRC · KRAS G12C MSS 2L · адаграсиб+цетуксимаб (FDA 2024)",
+        summary_ua="Чоловік 58, mCRC стадія IVB, KRAS G12C (соматична NGS), BRAF-wt, MSS/pMMR. Прогрес на FOLFOX+bev 1L. Двигун: адаграсиб 600 мг BID + цетуксимаб Q1W (KRYSTAL-1; ESCAT IB) або сотораcиб + панітумумаб. Монотерапія G12Ci неефективна в CRC — комбо обов'язкове.",
+        badge="Treatment Plan", badge_class="bdg-plan", category="solid",
+        label_en="mCRC · KRAS G12C MSS 2L · adagrasib+cetuximab (FDA 2024)",
+        summary_en="Man 58, mCRC stage IVB, KRAS G12C (somatic NGS), BRAF-wt, MSS/pMMR. Progression on FOLFOX+bev 1L. Engine: adagrasib 600 mg BID + cetuximab Q1W (KRYSTAL-1; ESCAT IB) or sotorasib + panitumumab. G12Ci monotherapy ineffective in CRC — combination mandatory.",
+    ),
 
     # S4 MELANOMA BRAF/IO variants (5)
     CaseEntry(
