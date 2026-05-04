@@ -1,0 +1,95 @@
+id: REG-NIGRO-MMC-5FU-RT
+disease_context: DIS-ANAL-SCC
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "concurrent_chemoradiation"
+
+agents:
+  - drug_id: DRG-MITOMYCIN-C
+    dose: "10–12 mg/m² IV bolus over 30 min (max single dose 20 mg)"
+    route: IV
+    schedule: "Day 1 and Day 29 (two doses total — one per CRT course)"
+    cumulative_dose_limit: "Total ~20-24 mg/m² (2 doses) — cumulative limit to avoid hemolytic uremic syndrome"
+    dose_modifications:
+      - trigger: "Thrombocytopenia platelets <75K on Day 29"
+        action: "Delay Day 29 MMC until platelets recover; do NOT delay radiation"
+      - trigger: "Grade ≥3 thrombocytopenia/hemolysis"
+        action: "Consider omitting Day 29 MMC dose (continue 5-FU + RT)"
+  - drug_id: DRG-FLUOROURACIL
+    dose: "1000 mg/m²/day IV continuous infusion (IVCI)"
+    route: IV
+    schedule: "Days 1-4 AND Days 29-32 (two 4-day infusion courses during radiation)"
+    total_5fu_dose: "8000 mg/m² total (4 days × 2 courses)"
+    dose_modifications:
+      - trigger: "Grade ≥3 mucositis or diarrhea"
+        action: "Reduce 5-FU to 750 mg/m²/day for subsequent course"
+
+concurrent_radiation:
+  modality: "External beam radiation therapy (EBRT) — 3D-CRT or IMRT (preferred)"
+  total_dose: "50.4 Gy (standard) — range 45-54 Gy based on tumor size/nodal involvement"
+  fractionation: "1.8 Gy/fraction × 28 fractions"
+  fields: "Anal canal primary + regional nodes (inguinal, perirectal, internal iliac)"
+  imrt_preferred: true
+  imrt_rationale: "IMRT reduces acute hematologic and GI toxicity vs 3D-CRT; sphincter and genitalia sparing"
+  boost: "Optional 5.4-9 Gy boost to gross tumor (T3-T4) after 45 Gy initial course"
+  note: "Radiation MUST be planned and delivered by radiation oncology — concurrent systemic therapy only per this regimen"
+
+when_to_use: >
+  Standard concurrent chemoradiation (Nigro protocol) for squamous cell carcinoma
+  of the anal canal, stages I-III (locally advanced). This is the primary curative
+  treatment — APR (abdominoperineal resection) is NOT first-line therapy for anal
+  canal SCC. CRT achieves ~90% complete response and spares the sphincter.
+  NCCN Category 1 (any T, any N, M0).
+  DO NOT use for: stage IV metastatic disease (use systemic chemotherapy ±
+  immunotherapy); adenocarcinoma of anal glands (treat as rectal adenocarcinoma).
+
+premedication:
+  - "Antiemetics: moderately emetogenic protocol (5-HT3 + dexamethasone before MMC/5FU days)"
+  - "Hydration: 500 mL NS before MMC IV bolus"
+  - "Mucositis prevention: good oral hygiene, alcohol-free mouth rinse"
+
+cycle_length_days: 57
+total_planned_cycles: "1 course (2 chemotherapy 'cycles' embedded within one radiation course)"
+
+monitoring:
+  - "CBC + differential: weekly during CRT — MMC myelosuppression nadir typically weeks 3-4"
+  - "BMP (creatinine, electrolytes): weekly — 5-FU mucositis can cause dehydration"
+  - "Tumor markers: none standard for anal SCC (no serum markers)"
+  - "Dermatology/skin: weekly assessment of radiation field dermatitis — grade 2-3 common (perineal skin)"
+  - "Response assessment: clinical exam + imaging (CT/MRI pelvis) at 8-11 weeks post-CRT"
+  - "Biopsy: ONLY if suspicious residual disease at 8-11 weeks — biopsy-negative → observe; confirm at 26 weeks"
+  - "Biopsy timing critical: early post-CRT biopsy (4-6 weeks) has high false-positive rate due to radiation effect"
+
+key_toxicities:
+  - toxicity: "Acute hematologic toxicity (neutropenia, thrombocytopenia)"
+    grade_3_4_incidence: "~20-25% (primarily MMC-driven)"
+    management: "G-CSF secondary prophylaxis if Grade ≥3 neutropenia; delay Day 29 MMC if thrombocytopenic"
+  - toxicity: "Acute radiation dermatitis (perineal/anal)"
+    grade_3_4_incidence: "~30-50% (near-universal Grade 2 moist desquamation)"
+    management: "Topical wound care; IMRT reduces severity; treatment break only for Grade 4 (rare)"
+  - toxicity: "Mucositis / proctitis"
+    grade_3_4_incidence: "~20-30%"
+    management: "Supportive care; antidiarrheal agents; flexible treatment breaks if severe"
+  - toxicity: "GI toxicity (diarrhea, nausea)"
+    grade_3_4_incidence: "~15-20%"
+    management: "Antidiarrheals (loperamide); antiemetics; hydration support"
+  - toxicity: "Hemolytic uremic syndrome (HUS)"
+    grade_3_4_incidence: "Rare (<1%) but potentially fatal"
+    management: "Monitor for microangiopathic hemolysis; discontinue MMC if suspected; subspecialty hematology"
+  - toxicity: "Late effects: sexual dysfunction, fecal incontinence, inguinal lymphedema"
+    grade_3_4_incidence: "~10-20% long-term"
+    management: "Pelvic floor physiotherapy; radiation dose minimization with IMRT"
+
+watchpoints_ua:
+  - "УВАГА: Режим Нігро (ММС + 5-ФУ + ПТ) — КУРАТИВНЕ лікування раку анального каналу; АПЕ НЕ є первинним лікуванням при плоскоклітинному раку анального каналу"
+  - "УВАГА: ММС-індукована цитопенія — щотижневий КАК обов'язковий; зазвичай надір в 3-4 тижні CRT"
+  - "УВАГА: Оцінка відповіді через 8-11 тижнів після CRT — НЕ проводити біопсію раніше 8 тижнів (висока частота хибно-позитивних результатів через радіаційні зміни)"
+  - "УВАГА: Підтвердити залишкове захворювання біопсією перед порятунковою АПЕ — клінічна знахідка пухлини 4-6 тижнів після CRT = не показання для хірургії"
+  - "УВАГА: Перианальний радіаційний дерматит — майже повсюдний (волога десквамація); IMRT знижує тяжкість; підготувати пацієнта до очікуваної токсичності"
+  - "УВАГА: ВІЛ-позитивні пацієнти — та сама схема CRT; оптимізувати АРТ; може знадобитися корекція доз при тяжкій імуносупресії; вищий ризик цитопенії"
+  - "УВАГА: Немає поліхімієтерапії підтримки після CRT — дослідження ACT II не виявило переваг підтримуючої хіміотерапії; стандарт — спостереження"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

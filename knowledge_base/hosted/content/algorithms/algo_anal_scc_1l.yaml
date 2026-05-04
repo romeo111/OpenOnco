@@ -1,0 +1,136 @@
+id: ALGO-ANAL-SCC-1L
+applicable_to_disease: DIS-ANAL-SCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L treatment for squamous cell carcinoma of the anal canal.
+  Routes by: (1) stage — locally advanced (I-III, M0) vs metastatic (IV, M1),
+  (2) ECOG PS eligibility for chemoradiation or systemic chemotherapy, and
+  (3) immunotherapy access for metastatic disease.
+  CURATIVE INTENT for stages I-III (~90% complete response with CRT);
+  palliative/systemic for stage IV.
+  KEY PRINCIPLE: APR (abdominoperineal resection) is NOT primary treatment
+  for anal canal SCC — organ-preserving CRT is standard.
+
+output_indications:
+  - IND-ANAL-SCC-LA-1L-NIGRO-CRT
+  - IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI
+
+default_indication: IND-ANAL-SCC-LA-1L-NIGRO-CRT
+alternative_indication: IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI
+
+decision_tree:
+  # Step 1 — Stage assessment: locally advanced vs metastatic.
+  # This is the primary fork — completely different treatment intent and approach.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Histology confirmed: squamous cell carcinoma of the anal canal"
+        - condition: "CT CAP and/or PET-CT completed for staging"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Histological confirmation and complete staging workup required before
+        treatment selection. CT CAP mandatory; PET-CT preferred for lymph node
+        staging (inguinal nodes frequently involved; PET detects occult M1).
+        HIV testing required in all anal SCC patients. HPV testing optional
+        (epidemiologic, not treatment-modifying). MRI pelvis for local staging.
+
+  # Step 2 — Distant metastasis check: M0 vs M1.
+  # This is the critical fork between curative and palliative approaches.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Locally advanced disease (any T, any N, M0) — stages I, II, or III"
+    if_true:
+      next_step: 3
+      notes: "Stages I-III (M0): curative concurrent chemoradiation is standard. APR is NOT primary therapy."
+    if_false:
+      next_step: 4
+      notes: "Stage IV (M1): systemic chemotherapy ± PD-1 immunotherapy. Palliative/disease-control intent."
+
+  # Step 3 — ECOG PS gate for chemoradiation (locally advanced disease).
+  # MMC+5FU+RT requires adequate performance status and organ function.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "No prior pelvic RT to dose-limiting cumulative dose"
+        - condition: "CrCl ≥50 mL/min and adequate hepatic function"
+    if_true:
+      result: IND-ANAL-SCC-LA-1L-NIGRO-CRT
+      notes: >
+        Standard concurrent chemoradiation (Nigro protocol):
+        MMC 10-12 mg/m² IV days 1 + 29 + 5-FU 1000 mg/m²/d CI days 1-4 + 29-32
+        + concurrent EBRT 50.4 Gy (IMRT preferred). NCCN Category 1.
+        Expected complete response ~90% at 26 weeks.
+        RESPONSE ASSESSMENT: clinical exam + CT/MRI pelvis at 8-11 weeks post-CRT.
+        Biopsy only for residual mass — early biopsy false-positive rate is high.
+        SALVAGE: confirmed residual at 11-26 weeks → APR (curative salvage ~50% success).
+        HIV+ patients: same CRT; optimize antiretroviral therapy.
+        Stage I (T1N0): MDT discussion — local excision may be considered for very small,
+        superficial T1N0 with sphincter preservation and clear margins.
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3, renal failure (CrCl <50), or prior cumulative pelvic RT limiting
+        re-irradiation: individualized MDT assessment.
+        For ECOG 3: palliative RT alone (30-40 Gy) may provide symptom control.
+        For prior pelvic RT: stereotactic body RT (SBRT) or brachytherapy boost
+        at specialized centers. Refer to radiation oncology.
+
+  # Step 4 — Stage IV (metastatic): immunotherapy access gate.
+  # Retifanlimab+carbo+pacli is preferred (POD1UM-303, NCCN Cat 1).
+  # If immunotherapy unavailable: carbo+pacli doublet alone.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-1"
+        - condition: "No active autoimmune disease requiring systemic immunosuppression"
+        - condition: "Adequate organ function (CrCl ≥50 mL/min, normal LFTs)"
+    if_true:
+      result: IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI
+      notes: >
+        METASTATIC 1L: Retifanlimab 500 mg Q4W + carboplatin AUC 5 +
+        paclitaxel 175 mg/m² q3w × 6 cycles → retifanlimab Q4W maintenance
+        until progression or 24 months (POD1UM-303).
+        Retifanlimab not registered in Ukraine — access via named-patient import
+        or EAP. UA-ACCESSIBLE ALTERNATIVE: carboplatin AUC 5 + paclitaxel
+        175 mg/m² q3w × 6 cycles without immunotherapy (Rao 2011; ~60% ORR).
+        Note: pembrolizumab (KEYNOTE-158 anal SCC cohort: ORR 10% 2L) sometimes
+        used off-label in Ukraine for PD-L1+ patients.
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥2 or organ dysfunction for systemic chemotherapy: dose-reduced doublet
+        (carboplatin AUC 4 + paclitaxel 135 mg/m²) with close monitoring.
+        Avoid retifanlimab (PD-1) in active autoimmune disease or solid organ transplant.
+        For ECOG ≥3: best supportive care; palliative RT for symptomatic sites.
+
+sources:
+  - SRC-ACT2-JAMES-2013
+  - SRC-NCCN-ANAL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  PRINCIPLE: Anal canal SCC is treated with organ-preserving CRT — APR is salvage only.
+  Anal margin (perianal) SCC: treated differently (like skin SCC; smaller RT field);
+  this algorithm is for anal CANAL SCC.
+
+  CRT RESPONSE ASSESSMENT TIMING:
+    8-11 weeks post-CRT: clinical exam + CT/MRI pelvis
+    Residual mass without confirmed biopsy → observe; re-assess at 26 weeks
+    (radiation changes resolve by ~11-26 weeks; early biopsy is unreliable)
+    Biopsy-confirmed residual at 26 weeks → salvage APR discussion
+
+  HIV+ PATIENTS:
+    Same CRT protocol (ACT II included HIV+ patients)
+    CD4 >200 preferred; not an absolute contraindication
+    ART must continue during CRT; coordinate with HIV specialist
+    Higher risk of acute hematologic toxicity
+
+  STAGE IV GAPS:
+    IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI (doublet without immunotherapy)
+    not yet authored — needed for UA-accessible standard-track care
+    2L salvage (nivolumab/pembrolizumab monotherapy) not yet authored
