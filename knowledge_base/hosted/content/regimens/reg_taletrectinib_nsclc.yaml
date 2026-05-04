@@ -1,0 +1,67 @@
+id: REG-TALETRECTINIB-NSCLC
+name: "Taletrectinib monotherapy for ROS1+ NSCLC (TRUST-I/II)"
+name_ua: "Талетректиніб монотерапія при ROS1+ НМРЛ (TRUST-I/II)"
+alternate_names: ["AB-106 NSCLC", "taletrectinib ROS1"]
+
+components:
+  - drug_id: DRUG-TALETRECTINIB
+    dose: "600 mg PO once daily (QD)"
+    schedule: "Continuous; no lead-in dose titration required"
+    route: PO
+    notes: >
+      600 mg QD is the approved dose. No mandatory lead-in (unlike repotrectinib
+      which requires 160 mg daily × 14 days before BID). Take with or without food.
+      Once-daily dosing may improve adherence vs repotrectinib BID schedule.
+      Active against ROS1 G2032R resistance mutation (primary crizotinib resistance).
+
+cycle_length_days: 28
+number_of_cycles: "Continuous until progression or unacceptable toxicity"
+
+premedications:
+  - "Antiemetics PRN (nausea ~40-50% — preventive regimen per institutional protocol)"
+  - "No mandatory corticosteroid or antihistamine premedication"
+
+supportive_care:
+  - "LFTs, bilirubin: every 2 weeks for first 8 weeks, then monthly (hepatotoxicity monitoring)"
+  - "CBC, CMP: before each cycle"
+  - "Baseline ECG: QTc assessment (bradycardia and QTc prolongation risk)"
+  - "Brain MRI with contrast: baseline and every 2-3 cycles (ROS1+ high CNS metastasis incidence)"
+  - "CT CAP: every 2-3 cycles for response assessment"
+  - "ILD monitoring: assess respiratory symptoms at every visit; CT chest if new symptoms"
+
+dose_modifications:
+  - toxicity: "Grade 3 hepatotoxicity (AST/ALT >5-20× ULN)"
+    action: "Hold taletrectinib; resume at 400 mg QD when ≤Grade 1; permanently discontinue if Grade 4 or recurrent"
+  - toxicity: "Grade 3-4 ILD / pneumonitis"
+    action: "Permanently discontinue taletrectinib; high-dose corticosteroids (1-2 mg/kg/day prednisone)"
+  - toxicity: "Grade 3 CNS effects (dizziness, cognitive impairment)"
+    action: "Hold; reduce to 400 mg QD when resolved to ≤Grade 1; discontinue if Grade 4"
+  - toxicity: "Grade 3 nausea/vomiting refractory to antiemetics"
+    action: "Reduce to 400 mg QD; optimize antiemetic prophylaxis"
+  - toxicity: "QTc >500 ms"
+    action: "Hold; correct electrolytes; reassess; reduce dose or discontinue if persistent"
+
+special_requirements:
+  - "ROS1 rearrangement confirmed by validated NGS (RNA-NGS preferred; FISH acceptable for rapid diagnosis)"
+  - "AVOID strong CYP3A4 inhibitors and inducers (significant drug interaction)"
+  - "Baseline brain MRI mandatory for all ROS1+ NSCLC (CNS staging)"
+  - "Baseline ECG (QTc monitoring)"
+  - "Baseline LFTs (hepatotoxicity risk)"
+  - "ILD/baseline pulmonary function: contraindicated in active ILD"
+
+sources:
+  - SRC-TRUST-TALETRECTINIB-2024
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  TRUST-I (NCT04666748) and TRUST-II (NCT04919811): Phase 2 single-arm studies.
+  Taletrectinib 600 mg PO QD in ROS1+ NSCLC. Treatment-naive ORR ~72-91%
+  (TRUST-II global ~72%; TRUST-I China ~91%); strong intracranial activity.
+  FDA accelerated approval ~2024. NCCN NSCLC 2025: Category 1 preferred.
+  Key practical differentiator vs repotrectinib: once-daily dosing (vs BID),
+  no mandatory lead-in titration. Potentially better tolerability for dizziness
+  (TRUST data suggest lower dizziness rate than repotrectinib ~63%).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

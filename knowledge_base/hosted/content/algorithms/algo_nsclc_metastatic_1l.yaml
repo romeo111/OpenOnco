@@ -15,6 +15,7 @@ output_indications:
   - IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB
   - IND-NSCLC-ALK-MET-1L
   - IND-NSCLC-ROS1-1L-REPOTRECTINIB
+  - IND-NSCLC-ROS1-1L-TALETRECTINIB
   - IND-NSCLC-MET-EX14-1L-CAPMATINIB
   - IND-NSCLC-RET-FUSION-1L-SELPERCATINIB
   - IND-NSCLC-BRAF-V600E-1L-DAB-TRAM
@@ -106,17 +107,27 @@ decision_tree:
       next_step: 4
 
   # Step 4 — ROS1 fusion.
-  # Repotrectinib preferred 1L for ROS1+ (TRIDENT-1: ORR 79%; CNS-active).
-  # Crizotinib historical; entrectinib alternative.
+  # Two NCCN Cat 1 next-gen ROS1 TKIs: repotrectinib (aggressive-track, CNS-dominant)
+  # and taletrectinib (standard-track, QD dosing, lower dizziness burden).
   - step: 4
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-ROS1-FUSION-ACTIONABLE
     if_true:
       result: IND-NSCLC-ROS1-1L-REPOTRECTINIB
+      alternatives:
+        - indication: IND-NSCLC-ROS1-1L-TALETRECTINIB
+          criteria: "Standard-track alternative: QD dosing (vs BID), no lead-in titration, potentially lower dizziness burden; TRUST-I/II ORR ~72-91%; FDA accelerated approval ~2024; NCCN Cat 1"
+          nccn_category: 1
       notes: >
-        ROS1 fusion: repotrectinib 160 mg QD × 14d → 160 mg BID (TRIDENT-1: ORR 79%
-        treatment-naive, strong CNS activity). Entrectinib or crizotinib are alternatives.
+        ROS1 fusion (~1-2% NSCLC) — TWO NCCN Cat 1 next-gen preferred options:
+        DEFAULT: Repotrectinib 160 mg QD lead-in × 14d → 160 mg BID (TRIDENT-1: ORR 79%;
+        mDOR 34.1 mo; IC-ORR 89%; aggressive-track for CNS-dominant disease).
+        ALTERNATIVE: Taletrectinib 600 mg QD continuous (TRUST-I/II: ORR ~72-91%;
+        QD dosing; no lead-in; lower dizziness; mDOR ~15 mo — may mature further).
+        LEGACY: Entrectinib (STARTRK-2: ORR ~57%; CNS-active) and crizotinib remain
+        options where repotrectinib/taletrectinib inaccessible (access/cost).
+        MDT select based on CNS burden, patient tolerability preference, and drug access.
     if_false:
       next_step: 5
 
