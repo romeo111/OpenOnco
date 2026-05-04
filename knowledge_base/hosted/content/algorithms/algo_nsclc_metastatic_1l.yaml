@@ -21,6 +21,7 @@ output_indications:
   - IND-NSCLC-BRAF-V600E-1L-DAB-TRAM
   - IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
   - IND-NSCLC-PDL1-HIGH-MET-1L
+  - IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC
   - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 
 default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
@@ -203,7 +204,24 @@ decision_tree:
       notes: >
         PD-L1 TPS ≥50% (22C3 pharmDx): pembrolizumab monotherapy 200 mg q3w
         (KEYNOTE-024; OS HR 0.63). Pembro+chemo also acceptable if rapid progression
-        or visceral crisis requiring faster tumor reduction.
+        or visceral crisis requiring faster tumor reduction. For label-strict 22C3
+        clone-specific documentation (insurance/regulatory audit), use
+        IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC (same regimen, clone-documented track).
+      alternatives:
+        - indication_id: IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC
+          nccn_category: "1"
+          criteria: >
+            Same as IND-NSCLC-PDL1-HIGH-MET-1L but PD-L1 was scored specifically
+            on Dako 22C3 pharmDx companion diagnostic; label-strict adherence required
+            (insurance prior-auth requiring 22C3 documentation, regulatory audit,
+            clinical trial eligibility). KEYNOTE-024 clinical evidence base identical.
+          note: >
+            Label-strict pembrolizumab 1L track (KEYNOTE-024; NCCN Cat 1): identical
+            clinical recommendation to the permissive IND-NSCLC-PDL1-HIGH-MET-1L,
+            but explicitly records that PD-L1 scoring used FDA-required Dako 22C3
+            pharmDx companion diagnostic. Use when payer, regulator, or protocol
+            requires 22C3 assay documentation rather than Blueprint-concordant SP263/28-8.
+            Clinical outcome identical; distinction is regulatory/documentation only.
     if_false:
       result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
       notes: >
@@ -237,3 +255,8 @@ notes: >
 
   Updated 2026-05-04: expanded step 4 cascade to cover all 5 remaining
   driver subtypes with per-driver 1L indications now authored.
+  UPDATED 2026-05-04 (Workstream FJ): IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC
+  added to output_indications; wired as Cat 1 alternative at step 9 if_true
+  (PD-L1 high track). Companion to IND-NSCLC-PDL1-HIGH-MET-1L — identical
+  clinical recommendation but explicit 22C3 pharmDx clone documentation
+  for label-strict adherence scenarios.
