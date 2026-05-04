@@ -1,0 +1,109 @@
+id: REG-PACLITAXEL-WEEKLY-ENDOMETRIAL
+name: "Paclitaxel 80 mg/m² IV weekly (recurrent/metastatic endometrial; palliative)"
+name_ua: "Паклітаксел 80 мг/м² IV щотижнево (рецидивний/метастатичний рак ендометрія; паліативний)"
+alternate_names:
+  - "weekly paclitaxel endometrial"
+  - "paclitaxel mono endometrial 2L"
+  - "paclitaxel GOG endometrial"
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "80 mg/m² IV over 60 minutes"
+    schedule: "Days 1, 8, 15 of a 28-day cycle (3 of 4 weeks on). Continue until progression or unacceptable toxicity."
+    route: IV
+    notes: >
+      Weekly 80 mg/m² schedule preferred over q3w 175 mg/m² in recurrent endometrial
+      cancer: lower peak toxicity (neurotoxicity, myelosuppression) with similar efficacy.
+      Premedication MANDATORY to prevent hypersensitivity reactions (HSR) — see below.
+      If Grade ≥2 HSR on premedication: discontinue paclitaxel; switch to docetaxel or PLD.
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity (median 4-6 cycles in palliative endometrial)"
+toxicity_profile: moderate
+
+premedication:
+  - "Dexamethasone 10-20 mg IV (or 20 mg PO 12h + 6h before) — HSR prevention mandatory"
+  - "Diphenhydramine 50 mg IV (or equivalent antihistamine) — 30 min before paclitaxel"
+  - "Ranitidine 50 mg IV (or famotidine 20 mg IV) — H2 blocker 30 min before paclitaxel"
+
+mandatory_supportive_care:
+  - "CBC day 1 and day 8: hold if ANC <1.0×10⁹/L or PLT <100×10⁹/L on scheduled day"
+  - "Neuropathy assessment every cycle: use NCI-CTCAE sensory neuropathy scale"
+  - "Alopecia: counselling mandatory; universal with paclitaxel"
+  - "Neurotoxicity: cumulative — dose reduce to 60 mg/m² for Grade 2 peripheral neuropathy; hold for Grade ≥3"
+
+dose_adjustments:
+  - condition: "Grade 2 peripheral neuropathy (symptoms limiting instrumental ADLs)"
+    modification: "Reduce to 60 mg/m²/week; consider extending to q3w 175 mg/m² if weekly schedule poorly tolerated"
+    rationale: "Cumulative neurotoxicity; dose reduction preserves treatment duration"
+  - condition: "Grade ≥3 peripheral neuropathy"
+    modification: "Hold paclitaxel until recovery to Grade ≤1; resume at 60 mg/m²; consider switching to nab-paclitaxel or docetaxel"
+    rationale: "Grade 3+ neuropathy may be irreversible"
+  - condition: "ANC <1.0×10⁹/L on dose day OR Grade ≥4 neutropenia"
+    modification: "Delay dose 1 week; G-CSF not required for weekly paclitaxel (lower nadir than q3w)"
+    rationale: "Weekly schedule has lower nadir but dose delays are preferable to G-CSF burden in palliative context"
+  - condition: "Grade ≥2 HSR (flushing, bronchospasm, hypotension)"
+    modification: "Stop infusion; resuscitate; do not re-challenge with paclitaxel; switch to nab-paclitaxel (no Cremophor) or docetaxel"
+    rationale: "Paclitaxel HSR is Cremophor EL-mediated; nab-paclitaxel avoids this vehicle"
+  - condition: "Severe hepatic impairment (bilirubin >3× ULN)"
+    modification: "Reduce to 50 mg/m²/week (paclitaxel hepatically metabolised via CYP3A4 and CYP2C8)"
+    rationale: "Hepatic impairment increases paclitaxel exposure; dose reduction required"
+
+drug_interactions:
+  - "Strong CYP3A4 inhibitors (ketoconazole, clarithromycin, ritonavir): increase paclitaxel exposure → dose reduce by 25%"
+  - "Strong CYP3A4 inducers (rifampicin, carbamazepine): decrease paclitaxel → monitor response"
+  - "Anthracyclines: additive myelosuppression; not combined in endometrial 2L"
+  - "QTc-prolonging drugs: paclitaxel mild QTc effect; additive risk with antiarrhythmics"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Паклітаксел зареєстровано і НСЗУ-фінансується для раку ендометрія (онкопакет 2025).
+    Щотижневий режим (80 мг/м²) є стандартним вибором в Україні для паліативної
+    2L терапії ендометрія при ECOG ≥2 або непереносимості ленватинібу.
+    Доступний у більшості онкологічних відділень.
+
+sources:
+  - SRC-NCCN-UTERINE-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння пальців рук чи ніг"
+    action_ua: "Повідомте на наступному візиті — нейротоксичність від паклітакселу; може бути постійною"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Температура ≥38°C"
+    action_ua: "Зателефонуйте в клініку того ж дня — ризик нейтропенічної лихоманки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Задишка, кропив'янка, відчуття жару під час інфузії"
+    action_ua: "Зупиніть інфузію — реакція гіперчутливості; повідомте медперсонал негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Значне випадіння волосся"
+    action_ua: "Очікувано — розпочнеться через 2-3 тижні після першої дози; зазвичай зворотне"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+
+last_reviewed: "2026-05-04"
+reviewer_signoffs: []
+notes: >
+  Weekly paclitaxel 80 mg/m² d1,8,15 q28d for recurrent/metastatic endometrial
+  carcinoma: NCCN Uterine 2025 Category 2A. Preferred formulation for palliative
+  2L+ in frail/ECOG ≥2 patients over q3w 175 mg/m² schedule (lower peak
+  haematologic and neurologic toxicity). GOG-76E historical evidence;
+  Michener 2005 Gynecol Oncol weekly paclitaxel endometrial ORR ~36%.
+
+  KEY DISTINCTION FROM FIRST-LINE COMBINATION REGIMENS:
+  - 1L standard: carboplatin + paclitaxel (PORTEC-3, GOG 122) q3w
+  - 2L palliative mono: weekly 80 mg/m² (frail) or q3w 175 mg/m² (fit)
+  - PLD 40 mg/m² q4w: alternative mono in UK/EU where registered; slightly
+    lower neuropathy, more mucositis; NCCN Cat 2A equally.
+
+  STUB pending §6.1 signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

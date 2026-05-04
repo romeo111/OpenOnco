@@ -1,0 +1,168 @@
+id: IND-ENDOMETRIAL-2L-PACLITAXEL-FRAIL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic endometrial carcinoma after ≥1 prior platinum-based regimen"
+    - "ECOG PS 2-3 OR not eligible for lenvatinib combination (RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO not met: renal dysfunction CrCl <40, uncontrolled hypertension, proteinuria >2g/24h, hepatic impairment Child-Pugh B)"
+    - "Grade 3 endometrioid OR non-endometrioid histology (uterine serous, clear cell, carcinosarcoma) OR ER-negative Grade 1-2 (hormonal therapy not expected to benefit)"
+    - "Not MSI-H / dMMR (or MSI-H/dMMR but ICI-experienced — already received ICI in 1L)"
+    - "Not HER2 IHC 3+ (those should route to T-DXd)"
+    - "ANC ≥1.0×10⁹/L, PLT ≥100×10⁹/L at treatment start"
+    - "No Grade ≥2 pre-existing peripheral neuropathy (paclitaxel cumulative neurotoxicity)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "MSI-H/dMMR + ICI-naive: dostarlimab preferred (IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR)"
+    - "HER2 IHC 3+: T-DXd preferred (IND-ENDOMETRIAL-2L-HER2-TDXD)"
+    - "ER+ Grade 1-2 endometrioid + lenvatinib-ineligible: hormonal therapy preferred (IND-ENDOMETRIAL-2L-HORMONAL)"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      This indication is specifically designed for frail/ECOG ≥2 patients who
+      cannot tolerate lenvatinib combination (pembro+lenva) or have contraindications
+      to lenvatinib (renal, hepatic, cardiovascular).
+      ECOG 0-1 lenva-eligible patients should be routed to IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR.
+      ECOG ≥4: engine hard gate — all active therapy tracks suppressed.
+      Elderly patients (≥75) with Grade ≥2 neuropathy: PLD or doxorubicin mono
+      may be preferable to paclitaxel (avoid worsening neurotoxicity).
+
+recommended_regimen: REG-PACLITAXEL-WEEKLY-ENDOMETRIAL
+alternative_regimens:
+  - regimen_id: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
+    description: >
+      Pembrolizumab 200 mg q3w + lenvatinib 20 mg PO daily (KEYNOTE-775; ORR 30.9%;
+      mPFS 6.6 mo; mOS 17.4 mo in pMMR; NCCN Cat 1). Preferred for ECOG 0-1 lenva-eligible
+      patients with any histology (pMMR). Route back to pembro+lenva if patient status improves
+      or lenvatinib barriers resolved.
+  - regimen_id: IND-ENDOMETRIAL-2L-HORMONAL
+    description: >
+      Megestrol 160 mg PO daily or letrozole 2.5 mg PO daily for Grade 1-2 endometrioid ER+
+      patients. Oral, minimal toxicity. NCCN Cat 2A ORR ~25-30% (GOG 081). Preferred over
+      paclitaxel for ER+ Grade 1-2 endometrioid + lenvatinib-ineligible (hormonal therapy
+      lower toxicity burden).
+
+concurrent_therapy:
+  - "Antiemetics: ondansetron (or similar 5-HT3 antagonist) for paclitaxel days"
+  - "Alopecia counselling: cold cap optional but often ineffective for cytotoxics"
+  - "Supportive: loperamide PRN for GI symptoms; B12+B6 supplement for neuropathy prophylaxis (weak evidence)"
+
+followed_by:
+  - "Response assessment after cycle 3 (CT chest/abdomen/pelvis); continue if CR/PR/SD"
+  - "At progression: if still ECOG ≥2 — consider goals-of-care MDT discussion (BSC vs further active treatment)"
+  - "If ECOG improves to 0-1 + lenvatinib eligibility restored: escalate to pembro+lenva (KEYNOTE-775)"
+  - "Clinical trial enrolment: CAR-T, bispecifics, or ADC trials for 2L+ endometrial recommended at any time"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~25-36% (weekly paclitaxel endometrial; historical GOG + Michener 2005 ORR ~36%)"
+  complete_response: "~5-8%"
+  median_pfs_months: "~4-5 months (recurrent endometrial 2L mono chemotherapy)"
+  notes: >
+    No large randomized trial of weekly paclitaxel vs other agents specifically in 2L
+    recurrent endometrial. Evidence extrapolated from GOG phase 2 studies:
+    - Paclitaxel 175 mg/m² q3w: ORR ~36% (Ball 1996 Gynecol Oncol Phase 2; n=44)
+    - Weekly paclitaxel 80 mg/m²: lower toxicity profile; similar ORR in institutional data
+    - NCCN Cat 2A for recurrent endometrial after prior platinum-based therapy
+
+    COMPARISON TO PEMBRO+LENVA:
+    Weekly paclitaxel is inferior to pembro+lenva (KEYNOTE-775: mPFS 6.6 mo, ORR 30.9%
+    in pMMR). However, pembro+lenva requires fit ECOG 0-1 and lenvatinib-eligible physiology.
+    Paclitaxel mono is the practical fallback for lenva-ineligible frail patients and
+    remains NSZU-funded in Ukraine.
+
+    TOXICITY BURDEN APPROPRIATE FOR FRAIL PATIENTS:
+    Weekly 80 mg/m² paclitaxel avoids: neutropenic fever risk of q3w carboplatin-paclitaxel,
+    lenvatinib HTN/proteinuria, and cumulative platinum nephrotoxicity. Neuropathy
+    remains the dose-limiting cumulative toxicity.
+
+hard_contraindications:
+  - "Grade ≥3 pre-existing peripheral neuropathy: paclitaxel absolutely contraindicated"
+  - "Known severe paclitaxel hypersensitivity (anaphylaxis) with prior premedication: switch to nab-paclitaxel or docetaxel"
+  - "ANC <1.0×10⁹/L or PLT <100×10⁹/L at planned treatment date: delay until recovery"
+
+red_flags_triggering_alternative:
+  - condition: "RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO now met (ECOG improved, organ function normalized) → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR preferred"
+  - condition: "ER+ Grade 1-2 endometrioid → IND-ENDOMETRIAL-2L-HORMONAL preferred (better tolerated)"
+  - condition: "MSI-H/dMMR + ICI-naive → IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR preferred"
+  - condition: "HER2 IHC 3+ → IND-ENDOMETRIAL-2L-HER2-TDXD preferred"
+  - condition: "Grade ≥3 peripheral neuropathy after paclitaxel: switch to doxorubicin 50 mg/m² q3w or PLD 40 mg/m² q4w"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Neuropathy baseline assessment (NCI-CTCAE sensory neuropathy scale)"
+  - "CT chest/abdomen/pelvis: confirm metastatic burden + baseline for response assessment"
+  - "ER IHC if histology Grade 1-2 endometrioid (confirm hormonal therapy route not preferred)"
+  - "HER2 IHC if serous histology (confirm T-DXd route not preferred)"
+  - "MMR/MSI status if not already tested (confirm MSI-H route not preferred)"
+
+desired_tests:
+  - "PET-CT: useful if CT equivocal for nodal vs metastatic disease"
+  - "Echocardiogram if anthracycline alternative (doxorubicin) planned"
+
+rationale: >
+  Weekly paclitaxel as palliative 2L+ endometrial carcinoma therapy for patients
+  ineligible for lenvatinib-containing combination regimens (pembro+lenva) due to
+  frailty, organ dysfunction, or cardiovascular contraindications.
+
+  This indication fills the gap between the current preferred 2L combination
+  (pembro+lenva; KEYNOTE-775) and best supportive care (BSC) for patients who
+  are not lenvatinib-eligible. The primary population is:
+  1. ECOG PS 2-3 with grade 3/serous/clear cell histology (not ER+ grade 1-2)
+  2. Lenvatinib-contraindicated: CrCl <40, HTN >160/90 uncontrolled, proteinuria >2g/24h,
+     hepatic dysfunction, recent stroke/arterial thrombosis within 6 months
+
+  PACLITAXEL MECHANISM in endometrial cancer: microtubule stabilisation → G2/M arrest →
+  apoptosis. Endometrial cancer cells retain paclitaxel sensitivity even after platinum
+  failure (different mechanism; no cross-resistance).
+
+  WEEKLY SCHEDULE RATIONALE: Weekly 80 mg/m² vs q3w 175 mg/m² provides:
+  - Lower nadir absolute neutrophil count (fewer G-CSF requirements)
+  - Lower peak peripheral neuropathy (cumulative but lower per-cycle dose)
+  - Dose interruption possible day 8 or 15 without losing full cycle effect
+  - Preferred in frail/ECOG ≥2 patients for these tolerability reasons
+
+  UKRAINE ACCESS ADVANTAGE: Paclitaxel is NSZU-reimbursed for gynecological malignancies.
+  Unlike lenvatinib (not NSZU-funded for endometrial in 2026) or pembrolizumab
+  (NSZU-funded for pMMR only with approved applications), paclitaxel is uniformly
+  accessible at all Ukrainian oncology centres.
+
+rationale_ua: >
+  Паклітаксел 80 мг/м² IV щотижнево (d1, 8, 15 q28d) для рецидивного/метастатичного
+  раку ендометрія при неможливості комбінації пембролізумаб+ленватиніб (ECOG ≥2,
+  протипоказання ленватинібу). NCCN Uterine 2025 Cat 2A.
+  ОБОВ'ЯЗКОВО: преmedикація (дексаметазон + дифенгідрамін + блокатор H2).
+  Щотижневий режим (80 мг/м²) — менша нейропатія та мієлотоксичність vs q3w 175 мг/м².
+  В Україні: паклітаксел НСЗУ-фінансується для гінекологічних пухлин.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без преmedикації дексаметазоном + антигістаміном + H2-блокатором: анафілаксія від паклітакселу (Cremophor EL) у ~3% без преmedикації"
+  - "При Grade ≥3 нейропатії: паклітаксел абсолютно протипоказаний — постійна нейропатія"
+  - "Без ОАК перед кожною дозою: відстрочка доз при ANC <1.0 × 10⁹/л"
+  - "Не ігнорувати можливість переходу до пембролізумаб+ленватиніб при поліпшенні функції нирок/кардіального статусу"
+  - "У випадку ER+ Grade 1-2 ендометріоїдної карциноми — гормональна терапія (мегестрол/летрозол) менш токсична альтернатива"
+
+sources:
+  - source_id: SRC-NCCN-UTERINE-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Uterine 2025 Category 2A: weekly paclitaxel as a recommended systemic
+      therapy option for recurrent/metastatic endometrial carcinoma after prior
+      platinum-based therapy. Listed under "Other Recommended Regimens" alongside
+      doxorubicin, pegylated liposomal doxorubicin, and topotecan.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
