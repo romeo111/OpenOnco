@@ -146,7 +146,15 @@ class Indication(Base):
     # "What NOT to do" list per REFERENCE_CASE_SPECIFICATION §1.3 critical:
     # explicit prohibitive bullets that frame avoidable harm. Surfaced by
     # render_plan_html as a dedicated section.
+    #
+    # `do_not_do` is the canonical Ukrainian-language list (legacy primary
+    # language, per CHARTER §1). `do_not_do_en` is the optional English
+    # companion list — when populated, EN-side render prefers it over the
+    # UA list. Bullets pair positionally; if `do_not_do_en` is shorter
+    # than `do_not_do`, render falls back to UA for the un-translated
+    # tail.
     do_not_do: list[str] = Field(default_factory=list)
+    do_not_do_en: list[str] = Field(default_factory=list)
 
     plan_track: Optional[str] = None  # "standard" | "aggressive" | "trial" | "palliative"
 

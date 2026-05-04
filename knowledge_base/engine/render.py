@@ -506,6 +506,109 @@ _UI_STRINGS: dict[str, dict[str, str]] = {
     "matrix_disclaimer":           {"uk": "Інформація про ціни — orientation. Перевіряти у конкретній аптеці / foundation / трайл-сайті.",
                                     "en": "Cost information is orientation. Verify with a specific pharmacy / foundation / trial site."},
     "matrix_status_updated":       {"uk": "Status updated:", "en": "Status updated:"},
+    # ── MDT orchestrator strings ──────────────────────────────────────────
+    # The orchestrator (knowledge_base/engine/mdt_orchestrator.py) emits
+    # role `reason`s and OpenQuestion `question`/`rationale` strings as
+    # Ukrainian literals. The render layer pipes them through `_h_t`
+    # which only translates when a translate client is configured;
+    # without one, UA leaks into EN renders. We register the literals
+    # here so `_localize_html`'s post-pass substitutes them. Keep
+    # `uk` values byte-identical to the source — fragments must match
+    # whole-word for `str.replace` to fire.
+    "mdt_role_lymphoma":           {"uk": "Лімфомний діагноз — провідна спеціальність для терапевтичного ведення.",
+                                    "en": "Lymphoma diagnosis — primary specialty for therapeutic management."},
+    "mdt_role_hcv_hbv":            {"uk": "Активна вірусна етіологія (HCV/HBV) потребує паралельного ведення антивірусної терапії та оцінки реактивації.",
+                                    "en": "Active viral etiology (HCV/HBV) requires concurrent antiviral management and reactivation monitoring."},
+    "mdt_role_imaging":            {"uk": "Наявні візуалізаційні знахідки — потрібен радіолог для staging/restaging.",
+                                    "en": "Imaging findings present — radiologist needed for staging/restaging."},
+    "mdt_role_pathology":          {"uk": "Підтвердження гістології лімфоми + оцінка ризику трансформації (DLBCL/Richter).",
+                                    "en": "Lymphoma histology confirmation + transformation risk assessment (DLBCL/Richter)."},
+    "mdt_role_pharmacist":         {"uk": "Хіміоімунотерапевтичний схема — drug-drug interactions, dose adjustments, premedication.",
+                                    "en": "Chemoimmunotherapy regimen — drug-drug interactions, dose adjustments, premedication."},
+    "mdt_role_radonc":             {"uk": "Екстранодальна MALT-лімфома — у частини локалізацій локальна променева терапія є опцією.",
+                                    "en": "Extranodal MALT lymphoma — for some sites, local radiotherapy is a treatment option."},
+    "mdt_role_social_worker":      {"uk": "У плані використовуються препарати без реімбурсації НСЗУ — потрібна оцінка доступу для пацієнта.",
+                                    "en": "The plan uses drugs without NSZU reimbursement — patient access needs to be assessed."},
+    "mdt_role_palliative":         {"uk": "Знижений performance status / декомпенсована коморбідність — потрібна оцінка цілей лікування.",
+                                    "en": "Reduced performance status / decompensated comorbidity — goals-of-care assessment needed."},
+    "mdt_role_molgen":             {"uk": "Indication посилається на actionable геномний біомаркер — потрібна інтерпретація мутації / target / actionability.",
+                                    "en": "Indication references an actionable genomic biomarker — mutation / target / actionability interpretation needed."},
+    # Escalation suffix appended to an existing role reason when a fired
+    # RedFlag bumps the role's priority. Preserve the leading space.
+    "mdt_escalation_suffix":       {"uk": " Ескальовано через RedFlag ",
+                                    "en": " Escalated via RedFlag "},
+    # Open-question text + rationale (deterministic strings emitted from
+    # `_apply_open_question_rules`).
+    "oq_hbv_q":                    {"uk": "Чи проведена серологія HBV (HBsAg, anti-HBc total)? До початку anti-CD20 терапії статус має бути відомий.",
+                                    "en": "Has HBV serology been done (HBsAg, anti-HBc total)? Status must be known before starting anti-CD20 therapy."},
+    "oq_hbv_r":                    {"uk": "Anti-CD20 без HBV профілактики при HBsAg+/anti-HBc+ несе значний ризик реактивації (CI-HBV-NO-PROPHYLAXIS).",
+                                    "en": "Anti-CD20 without HBV prophylaxis in HBsAg+/anti-HBc+ patients carries significant reactivation risk (CI-HBV-NO-PROPHYLAXIS)."},
+    "oq_fibrosis_q":               {"uk": "Який стадій фіброзу/цирозу печінки (Child-Pugh, FIB-4)? Це впливає на вибір DAA та dosing бендамустину.",
+                                    "en": "What is the liver fibrosis/cirrhosis stage (Child-Pugh, FIB-4)? It affects DAA choice and bendamustine dosing."},
+    "oq_fibrosis_r":               {"uk": "Декомпенсований цироз — RF-DECOMP-CIRRHOSIS, вимагає змін у схемі.",
+                                    "en": "Decompensated cirrhosis — RF-DECOMP-CIRRHOSIS, requires regimen changes."},
+    "oq_cd20_q":                   {"uk": "Чи підтверджено CD20+ статус гістологією (IHC)? Без CD20+ rituximab/obinutuzumab не показані.",
+                                    "en": "Has CD20+ status been confirmed by histology (IHC)? Without CD20+, rituximab/obinutuzumab are not indicated."},
+    "oq_cd20_r":                   {"uk": "Anti-CD20 терапія — основа для більшості ліній; відсутність експресії CD20 повністю змінює regimen.",
+                                    "en": "Anti-CD20 therapy is the backbone of most lines; absence of CD20 expression entirely changes the regimen."},
+    "oq_staging_q":                {"uk": "Чи виконано повне стадіювання (Lugano + PET/CT або CT)?",
+                                    "en": "Has complete staging been performed (Lugano + PET/CT or CT)?"},
+    "oq_staging_r":                {"uk": "Прогноз і вибір треку залежать від stage та tumor burden.",
+                                    "en": "Prognosis and track selection depend on stage and tumor burden."},
+    "oq_ldh_q":                    {"uk": "Який актуальний LDH? Маркер пухлинного навантаження і трансформації.",
+                                    "en": "What is the current LDH? A marker of tumor burden and transformation."},
+    "oq_ldh_r":                    {"uk": "LDH входить у прогностичні індекси індолентних лімфом.",
+                                    "en": "LDH is a component of indolent-lymphoma prognostic indices."},
+    # OQ-DRUG-AVAILABILITY question is built dynamically with non-reimbursed
+    # drug IDs interpolated in the middle. Register the static prefix and
+    # suffix separately; substitution is longest-first so each fragment
+    # is replaced independently of the dynamic IDs.
+    "oq_drugavail_q_prefix":       {"uk": "Чи доступні препарати без реімбурсації НСЗУ для пацієнта (",
+                                    "en": "Are non-NSZU-reimbursed drugs available for the patient ("},
+    "oq_drugavail_q_suffix":       {"uk": ")? Чи потрібна social work consult / альтернативний схема?",
+                                    "en": ")? Is a social work consult / alternative regimen needed?"},
+    "oq_drugavail_r":              {"uk": "Препарати з reimbursed_nszu=false означають out-of-pocket вартість для пацієнта; це впливає на adherence та реалістичність плану.",
+                                    "en": "Drugs with reimbursed_nszu=false mean out-of-pocket cost for the patient; this affects adherence and the plan's feasibility."},
+    # ── Diagnostic-mode MDT strings (pre-biopsy Workup Brief) ─────────────
+    # Mirrors the treatment-mode set above for the orchestrator's
+    # `_apply_diagnostic_role_rules` / `_apply_diagnostic_open_question_rules`.
+    "mdt_diag_lymphoma":           {"uk": "Підозра на лімфому — провідна спеціальність для diagnostic workup та подальшого ведення.",
+                                    "en": "Lymphoma suspected — primary specialty for diagnostic workup and ongoing management."},
+    "mdt_diag_pathology":          {"uk": "Будь-яка підозра вимагає біопсії — патолог планує вибір місця, IHC панель, ancillary tests.",
+                                    "en": "Any suspicion warrants biopsy — pathologist plans the biopsy site, IHC panel, and ancillary tests."},
+    "mdt_diag_imaging":            {"uk": "Stage / restaging imaging + biopsy guidance — радіолог.",
+                                    "en": "Stage / restaging imaging + biopsy guidance — radiologist."},
+    "mdt_diag_solid":              {"uk": "Підозра на солідну пухлину — оцінка resectability, biopsy approach.",
+                                    "en": "Solid tumor suspected — resectability assessment, biopsy approach."},
+    "mdt_diag_idhep":              {"uk": "Перед anti-CD20 treatment status HCV/HBV має бути відомий — ще на діагностичній фазі.",
+                                    "en": "HCV/HBV status must be known before any anti-CD20 treatment — establish during the diagnostic phase."},
+    "mdt_diag_palliative":         {"uk": "Знижений performance status / ознаки декомпенсації — рання оцінка цілей лікування.",
+                                    "en": "Reduced performance status / decompensation signs — early goals-of-care assessment."},
+    # Diagnostic-mode open questions
+    "oq_diag_cd20_q":              {"uk": "Який результат CD20 IHC буде після біопсії? Без CD20+ rituximab/obinutuzumab не показані.",
+                                    "en": "What will the post-biopsy CD20 IHC result show? Without CD20+, rituximab/obinutuzumab are not indicated."},
+    "oq_diag_cd20_r":              {"uk": "Базис для будь-якого anti-CD20-containing regimen у майбутньому.",
+                                    "en": "Foundation for any future anti-CD20-containing regimen."},
+    # The HBV-pre-biopsy question contains an apostrophe in "обов'язкова",
+    # so `_localize_html` will register both the raw and `&#x27;`-escaped
+    # variants. Either form will substitute correctly.
+    "oq_diag_hbv_q":               {"uk": "Серологія HBV (HBsAg, anti-HBc) — обов'язкова перед anti-CD20; почати workup зараз.",
+                                    "en": "HBV serology (HBsAg, anti-HBc) is mandatory before anti-CD20; start workup now."},
+    "oq_diag_hbv_r":               {"uk": "HBV reactivation risk при anti-CD20 без prophylaxis.",
+                                    "en": "HBV reactivation risk with anti-CD20 absent prophylaxis."},
+    "oq_diag_staging_q":           {"uk": "Чи запланований повний staging (PET/CT + bone marrow за показаннями)?",
+                                    "en": "Is full staging planned (PET/CT + bone marrow as indicated)?"},
+    "oq_diag_staging_r":           {"uk": "Stage визначає track і treatment intensity.",
+                                    "en": "Stage determines track and treatment intensity."},
+    # Differential-diagnosis question is built dynamically with hypothesis
+    # IDs interpolated mid-sentence; register prefix and suffix separately
+    # so each substitutes independently of the dynamic content.
+    "oq_diag_diffdiag_q_prefix":   {"uk": "Який план диференціальної діагностики між гіпотезами: ",
+                                    "en": "What is the differential-diagnosis plan among the hypotheses: "},
+    "oq_diag_diffdiag_q_suffix":   {"uk": "? Які молекулярні / IHC тести розрізняють?",
+                                    "en": "? Which molecular / IHC tests distinguish them?"},
+    "oq_diag_diffdiag_r":          {"uk": "Множинні гіпотези — розрізнити їх перед treatment discussion.",
+                                    "en": "Multiple hypotheses — resolve them before any treatment discussion."},
 }
 
 
@@ -1167,15 +1270,39 @@ def _render_what_not_to_do(plan, target_lang: str = "uk") -> str:
     """Explicitly prohibitive 'do_not_do' list per track.
     Per REFERENCE_CASE_SPECIFICATION §1.3 critical.
 
-    Each bullet is UA free-text from Indication.do_not_do — translated
-    via the configured client when target_lang != source."""
+    Bullet language selection (target_lang == "en"):
+      1. If `Indication.do_not_do_en[i]` is populated, use it as-is.
+      2. Otherwise fall back to `Indication.do_not_do[i]` routed through
+         `_h_t` — which calls the translation client when configured, or
+         leaves UA in place when not.
+    On the UA side we always emit the canonical UA bullet."""
+    is_en = (target_lang or "").lower().startswith("en")
     blocks = []
     for t in plan.tracks:
         ind = t.indication_data or {}
-        items = ind.get("do_not_do") or []
-        if not items:
+        items_ua = ind.get("do_not_do") or []
+        items_en = ind.get("do_not_do_en") or []
+        if not items_ua and not items_en:
             continue
-        li = "".join(f"<li>{_h_t(x, target_lang)}</li>" for x in items)
+        bullets = []
+        if is_en:
+            # Prefer EN bullet positionally; fall back to UA-via-_h_t
+            # for any tail not yet translated. Also handles the case
+            # where an Indication only has do_not_do_en populated.
+            count = max(len(items_ua), len(items_en))
+            for i in range(count):
+                en = items_en[i] if i < len(items_en) else None
+                ua = items_ua[i] if i < len(items_ua) else None
+                if en:
+                    bullets.append(_h(en))
+                elif ua:
+                    bullets.append(_h_t(ua, target_lang))
+        else:
+            for ua in items_ua:
+                bullets.append(_h(ua))
+        if not bullets:
+            continue
+        li = "".join(f"<li>{b}</li>" for b in bullets)
         blocks.append(
             '<div class="do-not">'
             f'<div class="track-name">{_h(t.label)} ({_h(t.indication_id)})</div>'
