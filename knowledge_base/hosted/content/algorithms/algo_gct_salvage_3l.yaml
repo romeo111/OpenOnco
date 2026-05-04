@@ -1,0 +1,95 @@
+id: ALGO-GCT-SALVAGE-3L
+applicable_to_disease: DIS-TESTICULAR-GCT
+applicable_to_line_of_therapy: 3
+purpose: >
+  Select 3L systemic therapy for relapsed/refractory GCT (NSGCT or seminoma) after
+  failure of ≥2 prior cisplatin-containing lines (typically 1L BEP/EP + 2L TIP or
+  HDCT+ASCT). Primary regimen: gemcitabine 1000 mg/m² + paclitaxel 110 mg/m² d1+8 q21d
+  (GemPac; REG-GEMPACLITAXEL-GCT; NCCN Cat 2A; ORR ~20-32%; Kollmannsberger 1999 JCO).
+  GEMOX (gemcitabine + oxaliplatin; NCCN Cat 2B) when Grade ≥2 peripheral neuropathy
+  contraindicates paclitaxel. Clinical trial enrollment is NCCN priority in 3L+.
+  HDCT+ASCT check: if not given at 2L AND patient cisplatin-sensitive → redirect
+  to IND-GCT-SALVAGE-2L-HDCT-ASCT before GemPac.
+
+output_indications:
+  - IND-GCT-SALVAGE-3L
+
+default_indication: IND-GCT-SALVAGE-3L
+
+decision_tree:
+  # Step 1 — HDCT+ASCT check: if HDCT not yet given at 2L AND patient is potentially
+  # cisplatin-sensitive (late relapse >1y from prior line), strongly consider HDCT+ASCT
+  # before GemPac. HDCT+ASCT remains the higher-efficacy option when applicable.
+  # If HDCT already given (or HDCT-ineligible): proceed to step 2.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "HDCT+ASCT (high-dose carboplatin+etoposide with ASCT) already administered at 2L OR patient is HDCT-ineligible (organ function, comorbidities, prior cumulative myelosuppression)"
+    if_true:
+      next_step: 2
+    if_false:
+      result: IND-GCT-SALVAGE-3L
+      notes: >
+        HDCT+ASCT not yet attempted AND patient may be eligible: strongly discuss
+        IND-GCT-SALVAGE-2L-HDCT-ASCT (Indiana tandem HDCT; carbo 700 mg/m²/d×3 +
+        VP-16 750 mg/m²/d×3 × 2 cycles with ASCT; ORR ~50%; NCCN Cat 2A) before
+        GemPac. GemPac is appropriate only if HDCT-ineligible or after MDT decision
+        favoring 3L cytotoxic over HDCT intensification. Route to IND-GCT-SALVAGE-3L
+        when HDCT option definitively declined or ineligible.
+
+  # Step 2 — peripheral neuropathy gate for paclitaxel.
+  # Grade ≥2 neuropathy from prior cisplatin / paclitaxel / vinca → GEMOX preferred
+  # (gemcitabine + oxaliplatin; NCCN Cat 2B; ORR ~15-20%).
+  # No significant neuropathy → GemPac preferred (NCCN Cat 2A; ORR ~20-32%).
+  # Both branches route to IND-GCT-SALVAGE-3L; regimen selection noted.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "No Grade ≥2 peripheral neuropathy from prior cisplatin, paclitaxel, or vinca alkaloids"
+        - condition: "No prior Grade 4 hypersensitivity reaction to paclitaxel"
+    if_true:
+      result: IND-GCT-SALVAGE-3L
+      notes: >
+        Paclitaxel-eligible: GemPac preferred — gemcitabine 1000 mg/m² + paclitaxel
+        110 mg/m² d1+8 q21d (REG-GEMPACLITAXEL-GCT; NCCN Cat 2A; ORR ~20-32%;
+        CRs ~10-15%; Kollmannsberger 1999 JCO). CRITICAL: dexamethasone + diphenhydramine
+        + ranitidine premedication mandatory before each paclitaxel dose (HSR prophylaxis).
+        Neuro exam before each cycle (cumulative neuropathy). At marker normalization +
+        residual mass ≥1 cm: refer for RPLND or pulmonary resection — potentially curative.
+        Clinical trial enrollment is NCCN priority in 3L — check first.
+        Ukraine: paclitaxel NSZU-reimbursed; gemcitabine NSZU-reimbursed.
+        GCT specialty center referral mandatory.
+    if_false:
+      result: IND-GCT-SALVAGE-3L
+      notes: >
+        Grade ≥2 peripheral neuropathy or prior severe paclitaxel HSR: GEMOX alternative
+        (gemcitabine 1000 mg/m² d1 + oxaliplatin 130 mg/m² d1 q21d; NCCN Cat 2B;
+        ORR ~15-20%; non-crossresistant with cisplatin and vinca alkaloids). Use
+        IND-GCT-SALVAGE-3L with alternative_regimen (GEMOX listed in indication).
+        Oxaliplatin cold dysesthesia + cumulative neuropathy: assess before each cycle.
+        Clinical trial enrollment priority. GCT specialty center referral mandatory.
+
+sources:
+  - SRC-NCCN-TESTICULAR-2025
+  - SRC-KONDAGUNTA-TIP-2005
+  - SRC-EINHORN-HDCT-ASCT-2007
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  AUTHORED 2026-05-04 (Workstream DD): ALGO-GCT-SALVAGE-3L created to wire
+  IND-GCT-SALVAGE-3L (REG-GEMPACLITAXEL-GCT) into a formal algorithm step.
+  Gap in ALGO-GCT-SALVAGE-2L "REMAINING GAPS: ALGO-GCT-SALVAGE-3L full 3L algorithm
+  not yet authored" CLOSED.
+
+  ROUTING SUMMARY:
+  - HDCT+ASCT not yet given AND eligible: redirect to HDCT (IND-GCT-SALVAGE-2L-HDCT-ASCT)
+    before GemPac
+  - Paclitaxel-eligible (no Grade ≥2 neuropathy): GemPac (Cat 2A preferred; NCCN)
+  - Grade ≥2 neuropathy or paclitaxel HSR: GEMOX (Cat 2B; same IND, alternative regimen)
+
+  NOTE: single output indication only (IND-GCT-SALVAGE-3L) — GEMOX alternative is
+  captured within the indication's alternative_regimens field, not as a separate IND.
+  Clinical trial enrollment is NCCN priority at 3L+ — engine should surface this
+  recommendation before any systemic option.
