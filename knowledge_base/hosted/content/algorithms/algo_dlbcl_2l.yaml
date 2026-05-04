@@ -13,6 +13,7 @@ output_indications:
 - IND-DLBCL-3L-LONCASTUXIMAB
 - IND-DLBCL-3L-EPCORITAMAB
 - IND-DLBCL-3L-GLOFITAMAB
+- IND-DLBCL-2L-TAFA-LEN
 default_indication: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
 alternative_indication: IND-DLBCL-2L-LISOCEL
 decision_tree:
@@ -122,18 +123,40 @@ decision_tree:
     - red_flag: RF-DLBCL-FRAILTY-AGE
   if_true:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
+    notes: >
+      Transplant-ineligible R/R DLBCL: Pola-BR (NCCN Cat 1; GO29365 ORR ~63%;
+      mPFS ~9.5 months). Preferred standard-track option.
+      Alternative (Cat 2A): tafasitamab + lenalidomide (IND-DLBCL-2L-TAFA-LEN;
+      L-MIND; ORR 57.5%; CR 40%; mDOR 43.9 months; mOS 33.5 months; FDA Jul
+      2020) — preferred when bendamustine contraindicated (CrCl <30 mL/min,
+      prior benda exposure) or inaccessible; requires lenalidomide REMS and
+      VTE prophylaxis; not registered in Ukraine.
+    alternatives:
+      - indication_id: IND-DLBCL-2L-TAFA-LEN
+        nccn_category: "2A"
+        criteria: >
+          Bendamustine contraindicated (CrCl <30 mL/min) or prior bendamustine
+          exposure or inaccessible; CD19+ confirmed; not pregnant; lenalidomide
+          REMS enrollment feasible; not eligible for autoSCT.
+        note: >
+          L-MIND: ORR 57.5%; CR 40%; mDOR 43.9 months; mOS 33.5 months;
+          FDA accelerated Jul 31, 2020. No head-to-head vs Pola-BR. NCCN Cat 2A
+          (lower evidence — single-arm trial). After 12 lenalidomide cycles:
+          tafasitamab monotherapy maintenance continues until progression.
   if_false:
     result: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
 - SRC-TRANSFORM-KAMDAR-2022
+- SRC-LMIND-SALLES-2020
 last_reviewed: '2026-05-04'
 notes: 'AUTHORED 2026-05-04: IND-DLBCL-2L-RDHAP-AUTOSCT (CORAL NCCN Cat 1; R-ICE/R-DHAP ORR ~63% → BEAM-autoSCT) wired at step 1 for transplant-eligible chemosensitive relapse.
   UPDATED 2026-05-04: IND-DLBCL-2L-LISOCEL wired at step 11 (early-relapse ≤12m + CAR-T eligible → liso-cel preferred over autoSCT; TRANSFORM NCCN Cat 1; EFS HR 0.35). Step 1 if_true now routes to step 11 before autoSCT decision.
   AUTHORED 2026-05-04 (Workstream AP): IND-DLBCL-2L-AXICEL-CART created (ZUMA-7; EFS HR 0.24; NCCN Cat 1); added to output_indications; step 11 notes updated. Liso-cel remains primary at step 11 (lower ICANS); axi-cel is documented equivalent alternative.
   UPDATED 2026-05-04 (Workstream BJ): IND-DLBCL-3L-EPCORITAMAB + IND-DLBCL-3L-GLOFITAMAB wired at step 22 (epcoritamab EPCORE-NHL-1 ORR 63%; glofitamab NP30179 ORR 52%; both NCCN Cat 2A). Gap (1) CLOSED. Step 21 if_false → step 22 → step 3 fallback. Both pre-existing indication entities now surfaced by engine.
   UPDATED 2026-05-04 (Workstream CP): Step 12 added as liso-cel vs axi-cel access gate (early-relapse/primary-refractory DLBCL 2L). Step 11 if_true now routes to step 12; liso-cel preferred (TRANSFORM; ICANS G≥3 ~4%); axi-cel when liso-cel unavailable (ZUMA-7; ICANS G≥3 ~21%); both NCCN Cat 1. Gap (3) CLOSED.
+  UPDATED 2026-05-04 (Workstream EY): IND-DLBCL-2L-TAFA-LEN added to output_indications; wired as Cat 2A alternative at step 3 (transplant-ineligible track) when bendamustine contraindicated/inaccessible. L-MIND: ORR 57.5%; CR 40%; mDOR 43.9 months; FDA Jul 2020. DRUG-TAFASITAMAB + REG-TAFASITAMAB-LEN-DLBCL + SRC-LMIND-SALLES-2020 created.
   OOS / wiring gaps: (2) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '

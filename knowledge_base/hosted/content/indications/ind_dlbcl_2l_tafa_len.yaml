@@ -1,0 +1,111 @@
+id: IND-DLBCL-2L-TAFA-LEN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory DLBCL (including DLBCL arising from low-grade lymphoma, e.g., transformed follicular lymphoma)"
+    - "Not eligible for autologous stem cell transplant (autoSCT) — due to age >70, comorbidity, ECOG ≥2, or patient/physician preference after MDT discussion"
+    - "≥1 prior line of systemic therapy (FDA label: 1–3 prior lines per L-MIND eligibility)"
+  biomarker_requirements:
+    - "CD19 expression: required (tafasitamab targets CD19 — confirm on most recent biopsy)"
+    - "CD20 expression: should be confirmed (rituximab in prior lines; CD20 target not required for tafasitamab but typically present)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-TAFASITAMAB-LEN-DLBCL
+
+concurrent_therapy:
+  - "Mandatory VTE prophylaxis throughout lenalidomide phase (aspirin or LMWH)"
+  - "G-CSF support as clinically required (Grade ≥3 neutropenia expected in ~48%)"
+
+followed_by:
+  - "Tafasitamab 12 mg/kg IV d1, d15 monotherapy maintenance after lenalidomide completion (cycle 12); continue until progression"
+  - "At progression: systemic therapy per ≥3L algorithm (ALGO-DLBCL-2L step 22/3 tracks)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "57.5% (updated L-MIND analysis; ORR ~60% per 3-year Duell 2021 update)"
+  cr: "40.0%"
+  median_dor: "43.9 months (for responders)"
+  median_pfs: "12.1 months"
+  median_os: "33.5 months"
+  notes: >
+    L-MIND (Salles 2020 Lancet Oncol; NCT03019640; Phase 2; N=71 efficacy):
+    Tafasitamab + lenalidomide for R/R DLBCL not eligible for autoSCT.
+    ORR 57.5%; CR 40%; mDOR 43.9 months; mPFS 12.1 months; mOS 33.5 months.
+    FDA accelerated approval July 31, 2020. NCCN B-Cell Lymphomas 2025: Cat 2A.
+    Single-arm design (no randomized comparator); lower evidence level than
+    Pola-BR (Cat 1) or CAR-T (Cat 1). No head-to-head comparison vs Pola-BR.
+
+hard_contraindications:
+  - "Pregnancy (lenalidomide is highly teratogenic — REMS mandatory)"
+  - "Active Grade ≥3 infection (immunosuppression risk)"
+  - "Severe renal impairment requiring dialysis — lenalidomide dose modification required; requires nephrologist input"
+  - "Prior Grade ≥4 IRR to tafasitamab"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Active autoimmune disease requiring systemic immunosuppression (additive risk with anti-CD19 therapy)"
+
+red_flags_triggering_alternative:
+  - "Transplant-eligible patient: tafasitamab+len is NOT indicated; route to salvage R-DHAP/R-ICE → autoSCT (or CAR-T for early-relapse)"
+  - "Bendamustine accessible + no prior benda exposure + no CrCl <30: Pola-BR (Cat 1) preferred over tafasitamab+len (Cat 2A)"
+  - "Prior lenalidomide exposure with refractoriness: IMiD resistance may limit lenalidomide benefit"
+  - "Active VTE despite anticoagulation: additional IMiD-related VTE risk; MDT discussion"
+
+required_tests:
+  - "CD19 IHC or flow cytometry: REQUIRED before treatment (tafasitamab mechanism)"
+  - "CD20 expression: confirm on most recent biopsy"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CREATININE-CRCL
+  - TEST-LDH
+  - TEST-PREGNANCY
+  - "HBV serology (HBsAg, anti-HBc, anti-HBs): antiviral prophylaxis if HBsAg+ or anti-HBc+"
+  - "HCV antibody"
+  - "HIV serology"
+  - "CT CAP (PET-CT preferred) at baseline"
+  - "Lenalidomide REMS enrollment: MANDATORY in US and equivalent risk management program in EU before prescribing"
+
+desired_tests:
+  - "D-dimer, VTE risk assessment (Khorana score or institutional tool)"
+  - "ECHO (cardiac function baseline if prior anthracycline)"
+  - "Bone marrow biopsy if MRD monitoring planned"
+
+rationale: >
+  L-MIND (Salles 2020 Lancet Oncol) established tafasitamab + lenalidomide as
+  an active regimen for R/R DLBCL not eligible for autoSCT: ORR 57.5%, CR 40%,
+  mDOR 43.9 months, mOS 33.5 months. FDA accelerated approval July 31, 2020.
+  NCCN B-Cell Lymphomas 2025: Category 2A.
+  Position: alternative to Pola-BR (Cat 1) in transplant-ineligible R/R DLBCL,
+  particularly when bendamustine is contraindicated (CrCl <30, prior benda
+  exposure) or inaccessible. Tafasitamab targets CD19; lenalidomide activates NK
+  cells and directly inhibits DLBCL proliferation. Combination is synergistic.
+  Limitations: single-arm trial (no randomized control), lower evidence level
+  than Pola-BR. Lenalidomide requires REMS and mandatory VTE prophylaxis.
+  Tafasitamab not registered in Ukraine — international/compassionate access only.
+
+sources:
+  - source_id: SRC-LMIND-SALLES-2020
+    position: supports
+    relevant_quote_paraphrase: "L-MIND: tafasitamab + lenalidomide for R/R DLBCL not eligible for autoSCT — ORR 57.5%, CR 40%, mDOR 43.9 months, mOS 33.5 months; FDA accelerated approval Jul 2020; NCCN Cat 2A"
+  - source_id: SRC-NCCN-BCELL-2025
+    weight: primary
+  - source_id: SRC-ESMO-DLBCL-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EY 2026-05-04. Tafasitamab+lenalidomide for transplant-ineligible
+  R/R DLBCL. FDA accelerated approval Jul 31, 2020. NCCN Cat 2A.
+  Position: alternative to Pola-BR when benda contraindicated/inaccessible.
+  Not registered in Ukraine. Wired into ALGO-DLBCL-2L step 3 as Cat 2A
+  alternative at same workstream (EY).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

@@ -1,0 +1,95 @@
+id: REG-TAFASITAMAB-LEN-DLBCL
+display_name: "Tafasitamab + Lenalidomide (L-MIND regimen)"
+regimen_type: targeted_immunotherapy
+disease_context: DIS-DLBCL-NOS
+line_context: "2L+ (transplant-ineligible R/R DLBCL)"
+
+drugs:
+  - drug_id: DRUG-TAFASITAMAB
+    dose: "12 mg/kg IV"
+    schedule: >
+      Cycle 1: days 1, 4, 8, 15, 22 (five infusions; loading phase).
+      Cycles 2–3: days 1, 8, 15, 22 (weekly).
+      Cycles ≥4: days 1, 15 (biweekly).
+      After lenalidomide completion (cycle 12): continue tafasitamab 12 mg/kg
+      d1, d15 as monotherapy maintenance until disease progression or
+      unacceptable toxicity.
+    cycle_length_days: 28
+    route: "IV infusion"
+    notes: >
+      Initial infusion rate 70 mL/h; increase to 120 mL/h if no reaction after
+      30 min; to 200 mL/h thereafter if tolerated. Premedicate all infusions
+      with acetaminophen 650 mg PO + diphenhydramine 25–50 mg PO/IV
+      (add corticosteroid after Grade 1 IRR). Reduce rate or interrupt for IRR.
+
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "25 mg PO"
+    schedule: "Days 1–21 of each 28-day cycle; maximum 12 cycles (cycle 1 through 12)"
+    cycle_length_days: 28
+    route: "oral"
+    dose_modifications:
+      - condition: "CrCl 30–60 mL/min"
+        modified_dose: "10 mg PO d1–21"
+      - condition: "CrCl <30 mL/min (no dialysis)"
+        modified_dose: "15 mg PO every other day"
+      - condition: "Grade ≥3 neutropenia"
+        modified_dose: "Hold; restart at 5 mg below previous dose after recovery to ANC ≥1.0 × 10⁹/L"
+      - condition: "Grade ≥3 thrombocytopenia"
+        modified_dose: "Hold; restart at 5 mg below previous dose after platelet recovery"
+    notes: >
+      REMS / Risk Management Programme mandatory before prescribing.
+      Mandatory pregnancy testing (2 negative tests before start) and dual
+      contraception for patients of childbearing potential.
+      Mandatory VTE prophylaxis throughout lenalidomide phase (aspirin 100 mg QD
+      minimum; LMWH if high-risk: prior VTE, hyperviscosity, IMiD+high-dose dex).
+
+supportive_care:
+  - "Pre-medications for tafasitamab: acetaminophen + antihistamine ± corticosteroid (see above)"
+  - "VTE prophylaxis: aspirin 100 mg QD (or LMWH for high-risk patients)"
+  - "G-CSF: mandatory for Grade ≥3 neutropenia; consider primary prophylaxis in patients ≥70 or with baseline neutropenia"
+  - "Lenalidomide REMS enrollment: mandatory in US; equivalent risk management programme in EU"
+  - "PCP prophylaxis: consider in patients on prolonged immunosuppression"
+  - "HBV screening before treatment; antiviral prophylaxis if HBsAg+ or anti-HBc+"
+
+cycle_count: >
+  Combination phase: up to 12 cycles (lenalidomide capped at 12 cycles per L-MIND).
+  Tafasitamab monotherapy maintenance: continues until disease progression or
+  unacceptable toxicity (no fixed duration cap after lenalidomide completion).
+
+response_assessment:
+  - "CT CAP (or PET-CT) after cycles 4, 8, 12 and as clinically indicated"
+  - "Bone marrow biopsy if clinically indicated (not mandated on-therapy)"
+
+dose_modifications_tafasitamab:
+  - condition: "Grade 1–2 infusion-related reaction (IRR)"
+    action: "Reduce infusion rate; resume at 50% previous rate after resolution. Add corticosteroid premedication for subsequent infusions."
+  - condition: "Grade 3 IRR"
+    action: "Interrupt infusion; resume at reduced rate only after complete resolution. Add corticosteroid premedication. If recurs at Grade 3: permanently discontinue."
+  - condition: "Grade 4 IRR"
+    action: "Permanently discontinue tafasitamab."
+  - condition: "Grade 3–4 neutropenia"
+    action: "Hold tafasitamab until ANC ≥1.0 × 10⁹/L; resume at same dose. No dose reduction for tafasitamab."
+
+evidence_base:
+  primary_trial: SRC-LMIND-SALLES-2020
+  orr: "57.5% (updated analysis)"
+  cr: "40.0%"
+  median_dor: "43.9 months"
+  median_pfs: "12.1 months"
+  median_os: "33.5 months"
+
+sources:
+  - SRC-LMIND-SALLES-2020
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EY 2026-05-04. L-MIND regimen: tafasitamab 12 mg/kg IV (complex
+  step-up weekly → biweekly schedule) + lenalidomide 25 mg PO d1-21 × 12 cycles,
+  then tafasitamab monotherapy maintenance. FDA approved Jul 31, 2020 (accelerated).
+  Key safety: neutropenia (~48% Grade 3/4) + VTE risk (lenalidomide); G-CSF support
+  + mandatory VTE prophylaxis. Lenalidomide REMS mandatory.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
