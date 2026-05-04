@@ -14,6 +14,7 @@ output_indications:
   - IND-AML-1L-7-3
   - IND-AML-1L-7-3-GO-CBF
   - IND-AML-1L-CPX351-SECONDARY
+  - IND-AML-1L-IDH1-IVOSIDENIB-AZA
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -116,21 +117,49 @@ decision_tree:
     if_false:
       next_step: 6
 
-  # Step 6 — IDH1 / IDH2 actionable. AGILE / IDHENTIFY: ivosidenib /
-  # enasidenib + azacitidine for unfit; 7+3 + IDHi emerging for fit.
-  # No dedicated IDHi indication in this KB yet (PROD-5 territory) —
-  # route to ven+aza backbone with MDT note to consider IDH1/IDH2
-  # inhibitor add-on.
+  # Step 6 — IDH1 actionable. AGILE (DiNardo 2022 Lancet Oncol): ivosidenib 500 mg QD
+  # + azacitidine 75 mg/m² d1-7 q28d for ND IDH1-mutated AML unfit for intensive
+  # induction. CR 47.2% vs 14.9%; OS HR 0.44; FDA May 2022; NCCN Cat 1.
+  # IDH1-mut + unfit patients now have a dedicated indication.
+  # IDH2 routing handled at step 61 below.
   - step: 6
     evaluate:
       any_of:
         - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
+    if_true:
+      result: IND-AML-1L-IDH1-IVOSIDENIB-AZA
+      notes: >
+        IDH1 R132 mutation confirmed + unfit for intensive induction:
+        ivosidenib 500 mg QD + azacitidine 75 mg/m² d1-7 q28d (AGILE; CR 47.2% vs 14.9%;
+        OS HR 0.44; median OS 24 vs 7.9 mo; FDA May 2022; NCCN Cat 1).
+        Abbott RealTime IDH1 Assay required as companion diagnostic.
+        IDH differentiation syndrome (IDS): empirical corticosteroids if suspected.
+        AlloHCT consolidation if CR/CRi achieved and patient eligible.
+    if_false:
+      next_step: 61
+    notes: "Step 6 updated 2026-05-04 (Workstream EW): IDH1-specific step — PROD-5 deferred gap CLOSED. IND-AML-1L-IDH1-IVOSIDENIB-AZA authored (AGILE; FDA May 2022; NCCN Cat 1). IDH2 routing → step 61."
+
+  # Step 61 — IDH2 actionable. Enasidenib+azacitidine (IDHENTIFY-like) for unfit
+  # IDH2-mut ND AML. No dedicated FDA-approved combination for 1L IDH2-mut unfit AML
+  # as of 2026 — enasidenib mono FDA-approved for R/R only. Route to ven+aza backbone;
+  # MDT may add enasidenib off-label per IDHENTIFY data (ORR ~34% enasidenib+aza
+  # vs 13% aza alone in phase 3; EMA approved 2023 for 1L enasidenib+aza in unfit IDH2-mut AML).
+  - step: 61
+    evaluate:
+      any_of:
         - red_flag: RF-AML-IDH2-MUT-ACTIONABLE
     if_true:
       result: IND-AML-1L-VEN-AZA
+      notes: >
+        IDH2 R140/R172 mutation + unfit: no FDA-approved IDH2+aza combination for 1L
+        (enasidenib FDA-approved R/R only). Route to ven+aza as unfit-AML standard.
+        MDT consideration: IDHENTIFY-like data (enasidenib+aza ORR 34% vs 13%; EMA
+        approved enasidenib+aza for 1L unfit IDH2-mut AML in EU 2023).
+        For EU patients or clinical trial access: enasidenib 100 mg QD + azacitidine.
+        AlloHCT consolidation if CR/CRi and patient eligible.
     if_false:
       next_step: 7
-    notes: "MDT-only — IDH1/IDH2 actionable: route to ven+aza backbone (default unfit-AML standard); MDT to add ivosidenib (IDH1) or enasidenib (IDH2) per AGILE / IDHENTIFY. No dedicated IDHi Indication in KB (PROD-5 deferred)."
+    notes: "Step 61 added 2026-05-04 (Workstream EW): IDH2-specific fallback. FDA no 1L IDH2 combination approval (EU EMA approved enasidenib+aza). Routes IDH2-mut unfit → ven+aza (MDT adds enasidenib per EMA approval or IDHENTIFY data)."
 
   # Step 7 — default for fit patients = 7+3
   - step: 7
@@ -147,6 +176,7 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ELN-AML-2022
   - SRC-VIALE-A-DINARDO-2020
+  - SRC-AGILE-DINARDO-2022
 
 last_reviewed: "2026-04-30"
 notes: >

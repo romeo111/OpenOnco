@@ -1,0 +1,72 @@
+id: REG-IVOSIDENIB-AZA-AML
+name: "Ivosidenib + Azacitidine (ND IDH1-mutated AML; AGILE)"
+
+drugs:
+  - drug_id: DRUG-IVOSIDENIB
+    role: primary
+    dose: "500 mg PO QD continuous"
+    dose_modification: >
+      Hold for QTc prolongation (>500 ms or increase >60 ms from baseline).
+      Reduce to 250 mg QD if strong CYP3A4 inhibitor cannot be avoided.
+      Do not adjust for renal impairment; use caution in severe hepatic impairment.
+      CRITICAL: IDH differentiation syndrome — hold ivosidenib if suspected;
+      initiate dexamethasone 10 mg IV BID empirically (can be life-threatening).
+  - drug_id: DRUG-AZACITIDINE
+    role: primary
+    dose: "75 mg/m² SC or IV days 1-7 of 28-day cycle"
+    dose_modification: >
+      Delay cycle if ANC <1.0×10⁹/L or platelets <50×10⁹/L on day 1.
+      Reduce for severe renal impairment (CrCl <30 mL/min): use cautiously.
+      Hold for hepatic impairment (serum bilirubin >2×ULN): use with caution.
+
+cycle:
+  length_days: 28
+  treatment_until: "Disease progression, intolerable toxicity, or alloHCT consolidation"
+
+administration_notes: >
+  Ivosidenib 500 mg PO QD continuously + azacitidine 75 mg/m² SC/IV days 1-7.
+  ADT (ADT does not apply here — this is AML, not prostate).
+  IDH differentiation syndrome (IDS) monitoring is MANDATORY: fever, dyspnea,
+  pleural/pericardial effusion, pulmonary infiltrates, renal failure, lymphadenopathy,
+  rash — initiate corticosteroids immediately if suspected; do NOT delay.
+  QTc monitoring: baseline ECG + before each cycle; avoid QT-prolonging drugs.
+  Companion diagnostic: Abbott RealTime IDH1 Assay (R132 mutation confirmation).
+  Azacitidine SC formulation: reconstitute per label; SC preferred over IV for
+  outpatient administration (equivalent bioavailability).
+
+monitoring:
+  - "CBC differential: weekly × 8 weeks, then before each cycle"
+  - "LFTs, electrolytes, creatinine: before each cycle"
+  - "ECG: baseline, day 8 of cycle 1, day 1 of cycles 2-3, then Q3 cycles"
+  - "QTc: baseline and at each ECG time point"
+  - "IDH differentiation syndrome assessment: each visit (fever, dyspnea, edema)"
+  - "Bone marrow biopsy: cycle 3 day 1 (response assessment)"
+
+supportive_care:
+  - "Dexamethasone 10 mg BID for suspected IDH differentiation syndrome (empirical; do not wait for confirmation)"
+  - "Antiemetics: moderate emetogenic risk with azacitidine (5-HT3 + dex)"
+  - "Prophylactic antifungal: fluconazole or posaconazole for neutropenia"
+  - "GCSF permitted for neutropenia (not contraindicated with ivosidenib+aza)"
+  - "HBV prophylaxis if HBsAg+ or anti-HBc+: entecavir or tenofovir"
+
+contraindications:
+  - "IDH1 R132 mutation NOT confirmed (Abbott RealTime IDH1 assay required)"
+  - "Prior IDH1 inhibitor therapy"
+  - "QTc >450 ms at baseline (ivosidenib prolongs QTc)"
+  - "Strong CYP3A4 inhibitors unavoidable: reduce ivosidenib to 250 mg QD"
+  - "ECOG PS ≥4 (engine hard gate)"
+
+evidence_source:
+  - SRC-AGILE-DINARDO-2022
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  AGILE regimen (ivosidenib+azacitidine). FDA approved May 2022 for ND IDH1-mut
+  AML unfit for intensive induction.
+  Distinguished from REG-IVOSIDENIB-AML (monotherapy for R/R IDH1-mut AML).
+  IDH differentiation syndrome is the critical safety consideration — can be
+  severe/fatal if not recognized and treated promptly.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
