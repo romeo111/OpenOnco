@@ -2,12 +2,13 @@ id: ALGO-MF-SEZARY-2L
 applicable_to_disease: DIS-MF-SEZARY
 applicable_to_line_of_therapy: 2
 purpose: >
-  Relapsed/refractory advanced MF/Sézary — four branches: (1) post
+  Relapsed/refractory advanced MF/Sézary — five branches: (1) post
   CR/PR to induction → bexarotene low-dose maintenance to extend
   response; (2) CD30+ + BV-naive → BV mono (ALCANZA); (3) Sézary
   leukemic + moga-naive → mogamulizumab; (4) plaque-dominant MF +
-  CrCl ≥30 → methotrexate 5-25 mg/week (NCCN Cat 2A); default →
-  bexarotene full-dose mono.
+  CrCl ≥30 → methotrexate 5-25 mg/week (NCCN Cat 2A); (5) erythrodermic/
+  non-plaque + QTcF ≤480 ms + romidepsin accessible → romidepsin (HDACi;
+  Whittaker 2010 JCO; ORR ~34%; NCCN Cat 2A); default → bexarotene.
 
 output_indications:
   - IND-MF-MAINTENANCE-RETINOID
@@ -15,9 +16,10 @@ output_indications:
   - IND-MF-ADVANCED-1L-MOGA
   - IND-MF-ADVANCED-1L-BV
   - IND-MF-ADVANCED-2L-METHOTREXATE
+  - IND-MF-ADVANCED-2L-ROMIDEPSIN
 
 default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
-alternative_indication: IND-MF-MAINTENANCE-RETINOID
+alternative_indication: IND-MF-ADVANCED-2L-ROMIDEPSIN
 
 decision_tree:
   # Step 1 — in CR/PR to induction → maintenance
@@ -73,23 +75,51 @@ decision_tree:
         Bexarotene is an equivalent alternative: use if erythrodermic presentation or
         patient preference for non-antifolate mechanism.
     if_false:
+      next_step: 5
+    notes: "MTX gate added 2026-05-04 (Workstream AO). Updated 2026-05-04 (Workstream BI): step 4 if_false now routes to step 5 (romidepsin gate) before bexarotene fallback."
+
+  # Step 5 — Erythrodermic/non-plaque MF or CrCl <30 (MTX contraindicated):
+  # HDACi (romidepsin) as systemic alternative to bexarotene.
+  # Romidepsin 14 mg/m² IV days 1,8,15 q28d (Whittaker 2010 JCO; ORR 34%; mDOR 15 mo;
+  # FDA approved CTCL 2009; NCCN Cat 2A). QTcF ≤480 ms required; electrolyte repletion.
+  # Bexarotene preferred when romidepsin inaccessible (UA: romidepsin not registered).
+  - step: 5
+    evaluate:
+      all_of:
+        - condition: "QTcF ≤480 ms at baseline ECG (HDACi class contraindicated if QTcF >480 ms)"
+        - condition: "No Grade ≥3 cardiac arrhythmia or uncontrolled heart failure precluding HDACi"
+        - condition: "Romidepsin accessible (named-patient import, compassionate access, or clinical trial)"
+    if_true:
+      result: IND-MF-ADVANCED-2L-ROMIDEPSIN
+      notes: >
+        Erythrodermic/non-plaque MF or CrCl <30 + QTcF adequate + romidepsin accessible:
+        romidepsin 14 mg/m² IV days 1,8,15 q28d (REG-ROMIDEPSIN-PTCL; Whittaker 2010 JCO;
+        ORR 34%; mDOR 15 months; NCCN Cat 2A). Active across MF stages IIB-IV.
+        K+/Mg²+ repletion mandatory before each infusion. ECG monitoring each cycle.
+        Ukraine: not registered — named-patient only. Substantial access barrier.
+    if_false:
       result: IND-MF-ADVANCED-2L-BEXAROTENE
       notes: >
-        Erythrodermic MF, Sézary-dominant blood disease, or CrCl <30 (MTX contraindicated):
+        Romidepsin inaccessible or cardiac contraindication (QTcF >480 ms / arrhythmia):
         bexarotene 300 mg/m² PO daily (NCCN Cat 2A for erythrodermic MF; ORR ~45%).
         Requires fenofibrate/statin (hypertriglyceridemia universal) + levothyroxine
         (central hypothyroidism universal) — mandatory concurrent medications.
-    notes: "MTX gate added 2026-05-04 (Workstream AO). Free-text conditions; MDT validation required. Closes gap: IND-MF-ADVANCED-2L-METHOTREXATE not previously authored."
+    notes: "Step 5 added 2026-05-04 (Workstream BI): romidepsin HDACi gate for erythrodermic/non-plaque MF. Gap (3) CLOSED. Free-text conditions (QTc threshold + access); MDT-evaluated."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-CTCL-2024]
 last_reviewed: "2026-05-04"
 notes: >
   AUTHORED 2026-05-04: IND-MF-ADVANCED-2L-METHOTREXATE wired at step 4
   (plaque-dominant MF + CrCl ≥30 → MTX 5-25 mg/week; NCCN Cat 2A; Workstream AO).
+  UPDATED 2026-05-04 (Workstream BI): IND-MF-ADVANCED-2L-ROMIDEPSIN authored and wired
+  at step 5 for erythrodermic/non-plaque MF + adequate QTcF (Whittaker 2010 JCO;
+  ORR 34%; NCCN Cat 2A). Gap (3) CLOSED.
   ROUTING SUMMARY: (1) CR/PR to induction → bexarotene maintenance; (2) CD30+
   BV-naive → BV; (3) Sézary leukemic moga-naive → mogamulizumab; (4) plaque-MF
-  CrCl ≥30 → MTX; else → bexarotene (erythrodermic/renal-impaired).
+  CrCl ≥30 → MTX; (5) erythrodermic/CrCl<30 + QTcF≤480 + accessible → romidepsin;
+  else → bexarotene (cardiac CI or access barrier).
   Reuses 1L MOGA/BV indications when axes still naive at 2L relapse.
   OOS / wiring gaps: (1) Pralatrexate for transformed MF (PROPEL) — not modeled.
   (2) ECP (extracorporeal photopheresis) for Sézary — not in KB.
-  (3) Romidepsin/vorinostat 2L for CTCL — separate indication needed.
+  (4) Vorinostat (oral HDACi; ORR ~30%) — not separately modeled; noted as alternative
+  in IND-MF-ADVANCED-2L-ROMIDEPSIN.
