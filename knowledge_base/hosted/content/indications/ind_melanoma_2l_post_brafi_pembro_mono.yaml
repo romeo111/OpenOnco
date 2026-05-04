@@ -1,0 +1,212 @@
+id: IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV unresectable or metastatic melanoma"
+    - "Prior 1L was BRAFi+MEKi (dabrafenib+trametinib or similar; given for BRAF V600+ with visceral crisis, active CNS disease, or rapid disease progression requiring fast response)"
+    - "IO-naive: no prior anti-PD-1, anti-CTLA-4, or anti-LAG-3 therapy"
+    - "ECOG PS 0-2 (particularly indicated for ECOG 2 or patients with frailty/comorbidities that preclude combination immunotherapy)"
+    - "Adequate hepatic function: ALT/AST ≤5× ULN (≤3× ULN in autoimmune hepatitis history)"
+    - "No active uncontrolled autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone equivalent)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior anti-PD-1 therapy: rechallenge with pembrolizumab after prior PD-1 failure has low yield; not this indication"
+    - "Prior anti-CTLA-4 therapy: use specific post-ipi indications (IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO covers post-BRAFi IO-fit patients)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Primary use case: ECOG 2 patients post-BRAFi who cannot tolerate combination
+      immunotherapy (ipi+nivo ~50% Grade 3-4 irAE; rela+nivo ~19% Grade 3-4 irAE).
+      Pembrolizumab mono (~15% Grade 3-4 irAE) is the lowest-toxicity IO option.
+      ECOG 0-1 patients: rela+nivo preferred (IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB)
+      if accessible; pembrolizumab mono acceptable if rela+nivo unavailable (UA context).
+      Age ≥75: pembrolizumab mono is the preferred IO option (KEYNOTE-006 showed consistent
+      benefit across age groups; lower Grade 3-4 irAE than combination IO).
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+alternative_regimens:
+  - regimen_id: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+    description: >
+      Rela+nivo (Opdualag; RELATIVITY-047; mPFS 10.1 mo; NCCN Cat 1) — preferred
+      for ECOG 0-1 patients unfit for ipi+nivo; higher response rate than pembro mono
+      but requires ECOG ≤1 and has ~19% Grade 3-4 irAE. Not registered in UA.
+  - regimen_id: IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
+    description: >
+      Ipi+nivo (CHECKMATE-067; ORR ~58%; NCCN Cat 1) — for fit patients (ECOG 0-1,
+      no autoimmunity). Highest response rates of any IO regimen in melanoma but
+      ~50% Grade 3-4 irAE. Not appropriate for frail or ECOG 2 patients.
+  - regimen_id: IND-MELANOMA-3L-LIFILEUCEL
+    description: >
+      Lifileucel TIL therapy (C-144-01; ORR 36%; NCCN Cat 2A) — for 3L+; requires
+      apheresis + conditioning + in-patient IL-2; manufacturing time; UA access ≈ zero.
+
+concurrent_therapy:
+  - "Thyroid function tests (TSH + free T4) at baseline and every 3 cycles — immune thyroiditis ~10%"
+  - "LFT + creatinine baseline and q3 cycles — immune hepatitis, nephritis monitoring"
+  - "No routine steroid premedication (reduces ICI efficacy)"
+  - "VTE prophylaxis as per standard melanoma management (not pembrolizumab-specific)"
+  - "Bisphosphonate/denosumab for bone mets if present"
+  - "Avoid live vaccines during treatment and ≥3 months after"
+
+followed_by:
+  - "CT/PET-CT q9 weeks for response assessment (RECIST 1.1 + iRECIST for IO responses)"
+  - "Continue until 2 years (35 cycles) OR disease progression OR unacceptable toxicity — whichever first"
+  - "Pseudoprogression: if clinically stable at radiologic progression, rebiopsy and confirm with iRECIST before stopping"
+  - "At confirmed progression: consider lifileucel TIL (IND-MELANOMA-3L-LIFILEUCEL) if eligible; or BRAF V600+ retreatment with BRAFi+MEKi if ≥6 months drug holiday (re-exposure benefit documented)"
+  - "Grade ≥3 immune-related AE: hold pembrolizumab; start prednisone 1-2 mg/kg/day; permanently discontinue for Grade ≥4 non-endocrine irAE"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~33-35% (KEYNOTE-006; IO-naive 1L melanoma; pembrolizumab 200 mg q3w)"
+  complete_response: "~16% (KEYNOTE-006 updated; durable CRs)"
+  median_pfs_months: "~5.6 months (KEYNOTE-006; HR 0.61 vs ipi; mPFS varied by dose cohort)"
+  median_os_months: "~32.7 months (KEYNOTE-006 updated OS; 5-year OS ~34-38%)"
+  notes: >
+    PRIMARY EVIDENCE: KEYNOTE-006 (Robert 2015 NEJM; Schachter 2017; extended follow-up):
+    - Phase 3 RCT: pembrolizumab 10 mg/kg q3w vs 10 mg/kg q2w vs ipilimumab 3 mg/kg in
+      IO-naive metastatic melanoma (N=834)
+    - ORR 33-35% (pembro arms) vs 12% (ipi)
+    - mOS ~32.7 mo vs 15.9 mo (ipi; HR 0.68; p<0.001)
+    - Grade 3-4 irAE ~15% (pembro) vs ~20% (ipi)
+    - 5-year OS ~38% (pembro) — durable long-term benefit
+
+    NOTE: KEYNOTE-006 was conducted in 1L IO-naive patients; this indication positions
+    pembrolizumab at 2L in IO-naive patients who received 1L BRAFi+MEKi. The IO-naive
+    status means the KEYNOTE-006 tumor biology context applies (no prior PD-1 escape
+    mechanisms). NCCN Melanoma 2025 recommends anti-PD-1 monotherapy as Cat 1 for patients
+    unsuitable for combination immunotherapy (ipi+nivo or rela+nivo).
+
+    COMPARISON TO RELA+NIVO:
+    Rela+nivo (RELATIVITY-047): ORR ~43%, mPFS 10.1 mo; Grade 3-4 irAE ~19%.
+    Pembrolizumab mono: ORR ~33%, mPFS ~5.6 mo; Grade 3-4 irAE ~15%.
+    Rela+nivo is preferred for ECOG 0-1. For ECOG 2 or patients with frailty/
+    significant comorbidities, pembrolizumab mono is the appropriate choice.
+
+    UKRAINE CONTEXT:
+    Relatlimab (component of rela+nivo Opdualag) is NOT registered in Ukraine —
+    named-patient import only. Pembrolizumab (Keytruda) IS registered in Ukraine
+    with NSZU reimbursement in some settings. For Ukrainian patients, pembrolizumab
+    mono may be the de facto IO option even for ECOG 0-1 patients when rela+nivo
+    is inaccessible.
+
+hard_contraindications:
+  - "Prior anti-PD-1 therapy: pembrolizumab rechallenge post-PD-1 failure has low response rate; not appropriate"
+  - "Active autoimmune disease requiring systemic immunosuppression >10 mg/day prednisone equivalent — irAE risk compounded"
+  - "Prior organ transplant: PD-1 blockade causes allograft rejection; contraindicated"
+  - "Active Grade ≥3 immune-related adverse event from prior ICI: do not start PD-1 therapy until resolved"
+
+red_flags_triggering_alternative:
+  - condition: "ECOG 0-1 + IO-naive + no contraindication to combination IO → prefer rela+nivo (IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB; higher ORR) if accessible"
+  - condition: "ECOG 0-1 + no autoimmunity + tolerates Grade 3-4 irAE risk → ipi+nivo (IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO; highest ORR ~58%) preferred per NCCN"
+  - condition: "Confirmed Grade 3-4 immune pneumonitis: permanently discontinue pembrolizumab; no rechallenge"
+  - condition: "Prior PD-1 therapy: route to lifileucel TIL or clinical trial"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH + free T4 baseline — immune thyroiditis"
+  - "Cortisol AM baseline — adrenal insufficiency exclusion (particularly in frail/elderly)"
+  - TEST-CECT-CAP
+  - "MRI brain with contrast — brain mets assessment (melanoma high CNS tropism)"
+  - "LDH — prognostic (elevated LDH = worse OS in melanoma)"
+  - "ECG baseline + troponin — myocarditis risk with any ICI (1.5-2%)"
+  - "BRAF V600 status confirmed from prior tumor testing (already established at 1L BRAFi prescription)"
+  - "PD-L1 IHC: not required for dosing but may be informative (pembro activity in melanoma is PD-L1 independent)"
+
+desired_tests:
+  - "MRI brain with gadolinium (high sensitivity for small mets)"
+  - "HbA1c baseline — immune diabetes risk"
+
+rationale: >
+  Pembrolizumab monotherapy (200 mg IV q3w) as 2L IO-naive treatment for
+  BRAF V600+ metastatic melanoma patients who received 1L BRAFi+MEKi and
+  are now IO-naive but cannot tolerate combination immunotherapy.
+
+  CLINICAL CONTEXT:
+  The DREAMseq data (Atkins 2023 JCO) established that IO-first → BRAFi-second
+  sequencing is superior to BRAFi-first → IO-second in BRAF V600+ melanoma for
+  most patients. However, patients with visceral crisis, active brain metastases,
+  or rapid disease trajectory at diagnosis receive 1L BRAFi+MEKi for rapid response,
+  then transition to IO at 2L. This creates an IO-naive 2L population.
+
+  FRAILTY DE-ESCALATION:
+  For fit IO-naive 2L patients (ECOG 0-1, no baseline autoimmunity), ipi+nivo
+  (58% ORR, NCCN Cat 1) or rela+nivo (43% ORR, NCCN Cat 1) are preferred.
+  For ECOG 2 or significant comorbidities (cardiac, renal, hepatic; active but
+  controlled autoimmunity), pembrolizumab monotherapy represents the de-escalated
+  option with lower irAE burden (~15% Grade 3-4 vs 50% ipi+nivo) while maintaining
+  meaningful clinical activity (33-35% ORR).
+
+  PEMBROLIZUMAB MECHANISM:
+  Anti-PD-1 antibody blocking PD-1/PD-L1 interaction, restoring CD8+ T cell
+  cytotoxic activity against tumor cells. Melanoma is an inherently immunogenic
+  tumor (high TMB, high UV-signature mutational load) — ideal target for PD-1
+  blockade regardless of prior BRAFi exposure.
+
+  PRIOR BRAFi EXPOSURE:
+  BRAFi+MEKi does not induce cross-resistance to PD-1 blockade. BRAF inhibition
+  may increase tumor-infiltrating lymphocytes (TIL) and MHC class I expression,
+  potentially sensitizing melanoma to subsequent immunotherapy. Multiple
+  retrospective and prospective series confirm IO activity in the post-BRAFi setting.
+
+  UKRAINE CONTEXT:
+  Pembrolizumab registered in Ukraine (Keytruda); NSZU reimbursement for melanoma
+  variable by year and centre (verify at prescribing centre). Relatlimab (Opdualag)
+  not registered → pembrolizumab mono is often the only accessible IO option for
+  Ukrainian patients who need IO at 2L post-BRAFi.
+
+rationale_ua: >
+  Пембролізумаб 200 мг IV q3w для BRAF V600+ метастатичної меланоми,
+  2L після 1L BRAFi+MEKi (IO-наївні пацієнти з ECOG PS 0-2, особливо
+  ECOG 2 або тяжко хворі, які не переносять комбінованої ІТ).
+  KEYNOTE-006 (Robert 2015 NEJM): ЧВ 33-35%; mOS 32.7 міс; NCCN Cat 1.
+  Перевага для ECOG 2 / супутні захворювання: Grade ≥3 іrAE ~15%
+  (vs іпі+ніво ~50%; рела+ніво ~19%).
+  В Україні: пембролізумаб зареєстрований (Кейтруда); НСЗУ-доступ
+  залежить від центру. Релатліміаб (Оpdualag) не зареєстрований →
+  пембролізумаб моно є фактичним IO-вибором для більшості UA пацієнтів.
+  ОБОВ'ЯЗКОВО: ТТГ + ВТ4 вихідно та q3 цикли; АЛТ/АСТ; МРТ головного
+  мозку перед початком; НЕ вводити рутинні стероїди перед ІКП.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати після попередньої анти-PD-1 терапії — низька ефективність при реіндукції PD-1 після прогресії"
+  - "Не ігнорувати базовий ТТГ і функцію кори наднирників — тиреоїдит та надниркова недостатність найчастіші ендокринні іrAE"
+  - "Не давати преднізолон >10 мг/добу перед початком ІКП — знижує ефективність"
+  - "При Grade ≥2 пневмоніті — зупинити пембролізумаб + КТ грудної клітки + ГКС (преднізолон 0.5-1 мг/кг); Grade ≥3 = постійна відміна"
+  - "Не призначати при трансплантації органів — PD-1 блокада викликає відторгнення трансплантата"
+  - "Не підтверджувати без верифікованого НСЗУ-фінансування — Кейтруда не в усіх центрах покривається"
+
+sources:
+  - source_id: SRC-KEYNOTE006-ROBERT-2015
+    position: supports
+    relevant_quote_paraphrase: >
+      KEYNOTE-006 (Robert 2015 NEJM; Schachter 2017 Lancet; extended follow-up):
+      Pembrolizumab 200 mg q3w vs ipilimumab in IO-naive metastatic melanoma.
+      ORR 33-35%; mOS ~32.7 mo vs 15.9 mo (ipi; HR 0.68); 5-year OS ~38%.
+      Grade 3-4 treatment-related AEs: ~15% (pembro) vs ~20% (ipi).
+      NCCN Cat 1 for metastatic melanoma; recommended as de-escalation option
+      when combination IO (ipi+nivo or rela+nivo) is not appropriate.
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Melanoma 2025: anti-PD-1 monotherapy (pembrolizumab or nivolumab) is
+      Category 1 for patients with metastatic melanoma who cannot receive combination
+      immunotherapy. For patients with ECOG ≥2 or significant comorbidities
+      precluding ipi+nivo or rela+nivo, PD-1 mono is the standard IO option.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

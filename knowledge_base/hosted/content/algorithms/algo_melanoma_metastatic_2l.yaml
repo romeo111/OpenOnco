@@ -14,6 +14,7 @@ output_indications:
   - IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
   - IND-MELANOMA-2L-POST-BRAFI-IPI-NIVO
   - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+  - IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO
   - IND-MELANOMA-3L-LIFILEUCEL
 
 default_indication: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
@@ -89,19 +90,49 @@ decision_tree:
     notes: "MDT-only — ipi+nivo fitness has no dedicated RF (composite ECOG + autoimmunity); falls through to rela+nivo / lifileucel for unfit patients."
 
   # Step 5 — Patient unfit for ipi+nivo OR strongly prefers
-  # tolerability profile → rela+nivo (Opdualag) as IO-naive 2L
-  # alternative. If neither applicable, fall through to lifileucel
-  # default (e.g., BRAF-WT with no IO history at all — unusual but
-  # possible if 1L was clinical trial).
+  # tolerability profile → sub-gate at step 51 to choose rela+nivo
+  # (ECOG 0-1) vs pembrolizumab mono (ECOG 2 / truly frail).
+  # If neither frailty criterion met, fall through to lifileucel
+  # (e.g., BRAF-WT with no IO history at all — unusual but possible
+  # if 1L was clinical trial).
   - step: 5
     evaluate:
       any_of:
         - condition: "Patient unfit for ipi+nivo (baseline autoimmunity, frailty, advanced age) but IO-naive"
         - red_flag: RF-MELANOMA-FRAILTY-AGE
     if_true:
-      result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+      next_step: 51
     if_false:
       result: IND-MELANOMA-3L-LIFILEUCEL
+    notes: "Step 5 if_true changed from result to next_step: 51 (Workstream CE 2026-05-04): frailty sub-gate added."
+
+  # Step 51 — Frailty fitness sub-stratification: rela+nivo requires
+  # ECOG 0-1 (IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB ecog_max: 1);
+  # ECOG 2 or significant comorbidities → pembrolizumab mono (lowest
+  # irAE burden ~15% Grade 3-4; KEYNOTE-006; NCCN Cat 1).
+  # Ukraine: relatlimab not registered → pembro mono often the only
+  # accessible IO option even for ECOG 0-1 patients.
+  - step: 51
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+    if_true:
+      result: IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
+      notes: >
+        ECOG 0-1 frail (unfit for ipi+nivo but fit for rela+nivo tolerability):
+        rela+nivo (Opdualag; RELATIVITY-047; ORR 43%; mPFS 10.1 mo; NCCN Cat 1).
+        Grade 3-4 irAE ~19% — acceptable de-escalation from ipi+nivo ~50%.
+        Ukraine: relatlimab not registered — named-patient import; if inaccessible
+        → pembrolizumab mono (IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO) as fallback.
+    if_false:
+      result: IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO
+      notes: >
+        ECOG 2 or truly frail (cannot tolerate even rela+nivo combination):
+        pembrolizumab 200 mg q3w (REG-PEMBROLIZUMAB-MONO; KEYNOTE-006; ORR 33-35%;
+        mOS 32.7 mo; NCCN Cat 1). Grade 3-4 irAE ~15% — lowest IO toxicity profile.
+        IO-naive status means full PD-1 benefit expected. Standard in UA: pembro
+        registered + NSZU reimbursement (verify at prescribing centre).
+    notes: "Step 51 added 2026-05-04 (Workstream CE): ECOG fitness sub-gate for frail IO-naive 2L post-BRAFi patients. ECOG 0-1 → rela+nivo; ECOG 2 → pembro mono. Gap (2) CLOSED."
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -112,7 +143,7 @@ sources:
   - SRC-C14401-CHESNEY-2024
   - SRC-CARVAJAL-KIT-MELANOMA-2013
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 
 notes: >
   Sequencing logic: 1L choice (IO vs BRAFi+MEKi) drives 2L. KIT
@@ -126,12 +157,16 @@ notes: >
   All cellular/imported components have substantial UA access barriers
   — funding pathway must be verified before plan finalization.
 
-  Wiring gaps for next batch:
+  UPDATED 2026-05-04 (Workstream CE): IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO
+  authored and wired at step 51 (ECOG 2 / truly frail IO-naive post-BRAFi 2L;
+  KEYNOTE-006; ORR 33-35%; mOS 32.7 mo; NCCN Cat 1). Step 5 if_true now routes
+  to step 51 (fitness sub-gate): ECOG 0-1 → rela+nivo; ECOG 2 → pembro mono.
+  Gap (2) CLOSED.
+
+  Remaining wiring gaps:
   (1) RELATIVITY-047 used at 1L would shift the 2L IO-naive branch
   to a different alternative — currently algorithm does not check
   whether rela+nivo was already used at 1L.
-  (2) Pembrolizumab-only 2L (anti-PD-1 mono salvage) is not modeled —
-  reasonable de-escalation for frail patients post-BRAFi.
   (3) Talimogene laherparepvec (T-VEC) intralesional for in-transit
   disease not modeled.
   (4) Brain-met-specific RFs (RF-MELANOMA-CNS-ACTIVE) should fire
