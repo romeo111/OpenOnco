@@ -7,6 +7,7 @@ purpose: 'Relapsed/refractory PTCL-NOS — three salvage options of comparable m
 output_indications:
 - IND-PTCL-2L-PRALATREXATE
 - IND-PTCL-2L-ROMIDEPSIN
+- IND-PTCL-2L-BELINOSTAT
 default_indication: IND-PTCL-2L-ROMIDEPSIN
 alternative_indication: IND-PTCL-2L-PRALATREXATE
 decision_tree:
@@ -31,12 +32,35 @@ decision_tree:
   if_true:
     result: IND-PTCL-2L-PRALATREXATE
   if_false:
-    result: IND-PTCL-2L-ROMIDEPSIN
+    next_step: 3
   notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+- step: 3
+  evaluate:
+    all_of:
+    - red_flag: RF-PRIOR-HDACI-NAIVE
+    - condition: Belinostat accessible (named-patient or compassionate access)
+    - condition: No QTcF >500 ms or active Grade ≥3 thrombocytopenia
+    - condition: Hepatic function adequate (bilirubin ≤3×ULN; if UGT1A1 *28/*28 → dose reduce to 750 mg/m²)
+  if_true:
+    result: IND-PTCL-2L-BELINOSTAT
+    notes: >
+      Belinostat 1000 mg/m² IV d1-5 q21d (BELIEF trial; O'Connor 2015, JCO; ORR 25.8%;
+      NCCN Cat 2A). Used when romidepsin AND pralatrexate are both inaccessible or
+      contraindicated. HDACi class — requires HDACi-naive status (no prior romidepsin/vorinostat).
+      UGT1A1 *28/*28 homozygous → dose reduce to 750 mg/m². QTc monitoring mandatory.
+      Toxicity advantage: lower mucositis than pralatrexate; less nausea than romidepsin.
+      FDA accelerated approval July 2014. Ukraine: unregistered — named-patient access required.
+  if_false:
+    result: IND-PTCL-2L-ROMIDEPSIN
+    notes: >
+      MDT fallback — all three standard agents unavailable/contraindicated. Romidepsin
+      returned as default for MDT discussion re: expanded access, clinical trial enrollment
+      (NCT available), or alloSCT bridge without salvage systemic therapy.
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-PTCL-2024
-last_reviewed: '2026-04-27'
-notes: 'OOS / wiring gaps: (1) Belinostat 2L for PTCL-NOS not yet authored as separate indication (only AITL 2L belinostat exists). (2) Brentuximab vedotin monotherapy for CD30+ PTCL-NOS relapse — standalone indication needed. (3) Allo-SCT bridging is referral, outside KB. (4) Combination HDACi + pralatrexate emerging but not modeled.
+- SRC-BELIEF-OCONNOR-2015
+last_reviewed: '2026-05-04'
+notes: 'AUTHORED 2026-05-04: IND-PTCL-2L-BELINOSTAT wired at step 3 (fallback when romidepsin AND pralatrexate both inaccessible/contraindicated). OOS / wiring gaps: (1) Brentuximab vedotin monotherapy for CD30+ PTCL-NOS relapse (IHC ≥10%) — standalone indication needed; currently surfaced only as red_flag redirect in IND-PTCL-2L-BELINOSTAT. (2) Allo-SCT bridging is referral, outside KB scope. (3) Combination HDACi + pralatrexate emerging but not modeled. (4) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
 
   '

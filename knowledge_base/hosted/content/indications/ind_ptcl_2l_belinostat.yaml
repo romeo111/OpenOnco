@@ -1,0 +1,94 @@
+id: IND-PTCL-2L-BELINOSTAT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PTCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory PTCL-NOS (peripheral T-cell lymphoma, not otherwise specified)"
+    - "≥1 prior systemic line of therapy (CHOEP, CHOP, or equivalent)"
+    - "ECOG PS 0-2"
+    - "HDACi-naive (no prior romidepsin or vorinostat; cross-resistance partial)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior belinostat or romidepsin failure (class cross-resistance limits benefit)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "BELIEF trial enrolled ECOG 0-2. Hepatic impairment: reduce dose 25% for bilirubin 1-1.5×ULN; avoid if bilirubin >3×ULN (UGT1A1 polymorphisms affect metabolism)."
+
+recommended_regimen: REG-BELINOSTAT-PTCL
+concurrent_therapy: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "25.8% (BELIEF trial overall PTCL cohort; n=120 evaluable)"
+  cr_rate: "11%"
+  median_dor_months: "13.6"
+  notes: >
+    BELIEF trial (O'Connor 2015, JCO; n=120 evaluable r/r PTCL): belinostat 1000 mg/m²
+    IV d1-5 q21d. ORR 25.8%; CR 11%; median DOR 13.6 months. PTCL-NOS subgroup: ORR
+    ~23% (lower than AITL ~46%). FDA accelerated approval July 2014.
+    Results comparable to pralatrexate (PROPEL: ORR 29%) and romidepsin (ORR 25%).
+    HDACi mechanism: histone deacetylase inhibition → acetylation of histones →
+    tumor suppressor gene re-expression + apoptosis in lymphoma cells.
+    No head-to-head comparison with romidepsin or pralatrexate — agent selection based on
+    toxicity profile and access.
+
+hard_contraindications:
+  - "QTcF >500 ms at baseline (HDACi QT risk)"
+  - "Active Grade ≥3 thrombocytopenia (belinostat myelosuppression)"
+  - "Severe hepatic impairment (bilirubin >3×ULN) — UGT1A1 metabolism impaired"
+
+red_flags_triggering_alternative:
+  - condition: "Prior romidepsin or belinostat failure → IND-PTCL-2L-PRALATREXATE (different class; antifolate mechanism)"
+  - condition: "CD30+ PTCL-NOS at relapse (IHC ≥10%) → brentuximab vedotin preferred (NCCN Cat 1 for CD30+ PTCL)"
+  - condition: "Fit for alloSCT and achieving CR → alloSCT referral (all PTCL 2L agents are bridges to transplant)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - "ECG: baseline (QTc); repeat after cycle 1 day 1"
+  - "Electrolytes (K+, Mg²+): correct hypokalemia/hypomagnesemia before each cycle (QT risk)"
+  - "CT CAP: baseline; after 2 cycles (response assessment)"
+
+desired_tests:
+  - "CD30 IHC: if not done — if CD30+ ≥10%, brentuximab vedotin is preferred (NCCN Cat 1)"
+  - "UGT1A1 genotype: *28/*28 homozygous patients have reduced belinostat metabolism → dose reduce 25% at baseline"
+
+rationale: >
+  Belinostat 1000 mg/m² IV d1-5 q21d is an FDA-approved HDACi for r/r PTCL (BELIEF trial;
+  ORR 25.8%; NCCN Cat 2A). For PTCL-NOS, belinostat is equivalent to romidepsin and
+  pralatrexate in terms of efficacy (~25-29% ORR across all three agents). Toxicity
+  profile: belinostat has lower mucositis risk than pralatrexate and lower nausea than
+  romidepsin. UGT1A1*28 genotype may reduce metabolism → dose reduction warranted.
+  All agents are bridges to consolidative alloSCT for fit patients.
+
+rationale_ua: >
+  Белінoстат 1000 мг/м² IV дні 1-5 q21d — FDA-схвалений ГДАКі для р/р PTCL-NOS
+  (BELIEF; ORR 25.8%; NCCN Категорія 2A). Порівнянна ефективність з ромідепсином
+  і пралатрексатом (~25-29%). Менше мукозиту ніж у пралатрексату; менша нудота
+  ніж у ромідепсину. При CD30+ ≥10% — бренtuximab vedotin (NCCN Cat 1) переважніший.
+  Мета — досягти CR/PR для алоТКМ-консолідації.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+
+do_not_do:
+  - "Перевірити CD30 IHC перед призначенням — CD30+ ≥10% → бренtuximab vedotin (NCCN Cat 1)"
+  - "ЕКГ і електроліти перед кожним циклом — QT-подовження при гіпокаліємії"
+  - "При UGT1A1 *28/*28 — знизити дозу до 750 мг/м² (сповільнений метаболізм)"
+  - "Не призначати при попередньому ромідепсині/белінoстаті — часткова перехресна резистентність"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
