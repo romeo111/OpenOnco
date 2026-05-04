@@ -1,0 +1,179 @@
+id: IND-CERVICAL-2L-TOPOTECAN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CERVICAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic cervical carcinoma (squamous cell, adenocarcinoma, or adenosquamous) after 1L platinum-based chemotherapy (with or without bevacizumab + pembrolizumab)"
+    - "Disease progression on 1L systemic therapy"
+    - "ECOG PS 0-2"
+    - "Adequate bone marrow function: ANC ≥1500/μL, platelets ≥100×10⁹/L before each cycle"
+    - "Adequate renal function: CrCl ≥20 mL/min (dose-reduce if CrCl 20–39 mL/min)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 2: topotecan 2L acceptable with dose vigilance; ECOG ≥3 → goals-of-care
+      discussion; systemic cytotoxic unlikely beneficial. Standard-track option when
+      tisotumab vedotin (Tivdak) is inaccessible (not registered in Ukraine 2026;
+      named-patient import or EAP required). Topotecan has broad NSZU access via
+      existing oncology reimbursement packages (ovarian/SCLC basket).
+
+recommended_regimen: REG-TOPOTECAN-SCLC-RR
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Vinorelbine 30 mg/m² IV weekly (days 1,8 q21d; NCCN Cat 1 in innovaTV 301
+      comparator arm; ORR ~10-15% in r/r cervical; NSZU-reimbursed for breast/NSCLC).
+  - regimen_id: null
+    description: >
+      Gemcitabine 1000 mg/m² IV d1,8 q21d (NCCN Cat 1 comparator; ORR ~10-20%;
+      NSZU-reimbursed for multiple indications). Well-tolerated profile.
+  - regimen_id: null
+    description: >
+      Pemetrexed 500 mg/m² IV q21d with B12 + folic acid supplementation (NCCN Cat 1
+      comparator; accessible in Ukraine). Avoid in squamous histology (unfavorable
+      outcomes in squamous vs non-squamous cancers generally — cervical SCC represents
+      ~70% of cases). Preferred for adenocarcinoma/adenosquamous histology.
+  - regimen_id: null
+    description: >
+      Irinotecan 125 mg/m² IV d1,8,15 q28d (NCCN Cat 1 in r/r cervical; some data
+      in GOG-204 comparable arm; UGT1A1 pharmacogenomic caution for Grade ≥3
+      diarrhea risk — consider *28 allele screening if available).
+
+concurrent_therapy:
+  - "PJP prophylaxis not routinely required unless immunosuppression or prior CRT"
+  - "Antiemetic premedication: ondansetron + dexamethasone before topotecan (moderate emetogenic)"
+  - "G-CSF secondary prophylaxis if Grade ≥3 neutropenia occurs"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q2-3 cycles (RECIST 1.1)"
+  - "CBC before each cycle (topotecan: myelosuppression expected; nadir d10-14)"
+  - "Renal function q2 cycles (topotecan renally eliminated)"
+  - "At progression: clinical trial preferred; BSC / best available option"
+  - "Tisotumab vedotin (IND-CERVICAL-2L-TISOTUMAB-VEDOTIN): upgrade to tisotumab when access becomes available — superior OS in innovaTV 301 (HR 0.70)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~13-17% (single-agent chemo comparator arm innovaTV 301; topotecan specific ~13-15% historical GOG-204)"
+  complete_response: "~2-5%"
+  progression_free_survival: "Median PFS ~2.9 mo (innovaTV 301 chemo control arm; Vergote NEJM 2024)"
+  overall_survival_5y: "Median OS ~9.5 mo (innovaTV 301 chemo control arm; all single-agent options combined)"
+  notes: >
+    Evidence context: innovaTV 301 (Vergote NEJM 2024) randomized tisotumab vedotin vs
+    investigator-choice single-agent chemo (topotecan, vinorelbine, gemcitabine, irinotecan,
+    pemetrexed) in r/r cervical cancer post-platinum; chemo arm mOS 9.5 mo, mPFS 2.9 mo,
+    ORR 5.2% (randomized population; real-world ORR slightly higher in single-agent series).
+    GOG-204 (Monk JCO 2009; vinorelbine, topotecan, pemetrexed, gemcitabine vs paclitaxel):
+    no significant differences between single-agent arms; paclitaxel historical comparator.
+    Topotecan is the most studied single agent in cervical cancer 2L+ in Ukraine-relevant
+    context (NSZU ovarian/SCLC reimbursement = practical access).
+    Note: All single-agent chemo options are INFERIOR to tisotumab vedotin (OS HR 0.70,
+    p=0.0038, innovaTV 301). Single-agent chemo is recommended ONLY when tisotumab
+    vedotin is inaccessible.
+
+hard_contraindications:
+  - "ECOG PS ≥4 — ECOG engine hard gate suppresses active tracks"
+  - "CrCl <20 mL/min (topotecan) — switch to vinorelbine or gemcitabine (hepatically cleared)"
+  - "Severe active infection — delay until resolved"
+  - "Pregnancy (teratogenic) — not for use in pregnancy"
+
+red_flags_triggering_alternative:
+  - RF-CERVICAL-FRAILTY-AGE
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "Renal function (CrCl calculation) — mandatory for topotecan dosing (renally eliminated)"
+
+desired_tests:
+  - "PD-L1 CPS if not done at 1L (pembrolizumab 2L may be appropriate in ICI-naive patients; check prior pembrolizumab exposure)"
+  - "Tissue factor expression (tisotumab vedotin companion; no formal requirement but supports ADC use)"
+
+rationale: >
+  Single-agent cytotoxic chemotherapy remains the standard-of-care second-line option
+  for recurrent/metastatic cervical carcinoma when tisotumab vedotin (the preferred NCCN
+  Category 1 2L+ agent, innovaTV 301 HR 0.70 OS benefit) is inaccessible.
+
+  NCCN Cervical Cancer 2025 lists the following as acceptable second-line single-agent
+  regimens after platinum failure: topotecan (Cat 1), vinorelbine (Cat 1), gemcitabine
+  (Cat 1), irinotecan (Cat 1), pemetrexed (Cat 1, non-squamous). All formed the
+  investigator-choice comparator arm in innovaTV 301.
+
+  Topotecan (Hycamtin) is selected as the recommended regimen for this indication
+  because: (a) it has the longest history in cervical 2L+ (used in GOG studies since
+  the 1990s); (b) the NSZU of Ukraine reimburses topotecan under existing ovarian/SCLC
+  packages, providing the most accessible 2L cytotoxic for Ukrainian patients who
+  cannot access tisotumab vedotin; (c) dosing schedule (1.5 mg/m²/d × 5d q21d) is
+  identical to the SCLC regimen (REG-TOPOTECAN-SCLC-RR) enabling regimen reuse.
+
+  UKRAINE CONTEXT: Tisotumab vedotin is not registered in Ukraine (drlz.com.ua 2026);
+  access requires named-patient DEC import, Pfizer/Seagen EAP, or transborder
+  treatment under MOH order 988. Most UA patients therefore receive single-agent
+  chemo as 2L. Topotecan or vinorelbine are the most practically accessible options.
+  Upgrade to tisotumab vedotin when access established.
+
+rationale_ua: >
+  Монохіміотерапія — стандарт 2L раку шийки матки, коли тисотумаб ведотин (Tivdak;
+  innovaTV 301 OS ВР 0,70; NCCN Кат 1 пріоритет) недоступний. NCCN 2025 Кат 1
+  одноагентні варіанти: топотекан, вінорельбін, гемцитабін, іринотекан,
+  пеметрексед. Топотекан обрано як базовий — НСЗУ-доступний (пакет яєчника/SCLC);
+  1,5 мг/м²/д × 5 д q21d.
+  Тисотумаб ведотин НЕ зареєстрований в Україні 2026; доступ виключно через
+  named-patient DEC/EAP. Переходьте на тисотумаб при відновленні доступу.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ призначати топотекан при CrCl <20 мл/хв — перейдіть на вінорельбін або гемцитабін (печінковий кліренс)"
+  - "НЕ відкладати перехід на тисотумаб ведотин при відновленні доступу — OS перевага доведена (innovaTV 301 HR 0,70)"
+  - "НЕ ігнорувати мієлосупресію топотекану — КАК перед кожним циклом; надир д10-14"
+  - "НЕ застосовувати пеметрексед при плоскоклітинній гістології раку шийки матки (>70% випадків) — відносно несприятливі результати у плоскоклітинних пухлинах"
+  - "НЕ продовжувати при прогресуванні після 2 циклів — паліативна допомога або КТ"
+
+sources:
+  - source_id: SRC-NCCN-CERVICAL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Cervical Cancer 2025: topotecan, vinorelbine, gemcitabine, irinotecan,
+      pemetrexed are all Category 1 single-agent options for recurrent/metastatic
+      cervical cancer 2L+ after platinum failure. These formed the comparator arm
+      in innovaTV 301. Tisotumab vedotin is the preferred Cat 1 option when accessible.
+  - source_id: SRC-ESMO-CERVICAL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO 2024 Cervical Cancer Guidelines: single-agent chemotherapy (topotecan,
+      vinorelbine, gemcitabine, irinotecan, pemetrexed) recommended when tisotumab
+      vedotin inaccessible; used as comparator in innovaTV 301 (mOS 9.5 mo, mPFS
+      2.9 mo, ORR 5.2%).
+
+known_controversies:
+  - topic: "Tisotumab vedotin vs single-agent chemo as 2L standard for r/r cervical cancer"
+    positions:
+      - position: "Tisotumab vedotin (Tivdak): innovaTV 301 superiority in OS, PFS, ORR vs single-agent chemo (HR 0.70, p=0.0038); NCCN/ESMO Cat 1 preferred 2L+ — established as new standard when accessible"
+        sources: [SRC-NCCN-CERVICAL-2025]
+      - position: "Single-agent chemo (topotecan/vinorelbine/gemcitabine/irinotecan/pemetrexed): longstanding standard prior to tisotumab approval; mOS 9.5 mo in innovaTV 301 control arm; widely accessible + reimbursed"
+        sources: [SRC-ESMO-CERVICAL-2024]
+    our_default: "Tisotumab vedotin preferred when accessible (NCCN Cat 1; innovaTV 301 OS HR 0.70). Single-agent chemo (topotecan primary for Ukraine NSZU access) is the practical standard in UA where tisotumab vedotin requires named-patient import."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track 2L option for r/r cervical
+  cancer when tisotumab vedotin inaccessible. Reuses REG-TOPOTECAN-SCLC-RR (identical
+  1.5 mg/m²/d × 5d q21d dosing; cervical cancer same dosing as SCLC/ovarian).
+  Alternative single agents (vinorelbine, gemcitabine, irinotecan, pemetrexed) all
+  acceptable per NCCN Cat 1 (innovaTV 301 comparator arm). Authored 2026-05-04
+  (Workstream DE).

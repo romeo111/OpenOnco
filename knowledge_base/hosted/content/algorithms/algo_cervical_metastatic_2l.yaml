@@ -1,0 +1,134 @@
+id: ALGO-CERVICAL-METASTATIC-2L
+applicable_to_disease: DIS-CERVICAL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for recurrent or metastatic cervical carcinoma after
+  disease progression on 1L platinum-based chemotherapy (with or without bevacizumab
+  + pembrolizumab per KEYNOTE-826). Two tracks:
+  (1) Tisotumab vedotin (Tivdak) — preferred when accessible (NCCN Cat 1; innovaTV 301
+      Vergote NEJM 2024; OS HR 0.70; mOS 11.5 mo vs 9.5 mo; ECOG 0-1 preferred).
+  (2) Single-agent chemotherapy — standard track when tisotumab inaccessible (not
+      registered Ukraine 2026). Topotecan 1.5 mg/m²/d × 5d q21d primary (NSZU-funded);
+      vinorelbine, gemcitabine, irinotecan, pemetrexed are equivalent alternatives
+      (all NCCN Cat 1; innovaTV 301 comparator arm).
+
+output_indications:
+  - IND-CERVICAL-2L-TISOTUMAB-VEDOTIN
+  - IND-CERVICAL-2L-TOPOTECAN
+
+default_indication: IND-CERVICAL-2L-TISOTUMAB-VEDOTIN
+alternative_indication: IND-CERVICAL-2L-TOPOTECAN
+
+decision_tree:
+  # Step 1 — Fitness and frailty gate.
+  # RF-CERVICAL-FRAILTY-AGE captures ECOG ≥3, severe comorbidity, and poor organ
+  # function that preclude systemic 2L therapy. ECOG ≥4 → engine hard gate.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      next_step: 2
+    if_false:
+      result: IND-CERVICAL-2L-TOPOTECAN
+      notes: >
+        ECOG ≥3: systemic therapy high toxicity burden vs marginal benefit. Goals-of-care
+        MDT discussion. Topotecan at reduced dose (0.75 mg/m²/d) may be considered
+        for ECOG 3 with preserved renal function; ECOG ≥4 → engine hard gate;
+        palliative/BSC only. Clinical trial if functional trajectory improving.
+
+  # Step 2 — Tisotumab vedotin eligibility + accessibility gate.
+  # NCCN Cat 1 preferred 2L+ for all histologies (SCC, adeno, adenosquamous).
+  # Key constraints for tisotumab: ECOG 0-1 (innovaTV 301/204 enrolled ECOG 0-1);
+  # no severe corneal/ocular disease (BOXED WARNING: keratitis, vision changes);
+  # no Grade ≥2 peripheral neuropathy (MMAE payload neurotoxicity additive);
+  # no active bleeding/hemorrhage (TF expressed on vascular endothelium).
+  # Ukraine 2026: tisotumab vedotin NOT registered → named-patient DEC import
+  # or Pfizer/Seagen EAP or transborder treatment (MOH order 988) required.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Tisotumab vedotin (Tivdak) accessible (registered/funded OR named-patient import confirmed OR EAP enrolled)"
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - condition: "No active corneal disease or severe dry eye syndrome (ocular toxicity BOXED WARNING)"
+        - condition: "No Grade ≥2 peripheral neuropathy (MMAE payload)"
+        - condition: "No Grade ≥3 uncontrolled hemorrhage within 4 weeks"
+    if_true:
+      result: IND-CERVICAL-2L-TISOTUMAB-VEDOTIN
+      notes: >
+        Tisotumab vedotin accessible + ECOG 0-1 + no ocular/neuropathy contraindications:
+        tisotumab vedotin 2.0 mg/kg IV q3w (REG-TISOTUMAB-VEDOTIN-CERVICAL-2L; innovaTV 301
+        Vergote NEJM 2024; OS HR 0.70; mOS 11.5 vs 9.5 mo; ORR 17.8% vs 5.2%; NCCN Cat 1).
+        MANDATORY before cycle 1: ophthalmology exam (slit-lamp + visual acuity + IOP).
+        MANDATORY per-cycle (cycles 1-9): ophthalmology before each infusion.
+        MANDATORY throughout treatment: prophylactic eye drops (vasoconstrictor + lubricating)
+        + cooling eye pads during infusion.
+        At Grade ≥2 keratitis or vision change: hold and urgent ophthalmology. Grade ≥3 →
+        permanent discontinuation. Ukraine: named-patient DEC spetsdozvil or EAP required.
+    if_false:
+      next_step: 3
+    notes: "Tisotumab gate — ECOG 0-1 + accessible + no ocular/neuropathy CI: preferred NCCN Cat 1. All other patients → step 3 (topotecan)."
+
+  # Step 3 — Single-agent chemotherapy when tisotumab vedotin inaccessible or
+  # contraindicated. Topotecan primary (NSZU-accessible UA; long cervical cancer history).
+  # Vinorelbine/gemcitabine/irinotecan/pemetrexed are equivalent NCCN Cat 1 alternatives.
+  # Select based on: UA access/NSZU status, prior regimen history, comorbidities.
+  # CrCl gate for topotecan: renal dose-reduce if CrCl 20-39 mL/min (0.75 mg/m²/d);
+  # switch to vinorelbine or gemcitabine (hepatic clearance) if CrCl <20 mL/min.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "CrCl ≥20 mL/min (topotecan eligible) OR switching to hepatically-cleared agent (vinorelbine, gemcitabine) if CrCl <20 mL/min"
+    if_true:
+      result: IND-CERVICAL-2L-TOPOTECAN
+      notes: >
+        Tisotumab vedotin inaccessible or ECOG 2 or contraindicated: topotecan
+        1.5 mg/m²/d IV d1-5 q21d (REG-TOPOTECAN-SCLC-RR reused; identical dosing;
+        IND-CERVICAL-2L-TOPOTECAN; NCCN Cat 1; mOS 9.5 mo in innovaTV 301 control arm).
+        NSZU-reimbursed in Ukraine via ovarian/SCLC oncology basket.
+        Alternatives (all NCCN Cat 1): vinorelbine 30 mg/m² IV weekly d1,8 q21d
+        (NSZU breast/NSCLC); gemcitabine 1000 mg/m² d1,8 q21d; irinotecan 125 mg/m²
+        d1,8,15 q28d; pemetrexed 500 mg/m² q21d with B12+folic acid (non-squamous only).
+        CBC before each cycle (topotecan myelosuppression). Upgrade to tisotumab when access restored.
+    if_false:
+      result: IND-CERVICAL-2L-TOPOTECAN
+      notes: >
+        CrCl <20 mL/min: topotecan contraindicated. Switch to vinorelbine 30 mg/m² IV
+        d1,8 q21d or gemcitabine 1000 mg/m² d1,8 q21d (hepatically cleared; no renal
+        dose adjustment required). Use IND-CERVICAL-2L-TOPOTECAN with alternative
+        regimen substitution. Goals-of-care MDT discussion if ECOG deteriorating.
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  AUTHORED 2026-05-04 (Workstream DE): ALGO-CERVICAL-METASTATIC-2L created.
+  Gap noted in ALGO-CERVICAL-METASTATIC-1L (no 2L algorithm existed; 1L notes referenced
+  "2L: tisotumab vedotin, innovaTV 301, NCCN Cat 1, or single-agent chemo").
+
+  IND-CERVICAL-2L-TISOTUMAB-VEDOTIN: already authored (tisotumab vedotin NCCN Cat 1;
+  innovaTV 301 Vergote NEJM 2024; OS HR 0.70; mOS 11.5 mo; ECOG 0-1; BOXED WARNING ocular).
+  IND-CERVICAL-2L-TOPOTECAN: authored 2026-05-04 (Workstream DE; standard-track chemo
+  fallback; topotecan 1.5 mg/m²/d × 5d q21d; REG-TOPOTECAN-SCLC-RR reused;
+  NCCN Cat 1; NSZU-funded UA).
+
+  ROUTING SUMMARY:
+  - ECOG ≥3: frailty path → topotecan reduced dose or BSC
+  - ECOG 0-1 + tisotumab accessible + no ocular/neuropathy CI: tisotumab vedotin (Cat 1 preferred)
+  - ECOG 2 OR tisotumab inaccessible OR contraindicated → topotecan (NSZU-accessible UA)
+
+  Ukraine context: tisotumab vedotin not registered 2026 → named-patient DEC import / EAP.
+  Most UA patients receive topotecan (or vinorelbine/gemcitabine) as practical 2L standard.
+  Upgrade to tisotumab when access pathway established.
+
+  OOS / wiring gaps:
+  (1) Pembrolizumab 2L for ICI-naive patients (CPS ≥1) — KEYNOTE-158 cervical cohort ORR ~12%;
+      not explicitly modeled as 2L in this algorithm (1L pembro+chemo+bev is now standard;
+      most patients are ICI-experienced at 2L). MDT can consider for truly ICI-naive 2L patients.
+  (2) Bevacizumab combinations at 2L — limited data; not NCCN Cat 1 at 2L specifically.
+  (3) Pelvic exenteration or RT for locoregional recurrence — surgical/RT referral outside KB.
