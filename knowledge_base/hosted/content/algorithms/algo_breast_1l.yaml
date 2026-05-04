@@ -17,6 +17,8 @@ output_indications:
   - IND-BREAST-TNBC-EARLY-NEOADJUVANT
   - IND-BREAST-BRCA-POS-MET-PARPI
   - IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO
+  - IND-BREAST-HER2-POS-MAINT-TRAST
+  - IND-BREAST-HR-POS-MAINT-CDK46I
 
 default_indication: IND-BREAST-HR-POS-MET-1L-CDKI
 alternative_indication: IND-BREAST-HER2-POS-MET-1L-THP
@@ -40,6 +42,27 @@ decision_tree:
       result: IND-BREAST-HER2-POS-EARLY-NEOADJUVANT
     if_false:
       result: IND-BREAST-HER2-POS-MET-1L-THP
+      notes: >
+        HER2+ metastatic: THP (taxane + trastuzumab + pertuzumab) induction per
+        CLEOPATRA. After ≥6 cycles with response: discontinue taxane; continue
+        HP backbone until progression (IND-BREAST-HER2-POS-MAINT-TRAST; Cat 1) —
+        see alternatives.
+      alternatives:
+        - indication_id: IND-BREAST-HER2-POS-MAINT-TRAST
+          nccn_category: "1"
+          criteria: >
+            HER2-positive metastatic breast cancer (IHC 3+ OR IHC 2+ FISH-amplified);
+            achieved CR/PR/SD after ≥6 cycles THP induction; LVEF adequate (ECHO
+            baseline + q3 months); RF-BREAST-TRANSFORMATION-PROGRESSION absent.
+            Automatic transition at taxane discontinuation — not a new separate decision.
+          note: >
+            Trastuzumab + pertuzumab (HP) maintenance after THP induction (CLEOPATRA;
+            Swain 2015 NEJM final; Swain 2020 ESMO 8-yr update; NCCN Cat 1): mPFS
+            18.7 mo; 8-yr OS landmark ~37%; mOS 57.1 mo. Trastuzumab 6 mg/kg q3w +
+            pertuzumab 420 mg q3w continuously until progression or intolerable toxicity.
+            LVEF monitoring q3 months (trastuzumab cardiotoxicity: hold if ↓ >10% to
+            below LLN or any ↓ to <50%). At progression: T-DXd 2L preferred (DESTINY-
+            Breast03; NCCN Cat 1; PFS HR 0.28; mOS NR vs 23.4 mo tucatinib-based).
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
   # Step 3 — HER2-negative; check TNBC vs HR+
   - step: 3
@@ -71,6 +94,30 @@ decision_tree:
         - condition: "Default HR+/HER2- 1L metastatic"
     if_true:
       result: IND-BREAST-HR-POS-MET-1L-CDKI
+      notes: >
+        HR+/HER2- metastatic: AI + CDK4/6i continuous (PALOMA-2 / MONALEESA-2 / MONARCH-3).
+        The CDK4/6i + AI combination is continuous until progression (not induction-maintenance).
+        IND-BREAST-HR-POS-MAINT-CDK46I tracks the continuation phase beyond first response —
+        see alternatives.
+      alternatives:
+        - indication_id: IND-BREAST-HR-POS-MAINT-CDK46I
+          nccn_category: "1"
+          criteria: >
+            HR+ (ER ≥1%) / HER2-negative metastatic breast cancer; CDK4/6 inhibitor +
+            AI selected 1L (palbociclib + letrozole, or ribociclib + AI, or abemaciclib
+            + AI); ≥SD/PR at first restaging; ongoing continuous combination (no distinct
+            induction + maintenance phases — CDK4/6i is continuous per trials); ECOG 0-2.
+            RF-BREAST-TRANSFORMATION-PROGRESSION absent.
+          note: >
+            CDK4/6i + AI continuous 1L for HR+/HER2- metastatic BC (NCCN Cat 1; multiple
+            Phase 3 trials): Palbociclib + letrozole (PALOMA-2; mPFS 27.6 mo; Rugo 2019
+            final; OS benefit not statistically significant PALOMA-2 final Finn 2022);
+            Ribociclib + AI (MONALEESA-2; mPFS 25.3 mo; OS HR 0.76 confirmed; NCCN Cat 1
+            preferred for OS data); Abemaciclib + AI (MONARCH-3; mPFS 28.2 mo; OS HR 0.75
+            confirmed monarchE early BC). CDK4/6i dosed continuously (palbociclib 21/7
+            cycle; ribociclib 21/7 cycle; abemaciclib continuous BID). Continue until
+            progression or unacceptable toxicity. CBC monthly (neutropenia; dose interruption
+            as per label).
     if_false:
       result: IND-BREAST-HR-POS-MET-1L-CDKI
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
@@ -101,7 +148,7 @@ decision_tree:
         prior taxane exposure; gem+carbo for taxane-ineligible patients.
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
-last_reviewed: null
+last_reviewed: "2026-05-04"
 notes: >
   Receptor-subtype is the dominant branch point — biomarker_driven
   archetype materialized. T-DXd 2L HER2+ metastatic referenced as

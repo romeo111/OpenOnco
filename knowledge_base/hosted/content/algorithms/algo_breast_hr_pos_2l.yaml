@@ -18,6 +18,7 @@ output_indications:
   - IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
   - IND-BREAST-HR-POS-2L-DATO-DXD
   - IND-BREAST-BRCA-POS-MET-PARPI
+  - IND-BREAST-BRCA-MET-TALAZOPARIB
 
 default_indication: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
 alternative_indication: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
@@ -35,6 +36,28 @@ decision_tree:
         - red_flag: RF-BREAST-BRCA-GERMLINE-ACTIONABLE
     if_true:
       result: IND-BREAST-BRCA-POS-MET-PARPI
+      notes: >
+        gBRCA1/2 pathogenic: PARPi preferred (olaparib or talazoparib).
+        IND-BREAST-BRCA-MET-TALAZOPARIB is the EMBRACA-specific talazoparib
+        entity for HR+/HER2- BRCA-mutated metastatic BC — see alternatives.
+      alternatives:
+        - indication_id: IND-BREAST-BRCA-MET-TALAZOPARIB
+          nccn_category: "1"
+          criteria: >
+            HR+/HER2-negative metastatic breast cancer; germline BRCA1 or BRCA2
+            pathogenic / likely-pathogenic mutation confirmed; progression on prior
+            endocrine therapy ± CDK4/6i; PARPi-naive (olaparib not yet given);
+            ≤3 prior chemo lines for metastatic disease (EMBRACA eligibility);
+            ECOG 0-2; adequate organ function.
+          note: >
+            Talazoparib monotherapy for gBRCA1/2-mutated HR+/HER2- metastatic BC
+            (EMBRACA; Litton 2018 NEJM; NCCN Cat 1): mPFS 8.6 vs 5.6 mo (HR 0.54);
+            ORR 62.6% vs 27.2%. Talazoparib 1 mg PO QD continuously until progression.
+            FDA-approved Oct 2018. Alternative: olaparib 300 mg BID (OlympiAD;
+            Robson 2017 NEJM; mPFS 7.0 vs 4.2 mo; HR 0.58) — clinical equivalence,
+            no direct head-to-head comparison; choice based on access + toxicity
+            (talazoparib higher Grade 3 anemia ~55%, thrombocytopenia ~27%).
+            Ukraine: neither routinely NSZU-reimbursed — import/foundation access.
     if_false:
       next_step: 1
     notes: "MDT-only — 2L PARPi entry assumes PARPi-naive at 1L (OlympiAD line-position varied; ESMO 2024 supports 2L+ when PARPi not yet given); MDT confirms not-already-exposed before this branch fires."
