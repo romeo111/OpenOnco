@@ -1,0 +1,52 @@
+id: REG-TRABECTEDIN-PLD
+name: "Trabectedin + pegylated liposomal doxorubicin for platinum-resistant ovarian cancer"
+name_ua: "Трабектедин + ПЛД при платинорезистентному раку яєчника"
+alternate_names: ["yondelis + doxil", "trabectedin + PLD ovarian", "ET-743 + liposomal doxorubicin"]
+
+components:
+  - drug_id: DRUG-TRABECTEDIN
+    dose: "1.1 mg/m²"
+    schedule: "IV day 1 Q21D (3-hour infusion via central line)"
+    route: IV
+    notes: "Must use central venous access — severe vesicant if extravasated. Dexamethasone 20 mg IV pre-treatment mandatory (both hepatoprotection and antiemetic)"
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "30 mg/m²"
+    schedule: "IV day 1 Q21D (administered before trabectedin)"
+    route: IV
+    notes: "Infuse PLD over 60-90 min first; then trabectedin. Lower PLD dose (30 mg/m²) vs monotherapy (40-50 mg/m²)"
+
+cycle_length_days: 21
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Dexamethasone 20 mg IV 30 min before trabectedin (mandatory — hepatoprotection)"
+  - "Antihistamine + acetaminophen before PLD (IRR prophylaxis)"
+  - "Antiemetics: 5-HT3 antagonist + dexamethasone (covered by dexamethasone pre-meds)"
+
+supportive_care:
+  - "LFT: before each cycle (trabectedin hepatotoxicity — ALT/AST elevation common)"
+  - "CBC: before each cycle (neutropenia, thrombocytopenia)"
+  - "LVEF: baseline and Q3 months (cumulative PLD cardiotoxicity)"
+  - "Hand-foot syndrome monitoring (PLD)"
+  - "CK (creatine kinase): if myalgia — trabectedin-associated rhabdomyolysis (rare)"
+  - "Central line care: trabectedin vesicant risk"
+
+dose_modifications:
+  - toxicity: "ALT/AST > 2.5× ULN at treatment day"
+    action: "Delay trabectedin until normalized; reduce dose 25% if persistent"
+  - toxicity: "Grade 3-4 neutropenia or febrile neutropenia"
+    action: "Dose reduce trabectedin 25%; consider G-CSF secondary prophylaxis"
+  - toxicity: "Rhabdomyolysis (CK >5× ULN + muscle symptoms)"
+    action: "DISCONTINUE trabectedin permanently"
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  OVA-301 trial (Poveda 2011 JCO; N=672): trabectedin + PLD vs PLD alone in
+  platinum-sensitive recurrent ovarian cancer. mPFS 7.3 vs 5.8 months (HR 0.79;
+  p=0.019). Post-hoc: platinum-resistant subgroup ORR 27% vs 19%. NCCN lists
+  trabectedin + PLD as a recommended option for platinum-resistant ovarian cancer.
+  Central line REQUIRED — trabectedin is a severe vesicant.

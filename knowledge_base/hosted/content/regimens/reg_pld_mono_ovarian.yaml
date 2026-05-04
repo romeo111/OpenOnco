@@ -1,0 +1,48 @@
+id: REG-PLD-MONO
+name: "Pegylated liposomal doxorubicin (PLD) monotherapy for platinum-resistant ovarian cancer"
+name_ua: "Пегільований ліпосомальний доксорубіцин (ПЛД) монотерапія при платинорезистентному раку яєчника"
+alternate_names: ["Doxil monotherapy", "PLD ovarian", "liposomal doxorubicin ovarian"]
+
+components:
+  - drug_id: DRUG-PEGYLATED-LIPOSOMAL-DOXORUBICIN
+    dose: "40 mg/m²"
+    schedule: "IV day 1 Q28D"
+    route: IV
+    notes: "Alternative: 50 mg/m² Q28D (equivalent efficacy, slightly more toxicity). Infuse over 60–90 minutes; do not use standard doxorubicin in place of PLD (different pharmacokinetics)"
+
+cycle_length_days: 28
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Antihistamine + acetaminophen: 30 minutes before first dose (IRR prophylaxis)"
+  - "Antiemetics: low emetogenic protocol (5-HT3 antagonist optional)"
+
+supportive_care:
+  - "CBC: before each cycle (myelosuppression)"
+  - "LVEF (ECHO or MUGA): baseline; Q3 months on treatment (cumulative cardiotoxicity)"
+  - "Skin: hand-foot syndrome (palmar-plantar erythrodysesthesia) prophylaxis: moisturizers, avoid friction"
+  - "Mucositis: oral hygiene, topical agents if Grade 2+"
+  - "Cumulative doxorubicin equivalent dose tracking: limit ~550 mg/m² (with prior anthracycline history)"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 hand-foot syndrome (PPE)"
+    action: "Hold until Grade ≤1; reduce dose by 25%"
+  - toxicity: "Stomatitis Grade 3"
+    action: "Hold until Grade ≤1; reduce dose by 25%"
+  - toxicity: "Grade 4 neutropenia or febrile neutropenia"
+    action: "Consider dose reduction 25%; GCSF secondary prophylaxis"
+  - toxicity: "LVEF reduction >20% from baseline or below institutional lower limit"
+    action: "Hold; cardiology consultation; discontinue if no recovery"
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  PLD monotherapy is NCCN Cat 1 for platinum-resistant recurrent ovarian cancer.
+  CALYPSO trial (Wagner 2012 JCO): PLD + carboplatin vs gemcitabine + carboplatin
+  in platinum-sensitive — not directly applicable here.
+  For platinum-resistant: PLD ORR ~15-20%; mPFS ~3-4 months; better tolerability vs
+  paclitaxel; preferred in patients with neuropathy (from prior taxane) or risk of
+  further neuropathy. Also used as backbone for trabectedin + PLD combination.

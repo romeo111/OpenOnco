@@ -1,0 +1,55 @@
+id: REG-AMIVANTAMAB-LAZERTINIB-CHEMO
+name: "Amivantamab + lazertinib + carboplatin + pemetrexed for EGFR NSCLC post-osimertinib"
+name_ua: "Амівантамаб + лазертиніб + карбоплатин + пеметрексед при EGFR-мутантному НМРЛ після осімертинібу"
+alternate_names: ["MARIPOSA-2 regimen", "amivantamab-lazertinib-carbo-pem", "EGFR bispecific + chemo"]
+
+components:
+  - drug_id: DRUG-AMIVANTAMAB
+    dose: "1050 mg (body weight <80 kg) or 1400 mg (≥80 kg)"
+    schedule: "IV weekly × 4 weeks, then Q2W (starting cycle 3)"
+    route: IV
+    notes: "Step-up dosing cycle 1: split over 2 days (Week 1 day 1/2); pre-medicate for IRR"
+  - drug_id: DRUG-LAZERTINIB
+    dose: "240 mg PO QD"
+    schedule: "Continuous daily"
+    route: PO
+    notes: "3rd-generation EGFR TKI; CNS-penetrant; EGFR/HER2 dual inhibitor with amivantamab"
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5"
+    schedule: "IV day 1 Q21D × 4 cycles"
+    route: IV
+    notes: "Cycles 1–4 only; discontinue carboplatin after cycle 4 (maintenance phase begins)"
+  - drug_id: DRUG-PEMETREXED
+    dose: "500 mg/m²"
+    schedule: "IV day 1 Q21D (ongoing maintenance after platinum phase)"
+    route: IV
+    notes: "Folic acid 400 µg QD + B12 1000 µg IM Q9W mandatory; continue as maintenance"
+
+cycle_length_days: 21
+number_of_cycles: "4 cycles induction (amivantamab + lazertinib + carbo + pem); then amivantamab + lazertinib + pemetrexed maintenance until progression"
+
+premedications:
+  - "Amivantamab cycle 1: diphenhydramine + famotidine + dexamethasone + montelukast 30-60 min before (IRR prophylaxis)"
+  - "Pemetrexed: folic acid 400 µg/day starting 1 week before, B12 1000 µg IM Q9 weeks"
+  - "Antiemetics: 5-HT3 antagonist + dexamethasone for carboplatin days"
+
+supportive_care:
+  - "CBC + CMP: before each cycle"
+  - "Skin toxicity monitoring: amivantamab EGFR/MET-driven rash (EGFR inhibitor skincare protocol)"
+  - "VTE prophylaxis: anticoagulation recommended (amivantamab VTE signal ~11%)"
+  - "IRR monitoring: first infusion in-hospital observation"
+  - "Peripheral edema monitoring: common with amivantamab"
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Based on MARIPOSA-2 (Passaro 2024 NEJM; N=657): amivantamab + lazertinib + chemo
+  vs chemotherapy alone in EGFR-mutant NSCLC after osimertinib failure.
+  mPFS 8.3 vs 6.3 months (HR 0.67; p<0.001). ORR 53% vs 29%. mOS not mature.
+  VTE events 11% vs 3% (manage with anticoagulation). Amivantamab (EGFR×MET bispecific)
+  + lazertinib (3rd-gen EGFR TKI) combination addresses multiple resistance mechanisms
+  to osimertinib (MET amplification, EGFR C797S). FDA approved August 2024 for
+  EGFR-mutant NSCLC after osimertinib/EGFR TKI failure.

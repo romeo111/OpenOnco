@@ -1,0 +1,61 @@
+id: REG-RT-PCV-LGG
+name: "RT + PCV for IDH-mutant low-grade glioma"
+name_ua: "ПТ + ПКВ при ІДГ-мутантній гліомі низького ступеня"
+alternate_names: ["RT/PCV LGG", "radiotherapy + procarbazine/CCNU/vincristine", "Buckner LGG regimen"]
+
+components:
+  - drug_id: DRUG-PROCARBAZINE
+    dose: "60 mg/m²/day PO"
+    schedule: "Days 8–21 of each 6-week cycle"
+    route: PO
+    notes: "Hold for ANC <1.5 or platelets <100; dietary tyramine restriction (MAOI activity)"
+  - drug_id: DRUG-LOMUSTINE
+    dose: "110 mg/m²"
+    schedule: "PO day 1 of each 6-week cycle"
+    route: PO
+    notes: "Cumulative pulmonary toxicity limit ~1000 mg/m²; delayed nadir at ~4-6 weeks"
+  - drug_id: DRUG-VINCRISTINE
+    dose: "1.4 mg/m² (max 2 mg)"
+    schedule: "IV days 8 and 29 of each 6-week cycle"
+    route: IV
+    notes: "Peripheral neuropathy dose-limiting; cap at 2 mg absolute"
+
+radiotherapy:
+  dose: "54 Gy in 30 fractions (1.8 Gy/fraction)"
+  timing: "Administered before PCV chemotherapy in sequential approach"
+  notes: "RT given first (54 Gy/30f); PCV × 6 cycles initiated after RT completion. Concurrent RT+PCV not standard."
+
+cycle_length_days: 42
+number_of_cycles: "6 cycles of PCV (after RT completion)"
+
+premedications:
+  - "Antiemetics: 5-HT3 antagonist before procarbazine + lomustine days"
+  - "PCP prophylaxis: TMP-SMX BID 3× weekly during chemotherapy (immunosuppression from PCV)"
+
+supportive_care:
+  - "CBC: weekly during treatment (nadir ~4-6 weeks post-lomustine)"
+  - "LFT: before each cycle (procarbazine hepatotoxicity)"
+  - "Neurologic exam: each cycle (vincristine neuropathy)"
+  - "LVEF: baseline and after 3 cycles if prior anthracycline"
+  - "Avoid tyramine-rich foods during procarbazine (MAOI effect)"
+
+dose_modifications:
+  - toxicity: "ANC <1.5 at day 1"
+    action: "Delay cycle up to 2 weeks; reduce procarbazine 25% if delay needed"
+  - toxicity: "Grade 3+ peripheral neuropathy (vincristine)"
+    action: "Discontinue vincristine; continue PL"
+  - toxicity: "Grade 3+ pulmonary toxicity (lomustine)"
+    action: "DISCONTINUE lomustine permanently"
+
+sources:
+  - SRC-NCCN-CNS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Based on RTOG 9802 (Shaw 2012 JCO) and Buckner 2016 NEJM (N=251): RT alone vs
+  RT + PCV in IDH-mutant (or 1p19q codeleted) LGG. RT+PCV: mOS 13.3 vs 7.8 years
+  (HR 0.59; p=0.003). mPFS 10.4 vs 4.0 years. OS benefit driven by IDH-mutant
+  tumors. NCCN Cat 1 for IDH-mutant LGG with high-risk features (age ≥40 OR
+  incomplete resection). Temozolomide is alternative chemotherapy partner for
+  IDH-mutant tumors (easier tolerability; RT+TMZ regimen also in use).

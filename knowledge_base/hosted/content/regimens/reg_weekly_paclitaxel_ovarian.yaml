@@ -1,0 +1,48 @@
+id: REG-WEEKLY-PACLITAXEL-OVARIAN
+name: "Weekly paclitaxel (metronomic) for platinum-resistant ovarian cancer"
+name_ua: "Паклітаксел щотижневий (метрономічний) при платинорезистентному раку яєчника"
+alternate_names: ["paclitaxel weekly ovarian", "metronomic paclitaxel ovarian", "dose-dense paclitaxel"]
+
+components:
+  - drug_id: DRUG-PACLITAXEL
+    dose: "80 mg/m²"
+    schedule: "IV weekly (days 1, 8, 15, 22 Q28D) or 3 of 4 weeks"
+    route: IV
+    notes: "Infuse over 1 hour; premedication mandatory for hypersensitivity. Alternative: 70 mg/m² weekly for frail patients"
+
+cycle_length_days: 28
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Dexamethasone 20 mg IV (or 10 mg if well-tolerated) 30-60 min before"
+  - "Diphenhydramine 50 mg IV 30-60 min before"
+  - "Famotidine 20 mg IV (or ranitidine equivalent) 30-60 min before"
+  - "Pre-medications mandatory every cycle (hypersensitivity reaction risk)"
+
+supportive_care:
+  - "Peripheral neuropathy assessment: each visit (dose-limiting cumulative toxicity)"
+  - "CBC: before each cycle (neutropenia common)"
+  - "Alopecia: expected (counsel before starting)"
+  - "Fluid retention: dexamethasone steroid effect with weekly dosing"
+
+dose_modifications:
+  - toxicity: "Grade 3+ peripheral neuropathy"
+    action: "Hold until Grade ≤1; reduce dose to 60 mg/m² if recurs"
+  - toxicity: "ANC <1.0 at treatment day"
+    action: "Skip week; G-CSF not routinely used with weekly schedule"
+  - toxicity: "Grade 3 hypersensitivity"
+    action: "Discontinue paclitaxel; consider docetaxel if platinum-refractory alternative needed"
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Weekly paclitaxel is NCCN Cat 1 for platinum-resistant recurrent ovarian cancer.
+  Phase 2 data (Lheureux 2020 Lancet): single-agent weekly paclitaxel ORR 18%;
+  mPFS 3.2 months. Inferior to mirvetuximab for FRα-high patients (SORAYA, MIRASOL)
+  but remains standard for FRα-low or post-mirvetuximab patients.
+  Weekly schedule (metronomic) preferred over Q3W for platinum-resistant ovarian —
+  better tolerability (less Grade 3+ neutropenia, less neuropathy per cycle) and
+  anti-angiogenic metronomic effect.
