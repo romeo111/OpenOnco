@@ -1,0 +1,146 @@
+id: ALGO-GIST-2L
+applicable_to_disease: DIS-GIST
+applicable_to_line_of_therapy: 2
+purpose: >
+  Sequential therapy cascade for advanced/metastatic GIST after 1L imatinib failure
+  or intolerance. Routes by: (1) PDGFRA D842V gate (avapritinib at any line),
+  (2) prior-line history (sunitinib 2L → regorafenib 3L → ripretinib 4L),
+  (3) fitness. All four sequential lines are NCCN Category 1.
+  This algorithm covers lines 2-4 in a single decision tree to handle patients
+  presenting at different stages of their sequential TKI cascade.
+
+output_indications:
+  - IND-GIST-2L-SUNITINIB
+  - IND-GIST-3L-REGORAFENIB
+  - IND-GIST-4L-RIPRETINIB
+  - IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+
+default_indication: IND-GIST-2L-SUNITINIB
+alternative_indication: IND-GIST-3L-REGORAFENIB
+
+decision_tree:
+  # Step 1 — PDGFRA D842V hard gate.
+  # Avapritinib is preferred regardless of prior therapy line.
+  # Sunitinib and regorafenib are largely inactive against D842V.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "PDGFRA D842V mutation confirmed on molecular testing"
+    if_true:
+      result: IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V
+      notes: >
+        PDGFRA D842V: avapritinib preferred regardless of prior imatinib failure
+        (IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V; NCCN Cat 1). Sunitinib and regorafenib
+        have minimal activity against D842V. If avapritinib was used 1L (correct per
+        NCCN), patient may be eligible for clinical trial at 2L (no standard 2L for
+        D842V after avapritinib failure; ripretinib active against non-D842V PDGFRA).
+    if_false:
+      next_step: 2
+    notes: "D842V gate evaluated at entry to cascade — do not advance to sunitinib if D842V present."
+
+  # Step 2 — Fitness gate.
+  # ECOG PS ≥4 is a hard contraindication per ECOG engine (CHARTER §8.3).
+  # ECOG 3 routes to BSC; ECOG 0-2 eligible for active TKI therapy.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - condition: "ECOG PS 0-2 (adequate for active TKI therapy)"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        ECOG PS 3-4: active TKI therapy unlikely to benefit; risk/benefit unfavorable.
+        ECOG 3: consider best supportive care; symptom-directed palliation; dose-reduced
+        sunitinib or regorafenib only after MDT discussion and explicit patient discussion
+        of expected toxicity vs limited potential benefit.
+        ECOG 4: hard gate — no active treatment (ECOG engine rule; CHARTER §8.3).
+
+  # Step 3 — Prior sunitinib check.
+  # If no prior sunitinib, this is the 2L presentation: route to sunitinib.
+  # If prior sunitinib given (progressed or intolerant), route to 3L.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "No prior sunitinib therapy (first active therapy after imatinib failure)"
+    if_true:
+      result: IND-GIST-2L-SUNITINIB
+      notes: >
+        2L presentation: sunitinib 50 mg PO daily (4 weeks on/2 weeks off) per
+        NCCN Cat 1 (SUN1111; Demetri 2006 Lancet; mTTP 27.3 vs 6.4 weeks; HR 0.33).
+        PDGFRA D842V already excluded at step 1. KIT exon 9: numerically higher
+        sunitinib benefit than exon 11 — no dose adjustment, just information.
+        Continuous 37.5 mg/day is NCCN-acceptable alternative (Heinrich 2012 Lancet Oncol).
+    if_false:
+      next_step: 4
+
+  # Step 4 — Prior regorafenib check.
+  # If prior sunitinib but no prior regorafenib, this is 3L: route to regorafenib.
+  # If prior regorafenib given (progressed or intolerant), route to 4L.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Prior sunitinib AND no prior regorafenib (second active therapy after imatinib + sunitinib failure)"
+    if_true:
+      result: IND-GIST-3L-REGORAFENIB
+      notes: >
+        3L presentation: regorafenib 160 mg PO daily (3 weeks on/1 week off) per
+        NCCN Cat 1 (GRID; Demetri 2013 Lancet; mPFS 4.8 vs 0.9 months; HR 0.27).
+        Active against KIT exon 17/18 activation-loop mutations (primary sunitinib
+        resistance mechanism) — rational sequential sequencing rationale.
+        Weekly LFTs × 2 months mandatory (hepatotoxicity surveillance).
+        Ukraine: registered; better NSZU access than sunitinib (CRC basket, off-label PA).
+    if_false:
+      next_step: 5
+
+  # Step 5 — 4L ripretinib gate.
+  # After imatinib + sunitinib + regorafenib failure: ripretinib is NCCN Cat 1.
+  # Ukraine access barrier: not registered, not NSZU (USD 32K/month).
+  - step: 5
+    evaluate:
+      all_of:
+        - condition: "Prior imatinib + sunitinib + regorafenib (all three prior lines documented)"
+        - condition: "ECOG PS 0-2 AND adequate organ function"
+    if_true:
+      result: IND-GIST-4L-RIPRETINIB
+      notes: >
+        4L presentation: ripretinib 150 mg PO daily per NCCN Cat 1 (INVICTUS;
+        Blay 2020; mPFS 6.3 vs 1.0 months; HR 0.15). Broad-spectrum switch-pocket
+        inhibitor — active across heterogeneous KIT secondary resistance mutations.
+        Ukraine access barrier: not registered, not NSZU; named-patient import
+        USD 32K/month. If ripretinib inaccessible: imatinib re-challenge (RIGHT
+        trial; NCCN Cat 2A; HR 0.46 vs placebo; lower magnitude but accessible).
+        Clinical trial enrollment preferred when available.
+    if_false:
+      result: null
+      notes: >
+        Beyond 4L or fitness insufficient: clinical trial strongly preferred.
+        Compassionate use/named-patient programs for investigational agents.
+        Best supportive care if no active therapy appropriate.
+
+sources:
+  - SRC-NCCN-GIST-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  GIST sequential cascade algorithm covering lines 2-4.
+  All four sequential lines are NCCN Category 1:
+    1L: imatinib (IND-GIST-1L-IMATINIB; MetaGIST meta-analysis)
+    2L: sunitinib (IND-GIST-2L-SUNITINIB; SUN1111; Demetri 2006 Lancet)
+    3L: regorafenib (IND-GIST-3L-REGORAFENIB; GRID; Demetri 2013 Lancet)
+    4L: ripretinib (IND-GIST-4L-RIPRETINIB; INVICTUS; Blay 2020)
+
+  PDGFRA D842V: avapritinib preferred at any line (step 1 gate).
+  KIT WT (SDH-deficient, NF1-mutant): limited activity across all TKIs —
+    clinical trial preferred; imatinib fallback only.
+  INTRIGUE trial (ripretinib vs sunitinib 2L) was NEGATIVE — ripretinib
+    confirmed ONLY at 4L+; sunitinib remains 2L SOC.
+
+  Ukraine drug access summary:
+    Sunitinib: registered; NOT NSZU-reimbursed for GIST (RCC only)
+    Regorafenib: registered; NSZU-reimbursed CRC; off-label PA for GIST
+    Ripretinib: NOT registered; NOT NSZU; USD 32K/month named-patient
+    Avapritinib: NOT registered; USD ~50K/month named-patient (D842V only)
+
+  Wired in ALGO-GIST-1L notes 2026-05-04 (Workstream DF).

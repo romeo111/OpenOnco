@@ -1,0 +1,167 @@
+id: IND-GIST-3L-REGORAFENIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 3
+  stage_requirements:
+    - "Unresectable or metastatic GIST with disease progression on imatinib (1L) AND sunitinib (2L)"
+    - "Or documented intolerance to sunitinib with prior imatinib failure"
+    - "KIT or PDGFRA-mutant GIST (or molecular status unknown pending testing)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: CrCl ≥30 mL/min; total bilirubin ≤1.5× ULN; ALT/AST ≤3× ULN"
+    - "No prior regorafenib therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KIT-MUTATION
+      value_constraint: "KIT any exon mutation — regorafenib active across secondary resistance exon 13/14 mutations; also active in PDGFRA-mutant GIST"
+  biomarker_requirements_excluded:
+    - "PDGFRA D842V mutation — avapritinib preferred regardless of prior therapy line"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 2: regorafenib 3L feasible; dose-start at 120 mg if ECOG 2 + borderline
+      organ function per NCCN guidance; escalate to 160 mg if tolerated.
+      PDGFRA D842V: avapritinib preferred (IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V);
+      regorafenib active but avapritinib superior.
+      KIT WT (SDH-deficient, NF1-mutant): limited activity — clinical trial preferred.
+
+recommended_regimen: REG-REGORAFENIB
+concurrent_therapy:
+  - "Antihypertensive titration: HTN in ~50-60%; ACEi or CCB preferred; check BP each cycle"
+  - "Hand-foot skin reaction prevention: urea-based emollient from day 1 of each cycle"
+  - "Hepatotoxicity monitoring: ALT/AST weekly × first 2 cycles, then q4 weeks; dose-reduce for G2 elevation"
+  - "Wound healing: hold regorafenib ≥4 weeks before major surgery"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q12 weeks (RECIST 1.1 + Choi criteria for GIST response)"
+  - "LFTs weekly × first 2 cycles, then with each cycle"
+  - "At progression: ripretinib 4L (IND-GIST-4L-RIPRETINIB; INVICTUS; NCCN Cat 1)"
+  - "Ukraine fallback at 4L if ripretinib inaccessible: imatinib re-challenge (RIGHT trial; NCCN Cat 2A; lower magnitude)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "4.5% (Demetri 2013 Lancet; all partial responses); clinical benefit rate 52.6%"
+  complete_response: "<1% (regorafenib is cytostatic in GIST; stable disease is primary clinical endpoint)"
+  progression_free_survival: "Median PFS 4.8 vs 0.9 months (HR 0.27, p<0.0001; GRID trial — Demetri 2013 Lancet)"
+  overall_survival_5y: "Median OS 17.4 vs 9.9 months (HR 0.77; p=0.19 NS — confounded by 85% crossover in placebo arm)"
+  notes: >
+    PRIMARY EVIDENCE: Demetri GD, et al. Lancet 2013;381:295-302 (GRID trial):
+    regorafenib 160 mg PO daily (3 weeks on/1 week off) vs placebo in imatinib+sunitinib-
+    refractory GIST (N=199); 1° endpoint PFS: 4.8 vs 0.9 months (HR 0.27, p<0.0001).
+    FDA approval February 25, 2013 (imatinib+sunitinib-refractory GIST).
+    NCCN GIST 2025: regorafenib Category 1 for 3L imatinib+sunitinib-refractory GIST.
+    Mechanism: multi-kinase inhibitor — KIT, PDGFRA, VEGFR-1/2/3, TIE-2, RET, RAF/MEK.
+    Active against secondary KIT resistance mutations (exon 17/18 activation loop) —
+    complements sunitinib (exon 13/14 V654A/T670I gatekeeper); sequential exposure rationale.
+
+hard_contraindications:
+  - "PDGFRA D842V mutation — avapritinib preferred (IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V)"
+  - "Active severe hepatic impairment (Child-Pugh B/C) — hepatotoxicity risk; fatal hepatic failure reported"
+  - "Active uncontrolled hemorrhage or hemoptysis"
+  - "Prior regorafenib therapy — no second-course benefit; proceed to ripretinib"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT  # ECOG 0-1 preferred; ECOG 2 use with dose vigilance
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "LFTs weekly × 2 months (hepatotoxicity surveillance), then q4 weeks"
+  - "Blood pressure baseline + each cycle (regorafenib HTN class effect)"
+  - "Urinalysis + urine protein baseline (VEGF inhibitor proteinuria)"
+  - "KIT/PDGFRA mutation status if not yet documented (secondary resistance profiling)"
+  - "Thyroid function baseline + q3 months"
+
+desired_tests:
+  - "MRI abdomen (hepatic metastasis characterization; CT preferred for standard monitoring)"
+  - "Cardiac biomarkers (troponin) if baseline cardiac risk factors"
+
+rationale: >
+  Regorafenib (Stivarga) is NCCN Category 1 third-line therapy for unresectable/metastatic
+  GIST after imatinib + sunitinib failure or intolerance. GRID Phase 3 RCT (Demetri 2013
+  Lancet; N=199): regorafenib 160 mg PO daily (3 weeks on/1 week off) vs placebo:
+  - Primary endpoint (PFS): 4.8 vs 0.9 months (HR 0.27; p<0.0001)
+  - Clinical benefit rate: 52.6% vs 9.1% (SD + PR)
+  - ORR: 4.5% (all PR; no CR) vs 0%
+  FDA approved February 2013 — second approved therapy for imatinib+sunitinib-refractory GIST.
+
+  Mechanism: multi-kinase inhibitor targeting KIT + PDGFRA (primary oncogenic drivers) +
+  VEGFR-1/2/3 (anti-angiogenic) + TIE-2 + RET + RAF/MEK. Critically, regorafenib maintains
+  activity against KIT exon 17/18 activation-loop secondary resistance mutations (the primary
+  mechanism of sunitinib resistance after initial sunitinib benefit) — providing rational
+  sequential sequencing: imatinib 1L (exon 11/9 primary) → sunitinib 2L (exon 13/14
+  secondary) → regorafenib 3L (exon 17/18 secondary).
+
+  SEQUENTIAL THERAPY RATIONALE: GIST demonstrates genomic evolution at progression;
+  sequential TKI therapy exploits different mutation spectrum coverage at each line.
+  Maintaining sequential drug access is the clinical priority — multi-drug resistance
+  (exon 17+18 compound mutations) ultimately limits all available agents.
+
+  DOSE MANAGEMENT: Grade 3-4 HFSR (~20%), fatigue (~8%), HTN (~23%), hepatotoxicity
+  (~14% G3-4 ALT elevation) drive dose interruption and reduction. Start at 80 or
+  120 mg in ECOG 2 patients; weekly LFTs × 2 months non-negotiable.
+
+  UKRAINE CONTEXT: Regorafenib (Stivarga) registered in Ukraine AND NSZU-reimbursed
+  for colorectal cancer (CRC). GIST-specific NSZU reimbursement requires off-label
+  prior authorization (Nakaz No. 1000 pathway). Practical access better than sunitinib
+  for GIST via CRC NSZU basket — confirm GIST-specific PA pathway with local payer.
+  Better Ukraine access than ripretinib (not registered, not NSZU; USD 32K/month).
+
+rationale_ua: >
+  Регорафеніб (Stivarga) — NCCN Кат 1 терапія 3L GIST після невдачі іматинібу + сунітинібу.
+  GRID (Demetri 2013 Lancet; N=199): mPFS 4,8 vs 0,9 міс (ВР 0,27; p<0,0001).
+  FDA схвалено лютий 2013. Механізм: мультикіназний інгібітор KIT/PDGFRA/VEGFR/RAF.
+  Послідовна терапія GIST: іматиніб → сунітиніб → регорафеніб → ріпретиніб.
+  Україна: регорафеніб зареєстрований; НСЗУ — КРР; off-label GIST при спеціальному дозволі.
+  Доступність краща ніж сунітиніб (НСЗУ лише RCC) та ріпретиніб (не зареєстрований).
+  Моніторинг гепатотоксичності: АЛТ/АСТ щотижня × 2 місяці — обов'язково.
+  Гіпертензія: контроль АТ кожного циклу; підбір гіпотензивних (ІАПФ або БКК).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ застосовувати при PDGFRA D842V — авапритиніб ефективніший"
+  - "НЕ пропускати тижневий контроль АЛТ/АСТ перші 2 місяці — гепатотоксичність регорафенібу може бути фатальною"
+  - "НЕ призначати при Child-Pugh B/C — печінкова недостатність у важкому ступені"
+  - "НЕ продовжувати при активній неконтрольованій кровотечі або кровохарканні"
+  - "НЕ плутати схему GIST (160 мг 3/1) з CRC дозуванням — ОДНАКОВА схема; але пам'ятайте про стартову дозу 80/120 мг у ECOG 2"
+  - "При прогресуванні: ріпретиніб 4L (INVICTUS; NCCN Кат 1); при недоступності — повторний іматиніб (RIGHT trial; Cat 2A)"
+
+sources:
+  - source_id: SRC-NCCN-GIST-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN GIST 2025 Category 1: regorafenib 160 mg PO daily (3 weeks on/1 week off)
+      for unresectable or metastatic GIST after imatinib + sunitinib failure or intolerance.
+      Sequential cascade: imatinib → sunitinib → regorafenib → ripretinib.
+
+known_controversies:
+  - topic: "Regorafenib starting dose: 160 mg vs dose-escalation from 80-120 mg"
+    positions:
+      - position: "160 mg daily (3/1 schedule): FDA-approved GRID trial dose; NCCN standard"
+        sources: [SRC-NCCN-GIST-2025]
+      - position: "Start 80 or 120 mg with escalation to 160 mg: pragmatic dose-titration used in clinical practice, especially ECOG 2, borderline LFTs, or known HFSR susceptibility — reduces early discontinuation"
+        sources: [SRC-NCCN-GIST-2025]
+    our_default: "160 mg (3/1) per FDA/NCCN; dose-reduce at start for ECOG 2 + borderline organ function; escalate as tolerated."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DF).
+  Reuses REG-REGORAFENIB (same 160 mg 3/1 dosing as FDA-approved GIST schedule).
+  SRC-GRID-DEMETRI-2013 (Lancet) not authored as separate source; citing via
+  SRC-NCCN-GIST-2025 until trial-level source added.
+  GIST sequential cascade fully covered: 1L IND-GIST-1L-IMATINIB,
+  2L IND-GIST-2L-SUNITINIB, 3L IND-GIST-3L-REGORAFENIB (this file),
+  4L IND-GIST-4L-RIPRETINIB — all NCCN Cat 1.

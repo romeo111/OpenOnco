@@ -1,0 +1,152 @@
+id: IND-GIST-2L-SUNITINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 2
+  stage_requirements:
+    - "Unresectable or metastatic GIST with disease progression on or intolerance to imatinib 1L"
+    - "KIT or PDGFRA-mutant GIST (or molecular status unknown pending testing)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: CrCl ≥30 mL/min; LVEF ≥45%; total bilirubin ≤1.5× ULN"
+    - "No prior sunitinib therapy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KIT-MUTATION
+      value_constraint: "KIT exon 9 or 11 mutation preferred for sunitinib benefit; WT may be lower sensitivity"
+  biomarker_requirements_excluded:
+    - "PDGFRA D842V mutation — avapritinib preferred regardless of prior therapy line"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 2: sunitinib 2L feasible; dose-reduce at start if ECOG 2 + borderline
+      organ function. KIT exon 9 mutant GISTs may have higher sunitinib benefit
+      than exon 11 (Demetri 2006 subgroup). PDGFRA D842V: avapritinib preferred
+      (IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V); sunitinib largely inactive.
+      SDH-deficient and NF1-mutant GIST (WT): sunitinib activity is limited —
+      clinical trial preferred for WT GIST at all lines.
+
+recommended_regimen: REG-SUNITINIB-RCC
+concurrent_therapy:
+  - "Levothyroxine supplementation: hypothyroidism in ~20-40% with long-term sunitinib — TSH q3 months"
+  - "Antihypertensive titration: HTN in ~30%; ACE inhibitor or CCB preferred"
+  - "Hand-foot skin reaction prevention: urea-based emollient from day 1"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q12 weeks (RECIST 1.1 + Choi criteria for GIST response)"
+  - "LVEF q12 weeks (sunitinib cardiotoxicity monitoring)"
+  - "At progression: regorafenib 3L (IND-GIST-3L-REGORAFENIB; GRID trial; NCCN Cat 1)"
+  - "After regorafenib failure: ripretinib 4L (IND-GIST-4L-RIPRETINIB; INVICTUS; NCCN Cat 1)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "6.8% (partial response; Demetri 2006 Lancet vs 0% placebo); clinical benefit rate 53%"
+  complete_response: "<1% (sunitinib is cytostatic in GIST; stable disease is primary benefit)"
+  progression_free_survival: "Median TTP 27.3 vs 6.4 weeks (HR 0.33, p<0.0001; Demetri 2006 Lancet)"
+  overall_survival_5y: "Median OS 72.7 vs 64.9 weeks (HR 0.76; p=0.306 NS but OS confounded by crossover)"
+  notes: >
+    PRIMARY EVIDENCE: Demetri GD, et al. Lancet 2006;368:1329-1338 (SUN1111; NCCTG N1J04;
+    Phase 3 RCT): sunitinib 50 mg PO daily 4/2 vs placebo in imatinib-refractory/intolerant GIST
+    (N=312); 1° endpoint TTP: 27.3 vs 6.4 weeks (HR 0.33, p<0.0001).
+    FDA approval January 26, 2006.
+    NCCN GIST 2025: sunitinib Category 1 for 2L imatinib-refractory/intolerant GIST.
+    KIT exon 9 subgroup: sunitinib numerically superior; KIT exon 11 lower TTP (Demetri 2006).
+    Continuous 37.5 mg/day is an alternative to 4/2 schedule (comparable efficacy per Heinrich
+    2012 Lancet Oncol) — but KB uses 4/2 (standard FDA-approved schedule).
+
+hard_contraindications:
+  - "PDGFRA D842V mutation — avapritinib preferred (IND-GIST-1L-AVAPRITINIB-PDGFRA-D842V)"
+  - "LVEF <45% or NYHA III/IV heart failure — cardiac toxicity risk"
+  - "Prior sunitinib therapy — no second-course benefit; proceed to regorafenib"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT  # ECOG 0-1 preferred; ECOG 2 use with dose vigilance
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "LVEF (ECHO or MUGA) baseline + q12 weeks"
+  - "TSH baseline + q3 months"
+  - "Urinalysis + urine protein/creatinine ratio (proteinuria)"
+  - "KIT/PDGFRA mutation status (molecular testing — exon 9/11/13/17 KIT; exon 12/14/18 PDGFRA)"
+  - "Fasting blood glucose baseline"
+
+desired_tests:
+  - "MRI abdomen (hepatic metastasis characterization; CT preferred for standard monitoring)"
+  - "Cardiac biomarkers (troponin) if baseline cardiac risk factors"
+
+rationale: >
+  Sunitinib (Sutent) is NCCN Category 1 second-line therapy for unresectable/metastatic
+  GIST after imatinib failure or intolerance. The SUN1111 Phase 3 RCT (Demetri 2006 Lancet)
+  demonstrated sunitinib 50 mg PO daily (4 weeks on/2 weeks off) vs placebo:
+  - Primary endpoint (TTP): 27.3 vs 6.4 weeks (HR 0.33; p<0.0001)
+  - Clinical benefit rate: 53% vs 9% (SD + PR)
+  - ORR: 6.8% (all PR; no CR) vs 0%
+  FDA approved January 2006 — first approved therapy for imatinib-refractory GIST.
+
+  Mechanism: sunitinib inhibits KIT, PDGFRA, VEGFR-1/2/3, CSF-1R, RET, FLT3 — the KIT
+  inhibition overcomes many primary imatinib resistance mutations (notably KIT exon 13/14
+  secondary resistance mutations) though not all.
+
+  SEQUENTIAL THERAPY: GIST treatment is a sequential cascade:
+  1L imatinib → 2L sunitinib → 3L regorafenib → 4L ripretinib (all NCCN Cat 1).
+  Always discuss next-line options at 2L — establish access pathways for regorafenib and
+  ripretinib before progression to minimize treatment gaps.
+
+  UKRAINE CONTEXT: Sunitinib (Sutent/generics) registered in Ukraine. Not NSZU-reimbursed
+  for GIST (NSZU coverage for RCC only). Hospital compassionate or out-of-pocket access.
+  Regorafenib (Stivarga; NSZU-reimbursed for CRC) — check GIST-specific reimbursement
+  pathway; off-label NSZU use possible with prior authorization.
+
+rationale_ua: >
+  Сунітиніб (Sutent) — NCCN Кат 1 терапія 2L GIST після невдачі іматинібу.
+  SUN1111 (Demetri 2006 Lancet): mTTP 27,3 vs 6,4 тижні (ВР 0,33; p<0,0001).
+  FDA схвалено 2006. Механізм: інгібітор KIT/PDGFRA/VEGFR.
+  Послідовна терапія GIST: іматиніб → сунітиніб → регорафеніб → ріпретиніб.
+  Україна: сунітиніб зареєстрований; НСЗУ — лише RCC. Госпітальне/персональне фінансування
+  для GIST. Регорафеніб НСЗУ — КРР; off-label GIST при спеціальному дозволі.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ застосовувати при PDGFRA D842V — авапритиніб ефективніший"
+  - "НЕ ігнорувати моніторинг ФВЛШ — серцева токсичність сунітинібу: ECHO q12 тижнів"
+  - "НЕ пропускати ТТГ контроль — гіпотиреоз у 20-40% при тривалій терапії; тироксин при потребі"
+  - "НЕ плутати схему GIST (50 мг 4/2) з pNET (37,5 мг безперервно) або RCC (обидві схеми прийнятні)"
+  - "НЕ продовжувати при ФВЛШ <45% без кардіологічної консультації"
+  - "При прогресуванні: регорафеніб 3L (GRID; NCCN Кат 1) — не повторювати сунітиніб"
+
+sources:
+  - source_id: SRC-NCCN-GIST-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN GIST 2025 Category 1: sunitinib 50 mg PO daily (4 weeks on/2 weeks off)
+      for unresectable or metastatic GIST after imatinib failure or intolerance.
+      Sequential post-imatinib cascade: sunitinib → regorafenib → ripretinib.
+
+known_controversies:
+  - topic: "4/2 vs continuous 37.5 mg sunitinib schedule for GIST"
+    positions:
+      - position: "4/2 (50 mg daily × 28d on, 14d off): FDA-approved schedule; SUN1111 trial design; mTTP 27.3 weeks"
+        sources: [SRC-NCCN-GIST-2025]
+      - position: "Continuous 37.5 mg daily: Heinrich 2012 Lancet Oncol Phase 2 — comparable efficacy; reduced grade 3-4 adverse events; preferred by some centers for improved tolerability"
+        sources: [SRC-NCCN-GIST-2025]
+    our_default: "4/2 schedule (50 mg) as per FDA approval; continuous 37.5 mg acceptable per NCCN; MDT/patient preference."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DF).
+  Reuses REG-SUNITINIB-RCC (same 50 mg 4/2 dosing as FDA-approved GIST schedule).
+  SRC-SUN1111-DEMETRI-2006 (Lancet) not authored as separate source; citing via
+  SRC-NCCN-GIST-2025 until trial-level source added.
