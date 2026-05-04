@@ -34,25 +34,42 @@ decision_tree:
     - red_flag: RF-CAR-T-ELIGIBLE
     - condition: "CD19+ confirmed"
   if_true:
-    result: IND-DLBCL-2L-LISOCEL
-    notes: >
-      Primary-refractory or early-relapse (≤12m) + CAR-T eligible:
-      liso-cel (TRANSFORM; Kamdar 2022, Lancet; EFS HR 0.35; ORR 86% vs 48%;
-      NCCN Cat 1) preferred over salvage chemo → autoSCT.
-      Axi-cel (ZUMA-7; EFS HR 0.24; NCCN Cat 1) is an equivalent Cat 1 alternative
-      — now separately modeled as IND-DLBCL-2L-AXICEL-CART (Workstream AP). Product
-      selection: liso-cel preferred for lower ICANS G≥3 profile (~4% vs 21%); axi-cel
-      when liso-cel unavailable or physician preference. Both NCCN Cat 1.
-      Bridging chemotherapy permitted during ~3-4 week manufacturing window.
-      Ukraine: international CAR-T referral required (no domestic centres).
-      CAR-T inaccessible → fall back to IND-DLBCL-2L-RDHAP-AUTOSCT.
+    next_step: 12
   if_false:
     result: IND-DLBCL-2L-RDHAP-AUTOSCT
     notes: >
       Late relapse (>12m from 1L) OR CAR-T ineligible: R-ICE or R-DHAP × 2-3 cycles
       (CORAL: ORR ~63% each; NS difference) → BEAM-autoSCT for responders (≥PR).
       NCCN Cat 1. For late-relapse DLBCL, autoSCT consolidation remains standard.
-  notes: "Partially wired - RF-CAR-T-ELIGIBLE gates manufacturing eligibility (organ function, no active CNS disease, no active infection, ECOG 0-1); early-relapse timing criterion remains MDT-text (time-from-1L not RF-modelled)."
+  notes: "Partially wired - RF-CAR-T-ELIGIBLE gates manufacturing eligibility; early-relapse timing remains MDT-text. if_true updated 2026-05-04 (Workstream CP): routes to step 12 (liso-cel vs axi-cel access gate) instead of direct liso-cel result."
+
+  # Step 12 — liso-cel vs axi-cel product selection gate.
+  # Both are NCCN Cat 1 for 2L early-relapse/primary-refractory DLBCL.
+  # TRANSFORM (Kamdar 2022 Lancet): liso-cel EFS HR 0.35; ICANS G≥3 ~4%.
+  # ZUMA-7 (Locke 2022 NEJM): axi-cel EFS HR 0.24; ICANS G≥3 ~21%.
+  # Liso-cel preferred when accessible (lower ICANS toxicity profile).
+  # Axi-cel when liso-cel inaccessible at CAR-T referral centre.
+  # Both require international referral from Ukraine (no domestic centres).
+- step: 12
+  evaluate:
+    all_of:
+    - condition: "Lisocabtagene maraleucel (liso-cel; Breyanzi) accessible at CAR-T referral centre (certified centre + manufacturing slot + funding pathway)"
+  if_true:
+    result: IND-DLBCL-2L-LISOCEL
+    notes: >
+      Liso-cel accessible: lisocabtagene maraleucel (TRANSFORM; Kamdar 2022 Lancet;
+      EFS HR 0.35; ORR 86% vs 48%; NCCN Cat 1; lower ICANS G≥3 profile ~4% vs 21%).
+      Preferred over axi-cel when available due to improved ICANS tolerability.
+      Bridging chemotherapy permitted during ~3-4 week manufacturing window.
+      Ukraine: international referral required (no domestic certified centres).
+  if_false:
+    result: IND-DLBCL-2L-AXICEL-CART
+    notes: >
+      Liso-cel inaccessible at referral centre (formulary, manufacturing, funding):
+      axicabtagene ciloleucel (ZUMA-7; Locke 2022 NEJM; EFS HR 0.24; ORR 83%; NCCN Cat 1).
+      Equivalent Cat 1 efficacy outcome. ICANS G≥3 ~21% (higher than liso-cel ~4%)
+      — intensive monitoring required. Ukraine: international referral required.
+  notes: "Step 12 added 2026-05-04 (Workstream CP): liso-cel vs axi-cel access gate for early-relapse/primary-refractory DLBCL 2L. Both NCCN Cat 1; liso-cel preferred (lower ICANS); axi-cel when liso-cel unavailable. Gap (3) CLOSED."
 - step: 2
   evaluate:
     all_of:
@@ -116,7 +133,8 @@ notes: 'AUTHORED 2026-05-04: IND-DLBCL-2L-RDHAP-AUTOSCT (CORAL NCCN Cat 1; R-ICE
   UPDATED 2026-05-04: IND-DLBCL-2L-LISOCEL wired at step 11 (early-relapse ≤12m + CAR-T eligible → liso-cel preferred over autoSCT; TRANSFORM NCCN Cat 1; EFS HR 0.35). Step 1 if_true now routes to step 11 before autoSCT decision.
   AUTHORED 2026-05-04 (Workstream AP): IND-DLBCL-2L-AXICEL-CART created (ZUMA-7; EFS HR 0.24; NCCN Cat 1); added to output_indications; step 11 notes updated. Liso-cel remains primary at step 11 (lower ICANS); axi-cel is documented equivalent alternative.
   UPDATED 2026-05-04 (Workstream BJ): IND-DLBCL-3L-EPCORITAMAB + IND-DLBCL-3L-GLOFITAMAB wired at step 22 (epcoritamab EPCORE-NHL-1 ORR 63%; glofitamab NP30179 ORR 52%; both NCCN Cat 2A). Gap (1) CLOSED. Step 21 if_false → step 22 → step 3 fallback. Both pre-existing indication entities now surfaced by engine.
-  OOS / wiring gaps: (2) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land. (3) Dedicated step 12 (liso-cel vs axi-cel sub-decision) not yet added — MDT product choice; both entities exist for surfacing.
+  UPDATED 2026-05-04 (Workstream CP): Step 12 added as liso-cel vs axi-cel access gate (early-relapse/primary-refractory DLBCL 2L). Step 11 if_true now routes to step 12; liso-cel preferred (TRANSFORM; ICANS G≥3 ~4%); axi-cel when liso-cel unavailable (ZUMA-7; ICANS G≥3 ~21%); both NCCN Cat 1. Gap (3) CLOSED.
+  OOS / wiring gaps: (2) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
 reviewer_signoffs_v2:
