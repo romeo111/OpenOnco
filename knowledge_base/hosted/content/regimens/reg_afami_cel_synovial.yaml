@@ -1,0 +1,74 @@
+id: REG-AFAMI-CEL-SYNOVIAL
+name: "Afamitresgene autoleucel (afami-cel) for MAGE-A4+ HLA-A*02:01+ synovial sarcoma"
+name_ua: "Афамітресген аутолейцел при MAGE-A4+ HLA-A*02:01+ синовіальній саркомі"
+alternate_names: ["Tecelra", "afami-cel synovial sarcoma", "TCR-T cell synovial sarcoma", "SPEARHEAD-1 regimen"]
+
+components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "25 mg/m² IV QD"
+    schedule: "Days -5 to -1 (lymphodepletion, prior to infusion)"
+    route: IV
+    notes: "Lymphodepletion: fludarabine days -5 through -1. Concurrent with cyclophosphamide days -5 to -3."
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "900 mg/m² IV QD"
+    schedule: "Days -5 to -3 (lymphodepletion)"
+    route: IV
+    notes: "Cyclophosphamide days -5 to -3 (first 3 days of lymphodepletion). Mesna uroprotection required. Aggressive IV hydration."
+  - drug_id: DRUG-AFAMI-CEL
+    dose: "Target: 0.1–10 × 10^9 MAGE-A4c1032-specific cells/kg"
+    schedule: "Single IV infusion on Day 0 (2-7 days after last lymphodepletion dose)"
+    route: IV
+    notes: "One-time infusion. Thaw and infuse per REMS protocol. Tocilizumab and corticosteroids at bedside."
+
+cycle_length_days: 0
+number_of_cycles: "Single infusion (one-time treatment)"
+
+special_requirements:
+  - "REMS REQUIRED: TECELRA REMS program enrollment mandatory"
+  - "HLA-A*02:01 STATUS: must be confirmed positive before leukapheresis (validated HLA typing)"
+  - "MAGE-A4 expression: IHC or RT-PCR testing recommended (MAGE-A4/A8 positive)"
+  - "Manufacturing time: ~6 weeks from leukapheresis to product release"
+  - "Bridge therapy: may be needed for rapidly progressing disease during manufacturing"
+  - "Lymphodepletion completion: ≥48h before afami-cel infusion and ≤7 days after"
+  - "ECOG PS 0-1 required; adequate organ function"
+  - "Hospitalization: minimum 7 days post-infusion recommended; CRS monitoring"
+
+premedications:
+  - "Mesna (for cyclophosphamide uroprotection): per institutional protocol"
+  - "IV hydration: 3 L/day during cyclophosphamide days"
+  - "Antiemetics: 5-HT3 antagonist + dexamethasone (cyclophosphamide emetogenic)"
+  - "Anti-infective prophylaxis during lymphodepletion: TMP-SMX + fluconazole + acyclovir"
+  - "Pre-infusion day 0: acetaminophen 650 mg PO + diphenhydramine 25 mg IV"
+
+supportive_care:
+  - "G-CSF/pegfilgrastim: after afami-cel infusion for prolonged neutropenia (do NOT give during afami-cel expansion period, ~2 weeks post-infusion, without hematology guidance)"
+  - "CRS management: tocilizumab 8 mg/kg IV + corticosteroids per grade"
+  - "CBC: daily during lymphodepletion; then every 2-3 days × 4 weeks post-infusion"
+  - "LFTs + CMP: weekly × 4 weeks"
+  - "Infection monitoring: fever protocol; broad-spectrum antibiotics for febrile neutropenia"
+  - "Do NOT transfuse irradiated blood products unless CMV-negative (risk of graft-vs-host)"
+
+dose_modifications:
+  - toxicity: "Grade 3+ CRS"
+    action: "Tocilizumab 8 mg/kg IV; add corticosteroids if no improvement at 12-24h; ICU-level monitoring"
+  - toxicity: "Grade 4 CRS or life-threatening ICANS"
+    action: "ICU admission; high-dose corticosteroids; supportive care; notify REMS"
+  - toxicity: "Prolonged cytopenias (ANC <500 >7 days)"
+    action: "Filgrastim 5 mcg/kg/day SC; transfusion support; infectious workup"
+
+sources:
+  - SRC-NCCN-STS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  SPEARHEAD-1 (Demetri G et al. Lancet 2024; NCT04044768): Phase 2 trial.
+  HLA-A*02:01+ synovial sarcoma, ≥1 prior anthracycline or ifosfamide.
+  Treated cohort n=44: ORR 37% (16/44 responders), mDOR 11.3 months,
+  DCR 68%, mOS 17.5 months. CRS 58% any grade; Grade 3+: 10%.
+  FDA accelerated approval August 2024. First solid tumor TCR-T approval.
+  NCCN STS 2025: preferred option for MAGE-A4+/HLA-A*02:01+ synovial sarcoma
+  2L+ (Cat 2A). Lymphodepletion regimen: flu/cy (fludarabine 25 mg/m² × 5d +
+  cyclophosphamide 900 mg/m² × 3d) — standard across TCR/CAR-T programs.
+  Note: afami-cel also shows signal in myxoid/round cell liposarcoma (MRCLS)
+  with MAGE-A4 expression (cohort B of SPEARHEAD-1) — off-label in 2026.

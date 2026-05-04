@@ -1,0 +1,85 @@
+id: IND-STS-SYNOVIAL-2L-AFAMI-CEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  histologic_subtype: "Synovial sarcoma (SS) — monophasic or biphasic"
+  line_of_therapy: 2
+  stage_requirements:
+    - "Unresectable or metastatic synovial sarcoma"
+    - "Prior anthracycline-based or ifosfamide-based chemotherapy"
+  biomarker_requirements:
+    - "HLA-A*02:01 POSITIVE (mandatory — validated HLA typing required)"
+    - "MAGE-A4 expression positive by IHC or RNA-seq (recommended; ~80% of SS express MAGE-A4)"
+
+recommended_regimen: REG-AFAMI-CEL-SYNOVIAL
+
+concurrent_therapy: []
+
+followed_by:
+  - "Single one-time infusion — no maintenance therapy"
+  - "Surveillance CT Q3 months post-infusion × 2 years"
+  - "Salvage: clinical trial preferred post-afami-cel progression"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 2A
+
+expected_outcomes:
+  overall_response_rate: "37% (SPEARHEAD-1)"
+  median_duration_of_response_months: 11.3
+  disease_control_rate: "68%"
+  median_overall_survival_months: 17.5
+  notes: "SPEARHEAD-1 (Lancet 2024): n=44 treated. ORR 37%, mDOR 11.3 months, DCR 68%. First TCR-T approval in solid tumors."
+
+hard_contraindications:
+  - "HLA-A*02:01 NEGATIVE (absolute contraindication — mechanism requires HLA-A*02:01 presentation)"
+  - "Active uncontrolled infection"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "ECOG PS 2+ (relative; afami-cel requires tolerance of lymphodepletion)"
+  - "Inadequate organ function precluding lymphodepletion chemotherapy"
+  - "Prior allogeneic stem cell transplant (graft-vs-host risk from lymphodepletion)"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "RF-STS-ORGAN-DYSFUNCTION"
+  - "RF-STS-INFECTION-SCREENING"
+  - "RF-STS-RAPID-PROGRESSION (consider bridge therapy; manufacturing 6 weeks)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HLA-A*02:01 typing (validated, high-resolution HLA typing)"
+  - "MAGE-A4 IHC or RNA expression testing (tissue biopsy if archival not available)"
+  - TEST-CECT-CAP
+  - "Cardiac evaluation: ECHO (cyclophosphamide cardiotoxicity risk)"
+  - "Pulmonary function tests (fludarabine pulmonary toxicity)"
+
+desired_tests:
+  - "CT or MRI of primary site and metastatic sites (baseline tumor measurement for response assessment)"
+  - "FDG-PET (optional — baseline metabolic activity)"
+  - "Infectious disease evaluation: CMV, EBV serology (lymphodepletion immunosuppression)"
+
+rationale: >
+  Afami-cel (Tecelra, afamitresgene autoleucel) received FDA accelerated approval
+  August 2024 for HLA-A*02:01+ unresectable/metastatic synovial sarcoma with prior
+  chemotherapy. SPEARHEAD-1 (Demetri 2024 Lancet; NCT04044768): ORR 37%, mDOR
+  11.3 months, DCR 68%, mOS 17.5 months (n=44). First solid tumor TCR-T cell therapy.
+  NCCN STS 2025 Cat 2A. Mandatory TECELRA REMS. HLA-A*02:01 positivity is a hard
+  requirement (TCR recognizes MAGE-A4 peptide exclusively in HLA-A*02:01 context).
+  MAGE-A4 expressed in ~80% of synovial sarcomas. Manufacturing time ~6 weeks:
+  bridge therapy planning required for rapidly progressing disease.
+
+sources:
+  - SRC-NCCN-STS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream DZ). Afami-cel synovial sarcoma 2L+
+  indication. SPEARHEAD-1 accelerated approval. Two-reviewer clinical signoff required.
+  Note: MAGE-A4 also expressed in myxoid/round cell liposarcoma (MRCLS) --
+  off-label use being studied in SPEARHEAD-1 cohort B; do NOT route MRCLS here without
+  clinical signoff on expanded indication.

@@ -1,0 +1,65 @@
+id: REG-TARLATAMAB-SCLC
+name: "Tarlatamab for relapsed/refractory extensive-stage SCLC (≥3rd line)"
+name_ua: "Тарлатамаб при рецидивуючому/рефрактерному МДЛ (≥3 лінія)"
+alternate_names: ["Imdelltra", "DLL3 BiTE SCLC", "tarlatamab-dlle"]
+
+components:
+  - drug_id: DRUG-TARLATAMAB
+    dose: "Step-up: Cycle 1 Day 1: 1 mg IV; Cycle 1 Day 8: 10 mg IV; then 10 mg IV Q14D"
+    schedule: "Q14D (2-hour IV infusion)"
+    route: IV
+    notes: >
+      MANDATORY HOSPITALIZATION for C1D1 and C1D8 (CRS monitoring for ≥24h post-infusion).
+      Step-up dosing required: 1 mg first dose, 10 mg second dose, 10 mg maintenance.
+      For subsequent doses (C1D15 onward): outpatient acceptable with ≥2h observation.
+      Pre-medicate: acetaminophen 650 mg PO + diphenhydramine 25 mg IV/PO 30 min before.
+      Have tocilizumab 8 mg/kg IV + dexamethasone 10 mg IV ready at bedside for CRS management.
+
+cycle_length_days: 14
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Acetaminophen 650 mg PO 30 min before infusion"
+  - "Diphenhydramine 25 mg IV or PO 30 min before infusion"
+  - "Dexamethasone: NOT routinely given (may blunt T-cell activation); reserve for CRS management"
+
+supportive_care:
+  - "CRS management: Grade 1-2 — supportive care; Grade 3 — tocilizumab 8 mg/kg IV; Grade 4 — tocilizumab + corticosteroids; discontinue if Grade 4 recurrent"
+  - "ICANS: hold for Grade 2+ neurological symptoms; corticosteroids for Grade 2+ ICANS"
+  - "CBC + CMP: before each dose"
+  - "Infection prophylaxis: not standardized (no lymphodepletion required)"
+  - "DLL3 testing: not required for eligibility but recommended for prognostic purposes"
+
+dose_modifications:
+  - toxicity: "Grade 2 CRS"
+    action: "Hold next dose until resolved to Grade ≤1; can restart at same dose"
+  - toxicity: "Grade 3 CRS"
+    action: "Hold; administer tocilizumab; restart at same dose when resolved; consider step-down to 1 mg if Grade 3 on C1D8"
+  - toxicity: "Grade 4 CRS (life-threatening)"
+    action: "PERMANENTLY DISCONTINUE"
+  - toxicity: "Grade 2 ICANS"
+    action: "Hold until resolution; corticosteroids; restart when Grade ≤1"
+  - toxicity: "Grade 3+ ICANS"
+    action: "PERMANENTLY DISCONTINUE; high-dose corticosteroids (1-2 mg/kg/day methylprednisolone)"
+
+special_requirements:
+  - "Hospitalization mandatory for Cycle 1 Day 1 AND Cycle 1 Day 8 (first 1 mg and first 10 mg doses)"
+  - "Facility must have ICU capability and tocilizumab on site"
+  - "No lymphodepletion required"
+  - "Patient and caregiver education on CRS symptoms (fever, hypotension, hypoxia)"
+
+sources:
+  - SRC-NCCN-SCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  DeLLphi-301 (Ahn MJ et al. NEJM 2023; NCT05269823): Phase 2, n=88 ES-SCLC
+  ≥2 prior lines. Flat 10 mg dose arm: ORR 23%, Grade 3+ CRS 10%.
+  Step-up 1→10 mg arm: ORR 40% (DLL3-high), Grade 3+ CRS 4%.
+  mDOR 9.7 months, mOS 13.2 months for step-up arm.
+  FDA accelerated approval May 2024. NCCN SCLC 2025: Category 2A for 3L+.
+  No mandatory DLL3 testing per FDA label; benefit seen across DLL3
+  expression levels though higher expression correlates with better response.
+  Alternative to topotecan/lurbinectedin rechallenge for patients who have
+  progressed after ≥2 prior lines.

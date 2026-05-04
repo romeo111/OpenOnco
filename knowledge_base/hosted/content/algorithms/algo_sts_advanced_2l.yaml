@@ -17,6 +17,7 @@ output_indications:
   - IND-STS-ADVANCED-2L-TRABECTEDIN
   - IND-STS-ADVANCED-2L-ERIBULIN
   - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE
+  - IND-STS-SYNOVIAL-2L-AFAMI-CEL
 
 default_indication: IND-STS-ADVANCED-2L-GEMDOC
 alternative_indication: IND-STS-ADVANCED-2L-PAZOPANIB
@@ -117,6 +118,40 @@ decision_tree:
     if_false:
       next_step: 5
     notes: "Partially wired — 1L ifosfamide-naive status and CrCl kept as MDT-evaluated text (no RF available for prior-ifosfamide status or synovial sarcoma subtype at this level). Falls through to step 5 (GemDoc/pazopanib) if not synovial sarcoma or if ifosfamide contraindicated."
+
+  # Step 42 — Synovial sarcoma + afami-cel gate (HLA-A*02:01 positive).
+  # Afami-cel (Tecelra) FDA approved August 2024 for HLA-A*02:01+ synovial sarcoma
+  # with prior chemotherapy. SPEARHEAD-1 (Lancet 2024): ORR 37%, mDOR 11.3 months.
+  # This step captures SS patients who are HLA-A*02:01+ and MAGE-A4+.
+  # Applies whether ifosfamide was used 1L or not (eligibility: >=1 prior line).
+  # Manufacturing time ~6 weeks: bridge therapy planning required.
+  - step: 42
+    evaluate:
+      all_of:
+        - condition: "STS subtype = synovial sarcoma (SS18-SSX fusion or histological diagnosis)"
+        - condition: "HLA-A*02:01 positive (confirmed by validated high-resolution HLA typing)"
+        - condition: "MAGE-A4 expression confirmed (IHC or RNA-seq)"
+        - condition: "Afami-cel accessible (TECELRA REMS center, named-patient or approved)"
+        - condition: "ECOG PS 0-1 and adequate organ function for lymphodepletion"
+    if_true:
+      result: IND-STS-SYNOVIAL-2L-AFAMI-CEL
+      notes: >
+        HLA-A*02:01+ MAGE-A4+ synovial sarcoma: afami-cel (Tecelra) preferred when
+        accessible (FDA accelerated approval August 2024; NCCN STS 2025 Cat 2A).
+        SPEARHEAD-1 (Demetri Lancet 2024): ORR 37%, mDOR 11.3 months, DCR 68%.
+        First solid-tumor TCR-T therapy. REMS required (TECELRA REMS).
+        Manufacturing ~6 weeks: plan bridge therapy for rapidly progressive disease.
+        Lymphodepletion: fludarabine 25 mg/m2 x5d + cyclophosphamide 900 mg/m2 x3d.
+        ECOG PS 0-1 and adequate organ function required for lymphodepletion tolerance.
+        HLA-A*02:01 prevalence: ~40-45% in European/US populations; ~20-25% in East Asian.
+        If afami-cel inaccessible or patient ineligible: proceed to ifosfamide HD
+        (IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE if ifosfamide-naive) or GemDoc/pazopanib.
+    if_false:
+      next_step: 5
+    notes: >
+      Step 42 added 2026-05-04: afami-cel gate for HLA-A*02:01+ MAGE-A4+ synovial sarcoma.
+      Falls through to step 5 (GemDoc/pazopanib) if HLA-negative, MAGE-A4-negative,
+      afami-cel inaccessible, or ECOG/organ function insufficient for lymphodepletion.
 
   # Step 5 — Other non-adipocytic STS: chemotherapy tolerance assessment.
   # Non-LMS, non-UPS, non-liposarcoma STS (synovial sarcoma, angiosarcoma,
