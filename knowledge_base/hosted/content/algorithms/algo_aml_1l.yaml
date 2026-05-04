@@ -15,6 +15,7 @@ output_indications:
   - IND-AML-1L-7-3-GO-CBF
   - IND-AML-1L-CPX351-SECONDARY
   - IND-AML-1L-IDH1-IVOSIDENIB-AZA
+  - IND-AML-1L-QUIZARTINIB-FLT3ITD
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -114,8 +115,35 @@ decision_tree:
         - red_flag: RF-AML-TRANSFORMATION-PROGRESSION
     if_true:
       result: IND-AML-1L-7-3
+      notes: >
+        Fit AML with high-risk biology, FLT3 mutation, NPM1 mutation, or
+        MDS-transformed: 7+3 induction (daunorubicin 60 mg/m² d1-3 +
+        cytarabine 100-200 mg/m² d1-7). For FLT3-TKD (D835/I836) or
+        combined ITD+TKD: add midostaurin 50 mg BID continuous (RATIFY;
+        NCCN Cat 1) via regimen layer adjustment — quizartinib inactive
+        against TKD. AlloHCT in CR1 for high-risk biology and
+        FLT3-ITD/high-allelic-burden. Aggressive track (Cat 1 preferred
+        over standard): quizartinib+7+3 for confirmed FLT3-ITD (see
+        alternative below).
+      alternatives:
+        - indication_id: IND-AML-1L-QUIZARTINIB-FLT3ITD
+          nccn_category: "1"
+          criteria: >
+            FLT3-ITD confirmed (NOT D835/I836 TKD); QTc <470 ms at baseline;
+            age 18–75; fit for intensive 7+3; no non-interruptible strong
+            CYP3A4 inhibitors; planned 3-year quizartinib maintenance post-chemo.
+          note: >
+            QuANTUM-First (Erba 2023 Lancet; NCT02668653; N=539): mOS 31.9 vs
+            15.1 months (HR 0.78; p=0.032); 4-yr OS ~39% vs 30%; FDA approved
+            July 20, 2023; NCCN Cat 1. Preferred over midostaurin for confirmed
+            FLT3-ITD (Type-II FLT3 inhibitor — ITD-specific; does NOT cover TKD).
+            Requires strict QTc management: baseline ECG, K+ ≥4.0/Mg++ ≥2.0
+            before each cycle, avoid concomitant QT-prolonging drugs, dose-reduce
+            50% with strong CYP3A4 inhibitors. Ukraine: not registered (access barrier
+            — midostaurin also unfunded; clinical trial pathway needed).
     if_false:
       next_step: 6
+    notes: "Step 5 updated 2026-05-04 (Workstream EZ): IND-AML-1L-QUIZARTINIB-FLT3ITD wired as Cat 1 aggressive-track alternative for confirmed FLT3-ITD+ AML. QuANTUM-First (Erba 2023 Lancet; mOS 31.9 vs 15.1 mo; HR 0.78). FLT3-TKD/combined → midostaurin via regimen layer. Default 7+3 preserved for non-FLT3 flags."
 
   # Step 6 — IDH1 actionable. AGILE (DiNardo 2022 Lancet Oncol): ivosidenib 500 mg QD
   # + azacitidine 75 mg/m² d1-7 q28d for ND IDH1-mutated AML unfit for intensive
@@ -177,12 +205,20 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-VIALE-A-DINARDO-2020
   - SRC-AGILE-DINARDO-2022
+  - SRC-QUANTUM-FIRST-ERBA-2023
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream EZ): IND-AML-1L-QUIZARTINIB-FLT3ITD wired at
+  step 5 as Cat 1 aggressive-track alternative for confirmed FLT3-ITD+ AML
+  (QuANTUM-First; Erba 2023 Lancet; mOS 31.9 vs 15.1 mo; HR 0.78; FDA Jul 2023).
+  FLT3-TKD (D835/I836) or combined ITD+TKD → midostaurin via regimen layer (not
+  quizartinib — Type-II inhibitor inactive against TKD). Gap CLOSED.
   Fit-vs-unfit triage is the dominant decision. FLT3-ITD/TKD adds
-  midostaurin via REG-AML-7-3 component dose_adjustment, not via
-  separate algorithm branch. CBF + CD33+ adds fractionated GO via
+  midostaurin via REG-AML-7-3 component dose_adjustment; quizartinib
+  now surfaces as Cat 1 aggressive-track alternative for ITD-confirmed patients.
+  CBF + CD33+ adds fractionated GO via
+  IND-AML-1L-7-3-GO-CBF (step 4 — additive 2026-04-30, ALFA-0701); CBF + CD33+ adds fractionated GO via
   IND-AML-1L-7-3-GO-CBF (step 4 — additive 2026-04-30, ALFA-0701);
   CBF without explicit CD33-positivity remains on plain 7+3 path
   preserving prior behavior. Transplant eligibility is a parallel
