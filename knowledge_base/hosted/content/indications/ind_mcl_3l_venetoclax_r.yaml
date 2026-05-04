@@ -1,0 +1,195 @@
+id: IND-MCL-3L-VENETOCLAX-R
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed/refractory MCL after ≥2 prior lines including a covalent BTK inhibitor (ibrutinib, acalabrutinib, zanubrutinib)"
+    - "Pirtobrutinib inaccessible OR post-pirtobrutinib progression OR BTK-C481 mutation precluding covalent BTKi benefit"
+    - "CAR-T ineligible or CAR-T-failed — venetoclax is post-CAR-T option for fit patients"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L (pre-ramp; TLS prophylaxis for high burden), CrCl ≥30 mL/min"
+    - "CD20+ confirmed (for rituximab component)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active severe infection — venetoclax + rituximab causes significant immunosuppression; treat and stabilize first"
+    - "Strong CYP3A4 inhibitor use not stoppable (azole antifungals, ritonavir) — venetoclax AUC dramatically increased; fatal TLS risk"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No absolute age cutoff for venetoclax. Elderly patients (>70) with adequate
+      organ function can receive venetoclax; rituximab may be omitted in frail patients
+      with cardiac comorbidity (venetoclax monotherapy ORR 53% MCL — Davids 2017 JCO).
+      TLS risk is high in MCL (high lymphocyte burden, bulky disease) — hospitalization
+      for first ramp-up steps in high-TLS-risk patients is standard.
+
+recommended_regimen: REG-VENETOCLAX-RITUXIMAB
+regimen_adaptation_notes: >
+  REG-VENETOCLAX-RITUXIMAB is the MURANO schedule (fixed-duration 24 months) designed
+  for CLL. In MCL, venetoclax is typically used CONTINUOUSLY (not fixed 24 months)
+  until progression or intolerance, as MCL does not achieve the deep molecular remissions
+  seen in CLL. MCL-specific adaptation:
+  - Venetoclax ramp-up: same 5-week ramp (20→50→100→200→400 mg/day); dose = 400 mg/day
+    (MCL FDA label dose; not 800 mg). Note: Davids 2017 used 400-900 mg doses;
+    400 mg is standard per NCCN MCL 2025.
+  - Rituximab: 375 mg/m² IV q28d × 6 cycles (start after ramp completion).
+    If rituximab previously used and patient rituximab-refractory, substitute with
+    obinutuzumab (off-label; some centers).
+  - Duration: venetoclax continuous until progression/intolerance (not 24-month fixed).
+    TLS monitoring: same as MURANO — inpatient first dose ramp for high-risk patients.
+  - TLS risk in MCL is HIGH: MCL has high tumor burden + rapid cell cycling; all patients
+    should have TLS prophylaxis (allopurinol 300 mg/day × ≥7 days before ramp start);
+    hydration mandatory; high-risk patients inpatient for week 1 of each ramp step.
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Venetoclax monotherapy 400 mg PO daily continuous (no rituximab): ORR 53%
+      CR 18% (Davids 2017 JCO n=28 MCL cohort). Use when rituximab contraindicated
+      (cardiac, prior infusion reaction Grade ≥3, CD20 loss) or for heavily pre-treated
+      patients. NCCN MCL 2025 Category 2A for venetoclax monotherapy.
+  - regimen_id: null
+    description: >
+      Venetoclax + ibrutinib (off-label): small series in post-BTKi MCL; combination
+      can overcome BTK resistance in some cases (different binding modes). AIM trial
+      (Tam 2018 NEJM) was CLL/SLL — extrapolated to MCL. Limited evidence; use in
+      clinical trial or MDT decision context only. Not a standard-of-care recommendation.
+
+concurrent_therapy:
+  - "Allopurinol 300 mg PO daily: start ≥72h before first venetoclax dose; continue through ramp-up (TLS prophylaxis — mandatory)"
+  - "Aggressive oral hydration 1.5-2L/day during ramp-up (TLS prevention)"
+  - "PJP prophylaxis: TMP-SMX 160/800 mg 3×/week (venetoclax + rituximab significant immunosuppression)"
+  - "AVOID strong CYP3A4 inhibitors: azoles (fluconazole, itraconazole, voriconazole), ritonavir — venetoclax AUC increases 5-6×; fatal TLS risk"
+  - "Antiviral prophylaxis: valacyclovir 500 mg daily (HSV/VZV reactivation with rituximab)"
+
+followed_by:
+  - "Continue venetoclax 400 mg/day until progression or intolerance (not fixed 24 months — unlike CLL MURANO)"
+  - "Response assessment: CT at 3 months, then q3-6 months"
+  - "Post-venetoclax relapse: pirtobrutinib (if not yet tried); allogeneic SCT referral for fit younger patients; clinical trial"
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~53% (Davids 2017 JCO; venetoclax mono; MCL cohort n=28)"
+  cr_rate: "~18% (Davids 2017)"
+  median_duration_of_response_months: "~8.1 months (Davids 2017 venetoclax mono)"
+  notes: >
+    Venetoclax in MCL evidence base:
+    - Davids 2017 (JCO; n=106 NHL expansion incl. 28 MCL): venetoclax 400-900 mg/day
+      MCL cohort ORR 53% (CR 18%; PR 35%); median DOR 8.1 months;
+      MCL had high initial response but relapse common (less durable than CLL).
+    - BCL-2 overexpression in MCL: ~70-85% of MCL expresses BCL-2 (t(14;18) or
+      SOX11/p53-independent amplification); venetoclax is biologically rationale.
+    - Venetoclax + rituximab (VenR) in MCL: limited prospective MCL-specific data;
+      off-label extrapolation from MURANO CLL schedule (Seymour 2018 NEJM); small
+      series suggest ORR 60-70% with VenR in MCL; no randomized data.
+    - NCCN MCL 2025 Category 2A: venetoclax ± rituximab for R/R MCL (≥2 prior lines).
+    - ESMO MCL 2024: venetoclax-based regimens as 3L+ option for post-BTKi MCL.
+    - Key limitation: no head-to-head vs pirtobrutinib (BRUIN MCL-321) in post-cBTKi
+      MCL. Pirtobrutinib (ORR 50-57%; mPFS 7.4 mo) has similar or better efficacy
+      with more manageable toxicity (no TLS risk). Venetoclax preferred when
+      pirtobrutinib inaccessible or after pirtobrutinib failure.
+
+hard_contraindications:
+  - "Strong CYP3A4 inhibitor not stoppable (venetoclax AUC ×5-6 increase; fatal TLS risk)"
+  - "Tumor lysis syndrome active (treat first, then ramp)"
+  - "Active uncontrolled infection (venetoclax + rituximab immunosuppression)"
+  - "ECOG PS ≥3 (frailty; TLS risk not manageable without intensive monitoring)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Pirtobrutinib accessible (BRUIN MCL-321; ORR 50-57%) → IND-MCL-3L-PIRTOBRUTINIB preferred (no TLS risk, oral monotherapy)"
+  - condition: "CAR-T eligible and not yet tried → brexucel (IND-MCL-3L-BREXUCEL-CART) or liso-cel (IND-MCL-3L-LISOCEL) preferred (potentially curative)"
+  - condition: "CD20 lost at relapse → venetoclax monotherapy (omit rituximab); ORR 53% Davids 2017"
+  - condition: "CYP3A4 inhibitor use not interruptible → venetoclax contraindicated; pirtobrutinib or CDK4/6 inhibitor clinical trial"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Uric acid + LDH + phosphorus + potassium: TLS baseline and serial during ramp-up (q6-8h first dose, then q24h per MURANO protocol)"
+  - "CT chest/abdomen/pelvis: baseline at progression (tumor bulk determines TLS risk category)"
+  - "CrCl: venetoclax dose not adjusted for renal impairment BUT TLS clearance impaired with CrCl <30 — hospitalization during ramp"
+  - "Relapse biopsy: confirm MCL histology and CD20 status (rare CD20 loss after rituximab)"
+  - "BCL-2 IHC: not required for venetoclax prescribing but may help predict depth of response"
+
+desired_tests:
+  - "BCL-2 expression IHC: ≥50% expression correlates with better venetoclax response in MCL (hypothesis; retrospective data)"
+  - "TP53 mutation (NGS): TP53-mutated MCL has worse venetoclax outcomes; affects counseling"
+  - "MIPI score at progression: prognostic"
+  - "Beta-2 microglobulin + LDH: TLS risk stratification"
+
+rationale: >
+  Venetoclax (BCL-2 inhibitor, BH3-mimetic) targets the anti-apoptotic BCL-2 protein
+  overexpressed in ~70-85% of MCL. MCL is unique among B-cell lymphomas in having
+  both BCL-2 overexpression AND cyclin D1 dysregulation, making it biologically
+  susceptible to venetoclax.
+
+  Post-BTKi MCL landscape:
+  - After cBTKi failure, options are: pirtobrutinib (BRUIN MCL-321; ORR 50-57%;
+    mPFS 7.4 mo), CAR-T (brexucel/liso-cel; if eligible), or venetoclax-based therapy.
+  - Venetoclax fills the gap when: (a) pirtobrutinib not accessible (Ukraine: not
+    NSZU-funded; EAP/import required); (b) post-pirtobrutinib failure; (c) CAR-T
+    ineligible AND BTK-exhausted; (d) BCL-2 expression confirmed high.
+
+  Evidence:
+  - Davids 2017 (JCO): venetoclax mono ORR 53% in MCL cohort; BCL-2+ disease
+    correlates with response.
+  - VenR (off-label MURANO-style): small series ORR ~60-70%; no MCL-specific RCT.
+  - NCCN MCL 2025: venetoclax ± rituximab Category 2A for ≥2 prior lines.
+  - ESMO MCL 2024: venetoclax as a reasonable 3L+ option in post-BTKi MCL.
+
+  TLS management is the primary challenge — MCL has high tumor burden and rapid
+  proliferating cells. The 5-week ramp-up protocol (same as CLL MURANO) is
+  mandatory; high-TLS-risk patients (LDH >2× ULN, bulky disease) require inpatient
+  monitoring during first ramp steps.
+
+  Ukraine context:
+  - Venetoclax (Venclyxto): registered in Ukraine for CLL + AML (combo);
+    off-label for MCL. Available via oncology prescription; cost significant
+    (~$3,000-5,000/month); some NSZU partial reimbursement via compassionate use.
+  - Rituximab: registered, widely accessible (biosimilars available).
+  - Pirtobrutinib: NOT registered in Ukraine; venetoclax fills this gap.
+
+rationale_ua: >
+  Венетоклакс (інгібітор BCL-2) + ритуксимаб — ОРВ ~53-70% при рецидивуючому
+  ЛКЗ після цБТКі (Davids 2017 JCO; венетоклакс моно ОРВ 53% n=28 ЛКЗ кагорта).
+  NCCN кат.2A для ≥2 ліній ЛКЗ. Застосовується при: (1) пертобрутиніб недоступний
+  (в Україні не зареєстрований); (2) після невдачі CAR-T; (3) після пертобрутинібу.
+  ТЛС-профілактика ОБОВ'ЯЗКОВА: алопуринол 300 мг/добу ≥72 год до рампінгу +
+  гідратація + моніторинг (K, фосфор, сечова кислота q6-8год першого дня).
+  Уникати азольних антимікотиків (CYP3A4) — небезпека ТЛС.
+  В Україні: венетоклакс (Venclyxto) зареєстрований (ХЛЛ, ГМЛ); off-label ЛКЗ;
+  ритуксимаб доступний.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN MCL 2025 Category 2A: venetoclax (± rituximab) for relapsed/refractory
+      MCL after ≥2 prior lines including cBTKi. BCL-2 overexpression supports
+      rationale; TLS risk management mandatory.
+  - source_id: SRC-ESMO-MCL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO MCL 2024: venetoclax-based therapy as 3L+ option in post-BTKi MCL
+      with BCL-2 overexpression; limited prospective MCL-specific data.
+
+do_not_do:
+  - "Заборонено при прийомі сильних інгібіторів CYP3A4 (азоли, ритонавір): AUC венетоклаксу ×5-6; фатальний ТЛС"
+  - "Без профілактики ТЛС: алопуринол + гідратація + серійний моніторинг (K, фосфор, сечова к-та) — обов'язково ПЕРЕД початком рампінгу"
+  - "Якщо пертобрутиніб доступний: він кращий варіант (ОРВ 50-57%, без ризику ТЛС); венетоклакс — при недоступності"
+  - "CD20 втрачений (рецидив): не давати ритуксимаб; венетоклакс моно замість VenR"
+  - "ЛКЗ у фазі рампінгу: уникати вакцинацій живими вакцинами, уникати телефонних контактів з інфекційними хворими"
+  - "Фіксований 24-місячний курс (як MURANO для ХЛЛ) НЕ застосовується при ЛКЗ: продовжувати до прогресування/токсичності"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
