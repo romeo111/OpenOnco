@@ -1,0 +1,79 @@
+id: REG-NIVO-IPI-MESOTHELIOMA
+disease_context: DIS-MESOTHELIOMA
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-NIVOLUMAB
+    brand_name: "Opdivo"
+    dose: "3 mg/kg IV over 30 min, day 1"
+    route: IV
+    schedule: "q14 days (every 2 weeks); up to 2 years"
+    dose_modifications:
+      - trigger: "Grade 3 immune-mediated AE (pneumonitis, hepatitis, colitis, nephritis)"
+        action: "Hold nivolumab; methylprednisolone 1-2 mg/kg/d; resume when resolved to ≤Grade 1 and corticosteroids tapered to ≤10 mg/d prednisone equivalent"
+      - trigger: "Grade 4 immune-mediated AE or recurrent Grade 3"
+        action: "Permanently discontinue"
+      - trigger: "Grade 2 hepatitis (AST/ALT 3-5× ULN)"
+        action: "Hold; methylprednisolone 0.5-1 mg/kg/d; resume when resolved"
+  - drug_id: DRG-IPILIMUMAB
+    brand_name: "Yervoy"
+    dose: "1 mg/kg IV over 30 min, day 1 (same day as nivolumab)"
+    route: IV
+    schedule: "q42 days (every 6 weeks); up to 2 years"
+    dose_modifications:
+      - trigger: "Grade 3 immune-mediated AE (colitis, hepatitis, dermatitis)"
+        action: "Hold ipilimumab; methylprednisolone 1-2 mg/kg/d; resume when resolved to ≤Grade 1"
+      - trigger: "Grade 4 or recurrent Grade 3"
+        action: "Permanently discontinue ipilimumab; may continue nivolumab alone if risk/benefit favorable"
+
+critical_dosing_note: >
+  CheckMate-743 mesothelioma dosing is DISTINCT from other nivo+ipi regimens.
+  Do NOT use NSCLC dosing (nivo 360mg flat + ipi 1mg/kg q3w) or RCC dosing
+  (nivo 3mg/kg + ipi 1mg/kg q3w x4, then nivo maintenance). Mesothelioma-
+  specific schedule: nivo 3mg/kg q2w + ipi 1mg/kg q6w throughout, up to 2 years.
+
+premedication:
+  - "No standard premedication required"
+  - "Baseline: CBC, CMP, LFTs, TSH, cortisol, ECG, LVEF if cardiac risk"
+  - "Hepatitis B and C screening before first dose"
+
+cycle_length_days: 14
+total_planned_cycles: "Up to 2 years total (nivo continuous q2w; ipi q6w); discontinue earlier for progression or unacceptable toxicity"
+
+monitoring:
+  - "CBC, CMP, LFTs, TSH: q2-4 weeks — immune-mediated toxicity screening"
+  - "Cortisol (morning), ACTH if adrenal insufficiency suspected"
+  - "CT chest + abdomen: q8-12 weeks — use modified RECIST for MPM (bidimensional pleural measurement)"
+  - "Pulmonary function tests at baseline (MPM causes restrictive pattern; monitor for immune pneumonitis vs disease progression)"
+  - "Diarrhea assessment each visit — immune colitis most common cause of treatment discontinuation"
+
+key_toxicities:
+  - toxicity: "Immune-mediated hepatitis"
+    grade_3_4_incidence: "~4%"
+    management: "Hold; methylprednisolone 1-2 mg/kg/d; mycophenolate mofetil if refractory; rarely infliximab (risk of fulminant hepatitis with infliximab in CTLA-4 toxicity)"
+  - toxicity: "Immune-mediated pneumonitis"
+    grade_3_4_incidence: "~2-3%"
+    management: "Hold both agents; CT chest; methylprednisolone 1-2 mg/kg/d; bronchoscopy if unclear vs disease progression"
+  - toxicity: "Immune-mediated colitis"
+    grade_3_4_incidence: "~4%"
+    management: "Hold; methylprednisolone; infliximab 5 mg/kg IV if Grade 3-4 corticosteroid-refractory (safe in colitis, unlike hepatitis)"
+  - toxicity: "Hypothyroidism"
+    grade_3_4_incidence: "~8-12% all grade"
+    management: "Levothyroxine replacement; rare dose modification required"
+  - toxicity: "Dermatitis"
+    grade_3_4_incidence: "~1-2%"
+    management: "Topical corticosteroids for Grade 1-2; systemic for Grade 3+"
+
+watchpoints_ua:
+  - "УВАГА: Доза ніволумабу в мезотеліомі — 3 мг/кг q2w (вагова доза), а НЕ фіксована 360 мг q3w як при НМКЛЛ або 480 мг q4w як при НМКЛЛ підтримуючій терапії"
+  - "УВАГА: Іпілімумаб 1 мг/кг кожні 6 тижнів — НЕ q3w і НЕ q6w дозу 3 мг/кг (як при меланомі або нирково-клітинному раку)"
+  - "УВАГА: Імунно-опосередкований гепатит — НЕ використовувати інфліксімаб при Grade 3+ (ризик фульмінантного гепатиту при CTLA-4 токсичності); мікофенолат мофетил при рефрактерності"
+  - "УВАГА: При Grade 3+ імунних ускладненнях — тримати обидва препарати; при відновленні можна продовжити ніволумаб монотерапію якщо іпілімумаб постійно відмінений"
+  - "УВАГА: Базовий статус функції легенів (спірометрія) — МПМ викликає рестриктивний дефект; пневмоніт може бути важко відрізнити від прогресування хвороби"
+  - "УВАГА: Modified RECIST для МПМ — плевральне вимірювання (двовимірне); стандартний CT RECIST 1.1 не застосовується"
+  - "УВАГА: Гепатит B/C скринінг обов'язковий до першої дози — реактивація HBV під ICI описана"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
