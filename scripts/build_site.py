@@ -460,6 +460,50 @@ self.addEventListener('fetch', (event) => {
     return {"path": "sw.js", "cache_name": cache_name}
 
 
+def _dis_id_to_icd_map() -> dict[str, str]:
+    """Direct `{DIS-...: ICD-O-3 code}` map built by reading disease YAMLs.
+
+    Supersedes the simple reverse of `_icd_to_disease_id_map` which loses
+    entries when multiple diseases share the same ICD-O-3 morphology code
+    (e.g. 8500/3 is shared by breast, PDAC, and salivary carcinomas).
+    """
+    import yaml as _yaml
+    src = REPO_ROOT / "knowledge_base" / "hosted" / "content" / "diseases"
+    out: dict[str, str] = {}
+    if not src.is_dir():
+        return out
+    for path in sorted(src.glob("*.yaml")):
+        try:
+            data = _yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        did = data.get("id")
+        code = (data.get("codes") or {}).get("icd_o_3_morphology")
+        if did and code:
+            out[str(did).upper()] = str(code)
+    return out
+
+
+def _resolve_disease_icd(ex_json: dict, dis_id_to_icd: dict[str, str]) -> str | None:
+    """Return the ICD-O-3 morphology code for a patient profile.
+
+    Tries `disease.icd_o_3_morphology` first (legacy hand-crafted profiles),
+    then falls back to resolving `disease.id` (DIS-...) via the KB disease
+    map so that auto-generated and new biomarker-driven examples are correctly
+    grouped in the try.html example dropdown.
+    """
+    if not isinstance(ex_json, dict):
+        return None
+    disease = ex_json.get("disease") or {}
+    icd = disease.get("icd_o_3_morphology")
+    if icd:
+        return str(icd)
+    did = (disease.get("id") or "").upper()
+    return dis_id_to_icd.get(did)
+
+
 def bundle_examples(output_dir: Path) -> dict:
     """Write docs/examples.json — array of {label, json} entries used as
     the 'Load example' dropdown on try.html.
@@ -468,6 +512,7 @@ def bundle_examples(output_dir: Path) -> dict:
     used by /try.html for instant dropdown population. Full payload is
     lazy-fetched only when a user actually picks an example.
     """
+    dis_id_to_icd = _dis_id_to_icd_map()
     payload = []
     manifest = []
     for c in CASES:
@@ -491,10 +536,7 @@ def bundle_examples(output_dir: Path) -> dict:
             "case_id": c.case_id,
             "label": c.label_ua,
             "label_en": label_en,
-            "disease_icd": (
-                ex_json.get("disease", {}).get("icd_o_3_morphology")
-                if isinstance(ex_json, dict) else None
-            ),
+            "disease_icd": _resolve_disease_icd(ex_json, dis_id_to_icd),
         })
     out = output_dir / "examples.json"
     out.write_text(
@@ -1627,6 +1669,7 @@ def render_try(
     bundle_version: str = "",
     questionnaires_manifest: list = None,
     examples_manifest: list = None,
+    disease_id_map: dict = None,
 ) -> str:
     # Pyodide assets live at site root — root-relative paths work for both
     # /try.html (EN, default) and /ukr/try.html (UA mirror). The Pyodide
@@ -1638,8 +1681,10 @@ def render_try(
     # an option — saves ~870 KB on first paint.
     qm = questionnaires_manifest if questionnaires_manifest is not None else []
     em = examples_manifest if examples_manifest is not None else []
+    dim = disease_id_map if disease_id_map is not None else {}
     qm_json = json.dumps(qm, ensure_ascii=False).replace("</", "<\\/")
     em_json = json.dumps(em, ensure_ascii=False).replace("</", "<\\/")
+    dim_json = json.dumps(dim, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!DOCTYPE html>
 <html lang="{'en' if target_lang == 'en' else 'uk'}">
 <head>
@@ -1955,6 +2000,8 @@ const loadedDiseases = new Set();
 // Build-time manifests — instant dropdown population, no fetch.
 const QUESTIONNAIRES_MANIFEST = {qm_json};
 const EXAMPLES_MANIFEST = {em_json};
+// DIS-... → ICD-O-3 code, for resolving disease.id in profiles that lack icd_o_3_morphology.
+const DISEASE_ID_MAP = {dim_json};
 let questionnaires = null;   // lazy-fetched from /questionnaires.json on first need
 let examples = null;         // lazy-fetched from /examples.json on first need
 let _questionnairesPromise = null;
@@ -3432,9 +3479,14 @@ diseaseSelect.addEventListener('change', async () => {{
 }});
 
 function findQuestionnaireForProfile(profile) {{
-  // Match by ICD-O-3 morphology — manifest carries disease_icd, no need
-  // to wait for full questionnaires payload.
-  const code = profile && profile.disease && profile.disease.icd_o_3_morphology;
+  // Match by ICD-O-3 morphology first (legacy profiles), then fall back to
+  // resolving disease.id via DISEASE_ID_MAP (auto-generated / new examples).
+  const disease = profile && profile.disease || {{}};
+  let code = disease.icd_o_3_morphology;
+  if (!code) {{
+    const did = (disease.id || '').toUpperCase();
+    code = did ? DISEASE_ID_MAP[did] : null;
+  }}
   if (!code) return -1;
   return QUESTIONNAIRES_MANIFEST.findIndex(q => q.disease_icd === code);
 }}
@@ -7073,6 +7125,7 @@ def build_site(output_dir: Path) -> dict:
     questionnaires_payload = bundle_questionnaires(output_dir)
     questionnaires_manifest = questionnaires_payload.get("manifest", [])
     examples_manifest = examples_payload.get("manifest", [])
+    disease_id_map = _dis_id_to_icd_map()
 
     # ── EN build (default at site root) ──
     # English is the primary language; the root URLs (/, /capabilities.html,
@@ -7095,6 +7148,7 @@ def build_site(output_dir: Path) -> dict:
             bundle_version=bundle_version,
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
+            disease_id_map=disease_id_map,
         ), encoding="utf-8")
 
     # ── UA build (mirror at /ukr/) ──
@@ -7118,6 +7172,7 @@ def build_site(output_dir: Path) -> dict:
             bundle_version=bundle_version,
             questionnaires_manifest=questionnaires_manifest,
             examples_manifest=examples_manifest,
+            disease_id_map=disease_id_map,
         ), encoding="utf-8")
 
     case_paths_uk, case_paths_en = _build_all_cases_parallel(output_dir)
