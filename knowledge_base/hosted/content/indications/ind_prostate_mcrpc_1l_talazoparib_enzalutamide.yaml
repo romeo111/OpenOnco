@@ -1,0 +1,118 @@
+id: IND-PROSTATE-MCRPC-1L-TALAZOPARIB-ENZALUTAMIDE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "Asymptomatic or minimally symptomatic (TALAPRO-2 enrolment)"
+    - "Castrate testosterone level (<50 ng/dL)"
+    - "No prior enzalutamide (TALAPRO-2 enrolled enzalutamide-naive patients)"
+  biomarker_requirements:
+    - "HRR mutation (BRCA1/2, ATM, CDK12, PALB2, RAD51B/C/D, FANCA, CHEK2) — MANDATORY; tissue NGS or ctDNA"
+    - "BRCA1/2 patients derive largest benefit (rPFS HR 0.20); other HRR genes (HR 0.46 HRR-mutant cohort)"
+    - "HRR testing (somatic + germline) required before initiation"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HRR-PANEL
+      value_constraint: "pathogenic alteration in HRR gene panel (BRCA1/2 or other HRR)"
+      required: true
+  demographic_constraints:
+    ecog_max: 2
+    prior_enzalutamide: false
+
+recommended_regimen: REG-TALAZOPARIB-ENZALUTAMIDE-MCRPC
+
+concurrent_therapy:
+  - "LHRH agonist/antagonist (maintain castration throughout)"
+
+followed_by:
+  - "At progression: cabazitaxel (if docetaxel-naive) or Lu-PSMA-617 (if PSMA-PET positive)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_radiographic_pfs_months: null
+  pfs_hr_hrr_mutant: 0.46
+  pfs_hr_brca12: 0.20
+  pfs_p_value: "<0.001 (HRR-mutant primary endpoint)"
+  notes: >
+    TALAPRO-2 (Agarwal 2023 Lancet Oncol; NCT03395197; Phase 3):
+    Talazoparib 0.5 mg QD + enzalutamide 160 mg QD vs placebo + enzalutamide in
+    mCRPC (enzalutamide-naive; HRR-mutant primary cohort).
+    HRR-mutant primary cohort: rPFS HR 0.46 (p<0.001); BRCA1/2 subgroup: rPFS HR 0.20
+    (dramatic; one of strongest PARPi signals). ORR (measurable disease): ~62% vs ~43%.
+    FDA approved June 2023 (Talzenna + Xtandi). NCCN PROSTATE 2025: Cat 1 for
+    BRCA1/2-mutant mCRPC; also covers other HRR genes (HR 0.46 for full HRR-mutant
+    cohort — broader coverage vs MAGNITUDE which is BRCA1/2-only).
+
+hard_contraindications:
+  - "HRR wild-type (no mutation detected) — talazoparib+enzalutamide not approved for HRR-WT"
+  - "Prior enzalutamide (TALAPRO-2 enrolled enzalutamide-naive; cross-resistance likely)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "MDS or AML (PARPi class effect)"
+  - "CrCl <15 mL/min (talazoparib not studied; contraindicated)"
+  - "Prior seizures (enzalutamide component)"
+
+red_flags_triggering_alternative:
+  - "Non-BRCA HRR mutation only (ATM, CDK12) with prior ARPI exposure — olaparib mono or MAGNITUDE preferred"
+  - "Prior abiraterone failure — enzalutamide cross-resistance likely; Lu-PSMA or cabazitaxel preferred"
+  - "Baseline anemia Grade ≥2 — talazoparib-related anemia will worsen; consider niraparib+abiraterone or olaparib mono"
+
+required_tests:
+  - TEST-PSA-SERUM
+  - TEST-TESTOSTERONE-SERUM
+  - TEST-BONE-SCAN
+  - TEST-GERMLINE-BRCA-PANEL
+  - TEST-SOMATIC-HRR-PANEL
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+
+desired_tests:
+  - TEST-PSMA-PET
+  - "ctDNA HRR panel (alternative to tissue NGS)"
+
+rationale: >
+  Talazoparib (PARP1/2 inhibitor) combined with enzalutamide (androgen receptor
+  inhibitor) exploits synthetic lethality in HRR-deficient mCRPC. TALAPRO-2
+  (Agarwal 2023 Lancet Oncol; Phase 3) demonstrated rPFS HR 0.46 (HRR-mutant
+  cohort) and HR 0.20 in the BRCA1/2 subgroup — the most dramatic PARPi benefit
+  reported in mCRPC. FDA approved June 2023 (Talzenna+Xtandi) for BRCA1/2-mutant
+  mCRPC. NCCN PROSTATE 2025: Category 1.
+  Key advantage over olaparib monotherapy (PROfound, post-ARPI): combination PARPi
+  + ARPI given upfront as 1L mCRPC (enzalutamide-naive) vs olaparib mono post-ARPI.
+  Key advantage over MAGNITUDE (niraparib+abiraterone): TALAPRO-2 covers broader
+  HRR genes (not BRCA1/2-only); MAGNITUDE non-BRCA HRR cohort was NEGATIVE.
+  Talazoparib dose 0.5 mg QD is calibrated for co-administration with enzalutamide
+  (a CYP3A4 inducer that reduces talazoparib exposure ~32% — the 0.5 mg is the
+  correct dose, not a reduction from 1 mg).
+  Ukraine access: talazoparib not registered for prostate; enzalutamide registered
+  for mCRPC. Combination requires named-patient import/EAP.
+
+sources:
+  - source_id: SRC-TALAPRO2-AGARWAL-2023
+    position: supports
+    relevant_quote_paraphrase: "TALAPRO-2 talazoparib+enzalutamide vs placebo+enzalutamide in HRR-mutant mCRPC: rPFS HR 0.46; BRCA1/2 subgroup HR 0.20 (p<0.001); FDA Jun 2023"
+  - source_id: SRC-NCCN-PROSTATE-2025
+    weight: primary
+  - source_id: SRC-ESMO-PROSTATE-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ER 2026-05-04. PARPi+ARPI combination for HRR-mutant mCRPC.
+  FDA approved June 2023 (Talzenna+Xtandi for BRCA1/2-mutant mCRPC label).
+  NCCN PROSTATE 2025: Cat 1 for BRCA1/2-mutant; also covers broader HRR
+  (TALAPRO-2 HR 0.46 for full HRR-mutant cohort — this distinguishes it from
+  MAGNITUDE which was BRCA-only). Companion to IND-PROSTATE-MCRPC-1L-NIRAPARIB-
+  ABIRATERONE (MAGNITUDE; BRCA1/2-specific). Two-reviewer clinical signoff
+  required per CHARTER §6.1.

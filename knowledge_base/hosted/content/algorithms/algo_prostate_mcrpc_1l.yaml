@@ -12,6 +12,8 @@ purpose: >
 output_indications:
   - IND-PROSTATE-MCRPC-1L-ARPI
   - IND-PROSTATE-MCRPC-1L-PARPI
+  - IND-PROSTATE-MCRPC-1L-TALAZOPARIB-ENZALUTAMIDE
+  - IND-PROSTATE-MCRPC-1L-NIRAPARIB-ABIRATERONE
   - IND-PROSTATE-MCRPC-2L-LU-PSMA
   - IND-PROSTATE-MCRPC-2L-DOCETAXEL
   - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
@@ -30,13 +32,25 @@ decision_tree:
         - condition: "BRCA1 or BRCA2 somatic or germline pathogenic variant"
     if_true:
       result: IND-PROSTATE-MCRPC-1L-PARPI
+      alternatives:
+        - indication: IND-PROSTATE-MCRPC-1L-TALAZOPARIB-ENZALUTAMIDE
+          criteria: "BRCA1/2-mutant (preferred signal HR 0.20) OR other HRR-mutant (HR 0.46 full HRR-mutant cohort) + enzalutamide-naive; TALAPRO-2 (Agarwal 2023 Lancet Oncol); FDA Jun 2023 (Talzenna+Xtandi); NCCN Cat 1; broader HRR coverage vs MAGNITUDE"
+          nccn_category: 1
+        - indication: IND-PROSTATE-MCRPC-1L-NIRAPARIB-ABIRATERONE
+          criteria: "BRCA1/2-mutant ONLY (MAGNITUDE non-BRCA NEGATIVE) + abiraterone-based ARPI preferred; MAGNITUDE (Chi 2023 Lancet Oncol); FDA Aug 2023 (Zejula+Zytiga); NCCN Cat 1; do NOT use for non-BRCA HRR mutations"
+          nccn_category: 1
       notes: >
-        BRCA1/2 or HRR-mutant mCRPC: PARPi preferred (PROfound; olaparib vs
-        investigator choice — rPFS HR 0.49 Cohort A; OS HR 0.69 in BRCA1/2 subset).
-        Olaparib 300mg BID recommended for BRCA1/2; for non-BRCA HRR mutations
-        (ATM, CDK12) evidence is weaker — consider ARPI if no prior ARPI exposure.
-        TRITON3 (rucaparib vs docetaxel/second ARPI in BRCA1/2 mCRPC): rucaparib
-        rPFS HR 0.61 — alternative if olaparib not available.
+        BRCA1/2 or HRR-mutant mCRPC — THREE Cat 1 options:
+        DEFAULT: Olaparib 300mg BID monotherapy (PROfound; Cohort A rPFS HR 0.49;
+        post-ARPI setting; broadly applicable regardless of prior ARPI). NCCN Cat 1.
+        PREFERRED COMBINATION (HRR-mutant + enzalutamide-naive): Talazoparib 0.5mg QD
+        + enzalutamide 160mg QD (TALAPRO-2; BRCA1/2 HR 0.20, HRR-mutant HR 0.46;
+        FDA Jun 2023; covers broader HRR, not just BRCA1/2). NCCN Cat 1.
+        PREFERRED COMBINATION BRCA1/2-ONLY (abiraterone-based preference): Niraparib
+        200mg QD + abiraterone 1000mg QD + prednisone 5mg BID (MAGNITUDE; BRCA1/2
+        HR 0.47; FDA Aug 2023; NON-BRCA HRR NEGATIVE — do not use for ATM/CDK12).
+        NOTE: Talazoparib dose 0.5mg (not standard 1mg) is correct with enzalutamide
+        (CYP3A4 inducer reduces talazoparib by ~32%); abiraterone fasting required.
     if_false:
       next_step: 2
 
@@ -104,8 +118,10 @@ sources:
   - SRC-VISION-PSMA-SARTOR-2021
   - SRC-NCCN-PROSTATE-2025
   - SRC-ESMO-PROSTATE-2024
+  - SRC-TALAPRO2-AGARWAL-2023
+  - SRC-MAGNITUDE-CHI-2023
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-04"
 notes: >
   Modern mCRPC algorithm assumes most patients received ARPI (abiraterone/
   enzalutamide/darolutamide) in mHSPC per LATITUDE/ENZAMET/ARASENS. For those
@@ -123,3 +139,14 @@ notes: >
   Docetaxel + cabazitaxel wiring CLOSED 2026-05-04 (Workstream DG):
     Step 4 if_true → IND-PROSTATE-MCRPC-2L-DOCETAXEL (TAX 327; NCCN Cat 1)
     Step 4 if_false → IND-PROSTATE-MCRPC-2L-CABAZITAXEL (CARD; NCCN Cat 1)
+
+  UPDATED 2026-05-04 (Workstream ER): PARPi+ARPI combination options wired at
+  step 1 as Cat 1 alternatives to olaparib monotherapy.
+  IND-PROSTATE-MCRPC-1L-TALAZOPARIB-ENZALUTAMIDE: TALAPRO-2 (Agarwal 2023 Lancet
+  Oncol; FDA Jun 2023). HRR-mutant mCRPC + enzalutamide-naive. BRCA1/2 rPFS HR 0.20;
+  HRR-mutant HR 0.46. Broad HRR coverage (not just BRCA1/2). NCCN Cat 1.
+  IND-PROSTATE-MCRPC-1L-NIRAPARIB-ABIRATERONE: MAGNITUDE (Chi 2023 Lancet Oncol;
+  FDA Aug 2023). BRCA1/2-mutant ONLY — non-BRCA HRR cohort NEGATIVE. BRCA1/2
+  rPFS HR 0.47. NCCN Cat 1. Non-BRCA absolute contraindication — MAGNITUDE negative.
+  CRITICAL DOSING NOTE: Talazoparib dose in combination is 0.5mg QD (not 1mg
+  standard) because enzalutamide reduces talazoparib exposure ~32% via CYP3A4.

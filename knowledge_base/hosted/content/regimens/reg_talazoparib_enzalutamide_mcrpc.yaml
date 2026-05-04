@@ -1,0 +1,66 @@
+id: REG-TALAZOPARIB-ENZALUTAMIDE-MCRPC
+name: "Talazoparib + Enzalutamide (TALAPRO-2 regimen)"
+
+drugs:
+  - drug_id: DRUG-TALAZOPARIB
+    role: primary
+    dose: "0.5 mg PO QD continuous"
+    dose_modification: >
+      Renal impairment: CrCl 30-59 mL/min → 0.35 mg QD; CrCl 15-29 mL/min → 0.25 mg QD.
+      Anemia Grade 3-4 or other hematologic AE: hold until ≤Grade 1, then resume at
+      reduced dose (0.35 mg → 0.25 mg QD). No hepatic dose adjustment.
+  - drug_id: DRUG-ENZALUTAMIDE
+    role: primary
+    dose: "160 mg PO QD continuous"
+    dose_modification: >
+      Seizure: hold permanently. Grade ≥3 AE or intolerable Grade 2: hold 1 week
+      then resume at same or lower dose. No renal/hepatic dose adjustment for enzalutamide.
+
+cycle:
+  length_days: 28
+  continuous: true
+  treatment_until: "Progression or unacceptable toxicity"
+
+administration_notes: >
+  Both agents given continuously (no rest days). Enzalutamide is a strong CYP3A4
+  inducer — reduces talazoparib exposure ~32%; 0.5 mg QD dose of talazoparib is
+  calibrated for concurrent enzalutamide. Do NOT use talazoparib standard dose
+  (1 mg QD) with enzalutamide.
+  Concomitant P-gp inhibitors (e.g., amiodarone) increase talazoparib exposure —
+  reduce talazoparib to 0.35 mg QD if P-gp inhibitor cannot be avoided.
+  Castration (surgical or medical with GnRHa/antagonist) must be maintained throughout.
+  LHRH agonist/antagonist continued concurrently.
+
+monitoring:
+  - "CBC weekly for first 3 months, then monthly — anemia Grade 3-4 occurs in ~46%"
+  - "LFTs q4 weeks (enzalutamide hepatotoxicity)"
+  - "PSA + imaging per PCWG3 criteria (q12-16 weeks)"
+  - "Blood pressure monitoring (both agents)"
+  - "Seizure history screen before starting enzalutamide"
+  - "Testosterone: confirm castrate (<50 ng/dL) at baseline"
+
+supportive_care:
+  - "Erythropoiesis-stimulating agents or transfusion for symptomatic anemia"
+  - "LHRH agonist/antagonist continued (castrate level required)"
+  - "Bone-protective therapy: zoledronic acid or denosumab if bone mets present"
+
+contraindications:
+  - "ECOG PS ≥3"
+  - "Active CNS metastasis (enzalutamide crosses BBB but CNS-met not a standard enrolment criterion)"
+  - "Prior seizures or conditions predisposing to seizure (enzalutamide)"
+  - "Severe renal impairment CrCl <15 mL/min (talazoparib; no data)"
+  - "MDS or AML (PARPi class; rare but reported)"
+
+evidence_source:
+  - SRC-TALAPRO2-AGARWAL-2023
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  TALAPRO-2 regimen. FDA approved Jun 2023 (talazoparib+enzalutamide for
+  BRCA1/2-mutant mCRPC). Enzalutamide reduces talazoparib exposure — the
+  0.5 mg QD talazoparib dose is specifically calibrated for this combination.
+  Anemia is the dominant toxicity (dose reductions ~46%); growth factors may
+  help. Two-reviewer clinical signoff required per CHARTER §6.1.

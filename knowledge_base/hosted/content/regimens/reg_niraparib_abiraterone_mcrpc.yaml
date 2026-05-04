@@ -1,0 +1,70 @@
+id: REG-NIRAPARIB-ABIRATERONE-MCRPC
+name: "Niraparib + Abiraterone Acetate + Prednisone (MAGNITUDE regimen)"
+
+drugs:
+  - drug_id: DRUG-NIRAPARIB
+    role: primary
+    dose: "200 mg PO QD continuous"
+    dose_modification: >
+      Hematologic toxicity Grade 3-4: hold until ≤Grade 2, resume at 100 mg QD.
+      Hypertension Grade 3: hold until controlled, resume at reduced dose if needed.
+      No renal dose adjustment for mild-moderate impairment. Severe renal (CrCl <30):
+      not studied; avoid or use with caution.
+  - drug_id: DRUG-ABIRATERONE
+    role: primary
+    dose: "1000 mg PO QD, taken on empty stomach (2h before or 1h after food)"
+    dose_modification: >
+      Grade ≥3 hepatotoxicity (ALT/AST >5× ULN): hold, re-check LFTs weekly;
+      if resolves to ≤Grade 1: resume 500 mg QD; if recurs: discontinue.
+      Hypokalemia / fluid retention: dose modify per label.
+  - drug_id: DRUG-PREDNISONE
+    role: supportive
+    dose: "5 mg PO BID (adrenal support for abiraterone)"
+
+cycle:
+  length_days: 28
+  continuous: true
+  treatment_until: "Progression or unacceptable toxicity"
+
+administration_notes: >
+  Abiraterone must be taken on an empty stomach (2h before or 1h after food) —
+  co-administration with food dramatically increases abiraterone exposure and toxicity.
+  Prednisone is mandatory (5 mg BID) to counteract mineralocorticoid excess from
+  abiraterone (hypertension, hypokalemia, fluid retention). Castration (surgical or
+  medical) must be maintained throughout. LHRH agonist/antagonist continued.
+  Niraparib does NOT have the same food interaction as abiraterone; both can be taken
+  on the same day at different times to accommodate the abiraterone fasting window.
+
+monitoring:
+  - "LFTs at baseline, 2 weeks, 1 month, then q3 months — abiraterone hepatotoxicity"
+  - "Blood pressure + weight weekly for first month, then monthly — niraparib hypertension"
+  - "CBC monthly — niraparib hematologic toxicity (thrombocytopenia, anemia)"
+  - "Electrolytes (K+, Na+) monthly — abiraterone mineralocorticoid excess"
+  - "PSA + imaging per PCWG3 criteria (q12-16 weeks)"
+  - "Testosterone: confirm castrate (<50 ng/dL)"
+
+supportive_care:
+  - "Prednisone 5 mg BID mandatory (do not omit — adrenal insufficiency risk)"
+  - "Antihypertensives as needed for niraparib-induced hypertension"
+  - "Potassium supplementation if hypokalemia develops"
+  - "Bone-protective therapy: zoledronic acid or denosumab if bone mets present"
+
+contraindications:
+  - "ECOG PS ≥3"
+  - "Non-BRCA HRR mutations without BRCA1/2 — MAGNITUDE futility crossed for non-BRCA"
+  - "Severe hepatic impairment (Child-Pugh C) — abiraterone contraindicated"
+  - "Active mineralocorticoid-related complications uncontrolled on prednisone"
+
+evidence_source:
+  - SRC-MAGNITUDE-CHI-2023
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  MAGNITUDE regimen. FDA approved Aug 2023 (niraparib+abiraterone for BRCA1/2-
+  mutant mCRPC). CRITICAL: BRCA1/2-specific only — non-BRCA HRR cohort was
+  NEGATIVE in MAGNITUDE. Abiraterone fasting requirement is the key admin pitfall.
+  Prednisone is mandatory, not optional. Two-reviewer clinical signoff required
+  per CHARTER §6.1.

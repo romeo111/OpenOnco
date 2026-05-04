@@ -1,0 +1,113 @@
+id: IND-PROSTATE-MCRPC-1L-NIRAPARIB-ABIRATERONE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "Castrate testosterone level (<50 ng/dL)"
+  biomarker_requirements:
+    - "BRCA1/2 pathogenic alteration (germline or somatic) — MANDATORY; tissue NGS or ctDNA"
+    - "CRITICAL: Non-BRCA HRR mutations — MAGNITUDE non-BRCA cohort was NEGATIVE (futility crossed)"
+    - "Do NOT use niraparib+abiraterone for non-BRCA HRR mutations (ATM, CDK12, PALB2)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRCA-GERMLINE-SOMATIC
+      value_constraint: "BRCA1 or BRCA2 pathogenic/likely pathogenic variant"
+      required: true
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIRAPARIB-ABIRATERONE-MCRPC
+
+concurrent_therapy:
+  - "LHRH agonist/antagonist (maintain castration throughout)"
+  - "Prednisone 5 mg BID (mandatory with abiraterone)"
+
+followed_by:
+  - "At progression: taxane (docetaxel or cabazitaxel) or Lu-PSMA-617 (PSMA-PET positive)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pfs_hr_brca12: 0.47
+  pfs_p_value: "<0.0001 (BRCA1/2 primary cohort)"
+  notes: >
+    MAGNITUDE (Chi 2023 Lancet Oncol; NCT03748836; Phase 3):
+    Niraparib 200 mg QD + abiraterone 1000 mg QD + prednisone 5 mg BID vs
+    placebo + abiraterone + prednisone in mCRPC.
+    BRCA1/2 cohort (primary): rPFS HR 0.47 (p<0.0001). ORR (measurable): ~54% vs ~33%.
+    Non-BRCA HRR cohort: NEGATIVE — futility boundary crossed at interim analysis.
+    FDA approved August 2023 (Zejula + Zytiga for BRCA1/2-mutant mCRPC).
+    NCCN PROSTATE 2025: Category 1 for BRCA1/2-mutant mCRPC.
+
+hard_contraindications:
+  - "Non-BRCA HRR mutations (ATM, CDK12, PALB2) without BRCA1/2 — MAGNITUDE NEGATIVE for non-BRCA"
+  - "HRR wild-type — no benefit; do not use"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Severe hepatic impairment (Child-Pugh C) — abiraterone contraindicated"
+  - "MDS or AML (PARPi class effect)"
+  - "Uncontrolled hypertension (niraparib class effect; control before starting)"
+
+red_flags_triggering_alternative:
+  - "Non-BRCA HRR mutation (ATM, CDK12) — use talazoparib+enzalutamide (TALAPRO-2 HR 0.46 for HRR-mutant) or olaparib mono instead"
+  - "Prior abiraterone failure — significant cross-resistance expected; use talazoparib+enzalutamide or olaparib mono instead"
+  - "Baseline uncontrolled hypertension — niraparib significantly raises BP; stabilize first"
+  - "Severe hepatic dysfunction (abiraterone hepatotoxicity risk)"
+
+required_tests:
+  - TEST-PSA-SERUM
+  - TEST-TESTOSTERONE-SERUM
+  - TEST-BONE-SCAN
+  - TEST-GERMLINE-BRCA-PANEL
+  - TEST-SOMATIC-HRR-PANEL
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - "Blood pressure baseline and weekly for first month"
+
+desired_tests:
+  - TEST-PSMA-PET
+  - "ctDNA BRCA1/2 (alternative to tissue NGS)"
+
+rationale: >
+  Niraparib (PARP1/2 inhibitor) combined with abiraterone acetate (CYP17A1
+  inhibitor) + prednisone exploits synthetic lethality in BRCA1/2-mutant mCRPC.
+  MAGNITUDE (Chi 2023 Lancet Oncol; Phase 3) demonstrated rPFS HR 0.47 (BRCA1/2
+  primary cohort; p<0.0001). FDA approved August 2023 (Zejula+Zytiga for BRCA1/2-
+  mutant mCRPC). NCCN PROSTATE 2025: Category 1.
+  CRITICAL BIOMARKER SPECIFICITY: MAGNITUDE non-BRCA HRR cohort was NEGATIVE
+  (futility boundary crossed at interim). This regimen is BRCA1/2-ONLY —
+  do not use for other HRR mutations.
+  Key advantage over olaparib monotherapy: combination PARPi+ARPI; abiraterone
+  as ARPI backbone (useful when enzalutamide not preferred).
+  Key difference from TALAPRO-2 (talazoparib+enzalutamide): abiraterone-based
+  (not enzalutamide), BRCA-only (not HRR-broad). Choose between based on prior
+  ARPI exposure, hypertension risk, and access.
+  Ukraine access: niraparib not registered for prostate; abiraterone registered.
+  Combination requires named-patient import/EAP for niraparib.
+
+sources:
+  - source_id: SRC-MAGNITUDE-CHI-2023
+    position: supports
+    relevant_quote_paraphrase: "MAGNITUDE niraparib+abiraterone+prednisone in BRCA1/2-mutant mCRPC: rPFS HR 0.47 (p<0.0001); non-BRCA HRR cohort NEGATIVE; FDA Aug 2023"
+  - source_id: SRC-NCCN-PROSTATE-2025
+    weight: primary
+  - source_id: SRC-ESMO-PROSTATE-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ER 2026-05-04. PARPi+ARPI combination for BRCA1/2-mutant mCRPC.
+  FDA approved August 2023 (Zejula+Zytiga). BRCA1/2-ONLY — non-BRCA HRR
+  NEGATIVE in MAGNITUDE. Companion to IND-PROSTATE-MCRPC-1L-TALAZOPARIB-
+  ENZALUTAMIDE (TALAPRO-2; broader HRR). Two-reviewer clinical signoff required
+  per CHARTER §6.1.
