@@ -1,25 +1,69 @@
 id: ALGO-RCC-METASTATIC-2L
 applicable_to_disease: DIS-RCC
 applicable_to_line_of_therapy: 2
-purpose: "Select 2L+ therapy for metastatic clear-cell RCC after prior PD-(L)1 + VEGF-TKI."
-output_indications: [IND-RCC-METASTATIC-2L-BELZUTIFAN]
-default_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
-alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN  # single-option algorithm; Pydantic alt is required
+purpose: >
+  Select 2L+ therapy for metastatic clear-cell RCC after prior PD-(L)1 + VEGF-TKI.
+  Two tracks: (1) belzutifan accessible (LITESPARK-005; HIF-2α inhibitor; preferred
+  novel mechanism after IO+TKI; NCCN Cat 1; FDA Aug 2023; ORR 22%; PFS HR 0.75);
+  (2) cabozantinib fallback (METEOR; VEGFR/MET/AXL; NCCN Cat 1; ORR ~21%;
+  PFS 7.4 vs 3.8 mo; more accessible in UA).
+output_indications:
+  - IND-RCC-METASTATIC-2L-BELZUTIFAN
+  - IND-RCC-METASTATIC-2L-CABOZANTINIB
+default_indication: IND-RCC-METASTATIC-2L-CABOZANTINIB
+alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
 decision_tree:
+  # Step 1 — belzutifan accessibility gate.
+  # Belzutifan (Welireg; HIF-2α inhibitor) is NCCN Cat 1 for 2L+ ccRCC
+  # post-IO+TKI (LITESPARK-005; Choueiri 2023 NEJM; PFS HR 0.75; ORR 22%).
+  # HIF-2α mechanism avoids VEGFR cross-class resistance from 1L TKI.
+  # Ukraine: belzutifan NOT registered (2026); named-patient access only.
   - step: 1
     evaluate:
+      all_of:
+        - condition: "Belzutifan accessible (registered + reimbursed OR named-patient import available)"
+        - condition: "No severe hepatic impairment (belzutifan hepatotoxicity; bilirubin ≤1.5×ULN)"
+        - condition: "Hematocrit monitored (belzutifan → erythropoiesis suppression; anemia monitoring mandatory)"
+    if_true:
+      result: IND-RCC-METASTATIC-2L-BELZUTIFAN
+      notes: >
+        Belzutifan accessible + hepatic adequate: belzutifan 120 mg PO daily
+        (LITESPARK-005; Choueiri 2023 NEJM; PFS HR 0.75; ORR 22.7%; NCCN Cat 1).
+        HIF-2α inhibitor — unique non-VEGF mechanism; preferred post-IO+TKI.
+        Anemia monitoring mandatory (phlebotomy if Hct >55%). VEGF-TKI prior
+        line does not preclude belzutifan; mechanism switch is advantageous.
+        Ukraine: not registered; named-patient only; cabozantinib preferred if
+        belzutifan inaccessible.
+    if_false:
+      next_step: 2
+    notes: "Step 1 added 2026-05-04 (Workstream BL): belzutifan accessibility gate. Free-text conditions; MDT-evaluated."
+  # Step 2 — cabozantinib fallback. NCCN Cat 1 for 2L+ RCC after
+  # prior TKI (METEOR; Choueiri 2015 NEJM; PFS 7.4 vs 3.8 mo HR 0.58; ORR 17.1%).
+  # Oral; well-established UA access (generic cabozantinib emerging).
+  - step: 2
+    evaluate:
       any_of:
-        - {condition: "Prior PD-(L)1 + VEGF-TKI failure"}
-    if_true: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}
-    if_false: {result: IND-RCC-METASTATIC-2L-BELZUTIFAN}  # default — algorithm only fires post-1L
-    notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+        - condition: "Belzutifan inaccessible or contraindicated (hepatic impairment)"
+        - condition: "Progression after prior 1L IO+VEGFR-TKI — cabozantinib (additional TKI) is standard 2L"
+    if_true:
+      result: IND-RCC-METASTATIC-2L-CABOZANTINIB
+      notes: >
+        Belzutifan inaccessible or hepatic CI: cabozantinib 60 mg PO daily
+        (REG-CABOZANTINIB-RCC; METEOR Choueiri 2015 NEJM; PFS HR 0.58; ORR 17.1%;
+        mOS HR 0.68; NCCN Cat 1). Oral TKI; manageable toxicity (hypertension,
+        diarrhea, palmar-plantar erythrodysesthesia, fatigue). Ukraine: more
+        accessible than belzutifan (international import; generic emerging).
+    if_false:
+      result: IND-RCC-METASTATIC-2L-CABOZANTINIB
+    notes: "Step 2 added 2026-05-04 (Workstream BL): cabozantinib fallback for belzutifan-inaccessible 2L RCC (METEOR NCCN Cat 1)."
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-04"
 notes: >
-  Tracer-bullet 2L algorithm — single output (belzutifan). Future expansion:
-  cabozantinib, lenvatinib + everolimus, tivozanib as 2L+ alternatives.
-  When ≥2 indications wired, decision_tree becomes meaningful (currently
-  it's a passthrough). Hereditary-VHL patients diverge to 1L
-  IND-RCC-VHL-DISEASE-BELZUTIFAN regardless of metastatic status —
-  ALGO-RCC-METASTATIC-1L excludes them via VHL-status check upstream
-  (separate wiring task).
+  UPDATED 2026-05-04 (Workstream BL): Expanded from single-option pass-through to
+  2-track algorithm. IND-RCC-METASTATIC-2L-CABOZANTINIB (METEOR NCCN Cat 1) wired
+  at step 2 as accessibility-gated fallback to belzutifan. Default changed to
+  cabozantinib (more UA-accessible). Belzutifan remains preferred when accessible
+  (HIF-2α novel mechanism; LITESPARK-005 NCCN Cat 1).
+  OOS: lenvatinib + everolimus (HOPE205; NCCN Cat 2A; ORR 43%) and tivozanib
+  (TIVO-3; NCCN Cat 2A; 3L+) not yet modeled. Hereditary-VHL patients → 1L
+  IND-RCC-VHL-DISEASE-BELZUTIFAN via ALGO-RCC-METASTATIC-1L upstream exclusion.
