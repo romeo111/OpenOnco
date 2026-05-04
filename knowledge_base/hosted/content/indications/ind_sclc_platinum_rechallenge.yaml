@@ -1,0 +1,98 @@
+id: IND-SCLC-PLATINUM-RECHALLENGE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SCLC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Extensive-stage SCLC relapsed or progressed after 1L platinum-etoposide ± immunotherapy"
+    - "CTFI (chemotherapy-free interval) ≥180 days from end of 1L platinum-containing chemotherapy"
+    - "Platinum-sensitive relapse — CTFI ≥180d defines highly sensitive disease (~50-60% ORR)"
+    - "No platinum rechallenge for CTFI <90 days (platinum-resistant) or 90-180 days (intermediate)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-CE-SCLC
+concurrent_therapy: []
+followed_by:
+  - "CT CAP response assessment after 2-3 cycles"
+  - "Continue × 4-6 cycles if clinical benefit"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50-60% for CTFI ≥180d (multiple retrospective series)"
+  progression_free_survival: "~4-6 months"
+  overall_survival: "~8-12 months from rechallenge"
+  notes: "Response inversely correlated with CTFI duration; CTFI >12 months approaches 1L-like responses"
+
+hard_contraindications:
+  - "CTFI <90 days (platinum-resistant — use topotecan or lurbinectedin)"
+  - "Prior Grade ≥3 platinum hypersensitivity reaction (confirmed allergy)"
+  - "CrCl <30 mL/min (carboplatin dose reduction required)"
+
+red_flags_triggering_alternative:
+  - condition: "CTFI 90-179 days (intermediate sensitivity) — rechallenge possible but ORR lower (~30-40%); discuss at MDT vs topotecan"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CREATININE-CL
+
+desired_tests:
+  - "Brain MRI (SCLC high risk of CNS progression — assess before rechallenge)"
+
+rationale: >
+  CTFI ≥180 days after completing platinum-etoposide chemotherapy defines
+  platinum-sensitive relapse in SCLC. Retrospective series and NCCN guidelines
+  support re-administration of the same 1L platinum+etoposide regimen, achieving
+  ORR ~50-60% and providing meaningful disease control. This is superior to the
+  ~17-25% ORR expected with topotecan in sensitive relapse. NCCN Category 2A
+  recommendation: for CTFI ≥180d, rechallenge with original regimen (CE or EP)
+  is preferred over switching to topotecan monotherapy.
+  For CTFI <90d: platinum-resistant — do NOT rechallenge; use topotecan or
+  lurbinectedin (IND-SCLC-RR-TOPOTECAN or IND-SCLC-RR-LURBINECTEDIN).
+
+rationale_ua: >
+  CTFI ≥180 днів після платинавмісної хіміотерапії = "платиночутливий" рецидив
+  SCLC. Повторне призначення карбоплатин+етопозид (CE) досягає ORR ~50-60%,
+  що перевищує ORR топотекану (~17-25%) при чутливому рецидиві. NCCN Категорія 2A:
+  повторне призначення препаратів 1L рекомендоване при CTFI ≥180 днів.
+  При CTFI <90 днів: платинорезистентний рецидив — повторне призначення платини
+  НЕЕФЕКТИВНЕ; використовувати топотекан або лурбінектедин.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-SCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN Category 2A for CTFI ≥180 days: rechallenge with original platinum-etoposide regimen; CTFI <90 days: topotecan or lurbinectedin"
+
+do_not_do:
+  - "Не призначати повторне введення платини при CTFI <90 днів — платинорезистентний рецидив, ORR <10%"
+  - "Не призначати без оцінки наявності ГМ метастазів — SCLC часто метастазує в ГМ"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  CTFI stratification for SCLC 2L:
+  - CTFI <90 days: platinum-resistant → topotecan (IND-SCLC-RR-TOPOTECAN) or
+    lurbinectedin (IND-SCLC-RR-LURBINECTEDIN)
+  - CTFI 90-180 days: intermediate sensitivity → rechallenge OR topotecan;
+    MDT discussion
+  - CTFI ≥180 days: platinum-sensitive → rechallenge with original regimen
+    (this indication) is preferred
+
+  If patient received atezo or durva with 1L CE, rechallenge with CE alone
+  (without re-adding immunotherapy) is standard; re-adding PD-L1 after
+  progression on PD-L1 is not supported by data.

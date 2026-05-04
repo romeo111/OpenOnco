@@ -1,0 +1,99 @@
+id: REGIMEN-EPCORITAMAB-STEP-UP-DOSING
+name: "Epcoritamab cycle-1 step-up dosing sub-regimen (CRS mitigation)"
+name_ua: "Епкоритамаб — підграфік ескалаційного дозування циклу 1 (мітигація CRS)"
+alternate_names:
+  - "Epcoritamab step-up"
+  - "EPCORE step-up"
+
+components:
+  - drug_id: DRUG-EPCORITAMAB
+    dose: "Step-up sequence: 0.16 mg SC day 1 (priming dose 1) → 0.8 mg SC day 8 (priming dose 2) → 48 mg SC day 15 (first full dose) → 48 mg SC day 22 (second full dose); cycle-1 sequence ends day 22"
+    schedule: "28-day cycle 1; SC injection (abdomen / thigh); day 15 first full dose requires 24-hour hospital monitoring for CRS"
+    route: SC
+
+cycle_length_days: 28
+total_cycles: "Single cycle 1 step-up sequence; subsequent cycles at full 48 mg dose follow the parent monotherapy regimen schedule"
+
+toxicity_profile: severe
+
+premedication:
+  - "Mandatory pre-medication BEFORE each cycle-1 dose (day 1, day 8, day 15, day 22):"
+  - "  - Prednisolone 100 mg PO/IV (or equivalent) day-of-dose + days +1, +2, +3 (4-day course)"
+  - "  - Acetaminophen 650-1000 mg PO 30-60 min pre-dose"
+  - "  - Diphenhydramine 25-50 mg PO/IV 30-60 min pre-dose"
+  - "Hospital admission for 24-hour monitoring required for the first 48 mg full dose (cycle 1 day 15) — CRS observation window"
+  - "Adequate hydration day-of-dose"
+  - "This is a sub-regimen — must be combined with the parent monotherapy schedule (REGIMEN-EPCORITAMAB-MONO-DLBCL-3L) or future combination regimens; not used standalone as definitive therapy"
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CRS Grade ≥2 during step-up"
+    modification: "Hold next step-up dose; tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h; resume from current step (do not skip ahead) after resolution"
+    rationale: "Skipping step-up doses defeats the purpose of priming; resume sequentially after toxicity resolves"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Failure to complete step-up sequence within cycle 1 (e.g. prolonged toxicity)"
+    modification: "Prolong cycle 1 to allow full step-up; consider re-priming with 0.16 → 0.8 → 48 mg if interval >2 weeks between doses"
+    rationale: "Re-step-up mitigates CRS risk after prolonged interruption"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Epcoritamab not registered in Ukraine; this sub-regimen reflects the
+    cycle-1 step-up component of the EPCORE NHL-1 schedule, applicable
+    wherever epcoritamab is administered. The 24-hour cycle-1 day-15
+    hospital-monitoring requirement is the principal infrastructure
+    constraint for outpatient-heavy practices.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Epcoritamab step-up dosing for DLBCL (cycle 1). CRS peak during
+# step-up. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура у дні step-up"
+    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка може бути CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-15 step-up"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Реакція в місці підшкірної ін'єкції"
+    action_ua: "Чергуйте місця ін'єкцій"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-01"
+
+notes: >
+  Standalone authoring of the cycle-1 step-up sub-schedule for
+  epcoritamab subcutaneous dosing. Step-up sequence — 0.16 mg → 0.8 mg →
+  48 mg — with prophylactic prednisolone 100 mg × 4 days around each
+  dose suppresses any-grade CRS to ~50% (predominantly Grade 1-2;
+  G≥3 ~3%) per EPCORE NHL-1. Sub-regimen entity authored separately to
+  enable reuse across DLBCL / FL / future indications and to provide a
+  single entity for renderer to surface the cycle-1 hospital-monitoring
+  + corticosteroid prophylaxis pattern. Combine with parent schedule
+  (REGIMEN-EPCORITAMAB-MONO-DLBCL-3L) for full course. Trial source
+  SRC-EPCORE-NHL-1-THIEBLEMONT-2023 absent from KB at chunk authoring
+  time.
+notes_ua: >
+  Окреме авторінг підграфіка ескалаційного дозування циклу 1 для епкоритамабу підшкірно. Послідовність ескалації — 0.16 мг → 0.8 мг → 48 мг — з профілактичним преднізолоном 100 мг × 4 дні навколо кожної дози знижує CRS будь-якого ступеня до ~50% (переважно 1-2 ступеня; G≥3 ~3%) за даними EPCORE NHL-1. Сутність підрегіму створена окремо для повторного використання у DLBCL / FL / майбутніх показаннях та для надання рендереру єдиної сутності для відображення патерну госпітального моніторингу циклу 1 + кортикостероїдної профілактики. Комбінувати з батьківським графіком (REGIMEN-EPCORITAMAB-MONO-DLBCL-3L) для повного курсу. Джерело випробування SRC-EPCORE-NHL-1-THIEBLEMONT-2023 відсутнє в БЗ на момент авторингу чанку.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

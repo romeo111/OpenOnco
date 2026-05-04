@@ -1,0 +1,61 @@
+id: REG-CE-SCLC
+disease_context: DIS-SCLC
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-CARBOPLATIN
+    dose: "AUC 5 IV over 30 min"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    dose_modifications:
+      - trigger: "CrCl 30-60 mL/min"
+        action: "Calculate AUC 4 using Calvert formula; adequate hydration"
+      - trigger: "Platelets <100K or ANC <1500 on day 1"
+        action: "Delay until recovery; reduce AUC to 4 if repeated delays"
+  - drug_id: DRG-ETOPOSIDE
+    dose: "100 mg/m²/day IV over 60 min"
+    route: IV
+    schedule: "Days 1-3 of each 21-day cycle"
+    dose_modifications:
+      - trigger: "ANC <1500 or platelets <75K on day 1"
+        action: "Delay 1 week; G-CSF secondary prophylaxis if repeated"
+      - trigger: "Grade ≥3 mucositis"
+        action: "Reduce etoposide to 75 mg/m²/d days 1-3"
+
+when_to_use: >
+  Carboplatin+etoposide (CE) is the standard platinum-etoposide backbone for SCLC
+  without concurrent immunotherapy. Used when:
+  (1) Platinum rechallenge for sensitive relapse (CTFI ≥180 days) — same regimen
+      re-administered; ORR ~50-60% in CTFI ≥180d patients;
+  (2) Patients with autoimmune contraindication to PD-L1 inhibitors (avoiding
+      atezo/durva);
+  (3) Cisplatin-ineligible patients requiring carboplatin substitution at 1L
+      (cisplatin preferred for young/fit, carboplatin acceptable per NCCN).
+  For 1L extensive-stage SCLC with immunotherapy addition, see REG-EP-ATEZO-SCLC
+  or REG-EP-DURVA-SCLC.
+
+premedication:
+  - "Antiemetics: highly emetogenic protocol (carboplatin day 1; 5-HT3 + dexamethasone)"
+  - "G-CSF primary prophylaxis: pegfilgrastim day 4 or 5 — myelosuppression nearly universal"
+  - "Pre-hydration: 250-500 mL NS before carboplatin (less fluid-intensive than cisplatin)"
+
+cycle_length_days: 21
+total_planned_cycles: "4-6 cycles (first-line or rechallenge)"
+
+monitoring:
+  - "CBC: day 1 each cycle; nadir CBC day 10-14"
+  - "CrCl (Cockcroft-Gault): before each cycle — carboplatin Calvert dosing requires accurate CrCl"
+  - "CT CAP: after 2-3 cycles and at completion"
+  - "Serum markers: none standard for SCLC (no validated tumor markers)"
+
+watchpoints_ua:
+  - "УВАГА: CE — стандартна хіміотерапія без імунотерапії; при рецидиві CTFI ≥180 днів — ефективний режим перепризначення (ORR ~50-60%)"
+  - "УВАГА: Мієлосупресія — майже завжди; G-КСФ первинна профілактика (пегфілграстим день 4-5) обов'язкова"
+  - "УВАГА: Карбоплатин розраховується за формулою Calvert (AUC × [КК + 25]); точний КК клубочкової фільтрації обов'язковий перед кожним циклом"
+  - "УВАГА: Наяв тромбоцитопенія — карбоплатин більш тромбоцитотоксичний ніж цисплатин; контроль тромбоцитів до введення"
+  - "УВАГА: При повторному призначенні (rechallenge) — те саме дозування, що й при 1L; CTFI ≥180 д = 'чутливий' рецидив з вищою відповіддю на повторну платину"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

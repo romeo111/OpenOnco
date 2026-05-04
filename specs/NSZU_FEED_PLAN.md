@@ -1,39 +1,39 @@
-# NSZU Feed — План фічі (Live-feed змін формуляру НСЗУ)
+# NSZU Feed — Feature Plan (Live-Feed of NSZU Formulary Changes)
 
-**Статус:** v0.1 draft, pre-discovery.
-**Власник:** TBD.
-**Дата:** 2026-04-26.
+**Status:** v0.1 draft, pre-discovery.
+**Owner:** TBD.
+**Date:** 2026-04-26.
 
-## Мета і не-цілі
+## Goal and non-goals
 
-**Мета:** клініцист отримує сигнал про зміни reimbursement, що зачіпають його активні плани, без ручного моніторингу.
+**Goal:** a clinician receives a signal about reimbursement changes affecting their active plans, without manual monitoring.
 
-**Явні не-цілі:**
-- Не вирішуємо за лікаря — лише signaling.
-- **Не фільтруємо план за reimbursement** (CHARTER §8.3 + memory-правило `efficacy > registration`: NSZU-статус — metadata layer, не gate. Engine все одно показує найкращий по доказах варіант).
-- Не trackуємо реальну наявність у конкретній лікарні (це ProZorro-рівень, окрема пайплайн, не у скоупі).
+**Explicit non-goals:**
+- We do not make decisions for the clinician — signaling only.
+- **We do not filter the plan by reimbursement** (CHARTER §8.3 + memory rule `efficacy > registration`: NSZU status is a metadata layer, not a gate. The engine always shows the best-evidence option regardless).
+- We do not track actual drug availability at a specific hospital (that is a ProZorro-level concern, a separate pipeline, out of scope).
 
-## P0 — Discovery (треба ДО першого рядка коду)
+## P0 — Discovery (required BEFORE the first line of code)
 
-Найризикованіший етап. Без чесних відповідей будуємо в порожнечу.
+The highest-risk phase. Without honest answers, we are building in a vacuum.
 
-| Питання | Як відповісти |
+| Question | How to answer |
 |-|-|
-| Де НСЗУ публікує актуальний формуляр? (PDF / HTML / open-data CSV) | 2 години manual exploration `nszu.gov.ua` + open-data порталу |
-| Як часто оновлюється? Регулярно чи спорадично? | Те ж + перевірити `Last-Modified` headers за 3 місяці |
-| Granularity: тільки INN, чи з brand-names + дозуваннями? | Inspect конкретного PDF онко-пакета ПМГ |
-| Reimbursement відрізняється по регіонах? | 1 запит у НСЗУ-press або клін-чат |
-| Що болить більше: «у формулярі» vs «реально на складі лікарні»? | Питання №3 в інтерв'ю (нижче) |
+| Where does NSZU publish the current formulary? (PDF / HTML / open-data CSV) | 2 hours of manual exploration of `nszu.gov.ua` + the open-data portal |
+| How often is it updated? Regularly or sporadically? | Same + check `Last-Modified` headers over 3 months |
+| Granularity: INN only, or with brand names + dosages? | Inspect the specific PDF of the oncology PMG package |
+| Does reimbursement differ by region? | 1 query to NSZU press or a clinical chat |
+| What hurts more: "in the formulary" vs "actually in stock at the hospital"? | Question #3 in the interview (below) |
 
-**Output P0:** `specs/NSZU_FEED_DISCOVERY.md` — підтверджена cadence + format + ризики. Якщо формату немає (тільки скан-PDFs без структури) — переоцінити доцільність.
+**P0 output:** `specs/NSZU_FEED_DISCOVERY.md` — confirmed cadence + format + risks. If no machine-readable format exists (only scanned PDFs without structure) — reassess feasibility.
 
-## Дані: джерела
+## Data sources
 
-**Primary:** Програма медичних гарантій, онко-пакет НСЗУ.
-**Secondary:** МОЗ-наказ зі списком "Доступні ліки" (онко-частина), якщо релевантно.
-**Out of scope:** ProZorro tender-data (наявність на установі).
+**Primary:** Medical Guarantees Programme (PMG), NSZU oncology package.
+**Secondary:** Ministry of Health order listing "Available Medicines" (oncology section), if relevant.
+**Out of scope:** ProZorro tender data (facility-level stock).
 
-Snapshot-storage:
+Snapshot storage:
 ```
 knowledge_base/hosted/content/reimbursement/snapshots/
   nszu_2026-04-26.yaml
@@ -41,7 +41,7 @@ knowledge_base/hosted/content/reimbursement/snapshots/
   ...
 ```
 
-Один файл на дату, immutable, валідується schema-loader-ом.
+One file per date, immutable, validated by the schema loader.
 
 ## Schema additions
 
@@ -58,7 +58,7 @@ source_url: https://nszu.gov.ua/...
 source_snapshot: nszu_2026-04-26.yaml
 ```
 
-**`ReimbursementChange`** (diff-derived, не пишеться руками):
+**`ReimbursementChange`** (diff-derived, not hand-authored):
 ```yaml
 change_id: rc-2026-05-03-darat-loss
 drug_id: drugbank-DB06317
@@ -68,14 +68,14 @@ detected_at: 2026-05-03
 affected_regimen_ids: [REG-DARA-VRD, REG-DARA-RD]
 ```
 
-## Mapping: НСЗУ-рядок → KB Drug
+## Mapping: NSZU row → KB Drug
 
-**Найкрихкіша частина.** НСЗУ публікує українські INN + brand-names; engine оперує `Drug.id` (RxNorm/DrugBank-based).
+**The most brittle part.** NSZU publishes Ukrainian INN + brand names; the engine operates on `Drug.id` (RxNorm/DrugBank-based).
 
-Підхід:
-1. **Manual seed:** 50 онко-препаратів з активних KB-Regimens → `knowledge_base/hosted/content/reimbursement/mapping_nszu.yaml`. Two-reviewer merge (CHARTER §6.1) бо плив на recommendations.
-2. **Test gate:** кожен `Drug.id`, який використовується у активному `Regimen`, мусить мати або mapping, або явний `reimbursement_status: not_tracked`. Інакше CI fail.
-3. **Unmapped queue:** нові НСЗУ-рядки без mapping → `unmapped_log.yaml` → ручний розгляд Clinical Co-Lead (додати / відхилити).
+Approach:
+1. **Manual seed:** 50 oncology drugs from active KB Regimens → `knowledge_base/hosted/content/reimbursement/mapping_nszu.yaml`. Two-reviewer merge (CHARTER §6.1) because it affects recommendations.
+2. **Test gate:** every `Drug.id` used in an active `Regimen` must have either a mapping or an explicit `reimbursement_status: not_tracked`. Otherwise CI fails.
+3. **Unmapped queue:** new NSZU rows without a mapping → `unmapped_log.yaml` → manual review by a Clinical Co-Lead (add / reject).
 
 ## Pipeline
 
@@ -84,96 +84,96 @@ affected_regimen_ids: [REG-DARA-VRD, REG-DARA-RD]
        ↓
 1. fetch NSZU sources (HTML + PDF + open-data CSV)
        ↓
-2. parse → snapshot YAML (валідується loader-ом)
+2. parse → snapshot YAML (validated by loader)
        ↓
 3. diff(today, previous_snapshot) → list[ReimbursementChange]
        ↓
-4. для кожної change:
-     - знайти Regimens що використовують affected Drug
-     - emit ProvenanceEvent (event_type=reimbursement_change) на patient_id
-       (через існуючий event_store/append_event)
+4. for each change:
+     - find Regimens that use the affected Drug
+     - emit ProvenanceEvent (event_type=reimbursement_change) on patient_id
+       (via the existing event_store/append_event)
        ↓
-5. публікація:
-     - knowledge_base/hosted/content/reimbursement/changelog.yaml (truth)
+5. publish:
+     - knowledge_base/hosted/content/reimbursement/changelog.yaml (source of truth)
      - docs/changelog-nszu.html (public, build_site)
 ```
 
-**Re-use що вже існує:** `ProvenanceEvent` + `event_store` (commit `98ec53f`). Reimbursement-change це новий `event_type` literal, інакше та сама механіка.
+**Reuse of existing infrastructure:** `ProvenanceEvent` + `event_store` (commit `98ec53f`). A reimbursement change is a new `event_type` literal; the mechanics are otherwise identical.
 
 ## Engine integration
 
-Под час побудови плану engine читає поточний `ReimbursementStatus` для кожного `Regimen` і **додає його як metadata-badge** — не виключає не-reimbursed варіант:
+When building a plan, the engine reads the current `ReimbursementStatus` for each `Regimen` and **attaches it as a metadata badge** — it does not exclude non-reimbursed options:
 
-- 🟢 **НСЗУ** — у формулярі, дата snapshot
-- 🟡 **обмежено** — є restriction (line / indication / dose)
-- 🔴 **не у формулярі** — patient-pay або заявка
-- ⚪ **not_tracked** — препарат не в нашому mapping (чесний indicator)
+- 🟢 **NSZU** — in the formulary, snapshot date
+- 🟡 **restricted** — restriction present (line / indication / dose)
+- 🔴 **not in formulary** — patient-pay or application required
+- ⚪ **not_tracked** — drug not in our mapping (honest indicator)
 
-**Опційний "NSZU-only fallback track":** якщо клініцист хоче явно — окрема кнопка «Show alternative regimen using only reimbursed drugs». Не дефолт. Це постфакт-лінз, не первинний план.
+**Optional "NSZU-only fallback track":** if a clinician explicitly wants it — a separate button "Show alternative regimen using only reimbursed drugs". Not the default. This is a post-hoc lens, not the primary plan.
 
 ## UI / alert surfaces
 
-| Surface | Що показує | Auth required? |
+| Surface | What it shows | Auth required? |
 |-|-|-|
-| `/try.html` plan output | Badge на кожному Regimen | Ні |
-| `/changelog-nszu.html` (новий) | Публічний feed усіх змін за 12 тижнів, фільтр по препарату/диз | Ні |
-| Per-clinician digest | «13 ваших активних планів торкається сьогоднішня зміна» | Так — відкласти до auth (P3 roadmap) |
-| Email-дайджест (легкий) | Mailto: subscribe form, weekly send | Ні (manual mail-merge у переходному періоді) |
+| `/try.html` plan output | Badge on each Regimen | No |
+| `/changelog-nszu.html` (new) | Public feed of all changes over 12 weeks, filterable by drug/disease | No |
+| Per-clinician digest | "Today's change affects 13 of your active plans" | Yes — defer until auth (P3 roadmap) |
+| Email digest (lightweight) | Mailto: subscribe form, weekly send | No (manual mail-merge in the transitional period) |
 
 ## Phasing
 
 | Phase | Scope | Done-criterion | Estimate |
 |-|-|-|-|
-| **P0** Discovery | Manual NSZU exploration + 1 клін-інтерв'ю | `NSZU_FEED_DISCOVERY.md` з confirmed cadence/format | 1-2 дні |
-| **P1** Scraper + snapshot | Один онко-пакет, ручний run | YAML snapshot проходить validator | 3-5 днів |
-| **P2** Mapping seed | 50 препаратів + test gate | 100% активних Drug покриті mapping/not_tracked | 2 дні |
-| **P3** Engine integration (badge) | Read status, render badge | `/try.html` показує статус на кожному Regimen | 2-3 дні |
-| **P4** Diff + public changelog | Weekly cron + `/changelog-nszu.html` | Live page оновлюється з cron | 3 дні |
-| **P5** Fallback-track button | «Show NSZU-only alternative» | UX cycle з 1 клін-тестером | 2-3 дні |
-| **P6** Per-clinician alerts | Email digest / inbox | Відкласти до auth-роботи | — |
+| **P0** Discovery | Manual NSZU exploration + 1 clinical interview | `NSZU_FEED_DISCOVERY.md` with confirmed cadence/format | 1-2 days |
+| **P1** Scraper + snapshot | One oncology package, manual run | YAML snapshot passes validator | 3-5 days |
+| **P2** Mapping seed | 50 drugs + test gate | 100% of active Drugs covered by mapping/not_tracked | 2 days |
+| **P3** Engine integration (badge) | Read status, render badge | `/try.html` shows status on each Regimen | 2-3 days |
+| **P4** Diff + public changelog | Weekly cron + `/changelog-nszu.html` | Live page updates from cron | 3 days |
+| **P5** Fallback-track button | "Show NSZU-only alternative" | UX cycle with 1 clinical tester | 2-3 days |
+| **P6** Per-clinician alerts | Email digest / inbox | Defer until auth work | — |
 
-**MVP = P0-P4** (~2 тижні). P5/P6 — окремі релізи, фіча корисна без них.
+**MVP = P0-P4** (~2 weeks). P5/P6 are separate releases; the feature is useful without them.
 
-## Ризики
+## Risks
 
-| Ризик | Mitigation |
+| Risk | Mitigation |
 |-|-|
-| НСЗУ format раптом змінився, parser зламався | Contract-test на кожен snapshot. При fail — last-good snapshot stays + UI-banner «дані застарілі станом на DATE» |
-| Drug-name false-positive matching (brand collision) | Manual mapping з two-reviewer sign-off, не auto-mapping |
-| Лікар довіриться NSZU-signal-у, пропустить ефективніший regimen | UI-копія: «це інформація про формуляр, не клін-рекомендація». Best-evidence варіант — завжди default |
-| «Не доступно в моєму регіоні» хоча у формулярі | Чесно: trackуємо тільки формуляр. Посилання «де перевірити наявність по установі» |
-| Snapshot history роздуває репо | Diff-only після 8 тижнів, повний snapshot щомісяця |
-| PDF-only джерело без структури | Виявити в P0. Якщо так — переоцінити: можливо проєкт стає volunteer-driven manual-update замість автоматичного |
-| Конфлікт з memory-rule `efficacy > registration` | Архітектурно вирішено: metadata layer, не filter. Engine не змінює рекомендацій по reimbursement |
+| NSZU format changed unexpectedly, parser broke | Contract-test on each snapshot. On failure — last-good snapshot stays + UI banner "data is stale as of DATE" |
+| Drug-name false-positive matching (brand collision) | Manual mapping with two-reviewer sign-off, not auto-mapping |
+| Clinician trusts the NSZU signal and misses a more effective regimen | UI copy: "this is formulary information, not a clinical recommendation". Best-evidence option is always the default |
+| "Not available in my region" even though it's in the formulary | Honest: we track the formulary only. Link: "where to check availability at a specific facility" |
+| Snapshot history bloats the repo | Diff-only after 8 weeks, full snapshot monthly |
+| PDF-only source with no structure | Identify in P0. If so — reassess: the project may become volunteer-driven manual-update rather than automated |
+| Conflict with memory rule `efficacy > registration` | Architecturally resolved: metadata layer, not a filter. Engine does not change recommendations based on reimbursement |
 
-## Validation interview (виконати перед P1)
+## Validation interview (conduct before P1)
 
-Один дзвінок, **5 питань, 20 хвилин:**
+One call, **5 questions, 20 minutes:**
 
-1. «Скільки разів **на місяць** ви переробляєте план через зміну reimbursement?» — калібрує priority
-2. «Як зараз дізнаєтесь — пацієнт, лік-чат, НСЗУ-сайт, ніяк?» — калібрує channel
-3. «Що болить сильніше: alert по формуляру, чи real-time stock у конкретній лікарні?» — калібрує scope (формуляр vs ProZorro)
-4. «Engine бачить що daratumumab більше не у формулярі — ви хочете автоматично побачити fallback regimen, чи лише попередження?» — калібрує autonomy
-5. «Довірили б скрейпер з ризиком що часом зламається — vs руками раз на тиждень дивитися?» — калібрує надійність-vs-effort
+1. "How many times **per month** do you revise a plan because of a reimbursement change?" — calibrates priority
+2. "How do you find out currently — from the patient, a pharmacy chat, the NSZU website, not at all?" — calibrates channel
+3. "What hurts more: an alert about the formulary, or real-time stock at a specific hospital?" — calibrates scope (formulary vs ProZorro)
+4. "The engine sees that daratumumab is no longer in the formulary — do you want to automatically see a fallback regimen, or just a warning?" — calibrates autonomy
+5. "Would you trust a scraper that might occasionally break — vs checking manually once a week yourself?" — calibrates reliability-vs-effort tradeoff
 
-**Hard kill criterion:** якщо 2+ клініцистів кажуть «менше ніж 1 раз на квартал переробляю» — фіча не варта зусиль, кладемо на полицю до іншого signal-у.
+**Hard kill criterion:** if 2+ clinicians say "less than once a quarter do I revise" — the feature is not worth the effort; put it on the shelf until another signal appears.
 
 ## Open questions
 
-1. **Клін-контакт для P0?** Без однієї людини, з якою провести інтерв'ю до коду — ризикуємо будувати в порожнечу.
-2. **«Metadata, не filter»** — погодити explicitly з Clinical Co-Leads, бо архітектурно це коштує менше але теоретично можна було б фільтрувати.
-3. **Priority vs roadmap:** P1 (push перед іншими) чи P2 (після patient-registry/auth)?
+1. **Clinical contact for P0?** Without one person to interview before writing code, we risk building in a vacuum.
+2. **"Metadata, not filter"** — agree explicitly with Clinical Co-Leads, because architecturally this costs less but filtering would theoretically be possible.
+3. **Priority vs roadmap:** P1 (push before other work) or P2 (after patient-registry/auth)?
 
-## Залежності
+## Dependencies
 
-- `knowledge_base/engine/event_store.py` (commit `98ec53f`) — re-use для reimbursement-change events.
-- `knowledge_base/schemas/` — додати `ReimbursementStatus`, `ReimbursementChange`.
-- `knowledge_base/validation/loader.py` — нова контент-категорія `reimbursement/`.
+- `knowledge_base/engine/event_store.py` (commit `98ec53f`) — reuse for reimbursement-change events.
+- `knowledge_base/schemas/` — add `ReimbursementStatus`, `ReimbursementChange`.
+- `knowledge_base/validation/loader.py` — new content category `reimbursement/`.
 - `scripts/build_site.py` — `/changelog-nszu.html` rendering.
-- `legacy/source_pdfs/` — потенційно сюди фоллбекуються raw PDFs (вже у gitignore).
+- `legacy/source_pdfs/` — raw PDFs may fall back here (already gitignored).
 
-## Що цей spec НЕ покриває
+## What this spec does NOT cover
 
-- Auth/registry для per-clinician inbox (P3 у roadmap, окремий spec).
-- ProZorro stock-level integration (окрема фіча, окремий spec).
-- Reimbursement у країнах поза Україною (поки не у скоупі).
+- Auth/registry for per-clinician inbox (P3 in roadmap, separate spec).
+- ProZorro stock-level integration (separate feature, separate spec).
+- Reimbursement in countries outside Ukraine (not in scope for now).

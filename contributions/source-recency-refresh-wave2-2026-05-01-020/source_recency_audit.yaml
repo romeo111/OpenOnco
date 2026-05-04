@@ -1,0 +1,120 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-020
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Per-source audit summary (issue #222 manifest). One entry per source with
+    the structured fields specified in the issue body's Output Requirements
+    section (id, url_verified, content_current, proposed_current_as_of,
+    license_status, notes). Probe: httpx 0.28.1, HEAD method (per chunk brief
+    override of wave-1 GET pattern), UA "Mozilla/5.0 (compatible;
+    OpenOnco-recency-bot)", timeout=30s, retries=3, follow_redirects=True. On
+    403, fallback chain: DOI HEAD -> PubMed canonical HEAD -> unreachable.blocked.
+issue_number: 222
+audit_date: '2026-05-01'
+chunk_run_date: '2026-05-01'
+sources:
+- id: SRC-ESMO-SARCOMA-2024
+  url_verified: 'no'
+  url_verified_reason: stub_no_url_field
+  content_current: unknown
+  content_current_reason: stub_pending_clinical_signoff
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: no_current_as_of_field_on_stub
+  license_status: pending
+  license_status_reason: legal_review.status=pending; license block not yet populated
+  suggest_url: https://www.esmo.org/guidelines/guidelines-by-topic/sarcoma-and-gist
+  notes: >
+    SRC-ESMO-SARCOMA-2024 is an auto-stub on master
+    (knowledge_base/hosted/content/sources/src_esmo_sarcoma_2024.yaml): title still
+    has "(TODO: confirm citation)", no url / pmid / doi / version / authors /
+    journal fields, review_status: pending_clinical_signoff. Recency refresh out
+    of scope until upstream stub-fill chunk populates publisher metadata.
+    Suggested URL is the ESMO Sarcoma & GIST guidelines landing page; canonical
+    publication-of-record (likely Annals of Oncology STS 2024 update or a
+    "ESMO-EURACAN-GENTURIS-ERN PaedCan" update) requires clinical signoff to
+    disambiguate. No upsert sidecar produced.
+- id: SRC-SCOUT
+  url_verified: 'no'
+  url_verified_reason: stub_no_url_field
+  content_current: unknown
+  content_current_reason: stub_pending_clinical_signoff
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: no_current_as_of_field_on_stub
+  license_status: pending
+  license_status_reason: legal_review.status=pending; license block not yet populated
+  suggest_url: https://pubmed.ncbi.nlm.nih.gov/29606586/
+  notes: >
+    SRC-SCOUT is an auto-stub on master
+    (knowledge_base/hosted/content/sources/src_scout.yaml): title "SCOUT —
+    larotrectinib pediatric NTRK-fusion (TODO: confirm citation)", no url /
+    pmid / doi / version / authors / journal fields, review_status:
+    pending_clinical_signoff. Most likely refers to Laetsch TW et al,
+    "Larotrectinib for paediatric solid tumours harbouring NTRK gene fusions",
+    Lancet Oncol 2018;19:705-714 (PMID 29606586, DOI 10.1016/S1470-2045(18)30119-0)
+    — the SCOUT pediatric NTRK-fusion phase-1/2 publication. Disambiguation +
+    metadata fill requires clinical signoff. No upsert sidecar produced.
+- id: SRC-COMBI-D-LONG-2014
+  url_verified: 'no'
+  url_verified_reason: blocked_by_bot_protection_all_fallbacks
+  content_current: 'yes'
+  content_current_reason: >
+    COMBI-d phase-3 dabrafenib + trametinib evidence remains 1L standard for
+    BRAF V600E/K-mutant unresectable / metastatic melanoma; 5-year update
+    (Robert NEJM 2019, COMBI-d/v pooled) reaffirmed durability. Not superseded.
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: brief_specifies_no_bump_when_unreachable_blocked
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Primary URL https://pubmed.ncbi.nlm.nih.gov/25265492 returned HTTP 403 on
+    HEAD (NCBI bot-protection layer). Fallback chain: DOI HEAD
+    https://doi.org/10.1056/NEJMoa1406037 redirected to nejm.org and 403'd; PubMed
+    canonical HEAD also 403'd. All three fallbacks blocked; no current_as_of
+    bump per chunk brief. Recorded in unreachable.yaml under category 'blocked'.
+    Content known-current (PMID 25265492 is a stable record).
+- id: SRC-OLYMPIAD-ROBSON-2017
+  url_verified: 'no'
+  url_verified_reason: blocked_by_bot_protection_all_fallbacks
+  content_current: 'yes'
+  content_current_reason: >
+    OlympiAD established olaparib as 2L+ option for gBRCA-mutant HER2- metastatic
+    breast cancer. Subsequent expansion (OlympiA NEJM 2021, adjuvant gBRCA early
+    breast) extends but does not supersede OlympiAD. Remains current.
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: brief_specifies_no_bump_when_unreachable_blocked
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Primary URL https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 returned HTTP
+    403 on HEAD (NEJM bot-protection). Fallback chain: DOI HEAD
+    https://doi.org/10.1056/NEJMoa1706450 redirected to nejm.org and 403'd; PubMed
+    canonical HEAD https://pubmed.ncbi.nlm.nih.gov/28578601 also 403'd
+    (NCBI bot-protection on HEAD). All three fallbacks blocked; no current_as_of
+    bump per chunk brief. Recorded in unreachable.yaml under category 'blocked'.
+    Content known-current (PMID 28578601, DOI 10.1056/NEJMoa1706450 are stable
+    records).
+- id: SRC-KEYNOTE-407-PAZ-ARES-2018
+  url_verified: 'no'
+  url_verified_reason: blocked_by_bot_protection_all_fallbacks
+  content_current: 'yes'
+  content_current_reason: >
+    KEYNOTE-407 established pembrolizumab + carboplatin / (nab-)paclitaxel as
+    1L standard for metastatic squamous NSCLC. 5-year update (Novello JCO 2023)
+    confirmed durable benefit. Remains current — not superseded.
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: brief_specifies_no_bump_when_unreachable_blocked
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Primary URL https://pubmed.ncbi.nlm.nih.gov/30280635 returned HTTP 403 on
+    HEAD (NCBI bot-protection). Fallback chain: DOI HEAD
+    https://doi.org/10.1056/NEJMoa1810865 redirected to nejm.org and 403'd; PubMed
+    canonical HEAD also 403'd. All three fallbacks blocked; no current_as_of
+    bump per chunk brief. Recorded in unreachable.yaml under category 'blocked'.
+    Content known-current (PMID 30280635 is a stable record).

@@ -1,0 +1,96 @@
+id: REG-BLINATUMOMAB-BALL-ADULT-RR
+name: "Blinatumomab monotherapy (adult R/R Ph-negative B-ALL)"
+name_ua: "Блінатумомаб моно (дорослі рецидив/рефрактерний Ph-негативний B-ALL)"
+alternate_names:
+  - "Blincyto R/R B-ALL"
+  - "TOWER regimen"
+  - "BiTE CD19xCD3"
+
+components:
+  - drug_id: DRUG-BLINATUMOMAB
+    dose: "Cycle 1: 9 µg/day continuous IV days 1-7, then 28 µg/day continuous IV days 8-28 (step-up dosing). Cycles 2+: 28 µg/day continuous IV days 1-28."
+    schedule: "Continuous IV infusion (CIVI) via portable pump for 28 days, followed by 14-day treatment-free interval. Up to 2 induction cycles + 3 consolidation cycles."
+    route: IV
+
+cycle_length_days: 42
+total_cycles: "Up to 5 (2 induction + 3 consolidation); allogeneic HSCT recommended in responders if eligible"
+toxicity_profile: severe
+
+premedication:
+  - "Hospitalization mandatory for cycle 1 days 1-9 + cycle 2 days 1-2 (CRS / neurotoxicity monitoring)"
+  - "Dexamethasone 20 mg IV 1 hour before first infusion of cycle 1, before each step-up dose, and before re-initiation after ≥4 hour interruption — REQUIRED CRS / neurotoxicity prophylaxis"
+  - "Cytoreduction with dexamethasone if peripheral blast count >50% OR marrow blast >50% before initiation"
+  - "Confirm Ph-negative status (BCR::ABL1 by RT-PCR) — Ph+ B-ALL has separate regimen (TKI + blinatumomab combinations)"
+  - "Lumbar puncture + intrathecal chemotherapy per institutional CNS prophylaxis schedule"
+  - "Avoid corticosteroids except for AE management (suppress T-cell engagement)"
+
+mandatory_supportive_care:
+  - SUP-TLS-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3 cytokine release syndrome (CRS)"
+    modification: "Hold infusion; dexamethasone 8 mg IV q8h + tocilizumab 8 mg/kg IV (max 800 mg); resume at 9 µg/day once ≤Grade 1, escalate to 28 µg/day after 7 days if tolerated"
+    rationale: "TOWER — Grade ≥3 CRS ~5%; dex pretreatment + step-up dosing reduce risk"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Grade 4 CRS"
+    modification: "Permanently discontinue blinatumomab"
+    rationale: "Life-threatening; alternative therapy (inotuzumab, CAR-T) considered"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Grade 3 neurologic toxicity (encephalopathy, seizure, aphasia, tremor)"
+    modification: "Hold until ≤Grade 1 for ≥3 days; dex 8 mg IV q8h; resume at 9 µg/day; permanently discontinue if recurrent Grade 3 or any seizure"
+    rationale: "TOWER — neuro AE Grade ≥3 ~9%; ICANS-like"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Grade 4 neurologic toxicity OR seizure"
+    modification: "Permanently discontinue"
+    rationale: "Life-threatening; second event high recurrence risk"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Infusion interruption ≥4 hours"
+    modification: "Re-initiate as new cycle with dex pretreatment + step-up dosing 9 µg → 28 µg"
+    rationale: "Pharmacology — short half-life (~2 hours); CRS risk on resumption"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+  - condition: "Active uncontrolled CNS leukemia"
+    modification: "Treat CNS disease first (IT chemo + cranial RT); consider blinatumomab once CSF clear given limited CNS penetration"
+    rationale: "Excluded from TOWER; CSF blinatumomab levels minimal"
+    source_refs:
+      - SRC-NCCN-ALL-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Blinatumomab (Blincyto) registered in Ukraine. Reimbursement through NSZU pediatric/adult B-ALL specialty programs is partial; many adults face partial / no coverage. Continuous infusion pump + 28-day inpatient/outpatient logistics available only at specialized hematology centers (Kyiv, Lviv, Dnipro, Kharkiv)."
+
+sources:
+  - SRC-NCCN-ALL-2025
+  - SRC-BLAST-GOKBUGET-2018
+
+last_reviewed: "2026-04-29"
+notes: >
+  CD19xCD3 BiTE for R/R Ph-negative B-ALL in adults. TOWER (Phase III,
+  n=405, blinatumomab vs SOC chemo, R/R B-ALL) — mOS 7.7 vs 4.0 mo
+  (HR 0.71, p=0.012); CR/CRh 44% vs 25%; MRD-negative CR 76% vs 48% in
+  responders. Used as bridge to allogeneic HSCT in eligible patients.
+  Ph+ B-ALL has separate regimen (TKI ± blinatumomab combinations,
+  e.g., dasatinib + blinatumomab GIMEMA D-ALBA). MRD+ CR1 indication
+  uses BLAST data (separate regimen entity, future). STUB — pending
+  TOWER trial Source ingestion (SRC-TOWER-KANTARJIAN-2017) and Co-Lead
+  sign-off.
+notes_ua: >
+  CD19xCD3 BiTE для рецидиву/рефрактерного Ph-негативного B-ALL у
+  дорослих. TOWER (Фаза III, n=405, блінатумомаб проти SOC хіміо,
+  Р/Р B-ALL) — mOS 7.7 проти 4.0 міс (HR 0.71, p=0.012); CR/CRh 44%
+  проти 25%; MRD-негативна CR 76% проти 48% у респондерів. Використовується
+  як bridge до алогенної ТГСК у придатних пацієнтів. Ph+ B-ALL має окрему
+  схему (TKI ± блінатумомаб комбінації, напр. дазатиніб + блінатумомаб
+  GIMEMA D-ALBA). MRD+ CR1 показання використовує дані BLAST (окрема
+  сутність схеми, у майбутньому). STUB — очікує ingestion TOWER trial Source
+  та підпис клінічного Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

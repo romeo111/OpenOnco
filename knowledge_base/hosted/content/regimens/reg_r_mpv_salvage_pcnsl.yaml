@@ -46,6 +46,50 @@ ukraine_availability:
 sources:
   - SRC-NCCN-CNS-2025
   - SRC-ESMO-DLBCL-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# R-MPV (rituximab + procarbazine + vincristine + HD-methotrexate)
+# salvage for PCNSL. HD-MTX dominates: nephro/hepatic, mucositis,
+# cytopenia. Inpatient regimen. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, мукозит у порожнині рота після кожного циклу"
+    action_ua: "Поширене на HD-MTX — полоскання порожнини рота; м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Вінкристин може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — HD-MTX потребує суворого контролю функції нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — HD-MTX може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Розмиття мислення, утруднена мова"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка можливого прогресування PCNSL або нейротоксичності"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока нейтропенія, високий ризик сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CNS-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Судомний напад або виражена слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна оцінка прогресування PCNSL"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CNS-2025
+
 last_reviewed: '2026-04-27'
 notes: For relapsed PCNSL after initial HD-MTX induction with documented prior chemosensitivity. Re-induction with R-MPV → consolidation autoSCT (thiotepa-based, IELSG32) preferred for fit. WBRT alternative for ASCT-ineligible (cognitive toxicity caveat). Ibrutinib emerging salvage option.
 notes_ua: >-

@@ -45,6 +45,37 @@ sources:
   - SRC-NCCN-GIST-2025
   - SRC-ONCOKB
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Avapritinib for PDGFRA D842V GIST 1L (NAVIGATOR). Signature:
+# cognitive impairment (memory + concentration), edema, hair color
+# changes, intracranial hemorrhage rare. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Зміни пам'яті, проблеми зосередитись"
+    action_ua: "Поширене на авапритинібі — занотовуйте, обговоріть на візиті; може знадобитись корекція дози"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Набряки гомілок, обличчя"
+    action_ua: "Поширене — підніміть ноги; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Зміна кольору волосся"
+    action_ua: "Очікувана зміна — побічний ефект препарату"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Виражене порушення мислення, плутаність"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка можливої тяжкої когнітивної токсичності"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — авапритиніб рідко може спричиняти внутрішньочерепну кровотечу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-GIST-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   PDGFRA D842V is imatinib-RESISTANT — kinase-domain steric clash. Pre-

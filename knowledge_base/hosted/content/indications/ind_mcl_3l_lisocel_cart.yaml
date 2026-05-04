@@ -1,0 +1,157 @@
+id: IND-MCL-3L-LISOCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed / refractory MCL after ≥2 prior systemic lines including a covalent BTK inhibitor (ibrutinib / acalabrutinib / zanubrutinib)"
+    - "ECOG 0-2 (TRANSCEND NHL-001 MCL cohort enrolment)"
+    - "Adequate organ function for fludarabine + cyclophosphamide lymphodepletion (ANC ≥1.0, plt ≥75, AST/ALT ≤3× ULN, creatinine clearance ≥60)"
+    - "No prior CD19-directed CAR-T (or sufficient washout per protocol)"
+    - "Manufacturing slot available (~3-week wait acceptable; bridging chemotherapy permitted in window)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD19+ confirmed (CD19 IHC or flow); CD20+ at original diagnosis sufficient"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+
+recommended_regimen:  # No dedicated MCL liso-cel regimen entity in KB; lymphodepletion + dose mirror DLBCL liso-cel REGIMEN-LISOCEL-DLBCL-3L until MCL-specific REG- entity authored
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~83% (TRANSCEND NHL-001 MCL cohort, n≈88 evaluable)"
+  complete_response: "~72%"
+  progression_free_survival: "Median PFS ~15-16 months; durable responses ~50% at 12 months"
+  overall_survival_5y: "12-month OS ~74%; long-term follow-up ongoing"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+
+red_flags_triggering_alternative:
+  - RF-MCL-INFECTION-SCREENING
+  - RF-MCL-BLASTOID-VARIANT
+  - RF-MCL-POST-BTKI-C481-ACTIONABLE  # post-cBTKi r/r with potential actionable resistance mutation
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-MRI-BRAIN-CONTRAST
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Lisocabtagene maraleucel (liso-cel; Breyanzi) received FDA accelerated
+  approval for relapsed/refractory mantle cell lymphoma after ≥2 prior
+  systemic lines including a covalent BTK inhibitor, based on the MCL
+  cohort of TRANSCEND NHL-001 (Wang et al., Lancet 2024). Defined 1:1
+  CD4:CD8 cell composition with 4-1BB costimulation. ORR ~83%, CR ~72%,
+  median PFS ~15-16 months in heavily pretreated cohort with prior cBTKi
+  (universally) and prior autoSCT (~30%). CRS profile favourable: any
+  Grade ~61%, G≥3 ~1%; ICANS any ~31%, G≥3 ~9% — substantially better
+  than brexucel (ZUMA-2 CRS G≥3 ~15%, ICANS G≥3 ~31%) and supports
+  liso-cel preference for older / frail / cardiac comorbid MCL patients.
+  Brexucel (REG-CAR-T-BREXUCEL-MCL) remains alternative CD19 CAR-T
+  with longer follow-up and slightly higher response rates but worse
+  safety profile (separate IND-MCL-3L-BREXUCEL-CART entity). Ukraine
+  context: not registered, no domestic CAR-T manufacturing or accredited
+  centres; international referral pathway (Israel / Poland / Germany /
+  Spain) required at USD 350-500K all-in cost. Aggressive-track option
+  for fit MCL patients with post-cBTKi failure who can access
+  international CAR-T centre.
+
+rationale_ua: >
+  Лісокабтаген маралейцел (liso-cel; Breyanzi) отримав прискорене
+  схвалення FDA для рецидивної/рефрактерної мантійноклітинної лімфоми
+  після ≥2 попередніх системних ліній, включно з ковалентним BTK
+  інгібітором, на підставі MCL когорти TRANSCEND NHL-001 (Wang et al.,
+  Lancet 2024). Визначене 1:1 співвідношення CD4:CD8 з 4-1BB
+  костимуляцією. ORR ~83%, ПВ ~72%, медіана PFS ~15-16 місяців у
+  важко передлікованої когорти з попередньою cBTKi (універсально) та
+  попередньою аутоТГСК (~30%). Профіль CRS сприятливий: будь-який
+  ступінь ~61%, G≥3 ~1%; ICANS будь-який ~31%, G≥3 ~9% — суттєво
+  кращий за брексуцел (ZUMA-2 CRS G≥3 ~15%, ICANS G≥3 ~31%) та
+  підтримує перевагу liso-cel для старших / ослаблених / кардіально
+  обтяжених MCL пацієнтів. Брексуцел (REG-CAR-T-BREXUCEL-MCL)
+  залишається альтернативною CD19 CAR-T з довшим follow-up та трохи
+  вищими показниками відповіді, але з гіршим профілем безпеки (окрема
+  сутність IND-MCL-3L-BREXUCEL-CART). Контекст України: не
+  зареєстрований, немає домашнього CAR-T виробництва або акредитованих
+  центрів; необхідне міжнародне направлення (Ізраїль / Польща /
+  Німеччина / Іспанія) при загальній вартості ~USD 350-500 тис.
+  Агресивний варіант для здатних MCL пацієнтів з невдачею після cBTKi,
+  які можуть отримати доступ до міжнародного CAR-T центру.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Lisocabtagene maraleucel is a Category 2A preferred third-line+ option for r/r MCL after ≥2 prior systemic lines including covalent BTKi, per TRANSCEND NHL-001 MCL cohort; favourable CRS / ICANS profile vs brexucel."
+  - source_id: SRC-ESMO-LYMPHOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "CD19 CAR-T cell therapy (brexucabtagene autoleucel, lisocabtagene maraleucel) is the preferred treatment for r/r MCL after failure of covalent BTK inhibitor; product selection guided by safety profile and centre availability."
+
+known_controversies:
+  - topic: "Liso-cel vs brexucel for r/r MCL post-cBTKi"
+    positions:
+      - position: "Brexucel — first CAR-T approved for MCL (ZUMA-2 2020); CD28 costimulation higher CR rate (~68%) and longer follow-up but worse safety (CRS G≥3 ~15%, ICANS G≥3 ~31%)"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Liso-cel — TRANSCEND NHL-001 MCL cohort 2024; 4-1BB costimulation comparable efficacy (CR ~72%) with substantially better safety (CRS G≥3 ~1%, ICANS G≥3 ~9%); preferred for older / frail / cardiac comorbid"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Pirtobrutinib (non-covalent BTKi) is alternative non-CAR-T option for post-cBTKi MCL — separate IND-MCL-3L-PIRTOBRUTINIB entity"
+        sources: [SRC-ESMO-LYMPHOMA-2025]
+    our_default: "Brexucel for fit ECOG 0-1 patient under 70 with longer-follow-up data preference; liso-cel preferred for older / frailer where safety advantage matters; pirtobrutinib non-CAR-T fallback when CAR-T inaccessible. In Ukraine all 3 require international referral or imported drug."
+    rationale: >
+      MCL CAR-T product selection driven by patient comorbidity profile
+      and centre availability. Liso-cel safety advantage (G≥3 CRS ~1%
+      vs brexucel ~15%) is meaningful in elderly MCL population (median
+      age ~68 at diagnosis). For Ukrainian patients without CAR-T
+      access, pirtobrutinib (registered in some EU markets) provides
+      an oral non-CAR-T 3L option.
+
+do_not_do:
+  - "НЕ призначати prophylactic systemic corticosteroids — пригнічує CAR-T expansion + знижує efficacy."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) ДО інфузії — fatal CRS можливе."
+  - "НЕ робити в центрі без CAR-T accreditation (FACT/JACIE/REMS) — toxicity management потребує спеціалізованої команди + ICU доступу."
+  - "НЕ ігнорувати baseline brain MRI + lumbar puncture для blastoid / pleomorphic варіанту — pre-existing CNS disease суттєво підвищує ризик fatal ICANS."
+  - "НЕ пропускати bridging chemotherapy (3-4 тижні manufacturing window) — швидкопрогресуюча MCL у вікні значно зменшує efficacy."
+  - "НЕ призначати при active uncontrolled infection — лімфодеплеція + CRS = high mortality."
+  - "НЕ забути IVIG для довготривалої hypogammaglobulinemia (IgG <400 + recurrent infections) — B-cell aplasia може тривати >12 місяців; MCL пацієнти часто мають baseline низький IgG після передлікування."
+
+time_critical: false
+last_reviewed: "2026-05-01"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+ option
+  for r/r MCL post-cBTKi per TRANSCEND NHL-001 MCL cohort. Trial source
+  SRC-TRANSCEND-NHL-001-ABRAMSON-2020 in KB but covers DLBCL primary
+  publication; MCL-cohort publication SRC-TRANSCEND-MCL-WANG-2024 absent
+  from KB at chunk authoring time — citing NCCN-BCELL-2025 + ESMO-MCL-2024
+  pending source-stub creation (flagged for trial-source ingest
+  follow-up). Missing entity flag: dedicated REG- entity for MCL liso-cel
+  not authored (recommended_regimen empty); lymphodepletion + dose
+  mirrors DLBCL REGIMEN-LISOCEL-DLBCL-3L until MCL-specific regimen
+  authored — flagged for REG follow-up. Brexucel (IND-MCL-3L-BREXUCEL-CART)
+  is alternative; product selection driven by safety profile preference.

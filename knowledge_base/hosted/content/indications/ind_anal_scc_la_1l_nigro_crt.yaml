@@ -1,0 +1,122 @@
+id: IND-ANAL-SCC-LA-1L-NIGRO-CRT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ANAL-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Squamous cell carcinoma of the anal canal (histologically confirmed)"
+    - "Locally advanced disease: any T, any N, M0 (stages I-III)"
+    - "Stage I (T1N0): CRT or local excision acceptable; CRT preferred for any concern about margins"
+    - "Stage II-IIIB (T2-T4 or N+): definitive concurrent CRT is NCCN Category 1 standard"
+    - "No distant metastases (M0) — stage IV requires systemic chemotherapy approach"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG ≤2 required for chemoradiation; HIV+ patients eligible with optimized antiretroviral therapy"
+
+recommended_regimen: REG-NIGRO-MMC-5FU-RT
+concurrent_therapy:
+  - "Concurrent external beam radiation therapy (EBRT) 50.4 Gy (integral to regimen — must be planned by radiation oncology)"
+followed_by:
+  - "Response assessment at 8-11 weeks post-CRT (clinical exam + CT/MRI pelvis)"
+  - "If residual mass: biopsy to confirm viable tumor; observe until 26 weeks if biopsy-negative"
+  - "If confirmed residual/progressive disease: salvage abdominoperineal resection (APR)"
+  - "Surveillance: physical exam + inguinal nodes q3-6 months × 5 years; CT 6-12 monthly × 2 years"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  complete_response_rate: "~90% complete response at 26 weeks (ACT II)"
+  progression_free_survival: "74% 3-year PFS (ACT II, MMC arm)"
+  overall_survival_5y: "~80-85% 5-year OS for stage II-III with CRT"
+  colostomy_free_survival_3y: "~70% colostomy-free at 3 years"
+  salvage_apr_rate: "~10-25% require salvage APR for residual/recurrent disease"
+
+hard_contraindications:
+  - "Stage IV (distant metastases) — use systemic chemotherapy, not CRT with curative intent"
+  - "Anal gland adenocarcinoma — treat as rectal adenocarcinoma, not this protocol"
+  - "Perforated tumor or fistula with uncontrolled sepsis — stabilize first"
+  - "Prior pelvic RT to cumulative dose precluding safe re-irradiation"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-MRI-PELVIS
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CREATININE-CL
+
+desired_tests:
+  - "PET-CT (optional — improves nodal staging, identifies M1 disease before committing to CRT)"
+  - "HIV test (all patients with anal SCC)"
+  - "HPV typing (epidemiologic; not treatment-modifying)"
+  - "Gynecological examination (women: concurrent cervical/vulvar HSIL common)"
+
+rationale: >
+  Concurrent chemoradiation (Nigro protocol: MMC + 5-FU + RT 50.4 Gy) is NCCN
+  Category 1 and the global standard of care for locally advanced squamous cell
+  carcinoma of the anal canal (stages I-III). Originally described by Nigro (1974),
+  definitively validated by ACT II (James 2013, n=940): complete response ~90%,
+  3-year PFS 74%, with organ preservation in ~75% of patients. APR is NOT primary
+  treatment — it is reserved for CRT failure confirmed by biopsy. ACT II also
+  confirmed: (1) MMC is equivalent to cisplatin — MMC standard; (2) maintenance
+  chemotherapy provides no benefit. Radiation dose 50.4 Gy with IMRT preferred
+  (reduces acute toxicity vs 3D-CRT). Response assessment at 8-11 weeks — biopsy
+  only for residual mass (not at 4-6 weeks: high false-positive from radiation changes).
+
+rationale_ua: >
+  Одночасна хіміопроменева терапія (режим Нігро: ММС + 5-ФУ + ПТ 50.4 Гр) є
+  NCCN Категорія 1 та глобальним стандартом для місцево-поширеного плоскоклітинного
+  раку анального каналу (стадії I-III). Підтверджено ACT II (James 2013, n=940):
+  повна відповідь ~90%, 3-річний PFS 74%, збереження органу у ~75% пацієнтів.
+  АПЕ НЕ є первинним лікуванням — лише за наявності залишкового захворювання
+  після CRT. ММС рівнозначний цисплатину (ММС є стандартом); підтримуюча
+  хіміотерапія після CRT не дає переваг і не рекомендована (ACT II).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ACT2-JAMES-2013
+    position: supports
+    relevant_quote_paraphrase: "ACT II (n=940): MMC+5FU+RT complete response 90.5% at 26 weeks; 3y PFS 74%; MMC = cisplatin; no benefit from maintenance chemotherapy — MMC is standard"
+  - source_id: SRC-NCCN-ANAL-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN Category 1: MMC+5FU+RT for stages I-III anal SCC; APR reserved for CRT failure; IMRT preferred"
+
+do_not_do:
+  - "НІКОЛИ не починати з APE (абдомінально-промежинна екстирпація) при плоскоклітинному раку анального каналу — CRT є органозберігаючим стандартом"
+  - "Не проводити біопсію залишкового захворювання раніше 8 тижнів після CRT — радіаційні зміни дають хибно-позитивний результат"
+  - "Не замінювати ММС на цисплатин без клінічного обґрунтування — ACT II показав еквівалентність, ММС є стандартом"
+  - "Не призначати підтримуючу хіміотерапію після завершення CRT — ACT II не виявив переваг (несприятливий профіль токсичності без підвищення ефективності)"
+  - "Не призначати CRT при стадії IV (наявні метастази) — використовувати системну хіміотерапію ± імунотерапію"
+  - "Не знижувати дозу опромінення нижче 45 Гр без значного клінічного обґрунтування — доза 50.4 Гр пов'язана з оптимальним локальним контролем"
+
+known_controversies:
+  - topic: "T1N0 stage I: local excision vs CRT"
+    positions:
+      - position: "Local excision acceptable for T1N0 with clear margins and sphincter preservation — avoids radiation toxicity"
+        sources: [SRC-NCCN-ANAL-2025]
+      - position: "CRT preferred even for T1N0 — higher complete response, better long-term colostomy-free survival"
+        sources: [SRC-ACT2-JAMES-2013]
+    our_default: "CRT for all T2+ or any N+; MDT discussion for T1N0"
+    rationale: "T1N0 borderline — radiation oncology + colorectal surgery MDT discussion recommended"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Post-CRT surveillance: physical exam + inguinal node palpation q3-6 months × 5 years;
+  CT CAP q6-12 months × 2 years; MRI pelvis q6 months × 2 years (sensitive for local recurrence).
+  Recurrence after CRT: local-only → consider salvage APR if resectable; distant → systemic therapy.
+  HIV+ patients: same CRT protocol; coordinate with HIV specialist; CD4 >200 preferred but
+  not absolute contraindication; ART must continue during CRT.

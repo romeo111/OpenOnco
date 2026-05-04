@@ -1,0 +1,113 @@
+id: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "Progressive disease on or after docetaxel-based chemotherapy"
+    - "Prior ARPI (enzalutamide or abiraterone) in mHSPC or mCRPC setting"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PSA
+      value_constraint: "PSA baseline required (PCWG3 response/progression assessment)"
+    - biomarker_id: BIO-GLEASON-ISUP
+      value_constraint: "Gleason / ISUP grade group — mandatory pathologic stratifier"
+  biomarker_requirements_excluded:
+    - "HRR/BRCA mutation without prior PARPi exposure — PARPi preferred first (IND-PROSTATE-MCRPC-1L-PARPI)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "CARD/TROPIC: ECOG 0-2; borderline ECOG 2 requires careful benefit-risk assessment"
+
+recommended_regimen: REG-CABAZITAXEL-MCRPC
+concurrent_therapy:
+  - "G-CSF primary prophylaxis (mandatory — see regimen)"
+followed_by:
+  - "Lu-PSMA-617 if PSMA-PET positive after cabazitaxel failure (IND-PROSTATE-MCRPC-2L-LU-PSMA)"
+  - "Best supportive care if ECOG deteriorates to ≥3"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  ipfs_hr_vs_second_arpi: 0.54
+  median_ipfs_months: 8.0
+  os_hr_vs_second_arpi: 0.64
+  median_os_months: 13.6
+  overall_response_rate: "35.7% (CARD; post-docetaxel + post-ARPI)"
+  psa_decline_50pct: "35.7%"
+  notes: >
+    CARD trial (de Bono 2019, NEJM): cabazitaxel vs second ARPI (enza or abi, whichever not prior)
+    in mCRPC post-docetaxel + post-ARPI. Cabazitaxel: iPFS 8.0 vs 3.7 months (HR 0.54);
+    OS 13.6 vs 11.0 months (HR 0.64); ORR 35.7% vs 12.2%.
+    TROPIC (de Bono 2010, Lancet): cabazitaxel vs mitoxantrone post-docetaxel; OS 15.1 vs
+    12.7 months (HR 0.70) — historical landmark establishing cabazitaxel as post-docetaxel standard.
+
+hard_contraindications:
+  - "Severe hepatic impairment (bilirubin >3 × ULN)"
+  - "Severe hypersensitivity to cabazitaxel or polysorbate 80"
+  - "ECOG PS ≥3"
+  - "ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L at initiation"
+
+red_flags_triggering_alternative:
+  - condition: "BRCA1/2 or HRR mutation not yet treated with PARPi → olaparib preferred (IND-PROSTATE-MCRPC-1L-PARPI)"
+  - condition: "PSMA-PET-positive (all lesions avid) + prior taxane + prior ARPI → Lu-PSMA preferred (IND-PROSTATE-MCRPC-2L-LU-PSMA; VISION OS HR 0.62)"
+  - condition: "Bone-predominant disease, no visceral mets, ECOG 0-2 → Ra-223 is an alternative/complement (IND-PROSTATE-MCRPC-2L-RADIUM223; ALSYMPCA OS HR 0.70)"
+  - condition: "No prior docetaxel AND ARPI-naive → cabazitaxel not standard (not tested in fully treatment-naive patients)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PSA-SERUM
+  - "HRR/BRCA1/2 somatic + germline testing (if not done — gates PARPi eligibility)"
+  - "PSMA-PET/CT (if not done — gates Lu-PSMA eligibility at progression)"
+  - "CT CAP + bone scan (baseline staging for response assessment)"
+  - TEST-ECG
+
+desired_tests:
+  - "AR splice variant testing (AR-V7 — resistance marker for ARPI; informative but does not change cabazitaxel selection)"
+
+rationale: >
+  CARD (de Bono 2019, NEJM, n=255): head-to-head cabazitaxel vs second ARPI in mCRPC
+  patients who progressed during or after docetaxel AND prior ARPI. iPFS HR 0.54 (8.0 vs 3.7m);
+  OS HR 0.64 (13.6 vs 11.0m); ORR 35.7% vs 12.2%. The CARD result confirms that ARPI
+  cross-resistance (androgen receptor pathway sharing) limits the utility of second ARPI
+  after prior docetaxel + first ARPI — cabazitaxel's tubulin-targeting mechanism retains
+  activity. NCCN Category 1 for this sequence.
+  Preferred dose: 20 mg/m² (PROSELICA non-inferiority; lower Grade 3/4 hematologic toxicity).
+  G-CSF primary prophylaxis mandatory.
+
+rationale_ua: >
+  CARD (n=255): кабазитаксел vs другий АРПІ після доцетакселю + попереднього АРПІ.
+  rPFS HR 0.54 (8.0 vs 3.7 міс); OS HR 0.64 (13.6 vs 11.0 міс). NCCN Категорія 1.
+  Перехресна резистентність АРПІ обмежує ефективність другого АРПІ; кабазитаксел
+  зберігає активність через мікротубулярний механізм. Доза 20 мг/м² (PROSELICA:
+  не гірша ефективність, краща переносимість). G-CSF профілактика ОБОВ'ЯЗКОВА.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CARD-DE-BONO-2019
+    position: supports
+    relevant_quote_paraphrase: "CARD (n=255): cabazitaxel vs second ARPI post-docetaxel+prior ARPI; iPFS HR 0.54 (8.0 vs 3.7m); OS HR 0.64 (13.6 vs 11.0m); ORR 35.7% vs 12.2%; NCCN Cat 1"
+  - source_id: SRC-TROPIC-DE-BONO-2010
+    position: supports
+    relevant_quote_paraphrase: "TROPIC (n=755): cabazitaxel vs mitoxantrone post-docetaxel; mOS 15.1 vs 12.7m (HR 0.70, p<0.0001) — established cabazitaxel as post-docetaxel standard"
+
+do_not_do:
+  - "Не призначати другий АРПІ (ензалутамід або абіратерон) при прогресуванні після доцетакселю + попереднього АРПІ — CARD показав значно нижчу ефективність (ORR 12% vs 35%)"
+  - "Не застосовувати без G-CSF первинної профілактики — ризик нейтропенічної гарячки"
+  - "Не призначати при важкій печінковій недостатності (білірубін >3 × ВМН)"
+  - "Не пропускати тестування HRR/BRCA — PARPi перевершує хіміотерапію при BRCA1/2-мутованих пацієнтах"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

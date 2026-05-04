@@ -58,6 +58,50 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Amivantamab + carbo + pemetrexed for EGFR-mut NSCLC 3L+
+# (MARIPOSA-2). Combines ami rash/IRR/VTE with chemo cytopenia +
+# pemetrexed mucositis. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Акнеформний висип на обличчі"
+    action_ua: "Очікувано на амівантамабі — використовуйте призначені креми"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Запалення навколо нігтів"
+    action_ua: "Поширене — носіть м'яке взуття"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірний мукозит, нудота"
+    action_ua: "Полоскання порожнини рота; протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — карбо нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — амівантамаб підвищує ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Тяжка реакція на інфузію амівантамабу"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — PE або пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

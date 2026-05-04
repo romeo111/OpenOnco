@@ -1,0 +1,65 @@
+id: BIO-NOTCH2-MUTATION
+names:
+  preferred: "NOTCH2 mutation (PEST domain truncating)"
+  ukrainian: "Мутація NOTCH2 (PEST-домен, скорочуючі)"
+  english: "NOTCH2 mutation"
+biomarker_type: gene_mutation
+
+mutation_details:
+  gene: "NOTCH2"
+  variant_type: "frameshift / nonsense in PEST domain (exon 34)"
+  functional_impact: "stabilization of activated NOTCH2 intracellular domain → constitutive NF-κB + marginal-zone differentiation signaling"
+
+measurement: {method: "NGS panel covering NOTCH2 PEST domain (exon 34)", units: "categorical (positive | negative)"}
+specimen_requirements: ["FFPE tumor biopsy for SMZL/MZL/DLBCL"]
+
+sources:
+  - SRC-CIVIC
+  - SRC-NCCN-BCELL-2025
+
+oncokb_skip_reason: multi_allele_mvp
+external_ids:
+  hgnc_symbol: "NOTCH2"
+last_reviewed: "2026-04-29"
+notes: >
+  Cross-disease relevance:
+
+  - **Splenic marginal-zone lymphoma (SMZL)** (~25%): defining
+    recurrent driver alongside KLF2; associated with shorter time-to-
+    treatment + worse OS. Currently informational; no NOTCH2-targeted
+    therapy in MZL standard-of-care.
+  - **DLBCL (BN2 / C1 cluster)** (~20% of cases): NOTCH2 PEST mutation
+    + BCL6 fusion + cluster of marginal-zone-derived events define the
+    LymphGen BN2 subtype. BN2 has favorable outcome with R-CHOP and
+    appears intermediate-sensitive to BTKi.
+  - **Nodal MZL / MALT** (~5-10%): less frequent; subset marker.
+  - **CLL** (~5%): rare; not a treatment driver.
+
+  LymphGen BN2-classifier component for DLBCL; engine uses presence
+  to support BN2 subtype call (combined with BCL6 fusion + other
+  marginal-zone-derived events). Standalone treatment-changing impact
+  modest at MVP. `multi_allele_mvp` skip reason: PEST exon-34
+  truncating events have multiple recurring sites without a single
+  canonical hotspot — same pattern as NOTCH1 PEST.
+notes_ua: >
+  Cross-хвороба relevance:
+
+  - **Селезінкова MZL (SMZL)** (~25%): визначальний рекурентний
+    драйвер разом з KLF2; асоційований з shorter time-to-treatment +
+    гіршим OS. Currently informational; no NOTCH2-таргетована терапія
+    in MZL стандарт-of-care.
+  - **DLBCL (BN2 / C1 cluster)** (~20% of cases): NOTCH2 PEST mutation
+    + BCL6 fusion + cluster of marginal-zone-derived events визначають
+    LymphGen BN2 subtype. BN2 has сприятливий outcome with R-CHOP and
+    appears intermediate-чутливий to BTKi.
+  - **Вузлова MZL / MALT** (~5-10%): менш частий; subset marker.
+  - **CLL** (~5%): рідкісний; not a treatment driver.
+
+  LymphGen BN2-classifier component for DLBCL; engine uses presence
+  to support BN2 subtype call (combined with BCL6 fusion + інші
+  marginal-zone-derived events). Standalone treatment-changing impact
+  скромний at MVP. `multi_allele_mvp` skip reason: PEST exon-34
+  truncating events мають кілька recurring sites без single
+  canonical hotspot — same pattern as NOTCH1 PEST.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

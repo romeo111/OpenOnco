@@ -34,6 +34,43 @@ ukraine_availability:
   notes: "Рукапариб не зареєстрований в Україні; доступ через клінічне дослідження або благодійний імпорт. Альтернативи з UA-доступом: REG-OLAPARIB-MAINT-OVARIAN (BRCA1/2) або REG-NIRAPARIB-MAINT-OVARIAN (HRD+ або all-comer)."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-ARIEL3-COLEMAN-2017]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Rucaparib maintenance for ovarian post-platinum (ARIEL3). PARPi
+# pattern same as olaparib + photosensitivity (rare). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Часто проходить через 2-3 місяці — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищена чутливість шкіри до сонця"
+    action_ua: "Сонцезахисний крем SPF 50+; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — рукапариб може спричиняти анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — рукапариб може знижувати тромбоцити"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >

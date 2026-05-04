@@ -60,6 +60,42 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# P-GEMOX for NK/T-cell lymphoma. Asparaginase: pancreatitis (no rechallenge)
+# + coagulopathy/thrombosis. Oxaliplatin: neuropathy + cold sensitivity.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння у пальцях після оксаліплатину"
+    action_ua: "Очікувано від оксаліплатину — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Підвищена чутливість до холоду (металевий смак, оніміння від холодних предметів)"
+    action_ua: "Уникайте холодного в перші 5 днів після інфузії — гострий нейросенсорний ефект оксаліплатину; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий сильний біль у животі (оперізуючий, в центрі або зліва)"
+    action_ua: "Звертайтесь у лікарню негайно — панкреатит від аспарагінази (повторне призначення заборонено)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Кровотеча з ясен, виражені синці, кров у сечі"
+    action_ua: "Звертайтесь у лікарню негайно — порушення згортання крові від аспарагінази"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Різкий набряк або біль у нозі чи руці, почервоніння"
+    action_ua: "Звертайтесь у лікарню негайно — тромбоз від аспарагінази"
+    urgency: er_now
+    sources:
+      - SRC-ESMO-PTCL-2024
+
 last_reviewed: "2026-04-27"
 notes: >
   Wang 2013 (Leukemia) — P-GEMOX in r/r NK/T-cell lymphoma ORR ~80%,

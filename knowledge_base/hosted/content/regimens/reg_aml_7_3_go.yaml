@@ -69,6 +69,41 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ELN-AML-2022
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# 7+3 + GO for CD33+ favorable-risk AML 1L (ALFA-0701).
+# Inherits 7+3 inpatient toxicity + GO-specific VOD risk.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями"
+    action_ua: "Очікувано після індукції — кістковий мозок відновлюється повільно"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Жовтяниця, набір ваги, біль у правому верхньому квадранті — у перші 30 днів"
+    action_ua: "Звертайтесь у лікарню негайно — гемтузумаб може спричиняти веноокклюзивну хворобу печінки (VOD)"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-ALFA-0701-CASTAIGNE-2012
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — нейтропенія, ризик сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка інфузійна реакція на гемтузумаб"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-AML-2025
+
 last_reviewed: "2026-04-30"
 reviewer_signoffs: []
 notes: >

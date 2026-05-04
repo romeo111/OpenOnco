@@ -1,0 +1,96 @@
+id: IND-UROTHELIAL-2L-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic urothelial carcinoma"
+    - "Prior platinum-containing chemotherapy"
+    - "ICI-NAIVE at time of pembrolizumab 2L — no prior anti-PD-(L)1 exposure"
+    - "Applicable when: 1L was platinum-only (no avelumab maintenance, no PD-L1 inhibitor)"
+    - "Not applicable for patients who received avelumab maintenance 1L (prior ICI exposure)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior PD-(L)1 inhibitor therapy (ICI re-challenge not validated)"
+    - "FGFR2/3 alteration — erdafitinib preferred (IND-UROTHELIAL-2L-ERDAFITINIB)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+followed_by:
+  - "CT CAP response assessment q9 weeks (every 3 cycles)"
+  - "Continue up to 2 years total or until progression/toxicity"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~21.1% (KEYNOTE-045 vs 11.0% chemo)"
+  complete_response_rate: "~7% (with durable responses; ~19% 5-year responders)"
+  overall_survival: "~10.3 months (KEYNOTE-045 vs 7.4 months chemo; HR 0.73)"
+  pdl1_cps10_os: "~8.0 months (HR 0.57 for CPS ≥10 subgroup)"
+  notes: "Some patients (~7%) achieve durable CR — rare with chemotherapy; KEYNOTE-045 5y followup shows tail of survival curve"
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic treatment"
+  - "Solid organ transplant recipient"
+  - "Prior anti-PD-(L)1 therapy (pembrolizumab, avelumab, atezolizumab, nivolumab, durvalumab)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2/3 alteration: erdafitinib preferred (THOR; ORR 35.3% vs pembro ~21%; HR 0.58 vs chemo)"
+  - condition: "Prior avelumab maintenance: ICI re-challenge not validated; prefer EV monotherapy (IND-UROTHELIAL-2L-EV)"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH + cortisol (baseline immunotherapy endocrine monitoring)"
+  - "FGFR2/3 NGS/Therascreen testing (mandatory — identifies erdafitinib candidates)"
+  - "PD-L1 CPS (informative — CPS ≥10 predicts stronger benefit; not required for prescribing since KEYNOTE-045 benefit seen in all comers)"
+
+rationale: >
+  Pembrolizumab 200 mg q3w in KEYNOTE-045 (Bellmunt 2017, NEJM, n=542): ORR 21.1%
+  vs 11.0% chemo; mOS 10.3 vs 7.4 months (HR 0.73, p=0.002) in platinum-refractory,
+  ICI-naive advanced UC. PD-L1 CPS ≥10 subgroup derived greater benefit (HR 0.57).
+  FDA approved May 2017. In 2025/2026, pembrolizumab 2L applies primarily to patients
+  who received platinum 1L WITHOUT any ICI component (i.e., platinum-only 1L without
+  avelumab maintenance). For patients who received avelumab maintenance 1L, EV is
+  preferred 2L (ICI re-challenge has no data). FGFR2/3 testing is mandatory before 2L
+  — erdafitinib has superior outcomes for FGFR-altered patients (THOR: ORR 35.3%,
+  HR 0.58 vs chemo).
+
+rationale_ua: >
+  Пембролізумаб 200 мг q3w у KEYNOTE-045 (n=542): ORR 21.1% vs 11.0%; мOS 10.3 vs 7.4
+  місяці (HR 0.73) при рефрактерному до платини УК у ICI-наївних пацієнтів. У 2025/2026
+  пембролізумаб 2L найбільш актуальний при платиновій монохіміотерапії 1L без ICI.
+  Тестування FGFR2/3 обов'язкове — ердафітиніб ефективніший при FGFR-позитивних пацієнтах.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE045-BELLMUNT-2017
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-045 (n=542): pembrolizumab vs chemo in platinum-refractory ICI-naive UC; mOS 10.3 vs 7.4 months (HR 0.73, p=0.002); ORR 21.1% vs 11.0%; NCCN Cat 1"
+
+do_not_do:
+  - "Не призначати при попередньому ICI лікуванні (авелумаб, пembro, атезолізумаб) — повторне ICI не підтверджено"
+  - "Не пропускати FGFR2/3 тестування перед 2L — FGFR+ пацієнти мають кращу відповідь на ердафітиніб"
+  - "Не застосовувати при активних аутоімунних захворюваннях (ГКС >10 мг/д)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  KEYNOTE-045 5-year follow-up (Bellmunt 2022): ~19% pembrolizumab responders maintained
+  response at 5 years vs 0% with chemotherapy. Pembrolizumab provides durable disease
+  control for ~7% of patients. PD-L1 CPS testing before 2L is informative (CPS ≥10
+  has stronger predictive value) but is NOT a requirement — benefit seen regardless.
+  REG-PEMBROLIZUMAB-MONO reference required — use standard pembrolizumab 200 mg q3w.

@@ -1597,11 +1597,11 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="auto-urothelial",
         file="auto_urothelial.json",
-        label_ua="DIS-UROTHELIAL — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Urothelial carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-UROTHELIAL — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Urothelial carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
-        label_en="DIS-UROTHELIAL — Auto-stub (75% KB fill)",
-        summary_en="Auto-generated minimal profile for Urothelial carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
+        label_en="DIS-UROTHELIAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Urothelial carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-wm",
@@ -5454,5 +5454,207 @@ CASES: list[CaseEntry] = [
         summary_en="Pre-biopsy: PSA 12.4 ng/mL, mp-MRI PI-RADS 4. Engine: WORKUP-SUSPECTED-PROSTATE (transperineal mp-MRI-targeted biopsy + Gleason + PSMA-PET if int/high-risk).",
     ),
     # ── /CURATED CHUNK 2026-04-29-0313 ──
+
+    # ── DIAGNOSTIC-MODE EXPANSION 2026-05-01 (13 cases) ──
+    # Closes the diagnostic-cases gap: of 24 KB workups, only 4 had
+    # pre-biopsy patient examples before. This batch adds 13 more
+    # covering acute leukemia, CRC, endometrial, GBM, HCC, melanoma,
+    # MDS-pancytopenia (cytopenia-eval), MPN polycythemia, MM, ovarian,
+    # RCC, SCLC, urothelial. Each case emits Diagnostic Brief, NOT
+    # Treatment Plan (CHARTER §15.2 C7).
+    CaseEntry(
+        case_id="diagnostic-acute-leukemia-circulating-blasts",
+        file="patient_diagnostic_acute_leukemia_circulating_blasts.json",
+        label_ua="Diagnostic · Acute leukemia · Pancytopenia + 38% circulating blasts",
+        summary_ua="Pre-biopsy: WBC 95k з 38% blasts на peripheral smear, DIC labs, hyperleukocytosis. Engine: WORKUP-SUSPECTED-ACUTE-LEUKEMIA (BM aspirate + flow + cytogenetics + NPM1/FLT3/IDH/CEBPA NGS).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Acute leukemia · Pancytopenia + 38% circulating blasts",
+        summary_en="Pre-biopsy: WBC 95k with 38% blasts on peripheral smear, DIC labs, hyperleukocytosis. Engine: WORKUP-SUSPECTED-ACUTE-LEUKEMIA (BM aspirate + flow + cytogenetics + NPM1/FLT3/IDH/CEBPA NGS).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-crc-lgib-iron-deficiency",
+        file="patient_diagnostic_crc_lgib_iron_deficiency.json",
+        label_ua="Diagnostic · Suspect CRC · Iron-deficiency + LGIB + colon mass",
+        summary_ua="Pre-biopsy: Hgb 8.4, ferritin 9, рectal bleeding, 4.5 cm right-colon mass на CT. Engine: WORKUP-SUSPECTED-CRC (colonoscopy + biopsy + KRAS/NRAS/BRAF + MSI/MMR-IHC + CEA + staging CT).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect CRC · Iron-deficiency + LGIB + colon mass",
+        summary_en="Pre-biopsy: Hgb 8.4, ferritin 9, rectal bleeding, 4.5 cm right-colon mass on CT. Engine: WORKUP-SUSPECTED-CRC (colonoscopy + biopsy + KRAS/NRAS/BRAF + MSI/MMR-IHC + CEA + staging CT).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-endometrial-pmb",
+        file="patient_diagnostic_endometrial_pmb.json",
+        label_ua="Diagnostic · Suspect endometrial · PMB + thickened endometrium 14 mm",
+        summary_ua="Pre-biopsy: postmenopausal bleeding + endometrial stripe 14 mm на TVUS. Engine: WORKUP-SUSPECTED-ENDOMETRIAL (Pipelle ± hysteroscopy → histology + grade + POLE/dMMR/p53/NSMP molecular).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect endometrial · PMB + thickened endometrium 14 mm",
+        summary_en="Pre-biopsy: postmenopausal bleeding + endometrial stripe 14 mm on TVUS. Engine: WORKUP-SUSPECTED-ENDOMETRIAL (Pipelle ± hysteroscopy → histology + grade + POLE/dMMR/p53/NSMP molecular).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-gbm-focal-neuro-deficit",
+        file="patient_diagnostic_gbm_focal_neuro_deficit.json",
+        label_ua="Diagnostic · Suspect GBM · 4.2 cm ring-enhancing left frontal mass",
+        summary_ua="Pre-biopsy: focal motor deficit + aphasia + ring-enhancing brain mass з central necrosis. Engine: WORKUP-SUSPECTED-GBM (neurosurgical biopsy/resection + IDH-1/2 + MGMT methylation + 1p/19q).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect GBM · 4.2 cm ring-enhancing left frontal mass",
+        summary_en="Pre-biopsy: focal motor deficit + aphasia + ring-enhancing brain mass with central necrosis. Engine: WORKUP-SUSPECTED-GBM (neurosurgical biopsy/resection + IDH-1/2 + MGMT methylation + 1p/19q).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-hcc-cirrhosis-li-rads",
+        file="patient_diagnostic_hcc_cirrhosis_li_rads.json",
+        label_ua="Diagnostic · Suspect HCC · HCV-cirrhosis + LI-RADS 5 + AFP 480",
+        summary_ua="Pre-biopsy: post-DAA SVR12 4 yr + 3.8 cm liver mass + AFP rise 12→480. Engine: WORKUP-SUSPECTED-HCC (LI-RADS 5 = imaging-only diagnosis у cirrhosis per AASLD; Child-Pugh + BCLC + variceal screening).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect HCC · HCV-cirrhosis + LI-RADS 5 + AFP 480",
+        summary_en="Pre-biopsy: post-DAA SVR12 4 yr + 3.8 cm liver mass + AFP rise 12→480. Engine: WORKUP-SUSPECTED-HCC (LI-RADS 5 = imaging-only diagnosis in cirrhosis per AASLD; Child-Pugh + BCLC + variceal screening).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-melanoma-atypical-lesion",
+        file="patient_diagnostic_melanoma_atypical_lesion.json",
+        label_ua="Diagnostic · Suspect melanoma · Atypical pigmented lesion (ABCDE+)",
+        summary_ua="Pre-biopsy: changing pigmented lesion 1.4 cm з ABCDE positive на dorsal back. Engine: WORKUP-SUSPECTED-MELANOMA (excisional biopsy 1-3 mm margins + Breslow + ulceration + sentinel LN if ≥0.8 mm + BRAF V600).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect melanoma · Atypical pigmented lesion (ABCDE+)",
+        summary_en="Pre-biopsy: changing pigmented lesion 1.4 cm with ABCDE positive on dorsal back. Engine: WORKUP-SUSPECTED-MELANOMA (excisional biopsy 1-3 mm margins + Breslow + ulceration + sentinel LN if ≥0.8 mm + BRAF V600).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-mm-bone-pain-m-protein",
+        file="patient_diagnostic_mm_bone_pain_m_protein.json",
+        label_ua="Diagnostic · Suspect MM · Bone pain + IgG-kappa M-spike + lytic L2",
+        summary_ua="Pre-biopsy: thoracic back pain + IgG-kappa 32 g/L + Cr 1.6 + Ca 11.8 + L2 lytic 1.8 cm (CRAB+). Engine: WORKUP-SUSPECTED-MULTIPLE-MYELOMA (BM ≥10% plasma cells + skeletal survey/WB-MRI + FLC + cytogenetics FISH).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect MM · Bone pain + IgG-kappa M-spike + lytic L2",
+        summary_en="Pre-biopsy: thoracic back pain + IgG-kappa 32 g/L + Cr 1.6 + Ca 11.8 + L2 lytic 1.8 cm (CRAB+). Engine: WORKUP-SUSPECTED-MULTIPLE-MYELOMA (BM ≥10% plasma cells + skeletal survey/WB-MRI + FLC + cytogenetics FISH).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-mpn-mds-pancytopenia",
+        file="patient_diagnostic_mpn_mds_pancytopenia.json",
+        label_ua="Diagnostic · Suspect MDS · Pancytopenia + dysplastic changes + JAK2-neg",
+        summary_ua="Pre-biopsy: 71F з pancytopenia × 4 mo + macrocytosis + dysplastic neutrophils + Pelger-Huet. Engine: WORKUP-CYTOPENIA-EVALUATION (BM aspirate + cytogenetics + IPSS-R/IPSS-M + JAK2/CALR/SF3B1/ASXL1/TET2 NGS).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect MDS · Pancytopenia + dysplastic changes + JAK2-neg",
+        summary_en="Pre-biopsy: 71F with pancytopenia × 4 mo + macrocytosis + dysplastic neutrophils + Pelger-Huet. Engine: WORKUP-CYTOPENIA-EVALUATION (BM aspirate + cytogenetics + IPSS-R/IPSS-M + JAK2/CALR/SF3B1/ASXL1/TET2 NGS).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-mpn-polycythemia-pruritus",
+        file="patient_diagnostic_mpn_polycythemia_pruritus.json",
+        label_ua="Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus",
+        summary_ua="Pre-biopsy: facial plethora + aquagenic pruritus + Hgb 19.2 + EPO 2.1 + splenomegaly. Engine: WORKUP-SUSPECTED-MPN-MDS (JAK2 V617F + JAK2 exon 12 + serum EPO + BM biopsy для WHO 2022 PV).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect PV · Erythrocytosis (Hgb 19.2) + low EPO + aquagenic pruritus",
+        summary_en="Pre-biopsy: facial plethora + aquagenic pruritus + Hgb 19.2 + EPO 2.1 + splenomegaly. Engine: WORKUP-SUSPECTED-MPN-MDS (JAK2 V617F + JAK2 exon 12 + serum EPO + BM biopsy for WHO 2022 PV).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-ovarian-pelvic-mass-ca125",
+        file="patient_diagnostic_ovarian_pelvic_mass_ca125.json",
+        label_ua="Diagnostic · Suspect ovarian · Bilateral adnexal masses + CA-125 412 + ascites",
+        summary_ua="Pre-biopsy: bilateral complex adnexal masses (8.5 + 4.2 cm) + CA-125 412 + omental thickening + ascites. Engine: WORKUP-SUSPECTED-OVARIAN (primary cytoreduction + histology + HRD + BRCA1/2 germline).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect ovarian · Bilateral adnexal masses + CA-125 412 + ascites",
+        summary_en="Pre-biopsy: bilateral complex adnexal masses (8.5 + 4.2 cm) + CA-125 412 + omental thickening + ascites. Engine: WORKUP-SUSPECTED-OVARIAN (primary cytoreduction + histology + HRD + BRCA1/2 germline).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-rcc-incidental-mass",
+        file="patient_diagnostic_rcc_incidental_mass.json",
+        label_ua="Diagnostic · Suspect RCC · 5.4 cm incidental enhancing renal mass",
+        summary_ua="Pre-biopsy: incidental 5.4 cm right-kidney mass на CT abd для LBP. RENAL nephrometry 9. Engine: WORKUP-SUSPECTED-RCC (staging CT chest/abd/pelvis + radical/partial nephrectomy + histology + IMDC risk).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect RCC · 5.4 cm incidental enhancing renal mass",
+        summary_en="Pre-biopsy: incidental 5.4 cm right-kidney mass on CT abd for LBP. RENAL nephrometry 9. Engine: WORKUP-SUSPECTED-RCC (staging CT chest/abd/pelvis + radical/partial nephrectomy + histology + IMDC risk).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-sclc-central-lung-siadh",
+        file="patient_diagnostic_sclc_central_lung_siadh.json",
+        label_ua="Diagnostic · Suspect SCLC · Central 5.8 cm mass + paraneoplastic SIADH (Na 124)",
+        summary_ua="Pre-biopsy: heavy smoker + central perihilar mass + bulky mediastinal LAD + Na 124 (SIADH). Engine: WORKUP-SUSPECTED-SCLC (bronchoscopic biopsy + EBUS + brain MRI + LDH staging для LS vs ES).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect SCLC · Central 5.8 cm mass + paraneoplastic SIADH (Na 124)",
+        summary_en="Pre-biopsy: heavy smoker + central perihilar mass + bulky mediastinal LAD + Na 124 (SIADH). Engine: WORKUP-SUSPECTED-SCLC (bronchoscopic biopsy + EBUS + brain MRI + LDH staging for LS vs ES).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-urothelial-gross-hematuria",
+        file="patient_diagnostic_urothelial_gross_hematuria.json",
+        label_ua="Diagnostic · Suspect urothelial · Gross painless hematuria + 2.8 cm bladder mass",
+        summary_ua="Pre-biopsy: heavy smoker + 3 episodes gross hematuria + 2.8 cm right-wall papillary bladder mass. Engine: WORKUP-SUSPECTED-UROTHELIAL (TURBT + EUA + muscle invasion assessment + FGFR3/PDL1/HER2).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Suspect urothelial · Gross painless hematuria + 2.8 cm bladder mass",
+        summary_en="Pre-biopsy: heavy smoker + 3 episodes gross hematuria + 2.8 cm right-wall papillary bladder mass. Engine: WORKUP-SUSPECTED-UROTHELIAL (TURBT + EUA + muscle invasion assessment + FGFR3/PDL1/HER2).",
+    ),
+    # ── /DIAGNOSTIC-MODE EXPANSION 2026-05-01 ──
+
+    # ── DIAGNOSTIC-MODE COMPLETION 2026-05-01 (7 cases — 100% workup coverage) ──
+    # Closes the last 7 uncovered workups so all 24 KB workups have at
+    # least one curated diagnostic case. Adds:
+    #   - lymphadenopathy nonspecific (triage workup)
+    #   - metastatic prostate (post-confirmed-disease staging)
+    #   - MGUS incidental (asymptomatic M-spike, non-CRAB)
+    #   - NSCLC diagnosis (lung mass before NSCLC vs SCLC differentiation)
+    #   - solid tumor / CUP (cancer of unknown primary)
+    #   - breast diagnosis (post-biopsy staging path, distinct from
+    #     pre-biopsy SUSPECTED-BREAST)
+    #   - GU+skin+gyn combined (multi-system synchronous suspicion)
+    CaseEntry(
+        case_id="diagnostic-lymphadenopathy-undifferentiated",
+        file="patient_diagnostic_lymphadenopathy_undifferentiated.json",
+        label_ua="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+        summary_ua="Pre-biopsy: 35F з білатеральною LAD × 7 тижнів, ESR 38, без B-симптомів. Engine: WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage; CBC + LDH + ESR + viral serology + excisional biopsy найбільшого вузла).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Persistent LAD undifferentiated · Reactive vs lymphoma vs metastatic",
+        summary_en="Pre-biopsy: 35F with bilateral LAD × 7 weeks, ESR 38, no B-symptoms. Engine: WORKUP-LYMPHADENOPATHY-NONSPECIFIC (triage; CBC + LDH + ESR + viral serology + excisional biopsy of largest node).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-metastatic-prostate-rising-psa",
+        file="patient_diagnostic_metastatic_prostate_rising_psa.json",
+        label_ua="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+        summary_ua="Post-confirmed: Gleason 9 prostate post-RP 4 yr, PSA 0.05→12.4, новий біль + bone scan позитивний. Engine: WORKUP-METASTATIC-PROSTATE (PSMA-PET + germline BRCA + somatic HRR + testosterone для mHSPC vs mCRPC Tx).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · mPC restage · Rising PSA + bone mets post-RP (Gleason 9)",
+        summary_en="Post-confirmed: Gleason 9 prostate post-RP 4 yr, PSA 0.05→12.4, new pain + positive bone scan. Engine: WORKUP-METASTATIC-PROSTATE (PSMA-PET + germline BRCA + somatic HRR + testosterone for mHSPC vs mCRPC Tx).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-mgus-incidental-m-spike",
+        file="patient_diagnostic_mgus_incidental_m_spike.json",
+        label_ua="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+        summary_ua="Pre-biopsy: 71M asymptomatic, M-spike 8 g/L, no CRAB criteria, FLC ratio 1.33. Engine: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (IMWG 2014 risk stratification — low-risk MGUS, BM biopsy може бути skipped).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · MGUS · Asymptomatic M-spike 8 g/L IgG-kappa (incidental)",
+        summary_en="Pre-biopsy: 71M asymptomatic, M-spike 8 g/L, no CRAB criteria, FLC ratio 1.33. Engine: WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL (IMWG 2014 risk stratification — low-risk MGUS, BM biopsy may be skipped).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-lung-cancer-indeterminate",
+        file="patient_diagnostic_lung_cancer_indeterminate.json",
+        label_ua="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+        summary_ua="Pre-biopsy: heavy smoker 40 PY + 3.2 cm RUL mass на LDCT screening + persistent cough + hemoptysis. Engine: WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup — bronchoscopy + cytology + IHC TTF-1/CK7/p40/synaptophysin для NSCLC vs SCLC).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Lung cancer suspect · LDCT screening + 3.2 cm RUL mass (NSCLC vs SCLC)",
+        summary_en="Pre-biopsy: heavy smoker 40 PY + 3.2 cm RUL mass on LDCT screening + persistent cough + hemoptysis. Engine: WORKUP-NSCLC-DIAGNOSIS (broader lung-cancer workup — bronchoscopy + cytology + IHC TTF-1/CK7/p40/synaptophysin for NSCLC vs SCLC).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-cup-unknown-primary",
+        file="patient_diagnostic_cup_unknown_primary.json",
+        label_ua="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+        summary_ua="Pre-biopsy: 67F з multiple liver mets + bone + CK7+/CK20-/TTF-1- adenoCa, primary не знайдено на PET. Engine: WORKUP-SUSPECTED-SOLID-TUMOR (CUP catch-all; tumor-of-origin classifier + comprehensive NGS).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · CUP · 4 liver mets + bone lesions, occult primary",
+        summary_en="Pre-biopsy: 67F with multiple liver mets + bone + CK7+/CK20-/TTF-1- adenoCa, primary not found on PET. Engine: WORKUP-SUSPECTED-SOLID-TUMOR (CUP catch-all; tumor-of-origin classifier + comprehensive NGS).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-breast-post-imaging-staging",
+        file="patient_diagnostic_breast_post_imaging_staging.json",
+        label_ua="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+        summary_ua="Post-biopsy: 47F з invasive ductal G2 ER+/HER2-low (IHC 2+ FISH-) + 1.4 cm axillary node + strong family hx. Engine: WORKUP-BREAST-DIAGNOSIS (staging CT + germline + Oncotype-DX + sentinel-LN planning).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Breast post-biopsy staging · ER+/HER2-low + axillary node + family hx",
+        summary_en="Post-biopsy: 47F with invasive ductal G2 ER+/HER2-low (IHC 2+ FISH-) + 1.4 cm axillary node + strong family hx. Engine: WORKUP-BREAST-DIAGNOSIS (staging CT + germline + Oncotype-DX + sentinel-LN planning).",
+    ),
+    CaseEntry(
+        case_id="diagnostic-gu-skin-gyn-combined",
+        file="patient_diagnostic_gu_skin_gyn_combined.json",
+        label_ua="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+        summary_ua="Pre-biopsy: 56F з 4.0 cm right kidney mass + ABCDE-positive foot lesion + endometrial stripe 12 mm. Engine: WORKUP-SOLID-GU-SKIN-GYN (coordinated biopsy planning + germline panel BAP1/BRCA/HRR/Lynch для multi-cancer susceptibility).",
+        badge="Diagnostic Brief", badge_class="bdg-diag", category="diagnostic",
+        label_en="Diagnostic · Multi-system suspicion · Renal mass + atypical melanocytic + endometrial thickening",
+        summary_en="Pre-biopsy: 56F with 4.0 cm right kidney mass + ABCDE-positive foot lesion + endometrial stripe 12 mm. Engine: WORKUP-SOLID-GU-SKIN-GYN (coordinated biopsy planning + germline panel BAP1/BRCA/HRR/Lynch for multi-cancer susceptibility).",
+    ),
+    # ── /DIAGNOSTIC-MODE COMPLETION 2026-05-01 ──
 
 ]

@@ -1,0 +1,104 @@
+id: RF-DLBCL-CD79B-MUT-MCD-CANDIDATE
+definition: >
+  CD79B mutation (most commonly Y196 hotspot in ITAM domain) in
+  DLBCL, often co-occurring with MYD88 L265P — informational
+  flag for LymphGen MCD subtype (Schmitz NEJM 2018; Wright Cancer
+  Cell 2020). MCD-like DLBCL: ABC subtype + chronic active
+  BCR signaling, frequent extranodal involvement (CNS, testis,
+  breast, skin), inferior outcome on standard R-CHOP. Targeted
+  therapy implications: BTK inhibitor (ibrutinib) hypothesis-
+  generated benefit (PHOENIX subgroup analysis Younes 2019 JCO
+  in age <60 + non-GCB), polatuzumab vedotin (POLARIX subgroup
+  analysis suggests preferential MCD benefit). NOT yet
+  algorithm-shifting in routine NCCN/ESMO 2025 — RF acts as
+  surveillance / MDT-discussion / clinical-trial-eligibility
+  signal pending prospective LymphGen-stratified data. Distinct
+  from RF-DLBCL-HIGH-RISK-BIOLOGY (broader composite).
+definition_ua: >
+  Мутація CD79B (найчастіше hotspot Y196 у ITAM-домені) при DLBCL,
+  часто ко-присутня з MYD88 L265P — інформативний флаг для
+  LymphGen MCD-підтипу (Schmitz NEJM 2018; Wright Cancer Cell
+  2020). MCD-like DLBCL: ABC-підтип + хронічно активна BCR-
+  сигналізація, часте екстранодальне залучення (ЦНС, яєчко,
+  молочна залоза, шкіра), гірший прогноз на стандартному R-CHOP.
+  Імплікації таргетної терапії: інгібітор BTK (ібрутиніб)
+  гіпотезо-генеруюча користь (PHOENIX subgroup analysis Younes
+  2019 JCO у віці <60 + non-GCB), полатузумаб ведотин (POLARIX
+  subgroup analysis свідчить про preferential MCD-користь).
+  Поки не алгоритм-зсувний у рутинних NCCN/ESMO 2025 — RF діє
+  як сигнал для нагляду / МДК-обговорення / клінічно-дослідної
+  eligibility, очікуючи проспективних LymphGen-стратифікованих
+  даних. Відрізняти від RF-DLBCL-HIGH-RISK-BIOLOGY (ширший
+  композит).
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "cd79b_mutation"
+          value: true
+        - finding: "cd79b_y196_mutation"
+          value: true
+        - finding: "cd79b_itam_mutation"
+          value: true
+    - any_of:
+        - finding: "myd88_l265p_mutation"
+          value: true
+        - finding: "lymphgen_subtype"
+          value: "MCD"
+        - finding: "abc_subtype"
+          value: true
+        - finding: "non_gcb_subtype"
+          value: true
+        - finding: "extranodal_involvement"
+          value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 75
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm: []
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Informational RF — surfaces LymphGen MCD subtype for MDT
+  discussion + prospective clinical-trial eligibility (e.g.,
+  ESCALADE, ongoing acalabrutinib + R-CHOP trials in non-GCB).
+  Detection: targeted NGS panel (≥20 genes recommended) covering
+  CD79B (exon 5, Y196), MYD88 (L265P), and ABC-subtype defining
+  loci. Clinical correlates: extranodal disease (testicular DLBCL
+  ~75% MCD; primary CNS lymphoma ~70% MCD-like), CNS-IPI score
+  high. CNS-prophylaxis decision is informed by MCD signature
+  + extranodal sites — independent of CD79B per se. Active
+  research: BTKi addition to R-CHOP (PHOENIX, ESCALADE),
+  ibrutinib monotherapy R/R MCD (Wilson Nat Med 2015 ABC
+  subtype ORR 37%). NOT to be used to redirect 1L therapy
+  outside clinical trial — RF is shifts_algorithm: [] by design.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Інформативний RF — виявляє LymphGen MCD-підтип для МДК-
+  обговорення + проспективної клінічно-дослідної eligibility
+  (наприклад, ESCALADE, поточні випробування акалабрутинібу
+  + R-CHOP при non-GCB). Виявлення: таргетна NGS-панель (≥20
+  генів рекомендовано), що охоплює CD79B (екзон 5, Y196),
+  MYD88 (L265P) та ABC-підтипо-визначальні локуси. Клінічні
+  кореляти: екстранодальна хвороба (тестикулярна DLBCL
+  ~75% MCD; первинна ЦНС-лімфома ~70% MCD-like), CNS-IPI
+  high. Рішення про ЦНС-профілактику визначається MCD-
+  сигнатурою + екстранодальні ділянки — незалежно від CD79B
+  per se. Активні дослідження: додавання BTKi до R-CHOP
+  (PHOENIX, ESCALADE), ібрутиніб монотерапія R/R MCD
+  (Wilson Nat Med 2015 ABC-підтип ORR 37%). НЕ використовувати
+  для перенаправлення 1L терапії поза клінічним випробуванням —
+  RF має shifts_algorithm: [] свідомо.
+  STUB — потребує схвалення клінічного співкерівника.

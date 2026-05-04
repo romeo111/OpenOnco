@@ -1,0 +1,121 @@
+id: IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally recurrent unresectable or metastatic (stage IV) triple-negative breast cancer (TNBC)"
+    - "ER <1%, PR <1%, HER2 0/1+ (or HER2 2+ and FISH non-amplified)"
+    - "PD-L1 CPS ≥10 by FDA-approved 22C3 pharmDx assay (REQUIRED)"
+    - "No prior chemotherapy for metastatic disease (treatment-naive for 1L)"
+    - "If prior neoadjuvant chemo: acceptable if disease-free interval >6 months"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PDL1-CPS
+      value_constraint: "CPS ≥10 by 22C3 pharmDx — required for OS benefit per KEYNOTE-355"
+  biomarker_requirements_excluded:
+    - "BRCA1/2 germline or somatic pathogenic mutation — use IND-BREAST-BRCA-POS-MET-PARPI (olaparib or talazoparib preferred 1L)"
+  demographic_constraints:
+    ecog_max: 1
+    notes: "KEYNOTE-355 enrolled ECOG 0-1"
+
+recommended_regimen: REG-PEMBRO-CHEMO-TNBC-MET
+concurrent_therapy: []
+followed_by:
+  - "After 6-8 cycles of pembrolizumab+chemo: pembrolizumab monotherapy maintenance q3w up to 35 cycles (2 years) total"
+  - "CT CAP response assessment q9 weeks"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~53.2% vs 39.8% (CPS ≥10 subgroup; KEYNOTE-355)"
+  progression_free_survival: "~9.7 vs 5.6 months (HR 0.65 for CPS ≥10)"
+  overall_survival: "~23.0 vs 16.1 months (HR 0.73 for CPS ≥10; Cortes NEJM 2022)"
+  notes: "CPS <10 subgroup: OS HR 0.86 (not statistically significant) — pembro not beneficial for CPS <10"
+
+hard_contraindications:
+  - "PD-L1 CPS <10 (pembrolizumab benefit NOT demonstrated — do NOT add pembrolizumab)"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior anti-PD-(L)1 therapy (neoadjuvant pembrolizumab within 6 months)"
+
+red_flags_triggering_alternative:
+  - condition: "BRCA1/2 mutation: olaparib or talazoparib preferred 1L (OlympiAD/EMBRACA)"
+  - condition: "CPS <10: chemotherapy alone without pembrolizumab is standard"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "PD-L1 CPS by 22C3 pharmDx (MANDATORY)"
+  - "BRCA1/2 germline testing (MANDATORY for all mTNBC)"
+  - TEST-TSH
+  - "Cortisol baseline (pembrolizumab endocrine monitoring)"
+
+desired_tests:
+  - "HER2 by IHC + FISH (rule out HER2-low for T-DXd consideration at progression)"
+  - "Somatic BRCA testing (comprehensive tumor NGS)"
+  - "Germline BRCA if not done (genetic counseling)"
+
+rationale: >
+  KEYNOTE-355 (Cortes 2020 Lancet, Cortes 2022 NEJM; n=847): pembrolizumab + nab-paclitaxel,
+  paclitaxel, or gemcitabine-carboplatin vs placebo + chemo in 1L mTNBC.
+  For PD-L1 CPS ≥10 (primary analysis population):
+    ORR 53.2% vs 39.8%; mPFS 9.7 vs 5.6 months (HR 0.65, p<0.001);
+    mOS 23.0 vs 16.1 months (HR 0.73, p=0.0185 — statistically significant).
+  For CPS <10: OS HR 0.86 (not significant) — pembrolizumab should NOT be added.
+  NCCN Category 1. FDA approved November 2020 (accelerated) / July 2021 (full) for CPS ≥10.
+  NOTE: Atezolizumab+nab-paclitaxel (IMPASSION130) was FDA-approved in March 2019 but
+  FDA withdrew atezolizumab mTNBC indication in August 2021 after IMPASSION131 failed
+  to confirm OS benefit. Pembrolizumab (KEYNOTE-355) is the ONLY validated ICI in 1L mTNBC.
+
+rationale_ua: >
+  KEYNOTE-355 (n=847): пембролізумаб + хіміотерапія при CPS ≥10 mTNBC 1L:
+  mOS 23.0 vs 16.1 місяці (HR 0.73). NCCN Категорія 1. PD-L1 CPS ≥10 ОБОВ'ЯЗКОВО
+  (при CPS <10 — немає OS переваги). Атезолізумаб (IMPASSION130) — FDA відкликала
+  реєстрацію у серпні 2021 (IMPASSION131 не підтвердив). Пембролізумаб — єдиний
+  валідований ICI при mTNBC 1L. Перевірити BRCA1/2 перед призначенням.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE-355-CORTES-2020
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-355 (n=847): CPS ≥10 subgroup mOS 23.0 vs 16.1 months (HR 0.73, p=0.0185); mPFS 9.7 vs 5.6 months (HR 0.65) — NCCN Category 1 for CPS ≥10 mTNBC 1L"
+
+do_not_do:
+  - "НІКОЛИ не призначати пембролізумаб при CPS <10 — відсутня OS перевага; тільки токсичність"
+  - "Не призначати без тестування BRCA1/2 — BRCA-мутовані пацієнти мають кращу відповідь на PARPi"
+  - "Не використовувати атезолізумаб при TNBC — FDA відкликала реєстрацію у серпні 2021"
+  - "Не застосовувати схему при стадії I-III (неоад'ювантній) — використовувати KEYNOTE-522 протокол"
+
+known_controversies:
+  - topic: "PARPi vs immunochemotherapy 1L for BRCA-mutated mTNBC"
+    positions:
+      - position: "PARPi (olaparib/talazoparib) preferred 1L for BRCA-mutated mTNBC — higher ORR, better tolerability, biomarker-selected"
+        sources: [SRC-NCCN-BREAST-2025]
+      - position: "Pembrolizumab+chemo acceptable even for BRCA-mutated if CPS ≥10 — some data that ICI+PARP combination in trial"
+    our_default: "BRCA-mutated: PARPi 1L preferred; pembro+chemo 2L after PARPi"
+    rationale: "BRCA mutation drives specific vulnerability to PARPi; ICI should be reserved for BRCA-WT"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  ATEZOLIZUMAB WARNING: Do NOT use atezolizumab+nab-paclitaxel for mTNBC.
+  FDA withdrew the atezolizumab mTNBC indication August 2021 because
+  IMPASSION131 (paclitaxel backbone) failed to confirm OS benefit from IMPASSION130
+  (nab-paclitaxel backbone). The mechanism is that paclitaxel + nab-paclitaxel
+  may have different immune interaction profiles. Any remaining KB entries
+  referencing atezolizumab for mTNBC 1L are legacy/historical.
+
+  SACITUZUMAB GOVITECAN in mTNBC 1L: ASCENT trial established sacituzumab as
+  a standard-of-care option for 2L+ (≥2 prior lines), not currently 1L.
+  TROPiCS-02 established 2L pembro-refractory setting.
+  1L status for sacituzumab not yet established.

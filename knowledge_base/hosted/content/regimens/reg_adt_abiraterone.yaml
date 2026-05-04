@@ -38,6 +38,50 @@ ukraine_availability:
   notes: "Generic abiraterone widely available; reimbursed for mHSPC + mCRPC."
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# ADT + abiraterone + prednisone for mHSPC (LATITUDE/STAMPEDE).
+# Abiraterone signature: hypertension, hypokalemia, hepatic, fluid
+# retention. ADT signature: hot flashes, BMD, libido, cardiac.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Гарячі припливи, втрата лібідо, втома"
+    action_ua: "Очікувані ефекти від ADT — занотовуйте, обговоріть стратегії на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Абіратерон може підвищувати тиск — занотовуйте показники"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "М'язова слабкість, судоми ніг"
+    action_ua: "Можлива знижена кількість калію — занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — абіратерон може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильні набряки гомілок, задишка при навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива затримка рідини або серцева недостатність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Сильний головний біль або запаморочення з підвищеним тиском"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція антигіпертензивної терапії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Раптовий сильний головний біль, порушення зору або мовлення, слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — ADT підвищує ризик інсульту"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+
 last_reviewed:
 notes: >
   LATITUDE: ADT + abiraterone superior to ADT alone in high-risk mHSPC.

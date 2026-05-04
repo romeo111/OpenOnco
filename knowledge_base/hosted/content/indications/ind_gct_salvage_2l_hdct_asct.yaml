@@ -1,0 +1,112 @@
+id: IND-GCT-SALVAGE-2L-HDCT-ASCT
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-TESTICULAR-GCT
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory testicular GCT after cisplatin-containing 1L chemotherapy"
+    - "ANY of the following: cisplatin-refractory disease (relapse within 4 weeks of last cisplatin) OR poor Indiana prognostic score (AFP ≥1000 ng/mL OR hCG ≥1000 IU/L OR liver/bone/brain mets) OR incomplete response to 1L"
+    - "ECOG PS 0-1 at time of HDCT consideration (required for transplant eligibility)"
+    - "Adequate cardiac, pulmonary, renal, and hepatic function for high-dose protocol"
+    - "No active infection at time of stem cell infusion"
+    - "Availability of ASCT-capable center"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-AFP
+      value_constraint: "AFP — Indiana prognostic classification (≥1000 ng/mL = poor risk)"
+    - biomarker_id: BIO-HCG-SERUM
+      value_constraint: "hCG — Indiana prognostic classification (≥1000 IU/L = poor risk)"
+  demographic_constraints:
+    ecog_max: 1
+    age_note: "No absolute age cutoff but physiological reserve critical; most series enrolled patients <60y"
+
+recommended_regimen: null
+regimen_note: >
+  REG-HDCT-ASCT-GCT not yet authored — Indiana protocol:
+  2 tandem cycles of carboplatin 700 mg/m²/d × 3 days + etoposide 750 mg/m²/d × 3 days
+  followed by autologous PBSC rescue. Peripheral stem cell collection (G-CSF mobilization)
+  done before first HDCT cycle. Specialized ASCT center mandatory.
+concurrent_therapy: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  ned_2year_overall: "63% (Einhorn 2007)"
+  ned_favorable: "78%"
+  ned_unfavorable: "53%"
+  treatment_related_mortality: "<3%"
+  notes: >
+    Einhorn 2007 (NEJM; n=173): HDCT × 2 tandem cycles + ASCT at Indiana University.
+    63% NED at 2 years (potentially curative). Favorable Indiana score: 78% NED.
+    Even in previously multiply-treated GCT, long-term remissions achievable.
+
+hard_contraindications:
+  - "ECOG PS ≥2 (transplant-related mortality unacceptable)"
+  - "Severe organ dysfunction (cardiac EF <45%, CrCl <30 mL/min, bilirubin >2 × ULN)"
+  - "No ASCT-capable center available"
+  - "Active uncontrolled infection"
+
+red_flags_triggering_alternative:
+  - condition: "Good/intermediate Indiana score + cisplatin-sensitive relapse: TIP × 4 may be sufficient first (IND-GCT-SALVAGE-2L-TIP; CR 63-76%)"
+  - condition: "ECOG ≥2 or organ dysfunction precluding HDCT: TIP or VeIP conventional salvage; palliative intent if no transplant candidate"
+
+required_tests:
+  - "AFP, hCG, LDH (Indiana prognostic score calculation)"
+  - TEST-CT-CAP
+  - TEST-CBC
+  - "Cardiac ECHO (LVEF ≥45% required)"
+  - "PFTs (pulmonary reserve for HDCT)"
+  - "CrCl (carboplatin dosing by AUC)"
+  - TEST-LFT
+  - "Bone marrow biopsy if cytopenias suggest marrow infiltration"
+  - "Stem cell mobilization work-up (CD34 count target ≥2-4 × 10⁶/kg)"
+
+rationale: >
+  HDCT+ASCT (Indiana protocol): 2 tandem cycles of high-dose carboplatin + etoposide
+  with ASCT rescue. Einhorn 2007 (NEJM; n=173): 63% NED at 2 years including in
+  cisplatin-refractory/poor-prognosis patients. HDCT exploits non-cross-resistant
+  mechanism at supralethal doses of carboplatin (DNA crosslinking) + etoposide
+  (topoisomerase II inhibition). Indiana tandem transplant is now the most widely
+  referenced HDCT protocol. NCCN Category 1 for cisplatin-refractory GCT or poor
+  Indiana prognostic score. Requires ASCT-capable center with GCT expertise.
+  Several HDCT regimens exist (Indiana, MSKCC TI-CE); Indiana protocol most referenced.
+
+rationale_ua: >
+  HDCT+ASCT (Einhorn 2007, NEJM; n=173): висока доза карбоплатину + етопозид × 2 тандемні
+  цикли + аутоТКМ. 63% відсутність захворювання 2 роки. При цисплатин-рефрактерному або
+  поганому прогностичному індексі Indiana. NCCN Категорія 1.
+  Потребує спеціалізованого центру аутоТКМ з досвідом у GCT.
+  Доступність в Україні: обмежена — розгляньте направлення до міжнародного центру (Польща, Германія).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-EINHORN-HDCT-ASCT-2007
+    position: supports
+    relevant_quote_paraphrase: "Indiana HDCT+ASCT (n=173): 63% NED at 2y overall; 78% favorable group; <3% TRM; NCCN Cat 1 for cisplatin-refractory/poor-Indiana-score relapsed GCT"
+
+do_not_do:
+  - "Не відправляти на HDCT при ECOG ≥2 або значній органній дисфункції — летальність процедури неприйнятна"
+  - "Не відкладати збір стовбурових клітин — мобілізація G-CSF до першого HDCT циклу"
+  - "Не застосовувати без спеціалізованого аутоТКМ центру"
+  - "Не ігнорувати можливість TIP у сприятливому прогностичному сценарії — HDCT не обов'язково 1-я лінія рятівної терапії при хорошому прогнозі"
+
+known_controversies:
+  - topic: "TIP × 4 vs HDCT+ASCT first-line salvage — which is better 2L?"
+    positions:
+      - position: "TIP × 4 first, then HDCT at TIP failure — standard sequential approach"
+        sources: [SRC-KONDAGUNTA-TIP-2005]
+      - position: "HDCT upfront for poor Indiana score — better NED than conventional chemo in high-risk"
+        sources: [SRC-EINHORN-HDCT-ASCT-2007]
+    our_default: "TIP × 4 for good/intermediate Indiana; HDCT first-line for cisplatin-refractory or poor Indiana score"
+
+time_critical: true
+time_critical_note: "Transplant eligibility window closes if ECOG deteriorates; timely referral to ASCT center essential"
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -65,6 +65,48 @@ sources:
   - SRC-ELN-CML-2020
   - SRC-ESMO-CML-2017
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# 2nd-gen TKI (dasatinib OR nilotinib) for CML 1L or post-imatinib.
+# Dasatinib: pleural effusion + cytopenia. Nilotinib: cardiac/vascular
+# events + glucose/lipid changes. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома, головний біль"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Помірний висип"
+    action_ua: "Зустрічається — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Виражена задишка при навантаженні (особливо на дасатинібі)"
+    action_ua: "Подзвоніть у клініку того ж дня — дасатиніб може спричиняти випіт у грудній порожнині"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-ELN-CML-2020
+  - trigger_ua: "Біль у грудях, прискорене серцебиття (особливо на нілотинібі)"
+    action_ua: "Подзвоніть у клініку того ж дня — нілотиніб може спричиняти серцеві/судинні ускладнення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Часте сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — нілотиніб може спричиняти гіперглікемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова втрата свідомості, судорога"
+    action_ua: "Звертайтесь у лікарню негайно — нілотиніб може подовжувати QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   This regimen entry intentionally bundles dasatinib / nilotinib / bosutinib

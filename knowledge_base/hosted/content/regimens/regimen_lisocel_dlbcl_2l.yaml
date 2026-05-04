@@ -1,0 +1,135 @@
+id: REGIMEN-LISOCEL-DLBCL-2L
+name: "Lisocabtagene maraleucel (liso-cel) CAR-T 2L for primary-refractory or early-relapse LBCL (TRANSFORM)"
+name_ua: "Лісокабтаген маралейцел (liso-cel) CAR-T у 2-й лінії для первинно рефрактерної або раннього рецидиву великоклітинної B-клітинної лімфоми (TRANSFORM)"
+alternate_names:
+  - "Liso-cel 2L"
+  - "Breyanzi 2L"
+  - "TRANSFORM regimen"
+
+components: []  # phases supersede; kept empty for back-compat with downstream
+                # consumers that still iterate `components` directly
+                # (regimen-phases-refactor PR3 — plan-doc 2026-04-28 §4 + §5).
+
+phases:
+  - name: lymphodepletion
+    purpose_ua: "виснаження лімфоцитів перед CAR-T для приживлення клітин (Flu/Cy days -5 to -3 per TRANSFORM protocol)"
+    purpose_en: "lymphocyte depletion before CAR-T to enable cell engraftment (Flu/Cy days -5 to -3 per TRANSFORM protocol)"
+    duration: "3 days, days -5 to -3"
+    timing_relative_to: "main_infusion"
+    timing_offset_days: -5
+    optional: false
+    components:
+      - drug_id: DRUG-FLUDARABINE
+        dose: "30 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
+        schedule: "Days -5 to -3 before liso-cel infusion"
+        route: IV
+      - drug_id: DRUG-CYCLOPHOSPHAMIDE
+        dose: "300 mg/m² IV daily × 3 days (lymphodepleting conditioning)"
+        schedule: "Days -5 to -3 before liso-cel infusion"
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - name: main
+    purpose_ua: "основна CAR-T інфузія (defined 1:1 CD4:CD8 composition); 2L показання для primary-refractory або relapse <12 міс"
+    purpose_en: "main CAR-T infusion (defined 1:1 CD4:CD8 composition); 2L indication for primary-refractory or relapse <12 months from frontline"
+    duration: "single infusion"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-LISOCABTAGENE-MARALEUCEL
+        dose: "Target 100 × 10⁶ CAR+ viable T cells (50 × 10⁶ CD8+ component + 50 × 10⁶ CD4+ component, separately manufactured then administered sequentially)"
+        schedule: "Single IV infusion day 0, 2-7 days after lymphodepletion completion; CD8 component infused first, followed by CD4 component"
+        route: IV
+    sources:
+      - SRC-NCCN-BCELL-2025
+
+cycle_length_days:
+total_cycles: "Single infusion procedure; no maintenance; bridge chemotherapy permitted during 3-4 week manufacturing window for active disease"
+
+toxicity_profile: severe
+
+premedication:
+  - "Acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV/PO 30-60 min pre-infusion"
+  - "AVOID prophylactic systemic corticosteroids — reduces CAR-T expansion + may impair efficacy"
+  - "Confirm REMS / FACT-JACIE accreditation of administering centre"
+  - "Tocilizumab on-site (≥2 doses) BEFORE liso-cel infusion — mandatory for CRS rescue"
+  - "Bridging chemotherapy permitted during 3-4 week manufacturing window for active disease (avoid corticosteroids; coordinate with treating CAR-T centre)"
+  - "Pre-CAR-T infectious workup (HBV / HCV / HIV / CMV / TB) + ECHO + brain MRI"
+  - "Pre-conditioning hospitalisation + ICU bed availability + caregiver-presence-for-4-weeks-post-infusion"
+  - "Confirm CD19 expression on tumour (CD19 IHC or flow on baseline biopsy; CD19+ at original diagnosis sufficient)"
+  - "Eligibility check: primary-refractory disease (no CR to frontline R-CHOP-like therapy) OR relapse <12 months from completion of first-line; transplant intent at the time of treatment decision (TRANSFORM excluded transplant-ineligible patients in primary analysis; PILOT cohort supports transplant-ineligible 2L use, separate Regimen entity, future)"
+
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CRS Grade 1 (fever ≥38°C without hypotension/hypoxia)"
+    modification: "Supportive care, antipyretics; consider tocilizumab if persistent >24-48h"
+    rationale: "TRANSFORM CRS profile mirrors TRANSCEND — favourable G≥3 CRS rates"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "CRS Grade 2-3"
+    modification: "Tocilizumab 8 mg/kg IV (max 800 mg) ± dexamethasone 10 mg IV q6h; ICU monitoring for Grade 3"
+    rationale: "IL-6R blockade is first-line; corticosteroids reserved for refractory or higher-grade events"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "ICANS Grade ≥2"
+    modification: "Dexamethasone 10 mg IV q6h; intensify (methylprednisolone 1 g/day) for Grade 3-4; anakinra for refractory; ICU"
+    rationale: "Boxed warning — class label across anti-CD19 CAR-T products"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Active uncontrolled infection at planned infusion"
+    modification: "Defer liso-cel until controlled — lymphodepletion + CRS in active infection = high mortality"
+    rationale: "Absolute pre-infusion contraindication"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Persistent severe cytopenia >Day +30"
+    modification: "G-CSF support; transfusions; consider IVIG for IgG <400 + recurrent infections"
+    rationale: "On-target B-cell aplasia + delayed marrow recovery common; symptomatic hypogammaglobulinaemia treated with IVIG q3-4wk"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Liso-cel (Breyanzi) NOT registered in Ukraine; NO domestic CAR-T
+    manufacturing or accredited infusion centres. 2L use raises the
+    access-equity issue further: TRANSFORM superior EFS vs salvage
+    chemo + autoSCT, but international referral pathway (Israel /
+    Poland / Germany / Spain) required, USD 350-500K all-in. For
+    Ukrainian patients with primary-refractory or early-relapse DLBCL
+    who cannot access CAR-T, salvage chemo (R-DHAP / R-ICE / R-GDP)
+    + autoSCT remains the standard fallback (separate Regimen entities).
+    Lymphodepleting fludarabine + cyclophosphamide registered + reimbursed.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-05-01"
+
+notes: >
+  CD19 CAR-T (4-1BB costimulation) with defined 1:1 CD4:CD8 cell composition
+  for primary-refractory LBCL or relapse <12 months from completion of
+  first-line therapy. TRANSFORM phase 3 RCT (Kamdar et al., Lancet 2022;
+  long-term update Abramson et al., Blood 2023): liso-cel superior to
+  standard-of-care salvage chemo + autoSCT in transplant-intended 2L
+  primary-refractory / early-relapse LBCL — median EFS 10.1 vs 2.3 mo
+  (HR ~0.36), CR ~74% vs ~43%, PFS substantially extended; OS trend
+  favourable but crossover-confounded. Boxed warnings: CRS, ICANS,
+  secondary T-cell malignancy (FDA 2024 class label). REMS /
+  FACT-JACIE-accredited centre mandatory. Eligibility narrower than 3L:
+  primary-refractory or early-relapse + transplant-intent. Distinct from
+  REGIMEN-LISOCEL-DLBCL-3L (TRANSCEND, ≥3L any-comer). Trial source
+  SRC-TRANSFORM-KAMDAR-2022 absent from KB at chunk authoring time —
+  citing NCCN-BCELL-2025 + ESMO-DLBCL-2024 pending source-stub creation.
+notes_ua: >
+  CD19 CAR-T (4-1BB костимуляція) з визначеним співвідношенням CD4:CD8 = 1:1 для первинно рефрактерної великоклітинної B-клітинної лімфоми або рецидиву <12 місяців від завершення першої лінії терапії. TRANSFORM фаза 3 РКД (Kamdar et al., Lancet 2022; довготривале оновлення Abramson et al., Blood 2023): ліcо-cel перевершує стандарт-оф-кер сальвадж-ХТ + аутоТГСК у транспланта-намірених 2L первинно рефрактерних / ранній рецидив пацієнтів з ВКЛ — медіана EFS 10.1 проти 2.3 міс (HR ~0.36), ПВ ~74% проти ~43%, PFS суттєво подовжений; тренд ЗВ сприятливий, але плутаний кросовером. Спеціальні попередження в інструкції: CRS, ICANS, вторинне Т-клітинне злоякісне новоутворення (клас-маркер FDA 2024). REMS / FACT-JACIE-акредитований центр обов'язковий. Критерії придатності вужчі ніж у 3L: первинно рефрактерний або ранній рецидив + намір трансплантації. Відрізняється від REGIMEN-LISOCEL-DLBCL-3L (TRANSCEND, ≥3L). Джерело випробування SRC-TRANSFORM-KAMDAR-2022 відсутнє в БЗ на момент авторингу чанку — цитуються NCCN-BCELL-2025 + ESMO-DLBCL-2024 до створення стабу джерела.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

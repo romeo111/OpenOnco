@@ -34,6 +34,42 @@ ukraine_availability:
   notes: "Acalabrutinib NOT reimbursed via НСЗУ — funding gap. Ibrutinib + rituximab acceptable substitute (reimbursed)."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Acalabrutinib + rituximab combo. BTKi + IRR. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль, нудота"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — BTKi"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — миготлива аритмія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка з ознобом"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка інфузійна реакція"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сильна кровотеча або раптовий головний біль"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   1L for unfit / older MCL (age >65 OR ECOG ≥2 OR transplant-ineligible)

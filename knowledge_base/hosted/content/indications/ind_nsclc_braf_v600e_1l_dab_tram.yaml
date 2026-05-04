@@ -1,0 +1,70 @@
+id: IND-NSCLC-BRAF-V600E-1L-DAB-TRAM
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic BRAF V600E-mutant NSCLC (squamous or non-squamous)"
+    - "BRAF V600E confirmed by NGS or PCR (not BRAF non-V600E)"
+    - "Treatment-naive (1L setting)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600E
+      value_constraint: "BRAF V600E confirmed by NGS or validated PCR assay"
+      required: true
+  biomarker_requirements_excluded:
+    - "BRAF non-V600E mutation (class II/III) — different therapeutic approach"
+    - "Co-occurring EGFR or ALK driver"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DABRAFENIB-TRAMETINIB-NSCLC
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr_treatment_naive: "64.4% (36 treatment-naive; BRF113928 cohort C)"
+  median_pfs_months: "~10.9"
+  notes: >
+    BRF113928 (Planchard 2017, Lancet Oncol): dabrafenib 150 mg BID + trametinib
+    2 mg QD in BRAF V600E NSCLC. Cohort C (treatment-naive, n=36): ORR 64.4%;
+    mPFS 10.9 months; median OS 24.6 months. NCCN Category 1 for 1L BRAF V600E NSCLC.
+    Same regimen as 2L (IND-NSCLC-2L-BRAF-V600E-DAB-TRAM) — preferred 1L per current
+    guidelines.
+
+hard_contraindications:
+  - "BRAF non-V600E mutation"
+  - "Active skin malignancy (cutaneous SCC surveillance required — BRAF inhibitor paradoxical activation)"
+
+required_tests:
+  - "BRAF V600E NGS or validated PCR (COBAS v600 or equivalent)"
+  - TEST-CT-CAP
+  - TEST-LFT
+  - TEST-CBC
+  - "Dermatology baseline (skin surveillance for cutaneous malignancy under BRAF+MEKi)"
+  - "ECHO/LVEF baseline (trametinib cardiomyopathy risk)"
+  - TEST-ECG
+
+sources:
+  - source_id: SRC-BRF113928-PLANCHARD-2016
+    position: supports
+    relevant_quote_paraphrase: "BRF113928 cohort C (treatment-naive, n=36): dabrafenib+trametinib; ORR 64.4%; mPFS 10.9m; OS 24.6m; NCCN Cat 1"
+
+rationale_ua: >
+  BRF113928 (n=36 раніше нелікованих): дабрафеніб 150 мг BID + траметиніб 2 мг QD;
+  ORR 64.4%; mPFS 10.9 міс; mOS 24.6 міс. NCCN Категорія 1. BRAF V600E, не non-V600E.
+  Шкірний моніторинг ОБОВ'ЯЗКОВИЙ (BRAF-інгібітор ризик кутанного SCC).
+
+do_not_do:
+  - "НЕ застосовувати при BRAF non-V600E — парадоксальна активація кінази"
+  - "Не ігнорувати дерматологічний нагляд — ризик кутанного SCC"
+  - "Не застосовувати монотерапію дабрафенібом без траметинібу — BRAF монотерапія при NSCLC не рекомендована"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+ukrainian_review_status: pending_clinical_signoff

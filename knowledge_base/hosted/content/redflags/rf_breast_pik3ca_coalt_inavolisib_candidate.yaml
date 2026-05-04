@@ -1,0 +1,89 @@
+id: RF-BREAST-PIK3CA-COALT-INAVOLISIB-CANDIDATE
+definition: >
+  PIK3CA-mutant HR+/HER2- metastatic breast with co-alteration profile
+  (endocrine-resistant biology — relapse on / within 12 months of
+  adjuvant endocrine therapy OR de novo metastatic with rapid
+  progression). INAVO120 (Jhaveri 2024) randomized first-line
+  endocrine-resistant PIK3CA-mut HR+/HER2- MBC to inavolisib +
+  palbociclib + fulvestrant vs placebo + palbociclib + fulvestrant
+  (mPFS 15.0 vs 7.3 mo, HR 0.43, p<0.0001). Inavolisib is a next-gen
+  PI3Kα-selective + mutant-specific degrader with reduced
+  hyperglycemia vs alpelisib. Candidate RF positions the 1L INAVO120
+  triplet specifically — distinct from RF-BREAST-PIK3CA-MUT-ACTIONABLE
+  (broad 2L+ pathway-altered class).
+definition_ua: >
+  PIK3CA-мутантний HR+/HER2- метастатичний РМЗ з профілем
+  ко-альтерацій (ендокрин-резистентна біологія — рецидив під час / у
+  межах 12 місяців ад'ювантної ендокринотерапії АБО первинно
+  метастатичний з швидким прогресуванням). INAVO120 (Jhaveri 2024)
+  рандомізував першу лінію ендокрин-резистентного PIK3CA-мут
+  HR+/HER2- МРМЗ до інаволісибу + палбоциклібу + фулвестранту проти
+  плацебо + палбоциклібу + фулвестранту (мПФВ 15.0 проти 7.3 міс,
+  HR 0.43, p<0.0001). Інаволісиб — наступне покоління PI3Kα-селективного
+  + мутант-специфічного деградатора зі зменшеною гіперглікемією
+  порівняно з алпелісибом. RF-кандидат позиціонує триплет 1L INAVO120
+  специфічно — відмінний від RF-BREAST-PIK3CA-MUT-ACTIONABLE
+  (широкий 2L+ клас pathway-альтерацій).
+
+trigger:
+  type: biomarker
+  all_of:
+    - finding: "pik3ca_mutation"
+      value: true
+  any_of:
+    - finding: "endocrine_resistance"
+      value: "primary"
+    - finding: "adjuvant_endocrine_relapse_within_12mo"
+      value: true
+    - finding: "de_novo_metastatic"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 64
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-1L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-04-29"
+draft: true
+
+notes: >
+  Candidate RF — INAVO120 trial-Source not yet ingested
+  (SRC-INAVO120-JHAVERI-2024 flag for ingestion chunk). FDA approved
+  inavolisib + palbociclib + fulvestrant Oct 2024 for endocrine-
+  resistant 1L HR+/HER2- PIK3CA-mut MBC. Differentiator from broader
+  RF-BREAST-PIK3CA-MUT-ACTIONABLE (priority 65, 2L+ alpelisib /
+  capivasertib): this RF gates 1L use specifically tied to endocrine-
+  resistance criterion (relapse on / within 12 months adjuvant
+  endocrine OR de novo metastatic with rapid progression). Priority 64
+  fires before broader PIK3CA RF (65) so 1L triplet route is preferred
+  when criteria met. ALGO-BREAST-1L is the 1L decision-tree (vs
+  ALGO-BREAST-HR-POS-2L for the broader RF). Inavolisib hyperglycemia
+  rate ~6% (much lower than alpelisib ~64%); diarrhea + rash + stomatitis
+  remain class effects. Promote to draft:false once trial-Source
+  ingested.
+notes_ua: >
+  Кандидатний RF — джерело випробування INAVO120 ще не інгестоване
+  (SRC-INAVO120-JHAVERI-2024 позначено для chunk інгестії). FDA схвалило
+  інаволісиб + палбоцикліб + фулвестрант у жовтні 2024 для ендокрин-
+  резистентного 1L HR+/HER2- PIK3CA-мут МРМЗ. Відмінність від ширшого
+  RF-BREAST-PIK3CA-MUT-ACTIONABLE (пріоритет 65, 2L+ алпелісиб /
+  капівасертиб): цей RF gating 1L застосування специфічно прив'язане
+  до критерію ендокринної резистентності (рецидив під час / у межах
+  12 місяців ад'ювантної ендокринотерапії АБО первинно метастатичний
+  з швидким прогресуванням). Пріоритет 64 спрацьовує перед ширшим
+  RF PIK3CA (65), тож 1L-триплетний маршрут є переважним при
+  виконанні критеріїв. ALGO-BREAST-1L — дерево рішень 1L (vs
+  ALGO-BREAST-HR-POS-2L для ширшого RF). Рівень гіперглікемії
+  інаволісибу ~6% (значно нижче за алпелісиб ~64%); діарея + висип
+  + стоматит залишаються класовими ефектами. Перевести на
+  draft:false після інгестії джерела випробування.

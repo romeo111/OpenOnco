@@ -1,0 +1,160 @@
+id: IND-DLBCL-2L-LISOCEL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Primary-refractory LBCL (no CR to first-line R-CHOP / Pola-R-CHP) OR relapse <12 months from completion of frontline therapy"
+    - "Transplant-intent at the time of treatment decision (TRANSFORM excluded transplant-ineligible patients in primary analysis; PILOT cohort supports transplant-ineligible 2L use, separate Indication entity, future)"
+    - "ECOG 0-1 (TRANSFORM enrolment)"
+    - "Adequate organ function for fludarabine + cyclophosphamide lymphodepletion (ANC ≥1.0, plt ≥75, AST/ALT ≤3× ULN, creatinine clearance ≥60)"
+    - "No prior CD19-directed CAR-T (or sufficient washout per protocol)"
+    - "Manufacturing slot available (~3-week wait acceptable; bridging chemotherapy permitted in window)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20 positive (and CD19 positive on flow / IHC; CD19 loss is exclusion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 1
+
+recommended_regimen: REGIMEN-LISOCEL-DLBCL-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~86% (TRANSFORM phase 3 RCT vs salvage chemo + autoSCT)"
+  complete_response: "~74% (vs ~43% with standard salvage + autoSCT)"
+  progression_free_survival: "Median EFS 10.1 months vs 2.3 months for salvage chemo + autoSCT (HR ~0.36)"
+  overall_survival_5y: "OS trend favourable but crossover-confounded; long-term follow-up ongoing"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+  - CI-LVEF-LOW-FOR-ANTHRACYCLINE  # cardiac function for lymphodepletion + CRS tolerance
+
+red_flags_triggering_alternative:
+  - RF-DLBCL-CNS-RISK
+  - RF-DLBCL-INFECTION-SCREENING
+  - RF-DLBCL-HIGH-RISK-BIOLOGY  # primary-refractory / early-relapse high-risk biology trigger
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-MRI-BRAIN-CONTRAST
+  - TEST-PREGNANCY
+desired_tests: []
+
+rationale: >
+  Lisocabtagene maraleucel (liso-cel; Breyanzi) is a CD19-targeted CAR-T
+  with defined 1:1 CD4:CD8 cell composition and 4-1BB costimulation,
+  approved for primary-refractory LBCL or relapse <12 months from
+  completion of first-line therapy in transplant-intended 2L setting
+  (TRANSFORM phase 3 RCT). TRANSFORM (Kamdar et al., Lancet 2022;
+  long-term update Abramson et al., Blood 2023): liso-cel superior to
+  standard-of-care salvage chemo + autoSCT — median EFS 10.1 vs 2.3 mo
+  (HR ~0.36), CR ~74% vs ~43%, ORR ~86%, PFS substantially extended; OS
+  trend favourable but crossover-confounded. Boxed warnings: CRS, ICANS,
+  secondary T-cell malignancy (FDA 2024 class label). Eligibility
+  narrower than 3L liso-cel (TRANSCEND): primary-refractory or
+  early-relapse + transplant-intent. CRS profile favourable (G≥3 ~2%,
+  ICANS G≥3 ~10% per TRANSCEND mirroring) makes liso-cel the preferred
+  CAR-T product where access exists. Distinct from REGIMEN-LISOCEL-DLBCL-3L
+  (TRANSCEND, ≥3L any-comer). Ukraine context: not registered, no
+  domestic CAR-T manufacturing or accredited centres; international
+  referral pathway (Israel / Poland / Germany / Spain) required at
+  USD 350-500K all-in cost. For Ukrainian patients with primary-refractory
+  or early-relapse DLBCL who cannot access CAR-T, salvage chemo
+  (R-DHAP / R-ICE / R-GDP) + autoSCT remains the standard fallback.
+
+rationale_ua: >
+  Лісокабтаген маралейцел (liso-cel; Breyanzi) — CD19-таргетована CAR-T
+  з визначеним 1:1 співвідношенням CD4:CD8 та 4-1BB костимуляцією,
+  схвалена для первинно рефрактерної ВКЛ або рецидиву <12 місяців від
+  завершення першої лінії в транспланта-намірній 2L ситуації (TRANSFORM
+  фаза 3 РКД). TRANSFORM (Kamdar et al., Lancet 2022; довготривале
+  оновлення Abramson et al., Blood 2023): liso-cel перевершує стандарт
+  сальвадж-ХТ + аутоТГСК — медіана EFS 10.1 проти 2.3 міс (HR ~0.36),
+  ПВ ~74% проти ~43%, ORR ~86%, PFS суттєво подовжений; тренд ЗВ
+  сприятливий, але плутаний кросовером. Спеціальні попередження
+  в інструкції: CRS, ICANS, вторинне Т-клітинне злоякісне новоутворення
+  (клас-маркер FDA 2024). Критерії придатності вужчі ніж у 3L liso-cel
+  (TRANSCEND): первинно рефрактерний або ранній рецидив + намір
+  трансплантації. Профіль CRS сприятливий (G≥3 ~2%, ICANS G≥3 ~10% за
+  даними TRANSCEND) робить liso-cel переважним CAR-T продуктом за
+  наявності доступу. Контекст України: не зареєстрований, немає
+  домашнього CAR-T виробництва або акредитованих центрів; необхідне
+  міжнародне направлення (Ізраїль / Польща / Німеччина / Іспанія) при
+  загальній вартості ~USD 350-500 тис. Для українських пацієнтів з
+  первинно рефрактерною / ранньорецидивною DLBCL без доступу до CAR-T
+  стандартним резервним варіантом залишається сальвадж-ХТ
+  (R-DHAP / R-ICE / R-GDP) + аутоТГСК.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Liso-cel is Category 1 preferred for 2L primary-refractory or early-relapse LBCL (relapse <12 months from frontline) in transplant-intended patients per TRANSFORM."
+  - source_id: SRC-ESMO-LYMPHOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "Anti-CD19 CAR-T cell therapy is preferred 2L for primary-refractory / early-relapse LBCL per ZUMA-7 (axi-cel) and TRANSFORM (liso-cel); displaces salvage chemo + autoSCT as standard of care for this high-risk population."
+
+known_controversies:
+  - topic: "Liso-cel vs axi-cel for 2L primary-refractory / early-relapse LBCL"
+    positions:
+      - position: "Axi-cel — ZUMA-7 first phase 3 to demonstrate CAR-T 2L superiority; CD28 costimulation higher CR rate but worse safety (CRS G≥3 ~7%, ICANS G≥3 ~21%)"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Liso-cel — TRANSFORM second phase 3; 4-1BB costimulation comparable efficacy with substantially better safety (CRS G≥3 ~1%, ICANS G≥3 ~4%); preferred for older / frail / cardiac comorbid patients"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Tisa-cel BELINDA failed to demonstrate superiority over standard 2L; not used 2L"
+        sources: [SRC-ESMO-LYMPHOMA-2025]
+    our_default: "In Ukrainian context all CAR-T products require international referral — product selection driven by partner-centre availability and patient tolerance of expected toxicity profile. Liso-cel preferred when accessible due to safety advantage."
+    rationale: >
+      2L CAR-T expansion via TRANSFORM displaces salvage chemo + autoSCT
+      as standard of care for primary-refractory / early-relapse LBCL.
+      For Ukrainian patients without international referral pathway,
+      salvage chemo + autoSCT remains best-available alternative.
+
+do_not_do:
+  - "НЕ призначати prophylactic systemic corticosteroids — пригнічує CAR-T expansion + знижує efficacy."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) ДО інфузії — fatal CRS можливе."
+  - "НЕ робити в центрі без CAR-T accreditation (FACT/JACIE/REMS) — toxicity management потребує спеціалізованої команди + ICU доступу."
+  - "НЕ пропускати baseline brain MRI — pre-existing CNS disease (CNS-2/3) була exclusion в TRANSFORM; ризик fatal ICANS значно вищий."
+  - "НЕ ігнорувати тимчасову bridging chemotherapy (3-4 тижні manufacturing window) — disease progression в цьому вікні зменшує efficacy."
+  - "НЕ призначати при active uncontrolled infection — лімфодеплеція + CRS = high mortality."
+  - "НЕ забути IVIG для довготривалої hypogammaglobulinemia (IgG <400 + recurrent infections) — B-cell aplasia може тривати >12 місяців."
+  - "НЕ застосовувати у транспланта-непридатних пацієнтів за цим показанням — TRANSFORM enrolment вимагав transplant-intent; для transplant-ineligible 2L див. PILOT cohort (окрема Indication, future)."
+
+time_critical: false
+last_reviewed: "2026-05-01"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L option
+  for primary-refractory or early-relapse LBCL in transplant-intended
+  patients per TRANSFORM phase 3. Eligibility narrower than 3L liso-cel
+  (TRANSCEND ≥3L any-comer; separate IND-DLBCL-3L-LISO-CEL-CART entity).
+  Trial source SRC-TRANSFORM-KAMDAR-2022 absent from KB at chunk
+  authoring time — citing NCCN-BCELL-2025 + ESMO-DLBCL-2024 pending
+  source-stub creation (flagged for trial-source ingest follow-up).
+  PILOT cohort transplant-ineligible 2L expansion is separate future
+  Indication entity. Axi-cel ZUMA-7 alternative 2L CAR-T not yet in
+  KB as 2L Indication — author-later candidate.

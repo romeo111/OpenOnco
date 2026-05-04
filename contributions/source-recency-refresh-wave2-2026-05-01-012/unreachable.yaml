@@ -1,0 +1,40 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-012
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose httpx GET did not return
+    2xx/3xx (after DOI fallback where available). HTTP 403 typically indicates publisher
+    bot-blocking; HTTP 404 indicates a genuinely broken URL.'
+rows:
+- id: SRC-EHA-WORKUP-2024
+  url: https://ehaweb.org/research/eha-guidelines-and-recommendations/
+  status_code: 404
+  category: unreachable.dead
+  error: HTTP 404 — page genuinely missing
+  current_as_of_existing: 2024-XX-XX
+- id: SRC-BREAK-3-HAUSCHILD-2012
+  url: https://pubmed.ncbi.nlm.nih.gov/22735384
+  status_code: 403
+  category: unreachable.blocked
+  error: 'HTTP 403 on primary; DOI fallback https://doi.org/10.1016/S0140-6736(12)60868-X
+    -> 403 '
+  doi_fallback_url: https://doi.org/10.1016/S0140-6736(12)60868-X
+  current_as_of_existing: '2026-04-29'
+- id: SRC-ARCAINI-2014
+  url: https://ascopubs.org/doi/10.1200/JCO.2016.70.6994
+  status_code: 403
+  category: unreachable.blocked
+  error: 'HTTP 403 on primary; DOI fallback https://doi.org/10.1200/JCO.2016.70.6994
+    -> 403 '
+  doi_fallback_url: https://doi.org/10.1200/JCO.2016.70.6994
+  current_as_of_existing: '2017-02-13'
+- id: SRC-INNOVATE-DIMOPOULOS-2018
+  url: https://pubmed.ncbi.nlm.nih.gov/29856685
+  status_code: 403
+  category: unreachable.blocked
+  error: 'HTTP 403 on primary; DOI fallback https://doi.org/10.1056/NEJMoa1802917
+    -> 403 '
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1802917
+  current_as_of_existing: '2026-04-29'

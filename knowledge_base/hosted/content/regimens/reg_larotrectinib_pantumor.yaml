@@ -45,6 +45,32 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Larotrectinib for NTRK-fusion pan-tumor (NAVIGATE). Generally well-
+# tolerated TKI: GI, hepatic, dizziness. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота, легке запаморочення"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна діарея або запор"
+    action_ua: "Занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — ларотректиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зміни поведінки, плутаність свідомості"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка нейротоксичності"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Pooled NAVIGATE / SCOUT / phase-1: ORR 75% (IRC) across 17 tumor

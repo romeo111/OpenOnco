@@ -42,6 +42,53 @@ ukraine_availability:
   notes: "Trastuzumab biosimilars NSZU-funded for gastric HER2+; chemo NSZU-funded."
 
 sources: [SRC-NCCN-GASTRIC-2025, SRC-ESMO-GASTRIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Trastuzumab + cisplatin + 5-FU/capecitabine for HER2+ gastric 1L
+# (TOGA). Trastuzumab adds cardiac watch (LVEF) + IRR; cisplatin adds
+# nephro/oto-toxicity; 5-FU adds GI/cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота протягом 1-3 днів після циклу"
+    action_ua: "Приймайте призначені протиблювотні; пийте багато води"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Помірна діарея, легка втрата апетиту"
+    action_ua: "Поширене на тлі 5-фторурацилу — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Шум у вухах або зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин може впливати на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка при навантаженні, набряки ніг, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — трастузумаб може впливати на серце; потрібна оцінка функції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка реакція на інфузію трастузумабу: задишка, висип, втрата свідомості"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

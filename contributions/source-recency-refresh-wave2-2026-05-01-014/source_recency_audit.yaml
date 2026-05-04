@@ -1,0 +1,77 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-014
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit per issue #216 Output Requirements. One
+    row per manifest ID with id / url_verified / content_current /
+    proposed_current_as_of / license_status / notes. Supersession audit beyond
+    HTTP reachability is out of scope for this chunk; content_current=yes means
+    "no supersession evidence surfaced during HTTP recency check", not a
+    clinical content review.'
+audit:
+- id: SRC-ESMO-BONE-SARCOMA
+  url_verified: 'no'
+  url_status: no_url_field_on_hosted_yaml
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending_clinical_signoff
+  notes: 'Hosted YAML is an auto-stub (title placeholder "ESMO bone sarcoma
+    guideline (TODO: confirm year/citation)"). No url field. legal_review.status
+    = pending. URL discovery + citation confirmation belongs to a dedicated
+    source-stub-fill chunk; out of scope for HTTP recency refresh. No edits
+    proposed.'
+- id: SRC-NCCN-PEDIATRIC-SARCOMA
+  url_verified: 'no'
+  url_status: no_url_field_on_hosted_yaml
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: license_populated_url_missing
+  notes: 'Hosted YAML is an auto-stub. license.name = "NCCN - clinician-only
+    redistribution prohibited", license.url points to nccn.org/permissions
+    (policy page, not content URL). No content url field. NCCN guidelines
+    require free clinician registration for canonical access; URL discovery
+    out of scope for HTTP recency refresh. No edits proposed.'
+- id: SRC-APL0406-LOCOCO-2013
+  url_verified: 'no'
+  url_status: blocked_by_publisher
+  http_status: 403
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1300874
+  doi_fallback_status: 403
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: populated
+  notes: 'NEJM bot-block on HEAD. DOI resolver fallback also 403 (redirects to
+    same NEJM landing page). PMID 23841729 / DOI 10.1056/NEJMoa1300874 intact.
+    Landmark 2013 RCT establishing chemo-free ATRA+ATO in low-risk APL — no
+    supersession evidence surfaced; remains the canonical reference for this
+    regimen. License (NEJM subscription) unchanged. No upsert proposed because
+    URL not verifiable; current_as_of left at 2013-07-11.'
+- id: SRC-APL-RELAPSE-LENGFELDER-2017
+  url_verified: 'yes'
+  url_status: 'reachable'
+  http_status: 200
+  content_current: 'yes'
+  proposed_current_as_of: '2026-05-01'
+  license_status: populated
+  notes: 'HTTP 200 on https://www.nature.com/articles/leu2016282 via HEAD with
+    User-Agent OpenOnco-recency-bot. Final URL adds cookies_not_supported query
+    string (Nature CDN, not a content move). Already refreshed in prior wave
+    (current_as_of: 2026-04-29); re-verified and bumped to 2026-05-01. No
+    supersession evidence found in this scan. License (Nature subscription)
+    unchanged.'
+- id: SRC-EMBRACA-LITTON-2018
+  url_verified: 'no'
+  url_status: blocked_by_publisher
+  http_status: 403
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1802905
+  doi_fallback_status: 403
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: populated
+  notes: 'NEJM bot-block on HEAD. DOI resolver fallback also 403. PMID 30110579
+    / DOI 10.1056/NEJMoa1802905 intact. Landmark 2018 RCT establishing
+    talazoparib in gBRCA-mutant HER2- metastatic breast — no supersession
+    evidence surfaced. License (NEJM subscription) unchanged. No upsert
+    proposed because URL not verifiable; current_as_of left at 2018-08-15.'

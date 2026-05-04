@@ -1,155 +1,157 @@
 # Clinical Content Standards
 
-**Проєкт:** OpenOnco
-**Документ:** Clinical Content Standards
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з Clinical Co-Leads
-**Попередній документ:** CHARTER.md
+**Project:** OpenOnco
+**Document:** Clinical Content Standards
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with Clinical Co-Leads
+**Preceding document:** CHARTER.md
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Цей документ визначає, **як клінічний контент пишеться, цитується,
-оцінюється і ревʼюється** у knowledge base проєкту.
+This document defines **how clinical content is written, cited,
+assessed, and reviewed** in the project knowledge base.
 
-Без цього документа:
-- Три клініцисти-співзасновники не мають спільної мови для рев'ю
-- Не існує об'єктивних критеріїв «good content» vs «bad content»
-- Неможливо зробити відтворювану оцінку evidence
-- Нові контрибутори не знають, як пропонувати зміни
+Without this document:
+- The three clinician co-founders have no shared language for review
+- No objective criteria exist for "good content" vs "bad content"
+- Reproducible evidence assessment is impossible
+- New contributors do not know how to propose changes
 
-Цей документ — **редакційний стандарт** проєкту. Аналоги: NCCN Guidelines
+This document is the project's **editorial standard**. Analogues: NCCN Guidelines
 Methodology, Cochrane Handbook, ESMO Living Guidelines Methodology.
 
 ---
 
-## 1. Принципи
+## 1. Principles
 
 ### 1.1. Evidence-based by default
 
-Кожна клінічна твердження в knowledge base має бути прослідковане до
-первинного джерела. Немає «загальновідомого» контенту без цитати.
+Every clinical claim in the knowledge base must be traceable to a
+primary source. There is no "common knowledge" content without a citation.
 
 ### 1.2. Transparency over elegance
 
-Якщо джерела суперечать одне одному — **показуємо суперечність**, не
-вибираємо «переможця» за власним смаком. Клініцист, що використовує
-систему, має право знати про розбіжність.
+When sources contradict each other — **we surface the contradiction**, we
+do not choose a "winner" by our own judgement. The clinician using
+the system has the right to know about the discrepancy.
 
-### 1.3. Дата важливіша за авторитет
+### 1.3. Date matters more than authority
 
-Стаття 2020 року з NEJM може бути застаріла у 2026. Recent evidence з
-меншого джерела може бути валідніша за стару з топового. Ієрархія
-джерел не заміщує temporal currency.
+A 2020 article from NEJM may be outdated by 2026. Recent evidence from
+a smaller source may be more valid than an older one from a top-tier journal.
+Source hierarchy does not replace temporal currency.
 
 ### 1.4. Explicit over implicit
 
-Те, що не сказано явно, не існує. «Препарат X звичайно використовують
-у дозі Y» без цитати — не враховується.
+What is not stated explicitly does not exist. "Drug X is commonly used
+at dose Y" without a citation — is not counted.
 
 ### 1.5. Uncertainty is content, not a gap
 
-«Evidence недостатнє для рекомендації» — це повноцінний висновок, не
-провал. Система має вміти сказати «не знаємо», а не припускати.
+"Evidence is insufficient to support a recommendation" — this is a complete
+conclusion, not a failure. The system must be able to say "we don't know"
+rather than make assumptions.
 
 ### 1.6. Local context matters
 
-Міжнародні настанови (NCCN, ESMO) — основа, але не єдина правда.
-Українська доступність препаратів, протоколи МОЗ, формуляр НСЗУ —
-обов'язковий шар для клінічно корисних рекомендацій.
+International guidelines (NCCN, ESMO) are the foundation, but not the
+only truth. Ukrainian drug availability, Ministry of Health protocols, the
+NHSU formulary — these are a mandatory layer for clinically useful
+recommendations.
 
 ---
 
-## 2. Ієрархія джерел
+## 2. Source hierarchy
 
-Ієрархія визначає, який вага призначається різним типам джерел при
-розбіжностях.
+The hierarchy defines how much weight is assigned to different source types
+when discrepancies arise.
 
 ### 2.1. Tier 1 — Consensus guidelines
 
-Найвищий пріоритет. Використовуються як основа рекомендацій.
+Highest priority. Used as the basis for recommendations.
 
-**Міжнародні:**
-- NCCN Guidelines (актуальна версія; зазначати версію: v.X.YYYY)
+**International:**
+- NCCN Guidelines (current version; specify version: v.X.YYYY)
 - ESMO Clinical Practice Guidelines
 - ASCO Clinical Practice Guidelines
-- EHA Guidelines (онкогематологія)
-- BSH Guidelines (Велика Британія, онкогематологія)
-- EASL Guidelines (при HCV-related pathologies)
+- EHA Guidelines (hemato-oncology)
+- BSH Guidelines (United Kingdom, hemato-oncology)
+- EASL Guidelines (for HCV-related pathologies)
 - CAP Guidelines (Pathology)
 
-**Класифікаційні:**
+**Classification:**
 - WHO Classification of Tumours 5th ed. (IARC Blue Books)
-- AJCC Cancer Staging Manual 8th ed. (готується 9-те)
+- AJCC Cancer Staging Manual 8th ed. (9th edition in preparation)
 - ICD-O-3.2
-- Lugano Classification (для лімфом)
+- Lugano Classification (for lymphomas)
 
-**Регуляторні:**
+**Regulatory:**
 - FDA drug labels (openFDA.gov)
 - EMA EPARs
-- Накази МОЗ України — уніфіковані клінічні протоколи з онкології
-- Державний формуляр України
-- Перелік реімбурсованих препаратів НСЗУ
+- Ministry of Health of Ukraine Orders — unified clinical oncology protocols
+- State Formulary of Ukraine
+- List of NHSU-reimbursed drugs
 
 ### 2.2. Tier 2 — High-quality primary evidence
 
-Використовуються коли guidelines застаріли або не покривають ситуацію.
+Used when guidelines are outdated or do not cover the situation.
 
-- Peer-reviewed RCT (Phase 3) у журналах з IF ≥10:
+- Peer-reviewed RCT (Phase 3) in journals with IF ≥10:
   NEJM, Lancet, JAMA, Nature Medicine, Cell, JCO, Annals of Oncology,
   Blood, Lancet Oncology, Journal of Hematology & Oncology
 - Cochrane Systematic Reviews
-- Large meta-analyses (peer-reviewed, з методологією PRISMA)
-- Registration trials для FDA/EMA approvals
+- Large meta-analyses (peer-reviewed, using PRISMA methodology)
+- Registration trials for FDA/EMA approvals
 
-### 2.3. Tier 3 — Primary evidence, нижча сила
+### 2.3. Tier 3 — Primary evidence, lower strength
 
 - Phase 2 RCT
-- Phase 3 з обмеженнями (малий N, non-US/EU cohort, surrogate endpoints)
+- Phase 3 with limitations (small N, non-US/EU cohort, surrogate endpoints)
 - Network meta-analyses
-- Real-world evidence studies (Flatiron, SEER-based, реєстрові дані)
+- Real-world evidence studies (Flatiron, SEER-based, registry data)
 - Post-marketing surveillance studies
 
 ### 2.4. Tier 4 — Supporting evidence
 
-Можна цитувати, але не як основу для сильних рекомендацій.
+May be cited, but not as the basis for strong recommendations.
 
 - Phase 1-2 single-arm studies
 - Retrospective cohort studies
-- Conference abstracts (ASCO, ESMO, ASH) — маркуємо як preliminary
-- Expert opinion papers у peer-reviewed журналах
+- Conference abstracts (ASCO, ESMO, ASH) — marked as preliminary
+- Expert opinion papers in peer-reviewed journals
 
 ### 2.5. Tier 5 — Molecular knowledge bases
 
-Окрема категорія для mutation-treatment associations.
+A separate category for mutation-treatment associations.
 
-- OncoKB — з рівнями доказовості 1, 2, 3A, 3B, 4, R1, R2
+- OncoKB — with evidence levels 1, 2, 3A, 3B, 4, R1, R2
 - CIViC (community-curated)
 - JAX Clinical Knowledgebase
 - My Cancer Genome
 
-Ці бази є **агрегаторами первинних доказів**. При використанні їх
-рекомендацій, зберігаємо посилання на базу + посилання на первинне
-дослідження, на яке вона посилається.
+These databases are **aggregators of primary evidence**. When using their
+recommendations, we retain a reference to the database plus a reference to
+the primary study they cite.
 
-### 2.6. НЕ приймаються як джерела
+### 2.6. NOT accepted as sources
 
-- Non-peer-reviewed preprints (medRxiv, bioRxiv) — окрім як indicative
-  signal, що треба слідкувати; не як основа рекомендації
-- Промоційні матеріали фармкомпаній
-- Медичні блоги, podcasts, news articles
-- Статті з predatory journals (перевірка через Beall's List, DOAJ)
-- ChatGPT/LLM-generated content без human verification
+- Non-peer-reviewed preprints (medRxiv, bioRxiv) — except as an indicative
+  signal to monitor; not as the basis for a recommendation
+- Pharmaceutical company promotional materials
+- Medical blogs, podcasts, news articles
+- Articles from predatory journals (verified via Beall's List, DOAJ)
+- ChatGPT/LLM-generated content without human verification
 - Wikipedia
 
 ---
 
-## 3. Структура клінічної рекомендації
+## 3. Structure of a clinical recommendation
 
-Кожна рекомендація в knowledge base має **обов'язкову структуру**.
+Every recommendation in the knowledge base has a **mandatory structure**.
 
-### 3.1. Обов'язкові поля
+### 3.1. Required fields
 
 ```yaml
 recommendation_id: REC-HCV-MZL-001
@@ -190,64 +192,65 @@ notes: >
   for patients with red flags for transformation
 ```
 
-### 3.2. Заборонені формулювання
+### 3.2. Prohibited phrasing
 
-**Не вживаємо без контексту:**
-- «найкращий», «оптимальний», «ідеальний» — subjective, не evidence
-- «більшість пацієнтів» — без конкретного % і джерела
-- «доведено ефективним» — треба сказати як саме (OS, PFS, ORR)
-- «загалом добре переноситься» — треба конкретні toxicity rates
-- «сучасний стандарт» — без посилання на конкретну настанову + дату
+**Do not use without context:**
+- "best", "optimal", "ideal" — subjective, not evidence
+- "most patients" — without a specific % and source
+- "proven effective" — must specify how (OS, PFS, ORR)
+- "generally well tolerated" — must provide specific toxicity rates
+- "current standard" — without a reference to a specific guideline + date
 
-**Замінюємо на:**
-- «preferred per NCCN v.X.YYYY, category 1»
-- «30% of patients achieve CR per BArT trial (Arcaini 2014)»
-- «median OS extension of 3.2 months (HR 0.78, 95% CI 0.65-0.94) per trial X»
-- «grade 3-4 neutropenia in 18% per registration trial»
+**Replace with:**
+- "preferred per NCCN v.X.YYYY, category 1"
+- "30% of patients achieve CR per BArT trial (Arcaini 2014)"
+- "median OS extension of 3.2 months (HR 0.78, 95% CI 0.65-0.94) per trial X"
+- "grade 3-4 neutropenia in 18% per registration trial"
 
 ### 3.3. Language neutrality
 
-Рекомендації пишуться **фактично**, без промоційного тону. Порівняйте:
+Recommendations are written **factually**, without a promotional tone. Compare:
 
-**Погано:** «Пембролізумаб — революційний breakthrough у лікуванні НМРЛ»
-**Добре:** «Пембролізумаб + хіміотерапія покращив OS у порівнянні з
-хіміотерапією (HR 0.56, 95% CI 0.45-0.70) за KEYNOTE-189 (Gandhi 2018)»
+**Bad:** "Pembrolizumab — a revolutionary breakthrough in the treatment of NSCLC"
+**Good:** "Pembrolizumab + chemotherapy improved OS compared with
+chemotherapy (HR 0.56, 95% CI 0.45-0.70) in KEYNOTE-189 (Gandhi 2018)"
 
 ---
 
-## 4. Оцінка сили доказів
+## 4. Evidence assessment
 
-Ми **не створюємо власну шкалу**, а використовуємо встановлені.
+We **do not create our own scale** — we use established ones.
 
-### 4.1. Evidence Level (сила доказу)
+### 4.1. Evidence Level
 
-Використовуємо адаптовану **GRADE** (Grading of Recommendations
-Assessment, Development and Evaluation) — міжнародний стандарт,
-використовується Cochrane, WHO, NICE.
+We use the adapted **GRADE** (Grading of Recommendations Assessment,
+Development and Evaluation) — an international standard used by Cochrane,
+WHO, and NICE.
 
-| Рівень | Значення | Типові джерела |
+| Level | Meaning | Typical sources |
 |---|---|---|
-| **High** | Подальші дослідження малоймовірно змінять оцінку ефекту | Multiple RCTs з consistent results + meta-analysis |
-| **Moderate** | Подальші дослідження можуть суттєво вплинути | Single RCT або RCTs з обмеженнями |
-| **Low** | Подальші дослідження ймовірно змінять оцінку | Observational studies, small RCTs |
-| **Very low** | Оцінка дуже невизначена | Case series, expert opinion |
+| **High** | Further research is unlikely to change the estimate of effect | Multiple RCTs with consistent results + meta-analysis |
+| **Moderate** | Further research may substantially affect the estimate | Single RCT or RCTs with limitations |
+| **Low** | Further research is likely to change the estimate | Observational studies, small RCTs |
+| **Very low** | The estimate is very uncertain | Case series, expert opinion |
 
-### 4.2. Strength of Recommendation (сила рекомендації)
+### 4.2. Strength of Recommendation
 
-Окремо від evidence level. Рекомендація може мати Moderate evidence,
-але Strong strength (якщо великий клінічний ефект і немає альтернатив).
+Separate from evidence level. A recommendation may have Moderate evidence
+but Strong strength (if the clinical effect is large and there are no
+alternatives).
 
-| Рівень | Значення |
+| Level | Meaning |
 |---|---|
 | **Preferred / Strong** | Benefit clearly outweighs harm; usually recommend |
 | **Alternative / Conditional** | Balance of benefit and harm is closer; individualize |
 | **Not recommended** | Evidence against use, OR harm ≥ benefit |
 | **Insufficient evidence** | Cannot determine benefit-harm balance |
 
-### 4.3. NCCN Categories як cross-reference
+### 4.3. NCCN Categories as cross-reference
 
-Для сумісності з клінічною практикою в США, також вказуємо NCCN
-category, якщо рекомендація взята з NCCN:
+For compatibility with US clinical practice, we also indicate the NCCN
+category when a recommendation is drawn from NCCN:
 
 - **Category 1:** High-level evidence + uniform NCCN consensus
 - **Category 2A:** Lower-level evidence + uniform NCCN consensus
@@ -256,208 +259,207 @@ category, якщо рекомендація взята з NCCN:
 
 ### 4.4. Molecular/Biomarker evidence — OncoKB levels
 
-Для рекомендацій, основаних на молекулярних маркерах:
+For recommendations based on molecular markers:
 
-- **Level 1:** FDA-approved biomarker для конкретної пухлини
-- **Level 2:** Standard of care biomarker в guidelines для конкретної пухлини
+- **Level 1:** FDA-approved biomarker for the specific tumor type
+- **Level 2:** Standard of care biomarker in guidelines for the specific tumor type
 - **Level 3A:** Clinical evidence in same indication (early phase)
 - **Level 3B:** Clinical evidence in different indication
 - **Level 4:** Preclinical evidence
 - **Level R1:** Standard care resistance
 - **Level R2:** Investigational resistance
 
-### 4.5. Що НЕ робимо
+### 4.5. What we do NOT do
 
-- Не створюємо кастомні 1-10 rating scales
-- Не агрегуємо evidence у composite score
-- Не робимо ranking рекомендацій через single number
-- Не автоматизуємо evidence evaluation через LLM
+- We do not create custom 1-10 rating scales
+- We do not aggregate evidence into a composite score
+- We do not rank recommendations by a single number
+- We do not automate evidence evaluation via LLM
 
-Ranking за single composite score — це шлях, яким пішов IBM Watson, і
-який приховує реальну структуру доказів. Ми презентуємо рекомендації
-з повним breakdown, лікар обирає сам.
+Ranking by a single composite score is the path IBM Watson took — one that
+conceals the real structure of evidence. We present recommendations with
+a full breakdown; the clinician decides.
 
 ---
 
-## 5. Цитування джерел
+## 5. Source citation
 
-### 5.1. Мінімальна інформація для цитати
+### 5.1. Minimum information for a citation
 
-Кожне джерело в knowledge base зберігається з:
+Every source in the knowledge base is stored with:
 
 ```yaml
 source_id: "NCCN-B-Cell-Lymphomas-v2.2026"  # unique identifier
 type: guideline | phase3_rct | meta_analysis | regulatory | molecular_kb | other
 title: "NCCN Guidelines for B-Cell Lymphomas"
-version_or_edition: "v.2.2026"  # для guidelines
-authors: ["Zelenetz AD", "..."]  # для RCT/меш-аналізів
-journal: "Blood"  # для статей
+version_or_edition: "v.2.2026"  # for guidelines
+authors: ["Zelenetz AD", "..."]  # for RCT/meta-analyses
+journal: "Blood"  # for articles
 year: 2026
-pmid: "XXXXXXXX"  # якщо є
-doi: "10.XXXX/..."  # якщо є
+pmid: "XXXXXXXX"  # if available
+doi: "10.XXXX/..."  # if available
 url: "https://..."
-date_accessed: "2026-04-15"  # коли актуально переглянуто для внесення
-access_notes: "Subscription required via institutional access"  # якщо закрите
+date_accessed: "2026-04-15"  # when last reviewed for entry
+access_notes: "Subscription required via institutional access"  # if behind paywall
 ```
 
 ### 5.2. Traceability requirement
 
-Кожне клінічне твердження в knowledge base має бути «одним кліком»
-від цитати. На практиці це означає:
+Every clinical claim in the knowledge base must be "one click" away from
+its citation. In practice this means:
 
-- UI відображення рекомендації завжди показує список джерел
-- Клік на джерело → opens source record з повною метаінформацією
-- Клік на PMID → opens PubMed entry (external)
-- Клік на DOI → opens publisher page (external)
+- The UI display of a recommendation always shows the list of sources
+- Click on a source → opens the source record with full metadata
+- Click on a PMID → opens PubMed entry (external)
+- Click on a DOI → opens publisher page (external)
 
-### 5.3. Коли guideline і RCT розходяться
+### 5.3. When a guideline and an RCT diverge
 
-Наприклад, NCCN рекомендує X, але recent RCT (після останнього
-guideline update) показує, що Y краще.
+For example, NCCN recommends X, but a recent RCT (published after the last
+guideline update) shows that Y is superior.
 
-**Підхід:**
-1. Фіксуємо обидва
-2. Відображаємо обидва з датами: "NCCN v.1.2025 рекомендує X (дата:
-   Jan 2025); RCT [name] published Mar 2025 показав Y superior"
-3. Не приховуємо суперечність, не вибираємо за read
-4. Clinical Co-Lead комітет обговорює, як формулювати рекомендацію з
-   урахуванням двох перспектив
+**Approach:**
+1. Record both
+2. Display both with dates: "NCCN v.1.2025 recommends X (date: Jan 2025);
+   RCT [name] published Mar 2025 showed Y superior"
+3. Do not conceal the contradiction; do not choose by default
+4. The Clinical Co-Lead committee discusses how to formulate the recommendation
+   taking both perspectives into account
 
-### 5.4. Управління застарілими джерелами
+### 5.4. Managing outdated sources
 
-Guidelines оновлюються (NCCN — кілька разів на рік). Системі потрібна
-дисципліна:
+Guidelines are updated (NCCN — several times per year). The system requires
+discipline:
 
-- Source record має field `currency_status`: current | superseded | historical
-- Superseded source залишається в БД з вказівкою на replacement
-- Рекомендація, що посилається на superseded source, автоматично
-  позначається flag `needs_review` під час quarterly audit
+- Source records have the field `currency_status`: current | superseded | historical
+- A superseded source remains in the database with a pointer to its replacement
+- A recommendation referencing a superseded source is automatically flagged
+  `needs_review` during the quarterly audit
 
 ---
 
-## 6. Процес internal review
+## 6. Internal review process
 
-### 6.1. Перед поданням на review
+### 6.1. Before submitting for review
 
-Contributor перевіряє:
+The contributor verifies:
 
-- [ ] Всі поля рекомендації заповнені
-- [ ] Мінімум 2 незалежні джерела Tier 1 або 2
-- [ ] Контрадикції перелічені і зв'язані
-- [ ] Evidence level оцінено з GRADE обґрунтуванням
-- [ ] Strength of recommendation обрано з обґрунтуванням
-- [ ] Formatting і language neutrality перевірено
-- [ ] Немає заборонених формулювань з розділу 3.2
-- [ ] Поле `applicable_population` чітко задане
-- [ ] Дата last_reviewed — поточна
+- [ ] All recommendation fields are filled in
+- [ ] At least 2 independent Tier 1 or 2 sources
+- [ ] Contradictions are listed and linked
+- [ ] Evidence level assessed with GRADE rationale
+- [ ] Strength of recommendation selected with rationale
+- [ ] Formatting and language neutrality checked
+- [ ] No prohibited phrasing from section 3.2
+- [ ] The `applicable_population` field is clearly defined
+- [ ] The `last_reviewed` date is current
 
 ### 6.2. Clinical review checklist
 
-Кожен з двох незалежних reviewers проходить:
+Each of the two independent reviewers goes through:
 
-**Коректність джерел:**
-- [ ] Цитати існують і доступні
-- [ ] Опис даних з джерела відповідає реальному змісту джерела
-- [ ] Найсвіжіші релевантні настанови процитовані
-- [ ] Конфлікти з іншими джерелами задокументовані
+**Source accuracy:**
+- [ ] Citations exist and are accessible
+- [ ] Description of data from the source matches the actual content of the source
+- [ ] The most recent relevant guidelines are cited
+- [ ] Conflicts with other sources are documented
 
-**Клінічна коректність:**
-- [ ] Рекомендація відповідає current standard of care
-- [ ] Рівень доказовості оцінений коректно за GRADE
-- [ ] Applicable_population — точна, без over/under-inclusion
-- [ ] Нічого важливого не пропущено (альтернативи, контрадикції)
+**Clinical accuracy:**
+- [ ] Recommendation aligns with current standard of care
+- [ ] Evidence level assessed correctly per GRADE
+- [ ] `applicable_population` is precise, without over/under-inclusion
+- [ ] Nothing important is omitted (alternatives, contraindications)
 
-**Консистентність:**
-- [ ] Не суперечить існуючим рекомендаціям у БД (або явно розходиться
-      з documented rationale)
-- [ ] Термінологія консистентна з існуючою
-- [ ] Формулювання не promotional
+**Consistency:**
+- [ ] Does not contradict existing recommendations in the database (or explicitly
+      diverges with a documented rationale)
+- [ ] Terminology is consistent with existing content
+- [ ] Phrasing is not promotional
 
-**Безпека:**
-- [ ] Всі hard contraindications перелічені
-- [ ] Warnings (особливо black box warnings FDA) перелічені
-- [ ] Взаємодії з поширеними concomitant medications перевірені
+**Safety:**
+- [ ] All hard contraindications are listed
+- [ ] Warnings (especially FDA black box warnings) are listed
+- [ ] Interactions with common concomitant medications are checked
 
 ### 6.3. Dual review resolution
 
-- Обидва reviewers згодні → merge
-- Reviewer A згоден, Reviewer B має питання, які requestor виправив →
-  merge після acknowledgment B
-- Reviewers принципово розходяться → escalate до third reviewer або
-  до full Clinical Editorial Board discussion
-- Контроверсія не вирішується → **document both positions** з явною
-  поміткою і let clinician-user вирішувати
+- Both reviewers agree → merge
+- Reviewer A agrees; Reviewer B has questions that the requestor has corrected
+  → merge after acknowledgment from B
+- Reviewers fundamentally disagree → escalate to a third reviewer or
+  to full Clinical Editorial Board discussion
+- Controversy is not resolved → **document both positions** with an explicit
+  notation and let the clinician-user decide
 
 ### 6.4. Emergency content updates
 
-Для критичних оновлень (drug recall, safety alert, нова black box
-warning):
+For critical updates (drug recall, safety alert, new black box warning):
 
-- Один Clinical Co-Lead + один зовнішній експерт можуть approve
+- One Clinical Co-Lead + one external expert may approve an
   emergency change
-- Change публікується з label `emergency_update`
-- Full dual review протягом 7 днів post-publication
-- Retroactive audit через 30 днів
+- The change is published with the label `emergency_update`
+- Full dual review within 7 days post-publication
+- Retroactive audit within 30 days
 
 ---
 
-## 7. Мовна політика
+## 7. Language policy
 
-### 7.1. Внутрішня мова knowledge base — англійська
+### 7.1. Internal language of the knowledge base — English
 
-Knowledge base зберігається англійською для:
-- Сумісності з міжнародними термінологіями (SNOMED CT, ICD-O, LOINC)
-- Цитувань англомовних джерел без translation noise
-- Міжнародного collaborators потенціалу
+The knowledge base is stored in English for:
+- Compatibility with international terminologies (SNOMED CT, ICD-O, LOINC)
+- Citation of English-language sources without translation noise
+- International collaboration potential
 
-### 7.2. Output — багатомовний
+### 7.2. Output — multilingual
 
-Система генерує документи українською (primary) та англійською
+The system generates documents in Ukrainian (primary) and English
 (for reference). Translation:
 
-- Клінічна термінологія — використовуємо офіційні українські
-  відповідники з МКХ-10/11, наказів МОЗ, українських медичних
-  словників
-- Назви препаратів — за Державним формуляром України
-- Назви досліджень — зберігаємо оригінальні англійські (KEYNOTE-522,
-  BArT, BRIGHT тощо), не транслітеруємо
-- Dosage units — метричні, SI-compliant (мг/м², мг/кг)
+- Clinical terminology — we use official Ukrainian equivalents from
+  ICD-10/11, Ministry of Health orders, Ukrainian medical dictionaries
+- Drug names — per the State Formulary of Ukraine
+- Study names — we keep original English names (KEYNOTE-522,
+  BArT, BRIGHT, etc.); we do not transliterate
+- Dosage units — metric, SI-compliant (mg/m², mg/kg)
 
-### 7.3. Consistency через glossary
+### 7.3. Consistency via glossary
 
-Ведеться `GLOSSARY.md` з узгодженими translation pairs для clinical
-terms. Це частина проекту, public і editable через standard review.
+A `GLOSSARY.md` is maintained with agreed translation pairs for clinical
+terms. This is part of the project, public and editable via the standard
+review process.
 
 ---
 
 ## 8. Conflict of interest (CoI) disclosure
 
-Всі contributors клінічного контенту декларують CoI перед першим
-прийнятим PR. Declaration public на сайті проекту.
+All clinical content contributors declare CoI before their first
+accepted PR. Declaration is public on the project website.
 
-### 8.1. Типи CoI, що потребують декларації
+### 8.1. Types of CoI requiring declaration
 
-- Консалтинг для фармкомпаній (з переліком компаній)
+- Consulting for pharmaceutical companies (with a list of companies)
 - Speaking fees, honoraria
-- Research grants (institutional і personal)
+- Research grants (institutional and personal)
 - Advisory board membership
-- Equity / stock ownership у medical ventures
+- Equity / stock ownership in medical ventures
 - Intellectual property / patents
-- Family members з industry ties
+- Family members with industry ties
 
 ### 8.2. Recusal rules
 
-Contributor з декларованим CoI **не може бути primary author** для
-рекомендацій, що стосуються продуктів компаній, з якими він має
-зв'язок. Може бути reviewer якщо:
+A contributor with a declared CoI **cannot be the primary author** for
+recommendations concerning products of companies with which they have
+a relationship. They may act as a reviewer if:
 
-- CoI явно задекларований у review comments
-- Другий reviewer — без CoI з цим же продуктом
-- Escalation до Clinical Co-Lead для final approval
+- The CoI is explicitly declared in review comments
+- The second reviewer has no CoI with the same product
+- Escalation to a Clinical Co-Lead for final approval
 
-### 8.3. Публічна CoI page
+### 8.3. Public CoI page
 
-На сайті проекту — публічна сторінка:
+The project website includes a public page:
 
 ```
 Clinical Content Contributors — CoI Declarations
@@ -476,40 +478,39 @@ Clinical Content Contributors — CoI Declarations
 
 ## 9. Knowledge base hygiene
 
-### 9.1. Періодичний review
+### 9.1. Periodic review
 
-Раз на квартал кожен domain reviewer проходить свою область і
-перевіряє:
+Once per quarter, each domain reviewer covers their area and checks:
 
-- Чи не з'явилися нові major guidelines (NCCN updates, ESMO updates)
-- Чи не з'явилися practice-changing RCTs (plenary abstracts ASCO/ESMO/ASH)
-- Чи не було FDA safety alerts / drug withdrawals
-- Чи рекомендації з last_reviewed > 6 місяців — валідні
+- Whether new major guidelines have appeared (NCCN updates, ESMO updates)
+- Whether practice-changing RCTs have appeared (plenary abstracts ASCO/ESMO/ASH)
+- Whether any FDA safety alerts / drug withdrawals have occurred
+- Whether recommendations with `last_reviewed` > 6 months ago are still valid
 
-Результат — quarterly report, публічний, з описом змін.
+The output is a quarterly report, public, describing the changes.
 
 ### 9.2. Annual full audit
 
-Раз на рік — full audit всіх рекомендацій у домені, не тільки recently
-changed. Випадкова вибірка (20% рекомендацій) перевіряється на
-coherence.
+Once per year — a full audit of all recommendations in the domain, not only
+recently changed ones. A random sample (20% of recommendations) is checked
+for coherence.
 
 ### 9.3. Deprecation
 
-Застарілі рекомендації не видаляються миттєво:
+Outdated recommendations are not deleted immediately:
 
-- Flag `deprecated` з `deprecated_reason` і `replacement_id`
-- Deprecation period — 6 місяців з warning
-- Архів зберігається безстроково для retrospective audits
+- Flag `deprecated` with `deprecated_reason` and `replacement_id`
+- Deprecation period — 6 months with warning
+- Archive retained indefinitely for retrospective audits
 
 ---
 
-## 10. Приклад застосування (mini case)
+## 10. Example application (mini case)
 
-Щоб показати, як Standards працюють на практиці — коротка демонстрація
-з HCV-MZL контекстом (реальний приклад буде в Reference Case doc).
+To illustrate how the Standards work in practice — a brief demonstration
+using the HCV-MZL context (a real example will appear in the Reference Case doc).
 
-**Сценарій:** додаємо нову рекомендацію "DAA + BR для HCV-MZL 1L"
+**Scenario:** adding a new recommendation "DAA + BR for HCV-MZL 1L"
 
 **Contributor Q:**
 ```yaml
@@ -530,16 +531,16 @@ sources:
 ...
 ```
 
-**Reviewer A (онкогематолог):** Верифікує клінічну коректність, доза,
-схема — OK. Зазначає: "Slight correction — bendamustine dose reduction
-to 70 mg/m² при FIB-4 > 3.25 має бути explicit, не тільки в нотатках".
+**Reviewer A (hemato-oncologist):** Verifies clinical accuracy, dose,
+regimen — OK. Notes: "Slight correction — bendamustine dose reduction
+to 70 mg/m² when FIB-4 > 3.25 must be explicit, not only in notes."
 
-**Reviewer B (гепатолог):** Верифікує HCV-related частину. Зазначає:
-"Заборонена комбінація sofosbuvir + amiodarone — потрібна окрема
-CONTRA-запис і link з рекомендації". Creates CONTRA-AMIODARONE-SOFOSBUVIR
-entry.
+**Reviewer B (hepatologist):** Verifies the HCV-related section. Notes:
+"Prohibited combination sofosbuvir + amiodarone — a separate
+CONTRA entry and a link from the recommendation are required." Creates the
+CONTRA-AMIODARONE-SOFOSBUVIR entry.
 
-**Contributor Q** вносить виправлення → reviewers approve → merge.
+**Contributor Q** incorporates corrections → reviewers approve → merge.
 
 Changelog:
 ```
@@ -554,33 +555,33 @@ Changelog:
 
 ---
 
-## 11. Governance цього документа
+## 11. Governance of this document
 
-- Зміни в Clinical Content Standards потребують consensus всіх Clinical
-  Co-Leads + 14 днів public comment
-- Перегляд документа раз на рік або за потреби
-- Changelog ведеться в CHANGELOG-CCS.md
-
----
-
-## 12. Поточний статус і обмеження
-
-**v0.1 означає:**
-- Skeleton для стартового обговорення з Clinical Co-Leads
-- Потребує calibration під український клінічний контекст
-- Потребує альфа-тестування на першій реальній рекомендації
-
-**Що ще не вирішено:**
-- Точний формат YAML/JSON для зберігання рекомендацій (Schema doc)
-- Інструменти для автоматичного source validation
-- Integration з reference management (Zotero? local bibliography?)
-- Переклад GLOSSARY для початкових нозологій
-
-**Перший test:** застосування Standards до HCV-MZL reference case —
-чи зможемо ми відтворити реальний верифікований документ через
-дисциплінований клінічний процес по цих standards?
+- Changes to the Clinical Content Standards require consensus of all Clinical
+  Co-Leads + 14 days of public comment
+- Document reviewed annually or as needed
+- Changelog maintained in CHANGELOG-CCS.md
 
 ---
 
-**Пропозиції, критика, pull requests — вітаються через стандартний
+## 12. Current status and limitations
+
+**v0.1 means:**
+- Skeleton for initial discussion with Clinical Co-Leads
+- Requires calibration for the Ukrainian clinical context
+- Requires alpha-testing on the first real recommendation
+
+**Still unresolved:**
+- Exact YAML/JSON format for storing recommendations (Schema doc)
+- Tools for automated source validation
+- Integration with reference management (Zotero? local bibliography?)
+- GLOSSARY translation for the initial nosologies
+
+**First test:** applying the Standards to the HCV-MZL reference case —
+can we reproduce a real verified document through a disciplined clinical
+process following these standards?
+
+---
+
+**Proposals, criticism, pull requests — welcome via the standard
 governance process (CHARTER.md §6).**

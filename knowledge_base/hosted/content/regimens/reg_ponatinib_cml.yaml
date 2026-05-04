@@ -52,6 +52,42 @@ sources:
   - SRC-ELN-CML-2020
   - SRC-PACE-CORTES-2013
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ponatinib for CML T315I+. Boxed: arterial occlusion (MI/stroke/PAOD) →
+# permanent discontinuation. Hypertension + cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Підвищений артеріальний тиск (вищий за 140/90)"
+    action_ua: "Занотовуйте і повідомте лікаря на прийомі — гіпертензія від понатинібу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий біль у животі (підшлунковий)"
+    action_ua: "Подзвоніть у клініку того ж дня — панкреатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-PACE-CORTES-2013
+  - trigger_ua: "Різкий біль у грудях, задишка — можливий інфаркт"
+    action_ua: "Звертайтесь у лікарню негайно — артеріальна оклюзія (спеціальне попередження в інструкції)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-PACE-CORTES-2013
+  - trigger_ua: "Раптове оніміння обличчя або кінцівки, порушення мовлення"
+    action_ua: "Звертайтесь у лікарню негайно — інсульт (спеціальне попередження понатинібу)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Виражений біль у нозі, зміна кольору шкіри кінцівки"
+    action_ua: "Звертайтесь у лікарню негайно — тяжка оклюзія периферичних артерій"
+    urgency: er_now
+    sources:
+      - SRC-PACE-CORTES-2013
+
 last_reviewed: "2026-04-25"
 notes: >
   Pan-BCR-ABL1 TKI active against ALL kinase-domain mutations

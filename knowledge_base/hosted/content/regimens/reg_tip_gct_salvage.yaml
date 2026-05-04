@@ -1,0 +1,82 @@
+id: REG-TIP-GCT-SALVAGE
+disease_context: DIS-TESTICULAR-GCT
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy_salvage"
+
+agents:
+  - drug_id: DRG-PACLITAXEL
+    dose: "250 mg/m² IV 24h continuous infusion"
+    route: IV
+    schedule: "Day 1 (24-hour CIV beginning Day 1)"
+    administration_notes: "24-hour continuous infusion critical — allows pre-sensitization before ifosfamide/cisplatin. Require non-PVC tubing and in-line filter. Hypersensitivity prophylaxis mandatory."
+    premedication:
+      - "Dexamethasone 20 mg IV 30 min pre-paclitaxel (higher dose for 24h infusion)"
+      - "Diphenhydramine 50 mg IV 30 min pre"
+      - "Ranitidine 50 mg IV 30 min pre"
+  - drug_id: DRG-IFOSFAMIDE
+    dose: "1.5 g/m²/day IV"
+    route: IV
+    schedule: "Days 2, 3, 4, 5 (4 days)"
+    mesna_mandatory: true
+    mesna_dose: "Mesna 1.5 g/m²/day continuous IV (or fractionated: 500 mg/m² before + 1000 mg/m² over 12h during ifosfamide); monitor hematuria"
+    dose_modifications:
+      - trigger: "Ifosfamide encephalopathy (confusion, somnolence, seizure)"
+        action: "Stop ifosfamide immediately; methylene blue 50 mg IV q4h until resolution; do not re-challenge in same cycle"
+  - drug_id: DRG-CISPLATIN
+    dose: "25 mg/m²/day IV over 60 min"
+    route: IV
+    schedule: "Days 2, 3, 4, 5 (4 days); after ifosfamide each day"
+    dose_modifications:
+      - trigger: "CrCl <50 mL/min"
+        action: "Carboplatin substitution required (carboplatin AUC 4 × 4 days); cisplatin nephrotoxicity"
+
+growth_factor_support:
+  mandatory: true
+  agent: "G-CSF (filgrastim 5 mcg/kg/day or pegfilgrastim)"
+  timing: "Day 7 onwards until ANC recovery (or pegfilgrastim day 7)"
+  rationale: "Significant myelosuppression from TIP triplet; G-CSF mandatory in all cycles"
+
+hydration:
+  mandatory: true
+  protocol: >
+    Aggressive IV hydration for cisplatin days (d2-5):
+    1L NS over 1h before cisplatin + 2-3L/24h during cisplatin infusion.
+    Target urine output ≥100-150 mL/h before each cisplatin dose.
+    Mannitol 25g IV before each cisplatin if urine output inadequate.
+
+when_to_use: >
+  Cisplatin-sensitive relapsed GCT (NSGCT or seminoma) after BEP/EP 1L chemotherapy.
+  Good/intermediate Indiana prognostic score at relapse:
+  - AFP <1000 ng/mL AND hCG <1000 IU/L AND no liver/bone/brain mets
+  - OR single prior line of platinum-containing chemo
+  TIP × 4 cycles q21d is the standard. 63% durable NED (Kondagunta 2005).
+  NOT for cisplatin-refractory disease (relapse within 4 weeks of last cisplatin) →
+  HDCT+ASCT preferred for refractory disease.
+
+monitoring:
+  - "CBC: daily during ifosfamide days; before each cycle start"
+  - "Creatinine + BUN: before each cycle and during hydration"
+  - "Tumor markers (AFP, hCG, LDH): before each cycle (IGCCC response assessment)"
+  - "Urine dipstick: daily during ifosfamide — hematuria = mesna insufficiency"
+  - "Neurologic status: daily during ifosfamide (encephalopathy warning)"
+  - "Electrolytes (Mg, K): before each cisplatin dose; replace proactively"
+  - "CT CAP + tumor markers: after cycles 2 and 4 for response assessment"
+  - "PSMA/residual mass: CT after 4 cycles; if residual mass ≥1 cm and markers normalized → retroperitoneal lymph node dissection (RPLND)"
+
+cycle_length_days: 21
+total_planned_cycles: 4
+
+watchpoints_ua:
+  - "КРИТИЧНО: Мезна ОБОВ'ЯЗКОВА при іфосфаміді — 1.5 г/м²/добу безперервна інфузія або фракціонована схема; без мезни — геморагічний цистит"
+  - "КРИТИЧНО: Іфосфамідна енцефалопатія — при сплутаності/сонливості/судомах НЕГАЙНО припинити іфосфамід; метиленовий синій 50 мг IV q4h"
+  - "КРИТИЧНО: Агресивна гідратація перед кожним введенням цисплатину d2-5 (1 л до + 2-3 л/24год під час); діурез ≥100 мл/год"
+  - "КРИТИЧНО: Паклітаксел 250 мг/м² — 24-годинна безперервна інфузія (не стандартна 3-годинна); нетрадиційна схема для GCT"
+  - "КРИТИЧНО: G-CSF з дня 7 ОБОВ'ЯЗКОВО — TIP значна мієлосупресія"
+  - "УВАГА: Стандарт 4 цикли q21d — маркери AFP/хГЧ/ЛДГ перед кожним циклом"
+  - "УВАГА: Після 4 циклів — якщо залишкова маса ≥1 см при нормалізованих маркерах → РПЛН (ретроперитонеальна лімфодисекція)"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

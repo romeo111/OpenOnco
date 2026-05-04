@@ -16,6 +16,7 @@ output_indications:
   - IND-BREAST-HER2-POS-MET-2L-TDXD
   - IND-BREAST-TNBC-EARLY-NEOADJUVANT
   - IND-BREAST-BRCA-POS-MET-PARPI
+  - IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO
 
 default_indication: IND-BREAST-HR-POS-MET-1L-CDKI
 alternative_indication: IND-BREAST-HER2-POS-MET-1L-THP
@@ -50,16 +51,18 @@ decision_tree:
     if_false:
       next_step: 5
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
-  # Step 4 — TNBC branch: BRCA+ takes PARPi-first metastatic; otherwise pembro+chemo
+  # Step 4 — TNBC: early vs metastatic stage gate.
+  # Early stage → neoadjuvant (KEYNOTE-522); metastatic → step 6 (BRCA/PD-L1 routing).
   - step: 4
     evaluate:
-      all_of:
-        - red_flag: RF-BREAST-HIGH-RISK-BIOLOGY
-        - condition: "Stage IV"
+      any_of:
+        - condition: "Stage IV (locally recurrent unresectable or distant metastatic)"
     if_true:
-      result: IND-BREAST-BRCA-POS-MET-PARPI
+      next_step: 6
+      notes: "Metastatic TNBC: route to BRCA mutation gate (step 6)."
     if_false:
       result: IND-BREAST-TNBC-EARLY-NEOADJUVANT
+      notes: "Stage I-III TNBC: KEYNOTE-522 neoadjuvant pembrolizumab+chemo regardless of PD-L1 status."
   # Step 5 — HR+/HER2- branch: BRCA+ metastatic takes PARPi over CDK4/6i?
   # Clinical practice mixed; default keeps CDK4/6i 1L; clinician overrides.
   - step: 5
@@ -71,6 +74,31 @@ decision_tree:
     if_false:
       result: IND-BREAST-HR-POS-MET-1L-CDKI
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
+
+  # Step 6 — Metastatic TNBC: BRCA mutation gate → PARPi vs pembro+chemo.
+  # BRCA-mutated mTNBC: olaparib or talazoparib preferred 1L (OlympiAD, EMBRACA).
+  # BRCA-WT: pembro+chemo if CPS ≥10 (KEYNOTE-355); chemo alone if CPS <10.
+  - step: 6
+    evaluate:
+      any_of:
+        - red_flag: RF-BREAST-HIGH-RISK-BIOLOGY
+    if_true:
+      result: IND-BREAST-BRCA-POS-MET-PARPI
+      notes: >
+        BRCA1/2 germline or somatic pathogenic mutation: olaparib 300 mg BID or
+        talazoparib 1 mg QD preferred 1L (OlympiAD/EMBRACA; higher ORR vs chemo in
+        BRCA-mutated TNBC; PARPi exploits homologous recombination deficiency).
+        Pembrolizumab+chemo is an alternative if BRCA-mutated + CPS ≥10 but PARPi
+        is preferred. PARPi + ICI combination trials ongoing.
+    if_false:
+      result: IND-BREAST-TNBC-METASTATIC-1L-PEMBRO-CHEMO
+      notes: >
+        BRCA-WT metastatic TNBC: pembrolizumab + chemotherapy (KEYNOTE-355).
+        REQUIRED: PD-L1 CPS ≥10 by 22C3 pharmDx assay (mOS 23.0 vs 16.1 months,
+        HR 0.73). If CPS <10: chemotherapy alone (nab-paclitaxel or paclitaxel or
+        gemcitabine+carboplatin without pembrolizumab).
+        Choose chemotherapy backbone based on: taxane tolerance, neuropathy,
+        prior taxane exposure; gem+carbo for taxane-ineligible patients.
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
 last_reviewed: null

@@ -1,0 +1,122 @@
+id: REG-RIPRETINIB-GIST-4L
+name: "Ripretinib monotherapy (advanced GIST, ≥4L after imatinib + sunitinib + regorafenib)"
+name_ua: "Ріпретиніб моно (поширений ГІСП, ≥4 лінія після іматинібу + сунітинібу + регорафенібу)"
+alternate_names:
+  - "Qinlock"
+  - "DCC-2618"
+  - "INVICTUS regimen"
+
+components:
+  - drug_id: DRUG-RIPRETINIB
+    dose: "150 mg PO once daily, with or without food, continuous"
+    schedule: "Continuous daily dosing in 28-day cycles until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Confirm prior progression / intolerance to imatinib, sunitinib, AND regorafenib (4L+ indication per FDA label / INVICTUS)"
+  - "Baseline LVEF (echo or MUGA) — heart failure / decreased ejection fraction warning"
+  - "Baseline BP — hypertension monitoring"
+  - "Baseline skin exam — palmar-plantar erythrodysesthesia + cutaneous SCC monitoring (~5%)"
+  - "Avoid strong CYP3A inducers (rifampin, phenytoin, St John's wort) — reduce ripretinib AUC"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 3 palmar-plantar erythrodysesthesia (PPES) / hand-foot skin reaction"
+    modification: "Hold until ≤Grade 1; resume at 100 mg PO daily (one dose level reduction)"
+    rationale: "INVICTUS — PPES Grade ≥3 in ~3%; topical urea / clobetasol; lifestyle modification"
+    source_refs:
+      - SRC-INVICTUS
+      - SRC-NCCN-GIST-2025
+  - condition: "New-onset cutaneous squamous cell carcinoma / melanoma"
+    modification: "Surgical excision; continue ripretinib at full dose if resected; permanent dose reduction not required"
+    rationale: "INVICTUS + post-marketing — cutaneous malignancies ~5-7%; routine derm exams q2 months"
+    source_refs:
+      - SRC-INVICTUS
+      - SRC-NCCN-GIST-2025
+  - condition: "LVEF decline ≥10% to <50% OR symptomatic heart failure"
+    modification: "Hold ripretinib; cardiology consult; resume at 100 mg PO daily once LVEF recovers OR permanent discontinuation if symptomatic"
+    rationale: "Class effect of multi-targeted KIT/PDGFRA TKIs; baseline + periodic LVEF mandated"
+    source_refs:
+      - SRC-INVICTUS
+  - condition: "Grade ≥3 hypertension (SBP ≥160 / DBP ≥100 despite optimal antihypertensive therapy)"
+    modification: "Hold until ≤Grade 1; resume at 100 mg PO daily; permanent discontinuation if Grade 4"
+    rationale: "Anti-VEGF–like vascular effect; ACE inhibitor / CCB first line"
+    source_refs:
+      - SRC-INVICTUS
+  - condition: "Strong CYP3A inhibitor concomitant use (itraconazole, clarithromycin, ritonavir)"
+    modification: "Avoid; if unavoidable, monitor for AEs; no formal dose-reduction recommendation"
+    rationale: "Ripretinib + DP-5439 active metabolite — CYP3A4-mediated"
+    source_refs:
+      - SRC-INVICTUS
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Ripretinib (Qinlock) NOT registered in Ukraine; NOT reimbursed. Imatinib (1L), sunitinib (2L), regorafenib (3L) all registered. Access to ripretinib via individual import / international pharmacy / clinical trial only. Out-of-pocket USD 32K/month."
+
+sources:
+  - SRC-INVICTUS
+  - SRC-NCCN-GIST-2025
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ripretinib for GIST 4L (INVICTUS). Switch-control KIT/PDGFRA TKI.
+# Tox: HFS, alopecia, fatigue, hypertension, cardiac. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, біль на долонях і стопах"
+    action_ua: "Hand-foot синдром — крем, м'яке взуття; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Поширене на ріпретинібі — повертається після відміни"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Помірна втома, м'язові болі"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Виражений біль на долонях / стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  Switch-pocket inhibitor of broad spectrum of KIT and PDGFRA mutations
+  (exon 9, 11, 13, 14, 17, 18; PDGFRA exon 12, 14, 18 except D842V).
+  INVICTUS (Phase III, n=129, ripretinib 150 mg vs placebo, 4L+ GIST after
+  imatinib + sunitinib + regorafenib) — mPFS 6.3 vs 1.0 mo (HR 0.15,
+  p<0.0001); mOS 15.1 vs 6.6 mo (HR 0.36); ORR 9.4% vs 0%; favorable safety
+  profile vs prior 4L options. INTRIGUE Phase III (ripretinib vs sunitinib
+  2L) was NEGATIVE — sunitinib remains 2L SOC; ripretinib position unchanged
+  at 4L+. Pending Co-Lead sign-off.
+notes_ua: >
+  Switch-pocket інгібітор широкого спектру мутацій KIT та PDGFRA (екзон 9,
+  11, 13, 14, 17, 18; PDGFRA екзон 12, 14, 18 крім D842V). INVICTUS (Фаза
+  III, n=129, ріпретиніб 150 мг проти плацебо, 4L+ ГІСП після іматинібу +
+  сунітинібу + регорафенібу) — mPFS 6.3 проти 1.0 міс (HR 0.15, p<0.0001);
+  mOS 15.1 проти 6.6 міс (HR 0.36); ORR 9.4% проти 0%; сприятливий профіль
+  безпеки порівняно з попередніми 4L опціями. INTRIGUE Фаза III (ріпретиніб
+  проти сунітинібу 2L) була НЕГАТИВНОЮ — сунітиніб лишається 2L SOC;
+  позиція ріпретинібу незмінна на 4L+. Очікує підпис клінічного Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

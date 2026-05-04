@@ -128,9 +128,36 @@ CASE_DIAGNOSTIC_GOLDENS: dict[str, str] = {
     "patient_diagnostic_breast_lump_prebiopsy.json": "WORKUP-SUSPECTED-BREAST",
     "patient_diagnostic_lung_mass_smoker_prebiopsy.json": "WORKUP-SUSPECTED-NSCLC",
     "patient_diagnostic_prostate_psa_elevated_prebiopsy.json": "WORKUP-SUSPECTED-PROSTATE",
+    # Diagnostic-mode expansion 2026-05-01 (13 new cases — covers
+    # workups that had no curated example before): acute leukemia,
+    # CRC, endometrial, GBM, HCC, melanoma, MDS-pancytopenia
+    # (cytopenia-eval), MPN polycythemia, MM, ovarian, RCC, SCLC,
+    # urothelial. Each emits Diagnostic Brief, NOT Treatment Plan
+    # (CHARTER §15.2 C7).
+    "patient_diagnostic_acute_leukemia_circulating_blasts.json": "WORKUP-SUSPECTED-ACUTE-LEUKEMIA",
+    "patient_diagnostic_crc_lgib_iron_deficiency.json": "WORKUP-SUSPECTED-CRC",
+    "patient_diagnostic_endometrial_pmb.json": "WORKUP-SUSPECTED-ENDOMETRIAL",
+    "patient_diagnostic_gbm_focal_neuro_deficit.json": "WORKUP-SUSPECTED-GBM",
+    "patient_diagnostic_hcc_cirrhosis_li_rads.json": "WORKUP-SUSPECTED-HCC",
+    "patient_diagnostic_melanoma_atypical_lesion.json": "WORKUP-SUSPECTED-MELANOMA",
+    "patient_diagnostic_mm_bone_pain_m_protein.json": "WORKUP-SUSPECTED-MULTIPLE-MYELOMA",
+    "patient_diagnostic_mpn_mds_pancytopenia.json": "WORKUP-CYTOPENIA-EVALUATION",
+    "patient_diagnostic_mpn_polycythemia_pruritus.json": "WORKUP-SUSPECTED-MPN-MDS",
+    "patient_diagnostic_ovarian_pelvic_mass_ca125.json": "WORKUP-SUSPECTED-OVARIAN",
+    "patient_diagnostic_rcc_incidental_mass.json": "WORKUP-SUSPECTED-RCC",
+    "patient_diagnostic_sclc_central_lung_siadh.json": "WORKUP-SUSPECTED-SCLC",
+    "patient_diagnostic_urothelial_gross_hematuria.json": "WORKUP-SUSPECTED-UROTHELIAL",
+    # Diagnostic-mode completion 2026-05-01 (7 more — 100% workup coverage)
+    "patient_diagnostic_lymphadenopathy_undifferentiated.json": "WORKUP-LYMPHADENOPATHY-NONSPECIFIC",
+    "patient_diagnostic_metastatic_prostate_rising_psa.json": "WORKUP-METASTATIC-PROSTATE",
+    "patient_diagnostic_mgus_incidental_m_spike.json": "WORKUP-MONOCLONAL-GAMMOPATHY-INCIDENTAL",
+    "patient_diagnostic_lung_cancer_indeterminate.json": "WORKUP-NSCLC-DIAGNOSIS",
+    "patient_diagnostic_cup_unknown_primary.json": "WORKUP-SUSPECTED-SOLID-TUMOR",
+    "patient_diagnostic_breast_post_imaging_staging.json": "WORKUP-BREAST-DIAGNOSIS",
+    "patient_diagnostic_gu_skin_gyn_combined.json": "WORKUP-SOLID-GU-SKIN-GYN",
 }
 
-# Combined param list: 60 cases (57 treatment + 3 diagnostic).
+# Combined param list: 80 cases (57 treatment + 23 diagnostic).
 ALL_CASES: list[str] = sorted(
     list(CASE_TREATMENT_GOLDENS.keys()) + list(CASE_DIAGNOSTIC_GOLDENS.keys())
 )
@@ -165,17 +192,20 @@ def kb_validator() -> dict[str, Any]:
 # ── Sanity ────────────────────────────────────────────────────────────────
 
 
-def test_curated_case_count_matches_pr150_scope():
+def test_curated_case_count_matches_expected_scope():
     """Guard against silent drift in the curated case set.
 
-    PR #150 shipped exactly 60 curated patient_*.json files (57
-    treatment + 3 diagnostic). If this count changes, update the
-    golden dicts deliberately rather than letting parametrize drift."""
-    assert len(ALL_CASES) == 60, (
-        f"expected 60 curated cases (PR #150 scope); got {len(ALL_CASES)}"
+    PR #150 shipped 60 curated patient_*.json files (57 treatment +
+    3 diagnostic). The 2026-05-01 diagnostic-mode expansion added 13
+    new diagnostic cases, bringing total to 73 (57 treatment + 16
+    diagnostic). If this count changes, update the golden dicts
+    deliberately rather than letting parametrize drift."""
+    assert len(ALL_CASES) == 80, (
+        f"expected 80 curated cases (PR #150 + 2026-05-01 diagnostic "
+        f"expansion + completion); got {len(ALL_CASES)}"
     )
     assert len(CASE_TREATMENT_GOLDENS) == 57
-    assert len(CASE_DIAGNOSTIC_GOLDENS) == 3
+    assert len(CASE_DIAGNOSTIC_GOLDENS) == 23
 
 
 def test_golden_files_exist_on_disk():

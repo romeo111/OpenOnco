@@ -1,0 +1,67 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-027
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit per issue #229 Output Requirements. One
+    entry per manifest ID covering url_verified, content_current,
+    proposed_current_as_of, license_status, notes. No upserts proposed this run
+    (all 4 sources unreachable to bot UA); proposed_current_as_of left blank for
+    each pending maintainer browser-verification.'
+issue_number: 229
+chunk_id: source-recency-refresh-wave2-2026-05-01-027
+audit_date: '2026-05-01'
+ua_string: 'Mozilla/5.0 (compatible; OpenOnco-recency-bot)'
+audit:
+  - id: SRC-GEOMETRY-MONO-1
+    url_verified: 'no'
+    primary_url: null
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: 'Auto-stub source — no url, doi, or pmid field populated in hosted YAML.
+      Cannot HEAD-check. Maintainer must populate URL (likely
+      https://www.nejm.org/doi/full/10.1056/NEJMoa2002787 — Wolf et al. NEJM 2020,
+      GEOMETRY mono-1 capmatinib in MET-altered NSCLC; PMID 32877583; DOI
+      10.1056/NEJMoa2002787) before next recency wave can verify.'
+  - id: SRC-MYLOFRANCE-ARIBI-2007
+    url_verified: 'no'
+    primary_url: https://acsjournals.onlinelibrary.wiley.com/doi/10.1002/cncr.22588
+    content_current: assumed_yes
+    proposed_current_as_of: null
+    license_status: 'Wiley (subscription) — already documented'
+    notes: 'HEAD via OpenOnco-recency-bot UA -> HTTP 403 on Wiley landing page.
+      DOI fallback (https://doi.org/10.1002/cncr.22588 -> redirects to same Wiley
+      page) -> HTTP 403. PubMed canonical fallback
+      (https://pubmed.ncbi.nlm.nih.gov/17326217) -> HTTP 403. Likely publisher
+      bot-walling — real browser would succeed. No content supersession indicator
+      found; 2007 single-center retrospective on gemtuzumab + ATO in relapsed APL
+      remains the canonical reference for that salvage regimen.'
+  - id: SRC-PALOMA-3-TURNER-2015
+    url_verified: 'no'
+    primary_url: https://pubmed.ncbi.nlm.nih.gov/26030518
+    content_current: assumed_yes
+    proposed_current_as_of: null
+    license_status: 'NEJM (subscription) — already documented'
+    notes: 'HEAD on PubMed -> HTTP 403 (PubMed bot-walls aggressively against
+      generic UAs). DOI fallback (10.1056/NEJMoa1505270 -> NEJM landing) -> HTTP
+      403. PubMed canonical (same as primary) -> HTTP 403. Likely publisher
+      bot-walling. Content remains current: PALOMA-3 (palbociclib + fulvestrant
+      vs placebo + fulvestrant in HR+/HER2- ABC after endocrine progression;
+      n=521; mPFS 9.2 vs 3.8 mo, HR 0.42; OS update Turner NEJM 2018 mOS 34.9 vs
+      28.0 mo, HR 0.81 not statistically significant overall) is still the
+      definitive 2L CDK4/6i + fulvestrant evidence. Not superseded.'
+  - id: SRC-MONARCH-3-GOETZ-2017
+    url_verified: 'no'
+    primary_url: https://pubmed.ncbi.nlm.nih.gov/28968163
+    content_current: assumed_yes
+    proposed_current_as_of: null
+    license_status: 'ASCO / JCO (subscription) — already documented'
+    notes: 'HEAD on PubMed -> HTTP 403. DOI fallback (10.1200/JCO.2017.75.6155 ->
+      ASCO Pubs landing) -> HTTP 403. PubMed canonical (same as primary) -> HTTP
+      403. Likely publisher bot-walling. Content remains current: MONARCH-3
+      (abemaciclib + nonsteroidal AI vs placebo + AI 1L HR+/HER2- ABC; n=493;
+      mPFS 28.2 vs 14.8 mo, HR 0.54). OS update (Goetz Ann Oncol 2024) mOS 66.8
+      vs 53.7 mo, HR 0.804, p=0.0664 — trend not statistically significant. Not
+      superseded.'

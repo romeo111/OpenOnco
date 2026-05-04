@@ -1,0 +1,109 @@
+id: REGIMEN-ELRANATAMAB-STEP-UP-DOSING-MM
+name: "Elranatamab BCMA × CD3 bispecific — inpatient step-up dosing schedule"
+name_ua: "Елранатамаб BCMA × CD3 біспецифік — стаціонарна схема step-up dosing"
+alternate_names:
+  - "Elranatamab step-up"
+  - "Elrexfio induction"
+  - "MagnetisMM-3 step-up phase"
+
+components:
+  - drug_id: DRUG-ELRANATAMAB
+    dose: >
+      Step-up dose 1: 12 mg SC on day 1.
+      Step-up dose 2: 32 mg SC on day 4 (≥48h after dose 1).
+      First full treatment dose: 76 mg SC on day 8 (≥48h after dose 2).
+    schedule: "Days 1, 4, 8 of a one-time 8-day inpatient induction window"
+    route: SC
+
+cycle_length_days: 8
+total_cycles: "1 (one-time step-up; transition to REGIMEN-ELRANATAMAB-MONO-MM weekly)"
+toxicity_profile: severe
+
+premedication:
+  - "Pre-step-up doses (each of 3 doses): dexamethasone 20 mg IV/PO + diphenhydramine 25 mg IV/PO + acetaminophen 650 mg PO 1h before dosing — required for CRS mitigation per FDA label."
+  - "Tocilizumab 8 mg/kg IV must be on-site for emergency CRS management."
+  - "Hospitalize for ≥48h after each step-up dose AND first full dose (CRS / ICANS surveillance) per FDA label."
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-IVIG-HYPOGAMMA
+
+dose_adjustments:
+  - condition: "CRS Grade 1 (fever ≥38°C only) during step-up"
+    modification: "Acetaminophen + observation; do not advance to next step-up dose until afebrile ≥48h."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CRS Grade 2 (hypotension responsive to fluids OR low-flow O₂)"
+    modification: "Tocilizumab 8 mg/kg IV; ± dexamethasone 10 mg IV q6h; supportive care; do not advance step-up until CRS resolved."
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "CRS Grade 3-4 OR ICANS Grade 2+"
+    modification: "Tocilizumab + high-dose dexamethasone OR methylprednisolone 1 g/day; ICU; anakinra for refractory; pause step-up indefinitely pending recovery + multidisciplinary review."
+    rationale: "Severe CRS / ICANS may be fatal if untreated."
+  - condition: "Step-up dose delayed >7 days"
+    modification: "Restart step-up at the previous tolerated dose level (per FDA label / MagnetisMM-3 protocol)."
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Elranatamab NOT registered in Ukraine; NOT available domestically.
+    Step-up dosing requires inpatient capability with continuous
+    monitoring + tocilizumab on-site + ICU access. International
+    referral only.
+
+sources:
+  - SRC-NCCN-MM-2025
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Elranatamab step-up dosing (cycle 1 inpatient). CRS peak during
+# step-up; inpatient monitoring 48h post each priming dose.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура (37.5-38°C) у дні step-up"
+    action_ua: "Звертайтесь у лікарню негайно — будь-яка лихоманка під час step-up може бути CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-7 step-up"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — нейротоксичність бісспецифіку"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Реакція в місці підшкірної ін'єкції — почервоніння, набряк"
+    action_ua: "Очікувано — повідомте медсестру в стаціонарі"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-01"
+notes: >
+  One-time inpatient step-up induction phase prior to weekly full-dose
+  monotherapy (REGIMEN-ELRANATAMAB-MONO-MM). MagnetisMM-3 schedule:
+  12 → 32 → 76 mg SC at days 1, 4, 8 with ≥48h between doses.
+  Hospitalization for ≥48h after each step-up dose AND first full
+  dose required by FDA label due to CRS risk (~58% any-grade,
+  <1% Grade 3+ in MagnetisMM-3). Trial Source
+  SRC-MAGNETISMM-3-LESOKHIN-2023 not yet ingested into KB — citing
+  NCCN-MM-2025 only; trial Source ingestion pending (flagged in
+  commit body).
+notes_ua: >
+  Одноразова стаціонарна фаза step-up індукції перед щотижневою
+  монотерапією повною дозою (REGIMEN-ELRANATAMAB-MONO-MM). Схема
+  MagnetisMM-3: 12 → 32 → 76 мг п/ш у дні 1, 4, 8 з ≥48 год між
+  дозами. Госпіталізація на ≥48 год після кожної step-up дози ТА
+  першої повної дози вимагається маркуванням FDA через ризик CRS
+  (~58% будь-якого ступеня, <1% Grade 3+ у MagnetisMM-3). Джерело-стаб
+  дослідження SRC-MAGNETISMM-3-LESOKHIN-2023 ще не внесене у KB —
+  цитуємо лише NCCN-MM-2025; завантаження джерела очікує.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

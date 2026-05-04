@@ -35,6 +35,48 @@ ukraine_availability:
   notes: "Усі компоненти доступні в Україні. Procarbazine — таблетована форма у обмежених аптеках."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# R-MPV induction for PCNSL when MATRIX thiotepa unavailable.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, мукозит"
+    action_ua: "Поширене на HD-MTX — полоскання, м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання в кистях/стопах"
+    action_ua: "Вінкристин нейропатія"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — HD-MTX контроль нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — функція печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Розмиття мислення, утруднена мова"
+    action_ua: "Подзвоніть у клініку того ж дня — оцінка прогресування або токсичності"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — нейтропенія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Судомний напад або слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   STUB. MSKCC standard induction (Morris 2013). Default для Ukrainian

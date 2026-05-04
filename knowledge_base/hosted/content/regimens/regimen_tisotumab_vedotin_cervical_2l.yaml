@@ -1,0 +1,124 @@
+id: REG-TISOTUMAB-VEDOTIN-CERVICAL-2L
+name: "Tisotumab vedotin (recurrent/metastatic cervical cancer 2L+, innovaTV 204 / innovaTV 301)"
+name_ua: "Тисотумаб ведотин (рецидивний/метастатичний рак шийки матки 2L+, innovaTV 204 / innovaTV 301)"
+alternate_names:
+  - "Tivdak monotherapy"
+  - "innovaTV 204"
+  - "innovaTV 301"
+
+components:
+  - drug_id: DRUG-TISOTUMAB-VEDOTIN
+    dose: "2.0 mg/kg IV (max 200 mg)"
+    schedule: "IV every 21 days until disease progression or unacceptable toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Lubricating eye drops + ophthalmic vasoconstrictor + topical ophthalmic corticosteroid before each infusion"
+  - "Cooling eye-pads applied during entire infusion"
+  - "Patient to use lubricating eye drops at least 6× daily throughout treatment"
+  - "Antiemetic (5-HT3 antagonist) day 1 as needed"
+mandatory_supportive_care: []
+monitoring_schedule_id: null
+
+dose_adjustments:
+  - condition: "Grade 2 ocular AE (conjunctivitis, keratitis, blurred vision)"
+    modification: "Hold until ≤Grade 1; resume at 1.5 mg/kg with intensified eye-drop + cooling pad protocol; ophthalmology consult"
+    rationale: "Ocular toxicity is the dominant treatment-limiting AE (BOXED WARNING)"
+  - condition: "Grade 3 ocular AE / corneal ulceration / vision loss"
+    modification: "Hold until ≤Grade 1; resume at 1.2 mg/kg; permanently discontinue if recurrent Grade 3 or any Grade 4"
+    rationale: "Severe ocular events including blindness reported"
+  - condition: "Grade 2 peripheral neuropathy"
+    modification: "Hold until ≤Grade 1, resume at 1.5 mg/kg"
+    rationale: "MMAE payload class effect"
+  - condition: "Grade ≥3 peripheral neuropathy"
+    modification: "Permanent discontinuation"
+  - condition: "Grade ≥3 hemorrhage (pulmonary, GI, GU)"
+    modification: "Hold; manage; resume at reduced dose only after full resolution; permanent discontinuation if recurrent or life-threatening"
+    rationale: "TF target — vascular endothelium expression; bleeding risk"
+  - condition: "Grade 2 pneumonitis"
+    modification: "Hold; corticosteroids; resume on resolution to ≤Grade 1"
+  - condition: "Grade ≥3 pneumonitis / interstitial lung disease"
+    modification: "Permanent discontinuation"
+  - condition: "Grade ≥3 infusion reaction"
+    modification: "Stop infusion; manage; permanently discontinue if Grade 4"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Тисотумаб ведотин не зареєстровано в Україні станом на 2026-04-29 (drlz.com.ua). Доступ через named-patient import (DEC спецдозвіл МОЗ), EAP Pfizer/Seagen (Tivdak access program), або транскордонне лікування (наказ МОЗ 988) у європейських гінекологічних центрах. NCCN-Cervical 2025 + ESMO-Cervical 2024 — категорія 1 / preferred 2L+ після платини незалежно від PD-L1 / попереднього пембролізумабу."
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Tisotumab vedotin (Tissue Factor ADC, MMAE payload) for cervical 2L+
+# (innovaTV-301). Signature: ocular toxicity (boxed warning, requires
+# eye exams + drops), peripheral neuropathy, bleeding risk.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Розмиття зору, відчуття піску в очах, сухість"
+    action_ua: "Очікувано на тісотумабі — використовуйте призначені очні краплі (preservative-free); занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "MMAE-payload може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Зустрічається — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражене розмиття зору, біль в очах, чутливість до світла"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна термінова оцінка офтальмолога"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — тісотумаб підвищує ризик кровотеч"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Раптова втрата зору"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне тяжке око-токсичне ускладнення"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  First and only ADC approved for recurrent / metastatic cervical cancer
+  2L+ post-platinum (with or without bevacizumab + pembrolizumab in 1L
+  per CPS). Pivotal innovaTV 204 (Coleman Lancet Oncol 2021, n=101):
+  ORR 24%, mDOR 8.3 mo, mPFS 4.2 mo, mOS 12.1 mo → FDA accelerated
+  approval Sep 20, 2021. Confirmatory innovaTV 301 (Vergote NEJM 2024,
+  n=502, tisotumab vedotin vs investigator-choice chemo): mOS 11.5 vs
+  9.5 mo (HR 0.70, p=0.0038), mPFS 4.2 vs 2.9 mo (HR 0.67), ORR 17.8%
+  vs 5.2% → FDA full approval Apr 29, 2024. Mandatory baseline
+  ophthalmologic exam + per-cycle exams for first 9 cycles. No
+  companion biomarker required (TF broadly expressed on cervical
+  carcinoma). Missing source IDs to flag: SRC-INNOVATV-204 (Coleman
+  2021), SRC-INNOVATV-301 (Vergote 2024), SRC-FDA-TIVDAK not yet
+  authored — citation provisionally via NCCN/ESMO until trial sources
+  added.
+notes_ua: >
+  Перший і єдиний ADC, схвалений для рецидивного / метастатичного раку
+  шийки матки 2L+ після платини. Опорне дослідження innovaTV 204
+  (Coleman Lancet Oncol 2021, n=101): ORR 24%, mDOR 8.3 міс, mPFS 4.2
+  міс, mOS 12.1 міс → FDA accelerated approval вересень 2021.
+  Підтверджуюче innovaTV 301 (Vergote NEJM 2024, n=502): mOS 11.5 vs
+  9.5 міс (HR 0.70, p=0.0038) → FDA повне схвалення квітень 2024.
+  Обов'язковий огляд офтальмолога перед циклом 1, далі перед кожним
+  циклом перші 9 циклів — окулярна токсичність є домінуючою
+  складністю лікування (BOXED WARNING). Біомаркерне тестування TF не
+  потрібне.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

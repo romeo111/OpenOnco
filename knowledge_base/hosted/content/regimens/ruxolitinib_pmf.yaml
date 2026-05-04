@@ -56,6 +56,50 @@ sources:
   - SRC-ESMO-MPN-2015
   - SRC-COMFORT-I-VERSTOVSEK-2012
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ruxolitinib for symptomatic myelofibrosis (COMFORT-I/II). JAK1/2
+# inhibition: cytopenia (especially anemia + thrombocytopenia) is
+# the dose-limiting toxicity; opportunistic infection risk significant.
+# Long-term continuous treatment. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома"
+    action_ua: "Часто проходить через місяць — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Помірна нудота, помірна діарея, нічна пітливість"
+    action_ua: "Зазвичай мінімальні і покращуються — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Виражена втома, задишка при невеликому навантаженні"
+    action_ua: "Подзвоніть у клініку того ж дня — руксолітиніб часто знижує гемоглобін"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці або кровотечі"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль тромбоцитів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка з ознобом, кашель з мокротинням, уражена шкіра"
+    action_ua: "Подзвоніть у клініку того ж дня — руксолітиніб пригнічує імунну систему, ризик опортуністичних інфекцій"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Висип у вигляді пухирців на смузі шкіри (одна сторона тіла)"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива реактивація опериєзу (herpes zoster)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Раптова сильна задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — потрібно виключити серцеву подію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L symptom-directed therapy for symptomatic PMF (and post-PV/ET

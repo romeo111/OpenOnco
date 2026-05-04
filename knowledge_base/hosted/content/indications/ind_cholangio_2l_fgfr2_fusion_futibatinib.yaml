@@ -1,0 +1,102 @@
+id: IND-CHOLANGIO-2L-FUTIBATINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic intrahepatic cholangiocarcinoma"
+    - "Disease progression on ≥1 prior systemic therapy (typically gem+cis ± durvalumab 1L)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-FGFR2
+      required: true
+      value_constraint: "FGFR2 fusion or rearrangement positive (RNA-NGS preferred; DNA-NGS fusion-aware OR FISH break-apart acceptable)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-FUTIBATINIB-CHOLANGIO-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~41.7% (FOENIX-CCA2; 43/103 confirmed responders)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 9.0 mo (FOENIX-CCA2)"
+  overall_survival_5y: "Median OS 21.7 mo (FOENIX-CCA2; long-term f/u)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-CHOLANGIOCARCINOMA-FRAILTY-AGE
+  - RF-CHOLANGIOCARCINOMA-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Futibatinib for FGFR2-fusion / rearrangement advanced
+  cholangiocarcinoma post ≥1 prior systemic line — ORR 41.7%, mPFS
+  9.0 mo, mOS 21.7 mo (FOENIX-CCA2). FDA accelerated approval Sep
+  2022; EMA approval Jun 2023. Futibatinib is a covalent (irreversible)
+  pan-FGFR1-4 TKI; differs mechanistically from reversible FGFR-TKIs
+  (pemigatinib, infigratinib) and retains activity against some
+  gatekeeper / molecular-brake resistance variants after pemigatinib
+  failure (sequencing data ASCO 2023). Class FGFR-TKI toxicity
+  (hyperphosphatemia ~85%, serous retinopathy, nail / hair toxicity)
+  requires dedicated supportive-care protocol — see regimen
+  REG-FUTIBATINIB-CHOLANGIO-2L. UA access barrier: futibatinib not
+  registered (named-patient / Taiho EAP only); pemigatinib also not
+  registered. Default 2L FGFR2-fusion CCA remains pemigatinib by
+  longer follow-up + traditional approval; futibatinib preferred
+  when pemigatinib resistance is documented or pemigatinib access
+  unavailable.
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: "Futibatinib is a recommended option for FGFR2-fusion / rearrangement advanced cholangiocarcinoma post ≥1 prior line (FOENIX-CCA2); FDA accelerated approval Sep 2022"
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: "FGFR2 fusion testing recommended in advanced biliary tract cancer; pemigatinib or futibatinib is the standard 2L option upon FGFR2-fusion confirmation"
+  - source_id: SRC-FOENIX-CCA2
+    position: supports
+    relevant_quote_paraphrase: "FOENIX-CCA2 phase 2 (Goyal NEJM 2023, n=103): futibatinib 20 mg PO daily continuous; ORR 41.7%, mPFS 9.0 mo, mOS 21.7 mo; FGFR2 fusion / rearrangement post-≥1L"
+
+known_controversies:
+  - topic: "Pemigatinib vs futibatinib for FGFR2-fusion CCA 2L"
+    positions:
+      - position: "Pemigatinib: first-approved (Apr 2020), longest follow-up; reversible inhibitor; mature mOS 21.1 mo (FIGHT-202)"
+        sources: [SRC-NCCN-HEPATOBILIARY]
+      - position: "Futibatinib: covalent irreversible FGFR1-4 TKI; FOENIX-CCA2 ORR 41.7%; retains activity vs some pemigatinib-resistance variants (gatekeeper, molecular-brake)"
+        sources: [SRC-NCCN-HEPATOBILIARY, SRC-FOENIX-CCA2]
+        evidence_note: "No head-to-head; futibatinib preferred when pemigatinib resistance documented; choice often by access"
+    our_default: "Pemigatinib as default 2L FGFR2-fusion CCA; futibatinib reserved for pemigatinib-resistance / progression OR pemigatinib unavailable"
+    rationale: "Longer follow-up + traditional approval favor pemigatinib first-of-class; futibatinib retains activity against pemigatinib-resistance variants and may yield numerically higher ORR"
+
+do_not_do:
+  - "НЕ призначати без RNA-NGS (або DNA-NGS fusion-aware / FISH break-apart) підтвердження FGFR2 fusion — амплифікація сама по собі недостатня для цього показання."
+  - "НЕ розпочинати без baseline офтальмологічного огляду — серозна ретинопатія / RPE detachment — класова токсичність."
+  - "НЕ ігнорувати моніторинг фосфату — гіперфосфатемія потребує дієти + sevelamer; затримка / зниження дози при >7 мг/дл."
+  - "НЕ комбінувати з потужними CYP3A4 інгібіторами / індукторами — експозиція futibatinib різко змінюється."
+  - "НЕ підтверджувати план без funding pathway — futibatinib не зареєстрований в UA (Taiho EAP / named-patient only)."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  FGFR2-fusion CCA. NCCN cat 2A (2025); FDA Sep 2022; EMA Jun 2023.
+  SRC-FOENIX-CCA2 source live in KB (Goyal NEJM 2023). Pairs with
+  IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB and (HISTORICAL)
+  IND-CHOLANGIO-2L-INFIGRATINIB for FGFR2-fusion CCA 2L+ landscape.
+  UA access: named-patient + Taiho EAP only.

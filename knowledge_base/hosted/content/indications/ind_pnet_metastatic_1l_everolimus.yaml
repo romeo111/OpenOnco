@@ -1,0 +1,105 @@
+id: IND-PNET-METASTATIC-1L-EVEROLIMUS
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PNET
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable locally advanced or metastatic pNET (any stage IV, or unresectable stage III)"
+    - "Well-differentiated G1 (Ki67 <3%) or G2 (Ki67 3–20%)"
+    - "Progressive disease (documented radiological progression per RECIST 1.1 within preceding 12 months, OR symptomatic tumour burden)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-KI67-PROLIFERATION
+      required: false
+      value_constraint: "Ki67 ≤20% (well-differentiated G1/G2); if Ki67 >20% see RF-NET-HIGH-GRADE-G3 — MDT decision required"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-EVEROLIMUS-MONO-PNET
+concurrent_therapy:
+  - "SSA (octreotide LAR or lanreotide) may be continued concurrently if patient is already on SSA therapy"
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~5% (RECIST CR+PR); disease control rate ~73%"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 11.0 mo (HR 0.35 vs placebo, RADIANT-3)"
+  overall_survival_5y: "No significant OS benefit proven (>70% crossover at progression confounds OS data)"
+
+hard_contraindications: []
+
+red_flags_triggering_alternative:
+  - RF-NET-HIGH-GRADE-G3
+  - RF-FITNESS-ECOG-POOR
+
+required_tests: []
+
+desired_tests: []
+
+rationale: >
+  Everolimus 10 mg/day for progressive well-differentiated G1/G2 pNET.
+  RADIANT-3 (Yao NEJM 2011): mPFS 11.0 vs 4.6 mo (HR 0.35, p<0.001) in
+  n=410 patients. mTOR pathway is activated in >80% of pNETs (DAXX/ATRX/
+  mTOR/PIK3CA mutations). NCCN Category 1 preferred systemic therapy for
+  progressive pNET alongside sunitinib (no head-to-head; both valid).
+  Everolimus preferred when cardiac comorbidities or hypertension would
+  limit sunitinib; sunitinib preferred when diabetes or chronic steroid use
+  would complicate everolimus hyperglycaemia management.
+
+rationale_ua: >
+  Еверолімус 10 мг/добу для прогресуючої добре-диференційованої G1/G2 pNET.
+  RADIANT-3 (Yao NEJM 2011): мВБП 11.0 проти 4.6 міс (HR 0.35, p<0.001) у
+  n=410 пацієнтів. Шлях mTOR активований у >80% pNET (мутації DAXX/ATRX/
+  mTOR/PIK3CA). NCCN Категорія 1 переважна системна терапія для прогресуючої
+  pNET поряд із сунітинібом (немає прямого порівняння; обидва дійсні).
+  Еверолімус переважний при серцевих коморбідностях або гіпертензії, що
+  обмежувала б сунітиніб; сунітиніб переважний при діабеті або хронічному
+  застосуванні стероїдів, де гіперглікемія від еверолімусу ускладнила б
+  менеджмент.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-RADIANT3-YAO-2011
+    position: supports
+    relevant_quote_paraphrase: "Everolimus significantly prolonged PFS in progressive pNET: 11.0 vs 4.6 mo (HR 0.35, p<0.001) — RADIANT-3"
+  - source_id: SRC-NCCN-NET-2025
+    position: supports
+    relevant_quote_paraphrase: "Everolimus is Category 1 preferred systemic therapy for progressive well-differentiated pNET"
+
+do_not_do:
+  - "Не призначати еверолімус при погано-диференційованій NEC (Ki67 >55%) — потрібна хіміотерапія (EP)"
+  - "Не починати без базового тестування Ki67 — градуювання є вимогою відбору"
+  - "Не застосовувати з сильними інгібіторами CYP3A4 без корекції дози (зниження до 2.5 мг/добу)"
+  - "Уникати живих вакцин на фоні еверолімусу (імуносупресія)"
+
+known_controversies:
+  - topic: "Everolimus vs sunitinib for pNET 1L"
+    positions:
+      - position: "Both NCCN Category 1; mPFS nearly identical (11.0 vs 11.4 mo in respective trials). No head-to-head data."
+        sources:
+          - SRC-NCCN-NET-2025
+      - position: "Everolimus preferred in cardiac comorbidity / hypertension; sunitinib preferred in diabetes / steroid-dependent patients"
+        sources:
+          - SRC-NCCN-NET-2025
+    our_default: "Everolimus as default standard; sunitinib as equivalent alternative pending separate IND authoring"
+    rationale: "RADIANT-3 and Raymond 2011 are parallel without cross-trial comparison; institutional preference applies"
+
+time_critical: false
+last_reviewed: "2026-05-03"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — requires clinical co-lead signoff (CHARTER §6.1 dev-mode exemption).
+  Sunitinib indication (IND-PNET-METASTATIC-1L-SUNITINIB) deferred — DRUG-SUNITINIB
+  entity created, regimen and indication to be authored as follow-up PR.
+  SSA concurrent use (octreotide/lanreotide): ~50% of RADIANT-3 patients
+  were on SSA at baseline; concurrent use is allowed and may provide additive
+  antiproliferative + symptomatic benefit.

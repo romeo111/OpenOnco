@@ -1,0 +1,63 @@
+id: RF-NET-CARCINOID-SYNDROME
+definition: >
+  Active carcinoid syndrome in a patient with metastatic or unresectable
+  GI-NET (or other serotonin-secreting NET). Defined clinically by any
+  of: episodic flushing, secretory diarrhea (≥4 loose stools/day),
+  bronchoconstriction, or elevated 24h urinary 5-HIAA / serum serotonin.
+  Carcinoid syndrome mandates SSA therapy for symptom control regardless
+  of antiproliferative intent; SSA is also the antiproliferative
+  standard (CLARINET, PROMID).
+definition_ua: >
+  Активний карциноїдний синдром у пацієнта з метастатичною або
+  нерезектабельною GI-NET (або іншою серотонін-секретуючою НЕП).
+  Визначається клінічно наявністю будь-якого з: епізодичні припливи,
+  секреторна діарея (≥4 рідких випорожнень на день), бронхоконстрикція,
+  або підвищений 24-год сечовий 5-HIAA / сироватковий серотонін.
+  Карциноїдний синдром вимагає SSA-терапії для контролю симптомів незалежно
+  від антипроліферативного наміру; SSA є також антипроліферативним
+  стандартом (CLARINET, PROMID).
+
+trigger:
+  type: clinical
+  any_of:
+    - finding: "carcinoid_syndrome"
+      value: "true"
+    - finding: "flushing_episodes"
+      comparator: "present"
+    - finding: "5hiaa_elevated"
+      comparator: "present"
+    - finding: "diarrhea_grade"
+      threshold: 2
+      comparator: ">="
+
+clinical_direction: intensify
+severity: minor
+priority: 55
+category: other
+
+relevant_diseases:
+  - DIS-GI-NET
+  - DIS-PNET
+shifts_algorithm:
+  - ALGO-GI-NET-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-03"
+draft: false
+
+notes: >
+  Carcinoid syndrome hallmarks: episodic cutaneous flushing (serotonin +
+  bradykinin), diarrhea (serotonin, prostaglandins), bronchoconstriction,
+  carcinoid heart disease (Hedinger syndrome — right-sided valvular fibrosis
+  from chronic serotonin exposure). Biochemical confirmation: 24h urinary
+  5-HIAA >50 µmol/day (normal: <30). SSA reduces 5-HIAA ~50% and controls
+  symptoms in ~70% initially. SSA dose escalation (octreotide short-acting
+  rescue; lanreotide dose increase) and addition of telotristat ethyl
+  (tryptophan hydroxylase inhibitor) for refractory diarrhea. Carcinoid
+  crisis risk during surgery / embolisation — SSA IV cover required.
+  Carcinoid heart disease: echocardiogram at baseline + annually; surgery
+  for severe tricuspid/pulmonary regurgitation if fit.
+notes_ua: >
+  Ознаки карциноїдного синдрому: епізодичне шкірне почервоніння (серотонін + брадикінін), діарея (серотонін, простагландини), бронхоконстрикція, карциноїдна хвороба серця (синдром Гедінгера — правобічний клапанний фіброз від хронічного впливу серотоніну). Біохімічне підтвердження: 24-год сечовий 5-HIAA >50 мкмоль/добу (норма: <30). SSA знижує 5-HIAA ~50% і контролює симптоми у ~70% спочатку. Ескалація дози SSA (октреотид коротке введення рятувальне; збільшення дози ланреотиду) і додавання телотристату (інгібітор триптофан-гідроксилази) при рефрактерній діареї. Ризик карциноїдного кризу під час операції/емболізації — потрібне SSA внутрішньовенно. Хвороба серця при карциноїдному синдромі: ехокардіографія на початку + щорічно; операція при тяжкій трикуспідальній/легеневій регургітації якщо пацієнт перебуває у формі.

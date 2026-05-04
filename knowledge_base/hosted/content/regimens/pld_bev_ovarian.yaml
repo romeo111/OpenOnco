@@ -45,6 +45,42 @@ ukraine_availability:
   notes: "Бевацизумаб НСЗУ-фінансований для рецидивного раку яєчників (часткове покриття); PLD зареєстрований але здебільшого OOP. Альтернатива — REG-WEEKLY-PAC-BEV-OVARIAN (паклітаксел тижневий + бев) має повне НСЗУ-покриття."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-AURELIA-PUJADE-LAURAINE-2014]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# PLD + bevacizumab for platinum-resistant ovarian (AURELIA).
+# PLD HFS + bev HTN/proteinuria/bleeding. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення на долонях/стопах"
+    action_ua: "PLD HFS — крем, м'яке взуття"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Бевацизумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Виражений біль на долонях/стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — корекція дози PLD"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — бев впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Раптовий гострий біль у животі"
+    action_ua: "Звертайтесь у лікарню негайно — рідко перфорація на бев"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >

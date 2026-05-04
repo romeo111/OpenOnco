@@ -37,6 +37,60 @@ ukraine_availability:
   notes: "TMZ NSZU-funded for newly-diagnosed GBM; recurrent indications variable."
 
 sources: [SRC-NCCN-CNS-2025, SRC-EANO-GBM-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Stupp protocol = concurrent radiotherapy + low-dose TMZ daily, then
+# adjuvant TMZ 5/28. Key axes: cytopenia (esp. lymphopenia → PJP),
+# nausea, fatigue. PJP prophylaxis MANDATORY (mandatory_supportive_care).
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома після початку променевої терапії і темозоломіду"
+    action_ua: "Очікувано — відпочивайте більше; занотовуйте інтенсивність, особливо у фазу променевої терапії"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Помірна нудота протягом курсу"
+    action_ua: "Приймайте призначені протиблювотні; занотовуйте, якщо нудота утруднює прийом препаратів"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Випадання волосся в зоні опромінення"
+    action_ua: "Очікувано на тлі променевої терапії — частина волосся може повернутись після завершення"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — темозоломід знижує імунітет; критично виключити інфекцію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжкий головний біль, що відрізняється від звичайного, особливо вранці"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка можливого набряку мозку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Сильний кашель з мокротинням, нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі лімфопенії можлива опортуністична інфекція легень (PJP)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа, що довго не спиняється"
+    action_ua: "Подзвоніть у клініку того ж дня — темозоломід знижує тромбоцити"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий судомний напад, втрата свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна термінова оцінка можливого прогресування або судомного синдрому"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CNS-2025
+  - trigger_ua: "Сильна слабкість в одній стороні тіла, утруднена мова, асиметрія обличчя"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого інсульту або прогресування пухлини"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CNS-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

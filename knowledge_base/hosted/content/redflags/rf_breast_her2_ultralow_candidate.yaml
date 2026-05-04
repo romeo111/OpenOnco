@@ -1,0 +1,79 @@
+id: RF-BREAST-HER2-ULTRALOW-CANDIDATE
+definition: >
+  HER2-ultralow breast cancer (IHC > 0 < 1+; faint/incomplete membrane
+  staining ≤10% of tumor cells) — a sub-tier between IHC 0 and IHC 1+
+  not part of standard ASCO/CAP scoring. DESTINY-Breast06 (Bardia 2024
+  ASCO plenary) extended T-DXd benefit beyond HER2-low to HER2-ultralow
+  HR+ metastatic breast post-endocrine + CDK4/6i, chemo-naive in the
+  metastatic setting (HER2-low cohort mPFS 13.2 vs 8.1 mo, HR 0.62;
+  HER2-ultralow exploratory n=153 mPFS 13.2 vs 8.3 mo, HR 0.78). FDA
+  label expansion anticipated 2026 — candidate RF until pivotal-trial
+  Source SRC-DESTINY-BREAST06-BARDIA-2024 ingested.
+definition_ua: >
+  HER2-ultralow РМЗ (ІГХ > 0 < 1+; слабке/неповне мембранне забарвлення
+  ≤10% пухлинних клітин) — підкатегорія між ІГХ 0 та ІГХ 1+, не входить
+  до стандартного протоколу ASCO/CAP. DESTINY-Breast06 (Bardia 2024
+  ASCO пленарне) розширило виграш T-DXd за межі HER2-low до HER2-ultralow
+  HR+ метастатичного РМЗ після ендокринотерапії + CDK4/6i, хіміо-наїв у
+  метастатичному стані (HER2-low когорта мПФВ 13.2 проти 8.1 міс, HR 0.62;
+  HER2-ultralow експлораторна n=153 мПФВ 13.2 проти 8.3 міс, HR 0.78).
+  Розширення мітки FDA очікується у 2026 — RF-кандидат до інгестії
+  ключового джерела SRC-DESTINY-BREAST06-BARDIA-2024.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "her2_status"
+      value: "ultralow"
+    - finding: "her2_ihc"
+      value: "ultralow"
+    - finding: "her2_ihc_ultralow"
+      value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 72
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-BREAST
+shifts_algorithm:
+  - ALGO-BREAST-HR-POS-2L
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+last_reviewed: "2026-04-29"
+draft: true
+
+notes: >
+  Candidate RF — DESTINY-Breast06 trial-Source not yet ingested
+  (SRC-DESTINY-BREAST06-BARDIA-2024 flagged in BIO-HER2-ULTRALOW
+  notes). Pathology re-scoring required: ASCO/CAP 2018 / 2023 guideline
+  does not formally distinguish ultralow from IHC 0; central pathology
+  in DESTINY-Breast06 reported lower inter-observer kappa for ultralow
+  than HER2-low. Practical consequence: rescore archival biopsy with
+  ultralow criteria before T-DXd consideration. ILD class warning
+  unchanged from HER2-low / HER2-positive T-DXd indications. Distinct
+  from RF-BREAST-HER2-LOW-ACTIONABLE (which gates IHC 1+ or 2+/ISH-);
+  this RF gates the new ultralow stratum exclusively. Priority 72
+  places it just below HER2-low (priority 70) so when both could
+  theoretically fire, HER2-low wins. Promote to draft:false once
+  trial-Source ingested and FDA approval confirmed (anticipated 2026).
+notes_ua: >
+  Кандидатний RF — джерело випробування DESTINY-Breast06 ще не
+  інгестоване (SRC-DESTINY-BREAST06-BARDIA-2024 позначено в notes
+  BIO-HER2-ULTRALOW). Необхідне повторне патоморфологічне оцінювання:
+  настанова ASCO/CAP 2018 / 2023 формально не розрізняє ultralow від
+  ІГХ 0; центральна патологія в DESTINY-Breast06 повідомила нижчий
+  каппа-індекс для ultralow ніж для HER2-low. Практичний наслідок:
+  переоцінити архівну біопсію за критеріями ultralow до розгляду T-DXd.
+  Класове застереження ILD без змін від показань T-DXd при HER2-low /
+  HER2-позитивний. Відрізняється від RF-BREAST-HER2-LOW-ACTIONABLE
+  (gating ІГХ 1+ або 2+/ISH-); цей RF gating винятково новий стратум
+  ultralow. Пріоритет 72 розміщує його одразу під HER2-low (пріоритет
+  70) — при гіпотетичному одночасному спрацьовуванні HER2-low має
+  перевагу. Перевести на draft:false після інгестії джерела
+  випробування та підтвердження схвалення FDA (очікується 2026).

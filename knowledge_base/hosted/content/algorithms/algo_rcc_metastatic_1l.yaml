@@ -1,18 +1,145 @@
 id: ALGO-RCC-METASTATIC-1L
 applicable_to_disease: DIS-RCC
 applicable_to_line_of_therapy: 1
-purpose: "Select 1L mRCC by histology + IMDC risk."
-output_indications: [IND-RCC-METASTATIC-1L-NIVO-IPI, IND-RCC-METASTATIC-1L-PEMBRO-AXI]
+purpose: >
+  Select 1L systemic regimen for advanced/metastatic clear-cell RCC based on
+  histologic subtype (clear-cell only; non-clear cell → separate pathway),
+  IMDC risk group (favorable vs intermediate/poor), and patient fitness/toxicity
+  profile to choose among four NCCN category-1 ICI+TKI combinations (or
+  ICI+ICI for ipi-eligible intermediate/poor).
+
+output_indications:
+  - IND-RCC-METASTATIC-1L-NIVO-IPI
+  - IND-RCC-METASTATIC-1L-PEMBRO-AXI
+  - IND-RCC-METASTATIC-1L-LENV-PEMBRO
+  - IND-RCC-METASTATIC-1L-NIVO-CABO
+
 default_indication: IND-RCC-METASTATIC-1L-PEMBRO-AXI
-alternative_indication: IND-RCC-METASTATIC-1L-NIVO-IPI
+alternative_indication: IND-RCC-METASTATIC-1L-NIVO-CABO
+
 decision_tree:
+  # Step 1 — Histology gate. Algorithm covers clear-cell ccRCC only.
+  # Non-clear cell (papillary, chromophobe, sarcomatoid-predominant, collecting duct)
+  # follow separate NCCN guidance (cabozantinib preferred for papillary; clinical trial).
   - step: 1
     evaluate:
       any_of:
-        - {red_flag: RF-RCC-IMDC-INTERMEDIATE-POOR-RISK}
-    if_true: {result: IND-RCC-METASTATIC-1L-NIVO-IPI}
-    if_false: {result: IND-RCC-METASTATIC-1L-PEMBRO-AXI}
-    notes: "Wired via RF-RCC-IMDC-INTERMEDIATE-POOR-RISK (W5c chunk 2026-04-30): trigger fires on imdc_risk in {intermediate, poor, int} or imdc_risk_factors_count >= 1; favorable falls through to default IND-RCC-METASTATIC-1L-PEMBRO-AXI."
-sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
-last_reviewed: null
-notes: "Default to pembro+axi for IMDC favorable; nivo+ipi for intermediate/poor."
+        - condition: "Clear-cell (conventional) RCC confirmed on pathology"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Non-clear cell RCC: use cabozantinib 60mg monotherapy (REG-CABOZANTINIB-RCC)
+        for papillary subtype (NCCN preferred, MET pathway rationale); clinical trial
+        enrollment preferred for chromophobe, collecting duct, translocation RCC.
+        Algorithm does not cover these subtypes.
+
+  # Step 2 — IMDC risk group. Determines regimen eligibility.
+  # IMDC favorable (0 factors) vs intermediate/poor (1-2 / ≥3 factors).
+  # IMDC factors: KPS <80, <1y from dx to systemic therapy, Hgb < LLN,
+  # Ca > ULN, Neutrophil > ULN, Platelets > ULN.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-RCC-IMDC-INTERMEDIATE-POOR-RISK
+    if_true:
+      next_step: 3b
+    if_false:
+      next_step: 3a
+    notes: "RF-RCC-IMDC-INTERMEDIATE-POOR-RISK fires on imdc_risk in {intermediate, poor, int} or imdc_risk_factors_count >= 1. Favorable (0 factors) falls to step 3a."
+
+  # Step 3a — IMDC favorable. Nivo+ipi is NOT preferred (CheckMate-214:
+  # sunitinib numerically better in favorable subgroup). Use ICI+TKI.
+  - step: 3a
+    evaluate:
+      all_of:
+        - condition: "IMDC favorable risk (0 adverse factors)"
+        - condition: "ECOG PS 0-1 AND fit for ICI+TKI combination"
+    if_true:
+      next_step: 4
+    if_false:
+      result: IND-RCC-METASTATIC-1L-PEMBRO-AXI
+      notes: "IMDC favorable + ECOG 2 or limited fitness: pembro+axi preferred (KEYNOTE-426 includes ECOG 0-2; less TKI toxicity than lenv+pembro)."
+
+  # Step 3b — IMDC intermediate/poor. All 4 preferred regimens eligible.
+  # Route based on ipilimumab eligibility and patient profile.
+  - step: 3b
+    evaluate:
+      all_of:
+        - condition: "No active autoimmune disease; no prior transplant; ECOG 0-1"
+        - condition: "Ipi-eligible (no significant autoimmune history, patient accepts 4-dose ipi induction)"
+    if_true:
+      result: IND-RCC-METASTATIC-1L-NIVO-IPI
+      notes: >
+        IMDC intermediate/poor + ipi-eligible: nivo+ipi preferred (CheckMate-214;
+        mOS 56 mo in int/poor; 48% ORR; durable responses including complete remissions).
+        ICI+TKI alternatives (pembro+axi, lenv+pembro, nivo+cabo) are equally valid
+        if patient/MDT prefers TKI-containing regimen or ipi not suitable.
+    if_false:
+      next_step: 4
+
+  # Step 4 — ICI+TKI selection for fit patients (all IMDC groups reaching this step).
+  # Three equally valid NCCN category-1 regimens; differentiate by toxicity profile
+  # and tumor burden / response priority.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-1"
+        - condition: "High tumour burden OR conversion-to-resection intent OR rapid response needed"
+    if_true:
+      result: IND-RCC-METASTATIC-1L-LENV-PEMBRO
+      notes: >
+        Fit + high-burden/rapid response: lenv+pembro preferred (CLEAR: ORR 71%,
+        mPFS 23.9 mo vs 9.2 sunitinib — highest response magnitude of 1L regimens).
+        Requires active BP management (hypertension G3-4 ~36%). Alternative:
+        nivo+cabo if BP uncontrolled or bone metastases prominent.
+    if_false:
+      next_step: 5
+
+  # Step 5 — Bone metastases or lenv+pembro hypertension concern → nivo+cabo.
+  - step: 5
+    evaluate:
+      any_of:
+        - condition: "Significant bone metastases (MET/AXL pathway biological rationale for cabozantinib)"
+        - condition: "Uncontrolled hypertension (lenvatinib toxicity concern)"
+        - condition: "ECOG PS 1-2 (better tolerability of nivo+cabo vs lenv+pembro)"
+    if_true:
+      result: IND-RCC-METASTATIC-1L-NIVO-CABO
+      notes: >
+        Nivo+cabo preferred with bone mets, marginal BP tolerance, or ECOG 1-2.
+        CheckMate-9ER: PFS HR 0.51, mOS HR 0.70 vs sunitinib; cabo 40mg in combo
+        reduces SRE risk and has MET inhibition rationale for bone disease.
+    if_false:
+      result: IND-RCC-METASTATIC-1L-PEMBRO-AXI
+      notes: >
+        Default ICI+TKI for fit ccRCC without specific driver to lenv+pembro or
+        nivo+cabo: pembro+axi (KEYNOTE-426; PFS HR 0.69, mOS HR 0.68 across all
+        IMDC risk groups including favorable). Well-tolerated, mature OS data.
+
+sources:
+  - SRC-CHECKMATE214-MOTZER-2018
+  - SRC-KEYNOTE426-RINI-2019
+  - SRC-CLEAR-MOTZER-2021
+  - SRC-CHECKMATE9ER-CHOUEIRI-2021
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+last_reviewed: "2026-05-03"
+notes: >
+  1L clear-cell RCC algorithm covering all 4 NCCN category-1 regimens.
+  Non-clear cell (papillary, chromophobe, etc.) is out of scope — use
+  cabozantinib monotherapy for papillary; clinical trial for others.
+
+  IMDC favorable: nivo+ipi NOT preferred (CheckMate-214 numerical inferiority
+  in favorable subgroup). Use ICI+TKI for favorable.
+
+  ICI+TKI selection (steps 4-5) differentiates by tumor burden and toxicity
+  profile, not fixed hierarchy. All three are NCCN category 1; MDT/patient
+  preference is a valid tiebreaker.
+
+  Adjuvant pembro (KEYNOTE-564) → IND-RCC-ADJUVANT-PEMBRO; this algorithm
+  covers metastatic 1L only.
+
+  2L: belzutifan (IND-RCC-METASTATIC-2L-BELZUTIFAN), cabozantinib
+  (IND-RCC-METASTATIC-2L-CABOZANTINIB), or clinical trial. 2L algorithm pending.

@@ -48,6 +48,50 @@ sources:
   - SRC-NCCN-AML-2025
   - SRC-ESMO-MDS-2021
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Azacitidine is given monthly cycles for many months in MDS-HR.
+# Most patients are older; key axes are GI side effects, prolonged
+# cytopenia, injection-site reactions (SC), and infection risk.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота, зниження апетиту після ін'єкцій"
+    action_ua: "Часто буває в перші 1-2 цикли — приймайте призначені протиблювотні; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Почервоніння або легкий біль у місці підшкірних ін'єкцій"
+    action_ua: "Очікувано — чергуйте місця ін'єкцій, занотовуйте, якщо реакція стає сильнішою"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Помірний запор"
+    action_ua: "Поширений побічний ефект — пийте достатньо рідини, обговоріть проносні з лікарем"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — низька кількість нейтрофілів і ризик інфекції протягом усього курсу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці або кровотеча, що довго не спиняється"
+    action_ua: "Подзвоніть у клініку того ж дня — азацитидин знижує тромбоцити, особливо у перших циклах"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена реакція в місці ін'єкції — болючий вузол, виразка"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко потрібна корекція техніки введення або препарату"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії можливий швидкий розвиток сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for MDS-HR (and bridging to alloHCT in eligible patients).

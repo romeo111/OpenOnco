@@ -67,6 +67,51 @@ sources:
   - SRC-NCCN-HEPATOBILIARY
   - SRC-ESMO-BTC-2023
   - SRC-FIGHT-202
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pemigatinib for FGFR2-fusion cholangiocarcinoma 2L+ (FIGHT-202).
+# FGFRi signature: hyperphosphatemia (very common), hand-foot, dry eyes,
+# nail changes, alopecia, retinal detachment (rare). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Сухість очей, нечіткий зір, відчуття піску"
+    action_ua: "Очікувано на FGFR-інгібіторі — використовуйте призначені очні краплі (preservative-free)"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+      - SRC-FIGHT-202
+  - trigger_ua: "Зміни нігтів, ламкість, відшарування від нігтьового ложа"
+    action_ua: "Поширене — носіть рукавички при роботі з водою; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+  - trigger_ua: "Помірна нудота, втрата апетиту"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "М'язові судоми, спазми"
+    action_ua: "Подзвоніть у клініку того ж дня — пеміґатиніб часто спричиняє підвищення фосфору; потрібен контроль"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+      - SRC-FIGHT-202
+  - trigger_ua: "Спалахи світла в полі зору, плаваючі плями, тіні"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко пеміґатиніб може спричиняти серозну ретинопатію; потрібна оцінка офтальмолога"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+      - SRC-FIGHT-202
+  - trigger_ua: "Виражений біль на долонях / стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+  - trigger_ua: "Раптова втрата зору"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне серйозне ускладнення"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-HEPATOBILIARY
+
 last_reviewed: "2026-04-30"
 
 notes: >

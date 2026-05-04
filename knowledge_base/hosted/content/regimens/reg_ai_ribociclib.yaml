@@ -34,6 +34,45 @@ ukraine_availability:
   notes: "Same access pattern as palbociclib — registered, NSZU-reimbursement pending."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# AI + ribociclib for HR+/HER2- breast 1L (MONALEESA). Ribociclib has
+# higher QT prolongation rate than other CDK4/6i (boxed warning).
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, гарячі припливи, біль у суглобах"
+    action_ua: "Очікувано від AI + рибоцикліба — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна нудота, легка втрата апетиту"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — на 2-3 тижні циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб дає нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-28"
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — рибоцикліб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — рибоцикліб може подовжувати інтервал QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed:
 notes: >
   MONALEESA-2/3/7: OS benefit in metastatic HR+/HER2- 1L+ premenopausal

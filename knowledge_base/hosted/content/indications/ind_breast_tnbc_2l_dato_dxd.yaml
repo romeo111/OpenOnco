@@ -1,0 +1,70 @@
+id: IND-BREAST-TNBC-2L-DATO-DXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: TNBC
+  stage_stratum: METASTATIC
+  line_of_therapy: 2
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      required: false
+    - biomarker_id: BIO-ESTROGEN-RECEPTOR
+      value_constraint: "positive"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+    prior_chemo_lines_for_metastatic_min: 1
+    # TROPION-Breast02 design: 1L metastatic TNBC PD-L1-low/-negative
+    # ineligible for IO; readout pending — manifest entry kept under
+    # plan_track=aggressive pending positive PFS / OS confirmatory data.
+    # Current FDA Datroway label does NOT include TNBC; NCCN lists
+    # Dato-DXd as preferred only for HR+/HER2-low/-zero post-ET + chemo.
+    # Sacituzumab govitecan (ASCENT, FDA-approved TROP2 ADC for TNBC)
+    # remains the standard 2L+ TNBC ADC choice.
+
+recommended_regimen: REG-DATO-DXD-BREAST-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  median_progression_free_survival_months: 6
+  notes: "TROPION-Breast02 (1L PD-L1-low/-negative TNBC) PFS readout pending; cross-trial benchmark (TROPION-Breast01 HR+ ITT) PFS 6.9 mo. Sacituzumab ASCENT TNBC PFS 5.6 vs 1.7 mo (HR 0.41) is the benchmark for TNBC TROP2 ADCs."
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+required_tests:
+  - TEST-ER-PR-IHC
+  - TEST-HER2-IHC-FISH
+  - TEST-CECT-CAP
+desired_tests: []
+
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    weight: primary
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    weight: primary
+
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+
+notes: >
+  Aggressive-track only. TROPION-Breast02 (NCT05374512): Phase III,
+  1L PD-L1-low/-negative metastatic TNBC, Dato-DXd vs investigator-
+  choice chemo. Topline PFS not yet reported; FDA Datroway label
+  (Jan 2025) does NOT cover TNBC — current standard 2L+ TNBC TROP2
+  ADC is sacituzumab govitecan (ASCENT). This indication exists as
+  an aggressive-track placeholder for patients who failed sacituzumab
+  + post-IO chemo and have access via clinical trial / EAP. When
+  TROPION-Breast02 readout lands positive, downgrade evidence_level
+  to high + strength to strong + plan_track to standard. Trial-
+  source SRC-TROPION-BREAST02 not yet ingested into KB — citations
+  fall back to NCCN + ESMO guideline Sources; flagged for follow-up
+  source-stub generation. UA access: not registered.

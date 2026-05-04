@@ -109,12 +109,12 @@ def _q_yaml_dict(d: dict) -> str:
 
 def _baseline_demographics_group(disease_short: str) -> str:
     """Universal demographics + ECOG block. Identical across diseases."""
-    return f"""  - title: "Демографія + базовий статус"
-    description: "Базові поля. ECOG 4 → engine піде у palliative track."
+    return f"""  - title: "Demographics + baseline status"
+    description: "Base fields. ECOG 4 → engine routes to palliative track."
     questions:
 {_q_yaml_dict({
     'field': 'patient_id',
-    'label': 'ID пацієнта (synthetic)',
+    'label': 'Patient ID (synthetic)',
     'type': 'text',
     'impact': 'required',
     'default_value': f'VIRTUAL-{disease_short.upper()}-001',
@@ -122,21 +122,21 @@ def _baseline_demographics_group(disease_short: str) -> str:
 
 {_q_yaml_dict({
     'field': 'demographics.age',
-    'label': 'Вік',
+    'label': 'Age',
     'type': 'integer',
     'impact': 'critical',
     'range_min': 18,
     'range_max': 110,
-    'units': 'років',
+    'units': 'years',
     'default_value': 60,
 })}
 
 {_q_yaml_dict({
     'field': 'demographics.sex',
-    'label': 'Стать',
+    'label': 'Sex',
     'type': 'enum',
     'impact': 'optional',
-    'options': [{'value': 'male', 'label': 'Чоловіча'}, {'value': 'female', 'label': 'Жіноча'}],
+    'options': [{'value': 'male', 'label': 'Male'}, {'value': 'female', 'label': 'Female'}],
 })}
 
 {_q_yaml_dict({
@@ -151,18 +151,18 @@ def _baseline_demographics_group(disease_short: str) -> str:
         {'value': 3, 'label': '3'},
         {'value': 4, 'label': '4'},
     ],
-    'helper': 'ECOG 4 → engine не запропонує active treatment.',
+    'helper': 'ECOG 4 → engine will not propose active treatment.',
 })}
 
 {_q_yaml_dict({
     'field': 'line_of_therapy',
-    'label': 'Лінія терапії',
+    'label': 'Line of therapy',
     'type': 'integer',
     'impact': 'critical',
     'range_min': 1,
     'range_max': 5,
     'default_value': 1,
-    'helper': 'Цей опитувальник орієнтований на 1L. Для 2L+ скористайтеся розширеним JSON-режимом.',
+    'helper': 'This questionnaire targets 1L. For 2L+ use the extended JSON mode.',
 })}
 """
 
@@ -170,16 +170,16 @@ def _baseline_demographics_group(disease_short: str) -> str:
 def _safety_panel_group() -> str:
     """Universal HBV/HCV/HIV + cytopenia panel — relevant to most cancers
     that may receive immunosuppressive therapy."""
-    return f"""  - title: "Базова безпека (вірусологія + кров)"
-    description: "Skrining перед systemic therapy. Engine використовує для RF-HBV-REACTIVATION-RISK тощо."
+    return f"""  - title: "Baseline safety (virology + blood)"
+    description: "Screening before systemic therapy. Engine uses this for RF-HBV-REACTIVATION-RISK etc."
     questions:
 {_q_yaml_dict({
     'field': 'findings.hbsag',
     'label': 'HBsAg',
     'type': 'enum',
     'impact': 'critical',
-    'options': [{'value': 'negative', 'label': 'Негативний'}, {'value': 'positive', 'label': 'Позитивний'}],
-    'helper': 'HBsAg+ → entecavir prophylaxis перед anti-CD20/anti-CD38/cytotoxic immunosuppressive.',
+    'options': [{'value': 'negative', 'label': 'Negative'}, {'value': 'positive', 'label': 'Positive'}],
+    'helper': 'HBsAg+ → entecavir prophylaxis before anti-CD20/anti-CD38/cytotoxic immunosuppressive.',
     'default_value': 'negative',
 })}
 
@@ -188,7 +188,7 @@ def _safety_panel_group() -> str:
     'label': 'Anti-HBc total',
     'type': 'enum',
     'impact': 'required',
-    'options': [{'value': 'negative', 'label': 'Негативний'}, {'value': 'positive', 'label': 'Позитивний (occult)'}],
+    'options': [{'value': 'negative', 'label': 'Negative'}, {'value': 'positive', 'label': 'Positive (occult)'}],
     'default_value': 'negative',
 })}
 
@@ -198,7 +198,7 @@ def _safety_panel_group() -> str:
     'type': 'enum',
     'impact': 'recommended',
     'options': [
-        {'value': 'negative', 'label': 'HCV-Ab негативний'},
+        {'value': 'negative', 'label': 'HCV-Ab negative'},
         {'value': 'cured', 'label': 'Anti-HCV+, RNA undetectable (cured / SVR)'},
         {'value': 'active', 'label': 'Active HCV (RNA+)'},
     ],
@@ -211,9 +211,9 @@ def _safety_panel_group() -> str:
     'type': 'enum',
     'impact': 'recommended',
     'options': [
-        {'value': 'negative', 'label': 'Негативний'},
-        {'value': 'positive_controlled', 'label': 'Позитивний, на ART, vRNA undetectable'},
-        {'value': 'positive_uncontrolled', 'label': 'Позитивний, не контрольований'},
+        {'value': 'negative', 'label': 'Negative'},
+        {'value': 'positive_controlled', 'label': 'Positive, on ART, vRNA undetectable'},
+        {'value': 'positive_uncontrolled', 'label': 'Positive, uncontrolled'},
     ],
     'default_value': 'negative',
 })}
@@ -257,9 +257,9 @@ def _biomarker_group_from_disease(
                 "type": "enum",
                 "impact": "recommended",
                 "options": [
-                    {"value": "positive", "label": "Позитивний"},
-                    {"value": "negative", "label": "Негативний"},
-                    {"value": "unknown", "label": "Невідомо / pending"},
+                    {"value": "positive", "label": "Positive"},
+                    {"value": "negative", "label": "Negative"},
+                    {"value": "unknown", "label": "Unknown / pending"},
                 ],
                 "default_value": "unknown",
                 "helper": f"Source: KB {bio_id}.",
@@ -270,8 +270,8 @@ def _biomarker_group_from_disease(
         return ""
 
     sep = "\n\n"
-    return f"""  - title: "Біомаркери (auto-extracted з indications)"
-    description: "Поля автоматично згенеровані з biomarker_requirements у Indications цієї хвороби. Уточнить клініцист."
+    return f"""  - title: "Biomarkers (auto-extracted from indications)"
+    description: "Fields auto-generated from biomarker_requirements in disease Indications. To be refined by clinician."
     questions:
 {sep.join(questions)}
 """
@@ -281,24 +281,24 @@ def _findings_pool_group() -> str:
     """A small open-ended findings block — the engine often reads
     extra findings (cytopenia values, organ dysfunction flags). Stub
     just ECOG-adjacent ones."""
-    return f"""  - title: "Додаткові показники"
-    description: "Заповніть наявні; решта — engine фолбекне на безпечні defaults."
+    return f"""  - title: "Additional parameters"
+    description: "Fill in what is available; the rest — engine will fall back to safe defaults."
     questions:
 {_q_yaml_dict({
     'field': 'findings.creatinine_clearance_ml_min',
-    'label': 'Кліренс креатиніну (CrCl, мл/хв)',
+    'label': 'Creatinine clearance (CrCl, mL/min)',
     'type': 'integer',
     'impact': 'recommended',
     'range_min': 5,
     'range_max': 200,
-    'units': 'мл/хв',
-    'helper': '<30 → renal-impaired regimens; <60 → dose modify багатьох cytotoxics.',
+    'units': 'mL/min',
+    'helper': '<30 → renal-impaired regimens; <60 → dose modify many cytotoxics.',
     'default_value': 90,
 })}
 
 {_q_yaml_dict({
     'field': 'findings.bilirubin_uln_x',
-    'label': 'Білірубін × ULN',
+    'label': 'Bilirubin × ULN',
     'type': 'float',
     'impact': 'recommended',
     'range_min': 0,
@@ -316,19 +316,19 @@ def _findings_pool_group() -> str:
     'range_min': 0,
     'range_max': 50,
     'units': 'K/μL',
-    'helper': '<1.0 K/μL — engine додасть G-CSF prophylaxis.',
+    'helper': '<1.0 K/μL — engine will add G-CSF prophylaxis.',
     'default_value': 2.5,
 })}
 
 {_q_yaml_dict({
     'field': 'findings.platelets_k_ul',
-    'label': 'Тромбоцити (K/μL)',
+    'label': 'Platelets (K/μL)',
     'type': 'integer',
     'impact': 'recommended',
     'range_min': 0,
     'range_max': 1000,
     'units': 'K/μL',
-    'helper': '<75 — багато regimens dose-modify; <50 — hold більшості cytotoxics.',
+    'helper': '<75 — many regimens dose-modify; <50 — hold most cytotoxics.',
     'default_value': 200,
 })}
 """
@@ -364,10 +364,10 @@ def _build_questionnaire_yaml(
         "  thresholds and biomarker enums may need clinician adjustment per CHARTER §6.1.",
         "",
         "intro: >",
-        f"  ⚠ STUB-опитувальник для {name_en}. Заповнено автоматично з KB",
-        "  metadata. Дозволяє запустити end-to-end engine + render для розуміння",
-        "  алгоритмічного маршруту, але клінічних деталей бракує — питання",
-        "  спрощені, дефолти консервативні. Очікує clinical co-lead review.",
+        f"  ⚠ STUB questionnaire for {name_en}. Auto-filled from KB",
+        "  metadata. Allows running end-to-end engine + render to understand",
+        "  the algorithmic pathway, but clinical details are lacking — questions",
+        "  are simplified, defaults are conservative. Awaiting clinical co-lead review.",
         "",
         "fixed_fields:",
     ]

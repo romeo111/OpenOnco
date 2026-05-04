@@ -38,6 +38,41 @@ sources:
   - SRC-ESMO-MZL-2024
   - SRC-MOZ-UA-LYMPH-2013
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Wave 1 anchor regimen — Sof/Vel is among the best-tolerated antivirals,
+# so most watchpoints sit at the `log_at_next_visit` tier. Aphasia / new
+# severe headache + amiodarone interaction are the rare ER triggers.
+# STUB pending CHARTER §6.1 two-Co-Lead signoff (dev-mode exemption).
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома або легкий головний біль протягом перших 4 тижнів"
+    action_ua: "Це поширено на початку курсу — занотуйте у щоденник симптомів і обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Легка нудота без блювоти"
+    action_ua: "Зазвичай минає протягом 2-3 тижнів — занотуйте і обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Жовтяниця (жовте забарвлення шкіри або очей) або потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — це ознака можливого погіршення функції печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-EASL-HCV-2023
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений шкірний висип, який швидко поширюється"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко буває реакція на препарат, що потребує оцінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна слабкість, запаморочення або непритомність — особливо якщо приймаєте аміодарон від серця"
+    action_ua: "Звертайтесь у лікарню негайно — софосбувір з аміодароном може викликати небезпечне сповільнення серцевого ритму"
+    urgency: er_now
+    sources:
+      - SRC-EASL-HCV-2023
+
 last_reviewed: "2026-04-24"
 notes: >
   First-line antiviral regimen for HCV-associated lymphoproliferative

@@ -39,6 +39,37 @@ sources:
   - SRC-ESMO-MELANOMA-2024
   - SRC-CARVAJAL-KIT-MELANOMA-2013
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Imatinib for KIT-mutant mucosal/acral melanoma (off-label). Same
+# imatinib pattern as CML/GIST: edema + fluid retention + GI + cytopenia
+# + rare hepatotoxicity. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Періорбітальні набряки (опухлі повіки) вранці"
+    action_ua: "Очікувано від іматинібу — занотовуйте; обмежте сіль"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Помірна нудота, спазми у м'язах"
+    action_ua: "Приймайте препарат з їжею; зволоження; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Швидкий набір ваги, виражені набряки ніг, задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — затримка рідини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MELANOMA-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Carvajal et al. JAMA 2011 (NCT00470470): imatinib 400 BID in

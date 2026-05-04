@@ -1,0 +1,83 @@
+id: RF-NSCLC-HER3-HIGH-PATRITUMAB-CANDIDATE
+definition: >
+  HER3 (ERBB3) high-expression / actionability surrogate in EGFR-mutant
+  NSCLC progressing on prior EGFR-TKI — patritumab deruxtecan
+  (HER3-DXd) is a HER3-directed deruxtecan antibody-drug conjugate.
+  HERTHENA-Lung01 (Yu 2023) phase-2 single-arm in EGFR-mutant NSCLC
+  post-osimertinib + platinum chemo (n=225): ORR 29.8%, mPFS 5.5 mo,
+  mOS 11.9 mo independent of HER3 IHC level — biomarker-unselected
+  enrollment. FDA accelerated-approval review pending. Candidate RF
+  until BIO-HER3-EXPRESSION lands and pivotal trial-Source
+  SRC-HERTHENA-LUNG01-YU-2024 ingested.
+definition_ua: >
+  Висока експресія HER3 (ERBB3) / сурогатна актонабельність у EGFR-
+  мутантному НДРЛ при прогресуванні на попередньому EGFR-TKI —
+  патритумаб деруксtекан (HER3-DXd) — кон'югат антитіло-препарат
+  деруксtекан, спрямований на HER3. HERTHENA-Lung01 (Yu 2023) фаза-2
+  однорукове в EGFR-мутантному НДРЛ після осимертинібу + платинової
+  хіміотерапії (n=225): ORR 29.8%, мПФВ 5.5 міс, мЗВ 11.9 міс
+  незалежно від рівня IHC HER3 — рекрутинг без біомаркерного відбору.
+  Очікується розгляд прискореного схвалення FDA. RF-кандидат до
+  появи BIO-HER3-EXPRESSION та інгестії ключового джерела випробування
+  SRC-HERTHENA-LUNG01-YU-2024.
+
+trigger:
+  type: biomarker
+  all_of:
+    - finding: "egfr_mutation"
+      value: "positive"
+    - finding: "prior_egfr_tki_progression"
+      value: true
+    - finding: "prior_platinum_chemo"
+      value: true
+
+clinical_direction: investigate
+
+severity: minor
+priority: 90
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-NSCLC
+shifts_algorithm:
+  - ALGO-NSCLC-METASTATIC-2L
+
+sources:
+  - SRC-NCCN-NSCLC-2025
+  - SRC-ESMO-NSCLC-METASTATIC-2024
+
+last_reviewed: "2026-04-29"
+draft: true
+
+notes: >
+  Candidate RF — multiple prerequisites missing. (a) BIO-HER3-EXPRESSION
+  not yet authored on master (W7d emerging-targeted bio chunk pending);
+  (b) HERTHENA-Lung01 trial-Source SRC-HERTHENA-LUNG01-YU-2024 not yet
+  ingested. clinical_direction = investigate (not intensify) because
+  HERTHENA-Lung01 was biomarker-unselected — HER3 IHC not a gating
+  criterion in pivotal data; eligibility is post-osimertinib +
+  platinum-progressed EGFR-mutant. Priority 90 placed conservatively
+  to avoid over-firing while awaiting confirmatory FDA approval (delay
+  signal as of 2024-2025). When trigger fires the engine should
+  surface patritumab-DXd as a candidate option for MDT discussion;
+  not auto-route. Toxicity: thrombocytopenia (~21% G≥3), neutropenia,
+  ILD class warning per deruxtecan platform. Promote to draft:false +
+  clinical_direction:intensify after FDA accelerated approval +
+  trial-Source ingestion.
+notes_ua: >
+  Кандидатний RF — кілька передумов відсутні. (а) BIO-HER3-EXPRESSION
+  ще не створено на master (chunk W7d emerging-targeted bio
+  очікується); (b) джерело випробування HERTHENA-Lung01
+  SRC-HERTHENA-LUNG01-YU-2024 ще не інгестоване. clinical_direction =
+  investigate (не intensify), оскільки HERTHENA-Lung01 був без
+  біомаркерного відбору — HER3 IHC не gating-критерій у ключових
+  даних; критерії — після осимертинібу + прогресування на платині при
+  EGFR-мутації. Пріоритет 90 розміщено консервативно, щоб уникнути
+  надмірного спрацьовування під час очікування підтверджуючого
+  схвалення FDA (сигнал затримки на 2024-2025). При спрацьовуванні
+  тригера двигун має пред'явити патритумаб-DXd як кандидатну опцію
+  для обговорення MDT; не авто-маршрутизувати. Токсичність:
+  тромбоцитопенія (~21% G≥3), нейтропенія, класове застереження ILD
+  за платформою деруксtекану. Перевести на draft:false +
+  clinical_direction:intensify після прискореного схвалення FDA +
+  інгестії джерела випробування.

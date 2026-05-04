@@ -1,0 +1,89 @@
+id: BIO-TMPRSS2-ERG-FUSION
+names:
+  preferred: "TMPRSS2-ERG fusion"
+  ukrainian: "Фузія TMPRSS2-ERG"
+  english: "TMPRSS2-ERG fusion"
+  synonyms: ["TMPRSS2:ERG", "T2:ERG", "ERG rearrangement (prostate)"]
+
+biomarker_type: fusion
+
+mutation_details:
+  gene: "ERG"
+  gene_hugo_id: "HGNC:3446"
+  partners: ["TMPRSS2 (most common, 5' partner)", "SLC45A3 (rare)", "NDRG1 (rare)"]
+  type: "interstitial deletion or translocation at 21q22.2-22.3 placing ERG under androgen-responsive TMPRSS2 promoter"
+  functional_impact: "Androgen-driven aberrant ERG transcription factor expression — drives prostate-cancer-specific oncogenic program (invasion, EMT, PI3K-AKT cross-talk)"
+
+measurement:
+  method: "FISH break-apart probe for ERG (or TMPRSS2-ERG dual-color fusion probe); ERG IHC (clone EPR3864) as screening surrogate (~95% concordance with FISH); RNA-based NGS detects fusion transcript directly"
+  units: "categorical (positive | negative)"
+  sensitivity_requirement: "ERG IHC nuclear staining ≥1+ in tumor cells correlates with FISH-confirmed fusion; FISH gold standard. RNA-NGS captures rare non-TMPRSS2 ERG-fusion partners that IHC also detects (ERG-positive) but FISH break-apart probe may miss without TMPRSS2 confirmation."
+
+specimen_requirements:
+  - "FFPE tumor tissue (prostate biopsy or radical prostatectomy specimen)"
+  - "Minimum 10% tumor cellularity for FISH; ERG IHC tolerates lower cellularity"
+
+related_biomarkers: []
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+  - SRC-ESMO-PROSTATE-2024
+  - SRC-EAU-PROSTATE-2024
+
+# Prognostic-not-actionable: no FDA-approved Tx decision keyed on
+# TMPRSS2-ERG status. Fusion is prostate-cancer-defining (~50% of
+# Caucasian prostate adenocarcinomas) but does not modify Tx selection
+# in current guidelines. Listed as fusion_mvp per ALK-pattern token
+# convention; downstream actionability extractor should NOT surface
+# Tx recommendations on TMPRSS2-ERG status alone.
+oncokb_skip_reason: fusion_mvp
+
+external_ids:
+  hgnc_symbol: "ERG"
+
+last_reviewed: "2026-04-29"
+notes: >
+  TMPRSS2-ERG is the most common gene fusion in prostate cancer
+  (~50% of Caucasian prostate adenocarcinomas, ~20-30% in Asian and
+  African-American populations — frequency varies by ancestry).
+  Mechanism: androgen-responsive TMPRSS2 promoter drives aberrant
+  ERG expression after interstitial 21q22 deletion (~2/3 of cases) or
+  translocation. Clinical relevance: PROGNOSTIC, not Tx-modifying.
+  Original Tomlins 2005 (Science) report linked fusion to aggressive
+  disease; subsequent meta-analyses (e.g., Pettersson 2012, Cancer
+  Epidemiol Biomarkers Prev) showed prognostic signal weaker than
+  initially claimed and confounded by Gleason / stage. PARPi-sensitivity
+  hypothesis (ETS-fusions causing replicative stress → PARPi response)
+  TESTED but not validated as a monotherapy biomarker — ERG status
+  alone does NOT qualify for olaparib / niraparib / talazoparib (which
+  require HRR mutations). Use in KB: ships as biomarker only — no
+  IND, no algorithm step. May be used in MDT brief to confirm prostate-
+  origin in challenging metastasis-of-unknown-primary cases (ERG-IHC
+  in metastasis = strong prostate-origin signal). Trial-level Source
+  IDs for Tomlins 2005 + Pettersson 2012 + PROPHECY are flagged as
+  missing in commit body and will be added in subsequent prostate-trial
+  Source ingest chunk.
+notes_ua: >
+  TMPRSS2-ERG — найпоширеніша генна фузія в раку передміхурової
+  залози (~50% європеоїдних аденокарцином простати, ~20-30% серед
+  азіатського та афроамериканського населення — частота варіює за
+  походженням). Механізм: андроген-чутливий промотор TMPRSS2 керує
+  аберрантною експресією ERG після інтерстиціальної делеції 21q22
+  (~2/3 випадків) або транслокації. Клінічне значення: ПРОГНОСТИЧНЕ,
+  не Tx-модифікуюче. Оригінальний звіт Tomlins 2005 (Science) пов'язав
+  фузію з агресивним перебігом; наступні мета-аналізи (Pettersson
+  2012, Cancer Epidemiol Biomarkers Prev) показали слабший прогностичний
+  сигнал, конфаундований Gleason / стадією. Гіпотеза чутливості до
+  PARPi (ETS-фузії → реплікативний стрес → відповідь на PARPi) —
+  ПЕРЕВІРЕНА, але НЕ валідована як біомаркер монотерапії: статус ERG
+  сам по собі НЕ кваліфікує до олапарибу / нірапарибу / талазопарибу
+  (потрібні HRR-мутації). Використання в KB: постачається лише як
+  біомаркер — без IND, без кроку алгоритму. Може використовуватися
+  в MDT-брифі для підтвердження простатичного походження в складних
+  випадках метастазу невідомого первинного вогнища (ERG-IHC у
+  метастазі = сильний сигнал простатичного походження). ID джерел
+  рівня випробувань для Tomlins 2005 + Pettersson 2012 + PROPHECY
+  позначено як відсутні в тілі коміту і будуть додані в наступному
+  prostate-trial Source ingest chunk.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,105 @@
+id: IND-STS-ADVANCED-1L-AI
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced or metastatic soft-tissue sarcoma"
+    - "High-grade (G2-G3) STS — AI combination provides the most benefit in high-grade histologies"
+    - "Response rate priority: neoadjuvant downstaging intent OR rapidly progressive disease requiring tumor shrinkage"
+    - "No prior anthracycline-based chemotherapy"
+    - "Synovial sarcoma: ifosfamide-sensitive — AI preferred over doxorubicin monotherapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "GIST (imatinib, not AI)"
+  demographic_constraints:
+    ecog_max: 1
+    cardiac_constraint: "Baseline LVEF ≥50% required"
+    renal_constraint: "CrCl ≥50 mL/min required for ifosfamide"
+
+recommended_regimen: REG-DOXORUBICIN-IFOSFAMIDE-STS
+concurrent_therapy: []
+followed_by:
+  - "Response assessment (CT CAP) after 2-3 cycles"
+  - "Re-evaluate surgical resectability if neoadjuvant intent"
+  - "Continue × 4-6 cycles if clinical benefit; maximum 6 cycles total"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~26% (EORTC 62012)"
+  progression_free_survival: "~7.4 months (EORTC 62012)"
+  overall_survival: "~14.3 months (EORTC 62012)"
+  notes: "Higher ORR vs dox mono (26% vs 14%) but OS not significantly different — use when response rate matters"
+
+hard_contraindications:
+  - "CrCl <45 mL/min (ifosfamide nephrotoxic and renally cleared)"
+  - "Prior ifosfamide-induced Grade ≥3 encephalopathy or hemorrhagic cystitis"
+  - "ECOG ≥2 (combination too toxic; use doxorubicin mono)"
+  - "Baseline LVEF <50%"
+
+red_flags_triggering_alternative:
+  - condition: "Ifosfamide encephalopathy Grade ≥2 → switch to doxorubicin monotherapy (REG-DOXORUBICIN-STS)"
+  - condition: "CrCl declines to <45 mL/min during treatment → discontinue ifosfamide, continue doxorubicin alone"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CREATININE-CL
+  - "MUGA scan or echocardiogram (baseline LVEF)"
+  - "Urinalysis (baseline hematuria screen)"
+
+desired_tests:
+  - "MDT discussion at specialized sarcoma center (strongly recommended)"
+  - "PET-CT baseline (metabolic response assessment)"
+
+rationale: >
+  AI (doxorubicin 75 mg/m² d1 + ifosfamide 10 g/m² d1-4 + mesna q21d) achieves
+  significantly higher ORR (26% vs 14%) and longer PFS (7.4 vs 4.6 months, HR 0.74)
+  vs doxorubicin monotherapy in EORTC 62012 (n=455) but does NOT improve OS
+  (14.3 vs 12.8 months, p=0.076). AI is therefore reserved for patients where
+  tumor shrinkage is specifically required: (1) neoadjuvant intent before
+  potentially resectable disease; (2) rapidly progressive STS threatening organ
+  function; (3) synovial sarcoma (ifosfamide-sensitive subtype). MANDATORY
+  supportive care: G-CSF primary prophylaxis (Grade 3/4 neutropenia ~71%),
+  mesna for hemorrhagic cystitis prevention, aggressive hydration.
+  Do NOT use AI for palliative intent in ECOG ≥2 patients — the toxicity
+  burden is not justified without OS benefit.
+
+rationale_ua: >
+  AI (доксорубіцин + іфосфамід) дає вищий ORR (26% vs 14%) та кращий PFS
+  (7.4 vs 4.6 міс, HR 0.74) при порівнянні з монотерапією доксорубіцином
+  (EORTC 62012, n=455), але не покращує OS (p=0.076). Тому AI показаний лише
+  при пріоритеті відповіді пухлини: неоад'ювантна мета, швидке прогресування,
+  синовіальна саркома. G-КСФ ОБОВ'ЯЗКОВИЙ (71% нейтропенії Grade 3/4). Мезна
+  ОБОВ'ЯЗКОВА. При паліативній меті та ECOG ≥2 — лише доксорубіцин монотерапія.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-EORTC62012-JUDSON-2014
+    position: supports
+    relevant_quote_paraphrase: "EORTC 62012 (n=455): AI ORR 26% vs dox 14%; AI mPFS 7.4 vs 4.6 mo (HR 0.74); NO OS benefit (HR 0.83, p=0.076); Grade 3/4 neutropenia 71% vs 36% — AI reserved for response-critical scenarios"
+  - source_id: SRC-NCCN-SARCOMA
+    position: supports
+    relevant_quote_paraphrase: "NCCN Category 1: doxorubicin+ifosfamide (AI) for advanced STS when response rate priority"
+
+do_not_do:
+  - "Не застосовувати без мезни — геморагічний цистит"
+  - "Не застосовувати без G-КСФ — 71% нейтропенії Grade 3/4"
+  - "Не призначати при ECOG ≥2 — токсичність не виправдана при відсутності OS переваги"
+  - "Не призначати при КК <50 мл/хв без корекції дози іфосфаміду"
+  - "Не продовжувати іфосфамід при енцефалопатії Grade ≥2 — відміна іфосфаміду, лікування метиленовим синім"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

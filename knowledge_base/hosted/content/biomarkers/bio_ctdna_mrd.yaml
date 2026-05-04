@@ -1,0 +1,125 @@
+id: BIO-CTDNA-MRD
+names:
+  preferred: "Circulating tumor DNA — minimal residual disease (ctDNA-MRD)"
+  ukrainian: "Циркулююча пухлинна ДНК — мінімальна залишкова хвороба (цтДНК-МЗХ)"
+  english: "ctDNA MRD"
+  synonyms: ["ctDNA-MRD", "molecular residual disease", "MRD by liquid biopsy", "circulating tumor DNA MRD"]
+biomarker_type: composite
+
+measurement:
+  method: "Liquid biopsy (peripheral blood plasma): tumor-informed assay (e.g., Signatera bespoke panel from primary tumor WES) OR tumor-agnostic panel; quantitative VAF or qualitative positive/negative call"
+  units: "categorical (positive | negative) and/or continuous (mean tumor molecules per mL plasma, MTM/mL)"
+specimen_requirements: ["Plasma from peripheral blood (Streck or EDTA tube per assay protocol)", "Primary tumor FFPE for tumor-informed assay design (Signatera and similar)"]
+
+interpretation_notes: >
+  ctDNA-MRD detects post-treatment molecular residual disease earlier
+  than imaging or serum protein markers (CEA, CA19-9, etc.). Lineage-
+  agnostic concept; clinical actionability differs by tumor type and
+  treatment context.
+
+related_biomarkers: []
+
+sources: [SRC-NCCN-COLON-2025, SRC-ESMO-CRC-2024, SRC-CIVIC]
+
+oncokb_skip_reason: tumor_agnostic
+
+last_reviewed: "2026-04-29"
+notes: >
+  Lineage-agnostic post-treatment surveillance / risk-stratification
+  biomarker. Two assay families:
+
+  - **Tumor-informed (bespoke):** Signatera (Natera), RaDaR (NeoGenomics
+    / Inivata) — primary tumor WES designs a patient-specific
+    multi-locus panel; high analytic sensitivity (~0.01% VAF).
+  - **Tumor-agnostic:** fixed-panel ctDNA assays — broader coverage
+    of recurrent driver mutations / methylation signatures; lower
+    specificity for low tumor burden.
+
+  **CRC adjuvant (strongest evidence base):**
+  - **GALAXY (CIRCULATE-Japan, Kotani et al. Nat Med 2023):** Stage
+    II-IV CRC, post-curative resection, Signatera. Post-op MRD-positive
+    patients had ~22% 18-month DFS vs ~93% MRD-negative. MRD-positive
+    benefited substantially from adjuvant chemotherapy (vs no benefit
+    or marginal benefit in MRD-negative). Established ctDNA-MRD as a
+    clinically actionable risk stratifier in CRC.
+  - **CIRCULATE-Japan ALTAIR / VEGA / CIRCULATE-US:** ongoing
+    randomized trials of MRD-driven escalation/de-escalation.
+
+  **Other lineages with growing evidence:**
+  - Muscle-invasive bladder cancer (IMvigor010 ctDNA subgroup): MRD+
+    benefited from adjuvant atezolizumab; MRD- did not.
+  - Breast (early HR+/HER2+): emerging from c-TRAK-TN, CHIRP, and
+    others — not yet level-1 actionable.
+  - NSCLC adjuvant (post-IMpower010 retrospectives), pancreatic,
+    gastric — emerging.
+
+  **Clinical caveats:**
+  - **Negative does not equal cured:** assay LOD is ~0.01% VAF;
+    micrometastatic disease below LOD can recur.
+  - **Positive does not equal disease:** clonal hematopoiesis (CHIP)
+    can produce false positives; tumor-informed assays mitigate but
+    do not eliminate.
+  - Optimal post-op timing varies by assay; most evidence is at
+    4-8 weeks post-curative-intent therapy.
+  - Reimbursement and access vary (US Medicare CRC, expanding).
+
+  tumor_agnostic skip-reason: composite measurement (assay output, not
+  a sequence variant) — has no single (gene, variant) tuple suitable for
+  per-variant actionability lookup; clinical use is driven by quantitative
+  call, not specific allele.
+
+  TODO source citations (flagged for chunk follow-up; primary literature
+  not yet ingested as src_*.yaml stubs):
+    - GALAXY/CIRCULATE-Japan (Kotani et al., Nature Medicine 2023)
+    - IMvigor010 ctDNA subgroup (Powles et al., Nature 2021)
+notes_ua: >
+  Лінія-агностичний пост-терапевтичний біомаркер для нагляду /
+  стратифікації ризику. Дві сім'ї аналізів:
+
+  - **Tumor-informed (персоналізовані):** Signatera (Natera), RaDaR
+    (NeoGenomics/Inivata) — WES первинної пухлини проектує
+    мульти-локусну панель пацієнта; висока аналітична чутливість
+    (~0.01% VAF).
+  - **Tumor-agnostic (універсальні):** фіксовані панелі ctDNA —
+    ширше покриття рекурентних драйверних мутацій / сигнатур
+    метилювання; нижча специфічність при низькому пухлинному навантаженні.
+
+  **КРР ад'ювантно (найсильніша доказова база):**
+  - **GALAXY (CIRCULATE-Japan, Kotani et al. Nat Med 2023):**
+    КРР стадій II-IV, після куративної резекції, Signatera. Пацієнти
+    з пост-операційним MRD+ мали ~22% 18-міс DFS проти ~93% у MRD-
+    негативних. MRD+ пацієнти суттєво виграли від ад'ювантної
+    хіміотерапії (vs відсутність / маргінальний ефект у MRD-).
+    Встановлено цтДНК-МЗХ як клінічно дієвий стратифікатор ризику у КРР.
+  - **CIRCULATE-Japan ALTAIR / VEGA / CIRCULATE-US:** триваючі
+    рандомізовані дослідження ескалації / деескалації за MRD.
+
+  **Інші лінії з накопичуваними даними:**
+  - М'язово-інвазивний рак сечового міхура (IMvigor010 ctDNA-підгрупа):
+    MRD+ виграли від ад'ювантного атезолізумабу; MRD- — ні.
+  - Молочна залоза (рання HR+/HER2+): емерджентно з c-TRAK-TN, CHIRP
+    тощо — поки не рівень-1 дієвість.
+  - НДРЛ ад'ювантно (ретроспективи пост-IMpower010), підшлункова, шлунок —
+    емерджентно.
+
+  **Клінічні застереження:**
+  - **Негативний != вилікуваний:** межа виявлення ~0.01% VAF;
+    мікрометастатична хвороба нижче LOD може рецидивувати.
+  - **Позитивний != хвороба:** клональний гемопоез (CHIP) може давати
+    хибно-позитивні; tumor-informed аналізи зменшують, але не
+    усувають.
+  - Оптимальний час пост-операційного забору залежить від аналізу;
+    більшість даних — 4-8 тижнів після терапії з куративним наміром.
+  - Доступ і відшкодування різні (US Medicare КРР, розширюється).
+
+  Skip-reason tumor_agnostic: композитне вимірювання (вихід аналізу,
+  не варіант послідовності) — немає єдиного (ген, варіант) кортежу,
+  придатного для per-variant actionability lookup; клінічне використання
+  керується кількісним результатом, не специфічним алелем.
+
+  TODO цитування джерел (для подальшого чанку; первинна література ще
+  не імпортована як src_*.yaml стаби):
+    - GALAXY/CIRCULATE-Japan (Kotani et al., Nature Medicine 2023)
+    - IMvigor010 ctDNA-підгрупа (Powles et al., Nature 2021)
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,96 @@
+id: RF-MM-BCMA-EXPRESSION-POS
+definition: >
+  BCMA (B-cell maturation antigen, TNFRSF17) expression on plasma
+  cells in relapsed/refractory multiple myeloma — universally
+  expressed on malignant plasma cells (>99% of MM); IHC / flow
+  cytometric confirmation typically not required for clinical
+  eligibility but expression-loss escape on prior BCMA-directed
+  therapy is a known mechanism. Gates BCMA-targeting agents 4L+:
+  teclistamab (BCMAxCD3 BiTE; MajesTEC-1 Moreau 2022 NEJM —
+  ORR 63%, CR 39.4%, mPFS 11.3 mo, mDOR 21.6 mo), elranatamab
+  (MagnetisMM-3), and BCMA-directed CAR-T (ide-cel KarMMa,
+  cilta-cel CARTITUDE-1). Triple-class-exposed (TCE) refractory
+  MM cohort. Expression-loss / antigen-escape after prior
+  BCMA exposure is a tracked composite — re-biopsy advised before
+  sequencing a second BCMA agent.
+definition_ua: >
+  Експресія BCMA (B-cell maturation antigen, TNFRSF17) на плазматичних
+  клітинах при рецидивній/рефрактерній множинній мієломі — практично
+  універсально присутня на злоякісних плазматичних клітинах (>99% ММ);
+  ІГХ / проточно-цитометрична верифікація зазвичай не потрібна для
+  клінічного відбору, але втрата експресії як механізм escape на
+  попередній BCMA-таргетній терапії є відомим явищем. Гейтить
+  BCMA-таргетні агенти 4L+: теклістамаб (BCMAxCD3 BiTE; MajesTEC-1
+  Moreau 2022 NEJM — ORR 63%, ПР 39.4%, мПФВ 11.3 міс, мТВ 21.6 міс),
+  елранатамаб (MagnetisMM-3), і BCMA-таргет CAR-T (ide-cel KarMMa,
+  cilta-cel CARTITUDE-1). Когорта TCE рефрактерної ММ. Втрата експресії /
+  antigen-escape після попередньої BCMA-експозиції — відстежуваний
+  композит; перед послідовним призначенням другого BCMA-агента
+  рекомендується ре-біопсія.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "bcma_expression"
+          value: "positive"
+        - finding: "bcma_status"
+          value: "expressed"
+        - finding: "bcma_ihc"
+          value: "positive"
+        - finding: "bcma_flow"
+          value: "positive"
+    - any_of:
+        - finding: "prior_lines_count"
+          threshold: 3
+          comparator: ">="
+        - finding: "triple_class_exposed"
+          value: true
+        - finding: "triple_class_refractory"
+          value: true
+        - finding: "penta_refractory"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 60
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-MM
+shifts_algorithm:
+  - ALGO-MM-2L
+
+sources:
+  - SRC-MAJESTEC-1-MOREAU-2022
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  BCMA is expressed on >99% of MM plasma cells at diagnosis — RF gate
+  is not "do you have BCMA" but rather "is patient TCE/penta-refractory
+  AND BCMA-naive (or re-biopsied for re-expression)". Common AEs:
+  cytokine release syndrome (CRS) ~70% any grade / <2% G3+, ICANS
+  ~3%, infections G3+ ~45% (notable for hypogammaglobulinemia +
+  opportunistic infection — IVIG replacement protocol expected).
+  Antigen-escape mechanisms: BCMA loss-of-expression, BCMA mutation,
+  γ-secretase upregulation. Pre-treatment IVIG threshold IgG <400 mg/dL.
+  Sequencing question (BCMA-BiTE → BCMA-CAR-T vs reverse) is open
+  research; CARTITUDE-4 + MajesTEC-1 cohort C inform.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  BCMA експресується на >99% плазматичних клітин ММ при діагнозі —
+  RF-гейт це не "чи є BCMA" а "чи пацієнт TCE/penta-рефрактерний
+  ТА BCMA-naive (або re-biopsied на re-expression)". Часті НП: синдром
+  вивільнення цитокінів (CRS) ~70% будь-якого ступеня / <2% G3+, ICANS
+  ~3%, інфекції G3+ ~45% (особливо гіпогаммаглобулінемія + опортуністичні
+  — очікується протокол замісного IVIG). Механізми antigen-escape:
+  втрата експресії BCMA, мутація BCMA, гіперекспресія γ-секретази.
+  Перед-лікувальний поріг IVIG IgG <400 мг/дл. Питання послідовності
+  (BCMA-BiTE → BCMA-CAR-T vs зворотній) залишається відкритим;
+  CARTITUDE-4 + MajesTEC-1 cohort C дають дані.
+  STUB — потребує схвалення клінічного співкерівника.

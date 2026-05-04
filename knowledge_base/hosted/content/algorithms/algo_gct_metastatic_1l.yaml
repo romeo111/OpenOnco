@@ -1,0 +1,131 @@
+id: ALGO-GCT-METASTATIC-1L
+applicable_to_disease: DIS-TESTICULAR-GCT
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic chemotherapy for advanced/metastatic testicular germ cell tumor (GCT).
+  Routes by: (1) orchiectomy status (must precede chemotherapy), (2) histology
+  (seminoma vs NSGCT — distinct marker profiles), (3) IGCCC risk classification
+  (good vs intermediate vs poor — determines BEP cycle count 3 vs 4), and (4)
+  bleomycin eligibility (normal DLCO → BEP; impaired DLCO → EP × 4).
+  GCT is highly curable even at metastatic stage — treatment intent is CURATIVE.
+
+output_indications:
+  - IND-GCT-METASTATIC-1L-BEP
+  - IND-GCT-METASTATIC-1L-EP
+
+default_indication: IND-GCT-METASTATIC-1L-BEP
+alternative_indication: IND-GCT-METASTATIC-1L-EP
+
+decision_tree:
+  # Step 1 — Orchiectomy prerequisite.
+  # Radical inguinal orchiectomy is both diagnostic and therapeutic.
+  # Chemotherapy should NOT precede orchiectomy unless patient is
+  # hemodynamically unstable or has rapidly progressing visceral disease
+  # threatening organ function.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Radical inguinal orchiectomy completed (or contraindicated by urgency)"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Radical inguinal orchiectomy must be performed before systemic chemotherapy.
+        (1) Provides histological diagnosis — seminoma vs NSGCT determines treatment;
+        (2) Removes primary tumor;
+        (3) Allows accurate post-orchiectomy marker trajectory assessment.
+        EXCEPTION: rapidly progressive life-threatening disease (massive mediastinal
+        disease, bulky NSGCT with CNS mets, rapidly rising markers) → start BEP
+        immediately and perform delayed orchiectomy. Discuss with GCT specialist.
+
+  # Step 2 — Stage and marker assessment.
+  # Serum AFP, beta-hCG, LDH must be measured POST-orchiectomy and before chemo.
+  # These determine IGCCC risk classification.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Post-orchiectomy serum AFP, beta-hCG, and LDH measured"
+        - condition: "CT CAP completed for staging"
+        - any_of:
+          - condition: "Stage II (retroperitoneal lymph node involvement)"
+          - condition: "Stage III (distant metastases or above-diaphragm nodes)"
+          - condition: "Stage I with rising markers post-orchiectomy"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        Stage I testicular GCT (no metastases, normalized markers post-orchiectomy):
+        surveillance preferred for most patients (seminoma and NSGCT) — 95-99% cured
+        with orchiectomy alone + active surveillance. Adjuvant carboplatin AUC 7 ×1-2
+        cycles for high-risk stage I seminoma (lymphovascular invasion) or
+        RPLND for high-risk stage I NSGCT are alternatives at MDT discretion.
+        Chemotherapy is NOT standard for stage I if markers normalize.
+
+  # Step 3 — Histology verification and AFP interpretation.
+  # Pure seminoma does NOT produce AFP. If AFP elevated → reclassify as NSGCT.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "AFP normal AND histology confirmed as pure seminoma"
+    if_true:
+      next_step: 4
+      notes: "Pure seminoma confirmed (normal AFP): IGCCC risk categories for seminoma apply (no 'poor-risk' seminoma)."
+    if_false:
+      next_step: 4
+      notes: "AFP elevated OR non-seminomatous elements present: classify as NSGCT regardless of histology report. NSGCT IGCCC risk categories apply (good/intermediate/poor). AFP elevation in apparent seminoma mandates NSGCT treatment."
+
+  # Step 4 — IGCCC risk classification and bleomycin eligibility.
+  # Good risk: BEP × 3 cycles (or EP × 4 if bleomycin contraindicated).
+  # Intermediate/poor risk: BEP × 4 cycles (or EP × 4 if bleomycin contraindicated).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Baseline DLCO ≥80% predicted AND CrCl ≥50 mL/min"
+    if_true:
+      result: IND-GCT-METASTATIC-1L-BEP
+      notes: >
+        Bleomycin eligible (normal DLCO + CrCl ≥50): BEP is standard.
+        IGCCC GOOD RISK → BEP × 3 cycles (q21d): 5-year OS ~92%.
+        IGCCC INTERMEDIATE RISK → BEP × 4 cycles (q21d): 5-year OS ~80%.
+        IGCCC POOR RISK → BEP × 4 cycles (q21d): 5-year OS ~50%.
+        Communicate cycle count explicitly in the plan — 3 vs 4 cycles
+        is determined by IGCCC risk, NOT by patient preference.
+        Bleomycin CRITICAL WARNINGS: FiO₂ cap post-BEP; DLCO monitoring; G-CSF.
+    if_false:
+      result: IND-GCT-METASTATIC-1L-EP
+      notes: >
+        Bleomycin contraindicated (DLCO <80%, CrCl <50, prior bleomycin pneumonitis,
+        age >40-50 with baseline lung disease): use EP × 4 cycles (IND-GCT-METASTATIC-1L-EP).
+        EP × 4 = BEP × 3 for good-risk (Loehrer 1995). EP × 4 for all IGCCC risk groups
+        when bleomycin omitted — do NOT reduce to 3 cycles of EP.
+
+sources:
+  - SRC-IGCCC-1997
+  - SRC-NCCN-TESTICULAR-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  GCT is unique: even metastatic disease is CURATIVE in ~80-92% of patients.
+  Treatment intent is ALWAYS curative — dose reductions are NOT standard.
+
+  IGCCC risk categories (abbreviated):
+  NON-SEMINOMA:
+    Good risk: AFP <1000 + LDH <1.5×ULN + hCG <5000 + no non-pulm visceral mets → BEP ×3
+    Intermediate: AFP 1000-10000 OR LDH 1.5-10×ULN OR hCG 5000-50000 → BEP ×4
+    Poor risk: AFP >10000 OR LDH >10×ULN OR hCG >50000 OR non-pulm visceral mets → BEP ×4
+  SEMINOMA:
+    Good risk: no non-pulmonary visceral mets → BEP ×3
+    Intermediate: non-pulmonary visceral mets → BEP ×4
+    (No "poor risk" category for seminoma)
+
+  Post-chemotherapy residual mass management (not in algorithm — MDT decision):
+    Seminoma >3cm residual: PET-guided (FDG-avid → resect/biopsy; FDG-negative → observe)
+    NSGCT >1cm residual: RPLND (retroperitoneal lymph node dissection) for teratoma
+    Both: serum markers must normalize first; rising markers → salvage
+
+  IND-GCT-METASTATIC-1L-EP (bleomycin-free) now in KB. REG-EP-GCT exists.
+  2L salvage: ALGO-GCT-SALVAGE-2L authored (TIP × 4 for cisplatin-sensitive /
+  good-intermediate Indiana; HDCT+ASCT for cisplatin-refractory or poor Indiana score).
+  IND-GCT-SALVAGE-2L-TIP and IND-GCT-SALVAGE-2L-HDCT-ASCT in KB.

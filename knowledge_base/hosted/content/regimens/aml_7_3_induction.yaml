@@ -67,6 +67,50 @@ sources:
   - SRC-ESMO-AML-2020
   - SRC-RATIFY-STONE-2017
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# 7+3 induction is in-hospital — most acute toxicity managed in the
+# ward. These watchpoints apply to the post-discharge follow-up window
+# until count recovery and after consolidation cycles when the patient
+# is at home. STUB pending §6.1 two-Co-Lead signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, що триває кілька тижнів після індукції"
+    action_ua: "Очікувано — кістковий мозок відновлюється повільно. Занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікуване — волосся повертається після завершення лікування"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі тривалої нейтропенії інфекція може швидко переходити у сепсис"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа, що довго не спиняється"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка при навантаженні, набряки ніг, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — антрациклін може впливати на серце; потрібна оцінка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений висип, що поширюється або з пухирями"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка можливої реакції на препарат"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сплутаність свідомості, дезорієнтація, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки можливого сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 1L for fit-for-intensive AML. Add midostaurin if FLT3-ITD/TKD+

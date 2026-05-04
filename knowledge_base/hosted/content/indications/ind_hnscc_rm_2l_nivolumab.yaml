@@ -1,0 +1,99 @@
+id: IND-HNSCC-RM-2L-NIVOLUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic HNSCC (oral cavity, oropharynx, hypopharynx, or larynx)"
+    - "Progression during or within 6 months of platinum-based chemotherapy"
+    - "ICI-naive at 2L (no prior anti-PD-(L)1 therapy in 1L or earlier)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior anti-PD-(L)1 therapy (pembrolizumab, atezolizumab, etc.) — ICI re-challenge not validated"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "CheckMate-141 enrolled ECOG 0-1; ECOG 2 accepted clinically per NCCN"
+
+recommended_regimen: REG-NIVOLUMAB-MONO
+concurrent_therapy: []
+followed_by:
+  - "CT CAP response assessment q9-12 weeks"
+  - "Continue until progression or unacceptable toxicity"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  os_hr: 0.70
+  median_os_nivolumab_months: 7.5
+  median_os_comparator_months: 5.1
+  overall_response_rate: "13.3% (vs 5.8% comparator)"
+  one_year_os: "36% (vs 16.6% comparator)"
+  pdl1_pos_os_hr: 0.55
+  notes: >
+    CheckMate-141 (Ferris 2016, NEJM; n=361): nivolumab vs investigator choice
+    (methotrexate, docetaxel, or cetuximab) in platinum-refractory ICI-naive HNSCC.
+    mOS 7.5 vs 5.1 months (HR 0.70, p=0.01); 1y OS 36% vs 16.6% (durable responders).
+    PD-L1 ≥1% subgroup: OS HR 0.55. FDA approved November 2016.
+    Modern context: primary 2L population is CPS <1 EXTREME-treated patients.
+
+hard_contraindications:
+  - "Prior anti-PD-(L)1 therapy (pembrolizumab, nivolumab, atezolizumab, durvalumab)"
+  - "Active autoimmune disease requiring systemic immunosuppression (prednisone >10 mg/day)"
+  - "Active interstitial lung disease / pneumonitis"
+  - "Solid organ transplant recipient"
+
+red_flags_triggering_alternative:
+  - condition: "Prior pembrolizumab 1L (ICI-experienced): platinum chemotherapy preferred 2L (no ICI re-challenge data)"
+  - condition: "Rapid life-threatening disease progression: consider platinum chemotherapy for faster response"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "TSH + cortisol (baseline — irAE endocrine monitoring)"
+  - "PD-L1 by SP263 or 28-8 (informative — PD-L1 ≥1% predicts greater benefit; not required for prescribing)"
+  - "ECOG PS assessment"
+
+desired_tests:
+  - "HPV status (oropharyngeal HNSCC — informative for prognosis; HPV+ has better baseline outcomes)"
+  - "EBV status (nasopharyngeal component assessment)"
+
+rationale: >
+  CheckMate-141 (Ferris 2016, NEJM; n=361): nivolumab 3 mg/kg q2w (now given as
+  flat 240 mg q2w) vs investigator's choice chemotherapy in platinum-refractory,
+  ICI-naive recurrent/metastatic HNSCC. mOS 7.5 vs 5.1 months (HR 0.70, p=0.01).
+  One-year OS 36% vs 16.6% — durable responses with immunotherapy. PD-L1 ≥1%:
+  OS HR 0.55; PD-L1 negative: OS HR 0.89 (borderline benefit). FDA approved
+  November 2016. NCCN Category 1. In 2025/2026, nivolumab 2L is most relevant
+  for patients who received EXTREME (CPS <1) as 1L and are ICI-naive at 2L.
+
+rationale_ua: >
+  CheckMate-141 (n=361): нівалумаб vs хіміотерапія при рефрактерному до платини
+  ICI-наівному HNSCC. mOS 7.5 vs 5.1 міс (HR 0.70). PD-L1 ≥1%: HR 0.55.
+  NCCN Категорія 1. У 2025/2026 — для ICI-наівних пацієнтів (переважно при
+  попередній терапії EXTREME при CPS <1). Дозування: 240 мг q2w (плоска доза).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CHECKMATE141-FERRIS-2016
+    position: supports
+    relevant_quote_paraphrase: "CheckMate-141 (n=361): nivolumab vs investigator choice, platinum-refractory ICI-naive HNSCC; mOS 7.5 vs 5.1m (HR 0.70, p=0.01); 1y OS 36% vs 16.6%; NCCN Cat 1"
+
+do_not_do:
+  - "Не призначати при попередній ICI-терапії (пembro, атезолізумаб) — повторний ICI не підтверджений"
+  - "Не відміняти нівалумаб при ендокринних іrAE — гормональна замісна терапія без відміни"
+  - "Не призначати при активному аутоімунному захворюванні під системними ГКС"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,125 @@
+id: REG-CILTACEL-LYMPHODEPLETION-FLU-CY
+name: "Lymphodepleting fludarabine + cyclophosphamide conditioning before ciltacabtagene autoleucel (cilta-cel) CAR-T"
+name_ua: "Лімфодеплеційне кондиціонування флударабін + циклофосфамід перед цилтакабтаген аутолейцел (cilta-cel) CAR-T"
+alternate_names:
+  - "Flu/Cy cilta-cel conditioning"
+  - "CARTITUDE-1 lymphodepletion"
+  - "CARTITUDE-4 lymphodepletion"
+  - "Carvykti lymphodepletion"
+
+components:
+  - drug_id: DRUG-FLUDARABINE
+    dose: "30 mg/m²/day"
+    schedule: "IV days -5, -4, -3 (3 consecutive days starting 5 days before CAR-T infusion)"
+    route: IV
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "300 mg/m²/day"
+    schedule: "IV days -5, -4, -3 (3 consecutive days starting 5 days before CAR-T infusion)"
+    route: IV
+
+cycle_length_days:
+total_cycles: "Single 3-day course immediately preceding cilta-cel infusion (no repeat unless lymphodepletion-to-infusion interval exceeds 2 weeks due to operational delay)"
+
+toxicity_profile: severe
+
+premedication:
+  - "Antiemetic prophylaxis (5-HT3 antagonist + dexamethasone-sparing regimen — corticosteroids reduce CAR-T expansion + must be avoided)"
+  - "Allopurinol 300 mg PO daily ± rasburicase per TLS risk for high tumor burden"
+  - "Mesna with cyclophosphamide per institutional protocol (uroprotection)"
+  - "Confirm absolute neutrophil count + platelet recovery acceptable per CARTITUDE criteria before initiating lymphodepletion"
+  - "Confirm REMS / FACT-JACIE accreditation of administering center + tocilizumab on-site (≥2 doses)"
+mandatory_supportive_care:
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-HSV-PROPHYLAXIS
+  - SUP-TLS-PROPHYLAXIS
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "CrCl 30-70 mL/min"
+    modification: "Reduce fludarabine to 24 mg/m²/day; cyclophosphamide unchanged"
+    rationale: "Fludarabine is renally cleared; reduced dose for moderate renal impairment per CARTITUDE label"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "CrCl <30 mL/min"
+    modification: "Defer CAR-T pathway; consult treating CAR-T center; reduced or alternate conditioning per institutional CAR-T protocol"
+    rationale: "Severe renal impairment excluded from CARTITUDE-1 / CARTITUDE-4"
+    source_refs:
+      - SRC-CARTITUDE-1-BERDEJA-2021
+  - condition: "Active uncontrolled infection"
+    modification: "Defer lymphodepletion until infection controlled — neutropenia post-conditioning + CRS / movement-and-neurocognitive treatment-emergent adverse events post-CAR-T = high mortality"
+    rationale: "Absolute pre-conditioning contraindication; cilta-cel adds delayed-onset MNT signal beyond CRS/ICANS"
+  - condition: "CAR-T infusion delayed >2 weeks after lymphodepletion"
+    modification: "Repeat full Flu/Cy lymphodepleting course before infusion"
+    rationale: "Lymphocyte recovery degrades CAR-T expansion + efficacy"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Fludarabine + cyclophosphamide both registered in Ukraine + reimbursed
+    via НСЗУ for hematologic indications. The lymphodepleting CONTEXT
+    (pre-CAR-T) is operational — both drugs are administered domestically
+    as preparation for international CAR-T referral. Coordination with
+    receiving CAR-T center essential: lymphodepletion → CAR-T infusion
+    interval typically 2-7 days; >14 days requires repeat conditioning.
+
+sources:
+  - SRC-CARTITUDE-1-BERDEJA-2021
+  - SRC-NCCN-MM-2025
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lymphodepletion (fludarabine + cyclophosphamide) before CAR-T.
+# Brief 3-day inpatient course; cytopenia + immunosuppression
+# until CAR-T cells engraft. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота протягом 1-3 днів після ін'єкцій"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — відпочивайте більше"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Лихоманка вище 38°C — у вікно між лімфодеплецією і CAR-T інфузією"
+    action_ua: "Звертайтесь у лікарню негайно — глибока нейтропенія + ризик інфекції до engraftment"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або біль при сечовипусканні"
+    action_ua: "Подзвоніть у клініку того ж дня — циклофосфамід може спричиняти геморагічний цистит; пийте багато води"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-04-29"
+notes: >
+  Lymphodepleting conditioning phase for cilta-cel (ciltacabtagene
+  autoleucel, REG-CILTACEL-MM-3L + REG-CILTACEL-MM-2L). Standardized in
+  CARTITUDE-1 phase-1b/2 (Berdeja Lancet 2021) and re-used in
+  CARTITUDE-4 (San-Miguel NEJM 2023): fludarabine 30 mg/m² +
+  cyclophosphamide 300 mg/m² IV daily × 3 days, days -5 to -3.
+  Distinct from the 500 mg/m² Cy regimen used with axi-cel / brexu-cel.
+  Single course immediately preceding CAR-T infusion; no maintenance.
+  STUB — pending Co-Lead sign-off. TODO: register
+  SRC-CARTITUDE-4-SAN-MIGUEL-2023 (CARTITUDE-4 publication source not
+  yet present in KB) and add to sources list.
+notes_ua: >
+  Лімфодеплеційне кондиціонування для cilta-cel (цилтакабтаген
+  аутолейцел, REG-CILTACEL-MM-3L + REG-CILTACEL-MM-2L). Стандартизовано
+  у CARTITUDE-1 фази-1b/2 (Berdeja Lancet 2021) і повторно використано
+  у CARTITUDE-4 (San-Miguel NEJM 2023): флударабін 30 мг/м² +
+  циклофосфамід 300 мг/м² в/в щодня × 3 дні, дні -5 до -3. Відмінно
+  від схеми Cy 500 мг/м² для axi-cel / brexu-cel. Одноразовий курс
+  безпосередньо перед інфузією CAR-T; підтримуюча терапія відсутня.
+  STUB — очікує клінічного підтвердження Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

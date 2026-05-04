@@ -1,0 +1,48 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-012
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only: per-BMA outcomes for this chunk''s manifest. Upsert
+    rows summarized for traceability; no_match rows record structured reason (already_has_civic
+    / gene_not_in_civic / no_disease_overlap). Per chunk-spec: ''do not invent treatment
+    claims when CIViC has no suitable evidence item.'''
+upsert_rows: []
+no_match_rows:
+- bma_id: BMA-CALR-PMF
+  gene: CALR
+  disease_id: DIS-PMF
+  verdict: already_has_civic_evidence
+  no_civic_match_reason: BMA already carries SRC-CIVIC evidence_sources from a prior
+    backfill wave; wave-2 does not redo reconstruct work.
+  current_eid_count: 2
+- bma_id: BMA-HRD-STATUS-OVARIAN
+  gene: HRD
+  disease_id: DIS-OVARIAN
+  verdict: gene_not_in_civic
+  no_civic_match_reason: Gene token 'HRD' parsed from BMA-id is not present in CIViC
+    snapshot 2026-04-25; cannot link evidence.
+  civic_gene_evidence_count_any_disease: 0
+- bma_id: BMA-MLH1-SOMATIC-UROTHELIAL
+  gene: MLH1
+  disease_id: DIS-UROTHELIAL
+  verdict: gene_in_civic_no_disease_overlap
+  no_civic_match_reason: Gene 'MLH1' has 27 CIViC evidence items but none overlap
+    disease tokens for DIS-UROTHELIAL.
+  civic_gene_evidence_count_any_disease: 27
+- bma_id: BMA-MSH6-SOMATIC-GASTRIC
+  gene: MSH6
+  disease_id: DIS-GASTRIC
+  verdict: gene_in_civic_no_disease_overlap
+  no_civic_match_reason: Gene 'MSH6' has 6 CIViC evidence items but none overlap disease
+    tokens for DIS-GASTRIC.
+  civic_gene_evidence_count_any_disease: 6
+- bma_id: BMA-PMS2-SOMATIC-ENDOMETRIAL
+  gene: PMS2
+  disease_id: DIS-ENDOMETRIAL
+  verdict: already_has_civic_evidence
+  no_civic_match_reason: BMA already carries SRC-CIVIC evidence_sources from a prior
+    backfill wave; wave-2 does not redo reconstruct work.
+  current_eid_count: 1
+not_found_in_master: []

@@ -102,6 +102,48 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# CHOEP × 6 induction → allo-HCT consolidation for fit transplant-eligible
+# PTCL NOS in CR1. Induction has CHOP toxicities + etoposide cytopenia;
+# transplant phase has GVHD + infection signature. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання у пальцях рук і ніг"
+    action_ua: "Очікувано від вінкристину — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Закреп на 3+ дні, біль у животі під час циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — кишкова непрохідність від вінкристину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Висип на шкірі (особливо долоні, стопи), діарея, жовтяниця після трансплантації"
+    action_ua: "Подзвоніть у клініку того ж дня — реакція трансплантат-проти-господаря"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Задишка при підйомі сходами, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard intensification for fit younger transplant-eligible PTCL

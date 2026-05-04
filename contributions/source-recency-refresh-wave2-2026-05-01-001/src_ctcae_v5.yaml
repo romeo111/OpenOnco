@@ -1,0 +1,74 @@
+id: SRC-CTCAE-V5
+source_type: terminology
+title: Common Terminology Criteria for Adverse Events (CTCAE) v5.0
+version: v5.0 (2017-11-27)
+authors:
+- U.S. Department of Health and Human Services, NIH, NCI
+url: https://dctd.cancer.gov/research/ctep-trials/trial-development
+url_redirected_from: https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm
+access_level: open_access
+currency_status: current
+current_as_of: '2026-05-01'
+evidence_tier: 2
+hosting_mode: hosted
+hosting_justification: H5 — small, stable, critical for AE grading across all Regimens
+ingestion:
+  method: scheduled_batch
+  client: knowledge_base/ingestion/ctcae_loader.py
+  endpoint: https://evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/CTCAE_v5.0_2017-11-27.xlsx
+  rate_limit: null
+cache_policy:
+  enabled: false
+license:
+  name: U.S. government work — public domain
+  url: null
+  spdx_id: null
+attribution:
+  required: true
+  text: Common Terminology Criteria for Adverse Events (CTCAE) v5.0, U.S. Department
+    of Health and Human Services, NCI
+commercial_use_allowed: true
+redistribution_allowed: true
+modifications_allowed: true
+sharealike_required: false
+known_restrictions: []
+legal_review:
+  status: reviewed
+  date: '2026-04-25'
+  notes: Public domain
+relates_to_diseases: []
+last_verified: '2026-05-01'
+notes: 'Hosted at knowledge_base/hosted/ctcae/v5.0/grading.yaml — 837 AEs across 26
+  SOC categories. CTCAE v6.0 in development; monitor NCI for release.
+
+  '
+pages_count: 150
+references_count: 30
+corpus_role: terminology
+last_recency_check: '2026-05-01'
+recency_check_status_code: 200
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-001
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: upsert
+  target_entity_id: SRC-CTCAE-V5
+  notes_for_reviewer: >
+    Recency refresh: original publisher landing page
+    https://ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm
+    301-redirected to
+    https://dctd.cancer.gov/research/ctep-trials/trial-development
+    (different host AND different path) — final response 200 OK,
+    text/html 64 KB. The CTEP hostname has been retired in favor of
+    DCTD; the new landing page references CTCAE v5.0 with download
+    links into the EVS endpoint. The actual data endpoint
+    (ingestion.endpoint = evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/...xlsx)
+    independently verified 200 OK, 466 KB xlsx — unchanged. URL field
+    updated to the redirect target; url_redirected_from records the
+    pre-redirect URL. last_verified bumped 2026-04-27 -> 2026-05-01;
+    current_as_of bumped 2017-11-27 -> 2026-05-01 (CTCAE v5.0 remains
+    in force; NCI has not yet released v6.0 to public). License (U.S.
+    government work — public domain) confirmed unchanged. No content
+    / license / attribution fields modified beyond the URL move.

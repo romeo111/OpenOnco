@@ -1,0 +1,99 @@
+id: IND-NSCLC-ALK-1L-ENSARTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: ALK_REARRANGED
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic ALK-rearranged NSCLC, TKI-naïve"
+    - "Alternative to alectinib (NCCN Cat 1 default) and lorlatinib (CROWN superior PFS, more cognitive AE)"
+    - "Ensartinib position: similar PFS to alectinib in eXalt3 head-to-head vs crizotinib; rash dominant AE"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ALK-FUSION
+      value_constraint: "ALK rearrangement confirmed (FISH / IHC D5F3 / RNA-NGS — any standard validated assay)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ENSARTINIB-ALK-1L-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  progression_free_survival: "mPFS 25.8 mo (eXalt3 ensartinib) vs 12.7 mo (crizotinib); HR 0.51 (95% CI 0.35-0.72)"
+  overall_response_rate: "~74% ensartinib (BICR)"
+  intracranial_orr: "~64% ensartinib in patients with baseline brain metastases"
+  overall_survival: "Mature OS evolving; eXalt3 phase III primary endpoint PFS"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Ensartinib (Ensacove, X-396, second-generation ALK TKI) for 1L
+  TKI-naïve ALK-rearranged metastatic NSCLC. eXalt3 phase III (n=290):
+  ensartinib 225 mg PO daily vs crizotinib; mPFS 25.8 vs 12.7 mo, HR
+  0.51 (95% CI 0.35-0.72), intracranial ORR 64%. FDA approval 2024-12
+  for 1L ALK+ metastatic NSCLC. Aggressive-track alternative to
+  alectinib (NCCN Cat 1 default per ALEX); ensartinib offers similar
+  efficacy magnitude with rash-dominant AE profile (rash ~67% any-grade,
+  Grade 3 ~12%) requiring proactive dermatologic management.
+  Lorlatinib (CROWN) remains the longest-PFS option but with more
+  cognitive AE; alectinib remains default workhorse for most patients.
+  Ensartinib position: CNS-active, rash-tolerant patients, or where
+  alectinib not accessible.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Ensartinib is recommended option for 1L ALK+ metastatic NSCLC (eXalt3 phase III); Cat 2A alternative to alectinib (Cat 1 default); rash class management critical"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Ensartinib is acceptable 1L alternative to alectinib for ALK+ NSCLC based on eXalt3 mPFS 25.8 mo vs crizotinib 12.7 mo, HR 0.51; intracranial activity comparable; rash dominant AE"
+
+known_controversies:
+  - topic: "Ensartinib 1L positioning vs alectinib (Cat 1 default) and lorlatinib (best PFS)"
+    positions:
+      - position: "Alectinib 1L default: ALEX phase III long-term mPFS ~35 mo, well-tolerated, NCCN Cat 1; the workhorse"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "Lorlatinib 1L for fit patients: CROWN mPFS not reached, best-in-class CNS activity; cognitive AE concern"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+      - position: "Ensartinib alternative: similar PFS magnitude to alectinib (eXalt3 25.8 mo); choose if rash tolerant or alectinib not accessible"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Alectinib 1L default; ensartinib 1L alternative for selected patients with access constraints; lorlatinib 1L for fit aggressive-track patients accepting cognitive AE risk"
+    rationale: "Three viable 1L options with different AE profiles; access + comorbidity drive choice"
+
+do_not_do:
+  - "НЕ ігнорувати rash management — proactive dermatology consult, topical corticosteroids, dose interruption for Grade 3."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors / inducers без dose modification."
+  - "НЕ використовувати при baseline severe hepatic impairment — LFT monitoring + dose reduction."
+  - "НЕ підтверджувати план без funding pathway — ensartinib не зареєстрований в Україні; FDA-approved 2024-12."
+  - "НЕ припиняти за reversible Grade 1-2 rash — топ steroids + supportive care."
+  - "НЕ ігнорувати baseline + serial LFTs — hepatotoxicity class signal."
+  - "НЕ використовувати at progression after another 2nd-gen ALK TKI без NGS-based resistance characterization — lorlatinib often preferred next."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L
+  alternative to alectinib for ALK+ metastatic NSCLC (eXalt3
+  registration). Existing IND-NSCLC-ALK-MET-1L (alectinib, Cat 1)
+  remains standard-track default. eXalt3 source stub not yet in KB —
+  citation flagged in commit body for source-ingest follow-up.

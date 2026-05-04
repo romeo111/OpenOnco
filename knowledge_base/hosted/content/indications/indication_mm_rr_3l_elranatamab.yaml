@@ -1,0 +1,129 @@
+id: IND-MM-RR-3L-ELRANATAMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed/refractory multiple myeloma"
+    - "Triple-class exposed/refractory (post-PI, post-IMiD, post-anti-CD38)"
+    - "≥3 prior systemic lines"
+    - "Active progressive disease (IMWG criteria)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    age_min: 18
+
+recommended_regimen: REGIMEN-ELRANATAMAB-MONO-MM
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~61% (MagnetisMM-3 BCMA-naive cohort A; Lesokhin 2023 Nat Med)"
+  complete_response: "~35% sCR / CR"
+  progression_free_survival: "Median PFS ~17.2 mo (longer-term update; not yet mature)"
+  overall_survival_median: "Median OS ~24+ mo (immature follow-up)"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+red_flags_triggering_alternative:
+  - RF-MM-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CMV-SEROLOGY
+  - TEST-EBV-SEROLOGY
+  - TEST-ECHO
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-WHOLE-BODY-MRI
+
+rationale: >
+  Elranatamab (BCMA × CD3 bispecific, subcutaneous) for triple-class
+  exposed/refractory R/R multiple myeloma after ≥3 prior lines (PI +
+  IMiD + anti-CD38). MagnetisMM-3 phase 2 BCMA-naive cohort A (Lesokhin
+  2023 Nat Med): ORR ~61%, ≥CR ~35%, mPFS ~17.2 mo at longer-term
+  update. Subcutaneous administration with step-up dosing and a
+  Q2-weekly maintenance schedule (post-response) — operationally lighter
+  than weekly teclistamab once steady-state reached. Step-up dosing
+  inpatient observation REQUIRED (CRS Grade 1-2 in ~58% during step-up;
+  Grade ≥3 <2%). Universal hypogammaglobulinemia → IVIG support; PJP +
+  HSV/VZV prophylaxis mandatory. Class effect with teclistamab on
+  prolonged immunosuppression and infection burden. Ukraine access: not
+  registered (2026-04); international referral required.
+
+rationale_ua: >
+  Елранатамаб (BCMA × CD3 біспецифічне антитіло, підшкірно) для тричі-
+  класно-експонованої/рефрактерної р/р множинної мієломи після ≥3
+  попередніх ліній (PI + IMiD + анти-CD38). MagnetisMM-3 фаза 2
+  BCMA-наївна когорта A (Lesokhin 2023 Nat Med): ORR ~61%, ≥CR ~35%,
+  mPFS ~17.2 міс. на довшому follow-up. Підшкірне введення зі step-up
+  dosing і Q2-тижневою підтримуючою схемою (після відповіді) —
+  операційно легше за щотижневий теклістамаб після виходу на плато.
+  Step-up dosing зі стаціонарним спостереженням ОБОВ'ЯЗКОВЕ (CRS
+  ступеня 1-2 у ~58% під час step-up; ≥3 ступеня <2%). Універсальна
+  гіпогаммаглобулінемія → ВВІГ-підтримка; PJP + HSV/VZV профілактика
+  обов'язкові. Класовий ефект з теклістамабом щодо тривалої
+  імуносупресії та інфекційного навантаження. Доступ в Україні: не
+  зареєстрований (2026-04); потрібне міжнародне направлення.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Elranatamab is recommended for triple-class refractory MM after ≥3 prior lines (PI, IMiD, anti-CD38); class effect with teclistamab on infection burden + IVIG dependence"
+  - source_id: SRC-ESMO-MM-2023
+    position: supports
+    relevant_quote_paraphrase: "BCMA × CD3 bispecifics (elranatamab, teclistamab) for triple-class refractory MM where CAR-T not feasible; SC schedule with Q2W maintenance once steady-state achieved"
+
+do_not_do:
+  - "Не починати без HBV скринінгу + entecavir prophylaxis при HBsAg+ або anti-HBc+ — ризик HBV реактивації."
+  - "Не пропускати step-up dosing і стаціонарне спостереження — ризик CRS під час нарощування дози."
+  - "Не пропускати IVIG-замісну терапію — універсальна гіпогаммаглобулінемія підвищує ризик важких інфекцій."
+  - "Не пропускати PJP + HSV/VZV профілактику — пролонгована імуносупресія значно підвищує ризик опортуністичних інфекцій."
+  - "Не призначати при активній неконтрольованій інфекції — ризик летальної інфекції на тлі CRS/імуносупресії."
+  - "Не комбінувати з іншими BCMA-таргетними агентами без abstinence period — ризик antigen-loss escape."
+
+known_controversies:
+  - topic: Elranatamab vs teclistamab (BCMA bispecific class) for triple-class refractory MM
+    positions:
+      - position: Elranatamab — SC, Q2W maintenance after response, ORR ~61%
+        sources:
+          - SRC-NCCN-MM-2025
+        evidence_note: "Q2W maintenance schedule operationally lighter post-response"
+      - position: Teclistamab — SC weekly, ORR ~63%, longer follow-up data (MajesTEC-1)
+        sources:
+          - SRC-MAJESTEC-1-MOREAU-2022
+        evidence_note: "Longer mature follow-up; weekly schedule"
+    our_default: Class-equivalent — choice driven by access, schedule preference, and Q2W maintenance value
+    rationale: Cross-trial efficacy comparable; no head-to-head data; differentiation primarily operational
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: []
+notes: >
+  STUB — requires two clinical co-lead signoffs before publication
+  (CHARTER §6.1). Pivotal trial source MagnetisMM-3 (Lesokhin 2023
+  Nat Med) NOT YET in KB; commit body flags this gap. NCCN-MM-2025
+  + ESMO-MM-2023 satisfy Q4 ≥2-source axis pending MagnetisMM-3
+  ingestion.

@@ -34,6 +34,58 @@ ukraine_availability:
   notes: "All chemo components reimbursed; RT availability institutional."
 
 sources: [SRC-NCCN-SCLC-2025, SRC-ESMO-SCLC-2021]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Cisplatin + etoposide concurrent thoracic RT for limited-stage
+# SCLC. Adds cisplatin nephro/oto-toxicity + RT esophagitis +
+# pneumonitis. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, нудота протягом 1-3 днів після цисплатину"
+    action_ua: "Приймайте призначені протиблювотні; пийте багато води"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Біль або печіння при ковтанні"
+    action_ua: "Очікувано на тлі променевої терапії — м'яка їжа, холодні рідини; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Випадання волосся, легкий мукозит"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Шум у вухах або зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин може впливати на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильний біль при ковтанні, неможливість їсти"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка променевого езофагіту"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія від етопозиду"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-SCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — можливий променевий пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SCLC-2025
+
 last_reviewed:
 notes: >
   CONVERT: once-daily 60 Gy non-inferior to BID 45 Gy. Concurrent (not

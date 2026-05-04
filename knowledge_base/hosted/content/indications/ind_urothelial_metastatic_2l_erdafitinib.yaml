@@ -1,0 +1,122 @@
+id: IND-UROTHELIAL-2L-ERDAFITINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  disease_state: METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic urothelial carcinoma"
+    - "Disease progression on ≥1 prior systemic line including a PD-(L)1 inhibitor (THOR cohort 1 entry criteria)"
+    - "FGFR2/3 alteration confirmed by FDA-approved companion diagnostic (Therascreen FGFR RGQ RT-PCR Kit) OR comprehensive NGS (RNA-NGS preferred for fusions)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-FGFR3-MUTATION
+      required: true
+      value_constraint: "FGFR3 activating mutation (S249C, R248C, G370C, Y373C) OR FGFR2 / FGFR3 fusion (THOR-eligible alterations); confirm with Therascreen companion diagnostic OR NGS"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ERDAFITINIB-UROTHELIAL-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~35.3% vs 8.5% chemo (THOR cohort 1)"
+  progression_free_survival: "Median PFS 5.6 vs 2.7 mo chemo (THOR cohort 1; HR 0.58)"
+  overall_survival_5y: "Median OS 12.1 vs 7.8 mo chemo (THOR cohort 1; HR 0.64, p=0.005)"
+
+hard_contraindications: []
+red_flags_triggering_alternative:
+  - RF-UROTHELIAL-FRAILTY-AGE
+  - RF-UROTHELIAL-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+desired_tests:
+  - TEST-NGS-COMPREHENSIVE
+
+rationale: >
+  Erdafitinib for FGFR2/3-altered metastatic urothelial carcinoma
+  post ≥1 prior line including a PD-(L)1 inhibitor. THOR cohort 1
+  (Loriot NEJM 2023, n=266; 136 erda vs 130 investigator-choice
+  chemo): met primary endpoint mOS 12.1 vs 7.8 mo (HR 0.64, p=0.005),
+  mPFS 5.6 vs 2.7 mo (HR 0.58), ORR 35.3% vs 8.5%. FDA converted
+  accelerated to full approval Jan 2024 based on THOR cohort 1
+  (BLC2001 single-arm cohort had supported 2019 accelerated approval).
+  THOR cohort 2 (erda vs pembrolizumab in PD-(L)1-naive) was
+  NEGATIVE and not used to support labeling — restricts Cat 1
+  positioning to post-PD-(L)1 setting. Selected FGFR alterations
+  required: FGFR3 mutations (S249C / R248C / G370C / Y373C) OR
+  FGFR2/3 fusions; companion diagnostic = Therascreen FGFR RGQ RT-PCR
+  Kit (or comprehensive NGS). Class FGFR-TKI toxicity (hyperphosphatemia
+  ~76%, central serous retinopathy ~25%, nail toxicity ~57%, stomatitis)
+  requires dedicated supportive-care protocol — see regimen
+  REG-ERDAFITINIB-UROTHELIAL-2L. Up-titration from 8 to 9 mg ONLY
+  if phosphate <5.5 mg/dL on day 14-21 of cycle 1 — pharmacodynamic-
+  guided dosing. UA access barrier: not registered; named-patient /
+  Janssen EAP only. Position in 2L+ landscape: sequenced AFTER
+  EV-pembro 1L (EV-302 paradigm); for FGFR2/3-altered patients
+  who progressed on EV-pembro 1L, erdafitinib is the preferred 2L
+  option where access permits. Alternative: platinum-based chemo
+  (if not received), enfortumab vedotin monotherapy (post-1L PD-1
+  + chemo eligibility), or clinical trial.
+
+sources:
+  - source_id: SRC-NCCN-BLADDER-2025
+    position: supports
+    relevant_quote_paraphrase: "Erdafitinib is a Cat 1 option for FGFR2/3-altered metastatic urothelial carcinoma post ≥1 prior line including PD-(L)1 inhibitor (THOR cohort 1); FDA full approval Jan 2024"
+  - source_id: SRC-EAU-BLADDER-2024
+    position: supports
+    relevant_quote_paraphrase: "FGFR2/3 alteration testing recommended in metastatic urothelial carcinoma; erdafitinib is a recommended 2L+ option upon FGFR-alteration confirmation post-PD-(L)1 progression"
+
+known_controversies:
+  - topic: "Erdafitinib positioning vs enfortumab vedotin monotherapy 2L+ mUC"
+    positions:
+      - position: "Erdafitinib preferred 2L for FGFR2/3-altered post-EV-pembro-1L (THOR cohort 1 mOS 12.1 mo, HR 0.64; biomarker-driven)"
+        sources: [SRC-NCCN-BLADDER-2025]
+      - position: "Enfortumab vedotin monotherapy alternative if patient FGFR-altered but EV not yet received in 1L (e.g., if 1L was platinum-only; EV-203 single-arm)"
+        sources: [SRC-NCCN-BLADDER-2025]
+        evidence_note: "EV-302 paradigm has established EV+pembro as 1L for nearly all comers — restricts 2L EV-mono to platinum-1L-treated patients"
+    our_default: "Erdafitinib for FGFR2/3-altered post-EV-pembro-1L; EV-monotherapy 2L only if EV not yet received"
+    rationale: "Biomarker-driven OS benefit + Cat 1 status drive erdafitinib choice in FGFR-altered subgroup"
+  - topic: "FGFR alteration testing modality (Therascreen companion diagnostic vs comprehensive NGS)"
+    positions:
+      - position: "Therascreen FGFR RGQ RT-PCR Kit — FDA-approved companion diagnostic; covers THOR-eligible alterations"
+        sources: [SRC-NCCN-BLADDER-2025]
+      - position: "Comprehensive NGS (RNA-NGS preferred for fusions) — broader actionability assessment, picks up co-alterations"
+        sources: [SRC-NCCN-BLADDER-2025]
+        evidence_note: "NGS preferred when tissue allows; Therascreen sufficient if NGS unavailable / insufficient tissue"
+    our_default: "Comprehensive NGS preferred (RNA-NGS for fusions); Therascreen acceptable when NGS unavailable"
+    rationale: "NGS identifies broader actionability; both modalities recognized in NCCN-BLADDER-2025"
+
+do_not_do:
+  - "НЕ призначати без підтвердження FGFR2/3 alteration (Therascreen companion diagnostic OR comprehensive NGS) — generic FGFR overexpression by IHC недостатня."
+  - "НЕ використовувати в PD-(L)1-naive setting — THOR cohort 2 negative vs pembrolizumab."
+  - "НЕ підвищувати дозу до 9 мг без перевірки фосфату на день 14-21 — up-titration лише при phosphate <5.5 мг/дл."
+  - "НЕ ігнорувати baseline + serial офтальмологічний огляд — central serous retinopathy ~25%, often reversible але потребує hold."
+  - "НЕ ігнорувати фосфат моніторинг — гіперфосфатемія ~76%; дієта + sevelamer; затримка / зниження дози при >7 мг/дл."
+  - "НЕ комбінувати з потужними CYP3A4 OR CYP2C9 інгібіторами / індукторами — експозиція erdafitinib різко змінюється."
+  - "НЕ ігнорувати nail / skin / mucosal care — onycholysis, paronychia, stomatitis високої частоти."
+  - "НЕ підтверджувати план без funding pathway — erdafitinib не зареєстрований в UA (Janssen EAP / named-patient only)."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for
+  FGFR2/3-altered mUC post PD-(L)1. NCCN Cat 1 (2025); FDA full
+  approval Jan 2024 (post-THOR cohort 1; converted from 2019
+  accelerated). Pivotal trial source (THOR cohort 1, Loriot NEJM
+  2023) NOT yet authored in KB — cited via SRC-NCCN-BLADDER-2025
+  + SRC-EAU-BLADDER-2024; flag for source-ingest follow-up. UA access: named-patient /
+  Janssen EAP only. Pairs with IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
+  in 1L → 2L sequencing.

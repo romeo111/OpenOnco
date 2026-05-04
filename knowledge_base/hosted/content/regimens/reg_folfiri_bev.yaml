@@ -73,6 +73,49 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# FOLFIRI + bevacizumab for mCRC 2L+. Irinotecan diarrhea + cytopenia
+# + bev HTN/proteinuria. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Раптовий приплив, виділення з носа, сльози (під час інфузії іринотекану)"
+    action_ua: "Очікувано — холінергічний синдром, минає за 30 хв; повідомте медсестру"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1"
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Бевацизумаб може підвищувати тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Тяжка діарея >6 разів/день"
+    action_ua: "Подзвоніть у клініку того ж дня — іринотекан небезпечна діарея"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — бев впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Раптовий гострий біль у животі або кровохаркання"
+    action_ua: "Звертайтесь у лікарню негайно — перфорація або кровотеча"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Standard 2L mCRC after FOLFOX progression. Adding bevacizumab (TML

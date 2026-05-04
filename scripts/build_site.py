@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Static-site builder for the OpenOnco GitHub Pages landing.
 
 Two goals (per user direction):
@@ -513,113 +514,115 @@ def bundle_examples(output_dir: Path) -> dict:
 # because these clinically-universal data points (TB screening, LVEF,
 # etc.) were absent from the per-disease questionnaire YAMLs. Rather
 # than copy-paste these into 65 questionnaires, the build prepends a
-# single "Загальний скринінг" group at JSON serialisation time. Each
+# single "General screening" group at JSON serialisation time. Each
 # field is `recommended` (not `critical`) so users can leave it blank
 # without blocking the Generate button. RF triggers reference these
 # field names directly — no alias needed.
 _COMMON_SCREENING_GROUP = {
-    "title": "Загальний скринінг (опційно)",
-    "description": "Універсальні поля для оцінки фітнесу, інфекційного статусу, "
-                   "органної функції. Заповнюй те, що є в карті — пусті поля "
-                   "engine просто не оцінює (replaces 'unevaluated RedFlag' warnings).",
+    "title": "General screening (optional)",
+    "description": (
+        "Universal fields for fitness assessment, infection status, and organ function. "
+        "Fill in whatever is in the chart — empty fields are simply not evaluated by the "
+        "engine (replaces 'unevaluated RedFlag' warnings)."
+    ),
     "questions": [
-        {"field": "findings.lvef_percent", "label": "LVEF (%) — ехокардіографія",
+        {"field": "findings.lvef_percent", "label": "LVEF (%) — echocardiography",
          "type": "float", "impact": "recommended", "range_min": 10, "range_max": 80,
-         "units": "%", "helper": "Перед антрациклінами / HER2-агентами / алкілуючими — потрібно baseline LVEF."},
-        {"field": "findings.active_tb", "label": "Активний туберкульоз?",
+         "units": "%", "helper": "Before anthracyclines / HER2 agents / alkylating agents — baseline LVEF required."},
+        {"field": "findings.active_tb", "label": "Active tuberculosis?",
          "type": "boolean", "impact": "recommended",
-         "helper": "Скринінг перед IO / стероїдами / алоТКМ. Quantiferon або скриніноговий рентген."},
-        {"field": "findings.latent_tb", "label": "Латентний ТБ (Quantiferon+ / IGRA+)?",
+         "helper": "Screening before IO / steroids / alloSCT. Quantiferon or screening chest X-ray."},
+        {"field": "findings.latent_tb", "label": "Latent TB (Quantiferon+ / IGRA+)?",
          "type": "boolean", "impact": "recommended"},
-        {"field": "findings.active_uncontrolled_infection", "label": "Активна неконтрольована інфекція?",
+        {"field": "findings.active_uncontrolled_infection", "label": "Active uncontrolled infection?",
          "type": "boolean", "impact": "recommended",
-         "helper": "Будь-який сепсис / pneumonia / неконтрольована грибкова — затримка lечення."},
-        {"field": "findings.albumin_g_dl", "label": "Альбумін",
+         "helper": "Any sepsis / pneumonia / uncontrolled fungal infection — treatment delay required."},
+        {"field": "findings.albumin_g_dl", "label": "Albumin",
          "type": "float", "impact": "recommended", "range_min": 1.0, "range_max": 6.0,
-         "units": "г/дл"},
-        {"field": "findings.bilirubin_uln_x", "label": "Загальний білірубін (× ULN)",
+         "units": "g/dL"},
+        {"field": "findings.bilirubin_uln_x", "label": "Total bilirubin (× ULN)",
          "type": "float", "impact": "recommended", "range_min": 0.1, "range_max": 20.0,
-         "units": "× верхня межа норми",
-         "helper": "Більшість регімів вимагає bili ≤1.5×ULN; FDA-одобрення часто пишуть в кратах ULN."},
-        {"field": "findings.dlco_percent", "label": "DLCO (% від норми)",
+         "units": "× upper limit of normal",
+         "helper": "Most regimens require bili ≤1.5×ULN; FDA approvals commonly express this in multiples of ULN."},
+        {"field": "findings.dlco_percent", "label": "DLCO (% of predicted)",
          "type": "float", "impact": "recommended", "range_min": 10, "range_max": 150,
-         "units": "%", "helper": "DLCO <50% — заборона на блеоміцин (cHL ABVD); <40% — обережно з CAR-T."},
-        {"field": "findings.qtc_ms", "label": "QTc (мс) на ЕКГ",
+         "units": "%", "helper": "DLCO <50% — bleomycin contraindicated (cHL ABVD); <40% — caution with CAR-T."},
+        {"field": "findings.qtc_ms", "label": "QTc (ms) on ECG",
          "type": "integer", "impact": "recommended", "range_min": 300, "range_max": 700,
-         "units": "мс",
-         "helper": "QTc >480 → обережно з венетоклаксом, кризотинібом, апалутамідом, FLT3i."},
-        {"field": "findings.potassium_mmol_l", "label": "Калій",
+         "units": "ms",
+         "helper": "QTc >480 → caution with venetoclax, crizotinib, apalutamide, FLT3i."},
+        {"field": "findings.potassium_mmol_l", "label": "Potassium",
          "type": "float", "impact": "recommended", "range_min": 1.5, "range_max": 8.0,
-         "units": "ммоль/л"},
-        {"field": "findings.uric_acid_mg_dl", "label": "Сечова кислота",
+         "units": "mmol/L"},
+        {"field": "findings.uric_acid_mg_dl", "label": "Uric acid",
          "type": "float", "impact": "recommended", "range_min": 1, "range_max": 20,
-         "units": "мг/дл",
-         "helper": "Високий уровень + bulky disease → ризик TLS, потрібен расбуриказа."},
-        {"field": "findings.tls_active", "label": "Активний синдром лізису пухлини?",
+         "units": "mg/dL",
+         "helper": "Elevated level + bulky disease → TLS risk, rasburicase required."},
+        {"field": "findings.tls_active", "label": "Active tumour lysis syndrome?",
          "type": "boolean", "impact": "recommended"},
-        {"field": "findings.comorbidity_count", "label": "К-сть значущих коморбідностей",
+        {"field": "findings.comorbidity_count", "label": "Number of significant comorbidities",
          "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 20,
-         "helper": "Серцева недостатність / COPD / cirrhosis / CKD / diabetes etc. Driver для frailty score."},
+         "helper": "Heart failure / COPD / cirrhosis / CKD / diabetes etc. Driver for frailty score."},
         {"field": "findings.charlson_score", "label": "Charlson Comorbidity Index",
          "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 30,
-         "helper": "0-1 fit, 2-3 intermediate, ≥4 frail (для elderly + солідних)."},
+         "helper": "0-1 fit, 2-3 intermediate, ≥4 frail (for elderly + solid tumours)."},
         {"field": "findings.g8_score", "label": "G8 Geriatric Screening (0-17)",
          "type": "integer", "impact": "recommended", "range_min": 0, "range_max": 17,
-         "helper": "≤14 — потрібна повна geriatric assessment перед інтенсивною ХТ."},
-        {"field": "findings.child_pugh_class", "label": "Child-Pugh class (печінка)",
+         "helper": "≤14 — full geriatric assessment required before intensive chemotherapy."},
+        {"field": "findings.child_pugh_class", "label": "Child-Pugh class (liver)",
          "type": "enum", "impact": "recommended",
          "options": [
-             {"value": "A", "label": "A — компенсована"},
-             {"value": "B", "label": "B — субкомпенсована"},
-             {"value": "C", "label": "C — декомпенсована"},
+             {"value": "A", "label": "A — compensated"},
+             {"value": "B", "label": "B — moderately decompensated"},
+             {"value": "C", "label": "C — decompensated"},
          ],
-         "helper": "Тільки якщо є cirrhosis / liver disease. B/C — виключає більшість регімів."},
-        {"field": "findings.rapid_progression", "label": "Стрімка прогресія (швидке зростання обʼєму / нові симптоми)?",
+         "helper": "Only if cirrhosis / liver disease present. B/C — excludes most regimens."},
+        {"field": "findings.rapid_progression", "label": "Rapid progression (rapid volume increase / new symptoms)?",
          "type": "boolean", "impact": "recommended",
-         "helper": "Driver для intensification у aggressive lymphomas / CAR-T bridging."},
-        {"field": "findings.new_metastatic_disease", "label": "Нові метастази на повторному скані?",
+         "helper": "Driver for intensification in aggressive lymphomas / CAR-T bridging."},
+        {"field": "findings.new_metastatic_disease", "label": "New metastatic disease on repeat scan?",
          "type": "boolean", "impact": "recommended"},
-        {"field": "findings.hcv_rna", "label": "HCV RNA (для пацієнтів з anti-HCV+)",
+        {"field": "findings.hcv_rna", "label": "HCV RNA (for patients with anti-HCV+)",
          "type": "enum", "impact": "recommended",
          "options": [
-             {"value": "negative", "label": "Негативна / нижче LOD"},
-             {"value": "positive", "label": "Позитивна (active HCV)"},
+             {"value": "negative", "label": "Negative / below LOD"},
+             {"value": "positive", "label": "Positive (active HCV)"},
          ]},
-        {"field": "findings.hiv_status", "label": "HIV статус",
+        {"field": "findings.hiv_status", "label": "HIV status",
          "type": "enum", "impact": "recommended",
          "options": [
-             {"value": "negative", "label": "Негативний"},
-             {"value": "positive", "label": "Позитивний"},
+             {"value": "negative", "label": "Negative"},
+             {"value": "positive", "label": "Positive"},
          ]},
-        {"field": "findings.peripheral_neuropathy_grade", "label": "Передіснуюча периферична нейропатія (CTCAE)",
+        {"field": "findings.peripheral_neuropathy_grade", "label": "Pre-existing peripheral neuropathy (CTCAE)",
          "type": "enum", "impact": "recommended",
          "options": [
-             {"value": 0, "label": "0 — немає"},
-             {"value": 1, "label": "1 — мінімальна"},
-             {"value": 2, "label": "2 — обмежує ADL"},
+             {"value": 0, "label": "0 — none"},
+             {"value": 1, "label": "1 — minimal"},
+             {"value": 2, "label": "2 — limits ADL"},
              {"value": 3, "label": "3 — severe"},
              {"value": 4, "label": "4 — disabling"},
          ],
-         "helper": "Grade ≥3 — заборона на bortezomib SC, vincristine, oxaliplatin, cisplatin."},
-        {"field": "findings.nyha_class", "label": "NYHA клас (серцева недостатність)",
+         "helper": "Grade ≥3 — bortezomib SC, vincristine, oxaliplatin, cisplatin contraindicated."},
+        {"field": "findings.nyha_class", "label": "NYHA class (heart failure)",
          "type": "enum", "impact": "recommended",
          "options": [
-             {"value": "I", "label": "I — без обмежень"},
-             {"value": "II", "label": "II — легкі обмеження"},
-             {"value": "III", "label": "III — виражені обмеження"},
-             {"value": "IV", "label": "IV — симптоми у спокої"},
+             {"value": "I", "label": "I — no limitation"},
+             {"value": "II", "label": "II — mild limitation"},
+             {"value": "III", "label": "III — marked limitation"},
+             {"value": "IV", "label": "IV — symptoms at rest"},
          ],
-         "helper": "Тільки якщо є HF в анамнезі. NYHA III/IV — заборона на антрацикліни / трастузумаб."},
-        {"field": "findings.hemoglobin_g_dl", "label": "Гемоглобін",
+         "helper": "Only if HF history present. NYHA III/IV — anthracyclines / trastuzumab contraindicated."},
+        {"field": "findings.hemoglobin_g_dl", "label": "Haemoglobin",
          "type": "float", "impact": "recommended", "range_min": 3, "range_max": 22,
-         "units": "г/дл"},
-        {"field": "findings.wbc_k_ul", "label": "Лейкоцити (×10⁹/л)",
+         "units": "g/dL"},
+        {"field": "findings.wbc_k_ul", "label": "WBC (×10⁹/L)",
          "type": "float", "impact": "recommended", "range_min": 0, "range_max": 1000,
-         "units": "×10⁹/л",
-         "helper": "Hyperleukocytosis (>50-100) — risk leukostasis у AML/ALL/CML-blast."},
-        {"field": "findings.uncontrolled_hypertension", "label": "Неконтрольована гіпертензія?",
+         "units": "×10⁹/L",
+         "helper": "Hyperleukocytosis (>50-100) — risk of leukostasis in AML/ALL/CML-blast."},
+        {"field": "findings.uncontrolled_hypertension", "label": "Uncontrolled hypertension?",
          "type": "boolean", "impact": "recommended",
-         "helper": "Заборона / обережність з VEGF-інгібіторами (bevacizumab, sunitinib, lenvatinib)."},
+         "helper": "Contraindicated / use with caution with VEGF inhibitors (bevacizumab, sunitinib, lenvatinib)."},
     ],
 }
 
@@ -1822,10 +1825,23 @@ def render_try(
           <button id="langUaBtn" class="rt-lang-btn" type="button" data-lang="uk">UA</button>
           <button id="langEnBtn" class="rt-lang-btn" type="button" data-lang="en">EN</button>
         </div>
+        <div class="rt-lang-group" role="group" aria-label="{'Audience' if target_lang == 'en' else 'Аудиторія'}">
+          <span class="rt-lang-label">{'View:' if target_lang == 'en' else 'Версія:'}</span>
+          <button id="modeClinicianBtn" class="rt-lang-btn is-active" type="button"
+                  data-mode="clinician"
+                  title="{'Full tumor-board brief — for clinicians' if target_lang == 'en' else 'Повний tumor-board brief — для лікаря'}">{'Clinician' if target_lang == 'en' else 'Лікар'}</button>
+          <button id="modePatientBtn" class="rt-lang-btn" type="button"
+                  data-mode="patient"
+                  title="{'Plain-Ukrainian simplified report — for patients' if target_lang == 'en' else 'Спрощений звіт зрозумілою мовою — для пацієнта'}">{'Patient' if target_lang == 'en' else 'Пацієнт'}</button>
+        </div>
         <div class="plan-modal-actions">
+          <button id="modalHtmlBtn" class="rt-btn" type="button" disabled
+                  title="{'Save the current view as a single-file HTML' if target_lang == 'en' else 'Зберегти поточну версію як один HTML-файл'}">
+            <span aria-hidden="true">⬇</span> HTML
+          </button>
           <button id="modalPdfBtn" class="rt-btn" type="button"
                   title="{'Save as PDF via your browser print dialog' if target_lang == 'en' else 'Зберегти як PDF через діалог друку браузера'}">
-            <span aria-hidden="true">📄</span> {'Download PDF' if target_lang == 'en' else 'Скачати PDF'}
+            <span aria-hidden="true">📄</span> PDF
           </button>
           <button id="planModalClose" class="rt-btn rt-btn-ghost" type="button"
                   aria-label="{'Close' if target_lang == 'en' else 'Закрити'}">✕</button>
@@ -1900,6 +1916,9 @@ const planModal = document.getElementById('planModal');
 const planModalClose = document.getElementById('planModalClose');
 const langUaBtn = document.getElementById('langUaBtn');
 const langEnBtn = document.getElementById('langEnBtn');
+const modeClinicianBtn = document.getElementById('modeClinicianBtn');
+const modePatientBtn = document.getElementById('modePatientBtn');
+const modalHtmlBtn = document.getElementById('modalHtmlBtn');
 const formPane = document.getElementById('formPane');
 const jsonPane = document.getElementById('jsonPane');
 const questGroups = document.getElementById('questGroups');
@@ -1965,6 +1984,13 @@ const WHATIF_DEBOUNCE_MS = 1500;
 // without re-running the engine — Pyodide caches _oo_result/_oo_mdt.
 let currentResultLang = '{target_lang}';
 
+// Audience mode for the plan render — 'clinician' (default, full tumor-
+// board brief) or 'patient' (plain-UA simplified report). Per
+// PATIENT_MODE_SPEC §3, patient mode is treatment-plan only; the toggle
+// is disabled for diagnostic-mode results and for example-mode bundles
+// (pre-built /cases/<id>.html files don't have a patient-rendered twin).
+let currentResultMode = 'clinician';
+
 // planSource tracks where the plan currently shown in the modal came from:
 //   null        — no plan yet (form not generated, no example loaded)
 //   'example'   — pre-built case HTML loaded from /cases/<case_id>.html;
@@ -2023,6 +2049,39 @@ function highlightLangButtons() {{
   langEnBtn.classList.toggle('is-active', currentResultLang === 'en');
 }}
 
+function highlightModeButtons() {{
+  modeClinicianBtn.classList.toggle('is-active', currentResultMode === 'clinician');
+  modePatientBtn.classList.toggle('is-active', currentResultMode === 'patient');
+}}
+
+// Patient mode is render-only on top of an already-generated treatment
+// PlanResult. It can't toggle for:
+//   * diagnostic-mode bundles (no `_render_patient_mode` for DiagnosticPlan)
+//   * example-mode (pre-built /cases/*.html — no Pyodide engine running)
+//   * pre-generation (planSource === null)
+function refreshModeButtonAvailability() {{
+  const canPatient = (
+    pyodide
+    && planSource === 'generated'
+    && !planDirty
+  );
+  modePatientBtn.disabled = !canPatient;
+  if (!canPatient) {{
+    modePatientBtn.title = (
+      planSource === 'example'
+        ? '{ "Patient view is available for plans you generate yourself — not for example bundles yet" if target_lang == "en" else "Пацієнтська версія доступна лише для планів, які ви згенерували — не для прикладів" }'
+        : '{ "Generate a plan first to enable Patient view" if target_lang == "en" else "Згенеруйте план, щоб увімкнути пацієнтську версію" }'
+    );
+    if (currentResultMode === 'patient') {{
+      currentResultMode = 'clinician';
+      highlightModeButtons();
+    }}
+  }} else {{
+    modePatientBtn.title = '{ "Plain-Ukrainian simplified report — for patients" if target_lang == "en" else "Спрощений звіт зрозумілою мовою — для пацієнта" }';
+  }}
+  modeClinicianBtn.disabled = (planSource === null);
+}}
+
 function openPlanModal() {{
   if (!planModal) return;
   planModal.hidden = false;
@@ -2050,6 +2109,63 @@ function downloadPdf() {{
   }}
 }}
 
+async function switchResultMode(newMode) {{
+  if (newMode === currentResultMode) return;
+  if (modePatientBtn.disabled && newMode === 'patient') return;
+  if (!pyodide || planSource !== 'generated') return;
+  modeClinicianBtn.disabled = true;
+  modePatientBtn.disabled = true;
+  try {{
+    pyodide.globals.set('_target_lang', currentResultLang);
+    pyodide.globals.set('_target_mode', newMode);
+    const html = await pyodide.runPythonAsync(`
+if _oo_mode == 'diagnostic':
+    # Patient mode is treatment-only per PATIENT_MODE_SPEC §3 — fall back
+    # to the clinician diagnostic brief regardless of mode toggle.
+    html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+else:
+    html = render_plan_html(
+        _oo_result, mdt=_oo_mdt, target_lang=_target_lang, mode=_target_mode,
+    )
+html
+`);
+    resultFrame.removeAttribute('src');
+    resultFrame.srcdoc = html;
+    currentResultMode = newMode;
+    highlightModeButtons();
+  }} catch (e) {{
+    setError('Re-render failed: ' + (e.message || e));
+  }} finally {{
+    refreshModeButtonAvailability();
+  }}
+}}
+
+function downloadHtml() {{
+  if (planSource == null) return;
+  let html = resultFrame.srcdoc;
+  if (!html) {{
+    try {{
+      html = '<!DOCTYPE html>\\n' + resultFrame.contentDocument.documentElement.outerHTML;
+    }} catch (e) {{
+      setError('Could not read the rendered document: ' + (e.message || e));
+      return;
+    }}
+  }}
+  const blob = new Blob([html], {{ type: 'text/html;charset=utf-8' }});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  // Filename encodes audience + lang so a doctor downloading both for the
+  // same patient gets distinct files: openonco-plan.<mode>.<lang>.html
+  const stamp = new Date().toISOString().slice(0, 10);
+  const modePart = (planSource === 'generated' ? '.' + currentResultMode : '');
+  a.href = url;
+  a.download = `openonco-plan${{modePart}}.${{currentResultLang}}.${{stamp}}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}}
+
 async function switchResultLang(newLang) {{
   if (newLang === currentResultLang) return;
   if (planSource === 'example') {{
@@ -2067,11 +2183,14 @@ async function switchResultLang(newLang) {{
   langEnBtn.disabled = true;
   try {{
     pyodide.globals.set('_target_lang', newLang);
+    pyodide.globals.set('_target_mode', currentResultMode);
     const html = await pyodide.runPythonAsync(`
 if _oo_mode == 'diagnostic':
     html = render_diagnostic_brief_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
 else:
-    html = render_plan_html(_oo_result, mdt=_oo_mdt, target_lang=_target_lang)
+    html = render_plan_html(
+        _oo_result, mdt=_oo_mdt, target_lang=_target_lang, mode=_target_mode,
+    )
 html
 `);
     resultFrame.removeAttribute('src');
@@ -2097,9 +2216,16 @@ function loadExamplePlan(caseId) {{
   resultFrame.src = (currentResultLang === 'en' ? '/cases/' : '/ukr/cases/') + caseId + '.html';
   planSource = 'example';
   planDirty = false;
+  // Example bundles are always rendered as the clinician view (the
+  // pre-built /cases/*.html doesn't have a patient twin yet — see
+  // PATIENT_MODE_SPEC §3 + roadmap).
+  currentResultMode = 'clinician';
+  highlightModeButtons();
+  refreshModeButtonAvailability();
   viewPlanBtn.disabled = false;
   pdfBtn.disabled = false;
   modalPdfBtn.disabled = false;
+  modalHtmlBtn.disabled = false;
   openPlanModal();
 }}
 
@@ -2112,11 +2238,16 @@ function clearPlanState() {{
   viewPlanBtn.disabled = true;
   pdfBtn.disabled = true;
   modalPdfBtn.disabled = true;
+  modalHtmlBtn.disabled = true;
+  currentResultMode = 'clinician';
+  highlightModeButtons();
+  refreshModeButtonAvailability();
   closePlanModal();
 }}
 
 pdfBtn.addEventListener('click', downloadPdf);
 modalPdfBtn.addEventListener('click', downloadPdf);
+modalHtmlBtn.addEventListener('click', downloadHtml);
 viewPlanBtn.addEventListener('click', openPlanModal);
 planModalClose.addEventListener('click', closePlanModal);
 planModal.addEventListener('click', (ev) => {{
@@ -2127,6 +2258,8 @@ document.addEventListener('keydown', (ev) => {{
 }});
 langUaBtn.addEventListener('click', () => switchResultLang('uk'));
 langEnBtn.addEventListener('click', () => switchResultLang('en'));
+modeClinicianBtn.addEventListener('click', () => switchResultMode('clinician'));
+modePatientBtn.addEventListener('click', () => switchResultMode('patient'));
 
 function escHtml(s) {{
   return String(s).replace(/[&<>"']/g, c => ({{
@@ -3063,9 +3196,15 @@ html
       planSource = 'generated';
       planDirty = false;
       activeExampleCaseId = null;
+      // Fresh generation always lands on clinician view; user toggles to
+      // patient view via the toolbar (PATIENT_MODE_SPEC §3.5).
+      currentResultMode = 'clinician';
+      highlightModeButtons();
+      refreshModeButtonAvailability();
       viewPlanBtn.disabled = false;
       pdfBtn.disabled = false;
       modalPdfBtn.disabled = false;
+      modalHtmlBtn.disabled = false;
       openPlanModal();
       setStatus('{"Plan ready ✓" if target_lang == "en" else "Plan готовий ✓"}', 'ok');
       const _ooTNow = performance.now();

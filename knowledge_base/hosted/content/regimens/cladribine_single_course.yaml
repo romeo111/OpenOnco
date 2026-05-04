@@ -22,6 +22,49 @@ dose_adjustments:
 
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: true}
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Cladribine single 5-7 day course for HCL — induces durable
+# remissions; main risk is prolonged immunosuppression after the
+# course. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, що триває кілька тижнів після курсу"
+    action_ua: "Очікувано — кістковий мозок відновлюється поступово"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зниження апетиту, легка нудота"
+    action_ua: "Зустрічається — занотовуйте інтенсивність, обговоріть на наступному візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо в перший місяць після курсу"
+    action_ua: "Подзвоніть у клініку того ж дня — кладрибін викликає тривалу лімфопенію, ризик опортуністичної інфекції підвищений на місяці"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сухий кашель, нова задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — на тлі лімфопенії можлива опортуністична інфекція легень (PJP), потрібна оцінка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висип у вигляді пухирців на смузі шкіри (одна сторона тіла)"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива реактивація опериєзу (herpes zoster); потрібне противірусне лікування"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Незвичні синці, кровотеча ясен або носа"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібен контроль показників крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена слабкість, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — у пацієнтів з тривалою лімфопенією інфекція може швидко прогресувати"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   Single course produces durable CR (median PFS >10 years) in >85% of

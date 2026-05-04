@@ -52,6 +52,64 @@ ukraine_availability:
   notes: "All four components NSZU-funded; G-CSF prophylaxis recommended due to febrile-neutropenia rate ~10% in metastatic, ~3% in modified."
 
 sources: [SRC-NCCN-PANCREATIC-2025, SRC-ESMO-PANCREATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# FOLFIRINOX is the most toxic of standard PDAC regimens — fit ECOG
+# 0-1 only. Adds irinotecan (severe diarrhea — cholinergic + delayed)
+# and oxaliplatin neuropathy on top of 5-FU. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Характерно для оксаліплатину — занотовуйте інтенсивність, обговоріть на візиті"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Чутливість до холоду, дискомфорт у горлі від холодного"
+    action_ua: "Очікувано перші 3-5 днів циклу — уникайте холодного"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Випадання волосся (на 2-3 тижні)"
+    action_ua: "Очікувано — волосся повертається після завершення курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Приймайте призначені протиблювотні і лоперамід; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея — більше 6 разів на день, з кров'ю або сильним болем"
+    action_ua: "Подзвоніть у клініку того ж дня — іринотекан може спричиняти небезпечну діарею; потрібна корекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — на FOLFIRINOX ризик фебрильної нейтропенії високий навіть з G-CSF"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Поколювання стає сильним болем, заважає ходити"
+    action_ua: "Подзвоніть у клініку того ж дня — нейропатія потребує корекції дози оксаліплатину"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+  - trigger_ua: "Раптова виражена слабкість, тяжке зневоднення (запаморочення стоячи, мала кількість сечі)"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна інфузійна терапія, можливо термінова"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сплутаність свідомості, висока лихоманка з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — ознаки сепсису на тлі нейтропенії"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PANCREATIC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

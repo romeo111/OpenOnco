@@ -38,6 +38,51 @@ ukraine_availability:
   notes: "Both components NSZU-funded; outpatient delivery feasible."
 
 sources: [SRC-NCCN-ESOPHAGEAL-2025, SRC-ESMO-ESOPHAGEAL-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Carbo+pacli weekly with concurrent RT (CROSS protocol) for esophageal
+# resectable. Combines chemo cytopenia + neuropathy + RT esophagitis.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Біль або печіння при ковтанні (особливо ближче до 3-4 тижня RT)"
+    action_ua: "Очікувано на тлі променевої терапії — пийте холодні рідини, м'яка їжа; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Паклітаксел спричиняє нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Випадання волосся, втома"
+    action_ua: "Очікувано — волосся повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Сильний біль при ковтанні, неможливість їсти і пити"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка променевого езофагіту і можливо знеболення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія від карбо"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Зневоднення (запаморочення стоячи, мала кількість сечі) через неможливість ковтати"
+    action_ua: "Подзвоніть у клініку того ж дня — може знадобитись інфузійна терапія або тимчасова зонда"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+  - trigger_ua: "Сильна реакція на інфузію паклітакселу: задишка, висип, набряк обличчя"
+    action_ua: "Інфузія в клініці — повідомте медсестру негайно"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-ESOPHAGEAL-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

@@ -18,7 +18,7 @@ that author `phases:` explicitly are left as-is — `components` and
 `phases` are independent on input; the auto-wrap is one-way only.
 """
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import Field, field_validator, model_validator
 
@@ -72,6 +72,27 @@ class RegimenUkraineAvailability(Base):
     notes: Optional[str] = None
 
 
+class BetweenVisitWatchpoint(Base):
+    """One between-visit watchpoint for the patient-mode renderer.
+
+    PATIENT_MODE_SPEC §3.4: render-only field that powers the "На що
+    звернути увагу між візитами" patient bundle section. The renderer
+    groups items by `urgency` tier; engine MUST NOT consult this field
+    as a treatment-selection signal (CHARTER §8.3).
+
+    Authoring queue: `docs/plans/patient_watchpoints_authoring_queue_2026-05-01-0100.md`.
+    Two Clinical Co-Lead sign-offs required per regimen before the
+    `between_visit_watchpoints` field can be considered authored
+    (CHARTER §6.1; see PATIENT_MODE_SPEC §6).
+    """
+
+    trigger_ua: str  # plain UA: what the patient might notice at home
+    action_ua: str  # plain UA: what to do — log, call clinic, or ER
+    urgency: Literal["log_at_next_visit", "call_clinic_same_day", "er_now"]
+    cycle_day_window: Optional[str] = None  # e.g. "Day 7-14 — nadir"
+    sources: list[str] = Field(default_factory=list)
+
+
 class Regimen(Base):
     id: str
     name: str
@@ -95,6 +116,12 @@ class Regimen(Base):
     dose_adjustments: list[DoseAdjustment] = Field(default_factory=list)
 
     ukraine_availability: Optional[RegimenUkraineAvailability] = None
+
+    # Patient-mode "between visits" watchpoints (PATIENT_MODE_SPEC §3.4).
+    # Optional — existing regimens load without it. The renderer falls
+    # back to a "ще не узгоджено клінічною командою" placeholder when
+    # the list is empty so an empty list ≡ unauthored, never fabricated.
+    between_visit_watchpoints: list[BetweenVisitWatchpoint] = Field(default_factory=list)
 
     sources: list[str] = Field(default_factory=list)
     last_reviewed: Optional[str] = None

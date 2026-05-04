@@ -1,0 +1,98 @@
+id: IND-NSCLC-NRG1-ZENOCUTUZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: NRG1_FUSION
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic NRG1-fusion+ NSCLC (most common partner: CD74-NRG1; less common: SLC3A2, ATP1B1)"
+    - "Disease progression on prior systemic therapy OR no prior therapy if zenocutuzumab is selected as first targeted agent"
+    - "NRG1 fusion frequency in NSCLC ~0.2-0.3% — RNA-NGS panel testing essential"
+    - "Particular enrichment in invasive mucinous adenocarcinoma (IMA) histology"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-NRG1-FUSION
+      value_constraint: "NRG1 fusion confirmed by RNA-NGS (preferred — captures partner; DNA-NGS frequently misses NRG1 due to large intronic regions)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ZENOCUTUZUMAB-NRG1-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~33% NSCLC subset (eNRGy phase II registration cohort, n=93 NSCLC)"
+  duration_of_response: "mDOR 7.4 mo NSCLC subset"
+  progression_free_survival: "mPFS ~6.8 mo NSCLC subset"
+  pan_tumor_orr: "~37% all-tumor pooled; activity also documented in pancreatic NRG1-fusion+ adenocarcinoma"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL  # RNA-NGS critical — DNA-NGS misses ~30-50% of NRG1 fusions
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Zenocutuzumab (Bizengri, MCLA-128, HER2 x HER3 bispecific antibody)
+  for NRG1-fusion+ metastatic NSCLC. NRG1 fusion is a rare (~0.2-0.3%
+  NSCLC; enriched in invasive mucinous adenocarcinoma) but actionable
+  oncogenic driver — fusion-encoded EGF-like domain hyperactivates HER3,
+  driving HER2:HER3 dimerization. Zenocutuzumab dock-and-block mechanism
+  prevents NRG1-driven HER3 activation. eNRGy phase II tumor-agnostic
+  registration trial: NSCLC subset ORR ~33%, mDOR 7.4 mo, mPFS 6.8 mo.
+  FDA approval 2024-12 for NRG1-fusion+ pancreatic adenocarcinoma + NSCLC
+  (tumor-agnostic-style with two-tumor label). RNA-NGS is essential
+  (DNA-NGS misses ~30-50% of NRG1 fusions due to large intronic regions
+  in NRG1). Standard-track 2L+ for NRG1-fusion+ NSCLC; can also be 1L
+  if fusion identified upfront and patient prefers targeted-first
+  approach over chemo.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Zenocutuzumab is recommended for NRG1 fusion-positive NSCLC any line; Cat 2A; tumor-agnostic-style FDA approval (NSCLC + pancreatic 2024); RNA-NGS testing essential"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Zenocutuzumab is the standard-of-care for NRG1-fusion+ NSCLC; eNRGy ORR ~33% NSCLC subset, durable; reflex RNA-NGS panel testing for NRG1 detection"
+
+known_controversies:
+  - topic: "Zenocutuzumab line-of-therapy positioning (1L vs 2L) in NRG1-fusion+ NSCLC"
+    positions:
+      - position: "1L if NRG1 fusion identified upfront — tumor-agnostic data supports targeted-first; chemo less effective in NRG1-fusion+"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "2L after platinum + ICI failure — preserves chemo as proven initial control; NRG1 fusion frequently identified at re-biopsy/progression"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "2L+ standard; 1L if NRG1 fusion identified at diagnosis (rare due to NGS lag); preferred over chemo when fusion confirmed"
+    rationale: "Both positions supported; in practice fusion detection timing drives sequencing"
+
+do_not_do:
+  - "НЕ підтверджувати NRG1 fusion лише на DNA-NGS — false-negative rate ~30-50%; reflex RNA-NGS обов'язковий."
+  - "НЕ затримувати тестування — invasive mucinous adenocarcinoma + другорідні негативи на standard panel мають вищий pretest probability NRG1."
+  - "НЕ ігнорувати infusion-related reactions — premedication mandatory; first-dose closely monitored."
+  - "НЕ комбінувати з anti-HER2 / anti-HER3 agents без data — overlap mechanism of action."
+  - "НЕ підтверджувати план без funding pathway — zenocutuzumab не зареєстрований в Україні; FDA-approved 2024-12."
+  - "НЕ використовувати при significant cardiac dysfunction (LVEF <50%) без cardiology clearance — HER2-class signal."
+  - "НЕ припиняти терапію за perfusable Grade 1-2 IRR — premedicate + slow infusion."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Standard-track for NRG1
+  fusion+ metastatic NSCLC; FDA-approved 2024-12 for NSCLC + pancreatic
+  adenocarcinoma. eNRGy primary-trial source stub not yet in KB —
+  citation flagged in commit body for source-ingest follow-up.

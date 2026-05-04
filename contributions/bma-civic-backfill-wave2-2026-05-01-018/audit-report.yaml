@@ -1,0 +1,167 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-018
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: null
+  target_entity_id: null
+  notes_for_reviewer: 'Read-only audit-report covering all five manifest IDs.
+    One outcome row per BMA. CIViC snapshot 2026-04-25. Variant-aware filter +
+    synonym expansion applied per chunk spec.'
+
+snapshot_used: knowledge_base/hosted/civic/2026-04-25/evidence.yaml
+snapshot_date: '2026-04-25'
+total_civic_accepted_evidence_items: 4842
+
+outcomes:
+
+- bma_id: BMA-CD30-CHL
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains zero accepted evidence items where
+    gene == "CD30" or gene == "TNFRSF8" (the official HGNC symbol for CD30).
+    Synonym expansion: also checked "CD30" molecular_profile substring
+    matches — none found. CD30 is universally expressed on Reed-Sternberg
+    cells in classical Hodgkin lymphoma and is essentially a histologic-
+    confirmation gate (per hosted notes, ESCAT IA / OncoKB Level 1) — the
+    actionable evidence base lives in the brentuximab vedotin clinical
+    program (ECHELON-1, AETHERA, CheckMate-744) which CIViC has not
+    catalogued at the EID level.
+  no_civic_match_reason: 'gene_absent_from_civic_snapshot'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_cd30_chl.yaml
+  recommended_followup: 'Source-gap remains: ingest SRC-ECHELON-1 (Ansell NEJM
+    2022, PMID: 35353261), SRC-AETHERA (Younes Lancet 2015, PMID: 25796459),
+    SRC-CHECKMATE-744 (pediatric R/R cHL) as primary_sources for the BV
+    evidence base. Already noted in hosted notes field. CIViC backfill not
+    applicable.'
+
+- bma_id: BMA-KIT-EXON9-GIST
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 16 SRC-CIVIC blocks
+    spanning ~62 EIDs across CIViC levels A/B/C/D'
+  proposed_action: none
+  rationale: |
+    Hosted file already has a richly populated evidence_sources block from
+    a prior backfill pass. Re-running variant-aware filter
+    (gene == "KIT" AND variant matches "Exon 9" AND disease matches
+    "Gastrointestinal Stromal Tumor") yields a strict subset of 8 EIDs:
+    EID1221, EID1223, EID1424, EID2466, EID2477, EID4104, EID4139, EID4628.
+    The hosted block contains these 8 EIDs plus ~54 additional KIT-gene
+    EIDs whose variants are NOT "Exon 9" (e.g. specific point mutations,
+    other-exon variants). Removing the broader 54 EIDs would be a
+    destructive narrowing of an already-reviewer-pending block; preserving
+    the over-broad list lets the maintainer adjudicate whether the wider
+    KIT panel is intended (clinically reasonable for a gene-level link)
+    versus the strict variant-aware interpretation. No upsert proposed
+    in this chunk to avoid silently dropping existing CIViC references
+    pending Co-Lead signoff.
+  variant_aware_strict_eids:
+  - EID1221  # Imatinib, Sensitivity/Response, level A, PMID 16624552
+  - EID1223  # Sunitinib, Sensitivity/Response, level B, PMID 22439647
+  - EID1424  # Sunitinib, Sensitivity/Response, level B, PMID 18955458
+  - EID2466  # Imatinib, Sensitivity/Response, level B, PMID 14645423
+  - EID2477  # Imatinib, Reduced Sensitivity, level B, PMID 18955451
+  - EID4104  # Regorafenib, Reduced Sensitivity, level C, PMID 27371698
+  - EID4139  # Regorafenib, Reduced Sensitivity, level B, PMID 22614970
+  - EID4628  # Regorafenib, Sensitivity/Response, level B, PMID 23177515
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_kit_exon9_gist.yaml
+  recommended_followup: 'Maintainer decision: keep gene-level KIT block (status
+    quo) OR tighten to variant-aware 8-EID subset. If tightening is preferred,
+    spawn a separate chunk with target_action=upsert because narrowing
+    requires explicit Co-Lead approval per CHARTER §6.1.'
+
+- bma_id: BMA-MSH2-GERMLINE-UROTHELIAL
+  outcome: civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: upsert
+  proposed_sidecar: bma_msh2_germline_urothelial.yaml
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 7 accepted evidence items for
+    gene == "MSH2". Disease-token overlap with DIS-UROTHELIAL: only
+    EID1877 (disease="Transitional Cell Carcinoma", DOID:2671) which
+    is the standard CIViC term for urothelial carcinoma. EID11677
+    (disease="Cancer", DOID:162) is pan-tumor and excluded per the
+    closed-#43 policy ("off-disease evidence items NOT included" —
+    avoids cross-disease borrowing). Remaining 5 MSH2 EIDs are
+    colorectal/endometrial — out of scope for this BMA.
+  matched_evidence_ids:
+  - eid: EID1877
+    disease: Transitional Cell Carcinoma (DOID:2671)
+    variant: Loss
+    therapies: [Durvalumab, Anti-PD-1 Monoclonal Antibody MEDI0680]
+    therapy_interaction_type: Combination
+    direction: Supports
+    significance: Sensitivity/Response
+    level: C
+    pmid: '26674132'
+    civic_url: https://civicdb.org/links/evidence_items/1877
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_germline_urothelial.yaml
+  - pmid: '26674132'
+  caveat: 'CIViC variant="Loss" does not distinguish germline vs somatic.
+    Maintainer adjudicates whether EID1877 is appropriate evidence for the
+    germline-scoped BMA (vs the parallel somatic BMA-MSH2-SOMATIC-UROTHELIAL).'
+
+- bma_id: BMA-NTRK-FUSION-CRC
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 9 accepted evidence items across
+    NTRK1 (5), NTRK2 (0), NTRK3 (4). None have a colorectal disease token
+    (search: disease contains "colon"/"colorectal"/"rectal"). The fusion-
+    specific NTRK entries are catalogued in NSCLC and GIST, not CRC.
+    Synonym expansion checked: also queried fusion partners
+    (TPM3, LMNA, TFG, ETV6) for CRC disease overlap — none in snapshot.
+    Pan-tumor "Cancer" DOID:162 entries: none with "fusion" variant
+    string. Tumor-agnostic NTRK actionability lives in larotrectinib /
+    entrectinib labels (FDA 2018/2019) and the LOXO-101 / STARTRK-2
+    pooled trials, which CIViC has not catalogued under the umbrella
+    DOID:162 for fusion variants. No-match per the closed-#43 strict
+    disease-token-overlap rule.
+  no_civic_match_reason: 'no_disease_token_overlap_with_DIS_CRC'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_crc.yaml
+  recommended_followup: 'Tissue-agnostic actionability covered by hosted
+    primary_sources (SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024) and FDA
+    tumor-agnostic approvals already cited in regulatory_approval. CIViC
+    backfill not applicable for this BMA in current snapshot. Re-check
+    on next CIViC nightly refresh once tumor-agnostic NTRK fusion EIDs
+    are catalogued under DOID:162.'
+
+- bma_id: BMA-RAD51C-GERMLINE-OVARIAN
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains zero accepted evidence items where
+    gene == "RAD51C". Synonym expansion: also checked RAD51 paralogs
+    (RAD51, RAD51B, RAD51D) — RAD51 has limited entries, none in ovarian
+    with germline variant scope. RAD51C HRR-deficiency actionability is
+    captured in the PARPi trial program (PAOLA-1 olaparib+bev, NOVA
+    niraparib non-gBRCA, ARIEL3 rucaparib LOH-high) which CIViC has not
+    catalogued at the EID level for RAD51C-specific subgroups.
+  no_civic_match_reason: 'gene_absent_from_civic_snapshot'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_rad51c_germline_ovarian.yaml
+  recommended_followup: 'Source-gap: RAD51C-specific ESCAT IIA actionability
+    is anchored on the PAOLA-1 / ARIEL3 / NOVA HRD-positive subgroup analyses
+    (already in hosted notes). Consider ingesting SRC-PAOLA-1, SRC-ARIEL3,
+    SRC-NOVA-NIRAPARIB as primary_sources. CIViC backfill not applicable
+    for current snapshot.'
+
+summary:
+  total_manifest_ids: 5
+  civic_match_with_upsert: 1
+  no_civic_match: 3
+  already_populated_no_action: 1

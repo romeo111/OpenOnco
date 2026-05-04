@@ -1,0 +1,78 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-026
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit table required by issue #228. One row
+    per manifest ID with url_verified, content_current, proposed_current_as_of,
+    license_status, notes. Zero rows propose upsert this wave; see
+    unreachable.yaml for the structured failure list and refresh_summary.yaml
+    for aggregate counts.'
+rows:
+- id: SRC-FORTITUDE-101
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending
+  notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+    review_status: pending_clinical_signoff). Title still contains "TODO:
+    confirm citation"; no top-level url field. Per chunk-brief rule "No
+    URL → unreachable", flagged unreachable.no_url. FORTITUDE-101 is the
+    Phase-3 trial of bemarituzumab + chemotherapy in FGFR2b-overexpressing
+    HER2-negative gastric/GEJ adenocarcinoma (NCT05052801, primary completion
+    2024-07; topline reported in 2025); Amgen press release Apr-2025
+    indicated positive OS readout. Resolving the correct primary citation
+    (likely a 2025 ESMO presentation or NEJM/Lancet primary publication)
+    is stub-resolution work and out of scope for a recency refresh.'
+- id: SRC-BR21-SHEPHERD-2005
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/16014883 → 403 Forbidden.
+    DOI fallback https://doi.org/10.1056/NEJMoa050753 redirected via
+    nejm.org → 403 Forbidden. PubMed canonical URL equals primary URL so
+    fallback skipped. Likely publisher bot-blocking (NCBI + NEJM gate
+    non-browser HEAD requests; recency-bot UA flagged). Hosted YAML
+    metadata complete (PMID 16014883, DOI 10.1056/NEJMoa050753, NEJM 2005,
+    last_verified 2026-04-27, current_as_of 2026-04-29 from prior wave-1
+    refresh). Underlying NCIC CTG BR.21 phase-3 (Shepherd FA et al.) is a
+    well-established historical reference for erlotinib activity in
+    EGFR-unselected NSCLC; clinical content unchanged. Maintainer
+    browser-verify recommended; unreachable status reflects probe
+    limitation, not stale evidence.'
+- id: SRC-KEYNOTE-006-ROBERT-2015
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/25891173 → 403 Forbidden.
+    DOI fallback https://doi.org/10.1056/NEJMoa1503093 redirected via
+    nejm.org → 403 Forbidden. PubMed canonical URL equals primary URL so
+    fallback skipped. NCBI + NEJM publisher bot-blocking. Hosted YAML
+    metadata complete (PMID 25891173, DOI 10.1056/NEJMoa1503093, NEJM
+    2015, last_verified 2026-04-27); current_as_of in hosted YAML is still
+    "2015-06-25" — this would normally bump to 2026-05-01 on a successful
+    HEAD, but per chunk-brief rule no upsert is proposed when the probe
+    fails. KEYNOTE-006 phase-3 (Robert C et al.) established anti-PD-1
+    monotherapy as 1L IO for advanced melanoma; 7-yr update (Robert Lancet
+    Oncol 2023) noted in hosted YAML notes field. Underlying clinical
+    content unchanged. Maintainer browser-verify recommended.'
+- id: SRC-COMBI-AD-LONG-2017
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/28891408 → 403 Forbidden.
+    DOI fallback https://doi.org/10.1056/NEJMoa1708539 redirected via
+    nejm.org → 403 Forbidden. PubMed canonical URL equals primary URL so
+    fallback skipped. NCBI + NEJM publisher bot-blocking. Hosted YAML
+    metadata complete (PMID 28891408, DOI 10.1056/NEJMoa1708539, NEJM
+    2017, last_verified 2026-04-27, current_as_of 2026-04-29 from prior
+    wave-1 refresh). COMBI-AD phase-3 (Long GV et al.) established
+    adjuvant dabrafenib+trametinib for resected stage III BRAF-mutant
+    melanoma; 5-yr update (Dummer NEJM 2020) noted in hosted YAML notes
+    field. Underlying clinical content unchanged. Maintainer browser-verify
+    recommended; unreachable status reflects probe limitation, not stale
+    evidence.'

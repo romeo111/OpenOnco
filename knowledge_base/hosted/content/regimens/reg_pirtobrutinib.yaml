@@ -47,6 +47,31 @@ ukraine_availability:
 sources:
   - SRC-NCCN-BCELL-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pirtobrutinib (non-covalent BTKi) r/r CLL post-cBTKi (BRUIN). Bleeding +
+# afib (lower rate than ibrutinib ~3%) + cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Кровотеча з ясен, синці без причини, носові кровотечі"
+    action_ua: "Подзвоніть у клініку того ж дня — кровотеча (BTKi ефект)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Серцебиття, нерівний пульс"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива фібриляція передсердь"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   BRUIN trial (Mato 2023): r/r CLL/SLL after prior cBTKi (median 3

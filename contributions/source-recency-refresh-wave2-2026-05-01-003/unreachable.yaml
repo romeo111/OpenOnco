@@ -1,0 +1,38 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-003
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL GET (with
+    follow_redirects + 403→retry-after-15s) did not return 2xx/3xx, plus the
+    LIBRETTO-431 stub which has no `url` field on master. HTTP 403 from
+    PubMed / NEJM / ASCO Pubs is publisher bot-blocking (real browser
+    resolves) — citations are still valid via PMID/DOI. Maintainer
+    browser-verify before next action.'
+rows:
+  - id: SRC-ATA-ATC-2021
+    url: https://pubmed.ncbi.nlm.nih.gov/33728999/
+    status_code: 403
+    error: Forbidden (PubMed bot-blocking; PMID 33728999 stable)
+    last_verified_existing: '2026-04-28'
+  - id: SRC-LIBRETTO-431
+    url: null
+    status_code: null
+    error: missing url field on master (auto-stub pending clinical signoff)
+    last_verified_existing: '2026-04-27'
+  - id: SRC-DIPSS-PLUS-GANGAT-2011
+    url: https://ascopubs.org/doi/10.1200/JCO.2010.32.2446
+    status_code: 403
+    error: Forbidden (ASCO Pubs bot-blocking; DOI 10.1200/JCO.2010.32.2446 stable)
+    last_verified_existing: '2026-04-27'
+  - id: SRC-TOURMALINE-MM1-MOREAU-2016
+    url: https://pubmed.ncbi.nlm.nih.gov/27119237
+    status_code: 403
+    error: Forbidden (PubMed bot-blocking; PMID 27119237 stable)
+    last_verified_existing: '2026-04-27'
+  - id: SRC-FLAURA-SORIA-2018
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa1713137
+    status_code: 403
+    error: Forbidden (NEJM bot-blocking; DOI 10.1056/NEJMoa1713137 stable)
+    last_verified_existing: '2026-04-27'

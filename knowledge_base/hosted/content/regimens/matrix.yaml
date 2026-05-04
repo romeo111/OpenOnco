@@ -51,6 +51,50 @@ ukraine_availability:
   notes: "Тіотепа має обмежений import у Україну — потрібна попередня перевірка через Drlz / НСЗУ. Fall back на R-MPV якщо тіотепа недоступна."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# MATRix induction for PCNSL (HiDAC + HD-MTX + thiotepa + rituximab).
+# Inpatient regimen — most acute toxicity managed in ward. Watchpoints
+# apply to discharge/post-cycle window. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, що триває тижнями"
+    action_ua: "Очікувано після високодозової хіміотерапії — відпочивайте більше"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Мукозит — болі і виразки в порожнині рота"
+    action_ua: "Поширене на високодозовому метотрексаті — полоскання порожнини рота, м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мислення, утруднена мова, плутаність свідомості"
+    action_ua: "Подзвоніть у клініку того ж дня — HiDAC і HD-MTX можуть впливати на нервову систему"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — метотрексат у високих дозах потребує контролю функції нирок"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія, високий ризик сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптовий судомний напад або виражена слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна оцінка можливого прогресування PCNSL або токсичності"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   STUB. IELSG32 trial standard induction. autoSCT BCNU+thiotepa

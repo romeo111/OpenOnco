@@ -55,6 +55,42 @@ sources:
   - SRC-NCCN-MPN-2025
   - SRC-ESMO-MPN-2015
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Anagrelide for ET 2L cytoreduction (post-HU intolerance/resistance).
+# Signature: cardiac (palpitations, fluid retention), headache.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний головний біль протягом перших тижнів"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Прискорене серцебиття, відчуття перебоїв"
+    action_ua: "Поширене на анагреліді — занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Зазвичай легкі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена задишка при навантаженні, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — анагрелід може спричиняти серцеву недостатність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття у спокої"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Раптовий сильний головний біль, порушення зору"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна оцінка тромбозу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   ET 2L cytoreduction for HU-intolerant or HU-resistant patients per

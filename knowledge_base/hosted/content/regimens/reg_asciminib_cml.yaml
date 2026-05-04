@@ -51,6 +51,42 @@ sources:
   - SRC-ELN-CML-2020
   - SRC-ASCEMBL-REA-2021
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Asciminib (STAMP allosteric BCR-ABL inhibitor) for 3L+ CML-CP.
+# Better cardiovascular safety than ponatinib; cytopenia + pancreatitis
+# are dominant signals. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, помірний головний біль"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Висип на шкірі"
+    action_ua: "Очікувано — зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Сильний біль у верхній частині живота, що віддає в спину"
+    action_ua: "Подзвоніть у клініку того ж дня — підозра на панкреатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-ASCEMBL-REA-2021
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Раптовий біль у грудях, задишка, слабкість в одній руці чи нозі"
+    action_ua: "Звертайтесь у лікарню негайно — судинна подія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MPN-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   STAMP allosteric inhibitor — mechanism distinct from all ATP-site

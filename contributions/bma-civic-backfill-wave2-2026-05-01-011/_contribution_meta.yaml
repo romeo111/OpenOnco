@@ -1,0 +1,33 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-011
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 BMA-CIViC backfill — closes #192. CIViC snapshot 2026-04-25.
+    Conservative matching: gene match + disease-token overlap required. Off-disease
+    evidence items NOT included (would be cross-disease borrowing per chunk-spec
+    invention prohibition). Mirrors closed wave-1 chunk pattern (#43 /
+    bma-civic-backfill-2026-04-29-001) and adjacent wave-2 chunks (#182, #183).
+
+    Manifest outcomes:
+    - BMA-HRD-STATUS-BREAST: 21 BRCA1/BRCA2 evidence items with breast disease
+      overlap → upsert applied (hosted evidence_sources was empty list).
+    - BMA-CALR-ET: 2 CALR evidence items found and disease-overlap matched, but
+      both EIDs (EID6382, EID1482) are already present in the hosted record; no
+      upsert authored — recorded in audit-report.yaml as
+      already_populated_no_diff_vs_civic_snapshot.
+    - BMA-MSH6-SOMATIC-ENDOMETRIAL: 1 MSH6 evidence item disease-overlapped
+      (EID1839); already present in the hosted record; same handling as CALR-ET.
+    - BMA-MLH1-SOMATIC-PROSTATE: gene present in CIViC (27 evidence items) but
+      none with prostate disease overlap → no_match (gene_in_civic_no_disease_overlap).
+    - BMA-PMS2-SOMATIC-CRC: gene present in CIViC (2 evidence items, both
+      Glioblastoma + Endometrial) with no CRC disease overlap → no_match.'
+  tasktorrent_version: '2026-05-01-wave2'
+  notes_for_reviewer: 'Per-BMA upsert touches only: evidence_sources (replaces empty
+    list), actionability_review_required (kept true). All other fields untouched.
+    Maintainer adjudicates direction/significance/level interpretation. Two of
+    the manifest IDs already had CIViC evidence on master that matched the
+    snapshot exactly; reauthoring those upserts would be a no-op so they are
+    recorded in audit-report.yaml instead — no clinical claim is invented.'

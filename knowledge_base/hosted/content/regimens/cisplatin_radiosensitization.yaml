@@ -35,6 +35,57 @@ ukraine_availability:
   notes: "Cisplatin NSZU-funded; radiotherapy modality not in Drug entity scope — see PROPOSAL §17."
 
 sources: [SRC-NCCN-CERVICAL-2025, SRC-ESMO-CERVICAL-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Concurrent chemoradiation for cervical cancer. Cisplatin weekly +
+# external beam RT + brachytherapy. Key axes: cisplatin nephrotoxicity,
+# ototoxicity, RT-related skin/bowel/bladder reactions, anemia.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, що наростає до кінця курсу"
+    action_ua: "Очікувано — більше відпочивайте; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Подразнення шкіри в зоні опромінення (червоність, лущення)"
+    action_ua: "Використовуйте призначений зволожувач; уникайте мила і тертя; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Помірна нудота протягом 1-2 днів після цисплатину"
+    action_ua: "Приймайте призначені протиблювотні; пийте багато води"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Часті позиви до сечовипускання, печіння"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібно виключити променевий цистит або інфекцію сечових шляхів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Шум у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин може впливати на слух; потрібна оцінка"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Зменшення кількості сечі, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — цисплатин може впливати на нирки; потрібен аналіз креатиніну"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна тривала діарея або кровотеча з прямої кишки"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка реакції з боку кишечника"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Лихоманка вище 38°C з ознобом"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі лікування і можливої інфекції потрібна термінова оцінка"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-26"
 
 notes: >

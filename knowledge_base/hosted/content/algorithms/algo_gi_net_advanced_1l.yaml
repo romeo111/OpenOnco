@@ -1,0 +1,72 @@
+id: ALGO-GI-NET-ADVANCED-1L
+applicable_to_disease: DIS-GI-NET
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for unresectable / metastatic GI-NET
+  (carcinoid, midgut/foregut/hindgut). Primary decision gate: grade (Ki67).
+  G1/G2 (≤20%): SSA (lanreotide 120 mg q4w) as standard — antiproliferative
+  AND symptom control. Carcinoid syndrome detection reinforces SSA urgency.
+  G3 / NEC: MDT review. Fitness gates via pan-disease RFs.
+
+output_indications:
+  - IND-GI-NET-ADVANCED-1L-LANREOTIDE
+
+default_indication: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NET-HIGH-GRADE-G3
+    if_true:
+      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+      notes: "G3 / Ki67 >20% — routes to lanreotide indication which carries hard_contraindication warning for poorly differentiated NEC. MDT must verify G3 well-differentiated vs NEC morphology before SSA."
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-NET-CARCINOID-SYNDROME
+    if_true:
+      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+      notes: "Active carcinoid syndrome confirms SSA is mandatory for symptom control and antiproliferative intent."
+    if_false:
+      next_step: 3
+  - step: 3
+    evaluate:
+      all_of:
+        - any_of:
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+    if_false:
+      result: IND-GI-NET-ADVANCED-1L-LANREOTIDE
+    notes: >
+      Both branches resolve to lanreotide (SSA is very well tolerated even
+      in frail patients). ECOG PS ≥4 hard gate in engine suppresses active
+      tracks regardless. Active surveillance (no systemic therapy) is
+      clinically appropriate for G1, asymptomatic, low-burden GI-NET —
+      modelled here as MDT decision, not a separate indication.
+
+sources:
+  - SRC-CLARINET-CAPLIN-2014
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-03"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Single-indication scaffold. Deferred paths:
+  - Active surveillance (watch-and-wait for G1 asymptomatic low-burden) —
+    clinical judgment, not a separate KB indication
+  - Octreotide LAR 30 mg q4w (equivalent alternative to lanreotide;
+    PROMID data) — pending REG-OCTREOTIDE-LAR-GI-NET + DRUG-OCTREOTIDE
+  - PRRT (¹⁷⁷Lu-DOTATATE; NETTER-1 2017) — 2L after SSA progression for
+    SSTR2+ disease; requires SSTR biomarker scaffolding + DRUG-LUTETIUM-177-
+    DOTATATE; separate future PR
+  - Everolimus (RADIANT-4, Yao Lancet 2016) for G1/G2 GI-NET after SSA
+    progression — deferred
+  - Hepatic locoregional therapy (TACE, ablation) for liver-dominant
+    disease — Surgery entity proposal needed

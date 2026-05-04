@@ -34,6 +34,50 @@ ukraine_availability:
   notes: "Нірапариб — НСЗУ-фінансований для оваріальної підтримуючої терапії 1L (PRIMA) і 2L+ платиночутливого рецидиву (НОВА). Перевірено 2026-04-27."
 
 sources: [SRC-NCCN-OVARIAN-2025, SRC-ESMO-OVARIAN-2024, SRC-NOVA-MIRZA-2016, SRC-PRIMA-GONZALEZ-MARTIN-2019]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Niraparib maintenance for ovarian post-platinum response (PRIMA 1L,
+# NOVA 2L+). Same PARPi pattern as olaparib + higher rates of
+# thrombocytopenia early on (especially low body weight). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано в перші тижні — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Нірапариб може підвищувати тиск — занотовуйте показники"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+  - trigger_ua: "Незвичні синці або кровотечі"
+    action_ua: "Подзвоніть у клініку того ж дня — нірапариб часто знижує тромбоцити, особливо в перші 2 місяці"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена втома, задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка анемії"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка кровотеча, що не спиняється"
+    action_ua: "Звертайтесь у лікарню негайно — на тлі тромбоцитопенії"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко нірапариб може спричиняти пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-OVARIAN-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >

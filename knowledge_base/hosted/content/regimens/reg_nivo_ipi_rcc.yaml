@@ -14,6 +14,56 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Immune-mediated AE G≥2", modification: "Hold; corticosteroids"}]
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Out-of-pocket"}
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Nivo+ipi (CheckMate-214) for IMDC intermediate/poor RCC 1L. Lower
+# ipi dose than melanoma (1 mg/kg vs 3 mg/kg) → fewer Grade 3 irAEs
+# but still significant. Patterns reuse from melanoma checkpoint.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузій"
+    action_ua: "Очікувано — відпочивайте більше у дні 1-3"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Шкірний свербіж або сухість шкіри"
+    action_ua: "Часто і зазвичай легко — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — комбінація може спричиняти імунний коліт; рання оцінка важлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит зустрічається на нiвo+іпі"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Сильна слабкість, постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або гіпофіза"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Раптова сильна слабкість + низький тиск + сплутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можливий криз надниркових залоз"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+
 last_reviewed:
 notes: "CheckMate-214 IMDC intermediate/poor. Nivo q4w maintenance up to 2 years."
 notes_ua: CheckMate-214 IMDC intermediate/poor. Nivo q4w підтримка до 2 years.

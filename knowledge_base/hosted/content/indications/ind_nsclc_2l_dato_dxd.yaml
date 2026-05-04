@@ -1,0 +1,99 @@
+id: IND-NSCLC-2L-DATO-DXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: NONSQUAMOUS
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Stage IV metastatic nonsquamous NSCLC"
+    - "Disease progression on 1L platinum-based chemotherapy AND prior immune checkpoint inhibitor (driver-negative) OR post-osimertinib + platinum chemotherapy (EGFR-mutant subgroup, FDA-labeled scope)"
+    - "Squamous histology not benefited in TROPION-Lung01 — exclude"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-TROP2-EXPRESSION
+      value_constraint: "TROP2 is the ADC target but routine TROP2-IHC selection NOT required; clinical selection by histology + actionable-mutation context"
+      required: false
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-PDL1-TPS
+      value_constraint: "Squamous histology — TROPION-Lung01 squamous subgroup did not benefit; exclude squamous patients"
+      required: false
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DATO-DXD-NSCLC-2L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  progression_free_survival: "mPFS 5.6 vs 3.7 mo nonsquamous (HR 0.84, 95% CI 0.74-0.95) — TROPION-Lung01 phase III"
+  overall_response_rate: "~26% nonsquamous Dato-DXd vs ~13% docetaxel"
+  overall_survival: "ITT OS not statistically significant; nonsquamous numerical trend favors Dato-DXd; FDA approval restricted to EGFR-mutant post-targeted-therapy + chemotherapy subset (TROPION-Lung05 supporting)"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Datopotamab deruxtecan (Dato-DXd, TROP2-directed ADC with topoisomerase-I
+  payload) for 2L+ nonsquamous metastatic NSCLC after platinum + ICI (or
+  post-osimertinib + platinum for EGFR-mut). TROPION-Lung01 phase III
+  (n=604): nonsquamous PFS HR 0.84 (95% CI 0.74-0.95); squamous subgroup
+  did not benefit; ITT OS not significant. FDA approval (2025-01)
+  restricted to actionable-mutation (EGFR-mutant) post-targeted-therapy
+  + chemotherapy subset based on TROPION-Lung05 supporting evidence.
+  Aggressive-track 2L for nonsquamous (especially EGFR-mut post-osi +
+  platinum) with adequate pulmonary baseline. ILD is the dominant class
+  toxicity — adjudicated ~8% all-grade; lower threshold for permanent
+  discontinuation than T-DXd. Patient selection: prefer for nonsquamous
+  histology, especially EGFR-mutant; avoid in squamous and in patients
+  with ILD risk factors.
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Datopotamab deruxtecan is recommended for previously treated metastatic nonsquamous NSCLC, particularly EGFR-mutant post-osimertinib + platinum chemotherapy (TROPION-Lung01 + TROPION-Lung05)"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Dato-DXd is an emerging ADC option for previously treated nonsquamous NSCLC; PFS benefit anchored in nonsquamous and actionable-mutation subgroups; ILD class risk requires baseline pulmonary assessment"
+
+known_controversies:
+  - topic: "Dato-DXd 2L all-comers nonsquamous vs restricted to EGFR-mutant post-osi + chemo"
+    positions:
+      - position: "All-comers nonsquamous: TROPION-Lung01 PFS HR 0.84 nonsquamous subset supports broader use"
+        sources: [SRC-NCCN-NSCLC-2025]
+      - position: "EGFR-mutant restricted: FDA label scope (TROPION-Lung05); ITT OS not significant pushed regulators to actionable-mutation subset"
+        sources: [SRC-ESMO-NSCLC-METASTATIC-2024]
+    our_default: "EGFR-mutant post-osi + platinum (FDA scope); broader nonsquamous use as aggressive-track for selected patients with adequate pulmonary baseline"
+    rationale: "Regulatory + outcomes disagreement; align with FDA scope while preserving NCCN flexibility for nonsquamous"
+
+do_not_do:
+  - "НЕ використовувати при squamous histology — TROPION-Lung01 squamous subgroup без користі."
+  - "НЕ використовувати при baseline ILD або history of pneumonitis — class-effect risk."
+  - "НЕ ігнорувати baseline ocular assessment + preservative-free artificial tears prophylaxis — keratitis ~50% all-grade."
+  - "НЕ продовжувати при Grade ≥2 ILD — permanently discontinue."
+  - "НЕ комбінувати з IO без even more aggressive ILD monitoring (early data evolving)."
+  - "НЕ підтверджувати план без funding pathway — Dato-DXd не зареєстрований в Україні."
+  - "НЕ ігнорувати stomatitis prophylaxis — steroid mouthwash, dexamethasone oral rinse."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L for
+  nonsquamous (esp. EGFR-mutant post-osi + platinum) metastatic NSCLC.
+  TROPION-Lung01 + TROPION-Lung05 source stubs not yet in KB —
+  citation flagged in commit body for source-ingest follow-up.

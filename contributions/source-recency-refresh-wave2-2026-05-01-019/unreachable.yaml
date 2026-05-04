@@ -1,0 +1,67 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-019
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL HEAD (with
+    DOI fallback and PubMed fallback per chunk-brief escalation) did not
+    return 2xx/3xx. HTTP 403 typically indicates publisher bot-blocking
+    (NCBI/Elsevier/NEJM/JAMA/ASCO gate non-browser User-Agents); a real
+    browser would normally succeed. Two stub sources have no top-level
+    url field and were flagged unreachable.no_url per chunk-brief rule;
+    citation-resolution suggestions captured in source_recency_audit.yaml.
+    current_as_of NOT bumped on any blocked source per chunk-brief
+    instruction. Maintainer browser-verify recommended before next wave.'
+rows:
+  - id: SRC-ESMO-SARCOMA
+    url: null
+    status_code: null
+    reason: no_url
+    error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+    suggested_pmid: '34303806'
+    suggested_doi: 10.1016/j.annonc.2021.07.006
+    suggested_citation: 'Gronchi A et al., Soft tissue and visceral sarcomas: ESMO Clinical
+      Practice Guideline (Ann Oncol 2021;32(11):1348-1365)'
+    current_as_of_existing: null
+  - id: SRC-SAVOIR
+    url: null
+    status_code: null
+    reason: no_url
+    error: hosted YAML lacks top-level url field (auto-stub awaiting clinical signoff)
+    suggested_pmid: '32469384'
+    suggested_doi: 10.1001/jamaoncol.2020.2218
+    suggested_citation: 'Choueiri TK et al., Efficacy of Savolitinib vs Sunitinib in
+      Patients With MET-Driven Papillary Renal Cell Carcinoma: The SAVOIR Phase 3
+      Randomized Clinical Trial (JAMA Oncol 2020;6(8):1247-1255)'
+    current_as_of_existing: null
+  - id: SRC-COBRIM-LARKIN-2014
+    url: https://pubmed.ncbi.nlm.nih.gov/25265494
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1408868
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/25265494
+    status_code: 403
+    doi_fallback_status_code: 403
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary HEAD + DOI fallback HEAD + PubMed fallback HEAD)
+    current_as_of_existing: '2026-04-29'
+  - id: SRC-RATIFY-STONE-2017
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa1614359
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1614359
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/28644114
+    status_code: 403
+    doi_fallback_status_code: 403
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary HEAD + DOI fallback HEAD + PubMed fallback HEAD)
+    current_as_of_existing: '2017-08-03'
+  - id: SRC-ELOQUENT-3-DIMOPOULOS-2018
+    url: https://pubmed.ncbi.nlm.nih.gov/30403938
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1805762
+    pubmed_fallback_url: https://pubmed.ncbi.nlm.nih.gov/30403938
+    status_code: 403
+    doi_fallback_status_code: 403
+    pubmed_fallback_status_code: 403
+    reason: blocked
+    error: Forbidden (primary HEAD + DOI fallback HEAD + PubMed fallback HEAD)
+    current_as_of_existing: '2026-04-29'

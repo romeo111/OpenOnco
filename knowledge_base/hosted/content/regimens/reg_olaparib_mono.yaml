@@ -34,6 +34,38 @@ ukraine_availability:
   notes: "Registered for ovarian/breast indications; prostate reimbursement under negotiation. Out-of-pocket for prostate use until formulary update."
 
 sources: [SRC-NCCN-PROSTATE-2025, SRC-ESMO-PROSTATE-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Olaparib mono for HRR-mutated mCRPC (PROfound). Same PARPi pattern.
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Часто проходить за 2-3 місяці"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+  - trigger_ua: "Виражена втома, задишка"
+    action_ua: "Подзвоніть у клініку того ж дня — олапариб може спричиняти анемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-PROSTATE-2025
+
 last_reviewed:
 notes: >
   PROfound: olaparib superior to enzalutamide / abiraterone in HRR-mutant

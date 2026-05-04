@@ -1,0 +1,151 @@
+id: IND-DLBCL-3L-EPCORITAMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed / refractory DLBCL after ≥2 prior systemic lines (1L R-CHOP / Pola-R-CHP, 2L salvage chemo ± autoSCT, pola-R-bendamustine, or CAR-T)"
+    - "CD20 positive on most recent biopsy (immunohistochemistry or flow cytometry)"
+    - "ECOG 0-2 (EPCORE NHL-1 enrolment)"
+    - "Adequate organ function (ANC ≥1.0, plt ≥75, AST/ALT ≤3× ULN, bilirubin ≤2× ULN, eGFR ≥45)"
+    - "Includes patients ineligible for or relapsed after CD19 CAR-T (~39% of EPCORE NHL-1 cohort had prior CAR-T)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20 positive on most recent biopsy (loss of CD20 after prior anti-CD20 therapy is exclusion)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    age_min: 18
+    ecog_max: 2
+
+recommended_regimen: REGIMEN-EPCORITAMAB-MONO-DLBCL-3L
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~63% (EPCORE NHL-1; n=157, ≥3L r/r LBCL with ~39% prior CAR-T)"
+  complete_response: "~39%"
+  progression_free_survival: "Median PFS ~4.4 months overall; substantially longer in CR responders (median DOR ~12 months)"
+  overall_survival_5y: "OS not reached at primary analysis; 12-month OS ~50% in pooled bispecific cohorts"
+
+hard_contraindications:
+  - CI-ACTIVE-INFECTION-FOR-ALEMTUZUMAB
+  - CI-HBV-NO-PROPHYLAXIS
+
+red_flags_triggering_alternative:
+  - RF-DLBCL-CD20-POS-EPCORITAMAB-CANDIDATE
+  - RF-DLBCL-CART-INELIGIBLE-POST-2L
+  - RF-DLBCL-CNS-RISK
+  - RF-DLBCL-INFECTION-SCREENING
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-IMMUNOGLOBULINS
+  - TEST-LN-CORE-BIOPSY
+  - TEST-FLOW-CYTOMETRY
+  - TEST-PREGNANCY
+desired_tests:
+  - TEST-MRI-BRAIN-CONTRAST
+
+rationale: >
+  Epcoritamab (Epkinly / Tepkinly) is a subcutaneous CD20×CD3 bispecific
+  T-cell engager for relapsed/refractory DLBCL after ≥2 prior systemic
+  lines, including patients ineligible for or relapsed after CD19 CAR-T.
+  EPCORE NHL-1 (Thieblemont et al., J Clin Oncol 2023; n=157, ~39% prior
+  CAR-T): ORR ~63%, CR ~39%, median DOR ~12 months, median PFS ~4.4 mo.
+  Step-up dosing (0.16 → 0.8 → 48 mg) + cycle-1 corticosteroid prophylaxis
+  reduce CRS to predominantly Grade 1-2 (any-grade ~50%, G≥3 ~3%); ICANS
+  ~6% any-grade. SC route + ambulatory schedule favourable vs IV
+  bispecifics for outpatient-heavy practices. Continuous indefinite dosing
+  is the principal sequencing trade-off vs fixed-duration glofitamab.
+  Ukraine context: not registered, no NSZU pathway; international
+  clinical trial / compassionate use only. Cycle 1 day 15 first 48 mg
+  full dose requires 24h hospital monitoring for CRS observation.
+  Aggressive-track 3L+ option preferred when CAR-T is unavailable,
+  declined, or has failed.
+
+rationale_ua: >
+  Епкоритамаб (Epkinly / Tepkinly) — підшкірний CD20×CD3 біспецифічний
+  Т-клітинний енгейджер для рецидивної/рефрактерної DLBCL після ≥2
+  попередніх системних ліній, включно з пацієнтами, непридатними для
+  CD19 CAR-T або з рецидивом після нього. EPCORE NHL-1 (Thieblemont
+  et al., J Clin Oncol 2023; n=157, ~39% попередня CAR-T): ORR ~63%,
+  ПВ ~39%, медіана DOR ~12 міс, медіана PFS ~4.4 міс. Покрокове
+  дозування (0.16 → 0.8 → 48 мг) + кортикостероїдна профілактика циклу 1
+  знижують CRS переважно до 1-2 ступеня (будь-який ступінь ~50%, G≥3
+  ~3%); ICANS ~6% будь-якого ступеня. Підшкірний шлях + амбулаторний
+  графік — перевага порівняно з IV біспецифіками для практик з
+  акцентом на амбулаторне ведення. Безперервне невизначене дозування
+  — головний компроміс послідовності проти фіксованого глофітамабу.
+  Контекст України: не зареєстрований, немає шляху НСЗУ; лише
+  міжнародне клінічне дослідження або compassionate use. Перша
+  повна доза 48 мг (цикл 1 день 15) потребує 24-годинного лікарняного
+  моніторингу для спостереження за CRS. Агресивний 3L+ варіант,
+  переважний за відсутності, відмові або неуспіху CAR-T.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: "Epcoritamab is a Category 2A preferred third-line+ option for r/r DLBCL after ≥2 prior systemic lines per EPCORE NHL-1; available for CAR-T-ineligible / post-CAR-T relapse populations."
+  - source_id: SRC-ESMO-LYMPHOMA-2025
+    position: supports
+    relevant_quote_paraphrase: "CD20×CD3 bispecific T-cell engagers (epcoritamab, glofitamab) are recommended therapeutic options for r/r DLBCL after ≥2 prior lines, including patients with prior CAR-T exposure."
+
+known_controversies:
+  - topic: "Epcoritamab vs glofitamab vs CAR-T for r/r DLBCL ≥3L"
+    positions:
+      - position: "Epcoritamab — subcutaneous, continuous indefinite dosing, ambulatory-friendly; preferred where outpatient pathway desired and indefinite therapy acceptable"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "Glofitamab — IV, fixed 12-cycle duration with treatment-free interval; preferred where finite-duration therapy desired"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "CD19 CAR-T (axi-cel, liso-cel) — single infusion, durable remissions in ~40%, but requires accredited centre + manufacturing window; bispecifics preferred when CAR-T unavailable / declined / failed"
+        sources: [SRC-ESMO-LYMPHOMA-2025]
+    our_default: "Bispecific (epcoritamab or glofitamab) preferred over CAR-T in Ukrainian context due to absence of domestic CAR-T capacity; epcoritamab preferred if SC ambulatory dosing valued and indefinite therapy acceptable; glofitamab if finite-duration valued."
+    rationale: >
+      In Ukraine all three modalities require international referral or
+      compassionate-use access; bispecifics may be more feasible than
+      CAR-T given no manufacturing infrastructure required and lower
+      total cost. Selection between epcoritamab and glofitamab driven
+      by route (SC vs IV), schedule (continuous vs fixed 12-cycle), and
+      partner-centre availability.
+
+do_not_do:
+  - "НЕ призначати без cycle-1 corticosteroid prophylaxis (preднізолон 100 мг ПО/ВВ + ацетамінофен + дифенгідрамін перед кожною step-up дозою) — істотно знижує ризик CRS."
+  - "НЕ пропускати 24-годинне лікарняне спостереження для першої повної дози 48 мг (цикл 1 день 15) — fatal CRS можливе без on-site моніторингу."
+  - "НЕ розпочинати без on-site tocilizumab (мінімум 2 дози) — стандартна терапія CRS Grade ≥2."
+  - "НЕ ігнорувати pre-treatment HBV / HCV / HIV скринінг — реактивація HBV вимагає entecavir / tenofovir prophylaxis при HBcAb+."
+  - "НЕ призначати при active uncontrolled infection — імунодеплеція + CRS = high mortality."
+  - "НЕ забувати про PJP / HSV профілактику + IVIG (якщо IgG <400 + рецидивні інфекції) — гіпогаммаглобулінемія + B-cell aplasia спостерігаються довготривало."
+  - "НЕ вводити без перевірки CD20 позитивності на найбільш свіжій біопсії — втрата CD20 після попередньої anti-CD20 терапії = absolute exclusion."
+
+time_critical: false
+last_reviewed: "2026-05-01"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 3L+ option
+  for r/r DLBCL. Epcoritamab subcutaneous CD20×CD3 bispecific is
+  particularly suited to outpatient-heavy Ukrainian oncology workflow if
+  registered later, though cycle 1 day 15 hospital-monitoring requirement
+  assumes a 24-hour inpatient bed. Trial source SRC-EPCORE-NHL-1-THIEBLEMONT-2023
+  absent from KB at chunk authoring time — citing NCCN-BCELL-2025 +
+  ESMO-DLBCL-2024 pending source-stub creation (flagged for
+  trial-source ingest follow-up). See REGIMEN-EPCORITAMAB-MONO-DLBCL-3L
+  for full dosing schedule and step-up sub-regimen.

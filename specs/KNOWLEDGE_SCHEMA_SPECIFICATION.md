@@ -1,86 +1,88 @@
 # Knowledge Schema Specification
 
-**Проєкт:** OpenOnco
-**Документ:** Knowledge Schema Specification
-**Версія:** v0.1 (draft)
-**Статус:** Draft для обговорення з командою розробки + Clinical Co-Leads
-**Попередні документи:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md
+**Project:** OpenOnco
+**Document:** Knowledge Schema Specification
+**Version:** v0.1 (draft)
+**Status:** Draft for discussion with the development team + Clinical Co-Leads
+**Prerequisite documents:** CHARTER.md, CLINICAL_CONTENT_STANDARDS.md
 
 ---
 
-> **Pivot 2026-04-27 — Actionability source.** Первинне джерело
-> biomarker-actionability мігровано з **OncoKB** на **CIViC**. Підстава:
-> OncoKB Terms of Use прямо забороняють використання даних "for patient
-> services" та "generation of reports in a hospital or other patient care
-> setting" — що є точним визначенням scope OpenOnco (CHARTER §2). Деталі
-> аудиту: [`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`](../docs/reviews/oncokb-public-civic-coverage-2026-04-27.md).
-> CIViC (CC0) тепер — primary actionability source; усі engine-модулі
-> названо vendor-neutral (`actionability_*`), що залишає можливість
-> повернутися до іншого джерела без переписування schema. Поля
-> `oncokb_skip_reason` та інші token-словники, що не виносять рішення
-> рендеру, збережені незмінними (vocabulary stays).
+> **Pivot 2026-04-27 — Actionability source.** The primary source for
+> biomarker actionability has been migrated from **OncoKB** to **CIViC**.
+> Rationale: the OncoKB Terms of Use explicitly prohibit use of the data
+> "for patient services" and "generation of reports in a hospital or other
+> patient care setting" — which is the exact definition of OpenOnco's
+> scope (CHARTER §2). Audit details:
+> [`docs/reviews/oncokb-public-civic-coverage-2026-04-27.md`](../docs/reviews/oncokb-public-civic-coverage-2026-04-27.md).
+> CIViC (CC0) is now the primary actionability source; all engine modules
+> have been given vendor-neutral names (`actionability_*`), which allows
+> switching back to another source without rewriting the schema. The fields
+> `oncokb_skip_reason` and other token vocabularies that do not affect
+> render decisions are preserved unchanged (vocabulary stays).
 
 ---
 
-## Мета документа
+## Purpose of this document
 
-Цей документ визначає **технічну структуру даних knowledge base** —
-які сутності зберігаються, які поля обов'язкові, як сутності
-пов'язані між собою, і як правила (rules) представлені у форматі,
-що може виконуватися rule engine.
+This document defines the **technical data structure of the knowledge base** —
+which entities are stored, which fields are required, how entities are
+related to each other, and how rules are represented in a format that can
+be executed by the rule engine.
 
-Без цього документа:
-- Розробники не знають, які таблиці/колекції будувати
-- Clinical Co-Leads не мають формату для подання рекомендацій
-- Неможливо написати ні engine, ні валідатор, ні migration скрипт
-- Кожна нозологія моделюється ad-hoc, що руйнує консистентність
+Without this document:
+- Developers do not know which tables/collections to build
+- Clinical Co-Leads have no format for submitting recommendations
+- It is impossible to write an engine, a validator, or a migration script
+- Each diagnosis is modeled ad-hoc, which destroys consistency
 
-Цей документ — **контракт між клінічним і технічним шарами**.
+This document is the **contract between the clinical and technical layers**.
 
 ---
 
-## 1. Принципи моделювання
+## 1. Modeling principles
 
 ### 1.1. Separation of knowledge and code
 
-Правила, показання, протипоказання — в декларативному форматі (YAML),
-не hardcoded у коді. Rule engine інтерпретує декларацію.
+Rules, indications, and contraindications are in a declarative format
+(YAML), not hardcoded in the code. The rule engine interprets the declaration.
 
-**Мотивація:** клініцист повинен мати змогу редагувати knowledge base
-без участі розробника. Зміна в NCCN guideline → редагування YAML →
-pull request → review → merge. Без code changes.
+**Motivation:** a clinician must be able to edit the knowledge base without
+involving a developer. A change in an NCCN guideline → edit the YAML →
+pull request → review → merge. No code changes.
 
 ### 1.2. Immutability through versioning
 
-Кожна сутність має версію. Старі версії зберігаються вічно (retention
-policy у Charter §10). Update = нова версія, не overwrite.
+Each entity has a version. Old versions are stored forever (retention
+policy in Charter §10). Update = new version, not overwrite.
 
 ### 1.3. Traceability
 
-Кожна рекомендація посилається на sources (Tier 1-5 per CCS §2).
+Each recommendation references sources (Tier 1–5 per CCS §2).
 Dangling reference = invalid entity.
 
 ### 1.4. Explicit unknowns
 
-"Невідомо" — це `unknown` enum value, не `null`. Різниця важлива: null
-може означати "не заповнено", unknown означає "явно невідомо для цього
-пацієнта". Rule engine трактує їх по-різному.
+"Unknown" is an `unknown` enum value, not `null`. The distinction
+matters: null may mean "not filled in", unknown means "explicitly unknown
+for this patient". The rule engine treats them differently.
 
 ### 1.5. Standards-based, not bespoke
 
-Використовуємо стандартні vocabularies (SNOMED CT, LOINC, RxNorm,
-ICD-O-3) для кодування, не винаходимо свої коди.
+We use standard vocabularies (SNOMED CT, LOINC, RxNorm, ICD-O-3) for
+coding — we do not invent our own codes.
 
 ### 1.6. No composite scoring
 
-Schema не містить `composite_rating` чи `overall_score`. Evidence
-level і strength of recommendation зберігаються окремо (per CCS §4).
+The schema does not contain a `composite_rating` or `overall_score`.
+Evidence level and strength of recommendation are stored separately
+(per CCS §4).
 
 ---
 
-## 2. Top-level entities (огляд)
+## 2. Top-level entities (overview)
 
-Всього 12 основних сутностей:
+There are 12 core entities in total:
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -108,14 +110,14 @@ level і strength of recommendation зберігаються окремо (per C
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-Patient entity — окремий шар (див. документ 3: Data Standards /
-mCODE). Тут ми моделюємо лише knowledge, не пацієнтські дані.
+The Patient entity is a separate layer (see Document 3: Data Standards /
+mCODE). Here we model only knowledge, not patient data.
 
 ---
 
 ## 3. Entity: Disease
 
-Нозологія з класифікацією за WHO.
+A diagnosis entity with WHO classification.
 
 ### 3.1. Schema
 
@@ -190,7 +192,7 @@ metadata:
 
 - `entity_type`, `id`, `version`
 - `names.preferred`
-- `codes.icd_o_3` (обов'язково для всіх онкологічних)
+- `codes.icd_o_3` (required for all oncological entities)
 - `codes.who_classification.entity`
 - `lineage`
 - `archetype`
@@ -214,7 +216,7 @@ Archetype determines document template structure.
 
 ## 4. Entity: Biomarker
 
-Молекулярний, гістологічний, лабораторний маркер.
+A molecular, histological, or laboratory marker.
 
 ### 4.1. Schema
 
@@ -303,75 +305,79 @@ knowledge_base_ref:
 
 ### 4.3. Actionability-wiring fields (Phase 1 scaffolding)
 
-Три опційні поля додано на Biomarker для безпечного підключення зовнішньої
-biomarker-actionability бази (CIViC у v0.1 після pivot 2026-04-27 — див.
-callout на початку документа). Поля свідомо vendor-neutral named — engine
-переключається з OncoKB на CIViC без зміни schema. Це чисто інженерне
-розширення схеми; жодного клінічного контенту в `bio_*.yaml` ця версія
-не торкається — заповнення полів виконується у фазі 2.
+Three optional fields have been added to Biomarker to safely connect an
+external biomarker-actionability database (CIViC in v0.1 after the
+2026-04-27 pivot — see the callout at the top of this document). The
+fields are deliberately vendor-neutral in name — the engine switches from
+OncoKB to CIViC without any schema change. This is a purely engineering
+extension of the schema; this version does not touch any clinical content
+in `bio_*.yaml` — field population is performed in phase 2.
 
-#### `actionability_lookup` (опційно)
+#### `actionability_lookup` (optional)
 
-Явний хінт, що дозволяє actionability-екстрактору запитати анотацію саме
-для цього біомаркера у зовнішній КБ (CIViC). Якщо поле відсутнє, екстрактор
-повністю **пропускає** біомаркер — це навмисно, щоб уникнути мовчазного
-«вгадування» (gene, variant) із id, що ризикує дати клініцисту false negative.
+An explicit hint that allows the actionability extractor to query the
+annotation for this specific biomarker in the external KB (CIViC). If
+the field is absent, the extractor **skips** the biomarker entirely —
+this is intentional, to avoid silently "guessing" (gene, variant) from
+the id, which risks giving the clinician a false negative.
 
-Поле раніше називалось `oncokb_lookup` (Phase 1 scaffolding); перейменоване
-на `actionability_lookup` у Phase 1.5-міграції (commit `c72e45b`,
-2026-04-27) разом з pivot до CIViC. Семантика і прийняті форми не
-змінилися.
+The field was previously named `oncokb_lookup` (Phase 1 scaffolding);
+renamed to `actionability_lookup` in the Phase 1.5 migration (commit
+`c72e45b`, 2026-04-27) together with the CIViC pivot. Semantics and
+accepted forms are unchanged.
 
 ```yaml
 actionability_lookup:
   gene: "BRAF"            # HGNC symbol, uppercase, 1..32 chars
-  variant: "V600E"        # короткий HGVS-p / структурний дескриптор / fs
+  variant: "V600E"        # short HGVS-p / structural descriptor / fs
 ```
 
-Прийнятні форми `variant`:
-- короткий HGVS-p: `V600E`, `L858R`, `G12C`
-- структурні: `Exon 19 deletion`, `E746_A750del`
-- frameshift-токени: `W288fs`
-- fusion-нотація CIViC: `BCR::ABL1` (пара генів через `::`), у т.ч.
-  з вкладеними резистентними мутаціями у `variant` (`Fusion AND ABL1 T315I`)
+Accepted forms for `variant`:
+- Short HGVS-p: `V600E`, `L858R`, `G12C`
+- Structural: `Exon 19 deletion`, `E746_A750del`
+- Frameshift tokens: `W288fs`
+- CIViC fusion notation: `BCR::ABL1` (gene pair separated by `::`),
+  including with nested resistance mutations in `variant`
+  (`Fusion AND ABL1 T315I`)
 
-Повна валідація HGVS живе в `engine/civic_variant_matcher.py` (попередньо
-`engine/oncokb_extract.py:normalize_variant`). Схема робить тільки type-check.
+Full HGVS validation lives in `engine/civic_variant_matcher.py`
+(previously `engine/oncokb_extract.py:normalize_variant`). The schema
+performs only a type check.
 
-#### `oncokb_skip_reason` (опційно)
+#### `oncokb_skip_reason` (optional)
 
-Стабільний machine-readable токен, що пояснює, чому біомаркер навмисно
-**виключений** з actionability-запитів. Ім'я поля збережено історично
-(token-словник source-agnostic — ті самі причини виключення діють і для
-CIViC, і для OncoKB). Ці рядки греп-стійкі — downstream код
-(`engine/_actionability.py`) ключує поведінку саме на них, тож
-перейменування без координації заборонене.
+A stable machine-readable token explaining why a biomarker is
+intentionally **excluded** from actionability queries. The field name is
+preserved for historical reasons (the token vocabulary is source-agnostic
+— the same exclusion reasons apply to both CIViC and OncoKB). These
+strings are grep-stable — downstream code (`engine/_actionability.py`)
+keys behavior on them, so renaming without coordination is prohibited.
 
-Допустимі значення (`Literal`):
+Permitted values (`Literal`):
 
-| Token | Коли |
+| Token | When used |
 |---|---|
-| `ihc_no_variant` | IHC без молекулярного варіанту (Ki-67, CD20, …) |
-| `score` | Скор/індекс (IPI, MIPI, GIPSS) |
-| `clinical_composite` | Композитний клінічний маркер |
-| `serological` | Серологія (HCV-Ab, HBsAg) |
-| `viral_load` | Вірусне навантаження (HCV-RNA, HBV-DNA) |
-| `tumor_marker` | Загальний пухлинний маркер (CA-125, AFP, β-hCG) |
-| `imaging` | Imaging-патерн |
-| `germline_no_somatic` | Лише герм-лайн варіант, без соматичної актнабельності |
-| `fusion_mvp` | Fusion — поза скоупом MVP |
-| `itd_mvp` | ITD-варіанти (FLT3-ITD) — поза скоупом MVP |
-| `multi_allele_mvp` | Мультиалельні випадки — поза скоупом MVP |
-| `tumor_agnostic` | Tumor-agnostic indication — окремий шлях |
+| `ihc_no_variant` | IHC without a molecular variant (Ki-67, CD20, …) |
+| `score` | Score/index (IPI, MIPI, GIPSS) |
+| `clinical_composite` | Composite clinical marker |
+| `serological` | Serology (HCV-Ab, HBsAg) |
+| `viral_load` | Viral load (HCV-RNA, HBV-DNA) |
+| `tumor_marker` | General tumor marker (CA-125, AFP, β-hCG) |
+| `imaging` | Imaging pattern |
+| `germline_no_somatic` | Germline-only variant, without somatic actionability |
+| `fusion_mvp` | Fusion — outside MVP scope |
+| `itd_mvp` | ITD variants (FLT3-ITD) — outside MVP scope |
+| `multi_allele_mvp` | Multi-allelic cases — outside MVP scope |
+| `tumor_agnostic` | Tumor-agnostic indication — separate pathway |
 
-Взаємно виключає `actionability_lookup`. Допустимі стани: «жоден не заданий»
-(біомаркер ще не триаговано), «лише lookup», «лише skip_reason». Обидва
-одночасно → ValidationError.
+Mutually exclusive with `actionability_lookup`. Valid states: "neither
+set" (biomarker not yet triaged), "lookup only", "skip_reason only". Both
+simultaneously → ValidationError.
 
-#### `external_ids` (опційно)
+#### `external_ids` (optional)
 
-Крос-референси на зовнішні KB. Усі ключі опційні; часткове заповнення
-(наприклад, лише `hgnc_symbol`) — нормально.
+Cross-references to external KBs. All keys are optional; partial
+population (e.g., only `hgnc_symbol`) is fine.
 
 ```yaml
 external_ids:
@@ -385,30 +391,32 @@ external_ids:
   hgvs_coding: "NM_005228.5:c.2573T>G"
 ```
 
-Поле незалежне від `actionability_lookup` / `oncokb_skip_reason` — може
-бути заповнене у будь-якій комбінації. `oncokb_url` залишено в словнику
-як read-only legacy-метадані: рендер їх не використовує (див. §4.4 щодо
-ToS-обмежень OncoKB), але цитати з опублікованих наукових праць можуть
-посилатися на стабільну OncoKB-сторінку без redistribution-конфлікту.
+This field is independent of `actionability_lookup` / `oncokb_skip_reason`
+— it may be populated in any combination. `oncokb_url` is retained in the
+vocabulary as read-only legacy metadata: the render layer does not use it
+(see §4.4 for OncoKB ToS restrictions), but citations from published
+scientific works may reference a stable OncoKB page without redistribution
+conflict.
 
 ---
 
 ### 4.4. Entity: BiomarkerActionability (BMA)
 
-Окрема сутність, яка маппить пару (gene-variant, tumor type) на
-клінічну actionability-tier за ESCAT (ESMO Scale for Clinical Actionability
-of molecular Targets, Mateo 2018). Композує існуючі `BIO-*` (gene/variant
-taxonomy) та `DIS-*` (disease taxonomy) у per-tumor клінічну
-інтерпретацію. Pydantic-схема: `knowledge_base/schemas/biomarker_actionability.py`.
+A separate entity that maps a (gene-variant, tumor type) pair to a
+clinical actionability tier per ESCAT (ESMO Scale for Clinical
+Actionability of molecular Targets, Mateo 2018). It composes existing
+`BIO-*` (gene/variant taxonomy) and `DIS-*` (disease taxonomy) into a
+per-tumor clinical interpretation. Pydantic schema:
+`knowledge_base/schemas/biomarker_actionability.py`.
 
-**ID convention:** `BMA-{biomarker}-{variant?}-{disease}`, наприклад
-`BMA-BRAF-V600E-CRC`, `BMA-EGFR-T790M-NSCLC`. `biomarker_id` може вже
-кодувати variant (e.g. `BIO-BRAF-V600E`); тоді `variant_qualifier` —
-опційний рефайнмент (sub-variant / co-occurrence). `null` у
-`variant_qualifier` → клітинка gene-level (будь-яка патогенна
-альтерація трактується ідентично).
+**ID convention:** `BMA-{biomarker}-{variant?}-{disease}`, for example
+`BMA-BRAF-V600E-CRC`, `BMA-EGFR-T790M-NSCLC`. The `biomarker_id` may
+already encode the variant (e.g. `BIO-BRAF-V600E`); in that case,
+`variant_qualifier` is an optional refinement (sub-variant / co-occurrence).
+`null` in `variant_qualifier` → gene-level cell (any pathogenic alteration
+is treated identically).
 
-#### 4.4.1. Канонічна схема (post-pivot)
+#### 4.4.1. Canonical schema (post-pivot)
 
 ```yaml
 # File: knowledge_base/hosted/content/biomarker_actionability/bma_braf_v600e_crc.yaml
@@ -416,15 +424,15 @@ taxonomy) та `DIS-*` (disease taxonomy) у per-tumor клінічну
 entity_type: BiomarkerActionability
 id: BMA-BRAF-V600E-CRC
 biomarker_id: BIO-BRAF-V600E         # FK → BIO-*
-variant_qualifier: null               # null → весь варіант, що в biomarker_id
+variant_qualifier: null               # null → entire variant encoded in biomarker_id
 disease_id: DIS-CRC                  # FK → DIS-*
 
 # ── Primary actionability tier (vendor-neutral) ────────────────────────
 escat_tier: "IA"                     # ESCAT IA|IB|IIA|IIB|IIIA|IIIB|IV|X
 
 # ── Evidence sources block (canonical post-pivot) ──────────────────────
-# Замінює legacy-поля oncokb_level / oncokb_snapshot_version. Список
-# EvidenceSourceRef-структур; жодне джерело не привілейоване в render.
+# Replaces legacy fields oncokb_level / oncokb_snapshot_version. A list
+# of EvidenceSourceRef structures; no source is privileged in render.
 evidence_sources:
   - source: "SRC-CIVIC"              # FK → Source entity
     level: "B"                       # CIViC level: A|B|C|D|E
@@ -440,9 +448,9 @@ evidence_sources:
     note: "Preferred 2L+ regimen for V600E."
 
 # ── Two-reviewer gate flag (CHARTER §6.1) ─────────────────────────────
-# True → блокує publish до двох клінічних sign-off. Виставляється
-# loader'ом якщо drafted_by починається з "claude_extraction" або якщо
-# evidence_sources містить лише A/B без guideline-corroboration.
+# True → blocks publish until two clinical sign-offs. Set by the loader
+# if drafted_by starts with "claude_extraction" or if evidence_sources
+# contains only A/B without guideline corroboration.
 actionability_review_required: true
 
 # ── Per-jurisdiction regulatory ─────────────────────────────────────
@@ -481,49 +489,52 @@ EvidenceSourceRef = {
 }
 ```
 
-`level` — це **source-native токен** (CIViC `A|B|C|D|E`, NCCN
-`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Vendor-mapping (наприклад,
-CIViC-A → ESCAT IA) лежить у render-шарі, не в YAML — клінічна
-відповідальність за сumulative-tier (`escat_tier`) залишається на
-рев'юері BMA, не на автоматичному маппінгу.
+`level` is a **source-native token** (CIViC `A|B|C|D|E`, NCCN
+`category_1|2A|2B|3`, ESMO `I|II|III|IV|V`). Vendor mapping (e.g.,
+CIViC-A → ESCAT IA) lives in the render layer, not in the YAML —
+clinical responsibility for the cumulative tier (`escat_tier`) rests
+with the BMA reviewer, not with automated mapping.
 
-Поле `direction == "does_not_support"` є load-bearing: render має
-показати такий запис як **anti-evidence card** (negative recommendation),
-а не приховати. CIViC містить ~10% таких записів — це навмисний клінічний
-сигнал, який engine не повинен мовчазно дропати.
+The field `direction == "does_not_support"` is load-bearing: the render
+must display such an entry as an **anti-evidence card** (negative
+recommendation), not suppress it. CIViC contains ~10% such entries —
+this is an intentional clinical signal that the engine must not silently
+drop.
 
-#### 4.4.3. `escat_tier` як primary actionability tier
+#### 4.4.3. `escat_tier` as the primary actionability tier
 
-`escat_tier` — vendor-neutral, опубліковано-стабільний (Mateo 2018 не
-оновлюється щодня, на відміну від OncoKB level scheme). Це поле — те,
-що render використовує як основний тіер у Plan-картках. Окремі
-`evidence_sources[*].level` — це доказова база для sign-off, не
-користувацький рендер-токен.
+`escat_tier` is vendor-neutral and publication-stable (Mateo 2018 does
+not update daily, unlike the OncoKB level scheme). This field is what
+the render uses as the primary tier in Plan cards. The individual
+`evidence_sources[*].level` fields are the evidence base for sign-off,
+not a user-facing render token.
 
-#### 4.4.4. Legacy-поля та ToS-обмеження
+#### 4.4.4. Legacy fields and ToS restrictions
 
-Поля `oncokb_level` і `oncokb_snapshot_version`, що існували у Phase 0
-draft-yaml-ах, **видалено зі схеми** в Phase 1.5-міграції (engine commit
-`5384348`, schema-міграція YAML — pending Part B). Якщо запис у
-`evidence_sources` має `source: "SRC-ONCOKB"`, він трактується render-шаром
-як **legacy metadata**: не виводиться у користувацький UI, не використовується
-як основа для рекомендації. Підстава — OncoKB Terms of Use (Phase-4 правило
-рендеру; деталі див. `SOURCE_INGESTION_SPEC.md` §2.5 і
+The fields `oncokb_level` and `oncokb_snapshot_version` that existed in
+Phase 0 draft YAMLs have been **removed from the schema** in the Phase
+1.5 migration (engine commit `5384348`, YAML schema migration — pending
+Part B). If an entry in `evidence_sources` has `source: "SRC-ONCOKB"`,
+it is treated by the render layer as **legacy metadata**: it is not
+surfaced in the user UI and is not used as the basis for a
+recommendation. Rationale: OncoKB Terms of Use (Phase-4 render rule;
+details in `SOURCE_INGESTION_SPEC.md` §2.5 and
 `docs/reviews/oncokb-public-civic-coverage-2026-04-27.md` §3.3).
 
-#### 4.4.5. Статус формалізації
+#### 4.4.5. Formalization status
 
-Сутність додано до Pydantic-схеми (`knowledge_base/schemas/biomarker_actionability.py`)
-2026-04-26 під CSD Lab pitch і не потрапила в §2 top-level entities у
-v0.1-draft цього документа. Цей розділ — закрепачення BMA як
-повноправної сутності 13-го рівня для майбутнього перегляду §2 і
-data-model-діаграми (§15).
+The entity was added to the Pydantic schema
+(`knowledge_base/schemas/biomarker_actionability.py`) on 2026-04-26
+under the CSD Lab pitch and did not appear in the §2 top-level entities
+in the v0.1 draft of this document. This section anchors BMA as a
+full-fledged 13th-tier entity for a future revision of §2 and the
+data-model diagram (§15).
 
 ---
 
 ## 5. Entity: Drug
 
-Окремий препарат.
+An individual drug.
 
 ### 5.1. Schema
 
@@ -632,15 +643,15 @@ reviewers: [reviewer-id-1, reviewer-id-2]
 
 ## 6. Entity: Regimen
 
-Лікувальна схема — комбінація препаратів з графіком.
+A treatment regimen — a combination of drugs with a schedule.
 
-> **Зміна 2026-04-29 — phase-aware schema (PR1 of regimen-phases-refactor).**
-> Додано опційні поля `phases:` (`list[RegimenPhase]`) та
-> `bridging_options:` (`list[regimen_id]`). `components:` лишається; для
-> легасі-YAML без `phases:` loader auto-wrap'ить `components` у єдину
-> фазу `name: "main"`. Деталі — §6.4 нижче. План: [`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
-> Manual YAML migration (18 файлів CAR-T/TIL/SCT/multi-block) — окремий
-> PR2.
+> **Change 2026-04-29 — phase-aware schema (PR1 of regimen-phases-refactor).**
+> Optional fields `phases:` (`list[RegimenPhase]`) and
+> `bridging_options:` (`list[regimen_id]`) have been added. `components:`
+> remains; for legacy YAMLs without `phases:` the loader auto-wraps
+> `components` into a single phase `name: "main"`. Details — §6.4 below.
+> Plan: [`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
+> Manual YAML migration (18 CAR-T/TIL/SCT/multi-block files) — separate PR2.
 
 ### 6.1. Schema
 
@@ -784,7 +795,7 @@ reviewers: [reviewer-id-hem-1, reviewer-id-hem-2]
 ### 6.2. Required fields
 
 - `id`, `names.preferred`, `names.ukrainian`
-- `components` (список з мінімум одного Drug)
+- `components` (list with at least one Drug)
 - `cycle_length_days`
 - `total_cycles` OR `total_duration_weeks`
 - `toxicity_profile`
@@ -798,34 +809,34 @@ For each toxicity category, use enum:
 - `low`
 - `moderate`
 - `severe`
-- `variable` (з описом в `notes`)
+- `variable` (with description in `notes`)
 
-Numeric rates (where available) в окремих полях з джерелом.
+Numeric rates (where available) in separate fields with source.
 
-### 6.4. RegimenPhase (додано 2026-04-29)
+### 6.4. RegimenPhase (added 2026-04-29)
 
-Phase-aware декомпозиція курсу терапії. Закриває структурний пробіл,
-виявлений на патієнт-нульовому фідбеку: "чому план не показав
-циклофосфамід *перед* основною терапією?" — lymphodepletion / bridging /
-conditioning / IL-2 support колишньою плоскою `components` + рядковою
-`premedication` ховались у деталях one-block render. План:
-[`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
+Phase-aware decomposition of a course of therapy. Closes a structural
+gap identified in patient-zero feedback: "why did the plan not show
+cyclophosphamide *before* the main therapy?" — lymphodepletion / bridging
+/ conditioning / IL-2 support were previously hidden inside the details
+of a one-block render via the flat `components` + string `premedication`.
+Plan: [`docs/reviews/regimen-phases-refactor-plan-2026-04-28.md`](../docs/reviews/regimen-phases-refactor-plan-2026-04-28.md).
 
-**Поля:**
+**Fields:**
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
-| `name` | str | Назва фази (відкритий рядок; куратор-facing вокабуляр нижче) |
-| `purpose_ua` | str | UA-опис мети фази для render (наприклад, "виснаження лімфоцитів перед CAR-T") |
-| `purpose_en` | Optional[str] | EN-опис (опційно) |
-| `components` | list[RegimenComponent] | Drug-компоненти саме цієї фази |
-| `duration` | Optional[str] | Тривалість, наприклад "3 days, days -5 to -3" |
+| `name` | str | Phase name (open string; curator-facing vocabulary below) |
+| `purpose_ua` | str | Ukrainian description of the phase purpose for render (e.g., "lymphocyte depletion before CAR-T") |
+| `purpose_en` | Optional[str] | English description (optional) |
+| `components` | list[RegimenComponent] | Drug components for this phase only |
+| `duration` | Optional[str] | Duration, e.g. "3 days, days -5 to -3" |
 | `timing_relative_to` | Optional[str] | `main_infusion` \| `next_phase` \| `absolute` \| `previous_phase_completion` |
-| `timing_offset_days` | Optional[int] | Зсув у днях; `-5` = "за 5 днів до main_infusion" |
+| `timing_offset_days` | Optional[int] | Offset in days; `-5` = "5 days before main_infusion" |
 | `optional` | bool | bridging — `true`; lymphodepletion — `false` |
-| `sources` | list[str] | Source IDs, що документують цю фазу |
+| `sources` | list[str] | Source IDs documenting this phase |
 
-**Куратор-facing vocabulary для `name`:**
+**Curator-facing vocabulary for `name`:**
 
 ```
 lymphodepletion | bridging | induction | consolidation | maintenance |
@@ -833,48 +844,49 @@ main | premedication | conditioning | salvage_induction |
 alternating_block_a | alternating_block_b | il2_support
 ```
 
-Schema поки не enum'ить це — PR1 лишає `name: str`, бо нові кейси
-з'являтимуться під час PR2 manual migration. Якщо вокабуляр
-стабілізується — закрити enum'ом у наступному PR.
+The schema does not enum this yet — PR1 keeps `name: str` because new
+cases will emerge during the PR2 manual migration. If the vocabulary
+stabilizes — close it with an enum in the next PR.
 
-### 6.5. Back-compat інваріант (auto-wrap)
+### 6.5. Back-compat invariant (auto-wrap)
 
-Усі легасі-YAML без `phases:` після завантаження мають
-`regimen.phases == [RegimenPhase(name="main", purpose_ua="основна терапія",
-components=regimen.components)]`. `regimen.components` лишається
-непорожнім та збігається з `regimen.phases[0].components` для легасі-YAML.
+All legacy YAMLs without `phases:` will, after loading, have
+`regimen.phases == [RegimenPhase(name="main", purpose_ua="main therapy",
+components=regimen.components)]`. `regimen.components` remains non-empty
+and matches `regimen.phases[0].components` for legacy YAMLs.
 
-Логіка живе у Pydantic `@model_validator(mode="after")` на класі
-`Regimen` (`knowledge_base/schemas/regimen.py`). Loader автоматично
-наслідує цю поведінку через `Regimen.model_validate(raw)`.
+The logic lives in a Pydantic `@model_validator(mode="after")` on the
+`Regimen` class (`knowledge_base/schemas/regimen.py`). The loader
+inherits this behavior automatically via `Regimen.model_validate(raw)`.
 
-**Контракти:**
+**Contracts:**
 
-- Якщо `phases:` авторизовано явно — auto-wrap НЕ спрацьовує. `phases`
-  і `components` лишаються незалежними на вході.
-- Якщо `components:` порожній — `phases:` теж порожній. Render-шар
-  має маршрутизувати такі сутності окремо (наприклад, surveillance-only
+- If `phases:` is explicitly authored — auto-wrap does NOT fire. `phases`
+  and `components` remain independent on input.
+- If `components:` is empty — `phases:` is also empty. The render layer
+  must route such entities separately (e.g., a surveillance-only
   "regimen" `REG-DAA-OBSERVATION-HCV-MZL`).
-- `regimen.components` НЕ deprecated. Видаляти його в PR1/PR2 не
-  плануємо.
+- `regimen.components` is NOT deprecated. We do not plan to remove it
+  in PR1/PR2.
 
-Покриття: `tests/test_regimen_phases.py` (10 тестів, у т.ч. catch-all
-по всіх 244 регімен-YAML).
+Coverage: `tests/test_regimen_phases.py` (10 tests, including a catch-all
+over all 244 regimen YAMLs).
 
 ### 6.6. bridging_options
 
-`Regimen.bridging_options: list[str]` — список регімен-ID, прийнятних
-як bridging therapy під час manufacturing window для CAR-T / TIL.
-Default — порожній список. Render-шар (PR2) виносить цей блок окремою
-секцією "Якщо очікування на основну терапію >2 тижнів". Заповнення
-для існуючих CAR-T/TIL регіменів — частина PR2 ручної міграції.
+`Regimen.bridging_options: list[str]` — a list of regimen IDs acceptable
+as bridging therapy during the manufacturing window for CAR-T / TIL.
+Default — empty list. The render layer (PR2) surfaces this block as a
+separate section "If wait for the main therapy exceeds 2 weeks". Filling
+this in for existing CAR-T/TIL regimens is part of the PR2 manual
+migration.
 
 ---
 
 ## 7. Entity: Indication
 
-**Найважливіша сутність.** Пов'язує Disease + clinical profile → Regimen
-з рівнем доказовості.
+**The most important entity.** Connects Disease + clinical profile →
+Regimen with a level of evidence.
 
 ### 7.1. Schema
 
@@ -1225,7 +1237,7 @@ Follows HCV-MZL reference document convention:
 
 ## 11. Entity: SupportiveCare
 
-Profylactic and supportive interventions.
+Prophylactic and supportive interventions.
 
 ### 11.1. Schema
 
@@ -1416,7 +1428,7 @@ reviewers: [reviewer-id-hem-1, reviewer-id-hem-2]
 
 ## 14. Entity: Source
 
-Metadata для будь-якого джерела.
+Metadata for any source.
 
 ### 14.1. Schema
 
@@ -1459,10 +1471,10 @@ evidence_tier: 1
 
 # Licensing & hosting (per SOURCE_INGESTION_SPEC §3)
 hosting_mode: "referenced"          # hosted | referenced | mixed
-hosting_justification: null         # H1..H5 per SOURCE_INGESTION_SPEC §1.4 (null якщо referenced)
+hosting_justification: null         # H1..H5 per SOURCE_INGESTION_SPEC §1.4 (null if referenced)
 ingestion:
   method: "live_api"                # live_api | scheduled_batch | manual | none
-  client: null                      # modulename якщо live_api, null інакше
+  client: null                      # module name if live_api, null otherwise
   endpoint: null
   rate_limit: null
 cache_policy:
@@ -1472,7 +1484,7 @@ cache_policy:
 license:
   name: "NCCN proprietary"
   url: "https://www.nccn.org/permissions"
-  spdx_id: null                     # SPDX якщо застосовно (e.g. "CC-BY-4.0", "CC0-1.0")
+  spdx_id: null                     # SPDX if applicable (e.g. "CC-BY-4.0", "CC0-1.0")
 attribution:
   required: true
   text: "Reproduced with permission from the NCCN Clinical Practice Guidelines..."
@@ -1496,14 +1508,13 @@ notes: >
   Primary reference for all B-cell lymphoma indications. Updated
   quarterly. Check for new versions every 3 months as part of
   knowledge base hygiene (CCS §9.1).
-
 last_verified: "2026-04-15"
 verifier: [reviewer-id]
 ```
 
-**Fields повторюються з SOURCE_INGESTION_SPEC §3.** Два документи
-описують те ж саме; при розбіжності SOURCE_INGESTION_SPEC переможе
-як пізніший і більш детальний спеціалізований документ.
+**Fields overlap with SOURCE_INGESTION_SPEC §3.** The two documents
+describe the same thing; in case of discrepancy, SOURCE_INGESTION_SPEC
+prevails as the later and more detailed specialized document.
 
 ---
 
@@ -1564,54 +1575,54 @@ knowledge_base/
 └── sources/
 ```
 
-**Переваги:**
+**Advantages:**
 - Git history = complete audit trail
 - Standard OSS workflow (PRs, reviews)
-- Клініцисти можуть редагувати у текстовому редакторі
+- Clinicians can edit in a text editor
 - Human-readable, human-reviewable
 - No database infrastructure needed for MVP
 
-**Мінуси:**
-- Referential integrity не enforced автоматично — потрібен валідатор
-- Performance обмежена для великих KBs (тисячі entities)
+**Disadvantages:**
+- Referential integrity is not enforced automatically — a validator is needed
+- Performance is limited for large KBs (thousands of entities)
 
-### 16.2. PostgreSQL з JSON columns
+### 16.2. PostgreSQL with JSON columns
 
-Для версії, коли knowledge base виростає:
+For the version when the knowledge base grows:
 - Core fields — typed columns
 - Flexible content (trees, conditions) — JSONB
-- Referential integrity через foreign keys
-- Повнотекстовий пошук built-in
+- Referential integrity via foreign keys
+- Full-text search built-in
 
 ### 16.3. Graph database (Neo4j, ArangoDB)
 
-Оптимально для складних декілька-hop queries (biomarker → drugs → regimens → ...).
-Overkill для MVP.
+Optimal for complex multi-hop queries (biomarker → drugs → regimens → ...).
+Overkill for MVP.
 
-**Рекомендація:** почати з 16.1, перейти на 16.2 коли тестова нозологія
-доведе life (шкалювання + production reliability).
+**Recommendation:** start with 16.1, migrate to 16.2 when the pilot
+diagnosis proves viability (scaling + production reliability).
 
 ---
 
 ## 17. Validation tooling
 
-Що розробник має побудувати з першого дня:
+What the developer must build from day one:
 
 **Entity validator:**
-- Перевіряє, що всі required fields заповнені
-- Перевіряє, що всі `_id` references валідні (не dangling)
-- Перевіряє, що `version` semantic і увеличивается
-- Перевіряє, що `last_reviewed` не старіше threshold
+- Verifies that all required fields are populated
+- Verifies that all `_id` references are valid (no dangling references)
+- Verifies that `version` is semantic and increases
+- Verifies that `last_reviewed` is not older than the threshold
 
 **Source checker:**
-- Перевіряє, що всі sources існують у `sources/`
-- Перевіряє, що URLs доступні (periodic check)
-- Перевіряє `currency_status` не `superseded` без `superseded_by`
+- Verifies that all sources exist in `sources/`
+- Verifies that URLs are accessible (periodic check)
+- Verifies that `currency_status` is not `superseded` without `superseded_by`
 
 **Clinical review enforcer:**
-- Перевіряє, що кожна Indication має >= 2 reviewers
-- Перевіряє, що reviewers — з approved list
-- Блокує merge без approval від required number
+- Verifies that each Indication has >= 2 reviewers
+- Verifies that reviewers are from the approved list
+- Blocks merge without approval from the required number
 
 **CI/CD pipeline:**
 ```yaml
@@ -1629,36 +1640,36 @@ jobs:
 
 ---
 
-## 18. Governance цього документа
+## 18. Governance of this document
 
-- Зміни в Schema потребують consensus всіх Clinical Co-Leads + Tech Lead
-- 14 днів public comment перед major version
+- Schema changes require consensus from all Clinical Co-Leads + Tech Lead
+- 14-day public comment period before a major version
 - Breaking changes (renaming fields, changing types) — major version bump
-- Changelog в CHANGELOG-SCHEMA.md
+- Changelog in CHANGELOG-SCHEMA.md
 
 ---
 
-## 19. Поточний статус і обмеження
+## 19. Current status and limitations
 
-**v0.1 означає:**
-- Skeleton для першого enrolment — HCV-MZL
-- Потребує refactoring після first real implementation
-- Не валідований на інших нозологіях
+**v0.1 means:**
+- Skeleton for the first enrollment — HCV-MZL
+- Requires refactoring after the first real implementation
+- Not validated against other diagnoses
 
-**Відомі обмеження:**
-- Не моделюються: clinical trial matching (потрібен окремий entity), genetic syndromes (як in germline BRCA), multidisciplinary coordination
-- Fine-grained dose modifications — спрощено
-- Temporal reasoning (що через скільки) — обмежений
-- Interaction з patient preferences — ще не моделюється
+**Known limitations:**
+- Not modeled: clinical trial matching (requires a separate entity), genetic syndromes (such as germline BRCA), multidisciplinary coordination
+- Fine-grained dose modifications — simplified
+- Temporal reasoning (what happens when) — limited
+- Interaction with patient preferences — not yet modeled
 
-**Що треба зробити після v0.1:**
-- Реалізувати HCV-MZL в повному обсязі за цією schema
-- Порівняти згенерований output з reference document
-- Iterate на основі gaps
+**What needs to be done after v0.1:**
+- Implement HCV-MZL in full according to this schema
+- Compare generated output against the reference document
+- Iterate based on gaps
 
 ---
 
-**Pull requests на Schema — welcomed, але через governance CHARTER §6.**
+**Pull requests on the Schema are welcomed, but must go through CHARTER §6 governance.**
 
 
 ---

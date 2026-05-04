@@ -15,6 +15,58 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Peripheral neuropathy", modification: "Reduce paclitaxel"}, {condition: "Immune AE", modification: "Hold pembro"}]
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Pembro reimbursement variable"}
 sources: [SRC-NCCN-UTERINE-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembro + carbo+pacli for endometrial 1L (NRG-GY018). Combines
+# checkpoint irAEs with chemo nadir + paclitaxel hypersensitivity +
+# neuropathy. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Паклітаксел спричиняє нейропатію — занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Випадання волосся, втома"
+    action_ua: "Очікувано — волосся повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Біль у м'язах і суглобах через 2-3 дні після паклітакселу"
+    action_ua: "Зазвичай минає за тиждень; парацетамол допомагає"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 2-7"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія від карбо"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-UTERINE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — пембролізумаб може спричиняти імунний коліт; рання оцінка важлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражена слабкість, постійна спрага, втрата ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — можлива імунна реакція щитоподібної залози або новий діабет"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-UTERINE-2025
+  - trigger_ua: "Сильна реакція на інфузію паклітакселу: задишка, висип, набряк обличчя"
+    action_ua: "Інфузія в клініці — повідомте медсестру негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycles 1-2"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥7 разів на день, з кров'ю)"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний коліт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-UTERINE-2025
+
 last_reviewed:
 notes: "NRG-GY018: PFS HR 0.64 pMMR, 0.30 dMMR."
 notes_ua: 'NRG-GY018: PFS HR 0.64 pMMR, 0.30 dMMR.'

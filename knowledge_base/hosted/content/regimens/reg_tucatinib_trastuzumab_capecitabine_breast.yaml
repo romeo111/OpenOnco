@@ -43,6 +43,51 @@ ukraine_availability:
   notes: "Tucatinib not registered in Ukraine (named-patient import / EAP only); trastuzumab reimbursed via NSZU онкопакет; capecitabine reimbursed via Доступні Ліки. Tucatinib is the major access barrier."
 
 sources: [SRC-HER2CLIMB-MURTHY-2019, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Tucatinib + trastuzumab + capecitabine for HER2+ metastatic breast
+# 3L (HER2CLIMB) — penetrates CNS for brain metastases. Toxicity:
+# diarrhea (capecitabine + tucatinib), HFS, hepatic, cardiac.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, біль на долонях і стопах"
+    action_ua: "Hand-foot синдром від капецитабіну — крем, м'яке взуття"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна діарея (1-3 рази на день)"
+    action_ua: "Контролюється лоперамідом — занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна нудота, легка втрата ваги"
+    action_ua: "Зустрічається — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея (≥6 разів на день, з кров'ю)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози; ризик зневоднення"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — туцатиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Нова задишка, прискорене серцебиття, набряки гомілок"
+    action_ua: "Подзвоніть у клініку того ж дня — трастузумаб впливає на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Сильний головний біль, новий судомний напад"
+    action_ua: "Звертайтесь у лікарню негайно — потрібна оцінка прогресування мозкових метастазів"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   HER2CLIMB: brain-mets cohort CNS-PFS 9.9 vs 4.2 mo (HR 0.32);

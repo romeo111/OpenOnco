@@ -1,0 +1,103 @@
+id: RF-DLBCL-CD20-POS-EPCORITAMAB-CANDIDATE
+definition: >
+  Relapsed/refractory DLBCL with confirmed CD20 expression on
+  malignant B-cells, post ≥2 prior systemic therapies including
+  one anti-CD20 antibody-containing regimen (R-CHOP), CAR-T-ineligible
+  or post-CAR-T failure — candidate for epcoritamab (CD20xCD3
+  bispecific T-cell engager; subcutaneous step-up administration).
+  Pivotal data EPCORE NHL-1 phase 1/2 (Thieblemont 2023 J Clin Oncol):
+  ORR 63%, CR 39%, mPFS 4.4 mo, mDOR 12 mo in 3L+ R/R DLBCL.
+  Off-the-shelf alternative to CAR-T for non-eligible / bridging /
+  post-failure setting. Distinct from glofitamab (different schedule:
+  fixed 12 cycles vs continuous; IV vs SC). CD20-loss escape
+  post-prior-anti-CD20 is a documented mechanism — re-biopsy
+  advisable for late-relapse cohorts.
+definition_ua: >
+  Рецидивна/рефрактерна DLBCL з підтвердженою експресією CD20 на
+  злоякісних B-клітинах, після ≥2 попередніх системних терапій,
+  включно з одним анти-CD20-антитіло-вмісним режимом (R-CHOP),
+  CAR-T-ineligible або post-CAR-T невдача — кандидат для
+  епкоритамабу (CD20xCD3 біспецифічного T-cell engager;
+  підшкірна step-up схема). Базові дані EPCORE NHL-1 фаза 1/2
+  (Thieblemont 2023 J Clin Oncol): ORR 63%, ПР 39%, мПФВ 4.4 міс,
+  мТВ 12 міс при 3L+ R/R DLBCL. Off-the-shelf альтернатива
+  CAR-T для non-eligible / bridging / post-failure setting.
+  Відрізняти від глофітамабу (інша схема: фіксовані 12 циклів
+  vs continuous; в/в vs п/ш). Втрата CD20 як escape після
+  попередньої анти-CD20-терапії — задокументований механізм;
+  ре-біопсія рекомендована для late-relapse когорт.
+
+trigger:
+  type: composite_score
+  all_of:
+    - any_of:
+        - finding: "cd20_status"
+          value: "positive"
+        - finding: "cd20_ihc"
+          value: "positive"
+        - finding: "cd20_expression"
+          value: "preserved"
+    - any_of:
+        - finding: "prior_lines_count"
+          threshold: 2
+          comparator: ">="
+        - finding: "post_cart_failure"
+          value: true
+        - finding: "primary_refractory"
+          value: true
+    - any_of:
+        - finding: "cart_ineligible"
+          value: true
+        - finding: "cart_ineligibility_reason"
+        - red_flag: RF-DLBCL-CART-INELIGIBLE-POST-2L
+        - red_flag: RF-CAR-T-INELIGIBLE-AGE-COMORBID
+        - red_flag: RF-CAR-T-INELIGIBLE-ORGAN
+        - finding: "post_cart_relapse"
+          value: true
+
+clinical_direction: intensify
+
+severity: major
+priority: 55
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-DLBCL-NOS
+shifts_algorithm:
+  - ALGO-DLBCL-2L
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-DLBCL-2024
+
+last_reviewed: "2026-04-29"
+draft: false
+
+notes: >
+  Pivotal trial Source SRC-EPCORE-NHL-1-THIEBLEMONT-2023 not yet
+  ingested — flagged in commit body for follow-up source-stub chunk;
+  efficacy figures cited inline reflect Thieblemont et al. J Clin Oncol
+  2023 41(12):2238-2247 (DOI 10.1200/JCO.22.01725). Step-up schedule:
+  cycle 1 days 1/8/15 priming (0.16 mg → 0.8 mg → 48 mg) to mitigate
+  CRS; full dose 48 mg SC weekly cycles 1-3, biweekly cycles 4-9,
+  q4w cycle 10+. CRS ~50% any grade / 2.5% G3+ (mostly cycle 1);
+  ICANS ~6% / <1% G3+. Infection G3+ ~15%; tocilizumab + dexamethasone
+  for CRS. Sequencing post-CAR-T: epcoritamab retains activity
+  (cohort 1B EPCORE NHL-1 ~54% ORR post-CAR-T). NOT to be used in
+  CD20-negative escape variants — re-biopsy if late-relapse.
+  STUB — requires clinical co-lead signoff.
+notes_ua: >
+  Базове джерело SRC-EPCORE-NHL-1-THIEBLEMONT-2023 ще не внесене —
+  позначено в commit body для подальшого source-stub чанку;
+  цифри ефективності inline відображають Thieblemont et al. J Clin
+  Oncol 2023 41(12):2238-2247 (DOI 10.1200/JCO.22.01725). Step-up:
+  цикл 1 дні 1/8/15 priming (0.16 мг → 0.8 мг → 48 мг) для
+  мінімізації CRS; повна доза 48 мг п/ш щотижня цикли 1-3, кожні
+  2 тижні цикли 4-9, кожні 4 тижні цикл 10+. CRS ~50% будь-якого
+  ступеня / 2.5% G3+ (переважно цикл 1); ICANS ~6% / <1% G3+.
+  Інфекції G3+ ~15%; тоцилізумаб + дексаметазон при CRS.
+  Послідовність після CAR-T: епкоритамаб зберігає активність
+  (cohort 1B EPCORE NHL-1 ~54% ORR після CAR-T). НЕ застосовувати
+  при CD20-негативних escape-варіантах — ре-біопсія при пізньому
+  рецидиві.
+  STUB — потребує схвалення клінічного співкерівника.

@@ -54,6 +54,43 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Attenuated carbo-pem for elderly NSCLC ≥75y. Same toxicities as
+# standard dose but lower-grade; ototoxicity + cytopenia + fatigue
+# dominate. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Висип, помірна сухість шкіри"
+    action_ua: "Зволожувач; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Шум у вухах, зниження слуху"
+    action_ua: "Подзвоніть у клініку того ж дня — карбоплатин впливає на слух"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Поколювання у пальцях, що погіршується"
+    action_ua: "Занотовуйте — обговоримо корекцію дози"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Виражена слабкість, неможливість підвестися"
+    action_ua: "Подзвоніть у клініку того ж дня — ризик падінь у похилому віці"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

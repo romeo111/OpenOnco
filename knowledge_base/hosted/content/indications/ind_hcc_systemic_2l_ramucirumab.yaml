@@ -1,0 +1,121 @@
+id: IND-HCC-SYSTEMIC-2L-RAMUCIRUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced/unresectable HCC (BCLC C, or BCLC B not amenable to locoregional therapy)"
+    - "Disease progression on sorafenib 1L"
+    - "Child-Pugh A liver function"
+    - "AFP ≥ 400 ng/mL at time of 2L initiation (required biomarker)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-AFP
+      required: true
+      value_constraint: "AFP ≥ 400 ng/mL (serum AFP; FDA label requirement for ramucirumab in HCC)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-RAMUCIRUMAB-HCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~5% ORR (RECIST 1.1, REACH-2)"
+  complete_response: "~1%"
+  progression_free_survival: "Median PFS 2.8 mo vs 1.6 mo (HR 0.45, REACH-2)"
+  overall_survival_5y: "Median OS 8.5 mo vs 7.3 mo (HR 0.71, 95% CI 0.53–0.95, p=0.0199, REACH-2)"
+
+hard_contraindications:
+  - "AFP < 400 ng/mL (no OS benefit in unselected population per REACH-1; ramucirumab is ONLY indicated for AFP ≥400)"
+  - "Active uncontrolled hemorrhage (anti-VEGFR2 increases bleeding risk)"
+  - "Recent (< 6 months) arterial thromboembolism"
+  - "Child-Pugh B or C"
+  - "Uncontrolled hypertension (>150/100 despite treatment)"
+
+red_flags_triggering_alternative:
+  - RF-HCC-CHILD-PUGH-B-C
+  - RF-HCC-VARICEAL-BLEED
+  - RF-HCC-FRAILTY-AGE
+
+required_tests:
+  - TEST-AFP
+  - TEST-LFT
+  - TEST-BILIRUBIN-TOTAL
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CT-CAP
+  - TEST-URINE-PROTEIN
+
+desired_tests: []
+
+rationale: >
+  Ramucirumab (8 mg/kg IV q2w) is FDA-approved (May 2019) and NCCN Category 1
+  for HCC after sorafenib in patients with AFP ≥400 ng/mL, based on REACH-2
+  (Zhu, Lancet Oncol 2019, n=292, phase 3 RCT). mOS 8.5 vs 7.3 mo (HR 0.71,
+  p=0.0199); mPFS 2.8 vs 1.6 mo (HR 0.45). Ramucirumab is an anti-VEGFR2
+  monoclonal antibody — it blocks VEGF-A/B/C/D binding to VEGFR2, inhibiting
+  angiogenesis. The AFP ≥400 ng/mL biomarker selection is based on the failed
+  REACH-1 trial (HR 0.87 in unselected patients; no OS benefit) vs REACH-2
+  (AFP≥400 prospective selection; HR 0.71 significant benefit). High AFP
+  correlates with VEGFR2 pathway activation and aggressive angiogenic phenotype.
+  Distinct advantage: well-tolerated (primarily hypertension); no oral pill burden;
+  no significant overlap with sorafenib toxicity profile (no HFSR); suitable for
+  frail patients who cannot tolerate oral TKIs.
+
+rationale_ua: >
+  Рамуцирумаб (8 мг/кг IV кожні 2 тижні) є FDA-схваленим (травень 2019) та NCCN
+  Категорія 1 для ГЦК після сорафенібу у пацієнтів з АФП ≥400 нг/мл, на підставі
+  REACH-2 (Zhu, Lancet Oncol 2019, n=292). mOS 8.5 проти 7.3 міс. (HR 0.71,
+  p=0.0199). Відмінна перевага: добра переносимість (переважно гіпертензія);
+  відсутність перорального прийому таблеток; відсутність HFSR; підходить для
+  пацієнтів, які не переносять пероральні TKI. Біомаркерна відбірна умова АФП ≥400
+  є обов'язковою — у REACH-1 (unselected популяція) рамуцирумаб НЕ показав ЗВ-переваги.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-REACH2-ZHU-2019
+    position: supports
+    relevant_quote_paraphrase: "Ramucirumab vs placebo post-sorafenib AFP≥400 HCC: mOS 8.5 vs 7.3 mo (HR 0.71, p=0.0199); FDA approved May 2019 — first biomarker-selected 2L HCC approval"
+  - source_id: SRC-NCCN-HCC-2025
+    position: supports
+    relevant_quote_paraphrase: "Ramucirumab is NCCN Category 1 for HCC after sorafenib with AFP ≥400 ng/mL; do not use in AFP <400 population"
+
+do_not_do:
+  - "НІКОЛИ не призначати при АФП <400 нг/мл — FDA-схвалення біомаркерно-вибіркове; REACH-1 (unselected) НЕ показав ЗВ-переваги (HR 0.87, p=0.14)"
+  - "Не призначати при активній кровотечі або нелікованому варикозному розширенні вен — анти-VEGFR2 підвищує ризик кровотечі"
+  - "Не ігнорувати протеїнурію — UPCR моніторинг кожні 4 тижні; призупинити при UPCR ≥2 г/добу"
+  - "Не призначати при Child-Pugh B/C — REACH-2 включав тільки Child-Pugh A"
+  - "Контроль АТ перед кожним введенням — цільовий <150/100; гіпертензія у ~13% Grade 3-4"
+  - "Не призначати в Україні без підтвердження доступності — рамуцирумаб не зареєстрований в Україні"
+
+known_controversies:
+  - topic: "Optimal 2L sequencing: regorafenib vs cabozantinib vs ramucirumab in AFP≥400 HCC"
+    positions:
+      - position: "For AFP ≥400: ramucirumab is IV, well-tolerated, biomarker-selected; suitable when TKI toxicity (HFSR, fatigue) concerns dominate"
+        sources:
+          - SRC-REACH2-ZHU-2019
+      - position: "Regorafenib has largest OS benefit (HR 0.63 vs HR 0.71 for ramu); regorafenib preferred when sorafenib was tolerated regardless of AFP"
+        sources:
+          - SRC-RESORCE-BRUIX-2017
+    our_default: "AFP≥400 + sorafenib-intolerant (no HFSR tolerance): ramucirumab; AFP≥400 + sorafenib-tolerant: regorafenib preferred (HR 0.63 > 0.71)"
+    rationale: "Tolerated sorafenib→regorafenib gives the best OS HR; ramucirumab fills a gap for sorafenib-intolerant with AFP≥400"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  REACH-2 (PMID 30922890) established AFP≥400 as the first validated biomarker
+  for HCC 2L selection. AFP is routinely measured in HCC — no additional testing
+  burden. Note: BIO-AFP entity may not exist in KB — verify before deploying;
+  use AFP as a free-text condition in the algorithm if BIO-AFP is absent.

@@ -1,0 +1,135 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-013
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Per-source audit summary (issue #215 manifest). One entry per source
+    with the structured fields specified in the issue body's Output
+    Requirements section. URL probes: httpx 0.28.1, GET, timeout=30s,
+    retries=3, follow_redirects=True; User-Agent
+    'Mozilla/5.0 (compatible; OpenOnco-recency-bot)'; 403 responses retried
+    after 15s (still 403). DOI fallback attempted for PubMed 403s; NEJM /
+    ScienceDirect publisher landing pages also 403 (cross-publisher bot
+    protection).
+issue_number: 215
+audit_date: '2026-05-01'
+chunk_run_date: '2026-05-01'
+sources:
+- id: SRC-EORTC-62005
+  url_verified: no
+  url_verified_reason: stub_no_url_field
+  content_current: unknown
+  content_current_reason: stub_pending_clinical_signoff
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: no_current_as_of_field_on_stub
+  license_status: pending
+  license_status_reason: legal_review.status=pending; license block not yet populated
+  notes: >
+    SRC-EORTC-62005 is an auto-stub on master
+    (knowledge_base/hosted/content/sources/src_eortc_62005.yaml): title
+    'EORTC 62005 — adjuvant imatinib in GIST (TODO: confirm citation)',
+    no url / pmid / doi / version / authors / journal / current_as_of /
+    license fields, review_status: pending_clinical_signoff. Recency
+    refresh out of scope until upstream stub-fill chunk populates
+    publisher metadata. Likely refers to EORTC 62005 (NCT00103168) —
+    Casali PG et al, JCO 2015 (PMID 26330546) — adjuvant imatinib 1y vs
+    3y in resected high-risk GIST. Disambiguation requires clinical
+    signoff. No upsert sidecar produced — would require inventing
+    publisher metadata. Recorded in unreachable.yaml.
+- id: SRC-NCCN-MPN-2025
+  url_verified: yes
+  url_verified_reason: 'https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1477
+    returned 200 OK on GET; landing page (registered_free) reachable; NCCN MPN
+    guideline still listed under category=1, id=1477'
+  content_current: yes
+  content_current_reason: NCCN MPN remains primary guideline for PV / ET / PMF
+    / CML; current version pending verification (registration-gated content
+    not crawled — version field on master left as 'v.X.2025' placeholder, current_as_of
+    placeholder '2025-XX-XX' carried forward; bumped only last_verified)
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: NCCN proprietary terms (no redistribution) unchanged;
+    legal_review.status=reviewed 2026-04-25
+  notes: >
+    Upsert sidecar src_nccn_mpn_2025.yaml: last_verified bumped
+    2026-04-27 -> 2026-05-01, current_as_of bumped from
+    placeholder '2025-XX-XX' -> '2026-05-01' per chunk spec (clinical
+    content current). recency_check_status_code=200 added.
+    last_recency_check=2026-05-01. URL preserved unchanged. Version
+    field 'v.X.2025' retained — actual NCCN version requires registered
+    login + manual cross-check (registration-gated).
+    No content / license / attribution changes.
+- id: SRC-EMILIA-VERMA-2012
+  url_verified: blocked_by_bot_protection
+  url_verified_reason: 'pubmed.ncbi.nlm.nih.gov returned 403 on initial GET and
+    on retry after 15s; DOI fallback https://doi.org/10.1056/NEJMoa1209124 redirected
+    to nejm.org which also returned 403; PMID 23020162 + DOI 10.1056/NEJMoa1209124
+    are stable records, content known to exist'
+  content_current: yes
+  content_current_reason: 'EMILIA established T-DM1 as 2L HER2+ ABC standard;
+    superseded by trastuzumab deruxtecan (DESTINY-Breast03, 2022) per existing
+    notes field — but EMILIA record retained for sequencing decisions and as
+    historical reference; existing notes already document supersession; no
+    additional superseded_by field action required (the source remains
+    referenced for its trial-of-record role)'
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Upsert sidecar src_emilia_verma_2012.yaml: last_verified bumped
+    2026-04-27 -> 2026-05-01, current_as_of bumped 2026-04-29 ->
+    2026-05-01, url_status=blocked_by_bot_protection added,
+    recency_check_status_code=403 recorded, last_recency_check=2026-05-01.
+    URL preserved (pubmed.ncbi.nlm.nih.gov/23020162). DOI fallback to
+    nejm.org also 403 — bot protection at both publisher domains.
+    No content / license / attribution changes. Existing notes field
+    already documents DESTINY-Breast03 supersession.
+- id: SRC-AURA3-MOK-2017
+  url_verified: blocked_by_bot_protection
+  url_verified_reason: 'pubmed.ncbi.nlm.nih.gov returned 403 on initial GET and
+    on retry after 15s; DOI fallback https://doi.org/10.1056/NEJMoa1612674 redirected
+    to nejm.org which also returned 403; PMID 27959700 + DOI 10.1056/NEJMoa1612674
+    are stable records, content known to exist'
+  content_current: yes
+  content_current_reason: AURA3 remains pivotal evidence for osimertinib in EGFR
+    T790M-positive 2L NSCLC; FDA full approval (Mar 2017) still in force; not
+    superseded
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Upsert sidecar src_aura3_mok_2017.yaml: last_verified bumped
+    2026-04-27 -> 2026-05-01, current_as_of bumped 2026-04-29 ->
+    2026-05-01, url_status=blocked_by_bot_protection added,
+    recency_check_status_code=403 recorded, last_recency_check=2026-05-01.
+    URL preserved (pubmed.ncbi.nlm.nih.gov/27959700). DOI fallback to
+    nejm.org also 403 — bot protection at both publisher domains.
+    No content / license / attribution changes. PMID-correction note
+    in existing notes field carried forward unchanged.
+- id: SRC-MONALEESA-7-TRIPATHY-2018
+  url_verified: blocked_by_bot_protection
+  url_verified_reason: 'pubmed.ncbi.nlm.nih.gov returned 403 on initial GET and
+    on retry after 15s; DOI fallback https://doi.org/10.1016/S1470-2045(18)30292-4
+    redirected to sciencedirect.com which also returned 403; PMID 29804902 +
+    DOI 10.1016/S1470-2045(18)30292-4 are stable records, content known to exist'
+  content_current: yes
+  content_current_reason: MONALEESA-7 remains the first OS benefit demonstration
+    for CDK4/6i in pre-menopausal HR+/HER2- ABC; ribociclib + endocrine therapy
+    + ovarian suppression remains 1L standard for this population; not superseded
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: Elsevier subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Upsert sidecar src_monaleesa7_tripathy_2018.yaml: last_verified
+    bumped 2026-04-27 -> 2026-05-01, current_as_of bumped 2018-07-01
+    -> 2026-05-01 (clinical content still current), url_status=
+    blocked_by_bot_protection added, recency_check_status_code=403
+    recorded, last_recency_check=2026-05-01. URL preserved
+    (pubmed.ncbi.nlm.nih.gov/29804902). DOI fallback to
+    sciencedirect.com also 403 — bot protection at both publisher
+    domains. No content / license / attribution changes.

@@ -1,0 +1,59 @@
+id: REG-NIVOLUMAB-MONO
+disease_context: multiple
+plan_track: standard
+
+regimen_type: "immunotherapy_mono"
+
+agents:
+  - drug_id: DRG-NIVOLUMAB
+    dose: "240 mg IV over 30 min (flat dose q2w) OR 480 mg IV over 60 min q4w (flat dose)"
+    route: IV
+    schedule: "q2w (240 mg) or q4w (480 mg flat dose — FDA-approved equivalent)"
+    dose_modifications:
+      - trigger: "Grade ≥3 immune-related AE (excluding endocrine)"
+        action: "Permanently discontinue; high-dose corticosteroids (prednisone 1-2 mg/kg/day)"
+      - trigger: "Grade 2 irAE requiring intervention"
+        action: "Hold nivolumab; prednisone 0.5-1 mg/kg/day; resume on resolution ≤Grade 1"
+      - trigger: "Any Grade 4 non-endocrine irAE"
+        action: "Permanently discontinue"
+      - trigger: "Endocrine irAE (hypothyroidism, hypophysitis, adrenal insufficiency)"
+        action: "Hormone replacement; do NOT discontinue unless Grade 3/4 non-controlled"
+
+historical_dose_note: >
+  CheckMate-141 (HNSCC) used nivolumab 3 mg/kg IV q2w (weight-based).
+  Flat dosing (240 mg q2w or 480 mg q4w) was approved by FDA in 2018 based on
+  population pharmacokinetic modeling — equivalent exposure, simpler administration.
+  Flat dose is now standard clinical practice.
+
+when_to_use: >
+  Nivolumab monotherapy across multiple tumor types where anti-PD-1 monotherapy
+  is indicated. Anti-PD-1 mechanism: blocks PD-1 receptor, prevents T-cell exhaustion.
+  Most commonly used in HNSCC 2L (CheckMate-141), gastric/GEJ 2L+ (CheckMate-649),
+  and other settings. No dose reduction — modifications are hold or discontinue.
+
+premedication:
+  - "No routine premedication required for nivolumab IV"
+  - "TSH + cortisol baseline"
+
+monitoring:
+  - "TSH + free T4: baseline + q3 cycles (thyroiditis)"
+  - "LFT: baseline + q3 cycles (immune hepatitis)"
+  - "Creatinine: baseline + q3 cycles (immune nephritis)"
+  - "CBC: baseline; as clinically indicated"
+  - "Cortisol: baseline"
+  - "Imaging: per disease-specific protocol (typically q9-12 weeks)"
+
+total_planned_cycles: "Until progression or unacceptable toxicity; up to 2 years (some histology-specific limits)"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Ендокринні іrAE — НЕ відміняти нівалумаб; гормональна замісна терапія (левотироксин, гідрокортизон)"
+  - "КРИТИЧНО: Grade ≥3 неендокринний іrAE — ГКС (преднізон 1-2 мг/кг/добу) + відміна нівалумабу"
+  - "УВАГА: Пневмоніт — частіший при нівалумабі ніж при доцетакселі; нові респіраторні симптоми = КТ грудної клітки"
+  - "УВАГА: Моніторинг ТТГ/Т4 кожні 3 цикли"
+  - "УВАГА: Плоска доза (240 мг q2w або 480 мг q4w) замінила вагову (3 мг/кг) — еквівалентна фармакокінетика"
+  - "УВАГА: Стероїд-рефрактерний коліт — інфліксимаб 5 мг/кг"
+  - "УВАГА: Активне аутоімунне захворювання — відносне протипоказання; оцінка ризику/користі"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,0 +1,27 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-021
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 BMA-CIViC backfill (formal-issue #202). Pattern mirrors
+    closed #43 (chunk bma-civic-backfill-2026-04-29-001) and the wave-2 series
+    #182-#199. Local CIViC snapshot 2026-04-25. Variant-aware filter applied
+    (e.g. NTRK NSCLC matches only items with explicit "Fusion" variant token,
+    NOT acquired-resistance kinase-domain mutations). Synonym expansion checked:
+    NTRK1/2/3 across NSCLC and pan-tumor "Cancer" DOID:162; CHEK2 across breast
+    disease tokens; MSH2 across gastric tokens; MGMT promoter-methylation
+    variant-aware filter for GBM. Off-disease items NOT included (no
+    cross-disease borrowing per chunk-spec invention prohibition).'
+  tasktorrent_version: 2026-04-29
+  notes_for_reviewer: 'Per-BMA outcomes in audit-report.yaml. Single upsert in
+    this chunk: BMA-NTRK-FUSION-NSCLC adds 2 EIDs (EID11515, EID11516) under a
+    single SRC-CIVIC level=C evidence_sources block; actionability_review_required
+    preserved as true. BMA-MGMT-METHYLATION-GBM is already_populated — strict
+    variant-aware filter yields 5-EID subset of the existing 8-EID hosted block;
+    no upsert proposed (would silently drop hosted EIDs 822/2899/2903 which
+    encode different MGMT variants — RS16906252 SNP and Underexpression). Two
+    no-match audit rows for CHEK2-breast and MSH2-gastric (no disease-token
+    overlap in CIViC snapshot 2026-04-25). Maintainer adjudicates direction /
+    significance / level interpretation and somatic-vs-germline scope for MSH2.'

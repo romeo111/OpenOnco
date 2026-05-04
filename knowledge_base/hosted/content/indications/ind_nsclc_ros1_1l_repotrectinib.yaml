@@ -1,0 +1,102 @@
+id: IND-NSCLC-ROS1-1L-REPOTRECTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  molecular_subtype: ROS1_REARRANGED
+  stage_stratum: STAGE_IV_METASTATIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic ROS1-rearranged NSCLC, TKI-naïve"
+    - "Preferred for patients with CNS-dominant disease or planning durable single-agent targeted control"
+    - "Alternative to crizotinib / entrectinib 1L (sequencing approach)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ROS1-FUSION
+      value_constraint: "ROS1 rearrangement confirmed (RNA-NGS preferred — captures partner; FISH/IHC acceptable for rapid diagnosis with NGS confirmation)"
+      required: true
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-REPOTRECTINIB-NSCLC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~79% TKI-naïve (TRIDENT-1 phase I/II registration)"
+  duration_of_response: "mDOR 34.1 mo TKI-naïve"
+  progression_free_survival: "mPFS not reached at 24-mo follow-up TKI-naïve cohort"
+  intracranial_orr: "~89% TKI-naïve with measurable brain metastases"
+
+hard_contraindications: []
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-NSCLC-NGS-PANEL
+  - TEST-BRAIN-MRI-CONTRAST
+desired_tests: []
+
+rationale: >
+  Repotrectinib (next-generation macrocyclic ROS1 / NTRK / ALK TKI with
+  solvent-front activity) for 1L TKI-naïve ROS1-rearranged metastatic
+  NSCLC. TRIDENT-1 phase I/II TKI-naïve cohort (n=71): ORR 79%, mDOR
+  34.1 mo, mPFS not reached at 24-mo follow-up, intracranial ORR 89% —
+  best-in-class CNS activity and durability among ROS1 TKIs. FDA
+  approval 2023-11 for ROS1+ NSCLC any line. Aggressive-track 1L for
+  fit patients with funding access; sequencing approach (crizotinib /
+  entrectinib 1L → repotrectinib 2L for solvent-front G2032R) remains
+  valid for cost/access constraints. CNS-AE profile: vestibular
+  dizziness ~60% baseline (attenuates over 4-8 weeks); lead-in dosing
+  (160 mg daily x14 days, then 160 mg BID) is essential. Long-term
+  skeletal-fracture surveillance class signal. Patient counseling re
+  vestibular AE adaptation is critical to avoid premature
+  discontinuation.
+
+sources:
+  - source_id: SRC-TRIDENT1-DRILON-2024
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib in ROS1+ NSCLC TRIDENT-1 TKI-naïve cohort: ORR 79%, mDOR 34.1 mo, mPFS not reached, intracranial ORR 89% — best-in-class durability and CNS activity"
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib is preferred 1L option for TKI-naïve ROS1+ metastatic NSCLC; Cat 1; especially for CNS-dominant disease"
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: "Repotrectinib is the preferred next-generation 1L option for ROS1+ NSCLC based on TRIDENT-1 mDOR 34.1 mo and intracranial ORR 89%; entrectinib remains acceptable alternative"
+
+known_controversies:
+  - topic: "Repotrectinib 1L vs crizotinib/entrectinib 1L → repotrectinib 2L for ROS1+ NSCLC"
+    positions:
+      - position: "Repotrectinib 1L: best mDOR (34.1 mo), best CNS activity (89% IC-ORR), G2032R-active; aggressive default for fit patients with access"
+        sources: [SRC-TRIDENT1-DRILON-2024]
+      - position: "Sequencing 1L crizotinib/entrectinib → 2L repotrectinib: preserves later-line options; resistance characterization informs precise sequencing"
+        sources: [SRC-NCCN-NSCLC-2025]
+    our_default: "Repotrectinib 1L for fit patients with funding (best mDOR + CNS profile); sequencing approach acceptable for cost/access reasons"
+    rationale: "Both supported; access and CNS burden drive choice"
+
+do_not_do:
+  - "НЕ пропускати lead-in dosing (14 days at 160 mg daily before BID) — пряме BID різко погіршує CNS-AE."
+  - "НЕ ігнорувати vestibular AE counseling — пацієнти повинні розуміти, що dizziness ~60% але зазвичай адаптується через 4-8 тижнів."
+  - "НЕ комбінувати з strong CYP3A4 inhibitors або inducers без dose modification."
+  - "НЕ ігнорувати long-term skeletal fracture monitoring — bone density q-yearly."
+  - "НЕ припиняти за reversible Grade 1-2 dizziness — зазвичай адаптується; reduction до 120 mg BID при Grade 3."
+  - "НЕ підтверджувати план без funding pathway — repotrectinib не зареєстрований в Україні."
+  - "НЕ використовувати при baseline severe vestibular dysfunction — additive CNS toxicity."
+
+time_critical: false
+last_reviewed: "2026-04-29"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 1L for
+  TKI-naïve ROS1+ metastatic NSCLC (CROWN-style first-mover preferred
+  for CNS-dominant disease and patients planning durable targeted
+  control). Companion to existing IND-NSCLC-2L-ROS1-REPOTRECTINIB
+  (post-TKI). TRIDENT-1 source already in KB (SRC-TRIDENT1-DRILON-2024).

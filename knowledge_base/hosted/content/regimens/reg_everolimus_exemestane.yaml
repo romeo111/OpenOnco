@@ -58,6 +58,51 @@ sources:
   - SRC-ESMO-BREAST-METASTATIC-2024
   - SRC-BOLERO2-BASELGA-2012
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Everolimus + exemestane for HR+/HER2- breast 2L+ (BOLERO-2).
+# mTOR inhibition: stomatitis (signature, common), pneumonitis (rare
+# but serious), hyperglycemia, infection, hyperlipidemia.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виразки в порожнині рота (стоматит) — болючі, заважають їсти"
+    action_ua: "Дуже поширене на еверолімусі — використовуйте призначений рот-полоск (стероїдний); м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-BOLERO2-BASELGA-2012
+  - trigger_ua: "Гарячі припливи, помірна втома"
+    action_ua: "Очікувано — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірне зниження апетиту, нудота"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжкий стоматит, неможливість їсти"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Часте сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — еверолімус може спричиняти гіперглікемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка з кашлем, або неінфекційні інфекції"
+    action_ua: "Подзвоніть у клініку того ж дня — еверолімус підвищує ризик інфекцій"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — еверолімус може спричиняти неінфекційний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-BOLERO2-BASELGA-2012
+
 last_reviewed: "2026-04-27"
 reviewers: []
 notes: >

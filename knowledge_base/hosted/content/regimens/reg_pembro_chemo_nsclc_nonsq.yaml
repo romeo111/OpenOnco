@@ -39,6 +39,56 @@ ukraine_availability:
   notes: "Pembrolizumab reimbursement variable; chemo backbone reimbursed. Out-of-pocket for combination."
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembro + carbo + pemetrexed for non-squamous NSCLC 1L (KEYNOTE-189).
+# Combines IO irAEs with carbo cytopenia + pemetrexed mucositis +
+# rare pneumonitis (additive). STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після кожного циклу"
+    action_ua: "Очікувано — відпочивайте більше у дні 1-3"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-3"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Зниження апетиту, легкий мукозит порожнини рота"
+    action_ua: "Поширене на пеметрексед — чистіть зуби м'якою щіткою; полоскання водою з содою; B12 + фолат за призначенням"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Шкірний свербіж або сухість шкіри"
+    action_ua: "Зустрічається на тлі пембролізумабу — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Лихоманка вище 38°C — особливо на 7-14 день циклу"
+    action_ua: "Подзвоніть у клініку того ж дня — карбоплатин дає нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт або прогресування потребують термінової оцінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті живота"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильна задишка у спокої, синюшність губ"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий імунний пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed:
 notes: >
   KEYNOTE-189: superior OS in non-sq NSCLC 1L driver-negative

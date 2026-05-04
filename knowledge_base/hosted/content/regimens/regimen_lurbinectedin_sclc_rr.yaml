@@ -1,0 +1,81 @@
+id: REG-LURBINECTEDIN-SCLC-RR
+name: "Lurbinectedin monotherapy (SCLC, relapsed/refractory, ≥2L)"
+name_ua: "Лурбінектедин моно (МКЛЛ, рецидив/рефрактерний, ≥2 лінія)"
+alternate_names:
+  - "Zepzelca SCLC"
+  - "PM01183 SCLC"
+  - "Basket trial / ATLANTIS regimen"
+
+components:
+  - drug_id: DRUG-LURBINECTEDIN
+    dose: "3.2 mg/m² IV over 60 minutes day 1 of every 21-day cycle"
+    schedule: "Day 1 q3 weeks; continue until progression or unacceptable toxicity"
+    route: IV
+
+cycle_length_days: 21
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication:
+  - "Dexamethasone 8 mg IV + 5-HT3 antagonist (ondansetron 8 mg IV) 30 min before infusion — emetic prophylaxis"
+  - "G-CSF primary prophylaxis recommended in patients with prior heavy chemotherapy / poor marrow reserve"
+  - "Confirm ANC ≥1.5 × 10⁹/L, platelets ≥100 × 10⁹/L, AST/ALT ≤3× ULN before each cycle"
+  - "CrCl ≥30 mL/min — no dose data <30 mL/min"
+
+mandatory_supportive_care: []
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Grade 4 neutropenia >7 days OR febrile neutropenia"
+    modification: "Delay next cycle until ANC ≥1.5; reduce to 2.6 mg/m² in subsequent cycles; add G-CSF prophylaxis"
+    rationale: "Phase II basket trial — Grade 3-4 neutropenia ~46%, febrile neutropenia ~5%"
+    source_refs:
+      - SRC-NCCN-SCLC-2025
+  - condition: "Grade 3-4 thrombocytopenia"
+    modification: "Delay until platelets ≥100; reduce to 2.6 mg/m² for subsequent cycles"
+    rationale: "Reversible myelosuppression; nadir day 11-14"
+    source_refs:
+      - SRC-NCCN-SCLC-2025
+  - condition: "AST/ALT >5× ULN OR total bilirubin >1.5× ULN"
+    modification: "Hold until ≤3× ULN; resume at 2.0 mg/m² (one dose level reduction)"
+    rationale: "Hepatic metabolism (CYP3A4); transaminitis common"
+    source_refs:
+      - SRC-NCCN-SCLC-2025
+  - condition: "Strong CYP3A4 inhibitor concomitant use"
+    modification: "Avoid; if unavoidable, monitor closely or reduce lurbinectedin dose"
+    rationale: "AUC increase risk; itraconazole/ritonavir/clarithromycin contraindicated"
+    source_refs:
+      - SRC-NCCN-SCLC-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Lurbinectedin (Zepzelca) NOT registered in Ukraine; NOT reimbursed by NSZU. Access via international pharmacy / clinical trial / individual import procedure only. Out-of-pocket cost USD 8-12K per cycle."
+
+sources:
+  - SRC-NCCN-SCLC-2025
+  - SRC-ESMO-SCLC-2021
+
+last_reviewed: "2026-04-29"
+notes: >
+  Single-agent lurbinectedin for relapsed/refractory SCLC after platinum-based 1L.
+  Phase II basket trial (Trigo et al. Lancet Oncol 2020) — ORR 35.2% overall;
+  platinum-sensitive (CTFI ≥90 days) ORR 45%, mDOR 6.2 mo, mOS 11.9 mo;
+  platinum-resistant (CTFI <90 days) ORR 22%, mDOR 4.7 mo, mOS 5.0 mo. ATLANTIS
+  Phase III (lurbinectedin + doxorubicin vs CAV/topotecan, 2L SCLC) did NOT
+  meet OS primary endpoint (mOS 8.6 vs 7.6 mo, HR 0.97) — combination arm not
+  superior; monotherapy use rests on FDA accelerated-approval basket trial
+  data + NCCN Category 2A listing. STUB — pending ATLANTIS / Trigo trial Source
+  ingestion (SRC-ATLANTIS-PAZ-ARES-2023, SRC-TRIGO-2020) and Co-Lead sign-off.
+notes_ua: >
+  Лурбінектедин моно для рецидиву/рефрактерної МКЛЛ після платиновмісної 1L.
+  Фаза II basket (Trigo et al. Lancet Oncol 2020) — ORR 35.2% загалом;
+  платино-чутливі (CTFI ≥90 днів) ORR 45%, mDOR 6.2 міс, mOS 11.9 міс;
+  платино-резистентні (CTFI <90 днів) ORR 22%, mDOR 4.7 міс, mOS 5.0 міс.
+  ATLANTIS Фаза III (лурбінектедин + доксорубіцин проти CAV/топотекан, 2L
+  МКЛЛ) НЕ досягла первинної кінцевої точки ЗВ (mOS 8.6 проти 7.6 міс,
+  HR 0.97) — комбінована група не перевершує; монотерапія тримається на
+  basket даних FDA accelerated-approval + NCCN Категорія 2A. STUB — очікує
+  на ingestion ATLANTIS / Trigo Source та підпис клінічного Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

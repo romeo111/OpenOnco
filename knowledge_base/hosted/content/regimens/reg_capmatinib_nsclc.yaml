@@ -45,6 +45,44 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Capmatinib for MET exon-14-skipping NSCLC. METi: peripheral edema
+# (very common), nausea, transaminitis, photosensitivity. STUB
+# pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Набряки гомілок, обличчя, рук"
+    action_ua: "Поширене на капматинібі — підніміть ноги відпочиваючи; занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-GEOMETRY-WOLF-2020
+  - trigger_ua: "Помірна нудота, помірна втома"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Чутливість шкіри до сонця"
+    action_ua: "Завжди використовуйте сонцезахисний крем SPF 50+; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Сильні набряки, виражене збільшення ваги"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — капматиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   GEOMETRY mono-1: MET ex14 1L ORR 68%, mPFS 12.4 mo; pretreated ORR
