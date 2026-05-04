@@ -36,6 +36,8 @@ output_indications:
   - IND-NSCLC-KRAS-G12C-MET-2L
   - IND-NSCLC-NRG1-ZENOCUTUZUMAB
   - IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD
+  - IND-NSCLC-3L-DRIVER-BEYOND-2L
+  - IND-NSCLC-3L-OSI-FAILURE-AMI
 
 default_indication: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL  # driver-negative cytotoxic fallback
 alternative_indication: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # most-common driver-targeted aggressive track
@@ -120,6 +122,33 @@ decision_tree:
             Neutropenia + nausea dominant other AEs. G-CSF prophylaxis per protocol.
             FDA accelerated approval withdrawn 2024 after HERTHENA-Lung02 OS negative;
             reserve for truly 3L+ exhausted patients or via trial.
+        - indication_id: IND-NSCLC-3L-OSI-FAILURE-AMI
+          nccn_category: "2A"
+          criteria: >
+            EGFR sensitizing mutation (ex19del / L858R); progression on osimertinib
+            1L AND platinum-based chemotherapy 2L; ECOG 0-2; re-biopsy at 3L
+            recommended (C797S, MET-amp, SCLC transformation, HER2-amp).
+          note: >
+            Amivantamab + chemotherapy (± lazertinib) for EGFR-mut NSCLC post-osi
+            + chemo (MARIPOSA-2; Passaro 2024 Ann Oncol; ORR ~63%; mPFS 8.3 vs
+            4.2 mo chemo alone; NCCN Cat 2A). Doublet (ami+chemo) preferred over
+            triplet (ami+laz+chemo) for most: comparable ORR 63% vs 64%, but G≥3
+            AE 75% vs 92%. Pre-medication mandatory (first-dose IRR ~67%);
+            dermatology support for paronychia + acneiform rash.
+        - indication_id: IND-NSCLC-3L-DRIVER-BEYOND-2L
+          nccn_category: "2A"
+          criteria: >
+            Driver-positive NSCLC (EGFR, ALK, ROS1, RET, MET, BRAF, NTRK, HER2);
+            progression on ≥2 prior lines including targeted therapy; no actionable
+            biomarker identified at 3L re-biopsy; ECOG 0-2; no active hemoptysis;
+            ramucirumab access confirmed if combining.
+          note: >
+            Docetaxel + ramucirumab 3L+ for driver-positive NSCLC after targeted
+            1L + chemo/IO 2L (REVEL; Garon 2014 Lancet; ORR ~23%; mPFS 4.5 vs
+            3.0 mo HR 0.76; NCCN Cat 2A). Re-biopsy at 3L recommended — 30-50%
+            have actionable resistance. Clinical trial preferred when available.
+            Ukraine: ramucirumab not NSZU-funded; single-agent docetaxel is the
+            accessible fallback.
     if_false:
       result: IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB
       notes: >
@@ -469,6 +498,12 @@ notes: >
   (nonsquamous histology gate; TROPION-Lung01; mPFS HR 0.84 nonsquamous; ORR 26%;
   NCCN Cat 2A). Step 16 now routes to step 161 → nonsquamous: DATO-DXd; squamous:
   docetaxel±ram. Gap (DATO-DXd wiring) CLOSED.
+  UPDATED 2026-05-04 (Workstream FY): IND-NSCLC-3L-OSI-FAILURE-AMI (Cat 2A;
+  amivantamab+chemo±laz; MARIPOSA-2 ORR ~63%; for EGFR post-osi+chemo at 3L)
+  and IND-NSCLC-3L-DRIVER-BEYOND-2L (Cat 2A; docetaxel+ramucirumab; REVEL;
+  for driver-positive NSCLC after targeted+chemo at 3L) wired at step 31
+  if_true (post-osimertinib EGFR track) as 3L+ planning alternatives.
+  Both gaps CLOSED.
 
   UPDATED 2026-05-04 (Workstream FK): IND-PAN-NTRK-2L-REPOTRECTINIB added
   to output_indications; wired as Cat 1 alternative at step 14 NTRK branch.

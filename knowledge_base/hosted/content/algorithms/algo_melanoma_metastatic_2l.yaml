@@ -16,6 +16,7 @@ output_indications:
   - IND-MELANOMA-2L-RELATLIMAB-NIVOLUMAB
   - IND-MELANOMA-2L-POST-BRAFI-PEMBRO-MONO
   - IND-MELANOMA-3L-LIFILEUCEL
+  - IND-MELANOMA-3L-POST-LIFILEUCEL
 
 default_indication: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
 alternative_indication: IND-MELANOMA-3L-LIFILEUCEL
@@ -62,6 +63,21 @@ decision_tree:
       result: IND-MELANOMA-2L-POST-IO-BRAFI-MEKI
     if_false:
       result: IND-MELANOMA-3L-LIFILEUCEL
+      alternatives:
+        - indication_id: IND-MELANOMA-3L-POST-LIFILEUCEL
+          nccn_category: "2B"
+          criteria: >
+            Stage IV melanoma BRAF-WT; progressed on anti-PD-1 1L AND lifileucel
+            TIL therapy (or lifileucel inaccessible); LOT ≥4; ECOG 0-2. Clinical
+            trial enrollment is strongly preferred over empirical chemo at this line.
+          note: >
+            4L+ palliative pathway after TIL exhaustion (NCCN Cat 2B; no RCT):
+            empirical single-agent chemo (dacarbazine 1000 mg/m² q21d; temozolomide
+            150-200 mg/m² d1-5 q28d; or paclitaxel 80 mg/m² weekly) — ORR <15%;
+            mPFS 1.5-3 mo; mOS 4-8 mo from 4L initiation. No standard regimen.
+            ICI re-challenge anecdotal only; bispecifics on trial (tebentafusp —
+            uveal/HLA-A*02:01 only, not cutaneous). Best supportive care + hospice
+            referral when ECOG ≥2 or QoL declines. Palliative care MDT co-mandatory.
 
   # Step 4 — Post-BRAFi branch (1L was BRAFi+MEKi for BRAF V600+
   # patient with visceral crisis or active brain mets). 2L is
@@ -162,6 +178,11 @@ notes: >
   KEYNOTE-006; ORR 33-35%; mOS 32.7 mo; NCCN Cat 1). Step 5 if_true now routes
   to step 51 (fitness sub-gate): ECOG 0-1 → rela+nivo; ECOG 2 → pembro mono.
   Gap (2) CLOSED.
+
+  UPDATED 2026-05-04 (Workstream FY): IND-MELANOMA-3L-POST-LIFILEUCEL (Cat 2B;
+  empirical chemo 4L+ after TIL exhaustion; ORR <15%; mPFS 1.5-3 mo) wired at
+  step 3 if_false (BRAF-WT post-IO → lifileucel result) as 4L+ palliative
+  alternative. Gap CLOSED.
 
   Remaining wiring gaps:
   (1) RELATIVITY-047 used at 1L would shift the 2L IO-naive branch
