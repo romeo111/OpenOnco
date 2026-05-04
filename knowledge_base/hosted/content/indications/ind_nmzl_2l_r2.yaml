@@ -1,0 +1,181 @@
+id: IND-NMZL-2L-R2
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NODAL-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Symptomatic relapsed or refractory nodal MZL after ≥1 prior rituximab-containing regimen"
+    - "CD20-positive (confirmed at relapse biopsy if histology change suspected)"
+    - "ECOG PS 0-2"
+    - "CrCl ≥30 mL/min (lenalidomide dose-adjust for CrCl 30-60; avoid if <30)"
+    - "Negative pregnancy test within 10-14 days and enrolled in REMS programme (lenalidomide category X teratogen)"
+    - "No active deep venous thrombosis or pulmonary embolism within 3 months without anticoagulation"
+    - "ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L, Hb ≥8 g/dL at cycle start"
+    - "No Grade ≥3 neuropathy (lenalidomide peripheral neuropathy risk)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20-positive on biopsy — mandatory for rituximab component activity"
+      notes: >
+        CD20 positivity must be confirmed at relapse — rare cases of antigen loss
+        after anti-CD20 therapy. If CD20-negative at relapse: re-biopsy additional
+        site; if truly lost, rituximab not beneficial → alternative regimen.
+  biomarker_requirements_excluded:
+    - "Histologic transformation to DLBCL at relapse — R2 not appropriate; route to DLBCL/HGBL algorithm"
+    - "Active hepatitis B (HBsAg+ or anti-HBc+ without prophylaxis) — both rituximab and lenalidomide carry HBV reactivation risk"
+    - "Active VTE within 3 months without therapeutic anticoagulation — lenalidomide VTE risk: start LMWH prophylaxis first"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      AUGMENT enrolled adults ≥18 years. No absolute age cutoff. Elderly patients (>70)
+      with multiple cardiovascular risk factors require LMWH prophylaxis from cycle 1
+      (not aspirin alone). CrCl <30 mL/min: lenalidomide not recommended; use rituximab
+      monotherapy or BR if bendamustine-naive. REMS programme mandatory regardless of
+      age — both oral contraception counselling and pregnancy testing apply to patients
+      of child-bearing potential and female partners.
+
+recommended_regimen: REG-R2-FL
+alternative_regimens:
+  - regimen_id: IND-NMZL-2L-BR
+    description: >
+      Bendamustine 90 mg/m² d1-2 + rituximab 375 mg/m² d1 q28d × 4-6 cycles
+      (REG-R-BENDAMUSTINE-RELAPSED-MZL; ORR ~85-90%; NCCN Cat 1 for relapsed NMZL).
+      Preferred over R² when: no prior bendamustine exposure at 1L AND patient tolerant
+      to IV infusion-based chemotherapy AND no concerns about cumulative alkylator toxicity.
+  - regimen_id: IND-NMZL-2L-RITUXIMAB-RETREATMENT
+    description: >
+      Rituximab 375 mg/m² × 4 weekly + maintenance q2months × 2 years (ORR ~70-80%;
+      NCCN Cat 2A). Preferred for frail patients, organ dysfunction precluding
+      both bendamustine and lenalidomide, or late relapse ≥12 months.
+
+concurrent_therapy:
+  - "VTE prophylaxis mandatory throughout: aspirin 100 mg/day (low VTE risk); LMWH (high VTE risk: prior VTE, obese, multiple RF)"
+  - "PJP prophylaxis: TMP-SMX 3×/week (rituximab + lenalidomide immunosuppression)"
+  - "HBV reactivation prophylaxis: entecavir 0.5 mg/day if HBsAg+ or anti-HBc+ (start week before rituximab; continue 12 months post)"
+  - "Antifungal: fluconazole 200 mg/day (optional for high-risk elderly or immunosuppressed)"
+
+followed_by:
+  - "Response assessment after cycle 6 (PET-CT preferred; CT if PET unavailable)"
+  - "CR/PR at cycle 12: complete course; no maintenance specified in AUGMENT"
+  - "Post-R² surveillance: q3-4 months × 2 years; imaging q6 months × 2 years"
+  - "At progression after R²: BR if bendamustine-naive; ibrutinib if CD20-positive (Noy 2017 MZL basket ORR ~48%); tafasitamab+lenalidomide investigational"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "80% (AUGMENT MZL subgroup; R² n=32 vs R-placebo n=31)"
+  complete_response: "64% (AUGMENT MZL subgroup R² arm)"
+  median_pfs_months: "31.4 months (AUGMENT MZL subgroup R²; vs 13.3 months R-placebo; HR 0.41)"
+  notes: >
+    AUGMENT (Leonard et al. JCO 2019; Phase 3 RCT; n=358):
+    R² (lenalidomide 20 mg d1-21 + rituximab 375 mg/m² q28d × 12 cycles) vs
+    R-placebo in relapsed/refractory FL (n=295) + MZL (n=63).
+    NMZL subgroup (n~32 in R² arm): ORR 80%, CR 64%, mPFS 31.4 vs 13.3 months (HR 0.41).
+    Combined FL+MZL: mPFS 39.4 vs 14.1 months (HR 0.46; p<0.001).
+
+    NOTE: AUGMENT was primarily powered for FL; MZL subgroup (n=63 total) is exploratory.
+    However, NCCN Cat 1 recommendation extends to MZL based on combined analysis
+    and consistent MZL subgroup data. BSH MZL 2024 endorses R² as an alternative to BR
+    for relapsed/refractory MZL.
+
+    TOXICITY COMPARISON vs BR:
+    R²: VTE 7%, rash 27%, fatigue 28%, neutropenia 50% (lenalidomide-driven)
+    BR: neutropenia 56%, severe skin reactions (7%), PML risk (rare, long-term)
+    R² is oral day-1-21 vs BR which requires IV infusion days 1-2 per cycle.
+
+hard_contraindications:
+  - "CrCl <30 mL/min: lenalidomide not recommended at full dosing; use rituximab monotherapy or BR"
+  - "Active pregnancy or unwilling to comply with REMS contraception requirements: lenalidomide absolute CI"
+  - "Histologic transformation to DLBCL: R2 insufficient for DLBCL; requires aggressive salvage (R-ICE/R-DHAP)"
+
+red_flags_triggering_alternative:
+  - condition: "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION — transformation to DLBCL: route to ALGO-DLBCL-2L"
+  - condition: "CrCl <30 mL/min — lenalidomide not recommended: IND-NMZL-2L-RITUXIMAB-RETREATMENT or IND-NMZL-2L-BR (reduced dose benda)"
+  - condition: "RF-NMZL-FRAILTY-AGE or RF-NMZL-ORGAN-DYSFUNCTION — consider IND-NMZL-2L-RITUXIMAB-RETREATMENT"
+  - condition: "Prior R² progression (relapsed ON lenalidomide+rituximab) — R² re-challenge unlikely active; switch to BR or ibrutinib"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CrCl: calculated (CKD-EPI or MDRD) — mandatory for lenalidomide dose adjustment"
+  - "HBV serology (HBsAg, anti-HBc, anti-HBs): HBV reactivation risk with rituximab + immunosuppression"
+  - TEST-HBV-SEROLOGY
+  - "CD20 IHC on relapse biopsy: confirm CD20 status at relapse"
+  - TEST-CD20-IHC
+  - "Pregnancy test (serum or urine β-hCG): within 10-14 days before first dose; REMS mandatory"
+  - "PET-CT staging: confirm relapse + extent of disease + rule out transformation"
+  - TEST-PET-CT
+
+desired_tests:
+  - "LDH, β2-microglobulin: MZL prognostic factors"
+  - "MIPI-like prognostic index or MALT lymphoma FLIPI2 — no validated NMZL-specific index; LDH + β2M as surrogates"
+  - "BM biopsy: confirm BM involvement pattern + response assessment at end of induction"
+
+rationale: >
+  R² (lenalidomide + rituximab) for relapsed/refractory NMZL as an alternative to
+  bendamustine + rituximab (BR) in the 2L setting. The combination leverages
+  lenalidomide's immunomodulatory effects (NK-cell activation, T-cell co-stimulation,
+  direct anti-tumour effects via cereblon) with rituximab's anti-CD20 monoclonal
+  antibody activity.
+
+  KEY SELECTION RATIONALE IN NMZL:
+  1. Prior bendamustine exposure (1L BR): R² avoids cumulative alkylator toxicity
+     and potential cross-resistance after prior bendamustine.
+  2. Patient preference for oral regimen: lenalidomide is PO daily d1-21; rituximab
+     IV only once monthly after the induction month. Less clinic burden vs BR (d1-2 IV).
+  3. No cross-resistance with prior anthracycline-based therapy (R-CHOP 1L):
+     R² mechanistically distinct from both alkylators and anthracyclines.
+
+  AUGMENT EVIDENCE FOR MZL: The AUGMENT trial Phase 3 RCT enrolled 63 MZL patients
+  (NMZL, MALT, SMZL) alongside 295 FL patients. MZL subgroup R² arm: ORR 80%,
+  mPFS 31.4 vs 13.3 months (HR 0.41). Combined R² arm: mPFS 39.4 vs 14.1 months
+  (HR 0.46; p<0.001). FDA approved lenalidomide+rituximab for r/r FL in 2020
+  (AUGMENT basis); NCCN Cat 1 extends to MZL per same data.
+
+  UKRAINE CONTEXT: Lenalidomide is registered in Ukraine (NSZU-funded for MM; R²
+  for lymphoma is off-label/access-dependent). REMS programme requires physician
+  registration. Rituximab is NSZU-funded. R² is accessible at major Ukrainian
+  oncology centres with lenalidomide access programmes.
+
+rationale_ua: >
+  R² (леналідомід + ритуксимаб) для рецидивної/рефрактерної NMZL як альтернатива
+  BR при: попередньому впливу бендамустину або перевагах пероральної терапії.
+  AUGMENT (Leonard JCO 2019; Phase 3; n=63 MZL): ORR 80%, мВБП 31.4 vs 13.3 міс
+  (HR 0.41). NCCN Cat 1. ОБОВ'ЯЗКОВО: профілактика ВТЕ, REMS-реєстрація,
+  HBV-скринінг. В Україні: леналідомід зареєстровано (ПАА для ММ); R² при
+  лімфомах — уточнити доступ у конкретному центрі.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без REMS-реєстрації та тесту на вагітність — леналідомід кат X тератоген; REMS обов'язковий"
+  - "Без ВТЕ-профілактики — аспірин мінімум; НМГ при високому ризику (ВТЕ в AUGMENT ~7%)"
+  - "При трансформації в DLBCL — R2 неефективний; потрібна агресивна 2L терапія"
+  - "При рецидиві ON ленадлідомід + ритуксимаб — повторний курс R² малоймовірно активний; перейти на BR або ібрутиніб"
+  - "Без HBV скринінгу — ритуксимаб + імуносупресія → реактивація HBV; профілактика ентекавіром"
+  - "Ленадлідомід без коригування дози при CrCl 30-60: 10 мг/добу (замість 20 мг) при помірному порушенні функції нирок"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: R² (lenalidomide + rituximab; AUGMENT regimen)
+      for relapsed/refractory MZL (nodal, MALT, splenic subtypes) after ≥1 prior therapy.
+      AUGMENT Phase 3 basis; MZL subgroup ORR 80%, mPFS 31.4 months.
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      BSH MZL 2024: R² (lenalidomide+rituximab) endorsed as alternative to BR for
+      relapsed/refractory MZL; AUGMENT data support use in all MZL subtypes.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

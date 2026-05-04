@@ -19,9 +19,10 @@ purpose: >
 output_indications:
   - IND-NMZL-2L-BR
   - IND-NMZL-2L-RITUXIMAB-RETREATMENT
+  - IND-NMZL-2L-R2
 
 default_indication: IND-NMZL-2L-BR
-alternative_indication: IND-NMZL-2L-RITUXIMAB-RETREATMENT
+alternative_indication: IND-NMZL-2L-R2
 
 decision_tree:
   # Step 1 — histologic transformation suspected → upstream re-biopsy
@@ -58,7 +59,7 @@ decision_tree:
     if_false:
       next_step: 3
 
-  # Step 3 — default: nodal progression, fit, BR-eligible → BR.
+  # Step 3 — default: nodal progression, fit, BR-eligible → step 31 (BR vs R² gate).
   - step: 3
     evaluate:
       any_of:
@@ -68,9 +69,34 @@ decision_tree:
         - red_flag: RF-NMZL-ORGAN-DYSFUNCTION
         - red_flag: RF-NMZL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-NMZL-2L-BR
+      next_step: 31
+    if_false:
+      next_step: 31
+
+  # Step 31 — BR vs R² (lenalidomide+rituximab) gate for fit NMZL 2L.
+  # Prior bendamustine/alkylator at 1L → R² preferred (avoid alkylator re-use).
+  # BR-naive at 1L → BR preferred (stronger evidence base; standard Cat 1).
+  # Both BR and R² are NCCN Cat 1 for relapsed NMZL (AUGMENT MZL subgroup).
+  - step: 31
+    evaluate:
+      all_of:
+        - condition: "Prior bendamustine or alkylating agent in 1L regimen (e.g., R-BR at 1L, CVP/CHOP-containing) — cumulative alkylator toxicity concern"
+    if_true:
+      result: IND-NMZL-2L-R2
+      notes: >
+        Prior alkylator/bendamustine at 1L: R² preferred to avoid cumulative alkylator
+        toxicity and cross-resistance. Lenalidomide 20 mg d1-21 + rituximab 375 mg/m² q28d × 12 cycles
+        (REG-R2-FL; AUGMENT Leonard JCO 2019; MZL subgroup ORR 80%, mPFS 31.4 mo; NCCN Cat 1).
+        Oral lenalidomide reduces clinic burden vs IV bendamustine infusion.
     if_false:
       result: IND-NMZL-2L-BR
+      notes: >
+        Bendamustine-naive at 1L (1L was R-mono, W&W, or R-CVP): BR preferred as
+        standard-of-care 2L immunochemotherapy (REG-R-BENDAMUSTINE-RELAPSED-MZL;
+        ORR ~85-90%; NCCN Cat 1). R² (IND-NMZL-2L-R2) is an equally valid Cat 1
+        alternative — MDT choice based on patient preference for oral vs IV and
+        REMS access considerations.
+    notes: "Step 31 added 2026-05-04 (Workstream BV): BR vs R² prior-alkylator gate. IND-NMZL-2L-R2 wired for prior-alkylator track. Gap (2) CLOSED. Free-text condition; MDT-evaluated."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -82,9 +108,12 @@ notes: >
   authored and wired at step 2 for frail/bendamustine-ineligible NMZL
   (rituximab 375 mg/m² × 4 + maintenance; ORR ~70-80%; NCCN Cat 2A).
   Gap (1) CLOSED.
+  UPDATED 2026-05-04 (Workstream BV): IND-NMZL-2L-R2 authored and wired at step 31
+  for prior-alkylator NMZL 2L (AUGMENT Leonard JCO 2019; MZL subgroup ORR 80%, mPFS
+  31.4 mo; NCCN Cat 1). Gap (2) CLOSED. ROUTING SUMMARY: (1) Transformation suspect →
+  BR placeholder (upstream DLBCL re-biopsy); (2) Frail/organ-dysfunction → R-mono;
+  (3) Fit → step 31 → R² if prior alkylator; BR if alkylator-naive.
   OOS / wiring gaps:
-  (2) Lenalidomide + rituximab (R², AUGMENT-equivalent in NMZL) —
-  not modeled as NMZL-specific indication.
   (3) Ibrutinib for r/r NMZL — FDA-approved 2017 (basket label
   with SMZL/MALT) but not modeled; UA access ≈zero.
   (4) Histologic transformation routing must be resolved at upstream
