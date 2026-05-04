@@ -16,6 +16,7 @@ output_indications:
   - IND-AML-2L-GILTERITINIB-FLT3
   - IND-AML-1L-VEN-AZA
   - IND-AML-2L-IDH2-ENASIDENIB
+  - IND-AML-2L-IDH1-IVOSIDENIB
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
@@ -87,20 +88,27 @@ decision_tree:
       next_step: 6
     notes: "Wired via RF-AML-IDH2-MUT-ACTIONABLE — IDH2 R140Q/R172K routes to enasidenib monotherapy (AG221-AML-001 phase 1/2; ORR 38%, CR 19%, mOS 9.3 mo). Bridge to alloHCT for fit responders. Ukraine: not registered, EU CHMP negative; international referral / compassionate-use only."
 
-  # Step 6 — IDH1 actionable at relapse → IDHi monotherapy
-  # (ivosidenib FDA-approved R/R-AML). No dedicated IDH1 Indication in
-  # KB yet (PROD-5 deferred); pin to ven+aza backbone with MDT
-  # annotation to switch to ivosidenib monotherapy. IDH2 already
-  # captured by step 5.
+  # Step 6 — IDH1-actionable at relapse → ivosidenib monotherapy
+  # (FDA-approved July 2018; DiNardo 2018 NEJM; ORR 41.6%; NCCN Cat 1).
+  # IDH2 captured at step 5. IDH differentiation syndrome (IDS) mandatory
+  # monitoring protocol applies — 10% incidence in AML (higher than CCA).
   - step: 6
     evaluate:
       any_of:
         - red_flag: RF-AML-IDH1-MUT-ACTIONABLE
     if_true:
-      result: IND-AML-1L-VEN-AZA
+      result: IND-AML-2L-IDH1-IVOSIDENIB
+      notes: >
+        IDH1 R132C/H/G/S/L mutation at relapse: ivosidenib 500 mg PO daily
+        (REG-IVOSIDENIB-AML; AG-120-AML DiNardo 2018 NEJM; ORR 41.6%; CR 21.8%;
+        mOS 8.8 months; FDA July 2018; NCCN Cat 1). CRITICAL: IDH differentiation
+        syndrome (IDS) in 10% — daily fever monitoring + dexamethasone 10 mg IV q12h
+        protocol if IDS Grade ≥2. QTc baseline ECG mandatory. Fit responders:
+        bridge to alloHCT. Ukraine: not registered; compassionate-use Servier or
+        named-patient. When inaccessible → ven+aza (IND-AML-1L-VEN-AZA) as fallback.
     if_false:
       next_step: 7
-    notes: "MDT-only — IDH1 R/R: switch to ivosidenib (AG-120) monotherapy per FDA-approved R/R-AML labelling. Pinned to ven+aza Indication as backbone (no dedicated IDH1 IND in KB). IDH2 captured at step 5."
+    notes: "Step 6 updated 2026-05-04 (Workstream CK): IDH1-mut R/R now routes to IND-AML-2L-IDH1-IVOSIDENIB (REG-IVOSIDENIB-AML; NCCN Cat 1) instead of ven+aza backbone. Gap (IDH1 IND deferred PROD-5) CLOSED."
 
   # Step 7 — frailty / organ dysfunction at relapse → ven+aza (lower
   # toxicity than re-induction; also covers FLT3-WT R/R unfit).
@@ -135,14 +143,13 @@ sources:
 
 last_reviewed: "2026-04-30"
 notes: >
-  ALGO-AML-2L primarily routes FLT3-actionable patients to gilteritinib;
-  IDH2-actionable patients to enasidenib (step 4b — added 2026-04-30,
-  AG221-AML-001); non-actionable (FLT3-WT, IDH-WT) patients fall back to
-  ven+aza or are routed off-algorithm to clinical trial / re-induction
-  (7+3 / FLAG-IDA) / BSC. CPX-351 (IND-AML-1L-CPX351-SECONDARY) and
-  quizartinib (IND-AML-1L-QUIZARTINIB-FLT3ITD) belong to ALGO-AML-1L
-  stratification (AML-MRC / therapy-related; de-novo FLT3-ITD
-  respectively), not 2L. AlloHCT bridge is parallel layer for any
-  responder. RF re-test of FLT3 / IDH2 at relapse is mandatory before
-  gilteritinib / enasidenib selection. STUB — requires clinical co-lead
-  signoff.
+  ALGO-AML-2L routes: FLT3-actionable → gilteritinib; IDH2-actionable → enasidenib
+  (step 5, added 2026-04-30); IDH1-actionable → ivosidenib (step 6, Workstream CK
+  2026-05-04); non-actionable (FLT3-WT, IDH-WT) → ven+aza backbone.
+  UPDATED 2026-05-04 (Workstream CK): IND-AML-2L-IDH1-IVOSIDENIB authored and wired
+  at step 6 (AG-120-AML DiNardo 2018 NEJM; ORR 41.6%; CR 21.8%; NCCN Cat 1;
+  REG-IVOSIDENIB-AML). Deferred IDH1 gap (PROD-5) CLOSED.
+  CPX-351 (IND-AML-1L-CPX351-SECONDARY) and quizartinib (IND-AML-1L-QUIZARTINIB-FLT3ITD)
+  belong to ALGO-AML-1L stratification, not 2L. AlloHCT bridge is parallel layer for
+  any responder. RF re-test of FLT3/IDH1/IDH2 at relapse is mandatory before
+  gilteritinib/ivosidenib/enasidenib selection. STUB — requires clinical co-lead signoff.

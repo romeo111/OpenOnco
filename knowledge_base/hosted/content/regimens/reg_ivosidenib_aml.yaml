@@ -1,0 +1,67 @@
+id: REG-IVOSIDENIB-AML
+name: "Ivosidenib monotherapy (AG-120; IDH1-mutant R/R AML)"
+name_ua: "Івосіденіб (AG-120; ІДГ1-мутантна рецидивна/рефрактерна ГМЛ)"
+alternate_names: ["AG-120", "Tibsovo AML", "ivosidenib R/R AML"]
+components:
+  - drug_id: DRUG-IVOSIDENIB
+    dose: "500 mg PO once daily"
+    schedule: "Continuous daily until disease progression or unacceptable toxicity"
+    route: PO
+    notes: >
+      Take at approximately the same time each day. Can be taken with or without food
+      (low-fat meal preferred; avoid high-fat meal within 2 hours — reduces Cmax ~35%).
+      Avoid grapefruit and Seville oranges (CYP3A4 inhibition → ivosidenib AUC increase).
+      Strong CYP3A4 inhibitors (ketoconazole, clarithromycin, voriconazole): reduce
+      ivosidenib to 250 mg QD if inhibitor cannot be avoided.
+      Strong CYP3A4 inducers (rifampicin, carbamazepine): avoid co-administration.
+      CRITICAL IDH DIFFERENTIATION SYNDROME MONITORING (see below).
+cycle_length_days: 28
+total_cycles: "Until confirmed disease progression or unacceptable toxicity; no fixed cycle cap"
+toxicity_profile: moderate
+premedication:
+  - "No routine premedication required"
+mandatory_supportive_care:
+  - "ECG MANDATORY: baseline, day 8 cycle 1, day 1 of cycles 2-3, then q3 months. QTc >470 ms (women) / >450 ms (men) at baseline: MDT evaluation before starting."
+  - "IDH DIFFERENTIATION SYNDROME (IDS) PROTOCOL: monitor weekly for fever ≥38°C + respiratory symptoms + pleural/pericardial effusion + pulmonary infiltrates + hypotension ± renal impairment. IDS grade ≥3 → immediately start dexamethasone 10 mg IV q12h × ≥3 days; hold ivosidenib until IDS resolves ≤Grade 1. IDS can occur even during CR — do not attribute pulmonary infiltrates to infection alone."
+  - "CBC + differential weekly × 4 cycles (IDH differentiation syndrome + cytopenias monitoring), then q2 weeks"
+  - "LFT + electrolytes + uric acid q2 weeks × 2 cycles, then monthly"
+  - "Bone marrow assessment at cycle 2 (day 28-35) for response evaluation"
+dose_adjustments:
+  - condition: "QTc 481-500 ms"
+    modification: "Repeat ECG within 1 week; correct QT-prolonging drugs; check electrolytes (K+, Mg2+). Monitor q2 weeks until stable. Ivosidenib continue at same dose if correction resolves."
+  - condition: "QTc >500 ms"
+    modification: "Hold ivosidenib immediately. Correct electrolytes, remove QT-prolonging drugs. Resume when QTc ≤480 ms. Permanent discontinuation if QTc >500 ms persists."
+  - condition: "IDH differentiation syndrome Grade 2 (symptomatic, not severe)"
+    modification: "Start dexamethasone 10 mg IV q12h. Continue ivosidenib (unless deteriorating). Continue dexamethasone ≥3 days until symptom resolution."
+  - condition: "IDH differentiation syndrome Grade ≥3 (oxygen required, ICU level)"
+    modification: "Immediately hold ivosidenib. Dexamethasone 10 mg IV q12h + aggressive supportive care (diuretics, oxygen, ICU if needed). Resume ivosidenib when Grade ≤1."
+  - condition: "Renal impairment (CrCl <30 mL/min)"
+    modification: "Limited data; ivosidenib is primarily hepatically metabolized. Proceed with caution; monitor closely. No formal dose reduction established."
+  - condition: "Hepatic impairment (Child-Pugh B/C or ALT/AST >5× ULN)"
+    modification: "Insufficient data. Ivosidenib cleared hepatically; use with extreme caution or avoid. Consult hepatologist."
+drug_interactions:
+  - "Strong CYP3A4 inhibitors (azole antifungals, clarithromycin): increase ivosidenib AUC substantially → reduce ivosidenib to 250 mg/day if inhibitor required"
+  - "Strong CYP3A4 inducers (rifampin, carbamazepine, phenytoin, St John's wort): reduce ivosidenib AUC >50% → avoid"
+  - "QT-prolonging agents (fluoroquinolones, azithromycin, ondansetron, antipsychotics): additive QTc prolongation risk — avoid or use lowest effective dose with ECG monitoring"
+  - "Statins metabolized by CYP3A4 (simvastatin, atorvastatin): ivosidenib inhibits CYP3A4/OATP1B1 — reduce statin dose or switch to pravastatin"
+  - "Warfarin: ivosidenib may affect CYP2C9; monitor INR closely"
+notes: >
+  Ivosidenib 500 mg PO daily for IDH1-mutant (R132C/H/G/S/L) R/R AML.
+  Evidence: DiNardo et al. 2018 NEJM (AG-120-AML; phase 1; ORR 41.6%; CR 21.8%;
+  mOS 8.8 months; FDA approval July 2018; NCCN Cat 1).
+
+  CRITICAL AML-SPECIFIC MONITORING vs CCA:
+  IDH differentiation syndrome occurs in ~10% of AML patients on IDH inhibitors
+  (higher than in CCA). It is potentially fatal if unrecognized — the mechanism
+  is differentiation of IDH1-mutant leukemic blasts releasing inflammatory
+  mediators. Daily temperature checks and weekly clinical assessment for the
+  first 8 weeks are mandatory. Distinct from tumor lysis syndrome (TLS).
+
+  UKRAINE ACCESS:
+  Ivosidenib (Tibsovo) not registered in Ukraine as of 2026. FDA approved 2018;
+  EMA not approved. Access options: compassionate-use programme (Servier/Agios),
+  named-patient import, clinical trial, or international referral.
+  Ivosidenib ± azacitidine combination (FDA 2022; Montesinos 2022 NEJM) not
+  modeled — more accessible combination may warrant future authoring.
+
+last_reviewed: "2026-05-04"

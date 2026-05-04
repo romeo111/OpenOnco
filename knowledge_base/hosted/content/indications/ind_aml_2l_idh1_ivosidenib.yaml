@@ -1,0 +1,205 @@
+id: IND-AML-2L-IDH1-IVOSIDENIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-AML
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory AML after ≥1 prior systemic therapy (induction failure OR relapse after CR)"
+    - "IDH1 R132C/H/G/S/L hotspot mutation confirmed by NGS or PCR at relapse (re-test mandatory — IDH1 clone may evolve)"
+    - "ECOG PS 0-3 (ivosidenib well-tolerated orally across broad performance status)"
+    - "Adequate hepatic function: ALT/AST ≤5× ULN; bilirubin ≤1.5× ULN (ivosidenib hepatically cleared)"
+    - "QTc ≤470 ms (women) / ≤450 ms (men) at baseline (QTc prolongation risk)"
+    - "No active uncontrolled infection (IDH differentiation syndrome may mimic infection)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-IDH1-MUT
+      required: true
+      value_constraint: "IDH1 R132C/H/G/S/L activating mutation — required; other IDH1 variants lack evidence for ivosidenib activity"
+      notes: >
+        IDH1 must be re-tested at relapse (NGS panel). ~10-15% of IDH1-mutant AML
+        lose detectable IDH1 mutation at relapse (clonal evolution). Ivosidenib is
+        inactive without IDH1 mutation. R132C most common (~70%); all R132 variants
+        (C/H/G/S/L) are ivosidenib-sensitive.
+  biomarker_requirements_excluded:
+    - "IDH1 mutation ABSENT at relapse: no therapeutic target; route to alternative (ven+aza, gilteritinib if FLT3+)"
+    - "IDH2 mutation: enasidenib is the appropriate agent (IND-AML-2L-IDH2-ENASIDENIB); not ivosidenib"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      Ivosidenib is oral with low myelosuppressive burden — suitable for elderly/frail
+      AML patients who cannot tolerate intensive re-induction. ECOG 3: proceed with MDT
+      discussion; oral administration feasible if patient can swallow pills reliably.
+      ECOG 4: CHARTER goals-of-care gate applies (ECOG PS ≥4 hard gate in engine).
+
+recommended_regimen: REG-IVOSIDENIB-AML
+alternative_regimens:
+  - regimen_id: IND-AML-1L-VEN-AZA
+    description: >
+      Venetoclax + azacitidine backbone (ven+aza) — use if ivosidenib inaccessible
+      (not registered in Ukraine) or IDH1 mutation lost at relapse. Less targeted
+      but accessible and NSZU-reimbursed. ORR ~37% (VIALE-A; but R/R setting less
+      studied for ven+aza). IDH1-mutant AML shows some ven+aza sensitivity independent
+      of IDH1 — reasonable fallback.
+  - regimen_id: IND-AML-2L-GILTERITINIB-FLT3
+    description: >
+      Gilteritinib — only applicable if co-occurring FLT3 mutation at relapse. FLT3
+      and IDH1 mutations can co-exist in ~5% of AML; gilteritinib should be used for
+      FLT3 (higher ORR in FLT3-mutant AML: ADMIRAL OS benefit) while ivosidenib
+      targets IDH1 pathway. MDT to prioritize by dominant clone.
+
+concurrent_therapy:
+  - "ECG MANDATORY: baseline, day 8 cycle 1, day 1 of cycles 2-3, then q3 months (QTc prolongation risk)"
+  - "IDH DIFFERENTIATION SYNDROME (IDS) monitoring: daily temperature check weeks 1-8; alert ALL nursing staff to recognize fever + respiratory symptoms + fluid retention + hypotension as IDS symptoms (not just infection)"
+  - "Dexamethasone protocol: IDS Grade 2+ → start dexamethasone 10 mg IV q12h immediately; maintain until symptoms resolve ≤Grade 1 (minimum 3 days)"
+  - "CBC weekly × 4 cycles (differentiation syndrome-related cytopenias; monitoring blast clearance)"
+  - "Bone marrow biopsy at end of cycle 2 (day 28-35): morphologic response + IDH1 mutant allele burden"
+  - "Electrolyte replacement: maintain K+ >4 mEq/L, Mg2+ >2 mg/dL (QTc risk management)"
+
+followed_by:
+  - "Response assessment at cycle 2 (BM biopsy + MRD): CR/CRi/PR decision point"
+  - "Fit responders achieving CR/CRi: allogeneic HCT bridge (outcomes substantially better vs ivosidenib alone — NCCN strongly recommends alloHCT consolidation when donor available)"
+  - "Ivosidenib + azacitidine combination (FDA-approved May 2022; Montesinos 2022 NEJM; higher ORR 47% CR+CRh vs ivosidenib mono 28%) — consider if azacitidine-naive"
+  - "At progression on ivosidenib: re-test IDH1 (acquired IDH1 resistance mutations G132 bypass); consider enasidenib if IDH2 emerges; clinical trial"
+  - "IDH differentiation syndrome: if recurs at re-challenge, consider permanent discontinuation; risk-benefit with MDT"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~41.6% (AG-120-AML phase 1; DiNardo 2018 NEJM; CR 21.8%; CRh 19.8%)"
+  complete_response: "~21.8% CR; ~19.8% CR with partial hematologic recovery (CRh)"
+  median_os_months: "~8.8 months overall; longer in patients bridged to alloHCT (mOS ~12-16 months in transplanted responders)"
+  notes: >
+    PRIMARY EVIDENCE: AG-120-AML (DiNardo et al. 2018 NEJM):
+    - Phase 1 dose-escalation/expansion: 258 patients with IDH1-mutant R/R AML
+    - ORR 41.6%: CR 21.8% + CRh (CR with partial hematologic recovery) 19.8%
+    - Median DOR 8.2 months; mOS 8.8 months; OS at 12 months 37%
+    - IDH differentiation syndrome: 10.6% (all grades); 3.4% Grade 3-4
+    - Grade ≥3 AEs: QTc prolongation (6.4%), febrile neutropenia (12%)
+    - FDA accelerated approval July 2018 (R/R IDH1-mutated AML ≥18 yr)
+
+    IVOSIDENIB + AZACITIDINE (COMBO; IVO-AZA):
+    Montesinos et al. 2022 NEJM (AG-120-AML-006; Phase 3 vs aza alone):
+    - ORR 47% (CR+CRh+CRi) vs 15% azacitidine alone — primarily for frontline IDH1-mut AML
+    - FDA-approved May 2022 for newly-diagnosed IDH1-mutant AML (1L); relevance in R/R as
+      combination salvage for azacitidine-naive patients (off-label but NCCN mentions)
+
+    MECHANISM:
+    IDH1 R132 mutations → accumulation of 2-hydroxyglutarate (2-HG) oncometabolite
+    → hypermethylation + blocked differentiation → leukemic stem cell expansion.
+    Ivosidenib (AG-120) = allosteric IDH1 inhibitor → reduces 2-HG >90% →
+    restores epigenetic reprogramming → terminal myeloid differentiation of leukemic blasts
+    (IDH differentiation syndrome is the clinical manifestation of this mechanism).
+
+    UKRAINE CONTEXT:
+    Ivosidenib (Tibsovo) NOT registered in Ukraine as of 2026. FDA-approved 2018;
+    EMA rejected (CHMP negative opinion — submitted for cholangio but not AML in EU).
+    Access options: compassionate use (Servier programme), named-patient import, or
+    clinical trial. When ivosidenib unavailable: ven+aza backbone (NSZU-funded) as fallback.
+
+hard_contraindications:
+  - "IDH1 R132 mutation absent: no mechanism for ivosidenib activity; do not use"
+  - "QTc >500 ms at baseline: absolute contraindication; correct electrolytes and review medications first"
+  - "Active unresolved Grade ≥3 IDH differentiation syndrome from prior IDH inhibitor: do not rechallenge without MDT consent"
+  - "Severe hepatic impairment (Child-Pugh C): insufficient data; avoid"
+
+red_flags_triggering_alternative:
+  - condition: "Ivosidenib inaccessible (not registered in Ukraine; compassionate-use failed) → IND-AML-1L-VEN-AZA as IDH1-mutant R/R fallback"
+  - condition: "Co-occurring FLT3 mutation at relapse (dominant clone) → MDT to prioritize IND-AML-2L-GILTERITINIB-FLT3 (higher ORR in FLT3-mutant R/R AML)"
+  - condition: "IDH1 mutation lost at relapse (re-test mandatory) → route per remaining mutations (IDH2 → enasidenib; FLT3 → gilteritinib; none → ven+aza)"
+  - condition: "IDH differentiation syndrome Grade ≥3 refractory to dexamethasone: hold ivosidenib, escalate supportive care, consider discontinuation"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-URIC-ACID
+  - TEST-COAG-PANEL
+  - TEST-HBV-SEROLOGY
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-NGS-MYELOID-PANEL
+  - "ECG with QTc measurement (Fridericia formula) — baseline; QTc gate"
+  - "IDH1 R132 mutation status (re-test at relapse: NGS myeloid panel or IDH1-specific PCR)"
+  - "Electrolytes (K+, Mg2+, Ca2+): QTc management"
+
+desired_tests:
+  - "MRD flow cytometry (pre-treatment baseline): track 2-HG-mediated differentiation response"
+  - "HLA typing (if alloHCT bridge planned for responders): early HLA typing enables faster transplant when CR achieved"
+  - "IDH1 variant allele frequency (VAF) in peripheral blood: 2-HG reduction correlates with VAF decrease — useful for early response monitoring"
+  - "2-hydroxyglutarate (2-HG) serum level (research/pharmacodynamic marker if available): direct confirmation of IDH1 inhibition"
+
+rationale: >
+  Ivosidenib (AG-120; Tibsovo) 500 mg PO daily for IDH1-mutant (R132C/H/G/S/L)
+  relapsed/refractory AML. FDA approved July 2018 (DiNardo 2018 NEJM; ORR 41.6%;
+  CR 21.8%; NCCN Category 1).
+
+  IDH1 MUTATION BIOLOGY IN AML:
+  IDH1 mutations (R132C/H/G/S/L) occur in ~6-10% of AML and ~15% of secondary
+  AML from MDS. The oncometabolite 2-HG inhibits TET2 (DNA demethylase) and
+  prolongs leukemic stem cell self-renewal. IDH1 mutations are retained at relapse
+  in ~90% of cases — making them reliable therapeutic targets.
+
+  IVOSIDENIB MECHANISM:
+  Allosteric inhibitor of mutant IDH1. Reduces 2-HG >90% within 4-8 weeks.
+  Restores normal TET2-dependent DNA methylation → differentiation of IDH1-mutant
+  leukemic blasts. The clinical consequence is CR through differentiation (not direct
+  cytotoxic killing) — explaining the characteristic IDH differentiation syndrome.
+
+  IDH DIFFERENTIATION SYNDROME:
+  Occurs in ~10% of AML patients (higher than in CCA where blast burden is absent).
+  Mechanism: cytokines released from differentiating leukemic blasts →
+  capillary leak, pulmonary infiltrates, fever, hypotension.
+  MANAGEMENT: Early dexamethasone 10 mg IV q12h + ivosidenib hold if Grade ≥3.
+  Fatal if unrecognized — nurses and physicians must be briefed before starting.
+
+  ALLOHT BRIDGE:
+  Fit responders (CR/CRi after ivosidenib) should proceed to allogeneic HCT when
+  a donor is available — this dramatically improves OS compared to ivosidenib alone.
+  AlloHCT consolidation is the curative intent; ivosidenib is the bridge.
+
+  UKRAINE ACCESS:
+  Ivosidenib not registered in Ukraine. Servier (acquired Agios oncology assets)
+  may have compassionate-use programs. When unavailable: venetoclax + azacitidine
+  (NSZU-funded) provides meaningful ORR in IDH1-mutant AML (mechanism-independent
+  from IDH1 pathway — additive through BCL-2 and MCL-1 dependence).
+
+rationale_ua: >
+  Івосіденіб 500 мг PO щоденно для IDH1-мутантної (R132C/H/G/S/L) рецидивної/
+  рефрактерної ГМЛ. FDA 2018; NCCN Cat 1; ЗВ 41.6% (CR 21.8%).
+  КРИТИЧНО: Синдром диференціації ІДГ (ІДС) — у 10% пацієнтів; потенційно
+  летальний при незнаних випадках. Симптоми: лихоманка + дихальні симптоми +
+  набряки + гіпотензія. Лікування: дексаметазон 10 мг IV q12год ≥3 дні;
+  відміна івосіденібу при Grade ≥3.
+  Обов'язковий ЕКГ: вихідно, д8 циклу 1, д1 циклів 2-3, потім q3 міс.
+  В Україні: не зареєстровано; доступ через програму compassionate-use Servier
+  або МОЗ наказ 988 (транскордонний). При недоступності → вен+аза (НСЗУ).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати без підтвердженої мутації IDH1 R132 — без молекулярного базису препарат неефективний"
+  - "Не ігнорувати симптоми ІДС — лихоманка + задишка + набряки → НЕГАЙНО дексаметазон 10 мг IV q12год"
+  - "Не починати при QTc >500 мс — абсолютне протипоказання; спочатку корегувати електроліти"
+  - "Не застосовувати разом із сильними інгібіторами CYP3A4 без коригування дози (знизити до 250 мг/добу)"
+  - "Не відкладати алоТКМ для придатних відповідачів (CR/CRi) — трансплантація суттєво покращує ЗВ"
+  - "Не призначати при тяжкій печінковій недостатності (Child-Pugh C) — недостатньо даних"
+
+sources:
+  - source_id: SRC-NCCN-AML-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN AML 2025 Category 1: ivosidenib (AG-120; Tibsovo) 500 mg PO daily for
+      relapsed/refractory IDH1-mutated AML (R132 hotspot mutations). FDA-approved
+      July 2018 based on AG-120-AML (DiNardo 2018 NEJM). IDH differentiation syndrome
+      monitoring and QTc monitoring mandatory. Bridge to alloHCT for fit responders.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
