@@ -1,0 +1,164 @@
+id: IND-PDAC-METASTATIC-2L-FOLFOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic pancreatic adenocarcinoma with disease progression after gemcitabine-based 1L therapy"
+    - "nal-IRI (ONIVYDE, nanoliposomal irinotecan) not registered or not accessible at prescribing centre"
+    - "ECOG PS 0-2"
+    - "Total bilirubin ≤2× ULN (or biliary obstruction drained — oxaliplatin requires adequate hepatic function)"
+    - "CrCl ≥40 mL/min (5-FU dose reduction for severe renal impairment)"
+    - "ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L at cycle start"
+    - "No Grade ≥2 pre-existing peripheral neuropathy (oxaliplatin cumulative neurotoxicity)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "FOLFIRINOX-pretreated 1L: FOLFOX contains same oxaliplatin+5-FU backbone as FOLFIRINOX → use gemcitabine-based 2L instead"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      PDAC 2L is inherently a palliative setting with median OS ~4-7 months.
+      ECOG PS 0-2 gate is standard for any 2L chemotherapy. Frail/ECOG ≥3 patients
+      should be directed to best supportive care. Elderly patients (≥70) without
+      functional reserve may require dose-modified FOLFOX (oxaliplatin 65-70 mg/m²
+      instead of 85 mg/m²) to reduce neurotoxicity.
+
+recommended_regimen: REG-FOLFOX
+alternative_regimens:
+  - regimen_id: IND-PDAC-METASTATIC-2L-NAL-IRI
+    description: >
+      Nal-IRI (ONIVYDE) 70 mg/m² + 5-FU 2400 mg/m² CIV + leucovorin 400 mg/m² q14d
+      (REG-NAL-IRI-5FU-LV-PDAC; NAPOLI-1; mOS 6.1 vs 4.2 mo; HR 0.67; NCCN Cat 1).
+      FDA-approved Oct 2015. Preferred over FOLFOX when accessible — superior
+      phase 3 RCT evidence. FOLFOX is the accessible UA alternative when ONIVYDE unavailable.
+
+concurrent_therapy:
+  - "Antiemetics: ondansetron + dexamethasone (moderate emetogenicity); NK-1 antagonist for high-dose regimens"
+  - "Cold-cap strategy not feasible (oxaliplatin neuropathy is cumulative, not alopecia-driven)"
+  - "Neuropathy management: wear gloves/socks in cold weather (oxaliplatin cold dysesthesia); avoid cold food/drinks on infusion days"
+  - "Pain control: adequate analgesia (opioids if needed; pancreatic pain often severe)"
+
+followed_by:
+  - "Response assessment after cycle 4 (CT chest/abdomen/pelvis + CA19-9)"
+  - "Continue until progression or unacceptable toxicity (NCCN recommends ongoing reassessment of benefit-burden)"
+  - "Cumulative oxaliplatin neuropathy: reduce to 65 mg/m² after 6 cycles or Grade ≥2 neuropathy; discontinue oxaliplatin after 12 cycles total (5-FU/LV alone as de-intensification)"
+  - "At 2L progression: consider clinical trial; BSC (limited 3L evidence)"
+  - "BRCA1/2 germline mutation + prior platinum response: olaparib maintenance (IND-PDAC-MAINTENANCE-OLAPARIB-BRCA) — applicable even in 2L context if patient achieved disease control with FOLFOX"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~5-10% (FOLFOX in post-gemcitabine PDAC; limited phase 2 data)"
+  complete_response: "~1-2%"
+  median_os_months: "~4.5-5 months (estimated from small series; inferior to nal-IRI+5-FU/LV)"
+  notes: >
+    No large phase 3 RCT exists for FOLFOX specifically in post-gemcitabine mPDAC.
+    Evidence comes from:
+    - FOLFOX2 (Samalin 2017 Oncotarget; n=23 post-gemcitabine PDAC): ORR 5%, DCR 47%, mOS 4.6 mo
+    - Phase 2 Pelzer 2011 (FOLFOX in 2L PDAC; n=46): ORR 7.6%, mOS 4.3 mo
+    - Institutional series consistently show mOS ~4-5 months (vs 6.1 mo for nal-IRI+5-FU/LV)
+
+    FOLFOX is INFERIOR to nal-IRI+5-FU/LV (no head-to-head RCT; indirect comparison
+    from separate single-arm studies). FOLFOX is the pragmatic choice when ONIVYDE
+    is not available (not registered in Ukraine as of 2026).
+
+    CONTEXT: 2L PDAC mOS with any therapy is ~4-7 months; the therapeutic goal is
+    modest disease control with quality-of-life preservation. The difference between
+    nal-IRI (mOS 6.1 mo) and FOLFOX (mOS ~4.5 mo) is real but small in absolute terms.
+
+hard_contraindications:
+  - "Prior FOLFIRINOX-based 1L: FOLFOX contains same oxaliplatin+5-FU components — cross-resistance likely; use gemcitabine-based 2L"
+  - "Grade ≥3 pre-existing peripheral neuropathy: oxaliplatin absolutely contraindicated"
+  - "Total bilirubin >2× ULN: hepatic metabolism of 5-FU and oxaliplatin impaired; address biliary obstruction first"
+  - "DPD deficiency (DPYD*2A homozygous): severe 5-FU toxicity — require DPYD testing before use in high-risk populations"
+
+red_flags_triggering_alternative:
+  - condition: "Nal-IRI (ONIVYDE) becomes accessible → switch to IND-PDAC-METASTATIC-2L-NAL-IRI (NCCN Cat 1; superior evidence)"
+  - condition: "RF-PDAC-BILIARY-OBSTRUCTION-CHOLANGITIS: address biliary drainage before any chemotherapy"
+  - condition: "FOLFIRINOX-pretreated 1L → gemcitabine ± nab-paclitaxel 2L (IND-PDAC-METASTATIC-1L-GEM-NAB-PAC)"
+  - condition: "Grade ≥3 cumulative neuropathy after oxaliplatin: continue 5-FU/LV alone (drop oxaliplatin)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BILIRUBIN-TOTAL
+  - "CA19-9: baseline tumour marker for response monitoring"
+  - TEST-CECT-CAP
+  - "Neuropathy baseline assessment (cumulative oxaliplatin neuropathy monitoring)"
+
+desired_tests:
+  - "BRCA1/2 germline testing: olaparib maintenance eligibility if disease control achieved (POLO trial)"
+  - "DPYD pharmacogenomics: DPYD*2A, *13, HapB3 — severe 5-FU toxicity in ~5-7% of patients; available at major centres"
+  - "MSI status: MSI-H rare in PDAC (<1%) but keystone for pembrolizumab eligibility"
+
+rationale: >
+  FOLFOX (oxaliplatin 85 mg/m² + leucovorin 400 mg/m² + 5-FU bolus/infusion q14d)
+  as 2L therapy for metastatic PDAC after gemcitabine-based 1L failure, when
+  nal-IRI (ONIVYDE) is not accessible.
+
+  MECHANISTIC BASIS: After gemcitabine-based 1L (gemcitabine ± nab-paclitaxel),
+  there is no cross-resistance to platinum compounds. Oxaliplatin creates interstrand
+  DNA crosslinks via different mechanism from gemcitabine (nucleoside analog) or
+  nab-paclitaxel (microtubule stabiliser). FOLFOX provides multi-agent activity
+  against a mechanism-naive tumour.
+
+  UKRAINE ACCESS RATIONALE: ONIVYDE (nal-IRI, nanoliposomal irinotecan) is not
+  registered or available in Ukraine (as of 2026). The accessible alternatives for
+  post-gemcitabine PDAC 2L in Ukraine are:
+  1. FOLFOX (oxaliplatin + 5-FU/LV): NSZU-funded components; standard infusion;
+     modest evidence (NCCN Cat 2A)
+  2. Irinotecan + 5-FU/LV (non-liposomal): conventional irinotecan registered in
+     Ukraine; pharmacokinetically different from nal-IRI (lower intratumoral SN-38);
+     used off-label but no published phase 3 data for PDAC 2L
+
+  FOLFOX is preferred over conventional irinotecan-based regimens in the UA context
+  because oxaliplatin + 5-FU has better published evidence in pancreatic cancer
+  (FOLFOX2, Pelzer 2011) and is a mechanistically rational cross-class switch.
+
+  LIMITATIONS: FOLFOX is inferior to nal-IRI+5-FU/LV in terms of evidence quality
+  and likely efficacy. When ONIVYDE access becomes available at a centre, patients
+  should switch to nal-IRI-based therapy as the NCCN Cat 1 standard.
+
+rationale_ua: >
+  FOLFOX (оксаліплатин 85 мг/м² + лейковорин 400 мг/м² + 5-ФУ болюс/інфузія q14d)
+  як 2L терапія метастатичного PDAC після гемцитабін-базованої 1L при недоступності
+  nal-IRI (ONIVYDE). NCCN Cat 2A.
+  ОНІВАЙД не зареєстровано в Україні (2026) → FOLFOX є основним доступним варіантом.
+  НСЗУ-фінансуються: оксаліплатин, 5-ФУ, лейковорин.
+  ОБОВ'ЯЗКОВО: базальна оцінка нейропатії; захист від холоду при оксаліплатині;
+  білірубін ≤2× ВМН до початку.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "FOLFOX після FOLFIRINOX: ті ж самі компоненти (оксаліплатин + 5-ФУ) — перехресна резистентність; натомість гемцитабін ± наб-паклітаксел"
+  - "Без оцінки нейропатії базово: оксаліплатин → кумулятивна нейропатія; знижуйте дозу при Grade ≥2"
+  - "Не вводити оксаліплатин при білірубіні >2× ВМН: гепатична метаболізація порушена"
+  - "Уникати холодних напоїв і їжі в день введення оксаліплатину — гостра холодова дизестезія"
+  - "Без тесту DPYD у пацієнтів з ознаками підвищеного ризику: тяжка 5-ФУ токсичність у ~5-7%"
+
+sources:
+  - source_id: SRC-NCCN-PANCREATIC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Pancreatic Adenocarcinoma 2025 Category 2A: FOLFOX (modified FOLFOX6) as an
+      acceptable 2L regimen for metastatic PDAC after gemcitabine-based 1L when nal-IRI+5-FU/LV
+      is not available. Listed under "Other Recommended Regimens" for 2L+ disease.
+  - source_id: SRC-NAPOLI1-WANG-GILLAM-2016
+    position: context
+    relevant_quote_paraphrase: >
+      NAPOLI-1 (Wang-Gillam 2016 Lancet): nal-IRI+5-FU/LV mOS 6.1 vs 4.2 mo post-gemcitabine
+      (HR 0.67; NCCN Cat 1). Establishes nal-IRI as the preferred 2L; FOLFOX used when nal-IRI
+      inaccessible.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

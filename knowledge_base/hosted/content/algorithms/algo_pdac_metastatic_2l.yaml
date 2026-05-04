@@ -10,9 +10,10 @@ purpose: >
 output_indications:
   - IND-PDAC-METASTATIC-2L-NAL-IRI
   - IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+  - IND-PDAC-METASTATIC-2L-FOLFOX
 
 default_indication: IND-PDAC-METASTATIC-2L-NAL-IRI
-alternative_indication: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
+alternative_indication: IND-PDAC-METASTATIC-2L-FOLFOX
 
 decision_tree:
   # Step 1 — Performance status gate. PS must allow 2L systemic therapy.
@@ -57,17 +58,13 @@ decision_tree:
       any_of:
         - condition: "Prior 1L was gemcitabine-based (gemcitabine monotherapy, gem+nab-paclitaxel, or gem+erlotinib)"
     if_true:
-      result: IND-PDAC-METASTATIC-2L-NAL-IRI
+      next_step: 31
       notes: >
-        After gemcitabine-based 1L: nal-IRI (ONIVYDE) + 5-FU/LV is the
-        preferred 2L regimen (NAPOLI-1; FDA approved Oct 2015; NCCN Category 1).
-        mOS 6.1 vs 4.2 mo vs 5-FU/LV alone (HR 0.67, p=0.012). FOLFOX or
-        modified FOLFOX (oxaliplatin 85mg/m²+5-FU/LV q2w) is an accessible
-        alternative when ONIVYDE is unavailable (NCCN Category 2A; no phase 3 RCT
-        in this setting). BRCA1/2 germline-mutated patients who received
-        platinum-containing 1L and achieved ≥16-week disease control: olaparib
-        maintenance (POLO trial, IND-PDAC-MAINTENANCE-OLAPARIB-BRCA) remains an
-        option even at 2L if not already used.
+        After gemcitabine-based 1L: routes to step 31 (nal-IRI access gate).
+        Nal-IRI+5-FU/LV preferred when accessible (NAPOLI-1; NCCN Cat 1).
+        FOLFOX when nal-IRI unavailable (ONIVYDE not registered in Ukraine).
+        BRCA1/2 germline-mutated patients: olaparib maintenance (IND-PDAC-MAINTENANCE-
+        OLAPARIB-BRCA) applicable at 2L if prior platinum-containing and disease control.
     if_false:
       result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
       notes: >
@@ -79,6 +76,27 @@ decision_tree:
         neuropathy from prior oxaliplatin. Single-agent gemcitabine if intolerant
         of nab-paclitaxel.
 
+  # Step 31 — Nal-IRI vs FOLFOX access gate (gemcitabine-pretreated track).
+  # ONIVYDE not registered in Ukraine (as of 2026) → FOLFOX is the accessible fallback.
+  # Nal-IRI+5-FU/LV is Cat 1; FOLFOX is Cat 2A (no phase 3 RCT in PDAC 2L).
+  - step: 31
+    evaluate:
+      all_of:
+        - condition: "Nal-IRI (ONIVYDE, nanoliposomal irinotecan) accessible (registered + stocked at prescribing centre)"
+    if_true:
+      result: IND-PDAC-METASTATIC-2L-NAL-IRI
+      notes: >
+        Nal-IRI accessible: nal-IRI 70 mg/m² + 5-FU/LV q14d (REG-NAL-IRI-5FU-LV-PDAC;
+        NAPOLI-1 Wang-Gillam Lancet 2016; mOS 6.1 vs 4.2 mo; HR 0.67; NCCN Cat 1).
+    if_false:
+      result: IND-PDAC-METASTATIC-2L-FOLFOX
+      notes: >
+        Nal-IRI inaccessible (ONIVYDE not registered/stocked): FOLFOX (oxaliplatin 85 mg/m²
+        + leucovorin 400 mg/m² + 5-FU bolus/CIV q14d; REG-FOLFOX; NCCN Cat 2A).
+        Cross-class switch after gemcitabine; modest evidence (phase 2 data; mOS ~4.5 mo).
+        When ONIVYDE becomes available: switch to nal-IRI-based regimen (preferred Cat 1).
+    notes: "Step 31 added 2026-05-04 (Workstream BX): nal-IRI vs FOLFOX UA access gate. ONIVYDE not registered in Ukraine → FOLFOX is the accessible 2L alternative post-gemcitabine. IND-PDAC-METASTATIC-2L-FOLFOX wired. Gap CLOSED."
+
 sources:
   - SRC-NAPOLI1-WANG-GILLAM-2016
   - SRC-NCCN-PANCREATIC-2025
@@ -86,16 +104,15 @@ sources:
 
 last_reviewed: "2026-05-04"
 notes: >
-  Two-backbone 2L routing: gemcitabine-pretreated → nal-IRI+5-FU/LV (Cat 1);
-  FOLFIRINOX-pretreated → gem±nab-pac (Cat 2A).
+  UPDATED 2026-05-04 (Workstream BX): IND-PDAC-METASTATIC-2L-FOLFOX authored and
+  wired at step 31 as nal-IRI access gate fallback (NCCN Cat 2A; NSZU-funded UA).
+  Gap CLOSED. ROUTING SUMMARY: (1) ECOG ≥3 → BSC; (2) Bilirubin >2× ULN → biliary
+  drainage first; (3) Gemcitabine-pretreated → step 31 → nal-IRI if accessible,
+  FOLFOX if not; (3 if_false) FOLFIRINOX-pretreated → gem±nab-pac 2L.
 
+  Remaining notes:
   IND-PDAC-METASTATIC-1L-GEM-NAB-PAC doubles as the 2L regimen post-FOLFIRINOX —
   same dosing applies in both 1L and 2L contexts.
-
-  Ukraine access note: ONIVYDE (nal-IRI) not registered in Ukraine. Post-gemcitabine
-  patients in Ukraine: FOLFOX (oxaliplatin+5-FU/LV) is the accessible alternative
-  (lower evidence, no phase 3 2L data); irinotecan + 5-FU/LV (non-liposomal) is also
-  used off-label but with different PK profile from ONIVYDE.
 
   3L and beyond: very limited evidence; consider clinical trial or best supportive care.
   Gemcitabine rechallenge after both FOLFIRINOX and gem-based therapy: minimal benefit.
