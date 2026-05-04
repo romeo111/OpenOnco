@@ -1,0 +1,69 @@
+id: REG-DABRAFENIB-TRAMETINIB-MELANOMA-ADJUVANT
+name: "Dabrafenib + Trametinib adjuvant (resected BRAF V600E/K-mutant melanoma; COMBI-AD)"
+name_ua: "Дабрафеніб + Траметиніб ад'ювантно (резектована BRAF V600E/K-мутантна меланома; COMBI-AD)"
+alternate_names: ["COMBI-AD regimen", "dab+tram adjuvant melanoma", "dabrafenib trametinib 12 months"]
+components:
+  - drug_id: DRUG-DABRAFENIB
+    dose: "150 mg PO BID (twice daily)"
+    schedule: "Continuous twice-daily dosing; take consistently with or without food (but consistently)"
+    route: PO
+    notes: >
+      Fasting recommended (1h before or 2h after food) for optimal and consistent absorption.
+      Dabrafenib should be taken at approximately same time each day. If missed dose:
+      take only if >6 hours until next dose; skip if <6 hours to next dose.
+      Avoid grapefruit (moderate CYP3A4 inhibitor). Strong CYP3A4 inhibitors → reduce dose.
+  - drug_id: DRUG-TRAMETINIB
+    dose: "2 mg PO once daily"
+    schedule: "Continuous once-daily dosing; take consistently with or without food"
+    route: PO
+    notes: >
+      Trametinib once daily. Administer at same time each day. If missed dose:
+      take only if >12 hours until next dose; skip if <12 hours.
+      REMS enrollment: required in US for trametinib. MEK inhibitor class effect: ocular toxicity
+      monitoring (vision changes → ophthalmology referral).
+cycle_length_days: 28
+total_cycles: "12 months fixed duration (COMBI-AD protocol: 12 months; Long 2017 NEJM)"
+toxicity_profile: moderate
+premedication: []
+mandatory_supportive_care:
+  - "Skin toxicity monitoring: rash, hyperkeratosis, hand-foot skin reaction q4 weeks (MEK inhibitor); dermatology referral if Grade ≥2"
+  - "Ophthalmology monitoring: q3 months (MEK inhibitor → retinal pigment epithelial detachment; central serous retinopathy); urgent referral if visual changes"
+  - "Blood pressure: q4 weeks (MEK inhibitor → HTN; BRAF inhibitor also); treat if ≥Grade 2"
+  - "ECG + LFTs: baseline + after 4 weeks, then q3 months (BRAF inhibitor: QTc prolongation, hepatotoxicity)"
+  - "CBC: baseline + monthly (myelosuppression uncommon but monitor)"
+  - "Skin surveillance for new cutaneous malignancies: BRAF inhibitor → cutaneous squamous cell carcinoma (cuSCC), keratoacanthoma — dermatology q3 months"
+  - "Pyrexia monitoring: dabrafenib-associated fever (38-40°C) in ~50%; interrupt dabrafenib; antipyretics; restart at same or reduced dose"
+dose_adjustments:
+  - condition: "Pyrexia Grade 2 (fever 38-40°C)"
+    modification: "Interrupt dabrafenib 3-7 days; antipyretics; restart dabrafenib at 100 mg BID if recurrent fever"
+  - condition: "Pyrexia Grade 3-4 (fever >40°C or complicated)"
+    modification: "Interrupt both drugs; corticosteroids (prednisolone 0.5-1 mg/kg) for refractory cases; reduce dabrafenib to 100 mg BID on restart"
+  - condition: "Grade ≥3 rash (MEK inhibitor)"
+    modification: "Interrupt trametinib 3-6 weeks; restart at 1.5 mg if resolved; permanent discontinue for Grade 4 or recurrence"
+  - condition: "Grade ≥2 ophthalmologic toxicity (RPED, uveitis)"
+    modification: "Interrupt trametinib; ophthalmology evaluation; restart only after resolution"
+  - condition: "Grade ≥3 hypertension"
+    modification: "Hold trametinib; initiate/optimize antihypertensive; restart when Grade ≤1"
+  - condition: "Grade ≥3 LFT elevation (ALT/AST >5× ULN)"
+    modification: "Hold dabrafenib; restart at 100 mg BID if Grade ≤1 within 4 weeks; permanently discontinue if recurrent"
+  - condition: "cuSCC (new cutaneous squamous cell carcinoma)"
+    modification: "Excise cuSCC; NO dose reduction of dabrafenib required (continue treatment); dermatology follow-up"
+drug_interactions:
+  - "Strong CYP3A4 inducers (rifampicin, carbamazepine, phenytoin): markedly decrease dabrafenib → avoid"
+  - "Strong CYP3A4 inhibitors (ketoconazole, clarithromycin): increase dabrafenib → reduce dabrafenib to 100 mg BID"
+  - "QTc-prolonging drugs: additive QTc risk with dabrafenib (Class Ib antiarrhythmics, fluoroquinolones, azoles) — ECG monitoring"
+  - "Warfarin: dabrafenib induces CYP2C9 → decreases warfarin → monitor INR closely; consider LMWH instead"
+  - "Hormonal contraceptives: dabrafenib induces CYP3A4 → decreased OCP efficacy → barrier contraception required"
+notes: >
+  COMBI-AD (Long 2017 NEJM; Phase 3 RCT; n=870):
+  Dabrafenib 150 mg BID + trametinib 2 mg/day × 12 months vs double placebo in resected
+  BRAF V600E/K-mutant stage III melanoma. Primary endpoint: RFS.
+  4-year RFS: 54% vs 38% (HR 0.49; p<0.001).
+  4-year OS: 77% vs 70% (HR 0.75; p=0.005 — OS pre-specified secondary endpoint).
+  Landmark data: 5-year DMFS 65% dab+tram vs 54% placebo.
+
+  IMPORTANT DISTINCTION FROM METASTATIC USE:
+  - Adjuvant: 12 months fixed duration (COMBI-AD protocol)
+  - Metastatic: continuous until progression or toxicity
+  - Lower starting dose consideration for frail/elderly: 100 mg BID dabrafenib may be discussed MDT
+last_reviewed: "2026-05-04"

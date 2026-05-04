@@ -13,8 +13,9 @@ purpose: >
 
 output_indications:
   - IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+  - IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
 default_indication: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
-alternative_indication: null
+alternative_indication: IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
 
 decision_tree:
   - step: 1
@@ -22,16 +23,36 @@ decision_tree:
       any_of:
         - red_flag: RF-MELANOMA-STAGE-III-RESECTED
     if_true:
-      result: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+      next_step: 2
     if_false:
       result: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
     notes: >
-      Single-branch scaffold — current curated patient profiles do not
-      carry `disease_state: "adjuvant"`, so this algorithm is reached
-      only when the orchestrator explicitly sets it. The metastatic-1L
-      algorithm carries an additive step 0 (RF-MELANOMA-STAGE-III-
-      RESECTED) that re-routes adjuvant biology to this Indication
-      without requiring the patient JSON migration.
+      Stage-III-resected gate. If confirmed resected stage III → step 2 (BRAF biomarker gate).
+      If not fired: default to pembrolizumab (fallback scaffold).
+
+  - step: 2
+    evaluate:
+      all_of:
+        - red_flag: RF-MELANOMA-BRAF-V600-ACTIONABLE
+        - condition: "ICI contraindicated: active autoimmune disease requiring systemic immunosuppression, prior solid organ transplant, or prior Grade ≥3 immune-related AE"
+        - condition: "No prior BRAF inhibitor (adjuvant BRAF-naive)"
+    if_true:
+      result: IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
+      notes: >
+        BRAF V600E/K-mutant + ICI contraindicated: dabrafenib 150 mg BID + trametinib 2 mg/day
+        × 12 months (REG-DABRAFENIB-TRAMETINIB-MELANOMA-ADJUVANT; COMBI-AD Long 2017 NEJM;
+        4-yr RFS 54% vs 38%; 4-yr OS 77% vs 70%; NCCN Cat 1).
+        Both dab+tram AND pembrolizumab are Cat 1 for BRAF-mutant stage III — dab+tram surfaced
+        here when ICI is contraindicated (no immune-related toxicities from BRAF+MEKi).
+    if_false:
+      result: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+      notes: >
+        BRAF-WT OR BRAF-mutant with no ICI contraindication: pembrolizumab 200 mg q3w × 12 months
+        (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III; KEYNOTE-054 Eggermont 2018 NEJM; NCCN Cat 1).
+        For BRAF V600E/K-mutant without ICI contraindication: pembrolizumab is the default
+        (ICI mechanism provides durable immune memory; dab+tram is equally valid Cat 1 alternative
+        — MDT individualization based on toxicity profile and patient preference).
+    notes: "Step 2 added 2026-05-04 (Workstream BT): BRAF V600-mutant + ICI-contraindicated gate. IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB wired. Gap CLOSED. Free-text autoimmune-contraindication condition; MDT-evaluated."
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -40,11 +61,17 @@ sources:
 
 last_reviewed: "2026-04-30"
 notes: >
-  Future scaffolding. Engine wiring for the existing curated case
-  patient_melanoma_adjuvant_pembro_stage_iii.json comes via an additive
-  step 0 in ALGO-MELANOMA-METASTATIC-1L (load-order fallback), not via
-  this state-tagged algorithm. Once the curated JSON migrates to set
-  `disease_state: "adjuvant"`, traffic shifts here directly.
-  BRAF-mutant aggressive-track (COMBI-AD) and stage IIB/IIC
-  (KEYNOTE-716) are deliberately not authored in this scaffold —
-  both are out of scope for the W5b drift fixes.
+  UPDATED 2026-05-04 (Workstream BT): IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
+  authored and wired at step 2 for BRAF V600E/K-mutant + ICI-contraindicated resected
+  stage III melanoma (COMBI-AD Long 2017 NEJM; 4-yr RFS 54% vs 38%; NCCN Cat 1). Gap CLOSED.
+  ROUTING SUMMARY: (1) Resected stage III → step 2; (2) BRAF V600-mutant + ICI-contraindicated
+  → dab+tram × 12 months; (3) BRAF-WT or ICI-eligible BRAF-mutant → pembrolizumab × 12 months.
+
+  Engine wiring: curated patient profiles without `disease_state: "adjuvant"` still receive
+  load-order fallback via step 0 in ALGO-MELANOMA-METASTATIC-1L (RF-MELANOMA-STAGE-III-RESECTED).
+  Once curated JSONs migrate to `disease_state: "adjuvant"`, traffic shifts here directly.
+
+  Remaining deferred gaps:
+  - Nivolumab adjuvant (CheckMate-238; equivalent Cat 1 to pembro): not separately modeled
+  - Stage IIB/IIC pembrolizumab adjuvant (KEYNOTE-716): separate DIS-MELANOMA-STAGE-IIC entity needed
+  - Ipilimumab 10 mg/kg adjuvant (historical EORTC-18071; largely superseded by pembro/nivo): not modeled

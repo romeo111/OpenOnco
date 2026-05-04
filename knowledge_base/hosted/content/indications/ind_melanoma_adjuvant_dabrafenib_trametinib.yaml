@@ -1,0 +1,174 @@
+id: IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  line_of_therapy: 1
+  disease_state: adjuvant
+  stage_requirements:
+    - "Completely resected stage III melanoma (AJCC 8th edition: IIIA, IIIB, IIIC, IIID) — no evidence of residual disease after surgical resection"
+    - "Resection within 12 weeks before adjuvant treatment initiation (COMBI-AD enrollment requirement)"
+    - "ECOG PS 0-1"
+    - "No prior systemic therapy for melanoma (adjuvant naive)"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, Hb ≥9 g/dL, creatinine ≤1.5× ULN, bilirubin ≤1.5× ULN, ALT/AST ≤2.5× ULN"
+    - "No active cardiac disease: LVEF ≥50%, QTc ≤480 ms at baseline"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-BRAF-V600
+      required: true
+      value_constraint: "BRAF V600E or V600K mutation confirmed by validated assay (COBAS 4800 or equivalent NGS panel)"
+      notes: >
+        COMBI-AD enrolled BRAF V600E and V600K mutant melanoma only. BRAF V600K represents
+        ~10-15% of BRAF-mutant melanoma and had similar benefit to V600E in COMBI-AD subgroup
+        analysis (though with fewer patients). BRAF V600R/D/M are rare and not included in
+        COMBI-AD label — use is off-label extrapolation.
+        BRAF testing is MANDATORY before prescribing — BRAF-WT melanoma cannot benefit from
+        BRAF inhibitors and may be harmed (paradoxical MAPK activation).
+  biomarker_requirements_excluded:
+    - "BRAF WT (wild-type, BRAF V600 negative): dab+tram inactive; pembrolizumab or nivolumab adjuvant"
+    - "BRAF non-V600E/K variants (V600R/D/M, rare): uncertain benefit; MDT recommendation"
+  demographic_constraints:
+    ecog_max: 1
+    notes: >
+      COMBI-AD enrolled ECOG 0-1. Elderly patients (≥70) with good organ function can receive
+      adjuvant dab+tram. Dose reductions for pyrexia or toxicity are common (~50% of patients
+      experience drug-related fever). Caregiver support for oral twice-daily dosing adherence
+      is important in older or cognitively impaired patients.
+
+recommended_regimen: REG-DABRAFENIB-TRAMETINIB-MELANOMA-ADJUVANT
+alternative_regimens:
+  - regimen_id: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+    description: >
+      Pembrolizumab 200 mg q3w × 12 months (KEYNOTE-054; Eggermont 2018 NEJM; 5-yr RFS 59%
+      vs 44% placebo; NCCN Cat 1). Preferred over dab+tram when: BRAF-WT, ICI not
+      contraindicated, MDT preference for checkpoint inhibitor mechanism.
+      Both pembro and dab+tram are Cat 1 for BRAF V600E/K mutant stage III melanoma —
+      individualized selection based on toxicity profile, autoimmune history, adherence.
+
+concurrent_therapy:
+  - "Sunscreen SPF ≥50+ and protective clothing: BRAF inhibitor → photosensitivity"
+  - "Dermatology surveillance q3 months: cuSCC/keratoacanthoma detection (excise when found; no treatment modification needed)"
+  - "Ophthalmology baseline + q3 months: RPED/uveitis screening (MEK inhibitor)"
+  - "ECG monthly × 3 months, then q3 months (QTc monitoring; dabrafenib)"
+
+followed_by:
+  - "After 12 months dab+tram: surveillance only (no maintenance)"
+  - "Active surveillance: melanoma-specific history + physical exam q3 months × 2 years, then q6 months × 3 years, then annually"
+  - "CT chest/abdomen/pelvis q6 months × 3 years post-completion (NCCN imaging recommendation for stage III)"
+  - "Brain MRI annually or symptom-driven (CNS metastasis monitoring)"
+  - "At recurrence: systemic therapy for stage IV — dab+tram (restarted; effective post-adjuvant relapse) OR combination ICI (nivo+ipi or pembro mono)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  rfs_4yr: "54% (COMBI-AD; Long 2017 NEJM + follow-up; dab+tram arm vs 38% placebo)"
+  os_4yr: "77% (COMBI-AD follow-up; dab+tram vs 70% placebo; HR 0.75; p=0.005)"
+  dmfs_5yr: "65% (COMBI-AD 5-year follow-up; vs 54% placebo)"
+  notes: >
+    COMBI-AD (Long 2017 NEJM; Phase 3 RCT; n=870):
+    Primary endpoint: RFS.
+    Dab+tram 12 months vs double placebo for resected BRAF V600E/K-mutant stage III melanoma.
+    4-year RFS: 54% vs 38% (HR 0.49; 95% CI 0.40-0.59; p<0.001).
+    4-year OS: 77% vs 70% (HR 0.75; p=0.005 — pre-specified secondary endpoint).
+    5-year DMFS: 65% dab+tram vs 54% placebo.
+
+    COMPARISON TO PEMBROLIZUMAB (no head-to-head):
+    Both COMBI-AD (dab+tram) and KEYNOTE-054 (pembro) are NCCN Cat 1 for BRAF-mutant
+    resected stage III melanoma. Cross-trial comparison is difficult due to different
+    populations, staging systems, and endpoints. Both show ~50% reduction in recurrence risk.
+
+    PRACTICAL SELECTION:
+    - Dab+tram: oral twice-daily/once-daily; no infusion; BRAF V600E/K required; pyrexia ~50%
+    - Pembrolizumab: IV q3w infusion; BRAF WT or mutant; immune-related AEs (colitis, pneumonitis)
+    - ICI contraindications (active autoimmune, transplant, steroid-dependent): dab+tram preferred for BRAF-mutant patients
+
+hard_contraindications:
+  - "BRAF WT melanoma: BRAF inhibitors may cause paradoxical MAPK activation and tumor acceleration"
+  - "Prior BRAF inhibitor therapy: for adjuvant — must be BRAF-inhibitor naive (no prior vemurafenib, dabrafenib, encorafenib)"
+  - "QTc >480 ms at baseline: dabrafenib QTc prolongation risk"
+  - "LVEF <50%: trametinib cardiac toxicity"
+  - "Severe hepatic impairment (bilirubin >3× ULN): dabrafenib primarily hepatically metabolized"
+
+red_flags_triggering_alternative:
+  - condition: "BRAF WT melanoma → IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III (pembrolizumab Cat 1; dab+tram inactive in WT)"
+  - condition: "RF-MELANOMA-BRAF-V600-ACTIONABLE fires on BRAF V600E/K → dab+tram is an alternative to pembro (MDT choice)"
+  - condition: "Prior or active autoimmune disease contraindicating ICI → dab+tram preferred for BRAF-mutant patients (no immune-related toxicities from BRAF+MEKi)"
+  - condition: "Strong adherence concerns (oral BID dabrafenib + daily trametinib) → pembrolizumab q3w IV preferred"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "BRAF V600E/K mutation confirmed (COBAS 4800, FoundationOne CDx, or equivalent): MANDATORY gate"
+  - "ECG: baseline QTc (must be ≤480 ms)"
+  - "Echocardiogram or MUGA: LVEF baseline (trametinib → cardiomyopathy)"
+  - "Ophthalmology exam: baseline (trametinib → RPED/uveitis)"
+  - "LDH: prognostic baseline"
+  - "CT chest/abdomen/pelvis: confirm no distant metastases (stage III adjuvant, not stage IV metastatic)"
+  - "Brain MRI: confirm no CNS metastases before adjuvant start"
+
+desired_tests:
+  - "Dermatology baseline exam: cuSCC surveillance program start (BRAF inhibitor)"
+  - "NRAS mutation status: relevant if disease recurs (NRAS-mutant = BRAF inhibitor resistance)"
+  - "PD-L1 expression (TPS): prognostic for ICI but NOT required for dab+tram selection"
+
+rationale: >
+  Dabrafenib (BRAF V600 inhibitor) + trametinib (MEK1/2 inhibitor) targets the activated
+  MAPK/ERK pathway downstream of mutant BRAF V600E/K. Simultaneous BRAF + MEK inhibition
+  reduces paradoxical ERK activation and delays resistance compared to BRAF inhibitor monotherapy.
+
+  In the adjuvant setting, eradicating micrometastatic disease during the 12-month window
+  reduces risk of distant metastasis (DMFS benefit) and improves OS. The COMBI-AD 5-year
+  follow-up demonstrates sustained RFS and OS benefit.
+
+  KEY CLINICAL DISTINCTION FROM PEMBROLIZUMAB ADJUVANT:
+  1. Mechanism: targeted (BRAF+MEK) vs immune checkpoint (anti-PD-1)
+  2. Toxicity: pyrexia (~50%), cuSCC (BRAF paradox), ocular (RPED), HTN vs immune-related (colitis, pneumonitis, thyroiditis)
+  3. Autoimmune history: ICI contraindicated → dab+tram preferred for BRAF V600-mutant patients
+  4. Adherence: oral BID (dab) + daily (tram) vs IV q3w (pembro) — patient preference matters
+  5. Both are Cat 1; MDT individualization is the key decision tool
+
+  RELAPSE AFTER ADJUVANT DAB+TRAM: ~40% of patients relapse after COMBI-AD dab+tram.
+  At relapse: reinitiate dab+tram (may still respond) OR switch to ICI (pembro or nivo+ipi).
+  Post-adjuvant ICI (pembro) for BRAF-mutant relapse: effective (~50% ORR in metastatic setting).
+
+rationale_ua: >
+  Дабрафеніб 150 мг × 2/добу + Траметиніб 2 мг/добу × 12 місяців ад'ювантно при
+  резектованій BRAF V600E/K-мутантній меланомі стадії III. COMBI-AD (Long 2017 NEJM):
+  4-річна БПВ 54% проти 38%; HR 0.49; 5-річна ВДМЦ 65% проти 54%.
+  NCCN Cat 1. Переваги перед пембролізумабом при: протипоказаннях до ICI (аутоімунні стани).
+  В Україні: дабрафеніб + траметиніб зареєстровані для метастатичної меланоми;
+  ад'ювантне застосування — уточнити поза-реєстраційний статус за НСЗУ (2026).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без підтвердженої BRAF V600E/K мутації: BRAF-інгібітори при BRAF-WT — парадоксальна активація MAPK"
+  - "Без базової ЕКГ: дабрафеніб → подовження QTc; QTc >480 мс — протипоказання"
+  - "Ад'ювантно >12 місяців: COMBI-AD — 12 місяців фіксовано; немає даних по тривалішому курсу"
+  - "Без дерматологічного спостереження: дабрафеніб → КпПРЕ; видалення при виявленні"
+  - "Без офтальмологічного скринінгу: траметиніб → відшарування ПРЕ; моніторинг q3 міс"
+  - "Ігнорувати гарячку 38-40°С: перервати дабрафеніб; жарознижувальні; відновити після нормалізації t°"
+
+sources:
+  - source_id: SRC-COMBI-AD-LONG-2017
+    position: supports
+    relevant_quote_paraphrase: >
+      COMBI-AD (Long 2017 NEJM; Phase 3; n=870): dabrafenib+trametinib × 12 months vs
+      placebo in resected BRAF V600E/K-mutant stage III melanoma. 4-yr RFS 54% vs 38%
+      (HR 0.49; p<0.001). 4-yr OS 77% vs 70% (HR 0.75; p=0.005). NCCN Cat 1.
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Melanoma 2025 Category 1: dabrafenib+trametinib × 12 months adjuvant for
+      resected BRAF V600E/K-mutant stage III melanoma (COMBI-AD basis).
+      Equivalent Category 1 recommendation alongside pembrolizumab and nivolumab.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
