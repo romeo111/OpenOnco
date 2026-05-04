@@ -1,0 +1,71 @@
+id: REG-PEMBRO-CHEMO-NSCLC-PERIOP
+name: "Pembrolizumab + Platinum-based Chemotherapy (Perioperative NSCLC; KEYNOTE-671)"
+
+drugs:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    role: primary
+    dose: "200 mg IV Q3W (neoadjuvant phase, cycles 1-4); 200 mg IV Q3W (adjuvant phase, cycles 5-17)"
+    dose_modification: >
+      Hold for Grade ≥3 irAE; dexamethasone for immune-mediated toxicity.
+      No dose reduction — hold or discontinue only.
+  - drug_id: DRUG-CARBOPLATIN
+    role: primary
+    dose: "AUC 5 or 6 IV Q3W (cycles 1-4 neoadjuvant only)"
+    dose_modification: "Reduce if GFR decreases; cisplatin option if fit"
+  - drug_id: DRUG-PACLITAXEL
+    role: primary
+    dose: "200 mg/m² IV Q3W (cycles 1-4 neoadjuvant only)"
+    dose_modification: "Reduce for Grade ≥2 neuropathy or neutropenia"
+    alternative: "Nab-paclitaxel 100 mg/m² IV Days 1, 8, 15 Q3W may be substituted"
+
+cycle:
+  neoadjuvant_cycles: 4
+  neoadjuvant_length_days: 21
+  surgery_after_neoadjuvant: true
+  adjuvant_cycles: 13
+  adjuvant_length_days: 21
+  total_pembro_duration_cycles: 17
+  treatment_until: "Completion of 17 cycles or unacceptable toxicity or progression"
+
+administration_notes: >
+  NEOADJUVANT (cycles 1-4): pembrolizumab 200mg + carboplatin/paclitaxel Q3W × 4 cycles.
+  Surgery: 4-8 weeks after completing neoadjuvant (restaging CT before surgery).
+  ADJUVANT (cycles 5-17): pembrolizumab 200mg Q3W × 13 cycles (regardless of pCR status).
+  Chemo NOT given in adjuvant phase — pembrolizumab only.
+  Cisplatin 75 mg/m² Q3W may substitute carboplatin in cisplatin-eligible patients.
+  Nab-paclitaxel 100 mg/m² Days 1/8/15 may substitute paclitaxel Q3W.
+  Standard pembrolizumab premedication (antihistamine + antipyretic) per institutional protocol.
+  Steroids for irAE management (dexamethasone 1-2 mg/kg/day for Grade ≥2 irAE).
+
+monitoring:
+  - "Restaging CT after 4 neoadjuvant cycles (pre-surgical assessment)"
+  - "Surgical consultation: mediastinal staging (EBUS/mediastinoscopy) + resectability assessment"
+  - "LFTs, TSH, CBC: baseline and before each cycle"
+  - "Cortisol/ACTH (adrenal insufficiency screen) if clinically indicated"
+  - "Post-surgical: CT chest q3 months × 2 years, then q6 months × 3 years"
+  - "Thyroid function q12 weeks during adjuvant phase"
+
+supportive_care:
+  - "G-CSF (filgrastim/pegfilgrastim) for febrile neutropenia prevention (neoadjuvant cycles)"
+  - "5-HT3 antagonist + dexamethasone antiemesis (neoadjuvant chemo cycles)"
+  - "Neuropathy monitoring (paclitaxel)"
+
+contraindications:
+  - "Known EGFR sensitizing mutation or ALK/ROS1 rearrangement (benefit uncertain; targeted adjuvant preferred)"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior organ transplant"
+  - "ECOG PS ≥2"
+
+evidence_source:
+  - SRC-KEYNOTE671-WAKELEE-2023
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  KEYNOTE-671 regimen. FDA approved Sep 2023 for resectable stage II-IIIB NSCLC.
+  The only perioperative NSCLC regimen with positive OS data at primary analysis
+  (OS HR 0.73; p=0.004). Pembrolizumab continues × 13 adjuvant cycles regardless
+  of surgical pathological response. Chemo given neoadjuvant only (not adjuvant).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

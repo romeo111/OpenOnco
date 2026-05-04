@@ -1,0 +1,95 @@
+id: IND-NSCLC-RESECTABLE-PERIOP-NIVO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  stage_stratum: RESECTABLE
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resectable stage IIA, IIIB, or select IIIC NSCLC (surgically resectable per MDT)"
+    - "No prior systemic therapy for NSCLC"
+  biomarker_requirements:
+    - "PD-L1: not required for eligibility — CheckMate-77T unselected"
+    - "EGFR/ALK/ROS1: testing REQUIRED before starting — sensitizing EGFR or ALK/ROS1 → targeted adjuvant preferred"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "sensitizing mutation — osimertinib adjuvant preferred"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-NIVO-CHEMO-NSCLC-PERIOP
+
+concurrent_therapy:
+  - "Thoracic surgery MDT evaluation required before treatment initiation"
+
+followed_by:
+  - "Surgery: anatomic resection 4-8 weeks after neoadjuvant completion"
+  - "Adjuvant nivolumab: 480 mg IV Q4W × 52 weeks post-surgery"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pcr_rate: "25.3% (nivo) vs 4.7% (placebo)"
+  pcr_p_value: "<0.0001"
+  efs_hr: 0.58
+  notes: >
+    CheckMate-77T (Cascone 2023 NEJM; NCT04025879; Phase 3):
+    Nivolumab 360mg Q3W + chemo × 4 neoadjuvant → surgery → nivolumab 480mg Q4W × 52 wk
+    vs placebo + chemo → surgery → placebo. Resectable stage IIA-IIIB NSCLC (N=461).
+    pCR: 25.3% vs 4.7% (p<0.0001); EFS HR 0.58; 18-mo EFS ~70% vs ~50%.
+    FDA approved December 2023. NCCN NSCLC 2025: Category 1.
+    Highest pCR rate among the 3 perioperative trials; OS data still maturing.
+
+hard_contraindications:
+  - "Known sensitizing EGFR mutation or ALK/ROS1 rearrangement — targeted adjuvant preferred"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior organ transplant"
+  - "ECOG PS ≥2"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "Patient with inflammatory bowel disease: higher irAE-colitis risk; consider pembrolizumab instead"
+  - "Need for shorter adjuvant duration: durvalumab 12 months vs nivolumab 52 weeks"
+
+required_tests:
+  - "Tissue NGS: EGFR, ALK, ROS1, KRAS, PD-L1 — MANDATORY"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-TSH
+  - "PFTs — surgical planning"
+  - "CT CAP + PET-CT staging"
+
+desired_tests:
+  - "EBUS/mediastinoscopy for mediastinal staging"
+  - "Brain MRI"
+
+rationale: >
+  CheckMate-77T (Cascone 2023 NEJM) demonstrated perioperative nivolumab+chemo
+  significantly improves pCR (25.3% vs 4.7%; p<0.0001) and EFS (HR 0.58) in
+  resectable stage IIA-IIIB NSCLC. FDA approved December 2023. NCCN Cat 1.
+  Highest pCR rate of the 3 perioperative ICI trials (cross-trial; no head-to-head).
+  Key distinction from pembrolizumab (KEYNOTE-671): no OS data yet at primary
+  analysis vs pembro OS HR 0.73. Adjuvant nivolumab: 480 mg Q4W (extended interval)
+  vs neoadjuvant 360 mg Q3W — dose differs between phases.
+
+sources:
+  - source_id: SRC-CM77T-CASCONE-2023
+    position: supports
+    relevant_quote_paraphrase: "CheckMate-77T: nivolumab perioperative for resectable NSCLC — pCR 25.3% vs 4.7% (p<0.0001); EFS HR 0.58; FDA Dec 2023"
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ES 2026-05-04. Perioperative nivolumab for resectable NSCLC.
+  FDA approved Dec 2023 (CheckMate-77T). Two-reviewer clinical signoff required
+  per CHARTER §6.1.

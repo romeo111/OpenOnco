@@ -1,0 +1,62 @@
+id: REG-DURVALUMAB-CHEMO-NSCLC-PERIOP
+name: "Durvalumab + Platinum-based Chemotherapy (Perioperative NSCLC; AEGEAN)"
+
+drugs:
+  - drug_id: DRUG-DURVALUMAB
+    role: primary
+    dose: "1500 mg IV Q3W (neoadjuvant, cycles 1-4); 1500 mg IV Q4W (adjuvant, × 12 months)"
+    dose_modification: >
+      Hold for Grade ≥3 irAE. No dose reduction — hold or discontinue.
+      Adjuvant durvalumab: 1500 mg Q4W × 12 months.
+  - drug_id: DRUG-CARBOPLATIN
+    role: primary
+    dose: "AUC 5 or 6 IV Q3W (cycles 1-4 neoadjuvant only)"
+  - drug_id: DRUG-PACLITAXEL
+    role: primary
+    dose: "175-200 mg/m² IV Q3W (cycles 1-4 neoadjuvant only)"
+    alternative: "Nab-paclitaxel 100 mg/m² Days 1, 8, 15 may be substituted; cisplatin-based regimen also used"
+
+cycle:
+  neoadjuvant_cycles: 4
+  neoadjuvant_length_days: 21
+  surgery_after_neoadjuvant: true
+  adjuvant_months: 12
+  adjuvant_length_days: 28
+  treatment_until: "Completion of 12-month adjuvant durvalumab or unacceptable toxicity or progression"
+
+administration_notes: >
+  NEOADJUVANT (cycles 1-4): durvalumab 1500mg + carboplatin/paclitaxel Q3W × 4 cycles.
+  Surgery: 4-8 weeks after completing neoadjuvant.
+  ADJUVANT: durvalumab 1500 mg IV Q4W × 12 months (regardless of pCR status).
+  Durvalumab dose is a flat dose of 1500 mg (not weight-based) — same in both phases.
+  Chemo NOT given in adjuvant phase.
+  Cisplatin-based chemo may be used per physician preference/patient eligibility.
+
+monitoring:
+  - "Restaging imaging before surgery (CT or PET-CT)"
+  - "LFTs, TSH, CBC: before each cycle"
+  - "Surgical assessment: resectability and mediastinal staging"
+  - "Thyroid monitoring during adjuvant phase"
+
+supportive_care:
+  - "G-CSF for neutropenia prophylaxis (neoadjuvant cycles)"
+  - "Antiemetics during neoadjuvant chemo cycles"
+  - "Corticosteroids for irAE"
+
+contraindications:
+  - "Known EGFR sensitizing mutation or ALK rearrangement (targeted adjuvant preferred)"
+  - "Active autoimmune disease"
+  - "ECOG PS ≥2"
+
+evidence_source:
+  - SRC-AEGEAN-HEYMACH-2023
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  AEGEAN regimen. FDA approved Apr 2024 for resectable stage IIA-IIIB NSCLC.
+  Durvalumab 1500 mg flat dose (same in neoadjuvant Q3W and adjuvant Q4W).
+  Adjuvant duration: 12 months. Two-reviewer clinical signoff required per
+  CHARTER §6.1.

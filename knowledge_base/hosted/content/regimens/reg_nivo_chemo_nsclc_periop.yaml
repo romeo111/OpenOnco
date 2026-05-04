@@ -1,0 +1,67 @@
+id: REG-NIVO-CHEMO-NSCLC-PERIOP
+name: "Nivolumab + Platinum-based Chemotherapy (Perioperative NSCLC; CheckMate-77T)"
+
+drugs:
+  - drug_id: DRUG-NIVOLUMAB
+    role: primary
+    dose: "360 mg IV Q3W (neoadjuvant, cycles 1-4); 480 mg IV Q4W (adjuvant, up to 52 weeks)"
+    dose_modification: >
+      Hold for Grade ≥3 irAE. No dose reduction — hold or discontinue.
+      NOTE: adjuvant dosing is 480 mg Q4W (flat dose extended interval) — different
+      from neoadjuvant 360 mg Q3W.
+  - drug_id: DRUG-CARBOPLATIN
+    role: primary
+    dose: "AUC 5 or 6 IV Q3W (cycles 1-4 neoadjuvant only)"
+    dose_modification: "Reduce per standard carboplatin dose adjustment guidelines"
+  - drug_id: DRUG-PACLITAXEL
+    role: primary
+    dose: "175-200 mg/m² IV Q3W (cycles 1-4 neoadjuvant only)"
+    dose_modification: "Reduce for Grade ≥2 neuropathy or neutropenia"
+    alternative: "Nab-paclitaxel 100 mg/m² IV Days 1, 8, 15 Q3W may be substituted"
+
+cycle:
+  neoadjuvant_cycles: 4
+  neoadjuvant_length_days: 21
+  surgery_after_neoadjuvant: true
+  adjuvant_nivo_weeks: 52
+  adjuvant_length_days: 28
+  treatment_until: "Completion of 52 weeks adjuvant or unacceptable toxicity or progression"
+
+administration_notes: >
+  NEOADJUVANT (cycles 1-4): nivolumab 360mg + carboplatin/paclitaxel Q3W × 4 cycles.
+  Surgery: 4-8 weeks after completing neoadjuvant (restaging imaging required).
+  ADJUVANT: nivolumab 480 mg IV Q4W × 52 weeks (regardless of pCR status).
+  CRITICAL DOSING NOTE: adjuvant dose is 480 mg Q4W — NOT the neoadjuvant 360 mg Q3W.
+  Chemo NOT continued in adjuvant phase.
+  Cisplatin 75 mg/m² Q3W may substitute carboplatin if patient is cisplatin-eligible.
+
+monitoring:
+  - "Restaging CT/PET after neoadjuvant cycles (pre-surgical assessment)"
+  - "LFTs, TSH, CBC: baseline and before each cycle"
+  - "Surgical staging: PFTs, EBUS if mediastinal nodes suspicious"
+  - "Post-surgical imaging: CT chest per oncologic follow-up standards"
+
+supportive_care:
+  - "G-CSF for neutropenia prophylaxis (neoadjuvant cycles)"
+  - "Antiemetics: 5-HT3 + dexamethasone (neoadjuvant chemo)"
+  - "Corticosteroids for irAE management"
+
+contraindications:
+  - "Known EGFR sensitizing mutation or ALK rearrangement (targeted adjuvant preferred)"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "ECOG PS ≥2"
+  - "Prior organ transplant"
+
+evidence_source:
+  - SRC-CM77T-CASCONE-2023
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  CheckMate-77T regimen. FDA approved Dec 2023 for resectable stage IIA-IIIB NSCLC.
+  Highest pCR rate of the 3 perioperative trials (25.3%). CRITICAL: adjuvant
+  nivolumab is 480 mg Q4W (extended interval), not 360 mg Q3W (neoadjuvant dose).
+  Total adjuvant duration: 52 weeks (~13 Q4W doses). Two-reviewer clinical
+  signoff required per CHARTER §6.1.

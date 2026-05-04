@@ -1,0 +1,116 @@
+id: ALGO-NSCLC-RESECTABLE-PERIOP
+applicable_to_disease: DIS-NSCLC
+applicable_to_disease_state: RESECTABLE
+applicable_to_line_of_therapy: 1
+purpose: >
+  Perioperative ICI selection for resectable NSCLC (stage IIA-IIIB).
+  Three FDA-approved Cat 1 options: pembrolizumab (KEYNOTE-671; FDA Sep 2023;
+  only perioperative trial with positive OS), nivolumab (CheckMate-77T; FDA Dec 2023;
+  highest pCR 25.3%), durvalumab (AEGEAN; FDA Apr 2024; 12-month adjuvant).
+  Gate 1: exclude known sensitizing EGFR/ALK/ROS1 → targeted adjuvant.
+  Gate 2: confirm resectability + ECOG 0-1.
+  Default result: pembrolizumab (preferred per NCCN — only trial with OS benefit).
+
+output_indications:
+  - IND-NSCLC-RESECTABLE-PERIOP-PEMBRO
+  - IND-NSCLC-RESECTABLE-PERIOP-NIVO
+  - IND-NSCLC-RESECTABLE-PERIOP-DURVA
+
+default_indication: IND-NSCLC-RESECTABLE-PERIOP-PEMBRO
+
+decision_tree:
+  # Step 1 — EGFR/ALK/ROS1 sensitizing mutation gate.
+  # If sensitizing driver present → surgery + targeted adjuvant (osimertinib for EGFR,
+  # ALK/ROS1 TKI for ALK/ROS1). ICI perioperative is NOT indicated: ADAURA OS HR 0.49
+  # for osimertinib adjuvant; perioperative ICI showed attenuated/no benefit in EGFR+
+  # subgroups across KEYNOTE-671, CM-77T, AEGEAN.
+  # NOTE: Testing MUST occur before treatment initiation — do not proceed without NGS.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-SENSITIZING-MUTATION
+        - red_flag: RF-NSCLC-ALK-REARRANGEMENT
+        - red_flag: RF-NSCLC-ROS1-REARRANGEMENT
+    if_true:
+      result: null
+      notes: >
+        Known sensitizing EGFR mutation (ex19del/L858R) or ALK/ROS1 rearrangement —
+        perioperative ICI is NOT indicated. Route to:
+        • EGFR+ (ex19del/L858R): surgery + osimertinib adjuvant (ADAURA; OS HR 0.49;
+          FDA 2020 neoadjuvant label expansion Apr 2024 — osimertinib neoadjuvant+adjuvant
+          also now approved per NeoADAURA 2024).
+        • ALK+: surgery + alectinib adjuvant (ALINA; OS data pending; FDA Apr 2024) or
+          crizotinib adjuvant (historical).
+        • ROS1+: no approved adjuvant TKI; clinical trial preferred.
+        Explicit hard contraindication per KEYNOTE-671, CM-77T, and AEGEAN labels.
+    if_false:
+      next_step: 2
+
+  # Step 2 — Resectability + ECOG eligibility confirmation.
+  # Thoracic surgery MDT must confirm resectability. ECOG 0-1 required (all 3 trials
+  # enrolled ECOG 0-1). ECOG ≥2 → proceed to definitive CRT or induction chemo alone.
+  - step: 2
+    evaluate:
+      all_of:
+        - red_flag: RF-NSCLC-CONFIRMED-RESECTABLE
+        - red_flag: RF-NSCLC-ECOG-0-1
+    if_true:
+      result: IND-NSCLC-RESECTABLE-PERIOP-PEMBRO
+      notes: >
+        DEFAULT: Pembrolizumab perioperative (KEYNOTE-671; Wakelee 2023 NEJM; FDA Sep 2023;
+        NCCN Cat 1 preferred). Only perioperative NSCLC trial with positive OS at primary
+        analysis (OS HR 0.73; p=0.004 interim). EFS HR 0.58; pCR 18.1% vs 4.0%.
+        Regimen: pembro 200mg Q3W + carbo/paclitaxel × 4 neoadjuvant → surgery →
+        pembro 200mg Q3W × 13 adjuvant (17 total cycles, ~1 year adjuvant).
+        PD-L1 does NOT gate eligibility — benefit shown across PD-L1 strata.
+        ALTERNATIVES (all Cat 1; selection by patient/provider preference):
+        • Nivolumab (CM-77T; Cascone 2023 NEJM; FDA Dec 2023; NCCN Cat 1):
+          highest pCR of 3 trials (25.3% vs 4.7%; EFS HR 0.58); OS data still maturing.
+          IND-NSCLC-RESECTABLE-PERIOP-NIVO. Adjuvant 480mg Q4W × 52 weeks.
+          Prefer if: patient/provider values pCR signal; IBD risk concerns (use pembro
+          over nivo per red_flags in nivo indication file).
+        • Durvalumab (AEGEAN; Heymach 2023 NEJM; FDA Apr 2024; NCCN Cat 1):
+          pCR 17.2% vs 4.3%; EFS HR 0.68; OS data immature. IND-NSCLC-RESECTABLE-PERIOP-DURVA.
+          Adjuvant 1500mg Q4W × 12 months (shorter than nivo 52-week).
+          Prefer if: patient preference for 12-month adjuvant vs 52-week/13-cycle.
+      alternatives:
+        - indication: IND-NSCLC-RESECTABLE-PERIOP-NIVO
+          criteria: "Patient/provider preference for highest pCR (25.3%; CM-77T; EFS HR 0.58); FDA Dec 2023; NCCN Cat 1; OS data immature; adjuvant nivo 480mg Q4W × 52 weeks; consider if IBD → avoid (irAE-colitis risk; use pembro instead)"
+          nccn_category: 1
+        - indication: IND-NSCLC-RESECTABLE-PERIOP-DURVA
+          criteria: "Preference for shorter adjuvant duration (12 months vs pembro 13-cycle ~1yr or nivo 52-week); FDA Apr 2024; NCCN Cat 1; OS data immature; pCR 17.2%; EFS HR 0.68"
+          nccn_category: 1
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥2 or confirmed unresectable — perioperative ICI not appropriate.
+        • ECOG ≥2: assess for systemic therapy (unresectable stage III CRT or
+          metastatic-track algorithm) or best supportive care per PS.
+        • Unresectable stage III: concurrent chemoradiation ± durvalumab consolidation
+          (PACIFIC; IND-NSCLC-STAGE3-UNRESECTABLE-DURVA if available in KB).
+
+sources:
+  - source_id: SRC-KEYNOTE671-WAKELEE-2023
+    position: supports
+  - source_id: SRC-CM77T-CASCONE-2023
+    position: supports
+  - source_id: SRC-AEGEAN-HEYMACH-2023
+    position: supports
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ES 2026-05-04. Perioperative NSCLC algorithm covering all 3 FDA-approved
+  Cat 1 options. Default = pembrolizumab (KEYNOTE-671; only positive OS at primary).
+  Alternatives: nivolumab (CM-77T; highest pCR) and durvalumab (AEGEAN; 12-mo adjuvant).
+  Step 1 hard gate: EGFR/ALK/ROS1 sensitizing mutation → targeted adjuvant, NOT ICI.
+  Companion indications: IND-NSCLC-RESECTABLE-PERIOP-PEMBRO/NIVO/DURVA.
+  Companion regimens: REG-PEMBRO-CHEMO-NSCLC-PERIOP, REG-NIVO-CHEMO-NSCLC-PERIOP,
+  REG-DURVALUMAB-CHEMO-NSCLC-PERIOP.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

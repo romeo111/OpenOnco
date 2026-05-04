@@ -1,0 +1,97 @@
+id: IND-NSCLC-RESECTABLE-PERIOP-DURVA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  stage_stratum: RESECTABLE
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resectable stage IIA-IIIB NSCLC (UICC/AJCC 8th edition)"
+    - "Confirmed surgical resectability by thoracic surgery MDT"
+    - "No prior systemic therapy for NSCLC"
+  biomarker_requirements:
+    - "PD-L1: not required for eligibility — AEGEAN enrolled regardless of PD-L1"
+    - "EGFR/ALK/ROS1: testing REQUIRED — sensitizing EGFR or ALK/ROS1 → targeted adjuvant preferred"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "sensitizing mutation — osimertinib adjuvant preferred"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-DURVALUMAB-CHEMO-NSCLC-PERIOP
+
+concurrent_therapy:
+  - "Thoracic surgery MDT evaluation required"
+
+followed_by:
+  - "Surgery: anatomic resection 4-8 weeks after neoadjuvant completion"
+  - "Adjuvant durvalumab: 1500 mg IV Q4W × 12 months post-surgery"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pcr_rate: "17.2% (durva) vs 4.3% (placebo)"
+  pcr_p_value: "<0.0001"
+  efs_hr: 0.68
+  efs_p_value: "0.004"
+  notes: >
+    AEGEAN (Heymach 2023 NEJM; NCT03800555; Phase 3):
+    Durvalumab 1500mg Q3W + chemo × 4 neoadjuvant → surgery → durvalumab 1500mg Q4W
+    × 12 months vs placebo + chemo → surgery → placebo. Stage IIA-IIIB NSCLC (N=802).
+    pCR: 17.2% vs 4.3% (p<0.0001); EFS HR 0.68 (p=0.004); 24-mo EFS ~65% vs ~52%.
+    FDA approved April 2024. NCCN NSCLC 2025: Category 1.
+    Most recent perioperative NSCLC approval; OS data immature.
+
+hard_contraindications:
+  - "Known sensitizing EGFR mutation or ALK/ROS1 rearrangement — targeted adjuvant preferred"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior organ transplant"
+  - "ECOG PS ≥2"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "Patient preference for established OS data: pembrolizumab (KEYNOTE-671) is only perioperative trial with positive OS; durvalumab OS data immature"
+
+required_tests:
+  - "Tissue NGS: EGFR, ALK, ROS1, KRAS, PD-L1 — MANDATORY"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-TSH
+  - "PFTs — surgical planning"
+  - "CT CAP + PET-CT staging"
+
+desired_tests:
+  - "EBUS/mediastinoscopy for mediastinal staging"
+  - "Brain MRI"
+
+rationale: >
+  AEGEAN (Heymach 2023 NEJM) demonstrated perioperative durvalumab+chemo
+  significantly improves pCR (17.2% vs 4.3%) and EFS (HR 0.68) in resectable
+  stage IIA-IIIB NSCLC. FDA approved April 2024. NCCN NSCLC 2025: Category 1.
+  Most recent perioperative approval. Durvalumab dose is a flat 1500 mg for
+  both neoadjuvant (Q3W) and adjuvant (Q4W) phases.
+  Key distinction: OS data not yet mature (vs KEYNOTE-671 OS HR 0.73 at primary).
+  EFS HR 0.68 numerically lower than KEYNOTE-671/CM-77T HR 0.58 — cross-trial.
+  Adjuvant duration: 12 months (shorter than nivolumab 52-week or pembro 13-cycle).
+
+sources:
+  - source_id: SRC-AEGEAN-HEYMACH-2023
+    position: supports
+    relevant_quote_paraphrase: "AEGEAN: durvalumab perioperative for resectable NSCLC — pCR 17.2% vs 4.3% (p<0.0001); EFS HR 0.68 (p=0.004); FDA Apr 2024"
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ES 2026-05-04. Perioperative durvalumab for resectable NSCLC.
+  FDA approved Apr 2024 (AEGEAN). Most recent of 3 perioperative NSCLC approvals.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

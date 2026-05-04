@@ -1,0 +1,117 @@
+id: IND-NSCLC-RESECTABLE-PERIOP-PEMBRO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  stage_stratum: RESECTABLE
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resectable stage II, IIIA, or IIIB (T3-4N2) NSCLC"
+    - "Confirmed surgical resectability by thoracic surgery MDT"
+    - "No prior systemic therapy for NSCLC"
+  biomarker_requirements:
+    - "PD-L1 testing: not required for eligibility — KEYNOTE-671 enrolled regardless of PD-L1"
+    - "EGFR/ALK/ROS1: testing REQUIRED — patients with sensitizing EGFR mutation or ALK/ROS1 rearrangement should consider targeted adjuvant therapy instead (attenuated ICI benefit)"
+    - "NGS tumor profiling before neoadjuvant: EGFR exons 18-21, KRAS G12C, ALK, ROS1, HER2, BRAF, MET, RET, NTRK — informs adjuvant targeting decisions after surgery"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "sensitizing mutation (exon 19 del, exon 21 L858R) — attenuated ICI benefit; osimertinib adjuvant preferred (ADAURA)"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+    # KEYNOTE-671 enrolled ECOG 0-1; ECOG 2 acceptable by MDT discretion only
+
+recommended_regimen: REG-PEMBRO-CHEMO-NSCLC-PERIOP
+
+concurrent_therapy:
+  - "Thoracic surgery MDT evaluation required before treatment initiation"
+
+followed_by:
+  - "Surgery: anatomic resection (lobectomy preferred; pneumonectomy MDT discussion) 4-8 weeks after neoadjuvant"
+  - "Adjuvant pembrolizumab: 200 mg Q3W × 13 cycles post-surgery (regardless of pCR)"
+  - "If EGFR sensitizing mutation found on surgical specimen: consider adding osimertinib adjuvant per ADAURA (off-label combination; MDT discussion)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  efs_hr: 0.58
+  efs_p_value: "<0.001"
+  pcr_rate: "18.1% (pembro) vs 4.0% (placebo)"
+  os_hr: 0.73
+  os_p_value: "0.004 (interim)"
+  notes: >
+    KEYNOTE-671 (Wakelee 2023 NEJM; NCT03425643; Phase 3):
+    Pembrolizumab 200mg Q3W + platinum-based chemo × 4 neoadjuvant → surgery →
+    pembrolizumab 200mg Q3W × 13 adjuvant vs placebo+chemo → surgery → placebo.
+    Resectable stage II-IIIB NSCLC, unselected for PD-L1 (N=797).
+    EFS HR 0.58 (p<0.001); pCR 18.1% vs 4.0%; OS HR 0.73 (p=0.004 at interim).
+    FDA approved September 2023. NCCN NSCLC 2025: Category 1 preferred.
+    Only perioperative NSCLC trial with positive OS data at primary analysis.
+    Total pembrolizumab: up to 17 cycles (4 neoadjuvant + 13 adjuvant).
+
+hard_contraindications:
+  - "Known sensitizing EGFR mutation (exon 19 del, exon 21 L858R) — osimertinib adjuvant preferred (ADAURA OS HR 0.49)"
+  - "Known ALK or ROS1 rearrangement — ALK/ROS1 TKI adjuvant or targeted therapy preferred"
+  - "Active autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone)"
+  - "Prior organ transplant"
+  - "ECOG PS ≥2 (relative; ECOG 2 requires MDT discussion)"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Unresectable disease (neoadjuvant ICI not appropriate)"
+  - "Active severe interstitial lung disease (ICI pneumonitis risk)"
+
+red_flags_triggering_alternative:
+  - "PD-L1 <1% or TPS <1%: benefit may be attenuated but not excluded; pembro still preferred per KEYNOTE-671 overall benefit"
+  - "Non-squamous histology with KRAS G12C: consider whether neoadjuvant KRAS-targeted approach is available on trial"
+  - "Patient preference for shorter adjuvant duration: consider durvalumab (AEGEAN: 12 months adjuvant)"
+
+required_tests:
+  - "Tissue biopsy for NGS: EGFR, ALK, ROS1, KRAS, BRAF, HER2, MET, RET, NTRK, PD-L1 TPS — MANDATORY before treatment"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "PFTs (pulmonary function tests) — surgical planning"
+  - "CT CAP + PET-CT for staging and resectability assessment"
+  - TEST-TSH
+  - "ECHO (cardiac evaluation if cisplatin planned)"
+
+desired_tests:
+  - "EBUS/mediastinoscopy: mediastinal node staging if CT/PET suspicious"
+  - "Brain MRI: rule out brain metastases"
+  - "ctDNA baseline (molecular monitoring)"
+
+rationale: >
+  KEYNOTE-671 demonstrated that perioperative pembrolizumab+chemo significantly
+  improves EFS (HR 0.58), pCR (18.1% vs 4.0%), and OS (HR 0.73) in resectable
+  stage II-IIIB NSCLC regardless of PD-L1 status. FDA approved September 2023.
+  NCCN NSCLC 2025: Category 1 preferred for resectable NSCLC.
+  This is the only perioperative NSCLC trial with positive OS at primary analysis —
+  a key differentiator from CheckMate-77T and AEGEAN (OS immature).
+  Perioperative design (neoadjuvant + adjuvant ICI) is superior to adjuvant-only
+  ICI: neoadjuvant phase generates systemic anti-tumor immune priming, potentially
+  increases pCR, and tests tumor biology before surgery.
+  Biomarker note: PD-L1 does not gate eligibility but EGFR/ALK status does —
+  sensitizing mutations predict attenuated ICI benefit (ICI less effective against
+  oncogene-driven tumors with low TMB). For EGFR+ stage II-IIIA NSCLC, osimertinib
+  adjuvant (ADAURA; OS HR 0.49) is the preferred post-surgical approach.
+
+sources:
+  - source_id: SRC-KEYNOTE671-WAKELEE-2023
+    position: supports
+    relevant_quote_paraphrase: "KEYNOTE-671: pembrolizumab perioperative for resectable stage II-IIIB NSCLC — EFS HR 0.58 (p<0.001); OS HR 0.73 (p=0.004); pCR 18.1% vs 4.0%; FDA Sep 2023"
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ES 2026-05-04. Perioperative pembrolizumab for resectable NSCLC.
+  FDA approved Sep 2023 (KEYNOTE-671). Companion to IND-NSCLC-RESECTABLE-PERIOP-NIVO
+  (CM-77T; FDA Dec 2023) and IND-NSCLC-RESECTABLE-PERIOP-DURVA (AEGEAN; FDA Apr 2024).
+  All three are Cat 1 per NCCN NSCLC 2025; pembro is preferred default (only OS data).
+  Two-reviewer clinical signoff required per CHARTER §6.1.
