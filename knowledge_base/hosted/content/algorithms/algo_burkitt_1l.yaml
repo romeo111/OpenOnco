@@ -9,6 +9,7 @@ purpose: >
 output_indications:
   - IND-BURKITT-1L-DAEPOCHR
   - IND-BURKITT-1L-CODOXM-IVAC
+  - IND-BURKITT-1L-HYPERCVAD-R
 
 default_indication: IND-BURKITT-1L-DAEPOCHR
 alternative_indication: IND-BURKITT-1L-CODOXM-IVAC
@@ -20,6 +21,28 @@ decision_tree:
         - red_flag: RF-BURKITT-HIGH-RISK
     if_true:
       result: IND-BURKITT-1L-CODOXM-IVAC
+      notes: >
+        High-risk Burkitt: R-CODOX-M/IVAC preferred (NCCN Cat 1; alternating cycles
+        with rituximab; ~80% CR rate in fit younger patients). HyperCVAD-R is an
+        equivalent Cat 1 alternative — center experience drives choice.
+      alternatives:
+        - indication_id: IND-BURKITT-1L-HYPERCVAD-R
+          nccn_category: "1"
+          criteria: >
+            High-risk Burkitt (RF-BURKITT-HIGH-RISK: CNS involvement, leukemic phase,
+            LDH >3× ULN, or bulky abdominal disease); CD20+ confirmed; MYC
+            rearrangement confirmed; age ≤60; ECOG ≤2; center has hyper-CVAD
+            experience. Alternative to CODOX-M/IVAC when institutional experience
+            favors hyper-CVAD or when CNS-intensive regimen preferred.
+          note: >
+            Rituximab + hyper-CVAD (HyperCVAD-R; NCCN Cat 1) for high-risk Burkitt:
+            alternating cycles A (cyclophosphamide + vincristine + dox + dex) and B
+            (methotrexate + cytarabine) with rituximab. IT chemotherapy for CNS
+            prophylaxis/treatment (methotrexate + cytarabine). Comparable CR rates
+            to R-CODOX-M/IVAC; choice based on institutional experience and disease
+            pattern (hyper-CVAD may be preferred when extensive CNS involvement or
+            marrow involvement). Supportive: G-CSF mandatory; TLS prophylaxis;
+            PJP prophylaxis.
     if_false:
       next_step: 2
   - step: 2
@@ -33,11 +56,18 @@ decision_tree:
       result: IND-BURKITT-1L-DAEPOCHR
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-BURKITT-2024]
-last_reviewed: "2026-04-27"
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-BURKITT-2024
+
+last_reviewed: "2026-05-04"
 notes: >
   CODOX-M/IVAC requires fit younger (age ≤60, ECOG ≤2). If high-risk
   AND not fit younger, falls back to DA-EPOCH-R + supportive care.
+  UPDATED 2026-05-04 (Workstream FL): IND-BURKITT-1L-HYPERCVAD-R added
+  to output_indications; wired as Cat 1 alternative at step 1 if_true
+  (high-risk Burkitt → CODOX-M/IVAC default; HyperCVAD-R when center
+  experience favors it). Gap CLOSED.
 
   Etiology rails (parallel to indication selection):
 

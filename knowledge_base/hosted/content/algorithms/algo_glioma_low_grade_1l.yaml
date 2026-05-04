@@ -14,6 +14,7 @@ purpose: >
 
 output_indications:
   - IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
+  - IND-GLIOMA-LOW-GRADE-1L-RT-PCV
 
 default_indication: IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
 alternative_indication: null
@@ -70,19 +71,17 @@ decision_tree:
         Typical profile: age <40 OR gross-total resection; non-enhancing residual disease;
         grade 2 (no anaplastic features); no significant mass effect.
     if_false:
-      result: null
+      result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
       notes: >
         High-risk grade 2 LGG requiring immediate RT/chemotherapy:
-        Standard regimens (NCCN CNS; RTOG-9802; CATNON):
-        (1) RT + adjuvant PCV (procarbazine + CCNU/lomustine + vincristine) — RTOG-9802:
-            12-year PFS and OS benefit for high-risk LGG (Shaw 2012 NEJM; Buckner 2016 NEJM)
-        (2) RT + temozolomide — CATNON (van den Bent 2017 Lancet; grade 3 IDH-mutant):
-            TMZ×12 cycles after RT improves OS (HR 0.64)
-        Both regimens are NCCN Category 1 for high-risk LGG. PCV is preferred for
-        oligodendroglioma (1p/19q-codeleted); RT+TMZ is an alternative.
-        After completing RT/chemotherapy, vorasidenib role at progression is under
-        investigation (not current standard for post-chemoRT residual disease).
-        MDT neuro-oncology team discussion required for high-risk LGG treatment planning.
+        IND-GLIOMA-LOW-GRADE-1L-RT-PCV (RT + adjuvant PCV; RTOG-9802;
+        Buckner 2016 NEJM; NCCN Cat 1; mPFS 10.4 vs 4.0 yr; mOS 13.3 vs 7.8 yr)
+        is the primary aggressive-track recommendation. RT + temozolomide
+        (CATNON; van den Bent 2017 Lancet) is an alternative for astrocytoma
+        IDH-mutant (non-1p/19q-codeleted); no dedicated TMZ indication entity
+        yet authored — see future authoring gap. PCV preferred for oligodendroglioma
+        (1p/19q-codeleted) per mature RTOG-9802 data. MDT neuro-oncology
+        discussion required.
 
   # Step 3 — Antiepileptic drug (AED) interaction check.
   # CYP3A4-inducing AEDs (carbamazepine, phenytoin, phenobarbital) reduce vorasidenib
@@ -166,10 +165,15 @@ notes: >
   and-wait candidates from high-risk patients requiring immediate RT+PCV/TMZ;
   (3) AED CYP3A4 interaction (most common practical implementation barrier);
   (4) ECOG/pregnancy eligibility gate.
-  HIGH-RISK LGG (age ≥40 + STR) routes to RT+PCV (RTOG-9802) or RT+TMZ (CATNON)
-  — those indications not yet authored in KB; referenced in decision tree notes.
-  NCCN CNS v3.2025 does NOT have a separate LGG algorithm in this KB yet —
-  this algorithm covers the vorasidenib-eligible post-surgical low-risk cohort.
+  UPDATED 2026-05-04 (Workstream FL): IND-GLIOMA-LOW-GRADE-1L-RT-PCV added
+  to output_indications; wired at step 2 if_false (high-risk LGG requiring
+  immediate RT+PCV — RTOG-9802; Buckner 2016 NEJM; NCCN Cat 1; mOS 13.3 vs
+  7.8 yr). Step 2 if_false previously returned null. Gap CLOSED.
+  RT+TMZ (CATNON) for astrocytoma IDH-mutant remains a gap — no dedicated
+  indication entity yet; referenced in step 2 if_false notes.
+  HIGH-RISK LGG (age ≥40 + STR) now routes to IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+  (RT+PCV) at step 2; low-risk routes to vorasidenib. NCCN CNS v3.2025 is
+  the primary guideline.
   EANO LGG source (SRC-EANO-LGG-2024) version is actually the 2021 published
   paper — EANO has not published a full 2024 update incorporating INDIGO as of
   this authoring; NCCN v3.2025 is the primary guideline incorporating August 2024 FDA
