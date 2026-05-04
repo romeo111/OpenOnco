@@ -1,16 +1,17 @@
 id: ALGO-FL-2L
 applicable_to_disease: DIS-FL
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+ relapsed/refractory FL Indication. Four tracks: (1) TRUE 2L (1 prior line, rituximab-sensitive) → R2 (rituximab+lenalidomide; AUGMENT; NCCN Cat 1; PFS HR 0.46; ORR 78%); (2) 3L+ EZH2-mutated (Y641) → tazemetostat (ORR ~69% mut vs ~35% WT); (3) 3L+ CAR-T-eligible non-EZH2 → axi-cel; (4) CAR-T-ineligible / older / no CAR-T access → mosunetuzumab bispecific (off-the-shelf). Workstream AT 2026-05-04.
+purpose: 'Select 2L+ relapsed/refractory FL Indication. Five tracks: (1) TRUE 2L rituximab-sensitive → R2 (AUGMENT; NCCN Cat 1; PFS HR 0.46; ORR 78%); (2) TRUE 2L rituximab-REFRACTORY → obinutuzumab+benda (GADOLIN; NCCN Cat 1; PFS HR 0.55; ORR 69%); (3) 3L+ EZH2-mutated (Y641) → tazemetostat (ORR ~69%); (4) 3L+ CAR-T-eligible non-EZH2 → axi-cel; (5) CAR-T-ineligible / older → mosunetuzumab bispecific. Workstreams AT+AX 2026-05-04.
 
   '
 output_indications:
 - IND-FL-2L-R2
+- IND-FL-2L-OBINU-BENDA
 - IND-FL-3L-TAZEMETOSTAT
 - IND-FL-3L-AXICEL-CART
 - IND-FL-3L-MOSUNETUZUMAB
 default_indication: IND-FL-2L-R2
-alternative_indication: IND-FL-3L-MOSUNETUZUMAB
+alternative_indication: IND-FL-2L-OBINU-BENDA
 decision_tree:
 - step: 0
   evaluate:
@@ -27,11 +28,27 @@ decision_tree:
       VTE prophylaxis mandatory (aspirin 81 mg or LMWH). Lenalidomide REMS: negative
       pregnancy test + contraception mandatory before start. EZH2 testing at this point
       for future reference; result does not change 2L routing.
-      Rituximab-refractory → fall to step 1 (obinutuzumab pathway not yet modeled;
-      MDT escalation).
+      Rituximab-refractory → fall to step 02 (obinutuzumab+benda; GADOLIN; Workstream AX).
+  if_false:
+    next_step: 02
+  notes: "Step 0 updated Workstream AX 2026-05-04: rituximab-refractory 2L → step 02 (G-benda). Free-text conditions — prior-lines count and rituximab-refractory status not yet RF-modelled; MDT text evaluation."
+- step: 02
+  evaluate:
+    all_of:
+    - condition: "Exactly 1 prior systemic line (true 2L; not yet ≥2 lines post-progression)"
+    - condition: "Rituximab-REFRACTORY: progression within 6 months of last rituximab-containing regimen or last rituximab maintenance dose"
+    - condition: "FL Grade 1-3a confirmed (NOT transformation)"
+  if_true:
+    result: IND-FL-2L-OBINU-BENDA
+    notes: >
+      2L rituximab-refractory FL: obinutuzumab + bendamustine × 6 cycles →
+      obinutuzumab maintenance q2m × 2 years (GADOLIN; Sehn 2016 JCO).
+      mPFS 29.2 vs 13.7 months (HR 0.55 p<0.0001); ORR 69%; NCCN Cat 1.
+      HBV screen mandatory. PJP prophylaxis mandatory. Ukraine: obinutuzumab
+      (Gazyvaro) registered; NSZU reimbursement limited.
   if_false:
     next_step: 1
-  notes: "Step 0 added Workstream AT 2026-05-04. Free-text conditions — prior-lines count and rituximab-refractory status not yet RF-modelled; MDT text evaluation."
+  notes: "Step 02 added Workstream AX 2026-05-04: rituximab-refractory 2L FL → O-benda (GADOLIN); if not 2L or not truly refractory → step 1 (3L+ EZH2/CAR-T cascade)."
 - step: 1
   evaluate:
     any_of:
@@ -79,15 +96,12 @@ sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-FL-2024
 last_reviewed: '2026-05-04'
-notes: 'UPDATED 2026-05-04 (Workstream AT): IND-FL-2L-R2 (R2 AUGMENT; Leonard 2019 JCO;
-  PFS HR 0.46; ORR 78%) authored and wired at new step 0 (true 2L rituximab-sensitive FL).
-  algo line_of_therapy updated 3→2. Gap (1) PARTIALLY CLOSED: R2 added; obinutuzumab+benda
-  (GADOLIN) for rituximab-refractory FL remains an OOS gap.
-  OOS / wiring gaps: (1b) Obinutuzumab+bendamustine (GADOLIN) for rituximab-refractory
-  2L FL — not yet modeled. (2) Histologic transformation detection at relapse (RF-FL-
-  TRANSFORMATION-SUSPECT) routes to DLBCL algos — must be resolved upstream. (3) Loncastuximab
-  tesirine, glofitamab not modeled. (4) Bridging therapy + lymphodepletion for axi-cel
-  in Regimen/SUP layer. (5) AUGMENT enrolled rituximab-sensitive patients; rituximab-refractory
-  subgroup at step 0 if_false falls to EZH2/CAR-T steps — MDT note needed for that subgroup.
+notes: 'UPDATED 2026-05-04 (Workstream AT): IND-FL-2L-R2 + step 0 (2L rituximab-sensitive).
+  UPDATED 2026-05-04 (Workstream AX): IND-FL-2L-OBINU-BENDA + step 02 (2L rituximab-refractory
+  → obinutuzumab+benda; GADOLIN; Sehn 2016 JCO; mPFS 29.2 mo HR 0.55; ORR 69%; NCCN Cat 1).
+  Gap (1) FULLY CLOSED: both R2 (rituximab-sensitive) and O-benda (rituximab-refractory) 2L.
+  OOS / wiring gaps: (2) Histologic transformation detection (RF-FL-TRANSFORMATION-SUSPECT)
+  routes to DLBCL algos — must be resolved upstream. (3) Loncastuximab tesirine, glofitamab
+  not modeled for 3L+. (4) Bridging therapy for axi-cel in Regimen/SUP layer.
 
   '

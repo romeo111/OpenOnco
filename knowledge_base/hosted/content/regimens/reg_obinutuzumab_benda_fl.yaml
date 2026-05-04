@@ -1,0 +1,70 @@
+id: REG-OBINUTUZUMAB-BENDA-FL
+name: Obinutuzumab + Bendamustine → Obinutuzumab Maintenance (GADOLIN)
+drugs:
+  - drug_id: DRUG-OBINUTUZUMAB
+    dose: >
+      Cycle 1: 100 mg IV d1 (slow; TLS premedication) → 900 mg IV d1 (if no Grade ≥3 IRR);
+      OR 1000 mg IV d1 split as 100 mg + 900 mg same day (center practice varies).
+      Cycle 1 total: 1000 mg d1 + 1000 mg d8 + 1000 mg d15.
+      Cycles 2-6: 1000 mg IV d1 q28d.
+    route: intravenous
+    notes: >
+      Obinutuzumab premedication MANDATORY (higher IRR rate vs rituximab):
+      dexamethasone 20 mg IV + acetaminophen 650 mg PO + diphenhydramine 50 mg IV
+      ≥30 min before each infusion. Anti-hypertensive hold day of infusion.
+      Infusion rates: cycle 1 d1 — 50 mg/h (increase 50 mg/h q30m to max 400 mg/h
+      if no reaction); subsequent infusions — start 100 mg/h if prior tolerability.
+      HBV reactivation prophylaxis mandatory if HBsAg+ or HBcAb+ (entecavir).
+  - drug_id: DRUG-BENDAMUSTINE
+    dose: "90 mg/m² IV over 30-60 min d1 and d2 of each 28-day cycle"
+    route: intravenous
+    days: [1, 2]
+    notes: >
+      Bendamustine vesicant — ensure good IV access or PICC/port.
+      Pre-hydration 500 mL NS before each infusion.
+      Antiemetic: ondansetron 8 mg IV + dexamethasone 8 mg IV before.
+      Avoid in active severe infection (immunosuppression synergistic with obinutuzumab).
+
+cycle_length_days: 28
+number_of_cycles: 6
+maintenance_phase: >
+  After 6 cycles: obinutuzumab 1000 mg IV q8 weeks (q2 months) × 2 years
+  (total 12 maintenance doses) if ≥SD after induction. Start maintenance ~8 weeks
+  after last G-benda induction cycle. Monitor CBC before each maintenance dose.
+
+regimen_type: chemoimmunotherapy
+
+dosing_notes: >
+  GADOLIN protocol (Sehn 2016 JCO; Sehn 2020 Blood update):
+  Induction: obinutuzumab 1000 mg IV d1/8/15 (cycle 1) then d1 (cycles 2-6) +
+  bendamustine 90 mg/m² IV d1-2, q28d × 6 cycles.
+  Maintenance: obinutuzumab 1000 mg IV q2months × 2 years (12 doses total).
+  CBC before each cycle; hold if ANC <1.0×10⁹/L or platelets <75×10⁹/L.
+  G-CSF (filgrastim or pegfilgrastim) prophylaxis if prior Grade ≥3 neutropenia
+  or if ANC <1.5×10⁹/L before cycle start.
+  Tumor lysis syndrome (TLS): monitor electrolytes + uric acid before cycle 1;
+  allopurinol 300 mg/day starting 2-3 days before if high tumor burden.
+  PJP prophylaxis: TMP-SMX 160/800 mg 3×/week (obinutuzumab + bendamustine
+  combined immunosuppression; CD4 may drop to <200/µL).
+
+key_toxicities:
+  - "Infusion-related reactions (Grade ≥3 ~25% cycle 1 d1 — higher than rituximab; premedication + slow infusion rate)"
+  - "Neutropenia (Grade ≥3 ~50%; G-CSF use; dose delay for ANC <1.0)"
+  - "Thrombocytopenia (Grade ≥3 ~15%)"
+  - "Fatigue (Grade ≥3 ~5%)"
+  - "HBV reactivation (obinutuzumab + bendamustine both B-cell depleting; mandatory HBV screen + prophylaxis)"
+  - "PJP pneumonia risk (obinutuzumab causes profound B-cell depletion; TMP-SMX mandatory)"
+  - "Secondary malignancies: bendamustine alkylating agent; monitor for MDS/AML long-term"
+
+special_precautions:
+  - "HBV mandatory screen: obinutuzumab + bendamustine combined cause deep B-cell depletion — fatal HBV reactivation cases reported. Entecavir prophylaxis for HBsAg+ or HBcAb+."
+  - "Anti-hypertensive medications: hold on infusion day (obinutuzumab can cause acute hypertension or hypotension during IRR)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg bid (obinutuzumab reactivates VZV; given for duration of therapy + 6 months)"
+  - "Immunosuppression during maintenance: complete live vaccines BEFORE treatment; avoid live vaccines throughout + 12 months after last dose"
+  - "Ukraine: obinutuzumab (Gazyvaro) registration status — registered for CLL+FL in Ukraine; NSZU reimbursement limited; may require MDT compassionate use request"
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+drafted_by: claude_extraction

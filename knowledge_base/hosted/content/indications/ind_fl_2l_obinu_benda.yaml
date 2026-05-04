@@ -1,0 +1,183 @@
+id: IND-FL-2L-OBINU-BENDA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Follicular lymphoma Grade 1, 2, or 3a (Grade 3b → DLBCL algorithm)"
+    - "RITUXIMAB-REFRACTORY: progression within 6 months of completing last rituximab-containing regimen OR within 6 months of last rituximab maintenance dose"
+    - "≥1 prior rituximab-containing regimen (GADOLIN enrolled patients who received ≥1 prior anti-CD20 and were rituximab-refractory)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, platelets ≥100×10⁹/L (pre-cycle), CrCl ≥40 mL/min (bendamustine)"
+    - "NOT histologic transformation to DLBCL at relapse biopsy"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20+ confirmed (IHC or flow cytometry); obinutuzumab is anti-CD20; loss of CD20 negates obinutuzumab benefit"
+  biomarker_requirements_excluded:
+    - "NOT rituximab-refractory (rituximab-sensitive FL with ≥6 months since last rituximab) → R2 (IND-FL-2L-R2) preferred (AUGMENT; ORR 78%; PFS HR 0.46)"
+    - "Histologic transformation to DLBCL → DLBCL algorithm (ALGO-DLBCL-*)"
+    - "Grade 3b FL → treat as DLBCL"
+    - "Active HBV without antiviral prophylaxis (obinutuzumab + bendamustine B-cell depleting → HBV reactivation fatal)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No absolute age cutoff. Elderly patients (>70) with adequate organ function
+      can receive O-benda; bendamustine dose may need adjustment for CrCl 40-60 mL/min
+      (90 mg/m² can be reduced to 70 mg/m²). Obinutuzumab is renally cleared; CrCl
+      monitoring required. Pregnancy: absolute contraindication (bendamustine teratogenic;
+      obinutuzumab B-cell depleting in fetus).
+
+recommended_regimen: REG-OBINUTUZUMAB-BENDA-FL
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Rituximab + bendamustine (R-benda) × 6 cycles: GADOLIN control arm (Sehn 2016 JCO);
+      ORR 56%; mPFS 13.7 months. Inferior to G-benda for rituximab-refractory FL but may
+      be used when obinutuzumab is inaccessible (cost, no registration). Not preferred for
+      rituximab-refractory disease per GADOLIN data (G-benda superior; HR 0.55).
+  - regimen_id: null
+    description: >
+      Obinutuzumab monotherapy (1000 mg IV weekly × 4 then q2m maintenance): GADOLIN
+      was combination; monotherapy ORR ~30-40% in rituximab-refractory FL. Use when
+      bendamustine contraindicated (CrCl <30, severe cytopenias, frailty).
+      NCCN Cat 2B for obinutuzumab monotherapy in rituximab-refractory FL.
+
+concurrent_therapy:
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week — mandatory from day 1 through 12 months post-maintenance (obinutuzumab + bendamustine combined immunosuppression)"
+  - "HBV prophylaxis: entecavir 0.5 mg/day if HBsAg+ or HBcAb+ (obinutuzumab fatal HBV reactivation cases; screen ALL patients)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg PO bid throughout therapy + 6 months after last dose"
+  - "Antiemetic: ondansetron 8 mg IV ± dexamethasone 8 mg IV before bendamustine (moderate emetogenicity)"
+
+followed_by:
+  - "Obinutuzumab maintenance: 1000 mg IV q8 weeks × 2 years (12 doses; start ~8 weeks after last induction dose if ≥SD)"
+  - "Response assessment CT at end of 6 cycles; PET-CT if initial PET-staging was performed"
+  - "After O-benda failure: EZH2 testing → tazemetostat if EZH2 Y641 mut + ≥2 lines; CAR-T (IND-FL-3L-AXICEL-CART) or mosunetuzumab (IND-FL-3L-MOSUNETUZUMAB)"
+  - "Rituximab cannot be substituted back — rituximab-refractory patients retain refractory status; obinutuzumab has different binding epitope and ADCC profile"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~69% (GADOLIN G-benda; vs 56% R-benda)"
+  cr_rate: "~39% (end of induction PET CR + PR, GADOLIN)"
+  median_pfs_months: "29.2 vs 13.7 months (GADOLIN G-benda vs R-benda; HR 0.55; p<0.0001)"
+  pfs_5yr: "~27% (Sehn 2020 Blood 5-year update G-benda) vs ~13% R-benda"
+  notes: >
+    GADOLIN (Sehn 2016, JCO; Sehn 2020 Blood 5-year update; n=321, 1:1 randomized):
+    Obinutuzumab 1000 mg IV d1/8/15 cycle 1 then d1 cycles 2-6 + bendamustine 90 mg/m²
+    d1-2 × 6 cycles → obinutuzumab maintenance q2months × 2 years vs rituximab-benda × 6.
+    Primary endpoint: PFS HR 0.55 (95% CI 0.40-0.74; p<0.0001); mPFS 29.2 vs 13.7 months.
+    ORR: 68.7% G-benda vs 56.3% R-benda.
+    OS: no significant difference at primary analysis (immature); 5-year OS ~76% G-benda.
+    Key enrollment criterion: RITUXIMAB-REFRACTORY (progression within 6 months of
+    last rituximab; all patients had ≥1 prior rituximab-containing regimen).
+    NCCN B-cell 2025 Cat 1: obinutuzumab + bendamustine for rituximab-refractory FL.
+    ESMO FL 2024: G-benda preferred over R-benda for rituximab-refractory FL 2L.
+
+hard_contraindications:
+  - "NOT rituximab-refractory — use R2 (IND-FL-2L-R2) or another rituximab-containing regimen; G-benda's superiority was specifically demonstrated in rituximab-refractory disease"
+  - "Grade 3b FL or histologic transformation to DLBCL — G-benda not appropriate"
+  - "CrCl <30 mL/min (bendamustine dose-limiting; consider obinutuzumab monotherapy)"
+  - "ECOG PS ≥3 (frailty; combined immunosuppression risk)"
+  - "Pregnancy (bendamustine teratogenic; obinutuzumab neonatal B-cell depletion)"
+  - "Active HBV without entecavir prophylaxis (fatal HBV reactivation)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Rituximab-sensitive FL (last rituximab ≥6 months ago; no progression on rituximab) → IND-FL-2L-R2 (AUGMENT; ORR 78%; PFS HR 0.46)"
+  - condition: "Histologic transformation to DLBCL → DLBCL algorithm"
+  - condition: "CrCl 30-60 mL/min: reduce bendamustine 70 mg/m² OR use obinutuzumab monotherapy"
+  - condition: "After G-benda failure + EZH2 Y641 mut + ≥2 prior lines → IND-FL-3L-TAZEMETOSTAT"
+  - condition: "CAR-T eligible after G-benda failure → IND-FL-3L-AXICEL-CART"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HBV serology (HBsAg, HBcAb total): MANDATORY — obinutuzumab fatal HBV reactivation; entecavir prophylaxis if positive"
+  - "Uric acid + LDH: TLS risk assessment (obinutuzumab induces more cell death than rituximab — higher TLS risk)"
+  - "CrCl: bendamustine dose adjustment for CrCl 40-60 (70 mg/m²); avoid <40"
+  - "CT chest/abdomen/pelvis (+ PET-CT if feasible): baseline staging at relapse; interim after cycle 3"
+  - "Relapse biopsy: mandatory — confirm FL histology (not transformation), grade 1-3a, CD20+"
+  - "EZH2 mutation testing: baseline — if Y641 positive + treatment failure → tazemetostat eligible (3L+)"
+
+desired_tests:
+  - "PET-CT: preferred over CT alone for end-of-treatment assessment; Lugano 2014 criteria for response"
+  - "FLIPI-2 at relapse: prognostic"
+  - "Bone marrow biopsy: if cytopenias or bulky disease"
+
+rationale: >
+  Obinutuzumab (GA101) is a glycoengineered type II anti-CD20 antibody with enhanced
+  ADCC (antibody-dependent cellular cytotoxicity), direct cell death induction, and
+  reduced CDC (complement-dependent cytotoxicity) vs rituximab. These differences
+  provide activity in rituximab-refractory FL where rituximab-dependent mechanisms
+  are exhausted.
+
+  GADOLIN mechanism:
+  - Enhanced ADCC via glycoengineered Fc region → more potent NK-cell-mediated killing
+  - Type II binding → elbow-hinge epitope → direct cell death independent of CDC
+  - Overcomes rituximab resistance mechanisms (CD20 downregulation, complement pathway
+    saturation, FCγR polymorphisms less impactful with ADCC-dominant mechanism)
+
+  GADOLIN (Sehn 2016 JCO; Sehn 2020 Blood 5yr update):
+  Phase 3, 1:1 randomized, N=321. Rituximab-refractory indolent NHL (FL + MZL).
+  G-benda superior to R-benda: PFS HR 0.55 (p<0.0001); mPFS 29.2 vs 13.7 months.
+  No OS benefit at primary analysis; 5yr PFS 27% G-benda vs 13% R-benda.
+  NCCN FL 2025 Category 1 for rituximab-refractory FL.
+
+  R2 vs G-benda:
+  - R2 (AUGMENT): rituximab-sensitive FL; ORR 78%, PFS HR 0.46. Not studied in
+    rituximab-refractory.
+  - G-benda (GADOLIN): rituximab-refractory FL; ORR 69%, PFS HR 0.55. No activity
+    data in rituximab-sensitive (rituximab-naive patients were EXCLUDED from GADOLIN).
+  - The populations are complementary: R2 for rituximab-sensitive 2L;
+    G-benda for rituximab-refractory 2L.
+
+  Ukraine:
+  - Obinutuzumab (Gazyvaro): registered in Ukraine (CLL and FL indications);
+    NSZU reimbursement limited but available for CLL; FL indication may require
+    MDT request or compassionate use; cost significant.
+  - Bendamustine: registered + accessible in Ukraine.
+  - For rituximab-refractory UA patients without obinutuzumab access: R-benda or
+    clinical trial; eventually tazemetostat/CAR-T/mosunetuzumab at 3L.
+
+rationale_ua: >
+  О-бенда (Газіваро + бендамустин) → підтримка Газіваро: GADOLIN (Sehn 2016 JCO;
+  n=321): ОРВ 69%, ВБП HR 0.55 (p<0.0001); медіана ВБП 29.2 vs 13.7 міс при
+  ритуксимаб-рефрактерному ФЛ Grade 1-3a. NCCN кат.1. Механізм: обінутузумаб —
+  тип II анти-CD20; посилений ADCC; подолання ритуксимаб-рефрактерності.
+  НЕ при ритуксимаб-чутливому ФЛ (там R2 кращий, ORR 78%).
+  В Україні: обінутузумаб (Газіваро) зареєстрований; НСЗУ — обмежено; бендамустин
+  доступний. Профілактика ПЦП (ТМП-СМЗ) + HBV скринінг обов'язкові.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: obinutuzumab + bendamustine → obinutuzumab maintenance
+      for rituximab-refractory FL Grade 1-3a. GADOLIN Phase 3 data support recommendation.
+  - source_id: SRC-ESMO-FL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO FL 2024: G-benda (GADOLIN) preferred for rituximab-refractory 2L FL; superior
+      PFS vs R-benda (HR 0.55); obinutuzumab overcomes rituximab-resistance mechanisms.
+
+do_not_do:
+  - "Без HBV скринінгу: обінутузумаб + бендамустин викликають глибоку деплецію B-клітин → реактивація HBV може бути фатальною; ентекавір профілактично"
+  - "При ритуксимаб-чутливому ФЛ (останній ритуксимаб ≥6 міс тому): R2 (AUGMENT) кращий (ORR 78%, PFS HR 0.46); G-бенда не вивчали в цій популяції"
+  - "Профілактика ПЦП обов'язкова: ТМП-СМЗ від дня 1 до 12 міс після підтримки"
+  - "Не відміняти підтримку обінутузумабом після 6 індукційних циклів (якщо є відповідь): 2-річна підтримка q2міс значно покращує ВБП vs лише індукція"
+  - "Гістологічна трансформація → не G-бенда; агресивний лімфома протокол (DLBCL)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
