@@ -1,15 +1,16 @@
 id: ALGO-WM-2L
 applicable_to_disease: DIS-WM
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/relapsed WM Indication based on CXCR4 status, prior BTKi exposure, and patient preference for chemo-free vs fixed-duration. Three tracks: (1) CXCR4-WHIM-mutated → carfilzomib-based (BTKi response weaker in CXCR4-mut); (2) cBTKi-naive → zanubrutinib (ASPEN superior cardiac safety vs ibrutinib); (3) chemo-tolerant fixed-duration preference OR post-BTKi failure → VRd (bortezomib-rituximab-dex).
+purpose: 'Select 2L+/relapsed WM Indication based on CXCR4 status, prior BTKi exposure, and patient preference for chemo-free vs fixed-duration. Four tracks: (1) CXCR4-WHIM-mutated → carfilzomib-based (BTKi response weaker in CXCR4-mut); (2) cBTKi-naive → zanubrutinib (ASPEN superior cardiac safety vs ibrutinib); (3) chemo-tolerant + chemo-sensitive late relapse ≥24 mo → BR (bendamustine-rituximab; NCCN Cat 2A; ORR ~70-80%); (4) BR-refractory or post-BTKi failure → VRd (bortezomib-rituximab-dex).
 
   '
 output_indications:
 - IND-WM-2L-ZANUBRUTINIB
 - IND-WM-2L-VRD
 - IND-WM-2L-CARFILZOMIB-CXCR4MUT
+- IND-WM-2L-BR
 default_indication: IND-WM-2L-ZANUBRUTINIB
-alternative_indication: IND-WM-2L-VRD
+alternative_indication: IND-WM-2L-BR
 decision_tree:
 - step: 1
   evaluate:
@@ -42,13 +43,36 @@ decision_tree:
     - condition: MYD88-WT (BTKi response markedly weaker)
     - red_flag: RF-WM-TRANSFORMATION-PROGRESSION
   if_true:
-    result: IND-WM-2L-VRD
+    next_step: 4
   if_false:
     result: IND-WM-2L-ZANUBRUTINIB
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Chemo-sensitive late relapse: ≥24 months from last BR or alkylator-based therapy (OR BTKi-naive patient with no prior bendamustine exposure)"
+    - condition: "Not prior bendamustine-REFRACTORY (progression >6 months from last BR dose)"
+    - condition: "CrCl ≥30 mL/min (bendamustine dose reduction 70 mg/m² if CrCl 30-50; avoid if CrCl <30)"
+    - condition: "No active uncontrolled infection precluding bendamustine immunosuppression"
+  if_true:
+    result: IND-WM-2L-BR
+    notes: >
+      Chemo-sensitive late relapse WM: BR (bendamustine 90 mg/m² d1-2 + rituximab 375 mg/m²
+      d1 q28d × 4-6 cycles; REG-BR-STANDARD; Rummel 2013 StiL Lancet; NCCN Cat 2A).
+      ORR ~70-80%; mPFS ~24-36 months in chemo-sensitive R/R WM.
+      Preferred over VRd: no cumulative neuropathy (avoids bortezomib); fixed duration;
+      lower cardiac toxicity than BTKi. IgM flare post-cycle 1 expected — do not stop.
+      UA: bendamustine + rituximab both NSZU-funded; accessible.
+  if_false:
+    result: IND-WM-2L-VRD
+    notes: >
+      BR-refractory or CrCl <30 or active infection: bortezomib-rituximab-dexamethasone
+      (VRd; IND-WM-2L-VRD). Also preferred for post-BTKi failure in patients with prior BR
+      exposure (mechanism switch: alkylator → PI class). NCCN Cat 2A for R/R WM.
+  notes: "Step 4 added 2026-05-04 (Workstream BG): BR-retreatment gate for chemo-sensitive late-relapse WM. Gap (2) CLOSED. Free-text conditions retained (no RF for 'chemo-sensitivity interval' or 'prior BR exposure' timing); MDT-evaluated."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-WM-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled (no IND-WM yet). (2) Bendamustine-rituximab (BR) re-treatment for chemo-sensitive late relapse — not modeled. (3) Hyperviscosity emergency at relapse routes via RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not decision-tree branch. (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut, TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
+last_reviewed: '2026-05-04'
+notes: 'UPDATED 2026-05-04 (Workstream BG): IND-WM-2L-BR authored and wired at step 4 for chemo-sensitive late-relapse WM (Rummel 2013 StiL Lancet; NCCN Cat 2A; ORR ~70-80%; REG-BR-STANDARD). Gap (2) CLOSED. OOS / wiring gaps: (1) Pirtobrutinib (BRUIN WM cohort) for post-cBTKi WM — not modeled (no IND-WM yet). (3) Hyperviscosity emergency at relapse routes via RF-WM-HYPERVISCOSITY (plasmapheresis SUP-* parallel trigger), not decision-tree branch. (4) MYD88-WT WM (~5-10%) has poor BTKi response — covered by RF-WM-HIGH-RISK-BIOLOGY (which fires on MYD88 wildtype, CXCR4-mut, TP53-mut, or IPSSWM high-risk) and routes to VRd or BR.
 
   '

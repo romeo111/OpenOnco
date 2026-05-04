@@ -1,0 +1,168 @@
+id: IND-WM-2L-BR
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-WM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory Waldenström macroglobulinemia after ≥1 prior systemic line"
+    - "Chemo-sensitive late relapse: ≥24 months from last bendamustine/alkylator-based therapy (OR BTKi-naive patient with prior non-bendamustine 1L — e.g., DRC, VRd)"
+    - "ECOG PS 0-2; adequate organ function (see constraints)"
+    - "Not prior-bendamustine-refractory (progression on or within 6 months of BR)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior bendamustine-REFRACTORY (progression on or within 6 months of last BR dose): re-treatment ineffective; switch to BTKi (zanubrutinib) or VRd"
+    - "MYD88-WT (~5-10% WM): BTKi response impaired; BR active but consider VRd (bortezomib-based) for stronger proteaotoxic stress; MDT discussion"
+    - "CXCR4-WHIM mutation: BTKi response reduced but BR/bendamustine unaffected; acceptable if BTKi exhausted"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      WM primarily affects elderly patients (median age ~65-70). Bendamustine is
+      generally well-tolerated in older patients. Key toxicities: myelosuppression
+      (grade 3-4 neutropenia ~40%), infusion reactions (rituximab), delayed cytopenias
+      at weeks 3-5 post-infusion. Pre-existing neuropathy does not contraindicate BR
+      (unlike VRd/bortezomib). CrCl ≥30 mL/min needed for bendamustine at full dose
+      (90 mg/m²); reduce to 70 mg/m² if CrCl 30-50 mL/min.
+      Ukraine: bendamustine (Treanda/generic) and rituximab both NSZU-funded for
+      indolent B-NHL; fully accessible for WM.
+
+recommended_regimen: REG-BR-STANDARD
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      BR with reduced bendamustine (70 mg/m² d1-2 q28d × 4-6 cycles): dose reduction
+      for CrCl 30-50 mL/min, age >75, or frailty; maintains rituximab 375 mg/m² d1;
+      ORR modestly lower (~65-70%) vs full-dose but acceptable.
+  - regimen_id: REG-VRD-WM
+    description: >
+      VRd (VRd-WM; bortezomib + rituximab + dexamethasone): preferred when prior BR
+      failure (cross-resistance unlikely with PI-based therapy) or patient preference
+      for SC bortezomib over IV bendamustine; NCCN Cat 2A for R/R WM.
+
+concurrent_therapy:
+  - "PJP prophylaxis: co-trimoxazole 480 mg PO 3×/week or dapsone 100 mg/day (bendamustine + rituximab → T-cell immunosuppression)"
+  - "HBV prophylaxis: entecavir 0.5 mg PO daily if HBsAg+ or HBcAb+ — screen all patients before rituximab (anti-CD20 → B-cell depletion → HBV reactivation)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg bid throughout therapy + 3 months after"
+  - "Pre-rituximab premedication: diphenhydramine 25 mg IV + acetaminophen 650 mg PO + dexamethasone 20 mg IV 30 min before infusion (IRR prevention cycle 1)"
+  - "G-CSF support: consider pegfilgrastim after cycle 1 if ANC nadir <0.5×10⁹/L or prior febrile neutropenia"
+  - "Anti-nausea: 5-HT3 antagonist before bendamustine days 1-2 (moderate emetogenic potential)"
+
+followed_by:
+  - "Continue BR for 4-6 cycles; response assessment after cycle 2 (IgM paraprotein + CT) and end of treatment"
+  - "Maintenance rituximab: single agent rituximab 375 mg/m² q2-3 months × 2 years in responders (CR/VGPR/PR) per MAINTAIN trial — reduces PFS events by ~50% in untreated WM; extrapolated to R/R"
+  - "After BR failure: zanubrutinib (IND-WM-2L-ZANUBRUTINIB) if BTKi-naive; VRd (IND-WM-2L-VRD) if BTKi-exposed"
+  - "Hyperviscosity monitoring: IgM levels q cycle; if IgM >4000 mg/dL or symptoms → plasmapheresis before next BR cycle (BR can transiently spike IgM)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~70-80% in chemo-sensitive late relapse WM (extrapolated from StiL/indolent NHL + WM-specific series)"
+  cr_rate: "~10-15% CR; ~40-50% VGPR (M-protein reduction ≥90%)"
+  median_pfs_months: "~24-36 months in WM (retrospective series; Rummel 2013 StiL 1L mTTP 69.5 months benchmark)"
+  notes: >
+    Rummel 2013 Lancet (StiL trial): Phase 3 BR vs R-CHOP in untreated indolent B-NHL/MCL
+    (n=513); WM subgroup included (~5-10% of cohort). Overall indolent-NHL mTTP 69.5 months
+    BR vs 31.2 months R-CHOP (HR 0.44). ORR 93% BR. Lower alopecia, nausea, and neuropathy
+    than R-CHOP. Myelosuppression comparable.
+    R/R WM-specific evidence: Fischer 2011 Haematologica retrospective BR in R/R WM (n=30):
+    ORR 83% (CR+VGPR+PR); mPFS ~24 months. Lamm 2012 Leuk Lymphoma n=30 R/R WM: ORR 77%;
+    mTTP ~25 months.
+    NCCN WM 2025: BR listed Category 2A for R/R WM. ESMO WM 2024: BR acceptable for
+    chemo-sensitive late relapse when BTKi contraindicated or not preferred.
+    BR preferred over VRd when: (1) no baseline neuropathy contraindication concern; (2)
+    chemo-sensitive disease defined by long prior remission; (3) BTKi-naive but BTKi not
+    preferred (cardiac AF risk, anticoagulation requirement).
+
+hard_contraindications:
+  - "Prior bendamustine-REFRACTORY (progression ≤6 months of last BR): re-treatment ineffective; switch mechanism"
+  - "CrCl <30 mL/min: bendamustine accumulates; not recommended at any dose"
+  - "Active uncontrolled infection (immunosuppression risk)"
+  - "ECOG PS ≥3 (myelosuppression + immunosuppression + infusion burden)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Active HBV without antiviral prophylaxis (anti-CD20 + bendamustine → HBV reactivation)"
+
+red_flags_triggering_alternative:
+  - condition: "Prior BR-refractory (PD ≤6 months of BR): zanubrutinib (IND-WM-2L-ZANUBRUTINIB) if BTKi-naive"
+  - condition: "CXCR4-WHIM mutation: carfilzomib-based (IND-WM-2L-CARFILZOMIB-CXCR4MUT) if BTKi-exhausted"
+  - condition: "CrCl 30-50 mL/min: reduce bendamustine to 70 mg/m²; consider VRd if CrCl <30"
+  - condition: "MYD88-WT: BR active but weaker BTKi response; VRd or BR per MDT; BTKi trial preferred"
+  - condition: "IgM flare after cycle 1 (transient rise before response): continue, do not stop; plasmapheresis if symptomatic"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Creatinine/CrCl: bendamustine dose adjustment if CrCl 30-50 mL/min; avoid if CrCl <30"
+  - "HBV serology (HBsAg, HBcAb total): mandatory before rituximab; entecavir if positive"
+  - "Serum IgM quantification (nephelometry): baseline + q cycle (response marker)"
+  - "Serum protein electrophoresis (SPEP) + immunofixation: M-protein characterization at baseline + end of treatment"
+  - "Bone marrow biopsy: at response assessment if CR claimed (confirm MRD)"
+  - "CT chest/abdomen/pelvis: baseline + after cycle 3 + end of treatment (lymphadenopathy, splenomegaly)"
+
+desired_tests:
+  - "MYD88 L265P + CXCR4 mutation status (NGS if not done): BTKi eligibility and CXCR4 routing"
+  - "Free light chains: serum κ/λ FLC for response monitoring in non-secretory variants"
+  - "Ophthalmology referral: if symptomatic visual change (hyperviscosity/Bing-Neel syndrome concern)"
+
+rationale: >
+  Bendamustine is a bifunctional alkylating agent with unique hybrid structure (benzimidazole
+  + nitrogen mustard): cross-links DNA strands AND activates apoptotic pathways independent of
+  p53 status, allowing activity in WM cells that evade conventional alkylator death signals.
+  Rituximab (anti-CD20) depletes malignant lymphoplasmacytic B-cells via ADCC, CDC, and
+  direct apoptosis. The BR combination achieves synergistic lymphoplasmacytic cell kill.
+
+  WM-specific rationale:
+  BR is particularly well-suited for WM because:
+  (1) WM lymphoplasmacytic cells express CD20 strongly (unlike myeloma); rituximab highly active
+  (2) Bendamustine achieves deep responses including VGPR (IgM >90% reduction) in chemo-sensitive disease
+  (3) Low neuropathy risk vs bortezomib (VRd): avoids compounding pre-existing peripheral neuropathy common in WM
+  (4) Fixed-duration (4-6 cycles) vs BTKi continuous therapy — remission duration without indefinite drug exposure
+
+  Patient selection for BR retreatment at 2L:
+  - Late relapse (≥24 months): chemo-sensitive biology; remission quality maintained
+  - BTKi-naive patients with prior non-bendamustine 1L (DRC, VRd): BR is mechanism switch
+  - BTKi-intolerant (atrial fibrillation, anticoagulation requirement, bleeding history): BR avoids BTKi cardiac toxicity
+
+  Ukraine: bendamustine and rituximab both NSZU-funded for indolent B-NHL; no access barriers.
+  WM is classified as indolent B-NHL in UA protocols; coverage confirmed.
+
+rationale_ua: >
+  BR (бендамустин + ритуксимаб): ефективне лікування рецидивуючої ВМ при хімчутливому
+  рецидиві (≥24 міс від останньої хімії) або після BTKi. ORR ~70-80%, мПВЗ ~24-36 міс.
+  Перевага над VRd: відсутність нейропатії (без бортезомібу). Переваги над BTKi:
+  фіксована тривалість, відсутність кардіотоксичності. Бендамустин + ритуксимаб:
+  обидва НСЗУ. Протипоказання до ре-введення: рефрактерність до BR (<6 міс ремісія).
+  HBV скринінг + ентекавір ОБОВ'ЯЗКОВИЙ перед ритуксимабом. G-CSF підтримка
+  при надирі нейтрофілів.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN WM 2025 Category 2A: bendamustine + rituximab (BR) for relapsed/refractory
+      WM; chemo-sensitive late relapse preferred indication; not for prior BR-refractory
+      disease.
+  - source_id: SRC-ESMO-WM-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO WM 2024: BR acceptable for chemo-sensitive late relapse; myelosuppression
+      monitoring mandatory; preferred over R-CHOP due to lower toxicity (Rummel 2013 StiL).
+
+do_not_do:
+  - "При BR-рефрактерності (рецидив ≤6 міс після BR): ре-лікування BR неефективне; переходити на занубрутиніб або VRd"
+  - "Без HBV скринінгу: ритуксимаб → деплеція B-клітин → реактивація HBV; ентекавір якщо HBsAg+ або HBcAb+"
+  - "КК <30 мл/хв: бендамустин накопичується — протипоказаний; переходити на VRd або BTKi"
+  - "Без Г-КСФ підготовки при наявності факторів ризику: BR-індукована нейтропенія grade 3-4 ~40% → ФН без профілактики"
+  - "IgM-сплеск після 1-го циклу: не припиняти BR — транзиторний підйом перед відповіддю; плазмаферез при симптомах гіперв'язкості"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
