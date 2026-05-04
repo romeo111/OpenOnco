@@ -1,0 +1,101 @@
+id: REG-BV-NIVO-CHL
+name: "Brentuximab vedotin + nivolumab (BV+nivo) for r/r classical Hodgkin lymphoma"
+name_ua: "Брентуксимаб ведотін + ніволумаб (BV+ніво) для р/р класичної хвороби Ходжкіна"
+alternate_names:
+  - "BV + nivolumab"
+  - "Herrera regimen"
+  - "BV-nivo combination"
+
+disease_context: DIS-CHL
+line_of_therapy: 2
+plan_track: aggressive
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg IV (max 180 mg)"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    administration_notes: >
+      IV over 30 minutes. Maximum 180 mg per dose (weight cap).
+      Administer BV first, then nivolumab (separate IV lines or sequential on same day).
+      Neuropathy is the primary BV-related DLT — grade each cycle.
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "240 mg IV flat dose"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle (q3w, synchronised with BV)"
+    administration_notes: >
+      IV over 30 minutes. 240 mg flat dose q3w (matches BV cycle schedule).
+      May alternate to 480 mg q6w after initial cycles if sustained PR/CR
+      (maintenance dosing per institutional preference; not studied in BV+nivo trial).
+      Administer after BV infusion is complete.
+
+cycle_length_days: 21
+total_planned_cycles: >
+  Typically 4-6 cycles. Continue until best response (CR/PR), then consolidation
+  decision (alloSCT for transplant-eligible CR responders; continued treatment
+  until progression for transplant-ineligible). Do NOT continue past confirmed
+  progression. Neuropathy is cumulative — reassess BV component at Grade ≥2 peripheral
+  neuropathy (reduce BV to 1.2 mg/kg; discontinue BV if Grade ≥3 persists; nivolumab
+  can be continued as monotherapy at 240 mg q2w if BV discontinued).
+
+toxicity_profile: moderate
+
+premedication:
+  - "Antiemetic: low-moderate emetogenicity (5-HT3 ± dexamethasone d1 PRN)"
+  - "H1-antihistamine (diphenhydramine 25-50 mg IV) before BV infusion (infusion reaction prophylaxis)"
+  - "PCP prophylaxis: TMP-SMX 160/800 mg 3×/week (lymphoma salvage + PD-1 blockade combined immunosuppression)"
+  - "Herpes virus reactivation: acyclovir 400 mg BID or valacyclovir 500 mg daily"
+  - "Baseline TSH + thyroid function (nivolumab-associated thyroiditis common)"
+  - "HBV screen: HBsAg + anti-HBc before cycle 1; entecavir prophylaxis if positive"
+
+mandatory_supportive_care:
+  - "G-CSF: not routinely required at standard BV 1.8 mg/kg doses; consider pegfilgrastim for Grade 4 neutropenia episodes"
+  - "Thyroid monitoring: TSH q6-8 weeks (nivolumab immune thyroiditis ~10-15%)"
+  - "irAE monitoring: LFT, creatinine, CBC at each cycle"
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral neuropathy (cumulative BV)"
+    modification: "Reduce BV to 1.2 mg/kg; discontinue BV at Grade ≥3; nivolumab may continue as monotherapy"
+    rationale: "MMAE neuropathy is cumulative and most common BV DLT"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Grade ≥3 irAE (nivolumab-related)"
+    modification: "Hold nivolumab; start systemic corticosteroids per NCCN irAE guidelines; resume after resolution to G≤1"
+    rationale: "PD-1 blockade immune-related adverse events; steroid-responsive in most cases"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+  - condition: "Grade ≥3 hepatotoxicity"
+    modification: "Hold both agents; evaluate for drug-induced vs disease progression; prednisone 1-2 mg/kg for G3; if G4 or no response to steroids within 3-5 days add mycophenolate; consider permanent discontinuation"
+    rationale: "Combined hepatotoxicity risk from MMAE (BV) + PD-1 blockade (nivolumab)"
+    source_refs:
+      - SRC-NCCN-BCELL-2025
+
+ukraine_availability:
+  all_components_registered: true
+  notes: >
+    BV (Adcetris): registered in Ukraine; NSZU reimbursement limited — verify.
+    Nivolumab (Opdivo): registered in Ukraine; NSZU reimbursement available for some
+    indications. BV+nivo combination may require named-patient or compassionate-use
+    justification (combination not separately registered vs individual components).
+    Combination regimen access may be facility-dependent.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  BV 1.8 mg/kg + nivolumab 240 mg both on day 1 of q21d cycle.
+  Primary evidence: Herrera et al. 2021 Lancet Haematol (phase 2; NCT02985111):
+  r/r cHL ≥1 prior line; N=60; ORR 82%; CR 61%; mPFS ~15.4 months.
+  Neuropathy is cumulative BV DLT; immune thyroiditis most common nivolumab irAE.
+  NCCN Hodgkin 2025: Category 2A for r/r cHL. Particularly valuable for BV-naive
+  patients relapsing post-ASCT where monotherapy PD-1 ORR ~65-66% vs BV+nivo ORR ~82%.
+  STUB — pending Co-Lead sign-off.
+notes_ua: >
+  БВ 1,8 мг/кг + ніволумаб 240 мг обидва в день 1 циклу q21d.
+  Основний доказ: Herrera et al. 2021 Lancet Haematol: ORR 82%; ПВ 61%;
+  медіана ВБП ~15,4 міс. NCCN Hodgkin 2025: Категорія 2A.
+  Нейропатія — основна токсичність БВ; імунний тиреоїдит — основна irAE ніволумабу.
+  STUB — очікує підпис Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

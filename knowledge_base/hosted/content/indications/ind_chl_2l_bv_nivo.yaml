@@ -1,0 +1,199 @@
+id: IND-CHL-2L-BV-NIVO
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-CHL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory classical Hodgkin lymphoma (cHL) after ≥1 prior line"
+    - "Post-autologous SCT (ASCT) relapse OR ASCT-ineligible with ≥2 prior lines"
+    - "BV-naive (no prior brentuximab vedotin exposure) — defining eligibility criterion"
+    - "No prior PD-1/PD-L1 checkpoint inhibitor exposure"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L, bilirubin ≤1.5× ULN, AST/ALT ≤3× ULN, CrCl ≥30 mL/min"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone equivalent) — irAE risk"
+    - "Prior solid organ transplant — PD-1 blockade causes allograft rejection"
+    - "Active Grade ≥2 peripheral neuropathy at baseline — BV MMAE cumulative neuropathy"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      BV-naive status is the key eligibility gate — patients who received BV in
+      the salvage setting (step 0, BV+benda bridge to ASCT) and then relapsed
+      post-ASCT are BV-EXPOSED and should route to PD-1 monotherapy (step 21;
+      IND-CHL-2L-PEMBROLIZUMAB or IND-CHL-2L-NIVOLUMAB) rather than this indication.
+      BV+nivo reserved for patients whose ASCT was preceded by non-BV salvage
+      (e.g., ICE, DHAP, platinum-based) and who relapse post-ASCT BV-naive.
+
+recommended_regimen: REG-BV-NIVO-CHL
+alternative_regimens:
+  - regimen_id: REG-NIVOLUMAB-MONO
+    description: >
+      Nivolumab monotherapy 240 mg IV q2w (CheckMate-205; ORR ~66%; NCCN Cat 1) —
+      used when BV is inaccessible (not NSZU-funded) or patient has baseline neuropathy
+      contra-indicating BV component. PD-1 monotherapy remains standard alternative.
+  - regimen_id: REG-PEMBROLIZUMAB-CHL
+    description: >
+      Pembrolizumab 200 mg IV q3w (KEYNOTE-204; ORR 65.6%; NCCN Cat 1) —
+      alternative to nivolumab when pembrolizumab is the accessible PD-1 option.
+
+concurrent_therapy:
+  - "G-CSF: pegfilgrastim d2 if Grade 4 neutropenia in prior cycle; not routinely required"
+  - "TSH + thyroid function: baseline + q6-8 weeks (nivolumab immune thyroiditis ~10-15%)"
+  - "PCP prophylaxis: TMP-SMX 160/800 3×/week (combined BV + PD-1 immunosuppression)"
+  - "LFT + creatinine: baseline + each cycle (irAE monitoring)"
+  - "Peripheral neuropathy assessment: CTCAE v5 each cycle (cumulative BV MMAE)"
+
+followed_by:
+  - "PET-CT after 2-3 cycles (interim) and after 4-6 cycles (end-of-treatment)"
+  - "Deauville ≤3 (CR/CMR): consider alloSCT consolidation for eligible patients (only curative pathway post-ASCT relapse)"
+  - "Deauville 3-4 (PR): MDT discussion — continue BV+nivo vs switch to salvage (R-ICE/GDP+BV)"
+  - "Deauville 5 (refractory): stop; clinical trial or alloSCT referral if CR not achieved"
+  - "AlloSCT referral: post-BV+nivo CR in post-ASCT relapse — alloSCT may offer curative intent; NCCN Cat 2A"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~82% (Herrera 2021 Lancet Haematol; phase 2; r/r cHL ≥1 prior line; N=60)"
+  complete_response: "~61% (Herrera 2021; BV+nivo combination; vs ~16-29% for nivolumab monotherapy in CheckMate-205)"
+  progression_free_survival: "Median PFS ~15.4 months (Herrera 2021; longer than PD-1 monotherapy ~13-14.7 mo)"
+  notes: >
+    PRIMARY EVIDENCE: Herrera et al. 2021 Lancet Haematol (phase 2; NCT02985111):
+    - BV 1.8 mg/kg + nivolumab 240 mg q3w in r/r cHL with ≥1 prior line; N=60
+    - ORR 82%; CR 61%; mPFS ~15.4 months
+    - Grade ≥3 AEs ~47%; neuropathy (any) ~19%; Grade ≥3 neuropathy ~2%
+    - irAE (any grade) ~30%; Grade ≥3 irAE ~9%
+    - No new safety signals vs individual agents; rates comparable to BV+nivo in 1L setting
+
+    COMPARISON TO PD-1 MONOTHERAPY:
+    CR rate 61% (BV+nivo) vs ~16-29% (nivolumab monotherapy; CheckMate-205) — combination
+    achieves substantially deeper responses, which is critical for bridging to alloSCT.
+    ORR 82% vs 65-66% for monotherapy. No randomized head-to-head data; NCCN extrapolates
+    to Category 2A based on higher CR rates and clinical rationale for BV-naive population.
+
+    NCCN Hodgkin Lymphoma 2025 Category 2A: BV + anti-PD-1 (nivolumab or pembrolizumab)
+    as combination option for r/r cHL in patients with ≥2 prior lines; particularly
+    relevant for BV-naive post-ASCT relapse.
+
+hard_contraindications:
+  - "Prior BV exposure — BV-exposed patients route to PD-1 monotherapy (step 21)"
+  - "Active Grade ≥2 peripheral neuropathy — BV MMAE cumulative neuropathy"
+  - "Active autoimmune disease on immunosuppression — PD-1 blockade irAE risk"
+  - "Prior solid organ transplant — PD-1 causes graft rejection"
+
+red_flags_triggering_alternative:
+  - RF-CHL-FRAILTY-AGE
+  - RF-CHL-TRANSFORMATION-PROGRESSION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-PET-CT
+  - TEST-ECHO
+  - TEST-LN-CORE-BIOPSY
+  - "TSH + free T4 (baseline thyroid function; nivolumab thyroiditis)"
+  - "CTCAE v5 neuropathy grading (baseline; cumulative BV MMAE risk)"
+
+desired_tests:
+  - "HLA typing: if alloSCT consolidation planned after CR (most valuable use case for BV+nivo)"
+  - "PET-CT after cycle 2-3: early response prediction (Deauville ≤3 identifies patients benefiting from alloSCT bridge)"
+
+rationale: >
+  Brentuximab vedotin + nivolumab (BV+nivo) for relapsed/refractory cHL in BV-naive
+  patients after ASCT or in transplant-ineligible disease with ≥2 prior lines.
+
+  COMBINATION RATIONALE: cHL is unique among hematologic malignancies in that Reed-Sternberg
+  (RS) cells constitutively overexpress CD30 (BV target) AND PD-L1 (nivolumab target) due
+  to 9p24.1 chromosomal amplification. These complementary mechanisms create a synergistic
+  opportunity: BV (CD30-targeted MMAE ADC) delivers direct cytotoxicity to RS cells while
+  nivolumab (PD-1 blockade) unleashes T-cell tumor surveillance. The combination achieves
+  markedly higher CR rates (~61%) than either agent alone (BV monotherapy ~35%; nivolumab
+  ~16-29%), which is clinically critical for patients being bridged to alloSCT.
+
+  HERRERA 2021 (Lancet Haematol; phase 2; N=60): BV 1.8 mg/kg + nivolumab 240 mg q3w
+  in r/r cHL ≥1 prior line — ORR 82%; CR 61%; mPFS ~15.4 months. Safety consistent with
+  individual agents; Grade ≥3 AEs ~47%; no unexpected combination toxicities.
+
+  NCCN Hodgkin Lymphoma 2025 Category 2A for r/r cHL with ≥2 prior lines in BV-naive patients.
+  The combination is particularly valuable for post-ASCT relapse where PD-1 monotherapy
+  (Cat 1, ORR ~65-66%, CR ~16-29%) achieves lower CR rates, limiting bridging to curative
+  alloSCT. BV+nivo's 61% CR rate optimizes the proportion of patients achieving deep enough
+  response for alloSCT.
+
+  PATIENT SELECTION — BV-NAIVE IS MANDATORY: Patients who received BV in the salvage
+  line (BV+benda bridge to ASCT, IND-CHL-2L-BV-SALVAGE) and then relapsed post-ASCT
+  are BV-exposed and should receive PD-1 monotherapy (IND-CHL-2L-PEMBROLIZUMAB or
+  IND-CHL-2L-NIVOLUMAB). BV+nivo is specifically for patients whose pre-ASCT salvage
+  used platinum-based regimens (ICE/DHAP) without BV exposure.
+
+  UKRAINE CONTEXT: Both BV (Adcetris) and nivolumab (Opdivo) are individually registered
+  in Ukraine; combination use may require specific justification per NSZU protocols.
+  AlloSCT for CR consolidation requires access to allotransplant centre.
+
+rationale_ua: >
+  Брентуксимаб ведотін + ніволумаб для рецидивної/рефрактерної кХЛ у БВ-наївних
+  пацієнтів після аутоТГСК або у transplant-ineligible захворюванні з ≥2 попередніми лініями.
+
+  RS-клітини при кХЛ конститутивно надекспресують CD30 (мішень БВ) ТА PD-L1 (мішень
+  ніволумабу) через ампліфікацію 9p24.1 — що робить цю комбінацію особливо синергічною.
+
+  Herrera 2021 (Lancet Haematol; n=60): ORR 82%; ПВ 61%; медіана ВБП ~15,4 міс.
+  NCCN Hodgkin 2025 Категорія 2A. Особливо цінна у БВ-наївних пацієнтів після аутоТГСК,
+  де більш висока частота ПВ (61% проти ~16-29% монотерапії PD-1) критична для переходу
+  до аллоТГСК.
+
+  В Україні: БВ (Adcetris) та ніволумаб (Opdivo) зареєстровані; комбінація може
+  потребувати обґрунтування в рамках НСЗУ.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ призначати пацієнтам з попереднім прийомом БВ — для BV-exposed → PD-1 монотерапія"
+  - "НЕ призначати при Grade ≥2 периферичній нейропатії — кумулятивна токсичність ММАЕ"
+  - "НЕ пропускати нейропатію при кожному циклі — при Grade ≥2 знизити БВ до 1,2 мг/кг"
+  - "НЕ застосовувати при активному аутоімунному захворюванні на імуносупресії"
+  - "НЕ застосовувати у реципієнтів трансплантату солідних органів — PD-1 блокада = відторгнення"
+  - "НЕ вводити кортикостероїди системно без підстав — знижує ефективність ніволумабу"
+  - "НЕ забувати скринінг HBV + щитовидна залоза baseline — реактивація HBV (БВ+ніво) та тиреоїдит (ніво)"
+  - "НЕ ігнорувати irAE — системні кортикостероїди при Grade ≥3; для Grade 4 або стероїд-рефрактерних → інфліксімаб/ММФ"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hodgkin Lymphoma 2025 Category 2A: brentuximab vedotin + anti-PD-1
+      (nivolumab or pembrolizumab) for r/r cHL with ≥2 prior lines; particularly
+      in BV-naive post-ASCT relapse where combination achieves higher CR rates
+      for alloSCT bridging (Herrera 2021 Lancet Haematol; ORR 82%, CR 61%).
+
+known_controversies:
+  - topic: "BV+nivo vs PD-1 monotherapy for BV-naive post-ASCT relapse cHL"
+    positions:
+      - position: "PD-1 monotherapy (pembro/nivo, Cat 1) — proven in large trials; simpler administration; manageable toxicity; KEYNOTE-204 and CheckMate-205 are the definitive trials"
+        sources: [SRC-NCCN-BCELL-2025]
+      - position: "BV+nivo (Cat 2A) — higher CR rate 61% vs ~16-29%; particularly beneficial if alloSCT consolidation planned; phase 2 single-arm data; no randomized comparison; potentially more toxicity"
+        sources: [SRC-NCCN-BCELL-2025]
+    our_default: "BV+nivo preferred for BV-naive post-ASCT relapse when alloSCT consolidation is planned (higher CR optimizes bridge); PD-1 monotherapy when alloSCT not planned or BV component contraindicated."
+    rationale: "The key clinical question is whether deep CR (61% vs ~16-29%) translates to meaningful benefit for the individual patient. AlloSCT is the only curative pathway post-ASCT relapse; achieving CR before alloSCT is a decisive factor."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+ for r/r cHL
+  BV-naive post-ASCT relapse. Wired at ALGO-CHL-2L step 22 (BV+nivo gate for
+  BV-naive post-ASCT relapse; Workstream CU 2026-05-04).
+  Primary trial: Herrera et al. 2021 Lancet Haematol (phase 2; NCT02985111;
+  N=60; ORR 82%; CR 61%; mPFS ~15.4 mo). Source stub SRC-HERRERA-BV-NIVO-2021
+  absent from KB at authoring time — citing via SRC-NCCN-BCELL-2025 pending
+  source-stub creation. Gap (3) in ALGO-CHL-2L CLOSED by Workstream CU.

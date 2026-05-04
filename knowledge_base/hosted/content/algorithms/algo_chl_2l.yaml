@@ -10,6 +10,7 @@ purpose: >
   (KEYNOTE-204; Cat 1). Default: pembrolizumab.
 
 output_indications:
+  - IND-CHL-2L-BV-NIVO
   - IND-CHL-2L-PEMBROLIZUMAB
   - IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
   - IND-CHL-2L-BV-SALVAGE
@@ -65,7 +66,7 @@ decision_tree:
       next_step: 2
     notes: "Partially wired - RF-PRIOR-BV-NAIVE gates AETHERA eligibility (BV-naive vs BV-exposed routes); remaining high-risk composite (primary refractory OR extranodal OR <12mo CR1→relapse OR ≥2 prior salvage) kept as MDT-evaluated text (no pan-disease RF for post-ASCT high-risk composite yet)."
 
-  # Step 2 — post-ASCT relapse OR transplant-ineligible → pembrolizumab.
+  # Step 2 — post-ASCT relapse OR transplant-ineligible → step 22 (BV+nivo gate).
   - step: 2
     evaluate:
       any_of:
@@ -75,10 +76,37 @@ decision_tree:
         - red_flag: RF-CHL-FRAILTY-AGE
         - red_flag: RF-CHL-TRANSFORMATION-PROGRESSION
     if_true:
-      next_step: 21
+      next_step: 22
     if_false:
       next_step: 3
-    notes: "Step 2 if_true updated 2026-05-04 (Workstream CJ): routes to step 21 (pembro vs nivo access gate) instead of direct pembro result."
+    notes: "Step 2 if_true updated 2026-05-04 (Workstream CU): routes to step 22 (BV+nivo gate) before step 21 (pembro vs nivo). BV-naive post-ASCT → BV+nivo preferred (higher CR for alloSCT bridge); BV-exposed → PD-1 mono."
+
+  # Step 22 — BV+nivolumab gate for BV-naive post-ASCT relapse.
+  # BV+nivo achieves CR ~61% vs PD-1 monotherapy CR ~16-29% (CheckMate-205).
+  # Higher CR is critical for alloSCT bridging (only curative pathway post-ASCT relapse).
+  # NCCN Hodgkin 2025 Category 2A. Herrera 2021 Lancet Haematol; ORR 82%, CR 61%.
+  # BV-EXPOSED patients (had BV+benda bridge before ASCT from step 0) route directly
+  # to step 21 (PD-1 monotherapy; Cat 1) — combination brings no added benefit.
+  - step: 22
+    evaluate:
+      all_of:
+        - red_flag: RF-PRIOR-BV-NAIVE
+        - condition: "BV+nivolumab combination accessible at prescribing centre"
+        - condition: "No active Grade ≥2 peripheral neuropathy (BV MMAE cumulative neuropathy)"
+    if_true:
+      result: IND-CHL-2L-BV-NIVO
+      notes: >
+        BV-naive + BV+nivo accessible: brentuximab vedotin 1.8 mg/kg + nivolumab 240 mg
+        q3w (REG-BV-NIVO-CHL; Herrera 2021 Lancet Haematol; ORR 82%; CR 61%; mPFS ~15.4 mo;
+        NCCN Cat 2A). CR rate 61% vs ~16-29% for PD-1 monotherapy — optimises alloSCT bridge.
+        Post-CR: alloSCT consolidation for transplant-eligible patients.
+    if_false:
+      next_step: 21
+      notes: >
+        BV-exposed (had BV salvage before ASCT), OR BV+nivo inaccessible, OR neuropathy
+        contraindication: route to step 21 (pembro vs nivo access gate; NCCN Cat 1;
+        ORR ~65-66%; standard-of-care for post-ASCT relapse / transplant-ineligible cHL).
+    notes: "Step 22 added 2026-05-04 (Workstream CU): BV+nivo gate for BV-naive r/r cHL. IND-CHL-2L-BV-NIVO. Gap (3) CLOSED."
 
   # Step 21 — Pembrolizumab vs nivolumab access gate for PD-1 arm.
   # Both KEYNOTE-204 (pembro) and CheckMate-205 (nivo) are NCCN Cat 1.
@@ -132,9 +160,19 @@ notes: >
   step 21 (CheckMate-205; Armand 2018 JCO; ORR ~66%; mPFS ~14.7 mo; NCCN Cat 1;
   REG-NIVOLUMAB-MONO). Steps 2 and 3 if_true/if_false now route to step 21 (pembro
   vs nivo access gate): pembro accessible → pembro; else → nivolumab. Gap (2) CLOSED.
-  OOS / wiring gaps:
+  UPDATED 2026-05-04 (Workstream CU): IND-CHL-2L-BV-NIVO authored and wired at step 22
+  (BV-naive post-ASCT relapse gate; Herrera 2021 Lancet Haematol; ORR 82%; CR 61%;
+  mPFS ~15.4 mo; NCCN Cat 2A). Step 2 if_true now routes to step 22 (BV+nivo check)
+  before step 21 (PD-1 mono). Gap (3) CLOSED.
+  ROUTING SUMMARY:
+  (0) ASCT-eligible + BV-naive + 1st/2nd relapse → BV+benda salvage bridge (ASCT intent);
+  (1) post-ASCT + high-risk + BV-naive → BV maintenance (AETHERA; Cat 1);
+  (2) post-ASCT relapse / transplant-ineligible → step 22 (BV+nivo gate);
+  (22) BV-naive + BV+nivo accessible → BV+nivo (Cat 2A; CR 61%; alloSCT bridge);
+  (22) BV-exposed or BV+nivo inaccessible → step 21 (pembro/nivo; Cat 1);
+  (21) pembro accessible → pembrolizumab; else → nivolumab.
+  OOS / wiring gaps remaining:
   (1) BEAM-autoSCT itself is a procedure (not an indication) — not modeled.
-  (3) BV+nivolumab combo (post-ASCT relapse) — not modeled.
   (4) Allogeneic SCT for post-PD-1 relapse — referral, outside KB.
   (5) ICE/DHAP/GDP salvage (platinum-based) — not separately modeled;
   surfaced as alternative in IND-CHL-2L-BV-SALVAGE alternative_regimens.
