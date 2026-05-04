@@ -23,6 +23,10 @@ output_indications:
   - IND-NSCLC-PDL1-HIGH-MET-1L
   - IND-NSCLC-PDL1-22C3-PEMBRO-CLONE-SPECIFIC
   - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+  - IND-NSCLC-ALK-MAINT-ALECTINIB
+  - IND-NSCLC-EGFR-MAINT-OSIMERTINIB
+  - IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO
+  - IND-NSCLC-ELDERLY-CARBO-PEM-MOD
 
 default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 alternative_indication: IND-NSCLC-PDL1-HIGH-MET-1L
@@ -81,6 +85,24 @@ decision_tree:
         - indication: IND-NSCLC-1L-EGFR-CLASSIC-AMIVANTAMAB-LAZERTINIB
           criteria: "Fit patient ECOG 0-1 + no VTE/bleeding contraindication + willing to accept IV+oral + DOAC prophylaxis"
           nccn_category: 1
+        - indication_id: IND-NSCLC-EGFR-MAINT-OSIMERTINIB
+          nccn_category: "1"
+          criteria: >
+            EGFR sensitizing mutation confirmed (ex19del or L858R); osimertinib 80 mg
+            QD selected as 1L TKI (IND-NSCLC-EGFR-MUT-MET-1L decision); ≥SD/PR at
+            first restaging; ongoing 1L continuation (continuous TKI paradigm — no
+            distinct induction+maintenance phases). RF-NSCLC-TRANSFORMATION-PROGRESSION
+            absent. Engine activates for any patient on osimertinib 1L beyond first
+            restaging.
+          note: >
+            Osimertinib continuous 1L (FLAURA; Soria 2018 NEJM; Ramalingam 2020 NEJM):
+            mPFS 18.9 vs 10.2 mo (HR 0.46); mOS 38.6 vs 31.8 mo (HR 0.80) vs 1st-gen
+            TKI. CNS PFS HR 0.47 (superior CNS penetration). 80 mg PO QD continuously
+            until progression or intolerable toxicity. Baseline ECHO + serial LVEF
+            (cardiotoxicity ~3-5% LVEF decline); ILD monitoring throughout.
+            Oligoprogression: continue + local SBRT. At systemic progression:
+            amivantamab+chemotherapy (MARIPOSA-2; IND-NSCLC-3L-OSI-FAILURE-AMI) or
+            biopsy-guided (C797S → 4G TKI on trial; MET-amp → savolitinib combo).
       notes: >
         Classical EGFR sensitizing (ex19del/L858R) — THREE NCCN Cat 1 options (all FDA Aug 2024):
         DEFAULT: Osimertinib 80 mg QD (FLAURA; mPFS 18.9m; mOS 38.6m; IND-NSCLC-EGFR-MUT-MET-1L)
@@ -104,6 +126,26 @@ decision_tree:
       notes: >
         ALK fusion: alectinib (ALEX), brigatinib (ALTA-1L), or lorlatinib (CROWN)
         preferred 1L. Lorlatinib preferred for CNS disease/poor prognostic features.
+        If alectinib selected and ≥SD at first restaging: IND-NSCLC-ALK-MAINT-ALECTINIB
+        tracks the alectinib continuation phase (Cat 1; ALEX mPFS 34.8 mo) — see alternatives.
+      alternatives:
+        - indication_id: IND-NSCLC-ALK-MAINT-ALECTINIB
+          nccn_category: "1"
+          criteria: >
+            ALK fusion confirmed; alectinib 600 mg BID selected as 1L TKI (from
+            IND-NSCLC-ALK-MET-1L decision); ≥SD/PR achieved at first restaging;
+            ongoing 1L continuation (continuous TKI — not post-progression; not new
+            line). RF-NSCLC-TRANSFORMATION-PROGRESSION absent. Tracks alectinib
+            continuation beyond induction response per ALEX paradigm.
+          note: >
+            Alectinib continuous 1L (ALEX; Peters 2017 NEJM; Mok 2020 Ann Oncol;
+            Mok 2024 5-yr update): mPFS 34.8 vs 10.9 mo (HR 0.43) vs crizotinib;
+            5-yr OS 62.5% vs 45.5%. CNS PFS HR 0.18 (intracranial response ~81%).
+            Alectinib 600 mg BID PO continuously until progression or toxicity.
+            Oligoprogression: continue alectinib + local SBRT; systemic progression
+            → lorlatinib 2L (preferred per CROWN) or platinum doublet.
+            LFT monitoring q4w initially (hepatotoxicity Grade ≥3 ~5%).
+            Alternative 1L: lorlatinib (CROWN; mPFS NR at 5yr; higher CNS cognitive AEs).
     if_false:
       next_step: 4
 
@@ -228,6 +270,41 @@ decision_tree:
         PD-L1 TPS <50% or unknown: pembrolizumab + platinum + pemetrexed (non-squamous;
         KEYNOTE-189) or pembrolizumab + carboplatin + paclitaxel/nab-paclitaxel (squamous;
         KEYNOTE-407). TMB-high (≥10 mut/Mb) may support pembro mono even at low TPS.
+        Post-4-cycle induction: pembrolizumab maintenance continuation is Cat 1 automatic
+        (IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO). Elderly ≥75 or ECOG 2: modified
+        dose-reduced regimen (IND-NSCLC-ELDERLY-CARBO-PEM-MOD). See alternatives.
+      alternatives:
+        - indication_id: IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO
+          nccn_category: "1"
+          criteria: >
+            Driver-negative metastatic NSCLC; completed 4 induction cycles chemo +
+            pembrolizumab (KEYNOTE-189 non-squamous OR KEYNOTE-407 squamous); ≥SD/PR
+            at end of induction; no Grade ≥3 irAE during induction;
+            CI-PEMBROLIZUMAB-AUTOIMMUNE absent. ECOG ≤2. Automatic continuation —
+            not a separate clinical decision point.
+          note: >
+            Pembrolizumab maintenance continuation q3w to total 35 cycles (~2 yr)
+            (KEYNOTE-189; Gandhi 2018 NEJM; 5-yr update; NCCN Cat 1): 5-yr OS ~19-22%
+            vs ~11% chemo alone. Non-squamous: pembrolizumab + pemetrexed 500 mg/m²
+            q3w maintenance. Squamous: pembrolizumab monotherapy. TSH + thyroid q3
+            cycles; any new dyspnea → hold + CT (pneumonitis). At 35 cycles: stop per
+            protocol; re-challenge feasible if response durable ≥6 months and progression occurs.
+        - indication_id: IND-NSCLC-ELDERLY-CARBO-PEM-MOD
+          nccn_category: "1"
+          criteria: >
+            Non-squamous stage IV NSCLC; driver-negative; PD-L1 TPS <50% (TPS ≥50%
+            → IND-NSCLC-PDL1-HIGH-MET-1L monotherapy); age ≥75 AND/OR ECOG 2; CGA
+            + G8 frailty score performed; full-dose KEYNOTE-189 regimen (carbo AUC
+            5-6) deemed intolerable. Excludes ECOG ≥3 (hard gate — BSC/palliative).
+          note: >
+            Dose-modified carbo-pem ± pembro for elderly/ECOG 2 non-squamous NSCLC
+            (NCCN Cat 1 reduced-intensity approach; JCOG 0803; Quoix 2011 Lancet Oncol):
+            carboplatin AUC 4 (vs standard AUC 5-6) + pemetrexed 500 mg/m² q21d ×
+            4-6 cycles then pemetrexed maintenance ± pembrolizumab. Elderly subgroup
+            KEYNOTE-189 (JCO 2020): pembro addition OS HR ~0.79 — add when ECOG 0-1
+            + tolerability confirmed. ECOG 2: single-agent chemo (weekly paclitaxel
+            or gemcitabine) if doublet still intolerable. CGA mandatory for ≥75.
+            Ukraine: carbo+pem NSZU-accessible; pembro via import/foundation.
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
 last_reviewed: "2026-05-04"
@@ -260,3 +337,14 @@ notes: >
   (PD-L1 high track). Companion to IND-NSCLC-PDL1-HIGH-MET-1L — identical
   clinical recommendation but explicit 22C3 pharmDx clone documentation
   for label-strict adherence scenarios.
+
+  UPDATED 2026-05-04 (Workstream FN): 4 maintenance/special-population
+  indications added to output_indications and wired as alternatives:
+  - IND-NSCLC-ALK-MAINT-ALECTINIB at step 3 if_true (alectinib cont.; ALEX
+    mPFS 34.8 mo; Cat 1).
+  - IND-NSCLC-EGFR-MAINT-OSIMERTINIB at step 25 if_true (osimertinib cont.;
+    FLAURA mPFS 18.9 mo; Cat 1).
+  - IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO at step 9 if_false (pembro
+    continuation post 4-cycle induction; KEYNOTE-189 5-yr OS 22%; Cat 1).
+  - IND-NSCLC-ELDERLY-CARBO-PEM-MOD at step 9 if_false (carbo AUC4 + pem
+    for elderly ≥75 / ECOG 2; Cat 1).
