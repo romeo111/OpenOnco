@@ -7,10 +7,11 @@ purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) tra
 output_indications:
 - IND-DLBCL-2L-RDHAP-AUTOSCT
 - IND-DLBCL-2L-POLA-R-BENDAMUSTINE
+- IND-DLBCL-2L-LISOCEL
 - IND-DLBCL-3L-AXICEL-CART
 - IND-DLBCL-3L-LONCASTUXIMAB
 default_indication: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
-alternative_indication: IND-DLBCL-3L-AXICEL-CART
+alternative_indication: IND-DLBCL-2L-LISOCEL
 decision_tree:
 - step: 1
   evaluate:
@@ -18,16 +19,36 @@ decision_tree:
     - red_flag: RF-ASCT-ELIGIBLE-COMPOSITE
     - condition: First relapse, chemosensitive disease (≥PR to salvage)
   if_true:
-    result: IND-DLBCL-2L-RDHAP-AUTOSCT
-    notes: >
-      Transplant-eligible + chemosensitive relapse: R-ICE or R-DHAP × 2-3 cycles
-      (CORAL: ORR ~63% each; NS difference) → BEAM-autoSCT for responders (≥PR).
-      NCCN Cat 1. Note: axi-cel CAR-T (ZUMA-7) superior over R-ICE→autoSCT for
-      early-relapse (≤12m from 1L) in CAR-T eligible — MDT decision.
-      Late relapse (>12m): R-ICE→autoSCT remains standard.
+    next_step: 11
+    notes: "Transplant-eligible + chemosensitive: route to step 11 to assess early-relapse CAR-T eligibility before autoSCT path."
   if_false:
     next_step: 2
   notes: "Partially wired - RF-ASCT-ELIGIBLE-COMPOSITE gates the transplant-eligible composite (ECOG ≤2 + LVEF ≥50% + CrCl ≥30 + bilirubin ≤2× ULN + no active infection + age <70) for autoSCT consolidation route (vs transplant-ineligible CAR-T pivot at step 2); chemosensitivity-to-salvage criterion remains MDT-text (response-to-prior-line not RF-modelled)."
+- step: 11
+  evaluate:
+    all_of:
+    - condition: "Early relapse or primary refractory (relapse ≤12 months from 1L completion OR no CR to 1L R-CHOP/Pola-R-CHP)"
+    - red_flag: RF-CAR-T-ELIGIBLE
+    - condition: "CD19+ confirmed"
+  if_true:
+    result: IND-DLBCL-2L-LISOCEL
+    notes: >
+      Primary-refractory or early-relapse (≤12m) + CAR-T eligible:
+      liso-cel (TRANSFORM; Kamdar 2022, Lancet; EFS HR 0.35; ORR 86% vs 48%;
+      NCCN Cat 1) preferred over salvage chemo → autoSCT.
+      Axi-cel (ZUMA-7; EFS HR 0.24; NCCN Cat 1) is an equivalent alternative
+      — product selection by availability and toxicity preference (liso-cel
+      lower CRS/ICANS; axi-cel: CRS G≥3 ~6%, ICANS G≥3 ~21% vs 1%/4%).
+      Bridging chemotherapy permitted during ~3-week manufacturing window.
+      Ukraine: international CAR-T referral required (no domestic centres).
+      CAR-T inaccessible → fall back to IND-DLBCL-2L-RDHAP-AUTOSCT.
+  if_false:
+    result: IND-DLBCL-2L-RDHAP-AUTOSCT
+    notes: >
+      Late relapse (>12m from 1L) OR CAR-T ineligible: R-ICE or R-DHAP × 2-3 cycles
+      (CORAL: ORR ~63% each; NS difference) → BEAM-autoSCT for responders (≥PR).
+      NCCN Cat 1. For late-relapse DLBCL, autoSCT consolidation remains standard.
+  notes: "Partially wired - RF-CAR-T-ELIGIBLE gates manufacturing eligibility (organ function, no active CNS disease, no active infection, ECOG 0-1); early-relapse timing criterion remains MDT-text (time-from-1L not RF-modelled)."
 - step: 2
   evaluate:
     all_of:
@@ -63,9 +84,11 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-DLBCL-2024
-last_reviewed: '2026-04-26'
+- SRC-TRANSFORM-KAMDAR-2022
+last_reviewed: '2026-05-04'
 notes: 'AUTHORED 2026-05-04: IND-DLBCL-2L-RDHAP-AUTOSCT (CORAL NCCN Cat 1; R-ICE/R-DHAP ORR ~63% → BEAM-autoSCT) wired at step 1 for transplant-eligible chemosensitive relapse.
-  OOS / wiring gaps: (2) Liso-cel / TRANSFORM (early-relapse 2L CAR-T) not modeled — only axi-cel for ≥3L modeled. (3) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (4) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
+  UPDATED 2026-05-04: IND-DLBCL-2L-LISOCEL wired at step 11 (early-relapse ≤12m + CAR-T eligible → liso-cel preferred over autoSCT; TRANSFORM NCCN Cat 1; EFS HR 0.35). Step 1 if_true now routes to step 11 before autoSCT decision.
+  OOS / wiring gaps: (1) Axi-cel ZUMA-7 2L (parallel Cat 1 to liso-cel) not modeled as separate indication. (2) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (3) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
 reviewer_signoffs_v2:
