@@ -10,6 +10,7 @@ purpose: >
 output_indications:
   - IND-MCL-1L-BTKI-R
   - IND-MCL-1L-INTENSIVE
+  - IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
 
 default_indication: IND-MCL-1L-BTKI-R
 alternative_indication: IND-MCL-1L-INTENSIVE
@@ -38,12 +39,41 @@ decision_tree:
         - red_flag: RF-MIPI-LOW
     if_true:
       result: IND-MCL-1L-INTENSIVE
+      notes: >
+        Fit younger MCL: Nordic/R-CHOP/R-DHAP induction → autoSCT consolidation.
+        Post-autoSCT: rituximab maintenance × 3 years is Cat 1 (LyMa; see
+        IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE below). NOT applicable
+        to BTKi-R continuous track.
+      alternatives:
+        - indication_id: IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
+          nccn_category: "1"
+          criteria: >
+            Post-autoSCT consolidation ≥PR; CD20+ confirmed; ECOG ≤2; HBV
+            screened + prophylaxis in place; no active infection; patient
+            completed Nordic/R-CHOP/R-DHAP induction + autoSCT. NOT for
+            BTKi-R continuous induction track (continuous BTKi subsumes
+            maintenance; adding rituximab on top is not standard).
+          note: >
+            Rituximab maintenance post-autoSCT (LyMa; Le Gouill 2017 NEJM;
+            NCCN Cat 1): rituximab 375 mg/m² IV q2mo × 3 years. 4-yr PFS
+            83% vs 64% observation (HR 0.40); 4-yr OS 89% vs 80% (HR 0.50).
+            For older/unfit post-BR or R-CHOP (no autoSCT): EU MCL Elderly
+            trial (Kluin-Nelemans 2012 NEJM) supports R-maintenance × ≥2
+            years over interferon-α. HBV prophylaxis mandatory throughout.
+            PJP prophylaxis ≥6 months post last anti-CD20 dose.
     if_false:
       result: IND-MCL-1L-BTKI-R
     notes: "Wired via RF-MIPI-LOW (CSD-8A): low-MIPI fit-younger MCL routes to standard intensified Nordic / R-DHAP induction; default to BTKi+R for unfit / unstratified."
 
-sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-LYMPHOMA-2025
+
+last_reviewed: "2026-05-04"
 notes: >
   Fitness assessment is decisive. TP53-mutant / blastoid go BTKi+R
   regardless of fitness — chemoimmuno is ineffective for them.
+  UPDATED 2026-05-04 (Workstream FG): IND-MCL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
+  added to output_indications and wired as Cat 1 alternative at step 3
+  intensive (autoSCT) branch. LyMa evidence (4-yr PFS 83% vs 64%; NCCN Cat 1).
+  BTKi-R continuous track (steps 1, 2, fallback) does NOT get maintenance added.

@@ -11,6 +11,7 @@ output_indications:
   - IND-FL-1L-WATCH
   - IND-FL-1L-BR
   - IND-FL-1L-RCHOP-AGGRESSIVE
+  - IND-FL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
 
 default_indication: IND-FL-1L-WATCH
 alternative_indication: IND-FL-1L-BR
@@ -31,6 +32,26 @@ decision_tree:
         - red_flag: RF-FL-HIGH-TUMOR-BURDEN-GELF
     if_true:
       result: IND-FL-1L-BR
+      notes: >
+        BR induction for GELF-high-burden FL (6-8 cycles). Post-induction:
+        if ≥PR achieved, rituximab maintenance × 2 years is Cat 1 (PRIMA trial;
+        see IND-FL-POST-INDUCTION-RITUXIMAB-MAINTENANCE below).
+      alternatives:
+        - indication_id: IND-FL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
+          nccn_category: "1"
+          criteria: >
+            Post-BR (or post-R-CHOP) induction ≥PR achieved; CD20+ confirmed;
+            ECOG ≤2; HBV screened + prophylaxis in place; no active infection;
+            patient fit for 2-year maintenance; not watch-and-wait track.
+          note: >
+            Rituximab maintenance × 2 years (PRIMA; Salles 2011 Lancet; 9-year
+            update Bachy 2019; NCCN Cat 1): mPFS ~10 years vs ~4 years
+            observation (HR 0.50). No OS benefit confirmed at 9-year follow-up —
+            preference-sensitive trade-off. Rituximab 375 mg/m² IV q8w × 12
+            doses (2 years), starting ~2 months post-induction. Mandatory:
+            HBV prophylaxis throughout + ≥6 months post last dose; PJP
+            prophylaxis ≥6 months post last anti-CD20 dose. Skip in frail
+            patients or those with recurrent infections / hypogammaglobulinemia.
     if_false:
       next_step: 3
   - step: 3
@@ -45,9 +66,14 @@ decision_tree:
 
 sources:
   - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-LYMPHOMA-2025
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
   GELF criteria are the primary algorithm driver. Transformation suspect
   trumps GELF. FL grade 3B treated as DLBCL via different algorithm
   (ALGO-DLBCL-1L) — recognized at disease-resolution stage.
+  UPDATED 2026-05-04 (Workstream FG): IND-FL-POST-INDUCTION-RITUXIMAB-MAINTENANCE
+  added to output_indications and wired as Cat 1 alternative at step 2 BR
+  branch. PRIMA evidence (mPFS ~10 vs ~4 years observation; NCCN Cat 1).
+  Watch-and-wait (step 3) track does NOT proceed to maintenance.
