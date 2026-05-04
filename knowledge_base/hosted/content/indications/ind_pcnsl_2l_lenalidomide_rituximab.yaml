@@ -1,0 +1,169 @@
+id: IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PCNSL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory primary CNS lymphoma (PCNSL) — diffuse large B-cell lymphoma of the CNS"
+    - "Prior ≥1 systemic line including high-dose methotrexate (HD-MTX)-based regimen"
+    - "CD20-positive histology confirmed (rituximab requires CD20+ target)"
+    - "ECOG PS 0-2 OR adequate functional status for oral daily dosing + monthly IV rituximab"
+    - "CrCl ≥30 mL/min (lenalidomide renally excreted; do not use if CrCl <30)"
+    - "ANC ≥1.0×10⁹/L, PLT ≥100×10⁹/L before cycle 1"
+    - "No active VTE without anticoagulation (lenalidomide → DVT/VTE risk; LMWH required if prior VTE)"
+    - "Negative pregnancy test (women of childbearing potential) — lenalidomide teratogen (REMS)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-EXPRESSION
+      required: true
+      value_constraint: "CD20-positive on IHC"
+      notes: >
+        Rituximab requires CD20 expression. Most PCNSL (DLBCL subtype) is CD20+.
+        If CD20-negative at relapse (rare ~5%; may acquire negative status post-rituximab):
+        use lenalidomide monotherapy (off-label) or ibrutinib (BTKi independent of CD20).
+  biomarker_requirements_excluded:
+    - "Histologic transformation to Burkitt / high-grade B-ALL morphology: different treatment (CODOX-M/IVAC or similar)"
+    - "T-cell PCNSL: rituximab inactive; different chemotherapy backbone required"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      PCNSL population includes a significant proportion of elderly patients (median age ~65).
+      Lenalidomide oral + rituximab monthly IV is manageable in older patients with adequate
+      organ function. Age ≥70 with CrCl 30-60 mL/min: start at 10 mg lenalidomide (renal-adjusted).
+      Cognitive impairment from prior HD-MTX does not preclude R² but requires caregiver supervision
+      for daily oral lenalidomide adherence.
+
+recommended_regimen: REG-LENALIDOMIDE-RITUXIMAB-PCNSL
+alternative_regimens:
+  - regimen_id: IND-PCNSL-2L-IBRUTINIB
+    description: >
+      Ibrutinib 560 mg/day PO (iLOC; Soussain 2019; ORR 52.3% PCNSL; NCCN Cat 2A).
+      Preferred when accessible. Superior to R² in MTX-refractory disease (higher ORR).
+      Use R² when ibrutinib inaccessible (not registered in Ukraine as of 2026) OR
+      after ibrutinib progression (class switch to immunomodulatory mechanism).
+  - regimen_id: IND-PCNSL-2L-RMPV-SALVAGE
+    description: >
+      HD-MTX re-challenge ± procarbazine/vincristine (R-MPV salvage): for MTX-responsive
+      late relapse (≥6 months from 1L). CR rate ~50-70% in chemosensitive disease.
+      Use when MTX rechallenge feasible and CD20+ → bridge to autoSCT.
+
+concurrent_therapy:
+  - "DVT/VTE prophylaxis MANDATORY: aspirin 81 mg/day minimum; LMWH (enoxaparin 40 mg/day) if high VTE risk"
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week for duration of treatment"
+  - "HBV prophylaxis: entecavir 0.5 mg/day if HBsAg+ or anti-HBc+ (before rituximab cycle 1)"
+  - "Dexamethasone for cerebral edema (if symptomatic): continue baseline steroid; R² itself not immunosuppressive enough to replace steroids for acute edema"
+
+followed_by:
+  - "MRI brain (with gadolinium) q2 cycles (every 8 weeks): IPCG response criteria"
+  - "CSF cytology (if leptomeningeal involvement at baseline): q2 cycles"
+  - "Continue until progression, unacceptable toxicity, or 12 cycles in responders (MDT decision)"
+  - "After R² progression: clinical trial preferred; ibrutinib (if not yet used); WBRT 36-45 Gy palliative (ECOG ≥3)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~36% (Rubenstein JCO 2018 extended dataset; lenalidomide+rituximab r/r PCNSL; CR 10%, PR 26%)"
+  disease_control_rate: "~50% (SD + PR; heavily pretreated r/r PCNSL)"
+  median_pfs_months: "~8 months (responders; Rubenstein JCO 2018)"
+  notes: >
+    REAL trial / Rubenstein JCO 2018: Phase 1/2 single-arm study of lenalidomide +
+    rituximab for r/r PCNSL and vitreoretinal lymphoma (PVRL). PCNSL cohort:
+    ORR ~36% (CR ~10%; PR ~26%); mPFS ~8 months in responders; mOS ~19 months.
+    Heavily pretreated population (median ~2 prior lines, most post-HD-MTX).
+
+    COMPARISON TO IBRUTINIB (iLOC, Soussain 2019):
+    - Ibrutinib ORR 52.3% vs R² ~36% in r/r PCNSL
+    - Ibrutinib preferred when accessible (superior ORR, oral convenience)
+    - R² is the practical alternative in ibrutinib-inaccessible settings (Ukraine)
+    - R² post-ibrutinib failure: R² has different mechanism (IMiD+CD20) vs BTKi — can
+      achieve responses in ibrutinib-refractory disease (class switch rationale)
+
+    MECHANISM: Lenalidomide augments T-cell, NK-cell, and macrophage function (IMiD
+    class); rituximab depletes CD20+ PCNSL cells + activates ADCC. Combined
+    immunomodulatory + CD20-directed mechanism is distinct from BTKi (signaling) and
+    HD-MTX (cytotoxic), allowing activity in multiply-refractory disease.
+
+hard_contraindications:
+  - "CrCl <30 mL/min: lenalidomide renally cleared; severe renal impairment"
+  - "CD20-negative histology: rituximab inactive"
+  - "Active pregnancy / inadequate contraception: lenalidomide teratogen (Cat X); REMS mandatory"
+  - "Prior lenalidomide with disease progression: re-challenge unlikely to benefit"
+
+red_flags_triggering_alternative:
+  - condition: "Ibrutinib accessible AND MTX-refractory → IND-PCNSL-2L-IBRUTINIB (superior ORR)"
+  - condition: "MTX-responsive late relapse (≥6 mo) AND HD-MTX eligible → IND-PCNSL-2L-RMPV-SALVAGE"
+  - condition: "CrCl <30 → IND-PCNSL-2L-IBRUTINIB (oral BTKi; not renally contraindicated)"
+  - condition: "RF-PCNSL-FRAILTY-AGE: very frail (ECOG ≥3) → WBRT palliative; R² requires adequate PS"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CrCl (CKD-EPI): lenalidomide dose gate; must be ≥30 mL/min"
+  - "Serum β-hCG (women of childbearing potential): REMS requirement; negative before start"
+  - "HBV: HBsAg + anti-HBc + anti-HBs (rituximab reactivation risk)"
+  - "CD20 IHC (relapse biopsy): confirm CD20-positive at time of salvage"
+  - "MRI brain with gadolinium (IPCG baseline): establish baseline enhancing tumor volume"
+  - "Ophthalmologic exam: vitreoretinal lymphoma component exclusion (PVRL ~10-15% of PCNSL)"
+  - "CSF cytology + protein: leptomeningeal staging before R²"
+  - "TSH: baseline (lenalidomide → hypothyroidism)"
+
+desired_tests:
+  - "VTE risk stratification (Khorana score): informs prophylaxis intensity (aspirin vs LMWH)"
+  - "MYD88 L265P + CD79B mutation (from relapse biopsy tissue): confirms ABC/MCD molecular subtype; most PCNSL are MYD88-L265P-positive (BTK/NF-κB pathway active)"
+  - "PET-CT brain/orbit: if PVRL component suspected (vitreoretinal lymphoma)"
+
+rationale: >
+  R² (lenalidomide + rituximab) provides immunomodulatory + CD20-directed therapy for
+  r/r PCNSL. The combination exploits:
+  1. Lenalidomide (cereblon/IKZF1-3 modulator): IMiD class; enhances T-cell and NK-cell
+     cytotoxicity; direct anti-proliferative effect in activated B-cell lymphoma
+  2. Rituximab: CD20-directed ADCC and complement-dependent cytotoxicity (CDC)
+
+  Key positioning: This regimen is the preferred ibrutinib ALTERNATIVE in settings where:
+  - Ibrutinib access is limited (not registered in Ukraine as of 2026)
+  - After ibrutinib progression (mechanism class switch — IMiD vs BTKi)
+  - Patient preference for IV+oral combined vs continuous oral BTKi monotherapy
+
+  UKRAINE-SPECIFIC CONTEXT: Ibrutinib (Imbruvica) has restricted NSZU coverage in Ukraine
+  for PCNSL (off-label CNS indication). Rituximab + lenalidomide are both available through
+  the oncology formulary, making R² a more accessible 2L option for Ukrainian PCNSL patients
+  compared to ibrutinib.
+
+rationale_ua: >
+  R² (леналідомід 20 мг/добу d1-21 + ритуксимаб 375 мг/м² d1 q28д) для рецидивної/
+  рефрактерної ПЛЦНС. ЗВ ~36%; Rubenstein JCO 2018 (фаза 1/2). NCCN Cat 2A.
+  У КОНТЕКСТІ УКРАЇНИ: ібрутиніб не зареєстрований для ПЛЦНС; R² доступніший варіант
+  (леналідомід + ритуксимаб зареєстровані). REMS-моніторинг леналідоміду обов'язковий.
+  Профілактика: ТВЕ (аспірин або НМГГ) + ПЦП (ко-тримоксазол). МРТ мозку q2 цикли.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "R² без REMS-реєстрації: леналідомід — тератоген; обов'язкові щомісячні тести вагітності"
+  - "Без ТВЕ-профілактики: ризик тромбозу з леналідомідом+ритуксимабом ~7%"
+  - "R² при CrCl <30: нефроксичний для леналідоміду; ібрутиніб є нефро-безпечною альтернативою"
+  - "Без скринінгу на HBV: ритуксимаб → реактивація HBV летальна"
+  - "R² як 1L ПЛЦНС: ритуксимаб обмежено проникає через ГЕБ; HD-MTX-базовані схеми є стандартом 1L"
+
+sources:
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CNS Tumors 2025 Category 2A: lenalidomide + rituximab (R²) for r/r PCNSL
+      after HD-MTX failure; alternative to ibrutinib when BTKi inaccessible.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell Lymphoma 2025: R² (lenalidomide + rituximab) is listed as Cat 2A
+      for r/r PCNSL (DLBCL subtype); evidence from Rubenstein JCO 2018 REAL dataset.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

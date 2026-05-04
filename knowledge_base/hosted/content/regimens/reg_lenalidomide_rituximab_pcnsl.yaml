@@ -1,0 +1,70 @@
+id: REG-LENALIDOMIDE-RITUXIMAB-PCNSL
+name: "R² (Lenalidomide + Rituximab) for relapsed/refractory PCNSL"
+name_ua: "R² (Леналідомід + Ритуксимаб) для рецидивної/рефрактерної ПЛЦНС"
+alternate_names: ["R2 PCNSL", "lenalidomide-rituximab PCNSL", "Rubenstein PCNSL"]
+components:
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "20 mg PO once daily days 1-21"
+    schedule: "Days 1-21 of each 28-day cycle (7-day rest days 22-28)"
+    route: PO
+    notes: >
+      Dose reductions for toxicity: Grade ≥3 neutropenia → hold, restart at 15 mg/day;
+      rash Grade ≥3 → hold, restart at 15 mg if resolved; CrCl 30-60 mL/min → reduce
+      to 10 mg/day; CrCl <30 mL/min → not recommended. REMS enrollment MANDATORY
+      (teratogen; negative pregnancy test ≤10-14 days before start; monthly thereafter).
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m² IV day 1 of each 28-day cycle"
+    schedule: "Day 1 q28d"
+    route: IV
+    notes: >
+      Premedication: acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV 30-60 min
+      before infusion. IRR monitoring during first infusion. HBV reactivation: entecavir
+      prophylaxis if HBsAg+ or anti-HBc+.
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity (no fixed-cycle cap; most studies treated 6-12 cycles in responders)"
+toxicity_profile: moderate
+premedication:
+  - "Acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV: 30-60 min before rituximab (IRR prophylaxis)"
+mandatory_supportive_care:
+  - "CBC weekly × first 2 cycles, then q2 weeks × 2 cycles, then monthly (lenalidomide myelosuppression)"
+  - "DVT/VTE prophylaxis MANDATORY: aspirin 81-325 mg/day PO (low risk) OR LMWH (enoxaparin 40 mg SC/day) if high VTE risk (prior VTE, immobility). Lenalidomide + rituximab multiplies VTE risk."
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week (additive immunosuppression from both agents)"
+  - "HBV screening + entecavir 0.5 mg/day if HBsAg+ or anti-HBc+ (rituximab → HBV reactivation)"
+  - "TSH baseline + q3 months (lenalidomide → hypothyroidism; levothyroxine if TSH >5 mU/L)"
+  - "Serum β-hCG monthly for women of childbearing potential (REMS)"
+dose_adjustments:
+  - condition: "Grade ≥3 neutropenia (ANC <1.0×10⁹/L)"
+    modification: "Hold lenalidomide; restart at 15 mg/day when ANC ≥1.0×10⁹/L; add G-CSF if recurrent"
+  - condition: "Grade ≥3 thrombocytopenia (PLT <50×10⁹/L)"
+    modification: "Hold lenalidomide; restart at 15 mg/day when PLT ≥50×10⁹/L; review anticoagulation"
+  - condition: "Grade ≥3 rash"
+    modification: "Hold lenalidomide; dermatology consultation; restart at 15 mg/day if resolved to Grade ≤1"
+  - condition: "CrCl 30-60 mL/min"
+    modification: "Reduce lenalidomide to 10 mg/day; rituximab no dose adjustment required"
+  - condition: "CrCl <30 mL/min"
+    modification: "Hold lenalidomide; rituximab requires MDT decision (accumulation risk); alternative regimen consideration"
+drug_interactions:
+  - "Strong CYP3A4 inhibitors (azole antifungals, clarithromycin): minimal lenalidomide interaction (not CYP metabolized); rituximab not CYP-dependent"
+  - "Warfarin: lenalidomide may alter INR (not directly CYP but cofactor effects); monitor INR closely"
+  - "Digoxin: lenalidomide may increase digoxin AUC by ~14%; monitor digoxin levels"
+  - "DVT prophylaxis interaction: LMWH preferred over warfarin with lenalidomide (less monitoring burden)"
+notes: >
+  R² (lenalidomide + rituximab) for r/r PCNSL based on Rubenstein et al. (JCO 2018;
+  extended REAL trial data). Lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d.
+  ORR ~36% (CR ~10%; PR ~26%) in r/r PCNSL post-HD-MTX. mPFS ~8 months in responders.
+
+  PCNSL-specific considerations vs. FL R² (AUGMENT regimen):
+  - PCNSL is CNS-confined lymphoma; rituximab CNS penetration is limited (high dose IV
+    partially crosses blood-brain barrier; most activity attributed to systemic/microenvironment
+    modulation and residual systemic disease component)
+  - Lenalidomide immunomodulation may augment CNS-directed immune responses
+  - Neurotoxicity monitoring: lenalidomide can cause peripheral neuropathy (overlaps with
+    MTX-related leukoencephalopathy in prior-treated PCNSL patients)
+  - Cognitive impairment is a concern in this population (prior MTX + HD-MTX + radiation
+    cumulative neurotoxicity); monitor with neuropsychological assessment if feasible
+
+  CLINICAL CONTEXT: This is an important alternative to ibrutinib for patients where:
+  1. Ibrutinib is inaccessible (common in Ukraine as of 2026)
+  2. Prior BTKi failure (ibrutinib-refractory → R² as third-line option)
+  3. Patient preference for fixed-duration IV vs continuous oral BTKi
+last_reviewed: "2026-05-04"

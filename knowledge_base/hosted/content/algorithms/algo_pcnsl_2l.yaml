@@ -5,6 +5,7 @@ purpose: "Select 2L Indication for relapsed/refractory primary CNS lymphoma afte
 output_indications:
 - IND-PCNSL-2L-RMPV-SALVAGE
 - IND-PCNSL-2L-IBRUTINIB
+- IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
 default_indication: IND-PCNSL-2L-RMPV-SALVAGE
 alternative_indication: IND-PCNSL-2L-IBRUTINIB
 decision_tree:
@@ -15,13 +16,11 @@ decision_tree:
     - red_flag: RF-PCNSL-ORGAN-DYSFUNCTION
     - condition: CrCl <50 mL/min OR severe hepatic dysfunction (HD-MTX contraindicated)
   if_true:
-    result: IND-PCNSL-2L-IBRUTINIB
+    next_step: 22
     notes: >
-      HD-MTX contraindicated (renal or hepatic dysfunction, frailty): ibrutinib 560 mg/d
-      (REG-IBRUTINIB-PCNSL) is the preferred option. Oral BTKi achieves CNS penetration
-      without nephrotoxicity (no renal clearance of active drug). NCCN Cat 2A.
-      CrCl <50: hold ibrutinib if CrCl <25 (limited data); use with caution CrCl 25-50.
-      Check CYP3A4 drug interactions before prescribing (azole antifungals → reduce to 140 mg).
+      HD-MTX contraindicated (renal or hepatic dysfunction, frailty): ibrutinib 560 mg/d preferred
+      (oral, no nephrotoxicity, CNS-penetrant). R² (lenalidomide+rituximab) if ibrutinib inaccessible.
+      CrCl <30: use R² cautiously (lenalidomide renally excreted) or ibrutinib (NCCN Cat 2A).
   if_false:
     next_step: 2
 - step: 2
@@ -32,16 +31,35 @@ decision_tree:
     - condition: Failure to achieve CR to 1L R-MPV / MATRix
     - red_flag: RF-PCNSL-TRANSFORMATION-PROGRESSION
   if_true:
-    result: IND-PCNSL-2L-IBRUTINIB
+    next_step: 22
     notes: >
-      MTX-refractory PCNSL (primary refractory OR early relapse <6 months): ibrutinib 560 mg/d.
-      iLOC (Soussain 2019): ORR 52.3% in PCNSL; ~73% combined with PVRL. NCCN Cat 2A.
-      Mechanistic rationale: MYD88 L265P (~85% PCNSL) + CD79B → BTK/NF-κB — ibrutinib active.
-      HD-MTX re-challenge in MTX-refractory disease has very low ORR (~15-20%); ibrutinib preferred.
-      Bridge to autoSCT consolidation (thiotepa-based) for fit patients achieving CR2/PR2.
-      CRITICAL: No anticoagulants (ICH risk). CYP3A4 interactions mandatory check.
+      MTX-refractory (primary refractory OR early relapse <6 months): ibrutinib preferred
+      (iLOC ORR 52.3%; NCCN Cat 2A). HD-MTX re-challenge has very low ORR (~15-20%).
+      R² (lenalidomide+rituximab; REAL ORR ~36%) if ibrutinib inaccessible (Ukraine 2026).
+      CRITICAL for ibrutinib: no anticoagulants (ICH risk); CYP3A4 check mandatory.
   if_false:
     next_step: 3
+- step: 22
+  evaluate:
+    all_of:
+    - condition: "Ibrutinib accessible (registered + funded in patient's healthcare system)"
+    - condition: "No prior ibrutinib progression in this disease"
+  if_true:
+    result: IND-PCNSL-2L-IBRUTINIB
+    notes: >
+      Ibrutinib 560 mg/day PO (REG-IBRUTINIB-PCNSL; iLOC Soussain 2019; ORR 52.3% PCNSL;
+      NCCN Cat 2A). BTK/NF-κB mechanism — active in MYD88-L265P+ PCNSL (~85%).
+      CRITICAL: No therapeutic anticoagulation (ICH risk); CYP3A4 inhibitor interactions
+      (azole antifungals → reduce ibrutinib to 140 mg/day).
+  if_false:
+    result: IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
+    notes: >
+      Ibrutinib inaccessible (not registered in Ukraine as of 2026) OR prior ibrutinib
+      progression: R² (lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d;
+      REG-LENALIDOMIDE-RITUXIMAB-PCNSL; REAL/Rubenstein JCO 2018; ORR ~36%; NCCN Cat 2A).
+      Distinct mechanism (IMiD+CD20) from BTKi — active in ibrutinib-inaccessible setting.
+      MANDATORY: REMS enrollment + monthly pregnancy test; DVT prophylaxis; PJP prophylaxis.
+  notes: "Step 22 added 2026-05-04 (Workstream BR): ibrutinib access gate. R² (IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB) wired as ibrutinib-inaccessible fallback. Gap (2) CLOSED. Free-text access condition; MDT-evaluated."
 - step: 3
   evaluate:
     all_of:
@@ -72,6 +90,6 @@ sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ILOC-SOUSSAIN-2019
 last_reviewed: '2026-05-04'
-notes: 'AUTHORED 2026-05-04: IND-PCNSL-2L-IBRUTINIB wired at steps 1 (HD-MTX-contraindicated frail patients) and 2 (MTX-refractory/early-relapse); IND-PCNSL-2L-RMPV-SALVAGE retained at steps 3-4 for MTX-sensitive late relapse. OOS / wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION (thiotepa-based autoSCT for fit CR2/PR2 patients) — not modeled; surfaced as followed_by note in ibrutinib indication. (2) Lenalidomide ± rituximab (REAL trial; ORR ~35% r/r PCNSL) — not modeled. (3) Whole-brain RT (WBRT 36-45 Gy) — palliative for ECOG ≥3; surfaced as MDT free-text. (4) Temozolomide ± rituximab — historic; lower efficacy than ibrutinib; not modeled. (5) PD-1 inhibitors (nivolumab/pembrolizumab) for PCNSL — case series only; not modeled. (6) Re-biopsy at relapse mandatory if imaging atypical (leukoencephalopathy vs relapse). (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+notes: 'UPDATED 2026-05-04 (Workstream BR): IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB authored and wired at step 22 as ibrutinib-inaccessible fallback (REAL/Rubenstein JCO 2018; lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d; ORR ~36%; NCCN Cat 2A). Gap (2) CLOSED. Steps 1 and 2 if_true now route to step 22 (ibrutinib access gate). ROUTING SUMMARY: (1) HD-MTX-contraindicated/frail → step 22 (ibrutinib or R²); (2) MTX-refractory/early relapse → step 22 (ibrutinib or R²); (3) MTX-sensitive late relapse → R-MPV salvage; (fallback) → R-MPV salvage. UKRAINE: ibrutinib not registered for PCNSL → R² is the default ibrutinib-inaccessible path. OOS / wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION — not modeled. (3) WBRT palliative — ECOG ≥3; MDT free-text. (4) Temozolomide ± rituximab — not modeled. (5) PD-1 inhibitors — case series only. (6) Re-biopsy mandatory if imaging atypical. (7) reviewer_signoffs: 0.
 
   '
