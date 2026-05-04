@@ -1,0 +1,108 @@
+id: IND-DLBCL-2L-LISOCEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-DLBCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory large B-cell lymphoma (DLBCL NOS, HGBL with MYC and BCL2/BCL6 rearrangements, PMBCL, FL grade 3B)"
+    - "Primary refractory disease (no CR to 1L chemoimmunotherapy) OR early relapse (relapse ≤12 months from 1L completion)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L (or transfusion-independent), creatinine ≤1.5× ULN, ALT/AST ≤5× ULN, bilirubin ≤2× ULN"
+    - "No active CNS lymphoma at time of CAR-T infusion"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Liso-cel (Breyanzi) is an autologous CD19-directed CAR-T cell product with
+      defined 1:1 CD4:CD8 composition. Manufacturing requires apheresis of T cells
+      from the patient (~3-4 weeks lead time). PLAN APHERESIS EARLY.
+      Bridging chemotherapy: R-GemOx, R-ICE, or similar platinum-based salvage is
+      permitted during manufacturing window to control disease burden.
+      Preferred over axi-cel when: ICANS risk is a concern (liso-cel G≥3 ICANS ~4%
+      vs axi-cel G≥3 ICANS ~21% in 2L; TRANSFORM vs ZUMA-7 cross-trial comparison).
+      Preferred over autoSCT (historical standard) in primary-refractory/early-relapse
+      LBCL: TRANSFORM EFS HR 0.35 vs autoSCT (even when salvage chemo-sensitive).
+      Age: no strict upper limit; assess fitness for lymphodepletion conditioning.
+      CAR-T certified centre mandatory: REMS-equivalent; ICU monitoring, neurology
+      on-call, corticosteroids and tocilizumab (for CRS grade ≥3) must be on-site.
+
+recommended_regimen: REGIMEN-LISOCEL-DLBCL-2L
+concurrent_therapy:
+  - "CRS prophylaxis/management: tocilizumab 8 mg/kg IV on-site (for Grade ≥2 CRS); dexamethasone for Grade ≥3 ICANS"
+  - "GCSF: NOT during first 28 days post-infusion (may stimulate CAR-T-related cytopenias paradoxically)"
+  - "Antimicrobial prophylaxis: TMP-SMX (pneumocystis), acyclovir (HSV/VZV), antifungal (fluconazole) × ≥3 months post-infusion"
+  - "IVIG replacement: if IgG <400 mg/dL post-CAR-T (B-cell aplasia → hypogammaglobulinemia)"
+  - "Corticosteroids for ICANS: immediate dexamethasone 10 mg IV q6h for Grade ≥1 ICANS; escalate per ASTCT grading"
+
+followed_by:
+  - "PET-CT: at day +30 and day +90 post-infusion (standard CAR-T response assessment)"
+  - "CBC + CMP: weekly × 4 weeks, then q2 weeks × 2 months (cytopenia monitoring)"
+  - "IgG level: every 3 months × 1 year (hypogammaglobulinemia from B-cell aplasia)"
+  - "At relapse post-CAR-T: clinical trial preferred; bispecific antibodies (glofitamab, epcoritamab) for CD19+ relapse"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "86% (TRANSFORM; liso-cel vs 48% standard care + autoSCT; p<0.0001)"
+  complete_response: "66% (TRANSFORM; vs 39% standard care)"
+  progression_free_survival: "EFS HR 0.35 (TRANSFORM; p<0.0001); mPFS not reached (liso-cel) vs 2.4 months (standard)"
+  overall_survival_5y: "OS HR 0.51 (TRANSFORM; p=0.032); 2-year OS 66% vs 47%"
+  notes: >
+    PRIMARY EVIDENCE: Kamdar M et al. Lancet 2022;399:2294-2308 (TRANSFORM Phase 3;
+    N=184): liso-cel vs salvage chemotherapy + autoSCT in primary-refractory/early-relapse
+    LBCL. EFS HR 0.35; ORR 86% vs 48%; CR 66% vs 39%; OS HR 0.51.
+    ICANS Grade ≥3: 4% (liso-cel) — significantly lower than axi-cel in comparable 2L setting.
+    FDA expanded approval April 2022 (from 3L to 2L, based on TRANSFORM).
+    NCCN B-Cell Lymphomas: liso-cel Category 1 for primary-refractory or early-relapse
+    LBCL (preferred when ICANS tolerability is a concern; axi-cel is an equivalent
+    alternative per NCCN).
+
+hard_contraindications:
+  - "Active uncontrolled CNS lymphoma at time of CAR-T infusion (CNS disease is not an absolute contraindication but requires management before infusion)"
+  - "Active systemic infection at time of infusion (delay until infection resolved)"
+  - "ECOG PS ≥3 (unless reversible cause; MDT discussion for borderline cases)"
+  - "Not at certified CAR-T centre without CRS/ICANS management capability"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "PET-CT: baseline (disease extent before lymphodepletion)"
+  - "Bone marrow biopsy: optional (assess marrow involvement; not required)"
+  - "Echocardiography: baseline cardiac function (lymphodepletion includes cyclophosphamide)"
+  - "Pulmonary function (DLCO/FEV1): baseline (especially if prior lung-toxic chemo)"
+  - "CNS MRI: if CNS involvement suspected"
+  - "Apheresis scheduling: plan T-cell collection early; manufacturing ~3-4 weeks"
+
+sources:
+  - source_id: SRC-TRANSFORM-KAMDAR-2022
+    position: supports
+    relevant_quote_paraphrase: >
+      TRANSFORM Phase 3 (Kamdar 2022 Lancet; N=184): liso-cel vs salvage chemo + autoSCT
+      in primary-refractory/early-relapse LBCL. EFS HR 0.35 (p<0.0001); ORR 86% vs 48%;
+      CR 66% vs 39%; OS HR 0.51. ICANS Grade ≥3: 4% only. FDA 2L approval April 2022.
+      NCCN B-Cell Lymphoma Category 1.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-DLBCL-2L.
+  TIME-CRITICAL = true: early-relapse DLBCL progresses rapidly; T-cell collection and
+  manufacturing take ~3-4 weeks; initiate evaluation and apheresis scheduling without delay.
+  Ukraine: liso-cel not registered; international referral required (EU CAR-T centres:
+  Charité Berlin, Karolinska Stockholm, HMRC London, EBMT-accredited sites).
+  TRANSFORM: liso-cel's defined CD4:CD8 1:1 composition is associated with lower ICANS
+  burden vs CD28-based axi-cel (ZUMA-7); this is clinically significant for elderly
+  or patients with baseline neurological concerns.

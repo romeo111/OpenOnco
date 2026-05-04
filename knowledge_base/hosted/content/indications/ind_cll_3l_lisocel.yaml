@@ -1,0 +1,102 @@
+id: IND-CLL-3L-LISOCEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CLL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed or refractory CLL/SLL with prior treatment with a covalent BTK inhibitor (ibrutinib or acalabrutinib) AND a BCL-2 inhibitor (venetoclax) — double-exposed CLL"
+    - "CD19-positive disease (confirmed by flow cytometry)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function for lymphodepletion conditioning and CAR-T infusion"
+    - "No active CNS involvement with CLL at time of CAR-T infusion"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Liso-cel (Breyanzi) CAR-T in CLL: first CAR-T approved for CLL (FDA March 2024).
+      TRANSCEND CLL-004 enrolled patients with ≥2 prior lines including BTKi AND
+      venetoclax — double-exposed CLL is the approved indication.
+      Important: CLL patients receiving ibrutinib at time of referral should discuss
+      ibrutinib hold strategy before apheresis (ibrutinib may reduce T-cell function).
+      ICANS risk in CLL higher than in DLBCL (~20% Grade ≥3 in TRANSCEND CLL-004).
+      Richter transformation (large cell transformation from CLL) is a different
+      entity — route to DLBCL algorithm if Richter transformation is confirmed.
+
+recommended_regimen: REGIMEN-LISOCEL-DLBCL-3L
+concurrent_therapy:
+  - "Ibrutinib/BTKi hold: stop at least 3-7 days before apheresis (per institutional protocol)"
+  - "CRS management: tocilizumab on-site; dexamethasone for ICANS"
+  - "Antimicrobial prophylaxis: TMP-SMX, acyclovir, antifungal × ≥3 months"
+  - "IVIG: if IgG <400 mg/dL (CLL patients have pre-existing hypogammaglobulinemia)"
+
+followed_by:
+  - "Flow cytometry (blood/marrow): MRD assessment at month 1, 3, 6, 12"
+  - "PET-CT or CT: baseline + day 30 response"
+  - "At relapse/progression: clinical trial; allo-HSCT if eligible; pirtobrutinib (non-covalent BTKi)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~47% (TRANSCEND CLL-004; Siddiqi 2023 Lancet)"
+  complete_response: "~18% CR (TRANSCEND CLL-004)"
+  progression_free_survival: "~18 months mPFS estimated from TRANSCEND CLL-004 interim data"
+  overall_survival_5y: "Mature OS data not available (recent approval March 2024)"
+  notes: >
+    PRIMARY EVIDENCE: Siddiqi T et al. Lancet 2023;402:641-654 (TRANSCEND CLL-004
+    Phase 1-2; N=117 liso-cel cohort): CLL/SLL post-BTKi + post-venetoclax.
+    ORR ~47%; CR ~18%; uMRD rate in CR subset ~55%. Durable responses in MRD-negative
+    subset. ICANS Grade ≥3: ~20% (higher than DLBCL liso-cel).
+    FDA approval March 2024 — first CAR-T approval for CLL.
+    NCCN CLL Category 2A (consensus; single-arm Phase 1-2 data; no RCT).
+    Note: liso-cel ORR in CLL (~47%) is lower than in DLBCL (~86%) — CLL T-cell
+    dysfunction (from prior BTKi/venetoclax) limits CAR-T expansion and function.
+
+hard_contraindications:
+  - "CLL without prior BTKi + venetoclax exposure — liso-cel is for double-exposed CLL; alternative regimens preferred for BTKi-naive or venetoclax-naive"
+  - "CD19-negative CLL (very rare; check at relapse if prior anti-CD19 therapy)"
+  - "Richter transformation — treat as DLBCL (different algorithm)"
+  - "Active CNS CLL (managed before CAR-T)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Flow cytometry: CD19 expression confirmation (blood or bone marrow)"
+  - "PET-CT or CT: staging and baseline for response"
+  - "IGHV mutational status + TP53/del17p: prognostic; not gating for liso-cel"
+  - "Echocardiogram: cardiac function for lymphodepletion conditioning"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CLL/SLL Guidelines: lisocabtagene maraleucel Category 2A for CLL/SLL
+      after BTK inhibitor AND venetoclax (double-exposed). First FDA-approved CAR-T
+      for CLL (March 2024; TRANSCEND CLL-004; Siddiqi 2023 Lancet; ORR ~47%; CR ~18%).
+  - source_id: SRC-ESMO-CLL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO CLL Guidelines: CAR-T therapy (liso-cel) for CLL with exhausted BTKi and
+      venetoclax — emerging recommended option for fit patients at specialized centres.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-CLL-2L.
+  TIME-CRITICAL: double-exposed CLL progresses rapidly; T-cell quality is reduced by
+  prior BTKi/venetoclax; consider apheresis timing carefully.
+  Ukraine: liso-cel not registered; international referral required.
+  Liso-cel in CLL uses the same manufacturing and lymphodepletion protocol as DLBCL;
+  REGIMEN-LISOCEL-DLBCL-3L referenced as the closest matching regimen file.

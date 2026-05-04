@@ -1,0 +1,118 @@
+id: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic urothelial carcinoma (bladder, upper tract, or urethra)"
+    - "NOT eligible for enfortumab vedotin + pembrolizumab (EV+pembro) as 1L due to EV-specific contraindications: Grade ≥2 pre-existing peripheral neuropathy, uncontrolled diabetes mellitus, severe corneal or ocular disease, or patient/provider preference"
+    - "Has completed 4-6 cycles of 1L platinum-based chemotherapy (gemcitabine+cisplatin or gemcitabine+carboplatin) with response of SD, PR, or CR (no progression on platinum chemo)"
+    - "ECOG PS 0-2 at time of maintenance initiation"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Avelumab maintenance is administered after completion of 4-6 cycles of 1L
+      platinum-based chemotherapy — this indication covers BOTH the induction
+      phase and the maintenance phase.
+      PD-L1 status: JAVELIN Bladder 100 enrolled unselected patients; benefit was
+      observed in all-comers but was numerically larger in PD-L1+ patients.
+      PD-L1 testing is NOT required as a gating criterion.
+      Cisplatin vs carboplatin:
+      - Cisplatin-eligible (CrCl ≥60 mL/min, ECOG 0-1, no neuropathy ≥2, no hearing
+        loss ≥2, no NYHA III/IV HF): gemcitabine + cisplatin (4-6 cycles) → avelumab
+      - Cisplatin-ineligible: gemcitabine + carboplatin (4-6 cycles) → avelumab
+      START avelumab within 10 weeks of last platinum dose (JAVELIN Bladder 100 protocol).
+      Pre-medicate with antihistamine + acetaminophen before each avelumab infusion
+      (infusion reaction prophylaxis; Merkel cell carcinoma experience).
+
+recommended_regimen: REG-AVELUMAB-MAINTENANCE
+concurrent_therapy:
+  - "Gemcitabine + cisplatin (if cisplatin-eligible): 4-6 cycles before avelumab maintenance"
+  - "Gemcitabine + carboplatin (if cisplatin-ineligible): 4-6 cycles before avelumab maintenance"
+  - "Thyroid function (TSH): baseline + every 3 months on avelumab (immune-mediated thyroid dysfunction)"
+  - "Liver function (ALT/AST): baseline + every 6 weeks (immune-mediated hepatitis)"
+  - "Renal function (creatinine): at each visit on avelumab (immune-mediated nephritis)"
+  - "Adrenal function: if fatigue, weight loss, hypotension — adrenal insufficiency (rare but serious)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 12 weeks on avelumab maintenance (RECIST 1.1 response)"
+  - "Continue avelumab until disease progression or unacceptable toxicity (JAVELIN: continued indefinitely)"
+  - "At progression: 2L options — erdafitinib (if FGFR2/3-altered); enfortumab vedotin (EV) monotherapy; pembrolizumab (if ICI-naive)"
+  - "Note: patients receiving avelumab maintenance are ICI-exposed — pembrolizumab 2L less preferred after ICI maintenance"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "53.7% disease control rate (CR+PR+SD) with platinum induction; avelumab maintains response"
+  complete_response: "PR+CR on platinum chemo documented before avelumab start"
+  progression_free_survival: "mPFS with avelumab maintenance: 3.7 months (vs 2.0 months BSC; HR 0.62)"
+  overall_survival_5y: "mOS 21.4 months (avelumab arm) vs 14.3 months (BSC arm); HR 0.69; p=0.0011 (JAVELIN Bladder 100)"
+  notes: >
+    PRIMARY EVIDENCE: Powles T et al. NEJM 2020;383:1218-1230 (JAVELIN Bladder 100
+    Phase 3; N=700): avelumab + best supportive care (BSC) vs BSC alone as maintenance
+    following platinum-based 1L chemotherapy in unresectable/metastatic UC.
+    Primary endpoint OS: 21.4 vs 14.3 months; HR 0.69; 95% CI 0.56-0.86; p=0.0011.
+    PD-L1+ subgroup (CPS ≥1 or IC ≥1): mOS 17.1 vs 9.8 months; HR 0.56.
+    FDA approval June 2020. EMA approval July 2020. NCCN Bladder Category 1.
+    Note: EV+pembro (EV-302; mOS 31.5 months) is now the preferred 1L for
+    EV-eligible patients; avelumab maintenance is for the EV-ineligible population.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic therapy (ICI contraindication)"
+  - "Prior organ transplant on immunosuppression (ICI contraindication)"
+  - "Disease progression on platinum chemotherapy — do not start avelumab if disease progressed on chemo induction"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "Thyroid function (TSH): baseline before avelumab"
+  - "Urinalysis: baseline (ICI-related nephritis)"
+  - "Adrenal function (cortisol/ACTH): only if symptoms of insufficiency"
+
+desired_tests:
+  - "PD-L1 (CPS, IC scoring): for prognosis (benefit in all PD-L1 groups; stronger in PD-L1+)"
+  - "FGFR2/3 testing: if not done, perform for 2L planning (FGFR-altered → erdafitinib preferred at 2L)"
+
+sources:
+  - source_id: SRC-JAVELIN-BLADDER100-POWLES-2020
+    position: supports
+    relevant_quote_paraphrase: >
+      JAVELIN Bladder 100 Phase 3 (Powles 2020 NEJM; N=700): avelumab maintenance +
+      BSC vs BSC alone after 1L platinum chemo in UC. mOS 21.4 vs 14.3 months;
+      HR 0.69; p=0.0011. FDA June 2020. NCCN Category 1 for avelumab maintenance
+      post-platinum induction.
+  - source_id: SRC-NCCN-BLADDER-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Bladder Cancer: avelumab maintenance following platinum-based chemotherapy
+      is Category 1 for patients not eligible for or not receiving EV+pembrolizumab
+      as 1L. Preferred 1L is EV+pembro (EV-302); avelumab maintenance is for
+      EV-ineligible patients or clinical trial contexts.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-UROTHELIAL-METASTATIC-1L.
+  This indication covers patients who are NOT eligible for EV+pembrolizumab (EV-302 preferred
+  1L) and instead receive platinum-based chemotherapy induction followed by avelumab maintenance.
+  The 1L algorithm routes: EV+pembro (preferred) OR platinum-chemo→avelumab (for EV-ineligible).
+  Avelumab (anti-PD-L1 IgG1; no ADCC-mediated toxicity unlike other PD-L1 antibodies):
+  infusion reactions occur (~25%); antihistamine + acetaminophen premedication required.
+  Note: This indication covers both the platinum induction and avelumab maintenance phases
+  (the regimen file REG-AVELUMAB-MAINTENANCE may need to be updated to include induction
+  details or reference the platinum-based induction regimen separately).

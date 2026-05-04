@@ -1,0 +1,100 @@
+id: IND-UROTHELIAL-2L-ERDAFITINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced unresectable or metastatic urothelial carcinoma (UC of bladder, upper tract, or urethra)"
+    - "FGFR2 or FGFR3 activating mutation OR FGFR2/FGFR3 gene fusion detected by companion diagnostic"
+    - "Previously treated with platinum-based chemotherapy AND ICI (or platinum-ineligible patients who received carboplatin-based chemotherapy + ICI)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-FGFR2-MUTATION
+      value_constraint: "FGFR2 or FGFR3 activating mutation (FGFR3: R248C, S249C, G370C, Y373C, A393E, A393T; FGFR2: various) OR FGFR2/FGFR3 gene fusion — detected by Therascreen FGFR RGQ RT-PCR (FDA companion diagnostic) or comprehensive NGS (RNA-based NGS preferred for fusion detection)"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      FGFR2/3 testing is MANDATORY — erdafitinib only benefits FGFR-altered UC
+      (~15-20% of all UC). Therascreen FGFR RGQ RT-PCR is the FDA-approved companion
+      diagnostic. Comprehensive NGS (including RNA-seq for fusion detection) is
+      acceptable. Test at diagnosis if advanced disease; retest at 2L if not done at 1L.
+      Serum phosphate monitoring: FGFR inhibition causes hyperphosphatemia (dose
+      modification based on serum phosphate levels at weeks 2 and 4). Central serous
+      retinopathy risk: ophthalmologic baseline exam recommended.
+
+recommended_regimen: REG-ERDAFITINIB-UROTHELIAL-2L
+concurrent_therapy:
+  - "Serum phosphate: monitor at weeks 2 and 4 (dose titration from 8 mg → 9 mg if phosphate <5.5 mg/dL; hold if >7.0 mg/dL)"
+  - "Ophthalmologic exam: baseline and at any visual symptoms (central serous retinopathy risk)"
+  - "Dietary phosphate restriction: low-phosphate diet if hyperphosphatemia develops"
+  - "Phosphate binders (sevelamer): if serum phosphate persistently elevated; manage with nephrology"
+
+followed_by:
+  - "CT or MRI: every 8 weeks (RECIST 1.1 response)"
+  - "At progression: enfortumab vedotin (EV) monotherapy if EV-naive; platinum rechallenge if platinum-sensitive interval ≥12 months"
+  - "Note: FGFR inhibitor → EV: interactions minimal; EV-FGFR combination investigational"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "35.3% (THOR cohort 1; vs 8.5% investigator-choice chemotherapy; p<0.0001)"
+  complete_response: "~6% (THOR cohort 1)"
+  progression_free_survival: "mPFS 5.6 months (vs 2.7 months chemo; HR 0.58)"
+  overall_survival_5y: "mOS 12.1 months (vs 7.8 months chemo; HR 0.64; p=0.005)"
+  notes: >
+    PRIMARY EVIDENCE: van der Heijden MS et al. Lancet Oncology 2023;24:519-528
+    (THOR Phase 3, cohort 1; N=266): erdafitinib vs investigator-choice chemotherapy
+    (docetaxel or vinflunine) in FGFR-altered urothelial carcinoma post-platinum + post-ICI.
+    ORR 35.3% vs 8.5%; mOS 12.1 vs 7.8 months; HR 0.64; p=0.005.
+    FDA full approval January 2024 (upgraded from 2019 accelerated approval based on
+    confirmatory THOR data). NCCN Bladder Cancer Category 1 for FGFR2/3-altered UC
+    post-platinum+ICI.
+
+hard_contraindications:
+  - "FGFR2/3-wildtype UC — no therapeutic target; do not use without molecular confirmation"
+  - "Central serous retinopathy (active) — FGFR inhibition may worsen retinal disease"
+  - "Severe renal impairment (CrCl <30 mL/min) — increased exposure; use with caution"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "FGFR2/3 mutation/fusion testing: MANDATORY — Therascreen FGFR RGQ RT-PCR or comprehensive NGS"
+  - "Serum phosphate: baseline (FGFR inhibition → hyperphosphatemia; dose titration guided by phosphate level)"
+  - "Ophthalmologic exam: baseline"
+
+desired_tests:
+  - "RNA-based NGS: preferred for FGFR2/FGFR3 fusion detection (DNA NGS may miss fusions)"
+
+sources:
+  - source_id: SRC-NCCN-BLADDER-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Bladder Cancer: erdafitinib Category 1 for FGFR2/3-altered metastatic
+      urothelial carcinoma post-platinum and post-ICI. THOR Phase 3 data (ORR 35.3%
+      vs 8.5%; mOS 12.1 vs 7.8 months; HR 0.64) supports full FDA approval January 2024.
+      FGFR2/3 testing mandatory (Therascreen FGFR companion diagnostic).
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-UROTHELIAL-METASTATIC-2L.
+  THOR Phase 3 confirmed the 2019 accelerated approval → FDA full approval January 2024.
+  FGFR2/3 prevalence: ~15-20% of urothelial carcinomas harbor actionable FGFR alterations;
+  upper tract UC has higher FGFR3 mutation rates than bladder UC.
+  Hyperphosphatemia management: dose titration from 8 mg to 9 mg at weeks 2-4 is
+  required if phosphate <5.5 mg/dL (FGFR inhibition elevates phosphate by feedback).
+  THOR source stub SRC-NCCN-BLADDER-2025 used as proxy — separate THOR source stub
+  (van der Heijden 2023 Lancet Oncol) not yet created in KB; create separately.

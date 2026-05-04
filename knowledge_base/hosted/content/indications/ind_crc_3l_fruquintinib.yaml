@@ -1,0 +1,94 @@
+id: IND-CRC-3L-FRUQUINTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 3
+  stage_requirements:
+    - "Metastatic colorectal cancer (mCRC) previously treated with fluoropyrimidine, oxaliplatin, irinotecan, anti-VEGF therapy (bevacizumab or aflibercept), AND anti-EGFR (cetuximab or panitumumab) if RAS-wildtype"
+    - "OR prior exposure to trifluridine/tipiracil (TAS-102) — fruquintinib is active regardless of prior TAS-102 exposure"
+    - "ECOG PS 0-2"
+    - "Not MSI-H/dMMR (MSI-H mCRC should receive pembrolizumab or dostarlimab; fruquintinib is for MSS/MSI-L)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No companion diagnostic biomarker required — fruquintinib efficacy is
+      independent of RAS (KRAS/NRAS), BRAF, HER2, FGFR status in FRESCO-2.
+      MSI-H/dMMR mCRC should receive immunotherapy, not fruquintinib — check
+      mismatch repair status before 3L therapy.
+      Prior TAS-102 (trifluridine/tipiracil): fruquintinib is preferred over
+      regorafenib in this setting (different mechanism, no cross-resistance).
+      TAS-102 + bevacizumab (SUNLIGHT; mOS 10.8 mo) is the preferred 3L option
+      where accessible; fruquintinib used when TAS-102+bev is unavailable or
+      after prior TAS-102 monotherapy.
+
+recommended_regimen: REG-FRUQUINTINIB-CRC-3L
+concurrent_therapy:
+  - "Blood pressure monitoring: weekly × 2 cycles (VEGFR inhibition → hypertension)"
+  - "Hand-foot skin reaction (HFSR) monitoring: inspect palms/soles at each cycle; emollient cream preventive"
+  - "CBC + LFT: before each cycle"
+
+followed_by:
+  - "CT imaging: every 8 weeks (RECIST 1.1)"
+  - "At progression: clinical trial preferred; no standard 4L option approved"
+  - "TAS-102 + bevacizumab: if not prior TAS-102, may be used after fruquintinib failure"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "4.1% (FRESCO-2; vs 0.7% placebo; ORR modest, disease control is primary benefit)"
+  complete_response: "<1%"
+  progression_free_survival: "mPFS 3.7 months (vs 1.8 months placebo; HR 0.32; p<0.0001)"
+  overall_survival_5y: "mOS 7.4 months (vs 4.8 months placebo; HR 0.66; 95% CI 0.55–0.80; p<0.0001)"
+  notes: >
+    PRIMARY EVIDENCE: Dasari AN et al. Lancet 2023;402:41–53 (FRESCO-2 Phase 3;
+    N=691; international including US/EU). Fruquintinib vs placebo + BSC in
+    refractory mCRC post standard therapies. mOS 7.4 vs 4.8 mo; HR 0.66; p<0.0001.
+    mPFS 3.7 vs 1.8 mo; HR 0.32. ORR 4.1% vs 0.7%. FDA approval November 2023.
+    NCCN Colon/Rectal Cancer: fruquintinib Category 1 for refractory mCRC.
+    Ukraine: fruquintinib (Fruzaqla/Elunate) — not registered; China-approved (Elunate);
+    US-approved (Fruzaqla 2023). Named-patient import possible.
+
+hard_contraindications:
+  - "MSI-H/dMMR mCRC — ICI (pembrolizumab/dostarlimab) preferred; do not substitute fruquintinib"
+  - "Active GI perforation or hemorrhage — VEGFR inhibitor contraindicated"
+  - "Uncontrolled hypertension (BP >160/100 mmHg) — must control before starting"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "MSI/MMR status: if not previously tested (MSI-H → ICI preferred)"
+  - "RAS/BRAF/HER2: document for treatment history (not required for fruquintinib eligibility)"
+  - "Blood pressure: baseline"
+
+sources:
+  - source_id: SRC-FRESCO-2-DASARI-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      FRESCO-2 Phase 3 (Dasari 2023 Lancet; N=691): fruquintinib vs placebo in
+      refractory mCRC. mOS 7.4 vs 4.8 months; HR 0.66; p<0.0001. mPFS 3.7 vs 1.8
+      months; HR 0.32. FDA approval November 2023. NCCN Category 1.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-CRC-METASTATIC-2L.
+  Fruquintinib is a highly selective VEGFR1/2/3 TKI (minimal off-target activity vs
+  regorafenib) with a cleaner tolerability profile. FRESCO-2 included patients with
+  prior TAS-102, regorafenib, or both — broad eligibility in refractory disease.
+  Preferred over regorafenib when: prior TAS-102 exposure; patient prefers oral
+  agent without IV bevacizumab; Ukraine context where IV combination not accessible.

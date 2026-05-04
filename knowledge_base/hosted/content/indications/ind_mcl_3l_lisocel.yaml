@@ -1,0 +1,99 @@
+id: IND-MCL-3L-LISOCEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MCL
+  line_of_therapy: 3
+  stage_requirements:
+    - "Relapsed or refractory mantle cell lymphoma (MCL) after ≥2 prior lines of therapy"
+    - "Prior BTK inhibitor therapy (ibrutinib or acalabrutinib) — post-BTKi MCL is the primary eligibility context"
+    - "CD19-positive MCL"
+    - "ECOG PS 0-2"
+    - "Adequate organ function for lymphodepletion conditioning and CAR-T infusion"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Liso-cel (Breyanzi) is FDA-approved for r/r MCL after ≥2 prior lines of therapy
+      (TRANSCEND-NHL-001 MCL cohort; Palomba 2023 Lancet Oncol; FDA September 2024).
+      MCL patients with blastoid variant or TP53 mutation: particularly poor prognosis
+      after BTKi failure; CAR-T is the preferred option.
+      Liso-cel vs brexucabtagene autoleucel (brexucel/Tecartus) in MCL:
+      - Brexucel: earlier FDA approval (2020), ZUMA-2 data (ORR 91%); CD28 co-stimulation
+      - Liso-cel: TRANSCEND MCL cohort (ORR 84%, CR 59%); 4-1BB co-stimulation; similar
+        overall efficacy; product availability and centre experience guides choice
+      Both require certified CAR-T centre; either is acceptable per NCCN.
+
+recommended_regimen: REGIMEN-LISOCEL-DLBCL-3L
+concurrent_therapy:
+  - "CRS prophylaxis/management: tocilizumab on-site; dexamethasone for ICANS"
+  - "Bridging therapy: ibrutinib continuation or venetoclax-based during manufacturing if needed for disease control"
+  - "Antimicrobial prophylaxis: TMP-SMX, acyclovir, antifungal × ≥3 months"
+  - "IVIG: if IgG <400 mg/dL (MCL patients may have hypogammaglobulinemia)"
+
+followed_by:
+  - "PET-CT: day 30 and day 90 post-infusion"
+  - "MRD by flow or PCR (CCND1/IGH): if feasible at 3 months"
+  - "At relapse post-CAR-T: clinical trial; pirtobrutinib (non-covalent BTKi) if BTKi-sensitive"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "84% (TRANSCEND-NHL-001 MCL cohort; Palomba 2023 Lancet Oncol; N=68)"
+  complete_response: "59% CR (TRANSCEND-NHL-001 MCL cohort)"
+  progression_free_survival: "mPFS 16.2 months (median 23 months in CR subset)"
+  overall_survival_5y: "2-year OS ~55% in MCL cohort"
+  notes: >
+    PRIMARY EVIDENCE: Palomba ML et al. Lancet Oncology 2023;24:745-755 (TRANSCEND-NHL-001
+    MCL cohort; N=68): liso-cel in r/r MCL post-BTKi (≥2 prior lines). ORR 84%, CR 59%,
+    mPFS 16.2 months. CRS Grade ≥3: ~1%; ICANS Grade ≥3: ~16%.
+    FDA approval September 2024 for liso-cel in r/r MCL.
+    NCCN B-Cell Lymphoma: both brexucel (ZUMA-2; ORR 91%, CR 68%) and liso-cel (TRANSCEND
+    MCL; ORR 84%, CR 59%) are Category 1 for r/r MCL post-BTKi.
+
+hard_contraindications:
+  - "MCL without prior BTKi — alternative regimens (venetoclax, bendamustine-rituximab) preferred"
+  - "CD19-negative MCL (rare; check at relapse if prior anti-CD19 therapy)"
+  - "Active CNS MCL at infusion (manage before CAR-T)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "PET-CT: baseline staging and disease burden assessment"
+  - "Bone marrow biopsy: assess marrow involvement"
+  - "FISH/cytogenetics: TP53, del17p, blastoid morphology — prognostic"
+  - "CD19 flow cytometry: confirm CD19 expression"
+  - "Echocardiogram: lymphodepletion conditioning"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-Cell Lymphoma: lisocabtagene maraleucel Category 1 for r/r MCL after ≥2
+      prior lines including BTKi. TRANSCEND-NHL-001 MCL cohort (Palomba 2023 Lancet Oncol):
+      ORR 84%, CR 59%, mPFS 16.2 months. FDA September 2024. Brexucel is an equivalent
+      alternative (product availability and centre experience guides choice).
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DP) — wiring gap closure for ALGO-MCL-2L.
+  TIME-CRITICAL: MCL post-BTKi failure progresses rapidly; plan apheresis early.
+  Liso-cel and brexucel both NCCN Cat 1 — centre experience and product availability
+  guide choice; brexucel was approved earlier (2020 vs 2024) and many centres have more
+  experience. Liso-cel: lower ICANS profile (Grade ≥3 ~16% vs ZUMA-2 brexucel ~31%).
+  Ukraine: neither liso-cel nor brexucel registered; international referral required.
+  REGIMEN-LISOCEL-DLBCL-3L referenced as the closest matching regimen file (same
+  manufacturing protocol, lymphodepletion, and CAR-T infusion procedure).
