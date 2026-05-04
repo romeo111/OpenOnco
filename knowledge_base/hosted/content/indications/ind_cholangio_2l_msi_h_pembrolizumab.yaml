@@ -1,0 +1,182 @@
+id: IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Any biliary tract cancer subtype (intrahepatic, perihilar, distal CCA, or gallbladder carcinoma) — MSI-H is rare (~1-5%) but pan-BTC inclusive"
+    - "Advanced / metastatic BTC — not surgically resectable"
+    - "Disease progression on or after 1L gemcitabine + cisplatin (± durvalumab per TOPAZ-1)"
+    - "ECOG PS 0-2 (KEYNOTE-158 enrolled ECOG 0-1; ECOG 2 MDT assessment required)"
+    - "Adequate organ function: AST/ALT ≤5× ULN, bilirubin ≤3× ULN (biliary drainage if obstructed)"
+    - "No active autoimmune disease requiring systemic corticosteroids"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-H
+      required: true
+      value_constraint: "MSI-H (microsatellite instability high) or dMMR (mismatch repair deficient) confirmed by one of: PCR MSI testing, MMR IHC (MLH1/MSH2/MSH6/PMS2), or NGS TMB-H (≥10 mut/Mb as surrogate)"
+  biomarker_requirements_excluded:
+    - "MSI-L/MSS (microsatellite stable): pembrolizumab inactive in MSS BTC"
+    - "FGFR2 fusion → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB (ORR 36%; NCCN Cat 1 — takes precedence)"
+    - "IDH1 mutation → IND-CHOLANGIO-2L-IDH1-IVOSIDENIB (NCCN Cat 1)"
+    - "BRAF V600E → IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM (NCCN Cat 2A)"
+    - "Active autoimmune disease (SLE, IBD, autoimmune hepatitis, RA on systemic immunosuppression) — pembrolizumab may exacerbate autoimmune conditions"
+    - "Active biliary obstruction with bilirubin >3× ULN — resolve with drainage before starting"
+    - "Prior organ transplant (immunosuppression required — pembrolizumab contraindicated)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No absolute age cutoff. Pembrolizumab is an IV infusion q3 weeks (200 mg) or q6 weeks
+      (400 mg). Oral agent not available. Active biliary stent maintenance required
+      (biliary obstruction common in CCA). Elderly patients with good PS and controlled
+      biliary obstruction can receive pembrolizumab safely. Prior durvalumab in 1L:
+      no cross-resistance shown; pembrolizumab active after durvalumab progression.
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Dostarlimab (anti-PD-1): FDA-approved tumor-agnostic for dMMR solid tumors (GARNET;
+      Oaknin 2022 JCO). Equivalent mechanism to pembrolizumab; alternative if pembrolizumab
+      inaccessible. Not modeled as separate indication.
+  - regimen_id: null
+    description: >
+      FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06): appropriate if pembrolizumab inaccessible
+      (Ukraine: pembrolizumab registered + NSZU for MSI-H CRC, but CCA indication less
+      clear — MDT request required). FOLFOX ORR ~5% in MSS CCA context; for MSI-H CCA,
+      pembrolizumab ORR ~41% vastly superior.
+  - regimen_id: null
+    description: >
+      Pembrolizumab + chemotherapy (gemcitabine + cisplatin ± pembrolizumab): experimental
+      in 2L; pembrolizumab monotherapy is the validated approach for MSI-H.
+
+concurrent_therapy:
+  - "Biliary drain maintenance: ERCP or PTC stent if biliary obstruction present before pembrolizumab"
+  - "irAE monitoring: baseline and q3-4 week LFTs, thyroid, glucose, CBC (pembrolizumab hepatitis + cholangitis risk — particularly relevant in CCA with biliary involvement)"
+  - "Steroid stock: prednisone supply + irAE protocol — patient education before cycle 1"
+
+followed_by:
+  - "Continue pembrolizumab until progression or unacceptable toxicity; maximum 35 cycles (~2 years per KEYNOTE-158)"
+  - "Response assessment CT q9 weeks (q3 cycles); CA 19-9 + CEA trending"
+  - "After pembrolizumab failure: FOLFOX (if not given); clinical trial; BSC"
+  - "irAE management: hold for Grade 2; discontinue permanently for most Grade 3-4; corticosteroids mandatory"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~41% (KEYNOTE-158 BTC cohort; Bang 2020 Annals of Oncology; n=22)"
+  disease_control_rate: "~55% (KEYNOTE-158 BTC cohort)"
+  median_dor_months: "not reached (>20 months at data cutoff; durable responses characteristic of MSI-H IO)"
+  median_pfs_months: "not mature at primary analysis; durable in responders"
+  notes: >
+    KEYNOTE-158 (Bang 2020 Annals of Oncology; Le 2020 JAMA Oncology):
+    Phase 2 basket pembrolizumab in MSI-H/dMMR solid tumors including BTC.
+    BTC cohort n=22 (small): ORR ~41%; DCR ~55%; mDOR not reached at analysis.
+    FDA granted tumor-agnostic accelerated approval for pembrolizumab in MSI-H/dMMR
+    solid tumors (2017; later regular approval 2023 for unresectable/metastatic tumors).
+    MSI-H in BTC: ~1-5% (higher in gallbladder carcinoma ~5%; lower in CCA ~1-2%).
+    Small cohort limitation: n=22 for BTC; confidence intervals wide; ORR 41% is numerically
+    high but imprecise. Durable responses observed in nearly all BTC responders.
+    NCCN Hepatobiliary 2025 Category 2A (vs Cat 1 for FGFR2/IDH1); reflects smaller evidence
+    base but compelling ORR and durability in this rare molecular subtype.
+    MSI-H BTC shares biology with Lynch syndrome — consider germline testing.
+
+hard_contraindications:
+  - "MSS (microsatellite stable): pembrolizumab inactive; not indicated"
+  - "Active autoimmune disease on systemic immunosuppression (SLE, IBD, autoimmune hepatitis)"
+  - "Prior organ transplant (allograft rejection risk)"
+  - "Uncontrolled active infection or sepsis (biliary infection common in CCA — treat first)"
+  - "Active biliary obstruction without drainage (AST/ALT >5× ULN)"
+  - "ECOG PS ≥3"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2 fusion confirmed → IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB (higher ORR; NCCN Cat 1)"
+  - condition: "IDH1 mutation confirmed → IND-CHOLANGIO-2L-IDH1-IVOSIDENIB (NCCN Cat 1)"
+  - condition: "BRAF V600E confirmed → IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM (NCCN Cat 2A)"
+  - condition: "Pembrolizumab inaccessible for CCA in Ukraine → IND-CHOLANGIO-2L-FOLFOX-ABC06"
+  - condition: "Active biliary cholangitis/infection → antibiotics + biliary drainage first; delay pembrolizumab"
+  - condition: "irAE Grade ≥3 hepatitis: hold/discontinue pembrolizumab; corticosteroids; hepatology consultation"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "MSI/MMR testing: PCR MSI testing or MMR IHC (MLH1/MSH2/MSH6/PMS2) on tumor tissue — MANDATORY; liquid biopsy TMB as surrogate if tissue unavailable"
+  - "Thyroid function (TSH + free T4): pembrolizumab thyroiditis ~10%; baseline + q3 months"
+  - "Glucose + HbA1c: pembrolizumab type 1 diabetes (rare but severe); baseline"
+  - "CT chest/abdomen/pelvis: baseline staging + q9 weeks response assessment"
+  - "Bilirubin: <3× ULN before starting (biliary stent if needed)"
+  - "Comprehensive molecular profiling: FGFR2 fusion, IDH1, BRAF V600E all excluded — MSI-H is last-priority targeted agent before FOLFOX"
+
+desired_tests:
+  - "TMB (tumor mutational burden) by NGS: high TMB (≥10 mut/Mb) correlates with pembrolizumab response across tumor types; MSI-H and high TMB often co-occur in BTC"
+  - "Lynch syndrome germline testing (MLH1/MSH2/MSH6/PMS2 germline): MSI-H BTC may reflect Lynch syndrome; important for family counseling"
+  - "PD-L1 IHC (CPS score): not required for MSI-H tumor agnostic indication; but adds prognostic data"
+  - "CA 19-9 + CEA baseline: response monitoring"
+  - "Hepatitis B/C serology: pembrolizumab hepatitis risk + CCA pre-existing biliary inflammation"
+
+rationale: >
+  Mismatch repair deficiency (dMMR)/microsatellite instability-high (MSI-H) tumors carry
+  high mutational burden, generating abundant neoantigens that drive anti-tumor T-cell
+  responses when PD-1/PD-L1 checkpoint is released by pembrolizumab. This mechanism is
+  largely tumor-type agnostic — MSI-H confers pembrolizumab sensitivity independent of
+  histology.
+
+  KEYNOTE-158 (Bang 2020, Le 2020): First major evidence in BTC. Small cohort (n=22) but
+  ORR ~41% with durable responses — highly meaningful vs FOLFOX ~5%. FDA tumor-agnostic
+  approval covers BTC without separate trial requirement.
+
+  Molecular hierarchy for 2L CCA (MSI-H is the last targeted step before FOLFOX):
+  FGFR2 fusion (Cat 1) → IDH1 (Cat 1) → BRAF V600E (Cat 2A) → MSI-H (Cat 2A) → FOLFOX (Cat 1).
+  Comprehensive molecular testing at 2L must include MSI/MMR testing.
+
+  MSI-H in BTC is rare (~1-5%) — gallbladder carcinoma has slightly higher rates (~5%)
+  vs CCA (~1-2%). Lynch syndrome germline variants account for a subset; germline testing
+  recommended for all MSI-H BTC patients.
+
+  Ukraine: pembrolizumab (Keytruda; MSD) registered in Ukraine for several tumor types.
+  Tumor-agnostic MSI-H indication may require MDT compassionate use request for CCA
+  specifically (CRC/gastric MSI-H is routinely reimbursed; BTC is less clear). Patient
+  should be counseled on access pathway.
+
+rationale_ua: >
+  MSI-H/dMMR (~1-5% BTC): пембролізумаб 200 мг IV q3w (KEYNOTE-158; Bang 2020 AoO;
+  n=22 BTC): ORR ~41%, тривалі відповіді (медіана DOR — не досягнута). NCCN кат.2A.
+  Механізм: dMMR → висока мутаційна навантаженість → неоантигени → PD-1-блокада →
+  T-клітинна відповідь. Пухлиноагностична FDA-реєстрація 2017/2023 охоплює BTC.
+  В Україні: пембролізумаб зареєстрований; MSI-H CRC/шлунок — НСЗУ; BTC — можливо
+  MDT запит. Перевірити MSI/MMR статус у ALL пацієнтів до 2L — рідкісний (~1-5%) але
+  цінний маркер (ORR 41% vs FOLFOX 5%). ірАЕ протокол обов'язковий.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary 2025 Category 2A: pembrolizumab for MSI-H/dMMR advanced BTC
+      (KEYNOTE-158 basket; ORR ~41% BTC cohort; FDA tumor-agnostic approval).
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO BTC 2023: pembrolizumab recommended for MSI-H/dMMR BTC; comprehensive
+      molecular profiling mandatory including MMR/MSI testing.
+
+do_not_do:
+  - "При MSS (стабільний мікросателіт): пембролізумаб неактивний; не призначати"
+  - "FGFR2-злиття/IDH1/BRAF V600E мають пріоритет (Cat 1/2A vs MSI-H Cat 2A); спочатку виключити ці цілі"
+  - "Без перевірки MSI/dMMR: пробіопсія з MMR IHC обов'язкова перед призначенням"
+  - "Активне аутоімунне захворювання на імуносупресії — ризик тяжких ірАЕ"
+  - "Жовчна обструкція без дренування → жовчний холангіт під пембролізумабом небезпечний"
+  - "Не пропускати germline тестування Lynch синдрому у MSI-H BTC пацієнтів"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

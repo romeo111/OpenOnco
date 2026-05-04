@@ -7,13 +7,15 @@ purpose: >
   (1) FGFR2 fusion → pemigatinib (FIGHT-202; step 1; NCCN Cat 1);
   (2) IDH1 hotspot mutation → ivosidenib (ClarIDHy; step 12; NCCN Cat 1);
   (3) BRAF V600E mutation → dabrafenib+trametinib (ROAR; step 13; NCCN Cat 2A);
-  (4) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
-  Pending branches: HER2-amp (T-DXd), MSI-H/dMMR (pembrolizumab) — not yet modeled.
+  (4) MSI-H/dMMR → pembrolizumab (KEYNOTE-158; step 14; NCCN Cat 2A);
+  (5) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
+  Pending: HER2-amp (T-DXd/tucatinib-trastuzumab) — not yet modeled.
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
   - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
   - IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
+  - IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
   - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -70,13 +72,32 @@ decision_tree:
         Pyrexia ~50% — antipyretic protocol mandatory. Ukraine: off-label for CCA; MDT
         request required; accessible if approved (NSZU-funded for melanoma/NSCLC).
     if_false:
-      next_step: 2
+      next_step: 14
     notes: "Step 13 added 2026-05-04 (Workstream BC): BRAF V600E CCA → dab+tram (ROAR). Gap (4) CLOSED."
 
+  # Step 14 — MSI-H/dMMR (~1-5% pan-BTC; higher in gallbladder carcinoma ~5%).
+  # Pembrolizumab 200 mg IV q3w (KEYNOTE-158; Bang 2020; ORR ~41% BTC cohort;
+  # FDA tumor-agnostic approval; NCCN Cat 2A). Lynch syndrome germline testing.
+  # UA: pembrolizumab registered; CCA off-label — MDT request likely needed.
+  - step: 14
+    evaluate:
+      any_of:
+        - condition: "MSI-H or dMMR confirmed: PCR MSI testing, MMR IHC (MLH1/MSH2/MSH6/PMS2 loss), or NGS TMB-H (≥10 mut/Mb)"
+    if_true:
+      result: IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
+      notes: >
+        MSI-H/dMMR BTC: pembrolizumab 200 mg IV q3w (KEYNOTE-158; Bang 2020 AoO; ORR ~41%;
+        durable responses; NCCN Cat 2A). FDA tumor-agnostic approval covers BTC. irAE
+        protocol mandatory. Lynch syndrome germline testing recommended. Ukraine:
+        pembrolizumab registered; CCA off-label MDT request required.
+    if_false:
+      next_step: 2
+    notes: "Step 14 added 2026-05-04 (Workstream BD): MSI-H/dMMR CCA → pembrolizumab (KEYNOTE-158). Gap (5) CLOSED."
+
   # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
-  # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Replaces gem+cis
-  # placeholder. Future driver branches — IDH1 ivosidenib, HER2 T-DXd,
-  # BRAF V600E dab+tram, MSI-H pembrolizumab — pending authoring.
+  # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Reached only after
+  # FGFR2/IDH1/BRAF V600E/MSI-H steps all negative.
+  # HER2-amp (T-DXd/tucatinib-trastuzumab) — still pending authoring.
   # Comprehensive molecular profiling MANDATORY at or before 2L start.
   - step: 2
     evaluate:
@@ -106,9 +127,10 @@ notes: >
   wired at step 2 as proper default for non-driver 2L BTC/CCA. Gap (1) CLOSED.
   UPDATED 2026-05-04 (Workstream BB): IND-CHOLANGIO-2L-IDH1-IVOSIDENIB wired at step 12.
   Gap (2) CLOSED.
-  UPDATED 2026-05-04 (Workstream BC): IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM wired at step 13
-  (ROAR; Subbiah 2020 JCO; ORR 51%; mPFS 9 mo; NCCN Cat 2A). Gap (4) CLOSED.
+  UPDATED 2026-05-04 (Workstream BC): IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM wired at step 13.
+  Gap (4) CLOSED.
+  UPDATED 2026-05-04 (Workstream BD): IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB wired at step 14
+  (KEYNOTE-158; Bang 2020 AoO; ORR ~41%; NCCN Cat 2A). Gap (5) CLOSED.
   OOS / wiring gaps:
   (3) HER2-amp T-DXd (DESTINY-PanTumor02) / tucatinib-trastuzumab — not yet modeled.
-  (5) MSI-H/dMMR pembrolizumab (KEYNOTE-158) — not yet modeled.
   Out-of-scope: locoregional (radioembolization, TACE, SBRT) — outside KB scope.
