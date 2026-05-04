@@ -15,6 +15,7 @@ output_indications:
   - IND-UROTHELIAL-2L-ERDAFITINIB
   - IND-UROTHELIAL-2L-PLATINUM-CHEMO
   - IND-UROTHELIAL-2L-TAXANE-MONO
+  - IND-UROTHELIAL-2L-SACITUZUMAB
 
 default_indication: IND-UROTHELIAL-2L-EV
 alternative_indication: IND-UROTHELIAL-2L-PEMBROLIZUMAB
@@ -118,14 +119,19 @@ decision_tree:
         - condition: "No severe peripheral neuropathy (Grade ≥2), no uncontrolled DM, no severe ocular disease"
     if_true:
       result: IND-UROTHELIAL-2L-EV
+      alternatives:
+        - indication: IND-UROTHELIAL-2L-SACITUZUMAB
+          criteria: "EV inaccessible/contraindicated + prior platinum AND prior ICI (e.g. avelumab 1L); TROPHY-U-01 ORR 27.7%; mOS 10.9 mo; FDA regular Jan 2023; NCCN Cat 2A; no TROP2 testing required"
+          nccn_category: "2A"
       notes: >
         EV-naive, prior platinum ± avelumab: EV monotherapy preferred 2L (EV-301:
         mOS 12.9 vs 9.0 months, HR 0.70; ORR 40.6% vs 17.9%).
         EV 1.25 mg/kg IV d1, 8, 15 q28d until progression.
         FGFR testing mandatory — FGFR+ → erdafitinib preferred (THOR; HR 0.58).
-        For ICI-naive patients who did NOT receive avelumab maintenance 1L:
-        pembrolizumab (IND-UROTHELIAL-2L-PEMBROLIZUMAB) is an alternative,
-        especially for ECOG 2 patients ineligible for EV.
+        ALTERNATIVE (Cat 2A): Sacituzumab govitecan when EV inaccessible/contraindicated
+        AND patient had prior platinum + prior ICI (FDA label requires both).
+        For ICI-naive (no avelumab 1L): pembrolizumab (IND-UROTHELIAL-2L-PEMBROLIZUMAB)
+        is an alternative, especially for ECOG 2 ineligible for EV.
     if_false:
       result: IND-UROTHELIAL-2L-PEMBROLIZUMAB
       notes: >
@@ -133,10 +139,13 @@ decision_tree:
         2L if ICI-naive (KEYNOTE-045: mOS 10.3 vs 7.4 months, HR 0.73).
         Only if NO prior anti-PD-(L)1 exposure (not avelumab-experienced).
         PD-L1 CPS ≥10 predicts better benefit but not required.
+        If ICI-experienced (prior avelumab): pembro not appropriate →
+        sacituzumab (IND-UROTHELIAL-2L-SACITUZUMAB; Cat 2A) if prior platinum also received.
 
 sources:
   - SRC-EV301-POWLES-2021
   - SRC-KEYNOTE045-BELLMUNT-2017
+  - SRC-TROPHYU01-TAGAWA-2021
 
 last_reviewed: "2026-05-04"
 notes: >

@@ -1,0 +1,91 @@
+id: IND-UROTHELIAL-2L-SACITUZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced or metastatic urothelial carcinoma (bladder, upper tract, urethra)"
+    - "Prior platinum-based chemotherapy (cisplatin- or carboplatin-based)"
+    - "Prior anti-PD-(L)1 therapy (pembrolizumab, atezolizumab, nivolumab, avelumab)"
+    - "No prior sacituzumab govitecan or other Trop-2 ADC"
+  biomarker_requirements:
+    - "TROP2 expression: NOT required — FDA label does not require TROP2 testing; universal expression in UC"
+    - "UGT1A1 status: optional; UGT1A1*28 homozygous (*28/*28) associated with higher SN-38 exposure — consider dose reduction if tested"
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-SACITUZUMAB
+
+concurrent_therapy: []
+
+followed_by:
+  - "Continue until progression or unacceptable toxicity"
+
+evidence_level: high
+strength_of_recommendation: moderate
+nccn_category: 2A
+
+expected_outcomes:
+  orr: "27.7% (31/113)"
+  median_os: "10.9 months"
+  median_pfs: "5.4 months"
+  notes: >
+    TROPHY-U-01 Cohort 1 (Tagawa 2021 JCO; NCT03547973; Phase 2, n=113):
+    Sacituzumab govitecan 10 mg/kg IV d1,8 q21d in locally advanced/metastatic UC
+    post-platinum AND post-ICI. ORR 27.7%; mOS 10.9 mo; mPFS 5.4 mo; mDOR 7.2 mo.
+    FDA accelerated approval April 2021; converted to regular approval January 2023.
+    NCCN UC 2025: Category 2A.
+
+hard_contraindications:
+  - "No prior platinum-based chemotherapy AND no prior anti-PD-(L)1 therapy (FDA label requires both)"
+  - "Active severe hepatic impairment (SN-38 accumulation; Child-Pugh B/C)"
+  - "ECOG PS ≥3"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "FGFR2/3-altered UC: erdafitinib preferred (THOR PFS HR 0.58; ORR 35.3% vs 8.5%)"
+  - "EV-naive + ECOG 0-1 + no severe neuropathy/DM/ocular: EV monotherapy preferred (EV-301 OS HR 0.70)"
+  - "UGT1A1*28 homozygous: consider 7.5 mg/kg starting dose (higher SN-38 exposure)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "UGT1A1 genotyping: optional but recommended for dose guidance"
+  - "FGFR2/3 testing: mandatory before 2L — if positive → erdafitinib preferred"
+  - "Restaging CT CAP"
+
+desired_tests:
+  - "TROP2 expression by IHC: not required for eligibility but informational"
+
+rationale: >
+  TROPHY-U-01 Cohort 1 (Tagawa 2021 JCO) demonstrated sacituzumab govitecan 10 mg/kg
+  d1,8 q21d achieves ORR 27.7%, mOS 10.9 months in heavily pretreated metastatic UC
+  (post-platinum + post-ICI). FDA approved (regular) January 2023. NCCN UC 2025: Cat 2A.
+  Anti-Trop-2 ADC with SN-38 payload. Trop-2 universally expressed on UC cells —
+  no biomarker gating required. Key toxicities: severe neutropenia (G3+ ~52%),
+  diarrhea (~62%), nausea — G-CSF support recommended.
+  Role in current treatment landscape: with EV+pembro as preferred 1L, sacituzumab
+  is particularly relevant for: (1) EV-naive patients (prior platinum ± avelumab 1L)
+  where EV is contraindicated or inaccessible; (2) post-EV+pembro → post-platinum 3L
+  (Cohort 2 data). FGFR testing mandatory — erdafitinib supersedes in FGFR-altered UC.
+
+sources:
+  - source_id: SRC-TROPHYU01-TAGAWA-2021
+    position: supports
+    relevant_quote_paraphrase: "TROPHY-U-01 Cohort 1: sacituzumab govitecan in R/R metastatic UC post-platinum+ICI — ORR 27.7%; mOS 10.9 mo; FDA regular approval Jan 2023"
+  - source_id: SRC-NCCN-UROTHELIAL-2025
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream ET 2026-05-04. Sacituzumab govitecan for R/R metastatic UC post-platinum+ICI.
+  FDA regular approval January 2023 (converted from April 2021 accelerated approval).
+  Wired in ALGO-UROTHELIAL-METASTATIC-2L step 6 as Cat 2A alternative to EV in
+  EV-naive patients where EV is contraindicated/inaccessible.
+  References REG-SACITUZUMAB (existing; dose identical: 10 mg/kg d1,8 q21d).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

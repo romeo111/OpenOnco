@@ -174,17 +174,24 @@ decision_tree:
       - indication: IND-MM-RR-3L-ELRANATAMAB
         criteria: "Elranatamab SC Q2W maintenance after response (post-step-up steady-state); operationally lighter than weekly teclistamab; MagnetisMM-3 ORR ~61%; NCCN Cat 2A"
         nccn_category: "2A"
+      - indication: IND-MM-4L-LINVOSELTAMAB
+        criteria: "Linvoseltamab (Lynozyfic) SC Q2W all-cycle (lightest dosing of 3 BCMA bispecifics — no weekly maintenance phase); LINKER-MM1 ORR 71%; FDA Apr 2025; NCCN Cat 1 ≥4L triple-class exposed; use when Q2W schedule preferred or teclistamab/elranatamab inaccessible"
+        nccn_category: 1
     notes: >
       Triple-class refractory + BCMA-naive + CAR-T not feasible → BCMA bispecific.
       DEFAULT: Teclistamab 1.5 mg/kg SC weekly (MajesTEC-1; ORR 63%; ≥CR 39%;
       mPFS ~11.3 mo; mOS ~22 mo; NCCN Cat 1). Step-up mandatory (0.06 → 0.3 →
       1.5 mg/kg SC). IVIG + PJP/HSV/VZV prophylaxis mandatory (universal
-      hypogammaglobulinemia). ALTERNATIVE: Elranatamab (Q2W maintenance schedule
-      post-steady-state; MagnetisMM-3; ORR ~61%; Cat 2A). Ukraine: international
-      referral for either agent.
+      hypogammaglobulinemia).
+      ALTERNATIVE A: Elranatamab (Q2W maintenance schedule post-steady-state;
+      MagnetisMM-3; ORR ~61%; Cat 2A).
+      ALTERNATIVE B: Linvoseltamab (Lynozyfic; LINKER-MM1; ORR 71%; FDA Apr 2025;
+      Cat 1) — SC Q2W from cycle 1 after step-up: lightest schedule of the 3 BCMA
+      bispecifics. Preferred when Q2W schedule is operationally important.
+      Ukraine: all three require international referral or named-patient import.
   if_false:
     next_step: 22
-  notes: "Step 21 updated 2026-05-04 (Workstream EP): result → IND-MM-RR-3L-TECLISTAMAB (from IND-MM-4L-TECLISTAMAB; RR-3L framing canonical). Elranatamab added as Cat 2A alternative."
+  notes: "Step 21 updated 2026-05-04 (Workstream EP): result → IND-MM-RR-3L-TECLISTAMAB; elranatamab Cat 2A alt. Updated (Workstream EU 2026-05-04): linvoseltamab added as Cat 1 alt (LINKER-MM1; ORR 71%; FDA Apr 2025; SC Q2W all-cycle)."
 
   # Step 22 — selinexor fallback when bispecifics also inaccessible.
   # STORM (Chari 2019 NEJM): selinexor 80 mg BIW + dex 20 mg BIW; ORR 26%;
@@ -287,6 +294,6 @@ notes: >
   Workstream DA (2026-05-04): IND-MM-5L-SELINEXOR + teclistamab access gate.
 
   OOS / wiring gaps:
-  Linvoseltamab (IND-MM-4L-LINVOSELTAMAB; FDA Apr 2025; ≥4L) in output_indications
-  but not yet wired in decision tree — requires a ≥4L step extending step 22.
   Isatuximab combinations — not modeled.
+  Linvoseltamab (IND-MM-4L-LINVOSELTAMAB): WIRED 2026-05-04 (Workstream EU) as
+  Cat 1 alternative at step 21 alongside elranatamab (Q2W all-cycle schedule).
