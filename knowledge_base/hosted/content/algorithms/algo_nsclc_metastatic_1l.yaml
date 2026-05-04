@@ -27,6 +27,8 @@ output_indications:
   - IND-NSCLC-EGFR-MAINT-OSIMERTINIB
   - IND-NSCLC-PEMBRO-MAINTENANCE-POST-CHEMO
   - IND-NSCLC-ELDERLY-CARBO-PEM-MOD
+  - IND-NSCLC-ALK-1L-ENSARTINIB
+  - IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO
 
 default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 alternative_indication: IND-NSCLC-PDL1-HIGH-MET-1L
@@ -146,6 +148,23 @@ decision_tree:
             → lorlatinib 2L (preferred per CROWN) or platinum doublet.
             LFT monitoring q4w initially (hepatotoxicity Grade ≥3 ~5%).
             Alternative 1L: lorlatinib (CROWN; mPFS NR at 5yr; higher CNS cognitive AEs).
+        - indication_id: IND-NSCLC-ALK-1L-ENSARTINIB
+          nccn_category: "2A"
+          criteria: >
+            ALK rearrangement confirmed (FISH / IHC D5F3 / RNA-NGS); TKI-naive stage IV
+            metastatic NSCLC; ECOG 0-2; alectinib not accessible or rash-tolerant patient
+            profile. Ensartinib 225 mg PO QD continuously. Strong CYP3A4 inhibitors/inducers
+            require dose modification. LFT monitoring (hepatotoxicity); dermatology consult
+            for Grade 2+ rash (dominant AE class ~67% any-grade, ~12% Grade 3).
+          note: >
+            Ensartinib 1L ALK+ metastatic NSCLC (eXalt3; Markham 2021 Lancet Oncol; FDA
+            Dec 2024; NCCN Cat 2A): mPFS 25.8 vs 12.7 mo vs crizotinib (HR 0.51; 95%
+            CI 0.35-0.72); ORR ~74% BICR; intracranial ORR ~64% with brain metastases.
+            Second-generation ALK TKI — similar PFS magnitude to alectinib (eXalt3 ~25.8
+            mo; ALEX ~35 mo); choose when alectinib inaccessible, rash-tolerant profile,
+            or patient/MDT preference. CNS-active. Rash management: topical corticosteroids
+            + proactive dermatology referral; dose interruption for Grade 3.
+            NOT recommended post-alectinib (cross-resistance likely; lorlatinib preferred).
     if_false:
       next_step: 4
 
@@ -305,6 +324,24 @@ decision_tree:
             + tolerability confirmed. ECOG 2: single-agent chemo (weekly paclitaxel
             or gemcitabine) if doublet still intolerable. CGA mandatory for ≥75.
             Ukraine: carbo+pem NSZU-accessible; pembro via import/foundation.
+        - indication_id: IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO
+          nccn_category: "2A"
+          criteria: >
+            Driver-negative metastatic NSCLC (EGFR/ALK/ROS1/RET/MET/BRAF all absent);
+            TMB ≥10 mut/Mb by Foundation One CDx or comparable validated assay; PD-L1
+            TPS ambiguous (1-49%) or patient prefers ICI monotherapy over chemo+ICI;
+            ECOG 0-2; no active autoimmune disease. NOT for EGFR/ALK-driven NSCLC —
+            targeted TKIs are superior.
+          note: >
+            Pembrolizumab monotherapy for TMB-high (≥10 mut/Mb) NSCLC (KEYNOTE-158
+            pan-tumor; KEYNOTE-042 TMB-high subgroup; NCCN Cat 2A): ORR ~29% in
+            TMB-high cohort vs ~6% in TMB-low. TMB-high status enables single-agent
+            pembrolizumab even when PD-L1 TPS is 1-49% — addresses the patient group
+            where chemo+ICI toxicity is less desirable. NOTE: KEYNOTE-158 FDA approval
+            is pan-tumor (excludes NSCLC in primary cohort); NSCLC evidence extrapolated
+            from subgroup analyses. TMB-high does NOT override strong driver mutations —
+            standard targeted therapy takes precedence. CheckMate-227 (nivo+ipi vs chemo)
+            also showed TMB-high PFS benefit (≥10 mut/Mb); OS endpoint not TMB-selective.
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
 last_reviewed: "2026-05-04"
@@ -337,6 +374,12 @@ notes: >
   (PD-L1 high track). Companion to IND-NSCLC-PDL1-HIGH-MET-1L — identical
   clinical recommendation but explicit 22C3 pharmDx clone documentation
   for label-strict adherence scenarios.
+
+  UPDATED 2026-05-04 (Workstream FT): IND-NSCLC-ALK-1L-ENSARTINIB (Cat 2A)
+  wired as alternative at step 3 if_true (ALK 1L; eXalt3 mPFS 25.8 mo; FDA
+  Dec 2024; rash-dominant AE). IND-NSCLC-TMB-HIGH-MET-1L-PEMBRO-MONO (Cat 2A)
+  wired as alternative at step 9 if_false (TMB ≥10 mut/Mb; pembro mono;
+  KEYNOTE-158 subgroup; driver-negative only).
 
   UPDATED 2026-05-04 (Workstream FN): 4 maintenance/special-population
   indications added to output_indications and wired as alternatives:

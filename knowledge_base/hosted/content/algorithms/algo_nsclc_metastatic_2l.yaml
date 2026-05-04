@@ -33,6 +33,9 @@ output_indications:
   - IND-NSCLC-2L-DATO-DXD
   - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
   - IND-NSCLC-2L-DOCETAXEL-RAMUCIRUMAB
+  - IND-NSCLC-KRAS-G12C-MET-2L
+  - IND-NSCLC-NRG1-ZENOCUTUZUMAB
+  - IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD
 
 default_indication: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL  # driver-negative cytotoxic fallback
 alternative_indication: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ  # most-common driver-targeted aggressive track
@@ -92,7 +95,31 @@ decision_tree:
         Post-osimertinib 1L: amivantamab 1400 mg IV + lazertinib 240 mg PO once daily
         (REG-AMI-LAZ-NSCLC; MARIPOSA-2; ORR 64%; mPFS 8.3 mo vs chemo;
         NCCN Cat 1). Preferred post-osi 2L. Monitor for infusion-related reactions (IVRs)
-        + EGFR/MET-targeted toxicity (rash, paronychia, edema, hypoalbuminemia).
+        + EGFR/MET-targeted toxicity (rash, paronychia, edema, hypoalbuminemia). 3L+ post
+        ami+laz failure or as salvage option: patritumab-DXd (HERTHENA-Lung01; ORR ~30%;
+        Cat 2A) — see IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD in alternatives.
+      alternatives:
+        - indication_id: IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD
+          nccn_category: "2A"
+          criteria: >
+            EGFR sensitizing mutation (ex19del / L858R / T790M-acquired); disease
+            progression on prior osimertinib AND prior platinum-based chemotherapy
+            (typical 3L+ position: post-osi + post-platinum); ECOG 0-2; no active
+            or history of ILD/pneumonitis; adequate renal and hepatic function.
+            NOTE: FDA accelerated approval withdrawn 2024 post HERTHENA-Lung02 (negative
+            OS in phase III vs platinum doublet) — regulatory status fluid; access via
+            expanded-access or clinical trial preferred. Informed consent re phase III
+            results mandatory.
+          note: >
+            Patritumab deruxtecan (HER3-DXd) for EGFR-mut NSCLC post-osi + platinum
+            (HERTHENA-Lung01 phase II; Nakagawa 2023 NEJM; NCCN Cat 2A): BICR ORR ~30%;
+            mPFS 5.5 mo; mDOR 5.6 mo; intracranial ORR ~33% (non-irradiated). HER3-DXd
+            mechanism targets HER3-overexpressed resistance clones post-osimertinib.
+            ILD class risk (adjudicated ILD ~5-10% all-grade; Grade ≥3 ~3%) — baseline
+            HR-CT + serial pulmonary monitoring; permanently discontinue Grade ≥2.
+            Neutropenia + nausea dominant other AEs. G-CSF prophylaxis per protocol.
+            FDA accelerated approval withdrawn 2024 after HERTHENA-Lung02 OS negative;
+            reserve for truly 3L+ exhausted patients or via trial.
     if_false:
       result: IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB
       notes: >
@@ -180,6 +207,19 @@ decision_tree:
         - indication: IND-NSCLC-2L-KRAS-G12C-GLECIRASIB
           criteria: "Glecirasib 400 mg BID — NCCN Cat 2A; third option when sotorasib/adagrasib inaccessible; FDA Oct 2024 (KRYSTAL-6); QTc monitoring required"
           nccn_category: "2A"
+        - indication_id: IND-NSCLC-KRAS-G12C-MET-2L
+          nccn_category: "2A"
+          criteria: >
+            KRAS G12C-mutant metastatic NSCLC; 2L after progression on 1L platinum+ICI;
+            ECOG 0-2. Legacy entity for sotorasib 2L (CodeBreaK 200; FDA May 2021; NCCN
+            Cat 2A). Use IND-NSCLC-2L-KRAS-G12C-SOTORASIB (Cat 1) as primary. Retained
+            for backward compatibility with pre-CodeBreaK-200 NCCN versioned plans.
+          note: >
+            Sotorasib 960 mg PO QD (REG-SOTORASIB-KRAS) for KRAS G12C 2L NSCLC
+            (CodeBreaK 200; de Langen 2023 NEJM; NCCN Cat 2A legacy / Cat 1 updated).
+            mPFS 5.6 vs 4.5 mo (HR 0.66). Adagrasib 600 mg BID alternative (KRYSTAL-1).
+            Superseded in NCCN priority by Cat 1 specifics — defer to sotorasib
+            (IND-NSCLC-2L-KRAS-G12C-SOTORASIB) or adagrasib/glecirasib variants above.
     notes: >
       KRAS G12C 2L — THREE KRAS G12C inhibitors available:
       Cat 1: Sotorasib 960 mg QD (CodeBreaK-200; default when no active CNS + no PPI).
@@ -288,7 +328,27 @@ decision_tree:
     if_true:
       result: IND-NSCLC-2L-HER2-MUT-T-DXD
     if_false:
+      next_step: 151
+
+  # ── Step 151: NRG1 fusion (zenocutuzumab) ─────────────────────────
+  # Rare driver (~0.2-0.3% NSCLC; enriched in invasive mucinous adenocarcinoma).
+  # RNA-NGS essential — DNA-NGS misses ~30-50% of NRG1 fusions.
+  # FDA approved Dec 2024 for NRG1-fusion+ NSCLC + pancreatic adenocarcinoma.
+  - step: 151
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-NRG1-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-NRG1-ZENOCUTUZUMAB
+      notes: >
+        NRG1 fusion+ NSCLC: zenocutuzumab (Bizengri) — HER2×HER3 bispecific antibody;
+        blocks NRG1-driven HER3 hyperactivation. eNRGy phase II NSCLC subset ORR ~33%;
+        mDOR 7.4 mo; mPFS ~6.8 mo (FDA Dec 2024; NCCN Cat 2A). RNA-NGS mandatory
+        (DNA-NGS false-negative ~30-50% for NRG1). Infusion premedication required;
+        monitor LVEF (HER2-class signal if LVEF <50%).
+    if_false:
       next_step: 16
+    notes: "Step 151 added 2026-05-04 (Workstream FT): NRG1 fusion gate between HER2 (step 15) and driver-negative default (step 16). RF-NSCLC-NRG1-FUSION-ACTIONABLE: if authored, this step wires automatically; if not present, falls through to step 16 (driver-negative default). RNA-NGS mandatory for NRG1 detection."
 
   # ── Step 16: Default — driver-negative post-IO+chemo → histology gate ─
   - step: 16
@@ -412,6 +472,14 @@ notes: >
 
   UPDATED 2026-05-04 (Workstream FK): IND-PAN-NTRK-2L-REPOTRECTINIB added
   to output_indications; wired as Cat 1 alternative at step 14 NTRK branch.
+
+  UPDATED 2026-05-04 (Workstream FT): IND-NSCLC-KRAS-G12C-MET-2L (Cat 2A,
+  legacy sotorasib entity) wired as legacy alternative at step 9 if_false;
+  IND-NSCLC-NRG1-ZENOCUTUZUMAB (Cat 2A) wired at new step 151 (NRG1 fusion
+  gate; eNRGy ORR ~33%; FDA Dec 2024; step inserted between step 15 HER2
+  and step 16 default). IND-NSCLC-EGFR-POST-OSI-PATRITUMAB-DXD (Cat 2A;
+  3L+) wired as alternative at step 31 if_true (post-osi EGFR 3L+; FDA
+  accelerated approval withdrawn; reserve for trial). 3 gaps CLOSED.
   Post-1G-TKI resistance mutations (G595R/G667C/xDFG-motif); TRIDENT-1
   (Drilon 2024 NEJM; ORR ~58% post-1G); tumor-agnostic FDA Jun 2024.
 
