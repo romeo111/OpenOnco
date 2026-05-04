@@ -1,0 +1,196 @@
+id: IND-CHOLANGIO-2L-HER2-TDXD
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHOLANGIOCARCINOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced / metastatic biliary tract cancer (BTC: intrahepatic CCA, extrahepatic CCA, gallbladder carcinoma)"
+    - "Progression on or after ≥1 prior systemic line (gemcitabine+cisplatin ± durvalumab 1L standard)"
+    - "HER2-overexpressing confirmed: IHC 3+ (strong complete circumferential membrane staining ≥10% cells) OR IHC 2+/ISH+ (2+ staining + HER2 amplification by FISH/CISH/NGS)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, CrCl ≥30 mL/min, bilirubin ≤1.5×ULN (or ≤3×ULN if Gilbert), ALT/AST ≤3×ULN (≤5×ULN if liver metastases)"
+    - "No active ILD or grade ≥1 baseline interstitial lung disease / pneumonitis"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-IHC
+      required: true
+      value_constraint: "IHC 3+ OR IHC 2+/ISH+ (HER2:CEP17 ≥2.0 or average HER2 signals ≥6.0 per cell)"
+      notes: >
+        HER2 testing on most recent tumor biopsy (archival acceptable if ≤18 months
+        and no intervening anti-HER2 therapy). IHC 3+ alone sufficient; IHC 2+ requires
+        confirmatory ISH or NGS amplification. HER2-LOW (IHC 1+ or IHC 2+/ISH-): not
+        indicated here — standard for breast cancer T-DXd HER2-low context but NOT
+        validated in BTC. Use IHC 3+ / IHC 2+/ISH+ threshold per DESTINY-PanTumor02.
+        In BTC: ~5-7% overall HER2+; gallbladder carcinoma higher (~15-20%); extrahepatic
+        CCA ~10%; intrahepatic CCA ~2-5%.
+  biomarker_requirements_excluded:
+    - "HER2-negative (IHC 0/1+ or IHC 2+/ISH-): T-DXd inactive; FOLFOX default (IND-CHOLANGIO-2L-FOLFOX-ABC06)"
+    - "Active or history of ILD/pneumonitis: T-DXd ILD risk (~13% grade ≥2; 2% fatal); absolute contraindication if Grade ≥2 at baseline"
+    - "Prior trastuzumab deruxtecan exposure: re-treatment not validated in BTC"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      DESTINY-PanTumor02 enrolled ECOG 0-2. Elderly patients (>75) may have higher
+      ILD risk — closer pulmonary monitoring recommended; consider dose reduction to
+      4.4 mg/kg if Grade 1 ILD. Baseline pulmonary function testing (DLCO, CT chest)
+      recommended if any respiratory symptoms or prior lung disease.
+      Ukraine: Enhertu (trastuzumab deruxtecan) registered for HER2+ breast cancer (2022)
+      and HER2+ gastric/GEJ cancer. BTC = off-label use — MDT compassionate use request
+      required; NSZU funding likely NOT available for off-label BTC indication.
+
+recommended_regimen: REG-TDXD-METASTATIC
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Tucatinib + trastuzumab (MOUNTAINEER; Strickler 2023 JCO; originally CRC HER2+):
+      Phase 2 tucatinib 300 mg PO BID + trastuzumab 8→6 mg/kg IV q3w; ORR 31% CRC; BTC
+      experience limited; some BTC case series. Better GI tolerability than T-DXd; avoids
+      ILD. Consider if T-DXd ILD risk elevated or patient preference for lower pulmonary
+      risk. Not modeled as separate BTC indication; MDT-only option.
+  - regimen_id: null
+    description: >
+      Trastuzumab (single agent) + chemotherapy (FOLFOX/XELOX): modest activity in HER2+
+      BTC; pre-DESTINY-era standard; ORR ~20-25%; now superseded by T-DXd when accessible.
+      Fallback when T-DXd inaccessible; MDT decision.
+  - regimen_id: null
+    description: >
+      FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06): non-targeted 2L fallback when T-DXd
+      inaccessible. ORR ~5-10%; mOS 6.2 months. Use when no HER2-targeted agent available.
+
+concurrent_therapy:
+  - "ILD monitoring protocol: CT chest at baseline; respiratory symptom assessment before each cycle; hold T-DXd for any new respiratory symptoms or CT changes pending pulmonary evaluation"
+  - "Nausea/vomiting prophylaxis: 5-HT3 antagonist + dexamethasone 4 mg IV before each infusion; T-DXd has moderate emetogenic potential"
+  - "Pre-infusion: diphenhydramine 25 mg IV + acetaminophen 650 mg PO before infusion (IRR prevention)"
+  - "G-CSF support: consider pegfilgrastim after cycle 1 if ANC nadir <1.0 or prior febrile neutropenia (T-DXd grade 3-4 neutropenia ~8-12%)"
+  - "Biliary drainage: ensure adequate biliary drainage if bilirubin >1.5×ULN before starting (biliary obstruction worsens T-DXd hepatotoxicity)"
+
+followed_by:
+  - "Continue T-DXd until disease progression or unacceptable toxicity (no planned fixed duration)"
+  - "Response assessment: CT q2 cycles (q6 weeks); consider PET-CT at cycle 4"
+  - "ILD management: Grade 1 → hold T-DXd, monitor; Grade 2 → hold indefinitely until resolution, then consider restart at 4.4 mg/kg; Grade ≥3 → permanently discontinue"
+  - "After T-DXd failure: FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06); clinical trial preferred for further lines"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~36.4% (DESTINY-PanTumor02 BTC cohort; Shitara 2023 NEJM; n=22)"
+  cr_rate: "~4.5% CR (DESTINY-PanTumor02 BTC)"
+  dcr: "~90.9% (disease control rate; DESTINY-PanTumor02 BTC)"
+  median_dor_months: "~12.7 months (median DOR DESTINY-PanTumor02 all-tumor cohort; BTC-specific DOR pending extended follow-up)"
+  notes: >
+    DESTINY-PanTumor02 (Shitara 2023 NEJM; n=267 across 7 tumor types including BTC):
+    Phase 2 basket trial; T-DXd 5.4 mg/kg IV q21d in HER2-overexpressing (IHC 3+ or IHC 2+/ISH+)
+    solid tumors excluding breast/gastric (which had dedicated DESTINY trials).
+    BTC cohort (n=22): ORR 36.4% (CR 4.5%, PR 31.8%); DCR 90.9%; mPFS 5.5 months.
+    All-cohort ORR 37.1%; confirmed ORR 27%; mDOR all-cohort 12.7 months.
+    ILD/pneumonitis: 14.6% grade ≥2 all-cohort (2.2% fatal); careful monitoring mandatory.
+    IHC 3+ subgroup ORR higher (~50%) vs IHC 2+/ISH+ (~30%); HER2-HIGH expressors benefit more.
+    NCCN Hepatobiliary 2025: T-DXd Category 2A for HER2+ R/R BTC (IHC 3+ or IHC 2+/ISH+;
+    DESTINY-PanTumor02).
+    Compared to FOLFOX (ORR ~5-10%): T-DXd offers ~3-5× higher ORR in HER2+ selected BTC;
+    targeted therapy substantially superior in biomarker-selected population.
+    HER2 prevalence limits total eligible population to ~5-7% of CCA patients; mandatory
+    HER2 testing at or before 2L start.
+
+hard_contraindications:
+  - "HER2-negative (IHC 0/1+ or IHC 2+/ISH-): T-DXd requires HER2 target expression"
+  - "Active ILD or prior Grade ≥2 ILD/pneumonitis: absolute contraindication (fatal ILD risk)"
+  - "Severe hepatic impairment (bilirubin >3×ULN without Gilbert): T-DXd hepatotoxicity accumulation"
+  - "ECOG PS ≥3 (performance status precludes T-DXd infusion benefit)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Pregnancy: T-DXd embryotoxic; contraindicated"
+
+red_flags_triggering_alternative:
+  - condition: "HER2-negative → IND-CHOLANGIO-2L-FOLFOX-ABC06 (non-targeted default)"
+  - condition: "Grade ≥2 ILD: permanently discontinue T-DXd; FOLFOX fallback"
+  - condition: "T-DXd inaccessible (off-label for BTC in UA, no MDT approval): FOLFOX (IND-CHOLANGIO-2L-FOLFOX-ABC06)"
+  - condition: "FGFR2 fusion or IDH1 mutation (higher-priority drivers): use respective targeted therapy first"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HER2 IHC + ISH on tumor biopsy: IHC 3+ alone → eligible; IHC 2+ → must confirm ISH/FISH amplification; IHC 0/1+ or 2+/ISH- → not eligible"
+  - "CT chest: baseline for ILD screening (mandatory before T-DXd start)"
+  - "CT chest/abdomen/pelvis: baseline staging + q2 cycles response assessment"
+  - "Bilirubin + ALT/AST: baseline and before each cycle (T-DXd hepatotoxicity; biliary obstruction risk)"
+  - "Comprehensive molecular profiling (FGFR2 fusion, IDH1, BRAF V600E, MSI, HER2, NTRK, KRAS): MANDATORY at 2L start to identify higher-priority targetable drivers"
+
+desired_tests:
+  - "HER2 NGS amplification (copy number): HER2-amplified by CNV is an alternative confirmation when ISH not available"
+  - "Respiratory function testing (spirometry, DLCO): if prior respiratory symptoms or borderline CT findings"
+  - "Echocardiogram: cardiotoxicity with long-term anti-HER2 therapy (less risk with T-DXd than trastuzumab monotherapy but monitor if prior anthracyclines)"
+
+rationale: >
+  Trastuzumab deruxtecan (T-DXd; Enhertu) is a HER2-targeted antibody-drug conjugate:
+  humanized anti-HER2 antibody (trastuzumab) linked to topoisomerase I inhibitor (DXd = exatecan
+  derivative) via tetrapeptide-based cleavable linker. HER2 binding → internalization →
+  DXd release in lysosomes → DNA damage → apoptosis. "Bystander effect": released DXd
+  permeates adjacent HER2-negative tumor cells (membrane-permeable), extending activity
+  beyond HER2+ cells. This mechanism explains T-DXd's dual activity in HER2-high and
+  HER2-low tumors.
+
+  In BTC/CCA (~5-7% HER2+):
+  - HER2 overexpression (IHC 3+ / IHC 2+/ISH+) is highest in gallbladder carcinoma (~20%)
+    and extrahepatic CCA (~10%); intrahepatic CCA lower (~2-5%)
+  - Prior to T-DXd, no approved HER2-targeted therapy existed for BTC
+  - DESTINY-PanTumor02 ORR 36.4% in BTC is substantially higher than FOLFOX ORR ~5-10%
+    in unselected patients
+
+  Molecular profiling hierarchy in 2L CCA (enforced by algorithm):
+  Step 1 → FGFR2 fusion (pemigatinib; Cat 1; ORR ~36%)
+  Step 12 → IDH1 mutation (ivosidenib; Cat 1; ORR ~32%)
+  Step 13 → BRAF V600E (dab+tram; Cat 2A; ORR ~51%)
+  Step 14 → MSI-H/dMMR (pembrolizumab; Cat 2A; ORR ~41%)
+  Step 15 → HER2 IHC3+/2+ISH+ (T-DXd; Cat 2A; ORR ~36%)
+  Step 2 → default FOLFOX (Cat 1; ORR ~5%)
+
+  Key safety concern: ILD/pneumonitis is the critical T-DXd toxicity. DESTINY-PanTumor02
+  grade ≥2 ILD: 14.6%; grade 5 (fatal): 2.2%. Active pulmonary monitoring mandatory.
+  Any new respiratory symptoms (dyspnea, cough, fever) → hold T-DXd immediately + urgent CT.
+
+  Ukraine: Enhertu registered for HER2+ breast and gastric; BTC off-label → MDT
+  compassionate use request required; cost-access barrier significant.
+
+rationale_ua: >
+  Трастузумаб дерукстекан (T-DXd; Enhertu): ADC Anti-HER2 → топоізомераза I інгібітор.
+  DESTINY-PanTumor02 (Shitara 2023 NEJM; n=22 BTC): ORR 36.4%; ВКЗ 90.9%.
+  NCCN кат.2A для HER2+ (IHC 3+ або IHC 2+/ISH+) рецидивуючого BTC.
+  Відбір: HER2 IHC на рецидивній біопсії ОБОВ'ЯЗКОВИЙ. IHC 3+ → T-DXd;
+  IHC 2+ → ISH/FISH підтвердження (якщо ISH+ → T-DXd; ISH- → FOLFOX).
+  КРИТИЧНО: ІХЗ/пневмоніт ~14.6% grade ≥2 (2.2% летальна); КТ грудної клітки
+  базово + кожні 2 цикли; диспное/кашель → негайна відміна + КТ.
+  В Україні: Enhertu зареєстрований для раку молочної залози/шлунку HER2+;
+  BTC = off-label; MDT запит обов'язковий; НСЗУ не покриває off-label BTC.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HEPATOBILIARY
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hepatobiliary 2025 Category 2A: trastuzumab deruxtecan (T-DXd) 5.4 mg/kg IV
+      q21d for HER2-overexpressing (IHC 3+ or IHC 2+/ISH+) relapsed/refractory BTC
+      (DESTINY-PanTumor02; Shitara 2023 NEJM; BTC cohort ORR 36.4%).
+  - source_id: SRC-ESMO-BTC-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO BTC 2023: HER2-targeted therapy (T-DXd) recommended for HER2+ R/R BTC;
+      mandatory HER2 IHC testing at relapse; ILD monitoring mandatory with T-DXd.
+
+do_not_do:
+  - "Без HER2 IHC тестування: T-DXd вимагає HER2-мішені; тестування обов'язкове до початку"
+  - "При ILD grade ≥2 в анамнезі або активному ILD: T-DXd абсолютно протипоказаний (ризик летальної пневмонії)"
+  - "Без базового КТ грудної клітки: ILD може бути асимптомним; КТ до початку T-DXd ОБОВ'ЯЗКОВЕ"
+  - "Без профілю молекулярних маркерів: FGFR2/IDH1/BRAF/MSI повинні бути виключені ПЕРЕД призначенням T-DXd — пацієнти з FGFR2/IDH1 отримують Cat 1 препарати"
+  - "Після невдачі T-DXd: повторне лікування не валідоване; переходити на FOLFOX або клінічне дослідження"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

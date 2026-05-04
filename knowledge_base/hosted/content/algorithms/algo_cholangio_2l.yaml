@@ -8,14 +8,15 @@ purpose: >
   (2) IDH1 hotspot mutation → ivosidenib (ClarIDHy; step 12; NCCN Cat 1);
   (3) BRAF V600E mutation → dabrafenib+trametinib (ROAR; step 13; NCCN Cat 2A);
   (4) MSI-H/dMMR → pembrolizumab (KEYNOTE-158; step 14; NCCN Cat 2A);
-  (5) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
-  Pending: HER2-amp (T-DXd/tucatinib-trastuzumab) — not yet modeled.
+  (5) HER2 IHC3+/2+ISH+ → trastuzumab deruxtecan (DESTINY-PanTumor02; step 15; NCCN Cat 2A);
+  (6) Default non-driver → FOLFOX (ABC-06; step 2; NCCN Cat 1).
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
   - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
   - IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
   - IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
+  - IND-CHOLANGIO-2L-HER2-TDXD
   - IND-CHOLANGIO-2L-FOLFOX-ABC06
 
 default_indication: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -91,13 +92,33 @@ decision_tree:
         protocol mandatory. Lynch syndrome germline testing recommended. Ukraine:
         pembrolizumab registered; CCA off-label MDT request required.
     if_false:
-      next_step: 2
+      next_step: 15
     notes: "Step 14 added 2026-05-04 (Workstream BD): MSI-H/dMMR CCA → pembrolizumab (KEYNOTE-158). Gap (5) CLOSED."
+
+  # Step 15 — HER2-overexpressing BTC (~5-7% overall; ~20% gallbladder CA).
+  # Trastuzumab deruxtecan (T-DXd) 5.4 mg/kg IV q21d (DESTINY-PanTumor02;
+  # Shitara 2023 NEJM; BTC cohort n=22; ORR 36.4%; DCR 90.9%; NCCN Cat 2A).
+  # HER2 threshold: IHC 3+ OR IHC 2+/ISH+. ILD (14.6% grade ≥2) = key toxicity.
+  # UA: Enhertu off-label for BTC; MDT compassionate use request required.
+  - step: 15
+    evaluate:
+      any_of:
+        - condition: "HER2-overexpressing confirmed: IHC 3+ (any histotype) OR IHC 2+/ISH+ (FISH/CISH/NGS amplification) on most recent tumor biopsy"
+    if_true:
+      result: IND-CHOLANGIO-2L-HER2-TDXD
+      notes: >
+        HER2+ BTC: T-DXd 5.4 mg/kg IV q21d (REG-TDXD-METASTATIC; DESTINY-PanTumor02
+        Shitara 2023 NEJM; ORR 36.4%; DCR 90.9%; NCCN Cat 2A). IHC 3+ alone = sufficient;
+        IHC 2+ requires ISH confirmation. Mandatory CT chest baseline for ILD screening.
+        Any new respiratory symptoms → immediately hold T-DXd + urgent CT. Ukraine: off-label
+        for BTC; MDT compassionate use request required; not NSZU-funded for this indication.
+    if_false:
+      next_step: 2
+    notes: "Step 15 added 2026-05-04 (Workstream BH): HER2+ BTC → T-DXd (DESTINY-PanTumor02; NCCN Cat 2A). Gap (3) CLOSED."
 
   # Step 2 — default 2L non-driver: FOLFOX (ABC-06; Lamarca 2021 JCO;
   # mOS 6.2 vs 5.3 mo HR 0.69 p=0.031; NCCN Cat 1). Reached only after
-  # FGFR2/IDH1/BRAF V600E/MSI-H steps all negative.
-  # HER2-amp (T-DXd/tucatinib-trastuzumab) — still pending authoring.
+  # FGFR2/IDH1/BRAF V600E/MSI-H/HER2 steps all negative.
   # Comprehensive molecular profiling MANDATORY at or before 2L start.
   - step: 2
     evaluate:
@@ -106,11 +127,12 @@ decision_tree:
     if_true:
       result: IND-CHOLANGIO-2L-FOLFOX-ABC06
       notes: >
-        2L non-driver BTC/CCA: mFOLFOX (REG-FOLFOX; oxaliplatin 85 mg/m² d1 +
-        5-FU 2400 mg/m² 46h q14d; ABC-06 Lamarca 2021 JCO; mOS 6.2 mo HR 0.69
-        p=0.031; NCCN Cat 1). Ensure comprehensive molecular profiling (FGFR2, IDH1,
-        BRAF, HER2, MSI, NTRK) BEFORE or AT this 2L decision — targeted therapy
-        available for driver subtypes with ORR 20-36% vs FOLFOX ~5%.
+        2L non-driver BTC/CCA (FGFR2/IDH1/BRAF V600E/MSI-H/HER2 all negative):
+        mFOLFOX (REG-FOLFOX; oxaliplatin 85 mg/m² d1 + 5-FU 2400 mg/m² 46h q14d;
+        ABC-06 Lamarca 2021 JCO; mOS 6.2 mo HR 0.69 p=0.031; NCCN Cat 1).
+        Comprehensive molecular profiling (FGFR2, IDH1, BRAF, HER2, MSI, NTRK)
+        MANDATORY before accepting non-driver status — targeted therapy ORR 30-51%
+        vs FOLFOX ~5% in driver-positive tumors.
         Biliary drainage required if bilirubin >3× ULN. Neuropathy screen baseline.
     if_false:
       result: IND-CHOLANGIO-2L-FOLFOX-ABC06
@@ -131,6 +153,8 @@ notes: >
   Gap (4) CLOSED.
   UPDATED 2026-05-04 (Workstream BD): IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB wired at step 14
   (KEYNOTE-158; Bang 2020 AoO; ORR ~41%; NCCN Cat 2A). Gap (5) CLOSED.
-  OOS / wiring gaps:
-  (3) HER2-amp T-DXd (DESTINY-PanTumor02) / tucatinib-trastuzumab — not yet modeled.
-  Out-of-scope: locoregional (radioembolization, TACE, SBRT) — outside KB scope.
+  UPDATED 2026-05-04 (Workstream BH): IND-CHOLANGIO-2L-HER2-TDXD authored and wired at step 15
+  (DESTINY-PanTumor02; Shitara 2023 NEJM; BTC n=22 ORR 36.4%; NCCN Cat 2A). Gap (3) CLOSED.
+  All documented 2L driver gaps now CLOSED. Driver cascade complete: FGFR2→IDH1→BRAF V600E→MSI-H→HER2→FOLFOX.
+  OOS: locoregional (radioembolization, TACE, SBRT) — outside KB scope.
+  NTRK fusion (larotrectinib; tumor-agnostic; ~1-2% BTC) — not yet modeled; low prevalence, similar approach to MSI-H track.
