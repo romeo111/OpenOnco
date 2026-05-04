@@ -1,0 +1,147 @@
+id: REG-CAPE-BEV-FRAIL
+name: "Capecitabine + Bevacizumab (AVEX; frail/elderly mCRC 1L)"
+name_ua: "Капецитабін + Бевацизумаб (AVEX; ослаблені/літні мКРР 1L)"
+alternate_names:
+  - "Cape+Bev frail"
+  - "AVEX regimen"
+  - "Capecitabine-bevacizumab elderly"
+
+components:
+  - drug_id: DRUG-CAPECITABINE
+    dose: "1000 mg/m² PO BID (consider 750 mg/m² BID if age ≥80, CrCl 30-50, or significant comorbidity)"
+    schedule: "Days 1-14 of a 21-day cycle; rest days 15-21"
+    route: PO
+    notes: >
+      Lower starting dose (750 mg/m²) acceptable for age ≥80 or CrCl 30-50 to reduce
+      hand-foot syndrome and diarrhea. DPYD genotyping recommended before initiation.
+      Hold for Grade ≥2 HFS or diarrhea; resume at 75% once resolved to ≤Grade 1.
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "7.5 mg/kg IV over 30-90 min (first infusion 90 min; 2nd 60 min; subsequent 30 min)"
+    schedule: "Day 1 of each 21-day cycle"
+    route: IV
+    notes: >
+      Bevacizumab adds PFS benefit in frail/elderly mCRC (AVEX: HR 0.53; mPFS 9.1 vs 5.1 mo).
+      Monitor BP at each visit (hypertension common, manageable). Withhold for ≥grade 3 HTN,
+      nephrotic-range proteinuria, GI perforation, or arterial thromboembolism.
+
+cycle_length_days: 21
+total_cycles: "Continuous until disease progression or unacceptable toxicity. Median ~8-10 cycles in AVEX."
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care:
+  - "CBC + metabolic panel before each cycle (cycle 1 + every 2 cycles thereafter)"
+  - "Blood pressure check every cycle (bevacizumab-related hypertension; antihypertensive if needed)"
+  - "Urine protein:creatinine ratio or 24h urine protein every 2-3 cycles (bevacizumab proteinuria monitoring)"
+  - "Hand-foot syndrome assessment every cycle: emollient cream prophylaxis; dose interrupt at Grade ≥2"
+  - "DPYD genotyping before initiation (DPYD*2A, *13, HapB3) — 5-10% toxicity risk in unscreened"
+
+dose_adjustments:
+  - condition: "Hand-foot syndrome Grade 2"
+    modification: "Hold capecitabine until ≤Grade 1; resume at 75% (750 mg/m² BID or 1000→750 mg/m² BID)"
+    rationale: "Cumulative dose-limiting toxicity; dose reduction preserves tolerability"
+  - condition: "Hand-foot syndrome Grade 3"
+    modification: "Hold; resume at 50% on resolution to ≤Grade 1; discontinue if Grade 3 at 50%"
+    rationale: "Grade 3 HFS may be irreversible if underdosed or neglected"
+  - condition: "Diarrhea Grade ≥2"
+    modification: "Hold capecitabine; loperamide; IV hydration if needed; resume at 75% on resolution"
+    rationale: "Dehydration risk in elderly; grade 3+ diarrhea can be life-threatening"
+  - condition: "CrCl 30-50 mL/min"
+    modification: "Capecitabine 75% starting dose (750 mg/m² BID); bevacizumab dose unchanged"
+    rationale: "Capecitabine renally cleared; CrCl <30 is a contraindication"
+  - condition: "CrCl <30 mL/min"
+    modification: "Capecitabine CONTRAINDICATED; consider 5-FU/LV IV alternative"
+    rationale: "Capecitabine absolute contraindication below CrCl 30"
+  - condition: "Hypertension Grade 3 (SBP >160 or DBP >100 mmHg)"
+    modification: "Hold bevacizumab until BP controlled; resume after adequate antihypertensive"
+    rationale: "Bevacizumab-related VEGF inhibition causes HTN; mostly manageable with antihypertensives"
+  - condition: "Grade ≥4 hypertension, nephrotic syndrome, GI perforation, or arterial thromboembolism"
+    modification: "Permanently discontinue bevacizumab; continue capecitabine monotherapy (REG-CAPECITABINE-PALLIATIVE dosing)"
+    rationale: "Serious bevacizumab-specific adverse events; permanent d/c required"
+  - condition: "DPYD intermediate or poor metabolizer detected"
+    modification: "Reduce capecitabine starting dose by 50% per CPIC guideline; careful toxicity monitoring"
+    rationale: "DPYD deficiency → toxic 5-FU accumulation; dose reduction prevents life-threatening toxicity"
+
+drug_interactions:
+  - "Warfarin: capecitabine potentiates anticoagulation (INR monitoring required; dose reduce warfarin)"
+  - "Phenytoin: capecitabine increases phenytoin levels; monitor phenytoin"
+  - "Allopurinol: may decrease capecitabine efficacy; avoid combination if possible"
+  - "Bevacizumab + surgery: bevacizumab must be held ≥28 days before elective surgery (wound healing risk)"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Капецитабін і бевацизумаб зареєстровані та НСЗУ-фінансуються для мКРР (онкопакет 2025).
+    Пероральний прийом капецитабіну зручний для ослаблених/літніх пацієнтів (без щоденних
+    IV-інфузій). Бевацизумаб — разова інфузія кожні 3 тижні. Більш зручний для пацієнта,
+    ніж FOLFOX+Bev (2-годинні інфузії кожні 2 тижні + помпа 46h 5-ФУ).
+
+sources:
+  - SRC-NCCN-COLON-2025
+  - SRC-ESMO-COLON-2024
+
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення або болючість долонь / стоп"
+    action_ua: "Синдром долоня-стопа від капецитабіну — наносьте крем з сечовиною, уникайте тертя; повідомте на наступному візиті"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Виражений біль на долонях / стопах або неможливість ходити"
+    action_ua: "Зателефонуйте в клініку того ж дня — потрібна пауза в препараті"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Більше 4-5 рідких випорожнень на день"
+    action_ua: "Зателефонуйте в клініку того ж дня — почніть лоперамід, пийте більше рідини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Головний біль або підвищений тиск"
+    action_ua: "Виміряйте тиск вдома; якщо >150/90 — зателефонуйте в клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Температура ≥38°C"
+    action_ua: "Зателефонуйте в клініку того ж дня — ризик нейтропенічної лихоманки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Біль у животі, блювота, чи симптоми перфорації"
+    action_ua: "Негайно в лікарню — рідкісне, але серйозне ускладнення бевацизумабу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+notes: >
+  Capecitabine + bevacizumab for frail/elderly (ECOG 2 or age ≥75+comorbidities)
+  mCRC patients not tolerating oxaliplatin-containing doublets (FOLFOX/CapOx).
+
+  AVEX TRIAL (Cunningham 2013 Lancet Oncol; NCT01228734):
+  - Population: previously untreated mCRC patients ≥70 years
+  - Capecitabine 1000 mg/m² BID d1-14 q21d + bevacizumab 7.5 mg/kg q21d vs capecitabine alone
+  - Primary endpoint: mPFS 9.1 vs 5.1 mo (HR 0.53; 95% CI 0.41-0.69; p=0.0002)
+  - mOS 20.7 vs 16.8 mo (HR 0.79; not significant; p=0.18)
+  - ORR 46% vs 22%; DCR 78% vs 65%
+  - Toxicity: bevacizumab added Grade ≥3 HTN (20% vs 7%), venous TE, but manageable
+
+  RATIONALE over FOLFOX+bev in frail patients:
+  - Avoids: oxaliplatin (cumulative neuropathy, myelosuppression, hepatotoxicity)
+  - Avoids: IV pump infusion (patient burden, infection risk)
+  - Oral dosing (capecitabine): home administration, fewer clinic visits
+  - mPFS 9.1 mo is acceptable for palliative intent; not far from FOLFOX+bev in trial populations
+
+  UKRAINIAN CONTEXT:
+  - Both components NSZU-reimbursed for mCRC
+  - Particularly useful for elderly patients in smaller oncology centres (no 5-FU pump facilities)
+  - Hold bev ≥28 days before and after any surgical procedures (colostomy, drainage)
+
+  NCCN Colon 2025: capecitabine-based options acceptable for elderly/frail; bev +
+  cape or + simplified LV5FU2 both listed as options.
+
+  STUB pending §6.1 clinical signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

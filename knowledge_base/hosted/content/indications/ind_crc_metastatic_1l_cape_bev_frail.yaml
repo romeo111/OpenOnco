@@ -1,0 +1,182 @@
+id: IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV metastatic CRC, previously untreated"
+    - "Frailty profile: RF-CRC-FRAILTY-AGE met (ECOG ≥3 OR age ≥80+Charlson ≥3 OR age ≥75+albumin <3+≥2 comorbidities)"
+    - "BUT retains adequate ECOG 0-2 fitness for at least oral chemotherapy + bevacizumab"
+    - "CrCl ≥30 mL/min (capecitabine requires adequate renal function)"
+    - "ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L at treatment start"
+    - "BP controlled (<150/90) or adequately managed (bevacizumab-related HTN risk)"
+    - "No active GI bleeding, recent bowel perforation, or untreated brain metastases"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "MSI-H/dMMR: pembrolizumab 1L preferred (IND-CRC-METASTATIC-1L-MSI-H-PEMBRO; KEYNOTE-177 Cat 1)"
+    - "RAS-WT + left-sided primary + fit: cetuximab combination preferred (IND-CRC-METASTATIC-1L-RAS-WT-LEFT)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      This indication targets the MODERATELY FRAIL patient — RF-CRC-FRAILTY-AGE
+      positive but ECOG 0-2 (can self-care, ambulatory). For ECOG ≥3 (PS3/PS4):
+      route to IND-CRC-PERFORMANCE-STATUS-3 (capecitabine mono or BSC).
+
+      RF-CRC-FRAILTY-AGE includes:
+      - Age ≥80 + Charlson ≥3 (comorbidity-frail, but may be ECOG 2)
+      - Age ≥75 + albumin <3.0 + ≥2 comorbidities (nutritional frailty)
+      These patients can still benefit from active treatment but cannot tolerate
+      oxaliplatin-containing regimens (FOLFOX/CapOx) due to neuropathy risk,
+      myelosuppression, and treatment burden.
+
+      Fit ECOG 0-1 patients without composite frailty criteria should receive
+      standard FOLFOX+bev (IND-CRC-METASTATIC-1L-FOLFOX-BEV) instead.
+
+recommended_regimen: REG-CAPE-BEV-FRAIL
+alternative_regimens:
+  - regimen_id: REG-5FU-LV-BEV-CKD-MODIFIED
+    description: >
+      Simplified de Gramont (sLV5FU2) + bevacizumab 5 mg/kg q14d — IV alternative when
+      capecitabine is contraindicated (CrCl <30, DPYD homozygous deficient). Same
+      mechanism (fluoropyrimidine + VEGF inhibition); avoids oxaliplatin. NCCN Cat 2A.
+  - regimen_id: REG-CAPECITABINE-PALLIATIVE
+    description: >
+      Capecitabine mono 1000 mg/m² BID d1-14 q21d — use if bevacizumab contraindicated
+      (recent arterial thrombosis, uncontrolled HTN, hemoptysis, active GI bleeding) or
+      patient preference for minimally intensive therapy.
+
+concurrent_therapy:
+  - "BP monitoring every cycle; antihypertensive if systolic >150 or diastolic >90"
+  - "DPYD genotyping before initiation (CPIC; DPYD*2A, *13, HapB3)"
+  - "Emollient (urea-containing) cream prophylaxis for hand-foot syndrome"
+  - "Loperamide PRN for diarrhea (capecitabine-related)"
+  - "Anticoagulation monitoring if on warfarin (capecitabine potentiates anticoagulation)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis + CEA/CA19-9 after cycle 3 (response assessment); continue if CR/PR/SD"
+  - "Continue bevacizumab until progression or unacceptable toxicity"
+  - "At progression: 2L options — FOLFOX if no prior oxaliplatin (tolerable in initially frail patients who have improved); BEACON (encorafenib+cetuximab) if BRAF V600E; TAS-102 or regorafenib 3L"
+  - "Reassess goals-of-care every 2-3 cycles in frail/elderly patients (MDT + palliative care involvement)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~46% (AVEX trial: capecitabine+bev vs capecitabine mono; Cunningham 2013 Lancet Oncol)"
+  complete_response: "~5% (AVEX)"
+  median_pfs_months: "~9.1 months (AVEX cape+bev arm; vs 5.1 mo cape mono; HR 0.53; p=0.0002)"
+  median_os_months: "~20.7 months (AVEX; not significant vs mono: HR 0.79; p=0.18)"
+  notes: >
+    AVEX (Cunningham 2013 Lancet Oncol; NCT01228734):
+    - Population: previously untreated mCRC ≥70 years; n=280
+    - Cape+bev vs capecitabine mono: mPFS 9.1 vs 5.1 mo (HR 0.53; p<0.001)
+    - mOS 20.7 vs 16.8 mo (HR 0.79; p=0.18 — secondary endpoint, not powered)
+    - ORR 46% vs 22%; DCR 78% vs 65%
+
+    This is likely superior to FOLFOX+bev in this population for tolerability reasons —
+    real-world frail/elderly patients often do not achieve the 3-drug FOLFOX ORR/PFS
+    outcomes of trial populations due to treatment interruptions and dose reductions.
+    The key advantage of cape+bev is avoidance of oxaliplatin neuropathy + IV pump burden.
+
+    NCCN Colon 2025 Cat 2A: fluoropyrimidine-based regimens ± bevacizumab acceptable
+    for elderly/frail mCRC; oxaliplatin-based doublets noted to add neuropathy risk
+    without survival benefit in high-frailty populations.
+
+hard_contraindications:
+  - "CrCl <30 mL/min: capecitabine absolute contraindication; use sLV5FU2+bev (REG-5FU-LV-BEV-CKD-MODIFIED) instead"
+  - "DPYD homozygous deficient: 5-FU/capecitabine absolutely contraindicated (fatal toxicity risk)"
+  - "Recent arterial thromboembolism (stroke, MI) within 6 months: bevacizumab contraindicated"
+  - "GI perforation history or active fistula: bevacizumab contraindicated"
+  - "Uncontrolled hypertension (SBP >160 or DBP >100 despite 2+ antihypertensives): bevacizumab hold until controlled"
+  - "MSI-H/dMMR: pembrolizumab 1L preferred; cape+bev appropriate only if pembro inaccessible or contraindicated"
+
+red_flags_triggering_alternative:
+  - condition: "Patient functional status improves to ECOG 0-1 without frailty criteria → escalate to IND-CRC-METASTATIC-1L-FOLFOX-BEV (standard doublet)"
+  - condition: "ECOG deteriorates to ≥3 → de-escalate to IND-CRC-PERFORMANCE-STATUS-3 (capecitabine mono or BSC)"
+  - condition: "CrCl falls <30 mL/min during treatment → switch to REG-5FU-LV-BEV-CKD-MODIFIED (IV fluoropyrimidine)"
+  - condition: "Bevacizumab-related serious adverse event (GI perforation, ATE, RPLS) → bevacizumab permanent d/c; continue capecitabine mono"
+  - condition: "MSI-H status discovered during 1L → discuss pembrolizumab rechallenge (IND-CRC-METASTATIC-1L-MSI-H-PEMBRO)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - "Urine protein:creatinine ratio (bevacizumab monitoring)"
+  - "Blood pressure measurement"
+  - "CEA: baseline tumour marker for response monitoring"
+
+desired_tests:
+  - "DPYD pharmacogenomics: CPIC genotyping before initiation (avoid severe toxicity)"
+  - "MMR/MSI status if not tested (confirm ICI-preference route)"
+  - "RAS/BRAF status (inform 2L planning)"
+  - "Echocardiogram if cardiac history + bevacizumab concern"
+
+rationale: >
+  Capecitabine + bevacizumab as 1L mCRC for moderately frail patients (ECOG 2
+  or age-/comorbidity-defined frailty RF-CRC-FRAILTY-AGE) who are not tolerant
+  of oxaliplatin-containing doublets (FOLFOX, CapOx).
+
+  AVEX EVIDENCE: AVEX (Cunningham 2013 Lancet Oncol) is the primary evidence base.
+  RCT in ≥70-year mCRC patients; capecitabine+bev significantly improved mPFS
+  (9.1 vs 5.1 mo; HR 0.53) vs cape mono. This provides NCCN Cat 2A backing for
+  the combination in frail/elderly patients.
+
+  WHY NOT FOLFOX+BEV IN THIS POPULATION:
+  1. Oxaliplatin neuropathy is cumulative and often irreversible — particularly
+     problematic in elderly patients with pre-existing neuropathy (diabetes, prior chemo)
+  2. FOLFOX requires 46h IV pump infusion (caregiver burden, IV access)
+  3. Myelosuppression from oxaliplatin + 5-FU higher than cape+bev
+  4. Real-world completion rates in ECOG 2/frail much lower; dose reductions common
+
+  BEVACIZUMAB IN ELDERLY: AVEX demonstrated clear mPFS benefit of bev addition
+  in ≥70-year patients; no significant survival benefit but meaningful disease
+  control improvement. Hypertension is the main bev toxicity but manageable.
+
+  CAPECITABINE ORAL CONVENIENCE: Eliminates need for q2w IV infusion clinic visits
+  (critical for mobility-limited frail patients in Ukraine where transport is a barrier).
+  NSZU reimbursement confirmed for both components.
+
+rationale_ua: >
+  Капецитабін 1000 мг/м² BID d1-14 q21d + Бевацизумаб 7.5 мг/кг IV q21d
+  для ослаблених/літніх (RF-CRC-FRAILTY-AGE: ECOG ≥3 АБО ≥80 + Charlson ≥3
+  АБО ≥75 + альбумін <3.0 + ≥2 коморбідностей) мКРР 1L, які не переносять
+  оксаліплатин-вмісні схеми. AVEX (Cunningham 2013): mPFS 9.1 vs 5.1 міс
+  (HR 0.53; p<0.001). NCCN Cat 2A.
+  НСЗУ-фінансуються обидва компоненти. Пероральний прийом — зручніший для
+  ослаблених пацієнтів у малих центрах. Перевіряйте DPYD до початку терапії.
+  ОБОВ'ЯЗКОВО: моніторинг АТ кожен цикл; преmedикація не потрібна.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не давати капецитабін при CrCl <30 мл/хв: протипоказаний; перейдіть на IV 5-ФУ+ЛФ+Bev"
+  - "Без DPYD-тесту у пацієнтів з ознаками підвищеного ризику: важка токсичність 5-ФУ в ~5-7%"
+  - "Бевацизумаб не вводити після нещодавнього (≤6 міс) артеріального тромбозу або перфорації ШКТ"
+  - "Не ескалювати до FOLFOX+Bev автоматично при прогресії — оцінюйте статус спочатку"
+  - "Не продовжувати бевацизумаб після перфорації ШКТ, RPLS або важкого АТЕ — постійне скасування"
+
+sources:
+  - source_id: SRC-NCCN-COLON-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Colon/Rectal 2025 Category 2A: fluoropyrimidine-based regimens (with or without
+      bevacizumab) are appropriate for elderly/frail mCRC patients not tolerant of
+      oxaliplatin-based doublets. Capecitabine-based options noted as convenient for
+      oral administration in frail populations.
+  - source_id: SRC-ESMO-COLON-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO mCRC 2024: capecitabine + bevacizumab (AVEX regimen) is an accepted 1L option
+      for elderly/frail mCRC patients. AVEX demonstrated significant mPFS improvement
+      over capecitabine monotherapy in ≥70-year patients.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

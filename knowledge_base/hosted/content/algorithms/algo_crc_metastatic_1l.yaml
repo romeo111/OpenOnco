@@ -11,6 +11,8 @@ output_indications:
   - IND-CRC-METASTATIC-1L-RAS-WT-LEFT
   - IND-CRC-METASTATIC-1L-FOLFOXIRI-BEV
   - IND-CRC-METASTATIC-1L-FOLFOX-BEV
+  - IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL
+  - IND-CRC-PERFORMANCE-STATUS-3
 
 default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
@@ -79,16 +81,46 @@ decision_tree:
     if_false:
       next_step: 5
 
-  # Step 5 — frailty de-escalation.
+  # Step 5 — frailty de-escalation gate.
+  # RF-CRC-FRAILTY-AGE: ECOG ≥3 OR age ≥80+Charlson ≥3 OR age ≥75+albumin<3.0+≥2 comorbidities.
+  # Frail patients cannot tolerate oxaliplatin; route to step 51 for fitness sub-stratification.
   - step: 5
     evaluate:
       any_of:
         - red_flag: RF-CRC-FRAILTY-AGE
     if_true:
-      result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
-      notes: "Frail/older: dose-modified FOLFOX+bev. Palliative-intent 5-FU/LV mono awaits dedicated geriatric indication."
+      next_step: 51
+      notes: >
+        RF-CRC-FRAILTY-AGE met: routes to step 51 for ECOG-based de-escalation.
+        Avoids FOLFOX+bev in frail patients (oxaliplatin neuropathy + IV burden
+        outweigh benefit in true frailty). Step 51 selects cape+bev vs BSC-adjacent mono.
     if_false:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+
+  # Step 51 — Frailty ECOG sub-stratification.
+  # RF-CRC-FRAILTY-AGE positive patients reach this step.
+  # ECOG 0-2 (ambulatory even if frail by age/comorbidity) → cape+bev (AVEX; NCCN Cat 2A).
+  # ECOG ≥3 (not ambulatory) → capecitabine mono or BSC (IND-CRC-PERFORMANCE-STATUS-3).
+  - step: 51
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL
+      notes: >
+        Frail by age/comorbidity but ECOG 0-2: capecitabine 1000 mg/m² BID d1-14 q21d
+        + bevacizumab 7.5 mg/kg q21d (REG-CAPE-BEV-FRAIL; AVEX Cunningham 2013 Lancet Oncol;
+        mPFS 9.1 vs 5.1 mo; HR 0.53; NCCN Cat 2A). Avoids oxaliplatin neuropathy + IV pump.
+        DPYD genotyping mandatory before capecitabine initiation.
+    if_false:
+      result: IND-CRC-PERFORMANCE-STATUS-3
+      notes: >
+        ECOG ≥3 (PS3/PS4): doublet/triplet chemotherapy not appropriate. BSC-adjacent
+        care. If patient and family elect active treatment: capecitabine mono
+        (REG-CAPECITABINE-PALLIATIVE; 750-1000 mg/m² BID; minimal IV burden).
+        Goals-of-care MDT + palliative care referral strongly recommended.
+    notes: "Step 51 added 2026-05-04 (Workstream BY): frailty ECOG sub-stratification for CRC 1L. ECOG 0-2 frail → IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL (AVEX Cat 2A); ECOG ≥3 → IND-CRC-PERFORMANCE-STATUS-3. Gaps (frailty track + 5-FU/LV palliative mono) CLOSED."
 
 sources:
   - SRC-NCCN-COLON-2025
@@ -96,19 +128,26 @@ sources:
   - SRC-TRIBE-LOUPAKIS-2014
   - SRC-TRIBE2-CREMOLINI-2020
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-04"
 notes: >
-  Algorithm covering 4 indications: MSI-H pembro (1L standard), RAS-WT
-  left-sided cetux (CALGB-80405), FOLFOXIRI+bev for fit BRAF V600E or
-  high-burden conversion intent (TRIBE/TRIBE2), FOLFOX+bev default.
-  Still missing (deferred): HER2+ trastuzumab+tucatinib (MOUNTAINEER —
-  2L, already authored), regorafenib/TAS-102 3L+, palliative 5-FU/LV
-  mono for frail patients.
+  UPDATED 2026-05-04 (Workstream BY): IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL authored and
+  wired at step 51 for moderately frail (ECOG 0-2, RF-CRC-FRAILTY-AGE) patients (AVEX
+  Cunningham 2013; mPFS 9.1 mo; NCCN Cat 2A). IND-CRC-PERFORMANCE-STATUS-3 wired at step
+  51 if_false for ECOG ≥3 patients. Frailty de-escalation gap CLOSED.
 
-  Frailty (step 5) routes to FOLFOX+bev — clinically dose-modified or
-  palliative-intent 5-FU/LV mono is more appropriate but awaits dedicated
-  geriatric-oncology indication entry.
+  ROUTING SUMMARY: (1) MSI-H → pembro; (2) RAS-WT + left-sided → cetux; (3) BRAF V600E +
+  fit → FOLFOXIRI+bev; (3b) BRAF V600E + frail/older → FOLFOX+bev; (4) fit + high-burden →
+  FOLFOXIRI+bev; (5) frailty gate → step 51; (51) ECOG 0-2 frail → cape+bev; (51 if_false)
+  ECOG ≥3 → BSC-adjacent capecitabine mono; (5 if_false) default → FOLFOX+bev.
 
-  BRAF V600E routing: fit patients → FOLFOXIRI+bev 1L then BEACON 2L
-  (encorafenib+cetuximab). Frail/older BRAF V600E → FOLFOX+bev 1L then
-  BEACON 2L (no age bar for BEACON, only PS restriction).
+  Algorithm covering 6 indications now: MSI-H pembro, RAS-WT left-sided cetux,
+  FOLFOXIRI+bev (fit BRAF V600E or high-burden), FOLFOX+bev default, cape+bev frail (AVEX),
+  PS3+ BSC-adjacent mono.
+
+  Still deferred/OOS: HER2+ trastuzumab+tucatinib (MOUNTAINEER — 2L, already authored);
+  regorafenib/TAS-102 3L+; BRAF V600E frail subgroup (step 3b frail → FOLFOX+bev → BEACON
+  2L still applies; frailty gate step 5 does NOT catch BRAF V600E frail since step 3b
+  handles it upstream).
+
+  BRAF V600E routing: fit → FOLFOXIRI+bev 1L then BEACON 2L. Frail/older BRAF V600E →
+  FOLFOX+bev 1L then BEACON 2L (no age bar for BEACON; only PS restriction).
