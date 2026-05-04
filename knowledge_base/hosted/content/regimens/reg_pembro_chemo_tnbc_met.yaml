@@ -1,0 +1,84 @@
+id: REG-PEMBRO-CHEMO-TNBC-MET
+disease_context: DIS-BREAST
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "immunochemotherapy"
+
+agents:
+  - drug_id: DRG-PEMBROLIZUMAB
+    dose: "200 mg IV over 30 min"
+    route: IV
+    schedule: "Day 1 q21d (when combined with paclitaxel or gem-carbo); or Day 1 q28d (when combined with nab-paclitaxel)"
+    dose_modifications:
+      - trigger: "Grade ≥3 immune-related AE (excluding endocrine)"
+        action: "Permanently discontinue pembrolizumab; high-dose steroids (1-2 mg/kg/day)"
+      - trigger: "Grade 2 immune-related AE (pneumonitis, hepatitis, colitis)"
+        action: "Hold pembrolizumab; prednisolone 0.5-1 mg/kg/day; resume on resolution ≤Grade 1"
+      - trigger: "Endocrine irAE (hypothyroidism, hypophysitis, DI)"
+        action: "Hormone replacement; do NOT discontinue pembrolizumab unless severe"
+
+chemotherapy_backbone_options:
+  - backbone: "Nab-paclitaxel (preferred, KEYNOTE-355 primary)"
+    drug: DRG-NAB-PACLITAXEL
+    dose: "100 mg/m² IV over 30 min"
+    schedule: "Days 1, 8, 15 q28d + pembrolizumab Day 1 q28d"
+    cycle_length_days: 28
+  - backbone: "Paclitaxel (alternative, KEYNOTE-355 optional arm)"
+    drug: DRG-PACLITAXEL
+    dose: "90 mg/m² IV over 60 min"
+    schedule: "Days 1, 8, 15 q28d + pembrolizumab Day 1 q28d"
+    cycle_length_days: 28
+    premedication_additional: "Dexamethasone + diphenhydramine + H2 blocker (paclitaxel hypersensitivity prophylaxis)"
+  - backbone: "Gemcitabine + carboplatin (alternative, no taxane sensitivity)"
+    drugs:
+      - drug: DRG-GEMCITABINE
+        dose: "1000 mg/m² IV days 1, 8"
+      - drug: DRG-CARBOPLATIN
+        dose: "AUC 2 IV days 1, 8"
+    schedule: "q21d + pembrolizumab Day 1 q21d"
+    cycle_length_days: 21
+    notes: "Preferred for patients with taxane neuropathy or contraindication"
+
+when_to_use: >
+  First-line pembrolizumab + chemotherapy for locally recurrent unresectable or
+  metastatic TNBC. REQUIRED: PD-L1 CPS ≥10 by FDA-approved 22C3 pharmDx assay.
+  NCCN Category 1 for CPS ≥10. For CPS <10: pembrolizumab does NOT improve OS
+  (KEYNOTE-355 subgroup analysis HR 0.86 for CPS ≥1; statistically significant
+  benefit only demonstrated in CPS ≥10).
+  NOT for BRCA-mutated mTNBC where PARP inhibitor is preferred 1L (IND-BREAST-BRCA-POS-MET-PARPI).
+  NOT for early-stage (neoadjuvant) TNBC — use KEYNOTE-522 protocol instead (REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT).
+
+biomarker_requirement:
+  pdl1_cps: "≥10 required by FDA-approved 22C3 pharmDx assay for CPS ≥10 benefit"
+  notes: "PD-L1 testing MANDATORY before prescribing; CPS <10 → chemotherapy alone without pembrolizumab"
+
+premedication:
+  - "Antiemetics per backbone (moderately-to-highly emetogenic)"
+  - "TSH + cortisol baseline (pembrolizumab endocrine monitoring)"
+  - "Premedication per taxane if applicable (dexamethasone, diphenhydramine)"
+
+cycle_length_days: 28
+total_planned_cycles: "Pembrolizumab: up to 35 cycles (2 years) total or until progression/toxicity; chemo: typically 6-8 cycles then pembrolizumab maintenance"
+
+monitoring:
+  - "PD-L1 CPS: must be confirmed ≥10 before start (22C3 pharmDx)"
+  - "TSH + free T4: baseline + q3 cycles — thyroiditis (most common endocrine irAE)"
+  - "LFT: q3 cycles — immune hepatitis"
+  - "CT CAP: q9 weeks (every 3 cycles) for response assessment"
+  - "Peripheral neuropathy: each cycle — taxane cumulative effect"
+  - "CBC: each cycle"
+  - "BRCA testing: should be done for all mTNBC (germline + somatic) — impacts therapy sequencing"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Тестування PD-L1 CPS ОБОВ'ЯЗКОВЕ перед призначенням — при CPS <10 пембролізумаб НЕ покращує OS (статистично незначущо); тільки CPS ≥10 = підтверджена користь"
+  - "УВАГА: Перевірте статус мутацій BRCA до початку — BRCA-мутовані пацієнти мають перевагу від PARPi 1L (олапариб, талазопариб) над хімієтерапією"
+  - "УВАГА: Аутоімунні іrAE пембролізумабу — моніторинг ТТГ/Т4 кожні 3 цикли; при Grade ≥3 — системні ГКС + відміна пембролізумабу"
+  - "УВАГА: Відмінити атезолізумаб + наб-паклітаксель схеми — IMPASSION130 реєстрація відкликана FDA у серпні 2021 (IMPASSION131 не підтвердив OS переваги); пембролізумаб є поточним стандартом"
+  - "УВАГА: Taxane-нейропатія — кумулятивна; оцінювати кожен цикл; при Grade ≥2 — знизити дозу таксану або перейти на gem+carbo backbone"
+  - "УВАГА: Для стадії I-III (неоад'ювантний намір) — використовувати KEYNOTE-522 протокол (REG-PEMBRO-CHEMO-TNBC-NEOADJUVANT); ця схема лише для метастатичного захворювання"
+  - "УВАГА: Після завершення хіміотерапії (6-8 циклів) — продовжити пембролізумаб монотерапію до 2 років або прогресування"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
