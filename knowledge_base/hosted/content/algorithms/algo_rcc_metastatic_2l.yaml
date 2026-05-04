@@ -13,6 +13,7 @@ output_indications:
   - IND-RCC-METASTATIC-2L-BELZUTIFAN
   - IND-RCC-METASTATIC-2L-CABOZANTINIB
   - IND-RCC-METASTATIC-2L-LENV-EVER
+  - IND-RCC-METASTATIC-3L-TIVOZANIB
 default_indication: IND-RCC-METASTATIC-2L-CABOZANTINIB
 alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
 decision_tree:
@@ -84,11 +85,35 @@ decision_tree:
         Ukraine: lenvatinib registered for HCC/thyroid (off-label for RCC → MDT compassionate
         use); everolimus: verify NSZU RCC reimbursement status.
     if_false:
+      next_step: 31
+    notes: "Step 3 updated 2026-05-04 (Workstream CX): if_false now routes to step 31 (tivozanib gate) instead of direct cabozantinib fallback."
+
+  # Step 31 — tivozanib gate for ≥3L ccRCC (after ≥2 prior systemic therapies).
+  # TIVO-3 (Atkins 2021 Lancet Oncol; N=350): tivozanib vs sorafenib r/r ccRCC ≥3L;
+  # PFS HR 0.73 (mPFS 5.6 vs 3.9 mo); ORR 18% vs 8%; FDA accelerated approval March 2021.
+  # SELECTIVITY: VEGFR-1/2/3 only (no RAF, no PDGFR) → lower HFSR + fatigue vs sorafenib.
+  # Preferred over sorafenib/cabozantinib re-challenge for prior-TKI-toxicity patients.
+  # Ukraine: tivozanib not registered; cabozantinib fallback remains preferred alternative.
+  - step: 31
+    evaluate:
+      all_of:
+        - condition: "≥2 prior systemic therapies received (3L+ setting per TIVO-3 eligibility)"
+        - condition: "Tivozanib accessible (FDA/EMA registered + named-patient import available)"
+    if_true:
+      result: IND-RCC-METASTATIC-3L-TIVOZANIB
+      notes: >
+        ≥2 prior therapies + tivozanib accessible: tivozanib 1.5 mg PO daily d1-21 q28d
+        (REG-TIVOZANIB-RCC; TIVO-3 Atkins 2021 Lancet Oncol; PFS HR 0.73; mPFS 5.6 mo;
+        ORR 18%; NCCN Kidney 2025 Cat 2A; FDA March 2021). VEGFR-1/2/3 selective — lower
+        HFSR than sorafenib (no RAF). Preferred ≥3L when accessible. Clinical trial first.
+        Ukraine: not registered; use cabozantinib or lenvatinib+everolimus instead.
+    if_false:
       result: IND-RCC-METASTATIC-2L-CABOZANTINIB
       notes: >
-        Prior lenvatinib (CLEAR 1L) or severe renal/pulmonary CI: cabozantinib default
-        despite prior exposure — mechanism switch acceptable; MDT discussion.
-    notes: "Step 3 added 2026-05-04 (Workstream BN): lenv+ever gate for cabozantinib-inaccessible/prior-cabo 2L RCC. OOS gap CLOSED. Free-text conditions; MDT-evaluated."
+        Tivozanib inaccessible (Ukraine: not registered) OR fewer than 2 prior therapies:
+        cabozantinib default — even with prior cabo exposure, mechanism switch acceptable
+        at ≥3L; MDT discussion required. NCCN Cat 2A for ≥3L post-prior-TKI.
+    notes: "Step 31 added 2026-05-04 (Workstream CX): tivozanib gate for ≥3L ccRCC after ≥2 prior systemic therapies. Gap (tivozanib 3L+ OOS) CLOSED. TIVO-3 (Atkins 2021 Lancet Oncol)."
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
 last_reviewed: "2026-05-04"
 notes: >
@@ -101,6 +126,11 @@ notes: >
   Lancet; ORR 43%; mPFS 14.6 mo; NCCN Cat 2A) for cabozantinib-inaccessible or
   prior-cabozantinib patients. Step 2 restructured as cabozantinib eligibility gate
   (accessible + not prior cabo + bilirubin OK). OOS gap CLOSED.
-  Remaining OOS: tivozanib (TIVO-3; NCCN Cat 2A; 3L+) not yet modeled.
+  UPDATED 2026-05-04 (Workstream CX): IND-RCC-METASTATIC-3L-TIVOZANIB authored and
+  wired at step 31 (tivozanib 1.5 mg PO d1-21 q28d; TIVO-3 Atkins 2021 Lancet Oncol;
+  PFS HR 0.73; ORR 18%; NCCN Kidney 2025 Cat 2A). Step 3 if_false now routes to step 31
+  (tivozanib gate) instead of direct cabozantinib fallback. OOS gap CLOSED.
+  DRUG-TIVOZANIB + REG-TIVOZANIB-RCC authored. Ukraine: not registered; cabozantinib fallback.
+  Remaining OOS: sorafenib (historical 3L+; superseded by tivozanib) — not modeled (not needed).
   Hereditary-VHL patients → 1L IND-RCC-VHL-DISEASE-BELZUTIFAN via ALGO-RCC-METASTATIC-1L
   upstream exclusion.

@@ -1,0 +1,116 @@
+id: REG-TIVOZANIB-RCC
+name: "Tivozanib (Fotivda) for relapsed/refractory advanced RCC (≥3L)"
+name_ua: "Тивозаніб (Fotivda) для рецидивного/рефрактерного поширеного НКР (≥3Л)"
+alternate_names:
+  - "Tivozanib mono RCC"
+  - "TIVO-3 regimen"
+
+disease_context: DIS-RCC
+line_of_therapy: 3
+plan_track: aggressive
+
+components:
+  - drug_id: DRUG-TIVOZANIB
+    dose: "1.5 mg PO once daily"
+    schedule: "Days 1-21 of a 28-day cycle (3 weeks on, 1 week off). Continue until progression or unacceptable toxicity."
+    route: PO
+    administration_notes: >
+      Take at approximately the same time each day. May take with or without food.
+      Swallow capsule whole. If a dose is missed, take as soon as remembered the same day;
+      skip if it is the next day. Do not double up.
+
+cycle_length_days: 28
+total_cycles: "Continuous until confirmed progression or unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Baseline BP measurement — antihypertensive pre-initiation if BP >140/90 mmHg"
+  - "Baseline TSH + free T4 (hypothyroidism monitoring)"
+  - "Baseline urinalysis (proteinuria)"
+  - "Baseline CBC + CMP + LFT"
+
+mandatory_supportive_care:
+  - "BP monitoring: weekly × 6 weeks then q4 weeks; initiate/optimize antihypertensives early"
+  - "Thyroid function: TSH q4-8 weeks; levothyroxine replacement for clinical hypothyroidism"
+  - "Cardiac monitoring: ECG baseline if QTc concern; tivozanib can prolong QTc marginally"
+
+dose_adjustments:
+  - condition: "Grade 2 hypertension (BP >140/90 despite 1 antihypertensive)"
+    modification: "Add second antihypertensive; continue tivozanib"
+    rationale: "Hypertension is mechanism-based (VEGFR inhibition); can often be managed without dose reduction"
+    source_refs:
+      - SRC-NCCN-KIDNEY-2025
+  - condition: "Grade 3 hypertension (BP >160/100 or symptomatic despite antihypertensives)"
+    modification: "Hold tivozanib; optimize antihypertensives; resume 1.0 mg daily when BP <160/100"
+    rationale: "Grade 3 hypertension — dose reduce on resumption"
+    source_refs:
+      - SRC-NCCN-KIDNEY-2025
+  - condition: "Grade 2 HFSR / palmar-plantar erythrodysesthesia"
+    modification: "Reduce to 1.0 mg daily; supportive care (emollients, pain management)"
+    rationale: "HFSR lower frequency than sorafenib; dose reduction adequate for G2"
+    source_refs:
+      - SRC-NCCN-KIDNEY-2025
+  - condition: "Proteinuria ≥3.5 g/24h (nephrotic range)"
+    modification: "Hold tivozanib; recheck 24h urine protein weekly; resume 1.0 mg when <3 g/24h"
+    rationale: "Nephrotic-range proteinuria — risk of renal failure if continued"
+    source_refs:
+      - SRC-NCCN-KIDNEY-2025
+  - condition: "Grade ≥3 non-hematologic toxicity (fatigue, diarrhea)"
+    modification: "Hold; resume 1.0 mg daily on resolution to Grade ≤1"
+    rationale: "Standard TKI dose-reduction protocol"
+    source_refs:
+      - SRC-NCCN-KIDNEY-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Tivozanib NOT registered in Ukraine as of 2026. Named-patient import or
+    international referral required. For 3L+ RCC in Ukraine, consider:
+    (1) Cabozantinib if not prior-exposed; (2) Lenvatinib + everolimus if not
+    prior CLEAR/lenvatinib 1L; (3) Clinical trial. Document access barrier.
+
+sources:
+  - SRC-NCCN-KIDNEY-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Сильний головний біль або нечіткість зору"
+    action_ua: "Подзвоніть у клініку того ж дня — гіпертонічний криз (VEGFR-TKI)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Слабкість, відчуття холоду, набір ваги"
+    action_ua: "Занотовуйте і повідомте лікаря — гіпотиреоз (TSH тест)"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Хрипкість голосу (дисфонія)"
+    action_ua: "Занотовуйте — клас-ефект VEGFR-TKI, зазвичай м'який"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Набряки ніг або різке зменшення сечовиділення"
+    action_ua: "Подзвоніть у клініку того ж дня — протеїнурія або серцева недостатність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  Tivozanib 1.5 mg PO daily d1-21 of q28d cycle (3 weeks on, 1 week off).
+  TIVO-3 (Atkins 2021 Lancet Oncol): tivozanib vs sorafenib in r/r RCC ≥3L;
+  PFS HR 0.73 (mPFS 5.6 vs 3.9 months); ORR 18% vs 8%; selective VEGFR-1/2/3
+  with lower HFSR/fatigue vs sorafenib (no RAF inhibition). FDA approved March 2021.
+  EMA approved. NCCN Kidney 2025 Cat 2A.
+  Ukraine: not registered; named-patient access required.
+  STUB — pending Co-Lead sign-off.
+notes_ua: >
+  Тивозаніб 1,5 мг PO щодня д1-21 циклу q28d (3 тижні прийому, 1 тиждень перерви).
+  TIVO-3 (Atkins 2021 Lancet Oncol): ВБП ВР 0,73 (мВБП 5,6 проти 3,9 міс).
+  Висока VEGFR-1/2/3 селективність — менш HFSR та втома порівняно з сорафенібом.
+  FDA березень 2021. NCCN Kidney 2025 Кат 2A.
+  В Україні: не зареєстрований; необхідне ввезення за іменним призначенням.
+  STUB — очікує підпис Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
