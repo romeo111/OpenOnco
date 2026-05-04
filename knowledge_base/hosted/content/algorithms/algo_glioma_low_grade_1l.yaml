@@ -1,0 +1,176 @@
+id: ALGO-GLIOMA-LOW-GRADE-1L
+applicable_to_disease: DIS-GLIOMA-LOW-GRADE
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select first-line treatment approach for IDH-mutant WHO grade 2 low-grade glioma (LGG)
+  after surgery. Routes by: (1) IDH mutation status and WHO grade confirmation,
+  (2) post-surgical status and immediate treatment need (high-risk vs watch-and-wait),
+  (3) antiepileptic drug CYP interaction check, (4) vorasidenib eligibility.
+  KEY: INDIGO Phase 3 (Mellinghoff 2023 NEJM) established vorasidenib (pan-IDH1/2
+  inhibitor with CNS penetration) as Category 1 for IDH-mutant grade 2 glioma
+  post-surgery NOT requiring immediate RT/chemotherapy — replacing observation with
+  active disease-modifying therapy. For high-risk patients requiring immediate RT/chemo,
+  doxorubicin-based STS or RT+PCV/TMZ pathways apply.
+
+output_indications:
+  - IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
+
+default_indication: IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — WHO grade 2 IDH-mutant confirmation.
+  # WHO 2021 reclassified IDH-WT grade 2 as molecular GBM — they are NOT LGG.
+  # IDH1 IHC (R132H) positive identifies ~90% of IDH1-mutant; sequencing required
+  # for IHC-negative grade 2 (non-R132H IDH1 variants or IDH2 variants).
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "WHO grade 2 diffuse glioma confirmed histologically (astrocytoma IDH-mutant OR oligodendroglioma IDH-mutant 1p/19q-codeleted per WHO 2021)"
+        - condition: "IDH1 or IDH2 mutation confirmed (sequencing: IDH1 R132C/H/G/S or IDH2 R172K/S/G/M) — IDH-wildtype grade 2 excluded (molecular GBM, different algorithm)"
+    if_true:
+      next_step: 2
+      notes: >
+        IDH-mutant grade 2 LGG confirmed — proceed to post-surgical treatment decision.
+        Document: IDH variant (R132H vs non-H; IDH2 variant), 1p/19q codeletion status
+        (oligodendroglioma vs astrocytoma), MGMT methylation (future treatment planning),
+        CDKN2A/B deletion (adverse prognosis — upgrades to grade 4 per WHO 2021).
+        If IDH1 R132H IHC was not performed or was equivocal: require full IDH1/IDH2
+        sequencing before proceeding.
+    if_false:
+      result: null
+      notes: >
+        Not IDH-mutant grade 2 LGG — different algorithm:
+        - IDH-wildtype grade 2: molecular GBM (DIS-GBM) — treated as GBM not LGG;
+          proceed to GBM algorithm (RT + TMZ + bevacizumab backbone).
+        - WHO grade 3 anaplastic glioma: RT + TMZ (CATNON) or RT + PCV (anaplastic
+          oligodendroglioma with 1p/19q codeletion); higher urgency chemotherapy.
+        - WHO grade 4 glioma (GBM): DIS-GBM algorithm.
+        Ensure complete neuropathology workup: IDH1/IDH2 sequencing, 1p/19q codeletion
+        (FISH or chromosomal array), TERT promoter, EGFR amplification (to exclude GBM).
+        Refer to neuro-oncology center for molecular classification.
+
+  # Step 2 — Post-surgical status and immediate treatment need assessment.
+  # INDIGO enrolled patients NOT requiring immediate RT/chemotherapy.
+  # High-risk features mandating immediate treatment: age ≥40 + STR, Grade 3,
+  # enhancing lesion (indicates more aggressive biology), large residual volume.
+  - step: 2
+    evaluate:
+      none_of:
+        - condition: "High-risk features requiring immediate radiotherapy and/or chemotherapy: age ≥40 AND sub-total resection/biopsy (RTOG-9802 high-risk definition)"
+        - condition: "WHO grade 3 anaplastic transformation present (requires RT + chemotherapy; not eligible for vorasidenib monotherapy)"
+        - condition: "Contrast-enhancing lesion on post-surgical MRI (enhancing residual disease suggests aggressive biology; multidisciplinary recommendation for immediate treatment)"
+        - condition: "Large residual tumor volume with significant mass effect requiring urgent intervention"
+    if_true:
+      next_step: 3
+      notes: >
+        Not requiring immediate RT/chemotherapy — eligible for vorasidenib (watch-and-wait
+        window, now replaced by active therapy). This is the INDIGO eligibility window:
+        residual/recurrent disease post-surgery, not requiring immediate further treatment.
+        Typical profile: age <40 OR gross-total resection; non-enhancing residual disease;
+        grade 2 (no anaplastic features); no significant mass effect.
+    if_false:
+      result: null
+      notes: >
+        High-risk grade 2 LGG requiring immediate RT/chemotherapy:
+        Standard regimens (NCCN CNS; RTOG-9802; CATNON):
+        (1) RT + adjuvant PCV (procarbazine + CCNU/lomustine + vincristine) — RTOG-9802:
+            12-year PFS and OS benefit for high-risk LGG (Shaw 2012 NEJM; Buckner 2016 NEJM)
+        (2) RT + temozolomide — CATNON (van den Bent 2017 Lancet; grade 3 IDH-mutant):
+            TMZ×12 cycles after RT improves OS (HR 0.64)
+        Both regimens are NCCN Category 1 for high-risk LGG. PCV is preferred for
+        oligodendroglioma (1p/19q-codeleted); RT+TMZ is an alternative.
+        After completing RT/chemotherapy, vorasidenib role at progression is under
+        investigation (not current standard for post-chemoRT residual disease).
+        MDT neuro-oncology team discussion required for high-risk LGG treatment planning.
+
+  # Step 3 — Antiepileptic drug (AED) interaction check.
+  # CYP3A4-inducing AEDs (carbamazepine, phenytoin, phenobarbital) reduce vorasidenib
+  # by ~85% — must switch to levetiracetam or lacosamide with stable seizure control
+  # before starting vorasidenib.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Not on antiepileptic drugs (seizure-free, no AED required)"
+        - condition: "On CYP3A4-non-inducing antiepileptic drug (levetiracetam, lacosamide, brivaracetam, perampanel, valproate — these do NOT induce CYP3A4 and do not affect vorasidenib)"
+        - condition: "CYP3A4-inducing AED (carbamazepine, phenytoin, phenobarbital) successfully switched to levetiracetam or lacosamide with ≥2 weeks seizure control documented BEFORE vorasidenib initiation"
+    if_true:
+      next_step: 4
+      notes: >
+        AED interaction resolved — vorasidenib can be administered without CYP3A4-induced
+        reduction in exposure. Document current AED regimen and verify no strong CYP3A4
+        inhibitors or inducers in current medication list.
+    if_false:
+      result: null
+      notes: >
+        Still on CYP3A4-inducing AED — hold vorasidenib start until AED switch completed:
+        (1) Consult neurology: plan switch from carbamazepine/phenytoin → levetiracetam
+            or lacosamide. Requires careful titration to avoid seizure breakthrough.
+        (2) Monitor seizure frequency for ≥2 weeks after reaching stable dose of new AED.
+        (3) Recheck this algorithm step once seizure control confirmed on non-inducing AED.
+        NOTE: Valproate (sodium valproate) is NOT a CYP3A4 inducer and does not affect
+        vorasidenib — patients on valproate can proceed without switching.
+        Phenobarbital is sometimes used as a sedative/antiepileptic in elderly — same
+        strong CYP3A4 induction concern; switch required.
+
+  # Step 4 — Vorasidenib eligibility gate.
+  # ECOG PS ≤2, non-pregnant, age ≥12 years, hepatic function adequate.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "Age ≥12 years (INDIGO enrolled ≥12 years; FDA label ≥12 years)"
+        - condition: "Not pregnant (negative pregnancy test for women of reproductive potential)"
+        - condition: "Adequate hepatic function: ALT/AST ≤2.5× ULN AND total bilirubin ≤ULN at baseline (before starting)"
+    if_true:
+      result: IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
+      notes: >
+        Vorasidenib eligible: start 40 mg PO once daily.
+        INDIGO Phase 3 (Mellinghoff 2023 NEJM; N=331): mPFS 27.7 vs 11.1 months;
+        HR 0.39; p<0.001. FDA August 6, 2024 (first drug approval for LGG).
+        NCCN CNS: Category 1 for IDH-mutant grade 2 glioma post-surgery.
+        Baseline: LFT + CBC + MRI brain + IDH confirmation + pregnancy test + AED review.
+        LFT monitoring: every 4 weeks × 3 months mandatory (hepatotoxicity ALT ≥3× ULN ~34%).
+        MRI surveillance: every 8 weeks × 12 months.
+        Ukraine: NOT registered; named-patient import or clinical trial referral.
+    if_false:
+      result: null
+      notes: >
+        Vorasidenib not eligible — evaluate specific barrier:
+        - ECOG PS ≥3: borderline — neuro-oncology MDT discussion; if performance status
+          is driven by treatable symptom (seizures, corticosteroid side effects),
+          reassess after optimization
+        - ECOG PS ≥4: supportive care / palliative only (ECOG engine hard gate)
+        - Pregnancy: delay until postpartum; multidisciplinary discussion (neuro-oncology
+          + obstetrics); close MRI surveillance during pregnancy
+        - Age <12 years: outside INDIGO eligibility; pediatric neuro-oncology referral;
+          limited data on vorasidenib in very young children
+        - Elevated baseline LFTs: evaluate cause (hepatic metastases, drug interaction,
+          underlying liver disease); optimize before starting
+        - Patient declines: continue serial MRI observation per pre-INDIGO standard;
+          reassess at each imaging if progression warrants reconsideration
+
+sources:
+  - SRC-INDIGO-MELLINGHOFF-2023
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-LGG-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  DIS-GLIOMA-LOW-GRADE algorithm gap CLOSED 2026-05-04 (Workstream DL).
+  INDIGO trial (Mellinghoff 2023 NEJM; FDA August 2024) established vorasidenib as
+  the first active systemic therapy for IDH-mutant grade 2 LGG in the post-surgical
+  watch-and-wait window — mPFS 27.7 vs 11.1 months; HR 0.39; p<0.001.
+  Algorithm designed to distinguish: (1) IDH-mutant grade 2 (LGG; vorasidenib eligible)
+  from IDH-wildtype grade 2 (molecular GBM; different algorithm); (2) low-risk/watch-
+  and-wait candidates from high-risk patients requiring immediate RT+PCV/TMZ;
+  (3) AED CYP3A4 interaction (most common practical implementation barrier);
+  (4) ECOG/pregnancy eligibility gate.
+  HIGH-RISK LGG (age ≥40 + STR) routes to RT+PCV (RTOG-9802) or RT+TMZ (CATNON)
+  — those indications not yet authored in KB; referenced in decision tree notes.
+  NCCN CNS v3.2025 does NOT have a separate LGG algorithm in this KB yet —
+  this algorithm covers the vorasidenib-eligible post-surgical low-risk cohort.
+  EANO LGG source (SRC-EANO-LGG-2024) version is actually the 2021 published
+  paper — EANO has not published a full 2024 update incorporating INDIGO as of
+  this authoring; NCCN v3.2025 is the primary guideline incorporating August 2024 FDA
+  approval.

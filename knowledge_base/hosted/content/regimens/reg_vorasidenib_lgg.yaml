@@ -1,0 +1,91 @@
+id: REG-VORASIDENIB-LGG
+disease_context: DIS-GLIOMA-LOW-GRADE
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "targeted_therapy_oral"
+
+agents:
+  - drug_id: DRUG-VORASIDENIB
+    dose: "40 mg PO once daily"
+    route: PO
+    schedule: "Once daily continuously (with or without food), at the same time each day"
+    administration_notes: >
+      Take vorasidenib 40 mg PO once daily with or without food.
+      Consistency is preferred — take at the same time each day.
+      If a dose is missed, skip the missed dose and take the next dose at
+      the regularly scheduled time. Do not double the dose.
+      Continue until disease progression (RANO-LGG imaging criteria) or
+      unacceptable toxicity.
+      KEY DRUG INTERACTION: Common antiepileptic drugs used in glioma
+      (carbamazepine, phenytoin, phenobarbital) are strong CYP3A4 inducers
+      and significantly reduce vorasidenib exposure. Switch to levetiracetam
+      or lacosamide BEFORE starting vorasidenib when possible; discuss with
+      neurology before changing antiseizure therapy.
+    dose_modifications:
+      - trigger: "ALT/AST Grade 2 (>3–5× ULN) persisting >4 weeks"
+        action: "Reduce dose to 20 mg QD; monitor LFTs q2 weeks"
+      - trigger: "ALT/AST Grade 3 (>5–20× ULN)"
+        action: "HOLD vorasidenib; restart at 20 mg QD when ALT/AST recovers to Grade ≤1"
+      - trigger: "ALT/AST Grade 4 (>20× ULN) OR Grade ≥2 total bilirubin with Grade ≥2 AST/ALT"
+        action: "DISCONTINUE permanently (Hy's Law risk)"
+      - trigger: "Other Grade ≥3 non-hematologic toxicity"
+        action: "Hold until recovery to Grade ≤1; restart at 20 mg QD; discontinue if second Grade 3+ occurrence at 20 mg QD"
+    dose_reduction_levels:
+      - "40 mg QD — standard full dose (INDIGO trial dose)"
+      - "20 mg QD — first reduction (hepatotoxicity or non-hematologic toxicity)"
+      - "10 mg QD — second reduction"
+      - "Discontinue if unable to tolerate 10 mg QD"
+
+when_to_use: >
+  IDH1 or IDH2-mutant WHO grade 2 diffuse glioma (astrocytoma or oligodendroglioma)
+  in adults and pediatric patients ≥12 years with residual or recurrent disease
+  following surgery (biopsy, sub-total, or total resection), and NOT requiring
+  immediate radiotherapy or chemotherapy.
+  INDIGO Phase 3 (Mellinghoff 2023 NEJM; N=331): mPFS 27.7 vs 11.1 months;
+  HR 0.39; 95% CI 0.27–0.56; p<0.001. TTI: NR vs 17.8 months; HR 0.26.
+  FDA approval August 6, 2024. NCCN CNS: vorasidenib Category 1 for IDH-mutant
+  grade 2 glioma post-surgery.
+  NOT indicated for: grade 3–4 glioma; IDH-wildtype glioma; patients requiring
+  immediate RT/chemo; patients on strong CYP3A4-inducing antiepileptics
+  (switch AED to levetiracetam/lacosamide first).
+
+contraindications_relative:
+  - "IDH-wildtype glioma — no benefit without IDH1/IDH2 mutation"
+  - "WHO grade 3–4 glioma — not studied in INDIGO (high-risk disease requires RT+chemo)"
+  - "Immediately post-surgery requiring RT/chemo (high-risk features: age ≥40 + STR, grade 3, enhancing lesion) — chemotherapy and RT backbone preferred"
+  - "Pregnancy — reproductive toxicity; mandatory effective contraception"
+  - "Strong CYP3A4-inducing antiepileptics (carbamazepine, phenytoin, phenobarbital) — switch to levetiracetam or lacosamide before starting"
+  - "Severe hepatic impairment (Child-Pugh C) — not studied; use with caution, frequent LFT monitoring"
+
+monitoring:
+  - "LFTs (ALT/AST/ALP/total bilirubin): baseline + every 4 weeks × 3 months, then every 3 months (hepatotoxicity is the primary safety endpoint)"
+  - "MRI brain (RANO-LGG criteria): baseline + every 8 weeks × 12 months, then every 12–16 weeks (primary efficacy endpoint is PFS)"
+  - "Neurological exam + seizure diary: each visit"
+  - "ECG: baseline; repeat if QTc prolongation risk (cardiac comorbidities, concurrent QTc-prolonging drugs)"
+  - "Pregnancy test: monthly (women of reproductive potential)"
+  - "Antiepileptic drug level check: if switching AED from enzyme-inducer to levetiracetam, verify seizure control for ≥2 weeks before starting vorasidenib"
+
+sources:
+  - SRC-INDIGO-MELLINGHOFF-2023
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DL).
+  Key safety consideration: hepatotoxicity (ALT ≥3× ULN in ~34%) requires monthly
+  LFT monitoring × 3 months. No formal dose reduction was allowed in INDIGO — all
+  dose modifications described here follow FDA label (post-approval prescribing
+  information).
+  INDIGO trial eligibility did NOT include patients requiring immediate RT/chemo
+  — this regimen is for the "watch-and-wait" window post-surgery, where historically
+  observation was the standard. Vorasidenib replaces observation with active
+  disease-modifying therapy in this window.
+  Antiepileptic drug interaction is a major practical issue: carbamazepine and
+  phenytoin (common in glioma) are strong CYP3A4 inducers — reduce vorasidenib
+  exposure by ~85%. Must switch to levetiracetam or lacosamide with ≥2-week
+  stable antiseizure control before starting vorasidenib.

@@ -1,0 +1,197 @@
+id: IND-GLIOMA-LOW-GRADE-1L-VORASIDENIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GLIOMA-LOW-GRADE
+  line_of_therapy: 1
+  stage_requirements:
+    - "WHO grade 2 diffuse glioma (astrocytoma IDH-mutant OR oligodendroglioma IDH-mutant 1p/19q-codeleted)"
+    - "IDH1 or IDH2 mutation confirmed (sequencing: IDH1 R132C/H/G/S, IDH2 R172K/S/G/M)"
+    - "Residual or recurrent disease following surgery (biopsy, sub-total resection, or total resection)"
+    - "NOT requiring immediate radiotherapy or chemotherapy (per multidisciplinary assessment)"
+    - "Adults and pediatric patients ≥12 years (INDIGO enrolled ≥12 years)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-IDH-MUTATION
+      value_constraint: "IDH1 R132 mutation (any variant: R132C/H/G/S) OR IDH2 R172 mutation (any variant: R172K/S/G/M) — confirmed by tumor sequencing (NGS or allele-specific PCR); IDHwt glioma must be excluded"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      IDH mutation testing is mandatory — no benefit in IDH-wildtype glioma (no drug target).
+      Per WHO 2021, IDH-wildtype grade 2 diffuse gliomas are reclassified as molecular
+      GBM and are NOT eligible for vorasidenib (different biology and treatment).
+      Confirmatory IDH testing: if IDH1 R132H IHC negative in grade 2 glioma,
+      perform complete IDH1/IDH2 sequencing (non-R132H variants are IHC-negative but
+      sequencing-positive).
+      MGMT promoter methylation: not required for vorasidenib eligibility but document
+      for treatment planning (relevant if RT+TMZ is needed later).
+      1p/19q codeletion: oligodendroglioma classification; does not change vorasidenib
+      eligibility but important for RT/PCV planning at progression.
+      AED CYP3A4 interaction: patients on carbamazepine, phenytoin, or phenobarbital
+      should switch to levetiracetam or lacosamide (with neurology guidance and ≥2-week
+      stable seizure control) before starting vorasidenib.
+
+recommended_regimen: REG-VORASIDENIB-LGG
+concurrent_therapy:
+  - "LFT monitoring: every 4 weeks × 3 months, then every 3 months (hepatotoxicity surveillance)"
+  - "Antiepileptic medication management: switch CYP3A4-inducing AEDs (carbamazepine, phenytoin) to levetiracetam/lacosamide before starting vorasidenib"
+  - "Effective contraception: mandatory throughout treatment and for at least 3 months after last dose (women of reproductive potential)"
+  - "Neurology co-management: antiseizure optimization, cognitive monitoring, quality of life assessment"
+  - "Steroid taper: if on dexamethasone post-surgery, taper and discontinue before starting vorasidenib (baseline LFT interference)"
+
+followed_by:
+  - "MRI brain (RANO-LGG criteria): every 8 weeks × 12 months, then every 12–16 weeks"
+  - "Continue vorasidenib until disease progression (RANO-LGG) or unacceptable toxicity"
+  - "At radiographic progression: multidisciplinary neuro-oncology review — RT + PCV or RT + TMZ for grade 2→3 transformation or high-risk progression"
+  - "Grade 3 transformation at progression: consider IDH inhibitor continuation + RT/chemotherapy (limited data; clinical trial preferred)"
+  - "MGMT-methylated grade 2 progressive: consider TMZ-based chemotherapy if RT deferred"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "3.6% (INDIGO; grade 2 LGG rarely shrinks — disease stabilization is the primary benefit)"
+  complete_response: "<1% (consistent with cytostatic mechanism; CR is not the therapeutic goal)"
+  progression_free_survival: "mPFS 27.7 months (vorasidenib) vs 11.1 months (placebo); HR 0.39; 95% CI 0.27–0.56; p<0.001 (INDIGO)"
+  overall_survival_5y: "OS benefit not yet mature (INDIGO 12-month follow-up; OS data pending; LGG long natural history)"
+  notes: >
+    PRIMARY EVIDENCE: Mellinghoff IK et al. N Engl J Med 2023;389:589-601 (INDIGO Phase 3;
+    N=331; NCT04164901): vorasidenib 40 mg QD vs placebo in IDH1/2-mutant grade 2 glioma
+    post-surgery (residual/recurrent disease, not requiring immediate RT/chemo).
+    Primary endpoint: imaging-based PFS (independent radiology review, RANO-LGG).
+    mPFS: 27.7 vs 11.1 months; HR 0.39; 95% CI 0.27–0.56; p<0.001.
+    Time to next intervention (TTI): NR vs 17.8 months; HR 0.26; p<0.001.
+    ORR 3.6% (vorasidenib vs 0% placebo) — low ORR expected for cytostatic IDH inhibitor
+    in non-enhancing LGG (T2/FLAIR response, not contrast enhancement response).
+    Safety: ALT ≥3× ULN in ~34% (vorasidenib); Grade ≥3 ALT 9.6%.
+    FDA approval August 6, 2024: vorasidenib (Voranigo; Servier) for IDH-mutant
+    grade 2 astrocytoma or oligodendroglioma ≥12 years.
+    NCCN CNS v3.2025: vorasidenib Category 1 for IDH-mutant grade 2 glioma post-surgery.
+    NOTE: This is the first approved oral drug for LGG and represents a paradigm shift —
+    replacing "watch and wait" with active disease-modifying therapy in the post-surgical
+    observation window. The 2.5× PFS improvement is clinically meaningful for young
+    patients (median age 40 years) who face decades of disease burden.
+
+hard_contraindications:
+  - "IDH-wildtype glioma — no target; no benefit (grade 2 IDH-WT is molecular GBM, not LGG)"
+  - "WHO grade 3 or 4 glioma — INDIGO enrolled grade 2 only; high-grade requires RT+chemotherapy"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+  - "Pregnancy — reproductive toxicity; absolute contraindication without effective contraception"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-LFT
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-MRI-BRAIN
+  - "IDH1/IDH2 sequencing: MANDATORY — IDH1 R132 or IDH2 R172 mutation must be confirmed before vorasidenib (IHC alone insufficient — IDH1 non-R132H variants are IHC-negative)"
+  - "WHO grade confirmation (neuropathology): grade 2 required per INDIGO eligibility"
+  - "Pregnancy test: women of reproductive potential before starting"
+  - "Review current antiepileptic drug list: CYP3A4 inducers must be switched before starting"
+
+desired_tests:
+  - "MGMT promoter methylation: documents future TMZ sensitivity at progression"
+  - "1p/19q codeletion (oligodendroglioma): confirms histological classification"
+  - "CDKN2A/B deletion: adverse prognosis marker (upgrades to grade 4 per WHO 2021)"
+  - "TERT promoter mutation: adverse prognosis marker"
+  - "ECG (12-lead): baseline if QTc risk factors present"
+
+rationale: >
+  Vorasidenib (Voranigo) is the first FDA-approved drug specifically for IDH-mutant
+  low-grade glioma (LGG). FDA approval August 6, 2024 based on INDIGO Phase 3
+  (Mellinghoff 2023 NEJM).
+
+  BIOLOGY: IDH1/IDH2 mutations (the defining molecular alteration of WHO grade 2-3
+  diffuse glioma) drive 2-hydroxyglutarate (2-HG) overproduction. 2-HG is an
+  oncometabolite that competitively inhibits alpha-ketoglutarate-dependent dioxygenases
+  (TET2, histone demethylases), causing hypermethylation of DNA and histones and
+  blocking differentiation. Vorasidenib inhibits both mutant IDH1 and IDH2, reducing
+  intratumoral 2-HG and reversing epigenetic dysregulation.
+
+  BRAIN PENETRATION: Critical distinction from earlier IDH inhibitors. Vorasidenib
+  was designed for CNS penetration (brain:plasma ratio ~3–9×), enabling therapeutic
+  2-HG suppression within the tumor microenvironment. Ivosidenib (IDH1-only) has
+  limited CNS penetration; vorasidenib is the first IDH inhibitor with demonstrated
+  CNS activity.
+
+  INDIGO Phase 3 (N=331; NCT04164901):
+  - Patients: IDH1/2-mutant grade 2 glioma, ≥12 years, post-surgery, not requiring
+    immediate RT/chemo (watch-and-wait candidates)
+  - mPFS: 27.7 vs 11.1 months; HR 0.39; p<0.001 (2.5× improvement in median PFS)
+  - Time to next intervention: NR vs 17.8 months; HR 0.26 (defers RT and systemic chemo)
+  - Cognitive function: maintained; no impairment signal (critical in young patients)
+  - Safety: hepatotoxicity (ALT ≥3× ULN in ~34%) is the primary toxicity; manageable
+    with dose modification
+
+  PARADIGM SHIFT: Before INDIGO, the standard approach for low-risk LGG post-surgery
+  was "watch and wait" (observation with serial MRI). Vorasidenib converts observation
+  to active disease-modifying therapy, extending PFS by 16.6 months (median) and
+  deferring RT/chemotherapy — preserving cognitive function and quality of life
+  in a young patient population.
+
+  ANTIEPILEPTIC DRUG INTERACTION: LGG patients frequently use antiepileptic drugs
+  (seizure is the presenting symptom in ~60%). Enzyme-inducing AEDs (carbamazepine,
+  phenytoin, phenobarbital) are strong CYP3A4 inducers that reduce vorasidenib
+  exposure by ~85% — switching to levetiracetam or lacosamide is mandatory before
+  starting vorasidenib.
+
+  UKRAINE CONTEXT: Vorasidenib (Voranigo; Servier) is not registered in Ukraine.
+  Named-patient import is theoretically possible but expensive. Clinical trial
+  referral is the preferred pathway for Ukrainian patients with IDH-mutant LGG.
+  At this time, the standard Ukrainian treatment for high-risk LGG remains RT + TMZ
+  (off-label) or RT + PCV (procarbazine available, CCNU/lomustine available in Ukraine).
+
+rationale_ua: >
+  Ворасіденіб (Voranigo; Servier) — перший FDA-схвалений препарат для IDH-мутантної
+  гліоми низького ступеня (серпень 2024). INDIGO (Mellinghoff 2023 NEJM; N=331):
+  mПВЗ 27,7 vs 11,1 міс; ВР 0,39; p<0,001. Пан-IDH1/IDH2-інгібітор з хорошим
+  проникненням у ЦНС. Показаний після операції у пацієнтів без показань до
+  негайної РТ/хімієтерапії. ГЕПАТОТОКСИЧНІСТЬ: АЛТ ≥3×ВМН у ~34% — моніторинг LFT
+  обов'язковий. Взаємодія з АЕП: карбамазепін, фенітоїн знижують ефективність;
+  замінити на леветирацетам/лакозамід.
+  Україна: НЕ зареєстровано; клінічне дослідження або named-patient import.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ призначати при IDH-дикому типі гліоми — немає цілі, немає ефекту (IDH-WT grade 2 = молекулярна ГБМ)"
+  - "НЕ призначати при WHO grade 3-4 — INDIGO: тільки grade 2; при Grade 3 потрібна РТ + хімієтерапія"
+  - "НЕ починати без IDH-секвенування (IDH ІГХ недостатньо — не-R132H мутанти ІГХ-негативні)"
+  - "НЕ поєднувати з індукторами CYP3A4 (карбамазепін, фенітоїн) — знижують воросіденіб ~85%; замінити на леветирацетам"
+  - "НЕ ігнорувати підвищення АЛТ/АСТ — гепатотоксичність потребує обов'язкового моніторингу LFT щомісяця × 3 міс"
+  - "НЕ призначати вагітним — ембріо-фетальна токсичність; обов'язкова ефективна контрацепція"
+
+sources:
+  - source_id: SRC-INDIGO-MELLINGHOFF-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      INDIGO Phase 3 (Mellinghoff 2023 NEJM; N=331; NCT04164901): vorasidenib 40 mg QD
+      vs placebo in IDH1/2-mutant grade 2 glioma post-surgery. mPFS 27.7 vs 11.1 months;
+      HR 0.39; 95% CI 0.27–0.56; p<0.001. TTI: NR vs 17.8 months; HR 0.26; p<0.001.
+      Basis of FDA approval August 6, 2024. NCCN CNS Category 1.
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Central Nervous System Cancers: vorasidenib Category 1 recommendation for
+      IDH-mutant grade 2 glioma post-surgery (not requiring immediate RT/chemotherapy).
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DL).
+  INDIGO trial was pivotal — first Phase 3 trial to show benefit for IDH inhibition
+  in LGG. FDA approval August 2024 represents the first oral drug approved for LGG.
+  OS data not mature (LGG long natural history, 10–20 year median OS).
+  TTI endpoint (time to next intervention, i.e., deferral of RT/chemo) may be the
+  most clinically meaningful secondary endpoint — preserving cognitive function.
+  AED interaction note: flagged as do_not_do and in concurrent_therapy — this is
+  the highest-priority practical issue for implementation in clinical practice.
