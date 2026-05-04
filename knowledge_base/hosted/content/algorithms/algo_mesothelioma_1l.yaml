@@ -11,9 +11,10 @@ purpose: >
 
 output_indications:
   - IND-MESOTHELIOMA-1L-NIVO-IPI
+  - IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
 
 default_indication: IND-MESOTHELIOMA-1L-NIVO-IPI
-alternative_indication: null
+alternative_indication: IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
 
 decision_tree:
   # Step 1 — Resectability assessment. Surgery (EPP or P/D) can be curative
@@ -71,16 +72,37 @@ decision_tree:
         alone as 1L for sarcomatoid/biphasic histology — dramatically inferior.
         Continue nivo 3mg/kg q2w + ipi 1mg/kg q6w up to 2 years.
     if_false:
+      next_step: 4
+      notes: "Epithelioid MPM: nivo+ipi preferred but check ICI eligibility — step 4."
+
+  # Step 4 — ICI eligibility check (epithelioid MPM only).
+  # Nivo+ipi is preferred for eligible patients; pemetrexed+cisplatin
+  # is the standard-track alternative for ICI-contraindicated patients.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "No active autoimmune disease requiring systemic treatment"
+        - condition: "No solid organ transplant"
+        - condition: "No prior immune-mediated pneumonitis Grade ≥2"
+    if_true:
       result: IND-MESOTHELIOMA-1L-NIVO-IPI
       notes: >
-        Epithelioid MPM: nivo+ipi preferred per NCCN Category 1 (CheckMate-743;
-        mOS 18.7 vs 16.7 mo; HR 0.86). Alternative: pemetrexed 500mg/m² +
-        cisplatin 75mg/m² OR carboplatin AUC5 q3w × 6 cycles (NCCN Cat 1
-        pre-ICI era SOC; IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM — not yet
-        in KB; use nivo+ipi as default). Chemotherapy advantage: no immune
-        AEs, higher short-term ORR (43% vs 40%); disadvantage: lower 2-year
-        OS rate (27% vs 41%), no durable responses.
-        If ICI contraindicated (autoimmune, transplant): pemetrexed+platinum.
+        Epithelioid MPM, ICI eligible: nivo+ipi preferred (CheckMate-743;
+        mOS 18.7 vs 16.7 months with chemo; HR 0.86; 2y OS 41% vs 27%).
+        Advantages of nivo+ipi over pemetrexed+cisplatin: superior 2-year OS,
+        durable responses (~20% long-term survivors), no nephrotoxicity.
+        Disadvantage: irAEs (pneumonitis, colitis, endocrinopathies).
+        If patient declines ICI or strongly prefers chemotherapy: use
+        IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM (EMPHACIS: ORR 41%,
+        mOS 12.1 months; NCCN Cat 1 pre-ICI SOC).
+    if_false:
+      result: IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
+      notes: >
+        ICI contraindicated (active autoimmune disease, solid organ transplant,
+        prior immune-mediated pneumonitis): use pemetrexed+cisplatin (NCCN Cat 1).
+        EMPHACIS (Vogelzang 2003, n=456): ORR 41%, mPFS 5.7 months, mOS 12.1 months.
+        MANDATORY: folic acid daily + vitamin B12 q9 weeks before first dose.
+        Cisplatin-ineligible: substitute carboplatin AUC 5 (pemetrexed+carboplatin).
 
 sources:
   - SRC-CHECKMATE743-BAAS-2021
@@ -88,14 +110,14 @@ sources:
 
 last_reviewed: "2026-05-04"
 notes: >
-  3-step algorithm: resectability gate → PS gate → histology routing.
-  Both epithelioid and non-epithelioid route to IND-MESOTHELIOMA-1L-NIVO-IPI
-  (the only fully authored MPM 1L indication in KB). Non-epithelioid gets stronger
-  recommendation language; epithelioid notes chemotherapy alternative.
+  4-step algorithm: resectability gate → PS gate → histology routing → ICI eligibility.
+  Non-epithelioid → nivo+ipi (strongly preferred; HR 0.46 in sarcomatoid/biphasic).
+  Epithelioid, ICI-eligible → nivo+ipi (HR 0.86; preferred per CheckMate-743).
+  Epithelioid, ICI-contraindicated → pemetrexed+platinum (EMPHACIS, NCCN Cat 1).
 
-  Gap: IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM (chemotherapy backbone for
-  epithelioid or ICI-contraindicated) not yet in KB. REG-PEMETREXED-CISPLATIN
-  or REG-PEMETREXED-CARBOPLATIN would be needed.
+  Two active 1L indications:
+  - IND-MESOTHELIOMA-1L-NIVO-IPI (default; CheckMate-743)
+  - IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM (standard-track; EMPHACIS 2003)
 
   Peritoneal mesothelioma is a distinct disease with different treatment
   (CRS+HIPEC for peritoneal meso); not covered by this algorithm.

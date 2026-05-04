@@ -11,9 +11,10 @@ purpose: >
 
 output_indications:
   - IND-GCT-METASTATIC-1L-BEP
+  - IND-GCT-METASTATIC-1L-EP
 
 default_indication: IND-GCT-METASTATIC-1L-BEP
-alternative_indication: null
+alternative_indication: IND-GCT-METASTATIC-1L-EP
 
 decision_tree:
   # Step 1 — Orchiectomy prerequisite.
@@ -93,13 +94,12 @@ decision_tree:
         is determined by IGCCC risk, NOT by patient preference.
         Bleomycin CRITICAL WARNINGS: FiO₂ cap post-BEP; DLCO monitoring; G-CSF.
     if_false:
-      result: IND-GCT-METASTATIC-1L-BEP
+      result: IND-GCT-METASTATIC-1L-EP
       notes: >
-        Bleomycin contraindicated (DLCO <80%, CrCl <50, prior bleomycin pneumonitis):
-        Use EP (etoposide+cisplatin, no bleomycin) × 4 cycles — equivalent to BEP ×3
-        for good-risk (Loehrer 1995); use EP ×4 for intermediate/poor risk.
-        IND-GCT-METASTATIC-1L-EP not yet authored — use same indication with
-        regimen override to REG-EP-GCT.
+        Bleomycin contraindicated (DLCO <80%, CrCl <50, prior bleomycin pneumonitis,
+        age >40-50 with baseline lung disease): use EP × 4 cycles (IND-GCT-METASTATIC-1L-EP).
+        EP × 4 = BEP × 3 for good-risk (Loehrer 1995). EP × 4 for all IGCCC risk groups
+        when bleomycin omitted — do NOT reduce to 3 cycles of EP.
 
 sources:
   - SRC-IGCCC-1997
@@ -125,6 +125,5 @@ notes: >
     NSGCT >1cm residual: RPLND (retroperitoneal lymph node dissection) for teratoma
     Both: serum markers must normalize first; rising markers → salvage
 
-  Key gap: IND-GCT-METASTATIC-1L-EP (bleomycin-free) not yet authored as separate
-  indication; REG-EP-GCT exists. EP used when bleomycin contraindicated.
+  IND-GCT-METASTATIC-1L-EP (bleomycin-free) now in KB. REG-EP-GCT exists.
   2L salvage (TIP, VIP, HDCT+ASCT) not yet authored.
