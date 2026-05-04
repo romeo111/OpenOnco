@@ -20,6 +20,7 @@ output_indications:
   - IND-NMZL-2L-BR
   - IND-NMZL-2L-RITUXIMAB-RETREATMENT
   - IND-NMZL-2L-R2
+  - IND-NMZL-2L-IBRUTINIB
 
 default_indication: IND-NMZL-2L-BR
 alternative_indication: IND-NMZL-2L-R2
@@ -77,6 +78,7 @@ decision_tree:
   # Prior bendamustine/alkylator at 1L → R² preferred (avoid alkylator re-use).
   # BR-naive at 1L → BR preferred (stronger evidence base; standard Cat 1).
   # Both BR and R² are NCCN Cat 1 for relapsed NMZL (AUGMENT MZL subgroup).
+  # BTKi-appropriate patients (chemo-exhausted/intolerant) fall to step 4.
   - step: 31
     evaluate:
       all_of:
@@ -89,14 +91,29 @@ decision_tree:
         (REG-R2-FL; AUGMENT Leonard JCO 2019; MZL subgroup ORR 80%, mPFS 31.4 mo; NCCN Cat 1).
         Oral lenalidomide reduces clinic burden vs IV bendamustine infusion.
     if_false:
-      result: IND-NMZL-2L-BR
+      next_step: 4
+    notes: "Step 31 added 2026-05-04 (Workstream BV): BR vs R² prior-alkylator gate. IND-NMZL-2L-R2 wired for prior-alkylator track. Gap (2) CLOSED. if_false updated 2026-05-04 (Workstream CM): routes to step 4 (ibrutinib gate) instead of direct BR result."
+
+  # Step 4 — ibrutinib fallback gate for chemo-exhausted or chemo-
+  # intolerant NMZL. BTKi-naive patients where both BR and R² are
+  # contraindicated or previously failed. Ibrutinib 560 mg PO daily
+  # (PCYC-1121; Noy 2017 Blood; NMZL ORR ~50%; NCCN Cat 2B; FDA Jan 2017).
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Prior BR failure AND prior R² failure (BR/R²-exhausted, BTKi-naive)"
+        - condition: "Chemotherapy contraindicated AND R² inaccessible/failed AND BTKi-naive"
+    if_true:
+      result: IND-NMZL-2L-IBRUTINIB
       notes: >
-        Bendamustine-naive at 1L (1L was R-mono, W&W, or R-CVP): BR preferred as
-        standard-of-care 2L immunochemotherapy (REG-R-BENDAMUSTINE-RELAPSED-MZL;
-        ORR ~85-90%; NCCN Cat 1). R² (IND-NMZL-2L-R2) is an equally valid Cat 1
-        alternative — MDT choice based on patient preference for oral vs IV and
-        REMS access considerations.
-    notes: "Step 31 added 2026-05-04 (Workstream BV): BR vs R² prior-alkylator gate. IND-NMZL-2L-R2 wired for prior-alkylator track. Gap (2) CLOSED. Free-text condition; MDT-evaluated."
+        Chemo-exhausted or chemo-intolerant NMZL (BR/R² both failed or contraindicated):
+        ibrutinib 560 mg PO daily (REG-IBRUTINIB-MZL; PCYC-1121 Noy 2017 Blood;
+        NMZL ORR ~50%; all-MZL CR ~3% — mainly PRs; NCCN Cat 2B; FDA Jan 2017).
+        ECG baseline (AF risk); hold peri-procedure (bleeding). UA: not NSZU-funded
+        for MZL — named-patient or compassionate-use required.
+    if_false:
+      result: IND-NMZL-2L-BR
+    notes: "Step 4 added 2026-05-04 (Workstream CM): ibrutinib fallback for BR/R²-exhausted or chemo-intolerant NMZL. Gap (3) CLOSED."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -113,9 +130,12 @@ notes: >
   31.4 mo; NCCN Cat 1). Gap (2) CLOSED. ROUTING SUMMARY: (1) Transformation suspect →
   BR placeholder (upstream DLBCL re-biopsy); (2) Frail/organ-dysfunction → R-mono;
   (3) Fit → step 31 → R² if prior alkylator; BR if alkylator-naive.
+  UPDATED 2026-05-04 (Workstream CM): IND-NMZL-2L-IBRUTINIB authored and
+  wired at step 4 (ibrutinib 560 mg PO daily; PCYC-1121 Noy 2017 Blood;
+  NMZL ORR ~50%; NCCN Cat 2B; FDA Jan 2017; UA access ≈zero — named-patient only).
+  Step 31 if_false now routes to step 4 (BR-naive → ibrutinib gate check; default
+  to BR if ibrutinib not indicated). Gap (3) CLOSED.
   OOS / wiring gaps:
-  (3) Ibrutinib for r/r NMZL — FDA-approved 2017 (basket label
-  with SMZL/MALT) but not modeled; UA access ≈zero.
   (4) Histologic transformation routing must be resolved at upstream
   disease-resolution stage (relapse re-biopsy mandatory).
   (5) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.

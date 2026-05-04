@@ -1,0 +1,134 @@
+id: IND-NMZL-2L-IBRUTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NODAL-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory nodal marginal zone lymphoma after ≥1 prior anti-CD20-containing therapy"
+    - "BTK inhibitor (ibrutinib) naive"
+    - "ECOG PS 0-3"
+    - "No active major bleeding or anticoagulant requirement that cannot be safely interrupted"
+    - "Adequate hepatic function: ALT/AST ≤3× ULN"
+    - "No uncontrolled atrial fibrillation"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior BTKi therapy with acquired BTK C481S resistance: ibrutinib inactive"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      Oral ibrutinib 560 mg PO daily is feasible across broad performance status.
+      Elderly patients (>75): higher AF and bleeding risk — baseline ECG and
+      fall/bleeding risk assessment mandatory. ECOG 4: CHARTER goals-of-care gate.
+
+recommended_regimen: REG-IBRUTINIB-MZL
+alternative_regimens:
+  - regimen_id: IND-NMZL-2L-BR
+    description: >
+      Bendamustine + rituximab (BR) — NCCN Cat 1, preferred 2L for fit NMZL patients.
+      ORR ~85-90%. Ibrutinib appropriate when BR is contraindicated or after BR failure.
+  - regimen_id: IND-NMZL-2L-R2
+    description: >
+      Lenalidomide + rituximab (R²) — NCCN Cat 1 (AUGMENT; ORR ~80% MZL; mPFS 31.4 mo).
+      Preferred over ibrutinib for rituximab-refractory NMZL. Use ibrutinib after R²
+      failure or when lenalidomide inaccessible.
+
+concurrent_therapy:
+  - "ECG baseline MANDATORY: ibrutinib associated with atrial fibrillation (5-10%/year)"
+  - "Blood pressure monitoring monthly"
+  - "CBC + LFT monthly × 3, then q3 months"
+  - "Hold ibrutinib 3-7 days peri-procedure (bleeding risk)"
+  - "Avoid strong CYP3A4 inhibitors (azole antifungals): if unavoidable, reduce to 140 mg/day"
+  - "Avoid concurrent anticoagulants if clinically avoidable"
+
+followed_by:
+  - "CT restaging every 3-4 cycles (Lugano criteria)"
+  - "Continue until disease progression or unacceptable toxicity"
+  - "At progression: re-biopsy for transformation; zanubrutinib/acalabrutinib if BTK-WT; clinical trial"
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "~50% NMZL (8/16 in PCYC-1121 NMZL cohort; Noy 2017 Blood); ~48% all MZL"
+  complete_response: "~3% all MZL (mainly PRs)"
+  median_pfs_months: "~14.2 months (all MZL; PCYC-1121)"
+  notes: >
+    PRIMARY EVIDENCE: PCYC-1121 (Noy et al. 2017 Blood; phase 2; n=63 MZL):
+    - All MZL: ORR 48%; CR 3%; PR 45%; mPFS 14.2 months; mDoR 14.8 months
+    - NMZL subgroup (n=16): ORR 50% (8/16)
+    - FDA approved January 2017 for r/r MZL after ≥1 prior anti-CD20
+    - NCCN Category 2B for MZL
+
+    POSITION IN 2L NMZL HIERARCHY:
+    BR (Cat 1) and R² (Cat 1) are preferred first-choice 2L options.
+    Ibrutinib (Cat 2B) is reserved for: BR/R²-exhausted patients; chemo-intolerant
+    patients; or oral-only preference when Cat 1 options contraindicated.
+
+    UKRAINE ACCESS:
+    NSZU covers ibrutinib for CLL and WM, not for MZL.
+    Named-patient or compassionate-use (AbbVie/Janssen) required.
+    Practical access ≈zero in most Ukrainian centres for MZL indication.
+
+hard_contraindications:
+  - "Major uncontrollable bleeding or anticoagulation that cannot be interrupted"
+  - "Severe hepatic impairment (Child-Pugh C)"
+  - "Hypersensitivity to ibrutinib"
+
+red_flags_triggering_alternative:
+  - condition: "Ibrutinib inaccessible (not NSZU-funded for MZL) → IND-NMZL-2L-BR or IND-NMZL-2L-R2"
+  - condition: "Uncontrolled AF: consider zanubrutinib (lower AF rate); if BTKi not feasible → IND-NMZL-2L-BR or R²"
+  - condition: "Histologic transformation: re-biopsy; if DLBCL → ALGO-DLBCL routing"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "ECG baseline (atrial fibrillation risk assessment)"
+  - "CT chest/abdomen/pelvis restaging (baseline disease documentation)"
+  - TEST-HBV-SEROLOGY
+
+desired_tests:
+  - "MYD88 L265P mutation testing: informative; not required as gate"
+  - "Bone marrow biopsy if new cytopenias"
+
+rationale: >
+  Ibrutinib 560 mg PO daily for r/r NMZL after ≥1 prior anti-CD20 therapy.
+  FDA approved January 2017 (PCYC-1121; Noy 2017 Blood; NMZL ORR 50%; NCCN Cat 2B).
+  Position: reserve for BR/R²-exhausted patients; chemotherapy-intolerant; or
+  oral-only preference. Ukraine: not NSZU-reimbursed for MZL — named-patient/
+  compassionate-use access required; practical access ≈zero in most centres.
+
+rationale_ua: >
+  Ібрутиніб 560 мг PO щоденно для рецидивної/рефрактерної НМЗЛ після ≥1 попередньої
+  терапії з анти-CD20. FDA 2017; PCYC-1121 (Noy 2017 Blood): НМЗЛ ЗВ 50%;
+  ПВ лише 3% — переважно часткові відповіді. NCCN Cat 2B.
+  Місце: третя лінія після виснаження BR (Cat 1) та R² (Cat 1).
+  В Україні: НСЗУ не відшкодовує для МЗЛ; доступ через named-patient.
+  При недоступності → BR або R² (доступніші варіанти Cat 1).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати при некерованій AF без консультації кардіолога"
+  - "Не поєднувати з антикоагулянтами без крайньої потреби"
+  - "Не поєднувати з сильними інгібіторами CYP3A4 без зниження дози"
+  - "Не ігнорувати підозру на гістологічну трансформацію — ібрутиніб монотерапія недостатня"
+  - "Не оминати BR/R² без обґрунтування — ібрутиніб Cat 2B (нижча ефективність)"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell/MZL 2025 Category 2B: ibrutinib 560 mg PO daily for r/r MZL
+      including NMZL after ≥1 prior anti-CD20 (PCYC-1121 basis; Noy 2017 Blood).
+      Less preferred than BR or R² (both Cat 1) due to low CR rate.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

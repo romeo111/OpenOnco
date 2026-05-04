@@ -19,6 +19,7 @@ output_indications:
   - IND-SMZL-2L-BR
   - IND-SMZL-2L-RITUXIMAB-RETREATMENT
   - IND-SMZL-2L-R2
+  - IND-SMZL-2L-IBRUTINIB
 
 default_indication: IND-SMZL-2L-BR
 alternative_indication: IND-SMZL-2L-RITUXIMAB-RETREATMENT
@@ -81,6 +82,8 @@ decision_tree:
     notes: "Step 21 added 2026-05-04 (Workstream CH): R²/R-mono sub-gate for frail SMZL. Rituximab-refractory → IND-SMZL-2L-R2; rituximab-sensitive → IND-SMZL-2L-RITUXIMAB-RETREATMENT. Gap (3) CLOSED."
 
   # Step 3 — default: symptomatic relapse, fit, BR-eligible → BR.
+  # Patients with prior BR/R² failure OR chemo-intolerance fall through
+  # to step 4 (ibrutinib gate).
   - step: 3
     evaluate:
       any_of:
@@ -92,7 +95,29 @@ decision_tree:
     if_true:
       result: IND-SMZL-2L-BR
     if_false:
+      next_step: 4
+
+  # Step 4 — ibrutinib fallback gate: chemotherapy-exhausted or chemo-
+  # intolerant SMZL patients where BR and R² are both contraindicated
+  # or previously failed. Ibrutinib 560 mg PO daily (PCYC-1121; Noy
+  # 2017 Blood; ORR ~58% SMZL; NCCN Cat 2B; FDA Jan 2017).
+  # UA access ≈zero (NSZU not funded for MZL); named-patient only.
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Prior BR failure AND prior R² failure (chemo-exhausted, BTKi-naive)"
+        - condition: "Chemotherapy contraindicated (organ dysfunction, patient refusal) AND R² inaccessible/failed AND BTKi-naive"
+    if_true:
+      result: IND-SMZL-2L-IBRUTINIB
+      notes: >
+        Chemo-exhausted or chemo-intolerant SMZL (BR and R² both failed/contraindicated):
+        ibrutinib 560 mg PO daily (REG-IBRUTINIB-MZL; PCYC-1121 Noy 2017 Blood;
+        SMZL ORR ~58%; all-MZL CR only ~3% — mainly PRs; NCCN Cat 2B; FDA Jan 2017).
+        ECG baseline (AF risk); hold peri-procedure (bleeding); avoid strong CYP3A4
+        inhibitors. UA: not NSZU-funded for MZL; named-patient or compassionate-use required.
+    if_false:
       result: IND-SMZL-2L-BR
+    notes: "Step 4 added 2026-05-04 (Workstream CM): ibrutinib fallback gate for BR/R²-exhausted or chemo-intolerant SMZL. Gap (2) CLOSED."
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -108,9 +133,11 @@ notes: >
   (AUGMENT MZL subgroup; Leonard JCO 2019; ORR ~80%; mPFS 31.4 mo; NCCN Cat 1;
   REG-R2-FL). Step 2 if_true now routes to step 21 (rituximab-refractory sub-gate):
   early relapse <6m → R²; late relapse ≥12m → R-mono retreatment. Gap (3) CLOSED.
+  UPDATED 2026-05-04 (Workstream CM): IND-SMZL-2L-IBRUTINIB authored and
+  wired at step 4 (ibrutinib 560 mg PO daily; PCYC-1121 Noy 2017 Blood;
+  SMZL ORR ~58%; NCCN Cat 2B; FDA Jan 2017; UA access ≈zero — named-patient only).
+  Gap (2) CLOSED.
   OOS / wiring gaps:
-  (2) Ibrutinib (BTKi) for r/r SMZL — approved (FDA 2017) but not
-  modeled; UA access ≈zero outside named-patient.
   (4) Histologic transformation routing must be resolved at upstream
   disease-resolution stage (relapse re-biopsy mandatory); algo
   surfaces but does not auto-route to ALGO-DLBCL.

@@ -1,0 +1,93 @@
+id: REG-IBRUTINIB-MZL
+disease_context: "DIS-SPLENIC-MZL / DIS-NODAL-MZL / DIS-MALT"
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "targeted_oral"
+protocol_name: "Ibrutinib monotherapy (MZL 2L+ — BTKi)"
+notes: >
+  Ibrutinib 560 mg PO daily continuous for r/r MZL (SMZL, NMZL, MALT) after
+  ≥1 prior anti-CD20-containing therapy. PCYC-1121 (Noy 2017 Blood; phase 2;
+  n=63): ORR 48%; CR 3%; PR 45%; median PFS 14.2 months; median DoR 14.8 months.
+  FDA approved January 2017 for MZL after ≥1 prior anti-CD20. NCCN Cat 2B
+  (single-arm; low CR rate vs BR/R² Cat 1 comparators).
+  NOTE: Not registered/reimbursed in Ukraine for MZL; NSZU covers ibrutinib
+  for CLL and WM but not MZL — named-patient or compassionate-use required.
+
+agents:
+  - drug_id: DRUG-IBRUTINIB
+    dose: "560 mg PO once daily"
+    route: PO
+    schedule: "Continuous daily until disease progression or unacceptable toxicity"
+    administration_notes: >
+      560 mg = four 140 mg tablets PO once daily. Take at approximately the same
+      time each day with or without food. Swallow tablets whole with water.
+      MISSED DOSE: take same day if remembered; skip if within 6 hours of next dose.
+      CYP3A4 INTERACTIONS — CRITICAL:
+      - Strong CYP3A4 inhibitors (itraconazole, voriconazole, posaconazole,
+        clarithromycin, HIV protease inhibitors): reduce ibrutinib to 140 mg/day
+        if concurrent use unavoidable. Prefer fluconazole (moderate CYP3A4)
+        over voriconazole (strong CYP3A4) for antifungal prophylaxis.
+      - Strong CYP3A4 inducers (rifampicin, phenytoin, carbamazepine):
+        avoid — dramatically reduce ibrutinib exposure.
+      - Grapefruit / Seville orange: avoid during ibrutinib therapy.
+    dose_modifications:
+      - trigger: "Concurrent strong CYP3A4 inhibitor (azole antifungals)"
+        action: "Reduce ibrutinib to 140 mg/day. Consider acalabrutinib switch (lower CYP3A4 interaction)."
+      - trigger: "Grade ≥3 non-hematologic toxicity, Grade 3 neutropenia with fever, or Grade 4 hematologic toxicity (first occurrence)"
+        action: "Hold ibrutinib; restart at 420 mg/day after recovery to Grade ≤1 or baseline"
+      - trigger: "Second occurrence Grade ≥3 toxicity"
+        action: "Hold; restart at 280 mg/day"
+      - trigger: "Third occurrence Grade ≥3 toxicity"
+        action: "Discontinue"
+      - trigger: "New or worsening atrial fibrillation"
+        action: "Cardiology evaluation. Rate/rhythm control. Consider switch to zanubrutinib/acalabrutinib (lower AF incidence vs ibrutinib)."
+
+premedication:
+  - "No mandatory premedication"
+  - "PCP prophylaxis (TMP/SMX) in prolonged lymphopenia or prolonged corticosteroid exposure"
+
+growth_factor_support:
+  mandatory: false
+  protocol: "G-CSF not routinely required. Use if Grade 4 neutropenia."
+
+monitoring:
+  - "CBC + differential: every 2-4 weeks for first 3 months, then monthly"
+  - "LFT + bilirubin: monthly"
+  - "ECG: baseline + at 1 month; repeat if palpitations (atrial fibrillation monitoring)"
+  - "Blood pressure: monthly (hypertension 5-10%)"
+  - "CT scan restaging: every 3-4 cycles (Lugano criteria for MZL)"
+
+cycle_length_days: 28
+total_planned_cycles: "Continuous until progression or unacceptable toxicity (no pre-defined duration cap)"
+
+special_precautions:
+  - "ATRIAL FIBRILLATION: 5-10%/year cumulative incidence with ibrutinib; higher in elderly patients. Baseline ECG mandatory. New AF → cardiology evaluation; consider BTK switch to zanubrutinib or acalabrutinib."
+  - "BLEEDING RISK: Ibrutinib inhibits platelet collagen-receptor (GP VI) independent of BTK. Major bleeding ~2-4%. Avoid concurrent anticoagulants when possible; hold ibrutinib 3-7 days peri-procedure."
+  - "HYPERTENSION: new or worsening HTN in 5-10%. Monitor BP monthly; antihypertensive management as needed."
+  - "CYP3A4 INTERACTIONS: Document all concurrent medications at baseline. All azole antifungals interact significantly."
+  - "LOW CR RATE: ibrutinib in MZL achieves mainly PRs (CR ~3%). For patients seeking deep/durable remission, BR or R² are preferred first. Ibrutinib is best reserved for BR/R²-exhausted or chemo-intolerant patients."
+
+watchpoints_ua:
+  - "УВАГА: Фібриляція передсердь 5-10%/рік — ЕКГ базово та при серцебитті; кардіолог при AF"
+  - "УВАГА: Ризик кровотечі — УНИКАТИ антикоагулянтів по можливості; призупинити за 3-7 днів до операції"
+  - "УВАГА: Взаємодії CYP3A4 (протигрибкові азоли): знизити дозу до 140 мг/добу"
+  - "УВАГА: Гіпертензія — контроль АТ щомісяця"
+  - "УВАГА: Ібрутиніб не відшкодовується НСЗУ для МЗЛ (тільки ХЛЛ/ВКГ/МКЛ) — off-label / named-patient"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Ibrutinib (Imbruvica) зареєстрований в Україні. НСЗУ відшкодовує для ХЛЛ
+    і МКЛ; НЕ відшкодовує для МЗЛ (off-label для цього показання). Named-patient
+    або compassionate-use (AbbVie/Janssen) потрібні для МЗЛ-показань. Доступ
+    ≈нульовий в більшості онкологічних центрів для цього показання.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-MZL-2024
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
