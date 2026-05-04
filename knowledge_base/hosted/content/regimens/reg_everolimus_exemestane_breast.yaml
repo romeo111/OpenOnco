@@ -1,0 +1,55 @@
+id: REG-EVEROLIMUS-EXEMESTANE
+name: "Everolimus + exemestane for HR-positive, HER2-negative advanced breast cancer"
+name_ua: "Еверолімус + екземестан при ГР+/HER2- поширеному раку молочної залози"
+alternate_names: ["BOLERO-2 regimen", "everolimus + aromatase inhibitor", "RAD001 + exemestane"]
+
+components:
+  - drug_id: DRUG-EVEROLIMUS
+    dose: "10 mg PO QD"
+    schedule: "Continuous daily"
+    route: PO
+    notes: "Tablet; do not crush/chew; take consistently with or without food; avoid CYP3A4 inhibitors/inducers"
+  - drug_id: DRUG-EXEMESTANE
+    dose: "25 mg PO QD"
+    schedule: "Continuous daily after meals"
+    route: PO
+    notes: "Post-menopausal women or combined with ovarian suppression in premenopausal"
+
+cycle_length_days: 28
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "No routine premedication required"
+
+supportive_care:
+  - "Fasting glucose and HbA1c: baseline and monthly (mTOR-mediated hyperglycemia)"
+  - "Fasting lipids: baseline and monthly"
+  - "CBC: monthly (mTOR immunosuppression — infection risk)"
+  - "Pulmonary assessment: symptoms of non-infectious pneumonitis (cough, dyspnea) each visit"
+  - "Oral mucositis monitoring: mTOR inhibitor stomatitis (use steroid mouthwash prophylaxis)"
+  - "DXA bone density: annually (aromatase inhibitor bone loss)"
+
+dose_modifications:
+  - toxicity: "Grade 2 non-infectious pneumonitis"
+    action: "Hold everolimus until resolution to Grade ≤1; restart at 5 mg QD; use steroids if no improvement"
+  - toxicity: "Grade 3–4 non-infectious pneumonitis"
+    action: "DISCONTINUE everolimus permanently; IV corticosteroids"
+  - toxicity: "Grade 3 stomatitis"
+    action: "Hold until Grade ≤1; restart at 5 mg QD; prophylactic steroid mouthwash"
+  - toxicity: "Fasting glucose >250 mg/dL (Grade 3)"
+    action: "Hold until Grade ≤2; antidiabetic therapy; restart at same dose"
+
+sources:
+  - SRC-NCCN-BREAST-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Based on BOLERO-2 (Baselga 2012 NEJM; N=724): everolimus + exemestane vs
+  exemestane alone in postmenopausal HR+/HER2- advanced breast cancer post-NSAI.
+  mPFS 10.6 vs 4.1 months (HR 0.36; p<0.001). ORR 12% vs 2%. No OS benefit.
+  FDA approved July 2012. NCCN Cat 1 for HR+/HER2- advanced breast cancer after
+  prior endocrine therapy. Superseded in earlier lines by CDK4/6 inhibitors;
+  now typically 3L+ after CDK4/6i + 2L endocrine failure.
+  Pneumonitis (non-infectious) most concerning AE (14% any grade); mandatory
+  monitoring and steroid mouthwash for mucositis (stomatitis most common AE ~67%).

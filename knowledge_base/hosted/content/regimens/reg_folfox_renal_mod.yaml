@@ -1,0 +1,60 @@
+id: REG-FOLFOX-RENAL-MOD
+name: "Modified FOLFOX (mFOLFOX6) with oxaliplatin dose reduction for renal impairment"
+name_ua: "Модифікований FOLFOX зі зниженою дозою оксаліплатину при нирковій недостатності"
+alternate_names: ["mFOLFOX6 renal modified", "FOLFOX renal adjustment", "reduced oxaliplatin FOLFOX"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "60–75 mg/m² (standard 85 mg/m² reduced by 25–30% for CrCl 30–60 mL/min)"
+    schedule: "IV day 1 Q14D"
+    route: IV
+    notes: "Standard mFOLFOX6: 85 mg/m²; reduce to 75 mg/m² for CrCl 45-60, 60 mg/m² for CrCl 30-45. HOLD if CrCl <30 mL/min (oxaliplatin renal clearance dependent). 2-hour infusion via central line"
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV day 1 Q14D (infuse concurrently with oxaliplatin)"
+    route: IV
+    notes: "Standard dose — no renal dose adjustment needed"
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² bolus + 2400 mg/m² CI 46 hours"
+    schedule: "Day 1 Q14D"
+    route: IV
+    notes: "5-FU bolus + CI via pump/central line. No significant renal adjustment needed for 5-FU (primarily hepatic metabolism). Reduce bolus 5-FU if Grade 3+ toxicity"
+
+cycle_length_days: 14
+number_of_cycles: "Until progression or unacceptable toxicity; or 6–8 months then maintenance"
+
+premedications:
+  - "Antiemetics: 5-HT3 antagonist + dexamethasone (oxaliplatin moderately emetogenic)"
+  - "Calcium + magnesium infusions (before/after oxaliplatin): optional; may reduce neuropathy"
+
+supportive_care:
+  - "Renal function (CrCl/eGFR): before each cycle; dose-adjust oxaliplatin if CrCl changes"
+  - "CBC + CMP: before each cycle"
+  - "Peripheral neuropathy: cumulative with oxaliplatin; dose reduce at Grade 2+"
+  - "Cold sensitivity (oxaliplatin): avoid cold 3–5 days post-treatment"
+
+dose_modifications:
+  - toxicity: "CrCl 45–60 mL/min"
+    action: "Reduce oxaliplatin to 75 mg/m²"
+  - toxicity: "CrCl 30–44 mL/min"
+    action: "Reduce oxaliplatin to 60 mg/m²; close monitoring"
+  - toxicity: "CrCl <30 mL/min"
+    action: "HOLD oxaliplatin; consider 5-FU/leucovorin alone (FOLFIRI or de Gramont without oxaliplatin)"
+  - toxicity: "Grade 2 persistent peripheral neuropathy"
+    action: "Reduce oxaliplatin by 25%"
+  - toxicity: "Grade 3+ peripheral neuropathy"
+    action: "Discontinue oxaliplatin; continue 5-FU/LV maintenance"
+
+sources:
+  - SRC-NCCN-CRC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Standard mFOLFOX6 dose of oxaliplatin (85 mg/m²) requires dose reduction for
+  renal impairment because oxaliplatin is cleared by the kidneys (60–70% renal
+  excretion). For CrCl 30–60 mL/min: reduce 25–30% (per manufacturer and NCCN
+  guidelines). 5-FU and leucovorin do not require dose adjustment for renal
+  impairment. This regimen is the modification used when standard FOLFOX doses
+  are inappropriate for patients with CKD stage 3–4 but who otherwise merit
+  active chemotherapy (e.g., resectable metachronous mets, younger patients).
