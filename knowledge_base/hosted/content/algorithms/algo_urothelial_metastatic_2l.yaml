@@ -1,0 +1,157 @@
+id: ALGO-UROTHELIAL-METASTATIC-2L
+applicable_to_disease: DIS-UROTHELIAL
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for advanced/metastatic urothelial carcinoma (UC)
+  after 1L treatment failure. Routes by: (1) FGFR2/3 biomarker status (erdafitinib
+  preferred if FGFR-altered), (2) prior 1L regimen type (EV-containing vs platinum-only),
+  and (3) ICI-naive status for pembrolizumab eligibility.
+  KEY CONTEXT: With EV+pembro as preferred 1L (EV-302), most patients will be
+  EV-experienced at 2L. For EV+pembro progressors, platinum chemo is the 2L standard.
+
+output_indications:
+  - IND-UROTHELIAL-2L-EV
+  - IND-UROTHELIAL-2L-PEMBROLIZUMAB
+  - IND-UROTHELIAL-2L-ERDAFITINIB
+
+default_indication: IND-UROTHELIAL-2L-EV
+alternative_indication: IND-UROTHELIAL-2L-PEMBROLIZUMAB
+
+decision_tree:
+  # Step 1 — Clinical trial gate.
+  # Always screen for available trials first at UC recurrence.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "No available clinical trial OR patient declines trial enrollment"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "Clinical trial preferred at relapse. Discuss with MDT."
+
+  # Step 2 — ECOG PS gate.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "ECOG PS 0-2"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: "ECOG ≥3: best supportive care. Consider palliative RT for symptomatic sites."
+
+  # Step 3 — FGFR2/3 biomarker gate.
+  # Erdafitinib is NCCN Category 1 for FGFR2/3-altered UC post-platinum+ICI.
+  # THOR (van der Heijden 2023): erdafitinib vs chemo; HR 0.58 (ORR 35.3% vs 8.5%).
+  # This is the highest-priority routing — FGFR alteration overrides prior regimen history.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "FGFR2/3 activating mutation OR FGFR2/FGFR3 gene fusion detected (Therascreen or NGS)"
+        - condition: "Prior platinum-containing therapy AND prior anti-PD-(L)1 therapy"
+    if_true:
+      result: IND-UROTHELIAL-2L-ERDAFITINIB
+      notes: >
+        FGFR2/3-altered UC post-platinum+ICI: erdafitinib 8 mg PO daily (THOR cohort 1).
+        Preferred over EV monotherapy or chemo based on THOR data (ORR 35.3% vs 8.5%;
+        mPFS 5.6 vs 2.7 months; HR 0.58). NCCN Category 1.
+        FGFR testing: Therascreen FGFR RGQ RT-PCR (FDA companion diagnostic) OR
+        comprehensive NGS (RNA-NGS preferred for fusions). Test at diagnosis and
+        if not previously done.
+        Not registered in Ukraine — named-patient import or EAP (Janssen).
+    if_false:
+      next_step: 4
+      notes: "FGFR wild-type or not tested: proceed to prior therapy routing."
+
+  # Step 4 — Prior 1L regimen classification.
+  # Whether patient received EV+pembro (combination) or platinum-only (without EV)
+  # determines what 2L agents are appropriate.
+  - step: 4
+    evaluate:
+      any_of:
+        - condition: "Prior 1L regimen contained EV (enfortumab vedotin) — i.e., EV+pembro (EV-302 pathway)"
+    if_true:
+      next_step: 5
+      notes: "EV-experienced patients: EV re-challenge not validated; route to platinum chemo or other options."
+    if_false:
+      next_step: 6
+      notes: "EV-naive patients (prior platinum ± avelumab without EV): route to EV monotherapy or ICI."
+
+  # Step 5 — Post-EV+pembro patients: platinum chemo eligibility.
+  # For patients who progressed on EV+pembro 1L: platinum chemotherapy (if cisplatin/
+  # carboplatin eligible) is the standard 2L option. No approved antibody-drug conjugate
+  # rechallenge in this setting.
+  - step: 5
+    evaluate:
+      all_of:
+        - condition: "CrCl ≥30 mL/min"
+        - condition: "No prior platinum within 6 months (de novo platinum-eligible)"
+    if_true:
+      result: null
+      notes: >
+        Post-EV+pembro, platinum-eligible: gemcitabine+carboplatin (AUC 5 day 1 +
+        gemcitabine 1000 mg/m² d1,8 q21d) is standard 2L chemotherapy.
+        Or MVAC (methotrexate+vinblastine+doxorubicin+cisplatin) for cisplatin-eligible.
+        REG-CISPLATIN-GEMCITABINE-UROTHELIAL or REG-GEM-CARBO-UROTHELIAL.
+        IND-UROTHELIAL-2L-PLATINUM-CHEMO not yet authored — use platinum chemo regimen.
+        FGFR testing: if FGFR2/3+ → erdafitinib (IND-UROTHELIAL-2L-ERDAFITINIB)
+        may be considered even in post-EV setting (THOR enrolled some EV-experienced;
+        discuss at MDT).
+    if_false:
+      result: null
+      notes: >
+        Post-EV+pembro, platinum-ineligible (CrCl <30 or prior platinum ≤6 months):
+        single-agent taxane (paclitaxel 175 mg/m² q3w or docetaxel 75 mg/m² q3w)
+        is an option. Vinflunine (registered in EU; not in Ukraine).
+        MDT discussion; best supportive care if ECOG deteriorating.
+
+  # Step 6 — EV-naive, platinum-experienced patients.
+  # ICI exposure status determines whether pembrolizumab or EV is appropriate.
+  - step: 6
+    evaluate:
+      all_of:
+        - condition: "No prior EV-containing therapy"
+        - condition: "ECOG PS 0-1"
+        - condition: "No severe peripheral neuropathy (Grade ≥2), no uncontrolled DM, no severe ocular disease"
+    if_true:
+      result: IND-UROTHELIAL-2L-EV
+      notes: >
+        EV-naive, prior platinum ± avelumab: EV monotherapy preferred 2L (EV-301:
+        mOS 12.9 vs 9.0 months, HR 0.70; ORR 40.6% vs 17.9%).
+        EV 1.25 mg/kg IV d1, 8, 15 q28d until progression.
+        FGFR testing mandatory — FGFR+ → erdafitinib preferred (THOR; HR 0.58).
+        For ICI-naive patients who did NOT receive avelumab maintenance 1L:
+        pembrolizumab (IND-UROTHELIAL-2L-PEMBROLIZUMAB) is an alternative,
+        especially for ECOG 2 patients ineligible for EV.
+    if_false:
+      result: IND-UROTHELIAL-2L-PEMBROLIZUMAB
+      notes: >
+        EV-naive, ECOG 2 or EV-contraindicated (neuropathy, DM, ocular): pembrolizumab
+        2L if ICI-naive (KEYNOTE-045: mOS 10.3 vs 7.4 months, HR 0.73).
+        Only if NO prior anti-PD-(L)1 exposure (not avelumab-experienced).
+        PD-L1 CPS ≥10 predicts better benefit but not required.
+
+sources:
+  - SRC-EV301-POWLES-2021
+  - SRC-KEYNOTE045-BELLMUNT-2017
+
+last_reviewed: "2026-05-04"
+notes: >
+  UROTHELIAL 2L ROUTING SUMMARY (2025/2026):
+
+  Most patients receive EV+pembro (EV-302) as 1L → they are EV-experienced at 2L.
+  For these patients (step 5): platinum-based chemo is 2L standard.
+  IND-UROTHELIAL-2L-PLATINUM-CHEMO not yet formally authored as indication —
+  use REG-CISPLATIN-GEMCITABINE-UROTHELIAL or carbo-gem without separate indication.
+
+  EV-naive patients (received platinum ± avelumab 1L, no EV):
+  - FGFR2/3+: erdafitinib (THOR)
+  - FGFR WT: EV monotherapy (EV-301)
+  - EV-contraindicated, ICI-naive: pembrolizumab (KEYNOTE-045)
+
+  FGFR2/3 testing MANDATORY before 2L — 15-20% of UC patients have FGFR2/3 alterations.
+  NGS/RNA-seq preferred (captures both mutations and fusions).
+
+  Gap: IND-UROTHELIAL-2L-PLATINUM-CHEMO (formal indication for gem+carbo or gem+cis
+  post-EV+pembro) not yet authored.
