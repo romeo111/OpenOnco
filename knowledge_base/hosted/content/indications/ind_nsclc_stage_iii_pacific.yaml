@@ -5,38 +5,105 @@ applicable_to:
   disease_id: DIS-NSCLC
   stage_stratum: STAGE_III_UNRESECTABLE
   line_of_therapy: 1
-  biomarker_requirements_required: []
-  biomarker_requirements_excluded: []
+  stage_requirements:
+    - "Unresectable stage III NSCLC (IIIA, IIIB, or IIIC)"
+    - "No disease progression during or after platinum-based concurrent chemoradiotherapy (cCRT)"
+    - "EGFR/ALK wild-type OR EGFR/ALK status unknown (EGFR-mutated patients should receive osimertinib per LAURA; see IND-NSCLC-STAGE3-EGFR-LAURA)"
+  biomarker_requirements:
+    - "EGFR mutation status: test before CRT — if EGFR exon 19 del or L858R → osimertinib consolidation (LAURA) preferred over durvalumab"
+    - "PD-L1 TPS: testing NOT required for eligibility — PACIFIC enrolled regardless of PD-L1; subgroup with PD-L1 <1% may have attenuated benefit but NCCN does not restrict"
+    - "ALK: test before CRT — if ALK+ → alectinib may be preferred for systemic component"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "sensitizing EGFR mutation (ex19del/L858R) — LAURA (osimertinib; PFS HR 0.16) preferred over durvalumab (ICI attenuated in EGFR-driven tumors)"
+      required: false
   demographic_constraints:
     ecog_max: 1
 
 recommended_regimen: REG-DURVA-CONSOLIDATION-PACIFIC
-concurrent_therapy: []
-followed_by: []
+
+concurrent_therapy:
+  - "No concurrent anticancer therapy during durvalumab consolidation"
+
+followed_by:
+  - "Continue durvalumab 10 mg/kg Q2W or 1500 mg Q4W up to 12 months or progression"
+  - "At progression: systemic therapy per metastatic algorithm"
 
 evidence_level: high
 strength_of_recommendation: strong
-nccn_category: "1"
+nccn_category: 1
 
 expected_outcomes:
-  five_year_overall_survival: "43% durva vs 33% placebo"
-  notes: "PACIFIC"
+  pfs_hr: "0.52 (95% CI 0.42–0.65; p<0.001)"
+  os_hr: "0.68 (95% CI 0.53–0.87; p=0.0025)"
+  five_year_os: "43.0% (durvalumab) vs 33.4% (placebo)"
+  median_pfs: "16.9 months vs 5.6 months"
+  notes: >
+    PACIFIC (Antonia 2018 NEJM; NCT02125461; Phase 3; N=709):
+    Durvalumab 10 mg/kg Q2W × 12 months vs placebo after platinum-based cCRT in
+    unresectable stage III NSCLC (any PD-L1; any histology).
+    PFS HR 0.52; mPFS 16.9 vs 5.6 months; OS HR 0.68; 5-year OS 43% vs 33%.
+    FDA approved February 16, 2018. NCCN NSCLC 2025: Category 1.
+    NOTE: EGFR-mutated patients now route to osimertinib (LAURA; FDA Sep 2024;
+    PFS HR 0.16) — dramatically superior for EGFR+ subgroup. PACIFIC remains
+    standard for EGFR/ALK WT unresectable stage III NSCLC.
 
-hard_contraindications: []
+hard_contraindications:
+  - "EGFR sensitizing mutation (ex19del/L858R): osimertinib (LAURA; PFS HR 0.16) strongly preferred"
+  - "Active pneumonitis ≥Grade 2 at end of CRT (durvalumab ILD risk overlaps with post-CRT pneumonitis)"
+  - "Active autoimmune disease requiring systemic immunosuppression (>10 mg/day prednisone)"
+  - "Prior organ transplant"
+  - "ECOG PS ≥2 at consolidation initiation"
+  - "ECOG PS 4 (engine hard gate)"
+
 red_flags_triggering_alternative:
-  - RF-NSCLC-ORGAN-DYSFUNCTION
-required_tests: [TEST-NSCLC-NGS-PANEL, TEST-PDL1-IHC, TEST-CECT-CAP, TEST-BRAIN-MRI-CONTRAST]
-desired_tests: []
+  - "Unresolved pneumonitis ≥Grade 2 from CRT: delay durvalumab until ≤Grade 1; hold threshold lower than typical (combined ICI+RT pneumonitis is more common)"
+  - "EGFR mutation found after CRT: route to osimertinib (LAURA; IND-NSCLC-STAGE3-EGFR-LAURA)"
+  - "ALK rearrangement: alectinib adjuvant (ALINA trial) may apply in this setting; MDT discussion"
+
+required_tests:
+  - "EGFR mutation testing: MANDATORY before CRT initiation (if EGFR+, route to osimertinib post-CRT)"
+  - "PD-L1 TPS: informational (does not gate eligibility but PD-L1 <1% subgroup may have attenuated benefit)"
+  - "ALK/ROS1: test before CRT"
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "CT CAP restaging after CRT before durvalumab initiation"
+  - "PFTs if post-CRT pulmonary function concern"
+
+desired_tests:
+  - "Brain MRI at diagnosis and post-CRT"
+  - "ctDNA: molecular monitoring"
+
+rationale: >
+  PACIFIC (Antonia 2018 NEJM) demonstrated durvalumab consolidation after platinum-based
+  CRT significantly improves PFS (HR 0.52) and OS (HR 0.68; 5-year OS 43% vs 33%)
+  in unresectable stage III NSCLC. FDA approved February 16, 2018. NCCN Cat 1.
+  KEY UPDATE 2024: LAURA (Zhou 2024 NEJM; FDA Sep 2024) showed osimertinib post-CRT
+  achieves PFS HR 0.16 in EGFR-mutated stage III NSCLC — dramatically superior to
+  durvalumab. EGFR-mutated patients must now be routed to LAURA (osimertinib), not PACIFIC.
+  Durvalumab (PACIFIC) remains the standard for EGFR/ALK WT unresectable stage III NSCLC.
+  PD-L1 does not gate eligibility: PACIFIC enrolled PD-L1 unselected; analysis suggests
+  PD-L1 <1% may show attenuated benefit but NCCN does not restrict based on PD-L1.
+  Durvalumab dose: 10 mg/kg Q2W × 12 months (original PACIFIC dose) OR 1500 mg flat
+  Q4W (FDA-approved equivalent flat dose per population PK modeling).
 
 sources:
+  - source_id: SRC-PACIFIC-ANTONIA-2018
+    position: supports
+    relevant_quote_paraphrase: "PACIFIC: durvalumab consolidation post-CRT in stage III unresectable NSCLC — PFS HR 0.52; OS HR 0.68; 5-year OS 43% vs 33%; FDA Feb 2018; NCCN Cat 1"
   - source_id: SRC-NCCN-NSCLC-2025
     weight: primary
   - source_id: SRC-ESMO-NSCLC-EARLY-2024
     weight: primary
 
-last_reviewed: null
-reviewers: []
-
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
 notes: >
-  Standard for stage III unresectable post-concurrent CRT. Pneumonitis
-  G≥2 at end of CRT excludes durva initiation.
+  Workstream EX 2026-05-04. Updated from stub to full content.
+  Added EGFR-WT specificity post-LAURA (EGFR+ now route to IND-NSCLC-STAGE3-EGFR-LAURA).
+  Added SRC-PACIFIC-ANTONIA-2018 source.
+  Wired into ALGO-NSCLC-STAGE3-UNRESECTABLE (new algorithm authored in EX).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

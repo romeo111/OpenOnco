@@ -1,0 +1,100 @@
+id: ALGO-NSCLC-STAGE3-UNRESECTABLE
+applicable_to_disease: DIS-NSCLC
+applicable_to_disease_state: STAGE_III_UNRESECTABLE
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select post-CRT consolidation therapy for unresectable stage III NSCLC.
+  Gate 1: EGFR exon 19 del or L858R present → osimertinib (LAURA; FDA Sep 2024;
+  PFS HR 0.16 — most potent result in stage III NSCLC consolidation).
+  Gate 2: EGFR WT/negative → durvalumab (PACIFIC; FDA Feb 2018; PFS HR 0.52;
+  5-year OS 43% vs 33%). Applicable after completion of concurrent or sequential
+  platinum-based CRT without disease progression.
+  NOTE: ALK+ patients: ALINA (alectinib) data emerging but no FDA-approved
+  consolidation regimen for ALK+ stage III — MDT discussion for clinical trial.
+
+output_indications:
+  - IND-NSCLC-STAGE3-EGFR-LAURA
+  - IND-NSCLC-STAGE-III-PACIFIC
+
+default_indication: IND-NSCLC-STAGE-III-PACIFIC
+
+decision_tree:
+  # Step 1 — CRT completion and disease stability confirmation.
+  # Durvalumab/osimertinib consolidation applies only after CRT without
+  # progression. Progression during CRT → proceed to metastatic systemic
+  # algorithm. Also confirms unresectability — resectable patients would
+  # have been triaged to surgery before CRT.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Concurrent or sequential platinum-based CRT completed (≥2 cycles platinum+RT)"
+        - condition: "No disease progression during or after CRT (CT/PET restaging required)"
+        - condition: "Unresectable stage III confirmed (IIIA, IIIB, or IIIC — MDT or thoracic surgery assessment)"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Progression during CRT: route to ALGO-NSCLC-METASTATIC-1L for systemic therapy.
+        Resectable stage III: route to ALGO-NSCLC-RESECTABLE-PERIOP for perioperative ICI.
+
+  # Step 2 — EGFR mutation gate (LAURA vs PACIFIC).
+  # CRITICAL: EGFR testing must occur BEFORE CRT initiation to plan post-CRT
+  # consolidation. Late testing (after CRT) delays consolidation start.
+  # EGFR exon 19 del or L858R (sensitizing) → osimertinib (LAURA; PFS HR 0.16;
+  # FDA Sep 2024; NCCN Cat 1). All other EGFR status → durvalumab (PACIFIC; PFS
+  # HR 0.52; FDA Feb 2018; NCCN Cat 1).
+  # Durvalumab shows attenuated benefit in EGFR-mutated subgroup (oncogene-driven
+  # tumors with low TMB have limited ICI responsiveness).
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
+        - condition: "EGFR exon 21 L858R mutation confirmed"
+    if_true:
+      result: IND-NSCLC-STAGE3-EGFR-LAURA
+      notes: >
+        EGFR exon 19 del or L858R confirmed: osimertinib 80 mg QD consolidation
+        post-CRT (LAURA; Zhou 2024 NEJM; PFS HR 0.16; mPFS 39.1 vs 5.6 months;
+        FDA Sep 2024; NCCN Cat 1). Uses REG-OSIMERTINIB-NSCLC (same 80 mg dose
+        as 1L metastatic and ADAURA adjuvant).
+        Start osimertinib as soon as possible after CRT completion (within 6 weeks
+        per LAURA protocol; pneumonitis ≤Grade 1 required before starting).
+        Continue until progression or unacceptable toxicity (no fixed duration).
+        EGFR exon 20 insertion: NOT covered by LAURA; osimertinib inactive.
+    if_false:
+      result: IND-NSCLC-STAGE-III-PACIFIC
+      notes: >
+        EGFR WT / ALK WT / EGFR unknown / non-sensitizing EGFR variant:
+        durvalumab 10 mg/kg IV Q2W (or 1500 mg flat Q4W) up to 12 months
+        (PACIFIC; Antonia 2018 NEJM; PFS HR 0.52; OS HR 0.68; 5-year OS 43%
+        vs 33%; FDA Feb 2018; NCCN Cat 1).
+        Start within ~6 weeks of CRT completion. Pneumonitis ≥Grade 2 at CRT
+        end: hold durvalumab until resolved to ≤Grade 1.
+        ALK-rearranged patients: durvalumab is the current standard (no approved
+        ALK-TKI consolidation for stage III); discuss ALINA (alectinib) on clinical
+        trial basis with MDT.
+
+sources:
+  - source_id: SRC-PACIFIC-ANTONIA-2018
+    position: supports
+  - source_id: SRC-LAURA-ZHOU-2024
+    position: supports
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-EARLY-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EX 2026-05-04. New algorithm for unresectable stage III NSCLC
+  post-CRT consolidation. Two indications:
+  (1) IND-NSCLC-STAGE3-EGFR-LAURA: EGFR ex19del/L858R → osimertinib (LAURA;
+      FDA Sep 2024; PFS HR 0.16) — paradigm-changing 2024 approval.
+  (2) IND-NSCLC-STAGE-III-PACIFIC: EGFR-WT → durvalumab (PACIFIC; FDA Feb 2018;
+      PFS HR 0.52; 5-year OS 43%) — long-standing Cat 1 standard.
+  EGFR testing before CRT initiation is critical to plan the consolidation approach.
+  Two-reviewer clinical signoff required per CHARTER §6.1.

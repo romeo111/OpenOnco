@@ -1,0 +1,110 @@
+id: IND-NSCLC-STAGE3-EGFR-LAURA
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  stage_stratum: STAGE_III_UNRESECTABLE
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable stage III NSCLC (IIIA, IIIB, or IIIC)"
+    - "Following completion of concurrent or sequential platinum-based chemoradiotherapy (CRT)"
+    - "No disease progression during or after CRT"
+  biomarker_requirements:
+    - "EGFR exon 19 deletion OR exon 21 L858R mutation: REQUIRED (LAURA enrolled only these two common sensitizing mutations)"
+    - "EGFR testing: tissue or plasma NGS; exon 19 del and L858R must be confirmed BEFORE CRT initiation for appropriate planning"
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-EGFR-MUTATION
+      value_constraint: "exon 20 insertion — NOT covered by LAURA label; osimertinib inactive against exon 20 ins"
+      required: false
+  demographic_constraints:
+    ecog_max: 1
+
+recommended_regimen: REG-OSIMERTINIB-NSCLC
+
+concurrent_therapy:
+  - "No concurrent systemic anticancer therapy during osimertinib consolidation"
+
+followed_by:
+  - "Continue osimertinib until progression or unacceptable toxicity (no fixed duration cap)"
+  - "AlloHCT or RT: not applicable in this setting"
+  - "At progression: systemic therapy per metastatic algorithm (ALGO-NSCLC-METASTATIC-1L or 2L)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pfs_hr: "0.16 (95% CI 0.10–0.24; p<0.001)"
+  median_pfs: "39.1 months vs 5.6 months (placebo)"
+  cns_pfs_hr: "0.24 — significantly reduces brain metastases"
+  os_note: "OS immature at primary analysis (HR 0.81; p=0.53)"
+  notes: >
+    LAURA (Zhou 2024 NEJM; NCT03521154; Phase 3; N=216):
+    Osimertinib 80 mg QD vs placebo after CRT for EGFR-mutated (ex19del/L858R)
+    unresectable stage III NSCLC. PFS HR 0.16 (p<0.001); mPFS 39.1 vs 5.6 months.
+    CNS PFS HR 0.24 — osimertinib strongly prevents brain metastases.
+    OS data immature at primary (HR 0.81; CI 0.42–1.56; NS).
+    FDA approved September 5, 2024. NCCN NSCLC 2025: Category 1.
+
+hard_contraindications:
+  - "EGFR exon 20 insertion, ALK/ROS1 rearrangement, or EGFR WT — osimertinib not indicated"
+  - "Active severe ILD/pneumonitis ≥Grade 2 at time of osimertinib initiation"
+  - "Prior osimertinib therapy"
+  - "Unresolved radiation-induced pneumonitis ≥Grade 2 (overlapping toxicity with osimertinib ILD)"
+  - "ECOG PS ≥3"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "EGFR WT/unknown: use durvalumab (PACIFIC; IND-NSCLC-STAGE-III-PACIFIC) instead"
+  - "CRT pneumonitis ≥Grade 2 unresolved: delay osimertinib initiation; reassess when ≤Grade 1"
+  - "Active autoimmune disease requiring immunosuppression: not a contraindication for osimertinib (TKI, not ICI) — proceed with monitoring"
+
+required_tests:
+  - "EGFR mutation testing: ex19del/L858R confirmation MANDATORY (tissue NGS or validated plasma ctDNA)"
+  - "CT CAP restaging after CRT (before osimertinib initiation)"
+  - "Brain MRI: rule out brain metastases post-CRT (osimertinib CNS-active but baseline needed)"
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "ECG baseline (osimertinib prolongs QTc — uncommon but documented)"
+
+desired_tests:
+  - "PD-L1 TPS: informational only (does not change osimertinib indication)"
+  - "ctDNA: molecular monitoring tool"
+
+rationale: >
+  LAURA (Zhou 2024 NEJM) established osimertinib 80 mg QD as consolidation therapy
+  after CRT for EGFR-mutated unresectable stage III NSCLC: PFS HR 0.16 (mPFS 39.1 vs
+  5.6 months), CNS PFS HR 0.24. FDA approved September 5, 2024. NCCN Cat 1.
+  This approval transforms the treatment paradigm for EGFR+ stage III patients:
+  previously treated the same as EGFR-WT patients with durvalumab (PACIFIC), LAURA
+  demonstrates dramatic PFS benefit from EGFR-targeted consolidation.
+  Key rationale: EGFR-mutated NSCLC is oncogene-driven with low TMB and limited
+  immune responsiveness — ICI (durvalumab) generally shows attenuated benefit in
+  EGFR+ patients. Osimertinib (third-gen EGFR TKI) maintains its efficacy in the
+  locally advanced setting with excellent CNS penetration.
+  PD-L1 does NOT gate osimertinib eligibility — EGFR genotype is the sole biomarker.
+  OS data are immature but PFS HR 0.16 is one of the strongest efficacy signals
+  ever seen in a stage III NSCLC consolidation trial (PACIFIC PFS HR 0.52 comparatively).
+
+sources:
+  - source_id: SRC-LAURA-ZHOU-2024
+    position: supports
+    relevant_quote_paraphrase: "LAURA: osimertinib post-CRT in EGFR-mutated stage III unresectable NSCLC — PFS HR 0.16; mPFS 39.1 vs 5.6 mo; CNS PFS HR 0.24; FDA Sep 2024; NCCN Cat 1"
+  - source_id: SRC-NCCN-NSCLC-2025
+    weight: primary
+  - source_id: SRC-ESMO-NSCLC-EARLY-2024
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EX 2026-05-04. LAURA: osimertinib consolidation post-CRT for EGFR-mutated
+  stage III unresectable NSCLC. FDA Sep 2024.
+  Paradigm-changing approval — replaces durvalumab (PACIFIC) for EGFR-mutated patients.
+  Uses existing REG-OSIMERTINIB-NSCLC (same 80 mg QD dose as 1L metastatic/adjuvant).
+  Companion indication IND-NSCLC-STAGE-III-PACIFIC updated to specify EGFR-WT only.
+  Wired into ALGO-NSCLC-STAGE3-UNRESECTABLE (new algorithm).
+  Two-reviewer clinical signoff required per CHARTER §6.1.
