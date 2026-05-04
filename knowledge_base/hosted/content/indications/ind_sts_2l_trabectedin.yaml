@@ -1,0 +1,110 @@
+id: IND-STS-2L-TRABECTEDIN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-STS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced (unresectable or metastatic) soft-tissue sarcoma — relapsed/refractory after 1L anthracycline-based chemotherapy"
+    - "Histology with established trabectedin activity: liposarcoma (myxoid/round cell >> WD/DD) and leiomyosarcoma (uterine and retroperitoneal)"
+    - "ECOG PS 0-2"
+    - "Adequate hepatic function (ALT/AST ≤2.5× ULN; bilirubin ≤ULN)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Trabectedin (Yondelis; ET-743) is an alkylating agent with particularly
+      high activity in myxoid/round cell liposarcoma (MRCLS; FUS-CHOP or EWSR1-CHOP
+      fusion) and leiomyosarcoma. Phase 3 SAR-3007 (Demetri 2016 NEJM):
+      trabectedin vs dacarbazine in LPS/LMS — mPFS 4.2 vs 1.5 months; HR 0.55.
+      MRCLS-specific: exceptionally high ORR up to 51% (Grosso 2007 Annals Oncology)
+      — FUS-CHOP fusion-expressing tumors are highly sensitive to trabectedin.
+      Hepatotoxicity: transaminase elevation is common (Grade 3-4 ALT/AST in ~20%)
+      — mandatory LFT monitoring; dose reductions based on hepatic function.
+      Myopathy/rhabdomyolysis: rare but serious; weekly CK monitoring.
+      Administration: IV over 24 hours via central venous catheter (CVC required;
+      high risk of extravasation injury with peripheral IV).
+      Ukraine: trabectedin registered; NSZU reimbursement for STS per NCCN evidence.
+
+recommended_regimen: REG-TRABECTEDIN-STS
+concurrent_therapy:
+  - "Dexamethasone 20 mg IV: 30 minutes before trabectedin (hepatoprotection + antiemetic)"
+  - "5-HT3 antagonist antiemetic: day of infusion + day 1 post"
+  - "LFT (ALT/AST/bilirubin/ALP): before each cycle (hepatotoxicity monitoring)"
+  - "CK (creatine kinase): weekly (myopathy/rhabdomyolysis monitoring)"
+  - "Central venous catheter: mandatory for 24-hour infusion"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 8 weeks (RECIST 1.1)"
+  - "At progression: pazopanib (non-adipocytic STS); eribulin (LMS); gemcitabine+docetaxel; clinical trial"
+  - "MRCLS with FUS-CHOP: molecular re-evaluation if atypical progression (rare secondary dedifferentiation)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "9.9% (SAR-3007; trabectedin arm) but mPFS benefit in LPS/LMS; MRCLS specific ORR ~24-51%"
+  complete_response: "CR rare; mainly SD and PR constitute benefit"
+  progression_free_survival: "mPFS 4.2 months vs 1.5 months (dacarbazine; HR 0.55; p<0.001; SAR-3007)"
+  overall_survival_5y: "mOS 12.4 vs 12.9 months (SAR-3007; HR 0.87; p=0.37 — not significant OS difference)"
+  notes: >
+    PRIMARY EVIDENCE: Demetri GD et al. NEJM 2016;374:2219-2229 (SAR-3007
+    Phase 3; N=518): trabectedin vs dacarbazine in advanced LPS/LMS post-anthracycline.
+    mPFS 4.2 vs 1.5 months; HR 0.55 (p<0.001). OS similar (HR 0.87; p=0.37).
+    FDA approval October 2015 for liposarcoma and leiomyosarcoma post-anthracycline.
+    MRCLS histology has markedly higher response rates (ORR up to 51% per Grosso 2007).
+    NOTE: Trabectedin's clinical benefit is primarily PFS stabilization and
+    disease control rather than high ORR. Particularly valuable for MRCLS
+    where trabectedin interferes with aberrant FUS-CHOP transcriptional activity.
+
+hard_contraindications:
+  - "Severe hepatic impairment (Child-Pugh B/C; bilirubin >ULN; ALT >2.5× ULN)"
+  - "Concurrent strong CYP3A4 inhibitors (azole antifungals, ritonavir) — significant trabectedin exposure increase"
+  - "No peripheral IV administration — extravasation risk is high; central venous catheter required"
+  - "Creatinine clearance <30 mL/min (insufficient data; avoid)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "CK (creatine kinase): baseline (myopathy monitoring)"
+  - "Histology confirmation + subtype (liposarcoma, LMS — MRCLS FUS-CHOP fusion assessment if liposarcoma)"
+  - "CVC placement: before initiation"
+
+sources:
+  - source_id: SRC-ET743-SAR3007-DEMETRI-2016
+    position: supports
+    relevant_quote_paraphrase: >
+      SAR-3007 Phase 3 (Demetri 2016 NEJM; N=518): trabectedin vs dacarbazine
+      in advanced LPS/LMS post-anthracycline. mPFS 4.2 vs 1.5 months; HR 0.55
+      (p<0.001). FDA Oct 2015. NCCN STS Category 1.
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN STS: trabectedin Category 1 for 2L liposarcoma and leiomyosarcoma
+      after anthracycline failure. Particularly preferred for myxoid/round cell
+      liposarcoma and LMS given high subtype-specific activity.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing STS 2L trabectedin indication
+  gap in algo_sts_advanced_1l.yaml.
+  MRCLS (myxoid/round cell liposarcoma) is the "sweet spot" for trabectedin:
+  FUS-CHOP or EWSR1-CHOP fusion directly disrupted by trabectedin's MOA
+  (trabectedin binds minor groove of DNA, displacing FUS-CHOP from promoters).
+  This mechanism is unique to MRCLS and explains the dramatically higher ORR
+  compared to other sarcoma subtypes.
+  Central venous catheter (CVC or PICC) is mandatory — 24-hour infusion with
+  high risk of extravasation injury with peripheral administration.
+  Dexamethasone 20 mg IV before infusion is mandatory (hepatoprotection).

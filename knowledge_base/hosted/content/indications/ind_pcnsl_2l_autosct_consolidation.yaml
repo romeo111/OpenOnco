@@ -1,0 +1,125 @@
+id: IND-PCNSL-2L-AUTOSCT-CONSOLIDATION
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PCNSL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Primary CNS lymphoma (PCNSL) — relapsed/refractory after 1L HD-MTX-based induction"
+    - "Achieved CR or good PR (≥50% reduction in contrast-enhancing tumor on MRI) to 2L salvage chemotherapy (R-MPV re-challenge, ibrutinib, R-lenalidomide, or other salvage)"
+    - "Age ≤70 years (physiologic fitness — high-dose conditioning requires adequate organ reserve)"
+    - "ECOG PS 0-2 at time of autoSCT referral"
+    - "Adequate organ function: LVEF ≥45%, DLCO ≥50% predicted, creatinine ≤1.5× ULN, bilirubin ≤1.5× ULN"
+    - "No active systemic lymphoma (PCNSL is confined to CNS ± vitreoretinal)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      AutoSCT consolidation in PCNSL uses thiotepa-based high-dose conditioning
+      (thiotepa has excellent CNS penetration; carmustine/BCNU also CNS-penetrant).
+      PREFERRED CONDITIONING: thiotepa + busulfan + cyclophosphamide (TBC) or
+      thiotepa + carmustine (BCNU) — both established for PCNSL.
+      CONSOLIDATION IS RECOMMENDED FOR: fit patients (age ≤70, ECOG 0-2, adequate
+      organs) who achieve CR2 or PR2 after 2L salvage. AutoSCT offers a chance
+      at durable remission in a disease that almost universally relapses without
+      consolidation.
+      DATA: Schorb 2013 (Haematologica): autoSCT in relapsed PCNSL after salvage;
+      2-year PFS ~40-50% in responders undergoing transplant vs <20% without.
+      Soussain 2008 (Blood): thiotepa+busulfan conditioning autoSCT in PCNSL;
+      durable responses in ~40% of transplanted patients.
+      Age caveat: patients >70 with excellent performance status may be considered
+      after MDT discussion; reduced-intensity conditioning is being investigated.
+      PCNSL-specific: standard BEAM conditioning is LESS preferred than thiotepa-
+      based because of inferior CNS penetration of some BEAM components (carmustine
+      crosses BBB; etoposide, cytarabine, melphalan do so to a lesser degree).
+
+recommended_regimen: REG-AUTOSCT-THIOTEPA-PCNSL
+concurrent_therapy:
+  - "CNS radiotherapy (WBRT): avoided in favor of autoSCT (neurotoxicity risk); defer WBRT until after autoSCT failure"
+  - "Antimicrobial prophylaxis: TMP-SMX + acyclovir + antifungal × ≥3 months post-transplant"
+  - "GCSF: filgrastim or pegfilgrastim for engraftment support post-autoSCT"
+  - "IVIG: if IgG <400 mg/dL (B-cell aplasia post-conditioning)"
+  - "Ophthalmology: vitreoretinal involvement assessment before autoSCT (intravitreal MTX or WBRT may be needed for ocular disease)"
+
+followed_by:
+  - "Brain MRI with gadolinium: day +30, day +90, then every 3 months × 2 years"
+  - "Ophthalmology + CSF cytology: if vitreoretinal involvement at diagnosis"
+  - "Neuropsychological assessment: 6-12 months post-autoSCT (late neurotoxicity surveillance)"
+  - "At relapse post-autoSCT: clinical trial; WBRT (if not previously given); palliative approach for refractory disease"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "N/A (this is consolidation for patients already in response)"
+  complete_response: "CR maintained or deepened in ~60-70% of transplanted patients"
+  progression_free_survival: "2-year PFS ~40-50% in transplanted responders (Schorb 2013, Soussain 2008)"
+  overall_survival_5y: "5-year OS ~40-50% in transplanted responders (retrospective series)"
+  notes: >
+    KEY EVIDENCE:
+    (1) Soussain C et al. Blood 2008;112(9):3744-3755 (Phase 2; N=43):
+        thiotepa+busulfan conditioning autoSCT in relapsed PCNSL after salvage.
+        Complete response in 57% of transplanted patients; median OS not reached
+        at 5 years in responders.
+    (2) Schorb E et al. Haematologica 2013;98(5):804-807: autoSCT with
+        thiotepa-based conditioning in relapsed PCNSL; 2-year PFS ~43%.
+    (3) MSKCC retrospective data: autoSCT consolidation after 2L CR in
+        relapsed PCNSL associated with prolonged PFS vs salvage alone.
+    NCCN CNS Lymphoma: autoSCT consolidation (Category 2A) for fit patients
+    achieving CR2 or near-CR2 after salvage therapy.
+    NOTE: WBRT (whole-brain radiotherapy) is an alternative consolidation approach
+    but carries significant neurotoxicity (cognitive decline) — autoSCT is preferred
+    for fit patients ≤70 when achievable at a BMT-capable center.
+
+hard_contraindications:
+  - "No CR or PR after 2L salvage — autoSCT should not be pursued in chemorefractory disease (poor engraftment/outcomes)"
+  - "Age >70 without MDT evaluation (increased treatment-related mortality with thiotepa-based conditioning)"
+  - "ECOG PS ≥3 (functional status too poor for high-dose conditioning)"
+  - "Severe cardiac dysfunction (LVEF <45%) or pulmonary dysfunction (DLCO <50%)"
+  - "Active uncontrolled infection"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Brain MRI gadolinium: pre-autoSCT response assessment (confirm CR/PR to salvage)"
+  - "Echocardiogram (ECHO): LVEF ≥45% required for thiotepa/BCNU conditioning"
+  - "Pulmonary function (DLCO/FEV1): DLCO ≥50% predicted (BCNU pulmonary toxicity)"
+  - "Creatinine/CrCl: adequate renal function for busulfan/cyclophosphamide clearance"
+  - "CSF cytology: rule out leptomeningeal involvement before conditioning"
+  - "HLA typing: if alloSCT being considered as alternative (PCNSL alloSCT is investigational)"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CNS Lymphoma (B-Cell Lymphoma guideline): autoSCT consolidation
+      Category 2A for fit PCNSL patients achieving CR/near-CR after 2L salvage.
+      Thiotepa-based conditioning preferred over standard BEAM (better CNS penetration).
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing the PCNSL 2L autoSCT
+  consolidation gap noted in algo_pcnsl_2l.yaml.
+  TIME-CRITICAL = true: response to 2L salvage is transient; autoSCT must be
+  planned and initiated promptly after achieving CR/PR to salvage therapy.
+  REGIMEN NOTE: REG-AUTOSCT-THIOTEPA-PCNSL regimen file may need to be authored
+  (thiotepa-busulfan-cyclophosphamide conditioning or thiotepa-BCNU conditioning).
+  Check existing autologous SCT regimen files in the KB.
+  The algorithm models 2L as induction (ibrutinib, R-MPV salvage, R²) followed by
+  autoSCT consolidation in fit responders. This indication captures the consolidation
+  phase explicitly.
+  Ukraine: autologous SCT capability exists at specialized hematology centers
+  (Kyiv — DP "National Cancer Institute", Lviv); international referral to EU
+  transplant centers if local capacity unavailable.

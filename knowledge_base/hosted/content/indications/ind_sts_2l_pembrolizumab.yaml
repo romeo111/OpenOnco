@@ -1,0 +1,115 @@
+id: IND-STS-2L-PEMBROLIZUMAB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-STS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced (unresectable or metastatic) soft-tissue sarcoma — relapsed/refractory after ≥1 prior line of systemic therapy"
+    - "BIOMARKER GATE: TMB-H (≥10 mut/Mb by NGS) — FDA tissue-agnostic approval (KEYNOTE-158)"
+    - "OR: MSI-H/dMMR (any biomarker testing method) — FDA tissue-agnostic approval (2017/2019)"
+    - "HISTOLOGY PREFERENCE: UPS (undifferentiated pleomorphic sarcoma) has highest pembrolizumab response rate in sarcoma (~18% ORR in SARC028); LMS and liposarcoma respond poorly to pembrolizumab monotherapy"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - BIO-TMB-HIGH
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Pembrolizumab in STS is used in two distinct contexts:
+      (1) TISSUE-AGNOSTIC TMB-H indication (FDA June 2020; KEYNOTE-158 basket trial):
+          applicable to any STS with TMB ≥10 mut/Mb by F1CDx or FoundationOne CDx.
+          ORR across all TMB-H solid tumors: 29%. Sarcoma-specific data limited.
+      (2) MSI-H/dMMR tissue-agnostic indication (FDA May 2017/2022):
+          applicable to any sarcoma with MSI-H/dMMR. MSI-H is very rare in STS
+          (<2% of cases); important when present (can achieve durable responses).
+      (3) UPS SUBTYPE CONSIDERATION (SARC028; Tawbi 2017 Lancet Oncol):
+          Pembrolizumab in STS/bone sarcoma. UPS cohort: ORR 18% (4/22).
+          LMS cohort: ORR 0%. Dedifferentiated liposarcoma cohort: ORR 0%.
+          Clinical utility: pembrolizumab is preferred for UPS (even without TMB-H
+          per NCCN 2B recommendation) and is the primary option for TMB-H/MSI-H STS.
+      IMPORTANT: Pembrolizumab monotherapy in LMS, liposarcoma, and most STS
+      subtypes shows very low response rates — subtype-specific selection is critical.
+      Active autoimmune disease on systemic immunosuppression: CONTRAINDICATED.
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy:
+  - "Thyroid function (TSH): baseline + every 3 months (immune-mediated thyroiditis)"
+  - "LFT (ALT/AST): baseline + every 6 weeks (immune-mediated hepatitis)"
+  - "Glucose: baseline (immune-mediated diabetes mellitus)"
+  - "Corticosteroids for irAEs per ASTCT grading if needed"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 12 weeks (RECIST 1.1)"
+  - "Continue until progression or ≤35 cycles (2 years)"
+  - "At progression: rechallenge with pembrolizumab if prior benefit and ≥6 months off; clinical trial"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "18% UPS (SARC028; N=22); 29% TMB-H all-comers (KEYNOTE-158)"
+  complete_response: "~5% in UPS (SARC028)"
+  progression_free_survival: "mPFS ~18 weeks in SARC028 STS cohort"
+  overall_survival_5y: "Insufficient data for STS-specific OS (small cohorts)"
+  notes: >
+    EVIDENCE SOURCES:
+    (1) Tawbi HA et al. Lancet Oncology 2017;18(11):1493-1501 (SARC028 Phase 2;
+        N=80 total; 40 STS + 40 bone): pembrolizumab in advanced sarcoma.
+        UPS: ORR 18%; synovial sarcoma: ORR 10%; LMS: ORR 0%;
+        dedifferentiated liposarcoma: ORR 0%.
+    (2) Marabelle A et al. Lancet Oncology 2020;21(10):1353-1365 (KEYNOTE-158
+        basket Phase 2): pembrolizumab in TMB-H solid tumors. ORR 29% (TMB-H)
+        vs 6% (non-TMB-H). FDA tissue-agnostic approval June 2020.
+    (3) TMB-H/MSI-H FDA approval: tissue-agnostic; applies to all STS with
+        documented TMB ≥10 mut/Mb or MSI-H/dMMR.
+    NCCN STS: pembrolizumab Category 2B for UPS; tissue-agnostic for TMB-H/MSI-H.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic therapy (ICI contraindication)"
+  - "Prior organ transplant on immunosuppression (ICI contraindication)"
+  - "LMS or liposarcoma without TMB-H/MSI-H — pembrolizumab monotherapy has 0% ORR in these subtypes (SARC028); alternative regimens strongly preferred"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "TMB testing (FoundationOne CDx or equivalent NGS panel): if not previously done"
+  - "MSI/MMR testing (PCR or IHC): if not previously done"
+  - "PD-L1 CPS/TPS: informational only — not required for STS (tissue-agnostic approval is biomarker-independent)"
+
+sources:
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN STS: pembrolizumab Category 2B for UPS subtype; tissue-agnostic
+      (TMB-H ≥10 mut/Mb or MSI-H/dMMR) recommendation per KEYNOTE-158 applies.
+  - source_id: SRC-ESMO-SARCOMA-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO STS guidelines: immune checkpoint inhibitors in sarcoma limited to
+      selected histologies (UPS preferred) and biomarker-selected (TMB-H/MSI-H)
+      populations. SARC028 UPS cohort (ORR 18%) is the primary evidence.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing STS 2L pembrolizumab indication
+  gap in algo_sts_advanced_1l.yaml.
+  KEY CLINICAL POINT: Pembrolizumab in STS is histology-selective and
+  biomarker-gated. LMS and liposarcoma showed 0% ORR in SARC028 — these patients
+  should receive trabectedin, pazopanib, or GemDoc instead.
+  UPS is the subtype where pembrolizumab has real clinical utility (18% ORR).
+  TMB-H/MSI-H testing should be routine in STS workup at initial diagnosis
+  given that biomarker-positive cases have a distinct treatment path.
+  REG-PEMBROLIZUMAB-MONO (200 mg IV Q3W or 400 mg Q6W; generic pembrolizumab
+  monotherapy regimen) is the applicable regimen.

@@ -1,0 +1,114 @@
+id: IND-BCC-2L-CEMIPLIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Locally advanced BCC (laBCC) — unresectable, not curable by surgery or radiation"
+    - "OR metastatic BCC (mBCC) — distant metastases"
+    - "Prior HHI therapy (vismodegib or sonidegib) — progressed on, or intolerant to, HHI"
+    - "OR patient for whom HHI is not appropriate (e.g., contraindicated or patient refuses HHI)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Cemiplimab (LIBTAYO) is FDA-approved for locally advanced and metastatic BCC
+      after HHI therapy (FDA February 2021 for laBCC; extended to mBCC September 2021).
+      EMPOWER-BCC-1 (Stratigos 2021 Lancet Oncol; N=84 laBCC cohort):
+        ORR 21% (CR 6%, PR 15%) post-HHI. Duration of response: median not reached.
+      PD-L1 expression is NOT required as a gating criterion (EMPOWER-BCC-1 enrolled
+      unselected patients — PD-L1 positivity did not significantly enrich response).
+      Gorlin syndrome (basal cell nevus syndrome; PTCH1 germline): cemiplimab is an
+      appropriate option post-HHI; radiation should be avoided in Gorlin patients
+      (radiation induces new BCCs within the field).
+      Ukraine: cemiplimab not NSZU-listed for BCC; named-patient import required.
+
+recommended_regimen: REG-CEMIPLIMAB-BCC
+concurrent_therapy:
+  - "Thyroid function (TSH): baseline + every 3 months (immune-mediated thyroiditis)"
+  - "Blood glucose: baseline + PRN (immune-mediated diabetes mellitus, rare)"
+  - "Adrenal function (AM cortisol/ACTH): if fatigue, hypotension, hyponatremia (adrenal insufficiency)"
+  - "Dermatology co-management for skin irAEs"
+  - "No routine G-CSF (monotherapy; non-myelosuppressive)"
+
+followed_by:
+  - "CT/MRI: every 12 weeks (RECIST 1.1 for mBCC; modified WHO criteria for laBCC)"
+  - "Continue until progression or unacceptable toxicity (no defined number of cycles)"
+  - "At progression: clinical trial preferred; no established 3L standard for BCC"
+  - "Gorlin syndrome surveillance: 6-month dermatology skin checks (high baseline BCC risk)"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "21% (EMPOWER-BCC-1; laBCC cohort; N=84)"
+  complete_response: "6% CR (EMPOWER-BCC-1)"
+  progression_free_survival: "mPFS ~7.7 months (laBCC cohort; EMPOWER-BCC-1)"
+  overall_survival_5y: "Median OS not reached at 15-month follow-up (EMPOWER-BCC-1)"
+  notes: >
+    PRIMARY EVIDENCE: Stratigos AJ et al. Lancet Oncology 2021;22(6):848-857
+    (EMPOWER-BCC-1; NCT03132636; Phase 2 single-arm): cemiplimab 350 mg Q3W
+    in laBCC post-HHI. N=84 (laBCC); ORR 21%; CR 6%; PR 15%.
+    Disease control rate (SD ≥16 weeks + PR + CR): 48%.
+    FDA laBCC approval February 2021; mBCC approval September 2021.
+    NCCN Skin Cancer (BCC): cemiplimab Category 1 for laBCC/mBCC post-HHI
+    or where HHI is not appropriate.
+    NOTE: Cemiplimab ORR (~21%) is lower than typical NSCLC/melanoma PD-1
+    response rates, reflecting the lower TMB of BCC (~10-100 mut/Mb range
+    vs >10 mut/Mb median for HHI-resistant BCC — adequate but not highly
+    enriched for IO response). Durable responses achieved despite modest ORR.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic therapy (ICI contraindication)"
+  - "Prior organ transplant on immunosuppression (ICI contraindication)"
+  - "BCC without prior HHI or where HHI not yet tried (HHI remains 1L standard)"
+  - "Pregnancy — cemiplimab is fetotoxic (contraceptive counseling required)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Thyroid function (TSH): baseline"
+  - "Skin mapping/photography: baseline extent of laBCC (response documentation)"
+  - "CT chest/abdomen/pelvis: if mBCC — baseline staging"
+  - "MRI or CT primary site: laBCC extent before treatment"
+
+sources:
+  - source_id: SRC-EMPOWER-BCC1-STRATIGOS-2021
+    position: supports
+    relevant_quote_paraphrase: >
+      EMPOWER-BCC-1 Phase 2 (Stratigos 2021 Lancet Oncol; N=84 laBCC): cemiplimab
+      350 mg Q3W post-HHI. ORR 21% (CR 6%, PR 15%); DCR 48%. FDA Feb 2021 (laBCC),
+      Sep 2021 (mBCC). NCCN Cat 1.
+  - source_id: SRC-NCCN-SKIN-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN BCC: cemiplimab Category 1 for laBCC and mBCC after HHI progression
+      or intolerance, or when HHI is not appropriate.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing indication gap flagged in
+  algo_bcc_la_metastatic_1l.yaml notes.
+  BCC 2L represents the post-HHI progression population. First-line remains
+  vismodegib/sonidegib (HHI). Cemiplimab is the ONLY FDA-approved agent for
+  BCC in the post-HHI setting; pembrolizumab is NOT approved for BCC.
+  ORR ~21% post-HHI. Durable responses reported. No clear predictive biomarker
+  beyond PD-L1 (not required for prescribing).
+  Note: algo_bcc_la_metastatic_1l.yaml covers 1L only; IND-BCC-2L-CEMIPLIMAB
+  is referenced in followed_by of that algorithm but resides in the 2L space.
+  A separate ALGO-BCC-2L may be authored in a future workstream if the 2L
+  decision tree becomes more complex (currently single-arm: cemiplimab).

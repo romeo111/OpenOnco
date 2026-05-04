@@ -1,0 +1,97 @@
+id: REG-AUTOSCT-THIOTEPA-PCNSL
+name: "Thiotepa-busulfan-cyclophosphamide (TBC) or thiotepa-carmustine conditioning autoSCT for PCNSL consolidation"
+name_ua: "Тіотепа-бусульфан-циклофосфамід (TBC) або тіотепа-кармустин кондиціонування autoSCT для консолідації PCNSL"
+alternate_names: ["TBC autoSCT PCNSL", "thiotepa-BCNU autoSCT", "high-dose thiotepa PCNSL"]
+
+components:
+  - drug_id: DRUG-THIOTEPA
+    dose: "Thiotepa: 5 mg/kg/day IV × 2 days (days -6, -5)"
+    schedule: "Part of high-dose conditioning regimen (TBC protocol)"
+    route: IV
+    notes: "CNS-penetrating alkylating agent; key component for PCNSL conditioning"
+  - drug_id: DRUG-BUSULFAN
+    dose: "Busulfan: 3.2 mg/kg/day IV × 2 days (days -4, -3) [TBC protocol]"
+    schedule: "IV over 3 hours; pharmacokinetic monitoring recommended (AUC target 900-1350 µmol·min)"
+    route: IV
+    notes: "Alternatively: thiotepa + carmustine (BCNU 400 mg/m² × 1 day) if busulfan unavailable"
+  - drug_id: DRUG-CYCLOPHOSPHAMIDE
+    dose: "Cyclophosphamide: 60 mg/kg/day IV × 2 days (days -2, -1) [TBC protocol]"
+    schedule: "IV with hyperhydration + mesna uroprotection"
+    route: IV
+    notes: "Mesna 60% of cyclophosphamide dose at 0, 4, 8 hours (urothelial protection)"
+
+# Alternative: thiotepa + carmustine (BCNU) conditioning
+# Thiotepa 5 mg/kg × 2 days + BCNU 400 mg/m² day -6
+# (simpler; used when busulfan monitoring unavailable)
+
+phases:
+  - name: mobilization
+    purpose_en: "Stem cell mobilization (before conditioning): G-CSF ± plerixafor"
+    duration: "4-5 days"
+    optional: false
+    components:
+      - drug_id: DRUG-FILGRASTIM
+        dose: "10 µg/kg/day SC"
+        schedule: "Days 1-5 (mobilization phase)"
+        route: SC
+  - name: conditioning
+    purpose_en: "TBC myeloablative conditioning: thiotepa-busulfan-cyclophosphamide"
+    duration: "6 days (days -6 to -1)"
+    optional: false
+  - name: stem_cell_infusion
+    purpose_en: "Autologous stem cell infusion: day 0"
+    duration: "1 day"
+    optional: false
+  - name: engraftment
+    purpose_en: "Post-infusion recovery: G-CSF support until ANC >500/µL × 2 days"
+    duration: "~2-3 weeks"
+    optional: false
+
+supportive_care:
+  - "Mesna: with cyclophosphamide (60% dose at 0, 4, 8 hours — urothelial protection)"
+  - "G-CSF: filgrastim 5 µg/kg/day from day +1 until ANC >500 × 2 days"
+  - "Antimicrobial prophylaxis: TMP-SMX + acyclovir + fluconazole (Candida) × ≥3 months"
+  - "GVHD prophylaxis: not applicable (autologous transplant)"
+  - "Seizure monitoring: thiotepa is CNS-active; seizure precautions during conditioning"
+  - "Mucositis care: intensive oral hygiene; growth factors not generally required during conditioning"
+
+administration_notes: >
+  This regimen requires an inpatient bone marrow transplant unit with:
+  - Stem cell collection facility (apheresis)
+  - Intensive care/HEPA filtration rooms
+  - 24-hour nursing for infusion and monitoring
+  - Pharmacokinetic monitoring capability for busulfan
+  Thiotepa is CNS-penetrant (important for PCNSL — kills occult CNS tumor cells
+  in marrow/CSF compartments during conditioning).
+  PCNSL-specific considerations:
+  - WBRT is avoided as consolidation in favor of autoSCT (lower neurotoxicity)
+  - Brain MRI gadolinium mandatory before conditioning (confirm CR/near-CR)
+  - Vitreoretinal disease: may require intravitreal MTX pre-autoSCT if eye involvement
+  Alternative conditioning: thiotepa + BCNU (carmustine 400 mg/m² × 1 day) can be
+  substituted if busulfan PK monitoring is unavailable; slightly less myeloablative.
+
+contraindications:
+  - "LVEF <45% (cyclophosphamide cardiotoxicity threshold)"
+  - "DLCO <50% (BCNU pulmonary toxicity; carmustine-specific)"
+  - "Creatinine >1.5× ULN (cyclophosphamide renal clearance)"
+  - "Active uncontrolled infection"
+  - "Bilirubin >2× ULN (busulfan hepatotoxicity risk — veno-occlusive disease)"
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR).
+  TBC (thiotepa-busulfan-cyclophosphamide) is the standard PCNSL-specific
+  autoSCT conditioning backbone (CNS penetration of thiotepa and busulfan).
+  Alternative thiotepa-BCNU is also used (simpler; BCNU also CNS-penetrant).
+  Standard BEAM conditioning (used for DLBCL) is less preferred for PCNSL
+  because etoposide, cytarabine, and melphalan have inferior CNS penetration.
+  Drug IDs for thiotepa and busulfan should be verified in KB:
+  - DRUG-THIOTEPA
+  - DRUG-BUSULFAN
+  - DRUG-CYCLOPHOSPHAMIDE (standard chemotherapy drug)
+  - DRUG-FILGRASTIM (G-CSF)

@@ -1,0 +1,114 @@
+id: IND-GRANULOSA-CELL-2L-HORMONAL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GRANULOSA-CELL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Adult granulosa cell tumor (AGCT) — relapsed or refractory after platinum-based chemotherapy"
+    - "OR: first recurrence in patients not fit for platinum-based chemotherapy"
+    - "Hormone receptor-positive (ER/PR; applies to virtually all AGCT — testing confirmatory)"
+    - "ECOG PS 0-2"
+    - "Low-volume, indolent recurrence (slowly progressive); high-volume rapidly progressive favors chemotherapy over hormone therapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Hormonal therapy for AGCT exploits the steroidogenic nature of granulosa cells
+      (ER/PR positive; FSH receptor expression). Options include:
+        (A) Letrozole 2.5 mg PO QD (aromatase inhibitor; preferred in postmenopausal)
+        (B) Megestrol acetate 160 mg PO QD (progestin; older data)
+        (C) Leuprolide acetate 3.75 mg IM monthly or 11.25 mg IM Q3 months (GnRH agonist;
+            preferred in premenopausal — suppresses FSH/LH drive to tumor)
+        (D) Anastrozole 1 mg PO QD (alternative AI)
+      Choice depends on menopausal status and prior hormonal exposure.
+      Hormone therapy is generally low-toxicity; suitable for indolent recurrence or
+      patients not fit for chemotherapy.
+      DURATION: Continue until progression. Responses can be prolonged (months to years).
+      Tumor markers inhibin B and AMH should be monitored every 3 months as response
+      markers (correlate with disease burden in AGCT).
+
+recommended_regimen: REG-LETROZOLE-GRANULOSA-CELL
+concurrent_therapy:
+  - "Inhibin B: every 3 months (response marker — correlates with AGCT disease burden)"
+  - "AMH (anti-Müllerian hormone): every 3 months (alternative/complementary tumor marker)"
+  - "Estradiol monitoring: with leuprolide — confirm FSH/E2 suppression at 4 weeks"
+  - "Bone density (DXA): baseline + annually (AI-related bone loss in postmenopausal)"
+  - "Calcium + vitamin D supplementation: with letrozole/anastrozole"
+
+followed_by:
+  - "CT abdomen/pelvis: every 6-12 months (slow-growing tumor; annual imaging appropriate if stable)"
+  - "Inhibin B: every 3 months (rise precedes imaging evidence of progression by months)"
+  - "At progression on hormonal therapy: re-challenge with carboplatin+paclitaxel; BEP (younger patients); clinical trial"
+  - "Fertility preservation: refer to reproductive endocrinology before treatment if relevant"
+
+evidence_level: low
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~25-40% (retrospective series; no Phase 3 RCT)"
+  complete_response: "CR rare; PR + prolonged SD represent benefit"
+  progression_free_survival: "Highly variable — months to years (indolent disease; responders may have >2-year PFS)"
+  overall_survival_5y: "5-year OS >70% even with recurrence (AGCT is a slow-growing malignancy)"
+  notes: >
+    EVIDENCE BASE: Only retrospective series and case reports available for
+    hormonal therapy in AGCT. No Phase 3 RCT exists or is likely to be conducted
+    given the rarity of AGCT (~2-5% of ovarian cancers).
+    Key retrospective series:
+    - Hardy RD et al. (Gynecol Oncol 2005; N=11): leuprolide in recurrent GCT;
+      ORR ~36%; durable responses.
+    - Fishman A et al. (retrospective): aromatase inhibitors in GCT; partial responses.
+    - NCCN Ovarian Cancer (2025): hormonal options (letrozole, leuprolide, megestrol)
+      as Category 2A for recurrent/refractory AGCT.
+    Inhibin B is the most reliable tumor marker for AGCT and should be used for
+    treatment monitoring; normalization of inhibin B correlates with radiographic CR.
+
+hard_contraindications:
+  - "Juvenile granulosa cell tumor (JGCT) — different biology; chemotherapy preferred (BEP)"
+  - "Rapidly progressive high-volume disease — chemotherapy (carboplatin+paclitaxel) preferred over slow-acting hormonal therapy"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+  - "Hormone receptor-negative AGCT (rare; verify ER/PR before starting)"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Inhibin B: baseline tumor marker"
+  - "AMH: baseline tumor marker"
+  - "Estradiol/FSH/LH: baseline (hormonal axis — guides leuprolide vs letrozole choice)"
+  - "CT abdomen/pelvis: baseline staging for recurrence"
+  - "ER/PR IHC: confirm receptor expression if not previously done"
+
+sources:
+  - source_id: SRC-NCCN-OVARIAN-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Ovarian Cancer: hormonal therapy (letrozole, leuprolide, megestrol,
+      anastrozole) Category 2A for recurrent adult granulosa cell tumor.
+      Inhibin B monitoring recommended.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing indication gap in
+  algo_granulosa_cell_1l.yaml.
+  REGIMEN NOTE: A dedicated REG-LETROZOLE-GRANULOSA-CELL regimen file
+  should be authored (letrozole 2.5 mg PO QD with inhibin B/AMH monitoring
+  and bone density management). Alternatively, use REG-LETROZOLE-BREAST or
+  a generic aromatase inhibitor regimen with granulosa-specific monitoring notes.
+  TODO: verify if REG-LETROZOLE-GRANULOSA-CELL exists or needs creation.
+  For prescribing, letrozole 2.5 mg PO QD is straightforward and may be
+  covered by a generic letrozole drug file.
+  AGCT is the most common adult-type sex cord-stromal tumor. Recurrence can
+  occur >10 years after initial treatment (late recurrence is characteristic).
+  Inhibin B is the defining secretory product of granulosa cells; virtually
+  always elevated in active disease and is more sensitive than CA-125 for AGCT.

@@ -1,0 +1,110 @@
+id: IND-STS-2L-PAZOPANIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-STS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced (unresectable or metastatic) non-adipocytic soft-tissue sarcoma — relapsed/refractory after anthracycline-based chemotherapy"
+    - "EXCLUDED histologies: liposarcoma (adipocytic STS) — excluded from PALETTE trial; pazopanib NOT recommended for liposarcoma"
+    - "PREFERRED histologies: synovial sarcoma, leiomyosarcoma, angiosarcoma, other non-adipocytic STS"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Pazopanib (VOTRIENT) is a multitargeted VEGFR/PDGFR/c-KIT tyrosine kinase
+      inhibitor with FDA approval for non-adipocytic STS after prior chemotherapy
+      (FDA April 2012; PALETTE trial).
+      PALETTE (van der Graaf 2012 Lancet): pazopanib vs placebo in advanced
+      non-adipocytic STS — mPFS 4.6 vs 1.6 months; HR 0.31; p<0.0001.
+      EXCLUSION: liposarcoma was excluded from PALETTE because early trials showed
+      no benefit in adipocytic STS — this is a HARD exclusion in clinical practice.
+      HTN is a class effect and common early AE (blood pressure monitoring mandatory).
+      Hepatotoxicity: ALT elevation in ~40% — LFT monitoring every 4 weeks.
+      Tumor-specific notes:
+        - Synovial sarcoma: one of the best-responding subtypes (ORR ~18% vs average)
+        - LMS: responds; can be combined after GemDoc failure
+        - Angiosarcoma: anti-VEGFR effect clinically active
+        - GIST: excluded (imatinib/sunitinib standard for GIST, different pathway)
+      Ukraine: pazopanib registered for STS (NSZU coverage for PALETTE indication).
+
+recommended_regimen: REG-PAZOPANIB-STS
+concurrent_therapy:
+  - "Blood pressure: weekly × 1 month, then every 2 weeks (VEGFR inhibition → HTN)"
+  - "LFT (ALT/AST/bilirubin): every 4 weeks × 4 months, then every 8 weeks"
+  - "Thyroid function (TSH): every 3 months (hypothyroidism class effect)"
+  - "Urinalysis: baseline + Q3 months (proteinuria — VEGFR inhibition class effect)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 8-12 weeks (RECIST 1.1)"
+  - "At progression: gemcitabine+docetaxel (LMS); trabectedin (LMS/liposarcoma); eribulin (LMS); clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "6% ORR (PALETTE; pazopanib arm) — disease control (SD ≥12 weeks) more informative: 67% vs 38% placebo"
+  complete_response: "CR <1%"
+  progression_free_survival: "mPFS 4.6 months vs 1.6 months (placebo; HR 0.31; p<0.0001; PALETTE)"
+  overall_survival_5y: "mOS 12.5 vs 10.7 months (HR 0.86; p=0.25 — not statistically significant; PALETTE)"
+  notes: >
+    PRIMARY EVIDENCE: van der Graaf WTA et al. Lancet 2012;379:1879-1886
+    (PALETTE Phase 3; N=369): pazopanib vs placebo in advanced non-adipocytic
+    STS post-anthracycline. mPFS 4.6 vs 1.6 months; HR 0.31 (p<0.0001).
+    OS not significantly different (HR 0.86). FDA April 2012.
+    NCCN STS: pazopanib Category 1 for non-adipocytic STS 2L.
+    Low ORR (6%) but significant PFS benefit — disease stabilization is the
+    primary clinical endpoint for cytostatic VEGFR TKIs in sarcoma.
+
+hard_contraindications:
+  - "Liposarcoma (adipocytic STS) — excluded from PALETTE; pazopanib NOT for liposarcoma"
+  - "GIST — separate standard (imatinib/sunitinib/regorafenib/ripretinib)"
+  - "Uncontrolled hypertension (≥150/100 despite 3-drug antihypertensives)"
+  - "Recent major surgery within 28 days (wound healing impairment; VEGFR inhibition)"
+  - "Recent arterial thromboembolic event within 6 months"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "Blood pressure: baseline (VEGFR TKI — HTN monitoring mandatory)"
+  - "Urinalysis + urine protein:creatinine ratio: baseline (proteinuria)"
+  - "TSH: baseline (hypothyroidism)"
+  - "Histology confirmation: exclude liposarcoma (PALETTE exclusion criterion)"
+
+sources:
+  - source_id: SRC-PALETTE-VAN-DER-GRAAF-2012
+    position: supports
+    relevant_quote_paraphrase: >
+      PALETTE Phase 3 (van der Graaf 2012 Lancet; N=369): pazopanib vs placebo
+      in advanced non-adipocytic STS post-anthracycline. mPFS 4.6 vs 1.6 months;
+      HR 0.31 (p<0.0001). Liposarcoma excluded. FDA April 2012. NCCN Cat 1.
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN STS: pazopanib Category 1 for advanced non-adipocytic STS after
+      prior anthracycline-based therapy. Liposarcoma excluded.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing STS 2L pazopanib indication
+  gap in algo_sts_advanced_1l.yaml.
+  KEY CLINICAL POINT: Liposarcoma (WD/DD, myxoid, pleomorphic) must be
+  excluded — this is a hard exclusion in PALETTE and is clinically important.
+  Trabectedin is the preferred 2L for liposarcoma (MRCLS especially).
+  HTN is the most common early AE (VEGFR effect); often manageable but
+  must be treated proactively to maintain dose intensity.
+  Ukraine: pazopanib NSZU reimbursed for STS (registered in UA).

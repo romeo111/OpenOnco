@@ -1,0 +1,106 @@
+id: IND-STS-2L-GEMCITABINE-DOCETAXEL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-STS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced (unresectable or metastatic) soft-tissue sarcoma — relapsed/refractory after 1L anthracycline-based chemotherapy"
+    - "Histology with established sensitivity to gemcitabine+docetaxel: primarily leiomyosarcoma (LMS, uterine and retroperitoneal), undifferentiated pleomorphic sarcoma (UPS)"
+    - "ECOG PS 0-2"
+    - "Adequate bone marrow and organ function for combination cytotoxic therapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Gemcitabine + docetaxel (GemDoc) is particularly active in leiomyosarcoma (LMS)
+      and undifferentiated pleomorphic sarcoma (UPS). Activity in other STS subtypes
+      is lower — subtype-specific histology should guide selection.
+      SARC002 (Maki 2007 JCO): gemcitabine+docetaxel superior to gemcitabine alone
+      in STS (ORR 16% vs 8%; improved OS). Specifically designed for LMS.
+      G-CSF (filgrastim or pegfilgrastim) is MANDATORY given significant
+      myelosuppression with this combination (schedule-dependent cytopenia).
+      Uterine LMS: GemDoc is one of the most active regimens (historical 1L option
+      for uLMS before 1L doxorubicin was universally accepted); now standard 2L.
+      Retroperitoneal LMS: similar high sensitivity to GemDoc.
+      Liposarcoma: GemDoc has modest activity in dedifferentiated liposarcoma;
+      trabectedin or pazopanib are alternative preferred options for liposarcoma.
+
+recommended_regimen: REG-GEMCITABINE-DOCETAXEL-STS
+concurrent_therapy:
+  - "G-CSF (filgrastim or pegfilgrastim): day 8-12 or pegfilgrastim day 9 (mandatory — myelosuppression prophylaxis)"
+  - "Dexamethasone premedication: 8 mg PO twice daily × 3 days starting day before docetaxel (day 7 infusion protocol)"
+  - "Anti-emetics: ondansetron + dexamethasone (moderate-high emetogenicity with gemcitabine+docetaxel)"
+  - "Fluid hydration: day of docetaxel infusion"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 8 weeks (RECIST 1.1)"
+  - "At progression: pazopanib (non-adipocytic STS); trabectedin (LMS/liposarcoma); eribulin (LMS); clinical trial"
+  - "Uterine LMS: consider germline/somatic molecular profiling (homologous recombination deficiency — emerging data for PARP inhibitors)"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "16% (SARC002; gemcitabine+docetaxel arm) vs 8% (gemcitabine alone); specific subtype analysis: LMS ORR ~19-25%"
+  complete_response: "Rare CR (<3%); mainly PRs and stable disease"
+  progression_free_survival: "mPFS ~6.2 months (SARC002; GemDoc arm)"
+  overall_survival_5y: "2-year OS ~50% in LMS subset (SARC002 analysis)"
+  notes: >
+    PRIMARY EVIDENCE: Maki RG et al. Journal of Clinical Oncology 2007;25:2755-2763
+    (SARC002; Phase 2 randomized; N=122): gemcitabine+docetaxel vs gemcitabine alone
+    in advanced STS. ORR 16% vs 8%; mPFS 6.2 vs 3.0 months; improved OS.
+    Most active subtype: LMS (uterine and retroperitoneal); UPS also responsive.
+    NCCN STS: gemcitabine+docetaxel Category 1 for LMS 2L; also recommended for
+    UPS and other gemcitabine-sensitive subtypes.
+    Note: uterine LMS has the strongest evidence base for GemDoc and it remains
+    a standard option even when used in the 1L setting (per some guidelines).
+
+hard_contraindications:
+  - "Docetaxel hypersensitivity (prior Grade 3-4 infusion reaction to taxane — relative contraindication; consider desensitization)"
+  - "Biliary obstruction / severe hepatic dysfunction (docetaxel is hepatically cleared; dose modification or exclusion required)"
+  - "Liposarcoma — trabectedin is preferred over GemDoc for liposarcoma (higher subtype-specific activity)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "Liver function: AST/ALT/bilirubin — docetaxel dose reduction if elevated (Child-Pugh B/C: avoid)"
+  - "Histology confirmation + subtype (LMS vs other STS) — guides GemDoc selection"
+
+sources:
+  - source_id: SRC-SARC002-MAKI-2007
+    position: supports
+    relevant_quote_paraphrase: >
+      SARC002 Phase 2 RCT (Maki 2007 JCO; N=122): gemcitabine+docetaxel superior
+      to gemcitabine alone in advanced STS. ORR 16% vs 8%; mPFS 6.2 vs 3.0 months.
+      NCCN STS Category 1 for LMS 2L.
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN STS: gemcitabine+docetaxel Category 1 preferred for 2L leiomyosarcoma
+      and undifferentiated pleomorphic sarcoma after anthracycline failure.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DR) — closing STS 2L gemcitabine+docetaxel
+  indication gap in algo_sts_advanced_1l.yaml.
+  GemDoc (gemcitabine+docetaxel) is the most LMS-specific 2L regimen;
+  superior to gemcitabine alone per SARC002. The "fixed-dose rate" (FDR)
+  gemcitabine infusion (10 mg/m²/min) vs standard bolus is center-specific;
+  regimen file should specify. G-CSF support is mandatory.
+  Uterine vs retroperitoneal LMS both respond to GemDoc; response rates
+  may differ slightly. For uterine LMS, some centers use GemDoc in 1L
+  (before or instead of doxorubicin) — within scope of NCCN recommendations.
