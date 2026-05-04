@@ -8,6 +8,7 @@ output_indications:
 - IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 - IND-ESOPH-METASTATIC-2L-HER2-TDXD
+- IND-ESOPH-METASTATIC-2L-PAC-RAM
 default_indication: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 alternative_indication: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 decision_tree:
@@ -60,13 +61,53 @@ decision_tree:
   if_true:
     result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
   if_false:
-    result: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+    next_step: 3
+  notes: "Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs. if_false updated 2026-05-04 (Workstream CO): routes to step 3 (adenocarcinoma pac+ram gate) instead of incorrectly defaulting to nivo-squamous."
+
+  # Step 3 — adenocarcinoma fallback gate: HER2-neg + not squamous + progression
+  # after 1L → pac+ram (RAINBOW; Wilke 2014 Lancet Oncol; ORR 28%; mOS 9.6 mo;
+  # NCCN Cat 1). Also covers ICI-experienced adenocarcinoma (pembro/nivo already used)
+  # or CPS <10 (pembro not indicated at step 1). Both branches route to pac+ram
+  # as the standard 2L chemo for adenocarcinoma.
+- step: 3
+  evaluate:
+    any_of:
+    - condition: "Adenocarcinoma histology (esophageal or GEJ; non-squamous) + progression after 1L platinum-fluoropyrimidine"
+    - condition: "ICI-experienced adenocarcinoma (1L ICI + chemo completed; now 2L)"
+    - condition: "CPS <10 adenocarcinoma + HER2-negative OR HER2-untested"
+  if_true:
+    result: IND-ESOPH-METASTATIC-2L-PAC-RAM
+    notes: >
+      Adenocarcinoma (esophageal/GEJ) + HER2-neg + progression after 1L (CPS <10 or
+      ICI-experienced): ramucirumab 8 mg/kg IV d1,15 + paclitaxel 80 mg/m² IV d1,8,15 q28d
+      (REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC; RAINBOW Wilke 2014; ORR 28%; mPFS 4.4 mo;
+      mOS 9.6 mo; NCCN Cat 1). Re-test HER2 before pac+ram if only 1L HER2 data —
+      HER2 IHC 3+ at progression → T-DXd preferred. BP monitoring + proteinuria +
+      neuropathy assessment each cycle. UA: paclitaxel NSZU-funded; ramucirumab — verify.
+  if_false:
+    result: IND-ESOPH-METASTATIC-2L-PAC-RAM
+  notes: "Step 3 added 2026-05-04 (Workstream CO): adenocarcinoma 2L pac+ram gate. Gap (1) CLOSED."
 sources:
 - SRC-NCCN-ESOPHAGEAL-2025
 - SRC-ESMO-ESOPHAGEAL-2024
 - SRC-DESTINY-PANTUMOR02-MERIC-2024
 last_reviewed: '2026-05-04'
-notes: 'AUTHORED 2026-05-04: IND-ESOPH-METASTATIC-2L-HER2-TDXD wired at step 0 (HER2 3+ adeno + prior trast; DESTINY-Gastric02 ORR 38%; NCCN Cat 1; Workstream AM). ROUTING SUMMARY: (0) HER2 3+ adeno + prior trast → T-DXd; (1) CPS ≥10 ICI-naive → pembro; (2) SCC ICI-naive → nivo; (fallback) → pac+ram via ALGO-GASTRIC-2L. OOS / wiring gaps: (1) Adenocarcinoma + CPS <10 + HER2-neg + ICI-experienced — gastric-style pac+ram not separately modeled; refer to ALGO-GASTRIC-2L. (2) Post-1L ICI progression — cytotoxic taxane/irinotecan options not modeled. (3) MSI-H esophageal 2L pembro-mono — extremely rare; not modeled. (4) UA funding gap — neither nivo nor pembro NSZU-reimbursed for esophageal; taxane is funded fallback.
+notes: >
+  AUTHORED 2026-05-04: IND-ESOPH-METASTATIC-2L-HER2-TDXD wired at step 0 (HER2 3+
+  adeno + prior trast; DESTINY-Gastric02 ORR 38%; NCCN Cat 1; Workstream AM).
+  UPDATED 2026-05-04 (Workstream CO): IND-ESOPH-METASTATIC-2L-PAC-RAM authored and
+  wired at step 3 (adenocarcinoma + HER2-neg + progression after 1L → ramucirumab
+  8 mg/kg d1,15 + paclitaxel 80 mg/m² d1,8,15; REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC;
+  RAINBOW Wilke 2014; ORR 28%; mOS 9.6 mo; NCCN Cat 1). Step 2 if_false now routes
+  to step 3 (adenocarcinoma gate) instead of incorrectly defaulting to nivo-squamous.
+  Gap (1) CLOSED.
+  ROUTING SUMMARY: (0) HER2 3+ adeno + prior trast → T-DXd; (1) CPS ≥10 ICI-naive
+  adeno/SCC → pembro; (2) SCC ICI-naive → nivo; (3) adeno HER2-neg CPS<10 or
+  ICI-experienced → pac+ram (default adeno 2L chemo).
+  OOS / wiring gaps:
+  (2) Post-1L ICI progression — cytotoxic options (irinotecan, 5-FU) not modeled.
+  (3) MSI-H esophageal 2L pembro-mono — extremely rare; not modeled.
+  (4) UA funding gap — neither nivo nor pembro NSZU-reimbursed for esophageal;
+  paclitaxel NSZU-funded; ramucirumab UA status needs verification.
 
   '

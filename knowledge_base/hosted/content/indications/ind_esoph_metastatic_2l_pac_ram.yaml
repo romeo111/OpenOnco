@@ -1,0 +1,171 @@
+id: IND-ESOPH-METASTATIC-2L-PAC-RAM
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic or unresectable locally advanced esophageal or gastroesophageal junction (GEJ) adenocarcinoma"
+    - "Disease progression on or after 1L platinum-fluoropyrimidine-based chemotherapy (± ICI, ± trastuzumab)"
+    - "Adenocarcinoma histology (NOT squamous cell carcinoma)"
+    - "HER2-negative OR HER2 testing not available (HER2+ post-trastuzumab failure: route to T-DXd IND-ESOPH-METASTATIC-2L-HER2-TDXD first)"
+    - "ECOG PS 0-2"
+    - "Adequate hematologic function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L"
+    - "Adequate renal function: CrCl ≥30 mL/min (paclitaxel and ramucirumab)"
+    - "Adequate hepatic function: bilirubin ≤1.5× ULN (paclitaxel clearance)"
+    - "No active arterial thromboembolic events within 6 months (ramucirumab VEGFR2 inhibitor)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive (IHC 3+ or IHC 2+/ISH+)"
+      notes: "HER2+ with prior trastuzumab failure → IND-ESOPH-METASTATIC-2L-HER2-TDXD (T-DXd; DESTINY-Gastric02; NCCN Cat 1)"
+    - "Squamous cell carcinoma histology: pac+ram not established in SCC esophageal; route to IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS (nivolumab) or IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 2: pac+ram is feasible but requires close monitoring (paclitaxel neuropathy,
+      ramucirumab hypertension/proteinuria, myelosuppression). Full dose as per RAINBOW
+      dosing. ECOG ≥3: frailty gate — consider weekly paclitaxel alone (without ramucirumab)
+      at reduced dose as tolerance measure; MDT discussion.
+
+recommended_regimen: REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC
+alternative_regimens:
+  - regimen_id: IND-ESOPH-METASTATIC-2L-HER2-TDXD
+    description: >
+      T-DXd 6.4 mg/kg q3w — preferred when HER2 IHC 3+ confirmed (even after prior
+      trastuzumab). DESTINY-Gastric02 ORR 38%; OS 12.1 months. Only applicable to
+      HER2 IHC 3+ adenocarcinoma; not squamous.
+  - regimen_id: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
+    description: >
+      Pembrolizumab 200 mg q3w — preferred when PD-L1 CPS ≥10 and ICI-naive.
+      KEYNOTE-181 OS 9.3 vs 6.7 months (HR 0.69) in CPS ≥10 population.
+      Not applicable if ICI already used in 1L.
+
+concurrent_therapy:
+  - "HYPERTENSION MONITORING: BP at baseline and before each ramucirumab infusion. Grade ≥3 hypertension (≥160/100) → hold ramucirumab; antihypertensive; resume when Grade ≤1."
+  - "PROTEINURIA monitoring: urine dipstick before each ramucirumab dose; ≥2+ → 24h urine protein; ≥2g/24h → hold ramucirumab."
+  - "NEUROPATHY ASSESSMENT: weekly (paclitaxel peripheral neuropathy cumulative); dose reduce or delay paclitaxel at Grade ≥2 sensory neuropathy."
+  - "CBC before each cycle: ANC ≥1.5×10⁹/L and PLT ≥100×10⁹/L required before paclitaxel."
+  - "HBV REACTIVATION: screen HBsAg/anti-HBc before starting; prophylaxis (entecavir) if positive — ramucirumab immunosuppression risk is low but screen is standard."
+
+followed_by:
+  - "CT restaging after 2 cycles (8 weeks): RECIST 1.1; continued treatment if stable disease or response"
+  - "Continue until progression or unacceptable toxicity (no fixed-duration cap)"
+  - "At progression: trifluridine-tipiracil (IND-GASTRIC-METASTATIC-3L-TAS102) if ECOG ≤1; clinical trial; BSC"
+  - "Peripheral neuropathy progression: dose-reduce paclitaxel to 60 mg/m² at Grade 2; hold at Grade ≥3"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~28% (RAINBOW; n=330 gastric/GEJ adeno; Wilke 2014 Lancet Oncol)"
+  complete_response: "~1%"
+  median_pfs_months: "4.4 vs 2.9 months (paclitaxel alone; HR 0.64; p<0.0001)"
+  median_os_months: "9.6 vs 7.4 months (paclitaxel alone; HR 0.81; p=0.017)"
+  notes: >
+    PRIMARY EVIDENCE: RAINBOW (Wilke et al. 2014 Lancet Oncol; phase 3 RCT; n=665):
+    - Ramucirumab 8 mg/kg IV d1,15 + paclitaxel 80 mg/m² d1,8,15 q28d vs paclitaxel alone
+    - Population: gastric/GEJ adenocarcinoma progressing after platinum + fluoropyrimidine 1L
+    - ORR 28% vs 16%; PFS 4.4 vs 2.9 mo (HR 0.64; p<0.0001); OS 9.6 vs 7.4 mo (HR 0.81; p=0.017)
+    - Grade ≥3 AEs (pac+ram arm): neutropenia 41%, fatigue 12%, hypertension 11%, anemia 10%
+    - FDA approved April 2014 for gastric/GEJ after 1L platinum + fluoropyrimidine
+
+    ESOPHAGEAL ADENOCARCINOMA APPLICABILITY:
+    RAINBOW included predominantly gastric/GEJ (Siewert II-III) adenocarcinoma.
+    Esophageal adenocarcinoma (Siewert I) is treated per gastric/GEJ protocols in the
+    2L+ setting by NCCN Esophageal 2025 guidelines — pac+ram is specifically listed for
+    adenocarcinoma (esophageal + GEJ) after 1L progression.
+    NCCN Esophageal 2025 Category 1 for 2L adenocarcinoma (gastric regimen extrapolated).
+
+    UKRAINE CONTEXT:
+    Paclitaxel is NSZU-funded and widely available. Ramucirumab (Cyramza) is registered in
+    Ukraine but NSZU reimbursement for esophageal is uncertain — verify with NSZU/prescribing
+    centre. When ramucirumab inaccessible: weekly paclitaxel alone (80 mg/m² d1,8,15 q28d)
+    is an inferior but accessible alternative (ORR ~16%; mOS 7.4 months).
+
+hard_contraindications:
+  - "Active arterial thromboembolic event (myocardial infarction, stroke) within 6 months: ramucirumab VEGFR2 inhibition increases thrombosis risk"
+  - "Uncontrolled severe hypertension (>180/110 mmHg) despite maximal antihypertensive therapy"
+  - "Grade ≥2 hemoptysis or active bleeding: ramucirumab anti-angiogenic; hold until resolved"
+  - "Squamous cell carcinoma histology: no evidence base for pac+ram in esophageal SCC"
+
+red_flags_triggering_alternative:
+  - condition: "HER2 IHC 3+ at progression: T-DXd preferred (IND-ESOPH-METASTATIC-2L-HER2-TDXD; DESTINY-Gastric02 ORR 38%)"
+  - condition: "Ramucirumab inaccessible (funding barrier): weekly paclitaxel monotherapy 80 mg/m² d1,8,15 q28d as inferior alternative; ORR ~16%; mOS 7.4 months"
+  - condition: "ECOG ≥3: frailty; reduced-dose paclitaxel monotherapy or BSC; MDT discussion"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CT chest/abdomen/pelvis (baseline RECIST staging)"
+  - "HER2 testing (IHC 3+ → T-DXd first; IHC 2+ ISH testing): re-test at progression if 1L HER2 data is old (>6 months)"
+  - "PD-L1 CPS (22C3 assay): if CPS ≥10 and ICI-naive → pembro preferred"
+  - "BP measurement at baseline"
+  - "Urine dipstick (proteinuria baseline)"
+  - TEST-HBV-SEROLOGY
+
+desired_tests:
+  - "MSI/MMR testing: MSI-H + ICI-naive → pembrolizumab preferred (KEYNOTE-158 data in gastric/esophageal)"
+  - "Peripheral blood CEA/CA 19-9 if elevated at baseline: tumor marker tracking"
+
+rationale: >
+  Ramucirumab + paclitaxel (pac+ram; RAINBOW regimen; REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC)
+  for 2L metastatic esophageal/GEJ adenocarcinoma after 1L platinum + fluoropyrimidine.
+  RAINBOW (Wilke 2014 Lancet Oncol): ORR 28%; mPFS 4.4 mo; mOS 9.6 mo vs paclitaxel alone
+  (7.4 mo; HR 0.81). NCCN Esophageal 2025 Category 1 for adenocarcinoma.
+
+  DISEASE-HISTOLOGY STRATIFICATION IN ESOPHAGEAL 2L:
+  - Adenocarcinoma (esophageal/GEJ): pac+ram (this indication), T-DXd (HER2+), pembro (CPS ≥10 ICI-naive)
+  - Squamous cell carcinoma: nivolumab (ATTRACTION-3), pembrolizumab (KEYNOTE-181 CPS ≥10)
+  Pac+ram does NOT apply to SCC esophageal — there is no phase 3 randomized trial in SCC.
+
+  PRIORITY HIERARCHY IN ESOPHAGEAL ADENO 2L:
+  1. HER2 IHC 3+ + prior trastuzumab → T-DXd (NCCN Cat 1; better ORR 38% + OS benefit)
+  2. CPS ≥10 + ICI-naive → pembrolizumab (KEYNOTE-181 OS 9.3 mo in CPS ≥10)
+  3. All others (HER2-neg, CPS <10 or ICI-experienced) → pac+ram (default 2L chemo)
+
+  RATIONALE FOR RAMUCIRUMAB + PACLITAXEL:
+  Ramucirumab (anti-VEGFR2 monoclonal antibody) + paclitaxel achieves OS benefit
+  over paclitaxel alone in 2L gastric/GEJ: 9.6 vs 7.4 months (HR 0.81). The anti-
+  angiogenic mechanism complements taxane cytotoxicity — VEGFR2 blockade reduces
+  tumor vasculature. This combination is the standard chemotherapy backbone for
+  HER2-neg, non-ICI-candidate esophageal adeno 2L worldwide.
+
+rationale_ua: >
+  Рамуцирумаб 8 мг/кг IV д1,15 + паклітаксель 80 мг/м² IV д1,8,15 q28d для 2L
+  метастатичної аденокарциноми стравоходу/ГЕЗ після 1L платина + фторпіримідин.
+  RAINBOW (Wilke 2014 Lancet Oncol; n=665): ЗВ 28%; мВБП 4,4 міс; мЗВ 9,6 міс
+  vs паклітаксель монотерапія 7,4 міс (ВР 0,81; p=0,017). NCCN Cat 1.
+  Показання: аденокарцинома (НЕ плоскоклітинна) + HER2-neg + прогресія на 1L.
+  Пріоритет: T-DXd (HER2 3+) > пембролізумаб (CPS ≥10, без попереднього ІКТ) > pac+ram.
+  В Україні: паклітаксель НСЗУ-доступний; рамуцирумаб (Cyramza) зареєстрований —
+  відшкодування НСЗУ для стравоходу: уточнити у центрі. При недоступності рамуцирумабу
+  → паклітаксель монотерапія (80 мг/м² д1,8,15 q28d; ЗВ ~16%; мЗВ 7,4 міс).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати при плоскоклітинному раку стравоходу — доказова база лише для аденокарциноми"
+  - "Не призначати при HER2 IHC 3+ — T-DXd є переважним вибором (ЗВ 38%)"
+  - "Не ігнорувати АТ перед кожним рамуцирумабом — антигіпертензивна терапія при ≥160/100 мм рт.ст."
+  - "Не продовжувати при Grade ≥3 периферичній нейропатії від паклітакселю"
+  - "Не призначати при активних артеріальних тромбоемболічних подіях (ІМ, інсульт) протягом 6 міс"
+
+sources:
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Esophageal 2025 Category 1: ramucirumab + paclitaxel for 2L metastatic
+      esophageal/GEJ adenocarcinoma after 1L platinum + fluoropyrimidine (RAINBOW basis;
+      Wilke 2014 Lancet Oncol). Default 2L for HER2-neg adenocarcinoma when T-DXd and
+      PD-1 inhibitor are not indicated.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
