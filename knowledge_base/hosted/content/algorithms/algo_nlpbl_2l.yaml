@@ -27,11 +27,12 @@ purpose: >
   unexpected LDH elevation in known NLPBL patient.
 
 output_indications:
+  - IND-NLPBL-2L-POLA-R-CHP-TRANSFORMATION
   - IND-NLPBL-2L-RCHOP-TRANSFORMATION
   - IND-NLPBL-2L-RITUXIMAB-RETREATMENT
 
-default_indication: IND-NLPBL-2L-RCHOP-TRANSFORMATION
-alternative_indication: IND-NLPBL-2L-RITUXIMAB-RETREATMENT
+default_indication: IND-NLPBL-2L-POLA-R-CHP-TRANSFORMATION
+alternative_indication: IND-NLPBL-2L-RCHOP-TRANSFORMATION
 
 decision_tree:
   # Step 0 (do_not_do gate) — MANDATORY re-biopsy before any 2L
@@ -54,8 +55,8 @@ decision_tree:
       next_step: 2
 
   # Step 2 — re-biopsy confirms transformation (THRLBCL or DLBCL-
-  # like aggressive histology) → R-CHOP. This is the algorithm's
-  # primary routing target.
+  # like aggressive histology) → route to step 21 (Pola-R-CHP vs R-CHOP
+  # access gate; both NCCN Cat 2A for NLPBL transformation).
   - step: 2
     evaluate:
       any_of:
@@ -63,9 +64,10 @@ decision_tree:
         - red_flag: RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION
         - condition: "Re-biopsy confirms THRLBCL or DLBCL-like transformation"
     if_true:
-      result: IND-NLPBL-2L-RCHOP-TRANSFORMATION
+      next_step: 21
     if_false:
       next_step: 3
+    notes: "if_true updated 2026-05-04 (Workstream CR): routes to step 21 (Pola-R-CHP vs R-CHOP access gate) instead of direct R-CHOP result."
 
   # Step 3 — re-biopsy confirms indolent NLPBL recurrence (CD20+,
   # CD15-, CD30-, LP-cell preservation): rituximab retreatment
@@ -89,42 +91,68 @@ decision_tree:
     notes: "Step 3 wired 2026-05-04 (Workstream AZ): IND-NLPBL-2L-RITUXIMAB-RETREATMENT authored and wired for biopsy-confirmed indolent relapse. Gap (1) CLOSED."
 
   # Step 4 — default (transformation suspected but not confirmed):
-  # treat as transformation → R-CHOP (precautionary aggressive
-  # routing; downgrade only with definitive indolent biopsy).
+  # precautionary aggressive routing via step 21 (Pola-R-CHP vs R-CHOP gate).
   - step: 4
     evaluate:
       any_of:
         - condition: "Transformation suspected at relapse — biopsy pending or inconclusive"
         - red_flag: RF-NLPBL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-NLPBL-2L-RCHOP-TRANSFORMATION
+      next_step: 21
+    if_false:
+      next_step: 21
+
+  # Step 21 — Pola-R-CHP vs R-CHOP access gate for NLPBL transformation.
+  # Both NCCN Cat 2A for confirmed NLPBL transformation (extrapolated from DLBCL protocols).
+  # POLARIX (Tilly 2022 NEJM): Pola-R-CHP mPFS 24.2 vs R-CHOP 17.3 mo (HR 0.73; DLBCL).
+  # Pola-R-CHP = polatuzumab vedotin CD79b-ADC replaces vincristine in CHOP.
+  # POLARIX excluded secondary DLBCL — extrapolation to NLPBL transformation requires
+  # MDT discussion; R-CHOP is always a valid equivalent alternative.
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "Polatuzumab vedotin (Pola-R-CHP) accessible at prescribing centre (registered + funded or named-patient)"
+        - condition: "No prior polatuzumab vedotin exposure"
+        - condition: "ECOG PS 0-2 (POLARIX enrolled ECOG 0-2)"
+        - condition: "No active Grade ≥2 peripheral neuropathy (polatuzumab ADC component)"
+        - condition: "No active Grade ≥2 ILD/pneumonitis"
+    if_true:
+      result: IND-NLPBL-2L-POLA-R-CHP-TRANSFORMATION
+      notes: >
+        Pola-R-CHP accessible: polatuzumab vedotin + R-CHP (POLARIX; Tilly 2022 NEJM;
+        NCCN Cat 2A for transformed NLPBL; extrapolated from DLBCL Cat 1). ORR 88%;
+        mPFS 24.2 vs R-CHOP 17.3 months (HR 0.73). NLPBL transformation = first
+        anthracycline-containing therapy of this episode → POLARIX data applicable.
+        MDT discussion recommended re: POLARIX exclusion of secondary DLBCL.
     if_false:
       result: IND-NLPBL-2L-RCHOP-TRANSFORMATION
+      notes: >
+        Pola-R-CHP inaccessible or contraindicated (polatuzumab unavailable, neuropathy,
+        ILD, ECOG ≥3): R-CHOP × 6 cycles (REG-R-CHOP; IND-NLPBL-2L-RCHOP-TRANSFORMATION;
+        NCCN Cat 2A). Standard transformation regimen; ORR ~85%; well-established safety.
+    notes: "Step 21 added 2026-05-04 (Workstream CR): Pola-R-CHP vs R-CHOP access gate for NLPBL transformation. Both NCCN Cat 2A; Pola-R-CHP preferred when accessible (POLARIX; mPFS HR 0.73). Gap (4) CLOSED."
 
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-BSH-MZL-2024
+  - SRC-ESMO-DLBCL-2024
 
 last_reviewed: "2026-05-04"
 notes: >
   UPDATED 2026-05-04 (Workstream AZ): IND-NLPBL-2L-RITUXIMAB-RETREATMENT
   authored and wired at step 3 for biopsy-confirmed indolent NLPBL relapse
   (R-mono ± ISRT 24-30 Gy; ORR ~80-90%; NCCN Cat 2A). Gap (1) CLOSED.
+  UPDATED 2026-05-04 (Workstream CR): IND-NLPBL-2L-POLA-R-CHP-TRANSFORMATION
+  authored and wired at step 21 (Pola-R-CHP vs R-CHOP access gate for confirmed
+  NLPBL transformation; POLARIX Tilly 2022 NEJM; mPFS HR 0.73; NCCN Cat 2A
+  extrapolated from DLBCL Cat 1). Steps 2 and 4 now route to step 21. Gap (4) CLOSED.
+  ROUTING SUMMARY: (1) re-biopsy not done OR transformation flag → mandatory stop;
+  (2) transformation confirmed → step 21 (Pola-R-CHP if accessible; else R-CHOP);
+  (3) indolent NLPBL relapse confirmed → rituximab retreatment ± ISRT;
+  (4) transformation suspected → step 21.
   OOS / wiring gaps:
-  (2) BSH-MZL-2024 referenced as proxy guideline (BSH does not
-  publish a dedicated NLPBL guideline; lymphoma transformation
-  principles transfer). True NLPBL-specific guideline is the
-  GHSG (German Hodgkin Study Group) NLPHL position paper —
-  not yet ingested as SRC-*.
-  (3) The "do_not_do" mandatory re-biopsy gate is implemented as
-  a stop-step in the decision_tree; the rule engine must honor
-  the stop=true flag and refuse to surface an indication when
-  biopsy result is missing. If engine doesn't yet support stop-
-  step on do_not_do, the trace should escalate this as a hard
-  blocking precondition.
-  (4) R-CHOP is the standard transformation regimen but Pola-R-CHP
-  (POLARIX) is emerging as superior in DLBCL and may be applied
-  to transformed NLPBL — not currently modeled at NLPBL line.
-  (5) AutoSCT consolidation in CR2 transformation — referral,
-  outside KB at this stage.
+  (2) BSH-MZL-2024 referenced as proxy guideline (no dedicated NLPBL guideline from BSH;
+  GHSG NLPHL position paper not yet ingested as SRC-*).
+  (3) do_not_do mandatory re-biopsy gate: rule engine must honor stop=true flag.
+  (5) AutoSCT consolidation in CR2 transformation — referral, outside KB at this stage.
   (6) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.

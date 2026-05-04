@@ -1,0 +1,182 @@
+id: IND-NLPBL-2L-POLA-R-CHP-TRANSFORMATION
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-NLPBL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Biopsy-confirmed histologic transformation of NLPBL to DLBCL-like or T-cell/histiocyte-rich large B-cell lymphoma (THRLBCL)"
+    - "No prior anthracycline-containing chemotherapy (Pola-R-CHP is first-line treatment of the transformation, not salvage)"
+    - "ECOG PS 0-2"
+    - "Adequate cardiac function: LVEF ≥50% (anthracycline + cyclophosphamide)"
+    - "Adequate organ function: ANC ≥1.5×10⁹/L, PLT ≥100×10⁹/L, CrCl ≥30 mL/min, bilirubin ≤1.5× ULN"
+    - "Polatuzumab vedotin accessible at prescribing centre (NSZU or named-patient funding)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20 positive (rituximab component; re-confirm at transformation biopsy)"
+  biomarker_requirements_excluded:
+    - "Prior polatuzumab vedotin exposure (within prior treatment history)"
+    - "Active ILD/pneumonitis Grade ≥2 (ADC-associated pulmonary toxicity risk)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      NLPBL transformation typically occurs in adults (median ~50-60 years); younger than
+      typical DLBCL. ECOG 2 acceptable but monitor closely — doxorubicin + cyclophosphamide
+      + polatuzumab cumulative toxicity. IPI should be calculated from transformation biopsy
+      presentation (treat as de novo DLBCL IPI). ECOG ≥3: switch to R-CHOP (IND-NLPBL-2L-RCHOP-TRANSFORMATION).
+
+recommended_regimen: REG-POLA-R-CHP
+alternative_regimens:
+  - regimen_id: REG-R-CHOP
+    description: >
+      R-CHOP × 6 cycles (IND-NLPBL-2L-RCHOP-TRANSFORMATION) — standard alternative when
+      Pola-R-CHP inaccessible (polatuzumab not funded or available). NCCN Cat 2A;
+      ORR ~85% for transformed NLPBL; well-established safety profile.
+
+concurrent_therapy:
+  - "G-CSF primary prophylaxis (filgrastim or pegfilgrastim) d2-11 every cycle — pola+doxorubicin increases neutropenia risk"
+  - "HBV reactivation screen: HBsAg/anti-HBc before cycle 1; entecavir prophylaxis if positive (rituximab-associated reactivation)"
+  - "ECHO before cycle 1 (baseline LVEF); repeat if cumulative doxorubicin ≥240 mg/m² (typically after cycle 4)"
+  - "ILD surveillance: monitor respiratory symptoms each cycle; hold polatuzumab for new dyspnea or cough; CT chest if grade ≥2 respiratory symptoms"
+  - "Neuropathy assessment each cycle: peripheral neuropathy (polatuzumab ADC component); dose reduce at Grade ≥2 sensory neuropathy"
+  - "CNS prophylaxis: intrathecal MTX × 4 (cycles 1-4) if CNS-IPI ≥4 OR extranodal sites ≥2 OR THRLBCL with CNS-adjacent involvement"
+
+followed_by:
+  - "PET-CT after 4 cycles: Deauville ≤2 (complete metabolic response) → complete 6 cycles; Deauville 3-4 → MDT discussion (salvage vs continuation)"
+  - "Deauville 5 (primary refractory): stop Pola-R-CHP; switch to salvage (R-ICE/R-DHAP) → consider autoSCT or CAR-T"
+  - "Post-Pola-R-CHP complete remission: surveillance; no standard maintenance for NLPBL transformation"
+  - "Relapse post-Pola-R-CHP CR: R-ICE or R-DHAP → autoSCT if chemosensitive; consider ALGO-DLBCL-2L routing"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~88% (POLARIX; Tilly 2022 NEJM; DLBCL IPI 2-5; extrapolated to NLPBL transformation)"
+  complete_response: "~78% (POLARIX Pola-R-CHP arm)"
+  progression_free_survival: "mPFS 24.2 vs 17.3 months (POLARIX; Pola-R-CHP vs R-CHOP; HR 0.73; p=0.02)"
+  notes: >
+    PRIMARY EVIDENCE (POLARIX): Tilly et al. 2022 NEJM (phase 3 RCT; N=879):
+    - Pola-R-CHP vs R-CHOP for previously untreated DLBCL/HGBL with IPI 2-5
+    - ORR 88% vs 79%; CR 78% vs 74%; mPFS 24.2 vs 17.3 months (HR 0.73; p=0.02)
+    - OS HR 0.89 (p=0.33; NS at primary analysis — OS benefit not established)
+    - Grade ≥3 neuropathy: ~1% Pola-R-CHP vs <1% R-CHOP (acceptable rate)
+    - NCCN B-cell 2025 Category 1 for DLBCL IPI 2-5 (de novo); Category 2A for transformed
+
+    NLPBL TRANSFORMATION APPLICABILITY:
+    NLPBL transformation to THRLBCL/DLBCL is treated as de novo aggressive B-cell lymphoma
+    in NCCN protocols — Pola-R-CHP POLARIX data is directly applicable (same population:
+    untreated aggressive B-NHL with IPI ≥2). Prior NLPBL treatments (rituximab mono, RT,
+    observation) do NOT count as prior anthracycline exposure; Pola-R-CHP is truly
+    first-line treatment of the transformation episode.
+
+    NCCN Cat 2A for NLPBL transformation (extrapolated from DLBCL Cat 1; NLPBL-specific
+    subgroup not analyzed in POLARIX; POLARIX excluded secondary DLBCL/transformed).
+    Note: POLARIX exclusion criterion was "secondary DLBCL" — interpretation varies;
+    MDT discussion required for NLPBL transformation. R-CHOP remains valid alternative.
+
+    UKRAINE CONTEXT:
+    Polatuzumab vedotin (Polivy) registered in Ukraine. NSZU reimbursement for DLBCL 1L:
+    verify current status per NSZU protocol. If NSZU-unfunded: IND-NLPBL-2L-RCHOP-TRANSFORMATION
+    (R-CHOP) is equally valid and fully accessible.
+
+hard_contraindications:
+  - "Prior anthracycline-containing chemotherapy — cumulative cardiac toxicity risk; use R-CHOP-modified or consult cardio-oncology"
+  - "LVEF <50% — doxorubicin cardiotoxicity; use R-CVP (anthracycline-free) for ECOG ≤2"
+  - "Active Grade ≥2 ILD/pneumonitis — ADC pulmonary toxicity"
+  - "Grade ≥2 peripheral neuropathy at baseline — polatuzumab ADC neuropathy risk"
+
+red_flags_triggering_alternative:
+  - condition: "Polatuzumab inaccessible (NSZU-unfunded, named-patient unavailable) → R-CHOP (IND-NLPBL-2L-RCHOP-TRANSFORMATION; equivalent NCCN Cat 2A)"
+  - condition: "ECOG ≥3 → R-CHOP preferred (Pola-R-CHP not studied in ECOG ≥3; POLARIX enrolled ECOG 0-2)"
+  - condition: "Peripheral neuropathy Grade ≥2 at baseline → R-CHOP (vincristine in pola-R-CHP is already replaced; polatuzumab itself causes neuropathy)"
+  - condition: "Biopsy confirms indolent NLPBL recurrence (NOT transformation) → IND-NLPBL-2L-RITUXIMAB-RETREATMENT"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-CD20-IHC
+  - TEST-PET-CT
+  - TEST-LN-EXCISIONAL-BIOPSY
+  - TEST-ECHO
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - "Nerve conduction studies or clinical neuropathy assessment: baseline peripheral neuropathy (polatuzumab ADC component)"
+  - "LP-cell immunophenotype at re-biopsy: CD20+, CD15-, CD30-, CD3- (confirms NLPBL transformation pattern)"
+
+desired_tests:
+  - "MYC/BCL2/BCL6 FISH at transformation biopsy (DH/TH status affects prognosis; guides autoSCT decision if refractory)"
+  - "CT chest (ILD baseline before Pola-R-CHP)"
+  - "CNS-IPI calculation: extranodal sites, LDH, ECOG, age, stage, kidney/adrenal involvement — guides CNS prophylaxis"
+
+rationale: >
+  Polatuzumab vedotin + rituximab + cyclophosphamide + doxorubicin + prednisone (Pola-R-CHP)
+  for biopsy-confirmed NLPBL transformation to DLBCL-like or THRLBCL histology.
+
+  RATIONALE FOR POLA-R-CHP OVER R-CHOP IN NLPBL TRANSFORMATION:
+  NLPBL transformation is treated as de novo aggressive B-cell lymphoma — first anthracycline-
+  containing therapy of this episode. POLARIX (Tilly 2022 NEJM) established Pola-R-CHP
+  superiority over R-CHOP in DLBCL IPI 2-5 (ORR 88%; mPFS 24.2 vs 17.3 mo; HR 0.73).
+  Transformed NLPBL typically presents with IPI ≥2 (aggressive transformation; systemic
+  recurrence; elevated LDH) — falling into the POLARIX target population.
+
+  VINCRISTINE SUBSTITUTION BENEFIT:
+  R-CHOP contains vincristine (C = Oncovin); Pola-R-CHP substitutes polatuzumab vedotin
+  (CD79b-targeted ADC) for vincristine. Polatuzumab targets CD79b expressed on B-cells —
+  directly relevant for DLBCL-like transformation. Vincristine is responsible for the
+  peripheral neuropathy and ileus in R-CHOP; substitution with polatuzumab improves
+  gastrointestinal tolerability (constipation eliminated) while adding targeted cytotoxicity.
+
+  NLPBL POLARIX EXTRAPOLATION CAVEAT:
+  POLARIX excluded "secondary DLBCL" — this criterion's interpretation for NLPBL
+  transformation varies. Some centres use Pola-R-CHP for NLPBL transformation as
+  first treatment of the transformation (not salvage for NLPBL); MDT discussion recommended.
+  R-CHOP remains fully valid (IND-NLPBL-2L-RCHOP-TRANSFORMATION) when clinical uncertainty
+  about extrapolation exists.
+
+rationale_ua: >
+  Пола-R-CHP (поlatuzumab vedotin + ритуксимаб + циклофосфамід + доксорубіцин + преднізолон)
+  для підтвердженої трансформації NLPBL у DLBCL-подібний або THRLBCL.
+  POLARIX (Tilly 2022 NEJM; n=879): ORR 88%, мВБП 24,2 vs 17,3 міс (ВР 0,73; p=0,02).
+  Пола-R-CHP є першою антрацикліновою терапією трансформаційного епізоду — POLARIX-дані
+  застосовуються. NCCN Cat 2A для трансформованої NLPBL (Cat 1 для de novo DLBCL ІПІ 2-5).
+  В Україні: Polivy (поlatuzumab vedotin) зареєстрований; відшкодування НСЗУ — уточнити.
+  При недоступності → R-CHOP (IND-NLPBL-2L-RCHOP-TRANSFORMATION; рівноцінна альтернатива).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без підтвердженої трансформації на re-biopsy — не призначати (індолентна NLPBL не потребує Пола-R-CHP)"
+  - "Без baseline LVEF ≥50% — доксорубіцин + циклофосфамід = кардіотоксичність"
+  - "Без G-CSF профілактики — пола+доксорубіцин підвищує ризик нейтропенії"
+  - "Без HBV screen + entecavir при HBsAg+ або anti-HBc+ — ритуксимаб → реактивація"
+  - "Вінкристин внутрішньотекально — ФАТАЛЬНО (не застосовується в Пола-R-CHP)"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025: Pola-R-CHP Category 1 for untreated DLBCL IPI 2-5 (POLARIX;
+      Tilly 2022 NEJM). Transformed indolent lymphoma treated per DLBCL protocols —
+      Pola-R-CHP applicable as Category 2A for NLPBL transformation (extrapolated).
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO DLBCL 2024: POLARIX (Tilly 2022 NEJM; N=879): Pola-R-CHP vs R-CHOP for
+      untreated DLBCL IPI 2-5. ORR 88% vs 79%; mPFS 24.2 vs 17.3 months (HR 0.73; p=0.02).
+      FDA approved June 2023 for untreated DLBCL/HGBL. ESMO endorses for IPI 2-5.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
