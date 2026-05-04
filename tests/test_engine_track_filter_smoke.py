@@ -111,6 +111,71 @@ def test_helper_gene_level_positive_still_drops_unqualified_exclusion():
     assert is_track_excluded(ind, {"MSI": True}) is True
 
 
+def test_helper_gene_level_positive_with_presence_token_drops():
+    """Gene-level positive patient + value_constraint is a bare presence token
+    ("positive", "detected", …) MUST drop the track.
+
+    Regression for KB-YAML-2026-05-04:
+    - IND-B-ALL-1L-PH-NEG excludes BIO-BCR-ABL1 value_constraint="positive"
+      (BCR-ABL1+ patients belong on TKI-based Ph+ protocol, not Hyper-CVAD-R)
+    - IND-PROSTATE-MCRPC-1L-ARPI excludes BIO-HRR-PANEL value_constraint="positive"
+      (HRR+ patients get PARP inhibitor track, not ARPI-alone)
+    """
+    ind = {
+        "applicable_to": {
+            "biomarker_requirements_excluded": [
+                {"biomarker_id": "BIO-BCR-ABL1", "value_constraint": "positive"},
+            ]
+        }
+    }
+    # Gene-level / presence-word patient values must trigger exclusion.
+    assert is_track_excluded(ind, {"BCR-ABL1": True}) is True
+    assert is_track_excluded(ind, {"BCR-ABL1": "positive"}) is True
+    assert is_track_excluded(ind, {"BCR-ABL1": "present"}) is True
+    assert is_track_excluded(ind, {"BCR-ABL1": "detected"}) is True
+
+    # Negative / wildtype does NOT exclude
+    assert is_track_excluded(ind, {"BCR-ABL1": False}) is False
+    assert is_track_excluded(ind, {"BCR-ABL1": "negative"}) is False
+    assert is_track_excluded(ind, {"BCR-ABL1": "absent"}) is False
+
+
+def test_helper_categorical_value_matches_specific_constraint():
+    """When a biomarker has categorical values like "high_risk" / "standard_risk",
+    the exclusion must use the exact string, not the presence token "positive".
+
+    Regression for KB-YAML-2026-05-04:
+    - IND-MM-1L-VRD excludes BIO-MM-CYTOGENETICS-HR value_constraint="high_risk"
+      (high-risk cytogenetics → daratumumab-based quadruplet track)
+    """
+    ind = {
+        "applicable_to": {
+            "biomarker_requirements_excluded": [
+                {"biomarker_id": "BIO-MM-CYTOGENETICS-HR", "value_constraint": "high_risk"},
+            ]
+        }
+    }
+    assert is_track_excluded(ind, {"MM-CYTOGENETICS-HR": "high_risk"}) is True
+    # Standard-risk is NOT excluded from VRd — it belongs on this track.
+    assert is_track_excluded(ind, {"MM-CYTOGENETICS-HR": "standard_risk"}) is False
+
+
+def test_helper_presence_token_with_other_marker_does_not_cross_exclude():
+    """value_constraint="positive" should only affect the matching biomarker,
+    not spill over to other entries in the patient dict."""
+    ind = {
+        "applicable_to": {
+            "biomarker_requirements_excluded": [
+                {"biomarker_id": "BIO-HRR-PANEL", "value_constraint": "positive"},
+            ]
+        }
+    }
+    # Patient has something unrelated → not excluded
+    assert is_track_excluded(ind, {"KRAS": True}) is False
+    # Patient has HRR-PANEL negative → not excluded
+    assert is_track_excluded(ind, {"HRR-PANEL": False}) is False
+
+
 def test_helper_handles_none_and_non_dict():
     assert is_track_excluded(None, {"X": "Y"}) is False
     assert is_track_excluded({}, {"X": "Y"}) is False

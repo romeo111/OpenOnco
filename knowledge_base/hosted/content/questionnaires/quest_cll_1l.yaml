@@ -4,10 +4,10 @@ line_of_therapy: 1
 title: "Chronic Lymphocytic Leukemia / SLL — first line"
 
 intro: >
-  Опитувальник для CLL/SLL з iwCLL treatment indication. Алгоритм
-  розрізняє standard-risk (BTKi continuous, default) vs high-risk
+  Questionnaire for CLL/SLL with iwCLL treatment indication. Algorithm
+  distinguishes standard-risk (BTKi continuous, default) vs high-risk
   cytogenetics (venetoclax + obinutuzumab time-limited, alternative
-  preferred). 6-8 хвилин.
+  preferred). 6-8 minutes.
 
 fixed_fields:
   disease:
@@ -15,35 +15,35 @@ fixed_fields:
   line_of_therapy: 1
 
 groups:
-  - title: "Демографія + iwCLL treatment indication"
-    description: "Asymptomatic CLL без iwCLL indication = active surveillance, не treatment."
+  - title: "Demographics + iwCLL treatment indication"
+    description: "Asymptomatic CLL without iwCLL indication = active surveillance, not treatment."
     questions:
       - field: patient_id
-        label: "ID пацієнта (synthetic)"
+        label: "Patient ID (synthetic)"
         type: text
         impact: required
         default_value: "VIRTUAL-CLL-001"
 
       - field: demographics.age
-        label: "Вік"
+        label: "Age"
         type: integer
         impact: critical
         range_min: 18
         range_max: 110
-        units: "років"
+        units: "years"
         triggers:
-          - "filter:age у виборі intensive vs less intensive (FCR обмежений ≤65)"
+          - "filter:age in choice of intensive vs less intensive (FCR limited to ≤65)"
         helper: >
-          Вік + IGHV mutated → можливість FCR (рідкісно зараз). Старші
-          ≥65 → BTKi або VenO virtually завжди.
+          Age + IGHV mutated → possibility of FCR (rarely used now). Age
+          ≥65 → BTKi or VenO virtually always.
 
       - field: demographics.sex
-        label: "Стать"
+        label: "Sex"
         type: enum
         impact: optional
         options:
-          - {value: "male", label: "Чоловіча"}
-          - {value: "female", label: "Жіноча"}
+          - {value: "male", label: "Male"}
+          - {value: "female", label: "Female"}
 
       - field: demographics.ecog
         label: "ECOG Performance Status"
@@ -56,17 +56,17 @@ groups:
           - {value: 3, label: "3"}
           - {value: 4, label: "4"}
         triggers:
-          - "filter:ecog_max=3 у IND-CLL-1L-BTKI"
-        helper: "ECOG 4 — palliative track only; engine не запропонує active treatment."
+          - "filter:ecog_max=3 in IND-CLL-1L-BTKI"
+        helper: "ECOG 4 — palliative track only; engine will not propose active treatment."
 
       - field: demographics.fit_for_chemoimmunotherapy
-        label: "Придатний до хіміоімунотерапії (FCR/BR)?"
+        label: "Eligible for chemoimmunotherapy (FCR/BR)?"
         type: boolean
         impact: required
         helper: >
-          У 2025 chemoimmunotherapy витіснено BTKi/venetoclax. Поле
-          залишене для historical compatibility — для більшості 1L
-          ставимо false.
+          In 2025 chemoimmunotherapy has been displaced by BTKi/venetoclax.
+          Field retained for historical compatibility — for most 1L cases
+          set to false.
         default_value: false
 
       - field: "findings.iwcll_indication_present"
@@ -74,10 +74,10 @@ groups:
         type: boolean
         impact: critical
         helper: >
-          Хоч одна з: progressive cytopenia (Hb<10, plt<100), bulky/
-          progressive splenomegaly або lymphadenopathy, B-symptoms,
-          autoimmune cytopenia не на стероїдах, lymphocyte doubling
-          time <6 міс. БЕЗ цього → active surveillance, no plan.
+          At least one of: progressive cytopenia (Hb<10, plt<100), bulky/
+          progressive splenomegaly or lymphadenopathy, B-symptoms,
+          autoimmune cytopenia not on steroids, lymphocyte doubling
+          time <6 months. WITHOUT this → active surveillance, no plan.
 
   - title: "Cytogenetic + molecular risk (defines BTKi vs VenO)"
     description: "del(17p), TP53 mut, IGHV-unmutated, complex karyotype = high-risk composite."
@@ -87,14 +87,14 @@ groups:
         type: enum
         impact: critical
         options:
-          - {value: "high_risk", label: "High-risk (≥1 з: TP53 mut / del17p / IGHV-unmutated / complex karyotype)"}
+          - {value: "high_risk", label: "High-risk (≥1 of: TP53 mut / del17p / IGHV-unmutated / complex karyotype)"}
           - {value: "standard_risk", label: "Standard-risk"}
           - {value: "unknown", label: "Pending FISH/IGHV"}
         triggers:
-          - "RF-CLL-HIGH-RISK → IND-CLL-1L-VENO як preferred"
+          - "RF-CLL-HIGH-RISK → IND-CLL-1L-VENO as preferred"
         helper: >
-          Engine за NCCN рекомендує VenO для high-risk (BTKi не resensitизує
-          del17p, fixed-duration вигідніше).
+          Engine per NCCN recommends VenO for high-risk (BTKi does not
+          resensitize del17p; fixed-duration is advantageous).
 
       - field: "findings.tp53_mutation"
         label: "TP53 mutation"
@@ -102,7 +102,7 @@ groups:
         impact: critical
         triggers:
           - "RF-CLL-HIGH-RISK"
-        helper: "~5-7% NDxg CLL; робить FCR/BR contraindicated."
+        helper: "~5-7% newly-diagnosed CLL; makes FCR/BR contraindicated."
         default_value: false
 
       - field: "findings.del_17p"
@@ -111,7 +111,7 @@ groups:
         impact: critical
         triggers:
           - "RF-CLL-HIGH-RISK"
-        helper: "~5-10% 1L; найгірший single marker."
+        helper: "~5-10% 1L; worst single marker."
         default_value: false
 
       - field: "findings.ighv_unmutated"
@@ -129,21 +129,21 @@ groups:
         impact: recommended
         triggers:
           - "RF-CLL-HIGH-RISK"
-        helper: "≥5 = highly complex, асоційовано з gross prognosis."
+        helper: "≥5 = highly complex, associated with poor prognosis."
         default_value: false
 
-  - title: "Кардіальна безпека (BTKi-specific)"
-    description: "BTKi (acalabrutinib/zanubrutinib) — атипова фібриляція передсердь, hypertension."
+  - title: "Cardiac safety (BTKi-specific)"
+    description: "BTKi (acalabrutinib/zanubrutinib) — atrial fibrillation, hypertension."
     questions:
       - field: "findings.afib_history"
-        label: "Атипова фібриляція передсердь в анамнезі?"
+        label: "History of atrial fibrillation?"
         type: boolean
         impact: required
         triggers:
           - "filter:IND-CLL-1L-BTKI relative contraindication → favors VenO"
         helper: >
-          AFib history = relative contra на BTKi (особливо ibrutinib).
-          Acalab/zanub safer але не zero. VenO без cardiac risk.
+          AFib history = relative contraindication to BTKi (especially ibrutinib).
+          Acalabrutinib/zanubrutinib safer but not zero risk. VenO has no cardiac risk.
         default_value: false
 
       - field: "findings.bleeding_risk_high"
@@ -152,7 +152,7 @@ groups:
         impact: required
         triggers:
           - "filter:IND-CLL-1L-BTKI → favors VenO"
-        helper: "BTKi ↑ bleeding ризик ~2-3×. Anticoagulant interaction issue."
+        helper: "BTKi ↑ bleeding risk ~2-3×. Anticoagulant interaction issue."
         default_value: false
 
   - title: "TLS risk (VenO-specific)"
@@ -167,31 +167,31 @@ groups:
         units: "K/μL"
         triggers:
           - "SUP-TLS-PROPHYLAXIS intensive ramp-up (allopurinol + IV hydration)"
-        helper: ">25 K/μL = high TLS risk → 5-week ramp-up з hospitalization weeks 1-2."
+        helper: ">25 K/μL = high TLS risk → 5-week ramp-up with hospitalization weeks 1-2."
         default_value: 30
 
       - field: "findings.bulky_lymph_nodes_5cm"
-        label: "Lymph nodes ≥5 см?"
+        label: "Lymph nodes ≥5 cm?"
         type: boolean
         impact: recommended
         helper: "Bulky disease = TLS high-risk irrespective of ALC."
         default_value: false
 
-  - title: "HBV + опортуністичні інфекції"
-    description: "BTKi + venetoclax — risk of HSV/VZV, рідше PJP."
+  - title: "HBV + opportunistic infections"
+    description: "BTKi + venetoclax — risk of HSV/VZV, less commonly PJP."
     questions:
       - field: "findings.hbsag"
         label: "HBsAg"
         type: enum
         impact: critical
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive"}
         triggers:
-          - "RF-HBV-COINFECTION (особливо при VenO + obinutuzumab)"
+          - "RF-HBV-COINFECTION (especially with VenO + obinutuzumab)"
         helper: >
-          Obinutuzumab (anti-CD20) — HBV reactivation ризик. Engine
-          вимагає entecavir prophylaxis якщо HBsAg+.
+          Obinutuzumab (anti-CD20) — HBV reactivation risk. Engine
+          requires entecavir prophylaxis if HBsAg+.
         default_value: "negative"
 
       - field: "findings.anti_hbc_total"
@@ -199,8 +199,8 @@ groups:
         type: enum
         impact: required
         options:
-          - {value: "negative", label: "Негативний"}
-          - {value: "positive", label: "Позитивний (occult)"}
+          - {value: "negative", label: "Negative"}
+          - {value: "positive", label: "Positive (occult)"}
         default_value: "negative"
 
 sources:

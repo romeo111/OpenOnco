@@ -45,6 +45,21 @@ _NEGATIVE_TOKENS = {
     "",
 }
 
+# Tokens that mean "present / gene-level positive" without a specific
+# sub-variant.  Used below to decide whether a gene-level-positive patient
+# satisfies a presence-only value_constraint (e.g. "positive", "detected").
+_PRESENCE_TOKENS = {
+    "positive",
+    "pos",
+    "present",
+    "mutated",
+    "mut",
+    "amplified",
+    "high",
+    "detected",
+    "expressed",
+}
+
 
 def is_track_excluded(indication_data: dict, patient_biomarkers: dict) -> bool:
     """Return True if the patient profile EXPLICITLY violates this
@@ -175,21 +190,34 @@ def _matches_excluded_value(patient_value: Any, exclusion_spec: Any) -> bool:
         return True
 
     pv = (variant or "").strip().lower()
-    if not pv:
-        # Patient is gene-level positive (no specific variant string), but
-        # the exclusion is qualified by a value_constraint. The patient has
-        # not reported the qualifying condition, so don't drop the track —
-        # consistent with the file's "missing biomarkers do not drop a
-        # track" stance. The clinician decides on the more nuanced data.
-        return False
+    # `pv_is_presence` is True when the patient has gene-level positivity
+    # but no specific sub-variant confirmed ("positive", True, "detected", …).
+    pv_is_presence = not pv or pv in _PRESENCE_TOKENS
 
     for expected in expected_values:
         ev = expected.strip().lower()
         if not ev:
             continue
+
+        if ev in _PRESENCE_TOKENS:
+            # Spec wants bare positivity ("positive", "detected", …).
+            # Only match patients that are themselves gene-level positive —
+            # i.e. reported True, "positive", "present", or similar presence
+            # words.  Patients with a specific categorical value ("high_risk",
+            # "standard_risk", "V600E") fall through to the substring check
+            # below so the match uses the actual reported string instead.
+            if pv_is_presence:
+                return True
+            # Fall through to substring match for specific patient values.
+        elif pv_is_presence:
+            # Spec asks for a specific qualifier (e.g. "T790M", "histologic
+            # transformation"), but patient has only gene-level positivity.
+            # Not a sufficient confirmation — stay lenient.
+            continue
+
+        # Both pv and ev are specific variant strings — use substring / token match.
         if ev in pv or pv in ev:
             return True
-        # Token-level match for things like "MSI-H" vs "MSI-High"
         ev_tokens = {t for t in ev.replace(",", " ").split() if t}
         pv_tokens = {t for t in pv.replace(",", " ").split() if t}
         if ev_tokens and pv_tokens and ev_tokens & pv_tokens:

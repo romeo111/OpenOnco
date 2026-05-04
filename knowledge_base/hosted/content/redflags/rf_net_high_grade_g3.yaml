@@ -1,0 +1,61 @@
+id: RF-NET-HIGH-GRADE-G3
+definition: >
+  Well-differentiated or poorly-differentiated neuroendocrine tumor with
+  Ki67 >20% (WHO 2019 G3). High-grade disease is clinically and therapeutically
+  distinct from G1/G2: well-differentiated G3 pNET may still respond to
+  everolimus/sunitinib/SSA but outcomes are inferior; poorly differentiated
+  neuroendocrine carcinoma (NEC, Ki67 typically >55%) requires platinum-
+  etoposide chemotherapy (CAPEOX/EP/IP). Engine flag routes to MDT review.
+definition_ua: >
+  Добре- або погано-диференційована нейроендокринна пухлина з Ki67 >20%
+  (WHO 2019 G3). Високоступенева хвороба клінічно і терапевтично відрізняється
+  від G1/G2: добре-диференційована G3 pNET ще може відповідати на
+  еверолімус/сунітиніб/SSA, але результати гірші; погано диференційована
+  нейроендокринна карцинома (NEC, Ki67 зазвичай >55%) вимагає
+  платино-етопозидну хіміотерапію (CAPEOX/EP/IP). Прапор engine направляє
+  до MDT review.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "ki67_percent"
+      threshold: 20
+      comparator: ">"
+    - finding: "ki67_proliferation_index"
+      threshold: 20
+      comparator: ">"
+    - finding: "mitotic_rate_per_10hpf"
+      threshold: 20
+      comparator: ">"
+
+clinical_direction: intensify
+severity: major
+priority: 80
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-PNET
+  - DIS-GI-NET
+shifts_algorithm:
+  - ALGO-PNET-METASTATIC-1L
+  - ALGO-GI-NET-ADVANCED-1L
+
+sources:
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-03"
+draft: false
+
+notes: >
+  WHO 2019 split G3 NETs into two categories:
+  (1) Well-differentiated G3 NET: Ki67 20–100% but preserved architecture
+      (trabecular/glandular); often arise from G2 or de novo in pNET.
+      mTOR/TKI/SSA may still apply; CAPTEM shown active in pNET G3.
+  (2) Poorly differentiated NEC (small cell / large cell): Ki67 typically
+      >55–70%; platinum-etoposide (EP) backbone; not eligible for SSA
+      antiproliferative therapy. NCCN: treat like SCLC/LCNEC.
+  This RF fires at Ki67 >20% to route both to MDT review. The treating
+  team distinguishes G3 well-differentiated vs NEC via morphology + Ki67
+  level + CDX2/synaptophysin/chromogranin staining pattern.
+notes_ua: >
+  WHO 2019 розділила G3 НЕП на дві категорії: (1) Добре-диференційована G3 NET: Ki67 20–100%, але збережена архітектура (трабекулярна/залозиста); часто виникає з G2 або de novo в pNET. mTOR/TKI/SSA ще можуть застосовуватись; CAPTEM показав активність у pNET G3. (2) Погано-диференційована NEC (дрібноклітинна / великоклітинна): Ki67 зазвичай >55–70%; платино-етопозид (EP) основа; не підходить для антипроліферативної SSA-терапії. NCCN: лікувати як SCLC/LCNEC. Цей RF спрацьовує при Ki67 >20% для направлення обох до MDT review.
