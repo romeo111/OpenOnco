@@ -1,0 +1,174 @@
+id: IND-MELANOMA-ADJUVANT-NIVO-STAGE-III
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MELANOMA
+  stage_stratum: STAGE_III_REGIONAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Resected stage III (any sub-stage IIIA/IIIB/IIIC/IIID per AJCC 8) cutaneous melanoma"
+    - "Sentinel lymph node biopsy positive OR clinically detected nodal disease, surgically resected"
+    - "Adjuvant therapy initiated within 12 weeks of definitive surgery"
+    - "Pembrolizumab inaccessible or unavailable at prescribing centre (nivolumab used as equivalent alternative)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    notes: >
+      Interchangeable alternative to pembrolizumab (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III)
+      when pembrolizumab is inaccessible. Both are NCCN Category 1 and considered
+      clinically equivalent for adjuvant stage III melanoma. Choice is driven primarily
+      by access/formulary availability. No biomarker (PD-L1, BRAF, TMB) is required;
+      both PD-1 inhibitors show consistent benefit across biomarker subgroups.
+
+recommended_regimen: REG-NIVOLUMAB-MONO
+alternative_regimens:
+  - regimen_id: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
+    description: >
+      Pembrolizumab 200 mg IV q3w × 12 months (KEYNOTE-054; Eggermont 2018 NEJM;
+      5-yr RFS 55.4% vs 38.3% HR 0.61; NCCN Cat 1). Interchangeable with nivolumab —
+      preferred when accessible and pembrolizumab is the NSZU-reimbursed option at centre.
+  - regimen_id: IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
+    description: >
+      Dabrafenib 150 mg BID + trametinib 2 mg/day × 12 months (COMBI-AD; Long 2017 NEJM;
+      4-yr RFS 54% vs 38%; NCCN Cat 1) — for BRAF V600E/K-mutant patients with ICI
+      contraindication. Not interchangeable with nivolumab adjuvant (different mechanism,
+      different indication criteria).
+
+concurrent_therapy:
+  - "TSH baseline and q6-12 weeks (immune thyroiditis ~9% with nivolumab adjuvant)"
+  - "Liver function tests and creatinine baseline and q3 cycles"
+  - "No routine steroid premedication (reduces ICI efficacy)"
+  - "Avoid live vaccines during nivolumab treatment and ≥3 months after"
+
+followed_by:
+  - "Imaging surveillance per NCCN melanoma guidelines post-adjuvant completion: CT/PET-CT q6 months × 2 years, then annually"
+  - "Duration: 12 months total (CheckMate-238 protocol: 1 year adjuvant therapy)"
+  - "Discontinue early: confirmed Grade ≥3 irAE with inadequate response to immunosuppression; disease recurrence (transition to metastatic 1L algorithm)"
+  - "At recurrence during or after adjuvant nivolumab: prior anti-PD-1 status now 'exposed'; route to ALGO-MELANOMA-METASTATIC-1L with note of prior PD-1 failure"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "N/A — adjuvant disease-free setting (no measurable disease)"
+  rfs_5y: "~52% (CheckMate-238 5-year update; nivolumab vs ipilimumab; not vs placebo)"
+  notes: >
+    PRIMARY EVIDENCE: CheckMate-238 (Weber 2017 NEJM; Ascierto 2020 Lancet Oncol update):
+    - Phase 3 RCT: nivolumab 3 mg/kg q2w × 12 months vs ipilimumab 10 mg/kg q3w × 12 months
+      in resected stage IIIB-IV melanoma (N=906)
+    - 4-yr RFS: 51.7% (nivo) vs 41.2% (ipi); HR 0.71; p<0.0001
+    - 4-yr OS: 77.9% (nivo) vs 69.6% (ipi); HR 0.79; p=0.0162
+    - Grade ≥3 irAE: 14.4% (nivo) vs 45.9% (ipi) — dramatically better tolerability
+
+    NOTE: CheckMate-238 compared nivolumab to ipilimumab, NOT placebo. The placebo-
+    controlled evidence for anti-PD-1 adjuvant comes from KEYNOTE-054 (pembrolizumab vs
+    placebo; HR 0.57). Both agents are NCCN Cat 1 and considered interchangeable;
+    nivolumab vs ipilimumab data confirm nivolumab's superiority over the historical
+    ipilimumab standard.
+
+    COMPARISON TO PEMBROLIZUMAB (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III):
+    No head-to-head RCT comparing nivolumab vs pembrolizumab in adjuvant melanoma.
+    Cross-trial comparison suggests equivalent efficacy: both NCCN Cat 1; both ~50%
+    5-yr RFS; both ~14% Grade 3-4 irAE. Choice driven by access/formulary.
+
+    UKRAINE CONTEXT:
+    Nivolumab (Opdivo) registered in Ukraine; NSZU reimbursement for melanoma varies.
+    Pembrolizumab (Keytruda) also registered. In centres where pembrolizumab is
+    formulary-preferred, use IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III. If pembrolizumab
+    unavailable at prescribing centre, nivolumab is the equivalent substitute.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic immunosuppression >10 mg/day prednisone equivalent — irAE risk compounded"
+  - "Prior solid organ transplant: PD-1 blockade causes allograft rejection"
+  - "Active Grade ≥3 immune-related AE from prior ICI: do not start PD-1 therapy until resolved ≤Grade 1"
+  - "Prior anti-PD-1 therapy in any prior adjuvant or metastatic setting: rechallenge not recommended"
+
+red_flags_triggering_alternative:
+  - condition: "Pembrolizumab accessible at prescribing centre → IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III (either Cat 1 equivalent)"
+  - condition: "BRAF V600E/K-mutant + active autoimmune disease contraindicting ICI → IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB (BRAF/MEK mechanism; no irAE risk)"
+  - condition: "Confirmed Grade ≥3 immune pneumonitis: permanently discontinue nivolumab; no rechallenge"
+
+required_tests:
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+  - TEST-LDH
+  - "TSH + free T4 baseline — immune thyroiditis"
+  - "LFT + creatinine baseline — immune hepatitis, nephritis screening"
+  - TEST-CBC
+  - "BRAF V600 status (if not already determined): relevant for dabrafenib+trametinib alternative consideration"
+
+desired_tests:
+  - "ECG + troponin baseline (immune myocarditis 1-2% risk with any ICI)"
+  - "Cortisol AM baseline (immune adrenal insufficiency)"
+
+rationale: >
+  Nivolumab (480 mg IV q4w or 240 mg IV q2w × 12 months) adjuvant therapy for
+  resected stage III melanoma — equivalent Category 1 alternative to pembrolizumab
+  when pembrolizumab is inaccessible at the prescribing centre.
+
+  CLINICAL EQUIVALENCE:
+  Both nivolumab (CheckMate-238) and pembrolizumab (KEYNOTE-054) are NCCN Category 1
+  for adjuvant stage III melanoma. The evidence bases are complementary:
+  - KEYNOTE-054: pembrolizumab vs placebo (primary RFS benefit established)
+  - CheckMate-238: nivolumab vs ipilimumab (nivolumab superiority over historical standard)
+  Cross-trial comparison supports clinical interchangeability; choice is primarily
+  access-driven, not evidence-driven.
+
+  PD-1 MECHANISM IN ADJUVANT MELANOMA:
+  Post-resection melanoma microenvironment contains residual T cells primed against
+  tumor antigens but suppressed by PD-1/PD-L1 signaling. PD-1 blockade restores
+  cytotoxic T-cell activity against microscopic residual disease, reducing risk of
+  distant recurrence. Both nivolumab and pembrolizumab target PD-1; the clinical
+  benefit is therefore mechanism-class-driven and not agent-specific.
+
+  UKRAINE ACCESS:
+  At centers where nivolumab (Opdivo) is the preferred or NSZU-reimbursed anti-PD-1
+  agent for melanoma, nivolumab adjuvant replaces pembrolizumab in the adjuvant
+  sequence without evidence-based trade-off. Clinicians should use whichever PD-1
+  inhibitor is accessible and NSZU-covered at their centre.
+
+rationale_ua: >
+  Ніволумаб (480 мг IV q4w або 240 мг IV q2w × 12 місяців) для ад'ювантної терапії
+  резектованої меланоми III стадії — рівноцінна альтернатива NCCN Cat 1 до
+  пембролізумабу при недоступності останнього.
+  CheckMate-238 (Weber 2017 NEJM; Ascierto 2020 Lancet): ніволумаб vs іпіліімумаб;
+  4-річна ВБП 51.7% vs 41.2% (HR 0.71); 4-річна ЗВ 77.9% vs 69.6% (HR 0.79).
+  Grade ≥3 іrAE: 14.4% (ніво) vs 45.9% (іпі). NCCN Cat 1.
+  В Україні: ніволумаб (Оpdivo) зареєстрований; НСЗУ для меланоми — уточнити у
+  конкретному центрі. Призначити, якщо пембролізумаб недоступний.
+  ОБОВ'ЯЗКОВО: ТТГ, ЛФТ, МРТ мозку вихідно; не використовувати рутинні
+  стероїди перед ІКП; тривалість 12 місяців.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не призначати при активному автоімунному захворюванні з імуносупресивною терапією >10 мг/добу преднізолон-еквівалент"
+  - "Не призначати після трансплантації органів — ніволумаб → відторгнення трансплантата"
+  - "Не продовжувати понад 12 місяців без підтвердженого регресу: ад'ювантне лікування обмежене 1 роком"
+  - "Не ігнорувати базовий ТТГ — тиреоїдит ~9% при ніволумабі; лікування гормонами щитоподібної залози без відміни ІКП"
+  - "При Grade ≥3 пневмоніті — постійна відміна ніволумабу"
+
+sources:
+  - source_id: SRC-NCCN-MELANOMA-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Melanoma 2025 Category 1: nivolumab adjuvant therapy for resected stage III
+      melanoma (CheckMate-238 basis). Equivalent to pembrolizumab adjuvant; both
+      recommended as standard Category 1 options.
+  - source_id: SRC-CHECKMATE-067-LARKIN-2019
+    position: supports
+    relevant_quote_paraphrase: >
+      CheckMate-238 (Weber 2017 NEJM updated Ascierto 2020 Lancet): nivolumab vs
+      ipilimumab adjuvant in resected stage IIIB-IV melanoma. 4-yr RFS 51.7% vs 41.2%
+      (HR 0.71). 4-yr OS 77.9% vs 69.6% (HR 0.79). Grade 3-4 irAE 14.4% vs 45.9%.
+      FDA approval 2017; NCCN Cat 1.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

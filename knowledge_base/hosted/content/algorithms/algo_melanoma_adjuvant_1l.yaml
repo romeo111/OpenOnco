@@ -14,6 +14,7 @@ purpose: >
 output_indications:
   - IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
   - IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
+  - IND-MELANOMA-ADJUVANT-NIVO-STAGE-III
 default_indication: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
 alternative_indication: IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB
 
@@ -45,14 +46,35 @@ decision_tree:
         Both dab+tram AND pembrolizumab are Cat 1 for BRAF-mutant stage III — dab+tram surfaced
         here when ICI is contraindicated (no immune-related toxicities from BRAF+MEKi).
     if_false:
+      next_step: 21
+      notes: >
+        BRAF-WT OR BRAF-mutant with no ICI contraindication: anti-PD-1 adjuvant × 12 months.
+        Route to step 21 (pembrolizumab vs nivolumab access gate — both NCCN Cat 1 equivalents).
+    notes: "Step 2 updated 2026-05-04 (Workstream CI): if_false now routes to step 21 (pembro vs nivo access gate) instead of direct pembro result."
+
+  # Step 21 — Pembrolizumab vs nivolumab access gate.
+  # Both are NCCN Cat 1 equivalents for adjuvant stage III melanoma.
+  # Evidence: KEYNOTE-054 (pembro vs placebo; HR 0.57) + CheckMate-238 (nivo vs ipi; HR 0.71).
+  # Route: pembrolizumab preferred if accessible; nivolumab if pembro unavailable.
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "Pembrolizumab accessible (registered + funded at prescribing centre)"
+    if_true:
       result: IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III
       notes: >
-        BRAF-WT OR BRAF-mutant with no ICI contraindication: pembrolizumab 200 mg q3w × 12 months
-        (IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III; KEYNOTE-054 Eggermont 2018 NEJM; NCCN Cat 1).
-        For BRAF V600E/K-mutant without ICI contraindication: pembrolizumab is the default
-        (ICI mechanism provides durable immune memory; dab+tram is equally valid Cat 1 alternative
-        — MDT individualization based on toxicity profile and patient preference).
-    notes: "Step 2 added 2026-05-04 (Workstream BT): BRAF V600-mutant + ICI-contraindicated gate. IND-MELANOMA-ADJUVANT-DABRAFENIB-TRAMETINIB wired. Gap CLOSED. Free-text autoimmune-contraindication condition; MDT-evaluated."
+        Pembrolizumab accessible: 200 mg IV q3w × 12 months (REG-PEMBRO-ADJUVANT-MELANOMA;
+        KEYNOTE-054 Eggermont 2018 NEJM; 5-yr RFS 55.4% vs 38.3% HR 0.61; NCCN Cat 1).
+        Nivolumab (IND-MELANOMA-ADJUVANT-NIVO-STAGE-III) is an equally valid Cat 1
+        alternative — MDT choice based on access and institutional preference.
+    if_false:
+      result: IND-MELANOMA-ADJUVANT-NIVO-STAGE-III
+      notes: >
+        Pembrolizumab inaccessible: nivolumab 480 mg IV q4w (or 240 mg q2w) × 12 months
+        (REG-NIVOLUMAB-MONO; CheckMate-238 Weber 2017 NEJM; 4-yr RFS 51.7% vs 41.2% ipi
+        HR 0.71; NCCN Cat 1). Equivalent efficacy to pembrolizumab adjuvant; choice is
+        access-driven. Both ~50% 5-yr RFS; both ~14% Grade 3-4 irAE.
+    notes: "Step 21 added 2026-05-04 (Workstream CI): pembrolizumab vs nivolumab access gate for adjuvant stage III melanoma. Both NCCN Cat 1. Gap (nivolumab adjuvant not separately modeled) CLOSED."
 
 sources:
   - SRC-NCCN-MELANOMA-2025
@@ -71,7 +93,11 @@ notes: >
   load-order fallback via step 0 in ALGO-MELANOMA-METASTATIC-1L (RF-MELANOMA-STAGE-III-RESECTED).
   Once curated JSONs migrate to `disease_state: "adjuvant"`, traffic shifts here directly.
 
+  UPDATED 2026-05-04 (Workstream CI): IND-MELANOMA-ADJUVANT-NIVO-STAGE-III authored and
+  wired at step 21 (CheckMate-238; Weber 2017 NEJM; 4-yr RFS 51.7% vs ipi HR 0.71;
+  NCCN Cat 1; REG-NIVOLUMAB-MONO). Step 2 if_false now routes to step 21 (pembro vs nivo
+  access gate): pembro accessible → IND-MELANOMA-ADJUVANT-PEMBRO-STAGE-III; else →
+  IND-MELANOMA-ADJUVANT-NIVO-STAGE-III. Gap (nivolumab not separately modeled) CLOSED.
   Remaining deferred gaps:
-  - Nivolumab adjuvant (CheckMate-238; equivalent Cat 1 to pembro): not separately modeled
   - Stage IIB/IIC pembrolizumab adjuvant (KEYNOTE-716): separate DIS-MELANOMA-STAGE-IIC entity needed
   - Ipilimumab 10 mg/kg adjuvant (historical EORTC-18071; largely superseded by pembro/nivo): not modeled
