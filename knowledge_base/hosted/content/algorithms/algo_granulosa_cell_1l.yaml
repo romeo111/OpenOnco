@@ -1,0 +1,155 @@
+id: ALGO-GRANULOSA-CELL-1L
+applicable_to_disease: DIS-GRANULOSA-CELL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select treatment approach for adult granulosa cell tumor (GCT) of the ovary,
+  focusing on first-line systemic therapy decision for advanced or recurrent disease.
+  Routes by: (1) histological confirmation and FOXL2 status, (2) FIGO stage
+  (early/resectable vs advanced/recurrent), (3) high-risk features for adjuvant
+  chemotherapy, (4) systemic therapy eligibility gate.
+  KEY: Adult GCT is a sex cord-stromal tumor with an indolent but relapsing natural
+  history. Surgery (BSO ± staging) is the primary treatment; chemotherapy (carboplatin
+  + paclitaxel) is standard for advanced (FIGO III-IV) or recurrent disease NOT
+  curable by surgery alone. No FDA-approved targeted therapy exists; clinical trials
+  are preferred for eligible patients.
+
+output_indications:
+  - IND-GRANULOSA-CELL-1L-CARBO-PACLITAXEL
+
+default_indication: IND-GRANULOSA-CELL-1L-CARBO-PACLITAXEL
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Histological diagnosis: adult GCT confirmed.
+  # Adult GCT must be distinguished from juvenile GCT (different biology, better
+  # prognosis, distinct treatment considerations) and other sex cord-stromal tumors.
+  # FOXL2 mutation testing confirms adult-type GCT.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Adult granulosa cell tumor confirmed histologically (characteristic 'coffee-bean' nuclei, Call-Exner bodies, low mitotic index; pathology expert review of sex cord-stromal tumors required)"
+        - condition: "Adult-type GCT confirmed (not juvenile GCT, not Sertoli-Leydig, not SLCT) — FOXL2 p.C134W mutation positive OR histological features consistent with adult-type GCT"
+    if_true:
+      next_step: 2
+      notes: >
+        Adult GCT confirmed — proceed to staging and surgical assessment.
+        Document: FOXL2 p.C134W mutation status (diagnostic; pathognomonic if positive),
+        serum inhibin B (baseline tumor marker), AMH, estradiol.
+        Endometrial evaluation: if uterus retained, endometrial biopsy or sampling is
+        mandatory (GCT estrogen production → risk of endometrial hyperplasia/carcinoma ~5-10%).
+        Pathology review at specialized gynecologic oncology center preferred for rare tumor.
+    if_false:
+      result: null
+      notes: >
+        Adult GCT diagnosis uncertain — resolve before treatment:
+        (1) Request pathology expert review (gynecologic pathologist at specialized center).
+        (2) FOXL2 c.402C>G (p.C134W) mutation testing: near-pathognomonic for adult GCT.
+        (3) Differentiate from: juvenile GCT (younger, different nuclear morphology, FOXL2-WT),
+            Sertoli-Leydig cell tumor (virilizing, DICER1-mutant), fibroma, thecoma.
+        (4) Serum inhibin B: if markedly elevated, supports GCT diagnosis.
+        Refer to gynecologic oncology with rare tumor expertise before initiating therapy.
+
+  # Step 2 — FIGO stage assessment: surgery-appropriate vs systemic therapy needed.
+  # Stage I adult GCT: surgery (BSO ± staging) is standard; no systemic therapy for
+  # low-risk stage I. Advanced or recurrent disease requires systemic therapy.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "FIGO stage III–IV disease (peritoneal spread, lymph node metastases, or distant metastases at presentation)"
+        - condition: "Recurrent adult GCT after prior surgery (unresectable recurrence or recurrence not amenable to complete surgical cytoreduction)"
+        - condition: "Residual unresectable disease after optimal debulking surgery"
+    if_true:
+      next_step: 3
+      notes: >
+        Advanced or recurrent GCT requiring systemic therapy — proceed to chemotherapy
+        eligibility assessment. Document extent of disease, prior treatments, and
+        disease-free interval (shorter DFI predicts platinum-resistance pattern, though
+        adult GCT is generally platinum-sensitive).
+    if_false:
+      next_step: 2b
+      notes: >
+        Early-stage disease (FIGO I–II) — assess for adjuvant chemotherapy indications
+        at step 2b.
+
+  - step: 2b
+    evaluate:
+      any_of:
+        - condition: "High-risk Stage IC features: ruptured ovarian capsule at surgery, tumor on ovarian surface, positive peritoneal washings"
+        - condition: "Stage II disease (pelvic extension beyond ovary)"
+        - condition: "Residual disease after surgery for stage I"
+    if_true:
+      next_step: 3
+      notes: >
+        High-risk early-stage GCT — adjuvant chemotherapy consideration. MDT discussion
+        recommended (adjuvant chemotherapy for high-risk stage I/II is not strongly
+        evidence-based; no Phase 3 trial; individualized decision with patient).
+        Stage IC with rupture is the main high-risk feature where adjuvant chemotherapy
+        is most often considered (risk of peritoneal dissemination).
+    if_false:
+      result: null
+      notes: >
+        Low-risk stage I adult GCT — surgery alone is standard of care.
+        Observation protocol after surgery:
+        - Serum inhibin B + AMH: every 3 months × 2 years, then every 6 months × 3 years,
+          then annually (late recurrence monitoring is critical — GCT recurs 10–20 years later)
+        - CT chest/abdomen/pelvis: every 6–12 months × 3 years, then annually
+        - Endometrial surveillance: annually if uterus retained
+        - If recurrence detected: proceed to systemic therapy (step 3 and beyond)
+        NO adjuvant chemotherapy or radiation for low-risk stage I — observation standard.
+
+  # Step 3 — Systemic therapy eligibility gate.
+  # Carboplatin + paclitaxel (AUC5-6 + 175 mg/m² Q3W × 6 cycles) is the preferred
+  # platinum-based doublet for advanced/recurrent GCT.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "Adequate renal function for carboplatin (CrCl ≥40 mL/min)"
+        - condition: "No platinum hypersensitivity (prior severe carboplatin/cisplatin allergy)"
+        - condition: "Not pregnant (negative pregnancy test for women of reproductive potential)"
+    if_true:
+      result: IND-GRANULOSA-CELL-1L-CARBO-PACLITAXEL
+      notes: >
+        Carboplatin + paclitaxel eligible: carboplatin AUC 5–6 + paclitaxel 175 mg/m²
+        IV Q21D × 6 cycles (REG-CARBO-PACLI-OVARIAN).
+        Retrospective evidence: ~70-80% ORR in recurrent/advanced GCT.
+        No Phase 3 RCT; NCCN Ovarian Cancer Category 2A.
+        Tumor markers: inhibin B and AMH at baseline and before each cycle.
+        Clinical trial enrollment is strongly encouraged given rare disease status.
+        Ukraine: carboplatin and paclitaxel are NSZU-reimbursed; accessible.
+    if_false:
+      result: null
+      notes: >
+        Carboplatin + paclitaxel not eligible — evaluate specific barrier:
+        - ECOG PS 3: MDT discussion; carboplatin monotherapy (AUC 5, without paclitaxel)
+          may be tolerable; or hormonal therapy (letrozole 2.5 mg QD) as less-toxic option
+        - ECOG PS ≥4: palliative/supportive care; hormonal therapy if feasible
+        - Platinum hypersensitivity: BEP regimen is an alternative (no carboplatin/oxaliplatin)
+          OR desensitization protocol for platinum allergy if reactions were mild (MDT decision)
+        - Renal impairment (CrCl <40): reduce carboplatin dose (Calvert formula), consider
+          alternative (BEP with reduced bleomycin, or paclitaxel monotherapy)
+        - Pregnancy: delay chemotherapy until postpartum if clinically feasible;
+          multidisciplinary discussion (oncology + obstetrics); surgical debulking
+          during pregnancy is sometimes possible
+        Hormonal therapy (letrozole, anastrozole, leuprolide) is an option for patients
+        with endocrine-sensitive recurrent GCT or those unable to tolerate chemotherapy —
+        not yet authored as a separate KB indication; clinical trial preferred.
+
+sources:
+  - SRC-NCCN-OVARIAN-2025
+  - SRC-ESMO-OVARIAN-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  DIS-GRANULOSA-CELL algorithm gap CLOSED 2026-05-04 (Workstream DM).
+  Adult GCT is a rare sex cord-stromal tumor with limited RCT evidence.
+  Algorithm designed to distinguish: (1) adult vs juvenile GCT (different biology);
+  (2) low-risk stage I (surgery alone) from advanced/recurrent (systemic therapy);
+  (3) high-risk early-stage features warranting adjuvant chemotherapy consideration.
+  Primary systemic therapy: carboplatin + paclitaxel (NCCN 2A; preferred over BEP
+  due to better tolerability; retrospective evidence supports ~70-80% ORR).
+  LATE RECURRENCE is the hallmark of adult GCT — surveillance for 15+ years required.
+  Hormonal therapy (letrozole/anastrozole/leuprolide) for recurrent/refractory disease
+  not yet authored as a separate KB indication (IND-GRANULOSA-CELL-2L-HORMONAL pending).
+  Clinical trial enrollment is the highest priority for advanced/recurrent adult GCT
+  given absence of approved targeted therapy and weak retrospective evidence base.
