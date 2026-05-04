@@ -1,0 +1,129 @@
+id: IND-T-ALL-1L-PEDIATRIC-INSPIRED
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-T-ALL
+  line_of_therapy: 1
+  stage_requirements:
+    - "T-cell acute lymphoblastic leukemia (T-ALL) or T-cell lymphoblastic lymphoma (T-LBL)"
+    - "Age 15-39 years (AYA — adolescent and young adult population; primary population for pediatric-inspired regimens)"
+    - "Age 40-60: consider on MDT basis with adequate organ reserve (higher toxicity risk with L-asparaginase in older patients)"
+    - "ECOG PS 0-2 at diagnosis"
+    - "Adequate organ function for intensive multi-drug chemotherapy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Pediatric-inspired regimens for T-ALL (ages 15-39) are associated with
+      improved outcomes vs standard adult regimens (Hyper-CVAD) in the AYA population.
+      Key trials:
+        - GRAALL-2003 (Huguet 2009 JCO): pediatric-inspired regimen in adults 15-60
+          with ALL; 5-year event-free survival 41% vs historical adult benchmarks.
+        - CALGB 10403 (Stock 2019 JCO): pediatric regimen in adults 17-39 with ALL;
+          3-year OS 73%; superior to historical Hyper-CVAD data in this age group.
+        - The pediatric-inspired backbone (COG/GMALL) includes:
+          induction (vincristine, dexamethasone, L-asparaginase/PEGasparaginase,
+          anthracycline); consolidation with HD-MTX + L-asparaginase; delayed
+          intensification (re-induction block); maintenance 2-3 years.
+      T-ALL SPECIFIC ADDITIONS:
+        - Nelarabine (Arranon): Phase 2 data (Berg 2005 Blood; Blood 2009): ORR ~31-59%
+          in relapsed T-ALL; NCCN recommends considering nelarabine as add-on to
+          pediatric-inspired backbone or at early relapse.
+        - CNS prophylaxis: CNS-directed therapy (high-dose IT MTX + cytarabine ±
+          cranial RT for CNS disease) — T-ALL has higher CNS relapse risk than B-ALL.
+        - NOTCH1/FBXW7/RAS/PTEN profiling: identifies molecular risk; not currently
+          used for treatment routing in standard protocols but guides clinical trial eligibility.
+      ETP-ALL (early T-precursor ALL): particularly high-risk subtype; consider
+      upfront allo-SCT in CR1; nelarabine incorporation preferred.
+      DRUG INTERACTIONS: PEGasparaginase + methotrexate — timing critical to avoid
+      MTX toxicity (PEGasparaginase reduces MTX clearance; separate by ≥48 hours).
+
+recommended_regimen: REG-PEDIATRIC-INSPIRED-T-ALL
+concurrent_therapy:
+  - "CNS intrathecal therapy: IT methotrexate ± cytarabine Q2-4 weeks (CNS prophylaxis mandatory)"
+  - "G-CSF: filgrastim/pegfilgrastim between cycles (expected neutropenia from intensive regimen)"
+  - "PEGasparaginase monitoring: amylase/lipase + fibrinogen + albumin before each dose"
+  - "Anticoagulation: LMWH if fibrinogen <100 mg/dL (asparaginase-induced coagulopathy)"
+  - "TMP-SMX + acyclovir: throughout therapy (PCP + VZV prophylaxis)"
+  - "Allopurinol or rasburicase: for tumor lysis syndrome (high cell burden T-ALL)"
+
+followed_by:
+  - "Bone marrow biopsy: day 14 of induction (early response assessment); day 28 (complete response documentation)"
+  - "MRD (minimal residual disease): by flow cytometry or PCR at end of induction and consolidation"
+  - "MRD-positive at end of induction: escalate — consider allo-SCT in CR1 (ETP-ALL or MRD-positive T-ALL)"
+  - "Maintenance: mercaptopurine + weekly methotrexate × 2-3 years"
+  - "Allo-SCT: ETP-ALL in CR1; MRD-positive at end of consolidation; MRD-negative but high-risk molecular features"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "CR rate 85-95% at end of induction (T-ALL; pediatric-inspired regimens)"
+  complete_response: "CR ~90% with intensive pediatric-inspired induction"
+  progression_free_survival: "3-year EFS ~55-65% (CALGB 10403); 5-year EFS ~41% (GRAALL-2003)"
+  overall_survival_5y: "3-year OS ~73% in AYA (CALGB 10403; ages 17-39)"
+  notes: >
+    PRIMARY EVIDENCE:
+    (1) Stock W et al. JCO 2019;37(24):2113-2122 (CALGB 10403; N=318): pediatric-inspired
+        regimen in adults 17-39 with ALL. 3-year OS 73%; 3-year EFS 59%.
+        Significantly better than historical Hyper-CVAD outcomes for AYA.
+    (2) Huguet F et al. JCO 2009;27(6):911-918 (GRAALL-2003; N=225): adults 15-60.
+        5-year EFS 41%; comparable to some pediatric series.
+    (3) Berg SL et al. Blood 2005;105(11):4220-4226: nelarabine in T-ALL/T-LBL.
+    NCCN ALL 2025: pediatric-inspired regimen preferred for AYA (ages 18-39) ALL;
+    Category 1. Hyper-CVAD is an alternative (less asparaginase, slightly less
+    intensive; some centers prefer for older adults).
+
+hard_contraindications:
+  - "Age >60: pediatric-inspired regimens generally not recommended (PEGasparaginase hepatic toxicity; L-asparaginase pancreatitis — higher incidence with aging)"
+  - "History of pancreatitis (L-asparaginase contraindicated)"
+  - "Severe pre-existing coagulopathy"
+  - "Active hepatic disease (methotrexate + asparaginase hepatotoxicity)"
+  - "ECOG PS ≥3 in younger patients (unless reversible metabolic cause)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Bone marrow biopsy + aspirate: immunophenotype + cytogenetics + molecular (T-ALL classification)"
+  - "Lumbar puncture (CSF): staging ± IT therapy"
+  - "MRD baseline: flow cytometry ± molecular"
+  - "NOTCH1/FBXW7/PTEN/RAS: molecular profiling (ETP-ALL vs non-ETP)"
+  - "Echo: LVEF ≥45% (anthracycline requirement)"
+  - "Amylase/lipase/fibrinogen: baseline (asparaginase monitoring)"
+  - "HLA typing: concurrent with induction (allo-SCT may be indicated in CR1 for ETP-ALL)"
+
+sources:
+  - source_id: SRC-NCCN-ALL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN ALL: pediatric-inspired regimens (CALGB 10403, GRAALL-type) are preferred
+      Category 1 for AYA (ages 18-39) T-ALL. 3-year OS 73% (CALGB 10403).
+      Hyper-CVAD is an alternative for patients who cannot receive asparaginase.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) — closing IND-T-ALL-1L-PEDIATRIC-INSPIRED
+  gap noted in algo_t_all_1l.yaml.
+  TIME-CRITICAL = true: T-ALL is a rapidly dividing malignancy; treatment must
+  begin within 24-48 hours of diagnosis (tumor lysis risk is high before treatment).
+  REGIMEN NOTE: REG-PEDIATRIC-INSPIRED-T-ALL regimen file should be authored
+  (CALGB 10403 or GRAALL-2003 backbone). The existing REG-HYPER-CVAD-R covers
+  the alternative Hyper-CVAD approach; pediatric-inspired has different components
+  (PEGasparaginase is the key addition vs Hyper-CVAD).
+  ETP-ALL is the most important T-ALL subtype to identify — requires upfront
+  allo-SCT discussion; ETP biology = more stem-cell-like, worse prognosis with
+  standard regimens. Nelarabine incorporation in ETP-ALL strongly recommended.
+  Algorithm update needed: algo_t_all_1l.yaml should be updated to add this
+  indication to output_indications and wire into decision tree based on age.

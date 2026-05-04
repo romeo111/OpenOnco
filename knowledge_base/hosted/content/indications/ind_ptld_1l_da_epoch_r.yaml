@@ -1,0 +1,114 @@
+id: IND-PTLD-1L-DA-EPOCH-R
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PTLD
+  line_of_therapy: 1
+  stage_requirements:
+    - "Post-transplant lymphoproliferative disorder (PTLD) — monomorphic PTLD (DLBCL-type or Burkitt-like)"
+    - "EBV-negative monomorphic PTLD — higher-risk: chemotherapy preferred over reduce-IS + rituximab alone"
+    - "OR: failed reduce-IS + rituximab (no response within 4-8 weeks)"
+    - "Requires cytotoxic chemotherapy — adequate organ function to tolerate DA-EPOCH-R"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      DA-EPOCH-R (dose-adjusted etoposide/prednisone/vincristine/cyclophosphamide/
+      doxorubicin + rituximab) is preferred over R-CHOP for high-risk PTLD because:
+      (1) Monomorphic DLBCL-type PTLD often has aggressive biology
+      (2) DA-EPOCH-R's 96-hour continuous infusion allows dose adjustment based
+          on nadir counts — important in immunosuppressed transplant patients
+      (3) EBV-negative monomorphic PTLD has lower response to rituximab alone —
+          chemotherapy is the primary curative modality
+      WHEN TO USE DA-EPOCH-R vs R-CHOP:
+        - DA-EPOCH-R: double-hit PTLD (MYC + BCL2/BCL6), large cell PTLD with
+          high IPI, EBV-negative monomorphic PTLD — more intensive backbone
+        - R-CHOP: EBV+ PTLD after failed reduce-IS, lower IPI — same efficacy
+          with less complexity
+      Immunosuppression management during chemotherapy:
+        - CNI (cyclosporine/tacrolimus): maintain at reduced levels during chemo
+        - Steroids: prednisone in DA-EPOCH-R provides some IS; separate IS steroid
+          should be minimized to avoid additive infection risk
+        - Coordinate with transplant team for IS management
+
+recommended_regimen: REG-DA-EPOCH-R
+concurrent_therapy:
+  - "G-CSF: pegfilgrastim day 7 of each cycle (myelosuppression support; mandatory in immunosuppressed)"
+  - "Antimicrobial prophylaxis: TMP-SMX + acyclovir + antifungal (immunosuppressed patient)"
+  - "Rituximab: within DA-EPOCH-R regimen (CD20+ histology); omit if CD20-negative"
+  - "Transplant team coordination: monitor graft function during chemotherapy (organ function monthly)"
+  - "EBV viral load: Q2-4 weeks (if EBV+ — monitor for response)"
+
+followed_by:
+  - "PET-CT: interim after cycle 2 (Deauville 1-2 = early complete response); end-of-treatment"
+  - "Immunosuppression tapering: based on transplant team guidance after achieving remission"
+  - "At relapse: 2L PTLD options (PTLD-2L algorithm); clinical trial"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~60-80% (PTLD monomorphic DLBCL-type with DA-EPOCH-R; extrapolated from DLBCL + PTLD series)"
+  complete_response: "CR ~50-60% in monomorphic PTLD DLBCL-type"
+  progression_free_survival: "2-year PFS ~50% in complete responders"
+  overall_survival_5y: "2-year OS ~60% in monomorphic PTLD treated with R-CHOP or DA-EPOCH-R class regimens"
+  notes: >
+    EVIDENCE: No Phase 3 RCT specifically for DA-EPOCH-R in PTLD.
+    Evidence extrapolated from:
+    - PTLD-1 trial (Trappe 2012 JCO): sequential use of rituximab → CHOP-21 in PTLD;
+      4-year event-free survival 46%.
+    - DA-EPOCH-R in DLBCL: superior to R-CHOP for double-hit/double-expressor DLBCL
+      in several retrospective analyses; NCCN preferred for DLBCL high-risk subgroups.
+    - NCCN PTLD guidelines: DA-EPOCH-R is listed as an option alongside R-CHOP for
+      monomorphic PTLD requiring chemotherapy (Category 2A).
+    PTLD-specific note: PTLD patients are immunosuppressed — infectious complications
+    are more common; anti-infective prophylaxis is mandatory.
+
+hard_contraindications:
+  - "EBV+ PTLD responding to reduce-IS + rituximab — chemotherapy not needed if response achieved"
+  - "PTLD classified as polymorphic (not monomorphic) — reduce-IS + rituximab preferred (more likely to regress)"
+  - "Severe cardiac dysfunction (LVEF <45% — doxorubicin component)"
+  - "Active severe infection (hold chemotherapy until infection controlled)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "ECHO: LVEF ≥45% (doxorubicin requirement)"
+  - "PET-CT: baseline staging"
+  - "EBV EBER-ISH on tumor biopsy: confirm EBV status (guides rituximab use + tabelecleucel eligibility)"
+  - "EBV DNA quantitative PCR: baseline (plasma viral load monitoring)"
+  - "Transplant organ function: baseline (kidney/liver/heart — transplanted organ at risk during chemotherapy)"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN PTLD: DA-EPOCH-R Category 2A for monomorphic PTLD requiring cytotoxic
+      chemotherapy, particularly for EBV-negative high-risk monomorphic PTLD or
+      after failure of reduce-IS + rituximab.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) — closing IND-PTLD-1L-DA-EPOCH-R gap
+  noted in algo_ptld_1l.yaml.
+  TIME-CRITICAL = true: monomorphic PTLD (especially EBV-negative) can progress
+  rapidly; treatment initiation without delay is important.
+  PTLD classification note: monomorphic PTLD behaves like DLBCL and requires
+  full chemotherapy (DA-EPOCH-R or R-CHOP). Polymorphic PTLD often responds to
+  reduce-IS ± rituximab alone. This indication is for MONOMORPHIC PTLD.
+  Coordination with transplant team is mandatory throughout treatment
+  (risk of graft rejection if immunosuppression is too aggressively reduced;
+  risk of graft damage from chemotherapy).

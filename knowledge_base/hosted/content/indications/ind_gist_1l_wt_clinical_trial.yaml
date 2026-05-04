@@ -1,0 +1,115 @@
+id: IND-GIST-1L-WT-CLINICAL-TRIAL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GIST
+  line_of_therapy: 1
+  stage_requirements:
+    - "Unresectable or metastatic GIST — wild-type (WT): KIT-negative, PDGFRA-negative, SDH-deficient (succinate dehydrogenase-deficient), NF1-associated, or other non-KIT/PDGFRA driver"
+    - "ALL actionable KIT/PDGFRA mutations excluded: no KIT exon 9/11/13/14/17 mutation; no PDGFRA D842V or other mutation; PDGFRA D842V confirmed negative"
+    - "SDH deficiency confirmed (IHC SDHB loss) OR NF1 diagnosis confirmed OR molecular profiling confirms WT-GIST"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Wild-type GIST (WT-GIST) encompasses 10-15% of all GISTs and is heterogeneous:
+      (1) SDH-deficient GIST (most common WT-GIST; ~50% of pediatric GIST):
+          - SDHA/B/C/D mutation or promoter methylation → loss of SDHB on IHC
+          - VEGFR/PDGFR targeted therapy (sunitinib, regorafenib) has modest activity
+          - Best option: clinical trial (VEGFR inhibitors, BET inhibitors, other targets)
+          - Pediatric SDH-def GIST: characteristically indolent; imatinib NOT effective
+      (2) NF1-associated GIST:
+          - Germline or somatic NF1 mutation; typically multifocal; small intestine
+          - Poor imatinib response; sunitinib or regorafenib used off-label
+          - Clinical trial strongly preferred
+      (3) KRAS-mutant GIST (rare):
+          - MEK inhibitors under investigation (binimetinib)
+          - Standard of care unclear; clinical trial preferred
+      (4) BRAF V600E GIST (rare):
+          - Dabrafenib + trametinib rationale; investigational
+      STANDARD APPROACH FOR WT-GIST:
+        - Step 1: Confirm WT biology (molecular profiling mandatory)
+        - Step 2: Clinical trial enrollment STRONGLY preferred (heterogeneous biology;
+          no FDA-approved regimen for WT-GIST specifically)
+        - Step 3: If no trial available: sunitinib 50 mg QD 4/2 (empirical VEGFR
+          inhibition; some activity in SDH-def GIST per retrospective series)
+      Ukraine: clinical trials for WT-GIST unlikely to be available locally;
+      international referral to a GIST clinical trial center recommended.
+
+recommended_regimen: null  # Clinical trial referral — no specific regimen; sunitinib used off-label when no trial available
+concurrent_therapy:
+  - "Molecular profiling: comprehensive NGS panel (RNA-seq for fusion detection; WES if NGS negative)"
+  - "SDH IHC (SDHB): confirm SDH deficiency if suspected"
+  - "Germline testing: SDH gene mutations + NF1 → genetic counseling mandatory"
+  - "Succinate plasma metabolite: elevated succinate in SDH-deficient GIST"
+
+followed_by:
+  - "CT chest/abdomen/pelvis: every 12 weeks (WT-GIST often slow-growing; longer interval acceptable)"
+  - "Genetic counseling: SDH mutations are germline-heritable (SDHA most commonly germline)"
+  - "If clinical trial not available: sunitinib 50 mg QD 4/2 schedule (VEGFR inhibition; off-label)"
+  - "Pediatric WT-GIST (SDH-def): consider observation for non-progressing disease"
+
+evidence_level: low
+strength_of_recommendation: strong
+nccn_category: "2B"
+
+expected_outcomes:
+  overall_response_rate: "~10-20% with sunitinib empirically; trial data unavailable for most WT-GIST subtypes"
+  complete_response: "CR exceedingly rare in metastatic WT-GIST"
+  progression_free_survival: "Highly variable; SDH-def GIST often indolent (years); NF1 GIST more variable"
+  overall_survival_5y: "5-year OS >50% for some SDH-def GIST (indolent behavior) — poorer in aggressive subtypes"
+  notes: >
+    Wild-type GIST lacks KIT/PDGFRA mutations and is therefore imatinib-insensitive.
+    The diagnosis requires NGS and IHC characterization of SDHB, SDHA, and KIT.
+    For most WT-GIST patients, the standard of care IS clinical trial enrollment —
+    the molecular heterogeneity of WT-GIST means no single approved therapy.
+    Reference: NCCN GIST 2025 — WT-GIST: molecular testing mandatory; trial preferred;
+    VEGFR inhibitors (sunitinib, regorafenib) used off-label with limited evidence.
+
+hard_contraindications:
+  - "KIT-mutant GIST — not WT-GIST; imatinib is the standard first-line (NCCN Cat 1)"
+  - "PDGFRA D842V-mutant GIST — avapritinib is the standard (NAVIGATOR trial; NCCN Cat 1)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "KIT/PDGFRA mutation testing (NGS): confirm WT biology (exclusion of KIT/PDGFRA)"
+  - "SDHB IHC: diagnose SDH-deficiency"
+  - "SDHA/B/C/D sequencing: germline + somatic"
+  - "NF1 sequencing: if clinical features of NF1"
+  - "RNA sequencing: detection of novel fusions (BRAF, RAS, NF1) in WT-GIST"
+
+sources:
+  - source_id: SRC-NCCN-SARCOMA
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN GIST: WT-GIST (KIT/PDGFRA-negative) — clinical trial preferred;
+      molecular profiling mandatory to characterize SDH-def, NF1-associated,
+      or other rare WT-GIST subtype. VEGFR inhibitors used off-label when
+      no trial available.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) — closing IND-GIST-1L-WT-CLINICAL-TRIAL
+  gap noted in algo_gist_1l.yaml.
+  WT-GIST is a "clinical trial preferred" indication — the KB entry serves to
+  document the clinical trial pathway and ensure molecular workup is complete.
+  REG-CLINICAL-TRIAL-REFERRAL: this regimen ID is a placeholder for the
+  clinical trial referral. Check if a generic clinical trial referral regimen
+  entity exists in the KB; if not, this should be authored.
+  The key clinical value: ensuring ALL WT-GIST patients get proper molecular
+  characterization (SDHB IHC + comprehensive NGS) before any treatment decision,
+  and are referred to appropriate trials rather than receiving ineffective imatinib.

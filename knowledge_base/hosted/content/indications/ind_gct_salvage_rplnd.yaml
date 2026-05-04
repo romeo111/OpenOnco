@@ -1,0 +1,121 @@
+id: IND-GCT-SALVAGE-RPLND
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-GCT
+  line_of_therapy: 2
+  stage_requirements:
+    - "Germ cell tumor (GCT) — testicular or extragonadal — post-chemotherapy residual mass"
+    - "Residual retroperitoneal or other anatomical mass persisting after completion of BEP ± TIP/VIP salvage chemotherapy"
+    - "Serum tumor markers (AFP, beta-hCG, LDH) normalized or returning to normal after chemotherapy"
+    - "Residual mass ≥1 cm on CT (post-chemotherapy; radiologic mass that has not fully resolved)"
+    - "ECOG PS 0-1 (surgical eligibility — major abdominal surgery)"
+    - "Non-seminomatous GCT (NSGCT) OR seminoma with non-teratomatous mass histology suspected (see notes)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    notes: >
+      Post-chemotherapy retroperitoneal lymph node dissection (PC-RPLND) is indicated
+      for residual masses in non-seminomatous GCT (NSGCT) after chemotherapy, because:
+      (1) Residual masses contain viable GCT in ~10-15% of cases (needs resection)
+      (2) Residual masses contain teratoma in ~35-45% of cases — teratoma does not
+          respond to chemotherapy and cannot be imaged away; resection is the only
+          cure; "growing teratoma syndrome" risk if left behind
+      (3) Only ~45% contain pure necrosis/fibrosis (no active disease)
+      SEMINOMA: Residual masses after chemotherapy in seminoma are usually necrosis;
+      FDG-PET used to differentiate active seminoma from necrosis (PET-avid = biopsy/
+      resection; PET-negative = observe). RPLND in seminoma reserved for PET-avid
+      residual masses or clinical trial setting.
+      MARKER STATUS CRITICAL: If AFP/beta-hCG elevated after chemotherapy and still
+      declining → continue observation. If rising markers → not RPLND (active GCT
+      requires salvage chemotherapy, not surgery). RPLND is for normalized markers.
+      SURGICAL CONSIDERATIONS:
+        - Modified bilateral template RPLND or nerve-sparing RPLND
+        - Primary RPLND at GCT referral center (high-volume surgeon)
+        - Template modified based on primary tumor location (right vs left)
+        - Laparoscopic/robotic RPLND available at specialized centers
+      POST-CHEMOTHERAPY TERATOMA: Most important indication for RPLND — teratoma
+      can undergo malignant transformation (teratoma with somatic malignancy, TGCT);
+      complete resection is the only curative intent.
+
+recommended_regimen: null  # Surgical procedure — no chemotherapy regimen; MDT referral to urologic oncology
+concurrent_therapy:
+  - "Tumor marker monitoring: AFP + beta-hCG + LDH before and after surgery"
+  - "CT chest/abdomen/pelvis: baseline mapping of residual masses before RPLND"
+  - "FDG-PET-CT: if seminoma — differentiate active seminoma from necrosis"
+  - "Surgical referral: urologic oncology or surgical oncology with GCT-RPLND expertise"
+
+followed_by:
+  - "Histopathology of resected specimen: necrosis/fibrosis vs teratoma vs viable GCT"
+  - "If viable GCT (>10% viable tumor): 2 additional cycles of BEP (post-RPLND chemotherapy)"
+  - "Tumor markers: AFP + beta-hCG + LDH at 4 weeks post-surgery"
+  - "CT surveillance: 3, 6, 12, 24 months (post-RPLND surveillance)"
+  - "If teratoma only: close surveillance (no adjuvant chemotherapy)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "N/A (surgical procedure)"
+  complete_response: "Complete resection achieved in >95% of retroperitoneal residual masses in experienced hands"
+  progression_free_survival: "5-year PFS >80% in complete resection of teratoma or necrosis; lower for viable GCT"
+  overall_survival_5y: "Long-term OS >85% for NSGCT managed with chemotherapy + RPLND (all risk groups combined)"
+  notes: >
+    EVIDENCE: Standard of care; Level 1 evidence from multiple prospective series.
+    Indiana University data (multiple series): RPLND for residual masses after
+    cisplatin-based chemotherapy in NSGCT.
+    MSKCC series: outcomes in >500 post-chemotherapy RPLND patients.
+    Histology at RPLND: necrosis/fibrosis ~45%, teratoma ~40%, viable GCT ~15%
+    (varies with risk category and extent of chemotherapy response).
+    Viable GCT at RPLND → 2 cycles BEP: necessary to reduce relapse risk;
+    based on Indiana series showing improved OS with post-RPLND chemotherapy.
+    NCCN GCT: RPLND for normalized markers + residual mass in NSGCT is Category 1.
+
+hard_contraindications:
+  - "Rising AFP or beta-hCG (active disease — salvage chemotherapy first, then reassess)"
+  - "Seminoma with PET-negative residual mass (<3 cm) — observation preferred (necrosis highly likely)"
+  - "ECOG PS ≥3 (surgical fitness insufficient for major retroperitoneal surgery)"
+  - "Retroperitoneal fibrosis or prior RPLND with severe adhesions (relative contraindication; experienced center required)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Tumor markers: AFP + beta-hCG + LDH (must be normalized or declining to nadir)"
+  - "CT chest/abdomen/pelvis: characterize residual masses (size, location, number)"
+  - "FDG-PET-CT: for seminoma residual masses (>3 cm or uncertain histology)"
+  - "Pulmonary function: DLCO (prior bleomycin may cause pulmonary fibrosis — surgical anesthesia risk)"
+  - "Renal function: GFR (cisplatin prior nephrotoxicity affects anesthesia and post-op risk)"
+
+sources:
+  - source_id: SRC-NCCN-TESTICULAR-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN GCT (Testicular Cancer): post-chemotherapy RPLND Category 1 for NSGCT
+      with residual mass ≥1 cm and normalized markers. Histology at RPLND guides
+      further treatment: viable GCT → 2 more cycles BEP; teratoma or necrosis →
+      surveillance.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) — closing IND-GCT-SALVAGE-RPLND gap
+  noted in algo_gct_salvage_2l.yaml.
+  This indication represents a SURGICAL decision node in the GCT algorithm.
+  It is not a chemotherapy indication — the plan_track: aggressive designation
+  reflects that RPLND is a major surgical procedure for higher-risk patients.
+  The GCT algorithm should reference this when residual mass is detected after
+  salvage chemotherapy completion with normalized markers.
+  NOTE: SRC-NCCN-TESTICULAR-2025 — verify that this source ID exists in the KB.
+  If not, SRC-NCCN-SARCOMA or a generic NCCN guideline reference may need to be
+  used, or a dedicated testicular cancer NCCN source stub authored.

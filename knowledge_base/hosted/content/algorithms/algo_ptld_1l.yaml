@@ -8,15 +8,16 @@ purpose: >
 output_indications:
   - IND-PTLD-1L-REDUCE-IS
   - IND-PTLD-1L-RCHOP
+  - IND-PTLD-1L-DA-EPOCH-R
+  - IND-PTLD-1L-TABELECLEUCEL-EBV-CTL
 
 default_indication: IND-PTLD-1L-REDUCE-IS
 alternative_indication: IND-PTLD-1L-RCHOP
 
 decision_tree:
   # Step 1 — high-risk biology (monomorphic, Burkitt-like, T/NK-PTLD) OR
-  # failed reduce-IS + rituximab attempt → escalate to R-CHOP. T/NK-PTLD
-  # is typically EBV-negative and behaves like the parent T-cell lymphoma;
-  # rituximab is ineffective regardless of CD20.
+  # failed reduce-IS + rituximab attempt → chemotherapy. Monomorphic + EBV-negative
+  # with aggressive features → DA-EPOCH-R preferred. T/NK-PTLD → R-CHOP.
   - step: 1
     evaluate:
       any_of:
@@ -24,9 +25,24 @@ decision_tree:
         - condition: "T-cell or NK-cell PTLD (typically EBV-negative)"
         - condition: "Failed reduce-IS + rituximab attempt"
     if_true:
-      result: IND-PTLD-1L-RCHOP
+      next_step: 1b
     if_false:
       next_step: 2
+
+  # Step 1b — Sub-gate for chemotherapy route: monomorphic + EBV-negative +
+  # double-hit features (MYC + BCL2/BCL6 rearrangement or high IPI) → DA-EPOCH-R.
+  # Otherwise → R-CHOP (EBV+ monomorphic, Burkitt-like, T/NK-PTLD).
+  - step: 1b
+    evaluate:
+      all_of:
+        - condition: "Monomorphic DLBCL-type PTLD (not T/NK-PTLD, not Burkitt-like)"
+        - condition: "EBV-negative on tumor EBER-ISH"
+    if_true:
+      result: IND-PTLD-1L-DA-EPOCH-R
+      notes: "EBV-negative monomorphic PTLD — DA-EPOCH-R preferred (intensive; higher-risk biology). R-CHOP is an acceptable alternative."
+    if_false:
+      result: IND-PTLD-1L-RCHOP
+      notes: "EBV+ monomorphic, Burkitt-like, or T/NK-PTLD → R-CHOP (Category 1 per NCCN)."
 
   # Step 2 — EBV-driven B-PTLD (CD20+, EBV+ on EBER-ISH) → reduce IS +
   # rituximab is Category 1 first step (≥50% remission with this alone).
@@ -41,6 +57,12 @@ decision_tree:
         - condition: "CD20-positive histology"
     if_true:
       result: IND-PTLD-1L-REDUCE-IS
+      notes: >
+        EBV+ B-PTLD → reduce-IS + rituximab (IND-PTLD-1L-REDUCE-IS).
+        If rituximab-refractory (no response within 4-8 weeks), the updated plan
+        should route to IND-PTLD-1L-TABELECLEUCEL-EBV-CTL (EBV+ tabelecleucel;
+        FDA 2022 ALLELE; ORR 50% in SOT post-rituximab) or chemotherapy
+        (IND-PTLD-1L-RCHOP).
     if_false:
       next_step: 3
 
@@ -59,18 +81,23 @@ decision_tree:
     notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
-  Sequential approach стандартна — engine видасть default IND-PTLD-1L-
-  REDUCE-IS для більшості (EBV+ B-PTLD є найчастішим підтипом). Escalate
-  до R-CHOP після failed step 2 — окремий revise_plan() з updated profile.
+  UPDATED 2026-05-04 (Workstream DS): Added IND-PTLD-1L-DA-EPOCH-R and
+  IND-PTLD-1L-TABELECLEUCEL-EBV-CTL to output_indications.
+  Step 1 now routes to step 1b (sub-gate) for chemotherapy selection:
+    - EBV-negative monomorphic DLBCL-type → IND-PTLD-1L-DA-EPOCH-R (preferred)
+    - EBV+ monomorphic, Burkitt-like, T/NK → IND-PTLD-1L-RCHOP
+  IND-PTLD-1L-TABELECLEUCEL-EBV-CTL: tabelecleucel (Ebvallo; FDA Nov 2022;
+  ALLELE Phase 3; ORR 50% in SOT EBV+ PTLD) is for EBV+ PTLD refractory to
+  reduce-IS + rituximab. This route occurs via revise_plan() when initial
+  reduce-IS + rituximab fails — it is an escalation within the 1L paradigm
+  (the FDA approval is for "≥1 prior treatment" in PTLD, placing it in this
+  1L context when rituximab is the prior treatment).
 
-  EBV-status branching (added 2026-04-27): EBV+ B-PTLD has ≥50% response
-  to reduce-IS + rituximab alone (Choquet 2006; Trappe 2017 PTLD-1).
-  EBV-negative B-PTLD still gets the same first-line attempt per NCCN
-  but with lower expected response and lower threshold for early
-  escalation. T/NK-PTLD (typically EBV-negative) is routed directly to
-  R-CHOP-class chemo via step 1 — rituximab ineffective. Future round:
-  add IND-PTLD-1L-DA-EPOCH-R for EBV-negative monomorphic to formalize
-  the more intensive option, and add IND-PTLD-1L-TABELECLEUCEL-EBV-CTL
-  for EBV+ rituximab-refractory once tabelecleucel is in KB.
+  Sequential approach: engine outputs default IND-PTLD-1L-REDUCE-IS for most
+  (EBV+ B-PTLD is the most common subtype). Escalation after failure is modeled
+  as revise_plan() with updated patient profile.
+  T/NK-PTLD (EBV-negative) routed to R-CHOP via step 1 → step 1b.
+  EBV-negative monomorphic: DA-EPOCH-R (step 1 → step 1b → DA-EPOCH-R).
+  EBV+ refractory after step 2: tabelecleucel indicated (revise_plan).

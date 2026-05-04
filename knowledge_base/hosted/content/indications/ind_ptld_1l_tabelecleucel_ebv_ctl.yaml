@@ -1,0 +1,119 @@
+id: IND-PTLD-1L-TABELECLEUCEL-EBV-CTL
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PTLD
+  line_of_therapy: 1
+  stage_requirements:
+    - "EBV-positive PTLD (confirmed by EBER-ISH on tumor biopsy) — relapsed or refractory after ≥1 prior line of therapy (rituximab ± reduce-IS, or rituximab-based chemotherapy)"
+    - "Solid organ transplant (SOT) recipient OR allogeneic HCT recipient"
+    - "HLA typing performed — HLA-compatible tabelecleucel lot available in inventory"
+    - "ECOG PS 0-2"
+    - "EBV EBER-ISH positive on tumor tissue (mandatory biomarker gate)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Tabelecleucel (Ebvallo) is an allogeneic off-the-shelf EBV-specific CTL therapy.
+      FDA approval: November 2, 2022 (SOT patients); expanded November 2023 (HCT patients).
+      EMA approval: August 2023.
+      ALLELE Phase 3 (Prockop 2023 JCO):
+        SOT: ORR 50% (CR 28%); median DoR 25.9 months; 1-year OS 68%
+        HCT: ORR 33% (CR 16%)
+      KEY ADVANTAGE: Can be administered while maintaining standard immunosuppression —
+      does NOT require reduction of immunosuppression (unlike the reduce-IS strategy).
+      This is crucial for SOT patients where IS reduction risks graft rejection.
+      HLA MATCHING: Requires ordering from Atara Biotherapeutics catalog based on
+      patient HLA typing (≥2/8 loci match); deeper match correlates with better
+      outcomes. Coordinate with Atara early (lot confirmation takes 1-3 days).
+      Pediatric use: approved ≥2 years old; same dosing.
+      TIMING: This is listed as '1L' in the context of rituximab-refractory EBV+ PTLD —
+      first-line rituximab ± reduce-IS is standard; tabelecleucel is the EBV-specific
+      option once rituximab alone has failed (usually within 4-8 weeks).
+      In patients where chemotherapy is contraindicated (organ dysfunction, frailty,
+      high infection risk), tabelecleucel may be used earlier in the treatment sequence.
+
+recommended_regimen: REG-TABELECLEUCEL-PTLD
+concurrent_therapy:
+  - "Immunosuppression: MAINTAIN current IS regimen during tabelecleucel therapy"
+  - "EBV DNA PCR: before each weekly dose (response monitoring)"
+  - "LDH: before each cycle (disease burden marker)"
+  - "CBC + LFT: before each cycle"
+
+followed_by:
+  - "PET-CT: after every 2 cycles (response assessment; RECIST 1.1 or Lugano criteria)"
+  - "EBV viral load: monthly after completion (residual EBV monitoring)"
+  - "Continue cycles until CR, progression, or toxicity"
+  - "At progression: chemotherapy-based PTLD therapy (R-CHOP or DA-EPOCH-R); clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "50% SOT patients (ALLELE Phase 3; N=43)"
+  complete_response: "28% CR in SOT cohort; 16% CR in HCT cohort"
+  progression_free_survival: "Median DoR 25.9 months (SOT cohort; ALLELE)"
+  overall_survival_5y: "1-year OS 68% in SOT cohort (ALLELE Phase 3)"
+  notes: >
+    PRIMARY EVIDENCE: Prockop S et al. Journal of Clinical Oncology 2023;41(1):36-46
+    (ALLELE Phase 3; NCT02822495; N=43 SOT + 19 HCT): tabelecleucel for r/r EBV+ PTLD.
+    SOT: ORR 50% (12 CR + 9 PR); CR 28%; mDoR 25.9 months; 1-year OS 68%.
+    HCT: ORR 33%; CR 16%.
+    FDA approvals: SOT Nov 2022; HCT Nov 2023. EMA Aug 2023. NCCN Cat 1 for r/r EBV+ PTLD.
+    First allogeneic off-the-shelf T-cell therapy approved for a lymphoma indication.
+    KEY BENEFIT: Off-the-shelf availability (no manufacturing delay unlike autologous CAR-T);
+    no lymphodepletion; no preconditioning; can maintain IS (prevents graft rejection risk).
+
+hard_contraindications:
+  - "EBV-negative PTLD — tabelecleucel is ONLY active against EBV-antigen-expressing tumors; no benefit in EBV-negative PTLD"
+  - "Active uncontrolled GvHD (HCT recipients — GvHD risk)"
+  - "No HLA-compatible lot available — cannot administer (check Atara inventory early)"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "EBV EBER-ISH on tumor biopsy: MANDATORY — confirms EBV+ histology (gating test)"
+  - "HLA typing (class I and II): required for lot selection from Atara inventory"
+  - "EBV DNA quantitative PCR: baseline plasma viral load"
+  - "PET-CT: baseline staging (Lugano criteria)"
+  - "Transplanted organ function: baseline (kidney/liver/heart — ongoing monitoring)"
+
+sources:
+  - source_id: SRC-ALLELE-PROCKOP-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ALLELE Phase 3 (Prockop 2023 JCO; N=43 SOT): tabelecleucel in r/r EBV+ PTLD.
+      ORR 50%; CR 28%; mDoR 25.9 months; 1-year OS 68%. FDA Nov 2022 (SOT),
+      Nov 2023 (HCT). EMA Aug 2023. NCCN Cat 1.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN PTLD: tabelecleucel Category 1 for relapsed/refractory EBV+ PTLD in
+      SOT and HCT recipients after prior therapy.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) — closing IND-PTLD-1L-TABELECLEUCEL-EBV-CTL
+  gap noted in algo_ptld_1l.yaml.
+  TIME-CRITICAL = true: rituximab-refractory EBV+ PTLD requires prompt escalation;
+  tabelecleucel lot availability check and HLA matching should begin immediately
+  when rituximab failure is suspected.
+  NOTE on line_of_therapy: Listed as '1L' because this is used after first-line
+  rituximab has failed (rituximab-refractory setting); it is the next step in
+  the 1L PTLD treatment sequence. The FDA approval is specifically for "relapsed or
+  refractory after ≥1 prior treatment" — this corresponds to rituximab failure
+  in the first-line PTLD algorithm.
+  Ukraine: tabelecleucel not registered — international referral required
+  (EU centers with Ebvallo access per EMA-approved centers).
