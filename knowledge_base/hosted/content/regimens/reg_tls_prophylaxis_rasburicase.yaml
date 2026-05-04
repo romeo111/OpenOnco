@@ -1,0 +1,64 @@
+id: REG-TLS-PROPHYLAXIS-RASBURICASE
+name: "TLS prophylaxis — rasburicase ± allopurinol for high-risk hematologic malignancies"
+name_ua: "Профілактика СЛП — расбуриказа ± алопуринол при гематологічних злоякісних пухлинах"
+alternate_names: ["rasburicase TLS protocol", "tumor lysis syndrome prophylaxis", "urate oxidase prophylaxis"]
+
+components:
+  - drug_id: DRUG-RASBURICASE
+    dose: "0.2 mg/kg IV (or fixed 3 mg IV for body weight <75 kg)"
+    schedule: "IV over 30 min × 1-3 doses starting at/before cytotoxic therapy; repeat daily if UA elevated"
+    route: IV
+    notes: "MANDATORY: check G6PD status before first dose. Draw uric acid samples on ice immediately after collection (rasburicase degrades UA in vitro at RT). Single dose (0.15-0.2 mg/kg) sufficient for most high-risk prophylaxis; repeat dosing for treatment of established TLS."
+  - drug_id: DRUG-ALLOPURINOL
+    dose: "300 mg PO QD (reduce to 200 mg if CrCl 10-20 mL/min)"
+    schedule: "PO starting 24-48h before chemotherapy; continue through nadir"
+    route: PO
+    notes: "Allopurinol for intermediate-risk TLS (alternative to rasburicase) or as continuation after rasburicase reduces uric acid. Do NOT initiate allopurinol with 6-mercaptopurine or azathioprine without dose reduction of those agents (xanthine oxidase inhibition increases myelotoxicity)."
+
+cycle_length_days: 7
+number_of_cycles: "As needed during cytotoxic therapy nadir; typically 3-7 days"
+
+special_requirements:
+  - "G6PD SCREENING MANDATORY before rasburicase — fatal hemolysis in G6PD deficiency"
+  - "Uric acid samples on ICE immediately — rasburicase degrades UA in vitro at room temperature (falsely low result)"
+  - "IV hyperhydration: 2-3 L/m²/day to maintain UO ≥100 mL/h"
+  - "Urinary alkalinization (sodium bicarbonate): controversial — may precipitate calcium phosphate; AVOID unless significant uric acid crystalluria"
+  - "Phosphate binders: for hyperphosphatemia (sevelamer; avoid calcium-based in hypercalcemia)"
+  - "Cardiac monitoring: telemetry for hyperkalemia (QRS widening, peaked T-waves)"
+  - "Rasburicase + allopurinol: can be combined but allopurinol redundant while rasburicase active"
+
+premedications:
+  - "G6PD assay result MUST be in chart before rasburicase administration"
+
+supportive_care:
+  - "Electrolytes (K+, Ca²+, Mg²+, PO4): q4-6h during active TLS risk"
+  - "Uric acid: q4-8h"
+  - "Creatinine: q6-12h"
+  - "12-lead ECG if K+ ≥5.5 mEq/L"
+  - "Urine output: maintain ≥100 mL/h with IV hydration"
+  - "Dialysis availability: nephrology consult for Grade 3-4 TLS"
+
+dose_modifications:
+  - toxicity: "CrCl <10 mL/min"
+    action: "Allopurinol: reduce to 100 mg QD; rasburicase dose unchanged (not renally cleared)"
+  - toxicity: "Established hyperkalemia K+ >6.0 mEq/L"
+    action: "Calcium gluconate IV (cardiac stabilization) + insulin/dextrose + kayexalate/patiromer; dialysis if refractory"
+  - toxicity: "G6PD deficiency identified"
+    action: "CONTRAINDICATED — use allopurinol alone + aggressive hydration; avoid rasburicase"
+
+sources:
+  - SRC-NCCN-SUPPORTIVE-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  NCCN Guidelines for Tumor Lysis Syndrome (TLS): Risk stratification —
+  HIGH: AML with WBC >100K or LDH >2× ULN; ALL; Burkitt lymphoma; CLL
+  with fludarabine initiation; large-cell lymphoma with bulky disease + LDH >2× ULN.
+  INTERMEDIATE: AML WBC 25-100K; DLBCL; advanced CLL.
+  LOW: solid tumors, CML stable phase.
+  Rasburicase: FDA approved for pediatric/adult high-risk TLS. Superior to
+  allopurinol for uric acid reduction (Cairo NEJM 2010). Single-dose
+  protocols (fixed 3 mg or weight-based 0.15 mg/kg) shown effective in
+  many retrospective series. G6PD deficiency prevalence: ~13% African
+  descent, ~7% Mediterranean — screen all patients.

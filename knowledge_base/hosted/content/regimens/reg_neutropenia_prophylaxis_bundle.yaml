@@ -1,0 +1,65 @@
+id: REG-NEUTROPENIA-PROPHYLAXIS-BUNDLE
+name: "Primary neutropenia prophylaxis bundle (G-CSF + antibacterial + antifungal + anti-PJP + anti-VZV/HSV)"
+name_ua: "Первинна профілактика нейтропенії (G-CSF + антибактеріальна + протигрибкова + анти-PJP + анти-VZV/HSV)"
+alternate_names: ["febrile neutropenia prophylaxis", "neutropenia prophylaxis bundle", "G-CSF primary prophylaxis"]
+
+components:
+  - drug_id: DRUG-PEGFILGRASTIM
+    dose: "6 mg SC (single injection)"
+    schedule: "SC day 2 (or 24-48h after last chemo dose) each cycle"
+    route: SC
+    notes: "Primary G-CSF prophylaxis when FN risk ≥20% or intermediate risk with comorbidities. Pegfilgrastim preferred for most regimens. Filgrastim 5 mcg/kg/day × 10-14 days as alternative."
+  - drug_id: DRUG-LEVOFLOXACIN
+    dose: "500 mg PO QD"
+    schedule: "Days 1-7 (during expected nadir) or per protocol"
+    route: PO
+    notes: "Antibacterial prophylaxis during expected neutropenic nadir. NCCN recommended for AML/MDS intensive chemo. Risk: fluoroquinolone resistance — use per institutional protocol."
+  - drug_id: DRUG-FLUCONAZOLE
+    dose: "400 mg PO QD"
+    schedule: "During neutropenic period"
+    route: PO
+    notes: "Antifungal prophylaxis. Posaconazole 300 mg QD preferred for AML/MDS/HSCT high-risk patients (better mold coverage). Fluconazole for low-intermediate fungal risk."
+  - drug_id: DRUG-TMP-SMX
+    dose: "1 DS tablet (160/800 mg) PO BID"
+    schedule: "3 days/week (e.g., Mon-Wed-Fri) during immunosuppression"
+    route: PO
+    notes: "Anti-PJP (Pneumocystis jirovecii pneumonia) prophylaxis. Mandatory during prolonged neutropenia and for steroid-containing regimens (>20 mg prednisone ≥4 weeks). Alternative: inhaled pentamidine 300 mg monthly."
+  - drug_id: DRUG-ACYCLOVIR
+    dose: "400 mg PO BID"
+    schedule: "During immunosuppression period"
+    route: PO
+    notes: "Anti-HSV/VZV prophylaxis. Valacyclovir 500 mg QD equivalent. Mandatory after HSCT, purine analogue therapy (fludarabine, bendamustine), bortezomib-based regimens."
+
+cycle_length_days: 28
+number_of_cycles: "Duration per underlying chemotherapy regimen; G-CSF each cycle"
+
+special_requirements:
+  - "G-CSF selection: pegfilgrastim for most solid tumor / lymphoma schedules; filgrastim for AML (do not use G-CSF during active leukemia induction without attending approval)"
+  - "Antibacterial prophylaxis: fluoroquinolone only when institutional protocol supports — resistance surveillance required"
+  - "Antifungal upgrade: posaconazole for AML induction, HSCT, prolonged neutropenia >7 days"
+  - "TMP-SMX contraindicated in sulfa allergy: substitute inhaled pentamidine or dapsone"
+  - "Do NOT combine levofloxacin + TMP-SMX routinely — reassess each component per indication"
+
+supportive_care:
+  - "CBC: twice weekly during nadir"
+  - "Temperature monitoring: daily; patient education on fever thresholds (≥38.3°C single or ≥38.0°C × 1h)"
+  - "LFTs: monthly (azole antifungals hepatotoxic)"
+  - "Renal function: baseline and periodic (acyclovir nephrotoxicity at high doses)"
+
+sources:
+  - SRC-NCCN-SUPPORTIVE-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  NCCN Guidelines for Myeloid Growth Factors: primary G-CSF prophylaxis
+  indicated when chemotherapy FN risk ≥20% (high-risk regimens) or 10-20%
+  with comorbidities. Secondary prophylaxis after prior FN episode.
+  Antibacterial prophylaxis: NCCN recommends fluoroquinolone for AML
+  induction and high-risk patients (ANC expected <100 for ≥7 days).
+  Anti-PJP: TMP-SMX standard for all patients on steroid-containing
+  regimens >4 weeks, CD4 <200, or prolonged T-cell immunosuppression.
+  Anti-VZV/HSV: mandatory post-bortezomib (herpes zoster reactivation 13%
+  without prophylaxis), post-alemtuzumab, post-HSCT.
+  This bundle represents the composite prophylaxis package; individual
+  components are selected based on risk stratification.
