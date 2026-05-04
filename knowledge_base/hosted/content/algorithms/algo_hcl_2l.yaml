@@ -11,10 +11,9 @@ purpose: >
     RITUXIMAB (vemurafenib + rituximab combo, NEJM Tiacci 2021;
     chemo-free, deep MRD-negative responses).
 
-  - BRAF-V600E NEGATIVE (HCL-variant or rare WT): cladribine
-    retreatment OR pentostatin switch (free-text — no dedicated
-    IND-HCL-2L-CLADRIBINE-RETREATMENT exists; use IND-HCL-1L-*
-    placeholders + MDT note flagging "retreatment, not de novo").
+  - BRAF-V600E NEGATIVE (HCL-variant or rare WT): IND-HCL-2L-
+    CLADRIBINE-RETREATMENT (cladribine same 7-day course; ORR ~80-92%;
+    NCCN Cat 1; Workstream AW 2026-05-04).
 
   2L entry triggered by: documented HCL relapse (cytopenia
   recurrence, splenomegaly progression, marrow infiltration) ≥1y
@@ -24,9 +23,10 @@ purpose: >
 
 output_indications:
   - IND-HCL-2L-VEMURAFENIB
+  - IND-HCL-2L-CLADRIBINE-RETREATMENT
 
 default_indication: IND-HCL-2L-VEMURAFENIB
-alternative_indication: IND-HCL-2L-VEMURAFENIB
+alternative_indication: IND-HCL-2L-CLADRIBINE-RETREATMENT
 
 decision_tree:
   # Step 1 — frail / organ dysfunction precluding both vemurafenib
@@ -73,7 +73,14 @@ decision_tree:
         - red_flag: RF-HCL-ORGAN-DYSFUNCTION
         - red_flag: RF-HCL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-HCL-2L-VEMURAFENIB  # placeholder; see notes — cladribine retreatment / pentostatin
+      result: IND-HCL-2L-CLADRIBINE-RETREATMENT
+      notes: >
+        BRAF-V600E negative (HCL-variant) OR vemurafenib inaccessible/contraindicated
+        OR late relapse (>1y from 1L): cladribine retreatment (REG-CLADRIBINE-SINGLE;
+        same 7-day protocol as 1L). ORR ~80-92% (Else 2005 Blood; Saven 1992).
+        NCCN Cat 1. PJP prophylaxis (TMP-SMX) + antiviral (valacyclovir) MANDATORY
+        from day 1 through 12 months post-treatment. Ukraine: cladribine registered
+        + NSZU-funded; primary accessible 2L option for most UA HCL patients.
     if_false:
       next_step: 4
 
@@ -92,13 +99,14 @@ decision_tree:
 sources:
   - SRC-NCCN-BCELL-2025
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream AW): IND-HCL-2L-CLADRIBINE-RETREATMENT authored
+  and wired at step 3 if_true (BRAF-V600E negative/vemurafenib-inaccessible/late relapse
+  >1y → cladribine retreatment; REG-CLADRIBINE-SINGLE reused; ORR ~80-92%; NCCN Cat 1;
+  PJP + antiviral prophylaxis mandatory). Gap (1) CLOSED.
+
   OOS / wiring gaps:
-  (1) IND-HCL-2L-CLADRIBINE-RETREATMENT (cladribine 7-day course
-  retreatment >1y after 1L response) — not modeled as dedicated
-  2L indication. Step 3 routes via free-text MDT note; reuses
-  IND-HCL-1L-CLADRIBINE regimen.
   (2) IND-HCL-2L-PENTOSTATIN-SWITCH — not modeled.
   (3) Moxetumomab pasudotox (anti-CD22 immunotoxin, FDA 2018) for
   ≥3L HCL — withdrawn from market 2023 (sponsor decision), not

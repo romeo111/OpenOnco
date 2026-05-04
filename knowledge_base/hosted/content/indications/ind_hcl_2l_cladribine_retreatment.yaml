@@ -1,0 +1,189 @@
+id: IND-HCL-2L-CLADRIBINE-RETREATMENT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Classic HCL relapse (cytopenia recurrence, splenomegaly, BM infiltration) OR primary refractory after 1L purine analog (rare, <5%)"
+    - "≥1 year interval since last cladribine course (required for retreatment; TLS and cumulative toxicity risk lower after adequate interval)"
+    - "Indications: (a) BRAF-V600E NEGATIVE (HCL-variant — vemurafenib not effective); (b) Vemurafenib inaccessible or contraindicated (QTc >480 ms, severe arthralgia, hepatotoxicity history, no EAP); (c) Patient preference for purine analog over targeted therapy"
+    - "ECOG PS 0-3 (hairy cell leukemia often presents with cytopenias; ECOG not a strict gate)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "BRAF-V600E POSITIVE + vemurafenib accessible → IND-HCL-2L-VEMURAFENIB preferred (deeper MRD-negative responses; Tiacci 2021 NEJM)"
+    - "Interval <6 months since last purine analog — retreatment toxicity unacceptably high; wait or use vemurafenib"
+    - "Active severe infection (cladribine immunosuppression — CD4 nadir <50/µL for 3-6 months post-treatment)"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      No absolute age cutoff. Elderly patients (>70) can receive cladribine with
+      careful infection prophylaxis. ECOG 3 acceptable in HCL since cytopenias from
+      disease drive performance status deterioration — post-treatment ECOG typically
+      improves. Renal impairment (CrCl <30): cladribine dose reduction recommended
+      (50% if CrCl 10-30 mL/min); avoid if CrCl <10 mL/min.
+
+recommended_regimen: REG-CLADRIBINE-SINGLE
+regimen_adaptation_notes: >
+  REG-CLADRIBINE-SINGLE (same 7-day protocol as 1L):
+  Cladribine 0.09-0.10 mg/kg/day IV continuous infusion × 7 days OR
+  subcutaneous bolus 0.14 mg/kg/day SC × 5 days (NCCN equivalent; SC preferred
+  in 2L for outpatient feasibility).
+  Retreatment follows identical dosing as 1L — no dose escalation or modification
+  needed for 2L retreatment (Saven 1992; Else 2005).
+  PJP prophylaxis mandatory (TMP-SMX 160/800 mg 3×/week from start + 12 months
+  post-treatment; CD4 count will nadir <50/µL).
+  Antiviral prophylaxis: valacyclovir 500 mg/day (HSV/VZV reactivation — cladribine
+  profound immunosuppression; continue 12 months post-treatment).
+  HBV prophylaxis: entecavir if HBsAg+ or HBcAb+ (rituximab not used here but
+  cladribine alone causes B-cell depletion).
+
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Pentostatin (2-deoxycoformycin) 4 mg/m² IV every 2 weeks × 6-12 doses:
+      equivalent activity to cladribine in HCL (ORR ~80-95% both); use if cladribine
+      previously caused major toxicity or if pentostatin preferred (weekly/biweekly
+      outpatient vs 7-day continuous cladribine). NCCN Cat 1 equivalent for HCL.
+      Ukraine: pentostatin registration limited — cladribine preferred for access.
+  - regimen_id: null
+    description: >
+      Rituximab + cladribine combination: Else 2011 (JCO; n=59): rituximab 375 mg/m²
+      × 8 doses + cladribine (concurrent or sequential); MRD-negative CR ~73%;
+      significant MRD deepening vs cladribine alone. Use in BRAF-V600E-negative
+      HCL-variant (poor purine analog outcomes; rituximab adds CD20-targeted cytotoxicity).
+      Off-label combination; reasonable for HCL-variant 2L.
+
+concurrent_therapy:
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week — START at day 1 of cladribine; continue 12 months post-treatment (CD4 nadir <50/µL common)"
+  - "Antiviral prophylaxis: valacyclovir 500 mg PO daily — START at day 1; continue 12 months"
+  - "G-CSF (filgrastim 300 µg SC 3×/week) if ANC <0.5×10⁹/L during nadir (typically day 7-21); not routine but available for severe neutropenia"
+  - "HBV: entecavir 0.5 mg/day if HBsAg+ or HBcAb+ (B-cell depletion risk)"
+
+followed_by:
+  - "Bone marrow biopsy at day 28-56 post-treatment: response assessment (hairy cell clearance; immunohistochemistry CD20/CD25/CD103/annexin A1)"
+  - "If residual BM disease at day 56: rituximab consolidation (375 mg/m² × 4 weekly doses) may deepen to MRD-negative (off-label; small series)"
+  - "Monitor for 2nd relapse: CBC q3 months × 1y, then q6 months × 5y; repeat BM biopsy if cytopenias recur"
+  - "3rd relapse: vemurafenib (if BRAF-V600E+), or cladribine 3rd course (if >1y interval), or clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~80-92% (Saven 1992; Else 2005 Blood; cladribine retreatment in classic HCL)"
+  cr_rate: "~50-80% CR (lower than 1L ~85%; expected diminishing depth with retreatment)"
+  median_duration_of_response: "~5-8 years (progressively shorter with each retreatment course; still clinically meaningful)"
+  notes: >
+    Cladribine retreatment evidence in HCL:
+    - Saven 1992 (Leuk Lymphoma): original retreatment series; ORR ~85-90%; CR rates
+      comparable to 1L in patients with >1 year interval from prior course.
+    - Else 2005 (Blood; n=42): cladribine retreatment in relapsed HCL; ORR 84%; CR 50%;
+      median DOR 5.5 years; no significant cumulative toxicity with single retreatment course.
+    - Juliusson 1992, 1995: Swedish series; retreatment ORR ~90%; duration of 2nd response
+      shorter but clinically useful (3-5 years); acceptable toxicity.
+    - HCL-variant (BRAF-WT; IGHV4-34+): responds less well to cladribine alone
+      (~50-60% ORR vs ~90% classic HCL); combination with rituximab (Else 2011 JCO)
+      improves outcomes for variant HCL (ORR ~75-80% with VR).
+    - NCCN HCL 2025 Cat 1: purine analog retreatment (cladribine or pentostatin) is
+      Category 1 for HCL 2L when ≥1 year from prior purine course and either BRAF-V600E
+      negative (variant) or vemurafenib inaccessible/contraindicated.
+    - vs. vemurafenib ± rituximab (Tiacci 2021 NEJM): deeper MRD-negative CR (~65%
+      MRD-) with vemurafenib+rituximab vs cladribine (~15-20% MRD- by sensitive assay);
+      for BRAF-V600E+ patients, vemurafenib combo preferred where accessible.
+    - Cladribine retreatment remains the primary option for BRAF-V600E-negative HCL
+      (HCL-variant) and for vemurafenib-inaccessible patients.
+
+hard_contraindications:
+  - "Interval <6 months from prior purine analog (excessive cumulative immunosuppression risk; inadequate recovery time)"
+  - "Active severe infection (bacterial or fungal — cladribine worsens immune status)"
+  - "Active hepatitis B (without antiviral prophylaxis) — cladribine causes B-cell aplasia and HBV reactivation"
+  - "CrCl <10 mL/min (cladribine renally cleared; avoid without dialysis support)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "BRAF-V600E POSITIVE + vemurafenib accessible → IND-HCL-2L-VEMURAFENIB preferred (MRD-negative CR ~65%; mPFS not reached at 4y)"
+  - condition: "HCL-variant (BRAF-V600E negative, IGHV4-34+) with prior cladribine failure → rituximab + cladribine combination or clinical trial"
+  - condition: "Interval <1 year from last purine analog → vemurafenib (if BRAF-V600E+) or watchful waiting if counts acceptable"
+  - condition: "Active severe infection → stabilize infection first, then cladribine"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Bone marrow biopsy + immunohistochemistry (CD20, CD25, CD103, annexin A1, BRAF V600E IHC): confirm HCL histology at relapse + BRAF status"
+  - "BRAF V600E testing (NGS or allele-specific PCR): mandatory at relapse — determines vemurafenib eligibility"
+  - "HBV serology (HBsAg, HBcAb total): cladribine B-cell depletion → HBV reactivation; entecavir if positive"
+  - "CD4 count baseline: cladribine will suppress CD4 to <50/µL; baseline documents pre-treatment status"
+  - "CrCl: dose adjustment if impaired (reduce 50% for CrCl 10-30 mL/min)"
+  - "Peripheral blood smear: hairy cell count + differential"
+
+desired_tests:
+  - "MRD assessment (flow cytometry peripheral blood): 4-color or 6-color for CD19+CD20+CD11c+CD103+ cells — baseline + post-treatment day 56"
+  - "IGHV mutation status: IGHV4-34+ indicates HCL-variant (BRAF-WT); impacts retreatment expectations"
+  - "Immunophenotyping peripheral blood: DBA.44, CD22, CD25 — confirms hairy cell origin"
+
+rationale: >
+  Cladribine (2-CdA; 2-chlorodeoxyadenosine) is a purine nucleoside analog with
+  selective toxicity for both cycling and resting lymphocytes. A single 7-day
+  continuous infusion or 5-day SC administration achieves >90% ORR in HCL
+  (Piro 1990, Blood; Saven 1992).
+
+  In 2L retreatment context:
+  - After ≥1 year from 1L cladribine, re-treatment achieves 80-92% ORR with
+    comparable tolerability to 1L (Else 2005, Blood; Saven 1992).
+  - Response duration progressively shorter with each course (~10y after 1L,
+    ~5y after 2L, ~3y after 3L) but remains clinically meaningful.
+  - For BRAF-V600E-NEGATIVE HCL (HCL-variant): cladribine remains the backbone
+    as vemurafenib has minimal activity in BRAF-WT disease.
+  - For BRAF-V600E-POSITIVE but vemurafenib-inaccessible patients (Ukraine: not
+    NSZU-reimbursed): cladribine retreatment is the primary accessible option.
+
+  Cladribine vs vemurafenib+rituximab for BRAF-V600E+ 2L:
+  - Tiacci 2021 (NEJM): vemurafenib+rituximab → MRD-negative CR ~65%; median PFS
+    not reached at 4y. Deeper molecular remissions than cladribine alone (~15-20% MRD-).
+  - For accessible patients: vemurafenib preferred (IND-HCL-2L-VEMURAFENIB).
+  - For inaccessible/contraindicated: cladribine retreatment is Cat 1 alternative.
+
+  NCCN HCL 2025 Cat 1: cladribine or pentostatin retreatment for 2L HCL after
+  ≥1y interval. No consensus on maximum number of retreatment courses.
+
+  Ukraine context:
+  - Cladribine: registered for HCL; NSZU-reimbursed; widely accessible.
+  - Vemurafenib: registered for melanoma; off-label for HCL; not NSZU-funded for HCL.
+  - Most UA patients → cladribine retreatment is the most accessible 2L option
+    regardless of BRAF status.
+
+rationale_ua: >
+  Кладрибін 2L (повторний курс): тиждень безперервної інфузії або 5 днів п/ш.
+  ОРВ ~80-92% (Else 2005 Blood; Saven 1992) при рецидиві >1 рік після 1L курсу.
+  Перевагу при: (1) BRAF-V600E негативний (ВКЛ-варіант — вемурафеніб неефективний);
+  (2) вемурафеніб недоступний/протипоказаний (В Україні: не реімбурсується НСЗУ
+  для ВКЛ — кладрибін основний варіант); (3) пізній рецидив >1 рік.
+  NCCN кат.1. Профілактика ПЦП (ТМП-СМЗ) + противірусна (валацикловір) ОБОВ'ЯЗКОВІ
+  на весь курс + 12 місяців після (CD4 <50/мкл у всіх пацієнтів).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN HCL 2025 Category 1: purine analog retreatment (cladribine or pentostatin)
+      for relapsed HCL ≥1 year from prior course. For BRAF-V600E-negative (HCL-variant)
+      or vemurafenib-inaccessible patients, cladribine is the primary 2L option.
+
+do_not_do:
+  - "Ніколи при <6 міс від останнього курсу кладрибіну: кумулятивна імунотоксичність; підвищений ризик важких інфекцій"
+  - "Без профілактики ПЦП (ТМП-СМЗ): обов'язково до кладрибіну — CD4 завжди <50/мкл після курсу; пневмоцистна пневмонія може бути фатальною"
+  - "BRAF-V600E+ + вемурафеніб доступний: IND-HCL-2L-VEMURAFENIB кращий (МРД-негативна ВКЛ у 65%; ПВБ не досягнутий за 4 роки; Tiacci 2021 NEJM)"
+  - "Активний HBV без противірусного лікування: кладрибін викликає реактивацію HBV → фульмінантний гепатит"
+  - "Лихоманка нейтропенії після кладрибіну (типово день 7-21): негайна госпіталізація + емпіричні антибіотики (піперацилін/тазобактам); не чекати культур"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
