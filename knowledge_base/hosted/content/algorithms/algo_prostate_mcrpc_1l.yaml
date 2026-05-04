@@ -13,6 +13,8 @@ output_indications:
   - IND-PROSTATE-MCRPC-1L-ARPI
   - IND-PROSTATE-MCRPC-1L-PARPI
   - IND-PROSTATE-MCRPC-2L-LU-PSMA
+  - IND-PROSTATE-MCRPC-2L-DOCETAXEL
+  - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
 
 default_indication: IND-PROSTATE-MCRPC-1L-ARPI
 alternative_indication: IND-PROSTATE-MCRPC-1L-PARPI
@@ -78,20 +80,24 @@ decision_tree:
         - condition: "ECOG PS 0-2 (docetaxel eligible)"
         - condition: "No prior taxane in mHSPC or mCRPC"
     if_true:
-      result: IND-PROSTATE-MCRPC-1L-ARPI
+      result: IND-PROSTATE-MCRPC-2L-DOCETAXEL
       notes: >
-        Prior ARPI + taxane-naive + ECOG 0-2: docetaxel 75mg/m² q3w x 10 cycles
-        is the standard-of-care intensification. Indication IND-PROSTATE-MCRPC-1L-ARPI
-        routes here as ARPI-switch alternative; dedicated docetaxel mCRPC indication
-        stub is pending authoring. Consider cabazitaxel (CARD trial: superior to
-        2nd ARPI post-prior-ARPI+taxane) if docetaxel already given.
+        Prior ARPI + taxane-naive + ECOG 0-2: docetaxel 75mg/m² q3w × 10 cycles
+        (TAX 327; Tannock 2004 NEJM; mOS 18.9 mo; NCCN Cat 1).
+        Prednisone 5mg BID concurrent. G-CSF prophylaxis recommended for patients
+        ≥65 or borderline PS. After docetaxel progression: cabazitaxel
+        (IND-PROSTATE-MCRPC-2L-CABAZITAXEL; CARD trial preferred post-ARPI+docetaxel)
+        or Lu-PSMA if PSMA-PET positive.
     if_false:
-      result: IND-PROSTATE-MCRPC-1L-ARPI
+      result: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
       notes: >
-        Fall-through (prior ARPI + prior taxane + PSMA-PET unavailable or negative):
-        ARPI switch (enzalutamide ↔ abiraterone) has modest activity after prior ARPI
-        (cross-resistance common). Consider clinical trial enrollment. NCCN: cabazitaxel
-        or olaparib (if HRR not yet tested) are acceptable alternatives.
+        Prior ARPI + prior taxane + PSMA-PET unavailable or negative + ECOG 0-2:
+        cabazitaxel 25mg/m² q3w (CARD trial; De Wit 2019 NEJM: superior rPFS HR 0.54
+        and OS HR 0.64 vs second ARPI post-prior-ARPI+docetaxel; NCCN Cat 1).
+        ARPI cross-switch (enzalutamide ↔ abiraterone) has very limited activity
+        after prior ARPI failure (cross-resistance common); cabazitaxel preferred.
+        If ECOG ≥3 or organ dysfunction precludes cabazitaxel: clinical trial or
+        BSC per MDT.
 
 sources:
   - SRC-PROFOUND-DEBONO-2020
@@ -114,5 +120,6 @@ notes: >
   + post-taxane are the VISION eligibility criteria. Earlier line use (PSMAfore,
   PSMAddition trials) is emerging but not yet standard.
 
-  Docetaxel mCRPC indication stub is pending (currently addressed in notes only).
-  Cabazitaxel 2L post-docetaxel (CARD trial) also pending a dedicated indication.
+  Docetaxel + cabazitaxel wiring CLOSED 2026-05-04 (Workstream DG):
+    Step 4 if_true → IND-PROSTATE-MCRPC-2L-DOCETAXEL (TAX 327; NCCN Cat 1)
+    Step 4 if_false → IND-PROSTATE-MCRPC-2L-CABAZITAXEL (CARD; NCCN Cat 1)
