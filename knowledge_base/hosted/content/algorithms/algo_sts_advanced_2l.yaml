@@ -14,6 +14,8 @@ purpose: >
 output_indications:
   - IND-STS-ADVANCED-2L-GEMDOC
   - IND-STS-ADVANCED-2L-PAZOPANIB
+  - IND-STS-ADVANCED-2L-TRABECTEDIN
+  - IND-STS-ADVANCED-2L-ERIBULIN
 
 default_indication: IND-STS-ADVANCED-2L-GEMDOC
 alternative_indication: IND-STS-ADVANCED-2L-PAZOPANIB
@@ -77,16 +79,15 @@ decision_tree:
       any_of:
         - condition: "STS subtype = liposarcoma (well-differentiated, dedifferentiated, myxoid, pleomorphic)"
     if_true:
-      result: null
+      result: IND-STS-ADVANCED-2L-ERIBULIN
       notes: >
-        Liposarcoma 2L: trabectedin 1.5 mg/m² 24h CIV q21d preferred where available
-        (ET-743-SAR-3007; FDA approved Oct 2015 for unresectable LPS or LMS post-anthracycline).
-        Eribulin 1.4 mg/m² d1,8 q21d (ERIBULIN-312: OS benefit in liposarcoma subgroup;
-        HR 0.51 for LPS subset). Pazopanib has limited evidence in liposarcoma (excluded
-        from PALETTE) but used in practice.
-        IND-STS-ADVANCED-2L-TRABECTEDIN not yet authored — use trabectedin regimen
-        per NCCN if available. Ukraine access: trabectedin named-patient import or
-        international referral. GemDoc has poor evidence in liposarcoma vs LMS.
+        Liposarcoma 2L preferred: eribulin (IND-STS-ADVANCED-2L-ERIBULIN) — ERIBULIN-312
+        LPS subgroup OS HR 0.51 (strongest OS evidence in LPS); FDA approved Jan 2016 for LPS.
+        Trabectedin (IND-STS-ADVANCED-2L-TRABECTEDIN) is an alternative if eribulin
+        inaccessible — ET-743-SAR-3007 PFS HR 0.55; FDA-approved LPS/LMS Oct 2015;
+        requires 24h CIV + central access + dexamethasone 20 mg premedication.
+        GemDoc has limited evidence in liposarcoma vs LMS (SARC002 LMS-preferential).
+        Ukraine: eribulin (Halaven, Eisai) check NSZU access; trabectedin = named-patient import.
     if_false:
       next_step: 5
 
@@ -132,14 +133,12 @@ notes: >
   - If doxorubicin 1L: ifosfamide 2L (if not prior); GemDoc; pazopanib
   - If dox+ifo 1L (AI): GemDoc → pazopanib → trabectedin/eribulin sequence
 
-  GAPS:
-  - IND-STS-ADVANCED-2L-TRABECTEDIN: trabectedin for liposarcoma/LMS
-    (ET-743-SAR-3007, PMID 26527776) not yet authored
-  - IND-STS-ADVANCED-2L-ERIBULIN: eribulin for liposarcoma
-    (ERIBULIN-312; OS HR 0.51 in LPS subgroup; PMID 26441396) not yet authored
-  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE: high-dose ifosfamide 2L
-    (if not used in 1L) not yet authored
-  - SRC-NCCN-STS-2025 is referenced — confirm this source ID exists in KB
+  AUTHORED 2026-05-04:
+  - IND-STS-ADVANCED-2L-TRABECTEDIN: trabectedin LPS/LMS (ET-743-SAR-3007; PFS HR 0.55; NCCN Cat 1)
+  - IND-STS-ADVANCED-2L-ERIBULIN: eribulin for liposarcoma (ERIBULIN-312 LPS OS HR 0.51; NCCN Cat 1)
+
+  REMAINING GAPS:
+  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE: high-dose ifosfamide 2L (if not used in 1L) not yet authored
 
   Subtype nuances (not captured in algorithm):
   - Angiosarcoma: paclitaxel or gem preferred (angiosarcoma is taxane-sensitive)

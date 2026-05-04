@@ -1,0 +1,69 @@
+id: REG-ERIBULIN-SARCOMA
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy"
+
+agents:
+  - drug_id: DRG-ERIBULIN
+    dose: "1.4 mg/m² IV over 2-5 minutes"
+    route: IV
+    schedule: "Days 1 and 8 q21d (day 8 dose omitted if ANC <1.0 or platelets <75)"
+    administration_notes: "Short bolus IV push (2-5 min); peripheral IV acceptable"
+    dose_modifications:
+      - trigger: "Grade ≥3 neutropenia (ANC <1.0 × 10⁹/L) or Grade ≥3 thrombocytopenia on day 8"
+        action: "Omit day 8 dose; restart next cycle at day 1 when ANC ≥1.0 × 10⁹/L and platelets ≥75 × 10⁹/L"
+      - trigger: "Febrile neutropenia (Grade 4 ANC + fever ≥38.5°C)"
+        action: "Omit subsequent doses; add G-CSF prophylaxis; consider dose reduction to 1.1 mg/m² on next cycle"
+      - trigger: "Grade ≥3 peripheral neuropathy (motor or sensory)"
+        action: "Delay until ≤Grade 2; reduce dose to 1.1 mg/m²; if Grade ≥3 persists or recurs at 1.1 mg/m², discontinue"
+      - trigger: "CrCl 15-49 mL/min (moderate-severe renal impairment)"
+        action: "Reduce dose to 1.1 mg/m²"
+      - trigger: "Child-Pugh B hepatic impairment"
+        action: "Reduce dose to 0.7 mg/m²; Child-Pugh C contraindicated"
+      - trigger: "QTcF >500 ms on ECG"
+        action: "Hold eribulin; evaluate electrolytes (correct hypokalemia/hypomagnesemia); if resolves to <481 ms, can restart; consider discontinuation"
+
+when_to_use: >
+  Previously treated unresectable or metastatic liposarcoma (LPS) after prior
+  anthracycline-based chemotherapy. FDA approved January 2016 for LPS specifically.
+  ERIBULIN-312 (Schoffski 2016, Lancet): OS HR 0.768 overall; LPS subgroup OS HR 0.51
+  (13.5 vs 11.5 months overall); FDA restricted approval to LPS only (not LMS) based
+  on subgroup analysis — LMS subgroup OS HR 0.93 (NS).
+  Eribulin is a non-taxane microtubule dynamics inhibitor (halichondrin B analog);
+  activity in taxane-resistant disease.
+
+premedication:
+  - "Antiemetic: ondansetron 8 mg IV or PO (or equivalent) — mild-moderate emetogenic potential"
+  - "No dexamethasone or mesna required"
+
+growth_factor_support:
+  primary_prophylaxis: "Not routinely required for standard dose; consider for ECOG 2, age ≥70, or prior febrile neutropenia"
+  secondary_prophylaxis: "Mandatory after febrile neutropenia"
+
+monitoring:
+  - "CBC + differential: before each cycle and before day 8 dose"
+  - "LFT + creatinine: baseline; repeat if clinically indicated (dose adjustment threshold)"
+  - "ECG: baseline and if clinical concern (QT prolongation monitoring)"
+  - "Electrolytes (K⁺, Mg²⁺): baseline and if QTc prolonged"
+  - "Peripheral neuropathy assessment: each cycle (cumulative; most common ≥Grade 3 toxicity)"
+  - "CT or MRI: every 2-3 cycles (RECIST 1.1)"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression or unacceptable toxicity"
+
+watchpoints_ua:
+  - "КРИТИЧНО: FDA схвалений ЛИШЕ для ліпосаркоми — при лейоміосаркомі (LMS) ерибулін НЕ показаний (LMS підгрупа OS HR 0.93, NS); при LMS — трабектедин або гемдок"
+  - "КРИТИЧНО: Периферична нейропатія — кумулятивна; оцінювати кожен цикл; Grade ≥3 — знизити дозу або відмінити"
+  - "УВАГА: ЕКГ на початку — ризик подовження QT; корегувати гіпокаліємію/гіпомагніємію перед призначенням"
+  - "УВАГА: При нирковій недостатності (CrCl 15-49 мл/хв) — знизити дозу до 1.1 мг/м²"
+  - "УВАГА: День 8 — перевіряти ЗАК перед введенням: при ANC <1.0 або тромбоцити <75 — пропустити день 8"
+
+sources:
+  - SRC-ERIBULIN312-SCHOFFSKI-2016
+  - SRC-NCCN-STS-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

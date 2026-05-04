@@ -1,0 +1,105 @@
+id: IND-STS-ADVANCED-2L-ERIBULIN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  disease_state: advanced
+  line_of_therapy: 2
+  stage_requirements:
+    - "Unresectable or metastatic LIPOSARCOMA ONLY — FDA approval is LPS-specific"
+    - "LPS subtypes: well-differentiated (WDLPS), dedifferentiated (DDLPS), myxoid/round cell (MRCLS)"
+    - "Progressive disease after prior anthracycline-based chemotherapy (doxorubicin ± ifosfamide)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Leiomyosarcoma (LMS): eribulin NOT FDA-approved for LMS — LMS subgroup OS HR 0.93 (NS) in ERIBULIN-312; use trabectedin or GemDoc for LMS"
+    - "GIST, Ewing sarcoma, rhabdomyosarcoma"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ERIBULIN-SARCOMA
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  os_hr_lps_subgroup: 0.51
+  os_hr_lps_ci: "0.35-0.75"
+  median_os_months: 15.6
+  notes: >
+    ERIBULIN-312 (Schoffski 2016, Lancet; n=452 LPS/LMS): eribulin vs dacarbazine.
+    Overall OS HR 0.768 (13.5 vs 11.5 months; p=0.017). Liposarcoma subgroup:
+    OS HR 0.51 (0.35-0.75) — strong, statistically significant. LMS subgroup:
+    OS HR 0.93 (NS). FDA approved January 2016 for LPS specifically.
+    LPS subtypes with greatest benefit: dedifferentiated and myxoid/round cell in
+    most series; WDLPS (well-differentiated LPS) has inherently indolent behavior
+    and may not require systemic therapy unless symptomatic.
+    Median OS in LPS eribulin arm: ~15.6 months vs 8.4 months dacarbazine (subgroup).
+
+hard_contraindications:
+  - "Leiomyosarcoma (LMS) — eribulin FDA label is LPS-only; use trabectedin (IND-STS-ADVANCED-2L-TRABECTEDIN) or GemDoc (IND-STS-ADVANCED-2L-GEMDOC) for LMS"
+  - "Total bilirubin >3 × ULN (Child-Pugh C hepatic impairment — eribulin contraindicated)"
+  - "ECOG PS ≥3"
+  - "QTcF >500 ms at baseline (QT prolongation risk)"
+  - "Severe pre-existing peripheral neuropathy (Grade ≥3 — neuropathy is dose-limiting toxicity)"
+
+red_flags_triggering_alternative:
+  - condition: "Liposarcoma WDLPS (well-differentiated LPS) — WDLPS has indolent behavior; assess whether systemic therapy is clinically warranted vs surveillance"
+  - condition: "Trabectedin accessible and LPS/LMS — discuss trabectedin as alternative at MDT (IND-STS-ADVANCED-2L-TRABECTEDIN; PFS HR 0.55)"
+  - condition: "LMS — use IND-STS-ADVANCED-2L-TRABECTEDIN or IND-STS-ADVANCED-2L-GEMDOC (eribulin NOT indicated for LMS)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-ECG
+  - "Electrolytes (K⁺, Mg²⁺): correct before starting (QT prolongation risk)"
+  - TEST-CT-CAP
+  - "Histologic confirmation of liposarcoma subtype (WDLPS vs DDLPS vs MRCLS — subtype determines behavior and treatment urgency)"
+
+desired_tests:
+  - "MDM2 amplification / CDK4 amplification (confirmatory for WDLPS/DDLPS — FISH or IHC)"
+
+rationale: >
+  ERIBULIN-312 (Schoffski 2016, Lancet; n=452): eribulin mesylate vs dacarbazine in
+  previously treated LPS/LMS. Overall OS HR 0.768 (p=0.017). Liposarcoma subgroup:
+  OS HR 0.51 — the strongest OS benefit seen in any 2L STS agent in liposarcoma.
+  This LPS-specific OS benefit led to FDA approval (January 2016) restricted to
+  liposarcoma only. The LMS subgroup showed no OS benefit (HR 0.93, NS).
+  Eribulin mechanism: halichondrin B analog; inhibits microtubule polymerization by
+  binding to tubulin; non-taxane mechanism (activity in taxane-resistant sarcoma).
+  Peripheral neuropathy (cumulative sensory) is the main toxicity — baseline neuropathy
+  assessment and cycle-by-cycle monitoring critical.
+
+rationale_ua: >
+  ERIBULIN-312 (n=452): ерибулін vs дакарбазин. LPS підгрупа: OS HR 0.51 (0.35-0.75) —
+  найсильніший OS-ефект у 2L лікуванні ліпосаркоми. FDA схвалено: лише для ліпосаркоми
+  (не LMS; LMS підгрупа OS HR 0.93 NS). NCCN Категорія 1 для ліпосаркоми.
+  Периферична нейропатія — основна токсичність; кумулятивна; оцінювати кожен цикл.
+  ЕКГ до початку — подовження QT; корекція гіпокаліємії ОБОВ'ЯЗКОВА.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ERIBULIN312-SCHOFFSKI-2016
+    position: supports
+    relevant_quote_paraphrase: "ERIBULIN-312 (n=452): eribulin vs dacarbazine in LPS/LMS; LPS subgroup OS HR 0.51 (p<0.001); overall OS HR 0.768; FDA approved Jan 2016 for LPS; NCCN Cat 1"
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+
+do_not_do:
+  - "НЕ призначати при лейоміосаркомі (LMS) — ерибулін FDA схвалений ЛИШЕ для ліпосаркоми; при LMS — трабектедин або гемдок"
+  - "Не ігнорувати ЕКГ та електроліти перед призначенням — ризик подовження QT; корегувати K⁺, Mg²⁺"
+  - "Не ігнорувати периферичну нейропатію — оцінювати кожен цикл; Grade ≥3 — знизити дозу або відмінити"
+  - "Не призначати при важкій печінковій недостатності (Child-Pugh C)"
+  - "Не пропускати оцінку дня 8 — при ANC <1.0 або тромбоцити <75 → пропустити день 8"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

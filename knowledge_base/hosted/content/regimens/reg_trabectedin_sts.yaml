@@ -1,0 +1,74 @@
+id: REG-TRABECTEDIN-STS
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy"
+
+agents:
+  - drug_id: DRG-TRABECTEDIN
+    dose: "1.5 mg/m² IV as 24-hour continuous infusion (CIV)"
+    route: IV
+    schedule: "Day 1 q21d"
+    administration_notes: >
+      REQUIRES central venous access (PICC line or implanted port) — 24-hour CIV;
+      vesicant-like potential; peripheral IV administration not recommended.
+      Dose must be diluted in 500 mL 0.9% NaCl or 5% dextrose.
+    dose_modifications:
+      - trigger: "ALT/AST >2.5 × ULN (Grade 2 hepatotoxicity) before next cycle"
+        action: "Delay cycle until ≤Grade 1; may continue at same dose if recovers within 2 weeks"
+      - trigger: "ALT/AST >5 × ULN (Grade ≥3 hepatotoxicity)"
+        action: "Hold trabectedin; evaluate weekly; if recovers to ≤Grade 1, reduce dose to 1.2 mg/m²; if Grade ≥3 persists >3 weeks, discontinue"
+      - trigger: "ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L on day of cycle"
+        action: "Delay up to 3 weeks for recovery; if recovery requires >3 weeks, discontinue"
+      - trigger: "Grade ≥3 non-hematologic toxicity (except alopecia, nausea/vomiting)"
+        action: "Delay; reduce dose by 0.3 mg/m² steps; minimum dose 1.2 mg/m²"
+      - trigger: "Bilirubin >ULN (any elevation)"
+        action: "Contraindicated — trabectedin dose in hepatic impairment not established; do not administer"
+      - trigger: "Grade ≥3 CPK elevation (rhabdomyolysis risk)"
+        action: "Discontinue trabectedin — evaluate for rhabdomyolysis and myopathy"
+
+when_to_use: >
+  Previously treated unresectable or metastatic liposarcoma (LPS) or leiomyosarcoma (LMS)
+  after prior anthracycline-based chemotherapy. FDA approved October 2015.
+  ET-743-SAR-3007 (Demetri 2016, JCO): PFS HR 0.55 (4.2 vs 1.5 months); OS NS.
+  Note: For liposarcoma specifically, eribulin (ERIBULIN-312; OS HR 0.51 in LPS subgroup)
+  may be preferred over trabectedin due to OS benefit vs trabectedin's NS OS effect.
+  Trabectedin preferred for LMS (eribulin LMS subgroup OS HR 0.93 NS).
+  Ukraine access: trabectedin (Yondelis, PharmaMar) requires named-patient import or
+  international referral — EAP access may be available.
+
+premedication:
+  - "Dexamethasone 20 mg IV 30 min before trabectedin infusion (MANDATORY — hepatoprotective + antiemetic effect; reduces hepatotoxicity risk)"
+  - "5-HT3 antagonist (ondansetron 8 mg IV or equivalent) + dexamethasone before infusion"
+  - "Anti-emetic prophylaxis for moderately emetogenic potential"
+
+growth_factor_support:
+  primary_prophylaxis: "Not routinely required; CONSIDER for patients with prior febrile neutropenia or high-risk baseline"
+  secondary_prophylaxis: "Mandatory after febrile neutropenia (ANC <500 + fever)"
+
+monitoring:
+  - "LFT (ALT, AST, bilirubin, ALP) + CBC: before EACH cycle — hepatotoxicity is dose-limiting"
+  - "CPK: at baseline and each cycle (rhabdomyolysis risk, particularly early cycles)"
+  - "LFT weekly during first 3 cycles (dose-limiting hepatotoxicity occurs most commonly in early cycles)"
+  - "CT or MRI: every 2-3 cycles (RECIST 1.1 response assessment)"
+  - "Central venous access integrity: inspect before each infusion (extravasation risk)"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression, unacceptable toxicity, or patient withdrawal"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Центральний венозний доступ (PICC або порт) ОБОВ'ЯЗКОВИЙ — 24-годинна інфузія; периферична вена недопустима"
+  - "КРИТИЧНО: Дексаметазон 20 мг IV за 30 хв ДО трабектедину — гепатопротекторна + протиблювотна профілактика; БЕЗ неї зростає гепатотоксичність"
+  - "КРИТИЧНО: ФПП (АЛТ, АСТ, білірубін) перед КОЖНИМ циклом — при білірубін >ВМН — ЗАБОРОНЕНО призначати"
+  - "КРИТИЧНО: КФК (ККФ) перед кожним циклом — ризик рабдоміолізу; при Grade ≥3 КФК — відмінити трабектедин"
+  - "УВАГА: Доступ в Україні обмежений — іменний імпорт або міжнародне направлення (PharmaMar, Yondelis)"
+  - "УВАГА: При ліпосаркомі — ерибулін (ERIBULIN-312; OS HR 0.51) може бути переважнішим; обговорити з MDT"
+
+sources:
+  - SRC-ET743-SAR3007-DEMETRI-2016
+  - SRC-NCCN-STS-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

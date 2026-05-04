@@ -1,0 +1,110 @@
+id: IND-STS-ADVANCED-2L-TRABECTEDIN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  disease_state: advanced
+  line_of_therapy: 2
+  stage_requirements:
+    - "Unresectable or metastatic liposarcoma (LPS) OR leiomyosarcoma (LMS)"
+    - "LPS subtypes: well-differentiated, dedifferentiated, myxoid/round cell liposarcoma"
+    - "LMS subtypes: uterine or extra-uterine leiomyosarcoma"
+    - "Progressive disease after prior anthracycline-based chemotherapy (doxorubicin ± ifosfamide)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "GIST, Ewing sarcoma, rhabdomyosarcoma (different disease pathways)"
+    - "Normal total bilirubin not confirmed (trabectedin hepatically activated; bilirubin >ULN is contraindication)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "Central venous access required for 24-hour CIV; assess performance status carefully before initiating"
+
+recommended_regimen: REG-TRABECTEDIN-STS
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  pfs_hr_vs_dacarbazine: 0.55
+  median_pfs_months: 4.2
+  os_hr: 0.93
+  notes: >
+    ET-743-SAR-3007 (Demetri 2016, JCO; n=518 LPS/LMS): trabectedin 1.5 mg/m² 24h CIV
+    vs dacarbazine. PFS HR 0.55 (4.2 vs 1.5 months; p<0.0001). OS not significant
+    (HR 0.93; 12.4 vs 12.9 months). FDA approved October 2015 for unresectable/metastatic
+    LPS or LMS after prior anthracycline.
+    LMS subgroup: trabectedin may be preferred over eribulin — eribulin LMS subgroup
+    OS HR 0.93 (NS in ERIBULIN-312); trabectedin has the broader FDA label covering LMS.
+    Liposarcoma: eribulin has OS benefit (HR 0.51 in LPS subgroup of ERIBULIN-312) —
+    discuss at MDT whether eribulin or trabectedin is preferred for LPS.
+    Ukraine access: Yondelis (trabectedin, PharmaMar) requires named-patient import
+    or international referral — check EAP availability before committing to this pathway.
+
+hard_contraindications:
+  - "Total bilirubin >ULN (trabectedin dose in hepatic impairment not established; manufacturer label contraindication)"
+  - "ALK phosphatase >2.5 × ULN (indicates hepatic involvement — increased hepatotoxicity risk)"
+  - "ECOG PS ≥3"
+  - "No central venous access available (24-hour CIV cannot be given peripherally)"
+  - "Prior severe hypersensitivity to trabectedin"
+  - "Active severe infection requiring IV antibiotics (defer until infection resolved)"
+
+red_flags_triggering_alternative:
+  - condition: "Liposarcoma subtype AND eribulin accessible — consider IND-STS-ADVANCED-2L-ERIBULIN (OS HR 0.51 in LPS; FDA-approved for LPS)"
+  - condition: "Trabectedin inaccessible (Ukraine import not feasible) — use IND-STS-ADVANCED-2L-GEMDOC or IND-STS-ADVANCED-2L-PAZOPANIB"
+  - condition: "LMS with no prior gemcitabine+docetaxel → IND-STS-ADVANCED-2L-GEMDOC preferred first (SARC002 LMS benefit)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "CPK (creatine phosphokinase): baseline — rhabdomyolysis monitoring"
+  - "Total bilirubin: MUST be ≤ULN before initiating trabectedin"
+  - TEST-CT-CAP
+  - "Confirm central venous access (PICC or port placement before cycle 1)"
+
+desired_tests:
+  - "Histologic confirmation at relapse (rule out transformation, especially in dedifferentiated LPS)"
+
+rationale: >
+  ET-743-SAR-3007 (Demetri 2016, JCO; n=518): randomized trabectedin vs dacarbazine in
+  previously treated LPS/LMS. PFS benefit HR 0.55 (p<0.0001); OS not significantly
+  improved (HR 0.93). FDA approved October 2015 for both LPS and LMS.
+  The lack of OS benefit is contextually explained by high crossover rates and heterogeneous
+  post-progression therapy. NCCN Category 1 for LPS and LMS post-anthracycline.
+  Dexamethasone 20 mg IV premedication is mandatory (hepatoprotective + antiemetic benefit
+  in all trabectedin trials). Hepatotoxicity monitoring (LFT weekly × first 3 cycles) is
+  critical — dose-limiting in the original Phase 2/3 data.
+
+rationale_ua: >
+  ET-743-SAR-3007 (n=518): трабектедин vs дакарбазин; PFS HR 0.55 (4.2 vs 1.5 міс;
+  p<0.0001); OS HR 0.93 (NS). FDA схвалено жовтень 2015 для LPS та LMS.
+  NCCN Категорія 1. Дексаметазон 20 мг IV ОБОВ'ЯЗКОВИЙ (гепатопротектор + антиеметик).
+  24-годинна ЦВ інфузія — PICC або порт обов'язковий. Гепатотоксичність — основна
+  токсичність; ФПП щотижня в перших 3 циклах. Доступ в Україні: іменний імпорт.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ET743-SAR3007-DEMETRI-2016
+    position: supports
+    relevant_quote_paraphrase: "ET-743-SAR-3007 (n=518): trabectedin vs dacarbazine in LPS/LMS; PFS HR 0.55 (4.2 vs 1.5m; p<0.0001); OS HR 0.93 (NS); FDA approved Oct 2015; NCCN Cat 1"
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати при білірубін >ВМН — трабектедин ПРОТИПОКАЗАНИЙ (відсутні дані щодо дозування при печінковій недостатності)"
+  - "Не вводити у периферичну вену — ЛИШЕ центральний венозний доступ (24-годинна інфузія)"
+  - "Не пропускати дексаметазон 20 мг IV премедикацію — гепатопротекторна профілактика ОБОВ'ЯЗКОВА"
+  - "Не моніторити ФПП рідше ніж раз на тиждень у перших 3 циклах — гепатотоксичність розвивається рано"
+  - "Не ігнорувати КФК — рабдоміоліз (рідко, але небезпечно); при Grade ≥3 КФК — відмінити трабектедин"
+  - "При ліпосаркомі — розглянути ерибулін (OS HR 0.51 в LPS підгрупі ERIBULIN-312) перед трабектедином"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
