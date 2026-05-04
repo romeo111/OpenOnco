@@ -3,13 +3,16 @@ applicable_to_disease: DIS-RCC
 applicable_to_line_of_therapy: 2
 purpose: >
   Select 2L+ therapy for metastatic clear-cell RCC after prior PD-(L)1 + VEGF-TKI.
-  Two tracks: (1) belzutifan accessible (LITESPARK-005; HIF-2α inhibitor; preferred
+  Three tracks: (1) belzutifan accessible (LITESPARK-005; HIF-2α inhibitor; preferred
   novel mechanism after IO+TKI; NCCN Cat 1; FDA Aug 2023; ORR 22%; PFS HR 0.75);
-  (2) cabozantinib fallback (METEOR; VEGFR/MET/AXL; NCCN Cat 1; ORR ~21%;
-  PFS 7.4 vs 3.8 mo; more accessible in UA).
+  (2) cabozantinib (METEOR; VEGFR/MET/AXL; NCCN Cat 1; ORR ~21%; PFS 7.4 vs 3.8 mo;
+  more accessible in UA; preferred when not prior cabo-exposed);
+  (3) lenvatinib+everolimus fallback (HOPE205; Motzer 2015 Lancet; NCCN Cat 2A;
+  ORR 43%; mPFS 14.6 mo; for cabozantinib-inaccessible or prior-cabozantinib patients).
 output_indications:
   - IND-RCC-METASTATIC-2L-BELZUTIFAN
   - IND-RCC-METASTATIC-2L-CABOZANTINIB
+  - IND-RCC-METASTATIC-2L-LENV-EVER
 default_indication: IND-RCC-METASTATIC-2L-CABOZANTINIB
 alternative_indication: IND-RCC-METASTATIC-2L-BELZUTIFAN
 decision_tree:
@@ -37,33 +40,67 @@ decision_tree:
     if_false:
       next_step: 2
     notes: "Step 1 added 2026-05-04 (Workstream BL): belzutifan accessibility gate. Free-text conditions; MDT-evaluated."
-  # Step 2 — cabozantinib fallback. NCCN Cat 1 for 2L+ RCC after
-  # prior TKI (METEOR; Choueiri 2015 NEJM; PFS 7.4 vs 3.8 mo HR 0.58; ORR 17.1%).
-  # Oral; well-established UA access (generic cabozantinib emerging).
+  # Step 2 — cabozantinib eligibility gate (NCCN Cat 1).
+  # METEOR; Choueiri 2015 NEJM; PFS 7.4 vs 3.8 mo HR 0.58; ORR 17.1%; mOS HR 0.68.
+  # Preferred when: cabozantinib accessible + not prior cabozantinib in 1L
+  # (CheckMate 9ER, PAPMET) + no Grade ≥3 hepatic impairment.
+  # If cabozantinib inaccessible OR patient received cabozantinib in 1L → step 3 (lenv+ever).
   - step: 2
     evaluate:
-      any_of:
-        - condition: "Belzutifan inaccessible or contraindicated (hepatic impairment)"
-        - condition: "Progression after prior 1L IO+VEGFR-TKI — cabozantinib (additional TKI) is standard 2L"
+      all_of:
+        - condition: "Cabozantinib accessible (registered + international import OR generic formulation available)"
+        - condition: "No prior cabozantinib in 1L systemic therapy (CheckMate 9ER / PAPMET — re-use after prior cabo suboptimal)"
+        - condition: "Bilirubin ≤3×ULN (cabozantinib hepatic CI threshold)"
     if_true:
       result: IND-RCC-METASTATIC-2L-CABOZANTINIB
       notes: >
-        Belzutifan inaccessible or hepatic CI: cabozantinib 60 mg PO daily
+        Cabozantinib accessible + not prior cabozantinib: cabozantinib 60 mg PO daily
         (REG-CABOZANTINIB-RCC; METEOR Choueiri 2015 NEJM; PFS HR 0.58; ORR 17.1%;
-        mOS HR 0.68; NCCN Cat 1). Oral TKI; manageable toxicity (hypertension,
-        diarrhea, palmar-plantar erythrodysesthesia, fatigue). Ukraine: more
-        accessible than belzutifan (international import; generic emerging).
+        mOS HR 0.68; NCCN Cat 1). Oral TKI (VEGFR/MET/AXL); manageable toxicity
+        (hypertension, diarrhea, palmar-plantar erythrodysesthesia, fatigue).
+        Ukraine: more accessible than belzutifan (international import; generic emerging).
+    if_false:
+      next_step: 3
+    notes: "Step 2 updated 2026-05-04 (Workstream BN): cabozantinib eligibility gate — accessible + not prior cabo. if_false now routes to step 3 (lenv+ever)."
+
+  # Step 3 — lenvatinib+everolimus fallback (NCCN Cat 2A).
+  # HOPE205 (Motzer 2015 Lancet; Phase 2); ORR 43%; mPFS 14.6 mo vs 5.5 mo (ever alone).
+  # Indicated: cabozantinib inaccessible OR prior cabozantinib in 1L OR cabo intolerant.
+  # NOT after prior lenvatinib (CLEAR pembrolizumab+lenvatinib 1L → use cabozantinib or belzutifan).
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "No prior lenvatinib in 1L (CLEAR regimen: pembrolizumab+lenvatinib — cross-resistance within class)"
+        - condition: "CrCl ≥30 mL/min (both lenvatinib and everolimus require adequate renal function)"
+        - condition: "No active Grade ≥2 non-infectious pneumonitis (everolimus mTOR → pneumonitis risk)"
+    if_true:
+      result: IND-RCC-METASTATIC-2L-LENV-EVER
+      notes: >
+        Cabozantinib-inaccessible or prior-cabozantinib: lenvatinib 18 mg + everolimus 5 mg
+        PO daily (REG-LENVATINIB-EVEROLIMUS-RCC-2L; HOPE205 Motzer 2015 Lancet; ORR 43%;
+        mPFS 14.6 mo; NCCN Cat 2A). Higher ORR than cabozantinib/belzutifan but Phase 2 data.
+        Toxicity: hypertension, hypothyroidism, stomatitis, diarrhea, proteinuria.
+        Everolimus stomatitis prophylaxis (dex mouthwash) + PJP co-trimoxazole mandatory.
+        Ukraine: lenvatinib registered for HCC/thyroid (off-label for RCC → MDT compassionate
+        use); everolimus: verify NSZU RCC reimbursement status.
     if_false:
       result: IND-RCC-METASTATIC-2L-CABOZANTINIB
-    notes: "Step 2 added 2026-05-04 (Workstream BL): cabozantinib fallback for belzutifan-inaccessible 2L RCC (METEOR NCCN Cat 1)."
+      notes: >
+        Prior lenvatinib (CLEAR 1L) or severe renal/pulmonary CI: cabozantinib default
+        despite prior exposure — mechanism switch acceptable; MDT discussion.
+    notes: "Step 3 added 2026-05-04 (Workstream BN): lenv+ever gate for cabozantinib-inaccessible/prior-cabo 2L RCC. OOS gap CLOSED. Free-text conditions; MDT-evaluated."
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
 last_reviewed: "2026-05-04"
 notes: >
   UPDATED 2026-05-04 (Workstream BL): Expanded from single-option pass-through to
   2-track algorithm. IND-RCC-METASTATIC-2L-CABOZANTINIB (METEOR NCCN Cat 1) wired
-  at step 2 as accessibility-gated fallback to belzutifan. Default changed to
-  cabozantinib (more UA-accessible). Belzutifan remains preferred when accessible
-  (HIF-2α novel mechanism; LITESPARK-005 NCCN Cat 1).
-  OOS: lenvatinib + everolimus (HOPE205; NCCN Cat 2A; ORR 43%) and tivozanib
-  (TIVO-3; NCCN Cat 2A; 3L+) not yet modeled. Hereditary-VHL patients → 1L
-  IND-RCC-VHL-DISEASE-BELZUTIFAN via ALGO-RCC-METASTATIC-1L upstream exclusion.
+  at step 2. Default changed to cabozantinib (more UA-accessible). Belzutifan remains
+  preferred when accessible (HIF-2α; LITESPARK-005 NCCN Cat 1).
+  UPDATED 2026-05-04 (Workstream BN): Expanded to 3-track algorithm.
+  IND-RCC-METASTATIC-2L-LENV-EVER authored and wired at step 3 (HOPE205 Motzer 2015
+  Lancet; ORR 43%; mPFS 14.6 mo; NCCN Cat 2A) for cabozantinib-inaccessible or
+  prior-cabozantinib patients. Step 2 restructured as cabozantinib eligibility gate
+  (accessible + not prior cabo + bilirubin OK). OOS gap CLOSED.
+  Remaining OOS: tivozanib (TIVO-3; NCCN Cat 2A; 3L+) not yet modeled.
+  Hereditary-VHL patients → 1L IND-RCC-VHL-DISEASE-BELZUTIFAN via ALGO-RCC-METASTATIC-1L
+  upstream exclusion.

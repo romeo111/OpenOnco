@@ -1,0 +1,190 @@
+id: IND-RCC-METASTATIC-2L-LENV-EVER
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-RCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic or unresectable clear-cell RCC (ccRCC) — dominant histology required (HOPE205 enrolled ccRCC)"
+    - "Disease progression on or after 1L IO+VEGFR-TKI combination (nivolumab+cabozantinib, pembrolizumab+axitinib, pembrolizumab+lenvatinib, nivolumab+ipilimumab)"
+    - "Cabozantinib inaccessible OR prior cabozantinib in 1L (CheckMate 9ER/PAPMET) making re-use suboptimal OR cabozantinib intolerance (prior Grade ≥3 toxicity)"
+    - "ECOG PS 0-2 (HOPE205 enrolled ECOG 0-1; ECOG 2 requires MDT assessment)"
+    - "Adequate organ function: ANC ≥1.0, PLT ≥75×10⁹/L, Hb ≥8 g/dL, CrCl ≥30 mL/min, ALT/AST ≤3× ULN, bilirubin ≤1.5× ULN"
+    - "No uncontrolled hypertension (BP ≤140/90 on anti-HTN therapy before start)"
+    - "No Grade 3-4 proteinuria (UPCR <2 g/24h)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HISTOLOGY-CLEAR-CELL
+      required: false
+      value_constraint: "Clear-cell predominant or mixed ccRCC — HOPE205 enrolled ccRCC; non-clear-cell evidence is extrapolated, not phase-3-validated"
+      notes: >
+        HOPE205 was restricted to ccRCC. Non-clear-cell RCC (papillary, chromophobe,
+        collecting duct) have less data for lenvatinib+everolimus; NCCN non-clear-cell
+        2025 lists lenv+ever as Cat 2B for some subtypes but evidence is weaker.
+        Cabozantinib monotherapy is more broadly studied in non-ccRCC.
+  biomarker_requirements_excluded:
+    - "Prior lenvatinib exposure: cross-resistance within VEGFR-TKI class; HOPE205 enrolled TKI-naive or post-single-TKI patients"
+    - "Active non-infectious pneumonitis (everolimus mTOR inhibitor → pneumonitis risk additive with prior IO-related pneumonitis)"
+    - "Active uncontrolled infection (everolimus immunosuppression)"
+    - "HBV active infection or HBsAg+ (everolimus immunosuppression → HBV reactivation; antiviral prophylaxis mandatory)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Combination is well-tolerated in elderly patients (≥65) with adequate organ
+      function. Hypertension management is the most common dose-modification driver —
+      adequate anti-HTN therapy before start is mandatory. Prior IO in 1L: no
+      increased immune-related toxicity from lenvatinib+everolimus noted (non-immune
+      mechanism; mTOR inhibition may actually attenuate residual IO-related inflammation).
+      Belzutifan: if accessible, preferred over lenv+ever for novel HIF-2α mechanism
+      (LITESPARK-005 NCCN Cat 1). Cabozantinib: if NCCN Cat 1 and accessible, preferred
+      over lenv+ever (Cat 2A). Lenv+ever is the third-track option.
+
+recommended_regimen: REG-LENVATINIB-EVEROLIMUS-RCC-2L
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Cabozantinib 60 mg PO daily (IND-RCC-METASTATIC-2L-CABOZANTINIB; METEOR; NCCN Cat 1):
+      preferred over lenv+ever when accessible — NCCN Cat 1 vs Cat 2A; simpler dosing;
+      single agent; established UA access. Use lenv+ever when cabozantinib inaccessible
+      or patient had prior cabozantinib in 1L.
+  - regimen_id: null
+    description: >
+      Belzutifan 120 mg PO daily (IND-RCC-METASTATIC-2L-BELZUTIFAN; LITESPARK-005;
+      NCCN Cat 1; PFS HR 0.75; ORR 22.7%): preferred when accessible (novel HIF-2α
+      mechanism; NCCN Cat 1 preference over both lenv+ever and cabozantinib when
+      belzutifan is accessible). Not registered in Ukraine as of 2026.
+  - regimen_id: null
+    description: >
+      Axitinib (Inlyta) monotherapy: NCCN Cat 2B for 2L+ post-IO+TKI; lower ORR than
+      lenv+ever or cabozantinib; reasonable if both inaccessible. RECORD-4 data.
+      Not separately modeled.
+
+concurrent_therapy:
+  - "Anti-hypertensive therapy: amlodipine 5-10 mg PO daily or ramipril 5-10 mg PO daily started if Grade 2+ HTN (prophylactic anti-HTN often initiated before cycle 1 in patients with pre-existing HTN)"
+  - "Levothyroxine: TSH monitoring q6 weeks; supplement when TSH >5 mU/L (lenvatinib-induced hypothyroidism; >50% require therapy)"
+  - "Stomatitis prevention: dexamethasone 0.1% mouthwash 3×/day from day 1 of cycle 1 (everolimus stomatitis prophylaxis; Rugo 2017 Lancet Oncol)"
+  - "PJP prophylaxis: co-trimoxazole 480 mg 3×/week (everolimus T-cell suppression)"
+  - "Blood glucose monitoring q2 weeks for first 2 cycles, then q4 weeks (everolimus → hyperglycemia)"
+  - "Lipid panel + CBC q4 weeks: everolimus → hypertriglyceridemia; fenofibrate if TG >5 mmol/L"
+
+followed_by:
+  - "Continue until progression or unacceptable toxicity"
+  - "Response assessment CT chest/abdomen/pelvis q9 weeks (3 cycles); RECIST 1.1"
+  - "After progression: re-enter for systemic therapy — immunotherapy rechallenge (if IO-naive) or clinical trial; no established 3L standard post-lenv+ever"
+  - "Cabozantinib 3L (IND-RCC-METASTATIC-2L-CABOZANTINIB): if not previously given and patient fit"
+
+evidence_level: moderate
+strength_of_recommendation: weak
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "43% (HOPE205; Motzer 2015 Lancet; n=51 lenvatinib+everolimus arm)"
+  cr_rate: "<5% (CR rare in mRCC; most responses are PR)"
+  median_pfs_months: "14.6 months (HOPE205 primary analysis; vs 7.4 lenvatinib alone vs 5.5 everolimus alone)"
+  median_os_months: "25.5 months (HOPE205 updated OS; HR 0.67 vs everolimus; OS not primary endpoint)"
+  notes: >
+    HOPE205 (Motzer 2015 Lancet; Phase 2, n=153 total):
+    Three-arm randomized Phase 2: lenvatinib+everolimus (n=51) vs lenvatinib (n=52)
+    vs everolimus (n=50). Primary endpoint: PFS. All 2L post-VEGFR-TKI ccRCC.
+    Lenvatinib+everolimus results:
+    - ORR 43% (vs 27% lenv alone vs 6% ever alone)
+    - mPFS 14.6 months (HR 0.40 vs ever; 95% CI 0.24-0.68; p<0.0001)
+    - mOS 25.5 months (HR 0.67 vs ever; 95% CI 0.42-1.08; p=0.1; updated analysis)
+    Toxicity (lenv+ever): Grade ≥3 in 82%; most common G3+: diarrhea 20%, fatigue 18%,
+    hypertension 14%, proteinuria 10%. 71% required dose reductions.
+    Caveat: Phase 2 data (n=51); no direct Phase 3 comparison vs cabozantinib or belzutifan
+    in 2L. NCCN Cat 2A (one category below cabozantinib Cat 1 and belzutifan Cat 1).
+    Position: appropriate 2L option when cabozantinib is inaccessible or contraindicated,
+    and belzutifan is not available. ORR 43% is numerically highest among 2L ccRCC options
+    (cabozantinib METEOR ORR 17%; belzutifan LITESPARK-005 ORR 22.7%) but the survival
+    benefit has only been shown in Phase 2 vs everolimus alone (lower bar than METEOR or
+    LITESPARK-005 vs active comparators).
+
+hard_contraindications:
+  - "CrCl <30 mL/min: both lenvatinib and everolimus accumulate; combination not recommended at standard doses"
+  - "Uncontrolled hypertension (BP >160/100 despite anti-HTN): lenvatinib VEGFR inhibition exacerbates"
+  - "Grade 3-4 proteinuria at baseline (UPCR ≥2 g/24h): lenvatinib nephrotoxicity additive"
+  - "Active Grade ≥2 non-infectious pneumonitis (prior IO-related or other): everolimus mTOR → additive risk"
+  - "ECOG PS ≥3 (combination toxicity burden exceeds benefit in poor PS)"
+  - "Active HBV (HBsAg+): everolimus immunosuppression → HBV reactivation; antiviral prophylaxis required (entecavir)"
+
+red_flags_triggering_alternative:
+  - condition: "Cabozantinib accessible + not prior cabo exposure → IND-RCC-METASTATIC-2L-CABOZANTINIB (NCCN Cat 1 preferred)"
+  - condition: "Belzutifan accessible → IND-RCC-METASTATIC-2L-BELZUTIFAN (NCCN Cat 1 preferred; novel HIF-2α mechanism)"
+  - condition: "Prior lenvatinib in 1L (e.g., CLEAR pembrolizumab+lenvatinib) → do not reuse lenvatinib; cabozantinib or belzutifan preferred"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Urine protein/creatinine ratio (UPCR): baseline; hold if ≥2 g/24h"
+  - "Blood pressure measurement: baseline; must be controlled before start (≤140/90)"
+  - "TSH + free T4: baseline; lenvatinib → hypothyroidism common"
+  - "HbA1c + fasting glucose: baseline; everolimus → hyperglycemia"
+  - "Fasting lipids: baseline; everolimus → hypertriglyceridemia"
+  - "CT chest/abdomen/pelvis: baseline staging + response assessment"
+
+desired_tests:
+  - "HBV serology (HBsAg, HBcAb total): everolimus immunosuppression; entecavir if HBsAg+ or HBcAb+ with high viral load"
+  - "Echocardiogram: if prior cardiac history (lenvatinib VEGFR inhibition → cardiac toxicity in high-risk)"
+  - "DEXA scan: everolimus → mTOR-driven immunosuppression may worsen bone density over time"
+
+rationale: >
+  Lenvatinib (pan-VEGFR 1-3, FGFR 1-4, PDGFRα, RET, KIT TKI) combined with everolimus
+  (mTOR inhibitor) targets two interconnected resistance pathways in ccRCC:
+  (1) VEGFR pathway: direct anti-angiogenic effect on tumor vasculature
+  (2) mTOR pathway (HIF-1α/2α → VEGF/HIF transcription): mTOR inhibition prevents
+  compensatory upregulation of HIF-driven angiogenesis that occurs with VEGFR-TKI monotherapy
+
+  Dual pathway blockade achieves ORR 43% vs everolimus alone 6% and vs lenvatinib alone 27%,
+  demonstrating synergy. PFS 14.6 vs 5.5 months (everolimus) demonstrates clinically meaningful
+  benefit.
+
+  In the modern 2L context (post-IO+TKI 1L):
+  - Prior IO (nivolumab, pembrolizumab): no interaction with lenv+ever (non-immune mechanism)
+  - Prior TKI (cabozantinib, axitinib, lenvatinib): cross-resistance within class expected;
+    lenvatinib+everolimus should NOT be used after prior lenvatinib (CLEAR regimen)
+
+  Position in therapeutic hierarchy:
+  NCCN Kidney 2025 2L cascade: belzutifan (Cat 1, preferred) > cabozantinib (Cat 1) >
+  lenvatinib+everolimus (Cat 2A) > axitinib (Cat 2B).
+  Lenv+ever is the highest ORR option (43%) but Cat 2A because Phase 2 data only.
+
+rationale_ua: >
+  2L НКК після IO+ТКІ — ленватиніб 18 мг + еверолімус 5 мг PO щоденно (HOPE205;
+  Motzer 2015 Lancet; ВВО 43%; мПВЗ 14.6 міс; NCCN кат.2A). ПОКАЗАННЯ: кабозантиніб
+  недоступний АБО отримував кабозантиніб у 1L (CrossMate 9ER/PAPMET) АБО непереносимість
+  кабозантибу. НЕ застосовувати після попереднього ленватинібу (CLEAR-режим). ОБОВ'ЯЗКОВО:
+  контроль АТ, ТТГ, протеїнурія, глюкоза (еверолімус). В Україні: ленватиніб зареєстрований
+  для ГЦК/щитоподібна залоза; для НКК — поза-реєстраційне застосування (МДК рішення);
+  еверолімус — НСЗУ-потенціал для НКК (верифікувати поточний статус).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-KIDNEY-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Kidney 2025 Category 2A: lenvatinib + everolimus for 2L+ ccRCC after
+      prior VEGFR-TKI or IO-based combination therapy. HOPE205 basis (Motzer 2015
+      Lancet; ORR 43%; PFS 14.6 months vs everolimus alone).
+  - source_id: SRC-ESMO-RCC-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO RCC 2024: lenvatinib+everolimus is an option for subsequent lines of
+      therapy in ccRCC; HOPE205 provides Phase 2 evidence for ORR benefit; lower
+      evidence level than Phase 3-validated agents (cabozantinib, belzutifan).
+
+do_not_do:
+  - "Ленватиніб+еверолімус після попереднього ленватинібу (1L CLEAR): перехресна резистентність; кабозантиніб або белзутифан"
+  - "Без контролю АТ: ленватиніб → гіпертензія G3-4 у ~14%; АТ перед стартом ≤140/90"
+  - "Без профілактики стоматиту: еверолімус → стоматит у ~43%; дексаметазон 0.1% полоскання з 1-го дня"
+  - "Без PJP профілактики: еверолімус → імуносупресія (mTOR); ко-тримоксазол 480 мг 3×/тиж"
+  - "Без моніторингу ТТГ: ленватиніб → гіпотиреоз у >50%; замісна терапія левотироксином"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

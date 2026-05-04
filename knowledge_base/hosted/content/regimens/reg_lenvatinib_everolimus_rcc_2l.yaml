@@ -1,0 +1,62 @@
+id: REG-LENVATINIB-EVEROLIMUS-RCC-2L
+name: "Lenvatinib + everolimus (RCC, 2L, HOPE205)"
+name_ua: "Ленватиніб + еверолімус (НКК, 2L, HOPE205)"
+alternate_names: ["HOPE205 regimen", "lenv+ever RCC", "lenvatinib/everolimus combo"]
+components:
+  - drug_id: DRUG-LENVATINIB
+    dose: "18 mg PO daily"
+    schedule: "Continuous daily dosing (dose-reduced from 24 mg monotherapy for combination tolerability)"
+    route: PO
+  - drug_id: DRUG-EVEROLIMUS
+    dose: "5 mg PO daily"
+    schedule: "Continuous daily dosing (dose-reduced from 10 mg monotherapy for combination tolerability)"
+    route: PO
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: severe
+premedication: []
+mandatory_supportive_care:
+  - "Blood pressure monitoring at every visit (lenvatinib → hypertension Grade 3 in ~42%; anti-HTN therapy often required)"
+  - "Thyroid function q4-6 weeks (lenvatinib → hypothyroidism; levothyroxine supplementation common)"
+  - "Proteinuria monitoring: UPCR or dipstick q4 weeks; if UPCR ≥2 g/24h → hold lenvatinib"
+  - "Renal function (CrCl q cycle): everolimus can impair GFR; lenvatinib → renal toxicity"
+  - "Blood glucose monitoring: everolimus → hyperglycemia (mTOR inhibitor class effect); HbA1c q3 months"
+  - "CBC + lipids q4 weeks: everolimus → myelosuppression + hypercholesterolemia + hypertriglyceridemia"
+  - "PJP prophylaxis: co-trimoxazole 480 mg 3×/week (everolimus → T-cell immunosuppression; PJP risk especially if prior steroid use)"
+  - "No live vaccines during everolimus (immunosuppression)"
+monitoring_schedule_id:
+dose_adjustments:
+  - condition: "Grade 2 hypertension (SBP 140-159 or DBP 90-99 despite anti-HTN)"
+    modification: "Titrate anti-hypertensives; consider lenvatinib dose reduction to 14 mg if uncontrolled"
+  - condition: "Grade 3 hypertension (SBP ≥160 or DBP ≥100 despite optimal anti-HTN)"
+    modification: "Hold lenvatinib until Grade ≤1; resume at reduced dose (14 mg → 10 mg → 8 mg)"
+  - condition: "Grade 4 hypertension or hypertensive crisis"
+    modification: "Permanently discontinue lenvatinib"
+  - condition: "Proteinuria UPCR ≥2 g/24h"
+    modification: "Hold lenvatinib until UPCR <2 g; resume at 14 mg (or lower if prior reduction)"
+  - condition: "Grade 3-4 hepatotoxicity"
+    modification: "Hold both agents; lenvatinib permanent discontinuation for Grade 4; consider everolimus dose reduction"
+  - condition: "Grade 3-4 non-infectious pneumonitis (everolimus-related)"
+    modification: "Hold everolimus; Grade 3 → corticosteroids; Grade 4 → permanently discontinue everolimus"
+  - condition: "Grade 3 diarrhea or palmar-plantar erythrodysesthesia (PPE)"
+    modification: "Hold lenvatinib; reduce to 14 mg on resumption; supportive care (urea cream for PPE)"
+drug_interactions:
+  - "Strong CYP3A4/P-gp inhibitors (ketoconazole, clarithromycin): increase lenvatinib + everolimus AUC — avoid or reduce dose"
+  - "Strong CYP3A4 inducers (rifampicin, carbamazepine, St John's Wort): decrease both agents — avoid concomitant use"
+  - "Everolimus + grapefruit/grapefruit juice: CYP3A4 inhibition — avoid"
+  - "Both agents: additive risk of oral mucositis (stomatitis) — preventive dexamethasone mouthwash"
+notes: >
+  HOPE205 doses: lenvatinib 18 mg + everolimus 5 mg PO daily (Motzer 2015 Lancet).
+  Mechanism: lenvatinib (VEGFR 1-3, FGFR 1-4, PDGFRα, RET, KIT) + everolimus (mTOR
+  inhibitor). Dual angiogenic + mTOR pathway blockade. Post-VEGFR-TKI resistance
+  mechanism: VEGFR resistance often involves mTOR pathway upregulation → dual blockade
+  clinically superior to either agent alone (HOPE205: lenv+ever ORR 43% vs lenv 27%
+  vs ever 6%).
+  Common toxicities: hypertension (~80%), fatigue (~73%), diarrhea (~67%), PPE (~32%),
+  nausea (~54%), stomatitis (~43%), decreased appetite (~53%), hypothyroidism (~57%).
+  Combination is more toxic than cabozantinib monotherapy but offers higher ORR.
+  Ukraine: lenvatinib (Lenvima): registered for HCC + thyroid; RCC use would be
+  compassionate/named-patient; everolimus (Afinitor): registered for RCC (NCCN Cat 2A
+  approval basis includes NSZU reimbursement in some tumor types). Verify RCC-specific
+  NSZU status before prescribing.
+last_reviewed: "2026-05-04"
