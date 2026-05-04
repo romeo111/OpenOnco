@@ -19,6 +19,7 @@ output_indications:
   - IND-CRC-METASTATIC-3L-TAS102-BEV
   - IND-CRC-METASTATIC-3L-REGORAFENIB
   - IND-CRC-METASTATIC-3L-TRIFLURIDINE-TIPIRACIL-MONO
+  - IND-CRC-3L-FRUQUINTINIB
 
 default_indication: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
 alternative_indication: IND-CRC-METASTATIC-3L-TAS102-BEV
@@ -111,45 +112,71 @@ decision_tree:
     if_false:
       next_step: 7
 
-  # Step 7 — 3L+ chemo-refractory salvage. Default to TAS-102 + bev
-  # (SUNLIGHT, preferred); regorafenib (CORRECT) and TAS-102 monotherapy
-  # (RECOURSE) are alternatives by toxicity / access profile.
+  # Step 7 — 3L+ chemo-refractory salvage. Route to step 71 for
+  # TAS-102+bev vs fruquintinib sub-decision; regorafenib alternative
+  # noted via known_controversies in indication entities.
   - step: 7
     evaluate:
       any_of:
         - condition: "Disease progression on standard chemo (FOLFOX, FOLFIRI) + biologic; no driver mutation actionable"
         - red_flag: RF-CRC-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+      next_step: 71
     if_false:
       result: IND-CRC-METASTATIC-3L-TAS102-BEV
+
+  # Step 71 — TAS-102+bev (SUNLIGHT preferred; mOS 10.8 mo) vs fruquintinib
+  # (FRESCO-2; mOS 7.4 mo). TAS-102+bev preferred where accessible (superior
+  # OS vs monotherapy); fruquintinib preferred if TAS-102+bev not available or
+  # patient intolerant to tipiracil/trifluridine (oral monotherapy preference).
+  - step: 71
+    evaluate:
+      any_of:
+        - condition: "Prior trifluridine/tipiracil (TAS-102) therapy — fruquintinib preferred (no cross-resistance)"
+        - condition: "TAS-102+bevacizumab not accessible or unaffordable (Ukraine: bevacizumab NSZU gap for 3L combination)"
+        - condition: "Patient prefers oral VEGFR-TKI without IV infusion (bevacizumab requires IV)"
+    if_true:
+      result: IND-CRC-3L-FRUQUINTINIB
+      notes: >
+        Fruquintinib 5 mg PO daily × 21/28 days (FRESCO-2; Dasari 2023 Lancet;
+        mOS 7.4 vs 4.8 mo HR 0.66 p<0.001; mPFS 3.7 vs 1.8 mo HR 0.32; NCCN Cat 1).
+        Preferred when TAS-102+bev inaccessible, prior TAS-102 exposure, or IV-free
+        oral monotherapy preferred. Hepatotoxicity monitoring (LFT q4w). BP q2w.
+        Ukraine: fruquintinib not NSZU-registered; EAP Takeda / cross-border / self-pay.
+    if_false:
+      result: IND-CRC-METASTATIC-3L-TAS102-BEV
+      notes: >
+        TAS-102 + bevacizumab (SUNLIGHT; Van Cutsem 2023 NEJM; mOS 10.8 vs 7.5 mo
+        HR 0.61 p<0.001; NCCN Cat 1) preferred where accessible — superior OS
+        vs TAS-102 mono and vs regorafenib in indirect comparison. IND-CRC-3L-
+        FRUQUINTINIB is an equivalent alternative (see step 71 if_true above).
+    notes: "Step 71 added Workstream AU 2026-05-04. Free-text conditions; MDT access/exposure evaluation."
 
 sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
   2L+ routing for metastatic CRC. Driver-mutation cascade:
   MSI-H > BRAF V600E > KRAS G12C > HER2-amp > EGFRi rechallenge >
-  2L cytotoxic switch > 3L salvage.
+  2L cytotoxic switch > 3L salvage (TAS-102+bev preferred / fruquintinib).
+
+  UPDATED 2026-05-04 (Workstream AU): IND-CRC-3L-FRUQUINTINIB (existing entity)
+  added to output_indications; step 71 added as sub-decision routing TAS-102+bev
+  (preferred) vs fruquintinib (prior TAS-102 / IV-free preference / access).
+  Gap (3) CLOSED.
 
   Wiring gaps / future work:
   (1) RF-CRC-KRAS-G12C-ACTIONABILITY and RF-CRC-HER2-AMP-ACTIONABILITY
   do not yet exist as red-flag entities — algorithm currently uses
   free-text conditions for steps 3-4. Add dedicated RFs in next batch.
-  (2) HER2-amp T-DXd alternative (DESTINY-CRC01) is not a separate
-  algorithm branch — surfaced via known_controversies in
-  IND-CRC-METASTATIC-2L-HER2-AMP-TUCATINIB and via standalone
-  IND-CRC-METASTATIC-2L-HER2-AMP-T-DXD. MDT decides.
-  (3) Fruquintinib (FRESCO-2) 3L+ option not modeled — DRUG-FRUQUINTINIB
-  not in KB. Flagged for CSD-4.5.
-  (4) TAS-102 monotherapy fallback (RECOURSE) routes through step 7
-  decision via known_controversies in IND-CRC-METASTATIC-3L-TAS102-BEV;
-  no separate algorithm branch.
-  (5) Adagrasib + cetuximab (KRYSTAL-1) alternative for KRAS G12C+
-  with CNS involvement — surfaced via known_controversies; no separate
-  branch.
+  (2) HER2-amp T-DXd alternative (DESTINY-CRC01) surfaced via known_controversies;
+  no separate algorithm branch needed.
+  (4) TAS-102 monotherapy fallback (RECOURSE) surfaced via known_controversies in
+  IND-CRC-METASTATIC-3L-TAS102-BEV; no separate algorithm branch.
+  (5) Adagrasib + cetuximab (KRYSTAL-1) for KRAS G12C+ with CNS — known_controversies
+  in IND-CRC-METASTATIC-2L-KRAS-G12C-SOTORASIB-CETUXIMAB.
   (6) ctDNA-guided EGFRi rechallenge (step 5) requires ctDNA NGS access
   not universally available in Ukraine — clinical-selection fallback
   noted in indication.
