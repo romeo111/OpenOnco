@@ -1,0 +1,114 @@
+id: ALGO-ANAL-SCC-2L
+applicable_to_disease: DIS-ANAL-SCC
+applicable_to_line_of_therapy: 2
+purpose: >
+  Select 2L systemic therapy for recurrent/metastatic anal squamous cell carcinoma (SCC)
+  after 1L platinum-based chemotherapy. Critical gate: prior ICI exposure (retifanlimab
+  in POD1UM-303 pathway) determines pembrolizumab eligibility.
+  - ICI-naive (carbo+pacli 1L without retifanlimab — common in Ukraine due to retifanlimab
+    non-registration): pembrolizumab 200 mg q3w (KEYNOTE-158; ORR 10.6% overall, ~26%
+    CPS≥10; NCCN Category 2A).
+  - ICI-experienced (prior retifanlimab, pembrolizumab, or nivolumab): ICI re-challenge
+    NOT appropriate. Carboplatin+paclitaxel or best supportive care.
+
+output_indications:
+  - IND-ANAL-SCC-2L-PEMBROLIZUMAB
+  - IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI
+
+default_indication: IND-ANAL-SCC-2L-PEMBROLIZUMAB
+alternative_indication: IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI
+
+decision_tree:
+  # Step 1 — Performance status gate.
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - condition: "ECOG PS 0-2"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: systemic therapy unlikely to benefit. Best supportive care.
+        Palliative RT for symptomatic metastatic sites (bone, lymph nodes).
+        Hospice/palliative care referral.
+
+  # Step 2 — Prior ICI exposure gate.
+  # This is the critical fork: ICI-naive vs ICI-experienced.
+  # Most patients in Ukraine received carboplatin+paclitaxel 1L (without retifanlimab)
+  # due to retifanlimab non-registration → pembrolizumab 2L appropriate.
+  # Internationally, retifanlimab 1L (POD1UM-303) is preferred → prior ICI = PD-1 cross-resistance.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-PRIOR-IO-PROGRESSION
+        - condition: "Prior anti-PD-1 therapy: retifanlimab, pembrolizumab, nivolumab, or other PD-1/PD-L1 inhibitor"
+    if_true:
+      result: IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI
+      notes: >
+        ICI-experienced (prior retifanlimab or pembrolizumab): PD-1 re-challenge is
+        NOT appropriate (cross-resistance; no benefit demonstrated after anti-PD-1 failure).
+        Carboplatin AUC5 + paclitaxel 175 mg/m² q3w (IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI):
+        NCCN Category 2A re-challenge if platinum-naive in this line or long interval (>6 months)
+        from prior platinum. Taxane monotherapy (paclitaxel or docetaxel) if prior carbo+pacli.
+        Best supportive care if ECOG deteriorating.
+        Note: IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI is reused here as a 2L indication
+        (same regimen; applicable_to line_of_therapy=1 reflects original authoring context
+        but chemo is appropriate cross-line).
+    if_false:
+      next_step: 3
+    notes: "RF-PRIOR-IO-PROGRESSION fires on documented prior anti-PD-(L)1 PD or exposure within 6 months. Condition fallback covers retifanlimab explicitly."
+
+  # Step 3 — ICI-naive patients: PD-L1 CPS assessment.
+  # PD-L1 CPS ≥10 predicts higher ORR (~26% vs ~3%) but is not required for pembrolizumab.
+  # Route all ICI-naive ECOG 0-1 patients to pembrolizumab regardless of CPS.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-1"
+        - condition: "No active autoimmune disease requiring systemic corticosteroids >10 mg/day prednisone"
+        - condition: "No solid organ transplant"
+    if_true:
+      result: IND-ANAL-SCC-2L-PEMBROLIZUMAB
+      notes: >
+        ICI-naive + fit: pembrolizumab 200 mg q3w (KEYNOTE-158; ORR 10.6% overall;
+        CPS≥10 subgroup ORR ~26%; NCCN Cat 2A). Continue until progression, unacceptable
+        toxicity, or 24 months (complete responders may discontinue at 24 months and
+        re-treat at progression). PD-L1 CPS testing: obtain before cycle 1 for prognosis.
+        MSI testing: ~1-2% of anal SCC are MSI-H → FDA tumor-agnostic approval applies.
+        HIV+ patients: pembrolizumab applicable; coordinate with HIV specialist; CD4 >200
+        preferred (not absolute contraindication per KEYNOTE-028 enrollment).
+    if_false:
+      result: null
+      notes: >
+        ICI-naive but ICI-contraindicated (active autoimmune disease, transplant,
+        ECOG 2): best supportive care OR single-agent cytotoxic (mitomycin C, docetaxel,
+        5-FU — very limited evidence; MDT decision). Clinical trial preferred.
+
+sources:
+  - SRC-KEYNOTE158-ANAL-MARABELLE-2020
+  - SRC-NCCN-ANAL-2025
+  - SRC-ACT2-JAMES-2013
+
+last_reviewed: "2026-05-04"
+notes: >
+  AUTHORED 2026-05-04: ALGO-ANAL-SCC-2L — 3-step algorithm for 2L r/r anal SCC.
+  Key clinical context for Ukraine:
+  - Retifanlimab (Zynyz) NOT registered in Ukraine as of 2026 → most UA patients
+    receive carboplatin+paclitaxel 1L without ICI → MAJORITY are ICI-naive at 2L
+    → pembrolizumab is the standard 2L for most UA patients.
+  - Internationally (US/EU): retifanlimab 1L (POD1UM-303 NCCN Cat 1) → patients
+    are ICI-experienced at 2L → carboplatin+paclitaxel re-challenge or BSC.
+
+  Evidence gaps:
+  (1) Nivolumab in anal SCC: also active (Esrick 2020, phase 2; ORR ~24% in PD-L1+)
+      but less data than pembrolizumab; not separately modeled.
+  (2) Cisplatin-based re-challenge (mitomycin C + cisplatin): historical 2L option
+      for platinum-sensitive relapse (>6 months); not separately modeled.
+  (3) HPV-targeted vaccines and adoptive T-cell therapy for anal SCC: investigational;
+      not in KB.
+  (4) Paclitaxel monotherapy: NCCN 2A for post-platinum 2L; not separately modeled
+      (uses shared REG from urothelial/HNSCC contexts).
+  (5) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
