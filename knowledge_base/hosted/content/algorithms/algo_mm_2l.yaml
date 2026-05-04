@@ -9,6 +9,7 @@ output_indications:
 - IND-MM-2L-DRD
 - IND-MM-4L-TECLISTAMAB
 - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
+- IND-MM-2L-VENETOCLAX-T1114
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-2L-DRD
 decision_tree:
@@ -59,10 +60,17 @@ decision_tree:
     any_of:
     - red_flag: RF-MM-T11-14-ACTIONABLE
   if_true:
-    result: IND-MM-2L-DKD
+    result: IND-MM-2L-VENETOCLAX-T1114
+    notes: >
+      t(11;14) confirmed: venetoclax 800 mg/day PO + dexamethasone 40 mg/week
+      (REG-VEN-DEX-MM; BELLINI t(11;14) subgroup mPFS 22.4 vs 11.6 mo; HR 0.37;
+      NCCN Cat 2A). BCL-2-dependent biology in t(11;14) drives venetoclax sensitivity.
+      FISH confirmation mandatory before starting. TLS prophylaxis + CYP3A4 DDI review.
+      Ukraine: venetoclax registered for CLL/AML; MM off-label — MDT + patient consent.
+      If venetoclax inaccessible: DKd (IND-MM-2L-DKD) as fallback.
   if_false:
     next_step: 4
-  notes: 'MDT-only — t(11;14) actionable: route to DKd backbone with MDT to add venetoclax (BELLINI t(11;14) subgroup mPFS 22.4 vs 11.6 mo; off-label, CANOVA pending). No dedicated venetoclax MM Indication in KB (PROD-5 deferred).'
+  notes: 'Step 3 wired 2026-05-04 (Workstream CC): IND-MM-2L-VENETOCLAX-T1114 authored and wired for RF-MM-T11-14-ACTIONABLE (BELLINI t(11;14) subgroup HR 0.37; NCCN Cat 2A). Gap (PROD-5 deferred → CLOSED). Placeholder DKd routing removed.'
 - step: 4
   evaluate:
     any_of:
@@ -77,6 +85,24 @@ sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
 last_reviewed: '2026-05-04'
-notes: 'UPDATED 2026-05-04 (Workstream BE): IND-MM-2L-DRD + REG-DRD authored; wired at step 15 for lenalidomide-naive + anti-CD38-naive 2L MM (POLLUX; Dimopoulos 2016 NEJM; mPFS HR 0.44; ORR 92.9%; OS HR 0.73; NCCN Cat 1). Gap (2) CLOSED. OOS / wiring gaps: (1) Maintenance is conceptually a separate algo (ALGO-MM-MAINTENANCE) not a 2L choice — included here pragmatically until the maintenance algo lands. Surface to hematologist: should we split? (3) Belantamab mafodotin (BCMA ADC) — withdrawn from market post DREAMM-3, not modeled. (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) for early-line triple-class — not modeled (UA access ≈zero). (5) Selinexor combos for penta-refractory — not modeled. (6) Plasma cell leukemia / extramedullary disease handled at RF-MM-TRANSFORMATION-PROGRESSION level (1L algo), not here.
+notes: >
+  UPDATED 2026-05-04 (Workstream CC): IND-MM-2L-VENETOCLAX-T1114 + REG-VEN-DEX-MM
+  authored and wired at step 3 for t(11;14)-positive R/R MM (BELLINI t(11;14) subgroup;
+  HR 0.37; NCCN Cat 2A; venetoclax 800 mg/day + dex 40 mg/week). Placeholder DKd
+  routing replaced with dedicated venetoclax indication. Gap CLOSED.
 
-  '
+  EARLIER UPDATES:
+  Workstream BE (2026-05-04): IND-MM-2L-DRD + REG-DRD wired at step 15 (POLLUX;
+  lenalidomide-naive 2L; HR 0.44; NCCN Cat 1). Gap (2) CLOSED.
+
+  ROUTING SUMMARY: (1) Post-ASCT CR/VGPR → maintenance; (15) lena-naive + CD38-naive →
+  DRd (Cat 1); (2) triple-class refractory → teclistamab bispecific; (3) t(11;14) →
+  venetoclax+dex (Cat 2A); (4) default → DKd.
+
+  OOS / wiring gaps:
+  (1) Maintenance algo (ALGO-MM-MAINTENANCE) pragmatically included in step 1 here.
+  (3) Belantamab mafodotin — withdrawn from market post DREAMM-3; not modeled.
+  (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) — UA access ≈zero; not modeled.
+  (5) Selinexor combos for penta-refractory — not modeled.
+  (6) Venetoclax inaccessible in Ukraine off-label MM context → DKd as fallback
+  (documented in IND notes; MDT decision).

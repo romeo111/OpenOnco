@@ -1,0 +1,136 @@
+id: REG-VEN-DEX-MM
+name: "Venetoclax + Dexamethasone (VenDex; t(11;14) R/R Multiple Myeloma)"
+name_ua: "Венетоклакс + Дексаметазон (VenDex; t(11;14) рецидивна/рефрактерна множинна мієлома)"
+alternate_names:
+  - "VenDex MM"
+  - "Venetoclax-dexamethasone myeloma"
+  - "Venetoclax t(11;14) MM"
+
+components:
+  - drug_id: DRUG-VENETOCLAX
+    dose: "800 mg PO once daily"
+    schedule: "Continuous daily dosing (no ramp-up protocol required for MM unlike CLL). Take with food."
+    route: PO
+    notes: >
+      MM dosing: 800 mg/day flat (vs CLL ramp-up starting at 20 mg). MM has lower
+      circulating tumour cell burden than CLL, so TLS risk is lower but still
+      requires monitoring in first 4 weeks. Take with food to improve absorption.
+      Hold for Grade ≥3 toxicity; dose reduce to 600 mg → 400 mg if poorly tolerated.
+      Strong CYP3A4 inhibitors (azoles, clarithromycin) increase venetoclax AUC
+      dramatically — dose reduce or avoid co-administration.
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg PO or IV once weekly (patients ≤75 years); 20 mg PO or IV once weekly (patients >75 years)"
+    schedule: "Day 1 of each week; continuous until progression or toxicity"
+    route: PO
+    notes: >
+      Standard MM dexamethasone weekly dosing. Reduce to 20 mg/week for age >75,
+      frailty, or Grade ≥2 dexamethasone-related adverse events (hyperglycemia,
+      mood disturbance, fluid retention).
+
+cycle_length_days: 28
+total_cycles: "Continuous until disease progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care:
+  - "TLS monitoring: CBC, BMP/electrolytes (K+, phosphate, uric acid) at baseline, day 8, day 15 (first 4 weeks)"
+  - "TLS prophylaxis: hydration (1.5-2L/day during first week); allopurinol 300 mg/day if uric acid elevated"
+  - "Anti-infective prophylaxis: acyclovir (HSV/VZV reactivation — dex immunosuppression + venetoclax)"
+  - "PCP prophylaxis: trimethoprim-sulfamethoxazole DS once daily 3×/week (or equivalent)"
+  - "Blood glucose monitoring: dexamethasone-related hyperglycemia; consider metformin/insulin in diabetics"
+  - "Avoid proton pump inhibitors (PPIs): PPIs may reduce venetoclax absorption (take 2h after PPI if unavoidable)"
+  - "FISH/cytogenetics confirmation of t(11;14) mandatory before starting this regimen"
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor added (azole antifungals, clarithromycin, ritonavir)"
+    modification: "Reduce venetoclax to 100-200 mg/day during inhibitor course; resume full dose 2-3 days after inhibitor stopped"
+    rationale: "Strong CYP3A4 inhibition increases venetoclax AUC 5-6×; severe toxicity (neutropenia, TLS)"
+  - condition: "Moderate CYP3A4 inhibitor (fluconazole, erythromycin)"
+    modification: "Reduce venetoclax to 400 mg/day during inhibitor course"
+    rationale: "Moderate inhibition increases venetoclax AUC ~2-fold"
+  - condition: "Grade ≥3 neutropenia (ANC <1.0×10⁹/L)"
+    modification: "Hold venetoclax until ANC ≥1.0; consider G-CSF; resume at 600 mg if first occurrence, 400 mg if recurrent"
+    rationale: "Venetoclax neutropenia is dose-dependent and expected; dose reduction preserves tolerability"
+  - condition: "Grade ≥3 thrombocytopenia (PLT <25×10⁹/L)"
+    modification: "Hold venetoclax; transfuse if symptomatic; resume at 600 mg on recovery"
+    rationale: "Thrombocytopenia risk; hold to prevent serious bleeding"
+  - condition: "Dexamethasone Grade ≥2 hyperglycemia (glucose >250 mg/dL)"
+    modification: "Reduce dexamethasone to 20 mg/week; intensify glucose management"
+    rationale: "Steroid-induced diabetes; dose reduction required before insulin escalation"
+  - condition: "Age >75 at start"
+    modification: "Dexamethasone 20 mg/week from cycle 1; venetoclax dose unchanged"
+    rationale: "Standard frailty-adjusted MM steroid dosing"
+
+drug_interactions:
+  - "Strong CYP3A4 inhibitors (voriconazole, posaconazole, clarithromycin, ritonavir): CONTRAINDICATED or dose-reduce venetoclax to 100-200 mg/day"
+  - "Moderate CYP3A4 inhibitors (fluconazole, diltiazem, erythromycin): venetoclax 400 mg/day during course"
+  - "Strong CYP3A4 inducers (rifampicin, carbamazepine, phenytoin): CONTRAINDICATED — reduce venetoclax AUC >80% → subtherapeutic"
+  - "P-gp inhibitors (dronedarone, amiodarone): increase venetoclax exposure; use with caution"
+  - "Warfarin: dexamethasone alters INR; monitor closely if on anticoagulation"
+  - "NSAIDs: additive GI risk with dexamethasone; avoid"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Венетоклакс (Venclexta) зареєстровано в Україні для ХЛЛ та ГМЛ. Пряме НСЗУ-
+    фінансування для ММ t(11;14) відсутнє (2026). Можливий доступ через:
+    (1) АббВі пацієнтські програми, (2) фонди підтримки, (3) off-label призначення
+    на підставі консіліуму. Дексаметазон НСЗУ-фінансований.
+    t(11;14)-тестування (FISH/iFISH) є стандартним і доступним у більшості UA центрів.
+
+sources:
+  - SRC-NCCN-MM-2025
+  - SRC-ESMO-MM-2023
+
+between_visit_watchpoints:
+  - trigger_ua: "Температура ≥38°C або ознаки інфекції"
+    action_ua: "Зателефонуйте в клініку того ж дня — нейтропенія + імуносупресія дексаметазоном"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Незвичайна слабкість, аритмія або м'язові спазми"
+    action_ua: "Зателефонуйте в клініку того ж дня — електролітний дисбаланс (синдром лізису пухлини)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Синці, кровотеча, дуже слабкість"
+    action_ua: "Зателефонуйте в клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Підвищення цукру в крові, посилена спрага, часте сечовипускання"
+    action_ua: "Повідомте на наступному візиті або раніше — дексаметазон-індукована гіперглікемія"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+notes: >
+  Venetoclax 800 mg/day PO + dexamethasone 40 mg/week (20 mg/week >75y) for
+  t(11;14)-positive relapsed/refractory multiple myeloma.
+
+  RATIONALE: t(11;14) MM overexpresses BCL-2 protein (CYCLIN D1 → MCL-1 shift toward
+  BCL-2 dependence). Venetoclax is a BCL-2 inhibitor: in t(11;14) MM, BCL-2 is the
+  dominant anti-apoptotic protein → high venetoclax sensitivity.
+
+  BELLINI t(11;14) SUBGROUP (Kumar 2020 JCO):
+  - Phase 3 RCT: venetoclax + bortezomib + dexamethasone (VenBd) vs bortezomib + dex
+  - OVERALL trial negative (excess mortality at interim; venetoclax arm OS HR >1)
+  - t(11;14) SUBGROUP (n=50 of 291): mPFS 22.4 vs 11.6 mo (HR 0.37; mOS improvement)
+  - Hypothesis: venetoclax benefit is concentrated in t(11;14) BCL-2-high tumors
+
+  VenDex (without bortezomib) preferred over VenBd in this indication because:
+  - BELLINI overall trial mortality signal was bortezomib-related combination toxicity
+  - t(11;14) BCL-2 dependency suggests venetoclax can drive response without PI backbone
+  - NCCN MM 2025: venetoclax + dexamethasone listed as preferred regimen for t(11;14) R/R MM
+
+  TLS IN MM vs CLL: MM TLS risk is lower than CLL because circulating plasma cell burden
+  is lower. However, venetoclax TLS protocol (hydration, uric acid monitoring, labs week 1-4)
+  should be followed. Ramp-up not standard in MM (unlike CLL).
+
+  STUB pending §6.1 clinical signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

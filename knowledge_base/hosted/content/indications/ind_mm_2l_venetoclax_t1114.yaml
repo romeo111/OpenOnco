@@ -1,0 +1,178 @@
+id: IND-MM-2L-VENETOCLAX-T1114
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory multiple myeloma after ≥1 prior line of therapy"
+    - "t(11;14) translocation confirmed by FISH/iFISH (IgH-CCND1 rearrangement)"
+    - "ECOG PS 0-2"
+    - "Adequate bone marrow function: ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L"
+    - "Adequate renal function: CrCl ≥20 mL/min (venetoclax dosing acceptable at CrCl ≥20)"
+    - "No active uncontrolled infection"
+    - "Not requiring strong CYP3A4 inhibitors that cannot be discontinued"
+  biomarker_requirements_required:
+    - "t(11;14) translocation: IgH-CCND1 rearrangement by FISH/iFISH at diagnosis or relapse. BCL-2 expression by IHC (optional but supports; t(11;14) → CYCLIN D1 → BCL-2 high)"
+  biomarker_requirements_excluded:
+    - "t(11;14) negative: venetoclax has minimal benefit without BCL-2 dependence; reserve for t(11;14) confirmed MM only"
+    - "Active CLL or NHL component: separate venetoclax-based regimen per CLL/NHL indication"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 3 patients: venetoclax is well-tolerated orally; may consider with
+      dexamethasone dose-reduction if frailty is the primary concern.
+      ECOG 4: goals-of-care discussion — active treatment unlikely to benefit.
+      Age ≥75: reduce dexamethasone to 20 mg/week (standard MM elderly adjustment).
+
+recommended_regimen: REG-VEN-DEX-MM
+alternative_regimens:
+  - regimen_id: IND-MM-2L-DKD
+    description: >
+      DKd (daratumumab + carfilzomib + dexamethasone; CANDOR; mPFS HR 0.63;
+      NCCN Cat 1). Appropriate when t(11;14) status unavailable or when carfilzomib
+      triplet preferred (PI-naive 2L patients). DKd does not exploit t(11;14) biology.
+  - regimen_id: IND-MM-2L-DRD
+    description: >
+      DRd (daratumumab + lenalidomide + dexamethasone; POLLUX; HR 0.44; Cat 1).
+      For lenalidomide-naive 2L. Does not specifically target t(11;14).
+
+concurrent_therapy:
+  - "TLS prophylaxis week 1-4: hydration 1.5-2L/day; allopurinol 300 mg/day if uric acid elevated"
+  - "Anti-infective prophylaxis: acyclovir 400 mg BID; trimethoprim-sulfamethoxazole DS 3×/week"
+  - "Glycaemia monitoring and management (dexamethasone-induced hyperglycaemia)"
+  - "VTE prophylaxis: aspirin 81-100 mg/day or LMWH if ≥2 VTE risk factors (standard MM prophylaxis)"
+  - "Bisphosphonate: zoledronic acid 4 mg IV q4w or denosumab 120 mg SC q4w (bone disease management)"
+
+followed_by:
+  - "Response assessment after cycles 2 and 4 (IMWG criteria: sCR, CR, VGPR, PR, MR, SD, PD)"
+  - "Serum-free light chain + SPEP/UPEP monitoring monthly"
+  - "Continue until disease progression or unacceptable toxicity"
+  - "At progression: if venetoclax-refractory t(11;14) → consider DKd or clinical trial; BCMA-targeted therapy (IND-MM-4L-TECLISTAMAB) for triple-class refractory"
+  - "MRD assessment (next-generation flow cytometry or NGS) at CR/sCR for treatment duration decision"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~50-60% (BELLINI t(11;14) subgroup with venetoclax-containing regimens; indirect evidence)"
+  complete_response: "~15-20%"
+  median_pfs_months: "~22.4 months (BELLINI t(11;14) subgroup; HR 0.37 vs bortezomib+dex)"
+  notes: >
+    PRIMARY EVIDENCE: BELLINI t(11;14) subgroup (Kumar 2020 JCO):
+    - Phase 3 RCT VenBd vs Bd in R/R MM (overall n=291; t(11;14) subgroup n=50)
+    - t(11;14) subgroup: mPFS 22.4 vs 11.6 mo (HR 0.37; substantial benefit)
+    - Overall BELLINI trial was NEGATIVE (safety signal in non-t11;14 patients)
+    - t(11;14) subgroup is where venetoclax benefit is concentrated
+
+    NOTE: mPFS of 22.4 mo is from VenBd (venetoclax + bortezomib + dex), not VenDex
+    alone. VenDex without bortezomib may have somewhat lower efficacy but avoids
+    BELLINI's bortezomib-related safety signal. NCCN MM 2025 recommends VenDex as
+    the standard for t(11;14) 2L MM.
+
+    NCCN Category 2A: venetoclax-based therapy specifically for t(11;14)-positive R/R MM.
+    Biomarker-selected population (only ~15-20% of all MM patients have t(11;14)).
+
+    COMPARISON TO DKd (IND-MM-2L-DKD):
+    DKd provides mPFS HR 0.63 (CANDOR) in unselected R/R MM; VenDex provides HR 0.37
+    in the t(11;14)-selected subgroup. When t(11;14) is present, venetoclax-based
+    therapy is likely more effective than DKd based on mechanism and available data.
+
+hard_contraindications:
+  - "t(11;14) NEGATIVE: venetoclax provides no benefit and may be harmful; only for confirmed t(11;14)"
+  - "Strong CYP3A4 inhibitors that cannot be discontinued (posaconazole, voriconazole): venetoclax AUC ×5-6 → TLS, severe neutropenia"
+  - "Strong CYP3A4 inducers (rifampicin, carbamazepine): venetoclax AUC >80% reduction → subtherapeutic"
+  - "Child-Pugh C: venetoclax hepatically metabolized; severe impairment → supratherapeutic exposure"
+
+red_flags_triggering_alternative:
+  - condition: "t(11;14) not confirmed (FISH unavailable or negative) → IND-MM-2L-DKD (standard triplet)"
+  - condition: "Lenalidomide-naive + anti-CD38-naive → IND-MM-2L-DRD preferred (superior POLLUX evidence in lenalidomide-naive)"
+  - condition: "Triple-class refractory (IMiD+PI+CD38) → IND-MM-4L-TECLISTAMAB (BCMA bispecific)"
+  - condition: "Strong azole antifungal required (invasive fungal infection) → venetoclax must be dose-reduced to 100-200 mg/day or switched to DKd"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - "BMP/electrolytes (K+, Mg2+, phosphate, uric acid) — TLS monitoring"
+  - "FISH/iFISH for t(11;14) IgH-CCND1: mandatory before starting; result must be confirmed"
+  - "Serum protein electrophoresis (SPEP) + immunofixation + serum-free light chains — baseline M-protein"
+  - "24h urine protein electrophoresis (UPEP)"
+  - TEST-LFT
+  - "Bone marrow biopsy/aspirate: confirm active myeloma at progression; exclude plasma cell leukemia"
+  - "CT-PET or whole-body CT: disease burden assessment"
+
+desired_tests:
+  - "BCL-2 IHC on bone marrow biopsy: BCL-2 high expression supports t(11;14) venetoclax sensitivity (not yet validated as standalone biomarker — use FISH as primary)"
+  - "MRD testing (next-generation flow or NGS): at CR/sCR for treatment endpoint decision"
+  - "Molecular karyotype/SNP array: other high-risk cytogenetics (del17p, amp1q) affecting prognosis"
+
+rationale: >
+  Venetoclax + dexamethasone (VenDex) for t(11;14)-positive relapsed/refractory
+  multiple myeloma — a biomarker-selected population where BCL-2 dependency
+  makes venetoclax mechanistically rational.
+
+  MOLECULAR BASIS:
+  t(11;14) translocation (IgH-CCND1 rearrangement) is present in ~15-20% of MM.
+  This translocation leads to CYCLIN D1 overexpression which has been shown to
+  shift MM cells toward BCL-2 dependence (vs BCL-XL or MCL-1 dependence in other
+  MM subtypes). Venetoclax inhibits BCL-2 specifically → apoptosis in BCL-2-high
+  t(11;14) MM cells.
+
+  BELLINI EVIDENCE: Phase 3 VenBd vs Bd in R/R MM. Overall trial negative
+  (safety signal; off-protocol venetoclax deaths in non-t11;14 arm). t(11;14)
+  subgroup: mPFS 22.4 vs 11.6 mo (HR 0.37) — strong molecular subgroup benefit.
+  This is the evidence basis for NCCN Cat 2A biomarker-selected recommendation.
+
+  WHY VEND EX NOT VENBD:
+  Regimen simplified to VenDex (without bortezomib) because:
+  1. BELLINI's safety signal was partly attributed to venetoclax+bortezomib
+     combination in unselected (non-t11;14) patients
+  2. NCCN MM 2025 recommends VenDex as the standard regimen for t(11;14) 2L
+  3. Reduces infusion visits and peripheral neuropathy risk (bortezomib-related)
+
+  UKRAINE CONTEXT:
+  t(11;14) FISH testing available at major haematology centres in UA.
+  Venetoclax registered for CLL/AML in Ukraine; off-label use for MM requires
+  MDT decision and patient consent. NSZU reimbursement for MM venetoclax not
+  established (2026); access through patient foundations or AbbVie programme.
+
+rationale_ua: >
+  Венетоклакс 800 мг/день + дексаметазон 40 мг/тиж для t(11;14)-позитивної р/р ММ
+  (>1 попередня лінія). NCCN Cat 2A. Підгрупа BELLINI t(11;14): mPFS 22.4 vs 11.6 міс
+  (HR 0.37). BCL-2-залежні пухлини при t(11;14) → висока чутливість до венетоклаксу.
+  ОБОВ'ЯЗКОВО: FISH/iFISH для підтвердження t(11;14) перед призначенням;
+  TLS-профілактика 4 тижні; уникайте сильних CYP3A4-інгібіторів.
+  Дексаметазон ≤20 мг/тиж для пацієнтів >75 років.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не застосовувати венетоклакс без підтвердженого t(11;14) FISH — без молекулярного базису неефективний та ризикований"
+  - "Не додавати борзаміб без необхідності — BELLINI показав сигнал смертності в нербранній популяції"
+  - "Сильні інгібітори CYP3A4 (позаконазол, вориконазол, клариtromycin) → знизити венетоклакс до 100-200 мг/день або замінити схему"
+  - "Не пропускати TLS-моніторинг (ОАК + електроліти) тижні 1-4 — ризик лізисного синдрому"
+  - "Без противірусної профілактики (ацикловір): дексаметазон + венетоклакс → ризик реактивації VZV/HSV"
+
+sources:
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Multiple Myeloma 2025 Category 2A: venetoclax + dexamethasone (VenDex) as
+      a recommended regimen for relapsed/refractory MM with confirmed t(11;14) translocation.
+      Note: restricted to t(11;14)-positive disease based on BELLINI subgroup benefit;
+      venetoclax NOT recommended in unselected R/R MM.
+  - source_id: SRC-ESMO-MM-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO MM 2023: venetoclax-based therapy (VenDex or VenBd) is an option for
+      t(11;14)-positive R/R MM. BELLINI t(11;14) subgroup provides biological rationale.
+      t(11;14) FISH confirmation is mandatory before use.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
