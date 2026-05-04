@@ -2,15 +2,17 @@ id: ALGO-GASTRIC-METASTATIC-1L
 applicable_to_disease: DIS-GASTRIC
 applicable_to_line_of_therapy: 1
 purpose: >
-  Algorithm for gastric/GEJ adenocarcinoma metastatic 1L. HER2+ →
-  TOGA trastuzumab+chemo (treatment-defining); HER2- + PD-L1 CPS ≥5 →
-  FOLFOX+nivo. CLDN18.2+ zolbetuximab and MSI-H pembro mono pathways
-  await full authoring (separate Indications when zolbetuximab regimen
-  is added).
+  Algorithm for gastric/GEJ adenocarcinoma metastatic 1L. Routes by
+  hierarchical biomarker priority: (1) HER2+ → TOGA trastuzumab+chemo;
+  (2) CLDN18.2 ≥75% HER2-neg → zolbetuximab+chemo (SPOTLIGHT/GLOW);
+  (3) MSI-H/dMMR HER2-neg → pembrolizumab+chemo (KEYNOTE-859 Cat 1;
+  OS HR 0.38 in MSI-H subgroup); (4) PD-L1 CPS ≥1 HER2-neg →
+  FOLFOX+nivolumab (CheckMate-649 Cat 1).
 
 output_indications:
   - IND-GASTRIC-METASTATIC-1L-HER2-TOGA
   - IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
+  - IND-GASTRIC-METASTATIC-1L-MSI-H-PEMBROLIZUMAB
   - IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
 
 default_indication: IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI
@@ -41,8 +43,33 @@ decision_tree:
     if_true:
       result: IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB
     if_false:
+      next_step: 21
+    notes: "CLDN18.2 branch added W1.B2 (2026-04-30). MSI-H pembrolizumab branch wired at step 21 (2026-05-04)."
+
+  # Step 21 — MSI-H/dMMR gate.
+  # MSI-H/dMMR (~7% of advanced gastric) confers dramatic ICI benefit
+  # (KEYNOTE-859 MSI-H OS HR 0.38 vs all-comers HR 0.78). Route before
+  # the generic PD-L1 CPS check so MSI-H patients receive pembrolizumab+chemo
+  # explicitly documented as MSI-H preferred regimen. Benefit is CPS-independent.
+  # HER2+ already captured at step 1; CLDN18.2 at step 2; MSI-H here at step 21.
+  - step: 21
+    evaluate:
+      all_of:
+        - red_flag: RF-GASTRIC-MSI-H-ACTIONABLE
+        - {finding: her2_status, value: negative}
+    if_true:
+      result: IND-GASTRIC-METASTATIC-1L-MSI-H-PEMBROLIZUMAB
+      notes: >
+        MSI-H/dMMR HER2-negative gastric: pembrolizumab+FOLFOX or CAPOX
+        (REG-FOLFOX-PEMBRO-GASTRIC; KEYNOTE-859 MSI-H subgroup OS HR 0.38;
+        NCCN Cat 1). CPS testing still recommended for documentation but
+        benefit is CPS-independent in MSI-H. If CLDN18.2 also ≥75%: MDT —
+        ICI (pembro+chemo) generally preferred for MSI-H; zolbetuximab
+        indication surfaced in parallel by IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB.
+        Pembrolizumab inaccessible → use FOLFOX+nivolumab (CheckMate-649 Cat 1).
+    if_false:
       next_step: 3
-    notes: "CLDN18.2 branch added W1.B2 (2026-04-30). MSI-H pembrolizumab branch still pending — surfaces via known_controversies in indication."
+    notes: "MSI-H gate added 2026-05-04 (Workstream AF). Wired between CLDN18.2 (step 2) and PD-L1 CPS (step 3)."
 
   # Step 3 — HER2- + PD-L1 CPS ≥1 → FOLFOX+nivo (CheckMate-649). Note:
   # FDA strict label is CPS ≥5; EMA broader label is CPS ≥1.
@@ -64,18 +91,19 @@ decision_tree:
 sources:
   - SRC-NCCN-GASTRIC-2025
   - SRC-ESMO-GASTRIC-2024
+  - SRC-KEYNOTE859-RHA-2023
 
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-04"
 notes: >
   HER2+ branch (step 1) routes to TOGA via RF-GASTRIC-HIGH-RISK-BIOLOGY.
   CLDN18.2-positive HER2-negative branch (step 2) added W1.B2 chunk
-  2026-04-30 — routes to zolbetuximab+chemo (SPOTLIGHT/GLOW; FDA Oct
-  2024). PD-L1 CPS≥1 + HER2-negative branch (step 3, formerly step 2)
-  routes to nivolumab+chemo (CheckMate-649). The CLDN18.2 step
-  precedes PD-L1 because zolbetuximab + chemo is treatment-defining
-  when CLDN18.2≥75% AND PD-L1<5; for dual-positive CLDN18.2≥75% AND
-  PD-L1≥5 the indication's known_controversies surfaces the MDT
-  trade-off.
-  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable, MSI-H
-  KEYNOTE-859 pembrolizumab as separate algorithm branch (pending
-  dedicated indication).
+  2026-04-30 — routes to zolbetuximab+chemo (SPOTLIGHT/GLOW; FDA Oct 2024).
+  MSI-H/dMMR HER2-negative branch (step 21) added 2026-05-04 — routes to
+  pembrolizumab+chemo (KEYNOTE-859; FDA March 2023; MSI-H OS HR 0.38;
+  NCCN Cat 1). PD-L1 CPS≥1 + HER2-negative branch (step 3) routes to
+  nivolumab+chemo (CheckMate-649).
+  Routing priority: HER2+ (step 1) > CLDN18.2≥75% HER2-neg (step 2) >
+  MSI-H HER2-neg (step 21) > PD-L1 CPS≥1 HER2-neg (step 3).
+  Dual-positive cases (CLDN18.2 + MSI-H, or CLDN18.2 + high CPS): MDT
+  discussion; ICI preferred for MSI-H due to exceptional OS benefit.
+  Out-of-scope: T-DXd 2L+ HER2+, FLOT periop for resectable.

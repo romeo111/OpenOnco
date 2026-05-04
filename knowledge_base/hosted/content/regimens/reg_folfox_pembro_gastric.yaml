@@ -1,0 +1,130 @@
+id: REG-FOLFOX-PEMBRO-GASTRIC
+name: "FOLFOX + Pembrolizumab (KEYNOTE-859)"
+name_ua: "FOLFOX + Пембролізумаб (KEYNOTE-859)"
+alternate_names:
+  - "mFOLFOX6 + pembrolizumab"
+  - "CAPOX + pembrolizumab (interchangeable backbone per KEYNOTE-859)"
+
+disease_context: DIS-GASTRIC
+line_of_therapy: 1
+plan_track: standard
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV flat dose"
+    schedule: "Day 1 every 21 days"
+    route: IV
+    administration_notes: >
+      Infuse over 30 minutes. Pembrolizumab is given q3w; the FOLFOX
+      backbone runs q2w nested within the q3w pembrolizumab cycle
+      (i.e., FOLFOX days 1 and 15 of each 42-day period, or as per
+      institutional synchronisation of the two schedules).
+      Pembrolizumab continues until disease progression, unacceptable
+      toxicity, or maximum 35 cycles (~2 years).
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "Day 1 every 14 days (2-hour IV infusion)"
+    route: IV
+    administration_notes: >
+      Oxaliplatin infusion before 5-FU. Cold-sensitivity (acute
+      neurotoxicity) peaks d1-3; cumulative sensory neuropathy after
+      ~8 cycles. Discontinue oxaliplatin at grade ≥2 persistent neuropathy;
+      continue 5-FU + pembrolizumab.
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "Day 1 every 14 days (2-hour IV infusion, concurrent with oxaliplatin)"
+    route: IV
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CIV over 46 hours"
+    schedule: "Day 1 bolus, days 1-2 CIV every 14 days"
+    route: IV
+    administration_notes: >
+      Requires ambulatory pump for 46-hour 5-FU infusion. PICC or
+      port-a-cath recommended. Test DPD deficiency before initiating
+      (DPYD variants → life-threatening toxicity).
+
+alternative_backbone: >
+  CAPOX + pembrolizumab: capecitabine 1000 mg/m² PO bid days 1-14 +
+  oxaliplatin 130 mg/m² IV day 1 + pembrolizumab 200 mg IV day 1 q3w.
+  Equivalent backbone used in KEYNOTE-859. Preferred if PICC/port
+  unavailable or patient preference for oral capecitabine.
+  Check capecitabine-DPD (DPYD testing); dose-reduce for CrCl 30-50.
+
+cycle_length_days: 42
+total_cycles: >
+  Chemo backbone (FOLFOX/CAPOX): up to 6 months (≈8-12 FOLFOX cycles or
+  6 CAPOX cycles); pembrolizumab continues as maintenance until progression
+  or 35 cycles (~2 years). Standard practice: FOLFOX 4-6 months then
+  5-FU + pembrolizumab maintenance (omit oxaliplatin after cumulative dose
+  or neuropathy).
+
+premedication:
+  - "5-HT3 antagonist (ondansetron 8 mg IV) + dexamethasone 8 mg IV 30 min before oxaliplatin"
+  - "Avoid cold exposure (gloves, warm drinks) for 5-7 days after oxaliplatin — acute neuropathy"
+  - "Pembrolizumab: no premedication required unless prior infusion reaction"
+
+mandatory_supportive_care:
+  - "DPD testing (DPYD genotyping or UGT1A1 not required; DPYD is the critical pharmacogenomic gate for 5-FU/capecitabine)"
+  - "G-CSF: not routinely required; use if Grade 4 neutropenia or febrile neutropenia"
+
+monitoring_schedule:
+  - "CBC, CMP before each FOLFOX cycle (day 1 of each 2-week block)"
+  - "TSH: every 3 cycles (pembrolizumab hypothyroidism monitoring)"
+  - "LFTs: before each pembrolizumab dose (immune hepatitis — suspend at Grade ≥2)"
+  - "CT chest/abdomen/pelvis: every 2-3 cycles (response assessment per RECIST 1.1)"
+  - "Neurological exam: each cycle (oxaliplatin cumulative neuropathy — Grade ≥2 = dose modification)"
+
+dose_adjustments:
+  - condition: "Grade ≥3 irAE (immune-related adverse event)"
+    modification: "Hold pembrolizumab; systemic steroids per NCCN IO toxicity guidelines. Permanent discontinuation for Grade 4 irAE (except endocrinopathies)."
+  - condition: "Grade ≥2 persistent sensory neuropathy (from oxaliplatin)"
+    modification: "Discontinue oxaliplatin; continue 5-FU + leucovorin + pembrolizumab."
+  - condition: "Grade 3+ hand-foot syndrome (capecitabine backbone)"
+    modification: "Hold capecitabine until ≤Grade 1; resume at 25% dose reduction."
+  - condition: "CrCl 30-50 mL/min"
+    modification: "If using CAPOX backbone: reduce capecitabine by 25% (1000 → 750 mg/m² bid). FOLFOX backbone preferred for CrCl <50."
+
+special_precautions:
+  - "DPYD DEFICIENCY: full-dose 5-FU or capecitabine is life-threatening in DPYD*2A homozygotes — genotype before 1st dose or use DPYD-safe alternative backbone."
+  - "HYPOTHYROIDISM: most common irAE (~13%); screen TSH q3 cycles; levothyroxine if symptomatic."
+  - "IMMUNE HEPATITIS: check LFTs before each pembro dose; Grade ≥2 transaminitis → hold pembro + steroids."
+  - "COLITIS: pembrolizumab diarrhea — differentiate from 5-FU mucositis; scope if Grade ≥3."
+  - "PRIOR IMATINIB/TARGETED THERAPY for GIST: do NOT use in GIST (different disease — FOLFOX not standard in GIST)."
+
+watchpoints_ua:
+  - "КРИТИЧНО: Тестування DPD (DPYD генотипування) перед 5-ФУ/капецитабіном — дефіцит DPD = ризик летальної токсичності"
+  - "КРИТИЧНО: Холодова чутливість при оксаліплатині — уникати холодних напоїв і повітря 5-7 днів після ін'єкції"
+  - "УВАГА: Гіпотиреоз (~13%) — ТТГ кожні 3 цикли; левотироксин за симптоматикою"
+  - "УВАГА: ІГепатит — ферменти печінки перед кожним пембролізумабом; Grade ≥2 → зупинити + стероїди"
+  - "УВАГА: Діарея — відрізнити 5-ФУ мукозит від імунного коліту від пембролізумабу"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Pembrolizumab (Keytruda) — not NSZU-funded for gastric 1L in Ukraine as of
+    2026; out-of-pocket or international access programs. FOLFOX backbone
+    NSZU-fundable. CAPOX backbone: oxaliplatin NSZU + oral capecitabine.
+
+sources:
+  - SRC-KEYNOTE859-RHA-2023
+  - SRC-NCCN-GASTRIC-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  KEYNOTE-859 backbone: pembrolizumab 200 mg q3w + investigator-choice
+  FOLFOX or CAPOX. Three positive co-primary OS endpoints (all comers,
+  CPS≥1, CPS≥10). FDA approved March 2023 for HER2-neg advanced gastric/GEJ
+  with CPS≥1. MSI-H subgroup OS HR 0.38 — exceptional benefit.
+  Equivalent ICI alternative: FOLFOX + nivolumab (CheckMate-649; OS HR 0.78
+  in CPS≥5; no direct head-to-head vs KEYNOTE-859).
+  When pembrolizumab is unavailable in Ukraine, REG-FOLFOX-NIVO is the
+  fallback (nivolumab + FOLFOX; same mechanism class).
+notes_ua: >
+  KEYNOTE-859 режим: пембролізумаб 200 мг q3w + FOLFOX або CAPOX (вибір
+  дослідника). Три позитивних первинних ендпоінти OS. FDA схвалило
+  берез. 2023 для HER2-neg поширеного раку шлунку/ГЕЗ з CPS≥1.
+  MSI-H підгрупа OS HR 0.38 — виключний виграш незалежно від CPS.
+  При недоступності пембролізумабу в Україні — FOLFOX + ніволумаб (CheckMate-649).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

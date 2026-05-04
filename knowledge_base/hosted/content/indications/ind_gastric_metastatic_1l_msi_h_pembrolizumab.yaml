@@ -1,0 +1,154 @@
+id: IND-GASTRIC-METASTATIC-1L-MSI-H-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced or metastatic gastric or gastroesophageal junction (GEJ) adenocarcinoma"
+    - "No prior systemic therapy for metastatic disease"
+    - "HER2-negative (IHC 0 or 1+; or IHC 2+/ISH-negative)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI
+      value_constraint: "MSI-H"
+      notes: >
+        Either PCR-based MSI testing or IHC dMMR (MLH1/MSH2/MSH6/PMS2 loss
+        by IHC) accepted — concordance ~95%. MSI-H benefit is CPS-independent
+        (KEYNOTE-859 MSI-H subgroup OS HR 0.38 regardless of PD-L1 CPS level).
+  biomarker_requirements_excluded:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "positive"
+      notes: "HER2+ patients route to TOGA (trastuzumab+chemo) regardless of MSI status — HER2 is dominant routing biomarker."
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 3 — consider pembrolizumab monotherapy discussion (MSI-H benefit evident even in ICI mono); ECOG 4 hard gate blocks systemic therapy."
+
+recommended_regimen: REG-FOLFOX-PEMBRO-GASTRIC
+concurrent_therapy: []
+followed_by:
+  - "Pembrolizumab maintenance monotherapy (after ≈6 months chemo backbone, continue pembro up to 35 cycles / ~2 years or progression)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~51% (all comers KEYNOTE-859); MSI-H subgroup ORR not separately reported but expected higher"
+  os_all_comers:
+    median_months: 12.9
+    hr: 0.78
+    note: "All-comers OS; MSI-H subgroup magnified benefit"
+  os_msi_h_subgroup:
+    hr: 0.38
+    ci95: "0.19–0.74"
+    note: "MSI-H/dMMR subgroup n=113; exceptional ICI sensitivity"
+  dcr: "~70% (disease control including stable disease)"
+  notes: >
+    MSI-H/dMMR status confers OS HR 0.38 with pembrolizumab+chemo vs
+    chemo alone (KEYNOTE-859 post-hoc subgroup; n=113; ~7% of trial).
+    This substantially exceeds the all-comers benefit (HR 0.78) and
+    is comparable to CRC KEYNOTE-177 (pembro monotherapy 1L, PFS HR 0.60).
+    Unlike CRC, chemo+ICI (not ICI monotherapy) remains preferred in
+    gastric MSI-H, as no RCT head-to-head ICI mono vs ICI+chemo in gastric.
+
+hard_contraindications:
+  - "HER2-positive — use IND-GASTRIC-METASTATIC-1L-HER2-TOGA instead"
+  - "Active autoimmune disease requiring systemic immunosuppression (Grade ≥2)"
+  - "Prior pembrolizumab or PD-1/L1 inhibitor in prior line"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Severe hepatic impairment (Child-Pugh C) — pembrolizumab not studied"
+
+red_flags_triggering_alternative:
+  - condition: "HER2+ (IHC 3+ or IHC 2+/ISH+) → IND-GASTRIC-METASTATIC-1L-HER2-TOGA (dominant routing biomarker)"
+  - condition: "CLDN18.2 ≥75% + MSI-H co-positive → MDT: either IND-GASTRIC-METASTATIC-1L-CLDN18-2-ZOLBETUXIMAB or IND-GASTRIC-METASTATIC-1L-MSI-H-PEMBROLIZUMAB; no head-to-head data; ICI (pembro) is generally preferred for MSI-H given large OS benefit"
+  - condition: "Pembrolizumab inaccessible in Ukraine → IND-GASTRIC-METASTATIC-1L-PDL1-CHEMO-ICI (FOLFOX+nivolumab; same mechanism class; CheckMate-649 Cat 1)"
+  - condition: "ECOG 3 or borderline chemotherapy tolerance → MDT discussion: pembrolizumab monotherapy (lower toxicity; MSI-H is a strong predictor of ICI monotherapy response; KEYNOTE-158 agnostic; NCCN Cat 2A for single-agent pembro in MSI-H solid tumors)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HER2 IHC+ISH: mandatory before treatment (HER2+ routes differently)"
+  - "MSI/MMR testing: PCR (MSI) or IHC (MLH1/MSH2/MSH6/PMS2) — confirms MSI-H gate"
+  - "PD-L1 CPS by IHC 22C3: required for FDA label (CPS ≥1) — though MSI-H benefit is CPS-independent, CPS documents biomarker profile"
+  - "CT chest/abdomen/pelvis: baseline staging"
+  - "ECHO: baseline (if plan includes anthracycline-containing regimen; optional for FOLFOX-only backbone)"
+
+desired_tests:
+  - "CLDN18.2 IHC: MSI-H patients may be co-positive with CLDN18.2 ≥75% — MDT discussion if dual positive"
+  - "NGS panel: TMB-high co-occurrence in MSI-H (~80% concordance); also detects NTRK fusions, FGFR2/3 mutations (emerging targets)"
+  - "Lynch syndrome germline testing: MLH1/MSH2/MSH6/PMS2/EPCAM germline for patients <60 years, family history, or MLH1/PMS2 IHC loss (to rule out epigenetic silencing vs germline)"
+  - "EBV ISH (Epstein-Barr virus in situ hybridization): EBV+ gastric (~9% of cases) — distinct molecular subtype with very high PD-L1 expression; clinical implication overlaps with MSI-H regarding ICI sensitivity"
+
+rationale: >
+  MSI-H/dMMR advanced gastric and GEJ adenocarcinoma is a biomarker-defined
+  subgroup with exceptional sensitivity to PD-1/PD-L1 blockade. In KEYNOTE-859
+  (Rha 2023, Lancet Oncol; n=1579 HER2-negative advanced gastric/GEJ), the
+  MSI-H/dMMR subgroup (n=113; ~7%) showed OS HR 0.38 with pembrolizumab+chemo
+  vs chemo alone, compared to the all-comers HR of 0.78. This level of ICI
+  benefit is among the largest seen in any solid tumor subgroup treated with
+  chemo+ICI backbone.
+
+  Clinical rationale for chemo+ICI over ICI monotherapy in gastric MSI-H:
+  - No dedicated phase 3 RCT of ICI monotherapy vs chemo+ICI in gastric MSI-H
+  - Unlike CRC (where KEYNOTE-177 proved pembro monotherapy superiority 1L),
+    gastric-specific data for ICI mono is limited to KEYNOTE-158 (tumor-agnostic
+    MSI-H; mixed cohort; ORR 46% in gastric/GEJ subset; small n)
+  - NCCN recommendation: chemo+ICI preferred for fit MSI-H gastric patients
+  - Pembrolizumab monotherapy (NCCN Cat 2A) is an option when chemo not feasible
+
+  Evidence summary:
+  - KEYNOTE-859: pembro+FOLFOX/CAPOX vs chemo; OS HR 0.78 all-comers;
+    MSI-H subgroup OS HR 0.38 (post-hoc); FDA approved March 2023 (CPS ≥1 label)
+  - KEYNOTE-158: pembrolizumab monotherapy in MSI-H solid tumors including gastric
+    (ORR 46% in gastric/GEJ; small subset; basis for tumor-agnostic approval)
+  - NCCN Gastric 2025 Category 1 for pembrolizumab+chemo in HER2-neg gastric
+
+  Key safety note: MSI-H patients do NOT have higher rates of severe irAEs compared
+  to MSS tumors — ICI safety profile is histology/MSI-independent. Monitor per
+  standard pembrolizumab toxicity surveillance.
+
+rationale_ua: >
+  MSI-H/dMMR поширений рак шлунку/ГЕЗ — биомаркерна підгрупа з винятковою
+  чутливістю до блокади PD-1/PD-L1. KEYNOTE-859 (Rha 2023, Lancet Oncol):
+  MSI-H підгрупа (n=113) — OS HR 0.38 з пембролізумабом+хімія vs хімія
+  (порівняно з усією популяцією HR 0.78). Це один із найбільших виграшів
+  серед усіх підгруп твердих пухлин при ІКІ+хімія.
+  NCCN 2025 Категорія 1: пембролізумаб+хімія для HER2-neg поширеного
+  раку шлунку незалежно від CPS; MSI-H — окрема підгрупа з ≥2× виграшем.
+  FDA схвалило берез. 2023 (CPS ≥1 мітка); MSI-H виграш незалежний від CPS.
+  Тест: ІГХ (MLH1/MSH2/MSH6/PMS2) або ПЛР на MSI. Синдром Лінча —
+  обов'язкова герміногенна консультація для пацієнтів <60 або з сімейним анамнезом.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE859-RHA-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      KEYNOTE-859: pembrolizumab+chemo vs chemo in HER2-neg advanced gastric/GEJ.
+      All-comers OS HR 0.78 (p<0.0001). MSI-H/dMMR subgroup OS HR 0.38 (CI 0.19-0.74).
+      FDA approved March 2023 for PD-L1 CPS ≥1.
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Gastric 2025: pembrolizumab + fluoropyrimidine+platinum chemo — Category 1
+      for HER2-negative advanced gastric/GEJ. MSI-H/dMMR — preferred subgroup for
+      ICI-containing regimens.
+
+do_not_do:
+  - "НЕ призначати при HER2+ — трастузумаб+хімія є стандартом (незалежно від MSI)"
+  - "НЕ пропускати тест на MSI/MMR та HER2 перед початком лікування"
+  - "НЕ використовувати пембролізумаб монотерапію замість пембролізумаб+хімія у пацієнтів з ECOG 0-2 без обґрунтування"
+  - "НЕ продовжувати ICI при Grade ≥3 irAE без повного обстеження та стероїдної терапії"
+  - "Синдром Лінча — герміногенна консультація при MLH1/MSH2 дефіциті у пацієнтів <60 років"
+  - "Якщо пембролізумаб недоступний в Україні — FOLFOX+ніволумаб (CheckMate-649) є прийнятною альтернативою того ж механізму"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

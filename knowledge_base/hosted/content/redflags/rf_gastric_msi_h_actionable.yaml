@@ -1,0 +1,55 @@
+id: RF-GASTRIC-MSI-H-ACTIONABLE
+definition: >
+  MSI-high / dMMR gastric or GEJ adenocarcinoma — treatment-defining
+  biomarker. KEYNOTE-859 MSI-H subgroup: OS HR 0.38 (pembro+chemo vs
+  chemo; >2× benefit vs all-comers HR 0.78). Routes to pembrolizumab-based
+  1L ICI regardless of PD-L1 CPS level. Distinct from the general
+  RF-GASTRIC-PDL1-CPS-1-PLUS gate: MSI-H benefit is CPS-independent.
+definition_ua: >
+  MSI-high / dMMR рак шлунку або ГЕЗ — маркер, що визначає лікування.
+  KEYNOTE-859 MSI-H підгрупа: OS HR 0.38 (пембролізумаб+хімія vs хімія;
+  більш ніж 2× виграш порівняно з загальною популяцією HR 0.78).
+  Маршрутизує на пембролізумаб-базований 1L ІКІ незалежно від PD-L1 CPS.
+
+trigger:
+  type: biomarker
+  any_of:
+    - finding: "msi_status"
+      value: "MSI-H"
+    - finding: "dmmr_status"
+      value: "deficient"
+
+clinical_direction: intensify
+severity: critical
+priority: 45
+category: high-risk-biology
+
+relevant_diseases:
+  - DIS-GASTRIC
+shifts_algorithm:
+  - ALGO-GASTRIC-METASTATIC-1L
+branch_targets:
+  ALGO-GASTRIC-METASTATIC-1L: "step-21"
+
+sources:
+  - SRC-KEYNOTE859-RHA-2023
+  - SRC-NCCN-GASTRIC-2025
+
+last_reviewed: "2026-05-04"
+draft: false
+
+notes: >
+  MSI-H/dMMR ~7% of advanced gastric (higher in proximal/GEJ, lower in
+  distal gastric). Testing: IHC for MLH1/MSH2/MSH6/PMS2 loss (dMMR) or
+  PCR/NGS for MSI-H. These are concordant in ~95% of cases.
+  Lynch syndrome germline evaluation for patients aged <50 or family
+  history. KEYNOTE-859 did not test pembrolizumab monotherapy vs chemo
+  in MSI-H gastric specifically — chemo+ICI remains preferred in fit
+  patients unlike CRC (where KEYNOTE-177 proved ICI monotherapy superiority).
+  For gastric, add ICI to chemo backbone (FOLFOX or CAPOX) even in MSI-H.
+notes_ua: >
+  MSI-H/dMMR ~7% поширеного раку шлунку. Тестування: ІГХ на
+  MLH1/MSH2/MSH6/PMS2 (dMMR) або ПЛР/НГС на MSI-H. Синдром Лінча —
+  герміногенна консультація для пацієнтів <50 років або з сімейним анамнезом.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
