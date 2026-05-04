@@ -1,0 +1,160 @@
+id: IND-ENDOMETRIAL-2L-HORMONAL
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic endometrial carcinoma"
+    - "Histologic subtype: Grade 1-2 endometrioid (endometrioid adenocarcinoma, FIGO Grade 1 or 2)"
+    - "ER positive and/or PR positive by IHC (≥10% nuclear staining)"
+    - "After 1L platinum-based chemotherapy (or as primary systemic for patients not fit for chemotherapy)"
+    - "Low tumor burden and indolent disease course preferred (hormonal ORR modest)"
+    - "ECOG PS 0-3 (hormonal therapy can be used in frailer patients than chemo or lenva)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-ER-IHC
+      value_constraint: "positive (≥10% nuclear staining)"
+  biomarker_requirements_excluded:
+    - "High-grade histology (Grade 3 endometrioid, serous, clear cell, carcinosarcoma) — progestins ineffective; chemotherapy or ICI preferred"
+    - "Prior progestin/AI therapy failure in current line"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      One of few 2L endometrial options that is well-tolerated in ECOG 2-3 patients.
+      Oral administration; minimal organ-function requirements. Avoid if severe
+      thromboembolic history and anticoagulation not feasible.
+
+recommended_regimen: REG-MEGESTROL-ENDOMETRIAL
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Letrozole 2.5 mg PO daily (AI; post-menopausal patients; NCCN Cat 2A;
+      ORR ~9-14% GOG 263; lower VTE risk than progestins; preferred in patients
+      with prior VTE or high DVT risk)
+  - regimen_id: null
+    description: >
+      Anastrozole 1 mg PO daily (AI alternative; equivalent to letrozole
+      in mechanism; available generically)
+  - regimen_id: null
+    description: >
+      Medroxyprogesterone acetate (MPA) 200 mg PO daily — alternative
+      progestin; less commonly used than megestrol; similar efficacy
+concurrent_therapy: []
+followed_by:
+  - "After hormonal progression: pembro+lenva (IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR) — KEYNOTE-775 includes hormone-treated patients at ≥3L"
+
+evidence_level: low_moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~25-30% (megestrol GOG 081; Grade 1-2 endometrioid); ~9-14% (AI; GOG 263)"
+  pr_rate: "~20-25% (partial response + disease stabilization; progestins)"
+  median_pfs_months: "~3-6 (megestrol); ~6+ (grade 1 slowly progressive disease)"
+  notes: >
+    Hormonal therapy response is histotype-dependent:
+    - Grade 1-2 endometrioid ER+/PR+: ORR ~25-30% with megestrol (GOG 081, 1988);
+      median PFS ~3-5 months but long-tail responses in Grade 1 (median duration
+      of response 6-8 months; some patients >12 months)
+    - Grade 3 endometrioid, serous, clear cell: ORR <5%; not recommended
+    - PR expression predicts better hormonal response than ER alone (PR IHC ≥50%
+      most predictive; GOG historical data)
+    Modern context: in the era of pembrolizumab+lenvatinib (KEYNOTE-775), hormonal
+    therapy occupies a niche for: (1) patients not fit for lenva combination
+    (renal dysfunction, hypertension, hepatic impairment); (2) elderly/frail
+    patients preferring oral low-toxicity therapy; (3) Grade 1-2 indolent
+    relapse with low tumor burden where disease control is the goal.
+
+hard_contraindications:
+  - "Grade 3 endometrioid, uterine serous carcinoma, clear cell carcinoma, carcinosarcoma — progestins ineffective; pembro+lenva or T-DXd (if HER2+) preferred"
+  - "Active uncontrolled DVT/PE without therapeutic anticoagulation (megestrol increases thrombotic risk)"
+  - "Severe hepatic impairment (Child-Pugh C) — megestrol hepatic metabolism"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "High-grade histology (serous, clear cell, Grade 3) → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR or IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR if dMMR"
+  - condition: "dMMR/MSI-H + no prior ICI → IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR (superior ORR ~41-47% vs ~25% progestins)"
+  - condition: "HER2 IHC 3+ → IND-ENDOMETRIAL-2L-HER2-TDXD (ORR 57.5%; DESTINY-PanTumor02)"
+  - condition: "ER-negative tumor → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR (no hormonal rationale)"
+  - condition: "Active uncontrolled DVT/PE → AI (letrozole 2.5 mg/day) rather than megestrol (less thrombogenic)"
+  - condition: "Rapid progression or high tumor burden → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR (more active for aggressive relapse)"
+
+required_tests:
+  - "ER/PR IHC: confirm ≥10% ER+ (if not already performed; can use original tumor or relapsed biopsy)"
+  - "Tumor grade confirmation: Grade 1-2 endometrioid histology (Grade 3 → not appropriate)"
+  - "CT chest/abdomen/pelvis: baseline disease extent + response monitoring"
+  - "CBC, CMP, glucose: baseline (hormonal low-toxicity; glucose monitoring in diabetics)"
+  - "Coagulation screen: if DVT/PE risk concerns (megestrol thrombogenic)"
+
+desired_tests:
+  - "PR IHC: PR positivity strongly predicts progestin response (PR ≥50% most favored; GOG historical data)"
+  - "dMMR/MSI-H testing: if not yet done — dMMR patients would prefer dostarlimab/pembrolizumab (much higher ORR)"
+  - "Molecular tumor profile (TCGA-based): POLE-mutated (best prognosis), copy-number-low (ER+, progestin-sensitive), copy-number-high (serous-like, progestin-resistant), dMMR/MSI-H (ICI-sensitive)"
+
+rationale: >
+  Hormonal therapy (progestins and aromatase inhibitors) is a well-established,
+  low-toxicity treatment option for recurrent ER+/PR+ Grade 1-2 endometrioid
+  carcinoma. The biological rationale is direct: Grade 1-2 endometrioid carcinomas
+  arise from estrogen-driven endometrial hyperplasia and retain functional ER and PR
+  expression in ~80-90% of cases. Progestins (megestrol, medroxyprogesterone)
+  counteract estrogen stimulation and exert direct anti-proliferative effects on
+  ER+/PR+ tumor cells.
+
+  Evidence:
+  - GOG 081 (Thigpen 1999, JCO): megestrol 800 mg vs 200 mg in recurrent endometrial;
+    no dose-response but 200 mg ORR ~25%; Grade 1-2 ORR >30% in subgroup analysis.
+  - Historical GOG data (GOG 119, 153): megestrol, MPA, tamoxifen ORR ~15-25% in
+    unselected endometrial; Grade 1-2 ER+ subgroup consistently higher.
+  - GOG 263 (Wolfson 2011, Gynecol Oncol): letrozole; ORR 9.2% overall; lower than
+    progestins but better tolerated (less VTE risk).
+  - NCCN Uterine 2025 Category 2A: hormonal therapy recommended for Grade 1-2 ER+
+    recurrent endometrioid; specifically acknowledged for patients who prefer oral
+    low-toxicity therapy or are not fit for intensive systemic therapy.
+
+  Clinical positioning (2025/2026):
+  Hormonal therapy is increasingly a niche indication as more active options
+  (pembrolizumab+lenvatinib, T-DXd for HER2+, dostarlimab for dMMR) become available.
+  However, key population for hormonal therapy remains: elderly/frail patients (ECOG 2-3)
+  preferring oral therapy, patients with contraindications to lenvatinib (renal/hepatic
+  dysfunction, uncontrolled hypertension), and Grade 1 slowly progressive indolent
+  disease where toxicity minimization is the priority. Average time on hormonal therapy
+  in responders (~6 months) provides meaningful disease control for this population.
+
+rationale_ua: >
+  Гормональна терапія (мегестрол, АІ) — малотоксичний варіант для рецидивуючої
+  ER+/PR+ ендометріоїдної карциноми Grade 1-2 (NCCN кат.2A). ORR ~25-30% при
+  мегестролі (GOG 081); ~9-14% при AIs (GOG 263). Biologic rationale: Grade 1-2
+  ендометріоїд — ER/PR-залежна пухлина; прогестини блокують ER-сигналізацію.
+  Ключова популяція: ослаблені пацієнти (ECOG 2-3) або з протипоказаннями
+  до комбінації пембролізумаб+ленватиніб (ниркова/печінкова дисфункція, АГ).
+  dMMR/MSI-H пацієнти: достарлімаб/пембролізумаб ефективніші (ORR ~41-47%).
+  ER-негативні або Grade 3 пухлини: гормональна терапія неефективна.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-UTERINE-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Uterine 2025: hormonal therapy (progestins, AIs, tamoxifen) — Category 2A
+      for recurrent/metastatic Grade 1-2 endometrioid carcinoma with ER/PR expression.
+      Specifically appropriate for patients preferring low-toxicity oral therapy or
+      not suitable for intensive combination regimens.
+  - source_id: SRC-ESMO-ENDOMETRIAL-2022
+    position: context
+
+do_not_do:
+  - "НЕ призначати при Grade 3 ендометріоїд, серозній, світлоклітинній або карциносаркомі — гормональна терапія неефективна (<5% ORR)"
+  - "НЕ призначати при ER-негативній пухлині — відсутність молекулярної мішені"
+  - "dMMR/MSI-H: достарлімаб або пембролізумаб значно ефективніші (ORR ~41-47%); гормони — лише якщо ICI недоступний"
+  - "Мегестрол + ТГВ/ТЕЛА: ризик тромбозу підвищується в ~3 рази; АІ (летрозол) є безпечнішою альтернативою"
+  - "Адреналова недостатність: не різко відміняти мегестрол після тривалого застосування (>3 міс) — поступово"
+  - "Моніторинг глюкози у діабетиків — мегестрол спричиняє гіперглікемію (~12%)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

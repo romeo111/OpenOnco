@@ -1,13 +1,14 @@
 id: ALGO-ENDOMETRIAL-2L
 applicable_to_disease: DIS-ENDOMETRIAL
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+ recurrent/metastatic endometrial carcinoma Indication after 1L platinum-based chemotherapy failure. Two tracks: (1) dMMR/MSI-H + no prior ICI → single-agent dostarlimab (GARNET) or pembrolizumab (KEYNOTE-158); (2) pMMR OR dMMR with prior 1L ICI → pembrolizumab + lenvatinib (KEYNOTE-775). Note: in modern era (post-RUBY/NRG-GY018 ~2023+), most dMMR patients receive ICI in 1L and so route to pembro+lenva in 2L; the dostarlimab single-agent track is for historical-era patients without prior ICI.
+purpose: 'Select 2L+ recurrent/metastatic endometrial carcinoma Indication after 1L platinum-based chemotherapy failure. Four tracks: (1) HER2 IHC 3+ → T-DXd (DESTINY-PanTumor02; NCCN Cat 1); (2) dMMR/MSI-H + no prior ICI → dostarlimab (GARNET; NCCN Cat 1); (3) fit for lenva combination → pembro+lenva (KEYNOTE-775); (4) Grade 1-2 endometrioid ER+ not lenva-fit → hormonal therapy (megestrol/AI; NCCN Cat 2A). Note: in modern era (post-RUBY/NRG-GY018 ~2023+), most dMMR patients receive ICI in 1L and so route to pembro+lenva in 2L; the dostarlimab single-agent track is for historical-era patients without prior ICI.
 
   '
 output_indications:
 - IND-ENDOMETRIAL-2L-HER2-TDXD
 - IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
 - IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+- IND-ENDOMETRIAL-2L-HORMONAL
 default_indication: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
 alternative_indication: IND-ENDOMETRIAL-2L-HER2-TDXD
 decision_tree:
@@ -59,13 +60,34 @@ decision_tree:
   if_true:
     result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
   if_false:
+    next_step: 4
+  notes: "Fully wired (W5c-finish 2026-04-30): replaced 3 free-text conditions ('Disease progression after 1L platinum-based chemo', 'lenvatinib toxicity tolerance required', 'Adequate organ function...') with RF-PRIOR-PLATINUM-RESISTANT (universal) + new RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO (composite organ function from KEYNOTE-775 prerequisites). if_true → PEMBRO-LENVA-PMMR (fit for lenva combination). if_false → step 4 (hormonal therapy gate for patients not fit for lenva combo)."
+- step: 4
+  evaluate:
+    all_of:
+    - condition: "Grade 1-2 endometrioid histology (NOT Grade 3, uterine serous, clear cell, carcinosarcoma)"
+    - condition: "ER positive (≥10% nuclear staining by IHC; BIO-ER-IHC)"
+  if_true:
+    result: IND-ENDOMETRIAL-2L-HORMONAL
+    notes: >
+      Grade 1-2 endometrioid + ER+ + not fit for lenva combination:
+      hormonal therapy (megestrol 160 mg PO daily or letrozole 2.5 mg PO daily).
+      NCCN Uterine 2025 Category 2A. ORR ~25-30% megestrol (GOG 081); ~9-14% AI (GOG 263).
+      ECOG 0-3 eligible (broader than pembro+lenva). Appropriate for elderly/frail patients
+      preferring low-toxicity oral therapy, patients with lenvatinib contraindications
+      (renal/hepatic dysfunction, uncontrolled hypertension), or indolent low-burden Grade 1 relapse.
+  if_false:
     result: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
-  notes: "Fully wired (W5c-finish 2026-04-30): replaced 3 free-text conditions ('Disease progression after 1L platinum-based chemo', 'lenvatinib toxicity tolerance required', 'Adequate organ function...') with RF-PRIOR-PLATINUM-RESISTANT (universal) + new RF-ENDOMETRIAL-FIT-FOR-LENVATINIB-COMBO (composite organ function from KEYNOTE-775 prerequisites). Both branches still route to PEMBRO-LENVA-PMMR — gates serve MDT brief surfacing rather than indication switching here."
+    notes: >
+      High-grade histology (Grade 3/serous/clear cell/carcinosarcoma) or ER-negative:
+      hormonal therapy ineffective (<5% ORR). Default to pembro+lenva regardless of
+      lenvatinib fitness. MDT review for ECOG 2-3 patients with grade 3 tumor.
+  notes: "Free-text conditions — no engine RF for Grade 1-2 endometrioid or ER+ histotype yet; MDT validation required. Authored 2026-05-04 (Workstream AK). Wires IND-ENDOMETRIAL-2L-HORMONAL for the niche population (ECOG 0-3 ER+ Grade 1-2 not fit for lenva combo)."
 sources:
 - SRC-NCCN-UTERINE-2025
 - SRC-ESMO-ENDOMETRIAL-2022
 - SRC-DESTINY-PANTUMOR02-MERIC-2024
 last_reviewed: '2026-05-04'
-notes: 'AUTHORED 2026-05-04: IND-ENDOMETRIAL-2L-HER2-TDXD wired at step 1 (HER2 IHC 3+ gate; DESTINY-PanTumor02 ORR 57.5%; FDA Aug 2023; NCCN Cat 1). OOS / wiring gaps: (1) HRD+/POLE-mutated 2L scenarios — molecular-class-specific 2L (e.g., POLE-mut excellent prognosis with chemo re-challenge) not modeled. (2) Hormonal therapy (megestrol, AI) for low-grade ER+ endometrial 2L — not modeled; appropriate for indolent low-burden cases. (3) ECOG ≥2 patients ineligible for lenva combination — single-agent doxorubicin or paclitaxel re-challenge is the funded fallback; surfaced as free-text since not separately modeled. (4) UA funding gap — pembro+lenva not NSZU-reimbursed for endometrial 2L (2026 onco package); dostarlimab funding extends to 2L+ under same package but verify per current NSZU protocol.
+notes: 'AUTHORED 2026-05-04: IND-ENDOMETRIAL-2L-HER2-TDXD wired at step 1 (HER2 IHC 3+ gate; DESTINY-PanTumor02 ORR 57.5%; FDA Aug 2023; NCCN Cat 1). IND-ENDOMETRIAL-2L-HORMONAL wired at step 4 (Grade 1-2 endometrioid ER+ not fit for lenva combo; NCCN Cat 2A; megestrol GOG 081 ORR ~25-30%). ROUTING SUMMARY: (1) HER2 IHC 3+ → T-DXd; (2) dMMR/MSI-H + no prior ICI → dostarlimab; (3) fit for lenva combo → pembro+lenva; (4) Grade 1-2 endometrioid ER+ (not lenva-fit) → hormonal therapy; (fallback) → pembro+lenva. OOS / wiring gaps: (1) HRD+/POLE-mutated 2L scenarios — molecular-class-specific 2L (e.g., POLE-mut excellent prognosis with chemo re-challenge) not modeled. (2) ECOG ≥2 patients with grade 3 tumor ineligible for lenva combination — single-agent doxorubicin or paclitaxel re-challenge is the funded fallback; not separately modeled. (3) UA funding gap — pembro+lenva not NSZU-reimbursed for endometrial 2L (2026 onco package); dostarlimab funding extends to 2L+ under same package but verify per current NSZU protocol.
 
   '
