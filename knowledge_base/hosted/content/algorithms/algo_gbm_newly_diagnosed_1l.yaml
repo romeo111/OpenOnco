@@ -1,32 +1,81 @@
 id: ALGO-GBM-NEWLY-DIAGNOSED-1L
 applicable_to_disease: DIS-GBM
 applicable_to_line_of_therapy: 1
-purpose: 'Scaffold algorithm for newly-diagnosed GBM (IDH-WT, WHO grade 4). Currently models Stupp protocol only. Elderly variants (TMZ-only Nordic / RT-only / hypofractionated CCTG-CE.6) await full authoring. Recurrent GBM (bevacizumab, lomustine, TTF) entirely out of scope here.
+purpose: >
+  Select 1L treatment for newly-diagnosed GBM (IDH-WT, WHO grade 4) based on
+  age/performance status (Stupp-eligible vs elderly/frail) and MGMT methylation
+  status (drives TMZ benefit in elderly). IDH-mutant tumours excluded — WHO 2021
+  reclassifies as astrocytoma IDH-mutant grade 4 (different disease).
 
-  '
 output_indications:
-- IND-GBM-NEWLY-DIAGNOSED-STUPP
-default_indication: IND-GBM-NEWLY-DIAGNOSED-STUPP
-alternative_indication: null
-decision_tree:
-- step: 1
-  evaluate:
-    all_of:
-    - condition: IDH-WT GBM (WHO grade 4)
-    - any_of:
-      - red_flag: RF-FITNESS-ECOG-FIT
-      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    - condition: age ≤70
-    - condition: Post maximal safe resection OR biopsy-only
-  if_true:
-    result: IND-GBM-NEWLY-DIAGNOSED-STUPP
-  if_false:
-    result: IND-GBM-NEWLY-DIAGNOSED-STUPP
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
-sources:
-- SRC-NCCN-CNS-2025
-- SRC-EANO-GBM-2024
-last_reviewed: '2026-04-26'
-notes: 'Scaffold. Elderly + MGMT-stratified algorithm needed: ≥70 + MGMT methylated → TMZ-only (Nordic); ≥70 + MGMT unmethylated → RT-only (CCTG-CE.6 hypofractionated 40 Gy / 15 fx). Vorasidenib INDIGO for IDH-mutant grade-2 glioma (different entity per WHO 2021) — separate disease YAML if added.
+  - IND-GBM-NEWLY-DIAGNOSED-STUPP
+  - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ
+  - IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT
 
-  '
+default_indication: IND-GBM-NEWLY-DIAGNOSED-STUPP
+alternative_indication: IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT
+
+decision_tree:
+  # Step 1 — IDH status. IDH-mutant no longer classified as GBM (WHO 2021).
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "IDH-WT confirmed (IDH1 R132H IHC negative + IDH1/2 sequencing)"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "IDH-mutant glioma grade 4: not GBM per WHO 2021. Manage as astrocytoma IDH-mutant (vorasidenib INDIGO). Separate disease pathway."
+
+  # Step 2 — Age + performance status. Stupp threshold: <70 AND ECOG 0-1.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Age < 70"
+        - any_of:
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-GBM-NEWLY-DIAGNOSED-STUPP
+      notes: >
+        Fit <70: Stupp protocol (RT 60 Gy/30 fx + concurrent TMZ → adjuvant TMZ
+        × 6 cycles). MGMT methylation prognostic but Stupp applies regardless.
+        EF-14: add TTFields 200 kHz ≥18h/day to adjuvant TMZ if available
+        (mOS 20.9 vs 16.0 mo, HR 0.63, NCCN cat 1/2A per institution).
+    if_false:
+      next_step: 3
+
+  # Step 3 — Elderly/frail: MGMT methylation determines regimen choice.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "MGMT promoter methylated"
+    if_true:
+      result: IND-GBM-NEWLY-DIAGNOSED-ELDERLY-TMZ
+      notes: >
+        Age ≥70 + MGMT-methylated: TMZ alone (Nordic: HR 0.35 in ≥70) OR
+        hypofractionated RT + TMZ (CCTG CE.6: mOS 13.5 mo, HR ~0.51 methylated).
+        Both NCCN cat 1. TMZ alone if RT logistics are difficult; hypoRT+TMZ
+        if RT feasible and patient tolerates both.
+    if_false:
+      result: IND-GBM-NEWLY-DIAGNOSED-ELDERLY-HYPORT
+      notes: >
+        Age ≥70 + MGMT-unmethylated: hypofractionated RT alone (40 Gy/15 fx or
+        34 Gy/10 fx). TMZ adds minimal benefit without methylation (CCTG CE.6:
+        HR 0.75, borderline). Full Stupp 60 Gy/30 contraindicated — unacceptable
+        toxicity in elderly.
+
+sources:
+  - SRC-EF14-STUPP-2015
+  - SRC-NORDIC-GBM-MALMSTROM-2012
+  - SRC-CCTG-CE6-PERRY-2017
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  Three indications now wired: Stupp (fit <70), elderly TMZ (≥70 methylated),
+  elderly hypoRT (≥70 unmethylated or all ≥70 where RT is the preferred backbone).
+  TTFields (EF-14, Optune): NCCN cat 1 adjunct to TMZ maintenance for fit patients;
+  not modeled as separate indication — captured in Stupp notes. Not available in UA.
+  Recurrent GBM → ALGO-GBM-RECURRENT (bevacizumab, lomustine, clinical trial).

@@ -1,0 +1,102 @@
+id: REG-PEMBRO-PACLI-CARBO-BEV-CERVICAL
+name: "Pembrolizumab + paclitaxel + carboplatin ± bevacizumab (cervical cancer, 1L)"
+name_ua: "Пембролізумаб + паклітаксел + карбоплатин ± бевацизумаб (рак шийки матки, 1L)"
+alternate_names: ["KEYNOTE-826 regimen", "pembro+chemo±bev cervical"]
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV q3w"
+    schedule: "Until progression or max 35 cycles (~2 years)"
+    route: IV
+  - drug_id: DRUG-PACLITAXEL
+    dose: "175 mg/m² IV over 3h"
+    schedule: "Day 1 q3w; typically 6 cycles then pembro maintenance"
+    route: IV
+  - drug_id: DRUG-CARBOPLATIN
+    dose: "AUC 5 IV"
+    schedule: "Day 1 q3w with paclitaxel"
+    route: IV
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg IV (optional — if no contraindication)"
+    schedule: "Day 1 q3w; continue with pembro maintenance after chemo"
+    route: IV
+    optional: true
+    notes: "Bevacizumab used in ~63% of KEYNOTE-826 patients. Omit if: fistula history, uncontrolled HTN, proteinuria >2+, anticoagulation, recent hemorrhage."
+cycle_length_days: 21
+total_cycles: "6 cycles full combination; then pembro ± bev maintenance until progression or max 35 pembro cycles"
+toxicity_profile: severe
+premedication:
+  - "Paclitaxel premedication: dexamethasone 20mg PO ×2 (12h and 6h before), diphenhydramine 50mg IV, ranitidine/famotidine IV — prevents hypersensitivity"
+mandatory_supportive_care:
+  - "Blood pressure monitoring (bevacizumab hypertension)"
+  - "Urine protein (UPCR) before each bev dose"
+  - "TSH baseline and q12w (pembrolizumab thyroid)"
+  - "CBC before each cycle (paclitaxel myelosuppression)"
+monitoring_schedule_id:
+dose_adjustments:
+  - condition: "Grade 3-4 neutropenia or febrile neutropenia"
+    modification: "Hold paclitaxel; reduce to 135 mg/m² on resumption; G-CSF if needed"
+  - condition: "UPCR ≥ 2 g/24h"
+    modification: "Hold bevacizumab until < 2 g; discontinue if nephrotic range"
+  - condition: "Immune-mediated AE G≥2 from pembrolizumab"
+    modification: "Hold pembrolizumab; corticosteroids for G≥3"
+  - condition: "Grade ≥3 hypersensitivity to paclitaxel"
+    modification: "Discontinue paclitaxel; switch to docetaxel if retreating"
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Pembrolizumab registered in Ukraine; paclitaxel and carboplatin widely available. Bevacizumab registered. Reimbursement for pembrolizumab in cervical cancer limited — verify NSZU coverage or MOH special permit. Cisplatin alternative: if cisplatin-naive and fit, may use cisplatin 50mg/m² q3w instead of carboplatin AUC5 (KEYNOTE-826 allowed both; carboplatin preferred for tolerability in pretreated/renally limited patients)."
+sources:
+  - SRC-KEYNOTE826-COLOMBO-2021
+  - SRC-GOG240-TEWARI-2014
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+between_visit_watchpoints:
+  - trigger_ua: "Незвична або сильна кровотеча (вагінальна, ректальна, ясен)"
+    action_ua: "Зверніться до лікарні негайно — бевацизумаб підвищує ризик кровотечі"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Підвищений кров'яний тиск (≥150/100)"
+    action_ua: "Подзвоніть у клініку того ж дня — бевацизумаб-пов'язана гіпертензія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Оніміння, поколювання або слабкість у руках/ногах (нейропатія)"
+    action_ua: "Повідомте на наступному візиті — паклітаксел-нейропатія; поступово посилюється"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Температура ≥38°C або ознаки інфекції"
+    action_ua: "Зверніться до лікарні негайно — ризик нейтропенічного сепсису"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Алергічна реакція під час інфузії (свербіж, утруднення дихання, почервоніння)"
+    action_ua: "Зупиніть інфузію, повідомте медперсонал негайно — реакція на паклітаксел"
+    urgency: er_now
+    cycle_day_window: "Day 1 (infusion day)"
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Нова задишка або сухий кашель"
+    action_ua: "Подзвоніть у клініку — можливий імунний пневмоніт від пембролізумабу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Болі в животі, здуття або нудота після кожного прийому їжі"
+    action_ua: "Подзвоніть у клініку — ознаки кишкового ускладнення; ризик перфорації при бевацизумабі"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  KEYNOTE-826 backbone for metastatic/recurrent cervical cancer 1L.
+  Carboplatin AUC 5 preferred over cisplatin in this setting (cisplatin often
+  previously used in concurrent CRT). Bevacizumab addition: GOG-240 OS benefit
+  (HR 0.71) + KEYNOTE-826 design — use when no fistula/hemorrhage history.
+  Cisplatin alternative permitted: 50mg/m² if cisplatin-naive and renal function
+  adequate (CrCl ≥60).
+notes_ua: "Пембролізумаб 200мг + паклітаксел 175мг/м² + карбоплатин AUC5 ± бевацизумаб 15мг/кг. KEYNOTE-826 схема 1L. 6 циклів комбінації → підтримка пембролізумаб ± бев."
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
