@@ -2,15 +2,15 @@ id: ALGO-AITL-2L
 applicable_to_disease: DIS-AITL
 applicable_to_line_of_therapy: 2
 purpose: >
-  Select 2L+/relapsed AITL Indication. Three tracks reflecting AITL's
-  TFH-cell epigenetic biology (TET2/DNMT3A/IDH2 mutations frequent):
-  (1) AITL-specific epigenetic preferred → IND-AITL-2L-AZACITIDINE
-  (per RUYUAN-2 + UA-accessible hypomethylating agent); (2) HDAC-naive
-  with romidepsin access → IND-AITL-2L-ROMIDEPSIN (PTCL-classic HDACi);
-  (3) HDAC alternative for romidepsin-intolerant or accessibility →
-  IND-AITL-2L-BELINOSTAT.
+  Select 2L+/relapsed AITL Indication. Four tracks reflecting AITL biology:
+  (0) CD30+ ≥10% + BV-naive → IND-AITL-2L-BRENTUXIMAB (Cat 2A; ORR ~54%
+  CD30+ non-ALCL PTCL; Jacobsen 2015); (1) AITL epigenetic biology →
+  IND-AITL-2L-AZACITIDINE (TFH-TET2/DNMT3A/IDH2; UA-accessible HMA);
+  (2) HDAC-naive with romidepsin access → IND-AITL-2L-ROMIDEPSIN;
+  (3) HDAC alternative → IND-AITL-2L-BELINOSTAT.
 
 output_indications:
+  - IND-AITL-2L-BRENTUXIMAB
   - IND-AITL-2L-AZACITIDINE
   - IND-AITL-2L-ROMIDEPSIN
   - IND-AITL-2L-BELINOSTAT
@@ -19,6 +19,31 @@ default_indication: IND-AITL-2L-AZACITIDINE
 alternative_indication: IND-AITL-2L-ROMIDEPSIN
 
 decision_tree:
+  # Step 0 — CD30+ expression gate → brentuximab vedotin (BV) preferred.
+  # CD30+ AITL (~40-60% of cases, ≥10% by IHC): BV ORR ~54% in CD30+ non-ALCL PTCL
+  # (Jacobsen 2015, Blood; NCCN Cat 2A for CD30+ PTCL). BV is prioritized over
+  # azacitidine when CD30+ confirmed and BV accessible — higher ORR and clear
+  # molecular target. In Ukraine: BV not NSZU-reimbursed; azacitidine is accessible
+  # (MDS basket). When BV inaccessible, skip to azacitidine routing (step 1).
+  - step: 0
+    evaluate:
+      all_of:
+        - red_flag: RF-TCELL-CD30-POSITIVE
+        - condition: "No prior brentuximab vedotin exposure (BV-naive)"
+    if_true:
+      result: IND-AITL-2L-BRENTUXIMAB
+      notes: >
+        CD30+ AITL + BV-naive: brentuximab vedotin monotherapy preferred
+        (IND-AITL-2L-BRENTUXIMAB; REG-BV-MONO-SYSTEMIC-ALCL; NCCN Cat 2A;
+        ORR ~54% CD30+ non-ALCL PTCL; Jacobsen 2015). Re-biopsy for CD30 IHC
+        at relapse recommended (CD30 expression may change from 1L sample).
+        Bridge to alloSCT for fit responders (curative intent).
+        UA access note: BV not NSZU-reimbursed — if inaccessible, route to
+        IND-AITL-2L-AZACITIDINE (step 1 below; UA-accessible; AITL epigenetic biology).
+    if_false:
+      next_step: 1
+    notes: "CD30+ BV gate added 2026-05-04 (Workstream AJ). Only fires if RF-TCELL-CD30-POSITIVE AND BV-naive."
+
   # Step 1 — AITL epigenetic biology preferred → azacitidine.
   # Default for UA accessibility (azacitidine is on НСЗУ basket for MDS,
   # repurposable for AITL with hematologist sign-off).
@@ -64,16 +89,26 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-04"
 notes: >
+  AITL 2L ROUTING SUMMARY:
+
+  Priority routing (step 0 → 1 → 2 → 3):
+  (0) CD30+ + BV-naive → IND-AITL-2L-BRENTUXIMAB (BV; Cat 2A; ORR ~54%;
+      UA: not NSZU-reimbursed; if inaccessible → fall to step 1)
+  (1) Epigenetic/HMA preferred (broad condition) → IND-AITL-2L-AZACITIDINE
+      (Cat 2A; AITL TFH-epigenetic biology; UA: accessible via MDS basket)
+  (2) HDACi-naive + romidepsin accessible → IND-AITL-2L-ROMIDEPSIN (Cat 2A)
+  (3) Romidepsin inaccessible/intolerant → IND-AITL-2L-BELINOSTAT (Cat 2A)
+
+  AUTHORED 2026-05-04:
+  - IND-AITL-2L-BRENTUXIMAB: CD30+ gate wired at step 0 (BV Cat 2A; ORR ~54%)
+
   OOS / wiring gaps:
-  (1) Brentuximab vedotin for CD30+ AITL relapse not modeled as 2L
-  indication (CD30+ PTCL/AITL CHP-Bv 1L exists; relapsed-CD30+ BV
-  mono needs IND).
-  (2) Allogeneic SCT for fit younger CR2 — referral, outside KB.
-  (3) Pralatrexate (FOLOTYN) for PTCL/AITL — historic option, not
-  modeled.
-  (4) Combination HDACi+HMA (romidepsin+azacitidine, OPTILY-1) —
-  emerging, not modeled as separate indication.
-  (5) Surface to hematologist: should we add IND-AITL-3L-ALLO-SCT
-  referral indication, or keep allo-SCT as MDT free-text only?
+  (1) Allogeneic SCT for fit younger CR2 — referral, outside KB.
+  (2) Pralatrexate (FOLOTYN) for PTCL/AITL — historic option, not modeled.
+  (3) Combination HDACi+HMA (romidepsin+azacitidine, OPTILY-1) — emerging,
+      not modeled as separate indication.
+  (4) Step 0 BV gate is free-text condition for "BV-accessible" — no pan-disease
+      RF for BV-accessible currently. Wires via RF-TCELL-CD30-POSITIVE (does
+      exist) but BV-accessible condition is MDT free-text.

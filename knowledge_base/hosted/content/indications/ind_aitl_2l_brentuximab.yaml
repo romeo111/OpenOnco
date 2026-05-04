@@ -1,0 +1,143 @@
+id: IND-AITL-2L-BRENTUXIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-AITL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory AITL (angioimmunoblastic T-cell lymphoma) after ≥1 prior systemic line"
+    - "Prior systemic therapy: CHOEP, CHP-Bv, CHOP, or equivalent anthracycline-based induction"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L, CrCl ≥30 mL/min"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD30-IHC
+      required: true
+      value_constraint: "positive (≥10% tumor cells by IHC)"
+      notes: >
+        CD30 expression in AITL: ~40-60% of cases express CD30. IHC testing on
+        most recent biopsy (at relapse if possible) required before prescribing.
+        CD30 expression can change between 1L and relapse — re-biopsy recommended
+        to confirm CD30 status.
+  biomarker_requirements_excluded:
+    - "Prior brentuximab vedotin exposure (any line) — cross-resistance; use azacitidine (IND-AITL-2L-AZACITIDINE) or romidepsin"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 3 is a relative contraindication given myelosuppression and peripheral neuropathy risk. MDT decision."
+
+recommended_regimen: REG-BV-MONO-SYSTEMIC-ALCL
+concurrent_therapy: []
+followed_by:
+  - "AlloSCT consolidation in fit responders achieving CR or near-CR — only curative option for r/r AITL"
+  - "Response assessment after cycles 2-4 (CT/PET; CR/PR = bridge to alloSCT discussion)"
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~54% in CD30+ non-ALCL T-cell lymphomas (Jacobsen 2015, Blood; includes AITL and PTCL-NOS subsets)"
+  cr_rate: "~20-38% (AITL subset; less than ALCL which has ~57% CR with BV)"
+  median_pfs_months: "~6-9 (non-ALCL CD30+ PTCL; shorter than ALCL given lower CD30 expression density)"
+  notes: >
+    Brentuximab vedotin (BV) in CD30+ non-ALCL PTCL including AITL:
+    - Jacobsen 2015 (Blood, phase II; n=35 non-ALCL CD30+ T-cell NHL): ORR 54%,
+      CR 38% — included AITL and PTCL-NOS subsets.
+    - CD30 expression level in AITL is typically lower than ALCL (ALCL >90%;
+      AITL ~40-60%) — response rates in AITL subgroup are lower than systemic ALCL.
+    - No dedicated phase 3 RCT for BV monotherapy in AITL specifically.
+    - NCCN PTCL 2025 Category 2A for BV monotherapy in CD30+ PTCL (excluding ALCL
+      where it's Cat 1). Expert consensus supports BV for CD30+ AITL at relapse.
+    AlloSCT consolidation in responding fit patients is the curative aim. BV
+    response is a bridge — not a definitive therapy without transplant consolidation.
+
+hard_contraindications:
+  - "Prior brentuximab vedotin exposure (any line — cross-resistance to ADC)"
+  - "CD30-negative AITL (IHC <10% CD30) — use azacitidine or romidepsin/belinostat"
+  - "Grade ≥2 pre-existing peripheral neuropathy (CTCAE v5) — BV-associated MMAE neurotoxicity additive"
+  - "Active uncontrolled infection (BV is myelosuppressive; septic risk)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "CD30-negative (<10% IHC) or BV-experienced → IND-AITL-2L-AZACITIDINE (NCCN Cat 2A; epigenetic therapy preferred for AITL TFH biology; azacitidine UA-accessible)"
+  - condition: "Grade ≥2 peripheral neuropathy → IND-AITL-2L-AZACITIDINE or IND-AITL-2L-ROMIDEPSIN (non-neurotoxic alternatives)"
+  - condition: "AlloSCT-eligible in CR2 → refer immediately to transplant center"
+  - condition: "BV response but progression → IND-AITL-2L-AZACITIDINE as next line (AITL epigenetic sensitivity TET2/DNMT3A mutations)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - "CD30 IHC: confirm ≥10% positivity at relapse (re-biopsy of accessible site preferred)"
+  - "CT neck/chest/abdomen/pelvis + PET-CT: baseline staging at relapse"
+  - "Bone marrow aspirate + biopsy: at relapse (AITL frequently involves marrow)"
+  - "ECHO (LVEF ≥50%): baseline (MMAE cardiotoxicity rare but check baseline)"
+
+desired_tests:
+  - "TET2/DNMT3A/IDH2 mutation profiling (NGS): AITL-typical epigenetic mutations — guides consideration of azacitidine as next line post-BV (or concurrent discussion)"
+  - "EBER ISH (EBV-encoded RNA in situ hybridization): AITL frequently EBV-associated in microenvironment — prognostic information"
+  - "T-cell receptor gene rearrangement: clonal T-cell confirmation; MRD tracking"
+  - "AlloSCT donor search: initiate HLA typing and donor search concurrently with BV (lead time for transplant is 3-6 months)"
+
+rationale: >
+  Brentuximab vedotin (BV; DRUG-BRENTUXIMAB-VEDOTIN) is an antibody-drug conjugate
+  (ADC) consisting of anti-CD30 monoclonal antibody (cAC10) linked to the microtubule
+  inhibitor MMAE (monomethyl auristatin E). BV binds CD30 on tumor cell surface →
+  internalization → lysosomal cleavage → MMAE release → mitotic arrest and apoptosis.
+
+  In AITL specifically:
+  - CD30 expression: ~40-60% of AITL cases express CD30 (lower than ALCL, which is ~100%)
+  - AITL pathogenesis: TFH (T follicular helper) cell origin, characterized by
+    epigenetic mutations (TET2, DNMT3A, IDH2), hypervascular stroma, B-cell
+    activation/EBV, and CD30+ tumor cells (expressing CD30 at lower density than ALCL)
+  - BV activity in CD30+ AITL: ORR ~54% in mixed CD30+ non-ALCL PTCL series
+    (Jacobsen 2015, Blood); AITL subgroup CR rates ~20-38%
+
+  Rationale for BV priority over azacitidine in CD30+ AITL:
+  - BV ORR (~54%) > azacitidine ORR in AITL (~25-50% in limited series, RUYUAN-2
+    comparable but single-center AITL data)
+  - BV is the only FDA-approved ADC for CD30+ T-cell NHL (ALCL/MF/PTCL)
+  - NCCN Cat 2A consensus endorsement for CD30+ PTCL including AITL
+  - In Ukraine: BV is not NSZU-reimbursed but azacitidine is (for MDS/CMML);
+    access considerations may reverse the preference in practice — MDT discussion
+
+  Key safety: MMAE-associated peripheral sensory neuropathy (~56% any grade, ~11%
+  Grade 3 in ALCL trials) — additive with prior cisplatin/vincristine neuropathy from
+  CHOEP. Grade ≥2 neuropathy = dose reduction (1.2 mg/kg) or discontinuation.
+
+rationale_ua: >
+  Брентуксимаб ведотін (BV; ADC анти-CD30) — для CD30+ AITL рецидивуючого.
+  CD30+ в AITL ~40-60% випадків (нижче, ніж ALCL ~100%). ORR ~54% у CD30+ не-ALCL
+  PTCL (Jacobsen 2015). NCCN Категорія 2A для CD30+ PTCL включно з AITL.
+  В Україні: BV не відшкодовується НСЗУ (на відміну від азацитидину); MDT рішення
+  щодо доступу. MMAE-асоційована периферична нейропатія (~56%) — ключова токсичність;
+  знижувати дозу при ≥2 ступ. нейропатії.
+  Відповідь → консультація щодо алоТГСК (єдиний куративний шлях при р/р AITL).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN T-Cell Lymphomas 2025: brentuximab vedotin monotherapy Category 2A for
+      CD30+ relapsed/refractory PTCL (non-ALCL; includes AITL). Based on Jacobsen
+      2015 phase II and clinical consensus.
+  - source_id: SRC-ESMO-PTCL-2024
+    position: context
+
+do_not_do:
+  - "НЕ призначати при CD30 <10% (ІГХ) — відсутність мішені; азацитидін або ромідепсин"
+  - "НЕ призначати при попередньому BV (будь-яка лінія) — перехресна резистентність"
+  - "НЕ призначати при периферичній нейропатії ≥2 ступ. — MMAE нейротоксичність адитивна"
+  - "CD30 тест на матеріалі рецидиву (не лише первинної біопсії) — CD30 може змінитися"
+  - "При відповіді → ініціювати типування HLA та пошук донора (алоТГСК — куративна мета)"
+  - "В Україні: BV не НСЗУ; перевірити доступ (компасійне, клінічне дослідження) перед початком"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
