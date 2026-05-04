@@ -25,14 +25,14 @@ decision_tree:
         - condition: "T-cell or NK-cell PTLD (typically EBV-negative)"
         - condition: "Failed reduce-IS + rituximab attempt"
     if_true:
-      next_step: 1b
+      next_step: 4
     if_false:
       next_step: 2
 
-  # Step 1b — Sub-gate for chemotherapy route: monomorphic + EBV-negative +
+  # Step 4 — Sub-gate for chemotherapy route: monomorphic + EBV-negative +
   # double-hit features (MYC + BCL2/BCL6 rearrangement or high IPI) → DA-EPOCH-R.
   # Otherwise → R-CHOP (EBV+ monomorphic, Burkitt-like, T/NK-PTLD).
-  - step: 1b
+  - step: 4
     evaluate:
       all_of:
         - condition: "Monomorphic DLBCL-type PTLD (not T/NK-PTLD, not Burkitt-like)"
@@ -85,7 +85,7 @@ last_reviewed: "2026-05-04"
 notes: >
   UPDATED 2026-05-04 (Workstream DS): Added IND-PTLD-1L-DA-EPOCH-R and
   IND-PTLD-1L-TABELECLEUCEL-EBV-CTL to output_indications.
-  Step 1 now routes to step 1b (sub-gate) for chemotherapy selection:
+  Step 1 now routes to step 4 (sub-gate) for chemotherapy selection:
     - EBV-negative monomorphic DLBCL-type → IND-PTLD-1L-DA-EPOCH-R (preferred)
     - EBV+ monomorphic, Burkitt-like, T/NK → IND-PTLD-1L-RCHOP
   IND-PTLD-1L-TABELECLEUCEL-EBV-CTL: tabelecleucel (Ebvallo; FDA Nov 2022;

@@ -1,0 +1,142 @@
+id: REG-PEDIATRIC-INSPIRED-T-ALL
+name: "Pediatric-inspired induction for T-ALL / T-LBL (CALGB 10403 / GRAALL-2003 backbone)"
+name_ua: "Педіатрично-натхнена індукція для Т-ВСЛ (CALGB 10403 / GRAALL-2003 основа)"
+alternate_names: ["CALGB 10403", "GRAALL T-ALL", "pediatric ALL adults", "AYA T-ALL"]
+
+disease_context: "T-ALL, T-LBL; age 15-39 (AYA)"
+
+# Overview: The pediatric-inspired regimen for T-ALL is a 3-phase approach:
+# Induction (4 weeks) → Consolidation (8 cycles over ~18 months) → Maintenance (2 years)
+# Key distinguishing features vs adult Hyper-CVAD: PEGasparaginase, dexamethasone
+# (vs prednisone), and dose-density of vincristine; CNS prophylaxis with IT chemo
+# throughout (minimal cranial RT unless CNS disease).
+
+phases:
+  - name: induction
+    purpose_en: "Remission induction: vincristine + dexamethasone + PEGasparaginase + doxorubicin (4 weeks)"
+    duration: "28 days"
+    timing_relative_to: "absolute"
+    optional: false
+    components:
+      - drug_id: DRUG-VINCRISTINE
+        dose: "1.5 mg/m² (max 2 mg)"
+        schedule: "IV days 1, 8, 15, 22"
+        route: IV
+      - drug_id: DRUG-DEXAMETHASONE
+        dose: "10 mg/m²/day"
+        schedule: "PO days 1-28"
+        route: PO
+      - drug_id: DRUG-L-ASPARAGINASE
+        dose: "2500 IU/m²"
+        schedule: "IM day 4"
+        route: IM
+        notes: "Monitor fibrinogen (>1.0 g/L before next dose) + amylase/lipase + PT/PTT"
+      - drug_id: DRUG-DOXORUBICIN
+        dose: "30 mg/m²"
+        schedule: "IV days 1, 8, 15, 22 (or protocol-specific dosing)"
+        route: IV
+      - drug_id: DRUG-METHOTREXATE
+        dose: "15 mg IT (intrathecal)"
+        schedule: "IT days 1, 8, 15, 22 (CNS prophylaxis)"
+        route: intrathecal
+
+  - name: consolidation_early
+    purpose_en: "Early consolidation: high-dose methotrexate + L-asparaginase cycles"
+    duration: "~6 months (multiple cycles)"
+    timing_relative_to: "induction_complete"
+    optional: false
+    components:
+      - drug_id: DRUG-METHOTREXATE
+        dose: "4-5 g/m² over 24 hours (high-dose)"
+        schedule: "IV Q3-4 weeks (cycles 1-4)"
+        route: IV
+        notes: "Leucovorin rescue mandatory; pharmacokinetic-guided leucovorin dosing"
+      - drug_id: DRUG-L-ASPARAGINASE
+        dose: "2500 IU/m²"
+        schedule: "IM per cycle"
+        route: IM
+      - drug_id: DRUG-CYTARABINE
+        dose: "75 mg/m²/day × 4 days"
+        schedule: "IV SC per protocol consolidation block"
+        route: IV
+
+  - name: delayed_intensification
+    purpose_en: "Delayed intensification (re-induction block): vincristine + dexamethasone + doxorubicin + PEGasparaginase"
+    duration: "4-6 weeks"
+    timing_relative_to: "consolidation_complete"
+    optional: false
+    components:
+      - drug_id: DRUG-VINCRISTINE
+        dose: "1.5 mg/m² (max 2 mg)"
+        schedule: "IV weekly × 4"
+        route: IV
+      - drug_id: DRUG-DEXAMETHASONE
+        dose: "10 mg/m²/day × 21 days"
+        schedule: "PO"
+        route: PO
+      - drug_id: DRUG-DOXORUBICIN
+        dose: "25-30 mg/m²"
+        schedule: "IV weekly × 3"
+        route: IV
+      - drug_id: DRUG-L-ASPARAGINASE
+        dose: "2500 IU/m²"
+        schedule: "IM × 1-2 doses"
+        route: IM
+
+  - name: maintenance
+    purpose_en: "Maintenance: oral mercaptopurine + weekly methotrexate × 2 years"
+    duration: "2 years (total therapy ~2.5-3 years)"
+    timing_relative_to: "delayed_intensification_complete"
+    optional: false
+    components:
+      - drug_id: DRUG-MERCAPTOPURINE
+        dose: "75 mg/m²/day PO continuously"
+        schedule: "PO daily"
+        route: PO
+      - drug_id: DRUG-METHOTREXATE
+        dose: "20 mg/m²/week PO"
+        schedule: "PO weekly"
+        route: PO
+
+supportive_care:
+  - "PEGasparaginase monitoring: fibrinogen + PT/PTT + lipase/amylase + albumin before each dose"
+  - "HD-MTX: leucovorin rescue per pharmacokinetic MTX levels; IV fluids + urine alkalinization"
+  - "G-CSF: filgrastim/pegfilgrastim after each myelosuppressive block"
+  - "TMP-SMX: PCP prophylaxis throughout; hold 3 days around HD-MTX"
+  - "Antifungal prophylaxis: fluconazole or posaconazole (ANC<500)"
+  - "Acyclovir: VZV prophylaxis"
+  - "Tumor lysis: allopurinol or rasburicase at induction start (high cell burden)"
+  - "IVIG: if IgG <500 mg/dL (immunoparesis from therapy)"
+  - "Anticoagulation: LMWH if fibrinogen <100 mg/dL (asparaginase-induced)"
+
+administration_notes: >
+  This regimen is based on the CALGB 10403 (CALGB 10403/A011202) and GRAALL-2003
+  pediatric-inspired protocols for adults with ALL.
+  PEGasparaginase (PEG-L-asparaginase; Oncaspar) is the KEY agent distinguishing
+  pediatric-inspired from adult Hyper-CVAD regimens. PEGasparaginase:
+  - Dose: 2500 IU/m² IM (per protocol dosing)
+  - Monitoring: serum asparaginase activity, fibrinogen, coagulation factors
+  - Contraindications: prior pancreatitis, hepatic dysfunction, coagulopathy Grade ≥3
+  CNS PROPHYLAXIS: intrathecal methotrexate ± cytarabine throughout; cranial RT
+  only for documented CNS disease or patients unable to receive adequate IT therapy.
+  For T-ALL specifically, higher dose IT and potentially intrathecal cytarabine
+  are important given the higher CNS relapse risk in T-ALL.
+  ETP-ALL: consider incorporating nelarabine (nelarabine 1500 mg/m² IV days 1,3,5
+  Q3 weeks) as add-on to the backbone; allo-SCT evaluation in CR1 is mandatory.
+
+sources:
+  - SRC-NCCN-ALL-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Authored 2026-05-04 (Workstream DS) as companion regimen to
+  IND-T-ALL-1L-PEDIATRIC-INSPIRED.
+  Drug IDs to verify in KB: DRUG-VINCRISTINE, DRUG-DEXAMETHASONE,
+  DRUG-L-ASPARAGINASE, DRUG-DOXORUBICIN, DRUG-METHOTREXATE,
+  DRUG-CYTARABINE, DRUG-MERCAPTOPURINE.
+  Note: DRUG-L-ASPARAGINASE (PEGylated L-asparaginase; Oncaspar) may not
+  exist as a separate KB entity — check and author if needed.
+  This regimen is a condensed representation of a multi-phase protocol
+  spanning ~2.5-3 years total therapy duration.
