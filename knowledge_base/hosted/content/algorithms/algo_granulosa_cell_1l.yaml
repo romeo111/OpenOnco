@@ -15,6 +15,7 @@ purpose: >
 
 output_indications:
   - IND-GRANULOSA-CELL-1L-CARBO-PACLITAXEL
+  - IND-GRANULOSA-CELL-2L-HORMONAL
 
 default_indication: IND-GRANULOSA-CELL-1L-CARBO-PACLITAXEL
 alternative_indication: null
@@ -117,6 +118,22 @@ decision_tree:
         Tumor markers: inhibin B and AMH at baseline and before each cycle.
         Clinical trial enrollment is strongly encouraged given rare disease status.
         Ukraine: carboplatin and paclitaxel are NSZU-reimbursed; accessible.
+      alternatives:
+        - indication_id: IND-GRANULOSA-CELL-2L-HORMONAL
+          nccn_category: "2A"
+          criteria: >
+            Adult GCT recurrent or refractory after platinum-based chemotherapy (carbo+paclitaxel);
+            OR endocrine-sensitive recurrence with low-volume disease and slow growth;
+            OR patient intolerant of/declining chemotherapy; ECOG 0-2; premenopausal or
+            postmenopausal (aromatase inhibitor preferred in postmenopausal). LOT=2.
+          note: >
+            Hormonal therapy for recurrent/refractory adult GCT (NCCN Cat 2A; no RCT;
+            retrospective series only): letrozole 2.5 mg PO QD (preferred postmenopausal)
+            OR anastrozole 1 mg PO QD; leuprolide 3.75 mg IM q28d (premenopausal
+            ovarian suppression); ORR ~40-50% in retrospective series (case series and
+            registry data). Endocrine-sensitive adult GCT: inhibin B and AMH as response
+            markers. Duration: until progression or unacceptable toxicity. Clinical trial
+            enrollment prioritized given rare disease.
     if_false:
       result: null
       notes: >
@@ -149,7 +166,8 @@ notes: >
   Primary systemic therapy: carboplatin + paclitaxel (NCCN 2A; preferred over BEP
   due to better tolerability; retrospective evidence supports ~70-80% ORR).
   LATE RECURRENCE is the hallmark of adult GCT — surveillance for 15+ years required.
-  Hormonal therapy (letrozole/anastrozole/leuprolide) for recurrent/refractory disease
-  not yet authored as a separate KB indication (IND-GRANULOSA-CELL-2L-HORMONAL pending).
+  UPDATED 2026-05-04 (Workstream FX): IND-GRANULOSA-CELL-2L-HORMONAL (letrozole/
+  anastrozole/leuprolide; Cat 2A) wired at step 3 if_true as 2L hormonal alternative
+  for endocrine-sensitive or chemo-intolerant recurrent adult GCT. Gap CLOSED.
   Clinical trial enrollment is the highest priority for advanced/recurrent adult GCT
   given absence of approved targeted therapy and weak retrospective evidence base.

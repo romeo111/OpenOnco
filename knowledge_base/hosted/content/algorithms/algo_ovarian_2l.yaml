@@ -20,6 +20,8 @@ output_indications:
   - IND-OVARIAN-2L-PLAT-RES-PLD-BEV
   - IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
   - IND-OVARIAN-2L-PLAT-RES-TOPOTECAN
+  - IND-OVARIAN-3L-POST-PARPi-POST-MIRVE
+  - IND-OVARIAN-3L-TRABECTEDIN-PLD
 
 # Defaults: standard track = OCEANS carbo+gem+bev (platinum-sensitive
 # default, full UA NSZU coverage); aggressive track = mirvetuximab
@@ -83,6 +85,24 @@ decision_tree:
         - red_flag: RF-OVARIAN-FRA-HIGH-ACTIONABLE
     if_true:
       result: IND-OVARIAN-2L-PLAT-RES-MIRVETUXIMAB
+      notes: >
+        FRα-high platinum-resistant ovarian: mirvetuximab soravtansine preferred
+        (MIRASOL; NCCN Cat 1). After progression on mirvetuximab: PLD monotherapy or
+        sequential single-agent chemo — see IND-OVARIAN-3L-POST-PARPi-POST-MIRVE.
+      alternatives:
+        - indication_id: IND-OVARIAN-3L-POST-PARPi-POST-MIRVE
+          nccn_category: "2A"
+          criteria: >
+            Platinum-resistant ovarian cancer; progressed on prior PARPi AND prior
+            mirvetuximab (or mirvetuximab-ineligible FRα-low); LOT ≥3; ECOG 0-2;
+            further chemotherapy intent (palliative or response). PLD monotherapy
+            first choice; topotecan or gemcitabine as alternatives.
+          note: >
+            3L+ platinum-resistant ovarian after PARPi and mirvetuximab exhaustion
+            (NCCN Cat 2A): PLD 40-50 mg/m² IV q28d monotherapy (preferred 3L+ salvage;
+            PPE monitoring; pegylated formulation). Topotecan 1.25 mg/m² d1-5 q21d or
+            gemcitabine 1000 mg/m² d1,8 q21d as alternatives. ORR per single agent
+            ~5-20% in heavily pretreated setting. Clinical trial strongly preferred.
     if_false:
       next_step: 6
 
@@ -97,6 +117,24 @@ decision_tree:
         - red_flag: RF-OVARIAN-PLATINUM-RESISTANT
     if_true:
       result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
+      notes: >
+        Platinum-resistant FRα-low: AURELIA weekly paclitaxel+bev (NCCN Cat 1). After
+        AURELIA progression: trabectedin+PLD is a NCCN Cat 2A salvage option — see
+        IND-OVARIAN-3L-TRABECTEDIN-PLD in alternatives.
+      alternatives:
+        - indication_id: IND-OVARIAN-3L-TRABECTEDIN-PLD
+          nccn_category: "2A"
+          criteria: >
+            Platinum-resistant ovarian cancer; LOT ≥3; progressed on prior taxane + bev
+            (AURELIA-like regimen); ECOG 0-2; adequate hepatic function (trabectedin
+            hepatotoxic: bilirubin ≤ULN, ALT ≤2.5 × ULN); no severe myelosuppression.
+            Trabectedin 1.1 mg/m² IV over 3h day 1 q21d + PLD 30 mg/m² IV day 1.
+          note: >
+            Trabectedin + PLD for platinum-resistant ovarian LOT ≥3 (OVA-301; Del Conte
+            2014 Ann Oncol; NCCN Cat 2A): ORR ~35% trabectedin+PLD vs 23% PLD alone
+            (HR PFS 0.73); mPFS 7.3 vs 5.8 mo. Hepatotoxicity monitoring (LFT q3w
+            mandatory; G3+ ALT elevation in ~10%). Trabectedin: named-patient import in
+            Ukraine. Alternative: PLD monotherapy 40-50 mg/m² q28d if trabectedin inaccessible.
     if_false:
       result: IND-OVARIAN-2L-PLAT-RES-WEEKLY-PAC-BEV
     notes: "Default fall-through — platinum-resistant FRα-low cohort routes to AURELIA weekly pac+bev (PLD/topotecan as toxicity-driven alternatives via Indication notes)."
@@ -105,7 +143,7 @@ sources:
   - SRC-NCCN-OVARIAN-2025
   - SRC-ESMO-OVARIAN-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
   Decision-tree primary axes: PFI > BRCA/HRD > FRα. Maintenance PARPi
   surfaces via the chemo Indication's `followed_by` chain (BRCA-mut →
@@ -122,10 +160,9 @@ notes: >
   (2) FRα testing is gated on the patient already having tissue
   available — re-biopsy at platinum-resistant relapse is preferred
   over relying on archival primary tumor (expression can shift).
-  (3) Trabectedin+PLD (IND-OVARIAN-3L-TRABECTEDIN-PLD) and
-  topotecan single-agent (IND-OVARIAN-2L-PLAT-RES-TOPOTECAN) are
-  later-line / salvage options NOT routed by this 2L algorithm; they
-  surface via MDT free-text or a future ALGO-OVARIAN-3L.
+  (3) IND-OVARIAN-3L-TRABECTEDIN-PLD now wired at step 6 if_true (AURELIA track)
+  and IND-OVARIAN-3L-POST-PARPi-POST-MIRVE at step 5 if_true (mirvetuximab track)
+  as 3L+ alternatives — CLOSED (Workstream FX 2026-05-04).
   (4) Frailty (RF-OVARIAN-FRAILTY-AGE) and perioperative VTE
   (RF-OVARIAN-PERIOPERATIVE-VTE) modify dosing / drop bev — surfaced
   as red_flags_triggering_alternative on each Indication, not as

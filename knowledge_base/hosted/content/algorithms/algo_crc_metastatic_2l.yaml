@@ -21,6 +21,7 @@ output_indications:
   - IND-CRC-METASTATIC-3L-REGORAFENIB
   - IND-CRC-METASTATIC-3L-TRIFLURIDINE-TIPIRACIL-MONO
   - IND-CRC-3L-FRUQUINTINIB
+  - IND-CRC-METASTATIC-3L-RECHALLENGE-EGFRI
 
 default_indication: IND-CRC-METASTATIC-2L-FOLFIRI-BEV
 alternative_indication: IND-CRC-METASTATIC-3L-TAS102-BEV
@@ -111,6 +112,24 @@ decision_tree:
         - condition: "BRAF V600E excluded (ruled out via step 2)"
     if_true:
       result: IND-CRC-METASTATIC-2L-EGFRI-RECHALLENGE
+      notes: >
+        ctDNA-guided EGFRi rechallenge for RAS-WT mCRC (CHRONOS model). The
+        IND-CRC-METASTATIC-3L-RECHALLENGE-EGFRI entity provides a 3L+ labeled
+        variant when rechallenge occurs later in the treatment sequence — see alternatives.
+      alternatives:
+        - indication_id: IND-CRC-METASTATIC-3L-RECHALLENGE-EGFRI
+          nccn_category: "2B"
+          criteria: >
+            RAS-WT mCRC at time of rechallenge; ctDNA RAS-WT confirmed on liquid biopsy;
+            prior anti-EGFR response (PR or SD ≥6 mo) in earlier line; LOT ≥3; intervening
+            EGFR-free line(s) completed (cetuximab-binding clone washout). ctDNA NGS
+            infrastructure required (Guardant 360 or equivalent). BRAF V600E excluded.
+          note: >
+            ctDNA-guided anti-EGFR rechallenge (cetuximab ± irinotecan) at LOT ≥3 for
+            RAS-WT mCRC (NCCN Cat 2B; CHRONOS Cremolini 2023 Nat Med; ORR 30.2%;
+            mPFS 4.0 mo). Liquid biopsy RAS-WT at rechallenge timepoint is the
+            biomarker gate (RAS-mutant clones re-expand at rechallenge failure — re-test).
+            Not reimbursed in Ukraine (ctDNA NGS ~$1500-3000 USD; cetuximab access limited).
     if_false:
       next_step: 6
     notes: "Partially wired - RF-CRC-RAS-WT gates extended-RAS wild-type baseline (CHRONOS biomarker selection for cetuximab rechallenge post-FOLFOX failure); ctDNA-timepoint RAS-WT, prior-EGFR-response, and intervening-line criteria remain MDT-text (CHRONOS-style ctDNA timing and prior-response history not RF-modelled)."
@@ -187,6 +206,8 @@ notes: >
   (KRYSTAL-10; ORR 46%; FDA Dec 2023; NCCN Cat 1) alongside sotorasib+cetuximab (CodeBreaK 300;
   ORR 26%; NCCN Cat 1). Both Cat 1; MDT selection by QTc/PPI/drug-interaction profile.
 
+  UPDATED 2026-05-04 (Workstream FX): IND-CRC-METASTATIC-3L-RECHALLENGE-EGFRI (Cat 2B)
+  wired at step 5 if_true (EGFRi rechallenge track) as 3L+ labeled variant.
   Wiring gaps / future work:
   (1) RF-CRC-KRAS-G12C-ACTIONABILITY and RF-CRC-HER2-AMP-ACTIONABILITY
   do not yet exist as red-flag entities — algorithm currently uses

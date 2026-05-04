@@ -6,6 +6,7 @@ purpose: >
 
 output_indications:
   - IND-EATL-1L-CHOEP-AUTOSCT
+  - IND-EATL-2L-ICE
 
 default_indication: IND-EATL-1L-CHOEP-AUTOSCT
 alternative_indication: IND-EATL-1L-CHOEP-AUTOSCT
@@ -17,12 +18,34 @@ decision_tree:
         - condition: "EATL diagnosis confirmed"
     if_true:
       result: IND-EATL-1L-CHOEP-AUTOSCT
+      notes: >
+        1L EATL: CHOEP × 6 + autoSCT in CR1. For relapsed/refractory after CHOEP:
+        ICE salvage bridge to alloSCT (2L) — see IND-EATL-2L-ICE in alternatives.
+      alternatives:
+        - indication_id: IND-EATL-2L-ICE
+          nccn_category: "2A"
+          criteria: >
+            EATL relapsed or refractory after 1L CHOEP (± autoSCT in CR1); ECOG 0-2;
+            fit for intensive salvage; alloSCT donor identification in progress
+            (ICE is bridging intent). CD30+ re-biopsy at relapse: if CD30+, brentuximab
+            vedotin monotherapy alternative. ECOG ≥3 or prior autoSCT: less intensive
+            regimen preferred; clinical trial if available.
+          note: >
+            ICE (ifosfamide + carboplatin + etoposide) salvage for relapsed/refractory
+            EATL (NCCN Cat 2A; extrapolated from aggressive T-cell lymphoma data;
+            ORR ~40-60% ICE in relapsed PTCL; no EATL-specific RCT). 2L ICE as
+            bridge to alloSCT consolidation (GVL rationale — GVT effect in EATL
+            supports alloHCT over autoSCT in chemosensitive relapse). Overall prognosis
+            poor (median OS ~10 mo from relapse); clinical trial strongly preferred.
     if_false:
       result: IND-EATL-1L-CHOEP-AUTOSCT
     notes: "Free-text condition without matching disease-scoped RF; engine routes to default. Flag for RF authoring."
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
-  Single track для 1L EATL. Future: окрема Indication для CD30+ subtype
-  (BV-CHP замість CHOEP). Refractory → salvage (ICE + allo-SCT consideration).
+  Single track for 1L EATL. Future: separate Indication for CD30+ subtype
+  (BV-CHP replacing CHOEP). Refractory track now wired:
+  UPDATED 2026-05-04 (Workstream FX): IND-EATL-2L-ICE wired as Cat 2A
+  alternative at step 1 if_true (CHOEP+autoSCT track) for relapsed/refractory
+  EATL — ICE bridging to alloSCT. Gap CLOSED.
