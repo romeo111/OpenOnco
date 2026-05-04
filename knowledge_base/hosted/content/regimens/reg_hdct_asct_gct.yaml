@@ -1,0 +1,110 @@
+id: REG-HDCT-ASCT-GCT
+disease_context: DIS-TESTICULAR-GCT
+line_of_therapy: 2
+plan_track: aggressive
+
+regimen_type: "high_dose_chemotherapy_with_autologous_stem_cell_rescue"
+protocol_name: "Indiana University High-Dose Chemotherapy + Autologous Peripheral Stem Cell Transplant"
+
+agents:
+  - drug_id: DRG-CARBOPLATIN
+    dose: "700 mg/m² IV per day × 3 days"
+    route: IV
+    schedule: "Days 1-3 of each HDCT cycle (× 2 tandem cycles, approximately 4-6 weeks apart)"
+    administration_notes: >
+      High-dose carboplatin: dose calculated by body surface area (NOT Calvert formula at
+      supralethal doses). 700 mg/m²/day × 3 days = 2100 mg/m² total per cycle.
+      Aggressive IV hydration required (3-4 L/day). Anti-emetic prophylaxis mandatory
+      (highly emetogenic — 5-HT3 antagonist + NK1 antagonist + dexamethasone).
+    dose_modifications:
+      - trigger: "CrCl <50 mL/min at HDCT cycle"
+        action: "Dose reduction per protocol — discuss with transplant team; potential switch to AUC-based dosing"
+      - trigger: "Prior cisplatin total cumulative dose (ototoxicity/renal risk)"
+        action: "Audiogram + detailed renal assessment before high-dose carboplatin"
+  - drug_id: DRG-ETOPOSIDE
+    dose: "750 mg/m² IV per day × 3 days"
+    route: IV
+    schedule: "Days 1-3 concurrent with carboplatin (× 2 tandem HDCT cycles)"
+    administration_notes: >
+      High-dose etoposide: 750 mg/m²/day × 3 days = 2250 mg/m² total per cycle.
+      Dilute in ≥500 mL NS; infuse over ≥1h per dose. Mucositis prophylaxis mandatory.
+      Etoposide-associated secondary leukemia (AML): risk ~1% with high cumulative dose.
+    dose_modifications:
+      - trigger: "Hepatic impairment (bilirubin >1.5 × ULN)"
+        action: "Dose reduction; discuss with transplant team (etoposide hepatically metabolized)"
+
+when_to_use: >
+  Relapsed/refractory testicular GCT with: cisplatin-refractory disease OR poor Indiana
+  prognostic score (AFP ≥1000 ng/mL OR hCG ≥1000 IU/L OR liver/bone/brain mets).
+  Indiana University protocol (Einhorn 2007, NEJM; n=173): 2 tandem HDCT cycles × ASCT.
+  63% NED at 2 years. Favorable Indiana score: 78% NED.
+  REQUIRES: ASCT-capable center with GCT expertise. Peripheral stem cell collection
+  (G-CSF mobilization: G-CSF 10-16 mcg/kg/day × 4-5 days → apheresis) must be
+  completed BEFORE first HDCT cycle (target ≥2-4 × 10⁶ CD34+ cells/kg per cycle).
+  Two tandem cycles with re-infusion of peripheral blood stem cells at each nadir.
+
+protocol_sequence:
+  - step: "Stem cell mobilization"
+    description: "G-CSF 10-16 mcg/kg/day SC × 4-5 days; apheresis when WBC ≥5 × 10⁹/L. Target: ≥4-8 × 10⁶ CD34+ cells/kg total (2+ × 10⁶/kg per HDCT cycle). Cryopreserve collected stem cells."
+  - step: "HDCT Cycle 1 (Day -3 to Day 0)"
+    description: "Carboplatin 700 mg/m²/day IV + etoposide 750 mg/m²/day IV × 3 days. Day 0: infusion of first aliquot of PBSC (2+ × 10⁶ CD34+ cells/kg). G-CSF or GM-CSF from day +1 until ANC ≥0.5 × 10⁹/L."
+  - step: "Recovery (approximately 3-4 weeks)"
+    description: "Wait for ANC ≥1.0 × 10⁹/L, platelets ≥100 × 10⁹/L, adequate organ function before cycle 2. Tumor markers (AFP, hCG) checked."
+  - step: "HDCT Cycle 2 (Day -3 to Day 0)"
+    description: "Identical to cycle 1. Carboplatin 700 mg/m²/day IV + etoposide 750 mg/m²/day IV × 3 days. Day 0: infusion of second aliquot of PBSC."
+  - step: "Post-transplant recovery"
+    description: "G-CSF until ANC recovery. CBC + tumor markers monitoring every 2-4 weeks. CT scan 6-8 weeks post cycle 2."
+  - step: "Residual mass assessment"
+    description: "Post-HDCT residual mass (GCT standard): resect if ≥1 cm and viable tissue possible. RPLND referral at Indiana/specialized center."
+
+premedication:
+  - "5-HT3 antagonist (ondansetron 16 mg IV or equivalent) + NK1 antagonist (aprepitant 125 mg × 1 then 80 mg daily × 2) + dexamethasone 12 mg IV — highly emetogenic regimen"
+  - "Anti-fungal prophylaxis (fluconazole 200 mg PO daily from conditioning through engraftment)"
+  - "Anti-viral prophylaxis (acyclovir 800 mg PO BID or valacyclovir 500 mg PO daily)"
+  - "Cotrimoxazole DS (or equivalent) for PCP prophylaxis (from +1 through at least +3 months)"
+  - "Mucositis prophylaxis: oral rinses (chlorhexidine 0.12% or baking soda); palifermin (keratinocyte growth factor) per center protocol"
+  - "Aggressive IV hydration: 3-4 L/day during conditioning + 24-48h post (renal protection for high-dose carboplatin)"
+
+growth_factor_support:
+  mandatory: true
+  protocol: >
+    G-CSF 5 mcg/kg/day SC starting day +1 after each PBSC infusion until ANC ≥0.5 × 10⁹/L × 2 days.
+    Alternative: GM-CSF per center preference. G-CSF also used for stem cell mobilization pre-HDCT.
+
+monitoring:
+  - "CBC + differential: daily during aplastic nadir (days +5 to +12 typically)"
+  - "LFT + creatinine + electrolytes: daily during conditioning and early post-infusion period"
+  - "Tumor markers (AFP, hCG, LDH): baseline; after each HDCT cycle; at 6-8 weeks post HDCT"
+  - "Cardiac ECHO: baseline; consider at completion (high-dose anthracycline cumulative if prior)"
+  - "Audiogram: baseline + at completion (high-dose carboplatin ototoxicity risk)"
+  - "CT scan (CAP + pelvis): 6-8 weeks after cycle 2 completion for residual mass assessment"
+  - "PSYCH/palliative support: isolation during aplastic phase + extended hospitalization"
+
+inpatient_required: true
+hospitalization_notes: >
+  Both HDCT cycles require hospitalization at ASCT-capable center (typically 2-4 weeks each).
+  Aplastic nadir (ANC <0.1 × 10⁹/L) typically days +5 to +12; engraftment days +10-14.
+  Platelet and RBC transfusions during nadir are routine.
+  Ukraine access: HDCT+ASCT for GCT requires referral to specialized transplant centers
+  (Kyiv hematology-oncology centers with ASCT capability; or international referral to
+  Poland, Germany, or Czech Republic — within ESHRE/EBMT network).
+
+cycle_length_days: "2 cycles; approximately 4-6 weeks between cycle 1 and cycle 2"
+total_planned_cycles: "2 tandem HDCT cycles (Indiana standard)"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Забір стовбурових клітин (мобілізація G-CSF) ОБОВ'ЯЗКОВИЙ до першого HDCT — 2 аліквоти ≥2 × 10⁶ CD34+/кг кожна"
+  - "КРИТИЧНО: Висока доза карбоплатину 700 мг/м²/добу × 3 дні — агресивна гідратація 3-4 л/добу; НЕ за формулою Кальверта (фіксована доза/м²)"
+  - "КРИТИЧНО: 2 тандемні HDCT-цикли — між циклами очікують відновлення ANC ≥1.0 × 10⁹/л та тромбоцити ≥100 × 10⁹/л"
+  - "КРИТИЧНО: Спеціалізований центр аутоТКМ ОБОВ'ЯЗКОВИЙ — у разі недоступності в Україні → міжнародне направлення (Польща, Німеччина)"
+  - "УВАГА: Профілактика грибкових/вірусних інфекцій + котримоксазол (ПЦП) обов'язкові в аплазії"
+  - "УВАГА: Після HDCT — оцінка залишкових мас (КТ через 6-8 тижнів); RPLND при залишковій масі ≥1 см"
+  - "УВАГА: Ризик вторинного ГМЛ (~1%) при накопиченні етопозиду — інформувати пацієнта"
+
+sources:
+  - SRC-EINHORN-HDCT-ASCT-2007
+  - SRC-NCCN-TESTICULAR-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
