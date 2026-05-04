@@ -18,6 +18,7 @@ purpose: >
 output_indications:
   - IND-SMZL-2L-BR
   - IND-SMZL-2L-RITUXIMAB-RETREATMENT
+  - IND-SMZL-2L-R2
 
 default_indication: IND-SMZL-2L-BR
 alternative_indication: IND-SMZL-2L-RITUXIMAB-RETREATMENT
@@ -46,15 +47,38 @@ decision_tree:
         - red_flag: RF-SMZL-FRAILTY-AGE
         - red_flag: RF-SMZL-ORGAN-DYSFUNCTION
     if_true:
-      result: IND-SMZL-2L-RITUXIMAB-RETREATMENT
-      notes: >
-        Frail or organ-dysfunction precluding bendamustine: rituximab monotherapy
-        375 mg/m² × 4 weekly + maintenance q2months × 2 years (REG-RITUXIMAB-MONO).
-        ORR ~70-80% (Kalpadakis 2007 JCO; NCCN Cat 2A). HBV screen + entecavir mandatory.
-        Late relapse (≥12 months from last rituximab) = rituximab-non-refractory: R-mono
-        active. Early relapse (<6 months) → obinutuzumab-containing regimen instead.
+      next_step: 21
     if_false:
       next_step: 3
+    notes: "Step 2 if_true updated 2026-05-04 (Workstream CH): routes to step 21 (R²/R-mono sub-gate) instead of direct R-mono result."
+
+  # Step 21 — Frail sub-gate: rituximab-refractory vs rituximab-sensitive.
+  # Early relapse (<6m from last rituximab) = rituximab-refractory: R-mono retreatment
+  # unlikely active → R² (lenalidomide+rituximab; AUGMENT; ORR ~80%; mPFS 31.4 mo).
+  # Late relapse (≥12m from last rituximab) = rituximab-sensitive: R-mono retreatment
+  # adequate (ORR ~70-80%; less toxic; no REMS required).
+  - step: 21
+    evaluate:
+      any_of:
+        - condition: "Rituximab-refractory: early relapse <6 months from last rituximab OR refractory to prior rituximab-containing regimen"
+    if_true:
+      result: IND-SMZL-2L-R2
+      notes: >
+        Frail + rituximab-refractory SMZL: R² (lenalidomide 20 mg/day d1-21 +
+        rituximab 375 mg/m² d1 q28d × 12 cycles; REG-R2-FL; AUGMENT Leonard JCO 2019;
+        MZL subgroup ORR ~80%; mPFS 31.4 vs 13.3 months HR 0.41; NCCN Cat 1;
+        BSH MZL 2024). R² provides IMiD-mediated activity overcoming anti-CD20
+        resistance in rituximab-refractory disease. MANDATORY: REMS + VTE prophylaxis
+        + PJP prophylaxis + HBV screening.
+    if_false:
+      result: IND-SMZL-2L-RITUXIMAB-RETREATMENT
+      notes: >
+        Frail + rituximab-sensitive (late relapse ≥12 months from last rituximab):
+        rituximab 375 mg/m² × 4 weekly + maintenance q2months × 2 years
+        (REG-RITUXIMAB-MONO; ORR ~70-80%; Kalpadakis 2007 JCO; NCCN Cat 2A).
+        HBV screen + entecavir mandatory. Lower toxicity than R² (no lenalidomide
+        REMS, VTE, or IMiD side effects). Adequate for rituximab-sensitive late relapse.
+    notes: "Step 21 added 2026-05-04 (Workstream CH): R²/R-mono sub-gate for frail SMZL. Rituximab-refractory → IND-SMZL-2L-R2; rituximab-sensitive → IND-SMZL-2L-RITUXIMAB-RETREATMENT. Gap (3) CLOSED."
 
   # Step 3 — default: symptomatic relapse, fit, BR-eligible → BR.
   - step: 3
@@ -80,11 +104,13 @@ notes: >
   authored and wired at step 2 for frail/bendamustine-ineligible SMZL
   (rituximab 375 mg/m² × 4 + maintenance; ORR ~70-80%; NCCN Cat 2A;
   Kalpadakis 2007 JCO). Gap (1) CLOSED.
+  UPDATED 2026-05-04 (Workstream CH): IND-SMZL-2L-R2 authored and wired at step 21
+  (AUGMENT MZL subgroup; Leonard JCO 2019; ORR ~80%; mPFS 31.4 mo; NCCN Cat 1;
+  REG-R2-FL). Step 2 if_true now routes to step 21 (rituximab-refractory sub-gate):
+  early relapse <6m → R²; late relapse ≥12m → R-mono retreatment. Gap (3) CLOSED.
   OOS / wiring gaps:
   (2) Ibrutinib (BTKi) for r/r SMZL — approved (FDA 2017) but not
   modeled; UA access ≈zero outside named-patient.
-  (3) Lenalidomide ± rituximab (R²) for chemo-ineligible — not
-  modeled.
   (4) Histologic transformation routing must be resolved at upstream
   disease-resolution stage (relapse re-biopsy mandatory); algo
   surfaces but does not auto-route to ALGO-DLBCL.

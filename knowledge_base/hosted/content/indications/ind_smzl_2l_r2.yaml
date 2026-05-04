@@ -1,0 +1,191 @@
+id: IND-SMZL-2L-R2
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SPLENIC-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Symptomatic relapsed or refractory splenic MZL after ≥1 prior rituximab-containing regimen"
+    - "Rituximab-refractory (early relapse <6 months from last rituximab) OR inadequate R-mono efficacy expected"
+    - "CD20-positive (confirmed at relapse biopsy if histology change suspected)"
+    - "ECOG PS 0-2 (frail patients unfit for bendamustine but tolerating oral daily dosing)"
+    - "CrCl ≥30 mL/min (lenalidomide dose-adjust for CrCl 30-60 mL/min; avoid if CrCl <30)"
+    - "Negative pregnancy test within 10-14 days and enrolled in REMS programme (lenalidomide category X teratogen)"
+    - "No active deep venous thrombosis or pulmonary embolism within 3 months without anticoagulation"
+    - "ANC ≥1.0×10⁹/L, PLT ≥75×10⁹/L at cycle start"
+    - "Adequate hepatic function: bilirubin ≤1.5× ULN; ALT/AST ≤3× ULN (splenomegaly-associated hepatic congestion — check before starting)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20-positive on IHC — mandatory for rituximab component activity"
+      notes: >
+        CD20 positivity must be confirmed at relapse. Rare antigen loss after prior
+        anti-CD20 therapy. If CD20-negative at relapse: rebiopsy; if truly lost,
+        rituximab not beneficial → lenalidomide monotherapy or clinical trial.
+  biomarker_requirements_excluded:
+    - "Histologic transformation to DLBCL at relapse — R² not appropriate; route to DLBCL algorithm"
+    - "Active hepatitis B (HBsAg+ or anti-HBc+ without prophylaxis) — HBV reactivation risk with rituximab + lenalidomide"
+    - "Active VTE within 3 months without therapeutic anticoagulation — lenalidomide VTE risk: initiate LMWH prophylaxis first"
+    - "Prior R² progression (relapsed on lenalidomide+rituximab): re-challenge unlikely active"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Primary use case: frail SMZL patients (ECOG ≤2) unfit for bendamustine who are
+      rituximab-refractory (early relapse <6 months from last rituximab) and would not
+      benefit from rituximab monotherapy retreatment. R² provides meaningful step-up
+      from R-mono (ORR 70-80%) with IMiD-mediated activity independent of CD20 density.
+      ECOG 3: consider R-mono retreatment (if rituximab-non-refractory) or goals-of-care;
+      R² requires reliable daily oral lenalidomide adherence.
+
+recommended_regimen: REG-R2-FL
+alternative_regimens:
+  - regimen_id: IND-SMZL-2L-RITUXIMAB-RETREATMENT
+    description: >
+      Rituximab 375 mg/m² × 4 weekly + maintenance q2months × 2 years (ORR ~70-80%;
+      NCCN Cat 2A; Kalpadakis 2007 JCO). Preferred for: late relapse ≥12 months from
+      last rituximab (R-sensitive, no need for R²); frail patients unable to tolerate
+      lenalidomide; patients where REMS is not feasible.
+  - regimen_id: IND-SMZL-2L-BR
+    description: >
+      Bendamustine 90 mg/m² d1-2 + rituximab 375 mg/m² d1 q28d × 4-6 cycles.
+      Preferred for fit patients (ECOG 0-1) without prior bendamustine exposure.
+      R² is preferred over BR when: prior bendamustine 1L; patient preference for
+      oral regimen; bendamustine-ineligible (frailty, CrCl <40).
+
+concurrent_therapy:
+  - "VTE prophylaxis mandatory throughout: aspirin 100 mg/day (low VTE risk); LMWH (high risk: prior VTE, obesity, multiple RF)"
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week (rituximab + lenalidomide additive immunosuppression)"
+  - "HBV reactivation prophylaxis: entecavir 0.5 mg/day if HBsAg+ or anti-HBc+ (start ≥7 days before rituximab cycle 1; continue 12 months post-last-rituximab)"
+  - "TSH baseline and q3 cycles (lenalidomide → hypothyroidism)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q3 cycles (RECIST 1.1 for nodal/splenic response)"
+  - "PET-CT at end of treatment (if interim PET not available)"
+  - "CR/PR at cycle 12: complete course; post-R² surveillance q3-4 months × 2 years; imaging q6 months × 2 years"
+  - "At progression after R²: consider BR if bendamustine-naive; ibrutinib for CD20-positive (Noy 2017 MZL basket ORR ~48%); clinical trial"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~80% (AUGMENT MZL subgroup; R² vs R-placebo; n=63 MZL total; SMZL+NMZL+MALT pooled)"
+  complete_response: "~64% (AUGMENT MZL subgroup R² arm)"
+  median_pfs_months: "31.4 months (AUGMENT MZL subgroup R²; vs 13.3 months R-placebo; HR 0.41)"
+  notes: >
+    PRIMARY EVIDENCE: AUGMENT (Leonard et al. JCO 2019; Phase 3 RCT; n=358):
+    R² (lenalidomide 20 mg d1-21 + rituximab 375 mg/m² q28d × 12 cycles) vs
+    R-placebo in relapsed/refractory FL (n=295) + MZL (n=63, including SMZL, NMZL, MALT).
+    MZL subgroup (n~32 in R² arm): ORR 80%, CR 64%, mPFS 31.4 vs 13.3 months (HR 0.41).
+    Combined R² arm: mPFS 39.4 vs 14.1 months (HR 0.46; p<0.001).
+
+    SMZL-SPECIFIC NOTE: AUGMENT enrolled all MZL subtypes; SMZL-specific analysis not
+    powered (small n within the 63-patient MZL subgroup). The NCCN Cat 1 recommendation
+    and BSH MZL 2024 endorsement extend to SMZL based on combined MZL data.
+
+    COMPARISON TO R-MONO (IND-SMZL-2L-RITUXIMAB-RETREATMENT):
+    Rituximab monotherapy ORR ~70-80% in rituximab-non-refractory SMZL (Kalpadakis 2007 JCO).
+    R² (ORR ~80%) provides essentially equivalent response rates but with significantly
+    longer mPFS (31.4 vs 13.3 months, HR 0.41). R² is preferred when rituximab-refractory
+    (early relapse <6 months) because R-mono re-challenge is unlikely to benefit.
+
+    UKRAINE CONTEXT:
+    Lenalidomide is registered in Ukraine (NSZU-funded for MM; off-label for lymphoma).
+    R² for lymphoma requires MDT authorization; access at major oncology centres.
+    Rituximab is NSZU-funded. REMS programme requires physician registration.
+
+hard_contraindications:
+  - "CrCl <30 mL/min: lenalidomide not recommended; use rituximab monotherapy or BR"
+  - "Active pregnancy or unwilling to comply with REMS contraception requirements: lenalidomide absolute CI"
+  - "Histologic transformation to DLBCL: R² insufficient for DLBCL; route to ALGO-DLBCL-2L"
+  - "Prior R² progression: R² re-challenge unlikely active; switch to BR or ibrutinib"
+
+red_flags_triggering_alternative:
+  - condition: "RF-AGGRESSIVE-HISTOLOGY-TRANSFORMATION — transformation to DLBCL: IND-SMZL-2L-BR or ALGO-DLBCL-2L"
+  - condition: "CrCl <30 mL/min — lenalidomide not recommended: IND-SMZL-2L-RITUXIMAB-RETREATMENT"
+  - condition: "RF-SMZL-FRAILTY-AGE with ECOG ≥3 — R² requires daily oral adherence; consider R-mono or BSC"
+  - condition: "Late relapse ≥12 months from last rituximab (rituximab-sensitive) — R-mono retreatment adequate; R² not required unless prior R²-failure"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CrCl (CKD-EPI): lenalidomide dose gate — mandatory"
+  - "HBV serology (HBsAg, anti-HBc, anti-HBs): reactivation risk with rituximab + lenalidomide"
+  - "CD20 IHC on relapse biopsy: confirm CD20 status at relapse"
+  - "Pregnancy test (serum β-hCG): within 10-14 days before first dose; REMS mandatory"
+  - "CT chest/abdomen/pelvis: staging at relapse (splenic size + abdominal lymphadenopathy)"
+
+desired_tests:
+  - "PET-CT: transformation exclusion + extent of relapse disease"
+  - "LDH + β2-microglobulin: MZL prognostic markers"
+  - "BM biopsy: if cytopenia unexplained by splenomegaly alone (splenic infiltration vs marrow failure)"
+
+rationale: >
+  R² (lenalidomide + rituximab) for relapsed/refractory SMZL in patients
+  unfit for bendamustine who are rituximab-refractory (early relapse <6 months).
+
+  CLINICAL POSITIONING IN SMZL:
+  SMZL 2L tier:
+  1. Fit (ECOG 0-1) → BR (bendamustine+rituximab; ORR ~85-90%)
+  2. Frail + rituximab-refractory → R² (lenalidomide+rituximab; ORR ~80%; mPFS 31.4 mo)
+  3. Frail + late relapse (rituximab-sensitive) → R-mono retreatment (ORR ~70-80%)
+
+  AUGMENT MZL EVIDENCE:
+  R² demonstrated significant improvement over R-placebo in MZL (AUGMENT Phase 3;
+  Leonard JCO 2019). MZL subgroup ORR 80%, mPFS 31.4 months (HR 0.41 vs R-placebo).
+  NCCN Cat 1; BSH MZL 2024 endorsed.
+
+  R² OVER R-MONO FOR RITUXIMAB-REFRACTORY SMZL:
+  In early relapse (<6 months from last rituximab), the anti-CD20 component has
+  reduced activity (rituximab-refractory phenotype). Adding lenalidomide provides
+  IMiD-driven T-cell/NK-cell activation and direct anti-tumour effects (cereblon
+  pathway) that overcome CD20-directed resistance. R² ORR 80% vs R-mono ~70-80%
+  — but the key benefit is durability (mPFS 31.4 vs 13.3 months, HR 0.41).
+
+  UKRAINE ACCESS:
+  Lenalidomide registered for MM (NSZU-funded); lymphoma use is off-label requiring
+  MDT authorization. At major Ukrainian centres (Kyiv, Kharkiv, Lviv) lenalidomide
+  access is feasible for lymphoma. REMS registration required. Rituximab NSZU-funded.
+
+rationale_ua: >
+  R² (леналідомід 20 мг/добу d1-21 + ритуксимаб 375 мг/м² d1 q28д × 12 циклів)
+  для рецидивної/рефрактерної СМЗЛ у пацієнтів, не придатних для бендамустину,
+  при рефрактерності до ритуксимабу (ранній рецидив <6 міс від ритуксимабу).
+  AUGMENT (Leonard JCO 2019; Phase 3; n=63 МЗЛ підгрупа): ОВ 80%, CR 64%,
+  мВБП 31.4 vs 13.3 міс (HR 0.41). NCCN Cat 1. BSH МЗЛ 2024.
+  ОБОВ'ЯЗКОВО: профілактика ВТЕ (аспірин/НМГ), REMS-реєстрація, HBV-скринінг.
+  В Україні: леналідомід зареєстровано (НСЗУ — ПАА); R² для лімфом — потрібна
+  авторизація MDT/ТМК; ритуксимаб НСЗУ-відшкодовується.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Без REMS-реєстрації та тесту на вагітність — леналідомід кат X тератоген; REMS обов'язковий"
+  - "Без ВТЕ-профілактики — аспірин мінімум; НМГ при високому ризику (ВТЕ ~7% в AUGMENT)"
+  - "При трансформації в DLBCL — R² неефективний; потрібна агресивна 2L терапія"
+  - "При пізньому рецидиві ≥12 міс (ритуксимаб-чутливий) — R-моно ретретмент достатній; R² не потрібний якщо немає рефрактерності"
+  - "Без HBV-скринінгу — ритуксимаб + імуносупресія → реактивація HBV"
+  - "При CrCl <30: леналідомід протипоказаний; перейти на R-моно"
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: R² (lenalidomide + rituximab; AUGMENT regimen)
+      for relapsed/refractory MZL (nodal, MALT, splenic subtypes) after ≥1 prior
+      therapy. AUGMENT Phase 3 basis; MZL subgroup ORR 80%, mPFS 31.4 months.
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      BSH MZL 2024: R² (lenalidomide+rituximab) endorsed as alternative to BR for
+      relapsed/refractory MZL including splenic MZL subtype; AUGMENT data support
+      use across all MZL subtypes.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
