@@ -1,0 +1,69 @@
+id: REG-LINVOSELTAMAB-MM
+name: "Linvoseltamab for relapsed/refractory multiple myeloma (≥4 prior lines)"
+name_ua: "Лінвоселтамаб при рецидивуючій/рефрактерній множинній мієломі (≥4 лінії)"
+alternate_names: ["Lynozyfic", "BCMA BiTE MM 4L+", "linvoseltamab BCMA CD3"]
+
+components:
+  - drug_id: DRUG-LINVOSELTAMAB
+    dose: "Step-up SC: W1D1: 0.6 mg; W2D1: 3 mg; W3D1: 76 mg; then 76 mg SC Q2W maintenance"
+    schedule: "SC injection; step-up over 3 weeks then Q14D"
+    route: SC
+    notes: >
+      MANDATORY HOSPITALIZATION for W1D1 (0.6 mg) and W2D1 (3 mg) doses.
+      W3D1 (first full 76 mg dose): observe ≥4h at facility, consider overnight depending on
+      W1/W2 CRS experience. Dexamethasone 20 mg IV premedication before each dose.
+      Inject SC into abdomen, thigh, or upper arm; rotate sites.
+
+cycle_length_days: 14
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Dexamethasone 20 mg IV (or 28 mg PO equivalent) 1h before each dose"
+  - "Diphenhydramine 25-50 mg IV or PO 1h before each dose"
+  - "Acetaminophen 650 mg PO 1h before each dose"
+  - "Ranitidine or famotidine IV (H2 blocker) 1h before each dose"
+
+supportive_care:
+  - "Anti-infective prophylaxis: TMP-SMX DS 3x/week (PCP), acyclovir/valacyclovir, fluconazole"
+  - "Immunoglobulin monitoring: IgG before each cycle; IVIG if IgG <400 mg/dL"
+  - "CBC: before each dose (neutropenia, thrombocytopenia monitoring)"
+  - "Infection surveillance: educate on fever thresholds; early intervention for Grade 2+ infections"
+  - "CRS monitoring: during and for ≥1h after each dose"
+  - "Bone marrow function: CBC each cycle (B-cell aplasia + MM marrow)"
+
+dose_modifications:
+  - toxicity: "Grade 2 CRS"
+    action: "Hold until resolved; can restart at same dose; consider slowing subsequent infusion if applicable"
+  - toxicity: "Grade 3 CRS"
+    action: "Hold; tocilizumab 8 mg/kg IV; add dexamethasone; restart when Grade ≤1"
+  - toxicity: "Grade 4 CRS"
+    action: "PERMANENTLY DISCONTINUE"
+  - toxicity: "Grade 2+ ICANS"
+    action: "Hold; corticosteroids; neurological consult; restart when Grade ≤1"
+  - toxicity: "Serious infection Grade 3+"
+    action: "Hold until infection resolved; reinforce prophylaxis; consider IVIG"
+
+special_requirements:
+  - "TRIPLE-CLASS REFRACTORY or ≥4 prior lines required (PI + IMiD + anti-CD38)"
+  - "REMS: LINKER-MM REMS may be required per FDA label — confirm at initiation"
+  - "Hospitalization: W1D1 and W2D1 mandatory; assess individual CRS risk for W3"
+  - "Tocilizumab: must be available at facility for all doses"
+  - "Step-up cannot be abbreviated — all 3 step-up doses required"
+
+sources:
+  - SRC-NCCN-MM-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  FDA approved April 2025 based on LINKER-MM1 Phase 1/2 trial.
+  NCCN MM 2025: Category 1 for R/R MM >=4L triple-class refractory or
+  penta-drug exposed. BCMA x CD3 class now includes teclistamab (weekly SC),
+  elranatamab (weekly SC), and linvoseltamab (biweekly SC after step-up).
+  Linvoseltamab advantage: Q2W maintenance dosing (biweekly vs weekly for
+  teclistamab and elranatamab after initial period); SC formulation reduces
+  CRS rate vs IV BiTEs. Class effect: prophylaxis mandatory (infections are
+  leading cause of treatment discontinuation and non-relapse mortality).
+  If prior teclistamab/elranatamab: cross-resistance to linvoseltamab possible
+  (same BCMA target); consider different target (GPRC5D: talquetamab; or
+  FcRH5: cevostamab if accessible, or clinical trial).

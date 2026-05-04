@@ -1,0 +1,77 @@
+id: REG-FOLFOX-PANITUMUMAB
+name: "mFOLFOX6 + panitumumab for RAS-WT left-sided metastatic CRC"
+name_ua: "мFOLFOX6 + панітумумаб при RAS-WT лівостороньому метастатичному КРР"
+alternate_names: ["PRIME regimen", "FOLFOX panitumumab CRC", "oxaliplatin+leucovorin+5FU+panitumumab"]
+
+components:
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "85 mg/m²"
+    schedule: "IV over 2h, day 1 Q14D"
+    route: IV
+    notes: "Standard mFOLFOX6 oxaliplatin dose; dose reduce for neuropathy Grade 2+"
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m²"
+    schedule: "IV over 2h, day 1 Q14D (concurrently with oxaliplatin)"
+    route: IV
+    notes: "LV500 equivalent; some protocols use levoleucovorin 200 mg/m²"
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "400 mg/m² IV bolus + 2400 mg/m² CI over 46h"
+    schedule: "Day 1 Q14D"
+    route: IV
+    notes: "Bolus then 46h CI via pump. Capecitabine cannot substitute when paired with panitumumab (XELOX+pani lacks efficacy data)"
+  - drug_id: DRUG-PANITUMUMAB
+    dose: "6 mg/kg"
+    schedule: "IV over 60 min (30 min if first dose well-tolerated), day 1 Q14D"
+    route: IV
+    notes: "Give panitumumab first (before chemotherapy). Monitor 60 min post-infusion. Premedicate with antihistamine + acetaminophen. No steroid premedication needed (fully human antibody; lower IRR rate than cetuximab)."
+
+cycle_length_days: 14
+number_of_cycles: "Until progression or unacceptable toxicity; or planned surgical conversion for initially unresectable disease"
+
+premedications:
+  - "Diphenhydramine 50 mg IV (or antihistamine equivalent) 30 min before panitumumab"
+  - "Acetaminophen 650 mg PO 30 min before panitumumab"
+  - "Dexamethasone + 5-HT3 antagonist for chemotherapy (oxaliplatin moderately emetogenic)"
+  - "Note: no steroid premedication required for panitumumab (unlike cetuximab protocols)"
+
+supportive_care:
+  - "Magnesium: supplement to maintain Mg >0.5 mmol/L; check before each dose"
+  - "Calcium + electrolytes: check each cycle"
+  - "Skin toxicity (acneiform rash): prophylactic doxycycline 100 mg BID + sunscreen"
+  - "Peripheral neuropathy: cumulative oxaliplatin; dose reduce at Grade 2+"
+  - "CBC + CMP: before each cycle"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 acneiform rash"
+    action: "Hold panitumumab 1-2 doses; topical and systemic corticosteroids; restart at reduced dose or 50% dose when resolved to Grade ≤1"
+  - toxicity: "Grade 2 peripheral neuropathy (persistent)"
+    action: "Reduce oxaliplatin 25% (to 64 mg/m²)"
+  - toxicity: "Grade 3+ peripheral neuropathy"
+    action: "Discontinue oxaliplatin; continue 5-FU + LV + panitumumab (FOLFIRI switch if needed)"
+  - toxicity: "Grade 3-4 hypomagnesemia"
+    action: "IV magnesium replacement; hold panitumumab until Mg >0.5 mmol/L"
+  - toxicity: "Infusion-related reaction Grade 3+"
+    action: "Permanently discontinue panitumumab; cetuximab not substitutable (crossover may occur in IgG4 sensitization)"
+
+special_requirements:
+  - "RAS WILD-TYPE REQUIRED: KRAS + NRAS exons 2-4 ALL wild-type (mutation is absolute contraindication)"
+  - "LEFT-SIDED PRIMARY preferred: EGFR antibodies less effective in right-sided CRC (HER3/HER2 biology)"
+  - "BRAF V600E testing: if BRAF V600E, prefer BEACON triplet (encorafenib+cetuximab±binimetinib) over FOLFOX+pani"
+  - "HER2 amplification: EGFR antibodies ineffective; route to HER2-directed therapy"
+
+sources:
+  - SRC-NCCN-CRC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  PRIME trial (Douillard 2010 JCO): FOLFOX4+panitumumab vs FOLFOX4 alone in RAS-WT
+  1L mCRC (n=1183 total; 656 RAS-WT evaluable). mPFS 9.6 vs 8.0 months (HR 0.80;
+  p=0.02); mOS 23.9 vs 19.7 months (HR 0.83; p=0.03) in RAS-WT.
+  NCCN CRC 2025: Category 1 for RAS-WT, left-sided mCRC 1L alongside
+  FOLFOX+cetuximab, FOLFIRI+panitumumab, FOLFIRI+cetuximab.
+  Panitumumab vs cetuximab: equivalent efficacy in RAS-WT CRC (ASPECCT non-inferiority).
+  Panitumumab advantages: fully human (lower IRR rate ~4% vs ~20% cetuximab); no
+  magnesium sulfate premedication required; no crossover hypersensitivity with cetuximab.
+  Panitumumab disadvantages: not standard of care with XELOX (capecitabine substitution
+  lacks PRIME-level evidence); limited data in Ukrainian practice.

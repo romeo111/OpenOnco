@@ -1,0 +1,67 @@
+id: REG-FIANLIMAB-PEMBRO-MELANOMA
+name: "Fianlimab + pembrolizumab for unresectable/metastatic melanoma (1L)"
+name_ua: "Фіанліма + пембролізумаб при нерезектабельній/метастатичній меланомі (1 лінія)"
+alternate_names: ["RELATIVITY-2 regimen", "anti-LAG3+anti-PD1 melanoma", "fianlimab+pembro dual checkpoint"]
+
+components:
+  - drug_id: DRUG-FIANLIMAB
+    dose: "1600 mg IV Q3W"
+    schedule: "IV over 30 min Q21D; given AFTER pembrolizumab on same day"
+    route: IV
+    notes: "Filter required: non-pyrogenic, low-protein-binding, 0.2-5 micron inline filter. Do not shake vial. Administer via separate line from pembrolizumab."
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV Q3W"
+    schedule: "IV over 30 min Q21D; given BEFORE fianlimab on same day"
+    route: IV
+    notes: "Standard pembrolizumab 200 mg Q3W (or 400 mg Q6W is an acceptable substitution based on pharmacokinetics). Give pembrolizumab first, then fianlimab."
+
+cycle_length_days: 21
+number_of_cycles: "Until progression, unacceptable toxicity, or up to 2 years (per approved duration)"
+
+premedications:
+  - "No routine premedication required for either agent"
+  - "For patients with prior mild IRR: acetaminophen 650 mg PO + diphenhydramine 25 mg IV before infusion"
+
+supportive_care:
+  - "irAE monitoring: thyroid (TSH/fT4 q6-8 weeks), LFTs, glucose, CBC each cycle"
+  - "Dermatologic assessment: each visit (immune-mediated skin toxicity)"
+  - "Pulmonary: assess for cough/dyspnea symptoms each cycle (pneumonitis)"
+  - "Patient education: irAE symptoms — when to seek emergency care"
+  - "Tumor imaging: Q9-12 weeks for response assessment"
+
+dose_modifications:
+  - toxicity: "Grade 2 immune-mediated pneumonitis"
+    action: "Hold both agents; prednisone 1-2 mg/kg/day PO; restart when resolved to Grade ≤1"
+  - toxicity: "Grade 3-4 immune-mediated pneumonitis"
+    action: "PERMANENTLY DISCONTINUE both agents; IV methylprednisolone 1-2 mg/kg/day; pulmonology consult"
+  - toxicity: "Grade 3-4 hepatitis (ALT/AST >5x ULN)"
+    action: "Hold; prednisone 0.5-1 mg/kg/day; consider mycophenolate mofetil if no improvement"
+  - toxicity: "Grade 3 colitis"
+    action: "Hold; prednisone 1 mg/kg/day; infliximab 5 mg/kg IV if steroid-refractory"
+  - toxicity: "Grade 3+ endocrinopathy"
+    action: "Hormone replacement; may continue ICIs after stabilization (endocrinopathies often permanent)"
+  - toxicity: "Grade 2 irAE"
+    action: "Hold until Grade ≤1; low-dose corticosteroids for symptomatic management"
+
+special_requirements:
+  - "ECOG PS 0-2 (performance status assessment before initiation)"
+  - "No active autoimmune disease requiring >10 mg prednisone/day equivalent"
+  - "No solid organ transplant"
+  - "Baseline: TSH, LFTs, CBC, glucose, LDH"
+  - "Brain MRI: screen for CNS metastases before initiation"
+
+sources:
+  - SRC-NCCN-MELANOMA-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  FDA approved February 2025 for adults with unresectable or metastatic melanoma,
+  based on RELATIVITY-2 (NCT04303169). Dual checkpoint: anti-LAG-3 (fianlimab)
+  + anti-PD-1 (pembrolizumab). Builds on RELATIVITY-047 precedent (relatlimab+
+  nivolumab = Opdualag, March 2022 approval) validating LAG-3 in melanoma.
+  NCCN Melanoma 2025: Category 1 for 1L unresectable/metastatic melanoma,
+  alongside ipilimumab+nivolumab (Checkmate-067), pembrolizumab monotherapy
+  (KEYNOTE-006), nivolumab monotherapy, and relatlimab+nivolumab (Opdualag).
+  Patient selection: similar to other ICI regimens — no BRAF restriction;
+  benefit across PDL1 expression levels.

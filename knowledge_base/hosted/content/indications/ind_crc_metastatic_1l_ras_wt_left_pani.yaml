@@ -1,0 +1,84 @@
+id: IND-CRC-METASTATIC-1L-RAS-WT-LEFT-PANI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CRC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic)"
+    - "Left-sided primary tumor (splenic flexure, descending colon, sigmoid, rectum)"
+    - "Unresectable metastatic disease or borderline resectable requiring conversion therapy"
+  biomarker_requirements:
+    - "RAS WILD-TYPE: KRAS + NRAS exons 2-4 ALL wild-type (mutation = contraindication)"
+    - "BRAF V600E wild-type preferred (BRAF V600E: use BEACON triplet or FOLFOX+bev)"
+    - "HER2 amplification negative (anti-EGFR ineffective in HER2-amplified CRC)"
+    - "MSI-H: if MSI-H, route to pembrolizumab 1L (IND-CRC-METASTATIC-1L-MSI-H-PEMBRO)"
+
+recommended_regimen: REG-FOLFOX-PANITUMUMAB
+
+concurrent_therapy: []
+
+followed_by:
+  - "Second-line routing per CRC 2L algorithm after progression"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  overall_response_rate: "~70% in RAS-WT left-sided subgroup (PRIME, ASPECCT)"
+  median_pfs_months: 9.6
+  median_os_months: 23.9
+  notes: "PRIME trial (Douillard 2010 JCO): FOLFOX4+panitumumab. mPFS 9.6 vs 8.0 months (HR 0.80), mOS 23.9 vs 19.7 months (HR 0.83) in RAS-WT."
+
+hard_contraindications:
+  - "RAS mutation (KRAS or NRAS exons 2-4): evidence of harm (inferior OS vs chemotherapy alone with anti-EGFR)"
+  - "Right-sided primary tumor: anti-EGFR less effective; use bevacizumab-based regimen"
+  - "MSI-H: route to pembrolizumab 1L (superior PFS/OS — KEYNOTE-177)"
+  - "BRAF V600E mutation: anti-EGFR less effective as single-class; BEACON triplet preferred"
+  - "HER2 amplification (HER2 IHC 3+ or ISH-amplified)"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - RF-CRC-FRAILTY-AGE
+  - RF-CRC-MSI-H-ACTIONABILITY
+  - RF-CRC-BRAF-V600E-POOR-PROGNOSIS
+  - RF-CRC-RAS-MUTANT
+  - RF-CRC-RAS-WT
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - "RAS extended panel (KRAS + NRAS exons 2-4): MANDATORY"
+  - "BRAF V600E mutation testing"
+  - "MSI/MMR testing: IHC or PCR (MMR-deficient routes to pembrolizumab)"
+  - "HER2 IHC/ISH (or NGS HER2 copy number)"
+  - TEST-MAGNESIUM
+
+desired_tests:
+  - "Primary tumor sidedness confirmation (imaging or colonoscopy report)"
+  - "ctDNA NGS (optional; extended RAS/BRAF/HER2 liquid biopsy)"
+  - "Baseline LDH (prognostic)"
+
+rationale: >
+  Panitumumab-based FOLFOX (PRIME trial; Douillard 2010 JCO) is NCCN Cat 1 for
+  RAS-WT left-sided 1L mCRC. Panitumumab equivalent to cetuximab in RAS-WT CRC
+  (ASPECCT non-inferiority trial). Advantages: fully human IgG2 (lower IRR rate ~4%
+  vs ~20% for cetuximab); no crossover hypersensitivity; Q2W dosing aligns with
+  mFOLFOX6. Left-sided primary tumor location required: FIRE-3 + CALGB-80405 data
+  demonstrate anti-EGFR superior to bevacizumab specifically in left-sided, RAS-WT
+  patients. NCCN CRC 2025 Cat 1 alongside FOLFOX+cetuximab, FOLFIRI+panitumumab,
+  FOLFIRI+cetuximab.
+
+sources:
+  - SRC-NCCN-CRC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream EA). CRC 1L RAS-WT left-sided panitumumab.
+  Alternative to IND-CRC-METASTATIC-1L-RAS-WT-LEFT (cetuximab-based).
+  Two-reviewer clinical signoff required.
