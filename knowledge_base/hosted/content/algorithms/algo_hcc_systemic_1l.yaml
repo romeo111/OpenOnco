@@ -7,6 +7,7 @@ purpose: 'Select 1L systemic regimen for advanced/unresectable HCC. BCLC C or in
 output_indications:
 - IND-HCC-SYSTEMIC-1L-ATEZO-BEV
 - IND-HCC-SYSTEMIC-1L-DURVA-TREME
+- IND-HCC-SYSTEMIC-1L-NIVO-IPI
 - IND-HCC-SYSTEMIC-1L-SORAFENIB
 default_indication: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
 alternative_indication: IND-HCC-SYSTEMIC-1L-DURVA-TREME
@@ -17,6 +18,11 @@ decision_tree:
     - red_flag: RF-HCC-VARICEAL-BLEED
   if_true:
     result: IND-HCC-SYSTEMIC-1L-DURVA-TREME
+    alternatives:
+      - indication: IND-HCC-SYSTEMIC-1L-NIVO-IPI
+        criteria: "Bevacizumab-free ICI doublet alternative — nivo 1 mg/kg + ipi 3 mg/kg Q6W (CheckMate-9DW; OS HR 0.79 vs sora/len; FDA Jun 2024; NCCN Cat 1)"
+        nccn_category: 1
+    notes: "Variceal bleed: bevacizumab contraindicated — durva+treme or nivo+ipi (both bev-free). Durva+treme: HIMALAYA (OS HR 0.78); nivo+ipi: CheckMate-9DW (OS HR 0.79). NCCN Cat 1 for both. MDT select based on patient profile and access."
   if_false:
     next_step: 2
 - step: 2
@@ -37,9 +43,23 @@ decision_tree:
     - red_flag: RF-FITNESS-ECOG-FIT
   if_true:
     result: IND-HCC-SYSTEMIC-1L-ATEZO-BEV
+    alternatives:
+      - indication: IND-HCC-SYSTEMIC-1L-NIVO-IPI
+        criteria: "No bevacizumab contraindication but patient/MDT preference for all-ICI doublet (no anti-VEGF); CheckMate-9DW; NCCN Cat 1; OS HR 0.79 vs sorafenib/lenvatinib"
+        nccn_category: 1
+      - indication: IND-HCC-SYSTEMIC-1L-DURVA-TREME
+        criteria: "Bevacizumab contraindicated (esophageal varices, recent bleeding, fistula risk); HIMALAYA; NCCN Cat 1"
+        nccn_category: 1
+    notes: >
+      Child-Pugh A + fit (ECOG 0-1): THREE NCCN Cat 1 ICI-containing options:
+      DEFAULT: Atezolizumab+bevacizumab (IMbrave150; OS HR 0.58; ORR 30%); preferred when no bev contraindication.
+      ALTERNATIVE 1: Nivo+ipi Q6W (CheckMate-9DW; OS HR 0.79; ORR 36%; all-ICI, no anti-VEGF).
+      ALTERNATIVE 2: Durvalumab+tremelimumab (HIMALAYA; OS HR 0.78; bev-free; for variceal bleed or bev contraindication).
+      HBV prophylaxis mandatory before any ICI if HBsAg+ or anti-HBc+.
+      Wired via CSD-7A pan-disease fitness/eligibility/prior-therapy RFs.
   if_false:
     result: IND-HCC-SYSTEMIC-1L-SORAFENIB
-  notes: Wired via CSD-7A pan-disease fitness/eligibility/prior-therapy RFs.
+    notes: "CP-B or ECOG ≥2 or frailty: sorafenib 400 mg BID or lenvatinib 8-12 mg QD. ICI combinations not well-studied in CP-B. Updated 2026-05-04 (Workstream EJ): added nivo+ipi as Cat 1 alternative."
 sources:
 - SRC-NCCN-HCC-2025
 - SRC-AASLD-HCC-2023

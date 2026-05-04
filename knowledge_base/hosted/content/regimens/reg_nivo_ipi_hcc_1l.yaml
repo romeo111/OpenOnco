@@ -1,0 +1,80 @@
+id: REG-NIVO-IPI-HCC-1L
+name: "Nivolumab + ipilimumab for advanced HCC 1L (CheckMate-9DW)"
+name_ua: "Ніволумаб + іпілімумаб при ГЦК (1 лінія, CheckMate-9DW)"
+alternate_names: ["nivo+ipi HCC", "CheckMate-9DW regimen", "Opdivo+Yervoy HCC 1L"]
+
+components:
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "1 mg/kg IV over 30 min"
+    schedule: "Q6W (every 6 weeks); combined with ipilimumab on same day"
+    route: IV
+    notes: >
+      DOSE IS 1 mg/kg — NOT the standard 3 mg/kg or 240 mg flat dose.
+      This is the CheckMate-9DW HCC-specific dosing. Administer over 30 min.
+      Ipilimumab 3 mg/kg is given immediately after nivolumab on the same day.
+  - drug_id: DRUG-IPILIMUMAB
+    dose: "3 mg/kg IV over 30 min"
+    schedule: "Q6W (every 6 weeks); same day as nivolumab"
+    route: IV
+    notes: >
+      DOSE IS 3 mg/kg — inverse ratio vs melanoma regimen (where ipi 1 mg/kg + nivo 3 mg/kg).
+      Administer after nivolumab completion on the same day.
+      Continue Q6W until progression, unacceptable toxicity, or maximum 4 cycles;
+      after 4 cycles: nivolumab monotherapy 480 mg Q4W (flat dose) until progression.
+
+cycle_length_days: 42
+number_of_cycles: "Induction: up to 4 cycles nivo+ipi Q6W (24 weeks), then nivolumab 480mg Q4W maintenance until progression"
+
+premedications:
+  - "Corticosteroid premedication: NOT routinely given (blunts ICI response)"
+  - "Antihistamine/acetaminophen: optional for infusion reactions per institutional protocol"
+  - "HBV prophylaxis: entecavir 0.5 mg PO QD (or tenofovir) if HBsAg+ or anti-HBc+ — start ≥7 days before and continue through treatment + ≥12 months after"
+
+supportive_care:
+  - "LFTs, bilirubin: before each dose (hepatotoxicity + hepatic decompensation monitoring)"
+  - "TSH: every 2-3 cycles (immune-mediated thyroid toxicity)"
+  - "Cortisol/ACTH: if adrenal insufficiency symptoms (fatigue, weight loss, hypotension)"
+  - "CBC, CMP: before each cycle"
+  - "CTCAE irAE monitoring: colitis, pneumonitis, hepatitis, endocrinopathies, dermatitis"
+  - "AFP: at baseline and every 2-3 cycles (tumor marker response tracking)"
+  - "CT CAP (±MRI liver): every 2 cycles for response assessment"
+  - "HBV DNA: if HBV+ at baseline (monitor for reactivation despite prophylaxis)"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 immune-mediated hepatitis (AST/ALT >5× ULN)"
+    action: "Hold both drugs; high-dose corticosteroids (1-2 mg/kg/day prednisone); hepatology consult; PERMANENTLY DISCONTINUE if Grade 4 or non-responding"
+  - toxicity: "Grade 3-4 colitis (diarrhea ≥7 stools/day above baseline)"
+    action: "Hold; corticosteroids 1-2 mg/kg/day; infliximab 5 mg/kg if steroid-refractory; colonoscopy if persistent"
+  - toxicity: "Grade 3-4 pneumonitis"
+    action: "Hold; corticosteroids 2 mg/kg/day; pulmonology; PERMANENTLY DISCONTINUE if Grade 4"
+  - toxicity: "Grade 3 immune-mediated endocrinopathy"
+    action: "Hold; hormone replacement (levothyroxine, hydrocortisone); may resume when stable on replacement"
+  - toxicity: "Grade 2 hepatic toxicity (AST/ALT 3-5× ULN in setting of HBV reactivation)"
+    action: "Add or escalate antiviral therapy; consult hepatology; hold immunotherapy until hepatitis resolves"
+
+special_requirements:
+  - "Child-Pugh A liver function REQUIRED (CP-B with selected criteria only; CP-C contraindicated)"
+  - "No active autoimmune disease requiring systemic immunosuppression (>10 mg prednisone/day equivalent)"
+  - "No prior organ transplant (solid organ or stem cell)"
+  - "HBV screening mandatory: HBsAg, anti-HBc, HBV-DNA before treatment"
+  - "HBV prophylaxis MANDATORY if HBsAg+ or anti-HBc+ (entecavir or tenofovir)"
+  - "No prior systemic therapy for HCC (first-line only)"
+  - "Active variceal bleeding within prior 6 months: use durva+treme instead (no bevacizumab avoidance issue; but evaluate esophageal varices)"
+  - "ECOG PS 0-1 (CheckMate-9DW enrolled ECOG 0-1 predominantly)"
+  - "DOSING IS DIFFERENT from melanoma nivo+ipi: nivo 1 mg/kg + ipi 3 mg/kg Q6W"
+
+sources:
+  - SRC-CM9DW-ELKHOUEIRY-2024
+  - SRC-NCCN-HCC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  CheckMate-9DW (El-Khoueiry NEJM 2024; NCT04039607): Phase 3, n=668 advanced HCC.
+  Nivo 1 mg/kg + ipi 3 mg/kg Q6W vs sorafenib/lenvatinib.
+  mOS 23.7 vs 20.6 months (HR 0.79; p=0.018); ORR 36% vs 13%.
+  FDA approved June 6, 2024 for 1L advanced HCC.
+  NCCN HCC 2025: Category 1.
+  CRITICAL dosing note: nivo 1 mg/kg + ipi 3 mg/kg Q6W — inverse from melanoma (nivo 3 + ipi 1);
+  after 4 cycles, switch to nivolumab 480 mg flat dose Q4W monotherapy maintenance.

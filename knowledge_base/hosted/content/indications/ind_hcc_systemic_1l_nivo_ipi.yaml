@@ -1,0 +1,105 @@
+id: IND-HCC-SYSTEMIC-1L-NIVO-IPI
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Advanced/unresectable HCC — BCLC B not amenable to loco-regional therapy, or BCLC C"
+    - "No prior systemic therapy for HCC"
+    - "Child-Pugh A liver function (CP-B with caution; CP-C contraindicated)"
+  biomarker_requirements:
+    - "No biomarker required (CheckMate-9DW enrolled unselected HCC by etiology and PD-L1)"
+    - "PD-L1 testing not required; benefit observed regardless of PD-L1 expression"
+
+recommended_regimen: REG-NIVO-IPI-HCC-1L
+
+concurrent_therapy:
+  - "HBV prophylaxis: entecavir 0.5 mg PO QD (or tenofovir 300 mg QD) if HBsAg+ or anti-HBc+ — MANDATORY"
+  - "HCV DAA treatment: sofosbuvir/velpatasvir if HCV-RNA detectable (coordinate timing with oncology and hepatology)"
+
+followed_by:
+  - "Nivolumab 480 mg IV Q4W (flat dose) monotherapy maintenance after 4 cycles of nivo+ipi"
+  - "Continue maintenance until progression or unacceptable toxicity"
+  - "At progression: 2L per ALGO-HCC-SYSTEMIC-2L (sorafenib, lenvatinib, cabozantinib, or regorafenib)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_os_months: 23.7
+  os_control_arm_months: 20.6
+  os_hr: 0.79
+  os_p_value: "p=0.018"
+  orr_percent: 36
+  orr_control_arm_percent: 13
+  notes: >
+    CheckMate-9DW (El-Khoueiry NEJM 2024; NCT04039607; n=668): nivo+ipi Q6W vs
+    investigator-choice sorafenib or lenvatinib. mOS 23.7 vs 20.6 months (HR 0.79;
+    95% CI 0.65-0.96; p=0.018); ORR 36% vs 13% (p<0.001); mPFS 7.7 vs 3.7 months (HR 0.74).
+    FDA approved June 6, 2024 for 1L advanced HCC.
+    NCCN HCC 2025: Category 1.
+    Median OS numerically similar to atezo+bev (IMbrave150: 19.2m) and durva+treme
+    (HIMALAYA: 16.4-20.5m by analysis); direct cross-trial comparison not meaningful
+    due to different control arms and patient populations.
+
+hard_contraindications:
+  - "Child-Pugh C liver function (no systemic therapy; BSC/transplant evaluation only)"
+  - "Active autoimmune disease requiring systemic immunosuppression (>10 mg prednisone/day)"
+  - "Prior organ transplant (solid organ or stem cell — risk of immune-mediated rejection)"
+  - "HBsAg+ or anti-HBc+ without antiviral prophylaxis started before first dose"
+  - "Active severe hepatitis (transaminases >5× ULN at baseline)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Active esophageal variceal bleed within 6 months: evaluate varices; if high-risk, consider banding before treatment"
+
+red_flags_triggering_alternative:
+  - "Active variceal bleeding: no bevacizumab concern with nivo+ipi, but ensure varices controlled before starting"
+  - "Child-Pugh B: use with extreme caution; sorafenib/lenvatinib may be safer in CP-B7-8"
+  - "Prior autoimmune disease: evaluate carefully; select durva+treme or atezo+bev if autoimmune history concerning"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "AFP (baseline, tumor marker)"
+  - "HBsAg, anti-HBc, HBV-DNA (mandatory — determine antiviral prophylaxis need)"
+  - "Anti-HCV, HCV-RNA (if anti-HCV+)"
+  - "Child-Pugh score assessment"
+  - "BCLC staging confirmation (CT CAP ± MRI liver)"
+  - "TSH (baseline thyroid function)"
+  - TEST-ECOG-PS
+
+desired_tests:
+  - "PD-L1 IHC (22C3 SP263): not required but prognostic"
+  - "CTLA-4 polymorphisms: not clinically used"
+  - "AFP-L3 fraction (HCC-specific AFP variant)"
+
+rationale: >
+  CheckMate-9DW demonstrated OS benefit for nivolumab+ipilimumab (HR 0.79; p=0.018)
+  vs sorafenib or lenvatinib in 1L advanced HCC. FDA approved June 6, 2024.
+  NCCN HCC 2025: Category 1. Three NCCN Category 1 ICI-containing regimens now
+  available for 1L HCC: atezolizumab+bevacizumab (IMbrave150; preferred when no
+  variceal bleed), durvalumab+tremelimumab (HIMALAYA; when bev contraindicated),
+  and nivolumab+ipilimumab (CheckMate-9DW; all-ICI doublet; no anti-VEGF component).
+  CRITICAL dosing: nivo 1 mg/kg + ipi 3 mg/kg Q6W (opposite ratio vs melanoma).
+  After 4 cycles, switch to nivolumab 480 mg flat dose Q4W monotherapy maintenance.
+  No bevacizumab component — option for patients with variceal bleeding risk or
+  high-risk esophageal varices where anti-VEGF is contraindicated.
+  HBV prophylaxis mandatory in carriers (entecavir or tenofovir).
+
+sources:
+  - SRC-CM9DW-ELKHOUEIRY-2024
+  - SRC-NCCN-HCC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EJ 2026-05-04. CheckMate-9DW nivo+ipi for HCC 1L.
+  Third NCCN Cat 1 ICI-containing 1L option alongside atezo+bev and durva+treme.
+  Key differentiator: all-ICI doublet (no bevacizumab); suitable when variceal
+  bleeding risk makes atezo+bev inappropriate.
+  Dosing inverse from melanoma: nivo 1 mg/kg + ipi 3 mg/kg Q6W.
+  Two-reviewer clinical signoff required per CHARTER §6.1.
