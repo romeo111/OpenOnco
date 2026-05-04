@@ -1,0 +1,104 @@
+id: IND-UROTHELIAL-2L-TAXANE-MONO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-UROTHELIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced or metastatic urothelial carcinoma (bladder, upper tract, or urethra)"
+    - "Prior EV+pembrolizumab (EV-302) 1L regimen — EV-experienced"
+    - "Platinum-ineligible at 2L: CrCl <30 mL/min OR prior platinum within ≤6 months OR patient declines platinum"
+    - "ECOG PS 0-2"
+    - "FGFR2/3 wild-type or untested (if FGFR2/3-altered, erdafitinib preferred)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "FGFR2/3 activating mutation or fusion AND prior platinum+ICI therapy — erdafitinib preferred (THOR; PFS HR 0.58)"
+    - "Active Grade ≥2 peripheral neuropathy (paclitaxel concern; consider docetaxel with caution)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 2 patients: reduce paclitaxel to 135 mg/m² or docetaxel to 60 mg/m² at MDT discretion"
+
+recommended_regimen: REG-DOCETAXEL-MONO
+alternative_regimens:
+  - regimen_id: null
+    condition: "Paclitaxel 175 mg/m² IV q3w (or 80 mg/m² weekly × 3 of 4 weeks) is equally acceptable — no head-to-head comparison; paclitaxel more commonly used in urothelial practice"
+    notes: "Paclitaxel 175 mg/m² q3w: response rate ~7-13% in pretreated UC (phase 2 data); no phase 3 RCT in post-EV+pembro setting"
+concurrent_therapy: []
+
+evidence_level: low
+strength_of_recommendation: weak
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~7-13% (historical phase 2 data; no modern phase 3 RCT in post-EV+pembro setting)"
+  notes: >
+    No dedicated phase 3 RCT exists for taxane monotherapy after EV+pembrolizumab failure.
+    Evidence extrapolated from historical taxane data in multiply-pretreated UC:
+    Paclitaxel 175 mg/m² q3w: ORR 10-20% in 2L-3L (various phase 2 trials);
+    Docetaxel 75 mg/m² q3w: ORR ~13% in 2L+ UC (Vaughn 2002 and others).
+    Vinflunine (vinca alkaloid): ORR 8.6% (VINFLU-UC phase 3 vs BSC; registered in EU,
+    not in Ukraine); docetaxel or paclitaxel more accessible in Ukrainian oncology practice.
+    NCCN UC 2025: taxane chemotherapy listed as 2A option in post-EV+pembro platinum-ineligible
+    setting with no superior alternative.
+
+hard_contraindications:
+  - "Active uncontrolled infection (absolute neutropenia risk)"
+  - "ECOG PS ≥3"
+  - "Grade ≥3 peripheral neuropathy (taxane cumulative neuropathy)"
+  - "Severe hepatic impairment: bilirubin >3× ULN (docetaxel hepatic metabolism impaired)"
+
+red_flags_triggering_alternative:
+  - condition: "FGFR2/3 alteration detected → IND-UROTHELIAL-2L-ERDAFITINIB (THOR PFS HR 0.58; superior to taxane)"
+  - condition: "Platinum-eligible (CrCl ≥30 + no prior platinum ≤6 months) → IND-UROTHELIAL-2L-PLATINUM-CHEMO (gem+carbo; NCCN Cat 2A)"
+  - condition: "ICI-naive (no prior pembrolizumab) → IND-UROTHELIAL-2L-PEMBROLIZUMAB (KEYNOTE-045 OS HR 0.73)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - "CrCl/GFR (confirms platinum-ineligibility; Calvert-based carboplatin dosing if later platinum considered)"
+  - "FGFR2/3 testing (if not done — 15-20% of UC harbor FGFR2/3 alterations; erdafitinib preferred if FGFR+)"
+  - "Neurological assessment (baseline peripheral neuropathy — taxane cumulative neurotoxicity)"
+  - "CT CAP (response assessment every 2 cycles)"
+
+desired_tests:
+  - "HER2 IHC/FISH (emerging evidence for T-DXd in HER2+ UC; not yet NCCN standard in UC)"
+
+rationale: >
+  For patients with advanced UC progressing after EV+pembrolizumab 1L who are also
+  platinum-ineligible at 2L (CrCl <30 or recent prior platinum ≤6 months), single-agent
+  taxane chemotherapy is the most commonly used option in clinical practice despite limited
+  evidence. FGFR testing must be done first — FGFR2/3-altered patients should receive
+  erdafitinib (THOR; ORR 35.3% vs 8.5% chemotherapy; PFS HR 0.58). For FGFR wild-type
+  platinum-ineligible post-EV+pembro patients, taxane monotherapy (docetaxel 75 mg/m² q3w
+  or paclitaxel 175 mg/m² q3w) is NCCN Category 2A. Responses are modest (~10-13%)
+  but represent the most accessible option. Vinflunine (not registered in UA) has
+  marginally better phase 3 data vs BSC but is not accessible.
+
+rationale_ua: >
+  Після EV+пембролізумаб 1L, платинонепридатних пацієнтів з UC (CrCl <30 або
+  попередній платин ≤6 міс): таксанова монотерапія — найдоступніший варіант.
+  FGFR2/3-тестування обов'язкове: при FGFR+ → ердафітиніб (THOR; ORR 35.3% vs 8.5%).
+  При FGFR WT: доцетаксел 75 мг/м² q3w або паклітаксел 175 мг/м² q3w.
+  NCCN Категорія 2A. Відповідь ~10-13%; паліативний намір.
+  Вінфлунін (EMA-схвалений) — не зареєстрований в Україні.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-UROTHELIAL-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN UC 2025 Category 2A: taxane monotherapy (docetaxel or paclitaxel) for post-EV+pembro platinum-ineligible 2L UC"
+
+do_not_do:
+  - "Перевірити FGFR2/3 перед призначенням таксану — при FGFR+ ердафітиніб переважніший (THOR)"
+  - "Не призначати при нейропатії ≥2 ступеня — таксани накопичують нейротоксичність"
+  - "Не застосовувати при ECOG ≥3 — таксани не приносять користі при вкрай поганому стані"
+  - "Не ігнорувати профілактику G-CSF при запланованому дозуванні — рутинна профілактика при доцетаксел 75 мг/м²"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

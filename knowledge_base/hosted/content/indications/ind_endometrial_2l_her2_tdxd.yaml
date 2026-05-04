@@ -1,0 +1,112 @@
+id: IND-ENDOMETRIAL-2L-HER2-TDXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ENDOMETRIAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic endometrial carcinoma (any histological subtype — serous most common HER2+ subtype)"
+    - "HER2 overexpression: IHC 3+ (required for FDA tumor-agnostic approval; IHC 2+ FISH+ is a clinical consideration)"
+    - "Prior platinum-based chemotherapy (1L)"
+    - "≥1 prior line of systemic therapy for metastatic/recurrent disease"
+    - "Unresectable or metastatic disease not amenable to curative-intent surgery/RT"
+  biomarker_requirements_required:
+    - "HER2 IHC 3+ (by validated assay — PATHWAY HER2/neu 4B5 or equivalent; FDA companion diagnostic for tumor-agnostic label)"
+  biomarker_requirements_excluded:
+    - "Prior T-DXd or other anti-HER2 antibody-drug conjugate (cross-resistance expected)"
+    - "Active or prior ILD/pneumonitis Grade ≥2 (absolute contraindication for T-DXd)"
+  demographic_constraints:
+    ecog_max: 1
+    notes: "DESTINY-PanTumor02 enrolled ECOG 0-1; ECOG 2 use is off-label and requires MDT discussion"
+
+recommended_regimen: REG-TDXD-METASTATIC
+concurrent_therapy: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "57.5% (DESTINY-PanTumor02 endometrial cohort; n=40)"
+  median_dor_months: "11.3"
+  median_pfs_months: "10.1"
+  notes: >
+    DESTINY-PanTumor02 (Meric-Bernstam 2024, JCO; n=40 endometrial cohort):
+    T-DXd 5.4 mg/kg q3w. ORR 57.5%; median DOR 11.3 months; median PFS 10.1 months.
+    Predominantly serous or clear-cell histology; ~30% of uterine serous carcinomas
+    are HER2 IHC 3+. FDA tumor-agnostic approval August 2023 for HER2 IHC 3+ solid tumors.
+    NCCN Uterine 2025: Category 1 for HER2+ (IHC 3+) recurrent/metastatic uterine serous
+    carcinoma ≥2 prior lines.
+
+hard_contraindications:
+  - "Active or prior interstitial lung disease (ILD) / pneumonitis Grade ≥2 — T-DXd ILD is potentially fatal"
+  - "Baseline LVEF <50% (cardiotoxicity risk)"
+  - "ECOG PS ≥3"
+  - "Severe hepatic impairment (Child-Pugh C) — T-DXd not studied"
+  - "Pregnancy or breastfeeding — teratogenic; effective contraception required"
+
+red_flags_triggering_alternative:
+  - condition: "HER2 IHC 2+ FISH-negative → T-DXd FDA label not met; IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR is standard"
+  - condition: "Prior T-DXd failure → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR (if not yet given)"
+  - condition: "dMMR/MSI-H, no prior ICI → IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR preferred (single-agent ICI if prior ICI-naive)"
+  - condition: "ECOG ≥2 or ILD history → IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "HER2 IHC (3+ required; repeat if IHC 2+ only — reflex FISH/ISH)"
+  - "CT chest at baseline (ILD baseline screening — mandatory before T-DXd)"
+  - "ECHO/MUGA at baseline (LVEF; repeat if symptoms or q3 cycles)"
+  - "Pulmonary function tests (DLCO) if baseline respiratory symptoms or smoker"
+  - "Pregnancy test (women of reproductive age)"
+
+desired_tests:
+  - "MMR/MSI testing (dMMR/MSI-H patient may benefit from ICI first if ICI-naive)"
+  - "NGS/tumor molecular profiling (POLE, HRD, TMB)"
+
+rationale: >
+  HER2 overexpression (IHC 3+) occurs in ~30% of uterine serous carcinomas and a
+  smaller fraction of endometrioid carcinomas. DESTINY-PanTumor02 (Meric-Bernstam 2024;
+  n=40 endometrial cohort): T-DXd 5.4 mg/kg q3w achieved ORR 57.5%; median DOR 11.3m;
+  median PFS 10.1m — the highest ORR among tumor types tested (except salivary gland 72.7%).
+  FDA tumor-agnostic approval August 2023 for HER2+ (IHC 3+) unresectable/metastatic
+  solid tumors. NCCN Uterine 2025: Category 1 for HER2+ recurrent/metastatic uterine
+  serous carcinoma. T-DXd should be prioritized over pembrolizumab+lenvatinib in
+  HER2+ endometrial cancer given the superior ORR.
+  Critical safety: ILD — occurs in ~12% at Grade 1-2; Grade 3 rare but fatal. Requires
+  rigorous CT monitoring every 2 cycles × 6 cycles then every 3 cycles.
+
+rationale_ua: >
+  HER2 гіперекспресія (ІГХ 3+) — ~30% серозних карцином ендометрія.
+  DESTINY-PanTumor02 (Meric-Bernstam 2024, JCO; n=40 ендометрій): T-DXd 5.4 мг/кг q3w;
+  ORR 57.5%; медіана DOR 11.3 міс; медіана PFS 10.1 міс. FDA схвалено серпень 2023
+  (пухлиноагностично для HER2 ІГХ 3+ неоперабельних/метастатичних солідних пухлин).
+  NCCN Категорія 1. Пріоритет над pembro+lenva при HER2+ ендометрії.
+  УВАГА: ІЛЗ/пневмоніт — потенційно летальне ускладнення (~12%); моніторинг КТ
+  органів грудної клітки кожні 2 цикли протягом перших 6 циклів.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-DESTINY-PANTUMOR02-MERIC-2024
+    position: supports
+    relevant_quote_paraphrase: "DESTINY-PanTumor02 endometrial cohort (n=40): T-DXd ORR 57.5%; median PFS 10.1m; FDA tumor-agnostic approval August 2023 HER2 IHC 3+"
+  - source_id: SRC-NCCN-UTERINE-2025
+    position: supports
+
+do_not_do:
+  - "Не призначати T-DXd при ІГХ 2+ FISH-негативному — FDA-схвалення тільки для ІГХ 3+"
+  - "Не призначати при активному ІЛЗ/пневмоніті ≥2 ступеня — абсолютне протипоказання"
+  - "Обов'язковий КТ органів грудної клітки базово і кожні 2 цикли (перші 6 циклів) — рання діагностика ІЛЗ"
+  - "При появі респіраторних симптомів → НЕГАЙНО зупинити T-DXd; КТ + пульмонологічна консультація + ГКС"
+  - "Не комбінувати з іншими антитілоподібними препаратами без доказів"
+  - "При dMMR/MSI-H + відсутність попередньої ICI терапії → розглянути дострілімаб/пембролізумаб спочатку"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

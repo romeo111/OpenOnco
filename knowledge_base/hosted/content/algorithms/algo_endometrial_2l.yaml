@@ -5,12 +5,35 @@ purpose: 'Select 2L+ recurrent/metastatic endometrial carcinoma Indication after
 
   '
 output_indications:
+- IND-ENDOMETRIAL-2L-HER2-TDXD
 - IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
 - IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
 default_indication: IND-ENDOMETRIAL-2L-PEMBRO-LENVA-PMMR
-alternative_indication: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
+alternative_indication: IND-ENDOMETRIAL-2L-HER2-TDXD
 decision_tree:
 - step: 1
+  evaluate:
+    all_of:
+    - condition: "HER2 IHC 3+ confirmed (validated assay — PATHWAY HER2/neu 4B5 or equivalent)"
+    - any_of:
+      - red_flag: RF-FITNESS-ECOG-FIT
+      - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    - none_of:
+      - condition: "Prior T-DXd or HER2-targeted ADC therapy"
+      - condition: "Active ILD/pneumonitis Grade ≥2"
+  if_true:
+    result: IND-ENDOMETRIAL-2L-HER2-TDXD
+    notes: >
+      HER2 IHC 3+ + ECOG 0-1 + no prior T-DXd: trastuzumab deruxtecan (T-DXd) 5.4 mg/kg q3w.
+      DESTINY-PanTumor02 endometrial cohort (n=40): ORR 57.5%; median PFS 10.1 months.
+      FDA tumor-agnostic approval August 2023; NCCN Uterine 2025 Category 1.
+      ~30% of uterine serous carcinomas are HER2 IHC 3+. HER2 testing mandatory at recurrence.
+      CRITICAL ILD risk: CT chest baseline + every 2 cycles × 6 cycles; hold immediately for
+      any new respiratory symptoms; corticosteroids for Grade ≥2; permanent d/c for Grade ≥3.
+  if_false:
+    next_step: 2
+  notes: "Wired 2026-05-04: HER2 IHC 3+ gate added as highest-priority routing (DESTINY-PanTumor02; FDA Aug 2023; NCCN Cat 1). Condition-based (no universal RF for endometrial HER2+ yet). ILD and prior T-DXd are exclusion conditions."
+- step: 2
   evaluate:
     all_of:
     - any_of:
@@ -25,9 +48,9 @@ decision_tree:
   if_true:
     result: IND-ENDOMETRIAL-2L-DOSTARLIMAB-DMMR
   if_false:
-    next_step: 2
+    next_step: 3
   notes: "Fully wired (W5c-finish 2026-04-30): replaced free-text 'dMMR/MSI-H' with structured finding lookups + replaced 'No prior ICI exposure in 1L' with none_of(RF-PRIOR-IO-PROGRESSION) — universal RF triggers on any documented prior anti-PD-(L)1 PD or recent IO exposure within 6mo."
-- step: 2
+- step: 3
   evaluate:
     all_of:
     - red_flag: RF-PRIOR-PLATINUM-RESISTANT
@@ -41,7 +64,8 @@ decision_tree:
 sources:
 - SRC-NCCN-UTERINE-2025
 - SRC-ESMO-ENDOMETRIAL-2022
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) HER2+ endometrial 2L T-DXd (DESTINY-PanTumor02 + uterine serous carcinoma evidence) — not modeled as separate indication; surfaced as free-text recommendation. (2) HRD+/POLE-mutated 2L scenarios — molecular-class-specific 2L (e.g., POLE-mut excellent prognosis with chemo re-challenge) not modeled. (3) Hormonal therapy (megestrol, AI) for low-grade ER+ endometrial 2L — not modeled; appropriate for indolent low-burden cases. (4) ECOG ≥2 patients ineligible for lenva combination — single-agent doxorubicin or paclitaxel re-challenge is the funded fallback; surfaced as free-text since not separately modeled. (5) UA funding gap — pembro+lenva not NSZU-reimbursed for endometrial 2L (2026 onco package); dostarlimab funding extends to 2L+ under same package but verify per current NSZU protocol.
+- SRC-DESTINY-PANTUMOR02-MERIC-2024
+last_reviewed: '2026-05-04'
+notes: 'AUTHORED 2026-05-04: IND-ENDOMETRIAL-2L-HER2-TDXD wired at step 1 (HER2 IHC 3+ gate; DESTINY-PanTumor02 ORR 57.5%; FDA Aug 2023; NCCN Cat 1). OOS / wiring gaps: (1) HRD+/POLE-mutated 2L scenarios — molecular-class-specific 2L (e.g., POLE-mut excellent prognosis with chemo re-challenge) not modeled. (2) Hormonal therapy (megestrol, AI) for low-grade ER+ endometrial 2L — not modeled; appropriate for indolent low-burden cases. (3) ECOG ≥2 patients ineligible for lenva combination — single-agent doxorubicin or paclitaxel re-challenge is the funded fallback; surfaced as free-text since not separately modeled. (4) UA funding gap — pembro+lenva not NSZU-reimbursed for endometrial 2L (2026 onco package); dostarlimab funding extends to 2L+ under same package but verify per current NSZU protocol.
 
   '
