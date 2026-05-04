@@ -243,8 +243,17 @@ to find the relevant Disease entity in the knowledge base.
 
 ### 5.1. TNM or disease-specific
 
-For solid tumors — TNM via mCODE TNMClinicalStageGroup.
-For lymphomas — Lugano / Ann Arbor via a separate Observation.
+For solid tumors — TNM via mCODE, with the staging type explicit (МОЗ
+наказ №473/2026 requires cTNM / pTNM / ypTNM to be stated):
+
+| Type | When | mCODE profile | Simplified field value |
+|---|---|---|---|
+| **cTNM** | Pre-treatment clinical staging (imaging + biopsy, no surgery) | `TNMClinicalStageGroup` | `"cTNM"` |
+| **pTNM** | Post-surgical pathological staging | `TNMPathologicalStageGroup` | `"pTNM"` |
+| **ypTNM** | Post-neoadjuvant therapy pathological staging | `TNMPathologicalStageGroup` + `method` extension | `"ypTNM"` |
+
+For lymphomas — Lugano / Ann Arbor via a separate Observation
+(`tnm_staging_type: null`).
 
 ### 5.2. Example (Lugano for lymphoma)
 
@@ -289,11 +298,62 @@ For lymphomas — Lugano / Ann Arbor via a separate Observation.
 }
 ```
 
-### 5.3. Notes
+### 5.3. Example (solid tumor — cTNM vs pTNM)
+
+```json
+{
+  "resourceType": "Observation",
+  "meta": {
+    "profile": ["http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-tnm-pathological-stage-group"]
+  },
+  "status": "final",
+  "code": {
+    "coding": [{
+      "system": "http://loinc.org",
+      "code": "21902-2",
+      "display": "Stage group pathological Cancer"
+    }]
+  },
+  "subject": {"reference": "Patient/patient-001"},
+  "effectiveDateTime": "2026-04-07",
+  "valueCodeableConcept": {
+    "coding": [{
+      "system": "http://snomed.info/sct",
+      "code": "1229947003",
+      "display": "pIIIA"
+    }]
+  },
+  "component": [
+    {"code": {"coding": [{"system": "http://loinc.org", "code": "21899-0", "display": "Primary tumor.pathology Cancer"}]},
+     "valueCodeableConcept": {"text": "pT2"}},
+    {"code": {"coding": [{"system": "http://loinc.org", "code": "21900-6", "display": "Regional lymph nodes.pathology"}]},
+     "valueCodeableConcept": {"text": "pN2"}},
+    {"code": {"coding": [{"system": "http://loinc.org", "code": "21901-4", "display": "Distant metastases.pathology"}]},
+     "valueCodeableConcept": {"text": "pM0"}}
+  ]
+}
+
+```
+
+The staging type is encoded by `meta.profile` — that IS the cTNM/pTNM
+discriminator in FHIR/mCODE; no extra field needed at the FHIR level.
+
+| Staging type | `meta.profile` | LOINC `code` | T/N/M LOINC codes |
+|---|---|---|---|
+| cTNM | `mcode-tnm-clinical-stage-group` | `21908-9` | `21905-5` / `21906-3` / `21907-1` |
+| pTNM | `mcode-tnm-pathological-stage-group` | `21902-2` | `21899-0` / `21900-6` / `21901-4` |
+| ypTNM | `mcode-tnm-pathological-stage-group` + `method` ext | `21902-2` | same as pTNM |
+
+The simplified input field `tnm_staging_type` (§11) drives this profile
+selection when the engine serialises to FHIR.
+
+### 5.4. Notes
 
 - "unknown" for staging is a valid value; use `dataAbsentReason`
 - Combined staging systems — separate Observations (e.g.,
   ISS + R-ISS for multiple myeloma)
+- `tnm_staging_type` in the simplified input (§11) maps to the mCODE
+  profile selection here; the engine performs the mapping automatically
 
 ---
 
@@ -637,6 +697,9 @@ For the first UI, a **simplified subset** of FHIR-compatible format:
     "disease_entity": "HCV-associated marginal zone lymphoma",
     "staging_system": "Lugano",
     "stage": "IV-E",
+    "tnm_staging_type": null,
+    "histologic_grade": null,
+    "verification_method": "histological_biopsy",
     "biopsy_date": "2026-04-07",
     "body_sites": ["root_of_tongue", "tonsil"]
   },
@@ -706,6 +769,17 @@ For the first UI, a **simplified subset** of FHIR-compatible format:
 
 The engine converts this to a FHIR Bundle internally when required for
 integrations. The simplified format is used for the UI.
+
+### 11.1. Optional `diagnosis` fields (МОЗ наказ №473 / 2026-04-07)
+
+These fields are optional (`null` when not applicable) but required by МОЗ
+order №473 when present in the pathology report:
+
+| Field | Accepted values | Notes |
+|---|---|---|
+| `histologic_grade` | `"G1"` / `"G2"` / `"G3"` / `"G4"` / `"GX"` | `null` for hematologic malignancies where grade is encoded in the disease entity or a disease-specific system (Gleason/ISUP, WHO CNS grade, Ki-67-based NET grade) |
+| `tnm_staging_type` | `"cTNM"` / `"pTNM"` / `"ypTNM"` / `null` | `null` for lymphomas (Ann Arbor / Lugano) and other non-TNM systems |
+| `verification_method` | `"histological_biopsy"` / `"cytological"` / `"liquid_biopsy"` / `"imaging_only"` / `"clinical"` | Maps to FHIR `verificationStatus`; required per nakas 473 §4 |
 
 ---
 
