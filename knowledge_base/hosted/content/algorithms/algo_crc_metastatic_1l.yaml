@@ -15,6 +15,7 @@ output_indications:
   - IND-CRC-METASTATIC-1L-FOLFOX-BEV
   - IND-CRC-METASTATIC-1L-CAPE-BEV-FRAIL
   - IND-CRC-PERFORMANCE-STATUS-3
+  - IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV
 
 default_indication: IND-CRC-METASTATIC-1L-RAS-WT-LEFT
 alternative_indication: IND-CRC-METASTATIC-1L-FOLFOX-BEV
@@ -112,6 +113,33 @@ decision_tree:
         outweigh benefit in true frailty). Step 51 selects cape+bev vs BSC-adjacent mono.
     if_false:
       result: IND-CRC-METASTATIC-1L-FOLFOX-BEV
+      notes: >
+        Default mCRC 1L for fit non-frail patients (no specific FOLFOXIRI driver):
+        FOLFOX + bevacizumab (TREE/N016966; NCCN Cat 1). After 6-8 induction cycles
+        with ≥SD/PR: de-escalate to maintenance capecitabine + bevacizumab to limit
+        cumulative oxaliplatin neuropathy (CAIRO3; AIO 0207; NCCN Cat 1) —
+        see IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV in alternatives.
+      alternatives:
+        - indication_id: IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV
+          nccn_category: "1"
+          criteria: >
+            Stage IV unresectable mCRC; achieved ≥SD/PR after 6-8 cycles FOLFOX+bev
+            induction (non-MSI-H — MSI-H patients remain on pembrolizumab maintenance
+            pathway); ECOG 0-2; RF-CRC-TRANSFORMATION-PROGRESSION absent.
+            Maintenance regimen: capecitabine 1000 mg/m² BID d1-14 q21d + bevacizumab
+            7.5 mg/kg q21d. DPYD genotyping required before capecitabine start. LOT=1
+            continuation — induction → maintenance is one continuous 1L pathway; not a
+            new line of therapy.
+          note: >
+            Capecitabine + bevacizumab maintenance after FOLFOX+bev induction (CAIRO3;
+            Simkens 2015 Lancet; AIO 0207; Hegewisch-Becker 2015 Lancet Oncol; NCCN
+            Cat 1): CAIRO3 — mPFS 8.5 vs 4.1 mo (maintenance vs observation);
+            AIO 0207 — bev ± fluoropyrimidine maintenance superior to full pause.
+            Main rationale: avoid cumulative oxaliplatin neuropathy (>30% irreversible
+            at >7-12 g/m² cumulative). Reintroduce oxaliplatin at progression if
+            tolerated (CAIRO3 reintroduction arm supported re-induction). Full stop
+            acceptable for deep CR patients or patient preference (OPTIMOX stop-and-go
+            approach). REG stub: REG-CAPE-BEV-MAINTENANCE pending authoring.
 
   # Step 51 — Frailty ECOG sub-stratification.
   # RF-CRC-FRAILTY-AGE positive patients reach this step.
@@ -171,3 +199,8 @@ notes: >
 
   BRAF V600E routing: fit → FOLFOXIRI+bev 1L then BEACON 2L. Frail/older BRAF V600E →
   FOLFOX+bev 1L then BEACON 2L (no age bar for BEACON; only PS restriction).
+
+  UPDATED 2026-05-04 (Workstream FR): IND-CRC-METASTATIC-MAINT-FOLFIRI-BEV wired as
+  Cat 1 alternative at step 5 if_false (FOLFOX+bev default track). Maintenance
+  capecitabine + bevacizumab after 6-8 induction cycles per CAIRO3/AIO 0207 (NCCN
+  Cat 1). Maintenance gap CLOSED.

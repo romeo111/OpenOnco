@@ -13,6 +13,8 @@ output_indications:
   - IND-RCC-METASTATIC-1L-PEMBRO-AXI
   - IND-RCC-METASTATIC-1L-LENV-PEMBRO
   - IND-RCC-METASTATIC-1L-NIVO-CABO
+  - IND-RCC-VHL-DISEASE-BELZUTIFAN
+  - IND-RCC-ADJUVANT-PEMBRO
 
 default_indication: IND-RCC-METASTATIC-1L-PEMBRO-AXI
 alternative_indication: IND-RCC-METASTATIC-1L-NIVO-CABO
@@ -27,6 +29,49 @@ decision_tree:
         - condition: "Clear-cell (conventional) RCC confirmed on pathology"
     if_true:
       next_step: 2
+      notes: >
+        Clear-cell ccRCC confirmed: route to IMDC risk stratification (step 2).
+        VHL syndrome patients (germline VHL pathogenic mutation) should receive
+        belzutifan monotherapy rather than ICI+TKI (LITESPARK-004; NCCN Cat 1) —
+        see IND-RCC-VHL-DISEASE-BELZUTIFAN in alternatives. Post-nephrectomy
+        adjuvant setting (Stage II high-risk/III/M1 NED): pembrolizumab × 1 year
+        (KEYNOTE-564; NCCN Cat 1) — see IND-RCC-ADJUVANT-PEMBRO in alternatives.
+      alternatives:
+        - indication_id: IND-RCC-VHL-DISEASE-BELZUTIFAN
+          nccn_category: "1"
+          criteria: >
+            Clear-cell RCC in setting of VHL disease (germline VHL pathogenic /
+            likely-pathogenic variant confirmed by germline testing); tumors not
+            requiring immediate surgery; ECOG 0-2. Standard ICI+TKI NOT preferred
+            in VHL disease — belzutifan targets HIF-2α directly upstream of VEGF.
+            Not for sporadic ccRCC without germline VHL mutation. VHL-associated CNS
+            hemangioblastomas and pancreatic pVHL-pathway tumors also covered.
+          note: >
+            Belzutifan for VHL disease-associated clear-cell RCC (LITESPARK-004;
+            Jonasch 2021 NEJM; FDA Aug 2021; NCCN Cat 1): ORR 49% for RCC; DCR ~99%;
+            belzutifan 120 mg PO QD continuously. HIF-2α inhibitor targeting the
+            VHL/HIF pathway. Also active against VHL-associated CNS hemangioblastomas
+            (ORR 63%) and pancreatic lesions. Anemia Grade 3+ ~7% — monitor CBC,
+            consider EPO support. Hypoxia rare — monitor O2 saturation. FDA-approved
+            for VHL disease-associated RCC, CNS hemangioblastoma, pancreatic NET /
+            serous cystadenoma. NOT standard for sporadic metastatic RCC 1L.
+        - indication_id: IND-RCC-ADJUVANT-PEMBRO
+          nccn_category: "1"
+          criteria: >
+            Post-curative-intent nephrectomy (radical or partial) for clear-cell ccRCC;
+            KEYNOTE-564 eligibility: pT2 Grade 4 or sarcomatoid, OR pT3 any grade N0M0,
+            OR pT4/N+ any grade, OR M1 NED (resected metastases, no evidence of disease);
+            ECOG 0-2; no active systemic autoimmune disease; adequate organ function.
+            ADJUVANT track — LOT=1 post-curative resection; separate from metastatic
+            systemic therapy decision tree (steps 2-5). Not for active metastatic disease.
+          note: >
+            Pembrolizumab adjuvant post-nephrectomy for clear-cell ccRCC (KEYNOTE-564;
+            Choueiri 2021 NEJM; Choueiri 2023 NEJM 5-yr update; NCCN Cat 1): DFS HR 0.68
+            (5-yr 57.2% vs 49.7%); OS HR 0.62 (5-yr 83.4% vs 76.2%; p<0.001).
+            Pembrolizumab 200 mg IV Q3W × 17 cycles (~1 year). FDA approved Nov 2021.
+            Stage III high-risk and M1 NED subgroups have strongest NNT rationale.
+            Thyroid dysfunction most common irAE (~20%); monitor TSH q6-12w. Low-risk
+            pT2a Grade 1-2 not included in KEYNOTE-564 eligibility.
     if_false:
       result: null
       notes: >
@@ -125,7 +170,7 @@ sources:
   - SRC-NCCN-KIDNEY-2025
   - SRC-ESMO-RCC-2024
 
-last_reviewed: "2026-05-03"
+last_reviewed: "2026-05-04"
 notes: >
   1L clear-cell RCC algorithm covering all 4 NCCN category-1 regimens.
   Non-clear cell (papillary, chromophobe, etc.) is out of scope — use
@@ -138,9 +183,19 @@ notes: >
   profile, not fixed hierarchy. All three are NCCN category 1; MDT/patient
   preference is a valid tiebreaker.
 
-  Adjuvant pembro (KEYNOTE-564) → IND-RCC-ADJUVANT-PEMBRO; this algorithm
-  covers metastatic 1L only.
+  Adjuvant pembro (KEYNOTE-564) → IND-RCC-ADJUVANT-PEMBRO wired at step 1
+  if_true as stage-gated alternative (KEYNOTE-564 post-nephrectomy, LOT=1
+  adjuvant; DFS HR 0.68; OS HR 0.62; NCCN Cat 1). No dedicated adjuvant
+  algorithm exists — wired here with explicit adjuvant criteria.
 
   2L: ALGO-RCC-METASTATIC-2L exists — belzutifan, cabozantinib,
   tivozanib 3L (IND-RCC-METASTATIC-3L-TIVOZANIB), nivolumab mono wired.
   Gap CLOSED (2026-05-04).
+
+  UPDATED 2026-05-04 (Workstream FR): IND-RCC-VHL-DISEASE-BELZUTIFAN and
+  IND-RCC-ADJUVANT-PEMBRO wired as Cat 1 alternatives at step 1 if_true
+  (clear-cell histology gate). VHL belzutifan (LITESPARK-004; ORR 49%; FDA
+  Aug 2021) for germline VHL syndrome patients; adjuvant pembro (KEYNOTE-564;
+  DFS HR 0.68; OS HR 0.62) for post-nephrectomy high-risk Stage II/III and
+  M1 NED. Both are separate from the metastatic ICI+TKI pathway (steps 2-5).
+  Both gaps CLOSED.
