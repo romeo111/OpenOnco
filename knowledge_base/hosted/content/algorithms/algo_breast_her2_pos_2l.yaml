@@ -13,6 +13,7 @@ purpose: >
 output_indications:
   - IND-BREAST-HER2-POS-MET-2L-TDXD
   - IND-BREAST-HER2-POS-3L-TUCATINIB
+  - IND-BREAST-HER2-POS-2L-TDM1
 
 default_indication: IND-BREAST-HER2-POS-MET-2L-TDXD
 alternative_indication: IND-BREAST-HER2-POS-3L-TUCATINIB
@@ -46,16 +47,42 @@ decision_tree:
       next_step: 3
     notes: "MDT-only — brain-met status has no dedicated breast-scoped RF; positive branch routes to HER2CLIMB triplet (CNS-PFS doubling proven)."
 
-  # Step 3 — default: T-DXd 2L (DESTINY-Breast03 — superior to T-DM1).
+  # Step 3 — default: T-DXd 2L gate (DESTINY-Breast03 — superior to T-DM1).
+  # Routes to step 31 for T-DXd accessibility check.
   - step: 3
     evaluate:
       any_of:
         - condition: "No brain metastases OR brain mets not the dominant clinical issue"
     if_true:
-      result: IND-BREAST-HER2-POS-MET-2L-TDXD
+      next_step: 31
+      notes: "No dominant brain-met issue: routes to step 31 (T-DXd access gate)."
     if_false:
+      next_step: 31
+      notes: "Fall-through to T-DXd access gate — step 31."
+
+  # Step 31 — T-DXd vs T-DM1 access gate.
+  # T-DXd (ENHERTU; trastuzumab deruxtecan) is NCCN Cat 1 preferred 2L (DESTINY-Breast03;
+  # mPFS 28.8 vs 6.8 mo; HR 0.33). T-DM1 (EMILIA; NCCN Cat 1) is the accessible alternative
+  # when T-DXd is not registered or not reimbursed (Ukraine 2026: T-DXd not NSZU-funded).
+  - step: 31
+    evaluate:
+      all_of:
+        - condition: "T-DXd (ENHERTU, trastuzumab deruxtecan) accessible (registered + funded/reimbursed or patient programme at prescribing centre)"
+    if_true:
       result: IND-BREAST-HER2-POS-MET-2L-TDXD
-    notes: "Default fall-through — T-DXd 2L per DESTINY-Breast03."
+      notes: >
+        T-DXd accessible: trastuzumab deruxtecan 5.4 mg/kg IV q3w (REG-TDXD-METASTATIC;
+        DESTINY-Breast03; mPFS 28.8 vs 6.8 mo; HR 0.33; NCCN Cat 1).
+        Critical ILD monitoring: CT chest baseline + q2 cycles × 6; hold for any respiratory
+        symptoms; corticosteroids Grade ≥2; permanent d/c Grade ≥3.
+    if_false:
+      result: IND-BREAST-HER2-POS-2L-TDM1
+      notes: >
+        T-DXd inaccessible (not NSZU-funded UA 2026): T-DM1 (trastuzumab emtansine)
+        3.6 mg/kg IV q3w (REG-TDM1-METASTATIC; EMILIA Verma 2012 NEJM; mPFS 9.6 mo,
+        mOS 30.9 mo; NCCN Cat 1). Switch to T-DXd when access becomes available.
+        Monitor PLT before each cycle (thrombocytopenia); LVEF q3 months.
+    notes: "Step 31 added 2026-05-04 (Workstream BZ): T-DXd vs T-DM1 access gate. T-DXd not NSZU-reimbursed in UA 2026 → T-DM1 wired as accessible Cat 1 alternative. IND-BREAST-HER2-POS-2L-TDM1 authored. Gap CLOSED."
 
 sources:
   - SRC-NCCN-BREAST-2025
@@ -63,20 +90,22 @@ sources:
   - SRC-DESTINY-BREAST03-CORTES-2022
   - SRC-HER2CLIMB-MURTHY-2019
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
-  Subtype constraint: HER2+ only — algorithm should be entered only
-  after receptor-subtype branching at the disease-level dispatcher
-  routes the patient here. Schema lacks a top-level
-  `receptor_subtype` field on Algorithm; encoded in purpose +
-  Indication.applicable_to.receptor_subtype.
+  UPDATED 2026-05-04 (Workstream BZ): IND-BREAST-HER2-POS-2L-TDM1 authored and
+  wired at step 31 as T-DXd access gate fallback (EMILIA; NCCN Cat 1; mPFS 9.6 mo,
+  mOS 30.9 mo). T-DXd not NSZU-reimbursed in Ukraine (2026) → T-DM1 is the accessible
+  HER2-ADC 2L standard. When T-DXd access becomes available, switch.
 
-  Sequencing rationale:
-    Brain mets dominant → tucatinib triplet
-    No CNS issue → T-DXd 2L (DB-03 superior to T-DM1)
-    ≥3L post both → HER2CLIMB triplet (after T-DXd) OR T-DM1 fallback
+  ROUTING SUMMARY: (1) HER2-amplified confirmed → step 2; (2) active brain mets →
+  IND-BREAST-HER2-POS-3L-TUCATINIB (HER2CLIMB CNS-PFS proven); (3→31) no dominant
+  brain mets → T-DXd access gate: T-DXd accessible → TDXD (Cat 1 preferred);
+  T-DXd inaccessible → T-DM1 (Cat 1 accessible alternative).
 
-  T-DM1 (KATHERINE / EMILIA) and bispecifics (zanidatamab — late-stage)
-  not modeled in this batch. After both T-DXd and tucatinib triplet,
-  trastuzumab-deruxtecan rechallenge OR enrollment in trial appropriate
-  per NCCN/ESMO 2024-2025.
+  Subtype constraint: HER2+ only — algorithm fires only after receptor-subtype
+  branching routes the patient here.
+
+  Deferred / OOS:
+  - Bispecifics (zanidatamab — late-stage; not yet approved)
+  - ≥3L options (tucatinib triplet post-T-DXd, clinical trial)
+  - HER2-low 2L (T-DXd 5.4 mg/kg; DESTINY-Breast04 — requires separate algo/IND)

@@ -1,0 +1,173 @@
+id: IND-BREAST-HER2-POS-2L-TDM1
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-BREAST
+  receptor_subtype: HER2-positive
+  line_of_therapy: 2
+  stage_requirements:
+    - "HER2+ metastatic or locally advanced unresectable breast cancer (IHC 3+ OR ISH-amplified)"
+    - "Prior treatment with a taxane + trastuzumab (± pertuzumab) — 1L THP or equivalent"
+    - "T-DXd (trastuzumab deruxtecan, ENHERTU) NOT accessible (not registered OR not funded OR not stocked at prescribing centre)"
+    - "ECOG PS 0-2"
+    - "Adequate cardiac function: LVEF ≥50% (HER2-targeted cardiotoxicity monitoring)"
+    - "Total bilirubin ≤1.5× ULN, AST/ALT ≤2.5× ULN (hepatic metabolism of DM1 linker)"
+    - "PLT ≥100×10⁹/L at cycle start (T-DM1 thrombocytopenia)"
+    - "No Grade ≥3 baseline peripheral neuropathy"
+  biomarker_requirements_required:
+    - "HER2 IHC 3+ OR HER2 ISH-amplified (FISH ratio ≥2.0 or HER2 copy number ≥6 signals/cell)"
+  biomarker_requirements_excluded:
+    - "T-DXd (ENHERTU) accessible: T-DXd is preferred 2L (DESTINY-Breast03; mPFS 28.8 vs 6.8 mo; HR 0.33) — route to IND-BREAST-HER2-POS-MET-2L-TDXD instead"
+    - "Prior T-DM1 treatment: T-DM1 retreatment not standard"
+    - "HER2-low (IHC 1+/2+ ISH-): route to HER2-low indication if available"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      HER2+ mBC 2L is palliative intent in most settings unless oligo-metastatic.
+      ECOG 0-2 required for T-DM1 (EMILIA eligibility criterion).
+      ECOG 3-4: consider trastuzumab + capecitabine or best supportive care.
+
+recommended_regimen: REG-TDM1-METASTATIC
+alternative_regimens:
+  - regimen_id: IND-BREAST-HER2-POS-MET-2L-TDXD
+    description: >
+      T-DXd (trastuzumab deruxtecan) 5.4 mg/kg q3w (DESTINY-Breast03; mPFS 28.8 mo; HR 0.33
+      vs T-DM1; NCCN Cat 1). Preferred when accessible. Superior evidence over T-DM1.
+      Use this instead when T-DXd becomes accessible.
+  - regimen_id: IND-BREAST-HER2-POS-3L-TUCATINIB
+    description: >
+      Tucatinib + trastuzumab + capecitabine (HER2CLIMB; ORR 40.6%; CNS-PFS benefit).
+      Preferred when active brain metastases present or T-DM1 contraindicated.
+
+concurrent_therapy:
+  - "Cardiac monitoring: LVEF q3 months (echocardiogram or MUGA)"
+  - "Antiemetics: prochlorperazine or ondansetron PRN (low to moderate emetogenicity)"
+  - "Contraception: mandatory effective contraception during and ≥7 months post-treatment (embryo-fetal toxicity)"
+  - "Pain control per analgesic ladder"
+
+followed_by:
+  - "CT chest/abdomen/pelvis ± bone scan after every 3 cycles for response assessment"
+  - "MRI brain if neurological symptoms (brain mets common in HER2+ mBC)"
+  - "At progression: if T-DXd becomes accessible → switch to T-DXd (IND-BREAST-HER2-POS-MET-2L-TDXD); tucatinib triplet; or clinical trial"
+  - "Long-term LVEF monitoring during treatment and ≥6 months post-treatment"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~43.6% (EMILIA T-DM1 arm; Verma 2012 NEJM)"
+  complete_response: "~4-5%"
+  median_pfs_months: "~9.6 months (EMILIA T-DM1 arm; HR 0.65 vs lapatinib+cape)"
+  median_os_months: "~30.9 months (EMILIA T-DM1 arm; HR 0.68 vs lapatinib+cape)"
+  notes: >
+    EMILIA (Verma 2012 NEJM; n=991): T-DM1 vs lapatinib+capecitabine in HER2+ mBC
+    previously treated with taxane + trastuzumab.
+    - mPFS 9.6 vs 6.4 mo (HR 0.65; p<0.001)
+    - mOS 30.9 vs 25.1 mo (HR 0.68; p<0.001)
+    - ORR 43.6% vs 30.8%; Grade ≥3 toxicity LOWER with T-DM1 (41% vs 57%)
+
+    CONTEXT: DESTINY-Breast03 (Cortés 2022 NEJM) subsequently demonstrated T-DXd
+    superior to T-DM1 (mPFS 28.8 vs 6.8 mo; HR 0.33). When T-DXd is accessible,
+    T-DXd is the preferred 2L. T-DM1 remains the standard when T-DXd is inaccessible.
+
+    UKRAINE: T-DXd not NSZU-reimbursed as of 2026; T-DM1 registered but also not
+    NSZU-funded — access through patient support programmes at select centres.
+
+hard_contraindications:
+  - "HER2-negative tumor: T-DM1 has no benefit; requires confirmed HER2 IHC 3+ or ISH-amplified"
+  - "LVEF <40% at baseline: T-DM1 cardiotoxicity contraindicated; cardiology evaluation first"
+  - "Active ILD/pneumonitis ≥Grade 2: T-DM1 may worsen ILD (rare but reported)"
+  - "Total bilirubin >3× ULN: DM1 hepatic metabolism impaired; severe hepatotoxicity risk"
+  - "Pregnancy: embryo-fetal toxicity — category D equivalent; contraindicated"
+  - "Prior severe T-DM1 hypersensitivity: permanent discontinuation required"
+
+red_flags_triggering_alternative:
+  - condition: "T-DXd (ENHERTU) becomes accessible at centre → switch to IND-BREAST-HER2-POS-MET-2L-TDXD (NCCN Cat 1; superior evidence)"
+  - condition: "Active or progressing brain metastases → IND-BREAST-HER2-POS-3L-TUCATINIB (HER2CLIMB; CNS penetration proven)"
+  - condition: "LVEF decline ≥10 pp to <50% → cardiology review; hold T-DM1; consider switch to tucatinib triplet"
+  - condition: "Grade ≥3 thrombocytopenia → dose reduce per protocol; if recurrent → evaluate clinical trial or switch"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "LVEF (echocardiogram or MUGA) — baseline + q3 months"
+  - "HER2 IHC/FISH re-confirmation if not done at metastatic recurrence"
+  - TEST-CECT-CAP
+  - "MRI brain: recommended in HER2+ mBC at diagnosis and with any neurological symptoms"
+
+desired_tests:
+  - "Hormone receptor status (ER/PR): HER2+/HR+ may benefit from HER2-targeted + endocrine (concurrent or sequential)"
+  - "Germline BRCA1/2: olaparib eligibility in HER2+/BRCA1-2+ (unusual, but relevant for 3L+)"
+  - "PIK3CA mutation: relevant for 3L+ alpelisib if HR+ component"
+
+rationale: >
+  T-DM1 (ado-trastuzumab emtansine) as 2L HER2+ metastatic breast cancer therapy
+  in patients without access to T-DXd (trastuzumab deruxtecan).
+
+  MECHANISM: T-DM1 is an antibody-drug conjugate (ADC) combining trastuzumab
+  (anti-HER2) with DM1 (emtansine, a maytansine microtubule inhibitor) via a
+  stable thioether linker. T-DM1 binds HER2, internalises into tumour cells,
+  and releases DM1 intracellularly → microtubule disruption → G2/M arrest →
+  apoptosis. Simultaneous anti-HER2 signalling (trastuzumab-mediated).
+
+  EVIDENCE: EMILIA (NCCN Category 1) established T-DM1 as 2L standard
+  post-taxane+trastuzumab (mPFS 9.6 mo, mOS 30.9 mo). Superior tolerability
+  compared to lapatinib+capecitabine (Grade ≥3 toxicity 41% vs 57%).
+
+  SUPERSEDED IN ACCESSIBLE MARKETS: DESTINY-Breast03 established T-DXd superiority
+  over T-DM1 (HR 0.33; mPFS 28.8 vs 6.8 mo). In markets where T-DXd is available
+  and reimbursed, T-DM1 has been displaced to 3L+ or to T-DXd-intolerant patients.
+
+  UKRAINIAN CONTEXT: T-DXd (ENHERTU) is not NSZU-reimbursed in Ukraine (2026).
+  T-DM1 (Kadcyla) is registered but also not reimbursed; however, it is more
+  accessible through patient foundations at major oncology centres (Kyiv, Lviv,
+  Kharkiv). Until T-DXd reimbursement is achieved, T-DM1 remains the accessible
+  HER2-ADC 2L standard.
+
+rationale_ua: >
+  T-DM1 (трастузумаб емтанзин) 3.6 мг/кг IV q3w для HER2+ метастатичного РМЗ 2L
+  при недоступності T-DXd (ENHERTU). NCCN Cat 1 (EMILIA: mPFS 9.6 міс, mOS 30.9 міс).
+  T-DXd перевершує T-DM1 (DB-03; HR 0.33), але T-DXd не НСЗУ-фінансується (2026).
+  T-DM1 — більш доступний HER2-ADC варіант в Україні.
+  ОБОВ'ЯЗКОВО: контроль ЕхоКГ кожні 3 цикли; аналіз крові перед кожним циклом
+  (тромбоцитопенія!); контрацепція.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не замінювати T-DM1 на трастузумаб або пертузумаб — різні ADC та звичайні препарати"
+  - "Не вводити T-DM1 при тромбоцитах <100×10⁹/л — висока тромбоцитопенія; відстрочте і перевірте"
+  - "Без контролю LVEF — T-DM1 кардіотоксичний; ЕхоКГ кожні 3 цикли обов'язково"
+  - "Не ігнорувати жовтяницю — гепатотоксичність T-DM1 може бути важкою; перевірте ЛФТ"
+  - "Якщо T-DXd стає доступним — перейдіть на нього (кращий ефект; DB-03 HR 0.33)"
+
+sources:
+  - source_id: SRC-NCCN-BREAST-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Breast 2025 Category 1: T-DM1 (trastuzumab emtansine) as 2L therapy for
+      HER2+ metastatic breast cancer after prior taxane + trastuzumab. T-DXd is now
+      listed as the preferred 2L when accessible (DESTINY-Breast03); T-DM1 remains
+      Category 1 when T-DXd is not available.
+  - source_id: SRC-ESMO-BREAST-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO mBC 2024: T-DXd is recommended as preferred 2L for HER2+ mBC (Grade A,
+      Level I); T-DM1 (EMILIA) remains a valid option when T-DXd is not accessible.
+      Both maintain Category 1/Grade A recommendations.
+  - source_id: SRC-DESTINY-BREAST03-CORTES-2022
+    position: context
+    relevant_quote_paraphrase: >
+      DESTINY-Breast03 (Cortés 2022 NEJM): T-DXd vs T-DM1 — mPFS 28.8 vs 6.8 mo
+      (HR 0.33; p<0.001). Establishes T-DXd superiority; T-DM1 used when T-DXd
+      inaccessible.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

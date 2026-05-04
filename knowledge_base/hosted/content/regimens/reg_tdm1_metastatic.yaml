@@ -1,0 +1,133 @@
+id: REG-TDM1-METASTATIC
+name: "T-DM1 (trastuzumab emtansine) 3.6 mg/kg IV q3w — HER2+ metastatic breast (2L+)"
+name_ua: "T-DM1 (трастузумаб емтанзин) 3.6 мг/кг IV q3w — HER2+ метастатичний рак молочної залози (2L+)"
+alternate_names:
+  - "T-DM1 metastatic"
+  - "ado-trastuzumab emtansine mBC"
+  - "EMILIA regimen"
+  - "Kadcyla metastatic"
+
+components:
+  - drug_id: DRUG-TRASTUZUMAB-EMTANSINE
+    dose: "3.6 mg/kg IV"
+    schedule: "Day 1 of a 21-day cycle. Continue until disease progression or unacceptable toxicity."
+    route: IV
+    notes: >
+      Infuse over 90 min for cycle 1; reduce to 30 min for subsequent cycles if cycle 1 well tolerated.
+      DO NOT substitute T-DM1 for trastuzumab or pertuzumab — different pharmacology and dosing.
+      DO NOT co-administer with other HER2-targeting agents.
+      T-DM1 = trastuzumab + DM1 (maytansine microtubule inhibitor) via thioether linker — single ADC.
+
+cycle_length_days: 21
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: moderate
+
+premedication: []
+
+mandatory_supportive_care:
+  - "CBC before each cycle (thrombocytopenia is dose-limiting)"
+  - "LFTs before each cycle (hepatotoxicity, including nodular regenerative hyperplasia with prolonged use)"
+  - "Cardiac function assessment (LVEF) baseline + every 3 months (HER2-targeted cardiotoxicity risk)"
+  - "Peripheral neuropathy assessment every cycle (DM1 microtubule inhibitor; cumulative)"
+  - "Pregnancy test and effective contraception (teratogenic — category X equivalent)"
+
+dose_adjustments:
+  - condition: "Platelet count <75,000/µL (Grade 3 thrombocytopenia)"
+    modification: "Hold; resume at same dose when PLT ≥75,000/µL if nadir was ≥50,000; reduce 1 dose level if nadir <50,000"
+    rationale: "T-DM1 thrombocytopenia is common (~31%); dose reduction preserves duration"
+  - condition: "Platelet count <25,000/µL (Grade 4)"
+    modification: "Reduce 1 dose level (from 3.6→3.0→2.4 mg/kg) on recovery"
+    rationale: "Grade 4 thrombocytopenia requires permanent reduction"
+  - condition: "AST/ALT Grade 3 (>5-20× ULN)"
+    modification: "Hold until ≤Grade 2; resume at 3.0 mg/kg (dose reduce 1 level)"
+    rationale: "DM1 hepatotoxicity; monitor for nodular regenerative hyperplasia with extended use"
+  - condition: "AST/ALT Grade 4 (>20× ULN) OR total bilirubin >2× ULN"
+    modification: "Permanently discontinue"
+    rationale: "Severe hepatotoxicity — fatal cases reported"
+  - condition: "LVEF decline ≥10 percentage points to <50%"
+    modification: "Hold; reassess in 3 weeks; discontinue if persistent or symptomatic HF"
+    rationale: "HER2-targeted cardiotoxicity; similar monitoring to trastuzumab"
+  - condition: "Grade 3-4 peripheral neuropathy"
+    modification: "Hold until recovery to ≤Grade 2; resume at reduced dose or discontinue"
+    rationale: "Cumulative DM1 neuropathy; may be persistent"
+  - condition: "Interstitial lung disease / pneumonitis Grade ≥2"
+    modification: "Permanently discontinue"
+    rationale: "ADC-class ILD risk; less frequent than T-DXd but possible"
+
+drug_interactions:
+  - "Strong CYP3A4 inhibitors (ketoconazole, ritonavir): may increase DM1 exposure; caution"
+  - "P-gp inhibitors: potential increase in T-DM1 exposure; monitor"
+  - "Do NOT combine with other anti-HER2 therapies (trastuzumab, pertuzumab, T-DXd) — overlapping mechanism and cardiotoxicity"
+  - "Anticoagulants: thrombocytopenia from T-DM1 increases bleeding risk; monitor INR closely"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    T-DM1 (Kadcyla) зареєстровано в Україні, але НЕ є НСЗУ-фінансованим у метастатичному
+    контексті (2026). Потенційно доступний через пацієнтські програми, фонди або спеціальні
+    схеми (сирітський доступ). T-DXd (ENHERTU) — ще менш доступний (вищі витрати).
+    T-DM1 є більш доступним HER2-ADC варіантом порівняно з T-DXd в UA.
+    Perевіряйте доступність у центрі призначення перед маршрутизацією.
+
+sources:
+  - SRC-NCCN-BREAST-2025
+  - SRC-ESMO-BREAST-METASTATIC-2024
+
+between_visit_watchpoints:
+  - trigger_ua: "Незвичайне кровотечення, синці або дрібні крапки на шкірі"
+    action_ua: "Зателефонуйте в клініку того ж дня — тромбоцитопенія від T-DM1; аналіз крові"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Задишка, сухий кашель або утруднене дихання"
+    action_ua: "Зателефонуйте в клініку того ж дня або у швидку — пневмоніт (рідко, але серйозно)"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Оніміння або поколювання кистей чи стоп"
+    action_ua: "Повідомте на наступному візиті — нейропатія від DM1; може бути кумулятивною"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Жовтяниця, темна сеча, болі у правому підребер'ї"
+    action_ua: "Зателефонуйте в клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Задишка чи набряки ніг (серцева недостатність)"
+    action_ua: "Негайно у лікарню — кардіотоксичність HER2-препаратів"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+notes: >
+  T-DM1 (ado-trastuzumab emtansine) 3.6 mg/kg IV q21d for HER2+ metastatic
+  breast cancer (mBC) in the 2L+ setting, used when T-DXd (ENHERTU, trastuzumab
+  deruxtecan) is inaccessible.
+
+  EMILIA TRIAL (Verma 2012 NEJM; NCT00829166):
+  - Population: HER2+ mBC previously treated with taxane + trastuzumab (n=991)
+  - T-DM1 vs lapatinib+capecitabine: mPFS 9.6 vs 6.4 mo (HR 0.65; p<0.001)
+  - mOS 30.9 vs 25.1 mo (HR 0.68; p<0.001)
+  - ORR 43.6% vs 30.8%
+  - FDA-approved February 2013; NCCN Cat 1 for HER2+ mBC 2L
+
+  SUPERSEDED BY T-DXd: DESTINY-Breast03 (Cortés 2022 NEJM):
+  - T-DXd vs T-DM1 in HER2+ mBC 2L (post-THP): mPFS 28.8 vs 6.8 mo (HR 0.33; p<0.001)
+  - T-DXd is now NCCN Cat 1 preferred 2L when accessible
+  - T-DM1 remains Cat 1 when T-DXd is not accessible (NCCN language: "preferred" ≠ "only")
+
+  UKRAINIAN ACCESS CONTEXT:
+  T-DXd (ENHERTU): Not NSZU-reimbursed for mBC 2026; very high cost (~$14,000/cycle);
+  access through AstraZeneca/Daiichi Sankyo patient support limited in UA.
+  T-DM1 (Kadcyla): Not NSZU-reimbursed but registered; lower cost than T-DXd; accessible
+  through some oncology foundations (Tabletochki, Lybid, etc.) in select UA centres.
+
+  T-DM1 is the pragmatic 2L standard in most UA centres until T-DXd becomes reimbursed.
+
+  STUB pending §6.1 clinical signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
