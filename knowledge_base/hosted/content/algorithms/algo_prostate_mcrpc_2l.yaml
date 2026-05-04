@@ -16,6 +16,7 @@ output_indications:
   - IND-PROSTATE-MCRPC-2L-LU-PSMA
   - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
   - IND-PROSTATE-MCRPC-2L-RADIUM223
+  - IND-PROSTATE-MCRPC-2L-DOCETAXEL
 
 default_indication: IND-PROSTATE-MCRPC-2L-CABAZITAXEL
 alternative_indication: IND-PROSTATE-MCRPC-2L-LU-PSMA
@@ -93,13 +94,13 @@ decision_tree:
         second ARPI; TROPIC: OS benefit vs mitoxantrone). Route to step 5 for
         bone distribution assessment (Ra-223 eligibility for bone-only disease).
     if_false:
-      result: null
+      result: IND-PROSTATE-MCRPC-2L-DOCETAXEL
       notes: >
-        Taxane-naive mCRPC post-ARPI: docetaxel 75 mg/m² q21d × 10 cycles is standard
-        (TAX 327; mCRPC docetaxel data). Use REG-DOCETAXEL-MCRPC.
-        IND-PROSTATE-MCRPC-DOCETAXEL not yet formally authored as a 2L indication —
-        clinician should apply docetaxel mCRPC standard per NCCN Category 1.
-        After docetaxel: re-enter algorithm as post-docetaxel (step 4 if_true path).
+        Taxane-naive mCRPC post-ARPI: docetaxel 75 mg/m² q21d × 10 cycles (TAX 327;
+        OS HR 0.76 vs mitoxantrone; NCCN Category 1). REG-DOCETAXEL-MCRPC.
+        After docetaxel: re-enter algorithm as post-docetaxel (step 4 if_true path)
+        — cabazitaxel is the standard subsequent chemotherapy (CARD: OS HR 0.64 vs
+        second ARPI). Reassess PSMA-PET at docetaxel completion (step 3 pathway opens).
 
   # Step 5 — Post-docetaxel: visceral metastasis gate for Ra-223 routing.
   # Ra-223 is contraindicated if visceral (liver, lung, brain) mets present.
@@ -172,7 +173,7 @@ notes: >
   4. Bone-predominant, symptomatic → Ra-223 (ALSYMPCA; OS HR 0.70) OR cabazitaxel
 
   GAPS in this algorithm:
-  - IND-PROSTATE-MCRPC-DOCETAXEL (formal 2L indication for taxane-naive patients) not yet authored
+  - IND-PROSTATE-MCRPC-2L-DOCETAXEL: authored 2026-05-04; TAX 327 OS HR 0.76 (NCCN Cat 1)
   - Cabazitaxel + carboplatin (high-risk BRCA/HRR; CHAMP/KEYNOTE-991 data pending)
   - PSMAddition (Lu-PSMA earlier line — pre-taxane) data emerging; not yet NCCN Cat 1
   - Pembrolizumab for MSI-H/dMMR mCRPC (KEYNOTE-158 tumor-agnostic) not yet separately addressed

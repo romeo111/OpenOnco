@@ -13,6 +13,7 @@ output_indications:
   - IND-UROTHELIAL-2L-EV
   - IND-UROTHELIAL-2L-PEMBROLIZUMAB
   - IND-UROTHELIAL-2L-ERDAFITINIB
+  - IND-UROTHELIAL-2L-PLATINUM-CHEMO
 
 default_indication: IND-UROTHELIAL-2L-EV
 alternative_indication: IND-UROTHELIAL-2L-PEMBROLIZUMAB
@@ -88,16 +89,14 @@ decision_tree:
         - condition: "CrCl ≥30 mL/min"
         - condition: "No prior platinum within 6 months (de novo platinum-eligible)"
     if_true:
-      result: null
+      result: IND-UROTHELIAL-2L-PLATINUM-CHEMO
       notes: >
-        Post-EV+pembro, platinum-eligible: gemcitabine+carboplatin (AUC 5 day 1 +
-        gemcitabine 1000 mg/m² d1,8 q21d) is standard 2L chemotherapy.
-        Or MVAC (methotrexate+vinblastine+doxorubicin+cisplatin) for cisplatin-eligible.
-        REG-CISPLATIN-GEMCITABINE-UROTHELIAL or REG-GEM-CARBO-UROTHELIAL.
-        IND-UROTHELIAL-2L-PLATINUM-CHEMO not yet authored — use platinum chemo regimen.
-        FGFR testing: if FGFR2/3+ → erdafitinib (IND-UROTHELIAL-2L-ERDAFITINIB)
-        may be considered even in post-EV setting (THOR enrolled some EV-experienced;
-        discuss at MDT).
+        Post-EV+pembro, platinum-eligible (CrCl ≥30): gem+carbo (AUC 5 d1 +
+        gemcitabine 1000 mg/m² d1,8 q21d; REG-GEM-CARBO-UROTHELIAL) for
+        cisplatin-ineligible; gem+cis for cisplatin-eligible (GFR ≥60).
+        FGFR testing mandatory: if FGFR2/3+ → erdafitinib preferred
+        (IND-UROTHELIAL-2L-ERDAFITINIB; THOR PFS HR 0.58) — check before or
+        concurrent with cycle 1. NCCN Category 2A for chemo in this setting.
     if_false:
       result: null
       notes: >
@@ -141,17 +140,16 @@ notes: >
   UROTHELIAL 2L ROUTING SUMMARY (2025/2026):
 
   Most patients receive EV+pembro (EV-302) as 1L → they are EV-experienced at 2L.
-  For these patients (step 5): platinum-based chemo is 2L standard.
-  IND-UROTHELIAL-2L-PLATINUM-CHEMO not yet formally authored as indication —
-  use REG-CISPLATIN-GEMCITABINE-UROTHELIAL or carbo-gem without separate indication.
+  For these patients (step 5): IND-UROTHELIAL-2L-PLATINUM-CHEMO is the 2L standard
+  (gem+carbo REG-GEM-CARBO-UROTHELIAL for cisplatin-ineligible; gem+cis for eligible).
+  Authored 2026-05-04; NCCN Category 2A.
 
   EV-naive patients (received platinum ± avelumab 1L, no EV):
-  - FGFR2/3+: erdafitinib (THOR)
-  - FGFR WT: EV monotherapy (EV-301)
-  - EV-contraindicated, ICI-naive: pembrolizumab (KEYNOTE-045)
+  - FGFR2/3+: erdafitinib (IND-UROTHELIAL-2L-ERDAFITINIB; THOR PFS HR 0.58)
+  - FGFR WT: EV monotherapy (IND-UROTHELIAL-2L-EV; EV-301 OS HR 0.70)
+  - EV-contraindicated, ICI-naive: pembrolizumab (IND-UROTHELIAL-2L-PEMBROLIZUMAB; KEYNOTE-045 OS HR 0.73)
 
   FGFR2/3 testing MANDATORY before 2L — 15-20% of UC patients have FGFR2/3 alterations.
   NGS/RNA-seq preferred (captures both mutations and fusions).
 
-  Gap: IND-UROTHELIAL-2L-PLATINUM-CHEMO (formal indication for gem+carbo or gem+cis
-  post-EV+pembro) not yet authored.
+  Updated 2026-05-04: IND-UROTHELIAL-2L-PLATINUM-CHEMO authored; step 5 wired.
