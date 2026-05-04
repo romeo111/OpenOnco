@@ -1,0 +1,67 @@
+id: REG-OLAPARIB-ABIRATERONE-MCRPC
+name: "Olaparib + Abiraterone + Prednisone (mCRPC 1L; PROpel)"
+
+drugs:
+  - drug_id: DRUG-OLAPARIB
+    role: primary
+    dose: "300 mg PO BID continuous"
+    dose_modification: >
+      Reduce to 250 mg BID then 200 mg BID for Grade 3+ hematologic toxicity.
+      Reduce for CrCl 31-50 mL/min: 200 mg BID.
+      Contraindicated with strong CYP3A4 inhibitors (reduce to 100 mg BID if unavoidable).
+  - drug_id: DRUG-ABIRATERONE
+    role: primary
+    dose: "1000 mg PO QD on empty stomach (at least 1h before or 2h after eating)"
+    dose_modification: >
+      Hold for ALT/AST >5× ULN; permanently discontinue if >20× ULN.
+      No dose adjustment for renal impairment.
+  - drug_id: DRUG-PREDNISONE
+    role: supportive
+    dose: "5 mg PO BID (mandatory with abiraterone to prevent mineralocorticoid excess)"
+
+cycle:
+  length_days: 28
+  treatment_until: "Radiographic or clinical progression or unacceptable toxicity"
+
+administration_notes: >
+  Olaparib 300 mg BID continuous + abiraterone 1000 mg QD (fasting) + prednisone 5 mg BID.
+  ADT (LHRH agonist/antagonist or bilateral orchiectomy) continues throughout.
+  HRR mutation testing: perform somatic/germline NGS before or at initiation.
+  BRCA1/2 mutant patients show rPFS HR 0.23 (exploratory) and OS HR 0.29 vs abiraterone alone.
+  All-comer FDA approval: not restricted to BRCA1/2; all HRR-mutant patients benefit.
+  Drug interaction: olaparib is CYP3A4 substrate — avoid strong/moderate CYP3A4 inducers
+  (unlike talazoparib+enzalutamide where talazoparib dose is reduced to 0.5mg).
+  Abiraterone fasting requirement is CRITICAL — food increases exposure 5-10× (toxicity).
+
+monitoring:
+  - "CBC, LFTs: baseline, then monthly × 12 months; thereafter per clinical judgment"
+  - "PSA + imaging (CT CAP + bone scan) Q12 weeks"
+  - "Serum cortisol + ACTH: if adrenal insufficiency suspected"
+  - "Blood pressure: baseline and monthly (abiraterone hypertension risk)"
+  - "Potassium: baseline and monthly (abiraterone hypokalemia)"
+
+supportive_care:
+  - "Prednisone 5 mg BID mandatory (must not be omitted with abiraterone)"
+  - "G-CSF if neutropenia ≥Grade 3"
+  - "Antiemetics: low emetogenic risk"
+
+contraindications:
+  - "Prior ARPI (abiraterone/enzalutamide/apalutamide/darolutamide) in mCRPC (not validated)"
+  - "Severe hepatic impairment (Child-Pugh C): olaparib and abiraterone both hepatically metabolized"
+  - "Known MDS/AML (olaparib PARPi-associated secondary malignancy risk)"
+  - "ECOG PS ≥3"
+
+evidence_source:
+  - SRC-PROPEL-CLARKE-2022
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  PROpel regimen. FDA approved August 2022 for mCRPC (all-comers).
+  First FDA-approved PARPi+ARPI combination.
+  Key difference from REG-TALAZOPARIB-ENZALUTAMIDE-MCRPC: no dose reduction
+  needed for olaparib+abiraterone (abiraterone is NOT a CYP3A4 inducer;
+  enzalutamide IS, hence talazoparib 0.5mg dose reduction required in TALAPRO-2).
+  Two-reviewer clinical signoff required per CHARTER §6.1.

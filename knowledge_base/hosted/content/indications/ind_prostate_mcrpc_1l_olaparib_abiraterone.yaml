@@ -1,0 +1,104 @@
+id: IND-PROSTATE-MCRPC-1L-OLAPARIB-ABIRATERONE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "No prior ARPI (abiraterone/enzalutamide/apalutamide/darolutamide) for mCRPC"
+    - "No prior PARPi therapy"
+    - "Ongoing ADT (castration testosterone <50 ng/dL)"
+  biomarker_requirements:
+    - "HRR mutation testing: MANDATORY before or at initiation (somatic NGS + germline BRCA)"
+    - "BRCA1/2 mutation: FDA all-comer approval but BRCA1/2 subgroup shows most benefit (rPFS HR 0.23; OS HR 0.29)"
+    - "Non-BRCA HRR mutations (ATM, CDK12, etc.): all-comer approval includes; benefit present but smaller than BRCA"
+    - "Biomarker-unselected: FDA label allows (all-comer approval)"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-OLAPARIB-ABIRATERONE-MCRPC
+
+concurrent_therapy:
+  - "ADT continuation mandatory throughout (LHRH agonist/antagonist or bilateral orchiectomy)"
+
+followed_by:
+  - "After progression: taxane-based therapy (docetaxel or cabazitaxel) or Lu-PSMA-617 (VISION) per eligibility"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  rpfs_hr_all_comers: "0.66 (95% CI 0.54–0.81; p<0.001)"
+  rpfs_hr_brca1_2: "0.23 (exploratory subgroup)"
+  os_hr_all_comers: "0.81 (secondary; updated Saad 2023 JCO)"
+  os_hr_brca1_2: "0.29 (exploratory subgroup)"
+  notes: >
+    PROpel (Clarke 2022 NEJM Evidence; NCT03732820; Phase 3; N=796):
+    Olaparib 300mg BID + abiraterone 1000mg QD + prednisone 5mg BID vs abiraterone+placebo.
+    Unselected mCRPC, ARPI-naive. rPFS HR 0.66 (p<0.001) all-comers.
+    BRCA1/2 subgroup (n~170 in experimental): rPFS HR 0.23; OS HR 0.29 (exploratory).
+    FDA approved August 5, 2022. NCCN Prostate 2025: Category 1.
+    First FDA-approved PARPi+ARPI combination for mCRPC.
+    Updated OS (Saad 2023 JCO): all-comers OS HR 0.81 (nominally significant);
+    BRCA1/2 OS HR 0.29 — most pronounced survival benefit in BRCA cohort.
+
+hard_contraindications:
+  - "Prior ARPI for mCRPC (PROpel enrolled ARPI-naive patients)"
+  - "Prior PARPi therapy"
+  - "Known MDS/AML (PARPi-associated secondary malignancy risk)"
+  - "Severe hepatic impairment: Child-Pugh C (olaparib + abiraterone both hepatically metabolized)"
+  - "ECOG PS ≥3"
+  - "ECOG PS 4 (engine hard gate)"
+
+red_flags_triggering_alternative:
+  - "Non-BRCA HRR mutation + enzalutamide-naive: talazoparib+enzalutamide (TALAPRO-2; broader HRR coverage including ATM; FDA Jun 2023)"
+  - "Strong CYP3A4 inhibitor co-administration unavoidable: reduce olaparib to 100 mg BID"
+  - "Abiraterone not tolerated or contraindicated: talazoparib+enzalutamide preferred combination"
+
+required_tests:
+  - "Somatic tumor NGS: BRCA1/2, ATM, CDK12, PALB2, RAD51, FANCA, CHEK2 — MANDATORY"
+  - "Germline genetic counseling for BRCA1/2 pathogenic variants"
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Testosterone (castration level <50 ng/dL confirmation)"
+  - "Bone scan + CT CAP (staging)"
+  - "PSA baseline"
+
+desired_tests:
+  - "PSMA-PET/CT: baseline for future Lu-PSMA eligibility assessment"
+
+rationale: >
+  PROpel (Clarke 2022 NEJM Evidence) demonstrated olaparib 300 mg BID + abiraterone
+  significantly improves rPFS vs abiraterone alone in unselected mCRPC (HR 0.66; p<0.001).
+  BRCA1/2 subgroup showed most benefit (rPFS HR 0.23; OS HR 0.29).
+  FDA approved August 5, 2022 for mCRPC (all-comer approval). NCCN Cat 1.
+  First PARPi+ARPI combination approval; establishes PARPi+ARPI as 1L mCRPC
+  standard for HRR-mutant patients.
+  Key distinction from talazoparib+enzalutamide: no dose reduction for olaparib
+  (abiraterone is NOT a CYP3A4 inducer; enzalutamide IS — talazoparib 0.5mg required).
+  Key distinction from niraparib+abiraterone (MAGNITUDE): PROpel has all-comer FDA
+  approval; MAGNITUDE restricted to BRCA1/2 only (non-BRCA HRR futility crossed).
+  For BRCA1/2 patients: all three PARPi+ARPI combinations are Cat 1 (PROpel, TALAPRO-2
+  BRCA2 subgroup, MAGNITUDE BRCA1/2); choice by ARPI preference and access.
+
+sources:
+  - source_id: SRC-PROPEL-CLARKE-2022
+    position: supports
+    relevant_quote_paraphrase: "PROpel: olaparib+abiraterone vs abiraterone alone in mCRPC — rPFS HR 0.66 all-comers; BRCA1/2 HR 0.23; OS HR 0.29; FDA Aug 2022"
+  - source_id: SRC-NCCN-PROSTATE-2025
+    weight: primary
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  Workstream EV 2026-05-04. Olaparib+abiraterone for mCRPC 1L (PROpel).
+  FDA approved August 5, 2022 — first PARPi+ARPI combination for mCRPC.
+  Companion to IND-PROSTATE-MCRPC-1L-TALAZOPARIB-ENZALUTAMIDE (Workstream ER)
+  and IND-PROSTATE-MCRPC-1L-NIRAPARIB-ABIRATERONE (Workstream ER).
+  Two-reviewer clinical signoff required per CHARTER §6.1.
