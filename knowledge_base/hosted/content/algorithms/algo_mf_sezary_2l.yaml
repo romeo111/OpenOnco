@@ -17,6 +17,7 @@ output_indications:
   - IND-MF-ADVANCED-1L-BV
   - IND-MF-ADVANCED-2L-METHOTREXATE
   - IND-MF-ADVANCED-2L-ROMIDEPSIN
+  - IND-MF-ADVANCED-2L-VORINOSTAT
 
 default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
 alternative_indication: IND-MF-ADVANCED-2L-ROMIDEPSIN
@@ -98,13 +99,38 @@ decision_tree:
         K+/Mg²+ repletion mandatory before each infusion. ECG monitoring each cycle.
         Ukraine: not registered — named-patient only. Substantial access barrier.
     if_false:
+      next_step: 51
+    notes: "Step 5 added 2026-05-04 (Workstream BI): romidepsin HDACi gate. Gap (3) CLOSED. if_false updated 2026-05-04 (Workstream CN): routes to step 51 (vorinostat access gate) instead of direct bexarotene result."
+
+  # Step 51 — Oral HDACi (vorinostat) access gate.
+  # When romidepsin is inaccessible (step 5 if_false): check if vorinostat
+  # (oral HDAC inhibitor; FDA-approved 2006; ORR ~30%; NCCN Cat 2A) is
+  # obtainable AND QTcF still ≤480 ms. Vorinostat preferred over bexarotene
+  # (stays in HDAC-class; oral like bexarotene but targeted mechanism).
+  # If neither HDACi accessible → bexarotene (non-HDAC; most accessible UA).
+  - step: 51
+    evaluate:
+      all_of:
+        - condition: "QTcF ≤480 ms at baseline (vorinostat HDAC class QTc risk)"
+        - condition: "Vorinostat accessible (named-patient import / compassionate-use / international referral)"
+        - condition: "No prior pan-HDACi failure (romidepsin or vorinostat — class cross-resistance)"
+    if_true:
+      result: IND-MF-ADVANCED-2L-VORINOSTAT
+      notes: >
+        Romidepsin inaccessible + vorinostat accessible + QTcF ≤480 ms:
+        vorinostat 400 mg PO daily (REG-VORINOSTAT-MF; Olsen 2007 JCO;
+        ORR ~30%; mTTP 4.9 months; FDA Oct 2006; NCCN Cat 2A). ORAL advantage
+        over romidepsin IV — no weekly infusion clinic required. DVT/PE risk ~5%;
+        Caprini score + loperamide available; CBC q2 weeks; ECG baseline.
+        Ukraine: not registered — named-patient/compassionate-use required.
+    if_false:
       result: IND-MF-ADVANCED-2L-BEXAROTENE
       notes: >
-        Romidepsin inaccessible or cardiac contraindication (QTcF >480 ms / arrhythmia):
-        bexarotene 300 mg/m² PO daily (NCCN Cat 2A for erythrodermic MF; ORR ~45%).
-        Requires fenofibrate/statin (hypertriglyceridemia universal) + levothyroxine
-        (central hypothyroidism universal) — mandatory concurrent medications.
-    notes: "Step 5 added 2026-05-04 (Workstream BI): romidepsin HDACi gate for erythrodermic/non-plaque MF. Gap (3) CLOSED. Free-text conditions (QTc threshold + access); MDT-evaluated."
+        Neither romidepsin nor vorinostat accessible OR QTcF >480 ms (HDAC contraindicated):
+        bexarotene 300 mg/m² PO daily (IND-MF-ADVANCED-2L-BEXAROTENE; NCCN Cat 2A;
+        ORR ~45% erythrodermic MF). Fenofibrate + levothyroxine MANDATORY concurrent.
+        Most accessible CTCL-systemic option in Ukraine.
+    notes: "Step 51 added 2026-05-04 (Workstream CN): vorinostat oral HDACi access gate (romidepsin-inaccessible patients). Gap (4) CLOSED."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-CTCL-2024]
 last_reviewed: "2026-05-04"
@@ -114,12 +140,16 @@ notes: >
   UPDATED 2026-05-04 (Workstream BI): IND-MF-ADVANCED-2L-ROMIDEPSIN authored and wired
   at step 5 for erythrodermic/non-plaque MF + adequate QTcF (Whittaker 2010 JCO;
   ORR 34%; NCCN Cat 2A). Gap (3) CLOSED.
+  UPDATED 2026-05-04 (Workstream CN): IND-MF-ADVANCED-2L-VORINOSTAT authored and
+  wired at step 51 (oral HDACi sub-gate for romidepsin-inaccessible patients;
+  vorinostat 400 mg PO daily; Olsen 2007 JCO; ORR ~30%; FDA Oct 2006; NCCN Cat 2A).
+  Step 5 if_false now routes to step 51 (vorinostat check) before bexarotene fallback.
+  Gap (4) CLOSED.
   ROUTING SUMMARY: (1) CR/PR to induction → bexarotene maintenance; (2) CD30+
   BV-naive → BV; (3) Sézary leukemic moga-naive → mogamulizumab; (4) plaque-MF
-  CrCl ≥30 → MTX; (5) erythrodermic/CrCl<30 + QTcF≤480 + accessible → romidepsin;
-  else → bexarotene (cardiac CI or access barrier).
+  CrCl ≥30 → MTX; (5) erythrodermic/non-plaque + QTcF≤480 + romidepsin accessible
+  → romidepsin IV; (51) romidepsin inaccessible + vorinostat accessible + QTcF≤480
+  → vorinostat PO; else → bexarotene (HDAC CI or both HDACi inaccessible).
   Reuses 1L MOGA/BV indications when axes still naive at 2L relapse.
   OOS / wiring gaps: (1) Pralatrexate for transformed MF (PROPEL) — not modeled.
   (2) ECP (extracorporeal photopheresis) for Sézary — not in KB.
-  (4) Vorinostat (oral HDACi; ORR ~30%) — not separately modeled; noted as alternative
-  in IND-MF-ADVANCED-2L-ROMIDEPSIN.

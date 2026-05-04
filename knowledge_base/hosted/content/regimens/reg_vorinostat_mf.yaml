@@ -1,0 +1,85 @@
+id: REG-VORINOSTAT-MF
+disease_context: DIS-MF-SEZARY
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "targeted_oral"
+protocol_name: "Vorinostat (SAHA) monotherapy — CTCL / advanced MF / Sézary syndrome"
+notes: >
+  Vorinostat 400 mg PO daily continuous for r/r CTCL (MF/Sézary) after ≥2 prior
+  systemic therapies. Olsen 2007 JCO (phase 2B; n=74): ORR 29.7%; mTTP 4.9 months;
+  mDOR 168 days. FDA approved Oct 2006. NCCN CTCL Cat 2A.
+  KEY ADVANTAGE: oral — no IV infusion appointments required (vs romidepsin IV).
+  Ukraine: not registered; named-patient/compassionate-use only.
+
+agents:
+  - drug_id: DRUG-VORINOSTAT
+    dose: "400 mg PO once daily"
+    route: PO
+    schedule: "Continuous daily with food until disease progression or unacceptable toxicity"
+    administration_notes: >
+      Take with food (reduces GI toxicity). Take at approximately the same time each day.
+      Capsules: swallow whole; do not open or crush.
+      MISSED DOSE: skip if >12 hours late; do not double-dose next day.
+      ALTERNATIVE SCHEDULE: 300 mg PO BID × 5 days on / 2 days off (q7d) — lower GI
+      toxicity per investigator experience; not FDA-approved scheduling but NCCN-noted.
+    dose_modifications:
+      - trigger: "Grade 3-4 thrombocytopenia (PLT <50×10⁹/L)"
+        action: "Hold vorinostat until PLT ≥75×10⁹/L; reduce to 300 mg/day on restart"
+      - trigger: "Grade 3-4 diarrhea not controlled with loperamide"
+        action: "Hold until Grade ≤1; restart at 300 mg/day"
+      - trigger: "QTcF >500 ms"
+        action: "Hold vorinostat; correct electrolytes (K+, Mg2+); check/remove concurrent QT-prolonging drugs; resume when QTcF ≤480 ms"
+      - trigger: "Grade 3-4 non-hematologic toxicity (fatigue, anorexia, nausea)"
+        action: "Hold; resume at 300 mg/day after recovery to Grade ≤1"
+      - trigger: "DVT or PE confirmed"
+        action: "Therapeutic anticoagulation (LMWH preferred); continue vorinostat if platelet count adequate and therapeutic anticoagulation feasible"
+
+premedication:
+  - "No routine premedication required"
+  - "Prophylactic loperamide 2 mg PO at onset of first loose stool (diarrhea management)"
+
+growth_factor_support:
+  mandatory: false
+  protocol: "G-CSF not routinely required. Use if Grade 4 neutropenia."
+
+monitoring:
+  - "CBC + differential: every 2 weeks × 2 months, then monthly"
+  - "LFT: monthly × 3 months, then q3 months"
+  - "Fasting glucose: every 2-4 weeks in diabetic patients"
+  - "ECG with QTcF: baseline + cycle 1 day 15 (QTc monitoring)"
+  - "DVT screening: Caprini score at baseline; clinical monitoring for leg swelling/dyspnea"
+  - "Prothrombin time / INR: at baseline and with any coumarin anticoagulant use (warfarin interaction)"
+  - "Skin lesion photography + modified Severity Weighted Assessment Tool (mSWAT): q3-4 weeks (response assessment for MF)"
+
+cycle_length_days: 28
+total_planned_cycles: "Continuous until progression or unacceptable toxicity (no pre-defined duration cap)"
+
+special_precautions:
+  - "DVT/PE RISK: ~5% incidence; higher with immobility, prior VTE. Baseline Caprini DVT risk. Consider prophylaxis (LMWH) for high-risk patients or if VTE history."
+  - "QTcF MONITORING: Less severe than romidepsin but real. Baseline ECG mandatory. Avoid concurrent QT-prolonging agents (Class Ia/III antiarrhythmics, fluoroquinolones, azithromycin)."
+  - "WARFARIN INTERACTION: INR may increase unpredictably — monitor INR q1-2 weeks if warfarin co-administration unavoidable. Prefer LMWH."
+  - "THROMBOCYTOPENIA: Dose-limiting for ~8%; CBC monitoring q2 weeks early."
+
+watchpoints_ua:
+  - "УВАГА: Ризик тромбозу (~5%) — набряк ноги або задишка → ТЕРМІНОВО до лікаря"
+  - "УВАГА: Діарея (50%) — лоперамід при перших симптомах; при Grade ≥3 → призупинити"
+  - "УВАГА: Тромбоцитопенія — ОАК кожні 2 тижні протягом 2 місяців"
+  - "УВАГА: QTcF — ЕКГ базово та на 15-й день першого циклу"
+  - "УВАГА: Воріностат не зареєстрований в Україні; доступ off-label/named-patient"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Zolinza (воріностат) не зареєстрований в Україні. FDA схвалено для CTCL 2006;
+    EMA не схвалено. Доступ: named-patient import (MSD/Merck compassionate-use).
+    Практичний доступ ≈нульовий в більшості онкологічних центрів.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-CTCL-2024
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
