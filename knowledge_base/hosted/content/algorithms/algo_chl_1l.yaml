@@ -10,6 +10,8 @@ output_indications:
   - IND-CHL-1L-ABVD
   - IND-CHL-1L-A-AVD
   - IND-CHL-1L-N-AVD
+  - IND-CHL-PREGNANCY-MOD-ABVD
+  - IND-CHL-CHILD-PUGH-C-MOD
 default_indication: IND-CHL-1L-ABVD
 alternative_indication: IND-CHL-1L-A-AVD
 
@@ -45,6 +47,40 @@ decision_tree:
             off-label for cHL — institutional funding appeal required.
     if_false:
       result: IND-CHL-1L-ABVD
+      notes: >
+        Early-stage cHL (I-II) or advanced not qualifying for A+AVD/N+AVD: standard
+        ABVD × 2-6 cycles ± ISRT (NCCN Cat 1). Pregnancy and hepatic impairment
+        alternatives below.
+      alternatives:
+        - indication_id: IND-CHL-PREGNANCY-MOD-ABVD
+          nccn_category: "2A"
+          criteria: >
+            cHL any stage; confirmed pregnancy (2nd-3rd trimester); brentuximab vedotin
+            and nivolumab CONTRAINDICATED in pregnancy (teratogenic/fetal risk); DTIC
+            omitted (teratogenicity concerns); modified AVD schedule; multidisciplinary
+            obstetrics + oncology mandatory. 1st trimester: delay if possible or
+            discuss options per patient values.
+          note: >
+            Modified ABVD (DTIC omitted) for cHL in pregnancy (NCCN Cat 2A): doxorubicin
+            25 mg/m² + vinblastine 6 mg/m² + bleomycin 10 U/m² d1,15 q28d (DTIC held);
+            delivery planned at 35-37 weeks; full ABVD resumed post-partum. Brentuximab
+            vedotin and nivolumab absolutely contraindicated. Multidisciplinary obstetrics
+            + hematology-oncology co-management mandatory.
+        - indication_id: IND-CHL-CHILD-PUGH-C-MOD
+          nccn_category: "2B"
+          criteria: >
+            cHL; Child-Pugh C or bilirubin >3 × ULN; severe hepatic dysfunction. Bleomycin
+            and DTIC HELD (see note). Doxorubicin + vinblastine dose-reduced 50-75% per
+            bilirubin level. Brentuximab vedotin CONTRAINDICATED (Child-Pugh B-C). Hepatology
+            consultation mandatory; defer if reversible hepatic cause (HCV cure, alcohol
+            abstinence, HBV suppression) correctable first.
+          note: >
+            Modified A-V (dose-adjusted doxorubicin + vinblastine) for cHL + Child-Pugh C
+            (NCCN Cat 2B; NCCN BCELL + ESMO Lymphoma 2025; ORR ~70% extrapolated, no RCT).
+            Bleomycin HOLD — pulmonary toxicity amplified without hepatic compensatory
+            mechanisms. DTIC HOLD — FDA contraindication in severe hepatic impairment
+            (veno-occlusive disease risk). REG-AV-HEPATIC-MODIFIED STUB pending dedicated
+            regimen entity.
 
 sources:
   - SRC-NCCN-BCELL-2025
@@ -85,3 +121,6 @@ notes: >
   output_indications; wired as Cat 1 alternative at step 1 A+AVD branch.
   SWOG S1826 (Herrera 2024 NEJM): N+AVD 2-yr PFS 92% vs A+AVD 83%
   (HR 0.48). Preferred in younger/fit patients without autoimmune CI.
+  UPDATED 2026-05-04 (Workstream FU): IND-CHL-PREGNANCY-MOD-ABVD (Cat 2A) and
+  IND-CHL-CHILD-PUGH-C-MOD (Cat 2B) added; wired as alternatives at step 1
+  if_false (ABVD track). Pregnancy and hepatic-impairment gaps CLOSED.

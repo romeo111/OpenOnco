@@ -11,6 +11,7 @@ purpose: >
 output_indications:
   - IND-PV-1L-PHLEBOTOMY-ASA
   - IND-PV-1L-HU
+  - IND-PV-PREGNANCY-PEG-IFN
 
 default_indication: IND-PV-1L-PHLEBOTOMY-ASA
 alternative_indication: IND-PV-1L-HU
@@ -23,6 +24,24 @@ decision_tree:
         - red_flag: RF-PV-ET-HIGH-THROMBOSIS-RISK
     if_true:
       result: IND-PV-1L-HU
+      notes: >
+        High-risk PV (RF-PV-ET-HIGH-THROMBOSIS-RISK): HU + phlebotomy + ASA (NCCN Cat 1).
+        HU is CONTRAINDICATED in pregnancy (teratogenic) — peg-IFN α-2a is the
+        pregnancy-safe cytoreductive alternative — see IND-PV-PREGNANCY-PEG-IFN.
+      alternatives:
+        - indication_id: IND-PV-PREGNANCY-PEG-IFN
+          nccn_category: "2A"
+          criteria: >
+            PV; confirmed pregnancy (any trimester); cytoreduction indicated (high-risk
+            features: age >60, prior thrombosis, platelets >1500 × 10⁹/L) OR recurrent
+            pregnancy loss. HU CONTRAINDICATED in pregnancy (teratogenic — FDA Cat D).
+            JAK2 V617F documented. Phlebotomy to Hct <45% + low-dose ASA concurrent.
+          note: >
+            Peg-IFN α-2a (Pegasys) 45-90 μg SC weekly for PV in pregnancy (NCCN Cat 2A;
+            European LeukemiaNet; Passamonti 2010 Blood; Beauverd 2016 Ann Hematol):
+            ORR ~80-85%; live birth rate ~70-75%; no teratogenicity signal in registries.
+            Concurrent ASA 75-100 mg/day; LMWH postpartum 4-6 weeks (thrombosis peak).
+            Monitor CBC q2-4w; dose-titrate to Hct <45% + platelets <400 × 10⁹/L.
     if_false:
       next_step: 2
 
@@ -56,7 +75,7 @@ sources:
   - SRC-ESMO-MPN-2015
   - SRC-RESPONSE-VANNUCCHI-2015
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
   RF-PV-ET-PREGNANCY-OR-PLANNING, RF-PV-ET-ORGAN-DYSFUNCTION,
   RF-PV-ET-INFECTION-SCREENING, RF-PV-ET-FRAILTY-AGE are
@@ -64,3 +83,6 @@ notes: >
   switch for pregnancy; dose attenuation for organ dysfunction;
   HBV pre-JAKi screening; gentler cytoreduction for elderly).
   STUB — requires clinical co-lead signoff.
+  UPDATED 2026-05-04 (Workstream FU): IND-PV-PREGNANCY-PEG-IFN wired as Cat 2A
+  alternative at step 1 if_true (high-risk HU track). Pregnancy-safe cytoreduction
+  gap CLOSED.

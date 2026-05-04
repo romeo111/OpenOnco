@@ -7,6 +7,7 @@ output_indications:
 - IND-PCNSL-2L-IBRUTINIB
 - IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB
 - IND-PCNSL-2L-TEMOZOLOMIDE
+- IND-PCNSL-2L-AUTOSCT-CONSOLIDATION
 default_indication: IND-PCNSL-2L-RMPV-SALVAGE
 alternative_indication: IND-PCNSL-2L-IBRUTINIB
 decision_tree:
@@ -94,6 +95,27 @@ decision_tree:
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
   if_true:
     result: IND-PCNSL-2L-RMPV-SALVAGE
+    notes: >
+      MTX-sensitive late relapse (≥6 months from 1L): R-MPV salvage (HD-MTX +
+      procarbazine + vincristine ± rituximab; NCCN Cat 2A). For fit responders
+      achieving CR/PR: thiotepa-based autoSCT consolidation available — see
+      IND-PCNSL-2L-AUTOSCT-CONSOLIDATION in alternatives.
+    alternatives:
+      - indication_id: IND-PCNSL-2L-AUTOSCT-CONSOLIDATION
+        nccn_category: "2A"
+        criteria: >
+          PCNSL late relapse (≥6 months from 1L); CR or PR achieved after 2L salvage
+          (R-MPV, ibrutinib, or R²); age ≤70; ECOG 0-2; adequate organ function (CrCl
+          ≥40, bilirubin ≤2 × ULN, LVEF ≥50%); no prior autoSCT. Thiotepa-based
+          conditioning (TBC or thiotepa + BCNU). Time-critical: mobilize + proceed
+          to SCT within 8-12 weeks of response. HIV-negative preferred.
+        note: >
+          Thiotepa-based autoSCT consolidation after 2L PCNSL salvage (NCCN CNS Cat 2A;
+          Kasenda 2017 Blood; Ferreri 2012 Lancet Oncol): 2-yr PFS ~40-50% in transplanted
+          responders vs ~15-20% without consolidation. TBC conditioning preferred (highest
+          CNS drug exposure). NRM ~5-10% at specialized centers; no randomized data —
+          case series + EBMT registry. Ukraine: thiotepa named-patient import; BCNU
+          alternative if thiotepa inaccessible.
   if_false:
     next_step: 4
   notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
@@ -113,6 +135,9 @@ sources:
 last_reviewed: '2026-05-04'
 notes: 'UPDATED 2026-05-04 (Workstream BR): IND-PCNSL-2L-LENALIDOMIDE-RITUXIMAB authored and wired at step 22 as ibrutinib-inaccessible fallback (REAL/Rubenstein JCO 2018; lenalidomide 20 mg/day d1-21 + rituximab 375 mg/m² d1 q28d; ORR ~36%; NCCN Cat 2A). Gap (2) CLOSED. Steps 1 and 2 if_true now route to step 22 (ibrutinib access gate). ROUTING SUMMARY: (1) HD-MTX-contraindicated/frail → step 22 → step 221 (ibrutinib → R² → temozolomide); (2) MTX-refractory/early relapse → step 22 → step 221; (3) MTX-sensitive late relapse → R-MPV salvage; (fallback) → R-MPV salvage. UKRAINE: ibrutinib not registered for PCNSL → R² is the primary ibrutinib-inaccessible path; temozolomide (NSZU-funded for CNS tumors) is the R²-inaccessible fallback.
   UPDATED 2026-05-04 (Workstream CG): IND-PCNSL-2L-TEMOZOLOMIDE authored and wired at step 221 (DRUG-TEMOZOLOMIDE; REG-TEMOZOLOMIDE-PCNSL; Enting 2004 J Neurooncol + Reni 2004 Cancer; ORR ~31-53%; NCCN Cat 2B). Step 22 if_false now routes to step 221 (R² access gate); step 221 if_false → temozolomide. Gap (4) CLOSED.
-  Remaining wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION — not modeled. (3) WBRT palliative — ECOG ≥3; MDT free-text. (5) PD-1 inhibitors — case series only; not guideline-standard. (6) Re-biopsy mandatory if imaging atypical.
+  Remaining wiring gaps: (3) WBRT palliative — ECOG ≥3; MDT free-text. (5) PD-1 inhibitors — case series only; not guideline-standard. (6) Re-biopsy mandatory if imaging atypical.
+  UPDATED 2026-05-04 (Workstream FU): IND-PCNSL-2L-AUTOSCT-CONSOLIDATION wired as
+  Cat 2A alternative at step 3 if_true (R-MPV salvage track; thiotepa-based
+  conditioning; 2-yr PFS ~40-50%; Kasenda 2017 Blood). Gap (1) CLOSED.
 
   '

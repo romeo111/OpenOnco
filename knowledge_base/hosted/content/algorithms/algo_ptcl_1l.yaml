@@ -5,7 +5,10 @@ purpose: >
   PTCL NOS 1L: CD30+ → CHP-Bv (ECHELON-2); CD30- or brentuximab-
   inaccessible → CHOEP.
 
-output_indications: [IND-TCELL-1L-CHOEP, IND-TCELL-1L-CHP-BV]
+output_indications:
+  - IND-TCELL-1L-CHOEP
+  - IND-TCELL-1L-CHP-BV
+  - IND-PTCL-1L-CHOEP-ALLOSCT
 default_indication: IND-TCELL-1L-CHOEP
 alternative_indication: IND-TCELL-1L-CHP-BV
 
@@ -18,6 +21,28 @@ decision_tree:
       result: IND-TCELL-1L-CHP-BV
     if_false:
       result: IND-TCELL-1L-CHOEP
+      notes: >
+        CD30- or brentuximab-inaccessible PTCL NOS: CHOEP × 6 cycles (NCCN Cat 1).
+        Fit transplant-eligible patients (age ≤65, ECOG 0-1): alloSCT consolidation
+        in CR1 is a Cat 2A option — see IND-PTCL-1L-CHOEP-ALLOSCT in alternatives.
+      alternatives:
+        - indication_id: IND-PTCL-1L-CHOEP-ALLOSCT
+          nccn_category: "2A"
+          criteria: >
+            PTCL NOS; CD30- (or brentuximab inaccessible); ECOG 0-1; age ≤65; fit for
+            allogeneic SCT; HLA-matched donor identified (sibling or MUD); CR1 achieved
+            after CHOEP × 6 induction; no prior alloSCT. HLA typing at diagnosis
+            recommended. CD30+ patients prefer CHP+BV track.
+          note: >
+            CHOEP × 6 + alloSCT consolidation in CR1 for PTCL NOS (NCCN Cat 2A; EBMT
+            registry; Schmitz 2002 Leukemia; Reimer 2009 JCO): 5-yr PFS ~50% with
+            alloSCT vs ~25-30% CHOEP alone. NRM 15-20% at experienced centers. GVL
+            effect may compensate for NRM in high-risk PTCL NOS. AlloSCT preferred
+            over autoSCT in chemosensitive CR1 per EBMT and BMT-CTN registry data.
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
+notes: >
+  UPDATED 2026-05-04 (Workstream FU): IND-PTCL-1L-CHOEP-ALLOSCT wired as Cat 2A
+  alternative at step 1 if_false (CHOEP track) for fit transplant-eligible PTCL
+  NOS patients achieving CR1. AlloSCT consolidation gap CLOSED.
