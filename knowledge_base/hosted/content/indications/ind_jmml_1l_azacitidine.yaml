@@ -1,0 +1,197 @@
+id: IND-JMML-1L-AZACITIDINE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-JMML
+  line_of_therapy: 1
+  stage_requirements:
+    - "JMML confirmed by WHO 2022 diagnostic criteria: peripheral blood monocytosis ≥1×10⁹/L, BCR::ABL1 excluded, blasts <20% in peripheral blood and bone marrow, splenomegaly"
+    - "AND at least one of: somatic mutation in PTPN11/KRAS/NRAS/NF1/CBL, monosomy 7, HbF elevated for age"
+    - "Somatic RAS/MAPK mutation confirmed (PTPN11, KRAS, NRAS, NF1, or CBL) — NOT germline Noonan syndrome (germline PTPN11) with spontaneous remission"
+    - "Allogeneic HSCT planned as definitive therapy (donor search initiated or donor identified)"
+    - "Pediatric patients (JMML occurs exclusively in children; median age 1.8 years; >90% diagnosed before age 6)"
+    - "Adequate hepatic function (not severe hepatic impairment)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PTPN11
+      value_constraint: "Somatic PTPN11 mutation OR other RAS/MAPK pathway somatic mutation (KRAS, NRAS, NF1 loss-of-function, CBL loss-of-function); germline PTPN11 (Noonan syndrome) with spontaneous remission is a relative exclusion unless progressive"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      JMML is exclusively pediatric; this indication applies only to pediatric patients.
+      The clinical team managing JMML MUST include pediatric hematology-oncology with
+      JMML expertise; EWOG-MDS/Children's Oncology Group protocols are the reference standards.
+      CRITICAL DISTINCTION — germline vs somatic mutation:
+      - Somatic PTPN11: typical aggressive JMML; HSCT is curative intent; azacitidine bridge
+      - Germline PTPN11 (Noonan syndrome): ~10% of PTPN11-mutant JMML; may self-resolve;
+        OBSERVATION FIRST — azacitidine/HSCT reserved for progressive Noonan JMML
+      - Germline CBL (CBL syndrome): frequent spontaneous resolution; WATCH AND WAIT;
+        azacitidine/HSCT only if progressive or no resolution by 18 months
+      - NF1-associated JMML (germline NF1 loss): standard aggressive JMML; HSCT required
+      - Monosomy 7: high-risk feature; prompt HSCT; azacitidine bridge standard
+      Purpose of azacitidine: CYTOREDUCTIVE BRIDGE to HSCT (1-3 cycles), not long-term
+      disease control. HSCT is the only curative treatment for JMML.
+
+recommended_regimen: REG-AZACITIDINE-JMML
+concurrent_therapy:
+  - "HSCT planning: initiate donor search (matched sibling donor preferred; MUD acceptable) concurrently with azacitidine"
+  - "Supportive care: G-CSF NOT recommended (may stimulate JMML clone); RBC/platelet transfusions for symptomatic anemia/thrombocytopenia"
+  - "Anti-emetic: ondansetron before each azacitidine day"
+  - "Infection prophylaxis: trimethoprim-sulfamethoxazole (TMP-SMX) for pneumocystis prophylaxis; antifungal per institutional protocol"
+  - "Splenomegaly management: do NOT perform splenectomy (does not improve outcomes; increases infection risk); azacitidine may reduce spleen size"
+
+followed_by:
+  - "Bone marrow assessment: after cycle 1-2 (response assessment: monocyte burden, blast count, monosomy 7 FISH)"
+  - "HSCT: proceed to allogeneic HSCT after 1-3 cycles of azacitidine when donor ready and disease burden reduced"
+  - "Conditioning regimen for JMML-HSCT: busulfan + cyclophosphamide + melphalan (Bu/Cy/Mel) — EWOG-MDS recommended myeloablative conditioning"
+  - "Post-HSCT relapse: second allogeneic HSCT (if feasible) OR investigational MEK inhibitor (trametinib — compassionate use/trials for relapsed JMML post-HSCT)"
+  - "SHP2 inhibitors (RMC-4630, ERAS-601): Phase I/II trials for PTPN11-mutant JMML — clinical trial preferred at relapse"
+
+evidence_level: low
+strength_of_recommendation: moderate
+nccn_category: null
+
+expected_outcomes:
+  overall_response_rate: "~60–80% hematologic improvement (spleen size reduction, monocyte count reduction) with azacitidine bridging (EWOG-MDS data; no standardized response criteria for JMML)"
+  complete_response: "<10% hematologic CR pre-HSCT (deep molecular remission is not the goal of azacitidine; cytoreduction is)"
+  progression_free_survival: "5-year event-free survival after HSCT: ~50% (EWOG-MDS historical data; azacitidine-bridged cohort may improve outcomes vs historical controls)"
+  overall_survival_5y: "5-year OS after HSCT: ~55–65% (EWOG-MDS data; relapse post-HSCT: ~35–40% at 5 years)"
+  notes: >
+    PRIMARY EVIDENCE: No Phase 3 RCT for any pre-HSCT therapy in JMML (too rare;
+    exclusive pediatric disease). Evidence base: EWOG-MDS group prospective pilot
+    and retrospective data (NCT00450814; multiple EWOG-MDS publications 2015-2022).
+    COG (Children's Oncology Group) protocols provide North American guidance.
+    Key findings from EWOG-MDS azacitidine data:
+    - Azacitidine reduces JMML disease burden before transplant (spleen size, monocytes,
+      blast count) in a majority of patients
+    - Cytoreductive response correlates with improved post-HSCT outcomes in some analyses
+    - 1-3 cycles are typically sufficient; longer courses not standard
+    NCCN Pediatric guidelines: JMML is managed per COG protocols; azacitidine as
+    pre-HSCT therapy is supported but evidence level is low (Phase 1/2 data only).
+    NOTE: JMML without HSCT is essentially uniformly fatal — azacitidine without
+    transplant is NOT a curative approach and not standard care (investigational only).
+    OS data reflects HSCT outcomes, not azacitidine-alone outcomes.
+
+hard_contraindications:
+  - "Severe hepatic impairment (Child-Pugh C) — azacitidine absolute contraindication"
+  - "Active severe uncontrolled infection — delay azacitidine until infection controlled"
+  - "JMML without HSCT planned — azacitidine as sole therapy is investigational; refer to specialized JMML center"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "Bone marrow aspirate and biopsy: JMML diagnostic work-up (morphology, cytogenetics, FISH for monosomy 7)"
+  - "Molecular panel: comprehensive RAS/MAPK panel (PTPN11, KRAS, NRAS, NF1, CBL) — distinguish somatic vs germline mutations (germline testing for NF1, PTPN11, CBL if clinical features suggest syndromic JMML)"
+  - "BCR::ABL1 exclusion: RT-PCR or FISH (mandatory; CML must be excluded)"
+  - "HbF quantification: age-adjusted HbF elevated in JMML (normal fetal hemoglobin for age is a diagnostic criterion)"
+  - "Abdominal ultrasound: spleen size baseline"
+  - "Genetic counseling consultation: if NF1, Noonan, or CBL syndrome suspected (germline testing)"
+
+desired_tests:
+  - "Germline sequencing (germline DNA from non-tumor tissue): for PTPN11, CBL, NF1 — critical to distinguish somatic vs germline mutation"
+  - "Cytogenetic analysis: karyotype (identify monosomy 7, other chromosome abnormalities)"
+  - "JMML molecular scoring: EWOG-MDS JMML scoring system (age, platelets, HbF, genetic subgroup)"
+  - "HLA typing: patient and family HLA typing early — initiate HSCT donor search concurrent with diagnosis"
+
+rationale: >
+  Juvenile myelomonocytic leukemia (JMML) is a rare aggressive overlap
+  myelodysplastic/myeloproliferative neoplasm occurring exclusively in young children.
+  It is characterized by activation of the RAS/MAPK signaling pathway in ~90% of cases
+  through somatic mutations in PTPN11, KRAS, NRAS, NF1, or CBL.
+
+  ONLY CURATIVE TREATMENT: Allogeneic hematopoietic stem cell transplantation (allo-HSCT)
+  is the only treatment with curative potential in JMML. Without transplant, JMML is
+  uniformly progressive and fatal in the majority of patients. 5-year EFS with HSCT
+  is approximately 50% (EWOG-MDS data).
+
+  PURPOSE OF AZACITIDINE: Azacitidine is used as a BRIDGE to HSCT — its primary
+  purpose is cytoreduction (reducing spleen size, monocyte burden, blast count) to
+  optimize the patient's condition before myeloablative conditioning and transplant.
+  This is distinct from azacitidine's role in MDS/AML (long-term disease control).
+  Typical use: 1-3 cycles before HSCT, not indefinite therapy.
+
+  EWOG-MDS EVIDENCE: The European Working Group on MDS in Childhood (EWOG-MDS;
+  Niemeyer group, Freiburg) has conducted prospective pilot studies and retrospective
+  analyses demonstrating that azacitidine pre-HSCT achieves cytoreductive responses
+  in JMML. Spleen size reduction and monocyte count normalization are meaningful
+  clinical endpoints. Historical alternatives (hydroxyurea, 6-mercaptopurine) have
+  inferior activity.
+
+  GERMLINE VS SOMATIC — CRITICAL DISTINCTION:
+  - Noonan syndrome (germline PTPN11): JMML may spontaneously resolve within months
+    of diagnosis (especially in young infants); observation with periodic reassessment
+    is appropriate before committing to HSCT. Azacitidine used only if progressive.
+  - CBL syndrome (germline CBL): frequent spontaneous resolution; watch-and-wait
+    approach per EWOG-MDS guidelines.
+  - Somatic PTPN11, KRAS, NRAS, NF1, monosomy 7: aggressive JMML; HSCT is standard.
+
+  RAS/MAPK TARGETED THERAPY (INVESTIGATIONAL): SHP2 inhibitors (RMC-4630, ERAS-601,
+  TNO155) are in Phase I/II trials for PTPN11-mutant JMML. MEK inhibitor trametinib
+  has shown compassionate use activity in post-HSCT relapsed JMML. These remain
+  investigational — clinical trial enrollment is the first priority.
+
+  UKRAINE CONTEXT: JMML is extremely rare and requires specialized pediatric
+  hematology-oncology expertise. Azacitidine (Vidaza) is registered and NSZU-
+  reimbursed in Ukraine for MDS (off-label use for JMML requires documentation).
+  Allogeneic HSCT for JMML in Ukraine: refer to centers with HSCT capability
+  (Okhmatdyt National Children's Specialized Hospital, Kyiv; or international
+  referral to EWOG-MDS-affiliated centers in Europe). HLA-matched sibling donor
+  is optimal; unrelated donor HSCT is an alternative.
+
+rationale_ua: >
+  ЮММЛ — виключно педіатрична рідкісна миєлоїдна неоплазія. Алогенна ТКМ —
+  єдиний куративний метод (5-річна EFS ~50%). Азацитидин: МІСТ до ТКМ — для
+  зменшення захворювання (1–3 цикли) перед пересадкою, а не тривала терапія.
+  EWOG-MDS: азацитидин 75 мг/м²/д × 5–7 днів Q28 — зменшення селезінки,
+  нормалізація моноцитів. КРИТИЧНО: соматичний vs зародковий PTPN11 (синдром Нунан —
+  можлива спонтанна ремісія; спостереження). NF1-ЮММЛ: стандартний, потребує ТКМ.
+  Україна: азацитидин зареєстрований (НСЗУ, МДС); off-label для ЮММЛ.
+  ТКМ: Охматдит Київ або напрямлення до EWOG-MDS центрів у Європі.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ лікувати ЮММЛ азацитидином без запланованої ТКМ — без трансплантації азацитидин не є куративним"
+  - "НЕ ігнорувати розрізнення соматичного vs зародкового PTPN11 — синдром Нунан може спонтанно ремітувати"
+  - "НЕ застосовувати G-CSF при ЮММЛ — може стимулювати ЮММЛ-клон (відрізняється від MDS)"
+  - "НЕ виконувати спленектомію — не покращує результати, підвищує ризик інфекцій"
+  - "НЕ виключати BCR::ABL1 (хронічний мієлолейкоз) — обов'язкова диференційна діагностика перед початком лікування"
+  - "НЕ відкладати HLA-типування та пошук донора — ТКМ є метою і потребує часу для підбору донора"
+
+sources:
+  - source_id: SRC-EWOG-JMML-AZACITIDINE
+    position: supports
+    relevant_quote_paraphrase: >
+      EWOG-MDS azacitidine pilot data in JMML: azacitidine 75 mg/m²/day × 5-7 days
+      Q28 as pre-HSCT bridging therapy shows cytoreductive activity (spleen size
+      reduction, monocyte normalization) in the majority of JMML patients. Typically
+      1-3 cycles before allogeneic HSCT. Evidence level: Phase 1-2 / retrospective
+      (no Phase 3 RCT available; rare pediatric disease).
+  - source_id: SRC-COG
+    position: supports
+    relevant_quote_paraphrase: >
+      Children's Oncology Group (COG) JMML protocols: allogeneic HSCT is the
+      standard curative treatment for JMML. Azacitidine as pre-HSCT cytoreductive
+      therapy is supported per current COG/EWOG-MDS practice guidelines.
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DO).
+  TIME-CRITICAL = true: JMML can progress rapidly; HLA typing and donor search
+  should begin at diagnosis; do not delay systemic evaluation.
+  Evidence base is LOW (no Phase 3 RCT; exclusively pediatric rare disease).
+  nccn_category set to null — NCCN Pediatric protocols are referenced via SRC-COG
+  rather than NCCN adult oncology guidelines; JMML falls under COG/EWOG-MDS protocols.
+  The molecular stratification (germline vs somatic mutation) is the most clinically
+  critical decision point and should be resolved BEFORE committing to HSCT and
+  azacitidine bridging.

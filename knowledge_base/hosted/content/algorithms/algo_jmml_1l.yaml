@@ -1,0 +1,185 @@
+id: ALGO-JMML-1L
+applicable_to_disease: DIS-JMML
+applicable_to_line_of_therapy: 1
+purpose: >
+  Route juvenile myelomonocytic leukemia (JMML) to appropriate first-line treatment.
+  Primary goal: identify which patients require allogeneic HSCT and azacitidine
+  bridging vs which may observe (Noonan/CBL syndrome with potential spontaneous remission).
+  Routes by: (1) JMML diagnosis confirmation + CML exclusion, (2) germline vs somatic
+  mutation stratification (Noonan/CBL → observe vs somatic → transplant intent),
+  (3) HSCT eligibility assessment, (4) azacitidine bridging eligibility.
+  KEY: Allogeneic HSCT is the ONLY curative treatment for JMML. Azacitidine is
+  cytoreductive BRIDGE to transplant (1-3 cycles), not long-term disease control.
+  JMML is exclusively pediatric — all management must involve pediatric hematology-
+  oncology expertise (COG/EWOG-MDS protocols).
+
+output_indications:
+  - IND-JMML-1L-AZACITIDINE
+
+default_indication: IND-JMML-1L-AZACITIDINE
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Confirm JMML diagnosis and exclude CML (BCR::ABL1).
+  # WHO 2022 diagnostic criteria: monocytosis + splenomegaly + blasts <20% + RAS/MAPK
+  # mutation OR monosomy 7 OR HbF elevation. BCR::ABL1 MUST be excluded.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "JMML diagnostic criteria met (WHO 2022): peripheral blood monocytosis ≥1×10⁹/L, splenomegaly present, peripheral and bone marrow blasts <20%"
+        - condition: "BCR::ABL1 fusion excluded by RT-PCR or FISH (CML must be ruled out before any JMML treatment)"
+        - condition: "Somatic or germline RAS/MAPK mutation present (PTPN11, KRAS, NRAS, NF1, or CBL mutation) OR monosomy 7 OR HbF elevated for age"
+        - condition: "Pediatric patient (JMML exclusively affects children; median age 1.8 years)"
+    if_true:
+      next_step: 2
+      notes: >
+        JMML diagnosis confirmed and CML excluded. Proceed to mutation type stratification
+        — the most critical decision point in JMML management.
+        MANDATORY: determine if mutation is somatic (tumor-derived) vs germline (inherited):
+        - If Noonan syndrome features present (short stature, cardiac defect, ptosis,
+          pulmonic stenosis, hypertelorism) → test germline PTPN11, SOS1, RAF1, KRAS
+        - If café-au-lait macules, neurofibromas, NF1 clinical features → germline NF1
+        - If CBL mutation found → test germline vs somatic (uniparental disomy 11q23)
+    if_false:
+      result: null
+      notes: >
+        JMML diagnosis uncertain — complete diagnostic workup:
+        (1) Peripheral blood monocyte differential (monocytosis is key; measure absolute
+            monocyte count)
+        (2) Bone marrow aspirate/biopsy: morphology, blast count, cytogenetics (monosomy 7)
+        (3) BCR::ABL1 RT-PCR: MANDATORY exclusion of CML (BCR::ABL1-positive monocytosis
+            is CML, not JMML — treatment is completely different)
+        (4) Molecular panel: PTPN11/KRAS/NRAS/NF1/CBL sequencing (somatic + germline)
+        (5) HbF quantification (age-adjusted; elevated HbF supports JMML)
+        Differential: CML, atypical CML, CMML (older patients), other MPNs, reactive
+        monocytosis (viral infections, HLH — exclude before JMML diagnosis)
+        Refer immediately to pediatric hematology-oncology JMML center.
+
+  # Step 2 — Germline vs somatic mutation stratification.
+  # Germline PTPN11 (Noonan syndrome) and germline CBL may spontaneously resolve
+  # and should be observed before proceeding to HSCT.
+  # Somatic mutations and monosomy 7 → standard aggressive JMML; HSCT is curative intent.
+  - step: 2
+    evaluate:
+      none_of:
+        - condition: "Germline PTPN11 mutation confirmed (Noonan syndrome) with JMML currently stable or improving (serial assessment at 3-month intervals showing spontaneous remission trajectory)"
+        - condition: "Germline CBL mutation confirmed (CBL syndrome) with JMML currently stable or showing spontaneous remission signs"
+    if_true:
+      next_step: 3
+      notes: >
+        Somatic mutation (PTPN11, KRAS, NRAS, NF1) OR monosomy 7 OR Noonan JMML
+        with progressive disease → standard JMML, HSCT is curative intent.
+        Initiate HLA typing (patient + family) and unrelated donor search immediately.
+        NF1-associated JMML (germline NF1): standard aggressive JMML — HSCT required.
+        Somatic PTPN11 (most common, ~35%): typically aggressive; HSCT standard.
+        KRAS/NRAS somatic: HSCT standard; may have higher relapse rate post-HSCT.
+        Monosomy 7: high-risk; prompt HSCT workup.
+    if_false:
+      result: null
+      notes: >
+        Noonan syndrome (germline PTPN11) OR CBL syndrome with potential spontaneous
+        remission — OBSERVATION protocol:
+        - WATCH AND WAIT: serial clinical, hematological, and bone marrow assessments
+          every 3 months for the first year
+        - Spontaneous remission occurs in ~30–50% of Noonan JMML (especially young
+          infants <6 months at diagnosis with germline PTPN11 R138C or similar variants)
+        - CBL syndrome: spontaneous resolution common within 12–18 months; observed
+          without treatment in majority of cases
+        If spontaneous remission does NOT occur within 12–18 months OR disease
+        progresses (worsening monocytosis, increasing splenomegaly, increasing blast %,
+        clinical symptoms) → proceed to HSCT pathway (return to step 3)
+        Refer to EWOG-MDS/COG-affiliated center for Noonan JMML management.
+
+  # Step 3 — HSCT eligibility and timing: assess donor availability and HSCT fitness.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Patient is a candidate for myeloablative conditioning regimen (adequate organ function: hepatic, renal, cardiac; no active uncontrolled infection)"
+        - condition: "HLA typing initiated and donor search in progress (matched sibling donor OR unrelated donor search via registry)"
+    if_true:
+      next_step: 4
+      notes: >
+        HSCT plan confirmed — proceed to azacitidine bridging therapy while donor
+        search/confirmation is being finalized.
+        Preferred donor: HLA-matched sibling donor (MSD) — associated with lower
+        graft-versus-host disease rates; proceed to HSCT as soon as MSD confirmed.
+        If no MSD: initiate unrelated donor (MUD) registry search; azacitidine
+        bridging during 1-4 month donor search/confirmation period.
+        Conditioning regimen for JMML (EWOG-MDS): busulfan + cyclophosphamide +
+        melphalan (Bu/Cy/Mel) — myeloablative conditioning is the standard for JMML.
+    if_false:
+      result: null
+      notes: >
+        HSCT eligibility assessment incomplete or patient not yet transplant-candidate:
+        - If HLA typing not done: initiate immediately (do not delay donor search)
+        - If organ function impaired: optimize before HSCT; specialist consultation
+          (hepatology, cardiology as needed)
+        - If active infection: treat infection aggressively; delay HSCT conditioning
+          until infection controlled (azacitidine may still be started for disease control)
+        - If no HSCT center access: refer to nearest HSCT-capable pediatric oncology center
+          (JMML requires transplant-experienced center); international referral if necessary
+        - If family refuses HSCT: counseling and second opinion strongly recommended
+          (JMML without HSCT is uniformly progressive in somatic mutation cases)
+        - Investigational: SHP2 inhibitors (PTPN11-mutant) in Phase I/II trials —
+          COG/EWOG-MDS trial enrollment is an option while HSCT is being planned
+
+  # Step 4 — Azacitidine bridging eligibility gate.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Adequate hepatic function: ALT/AST ≤3× ULN AND bilirubin ≤ULN (azacitidine contraindicated in severe hepatic impairment)"
+        - condition: "No active severe uncontrolled infection (azacitidine is immunosuppressive; treat infections first)"
+        - condition: "HSCT plan is confirmed or donor search is actively underway (azacitidine is bridging therapy; do not use without transplant intent)"
+    if_true:
+      result: IND-JMML-1L-AZACITIDINE
+      notes: >
+        Azacitidine bridging eligible: start 75 mg/m²/day SC/IV × 5-7 days Q28.
+        Typically 1-3 cycles before HSCT conditioning.
+        EWOG-MDS pilot data: cytoreductive response (spleen size reduction, monocyte
+        normalization) in majority of patients; may improve post-HSCT outcomes.
+        Coordinate azacitidine schedule with transplant center — last azacitidine dose
+        typically 7-14 days before start of HSCT conditioning.
+        NO G-CSF during azacitidine (may stimulate JMML clone).
+        Bone marrow reassessment after cycle 1-2 to assess cytoreductive response.
+        Ukraine: azacitidine available and NSZU-reimbursed (MDS indication; off-label
+        for JMML with documentation); HSCT — Okhmatdyt Kyiv or international referral.
+    if_false:
+      result: null
+      notes: >
+        Azacitidine not immediately eligible — manage specific barrier:
+        - Severe hepatic impairment: hepatology consultation; azacitidine absolute
+          contraindication (Child-Pugh C); investigate hepatic cause (JMML-related
+          hepatomegaly/infiltration, infection, congenital liver disease)
+        - Active infection: treat aggressively with IV antibiotics/antifungals;
+          restart algorithm when infection resolving; avoid azacitidine while
+          systemic infection uncontrolled (immunosuppression risk)
+        - No HSCT plan: counsel family; do not start azacitidine without transplant
+          intent; refer for second opinion or investigational trial enrollment
+        While HSCT is being arranged: supportive care (transfusions, antimicrobials,
+        corticosteroids for symptomatic disease); hydroxyurea is a less-preferred
+        alternative to azacitidine if azacitidine unavailable (lower activity)
+
+sources:
+  - SRC-EWOG-JMML-AZACITIDINE
+  - SRC-COG
+
+last_reviewed: "2026-05-04"
+notes: >
+  DIS-JMML algorithm gap CLOSED 2026-05-04 (Workstream DO).
+  JMML is exclusively pediatric; this algorithm must be applied by pediatric
+  hematology-oncology with JMML expertise (COG/EWOG-MDS protocols).
+  Algorithm designed to: (1) confirm diagnosis and exclude CML;
+  (2) distinguish spontaneous remission candidates (Noonan, CBL) from standard
+  aggressive JMML requiring HSCT; (3) ensure HSCT is planned before azacitidine;
+  (4) gate azacitidine on hepatic function and transplant intent.
+  Critical: BCR::ABL1 exclusion (step 1) is mandatory — monocytosis in CML
+  can mimic JMML; treatment is completely different (tyrosine kinase inhibitor, not HSCT).
+  Noonan syndrome and CBL syndrome natural history data: spontaneous remission
+  rates quoted are from EWOG-MDS retrospective series (~30-50% for Noonan;
+  higher for CBL syndrome). Individual EWOG-MDS centers use clinical scoring
+  to predict spontaneous remission probability.
+  Post-HSCT relapse: ~35-40% relapse rate at 5 years (EWOG-MDS). Relapse management:
+  second HSCT (if feasible and donor available) or investigational MEK/SHP2 inhibitors.
+  Trametinib (MEK inhibitor): used compassionately in relapsed JMML post-HSCT;
+  emerging case series and Phase I/II data.
+  SHP2 inhibitors (RMC-4630, ERAS-601): PTPN11-mutant JMML in Phase I/II trials.
