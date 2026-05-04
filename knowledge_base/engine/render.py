@@ -2289,7 +2289,21 @@ def render_plan_html(
 
     plan = plan_result.plan
     if plan is None:
-        return _doc_shell("OpenOnco — empty plan", "<p>Empty PlanResult; nothing to render.</p>")
+        return _doc_shell(
+            "OpenOnco — no indications found",
+            "<div style='padding:2rem 2.5rem;font-family:system-ui,sans-serif;max-width:52rem'>"
+            "<h2 style='color:#c0392b;margin-top:0'>⚠ No treatment plan generated</h2>"
+            "<p>The engine matched <strong>no active indications</strong> for this patient profile.</p>"
+            "<p><strong>Common causes:</strong></p>"
+            "<ul style='line-height:1.8'>"
+            "<li>Disease not yet covered — check <a href='/diseases.html'>disease coverage</a></li>"
+            "<li>Patient profile missing <code>disease.id</code> or <code>disease.icd_o_3</code></li>"
+            "<li>All matching treatment tracks blocked by ECOG PS ≥ 4 gate or active contraindications</li>"
+            "<li>Diagnostic profile without <code>disease.suspicion</code> field</li>"
+            "</ul>"
+            "<p style='color:#666;font-size:.9rem'>Review the patient JSON, fill required fields, and generate again.</p>"
+            "</div>",
+        )
 
     fda = plan.fda_compliance
 

@@ -3138,6 +3138,10 @@ async function runEngine() {{
     initStageDone('validate');
   }}
   initShow();
+  // On subsequent runs the init stages fast-forward instantly — show the
+  // dedicated generating overlay so the user sees a clear blocker while
+  // Python/Pyodide runs. First-run: the staged initOverlay already covers it.
+  if (enginReady) setGeneratingUI(true, '{"Generating plan…" if target_lang == "en" else "Генерую план…"}');
 
   try {{
     try {{
@@ -3217,6 +3221,7 @@ html
   }} finally {{
     generating = false;
     if (mainTryEl) mainTryEl.inert = false;
+    setGeneratingUI(false);
     // Brief delay so the doctor sees green checkmarks before the overlay
     // fades — purely cosmetic confirmation that all stages succeeded.
     setTimeout(initHide, 600);

@@ -193,7 +193,8 @@ def _build_coverage(
         rfs: set[str] = set()
         for ind in d_inds:
             for rf in (ind.get("red_flags_triggering_alternative") or []):
-                rfs.add(rf)
+                if isinstance(rf, str):
+                    rfs.add(rf)
 
         # Workups attach by triage flow (lineage_hints), not disease_id.
         # Heuristic: match disease lineage OR id-substring against workup's
