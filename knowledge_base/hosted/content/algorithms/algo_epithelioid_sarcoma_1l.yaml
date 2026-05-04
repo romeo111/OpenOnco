@@ -1,0 +1,162 @@
+id: ALGO-EPITHELIOID-SARCOMA-1L
+applicable_to_disease: DIS-EPITHELIOID-SARCOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select first-line systemic therapy for epithelioid sarcoma — a rare, aggressive
+  soft tissue sarcoma defined by SMARCB1 (INI1/BAF47) biallelic inactivation.
+  Routes by: (1) histological confirmation + INI1 IHC status, (2) surgical
+  resectability (complete R0 resection eligibility), (3) disease tempo gate
+  (rapidly progressive high-volume vs indolent/slow-growing), (4) tazemetostat
+  eligibility (ECOG PS, contraindications).
+  KEY: Tazemetostat (EZH2 inhibitor) is FDA-approved and NCCN Category 1 for
+  INI1-deficient metastatic/locally advanced epithelioid sarcoma NOT eligible
+  for complete resection. For rapidly progressive high-volume disease,
+  doxorubicin-based chemotherapy is preferred over tazemetostat (faster response
+  onset; tazemetostat ORR 15% with primarily cytostatic/disease-control benefit).
+
+output_indications:
+  - IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+
+default_indication: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Histological confirmation and INI1 IHC status.
+  # INI1 IHC (BAF47 antibody) is mandatory before systemic therapy.
+  # ~90% of epithelioid sarcomas lose INI1 — retained INI1 = tazemetostat inactive.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Epithelioid sarcoma confirmed histologically (characteristic morphology + IHC panel)"
+        - condition: "INI1 IHC performed (BAF47/INI1 antibody): result documented as loss/negative OR retained/positive"
+    if_true:
+      next_step: 2
+      notes: >
+        Histological confirmation obtained and INI1 status documented.
+        If INI1 retained (positive nuclear staining) → tazemetostat not indicated;
+        refer to general STS algorithm (IND-STS-ADVANCED-1L-DOXORUBICIN or clinical trial).
+        Approximately 10% of epithelioid sarcomas retain INI1 and should not receive tazemetostat.
+        SMARCB1 NGS (deletion/mutation confirmation) optional if IHC equivocal.
+    if_false:
+      result: null
+      notes: >
+        Workup incomplete — perform:
+        (1) Histological biopsy (core needle or excisional) with H&E + IHC panel.
+        (2) INI1 IHC (BAF47/INI1 antibody): mandatory before tazemetostat — confirms SMARCB1 loss.
+        (3) If INI1 equivocal: SMARCB1 NGS (deletion/mutation).
+        Differential: other INI1-deficient tumors (malignant rhabdoid tumor, poorly differentiated
+        chordoma, SMARCB1-deficient sinonasal carcinoma) — histological distinction critical.
+        Refer to sarcoma center (sarcoma pathology expertise required for rare epithelioid tumors).
+
+  # Step 2 — INI1 loss confirmed: proceed to surgical resectability assessment.
+  # Surgery is curative intent for resectable disease — systemic therapy for non-resectable.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "Metastatic epithelioid sarcoma (M1 disease by staging imaging)"
+        - condition: "Locally advanced epithelioid sarcoma not eligible for complete R0 resection (surgical consultation confirms unresectable margins, critical structure involvement)"
+        - condition: "Prior resection with recurrence and current disease not resectable to R0"
+    if_true:
+      next_step: 3
+      notes: >
+        Not eligible for complete resection (R0) — systemic therapy indicated.
+        INI1 IHC loss confirmed (if retained, route to IND-STS-ADVANCED-1L-DOXORUBICIN).
+        Document reason for non-resectability (metastatic disease, margin infeasibility,
+        critical structure involvement, or recurrence after prior resection).
+        Surgical reassessment after partial response to tazemetostat is appropriate —
+        tazemetostat may bridge to curative resection in select responders (IND note).
+    if_false:
+      result: null
+      notes: >
+        Resectable epithelioid sarcoma (complete R0 resection feasible):
+        Surgical resection is the treatment of intent — proceed with oncologic surgery
+        (wide local excision with clear margins). Sarcoma surgery center referral essential.
+        Adjuvant radiation: consider for positive/close margins or high-risk features.
+        Adjuvant systemic therapy: not standard for resected epithelioid sarcoma (no RCT data).
+        Monitor for recurrence — high rate of local and distant recurrence after R0 resection.
+        Return to this algorithm at recurrence if systemic therapy becomes indicated.
+
+  # Step 3 — Disease tempo assessment: rapidly progressive vs indolent.
+  # NCCN distinguishes: doxorubicin-based chemotherapy for high-volume/rapidly progressive disease
+  # (faster response onset needed); tazemetostat for slower-growing/stable disease.
+  - step: 3
+    evaluate:
+      none_of:
+        - condition: "Rapidly progressive high-volume metastatic epithelioid sarcoma (multiple organ metastases, rapidly enlarging bulky disease, significant symptomatic burden requiring fast cytoreduction)"
+        - condition: "Life-threatening visceral crisis requiring urgent cytoreduction"
+    if_true:
+      next_step: 4
+      notes: >
+        Not rapidly progressive — tazemetostat is appropriate (NCCN preferred for indolent/
+        stable disease). INI1-loss confirmed from step 1 — proceed to eligibility gate.
+        Tazemetostat ORR 15% (EZH-202; cytostatic mechanism); primary benefit is disease
+        stabilization and durable disease control (CBR 26%; mDOR not reached in responders).
+    if_false:
+      result: null
+      notes: >
+        Rapidly progressive high-volume epithelioid sarcoma:
+        Doxorubicin-based chemotherapy preferred for faster response onset.
+        Primary options (NCCN Soft Tissue Sarcoma 2025):
+        (1) Doxorubicin monotherapy: IND-STS-ADVANCED-1L-DOXORUBICIN (NCCN Cat 1)
+        (2) Doxorubicin + ifosfamide (AI): higher ORR, greater toxicity, resection-intent cases
+        Consider tazemetostat after chemotherapy or at disease progression
+        (tazemetostat is not reserved only for 2L+ but patient selection matters).
+        Clinical trial preferred if available (epithelioid sarcoma is a rare tumor).
+
+  # Step 4 — Tazemetostat eligibility gate.
+  # ECOG PS ≤2 required (FDA label: ≥16 years; EZH-202 enrolled ECOG 0-2).
+  # Pregnancy is absolute contraindication (embryo-fetal toxicity).
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "INI1 loss confirmed by IHC (BAF47/INI1 antibody — lost/negative nuclear staining)"
+        - condition: "ECOG PS 0-2"
+        - condition: "Age ≥16 years (FDA label; EZH-202 enrolled ≥16 years)"
+        - condition: "Not pregnant (negative pregnancy test for women of reproductive potential)"
+        - condition: "No confirmed secondary T-cell lymphoma (prior EZH2 inhibitor exposure)"
+    if_true:
+      result: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+      notes: >
+        Tazemetostat eligible: start 800 mg PO BID continuously (1600 mg/day total).
+        EZH-202 Phase 2 (Gounder 2020 Lancet Oncol): ORR 15% (1 CR, 8 PR; N=62);
+        CBR 26%; mDOR not reached. FDA accelerated approval January 23, 2020.
+        NCCN Soft Tissue Sarcoma: tazemetostat Category 1 for INI1-deficient
+        metastatic/locally advanced epithelioid sarcoma.
+        Baseline: CBC + LFT + CMP + CT chest/abdomen/pelvis + INI1 IHC confirmation.
+        Secondary T-cell lymphoma vigilance: monitor lymph nodes at each visit;
+        immediate biopsy and permanent discontinuation if confirmed.
+        Ukraine: NOT registered; named-patient import or EZH-202 extension cohorts.
+    if_false:
+      result: null
+      notes: >
+        Tazemetostat not eligible — evaluate specific barrier:
+        - INI1 retained (positive IHC): tazemetostat inactive without SMARCB1 loss →
+          standard STS chemotherapy (IND-STS-ADVANCED-1L-DOXORUBICIN)
+        - ECOG PS 3: borderline — MDT discussion; palliative intent preferred;
+          if performance status improves, reassess
+        - ECOG PS ≥4: supportive care / palliative only (ECOG engine hard gate)
+        - Pregnancy: delay systemic therapy or discuss multidisciplinary management;
+          absolute contraindication to tazemetostat
+        - Prior T-cell lymphoma with EZH2 inhibitor: permanent contraindication
+        - Age <16 years: limited data — clinical trial enrollment strongly preferred
+        Refer to sarcoma center for clinical trial enrollment (high priority for
+        INI1-deficient sarcoma without clear treatment options).
+
+sources:
+  - SRC-EZH202-GOUNDER-2020
+  - SRC-NCCN-SARCOMA
+
+last_reviewed: "2026-05-04"
+notes: >
+  DIS-EPITHELIOID-SARCOMA algorithm gap CLOSED 2026-05-04 (Workstream DK).
+  Tazemetostat FDA accelerated approval January 2020 — first drug approved for
+  epithelioid sarcoma; first EZH2 inhibitor in solid tumors.
+  NCCN Soft Tissue Sarcoma 2025: tazemetostat Category 1 for INI1-deficient
+  metastatic/locally advanced epithelioid sarcoma.
+  Algorithm designed to distinguish: (1) resectable disease (surgery intent),
+  (2) rapidly progressive disease (doxorubicin preferred), (3) indolent/stable
+  INI1-loss disease (tazemetostat NCCN preferred).
+  Secondary T-cell lymphoma class effect of EZH2 inhibitors documented — monitor
+  at each visit; discontinue permanently if confirmed (rare ~1-3% cumulative).
+  INI1-intact (~10% of epithelioid sarcomas) routes to STS chemotherapy backbone;
+  tazemetostat mechanism requires SMARCB1 loss for EZH2 inhibition to be effective.

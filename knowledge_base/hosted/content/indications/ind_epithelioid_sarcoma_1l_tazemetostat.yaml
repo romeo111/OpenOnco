@@ -1,0 +1,154 @@
+id: IND-EPITHELIOID-SARCOMA-1L-TAZEMETOSTAT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-EPITHELIOID-SARCOMA
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic or locally advanced epithelioid sarcoma"
+    - "Not eligible for complete resection (surgery would not achieve R0 resection)"
+    - "Adults AND pediatric patients ≥16 years (FDA label; EZH-202 enrolled ≥16 years)"
+    - "INI1 loss confirmed by IHC (BAF47/INI1 antibody; negative/lost staining expected)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-SMARCB1
+      value_constraint: "SMARCB1/INI1 biallelic loss — confirmed by loss of INI1 nuclear expression on IHC (BAF47 antibody); present in ~90% of epithelioid sarcoma"
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      INI1 IHC loss is required for tazemetostat eligibility — while ~90% of epithelioid
+      sarcomas lose INI1, the minority with retained expression should not receive tazemetostat.
+      NCCN recommends INI1 IHC testing as part of standard sarcoma pathology workup.
+      For rapidly progressive high-volume disease: doxorubicin-based chemotherapy preferred
+      over tazemetostat (faster response onset needed; tazemetostat ORR 15%, cytostatic disease
+      control is primary benefit). Tazemetostat preferred for slower-growing disease.
+
+recommended_regimen: REG-TAZEMETOSTAT-EPITHELIOID-SARCOMA
+concurrent_therapy:
+  - "CBC and LFT monitoring q4 weeks × 3 months, then q8 weeks (hematologic toxicity)"
+  - "Lymph node surveillance: clinical exam every 8-12 weeks (secondary T-cell lymphoma vigilance)"
+  - "Supportive care: nausea management PRN (nausea ~25%); fatigue management (most common AE)"
+  - "Contraception: effective contraception for all patients of reproductive potential (embryo-fetal toxicity)"
+
+followed_by:
+  - "CT chest/abdomen/pelvis every 12 weeks (RECIST 1.1 response assessment)"
+  - "Continue until disease progression or unacceptable toxicity"
+  - "At progression: doxorubicin-based chemotherapy (IND-STS-ADVANCED-1L-DOXORUBICIN; or AI combination); clinical trial preferred"
+  - "Surgery reassessment: if partial response achieves resectability, consider R0 resection — tazemetostat may bridge to curative surgery"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "15% (EZH-202 Phase 2; N=62 evaluable; 1 CR, 8 PR; Gounder 2020 Lancet Oncol)"
+  complete_response: "1.6% (1/62 in EZH-202)"
+  progression_free_survival: "Clinical benefit rate 26% (CR+PR+SD ≥32 weeks); mDOR not reached in responders"
+  overall_survival_5y: "OS benefit not established in Phase 2 context (rare disease, small cohort)"
+  notes: >
+    PRIMARY EVIDENCE: Gounder M et al. Lancet Oncology 2020;21:1480-1490 (EZH-202; Phase 2;
+    N=62 evaluable): tazemetostat 800 mg BID in INI1-deficient epithelioid sarcoma.
+    ORR: 15% (1 CR, 8 PR); CBR 26%; mDOR not reached at data cut.
+    FDA accelerated approval January 23, 2020 (first drug approval for epithelioid sarcoma;
+    first EZH2 inhibitor approval in solid tumors).
+    NCCN Soft Tissue Sarcoma 2025: tazemetostat Category 1 for INI1-deficient epithelioid sarcoma.
+    Confirmatory trial requirements per FDA accelerated approval — ongoing post-marketing studies.
+    NOTE: ORR of 15% is modest but in the context of epithelioid sarcoma (a disease with limited
+    systemic therapy options) this represents a meaningful benefit.
+
+hard_contraindications:
+  - "INI1-intact (retained nuclear INI1 expression on IHC) — tazemetostat inactive without SMARCB1 loss"
+  - "Confirmed secondary T-cell lymphoma (prior EZH2 inhibitor exposure) — discontinue permanently"
+  - "ECOG PS ≥4 — ECOG engine hard gate"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-FIT
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - TEST-CT-CHEST-ABDOMEN-PELVIS
+  - "INI1 IHC (BAF47/INI1 antibody): MANDATORY before tazemetostat — confirms eligibility and diagnosis"
+  - "SMARCB1 NGS (deletion/mutation): optional confirmatory if IHC equivocal"
+
+desired_tests:
+  - "MRI target lesion (for local staging and response assessment of soft tissue extent)"
+  - "Repeat biopsy if INI1 status uncertain from archival tissue"
+
+rationale: >
+  Tazemetostat (Tazverik) is the first and only FDA-approved systemic therapy for
+  epithelioid sarcoma — one of the rarest and most difficult-to-treat soft tissue sarcomas.
+  FDA accelerated approval January 2020 based on EZH-202 Phase 2 (Gounder 2020 Lancet Oncol):
+
+  EZH-202 results (N=62 evaluable, N=68 enrolled):
+  - ORR: 15% (1 CR, 8 PR)
+  - CBR (CR+PR+SD ≥32 weeks): 26%
+  - mDOR: not reached in responders
+  - Safety: generally well-tolerated; most common AEs nausea, fatigue, anorexia, weight loss
+
+  MECHANISM: Epithelioid sarcoma is defined by SMARCB1 (INI1/BAF47) biallelic inactivation
+  in ~90% of cases. SMARCB1 is a core subunit of the SWI/SNF chromatin-remodeling complex.
+  Its loss relieves suppression of EZH2 (a histone methyltransferase), leading to
+  hypermethylation of H3K27 and transcriptional silencing of tumor suppressor genes.
+  Tazemetostat inhibits EZH2, reversing H3K27me3 and restoring tumor suppressor expression.
+  This is not a conventional cytotoxic mechanism — it is epigenetic reprogramming,
+  explaining the cytostatic/disease-stabilizing rather than cytotoxic response pattern.
+
+  IMPORTANT SAFETY: Secondary T-cell lymphoma has been reported with tazemetostat and
+  other EZH2 inhibitors. This is a class effect — the exact mechanism may involve EZH2
+  inhibition affecting T-cell differentiation checkpoints. Risk appears low (~1-3%)
+  but monitor carefully at each visit. Discontinue permanently if confirmed.
+
+  TREATMENT SEQUENCE: For rapidly progressive epithelioid sarcoma, doxorubicin-based
+  chemotherapy (or AI combination for resection-intent) may be preferred for faster
+  disease control. Tazemetostat is particularly suitable for patients with stable/slowly
+  progressive disease, for elderly patients with limited chemotherapy tolerance, or as
+  a bridge to surgery.
+
+  UKRAINE CONTEXT: Tazemetostat (Tazverik) is NOT registered in Ukraine and not NSZU
+  reimbursed. EZH-inhibitor registry access via named-patient import or participation
+  in remaining EZH-202 extension cohorts.
+
+rationale_ua: >
+  Таземетостат (Tazverik) — єдиний FDA-схвалений препарат для епітеліоїдної саркоми
+  (прискорене схвалення, січень 2020). EZH-202 (Gounder 2020 Lancet Oncol): ORR 15%
+  (1 CR, 8 PR; N=62); CBR 26%; mDOR не досягнуто. EZH2-інгібітор через втрату SMARCB1.
+  INI1 ІГХ — обов'язкова умова призначення. Другорядна Т-клітинна лімфома: рідко, але
+  серйозно; моніторинг кожного візиту.
+  Україна: НЕ зареєстровано; named-patient import.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ призначати без підтвердженої втрати INI1 (ІГХ) — збережений INI1 = неефективний"
+  - "НЕ ігнорувати нову лімфаденопатію або В-симптоми — вторинна Т-клітинна лімфома (класовий ефект EZH2-інгібіторів)"
+  - "НЕ застосовувати при швидко прогресуючому великоб'ємному захворюванні — доксорубіцин-based більш доцільний"
+  - "НЕ виконувати за відсутності CBC-моніторингу: q4 тижні × 3 місяці, потім q8 тижнів"
+
+sources:
+  - source_id: SRC-EZH202-GOUNDER-2020
+    position: supports
+    relevant_quote_paraphrase: >
+      EZH-202 Phase 2 (Gounder 2020 Lancet Oncol; N=62 evaluable): tazemetostat 800 mg BID
+      in INI1-deficient epithelioid sarcoma. ORR 15% (1 CR, 8 PR); CBR 26%; mDOR not reached.
+      Basis of FDA accelerated approval January 2020 for epithelioid sarcoma.
+  - source_id: SRC-NCCN-SARCOMA
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Soft Tissue Sarcoma: tazemetostat Category 1 for locally advanced/metastatic
+      INI1-deficient epithelioid sarcoma not eligible for complete resection.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DK).
+  FDA accelerated approval — confirmatory trial data ongoing per FDA post-marketing commitment.
+  DRUG-TAZEMETOSTAT already in KB. REG-TAZEMETOSTAT-EPITHELIOID-SARCOMA authored this workstream.
+  Ukraine: not registered; named-patient import only.

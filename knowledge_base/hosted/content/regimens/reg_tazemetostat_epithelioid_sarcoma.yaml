@@ -1,0 +1,70 @@
+id: REG-TAZEMETOSTAT-EPITHELIOID-SARCOMA
+disease_context: DIS-EPITHELIOID-SARCOMA
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "targeted_therapy_oral"
+
+agents:
+  - drug_id: DRUG-TAZEMETOSTAT
+    dose: "800 mg PO twice daily (BID)"
+    route: PO
+    schedule: "Twice daily continuously (1600 mg/day total), with or without food"
+    administration_notes: >
+      Swallow tablets whole; can be taken with or without food.
+      Take at approximately the same times each day (e.g., morning and evening ~12 hours apart).
+      If a dose is missed, do not double the next dose — skip and resume next scheduled dose.
+      Continue until disease progression or unacceptable toxicity.
+      Dose modification for hematologic or hepatic toxicity per standard EZH2 inhibitor protocol.
+    dose_modifications:
+      - trigger: "Grade ≥3 hematologic toxicity (ANC <1000/mm³, platelets <50,000/mm³, Hgb <8 g/dL)"
+        action: "Hold until recovery to Grade ≤1; resume at 800 mg BID if recovered within 2 weeks; reduce to 600 mg BID if requires >2 weeks or second occurrence"
+      - trigger: "Grade ≥3 non-hematologic toxicity"
+        action: "Hold until recovery to Grade ≤1; resume at 800 mg BID; reduce to 600 mg BID if second occurrence or slow recovery"
+      - trigger: "Secondary T-cell lymphoma suspected (new lymphadenopathy, constitutional symptoms)"
+        action: "HOLD tazemetostat immediately; urgent biopsy; discontinue permanently if confirmed. (Class-wide EZH2 inhibitor risk — rare but serious)"
+    dose_reduction_levels:
+      - "800 mg BID — standard full dose (EZH-202 dose)"
+      - "600 mg BID — first reduction (hematologic or non-hematologic toxicity)"
+      - "400 mg BID — second reduction"
+      - "Discontinue if unable to tolerate 400 mg BID"
+
+when_to_use: >
+  Metastatic or locally advanced epithelioid sarcoma in adults and pediatric patients
+  (≥16 years) not eligible for complete resection. Requires confirmed INI1 loss by IHC
+  (BAF47/INI1 antibody; diagnostic companion test for epithelioid sarcoma in this context).
+  EZH-202 Phase 2 (Gounder 2020 Lancet Oncol): ORR 15% (1 CR, 8 PR in N=62 evaluable);
+  CBR 26% (CR+PR+SD ≥32 weeks); mDOR not reached. FDA January 2020 (accelerated approval).
+  NCCN Soft Tissue Sarcoma: tazemetostat preferred for INI1-deficient epithelioid sarcoma
+  without rapidly progressive disease; doxorubicin-based chemotherapy for high-volume/
+  rapidly progressive disease.
+
+contraindications_relative:
+  - "Rapidly progressive high-volume metastatic epithelioid sarcoma — doxorubicin-based chemotherapy preferred (faster response rate needed)"
+  - "INI1 expression intact (IHC showing retained nuclear INI1) — tazemetostat targets EZH2 in SMARCB1-loss context; retained INI1 predicts no benefit"
+  - "Prior EZH2 inhibitor (cross-class resistance; limited evidence for rechallenge)"
+  - "Pregnancy — embryo-fetal toxicity risk"
+
+monitoring:
+  - "CBC: baseline, every 4 weeks × 3 months, then every 8 weeks (hematologic toxicity monitoring)"
+  - "LFTs: baseline + every 4 weeks × 3 months, then q3 months"
+  - "Imaging (CT chest/abdomen/pelvis): baseline + every 12 weeks (RECIST 1.1 response)"
+  - "INI1 IHC on biopsy: confirm at baseline if not already documented"
+  - "Lymph node/constitutional symptom monitoring: every visit — secondary T-cell lymphoma vigilance"
+  - "CBC and differential at any new lymphadenopathy or B symptoms"
+
+sources:
+  - SRC-EZH202-GOUNDER-2020
+  - SRC-NCCN-SARCOMA
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DK).
+  Secondary T-cell lymphoma is a class-wide EZH2 inhibitor concern (FDA added REMS-style
+  warning post-approval). Monitor at each visit. Risk appears low (~1–3% cumulative)
+  but discontinue immediately if suspected.
+  Same 800 mg BID dose as REG-TAZEMETOSTAT-FL (FL uses different disease context).
