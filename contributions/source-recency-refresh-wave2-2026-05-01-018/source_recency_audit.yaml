@@ -1,0 +1,77 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-018
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit table required by issue #220. One row
+    per manifest ID with url_verified, content_current, proposed_current_as_of,
+    license_status, notes. Zero rows propose upsert this wave; see
+    unreachable.yaml for the structured failure list and refresh_summary.yaml
+    for aggregate counts.'
+rows:
+- id: SRC-ESMO-SALIVARY
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending
+  notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+    review_status: pending_clinical_signoff). Title still contains "TODO:
+    confirm year/citation"; no top-level url field — only license.url
+    points to the journal landing page (annalsofoncology.org). Per
+    chunk-brief rule "No URL → unreachable", flagged unreachable.no_url.
+    Defer to a stub-resolution chunk to identify the correct ESMO salivary
+    gland cancer guideline citation (van Herpen 2022 EHNS-ESMO-ESTRO
+    candidate per maintainer note) and seed url/doi/pmid before next
+    recency wave.'
+- id: SRC-PATHFINDER
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending
+  notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+    review_status: pending_clinical_signoff). Title still contains "TODO:
+    confirm citation"; no top-level url field. Per chunk-brief rule "No
+    URL → unreachable", flagged unreachable.no_url. Multiple trials carry
+    the PATHFINDER name (Galleri MCED screening, avapritinib advanced SM,
+    others); resolving the correct primary citation is stub-resolution
+    work and out of scope for a recency refresh.'
+- id: SRC-REVEL-GARON-2014
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'GET https://pubmed.ncbi.nlm.nih.gov/24933332/ → 403 Forbidden.
+    DOI fallback https://doi.org/10.1016/S0140-6736(14)60845-X redirected
+    via linkinghub.elsevier.com → sciencedirect.com → 403. Likely
+    publisher bot-blocking (NCBI + Elsevier both gate non-browser GETs).
+    Hosted YAML metadata complete (PMID 24933332, DOI, Lancet 2014,
+    last_verified 2026-04-27). Maintainer browser-verify recommended;
+    underlying citation is well-established (REVEL phase-3, FDA-approved
+    basis for ramucirumab+docetaxel 2L NSCLC), so unreachable status
+    reflects probe limitation, not stale evidence.'
+- id: SRC-APHINITY-VONMINCKWITZ-2017
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'GET https://pubmed.ncbi.nlm.nih.gov/28581356 → 403 Forbidden.
+    DOI fallback https://doi.org/10.1056/NEJMoa1703643 → nejm.org → 403.
+    Publisher bot-blocking. Hosted YAML already has current_as_of
+    2026-04-29 + recency_check_status_code 200 from wave-1 (chunk
+    source-recency-refresh-2026-04-29-002, where HEAD method returned
+    200). Content remains current per OS update (Loibl Ann Oncol 2023);
+    no upsert needed this wave. Flagged unreachable.blocked for audit
+    completeness.'
+- id: SRC-LANCET-CPX351-2018
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: subscription_required
+  notes: 'GET https://ascopubs.org/doi/10.1200/JCO.2017.77.6112 → 403
+    Forbidden. DOI fallback https://doi.org/10.1200/JCO.2017.77.6112 →
+    same ASCO landing → 403. ASCO publisher bot-blocking. Hosted YAML
+    metadata complete (PMID 30024784, JCO 2018, last_verified 2026-04-27);
+    underlying CPX-351 phase-3 (Lancet JE et al.) is the FDA-approval
+    basis for Vyxeos in tAML/AML-MRC. Maintainer browser-verify
+    recommended.'

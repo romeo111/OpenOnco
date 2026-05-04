@@ -1,0 +1,59 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Report-only flag list: sources whose URL HEAD/GET did not return 2xx/3xx.
+    All four entries are HTTP 403 from major publisher hosts (PubMed/NCBI,
+    JAMA Network, NEJM) which return 403 to non-browser User-Agents as
+    bot-protection. A real browser would succeed (citations remain valid).
+    Per brief: 403 retried once after 15s; persistence noted as
+    url_status: blocked_by_bot_protection. last_verified updated to 2026-05-01
+    in audit only (no upsert sidecar — hosted current_as_of left untouched
+    per reference pattern from contributions/source-recency-refresh-2026-04-29-001/).
+    Maintainer browser-verify recommended before next action; consider
+    switching url to DOI canonical (https://doi.org/...) to avoid publisher
+    bot-walls in future recency sweeps.
+rows:
+  - id: SRC-ATA-THYROID-2015
+    url: https://pubmed.ncbi.nlm.nih.gov/26462967/
+    status_code: 403
+    error: Forbidden (PubMed bot-protection)
+    method: GET
+    retry_15s_status_code: 403
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: null
+    last_verified_existing: '2026-04-28'
+    suggestion: Consider switching url to https://doi.org/10.1089/thy.2015.0020 (DOI canonical) for stable resolution.
+  - id: SRC-CARVAJAL-KIT-MELANOMA-2013
+    url: https://jamanetwork.com/journals/jama/fullarticle/1104614
+    status_code: 403
+    error: Forbidden (JAMA Network bot-protection)
+    method: GET
+    retry_15s_status_code: 403
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2011-06-08'
+    last_verified_existing: '2026-04-27'
+    suggestion: Consider switching url to https://doi.org/10.1001/jama.2011.746 or https://pubmed.ncbi.nlm.nih.gov/22271878/ (PMID canonical).
+  - id: SRC-INOVATE-KANTARJIAN-2016
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa1509277
+    status_code: 403
+    error: Forbidden (NEJM bot-protection)
+    method: GET
+    retry_15s_status_code: 403
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2016-06-12'
+    last_verified_existing: '2026-04-27'
+    suggestion: Consider switching url to https://doi.org/10.1056/NEJMoa1509277 or https://pubmed.ncbi.nlm.nih.gov/27292104/ (PMID canonical).
+  - id: SRC-ECHELON-1-CONNORS-2018
+    url: https://pubmed.ncbi.nlm.nih.gov/29224502
+    status_code: 403
+    error: Forbidden (PubMed bot-protection)
+    method: GET
+    retry_15s_status_code: 403
+    url_status: blocked_by_bot_protection
+    current_as_of_existing: '2018-01-25'
+    last_verified_existing: '2026-04-27'
+    suggestion: Consider switching url to https://doi.org/10.1056/NEJMoa1708984 (DOI canonical) for stable resolution.

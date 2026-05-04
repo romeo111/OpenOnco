@@ -1,0 +1,103 @@
+id: IND-GCT-SALVAGE-2L-TIP
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-TESTICULAR-GCT
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory testicular GCT (NSGCT or seminoma) after 1L BEP or EP"
+    - "Cisplatin-sensitive relapse: CR after 1L then relapse (not cisplatin-refractory)"
+    - "Good or intermediate Indiana prognostic score at relapse"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: CrCl ≥50 mL/min for cisplatin (or ≥30 for carboplatin substitution)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-AFP
+      value_constraint: "AFP at relapse required (Indiana prognostic score; <1000 ng/mL = favorable)"
+    - biomarker_id: BIO-HCG-SERUM
+      value_constraint: "hCG at relapse required (Indiana score; <1000 IU/L = favorable)"
+  biomarker_requirements_excluded:
+    - "Cisplatin-refractory disease (progression within 4 weeks of last cisplatin) → HDCT+ASCT preferred"
+    - "Poor Indiana prognostic score (AFP ≥1000 AND/OR liver/bone/brain mets AND/OR hCG ≥1000) → consider HDCT+ASCT"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-TIP-GCT-SALVAGE
+concurrent_therapy:
+  - "G-CSF primary prophylaxis (mandatory)"
+followed_by:
+  - "Tumor markers (AFP, hCG, LDH) after each cycle"
+  - "CT CAP after cycles 2 and 4 for response assessment"
+  - "If complete remission after TIP: surveillance vs RPLND for residual mass"
+  - "RPLND for residual mass ≥1 cm with normalized markers (teratoma or necrosis)"
+  - "HDCT+ASCT (IND-GCT-SALVAGE-2L-HDCT-ASCT) if TIP fails or incomplete response"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  complete_response_rate: "63% (Kondagunta 2005)"
+  durable_ned_rate: "52%"
+  favorable_subgroup_cr: "76% (AFP <1000, no liver/bone/brain mets)"
+  unfavorable_subgroup_cr: "45%"
+  notes: >
+    Kondagunta 2005 (JCO; n=46): TIP × 4 cycles in relapsed GCT. CR 63%; durable NED 52%.
+    NCCN Category 1 for cisplatin-sensitive relapsed GCT.
+
+hard_contraindications:
+  - "CrCl <30 mL/min (cisplatin/ifosfamide nephrotoxicity; carboplatin substitution possible for CrCl 30-50)"
+  - "Prior severe cisplatin-refractory disease — HDCT preferred"
+  - "Severe hearing loss precluding cisplatin monitoring"
+  - "Active ifosfamide encephalopathy history (relative)"
+
+red_flags_triggering_alternative:
+  - condition: "Cisplatin-refractory (relapse within 4 weeks of last cisplatin): HDCT+ASCT preferred (IND-GCT-SALVAGE-2L-HDCT-ASCT)"
+  - condition: "Poor Indiana score (AFP ≥1000, or hCG ≥1000, or liver/bone/brain mets): HDCT+ASCT or clinical trial preferred"
+  - condition: "Clinical stage I surveillance relapse (no prior chemo): 1L BEP × 3-4 cycles is appropriate, not TIP salvage"
+
+required_tests:
+  - "AFP, hCG, LDH (tumor markers — required before each cycle; Indiana prognostic score)"
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - "CrCl or GFR (cisplatin eligibility: CrCl ≥50 for standard cis; ≥30 for carbo substitution)"
+  - TEST-LFT
+  - "Audiogram (baseline cisplatin ototoxicity monitoring)"
+  - TEST-ECG
+
+rationale: >
+  TIP (paclitaxel 250 mg/m² 24h CIV d1 + ifosfamide 1.5 g/m²/d d2-5 + cisplatin 25 mg/m²/d d2-5)
+  × 4 cycles q21d. Kondagunta 2005 (JCO; n=46): CR 63%; durable NED 52%.
+  Favorable Indiana prognostic criteria (AFP <1000, hCG <1000, no non-pulmonary visceral mets):
+  CR 76%. Rationale: paclitaxel d1 pre-exposure may sensitize tumor cells to subsequent
+  cisplatin/ifosfamide. NCCN Category 1 for cisplatin-sensitive relapsed GCT with good/
+  intermediate Indiana score. Ifosfamide encephalopathy is a key safety concern — methylene
+  blue is the treatment. Mesna mandatory with all ifosfamide courses.
+
+rationale_ua: >
+  TIP × 4 цикли при рецидивному цисплатин-чутливому GCT. CR 63%; дurable NED 52%.
+  NCCN Категорія 1. Мезна та G-CSF ОБОВ'ЯЗКОВІ. Іфосфамідна енцефалопатія —
+  метиленовий синій. При несприятливому прогностичному індексі (AFP ≥1000 або
+  liver/bone/brain мets) → перевага надається HDCT+ASCT.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KONDAGUNTA-TIP-2005
+    position: supports
+    relevant_quote_paraphrase: "TIP salvage (n=46): CR 63%; durable NED 52%; favorable group CR 76%; NCCN Cat 1 for cisplatin-sensitive relapsed GCT"
+
+do_not_do:
+  - "НЕ застосовувати при цисплатин-рефрактерному захворюванні (прогресія в межах 4 тижнів від останнього цисплатину) — HDCT+ASCT має перевагу"
+  - "НІКОЛИ не призначати іфосфамід без мезни — геморагічний цистит"
+  - "НІКОЛИ не ігнорувати ознаки іфосфамідної енцефалопатії — НЕГАЙНО зупинити + метиленовий синій"
+  - "Не пропускати базовий рівень маркерів AFP/хГЧ/ЛДГ перед кожним циклом"
+
+time_critical: true
+time_critical_note: "GCT salvage has curative intent; delay worsens outcomes — initiate within 2-4 weeks of confirmed relapse"
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

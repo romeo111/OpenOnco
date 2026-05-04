@@ -47,6 +47,42 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Crizotinib for ALK+ ALCL relapsed. ALKi pattern: visual disturbance,
+# GI, edema, hepatic, QT. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Розмиття зору, тимчасові плями в полі зору"
+    action_ua: "Поширене на кризотинібі — обов'язково повідомте на найближчому візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Набряки гомілок, обличчя"
+    action_ua: "Поширене на ALKi — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — кризотиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — кризотиніб може подовжувати інтервал QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна задишка, новий сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — рідко може спричиняти ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   NCI-9015 / Mossé 2017 (children + AYA): r/r ALK+ ALCL — ORR 88-90%,

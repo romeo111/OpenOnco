@@ -1,0 +1,100 @@
+id: ALGO-CERVICAL-METASTATIC-1L
+applicable_to_disease: DIS-CERVICAL
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for persistent, recurrent, or metastatic cervical
+  cancer (FIGO IVB, or recurrent not amenable to curative-intent surgery/RT).
+  Routes by PD-L1 CPS (KEYNOTE-826) and bevacizumab eligibility.
+  Distinct from ALGO-CERVICAL-LOCALLY-ADVANCED-1L (curative-intent CRT).
+
+output_indications:
+  - IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+
+default_indication: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Disease state gate. Confirm metastatic/recurrent setting.
+  # Locally advanced (FIGO IB3-IVA, curative intent) → ALGO-CERVICAL-LOCALLY-ADVANCED-1L.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "FIGO IVB (distant metastases)"
+        - condition: "Recurrent cervical cancer not amenable to curative-intent surgery or RT"
+        - condition: "Persistent disease after definitive CRT, not curable with further local therapy"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: "Locally advanced FIGO IB3-IVA with curative intent → ALGO-CERVICAL-LOCALLY-ADVANCED-1L."
+
+  # Step 2 — PD-L1 CPS testing. FDA-approved indication requires CPS ≥1.
+  # CPS testing mandatory before treatment initiation.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "PD-L1 CPS ≥ 1 (22C3 assay)"
+    if_true:
+      next_step: 3
+      notes: "CPS≥1 (primary KEYNOTE-826 population): mOS 28.6 vs 16.5 mo (HR 0.64); mPFS 10.4 vs 8.2 mo (HR 0.62). Pembrolizumab addition clearly indicated."
+    if_false:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+      notes: >
+        CPS < 1: KEYNOTE-826 all-comers also showed OS benefit (HR 0.67), but FDA
+        approval restricted to CPS≥1. NCCN accepts pembro+chemo for all-comers.
+        Chemo ± bevacizumab alone (GOG-240 backbone) is the alternative if pembro
+        contraindicated (active autoimmune disease, prior transplant).
+        IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV is still routed here as the
+        best available option; document CPS<1 status and discuss risk/benefit.
+
+  # Step 3 — Bevacizumab eligibility. GOG-240 showed OS benefit (HR 0.71);
+  # KEYNOTE-826 used bev in ~63% of patients. Add if no contraindication.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "No prior pelvic fistula (vesico-vaginal or recto-vaginal)"
+        - condition: "No active uncontrolled hemorrhage"
+        - condition: "Blood pressure controlled (< 150/100)"
+        - condition: "Urine protein < 2 g/24h (UPCR < 2)"
+        - condition: "No therapeutic anticoagulation with active hemorrhagic risk"
+    if_true:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+      notes: >
+        Bevacizumab-eligible: use full KEYNOTE-826 / GOG-240 regimen:
+        pembrolizumab 200mg + paclitaxel 175mg/m² + carboplatin AUC5 +
+        bevacizumab 15mg/kg q3w × 6 cycles, then pembro + bev maintenance.
+        Bevacizumab adds OS benefit (GOG-240 HR 0.71; KEYNOTE-826 ~63% used bev).
+    if_false:
+      result: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV
+      notes: >
+        Bevacizumab-ineligible: omit bevacizumab. Use pembrolizumab 200mg +
+        paclitaxel 175mg/m² + carboplatin AUC5 q3w × 6 cycles, then pembro
+        maintenance. KEYNOTE-826 enrolled a subgroup without bevacizumab (~37%).
+        Document bevacizumab contraindication clearly.
+
+sources:
+  - SRC-KEYNOTE826-COLOMBO-2021
+  - SRC-GOG240-TEWARI-2014
+  - SRC-NCCN-CERVICAL-2025
+  - SRC-ESMO-CERVICAL-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  Post-KEYNOTE-826 (2021): pembrolizumab + chemo ± bev is the preferred 1L
+  for all eligible patients with PD-L1 CPS≥1 metastatic/recurrent cervical cancer.
+  FDA approved October 2021 for PD-L1 CPS≥1.
+
+  Chemotherapy backbone: paclitaxel + carboplatin (JCOG-0505: carbo non-inferior
+  to cisplatin + paclitaxel, better tolerated). Cisplatin alternative if cisplatin-
+  naive and renal function adequate (cisplatin 50 mg/m² q3w).
+
+  Bevacizumab addition: GOG-240 OS HR 0.71; KEYNOTE-826 design allowed bev.
+  Use when no fistula, hemorrhage, uncontrolled HTN, or proteinuria.
+
+  INTERLACE (2024): induction carboplatin+paclitaxel 6 weeks before CRT for
+  locally advanced — improves PFS in curative setting. Does NOT apply to this
+  metastatic algorithm.
+
+  2L: tisotumab vedotin (innovaTV 301; IND-CERVICAL-2L-TISOTUMAB-VEDOTIN,
+  NCCN category 1) or single-agent chemo (topotecan, vinorelbine, gemcitabine,
+  irinotecan) when TV not accessible.

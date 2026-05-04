@@ -1,0 +1,126 @@
+id: ALGO-MESOTHELIOMA-1L
+applicable_to_disease: DIS-MESOTHELIOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for unresectable malignant pleural mesothelioma (MPM).
+  Routes by histological subtype (non-epithelioid vs epithelioid) and performance
+  status. Nivo+ipi (CheckMate-743) is the preferred 1L overall; the benefit is
+  dramatically larger in non-epithelioid histology (sarcomatoid/biphasic HR 0.46
+  vs epithelioid HR 0.86). Resectability assessment (EPP or P/D) must precede
+  systemic therapy initiation.
+
+output_indications:
+  - IND-MESOTHELIOMA-1L-NIVO-IPI
+  - IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
+
+default_indication: IND-MESOTHELIOMA-1L-NIVO-IPI
+alternative_indication: IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
+
+decision_tree:
+  # Step 1 — Resectability assessment. Surgery (EPP or P/D) can be curative
+  # in select early-stage MPM. Only unresectable/metastatic disease routes
+  # to systemic 1L here.
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Unresectable MPM (multidisciplinary assessment: IMIG stage III-IV, bilateral disease, poor PS, or patient declines surgery)"
+        - condition: "Technical unresectability confirmed by thoracic surgery + MDT"
+    if_true:
+      next_step: 2
+    if_false:
+      result: null
+      notes: >
+        Potentially resectable MPM: evaluate for EPP (extrapleural pneumonectomy)
+        or P/D (pleurectomy/decortication) with neoadjuvant or adjuvant intent at
+        high-volume thoracic surgery center. Multimodality approach (surgery +
+        chemotherapy ± RT) discussed in MDT. If resection attempted but incomplete
+        (R2), systemic therapy follows.
+
+  # Step 2 — Performance status gate.
+  - step: 2
+    evaluate:
+      any_of:
+        - red_flag: RF-FITNESS-ECOG-FIT
+        - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+        - condition: "ECOG 0-2"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: systemic therapy unlikely to benefit.
+        Best supportive care: pleurodesis for symptomatic effusion,
+        intercostal drainage, pain management. Palliative referral.
+
+  # Step 3 — Histological subtype routing.
+  # Non-epithelioid (sarcomatoid or biphasic): nivo+ipi dramatically superior
+  # to chemotherapy (HR 0.46; mOS 18.1 vs 8.8 mo). Chemotherapy is
+  # substantially inferior in non-epithelioid — nivo+ipi strongly preferred.
+  # Epithelioid: nivo+ipi still preferred (Cat 1; HR 0.86), but chemotherapy
+  # (pemetrexed+cisplatin/carboplatin) is an acceptable alternative with
+  # slightly higher ORR and no immune toxicity risk.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Non-epithelioid histology (sarcomatoid, desmoplastic, or biphasic with sarcomatoid component ≥50%)"
+    if_true:
+      result: IND-MESOTHELIOMA-1L-NIVO-IPI
+      notes: >
+        Non-epithelioid MPM: nivo+ipi strongly preferred (CheckMate-743; mOS 18.1
+        vs 8.8 mo with chemo; HR 0.46). Chemotherapy provides very limited benefit
+        in sarcomatoid histology (mOS ~8 mo with chemo). Do NOT use chemotherapy
+        alone as 1L for sarcomatoid/biphasic histology — dramatically inferior.
+        Continue nivo 3mg/kg q2w + ipi 1mg/kg q6w up to 2 years.
+    if_false:
+      next_step: 4
+      notes: "Epithelioid MPM: nivo+ipi preferred but check ICI eligibility — step 4."
+
+  # Step 4 — ICI eligibility check (epithelioid MPM only).
+  # Nivo+ipi is preferred for eligible patients; pemetrexed+cisplatin
+  # is the standard-track alternative for ICI-contraindicated patients.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "No active autoimmune disease requiring systemic treatment"
+        - condition: "No solid organ transplant"
+        - condition: "No prior immune-mediated pneumonitis Grade ≥2"
+    if_true:
+      result: IND-MESOTHELIOMA-1L-NIVO-IPI
+      notes: >
+        Epithelioid MPM, ICI eligible: nivo+ipi preferred (CheckMate-743;
+        mOS 18.7 vs 16.7 months with chemo; HR 0.86; 2y OS 41% vs 27%).
+        Advantages of nivo+ipi over pemetrexed+cisplatin: superior 2-year OS,
+        durable responses (~20% long-term survivors), no nephrotoxicity.
+        Disadvantage: irAEs (pneumonitis, colitis, endocrinopathies).
+        If patient declines ICI or strongly prefers chemotherapy: use
+        IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM (EMPHACIS: ORR 41%,
+        mOS 12.1 months; NCCN Cat 1 pre-ICI SOC).
+    if_false:
+      result: IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM
+      notes: >
+        ICI contraindicated (active autoimmune disease, solid organ transplant,
+        prior immune-mediated pneumonitis): use pemetrexed+cisplatin (NCCN Cat 1).
+        EMPHACIS (Vogelzang 2003, n=456): ORR 41%, mPFS 5.7 months, mOS 12.1 months.
+        MANDATORY: folic acid daily + vitamin B12 q9 weeks before first dose.
+        Cisplatin-ineligible: substitute carboplatin AUC 5 (pemetrexed+carboplatin).
+
+sources:
+  - SRC-CHECKMATE743-BAAS-2021
+  - SRC-NCCN-NSCLC-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  4-step algorithm: resectability gate → PS gate → histology routing → ICI eligibility.
+  Non-epithelioid → nivo+ipi (strongly preferred; HR 0.46 in sarcomatoid/biphasic).
+  Epithelioid, ICI-eligible → nivo+ipi (HR 0.86; preferred per CheckMate-743).
+  Epithelioid, ICI-contraindicated → pemetrexed+platinum (EMPHACIS, NCCN Cat 1).
+
+  Two active 1L indications:
+  - IND-MESOTHELIOMA-1L-NIVO-IPI (default; CheckMate-743)
+  - IND-MESOTHELIOMA-1L-PEMETREXED-PLATINUM (standard-track; EMPHACIS 2003)
+
+  Peritoneal mesothelioma is a distinct disease with different treatment
+  (CRS+HIPEC for peritoneal meso); not covered by this algorithm.
+
+  2L MPM: bevacizumab+chemotherapy, vinorelbine, gemcitabine — limited evidence;
+  no 2L algorithm yet.

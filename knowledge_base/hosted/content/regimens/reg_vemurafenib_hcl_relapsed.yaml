@@ -28,6 +28,45 @@ ukraine_availability:
 sources:
   - SRC-NCCN-BCELL-2025
   - SRC-MOZ-UA-LYMPH-2013
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Vemurafenib + rituximab for relapsed BRAF-V600E HCL (Tiacci 2021).
+# BRAFi pattern: photosensitivity, rash, secondary skin cancers,
+# arthralgia, fatigue. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Чутливість шкіри до сонця, швидкі опіки"
+    action_ua: "Завжди використовуйте сонцезахисний крем SPF 50+"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висип, біль у суглобах, помірна втома"
+    action_ua: "Зустрічається — занотовуйте інтенсивність"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Нові плями на шкірі або зміна вже існуючих родимок"
+    action_ua: "Подзвоніть у клініку того ж дня — BRAFi може спричиняти вторинні шкірні пухлини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія від ритуксимабу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — вемурафеніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка інфузійна реакція на ритуксимаб"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "Day 1 of cycle 1"
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: '2026-04-27'
 notes: 'Tiacci 2021 (NEJM): vemurafenib + rituximab in r/r HCL — CR ~87%, MRD-negative ~65%. NCCN-preferred 2L for BRAF-V600E HCL (~95% of classic HCL). Drug entity for vemurafenib not yet in KB — flagged for promotion when broader BRAF coverage opens.'
 notes_ua: >-

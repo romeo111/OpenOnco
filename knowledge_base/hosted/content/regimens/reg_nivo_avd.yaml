@@ -59,6 +59,48 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-HODGKIN-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Nivolumab + AVD for advanced cHL (SWOG S1826). Combines IO irAEs
+# with AVD chemo (cytopenia + cardiac + alopecia). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома після інфузії"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Шкірний свербіж"
+    action_ua: "Часто від ніволумабу — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Нова задишка, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — доксорубіцин впливає на серце; може бути імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   SWOG S1826 trial (Herrera 2024 NEJM): newly diagnosed advanced cHL

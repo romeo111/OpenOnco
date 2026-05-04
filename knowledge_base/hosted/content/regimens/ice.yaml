@@ -36,6 +36,44 @@ ukraine_availability:
   notes: "Усі компоненти доступні в Україні."
 
 sources: [SRC-NCCN-BCELL-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# ICE (ifosfamide + carbo + etoposide) salvage for relapsed lymphoma.
+# Inpatient. Ifosfamide adds CNS toxicity + hemorrhagic cystitis.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома, мукозит"
+    action_ua: "Поширене — м'яка їжа, полоскання порожнини рота"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Очікувано — повертається після курсу"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Кров у сечі або біль при сечовипусканні"
+    action_ua: "Подзвоніть у клініку того ж дня — іфосфамід може спричиняти геморагічний цистит; пийте багато води"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Розмиття мислення, сонливість, плутаність"
+    action_ua: "Подзвоніть у клініку того ж дня — іфосфамід може спричиняти енцефалопатію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока тривала нейтропенія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Судомний напад або втрата свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — тяжка іфосфамід-енцефалопатія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   STUB. Salvage / pre-transplant cytoreduction. Hemorrhagic cystitis ризик

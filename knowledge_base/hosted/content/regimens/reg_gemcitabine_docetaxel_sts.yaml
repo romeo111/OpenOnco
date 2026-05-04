@@ -1,0 +1,73 @@
+id: REG-GEMCITABINE-DOCETAXEL-STS
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy_doublet"
+
+agents:
+  - drug_id: DRG-GEMCITABINE
+    dose: "900 mg/m² IV over 90 min (rate-controlled: 10 mg/m²/min)"
+    route: IV
+    schedule: "Days 1 and 8 q21d"
+    rate_note: "CRITICAL: gemcitabine must be infused at fixed rate 10 mg/m²/min (not standard 30 min). Rate control improves intracellular gem-triphosphate accumulation and efficacy in STS."
+    dose_modifications:
+      - trigger: "Grade ≥3 thrombocytopenia (platelets <50 × 10⁹/L)"
+        action: "Delay until recovery; reduce gem to 675 mg/m²"
+      - trigger: "Grade ≥3 neutropenia"
+        action: "Add G-CSF if not already given; reduce dose if febrile neutropenia"
+  - drug_id: DRG-DOCETAXEL
+    dose: "100 mg/m² IV over 60 min"
+    route: IV
+    schedule: "Day 8 only q21d (after gemcitabine on day 8)"
+    dose_modifications:
+      - trigger: "Grade ≥3 peripheral neuropathy"
+        action: "Delay until ≤Grade 1; reduce to 75 mg/m²"
+      - trigger: "Grade ≥3 febrile neutropenia despite G-CSF"
+        action: "Reduce docetaxel to 75 mg/m²; consider dose reduction of gemcitabine to 675 mg/m²"
+      - trigger: "Significant fluid retention refractory to diuretics"
+        action: "Reduce dexamethasone evaluation; consider docetaxel dose reduction"
+
+growth_factor_support:
+  mandatory: true
+  agent: "G-CSF (filgrastim or pegfilgrastim)"
+  timing: "Days 9-15 or pegfilgrastim day 9; PRIMARY PROPHYLAXIS MANDATORY"
+  rationale: "SARC002: significant myelosuppression with GemDoc doublet; G-CSF required at full doses"
+
+premedication:
+  - "Dexamethasone 8 mg PO BID × 3 days (day before, day of, day after docetaxel day 8) — fluid retention/hypersensitivity prophylaxis"
+  - "Antiemetics per moderate emetogenicity (ondansetron or equivalent before day 1 and day 8)"
+
+when_to_use: >
+  2L+ metastatic or unresectable STS after anthracycline-based 1L, particularly:
+  - Leiomyosarcoma (uterine or retroperitoneal/extra-uterine) — best evidence (SARC002 LMS subgroup)
+  - Undifferentiated pleomorphic sarcoma (UPS) — benefit demonstrated
+  - Other STS subtypes — less data but used broadly
+  NOT preferred for adipocytic STS (liposarcoma) where trabectedin (if available) or
+  pazopanib are alternatives.
+  G-CSF PRIMARY PROPHYLAXIS MANDATORY. Rate-controlled gemcitabine (90-min infusion) critical.
+
+monitoring:
+  - "CBC: before each cycle and day 8 (before gemcitabine day 8 + docetaxel)"
+  - "Hold day 8 if ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L"
+  - "LFT: baseline + q3 cycles (docetaxel hepatic metabolism; gem/docetaxel hepatotoxicity)"
+  - "Peripheral neuropathy: each cycle (docetaxel cumulative)"
+  - "Fluid retention: each cycle — weight + edema; dexamethasone premedication key"
+  - "CT ± MRI: q3 cycles (RECIST 1.1; response/progression assessment)"
+  - "Pulmonary function: as clinically indicated (gemcitabine pneumonitis ~2%)"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression or unacceptable toxicity; typically 6 cycles initial assessment"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Швидкість введення гемцитабіну — 90-хвилинна інфузія зі швидкістю 10 мг/м²/хв ОБОВ'ЯЗКОВА (не стандартна 30-хвилинна); контрольована швидкість підвищує внутрішньоклітинний трифосфат"
+  - "КРИТИЧНО: G-CSF первинна профілактика ОБОВ'ЯЗКОВА — GemDoc значна мієлосупресія; без G-CSF неприйнятний ризик нейтропенічної гарячки"
+  - "КРИТИЧНО: Дексаметазон 8 мг × 2 рази/добу × 3 дні навколо дня 8 (доцетаксел) — профілактика затримки рідини та гіперчутливості"
+  - "УВАГА: ОАК перед кожним циклом та перед днем 8 — затримати день 8, якщо НАЧ <1.5 або тромбоцити <100 × 10⁹/л"
+  - "УВАГА: Доцетаксел тільки в ДЕНЬ 8 (не день 1) — схема gem d1,8 + doc d8"
+  - "УВАГА: Лейоміосаркома та UPS — найбільша користь від GemDoc (SARC002); для ліпосаркоми — трабектедин (якщо доступний) або пазопаніб"
+  - "УВАГА: Периферична нейропатія (доцетаксел, кумулятивна) — оцінка кожен цикл"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

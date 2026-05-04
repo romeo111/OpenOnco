@@ -1,0 +1,79 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-025
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: Report-only flag list. dead=HTTP 404 (URL gone). blocked=HTTP
+    403 across primary+DOI+PubMed cascade (likely publisher bot-block; real browser
+    would succeed). no_url=record has no resolvable URL/DOI/PMID. unreachable=other
+    network/HTTP error.
+rows:
+- id: SRC-FOENIX-CCA2
+  url: ''
+  status_code: null
+  fallback_attempted: no_url
+  cascade_trail: []
+  error: no_url_no_doi_no_pmid
+  reason: no_url
+  current_as_of_existing: null
+- id: SRC-PT1-HARRISON-2005
+  url: https://www.nejm.org/doi/full/10.1056/NEJMoa043800
+  status_code: 403
+  fallback_attempted: primary
+  cascade_trail:
+  - url: https://www.nejm.org/doi/full/10.1056/NEJMoa043800
+    label: primary
+    code: 403
+    error: ''
+  - url: https://doi.org/10.1056/NEJMoa043800
+    label: doi_fallback
+    code: 403
+    error: ''
+  - url: https://pubmed.ncbi.nlm.nih.gov/16000354
+    label: pubmed_fallback
+    code: 403
+    error: ''
+  error: ''
+  reason: blocked
+  current_as_of_existing: '2005-07-07'
+- id: SRC-RECOURSE-MAYER-2015
+  url: https://www.nejm.org/doi/full/10.1056/NEJMoa1414325
+  status_code: 403
+  fallback_attempted: primary
+  cascade_trail:
+  - url: https://www.nejm.org/doi/full/10.1056/NEJMoa1414325
+    label: primary
+    code: 403
+    error: ''
+  - url: https://doi.org/10.1056/NEJMoa1414325
+    label: doi_fallback
+    code: 403
+    error: ''
+  - url: https://pubmed.ncbi.nlm.nih.gov/25970050
+    label: pubmed_fallback
+    code: 403
+    error: ''
+  error: ''
+  reason: blocked
+  current_as_of_existing: '2015-05-14'
+- id: SRC-CHECKMATE-238-WEBER-2017
+  url: https://pubmed.ncbi.nlm.nih.gov/28891423
+  status_code: 403
+  fallback_attempted: primary
+  cascade_trail:
+  - url: https://pubmed.ncbi.nlm.nih.gov/28891423
+    label: primary
+    code: 403
+    error: ''
+  - url: https://doi.org/10.1056/NEJMoa1709030
+    label: doi_fallback
+    code: 403
+    error: ''
+  - url: https://pubmed.ncbi.nlm.nih.gov/28891423
+    label: pubmed_fallback
+    code: 403
+    error: ''
+  error: ''
+  reason: blocked
+  current_as_of_existing: '2026-04-29'

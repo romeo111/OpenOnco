@@ -44,6 +44,38 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Nelarabine for relapsed T-ALL/T-LL. Boxed warning: severe
+# neurotoxicity (peripheral neuropathy + CNS — seizure, paralysis).
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виражена втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах — навіть легке"
+    action_ua: "Подзвоніть у клініку того ж дня — нелярабін має тяжку нейротоксичність як boxed warning"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптовий судомний напад або слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — нелярабін може спричиняти тяжку CNS-токсичність"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+      - SRC-ESMO-PTCL-2024
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Звертайтесь у лікарню негайно — глибока нейтропенія"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова сонливість, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — CNS-токсичність"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Adult dosing per Gökbuget 2017 schema; pediatric dosing (650 mg/m²

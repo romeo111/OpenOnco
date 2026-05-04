@@ -1,0 +1,67 @@
+id: REG-DOCETAXEL-MCRPC
+disease_context: DIS-PROSTATE
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "chemotherapy"
+
+agents:
+  - drug_id: DRG-DOCETAXEL
+    dose: "75 mg/m² IV over 60 min"
+    route: IV
+    schedule: "Day 1 q21d"
+    dose_modifications:
+      - trigger: "Grade ≥3 peripheral neuropathy or mucositis"
+        action: "Delay until ≤Grade 1; reduce dose to 60 mg/m²"
+      - trigger: "Grade ≥3 febrile neutropenia"
+        action: "Delay until ANC ≥1.5 × 10⁹/L; add G-CSF prophylaxis; reduce dose to 60 mg/m²"
+      - trigger: "Fluid retention Grade ≥2 (refractory to diuretics)"
+        action: "Reduce dexamethasone premedication evaluation; consider dose reduction"
+  - drug_id: DRG-PREDNISONE
+    dose: "10 mg PO daily (continuous)"
+    route: PO
+    schedule: "Daily throughout docetaxel course"
+    notes: "Standard companion (TAX 327); reduces fluid retention; adrenal support"
+
+when_to_use: >
+  1L mCRPC in ARPI-naive patients (prior ARPI used in mHSPC setting or prior to mCRPC).
+  TAX 327 (Tannock 2004): docetaxel vs mitoxantrone; mOS 18.9 vs 16.5 months (HR 0.76).
+  In mHSPC: CHAARTED / STAMPEDE established early docetaxel benefit (especially high-volume disease).
+  mCRPC 1L docetaxel: ECOG 0-2 required; 10 cycles is standard (TAX 327 protocol).
+  Preferred 2L after ARPI 1L mCRPC (ARPI-switch cross-resistance common).
+  Cabazitaxel (REG-CABAZITAXEL-MCRPC) is 2L post-docetaxel (CARD/TROPIC).
+
+premedication:
+  - "Dexamethasone 8 mg PO BID × 3 days starting day before infusion (fluid retention + hypersensitivity prophylaxis)"
+  - "Antiemetic (ondansetron or equivalent) per moderately emetogenic protocol"
+
+growth_factor_support:
+  primary_prophylaxis: "Not routinely required for 75 mg/m²; consider for high-risk patients (age ≥65, poor nutritional status, prior RT to pelvis)"
+  secondary_prophylaxis: "Mandatory after febrile neutropenia"
+
+monitoring:
+  - "CBC: before each cycle; delay if ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L"
+  - "PSA: each cycle (PCWG3); >50% decline = response marker"
+  - "LFT: baseline + q3 cycles (hepatic metabolism; dose-reduce if bilirubin ≥1.5 × ULN)"
+  - "Peripheral neuropathy: each cycle (cumulative)"
+  - "Fluid retention: each cycle — weight + edema assessment; 3-day dexamethasone premedication key"
+  - "CT CAP + bone scan: every 3-4 cycles (response assessment)"
+
+cycle_length_days: 21
+total_planned_cycles: "10 cycles (TAX 327 protocol); may continue beyond 10 if responding and tolerating"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Дексаметазон 8 мг × 2 рази/добу 3 дні (день до, в день та день після) — ОБОВ'ЯЗКОВА профілактика затримки рідини та гіперчутливості"
+  - "КРИТИЧНО: ФПП (функція печінки) перед кожним циклом — доцетаксел метаболізується CYP3A4 печінкою; при білірубін ≥1.5 × ВМН — знизити дозу або відмінити"
+  - "УВАГА: Стандарт — 10 циклів (TAX 327); не скорочувати передчасно при хорошій відповіді та переносимості"
+  - "УВАГА: Преднізон 10 мг/добу щоденно протягом усього курсу (стандарт TAX 327)"
+  - "УВАГА: Після прогресування на доцетакселі — кабазитаксел (REG-CABAZITAXEL-MCRPC) є стандартом 2L (CARD: перевершує другий АРПІ)"
+  - "УВАГА: Периферична нейропатія — кумулятивна; оцінювати кожен цикл; Grade ≥3 — зниження дози"
+  - "УВАГА: Затримка рідини (кумулятивна) — вага та набряки щотижня; рефрактерний набряк — збільшити дексаметазон або знизити дозу"
+
+sources:
+  - SRC-NCCN-PROSTATE-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

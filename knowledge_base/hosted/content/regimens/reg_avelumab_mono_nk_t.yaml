@@ -40,6 +40,41 @@ ukraine_availability:
 sources:
   - SRC-NCCN-BCELL-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Avelumab monotherapy for relapsed NK/T-cell lymphoma. Anti-PD-L1
+# irAE pattern. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано — зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — щитоподібна реакція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Kim 2020 (Blood) phase 2 in r/r EBV-driven NK/T-cell lymphoma —

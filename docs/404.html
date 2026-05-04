@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenOnco — page not found</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="/style.css" rel="stylesheet">
+<script>
+(function () {
+  try {
+    var p = window.location.pathname || "";
+    var s = window.location.search || "";
+    var h = window.location.hash || "";
+    // Legacy /en/* paths were retired 2026-04-30 (English moved to root).
+    // Strip the /en prefix and redirect so old links / search results still work.
+    if (p === "/en" || p === "/en/") {
+      window.location.replace("/" + s + h);
+      return;
+    }
+    if (p.indexOf("/en/") === 0) {
+      window.location.replace(p.substring(3) + s + h);
+      return;
+    }
+  } catch (e) { /* fall through to static 404 below */ }
+})();
+</script>
+</head>
+<body>
+<header class="top-bar">
+  <div class="brand-line">
+    <a href="/" class="brand-mini">OpenOnco</a>
+  </div>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/diseases.html">Diseases</a>
+    <a href="/capabilities.html">Capabilities</a>
+    <a href="/contribute.html">Contribute</a>
+    <a href="/gallery.html">Examples</a>
+  </nav>
+  <div class="top-right">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a class="lang-other" href="/ukr/"><span class="lang-flag flag-ua" aria-hidden="true"></span>UA</a>
+      <span class="lang-current"><span class="lang-flag flag-en" aria-hidden="true"></span>EN</span>
+    </div>
+  </div>
+</header>
+<main style="max-width:720px;margin:6rem auto;padding:0 1.5rem;text-align:center;">
+  <h1 style="font-family:'Playfair Display',serif;font-size:3rem;margin-bottom:0.5rem;">404</h1>
+  <p style="font-size:1.25rem;color:#555;">This page has moved or no longer exists.</p>
+  <p style="margin-top:2rem;">
+    <a href="/" style="display:inline-block;padding:0.75rem 1.5rem;border:1px solid #333;border-radius:4px;text-decoration:none;color:#333;">Go to OpenOnco home →</a>
+  </p>
+  <p style="margin-top:3rem;color:#888;font-size:0.9rem;">
+    Looking for the Ukrainian version? <a href="/ukr/">Open /ukr/</a>.
+  </p>
+</main>
+</body>
+</html>

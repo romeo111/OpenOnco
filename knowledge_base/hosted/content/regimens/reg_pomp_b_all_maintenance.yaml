@@ -72,6 +72,37 @@ sources:
   - SRC-CALGB-10403-STOCK-2019
   - SRC-NCCN-BCELL-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# POMP maintenance B-ALL. Vincristine: ileus + neuropathy.
+# 6-MP + MTX: hepatotoxicity + cytopenia (TPMT/NUDT15 severe myelosuppression).
+# STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Запор більше 3 днів"
+    action_ua: "Прийміть призначений послаблюючий засіб; занотовуйте — вінкристин уповільнює кишечник"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Поколювання або оніміння у пальцях рук і ніг"
+    action_ua: "Занотовуйте і повідомте лікаря — нейротоксичність вінкристину"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, темна сеча"
+    action_ua: "Подзвоніть у клініку того ж дня — гепатотоксичність від 6-МП або MTX"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Відсутність стільця понад 5 днів, здуття живота, виражений біль"
+    action_ua: "Звертайтесь у лікарню негайно — паралітичний ілеус від вінкристину"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   CALGB 10403 (Stock 2019): 2-3 yr POMP maintenance after induction +

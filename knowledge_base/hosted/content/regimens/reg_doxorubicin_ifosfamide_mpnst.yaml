@@ -27,5 +27,43 @@ sources:
   - SRC-NCCN-SARCOMA
 
 reviewer_signoffs: 0
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Doxorubicin + ifosfamide for advanced MPNST. Toxicity = anthracycline
+# (cardio + cytopenia + alopecia) + ifosfamide (encephalopathy +
+# hemorrhagic cystitis even with mesna). STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Випадіння волосся, помірна нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — геморагічний цистит від іфосфаміду"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Сплутаність свідомості, надмірна сонливість"
+    action_ua: "Подзвоніть у клініку того ж дня — енцефалопатія від іфосфаміду"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Задишка при підйомі сходами або в стані спокою, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — антрацикліни впливають на серце"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Сильна задишка або біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SARCOMA
+
 notes: >
   STUB scaffold. Dosing summary only.

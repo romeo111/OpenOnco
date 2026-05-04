@@ -1,0 +1,103 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-001
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Per-source audit summary (issue #203 manifest). One entry per source
+    with the structured fields specified in the issue body's Output
+    Requirements section. URL probes: httpx 0.28.1, GET, timeout=30s,
+    retries=3, follow_redirects=True; 403 responses retried after 15s.
+issue_number: 203
+audit_date: '2026-05-01'
+chunk_run_date: '2026-05-01'
+sources:
+- id: SRC-ARROW
+  url_verified: no
+  url_verified_reason: stub_no_url_field
+  content_current: unknown
+  content_current_reason: stub_pending_clinical_signoff
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: no_current_as_of_field_on_stub
+  license_status: pending
+  license_status_reason: legal_review.status=pending; license block not yet populated
+  notes: >
+    SRC-ARROW is an auto-stub: title still has '(TODO: confirm citation)',
+    no url / pmid / doi / version / authors / journal fields, and
+    review_status: pending_clinical_signoff. Recency refresh out of scope
+    until the upstream stub is fleshed out by the source-stub fill chunks
+    (parallel workstream). No upsert sidecar produced — would require
+    inventing publisher metadata. Recorded in unreachable.yaml for
+    audit-trail completeness.
+- id: SRC-HODI-2013
+  url_verified: no
+  url_verified_reason: stub_no_url_field
+  content_current: unknown
+  content_current_reason: stub_pending_clinical_signoff
+  proposed_current_as_of: null
+  proposed_current_as_of_reason: no_current_as_of_field_on_stub
+  license_status: pending
+  license_status_reason: legal_review.status=pending; license block not yet populated
+  notes: >
+    SRC-HODI-2013 is an auto-stub: title 'Hodi et al. 2013 (TODO: confirm
+    citation)', no url / pmid / doi / journal / authors fields. Likely
+    refers to Hodi FS et al, NEJM 2010 (CA184-020 ipilimumab metastatic
+    melanoma, PMID 20525992) OR the Hodi FS et al, JCO 2014 ipi+gp100
+    long-term follow-up — disambiguation requires clinical signoff. No
+    upsert sidecar produced. Recorded in unreachable.yaml.
+- id: SRC-EXTREME-VERMORKEN-2008
+  url_verified: blocked_by_bot_protection
+  url_verified_reason: 'pubmed.ncbi.nlm.nih.gov returned 403 on initial GET and on
+    retry after 15s; PMID 18784101 is a stable PubMed record, content known to exist'
+  content_current: yes
+  content_current_reason: EXTREME remains 1L SCCHN standard for PD-L1 CPS<1 patients
+    and IO-contraindicated cohort; not superseded
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: NEJM subscription terms unchanged; legal_review.status=reviewed
+    2026-04-30
+  notes: >
+    Upsert sidecar src_extreme_vermorken_2008.yaml: last_verified +
+    current_as_of bumped to 2026-05-01, url_status=blocked_by_bot_protection
+    added, recency_check_status_code=403 recorded. URL preserved
+    (pubmed.ncbi.nlm.nih.gov/18784101). No content / license /
+    attribution changes.
+- id: SRC-LEE-2015-BELINOSTAT-PTCL
+  url_verified: blocked_by_bot_protection
+  url_verified_reason: 'pubmed.ncbi.nlm.nih.gov returned 403 on initial GET and on
+    retry after 15s; PMID 26101246 is a stable PubMed record, content known to exist'
+  content_current: yes
+  content_current_reason: BELIEF (CLN-19) remains pivotal phase-2 evidence for belinostat
+    R/R PTCL; FDA 2014 accelerated approval still in force per Drugs@FDA
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: ASCO / JCO subscription terms unchanged; legal_review.status=reviewed
+    2026-04-27
+  notes: >
+    Upsert sidecar src_lee_2015_belinostat_ptcl.yaml: last_verified +
+    current_as_of bumped to 2026-05-01, url_status=blocked_by_bot_protection
+    added, recency_check_status_code=403 recorded. URL preserved.
+    Authorship-attribution caveat (Lee vs O'Connor first-author) carried
+    forward unchanged from existing notes field.
+- id: SRC-CTCAE-V5
+  url_verified: yes_with_redirect
+  url_verified_reason: '301 redirect from ctep.cancer.gov/protocoldevelopment/electronic_applications/ctc.htm
+    -> dctd.cancer.gov/research/ctep-trials/trial-development; final 200 OK; CTEP
+    hostname retired in favor of DCTD; data endpoint at evs.nci.nih.gov independently
+    verified 200 OK on the v5.0 xlsx (466 KB)'
+  content_current: yes
+  content_current_reason: CTCAE v5.0 remains in force; NCI has not released v6.0
+    publicly
+  proposed_current_as_of: '2026-05-01'
+  license_status: confirmed_unchanged
+  license_status_reason: U.S. government work — public domain; legal_review.status=reviewed
+    2026-04-25
+  notes: >
+    Upsert sidecar src_ctcae_v5.yaml: url field updated to redirect
+    target, url_redirected_from added with the pre-redirect URL,
+    last_verified + current_as_of bumped to 2026-05-01,
+    recency_check_status_code=200. ingestion.endpoint
+    (evs.nci.nih.gov/ftp1/CTCAE/CTCAE_5.0/CTCAE_v5.0_2017-11-27.xlsx)
+    independently verified 200 OK 466460 bytes — unchanged. License
+    (public domain) confirmed unchanged.

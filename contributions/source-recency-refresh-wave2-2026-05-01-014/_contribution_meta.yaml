@@ -1,0 +1,21 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-014
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source-recency refresh batch — closes #216. Real HTTP HEAD
+    checks via stdlib urllib using User-Agent "Mozilla/5.0 (compatible; OpenOnco-recency-bot)",
+    30s timeout, 3 retries, with DOI fallback on HTTP 403. Manifest = 5 sources.
+    Pattern follows contributions/source-recency-refresh-2026-04-29-001/ from #92-#121
+    wave 7. Supersession audit is OUT OF SCOPE for HTTP-only refresh; content_current
+    reflects "no supersession evidence found in this scan", not a clinical sign-off.'
+  tasktorrent_version: 2026-05-01
+  notes_for_reviewer: 'Per-source upsert touches only: current_as_of, last_recency_check,
+    recency_check_status_code. Content/license/attribution unchanged. Two stub
+    sources (SRC-ESMO-BONE-SARCOMA, SRC-NCCN-PEDIATRIC-SARCOMA) have no url field
+    on the hosted YAML — flagged unreachable.no_url. Two NEJM URLs (APL0406, EMBRACA)
+    return HTTP 403 (publisher bot-block); DOI fallback also 403 — flagged
+    unreachable.blocked.'
+claim_method: formal-issue

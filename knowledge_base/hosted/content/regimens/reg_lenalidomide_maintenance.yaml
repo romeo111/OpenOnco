@@ -54,6 +54,43 @@ sources:
   - SRC-NCCN-MM-2025
   - SRC-ESMO-MM-2023
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lenalidomide maintenance post-ASCT for MM. Long-term oral.
+# Cytopenia (especially neutropenia) + thrombosis + secondary
+# malignancy risk + diarrhea. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна діарея або помірна втома"
+    action_ua: "Часто проходить — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Помірний висип"
+    action_ua: "Зустрічається — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — леналідомід підвищує ризик тромбозу; антикоагулянти зазвичай призначаються профілактично"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений висип з пухирями"
+    action_ua: "Подзвоніть у клініку того ж дня — рідко тяжкі шкірні реакції"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   CALGB 100104 (McCarthy 2012; updated 2017): post-ASCT lenalidomide

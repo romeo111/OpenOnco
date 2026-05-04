@@ -1597,11 +1597,11 @@ CASES: list[CaseEntry] = [
     CaseEntry(
         case_id="auto-urothelial",
         file="auto_urothelial.json",
-        label_ua="DIS-UROTHELIAL — Auto-stub (75% наповненість)",
-        summary_ua="Автогенерований мінімальний профіль для Urothelial carcinoma. Фактична наповненість бази для цієї хвороби — 75%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
+        label_ua="DIS-UROTHELIAL — Auto-stub (88% наповненість)",
+        summary_ua="Автогенерований мінімальний профіль для Urothelial carcinoma. Фактична наповненість бази для цієї хвороби — 88%. Використовується для перевірки end-to-end engine + render — не для клінічних рішень.",
         badge="Auto-stub", badge_class="bdg-stub", category="solid",
-        label_en="DIS-UROTHELIAL — Auto-stub (75% KB fill)",
-        summary_en="Auto-generated minimal profile for Urothelial carcinoma. Actual KB fill for this disease is 75%. Used to verify end-to-end engine + render — not for clinical decisions.",
+        label_en="DIS-UROTHELIAL — Auto-stub (88% KB fill)",
+        summary_en="Auto-generated minimal profile for Urothelial carcinoma. Actual KB fill for this disease is 88%. Used to verify end-to-end engine + render — not for clinical decisions.",
     ),
     CaseEntry(
         case_id="auto-wm",

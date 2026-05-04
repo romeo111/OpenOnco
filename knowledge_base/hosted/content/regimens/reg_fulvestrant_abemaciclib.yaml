@@ -33,6 +33,44 @@ ukraine_availability:
   notes: "Fulvestrant reimbursed; abemaciclib reimbursement pending. Out-of-pocket for combination; clinical-review queue item."
 
 sources: [SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Fulvestrant + abemaciclib for HR+/HER2- breast 2L (MONARCH-2).
+# Abemaciclib has higher diarrhea + VTE rates than other CDK4/6i.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Абемацикліб часто спричиняє діарею — занотовуйте, лоперамід за призначенням"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Помірна втома, нудота"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Тяжка діарея (≥6 разів/день)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — абемацикліб підвищує ризик тромбозу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed:
 notes: >
   MONARCH-2: PFS + OS benefit post-AI failure. Diarrhea management

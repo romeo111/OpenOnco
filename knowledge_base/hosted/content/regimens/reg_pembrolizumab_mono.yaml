@@ -1,0 +1,56 @@
+id: REG-PEMBROLIZUMAB-MONO
+disease_context: multiple
+plan_track: standard
+
+regimen_type: "immunotherapy_mono"
+
+agents:
+  - drug_id: DRG-PEMBROLIZUMAB
+    dose: "200 mg IV over 30 min (flat dose)"
+    route: IV
+    schedule: "Day 1 q21d (q3w); or 400 mg q6w (alternative flat dose — equivalent exposure)"
+    dose_modifications:
+      - trigger: "Grade ≥3 immune-related AE (excluding endocrine)"
+        action: "Permanently discontinue; high-dose corticosteroids (prednisone 1-2 mg/kg/day or equivalent)"
+      - trigger: "Grade 2 irAE (pneumonitis, hepatitis, colitis, nephritis)"
+        action: "Hold pembrolizumab; prednisone 0.5-1 mg/kg/day; resume on resolution ≤Grade 1"
+      - trigger: "Grade 3/4 irAE requiring hospitalization"
+        action: "Permanently discontinue; IV methylprednisolone 1-2 mg/kg/day; add infliximab for colitis if steroid-refractory"
+      - trigger: "Endocrine irAE (hypothyroidism, hypophysitis, adrenal insufficiency, DI)"
+        action: "Hormone replacement (levothyroxine, hydrocortisone); do NOT discontinue pembrolizumab unless severe"
+      - trigger: "Any Grade 4 non-endocrine irAE"
+        action: "Permanently discontinue"
+
+when_to_use: >
+  Pembrolizumab monotherapy across multiple tumor types and settings where ICI monotherapy
+  is indicated by disease-specific evidence. Dosing is flat (200 mg q3w or 400 mg q6w).
+  No dose reduction — modifications are hold or discontinue.
+  Anti-PD-1 mechanism: blocks PD-1/PD-L1 interaction, restoring T-cell cytotoxic activity.
+
+premedication:
+  - "No routine premedication required for pembrolizumab IV"
+  - "Antiemetics not typically required (pembrolizumab not emetogenic)"
+  - "TSH + cortisol baseline (endocrine monitoring)"
+
+monitoring:
+  - "TSH + free T4: baseline + q3 cycles — thyroiditis (most common endocrine irAE; ~10%)"
+  - "LFT: baseline + q3 cycles — immune hepatitis"
+  - "Creatinine: baseline + q3 cycles — immune nephritis"
+  - "CBC: baseline; repeat as clinically indicated"
+  - "Cortisol: baseline — adrenal insufficiency workup if fatigue/hypotension"
+  - "CT/imaging: per disease-specific protocol (typically q9 weeks)"
+
+total_planned_cycles: "Up to 35 cycles (2 years) total, or until progression/unacceptable toxicity"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Ендокринні іrAE (гіпотиреоз, гіпофізит) — НЕ відміняти пембролізумаб; призначити гормональну замісну терапію"
+  - "КРИТИЧНО: Grade ≥3 неендокринний іrAE (пневмоніт, коліт, гепатит Grade ≥3) — системні ГКС (преднізон 1-2 мг/кг/добу) + відміна пембролізумабу"
+  - "УВАГА: Моніторинг ТТГ/Т4 кожні 3 цикли — тиреоїдит найчастіший іrAE"
+  - "УВАГА: Пневмоніт — нові симптоми задишки/кашлю = КТ грудної клітки; Grade ≥2 = відстрочення + ГКС"
+  - "УВАГА: Інфліксимаб при стероїд-рефрактерному коліті (Grade ≥3 діарея) — консультація гастроентеролога"
+  - "УВАГА: Адреналова недостатність — базальний кортизол перед початком; при стомлюваності/гіпотонії — виключити"
+  - "УВАГА: Аутоімунний анамнез або активне аутоімунне захворювання — ретельна оцінка ризик/користь; відносне протипоказання"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -60,6 +60,45 @@ sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Amivantamab + lazertinib for EGFR-mut NSCLC post-osimertinib
+# (MARIPOSA-2). EGFR + MET bispecific + 3rd-gen EGFR TKI. Signature:
+# acneiform rash, paronychia, infusion reactions, VTE.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Акнеформний висип на обличчі, шиї"
+    action_ua: "Очікувано на тлі амівантамабу/лазертинібу — використовуйте призначені креми"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Запалення та біль навколо нігтів (паронихії)"
+    action_ua: "Поширене — носіть м'яке взуття, уникайте травм нігтів"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Помірна нудота, помірна діарея"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Біль або припухлість в одній нозі"
+    action_ua: "Подзвоніть у клініку того ж дня — амівантамаб підвищує ризик тромбозу; антикоагулянти зазвичай призначаються профілактично"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NSCLC-2025
+      - SRC-MARIPOSA2-PASSARO-2024
+  - trigger_ua: "Виражена реакція на інфузію амівантамабу: задишка, висип, набряк"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно. Премедикація стероїдами + антигістамінними знижує ризик"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-NSCLC-2025
+  - trigger_ua: "Раптова задишка, біль у грудях"
+    action_ua: "Звертайтесь у лікарню негайно — можлива легенева тромбоемболія або пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NSCLC-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   MARIPOSA-2: ami+laz+chemo PFS HR 0.44 vs chemo alone in EGFR-mutated

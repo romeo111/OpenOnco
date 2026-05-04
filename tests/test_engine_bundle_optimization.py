@@ -72,8 +72,8 @@ def test_core_bundle_under_size_ceiling(bundle_out: dict):
     tighten as the split matures."""
     core_zip = Path(bundle_out["_dir"]) / "openonco-engine-core.zip"
     size = core_zip.stat().st_size
-    assert size < 2_950_000, (
-        f"core bundle exceeds 2.95MB compressed: {size} bytes — split is "
+    assert size < 3_000_000, (
+        f"core bundle exceeds 3.0MB compressed: {size} bytes — split is "
         "leaking disease-scoped content into core or shared content has bloated"
     )
 

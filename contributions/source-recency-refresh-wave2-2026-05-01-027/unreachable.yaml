@@ -1,0 +1,58 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-027
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL HEAD did not
+    return 2xx/3xx after primary + DOI + PubMed canonical fallbacks per issue
+    #229 spec. Most HTTP 403 are publisher bot-walling (real browser would
+    succeed); SRC-GEOMETRY-MONO-1 has no url field (auto-stub). Maintainer
+    browser-verify before next action.'
+rows:
+  - id: SRC-GEOMETRY-MONO-1
+    url: null
+    status_code: null
+    error: no url field in hosted YAML (auto-stub)
+    current_as_of_existing: null
+    fallback_results: []
+    outcome: unreachable.no_url
+  - id: SRC-MYLOFRANCE-ARIBI-2007
+    url: https://acsjournals.onlinelibrary.wiley.com/doi/10.1002/cncr.22588
+    status_code: 403
+    error: 'Forbidden (HEAD); DOI + PubMed fallbacks also 403'
+    current_as_of_existing: '2007-04-15'
+    fallback_results:
+      - target: doi
+        url: https://doi.org/10.1002/cncr.22588
+        status_code: 403
+      - target: pubmed
+        url: https://pubmed.ncbi.nlm.nih.gov/17326217
+        status_code: 403
+    outcome: unreachable.blocked
+  - id: SRC-PALOMA-3-TURNER-2015
+    url: https://pubmed.ncbi.nlm.nih.gov/26030518
+    status_code: 403
+    error: 'Forbidden (HEAD); DOI + PubMed fallbacks also 403'
+    current_as_of_existing: '2015-07-16'
+    fallback_results:
+      - target: doi
+        url: https://doi.org/10.1056/NEJMoa1505270
+        status_code: 403
+      - target: pubmed
+        url: https://pubmed.ncbi.nlm.nih.gov/26030518
+        status_code: 403
+    outcome: unreachable.blocked
+  - id: SRC-MONARCH-3-GOETZ-2017
+    url: https://pubmed.ncbi.nlm.nih.gov/28968163
+    status_code: 403
+    error: 'Forbidden (HEAD); DOI + PubMed fallbacks also 403'
+    current_as_of_existing: '2017-11-10'
+    fallback_results:
+      - target: doi
+        url: https://doi.org/10.1200/JCO.2017.75.6155
+        status_code: 403
+      - target: pubmed
+        url: https://pubmed.ncbi.nlm.nih.gov/28968163
+        status_code: 403
+    outcome: unreachable.blocked

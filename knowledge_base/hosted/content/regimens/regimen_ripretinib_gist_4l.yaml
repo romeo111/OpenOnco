@@ -64,6 +64,41 @@ sources:
   - SRC-INVICTUS
   - SRC-NCCN-GIST-2025
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Ripretinib for GIST 4L (INVICTUS). Switch-control KIT/PDGFRA TKI.
+# Tox: HFS, alopecia, fatigue, hypertension, cardiac. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, біль на долонях і стопах"
+    action_ua: "Hand-foot синдром — крем, м'яке взуття; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Випадання волосся"
+    action_ua: "Поширене на ріпретинібі — повертається після відміни"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Помірна втома, м'язові болі"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Виражений біль на долонях / стопах"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+  - trigger_ua: "Біль у грудях, прискорене серцебиття"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна оцінка функції серця"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GIST-2025
+
 last_reviewed: "2026-04-29"
 notes: >
   Switch-pocket inhibitor of broad spectrum of KIT and PDGFRA mutations

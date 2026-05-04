@@ -13,6 +13,43 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Immune-mediated AE", modification: "Standard ICI management"}]
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Reimbursement gap"}
 sources: [SRC-NCCN-BLADDER-2025]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Avelumab maintenance for advanced urothelial post-platinum
+# (JAVELIN Bladder 100). Anti-PD-L1 monotherapy — same irAE pattern
+# as pembro mono. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Помірна діарея (3-4 рази/день)"
+    action_ua: "Подзвоніть у клініку того ж дня — можливий імунний коліт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний пневмоніт"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Жовтяниця"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Виражена слабкість, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — імунна реакція щитоподібної залози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BLADDER-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BLADDER-2025
+
 last_reviewed:
 notes: "JAVELIN Bladder 100: median OS 21.4 vs 14.3 months (BSC)."
 notes_ua: 'JAVELIN Bladder 100: медіана ЗВ 21.4 проти 14.3 місяців (BSC).'

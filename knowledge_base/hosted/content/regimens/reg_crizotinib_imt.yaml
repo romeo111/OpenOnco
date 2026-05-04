@@ -22,6 +22,37 @@ evidence_level: moderate
 sources:
   - SRC-NCCN-SARCOMA
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Crizotinib for ALK+ inflammatory myofibroblastic tumor (IMT). Same
+# crizotinib pattern as in ALCL/NSCLC. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Розмиття зору, тимчасові плями в полі зору"
+    action_ua: "Поширене на кризотинібі — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Помірна нудота, помірна діарея, набряки гомілок"
+    action_ua: "Зустрічається — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — кризотиніб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SARCOMA
+      - SRC-CTCAE-V5
+  - trigger_ua: "Раптова втрата свідомості, серцебиття ненормальне"
+    action_ua: "Звертайтесь у лікарню негайно — кризотиніб може подовжувати QT"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SARCOMA
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — можливе ушкодження легень"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SARCOMA
+
 reviewer_signoffs: 0
 notes: >
   STUB scaffold. Dosing summary only.

@@ -1,0 +1,62 @@
+id: REG-TOPOTECAN-SCLC-RR
+disease_context: DIS-SCLC
+line_of_therapy: 2
+plan_track: standard
+
+agents:
+  - drug_id: DRG-TOPOTECAN
+    dose: "1.5 mg/m²/day IV over 30 minutes, days 1–5"
+    route: IV
+    schedule: "Days 1-5, repeat q21 days"
+    dose_modifications:
+      - trigger: "Grade 4 neutropenia >7 days OR febrile neutropenia"
+        action: "Reduce to 1.25 mg/m²/day; G-CSF secondary prophylaxis"
+      - trigger: "Grade 3-4 thrombocytopenia (platelets <25K)"
+        action: "Hold until recovery; reduce to 1.25 mg/m²/day"
+      - trigger: "CrCl 20-39 mL/min"
+        action: "Reduce to 0.75 mg/m²/day (renal dose adjustment; renally excreted)"
+      - trigger: "CrCl <20 mL/min"
+        action: "Contraindicated"
+
+alternative_formulation:
+  - "Oral topotecan 2.3 mg/m²/day PO days 1-5 q21 days (non-inferior OS in phase 3; NCCN 2A; unavailable in Ukraine)"
+
+premedication:
+  - "G-CSF (filgrastim/pegfilgrastim) primary prophylaxis in heavily pretreated patients or prior febrile neutropenia"
+  - "Antiemetics: moderate emetogenic (5-HT3 antagonist + dexamethasone day 1)"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression or unacceptable toxicity (no fixed cycle cap)"
+
+monitoring:
+  - "CBC with differential: days 1, 8, 15 each cycle — neutrophil nadir day 9-15; platelet nadir day 14-21"
+  - "CMP, LFTs q2-3 cycles"
+  - "CT CAP after every 2 cycles for response assessment"
+  - "Brain MRI if neurological symptoms (SCLC propensity for brain mets)"
+
+key_toxicities:
+  - toxicity: "Neutropenia"
+    grade_3_4_incidence: "~80-90%"
+    management: "G-CSF prophylaxis; dose reduction; delay if ANC <1500"
+  - toxicity: "Thrombocytopenia"
+    grade_3_4_incidence: "~40-60%"
+    management: "Platelet transfusion if <10K or bleeding; dose reduction"
+  - toxicity: "Anemia"
+    grade_3_4_incidence: "~37%"
+    management: "Transfusion; consider EPO if clinically stable"
+  - toxicity: "Fatigue"
+    grade_3_4_incidence: "~25%"
+    management: "Supportive; evaluate for reversible causes"
+
+watchpoints_ua:
+  - "УВАГА: Grade 3-4 нейтропенія у ~80-90% — первинна G-КСФ профілактика у передлікованих пацієнтів або при попередній febr нейтропенії"
+  - "УВАГА: НЕ починати цикл при ANC <1500 або тромбоцитах <100K — ризик тяжкої цитопенії"
+  - "УВАГА: Ниркова корекція доз обов'язкова при CrCl <40 мл/хв — топотекан на 30-50% ниркового кліренсу"
+  - "УВАГА: Оральна форма (2.3 мг/м²/д д1-5) не зареєстрована в Україні; тільки IV форма"
+  - "УВАГА: Базовий CBC + CMP + LFTs перед кожним циклом — не призначати при тяжкій цитопенії"
+  - "УВАГА: Моніторинг симптомів ЦНС — топотекан слабо проникає через ГЕБ; при погіршенні неврологічного статусу — МРТ головного мозку"
+  - "УВАГА: Лікування лише паліативне — мета: зменшення симптомів + контроль захворювання; спільне рішення з пацієнтом щодо агресивності терапії"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

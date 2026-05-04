@@ -5,12 +5,17 @@ purpose: >
   Select 1L metastatic NSCLC regimen via molecular-cascade decision
   tree: actionable driver → driver-targeted TKI/ADC; driver-negative →
   PD-L1 TPS → ICI strategy. Stage III unresectable handled in separate
-  Algorithm.
+  Algorithm. Driver cascade: EGFR → ALK → ROS1 → MET ex14 → RET fusion
+  → BRAF V600E → NTRK fusion → PD-L1 stratified ICI ± chemo.
 
 output_indications:
   - IND-NSCLC-EGFR-MUT-MET-1L
   - IND-NSCLC-ALK-MET-1L
-  - IND-NSCLC-KRAS-G12C-MET-2L
+  - IND-NSCLC-ROS1-1L-REPOTRECTINIB
+  - IND-NSCLC-MET-EX14-1L-CAPMATINIB
+  - IND-NSCLC-RET-FUSION-1L-SELPERCATINIB
+  - IND-NSCLC-BRAF-V600E-1L-DAB-TRAM
+  - IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
   - IND-NSCLC-PDL1-HIGH-MET-1L
   - IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 
@@ -18,6 +23,10 @@ default_indication: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
 alternative_indication: IND-NSCLC-PDL1-HIGH-MET-1L
 
 decision_tree:
+  # Step 1 — Actionable driver gate.
+  # RF-NSCLC-HIGH-RISK-BIOLOGY summarizes presence of any known oncogenic driver
+  # detected on comprehensive NGS panel. If any driver detected → driver cascade.
+  # If no driver detected → PD-L1 stratified ICI pathway (step 9).
   - step: 1
     evaluate:
       any_of:
@@ -25,10 +34,10 @@ decision_tree:
     if_true:
       next_step: 2
     if_false:
-      next_step: 5
+      next_step: 9
+
+  # Step 2 — EGFR sensitizing mutation (ex19del / L858R / ex20ins).
   - step: 2
-    # EGFR sensitizing mutation (ex19del / L858R / ex20ins covered by RF set)
-    # → osimertinib 1L (FLAURA) or amivantamab+chemo for ex20ins (PAPILLON).
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
@@ -36,51 +45,144 @@ decision_tree:
         - condition: "EGFR L858R or other classical sensitizing mutation"
     if_true:
       result: IND-NSCLC-EGFR-MUT-MET-1L
+      notes: >
+        EGFR sensitizing (ex19del/L858R): osimertinib 80 mg QD (FLAURA; mOS 38.6m).
+        EGFR ex20ins: amivantamab+carboplatin+pemetrexed (PAPILLON; PFS HR 0.40)
+        or amivantamab+lazertinib (MARIPOSA). Routing handled within IND-NSCLC-EGFR-MUT-MET-1L.
     if_false:
       next_step: 3
+
+  # Step 3 — ALK fusion.
   - step: 3
-    # ALK fusion → alectinib/brigatinib/lorlatinib 1L.
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-ALK-FUSION-ACTIONABLE
     if_true:
       result: IND-NSCLC-ALK-MET-1L
+      notes: >
+        ALK fusion: alectinib (ALEX), brigatinib (ALTA-1L), or lorlatinib (CROWN)
+        preferred 1L. Lorlatinib preferred for CNS disease/poor prognostic features.
     if_false:
       next_step: 4
+
+  # Step 4 — ROS1 fusion.
+  # Repotrectinib preferred 1L for ROS1+ (TRIDENT-1: ORR 79%; CNS-active).
+  # Crizotinib historical; entrectinib alternative.
   - step: 4
-    # Other actionable drivers — ROS1 / KRAS G12C / BRAF V600E / MET ex14 /
-    # RET fusion / NTRK fusion / HER2-mut. KRAS G12C is 2L+ only (no 1L
-    # G12C-inhibitor approval); other drivers route to per-driver 1L when
-    # an Indication exists (deferred — currently routes to KRAS-G12C-MET-2L
-    # placeholder per pre-CSD-6A behaviour).
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-ROS1-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-ROS1-1L-REPOTRECTINIB
+      notes: >
+        ROS1 fusion: repotrectinib 160 mg QD × 14d → 160 mg BID (TRIDENT-1: ORR 79%
+        treatment-naive, strong CNS activity). Entrectinib or crizotinib are alternatives.
+    if_false:
+      next_step: 5
+
+  # Step 5 — MET exon 14 skipping mutation.
+  # Capmatinib preferred 1L (GEOMETRY mono-1: treatment-naive ORR 68%).
+  # Tepotinib is alternative (VISION-lung: ORR 56% overall).
+  - step: 5
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-MET-EX14-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-MET-EX14-1L-CAPMATINIB
+      notes: >
+        MET exon 14 skipping: capmatinib 400 mg BID (GEOMETRY mono-1: treatment-naive
+        ORR 67.9%; mPFS ~12.4m). Tepotinib 500 mg QD (VISION: ORR 56%) is alternative.
+        RNA-NGS preferred for splice variant detection.
+    if_false:
+      next_step: 6
+
+  # Step 6 — RET fusion.
+  # Selpercatinib preferred 1L (LIBRETTO-001: ORR 84.1%; LIBRETTO-431: PFS HR 0.46).
+  # Pralsetinib is alternative.
+  - step: 6
+    evaluate:
+      any_of:
         - red_flag: RF-NSCLC-RET-FUSION-ACTIONABLE
-        - red_flag: RF-NSCLC-ROS1-FUSION-ACTIONABLE
-        - red_flag: RF-NSCLC-NTRK-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-RET-FUSION-1L-SELPERCATINIB
+      notes: >
+        RET fusion: selpercatinib 160 mg BID (LIBRETTO-001: treatment-naive ORR 84.1%;
+        LIBRETTO-431: PFS HR 0.46 vs chemo±ICI). Pralsetinib 400 mg QD (ARROW: ORR 70%)
+        is alternative. RNA-NGS preferred for fusion detection.
+    if_false:
+      next_step: 7
+
+  # Step 7 — BRAF V600E mutation.
+  # Dabrafenib+trametinib preferred 1L (BRF113928 cohort C: ORR 64.4%; mPFS 10.9m).
+  - step: 7
+    evaluate:
+      any_of:
         - red_flag: RF-NSCLC-BRAF-V600E-ACTIONABLE
     if_true:
-      result: IND-NSCLC-KRAS-G12C-MET-2L
+      result: IND-NSCLC-BRAF-V600E-1L-DAB-TRAM
+      notes: >
+        BRAF V600E: dabrafenib 150 mg BID + trametinib 2 mg QD (BRF113928: ORR 64.4%).
+        NOT for BRAF non-V600E (class II/III). Dermatology monitoring mandatory.
     if_false:
-      next_step: 5
-    notes: "MDT-only — driver-positive cohort routes to 2L+ targeted regimen as a placeholder (1L per-driver Indications not yet authored for ROS1/MET/RET/NTRK/BRAF V600E in this KB; PROD-5 territory). KRAS G12C deliberately excluded from 1L (no approved 1L G12Ci)."
-  - step: 5
-    # PD-L1 TPS ≥50% (KEYNOTE-024) → pembro monotherapy 1L; lower
-    # TPS / non-squamous → chemo+pembro (KEYNOTE-189 / KEYNOTE-407).
+      next_step: 8
+
+  # Step 8 — NTRK fusion (tumor-agnostic; rare in NSCLC ~0.1-0.3%).
+  - step: 8
+    evaluate:
+      any_of:
+        - red_flag: RF-NSCLC-NTRK-FUSION-ACTIONABLE
+    if_true:
+      result: IND-NSCLC-NTRK-FUSION-1L-LAROTRECTINIB
+      notes: >
+        NTRK fusion: larotrectinib 100 mg BID (ORR ~75%; tumor-agnostic FDA approval).
+        Entrectinib 600 mg QD (ORR ~57%; also ROS1/ALK active; CNS-active) is alternative.
+        RNA-NGS preferred for NTRK fusion detection.
+    if_false:
+      next_step: 9
+
+  # Step 9 — Driver-negative: PD-L1 TPS gate.
+  # TPS ≥50%: pembrolizumab monotherapy (KEYNOTE-024: OS HR 0.63).
+  # TPS <50%: chemo+ICI (KEYNOTE-189 non-squamous or KEYNOTE-407 squamous).
+  - step: 9
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-PDL1-50-PLUS
     if_true:
       result: IND-NSCLC-PDL1-HIGH-MET-1L
+      notes: >
+        PD-L1 TPS ≥50% (22C3 pharmDx): pembrolizumab monotherapy 200 mg q3w
+        (KEYNOTE-024; OS HR 0.63). Pembro+chemo also acceptable if rapid progression
+        or visceral crisis requiring faster tumor reduction.
     if_false:
       result: IND-NSCLC-PDL1-LOW-NONSQ-MET-1L
+      notes: >
+        PD-L1 TPS <50% or unknown: pembrolizumab + platinum + pemetrexed (non-squamous;
+        KEYNOTE-189) or pembrolizumab + carboplatin + paclitaxel/nab-paclitaxel (squamous;
+        KEYNOTE-407). TMB-high (≥10 mut/Mb) may support pembro mono even at low TPS.
 
 sources: [SRC-NCCN-NSCLC-2025, SRC-ESMO-NSCLC-METASTATIC-2024]
-last_reviewed: null
+last_reviewed: "2026-05-04"
 notes: >
-  Decision tree intentionally simplified for MVP. KRAS G12C step routes
-  to KRAS-G12C-MET-2L (which is 2L+ per current guidelines); for true
-  1L driver-targeting of ROS1 / BRAF / MET / RET / NTRK / HER2, additional
-  per-driver indications would be required (deferred). Driver-negative
-  branches into PD-L1-stratified ICI ± chemo.
+  NSCLC DRIVER CASCADE (1L):
+  EGFR (ex19del/L858R/ex20ins) → ALK fusion → ROS1 fusion → MET ex14 →
+  RET fusion → BRAF V600E → NTRK fusion → PD-L1 ICI ± chemo
+
+  Driver prevalence in non-squamous NSCLC (approximate):
+  - EGFR sensitizing: 10-15% (Western), 40-50% (East Asian)
+  - ALK fusion: 3-5%
+  - ROS1 fusion: 1-2%
+  - MET ex14 skipping: 3-4%
+  - BRAF V600E: 1-3%
+  - RET fusion: 1-2%
+  - NTRK fusion: 0.1-0.3%
+  - KRAS G12C: 13% (no approved 1L inhibitor as of 2026)
+
+  Key testing note: comprehensive NGS (DNA+RNA) at diagnosis recommended for
+  all non-squamous NSCLC stage IV. RNA-NGS critical for fusion detection
+  (ALK, ROS1, RET, NTRK, MET ex14 splice variants).
+
+  KRAS G12C: no approved 1L inhibitor — routes to ICI+chemo backbone 1L;
+  sotorasib/adagrasib are 2L options.
+
+  Updated 2026-05-04: expanded step 4 cascade to cover all 5 remaining
+  driver subtypes with per-driver 1L indications now authored.

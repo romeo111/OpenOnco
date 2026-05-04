@@ -71,6 +71,49 @@ sources:
   - SRC-MYLOFRANCE-ARIBI-2007
   - SRC-APL-RELAPSE-LENGFELDER-2017
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Gemtuzumab + ATRA + ATO for relapsed APL. CD33 ADC: VOD/SOS boxed
+# warning + DS + QT (ATO) + cytopenia overlay. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Сухість шкіри, тріщини на губах, головний біль"
+    action_ua: "Очікувано від ATRA — зволожувач, занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Помірна нудота"
+    action_ua: "Очікувано — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Жовтяниця, набір ваги, біль у правому підребер'ї"
+    action_ua: "Звертайтесь у лікарню негайно — вено-оклюзивне ускладнення від гемтузумабу (потенційно фатальне)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-AML-2025
+      - SRC-MYLOFRANCE-ARIBI-2007
+  - trigger_ua: "Раптовий набір ваги, набряки, задишка, лихоманка"
+    action_ua: "Звертайтесь у лікарню негайно — синдром диференціації"
+    urgency: er_now
+    cycle_day_window: "Day 1-14"
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+    action_ua: "Звертайтесь у лікарню негайно — ДВЗ-синдром, потрібна термінова трансфузія"
+    urgency: er_now
+    cycle_day_window: "Day 1-14"
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Серцебиття, запаморочення"
+    action_ua: "Подзвоніть у клініку того ж дня — ATO може подовжувати QT"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-25"
 notes: >
   Gemtuzumab combined with ATRA + ATO for relapsed APL — APL is

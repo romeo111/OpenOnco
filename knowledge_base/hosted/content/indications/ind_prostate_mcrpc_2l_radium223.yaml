@@ -1,0 +1,126 @@
+id: IND-PROSTATE-MCRPC-2L-RADIUM223
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  disease_state: mCRPC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC)"
+    - "Symptomatic bone metastases (bone pain or bone-related complications)"
+    - "No known visceral metastases (liver, lung, brain — MANDATORY exclusion)"
+    - "ECOG PS 0-2"
+    - "Prior ARPI or docetaxel (post-1L mCRPC treatment)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PSA
+      value_constraint: "PSA baseline required"
+    - biomarker_id: BIO-GLEASON-ISUP
+      value_constraint: "Gleason / ISUP grade group"
+  biomarker_requirements_excluded:
+    - "Visceral metastases (liver, lung, peritoneum, brain) — Ra-223 CONTRAINDICATED"
+    - "Active docetaxel treatment — ALSYMPCA+: combination shows increased toxicity without benefit"
+    - "Concurrent novel ARPI (abiraterone, enzalutamide) — ERA 223: increased fracture risk and deaths"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-RADIUM223-MCRPC
+concurrent_therapy:
+  - "ADT (LHRH agonist/antagonist or orchiectomy) continues throughout — castration maintained"
+  - "Bone-protective agent (zoledronic acid 4 mg q4w or denosumab 120 mg q4w) may continue"
+  - "NOTE: Do NOT add novel ARPI concurrently (ERA 223 fracture harm)"
+followed_by:
+  - "Post-Ra-223 course: assess PSA, alkaline phosphatase, imaging for re-staging"
+  - "After Ra-223 completion: cabazitaxel (IND-PROSTATE-MCRPC-2L-CABAZITAXEL) or Lu-PSMA if PSMA-positive (IND-PROSTATE-MCRPC-2L-LU-PSMA)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  os_hr: 0.70
+  median_os_radium_months: 14.9
+  median_os_placebo_months: 11.3
+  time_to_sse_hr: 0.66
+  alkaline_phosphatase_normalization: "47% vs 3%"
+  bone_pain_palliation: "Significant — primary benefit beyond survival"
+  notes: >
+    ALSYMPCA (Parker 2013, NEJM; n=921): Ra-223 vs placebo in mCRPC with symptomatic
+    bone mets, no visceral mets. mOS 14.9 vs 11.3 months (HR 0.70, p<0.001).
+    Time to first SSE (symptomatic skeletal event) HR 0.66. ALP normalization 47% vs 3%.
+    Benefit seen regardless of prior docetaxel status.
+    CRITICAL: ERA 223 (Ra-223 + abiraterone): increased fractures and deaths — do NOT combine.
+
+hard_contraindications:
+  - "Visceral metastases (liver, lung, brain, peritoneal) — Ra-223 is bone-selective ONLY"
+  - "Concurrent novel ARPI (abiraterone, enzalutamide, darolutamide, apalutamide) — ERA 223 harm"
+  - "Concurrent docetaxel — ALSYMPCA+: increased toxicity"
+  - "ANC <1.0 × 10⁹/L or platelets <50 × 10⁹/L"
+  - "Crohn's disease or ulcerative colitis (increased GI toxicity)"
+  - "No nuclear medicine department with radiation therapy license available"
+
+red_flags_triggering_alternative:
+  - condition: "Visceral metastases present → Ra-223 NOT appropriate; use cabazitaxel or Lu-PSMA"
+  - condition: "PSMA-PET positive + post-taxane + post-ARPI → Lu-PSMA preferred (VISION; OS HR 0.62)"
+  - condition: "BRCA/HRR mutation without prior PARPi → PARPi preferred (IND-PROSTATE-MCRPC-1L-PARPI)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-PSA-SERUM
+  - "CT CAP (MANDATORY to rule out visceral metastases before each cycle)"
+  - "Bone scan (staging; baseline)"
+  - "HRR/BRCA testing if not done"
+
+desired_tests:
+  - "PSMA-PET/CT (if available — assesses PSMA status for future Lu-PSMA eligibility)"
+  - "Alkaline phosphatase (bone-specific) — response biomarker"
+
+rationale: >
+  ALSYMPCA (Parker 2013, NEJM; n=921): radium-223 dichloride (55 kBq/kg q4w × 6 cycles)
+  vs placebo in mCRPC with symptomatic bone mets, no visceral mets. mOS 14.9 vs 11.3 months
+  (HR 0.70, p<0.001). Improvement in time to first SSE (HR 0.66). Significant bone pain
+  palliation. Ra-223 is a calcium mimetic alpha emitter that accumulates at sites of increased
+  bone turnover (osteoblastic mets) and delivers short-range, high-LET alpha radiation locally,
+  with minimal systemic exposure. Benefit is restricted to bone-predominant disease.
+  CRITICAL safety data: ERA 223 (Ra-223 + abiraterone) showed increased fractures and deaths —
+  combination with novel ARPIs is contraindicated. Ra-223 + docetaxel (ALSYMPCA+): no benefit
+  with increased toxicity. Ra-223 should be given as a standalone agent within the treatment sequence.
+  Nuclear medicine infrastructure required: only available at specialized centers in Ukraine.
+
+rationale_ua: >
+  ALSYMPCA (n=921): Радій-223 при mCRPC з кістковими метастазами (без вісцеральних):
+  mOS 14.9 vs 11.3 міс (HR 0.70). 6 ін'єкцій q4w. NCCN Категорія 1.
+  ВИКЛЮЧНО кісткова хвороба — при вісцеральних метастазах НЕ призначати.
+  ERA 223: Ra-223 + абіратерон → підвищена частота переломів (ЗАБОРОНЕНО комбінувати).
+  Потребує ядерно-медичного відділу. В Україні — обмежена доступність.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ALSYMPCA-PARKER-2013
+    position: supports
+    relevant_quote_paraphrase: "ALSYMPCA (n=921): Ra-223 vs placebo, bone-predominant mCRPC; mOS 14.9 vs 11.3 months (HR 0.70, p<0.001); SSE HR 0.66; NCCN Cat 1"
+
+do_not_do:
+  - "НІКОЛИ не призначати при вісцеральних метастазах — тільки при кістковому захворюванні"
+  - "НІКОЛИ не комбінувати з абіратероном/ензалутамідом (ERA 223: підвищений ризик переломів та смертності)"
+  - "НІКОЛИ не комбінувати з доцетакселем (ALSYMPCA+: підвищена токсичність без переваги)"
+  - "Не призначати без КТ-підтвердження відсутності вісцеральних метастазів перед кожною ін'єкцією"
+  - "Не ігнорувати радіаційну безпеку — пацієнт залишається джерелом радіації 7-10 днів після ін'єкції"
+
+known_controversies:
+  - topic: "Sequencing Ra-223 with other mCRPC agents"
+    positions:
+      - position: "Ra-223 as standalone without concurrent systemic therapy — supported by ERA 223 safety data"
+        sources: [SRC-ALSYMPCA-PARKER-2013]
+      - position: "Denosumab/zoledronate may be given concurrently (bone-protective) — not contraindicated"
+    our_default: "Ra-223 standalone, maintain ADT, avoid concurrent ARPI/taxane; bone protection agents acceptable"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

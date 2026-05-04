@@ -1,0 +1,37 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-005
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL did not return 2xx
+    from this client. HTTP 403 are publisher bot-blocking (real browser would
+    succeed); missing_url_field rows are auto-stubs with no url/doi/pmid populated.
+    Maintainer browser-verify before next action. Mirrors the unreachable.yaml
+    pattern from contributions/source-recency-refresh-2026-04-29-001/.'
+rows:
+  - id: SRC-B2222-DEMETRI
+    url: null
+    status_code: missing_url_field
+    error: source yaml has no url, doi, or pmid field; auto-stub pending citation backfill
+    current_as_of_existing: null
+  - id: SRC-NAVIGATOR
+    url: null
+    status_code: missing_url_field
+    error: source yaml has no url, doi, or pmid field; auto-stub pending citation backfill
+    current_as_of_existing: null
+  - id: SRC-BRIM-3-CHAPMAN-2011
+    url: https://pubmed.ncbi.nlm.nih.gov/21639808
+    status_code: 403
+    error: Forbidden (NCBI bot-protection; doi.org canonical also 403)
+    current_as_of_existing: '2011-06-30'
+  - id: SRC-BRF113928-PLANCHARD-2016
+    url: https://pubmed.ncbi.nlm.nih.gov/27283860/
+    status_code: 403
+    error: 'Forbidden at PubMed; DOI canonical resolves 200 via Elsevier (https://linkinghub.elsevier.com/retrieve/pii/S1470204516301462)'
+    current_as_of_existing: '2016-07-01'
+  - id: SRC-ELIANA-MAUDE-2018
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa1709866
+    status_code: 403
+    error: Forbidden (NEJM bot-protection; doi.org canonical also 403)
+    current_as_of_existing: '2018-02-01'

@@ -1,0 +1,226 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-021
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  target_action: null
+  target_entity_id: null
+  notes_for_reviewer: 'Read-only audit-report covering all four manifest IDs.
+    One outcome row per BMA. CIViC snapshot 2026-04-25. Variant-aware filter +
+    synonym expansion applied per chunk spec.'
+
+snapshot_used: knowledge_base/hosted/civic/2026-04-25/evidence.yaml
+snapshot_date: '2026-04-25'
+total_civic_accepted_evidence_items: 4842
+
+outcomes:
+
+- bma_id: BMA-CHEK2-SOMATIC-BREAST
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 6 accepted evidence items where
+    gene == "CHEK2". Disease-token overlap with DIS-BREAST: zero. The
+    six CHEK2 EIDs are:
+      EID531  — disease "Cancer" (DOID:162), Loss-of-function, Predisposing
+      EID1850 — Prostate Cancer (DOID:10283), 1100DELC, Predisposing
+      EID1852 — Prostate Cancer (DOID:10283), I157T, Predisposing
+      EID1854 — Prostate Cancer (DOID:10283), IVS2+1G>A, Does Not Support Predisposition
+      EID7962 — Cancer (DOID:162), R474C, Predisposing
+      EID11205 — Castration-resistant Prostate Carcinoma (DOID:0080909),
+                 mutation, Sensitivity/Response to Olaparib (level A, PMID 32343890)
+    None reference breast disease tokens. EID11205 is the only Predictive
+    item but is prostate-scoped — including it for a breast BMA would be
+    cross-disease borrowing, explicitly excluded per the wave-2 strict
+    disease-token-overlap policy (see audit pattern in
+    bma-civic-backfill-wave2-2026-05-01-018 BMA-NTRK-FUSION-CRC). Pan-
+    tumor (DOID:162) entries (EID531, EID7962) are Predisposing
+    (germline-cancer-risk evidence type) — mismatched scope for a
+    SOMATIC breast BMA. Actionability of CHEK2 in breast hinges on
+    HRR-deficiency reasoning anchored on TBCRC048 / OlympiAD-style
+    extrapolation, not on direct CIViC EIDs.
+  no_civic_match_reason: 'no_disease_token_overlap_with_DIS_BREAST'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_chek2_somatic_breast.yaml
+  recommended_followup: 'Source-gap: somatic-CHEK2 ESCAT IIIA actionability
+    reasoning is captured via SRC-NCCN-BREAST-2025 hosted primary_sources.
+    No CIViC backfill applicable in current snapshot. Re-check on next
+    nightly refresh once breast-scoped CHEK2 EIDs (e.g. TBCRC048 olaparib
+    breast HRR-mutation cohort) are catalogued.'
+
+- bma_id: BMA-MGMT-METHYLATION-GBM
+  outcome: already_populated_no_action_taken
+  hosted_state_before: 'evidence_sources contains 4 SRC-CIVIC blocks
+    spanning 8 EIDs across CIViC levels A/B/E (EID172, EID307, EID308,
+    EID309, EID491, EID822, EID2899, EID2903)'
+  proposed_action: none
+  rationale: |
+    Hosted file already has a richly populated evidence_sources block
+    from a prior backfill pass (bma-civic-backfill-2026-04-29-009).
+    Re-running variant-aware filter on snapshot 2026-04-25 with strict
+    constraint (gene == "MGMT" AND variant == "Promoter Methylation"
+    AND disease == "Glioblastoma" DOID:3068) yields a 5-EID subset:
+    EID172, EID307, EID308, EID309, EID491.
+    The hosted block contains these 5 EIDs plus 3 additional MGMT-gene
+    EIDs whose variants are NOT "Promoter Methylation":
+      EID822  — variant "RS16906252" (SNP locus)
+      EID2899 — variant "Underexpression" (protein-level)
+      EID2903 — variant "Underexpression" (protein-level)
+    All 3 are MGMT-pathway-related Glioblastoma+Temozolomide evidence
+    items and are clinically reasonable lumps for a "MGMT methylation"
+    actionability concept (low MGMT activity → TMZ sensitivity).
+    Removing the 3 broader EIDs would be a destructive narrowing of an
+    already-reviewer-pending block; preserving the over-broad list lets
+    the maintainer adjudicate whether the wider MGMT-pathway panel is
+    intended (clinically reasonable for an expression/methylation
+    actionability link) versus the strict variant-name interpretation.
+    No upsert proposed in this chunk to avoid silently dropping
+    existing CIViC references pending Co-Lead signoff.
+  variant_aware_strict_eids:
+  - EID172   # Better Outcome (Prognostic), level B, PMID 11070098
+  - EID307   # Temozolomide, Sensitivity/Response, level A, PMID 15758010
+  - EID308   # Carmustine, Sensitivity/Response, level B, PMID 11070098
+  - EID309   # O6-Benzylguanine, Sensitivity/Response, level E, PMID 11070098
+  - EID491   # Better Outcome (Prognostic), level B, PMID 15758010
+  hosted_extra_pathway_eids:
+  - EID822   # variant=RS16906252 (SNP locus), Temozolomide level B, PMID 25910840
+  - EID2899  # variant=Underexpression, Temozolomide level B, PMID 17442989
+  - EID2903  # variant=Underexpression, Temozolomide level B, PMID 21331613
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_mgmt_methylation_gbm.yaml
+  recommended_followup: 'Maintainer decision: keep MGMT-pathway block
+    (status quo) OR tighten to strict variant-aware 5-EID subset. If
+    tightening is preferred, spawn a separate chunk with target_action=upsert
+    because narrowing requires explicit Co-Lead approval per CHARTER §6.1.
+    Alternatively, split into two evidence_sources blocks (strict-methylation
+    + ancillary-MGMT-pathway) for clearer provenance.'
+
+- bma_id: BMA-MSH2-SOMATIC-GASTRIC
+  outcome: no_civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: none
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 7 accepted evidence items where
+    gene == "MSH2". Disease-token overlap with DIS-GASTRIC: zero. The
+    seven MSH2 EIDs are:
+      EID1790 — Endometrial Cancer (DOID:1380), R383*, Oncogenic
+      EID1826 — Colorectal Cancer (DOID:9256), V273FS, Oncogenic
+      EID1827 — Colorectal Cancer (DOID:9256), E28FS, Oncogenic
+      EID1834 — Colorectal Cancer (DOID:9256), K172*, Oncogenic
+      EID1837 — Endometrial Cancer (DOID:1380), E483G, Oncogenic
+      EID1877 — Transitional Cell Carcinoma (DOID:2671), Loss,
+                Sensitivity/Response to Durvalumab + MEDI0680 (level C, PMID 26674132)
+      EID11677 — Cancer (DOID:162), Loss OR MLH1 Loss, Sensitivity/Response
+                 to Nivolumab (level B, PMID 31765263)
+    None reference gastric / stomach disease tokens. EID11677 is pan-
+    tumor (DOID:162) but excluded per the wave-2 strict policy
+    "off-disease evidence items NOT included" (matches the closed-#43
+    + #018 exclusion of pan-tumor EID11677 for the urothelial scope).
+    Pan-tumor MSI-H ICI actionability for gastric is captured via FDA
+    tissue-agnostic pembrolizumab approval already documented in
+    hosted regulatory_approval and evidence_summary.
+  no_civic_match_reason: 'no_disease_token_overlap_with_DIS_GASTRIC'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_msh2_somatic_gastric.yaml
+  recommended_followup: 'Tissue-agnostic actionability covered by hosted
+    primary_sources (SRC-NCCN-GASTRIC-2025, SRC-ESMO-GASTRIC-2024) and
+    FDA tumor-agnostic pembrolizumab approval already cited in
+    regulatory_approval. CIViC backfill not applicable for this BMA in
+    current snapshot. Source-gap: ingest SRC-CHECKMATE-649 (Janjigian
+    Lancet 2021), SRC-KEYNOTE-859 (Rha Lancet Oncol 2023),
+    SRC-KEYNOTE-158 (Marabelle Ann Oncol 2020) as primary_sources for
+    the MSI-H gastric ICI evidence base. Re-check on next CIViC nightly
+    once gastric-scoped MSH2 EIDs are catalogued.'
+
+- bma_id: BMA-NTRK-FUSION-NSCLC
+  outcome: civic_match
+  hosted_state_before: 'evidence_sources: [] (empty)'
+  proposed_action: upsert
+  proposed_sidecar: bma_ntrk_fusion_nsclc.yaml
+  rationale: |
+    CIViC snapshot 2026-04-25 contains 9 accepted evidence items across
+    NTRK1 (5), NTRK2 (0), NTRK3 (4). Disease-token overlap with
+    DIS-NSCLC ("Lung Non-small Cell Carcinoma" DOID:3908): 3 items —
+    EID9593, EID11515, EID11516.
+    Variant-aware filter (require explicit "Fusion" token in variant
+    string for an NTRK-FUSION-scoped BMA):
+      EID11515 — NTRK3 G623R AND EML4::NTRK3 Fusion, Resistance to
+                 Entrectinib, level C, PMID 34625502 — INCLUDE (variant
+                 contains "Fusion" token, fusion-scoped acquired-
+                 resistance evidence relevant to NSCLC NTRK-fusion BMA)
+      EID11516 — NTRK3 G623R AND EML4::NTRK3 Fusion, Sensitivity/Response
+                 to Repotrectinib, level C, PMID 34625502 — INCLUDE
+                 (variant contains "Fusion" token, post-resistance
+                 next-line sensitivity directly relevant)
+      EID9593  — NTRK1 G595R AND NTRK1 G667S (no explicit "Fusion"
+                 token in variant string), Resistance to Larotrectinib,
+                 level C, PMID 30624546 — EXCLUDE (variant-aware filter:
+                 strict CIViC variant string does not contain "Fusion".
+                 Clinically these are solvent-front/gatekeeper kinase-
+                 domain mutations that arise on the background of a
+                 pre-existing TRK fusion, but the CIViC variant
+                 representation does not encode the fusion partner
+                 explicitly — flagged for maintainer review.)
+    Tumor-agnostic actionability lives in the larotrectinib (LOXO-101 /
+    NAVIGATE) and entrectinib (STARTRK-2) pooled trials and the FDA
+    tumor-agnostic approvals already cited in hosted regulatory_approval.
+    CIViC has NOT catalogued the primary tumor-agnostic Sensitivity
+    EIDs under DOID:3908 — only the acquired-resistance items. The
+    proposed upsert therefore covers acquired-resistance actionability
+    only (which is the realistic 2L+ treatment-decision context for a
+    NSCLC NTRK-fusion patient: progressed-on-larotrectinib EID11515
+    informs entrectinib resistance; EID11516 supports repotrectinib
+    salvage). Maintainer adjudicates whether to extend to EID9593
+    (point-mutation-on-fusion-background evidence) in a follow-up
+    review.
+  matched_evidence_ids:
+  - eid: EID11515
+    disease: Lung Non-small Cell Carcinoma (DOID:3908)
+    variant: NTRK3 G623R AND EML4::NTRK3 Fusion
+    therapies: [Entrectinib]
+    therapy_interaction_type: null
+    direction: Supports
+    significance: Resistance
+    level: C
+    pmid: '34625502'
+    civic_url: https://civicdb.org/links/evidence_items/11515
+  - eid: EID11516
+    disease: Lung Non-small Cell Carcinoma (DOID:3908)
+    variant: NTRK3 G623R AND EML4::NTRK3 Fusion
+    therapies: [Repotrectinib]
+    therapy_interaction_type: null
+    direction: Supports
+    significance: Sensitivity/Response
+    level: C
+    pmid: '34625502'
+    civic_url: https://civicdb.org/links/evidence_items/11516
+  borderline_excluded_evidence_ids:
+  - eid: EID9593
+    reason: 'variant string "NTRK1 G595R AND NTRK1 G667S" does not
+      contain explicit "Fusion" token; strict variant-aware filter
+      excludes. Clinically a TRK-fusion-background acquired-resistance
+      item — flag for maintainer review.'
+  evidence_used:
+  - civic_snapshot: 2026-04-25
+  - hosted_file: knowledge_base/hosted/content/biomarker_actionability/bma_ntrk_fusion_nsclc.yaml
+  - pmid: '34625502'
+  caveat: 'Both included EIDs (EID11515, EID11516) are level C
+    acquired-resistance items from a single PMID 34625502 cohort.
+    They do NOT provide primary tumor-agnostic Sensitivity/Response
+    evidence for treatment-naive NTRK-fusion NSCLC (that evidence base
+    is already captured in hosted regulatory_approval and primary_sources
+    via FDA/EMA tumor-agnostic approvals + ESCAT IA citation). Maintainer
+    adjudicates whether to expand block to include EID9593 (NTRK1
+    kinase-domain mutations on fusion background — pattern-matches
+    fusion biology but variant-aware filter excludes per strict policy).'
+
+summary:
+  total_manifest_ids: 4
+  civic_match_with_upsert: 1
+  no_civic_match: 2
+  already_populated_no_action: 1

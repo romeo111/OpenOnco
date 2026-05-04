@@ -1,0 +1,118 @@
+id: IND-SCLC-RR-TOPOTECAN
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SCLC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory SCLC (extensive-stage OR limited-stage with progression after definitive CRT)"
+    - "Platinum-refractory (CTFI <90 days) OR platinum-sensitive (CTFI ≥90 days) if lurbinectedin not accessible"
+    - "Also appropriate: CTFI <30 days (true platinum-refractory; outside lurbinectedin label CTFI ≥30d)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-TOPOTECAN-SCLC-RR
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~24% in platinum-sensitive; ~4% in platinum-resistant"
+  complete_response: "~5% CR in platinum-sensitive; rare in resistant"
+  progression_free_survival: "Median PFS ~3.4 mo (phase 3 vs CAV)"
+  overall_survival_5y: "Median OS ~7-8 mo in platinum-sensitive; ~5 mo in platinum-resistant (von Pawel 1999 vs CAV, similar OS HR ~0.93, p=NS)"
+
+hard_contraindications:
+  - "CrCl <20 mL/min (absolute; topotecan primarily renal excretion)"
+  - "Grade 3-4 baseline neutropenia or thrombocytopenia"
+
+red_flags_triggering_alternative:
+  - RF-SCLC-BRAIN-METS-EMERGENCY
+  - RF-SCLC-PARANEOPLASTIC
+  - RF-SCLC-INFECTION-SCREENING
+  - RF-SCLC-ORGAN-DYSFUNCTION
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CREATININE-CL
+  - TEST-LFT
+  - TEST-CECT-CAP
+  - TEST-BRAIN-MRI-CONTRAST
+
+desired_tests: []
+
+rationale: >
+  Topotecan (IV 1.5 mg/m²/d d1-5 q3w) is the established standard-of-care
+  2L for R/R SCLC per NCCN Category 1 and has been so since von Pawel 1999
+  (phase 3 vs CAV: equivalent OS ~8 mo, better hematologic toxicity profile).
+  Topotecan is a topoisomerase I inhibitor; it achieves intracranial penetration
+  (important given SCLC brain-met propensity) and is registered/reimbursable
+  in Ukraine (unlike lurbinectedin). Platinum-sensitive (CTFI ≥90 days): ORR ~24%;
+  platinum-resistant (CTFI <90 days): ORR ~4-9%. True platinum-refractory
+  (CTFI <30 days): lurbinectedin is technically outside its FDA-label CTFI
+  requirement (≥30 days from last platinum dose); topotecan is the preferred
+  option in this setting. Oral topotecan (2.3 mg/m²/d d1-5) is non-inferior
+  to IV (OS HR 1.01, O'Brien 2006) but not registered in Ukraine.
+
+rationale_ua: >
+  Топотекан (IV 1.5 мг/м²/д д1-5 кожні 3 тижні) є встановленим стандартом 2L
+  для рецидивного/рефрактерного МКЛЛ згідно NCCN Категорія 1 з моменту
+  дослідження von Pawel 1999 (фаза 3 проти CAV: еквівалентна ЗВ ~8 міс.,
+  краща гематологічна токсичність). Топотекан — інгібітор топоізомерази I;
+  досягає внутрішньочерепної концентрації (важливо при метастазах у мозок
+  при МКЛЛ) та зареєстрований/відшкодовується в Україні (на відміну від
+  лурбінектедину). Платино-чутливі (CTFI ≥90 днів): ORR ~24%; платино-резистентні
+  (CTFI <90 днів): ORR ~4-9%. При справжній платино-рефрактерності (CTFI <30 днів):
+  лурбінектедин технічно поза FDA-показаннями (вимога CTFI ≥30 днів від останньої
+  дози платини); топотекан є кращим варіантом у цьому сеттингу.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-SCLC-2025
+    position: supports
+    relevant_quote_paraphrase: "Topotecan is a Category 1 preferred option for R/R SCLC 2L; both IV and oral formulations listed"
+  - source_id: SRC-ESMO-SCLC-2021
+    position: supports
+    relevant_quote_paraphrase: "Topotecan IV is the established comparator arm in SCLC 2L RCTs; recommended for platinum-sensitive and resistant relapse"
+
+do_not_do:
+  - "Не призначати при CrCl <20 мл/хв — топотекан первинно виводиться нирками; ризик тяжкої токсичності"
+  - "Не починати при Grade 3-4 нейтропенії або тромбоцитопенії — зачекати відновлення; G-КСФ prophylaxis"
+  - "Не поєднувати з лурбінектедином — немає підтвердженої комбінації; ATLANTIS (лурбінектедин+доксорубіцин) НЕ перевершив топотекан/CAV"
+  - "Не пропускати МРТ головного мозку перед початком — відсутні симптоми ≠ відсутність метастазів у мозок"
+
+known_controversies:
+  - topic: "Topotecan vs lurbinectedin in SCLC 2L"
+    positions:
+      - position: "Lurbinectedin preferred (NCCN Cat 2A): superior ORR 35% vs ~24% (platinum-sensitive), less Grade 3-4 neutropenia vs topotecan"
+        sources:
+          - SRC-NCCN-SCLC-2025
+          - SRC-TRIGO-2020
+      - position: "Topotecan is the standard comparator arm (NCCN Cat 1): registered in Ukraine, reimbursed, lower cost; lurbinectedin not confirmed superior on OS (ATLANTIS failed)"
+        sources:
+          - SRC-NCCN-SCLC-2025
+          - SRC-ESMO-SCLC-2021
+    our_default: "Topotecan when lurbinectedin inaccessible (not registered UA) or CTFI <30 days; lurbinectedin preferred if available with CTFI ≥30d"
+    rationale: "Access-driven: topotecan is the UA-standard; lurbinectedin has better ORR but no OS advantage proven"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Standard-track 2L for R/R SCLC. Topotecan is NCCN Category 1 and remains
+  the de-facto Ukraine standard (registered, NSZU-reimbursable) vs lurbinectedin
+  (aggressive track, NCCN Cat 2A, not registered UA). CTFI stratification is
+  key: ≥180 days → consider platinum rechallenge first; 30-180 days → lurbinectedin
+  preferred (aggressive) or topotecan (standard); <30 days → topotecan.
+  Oral topotecan equivalent by OS but unavailable in Ukraine.

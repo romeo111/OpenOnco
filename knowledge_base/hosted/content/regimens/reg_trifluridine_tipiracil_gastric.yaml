@@ -44,6 +44,38 @@ sources:
   - SRC-NCCN-GASTRIC-2025
   - SRC-ESMO-GASTRIC-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Trifluridine-tipiracil for gastric 3L+ (TAGS). Same TAS-102 pattern
+# as in mCRC. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Приймайте препарат після їжі"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Помірна діарея або запор"
+    action_ua: "Занотовуйте, обговоріть на візиті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — TAS-102 дає нейтропенію"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 14-21"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Незвичні синці, кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Тяжка діарея або сепсис"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-26"
 notes: >
   TAGS trial (Shitara 2018): 3L+ gastric/GEJ adenocarcinoma after ≥2

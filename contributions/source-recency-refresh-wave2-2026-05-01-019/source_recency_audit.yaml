@@ -1,0 +1,89 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-019
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit table required by issue #221. One row
+    per manifest ID with id, url_verified, content_current,
+    proposed_current_as_of, license_status, notes. Zero rows propose upsert
+    this wave; see unreachable.yaml for the structured failure list and
+    refresh_summary.yaml for aggregate counts.'
+rows:
+  - id: SRC-ESMO-SARCOMA
+    url_verified: 'no'
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+      review_status: pending_clinical_signoff). Title still contains
+      "TODO: confirm year/citation"; no top-level url field. Per
+      chunk-brief rule "No URL on stub → unreachable.no_url", flagged
+      accordingly. Citation-resolution suggestion: ESMO soft-tissue and
+      visceral sarcomas Clinical Practice Guideline (Gronchi A et al.,
+      Ann Oncol 2021;32(11):1348-1365; PMID 34303806;
+      DOI 10.1016/j.annonc.2021.07.006) — maintainer to confirm whether
+      this or the more recent ESMO sarcoma update is the intended
+      reference before next recency wave.'
+  - id: SRC-SAVOIR
+    url_verified: 'no'
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+      review_status: pending_clinical_signoff). Title still contains
+      "TODO: confirm citation"; no top-level url field. Per chunk-brief
+      rule "No URL on stub → unreachable.no_url", flagged accordingly.
+      Citation-resolution suggestion: SAVOIR phase-3 of savolitinib vs
+      sunitinib in MET-driven papillary RCC closed early due to slow
+      accrual (Choueiri TK et al., JAMA Oncol 2020;6(8):1247-1255;
+      PMID 32469384; DOI 10.1001/jamaoncol.2020.2218) — maintainer to
+      confirm and seed url/doi/pmid before next recency wave.'
+  - id: SRC-COBRIM-LARKIN-2014
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/25265494 → 403. DOI
+      fallback https://doi.org/10.1056/NEJMoa1408868 redirected to
+      nejm.org → 403. PubMed fallback https://pubmed.ncbi.nlm.nih.gov/25265494
+      → 403. All three HEAD attempts blocked (NCBI + NEJM both gating
+      this UA). Hosted YAML metadata complete (PMID 25265494, DOI, NEJM
+      2014, current_as_of 2026-04-29 from wave-1, last_recency_check
+      2026-04-29 with status 200). Content remains current (coBRIM
+      vemurafenib + cobimetinib in 1L BRAF V600 melanoma; established
+      regimen). No upsert needed this wave; current_as_of NOT bumped
+      per chunk-brief "do NOT bump current_as_of" rule for blocked
+      sources. Maintainer browser-verify recommended.'
+  - id: SRC-RATIFY-STONE-2017
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://www.nejm.org/doi/full/10.1056/NEJMoa1614359 →
+      403. DOI fallback https://doi.org/10.1056/NEJMoa1614359 → nejm.org
+      → 403. PubMed fallback https://pubmed.ncbi.nlm.nih.gov/28644114 →
+      403. All three blocked. Hosted YAML metadata complete (PMID
+      28644114, DOI, NEJM 2017, current_as_of 2017-08-03 — STALE).
+      Content remains current (RATIFY phase-3: midostaurin +
+      7+3/HiDAC in newly-diagnosed FLT3-mutated AML; FDA-approval
+      basis). current_as_of NOT bumped per chunk-brief "do NOT bump
+      current_as_of" rule for blocked sources, despite stale value;
+      maintainer browser-verify required to bump in next wave or
+      switch URL to a non-bot-blocking landing (e.g., trial registry).'
+  - id: SRC-ELOQUENT-3-DIMOPOULOS-2018
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/30403938 → 403. DOI
+      fallback https://doi.org/10.1056/NEJMoa1805762 → nejm.org → 403.
+      PubMed fallback https://pubmed.ncbi.nlm.nih.gov/30403938 → 403.
+      All three blocked. Hosted YAML metadata complete (PMID 30403938,
+      DOI, NEJM 2018, current_as_of 2026-04-29 from wave-1,
+      last_recency_check 2026-04-29 with status 200). Content remains
+      current (ELOQUENT-3 phase-2: Elo-Pd vs Pd in R/R MM post-len/PI;
+      FDA-approval basis Nov 2018; OS update Dimopoulos Leukemia 2021).
+      No upsert needed this wave; current_as_of NOT bumped per
+      chunk-brief "do NOT bump current_as_of" rule for blocked sources.
+      Maintainer browser-verify recommended.'

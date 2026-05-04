@@ -1,0 +1,53 @@
+id: REG-EP-GCT
+disease_context: DIS-TESTICULAR-GCT
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-ETOPOSIDE
+    dose: "100 mg/m²/day IV over 60 min"
+    route: IV
+    schedule: "Days 1-5 of each 21-day cycle"
+    dose_modifications:
+      - trigger: "ANC <1000 or platelets <50K on day 1"
+        action: "Delay until ANC ≥1000 + platelets ≥75K"
+  - drug_id: DRG-CISPLATIN
+    dose: "20 mg/m²/day IV over 60 min with aggressive hydration"
+    route: IV
+    schedule: "Days 1-5 of each 21-day cycle (total 100 mg/m² per cycle)"
+
+when_to_use: >
+  EP is the preferred regimen (over BEP) when bleomycin is contraindicated:
+  (1) pulmonary fibrosis or impaired DLCO at baseline (<80% predicted),
+  (2) prior bleomycin exposure with pulmonary toxicity,
+  (3) CrCl <50 mL/min (bleomycin cleared renally; accumulates),
+  (4) DLCO decline >25% during BEP cycles (switch EP for remaining cycles),
+  (5) patient age >40-50 with baseline lung disease (increased bleomycin risk).
+  EP is also used for good-risk GCT when 4 cycles preferred over 3 cycles of BEP.
+  EP × 4 = BEP × 3 in good-risk GCT (Bosl 1988; Loehrer 1995 — equivalent efficacy;
+  more cycles compensate for no bleomycin component).
+
+premedication:
+  - "Aggressive hydration: 1L NS over 2h before cisplatin; 1L NS over 2h after"
+  - "Antiemetics: highly emetogenic protocol (5-HT3 + NK1 + dexamethasone)"
+  - "G-CSF primary prophylaxis (pegfilgrastim day 7)"
+
+cycle_length_days: 21
+total_planned_cycles: "4 cycles for good-risk (equivalence to BEP ×3); 4 cycles for intermediate/poor risk"
+
+monitoring:
+  - "Serum tumor markers (AFP, beta-hCG, LDH): before each cycle"
+  - "BMP, CrCl: before each cycle — cisplatin nephrotoxicity"
+  - "CBC: day 1 each cycle + mid-cycle nadir check"
+  - "Audiometry: baseline + post-treatment"
+  - "CT CAP: after 2 cycles + after completion"
+
+watchpoints_ua:
+  - "УВАГА: EP (без блеоміцину) × 4 цикли = BEP × 3 при хорошому ризику IGCCC — еквівалентна ефективність, відсутній ризик легеневої токсичності блеоміцину"
+  - "УВАГА: Переключитися з BEP на EP якщо DLCO падає >25% під час лікування або є клінічний пневмоніт"
+  - "УВАГА: Цисплатин-специфічне попереджувальне гідратування обов'язкове (1L NaCl 0.9% до/після); аудіограма базово та після завершення"
+  - "УВАГА: EP × 4 при поганому/проміжному ризику — не скорочувати до 3 циклів при відсутності блеоміцину"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

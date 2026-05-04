@@ -1,0 +1,44 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-004
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  notes_for_reviewer: 'Report-only: BMAs in this chunk''s manifest where wave-2
+    variant-precision backfill produced no upsert. Per chunk-spec: ''do not invent
+    treatment claims when CIViC has no suitable evidence item.'' Each row records a
+    structured reason and supersedes the wave-1 entry where applicable.'
+no_match_rows:
+- bma_id: BMA-MLH1-GERMLINE-OVARIAN
+  gene: MLH1
+  disease_id: DIS-OVARIAN
+  variant_qualifier: MLH1 germline loss-of-function (dMMR / MSI-H)
+  verdict: gene_in_civic_no_disease_overlap
+  no_civic_match_reason: 'CIViC snapshot 2026-04-25 has zero MLH1 evidence items
+    with ovarian-cancer disease overlap. MLH1 evidence in CIViC covers Colorectal
+    Cancer, Endometrial Cancer, Stomach Carcinoma, and Villous Adenoma — none
+    ovarian. Cross-disease borrowing (e.g. MLH1 CRC Oncogenicity) declined per
+    chunk-spec invention prohibition. Reconstruct-all matcher (codex, 2026-04-27)
+    reached the same conclusion.'
+  civic_gene_evidence_count_any_disease: 30
+  civic_gene_evidence_count_this_disease: 0
+- bma_id: BMA-PDGFRA-EXON14-GIST
+  gene: PDGFRA
+  disease_id: DIS-GIST
+  variant_qualifier: exon 14 mutation (ATP-binding pocket — N659K, N659Y; very rare)
+  verdict: gene_and_disease_match_no_variant_overlap
+  no_civic_match_reason: 'CIViC snapshot 2026-04-25 has 17 PDGFRA evidence items in
+    GIST, but every one is at exon 12 (V561A, V561D), exon 18 (D842V, D842I, D842Y,
+    I843DEL, D842_I843delinsVM, generic ''Exon 18 Mutation''), or generic
+    ''Mutation'' — none at exon 14 (N659K, N659Y). The BMA variant_qualifier is
+    specific to the rare exon-14 ATP-binding-pocket residue mutations N659K and
+    N659Y; CIViC has no evidence at this locus. Wave-1 chunk-018 over-included all
+    17 PDGFRA-GIST EIDs ignoring variant; wave-2 declines per chunk-spec ''Each
+    proposed CIViC link is checked against ... biomarker alteration''. Imatinib-
+    sensitivity claim rests on NCCN / IRIS-OBRIEN sources already in
+    primary_sources, not CIViC. Wave-2 audit-report row supersedes wave-1
+    chunk-018 sidecar for this BMA.'
+  civic_gene_evidence_count_any_disease: 28
+  civic_gene_evidence_count_this_disease: 17
+not_found_in_master: []

@@ -57,6 +57,48 @@ sources:
   - SRC-NCCN-COLON-2025
   - SRC-ESMO-COLON-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Regorafenib for mCRC 3L+ (CORRECT). Multi-kinase TKI. Tox profile
+# similar to sorafenib but more pronounced: HFS, fatigue, HTN, GI,
+# hepatic. Quality-of-life impact is significant. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Почервоніння, лущення, болючі тріщини на долонях і стопах"
+    action_ua: "Hand-foot синдром від реґорафенібу — крем, м'яке взуття; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Виражена втома"
+    action_ua: "Поширене на реґорафенібі — обговоріть на візиті, якщо заважає в побуті"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Контролюється лоперамідом — занотовуйте частоту"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Підвищений тиск"
+    action_ua: "Подзвоніть у клініку того ж дня — реґорафеніб може значно підвищувати тиск"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — реґорафеніб впливає на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражений біль на долонях / стопах, заважає ходити"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Кровохаркання або значна кровотеча"
+    action_ua: "Звертайтесь у лікарню негайно — реґорафеніб підвищує ризик кровотеч"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   CORRECT trial (Grothey 2013): 3L+ chemo-refractory mCRC — regorafenib

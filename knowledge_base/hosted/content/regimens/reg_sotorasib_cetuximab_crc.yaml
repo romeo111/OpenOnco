@@ -50,6 +50,45 @@ ukraine_availability:
     дослідження CodeBreaK.
 
 sources: [SRC-NCCN-COLON-2025, SRC-ESMO-COLON-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Sotorasib + cetuximab for KRAS G12C mCRC 2L+ (CodeBreaK-300).
+# KRASi GI/hepatic + cetuximab acneiform rash + IRR.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Акнеформний висип на обличчі, шиї"
+    action_ua: "Цетуксимаб — використовуйте призначені креми"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Контролюється лоперамідом"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Сухість шкіри, тріщини на пальцях"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-COLON-2025
+  - trigger_ua: "Тяжка діарея (≥6 разів/день)"
+    action_ua: "Подзвоніть у клініку того ж дня"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Жовтяниця, потемніння сечі"
+    action_ua: "Подзвоніть у клініку того ж дня — сотурасіб може впливати на печінку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-COLON-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Сильна реакція на інфузію цетуксимабу"
+    action_ua: "Інфузія в клініці — медперсонал реагує негайно"
+    urgency: er_now
+    cycle_day_window: "First infusion"
+    sources:
+      - SRC-NCCN-COLON-2025
+
 last_reviewed: "2026-04-27"
 
 notes: >

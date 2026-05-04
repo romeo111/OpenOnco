@@ -1,0 +1,65 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-014
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only flag list: sources whose URL HEAD did not return
+    2xx/3xx (or have no URL on the hosted YAML at all). HTTP 403 entries are NEJM
+    publisher bot-blocking — DOI-resolver fallback (https://doi.org/<doi>) also
+    returns 403 because it redirects to the same publisher landing page. PMID and
+    DOI metadata remain intact; a real browser would succeed. Two stubs have no
+    url field on the hosted YAML and are flagged unreachable.no_url — URL
+    discovery is out of scope for an HTTP recency refresh. Maintainer should
+    browser-verify or address via dedicated source-stub-fill chunk before next
+    action.'
+rows:
+- id: SRC-ESMO-BONE-SARCOMA
+  url: null
+  status_code: null
+  error: no_url
+  reason_class: unreachable.no_url
+  current_as_of_existing: null
+  last_verified_existing: '2026-04-27'
+  notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+    review_status: pending_clinical_signoff). Title still has TODO placeholder.
+    No url field present — URL discovery requires clinical-signoff workflow,
+    out of scope for HTTP-only recency refresh.'
+- id: SRC-NCCN-PEDIATRIC-SARCOMA
+  url: null
+  status_code: null
+  error: no_url
+  reason_class: unreachable.no_url
+  current_as_of_existing: null
+  last_verified_existing: '2026-04-27'
+  notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+    review_status: pending_clinical_signoff). Title still has TODO placeholder.
+    No url field present (license points to https://www.nccn.org/permissions but
+    that is the license-policy URL, not a content URL). NCCN guidelines require
+    free clinician registration; canonical URL discovery is out of scope here.'
+- id: SRC-APL0406-LOCOCO-2013
+  url: https://www.nejm.org/doi/full/10.1056/NEJMoa1300874
+  status_code: 403
+  error: Forbidden
+  reason_class: unreachable.blocked
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1300874
+  doi_fallback_status_code: 403
+  current_as_of_existing: '2013-07-11'
+  last_verified_existing: '2026-04-27'
+  notes: 'NEJM publisher bot-block on HEAD. DOI resolver fallback redirects to
+    same NEJM landing page and also returns 403. PMID 23841729 and DOI
+    10.1056/NEJMoa1300874 remain intact; a real browser succeeds. No content
+    fields modified; current_as_of unchanged.'
+- id: SRC-EMBRACA-LITTON-2018
+  url: https://www.nejm.org/doi/full/10.1056/NEJMoa1802905
+  status_code: 403
+  error: Forbidden
+  reason_class: unreachable.blocked
+  doi_fallback_url: https://doi.org/10.1056/NEJMoa1802905
+  doi_fallback_status_code: 403
+  current_as_of_existing: '2018-08-15'
+  last_verified_existing: '2026-04-27'
+  notes: 'NEJM publisher bot-block on HEAD. DOI resolver fallback redirects to
+    same NEJM landing page and also returns 403. PMID 30110579 and DOI
+    10.1056/NEJMoa1802905 remain intact; a real browser succeeds. No content
+    fields modified; current_as_of unchanged.'

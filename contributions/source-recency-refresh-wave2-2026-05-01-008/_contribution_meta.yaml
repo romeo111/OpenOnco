@@ -1,0 +1,20 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-008
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 batch — closes #210. Real HTTPS GET checks via httpx
+    (UA: OpenOnco-recency-bot, 30s timeout, 3 retries, exponential back-off).
+    Five sources from chunk manifest. Per-source rules per issue body: 200 ->
+    upsert + bump current_as_of; 301/302 -> upsert + url_redirected_from;
+    404/410 -> unreachable.yaml (replacement_needed); 403 -> DOI fallback,
+    if still blocked -> unreachable (blocked_by_bot_protection, NO current_as_of
+    bump); no URL -> unreachable.yaml with PMID/DOI suggestion.'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'Per-source upsert touches only: current_as_of, last_verified,
+    last_recency_check, recency_check_status_code. Content / license /
+    attribution unchanged. NCCN B-Cell (200 OK) is the only upsert; the three
+    NEJM/JCO RCT papers (403/403) and the SRC-COG stub (no URL) are reported
+    via unreachable.yaml without modifying hosted current_as_of.'

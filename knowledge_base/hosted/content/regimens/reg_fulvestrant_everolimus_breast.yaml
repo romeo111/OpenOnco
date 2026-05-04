@@ -38,6 +38,43 @@ ukraine_availability:
   notes: "Fulvestrant reimbursed; everolimus registered (Afinitor + generics) but NSZU онкопакет does not cover the breast indication (RCC indication is broader). Out-of-pocket; generic everolimus substantially cheaper than brand."
 
 sources: [SRC-BOLERO2-BASELGA-2012, SRC-NCCN-BREAST-2025, SRC-ESMO-BREAST-METASTATIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Fulvestrant + everolimus for HR+/HER2- breast 2L+ (PrECOG 0102).
+# mTORi: stomatitis dominates, pneumonitis is rare ER. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Виразки в порожнині рота, болючі"
+    action_ua: "Дуже поширене — призначений рот-полоск, м'яка їжа"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+      - SRC-BOLERO2-BASELGA-2012
+  - trigger_ua: "Помірна втома, гарячі припливи"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Тяжкий стоматит, неможливість їсти"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція дози"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Часте сечовипускання, постійна спрага"
+    action_ua: "Подзвоніть у клініку того ж дня — еверолімус може спричиняти гіперглікемію"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Лихоманка з кашлем"
+    action_ua: "Подзвоніть у клініку того ж дня — імуносупресія підвищує ризик інфекцій"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BREAST-2025
+  - trigger_ua: "Нова задишка, сухий кашель"
+    action_ua: "Звертайтесь у лікарню негайно — еверолімус-пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BREAST-2025
+
 last_reviewed: "2026-04-27"
 notes: >
   Pivotal trial: BOLERO-2 used everolimus + exemestane (PFS 10.6 vs

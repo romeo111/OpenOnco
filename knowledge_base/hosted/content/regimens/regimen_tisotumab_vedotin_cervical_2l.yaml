@@ -56,6 +56,43 @@ sources:
   - SRC-NCCN-CERVICAL-2025
   - SRC-ESMO-CERVICAL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Tisotumab vedotin (Tissue Factor ADC, MMAE payload) for cervical 2L+
+# (innovaTV-301). Signature: ocular toxicity (boxed warning, requires
+# eye exams + drops), peripheral neuropathy, bleeding risk.
+# STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Розмиття зору, відчуття піску в очах, сухість"
+    action_ua: "Очікувано на тісотумабі — використовуйте призначені очні краплі (preservative-free); занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "MMAE-payload може спричиняти нейропатію — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Помірна нудота, втома"
+    action_ua: "Зустрічається — приймайте призначені протиблювотні"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Виражене розмиття зору, біль в очах, чутливість до світла"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна термінова оцінка офтальмолога"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Незвичні синці, кровотеча ясен"
+    action_ua: "Подзвоніть у клініку того ж дня — тісотумаб підвищує ризик кровотеч"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+  - trigger_ua: "Раптова втрата зору"
+    action_ua: "Звертайтесь у лікарню негайно — рідкісне тяжке око-токсичне ускладнення"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-CERVICAL-2025
+
 last_reviewed: "2026-04-29"
 notes: >
   First and only ADC approved for recurrent / metastatic cervical cancer

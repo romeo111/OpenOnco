@@ -1,0 +1,60 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-003
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Issue #205 required output: one entry per manifest source
+    capturing url_verified, content_current, proposed_current_as_of,
+    license_status, notes. URL probes via httpx GET (30s, 3 retries,
+    follow_redirects, 403 retry-after-15s).'
+audit_date: '2026-05-01'
+issue_number: 205
+entries:
+  - id: SRC-ATA-ATC-2021
+    url_verified: 'no (HTTP 403 PubMed bot-blocking; PMID 33728999 stable)'
+    content_current: yes
+    proposed_current_as_of: null
+    license_status: 'pending (Mary Ann Liebert / Thyroid subscription; legal_review.status=pending on master)'
+    notes: 'last_verified 2026-04-28 → 2026-05-01. No current_as_of field on master;
+      not adding one because review_status is pending_clinical_signoff. ATA ATC
+      2021 guidelines remain the authoritative ATC reference; no superseding
+      guideline published.'
+  - id: SRC-LIBRETTO-431
+    url_verified: 'no (no url field on master; flagged url_replacement_needed: true)'
+    content_current: yes
+    proposed_current_as_of: null
+    license_status: 'pending (auto-stub; legal_review.status=pending)'
+    notes: 'last_verified 2026-04-27 → 2026-05-01. Auto-stub awaiting clinical
+      signoff. Suggested canonical citation for next pass: Zhou C, et al. NEJM
+      2023;389:1839-1850. PMID 37861362, DOI 10.1056/NEJMoa2309457
+      (LIBRETTO-431 phase-3: 1L selpercatinib vs platinum-pemetrexed ± pembro
+      in RET-fusion advanced NSCLC; mPFS 24.8 vs 11.2 mo, HR 0.46).'
+  - id: SRC-DIPSS-PLUS-GANGAT-2011
+    url_verified: 'no (HTTP 403 ASCO Pubs bot-blocking; DOI 10.1200/JCO.2010.32.2446 stable)'
+    content_current: yes
+    proposed_current_as_of: '2026-05-01'
+    license_status: 'reviewed 2026-04-25 (ASCO/JCO subscription)'
+    notes: 'last_verified 2026-04-27 → 2026-05-01. current_as_of bumped from
+      2011-02-01 (was stale per Q2 wave-2 criterion). DIPSS-Plus remains the
+      most widely-implemented PMF prognostic score; MIPSS70/MIPSS70-plus v2.0
+      coexist but do not supersede.'
+  - id: SRC-TOURMALINE-MM1-MOREAU-2016
+    url_verified: 'no (HTTP 403 PubMed bot-blocking; PMID 27119237 stable)'
+    content_current: yes
+    proposed_current_as_of: '2026-05-01'
+    license_status: 'reviewed 2026-04-27 (NEJM subscription)'
+    notes: 'last_verified 2026-04-27 → 2026-05-01. current_as_of bumped from
+      2016-04-28 (was stale per Q2 wave-2 criterion). Long-term Richardson
+      Lancet Oncol 2022 update already noted in payload; trial remains the
+      foundational ixazomib-IRd phase-3 RCT. Not superseded.'
+  - id: SRC-FLAURA-SORIA-2018
+    url_verified: 'no (HTTP 403 NEJM bot-blocking; DOI 10.1056/NEJMoa1713137 stable)'
+    content_current: yes
+    proposed_current_as_of: '2026-05-01'
+    license_status: 'reviewed 2026-04-27 (NEJM subscription)'
+    notes: 'last_verified 2026-04-27 → 2026-05-01. current_as_of bumped from
+      2018-01-11 (was stale per Q2 wave-2 criterion). FLAURA + Ramalingam
+      NEJM 2020 OS update established 1L osimertinib for EGFR-mutant advanced
+      NSCLC. FLAURA2 (osimertinib + chemo, Planchard NEJM 2023) is a related
+      trial, not a supersession of the original FLAURA evidence.'

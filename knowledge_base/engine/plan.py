@@ -309,9 +309,11 @@ def _build_fda_compliance(
             "to independently review the basis of every recommendation."
         ),
         patient_population_match=(
-            f"Adults with confirmed {(tracks[0].indication_data or {}).get('applicable_to', {}).get('disease_id', 'disease')} "
-            f"diagnosis at line of therapy "
-            f"{(tracks[0].indication_data or {}).get('applicable_to', {}).get('line_of_therapy', '?')}."
+            (
+                f"Adults with confirmed {(tracks[0].indication_data or {}).get('applicable_to', {}).get('disease_id', 'disease')} "
+                f"diagnosis at line of therapy "
+                f"{(tracks[0].indication_data or {}).get('applicable_to', {}).get('line_of_therapy', '?')}."
+            ) if tracks else "Adults with confirmed oncology diagnosis."
         ),
         algorithm_summary=algorithm.get("purpose") or (
             "Rule-based decision tree evaluating patient findings against "
@@ -412,6 +414,14 @@ def generate_plan(
     for k, v in (patient.get("demographics") or {}).items():
         findings.setdefault(k, v)
 
+    # Hard gate: ECOG PS ≥ 4 — active treatment is clinically inappropriate.
+    # Standard and aggressive tracks are suppressed; palliative/surveillance/trial
+    # tracks pass through unchanged.
+    try:
+        _ecog_ps = int(findings.get("ecog") or 0)
+    except (TypeError, ValueError):
+        _ecog_ps = 0
+
     redflag_lookup = _collect_redflags(entities)
     selected, trace = walk_algorithm(algo, findings, redflag_lookup)
     result.trace = trace
@@ -430,6 +440,8 @@ def generate_plan(
     # drop a track — see engine/_track_filter.py for rationale.
     patient_biomarkers = patient.get("biomarkers") or {}
 
+    _ACTIVE_TRACKS = {"standard", "aggressive"}
+
     tracks: list[PlanTrack] = []
     for ind_id in candidates:
         ind = _resolve(entities, ind_id)
@@ -440,6 +452,12 @@ def generate_plan(
             )
             continue
         track_label = (ind or {}).get("plan_track") or ind_id
+        if _ecog_ps >= 4 and track_label in _ACTIVE_TRACKS:
+            result.warnings.append(
+                f"track {ind_id} suppressed: ECOG {_ecog_ps} — "
+                "active treatment not appropriate; palliative care only"
+            )
+            continue
         is_default = ind_id == default_id
         reason = (
             f"Engine default per algorithm {algo['id']}: {trace[-1] if trace else 'no trace'}"

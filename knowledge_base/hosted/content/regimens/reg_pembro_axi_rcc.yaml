@@ -14,6 +14,42 @@ monitoring_schedule_id:
 dose_adjustments: [{condition: "Hypertension G2", modification: "Antihypertensive"}, {condition: "ICI AE", modification: "Hold pembro; corticosteroids"}]
 ukraine_availability: {all_components_registered: true, all_components_reimbursed: false, notes: "Out-of-pocket"}
 sources: [SRC-NCCN-KIDNEY-2025, SRC-ESMO-RCC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pembrolizumab + axitinib for clear-cell mRCC 1L (KEYNOTE-426).
+# Combines IO irAEs with axitinib BP/HFS/proteinuria. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна втома, шкірний свербіж"
+    action_ua: "Очікувано — використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Підвищений тиск (вимірюйте 1-2 рази на тиждень)"
+    action_ua: "Аксітініб часто підвищує тиск"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Помірна діарея"
+    action_ua: "Часто на тлі аксітінібу — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кров у сечі або сеча, що піниться"
+    action_ua: "Подзвоніть у клініку того ж дня — аксітініб впливає на нирки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит або HFS"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — імунний коліт або пневмоніт"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+
 last_reviewed:
 notes: "KEYNOTE-426 workhorse 1L clear-cell mRCC."
 notes_ua: KEYNOTE-426 workhorse 1L clear-cell mRCC.

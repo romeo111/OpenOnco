@@ -80,6 +80,40 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-FL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Axicabtagene CD19 CAR-T for relapsed/refractory FL (ZUMA-5).
+# Same axi-cel pattern as DLBCL — CRS/ICANS in first 4 weeks,
+# B-cell aplasia for years. STUB pending §6.1 signoff.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна температура у перші 1-2 тижні"
+    action_ua: "Подзвоніть у клініку того ж дня — будь-яка лихоманка може бути CRS"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Розмиття мови, плутаність свідомості"
+    action_ua: "Звертайтесь у лікарню негайно — можлива ICANS"
+    urgency: er_now
+    cycle_day_window: "Day 1-30"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Висока лихоманка, низький тиск"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    cycle_day_window: "Day 1-21"
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Раптова сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно — тяжкий CRS"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Часті інфекції протягом місяців"
+    action_ua: "Подзвоніть у клініку того ж дня — B-cell aplasia триває роки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   ZUMA-5 trial (Jacobson 2022): r/r FL after ≥2 prior lines (incl

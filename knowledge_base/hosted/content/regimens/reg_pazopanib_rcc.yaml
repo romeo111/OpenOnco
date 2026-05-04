@@ -1,0 +1,70 @@
+id: REG-PAZOPANIB-RCC
+name: "Pazopanib (RCC)"
+name_ua: "Пазопаніб (НКК)"
+alternate_names: ["Votrient", "GW786034"]
+components:
+  - drug_id: DRUG-PAZOPANIB
+    dose: "800 mg PO daily"
+    schedule: "Continuous daily dosing; take without food (≥1h before or 2h after meal)"
+    route: PO
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+toxicity_profile: moderate
+premedication: []
+mandatory_supportive_care:
+  - "LFTs at baseline, weeks 3 and 5, then q3 months (hepatotoxicity — ALT elevation up to 53%)"
+  - "Blood pressure monitoring (hypertension common)"
+  - "Thyroid function q12w"
+monitoring_schedule_id:
+dose_adjustments:
+  - condition: "ALT > 3× ULN"
+    modification: "Hold; recheck weekly. Resume at 400 mg if ALT returns to ≤ grade 1"
+  - condition: "ALT > 8× ULN or hepatotoxicity with bilirubin"
+    modification: "Permanently discontinue"
+  - condition: "Grade 3-4 non-hematologic AE"
+    modification: "Reduce to 400 mg → 200 mg as needed"
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Registered in Ukraine. Reimbursement limited."
+sources:
+  - SRC-NCCN-KIDNEY-2025
+  - SRC-ESMO-RCC-2024
+
+between_visit_watchpoints:
+  - trigger_ua: "Жовтяниця, потемніння сечі або болі в правому боці"
+    action_ua: "Зверніться до лікарні негайно — гепатотоксичність від пазопанібу"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Підвищений кров'яний тиск (≥150/100)"
+    action_ua: "Подзвоніть у клініку того ж дня — потрібна корекція гіпотензивними"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Втома, нудота, блювання"
+    action_ua: "Часто — повідомте на наступному візиті; сильна нудота — подзвоніть у клініку"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Зміна кольору волосся (знебарвлення)"
+    action_ua: "Очікуване побічне явище, не потребує дій"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+  - trigger_ua: "Діарея або болі в животі"
+    action_ua: "Повідомте клініку; лоперамід при помірній діареї"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-KIDNEY-2025
+
+last_reviewed: "2026-05-03"
+notes: >
+  Pazopanib 800mg continuous is non-inferior to sunitinib (COMPARZ 2013) with
+  different toxicity profile: less fatigue and hand-foot syndrome vs sunitinib
+  but more hepatotoxicity. Remains acceptable NCCN alternative for patients where
+  ICI combination is contraindicated. Fasting intake required — food significantly
+  increases exposure (risk of toxicity if taken with food).
+notes_ua: "Пазопаніб 800 мг щоденно. Не гірший за сунітиніб. Приймати натще."
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

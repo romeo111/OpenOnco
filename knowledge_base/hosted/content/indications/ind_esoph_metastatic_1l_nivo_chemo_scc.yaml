@@ -1,0 +1,87 @@
+id: IND-ESOPH-METASTATIC-1L-NIVO-CHEMO-SCC
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Stage IV (metastatic) OR unresectable locally advanced esophageal carcinoma"
+    - "Squamous-cell histology (ESCC)"
+    - "Treatment-naive (no prior systemic therapy for advanced disease)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-PD-L1-CPS
+      required: false
+      value_constraint: "PD-L1 CPS ≥1 preferred (CheckMate-648 primary endpoint; larger OS benefit at CPS≥1). All-comers benefit observed but smaller. Test required for decision-making."
+  biomarker_requirements_excluded:
+    - "Adenocarcinoma histology — use pembro+chemo (KEYNOTE-590) or chemo alone"
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-NIVO-CHEMO-ESCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "47.0% vs 27.3% (CPS≥1 nivo+chemo vs chemo; CheckMate-648)"
+  progression_free_survival: "mPFS 6.9 vs 4.4 mo (CPS≥1, HR 0.65)"
+  overall_survival_median: "mOS 15.4 vs 9.1 mo (CPS≥1, HR 0.54, p<0.0001)"
+  notes: "CheckMate-648, N=970 ESCC. CPS≥1 subgroup N=473 nivo+chemo arm."
+
+hard_contraindications:
+  - "Adenocarcinoma histology"
+  - "Active autoimmune disease requiring systemic immunosuppression"
+  - "Prior solid organ transplant"
+  - "ECOG PS ≥ 3"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - "Histology confirmation (squamous-cell histology mandatory)"
+  - "PD-L1 CPS (22C3 assay — CheckMate-648 used 28-8 assay but CPS generally equivalent)"
+  - "CBC, CMP, LFTs, creatinine baseline"
+
+desired_tests:
+  - "HER2 status (rare in ESCC but relevant if adeno component)"
+  - "CT chest/abdomen/pelvis + bone scan if symptomatic"
+
+rationale: >
+  CheckMate-648 (NCT03143153): nivolumab 360mg + chemo (5-FU 800mg/m²/d D1-5 +
+  cisplatin 80mg/m² D1 q3w) vs chemo alone in untreated advanced ESCC (n=970).
+  In PD-L1 CPS≥1 (primary endpoint): mOS 15.4 vs 9.1 mo (HR 0.54, p<0.0001),
+  mPFS 6.9 vs 4.4 mo (HR 0.65, p<0.0001), ORR 47.0% vs 27.3%. All-randomized:
+  mOS 13.2 vs 10.7 mo (HR 0.74, p=0.002). CPS≥5 showed even larger benefit.
+  Nivolumab + ipilimumab arm also superior but with different toxicity profile;
+  nivo+chemo is preferred when rapid response is priority (higher ORR vs nivo+ipi).
+  FDA approved nivolumab+chemo for ESCC 1L (May 2022). NCCN category 1.
+
+rationale_ua: >
+  CheckMate-648: ніволумаб + хіміотерапія (цисплатин/5-ФУ) для ПКРС стравоходу 1L.
+  mOS 15.4 vs 9.1 міс при CPS≥1 (HR 0.54). Категорія 1 NCCN.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-CHECKMATE648-DOKI-2022
+    position: supports
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+  - source_id: SRC-ESMO-ESOPHAGEAL-2024
+    position: supports
+
+do_not_do:
+  - "Do NOT use in adenocarcinoma — nivo+chemo studied in ESCC only (CheckMate-648)"
+  - "Do NOT skip PD-L1 testing — CPS guides benefit magnitude and clinical decision"
+  - "Do NOT continue ICI beyond disease progression"
+  - "Do NOT use with prior ICI (not for ICI-experienced patients)"
+
+last_reviewed: "2026-05-04"
+notes: >
+  REG-NIVO-CHEMO-ESCC (nivolumab 360mg + cisplatin 80mg/m² + 5-FU 800mg/m²/d D1-5
+  q3w) needs to be authored. Until then, reference CheckMate-648 protocol.
+  Nivolumab flat dose 360mg q3w (or 240mg q2w equivalent) is used in combination.
+  Maximum 2 years nivolumab. Cisplatin 80mg/m² is higher than standard 75mg/m²
+  in many protocols — use institutional dosing with renal adjustment.

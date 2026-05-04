@@ -1,0 +1,148 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-002
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Report-only aggregate audit. Per-source verdicts from real
+    httpx GET probes (30s timeout, 3 transport retries, follow redirects). 403 retried
+    once after 15s before classifying as blocked_by_bot_protection.'
+
+audit:
+  - id: SRC-ASCO-BTC-2023
+    url_verified: no
+    url_check_status: skipped_no_url_in_stub
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: |
+      Auto-stub (drafted_by: claude_extraction). Hosted YAML has no `url`
+      field, so no HTTP probe possible. Citation itself is unresolved per
+      hosted notes — PubMed search for "ASCO biliary tract cancer guideline
+      2023" returns no matches. Likely candidates: (a) misattribution of
+      ESMO BTC 2023 (Vogel et al., Ann Oncol 2023;34:127-140; SRC-ESMO-BTC-2023
+      already in hosted KB), (b) non-existent guideline. Maintainer action:
+      decide whether to redirect referencing entities to SRC-ESMO-BTC-2023
+      and delete this stub, or supply a real ASCO/JCO citation. No
+      `current_as_of` bump justified — content cannot be confirmed current
+      while citation is unresolved.
+
+  - id: SRC-INVICTUS
+    url_verified: no
+    url_check_status: skipped_no_url_in_stub
+    content_current: yes
+    content_current_evidence: |
+      INVICTUS (NCT03353753) is a known phase-3 trial of ripretinib
+      vs placebo in 4L+ advanced GIST. Primary publication: Blay et al.,
+      Lancet Oncol 2020;21(7):923-934 (PMID 32511981, doi
+      10.1016/S1470-2045(20)30168-6). Approved as standard 4L+ GIST
+      regimen by FDA (2020-05-15) and EMA (2020-11-18). No supersession;
+      INVICTUS remains the registrational evidence and current ESMO/NCCN
+      GIST guidelines (2024 / 2025) cite it as level-1 evidence for 4L+.
+    proposed_current_as_of: '2026-05-01'
+    proposed_url: https://pubmed.ncbi.nlm.nih.gov/32511981
+    proposed_doi: 10.1016/S1470-2045(20)30168-6
+    proposed_pmid: '32511981'
+    license_status: pending
+    notes: |
+      Stub still has TODO citation in title. Recommend maintainer
+      upsert: title → "Ripretinib in patients with advanced gastrointestinal
+      stromal tumours (INVICTUS): a double-blind, randomised, placebo-
+      controlled, phase 3 trial"; authors → Blay JY, Serrano C, Heinrich
+      MC, et al.; journal → Lancet Oncology; doi/pmid as proposed above;
+      url → PubMed; access_level → subscription_required; license → Elsevier
+      (subscription); evidence_tier → 2; current_as_of → 2026-05-01;
+      legal_review.status → reviewed. URL check deferred to that upsert
+      (no URL field in current stub).
+
+  - id: SRC-OVA-301-MONK-2010
+    url_verified: blocked_by_bot_protection
+    url_check_status_codes:
+      first: 403
+      retry_after_15s: 403
+    url_check_url: https://ascopubs.org/doi/10.1200/JCO.2009.25.4037
+    content_current: yes
+    content_current_evidence: |
+      OVA-301 (Monk et al., JCO 2010, doi 10.1200/JCO.2009.25.4037,
+      PMID 20194850) remains the registrational publication for trabectedin
+      + PLD in recurrent ovarian cancer. Trabectedin is an EMA-approved
+      regimen for recurrent ovarian cancer; FDA approval was withdrawn
+      historically. ESMO ovarian cancer guideline 2024 retains the
+      OVA-301 evidence as basis for trabectedin + PLD recommendation in
+      partially-platinum-sensitive recurrence when re-platinum is
+      undesirable. No supersession.
+    proposed_current_as_of: '2026-05-01'
+    license_status: unchanged
+    license_status_detail: 'ASCO (subscription); commercial_use_allowed: false; redistribution_allowed: false. No visible change.'
+    notes: |
+      ASCO Publications (ascopubs.org) returns HTTP 403 to scripted
+      requests on both initial probe and 15s retry — this is bot
+      protection, not a dead link. DOI resolution to ASCO is canonical
+      and unchanged. PubMed mirror at https://pubmed.ncbi.nlm.nih.gov/20194850
+      is a stable backup if maintainer wants a non-blocked URL.
+      Recommend bumping current_as_of from 2010-07-01 → 2026-05-01 and
+      last_verified from 2026-04-27 → 2026-05-01 in a follow-up upsert.
+
+  - id: SRC-ESMO-MPN-2015
+    url_verified: blocked_by_bot_protection
+    url_check_status_codes:
+      first: 403
+      retry_after_15s: 403
+    url_check_url: https://www.annalsofoncology.org/article/S0923-7534(19)31822-3/fulltext
+    content_current: yes
+    content_current_evidence: |
+      ESMO has not published a refreshed Ph-negative MPN clinical
+      practice guideline since the 2015 Vannucchi/Barbui document
+      (doi 10.1093/annonc/mdv203, PMID 26242182). The 2015 ESMO MPN
+      guideline remains the canonical ESMO reference. Hosted notes
+      already flag this and direct active clinical use to NCCN-MPN-2025
+      + ELN-2018 PV/ET consensus + individual JAK-inhibitor RCTs.
+      No supersession at the ESMO source-of-truth layer.
+    proposed_current_as_of: '2026-05-01'
+    license_status: unchanged
+    license_status_detail: 'ESMO (CC-BY-NC-ND 4.0); commercial_use_allowed: false; redistribution_allowed: true. No visible change.'
+    notes: |
+      Annals of Oncology (Elsevier-hosted) returns HTTP 403 to scripted
+      requests on both initial probe and 15s retry — bot protection,
+      not a dead link. Stable mirror at PubMed
+      https://pubmed.ncbi.nlm.nih.gov/26242182 if maintainer wants a
+      non-blocked URL. Recommend bumping current_as_of from 2015-09-01 →
+      2026-05-01 and last_verified from 2026-04-27 → 2026-05-01.
+
+  - id: SRC-ZUMA-1-NEELAPU-2017
+    url_verified: blocked_by_bot_protection
+    url_check_status_codes:
+      first: 403
+      retry_after_15s: 403
+    url_check_url: https://pubmed.ncbi.nlm.nih.gov/29226797
+    content_current: yes
+    content_current_evidence: |
+      ZUMA-1 (Neelapu et al., NEJM 2017, doi 10.1056/NEJMoa1707447,
+      PMID 29226797) remains the registrational publication for
+      axicabtagene ciloleucel in R/R aggressive B-NHL. 5-year
+      follow-up (Neelapu et al., Blood 2023) extends but does not
+      supersede the primary efficacy/safety publication. NCCN B-NHL
+      (2025) and ESMO DLBCL (2024) cite Neelapu 2017 as level-1
+      evidence for 3L+ axi-cel. No supersession.
+    proposed_current_as_of: '2026-05-01'
+    license_status: unchanged
+    license_status_detail: 'NEJM (subscription); commercial_use_allowed: false; redistribution_allowed: false. No visible change.'
+    notes: |
+      NCBI/PubMed returns HTTP 403 to scripted requests from this
+      probe on both initial check and 15s retry — bot protection,
+      not a dead link. PubMed itself remains the canonical, stable
+      URL. Recommend bumping current_as_of from 2017-12-28 →
+      2026-05-01 and last_verified from 2026-04-27 → 2026-05-01.
+
+summary:
+  manifest_count: 5
+  url_verified_yes: 0
+  url_verified_blocked_by_bot_protection: 3
+  url_verified_skipped_no_url: 2
+  url_verified_replaced_with: 0
+  content_current_yes: 4
+  content_current_unknown: 1
+  content_superseded: 0
+  proposed_current_as_of_bumps: 4
+  license_changes_detected: 0
+  banned_sources_detected: 0

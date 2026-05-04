@@ -1,0 +1,61 @@
+id: ALGO-PNET-METASTATIC-1L
+applicable_to_disease: DIS-PNET
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for unresectable / metastatic pNET.
+  Primary decision gate: grade (Ki67). G1/G2 (≤20%): everolimus 10 mg/day
+  (RADIANT-3) as standard. G3 (>20%) or poorly differentiated NEC: MDT
+  review — may require chemotherapy (EP/IP/CAPTEM). Fitness gates via
+  pan-disease RFs.
+
+output_indications:
+  - IND-PNET-METASTATIC-1L-EVEROLIMUS
+
+default_indication: IND-PNET-METASTATIC-1L-EVEROLIMUS
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - red_flag: RF-NET-HIGH-GRADE-G3
+    if_true:
+      result: IND-PNET-METASTATIC-1L-EVEROLIMUS
+      notes: "G3 / Ki67 >20% — engine routes to everolimus indication but indication carries contraindication warning for poorly differentiated NEC. MDT must verify well-differentiated G3 vs NEC morphology before proceeding."
+    if_false:
+      next_step: 2
+  - step: 2
+    evaluate:
+      all_of:
+        - any_of:
+          - red_flag: RF-FITNESS-ECOG-FIT
+          - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
+    if_true:
+      result: IND-PNET-METASTATIC-1L-EVEROLIMUS
+    if_false:
+      result: IND-PNET-METASTATIC-1L-EVEROLIMUS
+    notes: >
+      Both branches resolve to same indication. ECOG ≥2 — discuss
+      dose reduction (everolimus 5 mg/day) or palliative care; ECOG 3+ →
+      engine ECOG PS ≥4 hard gate already suppresses active tracks.
+      Sunitinib alternative (REG-SUNITINIB-MONO-PNET) deferred — pending
+      IND-PNET-METASTATIC-1L-SUNITINIB authoring.
+
+sources:
+  - SRC-RADIANT3-YAO-2011
+  - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-03"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Single-indication scaffold. Deferred paths:
+  - Sunitinib 1L (Raymond 2011 NEJM) — equivalent to everolimus; DRUG-SUNITINIB
+    created; REG + IND to follow as separate PR
+  - SSA concurrent / sequential: octreotide/lanreotide may be added to
+    everolimus or sunitinib; not modelled as separate track (MDT/clinical
+    judgment)
+  - Chemotherapy for poorly differentiated NEC: platinum-etoposide (CAPEOX/EP)
+    — separate disease entity DIS-GEP-NEC needed
+  - PRRT for SSTR2+ pNET: requires SSTR biomarker scaffolding
+    (DRUG-LUTETIUM-177-DOTATATE) — future PR

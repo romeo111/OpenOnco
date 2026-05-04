@@ -1,0 +1,110 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-009
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source recency audit per issue #211 output spec:
+    one entry per manifest ID with url_verified, content_current,
+    proposed_current_as_of, license_status, notes.'
+issue_number: 211
+chunk_id: source-recency-refresh-wave2-2026-05-01-009
+audit_date: '2026-05-01'
+http_method: GET
+http_user_agent: 'Mozilla/5.0 (compatible; OpenOnco-recency-bot)'
+http_timeout_seconds: 30
+http_retries: 3
+entries:
+  - id: SRC-EANO-LGG-2024
+    primary_url: https://pubmed.ncbi.nlm.nih.gov/33293629/
+    primary_status_code: 403
+    doi_fallback_url: https://doi.org/10.1038/s41571-020-00447-z
+    doi_fallback_status_code: 200
+    doi_fallback_final_url: https://www.nature.com/articles/s41571-020-00447-z
+    url_verified: replaced-with-https://www.nature.com/articles/s41571-020-00447-z
+    content_current: 'yes'
+    proposed_current_as_of: '2026-05-01'
+    license_status: populated
+    notes: >
+      PubMed page returns 403 to bot UA (real browser succeeds); DOI
+      redirects to publisher (Nature Reviews Clinical Oncology) and
+      returns 200. Proposing URL replacement to the publisher landing
+      page. Stable-ID year mismatch (SRC-EANO-LGG-2024 vs Weller 2021)
+      previously flagged in source notes — out of scope for recency
+      refresh, leaving as-is.
+  - id: SRC-NCCN-BONE-SARCOMA
+    primary_url: null
+    primary_status_code: null
+    doi_fallback_url: null
+    doi_fallback_status_code: null
+    url_verified: 'no'
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: populated
+    suggested_url: https://www.nccn.org/guidelines/category_1
+    notes: >
+      Auto-stub source with no URL on file. NCCN guidelines are gated
+      behind a free-registration login, so no public landing page can
+      be HEAD-checked anonymously. Suggested URL points to the public
+      NCCN clinical-practice-guidelines category index — maintainer
+      should look up the canonical Bone Cancer guideline number /
+      version and replace the title TODO at the same time. Title +
+      citation remain auto-stub pending clinical signoff.
+  - id: SRC-COMFORT-I-VERSTOVSEK-2012
+    primary_url: https://www.nejm.org/doi/full/10.1056/NEJMoa1110557
+    primary_status_code: 403
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1110557
+    doi_fallback_status_code: 403
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: populated
+    notes: >
+      NEJM returns 403 to bot UA on both primary URL and DOI fallback
+      (publisher anti-bot policy; real browser succeeds). PMID 22375971
+      is the canonical NEJM citation for COMFORT-I. Clinical content
+      remains current (ruxolitinib still standard for symptomatic
+      myelofibrosis per multiple guidelines). NOT bumping
+      current_as_of since URL is unverifiable from this run; flagging
+      as unreachable.blocked for maintainer real-browser confirmation.
+  - id: SRC-KEYNOTE-024-RECK-2016
+    primary_url: https://pubmed.ncbi.nlm.nih.gov/27718847
+    primary_status_code: 403
+    doi_fallback_url: https://doi.org/10.1056/NEJMoa1606774
+    doi_fallback_status_code: 403
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: populated
+    notes: >
+      Both PubMed and DOI return 403 to bot UA (publisher anti-bot
+      policy; real browser succeeds). PMID 27718847 is canonical for
+      KEYNOTE-024. Clinical content current — pembrolizumab monotherapy
+      remains 1L standard for PD-L1-high metastatic NSCLC per NCCN /
+      ESMO 2025. NOT bumping current_as_of; flagging as
+      unreachable.blocked for maintainer real-browser confirmation.
+  - id: SRC-BLAST-GOKBUGET-2018
+    primary_url: https://ashpublications.org/blood/article/131/14/1522/36798
+    primary_status_code: 403
+    doi_fallback_url: https://doi.org/10.1182/blood-2017-08-798322
+    doi_fallback_status_code: 403
+    doi_fallback_final_url: https://ashpublications.org/blood/article/131/14/1522/36655/Blinatumomab-for-minimal-residual-disease-in
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: populated
+    notes: >
+      ASH Blood 403 on bot UA for both URLs (publisher anti-bot;
+      real browser succeeds). DOI does redirect to a longer slug URL
+      but still returns 403 to the bot. PMID 29279378 canonical.
+      Content remains current — blinatumomab still standard of care
+      for MRD+ B-ALL post-induction per NCCN / ESMO. NOT bumping
+      current_as_of; flagging as unreachable.blocked for maintainer
+      real-browser confirmation.
+status_distribution:
+  http_200_via_doi_fallback: 1
+  http_403_blocked: 3
+  no_url_on_file: 1
+manifest_count: 5
+upserts_count: 1
+unreachable_count: 4

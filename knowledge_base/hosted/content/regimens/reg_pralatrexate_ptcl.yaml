@@ -58,6 +58,31 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-PTCL-2024
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Pralatrexate for r/r PTCL (PROPEL). Mucositis dominant (~70% any, ~21% G≥3).
+# Folate + B12 mandatory. Cytopenia. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірний біль або болючість у ротовій порожнині"
+    action_ua: "Полощіть рот сольовим розчином; приймайте фолієву кислоту та вітамін B12 як призначено; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Виражений мукозит — неможливість їсти або пити"
+    action_ua: "Подзвоніть у клініку того ж дня — тяжкий мукозит потребує дозового корегування"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Кровотеча з ясен, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-BCELL-2025
+
 last_reviewed: "2026-04-25"
 notes: >
   PROPEL trial (O'Connor 2011): r/r PTCL n=111 — ORR 29%, CR 11%, mDOR

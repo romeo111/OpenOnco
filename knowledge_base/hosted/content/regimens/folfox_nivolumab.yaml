@@ -41,6 +41,50 @@ ukraine_availability:
   notes: "Nivolumab out-of-pocket; chemo backbone NSZU-funded."
 
 sources: [SRC-NCCN-GASTRIC-2025, SRC-ESMO-GASTRIC-2024]
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# FOLFOX + nivolumab for gastric/GEJ adeno 1L (CheckMate-649).
+# FOLFOX neuropathy + IO irAEs. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Поколювання або оніміння в кистях/стопах"
+    action_ua: "Оксаліплатин — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Чутливість до холоду"
+    action_ua: "Уникайте холодного питва і повітря"
+    urgency: log_at_next_visit
+    cycle_day_window: "Day 1-5"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Шкірний свербіж від ніволумабу"
+    action_ua: "Використовуйте зволожувач"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія можлива"
+    urgency: call_clinic_same_day
+    cycle_day_window: "Day 7-14"
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+      - SRC-CTCAE-V5
+  - trigger_ua: "Помірна діарея (3-4 рази на день)"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний коліт або 5-ФУ-токсичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Жовтяниця, біль у правому верхньому квадранті"
+    action_ua: "Подзвоніть у клініку того ж дня — імунний гепатит"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+  - trigger_ua: "Тяжка діарея або сильна задишка"
+    action_ua: "Звертайтесь у лікарню негайно"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-GASTRIC-2025
+
 last_reviewed: "2026-04-26"
 
 notes: >

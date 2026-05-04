@@ -1,18 +1,87 @@
 id: ALGO-UROTHELIAL-METASTATIC-1L
 applicable_to_disease: DIS-UROTHELIAL
 applicable_to_line_of_therapy: 1
-purpose: "Select 1L mUC. Modern: EV+pembro for all unless contraindicated."
-output_indications: [IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO, IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB]
+purpose: >
+  Select 1L regimen for locally advanced or metastatic urothelial carcinoma
+  (bladder, upper tract, urethra). Post-EV-302: EV+pembro is the preferred 1L
+  for all eligible patients regardless of cisplatin eligibility or PD-L1 status.
+  Platinum-based chemotherapy → avelumab maintenance remains for EV+pembro-
+  ineligible patients (severe neuropathy, uncontrolled diabetes, corneal disease).
+
+output_indications:
+  - IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
+  - IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+
 default_indication: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
 alternative_indication: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+
 decision_tree:
+  # Step 1 — EV+pembro eligibility. Main exclusions: severe pre-existing
+  # peripheral neuropathy (EV: MMAE-related neuropathy risk), uncontrolled
+  # diabetes mellitus (EV hyperglycemia risk), severe corneal/ocular disease
+  # (EV-associated keratopathy). No CrCl cutoff — EV+pembro works regardless
+  # of cisplatin eligibility (EV-302 enrolled both groups).
   - step: 1
     evaluate:
-      any_of:
-        - {finding: ev_pembro_eligible, value: true}
-    if_true: {result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO}
-    if_false: {result: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB}
-    notes: "Gate replaced free-text condition with structured finding lookup (EV+pembro eligibility composite — see patient_urothelial_muc_ev_pembro fixture). RF authoring still owed for the composite criteria (no severe diabetes / neuropathy / ocular disease)."
-sources: [SRC-NCCN-BLADDER-2025, SRC-EAU-BLADDER-2024]
-last_reviewed: null
-notes: "EV-302 paradigm shift."
+      all_of:
+        - condition: "No pre-existing severe (Grade ≥2) peripheral neuropathy"
+        - condition: "No uncontrolled diabetes mellitus (HbA1c > 10% or recurrent DKA)"
+        - condition: "No severe corneal disease or active keratopathy"
+    if_true:
+      result: IND-UROTHELIAL-METASTATIC-1L-EV-PEMBRO
+      notes: >
+        EV+pembro preferred 1L for all eligible mUC patients (EV-302/KEYNOTE-A39;
+        mOS 31.5 vs 16.1 mo, HR 0.47 vs platinum chemo). Applies regardless of
+        cisplatin eligibility, PD-L1 status, or primary site (bladder, upper tract).
+        EV-302 enrolled both cisplatin-eligible and cisplatin-ineligible patients.
+    if_false:
+      next_step: 2
+    notes: >
+      EV eligibility gate covers MMAE toxicity-based exclusions (neuropathy,
+      hyperglycemia, keratopathy). RF authoring for composite exclusion criteria
+      still owed (RF-UROTHELIAL-EV-INELIGIBLE). Until then, evaluated as MDT text.
+
+  # Step 2 — EV+pembro ineligible. Route by cisplatin eligibility.
+  # Cisplatin-eligible: GC or dose-dense MVAC followed by avelumab maintenance.
+  # Cisplatin-ineligible (CrCl <60, ECOG ≥2, grade ≥2 peripheral neuropathy,
+  # grade ≥2 hearing loss, NYHA class III/IV HF): gem+carboplatin → avelumab.
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "Cisplatin-eligible: CrCl ≥60 mL/min, ECOG PS 0-1, no significant hearing loss, no neuropathy Grade ≥2, no HF NYHA III/IV"
+    if_true:
+      result: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+      notes: >
+        Cisplatin-eligible + EV-pembro ineligible: gemcitabine+cisplatin (4-6 cycles)
+        → avelumab maintenance until progression (JAVELIN Bladder 100;
+        mOS 21.4 vs 14.3 mo, HR 0.69). MVAC (dose-dense) is an alternative backbone.
+    if_false:
+      result: IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-AVELUMAB
+      notes: >
+        Cisplatin-ineligible + EV-pembro ineligible: gemcitabine+carboplatin (4-6
+        cycles) → avelumab maintenance. IND-UROTHELIAL-METASTATIC-1L-PLATINUM-CHEMO-
+        AVELUMAB covers both cisplatin and carboplatin backbone — regimen selection
+        guided by CrCl and patient fitness within the indication.
+
+sources:
+  - SRC-EV302-POWLES-2024
+  - SRC-JAVELIN-BLADDER100-POWLES-2020
+  - SRC-NCCN-BLADDER-2025
+  - SRC-EAU-BLADDER-2024
+
+last_reviewed: "2026-05-03"
+notes: >
+  Post-EV-302 (2024): EV+pembro has replaced platinum-based chemotherapy as
+  the preferred 1L for most patients, including cisplatin-ineligible (EV-302
+  enrolled both groups; mOS HR 0.47 vs any platinum regimen).
+
+  The platinum→avelumab pathway (JAVELIN Bladder 100) remains for patients with
+  EV-specific toxicity exclusions (pre-existing neuropathy, DM, corneal disease).
+
+  Cisplatin-ineligibility criteria: CrCl <60 mL/min, ECOG PS ≥2, grade ≥2
+  neuropathy or hearing loss, NYHA class III/IV HF.
+
+  2L+ after EV+pembro: erdafitinib if FGFR2/3-altered (IND-UROTHELIAL-METASTATIC-
+  2L-ERDAFITINIB), or platinum-based chemotherapy if EV+pembro was 1L (JAVELIN
+  pathway reversed). Sacituzumab govitecan (SG) 2L also active (TROPHY-U-01) —
+  indication stub pending.

@@ -1,0 +1,58 @@
+id: REG-CARBO-PACLI-ANAL-MET
+disease_context: DIS-ANAL-SCC
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "chemotherapy_doublet"
+
+agents:
+  - drug_id: DRG-CARBOPLATIN
+    dose: "AUC 5 IV over 30 min"
+    route: IV
+    schedule: "Day 1 q21d"
+    dose_modifications:
+      - trigger: "CrCl <30 mL/min"
+        action: "Reduce to AUC 4 or consider cisplatin alternative; carboplatin dose by Calvert formula"
+      - trigger: "Grade 4 thrombocytopenia"
+        action: "Reduce to AUC 4; delay until platelets ≥100 × 10⁹/L"
+  - drug_id: DRG-PACLITAXEL
+    dose: "175 mg/m² IV over 3h"
+    route: IV
+    schedule: "Day 1 q21d (after carboplatin)"
+    premedication:
+      - "Dexamethasone 20 mg IV 30 min before paclitaxel"
+      - "Diphenhydramine 50 mg IV 30 min before"
+      - "Ranitidine 50 mg IV (or H2 blocker) 30 min before"
+    dose_modifications:
+      - trigger: "Grade ≥3 peripheral neuropathy"
+        action: "Reduce to 135 mg/m²; delay until ≤Grade 1"
+      - trigger: "Grade 4 neutropenia or febrile neutropenia"
+        action: "Add G-CSF; reduce paclitaxel to 135 mg/m² at next cycle"
+
+when_to_use: >
+  1L metastatic or recurrent/unresectable anal squamous cell carcinoma where
+  immunotherapy (retifanlimab or pembrolizumab) is unavailable or contraindicated.
+  UA-accessible standard-track alternative to retifanlimab + carbo + pacli.
+  Evidence: retrospective series and phase 2 data; historical standard before POD1UM era.
+  Retifanlimab + carbo + pacli (POD1UM-303; PFS HR 0.63) is preferred where accessible.
+
+monitoring:
+  - "CBC before each cycle — hold if ANC <1.5 × 10⁹/L or platelets <100 × 10⁹/L"
+  - "CrCl before each cycle — carboplatin AUC dosing (Calvert formula)"
+  - "Peripheral neuropathy: each cycle (paclitaxel cumulative)"
+  - "CT CAP: q3 cycles (response assessment)"
+  - "HIV status: check at diagnosis (anal SCC HIV association)"
+
+cycle_length_days: 21
+total_planned_cycles: "6 cycles; reassess every 3 cycles"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Преп'едикація (дексаметазон 20 мг + дифенгідрамін + H2-блокатор) ОБОВ'ЯЗКОВА перед кожним введенням паклітакселю"
+  - "УВАГА: Ця схема — стандарт при недоступності ретіфанлімабу; при доступності — перевага надається ретіфанлімаб + карбоплатин + паклітаксел (POD1UM-303)"
+  - "УВАГА: Карбоплатин AUC 5 за формулою Calvert; перевірити CrCl перед кожним циклом"
+  - "УВАГА: Периферична нейропатія (паклітаксел, кумулятивна) — оцінка кожен цикл"
+  - "УВАГА: Аноскопія та ВПЛ-тестування — ВІЛ-статус при анальному SCC"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

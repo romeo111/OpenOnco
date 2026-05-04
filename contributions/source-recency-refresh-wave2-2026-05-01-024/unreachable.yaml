@@ -1,0 +1,75 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-024
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Report-only flag list: sources whose URL HEAD did not return 2xx/3xx
+    after primary + DOI + PubMed-canonical fallbacks. HTTP 403 is publisher
+    bot-blocking on non-browser HEAD requests (NEJM / Elsevier / Lancet)
+    and is the same dominant pattern observed in wave-1 (#92-#121). One
+    entry has no URL field at all (auto-stub source).
+rows:
+  - id: SRC-FIGHT-207
+    url: null
+    status_code: null
+    error: no_url
+    reason: unreachable.no_url
+    current_as_of_existing: null
+    notes: >
+      Source is an auto-stub with no `url`, `doi`, or `pmid` populated;
+      title still flagged "TODO: confirm citation". Cannot perform HEAD
+      check until citation metadata lands. Recommend separate chunk to
+      resolve the stub (look up FIGHT-207 NCT00911300 / pemigatinib /
+      Subbiah 2023 J Clin Oncol).
+  - id: SRC-IRIS-OBRIEN-2003
+    url: https://www.nejm.org/doi/full/10.1056/NEJMoa022457
+    status_code: 403
+    error: Forbidden
+    reason: unreachable.blocked
+    current_as_of_existing: '2003-03-13'
+    fallback_doi:
+      url: https://doi.org/10.1056/NEJMoa022457
+      status_code: 403
+    fallback_pubmed:
+      url: https://pubmed.ncbi.nlm.nih.gov/12637609/
+      status_code: 403
+    notes: >
+      NEJM publisher routinely 403s non-browser HEAD requests; doi.org
+      301-resolves to nejm.org which then 403s; PubMed also 403'd this
+      run (intermittent — wave-1 noted PubMed usually returns 200).
+      Recommend browser-verify; URL is structurally well-formed.
+  - id: SRC-AETHERA-MOSKOWITZ-2015
+    url: https://pubmed.ncbi.nlm.nih.gov/25796459
+    status_code: 403
+    error: Forbidden
+    reason: unreachable.blocked
+    current_as_of_existing: '2026-04-29'
+    fallback_doi:
+      url: https://doi.org/10.1016/S0140-6736(15)60165-9
+      status_code: 403
+    fallback_pubmed:
+      url: https://pubmed.ncbi.nlm.nih.gov/25796459/
+      status_code: 403
+    notes: >
+      PubMed canonical URL 403'd this run; same URL returned 200 in
+      wave-1 batch (2026-04-29) — see hosted file's existing
+      last_recency_check / recency_check_status_code. Treat as
+      transient bot-block. current_as_of already 2026-04-29 (recent).
+  - id: SRC-ARIEL3-COLEMAN-2017
+    url: https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(17)32440-6/fulltext
+    status_code: 403
+    error: Forbidden
+    reason: unreachable.blocked
+    current_as_of_existing: '2017-10-28'
+    fallback_doi:
+      url: https://doi.org/10.1016/S0140-6736(17)32440-6
+      status_code: 403
+    fallback_pubmed:
+      url: https://pubmed.ncbi.nlm.nih.gov/28850325/
+      status_code: 403
+    notes: >
+      Lancet (Elsevier) publisher 403s non-browser HEAD; DOI redirects
+      to thelancet.com which 403s; PubMed also 403'd this run.
+      Browser-verify recommended.

@@ -1,0 +1,102 @@
+id: IND-ANAL-SCC-METASTATIC-1L-RETIFANLIMAB-CARBO-PACLI
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ANAL-SCC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Squamous cell carcinoma of the anal canal — Stage IV (M1, distant metastases)"
+    - "OR locally recurrent unresectable disease not amenable to re-irradiation"
+    - "Prior curative-intent CRT allowed (for recurrent/refractory cases)"
+    - "No prior systemic chemotherapy for metastatic disease"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    notes: "ECOG 0-1 for triplet combination; ECOG 2 may receive carboplatin+paclitaxel doublet only"
+
+recommended_regimen: REG-RETIFANLIMAB-CARBO-PACLI-ANAL-1L
+concurrent_therapy: []
+followed_by:
+  - "Retifanlimab Q4W maintenance until progression or 24 months total"
+  - "CT restaging q8-12 weeks during maintenance"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~57% ORR (retifanlimab+carbo+pacli, POD1UM-303)"
+  progression_free_survival: "~9-10 months mPFS vs ~6-7 months with chemotherapy alone (POD1UM-303)"
+  overall_survival: "Data maturing; 12-month OS ~65% (preliminary)"
+  notes: "Metastatic anal SCC prognosis remains poor — ~20% 5-year OS; retifanlimab+chemo improves PFS vs chemo alone"
+
+hard_contraindications:
+  - "Active autoimmune disease requiring systemic treatment (PD-1 contraindicated)"
+  - "Active or prior immune-mediated pneumonitis Grade ≥2"
+  - "Organ transplant recipient (risk of rejection with PD-1)"
+  - "Severe peripheral neuropathy Grade ≥2 (paclitaxel contraindicated)"
+
+red_flags_triggering_alternative:
+  - condition: "Retifanlimab not available — use carboplatin AUC 5 + paclitaxel 175 mg/m² q3w alone (without PD-1)"
+  - condition: "ECOG 2+ — consider dose-reduced doublet; avoid triplet combination"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-TSH
+  - "Cortisol (baseline for immunotherapy endocrine monitoring)"
+
+desired_tests:
+  - "PD-L1 CPS (informative but not required — retifanlimab POD1UM-303 enrolled all-comers)"
+  - "HIV test"
+
+rationale: >
+  POD1UM-303 (randomized Phase III): retifanlimab 500 mg Q4W + carboplatin AUC 5 +
+  paclitaxel 175 mg/m² q3w × 6 cycles → retifanlimab maintenance Q4W vs placebo +
+  carbo+pacli in 1L advanced/metastatic anal SCC. Primary endpoint PFS was positive
+  (HR ~0.63, 2024 data). Retifanlimab (Zynyz, Incyte) is a PD-1 inhibitor approved
+  by FDA (March 2023, accelerated approval based on POD1UM-202 2L monotherapy data)
+  and EMA (August 2023). POD1UM-303 advances this to 1L combination setting.
+  Prior 1L standard was carboplatin+paclitaxel (Rao 2011, J Clin Oncol) with ~60%
+  ORR but limited OS — retifanlimab addition improves PFS and likely OS.
+  PD-L1 testing not required — trial enrolled regardless of PD-L1 status.
+
+rationale_ua: >
+  POD1UM-303 (рандомізоване дослідження III фази): ретифанлімаб + карбоплатин +
+  паклітаксель проти плацебо + карбо+пакліксель при поширеному/метастатичному
+  плоскоклітинному раку анального каналу 1L — позитивний PFS (HR ~0.63, дані 2024).
+  Ретифанлімаб (Zynyz, Incyte) — PD-1 інгібітор, схвалений FDA (березень 2023,
+  прискорена реєстрація на основі POD1UM-202 2L монотерапія) та EMA (серпень 2023).
+  Попереднім стандартом 1L був карбоплатин+паклітаксель (~60% ORR без PFS переваги
+  над IMRT); ретифанлімаб покращує PFS. Тестування PD-L1 не потрібне.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-ANAL-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN Category 1: retifanlimab+carbo+pacli for 1L advanced/metastatic anal SCC (POD1UM-303 positive PFS)"
+
+do_not_do:
+  - "Не застосовувати без базового ТТГ, кортизолу та повної оцінки аутоімунного анамнезу"
+  - "Не застосовувати при активних аутоімунних захворюваннях, що потребують системного лікування (ГКС >10 мг/д)"
+  - "Не відкладати ретифанлімаб при irAE ендокринного типу (гіпотиреоз, гіпофізит) — лікувати замісною терапією, продовжувати імунотерапію"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Retifanlimab not registered in Ukraine as of 2026-05-04 (drlz.com.ua).
+  UA-accessible alternative: carboplatin AUC 5 + paclitaxel 175 mg/m² q3w alone
+  (Rao 2011 evidence; accessible and reimbursed under NSZU).
+  Pembrolizumab (KEYNOTE-158 basket, anal SCC cohort): 10% ORR 2L monotherapy —
+  not standard 1L but sometimes used off-label in Ukraine for PD-L1+ patients.
+  Gap: IND-ANAL-SCC-METASTATIC-1L-CARBO-PACLI (doublet without immunotherapy)
+  should be authored as a standard-track alternative for UA-accessible care.

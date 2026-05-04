@@ -1,0 +1,21 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-027
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source-recency refresh — closes #229. httpx HEAD checks
+    (UA: Mozilla/5.0 (compatible; OpenOnco-recency-bot); 30s timeout; 3 retries;
+    follow_redirects=True) on 4 manifest sources. 1 source has no url field
+    (auto-stub SRC-GEOMETRY-MONO-1) -> unreachable.no_url. 3 publisher landing
+    pages returned HTTP 403 to bot UA, with DOI + PubMed canonical HEAD fallbacks
+    also returning 403 -> unreachable.blocked. 0 sources upserted; report-only
+    sidecars (audit + unreachable + summary) for maintainer browser-verification.'
+  tasktorrent_version: '2026-05-01'
+  notes_for_reviewer: 'No hosted KB writes proposed. Per spec all 403s after DOI +
+    PubMed fallback exhaustion are flagged as unreachable.blocked (likely
+    publisher bot-blocking; real browser would succeed). Per spec, source with no
+    url field is flagged as unreachable.no_url. Maintainer should browser-verify
+    and either populate the missing url (SRC-GEOMETRY-MONO-1) or accept blocked
+    status as a known publisher pattern.'

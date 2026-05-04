@@ -1,0 +1,69 @@
+id: REG-CABAZITAXEL-MCRPC
+disease_context: DIS-PROSTATE
+line_of_therapy: 2
+plan_track: standard
+
+regimen_type: "chemotherapy"
+
+agents:
+  - drug_id: DRG-CABAZITAXEL
+    dose: "20-25 mg/m² IV over 60 min"
+    route: IV
+    schedule: "Day 1 q21d"
+    preferred_dose: "20 mg/m² (PROSELICA non-inferior OS; lower hematologic toxicity)"
+    dose_modifications:
+      - trigger: "Grade ≥3 neutropenia lasting >1 week or febrile neutropenia"
+        action: "Reduce dose 25 mg/m² → 20 mg/m²; delay until ANC ≥1.5 × 10⁹/L; add G-CSF next cycle"
+      - trigger: "Grade ≥3 peripheral neuropathy"
+        action: "Delay until ≤Grade 1; reduce dose or discontinue if not recovering"
+      - trigger: "Grade ≥3 diarrhea or stomatitis"
+        action: "Delay until ≤Grade 1; reduce dose by one level"
+      - trigger: "Severe hypersensitivity (Grade 3/4)"
+        action: "Permanently discontinue; immediately manage with steroids/epinephrine"
+  - drug_id: DRG-PREDNISONE
+    dose: "10 mg PO daily (continuous, throughout cabazitaxel treatment)"
+    route: PO
+    schedule: "Daily"
+    notes: "Anti-inflammatory + adrenal support; standard companion to cabazitaxel (TROPIC/CARD)"
+
+growth_factor_support:
+  mandatory: true
+  agent: "G-CSF (filgrastim or pegfilgrastim)"
+  timing: "Day 2-5 of each cycle (or pegfilgrastim day 2); PRIMARY PROPHYLAXIS MANDATORY"
+  rationale: "TROPIC: 7.5% febrile neutropenia at 25 mg/m²; G-CSF primary prophylaxis reduces risk significantly"
+
+when_to_use: >
+  mCRPC post-docetaxel + post-ARPI (cabazitaxel preferred over second ARPI per CARD trial:
+  iPFS HR 0.54, OS HR 0.64). Also post-docetaxel alone (TROPIC: OS HR 0.70 vs mitoxantrone).
+  Preferred dose 20 mg/m² (PROSELICA: non-inferior OS, better tolerability).
+  G-CSF PRIMARY PROPHYLAXIS IS MANDATORY regardless of dose chosen.
+
+premedication:
+  - "Dexamethasone 8 mg IV (or equivalent steroid) 30 min before cabazitaxel — hypersensitivity prophylaxis"
+  - "Diphenhydramine 25 mg IV 30 min before"
+  - "Ranitidine 50 mg IV (or H2 blocker equivalent) 30 min before"
+  - "Antiemetic per moderate emetogenicity protocol (ondansetron or equivalent)"
+
+monitoring:
+  - "CBC with differential: before each cycle; hold if ANC <1.5 × 10⁹/L"
+  - "PSA: each cycle (PCWG3 response assessment)"
+  - "Peripheral neuropathy: each cycle (cumulative taxane toxicity)"
+  - "Diarrhea assessment: each cycle — manage aggressively (loperamide); Grade ≥3 requires dose modification"
+  - "Renal function: baseline + as clinically indicated"
+  - "Imaging (CT + bone scan): every 3-4 cycles for response assessment"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression or unacceptable toxicity; typically 6-10 cycles"
+
+watchpoints_ua:
+  - "КРИТИЧНО: G-CSF первинна профілактика ОБОВ'ЯЗКОВА — кабазитаксел асоційований з нейтропенічною гарячкою (7.5% у TROPIC при 25 мг/м²); без G-CSF ризик є неприйнятним"
+  - "КРИТИЧНО: Преп'едикація (дексаметазон + дифенгідрамін + H2-блокатор) перед кожним циклом — ризик реакцій гіперчутливості"
+  - "УВАГА: Переважна доза 20 мг/м² (PROSELICA: не гірша ефективність при кращій переносимості); 25 мг/м² для пацієнтів з хорошим PS та нормальним КА"
+  - "УВАГА: Кабазитаксел перевершує другий АРПІ (ензалутамід або абіратерон) після попереднього таксану + АРПІ (CARD: rPFS HR 0.54, OS HR 0.64) — не призначайте другий АРПІ якщо є кабазитаксел"
+  - "УВАГА: Діарея — кумулятивна; лоперамід при перших ознаках; Grade ≥3 — відстрочення циклу + зниження дози"
+  - "УВАГА: Периферична нейропатія — кумулятивна (особливо при попередньому доцетакселі); оцінювати кожен цикл"
+  - "УВАГА: Проднізон 10 мг/добу ОБОВ'ЯЗКОВИЙ протягом усього курсу кабазитакселю (стандарт з TROPIC/CARD)"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -66,6 +66,36 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-QUANTUM-FIRST-ERBA-2023
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Quizartinib + 7+3 for FLT3-ITD+ AML (QuANTUM-First). QT prolongation
+# boxed warning. Cytopenia + anthracycline cardiotoxicity. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота після інфузії"
+    action_ua: "Очікувано — приймайте призначені протиблювотні; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Серцебиття, запаморочення, відчуття нерівного пульсу"
+    action_ua: "Подзвоніть у клініку того ж дня — квізартиніб подовжує QT-інтервал"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-QUANTUM-FIRST-ERBA-2023
+  - trigger_ua: "Задишка при підйомі сходами або у спокої, набряки ніг"
+    action_ua: "Подзвоніть у клініку того ж дня — кардіотоксичність антрациклінів"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-AML-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+  - trigger_ua: "Різке серцебиття, непритомність або переднепритомний стан"
+    action_ua: "Звертайтесь у лікарню негайно — шлуночкова тахікардія / тяжке подовження QT"
+    urgency: er_now
+    sources:
+      - SRC-QUANTUM-FIRST-ERBA-2023
+
 last_reviewed: "2026-04-25"
 notes: >
   Approved 2023 for newly-dx FLT3-ITD+ AML aged 18-75. Median OS

@@ -1,0 +1,92 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-010
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Issue-required structured audit log. One entry per manifest
+    source with url_verified / content_current / proposed_current_as_of /
+    license_status / notes columns.'
+audit:
+  - id: SRC-EASL-HBV-2025
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: '2026-05-01'
+    license_status: pending
+    probe_status_code: null
+    probe_method: none
+    notes: >
+      Hosted source has no `url` field — auto-stub awaiting clinical signoff.
+      EASL CPG on HBV (2025) is published in Journal of Hepatology
+      (doi:10.1016/j.jhep.2025.03.002, J Hepatol 2025). Suggested canonical URL:
+      https://easl.eu/publication/easl-clinical-practice-guidelines-on-the-management-of-hepatitis-b-virus-infection/
+      (publisher detail page). EASL homepage (https://easl.eu/) returned HTTP
+      200 in this probe; the suggested detail-page slug returned 404 — slug
+      requires maintainer verification on EASL website. License: EASL guideline
+      reuse policy (academic-only attribution). No clinical content fields
+      proposed for change here — stub upgrade is out of recency-refresh scope.
+      Unreachable+suggest entry written to unreachable.yaml.
+  - id: SRC-NCCN-HEAD-AND-NECK
+    url_verified: 'yes'
+    content_current: 'yes'
+    proposed_current_as_of: '2026-05-01'
+    license_status: present
+    probe_status_code: 200
+    probe_method: GET
+    notes: >
+      NCCN guidelines-detail landing page resolved HTTP 200 via httpx GET with
+      OpenOnco-recency-bot UA. License field already populated (NCCN — clinician-only
+      redistribution prohibited). Hosted source is itself an auto-stub awaiting
+      clinical signoff for year/citation; recency-refresh upserts current_as_of
+      + last_recency_check + recency_check_status_code only. Stub-upgrade
+      remains pending under separate clinical-content workstream.
+  - id: SRC-ALFA-0701-CASTAIGNE-2012
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: '2012-04-21'
+    license_status: present
+    probe_status_code: 403
+    probe_method: GET
+    notes: >
+      PubMed canonical URL (https://pubmed.ncbi.nlm.nih.gov/22482940) returned
+      HTTP 403 — publisher bot-block, not a real outage; identical pattern to
+      previous waves #92-#121. DOI fallback https://doi.org/10.1016/S0140-6736(12)60485-1
+      redirected to ScienceDirect and also returned HTTP 403 (Elsevier bot-block).
+      Clinical content (ALFA-0701 fractionated GO + 7+3 induction in 1L de-novo
+      AML) is the published 2012 trial result — content is current at the
+      published date 2012-04-21; no superseding publication that changes the
+      regimen status. License (Elsevier subscription) already set. Listed in
+      unreachable.yaml as blocked. current_as_of left at 2012-04-21 (publication
+      date) — bot-block is not evidence of supersession. Maintainer
+      browser-verify if desired.
+  - id: SRC-PALOMA-2-FINN-2016
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: '2016-11-17'
+    license_status: present
+    probe_status_code: 403
+    probe_method: GET
+    notes: >
+      PubMed canonical URL (https://pubmed.ncbi.nlm.nih.gov/27959613) returned
+      HTTP 403 (publisher bot-block). DOI fallback https://doi.org/10.1056/NEJMoa1607303
+      redirected to NEJM and also returned HTTP 403 (NEJM bot-block). Clinical
+      content (palbociclib + letrozole 1L HR+/HER2- ABC, PFS 24.8 vs 14.5 mo) is
+      current; OS update Finn JAMA 2022 already cited in hosted notes; no
+      supersession. License (NEJM subscription) already set. current_as_of left
+      at publication date 2016-11-17 — bot-block is not evidence of supersession.
+  - id: SRC-KEYNOTE-189-GANDHI-2018
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: '2018-04-16'
+    license_status: present
+    probe_status_code: 403
+    probe_method: GET
+    notes: >
+      PubMed canonical URL (https://pubmed.ncbi.nlm.nih.gov/29658856) returned
+      HTTP 403 (publisher bot-block). DOI fallback https://doi.org/10.1056/NEJMoa1801005
+      redirected to NEJM and also returned HTTP 403. Clinical content
+      (pembrolizumab + pemetrexed/platinum 1L non-squamous NSCLC w/o EGFR/ALK,
+      OS HR 0.49) is current; 5-yr update Garassino JCO 2023 already cited in
+      hosted notes; no supersession. License (NEJM subscription) already set.
+      current_as_of left at publication date 2018-04-16 — bot-block is not
+      evidence of supersession.

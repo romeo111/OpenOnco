@@ -1,0 +1,100 @@
+id: IND-STS-ADVANCED-2L-GEMDOC
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic or locally recurrent unresectable soft tissue sarcoma"
+    - "Progression after anthracycline-based 1L chemotherapy"
+    - "ECOG PS 0-2"
+    - "Preferred subtypes: leiomyosarcoma (LMS — uterine or extra-uterine), undifferentiated pleomorphic sarcoma (UPS)"
+    - "Acceptable for other STS subtypes where systemic chemotherapy is appropriate"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "GIST — imatinib/sunitinib landscape; out of scope"
+    - "Ewing sarcoma, rhabdomyosarcoma — pediatric/specialized protocols"
+    - "Severe renal impairment (CrCl <30 mL/min — gemcitabine renal clearance)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "SARC002 enrolled ECOG 0-2; ECOG 2 may require dose reduction consideration"
+
+recommended_regimen: REG-GEMCITABINE-DOCETAXEL-STS
+concurrent_therapy:
+  - "G-CSF primary prophylaxis (mandatory — see regimen)"
+followed_by:
+  - "CT (or MRI for soft tissue) every 3 cycles (RECIST 1.1)"
+  - "Pazopanib (IND-STS-ADVANCED-2L-PAZOPANIB) after GemDoc failure if not yet given"
+  - "Clinical trial enrollment preferred at progression"
+
+evidence_level: moderate
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~16-18% (SARC002: 16% GemDoc vs 8% gem mono)"
+  pfs_gemdoc_months: 6.2
+  pfs_gem_mono_months: 3.0
+  os_hr: 0.73
+  median_os_months: 17.9
+  notes: >
+    SARC002 (Maki 2007, JCO; n=122): GemDoc vs gemcitabine alone in 2L+ STS.
+    ORR 16% vs 8%; PFS 6.2 vs 3.0 months; OS 17.9 vs 11.5 months (HR 0.73).
+    Leiomyosarcoma subgroup showed greatest benefit. NCCN Category 1.
+    Also supported by Hensley 2002 (single-arm gem+docetaxel in LMS; ORR 53%
+    in retrospective analysis of uterine LMS; PMID 12206789).
+
+hard_contraindications:
+  - "CrCl <30 mL/min (gemcitabine renal clearance)"
+  - "Severe hepatic impairment (bilirubin >3 × ULN — docetaxel metabolism)"
+  - "ECOG ≥3"
+  - "Prior severe gemcitabine toxicity (interstitial pneumonitis, HUS)"
+
+red_flags_triggering_alternative:
+  - condition: "GIST: imatinib/sunitinib/regorafenib — completely different landscape"
+  - condition: "Adipocytic STS (liposarcoma): trabectedin preferred if available (ET-743-SAR-3007); pazopanib alternative (excluded from PALETTE but used off-label)"
+  - condition: "Prior ifosfamide not given in 1L: high-dose ifosfamide is an alternative 2L approach"
+  - condition: "ECOG ≥3 or severe organ dysfunction: BSC; GemDoc too toxic"
+
+required_tests:
+  - TEST-CT-CAP
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "GFR / CrCl (gemcitabine renal clearance — must be ≥30 mL/min)"
+  - "ECOG PS + performance functional assessment"
+
+rationale: >
+  SARC002 (Maki 2007, JCO; n=122): randomized phase 2, GemDoc vs gemcitabine alone
+  in metastatic STS 2L+. ORR 16% vs 8%; PFS 6.2 vs 3.0 months; OS HR 0.73 (17.9 vs
+  11.5 months). Leiomyosarcoma subgroup with greatest benefit. Gemcitabine rate control
+  (10 mg/m²/min over 90 min) is critical for efficacy — not the standard 30-min infusion.
+  G-CSF primary prophylaxis mandatory with full-dose GemDoc. Dexamethasone premedication
+  × 3 days for docetaxel. NCCN Category 1.
+
+rationale_ua: >
+  SARC002 (n=122): GemDoc vs гемцитабін моно при STS 2L. ORR 16% vs 8%;
+  PFS 6.2 vs 3.0 міс (HR 0.73). LMS — найбільший ефект. NCCN Категорія 1.
+  КРИТИЧНО: Гемцитабін 90-хвилинна інфузія (10 мг/м²/хв) — не 30 хвилин.
+  G-CSF первинна профілактика ОБОВ'ЯЗКОВА.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-SARC002-MAKI-2007
+    position: supports
+    relevant_quote_paraphrase: "SARC002 (n=122): GemDoc vs gem mono in 2L+ STS; ORR 16% vs 8%; PFS 6.2 vs 3.0m; OS HR 0.73; LMS greatest benefit; NCCN Cat 1"
+
+do_not_do:
+  - "Не вводити гемцитабін за стандартний 30-хвилинний протокол — потрібна 90-хвилинна контрольована інфузія (10 мг/м²/хв)"
+  - "Не призначати без G-CSF первинної профілактики"
+  - "Не використовувати при GIST — інша система TKI"
+  - "Не призначати при важкій нирковій недостатності (КК <30 мл/хв)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

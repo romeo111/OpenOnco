@@ -1,0 +1,25 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-002
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 source recency refresh. Real httpx GET probes (30s timeout,
+    3 transport retries, follow redirects, single retry after 15s on 403) on 5 sources
+    from issue #204 manifest. Two manifest IDs are auto-stubs without URLs
+    (SRC-ASCO-BTC-2023, SRC-INVICTUS) — recorded as skipped_no_url. Three publisher
+    URLs (ASCO Publications, Annals of Oncology, PubMed) returned 403 on both initial
+    request and 15s-retry — recorded as blocked_by_bot_protection per brief. No
+    URL change, license change, or supersession evidence found in the visible
+    surface. NOTE: orchestrator brief and issue #204 conflicted (brief proposed
+    direct hosted-KB edits + chunk/<id> branch + general validator+pytest gates;
+    issue #204 mandates sidecars-only + tasktorrent/<id> branch + validate_contributions
+    gate + explicit rejection criteria for direct hosted edits). Followed issue #204
+    on the sidecars/edits axis (auto-fail otherwise) and brief on branch name +
+    manifest count clarification (manifest is 5 IDs, brief said 4).'
+  tasktorrent_version: 2026-04-29-pending-first-commit
+  notes_for_reviewer: 'Report-only: per-source audit YAML + summary. No upserts,
+    no hosted KB modification. Three URLs returned 403 from bot-protection
+    layers — re-verification with a real browser session or via PubMed/DOI
+    landing-page proxies is recommended for the next wave.'

@@ -1,0 +1,87 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-020
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Report-only. Manifest entries with no upsert sidecar produced and the
+    structured reason. Categories per chunk brief: no_url+suggest (stub
+    sources without url/pmid/doi), blocked (publisher bot-protection across
+    primary + DOI + PubMed fallback HEAD probes), dead (404/410 — none this
+    chunk). Probe: httpx 0.28.1 HEAD with UA "Mozilla/5.0 (compatible;
+    OpenOnco-recency-bot)", timeout=30s, retries=3, follow_redirects=True.
+issue_number: 222
+unreachable_sources:
+- id: SRC-ESMO-SARCOMA-2024
+  category: no_url
+  reason: stub_pending_clinical_signoff
+  detail: >
+    Auto-stub on master (knowledge_base/hosted/content/sources/src_esmo_sarcoma_2024.yaml):
+    title "ESMO soft-tissue sarcoma guideline (2024) (TODO: confirm citation)",
+    no url / pmid / doi / version / authors / journal fields,
+    review_status: pending_clinical_signoff. Recency refresh out of scope until
+    upstream stub-fill chunk populates publisher metadata.
+  suggest_url: https://www.esmo.org/guidelines/guidelines-by-topic/sarcoma-and-gist
+  suggest_rationale: >
+    ESMO Sarcoma & GIST guidelines landing page. Canonical publication-of-record
+    likely Annals of Oncology STS 2021 update (Gronchi A et al,
+    doi:10.1016/j.annonc.2021.07.006) or 2024 ESMO STS update if published.
+    Clinical signoff needed to disambiguate.
+- id: SRC-SCOUT
+  category: no_url
+  reason: stub_pending_clinical_signoff
+  detail: >
+    Auto-stub on master (knowledge_base/hosted/content/sources/src_scout.yaml):
+    title "SCOUT — larotrectinib pediatric NTRK-fusion (TODO: confirm citation)",
+    no url / pmid / doi / version / authors / journal fields, review_status:
+    pending_clinical_signoff.
+  suggest_url: https://pubmed.ncbi.nlm.nih.gov/29606586/
+  suggest_rationale: >
+    Most likely Laetsch TW et al, "Larotrectinib for paediatric solid tumours
+    harbouring NTRK gene fusions", Lancet Oncol 2018;19:705-714, PMID 29606586,
+    DOI 10.1016/S1470-2045(18)30119-0 — the SCOUT pediatric NTRK-fusion
+    phase-1/2 registration publication. Clinical signoff needed for confirmation.
+- id: SRC-COMBI-D-LONG-2014
+  category: blocked
+  reason: bot_protection_all_fallbacks
+  detail: >
+    Primary HEAD https://pubmed.ncbi.nlm.nih.gov/25265492 -> 403; DOI HEAD
+    https://doi.org/10.1056/NEJMoa1406037 (-> nejm.org via 30x chain) -> 403;
+    PubMed canonical HEAD -> 403. All three fallback layers blocked by
+    publisher bot-protection. Content (Long GV et al, NEJM 2014, COMBI-d
+    phase-3) known-current — PMID 25265492 is a stable record. Per chunk brief:
+    no current_as_of bump on unreachable.blocked.
+  current_as_of_existing: '2026-04-29'
+  primary_status: 403
+  doi_fallback_status: 403
+  pubmed_fallback_status: 403
+- id: SRC-OLYMPIAD-ROBSON-2017
+  category: blocked
+  reason: bot_protection_all_fallbacks
+  detail: >
+    Primary HEAD https://www.nejm.org/doi/full/10.1056/NEJMoa1706450 -> 403; DOI
+    HEAD https://doi.org/10.1056/NEJMoa1706450 (-> nejm.org via 30x chain) ->
+    403; PubMed canonical HEAD https://pubmed.ncbi.nlm.nih.gov/28578601 ->
+    403. All three fallback layers blocked by publisher bot-protection. Content
+    (Robson M et al, NEJM 2017, OlympiAD phase-3) known-current — PMID 28578601,
+    DOI 10.1056/NEJMoa1706450 are stable records. Per chunk brief: no
+    current_as_of bump on unreachable.blocked.
+  current_as_of_existing: '2017-08-10'
+  primary_status: 403
+  doi_fallback_status: 403
+  pubmed_fallback_status: 403
+- id: SRC-KEYNOTE-407-PAZ-ARES-2018
+  category: blocked
+  reason: bot_protection_all_fallbacks
+  detail: >
+    Primary HEAD https://pubmed.ncbi.nlm.nih.gov/30280635 -> 403; DOI HEAD
+    https://doi.org/10.1056/NEJMoa1810865 (-> nejm.org via 30x chain) -> 403;
+    PubMed canonical HEAD -> 403. All three fallback layers blocked by
+    publisher bot-protection. Content (Paz-Ares L et al, NEJM 2018,
+    KEYNOTE-407 phase-3) known-current — PMID 30280635 is a stable record.
+    Per chunk brief: no current_as_of bump on unreachable.blocked.
+  current_as_of_existing: '2018-11-22'
+  primary_status: 403
+  doi_fallback_status: 403
+  pubmed_fallback_status: 403

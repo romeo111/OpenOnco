@@ -427,6 +427,71 @@ def test_question_templates_have_required_keys():
         assert q["question_ua"].strip(), f"Empty question_ua for {q['id']}"
 
 
+# ── Section H — ECOG 4 hard gate ─────────────────────────────────────
+
+
+_ACTIVE_TRACK_IDS = {"standard", "aggressive"}
+
+
+def test_ecog4_suppresses_active_tracks():
+    """ECOG PS 4 → engine must not produce any standard or aggressive tracks."""
+    patient = {
+        "patient_id": "TEST-ECOG4-GATE",
+        "disease": {"id": "DIS-CRC"},
+        "line_of_therapy": 1,
+        "demographics": {"age": 72, "ecog": 4},
+    }
+    result = generate_plan(patient, kb_root=KB_ROOT)
+    if result.plan is None:
+        return  # No plan at all is also acceptable
+    active_tracks = [
+        t for t in (result.plan.tracks or [])
+        if t.track_id in _ACTIVE_TRACK_IDS
+    ]
+    assert not active_tracks, (
+        f"ECOG 4 patient should have no active tracks; got: "
+        f"{[t.track_id for t in active_tracks]}"
+    )
+    ecog_warnings = [w for w in (result.warnings or []) if "ECOG" in w and "suppressed" in w]
+    assert ecog_warnings, "Expected ECOG suppression warning in result.warnings"
+
+
+def test_ecog3_allows_active_tracks():
+    """ECOG PS 3 must NOT be suppressed by the ECOG 4 hard gate."""
+    patient = {
+        "patient_id": "TEST-ECOG3-GATE",
+        "disease": {"id": "DIS-CRC"},
+        "line_of_therapy": 1,
+        "demographics": {"age": 68, "ecog": 3},
+    }
+    result = generate_plan(patient, kb_root=KB_ROOT)
+    ecog_suppression_warnings = [
+        w for w in (result.warnings or []) if "suppressed" in w and "ECOG" in w
+    ]
+    assert not ecog_suppression_warnings, (
+        f"ECOG 3 should not trigger active-track suppression; "
+        f"got warnings: {ecog_suppression_warnings}"
+    )
+
+
+def test_ecog4_gate_absent_ecog_defaults_to_no_suppression():
+    """Missing ECOG in demographics → defaults to 0, no suppression."""
+    patient = {
+        "patient_id": "TEST-ECOG-ABSENT",
+        "disease": {"id": "DIS-CRC"},
+        "line_of_therapy": 1,
+        "demographics": {"age": 55},
+    }
+    result = generate_plan(patient, kb_root=KB_ROOT)
+    ecog_suppression_warnings = [
+        w for w in (result.warnings or []) if "suppressed" in w and "ECOG" in w
+    ]
+    assert not ecog_suppression_warnings, (
+        "Absent ECOG should not suppress tracks; "
+        f"got: {ecog_suppression_warnings}"
+    )
+
+
 # ── Section F — End-to-end patient render integration ────────────────
 
 

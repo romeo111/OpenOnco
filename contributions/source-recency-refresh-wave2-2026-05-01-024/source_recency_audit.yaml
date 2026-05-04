@@ -1,0 +1,100 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-024
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: >
+    Per-source audit per issue #226 Output Requirements. Method: httpx
+    HEAD with UA "Mozilla/5.0 (compatible; OpenOnco-recency-bot)", 30s
+    timeout, 3 retries, follow_redirects=True; on 403, fall back to DOI
+    HEAD then PubMed canonical HEAD. Run date 2026-05-02T06:17Z.
+
+rows:
+  - id: SRC-FIGHT-207
+    url_verified: 'no'
+    primary_url_checked: null
+    primary_status: null
+    fallbacks:
+      doi: null
+      pubmed: null
+    content_current: 'unknown'
+    proposed_current_as_of: null
+    license_status: 'pending'
+    notes: >
+      Auto-stub source with no `url`, `doi`, or `pmid` populated; title
+      still tagged "TODO: confirm citation". Cannot perform HEAD check.
+      Suggested next step: resolve the stub by looking up FIGHT-207
+      (pemigatinib in FGFR-altered solid tumors; NCT03822117 /
+      Subbiah et al., J Clin Oncol 2023) and re-running recency check.
+
+  - id: SRC-IRIS-OBRIEN-2003
+    url_verified: 'no'
+    primary_url_checked: https://www.nejm.org/doi/full/10.1056/NEJMoa022457
+    primary_status: 403
+    fallbacks:
+      doi:
+        url: https://doi.org/10.1056/NEJMoa022457
+        status: 403
+      pubmed:
+        url: https://pubmed.ncbi.nlm.nih.gov/12637609/
+        status: 403
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: 'reviewed (subscription, NEJM; legal_review.date=2026-04-25)'
+    notes: >
+      All three URLs 403 to non-browser HEAD; structurally valid. NEJM
+      403 is canonical bot-blocking pattern. IRIS is the foundational
+      imatinib RCT for CML 1L; clinical content has not been superseded
+      (still cited as the historical-reference RCT, with 6-y / 8-y / 10-y
+      follow-up papers extending — not replacing — its findings). No
+      proposed_current_as_of bump because URL not actually verified this
+      run; recommend browser-verify, then maintainer can bump in a
+      follow-up. License/terms field already reviewed (NEJM subscription,
+      not redistributable, attribution required).
+
+  - id: SRC-AETHERA-MOSKOWITZ-2015
+    url_verified: 'no'
+    primary_url_checked: https://pubmed.ncbi.nlm.nih.gov/25796459
+    primary_status: 403
+    fallbacks:
+      doi:
+        url: https://doi.org/10.1016/S0140-6736(15)60165-9
+        status: 403
+      pubmed:
+        url: https://pubmed.ncbi.nlm.nih.gov/25796459/
+        status: 403
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: 'reviewed (Elsevier subscription; legal_review.date=2026-04-27)'
+    notes: >
+      PubMed canonical URL 403'd this run, but the same URL returned 200
+      in wave-1 (2026-04-29 batch — see hosted file's last_recency_check
+      and recency_check_status_code: 200). Treat as transient PubMed
+      bot-block. AETHERA continues to be cited as the pivotal trial for
+      brentuximab vedotin post-ASCT consolidation in high-risk cHL;
+      content is current. current_as_of already 2026-04-29 from wave-1,
+      so no bump proposed for this round.
+
+  - id: SRC-ARIEL3-COLEMAN-2017
+    url_verified: 'no'
+    primary_url_checked: https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(17)32440-6/fulltext
+    primary_status: 403
+    fallbacks:
+      doi:
+        url: https://doi.org/10.1016/S0140-6736(17)32440-6
+        status: 403
+      pubmed:
+        url: https://pubmed.ncbi.nlm.nih.gov/28850325/
+        status: 403
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: 'reviewed (Lancet/Elsevier subscription; legal_review.date=2026-04-27)'
+    notes: >
+      Lancet (Elsevier) 403s on HEAD; DOI redirects to thelancet.com
+      which 403s; PubMed also 403'd this run. ARIEL3 remains the
+      primary RCT establishing rucaparib maintenance in
+      platinum-sensitive recurrent ovarian — content is current
+      (5-year follow-up from Ledermann 2023 builds on, does not
+      supersede). No proposed_current_as_of bump because URL not
+      verified this run.

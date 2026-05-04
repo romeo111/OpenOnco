@@ -1,0 +1,109 @@
+id: REG-LANREOTIDE-AUTOGEL-GI-NET
+name: "Lanreotide Autogel 120 mg SC q4w (well-differentiated GEP-NET G1/G2; CLARINET)"
+name_ua: "Ланреотид Autogel 120 мг SC q4w (добре-диференційована ГЕП-НЕП G1/G2; CLARINET)"
+alternate_names:
+  - "CLARINET regimen"
+  - "Lanreotide NET"
+  - "Somatuline Depot GI-NET"
+  - "SSA antiproliferative GEP-NET"
+
+components:
+  - drug_id: DRUG-LANREOTIDE
+    dose: "120 mg SC deep subcutaneous injection"
+    schedule: "Every 4 weeks (q4w). Administer into lateral upper outer quadrant of buttock. Alternate sides. Patient/caregiver can self-inject after training."
+    route: SC
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression or unacceptable toxicity"
+toxicity_profile: low-moderate
+
+premedication: []
+
+mandatory_supportive_care: []
+
+monitoring_schedule_id:
+
+dose_adjustments:
+  - condition: "Severe diarrhea despite lanreotide (>6 stools/day, carcinoid syndrome refractory to SSA)"
+    modification: "Add telotristat ethyl 250 mg PO TID (tryptophan hydroxylase inhibitor); octreotide 100–200 µg SC TID as rescue for breakthrough flushing"
+    rationale: "Telotristat approved for carcinoid syndrome diarrhea inadequately controlled on SSA (TELESTAR trial)"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Biliary complications (cholelithiasis, cholecystitis)"
+    modification: "Asymptomatic gallstones — no change; symptomatic cholecystitis — surgical consultation; consider prophylactic cholecystectomy if planned surgery anyway"
+    rationale: "Long-term SSA reduces gallbladder motility → gallstone formation (~20% at 1 yr)"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Carcinoid crisis risk (planned surgery, hepatic arterial embolisation, ablation)"
+    modification: "IV octreotide 500 µg bolus before procedure + 100–200 µg/h infusion during procedure; continue 12–24h post-procedure"
+    rationale: "Manipulation of tumour can trigger massive mediator release → carcinoid crisis (flushing, bronchospasm, haemodynamic instability)"
+    source_refs:
+      - SRC-NCCN-NET-2025
+  - condition: "Diabetes mellitus (pre-existing)"
+    modification: "Monitor glucose q1–2 months; SSA may improve or worsen glycaemia (inhibits insulin + glucagon); adjust antidiabetic therapy accordingly"
+    rationale: "SSA-mediated insulin inhibition may reduce insulin requirements in patients on antidiabetics"
+    source_refs:
+      - SRC-NCCN-NET-2025
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Lanreotide (Somatuline Autogel) зареєстровано в Україні. НСЗУ-реімбурсація
+    для GEP-NET не включена до онкопакету 2025. SSA-терапія переважно
+    out-of-pocket або через спеціальні програми. Октреотид LAR (альтернативний
+    SSA; PROMID) може бути доступнішим у деяких регіонах. Значна фінансова
+    бар'єра для пацієнтів.
+
+sources:
+  - SRC-CLARINET-CAPLIN-2014
+  - SRC-NCCN-NET-2025
+
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Lanreotide Autogel for GEP-NET. Key concerns: injection site reactions,
+# gallstones (asymptomatic or symptomatic), breakthrough carcinoid symptoms,
+# glucose dysregulation.
+between_visit_watchpoints:
+  - trigger_ua: "Ущільнення або болючість у місці ін'єкції"
+    action_ua: "Очікувано — зазвичай минає за 1–2 доби; занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Припливи або діарея між ін'єкціями (прорив симптомів)"
+    action_ua: "Подзвоніть у клініку того ж дня — може потрібна рятувальна доза октреотиду або корекція схеми"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Біль у правому підребер'ї після їди"
+    action_ua: "Подзвоніть у клініку того ж дня — жовчнокам'яна хвороба від ланреотиду"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Лихоманка вище 38°C з болем у животі або жовтяниця"
+    action_ua: "Звертайтесь у лікарню негайно — гострий холецистит"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NET-2025
+  - trigger_ua: "Раптовий тяжкий прилив, бронхоспазм, падіння тиску"
+    action_ua: "Звертайтесь у лікарню негайно — карциноїдна криза"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-NET-2025
+
+last_reviewed: "2026-05-03"
+reviewer_signoffs: []
+notes: >
+  CLARINET (Caplin NEJM 2014): lanreotide 120 mg q4w vs placebo in
+  well-differentiated G1/G2 non-functioning GEP-NET (n=204). mPFS not
+  reached vs 18.0 mo (HR 0.47, p<0.001). Also shown in PROMID (Rinke JCO
+  2009) with octreotide LAR 30 mg q4w for midgut NET: mPFS 14.3 vs 6.0 mo
+  (HR 0.34). Both trials establish SSA as antiproliferative standard
+  (not just symptom control). CLARINET OLE (96-week extension) confirmed
+  durable benefit in stable/non-progressive disease. Octreotide LAR 30 mg
+  q4w is a valid alternative to lanreotide (no head-to-head; both NCCN
+  Category 1 for GI-NET). Lanreotide used here as it has the broader CLARINET
+  GEP-NET data set. STUB pending §6.1 signoff.
+notes_ua: >
+  CLARINET (Caplin NEJM 2014): ланреотид 120 мг q4w проти плацебо у добре-диференційованій G1/G2 нефункціональній ГЕП-НЕП (n=204). мВБП не досягнуто проти 18.0 міс (HR 0.47, p<0.001). Також показано у PROMID (Rinke JCO 2009) з октреотидом LAR 30 мг q4w для середньокишкової НЕП: мВБП 14.3 проти 6.0 міс (HR 0.34). Обидва дослідження встановлюють SSA як антипроліферативний стандарт (не лише контроль симптомів). CLARINET OLE (96-тижневе розширення) підтвердило стійку вигоду при стабільній/непрогресуючій хворобі. Октреотид LAR 30 мг q4w є дійсною альтернативою ланреотиду (немає прямого порівняння; обидва NCCN Категорія 1 для GI-NET). STUB очікує підпис §6.1.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

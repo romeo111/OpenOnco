@@ -1,0 +1,80 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-021
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit with required schema (id, url_verified,
+    content_current, proposed_current_as_of, license_status, notes). Five entries,
+    one per manifest ID. No hosted-content writes from this chunk -- all five
+    rows resolved to "no" or "blocked" outcomes per task-spec fallback rules.'
+audit:
+- id: SRC-EXPLORER
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending
+  notes: 'Stub source: hosted YAML has no url, no doi, no pmid. Cannot perform
+    HEAD recency check. Title still TODO ("EXPLORER -- avapritinib in advanced
+    systemic mastocytosis (TODO: confirm citation)"). Stub-backfill required
+    before recency assessment is meaningful. Likely citation: Gotlib et al.,
+    Nat Med 2021;27(12):2192-2199 (PMID 34873374, DOI 10.1038/s41591-021-01539-8)
+    -- pending clinical signoff. Recorded in unreachable.yaml as no_url.'
+
+- id: SRC-SSG-XVIII
+  url_verified: 'no'
+  content_current: unknown
+  proposed_current_as_of: null
+  license_status: pending
+  notes: 'Stub source: hosted YAML has no url, no doi, no pmid. Cannot perform
+    HEAD recency check. Title still TODO ("SSG XVIII -- adjuvant imatinib 3y vs
+    1y in GIST (TODO: confirm citation)"). Stub-backfill required before recency
+    assessment is meaningful. Likely citation: Joensuu et al., JAMA 2012;307(12):
+    1265-1272 (PMID 22453568, DOI 10.1001/jama.2012.347) with 10-yr update Joensuu
+    JAMA Oncol 2020;6(8):1241-1246 (PMID 32469385) -- pending clinical signoff.
+    Recorded in unreachable.yaml as no_url.'
+
+- id: SRC-COMBI-V-ROBERT-2015
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: '2026-04-29'
+  license_status: NEJM (subscription)
+  notes: 'Hosted url https://pubmed.ncbi.nlm.nih.gov/25399551 returned HTTP 403
+    on httpx HEAD (3 retries). DOI fallback (https://doi.org/10.1056/NEJMoa1412690
+    -> https://www.nejm.org/doi/10.1056/NEJMoa1412690) returned 403. PubMed
+    canonical fallback (https://pubmed.ncbi.nlm.nih.gov/25399551/) returned 403.
+    All three blocked by publisher bot-walls. Per task spec: no current_as_of
+    bump. Existing current_as_of of 2026-04-29 retained. Clinical content remains
+    current (COMBI-v BRAFi+MEKi vs vemurafenib in BRAF V600 melanoma; superseded
+    by no newer 1L head-to-head). Recorded in unreachable.yaml as blocked.'
+
+- id: SRC-ALEX-PETERS-2017
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: '2026-04-29'
+  license_status: NEJM (subscription)
+  notes: 'Hosted url https://pubmed.ncbi.nlm.nih.gov/28586279 returned HTTP 403
+    on httpx HEAD (3 retries). DOI fallback (https://doi.org/10.1056/NEJMoa1704795
+    -> https://www.nejm.org/doi/10.1056/NEJMoa1704795) returned 403. PubMed
+    canonical fallback (https://pubmed.ncbi.nlm.nih.gov/28586279/) returned 403.
+    All three blocked by publisher bot-walls. Per task spec: no current_as_of
+    bump. Existing current_as_of of 2026-04-29 retained. Clinical content remains
+    current (ALEX phase-3 alectinib vs crizotinib in 1L ALK+ NSCLC; final analysis
+    Mok 2020 Ann Oncol). Recorded in unreachable.yaml as blocked.'
+
+- id: SRC-SOLO1-MOORE-2018
+  url_verified: 'no'
+  content_current: 'yes'
+  proposed_current_as_of: '2018-12-27'
+  license_status: NEJM (subscription)
+  notes: 'Hosted url https://www.nejm.org/doi/full/10.1056/NEJMoa1810858 returned
+    HTTP 403 on httpx HEAD (3 retries). DOI fallback (https://doi.org/10.1056/NEJMoa1810858
+    -> https://www.nejm.org/doi/10.1056/NEJMoa1810858) returned 403. PubMed
+    canonical fallback (https://pubmed.ncbi.nlm.nih.gov/30345884/) returned 403.
+    All three blocked by publisher bot-walls. Per task spec: no current_as_of
+    bump. Existing current_as_of of 2018-12-27 retained (note: pre-existing
+    stale value, predates wave-1 refresh window). Clinical content remains
+    current (SOLO-1 phase-3 olaparib maintenance in BRCA-mutant 1L advanced
+    ovarian; durable benefit confirmed in DiSilvestro JCO 2023 7-yr update).
+    Recommend maintainer browser-verify and bump current_as_of to chunk-run
+    date once accessibility confirmed. Recorded in unreachable.yaml as blocked.'

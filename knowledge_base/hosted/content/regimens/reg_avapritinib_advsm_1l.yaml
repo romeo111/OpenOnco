@@ -50,6 +50,42 @@ sources:
   - SRC-NCCN-SM-2025
   - SRC-ONCOKB
 
+# Patient between-visit watchpoints (PATIENT_MODE_SPEC §3.4).
+# Avapritinib for advanced systemic mastocytosis (KIT D816V+).
+# Boxed warning: intracranial hemorrhage at low platelets; cognitive
+# AEs and cerebral microbleeds dominant signals. STUB pending §6.1.
+between_visit_watchpoints:
+  - trigger_ua: "Помірна нудота, помірна втома"
+    action_ua: "Очікувано — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Періорбітальні набряки (опухлі повіки)"
+    action_ua: "Очікувано від аваприніб — занотовуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Зміни пам'яті, концентрації, настрою, сплутаність"
+    action_ua: "Подзвоніть у клініку того ж дня — когнітивний побічний ефект, можлива пауза в препараті"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Раптовий сильний головний біль, проблеми із зором, слабкість в одній стороні тіла"
+    action_ua: "Звертайтесь у лікарню негайно — підозра на внутрішньомозковий крововилив"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Кровотеча з ясен, з носа, синці без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія підвищує ризик крововиливу"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-SM-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
 last_reviewed: "2026-04-27"
 notes: >
   EXPLORER (Gotlib NEJM 2023) + PATHFINDER (DeAngelo Nat Med 2023):

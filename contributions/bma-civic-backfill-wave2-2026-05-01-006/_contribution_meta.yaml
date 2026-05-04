@@ -1,0 +1,25 @@
+_contribution:
+  chunk_id: bma-civic-backfill-wave2-2026-05-01-006
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  ai_model_version: 1m-context
+  ai_session_notes: 'Wave-2 BMA-CIViC backfill — closes #187. Pattern mirrors
+    closed bma-civic-backfill-2026-04-29-001..020 (issue #43). Local CIViC
+    snapshot 2026-04-25 reused (no newer snapshot available yet). Wave-2
+    applied a stricter four-gate check (disease context, biomarker alteration,
+    therapy, evidence direction) per issue body; result: 0 of 5 manifest IDs
+    passed all four gates. Audit-report.yaml records per-ID verdict and
+    reasoning. The chunk-spec invention prohibition forbids attaching CIViC
+    items that fail alteration or therapy gates even when gene + disease match;
+    PMS2-endometrial is documented as the borderline case
+    (EID1832: somatic R315* with empty therapies list).'
+  tasktorrent_version: 2026-05-01-wave2
+  notes_for_reviewer: 'Report-only chunk: no upsert sidecars. All 5 BMAs remain
+    with evidence_sources: [] and actionability_review_required: true on master.
+    Maintainer call: (1) ingest non-CIViC primary sources (KEYNOTE-158, GARNET,
+    RUBY, KEYNOTE-859, AIM-trial, etc.) as source stubs, then attach via a
+    follow-up source-ingest chunk; or (2) wait for CIViC to curate
+    germline-LOF + therapy items for these gene/disease pairs. Re-attempt
+    backfill in a future wave once a newer CIViC snapshot is available.'

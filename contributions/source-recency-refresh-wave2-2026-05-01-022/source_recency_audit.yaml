@@ -1,0 +1,90 @@
+_contribution:
+  chunk_id: source-recency-refresh-wave2-2026-05-01-022
+  contributor: claude-anthropic-internal
+  submission_date: '2026-05-01'
+  ai_tool: claude-code
+  ai_model: claude-opus-4-7
+  notes_for_reviewer: 'Per-source audit table required by issue #224. One row
+    per manifest ID with url_verified, content_current, proposed_current_as_of,
+    license_status, notes. Zero rows propose upsert this wave; see
+    unreachable.yaml for the structured failure list and refresh_summary.yaml
+    for aggregate counts.'
+rows:
+  - id: SRC-FIGHT
+    url_verified: 'no'
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+      review_status: pending_clinical_signoff). Title still contains "TODO:
+      confirm phase/citation"; no top-level url field. Per chunk-brief rule
+      "No URL → unreachable", flagged unreachable.no_url. Multiple FIGHT
+      trials exist for bemarituzumab (FIGHT phase-2 NCT03694522 Wainberg
+      Lancet Oncol 2022; FIGHT-102 phase-3 active); resolving the correct
+      primary citation is stub-resolution work and out of scope for a
+      recency refresh. Defer to a stub-resolution chunk to seed
+      url/doi/pmid before the next recency wave.'
+  - id: SRC-VOYAGER
+    url_verified: 'no'
+    content_current: unknown
+    proposed_current_as_of: null
+    license_status: pending
+    notes: 'Hosted YAML is an auto-stub (drafted_by: claude_extraction;
+      review_status: pending_clinical_signoff). Title still contains "TODO:
+      confirm citation"; no top-level url field. Per chunk-brief rule
+      "No URL → unreachable", flagged unreachable.no_url. VOYAGER phase-3
+      (NCT03465722) compared avapritinib vs regorafenib in 3L+ GIST and
+      missed its primary PFS endpoint (Kang et al., J Clin Oncol 2021;
+      PMID 34758703 / DOI 10.1200/JCO.21.01007 candidate); resolving the
+      correct primary citation is stub-resolution work and out of scope
+      for a recency refresh. Defer to a stub-resolution chunk to seed
+      url/doi/pmid before the next recency wave.'
+  - id: SRC-RESPONSE-VANNUCCHI-2015
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://www.nejm.org/doi/full/10.1056/NEJMoa1409002 → 403.
+      DOI fallback https://doi.org/10.1056/NEJMoa1409002 redirected to
+      nejm.org canonical → 403. PubMed canonical fallback
+      https://pubmed.ncbi.nlm.nih.gov/25629741/ → 403. NCBI + NEJM both
+      gate non-browser HEAD requests. Hosted YAML metadata complete
+      (PMID 25629741, DOI, NEJM 2015, last_verified 2026-04-27,
+      legal_review.status: reviewed). RESPONSE phase-3 is the established
+      basis for ruxolitinib 2L PV (HU-resistant/intolerant) — content
+      remains current; long-term follow-up (Kiladjian Lancet Haematol
+      2020) reaffirmed durable Hct/spleen control. Maintainer
+      browser-verify recommended; unreachable status reflects probe
+      limitation, not stale evidence.'
+  - id: SRC-MONARCH-2-SLEDGE-2017
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://pubmed.ncbi.nlm.nih.gov/28580882 → 403.
+      DOI fallback https://doi.org/10.1200/JCO.2017.73.7585 redirected
+      via doi.org → ascopubs.org canonical → 403. PubMed canonical
+      fallback (same URL, trailing slash) → 403. NCBI + ASCO publisher
+      bot-blocking. Hosted YAML metadata complete (PMID 28580882, DOI,
+      JCO 2017, last_verified 2026-04-27, legal_review.status: reviewed).
+      MONARCH-2 phase-3 (NCT02107703) is the basis for FDA approval of
+      abemaciclib + fulvestrant in HR+/HER2- ABC; OS update (Sledge
+      JAMA Oncol 2019/2020) reaffirmed survival benefit (mOS 46.7 vs
+      37.3 mo). Content remains current. Maintainer browser-verify
+      recommended.'
+  - id: SRC-IMC-HTLV-2017
+    url_verified: 'no'
+    content_current: 'yes'
+    proposed_current_as_of: null
+    license_status: subscription_required
+    notes: 'HEAD https://ascopubs.org/doi/10.1200/JCO.18.00501 → 403.
+      DOI fallback https://doi.org/10.1200/JCO.18.00501 redirected via
+      doi.org → ascopubs.org canonical → 403. PubMed canonical fallback
+      https://pubmed.ncbi.nlm.nih.gov/30657736/ → 403. ASCO + NCBI
+      publisher bot-blocking. Hosted YAML metadata complete (PMID
+      30657736, DOI, JCO 2019 print of 2017 IMC, last_verified
+      2026-04-27, legal_review.status: reviewed). Cook et al. revised
+      ATL international consensus is the primary HTLV/ATL authority for
+      the PTCL vertical; remains the current full document (no later
+      international consensus published to date). Content remains
+      current. Maintainer browser-verify recommended.'

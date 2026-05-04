@@ -1,0 +1,69 @@
+id: DIS-TESTICULAR-GCT
+names:
+  preferred: "Testicular germ cell tumor (GCT)"
+  ukrainian: "Герміногенна пухлина яєчка"
+  english: "Testicular germ cell tumor"
+  synonyms:
+    - "Testicular cancer"
+    - "Germ cell tumor (GCT)"
+    - "Seminoma"
+    - "Non-seminomatous germ cell tumor (NSGCT)"
+    - "Testicular mixed GCT"
+
+codes:
+  icd_o_3_morphology: "9061/3"
+  icd_o_3_topography: ["C62.0", "C62.1", "C62.9"]
+  icd_10: "C62.9"
+  who_classification: "WHO Urinary and Male Genital Tumours 5th ed (2022): Germ cell tumours"
+
+archetype: stage_driven
+oncotree_code: TGCT
+lineage: "germ_cell"
+
+histological_subtypes:
+  - subtype: "Seminoma (pure)"
+    frequency: "~50-55% of GCTs"
+    characteristics: "Late peak (30-40s); AFP never elevated (AFP+ → reclassify as NSGCT); hCG may be mildly elevated; highly radiosensitive; highly chemosensitive; overall excellent prognosis"
+  - subtype: "Non-seminomatous GCT (NSGCT)"
+    frequency: "~45-50%"
+    characteristics: "Earlier peak (20-30s); includes embryonal carcinoma, yolk sac tumor, choriocarcinoma, teratoma, and mixed; AFP and/or hCG elevated in most; teratoma is chemoresistant (requires RPLND); pure choriocarcinoma very aggressive but rare"
+  - subtype: "Mixed GCT (seminoma + non-seminoma components)"
+    frequency: "Included in NSGCT category if any non-seminomatous element present"
+    characteristics: "Treated as NSGCT"
+
+staging_system: "TNM 8th edition (AJCC) + IGCCC risk classification for metastatic disease"
+
+tumor_markers:
+  - name: "AFP (alpha-fetoprotein)"
+    role: "Produced by yolk sac element; NEVER elevated in pure seminoma; if elevated → NSGCT regardless of histology; half-life ~5-7 days"
+  - name: "Beta-hCG (human chorionic gonadotropin)"
+    role: "Produced by syncytiotrophoblasts (choriocarcinoma primarily); may be mildly elevated in seminoma (~10-20%); very high in choriocarcinoma; half-life ~24-36h"
+  - name: "LDH (lactate dehydrogenase)"
+    role: "Non-specific bulk marker; included in IGCCC risk stratification"
+
+key_molecular_alterations:
+  - "Isochromosome 12p [i(12p)] — present in >90% of all GCTs; highly specific; diagnostic utility"
+  - "KIT mutation — in ~25-30% of seminoma (tyrosine kinase; imatinib investigated but not standard)"
+  - "Generally do NOT have EGFR/KRAS/BRAF driver mutations — unlike epithelial cancers"
+
+actionable_biomarkers: []
+
+prognosis:
+  stage_1_cure_rate: "~99% with orchiectomy + surveillance or adjuvant therapy"
+  metastatic_good_risk_5y: "~92%"
+  metastatic_poor_risk_5y: "~50%"
+
+notes: >
+  Testicular GCT is the most common solid tumor in men aged 15-35 and one
+  of the most curable cancers even at metastatic stage (BEP-based chemotherapy
+  cures ~80-92% of metastatic good/intermediate-risk GCT; ~50% poor-risk).
+  Early diagnosis via self-examination + ultrasound is critical.
+  All staging workup requires serum AFP, beta-hCG, LDH at diagnosis and
+  post-orchiectomy to determine marker trajectory.
+  RPLND (retroperitoneal lymph node dissection) is used for: residual masses
+  after chemotherapy (seminoma → PET-guided; NSGCT → surgery for >1cm residual),
+  pathologic stage I NSGCT surveillance-alternative.
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
