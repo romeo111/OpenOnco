@@ -1,0 +1,61 @@
+id: REG-SELPERCATINIB-DTC
+name: "Selpercatinib monotherapy — RET fusion-positive differentiated thyroid cancer"
+name_ua: "Селперкатиніб — RET-fusion+ диференційований рак щитоподібної залози"
+alternate_names: ["RETEVMO thyroid", "LOXO-292 DTC", "selpercatinib DTC", "LIBRETTO-001 thyroid"]
+
+components:
+  - drug_id: DRUG-SELPERCATINIB
+    dose: "160 mg PO BID (adults)"
+    schedule: "Continuous daily dosing; approximately every 12 hours"
+    route: PO
+    notes: >
+      Continue until disease progression or unacceptable toxicity. No planned treatment
+      discontinuation. Take consistently with or without food. Avoid strong CYP3A4
+      inhibitors/inducers. QTc monitoring required; hold for QTc >500ms.
+
+cycle_length_days: 28
+number_of_cycles: "Continuous until progression or unacceptable toxicity"
+
+premedications: []
+
+supportive_care:
+  - "TSH, free T4: baseline and q8-12 weeks (hyperthyroidism/hypothyroidism risk)"
+  - "LFTs (ALT/AST/bilirubin): baseline, weeks 2, 4, 8, 12, then q4 weeks"
+  - "Blood pressure: baseline and each visit (hypertension common)"
+  - "ECG with QTc: baseline, after dose increases, periodically (QTc prolongation)"
+  - "Calcium: baseline and periodically (hypocalcemia)"
+  - "CBC: baseline and periodically"
+  - "Pregnancy test before starting (embryofetal toxicity)"
+
+dose_modifications:
+  - toxicity: "ALT/AST 3-5x ULN (Grade 2)"
+    action: "Hold; restart at same dose when resolved to Grade ≤1"
+  - toxicity: "ALT/AST >5x ULN (Grade 3-4)"
+    action: "Hold; restart at reduced dose (120 mg BID) when resolved to Grade ≤1; permanently discontinue if recurrence"
+  - toxicity: "QTc >500ms or >60ms prolongation from baseline"
+    action: "Hold; identify/correct contributing factors; restart at 120 mg BID when resolved to ≤480ms"
+  - toxicity: "Hypertension Grade 3"
+    action: "Hold; optimize antihypertensives; restart at reduced dose when controlled"
+  - toxicity: "Hypersensitivity / pneumonitis Grade 2"
+    action: "Hold; if Grade 3-4, permanently discontinue"
+
+special_requirements:
+  - "RET fusion confirmed by validated molecular assay (NGS or FISH) BEFORE starting"
+  - "RAI-refractory or otherwise systemic therapy indicated"
+  - "Avoid strong CYP3A4 inhibitors (azoles, clarithromycin) and strong inducers (rifampin, phenytoin)"
+  - "Avoid proton pump inhibitors if possible (gastric pH reduces absorption); use antacids if needed >2h apart"
+  - "Contraception: females and males of reproductive potential during and 1 week after last dose"
+
+sources:
+  - SRC-NCCN-THYROID-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  LIBRETTO-001 (Wirth LJ et al. NEJM 2020; updated Subbiah 2021): n=55 previously treated
+  RET fusion-positive thyroid cancer (DTC histologies: papillary, follicular, Hurthle cell).
+  ORR 79% (95% CI 64-90%); median DOR not reached at median follow-up 18.4 months; 1-year DOR
+  rate 64%. FDA approved May 8, 2020 for RET fusion-positive thyroid cancer.
+  NCCN Thyroid 2025: Category 1 preferred for RET fusion+ DTC.
+  Same dose (160 mg BID) used across all RET-driven tumors (MTC, DTC, NSCLC).

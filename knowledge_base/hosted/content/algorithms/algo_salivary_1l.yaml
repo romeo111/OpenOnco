@@ -2,9 +2,13 @@ id: ALGO-SALIVARY-1L
 applicable_to_disease: DIS-SALIVARY
 applicable_to_line_of_therapy: 1
 purpose: >
-  Palliative 1L for metastatic / recurrent salivary gland carcinoma without actionable receptor (HER2+, AR+, NTRK fusion).
+  1L systemic therapy for metastatic/recurrent salivary gland carcinoma.
+  Biomarker-gated preferred track: NTRK fusion (Cat 1; larotrectinib) for secretory
+  carcinoma and rare other subtypes. Default: paclitaxel+carboplatin cytotoxic chemotherapy.
+  Obtain HER2 IHC+FISH and AR IHC at diagnosis for 2L planning.
 
 output_indications:
+  - IND-SALIVARY-NTRK-LAROTRECTINIB
   - IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
 
 default_indication: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
@@ -12,10 +16,43 @@ default_indication: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
 decision_tree:
   - step: 1
     evaluate:
-      any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
-    branch_target: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+      all_of:
+        - condition: "NTRK1/2/3 gene fusion confirmed by NGS (IHC pan-TRK screen + NGS confirmation acceptable)"
+    if_true:
+      result: IND-SALIVARY-NTRK-LAROTRECTINIB
+      notes: >
+        NCCN Cat 1. Larotrectinib tumor-agnostic approval (FDA 2018); ORR ~75% in NTRK fusion+
+        solid tumors. In salivary, secretory carcinoma (MASC) carries ETV6-NTRK3 fusion in up
+        to 90% — test all secretory carcinoma routinely. Non-secretory subtypes: NTRK fusion
+        rate <5% but should still be tested given high ORR if positive.
+    if_false:
+      next_step: 2
+    notes: "NTRK testing is mandatory at diagnosis for all salivary gland carcinomas per NCCN."
 
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "Adequate organ function"
+    if_true:
+      result: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+      notes: >
+        Paclitaxel 175mg/m² + carboplatin AUC 5 Q21D. Standard cytotoxic 1L for salivary gland
+        carcinoma without actionable mutation. ORR typically 30-50% in retrospective series;
+        no large randomized trial. HER2+ patients: T-DXd preferred 2L (IND-SALIVARY-HER2-TDXD).
+    if_false:
+      result: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO
+      notes: "ECOG 3-4: dose-reduce carboplatin; MDT required. ECOG 4: BSC discussion."
+
+sources:
+  - SRC-NCCN-SALIVARY-2025
+last_reviewed: "2026-05-04"
 reviewer_signoffs: 0
+drafted_by: claude_extraction
 notes: >
-  STUB scaffold. Single-branch algorithm.
+  UPDATED 2026-05-04 (Workstream EC): Added NTRK gate at step 1 for larotrectinib
+  (Cat 1; enriched in secretory carcinoma/MASC with ETV6-NTRK3 up to 90%).
+  2L planning: obtain HER2 IHC+FISH (T-DXd DESTINY-PanTumor02 ORR 61% in HER2+ salivary;
+  IND-SALIVARY-HER2-TDXD authored) and AR IHC (androgen deprivation for AR+ salivary duct).
+  Default: IND-SALIVARY-PALLIATIVE-PACLITAXEL-CARBO (cytotoxic 1L for mutation-negative).
+  AR-directed therapy (enzalutamide/leuprolide) and HER2-directed 2L: out-of-scope for 1L algo.

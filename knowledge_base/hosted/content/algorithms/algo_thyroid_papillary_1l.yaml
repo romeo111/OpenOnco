@@ -2,9 +2,16 @@ id: ALGO-THYROID-PAPILLARY-1L
 applicable_to_disease: DIS-THYROID-PAPILLARY
 applicable_to_line_of_therapy: 1
 purpose: >
-  Select 1L systemic therapy for RAI-refractory progressive PTC. Trigger: RECIST progression OR symptomatic disease that cannot be controlled by surgery/RAI/RT.
+  Select 1L systemic therapy for RAI-refractory progressive differentiated thyroid cancer
+  (DTC; papillary, follicular, Hurthle cell, poorly differentiated). Trigger: RECIST
+  progression OR symptomatic disease not controllable by surgery/RAI/RT.
+  Biomarker-gated preferred tracks (all require molecular profiling at diagnosis):
+  RET fusion (Cat 1) > NTRK fusion (Cat 1) > BRAF V600E (Cat 2A) > lenvatinib (Cat 1 default).
 
 output_indications:
+  - IND-THYROID-PAPILLARY-RET-FUSION-SELPERCATINIB
+  - IND-THYROID-PAPILLARY-NTRK-LAROTRECTINIB
+  - IND-THYROID-PAPILLARY-BRAF-V600E-DABTRAM
   - IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
 
 default_indication: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
@@ -12,10 +19,73 @@ default_indication: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
 decision_tree:
   - step: 1
     evaluate:
-      any_of:
-        - condition: "ECOG 0-2 AND advanced/unresectable/metastatic"
-    branch_target: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+      all_of:
+        - condition: "RET gene fusion confirmed by NGS or FISH"
+    if_true:
+      result: IND-THYROID-PAPILLARY-RET-FUSION-SELPERCATINIB
+      notes: >
+        NCCN Cat 1 preferred. Selpercatinib 160mg PO BID — highest ORR in RET fusion+ DTC.
+        LIBRETTO-001: ORR 79%, median DOR not reached. FDA approved May 2020.
+        Prioritized over all other systemic options when RET fusion confirmed.
+    if_false:
+      next_step: 2
+    notes: "RET fusion prevalence ~10-20% in PTC; enriched in radiation-associated PTC. NGS required."
 
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "NTRK1/2/3 gene fusion confirmed by NGS (or IHC pan-TRK screen + NGS confirmation)"
+    if_true:
+      result: IND-THYROID-PAPILLARY-NTRK-LAROTRECTINIB
+      notes: >
+        NCCN Cat 1. Larotrectinib (tumor-agnostic FDA approval 2018) — ORR 75% in NTRK fusion+
+        solid tumors including thyroid. ETV6-NTRK3 fusions enriched in radiation-associated PTC.
+        Preferred over BRAF inhibition and lenvatinib when NTRK fusion confirmed.
+    if_false:
+      next_step: 3
+    notes: "NTRK fusion prevalence ~2-5% in PTC; higher in post-radiation PTC."
+
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "BRAF V600E confirmed by PCR or NGS"
+        - condition: "No prior BRAF/MEK inhibitor therapy"
+    if_true:
+      result: IND-THYROID-PAPILLARY-BRAF-V600E-DABTRAM
+      notes: >
+        NCCN Cat 2A. Dabrafenib+trametinib — ORR 54%, mPFS 14.4 months in BRAF V600E DTC
+        (ROAR basket). Preferred over lenvatinib for BRAF V600E when fitness adequate.
+        Alternative if patient prefers oral-only therapy or lenvatinib intolerant.
+    if_false:
+      next_step: 4
+    notes: "BRAF V600E present in ~40-60% of classical PTC; BRAF V600E does NOT preclude lenvatinib if inhibitor therapy unsuitable."
+
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "Adequate organ function for VEGFR TKI (BP controlled, no active fistula)"
+    if_true:
+      result: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+      notes: >
+        NCCN Cat 1. Lenvatinib 24mg PO QD (SELECT trial; mPFS 18.3 vs 3.6 months; HR 0.21).
+        Standard of care for RAI-refractory DTC without actionable mutation, or when
+        targeted therapy inaccessible. Hypertension, proteinuria, hepatotoxicity monitoring.
+    if_false:
+      result: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB
+      notes: "ECOG 3-4 or poor organ function: reduced-dose lenvatinib (14mg QD); MDT required for ECOG 4."
+
+sources:
+  - SRC-NCCN-THYROID-2025
+last_reviewed: "2026-05-04"
 reviewer_signoffs: 0
+drafted_by: claude_extraction
 notes: >
-  STUB scaffold. Single-branch algorithm.
+  UPDATED 2026-05-04 (Workstream EC): Expanded from STUB (single-branch lenvatinib) to
+  4-step biomarker-gated algorithm.
+  New indications: IND-THYROID-PAPILLARY-RET-FUSION-SELPERCATINIB (Cat 1; LIBRETTO-001;
+  ORR 79%), IND-THYROID-PAPILLARY-NTRK-LAROTRECTINIB (Cat 1; ORR 75% basket),
+  IND-THYROID-PAPILLARY-BRAF-V600E-DABTRAM (Cat 2A; ROAR; ORR 54%).
+  Default: IND-THYROID-PAPILLARY-RAI-REFRACTORY-LENVATINIB (Cat 1; SELECT; HR 0.21).
+  Priority: RET > NTRK > BRAF V600E > lenvatinib.
+  Molecular testing (NGS panel) at diagnosis is mandatory for optimal routing.
