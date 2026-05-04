@@ -12,6 +12,7 @@ purpose: >
   switches.
 
 output_indications:
+  - IND-PMF-2L-PACRITINIB
   - IND-PMF-MOMELOTINIB-ANEMIA
   - IND-PMF-2L-FEDRATINIB
   - IND-PMF-ALLOHCT-HIGH-RISK
@@ -40,7 +41,30 @@ decision_tree:
     if_true:
       result: IND-PMF-ALLOHCT-HIGH-RISK
     if_false:
+      next_step: 21
+
+  # Step 21 — severe thrombocytopenia gate (plt <50×10⁹/L):
+  # pacritinib (Vonjo) is the ONLY approved JAKi for this population.
+  # Ruxolitinib and fedratinib are contraindicated at plt <50 (JAK1-driven
+  # myelosuppression); momelotinib has dose adjustments but is not specifically
+  # approved. Pacritinib has minimal JAK1 activity — effective JAK2 blockade
+  # without worsening thrombocytopenia.
+  # PERSIST-2 (Harrison 2018 JAMA Oncol): plt <50K subgroup SVR35 23% vs 3%
+  # BAT; TSS50 36% vs 9%. FDA accelerated approval Feb 2022. NCCN Cat 1.
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "Platelet count <50×10⁹/L (severe thrombocytopenia)"
+    if_true:
+      result: IND-PMF-2L-PACRITINIB
+      notes: >
+        Severe thrombocytopenia (plt <50K): pacritinib 200 mg PO BID
+        (REG-PACRITINIB-PMF; PERSIST-2; FDA Feb 2022; NCCN Cat 1).
+        Pacritinib is the ONLY JAKi approved and validated in this subpopulation.
+        Ukraine: not registered; named-patient/compassionate-use required.
+    if_false:
       next_step: 3
+    notes: "Step 21 added 2026-05-04 (Workstream CT): plt <50K gate — pacritinib wired as dedicated Indication IND-PMF-2L-PACRITINIB. Gap CLOSED per algo_pmf_2l notes (pacritinib previously annotation-only)."
 
   # Step 3 — anemia-dominant (Hgb <10 OR transfusion-dependent) →
   # momelotinib (MOMENTUM / SIMPLIFY-1: ACVR1 inhibition addresses
@@ -84,11 +108,23 @@ sources:
   - SRC-MOMENTUM-VERSTOVSEK-2023
   - SRC-JAKARTA2-HARRISON-2017
 
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
-  Pacritinib (severe thrombocytopenia, plt <50) is not yet a separate
-  Indication in KB and is surfaced as annotation only. RF-PMF-INFECTION-
-  SCREENING surfaces as annotation (HBV / TB pre-JAKi). Fedratinib
-  carries Wernicke encephalopathy risk — thiamine prophylaxis required.
-  AlloHCT eligibility (age ≤70, HCT-CI ≤4, donor) gates step 2.
+  UPDATED 2026-05-04 (Workstream CT): IND-PMF-2L-PACRITINIB authored and
+  wired at step 21 (plt <50K thrombocytopenia gate; PERSIST-2 Harrison 2018
+  JAMA Oncol; FDA Feb 2022; NCCN Cat 1). Step 2 if_false now routes to step 21
+  (pacritinib gate) before step 3 (anemia). Gap CLOSED.
+  ROUTING SUMMARY:
+  (1) blast progression → alloHCT;
+  (2) high-risk DIPSS + transplant-eligible → alloHCT;
+  (21) plt <50K → pacritinib (IND-PMF-2L-PACRITINIB; only approved JAKi for plt <50K);
+  (3) anemia-dominant (Hgb <10 / transfusion-dependent) → momelotinib;
+  (4) frailty/organ dysfunction → momelotinib;
+  (5) default non-anemic non-frail → fedratinib.
+  OOS / wiring gaps remaining:
+  (1) RF-PMF-INFECTION-SCREENING surfaces as annotation (HBV/TB pre-JAKi).
+  (2) Fedratinib: thiamine prophylaxis mandatory — boxed warning Wernicke encephalopathy.
+  (3) AlloHCT eligibility (age ≤70, HCT-CI ≤4, donor) gates step 2 — no dedicated RF.
+  (4) Pacritinib + momelotinib both inaccessible in Ukraine — access barrier documented
+      in respective IND files; MDT must address funding pathway.
   STUB — requires clinical co-lead signoff.

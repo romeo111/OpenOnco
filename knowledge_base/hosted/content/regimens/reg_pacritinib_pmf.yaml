@@ -1,0 +1,108 @@
+id: REG-PACRITINIB-PMF
+name: "Pacritinib (Vonjo) for MF with severe thrombocytopenia (plt <50K)"
+name_ua: "Пакритиніб (Vonjo) для МФ з тяжкою тромбоцитопенією (тромбоцити <50 000)"
+alternate_names:
+  - "Pacritinib mono"
+  - "PERSIST-2 regimen"
+
+components:
+  - drug_id: DRUG-PACRITINIB
+    dose: "200 mg PO twice daily (BID) with or without food"
+    schedule: "Continuous; cycles of 28 days; until progression / unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression / unacceptable toxicity"
+
+toxicity_profile: moderate
+
+premedication:
+  - "Pre-treatment HBV / HCV / HIV / TB screening — JAKi reactivation risk"
+  - "Baseline ECG (QTc) + electrolytes (K+, Mg²+)"
+  - "Baseline CBC with platelet count (q2 weeks for first 3 months)"
+  - "Loperamide on hand from day 1 — diarrhea management"
+  - "Pregnancy testing in WCBP + reliable contraception"
+
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor co-administration (azole antifungals, clarithromycin)"
+    modification: "Reduce pacritinib to 100 mg PO BID"
+    rationale: "CYP3A4 substrate — inhibitors increase systemic exposure"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Platelet count <25×10⁹/L (paradoxical worsening; ~15% of patients)"
+    modification: "Hold; resume 100 mg BID when plt ≥25K; escalate back to 200 mg BID if tolerated"
+    rationale: "Monitor CBC q2 weeks ×3 months — paradoxical thrombocytopenia in ~15%"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "QTc >500 ms or increase >60 ms from baseline"
+    modification: "Hold; correct electrolytes; resume 100 mg BID when QTc <480 ms; discontinue if persistent"
+    rationale: "QTc prolongation risk — monthly ECG first 3 months"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+  - condition: "Grade ≥3 diarrhea (not responding to loperamide)"
+    modification: "Hold; resume 100 mg BID on resolution to G≤1"
+    rationale: "GI toxicity most common AE — any grade ~55%, G3 ~12%"
+    source_refs:
+      - SRC-NCCN-MPN-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Pacritinib NOT registered in Ukraine. EMA also not approved as of 2026.
+    Named-patient import or compassionate-use pathway required. Document access
+    barrier explicitly when recommending. Significant practical constraint.
+
+sources:
+  - SRC-NCCN-MPN-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Діарея (рідкий стілець >3/день)"
+    action_ua: "Прийміть лоперамід. Якщо не допомагає за 24 год — подзвоніть у клініку"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Нудота / блювання"
+    action_ua: "Занотовуйте і повідомте лікаря — антиеметики за потребою"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Надмірні синці, петехії або кровотеча без причини"
+    action_ua: "Подзвоніть у клініку того ж дня — тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Серцебиття, запаморочення або непритомність"
+    action_ua: "Негайно зверніться до клініки або виклич швидку — подовження QTc"
+    urgency: go_to_emergency
+    sources:
+      - SRC-NCCN-MPN-2025
+  - trigger_ua: "Лихоманка вище 38°C"
+    action_ua: "Подзвоніть у клініку того ж дня — нейтропенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-CTCAE-V5
+
+last_reviewed: "2026-05-04"
+notes: >
+  JAK2/FLT3/IRAK1 inhibitor (minimal JAK1 activity) — key pharmacology
+  enabling use in plt <50K where ruxolitinib and fedratinib are contraindicated.
+  PERSIST-2 (Harrison 2018 JAMA Oncol; plt <50K subgroup): SVR35 23% vs 3% BAT;
+  TSS50 36% vs 9%. PAC203 (Oh 2020 Blood): 200 mg BID preferred over 400 mg QD
+  for tolerability. FDA accelerated approval February 2022. No thiamine
+  requirement (unlike fedratinib — no Wernicke encephalopathy risk).
+  QTc monitoring mandatory: baseline ECG + month 1 + month 3.
+  STUB — pending Co-Lead sign-off.
+notes_ua: >
+  JAK2/FLT3/IRAK1 інгібітор (мінімальна JAK1 активність) — ключова фармакологія
+  для застосування при тромбоцитах <50 000, де руксолітиніб і федратиніб
+  протипоказані. PERSIST-2 (Harrison 2018 JAMA Oncol): SVR35 23% проти 3% НСЛ;
+  TSS50 36% проти 9% у підгрупі тромбоцити <50 000. Прискорене схвалення FDA
+  лютий 2022. Не потребує тіаміну (на відміну від федратинібу). ЕКГ моніторинг
+  обов'язковий. В Україні не зареєстрований.
+  STUB — очікує підпис Co-Lead.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
