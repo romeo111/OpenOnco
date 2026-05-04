@@ -1,0 +1,68 @@
+id: REG-PEXIDARTINIB-TGCT
+name: "Pexidartinib monotherapy (symptomatic TGCT — diffuse-type)"
+name_ua: "Пексидартиніб моно (симптоматична ТГКП — дифузний тип)"
+alternate_names:
+  - "Turalio TGCT"
+  - "ILLUMINATE regimen"
+
+components:
+  - drug_id: DRUG-PEXIDARTINIB
+    dose: "400 mg PO twice daily with a high-fat meal for first 2 weeks, then 800 mg/day total (consult current prescribing info)"
+    schedule: "Continuous until progression or unacceptable toxicity; available through REMS only"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: high
+
+premedication: []
+mandatory_supportive_care:
+  - "REMS enrollment (Turalio REMS) — mandatory in US; verify local compassionate-use approval"
+  - "LFT monitoring: AST/ALT, total/direct bilirubin, alkaline phosphatase weekly × 8 weeks, then every 2 weeks × 2 months, then monthly"
+  - "Baseline LFTs, CBC, CMP before starting"
+
+dose_adjustments:
+  - condition: "Grade 2 hepatotoxicity (AST/ALT 3–5× ULN)"
+    modification: "Hold until Grade ≤1; resume at lower dose"
+    rationale: "Hepatotoxicity is dose-dependent; early detection critical"
+    source_refs:
+      - SRC-ILLUMINATE-TAP-2019
+  - condition: "Grade ≥3 hepatotoxicity (AST/ALT >5× ULN or bilirubin elevation)"
+    modification: "Permanently discontinue"
+    rationale: "Risk of fatal liver failure (Black Box Warning)"
+    source_refs:
+      - SRC-ILLUMINATE-TAP-2019
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Pexidartinib NOT registered in Ukraine; EMA refused marketing authorization. Extremely limited access — US REMS-restricted; compassionate use via Daiichi Sankyo or named-patient import only."
+
+between_visit_watchpoints:
+  - trigger_ua: "Жовтяниця (пожовтіння шкіри або очей), темна сеча, біль у правому боці"
+    action_ua: "Зверніться до клініки того ж дня — симптоми ураження печінки"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-ILLUMINATE-TAP-2019
+  - trigger_ua: "Зміна кольору волосся (депігментація)"
+    action_ua: "Очікуваний побічний ефект — занотуйте"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-ILLUMINATE-TAP-2019
+
+sources:
+  - SRC-ILLUMINATE-TAP-2019
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  ILLUMINATE (Tap 2019 NEJM): pexidartinib vs placebo in severely symptomatic
+  TGCT (n=120). ORR 38% vs 0%; 15% CR. Significant hepatotoxicity — required
+  Black Box Warning + REMS. EMA refused approval. Reserved for adults with
+  severe, functionally debilitating TGCT not amenable to surgery improvement.
+  Weekly LFT monitoring for first 2 months is mandatory.
+notes_ua: >
+  ILLUMINATE (Tap 2019 NEJM): ORR 38% vs 0%; 15% повна відповідь. Значна
+  гепатотоксичність (BBW + REMS). EMA відмовила. Для тяжкої симптоматичної ТГКП.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

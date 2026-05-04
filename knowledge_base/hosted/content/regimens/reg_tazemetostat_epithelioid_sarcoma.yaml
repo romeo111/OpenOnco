@@ -1,0 +1,72 @@
+id: REG-TAZEMETOSTAT-EPITHELIOID-SARCOMA
+name: "Tazemetostat monotherapy (advanced epithelioid sarcoma, SMARCB1/INI1-deficient)"
+name_ua: "Таземетостат моно (поширена епітеліоїдна саркома, SMARCB1/INI1-дефіцитна)"
+alternate_names:
+  - "Tazverik epithelioid sarcoma"
+  - "EZH-202 regimen"
+
+components:
+  - drug_id: DRUG-TAZEMETOSTAT
+    dose: "800 mg PO twice daily (1600 mg/day total)"
+    schedule: "Continuous until progression or unacceptable toxicity"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Continuous until progression"
+toxicity_profile: low_moderate
+
+premedication: []
+mandatory_supportive_care:
+  - "Confirm SMARCB1/INI1 loss by IHC (diagnostic + eligibility requirement)"
+  - "Baseline CBC, CMP, LFTs"
+  - "Contraception — teratogenicity risk"
+
+dose_adjustments:
+  - condition: "Strong CYP3A4 inhibitor co-administration"
+    modification: "Reduce tazemetostat to 400 mg BID"
+    rationale: "CYP3A4 interaction significantly increases exposure"
+    source_refs:
+      - SRC-EZH202-GOUNDER-2020
+  - condition: "Grade ≥3 cytopenias"
+    modification: "Hold until ≤Grade 2; resume at 400 mg BID"
+    rationale: "Hematologic toxicity management"
+    source_refs:
+      - SRC-EZH202-GOUNDER-2020
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: "Tazemetostat NOT registered in Ukraine. Access via DEC named-patient import or EAP Ipsen Ukraine (require INI1-loss confirmation by IHC)."
+
+between_visit_watchpoints:
+  - trigger_ua: "Нова пухлина або новоутворення на шкірі"
+    action_ua: "Терміново до клініки — на тлі EZH2-інгібіції описані вторинні злоякісні пухлини"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-EZH202-GOUNDER-2020
+  - trigger_ua: "Виражена втома, блідість, задишка"
+    action_ua: "Занотуйте — може бути анемія (CBC на контролі)"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-EZH202-GOUNDER-2020
+
+sources:
+  - SRC-EZH202-GOUNDER-2020
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  EZH-202 trial (Gounder 2020 NEJM): tazemetostat in advanced epithelioid
+  sarcoma with SMARCB1/INI1 deficiency — ORR ~15%, but responses were
+  durable (DoR not reached in responders). Given the lack of alternatives
+  in this ultra-rare sarcoma, even modest ORR with durable response is
+  clinically meaningful. FDA approved January 2020 — first and only
+  FDA-approved targeted therapy for epithelioid sarcoma. Secondary
+  malignancy risk (T-LBL/AML) was observed in pediatric sarcoma trials;
+  ongoing surveillance required.
+notes_ua: >
+  EZH-202: ORR ~15%, але довготривалі відповіді. FDA схвалено 01/2020 —
+  єдина затверджена цільова терапія для епітеліоїдної саркоми.
+  Ризик вторинних злоякісних пухлин — потребує нагляду.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

@@ -1,0 +1,60 @@
+id: ALGO-GLIOMA-LGG-1L
+applicable_to_disease: DIS-GLIOMA-LOW-GRADE
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select adjuvant therapy strategy for IDH-mutant low-grade glioma (WHO
+  grade 2–3) after maximal safe resection. High-risk LGG (age ≥40 OR
+  subtotal resection OR symptomatic/large residual) receives RT + PCV or
+  RT + TMZ. Low-risk LGG (age <40, gross total resection, asymptomatic)
+  may be observed after surgery per NCCN/EANO.
+
+output_indications:
+  - IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+
+default_indication: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+alternative_indication: null
+
+decision_tree:
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "IDH-wildtype LGG with EGFR amplification / +7-10 / TERT-promoter mutation"
+    if_true:
+      result: null
+      notes: "Reclassify to GBM per WHO 5th ed. — route to ALGO-GBM-1L (Stupp protocol); NOT to LGG algorithm"
+    if_false:
+      next_step: 2
+    notes: "WHO 5th ed. molecular reclassification — critical gating step."
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "High-risk features: age ≥40 OR subtotal resection/biopsy-only OR symptomatic/large residual"
+    if_true:
+      result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+    if_false:
+      next_step: 3
+    notes: "RTOG 9802 high-risk criteria — triggers RT+PCV adjuvant therapy."
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Low-risk LGG: age <40 AND gross total resection AND asymptomatic"
+    if_true:
+      result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+      notes: "Observation after GTR is a guideline-endorsed option for low-risk LGG; RT+PCV is an alternative — clinician/patient discussion needed"
+    if_false:
+      result: IND-GLIOMA-LOW-GRADE-1L-RT-PCV
+    notes: "Default to RT+PCV for any unclassified case."
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-GBM-2024
+last_reviewed: "2026-05-04"
+notes: >
+  Key gate: IDH-wildtype LGG with EGFR amp / +7-10 / TERT-promoter = GBM
+  per WHO 5th ed. — must reroute to GBM algorithm (Stupp). High-risk
+  IDH-mutant LGG (RTOG 9802 criteria) → RT+PCV is the evidence-based
+  standard with mature OS benefit (Buckner 2016 NEJM, 10-yr OS 60% vs 40%).
+  RT+TMZ is an accepted alternative (better tolerated; CATNON, CODEL data)
+  but not encoded as separate indication (REG-RT-PCV-LGG stub; REG-RT-TMZ-LGG
+  not yet created). Low-risk LGG: observation after GTR is guideline-endorsed
+  — this algorithm defaults to RT+PCV but clinical judgment is paramount.
