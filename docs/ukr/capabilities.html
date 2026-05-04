@@ -49,7 +49,7 @@
       (CHARTER §6.1 вимагає двох Clinical Co-Lead approvals для будь-якої
       Indication, перш ніж її можна вважати «published»). Зараз — це
       proposed-plan: structured data + algorithm + sources на місці, але
-      без dual sign-off. Стан станом на <code>2026-05-03 20:27 UTC</code>.
+      без dual sign-off. Стан станом на <code>2026-05-04 10:02 UTC</code>.
       Це інструмент підтримки рішень, не медичний пристрій.
     </div>
 
@@ -60,7 +60,7 @@
         з цитатою під кожною рекомендацією.
       </h2>
       <p class="promo-sub">
-        Декларативний rule engine на <strong>65 хворобах</strong>,
+        Декларативний rule engine на <strong>72 хворобах</strong>,
         467 red flags, 343 показань, 293 режимів.
         Без LLM у клінічному рішенні, без серверу, без логів.
         Patient JSON ніколи не покидає машину.
@@ -68,7 +68,7 @@
 
       <div class="promo-stats">
         <div class="promo-stat">
-          <div class="promo-stat-num">65</div>
+          <div class="promo-stat-num">72</div>
           <div class="promo-stat-lbl">Хвороб у KB</div>
         </div>
         <div class="promo-stat">
@@ -76,7 +76,7 @@
           <div class="promo-stat-lbl">Показань</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">272</div>
+          <div class="promo-stat-num">277</div>
           <div class="promo-stat-lbl">Цитованих джерел</div>
         </div>
         <div class="promo-stat">
@@ -263,14 +263,14 @@
       <div class="num-grid num-grid--rich">
 
         <div class="num-card">
-          <div class="num-big">65</div>
+          <div class="num-big">72</div>
           <div class="num-lbl">Хвороби в KB</div>
-          <div class="num-detail">37 гематологічних · 28 солідних · 64 з повним ланцюгом · 44 мають 2L+ алгоритм</div>
+          <div class="num-detail">38 гематологічних · 34 солідних · 64 з повним ланцюгом · 44 мають 2L+ алгоритм</div>
           <p class="num-text">
             Кожна хвороба має свій <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven), що визначає логіку алгоритму вибору лікування.
-            Зараз 1L покрито для всіх 65 (67 алгоритмів),
+            Зараз 1L покрито для всіх 72 (67 алгоритмів),
             2L+ — для 34 гематологічних та 10
             солідних (46 алгоритмів).
           </p>
@@ -358,11 +358,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">272</div>
+          <div class="num-big">277</div>
           <div class="num-lbl">Джерела (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · МОЗ · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Під цими 272 джерелами — десятки тисяч primary clinical
+            Під цими 277 джерелами — десятки тисяч primary clinical
             publications (RCTs, мета-аналізи, когортні дослідження) і тисячі
             сторінок керівництв. Кожна Indication / Regimen / RedFlag цитує
             конкретні джерела з <em>position</em> (supports / contradicts /
@@ -453,7 +453,7 @@
       <p class="info-text">
         <strong>Сторінка <a href="/ukr/diseases.html"><code>/ukr/diseases.html</code></a></strong>
         — це per-disease таблиця, що показує, що наявне у KB для кожної з
-        65 хвороб. Згрупована у три родини: лімфоїдна
+        72 хвороб. Згрупована у три родини: лімфоїдна
         гематологія, мієлоїдна гематологія, солідні пухлини. Для кожної
         хвороби: counts по біомаркерах / препаратах / показаннях / режимах /
         red flags, checkmarks для алгоритмів 1L і 2L, статус анкети
@@ -940,16 +940,16 @@
     <div class="info-section">
       <h2>15. Поточне покриття — де ще STUB і чого ще немає</h2>
       <p class="info-text">
-        OpenOnco — work in progress. Зараз модельовано <strong>65
-        захворювань</strong> (37 гематологічних + 28 солідних)
+        OpenOnco — work in progress. Зараз модельовано <strong>72
+        захворювань</strong> (38 гематологічних + 34 солідних)
         — це далеко не повний WHO-HAEM5 / WHO Classification of Tumours.
         Конкретно:
       </p>
       <table class="kv-table">
         <thead><tr><th>Категорія</th><th>Стан</th><th>Що це означає</th></tr></thead>
         <tbody>
-          <tr><td>Хвороби з повним ланцюгом</td><td>64 / 65</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>183</td><td>Перша лінія покрита для всіх 65 хвороб</td></tr>
+          <tr><td>Хвороби з повним ланцюгом</td><td>64 / 72</td><td>Решта — частково модельовані; engine може видати warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>183</td><td>Перша лінія покрита для всіх 72 хвороб</td></tr>
           <tr><td>Indications 2L+</td><td>160</td><td>Друга-четверта лінія: 34 гематологічних + 10 солідних. Решта solid-tumor 2L+ — частково (CRC, breast, urothelial), не systematically.</td></tr>
           <tr><td>RedFlags</td><td>467</td><td>Cover критичні clinical scenarios для існуючих хвороб; для нових disease треба додавати</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — окремий track спеціалізації</td></tr>

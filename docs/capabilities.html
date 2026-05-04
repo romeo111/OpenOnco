@@ -51,7 +51,7 @@
       Indication before it can be considered «published»). Right now this
       is a proposed plan: structured data + algorithm + sources are in
       place, but without dual sign-off. State as of
-      <code>2026-05-03 20:27 UTC</code>. This is a decision-support
+      <code>2026-05-04 10:02 UTC</code>. This is a decision-support
       tool, not a medical device.
     </div>
 
@@ -62,7 +62,7 @@
         with a citation under every recommendation.
       </h2>
       <p class="promo-sub">
-        A declarative rule engine over <strong>65 diseases</strong>,
+        A declarative rule engine over <strong>72 diseases</strong>,
         467 red flags, 343 indications, 293 regimens.
         No LLM in the clinical decision, no server, no logs.
         The patient JSON never leaves the machine.
@@ -70,7 +70,7 @@
 
       <div class="promo-stats">
         <div class="promo-stat">
-          <div class="promo-stat-num">65</div>
+          <div class="promo-stat-num">72</div>
           <div class="promo-stat-lbl">Diseases in KB</div>
         </div>
         <div class="promo-stat">
@@ -78,7 +78,7 @@
           <div class="promo-stat-lbl">Indications</div>
         </div>
         <div class="promo-stat">
-          <div class="promo-stat-num">272</div>
+          <div class="promo-stat-num">277</div>
           <div class="promo-stat-lbl">Cited sources</div>
         </div>
         <div class="promo-stat">
@@ -266,14 +266,14 @@
       <div class="num-grid num-grid--rich">
 
         <div class="num-card">
-          <div class="num-big">65</div>
+          <div class="num-big">72</div>
           <div class="num-lbl">Diseases in KB</div>
-          <div class="num-detail">37 heme · 28 solid · 64 with full chain · 44 have 2L+ algorithm</div>
+          <div class="num-detail">38 heme · 34 solid · 64 with full chain · 44 have 2L+ algorithm</div>
           <p class="num-text">
             Each disease has its own <strong>archetype</strong>
             (etiologically_driven, risk_stratified, biomarker_driven,
             stage_driven) which determines the treatment-selection
-            algorithm. 1L is covered for all 65
+            algorithm. 1L is covered for all 72
             (67 algorithms), 2L+ — for 34 heme
             and 10 solid (46 algorithms).
           </p>
@@ -363,11 +363,11 @@
         </div>
 
         <div class="num-card num-card--accent">
-          <div class="num-big">272</div>
+          <div class="num-big">277</div>
           <div class="num-lbl">Sources (top-level guidelines + RCTs)</div>
           <div class="num-detail">NCCN · ESMO · EHA · BSH · EASL · MoH · WHO · CTCAE · FDA · CIViC (CC0)</div>
           <p class="num-text">
-            Beneath these 272 sources sit tens of thousands of
+            Beneath these 277 sources sit tens of thousands of
             primary clinical publications (RCTs, meta-analyses, cohort
             studies) and thousands of guideline pages. Each Indication /
             Regimen / RedFlag cites specific sources with <em>position</em>
@@ -459,7 +459,7 @@
       <p class="info-text">
         The page <strong><a href="/diseases.html"><code>/diseases.html</code></a></strong>
         is a per-disease table that shows what's in the KB for each of
-        65 diseases. Grouped into three families: lymphoid heme,
+        72 diseases. Grouped into three families: lymphoid heme,
         myeloid heme, solid tumours. For each disease: counts of biomarkers /
         drugs / indications / regimens / red flags, checkmarks for 1L and 2L
         algorithms, questionnaire status (real / stub / none), fill% and
@@ -956,15 +956,15 @@
       <h2>15. Current coverage — what's still STUB and what's missing</h2>
       <p class="info-text">
         OpenOnco is work-in-progress. Right now we model
-        <strong>65 diseases</strong> (37 heme + 28
+        <strong>72 diseases</strong> (38 heme + 34
         solid) — far from complete WHO-HAEM5 / WHO Classification of
         Tumours. Concretely:
       </p>
       <table class="kv-table">
         <thead><tr><th>Category</th><th>State</th><th>What it means</th></tr></thead>
         <tbody>
-          <tr><td>Diseases with full chain</td><td>64 / 65</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
-          <tr><td>Indications 1L</td><td>183</td><td>First line is covered for all 65 diseases</td></tr>
+          <tr><td>Diseases with full chain</td><td>64 / 72</td><td>The rest are partially modelled; the engine may emit a warning «no Algorithm found for disease=X»</td></tr>
+          <tr><td>Indications 1L</td><td>183</td><td>First line is covered for all 72 diseases</td></tr>
           <tr><td>Indications 2L+</td><td>160</td><td>Second to fourth line: 34 heme + 10 solid. Remaining solid-tumour 2L+ — partial (CRC, breast, urothelial), not systematic.</td></tr>
           <tr><td>RedFlags</td><td>467</td><td>Cover critical clinical scenarios for existing diseases; new diseases need their own.</td></tr>
           <tr><td>Pediatric oncology</td><td>0</td><td>Out of scope for MVP — a separate specialization track</td></tr>
