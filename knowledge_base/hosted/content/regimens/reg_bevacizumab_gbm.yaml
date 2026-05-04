@@ -1,0 +1,68 @@
+id: REG-BEVACIZUMAB-GBM
+name: "Bevacizumab monotherapy for recurrent GBM"
+name_ua: "Бевацизумаб монотерапія при рецидивуючій ГБМ"
+alternate_names: ["bevacizumab GBM recurrent", "VEGF inhibitor GBM 2L", "Avastin GBM"]
+
+components:
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "10 mg/kg"
+    schedule: "IV Q14D (every 2 weeks)"
+    route: IV
+    notes: >
+      Alternative: 15 mg/kg Q21D (Q3W). Both schedules used in GBM.
+      Infuse first dose over 90 minutes; if tolerated, subsequent doses over 60
+      then 30 minutes.
+
+cycle_length_days: 14
+number_of_cycles: "Until progression or unacceptable toxicity"
+
+premedications:
+  - "Antihistamine + acetaminophen: before first infusion"
+  - "Blood pressure check: before each infusion"
+
+supportive_care:
+  - "Blood pressure: every infusion visit and weekly (VEGFR inhibition → HTN)"
+  - "Urine protein (UPCR or dipstick): before each cycle (bevacizumab-induced proteinuria)"
+  - "CBC + coagulation: monthly (thrombosis and bleeding risk)"
+  - "Wound healing: no bevacizumab within 28 days of surgery or biopsy"
+  - "Anti-epileptic: continue existing AED regimen (GBM seizure risk)"
+
+dose_modifications:
+  - toxicity: "Grade 3 hypertension"
+    action: "Hold until controlled (BP <150/100 on antihypertensives); restart at same dose"
+  - toxicity: "Grade 4 hypertension or hypertensive crisis"
+    action: "DISCONTINUE permanently"
+  - toxicity: "UPCR >2 or Grade 3 proteinuria"
+    action: "Hold until UPCR <1; restart at same dose"
+  - toxicity: "Nephrotic syndrome (UPCR >3.5)"
+    action: "DISCONTINUE permanently"
+  - toxicity: "Grade 3-4 GI perforation, wound dehiscence, arterial thromboembolism"
+    action: "DISCONTINUE permanently"
+
+administration_notes: >
+  Bevacizumab is FDA-approved for recurrent GBM (FDA May 2009; accelerated approval).
+  VEGF-A inhibitor — reduces tumor-associated vasogenic edema (often allows
+  dexamethasone dose reduction), and has anti-angiogenic effect on GBM vasculature.
+  NOTE: Bevacizumab does NOT improve overall survival in recurrent GBM
+  (AVAglio, RTOG 0825 failed to show OS benefit in newly diagnosed GBM;
+  BELOB showed no OS benefit in recurrent GBM) — but improves PFS and QoL
+  by reducing edema and symptom burden.
+  FDA accelerated approval based on response rate and dexamethasone reduction.
+  Steroid sparing effect: major clinical benefit — reduction of dexamethasone
+  dose reduces steroid-associated toxicities (hyperglycemia, myopathy, infection).
+  Surgical considerations: hold for ≥28 days before and after major surgery;
+  craniotomy within 28 days is a relative contraindication.
+
+sources:
+  - SRC-NCCN-CNS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  FDA accelerated approval May 2009 for bevacizumab in recurrent GBM (based on
+  BRAIN Phase 2; Friedman 2009 JCO: ORR 28.2%; PFS-6 42.6%).
+  NCCN CNS: bevacizumab monotherapy or bevacizumab + chemotherapy (lomustine, TMZ)
+  are Category 2A for recurrent GBM.
+  Evidence for OS benefit is weak; indication is primarily for symptom management,
+  steroid sparing, and PFS stabilization.
+  DRUG-BEVACIZUMAB: verify KB drug file ID.

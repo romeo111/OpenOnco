@@ -1,0 +1,51 @@
+id: REG-TMZ-MONO
+name: "Temozolomide monotherapy for GBM (elderly or MGMT-methylated)"
+name_ua: "Темозоломід монотерапія при ГБМ (похилий вік або MGMT-метильований)"
+alternate_names: ["TMZ mono GBM", "temozolomide alone elderly GBM", "temozolomide 5/28"]
+
+components:
+  - drug_id: DRUG-TEMOZOLOMIDE
+    dose: "150-200 mg/m²/day"
+    schedule: "PO days 1-5 Q28D (standard 5/28 schedule)"
+    route: PO
+    notes: >
+      Dose 150 mg/m²/day cycle 1 (if no prior RT/chemo); escalate to 200 mg/m²/day
+      cycle 2+ if well tolerated (ANC ≥1.5×10⁹/L, platelets ≥100×10⁹/L).
+      Take on empty stomach 1 hour before meals. Swallow capsules whole.
+
+cycle_length_days: 28
+number_of_cycles: "6 cycles adjuvant; or until progression/toxicity"
+
+supportive_care:
+  - "TMP-SMX DS: 1 tablet PO BID 3×/week (PCP prophylaxis — MANDATORY with temozolomide)"
+  - "Anti-emetics: ondansetron + dexamethasone on days 1-5 (moderate emetogenicity)"
+  - "CBC: day 1 of each cycle (ANC + platelets before dosing)"
+  - "Dexamethasone: taper to lowest effective dose"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 neutropenia or thrombocytopenia"
+    action: "Hold until recovery to Grade ≤1; reduce dose by 50 mg/m²/day next cycle"
+  - toxicity: "Grade 4 neutropenia or platelets <50×10⁹/L"
+    action: "Discontinue if recurrent Grade 4"
+
+administration_notes: >
+  TMZ monotherapy (without concurrent RT) is used for elderly GBM patients
+  with MGMT-methylated tumors who:
+  (1) Cannot tolerate RT (functional status, comorbidities)
+  (2) Prefer chemotherapy over RT (patient preference)
+  Or as 1L for elderly/frail MGMT-methylated GBM where RT is deferred.
+  MGMT-methylation testing is REQUIRED before TMZ monotherapy selection
+  (little benefit in MGMT-unmethylated tumors without RT).
+  NOTE: TMZ monotherapy is also used in combination with hypofractionated RT
+  (REG-HYPOFRACTIONATED-RT-GBM) for MGMT-methylated elderly GBM.
+
+sources:
+  - SRC-NCCN-CNS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Perry 2017 NEJM (N=562): Elderly GBM (≥65 years) — hypoRT + TMZ vs hypoRT alone.
+  In MGMT-methylated subset: hypoRT + TMZ improves OS (9.3 vs 7.6 months).
+  TMZ monotherapy (without RT): primarily used in MGMT-methylated patients unable to
+  receive RT; limited direct evidence vs RT+TMZ for elderly, but guideline-acceptable.

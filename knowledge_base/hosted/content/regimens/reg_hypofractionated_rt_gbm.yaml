@@ -1,0 +1,47 @@
+id: REG-HYPOFRACTIONATED-RT-GBM
+name: "Hypofractionated radiotherapy for elderly GBM"
+name_ua: "Гіпофракційна радіотерапія при ГБМ у людей похилого віку"
+alternate_names: ["short-course RT GBM", "hypoRT GBM", "25Gy/5f", "40Gy/15f"]
+
+components: []  # Radiation therapy — no drug components
+
+radiation_therapy:
+  indication: "GBM in patients ≥65-70 years OR ECOG PS 2-3 unable to tolerate 6-week standard Stupp RT"
+  protocols:
+    - name: "Ultra-short course"
+      dose: "25 Gy in 5 fractions (1 week)"
+      fractionation: "5 Gy × 5 fractions"
+      duration: "5 days (1 week)"
+      patient_selection: "Age ≥70, poor ECOG, unmethylated MGMT or unknown MGMT"
+      evidence: "Perry 2017 NEJM MGMT-unmethylated elderly GBM: RT alone superior to RT+TMZ for MGMT-unmethylated"
+    - name: "Short course"
+      dose: "40 Gy in 15 fractions (3 weeks)"
+      fractionation: "2.67 Gy × 15 fractions"
+      duration: "3 weeks"
+      patient_selection: "Age ≥65-70, moderate ECOG (0-2), MGMT-methylated may benefit from adding TMZ"
+      evidence: "Roa 2004 JCO; Perry 2017 NEJM elderly GBM trial"
+
+concurrent_systemic:
+  - "Temozolomide: add 75 mg/m²/day concurrent if MGMT-methylated (improves OS per Perry 2017; NCCN Cat 1)"
+  - "Dexamethasone: taper to lowest effective dose during RT (edema management)"
+  - "Anti-epileptic: levetiracetam preferred (no CYP3A4 interactions)"
+
+administration_notes: >
+  Hypofractionated RT is recommended for elderly GBM (≥65-70) or poor PS patients
+  who cannot tolerate the standard 6-week Stupp protocol (60 Gy/30f + TMZ).
+  MGMT methylation status guides adjuvant temozolomide decision:
+  - MGMT-methylated: add concurrent + adjuvant TMZ (OS benefit; Perry 2017)
+  - MGMT-unmethylated: RT alone may be sufficient; TMZ benefit less clear
+  Radiation therapy must be delivered at a center with radiotherapy planning
+  capability (3D-CRT or IMRT; MRI-based planning preferred).
+
+sources:
+  - SRC-NCCN-CNS-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Hypofractionated RT for elderly GBM: Perry 2017 NEJM (N=562; age ≥65): RT alone
+  vs RT+TMZ (40 Gy/15f); OS 7.4 vs 9.3 months overall; MGMT-methylated: TMZ benefit.
+  Also Swedish 25 Gy/5f protocol (Malmstrom 2012 Lancet Oncol).
+  SRC-NCCN-CNS-2025: verify ID exists in KB.

@@ -1,0 +1,44 @@
+id: REG-NIVO-CHEMO-ESCC
+name: "Nivolumab + cisplatin + 5-FU for esophageal squamous cell carcinoma (ESCC) 1L"
+name_ua: "Ніволумаб + цисплатин + 5-ФУ при плоскоклітинній карциномі стравоходу (ESCC) 1L"
+alternate_names: ["CheckMate-648 regimen", "nivolumab + platinum-5FU ESCC"]
+
+components:
+  - drug_id: DRUG-NIVOLUMAB
+    dose: "360 mg"
+    schedule: "IV Q21D (day 1 of each cycle)"
+    route: IV
+    notes: "Fixed flat dose; infuse over 30 minutes"
+  - drug_id: DRUG-CISPLATIN
+    dose: "80 mg/m²"
+    schedule: "IV day 1 Q21D"
+    route: IV
+    notes: "Pre-hydration mandatory (1-2 L NS over 1-2 hours before cisplatin); 2-4 L NS after"
+  - drug_id: DRUG-FLUOROURACIL
+    dose: "800 mg/m²/day"
+    schedule: "CI IV days 1-5 Q21D"
+    route: IV
+    notes: "Continuous 24-hour IV infusion via central line; fluorouracil toxidrome monitoring"
+
+cycle_length_days: 21
+number_of_cycles: "4-6 cycles of combination; then nivolumab 480 mg Q4W maintenance until progression"
+
+premedications:
+  - "Antiemetics: 5-HT3 antagonist + dexamethasone + NK-1 inhibitor (cisplatin = highly emetogenic)"
+  - "Hydration: 1-2 L NS IV before cisplatin; 2-4 L NS after (cisplatin nephrotoxicity)"
+  - "Magnesium supplementation: during/after cisplatin (cisplatin magnesium wasting)"
+
+supportive_care:
+  - "G-CSF: secondary prophylaxis if Grade 3-4 neutropenia in prior cycle"
+  - "Thyroid function (TSH): Q3 months on nivolumab maintenance"
+  - "CBC + CMP: before each cycle"
+
+sources:
+  - SRC-NCCN-ESOPHAGEAL-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  Based on CheckMate-648 (Doki 2022 NEJM; N=970): nivolumab + chemo vs chemo alone
+  in ESCC 1L. mOS 13.2 vs 10.7 months (all-comers); HR 0.74 (p<0.001) in PD-L1 CPS ≥1.
+  FDA approval May 2022. NCCN Cat 1 for ESCC 1L.
