@@ -1,15 +1,43 @@
 id: ALGO-ESOPH-2L
 applicable_to_disease: DIS-ESOPHAGEAL
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+ metastatic esophageal carcinoma Indication. Two ICI tracks modeled: (1) squamous histology → nivolumab monotherapy (ATTRACTION-3, biomarker-agnostic for ESCC); (2) adenocarcinoma OR squamous + PD-L1 CPS ≥10 → pembrolizumab monotherapy (KEYNOTE-181). Adenocarcinoma + CPS <10 routes to gastric-style ramucirumab+paclitaxel (not separately modeled — covered via DIS-GASTRIC pathway when histology is GEJ Siewert I-II adeno; pure esophageal adeno + CPS<10 surfaced as free-text in trace).
+purpose: 'Select 2L+ metastatic esophageal carcinoma Indication. Three tracks: (0) HER2 IHC 3+ adenocarcinoma + prior trastuzumab → T-DXd (DESTINY-Gastric01/02; NCCN Cat 1); (1) PD-L1 CPS ≥10 + ICI-naive → pembrolizumab mono (KEYNOTE-181); (2) squamous + ICI-naive → nivolumab mono (ATTRACTION-3). Adenocarcinoma + CPS <10 + HER2-negative → gastric-style pac+ram (not separately modeled; refer to ALGO-GASTRIC-2L).
 
   '
 output_indications:
 - IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
+- IND-ESOPH-METASTATIC-2L-HER2-TDXD
 default_indication: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 alternative_indication: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 decision_tree:
+  # Step 0 — HER2 IHC 3+ adenocarcinoma + prior trastuzumab → T-DXd.
+  # DESTINY-Gastric01/02 established T-DXd 6.4 mg/kg as standard 2L for HER2+
+  # gastric/GEJ after trastuzumab failure. Esophageal adeno at GEJ (Siewert I-III)
+  # included in DESTINY-Gastric trials. NCCN Esophageal 2025 Category 1.
+  # Pure esophageal (non-GEJ) HER2 3+: tumor-agnostic DESTINY-PanTumor02 applies
+  # at 5.4 mg/kg (alternative regimen). Mandatory CT chest baseline (ILD monitoring).
+- step: 0
+  evaluate:
+    all_of:
+    - condition: "HER2 IHC 3+ confirmed (reconfirmed at progression — re-biopsy if possible)"
+    - condition: "Adenocarcinoma histology (esophageal or GEJ; NOT squamous cell carcinoma)"
+    - condition: "Prior 1L trastuzumab-containing regimen (ToGA-type; disease progression)"
+    - red_flag: RF-FITNESS-ECOG-FIT
+    - none_of:
+      - condition: "Prior T-DXd or other HER2 ADC therapy"
+      - condition: "Active ILD/pneumonitis Grade ≥2 (baseline)"
+  if_true:
+    result: IND-ESOPH-METASTATIC-2L-HER2-TDXD
+    notes: >
+      HER2 IHC 3+ adenocarcinoma + prior trastuzumab + ECOG 0-1 + ILD-free:
+      T-DXd 6.4 mg/kg q3w (REG-TDXD-GASTRIC). NCCN Esophageal 2025 Cat 1.
+      DESTINY-Gastric02: ORR 38%; PFS 5.6 mo; OS 12.1 mo.
+      CRITICAL: mandatory CT chest baseline + q2 cycles × 6 (ILD risk ~15%).
+      HER2 must be reconfirmed on recent biopsy — HER2 loss under trastuzumab occurs.
+  if_false:
+    next_step: 1
+  notes: "HER2 T-DXd gate added 2026-05-04 (Workstream AM). Condition-based: no RF for HER2 IHC 3+ esoph yet. Only adenocarcinoma histology — no DESTINY SCC esophageal data."
 - step: 1
   evaluate:
     all_of:
@@ -37,7 +65,8 @@ decision_tree:
 sources:
 - SRC-NCCN-ESOPHAGEAL-2025
 - SRC-ESMO-ESOPHAGEAL-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) Adenocarcinoma + CPS <10 patients without ICI option — gastric-style ramucirumab+paclitaxel (RAINBOW) is the standard but not separately modeled here; engine should surface free-text recommendation to refer to ALGO-GASTRIC-2L when histology is GEJ-overlap or pure esoph adeno. (2) Patients post 1L ICI (KEYNOTE-590) — no good 2L ICI data; cytotoxic taxane / irinotecan remains the option, not modeled. (3) HER2+ adenocarcinoma 2L T-DXd evidence (DESTINY-Gastric02 + label extrapolation) for GEJ — not modeled as separate esoph indication. (4) MSI-H esophageal 2L pembro-mono — extremely rare; not separately modeled. (5) UA funding gap dominant — neither nivolumab nor pembrolizumab NSZU-reimbursed for esophageal; single-agent taxane is funded fallback.
+- SRC-DESTINY-PANTUMOR02-MERIC-2024
+last_reviewed: '2026-05-04'
+notes: 'AUTHORED 2026-05-04: IND-ESOPH-METASTATIC-2L-HER2-TDXD wired at step 0 (HER2 3+ adeno + prior trast; DESTINY-Gastric02 ORR 38%; NCCN Cat 1; Workstream AM). ROUTING SUMMARY: (0) HER2 3+ adeno + prior trast → T-DXd; (1) CPS ≥10 ICI-naive → pembro; (2) SCC ICI-naive → nivo; (fallback) → pac+ram via ALGO-GASTRIC-2L. OOS / wiring gaps: (1) Adenocarcinoma + CPS <10 + HER2-neg + ICI-experienced — gastric-style pac+ram not separately modeled; refer to ALGO-GASTRIC-2L. (2) Post-1L ICI progression — cytotoxic taxane/irinotecan options not modeled. (3) MSI-H esophageal 2L pembro-mono — extremely rare; not modeled. (4) UA funding gap — neither nivo nor pembro NSZU-reimbursed for esophageal; taxane is funded fallback.
 
   '

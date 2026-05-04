@@ -1,0 +1,167 @@
+id: IND-ESOPH-METASTATIC-2L-HER2-TDXD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-ESOPHAGEAL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic or unresectable locally advanced esophageal adenocarcinoma or gastroesophageal junction (GEJ) adenocarcinoma"
+    - "HER2-positive: IHC 3+ (or IHC 2+/ISH+; see biomarker notes)"
+    - "Disease progression on or after 1L trastuzumab-containing therapy (ToGA-type regimen + fluoropyrimidine + platinum)"
+    - "HER2 should be reconfirmed at progression (HER2 amplification can evolve)"
+    - "ECOG PS 0-1 (ILD monitoring capacity required; ECOG 0-2 may be considered at MDT discretion)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HER2-SOLID
+      value_constraint: "IHC 3+ (strongly preferred; FDA approval endpoint) OR IHC 2+/ISH+ (guideline-supported; re-test if discordant)"
+      notes: >
+        HER2 IHC 3+: clear T-DXd indication (DESTINY-Gastric01/02; DESTINY-PanTumor02).
+        HER2 IHC 2+/ISH+: supported by DESTINY-Gastric01 (included 2+/ISH+ cohort ORR ~26%);
+        NCCN includes. Re-biopsy recommended at progression — HER2 amplification can be lost.
+        Squamous esophageal cancer: HER2 amplification exists (~5-10%) but no dedicated T-DXd
+        esophageal SCC data; use with extreme caution — not standard (tumor-agnostic extrapolation only).
+  biomarker_requirements_excluded:
+    - "Active ILD/pneumonitis Grade ≥2 (T-DXd ILD is the most serious toxicity; absolute contraindication)"
+    - "Prior T-DXd or other HER2 ADC therapy (cross-resistance)"
+  demographic_constraints:
+    ecog_max: 1
+    notes: >
+      ECOG 0-1 required for standard use. T-DXd ILD requires close monitoring with
+      CT chest q2 cycles × 6 cycles; patients must be able to present immediately for
+      respiratory symptoms. ECOG 2 may be considered at MDT if ILD risk acceptable
+      and patient understands monitoring requirements.
+
+recommended_regimen: REG-TDXD-GASTRIC
+alternative_regimens:
+  - regimen_id: REG-TDXD-METASTATIC
+    description: >
+      T-DXd 5.4 mg/kg q3w (REG-TDXD-METASTATIC) — tumor-agnostic FDA approval
+      for HER2 IHC 3+ solid tumors (DESTINY-PanTumor02; Meric-Bernstam 2024 JCO;
+      ORR ~37-57% HER2 IHC 3+ pan-tumor). Use when pure esophageal adenocarcinoma
+      (not GEJ) or when 6.4 mg/kg not tolerated.
+concurrent_therapy: []
+followed_by:
+  - "After T-DXd progression: ICI monotherapy (pembro if CPS ≥10; nivo if squamous) — if ICI-naive"
+  - "Cytotoxic chemotherapy (paclitaxel, irinotecan, 5-FU) for fit patients after HER2-targeted ADC failure"
+  - "Clinical trials: HER3, FGFR2, CLDN18.2 emerging 2L+ targets in GEJ/esoph"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~38% (DESTINY-Gastric02; GEJ/gastric Western cohort; n=79); ~51% (DESTINY-Gastric01; Japanese/Korean cohort)"
+  cr_rate: "~9-14% (complete responses documented; durable)"
+  median_pfs_months: "~5.6 (DESTINY-Gastric02)"
+  notes: >
+    DESTINY-Gastric01 (Shitara 2021, NEJM; Japan/Korea; n=187):
+    ORR 51.3% vs 14.3% investigator's choice; OS 12.5 vs 8.4 months; HR 0.59 (p<0.001).
+    Included gastric/GEJ; pivotal trial leading to initial approval.
+
+    DESTINY-Gastric02 (Van Cutsem 2023; Western multinational; n=79):
+    Single-arm phase 2; ORR 38%; median DoR 8.1 months; PFS 5.6 months; OS 12.1 months.
+    Confirmed Western patient benefit. FDA approved April 2024 for HER2+ gastric/GEJ.
+
+    DESTINY-PanTumor02 (Meric-Bernstam 2024, JCO): Tumor-agnostic; HER2 IHC 3+;
+    Gastric/GEJ cohort ORR ~38.8% at 5.4 mg/kg; endometrial ORR 57.5%.
+    Overall pan-tumor ORR ~37% at 5.4 mg/kg (IHC 3+).
+
+    Esophageal adenocarcinoma specifically: Included in GEJ cohorts of DESTINY-Gastric trials
+    (Siewert I-III overlap). Evidence supports use in HER2+ esoph adeno by histological
+    and molecular analogy; NCCN Esophageal 2025 Category 1 for HER2+ esoph adenocarcinoma.
+
+hard_contraindications:
+  - "Active ILD/pneumonitis Grade ≥2 (baseline) — T-DXd ILD is treatment-emergent in ~15%; absolute contraindication if active at baseline"
+  - "Prior T-DXd or HER2 ADC therapy (DESTINY-Gastric01/02 both required HER2-ADC-naive status)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Uncontrolled active infection or sepsis"
+
+red_flags_triggering_alternative:
+  - condition: "ILD Grade 2-4 develops on T-DXd → hold immediately + corticosteroids; Grade ≥3 → permanent discontinuation"
+  - condition: "HER2-negative at re-biopsy → ICI track: pembro (CPS ≥10) or nivo (squamous); pac+ram if ICI not indicated"
+  - condition: "HER2 2+/ISH- (FISH amplification not confirmed) → preference for ICI or chemo; HER2 ADC benefit unclear in true IHC2+/ISH-"
+  - condition: "Prior pembrolizumab in 1L (ICI-experienced) + HER2-negative → pac+ram or irinotecan/FOLFIRI"
+  - condition: "Squamous histology + HER2 IHC 3+ → MDT discussion; tumor-agnostic T-DXd theoretically applicable but no dedicated esoph SCC data"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "HER2 IHC re-biopsy at progression: confirm HER2 3+ status on most recent tumor material (archival or fresh; HER2 can be lost)"
+  - "CT chest (high-resolution): BASELINE mandatory before T-DXd (ILD reference point); every 2 cycles × 6 cycles, then q3 cycles"
+  - "ECHO (LVEF baseline): trastuzumab component has mild cardiotoxicity potential"
+  - "PulmonaryFunction Test: if respiratory symptoms at baseline"
+
+desired_tests:
+  - "PD-L1 CPS: document for sequencing planning — if CPS ≥10 and ICI-naive, may prefer pembro mono first (lower ILD risk); MDT case-by-case"
+  - "HER2 FISH/ISH: if IHC 2+ to confirm amplification (IHC 3+ alone sufficient for ADC; 2+/ISH+ has lower ORR ~26% vs 3+ ~54%)"
+  - "NGS tumor profiling: identify co-occurring FGFR2b amplification, CLDN18.2 for future line planning"
+  - "Germline testing: if family history suggestive of hereditary cancer syndrome"
+
+rationale: >
+  Trastuzumab deruxtecan (T-DXd) is an antibody-drug conjugate (ADC) with an
+  anti-HER2 antibody (trastuzumab) linked to DXd (topoisomerase I inhibitor).
+  HER2 overexpression/amplification occurs in ~10-20% of esophageal adenocarcinomas
+  (higher in GEJ; lower in true esophageal primary), making it an actionable target.
+
+  Evidence base:
+  - DESTINY-Gastric01 (Shitara 2021, NEJM): Phase 2 RCT; HER2+ gastric/GEJ;
+    T-DXd 6.4 mg/kg vs investigator's choice; ORR 51% vs 14%; OS 12.5 vs 8.4 mo;
+    FDA approval October 2021 for HER2+ gastric/GEJ 2L.
+  - DESTINY-Gastric02 (Van Cutsem 2023): Phase 2 single-arm; Western population;
+    HER2+ gastric/GEJ after trastuzumab failure; T-DXd 6.4 mg/kg; n=79; ORR 38%;
+    FDA approval April 2024 confirming Western benefit.
+  - DESTINY-PanTumor02 (Meric-Bernstam 2024): Tumor-agnostic; T-DXd 5.4 mg/kg;
+    HER2 IHC 3+ solid tumors across 7 cohorts including GEJ/gastric; ORR ~37-38%.
+    FDA tumor-agnostic approval August 2023.
+
+  For esophageal adenocarcinoma specifically: GEJ adenocarcinoma (Siewert I-III)
+  overlaps extensively with "lower esophageal" disease and was enrolled in DESTINY-Gastric
+  trials. NCCN Esophageal 2025 Category 1 for HER2+ adenocarcinoma (GEJ and lower esoph)
+  in 2L after trastuzumab failure.
+
+  Key safety: T-DXd-associated ILD is the most serious toxicity (~15% any grade, ~2-3%
+  Grade ≥3). Requires mandatory CT chest monitoring. Symptoms (dyspnea, cough, fever)
+  mandate immediate drug hold + corticosteroids (prednisone 1 mg/kg/day). Grade ≥3 ILD →
+  permanent discontinuation. ILD risk factors: pre-existing lung disease, prior thoracic
+  radiation. All esophageal patients should have baseline CT chest before starting T-DXd.
+
+rationale_ua: >
+  Трастузумаб дерукстекан (T-DXd; ADC анти-HER2 + DXd — інгібітор топоізомерази I) —
+  стандарт 2L при HER2+ аденокарциномі стравоходу або ГЕЗ (NCCN кат.1).
+  HER2+ зустрічається у ~10-20% аденокарцином стравоходу/ГЕЗ.
+  DESTINY-Gastric01: ORR 51% vs 14% хімія; DESTINY-Gastric02 (Захід): ORR 38%.
+  FDA: жовтень 2021 (DESTINY-Gastric01) + квітень 2024 (DESTINY-Gastric02).
+  КРИТИЧНО: ILD (~15% будь-який ступінь) — обов'язкова КТ грудної клітки
+  вихідна + кожні 2 цикли × 6; негайна відміна при симптомах + преднізон 1 мг/кг.
+  HER2 2+/ISH-: слабкіша відповідь (~26% ORR); перевагу надавати ІКІ при CPS≥10.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-DESTINY-PANTUMOR02-MERIC-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      DESTINY-PanTumor02 (Meric-Bernstam 2024 JCO): T-DXd 5.4 mg/kg for HER2 IHC 3+
+      solid tumors including GEJ/gastric cohort; ORR ~37-38%; FDA tumor-agnostic
+      approval August 2023. Supports esophageal adenocarcinoma by tumor-agnostic label.
+  - source_id: SRC-NCCN-ESOPHAGEAL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Esophageal 2025 Category 1: T-DXd for HER2+ (IHC 3+) esophageal/GEJ
+      adenocarcinoma 2L after trastuzumab-containing 1L failure.
+
+do_not_do:
+  - "НІКОЛИ не починати T-DXd при активному ILD/пневмоніті ≥2 ступ. — смертельно небезпечно"
+  - "КТ грудної клітки базова обов'язкова до початку T-DXd; + кожні 2 цикли × 6"
+  - "Плоскоклітинний рак стравоходу + HER2 3+: лише MDT рішення (немає даних DESTINY SCC)"
+  - "Попереднє T-DXd або HER2 ADC (трастузумаб-емтанзин та ін.): перехресна резистентність"
+  - "HER2 ретест на матеріалі рецидиву — HER2 статус може змінитися після трастузумабу"
+  - "При ILD: терміново відмінити + преднізон 1 мг/кг/день → III-IV ступ.: постійна відміна"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
