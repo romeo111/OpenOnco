@@ -1,0 +1,146 @@
+id: IND-GASTRIC-METASTATIC-2L-MSI-H-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-GASTRIC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent or metastatic gastric or gastroesophageal junction (GEJ) adenocarcinoma"
+    - "MSI-H (microsatellite instability-high) or dMMR (mismatch repair deficient) confirmed"
+    - "Progression on or after 1L platinum + fluoropyrimidine-based chemotherapy"
+    - "No prior ICI (anti-PD-1/PD-L1) exposure — ICI-naive patients only"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-STATUS
+      value_constraint: "MSI-H (by PCR/NGS) or dMMR (by IHC loss of MLH1/MSH2/MSH6/PMS2)"
+  biomarker_requirements_excluded:
+    - "Prior anti-PD-1/PD-L1 therapy (pembrolizumab, nivolumab, durvalumab, atezolizumab, etc.) — cross-resistance; ICI re-challenge in gastric unproven"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 0-2 eligible. Pembrolizumab monotherapy is substantially better tolerated
+      than ramucirumab+paclitaxel (no peripheral neuropathy, no chemotherapy toxicity).
+      Consider pembro mono even for ECOG 2 patients who are MSI-H and ICI-naive — lower
+      toxicity burden than alternative regimens.
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+concurrent_therapy: []
+followed_by:
+  - "After pembrolizumab progression: ramucirumab + paclitaxel (IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL) if ECOG 0-1 and fit"
+  - "Trifluridine-tipiracil (IND-GASTRIC-METASTATIC-3L-TAS102) at 3L if prior platinum + pembro failed"
+  - "Clinical trial: FGFR2b, claudin 18.2 2L emerging targets"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~45-57% in MSI-H non-CRC tumor cohorts (KEYNOTE-158; gastric subgroup ORR ~45-57%; Marabelle 2020 JCO)"
+  cr_rate: "~15-20% (durable CRs documented; MSI-H tumors highly ICI-sensitive)"
+  median_pfs_months: "~5-8 (MSI-H gastric; long-tail responders; some durable 12-24+ months)"
+  notes: >
+    KEYNOTE-158 (Marabelle 2020, JCO): Tumor-agnostic phase 2; multiple tumor cohorts.
+    Gastric/GEJ MSI-H cohort (n~24): ORR ~45-57%; CR ~14%; durable responses.
+    ORR substantially higher than historical pac+ram in unselected 2L gastric (~26-28%).
+    FDA 2017 tumor-agnostic dMMR approval (first tissue-agnostic oncology approval).
+    2022 FDA expansion to all solid tumors TMB-H ≥10 mut/Mb also relevant but MSI-H
+    has stronger evidence (CPS-independent benefit vs pure TMB-H).
+    NCCN Gastric 2025 Category 1: pembrolizumab for MSI-H/dMMR gastric, any line.
+    In modern 1L practice (post-KEYNOTE-859), most MSI-H gastric patients receive
+    pembro+FOLFOX in 1L; this indication is for the residual ICI-naive 2L scenario
+    (pre-2023 treatment era, clinical trial enrollment, 1L ICI contraindication).
+
+hard_contraindications:
+  - "Prior anti-PD-1/PD-L1 therapy — ICI re-challenge not validated in gastric 2L"
+  - "Active autoimmune disease requiring systemic immunosuppression (steroids >10 mg/day prednisone equivalent)"
+  - "Active ILD or pneumonitis (baseline) — prohibits ICI use"
+  - "Organ transplant on immunosuppression"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Prior ICI exposure (pembrolizumab/nivolumab in 1L) → IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL (standard 2L; ICI re-challenge no evidence)"
+  - condition: "HER2 IHC 3+ confirmed at relapse → IND-GASTRIC-METASTATIC-2L-HER2-TDXD (DESTINY-Gastric01 ORR 51%; preferred in HER2+ regardless of MSI-H)"
+  - condition: "MSS/pMMR tumor → IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL (ICI monotherapy ineffective in MSS gastric)"
+  - condition: "Active severe autoimmune disease → IND-GASTRIC-METASTATIC-2L-RAMUCIRUMAB-PACLITAXEL"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "MSI/MMR testing: PCR-based MSI or IHC for MLH1/MSH2/MSH6/PMS2 — confirm MSI-H/dMMR on primary or fresh biopsy"
+  - "TSH: baseline thyroid function (pembrolizumab hypothyroidism ~10-15%)"
+  - "CT chest/abdomen/pelvis: baseline disease extent + response monitoring (q2-3 cycles)"
+  - "ECHO or BNP if cardiac history (rare pembro cardiotoxicity)"
+
+desired_tests:
+  - "HER2 IHC/FISH: re-test at progression from 1L (HER2 status may change; HER2 3+ → prefer T-DXd over pembro mono)"
+  - "PD-L1 CPS (22C3): not required for MSI-H (CPS-independent benefit) but documents if CPS ≥1 for secondary analysis"
+  - "Lynch syndrome germline testing (MLH1/MSH2/MSH6/PMS2 germline): if <60 years or family history — HNPCC-related gastric rare but relevant for family counseling"
+  - "TMB-H (NGS): complementary biomarker; TMB ≥10 mut/Mb may predict additional ICI benefit but MSI-H is the primary gate"
+
+rationale: >
+  Pembrolizumab monotherapy is the standard-of-care treatment for MSI-H/dMMR
+  solid tumors across all lines of therapy, including gastric/GEJ cancers. The
+  biological rationale is direct: MSI-H tumors carry a high mutational burden due
+  to deficient mismatch repair, generating abundant neoantigens that are recognized
+  by T cells when the PD-1/PD-L1 checkpoint is released by pembrolizumab.
+
+  Evidence:
+  - KEYNOTE-158 (Marabelle 2020, JCO): Phase 2, tumor-agnostic; gastric/GEJ MSI-H
+    cohort ORR ~45-57%; CR ~14%; median DoR not reached at data cutoff in responders.
+    CRs are durable in a meaningful proportion of MSI-H patients.
+  - FDA dMMR tumor-agnostic approval (2017): First tissue-agnostic FDA approval in
+    oncology. Pembrolizumab for all dMMR solid tumors across all lines, including gastric.
+  - NCCN Gastric 2025 Category 1: Pembrolizumab for MSI-H/dMMR gastric, any line.
+  - 2L rationale: In patients who did not receive ICI in 1L (pre-KEYNOTE-859 era,
+    ICI contraindicated in 1L, or enrolled on non-ICI trials), pembrolizumab mono
+    provides substantially better outcomes than ramucirumab+paclitaxel in MSI-H
+    gastric (~45-57% ORR vs ~26-28% ORR for pac+ram in unselected population).
+
+  Clinical positioning (2025/2026):
+  The modern standard for MSI-H gastric 1L is pembrolizumab+FOLFOX (KEYNOTE-859;
+  Category 1). Therefore, most MSI-H gastric patients in 2L will have already
+  received ICI and are ICI-experienced → route to pac+ram. However, a subset of
+  2L patients remain ICI-naive: (1) pre-2023 treatment era; (2) 1L ICI
+  contraindicated (severe autoimmune disease, organ transplant); (3) clinical trial
+  enrollment without ICI in 1L. For these ICI-naive MSI-H patients, pembrolizumab
+  mono remains a Category 1 option with superior expected outcomes.
+
+rationale_ua: >
+  Пембролізумаб монотерапія — стандарт при MSI-H/dMMR раку шлунку, будь-яка лінія
+  (NCCN кат.1; FDA tumor-agnostic 2017). KEYNOTE-158: ORR ~45-57% MSI-H шлунок/ГЕЗ.
+  Лише для ІКІ-наївних пацієнтів (без попереднього пембролізумабу/нівалумабу в 1L).
+  В сучасній практиці (після KEYNOTE-859): більшість MSI-H пацієнтів отримали
+  пембролізумаб+FOLFOX в 1L → у 2L вони ІКІ-досвідчені та мають іти на рам+пакліт.
+  Ця опція — для рідкісного сценарію ІКІ-наївної 2L (попередня епоха, протипоказання 1L ICI).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-KEYNOTE158-ANAL-MARABELLE-2020
+    position: supports
+    relevant_quote_paraphrase: >
+      KEYNOTE-158 (Marabelle 2020 JCO): pembrolizumab in MSI-H non-CRC solid tumors
+      including gastric/GEJ cohort; ORR ~45-57% in gastric MSI-H; CRs durable.
+      Same paper covers multiple tumor cohort MSI-H pembrolizumab data.
+  - source_id: SRC-NCCN-GASTRIC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Gastric 2025 Category 1: pembrolizumab for MSI-H/dMMR gastric/GEJ
+      adenocarcinoma. Applicable to 2L+ ICI-naive patients.
+
+do_not_do:
+  - "НЕ призначати пембролізумаб при попередньому ІКІ (1L або будь-яка попередня лінія) — ретестування ICI не підтверджено в шлунку"
+  - "MSS/pMMR: пембролізумаб монотерапія неефективна (<5% ORR); рам+пакліт"
+  - "HER2 IHC 3+ при рецидиві: T-DXd переважно (ORR 51%; DESTINY-Gastric01); HER2 ретест при прогресуванні"
+  - "Активна важка автоімунна хвороба на системній імуносупресії: рам+пакліт або клінічне дослідження"
+  - "Моніторинг TSH: гіпотиреоз ~10-15% (левотироксин, не відміняти пембролізумаб)"
+  - "Після пембролізумабу: рам+пакліт якщо ECOG 0-1 та придатний (наступна лінія)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
