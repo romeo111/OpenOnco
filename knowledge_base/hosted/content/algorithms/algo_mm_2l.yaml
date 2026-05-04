@@ -1,19 +1,32 @@
 id: ALGO-MM-2L
 applicable_to_disease: DIS-MM
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/maintenance MM Indication based on prior exposures and ASCT status. Four tracks: (1) post-ASCT in CR/VGPR → IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE; (2) lenalidomide-naive + anti-CD38-naive → IND-MM-2L-DRD (POLLUX; mPFS HR 0.44; NCCN Cat 1); (3) lenalidomide-refractory/exposed → IND-MM-2L-DKD (carfilzomib-based, CANDOR; HR 0.59); (4) triple-class refractory (≥3 lines IMiD+PI+CD38) → IND-MM-4L-TECLISTAMAB (BCMA bispecific, MajesTEC-1).
+purpose: >
+  Select 2L+/maintenance MM Indication based on prior exposures and ASCT status.
+  Seven tracks: (1) post-ASCT CR/VGPR → maintenance; (15) lenalidomide-naive +
+  anti-CD38-naive → DRd (POLLUX; HR 0.44; Cat 1); (16) lenalidomide-refractory
+  + manufacturing window tolerable → cilta-cel 2L (CARTITUDE-4; HR 0.26; Cat 1);
+  (2) triple-class refractory → CAR-T (cilta-cel preferred; step 211) → BCMA
+  bispecific (teclistamab/elranatamab; step 21) → talquetamab after BCMA
+  exposure (step 212) → selinexor fallback (step 22); (3) t(11;14) →
+  venetoclax+dex (BELLINI; Cat 2A); (4) default → DKd.
 
-  '
 output_indications:
 - IND-MM-2L-DKD
 - IND-MM-2L-DRD
-- IND-MM-4L-TECLISTAMAB
+- IND-MM-RR-3L-TECLISTAMAB
+- IND-MM-RR-3L-ELRANATAMAB
+- IND-MM-RR-3L-TALQUETAMAB
+- IND-MM-RR-3L-CILTACEL
+- IND-MM-RR-3L-IDECEL
+- IND-MM-RR-2L-CILTACEL
 - IND-MM-4L-LINVOSELTAMAB
 - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 - IND-MM-2L-VENETOCLAX-T1114
 - IND-MM-5L-SELINEXOR
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-2L-DRD
+
 decision_tree:
 - step: 1
   evaluate:
@@ -26,6 +39,7 @@ decision_tree:
   if_false:
     next_step: 15
   notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+
 - step: 15
   evaluate:
     all_of:
@@ -41,8 +55,37 @@ decision_tree:
       or LMWH). Lenalidomide REMS mandatory. HBV screen + entecavir. DRd preferred over DKd
       in lenalidomide-naive patients (DKd reserved for lenalidomide-refractory; CANDOR).
   if_false:
+    next_step: 16
+  notes: "Step 15 added 2026-05-04 (Workstream BE): DRd wired for lenalidomide-naive 2L MM (POLLUX; NCCN Cat 1). Gap (2) CLOSED. If lenalidomide-exposed or CrCl <30 → step 16 (cilta-cel 2L gate) → step 2 (triple-class check → DKd)."
+
+  # Step 16 — Cilta-cel 2L for lenalidomide-refractory R/R MM (CARTITUDE-4).
+  # CARTITUDE-4 (San-Miguel 2023 NEJM): cilta-cel vs SOC (KRd/DVd/DPd) in
+  # lena-refractory 1-3 prior lines. mPFS NR vs 11.8 mo (HR 0.26; p<0.001);
+  # ORR ~85%; ≥CR ~73%. Paradigm-shift: CAR-T moved from 4L → 2L for
+  # lenalidomide-refractory patients. Manufacturing window (4 weeks) gating:
+  # if rapid progression precludes 4-week wait → step 2 (conventional path).
+  # Aggressive-track: ECOG 0-1 ideal; ECOG 2 acceptable in real-world.
+  # Ukraine access: not registered; international referral required.
+- step: 16
+  evaluate:
+    all_of:
+    - condition: "Lenalidomide-refractory OR lenalidomide-exposed with relapse"
+    - condition: "1-3 prior lines (CARTITUDE-4 enrolment range)"
+    - condition: "Manufacturing window tolerable: 4-week wait acceptable for disease tempo + bridge therapy feasible"
+    - condition: "No prior BCMA-directed therapy (or sufficient washout)"
+    - condition: "Adequate organ function for lymphodepletion (fludarabine + cyclophosphamide)"
+  if_true:
+    result: IND-MM-RR-2L-CILTACEL
+    notes: >
+      Lenalidomide-refractory 2L MM + manufacturing feasible: cilta-cel (CARTITUDE-4;
+      San-Miguel 2023 NEJM; mPFS NR vs 11.8 mo; HR 0.26; ORR ~85%; ≥CR ~73%;
+      NCCN Cat 1). Aggressive-track — paradigm shift moving CAR-T to 2L. Late MNT
+      signal (parkinsonism ~5-10%) — unique cilta-cel safety dimension. Bridge therapy
+      mandatory during 4-week manufacturing window. Ukraine: international referral.
+  if_false:
     next_step: 2
-  notes: "Step 15 added 2026-05-04 (Workstream BE): DRd wired for lenalidomide-naive 2L MM (POLLUX; NCCN Cat 1). Gap (2) CLOSED. If lenalidomide-exposed or CrCl <30 → step 2 (triple-class check → DKd)."
+  notes: "Step 16 added 2026-05-04 (Workstream EP): cilta-cel 2L gate for lena-refractory R/R MM (CARTITUDE-4; HR 0.26; Cat 1). Rapid progression or manufacturing unavailable → step 2 (triple-class + venetoclax → DKd path)."
+
 - step: 2
   evaluate:
     all_of:
@@ -51,40 +94,102 @@ decision_tree:
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
-    - condition: adequate organ function for bispecific
+    - condition: adequate organ function for bispecific or CAR-T
   if_true:
-    next_step: 21
+    next_step: 211
   if_false:
     next_step: 3
-  notes: "Partially wired. Updated 2026-05-04 (Workstream DA): if_true now routes to step 21 (teclistamab access gate + selinexor fallback) instead of direct teclistamab result."
+  notes: "Updated 2026-05-04 (Workstream EP): if_true now routes to step 211 (CAR-T eligibility gate) before bispecific selection."
 
-  # Step 21 — teclistamab access gate for triple-class-refractory MM.
-  # Teclistamab (IND-MM-4L-TECLISTAMAB) is NCCN Cat 1 preferred; ORR 63%; mDOR 18.4 mo.
-  # However, not EMA-approved (MajesTEC-1 basis; US FDA-only + individual EU compassionate).
-  # Ukraine: neither teclistamab nor selinexor registered.
-  # If teclistamab accessible: preferred (Cat 1, superior efficacy).
-  # If inaccessible: selinexor (Cat 2A; STORM; ORR 26%; XPO1-mechanism non-overlapping).
+  # Step 211 — CAR-T eligibility gate for triple-class refractory MM.
+  # CAR-T (cilta-cel, ide-cel) preferred over BCMA bispecifics when:
+  # (a) manufacturing window tolerable — 4-week wait + bridge feasible,
+  # (b) BCMA-naive — prior BCMA exposure risks antigen-loss resistance,
+  # (c) ECOG 0-1 (CARTITUDE-1/KarMMa enrolment; ECOG 2 borderline).
+  # Cilta-cel preferred over ide-cel: ORR 98% vs 73%; mPFS 35 mo vs 12 mo.
+  # Ide-cel as alternate CAR-T when cilta-cel slot unavailable (broader mfg).
+  # If CAR-T not feasible → step 212 (BCMA-exposure check → bispecific/talq).
+- step: 211
+  evaluate:
+    all_of:
+    - condition: "Manufacturing window tolerable: 4-week wait acceptable + bridge therapy feasible"
+    - condition: "No prior BCMA-directed therapy (teclistamab, elranatamab, ide-cel, cilta-cel)"
+    - condition: "ECOG 0-1 (CAR-T enrolment criterion; borderline ECOG 2 MDT discussion)"
+    - condition: "Adequate organ function for lymphodepletion (fludarabine + cyclophosphamide)"
+  if_true:
+    result: IND-MM-RR-3L-CILTACEL
+    alternatives:
+      - indication: IND-MM-RR-3L-IDECEL
+        criteria: "Cilta-cel manufacturing slot unavailable; ide-cel as alternate BCMA CAR-T (KarMMa; ORR 73%, mPFS 12 mo); broader manufacturing capacity"
+        nccn_category: 1
+    notes: >
+      Triple-class refractory + CAR-T eligible: cilta-cel preferred (CARTITUDE-1;
+      Berdeja 2021 Lancet; ORR 98%; mPFS ~35 mo; NCCN Cat 1). CAR-T has superior
+      depth + durability vs bispecifics — first choice when manufacturing window
+      tolerable. CRITICAL: late MNT (movement/neurocognitive AEs including
+      parkinsonism) ~5-10% — unique cilta-cel signal. Bridge therapy mandatory
+      during 4-week manufacturing window. Ukraine: international referral.
+  if_false:
+    next_step: 212
+  notes: "Step 211 added 2026-05-04 (Workstream EP): CAR-T eligibility gate — cilta-cel preferred when manufacturing feasible + BCMA-naive; ide-cel as alternate; step 212 if CAR-T not feasible."
+
+  # Step 212 — BCMA-exposure check for bispecific/talquetamab selection.
+  # Prior BCMA-directed therapy → antigen-loss resistance risk with re-challenge.
+  # Talquetamab (GPRC5D × CD3; off-the-shelf) preserves activity after BCMA
+  # exposure — the alternate-target rescue option.
+  # BCMA-naive (CAR-T not feasible due to rapid progression/ECOG/slot) →
+  # BCMA bispecific (teclistamab/elranatamab) via step 21.
+- step: 212
+  evaluate:
+    any_of:
+    - condition: "Prior BCMA-directed therapy received (teclistamab, elranatamab, ide-cel, cilta-cel) with potential antigen-loss escape"
+  if_true:
+    result: IND-MM-RR-3L-TALQUETAMAB
+    notes: >
+      Prior BCMA exposure + BCMA CAR-T not feasible: talquetamab (GPRC5D × CD3;
+      MonumenTAL-1; ORR ~73%; mPFS ~11.9 mo Q2W; NCCN Cat 2A). GPRC5D target is
+      independent of BCMA — no cross-resistance. On-target AEs: dysgeusia ~50%,
+      oral/nail/skin toxicities. Less hypogammaglobulinemia vs BCMA bispecifics.
+      Step-up dosing inpatient observation required. Ukraine: international referral.
+  if_false:
+    next_step: 21
+  notes: "Step 212 added 2026-05-04 (Workstream EP): BCMA-exposure check. Prior BCMA → talquetamab GPRC5D (Cat 2A); BCMA-naive + CAR-T not feasible → step 21 (teclistamab/elranatamab bispecific)."
+
+  # Step 21 — BCMA bispecific gate for triple-class-refractory MM.
+  # Both teclistamab (MajesTEC-1; ORR 63%; NCCN Cat 1) and elranatamab
+  # (MagnetisMM-3 BCMA-naive cohort A; ORR ~61%; NCCN Cat 2A) are options.
+  # Teclistamab default: mature data, weekly dosing; NCCN Cat 1.
+  # Elranatamab alternative: SC Q2W maintenance after response (post-steady-
+  # state) — operationally lighter; ORR comparable; NCCN Cat 2A.
+  # If bispecifics accessible: preferred vs selinexor.
+  # If inaccessible → step 22 (selinexor fallback).
+  # Ukraine: neither teclistamab nor elranatamab registered.
 - step: 21
   evaluate:
     all_of:
-    - condition: "Teclistamab accessible (FDA-registered + named-patient / EMA compassionate / clinical trial)"
+    - condition: "BCMA bispecific accessible (FDA-registered + named-patient / EMA compassionate / clinical trial)"
   if_true:
-    result: IND-MM-4L-TECLISTAMAB
+    result: IND-MM-RR-3L-TECLISTAMAB
+    alternatives:
+      - indication: IND-MM-RR-3L-ELRANATAMAB
+        criteria: "Elranatamab SC Q2W maintenance after response (post-step-up steady-state); operationally lighter than weekly teclistamab; MagnetisMM-3 ORR ~61%; NCCN Cat 2A"
+        nccn_category: "2A"
     notes: >
-      Triple-class refractory + teclistamab accessible: teclistamab 1.5 mg/kg SC weekly
-      after step-up dosing (IND-MM-4L-TECLISTAMAB; REG-TECLISTAMAB-MM; MajesTEC-1
-      Moreau 2022 NEJM; ORR 63%; CR 39%; mDOR 18.4 mo; NCCN Cat 1). Step-up dosing
-      mandatory (0.06 mg/kg SC → 0.3 mg/kg SC → 1.5 mg/kg SC) to mitigate CRS risk.
-      Infection prophylaxis (IgG monitoring; PJP; antiviral) mandatory.
+      Triple-class refractory + BCMA-naive + CAR-T not feasible → BCMA bispecific.
+      DEFAULT: Teclistamab 1.5 mg/kg SC weekly (MajesTEC-1; ORR 63%; ≥CR 39%;
+      mPFS ~11.3 mo; mOS ~22 mo; NCCN Cat 1). Step-up mandatory (0.06 → 0.3 →
+      1.5 mg/kg SC). IVIG + PJP/HSV/VZV prophylaxis mandatory (universal
+      hypogammaglobulinemia). ALTERNATIVE: Elranatamab (Q2W maintenance schedule
+      post-steady-state; MagnetisMM-3; ORR ~61%; Cat 2A). Ukraine: international
+      referral for either agent.
   if_false:
     next_step: 22
-  notes: "Step 21 added 2026-05-04 (Workstream DA): teclistamab access gate — accessible → IND-MM-4L-TECLISTAMAB (Cat 1); inaccessible → step 22 (selinexor fallback)."
+  notes: "Step 21 updated 2026-05-04 (Workstream EP): result → IND-MM-RR-3L-TECLISTAMAB (from IND-MM-4L-TECLISTAMAB; RR-3L framing canonical). Elranatamab added as Cat 2A alternative."
 
-  # Step 22 — selinexor fallback when teclistamab inaccessible (penta-refractory MM).
-  # STORM (Chari 2019 NEJM): selinexor 80 mg BIW + dex 20 mg BIW; ORR 26%; NCCN Cat 2A.
-  # XPO1 inhibitor — distinct from all conventional anti-MM mechanisms.
+  # Step 22 — selinexor fallback when bispecifics also inaccessible.
+  # STORM (Chari 2019 NEJM): selinexor 80 mg BIW + dex 20 mg BIW; ORR 26%;
+  # NCCN Cat 2A. XPO1 mechanism — distinct from all conventional anti-MM.
   # High toxicity (thrombocytopenia 74%, nausea 72%); patient selection critical.
-  # Not EMA-approved (CHMP negative 2021); not UA-registered.
 - step: 22
   evaluate:
     all_of:
@@ -94,19 +199,20 @@ decision_tree:
   if_true:
     result: IND-MM-5L-SELINEXOR
     notes: >
-      Teclistamab inaccessible + selinexor accessible + platelets adequate: selinexor
+      Bispecific inaccessible + selinexor accessible + platelets adequate: selinexor
       80 mg PO BIW + dex 20 mg BIW (REG-SELINEXOR-DEX-MM; STORM Chari 2019 NEJM;
       ORR 26%; mPFS 3.7 mo; NCCN Cat 2A). Mandatory aggressive antiemetics (5-HT3 + NK1).
       Weekly CBC + Na monitoring. Ukraine: not registered; US named-patient import.
   if_false:
     result: IND-MM-2L-DKD
     notes: >
-      Neither teclistamab nor selinexor accessible (Ukraine: both require named-patient
+      Neither bispecific nor selinexor accessible (Ukraine: all require named-patient
       import/trial) OR inadequate baseline platelets/ECOG: fallback to DKd MDT
-      discussion. For penta-refractory patients, DKd is likely insufficient —
+      discussion. For triple-class refractory patients, DKd is likely insufficient —
       consider clinical trial enrollment, bisphosphonate + pain management (BSC),
-      or international referral for bispecific access. MDT mandatory.
-  notes: "Step 22 added 2026-05-04 (Workstream DA): selinexor fallback for teclistamab-inaccessible triple-class refractory MM (STORM Cat 2A). Gap (5) CLOSED."
+      or international referral for bispecific/CAR-T access. MDT mandatory.
+  notes: "Step 22 added 2026-05-04 (Workstream DA): selinexor fallback for bispecific-inaccessible triple-class refractory MM (STORM Cat 2A). Gap (5) CLOSED."
+
 - step: 3
   evaluate:
     any_of:
@@ -123,6 +229,7 @@ decision_tree:
   if_false:
     next_step: 4
   notes: 'Step 3 wired 2026-05-04 (Workstream CC): IND-MM-2L-VENETOCLAX-T1114 authored and wired for RF-MM-T11-14-ACTIONABLE (BELLINI t(11;14) subgroup HR 0.37; NCCN Cat 2A). Gap (PROD-5 deferred → CLOSED). Placeholder DKd routing removed.'
+
 - step: 4
   evaluate:
     any_of:
@@ -133,34 +240,53 @@ decision_tree:
     result: IND-MM-2L-DKD
   if_false:
     result: IND-MM-2L-DKD
+
 sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
 last_reviewed: '2026-05-04'
 notes: >
-  UPDATED 2026-05-04 (Workstream CC): IND-MM-2L-VENETOCLAX-T1114 + REG-VEN-DEX-MM
-  authored and wired at step 3 for t(11;14)-positive R/R MM (BELLINI t(11;14) subgroup;
-  HR 0.37; NCCN Cat 2A; venetoclax 800 mg/day + dex 40 mg/week). Placeholder DKd
-  routing replaced with dedicated venetoclax indication. Gap CLOSED.
+  UPDATED 2026-05-04 (Workstream EP): Wired 6 orphaned Tier-2 RR-MM indications —
+  IND-MM-RR-2L-CILTACEL, IND-MM-RR-3L-CILTACEL, IND-MM-RR-3L-IDECEL,
+  IND-MM-RR-3L-ELRANATAMAB, IND-MM-RR-3L-TALQUETAMAB, IND-MM-RR-3L-TECLISTAMAB.
+  RR-3L framing chosen as canonical over 4L framing (richer rationale, accurate
+  line numbers, Ukrainian text, controversies blocks). IND-MM-4L-TECLISTAMAB and
+  IND-MM-4L-CILTACEL-CART removed from output_indications (files retained as
+  legacy; RR-3L entities supersede them for engine routing). Decision to model
+  CAR-T explicitly reverses the prior "UA access ≈zero; not modeled" note per
+  project feedback_efficacy_over_registration: access is metadata, not a filter.
+
+  NEW STEPS:
+  Step 16: Cilta-cel 2L for lena-refractory R/R MM (CARTITUDE-4; San-Miguel 2023
+  NEJM; mPFS NR vs 11.8 mo; HR 0.26; Cat 1). Inserted between step 15 if_false
+  and step 2 triple-class gate.
+  Step 211: CAR-T eligibility gate for triple-class refractory — cilta-cel
+  (CARTITUDE-1; ORR 98%; mPFS 35 mo; Cat 1) preferred when manufacturing window
+  tolerable + BCMA-naive; ide-cel alternative (KarMMa; ORR 73%).
+  Step 212: BCMA-exposure check — talquetamab (GPRC5D; MonumenTAL-1; ORR ~73%;
+  Cat 2A) as alternate-target rescue after prior BCMA; bispecific (step 21) if
+  BCMA-naive but CAR-T not feasible.
+  Step 21: Updated result → IND-MM-RR-3L-TECLISTAMAB; elranatamab added as
+  Cat 2A alternative (MagnetisMM-3; ORR ~61%; Q2W maintenance).
+
+  ROUTING SUMMARY:
+  (1) Post-ASCT CR/VGPR → maintenance
+  (15) Lena-naive + CD38-naive → DRd (Cat 1)
+  (16) Lena-refractory + manufacturing feasible + BCMA-naive → cilta-cel 2L (Cat 1)
+  (2) Triple-class refractory → step 211
+  (211) CAR-T eligible → cilta-cel 3L (Cat 1; ide-cel alt)
+  (212) Prior BCMA → talquetamab GPRC5D (Cat 2A)
+  (21) BCMA-naive bispecific → teclistamab (Cat 1; elranatamab Cat 2A alt)
+  (22) Bispecific inaccessible → selinexor (Cat 2A) or DKd fallback
+  (3) t(11;14) → venetoclax+dex (Cat 2A)
+  (4) Default → DKd
 
   EARLIER UPDATES:
-  Workstream BE (2026-05-04): IND-MM-2L-DRD + REG-DRD wired at step 15 (POLLUX;
-  lenalidomide-naive 2L; HR 0.44; NCCN Cat 1). Gap (2) CLOSED.
-
-  ROUTING SUMMARY: (1) Post-ASCT CR/VGPR → maintenance; (15) lena-naive + CD38-naive →
-  DRd (Cat 1); (2) triple-class refractory → teclistamab bispecific; (3) t(11;14) →
-  venetoclax+dex (Cat 2A); (4) default → DKd.
+  Workstream BE (2026-05-04): IND-MM-2L-DRD + REG-DRD wired at step 15 (POLLUX).
+  Workstream CC (2026-05-04): IND-MM-2L-VENETOCLAX-T1114 wired at step 3.
+  Workstream DA (2026-05-04): IND-MM-5L-SELINEXOR + teclistamab access gate.
 
   OOS / wiring gaps:
-  (1) Maintenance algo (ALGO-MM-MAINTENANCE) pragmatically included in step 1 here.
-  (3) Belantamab mafodotin — withdrawn from market post DREAMM-3; not modeled.
-  (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) — UA access ≈zero; not modeled.
-  UPDATED 2026-05-04 (Workstream DA): IND-MM-5L-SELINEXOR authored and wired at
-  steps 21 and 22 (teclistamab access gate + selinexor fallback; DRUG-SELINEXOR +
-  REG-SELINEXOR-DEX-MM authored; STORM Chari 2019 NEJM; ORR 26%; NCCN Cat 2A).
-  Step 2 if_true now routes to step 21 (teclistamab access check) → step 22
-  (selinexor fallback). Gap (5) CLOSED.
-
-  (5) CLOSED — Selinexor penta-refractory now modeled at steps 21-22.
-  (6) Venetoclax inaccessible in Ukraine off-label MM context → DKd as fallback
-  (documented in IND notes; MDT decision).
+  Linvoseltamab (IND-MM-4L-LINVOSELTAMAB; FDA Apr 2025; ≥4L) in output_indications
+  but not yet wired in decision tree — requires a ≥4L step extending step 22.
+  Isatuximab combinations — not modeled.
