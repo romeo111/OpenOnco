@@ -12,6 +12,7 @@ output_indications:
   - IND-SCLC-RR-LURBINECTEDIN
   - IND-SCLC-PLATINUM-RECHALLENGE
   - IND-SCLC-3L-TARLATAMAB
+  - IND-SCLC-3L-IFINATAMAB
 
 default_indication: IND-SCLC-RR-TOPOTECAN
 alternative_indication: IND-SCLC-RR-LURBINECTEDIN
@@ -109,28 +110,37 @@ decision_tree:
         registered, reimbursable per NSZU). NCCN Category 1. ORR ~17-24% in
         platinum-sensitive relapse (CTFI >=90d); ~9% in resistant (CTFI 30-90d).
 
-  # Step 6 -- 3L tarlatamab gate.
+  # Step 6 -- 3L+ novel agent gate.
   # After progression on 2L topotecan or lurbinectedin (>=3rd line):
-  # Tarlatamab (DLL3 x CD3 BiTE) is NCCN Cat 2A. Step-up dosing mandatory;
-  # hospitalization required for first 2 doses (CRS monitoring).
+  # TWO NCCN Cat 2A options: tarlatamab (DLL3 x CD3 BiTE) OR ifinatamab deruxtecan (B7-H3 ADC).
+  # Tarlatamab: step-up dosing mandatory; hospitalization C1D1 + C1D8; tocilizumab on site.
+  # Ifinatamab: ILD/pneumonitis monitoring mandatory; no hospitalization requirement.
+  # Choose based on baseline pulmonary status (ILD risk favors tarlatamab) and accessibility.
   - step: 6
     evaluate:
       all_of:
         - condition: "Patient has received >=2 prior systemic therapy lines (including platinum)"
-        - condition: "Tarlatamab accessible (registered/reimbursed or named-patient program)"
         - red_flag: RF-FITNESS-ECOG-FIT
     if_true:
       result: IND-SCLC-3L-TARLATAMAB
+      alternatives:
+        - indication: IND-SCLC-3L-IFINATAMAB
+          criteria: "No baseline ILD/pulmonary fibrosis + adequate pulmonary function + ifinatamab accessible"
+          nccn_category: 2A
       notes: >
-        3L+ ES-SCLC after platinum + topotecan or lurbinectedin: tarlatamab (Imdelltra,
-        1 mg -> 10 mg step-up, 10 mg Q2W IV). FDA accelerated approval May 2024.
-        DeLLphi-301 (NEJM 2023): ORR 40%, mDOR 9.7 months, mOS 13.2 months (step-up arm).
-        NCCN Cat 2A. Requires hospitalization for C1D1 and C1D8; tocilizumab on site.
-        DLL3 testing not required per FDA label. Not registered in Ukraine as of 2025;
-        named-patient/compassionate use pathway required.
+        3L+ ES-SCLC after platinum + topotecan/lurbinectedin — TWO NCCN Cat 2A options:
+        DEFAULT: Tarlatamab (Imdelltra; DLL3×CD3 BiTE; 1 mg→10 mg step-up; Q2W IV;
+        IND-SCLC-3L-TARLATAMAB; FDA May 2024; DeLLphi-301 ORR 40%; mOS 13.2m).
+        Hospitalization C1D1+C1D8 mandatory; CRS ~53%; tocilizumab on site required.
+        ALTERNATIVE: Ifinatamab deruxtecan (I-DXd; B7-H3 ADC; 12 mg/kg Q3W IV;
+        IND-SCLC-3L-IFINATAMAB; FDA 2024; IDeate-Lung01 ORR ~52.4%; mOS ~12.9m).
+        ILD/pneumonitis Grade 3+ ~6-9% — requires baseline CT chest + active surveillance.
+        No hospitalization required. Prefer ifinatamab if tarlatamab inaccessible/contraindicated;
+        prefer tarlatamab if ILD risk or baseline pulmonary compromise present.
+        Both not registered in Ukraine; named-patient/compassionate use required.
     if_false:
       result: null
-      notes: "3L+ with tarlatamab inaccessible or ECOG >=3: BSC/palliative care. Clinical trial if eligible."
+      notes: "3L+ with ECOG >=2 or both agents inaccessible: BSC/palliative care. Clinical trial if eligible."
 
 sources:
   - SRC-NCCN-SCLC-2025

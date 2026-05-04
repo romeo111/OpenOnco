@@ -1,0 +1,71 @@
+id: REG-IFINATAMAB-SCLC
+name: "Ifinatamab deruxtecan for relapsed/refractory SCLC ≥3rd line (IDeate-Lung01)"
+name_ua: "Іфінатамаб дерукстекан при рецидивуючому/рефрактерному НДРК ≥3 лінія"
+alternate_names: ["I-DXd SCLC", "DS-7300a SCLC", "ifinatamab monotherapy SCLC"]
+
+components:
+  - drug_id: DRUG-IFINATAMAB
+    dose: "12 mg/kg IV over 90 min (first infusion); subsequent infusions may be shortened to 30 min if first infusion tolerated"
+    schedule: "Day 1 Q21D; continue until progression or unacceptable toxicity"
+    route: IV
+    notes: >
+      B7-H3-targeted ADC with DXd topoisomerase I inhibitor payload.
+      ILD/pneumonitis monitoring mandatory — hold for any Grade ≥2 pulmonary symptoms.
+      Dose reduction sequence: 12 mg/kg → 9 mg/kg → 6 mg/kg → discontinue.
+
+cycle_length_days: 21
+number_of_cycles: "Continuous until progression or unacceptable toxicity"
+
+premedications:
+  - "Antiemetic prophylaxis: ondansetron 8 mg IV (or equivalent 5-HT3 antagonist) + dexamethasone 8-12 mg IV before infusion (moderately emetogenic)"
+  - "Antihistamine and acetaminophen may be used for infusion reaction prophylaxis per institutional protocol"
+
+supportive_care:
+  - "CBC: before each cycle — ANC ≥1500/mm³, platelets ≥100K/mm³ required"
+  - "LFTs: before each cycle (hepatotoxicity monitoring)"
+  - "ILD ACTIVE SURVEILLANCE: ask about new/worsening dyspnea, cough, or fever at each visit"
+  - "CT chest: at baseline; immediately if respiratory symptoms develop (ILD monitoring)"
+  - "Baseline pulmonary function tests (PFTs): document prior to starting therapy"
+  - "SpO2 monitoring: at each infusion"
+  - "CT CAP: every 2 cycles for response assessment"
+
+dose_modifications:
+  - toxicity: "Grade 1 ILD/pneumonitis (asymptomatic radiographic change)"
+    action: "Hold ifinatamab; CT surveillance every 2 weeks; resume when resolved or corticosteroids if progressing"
+  - toxicity: "Grade 2 ILD/pneumonitis (symptomatic)"
+    action: "Hold ifinatamab; corticosteroids (0.5-1 mg/kg/day prednisone or equivalent); pulmonology consult; resume at reduced dose when resolved to Grade ≤1 after 4+ weeks"
+  - toxicity: "Grade 3-4 ILD/pneumonitis"
+    action: "PERMANENTLY DISCONTINUE ifinatamab; high-dose corticosteroids (1-2 mg/kg/day); inpatient/pulmonology management"
+  - toxicity: "Grade 3+ nausea/vomiting despite antiemetics"
+    action: "Hold; optimize antiemetic regimen; resume at next cycle when resolved"
+  - toxicity: "ANC <1000/mm³"
+    action: "Hold; G-CSF support; resume when ANC ≥1500/mm³; consider dose reduction if recurrent"
+  - toxicity: "Platelets <75K/mm³"
+    action: "Hold; resume when platelets ≥100K/mm³; dose reduce if recurrent Grade 3-4"
+  - toxicity: "Grade 3+ hepatic toxicity"
+    action: "Hold; resume at reduced dose (9 mg/kg) when ≤Grade 1"
+
+special_requirements:
+  - "Prior platinum-based chemotherapy REQUIRED (no treatment-naive SCLC)"
+  - "At least 1 prior additional treatment line beyond platinum REQUIRED per FDA label"
+  - "ECOG PS 0-2 (not studied in PS ≥3)"
+  - "No active ILD/pulmonary fibrosis at baseline (contraindicated)"
+  - "Adequate pulmonary function: no severe baseline pulmonary compromise"
+  - "CrCl ≥30 mL/min (no dose adjustment guidance below 30)"
+  - "B7-H3 testing NOT required — benefit observed regardless of expression level per IDeate-Lung01"
+
+sources:
+  - SRC-IDEATE-LUNG01-2024
+  - SRC-NCCN-SCLC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  IDeate-Lung01 (NCT04145622; Mansfield AS Lancet Oncol 2024): Phase 2 basket.
+  Ifinatamab deruxtecan 12 mg/kg Q3W in SCLC ≥2 prior lines (incl. platinum).
+  ORR ~52.4%; mDOR ~7.0 months; mOS ~12.9 months. Grade 3+ ILD ~6-9%.
+  FDA accelerated approval 2024. NCCN SCLC 2025: Category 2A for 3L+ SCLC.
+  B7-H3 ADC with DXd payload — distinct mechanism from tarlatamab (DLL3×CD3 BiTE).
+  ILD risk is the key safety differentiator vs tarlatamab; mandatory active monitoring.
+  No B7-H3 testing required per label.
