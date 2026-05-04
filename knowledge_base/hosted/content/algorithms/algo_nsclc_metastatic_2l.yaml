@@ -28,6 +28,7 @@ output_indications:
   - IND-NSCLC-2L-RET-FUSION-SELPERCATINIB
   - IND-NSCLC-2L-NTRK-LAROTRECTINIB
   - IND-NSCLC-2L-HER2-MUT-T-DXD
+  - IND-NSCLC-2L-DATO-DXD
   - IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
 
 default_indication: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL  # driver-negative cytotoxic fallback
@@ -244,22 +245,51 @@ decision_tree:
     if_false:
       next_step: 16
 
-  # ── Step 16: Default — driver-negative post-IO+chemo → docetaxel±ram ─
+  # ── Step 16: Default — driver-negative post-IO+chemo → histology gate ─
   - step: 16
     evaluate:
       any_of:
         - condition: "Driver-negative disease, progression on 1L platinum + ICI"
         - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+      next_step: 161
+    if_false:
+      next_step: 161
+    notes: "Step 16 if_true/if_false updated 2026-05-04 (Workstream CF): routes to step 161 (nonsquamous gate) instead of docetaxel directly."
+
+  # ── Step 161: Nonsquamous histology gate (DATO-DXd vs docetaxel±ram) ─
+  # DATO-DXd: TROPION-Lung01 nonsquamous PFS HR 0.84; ORR 26% vs 13%;
+  # squamous subgroup excluded (no benefit). FDA approval Jan 2025
+  # (EGFR-mut scope; NCCN Cat 2A broad nonsquamous).
+  # Docetaxel±ram: REVEL NCCN Cat 1 squamous + nonsquamous.
+  - step: 161
+    evaluate:
+      any_of:
+        - condition: "Nonsquamous NSCLC histology confirmed (adenocarcinoma, large-cell, adenosquamous, or NOS/mixed; NOT pure squamous cell carcinoma by pathology)"
+    if_true:
+      result: IND-NSCLC-2L-DATO-DXD
+      notes: >
+        Nonsquamous NSCLC 2L driver-negative: datopotamab deruxtecan 6 mg/kg IV q21d
+        (REG-DATO-DXD-NSCLC-2L; TROPION-Lung01; nonsquamous mPFS HR 0.84; ORR 26%
+        vs 13% docetaxel; NCCN Cat 2A). ILD monitoring mandatory (adjudicated ~8%
+        all-grade) — baseline CT chest; any new dyspnea → hold + CT. Squamous excluded.
+        Ukraine: DATO-DXd not NSZU-funded; imported/foundation access required.
+        If inaccessible: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL as standard fallback.
     if_false:
       result: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+      notes: >
+        Squamous NSCLC or histology unknown: docetaxel ± ramucirumab (REVEL Garon 2014
+        Lancet; mOS 10.5 vs 9.1 mo; HR 0.86; NCCN Cat 1). DATO-DXd excluded —
+        TROPION-Lung01 squamous subgroup showed no PFS/OS benefit. Single-agent
+        docetaxel or paclitaxel-weekly is the UA-accessible funded fallback when
+        ramucirumab is not NSZU-reimbursed.
+    notes: "Step 161 added 2026-05-04 (Workstream CF): nonsquamous histology gate — nonsquamous → DATO-DXd (TROPION-Lung01; NCCN Cat 2A); squamous/unknown → docetaxel±ram (Cat 1). Gap CLOSED."
 
 sources:
   - SRC-NCCN-NSCLC-2025
   - SRC-ESMO-NSCLC-METASTATIC-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
   Driver-stratified 2L+ algorithm. Branches in priority order by
   actionable mutation; default fallback to docetaxel±ramucirumab for
@@ -310,6 +340,10 @@ notes: >
   and wired at step 31 as prior EGFR-TKI generation gate (AURA3 Mok 2017 NEJM; NCCN Cat 1;
   mPFS 10.1 mo; HR 0.30). Post-osimertinib 1L → ami+laz; post-1G/2G TKI → osi 2L.
   Gap (post-1G/2G TKI sub-branch) CLOSED.
+  UPDATED 2026-05-04 (Workstream CF): IND-NSCLC-2L-DATO-DXD wired at step 161
+  (nonsquamous histology gate; TROPION-Lung01; mPFS HR 0.84 nonsquamous; ORR 26%;
+  NCCN Cat 2A). Step 16 now routes to step 161 → nonsquamous: DATO-DXd; squamous:
+  docetaxel±ram. Gap (DATO-DXd wiring) CLOSED.
 
   REMAINING WIRING GAPS:
   - RF-NSCLC-FRAILTY-AGE wired only via free-text condition; needs
@@ -320,3 +354,5 @@ notes: >
     (with note to use chemo if T790M-); no dedicated IND for T790M-neg yet.
   - C797S resistance (post-osimertinib) → no approved 4G EGFR-TKI; clinical trial.
   - Step 31 prior-TKI gate is free-text condition (no RF for prior TKI generation).
+  - Nonsquamous histology check in step 161 is free-text condition (no dedicated NSCLC
+    histology RF yet).
