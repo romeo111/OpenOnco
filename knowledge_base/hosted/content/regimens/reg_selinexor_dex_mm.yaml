@@ -1,0 +1,121 @@
+id: REG-SELINEXOR-DEX-MM
+name: "Selinexor 80 mg PO BIW + dexamethasone 20 mg BIW (XdD) — penta-refractory multiple myeloma"
+name_ua: "Селінексор 80 мг PO двічі на тиждень + дексаметазон 20 мг двічі на тиждень (XdD) — пентарефрактерна мієлома"
+alternate_names:
+  - "XdD regimen"
+  - "STORM regimen"
+  - "Selinexor-dex penta-refractory MM"
+
+disease_context: DIS-MM
+line_of_therapy: 5
+plan_track: aggressive
+
+components:
+  - drug_id: DRUG-SELINEXOR
+    dose: "80 mg PO"
+    schedule: "Twice weekly (days 1 and 3 of each week, e.g., Monday and Wednesday), continuous 28-day cycles"
+    route: PO
+    administration_notes: >
+      Take with food to reduce nausea. Administer antiemetic premedication 30 minutes
+      before each selinexor dose: 5-HT3 antagonist (ondansetron 8 mg PO) + dexamethasone
+      (20 mg; co-dosed) + NK1-antagonist (aprepitant or netupitant/palonsetron preferred for
+      first cycle). Schedule antiemetics PRN for rescue. Patients taking selinexor BIW
+      should take it on the same days each week for consistent scheduling.
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "20 mg PO"
+    schedule: "Twice weekly (same days as selinexor — co-administered)"
+    route: PO
+    administration_notes: >
+      Dexamethasone 20 mg PO serves dual purpose: direct anti-myeloma activity and
+      anti-emetic co-medication. Take 30 min before selinexor to maximize antiemetic effect.
+      Do not substitute with lower-dose dexamethasone without MDT discussion.
+
+cycle_length_days: 28
+total_cycles: "Continuous until confirmed progression or unacceptable toxicity"
+
+toxicity_profile: high
+
+premedication:
+  - "Mandatory antiemetics before EACH selinexor dose: 5-HT3 antagonist (ondansetron 8 mg PO) + NK1 antagonist (aprepitant 125 mg day 1, 80 mg days 2-3; or NEPA capsule) on cycle 1; 5-HT3 PRN cycles 2+"
+  - "Dexamethasone 20 mg co-administered (see above) — contributes to antiemetic coverage"
+  - "Hydration: ensure adequate PO fluid intake; no routine IV hydration unless hyponatremia"
+  - "Gastroprotection: PPI (omeprazole 20 mg) daily for GI mucosal protection"
+
+mandatory_supportive_care:
+  - "CBC weekly: hold for platelets <25×10⁹/L (severe thrombocytopenia); transfuse platelet support"
+  - "Serum sodium weekly: hold selinexor if Na <130 mEq/L; administer hypertonic saline if symptomatic hyponatremia; salt tablets as supplement"
+  - "Nutritional support: scheduled antiemetics (not PRN); dietary consultation if weight loss >10% from baseline"
+  - "DVT prophylaxis: not specifically required for XdD alone (unlike IMiD-based); assess per patient VTE risk score"
+  - "HBV prophylaxis: entecavir if HBsAg+ or anti-HBc+ (selinexor + dex → HBV reactivation risk)"
+
+dose_adjustments:
+  - condition: "Grade 3 thrombocytopenia (plt 25-50×10⁹/L)"
+    modification: "Hold selinexor; resume at 60 mg BIW after recovery to plt ≥50K"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade 4 thrombocytopenia (plt <25×10⁹/L)"
+    modification: "Hold selinexor; platelet transfusion support; resume at 60 mg BIW after recovery; consider dose reduction to once weekly"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade 3 hyponatremia (Na <130 mEq/L)"
+    modification: "Hold selinexor; sodium supplementation (PO salt tablets ±hypertonic saline); resume at same dose when Na ≥135 mEq/L; if recurrent → reduce to once weekly"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "Grade 3 fatigue / Grade 3 nausea-vomiting despite adequate antiemetics"
+    modification: "Hold; optimize antiemetic regimen; resume at 60 mg BIW after recovery to Grade ≤1"
+    source_refs: [SRC-NCCN-MM-2025]
+  - condition: "ANC <500/μL (Grade 4 neutropenia)"
+    modification: "Hold; G-CSF support; resume at same dose after recovery to ANC ≥1000"
+    source_refs: [SRC-NCCN-MM-2025]
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Selinexor NOT registered in Ukraine (no EMA approval). Dexamethasone is
+    NSZU-accessible. Selinexor requires US named-patient import — prohibitively
+    difficult access in practice. For penta-refractory MM in Ukraine: clinical
+    trial enrollment preferred; teclistamab via compassionate access (if EMA-
+    authorized compassionate program available); best supportive care when
+    treatment options exhausted.
+
+sources:
+  - SRC-NCCN-MM-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Нудота або блювота — неможливість їсти або пити"
+    action_ua: "Подзвоніть у клініку того ж дня — важка нудота/блювота потребує корекції антиеметичної терапії або дозового корегування"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Синці, петехії або незвичайна кровотеча"
+    action_ua: "Подзвоніть у клініку того ж дня — тяжка тромбоцитопенія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Різка слабкість, сплутаність свідомості, набряки"
+    action_ua: "Подзвоніть у клініку того ж дня — гіпонатріємія"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Порушення зору (двоїння, нечіткість)"
+    action_ua: "Повідомте лікаря на найближчому візиті — можливий ефект селінексору на зір"
+    urgency: log_at_next_visit
+    sources:
+      - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  STORM regimen (Chari 2019 NEJM): selinexor 80 mg PO BIW + dex 20 mg BIW for
+  penta-refractory MM (refractory to bortezomib, carfilzomib, lenalidomide,
+  pomalidomide, daratumumab). ORR 26%; mDOR 4.4 mo; mPFS 3.7 mo; mOS 8.6 mo.
+  FDA accelerated approval July 2019. Critical: aggressive antiemetic premedication
+  (5-HT3 + NK1 + dex) and weekly Na/CBC monitoring. High toxicity burden —
+  patient selection (ECOG 0-1, adequate organ function, motivated patient).
+  Ukraine: selinexor not registered; regimen for named-patient import only.
+  STUB pending Co-Lead sign-off.
+notes_ua: >
+  Режим STORM: селінексор 80 мг PO двічі на тиждень + дексаметазон 20 мг двічі
+  на тиждень для пентарефрактерної ММ. ORR 26%; mПВБ 3,7 міс.; mЗВ 8,6 міс.
+  Критично: агресивна антиеметична терапія (5-HT3 + NK1 + дексаметазон) перед
+  кожною дозою + щотижневий моніторинг Na та CBC.
+  В Україні: не зареєстрований.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

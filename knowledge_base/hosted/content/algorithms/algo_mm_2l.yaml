@@ -10,6 +10,7 @@ output_indications:
 - IND-MM-4L-TECLISTAMAB
 - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 - IND-MM-2L-VENETOCLAX-T1114
+- IND-MM-5L-SELINEXOR
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-2L-DRD
 decision_tree:
@@ -51,10 +52,60 @@ decision_tree:
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
     - condition: adequate organ function for bispecific
   if_true:
-    result: IND-MM-4L-TECLISTAMAB
+    next_step: 21
   if_false:
     next_step: 3
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired. Updated 2026-05-04 (Workstream DA): if_true now routes to step 21 (teclistamab access gate + selinexor fallback) instead of direct teclistamab result."
+
+  # Step 21 — teclistamab access gate for triple-class-refractory MM.
+  # Teclistamab (IND-MM-4L-TECLISTAMAB) is NCCN Cat 1 preferred; ORR 63%; mDOR 18.4 mo.
+  # However, not EMA-approved (MajesTEC-1 basis; US FDA-only + individual EU compassionate).
+  # Ukraine: neither teclistamab nor selinexor registered.
+  # If teclistamab accessible: preferred (Cat 1, superior efficacy).
+  # If inaccessible: selinexor (Cat 2A; STORM; ORR 26%; XPO1-mechanism non-overlapping).
+- step: 21
+  evaluate:
+    all_of:
+    - condition: "Teclistamab accessible (FDA-registered + named-patient / EMA compassionate / clinical trial)"
+  if_true:
+    result: IND-MM-4L-TECLISTAMAB
+    notes: >
+      Triple-class refractory + teclistamab accessible: teclistamab 1.5 mg/kg SC weekly
+      after step-up dosing (IND-MM-4L-TECLISTAMAB; REG-TECLISTAMAB-MM; MajesTEC-1
+      Moreau 2022 NEJM; ORR 63%; CR 39%; mDOR 18.4 mo; NCCN Cat 1). Step-up dosing
+      mandatory (0.06 mg/kg SC → 0.3 mg/kg SC → 1.5 mg/kg SC) to mitigate CRS risk.
+      Infection prophylaxis (IgG monitoring; PJP; antiviral) mandatory.
+  if_false:
+    next_step: 22
+  notes: "Step 21 added 2026-05-04 (Workstream DA): teclistamab access gate — accessible → IND-MM-4L-TECLISTAMAB (Cat 1); inaccessible → step 22 (selinexor fallback)."
+
+  # Step 22 — selinexor fallback when teclistamab inaccessible (penta-refractory MM).
+  # STORM (Chari 2019 NEJM): selinexor 80 mg BIW + dex 20 mg BIW; ORR 26%; NCCN Cat 2A.
+  # XPO1 inhibitor — distinct from all conventional anti-MM mechanisms.
+  # High toxicity (thrombocytopenia 74%, nausea 72%); patient selection critical.
+  # Not EMA-approved (CHMP negative 2021); not UA-registered.
+- step: 22
+  evaluate:
+    all_of:
+    - condition: "Selinexor accessible (US named-patient import feasible; MDT + pharmacy confirmed)"
+    - condition: "Platelets ≥75×10⁹/L at start (selinexor-related thrombocytopenia; baseline plt check)"
+    - condition: "ECOG 0-2 AND adequate antiemetic compliance feasible"
+  if_true:
+    result: IND-MM-5L-SELINEXOR
+    notes: >
+      Teclistamab inaccessible + selinexor accessible + platelets adequate: selinexor
+      80 mg PO BIW + dex 20 mg BIW (REG-SELINEXOR-DEX-MM; STORM Chari 2019 NEJM;
+      ORR 26%; mPFS 3.7 mo; NCCN Cat 2A). Mandatory aggressive antiemetics (5-HT3 + NK1).
+      Weekly CBC + Na monitoring. Ukraine: not registered; US named-patient import.
+  if_false:
+    result: IND-MM-2L-DKD
+    notes: >
+      Neither teclistamab nor selinexor accessible (Ukraine: both require named-patient
+      import/trial) OR inadequate baseline platelets/ECOG: fallback to DKd MDT
+      discussion. For penta-refractory patients, DKd is likely insufficient —
+      consider clinical trial enrollment, bisphosphonate + pain management (BSC),
+      or international referral for bispecific access. MDT mandatory.
+  notes: "Step 22 added 2026-05-04 (Workstream DA): selinexor fallback for teclistamab-inaccessible triple-class refractory MM (STORM Cat 2A). Gap (5) CLOSED."
 - step: 3
   evaluate:
     any_of:
@@ -103,6 +154,12 @@ notes: >
   (1) Maintenance algo (ALGO-MM-MAINTENANCE) pragmatically included in step 1 here.
   (3) Belantamab mafodotin — withdrawn from market post DREAMM-3; not modeled.
   (4) CAR-T (cilta-cel CARTITUDE-4, ide-cel KarMMa-3) — UA access ≈zero; not modeled.
-  (5) Selinexor combos for penta-refractory — not modeled.
+  UPDATED 2026-05-04 (Workstream DA): IND-MM-5L-SELINEXOR authored and wired at
+  steps 21 and 22 (teclistamab access gate + selinexor fallback; DRUG-SELINEXOR +
+  REG-SELINEXOR-DEX-MM authored; STORM Chari 2019 NEJM; ORR 26%; NCCN Cat 2A).
+  Step 2 if_true now routes to step 21 (teclistamab access check) → step 22
+  (selinexor fallback). Gap (5) CLOSED.
+
+  (5) CLOSED — Selinexor penta-refractory now modeled at steps 21-22.
   (6) Venetoclax inaccessible in Ukraine off-label MM context → DKd as fallback
   (documented in IND notes; MDT decision).

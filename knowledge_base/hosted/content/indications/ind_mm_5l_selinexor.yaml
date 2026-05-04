@@ -1,0 +1,201 @@
+id: IND-MM-5L-SELINEXOR
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 5
+  stage_requirements:
+    - "Penta-refractory multiple myeloma: refractory to ≥1 proteasome inhibitor (bortezomib or carfilzomib), ≥1 IMiD (lenalidomide or pomalidomide), AND ≥1 anti-CD38 antibody (daratumumab or isatuximab)"
+    - "Refractory = disease progression on or within 60 days of last dose of the agent"
+    - "≥4 prior regimens (STORM eligibility; NCCN requires exhaustion of established agents)"
+    - "Teclistamab or other BCMA bispecific inaccessible OR medically ineligible (e.g., cytokine release syndrome risk unacceptable)"
+    - "ECOG PS 0-2"
+    - "ANC ≥1000/μL; platelets ≥75×10⁹/L at start (selinexor-related thrombocytopenia; caution with prior plt nadirs)"
+    - "No active uncontrolled Grade ≥3 nausea/vomiting (selinexor dose-limiting; requires antiemetic compliance)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      STORM enrolled ECOG 0-2. ECOG ≥3 excluded in STORM. Very high toxicity burden
+      (thrombocytopenia 74%, nausea 72%, fatigue 73%) — requires motivated patient with
+      adequate caregiver support and close lab monitoring (CBC weekly). Antiemetic
+      compliance is critical: patients unable to take scheduled antiemetics reliably
+      should not receive selinexor. Elderly patients (>75y) tolerate poorly — reduce
+      starting dose or consider weekly schedule.
+
+recommended_regimen: REG-SELINEXOR-DEX-MM
+concurrent_therapy:
+  - "MANDATORY antiemetic premedication before EACH dose: 5-HT3 antagonist (ondansetron 8 mg) + NK1 antagonist (aprepitant) + dexamethasone 20 mg (co-administered)"
+  - "Serum sodium supplementation: oral salt tablets (sodium chloride 1-2 g/day) as prophylaxis if baseline Na <140; IV saline for Na <130"
+  - "PJP prophylaxis (TMP-SMX 160/800 mg 3×/week) — steroid component + immunocompromised MM"
+  - "Antiviral prophylaxis (acyclovir 400 mg BID) — ongoing immunosuppression"
+  - "HBV prophylaxis (entecavir 0.5 mg daily if HBsAg+ or anti-HBc+)"
+  - "Nutritional support consultation (scheduled antiemetics + dietary tracking for anorexia)"
+
+followed_by:
+  - "CBC + serum electrolytes (Na, K) weekly for first 2 months, then q2 weeks if stable"
+  - "CT/PET-CT reassessment after 2 cycles (weeks 8-9): assess response (PR/VGPR/CR/PD)"
+  - "Continuing responders (≥PR): continue until progression or unacceptable toxicity"
+  - "Progression after selinexor: best supportive care; clinical trial; BCMA-targeted therapy (if not prior)"
+  - "Consider dose reduction to once weekly (selinexor 80 mg/week) if toxicity-limiting despite support"
+
+evidence_level: moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: "~26% (STORM; selinexor+dex in penta-refractory MM; n=122)"
+  complete_response: "~2% (stringent CR; STORM)"
+  progression_free_survival: "Median PFS ~3.7 months (STORM; penta-refractory MM)"
+  overall_survival_5y: "Median OS ~8.6 months (STORM; penta-refractory at enrollment)"
+  notes: >
+    PRIMARY EVIDENCE: STORM (Chari 2019 NEJM; NCT02336815; Phase 2b):
+    - Selinexor 80 mg PO BIW + dex 20 mg BIW in penta-refractory MM
+    - N=122; heavily pretreated (median 7 prior regimens)
+    - ORR 26.2%; sCR 2.3%; VGPR 5.4%; PR 18.5%
+    - mDOR 4.4 months; mPFS 3.7 months; mOS 8.6 months
+    - G≥3 adverse events: thrombocytopenia 58.8%; hyponatremia 22.1%;
+      anemia 40.7%; nausea 9%
+    - FDA accelerated approval July 2019 based on ORR in penta-refractory
+
+    PLACING SELINEXOR IN SEQUENCE: For triple-class refractory MM, NCCN
+    Cat 1 preferred agents are teclistamab (BCMA bispecific; MajesTEC-1;
+    ORR 63%; CR 39%; mDOR 18.4 mo) and ciltacabtagene autoleucel/idecabtagene
+    vicleucel (BCMA CAR-T; CARTITUDE-4, KarMMa-3). Selinexor (NCCN Cat 2A)
+    is positioned for patients in whom BCMA-targeted therapy is inaccessible,
+    ineligible (inadequate organ function for CAR-T; CRS risk), or has failed.
+
+    XPO1 MECHANISM ADVANTAGE: Selinexor targets XPO1 (nuclear export) — a
+    completely distinct mechanism from IMiDs (cereblon), PIs (proteasome),
+    anti-CD38 (surface antigen), and BCMA-targeting (bispecific/CAR-T).
+    Allows salvage in penta-refractory disease where all conventional anti-MM
+    mechanisms are exhausted.
+
+    UKRAINE: Selinexor not registered (no EMA approval 2021 rejection).
+    Named-patient import from US is theoretically possible but practically
+    difficult. For Ukrainian penta-refractory MM patients, realistic options
+    are clinical trial enrollment, BCMA-targeted compassionate access (if
+    teclistamab EMA compassionate program), or best supportive care.
+
+hard_contraindications:
+  - "Platelets <25×10⁹/L at start (severe thrombocytopenia baseline; selinexor will worsen)"
+  - "Active Grade ≥3 nausea/vomiting not controlled on antiemetics (selinexor dose-limiting)"
+  - "ECOG ≥3 — high-toxicity regimen requires minimal functional reserve"
+  - "Active symptomatic hyponatremia (Na <125 mEq/L; selinexor exacerbates Na loss)"
+
+red_flags_triggering_alternative:
+  - RF-FITNESS-ECOG-POOR
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-SPEP
+  - TEST-UPEP
+  - TEST-SERUM-FREE-LIGHT-CHAINS
+  - TEST-BM-ASPIRATE
+  - TEST-BM-TREPHINE
+  - TEST-FLOW-CYTOMETRY
+  - TEST-CECT-CAP
+  - "Serum sodium (Na) at baseline — hyponatremia screening mandatory"
+  - "β2-microglobulin (prognostic)"
+  - "Cardiac function (ECG baseline — QTc screen)"
+
+desired_tests:
+  - "Cytogenetics (FISH) if not recently repeated — t(11;14) or del17p/gain1q may indicate clinical trial eligibility"
+  - "Prior regimen toxicity review (cumulative neuropathy, cardiac function post-carfilzomib)"
+
+rationale: >
+  Selinexor (Xpovio) is a first-in-class XPO1 inhibitor with FDA-accelerated
+  approval for penta-refractory multiple myeloma (refractory to bortezomib,
+  carfilzomib, lenalidomide, pomalidomide, AND daratumumab). Based on STORM
+  (Chari 2019 NEJM; ORR 26%; NCCN Cat 2A), selinexor + dexamethasone provides
+  clinically meaningful responses in a population with a median of 7 prior
+  regimens and no other standard options.
+
+  MECHANISM RATIONALE: Selinexor's XPO1 inhibition mechanism is completely
+  distinct from all currently approved anti-MM agents — no cross-resistance
+  with IMiDs (cereblon), PIs (proteasome 20S), anti-CD38 (surface antigen),
+  or BCMA-targeted therapies. Suitable for patients exhausting all conventional
+  anti-MM mechanisms.
+
+  PATIENT SELECTION IS CRITICAL: High toxicity burden (thrombocytopenia 74%,
+  nausea 72%, fatigue 73%, hyponatremia 39%) demands careful patient selection:
+  ECOG 0-2, platelets ≥75K, no prior GI intolerance to antifolates/oral agents,
+  motivated patient + caregiver, and infrastructure for weekly CBC + electrolyte
+  monitoring.
+
+  SEQUENCING RELATIVE TO TECLISTAMAB: NCCN Cat 1 for triple-class refractory
+  is teclistamab bispecific (MajesTEC-1; ORR 63%; mDOR 18.4 mo) — markedly
+  superior to selinexor. Selinexor is positioned as a NCCN Cat 2A option when:
+  (1) teclistamab inaccessible (not EMA-approved for compassionate access);
+  (2) patient ineligible for bispecific (infusion center not available, CRS risk);
+  (3) BCMA previously targeted and depleted.
+
+  UKRAINE CONTEXT: Both teclistamab and selinexor have limited Ukraine access
+  (no registration). Clinical trial enrollment is the most realistic pathway
+  for penta-refractory Ukrainian patients. If both are inaccessible, best
+  supportive care with pain control + anti-myeloma-activity maintenance
+  (low-dose steroids; bisphosphonates) is the pragmatic approach.
+
+rationale_ua: >
+  Селінексор (Xpovio) — інгібітор XPO1 (ядерний експорт), FDA-схвалений для
+  пентарефрактерної ММ (STORM; Chari 2019 NEJM; ORR 26%; mПВБ 3,7 міс.;
+  NCCN Кат 2A). Механізм відрізняється від IMiD, ПІ, анти-CD38 та BCMA-
+  спрямованих терапій → можливість відповіді при пентарефрактерності.
+
+  Вибір пацієнта критичний: ECOG 0-2, тромбоцити ≥75K, обов'язковий
+  антиеметичний режим (5-HT3 + NK1 + дексаметазон), щотижневий моніторинг
+  CBC + Na.
+
+  В Україні: не зареєстрований (EMA відмовило 2021). Текліставаб (BCMA
+  біспецифік) є кращим варіантом при доступності.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "НЕ починати без обов'язкової антиеметичної підготовки перед кожною дозою (5-HT3 + NK1 + дексаметазон)"
+  - "НЕ застосовувати при тромбоцитах <25 000 — ризик важкої кровотечі"
+  - "НЕ застосовувати при активній симптоматичній гіпонатріємії (Na <125) — посилить"
+  - "НЕ пропускати щотижневий CBC + Na — моніторинг токсичності обов'язковий"
+  - "НЕ застосовувати при ECOG ≥3 без обговорення MDT — висока токсичність"
+  - "НЕ продовжувати при Grade 4 тромбоцитопенії без відновлення — зменшіть дозу"
+  - "НЕ призначати без перевірки доступності текліставабу або клінічних досліджень — Кат 1 варіанти мають пріоритет"
+
+sources:
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN MM 2025 Category 2A: selinexor 80 mg PO BIW + dexamethasone 20 mg BIW
+      (XdD) for penta-refractory multiple myeloma after ≥4 prior regimens (STORM;
+      Chari 2019 NEJM; ORR 26%; mPFS 3.7 mo; FDA accelerated approval July 2019).
+  - source_id: SRC-ESMO-MM-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO MM 2023: selinexor endorsed as salvage option for heavily pre-treated
+      MM in specific clinical scenarios; high toxicity profile requires careful
+      patient selection and aggressive supportive care.
+
+known_controversies:
+  - topic: "Selinexor vs teclistamab for triple-class / penta-refractory MM"
+    positions:
+      - position: "Teclistamab (BCMA bispecific) — NCCN Cat 1; ORR 63%; mDOR 18.4 mo; MajesTEC-1; strongly preferred over selinexor when accessible; step-up dosing protocol reduces CRS risk"
+        sources: [SRC-NCCN-MM-2025]
+      - position: "Selinexor (XPO1 inhibitor) — NCCN Cat 2A; ORR 26%; oral administration; no CRS/ICANS risk; applicable when bispecifics inaccessible or infusion center unavailable; EMA not approved"
+        sources: [SRC-NCCN-MM-2025]
+    our_default: "Teclistamab strongly preferred when accessible (NCCN Cat 1; superior ORR). Selinexor reserved for teclistamab-inaccessible or bispecific-ineligible patients (NCCN Cat 2A; Ukraine: both require named-patient access; clinical trial preferred)."
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Penta-refractory MM XPO1-targeted
+  salvage option. Wired at ALGO-MM-2L step 21 (teclistamab access gate;
+  selinexor fallback when teclistamab inaccessible; Workstream DA 2026-05-04).
+  Gap (5) in ALGO-MM-2L CLOSED. STORM (Chari 2019 NEJM) primary evidence.
+  EMA not approved (CHMP negative 2021). Ukraine: named-patient US import only.
+  SRC-STORM-CHARI-2019 source stub absent; citing via SRC-NCCN-MM-2025.
+  DRUG-SELINEXOR + REG-SELINEXOR-DEX-MM authored (Workstream DA).
