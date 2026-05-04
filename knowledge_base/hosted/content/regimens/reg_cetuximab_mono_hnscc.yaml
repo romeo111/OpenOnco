@@ -1,0 +1,104 @@
+id: REG-CETUXIMAB-MONO-HNSCC
+name: "Cetuximab monotherapy (HNSCC 2L)"
+name_ua: "Цетуксимаб монотерапія (ХНСЩ 2L)"
+alternate_names:
+  - "Cetuximab single-agent"
+  - "Anti-EGFR monoclonal antibody monotherapy"
+
+disease_context: DIS-HNSCC
+line_of_therapy: 2
+plan_track: standard
+
+components:
+  - drug_id: DRUG-CETUXIMAB
+    dose: "Loading: 400 mg/m² IV (initial dose); Maintenance: 250 mg/m² IV weekly"
+    route: IV
+    schedule: "Weekly (loading dose week 1, then 250 mg/m²/week until progression)"
+    administration_notes: >
+      Loading dose (400 mg/m²): infuse over 2 hours via dedicated IV line (do not
+      administer with other agents in same line). Weekly maintenance (250 mg/m²):
+      infuse over 1 hour. Premedicate with H1-antihistamine (diphenhydramine 25-50 mg
+      IV) 30-60 min before each infusion — reduces severe infusion reaction risk.
+      Infusion reaction monitoring required during and 1h after infusion; have
+      resuscitation equipment available (epinephrine, corticosteroids, antihistamines).
+      EGFR testing NOT required for HNSCC (EGFR overexpressed in ~90% HNSCC;
+      no companion diagnostic required by label).
+      Magnesium monitoring: cetuximab causes hypomagnesemia — check Mg before
+      each infusion; supplement as needed.
+
+alternative_dosing: >
+  Biweekly dosing (q2w): cetuximab 500 mg/m² IV q14d (over 2 hours) — used
+  in some European protocols; not FDA label for HNSCC but pharmacokinetically
+  equivalent. Less commonly used for HNSCC monotherapy.
+
+cycle_length_days: 7
+total_cycles: >
+  Continue until disease progression, unacceptable toxicity, or patient
+  withdrawal. Median duration in R/M HNSCC ~3-4 months (limited duration
+  given disease biology). Response assessment after 6-8 weeks (CT CAP).
+
+premedication:
+  - "H1-antihistamine (diphenhydramine 25-50 mg IV) 30-60 min pre-infusion — mandatory"
+  - "Corticosteroid (dexamethasone 8 mg IV) for patients with prior Grade 1-2 infusion reaction"
+  - "No antiemetics required (cetuximab is not emetogenic)"
+
+mandatory_supportive_care:
+  - "Magnesium supplementation: check serum Mg before each infusion; supplement if <0.8 mmol/L (oral MgO or IV MgSO4 for severe hypomagnesemia)"
+  - "Skin care: cetuximab EGFR-related acneiform rash (~75%; Grade 3 ~10-15%) — prophylactic doxycycline 100 mg bid weeks 1-6 reduces severity (Lacouture protocol)"
+
+monitoring_schedule:
+  - "Serum electrolytes (Mg, K, Ca): weekly for first 4 weeks, then every 2-3 weeks (hypomagnesemia, hypokalemia)"
+  - "Skin assessment: each visit (acneiform rash grading — Grade ≥3 = cetuximab dose modification)"
+  - "CT chest/abdomen/neck: every 6-8 weeks (response assessment per RECIST 1.1)"
+  - "Infusion reaction monitoring: during and 1h post-infusion (vital signs q15 min during infusion)"
+
+dose_adjustments:
+  - condition: "Grade 3-4 infusion reaction"
+    modification: "Discontinue cetuximab permanently — anaphylaxis/severe IRR is a contraindication to rechallenge."
+  - condition: "Grade 3 acneiform rash (extensive, not controlled with supportive care)"
+    modification: "Hold cetuximab 1-2 weeks. If resolves to Grade ≤2: resume at 200 mg/m² weekly (first reduction) or 150 mg/m² (second reduction). Discontinue if no improvement in 2 weeks."
+  - condition: "Grade 3+ hypomagnesemia (<0.4 mmol/L or symptomatic)"
+    modification: "IV Mg supplementation (MgSO4 1-2 g IV over 1-2h); do not delay cetuximab if asymptomatic and Mg supplementation ongoing."
+  - condition: "Grade 3+ non-hematological toxicity (non-skin)"
+    modification: "Hold until ≤Grade 2; resume at reduced dose."
+
+special_precautions:
+  - "INFUSION REACTIONS: Life-threatening IRR in ~1-3% (Grade 4 rare but occurs); highest risk dose 1 — mandatory monitoring environment. Pre-treat with antihistamine every dose."
+  - "HYPOMAGNESEMIA: Cumulative with ongoing cetuximab; can cause Grade 3 Mg wasting syndrome. Monitor and supplement proactively."
+  - "PULMONARY TOXICITY: Rare interstitial lung disease (<1%); discontinue if new pulmonary infiltrates."
+  - "ACNEIFORM RASH: Not an allergic reaction — EGFR-driven skin toxicity; paradoxically associated with better clinical response. Treat with topical clindamycin, oral doxycycline. Grade ≥3 requires dose hold."
+  - "PRIOR CETUXIMAB: Do not use if prior cetuximab or other EGFR-mAb (panitumumab, zalutumumab) — lack of cross-resistance data and potential for sensitization/secondary resistance."
+
+watchpoints_ua:
+  - "КРИТИЧНО: Відстежувати інфузійні реакції під час та 1 год після ін'єкції — адреналін, стероїди, антигістаміни напоготові"
+  - "КРИТИЧНО: Магній перед кожним прийомом — гіпомагніємія (~75% пацієнтів при тривалому застосуванні)"
+  - "УВАГА: Акнеподібний висип (~75%) — не є алергічною реакцією; лікувати доксициклін 100 мг 2 р/д профілактично; корелює з відповіддю на лікування"
+  - "УВАГА: Не застосовувати при попередньому цетуксимабі (EXTREME 1L)"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: "Cetuximab (Erbitux, ImClone/Merck KGaA) — registered in Ukraine; NSZU reimbursement coverage for HNSCC as of 2026 requires verification."
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+  - SRC-ESMO-HNSCC-2020
+
+last_reviewed: "2026-05-04"
+notes: >
+  Cetuximab monotherapy 2L HNSCC: NCCN Category 2A for R/M HNSCC patients
+  without prior cetuximab exposure. No phase 3 RCT dedicated to cetuximab
+  monotherapy at 2L in R/M HNSCC. Evidence extrapolated from:
+  (1) EXTREME trial (Vermorken 2008, NEJM): cetuximab+platinum+5-FU vs
+  platinum+5-FU in 1L R/M HNSCC — established EGFR activity in HNSCC.
+  (2) Smaller phase 2/retrospective series in platinum-refractory HNSCC.
+  (3) NCCN expert panel consensus (Cat 2A).
+  ORR ~10-15% in R/M HNSCC 2L (historical; no modern RCT).
+  Not to be confused with EXTREME regimen (cetuximab+platinum+5-FU, 1L)
+  — this is cetuximab single-agent only.
+notes_ua: >
+  Цетуксимаб монотерапія 2L ХНСЩ: NCCN Категорія 2A для пацієнтів без
+  попереднього цетуксимабу. ORR ~10-15% (екстраполовані дані; немає phase 3 RCT
+  у 2L). Не плутати з режимом EXTREME (цетуксимаб+платина+5-ФУ, 1L).
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

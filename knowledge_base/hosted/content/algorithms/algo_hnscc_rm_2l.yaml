@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-HNSCC-RM-2L-NIVOLUMAB
   - IND-HNSCC-RM-2L-PEMBROLIZUMAB
+  - IND-HNSCC-RM-2L-CETUXIMAB
   - IND-HNSCC-RM-2L-CHEMO
 
 default_indication: IND-HNSCC-RM-2L-NIVOLUMAB
@@ -44,13 +45,43 @@ decision_tree:
         platinum + 5-FU) as 1L for CPS <1. Nivolumab (CheckMate-141) and pembrolizumab
         (KEYNOTE-040) are both NCCN Category 1 for this setting.
     if_false:
-      result: IND-HNSCC-RM-2L-CHEMO
+      next_step: 21
       notes: >
         ICI-experienced (prior pembrolizumab 1L or pembrolizumab+chemo 1L):
-        anti-PD-1 re-challenge NOT supported. Single-agent cytotoxic preferred:
-        docetaxel 75 mg/m² q3w (REG-DOCETAXEL-MONO; preferred) or methotrexate
-        40-50 mg/m² weekly (palliative/frail). Cetuximab if no prior EXTREME.
-        Clinical trial enrollment should be offered first. NCCN Category 2A.
+        anti-PD-1 re-challenge NOT supported. Route to step 21 to check
+        prior cetuximab status — cetuximab-naive patients eligible for
+        IND-HNSCC-RM-2L-CETUXIMAB; prior EXTREME (cetuximab-experienced) →
+        IND-HNSCC-RM-2L-CHEMO (docetaxel/methotrexate).
+
+  # Step 21 — ICI-experienced cetuximab gate.
+  # For ICI-experienced patients (step 2 if_false), check prior cetuximab:
+  # - No prior cetuximab (no EXTREME 1L): cetuximab monotherapy is an option
+  #   (NCCN Cat 2A; EGFR-active in ~90% HNSCC; non-myelosuppressive toxicity profile).
+  # - Prior cetuximab (EXTREME 1L): this path is inconsistent with ICI-experienced
+  #   routing (EXTREME patients are ICI-naive at 2L → routed at step 2 if_true),
+  #   so this if_false branch mainly handles the rare case of prior EGFR-mAb outside
+  #   EXTREME → docetaxel preferred.
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "ICI-experienced (prior anti-PD-1/L1 therapy)"
+        - condition: "No prior cetuximab or EGFR-targeted monoclonal antibody (no EXTREME regimen in prior therapy)"
+    if_true:
+      result: IND-HNSCC-RM-2L-CETUXIMAB
+      notes: >
+        ICI-experienced + cetuximab-naive: cetuximab monotherapy preferred over
+        docetaxel when cytotoxic myelosuppression risk is a concern (NCCN Cat 2A;
+        REG-CETUXIMAB-MONO-HNSCC; ORR ~10-15% R/M HNSCC). Docetaxel
+        (IND-HNSCC-RM-2L-CHEMO) is an equally valid option — MDT choice based
+        on toxicity preference, patient performance status, and comorbidities.
+        Clinical trial enrollment should be offered before either option.
+    if_false:
+      result: IND-HNSCC-RM-2L-CHEMO
+      notes: >
+        Prior cetuximab or ICI-experienced with cetuximab history: docetaxel
+        75 mg/m² q3w (REG-DOCETAXEL-MONO; NCCN Cat 2A) or methotrexate
+        40-50 mg/m² weekly (palliative/frail). Clinical trial preferred.
+    notes: "Cetuximab gate added 2026-05-04 (Workstream AG). Applies to ICI-experienced (post-pembrolizumab) patients only."
 
   # Step 3 — ICI-naive: PD-L1 CPS stratification for nivolumab vs pembrolizumab.
   # CheckMate-141 (nivolumab): met primary endpoint OS HR 0.70 — stronger regulatory standing.
@@ -95,13 +126,13 @@ notes: >
   received pembrolizumab 1L, there is no validated 2L ICI option.
 
   AUTHORED 2026-05-04:
-  - IND-HNSCC-RM-2L-CHEMO: docetaxel preferred (NCCN Cat 2A); methotrexate/cetuximab alternatives
+  - IND-HNSCC-RM-2L-CHEMO: docetaxel preferred (NCCN Cat 2A); methotrexate alternative
+  - IND-HNSCC-RM-2L-CETUXIMAB: cetuximab monotherapy for ICI-experienced cetuximab-naive
+    patients (NCCN Cat 2A; REG-CETUXIMAB-MONO-HNSCC; wired at step 21)
 
   REMAINING GAPS:
-  - IND-HNSCC-RM-2L-CETUXIMAB: cetuximab monotherapy/combination for 2L HNSCC
-    (applies to patients who did not receive EXTREME 1L) — not yet authored.
   - Locally advanced HNSCC (definitive CRT, induction, larynx preservation):
-    completely separate algorithm not yet authored.
+    separate algorithm not yet authored.
   - Salivary gland carcinoma: separate histology; out of scope for this algorithm.
 
   HPV oropharyngeal context: HPV+ HNSCC has better overall prognosis but same

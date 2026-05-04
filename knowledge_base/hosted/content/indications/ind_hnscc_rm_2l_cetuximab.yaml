@@ -1,0 +1,141 @@
+id: IND-HNSCC-RM-2L-CETUXIMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent/metastatic HNSCC (squamous cell carcinoma of oral cavity, oropharynx, larynx, hypopharynx, or nasopharynx)"
+    - "Progressive disease on or after 1L systemic therapy"
+    - "ICI-experienced: prior pembrolizumab ± platinum+5-FU (KEYNOTE-048 regimen)"
+    - "Cetuximab-naive: no prior cetuximab or other EGFR-targeted mAb (no EXTREME 1L)"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior cetuximab or panitumumab (any line) — cross-resistance expected; use IND-HNSCC-RM-2L-CHEMO"
+    - "EGFR testing NOT required for HNSCC (EGFR overexpressed in ~90%; no companion diagnostic)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG ≥3: systemic anti-EGFR therapy not appropriate; best supportive care."
+
+recommended_regimen: REG-CETUXIMAB-MONO-HNSCC
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~10-15% (historical R/M HNSCC salvage data; no modern RCT in post-ICI setting)"
+  dcr: "~40-50% (including stable disease)"
+  median_pfs_months: "~2-3 (limited duration; EGFR resistance develops rapidly)"
+  notes: >
+    No phase 3 RCT specifically evaluating cetuximab monotherapy at 2L in R/M
+    HNSCC. Evidence is extrapolated from:
+    (1) EXTREME trial (Vermorken 2008): cetuximab established activity in HNSCC
+        (1L setting; OS benefit with cetuximab+platinum+5-FU vs chemo alone).
+    (2) Phase 2/retrospective salvage data in platinum-refractory R/M HNSCC
+        (ORR ~10-15%; SD adds modest disease control benefit).
+    (3) NCCN expert consensus (Category 2A) for R/M HNSCC without prior
+        cetuximab exposure.
+    Modern context: most post-pembrolizumab 2L patients have never received
+    cetuximab (KEYNOTE-048 does not include cetuximab). Cetuximab represents
+    a non-cytotoxic option with a distinct toxicity profile vs docetaxel
+    (rash, hypomagnesemia vs myelosuppression/alopecia). EGFR pathway activated
+    in ~90% of HNSCC — biologically rational but response is modest.
+
+hard_contraindications:
+  - "Prior cetuximab or EGFR mAb (panitumumab, zalutumumab) — any line; resistance expected"
+  - "Severe infusion reaction (Grade 4) to prior cetuximab or chimeric antibody — absolute contraindication"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Prior EXTREME 1L (received cetuximab+platinum+5-FU) → ICI 2L (nivolumab IND-HNSCC-RM-2L-NIVOLUMAB or pembrolizumab IND-HNSCC-RM-2L-PEMBROLIZUMAB if ICI-naive)"
+  - condition: "ICI-naive at 2L (no prior pembrolizumab; received EXTREME 1L) → nivolumab (CheckMate-141 NCCN Cat 1) preferred over cetuximab"
+  - condition: "ECOG 2, frail, or high myelosuppression risk → IND-HNSCC-RM-2L-CHEMO with methotrexate weekly (lower toxicity option vs cetuximab)"
+  - condition: "Prior Grade 4 infusion reaction to any chimeric antibody → IND-HNSCC-RM-2L-CHEMO (docetaxel or methotrexate — avoid cetuximab permanently)"
+  - condition: "Grade 3+ cetuximab acneiform rash after dose reduction → discontinue and route to IND-HNSCC-RM-2L-CHEMO"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - "Serum electrolytes including magnesium: baseline (hypomagnesemia screening pre-treatment)"
+  - "CT neck/chest/abdomen/pelvis: baseline staging, then every 6-8 weeks for response"
+  - "Performance status assessment (ECOG) at each visit"
+
+desired_tests:
+  - "Clinical trial screening: NCCN recommends clinical trial enrollment as priority 2L option for R/M HNSCC — screen before starting cetuximab"
+  - "HPV/p16 status (oropharynx primary): prognostic only; does not change cetuximab indication"
+  - "EBV testing (nasopharynx): EBV+ NPC has distinct biology; specialized NPC protocols may be preferred"
+
+rationale: >
+  Cetuximab is a chimeric IgG1 anti-EGFR monoclonal antibody that competitively
+  blocks EGFR ligand binding, inhibiting downstream Ras-Raf-MEK-ERK and PI3K-AKT
+  signaling. EGFR is overexpressed in ~90% of HNSCC (independent of mutation status),
+  making EGFR targeting biologically rational.
+
+  In 2L R/M HNSCC, cetuximab monotherapy is relevant for the patient subgroup that:
+  (1) Is ICI-experienced (received pembrolizumab 1L per KEYNOTE-048) — ICI
+      re-challenge is not supported after progression on pembrolizumab.
+  (2) Is cetuximab-naive — did NOT receive EXTREME (cetuximab+platinum+5-FU) in 1L.
+  In the 2025/2026 landscape where KEYNOTE-048 set pembrolizumab as 1L standard
+  for CPS ≥1 patients (~80-85% of R/M HNSCC), most patients progressing to 2L
+  will be ICI-experienced AND cetuximab-naive. This makes cetuximab an eligible
+  option alongside docetaxel.
+
+  Evidence:
+  - EXTREME trial (Vermorken 2008, NEJM): cetuximab+platinum+5-FU vs chemo alone
+    in 1L R/M HNSCC; OS HR 0.80 (10.1 vs 7.4 months). Established cetuximab
+    activity in HNSCC; basis for the EXTREME regimen as 1L standard (now largely
+    displaced by pembrolizumab-based regimens in CPS ≥1).
+  - Salvage phase 2/retrospective 2L data: ORR ~10-15% for cetuximab monotherapy
+    in platinum-refractory R/M HNSCC.
+  - NCCN HNSCC 2025 Category 2A: cetuximab listed as subsequent therapy option
+    for R/M HNSCC without prior cetuximab exposure.
+
+  Key advantage of cetuximab over docetaxel: non-myelosuppressive (no bone marrow
+  toxicity, no febrile neutropenia risk); key disadvantage: EGFR-related toxicities
+  (acneiform rash, hypomagnesemia, infusion reactions). Clinical choice between
+  cetuximab and docetaxel at 2L depends on:
+  - Prior myelosuppression tolerance (docetaxel)
+  - Skin comorbidities (cetuximab rash)
+  - Infusion reaction history
+  - Patient and clinical preference
+
+rationale_ua: >
+  Цетуксимаб — химерне IgG1 анти-EGFR МАТ, що блокує зв'язування ліганду EGFR.
+  EGFR гіперекспресований у ~90% ХНСЩ. У 2L R/M ХНСЩ цетуксимаб показаний
+  пацієнтам, які: (1) пройшли ICI терапію (пембролізумаб 1L) — ICI re-challenge
+  не підтримується; (2) не отримували цетуксимаб раніше (не EXTREME 1L).
+  ORR ~10-15% (екстраполовані дані). NCCN Категорія 2A.
+  Перевага vs доцетаксел: відсутність мієлосупресії. Недоліки: EGFR-асоційовані
+  токсичності (акнеподібний висип, гіпомагніємія, інфузійні реакції).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN HNSCC 2025 Category 2A: cetuximab listed as subsequent systemic therapy
+      option for R/M HNSCC; applicable to patients without prior cetuximab exposure.
+  - source_id: SRC-ESMO-HNSCC-2020
+    position: context
+
+do_not_do:
+  - "НЕ застосовувати при попередньому цетуксимабі або EGFR МАТ — очікується резистентність"
+  - "НЕ застосовувати при ICI-наївних пацієнтах — ніволумаб/пембролізумаб мають переважну доказову базу (Cat 1)"
+  - "АНТИГІСТАМІН обов'язково перед кожною інфузією цетуксимабу — ризик тяжких інфузійних реакцій"
+  - "Магній перед кожним прийомом — гіпомагніємія розвивається при тривалому лікуванні"
+  - "Акнеподібний висип 3 ступ. — зупинити цетуксимаб; після відновлення — знижена доза"
+  - "НЕ призначати при ECOG ≥3 — паліативна допомога та RT є пріоритетом"
+  - "Клінічний протокол — пріоритетний вибір перед цетуксимабом у 2L ХНСЩ"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
