@@ -1,0 +1,173 @@
+id: IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NSCLC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic or locally advanced unresectable NSCLC (adenocarcinoma or non-squamous)"
+    - "EGFR sensitizing mutation: exon 19 deletion OR exon 21 L858R"
+    - "Prior 1L was 1st- or 2nd-generation EGFR-TKI (erlotinib, gefitinib, afatinib, dacomitinib)"
+    - "T790M resistance mutation confirmed on progression biopsy or liquid biopsy (primary indication; see notes for T790M-negative)"
+    - "ECOG PS 0-2"
+    - "Adequate hepatic/renal function: ALT/AST ≤3× ULN, CrCl ≥30 mL/min"
+  biomarker_requirements_required:
+    - "EGFR exon 19 deletion OR exon 21 L858R sensitizing mutation (tissue NGS or ctDNA)"
+    - "T790M acquired resistance mutation preferred (AURA3 evidence base) — liquid biopsy (plasma cfDNA) acceptable if tissue rebiopsy not feasible"
+  biomarker_requirements_excluded:
+    - "Prior osimertinib (3G EGFR-TKI) 1L: ami+laz (MARIPOSA-2) preferred → IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ"
+    - "EGFR exon 20 insertion: amivantamab preferred → IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB"
+    - "C797S resistance mutation (rare; post-osimertinib): no approved 4G EGFR-TKI; clinical trial"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 3 NSCLC patients: osimertinib is well-tolerated (oral; low-grade toxicity)
+      vs chemotherapy; ECOG 3 patients may benefit but were excluded from AURA3.
+      Clinical judgment required; dose-reduction to 40 mg/day possible for tolerability.
+
+recommended_regimen: REG-OSIMERTINIB-NSCLC
+alternative_regimens:
+  - regimen_id: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+    description: >
+      Amivantamab + lazertinib (MARIPOSA-2; ORR 64%; mPFS 8.3 mo) — for post-osimertinib 1L
+      patients. Superior to chemotherapy post-osi. Use this if prior 1L was osimertinib.
+  - regimen_id: IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL
+    description: >
+      Docetaxel ± ramucirumab — if T790M-negative and osimertinib inaccessible.
+      Platinum-pemetrexed was the AURA3 control arm (mPFS 4.4 mo).
+      Docetaxel±ram is NCCN Cat 1 for EGFR-mut 2L chemotherapy.
+
+concurrent_therapy:
+  - "Adequate antiemetics PRN (osimertinib low to moderate emetogenicity)"
+  - "Monitor for rash and diarrhea — common EGFR-TKI class effects; topical steroids/antidiarrheal PRN"
+  - "Avoid strong CYP3A4 inducers (rifampicin, carbamazepine, St. John's Wort — reduce osimertinib AUC ~78%)"
+  - "CNS metastases: osimertinib crosses BBB; local therapy (SRS) may be deferred for small asymptomatic mets"
+  - "QTc monitoring: osimertinib prolongs QTc (average ~14 ms); avoid concomitant QTc-prolonging drugs"
+
+followed_by:
+  - "CT chest/abdomen/pelvis q8-12 weeks for response assessment; MRI brain if CNS symptoms"
+  - "Continue until progression or unacceptable toxicity (AURA3: median 14.4 months treatment duration)"
+  - "At progression: rebiopsy for C797S or MET-amp resistance mechanisms; consider ami+laz (if T790M acquired on osi) or clinical trial"
+  - "Transformation to small-cell (5-15% of EGFR-mut post-osi) → platinum-etoposide"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~71% (AURA3 osimertinib arm; T790M+ post-1G/2G TKI)"
+  complete_response: "~5-7%"
+  median_pfs_months: "~10.1 months (AURA3; HR 0.30 vs platinum+pemetrexed; p<0.001)"
+  median_os_months: "~26.8 months (AURA3 updated OS; HR 0.80; p=0.07)"
+  notes: >
+    AURA3 (Mok 2017 NEJM; NCT02151981):
+    - Population: T790M+ NSCLC (ex19del or L858R) after 1L EGFR-TKI (n=419)
+    - Osimertinib 80 mg/day vs platinum+pemetrexed doublet
+    - mPFS 10.1 vs 4.4 mo (HR 0.30; 95% CI 0.23-0.41; p<0.001)
+    - ORR 71% vs 31%; CNS ORR 91% vs 68%
+    - mOS 26.8 vs 22.5 mo (HR 0.80; p=0.07 — not significant in updated analysis)
+    - Grade ≥3 AEs: 23% vs 47% (osimertinib significantly better tolerated)
+    NCCN NSCLC 2025 Category 1 for T790M+ 2L post-1G/2G TKI.
+
+    NOTE: AURA3 era predates widespread osimertinib 1L use. In current practice,
+    most EGFR-mut patients who received osimertinib 1L would progress to ami+laz (MARIPOSA-2).
+    Post-1G/2G TKI → osimertinib 2L remains relevant for:
+    1. Ukraine: osimertinib was not widely available as 1L until ~2024; patients on
+       erlotinib/gefitinib/afatinib 1L are a real clinical population
+    2. Healthcare systems where osimertinib cost prevents 1L use
+    3. Historical patients transitioning from 1G/2G maintenance
+
+hard_contraindications:
+  - "Prior osimertinib 1L: C797S or amplification-based resistance unlikely to respond to osimertinib retreatment"
+  - "EGFR exon 20 insertion: osimertinib has low activity vs ex20ins; amivantamab preferred"
+  - "QTc ≥500 ms at baseline: osimertinib QTc-prolonging; cardiac risk assessment required"
+  - "Strong CYP3A4 inducers that cannot be stopped: reduce osimertinib efficacy >50%"
+
+red_flags_triggering_alternative:
+  - condition: "T790M-negative resistance: consider platinum-pemetrexed (IND-NSCLC-2L-PD-L1-POST-IO-DOCETAXEL) or clinical trial"
+  - condition: "Prior 1L osimertinib (3G) → IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ (amivantamab+lazertinib; MARIPOSA-2)"
+  - condition: "MET-amplification at progression: osimertinib + savolitinib or IND-NSCLC-2L-MET-AMP-CAPMATINIB (MET inhibitor)"
+  - condition: "Small-cell transformation on progression biopsy: platinum-etoposide (SCLC protocol)"
+  - condition: "Grade ≥3 ILD/pneumonitis: permanently discontinue osimertinib"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "T790M test at progression: tissue rebiopsy (preferred) OR liquid biopsy (ctDNA cfDNA); Cobas EGFR assay or NGS"
+  - "NGS comprehensive panel at progression (identify co-mutations: MET-amp, C797S, HER2-amp)"
+  - TEST-CECT-CAP
+  - "MRI brain: NSCLC brain mets screening; osimertinib has CNS activity"
+  - "Baseline ECG + QTc measurement (osimertinib QTc prolongation)"
+
+desired_tests:
+  - "Liquid biopsy (plasma ctDNA): T790M detection; sequential monitoring during treatment"
+  - "PD-L1 IHC (DAKO 22C3): document for potential future ICI rechallenge"
+
+rationale: >
+  Osimertinib (3rd-generation EGFR-TKI) as 2L therapy for EGFR-mutant NSCLC
+  (ex19del or L858R) after disease progression on 1st- or 2nd-generation
+  EGFR-TKI, particularly in T790M-acquired resistance setting.
+
+  MECHANISM: Osimertinib is an irreversible 3G EGFR-TKI with covalent binding
+  to EGFR T790M mutant and sensitizing mutations (ex19del, L858R). 1G TKIs
+  (erlotinib, gefitinib) develop T790M resistance in ~50-60% of cases;
+  osimertinib overcomes T790M via different binding kinetics.
+  Excellent CNS penetration — crosses blood-brain barrier effectively.
+
+  AURA3 EVIDENCE: Phase 3 RCT (Mok 2017 NEJM) established osimertinib 80 mg/day
+  superiority over platinum-doublet chemotherapy in T790M+ 2L NSCLC:
+  - mPFS 10.1 mo (HR 0.30; >3× improvement)
+  - ORR 71% (vs 31% chemo)
+  - CNS ORR 91% (vs 68% — important for a disease with frequent brain mets)
+  - Significantly better tolerability (Grade ≥3: 23% vs 47%)
+
+  UKRAINIAN CONTEXT:
+  Until ~2024, osimertinib was not widely 1L-accessible in Ukraine due to
+  cost. Many patients received erlotinib (available as generic) or gefitinib
+  as 1L EGFR-TKI. These patients, when progressing, are candidates for
+  osimertinib 2L (AURA3 evidence base).
+  Osimertinib (Tagrisso): registered in Ukraine; NSZU reimbursement status
+  variable by centre/year — verify at prescribing centre.
+  Erlotinib/gefitinib generics: NSZU-reimbursed, commonly used 1L in UA.
+
+rationale_ua: >
+  Осимертиніб 80 мг/день PO для EGFR-мутантного НДРЛ (ex19del або L858R)
+  2L після 1G/2G EGFR-ТКІ (ерлотиніб/гефітиніб/афатиніб) ± T790M-резистентність.
+  AURA3 (Mok 2017 NEJM): mPFS 10.1 vs 4.4 міс (HR 0.30; ЧВ 71%).
+  NCCN Cat 1 для T790M+ 2L після 1G/2G ТКІ.
+  В Україні: ерлотиніб/гефітиніб — поширена 1L опція; осимертиніб 2L
+  актуальний для пацієнтів на 1G ТКІ. Перевіряйте НСЗУ-фінансування.
+  ОБОВ'ЯЗКОВО: T790M-тест при прогресії (рідка біопсія якщо тканина недоступна).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не застосовувати осимертиніб після попереднього осимертинібу 1L — C797S резистентність; перейдіть на аміванта+лазертиніб (MARIPOSA-2)"
+  - "Не ігнорувати T790M-тест при прогресії — T790M-від'ємні хворі отримують менше користі; хіміотерапія тоді краща"
+  - "Уникати сильних індукторів CYP3A4 (рифампіцин, карбамазепін) — знижують AUC осимертинібу на >50%"
+  - "Не пропускати ЕКГ-базовий вимір — осимертиніб подовжує QTc; уникайте конкурентних QTc-подовжуючих засобів"
+  - "При пневмоніті ≥Grade 3 — постійне скасування; не намагайтеся продовжити з дозовим зменшенням"
+
+sources:
+  - source_id: SRC-NCCN-NSCLC-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN NSCLC 2025 Category 1: osimertinib 80 mg/day for T790M-positive NSCLC
+      after 1L first- or second-generation EGFR-TKI. AURA3 RCT basis.
+      Note: in current guidelines, osimertinib 1L (FLAURA) is preferred; post-1G/2G
+      TKI patients on erlotinib/gefitinib/afatinib who progress remain a relevant 2L population.
+  - source_id: SRC-ESMO-NSCLC-METASTATIC-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO mNSCLC 2024: osimertinib (AURA3) for T790M-positive 2L post-first-line
+      EGFR-TKI remains Category 1/Grade A. If osimertinib was already 1L, ami+laz
+      (MARIPOSA-2) is the current preferred 2L post-osimertinib option.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

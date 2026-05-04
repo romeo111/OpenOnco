@@ -15,6 +15,7 @@ purpose: >
 output_indications:
   - IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
   - IND-NSCLC-2L-EGFR-EX20INS-AMIVANTAMAB
+  - IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB
   - IND-NSCLC-ALK-2L-LORLATINIB
   - IND-NSCLC-2L-ROS1-POST-CRIZ-ENTRECTINIB
   - IND-NSCLC-2L-ROS1-REPOTRECTINIB
@@ -57,8 +58,9 @@ decision_tree:
       next_step: 3
 
   - step: 3
-    # EGFR activating (ex19del / L858R / T790M / C797S) post-osimertinib 1L
-    # → ami+laz (MARIPOSA-2). T790M acquired on 1G/2G TKI also routes here.
+    # EGFR activating (ex19del / L858R / T790M / C797S): routes to step 31
+    # for prior-TKI-generation gate (post-1G/2G TKI → osimertinib 2L;
+    # post-osimertinib → ami+laz MARIPOSA-2).
     evaluate:
       any_of:
         - red_flag: RF-NSCLC-EGFR-EX19DEL-ACTIONABLE
@@ -66,11 +68,37 @@ decision_tree:
         - red_flag: RF-NSCLC-EGFR-C797S-RESISTANCE
         - red_flag: RF-NSCLC-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
+      next_step: 31
+      notes: "EGFR activating: routes to step 31 (prior TKI generation gate)."
     if_false:
+      next_step: 31
+      notes: "Fall-through to step 31 (EGFR 2L prior-generation gate)."
+
+  # Step 31 — Prior EGFR-TKI generation gate.
+  # Post-osimertinib 1L → ami+laz (MARIPOSA-2; NCCN Cat 1).
+  # Post-1G/2G TKI 1L (erlotinib/gefitinib/afatinib) → osimertinib 2L
+  # (AURA3; T790M+; NCCN Cat 1). Free-text condition (no RF for prior TKI generation yet).
+  - step: 31
+    evaluate:
+      any_of:
+        - condition: "Prior 1L EGFR-TKI was osimertinib (3rd-generation; Tagrisso)"
+    if_true:
       result: IND-NSCLC-2L-EGFR-POST-OSI-AMI-LAZ
-      # nested EGFR sub-branches (post-1G/2G TKI direct-to-osimertinib,
-      # MET-amp resistance) — see notes; capped at 4 levels
+      notes: >
+        Post-osimertinib 1L: amivantamab 1400 mg IV + lazertinib 240 mg PO once daily
+        (REG-AMI-LAZ-NSCLC; MARIPOSA-2; ORR 64%; mPFS 8.3 mo vs chemo;
+        NCCN Cat 1). Preferred post-osi 2L. Monitor for infusion-related reactions (IVRs)
+        + EGFR/MET-targeted toxicity (rash, paronychia, edema, hypoalbuminemia).
+    if_false:
+      result: IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB
+      notes: >
+        Post-1G/2G TKI 1L (erlotinib/gefitinib/afatinib/dacomitinib): osimertinib 80 mg/day
+        (REG-OSIMERTINIB-NSCLC; AURA3 Mok 2017 NEJM; T790M+; mPFS 10.1 mo; HR 0.30;
+        ORR 71%; CNS ORR 91%; NCCN Cat 1). T790M confirmation recommended (tissue rebiopsy
+        or liquid biopsy); if T790M-negative: platinum-pemetrexed or docetaxel±ram.
+        Ukraine: erlotinib/gefitinib are common 1L options (NSZU-funded generics) →
+        post-1G TKI osimertinib 2L is a prevalent clinical scenario.
+    notes: "Step 31 added 2026-05-04 (Workstream CB): prior EGFR-TKI generation gate. IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB authored (AURA3 Cat 1). Post-osi → ami+laz; post-1G/2G → osimertinib 2L. Gap CLOSED. Free-text condition — MDT-evaluated (no RF for prior TKI generation yet)."
 
   # ── Step 4: ALK-rearranged ────────────────────────────────────────
   - step: 4
@@ -278,12 +306,17 @@ notes: >
   Driver-negative default: doc+ram (REVEL) > doc+nintedanib (LUME-Lung
   1, adenocarcinoma) > single-agent docetaxel (UA fallback).
 
-  WIRING GAPS to address in csd-4.5:
+  UPDATED 2026-05-04 (Workstream CB): IND-NSCLC-2L-EGFR-POST-1G-OSIMERTINIB authored
+  and wired at step 31 as prior EGFR-TKI generation gate (AURA3 Mok 2017 NEJM; NCCN Cat 1;
+  mPFS 10.1 mo; HR 0.30). Post-osimertinib 1L → ami+laz; post-1G/2G TKI → osi 2L.
+  Gap (post-1G/2G TKI sub-branch) CLOSED.
+
+  REMAINING WIRING GAPS:
   - RF-NSCLC-FRAILTY-AGE wired only via free-text condition; needs
     proper red_flag binding in evaluate clauses.
   - CSD ≥3L lines not modeled — separate ALGO-NSCLC-METASTATIC-3L
     when entropy warrants.
-  - Resistance-mutation-driven precise sub-branches (T790M, C797S,
-    G2032R, G595R) deferred to dedicated future Indications +
-    biomarker entities for sub-types (currently single BIO-EGFR-MUTATION
-    covers all EGFR variants).
+  - T790M-negative 2L post-1G/2G TKI: currently falls to osimertinib
+    (with note to use chemo if T790M-); no dedicated IND for T790M-neg yet.
+  - C797S resistance (post-osimertinib) → no approved 4G EGFR-TKI; clinical trial.
+  - Step 31 prior-TKI gate is free-text condition (no RF for prior TKI generation).
