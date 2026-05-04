@@ -14,6 +14,7 @@ purpose: >
 
 output_indications:
   - IND-BCC-LA-METASTATIC-1L-VISMODEGIB
+  - IND-BCC-2L-CEMIPLIMAB
 
 default_indication: IND-BCC-LA-METASTATIC-1L-VISMODEGIB
 alternative_indication: null
@@ -79,9 +80,28 @@ decision_tree:
         ERIVANCE Phase 2 (Sekulic 2012 NEJM): laBCC ORR 43% (CR 13%), mBCC ORR 30%.
         FDA/EMA approved; NCCN Category 1 for laBCC and mBCC.
         Mandatory: verify negative pregnancy test; contraception counseling before starting.
-        At progression: cemiplimab (anti-PD-1; FDA 2021 for laBCC/mBCC post-HHI;
-        IND-BCC-2L-CEMIPLIMAB — pending authoring; NCCN Cat 1; ORR ~21% post-HHI).
+        At progression on HHI: cemiplimab (IND-BCC-2L-CEMIPLIMAB; FDA 2021; NCCN
+        Cat 1; ORR ~21% post-HHI) — see alternatives.
         Ukraine: not registered; named-patient import only; USD ~15-18K/month.
+      alternatives:
+        - indication_id: IND-BCC-2L-CEMIPLIMAB
+          nccn_category: "1"
+          criteria: >
+            laBCC or mBCC; progressed on or intolerant to hedgehog pathway inhibitor
+            (vismodegib or sonidegib); OR patient for whom HHI is not appropriate;
+            ECOG 0-2; no active autoimmune disease requiring systemic therapy; no
+            prior organ transplant on immunosuppression; confirmed negative pregnancy
+            test (fetotoxic). PD-L1 expression testing NOT required for prescribing.
+            Gorlin syndrome: appropriate option post-HHI; radiation contraindicated
+            in Gorlin (induces new BCCs in field).
+          note: >
+            Cemiplimab 350 mg IV Q3W for laBCC/mBCC post-HHI (EMPOWER-BCC-1;
+            Stratigos 2021 Lancet Oncol; N=84 laBCC cohort): ORR 21% (CR 6%, PR 15%);
+            DCR 48%; median OS not reached at 15-month follow-up. FDA approved
+            Feb 2021 (laBCC), Sep 2021 (mBCC). NCCN Skin Cat 1. Continue until
+            progression or unacceptable toxicity. irAE monitoring: TSH q3 months;
+            AM cortisol if fatigue/hypotension; skin surveillance. No established
+            3L standard after cemiplimab — clinical trial preferred.
     if_false:
       result: null
       notes: >
@@ -111,8 +131,9 @@ notes: >
 
   POST-HHI PROGRESSION: cemiplimab 350 mg IV q3w is FDA-approved and NCCN Cat 1
   for laBCC/mBCC after HHI progression or where HHI is not appropriate.
-  IND-BCC-2L-CEMIPLIMAB not yet authored — pending Workstream DI follow-on.
-  Wiring note: algo_bcc_la_metastatic_1l.yaml followed_by references it in IND text.
+  IND-BCC-2L-CEMIPLIMAB wired as Cat 1 alternative at step 3 if_true (UPDATED
+  2026-05-04 Workstream FS). EMPOWER-BCC-1: ORR 21%; DCR 48%; FDA Feb/Sep 2021.
+  Post-HHI gap CLOSED.
 
   GORLIN SYNDROME (PTCH1 germline): same treatment algorithm; requires more frequent
   dermatologic surveillance; radiation therapy is relatively contraindicated (may induce

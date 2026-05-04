@@ -17,6 +17,7 @@ output_indications:
   - IND-AML-1L-IDH1-IVOSIDENIB-AZA
   - IND-AML-1L-QUIZARTINIB-FLT3ITD
   - IND-AML-CR1-ORAL-AZA-MAINTENANCE
+  - IND-AML-PEDIATRIC-AAML1031
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-1L-7-3
@@ -201,7 +202,9 @@ decision_tree:
         Default 7+3 induction. Post-induction: if CR/CRi achieved AND patient
         ≥55 years OR not eligible for alloHCT, oral azacitidine maintenance
         × 1 year is Cat 1 (QUAZAR-AML-001; NCCN Cat 1; see
-        IND-AML-CR1-ORAL-AZA-MAINTENANCE below).
+        IND-AML-CR1-ORAL-AZA-MAINTENANCE below). Pediatric AML (age ≤18): use
+        COG AAML1031/AAML1831 protocol instead of adult 7+3 —
+        see IND-AML-PEDIATRIC-AAML1031 in alternatives.
       alternatives:
         - indication_id: IND-AML-CR1-ORAL-AZA-MAINTENANCE
           nccn_category: "1"
@@ -221,9 +224,29 @@ decision_tree:
             equivalent to IV azacitidine (different bioavailability/PK).
             Monitor CBC q4w (myelosuppression). Ukraine: not registered;
             named-patient import required.
+        - indication_id: IND-AML-PEDIATRIC-AAML1031
+          nccn_category: "1"
+          criteria: >
+            Newly-diagnosed AML; age ≤18 years; management at pediatric oncology
+            center with Children's Oncology Group AAML1031/AAML1831 protocol access;
+            ECOG ≤3; CI-LVEF-LOW-FOR-ANTHRACYCLINE absent. Distinct from adult 7+3
+            in dose density, consolidation, risk stratification, and GO use.
+            MDT at pediatric oncology center mandatory. NOT the adult 7+3 protocol —
+            do not substitute adult dosing.
+          note: >
+            COG AAML1031/AAML1831 for pediatric AML (Aplenc 2020 JCO; NCCN Cat 1):
+            cytarabine 100 mg/m² CIVI × 7d + daunorubicin 50 mg/m² IV × 3d induction.
+            GO added for low-risk (CBF, NPM1+/FLT3-ITD-, CEBPA biallelic): EFS 53%
+            vs 47% (AAML1031; p=0.04). High-dose cytarabine (HiDAC 3 g/m² q12h × 6
+            doses × 2-3 cycles) consolidation — cornerstone of pediatric AML cure.
+            Risk: low-risk (inv(16), t(8;21), NPM1+/FLT3-) → chemo alone; high-risk
+            (FLT3-ITD high-allelic, KMT2A-r, complex karyotype, monosomy 7, TP53) →
+            alloHCT in CR1. CNS prophylaxis: IT cytarabine + MTX × 4-6 doses.
+            5-yr EFS ~50-55%; 5-yr OS ~65-70%. Late-effect surveillance lifelong.
+            TPMT/NUDT15 not required for 7+3 induction (6-MP used in maintenance only).
     if_false:
       result: IND-AML-1L-7-3
-    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3. UPDATED 2026-05-04 (Workstream FK): IND-AML-CR1-ORAL-AZA-MAINTENANCE added as Cat 1 post-induction maintenance alternative for CR/CRi-achieving non-alloHCT patients ≥55 years."
+    notes: "Default fall-through — fit patient with no biomarker flags routes to 7+3. UPDATED 2026-05-04 (Workstream FK): IND-AML-CR1-ORAL-AZA-MAINTENANCE added as Cat 1 post-induction maintenance alternative for CR/CRi-achieving non-alloHCT patients ≥55 years. UPDATED 2026-05-04 (Workstream FS): IND-AML-PEDIATRIC-AAML1031 added as Cat 1 age-gated alternative for pediatric AML (≤18) using COG AAML1031/AAML1831 protocol."
 
 sources:
   - SRC-NCCN-AML-2025
@@ -260,3 +283,9 @@ notes: >
   cpx351.json (golden IND-AML-1L-7-3) breaking the e2e fixture; deferred
   pending fixture-golden refresh in a follow-up chunk. STUB — requires
   clinical co-lead signoff.
+
+  UPDATED 2026-05-04 (Workstream FS): IND-AML-PEDIATRIC-AAML1031 added
+  to output_indications; wired as Cat 1 age-gated alternative at step 7
+  if_true (default 7+3 result). COG AAML1031/AAML1831 protocol for
+  pediatric AML (age ≤18): EFS ~53% with GO for low-risk; HiDAC
+  consolidation; risk-adapted alloHCT in CR1 for high-risk. Gap CLOSED.
