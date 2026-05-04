@@ -1,0 +1,109 @@
+id: REG-LENALIDOMIDE-ATLL
+name: "Lenalidomide monotherapy for relapsed indolent ATLL"
+name_ua: "Леналідомід монотерапія для рецидивуючого індолентного ATLL"
+alternate_names:
+  - "Lenalidomide single-agent ATLL"
+  - "IMiD monotherapy ATLL"
+
+disease_context: DIS-ATLL
+line_of_therapy: 2
+plan_track: standard
+
+components:
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "25 mg PO once daily"
+    route: PO
+    schedule: "Days 1-21 of each 28-day cycle (21 days on, 7 days off)"
+    administration_notes: >
+      Lenalidomide is taken orally once daily at the same time each day,
+      with or without food. Do NOT split or crush capsules.
+      REMS compliance: pregnancy prevention program (US and EU); mandatory
+      pregnancy testing before each cycle refill for WCBP (women of
+      childbearing potential). In Ukraine (off-label use for ATLL): follow
+      REMS-equivalent contraception counseling protocol.
+      DVT prophylaxis mandatory before starting (see special_precautions).
+    dose_modifications:
+      - trigger: "CrCl 30-49 mL/min"
+        action: "Reduce to 10 mg PO daily days 1-21 q28d"
+      - trigger: "CrCl <30 mL/min (non-dialysis)"
+        action: "Reduce to 5 mg PO daily days 1-21 q28d or 10 mg every other day"
+      - trigger: "CrCl <15 mL/min or hemodialysis"
+        action: "Avoid or extreme dose reduction (5 mg 3× per week on dialysis days); nephrology consultation required"
+      - trigger: "Grade 3 neutropenia (ANC 0.5-1.0×10⁹/L)"
+        action: "Hold lenalidomide. Resume at 20 mg/day when ANC ≥1.0×10⁹/L."
+      - trigger: "Grade 4 neutropenia (ANC <0.5×10⁹/L) or febrile neutropenia"
+        action: "Hold lenalidomide. Resume at 15 mg/day when ANC ≥1.0×10⁹/L. G-CSF for febrile neutropenia."
+      - trigger: "Grade 3/4 thrombocytopenia (platelets <50×10⁹/L)"
+        action: "Hold lenalidomide. Resume at reduced dose (25 → 20 → 15 → 10 mg/day) when platelets ≥50×10⁹/L."
+      - trigger: "Grade 3 rash"
+        action: "Hold; resume at reduced dose after resolution to Grade ≤1."
+      - trigger: "Grade 3-4 DVT/PE despite prophylaxis"
+        action: "Hold lenalidomide. Initiate therapeutic anticoagulation. Resume with therapeutic anticoagulation + dose reduction."
+
+cycle_length_days: 28
+total_planned_cycles: >
+  Continue until disease progression, unacceptable toxicity, or 12+ months if
+  in sustained remission (no specific cap from phase II ATLL data). Reassess
+  CT and blood markers every 2-3 cycles.
+
+premedication:
+  - "DVT prophylaxis: aspirin 100 mg PO daily (low-risk; start before first dose). Therapeutic anticoagulation (LMWH or warfarin) for high-risk patients (prior DVT/PE, bed rest, concurrent steroids)"
+  - "Antiemetics: not routinely required (lenalidomide low emetogenicity)"
+
+mandatory_supportive_care:
+  - "DVT prophylaxis: mandatory throughout treatment — aspirin 100 mg/day minimum; LMWH for high-risk patients"
+  - "Pregnancy prevention: mandatory contraception for women of childbearing potential (two methods); male patients must use condoms during treatment + 4 weeks after; no blood/semen donation during treatment"
+
+monitoring_schedule:
+  - "CBC with differential: weekly × 2 cycles, then monthly (myelosuppression monitoring)"
+  - "Creatinine/CrCl: every cycle (renal dose adjustment)"
+  - "Serum electrolytes: monthly"
+  - "HTLV-1 proviral load (if available): every 2-3 cycles (disease response marker)"
+  - "CT neck/chest/abdomen/pelvis: every 3 cycles (response assessment)"
+  - "DVT screening: clinical assessment each visit; consider lower extremity Doppler if symptoms"
+
+special_precautions:
+  - "TERATOGENICITY: Lenalidomide is a known human teratogen (Category X). In women of childbearing potential: two forms of contraception required (hormonal + barrier) starting 4 weeks BEFORE first dose. Strict pregnancy avoidance during treatment and 4 weeks after last dose. Male patients: condom use mandatory during treatment and 4 weeks post-treatment."
+  - "DVT/PE: Thromboembolic events occur in ~3-5% without prophylaxis. Aspirin 100 mg daily is minimum prophylaxis. Therapeutic LMWH for high-risk patients (prior VTE, immobility, concurrent steroids, concurrent ESA use). ATLL patients may have baseline hypercoagulability."
+  - "MYELOSUPPRESSION: Grade 3/4 neutropenia ~20%; thrombocytopenia ~15%. Monitor CBC weekly for first 2 cycles. G-CSF for febrile neutropenia episodes."
+  - "RASH: Grade 3 rash occurs ~5-8%; discontinue if Stevens-Johnson or toxic epidermal necrolysis suspected."
+  - "SECOND PRIMARY MALIGNANCY: Small increased risk with IMiDs in hematologic malignancy; monitor clinically. Note: rarely clinically relevant in ATLL context given poor overall disease prognosis."
+
+watchpoints_ua:
+  - "КРИТИЧНО: Вагітність — АБСОЛЮТНЕ ПРОТИПОКАЗАННЯ; тест на вагітність перед кожним циклом; ПОДВІЙНА контрацепція обов'язкова"
+  - "КРИТИЧНО: Тромбоз (ТГВ/ТЕЛА) — аспірин 100 мг щодня або НМГ обов'язкові з першого дня леналідоміду"
+  - "УВАГА: ЗАК щотижня перші 2 цикли — нейтропенія 3-4 ст. ~20%"
+  - "УВАГА: Провірусне навантаження HTLV-1 кожні 2-3 цикли (якщо доступно) — маркер відповіді"
+  - "При недоступності могамулізумабу та тліючому/хронічному підтипі ATLL — леналідомід є прийнятною альтернативою"
+  - "КФ перед кожним циклом — зменшення дози при КФ <50 мл/хв (ниркове виведення ~80%)"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: false
+  notes: >
+    Lenalidomide (Revlimid, generic versions) registered in Ukraine for myeloma.
+    Use for ATLL is off-label; NSZU reimbursement for ATLL not established.
+    No REMS program formally in Ukraine — follow pregnancy prevention protocol
+    per treating center's policy.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  Lenalidomide monotherapy for indolent (smoldering/chronic) r/r ATLL.
+  NCCN Category 2A based on phase II Japanese series (Ogura 2014, Br J Haematol;
+  ORR ~42% in smoldering/chronic; ~13% in acute). Standard dosing 25 mg d1-21
+  q28d, renal adjustment mandatory (~80% renal clearance).
+  Mogamulizumab (anti-CCR4; Ishida 2012; NCCN Cat 1) is preferred when
+  accessible. Lenalidomide is the oral non-EGFR alternative, particularly
+  useful in access-constrained settings (Ukraine: lenalidomide registered for
+  myeloma; mogamulizumab requires named-patient import).
+  NOT recommended for aggressive ATLL (acute/lymphomatous): ORR ~13% insufficient.
+notes_ua: >
+  Леналідомід монотерапія для тліючого/хронічного р/р ATLL (NCCN кат.2A).
+  Фаза II Японія (Ogura 2014): ORR ~42% (тліючий/хронічний) vs ~13% (гострий).
+  Стандартне дозування 25 мг д1-21 кожних 28 д; ниркова корекція (КФ <50 → 10 мг).
+  В Україні: зареєстрований для мієломи; використання при ATLL поза інструкцією.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

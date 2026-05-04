@@ -1,0 +1,148 @@
+id: IND-ATLL-2L-LENALIDOMIDE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-ATLL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory indolent ATLL: smoldering subtype OR chronic subtype"
+    - "After first-line therapy (AZT+IFN-α or watchful waiting for smoldering)"
+    - "Mogamulizumab inaccessible or contraindicated (primary indication context: UA access-constrained)"
+    - "ECOG PS 0-2"
+    - "No active autoimmune hemolytic anemia or prior severe lenalidomide reaction"
+    - "Adequate bone marrow function (ANC ≥1.0×10⁹/L; platelets ≥75×10⁹/L)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Aggressive ATLL subtype (acute or lymphomatous) — mogamulizumab or salvage chemotherapy preferred; lenalidomide activity insufficient for aggressive disease (ORR ~13% acute vs ~42% indolent)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      Lenalidomide cleared primarily renally: mandatory dose reduction for CrCl <50 mL/min.
+      CrCl 30-49: lenalidomide 10 mg/day; CrCl <30 or dialysis: 5 mg/day or avoid.
+      DVT prophylaxis mandatory — lenalidomide is thrombogenic (especially if concurrent steroids).
+
+recommended_regimen: REG-LENALIDOMIDE-ATLL
+concurrent_therapy:
+  - "DVT prophylaxis: aspirin 100 mg daily (low-risk) or LMWH/therapeutic anticoagulation (high-risk: prior VTE, multiple MM risk factors). Note: ATLL patients may have hypercoagulable state from T-cell malignancy."
+followed_by:
+  - "Response assessment after cycles 1-2: CBC, CT/PET, HTLV-1 proviral load (if measurable) — ATLL-specific response criteria"
+  - "AlloSCT: for fit indolent ATLL with sufficient response — best consolidation even in smoldering/chronic (progression to aggressive ATLL risk ~30%/year in some series)"
+
+evidence_level: low_moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~42% in smoldering/chronic ATLL (phase II data; Ogura 2014 series)"
+  cr_rate: "~8-15% (mostly PR/stable in indolent histotypes)"
+  median_pfs_months: "~4-6 (limited data; indolent ATLL naturally slow but median progression still occurs within 6-12 months of relapse)"
+  notes: >
+    Lenalidomide activity in ATLL is histotype-dependent:
+    - Smoldering ATLL: ORR ~42% (Ogura/Maruyama phase II Japan series)
+    - Chronic ATLL: ORR ~38-42%
+    - Acute ATLL: ORR ~13% — NOT recommended as preferred agent; mogamulizumab or
+      intensive chemotherapy preferred for aggressive disease
+    Evidence base: phase II studies primarily from Japan/Caribbean centers
+    (ATLL is HTLV-1-endemic in those regions; limited European/Ukrainian data).
+    Mogamulizumab (NCCN Cat 1; Ishida 2012 ORR ~50%) is superior when accessible;
+    lenalidomide is a reasonable alternative in access-constrained settings or when
+    oral therapy preferred for indolent ATLL.
+
+hard_contraindications:
+  - "Aggressive ATLL (acute or lymphomatous subtype) — lenalidomide ORR insufficient; mogamulizumab preferred"
+  - "Pregnancy or inadequate contraception — lenalidomide is teratogenic (Category X); mandatory pregnancy testing + REMS program"
+  - "Prior Grade 4 thromboembolic event without anticoagulation plan — lenalidomide is thrombogenic"
+  - "CrCl <15 mL/min (no data; avoid or extreme dose reduction with nephrology consultation)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Mogamulizumab accessible → IND-ATLL-2L-MOGAMULIZUMAB preferred (NCCN Cat 1; ORR ~50%; FDA-approved for r/r ATLL)"
+  - condition: "Aggressive ATLL (acute/lymphomatous subtype) → IND-ATLL-2L-MOGAMULIZUMAB (Cat 1); salvage chemotherapy (brentuximab if CD30+; EPOCH) as alternatives"
+  - condition: "AlloSCT-eligible fit patient after response → alloSCT consolidation (only curative path for ATLL)"
+  - condition: "Grade ≥3 lenalidomide toxicity (thrombosis, severe rash, Grade 4 cytopenias) → mogamulizumab or trial"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - "Creatinine/CrCl: before each cycle (lenalidomide renal dose adjustment gate)"
+  - "Pregnancy test (females of childbearing potential): negative required before each prescription refill (lenalidomide REMS)"
+  - "CT neck/chest/abdomen/pelvis + bone marrow biopsy: baseline (disease extent)"
+  - "HTLV-1 serology + proviral load: confirm ATLL diagnosis; proviral load as tumor biomarker"
+  - "HTLV-1 ATLL subtype classification per Shimoyama criteria: smoldering / chronic / acute / lymphomatous — guides lenalidomide appropriateness"
+
+desired_tests:
+  - "Flow cytometry: CD4+CD25+ phenotype; CCR4 expression (relevant if mogamulizumab later used)"
+  - "TCR gene rearrangement: clonal T-cell assessment as MRD marker"
+  - "Karyotype/FISH: complex karyotype in ATLL; p53 mutations associated with worse prognosis"
+  - "PET-CT: for lymphomatous subtype if available (prognostically useful)"
+
+rationale: >
+  Lenalidomide is an IMiD (immunomodulatory drug) with pleiotropic anti-tumor
+  mechanisms including direct cytotoxicity, T-regulatory cell depletion, NK cell
+  activation, and anti-angiogenic effects. In ATLL, lenalidomide has demonstrated
+  activity specifically in the indolent (smoldering and chronic) subtypes.
+
+  Evidence summary:
+  - Ogura M, et al. (2014, Br J Haematol): Phase I/II lenalidomide in r/r PTCL
+    including ATLL; ATLL smoldering/chronic ORR ~42%; acute ORR ~13%.
+  - Maruyama D, et al. — additional Japanese phase II supporting activity in indolent
+    ATLL; consistent with ~40% ORR in smoldering/chronic subtype.
+  - NCCN PTCL 2025 Category 2A for lenalidomide in relapsed ATLL (particularly
+    indolent subtypes).
+
+  Clinical context:
+  - ATLL in Ukraine is extremely rare (HTLV-1 not endemic in Ukraine; cases likely
+    imported from endemic regions — Japan, Caribbean, West Africa, Iran).
+  - Mogamulizumab (anti-CCR4; Ishida 2012; NCCN Cat 1) is the preferred 2L agent
+    but requires named-patient international import to Ukraine.
+  - Lenalidomide is registered and available in Ukraine (primarily for myeloma);
+    its use in ATLL would be off-label but pharmacologically accessible.
+  - For indolent ATLL (smoldering/chronic) in Ukraine where mogamulizumab supply
+    is uncertain: lenalidomide + DVT prophylaxis is a reasonable, registered,
+    orally available option.
+
+  Key safety:
+  - Teratogenicity: absolute contraindication in pregnancy; REMS program in US.
+  - DVT/PE: ~3-5% in hematologic malignancy without prophylaxis — mandatory
+    aspirin or anticoagulation.
+  - Myelosuppression: Grade 3/4 neutropenia ~20%; dose reduction per CBC.
+  - Second primary malignancy: rarely relevant in ATLL given poor overall prognosis.
+
+rationale_ua: >
+  Леналідомід — ІМіД з плейотропними механізмами: пряма цитотоксичність,
+  деплеція T-регуляторних клітин, активація NK-клітин. В ATLL показаний
+  для мляво-перебігаючих підтипів (тліючий, хронічний): ORR ~42%.
+  Для агресивних підтипів (гострий, лімфоматозний): ORR ~13% — недостатньо;
+  могамулізумаб або хімія є пріоритетом.
+  В Україні: могамулізумаб вимагає іменного імпорту; леналідомід
+  зареєстрований (для мієломи) і доступний — прийнятна альтернатива
+  для tліючого/хронічного ATLL при недоступності могамулізумабу.
+  КРИТИЧНО: Протизаплідні заходи обов'язкові; DVT профілактика обов'язкова.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN T-Cell Lymphomas / ATLL 2025: lenalidomide listed as Category 2A
+      option for relapsed indolent ATLL (smoldering/chronic subtypes).
+      Based on phase II data showing ORR ~40-42% in indolent ATLL subtypes.
+  - source_id: SRC-ESMO-LYMPHOMA-2025
+    position: context
+
+do_not_do:
+  - "НЕ призначати при агресивних підтипах ATLL (гострий, лімфоматозний) — ORR ~13%, недостатньо; могамулізумаб або хімія"
+  - "ВАГІТНІСТЬ — АБСОЛЮТНЕ ПРОТИПОКАЗАННЯ; леналідомід тератогенний (категорія X); тест на вагітність перед кожним рецептом"
+  - "Профілактика ТГВ/ТЕЛА ОБОВ'ЯЗКОВА — аспірин 100 мг/день або НМГ (тромбогенний ефект ІМіДу)"
+  - "Дозування при нирковій недостатності: КФ 30-49 → 10 мг/день; КФ <30 → 5 мг або уникати"
+  - "Якщо могамулізумаб доступний — він є переважним вибором (NCCN кат.1; FDA схвалений для р/р ATLL)"
+  - "ОАК перед кожним циклом — нейтропенія 3-4 ступ. ~20%"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

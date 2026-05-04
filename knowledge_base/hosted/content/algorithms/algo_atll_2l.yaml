@@ -10,26 +10,73 @@ purpose: >
 
 output_indications:
   - IND-ATLL-2L-MOGAMULIZUMAB
+  - IND-ATLL-2L-LENALIDOMIDE
 
 default_indication: IND-ATLL-2L-MOGAMULIZUMAB
-alternative_indication: IND-ATLL-2L-MOGAMULIZUMAB
+alternative_indication: IND-ATLL-2L-LENALIDOMIDE
 
 decision_tree:
+  # Step 1 — Confirm R/R ATLL eligibility for 2L.
   - step: 1
     evaluate:
       any_of:
         - condition: "R/R aggressive ATLL after CHOEP / mLSG15"
-        - condition: "R/R indolent ATLL after AZT+IFN-α"
+        - condition: "R/R indolent ATLL after AZT+IFN-α or watchful waiting"
         - red_flag: RF-ATLL-TRANSFORMATION-PROGRESSION
     if_true:
-      result: IND-ATLL-2L-MOGAMULIZUMAB
+      next_step: 2
     if_false:
       result: IND-ATLL-2L-MOGAMULIZUMAB
+      notes: "Fallback to mogamulizumab as default — MDT evaluation required if eligibility unclear."
+
+  # Step 2 — Indolent ATLL subtype + mogamulizumab access gate.
+  # Mogamulizumab (anti-CCR4; Ishida 2012) is NCCN Cat 1 for all R/R ATLL.
+  # For indolent ATLL (smoldering/chronic) specifically, lenalidomide is a
+  # Category 2A alternative when mogamulizumab is inaccessible (Ukraine:
+  # named-patient international import required for mogamulizumab).
+  # Aggressive ATLL (acute/lymphomatous): mogamulizumab remains the only
+  # validated option (lenalidomide ORR only ~13% in aggressive subtype).
+  - step: 2
+    evaluate:
+      all_of:
+        - condition: "ATLL subtype = smoldering OR chronic (indolent disease; NOT acute or lymphomatous)"
+        - condition: "Mogamulizumab inaccessible (named-patient/international supply unavailable)"
+    if_true:
+      result: IND-ATLL-2L-LENALIDOMIDE
+      notes: >
+        Indolent ATLL (smoldering/chronic) + mogamulizumab inaccessible:
+        lenalidomide 25 mg PO d1-21 q28d (REG-LENALIDOMIDE-ATLL; NCCN Cat 2A;
+        ORR ~42% smoldering/chronic ATLL; Ogura 2014). Oral, registered in
+        Ukraine for myeloma, off-label for ATLL.
+        If mogamulizumab becomes accessible: switch to mogamulizumab (Cat 1; ORR ~50%).
+        DVT prophylaxis + pregnancy prevention MANDATORY for lenalidomide.
+    if_false:
+      result: IND-ATLL-2L-MOGAMULIZUMAB
+      notes: >
+        Either (a) aggressive ATLL (acute/lymphomatous) — mogamulizumab preferred
+        (lenalidomide ORR only ~13% in acute ATLL); or (b) mogamulizumab accessible
+        even for indolent ATLL — mogamulizumab is the NCCN Cat 1 standard (ORR ~50%
+        vs lenalidomide ~42% indolent). AlloSCT consolidation for fit responders
+        with aggressive ATLL (only curative path).
+    notes: "Lenalidomide gate added 2026-05-04 (Workstream AI)."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-PTCL-2024]
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
-  Single-track default. Lenalidomide alternative for relapsed indolent
-  ATLL not yet authored as separate indication. Allo-SCT remains the
-  only curative path for aggressive disease and is surfaced via MDT
-  brief.
+  ATLL 2L ROUTING SUMMARY:
+
+  Aggressive (acute/lymphomatous): mogamulizumab (NCCN Cat 1; Ishida 2012;
+  ORR ~50%). AlloSCT consolidation for fit responders (curative intent).
+
+  Indolent (smoldering/chronic):
+  - Mogamulizumab accessible → IND-ATLL-2L-MOGAMULIZUMAB (Cat 1; ORR ~50%)
+  - Mogamulizumab inaccessible → IND-ATLL-2L-LENALIDOMIDE (Cat 2A; ORR ~42%;
+    oral; registered in UA for myeloma; off-label ATLL)
+
+  AlloSCT: only curative path for aggressive ATLL — surfaced via followed_by
+  in mogamulizumab indication. Even indolent ATLL may transform (~30%/year);
+  alloSCT should be discussed in fit patients achieving remission.
+
+  Note: ATLL is extremely rare in Ukraine (HTLV-1 not endemic); expect
+  occasional imported cases from Japan/Caribbean/Africa. CCR4 expression
+  is universal in ATLL — mogamulizumab biologically rational for all subtypes.
