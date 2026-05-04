@@ -2,11 +2,11 @@ id: ALGO-MF-SEZARY-2L
 applicable_to_disease: DIS-MF-SEZARY
 applicable_to_line_of_therapy: 2
 purpose: >
-  Relapsed/refractory advanced MF/Sézary — three branches: (1) post
+  Relapsed/refractory advanced MF/Sézary — four branches: (1) post
   CR/PR to induction → bexarotene low-dose maintenance to extend
-  response; (2) active disease with new biology to exploit → switch
-  axis (CD30+ → BV; CCR4-targeted Sézary blood → mogamulizumab);
-  (3) chemo-axis exhausted or both targeted axes unavailable →
+  response; (2) CD30+ + BV-naive → BV mono (ALCANZA); (3) Sézary
+  leukemic + moga-naive → mogamulizumab; (4) plaque-dominant MF +
+  CrCl ≥30 → methotrexate 5-25 mg/week (NCCN Cat 2A); default →
   bexarotene full-dose mono.
 
 output_indications:
@@ -14,6 +14,7 @@ output_indications:
   - IND-MF-ADVANCED-2L-BEXAROTENE
   - IND-MF-ADVANCED-1L-MOGA
   - IND-MF-ADVANCED-1L-BV
+  - IND-MF-ADVANCED-2L-METHOTREXATE
 
 default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
 alternative_indication: IND-MF-MAINTENANCE-RETINOID
@@ -51,15 +52,44 @@ decision_tree:
     if_true:
       result: IND-MF-ADVANCED-1L-MOGA
     if_false:
+      next_step: 4
+
+  # Step 4 — Plaque-dominant MF (not Sézary/erythrodermic) + renal adequate →
+  # low-dose methotrexate (NCCN Cat 2A; Coors 2004; ORR ~58% plaque-MF).
+  # Bexarotene preferred for erythrodermic or Sézary-dominant presentation.
+  # MTX preferred for plaque-dominant disease where retinoid + lipid burden
+  # of bexarotene is undesirable. Both are NCCN Cat 2A; MDT choice.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "Plaque or patch dominant MF (stage IB-IIA or IIB skin-dominant; NOT primarily erythrodermic/blood disease)"
+        - condition: "CrCl ≥30 mL/min (methotrexate renally cleared; CrCl <30 → bexarotene)"
+    if_true:
+      result: IND-MF-ADVANCED-2L-METHOTREXATE
+      notes: >
+        Plaque-dominant MF + adequate renal function: methotrexate 5-25 mg/week PO
+        (REG-METHOTREXATE-MF). NCCN Cat 2A; Coors 2004 ORR ~58%.
+        Folic acid supplementation mandatory (not on MTX day). Monitor LFT monthly × 3.
+        Bexarotene is an equivalent alternative: use if erythrodermic presentation or
+        patient preference for non-antifolate mechanism.
+    if_false:
       result: IND-MF-ADVANCED-2L-BEXAROTENE
+      notes: >
+        Erythrodermic MF, Sézary-dominant blood disease, or CrCl <30 (MTX contraindicated):
+        bexarotene 300 mg/m² PO daily (NCCN Cat 2A for erythrodermic MF; ORR ~45%).
+        Requires fenofibrate/statin (hypertriglyceridemia universal) + levothyroxine
+        (central hypothyroidism universal) — mandatory concurrent medications.
+    notes: "MTX gate added 2026-05-04 (Workstream AO). Free-text conditions; MDT validation required. Closes gap: IND-MF-ADVANCED-2L-METHOTREXATE not previously authored."
 
 sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-CTCL-2024]
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
-  Reuses 1L MOGA / BV indications when those axes are still naive at
-  relapse — clinically these are still appropriate but in the 2L
-  position. OOS / wiring gaps: (1) Methotrexate 5-25 mg/week PO
-  not yet authored as separate indication. (2) Pralatrexate for
-  transformed MF (PROPEL subset) not yet modeled. (3) ECP
-  (extracorporeal photopheresis) for Sézary not in KB. (4) Romidepsin/
-  vorinostat 2L for CTCL — separate indication needed.
+  AUTHORED 2026-05-04: IND-MF-ADVANCED-2L-METHOTREXATE wired at step 4
+  (plaque-dominant MF + CrCl ≥30 → MTX 5-25 mg/week; NCCN Cat 2A; Workstream AO).
+  ROUTING SUMMARY: (1) CR/PR to induction → bexarotene maintenance; (2) CD30+
+  BV-naive → BV; (3) Sézary leukemic moga-naive → mogamulizumab; (4) plaque-MF
+  CrCl ≥30 → MTX; else → bexarotene (erythrodermic/renal-impaired).
+  Reuses 1L MOGA/BV indications when axes still naive at 2L relapse.
+  OOS / wiring gaps: (1) Pralatrexate for transformed MF (PROPEL) — not modeled.
+  (2) ECP (extracorporeal photopheresis) for Sézary — not in KB.
+  (3) Romidepsin/vorinostat 2L for CTCL — separate indication needed.

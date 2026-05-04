@@ -1,0 +1,155 @@
+id: IND-MF-ADVANCED-2L-METHOTREXATE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-MF-SEZARY
+  line_of_therapy: 2
+  stage_requirements:
+    - "Mycosis fungoides (MF) stage IB-IIB OR Sézary syndrome (SS) stage IVA1"
+    - "Relapsed/refractory after ≥1 prior skin-directed or systemic therapy line"
+    - "No CD30+ disease eligible for BV (step 2 in ALGO-MF-SEZARY-2L)"
+    - "No Sézary-dominant leukemic disease requiring mogamulizumab (step 3)"
+    - "ECOG PS 0-2; CrCl ≥30 mL/min (renal clearance of methotrexate)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Active hepatitis B or C (cumulative hepatotoxicity risk)"
+    - "Baseline transaminases >3× ULN (hepatotoxicity risk)"
+    - "Renal insufficiency: CrCl <30 mL/min (methotrexate accumulation → serious toxicity)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 0-2. MTX is well tolerated in frail patients at low doses (5-10 mg/week)
+      due to oral route and once-weekly dosing. CrCl monitoring is critical.
+      Pregnancy: absolute contraindication (Category X teratogen).
+
+recommended_regimen: REG-METHOTREXATE-MF
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Bexarotene 300 mg/m²/day PO (IND-MF-ADVANCED-2L-BEXAROTENE; REG-BEXAROTENE-MF
+      if exists): rexinoid; NCCN Cat 2A; ORR ~45% advanced MF. Requires lipid management
+      (fenofibrate/statin mandatory; hypertriglyceridemia universal) + thyroid monitoring
+      (central hypothyroidism ~100%; levothyroxine required). Preferred for erythrodermic
+      or Sézary-dominant disease where bexarotene + skin barrier effect is valuable.
+
+concurrent_therapy:
+  - "Skin-directed therapy continuation: topical steroids, NBUVB phototherapy, or ECP can be continued alongside MTX (synergistic)"
+
+followed_by:
+  - "After MTX progression: bexarotene (IND-MF-ADVANCED-2L-BEXAROTENE) or BV if CD30+ (IND-MF-ADVANCED-1L-BV) or mogamulizumab for Sézary (IND-MF-ADVANCED-1L-MOGA)"
+  - "Clinical trial: romidepsin, vorinostat (HDAC inhibitors), pralatrexate for transformed MF"
+  - "Pralatrexate (FOLOTYN) for transformed MF (PTCL/MF transformation): PROPEL study ORR ~29% MF; not yet modeled in KB"
+
+evidence_level: low_moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~40-60% (retrospective/small series; NCCN consensus; Coors 2004 Arch Dermatol: ORR ~58% at 15 mg/week; plaque-dominant MF best response)"
+  cr_rate: "~15-25% (CR uncommon at low doses; disease control and PR more typical)"
+  median_pfs_months: "~6-12 (ongoing benefit in responders; some patients maintain PR/SD for 18-24 months)"
+  notes: >
+    Evidence base: primarily retrospective case series and NCCN expert consensus.
+    No randomized controlled trials for MTX specifically in MF/Sézary.
+    Coors 2004 (Arch Dermatol; n=16): ORR ~58% plaque-stage MF at median 15 mg/week PO.
+    Historical case series (Olsen 1989; Zackheim 1996): ORR ~30-60% variable.
+    Low-dose MTX is particularly effective for plaque-dominant disease with lower
+    tumor burden; less effective for erythrodermic/blood-dominant Sézary.
+    Key advantage: low cost, oral administration, available in Ukraine, tolerable
+    in elderly/frail patients at starting dose 5-10 mg/week.
+
+hard_contraindications:
+  - "Pregnancy or planned pregnancy (methotrexate is absolutely contraindicated — teratogen Cat X)"
+  - "CrCl <30 mL/min (dangerous methotrexate accumulation → severe myelosuppression/mucositis)"
+  - "Active hepatic disease: Child-Pugh B or C, or transaminases >3× ULN (cumulative hepatotoxicity risk)"
+  - "Active serious infection (methotrexate immunosuppressive)"
+  - "Concurrent TMP-SMX (cotrimoxazole) use — reduces MTX renal tubular secretion → toxicity (if mandatory for PCP prophylaxis, consider aerosolized pentamidine or dapsone instead)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "CD30+ disease at relapse (≥10% IHC) + BV-naive → IND-MF-ADVANCED-1L-BV (superior targeted therapy for CD30+ MF; ALCANZA ORR ~56%)"
+  - condition: "Sézary-dominant blood disease (Sézary count ≥1000/μL or B2 stage) + moga-naive → IND-MF-ADVANCED-1L-MOGA (superior CCR4-targeted therapy for Sézary SS)"
+  - condition: "Renal impairment CrCl <30 mL/min → IND-MF-ADVANCED-2L-BEXAROTENE (no renal clearance requirement)"
+  - condition: "Hepatic impairment (Child-Pugh B/C) → IND-MF-ADVANCED-2L-BEXAROTENE (renal route; different toxicity profile)"
+  - condition: "Erythrodermic MF/Sézary with high skin burden → consider bexarotene (NCCN: bexarotene preferred for erythrodermic presentation)"
+  - condition: "Transformed MF (large-cell transformation) → consider pralatrexate (PROPEL; not yet KB-modeled) or gemcitabine-based combination chemotherapy"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Creatinine + CrCl estimate (Cockcroft-Gault): methotrexate is renally cleared; CrCl <30 is absolute contraindication"
+  - "HBsAg + anti-HBc: hepatitis B reactivation risk with immunosuppressive therapy"
+  - "Chest X-ray: baseline (MTX pneumonitis monitoring reference)"
+  - "Skin documentation + photography: baseline mSWAT scoring for response assessment"
+  - "Pregnancy test: women of childbearing potential"
+
+desired_tests:
+  - "Transient elastography (FibroScan): if prior methotrexate exposure or baseline hepatic risk factors (alcohol, NASH)"
+  - "CD30 IHC on skin biopsy (relapse material): if CD30+ → BV preferred (step 2 of algorithm)"
+  - "Sézary cell count (peripheral blood CD4+CD26- or CD4+CD7- immunophenotype): rule out leukemic Sézary disease (>1000 cells/μL) that would favor mogamulizumab"
+  - "HTLV-1 serology: if ATLL in differential (HTLV-1+ → separate disease entity; different management)"
+
+rationale: >
+  Low-dose weekly methotrexate (5-25 mg/week) is an established, low-toxicity
+  systemic therapy for MF/Sézary syndrome with NCCN Category 2A consensus
+  support. The biological mechanism involves dihydrofolate reductase inhibition
+  → impaired DNA synthesis + immunomodulation of aberrant T-cell clones.
+
+  Evidence:
+  - Coors 2004 (Arch Dermatol; n=16 plaque-stage MF): ORR ~58% at median 15 mg/week PO.
+  - Zackheim 1996 (J Am Acad Dermatol): Series of MF patients; ORR ~30-41% with
+    varying doses 5-75 mg/week.
+  - Olsen 1989: historical series establishing MTX for CTCL.
+  - NCCN CTCL 2025 Category 2A: low-dose methotrexate for advanced MF/Sézary
+    when skin-directed therapy insufficient; validated by NCCN expert consensus.
+
+  Clinical positioning:
+  Methotrexate is most appropriate for:
+  (1) PLAQUE-DOMINANT MF (stage IB-IIB): moderate tumor burden, no leukemic involvement
+  (2) PATIENTS WITHOUT CD30+ OR SÉZARY-DOMINANT FEATURES (BV/moga would be preferred)
+  (3) ELDERLY/FRAIL PATIENTS: oral, once-weekly, low toxicity at starting doses
+  (4) UKRAINE ACCESSIBILITY: MTX is registered, reimbursed, and very affordable
+
+  Compared to bexarotene (alternative):
+  - MTX: better for plaque-dominant disease; no lipid/thyroid toxicity; cheaper
+  - Bexarotene: preferred for erythrodermic/blood-dominant disease; different mechanism
+  Both are Category 2A; choice is individualized (MDT assessment of disease pattern,
+  comorbidities, toxicity preference, access).
+
+rationale_ua: >
+  МТХ 5-25 мг/тиждень — NCCN кат.2A при прогресуючому МГ/СС (Coors 2004: ORR ~58%).
+  Механізм: інгібування ДГФР → пригнічення клітинної проліферації + імуномодуляція
+  T-клонів. Переваги: пероральний прийом, одноразово на тиждень, доступний в UA.
+  Нішева популяція: бляшкова форма МГ, без CD30+ (BV) і без Sézary крові (мога).
+  Порівняно з бексаротеном: немає гіпертригліцеридемії, немає гіпотиреозу; нижча вартість.
+  Ключові застороги: вагітність (кат.X), CrCl <30 (накопичення), LFT моніторинг.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN CTCL 2025 Category 2A: low-dose methotrexate (5-25 mg/week) as systemic
+      therapy option for advanced MF/Sézary syndrome. Validated by expert consensus;
+      historical efficacy data.
+  - source_id: SRC-ESMO-CTCL-2024
+    position: context
+
+do_not_do:
+  - "НІКОЛИ не призначати при вагітності — Кат.X тератоген; контрацепція обов'язкова"
+  - "CrCl <30 мл/хв: МТХ накопичується → важка мієлосупресія/мукозит; альтернатива — бексаротен"
+  - "НПЗП (диклофенак, ібупрофен): підвищують токсичність МТХ (знижена ниркова екскреція); уникати"
+  - "ТМП/СМК (котримоксазол) одночасно: не сумісний з МТХ; замінити пневмоцистну профілактику (аерозольний пентамідин або дапсон)"
+  - "Фолієва кислота в день МТХ: не призначати фол. кислоту в той самий день (знижує ефективність МТХ)"
+  - "CD30+ захворювання (≥10% ІГХ): BV переважніше; МТХ менш ефективний при CD30+ MF"
+  - "Накопичена доза >1.5г: FibroScan або біопсія печінки (фіброз)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

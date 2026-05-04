@@ -1,0 +1,103 @@
+id: REG-METHOTREXATE-MF
+name: "Low-dose methotrexate (weekly oral, mycosis fungoides / Sézary syndrome)"
+name_ua: "Метотрексат низькодозовий (щотижнево PO, мікоз грибоподібний / синдром Сезарі)"
+alternate_names:
+  - "Low-dose MTX MF"
+  - "Methotrexate weekly CTCL"
+
+disease_context: DIS-MF-SEZARY
+line_of_therapy: 2
+plan_track: standard
+
+components:
+  - drug_id: DRUG-METHOTREXATE
+    dose: "5-25 mg PO once weekly (start 5-10 mg/week; titrate up to response; max 50 mg/week in selected patients)"
+    route: PO
+    schedule: "Once weekly (fixed day of week; same day every week)"
+    administration_notes: >
+      Start at 5-10 mg/week to assess tolerability. Escalate by 5 mg/week every
+      4 weeks to response (typically 15-25 mg/week is adequate for MF). Max 50 mg/week
+      in patients with good tolerability and suboptimal response. At doses >25 mg/week,
+      consider SC route (better bioavailability, less GI toxicity).
+      Give on empty stomach for consistent absorption.
+      Avoid same-day folic acid administration — space by ≥24 hours.
+
+cycle_length_days: 28
+total_planned_cycles: >
+  Continue until disease progression, unacceptable toxicity, or response plateau.
+  Response assessment every 3 months (skin scoring + photography + CBC).
+  Duration of response typically 6-12 months; some patients maintain benefit
+  for 2+ years on low-dose maintenance. Taper to minimum effective dose in responders.
+
+premedication:
+  - "No premedication required — oral outpatient therapy"
+
+mandatory_supportive_care:
+  - "Folic acid 1-5 mg PO daily (NOT on methotrexate day — space ≥24h): reduces mucositis and megaloblastic toxicity. Critical for long-term tolerability."
+  - "Avoid NSAIDs, aspirin, TMP-SMX (reduce methotrexate clearance → increased toxicity). If NSAID unavoidable: monitor closely."
+  - "Sun protection: photoprotection recommended (MTX + UV exposure may sensitize skin)"
+
+monitoring_schedule:
+  - "CBC with differential: baseline; monthly × 3 months; then every 3 months if stable"
+  - "LFT (AST, ALT, bilirubin, albumin): baseline; every 4-6 weeks × first 3 months; then every 3 months"
+  - "Creatinine/BUN: baseline and every 3 months (methotrexate renally cleared)"
+  - "Chest X-ray: baseline (MTX-associated pneumonitis — rare but fatal; baseline reference)"
+  - "Transient elastography (FibroScan) or liver biopsy: consider if cumulative MTX dose >1.5g (hepatic fibrosis risk; NCCN: assess at 1.5g cumulative)"
+  - "Skin assessment + photography: every 3 months (response assessment; mSWAT score preferred)"
+
+dose_adjustments:
+  - condition: "Renal impairment (CrCl 30-50 mL/min)"
+    modification: "Reduce dose to 50% of intended dose; monitor closely. CrCl <30: avoid methotrexate (serious toxicity risk)."
+  - condition: "Hepatic impairment (AST/ALT >3× ULN)"
+    modification: "Hold methotrexate. Resume at 50% dose after normalization to ≤2× ULN. Bilirubin >3 mg/dL: avoid methotrexate."
+  - condition: "Mucositis Grade ≥2 (oral ulcers, dysphagia)"
+    modification: "Reduce methotrexate by 25-50%. Add leucovorin rescue 5-10 mg PO 24h after MTX if severe (not routine at low doses)."
+  - condition: "Transaminase rise >3× ULN on LFT monitoring"
+    modification: "Hold methotrexate for 4-6 weeks; recheck. Resume at reduced dose. Persistent elevation: consider discontinuation; transient elastography."
+  - condition: "Pulmonary symptoms (new dyspnea, dry cough, fever)"
+    modification: "Hold methotrexate immediately; obtain CT chest; BAL if infiltrates. MTX pneumonitis: high-dose prednisone 1 mg/kg/day + permanent MTX discontinuation."
+
+special_precautions:
+  - "TERATOGENICITY: Methotrexate is Category X (absolutely contraindicated in pregnancy). Women: pregnancy test before starting + reliable contraception during + 3 months after last dose. Men: no sexual conception for 3 months after last dose."
+  - "FOLIC ACID TIMING: Always give folic acid. Never give folic acid the same day as methotrexate — reduces anti-folate effect. Space ≥24 hours."
+  - "RENAL MONITORING: Methotrexate eliminated renally; renal impairment causes dangerous accumulation. Check CrCl quarterly."
+  - "CUMULATIVE HEPATOTOXICITY: MTX causes hepatic fibrosis with cumulative dose. Assess at 1.5g total cumulative dose (NCCN: FibroScan or liver biopsy)."
+  - "DRUG INTERACTIONS: NSAIDs, TMP-SMX, penicillins reduce renal tubular secretion → MTX toxicity. PPIs may reduce clearance. Avoid concurrent hepatotoxic agents."
+  - "MTX PNEUMONITIS: rare but potentially fatal hypersensitivity pneumonitis (~1%). Any new respiratory symptoms → hold MTX, CT chest."
+
+watchpoints_ua:
+  - "УВАГА: Тератогенність (кат.X) — надійна контрацепція; тест на вагітність перед початком"
+  - "УВАГА: Фолієва кислота щоденно (крім дня прийому МТХ) — попереджає токсичність слизових"
+  - "УВАГА: НПЗП та ТМП/СМК — підвищують токсичність МТХ (знижена ниркова екскреція)"
+  - "УВАГА: ЦГН функція — МТХ ниркової екскреції; CrCl <30 → не призначати"
+  - "УВАГА: Накопичена доза >1.5г: ФіброСкан або біопсія печінки (ризик фіброзу)"
+  - "Гепатотоксичність (АЛТ >3×ULN): тимчасово відмінити МТХ; поновлювати зниженою дозою"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Methotrexate (Methotrexate-Teva, generic): registered in Ukraine; reimbursed
+    via NSZU for numerous indications (oncology, rheumatology). Very affordable.
+    Folic acid: OTC available; very low cost. Excellent UA accessibility.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  Low-dose methotrexate (5-25 mg/week) for MF: historical use with NCCN Cat 2A
+  consensus. Coors 2004 (Arch Dermatol; n=16): ORR ~58% at median 15 mg/week;
+  good tolerability. NCCN CTCL 2025: systemic MTX as single-agent option for
+  advanced MF (IB-IIB). Key advantage vs bexarotene: no hypertriglyceridemia,
+  no hypothyroidism, no teratogen-derived (well, MTX is also teratogenic but
+  different class). Key advantage over bexarotene: better skin response in
+  plaque-dominant disease; lower lipid/thyroid burden. Bexarotene preferred
+  for erythrodermic/blood-dominant disease (retinoid mechanism).
+notes_ua: >
+  МТХ 5-25 мг/тиждень — NCCN кат.2A при прогресуючому МГ/СС (Coors 2004:
+  ORR ~58%). Переваги перед бексаротеном: немає гіпертригліцеридемії, немає
+  гіпотиреозу; нижча вартість; доступний в Україні. Ключово: фолієва кислота
+  щоденно (крім дня МТХ) + моніторинг ЛФТ + ниркова функція.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
