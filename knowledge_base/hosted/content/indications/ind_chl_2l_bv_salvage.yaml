@@ -1,0 +1,176 @@
+id: IND-CHL-2L-BV-SALVAGE
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CHL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory classical Hodgkin lymphoma (cHL) after 1L ABVD or A-AVD or BEACOPP-based therapy"
+    - "ASCT-eligible: age ≤65 (relative), ECOG PS 0-2, adequate organ function for intensive salvage"
+    - "BV-naive OR limited prior BV exposure (< cumulative neurotoxic dose; re-biopsy to confirm CD30+)"
+    - "Measurable disease at relapse (CT or PET-avid)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD30-IHC
+      required: true
+      value_constraint: "positive (standard for cHL — virtually 100% CD30+; confirm on relapse biopsy if uncertain)"
+      notes: >
+        cHL is CD30+ in >99% of cases. Confirmatory CD30 IHC at relapse rarely needed unless
+        histologic transformation suspected. BV mechanism requires CD30 expression.
+  biomarker_requirements_excluded:
+    - "Prior cumulative BV >6 cycles (MMAE neurotoxicity risk; limited additional benefit)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      ECOG 0-2 for intensive BV+benda salvage. ECOG 2 with careful MDT review.
+      ECOG 3 patients may still receive BV monotherapy as a less toxic bridge (lower dose intensity).
+      ASCT eligibility must be confirmed with transplant center before salvage initiation.
+
+recommended_regimen: REG-BV-BENDA-CHL
+alternative_regimens:
+  - regimen_id: REG-BV-MONO-SYSTEMIC-ALCL
+    description: >
+      BV monotherapy 1.8 mg/kg IV q3w × 4-6 cycles (REG-BV-MONO-SYSTEMIC-ALCL;
+      same dosing as ALCL; Younes 2012 NEJM; ORR 75% cHL; CR 34%).
+      Use when: bendamustine unavailable, severe renal impairment (CrCl <30),
+      prior bendamustine failure, or patient preference for lower intensity.
+      Lower CR rate than BV-Benda (~34% vs ~73%) but still effective bridge.
+  - regimen_id: null
+    description: >
+      BV + nivolumab (CheckMate 039 combination; Herrera 2019 Lancet Oncol;
+      ORR 82%, CR 61%; NCCN Cat 2A); BV 1.8 mg/kg d1 + nivolumab 3 mg/kg d1
+      q21d × up to 4 cycles. Use when standard salvage chemo not tolerated or
+      as treatment prior to allo-SCT in very high-risk (allo-SCT eligibility
+      assessed). Less established than BV-Benda as standard bridge.
+  - regimen_id: null
+    description: >
+      ICE (ifosfamide 5 g/m² CIV + carboplatin AUC 5 + etoposide 100 mg/m² d1-3
+      q21d × 2-3 cycles) — NCCN Cat 1 platinum salvage option; pre-BV era
+      standard; still used when BV unavailable (Ukraine: if BV access barriers).
+      DHAP or GDP as alternatives (also Cat 2A).
+
+concurrent_therapy: []
+followed_by:
+  - "BEAM-ASCT (carmustine 300 mg/m² d-6, etoposide 200 mg/m² d-5 to d-2, cytarabine 200 mg/m² bid d-5 to d-2, melphalan 140 mg/m² d-1): high-dose conditioning + autologous SCT after ≥CR/PR to BV salvage"
+  - "STEM CELL MOBILIZATION: coordinate PBSC collection before cycle 3 or after salvage C4 (do NOT mobilize during BV cycle — MMAE impairs CD34+ collection)"
+  - "Post-ASCT assessment (day +100): if ≥1 high-risk feature (primary refractory, extranodal, <12mo CR1, ≥2 prior salvage lines) + BV-naive at ASCT → IND-CHL-2L-BRENTUXIMAB-MAINTENANCE (AETHERA)"
+  - "Post-ASCT relapse OR ASCT-ineligible: IND-CHL-2L-PEMBROLIZUMAB (KEYNOTE-204)"
+  - "Allogeneic SCT for fit patients with multiple relapse (allo-SCT → curative intent post-BV failure)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~93% (BV+benda; LaCasce 2018, Blood; n=66)"
+  cr_rate: "~73% (complete metabolic response by PET; Deauville ≤3)"
+  median_pfs_months: "~13-18 (BV+benda bridge; ASCT further improves outcomes)"
+  notes: >
+    BV + bendamustine (LaCasce 2018, Blood; phase 1/2):
+    - ORR 93%, CR 73%; higher CR than historical salvage (ICE ~25-30% CR; DHAP ~20-25% CR)
+    - CR at standard dose (BV 1.8 + benda 90 mg/m²): maintained regardless of prior BV (if <100 mg/m²)
+    - 2-year PFS post-ASCT in BV-Benda bridge: ~70-80% (favorable vs prior-era ICE)
+
+    BV monotherapy bridge (Younes 2012, NEJM):
+    - ORR 75% r/r cHL; CR 34%; median DoR 29.4 weeks
+    - Adequate as ASCT bridge; lower CR rate limits long-term PFS vs BV-Benda
+
+    ASCT consolidation: OS benefit; event-free survival substantially improved vs
+    salvage alone. Achieving CR before ASCT is the strongest predictor of outcome.
+    PET-CR post-salvage (Deauville ≤3) before ASCT → ~70-80% 5-year OS.
+
+hard_contraindications:
+  - "Prior BV cumulative dose ≥6 cycles with Grade ≥2 neurotoxicity (MMAE accumulation risk)"
+  - "ASCT-ineligible (all contraindications: cardiac LVEF <50%, renal CrCl <30, ECOG ≥3 with comorbidity) — route to IND-CHL-2L-PEMBROLIZUMAB"
+  - "Active uncontrolled infection"
+  - "Hepatitis B reactivation risk: active HBV without antivirals"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "ASCT-ineligible (ECOG ≥3, organ dysfunction, age >70 with comorbidity) → IND-CHL-2L-PEMBROLIZUMAB (KEYNOTE-204; non-intensive 2L)"
+  - condition: "BV-experienced (>6 prior cycles) → platinum salvage (ICE/DHAP) or nivolumab (if ICI-naive) → ASCT or allo-SCT"
+  - condition: "Post-BV salvage: CR/PR → proceed to ASCT; then evaluate AETHERA criteria"
+  - condition: "Primary refractory (no CR to 1L) + ASCT-eligible → BV+Benda as first choice (ORR 93%; superior to ICE/DHAP in primary refractory cHL)"
+  - condition: "BV unavailable (UA access) → ICE salvage (ifosfamide/carboplatin/etoposide; NCCN Cat 1 for ASCT-eligible cHL)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "PET-CT whole body: baseline at relapse (Deauville staging; essential for response assessment)"
+  - "Core biopsy of accessible lesion at relapse: confirm cHL histology (rule out transformation to DLBCL or NHL; confirm CD30+)"
+  - "ECHO (LVEF): ASCT conditioning prerequisite (LVEF ≥50% required for BEAM)"
+  - "PFTs (spirometry, DLCO): BEAM uses carmustine (pulmonary toxicity); baseline DLCO required"
+  - "HBsAg + anti-HBc: BV reactivation risk; positive HBsAg → prophylactic entecavir"
+  - "Pregnancy test: women of childbearing potential (teratogenic: BV, bendamustine)"
+  - "Stem cell mobilization consultation: HLA typing + apheresis planning before cycle 2"
+
+desired_tests:
+  - "PET-CT after cycle 2 (interim assessment): Deauville ≤3 → proceed to ASCT planning; Deauville 4-5 → consider early intensification or alternative salvage"
+  - "Peripheral neuropathy baseline assessment: sensory/motor grading (CTCAE v5) before BV-Benda"
+  - "NGS (lymphoma panel): if primary refractory — TP53, PTEN, MHC alterations may predict BV failure; alloSCT planning data"
+
+rationale: >
+  Brentuximab vedotin + bendamustine (BV-Benda) is the NCCN Category 1 standard
+  2L salvage regimen for ASCT-eligible patients with r/r cHL. The biological rationale
+  is strong: cHL is virtually universally CD30+ (tumor cell CD30 expression ~100%);
+  BV exploits this via ADC-mediated MMAE delivery (microtubule disruption + apoptosis).
+  Bendamustine adds alkylating cytotoxicity that is synergistic with MMAE.
+
+  Evidence:
+  - LaCasce 2018 (Blood; phase 1/2; n=66): BV 1.8 mg/kg + benda 90 mg/m² d1-2 q21d
+    × 4 cycles → ORR 93%; CR 73% by PET Deauville ≤3; superior to prior-era ICE
+    (~25-30% CR) and DHAP (~20-25% CR).
+  - Younes 2012 (NEJM; n=102): BV monotherapy ORR 75% in r/r cHL; CR 34%.
+  - Historical ASCT bridge context: achieving CR pre-ASCT is the strongest predictor
+    of post-ASCT EFS/OS (~70% 5y PFS vs ~45% if PR only).
+  - NCCN Hodgkin 2025 Category 1 for ASCT-eligible r/r cHL.
+
+  Clinical positioning:
+  - Primary refractory (no CR to ABVD): BV-Benda ORR ~91% vs ICE ~42% in this setting
+  - 1st relapse: BV-Benda gives higher CR rate than conventional platinum-based regimens
+  - Bridge philosophy: goal is PET-CR (Deauville ≤3) in 2-4 cycles → ASCT
+  - PBSC mobilization must be planned carefully — BV impairs CD34+ collection
+
+  Sequential plan:
+  1. BV-Benda × 2-4 cycles → PET assessment
+  2. PET-CR/PR → PBSC harvest + BEAM-ASCT
+  3. Post-ASCT day +30/+100: evaluate AETHERA criteria for BV maintenance (IND-CHL-2L-BRENTUXIMAB-MAINTENANCE)
+  4. If ASCT fails or patient relapses post-ASCT → pembrolizumab (IND-CHL-2L-PEMBROLIZUMAB)
+
+rationale_ua: >
+  BV + бендамустин — стандарт 2L сальважу при р/р cHL для придатних до аутоТГСК
+  (NCCN кат.1). LaCasce 2018: ORR 93%, CR 73% — перевищує ICE/DHAP (~25-30% CR).
+  cHL майже 100% CD30+ → BV (ADC) ефективний. Ключово:
+  - Мета сальважу: ПЕТ-CR (Deauville ≤3) → аутоТГСК
+  - Не проводити мобілізацію стовбурових клітин під час BV-циклу
+  - Після ASCT: при ≥1 фактор ризику (первинно рефрактерний, екстранодал,
+    <12 міс CR1 → рецидив) → BV підтримуюча терапія (AETHERA; 16 циклів)
+  - Якщо BV недоступний (UA): ICE сальваж (Cat 1 альтернатива)
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Hodgkin 2025 Category 1: BV + bendamustine as salvage for ASCT-eligible
+      r/r cHL. CR rate ~73% by PET; superior to older platinum-based regimens.
+      ASCT recommended after salvage response.
+  - source_id: SRC-ESMO-HODGKIN-2024
+    position: context
+
+do_not_do:
+  - "НЕ проводити мобілізацію CD34+ стовбурових клітин під час BV-циклу — MMAE пошкоджує CD34+ клітини-попередники"
+  - "Не призначати BV при накопиченій дозі >6 циклів з нейропатією ≥2 ст. — кумулятивна MMAE нейротоксичність"
+  - "Реактивація гепатиту B: перевірити HBsAg та anti-HBc перед BV; ентекавір при HBsAg+"
+  - "ASCT-непридатним пацієнтам: не призначати BV+бендамустин як самостійне лікування (не курс на ремісію) — перейти на пембролізумаб"
+  - "ПЕТ після 2 циклів обов'язкова: Deauville 4-5 → переглянути план (інтенсифікація або алоТГСК)"
+  - "При первинній рефрактерності: BV-Benda переважніше ICE (~91% vs ~42% ORR)"
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

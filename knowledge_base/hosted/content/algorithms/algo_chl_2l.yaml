@@ -2,21 +2,50 @@ id: ALGO-CHL-2L
 applicable_to_disease: DIS-CHL
 applicable_to_line_of_therapy: 2
 purpose: >
-  Select 2L+/relapsed cHL Indication. Three tracks: (1) post-frontline
-  relapse + ASCT-eligible → BV-based salvage (free-text — dedicated
-  IND-CHL-2L-SALVAGE-ASCT not yet wired) → BEAM-autoSCT; (2) high-risk
-  pre-ASCT (primary refractory, extranodal, <12mo CR1) → IND-CHL-2L-
-  BRENTUXIMAB-MAINTENANCE post-ASCT (AETHERA); (3) post-ASCT relapse OR
-  transplant-ineligible → IND-CHL-2L-PEMBROLIZUMAB (KEYNOTE-204 PD-1).
+  Select 2L+/relapsed cHL Indication. Four tracks: (0) ASCT-eligible + BV-naive
+  + relapsed → IND-CHL-2L-BV-SALVAGE (BV+Benda; LaCasce 2018; NCCN Cat 1;
+  bridge to BEAM-ASCT; followed_by: BV maintenance if high-risk); (1) post-ASCT
+  + high-risk + BV-naive → IND-CHL-2L-BRENTUXIMAB-MAINTENANCE (AETHERA; Cat 1);
+  (2) post-ASCT relapse OR transplant-ineligible → IND-CHL-2L-PEMBROLIZUMAB
+  (KEYNOTE-204; Cat 1). Default: pembrolizumab.
 
 output_indications:
   - IND-CHL-2L-PEMBROLIZUMAB
   - IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
+  - IND-CHL-2L-BV-SALVAGE
 
 default_indication: IND-CHL-2L-PEMBROLIZUMAB
 alternative_indication: IND-CHL-2L-BRENTUXIMAB-MAINTENANCE
 
 decision_tree:
+  # Step 0 — BV salvage bridge gate. ASCT-eligible + BV-naive + 1st/2nd relapse.
+  # BV + bendamustine (LaCasce 2018, Blood): ORR 93%; CR 73%. NCCN Cat 1.
+  # Goal: achieve PET-CR (Deauville ≤3) → PBSC harvest → BEAM-ASCT.
+  # NOTE: This is the CURRENT episode recommendation. After ASCT, the engine
+  # will route again: high-risk post-ASCT → step 1 (AETHERA maintenance).
+  # Post-ASCT relapse / transplant failure → step 2 (pembrolizumab).
+  # BV unavailable (UA access barrier): use ICE/DHAP salvage (NCCN Cat 1 alternative).
+  - step: 0
+    evaluate:
+      all_of:
+        - red_flag: RF-PRIOR-BV-NAIVE
+        - condition: "ASCT-eligible: ECOG 0-2, adequate cardiac/renal/hepatic function, age ≤65 (relative)"
+        - condition: "1st or 2nd relapse cHL after ABVD/A-AVD/BEACOPP; measurable disease"
+        - none_of:
+          - condition: "Post-ASCT relapse (ASCT already completed)"
+          - condition: "Transplant-ineligible (ECOG ≥3, organ failure, patient declined)"
+    if_true:
+      result: IND-CHL-2L-BV-SALVAGE
+      notes: >
+        ASCT-eligible + BV-naive: BV + bendamustine salvage bridge (REG-BV-BENDA-CHL).
+        ORR 93%; CR 73% (LaCasce 2018 Blood). Goal: PET-CR → PBSC harvest → BEAM-ASCT.
+        After ASCT: re-evaluate via this algorithm for BV maintenance (step 1) or
+        pembrolizumab (step 2) depending on high-risk features and subsequent course.
+        UA access: BV not NSZU-reimbursed; ICE/DHAP are funded alternatives if BV unavailable.
+    if_false:
+      next_step: 1
+    notes: "BV salvage bridge gate added 2026-05-04 (Workstream AN). Closes gap: IND-CHL-2L-BV-SALVAGE not previously modeled."
+
   # Step 1 — BV-naive gate. AETHERA BV-maintenance post-ASCT requires
   # patient is BV-exposure-naive at the maintenance start (or limited
   # prior BV in the salvage line) and has ≥1 high-risk feature for
@@ -67,16 +96,17 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-ESMO-HODGKIN-2024
 
-last_reviewed: "2026-04-26"
+last_reviewed: "2026-05-04"
 notes: >
+  AUTHORED 2026-05-04: IND-CHL-2L-BV-SALVAGE wired at step 0 (BV+benda;
+  LaCasce 2018 ORR 93%; NCCN Cat 1; Workstream AN). ROUTING SUMMARY:
+  (0) ASCT-eligible + BV-naive → BV+benda salvage (bridge to ASCT);
+  (1) post-ASCT + high-risk + BV-naive → BV maintenance (AETHERA);
+  (2) post-ASCT relapse / transplant-ineligible → pembrolizumab (KEYNOTE-204).
   OOS / wiring gaps:
-  (1) IND-CHL-2L-BV-SALVAGE (brentuximab + bendamustine OR BV mono
-  bridge to ASCT) — not modeled; surfaced as free-text in step 1
-  precondition.
-  (2) BEAM-autoSCT itself is a procedure, not modeled as an indication.
-  (3) Nivolumab (CheckMate-205) — not modeled; pembrolizumab covers
-  PD-1 niche.
-  (4) BV+nivolumab combo (post-ASCT relapse) — not modeled.
-  (5) Allogeneic SCT for post-PD-1 relapse — referral, outside KB.
-  (6) RF-CHL-ADVANCED-STAGE applies to 1L only; relapse staging
-  re-evaluated independently.
+  (1) BEAM-autoSCT itself is a procedure (not an indication) — not modeled.
+  (2) Nivolumab (CheckMate-205) — not modeled; pembrolizumab covers PD-1 niche.
+  (3) BV+nivolumab combo (post-ASCT relapse) — not modeled.
+  (4) Allogeneic SCT for post-PD-1 relapse — referral, outside KB.
+  (5) ICE/DHAP/GDP salvage (platinum-based) — not separately modeled;
+  surfaced as alternative in IND-CHL-2L-BV-SALVAGE alternative_regimens.

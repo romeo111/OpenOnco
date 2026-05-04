@@ -1,0 +1,107 @@
+id: REG-BV-BENDA-CHL
+name: "Brentuximab vedotin + bendamustine (BV-Benda salvage, r/r cHL bridge to ASCT)"
+name_ua: "Брентуксимаб ведотін + бендамустин (BV-Benda сальваж, р/р cHL міст до аутоТГСК)"
+alternate_names:
+  - "BV + bendamustine"
+  - "LaCasce regimen"
+
+disease_context: DIS-CHL
+line_of_therapy: 2
+plan_track: standard
+
+components:
+  - drug_id: DRUG-BRENTUXIMAB-VEDOTIN
+    dose: "1.8 mg/kg IV (max 180 mg)"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    administration_notes: >
+      IV over 30 minutes. Maximum 180 mg per dose (weight cap).
+      BV 1.8 mg/kg same dose as single-agent (no dose reduction for combination).
+  - drug_id: DRUG-BENDAMUSTINE
+    dose: "90 mg/m² IV"
+    route: IV
+    schedule: "Days 1-2 of each 21-day cycle"
+    administration_notes: >
+      IV over 30-60 minutes. Reduce to 70 mg/m² if Grade 3-4 hematologic toxicity
+      at day 15 nadir or in cycle 2. Consider dose reduction in renal impairment
+      (CrCl 30-50 mL/min: use 90 mg/m² with caution; <30: avoid).
+
+cycle_length_days: 21
+total_planned_cycles: >
+  4 cycles (standard ASCT bridge); extend to 6 cycles for partial responders
+  if additional cytoreduction needed before ASCT. Proceed to ASCT after 2-4
+  cycles if CR or PR achieved. Do NOT exceed 6 cycles — cumulative neurotoxicity
+  and lymphodepletion.
+
+premedication:
+  - "Antiemetic: moderate-high emetogenicity (NK1-RA + 5-HT3 + dexamethasone d1-2; metoclopramide/prochlorperazine PRN days 2-5)"
+  - "Anti-infective prophylaxis: TMP-SMX 160/800 mg 3×/week (PCP prophylaxis; NCCN recommended with lymphoma salvage regimens)"
+  - "Herpes virus reactivation: acyclovir 400 mg bid or valacyclovir 500 mg daily during treatment + 30 days post"
+  - "H1-antihistamine (diphenhydramine 25-50 mg IV) before BV infusion (infusion reaction prophylaxis)"
+
+mandatory_supportive_care:
+  - "G-CSF: pegfilgrastim 6 mg SC d3 (or filgrastim 5 mcg/kg/day d3-10) — Grade 4 neutropenia common (≥40%); G-CSF reduces duration but neutropenic fever still ~10-15%"
+  - "Stem cell mobilization coordination: discuss PBSC collection timing with transplant center; avoid BV in mobilization cycle if possible (BV is NOT mobilization-compatible — schedule PBSC harvest between cycles or after C4)"
+  - "Peripheral neuropathy monitoring: CTCAE v5 grading every cycle; MMAE neuropathy is cumulative"
+
+monitoring_schedule:
+  - "CBC with differential: day 1 (prior to each cycle) + day 15 (nadir check)"
+  - "CMP + uric acid: day 1 each cycle (tumor lysis risk low but monitor)"
+  - "Neuropathy assessment: grading score each visit; Grade ≥2 → dose reduce BV to 1.2 mg/kg"
+  - "PET-CT: after cycle 2 (early response Deauville score); after cycle 4 (ASCT decision gate)"
+  - "CT chest + spirometry: if any new respiratory symptoms (BV-associated ILD <1%)"
+
+dose_adjustments:
+  - condition: "Grade ≥2 peripheral sensory or motor neuropathy (CTCAE v5)"
+    modification: "Reduce BV to 1.2 mg/kg. Grade ≥3 neuropathy → hold BV; resume at 0.9 mg/kg or discontinue."
+  - condition: "Grade 4 neutropenia (ANC <0.5×10⁹/L) >7 days OR febrile neutropenia"
+    modification: "Ensure G-CSF given. Reduce bendamustine to 70 mg/m² in next cycle. BV dose unchanged unless dual-agent culprit."
+  - condition: "Infusion-related reaction Grade 1-2 to BV"
+    modification: "Slow infusion rate; add dexamethasone premedication. Grade 3 → stop infusion; rechallenge at slower rate only once."
+  - condition: "Grade 3-4 skin toxicity (Stevens-Johnson, TEN)"
+    modification: "Permanently discontinue BV."
+
+special_precautions:
+  - "PERIPHERAL NEUROPATHY: BV MMAE-associated; cumulative and dose-limiting. Grade ≥2 requires dose reduction. Risk additive with prior vincristine/cisplatin neuropathy from ABVD/BEACOPP."
+  - "STEM CELL MOBILIZATION TIMING: Do NOT use BV in the mobilization cycle. BV may impair stem cell collection (MMAE cytotoxic to CD34+ progenitors). Coordinate with transplant center to harvest PBSC before cycle 3 or after cycle 4."
+  - "HEPATITIS B REACTIVATION: Screen for HBsAg and anti-HBc before BV; positive HBsAg → prophylactic entecavir/tenofovir."
+  - "PROGRESSIVE MULTIFOCAL LEUKOENCEPHALOPATHY (PML): rare but fatal; JC virus reactivation reported with BV. Report new neurological symptoms immediately."
+  - "BENDAMUSTINE EXTRAVASATION: vesicant; ensure adequate IV access; monitor infusion site."
+
+watchpoints_ua:
+  - "УВАГА: Нейропатія від BV (MMAE) — кумулятивна; знижувати дозу при ≥2 ступ."
+  - "УВАГА: Не вводити BV у цикл мобілізації стовбурових клітин — пошкоджує CD34+ клітини"
+  - "УВАГА: Реактивація гепатиту B: скринінг HBsAg + anti-HBc до BV"
+  - "КТ ПЕТ після 2 циклів: оцінка відповіді (Deauville ≤3 → CR → ASCT план)"
+  - "Альтернатива: BV монотерапія 1.8 mg/kg q3w × 4-6 циклів (якщо бендамустин недоступний)"
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Brentuximab vedotin (Adcetris): registered in Ukraine but not NSZU-reimbursed
+    for cHL salvage. Named-patient or compassionate access required.
+    Bendamustine (Levact, Ribomustin): registered in Ukraine; reimbursed for B-cell
+    lymphoma (off-label for cHL salvage combination).
+    BV monotherapy alternative if BV-Benda not accessible: BV 1.8 mg/kg q3w mono
+    (ORR 75% cHL; Younes 2012 NEJM) — lower CR rate than BV-Benda but BV accessible
+    alone as salvage bridge.
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  BV + bendamustine for r/r cHL ASCT-bridge: LaCasce 2018 (Blood; phase 1/2; n=66):
+  ORR 93%; CR 73%; CR rate maintained regardless of prior BV exposure (<100 mg/m²).
+  NCCN Hodgkin 2025 Category 1 for ASCT-eligible r/r cHL.
+  Alternative salvage regimens: BV + nivolumab (CheckMate 039; Herrera 2019 Lancet Oncol;
+  ORR 82%; CR 61%), ifosfamide-based (ICE, DHAP, GDP) — all NCCN Cat 2A.
+  BV mono bridge (Younes 2012 NEJM): ORR 75%, CR 34% — use if benda unavailable
+  or prior benda exposure.
+notes_ua: >
+  BV + бендамустин — сальваж при р/р cHL перед аутоТГСК (NCCN кат.1).
+  LaCasce 2018: ORR 93%, CR 73%. BV моно (Younes 2012): ORR 75%, CR 34% —
+  якщо бендамустин недоступний. Ключово: не застосовувати BV у цикл мобілізації.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
