@@ -1,0 +1,77 @@
+id: REG-R2-FL
+name: R2 (Rituximab + Lenalidomide) for Follicular Lymphoma
+drugs:
+  - drug_id: DRUG-RITUXIMAB
+    dose: "375 mg/m² IV"
+    route: intravenous
+    days: [1]
+    cycle_day_reference: day 1 of each 28-day cycle
+    notes: >
+      Rituximab premedication: acetaminophen 650 mg PO + diphenhydramine 25-50 mg IV
+      30-60 min before infusion. Infusion-related reaction (IRR) monitoring mandatory
+      during first infusion (slower rate). Subsequent cycles: standard rituximab
+      infusion rate if prior tolerability confirmed.
+  - drug_id: DRUG-LENALIDOMIDE
+    dose: "20 mg PO once daily"
+    route: oral
+    days: "1-21"
+    cycle_day_reference: days 1-21 of each 28-day cycle (7-day rest d22-28)
+    notes: >
+      Starting dose 20 mg/day d1-21 q28d. Dose reductions for toxicity:
+      Grade ≥3 neutropenia → hold, restart at 15 mg; rash Grade ≥3 → hold,
+      restart at 15 mg if resolved. CrCl 30-60 mL/min: reduce to 10 mg/day.
+      CrCl <30 mL/min: not recommended without dialysis support.
+      REMS enrollment MANDATORY (lenalidomide teratogen; REVLIMID REMS/equivalent;
+      negative pregnancy test ≤10-14 days before start; monthly thereafter).
+
+cycle_length_days: 28
+number_of_cycles: 12
+regimen_type: chemoimmunotherapy
+
+dosing_notes: >
+  AUGMENT protocol (Leonard 2019 JCO): rituximab 375 mg/m² IV d1 q28d ×
+  12 cycles + lenalidomide 20 mg/day PO d1-21 × 12 cycles.
+  CBC weekly × first 2 cycles, then q2 weeks × 2, then monthly.
+  G-CSF (filgrastim 300-480 µg SC 3×/week or pegfilgrastim 6 mg once per cycle
+  starting d2) if ANC <1.5×10⁹/L before cycle. G-CSF prophylaxis recommended
+  for patients with prior myelosuppression or ANC <1.5 at baseline.
+  DVT/VTE prophylaxis MANDATORY: aspirin 81 mg/day PO (low risk) OR
+  low-molecular-weight heparin (LMWH; enoxaparin 40 mg SC/day) if
+  additional VTE risk factors (prior VTE, immobility, thrombophilia).
+  Lenalidomide + rituximab increases VTE risk multiplicatively (~7% AUGMENT
+  vs ~4% R alone vs ~2% general population NHL).
+  TSH baseline + q3 months (lenalidomide may cause hypothyroidism).
+  Hepatitis B surface antigen and core antibody: screen before rituximab
+  (HBV reactivation risk; prophylactic entecavir if HBsAg+ or HBcAb+).
+
+key_toxicities:
+  - "Neutropenia (Grade ≥3 ~50%; dose-limiting; G-CSF and dose reduction per protocol)"
+  - "Cutaneous reactions / rash (Grade ≥3 ~7%; lenalidomide class effect; hold and reduce)"
+  - "VTE/DVT (~7% AUGMENT; prophylaxis mandatory — aspirin minimum, LMWH if high risk)"
+  - "Rituximab infusion-related reactions (manageable with premedication)"
+  - "Fatigue (Grade ≥3 ~6%; cumulative with lenalidomide)"
+  - "Hypothyroidism (lenalidomide — monitor TSH q3 months)"
+  - "Tumor flare reaction (lenalidomide in FL; low-grade fever + tender lymphadenopathy
+    in first 1-2 cycles; self-limiting; steroid if severe; distinguish from progression)"
+  - "Second primary malignancies (SPM) — lenalidomide class risk; AUGMENT: SPM ~3%;
+    individual risk-benefit discussion required"
+  - "Hepatitis B reactivation (rituximab; screen and prophylax)"
+
+special_precautions:
+  - "REMS enrollment mandatory BEFORE prescribing lenalidomide (teratogen — Cat X;
+    two-form contraception required for women of childbearing potential)"
+  - "Tumor flare: common in FL weeks 1-4; if severe (Grade ≥2), may require prednisolone
+    20-40 mg/day × 5-7 days; do not discontinue lenalidomide unless Grade 3-4"
+  - "Rituximab + lenalidomide interaction: additive immunosuppression; PJP prophylaxis
+    (TMP-SMX 160/800 mg PO 3×/week or equivalent) recommended for duration of treatment"
+  - "CrCl monitoring: lenalidomide renally cleared; dose adjust for CrCl <60 mL/min;
+    not recommended if CrCl <30 mL/min"
+  - "No combination with thalidomide, pomalidomide, or other immunomodulatory drugs"
+  - "Ukraine: lenalidomide registration status — available via oncology specialty
+    (Revlimid or generic); REMS-equivalent monitoring required by prescriber"
+
+sources:
+  - SRC-NCCN-BCELL-2025
+
+last_reviewed: "2026-05-04"
+drafted_by: claude_extraction

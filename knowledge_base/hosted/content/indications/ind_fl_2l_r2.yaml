@@ -1,0 +1,193 @@
+id: IND-FL-2L-R2
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-FL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Follicular lymphoma Grade 1, 2, or 3a (Grade 3b treated as DLBCL — different algorithm)"
+    - "Relapsed or refractory after ≥1 prior rituximab-containing regimen (1L BR, R-CHOP, or R-CVP)"
+    - "NOT rituximab-refractory (defined as progression within 6 months of last rituximab dose);
+       rituximab-refractory FL → obinutuzumab-based regimen preferred (GADOLIN)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L, CrCl ≥30 mL/min (dose adjust ≥30; avoid <30)"
+    - "Negative pregnancy test within 10-14 days of lenalidomide initiation (REMS mandatory)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "EZH2 Y641 mutation confirmed AND ≥2 prior lines — tazemetostat preferred (disease-modifying mechanism; IND-FL-3L-TAZEMETOSTAT)"
+    - "Histologic transformation to DLBCL at relapse — R2 not appropriate; route to DLBCL algorithm (ALGO-DLBCL-*)"
+    - "Active VTE within 3 months with no anticoagulation — lenalidomide increases VTE risk; anticoagulate first then proceed"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No absolute age cutoff. AUGMENT enrolled adults ≥18. Elderly patients (>70)
+      with comorbid VTE risk may need LMWH prophylaxis from cycle 1.
+      CrCl <30 mL/min: lenalidomide not recommended; consider rituximab monotherapy
+      or obinutuzumab-based regimen. Pregnancy: ABSOLUTE contraindication (lenalidomide
+      REMS Cat X; two-form contraception + monthly pregnancy tests mandatory).
+
+recommended_regimen: REG-R2-FL
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Obinutuzumab + bendamustine × 6 cycles → obinutuzumab maintenance (GADOLIN;
+      Sehn 2016 JCO): ORR 69%, mPFS 29.2 vs 13.7 months (R-benda). Preferred for
+      rituximab-refractory FL (progression within 6 months of last rituximab).
+      Not modeled as separate indication — cross-reference IND-FL-2L-OBINU-BENDA
+      when authored.
+  - regimen_id: null
+    description: >
+      Rituximab monotherapy (375 mg/m² IV × 4 weekly doses; then maintenance 375 mg/m²
+      q8w × 2 years if response): ORR ~50-60% in indolent FL relapse; useful when
+      lenalidomide contraindicated (CrCl <30, prior SPM risk, patient refusal of REMS).
+      NCCN Cat 2A; inferior to R2 by indirect comparison.
+
+concurrent_therapy:
+  - "DVT/VTE prophylaxis MANDATORY: aspirin 81-100 mg PO daily (low-risk) or enoxaparin 40 mg SC daily (high-risk — prior VTE, immobility, thrombophilia)"
+  - "PJP prophylaxis: TMP-SMX 160/800 mg PO 3×/week (or inhaled pentamidine monthly if sulfa-allergic)"
+  - "HBV prophylaxis: entecavir 0.5 mg PO daily if HBsAg+ or HBcAb+ detected at screening"
+
+followed_by:
+  - "Continue R2 × 12 cycles (full AUGMENT protocol); response assessment by CT q4 cycles"
+  - "Post-completion: observation; rituximab maintenance (375 mg/m² q8w × 2 years after CR — PRIMA trial schedule) if not given in 1L"
+  - "After R2 failure: EZH2 testing (if not done) → tazemetostat if EZH2 Y641 mut + ≥2 prior lines; CAR-T (axi-cel IND-FL-3L-AXICEL-CART); or mosunetuzumab bispecific (IND-FL-3L-MOSUNETUZUMAB)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~78% overall (AUGMENT; 81% FL subgroup)"
+  cr_rate: "~34% CR (AUGMENT; vs 18% R alone)"
+  median_pfs_months: "39.4 vs 14.1 months (AUGMENT; R2 vs R alone; HR 0.46; p<0.001)"
+  notes: >
+    AUGMENT (Leonard 2019, JCO; n=358, 1:1 randomized):
+    R2 (rituximab + lenalidomide) vs rituximab alone in relapsed/refractory indolent NHL.
+    Primary endpoint: PFS HR 0.46 (95% CI 0.34-0.62; p<0.001); median PFS 39.4 vs 14.1 mo.
+    ORR: 78% vs 53% (p<0.001); CR 34% vs 18%.
+    FL subgroup (n=295): ORR 81% vs 53%; CR 36% vs 19%; PFS HR 0.40 (p<0.001).
+    OS: trend toward improvement (HR 0.61; p=0.07; not significant at primary analysis;
+    follow-up update showed OS HR ~0.50 at median follow-up 39 months).
+    Toxicity: Grade ≥3 neutropenia 50% vs 13%; cutaneous reactions 7% vs 2%;
+    VTE 7% vs 4%. SPM: 7 (R2) vs 4 (R alone) — manageable absolute risk.
+    AUGMENT enrolled rituximab-sensitive (not refractory) patients: 85% had prior
+    rituximab and were responsive (no progression within 6 months of last dose).
+    NCCN B-cell 2025 Category 1: R2 for relapsed/refractory FL after ≥1 prior therapy.
+    ELN/ESMO FL 2024: R2 recommended as preferred early-relapse option for
+    rituximab-sensitive FL (Grade 1-3a) in 2L.
+
+hard_contraindications:
+  - "Pregnancy or attempting pregnancy — lenalidomide is Category X teratogen (REMS mandatory; absolute contraindication)"
+  - "Rituximab-refractory FL (progression within 6 months of last anti-CD20) — R2 less effective; use obinutuzumab-based regimen (GADOLIN)"
+  - "Histologic transformation to DLBCL at relapse — R2 not appropriate; aggressive lymphoma requires DLBCL-appropriate therapy"
+  - "Grade 3b FL — treat as DLBCL (R-CHOP based)"
+  - "Active uncontrolled infection (rituximab + lenalidomide immunosuppression)"
+  - "CrCl <30 mL/min (lenalidomide dose-limiting renal clearance; avoid unless on dialysis)"
+  - "Active VTE without anticoagulation (lenalidomide multiplicative VTE risk)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Rituximab-refractory FL → obinutuzumab + bendamustine (GADOLIN; not yet modeled)"
+  - condition: "EZH2 Y641 mutation + ≥2 prior lines → IND-FL-3L-TAZEMETOSTAT (disease-modifying; superior ORR 69% mut)"
+  - condition: "After R2 failure + CAR-T eligible → IND-FL-3L-AXICEL-CART"
+  - condition: "After R2 failure + CAR-T ineligible → IND-FL-3L-MOSUNETUZUMAB (off-the-shelf bispecific)"
+  - condition: "CrCl <30 mL/min → rituximab monotherapy or obinutuzumab-based (no lenalidomide)"
+  - condition: "High VTE risk without feasible anticoagulation → avoid lenalidomide; obinutuzumab-based"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "CrCl (Cockroft-Gault): lenalidomide dose adjustment for CrCl <60; avoid <30"
+  - "Pregnancy test (serum hCG): MANDATORY ≤10-14 days before lenalidomide start; monthly during treatment for women of childbearing potential"
+  - "HBV serology (HBsAg, HBcAb): rituximab HBV reactivation risk; prophylactic entecavir if positive"
+  - "CT chest/abdomen/pelvis baseline: staging at relapse"
+  - "PET-CT (preferred) or CT alone: interim after cycle 4 and end of treatment assessment"
+  - "Relapse biopsy: mandatory to confirm FL histology (vs transformation) and grade"
+  - "EZH2 mutation testing (NGS or allele-specific PCR): if Y641 positive + ≥2 prior lines → tazemetostat preferred"
+  - "TSH baseline: lenalidomide-associated hypothyroidism"
+  - "LDH, beta-2 microglobulin: FLIPI-2 calculation at relapse"
+
+desired_tests:
+  - "FLIPI-2 score at relapse: predicts R2 outcome (low FLIPI-2 ORR higher)"
+  - "Bone marrow biopsy: if cytopenias or staging workup indicates BM involvement"
+  - "Flow cytometry (peripheral blood): circulating lymphoma cells in leukemic presentation"
+  - "CALR/MPL: not relevant — confirm FL grade 1-3a on biopsy before REMS enrollment"
+
+rationale: >
+  R2 (rituximab + lenalidomide) is the AUGMENT-validated combination for relapsed/
+  refractory indolent FL (Grade 1-3a) after ≥1 prior rituximab-containing regimen.
+
+  Mechanism: lenalidomide is an immunomodulatory imide drug (IMiD) with direct
+  anti-lymphoma activity (cereblon-mediated degradation of Ikaros/Aiolos transcription
+  factors) + enhanced NK-cell and T-cell anti-tumor activity. Rituximab provides
+  direct anti-CD20 cytotoxicity + ADCC. The combination is synergistic in pre-clinical
+  and clinical settings (AUGMENT).
+
+  AUGMENT (Leonard 2019, JCO): Phase 3, 1:1 randomized; R2 vs R alone in r/r indolent
+  NHL (FL + MZL); n=358. PFS HR 0.46 (p<0.001); ORR 78% vs 53%; CR 34% vs 18%.
+  FL subgroup (n=295): PFS HR 0.40 — strongest effect seen in this group.
+  Rituximab-refractory patients (progression ≤6 months of last anti-CD20) had
+  lower ORR — R2 benefit was primarily in rituximab-sensitive disease.
+
+  R2 vs alternatives:
+  - R2 vs obinutuzumab+benda (GADOLIN): no head-to-head; GADOLIN (Sehn 2016 JCO)
+    enrolled rituximab-refractory patients (where R2 is less suitable); mPFS 29 vs 14 months.
+    R2 preferred for rituximab-sensitive; O-benda for rituximab-refractory.
+  - R2 vs CAR-T (axi-cel; IND-FL-3L-AXICEL-CART): CAR-T is appropriate for ≥2 prior
+    lines (ZUMA-5); R2 is 2L option (post-1L). Not competing directly.
+  - R2 vs tazemetostat (IND-FL-3L-TAZEMETOSTAT): tazemetostat only FDA-approved
+    for ≥2 prior lines; R2 is 2L. EZH2-mutated patients can receive R2 at 2L but
+    tazemetostat is preferred at 3L+ for EZH2-mutated FL.
+
+  NCCN B-cell 2025 Cat 1: R2 recommended for r/r FL after ≥1 prior therapy.
+  ESMO FL 2024: R2 as preferred early-relapse option in 2L for rituximab-sensitive FL.
+
+  Ukraine:
+  - Rituximab: registered; widely available (original + biosimilars).
+  - Lenalidomide (Revlimid): registered for MM and MDS; off-label for FL in Ukraine.
+    Accessible via oncology prescription with monitoring. Cost may be significant.
+  - REMS: Ukraine does not have a US-equivalent REMS; prescribing oncologist responsible
+    for equivalent pregnancy prevention protocol (negative hCG + contraception counseling).
+
+rationale_ua: >
+  R2 (ритуксимаб + леналідомід) — AUGMENT (Leonard 2019 JCO): ОВВ 78% vs 53%;
+  ВБП HR 0.46 (p<0.001); ЧВ 34% vs 18% при рецидивуючому/рефрактерному ФЛ
+  після ≥1 попередньої лінії. NCCN кат.1. ELN/ESMO ФЛ 2024: R2 — перевагова
+  опція 2L при ритуксимаб-чутливому ФЛ Grade 1-3a.
+  НЕ при ритуксимаб-рефрактерному (прогрес ≤6 міс від останнього анти-CD20):
+  тоді — обінутузумаб + бендамустин (GADOLIN).
+  В Україні: ритуксимаб — зареєстрований/доступний; леналідомід — зареєстрований
+  (ММ, МДС; off-label для ФЛ); ВТЕ-профілактика обов'язкова (аспірин 81 мг або
+  НМГ); щомісячний тест на вагітність + контрацепція.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025 Category 1: R2 (rituximab + lenalidomide; AUGMENT regimen)
+      for relapsed/refractory FL Grade 1-3a after ≥1 prior therapy. Not for rituximab-
+      refractory disease.
+  - source_id: SRC-ESMO-FL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO FL 2024: R2 as preferred 2L option in rituximab-sensitive relapsed FL;
+      AUGMENT Phase 3 data support Cat 1 recommendation.
+
+do_not_do:
+  - "Ніколи при ритуксимаб-рефрактерному ФЛ (прогрес ≤6 міс): R2 малоефективний — обінутузумаб + бендамустин (GADOLIN)"
+  - "Вагітність — леналідомід Cat X тератоген; REMS обов'язковий; подвійна контрацепція + щомісячний ХГЛ тест"
+  - "ВТЕ-профілактика обов'язкова: аспірин 81 мг/добу або НМГ (до 7% ВТЕ в AUGMENT)"
+  - "EZH2 Y641+ при ≥2 попередніх лініях: таземетостат (IND-FL-3L-TAZEMETOSTAT) кращий — молекулярна відповідь"
+  - "Гістологічна трансформація до DLBCL: R2 не підходить; агресивний лімфома-протокол (R-CHOP / CAR-T)"
+  - "Зниження дози леналідоміду при ШКФ 30-60: 10 мг/добу; при <30 — не застосовувати"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

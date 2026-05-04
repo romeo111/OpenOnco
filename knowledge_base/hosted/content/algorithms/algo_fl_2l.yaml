@@ -1,16 +1,37 @@
 id: ALGO-FL-2L
 applicable_to_disease: DIS-FL
-applicable_to_line_of_therapy: 3
-purpose: 'Select 3L+ relapsed/refractory FL Indication. Three tracks driven by EZH2 status + CAR-T eligibility: (1) EZH2-mutated (Y641) → tazemetostat preferred (treatment-defining biomarker, ORR ~69% mut vs ~35% WT); (2) CAR-T-eligible non-EZH2 → axi-cel for durable remission; (3) transplant-ineligible / older / no CAR-T access → mosunetuzumab bispecific (off-the-shelf, manageable in standard heme unit). Note: although this algo is gated on line=3, it is the de-facto 2L+ relapsed routing for FL (no dedicated 2L algo wired).
+applicable_to_line_of_therapy: 2
+purpose: 'Select 2L+ relapsed/refractory FL Indication. Four tracks: (1) TRUE 2L (1 prior line, rituximab-sensitive) → R2 (rituximab+lenalidomide; AUGMENT; NCCN Cat 1; PFS HR 0.46; ORR 78%); (2) 3L+ EZH2-mutated (Y641) → tazemetostat (ORR ~69% mut vs ~35% WT); (3) 3L+ CAR-T-eligible non-EZH2 → axi-cel; (4) CAR-T-ineligible / older / no CAR-T access → mosunetuzumab bispecific (off-the-shelf). Workstream AT 2026-05-04.
 
   '
 output_indications:
+- IND-FL-2L-R2
 - IND-FL-3L-TAZEMETOSTAT
 - IND-FL-3L-AXICEL-CART
 - IND-FL-3L-MOSUNETUZUMAB
-default_indication: IND-FL-3L-MOSUNETUZUMAB
-alternative_indication: IND-FL-3L-AXICEL-CART
+default_indication: IND-FL-2L-R2
+alternative_indication: IND-FL-3L-MOSUNETUZUMAB
 decision_tree:
+- step: 0
+  evaluate:
+    all_of:
+    - condition: "Exactly 1 prior systemic line (true 2L; not yet ≥2 lines post-progression)"
+    - condition: "NOT rituximab-refractory: no progression within 6 months of last anti-CD20 dose"
+    - condition: "FL Grade 1-3a confirmed (NOT Grade 3b; NOT histologic transformation to DLBCL at relapse biopsy)"
+  if_true:
+    result: IND-FL-2L-R2
+    notes: >
+      True 2L rituximab-sensitive FL: R2 (rituximab 375 mg/m² d1 q28d + lenalidomide
+      20 mg/day d1-21 q28d × 12 cycles; AUGMENT; Leonard 2019 JCO). PFS HR 0.46
+      (p<0.001); ORR 78% FL subgroup 81%; CR 34%; NCCN Cat 1.
+      VTE prophylaxis mandatory (aspirin 81 mg or LMWH). Lenalidomide REMS: negative
+      pregnancy test + contraception mandatory before start. EZH2 testing at this point
+      for future reference; result does not change 2L routing.
+      Rituximab-refractory → fall to step 1 (obinutuzumab pathway not yet modeled;
+      MDT escalation).
+  if_false:
+    next_step: 1
+  notes: "Step 0 added Workstream AT 2026-05-04. Free-text conditions — prior-lines count and rituximab-refractory status not yet RF-modelled; MDT text evaluation."
 - step: 1
   evaluate:
     any_of:
@@ -57,7 +78,16 @@ decision_tree:
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-FL-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) True 2L (post-1L BR/R-CHOP) routing — R2 (rituximab+lenalidomide) AUGMENT regimen, obinutuzumab+benda — not modeled as dedicated indications; this algo is wired at line=3. (2) Histologic transformation detection at relapse (RF-FL- TRANSFORMATION-SUSPECT) routes to ALGO-DLBCL algos — must be resolved at disease-resolution stage upstream. (3) Loncastuximab tesirine, glofitamab not modeled. (4) Bridging therapy + lymphodepletion for axi-cel handled in Regimen / SUP layer, not algorithm.
+last_reviewed: '2026-05-04'
+notes: 'UPDATED 2026-05-04 (Workstream AT): IND-FL-2L-R2 (R2 AUGMENT; Leonard 2019 JCO;
+  PFS HR 0.46; ORR 78%) authored and wired at new step 0 (true 2L rituximab-sensitive FL).
+  algo line_of_therapy updated 3→2. Gap (1) PARTIALLY CLOSED: R2 added; obinutuzumab+benda
+  (GADOLIN) for rituximab-refractory FL remains an OOS gap.
+  OOS / wiring gaps: (1b) Obinutuzumab+bendamustine (GADOLIN) for rituximab-refractory
+  2L FL — not yet modeled. (2) Histologic transformation detection at relapse (RF-FL-
+  TRANSFORMATION-SUSPECT) routes to DLBCL algos — must be resolved upstream. (3) Loncastuximab
+  tesirine, glofitamab not modeled. (4) Bridging therapy + lymphodepletion for axi-cel
+  in Regimen/SUP layer. (5) AUGMENT enrolled rituximab-sensitive patients; rituximab-refractory
+  subgroup at step 0 if_false falls to EZH2/CAR-T steps — MDT note needed for that subgroup.
 
   '
