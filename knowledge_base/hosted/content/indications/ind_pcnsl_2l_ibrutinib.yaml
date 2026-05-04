@@ -1,0 +1,122 @@
+id: IND-PCNSL-2L-IBRUTINIB
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-PCNSL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed or refractory primary CNS lymphoma (PCNSL) — DLBCL histology"
+    - "Prior high-dose methotrexate-based regimen (R-MPV or MATRix ± consolidation)"
+    - "MTX-refractory: primary refractory (no CR to 1L) OR early relapse (<6 months from 1L completion)"
+    - "CNS disease documented by MRI (contrast-enhancing lesion) or CSF cytology"
+    - "ECOG PS 0-2 (iLOC enrolled ECOG 0-3 but outcomes poor at ECOG 3)"
+    - "No active bleeding or hemorrhagic lesion on MRI"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Concurrent anticoagulation (warfarin, NOACs) — ibrutinib inhibits platelet aggregation; intracranial hemorrhage risk in CNS disease"
+    - "Prior ibrutinib or other BTK inhibitor (resistance)"
+    - "Active atrial fibrillation with ventricular rate not controlled (ibrutinib AF risk)"
+    - "Active severe infection requiring IV antimicrobials"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 3 is a relative contraindication; iLOC enrolled some ECOG 3 patients with poor outcomes"
+
+recommended_regimen: REG-IBRUTINIB-PCNSL
+concurrent_therapy: []
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "52.3% (iLOC PCNSL cohort; n=44)"
+  combined_with_pvrl_orr: "73.1% (iLOC combined PCNSL+PVRL)"
+  cr_rate: "15.9%"
+  median_pfs_months: "4.8"
+  median_os_months: "14.5"
+  notes: >
+    iLOC trial (Soussain 2019, Eur J Cancer; n=44 PCNSL): ibrutinib 560 mg/d.
+    ORR 52.3%; CR 15.9%; median PFS 4.8 months; median OS 14.5 months.
+    Combined PCNSL+PVRL ORR 73.1% (PVRL subgroup highly responsive).
+    Mechanistic rationale: MYD88 L265P (~85% PCNSL) + CD79B mutations constitute
+    constitutive BCR/NF-κB signaling → BTK inhibition highly active (same pathway as ABC-DLBCL).
+    BBB penetration adequate at 560 mg daily (CSF:plasma ~0.3-1.0).
+    NCCN CNS Lymphomas 2025 Cat 2A. No FDA approval for PCNSL specifically.
+
+hard_contraindications:
+  - "Active intracranial hemorrhage (ibrutinib inhibits platelet aggregation; ICH risk)"
+  - "Therapeutic anticoagulation (warfarin, NOACs, heparin) — combination with ibrutinib in CNS disease = unacceptable ICH risk"
+  - "Prior BTK inhibitor therapy (primary resistance)"
+  - "ECOG PS ≥4 (outside ECOG PS gate — see engine ECOG hard gate)"
+  - "Severe hepatic impairment (Child-Pugh C) — ibrutinib hepatically metabolized"
+
+red_flags_triggering_alternative:
+  - condition: "MTX-SENSITIVE late relapse (≥6 months from 1L) + MTX-eligible → IND-PCNSL-2L-RMPV-SALVAGE (HD-MTX re-challenge preferred; higher ORR ~50-70% in chemosensitive late relapse)"
+  - condition: "Prior ibrutinib failure → clinical trial; lenalidomide+rituximab (REAL; ORR ~35%) considered off-label"
+  - condition: "Anticoagulation required (AF, DVT) → rituximab+temozolomide or WBRT referral; ibrutinib + anticoagulation is dangerous in CNS disease"
+  - condition: "Fit patient achieving CR2/PR2 on ibrutinib → consolidative autoSCT referral (thiotepa-based conditioning; IELSGxx/Illerhaus); ibrutinib as bridge"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "MRI brain + orbits with gadolinium: baseline (before ibrutinib); every 2-3 cycles (IPCG criteria)"
+  - "12-lead ECG: baseline (atrial fibrillation screening)"
+  - "Lumbar puncture + CSF cytology: if leptomeningeal disease suspected or parenchymal disease only with incomplete staging"
+  - "Ophthalmologic exam: baseline (vitreoretinal involvement — PVRL component)"
+  - "Coagulation panel (PT/INR): baseline (ensure no active anticoagulation)"
+  - "FISH/IHC for MYD88 L265P and CD79B (confirmatory BTK pathway assessment; not required for prescribing but aids response prediction)"
+
+desired_tests:
+  - "MYD88 L265P mutation (PCNSL; ~85% prevalence; BTK pathway rationale for ibrutinib)"
+  - "NGS on CSF or stereotactic biopsy (tumor DNA for BTK pathway mutations)"
+  - "PET-CT: not standard for PCNSL (CNS lesions use MRI); systemic restaging if extraneural involvement suspected"
+
+rationale: >
+  For MTX-refractory or early-relapse PCNSL (primary refractory, relapse <6 months),
+  ibrutinib 560 mg/d has demonstrated meaningful activity (ORR ~52% in PCNSL cohort;
+  73% combined) and BBB-adequate penetration. The mechanistic rationale is strong:
+  PCNSL characteristically harbors MYD88 L265P (~85%) and CD79B mutations activating
+  BCR/NF-κB signaling, the primary BTK inhibitor target.
+  NCCN CNS Lymphomas 2025 Category 2A. No FDA approval specific to PCNSL.
+  For MTX-sensitive late relapse (≥6 months), HD-MTX re-challenge (R-MPV salvage)
+  remains preferred as it offers higher ORR (~50-70%) in chemosensitive disease.
+  Ibrutinib is the standard for BTK-naive MTX-refractory patients.
+  Critical safety in CNS disease: intracranial hemorrhage risk — absolute
+  contraindication with anticoagulants. CYP3A4 interactions with azole antifungals
+  require dose reduction to 140 mg (common in neutropenic PCNSL patients).
+
+rationale_ua: >
+  Для МТХ-рефрактерного або раннього рецидиву ПЦНЛ (<6 міс) ібрутиніб 560 мг/добу
+  має значущу активність (ORR ~52%, PCNSL; медіана OS 14.5 міс). МЗД88 L265P (~85%
+  ПЦНЛ) + CD79B → конститутивна BCR/NF-κB → ціль ібрутинібу.
+  NCCN Категорія 2A. Не зареєстрований в Україні для ПЦНЛ (off-label).
+  КРИТИЧНО: ризик ВЧК — абсолютно протипоказаний з антикоагулянтами при ЦНС-хворобі.
+  Взаємодії CYP3A4 (протигрибкові): знизити до 140 мг при сильних інгібіторах.
+  При досягненні CR2/PR2 — направити на аутоТКМ (тіотепа-режим, Illerhaus).
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ILOC-SOUSSAIN-2019
+    position: supports
+    relevant_quote_paraphrase: "iLOC (n=44 PCNSL): ibrutinib 560 mg/d; ORR 52.3%; CR 15.9%; median OS 14.5m; NCCN Cat 2A"
+  - source_id: SRC-NCCN-CNS-2025
+    position: supports
+
+do_not_do:
+  - "НІКОЛИ не комбінувати ібрутиніб з антикоагулянтами при ЦНС-захворюванні — ризик ВЧК"
+  - "Зменшити дозу до 140 мг при сильних CYP3A4-інгібіторах (вориконазол, ітраконазол, HIV ПІ)"
+  - "МРТ мозку кожні 2-3 цикли — оцінка за IPCG-критеріями (не ПЕТ/КТ)"
+  - "При МТХ-чутливому пізньому рецидиві (≥6 міс) → розглянути повторний МТХ (R-MPV); ібрутиніб для МТХ-рефрактерних"
+  - "Призупинити ібрутиніб за 3-7 днів перед нейрохірургічним втручанням"
+  - "ФП на тлі ібрутинібу → контроль ритму + кардіологічна консультація; при неконтрольованій ФП — замінити на акалабрутиніб"
+
+time_critical: true
+time_critical_note: "PCNSL relapse is rapidly progressive; ibrutinib should be initiated within 1-2 weeks of confirmed progression. MRI at baseline required before first dose."
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

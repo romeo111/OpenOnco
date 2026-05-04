@@ -1,0 +1,95 @@
+id: REG-IBRUTINIB-PCNSL
+disease_context: DIS-PCNSL
+line_of_therapy: 2
+plan_track: aggressive
+
+regimen_type: "targeted_oral"
+protocol_name: "Ibrutinib monotherapy (PCNSL 2L — BTKi)"
+notes: >
+  Ibrutinib 560 mg PO daily continuous for r/r PCNSL. BBB-penetrant BTK inhibitor.
+  iLOC trial (Soussain 2019): ORR 52.3% (PCNSL) / 73.1% (combined PCNSL+PVRL).
+  NCCN CNS Lymphomas 2025 Category 2A. No FDA approval for PCNSL (off-label).
+  Mechanistic rationale: MYD88 L265P (~85% PCNSL) + CD79B mutations → constitutive
+  BCR/NF-κB signaling → ibrutinib BTK inhibition highly active.
+  CRITICAL: Intracranial hemorrhage risk — avoid anticoagulants; hold peri-procedure.
+
+agents:
+  - drug_id: DRUG-IBRUTINIB
+    dose: "560 mg PO once daily"
+    route: PO
+    schedule: "Continuous daily; take at same time each day with or without food"
+    administration_notes: >
+      560 mg = two 280 mg capsules PO once daily (continuous dosing, no rest days).
+      Take at approximately the same time each day. Swallow whole with water.
+      MISSED DOSE: take same day if remembered; skip if within 6 hours of next dose.
+      CYP3A4 INTERACTIONS — CRITICAL:
+      - Strong CYP3A4 inhibitors (itraconazole, voriconazole, posaconazole,
+        clarithromycin, HIV protease inhibitors): reduce ibrutinib to 140 mg/day
+        if concurrent use is unavoidable. Prefer fluconazole (moderate CYP3A4)
+        over voriconazole (strong CYP3A4) for antifungal prophylaxis.
+      - Strong CYP3A4 inducers (rifampicin, phenytoin, carbamazepine, St John's Wort):
+        avoid — dramatically reduce ibrutinib exposure.
+      - Grapefruit / Seville orange: avoid during ibrutinib therapy.
+    dose_modifications:
+      - trigger: "Concurrent strong CYP3A4 inhibitor (azole antifungals, HIV PIs)"
+        action: "Reduce ibrutinib to 140 mg/day. If strong inhibitor unavoidable >7d, consider acalabrutinib switch (lower CYP3A4 interaction)."
+      - trigger: "Grade ≥3 non-hematologic toxicity, Grade 3 neutropenia with fever, or Grade 4 hematologic toxicity (first occurrence)"
+        action: "Hold ibrutinib; restart at 420 mg/day after recovery to Grade ≤1 or baseline"
+      - trigger: "Second occurrence Grade ≥3 toxicity"
+        action: "Hold; restart at 280 mg/day"
+      - trigger: "Third occurrence Grade ≥3 toxicity"
+        action: "Discontinue"
+      - trigger: "New or worsening atrial fibrillation"
+        action: "Cardiology evaluation. Rate/rhythm control. If medically necessary, may continue ibrutinib. Consider switch to acalabrutinib for lower AF incidence."
+
+when_to_use: >
+  2L r/r PCNSL after MTX-based 1L failure (primary refractory OR early relapse <6 months).
+  iLOC (Soussain 2019): ibrutinib 560 mg/d; ORR 52.3% (PCNSL); BBB-penetrant.
+  NCCN CNS Lymphomas 2025 Cat 2A. MTX-refractory patients — ibrutinib preferred over
+  re-challenge with HD-MTX (no response expected). Also used as bridge to consolidative
+  autoSCT in responding patients who become transplant-eligible.
+
+premedication:
+  - "No mandatory premedication"
+  - "Antifungal prophylaxis if neutropenic or prolonged corticosteroid exposure: fluconazole preferred over voriconazole (strong CYP3A4 inhibitor); posaconazole 300 mg QD requires ibrutinib dose reduction to 140 mg"
+  - "PCP prophylaxis (TMP/SMX or pentamidine) in prolonged lymphopenia or corticosteroid-exposed patients"
+
+growth_factor_support:
+  mandatory: false
+  protocol: "G-CSF not routinely required. Use if Grade 4 neutropenia develops."
+
+monitoring:
+  - "CBC + differential: every 2-4 weeks for first 3 months, then monthly"
+  - "LFT + bilirubin: monthly (ibrutinib hepatotoxicity, rare)"
+  - "ECG: baseline; repeat if palpitations or new cardiac symptoms (atrial fibrillation monitoring)"
+  - "Blood pressure: monthly (hypertension 5-10%)"
+  - "MRI brain + orbits: every 2-3 cycles (IPCG response criteria; Deauville PET not applicable for CNS)"
+  - "CSF cytology: at relapse assessment or if leptomeningeal relapse suspected"
+  - "Skin examination: secondary cutaneous malignancy (squamous cell carcinoma of skin, rare)"
+  - "Bleeding assessment: monitor for bruising, epistaxis; avoid NSAIDs + anticoagulants"
+
+cycle_length_days: 28
+total_planned_cycles: "Continuous until progression or unacceptable toxicity (no pre-defined duration cap)"
+
+special_precautions:
+  - "INTRACRANIAL HEMORRHAGE: ibrutinib inhibits platelet aggregation via collagen/vWF pathway. In CNS disease, risk of ICH with anticoagulants is particularly dangerous. Avoid warfarin, NOACs. Hold ibrutinib 3-7 days before/after any neurosurgical procedure."
+  - "ATRIAL FIBRILLATION: 5-10%/year cumulative incidence. Baseline 12-lead ECG. New afib → rate control + cardiology; acalabrutinib switch if AF difficult to manage."
+  - "CYP3A4 INTERACTIONS: All azole antifungals interact. Document all concurrent medications at baseline and with any medication change."
+  - "SECOND MALIGNANCIES: Increased incidence of skin SCC and Richter's transformation (in CLL setting); monitor skin annually."
+  - "HYPERTENSION: New or worsening HTN in 5-10%; antihypertensive management as needed."
+
+watchpoints_ua:
+  - "КРИТИЧНО: Ризик внутрішньочерепного крововиливу — УНИКАТИ антикоагулянтів (варфарин, НОАК) при ібрутинібі у хворих на ПЛ ЦНС; призупинити за 3-7 днів до нейрохірургії"
+  - "КРИТИЧНО: Взаємодії з CYP3A4-інгібіторами (протигрибкові азоли, HIV ПІ): знизити дозу до 140 мг/добу при сильних інгібіторах; флуконазол безпечніший за вориконазол"
+  - "КРИТИЧНО: МРТ мозку кожні 2-3 цикли (оцінка відповіді по IPCG-критеріях)"
+  - "УВАГА: Фібриляція передсердь 5-10%/рік — ЕКГ базово та при серцебитті"
+  - "УВАГА: Гіпертензія — контроль АТ щомісяця"
+  - "УВАГА: Ібрутиніб не зареєстрований для ПЦНЛ-показань в Україні (тільки ХЛЛ/МКЛ) — застосування off-label / named-patient"
+
+sources:
+  - SRC-ILOC-SOUSSAIN-2019
+  - SRC-NCCN-CNS-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

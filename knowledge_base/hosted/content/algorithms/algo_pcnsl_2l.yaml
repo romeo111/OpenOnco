@@ -1,11 +1,12 @@
 id: ALGO-PCNSL-2L
 applicable_to_disease: DIS-PCNSL
 applicable_to_line_of_therapy: 2
-purpose: "Select 2L Indication for relapsed/refractory primary CNS lymphoma after 1L HD-MTX-based induction (R-MPV or MATRix). Routing branches on prior MTX-response (chemosensitivity at 1L):\n- MTX-RESPONSIVE (achieved CR/PR to 1L, relapse ≥6-12mo later):\n  IND-PCNSL-2L-RMPV-SALVAGE (re-induction with HD-MTX-based\n  salvage; chemosensitive late relapse retains MTX response in\n  50-70% per Plotkin 2004 and follow-on series). Followed by\n  thiotepa-based autoSCT consolidation (BCNU+thiotepa or\n  thiotepa+busulfan+cyclophosphamide) for fit responders.\n\n- MTX-REFRACTORY (failure to achieve CR to 1L, OR early relapse\n  <6mo, OR primary progression on MTX): ibrutinib monotherapy\n  (560mg PO daily; ASH 2017 Lionakis cohort + Soussain 2019\n  iLOC trial — 70% ORR in r/r PCNSL via BTK / NF-κB pathway,\n  blood-brain-barrier penetration adequate). Free-text routing\n  — no dedicated IND-PCNSL-2L-IBRUTINIB.\n\n2L entry triggered by: documented relapse on brain MRI ± CSF cytology after 1L (R-MPV / MATRix), OR primary refractoriness (residual contrast-enhancing lesion ≥4 weeks post-induction completion), OR isolated CSF/leptomeningeal relapse despite parenchymal CR.\n"
+purpose: "Select 2L Indication for relapsed/refractory primary CNS lymphoma after 1L HD-MTX-based induction (R-MPV or MATRix). Routing branches on HD-MTX eligibility and prior MTX-response:\n- HD-MTX CONTRAINDICATED (frailty, CrCl <50, hepatic dysfunction):\n  IND-PCNSL-2L-IBRUTINIB — oral BTKi; no nephrotoxicity; BBB-penetrant.\n\n- MTX-REFRACTORY (primary refractory OR early relapse <6 months from 1L):\n  IND-PCNSL-2L-IBRUTINIB — ibrutinib 560 mg/d; iLOC ORR 52.3%\n  (PCNSL); NCCN Cat 2A. Bridge to thiotepa-based autoSCT if CR2.\n\n- MTX-RESPONSIVE late relapse (≥6 months from 1L):\n  IND-PCNSL-2L-RMPV-SALVAGE — HD-MTX re-challenge; chemosensitive\n  late relapse ORR ~50-70%; followed by autoSCT for fit responders.\n\n2L entry triggered by: documented relapse on brain MRI ± CSF cytology after 1L (R-MPV / MATRix), OR primary refractoriness (residual contrast-enhancing lesion ≥4 weeks post-induction completion), OR isolated CSF/leptomeningeal relapse despite parenchymal CR.\n"
 output_indications:
 - IND-PCNSL-2L-RMPV-SALVAGE
+- IND-PCNSL-2L-IBRUTINIB
 default_indication: IND-PCNSL-2L-RMPV-SALVAGE
-alternative_indication: IND-PCNSL-2L-RMPV-SALVAGE
+alternative_indication: IND-PCNSL-2L-IBRUTINIB
 decision_tree:
 - step: 1
   evaluate:
@@ -14,7 +15,13 @@ decision_tree:
     - red_flag: RF-PCNSL-ORGAN-DYSFUNCTION
     - condition: CrCl <50 mL/min OR severe hepatic dysfunction (HD-MTX contraindicated)
   if_true:
-    result: IND-PCNSL-2L-RMPV-SALVAGE
+    result: IND-PCNSL-2L-IBRUTINIB
+    notes: >
+      HD-MTX contraindicated (renal or hepatic dysfunction, frailty): ibrutinib 560 mg/d
+      (REG-IBRUTINIB-PCNSL) is the preferred option. Oral BTKi achieves CNS penetration
+      without nephrotoxicity (no renal clearance of active drug). NCCN Cat 2A.
+      CrCl <50: hold ibrutinib if CrCl <25 (limited data); use with caution CrCl 25-50.
+      Check CYP3A4 drug interactions before prescribing (azole antifungals → reduce to 140 mg).
   if_false:
     next_step: 2
 - step: 2
@@ -25,7 +32,14 @@ decision_tree:
     - condition: Failure to achieve CR to 1L R-MPV / MATRix
     - red_flag: RF-PCNSL-TRANSFORMATION-PROGRESSION
   if_true:
-    result: IND-PCNSL-2L-RMPV-SALVAGE
+    result: IND-PCNSL-2L-IBRUTINIB
+    notes: >
+      MTX-refractory PCNSL (primary refractory OR early relapse <6 months): ibrutinib 560 mg/d.
+      iLOC (Soussain 2019): ORR 52.3% in PCNSL; ~73% combined with PVRL. NCCN Cat 2A.
+      Mechanistic rationale: MYD88 L265P (~85% PCNSL) + CD79B → BTK/NF-κB — ibrutinib active.
+      HD-MTX re-challenge in MTX-refractory disease has very low ORR (~15-20%); ibrutinib preferred.
+      Bridge to autoSCT consolidation (thiotepa-based) for fit patients achieving CR2/PR2.
+      CRITICAL: No anticoagulants (ICH risk). CYP3A4 interactions mandatory check.
   if_false:
     next_step: 3
 - step: 3
@@ -56,7 +70,8 @@ decision_tree:
 sources:
 - SRC-NCCN-CNS-2025
 - SRC-NCCN-BCELL-2025
-last_reviewed: '2026-04-27'
-notes: 'OOS / wiring gaps: (1) IND-PCNSL-2L-IBRUTINIB (560mg PO daily; iLOC Soussain 2019, ORR ~70% r/r PCNSL via BTK / NF-κB, BBB-adequate penetration) — not modeled as dedicated indication. Step 2 routes to R-MPV salvage placeholder; trace must surface "MTX-refractory → ibrutinib 560mg PO daily" as free-text MDT note. (2) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION (thiotepa+busulfan+ cyclophosphamide [TBC] or BCNU+thiotepa conditioning for fit MTX-responsive salvage CR2 patients) — not modeled. Trace must surface "consolidate with thiotepa-based autoSCT if achieve CR2/PR2 and transplant-eligible (IELSG32 / Illerhaus protocol)" as MDT note. (3) Lenalidomide ± rituximab (REAL trial in r/r PCNSL) — not modeled. (4) Whole-brain RT (WBRT 36-45Gy) — palliative routing for ineligible patients; surfaced as MDT note in step 1. Curative- intent WBRT abandoned due to leukoencephalopathy in survivors. (5) Temozolomide ± rituximab — historic salvage option, lower efficacy than ibrutinib in r/r PCNSL; not modeled. (6) PD-1 inhibitors (nivolumab/pembrolizumab) for PCNSL — emerging case-series only, not modeled. (7) Re-biopsy at relapse mandatory if imaging atypical (rule out toxicity-related leukoencephalopathy or radiation necrosis mimicking relapse). (8) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
+- SRC-ILOC-SOUSSAIN-2019
+last_reviewed: '2026-05-04'
+notes: 'AUTHORED 2026-05-04: IND-PCNSL-2L-IBRUTINIB wired at steps 1 (HD-MTX-contraindicated frail patients) and 2 (MTX-refractory/early-relapse); IND-PCNSL-2L-RMPV-SALVAGE retained at steps 3-4 for MTX-sensitive late relapse. OOS / wiring gaps: (1) IND-PCNSL-2L-AUTOSCT-CONSOLIDATION (thiotepa-based autoSCT for fit CR2/PR2 patients) — not modeled; surfaced as followed_by note in ibrutinib indication. (2) Lenalidomide ± rituximab (REAL trial; ORR ~35% r/r PCNSL) — not modeled. (3) Whole-brain RT (WBRT 36-45 Gy) — palliative for ECOG ≥3; surfaced as MDT free-text. (4) Temozolomide ± rituximab — historic; lower efficacy than ibrutinib; not modeled. (5) PD-1 inhibitors (nivolumab/pembrolizumab) for PCNSL — case series only; not modeled. (6) Re-biopsy at relapse mandatory if imaging atypical (leukoencephalopathy vs relapse). (7) reviewer_signoffs: 0 — pending two Clinical Co-Lead approvals.
 
   '
