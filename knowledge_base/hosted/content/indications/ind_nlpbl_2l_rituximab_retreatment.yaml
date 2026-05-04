@@ -1,0 +1,175 @@
+id: IND-NLPBL-2L-RITUXIMAB-RETREATMENT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-NLPBL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Nodular lymphocyte-predominant B-cell lymphoma (NLPBL), histology preserved on relapse biopsy (LP-cells, CD20+ CD15- CD30-)"
+    - "Re-biopsy at relapse site CONFIRMED: no transformation to THRLBCL or DLBCL"
+    - "Indolent relapse pattern: no B-symptoms, no LDH elevation, slow nodal re-growth"
+    - "ECOG PS 0-2"
+    - "Prior 1L: rituximab monotherapy, RT/ISRT, or observation (not prior chemo-immunotherapy)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20+ confirmed on relapse biopsy — mandatory; rituximab inactive against CD20-negative disease"
+  biomarker_requirements_excluded:
+    - "Histologic transformation to THRLBCL or DLBCL on relapse biopsy → IND-NLPBL-2L-RCHOP-TRANSFORMATION"
+    - "B-symptoms + elevated LDH suggesting transformation → re-biopsy before this indication"
+    - "ECOG PS ≥3 (rituximab infusion risk in frail; MDT assessment required)"
+    - "Active HBV without antiviral prophylaxis (fatal HBV reactivation)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      No absolute age cutoff. NLPBL predominantly affects younger patients (median onset 4th-5th
+      decade), so long-term toxicity profile is important — rituximab monotherapy preferred over
+      chemoimmunotherapy for indolent relapse to preserve fertility, avoid secondary malignancy risk,
+      and spare chemo for future transformation events. HBV reactivation prophylaxis: entecavir
+      0.5 mg/day if HBsAg+ or HBcAb+; screen all patients.
+
+recommended_regimen: REG-RITUXIMAB-MONO
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Rituximab monotherapy × 4 weekly induction (375 mg/m²) WITHOUT maintenance: induction-only
+      approach for patients with late relapse (>2 years after 1L), minimal disease burden, or
+      preference against long-term B-cell depletion. NCCN does not mandate maintenance in this
+      setting; maintenance is extrapolated from FL data. ORR indolent NLPBL retreatment ~80-90%.
+  - regimen_id: null
+    description: >
+      Involved-site radiotherapy (ISRT) alone: 24-30 Gy to relapsed nodal site(s) if anatomically
+      limited (≤2 nodal regions, no bulky disease). Reserved for patients with localized indolent
+      relapse, prior rituximab within 6 months (temporary relative contraindication), or rituximab-
+      intolerant. Radiation Oncology referral required.
+  - regimen_id: null
+    description: >
+      Rituximab + ISRT combined: concurrent or sequential rituximab induction + ISRT (24 Gy) for
+      bulkier localized relapse. Enhances local control vs either modality alone; radiosensitization
+      via rituximab. Used by some centers for stage II bulky or multi-region indolent relapse.
+
+concurrent_therapy:
+  - "HBV prophylaxis: entecavir 0.5 mg/day if HBsAg+ or HBcAb+ — screen ALL patients before rituximab (anti-CD20 reactivation potentially fatal)"
+  - "Antihistamine + acetaminophen + IV methylprednisolone 100 mg before each rituximab infusion (IRR prevention)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg PO bid throughout therapy + 6 months after last dose (rituximab B-cell depletion)"
+
+followed_by:
+  - "Rituximab maintenance q2months × 2 years if ≥partial response to induction (4 weekly doses) — extrapolated from FL practice; discuss with patient given long-term B-cell depletion"
+  - "Response assessment CT at 3 months (end of induction); PET-CT if initial PET-staging was positive"
+  - "Transformation surveillance: any new rapid growth, B-symptoms, LDH rise → immediate re-biopsy + DLBCL/THRLBCL algorithm"
+  - "After rituximab retreatment failure: consider R-CHOP if fit; clinical trial enrollment; MDT referral for advanced NLPBL"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~80-90% (indolent NLPBL; rituximab monotherapy; extrapolated from 1L NLPBL + SMZL retreatment series)"
+  cr_rate: "~50-70% (complete nodal regression; long-term remission common in true indolent relapse)"
+  median_pfs_months: "~36-60 months (NLPBL indolent biology; multiple remissions expected over disease course)"
+  notes: >
+    No Phase 3 randomized trial data specific to 2L NLPBL rituximab retreatment. Evidence
+    extrapolated from:
+    (a) NLPBL 1L rituximab monotherapy series (ORR ~75-90%; Schulz 2008 Blood; Eichenauer 2015);
+    (b) SMZL and EMZL 2L rituximab retreatment data (ORR ~80%);
+    (c) Indolent B-NHL retreatment with rituximab after ≥12 months from last dose (response rates
+    comparable to 1L in rituximab-non-refractory disease).
+    NCCN Hepatobiliary 2025 and NCCN B-cell 2025 support retreatment in indolent relapse without
+    transformation.
+    Key prognostic insight: true indolent NLPBL relapse (re-biopsy confirmed, no transformation)
+    carries excellent long-term OS (>90% at 10 years in most series) regardless of multiple
+    relapses. Treatment goal is symptom control and disease control, NOT cure — multiple
+    retreatments are expected and appropriate.
+
+hard_contraindications:
+  - "Transformation confirmed on relapse biopsy → IND-NLPBL-2L-RCHOP-TRANSFORMATION; rituximab monotherapy grossly inadequate for THRLBCL or DLBCL"
+  - "B-symptoms + elevated LDH (transformation-suspect) WITHOUT re-biopsy — do not treat until histology confirmed"
+  - "Active HBV without entecavir prophylaxis (rituximab fatal HBV reactivation)"
+  - "Known hypersensitivity to rituximab or murine proteins"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Transformation confirmed on relapse biopsy (THRLBCL or DLBCL-like) → IND-NLPBL-2L-RCHOP-TRANSFORMATION"
+  - condition: "B-symptoms + rapid nodal growth + elevated LDH → urgent re-biopsy before this indication applies"
+  - condition: "Prior rituximab within 6 months and treatment urgency → ISRT alone or MDT discussion"
+  - condition: "Localized relapse (1-2 nodal regions) → ISRT ± rituximab may be preferred over systemic retreatment alone"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - "Re-biopsy (excisional or core): MANDATORY at relapse site — confirm NLPBL histology (LP-cells, CD20+, CD15-, CD30-) vs transformation to THRLBCL/DLBCL"
+  - "CD20 IHC on relapse biopsy: rituximab inactive if CD20 lost (rare in NLPBL)"
+  - "HBV serology (HBsAg, HBcAb total): mandatory before rituximab; entecavir prophylaxis if positive"
+  - "CT chest/abdomen/pelvis: baseline relapse staging"
+  - "PET-CT (preferred): relapse extent; metabolic response assessment"
+
+desired_tests:
+  - "EBV (LMP1 IHC): NLPBL rare variant has EBV-positive large-cell component; alters transformation classification"
+  - "PD-L1 IHC (if progressive): checkpoint inhibitor eligibility in future lines"
+  - "FLIPI at relapse: prognostic for indolent NHL series"
+  - "Bone marrow biopsy: if cytopenias or bone marrow involvement suspected"
+
+rationale: >
+  NLPBL (formerly NLPHL — nodular lymphocyte-predominant Hodgkin lymphoma) was reclassified by
+  WHO 5th edition 2022 as a B-cell lymphoma. CD20+ LP-cells express B-cell markers; rituximab
+  is highly active and is the preferred systemic agent for indolent-pattern disease.
+
+  At relapse, re-biopsy is mandatory. ~30-40% of NLPBL relapses involve histologic transformation
+  to THRLBCL or DLBCL-like pattern (Boudova 2003; Biasoli 2010). Treating transformation with
+  rituximab monotherapy is inadequate and potentially harmful by delaying curative-intent R-CHOP.
+
+  For the ~60-70% of relapses with indolent histology preserved:
+  - Rituximab retreatment is standard (NCCN Cat 2A; ESMO indolent NHL framework)
+  - ORR ~80-90% (comparable to 1L; rituximab-non-refractory biology)
+  - Rituximab monotherapy preferred over chemoimmunotherapy for indolent relapse — spares
+    cytotoxic agents for transformation events; maintains quality of life; no OS difference
+    vs aggressive upfront chemo in indolent NLPBL
+
+  The indolent relapse trajectory for NLPBL is analogous to FL: multiple relapses, each
+  manageable with rituximab ± RT, with OS >90% at 10 years. Early aggressive treatment
+  does not improve OS in indolent relapse and exposes patients to unnecessary toxicity.
+
+  Involved-site RT (ISRT 24-30 Gy): effective for localized relapse; combined with rituximab
+  for bulkier presentations.
+
+  Ukraine: rituximab NSZU-reimbursed for B-cell NHL; first-choice 2L for indolent relapse.
+
+rationale_ua: >
+  NLPBL (рекласифікований WHO 5th ed. 2022): CD20+ LP-клітини → ритуксимаб першочергово.
+  ПРИ РЕЦИДИВІ: ре-біопсія ОБОВ'ЯЗКОВА (~30-40% трансформуються в THRLBCL/DLBCL; без
+  гістологічного підтвердження монотерапія ритуксимабом недостатня). Якщо гістологія
+  NLPBL збережена (LP-клітини, CD20+) → ритуксимаб монотерапія ORR ~80-90% (NCCN кат.2A).
+  Перевага монотерапії над хімо-імунотерапією: збереження хіміотерапії для майбутньої
+  трансформації; якість життя; ОС >90% при 10 роках при індолентному рецидиві.
+  В Україні: ритуксимаб НСЗУ відшкодовується для NHL; доступний.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025: rituximab monotherapy Cat 2A for relapsed NLPBL with indolent
+      histology at re-biopsy. Re-biopsy mandatory before 2L treatment selection.
+  - source_id: SRC-ESMO-LYMPHOMA-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      ESMO indolent B-NHL framework supports rituximab retreatment for rituximab-sensitive
+      relapse with preserved indolent histology; chemoimmunotherapy reserved for transformation.
+
+do_not_do:
+  - "Ре-біопсія обов'ЯЗКОВА: лікувати NLPBL рецидив без гістології — ~30-40% трансформація; монотерапія ритуксимабом при THRLBCL/DLBCL неефективна та відстрочує лікування"
+  - "HBV скринінг обов'язковий перед ритуксимабом — anti-CD20 може спровокувати фатальну реактивацію HBV"
+  - "Не застосовувати при B-симптомах + ↑LDH без ре-біопсії — це ознаки трансформації"
+  - "Не використовувати ABVD при NLPBL — WHO 5th ed. рекласифікував: B-cell, НЕ Hodgkin; ABVD неефективний"
+  - "Не забувати трансформаційний нагляд під час та після ритуксимабу: будь-яке прискорення росту → термінова ре-біопсія"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

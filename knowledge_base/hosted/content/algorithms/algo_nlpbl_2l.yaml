@@ -3,10 +3,11 @@ applicable_to_disease: DIS-NLPBL
 applicable_to_line_of_therapy: 2
 purpose: >
   Select 2L Indication for relapsed nodular lymphocyte-predominant
-  B-cell lymphoma (formerly NLPHL). Single track:
-  IND-NLPBL-2L-RCHOP-TRANSFORMATION (R-CHOP for confirmed transformation
-  to T-cell/histiocyte-rich large B-cell lymphoma — THRLBCL — or
-  aggressive DLBCL-like progression).
+  B-cell lymphoma (formerly NLPHL). Two tracks:
+  (1) IND-NLPBL-2L-RCHOP-TRANSFORMATION — R-CHOP for confirmed
+  transformation to THRLBCL or DLBCL-like histology;
+  (2) IND-NLPBL-2L-RITUXIMAB-RETREATMENT — rituximab monotherapy
+  ± ISRT for biopsy-confirmed indolent relapse (NCCN Cat 2A; ORR ~80-90%).
 
   CRITICAL do_not_do: re-biopsy is MANDATORY before treating any
   NLPBL relapse. NLPBL has a high (>10%) lifetime risk of histologic
@@ -27,9 +28,10 @@ purpose: >
 
 output_indications:
   - IND-NLPBL-2L-RCHOP-TRANSFORMATION
+  - IND-NLPBL-2L-RITUXIMAB-RETREATMENT
 
 default_indication: IND-NLPBL-2L-RCHOP-TRANSFORMATION
-alternative_indication: IND-NLPBL-2L-RCHOP-TRANSFORMATION
+alternative_indication: IND-NLPBL-2L-RITUXIMAB-RETREATMENT
 
 decision_tree:
   # Step 0 (do_not_do gate) — MANDATORY re-biopsy before any 2L
@@ -76,10 +78,15 @@ decision_tree:
         - condition: "Re-biopsy: NLPBL histology preserved (LP-cells, CD20+ CD15- CD30-)"
         - condition: "Indolent presentation, no B-symptoms, no LDH elevation"
     if_true:
-      result: IND-NLPBL-2L-RCHOP-TRANSFORMATION  # placeholder; see notes — R-mono retreatment ± ISRT alternative
+      result: IND-NLPBL-2L-RITUXIMAB-RETREATMENT
+      notes: >
+        Biopsy-confirmed indolent NLPBL relapse: rituximab monotherapy ± ISRT (24-30 Gy).
+        ORR ~80-90%; preferred over chemoimmunotherapy to spare cytotoxics for future
+        transformation events. HBV screen + entecavir prophylaxis mandatory. Re-biopsy
+        mandatory if rapid new progression during or after this regimen (transformation risk).
     if_false:
       next_step: 4
-    notes: "MDT-only after CSD-7A audit — composite is biomarker/disease-specific (not fitness/eligibility/prior-therapy), so no pan-disease RF applies. Wireable only via dedicated disease-specific RFs in a future round."
+    notes: "Step 3 wired 2026-05-04 (Workstream AZ): IND-NLPBL-2L-RITUXIMAB-RETREATMENT authored and wired for biopsy-confirmed indolent relapse. Gap (1) CLOSED."
 
   # Step 4 — default (transformation suspected but not confirmed):
   # treat as transformation → R-CHOP (precautionary aggressive
@@ -98,13 +105,12 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-BSH-MZL-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream AZ): IND-NLPBL-2L-RITUXIMAB-RETREATMENT
+  authored and wired at step 3 for biopsy-confirmed indolent NLPBL relapse
+  (R-mono ± ISRT 24-30 Gy; ORR ~80-90%; NCCN Cat 2A). Gap (1) CLOSED.
   OOS / wiring gaps:
-  (1) IND-NLPBL-2L-RITUXIMAB-RETREATMENT (R-mono ± ISRT for
-  biopsy-confirmed indolent relapse) — not modeled. Step 3
-  routes via free-text MDT note; reuses IND-NLPBL-1L-RITUXIMAB-
-  MONO regimen.
   (2) BSH-MZL-2024 referenced as proxy guideline (BSH does not
   publish a dedicated NLPBL guideline; lymphoma transformation
   principles transfer). True NLPBL-specific guideline is the

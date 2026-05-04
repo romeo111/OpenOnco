@@ -1,0 +1,175 @@
+id: IND-SMZL-2L-RITUXIMAB-RETREATMENT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-SPLENIC-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "Splenic marginal zone lymphoma (SMZL), CD20+ confirmed"
+    - "Relapse after 1L rituximab monotherapy (HCV-negative, or HCV-positive post-SVR12)"
+    - "Late relapse ≥12 months after last rituximab dose (rituximab-sensitive; not rituximab-refractory)"
+    - "ECOG PS 0-3 (rituximab monotherapy tolerable across PS range)"
+    - "Frailty/organ dysfunction precluding bendamustine (CrCl <40 mL/min, ECOG ≥2, comorbidity burden) OR patient preference for chemo-free re-treatment"
+    - "No histologic transformation to DLBCL on relapse assessment"
+    - "Adequate organ function for rituximab: ANC ≥1.0×10⁹/L, no active severe infection"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD20+ confirmed (IHC or flow cytometry); anti-CD20 inactive if CD20-negative"
+  biomarker_requirements_excluded:
+    - "Rituximab-refractory: progression within 6 months of last rituximab dose → IND-SMZL-2L-BR preferred (obinutuzumab option)"
+    - "Histologic transformation to DLBCL or aggressive NHL → DLBCL algorithm"
+    - "Active HBV without antiviral prophylaxis (anti-CD20 fatal HBV reactivation)"
+    - "Fit patients with adequate renal/marrow function who are tolerant of bendamustine → IND-SMZL-2L-BR preferred (superior PFS vs R-mono)"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      SMZL is predominantly a disease of elderly patients (median onset 7th decade).
+      Rituximab monotherapy is well-tolerated across ECOG PS 0-3 and in patients with
+      renal impairment (CrCl <40), cardiac disease, or comorbidities that preclude
+      bendamustine. Fit younger patients (ECOG 0-1, adequate renal function) are better
+      served by IND-SMZL-2L-BR (superior depth/duration of response). This indication
+      is specifically for: frail/elderly, CrCl <40, ECOG ≥2, or late relapse >2y where
+      re-treatment with R-mono is appropriate and patient prefers chemo-free option.
+
+recommended_regimen: REG-RITUXIMAB-MONO
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Rituximab monotherapy × 4 weekly induction ONLY (375 mg/m²), no maintenance:
+      For very frail patients (ECOG 3), or patients with recent infection/HBV reactivation
+      risk where prolonged B-cell depletion is hazardous. Monitor for relapse at 3-monthly
+      intervals; retreatment with 4-weekly course at symptomatic relapse acceptable.
+  - regimen_id: null
+    description: >
+      Obinutuzumab monotherapy (1000 mg IV weekly × 4 then q2months maintenance × 2 years):
+      For rituximab-refractory SMZL (progression <6 months after rituximab) where benda is
+      contraindicated. Overcomes rituximab-resistance via enhanced ADCC; NCCN Cat 2B.
+      Not indicated for rituximab-sensitive late relapse where rituximab remains active.
+  - regimen_id: null
+    description: >
+      Best supportive care / watch-and-wait: For asymptomatic minimal relapse (no cytopenia,
+      no splenomegaly progression) in very elderly or frail patients. SMZL often follows
+      indolent course; symptom-free relapse may not require immediate treatment.
+
+concurrent_therapy:
+  - "HBV prophylaxis: entecavir 0.5 mg/day if HBsAg+ or HBcAb+ — mandatory; anti-CD20 HBV reactivation potentially fatal; screen ALL patients"
+  - "Antihistamine + acetaminophen + IV methylprednisolone 100 mg IV before each rituximab infusion (IRR prevention)"
+  - "Herpes zoster prophylaxis: acyclovir 400 mg PO bid throughout therapy + 6 months after last dose"
+
+followed_by:
+  - "Rituximab maintenance q2months × 2 years if ≥partial response to 4-week induction — extrapolated from SMZL 1L + FL maintenance evidence"
+  - "Response assessment CT at 3 months; peripheral blood flow cytometry for SMZL tumor cells"
+  - "After rituximab retreatment failure or rituximab-refractoriness: IND-SMZL-2L-BR if now fit; clinical trial; ibrutinib (BTKi; FDA-approved for MZL; limited UA access)"
+  - "Splenectomy consultation: if refractory hypersplenism uncontrolled by systemic therapy"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~70-80% (SMZL rituximab retreatment; extrapolated from Kalpadakis 2007 JCO, Thieblemont 2002)"
+  cr_rate: "~30-50%"
+  median_pfs_months: "~24-48 months (shorter than 1L response in rituximab-sensitive SMZL; still clinically meaningful)"
+  notes: >
+    No dedicated randomized trial for SMZL 2L rituximab retreatment. Evidence from:
+    (a) Kalpadakis 2007 JCO: rituximab monotherapy in SMZL 1L and retreatment — ORR ~88%,
+        mPFS 5 years; retreatment responses comparable if relapse ≥12 months from last dose.
+    (b) Thieblemont 2002 Blood: SMZL rituximab series — ORR 74%, durable responses.
+    (c) Indolent B-NHL retreatment evidence: rituximab-non-refractory disease (≥12 months
+        since last dose) responds as well as 1L in multiple series.
+    Key point: rituximab-sensitivity versus rituximab-refractoriness (relapse <6 months)
+    is the key biomarker. Late relapse (>12 months) = rituximab-sensitive = R-mono appropriate.
+    Early relapse (<6 months) = rituximab-refractory = switch to obinutuzumab-containing regimen.
+
+hard_contraindications:
+  - "Rituximab-refractory: progression within 6 months of last rituximab — R-mono re-treatment has <20% ORR; use IND-SMZL-2L-BR (obinutuzumab-containing) instead"
+  - "Histologic transformation to DLBCL → DLBCL algorithm; rituximab mono grossly inadequate"
+  - "Active HBV without entecavir prophylaxis (fatal HBV reactivation)"
+  - "Known hypersensitivity to rituximab or murine proteins"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+
+red_flags_triggering_alternative:
+  - condition: "Rituximab-refractory (relapse <6 months after last dose) → IND-SMZL-2L-BR preferred"
+  - condition: "Fit patient ECOG 0-1 with CrCl ≥40 → IND-SMZL-2L-BR (bendamustine + rituximab superior PFS vs R-mono)"
+  - condition: "Histologic transformation to DLBCL → DLBCL algorithm"
+  - condition: "Obinutuzumab available + rituximab-refractory → obinutuzumab ± benda (GADOLIN-extrapolated)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - "HBV serology (HBsAg, HBcAb total): mandatory before rituximab; entecavir if positive"
+  - "CD20 IHC or flow cytometry on relapse sample: confirm CD20+ (rare CD20 loss in SMZL)"
+  - "CT chest/abdomen/pelvis: baseline relapse staging; spleen size measurement"
+  - "Peripheral blood flow cytometry: SMZL circulating tumor cells (villous lymphocytes)"
+  - "CrCl: bendamustine eligibility assessment; R-mono safe in renal impairment"
+  - "Relapse biopsy (bone marrow ± spleen needle aspirate if clinical concern): rule out transformation"
+
+desired_tests:
+  - "HCV antibody + RNA: ensure HCV clearance if prior HCV+ (IND-SMZL-1L-HCV-POSITIVE); active HCV alter management"
+  - "Somatic mutation panel (MYD88, NOTCH2, KLF2): prognostic in SMZL; not yet treatment-directing for rituximab"
+  - "IGHV mutation status: hypermutated IGHV correlates with better rituximab response"
+  - "PET-CT: if transformation or aggressive transformation suspected (SUVmax >10 prompts re-biopsy)"
+
+rationale: >
+  Splenic marginal zone lymphoma (SMZL) is a slow-growing indolent B-cell NHL. After 1L
+  rituximab monotherapy, relapse is expected but the indolent biology persists in the majority.
+  Rituximab-sensitivity at retreat is well-established in indolent B-cell NHL: responses to
+  rituximab retreatment are comparable to 1L responses if the interval from last rituximab
+  dose is ≥12 months (rituximab-non-refractory by convention in indolent NHL).
+
+  Choice of 2L agent for SMZL depends on fitness and rituximab-sensitivity:
+  - Fit patients (ECOG 0-1, CrCl ≥40): bendamustine + rituximab (IND-SMZL-2L-BR) — superior
+    PFS vs R-mono; Phase 3 data (Rummel STIL-1 for indolent NHL, StiL); preferred if tolerable.
+  - Frail patients or CrCl <40 or late relapse in older elderly: rituximab monotherapy retreatment
+    — safe across comorbidity spectrum; ORR ~70-80%; maintains quality of life.
+
+  IND-SMZL-2L-RITUXIMAB-RETREATMENT is therefore the appropriate 2L indication for:
+  (a) Frail patients (ECOG ≥2, comorbidities, age >80) who cannot tolerate bendamustine;
+  (b) Patients with CrCl <40 mL/min (bendamustine renal clearance limit);
+  (c) Late relapse (>2 years after 1L) in older patients where retreatment with R-mono is
+      preferred over introducing new cytotoxic agents;
+  (d) Patient preference for chemo-free active treatment.
+
+  Ukraine: rituximab fully NSZU-reimbursed for NHL; first-choice 2L option for frail SMZL.
+
+rationale_ua: >
+  SMZL — індолентна NHL, ритуксимаб-чутлива при рецидиві ≥12 міс від останньої дози.
+  Для слабких пацієнтів (ECOG ≥2, КК <40, важка коморбідність): ритуксимаб монотерапія
+  ORR ~70-80% (Kalpadakis 2007 JCO) — стандарт за відсутності бендамустину.
+  Fit пацієнти (ECOG 0-1): IND-SMZL-2L-BR (бендамустин+ритуксимаб) переважніший — вища ВБП.
+  Ритуксимаб-рефрактерний рецидив (<6 міс від останньої дози) → НЕ ця індикація; O-бенда.
+  В Україні: ритуксимаб НСЗУ відшкодовується для NHL — доступний першочерговий 2L варіант.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell 2025: rituximab monotherapy Cat 2A for relapsed/refractory SMZL in
+      patients not candidates for bendamustine-containing regimens; also appropriate for
+      rituximab-non-refractory late relapse.
+  - source_id: SRC-BSH-MZL-2024
+    position: supports
+    relevant_quote_paraphrase: >
+      BSH MZL 2024: rituximab retreatment (4-weekly induction ± maintenance) standard for
+      SMZL late relapse (≥12 months); R-benda preferred for fit patients. R-mono appropriate
+      for frail/elderly or CrCl <40 mL/min.
+
+do_not_do:
+  - "Ритуксимаб при ритуксимаб-рефрактерному SMZL (<6 міс від останньої дози): ORR <20%; переходити на IND-SMZL-2L-BR (O-бенда або R-бенда)"
+  - "HBV скринінг обов'ЯЗКОВИЙ: без entecavir профілактики при HBsAg+ або HBcAb+ — реактивація HBV фатальна"
+  - "Не пропускати оцінку придатності до бендамустину (КК, вік, ECOG): fit пацієнти — IND-SMZL-2L-BR більш ефективний"
+  - "Гістологічна трансформація в DLBCL → не ця індикація; агресивний лімфома протокол"
+  - "Не призначати без підтвердження CD20+ на рецидиві (рідкісна втрата CD20 при SMZL)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

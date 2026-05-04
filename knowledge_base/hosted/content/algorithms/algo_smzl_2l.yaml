@@ -4,11 +4,11 @@ applicable_to_line_of_therapy: 2
 purpose: >
   Select 2L+ Indication for splenic marginal zone lymphoma after 1L
   failure (rituximab monotherapy, splenectomy, or HCV-DAA antiviral
-  in HCV+ subset). Single track: IND-SMZL-2L-BR (bendamustine +
-  rituximab, BSH 2024 / NCCN 2L preferred; Rummel STIL-1-equivalent
-  data in indolent B-NHL). Two-plan output collapses to BR ±
-  alternative free-text (R-CHOP for transformation-suspect — routes
-  to ALGO-DLBCL upstream).
+  in HCV+ subset). Two tracks: (1) IND-SMZL-2L-BR (bendamustine +
+  rituximab; BSH 2024 / NCCN 2L preferred; fit patients);
+  (2) IND-SMZL-2L-RITUXIMAB-RETREATMENT (rituximab monotherapy for
+  frail / bendamustine-ineligible patients or late relapse >12 months;
+  Kalpadakis 2007 JCO; ORR ~70-80%; NCCN Cat 2A).
 
   2L entry triggered by: symptomatic relapse after 1L (cytopenia
   recurrence, splenomegaly progression, B-symptoms, transformation),
@@ -17,9 +17,10 @@ purpose: >
 
 output_indications:
   - IND-SMZL-2L-BR
+  - IND-SMZL-2L-RITUXIMAB-RETREATMENT
 
 default_indication: IND-SMZL-2L-BR
-alternative_indication: IND-SMZL-2L-BR
+alternative_indication: IND-SMZL-2L-RITUXIMAB-RETREATMENT
 
 decision_tree:
   # Step 1 — histologic transformation suspected → route to ALGO-DLBCL.
@@ -35,15 +36,23 @@ decision_tree:
     if_false:
       next_step: 2
 
-  # Step 2 — frail / organ dysfunction precluding bendamustine: free-text
-  # rituximab monotherapy retreatment OR best-supportive-care.
+  # Step 2 — frail / organ dysfunction precluding bendamustine →
+  # rituximab monotherapy retreatment (IND-SMZL-2L-RITUXIMAB-RETREATMENT).
+  # Late relapse >12 months + rituximab-non-refractory: R-mono ORR ~70-80%.
+  # Fit patients (ECOG 0-1, CrCl ≥40) fall through to BR at step 3.
   - step: 2
     evaluate:
       any_of:
         - red_flag: RF-SMZL-FRAILTY-AGE
         - red_flag: RF-SMZL-ORGAN-DYSFUNCTION
     if_true:
-      result: IND-SMZL-2L-BR  # placeholder; see notes — R-mono retreatment alternative
+      result: IND-SMZL-2L-RITUXIMAB-RETREATMENT
+      notes: >
+        Frail or organ-dysfunction precluding bendamustine: rituximab monotherapy
+        375 mg/m² × 4 weekly + maintenance q2months × 2 years (REG-RITUXIMAB-MONO).
+        ORR ~70-80% (Kalpadakis 2007 JCO; NCCN Cat 2A). HBV screen + entecavir mandatory.
+        Late relapse (≥12 months from last rituximab) = rituximab-non-refractory: R-mono
+        active. Early relapse (<6 months) → obinutuzumab-containing regimen instead.
     if_false:
       next_step: 3
 
@@ -65,12 +74,13 @@ sources:
   - SRC-NCCN-BCELL-2025
   - SRC-BSH-MZL-2024
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream AZ): IND-SMZL-2L-RITUXIMAB-RETREATMENT
+  authored and wired at step 2 for frail/bendamustine-ineligible SMZL
+  (rituximab 375 mg/m² × 4 + maintenance; ORR ~70-80%; NCCN Cat 2A;
+  Kalpadakis 2007 JCO). Gap (1) CLOSED.
   OOS / wiring gaps:
-  (1) IND-SMZL-2L-RITUXIMAB-RETREATMENT (R-mono for late relapse
-  >2y after 1L R-mono response) — not modeled as separate
-  indication; surfaced as free-text in step 2.
   (2) Ibrutinib (BTKi) for r/r SMZL — approved (FDA 2017) but not
   modeled; UA access ≈zero outside named-patient.
   (3) Lenalidomide ± rituximab (R²) for chemo-ineligible — not
