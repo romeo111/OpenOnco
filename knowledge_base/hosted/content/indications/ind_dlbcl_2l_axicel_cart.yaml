@@ -1,0 +1,149 @@
+id: IND-DLBCL-2L-AXICEL-CART
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-DLBCL-NOS
+  line_of_therapy: 2
+  stage_requirements:
+    - "Primary-refractory LBCL (no CR to first-line R-CHOP or Pola-R-CHP) OR relapse ≤12 months from completion of frontline therapy"
+    - "ECOG 0-1 (ZUMA-7 enrollment criteria)"
+    - "Adequate organ function: ANC ≥1.0×10⁹/L, platelets ≥75×10⁹/L, CrCl ≥30 mL/min, bilirubin ≤2× ULN, AST/ALT ≤5× ULN"
+    - "No active CNS lymphoma (ZUMA-7 excluded CNS involvement)"
+    - "No prior CD19-directed CAR-T therapy"
+    - "Manufacturing slot available (~4-week apheresis-to-infusion window; bridging chemotherapy permitted)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-CD20-IHC
+      required: true
+      value_constraint: "CD19+ confirmed (by flow cytometry or IHC); CD20 positive at original diagnosis"
+      notes: >
+        CD19 must be confirmed positive at relapse — CD19 loss after prior therapy
+        (rituximab) is rare but would negate CAR-T CD19-directed efficacy.
+        CD20 confirmation sufficient for rituximab-containing bridging compatibility.
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 1
+    age_min: 18
+    notes: >
+      ECOG 0-1. ZUMA-7 primarily enrolled fit, transplant-eligible patients but
+      also enrolled some transplant-ineligible patients in subgroup. NCCN Cat 1
+      for the intent-to-transplant population; CAR-T is preferred over autoSCT for
+      early-relapse/primary refractory DLBCL per ZUMA-7 (EFS HR 0.24).
+
+recommended_regimen: REG-CAR-T-AXICEL
+concurrent_therapy: []
+followed_by:
+  - "Consolidation/bridging window (~4 weeks manufacturing): R-miniCHOP, R-GDP, or involved-field RT if rapid progression risk"
+  - "Post-axi-cel assessment (day +90): if CR → observation; if PR/SD → consider additional cytoreductive therapy or allo-SCT for fit patients with residual disease"
+  - "Allogeneic SCT for fit patients failing CAR-T: only curative salvage after CAR-T failure (outside KB scope — referral)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  orr: "~83% (ZUMA-7; Locke 2022 NEJM; vs ~50% SOC R-ICE/DHAP→ASCT)"
+  cr_rate: "~65% (complete metabolic response by PET; Deauville ≤3; vs ~32% SOC)"
+  median_pfs_months: "~14.7 vs 5.9 months (EFS HR 0.24; p<0.001; ZUMA-7)"
+  notes: >
+    ZUMA-7 (Locke 2022, NEJM; n=359 1:1 randomized):
+    Axi-cel vs standard-of-care (R-ICE or R-DHAP × 2-3 cycles → BEAM-ASCT for responders).
+    Primary endpoint: event-free survival (EFS): HR 0.24 (95% CI 0.17-0.35; p<0.001).
+    ORR 83% vs 50%; CR 65% vs 32%; 24-month EFS 41% vs 16%.
+    Subgroup: primary-refractory patients also benefited (ORR 80% vs 38%).
+    Follow-up at 47 months: OS HR 0.73 (p=0.03; axi-cel superior OS).
+    NCCN Cat 1: axi-cel for primary-refractory or relapse ≤12 months after 1L.
+
+    Toxicity comparison to liso-cel (TRANSFORM):
+    - Axi-cel: CRS Grade ≥3 ~6%; ICANS Grade ≥3 ~21% (higher neurotoxicity vs liso-cel)
+    - Liso-cel: CRS Grade ≥3 ~1%; ICANS Grade ≥3 ~4% (lower toxicity profile)
+    - Product selection: clinical equivalence in efficacy; liso-cel preferred when
+      neurotoxicity risk is higher (prior CNS disease, elderly, high LDH).
+      Axi-cel when liso-cel slot unavailable or physician/patient preference.
+
+hard_contraindications:
+  - "Prior CD19-directed CAR-T therapy (antigen loss / cross-resistance)"
+  - "Active CNS lymphoma at time of axi-cel (ZUMA-7 exclusion; high ICANS risk)"
+  - "Active uncontrolled infection (immunosuppression from lymphodepletion lethal)"
+  - "ECOG PS ≥3 (frailty; CAR-T manufacturing feasibility and cytokine storm tolerance)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Inability to travel to certified CAR-T center (Ukraine: no domestic center; international referral required)"
+
+red_flags_triggering_alternative:
+  - condition: "Liso-cel accessible + higher ICANS risk (prior CNS involvement, elderly, high LDH) → prefer IND-DLBCL-2L-LISOCEL (lower ICANS G≥3 profile ~4% vs 21%)"
+  - condition: "CAR-T manufacturing delay not tolerable (rapid progression) → bridging chemo + CAR-T (axi-cel or liso-cel with bridging) OR IND-DLBCL-2L-RDHAP-AUTOSCT"
+  - condition: "CAR-T inaccessible (UA: no international referral, patient refuses travel) → IND-DLBCL-2L-POLA-R-BENDAMUSTINE or IND-DLBCL-2L-RDHAP-AUTOSCT if ASCT-eligible"
+  - condition: "Late relapse (>12 months from 1L) → IND-DLBCL-2L-RDHAP-AUTOSCT (autoSCT remains Cat 1 for late-relapse DLBCL; ZUMA-7 enrolled ≤12mo)"
+  - condition: "ECOG 2+ → IND-DLBCL-2L-POLA-R-BENDAMUSTINE (less intensive; outpatient)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "LVEF echocardiography: lymphodepletion fludarabine + cyclophosphamide requires LVEF ≥50%"
+  - "CT + PET-CT: baseline + confirm CD19+ relapse biopsy"
+  - "CSF cytology/flow: if any neurological symptoms (active CNS lymphoma is exclusion)"
+  - "Hepatitis B/C serology: reactivation risk with lymphodepletion"
+  - "Fertility counseling: cyclophosphamide gonadotoxic; discuss prior to lymphodepletion"
+  - "HLA typing: in parallel (alloSCT contingency planning for post-CAR-T relapse)"
+
+desired_tests:
+  - "LDH: elevated LDH correlates with CRS/ICANS risk; helps toxicity counseling"
+  - "Beta-2 microglobulin: prognostic marker"
+  - "FISH for MYC/BCL2/BCL6: double-hit/triple-hit biology may predict CAR-T resistance"
+
+rationale: >
+  Axicabtagene ciloleucel (axi-cel; KYMRIAH) is an autologous CD19-directed CAR-T
+  cell therapy that demonstrated superiority over standard-of-care (salvage
+  chemo → BEAM-ASCT) for early-relapse or primary-refractory LBCL in ZUMA-7.
+
+  ZUMA-7 (Locke 2022, NEJM): Phase 3 randomized (1:1); axi-cel vs SOC (R-ICE/DHAP × 2-3
+  → BEAM-ASCT for responders); n=359; primary endpoint EFS HR 0.24 (p<0.001).
+  24-month EFS 41% vs 16%; ORR 83% vs 50%; CR 65% vs 32%.
+  OS benefit at 47-month follow-up: HR 0.73 (p=0.03).
+
+  Axi-cel vs liso-cel (both NCCN Cat 1 for 2L early-relapse/primary refractory):
+  - Both demonstrate superiority over SOC for EFS; no head-to-head comparison
+  - Axi-cel (ZUMA-7): EFS HR 0.24 vs liso-cel (TRANSFORM): EFS HR 0.35
+  - Axi-cel: higher CRS G≥3 (~6%) and ICANS G≥3 (~21%) vs liso-cel (CRS ~1%, ICANS ~4%)
+  - Clinical choice: individual patient factors, center experience, product availability
+
+  In Ukraine (2025/2026): No domestic CAR-T manufacturing center. International
+  referral required (EU/Israel/Turkey). Access barriers: cost, travel, waiting list.
+  Axi-cel and liso-cel are both subject to same access constraints.
+
+rationale_ua: >
+  Аксикабтаген цилолейсель (аксі-сел) — аутологічні CAR-T CD19+ клітини; ZUMA-7
+  (Locke 2022 NEJM): EFS HR 0.24 (≤12міс рецидив/первинно-рефрактерний DLBCL;
+  аксі-сел vs SOC: ORR 83% vs 50%; CR 65% vs 32%; перевагу OS при 47міс: HR 0.73).
+  NCCN кат.1. Порівняно з лізо-сел (TRANSFORM): аксі-сел вищий EFS HR ефект, але
+  більша нейротоксичність (ICANS G≥3 ~21% vs ~4%). В Україні — лише міжнародний
+  відбір (ЄС/Ізраїль/Туреччина); немає вітчизняного центру.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-ZUMA-7-LOCKE-2022
+    position: supports
+    relevant_quote_paraphrase: >
+      ZUMA-7 (Locke 2022 NEJM): axi-cel vs SOC for early-relapse/primary-refractory LBCL;
+      EFS HR 0.24 (p<0.001); ORR 83% vs 50%; CR 65% vs 32%; OS HR 0.73 at 47m follow-up.
+      NCCN DLBCL 2025 Category 1 for 2L early-relapse/primary refractory DLBCL.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+  - source_id: SRC-ESMO-DLBCL-2024
+    position: context
+
+do_not_do:
+  - "CD19 ретест при рецидиві: CDK19 може бути втрачений (рідко) — підтвердити CD19+ перед апаферезом"
+  - "Активна ЦНС-лімфома: аксі-сел виключений (висока токсичність ICANS); спочатку IT метотрексат + RT → реоцінка"
+  - "Якщо ризик ICANS високий (похилий вік, попередня ЦНС, висока ЛДГ): розглянути лізо-сел (нижчий ICANS G≥3 ~4%)"
+  - "В Україні: не існує вітчизняного CAR-T центру — міжнародне направлення обов'язкове (ЄС/Ізраїль)"
+  - "Пізній рецидив (>12 міс): аксі-сел не вивчений; аутоТГСК з R-ICE/DHAP зберігає Cat 1"
+
+time_critical: true
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

@@ -1,13 +1,14 @@
 id: ALGO-DLBCL-2L
 applicable_to_disease: DIS-DLBCL-NOS
 applicable_to_line_of_therapy: 2
-purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Three tracks: (1) transplant-eligible salvage chemo → BEAM-autoSCT (no dedicated indication yet — surfaced as free-text recommendation in trace, see notes); (2) ≥3 lines failed AND CAR-T-eligible → axi-cel CAR-T (curative-intent aggressive track); (3) transplant-ineligible / older / frail → Pola-R- bendamustine (standard-track 2L for the realistic UA majority).
+purpose: 'Select 2L+/relapsed-refractory DLBCL Indication. Four CAR-T and chemo tracks: (1) early-relapse/primary refractory + CAR-T eligible → liso-cel (TRANSFORM; EFS HR 0.35; NCCN Cat 1) OR axi-cel (ZUMA-7; EFS HR 0.24; NCCN Cat 1) — both entities now modeled; (2) late relapse/ASCT-eligible → R-ICE/R-DHAP → BEAM-autoSCT; (3) ≥3 lines + CAR-T eligible → axi-cel 3L (ZUMA-1); (4) transplant-ineligible/frail → Pola-R-benda.
 
   '
 output_indications:
 - IND-DLBCL-2L-RDHAP-AUTOSCT
 - IND-DLBCL-2L-POLA-R-BENDAMUSTINE
 - IND-DLBCL-2L-LISOCEL
+- IND-DLBCL-2L-AXICEL-CART
 - IND-DLBCL-3L-AXICEL-CART
 - IND-DLBCL-3L-LONCASTUXIMAB
 default_indication: IND-DLBCL-2L-POLA-R-BENDAMUSTINE
@@ -36,10 +37,11 @@ decision_tree:
       Primary-refractory or early-relapse (≤12m) + CAR-T eligible:
       liso-cel (TRANSFORM; Kamdar 2022, Lancet; EFS HR 0.35; ORR 86% vs 48%;
       NCCN Cat 1) preferred over salvage chemo → autoSCT.
-      Axi-cel (ZUMA-7; EFS HR 0.24; NCCN Cat 1) is an equivalent alternative
-      — product selection by availability and toxicity preference (liso-cel
-      lower CRS/ICANS; axi-cel: CRS G≥3 ~6%, ICANS G≥3 ~21% vs 1%/4%).
-      Bridging chemotherapy permitted during ~3-week manufacturing window.
+      Axi-cel (ZUMA-7; EFS HR 0.24; NCCN Cat 1) is an equivalent Cat 1 alternative
+      — now separately modeled as IND-DLBCL-2L-AXICEL-CART (Workstream AP). Product
+      selection: liso-cel preferred for lower ICANS G≥3 profile (~4% vs 21%); axi-cel
+      when liso-cel unavailable or physician preference. Both NCCN Cat 1.
+      Bridging chemotherapy permitted during ~3-4 week manufacturing window.
       Ukraine: international CAR-T referral required (no domestic centres).
       CAR-T inaccessible → fall back to IND-DLBCL-2L-RDHAP-AUTOSCT.
   if_false:
@@ -88,7 +90,7 @@ sources:
 last_reviewed: '2026-05-04'
 notes: 'AUTHORED 2026-05-04: IND-DLBCL-2L-RDHAP-AUTOSCT (CORAL NCCN Cat 1; R-ICE/R-DHAP ORR ~63% → BEAM-autoSCT) wired at step 1 for transplant-eligible chemosensitive relapse.
   UPDATED 2026-05-04: IND-DLBCL-2L-LISOCEL wired at step 11 (early-relapse ≤12m + CAR-T eligible → liso-cel preferred over autoSCT; TRANSFORM NCCN Cat 1; EFS HR 0.35). Step 1 if_true now routes to step 11 before autoSCT decision.
-  OOS / wiring gaps: (1) Axi-cel ZUMA-7 2L (parallel Cat 1 to liso-cel) not modeled as separate indication. (2) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (3) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
+  AUTHORED 2026-05-04 (Workstream AP): IND-DLBCL-2L-AXICEL-CART created (ZUMA-7; EFS HR 0.24; NCCN Cat 1); added to output_indications; step 11 notes updated. Liso-cel remains primary at step 11 (lower ICANS); axi-cel is documented equivalent alternative. OOS / wiring gaps: (1) Bispecifics (epcoritamab, glofitamab) for ≥3L not modeled. (2) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land. (3) Dedicated step 12 (liso-cel vs axi-cel sub-decision) not yet added — MDT product choice; both entities now exist for surfacing.
 
   '
 reviewer_signoffs_v2:
