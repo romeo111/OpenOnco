@@ -9,6 +9,7 @@ output_indications:
 - IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 - IND-ESOPH-METASTATIC-2L-HER2-TDXD
 - IND-ESOPH-METASTATIC-2L-PAC-RAM
+- IND-ESOPH-METASTATIC-2L-PACLITAXEL-WEEKLY
 default_indication: IND-ESOPH-METASTATIC-2L-NIVO-SQUAMOUS
 alternative_indication: IND-ESOPH-METASTATIC-2L-PEMBRO-CPS10
 decision_tree:
@@ -76,17 +77,35 @@ decision_tree:
     - condition: "ICI-experienced adenocarcinoma (1L ICI + chemo completed; now 2L)"
     - condition: "CPS <10 adenocarcinoma + HER2-negative OR HER2-untested"
   if_true:
+    next_step: 31
+  if_false:
+    next_step: 31
+  notes: "Step 3 updated 2026-05-04 (Workstream DB): both if_true and if_false now route to step 31 (ramucirumab access gate + paclitaxel-weekly fallback)."
+
+  # Step 31 — ramucirumab access gate for 2L esophageal/GEJ adenocarcinoma.
+  # Ramucirumab accessible → pac+ram (preferred; RAINBOW ORR 28%; mOS 9.6 mo; NCCN Cat 1).
+  # Ramucirumab inaccessible (Ukraine: not consistently NSZU-funded) → paclitaxel weekly
+  # monotherapy (RAINBOW paclitaxel arm; ORR 16%; mOS 7.4 mo; NCCN Cat 1 acceptable).
+  # Ukraine: paclitaxel is NSZU-reimbursed; most accessible 2L cytotoxic option.
+- step: 31
+  evaluate:
+    all_of:
+    - condition: "Ramucirumab accessible at treating centre (registered + reimbursed OR hospital compassionate access confirmed)"
+  if_true:
     result: IND-ESOPH-METASTATIC-2L-PAC-RAM
     notes: >
-      Adenocarcinoma (esophageal/GEJ) + HER2-neg + progression after 1L (CPS <10 or
-      ICI-experienced): ramucirumab 8 mg/kg IV d1,15 + paclitaxel 80 mg/m² IV d1,8,15 q28d
-      (REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC; RAINBOW Wilke 2014; ORR 28%; mPFS 4.4 mo;
-      mOS 9.6 mo; NCCN Cat 1). Re-test HER2 before pac+ram if only 1L HER2 data —
-      HER2 IHC 3+ at progression → T-DXd preferred. BP monitoring + proteinuria +
-      neuropathy assessment each cycle. UA: paclitaxel NSZU-funded; ramucirumab — verify.
+      Ramucirumab accessible: pac+ram preferred (REG-PACLITAXEL-RAMUCIRUMAB-GASTRIC;
+      RAINBOW Wilke 2014 Lancet Oncol; ORR 28%; mPFS 4.4 mo; mOS 9.6 mo; NCCN Cat 1).
+      Re-test HER2 at progression — HER2 3+ → T-DXd preferred. BP + proteinuria +
+      neuropathy monitoring each cycle. UA: paclitaxel NSZU-funded; ramucirumab — verify.
   if_false:
-    result: IND-ESOPH-METASTATIC-2L-PAC-RAM
-  notes: "Step 3 added 2026-05-04 (Workstream CO): adenocarcinoma 2L pac+ram gate. Gap (1) CLOSED."
+    result: IND-ESOPH-METASTATIC-2L-PACLITAXEL-WEEKLY
+    notes: >
+      Ramucirumab inaccessible (Ukraine: not consistently NSZU-funded): paclitaxel
+      80 mg/m² IV d1,8,15 q28d monotherapy (REG-PACLITAXEL-WEEKLY-GASTRIC; RAINBOW
+      paclitaxel arm Wilke 2014; ORR 16%; mOS 7.4 mo; NCCN Cat 1 acceptable).
+      NSZU-reimbursed in Ukraine. Upgrade to pac+ram when ramucirumab access restored.
+  notes: "Step 31 added 2026-05-04 (Workstream DB): ramucirumab access gate — accessible → pac+ram; inaccessible → paclitaxel weekly (NCCN Cat 1 fallback; RAINBOW paclitaxel arm). Gap (2) CLOSED."
 sources:
 - SRC-NCCN-ESOPHAGEAL-2025
 - SRC-ESMO-ESOPHAGEAL-2024
@@ -104,8 +123,13 @@ notes: >
   ROUTING SUMMARY: (0) HER2 3+ adeno + prior trast → T-DXd; (1) CPS ≥10 ICI-naive
   adeno/SCC → pembro; (2) SCC ICI-naive → nivo; (3) adeno HER2-neg CPS<10 or
   ICI-experienced → pac+ram (default adeno 2L chemo).
-  OOS / wiring gaps:
-  (2) Post-1L ICI progression — cytotoxic options (irinotecan, 5-FU) not modeled.
+  UPDATED 2026-05-04 (Workstream DB): IND-ESOPH-METASTATIC-2L-PACLITAXEL-WEEKLY
+  authored and wired at step 31 (ramucirumab access gate; paclitaxel 80 mg/m² weekly
+  d1,8,15 q28d; REG-PACLITAXEL-WEEKLY-GASTRIC; RAINBOW paclitaxel arm Wilke 2014
+  Lancet Oncol; ORR 16%; mOS 7.4 mo; NCCN Cat 1 acceptable fallback). Step 3
+  both if_true and if_false now route to step 31. Gap (2) CLOSED.
+
+  OOS / wiring gaps: (2) CLOSED (see above).
   (3) MSI-H esophageal 2L pembro-mono — extremely rare; not modeled.
   (4) UA funding gap — neither nivo nor pembro NSZU-reimbursed for esophageal;
   paclitaxel NSZU-funded; ramucirumab UA status needs verification.
