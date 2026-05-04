@@ -1,0 +1,68 @@
+id: REG-DOCETAXEL-MONO
+disease_context: null
+line_of_therapy: null
+plan_track: standard
+
+regimen_type: "chemotherapy"
+notes: >
+  Generic docetaxel monotherapy regimen (non-prostate context).
+  For mCRPC prostate docetaxel: use REG-DOCETAXEL-MCRPC (which includes prednisone +
+  10-cycle protocol specific to TAX 327). This regimen covers HNSCC 2L, lung NSCLC 2L,
+  and other solid tumor contexts where docetaxel monotherapy is used.
+
+agents:
+  - drug_id: DRG-DOCETAXEL
+    dose: "75 mg/m² IV over 60 minutes"
+    route: IV
+    schedule: "Day 1 q21d"
+    dose_modifications:
+      - trigger: "Grade ≥3 peripheral neuropathy"
+        action: "Delay until ≤Grade 1; reduce dose to 60 mg/m² on restart"
+      - trigger: "Grade ≥3 febrile neutropenia"
+        action: "Delay until ANC ≥1.5 × 10⁹/L; add G-CSF prophylaxis; reduce to 60 mg/m²"
+      - trigger: "Grade ≥3 mucositis or skin toxicity"
+        action: "Delay until ≤Grade 1; reduce to 60 mg/m²"
+      - trigger: "AST/ALT >1.5 × ULN AND ALP >2.5 × ULN"
+        action: "Docetaxel clearance reduced — reduce dose to 60 mg/m²; bilirubin >ULN contraindication"
+      - trigger: "Severe fluid retention (refractory to diuretics, Grade ≥3)"
+        action: "Evaluate dexamethasone premedication; consider discontinuation if severe"
+
+when_to_use: >
+  HNSCC 2L post-ICI (pembrolizumab-experienced): standard cytotoxic option (NCCN Cat 2A).
+  NSCLC 2L post-platinum (docetaxel ± ramucirumab; TAX 317; NCCN Cat 1).
+  Gastric/GEJ 2L (monotherapy fallback if ramucirumab not available).
+  Other solid tumors: NCCN-listed single-agent cytotoxic in HNSCC, gastric, NSCLC.
+  Preferred over methotrexate for better response rates (though not head-to-head in HNSCC 2L).
+
+premedication:
+  - "Dexamethasone 8 mg PO twice daily × 3 days starting day before docetaxel infusion (MANDATORY — prevents fluid retention + hypersensitivity)"
+  - "Antiemetic: 5-HT3 antagonist (ondansetron 8 mg IV) before infusion — moderately emetogenic"
+
+growth_factor_support:
+  primary_prophylaxis: "Not routinely required at 75 mg/m²; consider for age ≥70, poor nutritional status, or prior significant neutropenia"
+  secondary_prophylaxis: "Mandatory after febrile neutropenia (ANC <500 + fever)"
+
+monitoring:
+  - "CBC: before each cycle (ANC ≥1.5 × 10⁹/L and platelets ≥100 × 10⁹/L required)"
+  - "LFT: baseline; repeat q3 cycles or if clinically indicated"
+  - "Peripheral neuropathy: each cycle (cumulative)"
+  - "Fluid retention/weight: each cycle (peripheral edema, pleural effusion — dexamethasone premedication key)"
+  - "CT scan: every 2-3 cycles (RECIST 1.1 response assessment)"
+  - "Cutaneous reactions: each cycle (nail toxicity, skin desquamation)"
+
+cycle_length_days: 21
+total_planned_cycles: "Continue until progression or unacceptable toxicity (no fixed maximum for palliative intent)"
+
+watchpoints_ua:
+  - "КРИТИЧНО: Дексаметазон 8 мг × 2 рази/добу 3 дні (за день до, в день та через день після інфузії) — профілактика затримки рідини та гіперчутливості; БЕЗ неї ризик сильного набряку"
+  - "КРИТИЧНО: ФПП перед кожним циклом — доцетаксел метаболізується CYP3A4; при білірубін >ВМН — знизити дозу або відмінити"
+  - "УВАГА: Периферична нейропатія — кумулятивна; оцінювати кожен цикл; Grade ≥3 — знизити дозу до 60 мг/м²"
+  - "УВАГА: При карциномі ХНСЩ 2L post-ICI — метотрексат 40-50 мг/м² тижнево є паліативною альтернативою для ослаблених хворих (менша токсичність)"
+  - "УВАГА: При ХНСЩ без попереднього цетуксимабу — цетуксимаб (EXTREME якщо ні 1L) або цетуксимаб монотерапія є альтернативою"
+
+sources:
+  - SRC-NCCN-HNSCC-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

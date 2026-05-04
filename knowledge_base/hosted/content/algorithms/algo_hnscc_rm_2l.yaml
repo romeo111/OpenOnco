@@ -12,6 +12,7 @@ purpose: >
 output_indications:
   - IND-HNSCC-RM-2L-NIVOLUMAB
   - IND-HNSCC-RM-2L-PEMBROLIZUMAB
+  - IND-HNSCC-RM-2L-CHEMO
 
 default_indication: IND-HNSCC-RM-2L-NIVOLUMAB
 alternative_indication: IND-HNSCC-RM-2L-PEMBROLIZUMAB
@@ -43,17 +44,13 @@ decision_tree:
         platinum + 5-FU) as 1L for CPS <1. Nivolumab (CheckMate-141) and pembrolizumab
         (KEYNOTE-040) are both NCCN Category 1 for this setting.
     if_false:
-      result: null
+      result: IND-HNSCC-RM-2L-CHEMO
       notes: >
         ICI-experienced (prior pembrolizumab 1L or pembrolizumab+chemo 1L):
-        anti-PD-1 re-challenge is NOT supported — cross-resistance expected.
-        2L standard: platinum-based doublet chemotherapy (if platinum-eligible) or
-        single-agent (docetaxel, methotrexate, cetuximab if not prior cetuximab).
-        No formally authored indication for post-ICI chemotherapy 2L in HNSCC —
-        clinician should apply NCCN chemotherapy options. Cetuximab (EXTREME):
-        if not used in 1L (unlikely if EXTREME 1L given, but possible if pembro 1L),
-        cetuximab-based regimens are an option. Clinical trial preferred.
-        IND-HNSCC-RM-2L-CHEMO not yet authored — gap flagged.
+        anti-PD-1 re-challenge NOT supported. Single-agent cytotoxic preferred:
+        docetaxel 75 mg/m² q3w (REG-DOCETAXEL-MONO; preferred) or methotrexate
+        40-50 mg/m² weekly (palliative/frail). Cetuximab if no prior EXTREME.
+        Clinical trial enrollment should be offered first. NCCN Category 2A.
 
   # Step 3 — ICI-naive: PD-L1 CPS stratification for nivolumab vs pembrolizumab.
   # CheckMate-141 (nivolumab): met primary endpoint OS HR 0.70 — stronger regulatory standing.
@@ -97,11 +94,12 @@ notes: >
   which represents ~15-20% of all R/M HNSCC patients. For the other 80-85% who
   received pembrolizumab 1L, there is no validated 2L ICI option.
 
-  GAPS:
-  - IND-HNSCC-RM-2L-CHEMO: formal indication for post-ICI chemotherapy 2L not authored
-    (docetaxel, methotrexate, cetuximab options per NCCN). High priority gap.
+  AUTHORED 2026-05-04:
+  - IND-HNSCC-RM-2L-CHEMO: docetaxel preferred (NCCN Cat 2A); methotrexate/cetuximab alternatives
+
+  REMAINING GAPS:
   - IND-HNSCC-RM-2L-CETUXIMAB: cetuximab monotherapy/combination for 2L HNSCC
-    (applies to patients who did not receive EXTREME 1L).
+    (applies to patients who did not receive EXTREME 1L) — not yet authored.
   - Locally advanced HNSCC (definitive CRT, induction, larynx preservation):
     completely separate algorithm not yet authored.
   - Salivary gland carcinoma: separate histology; out of scope for this algorithm.

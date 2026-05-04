@@ -1,0 +1,111 @@
+id: IND-HNSCC-RM-2L-CHEMO
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HNSCC
+  line_of_therapy: 2
+  stage_requirements:
+    - "Recurrent/metastatic HNSCC (squamous cell carcinoma of oral cavity, oropharynx, larynx, hypopharynx, or nasopharynx)"
+    - "Progressive disease on or after 1L systemic therapy containing anti-PD-(L)1 therapy (pembrolizumab ± platinum+5-FU per KEYNOTE-048)"
+    - "Prior ICI-experienced — anti-PD-1 re-challenge NOT supported"
+    - "ECOG PS 0-2"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-DOCETAXEL-MONO
+alternative_regimens:
+  - regimen_id: null
+    description: "Methotrexate 40-50 mg/m² IV weekly — palliative option for ECOG 2 or patients not suitable for docetaxel toxicity; lower toxicity, modest ORR (~10-15%); NCCN listed"
+  - regimen_id: null
+    description: "Cetuximab monotherapy 250 mg/m² IV weekly (loading 400 mg/m²) — if no prior cetuximab; NCCN Category 2B; EGFRi for EGFR-overexpressing HNSCC"
+  - regimen_id: null
+    description: "Capecitabine 2000 mg/m²/day PO ÷ BID × 14 days q21d — oral option for frail patients; modest activity"
+
+concurrent_therapy: []
+
+evidence_level: low
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr_docetaxel: "~10-15% (pre-ICI era data; no modern RCT for post-pembro setting)"
+  orr_methotrexate: "~10% (historical; palliative role)"
+  notes: >
+    No randomized trial specifically evaluates post-pembrolizumab 2L chemotherapy
+    in HNSCC. Evidence is extrapolated from pre-ICI era salvage data (Vermorken 2007
+    docetaxel; NCCN historical data for methotrexate and cetuximab). Modern context
+    (2025/2026): most HNSCC patients received pembrolizumab 1L (KEYNOTE-048), so
+    ICI-experienced 2L is the majority population. There is no validated targeted
+    therapy specifically for this post-ICI setting beyond chemotherapy.
+    Docetaxel 75 mg/m² q3w is the preferred cytotoxic based on:
+    (a) Evidence in platinum-refractory R/M HNSCC (Vokes 2000; Gibson 2005)
+    (b) NCCN Category 2A listing
+    (c) Better ORR than methotrexate in historical comparisons
+    Response rates are modest and palliation is the realistic goal for most patients.
+    Clinical trial enrollment should be offered as priority 2L option.
+
+hard_contraindications:
+  - "ICI re-challenge (anti-PD-1 or anti-PD-L1): not supported post-progression on pembrolizumab — cross-resistance expected"
+  - "ECOG PS ≥3: systemic chemotherapy not appropriate; best supportive care + palliative RT"
+
+red_flags_triggering_alternative:
+  - condition: "ICI-naive at 2L (prior EXTREME 1L without pembrolizumab) → nivolumab (IND-HNSCC-RM-2L-NIVOLUMAB) or pembrolizumab (IND-HNSCC-RM-2L-PEMBROLIZUMAB) preferred"
+  - condition: "ECOG 2 or frail → methotrexate 40-50 mg/m² weekly (lower toxicity) vs docetaxel"
+  - condition: "No prior cetuximab → cetuximab-based option via MDT discussion (especially if EXTREME not given 1L)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - TEST-CMP
+  - "PD-L1 CPS (if not previously tested — informative for future ICI rechallenge discussion, though not standard indication criterion here)"
+  - TEST-CT-CAP
+  - "HPV status (oropharynx primary): informative for prognosis but does not change 2L chemotherapy selection"
+
+desired_tests:
+  - "Clinical trial screening (NCCN: clinical trial enrollment preferred at 2L HNSCC)"
+
+rationale: >
+  HNSCC 2L post-pembrolizumab (ICI-experienced) population represents the majority of
+  2L patients in 2025/2026 context (KEYNOTE-048 set pembro as 1L for CPS ≥1). Anti-PD-1
+  re-challenge is not supported by data and cross-resistance to ICI is expected after
+  progression. Platinum re-challenge may be considered if >6 months from prior platinum
+  and performance status allows (platinum+5-FU or cisplatin+docetaxel); however,
+  most patients at this stage have received platinum previously.
+  Docetaxel 75 mg/m² q3w is the most commonly used cytotoxic in this setting —
+  single-agent activity, acceptable toxicity with dexamethasone premedication,
+  and NCCN-listed for R/M HNSCC 2L. Methotrexate weekly is a lighter option for
+  palliative intent. NCCN Category 2A; evidence is low given the absence of modern
+  RCT data in the post-ICI setting.
+
+rationale_ua: >
+  ХНСЩ 2L після пембролізумабу (ICI-досвідчені) — переважна популяція 2L у 2025/2026
+  (KEYNOTE-048 встановив pembro як 1L для CPS ≥1). Re-challenge анти-ПД-1 не підтримується
+  — очікується перехресна резистентність. Доцетаксел 75 мг/м² q3w — найчастіше
+  використовуваний цитотоксичний агент у цьому контексті (NCCN Категорія 2A).
+  Метотрексат 40-50 мг/м² щотижня — паліативна альтернатива для ослаблених хворих.
+  Клінічний протокол — пріоритетний вибір у 2L ХНСЩ.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-HNSCC-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN HNSCC v2025: docetaxel, methotrexate, cetuximab listed as 2L systemic options for R/M HNSCC post-ICI; Category 2A"
+  - source_id: SRC-ESMO-HNSCC-2020
+    position: context
+
+do_not_do:
+  - "НЕ призначати анти-ПД-1/ПД-Л1 (ніволумаб, пембролізумаб) при прогресуванні на попередньому ICI — перехресна резистентність; ICI re-challenge не підтверджений"
+  - "Не призначати при ECOG ≥3 — системна хіміотерапія недоцільна; паліативна допомога + RT"
+  - "Не пропускати скринінг клінічних протоколів (NCCN: клінічний протокол — пріоритет у 2L ХНСЩ)"
+  - "Не забути дексаметазон преmedication перед доцетакселем — профілактика затримки рідини"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
