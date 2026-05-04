@@ -1,0 +1,187 @@
+id: IND-PROSTATE-MCRPC-2L-MSI-H-PEMBROLIZUMAB
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PROSTATE
+  line_of_therapy: 2
+  stage_requirements:
+    - "Metastatic castration-resistant prostate cancer (mCRPC) — any prior therapy lines"
+    - "Disease progression on or after ≥1 line of mCRPC systemic therapy (ARPI or chemotherapy)"
+    - "ECOG PS 0-2"
+    - "Adequate organ function: AST/ALT ≤2.5× ULN (≤5× ULN if liver mets), bilirubin ≤1.5× ULN, CrCl ≥30 mL/min"
+    - "No active autoimmune disease requiring systemic corticosteroids or immunosuppressive therapy"
+    - "No prior allogeneic stem cell transplant or solid organ transplant"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-MSI-STATUS
+      required: true
+      value_constraint: "MSI-H"
+      notes: >
+        MSI-H (microsatellite instability high) or dMMR (mismatch repair deficient)
+        confirmed by: (1) PCR-based MSI testing (preferred: Promega panel or NGS), or
+        (2) MMR IHC (loss of MLH1, MSH2, MSH6, or PMS2 expression), or (3) NGS with
+        TMB ≥10 mut/Mb as surrogate when MSI testing unavailable.
+        MSI-H prevalence in prostate: ~3-5% of advanced PC; enriched in mCRPC
+        (immune-excluded phenotype; Lynch syndrome pedigrees; CDK12 biallelic loss
+        associated with high CD8+ infiltrate — distinct from canonical MSI-H).
+        NCCN: germline MMR testing at mCRPC diagnosis is Category 2A.
+        dMMR by IHC is equivalent to MSI-H by PCR for pembrolizumab eligibility.
+  biomarker_requirements_excluded:
+    - "MSI-L/MSS (microsatellite stable): pembrolizumab monotherapy inactive (~5% ORR in MSS prostate)"
+    - "Active autoimmune disease (SLE, IBD, vasculitis, myositis on systemic immunosuppression): pembrolizumab → Grade 3-4 irAE risk"
+    - "Prior Grade 3-4 immune-related adverse event from prior checkpoint inhibitor: re-challenge requires MDT discussion"
+    - "Active or untreated CNS metastases with neurological symptoms: KEYNOTE-158 exclusion"
+  demographic_constraints:
+    ecog_max: 2
+    notes: >
+      MSI-H mCRPC affects all age groups. Lynch syndrome (constitutional MMR defect)
+      may present in younger men. Pembrolizumab IV q3-6 weeks well tolerated in older
+      men with mCRPC provided adequate organ function. Monitor PSA response (PSA
+      flare possible first 4-8 weeks; not treatment failure if imaging stable).
+      Prostate is an immunologically "cold" tumor — MSI-H confers a "hot" phenotype
+      with improved pembrolizumab response compared to MSS prostate.
+
+recommended_regimen: REG-PEMBROLIZUMAB-MONO
+alternative_regimens:
+  - regimen_id: null
+    description: >
+      Dostarlimab (anti-PD-1; GSK4057190A): FDA-approved tumor-agnostic for dMMR
+      solid tumors (GARNET; Oaknin 2022 JCO; ORR ~44% dMMR non-endometrial solid tumors).
+      Equivalent mechanism; use if pembrolizumab inaccessible. Not separately modeled.
+  - regimen_id: null
+    description: >
+      Pembrolizumab + olaparib (KEYNOTE-365/BRCA co-occurring): if MSI-H and BRCA2
+      co-mutated (rare overlap), combination considered investigational; pembrolizumab
+      monotherapy preferred unless BRCA2 pathogenic variant warrants PARPi addition
+      per MDT.
+  - regimen_id: null
+    description: >
+      Nivolumab (CHECKMATE-650): anti-PD-1 alternative; anti-PD-1 class effect in
+      MSI-H tumors. Not FDA-approved for tumor-agnostic MSI-H; pembrolizumab preferred.
+
+concurrent_therapy:
+  - "Androgen deprivation therapy (ADT): continue castration-level testosterone maintenance throughout pembrolizumab"
+  - "LHRH agonist/antagonist: do NOT discontinue; pembrolizumab is added on top of castration"
+  - "irAE monitoring: baseline TFTs, glucose (HbA1c), CBC, CMP before cycle 1; repeat q3-4 cycles"
+  - "Bone-protective agent: zoledronic acid or denosumab if bone mets — unaffected by pembrolizumab"
+  - "Steroid stock: prednisone 1 mg/kg supply + patient irAE education — mandatory before cycle 1"
+  - "PSA monitoring note: PSA pseudoprogression (transient rise 4-8 weeks) possible; do not discontinue based on PSA alone"
+
+followed_by:
+  - "Continue pembrolizumab until progression or unacceptable toxicity; maximum 35 cycles (~2 years per KEYNOTE-158)"
+  - "Radiologic response assessment CT chest/abdomen/pelvis + bone scan q9-12 weeks (q3-4 cycles)"
+  - "PSA: monitor monthly during treatment (not the sole response criterion — use RECIST 1.1 + Prostate Cancer Working Group 3 criteria)"
+  - "After pembrolizumab completion (2 years) in responders: observation with PSA q3 months; re-treatment if late relapse per NCCN"
+  - "After pembrolizumab failure: cabazitaxel (IND-PROSTATE-MCRPC-2L-CABAZITAXEL) or Lu-PSMA (if PSMA-PET+ at progression)"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~33% (KEYNOTE-158 prostate cohort; n=~30 MSI-H mCRPC patients)"
+  disease_control_rate: "~55% (KEYNOTE-158 prostate + across MSI-H solid tumor cohorts)"
+  median_dor_months: "not reached at primary analysis (durable responses characteristic of MSI-H IO response)"
+  median_pfs_months: "not mature at cutoff; 12-month PFS ~40% in MSI-H prostate (small cohort)"
+  notes: >
+    KEYNOTE-158 (Marabelle 2020 Annals of Oncology; Le 2020 JAMA Oncology):
+    Phase 2 basket trial of pembrolizumab in MSI-H/dMMR solid tumors (10 tumor cohorts).
+    Prostate cohort (Cohort K): n=~30 MSI-H mCRPC patients; ORR ~33%; mDOR not reached.
+    Overall MSI-H/dMMR basket: ORR 34.3% (95% CI 28.3-40.8%); CR 11.1%; mDOR not reached.
+    Led to FDA tumor-agnostic accelerated approval (2017) → confirmed regular approval (2023).
+    Small cohort limitation: prostate cohort n=~30; confidence intervals wide.
+    KEYNOTE-199 (Antonarakis 2020 JCO): MSS prostate cohort had ORR ~3-5%;
+    MSI-H/dMMR identified as the only predictive biomarker for pembrolizumab in prostate.
+    Real-world series confirm ORR ~30-40% in MSI-H mCRPC; responses durable (>12 months).
+    PSA should NOT be used as sole response criterion (PSA flare common first 8 weeks).
+
+hard_contraindications:
+  - "MSS/MSI-L prostate cancer: pembrolizumab inactive; cytotoxic chemo or Lu-PSMA preferred"
+  - "Active autoimmune disease requiring systemic steroids (≥10 mg prednisone/day equivalent): irAE additive"
+  - "Prior organ transplant (immunosuppression required; pembrolizumab → rejection risk)"
+  - "Grade 3-4 prior immune-related pneumonitis or colitis from prior checkpoint inhibitor"
+  - "ECOG PS ≥3 (pembrolizumab benefit unclear; Goals-of-Care discussion preferred)"
+
+red_flags_triggering_alternative:
+  - condition: "MSS/MSI-L confirmed → cytotoxic chemo (cabazitaxel or docetaxel) or Lu-PSMA per PSMA-PET status"
+  - condition: "Prior PD-1/PD-L1 refractory (progression on pembrolizumab/nivolumab) → no re-challenge benefit; cabazitaxel or Ra-223"
+  - condition: "BRCA2 pathogenic variant co-occurring → IND-PROSTATE-MCRPC-1L-PARPI if PARPi-naive"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "MSI/MMR testing (tissue or liquid): NGS panel preferred (Foundation One CDx, Guardant360 TissueNext); OR MMR IHC (4 antibodies: MLH1, MSH2, MSH6, PMS2); MANDATORY — determines eligibility"
+  - "Baseline PSA, testosterone: castration-level confirmation"
+  - "Thyroid function (TSH, free T4): baseline; pembrolizumab → autoimmune thyroiditis in ~10%"
+  - "HbA1c + glucose: pembrolizumab → autoimmune diabetes (~1-2%)"
+  - "CT chest/abdomen/pelvis + bone scan: baseline staging before pembrolizumab start"
+
+desired_tests:
+  - "Germline MMR testing (Lynch syndrome assessment): if MSI-H confirmed on tumor, germline testing for Lynch syndrome recommended (cascade genetic counseling)"
+  - "Tumor mutational burden (TMB) by NGS: if MSI testing unavailable; TMB ≥10 mut/Mb as pembrolizumab-eligibility surrogate"
+  - "PSMA-PET/CT: if pembrolizumab fails, PSMA-PET to assess Lu-PSMA eligibility at progression"
+  - "CDK12 biallelic loss assessment: CDK12-mutated prostate has 'alternative hypermutation' (tandem duplicator phenotype) — responds poorly to PD-1 despite high neoantigen load; distinguish from canonical MSI-H"
+
+rationale: >
+  MSI-H/dMMR confers high somatic mutational burden and neoantigen load through defective
+  DNA mismatch repair. Frameshift insertions generate immunogenic neoantigens that activate
+  CD8+ tumor-infiltrating lymphocytes (TILs), reversing the immunologically "cold" prostate
+  tumor microenvironment. PD-1 blockade removes the immune checkpoint brake, enabling
+  durable T-cell-mediated tumor eradication.
+
+  Prostate cancer is typically MSS and immunologically cold — pembrolizumab has minimal
+  activity in MSS prostate (ORR ~3-5%, KEYNOTE-199). MSI-H prostate (~3-5% of advanced PC)
+  is a biologically distinct subset with dramatically better pembrolizumab response (ORR ~33%).
+
+  FDA tumor-agnostic pembrolizumab approval (2017 → 2023 confirmed) covers MSI-H/dMMR
+  unresectable/metastatic solid tumors including prostate, making this a regulatory-supported
+  indication regardless of disease-specific approval.
+
+  NCCN Prostate 2025 Category 2A: pembrolizumab for MSI-H/dMMR mCRPC — recommended
+  alongside HRR/PARPi as biomarker-driven therapy at any mCRPC line.
+
+  Sequencing: MSI-H and BRCA/HRR mutations can co-occur (rare). Per NCCN, both
+  pembrolizumab (MSI-H gate) and olaparib (BRCA2 gate) are appropriate; PARPi
+  is the preferred first approach for BRCA2 co-mutated MSI-H given NCCN Cat 1 for
+  PARPi vs Cat 2A for pembrolizumab.
+
+rationale_ua: >
+  МСН-В/дМСР мКРРПЗ (~3-5% випадків): пембролізумаб 200 мг в/в q3т (KEYNOTE-158;
+  Marabelle 2020; ВВО ~33%; тривала відповідь; FDA пухлинно-агностична схвалення 2017/2023;
+  NCCN кат.2A). ОБОВ'ЯЗКОВО: підтвердження МСН-В перед призначенням —
+  NGS-панель або ІГХ репараційних білків (MLH1/MSH2/MSH6/PMS2). При МСС:
+  пембролізумаб неефективний (ВВО 3-5%); перевага для кабазитакселу або лютецій-ПСМА.
+  В Україні: пембролізумаб зареєстрований; відшкодування НСЗУ для МСН-В ракуміхура
+  потребує верифікації (пухлинно-агностична показання може потребувати МДК-рішення).
+  Тестування MSI: NGS або ІГХ доступне в онкогенетичних центрах UA.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-PROSTATE-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN Prostate 2025 Category 2A: pembrolizumab for patients with MSI-H/dMMR mCRPC
+      at any line of therapy. Tumor-agnostic FDA approval applies. MMR/MSI testing
+      recommended at mCRPC diagnosis alongside HRR/BRCA germline + somatic testing.
+  - source_id: SRC-KEYNOTE158-ANAL-MARABELLE-2020
+    position: supports
+    relevant_quote_paraphrase: >
+      KEYNOTE-158 (Marabelle 2020 Annals of Oncology; Le 2020 JAMA Oncology):
+      pembrolizumab in MSI-H/dMMR solid tumors; overall basket ORR 34.3%; prostate
+      cohort n=~30 ORR ~33%; mDOR not reached; led to FDA tumor-agnostic regular approval.
+
+do_not_do:
+  - "Без тестування МСН-В: пембролізумаб при МСС простаті — ВВО 3-5%; неефективний підхід"
+  - "Відміна АДТ при пембролізумабі: кастраційний рівень тестостерону ПІДТРИМУВАТИ весь курс IO"
+  - "ПСА як єдиний критерій відповіді: флеш ПСА (перші 8 тижнів) ≠ прогресування; використовуйте RECIST 1.1"
+  - "Пембролізумаб при активному аутоімунному захворюванні на стероїдах: іРАЕ посилення"
+  - "CDK12-мутовані пухлини: танdemduplicator-фенотип ≠ MSI-H; пембролізумаб неефективний"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

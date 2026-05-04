@@ -4,15 +4,17 @@ applicable_to_disease_state: mCRPC
 applicable_to_line_of_therapy: 2
 purpose: >
   Select 2L systemic therapy for mCRPC progressing after 1L treatment.
-  Routes by: (1) HRR/BRCA mutation status (PARPi if untreated), (2) PSMA-PET
-  positivity + prior taxane + prior ARPI (Lu-PSMA-617, VISION), (3) prior
-  taxane exposure (cabazitaxel post-docetaxel per CARD/TROPIC), and (4) bone
-  distribution (Ra-223 for bone-predominant, no visceral mets, ALSYMPCA).
+  Routes by: (1) HRR/BRCA mutation status (PARPi if untreated), (2) MSI-H/dMMR
+  biomarker gate (pembrolizumab tumor-agnostic; KEYNOTE-158; ORR ~33%; NCCN Cat 2A),
+  (3) PSMA-PET positivity + prior taxane + prior ARPI (Lu-PSMA-617, VISION),
+  (4) prior taxane exposure (cabazitaxel post-docetaxel per CARD/TROPIC), and
+  (5) bone distribution (Ra-223 for bone-predominant, no visceral mets, ALSYMPCA).
   Modern context: most patients received ARPI in mHSPC + docetaxel in
   mHSPC or 1L mCRPC; many are post-ARPI + post-taxane at 2L.
 
 output_indications:
   - IND-PROSTATE-MCRPC-1L-PARPI
+  - IND-PROSTATE-MCRPC-2L-MSI-H-PEMBROLIZUMAB
   - IND-PROSTATE-MCRPC-2L-LU-PSMA
   - IND-PROSTATE-MCRPC-2L-CABAZITAXEL
   - IND-PROSTATE-MCRPC-2L-RADIUM223
@@ -55,7 +57,31 @@ decision_tree:
         (TRITON3: rPFS HR 0.61 for BRCA1/2 mCRPC). IND-PROSTATE-MCRPC-1L-PARPI
         applies at any mCRPC line if PARPi-naive.
     if_false:
+      next_step: 21
+
+  # Step 21 — MSI-H/dMMR gate (tumor-agnostic pembrolizumab).
+  # Pembrolizumab FDA tumor-agnostic approval (2017 acc → 2023 confirmed) for MSI-H/dMMR
+  # unresectable/metastatic solid tumors. KEYNOTE-158 prostate cohort: ORR ~33%;
+  # mDOR not reached. NCCN Prostate 2025 Cat 2A. Prevalence ~3-5% of advanced PC.
+  # Position: after PARPi gate (BRCA2 co-mutated MSI-H → PARPi preferred NCCN Cat 1);
+  # before PSMA gate (PSMA-directed therapy unrelated to MMR status).
+  - step: 21
+    evaluate:
+      all_of:
+        - condition: "MSI-H or dMMR confirmed by NGS / PCR MSI panel / MMR IHC (MLH1, MSH2, MSH6, PMS2)"
+        - condition: "No prior pembrolizumab or anti-PD-1 therapy for this indication"
+    if_true:
+      result: IND-PROSTATE-MCRPC-2L-MSI-H-PEMBROLIZUMAB
+      notes: >
+        MSI-H/dMMR mCRPC without prior IO: pembrolizumab 200 mg IV q3w (or 400 mg q6w)
+        (REG-PEMBROLIZUMAB-MONO; KEYNOTE-158 Marabelle 2020 Annals Oncol; ORR ~33%;
+        mDOR not reached; NCCN Cat 2A; FDA tumor-agnostic). Continue ADT throughout.
+        PSA flare first 4-8 weeks does not indicate failure — use RECIST 1.1 imaging.
+        CDK12-biallelic-loss tumors: tandem-duplicator phenotype ≠ canonical MSI-H;
+        distinguish carefully — MDT molecular review required.
+    if_false:
       next_step: 3
+    notes: "Step 21 added 2026-05-04 (Workstream BM): MSI-H/dMMR gate for tumor-agnostic pembrolizumab. Gap CLOSED. Free-text conditions (MSI testing result); MDT-evaluated."
 
   # Step 3 — PSMA-PET gate (Lu-PSMA-617 eligibility per VISION criteria).
   # All metastatic lesions must be PSMA-avid on PET/CT.
@@ -156,6 +182,7 @@ sources:
   - SRC-VISION-PSMA-SARTOR-2021
   - SRC-PROFOUND-DEBONO-2020
   - SRC-NCCN-PROSTATE-2025
+  - SRC-KEYNOTE158-ANAL-MARABELLE-2020
 
 last_reviewed: "2026-05-04"
 notes: >
@@ -168,15 +195,18 @@ notes: >
 
   Priority cascade for post-ARPI + post-docetaxel patients:
   1. BRCA/HRR mutation → PARPi (if not yet given)
-  2. PSMA-PET positive → Lu-PSMA-617 (VISION; OS HR 0.62)
-  3. Visceral mets → cabazitaxel (CARD; OS HR 0.64 vs second ARPI)
-  4. Bone-predominant, symptomatic → Ra-223 (ALSYMPCA; OS HR 0.70) OR cabazitaxel
+  2. MSI-H/dMMR → pembrolizumab (KEYNOTE-158; ORR ~33%; FDA tumor-agnostic Cat 2A) [WIRED 2026-05-04]
+  3. PSMA-PET positive → Lu-PSMA-617 (VISION; OS HR 0.62)
+  4. Visceral mets → cabazitaxel (CARD; OS HR 0.64 vs second ARPI)
+  5. Bone-predominant, symptomatic → Ra-223 (ALSYMPCA; OS HR 0.70) OR cabazitaxel
 
-  GAPS in this algorithm:
-  - IND-PROSTATE-MCRPC-2L-DOCETAXEL: authored 2026-05-04; TAX 327 OS HR 0.76 (NCCN Cat 1)
+  UPDATED 2026-05-04 (Workstream BM): IND-PROSTATE-MCRPC-2L-MSI-H-PEMBROLIZUMAB authored
+  and wired at step 21 (MSI-H/dMMR gate; KEYNOTE-158 Marabelle 2020; ORR ~33%;
+  FDA tumor-agnostic; NCCN Cat 2A). Gap CLOSED.
+
+  Remaining gaps:
   - Cabazitaxel + carboplatin (high-risk BRCA/HRR; CHAMP/KEYNOTE-991 data pending)
   - PSMAddition (Lu-PSMA earlier line — pre-taxane) data emerging; not yet NCCN Cat 1
-  - Pembrolizumab for MSI-H/dMMR mCRPC (KEYNOTE-158 tumor-agnostic) not yet separately addressed
 
   HRR testing mandatory: germline + somatic BRCA1/2 before any mCRPC systemic therapy.
   PSMA-PET: 68Ga-PSMA-11 (Illuccix) or 18F-DCFPyL (Pylarify) preferred FDA-approved agents.
