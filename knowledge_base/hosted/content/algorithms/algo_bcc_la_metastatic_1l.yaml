@@ -1,0 +1,121 @@
+id: ALGO-BCC-LA-METASTATIC-1L
+applicable_to_disease: DIS-BCC
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select treatment for locally advanced BCC (laBCC) or metastatic BCC (mBCC).
+  Early BCC (superficial, nodular, low-risk) is managed with surgery, radiation,
+  or topical treatments — not this algorithm. This algorithm covers:
+  (1) laBCC not amenable to surgery or radiation (large, recurrent, high surgical morbidity),
+  (2) mBCC (distant spread).
+  Default: vismodegib 150 mg QD (Hedgehog inhibitor; NCCN Cat 1 for both laBCC and mBCC).
+  Post-HHI progression: cemiplimab (IND-BCC-2L-CEMIPLIMAB; NCCN Cat 1 — pending separate authoring).
+  KEY: Surgery and radiation should be evaluated FIRST for laBCC. Hedgehog inhibitors
+  are for patients where curative-intent locoregional therapy is not feasible.
+
+output_indications:
+  - IND-BCC-LA-METASTATIC-1L-VISMODEGIB
+
+default_indication: IND-BCC-LA-METASTATIC-1L-VISMODEGIB
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Confirm this is locally advanced or metastatic BCC.
+  # Early/low-risk BCC is outside this algorithm (surgery/topical/PDT).
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "Locally advanced BCC (laBCC): large lesion, deeply invasive, recurrent, or perineural involvement — surgery would not achieve clear margins OR prior surgery/RT failed"
+        - condition: "Metastatic BCC (mBCC): regional nodal disease beyond surgical field, distant metastases (visceral, bone)"
+    if_true:
+      next_step: 2
+      notes: "Advanced BCC confirmed — proceed to locoregional therapy feasibility assessment."
+    if_false:
+      result: null
+      notes: >
+        Early BCC (low-risk nodular, superficial): surgery, radiation, or topical therapy
+        (imiquimod, 5-fluorouracil, photodynamic therapy). This algorithm covers advanced
+        disease only. Refer to dermatology/Mohs surgery for standard early BCC management.
+        High-risk features triggering advanced-disease consideration: diameter >2 cm (head/neck)
+        or >2 cm (trunk/extremities), poorly defined borders, recurrent, immunosuppressed
+        host, perineural invasion, aggressive histology (morpheaform, basosquamous).
+
+  # Step 2 — laBCC: surgical/radiation feasibility assessment.
+  # For laBCC, attempt surgery or radiation first if feasible.
+  # For mBCC: skip to step 3 (systemic therapy is first-line).
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "mBCC (distant metastasis — skip locoregional approach)"
+        - condition: "laBCC: prior surgery with recurrence AND prior radiation with failure — both locoregional options exhausted"
+        - condition: "laBCC: surgery not feasible (unresectable anatomy, would require disfiguring sacrifice of vital structures)"
+        - condition: "laBCC: radiation not appropriate (prior radiation to same site, nearby sensitive structures, radiation-induced carcinoma in Gorlin syndrome)"
+    if_true:
+      next_step: 3
+      notes: "Systemic hedgehog inhibitor indicated: locoregional therapy not feasible or already failed."
+    if_false:
+      result: null
+      notes: >
+        laBCC with locoregional option remaining:
+        - Surgery feasible: proceed to Mohs micrographic surgery or wide local excision;
+          refer to Mohs/head-neck surgery specialist.
+        - Radiation feasible (RT-naive): hypofractionated RT (50-60 Gy) — discuss with
+          radiation oncology; response rate ~85% for primary laBCC.
+        - After locoregional failure: return to this algorithm.
+        MDT (dermatology + surgery + radiation oncology) recommended for all laBCC.
+
+  # Step 3 — Pregnancy contraindication gate.
+  # Vismodegib is teratogenic (Category X). Absolute contraindication in pregnancy.
+  # All patients of reproductive potential require confirmed negative pregnancy test.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Not pregnant (confirmed negative pregnancy test for women of childbearing potential)"
+        - condition: "ECOG PS 0-2"
+        - condition: "Willing and able to comply with contraception requirements (women: two methods × 24 months post-treatment; men: condoms × 3 months post-treatment)"
+    if_true:
+      result: IND-BCC-LA-METASTATIC-1L-VISMODEGIB
+      notes: >
+        Vismodegib 150 mg PO QD (continuous).
+        ERIVANCE Phase 2 (Sekulic 2012 NEJM): laBCC ORR 43% (CR 13%), mBCC ORR 30%.
+        FDA/EMA approved; NCCN Category 1 for laBCC and mBCC.
+        Mandatory: verify negative pregnancy test; contraception counseling before starting.
+        At progression: cemiplimab (anti-PD-1; FDA 2021 for laBCC/mBCC post-HHI;
+        IND-BCC-2L-CEMIPLIMAB — pending authoring; NCCN Cat 1; ORR ~21% post-HHI).
+        Ukraine: not registered; named-patient import only; USD ~15-18K/month.
+    if_false:
+      result: null
+      notes: >
+        Vismodegib contraindicated (pregnancy confirmed, ECOG ≥3, or refusal of
+        contraception requirements):
+        - Pregnancy: delay treatment until postpartum; multidisciplinary obstetrics +
+          oncology consultation; local measures (surgery/RT) if urgent.
+        - ECOG ≥3: best supportive care; palliative radiation for symptomatic lesions.
+        - Contraception refusal: discuss fertility counseling; consider cemiplimab
+          (less teratogenic concern; anti-PD-1 has weaker embryotoxicity evidence
+          vs vismodegib — but still requires contraception in pregnancy).
+        MDT and patient values discussion required for all non-standard scenarios.
+
+sources:
+  - SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-04"
+notes: >
+  Early BCC management (surgery, radiation, topical) is explicitly out of scope.
+  This algorithm covers laBCC and mBCC requiring systemic therapy.
+
+  HEDGEHOG INHIBITOR CLASS: vismodegib and sonidegib are both SMO antagonists.
+  Sonidegib (Odomzo) is an NCCN-acceptable alternative to vismodegib for laBCC
+  (BOLT trial; ORR 58% at 200 mg). KB currently covers vismodegib only.
+  Cross-resistance between vismodegib and sonidegib is high — switching between
+  HHIs at progression is not recommended.
+
+  POST-HHI PROGRESSION: cemiplimab 350 mg IV q3w is FDA-approved and NCCN Cat 1
+  for laBCC/mBCC after HHI progression or where HHI is not appropriate.
+  IND-BCC-2L-CEMIPLIMAB not yet authored — pending Workstream DI follow-on.
+  Wiring note: algo_bcc_la_metastatic_1l.yaml followed_by references it in IND text.
+
+  GORLIN SYNDROME (PTCH1 germline): same treatment algorithm; requires more frequent
+  dermatologic surveillance; radiation therapy is relatively contraindicated (may induce
+  new BCCs within radiation field in Gorlin patients).
+
+  DIS-BCC algorithm gap CLOSED 2026-05-04 (Workstream DI).

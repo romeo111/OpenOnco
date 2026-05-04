@@ -1,0 +1,69 @@
+id: REG-VISMODEGIB-BCC
+disease_context: DIS-BCC
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "targeted_therapy_oral"
+
+agents:
+  - drug_id: DRUG-VISMODEGIB
+    dose: "150 mg PO once daily"
+    route: PO
+    schedule: "Continuous once daily, with or without food"
+    administration_notes: >
+      Take at the same time each day. Capsule should be swallowed whole.
+      PREGNANCY PREVENTION: verify negative pregnancy test before starting;
+      two forms of contraception required during treatment and for 24 months
+      after last dose (women of childbearing potential). Male patients: condoms
+      during treatment and for 3 months after last dose.
+      Drug holiday option: MIKIE study (Sekulic 2017) supports 12-week-on /
+      8-week-off cycling for patients with significant cumulative toxicity —
+      discuss with patient to improve long-term tolerability.
+    dose_modifications:
+      - trigger: "Grade ≥3 muscle spasms (disabling, interfering with daily activities)"
+        action: "Hold vismodegib 2-4 weeks; resume at 150 mg QD when resolved to Grade ≤1. Oral magnesium supplementation (400-800 mg/day) and/or quinine sulfate 300 mg BID."
+      - trigger: "Grade ≥3 fatigue or weight loss >10%"
+        action: "Hold 2-4 weeks; resume when recovered; nutritional support (dietitian referral). Consider dose break per MIKIE schedule."
+      - trigger: "Grade ≥3 dysgeusia significantly affecting oral intake"
+        action: "Consider 2-4 week treatment break; nutritional support; zinc supplementation (some evidence for partial benefit)."
+      - trigger: "Any Grade 4 toxicity"
+        action: "Discontinue permanently"
+    dose_reduction_levels:
+      - "150 mg QD — only approved dose; no formal dose reduction studied. Use treatment holidays for toxicity management."
+
+when_to_use: >
+  Locally advanced BCC (laBCC) not amenable to curative-intent surgery or radiation therapy,
+  OR metastatic BCC (mBCC). All BCC has HH pathway activation — no SMO/PTCH1 biomarker
+  testing required. FDA/EMA approved; NCCN Category 1.
+  ERIVANCE Phase 2 (Sekulic 2012 NEJM, N=104): laBCC ORR 43% (CR 13%); mBCC ORR 30%;
+  mDOR 7.6 months. Durable CR in some laBCC patients enables subsequent surgery.
+  Duration: Continue until progression or unacceptable toxicity; consider break at 24 weeks
+  if CR/near-CR achieved (MIKIE evidence for break vs continuous).
+
+contraindications_relative:
+  - "Resectable BCC — surgery preferred (smaller lesion, better long-term outcomes)"
+  - "BCC amenable to radiation therapy — RT preferred for unresectable laBCC"
+  - "Women of childbearing potential unable or unwilling to use two forms of contraception"
+  - "Early superficial or nodular BCC — topical therapies (imiquimod, 5-FU), photodynamic therapy, or surgery preferred"
+
+monitoring:
+  - "Tumor assessment: clinical photography + skin exam every 8-12 weeks; CT/MRI for deep laBCC or mBCC every 12 weeks"
+  - "Weight and BMI: baseline + every 4 weeks (weight loss common, can be significant)"
+  - "Pregnancy test: monthly for women of childbearing potential (REMS-equivalent safety)"
+  - "Serum magnesium: baseline + if Grade ≥2 muscle spasms"
+  - "Patient-reported outcomes (muscle cramps, dysgeusia, fatigue) at each visit"
+
+sources:
+  - SRC-NCCN-SKIN-2025
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DI).
+  Continuous dosing is FDA-approved; treatment breaks (MIKIE study) improve tolerability
+  without clear efficacy loss. No dose reduction option — holidays are the management tool.
+  TERATOGENICITY: 24-month contraception requirement after last dose is unusually long
+  (drug persists in tissue; detected in semen up to 3 months post-stop).
