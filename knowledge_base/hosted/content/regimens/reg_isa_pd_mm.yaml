@@ -1,0 +1,105 @@
+id: REG-ISA-PD-MM
+name: "Isa-Pd: Isatuximab + pomalidomide + dexamethasone for R/R MM (ICARIA-MM)"
+name_ua: "Іза-Пд: ісатуксімаб + помалідомід + дексаметазон для R/R MM (ICARIA-MM)"
+alternate_names:
+  - "Isa-Pd"
+  - "Isatuximab-pomalidomide-dexamethasone"
+  - "ICARIA-MM regimen"
+
+components:
+  - drug_id: DRUG-ISATUXIMAB
+    dose: "10 mg/kg IV — Cycle 1: days 1, 8, 15, 22 (once weekly × 4 doses); Subsequent cycles: days 1, 15 (every 2 weeks)"
+    schedule: "28-day cycles; IV infusion; infusion-reaction prophylaxis required before each dose"
+    route: IV
+  - drug_id: DRUG-POMALIDOMIDE
+    dose: "4 mg PO days 1-21 of each 28-day cycle"
+    schedule: "28-day cycles; PO; lenalidomide REMS equivalent mandatory (Pomalyst REMS); monthly pregnancy test for women of childbearing potential"
+    route: PO
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "40 mg PO once weekly (days 1, 8, 15, 22) q28d (reduce to 20 mg for age ≥75 or poor performance status)"
+    schedule: "28-day cycles; given on the same day as isatuximab infusion or pomalidomide dosing day"
+    route: PO
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Before each isatuximab infusion: dexamethasone 40 mg PO (counts as the weekly dex dose), acetaminophen 650-1000 mg PO, diphenhydramine 25-50 mg IV/PO, ranitidine 50 mg IV or equivalent H2-blocker"
+  - "HBV screen + entecavir/tenofovir prophylaxis if HBsAg+ or anti-HBc+"
+  - "Pomalyst REMS enrollment mandatory: negative pregnancy test + documented contraception counseling before start"
+  - "VTE prophylaxis (aspirin 81-325 mg/day OR LMWH based on risk): mandatory — IMiD-based regimen"
+
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-VTE-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+  - SUP-G-CSF-SECONDARY
+
+dose_adjustments:
+  - condition: "Grade 3-4 neutropenia (ANC <1.0)"
+    modification: "Hold pomalidomide until ANC ≥1.0; resume at 3 mg dose level; G-CSF secondary prophylaxis; isatuximab dose not reduced"
+    rationale: "Neutropenia is the primary dose-limiting toxicity for pomalidomide in this combination (Grade 3-4 ~53% in ICARIA-MM Isa-Pd arm)"
+    source_refs:
+      - SRC-ICARIA-ATTAL-2019
+  - condition: "Grade 4 thrombocytopenia (plt <25)"
+    modification: "Hold pomalidomide until plt ≥50; resume at lower dose if prolonged; consider platelet transfusion support"
+    rationale: "Class IMiD hematologic toxicity"
+    source_refs:
+      - SRC-ICARIA-ATTAL-2019
+  - condition: "Grade ≥3 isatuximab infusion reaction"
+    modification: "Interrupt infusion; manage with IV corticosteroids + antihistamines; resume at 50% rate after Grade ≤1 resolution; discontinue for Grade 4"
+    rationale: "Anti-CD38 infusion reactions predominantly first infusion, cycle 1"
+    source_refs:
+      - SRC-NCCN-MM-2025
+  - condition: "VTE event (DVT or PE)"
+    modification: "Initiate therapeutic LMWH or DOAC; consider pomalidomide dose hold × 1 week then resume; may continue pomalidomide on therapeutic anticoagulation"
+    rationale: "IMiD VTE risk; preventive prophylaxis reduces incidence but does not eliminate it"
+    source_refs:
+      - SRC-NCCN-MM-2025
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Isatuximab (Sarclisa) not registered in Ukraine. Pomalidomide (Pomalyst/
+    Imnovid) not registered in Ukraine. Full regimen requires international
+    referral or named-patient import for both isatuximab and pomalidomide.
+
+sources:
+  - SRC-ICARIA-ATTAL-2019
+  - SRC-NCCN-MM-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Лихоманка ≥38°C, ознаки інфекції"
+    action_ua: "Зверніться в лікарню терміново — нейтропенія збільшує ризик інфекцій"
+    urgency: er_today
+    sources:
+      - SRC-ICARIA-ATTAL-2019
+  - trigger_ua: "Задишка, набряк нижніх кінцівок, біль у гомілці"
+    action_ua: "Зверніться до лікаря — можлива тромбоемболія (DVT/PE)"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Лихоманка, озноб під час або після інфузії ісатуксімабу"
+    action_ua: "Негайно повідомте медсестру — реакція на інфузію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+
+last_reviewed: "2026-05-05"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  Isa-Pd regimen (ICARIA-MM; Richardson/Attal 2019 Lancet; NCT02990338):
+  isatuximab 10 mg/kg IV qw × 4 then q2w + pomalidomide 4 mg d1-21 +
+  dexamethasone 40 mg qw. mPFS 11.5 vs 6.5 months (HR 0.596; NCCN Cat 1;
+  FDA March 2020) in R/R MM ≥2 prior lines including lena + PI. Dominant
+  toxicity: neutropenia ~53% Grade 3-4. VTE prophylaxis mandatory.
+notes_ua: >
+  Режим Іза-Пд (ICARIA-MM; Lancet 2019): ісатуксімаб + помалідомід +
+  дексаметазон. mPFS 11.5 vs 6.5 міс (HR 0.596; NCCN Кат 1; FDA березень
+  2020). Authoring: Workstream FE 2026-05-05.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

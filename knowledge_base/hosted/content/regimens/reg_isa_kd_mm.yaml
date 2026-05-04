@@ -1,0 +1,107 @@
+id: REG-ISA-KD-MM
+name: "Isa-Kd: Isatuximab + carfilzomib + dexamethasone for R/R MM (IKEMA)"
+name_ua: "Іза-Кд: ісатуксімаб + карфілзоміб + дексаметазон для R/R МM (IKEMA)"
+alternate_names:
+  - "Isa-Kd"
+  - "Isatuximab-carfilzomib-dexamethasone"
+  - "IKEMA regimen"
+
+components:
+  - drug_id: DRUG-ISATUXIMAB
+    dose: "10 mg/kg IV — Cycle 1: days 1, 8, 15, 22 (once weekly × 4 doses); Subsequent cycles: days 1, 15 (every 2 weeks)"
+    schedule: "28-day cycles; IV infusion; infusion-reaction prophylaxis required before each dose"
+    route: IV
+  - drug_id: DRUG-CARFILZOMIB
+    dose: "20 mg/m² IV on days 1, 2 of cycle 1 (ramp-up); then 56 mg/m² IV on days 1, 2, 8, 9, 15, 16 of all cycles"
+    schedule: "28-day cycles; 10-30 min IV infusion; hydration mandatory (IV 250-500 mL NS before each dose); cardiorenal monitoring"
+    route: IV
+  - drug_id: DRUG-DEXAMETHASONE
+    dose: "20 mg IV/PO on carfilzomib infusion days (days 1, 2, 8, 9, 15, 16) q28d"
+    schedule: "Given on each carfilzomib day as premedication and antiemetic support"
+    route: PO_or_IV
+
+cycle_length_days: 28
+total_cycles: "Until progression or unacceptable toxicity"
+
+toxicity_profile: severe
+
+premedication:
+  - "Before each isatuximab infusion: dexamethasone 20 mg IV, acetaminophen 650-1000 mg PO, diphenhydramine 25-50 mg IV/PO, ranitidine 50 mg IV or equivalent H2-blocker (infusion-reaction prophylaxis)"
+  - "Before each carfilzomib infusion: IV hydration 250-500 mL NS; dexamethasone 20 mg IV/PO already given as premedication"
+  - "HBV screen + entecavir/tenofovir prophylaxis if HBsAg+ or anti-HBc+ (daratumumab-class: anti-CD38 anti-tumor effect + anti-CD38 suppresses HBV-specific B cells)"
+
+mandatory_supportive_care:
+  - SUP-HBV-PROPHYLAXIS
+  - SUP-VTE-PROPHYLAXIS
+  - SUP-PJP-PROPHYLAXIS
+
+dose_adjustments:
+  - condition: "Carfilzomib-related Grade ≥3 cardiac events (CHF, LVEF decline ≥10% to <50%)"
+    modification: "Withhold carfilzomib; resume at 27 mg/m² after resolution to Grade ≤1; discontinue for recurrent Grade ≥3"
+    rationale: "Carfilzomib cardiotoxicity class effect; ECHO baseline + q-cycle monitoring required"
+    source_refs:
+      - SRC-IKEMA-MOREAU-2021
+  - condition: "Carfilzomib-related Grade ≥3 pulmonary events"
+    modification: "Withhold carfilzomib until resolution; resume at 27 mg/m² if Grade ≤1; discontinue for life-threatening pulmonary events"
+    rationale: "Dyspnea, pulmonary hypertension are class carfilzomib AEs; urgent workup required"
+    source_refs:
+      - SRC-IKEMA-MOREAU-2021
+  - condition: "Grade 3-4 infusion reaction to isatuximab"
+    modification: "Interrupt infusion; manage with corticosteroids + antihistamines; resume at 50% rate if Grade ≤1; discontinue for Grade 4"
+    rationale: "Anti-CD38 class infusion reactions predominantly first-cycle"
+    source_refs:
+      - SRC-NCCN-MM-2025
+  - condition: "Grade ≥3 neutropenia (ANC <1.0)"
+    modification: "Hold until ANC ≥1.0; G-CSF secondary prophylaxis; do not dose-reduce isatuximab"
+    rationale: "Hematologic toxicity increases with CD38 suppression in MM"
+    source_refs:
+      - SRC-IKEMA-MOREAU-2021
+  - condition: "eGFR <15 mL/min or dialysis-dependent"
+    modification: "Carfilzomib not studied below eGFR 15; carfilzomib dose adjustment not required by label but monitor closely; MDT renal discussion"
+    rationale: "Carfilzomib is renally excreted as metabolites; minimal accumulation in severe renal impairment"
+    source_refs: []
+
+ukraine_availability:
+  all_components_registered: false
+  all_components_reimbursed: false
+  notes: >
+    Isatuximab (Sarclisa) not registered in Ukraine. Carfilzomib (Kyprolis)
+    not NSZU-reimbursed for MM. Full regimen requires international referral
+    or named-patient import for both components.
+
+sources:
+  - SRC-IKEMA-MOREAU-2021
+  - SRC-NCCN-MM-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Задишка, набряки ніг, збільшення ваги на 2+ кг за тиждень"
+    action_ua: "Зверніться до лікаря терміново — можлива кардіотоксичність карфілзомібу"
+    urgency: er_today
+    sources:
+      - SRC-IKEMA-MOREAU-2021
+  - trigger_ua: "Лихоманка, озноб під час або після інфузії ісатуксімабу"
+    action_ua: "Негайно повідомте медсестру — реакція на інфузію"
+    urgency: er_now
+    sources:
+      - SRC-NCCN-MM-2025
+  - trigger_ua: "Кровотеча, синці, петехії"
+    action_ua: "Зверніться до лікаря — можлива тромбоцитопенія"
+    urgency: er_today
+    sources:
+      - SRC-IKEMA-MOREAU-2021
+
+last_reviewed: "2026-05-05"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  Isa-Kd regimen (IKEMA; Moreau 2021 Lancet; NCT03275285): isatuximab
+  10 mg/kg IV qw × 4 then q2w + carfilzomib 56 mg/m² (20 mg/m² ramp-up
+  on C1D1-2) + dexamethasone 20 mg per carfilzomib day. mPFS 35.7 vs 19.2 months
+  (HR 0.531; NCCN Cat 1; FDA March 2021). Anti-CD38 PI triplet preferred for
+  lena-refractory patients with adequate LVEF and cardiac function.
+notes_ua: >
+  Режим Іза-Кд (IKEMA; Moreau 2021 Lancet): ісатуксімаб 10 мг/кг IV qw ×4
+  потім q2w + карфілзоміб 56 мг/м² + дексаметазон. mPFS 35.7 vs 19.2 міс
+  (HR 0.531; NCCN Кат 1; FDA березень 2021). Authoring: Workstream FE 2026-05-05.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

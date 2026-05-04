@@ -24,6 +24,8 @@ output_indications:
 - IND-MM-POST-ASCT-LENALIDOMIDE-MAINTENANCE
 - IND-MM-2L-VENETOCLAX-T1114
 - IND-MM-5L-SELINEXOR
+- IND-MM-2L-ISA-KD
+- IND-MM-2L-ISA-PD
 default_indication: IND-MM-2L-DKD
 alternative_indication: IND-MM-2L-DRD
 
@@ -245,12 +247,45 @@ decision_tree:
     - red_flag: RF-MM-TRANSFORMATION-PROGRESSION
   if_true:
     result: IND-MM-2L-DKD
+    notes: >
+      Default R/R MM: DKd (CANDOR; Dimopoulos 2020 NEJM; mPFS 28.6 vs 15.2 mo; HR 0.59; NCCN Cat 1).
+      ALTERNATIVE A (Cat 1): Isa-Kd — isatuximab + carfilzomib + dex
+      (IND-MM-2L-ISA-KD; IKEMA; Moreau 2021 Lancet; mPFS 35.7 vs 19.2 mo; HR 0.531;
+      FDA March 2021) — preferred when carfilzomib backbone desired and prior Kd-naive.
+      ALTERNATIVE B (Cat 1): Isa-Pd — isatuximab + pomalidomide + dex
+      (IND-MM-2L-ISA-PD; ICARIA-MM; Attal 2019 Lancet; mPFS 11.5 vs 6.5 mo; HR 0.596;
+      FDA March 2020) — preferred for ≥2 prior lines including lena + PI; pomalidomide-naive.
+    alternatives:
+      - indication_id: IND-MM-2L-ISA-KD
+        nccn_category: "1"
+        criteria: >
+          R/R MM ≥1 prior line; anti-CD38-naive or ≥12 months from last anti-CD38;
+          LVEF ≥40% (carfilzomib requirement); prior bortezomib but carfilzomib-naive
+          preferred; lenalidomide-refractory or lenalidomide-naive.
+        note: >
+          Isa-Kd (IKEMA; Moreau 2021 Lancet; mPFS 35.7 vs 19.2 months; HR 0.531;
+          NCCN Cat 1; FDA March 31, 2021). Baseline ECHO mandatory. IV isatuximab
+          schedule same as Isa-Pd (qw × 4 then q2w). Direct alternative to DKd —
+          no head-to-head; equivalent Cat 1 status.
+      - indication_id: IND-MM-2L-ISA-PD
+        nccn_category: "1"
+        criteria: >
+          R/R MM ≥2 prior lines including lenalidomide AND a PI; lenalidomide-refractory;
+          pomalidomide-naive; anti-CD38-naive or ≥12 months from last anti-CD38;
+          Pomalyst REMS enrollment feasible; not pregnant.
+        note: >
+          Isa-Pd (ICARIA-MM; Attal/Richardson 2019 Lancet; mPFS 11.5 vs 6.5 months;
+          HR 0.596; NCCN Cat 1; FDA March 2, 2020). Pomalidomide 4 mg d1-21 + isatuximab
+          IV qw × 4 then q2w + dex 40 mg qw. G-CSF secondary prophylaxis for neutropenia
+          ~53% Grade 3-4. VTE prophylaxis + REMS mandatory.
   if_false:
     result: IND-MM-2L-DKD
 
 sources:
 - SRC-NCCN-MM-2025
 - SRC-ESMO-MM-2023
+- SRC-IKEMA-MOREAU-2021
+- SRC-ICARIA-ATTAL-2019
 last_reviewed: '2026-05-04'
 notes: >
   UPDATED 2026-05-04 (Workstream EP): Wired 6 orphaned Tier-2 RR-MM indications —
@@ -293,7 +328,10 @@ notes: >
   Workstream CC (2026-05-04): IND-MM-2L-VENETOCLAX-T1114 wired at step 3.
   Workstream DA (2026-05-04): IND-MM-5L-SELINEXOR + teclistamab access gate.
 
-  OOS / wiring gaps:
-  Isatuximab combinations — not modeled.
-  Linvoseltamab (IND-MM-4L-LINVOSELTAMAB): WIRED 2026-05-04 (Workstream EU) as
-  Cat 1 alternative at step 21 alongside elranatamab (Q2W all-cycle schedule).
+  UPDATED 2026-05-05 (Workstream FE): IND-MM-2L-ISA-KD + IND-MM-2L-ISA-PD
+  authored and wired as Cat 1 alternatives to DKd at step 4.
+  Isa-Kd (IKEMA; Moreau 2021 Lancet; mPFS 35.7 vs 19.2 mo; HR 0.531; FDA March 2021)
+  — carfilzomib backbone, ≥1 prior line, LVEF ≥40%.
+  Isa-Pd (ICARIA-MM; Attal 2019 Lancet; mPFS 11.5 vs 6.5 mo; HR 0.596; FDA March 2020)
+  — pomalidomide backbone, ≥2 prior lines lena+PI, pomalidomide-naive.
+  Gap CLOSED. OOS / wiring gaps: none remaining.

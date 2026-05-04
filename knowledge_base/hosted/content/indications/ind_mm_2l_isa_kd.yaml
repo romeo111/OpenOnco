@@ -1,0 +1,135 @@
+id: IND-MM-2L-ISA-KD
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-MM
+  line_of_therapy: 2
+  stage_requirements:
+    - "Relapsed/refractory multiple myeloma after ≥1 prior systemic line"
+    - "CD38-naive OR ≥12 months from last daratumumab/isatuximab dose (non-anti-CD38-refractory)"
+    - "Lenalidomide-refractory or lenalidomide-exposed patients eligible (IKEMA enrolled ≥1 prior line; lenalidomide-refractory subgroup showed similar PFS HR)"
+    - "Adequate cardiac function: LVEF ≥40% at baseline (carfilzomib class-effect cardiotoxicity)"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded: []
+  demographic_constraints:
+    ecog_max: 2
+
+recommended_regimen: REG-ISA-KD-MM
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: "1"
+
+expected_outcomes:
+  overall_response_rate: "~86.6% ORR (IKEMA; Isa-Kd arm; N=179)"
+  complete_response: "~39.7% ≥CR; ~72.6% VGPR+"
+  progression_free_survival: "Median PFS 35.7 vs 19.2 months (HR 0.531; 95% CI 0.318-0.889; p=0.0008) — IKEMA primary endpoint"
+  overall_survival_5y: "Final OS analysis (Lancet Haematol 2024): OS benefit confirmed (HR ~0.78 at 5-year follow-up)"
+
+hard_contraindications:
+  - CI-HBV-NO-PROPHYLAXIS
+  - CI-CARFILZOMIB-LVEF-LOW
+
+red_flags_triggering_alternative:
+  - RF-MM-RENAL-DYSFUNCTION
+  - RF-MM-HIGH-RISK-CYTOGENETICS
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-LDH
+  - TEST-B2-MICROGLOBULIN
+  - TEST-IMMUNOGLOBULINS
+  - TEST-SPEP-UPEP
+  - TEST-FREE-LIGHT-CHAINS
+  - TEST-FISH-PANEL
+  - TEST-BM-ASPIRATE
+  - TEST-ECHO
+  - TEST-HBV-SEROLOGY
+  - TEST-HCV-ANTIBODY
+  - TEST-HIV-SEROLOGY
+  - TEST-DAT-COOMBS
+desired_tests:
+  - TEST-WHOLE-BODY-MRI
+  - TEST-MRD-FLOW
+
+rationale: >
+  Isatuximab + carfilzomib + dexamethasone (Isa-Kd) is FDA-approved
+  (March 31, 2021) for R/R MM after ≥1 prior line, on the basis of
+  IKEMA (NCT03275285; Moreau 2021 Lancet; N=302): primary endpoint mPFS
+  35.7 vs 19.2 months (HR 0.531; p=0.0008) — a ~16-month PFS advantage
+  over Kd alone. ORR 86.6% vs 82.9%; VGPR+ 72.6% vs 55.1%; ≥CR 39.7%
+  vs 27.6%; MRD-negativity 30% vs 13%. Final OS analysis (Lancet Haematol
+  2024) confirmed OS benefit. NCCN Multiple Myeloma 2025: Category 1
+  preferred for R/R MM ≥1 prior line. Mechanism: isatuximab is an
+  anti-CD38 IgG1κ antibody distinct from daratumumab (different epitope,
+  adds direct apoptosis via Fc-independent mechanism) — combined with
+  carfilzomib (irreversible proteasome inhibitor) and dexamethasone
+  for triple anti-myeloma synergy. Critical: baseline ECHO mandatory
+  (carfilzomib cardiotoxicity; LVEF <40% is relative/absolute
+  contraindication). HBV screen + prophylaxis mandatory (anti-CD38
+  class reactivation risk). Isa-Kd vs DKd: no head-to-head; cross-trial
+  comparison suggests comparable efficacy; agent selection driven by
+  carfilzomib (Isa-Kd) vs bortezomib/thalidomide (DKd) backbone
+  preference and prior exposure history. Ukraine: isatuximab not
+  registered; carfilzomib not NSZU-reimbursed; full international
+  referral or named-patient import required.
+
+rationale_ua: >
+  Іза-Кд FDA-схвалена (31 березня 2021) для R/R ММ після ≥1 попередньої
+  лінії, на підставі IKEMA (NCT03275285; Moreau 2021 Lancet; N=302):
+  mPFS 35.7 vs 19.2 міс (HR 0.531; p=0.0008). ORR 86.6% vs 82.9%;
+  VGPR+ 72.6% vs 55.1%; ≥ПВ 39.7% vs 27.6%; MRD-негативність 30%
+  vs 13%. NCCN ММ 2025: Кат 1 preferred для R/R ММ ≥1 лінії.
+  Механізм: ісатуксімаб — анти-CD38 IgG1κ-антитіло (відмінний
+  епітоп від дарату; додатковий прямий апоптоз) + карфілзоміб
+  (незворотний інгібітор протеасоми) + дексаметазон. КРИТИЧНО:
+  baseline ЕхоКГ обов'язкова (кардіотоксичність карфілзомібу;
+  ФВЛШ <40% — відносна/абсолютна КП). HBV скринінг + профілактика
+  обов'язкові. Українські бар'єри: ісатуксімаб не зареєстрований;
+  карфілзоміб не відшкодовується НСЗУ; міжнародне направлення.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+sources:
+  - source_id: SRC-IKEMA-MOREAU-2021
+    position: supports
+    relevant_quote_paraphrase: "Isatuximab + carfilzomib + dexamethasone (Isa-Kd) mPFS 35.7 vs 19.2 months (HR 0.531) in R/R MM ≥1 prior line; NCCN Cat 1; FDA March 2021"
+  - source_id: SRC-NCCN-MM-2025
+    position: supports
+    relevant_quote_paraphrase: "Isa-Kd is Category 1 preferred for R/R MM ≥1 prior line per IKEMA"
+
+do_not_do:
+  - "НЕ призначати без baseline ЕхоКГ — карфілзоміб кардіотоксичний; ФВЛШ <40% = висока ймовірність відміни; ФВЛШ ≥40% потрібна для початку."
+  - "НЕ призначати без HBV скринінгу та ентекавір/тенофовір профілактики при HBsAg+ або anti-HBc+ — реактивація HBV + анти-CD38 B-клітинна деплеція = ризик гепатиту."
+  - "НЕ застосовувати при значній кардіальній недостатності (NYHA III-IV) — карфілзоміб збільшує ризик CHF, задишки, набряків."
+  - "НЕ застосовувати у вагітних — карфілзоміб та ісатуксімаб протипоказані при вагітності."
+  - "НЕ призначати у пацієнтів з попередньою refractory-резистентністю до anti-CD38 (дарату або іза) без достатнього відмивного терміну ≥12 місяців — перехресна резистентність."
+  - "НЕ починати без IV гідратації перед кожним введенням карфілзомібу — ниркова токсичність та AKI ризик."
+
+known_controversies:
+  - topic: "Isa-Kd vs DKd for R/R MM: no head-to-head trial"
+    positions:
+      - position: "Isa-Kd (IKEMA): mPFS 35.7 mo; HR 0.531 vs Kd; Cat 1; carfilzomib backbone favored for lenalidomide-refractory patients"
+        sources: [SRC-IKEMA-MOREAU-2021, SRC-NCCN-MM-2025]
+      - position: "DKd (CANDOR; Dimopoulos 2020 NEJM): mPFS 28.6 vs 15.2 mo; HR 0.59 vs Kd; Cat 1; both options per NCCN with different Kd comparators"
+        sources: [SRC-NCCN-MM-2025]
+        evidence_note: "Cross-trial comparison only; IKEMA enrolled ≥1 prior line; CANDOR enrolled ≥1 prior line; populations overlapping but not identical. No direct head-to-head RCT."
+    our_default: "Either Isa-Kd or DKd per NCCN Cat 1; MDT decision based on access (isatuximab vs daratumumab SC availability), prior CD38 exposure, and toxicity profile"
+    rationale: "Both Cat 1 anti-CD38+carfilzomib+dex triplets; no head-to-head; clinical equivalence assumed until proven otherwise"
+
+time_critical: false
+last_reviewed: "2026-05-05"
+reviewers: []
+reviewer_signoffs: 0
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Aggressive-track 2L+
+  for R/R MM after ≥1 prior line. Isa-Kd (IKEMA; FDA March 2021; NCCN
+  Cat 1) is a direct Cat 1 alternative to DKd for lena-refractory or
+  CD38-naive patients. No indication files for isatuximab combinations
+  existed in KB before Workstream FE.
+  WIRED 2026-05-05 (Workstream FE): added to ALGO-MM-2L output_indications
+  and wired as Cat 1 alternative to DKd at step 4.
