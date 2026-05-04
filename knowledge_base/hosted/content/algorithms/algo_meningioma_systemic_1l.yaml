@@ -1,0 +1,177 @@
+id: ALGO-MENINGIOMA-SYSTEMIC-1L
+applicable_to_disease: DIS-MENINGIOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select treatment approach for meningioma, routing to systemic therapy only for
+  recurrent or progressive WHO grade II-III meningioma after maximal surgery and
+  radiotherapy. The vast majority of meningiomas are managed surgically and/or with
+  radiation — systemic therapy is reserved for refractory high-grade meningioma.
+  Routes by: (1) WHO grade and initial treatment eligibility, (2) surgical/radiation
+  treatment completion, (3) progressive/recurrent disease assessment, (4) bevacizumab
+  eligibility for systemic therapy.
+  KEY: Bevacizumab (NCCN 2B) is the most evidence-based systemic option for
+  progressive grade II-III meningioma post-surgery + RT. Clinical trial enrollment
+  is the highest priority for eligible patients — no FDA-approved systemic therapy
+  exists for meningioma.
+
+output_indications:
+  - IND-MENINGIOMA-PROGRESSIVE-BEVACIZUMAB
+
+default_indication: IND-MENINGIOMA-PROGRESSIVE-BEVACIZUMAB
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Meningioma diagnosis and WHO grade documentation.
+  # WHO 2021 classification: grade I (benign, ~75%), grade II atypical (~20%),
+  # grade III anaplastic (~2–3%). Grade determines prognosis and systemic therapy need.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Meningioma diagnosis confirmed histologically or by imaging (WHO CNS 2021 criteria)"
+        - condition: "WHO grade documented: grade I (benign) OR grade II (atypical — ≥4 mitoses/10 HPF, brain invasion, specific histological features) OR grade III (anaplastic — ≥20 mitoses/10 HPF or frank malignant histology)"
+    if_true:
+      next_step: 2
+      notes: >
+        Meningioma confirmed and grade documented. Systemic therapy pathway applies only
+        to recurrent/progressive grade II-III.
+        Document: location, surgical accessibility, prior surgery/RT history, molecular
+        profiling results (NF2, AKT1 E17K, SMO, TRAF7, CDKN2A/B — for prognosis and
+        clinical trial eligibility), current corticosteroid requirement (anti-edema).
+        Grade I without surgery: some grade I meningiomas are managed with observation
+        (small, asymptomatic, elderly patient) — imaging surveillance is appropriate.
+    if_false:
+      result: null
+      notes: >
+        Meningioma diagnosis or grade uncertain — complete neuropathological workup:
+        (1) Gadolinium-enhanced MRI brain/spine: essential for diagnosis, location, and
+            extent; RANO-meningioma criteria for response.
+        (2) Surgical biopsy or resection specimen: definitive grade classification requires
+            histology; imaging alone cannot reliably distinguish grade.
+        (3) WHO 2021 integrated diagnosis: requires histology + molecular markers
+            (CDKN2A/B loss upgrades from grade II to molecular grade IV; TERT mutation
+            adverse prognosis; H3K27me3 loss in grade III).
+        Refer to neurosurgery + neuro-oncology MDT.
+
+  # Step 2 — Grade I meningioma: route to surgery/observation (not systemic).
+  # Grade II/III: standard of care is surgery + radiation — systemic reserved for failure.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "WHO grade II or grade III meningioma"
+        - condition: "WHO grade I meningioma with multiple recurrences after repeated surgery and SRS, not amenable to further local treatment"
+    if_true:
+      next_step: 3
+      notes: >
+        Grade II/III meningioma OR multiply-recurrent unresectable grade I — standard
+        multimodal treatment is primary management. Surgery + radiation is the backbone.
+        Proceed to step 3 to assess whether primary local treatment has been completed
+        or is still indicated.
+    if_false:
+      result: null
+      notes: >
+        WHO grade I meningioma — primary management is surgical and/or radiosurgery:
+        - Symptomatic grade I: surgical resection (goal: Simpson grade I-II resection).
+          Adjuvant radiation after incomplete resection (Kaplan-Meier 2021 data).
+        - Asymptomatic small grade I: observation with serial MRI acceptable (especially
+          elderly or poor surgical candidates).
+        - Recurrent resectable grade I: re-resection ± SRS/SRT.
+        Systemic therapy for grade I meningioma is NOT evidence-based.
+        Return to systemic algorithm if multiple local failures render further surgery
+        and radiation infeasible (rare scenario — proceed to step 3 and beyond).
+
+  # Step 3 — Assess prior local treatment completion and progression.
+  # Systemic therapy only after maximum appropriate surgery and radiation have been
+  # completed or are not (further) feasible.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Maximal safe surgical resection has been performed (or surgery not feasible — eloquent location, patient unfit, patient declined)"
+        - condition: "Radiotherapy (SRS/FSRT/IMRT) has been delivered to the meningioma OR re-irradiation is not feasible (exceeded radiation tolerance, proximity to critical structures, or prior RT already at tolerance)"
+        - condition: "Progressive or recurrent disease documented on gadolinium-enhanced MRI (measurable disease per RANO-meningioma criteria: ≥10% increase in perpendicular diameter product)"
+    if_true:
+      next_step: 4
+      notes: >
+        Progressive grade II-III meningioma after maximal surgery and radiation —
+        systemic therapy indicated. Document: extent of disease, corticosteroid
+        requirement, most recent MRI (baseline for response assessment), and
+        molecular subtype for clinical trial eligibility.
+    if_false:
+      result: null
+      notes: >
+        Not yet eligible for systemic therapy — primary local treatments not yet
+        exhausted. Recommended actions:
+        (1) Surgery first: if resectable residual or recurrent tumor → neurosurgery
+            consultation for repeat resection (Simpson grade I-II is the goal).
+        (2) Radiation: SRS (Gamma Knife, CyberKnife) for small (<3 cm) residual/
+            recurrent meningioma; fractionated SRT for larger volumes or prior SRS.
+            Re-irradiation may be feasible at an interval ≥6 months from prior RT.
+        (3) Clinical trial enrollment at time of first recurrence — investigational
+            agents (AKT inhibitors, SMO inhibitors, FAK inhibitors) may be available.
+        (4) If observation: serial MRI every 3–4 months for grade II-III; corticosteroid
+            management for symptomatic edema.
+        Return to this algorithm when local options are truly exhausted.
+
+  # Step 4 — Systemic therapy eligibility gate for bevacizumab.
+  # Bevacizumab requires controlled BP, no recent surgery, no active ICH.
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-2"
+        - condition: "Blood pressure ≤150/100 mmHg at baseline (controlled hypertension acceptable; uncontrolled not eligible)"
+        - condition: "No active intracranial hemorrhage (MRI-confirmed no acute blood products in tumor)"
+        - condition: "At least 28 days since last major surgery (or 28 days since craniotomy)"
+        - condition: "Not pregnant"
+    if_true:
+      result: IND-MENINGIOMA-PROGRESSIVE-BEVACIZUMAB
+      notes: >
+        Bevacizumab eligible: 15 mg/kg IV Q21D.
+        Phase 2 evidence (Lou 2012; Kaley 2015): 6-month PFS rate ~40-44% (grade II),
+        ~20-26% (grade III). NCCN CNS Category 2B; no FDA approval for meningioma.
+        Anti-edema effect may allow dexamethasone taper — secondary clinical benefit.
+        Molecular profiling: document AKT1 E17K, SMO, NF2, CDKN2A/B status for
+        future trial eligibility.
+        Baseline MRI with gadolinium REQUIRED before starting — establishes reference
+        for RANO-meningioma response assessment.
+        CLINICAL TRIAL is preferred over off-label bevacizumab if available.
+        Ukraine: bevacizumab biosimilars accessible off-label for meningioma.
+    if_false:
+      result: null
+      notes: >
+        Bevacizumab not immediately eligible — evaluate specific barrier:
+        - Uncontrolled hypertension: optimize antihypertensives; recheck BP; restart
+          algorithm when BP ≤150/100 mmHg
+        - Recent surgery (<28 days): delay until wound healing complete (28–42 days
+          post-craniotomy)
+        - Active ICH: hold systemic therapy; neurosurgical evaluation; reassess after
+          hemorrhage stable on MRI (typically ≥4–6 weeks)
+        - ECOG PS ≥3: consider hydroxyurea (less toxic; oral; modest activity) or
+          systemic corticosteroids alone for palliative management of edema
+        - ECOG PS ≥4: supportive care only (corticosteroids for edema, AEDs for
+          seizures); palliative approach
+        Alternatives to bevacizumab (all Category 2B, Phase 2 evidence only):
+        - Everolimus ± octreotide (mTOR inhibitor; Graillon 2019; NCCN 2B)
+        - Hydroxyurea (modest activity; oral; tolerable in poor PS)
+        Clinical trial enrollment: ALWAYS preferred over off-label systemic therapy
+        for meningioma — no approved drug exists; trials may offer targeted agents
+        (capivasertib for AKT1 E17K; vismodegib for SMO-mutant; etc.)
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-MENINGIOMA-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  DIS-MENINGIOMA algorithm gap CLOSED 2026-05-04 (Workstream DN).
+  Algorithm designed to route most meningiomas to SURGERY + RADIATION (primary
+  treatment), reserving systemic therapy for truly refractory grade II-III disease.
+  This is clinically appropriate — systemic therapy for meningioma is a last resort
+  with modest evidence; the algorithm captures this clinical reality.
+  Bevacizumab is the KB default indication based on Phase 2 data and NCCN 2B
+  recommendation; clinical trial is the first choice for any eligible patient.
+  Molecular profiling important: AKT1 E17K (~8%), SMO-mutant (~5%) represent
+  molecularly defined subsets with potential targeted therapy in trials.
+  CDKN2A/B homozygous deletion and TERT mutation are adverse prognostic markers
+  per WHO 2021 and should guide aggressive treatment and trial enrollment.
+  Post-HSCT context: DIS-MENINGIOMA after radiation for prior cancer (radiation-
+  induced meningioma) — same algorithm applies; note shorter latency and often
+  higher grade in radiation-induced cases.

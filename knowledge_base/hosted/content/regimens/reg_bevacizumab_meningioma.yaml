@@ -1,0 +1,91 @@
+id: REG-BEVACIZUMAB-MENINGIOMA
+disease_context: DIS-MENINGIOMA
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "targeted_therapy_iv"
+
+agents:
+  - drug_id: DRUG-BEVACIZUMAB
+    dose: "15 mg/kg IV every 21 days (Q3W)"
+    route: IV
+    schedule: "Once every 21 days until disease progression or unacceptable toxicity"
+    administration_notes: >
+      Administer over 90 minutes for first infusion; if well tolerated, reduce to
+      60 minutes for second infusion; if still well tolerated, reduce to 30 minutes
+      for subsequent infusions.
+      Pre-medications: anti-emetics optional (low emetogenicity); antihistamine
+      pre-medication recommended if prior infusion reactions.
+      Do NOT administer within 28 days of major surgery (wound healing impairment risk).
+      Wait ≥4 weeks after neurosurgery before starting bevacizumab — CNS surgical wound
+      healing and intracranial hemorrhage risk. Wait ≥6 weeks if cranial surgery involved
+      large resection with dural repair.
+      Blood pressure control BEFORE each infusion: BP must be ≤150/100 mmHg.
+      Do NOT administer if active intracranial bleeding or recent (<6 months) major
+      thrombotic or hemorrhagic event.
+    dose_modifications:
+      - trigger: "Hypertension Grade 3 (>160/100 mmHg uncontrolled)"
+        action: "Hold bevacizumab; initiate antihypertensive therapy; restart when BP <150/100 mmHg on antihypertensives"
+      - trigger: "Hypertension Grade 4 (hypertensive crisis) or hypertensive encephalopathy"
+        action: "DISCONTINUE bevacizumab permanently"
+      - trigger: "Proteinuria ≥2+ on dipstick: confirm with 24-hour urine protein"
+        action: "If 24-hour protein ≥2g: hold bevacizumab until <2g/24h; if ≥3.5g (nephrotic range) → discontinue"
+      - trigger: "Grade ≥3 arterial thromboembolic event (MI, stroke)"
+        action: "DISCONTINUE bevacizumab permanently"
+      - trigger: "GI perforation or fistula (any grade)"
+        action: "DISCONTINUE bevacizumab permanently"
+      - trigger: "Wound dehiscence Grade ≥3"
+        action: "DISCONTINUE bevacizumab permanently"
+      - trigger: "Intracranial hemorrhage (any grade in meningioma context)"
+        action: "DISCONTINUE bevacizumab permanently; urgent neurosurgical consultation"
+    dose_reduction_levels:
+      - "15 mg/kg Q3W — standard dose (meningioma Phase 2 dose)"
+      - "10 mg/kg Q3W — first reduction (persistent hypertension or proteinuria)"
+      - "Discontinue if unable to tolerate 10 mg/kg"
+
+when_to_use: >
+  Recurrent or progressive WHO grade II (atypical) or grade III (anaplastic) meningioma
+  that has progressed after maximal surgical resection and radiotherapy (SRS or
+  fractionated RT). Bevacizumab is used off-label for meningioma based on Phase 2
+  data showing anti-tumor activity and anti-edema effect.
+  NCCN CNS (Category 2B): bevacizumab for recurrent/progressive grade II-III
+  meningioma after failure of surgery and RT.
+  Note: No FDA approval for meningioma; evidence is Phase 2 (no Phase 3 RCT).
+  Clinical trial enrollment should be the first option for eligible patients.
+
+contraindications_relative:
+  - "Active intracranial hemorrhage or uncontrolled coagulopathy (increased ICH risk)"
+  - "Uncontrolled hypertension (must control BP before starting; BP ≤150/100 mmHg required)"
+  - "Recent (within 28 days) major neurosurgery — wound healing impairment"
+  - "Prior CNS hemorrhage or patients on therapeutic anticoagulation with high CNS hemorrhage risk"
+  - "Severe proteinuria (nephrotic range ≥3.5g/24h at baseline)"
+  - "WHO grade I meningioma — not evidence-based; surgery and observation preferred"
+  - "Pregnancy — anti-VEGF teratogenic/embryotoxic"
+
+monitoring:
+  - "Blood pressure: before each infusion + weekly for first 2 cycles, then q2 weeks"
+  - "Urinalysis dipstick protein: before each infusion; if ≥2+, proceed to 24-hour urine protein"
+  - "CBC + LFT + coagulation: baseline + every 6 weeks"
+  - "MRI brain with contrast: baseline + every 8–12 weeks (RANO-meningioma response criteria)"
+  - "Neurological exam: each visit (baseline neurology assessment including current corticosteroid use)"
+  - "Corticosteroid dose tracking: bevacizumab may allow steroid taper (anti-edema effect)"
+
+sources:
+  - SRC-NCCN-CNS-2025
+  - SRC-EANO-MENINGIOMA-2024
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DN).
+  Bevacizumab 15 mg/kg Q3W: dose extrapolated from GBM and ovarian cancer Phase 2
+  experience; used consistently in meningioma Phase 2 trials.
+  Anti-edema effect is clinically significant — may allow reduction of dexamethasone dose
+  (corticosteroid dose reduction is a secondary benefit in patients with steroid side effects).
+  Intracranial hemorrhage risk: meningiomas are intrinsically vascular (grade II-III
+  especially); monitor closely. Prior embolization or surgery may confound ICH risk.
+  RANO meningioma criteria (Huang 2019) are used for response assessment — CT alone
+  is insufficient; gadolinium-enhanced MRI required.
