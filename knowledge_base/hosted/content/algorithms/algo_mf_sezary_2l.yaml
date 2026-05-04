@@ -18,11 +18,36 @@ output_indications:
   - IND-MF-ADVANCED-2L-METHOTREXATE
   - IND-MF-ADVANCED-2L-ROMIDEPSIN
   - IND-MF-ADVANCED-2L-VORINOSTAT
+  - IND-MF-TRANSFORMED-PRALATREXATE
 
 default_indication: IND-MF-ADVANCED-2L-BEXAROTENE
 alternative_indication: IND-MF-ADVANCED-2L-ROMIDEPSIN
 
 decision_tree:
+  # Step 0 — large-cell transformation (LCT) gate: pralatrexate for CD30-neg LCT-MF.
+  # MF with confirmed LCT (biopsy ≥25% large cells) behaves like aggressive T-cell
+  # lymphoma — standard CTCL skin-directed and retinoid/MTX approaches are ineffective.
+  # Pralatrexate (antifolate; PROPEL ORR ~29%; NCCN Cat 2A) endorsed for transformed CTCL.
+  # CD30+ LCT (~30-50% of cases): brentuximab vedotin preferred — routes via step 2 (BV gate).
+  # Pralatrexate-inaccessible LCT: MDT + CHOP-based / gemcitabine outside KB scope.
+  - step: 0
+    evaluate:
+      all_of:
+        - condition: "Biopsy-confirmed large-cell transformation (LCT; ≥25% large cells on skin or nodal biopsy)"
+        - condition: "CD30-negative on transformation biopsy (IHC <10% large cells) OR brentuximab vedotin inaccessible/contraindicated"
+        - condition: "Pralatrexate accessible (named-patient import from US feasible; MDT + pharmacy confirmed)"
+    if_true:
+      result: IND-MF-TRANSFORMED-PRALATREXATE
+      notes: >
+        Biopsy-confirmed LCT-MF + CD30-negative (or BV-inaccessible) + pralatrexate accessible:
+        pralatrexate 30 mg/m² IV weekly ×6 of 7-week cycle (REG-PRALATREXATE-PTCL; PROPEL
+        O'Connor 2011 JCO; ORR ~29% r/r CTCL/PTCL; NCCN Cat 2A). Mandatory folate 1 mg PO
+        daily (start ≥10 days before first dose) + B12 1 mg IM q8-10w. Bridge to alloSCT
+        for fit CR/PR responders. Ukraine: not registered; CHOP/gemcitabine UA fallback.
+    if_false:
+      next_step: 1
+    notes: "Step 0 added 2026-05-04 (Workstream CZ): LCT-MF pralatrexate gate. Gap (1) CLOSED. CD30+ LCT → falls to step 2 (BV gate); pralatrexate-inaccessible LCT → MDT/CHOP/gemcitabine outside KB scope."
+
   # Step 1 — in CR/PR to induction → maintenance
   - step: 1
     evaluate:
@@ -151,5 +176,11 @@ notes: >
   → romidepsin IV; (51) romidepsin inaccessible + vorinostat accessible + QTcF≤480
   → vorinostat PO; else → bexarotene (HDAC CI or both HDACi inaccessible).
   Reuses 1L MOGA/BV indications when axes still naive at 2L relapse.
-  OOS / wiring gaps: (1) Pralatrexate for transformed MF (PROPEL) — not modeled.
+  UPDATED 2026-05-04 (Workstream CZ): IND-MF-TRANSFORMED-PRALATREXATE authored and
+  wired at step 0 (LCT gate: biopsy-confirmed large-cell transformation + CD30-neg +
+  pralatrexate accessible → pralatrexate 30 mg/m² IV ×6 of 7-week cycle; PROPEL
+  O'Connor 2011 JCO; NCCN Cat 2A). DRUG-PRALATREXATE authored (Workstream CY).
+  Gap (1) CLOSED.
+
+  OOS / wiring gaps: gap (1) CLOSED (see above).
   (2) ECP (extracorporeal photopheresis) for Sézary — not in KB.
