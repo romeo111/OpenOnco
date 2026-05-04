@@ -1,0 +1,152 @@
+id: ALGO-STS-ADVANCED-1L
+applicable_to_disease: DIS-SOFT-TISSUE-SARCOMA
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select 1L systemic therapy for advanced or metastatic soft-tissue sarcoma (STS).
+  Routes by: (1) ECOG PS eligibility, (2) renal function for ifosfamide eligibility,
+  (3) treatment intent — response-rate priority (neoadjuvant or rapidly progressive)
+  vs tolerability priority (palliative).
+  Default: doxorubicin monotherapy (EORTC 62012 — no OS benefit with AI combination
+  despite higher ORR; AI reserved for response-critical situations).
+  KEY: MDT at a specialized sarcoma center is strongly recommended before starting
+  systemic therapy — histological subtype determines optimal regimen.
+
+output_indications:
+  - IND-STS-ADVANCED-1L-DOXORUBICIN
+  - IND-STS-ADVANCED-1L-AI
+
+default_indication: IND-STS-ADVANCED-1L-DOXORUBICIN
+alternative_indication: IND-STS-ADVANCED-1L-AI
+
+decision_tree:
+  # Step 1 — Histological subtype exclusion check.
+  # Several "sarcoma" diagnoses have completely different treatment algorithms.
+  # GIST, bone sarcomas, Ewing, rhabdomyosarcoma must be excluded first.
+  - step: 1
+    evaluate:
+      all_of:
+        - condition: "Soft tissue sarcoma confirmed by pathology (histology + IHC)"
+        - condition: "NOT GIST (KIT/PDGFRA — use imatinib algorithm)"
+        - condition: "NOT Ewing sarcoma (EWSR1 fusion — use VDC-IE algorithm)"
+        - condition: "NOT rhabdomyosarcoma (pediatric protocols)"
+        - condition: "NOT bone sarcoma / chondrosarcoma (separate disease entity)"
+    if_true:
+      next_step: 2
+      notes: "Adult STS confirmed — proceed to treatment intent + PS assessment."
+    if_false:
+      result: null
+      notes: >
+        Refer to disease-specific algorithm:
+        - GIST → imatinib (DIS-GIST algorithm)
+        - Ewing sarcoma → VDC-IE
+        - Rhabdomyosarcoma → pediatric oncology
+        - Chondrosarcoma → DIS-CHONDROSARCOMA algorithm (separate entity)
+        - Osteosarcoma / bone sarcomas → DIS-OSTEOSARCOMA algorithm (not yet authored)
+        MDT at specialized sarcoma center required for all histologically
+        complex sarcomas before any systemic therapy initiation.
+
+  # Step 2 — ECOG PS gate.
+  # AI combination requires ECOG 0-1; doxorubicin mono can be considered ECOG 0-2.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "ECOG PS 0-1"
+        - condition: "ECOG PS 2 (doxorubicin mono consideration only)"
+    if_true:
+      next_step: 3
+    if_false:
+      result: null
+      notes: >
+        ECOG ≥3: systemic chemotherapy not indicated — too toxic without meaningful
+        benefit. Best supportive care. Palliative RT for symptomatic bone/soft tissue
+        metastases. Referral to palliative care for symptom management.
+        Exception: short-course palliative doxorubicin 50 mg/m² × 1-2 cycles can be
+        considered for selected ECOG 3 patients with rapidly progressive disease
+        threatening vital organ function — MDT decision only.
+
+  # Step 3 — Treatment intent: response rate vs tolerability priority.
+  # This is the key fork between AI combination and doxorubicin monotherapy.
+  # EORTC 62012: AI achieves higher ORR (26% vs 14%) and PFS but NOT OS.
+  - step: 3
+    evaluate:
+      any_of:
+        - condition: "Neoadjuvant intent (tumor shrinkage goal for borderline resectable disease)"
+        - condition: "Rapidly progressive disease with visceral threat requiring fast response"
+        - condition: "Synovial sarcoma histology (ifosfamide-sensitive; AI preferred)"
+        - condition: "Young ECOG 0-1 patient requesting most aggressive curative-intent approach"
+    if_true:
+      next_step: 4
+      notes: "Response rate priority: evaluate for AI combination (dox+ifosfamide)."
+    if_false:
+      result: IND-STS-ADVANCED-1L-DOXORUBICIN
+      notes: >
+        Standard palliative intent: doxorubicin 75 mg/m² q21d × up to 6 cycles.
+        ECOG 0-2; baseline LVEF ≥50% required.
+        EORTC 62012: same OS as AI (12.8 vs 14.3 months, p=0.076) with
+        significantly lower toxicity (Grade 3/4 neutropenia 36% vs 71%).
+        G-CSF primary prophylaxis with pegfilgrastim day 2.
+        MUGA/Echo baseline + every 2-3 cycles.
+        For ECOG 2: reduced-dose doxorubicin 60 mg/m² may be considered
+        at MDT discretion; close monitoring for tolerability.
+
+  # Step 4 — Renal function eligibility for ifosfamide.
+  # Ifosfamide requires CrCl ≥50 mL/min (renal clearance + nephrotoxicity).
+  - step: 4
+    evaluate:
+      all_of:
+        - condition: "ECOG PS 0-1"
+        - condition: "CrCl ≥50 mL/min"
+        - condition: "No prior Grade ≥3 ifosfamide encephalopathy or hemorrhagic cystitis"
+    if_true:
+      result: IND-STS-ADVANCED-1L-AI
+      notes: >
+        AI combination: doxorubicin 75 mg/m² d1 + ifosfamide 10 g/m² d1-4 (2.5 g/m²/d)
+        + mesna (MANDATORY) q21d × 4-6 cycles.
+        EORTC 62012: ORR 26% vs 14% (dox mono); PFS 7.4 vs 4.6 months.
+        G-CSF MANDATORY (pegfilgrastim day 5 or 6 — after 4-day ifosfamide course).
+        MUGA/Echo baseline; CrCl + urinalysis before each cycle.
+        Ifosfamide encephalopathy monitoring (days 1-5): methylene blue if Grade ≥2.
+        If response insufficient after 2-3 cycles: reassess; consider switching
+        to alternative 2L agents (gemcitabine+docetaxel, trabectedin, pazopanib).
+    if_false:
+      result: IND-STS-ADVANCED-1L-DOXORUBICIN
+      notes: >
+        Ifosfamide contraindicated (CrCl <50 mL/min, prior ifosfamide toxicity,
+        or ECOG 2): use doxorubicin monotherapy even in response-critical setting.
+        Doxorubicin 75 mg/m² monotherapy retains ~14% ORR and median OS ~13 months.
+
+sources:
+  - SRC-EORTC62012-JUDSON-2014
+  - SRC-NCCN-SARCOMA
+  - SRC-ESMO-SARCOMA-2024
+
+last_reviewed: "2026-05-04"
+notes: >
+  HISTOLOGY-SPECIFIC CONSIDERATIONS (MDT discussion mandatory):
+
+  Liposarcoma (WD/DD): CDK4/MDM2 amplification (~100%); doxorubicin active;
+    2L trabectedin (YONDELIS) particularly active; CDK4 inhibitors in trials.
+
+  Liposarcoma (myxoid/round cell): FUS-CHOP/EWSR1-CHOP fusion; trabectedin
+    highly active (2L+); doxorubicin as 1L.
+
+  Leiomyosarcoma: gemcitabine+docetaxel has specific activity (Maki 2007);
+    often preferred 1L or 2L for uterine/retroperitoneal LMS.
+
+  Synovial sarcoma: ifosfamide-sensitive; AI preferred over dox alone; SYT-SSX
+    fusion diagnostic; NY-ESO-1+ → cell therapy trials.
+
+  Angiosarcoma: paclitaxel 80 mg/m² weekly shows specific activity; anti-VEGFR
+    drugs (bevacizumab, sorafenib) also used.
+
+  Alveolar soft part sarcoma (ASPS): responds poorly to chemotherapy;
+    anti-VEGFR agents (sunitinib, cediranib, axitinib) preferred.
+
+  Solitary fibrous tumor (SFT): temozolomide+bevacizumab (Stacchiotti 2016);
+    distinct from other STS.
+
+  GAPS to author:
+  - IND-STS-2L-GEMCITABINE-DOCETAXEL (LMS-specific)
+  - IND-STS-2L-TRABECTEDIN (liposarcoma/LMS)
+  - IND-STS-2L-PAZOPANIB (non-adipocytic STS)
+  - IND-STS-2L-PEMBROLIZUMAB (UPS: TMB-H/MSI-H)

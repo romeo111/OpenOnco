@@ -1,0 +1,71 @@
+id: REG-DOXORUBICIN-STS
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 1
+plan_track: standard
+
+agents:
+  - drug_id: DRG-DOXORUBICIN
+    dose: "75 mg/m² IV over 15–60 min (or 25 mg/m²/d × 3d continuous infusion)"
+    route: IV
+    schedule: "Day 1 of each 21-day cycle"
+    cumulative_dose_limit: "450–500 mg/m² lifetime cumulative dose — irreversible cardiomyopathy risk above this limit; reduced to 400 mg/m² if prior chest irradiation"
+    dose_modifications:
+      - trigger: "LVEF decline >10% from baseline to below 50%"
+        action: "Permanently discontinue doxorubicin; cardiology referral"
+      - trigger: "Grade ≥3 mucositis or stomatitis"
+        action: "Reduce to 60 mg/m²; consider liposomal doxorubicin if repeated"
+      - trigger: "Total bilirubin 1.2-3.0 mg/dL"
+        action: "Reduce dose 50% (doxorubicin is hepatically cleared)"
+      - trigger: "Total bilirubin >3.0 mg/dL"
+        action: "Reduce dose 75% or hold; hepatology referral"
+      - trigger: "ANC <1500 or platelets <75K on day 1"
+        action: "Delay until ANC ≥1500 + platelets ≥100K"
+
+premedication:
+  - "G-CSF primary prophylaxis: pegfilgrastim day 2 (or filgrastim d2-10) — recommended at 75 mg/m² dosing"
+  - "Antiemetics: moderately-to-highly emetogenic protocol (5-HT3 + dexamethasone)"
+  - "Ensure IV access with confirmed patency — doxorubicin is a vesicant (extravasation → tissue necrosis)"
+
+cycle_length_days: 21
+total_planned_cycles: "6 cycles (or until progression, cumulative dose limit, or unacceptable toxicity)"
+
+monitoring:
+  - "MUGA scan or echocardiogram: baseline (LVEF must be ≥50%); repeat every 2-3 cycles and at completion"
+  - "CBC with differential: day 1 each cycle; nadir CBC day 10-14"
+  - "LFTs + bilirubin: day 1 each cycle — hepatic clearance dose adjustment"
+  - "CT CAP: after 2-3 cycles (interim response) and at completion"
+  - "Cardiac symptoms: dyspnea, palpitations, edema — prompt cardiac evaluation"
+  - "Extravasation protocol: post-infusion site assessment; dexrazoxane for confirmed extravasation"
+
+key_toxicities:
+  - toxicity: "Cardiomyopathy (doxorubicin)"
+    grade_3_4_incidence: "~5% at standard dose; risk increases above 400-500 mg/m² cumulative"
+    management: "LVEF monitoring q2-3 cycles; dexrazoxane cardioprotection in selected patients; stop if LVEF <50%"
+  - toxicity: "Myelosuppression (neutropenia)"
+    grade_3_4_incidence: "~36% (EORTC 62012)"
+    management: "G-CSF primary prophylaxis; delay if ANC <1500 on day 1; febrile neutropenia protocol"
+  - toxicity: "Mucositis/stomatitis"
+    grade_3_4_incidence: "~10-15%"
+    management: "Good oral hygiene; dose reduction if Grade ≥3"
+  - toxicity: "Nausea/vomiting"
+    grade_3_4_incidence: "~10-15%"
+    management: "Triple antiemetic regimen; lorazepam for anticipatory nausea"
+  - toxicity: "Alopecia"
+    grade_3_4_incidence: "~90% (expected)"
+    management: "Scalp cooling (partial protection); counsel patient"
+  - toxicity: "Extravasation"
+    grade_3_4_incidence: "<5% (preventable with careful IV access)"
+    management: "Immediate dexrazoxane 1000 mg/m² IV within 6h; do NOT flush; cold compresses contraindicated"
+
+watchpoints_ua:
+  - "УВАГА: Доксорубіцин — кардіотоксичність залежить від кумулятивної дози; MUGA/ЕхоКГ базово та кожні 2-3 цикли; НІКОЛИ не перевищувати 500 мг/м² протягом усього лікування"
+  - "УВАГА: Доксорубіцин — ВЕЗИКАНТ (руйнує тканини при паравенозному введенні); підтвердьте прохідність IV доступу перед кожним введенням; при екстравазації — негайно дексразоксан"
+  - "УВАГА: Нейтропенія — надір 10-14 день; первинна профілактика G-КСФ (пегфілграстим день 2) обов'язкова при 75 мг/м²"
+  - "УВАГА: Дозова корекція при білірубіні > норми — доксорубіцин метаболізується в печінці; при білірубіні 1.2-3.0 мг/дл — 50% дози; >3.0 мг/дл — 75% зниження або утримання"
+  - "УВАГА: Гостра кардіотоксичність рідкісна; хронічна залежить від кумулятивної дози; пацієнтів з попереднім опроміненням середостіння знизити поріг до 400 мг/м²"
+  - "УВАГА: Оцінка відповіді після 2-3 циклів (КТ); прогресування або відсутність відповіді → перехід на іншу лінію (ІФО-вмісні схеми, гемцитабін+доцетаксел тощо)"
+  - "УВАГА: Стоматит/мукозит — контроль гігієни ротової порожнини; при Grade ≥3 — знизити дозу до 60 мг/м²"
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
