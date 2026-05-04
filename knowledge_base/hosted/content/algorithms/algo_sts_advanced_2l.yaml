@@ -16,6 +16,7 @@ output_indications:
   - IND-STS-ADVANCED-2L-PAZOPANIB
   - IND-STS-ADVANCED-2L-TRABECTEDIN
   - IND-STS-ADVANCED-2L-ERIBULIN
+  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE
 
 default_indication: IND-STS-ADVANCED-2L-GEMDOC
 alternative_indication: IND-STS-ADVANCED-2L-PAZOPANIB
@@ -89,7 +90,33 @@ decision_tree:
         GemDoc has limited evidence in liposarcoma vs LMS (SARC002 LMS-preferential).
         Ukraine: eribulin (Halaven, Eisai) check NSZU access; trabectedin = named-patient import.
     if_false:
+      next_step: 41
+
+  # Step 41 — Synovial sarcoma + ifosfamide-naive gate.
+  # Synovial sarcoma is particularly ifosfamide-sensitive (ORR ~25-40% with HD-IFO
+  # vs ~16% GemDoc in SARC002 ANGIOSARCOMA-rich cohort). If patient received
+  # doxorubicin monotherapy in 1L (without ifosfamide) and has SS histology:
+  # HD-ifosfamide is preferred over GemDoc for synovial sarcoma.
+  # CrCl gate: ifosfamide contraindicated at CrCl < 30 mL/min → fall through to step 5.
+  - step: 41
+    evaluate:
+      all_of:
+        - condition: "STS subtype = synovial sarcoma (SS18-SSX fusion or histological diagnosis)"
+        - condition: "Prior 1L was doxorubicin monotherapy (no prior ifosfamide exposure)"
+        - condition: "CrCl ≥ 30 mL/min"
+    if_true:
+      result: IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE
+      notes: >
+        Synovial sarcoma + ifosfamide-naive 1L: HD-ifosfamide preferred 2L
+        (IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE; REG-IFOSFAMIDE-HDDOSE-STS;
+        NCCN STS 2025 Cat 2A; ORR ~25-40% in SS — highest of any STS subtype).
+        GemDoc (IND-STS-ADVANCED-2L-GEMDOC) is an acceptable alternative
+        (SARC002; NCCN Cat 2A; ORR ~16% unselected STS; MDT decision).
+        Mesna + aggressive hydration mandatory. Neurological monitoring daily
+        (ifosfamide encephalopathy risk ~20% at HD dosing).
+    if_false:
       next_step: 5
+    notes: "Partially wired — 1L ifosfamide-naive status and CrCl kept as MDT-evaluated text (no RF available for prior-ifosfamide status or synovial sarcoma subtype at this level). Falls through to step 5 (GemDoc/pazopanib) if not synovial sarcoma or if ifosfamide contraindicated."
 
   # Step 5 — Other non-adipocytic STS: chemotherapy tolerance assessment.
   # Non-LMS, non-UPS, non-liposarcoma STS (synovial sarcoma, angiosarcoma,
@@ -136,9 +163,7 @@ notes: >
   AUTHORED 2026-05-04:
   - IND-STS-ADVANCED-2L-TRABECTEDIN: trabectedin LPS/LMS (ET-743-SAR-3007; PFS HR 0.55; NCCN Cat 1)
   - IND-STS-ADVANCED-2L-ERIBULIN: eribulin for liposarcoma (ERIBULIN-312 LPS OS HR 0.51; NCCN Cat 1)
-
-  REMAINING GAPS:
-  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE: high-dose ifosfamide 2L (if not used in 1L) not yet authored
+  - IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE: wired at new step 41 for synovial sarcoma + ifosfamide-naive 1L (NCCN Cat 2A; ORR ~25-40% in SS)
 
   Subtype nuances (not captured in algorithm):
   - Angiosarcoma: paclitaxel or gem preferred (angiosarcoma is taxane-sensitive)

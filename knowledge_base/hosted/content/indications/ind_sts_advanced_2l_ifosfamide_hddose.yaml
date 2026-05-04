@@ -1,0 +1,124 @@
+id: IND-STS-ADVANCED-2L-IFOSFAMIDE-HDDOSE
+plan_track: aggressive
+
+applicable_to:
+  disease_id: DIS-SOFT-TISSUE-SARCOMA
+  line_of_therapy: 2
+  stage_requirements:
+    - "Advanced/metastatic soft-tissue sarcoma (non-GIST, non-Ewing, non-RMS) after anthracycline-based 1L"
+    - "Prior 1L was doxorubicin monotherapy (NOT AI combination — if prior ifosfamide in 1L, this indication does NOT apply)"
+    - "ECOG PS 0-2"
+    - "CrCl ≥30 mL/min (ifosfamide nephrotoxicity risk; preferred ≥50 mL/min for standard dosing)"
+    - "No prior Grade ≥2 ifosfamide encephalopathy"
+  biomarker_requirements_required: []
+  biomarker_requirements_excluded:
+    - "Prior ifosfamide exposure (any line) — cross-resistance; use GemDoc or pazopanib instead"
+    - "CrCl < 30 mL/min — absolute contraindication (nephrotoxicity)"
+    - "Liposarcoma histology — eribulin or trabectedin preferred (ERIBULIN-312; ET-743-SAR-3007)"
+  demographic_constraints:
+    ecog_max: 2
+    notes: "ECOG 3 is a relative contraindication for HD ifosfamide due to aplasia-associated mortality risk."
+
+recommended_regimen: REG-IFOSFAMIDE-HDDOSE-STS
+concurrent_therapy: []
+followed_by: []
+
+evidence_level: low_moderate
+strength_of_recommendation: conditional
+nccn_category: "2A"
+
+expected_outcomes:
+  orr: "~15-25% (unselected advanced STS; synovial sarcoma subgroup ORR 25-40%)"
+  dcr: "~40-50% (disease control rate including stable disease)"
+  median_pfs_months: "~3-4 (historical r/r STS data)"
+  notes: >
+    HD-ifosfamide (10-14 g/m²/cycle) evidence is primarily from single-arm phase II
+    studies and retrospective series in r/r STS. No phase 3 RCT vs GemDoc or pazopanib.
+    Subtype-specific data:
+    - Synovial sarcoma: ifosfamide-sensitive; ORR ~25-40% (Gronchi series; historical)
+    - Uterine LMS: limited data; ifosfamide ORR ~17% (NCCN lists as 2A)
+    - Other non-adipocytic STS: ORR ~15-20% (unselected)
+    - Liposarcoma: NOT indicated (use eribulin/trabectedin)
+    NCCN STS 2025 Category 2A. Not FDA-approved as isolated 2L agent (FDA-approved
+    for STS in combination as part of 1L AI combination, not as 2L monotherapy).
+
+hard_contraindications:
+  - "CrCl < 30 mL/min (ifosfamide absolute renal contraindication)"
+  - "Prior ifosfamide exposure (any line) — no clinical benefit, potential added toxicity"
+  - "Active macroscopic hematuria (hemorrhagic cystitis from prior therapy)"
+  - "ECOG PS ≥4 (ECOG engine hard gate)"
+  - "Liposarcoma histology — different preferred agents (eribulin/trabectedin)"
+  - "Severe hepatic impairment (Child-Pugh C) — ifosfamide hepatic metabolism"
+
+red_flags_triggering_alternative:
+  - condition: "Prior ifosfamide in 1L (AI combination) → IND-STS-ADVANCED-2L-GEMDOC or IND-STS-ADVANCED-2L-PAZOPANIB (no cross-resistance)"
+  - condition: "Liposarcoma → IND-STS-ADVANCED-2L-ERIBULIN preferred (ERIBULIN-312 LPS OS HR 0.51; NCCN Cat 1)"
+  - condition: "CrCl < 30 mL/min → IND-STS-ADVANCED-2L-PAZOPANIB (not renally excreted; PALETTE Cat 1)"
+  - condition: "Grade ≥2 peripheral neuropathy → IND-STS-ADVANCED-2L-PAZOPANIB (docetaxel/gemcitabine also neurotoxic)"
+  - condition: "Fit patient with no prior GemDoc → IND-STS-ADVANCED-2L-GEMDOC also valid; MDT choice between ifosfamide and GemDoc for dox-mono 1L patients"
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - "Creatinine/BUN + urine dipstick: before each cycle (nephrotoxicity, hematuria monitoring)"
+  - "CT CAP: baseline (pre-treatment); after cycle 2 (RECIST 1.1 response assessment)"
+  - "ECHO: baseline (if cumulative anthracycline exposure concern from 1L doxorubicin)"
+
+desired_tests:
+  - "Next-generation sequencing (NGS) or FISH: confirm histological subtype (synovial sarcoma: SS18-SSX fusion; LMS, MPNST specific biomarkers)"
+  - "SYT-SSX1/SSX2 FISH: confirm synovial sarcoma histology before ifosfamide (highest response rate in SS)"
+
+rationale: >
+  High-dose ifosfamide (HD-IFO; 10-14 g/m²/cycle) is a standard second-line option
+  for advanced STS after anthracycline-based 1L when ifosfamide was NOT used in 1L.
+  It is specifically indicated as 2L after doxorubicin monotherapy, not after AI
+  (doxorubicin + ifosfamide combination) due to cross-resistance with ifosfamide.
+
+  Evidence base: NCCN STS 2025 Category 2A, based on single-arm phase II studies and
+  retrospective series (ORR ~15-25% unselected; ~25-40% for synovial sarcoma specifically).
+  No phase 3 head-to-head RCT vs GemDoc or pazopanib in the post-dox-monotherapy setting.
+
+  Clinical selection rationale:
+  - Synovial sarcoma: highest ifosfamide response rate (~25-40%); preferred over GemDoc
+    in this histotype (NCCN preferred STS 2A for synovial sarcoma)
+  - Other non-adipocytic STS after dox monotherapy: ifosfamide OR GemDoc; MDT choice
+    based on ECOG, renal function, prior neuropathy, patient preference (IV inpatient vs
+    outpatient GemDoc)
+  - Liposarcoma: NOT indicated; eribulin or trabectedin preferred
+
+  Key safety: mesna mandatory (hemorrhagic cystitis prevention); aggressive hydration;
+  ifosfamide encephalopathy (~20%) requires daily neurological monitoring.
+
+rationale_ua: >
+  Іфосфамід висока доза (10-14 г/м²/цикл) — стандарт 2-ї лінії для ПМС/метастатичної
+  СМТ після монотерапії доксорубіцином (не після AI-комбінації через перехресну
+  резистентність). NCCN Категорія 2A.
+  Особливо активний для синовіальної саркоми (ORR ~25-40%) — найвища відповідь
+  серед підтипів СМТ.
+  Для ліпосаркоми — ерибулін або трабектедин (не іфосфамід).
+  КРИТИЧНО: месна обов'язкова; агресивна гідратація; нейромоніторинг щодня.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+sources:
+  - source_id: SRC-NCCN-STS-2025
+    position: supports
+    relevant_quote_paraphrase: "NCCN STS 2025: ifosfamide (single-agent or HD) listed Category 2A for r/r STS after anthracycline-based 1L when not previously administered."
+
+do_not_do:
+  - "НЕ призначати при попередньому іфосфаміді (будь-яка лінія) — перехресна резистентність"
+  - "НЕ призначати при ліпосаркомі — ерибулін або трабектедин є кращими (NCCN кат.1)"
+  - "Месна ОБОВ'ЯЗКОВА — ніколи не давати іфосфамід без месни"
+  - "КФ обов'язково перед кожним циклом — КФ < 30 = абсолютне протипоказання"
+  - "Енцефалопатія від іфосфаміду (~20%) — неврологічне обстеження щодня; зупинити при сплутаності"
+  - "НЕ призначати при пережитій попередній іфосфамідній енцефалопатії ≥2 ступ."
+  - "Для синовіальної саркоми — іфосфамід є найкращим вибором у 2-й лінії (ORR ~25-40% vs ~16% GemDoc)"
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction

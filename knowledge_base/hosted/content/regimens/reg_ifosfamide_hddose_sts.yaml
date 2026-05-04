@@ -1,0 +1,107 @@
+id: REG-IFOSFAMIDE-HDDOSE-STS
+disease_context: DIS-SOFT-TISSUE-SARCOMA
+line_of_therapy: 2
+plan_track: aggressive
+
+regimen_type: "inpatient_chemo"
+protocol_name: "High-dose ifosfamide (HD-IFO) for r/r soft-tissue sarcoma"
+notes: >
+  High-dose ifosfamide 10-14 g/m² per cycle for advanced STS after
+  anthracycline-based 1L without prior ifosfamide exposure.
+  NCCN STS 2025 Category 2A. ORR ~15-25% in unselected r/r STS.
+  Mesna is mandatory to prevent hemorrhagic cystitis (uroprotection).
+  Requires inpatient admission with aggressive hydration and close monitoring.
+
+agents:
+  - drug_id: DRUG-IFOSFAMIDE
+    dose: "2500 mg/m² IV daily (range: 2000-3000 mg/m²/day)"
+    route: IV
+    schedule: "Days 1-4 (total 10 g/m²/cycle; range 8-14 g/m² depending on institutional protocol)"
+    administration_notes: >
+      Standard HD-IFO cycle: 2.5 g/m²/day × 4 days = 10 g/m² total,
+      or 3 g/m²/day × 4 days = 12 g/m² total (higher dose, some protocols).
+      Administer as a continuous 4-hour IV infusion in 1 L NS each day.
+      ALWAYS administer via central venous access (ifosfamide irritant/vesicant).
+      Mesna MUST be given concurrently — see separate mesna administration.
+      DO NOT administer ifosfamide without mesna.
+      Dose modifications:
+        - CrCl 30-60 mL/min: reduce to 75% dose; CrCl <30: contraindicated.
+        - Prior nephrotoxic agents (cisplatin exposure): assess renal function carefully.
+      Ifosfamide encephalopathy: discontinue immediately if confusion, somnolence,
+      hallucinations, seizures develop (encephalopathy risk ~20%; methylene blue
+      rescue reported). Hold if encephalopathy grade ≥2.
+    dose_modifications:
+      - trigger: "CrCl 30-60 mL/min"
+        action: "Reduce ifosfamide to 75% dose (1875 mg/m²/day). Ensure mesna adjusted proportionally."
+      - trigger: "CrCl < 30 mL/min"
+        action: "Contraindicated — ifosfamide nephrotoxicity risk. Use pazopanib (IND-STS-ADVANCED-2L-PAZOPANIB)."
+      - trigger: "Ifosfamide encephalopathy Grade ≥2 (confusion, somnolence)"
+        action: "Discontinue ifosfamide immediately. Methylene blue 50 mg IV q4h may be considered (case reports; limited evidence). Do NOT rechallenge."
+      - trigger: "Grade ≥3 non-hematologic toxicity (hemorrhagic cystitis, nephrotoxicity)"
+        action: "Hold ifosfamide. Investigate and treat. Do not restart until toxicity resolves to Grade ≤1."
+  - drug_id: DRUG-MESNA
+    dose: "Continuous IV infusion: 120% of ifosfamide total daily dose (e.g., 3 g/m²/day for 2.5 g/m² ifosfamide)"
+    route: IV
+    schedule: "Continuous IV infusion starting 30 min before ifosfamide and continuing 24h after last ifosfamide dose on final day"
+    administration_notes: >
+      MESNA IS MANDATORY. Ifosfamide metabolite acrolein causes hemorrhagic
+      cystitis — mesna binds acrolein in urine (uroprotection).
+      Standard mesna dosing for HD-IFO:
+        Bolus: 20% of ifosfamide dose 30 min before first ifosfamide dose.
+        Continuous: 80% of ifosfamide dose as 24h CIV while ifosfamide running.
+        Post-ifosfamide: Continue mesna CIV for 24h after LAST ifosfamide dose.
+      Total mesna per cycle = 200% of total ifosfamide dose.
+      Alternatively: Oral mesna (400% of ifosfamide dose in divided doses at 0, 2, 4, 6h after ifosfamide) — lower bioavailability, less reliable for HD-IFO.
+      Check urinalysis before each dose for hematuria; hold for macroscopic hematuria.
+
+when_to_use: >
+  r/r STS after anthracycline-based 1L (doxorubicin monotherapy) WITHOUT prior
+  ifosfamide exposure. HD-IFO 10-14 g/m²/cycle offers ORR ~15-25% in unselected
+  advanced STS. Particularly relevant for:
+  - Synovial sarcoma (historically ifosfamide-sensitive; ORR ~25-40%)
+  - Uterine LMS (after dox mono 1L without prior AI combination)
+  - Other non-adipocytic STS subtypes (fibrosarcoma, MPNST, angiosarcoma)
+  NOT for: patients who received AI (doxorubicin + ifosfamide) in 1L (cross-resistance);
+  liposarcoma (eribulin preferred 2L); GFR <30 (absolute contraindication).
+
+premedication:
+  - "Aggressive IV hydration: normal saline 200-250 mL/hour starting 4 hours before ifosfamide, continue throughout and for 12h after last dose"
+  - "Mesna: mandatory (see agent dosing)"
+  - "Antiemetics: ondansetron 8 mg IV + dexamethasone 8 mg IV 30 min before and q8h during ifosfamide days"
+  - "Allopurinol 300 mg/day if high tumour burden: tumour lysis prophylaxis"
+  - "G-CSF: not standard for first use; use prophylactically if dose-dense strategy or prior myelosuppression"
+
+growth_factor_support:
+  mandatory: false
+  protocol: "Consider G-CSF if Grade 4 neutropenia develops in cycle 1. Primary prophylaxis not standard for HD-IFO STS cycles."
+
+monitoring:
+  - "Urinalysis: before each dose (hemorrhagic cystitis screening — hold for macroscopic hematuria)"
+  - "Creatinine + electrolytes: before each cycle and every 2 days during treatment (nephrotoxicity, hyponatremia)"
+  - "CBC: nadir expected day 10-14; check CBC weekly during recovery"
+  - "Neurological status: daily during ifosfamide (encephalopathy monitoring)"
+  - "CT CAP: every 2 cycles (response assessment per RECIST 1.1)"
+
+cycle_length_days: 21
+total_planned_cycles: "2 cycles; reassess after cycle 2 with CT. Continue for 4-6 cycles if stable disease or response. Discontinue at progression."
+
+special_precautions:
+  - "HEMORRHAGIC CYSTITIS: mesna mandatory; aggressive hydration; urinalysis before each dose. If macroscopic hematuria → hold ifosfamide, continuous bladder irrigation, urology consult."
+  - "IFOSFAMIDE ENCEPHALOPATHY: ~20% risk at HD doses. Confusion, somnolence, hallucinations, seizures. Discontinue immediately — irreversible neurological injury if not caught early. Methylene blue infusion may help (50 mg IV q4h; limited evidence)."
+  - "NEPHROTOXICITY: Fanconi syndrome (proximal tubular dysfunction) can develop after multiple cycles — monitor electrolytes, phosphate, bicarbonate. CrCl <30 is absolute contraindication."
+  - "PRIOR IFOSFAMIDE: If patient received ifosfamide in 1L (AI combination), HD-ifosfamide 2L is NOT indicated due to cross-resistance. Use GemDoc or pazopanib."
+
+watchpoints_ua:
+  - "КРИТИЧНО: Месна ОБОВ'ЯЗКОВА — без месни іфосфамід спричиняє геморагічний цистит (акролеїн-токсичність)"
+  - "КРИТИЧНО: Гідратація 200-250 мл/год під час іфосфаміду та 12г після"
+  - "КРИТИЧНО: Енцефалопатія від іфосфаміду (~20%) — неврологічний статус щодня; зупинити при сплутаності свідомості"
+  - "КРИТИЧНО: Аналіз сечі перед кожною дозою — макроскопічна гематурія = зупинка іфосфаміду"
+  - "УВАГА: НЕ призначати, якщо ІФ вже отримував у 1-й лінії (AI = доксорубіцин+іфосфамід) — перехресна резистентність"
+  - "УВАГА: Нефротоксичність при повторних циклах — моніторинг КФ, електролітів, фосфату (синдром Фанконі)"
+
+sources:
+  - SRC-NCCN-STS-2025
+
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
