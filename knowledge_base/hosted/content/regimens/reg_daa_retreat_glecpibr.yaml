@@ -1,0 +1,113 @@
+id: REG-DAA-RETREAT-GLECPIBR
+name: "Glecaprevir/Pibrentasvir retreatment 12-16 weeks (after DAA failure — HCV-MZL)"
+name_ua: "Глекапревір/Пібрентасвір повторне лікування 12-16 тижнів (після невдачі ДАА — ВГС-МЗЛ)"
+alternate_names:
+  - "GLE/PIB retreatment"
+  - "Mavyret retreatment"
+  - "Second-line DAA HCV-MZL"
+
+components:
+  - drug_id: DRUG-GLECAPREVIR-PIBRENTASVIR
+    dose: "Glecaprevir 300 mg / Pibrentasvir 120 mg (3 tablets of GLE 100mg/PIB 40mg) PO once daily with food"
+    schedule: "Once daily; 12 weeks if NS5A-naive (prior SOF-only); 16 weeks if NS5A-experienced (prior SOF/VEL failure)"
+    route: PO
+    notes: >
+      Duration selection:
+      - 12 weeks: patient experienced SOF-based NS5A-naive failure (e.g., sofosbuvir + ribavirin)
+      - 16 weeks: patient experienced prior NS5A-containing regimen failure (e.g., SOF/VEL = NS5A-experienced)
+      Most HCV-MZL 1L DAA regimens include NS5A inhibitor (velpatasvir in SOF/VEL or ledipasvir in LED/SOF);
+      use 16-week schedule for most HCV-MZL retreatment scenarios.
+      Take with food (improves GLE absorption by ~83-163%).
+
+cycle_length_days: 84
+total_cycles: "1 course (12 weeks = 84 days; or 16 weeks = 112 days)"
+toxicity_profile: low
+
+premedication: []
+
+mandatory_supportive_care:
+  - "HCV-RNA at baseline, week 4 (early virologic response), week 12 (EOT), and 12 weeks post-EOT (SVR12)"
+  - "HBV screening before starting (HBsAg, anti-HBc total) — HBV reactivation risk with DAA + any concurrent anti-lymphoma therapy"
+  - "LFTs at baseline and week 4 (hepatotoxicity monitoring; low incidence)"
+  - "Drug-drug interaction review at each visit (DAA interactions with statins, acid reducers, anticonvulsants)"
+
+dose_adjustments:
+  - condition: "Child-Pugh B hepatic impairment"
+    modification: "GLE/PIB CONTRAINDICATED in Child-Pugh B/C — hepatic accumulation"
+    rationale: "Both GLE and PIB are hepatically eliminated; severe impairment → supratherapeutic exposure"
+  - condition: "Patient on rifampicin, carbamazepine, St. John's Wort (strong P-gp/CYP3A4 inducers)"
+    modification: "Contraindicated — strong inducers reduce GLE/PIB levels by >50%"
+    rationale: "GLE/PIB are P-gp and CYP3A4 substrates; inducers reduce efficacy unacceptably"
+  - condition: "Acid-suppressive therapy (PPIs)"
+    modification: "Avoid PPIs with GLE/PIB (reduce absorption); if needed, H2 blockers at specific timing"
+    rationale: "PPIs reduce GLE absorption; H2 blockers acceptable with appropriate timing"
+  - condition: "Statins (simvastatin, lovastatin, atorvastatin)"
+    modification: "Contraindicated or dose-capped; GLE/PIB inhibit OATP1B1/B3 → statin toxicity"
+    rationale: "OATP inhibition by GLE → supratherapeutic statin levels → rhabdomyolysis risk"
+
+drug_interactions:
+  - "Rifampicin, rifabutin, carbamazepine, phenytoin, oxcarbazepine: CONTRAINDICATED (>50% reduction in GLE/PIB)"
+  - "PPIs (omeprazole, pantoprazole): avoid; reduce GLE absorption significantly"
+  - "Atazanavir, darunavir + ritonavir/cobicistat: CONTRAINDICATED (hepatotoxicity risk from combined PI exposure)"
+  - "Statins (lovastatin, simvastatin, atorvastatin): reduce statin dose or switch to pravastatin; rosuvastatin max 10 mg/d"
+  - "Digoxin: increased digoxin levels (P-gp inhibition); reduce digoxin dose + monitor digoxin levels"
+  - "Cyclosporin ≥100 mg/d: GLE/PIB plasma levels may rise; avoid high-dose cyclosporin"
+  - "Bendamustine: no direct PK interaction known; monitor LFTs if concurrent (both hepatically metabolized)"
+
+ukraine_availability:
+  all_components_registered: true
+  all_components_reimbursed: true
+  notes: >
+    Глекапревір/Пібрентасвір (Мавірет) зареєстровано і НСЗУ-фінансується
+    для хронічного гепатиту С в Україні. Панреномний ефект (генотипи 1-6).
+    Більш доступний ніж SOF/VEL/VOX (Vosevi), якого немає в Україні.
+    Протипоказаний при Child-Pugh B/C; адекватна функція печінки необхідна.
+
+sources:
+  - SRC-EASL-HCV-2023
+  - SRC-NCCN-BCELL-2025
+
+between_visit_watchpoints:
+  - trigger_ua: "Жовтяниця, темна сеча або болі у правому підребер'ї"
+    action_ua: "Зателефонуйте в клініку того ж дня — гепатотоксичність"
+    urgency: call_clinic_same_day
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Нудота, слабкість, свербіж"
+    action_ua: "Повідомте на наступному візиті; зазвичай незначні побічні ефекти ГЛЕ/ПІБ"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-EASL-HCV-2023
+  - trigger_ua: "Будь-які нові ліки (статини, протиепілептичні, антибіотики)"
+    action_ua: "Перевірте взаємодію перед прийомом — ГЛЕ/ПІБ має багато взаємодій"
+    urgency: report_at_next_visit
+    sources:
+      - SRC-EASL-HCV-2023
+
+last_reviewed: "2026-05-04"
+reviewers: []
+notes: >
+  Glecaprevir/Pibrentasvir (Mavyret) as second-line DAA retreatment for
+  HCV-MZL patients who failed first-line DAA (SVR12 not achieved at 12 weeks
+  post-treatment).
+
+  EASL HCV 2023 RETREATMENT GUIDELINES:
+  - SOF/VEL/VOX (Vosevi) × 12 weeks: preferred rescue regimen for NS5A-experienced
+    patients (highest SVR rates ~95-98%); not available in Ukraine (not registered/reimbursed)
+  - GLE/PIB (Mavyret) × 12-16 weeks: pan-genotypic rescue, NSZU-reimbursed in Ukraine;
+    SVR12 ~90-95% in NS5A-experienced patients; 16 weeks for prior NS5A failure
+
+  SELECTION FOR HCV-MZL:
+  Most HCV-MZL 1L regimens use SOF/VEL (which contains NS5A inhibitor velpatasvir)
+  or LED/SOF (ledipasvir, also NS5A). After 1L SOF/VEL failure, retreatment with
+  GLE/PIB (different NS5A inhibitor + NS3/4A protease inhibitor) provides cross-resistance
+  rescue. Duration: 16 weeks recommended for NS5A-experienced failures.
+
+  IF LYMPHOMA PROGRESSES DURING DAA RETREATMENT:
+  Concurrent BR (bendamustine + rituximab) can be added once HCV-RNA is suppressing
+  on retreatment DAA (typically after week 4). IND-HCV-MZL-2L-BR is the concurrent
+  or sequential escalation path.
+
+  STUB pending §6.1 signoff.
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction

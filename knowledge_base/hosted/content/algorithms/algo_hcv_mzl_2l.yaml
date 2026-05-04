@@ -27,6 +27,7 @@ purpose: >
 output_indications:
   - IND-HCV-MZL-POST-DAA-SURVEILLANCE
   - IND-HCV-MZL-2L-BR
+  - IND-HCV-MZL-2L-DAA-RETREATMENT
 
 default_indication: IND-HCV-MZL-POST-DAA-SURVEILLANCE
 alternative_indication: IND-HCV-MZL-2L-BR
@@ -45,18 +46,24 @@ decision_tree:
       next_step: 2
 
   # Step 2 — SVR12 NOT achieved (HCV-RNA detectable post-DAA) →
-  # DAA retreatment branch. Per EASL 2023, second-line DAA is
-  # SOF/VEL/VOX (pan-genotypic, NS5A-rescue) or GLE/PIB. If lymphoma
-  # also progressing, add BR concurrent with retreatment.
+  # DAA retreatment (GLE/PIB 16w; EASL 2023 rescue regimen).
+  # If lymphoma progressing despite retreatment: add BR concurrent after week 4.
   - step: 2
     evaluate:
       all_of:
         - biomarker: BIO-HCV-RNA
           comparator: "detectable at week 12 post-DAA (SVR12 not achieved)"
     if_true:
-      result: IND-HCV-MZL-POST-DAA-SURVEILLANCE  # placeholder; see notes — DAA retreatment + BR
+      result: IND-HCV-MZL-2L-DAA-RETREATMENT
+      notes: >
+        SVR12 not achieved: second-line DAA (GLE/PIB 16 weeks; REG-DAA-RETREAT-GLECPIBR;
+        EASL HCV 2023; UA: SOF/VEL/VOX not registered → GLE/PIB accessible alternative).
+        If lymphoma also progressing → add BR (IND-HCV-MZL-2L-BR) concurrent after
+        week 4 of retreatment (once HCV-RNA suppressing; MDT decision).
+        HBV screen + entecavir mandatory before any rituximab addition.
     if_false:
       next_step: 3
+    notes: "Step 2 wired 2026-05-04 (Workstream CA): placeholder removed; IND-HCV-MZL-2L-DAA-RETREATMENT wired for SVR12-failure track. Gap (1) CLOSED."
 
   # Step 3 — SVR12 achieved + lymphoma relapse (HCV cleared, MZL
   # now antigen-independent / clonal escape) → BR. Histologic
@@ -104,15 +111,27 @@ sources:
 
 last_reviewed: "2026-05-04"
 notes: >
-  UPDATED 2026-05-04 (Workstream BK): IND-HCV-MZL-2L-BR authored and wired at
-  step 3 for SVR12-achieved HCV-MZL relapse (NCCN Cat 2A; Rummel 2013 StiL;
-  REG-R-BENDAMUSTINE-RELAPSED-MZL; ORR ~70-80%). Gap (2) CLOSED.
-  OOS / wiring gaps:
-  (1) IND-HCV-MZL-2L-DAA-RETREATMENT (SOF/VEL/VOX or GLE/PIB ±
-  concurrent BR) — not modeled as dedicated indication. Step 2
-  routes to surveillance placeholder; trace must surface "SVR12
-  not achieved → DAA retreatment per EASL 2023; add BR if
-  lymphoma progressing" as free-text MDT note.
+  UPDATED 2026-05-04 (Workstream CA): IND-HCV-MZL-2L-DAA-RETREATMENT authored and
+  wired at step 2 for SVR12-failure track (EASL HCV 2023; GLE/PIB 16w;
+  REG-DAA-RETREAT-GLECPIBR; SOF/VEL/VOX preferred but not UA-registered → GLE/PIB
+  accessible alternative). Gap (1) CLOSED.
+
+  ROUTING SUMMARY (post-CA):
+  (1) Aggressive histology at relapse → histology re-biopsy + DLBCL-routing (placeholder)
+  (2) HCV-RNA detectable at SVR12 → IND-HCV-MZL-2L-DAA-RETREATMENT (GLE/PIB 16w ±
+      concurrent BR if lymphoma progressing)
+  (3) HCV cleared (SVR12) + lymphoma relapsed → IND-HCV-MZL-2L-BR (BR)
+  (4) Post-DAA, no relapse → IND-HCV-MZL-POST-DAA-SURVEILLANCE
+
+  EARLIER UPDATES:
+  Workstream BK (2026-05-04): IND-HCV-MZL-2L-BR wired at step 3. Gap (2) CLOSED.
+
+  OOS / wiring gaps remaining:
+  (3) Histologic transformation routing (step 1 if_true) uses placeholder IND-HCV-MZL-
+  POST-DAA-SURVEILLANCE — correct routing would be separate DLBCL-context indication;
+  deferred pending disease-state entity authoring.
+  (4) BIO-HCV-RNA comparator is free-text (no numeric binding) — wireable only when
+  quantitative biomarker comparator engine supports HCV-RNA threshold semantics.
   (3) Histologic transformation routing must be resolved at upstream
   disease-resolution stage (re-biopsy mandatory at any clinical
   progression in HCV-MZL given baseline transformation risk).

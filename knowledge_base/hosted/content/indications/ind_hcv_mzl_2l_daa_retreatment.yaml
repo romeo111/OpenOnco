@@ -1,0 +1,171 @@
+id: IND-HCV-MZL-2L-DAA-RETREATMENT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-HCV-MZL
+  line_of_therapy: 2
+  stage_requirements:
+    - "HCV-associated marginal zone lymphoma (extranodal or nodal MZL) previously treated with first-line direct-acting antivirals (DAA ± rituximab)"
+    - "SVR12 NOT achieved: HCV-RNA detectable at ≥12 weeks post-DAA completion (virologic failure)"
+    - "Histologic transformation to aggressive lymphoma excluded (re-biopsy if clinically suspected)"
+    - "Child-Pugh A hepatic function (GLE/PIB contraindicated in Child-Pugh B/C)"
+    - "No active prior use of strong CYP3A4/P-gp inducers (rifampicin, carbamazepine, anticonvulsants)"
+  biomarker_requirements_required:
+    - biomarker_id: BIO-HCV-RNA
+      required: true
+      value_constraint: "HCV-RNA detectable at week 12 post-DAA (SVR12 NOT achieved — confirms virologic failure)"
+      notes: >
+        Virologic failure is the key gate for this indication. SVR12 non-achievement
+        is defined as detectable HCV-RNA at ≥12 weeks after completing first-line DAA.
+        If SVR12 WAS achieved but lymphoma relapsed → IND-HCV-MZL-2L-BR instead
+        (antigen-independent relapse; no further DAA benefit).
+  biomarker_requirements_excluded:
+    - "SVR12 achieved (HCV-RNA undetectable at week 12): retreatment with DAA has no further virologic benefit; lymphoma relapse after SVR12 is antigen-independent → IND-HCV-MZL-2L-BR"
+    - "Histologic transformation to DLBCL confirmed: aggressive-lymphoma salvage required, not DAA"
+  demographic_constraints:
+    ecog_max: 3
+    notes: >
+      DAA retreatment is well-tolerated (low systemic toxicity); ECOG 3 patients
+      can receive GLE/PIB if hepatic function adequate. If ECOG 4: goals-of-care
+      MDT discussion — DAA retreatment for antiviral benefit still valid, but
+      any concurrent chemotherapy is not.
+
+recommended_regimen: REG-DAA-RETREAT-GLECPIBR
+alternative_regimens:
+  - regimen_id: REG-DAA-SOF-VEL
+    description: >
+      SOF/VEL × 12 weeks — use as 2L only if first-line was SOF-only (SOF + ribavirin)
+      or NS5A-naive failure (non-NS5A-containing 1L). If 1L included velpatasvir (SOF/VEL),
+      re-treating with SOF/VEL is NOT appropriate (NS5A cross-resistance). In that case,
+      GLE/PIB (REG-DAA-RETREAT-GLECPIBR) is required.
+
+concurrent_therapy:
+  - "If lymphoma progressing despite DAA retreatment initiation: concurrent BR (bendamustine 90 mg/m² d1-2 + rituximab 375 mg/m² d1 q28d) may be added after week 4 of DAA when HCV-RNA is suppressing (IND-HCV-MZL-2L-BR; MDT decision)"
+  - "HBV prophylaxis: if HBsAg+ or anti-HBc+ → entecavir or tenofovir prophylaxis before any anti-lymphoma therapy added; DAA alone low HBV reactivation risk"
+  - "Avoid statins (especially simvastatin, lovastatin) during GLE/PIB (OATP1B1/1B3 inhibition → rhabdomyolysis)"
+  - "Drug-drug interaction review (DDI) mandatory at start — GLE/PIB has extensive DDI profile"
+
+followed_by:
+  - "HCV-RNA at week 4 (early virologic response assessment), week 12 (end-of-treatment), week 24 (= week 12 post-EOT = SVR12)"
+  - "If SVR12 achieved on retreatment: re-evaluate lymphoma status by CT/PET; if remission → surveillance (IND-HCV-MZL-POST-DAA-SURVEILLANCE); if persistent lymphoma → BR (IND-HCV-MZL-2L-BR)"
+  - "If SVR12 NOT achieved on second-line GLE/PIB: hepatology consultation; consider specialist referral for highly drug-resistant HCV; lymphoma-directed therapy (BR) without further DAA attempts"
+
+evidence_level: moderate
+strength_of_recommendation: moderate
+nccn_category: "2A"
+
+expected_outcomes:
+  overall_response_rate: >
+    Virologic response: SVR12 ~90-95% with second-line GLE/PIB after prior NS5A-containing
+    DAA failure (EASL HCV 2023 data; GLE/PIB retreatment cohorts).
+    Lymphoma response after SVR: lymphoma regression in ~50-60% of HCV-MZL patients
+    achieving HCV eradication (retrospective series; most data from 1L DAA; smaller
+    retreatment series; NCCN 2025 references).
+  complete_response: "~30-40% CR in HCV-MZL post-SVR (lymphoma response)"
+  notes: >
+    HCV-MZL DAA retreatment outcomes depend on whether SVR12 is achieved:
+    - SVR12 achieved with retreatment: ~50-60% lymphoma regression without further
+      chemo; if persistent after SVR12, add BR → ORR ~70-80% (IND-HCV-MZL-2L-BR evidence)
+    - SVR12 not achieved with 2nd-line DAA: lymphoma-directed therapy (BR) is primary;
+      further antiviral attempts require hepatology specialist review
+
+    CONTEXT: HCV-MZL is a rare indication where eradicating the viral driver
+    (HCV) can cause lymphoma regression without chemotherapy. This biological
+    rationale (antigen-dependent lymphoma) underpins the DAA-first approach.
+
+hard_contraindications:
+  - "Child-Pugh B or C hepatic impairment: GLE/PIB hepatically eliminated → supratherapeutic accumulation and hepatotoxicity"
+  - "Concurrent rifampicin, carbamazepine, phenytoin, oxcarbazepine: CONTRAINDICATED — strong inducers reduce GLE/PIB levels >50% → virologic failure guaranteed"
+  - "Prior atazanavir or ritonavir-boosted protease inhibitors: hepatotoxicity risk from combined NS3/4A inhibition"
+  - "SVR12 ALREADY achieved: no further antiviral benefit; if lymphoma relapse after SVR12 → IND-HCV-MZL-2L-BR"
+
+red_flags_triggering_alternative:
+  - condition: "SVR12 achieved on retreatment + lymphoma persists → add BR (IND-HCV-MZL-2L-BR)"
+  - condition: "SVR12 not achieved on retreatment + lymphoma progressing → BR-concurrent escalation (MDT decision)"
+  - condition: "Child-Pugh B/C hepatic impairment → GLE/PIB contraindicated; hepatology referral + lymphoma-first approach (BR without DAA)"
+  - condition: "Histologic transformation confirmed → R-CHOP salvage (aggressive histology protocol; not BR)"
+
+required_tests:
+  - TEST-CBC
+  - TEST-LFT
+  - "HCV-RNA quantitative (EASL 2023: confirm SVR12 failure; genotype if unknown)"
+  - "HBsAg + anti-HBc total: HBV status before any rituximab addition"
+  - "Child-Pugh score calculation (hepatic function gate for GLE/PIB)"
+  - TEST-CECT-CAP
+
+desired_tests:
+  - "HCV genotype/subtype: guides retreatment choice (GLE/PIB pan-genotypic but subtype 3a may need longer duration)"
+  - "HCV NS5A resistance-associated substitutions (RAS): if available, guides SOF/VEL/VOX vs GLE/PIB selection"
+  - "Echocardiogram if concurrent bendamustine planned (cardiac baseline)"
+
+rationale: >
+  Glecaprevir/Pibrentasvir (GLE/PIB) retreatment for HCV-associated MZL patients
+  who failed first-line DAA (SVR12 not achieved).
+
+  BIOLOGICAL RATIONALE FOR DAA RETREATMENT IN HCV-MZL:
+  HCV-MZL is caused by HCV antigen-driven clonal B-cell expansion. In ~60-70%
+  of HCV-MZL patients, eradicating HCV with DAA removes the antigenic stimulus
+  → lymphoma regression without chemotherapy. Retreatment is indicated when 1L
+  DAA fails to achieve SVR12, because persistent HCV continues to drive lymphoma.
+
+  EASL HCV 2023 RETREATMENT ALGORITHM:
+  - NS5A-experienced (1L included velpatasvir/ledipasvir/daclatasvir): SOF/VEL/VOX
+    × 12 weeks is preferred (pan-genotypic; SVR ~95-98%) — but NOT available in Ukraine
+  - GLE/PIB × 16 weeks: alternative for NS5A-experienced; SVR ~90-95%;
+    NSZU-reimbursed in Ukraine → pragmatic first choice
+  - NS5A-naive 1L failure: GLE/PIB or SOF/VEL × 12 weeks both acceptable
+
+  WHEN TO ADD BR:
+  If lymphoma is progressing despite DAA retreatment, concurrent BR is added after
+  week 4 (once HCV-RNA is declining on retreatment). Early BR addition risks
+  rituximab-mediated HCV flare (immunosuppression + viremia); waiting until week 4
+  HCV suppression is confirmed reduces this risk per clinical expert consensus.
+
+  UKRAINIAN ACCESS:
+  SOF/VEL/VOX (Vosevi): not registered in Ukraine (2026); not accessible.
+  GLE/PIB (Mavyret): NSZU-reimbursed for chronic HCV in Ukraine → pragmatic choice.
+  Both SOF/VEL (Epclusa) and GLE/PIB (Mavyret) registered; GLE/PIB preferred for
+  retreatment in UA context.
+
+rationale_ua: >
+  Глекапревір/Пібрентасвір 3 таблетки (300/120 мг) щоденно × 16 тижнів
+  для ВГС-асоційованої МЗЛ після невдачі 1L ДАА (SVR12 не досягнуто).
+  EASL ВГС 2023: відступна ДАА терапія. SOF/VEL/VOX (Vosevi) — краще,
+  але не зареєстровано в Україні → GLE/PIB (Мавірет, НСЗУ-фінансується).
+  Якщо лімфома прогресує незважаючи на ДАА — додати BR (бендамустин+ритуксимаб)
+  після 4-го тижня ДАА (коли вірусне навантаження знизилось).
+  ОБОВ'ЯЗКОВО: Child-Pugh A (GLE/PIB протипоказаний при B/C); перевірка
+  взаємодій з ліками; ВГВ-статус перед ритуксимабом.
+
+ukrainian_review_status: pending_clinical_signoff
+ukrainian_drafted_by: claude_extraction
+
+do_not_do:
+  - "Не застосовувати GLE/PIB при Child-Pugh B/C — противопоказано (гепатоток)"
+  - "Не лікувати SOF/VEL повторно після невдачі SOF/VEL — NS5A перехресна резистентність"
+  - "Не призначати статини разом з GLE/PIB — OATP-інгібування → рабдоміоліз"
+  - "Не ігнорувати перевірку ВГВ — ритуксимаб може активувати ВГВ при HBsAg+"
+  - "Якщо SVR12 досягнуто, але лімфома рецидивує → BR (ДАА не потрібні)"
+
+sources:
+  - source_id: SRC-EASL-HCV-2023
+    position: supports
+    relevant_quote_paraphrase: >
+      EASL HCV 2023 guidelines: second-line DAA retreatment for prior NS5A-containing
+      regimen failure. SOF/VEL/VOX × 12 weeks preferred; GLE/PIB × 16 weeks is the
+      alternative when SOF/VEL/VOX is not available. Both achieve SVR12 ~90-95%
+      in NS5A-experienced patients.
+  - source_id: SRC-NCCN-BCELL-2025
+    position: supports
+    relevant_quote_paraphrase: >
+      NCCN B-cell lymphomas 2025: for HCV-associated MZL with virologic failure
+      (SVR12 not achieved), retreatment with second-line DAA per infectious disease
+      guidelines. Lymphoma response is linked to viral eradication; chemotherapy
+      typically added if lymphoma progresses on DAA retreatment.
+
+time_critical: false
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
