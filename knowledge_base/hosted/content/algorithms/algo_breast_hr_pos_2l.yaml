@@ -19,6 +19,8 @@ output_indications:
   - IND-BREAST-HR-POS-2L-DATO-DXD
   - IND-BREAST-BRCA-POS-MET-PARPI
   - IND-BREAST-BRCA-MET-TALAZOPARIB
+  - IND-BREAST-HER2-LOW-2L-DATO-DXD
+  - IND-BREAST-HR-POS-3L-POST-CDK46I-POST-AKT
 
 default_indication: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
 alternative_indication: IND-BREAST-HR-POS-2L-AKT-CAPIVASERTIB
@@ -127,6 +129,24 @@ decision_tree:
         - condition: "≥1 prior chemo line for metastatic disease OR rapid progression on endocrine"
     if_true:
       result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
+      notes: >
+        HER2-low HR+/HER2- BC: T-DXd preferred (DESTINY-Breast04; OS HR 0.64; NCCN Cat 1).
+        Dato-DXd available as Cat 2A alternative with lower ILD risk (~3% vs ~12%) — see
+        IND-BREAST-HER2-LOW-2L-DATO-DXD in alternatives.
+      alternatives:
+        - indication_id: IND-BREAST-HER2-LOW-2L-DATO-DXD
+          nccn_category: "2A"
+          criteria: >
+            HR+/HER2-negative metastatic BC; HER2-low (IHC 1+ or IHC 2+/ISH-); ≥1 prior chemo
+            line for metastatic disease; ECOG 0-2; T-DXd inaccessible or prior ILD history
+            (ILD Grade ≥2 after T-DXd → dato-DXd lower risk; ~3% ILD vs ~12% T-DXd).
+            TROP2 testing not required. Prefer T-DXd when accessible (stronger OS data).
+          note: >
+            Dato-DXd for HER2-low HR+/HER2- metastatic BC (TROPION-Breast01 HER2-low pre-
+            specified subgroup; NCCN Cat 2A): PFS 6.9 vs 4.9 mo (HR 0.63); ILD ~3% (vs
+            T-DXd ~12%); no head-to-head vs T-DXd in HER2-low. Datopotamab deruxtecan
+            6 mg/kg IV Q3W (FDA Jan 2025, Datroway). DESTINY-Breast04 OS benefit makes
+            T-DXd preferred when accessible.
     if_false:
       result: IND-BREAST-HR-POS-2L-T-DXD-HER2-LOW
     notes: "MDT-only — chemo-line eligibility check has no dedicated RF; T-DXd default for HER2-low metastatic per DESTINY-Breast04."
@@ -147,6 +167,19 @@ decision_tree:
         - indication: IND-BREAST-HR-POS-2L-DATO-DXD
           criteria: "≥1 prior chemo line for metastatic disease + HER2 IHC 0 (NOT HER2-low — T-DXd step 4 takes priority for IHC 1+/2+); TROPION-Breast01 PFS HR 0.63; FDA Jan 2025 (Datroway); NCCN Cat 1; lower ILD ~3% vs T-DXd ~12%; TROP2 testing not required"
           nccn_category: 1
+        - indication_id: IND-BREAST-HR-POS-3L-POST-CDK46I-POST-AKT
+          nccn_category: "2A"
+          criteria: >
+            HR+/HER2-negative metastatic BC; LOT ≥3; prior CDK4/6 inhibitor exposure AND
+            prior AKT pathway inhibitor (capivasertib or alpelisib) exposure; ECOG 0-2;
+            adequate organ function. Everolimus + exemestane at 3L+ after CDK4/6i + AKT
+            inhibitor exhaustion (mTOR pathway remains partially active).
+          note: >
+            Everolimus 10 mg PO QD + exemestane 25 mg PO QD for HR+/HER2- metastatic BC
+            at 3L+ after CDK4/6i and AKT-pathway exhaustion (NCCN Cat 2A; BOLERO-2 Baselga
+            2012 NEJM established 2L; extrapolated to 3L+ here; ORR ~12%; mPFS ~4-6 mo in
+            heavily pretreated setting). Hyperglycemia + pneumonitis monitoring. Clinical
+            trial strongly preferred at 3L+ if available.
     if_false:
       result: IND-BREAST-HR-POS-2L-FUL-EVEROLIMUS
     notes: >
@@ -197,3 +230,7 @@ notes: >
   BARDIA-2024 stub not yet in KB — flagged for source ingestion.
   Sequencing: T-DXd (step 4) takes priority for HER2-low (IHC 1+/2+
   ISH-); dato-DXd is the HER2-IHC-0 post-chemo ADC option at step 5.
+  UPDATED 2026-05-04 (Workstream FW): IND-BREAST-HER2-LOW-2L-DATO-DXD (Cat 2A)
+  wired at step 4 if_true (T-DXd HER2-low track) — dato-DXd as T-DXd-inaccessible
+  or ILD-risk alternative. IND-BREAST-HR-POS-3L-POST-CDK46I-POST-AKT (Cat 2A) wired
+  at step 5 as 3L+ alternative post-CDK4/6i+AKT exhaustion. Both gaps CLOSED.

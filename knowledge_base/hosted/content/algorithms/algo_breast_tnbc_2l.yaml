@@ -13,6 +13,8 @@ output_indications:
   - IND-BREAST-TNBC-2L-BRCA-TALAZOPARIB
   - IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
   - IND-BREAST-TNBC-2L-SACITUZUMAB
+  - IND-BREAST-TNBC-2L-DATO-DXD
+  - IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD
 
 default_indication: IND-BREAST-TNBC-2L-SACITUZUMAB
 alternative_indication: IND-BREAST-TNBC-2L-T-DXD-HER2-LOW
@@ -63,6 +65,33 @@ decision_tree:
         - condition: "Non-BRCA AND HER2 IHC 0 metastatic TNBC ≥2L"
     if_true:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
+      notes: >
+        HER2 IHC=0 TNBC ≥2L: sacituzumab govitecan preferred (ASCENT; NCCN Cat 1; TROP2
+        ADC; mPFS 5.6 vs 1.7 mo; HR 0.41). Dato-DXd (Cat 2A) available for TROP2+; 3L+
+        sequential single-agent chemo after ADC exhaustion — see alternatives.
+      alternatives:
+        - indication_id: IND-BREAST-TNBC-2L-DATO-DXD
+          nccn_category: "2A"
+          criteria: >
+            Metastatic TNBC; HER2 IHC=0; ≥1 prior chemo line (including any 1L regimen);
+            ECOG 0-2; no baseline ILD; TROP2 testing not required. Use when sacituzumab
+            inaccessible or patient intolerant to sacituzumab (GI toxicity, severe neutropenia).
+          note: >
+            Dato-DXd for TNBC ≥2L (NCCN Cat 2A; TROPION-Breast02 primary endpoint readout
+            pending; cross-trial benchmark PFS ~6 mo; ILD ~3%). Datopotamab deruxtecan
+            6 mg/kg IV Q3W (FDA Jan 2025). Sacituzumab (ASCENT mPFS 5.6 mo, OS HR 0.59)
+            remains preferred when accessible; dato-DXd as access/intolerance alternative.
+        - indication_id: IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD
+          nccn_category: "2A"
+          criteria: >
+            Metastatic TNBC; LOT ≥3; progressed on prior sacituzumab AND T-DXd (or HER2-low
+            ADC); non-BRCA (or PARPi-exposed); ECOG 0-2; no curative treatment option. Single-
+            agent sequential chemotherapy (capecitabine, eribulin, vinorelbine, gemcitabine).
+          note: >
+            Sequential single-agent chemo for 3L+ TNBC after TROP2-ADC and HER2-ADC exhaustion
+            (NCCN Cat 2A; no OS-proven agent at this point; ORR ~10-20%; mPFS 2-4 mo per agent).
+            Capecitabine default (oral; NSZU access). Eribulin alternative (EMBRACE mOS benefit
+            in heavily pretreated MBC). Clinical trial strongly preferred at this line if available.
     if_false:
       result: IND-BREAST-TNBC-2L-SACITUZUMAB
     notes: "Default fall-through — sacituzumab govitecan per ASCENT."
@@ -75,7 +104,7 @@ sources:
   - SRC-DESTINY-BREAST04-MODI-2022
   - SRC-ASCENT-BARDIA-2021
 
-last_reviewed: "2026-04-27"
+last_reviewed: "2026-05-04"
 notes: >
   Subtype constraint: TNBC only — algorithm should be entered only
   after receptor-subtype branching at the disease-level dispatcher
@@ -99,3 +128,7 @@ notes: >
 
   After PARPi failure in BRCA-mut cohort: revisit at step 2/3 (T-DXd
   if HER2-low, otherwise sacituzumab). Follow-up authoring task.
+  UPDATED 2026-05-04 (Workstream FW): IND-BREAST-TNBC-2L-DATO-DXD (Cat 2A) and
+  IND-BREAST-TNBC-3L-POST-SACI-POST-T-DXD (Cat 2A) wired at step 4 if_true
+  (sacituzumab default track). Dato-DXd as sacituzumab-inaccessible alternative;
+  3L+ chemo for post-ADC exhaustion. Both gaps CLOSED.
