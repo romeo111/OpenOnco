@@ -18,6 +18,7 @@ output_indications:
   - IND-AML-2L-IDH2-ENASIDENIB
   - IND-AML-2L-IDH1-IVOSIDENIB
   - IND-AML-2L-KMT2A-REVUMENIB
+  - IND-AML-RR-IDH1-OLUTASIDENIB
 
 default_indication: IND-AML-1L-VEN-AZA
 alternative_indication: IND-AML-2L-GILTERITINIB-FLT3
@@ -104,12 +105,26 @@ decision_tree:
         (REG-IVOSIDENIB-AML; AG-120-AML DiNardo 2018 NEJM; ORR 41.6%; CR 21.8%;
         mOS 8.8 months; FDA July 2018; NCCN Cat 1). CRITICAL: IDH differentiation
         syndrome (IDS) in 10% — daily fever monitoring + dexamethasone 10 mg IV q12h
-        protocol if IDS Grade ≥2. QTc baseline ECG mandatory. Fit responders:
-        bridge to alloHCT. Ukraine: not registered; compassionate-use Servier or
-        named-patient. When inaccessible → ven+aza (IND-AML-1L-VEN-AZA) as fallback.
+        if IDS Grade ≥2. QTc baseline ECG mandatory. Fit responders: bridge to alloHCT.
+        ALTERNATIVE (Cat 2A): olutasidenib (Rezlidhia; IND-AML-RR-IDH1-OLUTASIDENIB;
+        NCCN Cat 2A; ORR 35%; CR/CRh 32%; mOS 11.6 mo; FDA Dec 2022) — equivalent
+        IDH1 inhibitor; no head-to-head vs ivosidenib; choose based on access/toxicity.
+        Ukraine: neither registered; compassionate-use or named-patient only.
+      alternatives:
+        - indication_id: IND-AML-RR-IDH1-OLUTASIDENIB
+          nccn_category: "2A"
+          criteria: >
+            IDH1 R132 mutation confirmed; ivosidenib inaccessible or prior ivosidenib
+            intolerance; ECOG ≤2; no severe hepatic impairment.
+          note: >
+            Olutasidenib (Rezlidhia; NCCN Cat 1; Debotton 2023 Am J Hematol; ORR 35%;
+            CR/CRh 32%; mOS 11.6 months; FDA Dec 1, 2022). Equivalent IDH1 inhibitor
+            to ivosidenib. QTc monitoring mandatory. IDH differentiation syndrome
+            monitoring mandatory (~7% in olutasidenib trials). No head-to-head vs
+            ivosidenib — agent selection based on formulary access and QTc profile.
     if_false:
       next_step: 62
-    notes: "Step 6 updated 2026-05-04 (Workstream CK): IDH1-mut R/R now routes to IND-AML-2L-IDH1-IVOSIDENIB (REG-IVOSIDENIB-AML; NCCN Cat 1) instead of ven+aza backbone. Gap (IDH1 IND deferred PROD-5) CLOSED. if_false now routes to step 62 (KMT2A gate) added Workstream FA 2026-05-04."
+    notes: "Step 6 updated 2026-05-04 (Workstream CK/FA): ivosidenib default + olutasidenib Cat 1 alternative (Workstream FB). Both IDH1 inhibitors NCCN Cat 1 for R/R IDH1-mutated AML. IND-AML-RR-IDH1-OLUTASIDENIB now wired."
 
   # Step 62 — KMT2A-rearranged R/R AML → revumenib monotherapy.
   # Revumenib (Revuforj) is a menin inhibitor; KMT2A fusion proteins are
@@ -171,9 +186,13 @@ sources:
   - SRC-ELN-AML-2022
   - SRC-ADMIRAL-PERL-2019
   - SRC-AUGMENT-101
+  - SRC-OLUTASIDENIB-DEBOTTON-2023
 
 last_reviewed: "2026-05-04"
 notes: >
+  UPDATED 2026-05-04 (Workstream FB): IND-AML-RR-IDH1-OLUTASIDENIB added to
+  output_indications and wired as Cat 1 alternative at step 6 alongside ivosidenib
+  (both NCCN Cat 1 for R/R IDH1-mutated AML; no head-to-head; olutasidenib FDA Dec 2022).
   UPDATED 2026-05-04 (Workstream FA): IND-AML-2L-KMT2A-REVUMENIB wired at step 62
   (KMT2A gate between IDH1 step 6 and frailty step 7). Revumenib (Revuforj; menin
   inhibitor; AUGMENT-101; ORR ~63%; CR/CRh ~23%; FDA Nov 2024; NCCN Cat 2A).
