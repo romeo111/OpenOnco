@@ -14,6 +14,7 @@ purpose: >
 
 output_indications:
   - IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+  - IND-CHOLANGIO-2L-FUTIBATINIB
   - IND-CHOLANGIO-2L-IDH1-IVOSIDENIB
   - IND-CHOLANGIO-2L-BRAF-V600E-DABTRAM
   - IND-CHOLANGIO-2L-MSI-H-PEMBROLIZUMAB
@@ -36,8 +37,29 @@ decision_tree:
         - condition: "FGFR2 fusion or rearrangement confirmed by RNA-NGS / DNA-NGS fusion-aware / FISH break-apart"
     if_true:
       result: IND-CHOLANGIO-2L-FGFR2-FUSION-PEMIGATINIB
+      notes: >
+        FGFR2 fusion/rearrangement iCCA: pemigatinib 13.5 mg PO d1-14 q21d
+        (FIGHT-202; Abou-Alfa 2020 JCO; ORR 35.5%; mPFS 6.9 mo; FDA April 2020;
+        NCCN Cat 1). ALTERNATIVE (Cat 2A): futibatinib (IND-CHOLANGIO-2L-FUTIBATINIB;
+        FOENIX-CCA2; ORR 41.7%; mPFS 9.0 mo; mOS 21.7 mo; FDA September 2023) —
+        preferred when pemigatinib inaccessible or prior pemigatinib intolerance/resistance.
+        Infigratinib: voluntarily withdrawn from market (not available); do not use.
+      alternatives:
+        - indication_id: IND-CHOLANGIO-2L-FUTIBATINIB
+          nccn_category: "2A"
+          criteria: >
+            FGFR2 fusion/rearrangement confirmed; pemigatinib inaccessible or
+            prior pemigatinib intolerance or post-pemigatinib acquired resistance
+            (FGFR2 gatekeeper mutation V565I or other); ECOG ≤2.
+          note: >
+            Futibatinib (Lytgobi; FOENIX-CCA2; Goyal 2023 NEJM; ORR 41.7%; mPFS
+            9.0 mo; mOS 21.7 mo; FDA September 22, 2023 regular approval). Covalent
+            irreversible FGFR1-4 inhibitor — distinct mechanism from pemigatinib
+            (non-covalent); retains activity against acquired FGFR2 resistance mutations.
+            Hyperphosphatemia + dry eye management mandatory.
     if_false:
       next_step: 12
+    notes: "Updated Workstream FF 2026-05-05: futibatinib (Cat 2A) added as alternative to pemigatinib at step 1 (FOENIX-CCA2; ORR 41.7%; mPFS 9.0 mo; FDA Sept 2023). IND-CHOLANGIO-2L-FUTIBATINIB wired. Infigratinib: withdrawn from market — NOT wired."
 
   # Step 12 — IDH1 hotspot mutation (~15-20% intrahepatic CCA).
   # Ivosidenib 500 mg/day (ClarIDHy; Abou-Alfa 2020 NEJM; 2021 FDA);
@@ -180,6 +202,10 @@ notes: >
   (KEYNOTE-158; Bang 2020 AoO; ORR ~41%; NCCN Cat 2A). Gap (5) CLOSED.
   UPDATED 2026-05-04 (Workstream BH): IND-CHOLANGIO-2L-HER2-TDXD authored and wired at step 15
   (DESTINY-PanTumor02; Shitara 2023 NEJM; BTC n=22 ORR 36.4%; NCCN Cat 2A). Gap (3) CLOSED.
+  UPDATED 2026-05-05 (Workstream FF): IND-CHOLANGIO-2L-FUTIBATINIB wired as Cat 2A alternative
+  to pemigatinib at step 1 (FOENIX-CCA2; Goyal 2023 NEJM; ORR 41.7%; mPFS 9.0 mo;
+  mOS 21.7 mo; FDA September 2023). Infigratinib: withdrawn from market; NOT wired.
+  Gap CLOSED.
   UPDATED 2026-05-04 (Workstream CD): IND-CHOLANGIO-2L-NTRK-LAROTRECTINIB authored and
   wired at step 16 (NAVIGATE; Drilon 2018 NEJM; ORR 75% pooled; NCCN Cat 2A).
   Step 15 if_false updated from next_step: 2 → next_step: 16. Gap CLOSED.
