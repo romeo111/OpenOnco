@@ -8,6 +8,7 @@ output_indications:
 - IND-CLL-2L-VENR-MURANO
 - IND-CLL-1L-ZANUBRUTINIB
 - IND-CLL-3L-PIRTOBRUTINIB
+- IND-CLL-3L-LISOCEL
 default_indication: IND-CLL-2L-VENR-MURANO
 alternative_indication: IND-CLL-3L-PIRTOBRUTINIB
 decision_tree:
@@ -42,12 +43,60 @@ decision_tree:
   if_true:
     result: IND-CLL-1L-ZANUBRUTINIB
   if_false:
+    next_step: 31
+  notes: "Wired via RF-CLL-VEN-RESISTANT-ACTIONABLE + none_of RF-PRIOR-BTKI-PROGRESSION: venetoclax progression in cBTKi-naive → zanubrutinib. if_false updated 2026-05-04 (Workstream CS): double-exposed (BTKi + BCL2i) patients now routed to step 31 (liso-cel gate) instead of direct venetoclax re-challenge."
+
+  # Step 31 — double-exposed CLL (cBTKi + BCL-2i both failed) → liso-cel.
+  # C481S/PLCG2 patients were already captured at step 1 → pirtobrutinib.
+  # Step 31 catches double-exposed patients WITHOUT C481S actionable mutation.
+  # TRANSCEND CLL-004 (Siddiqi 2023 Lancet; FDA March 2024): first CAR-T approval
+  # for CLL. ORR ~47% double-exposed; CR ~18%; uMRD in CR subset. NCCN Cat 2A.
+  # ICANS G≥3 ~20% (higher than DLBCL liso-cel) — CLL-specific neurotox signal;
+  # CAR-T centre with ICU access + neurology support mandatory.
+- step: 31
+  evaluate:
+    all_of:
+    - red_flag: RF-PRIOR-BTKI-PROGRESSION
+    - red_flag: RF-CLL-VEN-RESISTANT-ACTIONABLE
+    - red_flag: RF-CAR-T-ELIGIBLE
+    - condition: "No active Richter transformation (handled per DLBCL pathway)"
+  if_true:
+    result: IND-CLL-3L-LISOCEL
+    notes: >
+      Double-exposed CLL (cBTKi + BCL-2i both failed) + CAR-T eligible:
+      lisocabtagene maraleucel (TRANSCEND CLL-004; Siddiqi 2023 Lancet;
+      FDA March 2024; ORR ~47%; CR ~18%; uMRD in CR subset; NCCN Cat 2A).
+      First CAR-T approval for CLL. ICANS G≥3 ~20% — higher than DLBCL liso-cel;
+      CAR-T centre with ICU + neurology monitoring mandatory.
+      Ukraine: not registered; international referral required (Israel, Poland, Germany).
+  if_false:
     result: IND-CLL-2L-VENR-MURANO
-  notes: "Wired via RF-CLL-VEN-RESISTANT-ACTIONABLE (CSD-9A) + none_of RF-PRIOR-BTKI-PROGRESSION: venetoclax progression in cBTKi-naive patients routes back to BTKi class (zanubrutinib); cBTKi-exposed ven-resistant cases were already captured at step 1 via RF-CLL-POST-BTKI-C481-ACTIONABLE."
+    notes: >
+      CAR-T ineligible (ECOG ≥3, organ dysfunction, no international referral access)
+      OR not double-exposed: venetoclax + rituximab (IND-CLL-2L-VENR-MURANO) as
+      default fallback; or allogeneic HCT referral for fit younger patients. MDT discussion.
+  notes: "Step 31 added 2026-05-04 (Workstream CS): double-exposed CLL liso-cel gate. BTKi + BCL2i both failed + CAR-T eligible → IND-CLL-3L-LISOCEL (TRANSCEND CLL-004; FDA March 2024; NCCN Cat 2A). Gap (1) CLOSED."
 sources:
 - SRC-NCCN-BCELL-2025
 - SRC-ESMO-CLL-2024
-last_reviewed: '2026-04-26'
-notes: 'OOS / wiring gaps: (1) Lisocabtagene maraleucel (TRANSCEND CLL-004) for double-exposed CLL — not modeled. (2) Allogeneic SCT for high-risk young double-refractory — referral outside KB. (3) Richter transformation detection should route to ALGO-DLBCL — must be resolved upstream at disease-resolution. (4) Reuse of IND-CLL-1L-ZANUBRUTINIB as 2L is intentional — same regimen, different indication line; acceptable per existing applicable_to.line_of_therapy semantics (regimen-level reuse). Surface for hematologist: should we author dedicated IND-CLL-2L-ZANUBRUTINIB to make line semantics explicit? (5) Idelalisib / duvelisib (PI3Ki) — not modeled (largely abandoned due to immune toxicity).
+last_reviewed: '2026-05-04'
+notes: >
+  UPDATED 2026-05-04 (Workstream CS): IND-CLL-3L-LISOCEL wired at step 31 for
+  double-exposed CLL (cBTKi + BCL-2i both failed + CAR-T eligible). TRANSCEND
+  CLL-004 (Siddiqi 2023 Lancet; FDA March 2024; ORR ~47%; CR ~18%; NCCN Cat 2A).
+  Step 3 if_false now routes to step 31 (liso-cel gate) instead of venetoclax re-challenge.
+  Gap (1) CLOSED.
+  ROUTING SUMMARY: (1) C481S/PLCG2 mutation OR Richter → pirtobrutinib;
+  (2) post-BTKi + BCL2i-naive → venetoclax+rituximab (MURANO);
+  (3) BCL2i-resistant + BTKi-naive → zanubrutinib;
+  (31) double-exposed (BTKi + BCL2i failed) + CAR-T eligible → liso-cel;
+  (31) fallback → venetoclax+rituximab (or alloHCT referral).
+  OOS / wiring gaps:
+  (2) Allogeneic SCT for high-risk young double-refractory — referral outside KB.
+  (3) Richter transformation: routes to pirtobrutinib via step 1 (interim); upstream
+  disease-resolution should redirect to ALGO-DLBCL for Richter transformation.
+  (4) IND-CLL-1L-ZANUBRUTINIB reuse as 2L is intentional (same regimen; line-semantics
+  acceptable per applicable_to.line_of_therapy).
+  (5) Idelalisib / duvelisib (PI3Ki) — not modeled (largely abandoned due to immune toxicity).
 
   '
