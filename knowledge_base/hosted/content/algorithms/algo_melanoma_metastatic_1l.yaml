@@ -8,6 +8,7 @@ output_indications:
   - IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
   - IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO
   - IND-MELANOMA-METASTATIC-1L-FIANLIMAB-PEMBRO
+  - IND-MELANOMA-NIVO-MAINT
 default_indication: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
 alternative_indication: IND-MELANOMA-BRAF-METASTATIC-1L-DABRA-TRAME
 decision_tree:
@@ -89,9 +90,30 @@ decision_tree:
       result: IND-MELANOMA-METASTATIC-1L-PEMBRO-MONO
     if_false:
       result: IND-MELANOMA-METASTATIC-1L-NIVO-IPI
+      notes: >
+        BRAF-WT fit (no irAE/age/ECOG concern): nivolumab + ipilimumab 4-cycle induction
+        then transition to nivolumab monotherapy maintenance × up to 2 years (Cat 1;
+        CheckMate-067 5-yr OS 52%; IND-MELANOMA-NIVO-MAINT) — see alternatives.
+      alternatives:
+        - indication_id: IND-MELANOMA-NIVO-MAINT
+          nccn_category: "1"
+          criteria: >
+            Stage IV unresectable/metastatic melanoma; completed 4 cycles nivolumab +
+            ipilimumab induction (4 doses q3w); ≥SD/PR at first restaging; no Grade ≥3
+            irAE during induction; CI-PEMBROLIZUMAB-AUTOIMMUNE absent; ECOG 0-2. Also
+            applicable at step 3 if_false (BRAF+ IO-doublet track). Automatic transition
+            at end of induction — not a new clinical decision.
+          note: >
+            Nivolumab monotherapy maintenance post-nivo+ipi induction (CheckMate-067;
+            Larkin 2015 NEJM; Wolchok 2017-2022 updates; NCCN Cat 1): nivolumab 240 mg
+            IV q2w or 480 mg q4w × up to 2 years total. 5-yr OS 52% combination vs 44%
+            nivo mono vs 26% ipi alone. Long-tail ~49% at 6.5 years. Monitor thyroid /
+            pituitary / adrenal endocrinopathies (often permanent) + TSH q6w; skin
+            surveillance; imaging q12w. At 2 years: stop per protocol; re-challenge
+            with nivolumab feasible on progression if prior durable response.
     notes: "irAE-frail BRAF-WT → pembro mono (KEYNOTE-006). Otherwise ipi+nivo combination."
 sources: [SRC-NCCN-MELANOMA-2025, SRC-ESMO-MELANOMA-2024, SRC-KEYNOTE-006-ROBERT-2015, SRC-KEYNOTE-054-EGGERMONT-2018]
-last_reviewed: null
+last_reviewed: "2026-05-04"
 notes: >
   DREAMseq: ICI-doublet → BRAFi+MEKi sequence preferred over reverse.
   W5b drift fixes (2026-04-30): added step 0 (resected-stage-III →

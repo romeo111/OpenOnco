@@ -10,6 +10,7 @@ output_indications:
   - IND-CLL-1L-BTKI
   - IND-CLL-1L-VENO
   - IND-CLL-1L-ZANUBRUTINIB
+  - IND-CLL-ELDERLY-O-CHL
 
 default_indication: IND-CLL-1L-BTKI
 alternative_indication: IND-CLL-1L-VENO
@@ -32,6 +33,30 @@ decision_tree:
         - red_flag: RF-RAI-HIGH
     if_true:
       result: IND-CLL-1L-BTKI
+      notes: >
+        Binet B-C or RAI high: BTKi continuous is standard Cat 1. For very frail
+        (CIRS >6, age ≥75) or when BTKi continuous is not appropriate: O-Chl
+        (IND-CLL-ELDERLY-O-CHL; CLL11; Cat 1) is a fixed-duration alternative
+        for comorbid patients. See alternatives.
+      alternatives:
+        - indication_id: IND-CLL-ELDERLY-O-CHL
+          nccn_category: "1"
+          criteria: >
+            Age ≥75 AND/OR CIRS >6 (significant comorbidity score); TP53 mutation /
+            del(17p) absent (TP53-disrupted → VenO at step 1; O-Chl has poor outcomes
+            in TP53-mutated CLL); BTKi continuous not appropriate (atrial fibrillation
+            requiring anticoagulation, severe bleeding risk, or inability to tolerate
+            indefinite therapy); VenO (CLL14) also unsuitable (severe renal/hepatic
+            dysfunction, no specialist center access). Resource-limited UA access context.
+          note: >
+            Obinutuzumab + chlorambucil (O-Chl; CLL11; Goede 2014 NEJM; NCCN Cat 1):
+            mPFS 26.7 vs 16.3 mo (O-Chl vs R-Chl; HR 0.40); CR 21%; MRD-neg 38%.
+            Fixed-duration × 6 cycles q28d. Obinutuzumab first dose split (D1: 100 mg;
+            D2: 900 mg) to reduce IRR. HBV prophylaxis mandatory (entecavir before first
+            obinutuzumab). PJP prophylaxis (cotrimoxazole) ≥6 months post-anti-CD20.
+            Modern alternatives outperform (CLL14 BTKi/VenO superior PFS) — O-Chl
+            reserved for very-frail/comorbid or resource-limited settings.
+            Ukraine: obinutuzumab + chlorambucil accessible via standard procurement.
     if_false:
       next_step: 3
     notes: "Wired via RF-BINET-B-C / RF-RAI-HIGH (CSD-8A): treatment indication established by stage; standard-risk genetics route to BTKi 1L. Both IND-CLL-1L-BTKI (acalabrutinib) and IND-CLL-1L-ZANUBRUTINIB (output_indication added 2026-04-30, SEQUOIA / ALPINE) are Cat 1 second-generation BTKi options — engine pins to acalabrutinib as default per UA access; render surfaces zanubrutinib as alternative ALPINE-superiority track."
@@ -47,7 +72,7 @@ decision_tree:
     notes: "Wired via RF-BINET-A / RF-RAI-LOW (CSD-8A): early-stage CLL without iwCLL treatment indication — engine pins to BTKi as default but plan render surfaces watch-and-wait recommendation."
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-04"
 notes: >
   Both tracks are NCCN Cat 1; choice reflects risk + patient preference
   (continuous vs finite-duration). IND-CLL-1L-ZANUBRUTINIB added to

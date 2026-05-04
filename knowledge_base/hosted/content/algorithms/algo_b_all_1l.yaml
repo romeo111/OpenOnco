@@ -8,6 +8,7 @@ purpose: >
 output_indications:
   - IND-B-ALL-1L-PH-POS
   - IND-B-ALL-1L-PH-NEG
+  - IND-B-ALL-POST-CONSOLIDATION-POMP-MAINTENANCE
 
 default_indication: IND-B-ALL-1L-PH-NEG
 alternative_indication: IND-B-ALL-1L-PH-POS
@@ -21,9 +22,32 @@ decision_tree:
       result: IND-B-ALL-1L-PH-POS
     if_false:
       result: IND-B-ALL-1L-PH-NEG
+      notes: >
+        Ph-negative B-ALL: induction with pediatric-inspired regimen (CALGB 10403 or
+        institutional BFM protocol). After full induction-consolidation-interim
+        maintenance-delayed intensification: POMP maintenance × 2-3 yr
+        (IND-B-ALL-POST-CONSOLIDATION-POMP-MAINTENANCE; Cat 1) — see alternatives.
+      alternatives:
+        - indication_id: IND-B-ALL-POST-CONSOLIDATION-POMP-MAINTENANCE
+          nccn_category: "1"
+          criteria: >
+            Ph-negative B-ALL; completed full induction + consolidation + interim
+            maintenance + delayed intensification phases (BFM/CALGB 10403 schema);
+            confirmed morphologic CR (MRD-negative or low-positive preferred); ECOG ≤2;
+            no active infection; TPMT/NUDT15 genotype checked pre-6-MP start (homozygous
+            poor metabolizer → reduce 6-MP to ~10%). PJP prophylaxis (TMP-SMX) concurrent.
+          note: >
+            POMP maintenance for Ph-negative B-ALL (CALGB 10403; Stock 2019 Blood;
+            NCCN Cat 1): 6-MP PO daily + MTX PO weekly + monthly vincristine + prednisone
+            pulse × 2 years (women) or 3 years (men). 3-y EFS 59%; 3-y OS 73% in AYA
+            (vs ~30-40% historical adult-style protocols). Sex-specific duration per
+            CALGB 10403. Avoid allopurinol without 6-MP dose reduction (~50-75%). Monitor
+            LFTs monthly (6-MP + MTX hepatotoxicity synergistic). Ph+ B-ALL: POMP
+            maintenance given alongside continued TKI (imatinib/dasatinib/ponatinib) per
+            institutional protocol.
 
 sources: [SRC-NCCN-BCELL-2025]
-last_reviewed: "2026-04-25"
+last_reviewed: "2026-05-04"
 notes: >
   Engine видасть warning якщо BCR-ABL1 PCR не виконано — Ph+ vs Ph-
   decision unsafe без cytogenetics. CR1 allo-SCT decision — окремий
