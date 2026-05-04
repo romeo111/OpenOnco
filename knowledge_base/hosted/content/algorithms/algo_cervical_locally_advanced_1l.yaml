@@ -1,29 +1,57 @@
 id: ALGO-CERVICAL-LOCALLY-ADVANCED-1L
 applicable_to_disease: DIS-CERVICAL
 applicable_to_line_of_therapy: 1
-purpose: 'Scaffold algorithm for locally-advanced cervical (FIGO IB3-IVA). Currently models concurrent cisplatin-CRT only; metastatic KEYNOTE-826 (pembro+chemo+bev), tisotumab vedotin 2L+, early-stage surgical paths await full authoring.
+purpose: >
+  Locally advanced cervical cancer (FIGO IB2-IVA) definitive chemoradiotherapy.
+  Since KEYNOTE-A18 (2024), preferred track = pembrolizumab + CRT (NCCN Cat 1 for all
+  eligible patients). ICI-ineligible patients: CRT alone. MDT coordination with radiation
+  oncology is mandatory for all LA cervical cases.
 
-  '
 output_indications:
+- IND-CERVICAL-LA-1L-PEMBRO-CRT
 - IND-CERVICAL-LOCALLY-ADVANCED-CRT
-default_indication: IND-CERVICAL-LOCALLY-ADVANCED-CRT
-alternative_indication: null
+default_indication: IND-CERVICAL-LA-1L-PEMBRO-CRT
+alternative_indication: IND-CERVICAL-LOCALLY-ADVANCED-CRT
 decision_tree:
 - step: 1
   evaluate:
+    any_of:
+    - condition: "Active autoimmune disease requiring >10mg prednisone/day equivalent"
+    - condition: "Prior organ transplant with ongoing immunosuppression"
+  if_true:
+    result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
+    notes: "ICI contraindicated — use standard CRT alone (REG-CISPLATIN-RADIOSENS + RT). MDT required."
+  if_false:
+    next_step: 2
+  notes: "Autoimmune gate: active systemic immunosuppression -> CRT only (no pembro)."
+- step: 2
+  evaluate:
     all_of:
-    - condition: FIGO IB3-IVA (locally advanced)
+    - condition: "FIGO IB2, IIA1, IIA2, IIB, IIIA, IIIB, or IVA (locally advanced)"
     - any_of:
       - red_flag: RF-FITNESS-ECOG-FIT
       - red_flag: RF-FITNESS-ECOG-INTERMEDIATE
     - none_of:
       - red_flag: RF-ORGAN-RENAL-IMPAIRED
   if_true:
-    result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
+    result: IND-CERVICAL-LA-1L-PEMBRO-CRT
+    notes: >
+      KEYNOTE-A18 (Colombo N NEJM 2023; n=1060): pembro+CRT vs CRT.
+      24-month PFS 67.8% vs 57.3% (HR 0.70; p=0.0020). FDA approved January 2024.
+      NCCN Cervical 2025: Category 1 for LA cervical + CRT.
+      Pembro 200mg Q3W x5 concurrent with CRT; then 400mg Q6W x15 maintenance.
+      All LA cervical patients without ICI contraindication should receive pembro+CRT.
   if_false:
     result: IND-CERVICAL-LOCALLY-ADVANCED-CRT
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Fitness gate for pembro+CRT. Renal-impaired: hold cisplatin; substitute carboplatin AUC 2 weekly — pembro can still be given."
 sources:
 - SRC-NCCN-CERVICAL-2025
 last_reviewed: '2026-04-26'
-notes: "Single-indication scaffold. Full algorithm requires: - Metastatic 1L (KEYNOTE-826: pembro+carbo+pacli ± bev for PD-L1\n  CPS ≥1)\n- Recurrent/persistent locally advanced (tisotumab vedotin 2L+) - Early-stage surgical paths (radical hysterectomy IB1-IB2 vs\n  cone IA1; Surgery entity per PROPOSAL §17 needed)\n- INTERLACE 2024 — induction carbo+pacli before CRT (emerging standard)\n"
+last_reviewed: "2026-05-04"
+notes: >
+  UPDATED 2026-05-04 (Workstream EE): Added IND-CERVICAL-LA-1L-PEMBRO-CRT (KEYNOTE-A18;
+  FDA Jan 2024; NCCN Cat 1) as preferred 1L for LA cervical. New 2-step decision tree:
+  autoimmune gate -> CRT alone; fit + no ICI contraindication -> pembro+CRT.
+  REG-PEMBRO-CRT-CERVICAL-LA authored (pembro 200mg Q3W x5 concurrent + 400mg Q6W x15 maintenance).
+  Remaining gaps: INTERLACE 2024 (induction carbo+pacli before CRT; emerging standard);
+  early-stage surgical paths (FIGO IA1-IB1); metastatic 1L KEYNOTE-826 in algo_cervical_metastatic.

@@ -1,0 +1,85 @@
+id: IND-CERVICAL-LA-1L-PEMBRO-CRT
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-CERVICAL
+  line_of_therapy: 1
+  stage_requirements:
+    - "Locally advanced cervical cancer (FIGO 2014 stage IB2, IIA1, IIA2, IIB, IIIA, IIIB, or IVA)"
+    - "Definitive chemoradiotherapy intent (not post-operative adjuvant)"
+    - "No distant metastatic disease (M0); para-aortic nodal involvement: MDT case-by-case"
+  biomarker_requirements:
+    - "PD-L1 testing: not required for eligibility (KEYNOTE-A18 enrolled all comers; benefit across PD-L1 groups)"
+    - "Histology: squamous cell carcinoma (majority), adenocarcinoma, adenosquamous carcinoma all eligible"
+
+recommended_regimen: REG-PEMBRO-CRT-CERVICAL-LA
+
+concurrent_therapy:
+  - "External beam radiotherapy (EBRT) + intracavitary brachytherapy (managed by radiation oncology)"
+  - "Weekly cisplatin 40mg/m² as radiosensitizer (part of REG-PEMBRO-CRT-CERVICAL-LA)"
+
+followed_by:
+  - "Pembrolizumab 400mg Q6W maintenance × up to 15 cycles after CRT completion"
+  - "Surveillance imaging post-CRT (CT/PET-CT at 3 months)"
+  - "If local residual/recurrence: surgery (pelvic exenteration) or clinical trial"
+  - "If distant metastases at progression: IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV (note: pembro already used)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  pfs_24_month_rate: "67.8%"
+  pfs_control_arm_24_month_rate: "57.3%"
+  pfs_hr: 0.70
+  pfs_p_value: 0.0020
+  notes: >
+    KEYNOTE-A18 (Colombo N NEJM 2023; NCT04221945; n=1060): pembro+CRT vs placebo+CRT.
+    24-month PFS 67.8% vs 57.3% (HR 0.70; 95% CI 0.55-0.89; p=0.0020). OS data maturing.
+    FDA approved January 12, 2024 for LA cervical cancer (FIGO IB2-IVA).
+    NCCN Cervical 2025: Category 1 for LA cervical concurrent CRT.
+
+hard_contraindications:
+  - "Active autoimmune disease requiring >10mg prednisone/day equivalent (ICI contraindicated)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Distant metastatic disease (M1) — route to IND-CERVICAL-METASTATIC-1L-PEMBRO-CHEMO-BEV"
+  - "Contraindication to cisplatin AND carboplatin (severe renal failure, hypersensitivity)"
+  - "Prior pelvic radiation (cumulative dose concern)"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-CREATININE-CL
+  - "MRI pelvis: tumor staging and brachytherapy planning"
+  - "CT/PET-CT chest-abdomen-pelvis: M-staging"
+  - "Para-aortic lymph node assessment (PET-CT preferred)"
+  - "TSH baseline (pembro irAE monitoring)"
+  - "Glucose baseline (immune-mediated diabetes risk)"
+
+desired_tests:
+  - "PD-L1 CPS (not required for eligibility; prognostic)"
+  - "HPV testing and typing (prognostic)"
+  - "HIV status (affects immunotherapy safety)"
+  - "Fertility discussion before radiotherapy (RT causes permanent ovarian failure)"
+
+rationale: >
+  KEYNOTE-A18 established pembrolizumab + concurrent CRT as standard of care for locally
+  advanced cervical cancer, with 24-month PFS improvement from 57% to 68% (HR 0.70; p=0.002).
+  FDA approved January 2024; NCCN Category 1. The regimen uses pembrolizumab as an immune
+  co-stimulator alongside the cytotoxic/radiosensitizer effect of weekly cisplatin and
+  radiotherapy, with maintenance pembrolizumab extending immune surveillance after RT.
+  Benefit seen regardless of PD-L1 status. This replaces concurrent CRT alone as the
+  preferred treatment for LA cervical cancer in fit patients without ICI contraindications.
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream EE). Cervical LA 1L pembro+CRT (KEYNOTE-A18).
+  Two-reviewer clinical signoff required.

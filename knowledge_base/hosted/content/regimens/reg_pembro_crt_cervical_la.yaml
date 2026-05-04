@@ -1,0 +1,84 @@
+id: REG-PEMBRO-CRT-CERVICAL-LA
+name: "Pembrolizumab + cisplatin-based chemoradiotherapy for locally advanced cervical cancer (KEYNOTE-A18)"
+name_ua: "Пембролізумаб + хіміопроменева терапія при місцево-поширеному раку шийки матки (KEYNOTE-A18)"
+alternate_names: ["KEYNOTE-A18 regimen", "pembro+CRT cervical", "pembrolizumab+chemoradiation cervical"]
+
+components:
+  - drug_id: DRUG-PEMBROLIZUMAB
+    dose: "200 mg IV flat dose — concurrent phase (cycles 1-5)"
+    schedule: "Q21D × 5 cycles concurrent with chemoradiotherapy"
+    route: IV
+    notes: >
+      Give pembrolizumab on day 1 of each Q21D cycle concurrent with weekly cisplatin and
+      radiotherapy. After completing CRT (5 cycles pembro + ~6 weeks RT), switch to
+      pembrolizumab 400mg Q6W maintenance for up to 15 additional cycles (~84 weeks total).
+  - drug_id: DRUG-CISPLATIN
+    dose: "40 mg/m² IV (cap 70 mg) weekly"
+    schedule: "Weekly × 5-6 weeks concurrent with EBRT"
+    route: IV
+    notes: >
+      Cisplatin as radiosensitizer — low weekly dose (NOT full systemic cisplatin dose).
+      Administer with IV hydration 1L NaCl before and after; Mg 20-40 mEq IV.
+      Hold if CrCl <45 mL/min; substitute carboplatin AUC 2 weekly if cisplatin-ineligible.
+
+maintenance_phase:
+  drug_id: DRUG-PEMBROLIZUMAB
+  dose: "400 mg IV Q6W (flat dose)"
+  schedule: "Q42D × up to 15 cycles after concurrent CRT completion"
+  duration: "Up to 84 additional weeks (~15 cycles × 6 weeks); total pembro duration ~2 years"
+
+radiotherapy_component:
+  type: "External beam radiation therapy (EBRT) + intracavitary brachytherapy"
+  ebrt: "45-50 Gy in 25 fractions to pelvis (pelvic lymph nodes + primary tumor)"
+  brachytherapy: "30-35 Gy to point A (high-dose rate intracavitary; 5-6 fractions)"
+  total_dose: "EQD2 ≥80 Gy to primary tumor (EBRT + brachytherapy combined dose)"
+  radiation_oncology_required: true
+  notes: "Radiotherapy is managed by radiation oncology — this protocol documents the systemic (pembrolizumab + cisplatin) component. MDT coordination required."
+
+concurrent_phase_weeks: 6
+total_treatment_duration: "~2 years (CRT concurrent phase + maintenance pembrolizumab)"
+
+premedications:
+  - "Pre-cisplatin: 5-HT3 antagonist + dexamethasone (antiemetic; cisplatin moderately emetogenic at 40mg/m²)"
+  - "IV hydration: 1L NaCl 0.9% pre- and post-cisplatin; Mg 20-40 mEq MgSO4 IV with cisplatin"
+  - "No routine premedication required for pembrolizumab after first dose"
+
+supportive_care:
+  - "CBC: before each weekly cisplatin dose — hold cisplatin if ANC <1000 or platelets <75K"
+  - "CMP + creatinine + Mg: before each weekly cisplatin"
+  - "Thyroid function (TSH): baseline, q8 weeks (pembro irAE)"
+  - "Blood glucose: baseline, q8 weeks (pembro irAE — immune-mediated diabetes)"
+  - "LFTs: baseline, q8 weeks (hepatotoxicity irAE)"
+  - "irAE monitoring: rash, diarrhea, dyspnea — each visit"
+
+dose_modifications:
+  - toxicity: "CrCl <45 mL/min"
+    action: "Hold cisplatin; substitute carboplatin AUC 2 weekly; continue pembro + RT"
+  - toxicity: "Grade 3 immune-related AE"
+    action: "Hold pembrolizumab; corticosteroids 1-2 mg/kg/day prednisone; restart when Grade ≤1"
+  - toxicity: "Grade 4 immune-related AE or Grade 3+ pneumonitis"
+    action: "PERMANENTLY DISCONTINUE pembrolizumab; IV methylprednisolone + organ-specific management"
+  - toxicity: "Grade 3-4 hematologic toxicity from cisplatin"
+    action: "Hold cisplatin 1 week; if ANC recovers continue RT; G-CSF for Grade 4 febrile neutropenia"
+
+special_requirements:
+  - "MDT required: medical oncology + radiation oncology coordination mandatory"
+  - "ECOG PS 0-2"
+  - "Adequate renal function: CrCl ≥45 mL/min for cisplatin"
+  - "No active autoimmune disease requiring >10mg prednisone/day equivalent"
+  - "FIGO stage IB2, IIA1, IIA2, IIB, IIIA, IIIB, or IVA (KEYNOTE-A18 eligibility)"
+  - "No distant metastatic disease (para-aortic node involvement borderline — MDT)"
+
+sources:
+  - SRC-NCCN-CERVICAL-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  KEYNOTE-A18 (Colombo N et al. NEJM 2023; NCT04221945): Phase 3, n=1060 locally advanced
+  cervical cancer (FIGO 2014 stage IB2-IVA). Pembrolizumab + CRT vs placebo + CRT.
+  24-month PFS rate 67.8% vs 57.3% (HR 0.70; 95% CI 0.55-0.89; p=0.0020).
+  FDA approved January 12, 2024 for LA cervical cancer. NCCN Cervical 2025: Category 1.
+  Pembrolizumab regimen: 200mg Q3W × 5 concurrent with CRT, then 400mg Q6W × 15 maintenance.
+  Cisplatin radiosensitizer 40mg/m² weekly during RT (identical to standard CRT).
