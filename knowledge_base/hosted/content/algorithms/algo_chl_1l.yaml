@@ -6,7 +6,10 @@ purpose: >
   per ECHELON-1; ABVD fallback. Early-stage (I-II) — ABVD × 2-4 + ISRT
   (response-adapted, but represented here as ABVD for simplicity).
 
-output_indications: [IND-CHL-1L-ABVD, IND-CHL-1L-A-AVD]
+output_indications:
+  - IND-CHL-1L-ABVD
+  - IND-CHL-1L-A-AVD
+  - IND-CHL-1L-N-AVD
 default_indication: IND-CHL-1L-ABVD
 alternative_indication: IND-CHL-1L-A-AVD
 
@@ -17,11 +20,38 @@ decision_tree:
         - red_flag: RF-CHL-ADVANCED-STAGE
     if_true:
       result: IND-CHL-1L-A-AVD
+      notes: >
+        A+AVD (brentuximab vedotin + AVD) for advanced cHL stage III-IV
+        (ECHELON-1; NCCN Cat 1; mature OS benefit demonstrated). N+AVD
+        (nivolumab + AVD) is an equivalent Cat 1 alternative per SWOG S1826
+        — see alternatives block below.
+      alternatives:
+        - indication_id: IND-CHL-1L-N-AVD
+          nccn_category: "1"
+          criteria: >
+            Advanced cHL stage III-IV (or stage II with bulky/B-symptoms/IPS ≥4);
+            no active autoimmune disease requiring systemic immunosuppression
+            (CI-PEMBROLIZUMAB-AUTOIMMUNE); no solid-organ transplant; nivolumab
+            accessible + funding pathway confirmed; ECOG ≤2; younger / fit
+            patients or those with neuropathy concern from brentuximab preferred.
+          note: >
+            N+AVD (SWOG S1826; Herrera 2024 NEJM; NCCN Cat 1): 2-yr PFS 92%
+            vs A+AVD 83% (HR 0.48; p<0.001) — superior PFS in advanced cHL.
+            Bleomycin replaced by nivolumab (eliminates bleomycin pulmonary
+            toxicity same as A+AVD). Less peripheral neuropathy vs A+AVD
+            (no brentuximab); less hematologic AEs Grade ≥3. Baseline thyroid
+            function + cortisol mandatory (endocrine irAE monitoring). No
+            maintenance added per S1826 protocol. UA access: nivolumab
+            off-label for cHL — institutional funding appeal required.
     if_false:
       result: IND-CHL-1L-ABVD
 
-sources: [SRC-NCCN-BCELL-2025, SRC-ESMO-HODGKIN-2024]
-last_reviewed: "2026-04-27"
+sources:
+  - SRC-NCCN-BCELL-2025
+  - SRC-ESMO-HODGKIN-2024
+  - SRC-ESMO-LYMPHOMA-2025
+
+last_reviewed: "2026-05-04"
 notes: >
   Etiology rails (parallel to indication selection — none shifts ABVD
   vs A+AVD choice; both routed via SUP-* + RF-CHL-INFECTION-SCREENING):
@@ -51,3 +81,7 @@ notes: >
   All three operate via parallel SUP-* / RF-* surfaces. BIO-HBV-STATUS
   and BIO-HIV-STATUS missing — would let us formalize these rails as
   biomarker_requirements; flagged for future round.
+  UPDATED 2026-05-04 (Workstream FH): IND-CHL-1L-N-AVD added to
+  output_indications; wired as Cat 1 alternative at step 1 A+AVD branch.
+  SWOG S1826 (Herrera 2024 NEJM): N+AVD 2-yr PFS 92% vs A+AVD 83%
+  (HR 0.48). Preferred in younger/fit patients without autoimmune CI.

@@ -10,6 +10,7 @@ output_indications:
 - IND-DLBCL-2L-LISOCEL
 - IND-DLBCL-2L-AXICEL-CART
 - IND-DLBCL-3L-AXICEL-CART
+- IND-DLBCL-3L-LISO-CEL-CART
 - IND-DLBCL-3L-LONCASTUXIMAB
 - IND-DLBCL-3L-EPCORITAMAB
 - IND-DLBCL-3L-GLOFITAMAB
@@ -81,9 +82,31 @@ decision_tree:
     - condition: CD19+ disease confirmed
   if_true:
     result: IND-DLBCL-3L-AXICEL-CART
+    notes: >
+      ≥3L DLBCL + CAR-T eligible: axi-cel (ZUMA-1; Neelapu 2017 NEJM;
+      ORR ~83%; CR ~58%; NCCN Cat 1). Liso-cel is equivalent Cat 1
+      alternative with better safety profile — see alternatives below.
+      Prefer liso-cel when centre offers both products.
+    alternatives:
+      - indication_id: IND-DLBCL-3L-LISO-CEL-CART
+        nccn_category: "1"
+        criteria: >
+          R/R DLBCL after ≥2 prior lines; CD19+ confirmed; ECOG 0-2;
+          adequate organ function for Flu/Cy lymphodepletion; no prior
+          CD19-directed CAR-T; manufacturing slot + funding pathway
+          confirmed; liso-cel accessible at certified CAR-T centre.
+          Preferred when centre offers both products (lower ICANS).
+        note: >
+          Liso-cel 3L (TRANSCEND NHL-001; Abramson 2020 Lancet; NCCN Cat 1):
+          ORR 73%; CR 53%; mOS 27.3 months. CRS Grade ≥3 ~2% (vs axi-cel
+          ~13%); ICANS Grade ≥3 ~10% (vs axi-cel ~28%) — markedly safer
+          profile. Preferred in older / frail / cardiac-comorbid patients.
+          Single infusion (no step-up dosing). Manufacturing ~3 weeks —
+          bridge therapy during window mandatory for active disease. Ukraine:
+          not registered; international referral required.
   if_false:
     next_step: 21
-  notes: Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion).
+  notes: "Partially wired - fitness/eligibility gates wired via CSD-7A pan-disease RFs; remaining condition(s) kept as MDT-evaluated text (no RF available for that criterion). UPDATED 2026-05-04 (Workstream FI): IND-DLBCL-3L-LISO-CEL-CART added as Cat 1 alternative at step 2 if_true (axi-cel default; liso-cel preferred when accessible for lower ICANS profile)."
 - step: 21
   evaluate:
     any_of:
@@ -157,6 +180,7 @@ notes: 'AUTHORED 2026-05-04: IND-DLBCL-2L-RDHAP-AUTOSCT (CORAL NCCN Cat 1; R-ICE
   UPDATED 2026-05-04 (Workstream BJ): IND-DLBCL-3L-EPCORITAMAB + IND-DLBCL-3L-GLOFITAMAB wired at step 22 (epcoritamab EPCORE-NHL-1 ORR 63%; glofitamab NP30179 ORR 52%; both NCCN Cat 2A). Gap (1) CLOSED. Step 21 if_false → step 22 → step 3 fallback. Both pre-existing indication entities now surfaced by engine.
   UPDATED 2026-05-04 (Workstream CP): Step 12 added as liso-cel vs axi-cel access gate (early-relapse/primary-refractory DLBCL 2L). Step 11 if_true now routes to step 12; liso-cel preferred (TRANSFORM; ICANS G≥3 ~4%); axi-cel when liso-cel unavailable (ZUMA-7; ICANS G≥3 ~21%); both NCCN Cat 1. Gap (3) CLOSED.
   UPDATED 2026-05-04 (Workstream EY): IND-DLBCL-2L-TAFA-LEN added to output_indications; wired as Cat 2A alternative at step 3 (transplant-ineligible track) when bendamustine contraindicated/inaccessible. L-MIND: ORR 57.5%; CR 40%; mDOR 43.9 months; FDA Jul 2020. DRUG-TAFASITAMAB + REG-TAFASITAMAB-LEN-DLBCL + SRC-LMIND-SALLES-2020 created.
+  UPDATED 2026-05-04 (Workstream FI): IND-DLBCL-3L-LISO-CEL-CART added to output_indications; wired as Cat 1 alternative at step 2 if_true (axi-cel default; liso-cel preferred when both accessible — lower ICANS G≥3 ~10% vs axi-cel ~28%; TRANSCEND NHL-001 ORR 73%; CR 53%; NCCN Cat 1). Gap CLOSED.
   OOS / wiring gaps: (2) RF-DLBCL-FRAILTY-AGE / RF-DLBCL-ORGAN-DYSFUNCTION should also fire here — wired only via free-text condition until 2L-specific RFs land.
 
   '
