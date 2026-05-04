@@ -1,0 +1,85 @@
+id: REG-NALIRIFOX-PDAC
+name: "NALIRIFOX — nal-IRI + oxaliplatin + 5-FU/LV for metastatic PDAC (1L, NAPOLI-3)"
+name_ua: "НАЛІРІФОКС — нал-ІРІ + оксаліплатин + 5-ФУ/ЛВ при метастатичному ПДРПЗ (1 лінія)"
+alternate_names: ["NALIRIFOX", "nal-IRI+oxaliplatin+5FU/LV", "NAPOLI-3 regimen", "liposomal irinotecan+oxaliplatin"]
+
+components:
+  - drug_id: DRUG-NAL-IRI
+    dose: "50 mg/m² free base (= 57.5 mg/m² irinotecan HCl equivalent) IV over 90 min"
+    schedule: "Day 1 Q14D"
+    route: IV
+    notes: "LOWER dose than NAPOLI-1 2L regimen (70 mg/m²). UGT1A1*28/*28: reduce to 35 mg/m² free base at start."
+  - drug_id: DRUG-OXALIPLATIN
+    dose: "60 mg/m² IV over 2 hours"
+    schedule: "Day 1 Q14D (after nal-IRI)"
+    route: IV
+    notes: "Lower oxaliplatin dose vs mFOLFIRINOX (85 mg/m²). Cumulative neurotoxicity — assess before each cycle."
+  - drug_id: DRUG-LEUCOVORIN
+    dose: "400 mg/m² IV over 30 min"
+    schedule: "Day 1 Q14D (after oxaliplatin)"
+    route: IV
+    notes: "Leucovorin (folinic acid) modulates 5-FU activity. Administer before 5-FU bolus."
+  - drug_id: DRUG-5-FLUOROURACIL
+    dose: "2400 mg/m² IV 46-hour continuous infusion"
+    schedule: "Days 1-2 (46h CI starting after leucovorin) Q14D"
+    route: IV_CI
+    notes: "46h CI requires PICC line or implanted port; not suitable for peripheral IV. No bolus 5-FU in NALIRIFOX (vs FOLFIRINOX)."
+
+cycle_length_days: 14
+number_of_cycles: "Continue until progression or unacceptable toxicity"
+
+infusion_order:
+  - "1. nal-IRI 50 mg/m² IV over 90 min"
+  - "2. Oxaliplatin 60 mg/m² IV over 120 min (can run concurrent or sequential after nal-IRI)"
+  - "3. Leucovorin 400 mg/m² IV over 30 min"
+  - "4. 5-FU 2400 mg/m² IV 46h CI (pump)"
+
+premedications:
+  - "Atropine 0.25-1 mg IV/SQ: premedicate before nal-IRI OR keep at bedside for acute cholinergic syndrome (diaphoresis, abdominal cramping, early diarrhea within 30 min of infusion)"
+  - "5-HT3 antagonist + dexamethasone: standard antiemetic (nal-IRI and oxaliplatin are moderately emetogenic)"
+  - "NK1 antagonist (aprepitant/fosaprepitant): consider for combination emetogenic burden"
+  - "Loperamide: prescribe for late diarrhea (≥24h post-infusion); patient must have supply at home"
+
+supportive_care:
+  - "CBC with differential: before each cycle — hold if ANC <1500/mm³ or platelets <100K/mm³"
+  - "CMP + LFTs + bilirubin: before each cycle — hold nal-IRI if total bilirubin >2× ULN"
+  - "Neurological assessment: peripheral neuropathy (oxaliplatin); hold/reduce if Grade 2+ persistent"
+  - "UGT1A1 genotyping before starting if available (UGT1A1*28/*28: reduce nal-IRI to 35 mg/m²)"
+  - "CT CAP: every 8 weeks (4 cycles) for response assessment"
+  - "ECOG PS reassessment: each visit"
+
+dose_modifications:
+  - toxicity: "Grade 3-4 diarrhea"
+    action: "Hold nal-IRI; aggressive loperamide + IV hydration; reduce nal-IRI to 35 mg/m² at restart"
+  - toxicity: "ANC <1000/mm³ at Day 1"
+    action: "Hold; G-CSF; restart when ANC ≥1500/mm³; reduce nal-IRI by 1 dose level"
+  - toxicity: "Grade 2 peripheral neuropathy persisting ≥2 weeks"
+    action: "Reduce oxaliplatin to 50 mg/m²; hold oxaliplatin if Grade 3+"
+  - toxicity: "Total bilirubin >2× ULN"
+    action: "Hold nal-IRI; investigate biliary obstruction (stenting if needed); restart when bilirubin ≤1.5× ULN"
+  - toxicity: "Grade 3 mucositis or hand-foot syndrome"
+    action: "Reduce 5-FU by 25%; consider uridine triacetate for overdose scenario"
+
+special_requirements:
+  - "PICC line or implanted port required for 46h 5-FU continuous infusion"
+  - "ECOG PS 0-1 preferred; PS 2 with caution (NAPOLI-3 enrolled PS 0-1 predominantly)"
+  - "UGT1A1 genotyping strongly recommended (reduces febrile neutropenia in *28/*28)"
+  - "No prior chemotherapy for metastatic PDAC (1L indication)"
+  - "Gemcitabine-treated adjuvant PDAC may be eligible if 6+ months from last gemcitabine"
+  - "BRCA1/2 germline mutation testing: if BRCA+ and responds, consider olaparib maintenance"
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  NAPOLI-3 (Wainberg ZM et al. NEJM 2023; NCT04083235): Phase 3, n=770 metastatic PDAC.
+  NALIRIFOX vs mFOLFIRINOX: mOS 11.1 vs 9.2 months (HR 0.84; 95% CI 0.71-0.99; p=0.0001),
+  mPFS 7.4 vs 5.6 months (HR 0.69; p<0.0001), ORR 41.8% vs 36.2%.
+  FDA approved January 19, 2024 for 1L metastatic PDAC.
+  NCCN PDAC 2025: Category 1 preferred 1L (alongside FOLFIRINOX and gem-nab-pac).
+  Key difference from FOLFIRINOX: uses nal-IRI (liposomal) instead of conventional irinotecan;
+  lower oxaliplatin dose (60 vs 85 mg/m²); no bolus 5-FU.
+  UA access: ONIVYDE not registered in Ukraine — major access barrier.

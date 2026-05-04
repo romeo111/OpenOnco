@@ -1,0 +1,87 @@
+id: IND-PDAC-METASTATIC-1L-NALIRIFOX
+plan_track: standard
+
+applicable_to:
+  disease_id: DIS-PDAC
+  line_of_therapy: 1
+  stage_requirements:
+    - "Metastatic pancreatic ductal adenocarcinoma (PDAC)"
+    - "No prior systemic therapy for metastatic disease"
+    - "ECOG PS 0-1 (NAPOLI-3 enrollment); ECOG PS 2 with significant caution"
+  biomarker_requirements:
+    - "No biomarker requirement for eligibility"
+    - "BRCA1/2 germline testing recommended: if BRCA-mutated + responds, consider olaparib maintenance after 4+ months"
+    - "UGT1A1 genotyping recommended (dose modification for *28/*28)"
+
+recommended_regimen: REG-NALIRIFOX-PDAC
+
+concurrent_therapy: []
+
+followed_by:
+  - "Olaparib maintenance (IND-PDAC-MAINTENANCE-OLAPARIB-BRCA) if germline BRCA1/2-mutated + no progression after 4+ months platinum-based therapy"
+  - "2L: nal-IRI+5FU/LV (REG-NAL-IRI-5FU-LV-PDAC) — note: nal-IRI already used in 1L NALIRIFOX; potential overlap"
+  - "2L: FOLFOX (REG-FOLFOX), or clinical trial (KRAS G12D inhibitors in development)"
+
+evidence_level: high
+strength_of_recommendation: strong
+nccn_category: 1
+
+expected_outcomes:
+  median_overall_survival_months: 11.1
+  os_control_arm_months: 9.2
+  os_hr: 0.84
+  os_p_value: 0.0001
+  median_pfs_months: 7.4
+  pfs_control_arm_months: 5.6
+  pfs_hr: 0.69
+  orr_percent: 41.8
+  notes: >
+    NAPOLI-3 (Wainberg ZM NEJM 2023; NCT04083235; n=770): NALIRIFOX vs mFOLFIRINOX.
+    mOS 11.1 vs 9.2 months (HR 0.84; p=0.0001). mPFS 7.4 vs 5.6 months (HR 0.69; p<0.0001).
+    ORR 41.8% vs 36.2%. FDA approved January 19, 2024. NCCN PDAC 2025: Category 1 preferred.
+
+hard_contraindications:
+  - "Prior systemic therapy for metastatic PDAC"
+  - "Total bilirubin >2× ULN at baseline (nal-IRI hepatic metabolism; biliary obstruction must be relieved)"
+  - "ECOG PS 3-4"
+  - "ECOG PS 4 (engine hard gate)"
+  - "Active severe peripheral neuropathy (oxaliplatin component)"
+  - "Known hypersensitivity to oxaliplatin or platinum compounds"
+  - "ONIVYDE not accessible without confirmed named-patient supply (UA: not registered)"
+
+red_flags_triggering_alternative: []
+
+required_tests:
+  - TEST-CBC
+  - TEST-CMP
+  - TEST-LFT
+  - TEST-BILIRUBIN
+  - TEST-CECT-CAP
+  - "Neurological assessment for pre-existing neuropathy (oxaliplatin)"
+  - "Germline BRCA1/2 testing (for maintenance olaparib planning)"
+  - "UGT1A1 genotyping if available"
+
+desired_tests:
+  - "ECOG PS assessment"
+  - "CA 19-9 baseline (tumor marker for response monitoring)"
+  - "KRAS/TP53/SMAD4 NGS panel (prognostic; also identifies rare KRAS G12C candidates)"
+
+rationale: >
+  NALIRIFOX (nanoliposomal irinotecan + oxaliplatin + 5-FU/LV) is FDA approved January 2024
+  and NCCN Category 1 for 1L metastatic PDAC based on NAPOLI-3 superiority vs mFOLFIRINOX
+  (mOS 11.1 vs 9.2 months). NALIRIFOX is an alternative to FOLFIRINOX and gem+nab-pac for
+  fit patients (ECOG 0-1). Practical advantages over FOLFIRINOX: lower irinotecan dose
+  (50 not 180 mg/m²; nal-IRI liposomal formulation), lower oxaliplatin dose (60 not 85 mg/m²),
+  no bolus 5-FU. Main limitation in Ukraine: ONIVYDE (nal-IRI) is not registered; named-patient
+  import required. For most Ukrainian patients, mFOLFIRINOX (IND-PDAC-METASTATIC-1L-FOLFIRINOX)
+  remains the more accessible preferred Cat 1 option.
+
+sources:
+  - SRC-NCCN-PANCREATIC-2025
+last_reviewed: "2026-05-04"
+review_status: pending_clinical_signoff
+reviewer_signoffs: 0
+drafted_by: claude_extraction
+notes: >
+  STUB - authored 2026-05-04 (Workstream ED). PDAC 1L NALIRIFOX (NAPOLI-3; FDA Jan 2024).
+  Two-reviewer clinical signoff required.

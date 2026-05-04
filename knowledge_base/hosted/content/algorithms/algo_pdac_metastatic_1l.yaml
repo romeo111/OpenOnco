@@ -5,6 +5,7 @@ purpose: 'Algorithm for PDAC metastatic 1L. ECOG 0-1 + bilirubin-resolved → FO
 
   '
 output_indications:
+- IND-PDAC-METASTATIC-1L-NALIRIFOX
 - IND-PDAC-METASTATIC-1L-FOLFIRINOX
 - IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
 - IND-PDAC-MAINTENANCE-OLAPARIB-BRCA
@@ -25,10 +26,30 @@ decision_tree:
     - red_flag: RF-FITNESS-ECOG-FIT
     - red_flag: RF-PDAC-FIT-FOR-FOLFIRINOX
   if_true:
-    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+    next_step: 35
   if_false:
     result: IND-PDAC-METASTATIC-1L-GEM-NAB-PAC
   notes: "Wired via RF-FITNESS-ECOG-FIT (universal) AND RF-PDAC-FIT-FOR-FOLFIRINOX (W5c chunk 2026-04-30 — bilirubin_uln_x <=1.5 AND ecog <=1 AND age <=75 per PRODIGE-4 inclusion). Both required (all_of) for FOLFIRINOX intensification; failure on either gate routes to gem-nab-pac default."
+- step: 35
+  evaluate:
+    all_of:
+    - condition: "ONIVYDE (nal-IRI/nanoliposomal irinotecan) accessible (approved supply or named-patient)"
+  if_true:
+    result: IND-PDAC-METASTATIC-1L-NALIRIFOX
+    notes: >
+      NALIRIFOX (NAPOLI-3; Wainberg ZM NEJM 2023): mOS 11.1 vs 9.2 months vs mFOLFIRINOX
+      (HR 0.84; p=0.0001); mPFS 7.4 vs 5.6 months (HR 0.69). FDA approved January 2024.
+      NCCN PDAC 2025: Category 1 preferred alongside FOLFIRINOX. NALIRIFOX preferred when
+      nal-IRI accessible — superior OS vs mFOLFIRINOX in randomized trial.
+      nal-IRI dose 50 mg/m² (lower than 2L NAPOLI-1 70 mg/m²); oxaliplatin 60 mg/m² (lower
+      than FOLFIRINOX 85 mg/m²). UGT1A1 genotyping recommended.
+  if_false:
+    result: IND-PDAC-METASTATIC-1L-FOLFIRINOX
+    notes: >
+      ONIVYDE not accessible (not registered in Ukraine; no named-patient supply): use
+      mFOLFIRINOX as Cat 1 alternative. PRODIGE-4/ACCORD-11 (Conroy 2011 NEJM):
+      mOS 11.1 vs 6.8 months for FOLFIRINOX vs gem. NCCN Cat 1 for fit ECOG 0-1 PDAC.
+  notes: "Step 35 added 2026-05-04 (Workstream ED): NALIRIFOX access gate for fit patients. nal-IRI accessible -> NALIRIFOX preferred (NAPOLI-3 superiority vs mFOLFIRINOX); inaccessible -> FOLFIRINOX fallback."
 - step: 4
   evaluate:
     any_of:
@@ -41,6 +62,11 @@ sources:
 - SRC-NCCN-PANCREATIC-2025
 - SRC-ESMO-PANCREATIC-2024
 last_reviewed: '2026-04-26'
-notes: '3-arm algorithm: FOLFIRINOX (default fit) / gem-nab-pac (frail) / olaparib-maintenance (BRCA-germline post-platinum). NALIRIFOX (NAPOLI-3) emerging as 1L alternative — separate Indication when added.
-
-  '
+notes: >
+  UPDATED 2026-05-04 (Workstream ED): NALIRIFOX (NAPOLI-3; FDA Jan 2024; NCCN Cat 1)
+  added as IND-PDAC-METASTATIC-1L-NALIRIFOX. New step 35: nal-IRI accessible ->
+  NALIRIFOX preferred for fit patients (HR 0.84 vs mFOLFIRINOX); inaccessible ->
+  FOLFIRINOX fallback (UA: ONIVYDE not registered).
+  4-arm algorithm: NALIRIFOX (nal-IRI accessible fit) / FOLFIRINOX (nal-IRI inaccessible fit) /
+  gem-nab-pac (frail/PS2) / olaparib-maintenance (BRCA-germline post-platinum).
+  REG-NALIRIFOX-PDAC + DRUG-NAL-IRI authored in this workstream.
