@@ -1,0 +1,134 @@
+id: ALGO-LAM-1L
+applicable_to_disease: DIS-LAM
+applicable_to_line_of_therapy: 1
+purpose: >
+  Select treatment approach for lymphangioleiomyomatosis (LAM) — a rare progressive
+  cystic lung disease caused by mTORC1-hyperactive LAM cells.
+  Routes by: (1) diagnosis confirmation (clinical vs histological), (2) functional
+  impairment (progressive vs stable asymptomatic), (3) pregnancy/contraindication gate.
+  KEY: Not all LAM requires immediate treatment. Asymptomatic patients with stable
+  lung function may be monitored. Sirolimus is indicated for progressive or symptomatic
+  LAM (per MILES eligibility criteria and ERS guidelines).
+  MANAGEMENT PRINCIPLE: This is a CHRONIC DISEASE — sirolimus suppresses but does not
+  cure LAM. Continuous indefinite therapy required once started.
+
+output_indications:
+  - IND-LAM-1L-SIROLIMUS
+
+default_indication: IND-LAM-1L-SIROLIMUS
+alternative_indication: null
+
+decision_tree:
+  # Step 1 — Diagnosis confirmation.
+  # LAM can be diagnosed clinically (VEGF-D ≥800 pg/mL + characteristic HRCT)
+  # without biopsy in appropriate clinical context (ERS criteria).
+  - step: 1
+    evaluate:
+      any_of:
+        - condition: "LAM confirmed histologically (surgical or transbronchial lung biopsy — characteristic LAM histology)"
+        - condition: "Clinical LAM diagnosis: HRCT showing bilateral diffuse thin-walled cysts + VEGF-D ≥800 pg/mL (ERS non-invasive criteria) — biopsy not required"
+        - condition: "TSC-associated LAM: germline TSC1/TSC2 mutation + characteristic HRCT cysts in appropriate clinical context"
+    if_true:
+      next_step: 2
+      notes: >
+        LAM diagnosis confirmed — proceed to functional assessment and treatment decision.
+        ERS non-invasive diagnostic criteria (2010/2022): characteristic HRCT cysts +
+        at least one of: VEGF-D ≥800 pg/mL, TSC diagnosis, chylous pleural effusion,
+        angiomyolipoma, tuberous sclerosis complex, lymphangioma.
+        Biopsy may be deferred when clinical criteria are met in appropriate context
+        to avoid surgical risk.
+    if_false:
+      result: null
+      notes: >
+        LAM diagnosis uncertain: proceed with diagnostic workup.
+        (1) HRCT chest: bilateral diffuse thin-walled cysts are hallmark of LAM.
+        (2) VEGF-D serum level: ≥800 pg/mL is diagnostic in appropriate clinical context.
+        (3) Lung biopsy: if HRCT and VEGF-D non-diagnostic or atypical presentation.
+        Differential: other cystic lung diseases (emphysema, Langerhans histiocytosis,
+        BHD syndrome, lymphocytic interstitial pneumonia, light chain deposition disease).
+        Refer to pulmonology/rare lung disease center for diagnostic workup.
+
+  # Step 2 — Functional impairment assessment: treat vs observe.
+  # Asymptomatic stable LAM (normal FEV1, no decline) = observe.
+  # Progressive or functionally impaired LAM = treat with sirolimus.
+  - step: 2
+    evaluate:
+      any_of:
+        - condition: "FEV1 <70% predicted on spirometry"
+        - condition: "Documented FEV1 decline ≥10% over prior year"
+        - condition: "Symptomatic LAM: dyspnea on exertion, reduced 6-min walk, significant impairment in daily activities"
+        - condition: "Chylous complications (chylothorax requiring drainage, chylous ascites)"
+        - condition: "Significant VEGF-D elevation suggesting active disease (VEGF-D ≥2000 pg/mL)"
+    if_true:
+      next_step: 3
+      notes: "Progressive or symptomatic LAM: proceed to treatment eligibility assessment."
+    if_false:
+      result: null
+      notes: >
+        Asymptomatic LAM with stable normal lung function: OBSERVE.
+        Serial monitoring: PFTs q6–12 months, VEGF-D q6–12 months, HRCT annually.
+        Begin sirolimus when evidence of functional decline or symptoms develop.
+        Pregnancy counseling: LAM may progress rapidly during pregnancy (estrogen effect);
+        reproductive planning discussion is essential.
+        Refer to specialized LAM clinic for longitudinal management.
+
+  # Step 3 — Contraindication and eligibility gate for sirolimus.
+  - step: 3
+    evaluate:
+      all_of:
+        - condition: "Not pregnant (confirmed negative pregnancy test)"
+        - condition: "Adequate hepatic function (non-severe hepatic impairment)"
+        - condition: "Patient willing and able to comply with contraception requirements and TDM monitoring"
+    if_true:
+      result: IND-LAM-1L-SIROLIMUS
+      notes: >
+        Sirolimus eligible: start 2 mg PO once daily; titrate to trough 5–15 ng/mL.
+        MILES Phase III (McCormack 2011 NEJM): FEV1 slope +11 mL/month difference vs placebo
+        (p<0.001); VEGF-D reduced ~50%. FDA approved May 2015.
+        Pregnancy prevention mandatory (progesterone-only or non-hormonal contraception —
+        avoid estrogen-containing methods which may worsen LAM).
+        Continuous indefinite therapy — benefits lost on discontinuation (MILES).
+        Ukraine: registered (off-label for LAM); accessible generics; ~USD 500–2000/month.
+        Everolimus (10 mg QD) is an alternative especially for TSC-associated LAM.
+    if_false:
+      result: null
+      notes: >
+        Sirolimus contraindicated or patient declines:
+        - Pregnancy: delay until postpartum; urgent cases — multidisciplinary discussion
+          (pulmonology + obstetrics); pneumothorax and chylothorax management during pregnancy.
+        - Severe hepatic impairment: everolimus pharmacokinetics may be slightly better;
+          hepatology consultation; individual case decision.
+        - Patient declines: respiratory physiotherapy, supplemental oxygen, symptom management.
+          Lung transplantation evaluation if end-stage disease (FEV1 <40% predicted).
+        MDT (pulmonology + rare disease) referral for all complex LAM cases.
+
+sources:
+  - SRC-MILES-MCCORMACK-2011
+
+last_reviewed: "2026-05-04"
+notes: >
+  LAM is managed by pulmonologists (not oncologists) in clinical practice.
+  This algorithm represents the systemic therapy decision for LAM patients.
+  NCCN does not publish a standalone LAM guideline; ERS and ATS guidelines
+  (European Respiratory Society and American Thoracic Society) are the reference
+  standards. ERS LAM guidelines (Ong 2010; updated 2022) support sirolimus for
+  progressive/symptomatic LAM.
+
+  TSC-ASSOCIATED LAM: Same treatment algorithm. TSC patients also require evaluation
+  for SEGA (subependymal giant cell astrocytoma), renal AML, and other TSC manifestations.
+  Everolimus (Afinitor) is FDA/EMA-approved for SEGA, renal AML, and is used for
+  TSC-associated LAM — may be preferred when managing multiple TSC manifestations.
+
+  PNEUMOTHORAX: Occurs in 40–60% of LAM patients. Ipsilateral pleurodesis (chemical
+  or mechanical) is standard after first pneumothorax in LAM (high recurrence rate).
+  Sirolimus does not prevent pneumothorax; does not change pneumothorax management.
+
+  CHYLOTHORAX: Occurs in ~20% of LAM patients. Sirolimus reduces lymphatic complications
+  (VEGF-D and mTOR-driven lymphangiogenesis). Drainage and dietary fat restriction
+  (medium-chain triglycerides diet) are supportive measures.
+
+  LUNG TRANSPLANTATION: Reserved for end-stage LAM (FEV1 <40% predicted, significant
+  hypoxemia). Sirolimus is typically held 2 weeks before transplant (impairs wound
+  healing); post-transplant management involves tacrolimus or cyclosporine.
+
+  DIS-LAM algorithm gap CLOSED 2026-05-04 (Workstream DJ).

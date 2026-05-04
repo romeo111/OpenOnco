@@ -1,0 +1,80 @@
+id: REG-SIROLIMUS-LAM
+disease_context: DIS-LAM
+line_of_therapy: 1
+plan_track: standard
+
+regimen_type: "targeted_therapy_oral"
+
+agents:
+  - drug_id: DRUG-SIROLIMUS
+    dose: "2 mg PO once daily initially; titrate to trough level 5–15 ng/mL"
+    route: PO
+    schedule: "Once daily continuously, at the same time each day"
+    administration_notes: >
+      Take consistently WITH or WITHOUT food (not both — food increases peak concentration;
+      choose one and maintain consistency). Swallow tablets whole.
+      Avoid grapefruit juice (CYP3A4 inhibition increases sirolimus levels unpredictably).
+      Starting dose: 2 mg once daily. Check trough level on day 5–7 then adjust.
+      Target trough: 5–15 ng/mL (same as MILES trial therapeutic window).
+      Dose adjustment: 0.5–1 mg increments; wait ≥5–7 days between adjustments
+      (sirolimus has ~62-hour half-life; steady state takes ~7 days).
+      Continuous therapy indefinitely — benefits lost when sirolimus discontinued
+      (MILES observation phase: FEV1 decline resumed after drug stopped).
+      PREGNANCY: mandatory contraception (progesterone-only or non-hormonal methods
+      preferred — estrogen-containing contraceptives may worsen LAM).
+    dose_modifications:
+      - trigger: "Trough >15 ng/mL (supratherapeutic)"
+        action: "Reduce dose by 0.5–1 mg; recheck trough in 7 days"
+      - trigger: "Trough <5 ng/mL after ≥14 days at current dose (sub-therapeutic)"
+        action: "Increase dose by 0.5–1 mg; recheck trough in 7 days; check for CYP3A4 interactions first"
+      - trigger: "Grade ≥2 stomatitis (oral ulcers interfering with eating)"
+        action: "Topical triamcinolone 0.1% oral paste to ulcers; consider sirolimus dose reduction if Grade 3"
+      - trigger: "Suspected interstitial pneumonitis (new respiratory symptoms, new infiltrates on HRCT not explained by LAM progression)"
+        action: "HOLD sirolimus; evaluate with HRCT and PFTs; bronchoscopy if indicated; corticosteroids if confirmed pneumonitis; usually reversible"
+      - trigger: "Elective major surgery planned"
+        action: "Hold sirolimus 7–14 days pre-operatively; restart after wound healing complete (typically 4–6 weeks post-op)"
+      - trigger: "Active significant infection"
+        action: "Hold sirolimus until infection resolving; prophylaxis for pneumocystis if prolonged hold and then restart"
+
+when_to_use: >
+  LAM in adults with evidence of functional impairment (FEV1 <70% predicted or documented
+  FEV1 decline) OR chylous complications (chylothorax, chylous ascites). Sirolimus slows
+  FEV1 decline (MILES Phase III: FEV1 slope difference +11 mL/month vs placebo, p<0.001).
+  Continuous indefinite therapy required — benefits lost on discontinuation.
+  MILES trial enrolled patients with FEV1 <70% predicted or FEV1 decline ≥10% over
+  prior year; asymptomatic patients with normal lung function may be observed.
+  VEGF-D reduction (a LAM biomarker) also observed with sirolimus treatment.
+  NCCN and European Respiratory Society (ERS) LAM guidelines: sirolimus/everolimus
+  recommended for progressive LAM (pulmonary function decline).
+
+contraindications_relative:
+  - "Asymptomatic LAM with stable normal lung function — monitor without treatment"
+  - "Pregnancy — embryo-fetal toxicity (teratogenic in animal models)"
+  - "Active systemic infection — immunosuppressive effects"
+  - "Peri-operative period — wound healing impairment"
+
+monitoring:
+  - "Sirolimus trough: check at baseline, 5–7 days post each dose change; q3 months once stable at therapeutic range"
+  - "PFTs (FEV1, FVC, DLCO): baseline + every 3–6 months (primary efficacy endpoint)"
+  - "VEGF-D: baseline + q6–12 months (disease activity biomarker)"
+  - "HRCT chest: baseline + annually or if symptoms worsen"
+  - "Lipid panel (triglycerides, LDL): baseline + q3–6 months"
+  - "CBC + LFTs: baseline + q3 months"
+  - "Pregnancy test: monthly (women of reproductive potential)"
+  - "Oral mucosa assessment: every visit (stomatitis monitoring)"
+
+sources:
+  - SRC-MILES-MCCORMACK-2011
+
+last_reviewed: "2026-05-04"
+reviewers: []
+reviewer_signoffs: 0
+review_status: pending_clinical_signoff
+drafted_by: claude_extraction
+notes: >
+  STUB — pending Clinical Co-Lead sign-off. Authored 2026-05-04 (Workstream DJ).
+  Trough-based dosing is essential — starting dose 2 mg/day is not always therapeutic;
+  target 5–15 ng/mL must be confirmed with TDM. LAM patients typically require
+  2–6 mg/day but individual variation is high. Stomatitis is the most bothersome AE
+  and a common cause of dose reduction or discontinuation in clinical practice.
+  Everolimus 10 mg QD is an alternative (used for TSC-associated LAM; EXIST-2 trial data).
